@@ -40,6 +40,15 @@
   
   <properties>
     <cargo.version>1.1.0-SNAPSHOT</cargo.version>
+    <!-- if you want a remote debugging on a different a address
+         override on command line with -Dcargo.debug.addres=xxxx -->
+    <cargo.debug.address>8000</cargo.debug.address>
+    <!-- if you want to start remote debugging session suspended
+         override on command line with -Dcargo.debug.suspend=y -->
+    <cargo.debug.suspend>n</cargo.debug.suspend>
+    <!-- default empty javaagent
+         if needed you can specify it on the command line with -Djavaagent="..." -->
+    <javaagent></javaagent>
   </properties>
   
   <pluginRepositories>
@@ -88,46 +97,51 @@
     </dependency>
     
   </dependencies>
-  
+
   <build>
     <defaultGoal>install</defaultGoal>
-      <plugins>
-        <plugin>
-          <groupId>org.codehaus.cargo</groupId>
-          <artifactId>cargo-maven2-plugin</artifactId>
-          <version>${cargo.version}</version>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.cargo</groupId>
+        <artifactId>cargo-maven2-plugin</artifactId>
+        <version>${cargo.version}</version>
+        <configuration>
+          <wait>true</wait>
           <configuration>
-            <wait>true</wait>
-            <configuration>
-                <home>${project.build.directory}/tomcat6x</home>
-                <deployables>
-                  <deployable>
-                    <groupId>org.apache.rave</groupId>
-                    <artifactId>rave-shindig</artifactId>
-                    <type>war</type>
-                    <properties>
-                      <context>/ROOT</context>
-                    </properties>
-                  </deployable>
-                  <deployable>
-                    <groupId>org.apache.rave</groupId>
-                    <artifactId>rave-portal</artifactId>
-                    <type>war</type>
-                    <properties>
-                      <context>/portal</context>
-                    </properties>
-                  </deployable>
-                </deployables>
-            </configuration>
-            <container>
-              <containerId>tomcat6x</containerId>
-                <zipUrlInstaller>
-                  <url>http://archive.apache.org/dist/tomcat/tomcat-6/v6.0.32/bin/apache-tomcat-6.0.32.tar.gz</url>
-                </zipUrlInstaller>
-            </container>
+            <properties>
+              <cargo.jvmargs>
+                <![CDATA[-Xdebug -Xrunjdwp:transport=dt_socket,address=${cargo.debug.address},server=y,suspend=${cargo.debug.suspend} -noverify ${javaagent}]]>
+              </cargo.jvmargs>
+            </properties>
+            <home>${project.build.directory}/tomcat6x</home>
+            <deployables>
+              <deployable>
+                <groupId>org.apache.rave</groupId>
+                <artifactId>rave-shindig</artifactId>
+                <type>war</type>
+                <properties>
+                  <context>/ROOT</context>
+                </properties>
+              </deployable>
+              <deployable>
+                <groupId>org.apache.rave</groupId>
+                <artifactId>rave-portal</artifactId>
+                <type>war</type>
+                <properties>
+                  <context>/portal</context>
+                </properties>
+              </deployable>
+            </deployables>
           </configuration>
-        </plugin>
-      </plugins>
+          <container>
+            <containerId>tomcat6x</containerId>
+            <zipUrlInstaller>
+              <url>http://archive.apache.org/dist/tomcat/tomcat-6/v6.0.32/bin/apache-tomcat-6.0.32.tar.gz</url>
+            </zipUrlInstaller>
+          </container>
+        </configuration>
+      </plugin>
+    </plugins>
   </build>
   
 </project>
