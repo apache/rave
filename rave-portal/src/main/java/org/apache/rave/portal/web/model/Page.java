@@ -20,6 +20,8 @@ package org.apache.rave.portal.web.model;
 
 import java.util.List;
 
+import org.apache.rave.portal.web.model.util.InternationalString;
+
 /**
  * A page, which consists of regions, and which may be owned by a user (or other principal)
  */
@@ -39,9 +41,9 @@ public interface Page {
      *
      * @return  valid name
      */
-    String getName();
+    InternationalString getName();
 
-    void setName(String name);
+    void setName(InternationalString name);
 
     /**
      * Get the principal that owns the page and the widgets on it
