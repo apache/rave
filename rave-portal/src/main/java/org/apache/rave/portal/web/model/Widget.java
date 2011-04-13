@@ -19,8 +19,12 @@
 package org.apache.rave.portal.web.model;
 
 /**
- * A person
+ * A widget
  */
-public interface IPerson {
+public interface Widget {
 
+	String getTitle(String locale);
+	
+	void setTitle(String title, String locale); 
+	
 }

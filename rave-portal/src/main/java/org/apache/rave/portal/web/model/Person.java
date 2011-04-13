@@ -19,17 +19,8 @@
 package org.apache.rave.portal.web.model;
 
 /**
- * An instance of an IWidget for a particular IPerson; for example, the
- * widget instance for the current viewer
+ * A person
  */
-public interface IPersonWidget {
-	
-	public IWidget getWidget();
-	
-	public void setWidget(IWidget widget);
-	
-	public IPerson getPerson();
-	
-	public void setPerson(IPerson person);
+public interface Person {
 
 }

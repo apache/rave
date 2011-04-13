@@ -18,21 +18,27 @@
  */
 package org.apache.rave.portal.web.model;
 
-import java.util.Collection;
+import java.util.List;
 
 /**
- * A page, which consists of regions, and which may be owned by a user
+ * A region of a page, which can contain widget instances {@link RegionWidget}
  */
-public interface IPage {
-	
-	public Collection <IRegion> getRegions();
-	
-	public void addRegion(IRegion region);
-	
-	public void removeRegion(IRegion region);
-	
-	public IPerson getOwner();
-	
-	public void setOwner(IPerson owner);
+public interface Region {
+    /**
+     * Gets the persistence unique identifier
+     *
+     * @return id of the persisted object; null if not persisted
+     */
+    Long getId();
 
+    void setId(Long id);
+
+    /**
+     * Gets the ordered list of widget instances for the region
+     *
+     * @return valid list
+     */
+    List<RegionWidget> getRegionWidgets();
+
+    void setRegionWidgets(List<RegionWidget> regionWidgets);
 }

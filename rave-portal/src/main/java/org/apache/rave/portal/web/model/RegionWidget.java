@@ -19,8 +19,43 @@
 package org.apache.rave.portal.web.model;
 
 /**
- * A region that acts as a column within a multi-column page layout
+ * A widget within a region
  */
-public interface IColumn extends IRegion {
+public interface RegionWidget {
 
+    /**
+     * Gets the persistence unique identifier
+     *
+     * @return id of the persisted object; null if not persisted
+     */
+    Long getId();
+
+    void setId(Long id);
+
+    /**
+     * Gets the object that represents the metadata about the widget
+     *
+     * @return valid widget
+     */
+    Widget getWidget();
+
+    void setWidget(Widget widget);
+
+    /**
+     * Gets the render sequence of this gadget relative to other gadgets in the same region
+     *
+     * @return value >= 0
+     */
+    long getRenderSeq();
+
+    void setRenderSeq(long renderSeq);
+
+    /**
+     * Gets whether or not to render the gadget in collapsed mode
+     *
+     * @return true if render collapsed; false otherwise
+     */
+    boolean isCollapsed();
+
+    void setCollapsed(boolean collapsed);
 }
