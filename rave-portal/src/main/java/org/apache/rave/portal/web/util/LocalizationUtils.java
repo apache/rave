@@ -24,8 +24,9 @@ import java.util.Comparator;
 import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.apache.log4j.Logger;
 import org.apache.rave.portal.web.model.util.LocalizedString;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.ibm.icu.util.GlobalizationPreferences;
 import com.ibm.icu.util.ULocale;
@@ -34,7 +35,7 @@ import com.ibm.icu.util.ULocale;
  * Utilities for localization (adapted from org.apache.wookie.w3c.util.LocalizationUtils.java)
  */
 public class LocalizationUtils {
-	static Logger _logger = Logger.getLogger(LocalizationUtils.class.getName());
+	static Logger _logger = LoggerFactory.getLogger(LocalizationUtils.class);
 	
 	/**
 	 * Returns the first (best) match for an element given the set of locales, or null
