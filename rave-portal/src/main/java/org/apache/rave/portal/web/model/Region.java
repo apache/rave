@@ -26,7 +26,7 @@ import java.util.List;
 public interface Region {
     /**
      * Gets the persistence unique identifier
-     *
+     * 
      * @return id of the persisted object; null if not persisted
      */
     Long getId();
@@ -35,7 +35,7 @@ public interface Region {
 
     /**
      * Gets the ordered list of widget instances for the region
-     *
+     * 
      * @return valid list
      */
     List<RegionWidget> getRegionWidgets();

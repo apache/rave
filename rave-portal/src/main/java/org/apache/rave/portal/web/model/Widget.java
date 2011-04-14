@@ -25,8 +25,8 @@ import org.apache.rave.portal.web.model.util.InternationalString;
  */
 public interface Widget {
 
-	InternationalString getTitle();
-	
-	void setTitle(InternationalString title); 
-	
+    InternationalString getTitle();
+
+    void setTitle(InternationalString title);
+
 }

@@ -20,14 +20,13 @@
 package org.apache.rave.portal.web.model;
 
 /**
- * Represents an organization of regions within a page that is supported by the
- * rendering engine
+ * Represents an organization of regions within a page that is supported by the rendering engine
  */
 public interface PageLayout {
 
     /**
      * Gets the persistence unique identifier
-     *
+     * 
      * @return id of the persisted object; null if not persisted
      */
     Long getId();
@@ -36,7 +35,7 @@ public interface PageLayout {
 
     /**
      * Gets the code used by the rendering engine to identify the page layout
-     *
+     * 
      * @return valid code known by rendering engine
      */
     String getCode();
@@ -45,7 +44,7 @@ public interface PageLayout {
 
     /**
      * Gets the display name shown to users
-     *
+     * 
      * @return valid name
      */
     String getName();
@@ -54,7 +53,7 @@ public interface PageLayout {
 
     /**
      * Gets the number of regions supported by this page layout
-     *
+     * 
      * @return valid number of regions > 0
      */
     long getNumRegions();

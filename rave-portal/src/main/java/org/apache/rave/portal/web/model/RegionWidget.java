@@ -25,7 +25,7 @@ public interface RegionWidget {
 
     /**
      * Gets the persistence unique identifier
-     *
+     * 
      * @return id of the persisted object; null if not persisted
      */
     Long getId();
@@ -34,7 +34,7 @@ public interface RegionWidget {
 
     /**
      * Gets the object that represents the metadata about the widget
-     *
+     * 
      * @return valid widget
      */
     Widget getWidget();
@@ -43,7 +43,7 @@ public interface RegionWidget {
 
     /**
      * Gets the render sequence of this gadget relative to other gadgets in the same region
-     *
+     * 
      * @return value >= 0
      */
     long getRenderSeq();
@@ -52,7 +52,7 @@ public interface RegionWidget {
 
     /**
      * Gets whether or not to render the gadget in collapsed mode
-     *
+     * 
      * @return true if render collapsed; false otherwise
      */
     boolean isCollapsed();

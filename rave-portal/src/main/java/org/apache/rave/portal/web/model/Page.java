@@ -29,7 +29,7 @@ public interface Page {
 
     /**
      * Gets the persistence unique identifier
-     *
+     * 
      * @return id of the persisted object; null if not persisted
      */
     Long getId();
@@ -38,8 +38,8 @@ public interface Page {
 
     /**
      * Get the name of the page that is displayed to the user
-     *
-     * @return  valid name
+     * 
+     * @return valid name
      */
     InternationalString getName();
 
@@ -47,7 +47,7 @@ public interface Page {
 
     /**
      * Get the principal that owns the page and the widgets on it
-     *
+     * 
      * @return valid principal
      */
     Person getOwner();
@@ -56,7 +56,7 @@ public interface Page {
 
     /**
      * Gets the order of the page instance in all pages for the owner
-     *
+     * 
      * @return valid, unique render sequence
      */
     long getRenderSeq();
@@ -65,7 +65,7 @@ public interface Page {
 
     /**
      * Get the {@link PageLayout}
-     *
+     * 
      * @return valid layout
      */
     PageLayout getPageLayout();
@@ -74,7 +74,7 @@ public interface Page {
 
     /**
      * Get the widget containing regions of the page
-     *
+     * 
      * @return valid list
      */
     List<Region> getRegions();

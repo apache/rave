@@ -22,16 +22,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
- * Minimal Home Controller 
- *
+ * Minimal Home Controller
+ * 
  * @version $Id$
  */
 @Controller
-public class HomeController
-{
-	@RequestMapping(value="/")
-	public String getHome()
-	{
-		return "home";
-	}
+public class HomeController {
+    @RequestMapping(value = "/")
+    public String getHome() {
+        return "home";
+    }
 }

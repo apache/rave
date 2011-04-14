@@ -22,44 +22,42 @@ package org.apache.rave.portal.web.model.util;
  * A String localized for a specific language-tag
  */
 public class LocalizedString {
-	
-	/**
-	 * Default constructor
-	 */
-	public LocalizedString(){
-	}
-	
-	public LocalizedString(String value, String lang){
-		this.value = value;
-		this.lang = lang;
-	}
-	
-	/**
-	 * The value of the String
-	 */
-	private String value;
 
-	/**
-	 * The BCP-47 language tag 
-	 */
-	private String lang;
-	
-	public String getValue() {
-		return value;
-	}
-	
-	public void setValue(String value) {
-		this.value = value;
-	}
-	
-	public String getLang() {
-		return lang;
-	}
-	
-	public void setLang(String lang) {
-		this.lang = lang;
-	}
-	
-	
+    /**
+     * Default constructor
+     */
+    public LocalizedString() {
+    }
+
+    public LocalizedString(String value, String lang) {
+        this.value = value;
+        this.lang = lang;
+    }
+
+    /**
+     * The value of the String
+     */
+    private String value;
+
+    /**
+     * The BCP-47 language tag
+     */
+    private String lang;
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
+
+    public String getLang() {
+        return lang;
+    }
+
+    public void setLang(String lang) {
+        this.lang = lang;
+    }
 
 }

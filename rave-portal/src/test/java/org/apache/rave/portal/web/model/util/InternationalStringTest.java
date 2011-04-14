@@ -24,72 +24,71 @@ import org.junit.Test;
 import com.ibm.icu.util.GlobalizationPreferences;
 
 public class InternationalStringTest {
-	
-	@Test
-	public void twoLanguages(){
-		InternationalString internationalString = new InternationalString();
-		internationalString.setLocalizedString(new LocalizedString("Hello World","en"));
-		internationalString.setLocalizedString(new LocalizedString("你好世界","cn"));
-		
-		assertEquals("你好世界", internationalString.getLocalizedString("cn").getValue());
-		assertEquals("Hello World", internationalString.getLocalizedString("en").getValue());
-	}
-	
-	@Test
-	public void defaultLocale(){
-		GlobalizationPreferences prefs = new GlobalizationPreferences();
-		
-		InternationalString internationalString = new InternationalString();
-		internationalString.setLocalizedString(new LocalizedString("Hello World","en"));
-		internationalString.setLocalizedString(new LocalizedString("Hallo Wereld","nl"));
-		internationalString.setLocalizedString(new LocalizedString("你好世界","cn"));
-		
-		// The actual test depends on the system default locale
-		String defaultLocale = prefs.getLocale(0).toLanguageTag();
-		if (defaultLocale.contains("cn"))
-			assertEquals("你好世界", internationalString.getDefaultLocalizedString().getValue());
-		if (defaultLocale.equals("nl"))
-			assertEquals("Hallo Wereld", internationalString.getDefaultLocalizedString().getValue());
-		if (defaultLocale.contains("en"))
-			assertEquals("Hello World", internationalString.getDefaultLocalizedString().getValue());	
-	}
-	
-	@Test
-	public void noLocalizedStrings(){
-		InternationalString internationalString = new InternationalString();
-		assertEquals(null, internationalString.getLocalizedString("cn"));
-	}
-	
-	@Test
-	public void noMatch(){
-		InternationalString internationalString = new InternationalString();
-		internationalString.setLocalizedString(new LocalizedString("Hello World","en"));
-		assertEquals(null, internationalString.getLocalizedString("cn"));
-	}
 
-	/**
-	 * This tests that we can use a "default" non-localized string as a last-resort fallback
-	 */
-	@Test
-	public void nonLocalizedFallback(){
-		InternationalString internationalString = new InternationalString();
-		internationalString.setLocalizedString(new LocalizedString("Hello World",null));
-		assertEquals("Hello World", internationalString.getLocalizedString("cn").getValue());
-	}
-	
-	@Test
-	public void fallback(){
-		InternationalString internationalString = new InternationalString();
-		internationalString.setLocalizedString(new LocalizedString("Hello World","en"));
-		internationalString.setLocalizedString(new LocalizedString("Hi World","en-us"));
-		internationalString.setLocalizedString(new LocalizedString("How Do You Do World","en-gb"));
+    @Test
+    public void twoLanguages() {
+        InternationalString internationalString = new InternationalString();
+        internationalString.setLocalizedString(new LocalizedString("Hello World", "en"));
+        internationalString.setLocalizedString(new LocalizedString("你好世界", "cn"));
 
-		assertEquals("Hello World", internationalString.getLocalizedString("en").getValue());
-		assertEquals("How Do You Do World", internationalString.getLocalizedString("en-gb").getValue());
-		assertEquals("Hi World", internationalString.getLocalizedString("en-us").getValue());
-		assertEquals("Hello World", internationalString.getLocalizedString("en-za").getValue());
-		assertEquals("Hi World", internationalString.getLocalizedString("en-us-posix").getValue());
-	}
+        assertEquals("你好世界", internationalString.getLocalizedString("cn").getValue());
+        assertEquals("Hello World", internationalString.getLocalizedString("en").getValue());
+    }
 
+    @Test
+    public void defaultLocale() {
+        GlobalizationPreferences prefs = new GlobalizationPreferences();
+
+        InternationalString internationalString = new InternationalString();
+        internationalString.setLocalizedString(new LocalizedString("Hello World", "en"));
+        internationalString.setLocalizedString(new LocalizedString("Hallo Wereld", "nl"));
+        internationalString.setLocalizedString(new LocalizedString("你好世界", "cn"));
+
+        // The actual test depends on the system default locale
+        String defaultLocale = prefs.getLocale(0).toLanguageTag();
+        if (defaultLocale.contains("cn"))
+            assertEquals("你好世界", internationalString.getDefaultLocalizedString().getValue());
+        if (defaultLocale.equals("nl"))
+            assertEquals("Hallo Wereld", internationalString.getDefaultLocalizedString().getValue());
+        if (defaultLocale.contains("en"))
+            assertEquals("Hello World", internationalString.getDefaultLocalizedString().getValue());
+    }
+
+    @Test
+    public void noLocalizedStrings() {
+        InternationalString internationalString = new InternationalString();
+        assertEquals(null, internationalString.getLocalizedString("cn"));
+    }
+
+    @Test
+    public void noMatch() {
+        InternationalString internationalString = new InternationalString();
+        internationalString.setLocalizedString(new LocalizedString("Hello World", "en"));
+        assertEquals(null, internationalString.getLocalizedString("cn"));
+    }
+
+    /**
+     * This tests that we can use a "default" non-localized string as a last-resort fallback
+     */
+    @Test
+    public void nonLocalizedFallback() {
+        InternationalString internationalString = new InternationalString();
+        internationalString.setLocalizedString(new LocalizedString("Hello World", null));
+        assertEquals("Hello World", internationalString.getLocalizedString("cn").getValue());
+    }
+
+    @Test
+    public void fallback() {
+        InternationalString internationalString = new InternationalString();
+        internationalString.setLocalizedString(new LocalizedString("Hello World", "en"));
+        internationalString.setLocalizedString(new LocalizedString("Hi World", "en-us"));
+        internationalString.setLocalizedString(new LocalizedString("How Do You Do World", "en-gb"));
+
+        assertEquals("Hello World", internationalString.getLocalizedString("en").getValue());
+        assertEquals("How Do You Do World", internationalString.getLocalizedString("en-gb").getValue());
+        assertEquals("Hi World", internationalString.getLocalizedString("en-us").getValue());
+        assertEquals("Hello World", internationalString.getLocalizedString("en-za").getValue());
+        assertEquals("Hi World", internationalString.getLocalizedString("en-us-posix").getValue());
+    }
 
 }
