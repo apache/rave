@@ -52,6 +52,8 @@
     <org.slf4j.version>1.6.1</org.slf4j.version>
     <log4j.version>1.2.16</log4j.version>
     <junit.version>4.7</junit.version>
+    <commons-lang.version>2.6</commons-lang.version>
+    <icu4j.version>4.6.1</icu4j.version>
   </properties>
 
   <!-- Global management of all dependencies -->
@@ -68,7 +70,7 @@
         <artifactId>spring-webmvc</artifactId>
         <version>${org.springframework.version}</version>
       </dependency>
-      
+
       <!-- Logging -->
       <dependency>
         <groupId>org.slf4j</groupId>
@@ -93,7 +95,19 @@
         <version>${log4j.version}</version>
         <scope>runtime</scope>
       </dependency>
-      
+
+      <!-- Language and localization -->
+      <dependency>
+        <groupId>com.ibm.icu</groupId>
+        <artifactId>icu4j</artifactId>
+        <version>${icu4j.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-lang</groupId>
+        <artifactId>commons-lang</artifactId>
+        <version>${commons-lang.version}</version>
+      </dependency>
+
       <!-- Rave artifacts -->
       <dependency>
         <groupId>org.apache.rave</groupId>
@@ -107,7 +121,7 @@
         <version>${project.version}</version>
         <type>war</type>
       </dependency>
-      
+
     </dependencies>
   </dependencyManagement>
 
