@@ -16,48 +16,21 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.rave.portal.web.model.util;
+package org.apache.rave.portal.model;
+
+import org.apache.rave.portal.model.util.InternationalString;
 
 /**
- * A String localized for a specific language-tag
+ * A widget
  */
-public class LocalizedString {
+public class Widget {
+    private InternationalString title;
 
-    /**
-     * Default constructor
-     */
-    public LocalizedString() {
+    public InternationalString getTitle() {
+        return title;
     }
 
-    public LocalizedString(String value, String lang) {
-        this.value = value;
-        this.lang = lang;
+    public void setTitle(InternationalString title) {
+        this.title = title;
     }
-
-    /**
-     * The value of the String
-     */
-    private String value;
-
-    /**
-     * The BCP-47 language tag
-     */
-    private String lang;
-
-    public String getValue() {
-        return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
-    }
-
-    public String getLang() {
-        return lang;
-    }
-
-    public void setLang(String lang) {
-        this.lang = lang;
-    }
-
 }

@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.rave.portal.web.util;
+package org.apache.rave.portal.util;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,7 +24,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.apache.rave.portal.web.model.util.LocalizedString;
+import org.apache.rave.portal.model.util.LocalizedString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

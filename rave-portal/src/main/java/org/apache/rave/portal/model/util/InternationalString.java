@@ -16,15 +16,15 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.rave.portal.web.model.util;
+package org.apache.rave.portal.model.util;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.rave.portal.web.util.LocalizationUtils;
+import org.apache.rave.portal.util.LocalizationUtils;
 
 /**
- * a String that has been internationalized into several Locales. This class is used as a replacement for the String
+ * A String that has been internationalized into several Locales. This class is used as a replacement for the String
  * type whenever a String needs to be i18nn-capable. An instance of the InternationalString interface composes within it
  * an ArrayList of LocalizedString instances, where each String is specific to a particular Locale.
  * 

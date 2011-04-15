@@ -16,29 +16,40 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.rave.portal.web.model;
+package org.apache.rave.portal.model;
 
 import java.util.List;
 
 /**
  * A region of a page, which can contain widget instances {@link RegionWidget}
  */
-public interface Region {
+public class Region {
+    private Long id;
+    private List<RegionWidget> regionWidgets;
+
     /**
      * Gets the persistence unique identifier
-     * 
-     * @return id of the persisted object; null if not persisted
+     *
+     * @return id The ID of persisted object; null if not persisted
      */
-    Long getId();
+    public Long getId() {
+        return id;
+    }
 
-    void setId(Long id);
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     /**
      * Gets the ordered list of widget instances for the region
-     * 
-     * @return valid list
+     *
+     * @return Valid list
      */
-    List<RegionWidget> getRegionWidgets();
+    public List<RegionWidget> getRegionWidgets() {
+        return regionWidgets;
+    }
 
-    void setRegionWidgets(List<RegionWidget> regionWidgets);
+    public void setRegionWidgets(List<RegionWidget> regionWidgets) {
+        this.regionWidgets = regionWidgets;
+    }
 }

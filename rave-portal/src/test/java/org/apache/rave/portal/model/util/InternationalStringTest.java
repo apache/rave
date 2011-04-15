@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.rave.portal.web.model.util;
+package org.apache.rave.portal.model.util;
 
 import static org.junit.Assert.assertEquals;
 

@@ -16,17 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.rave.portal.web.model;
-
-import org.apache.rave.portal.web.model.util.InternationalString;
+package org.apache.rave.portal.model;
 
 /**
- * A widget
+ * A person
  */
-public interface Widget {
-
-    InternationalString getTitle();
-
-    void setTitle(InternationalString title);
+public class Person {
 
 }

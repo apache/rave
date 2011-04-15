@@ -17,46 +17,52 @@
  * under the License.
  */
 
-package org.apache.rave.portal.web.model;
+package org.apache.rave.portal.model;
 
 /**
  * Represents an organization of regions within a page that is supported by the rendering engine
  */
-public interface PageLayout {
+public class PageLayout {
+    private Long id;
+    private String code;
+    private Long numberOfRegions;
 
     /**
      * Gets the persistence unique identifier
-     * 
-     * @return id of the persisted object; null if not persisted
+     *
+     * @return id The ID of persisted object; null if not persisted
      */
-    Long getId();
+    public Long getId() {
+        return id;
+    }
 
-    void setId(Long id);
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     /**
      * Gets the code used by the rendering engine to identify the page layout
-     * 
-     * @return valid code known by rendering engine
+     *
+     * @return Valid code known by rendering engine
      */
-    String getCode();
+    public String getCode() {
+        return code;
+    }
 
-    void setCode(String code);
-
-    /**
-     * Gets the display name shown to users
-     * 
-     * @return valid name
-     */
-    String getName();
-
-    void setName(String name);
+    public void setCode(String code) {
+        this.code = code;
+    }
 
     /**
      * Gets the number of regions supported by this page layout
-     * 
-     * @return valid number of regions > 0
+     *
+     * @return Valid number of regions > 0
      */
-    long getNumRegions();
+    public Long getNumberOfRegions() {
+        return numberOfRegions;
+    }
 
-    void setNumRegions(long numRegions);
+    public void setNumberOfRegions(Long numberOfRegions) {
+        this.numberOfRegions = numberOfRegions;
+    }
 }
