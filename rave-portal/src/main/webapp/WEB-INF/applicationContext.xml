@@ -28,7 +28,7 @@
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
   <!-- Scans the classpath of this application for @Components to deploy as beans -->
-  <context:component-scan base-package="org.apache.rave.portal.web" />
+  <context:component-scan base-package="org.apache.rave.portal" />
 
   <!-- Configures the @Controller programming model -->
   <mvc:annotation-driven />

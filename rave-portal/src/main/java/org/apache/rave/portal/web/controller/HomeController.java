@@ -18,8 +18,17 @@
  */
 package org.apache.rave.portal.web.controller;
 
+import org.apache.rave.portal.model.Page;
+import org.apache.rave.portal.model.Person;
+import org.apache.rave.portal.service.PageService;
+import org.apache.rave.portal.service.UserService;
+import org.apache.rave.portal.web.util.ModelKeys;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.List;
 
 /**
  * Minimal Home Controller
@@ -28,8 +37,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @Controller
 public class HomeController {
+    private PageService pageService;
+    private UserService userService;
+
+    @Autowired
+    public HomeController(PageService pageService, UserService userService) {
+        this.pageService = pageService;
+        this.userService = userService;
+    }
+
     @RequestMapping(value = "/")
-    public String getHome() {
+    public String getHome(Model model) {
+        Person user = userService.getAuthenticatedUser();
+        List<Page> pages = pageService.getAllPages(user.getUserId());
+        model.addAttribute(ModelKeys.PAGES, pages);
         return "home";
     }
 }

@@ -16,18 +16,20 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.rave.portal.service;
 
-import org.apache.rave.portal.model.Page;
+package org.apache.rave.portal.service.impl;
 
-import java.util.List;
+import org.apache.rave.portal.model.Person;
+import org.apache.rave.portal.service.UserService;
+import org.springframework.stereotype.Service;
 
-public interface PageService {
-    /**
-     * Gets all pages for the given user.
-     *
-     * @param userId The user to retrieve pages for.
-     * @return A non null possible empty list of pages for the given user.
-     */
-    List<Page> getAllPages(String userId);
+@Service
+public class DefaultUserService implements UserService {
+    @Override
+    public Person getAuthenticatedUser() {
+        //TODO: Returning mock data until we hook in real authentication
+        Person person = new Person();
+        person.setUserId("jcian");
+        return person;
+    }
 }

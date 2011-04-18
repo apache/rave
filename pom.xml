@@ -48,6 +48,7 @@
   <properties>
     <apache.shindig.version>2.0.2</apache.shindig.version>
     <org.springframework.version>3.0.5.RELEASE</org.springframework.version>
+    <jstl.version>1.2</jstl.version>
     <javax.servlet.version>2.5</javax.servlet.version>
     <org.slf4j.version>1.6.1</org.slf4j.version>
     <log4j.version>1.2.16</log4j.version>
@@ -55,6 +56,13 @@
     <commons-lang.version>2.6</commons-lang.version>
     <icu4j.version>4.6.1</icu4j.version>
   </properties>
+
+  <repositories>
+    <repository>
+      <id>java.net</id>
+      <url>http://download.java.net/maven/2/</url>
+    </repository>
+  </repositories>
 
   <!-- Global management of all dependencies -->
   <dependencyManagement>
@@ -69,6 +77,11 @@
         <groupId>org.springframework</groupId>
         <artifactId>spring-webmvc</artifactId>
         <version>${org.springframework.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>javax.servlet</groupId>
+        <artifactId>jstl</artifactId>
+        <version>${jstl.version}</version>
       </dependency>
 
       <!-- Logging -->
@@ -148,6 +161,12 @@
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>${junit.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.easymock</groupId>
+      <artifactId>easymock</artifactId>
+      <version>3.0</version>
       <scope>test</scope>
     </dependency>
   </dependencies>

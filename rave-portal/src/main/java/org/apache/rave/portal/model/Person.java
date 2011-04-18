@@ -22,5 +22,24 @@ package org.apache.rave.portal.model;
  * A person
  */
 public class Person {
+    private String userId;
 
+    public Person() {
+    }
+
+    public Person(String userId) {
+        this.userId = userId;
+    }
+
+    /**
+     * Gets the unique identifier for this user.
+     * @return The unique identifier for this user.
+     */
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 }

@@ -20,11 +20,28 @@ package org.apache.rave.portal.model;
 
 import org.apache.rave.portal.model.util.InternationalString;
 
+import java.net.URL;
+
 /**
  * A widget
  */
 public class Widget {
+    private Long id;
     private InternationalString title;
+    private URL url;
+
+    /**
+     * Gets the persistence unique identifier
+     *
+     * @return id The ID of persisted object; null if not persisted
+     */
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public InternationalString getTitle() {
         return title;
@@ -32,5 +49,13 @@ public class Widget {
 
     public void setTitle(InternationalString title) {
         this.title = title;
+    }
+
+    public URL getUrl() {
+        return url;
+    }
+
+    public void setUrl(URL url) {
+        this.url = url;
     }
 }

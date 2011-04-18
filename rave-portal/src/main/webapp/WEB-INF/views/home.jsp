@@ -18,12 +18,28 @@
   
   $Id$
 --%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<jsp:useBean id="pages" type="java.util.List<org.apache.rave.portal.model.Page>" scope="request"/>
 <html>
 <head>
   <title>Rave Home</title>
 </head>
 <body>
-  <h1>Hello Rave!</h1>
-  <iframe src="/gadgets/ifr?url=http://www.labpixies.com/campaigns/todo/todo.xml" width="250" height="250" frameborder="0"></iframe>
+<h1>Hello Rave!</h1>
+<table>
+  <tr>
+    <c:forEach var="region" items="${pages[0].regions}">
+      <td>
+        <c:forEach var="regionWidget" items="${region.regionWidgets}">
+          <c:set var="widget" value="${regionWidget.widget}"/>
+          ${widget.title.defaultLocalizedString.value}
+          <br>
+          <iframe src="/gadgets/ifr?url=${widget.url}&view=home" width="250" height="250" frameborder="0"></iframe>
+          <br><br>
+        </c:forEach>
+      </td>
+    </c:forEach>
+  </tr>
+</table>
 </body>
 </html>

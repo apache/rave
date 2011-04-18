@@ -16,18 +16,28 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.rave.portal.service;
+
+package org.apache.rave.portal.service.impl;
 
 import org.apache.rave.portal.model.Page;
+import org.apache.rave.portal.repository.PageRepository;
+import org.apache.rave.portal.service.PageService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-public interface PageService {
-    /**
-     * Gets all pages for the given user.
-     *
-     * @param userId The user to retrieve pages for.
-     * @return A non null possible empty list of pages for the given user.
-     */
-    List<Page> getAllPages(String userId);
+@Service
+public class DefaultPageService implements PageService {
+    private PageRepository pageRepository;
+
+    @Autowired
+    public DefaultPageService(PageRepository pageRepository) {
+        this.pageRepository = pageRepository;
+    }
+
+    @Override
+    public List<Page> getAllPages(String userId) {
+        return pageRepository.getAllPages(userId);
+    }
 }
