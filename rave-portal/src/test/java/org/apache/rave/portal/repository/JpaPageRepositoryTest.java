@@ -36,7 +36,7 @@ import static org.junit.Assert.assertThat;
  *         Time: 9:13 AM
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations={"classpath:test-context.xml", "file:src/main/webapp/WEB-INF/applicationContext.xml"})
+@ContextConfiguration(locations={"file:src/main/webapp/WEB-INF/dataContext.xml", "file:src/main/webapp/WEB-INF/applicationContext.xml"})
 public class JpaPageRepositoryTest {
 
     private static final String USER_ID = "canonical";

@@ -38,8 +38,7 @@ public class RegionWidget {
     @Basic @Column(name="render_position")
     private String renderPosition;
 
-    @Transient
-    //@Basic @Column(name="collapsed")
+    @Basic @Column(name="collapsed")
     private boolean collapsed;
 
 

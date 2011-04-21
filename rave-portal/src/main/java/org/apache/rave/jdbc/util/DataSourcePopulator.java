@@ -1,0 +1,175 @@
+package org.apache.rave.jdbc.util;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.io.Resource;
+
+import javax.annotation.PostConstruct;
+import javax.persistence.EntityManager;
+import javax.sql.DataSource;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.List;
+
+/**
+ * {@inheritDoc}
+ * <p/>
+ * <p/>
+ * Executes a given set of SQL scripts against a javax.sql.DataSource
+ * <p/>
+ * <p/>
+ * Usage:
+ * <code>
+ *    <bean id="dataSourcePopulator" class="org.apache.rave.jdbc.DataSourcePopulator">
+ *       <property name="executeScriptQuery" value="SELECT * FROM widgets" />
+ *       <property name="scriptLocations" >
+ *          <list>
+ *              <value>file:db/sequences/create_all_seq.sql</value>
+ *              <value>file:db/tables/create_all_tables.sql</value>
+*               <value>classpath:test-data.sql</value>
+ *          </list>
+ *       </property>
+ *    </bean>
+ * </code>
+ * <p/>
+ */
+public class DataSourcePopulator {
+
+    private static Logger logger = LoggerFactory.getLogger(DataSourcePopulator.class);
+
+    protected String executeScriptQuery;
+    protected List<Resource> scriptLocations;
+
+    /**
+     * Creates a new populator initial values for required properties.
+     * <p/>
+     * NOTE: If the populator is initialized using the default constructor, the required properties must be set prior to use
+     */
+    public DataSourcePopulator() {
+    }
+
+    /**
+     * Creates a new populator and sets the properties to the passed in parameters
+     *
+     * @param scriptLocations    {@see setScriptLocations}
+     * @param executeScriptQuery {@see setExecuteScriptQuery}
+     */
+    public DataSourcePopulator(List<Resource> scriptLocations, String executeScriptQuery, DataSource dataSource, EntityManager entityManager) {
+        setScriptLocations(scriptLocations);
+        setExecuteScriptQuery(executeScriptQuery);
+    }
+
+    /**
+     * Optional Property
+     * <p/>
+     * Set the query used to determine whether or not to execute the scripts on initialization
+     *
+     * @param executeScriptQuery the query to execute.  If there are no results of the query, the scripts referenced
+     *                           in setScriptLocations will be executed.  The statement must be a select statement.
+     */
+    public void setExecuteScriptQuery(String executeScriptQuery) {
+        this.executeScriptQuery = executeScriptQuery;
+    }
+
+
+    /**
+     * Required Property
+     * <p/>
+     * Sets the locations of the files containing DDL to be executed against the database
+     * <p/>
+     * NOTE: Files are executed in order
+     *
+     * @param scriptLocations list of {@link org.springframework.core.io.Resource} compatible location strings
+     */
+    public void setScriptLocations(List<Resource> scriptLocations) {
+        this.scriptLocations = scriptLocations;
+    }
+
+    public void initialize(DataSource dataSource) {
+        validateProperties();
+        populateDataSourceIfNecessary(dataSource);
+    }
+
+    /*
+      Helper methods
+    */
+    protected void validateProperties() {
+        if (scriptLocations == null) {
+            throw new IllegalArgumentException("The path to the database schema DDL is required");
+        }
+    }
+
+    protected void populateDataSourceIfNecessary(DataSource dataSource) {
+        Connection conn = null;
+        try {
+            conn = dataSource.getConnection();
+            if (testExecuteScriptQuery(conn, executeScriptQuery)) {
+                logger.debug("Database is empty.  Loading script files");
+                executeScripts(conn, scriptLocations);
+            }
+        } catch (SQLException e) {
+            logger.error("Error querying or populating database", e);
+            throw new RuntimeException(e);
+        } finally {
+            closeConnection(conn);
+        }
+    }
+
+    /*
+      Static Helper methods
+    */
+    protected static void executeScripts(Connection connection, List<Resource> resources) {
+        for (Resource script : resources) {
+            try {
+                String sql = new SqlFileParser(script).getSQL();
+                logger.debug("Executing sql:\n" + sql);
+                executeSql(sql, connection);
+                logger.debug("Successfully executed statement");
+
+            } catch (IOException e) {
+                throw new RuntimeException("File IO Exception while loading " + script.getFilename(), e);
+            } catch (SQLException e) {
+                throw new RuntimeException("SQL exception occurred loading data from " + script.getFilename(), e);
+            }
+        }
+    }
+
+    protected static boolean testExecuteScriptQuery(Connection conn, String executeScriptQuery) {
+        boolean result;
+        try {
+            //If the ResultSet has any rows, the first method will return true
+            result = !executeQuery(conn, executeScriptQuery).first();
+        } catch (SQLException e) {
+            //Only return true if the execption we got is that the table was not found
+            result = e.getMessage().toLowerCase().matches("table \".*\" not found.*\n*.*");
+        }
+        logger.debug("Executed query " + executeScriptQuery + " with result " + result);
+        return result;
+    }
+
+    protected static void closeConnection(Connection conn) {
+        if (conn != null) {
+            try {
+                conn.close();
+            } catch (SQLException e) {
+                logger.error("Error closing connection to database", e);
+            }
+        }
+    }
+
+    protected static ResultSet executeQuery(Connection conn, String executeScriptQuery) throws SQLException {
+        Statement statement = conn.createStatement();
+        return statement.executeQuery(executeScriptQuery);
+    }
+
+
+    protected static void executeSql(String sql, Connection connection) throws SQLException {
+        Statement statement = connection.createStatement();
+        statement.execute(sql);
+    }
+
+
+}

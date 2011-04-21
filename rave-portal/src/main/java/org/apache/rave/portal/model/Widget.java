@@ -35,11 +35,12 @@ public class Widget {
     private Long id;
 
     /*
-        TODO: Figure out what the OpenJPA strategy is for functionality provided by Eclisplink's @Convert
+        TODO 1: Figure out what the OpenJPA strategy is for functionality provided by Eclisplink's @Convert
      */
 
-    @Transient
-    private InternationalString title;
+    @Basic @Column(name="title")
+    private String title;
+    //private InternationalString title;
 
     @Basic @Column(name="url")
     private String url;
@@ -57,11 +58,22 @@ public class Widget {
         this.id = id;
     }
 
-    public InternationalString getTitle() {
+    //See TODO 1
+//    public InternationalString getTitle() {
+//        return title;
+//    }
+//
+//    public void setTitle(InternationalString title) {
+//        this.title = title;
+//
+// }
+
+
+    public String getTitle() {
         return title;
     }
 
-    public void setTitle(InternationalString title) {
+    public void setTitle(String title) {
         this.title = title;
     }
 

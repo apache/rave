@@ -1,4 +1,4 @@
-package org.apache.rave.datasource.util;
+package org.apache.rave.jdbc.util;
 
 import org.springframework.core.io.Resource;
 
@@ -45,7 +45,7 @@ public class SqlFileParser {
     private Resource resource;
 
     /**
-     * Constructor takes a Spring {@link Resource}
+     * Constructor takes a Spring {@link org.springframework.core.io.Resource}
      *
      * @param resource the initial file to parse
      */
@@ -58,7 +58,7 @@ public class SqlFileParser {
      * Gets the executable SQL statements from the resource passed to the constructor and its children
      *
      * @return a valid executable string containing SQL statements
-     * @throws IOException if the resource or its children are not found
+     * @throws java.io.IOException if the resource or its children are not found
      */
     public String getSQL() throws IOException {
         return processResource(resource);

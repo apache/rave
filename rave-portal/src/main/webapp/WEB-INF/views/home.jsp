@@ -32,7 +32,7 @@
       <td>
         <c:forEach var="regionWidget" items="${region.regionWidgets}">
           <c:set var="widget" value="${regionWidget.widget}"/>
-          ${widget.title.defaultLocalizedString.value}
+          ${widget.title}
           <br>
           <iframe src="/gadgets/ifr?url=${widget.url}&view=home" width="250" height="250" frameborder="0"></iframe>
           <br><br>

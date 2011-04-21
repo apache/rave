@@ -33,19 +33,31 @@
         <property name="entityManagerFactory" ref="entityManagerFactory"/>
     </bean>
 
+    <!-- Bean that executes the given set of resources (SQL scripts) in order
+         To remove runtime initialization of initial data, remove this bean and change teh entity manager factory to the default
+         Spring implementation
+    -->
+    <bean id="dataSourcePopulator" class="org.apache.rave.jdbc.util.DataSourcePopulator">
+        <property name="executeScriptQuery" value="SELECT * FROM WIDGETS"/>
+        <property name="scriptLocations">
+            <list>
+                <value>classpath:initial_data.sql</value>
+            </list>
+        </property>
+    </bean>
+
     <bean id="entityManagerFactory"
-          class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+          class="org.apache.rave.orm.jpa.PopulatedLocalContainerEntityManagerFactory">
+        <property name="populator" ref="dataSourcePopulator" />
         <property name="persistenceUnitName" value="ravePersistenceUnit"/>
         <property name="dataSource" ref="dataSource"/>
         <property name="jpaVendorAdapter">
-            <!--<bean class="org.springframework.orm.jpa.vendor.EclipseLinkJpaVendorAdapter" >-->
             <bean class="org.springframework.orm.jpa.vendor.OpenJpaVendorAdapter">
                 <property name="showSql" value="true" />
             </bean>
         </property>
         <property name="jpaPropertyMap">
             <map>
-                <!--<entry key="eclipselink.weaving" value="false"/>-->
                 <entry key="openjpa.Log" value="DefaultLevel=WARN, Runtime=INFO, Tool=INFO, SQL=TRACE"/>
                 <entry key="openjpa.RuntimeUnenhancedClasses" value="unsupported"/>
                 <entry key="openjpa.jdbc.SynchronizeMappings" value="buildSchema(ForeignKeys=true)"/>
