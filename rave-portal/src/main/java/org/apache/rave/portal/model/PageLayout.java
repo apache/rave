@@ -19,12 +19,23 @@
 
 package org.apache.rave.portal.model;
 
+import javax.persistence.*;
+
 /**
  * Represents an organization of regions within a page that is supported by the rendering engine
  */
+@Entity
+@Table(name="page_layout")
+@SequenceGenerator(name="pageLayoutIdSeq", sequenceName = "page_layout_id_seq")
 public class PageLayout {
+    @Id @Column(name="id")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "pageLayoutIdSeq")
     private Long id;
+
+    @Basic @Column(name="code")
     private String code;
+
+    @Basic @Column(name="number_of_regions")
     private Long numberOfRegions;
 
     /**

@@ -29,7 +29,7 @@ public class DefaultUserService implements UserService {
     public Person getAuthenticatedUser() {
         //TODO: Returning mock data until we hook in real authentication
         Person person = new Person();
-        person.setUserId("jcian");
+        person.setUserId("canonical");
         return person;
     }
 }

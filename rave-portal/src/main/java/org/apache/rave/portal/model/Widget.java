@@ -20,15 +20,29 @@ package org.apache.rave.portal.model;
 
 import org.apache.rave.portal.model.util.InternationalString;
 
+import javax.persistence.*;
 import java.net.URL;
 
 /**
  * A widget
  */
+@Entity
+@Table(name="widget")
+@SequenceGenerator(name="widgetIdSeq", sequenceName = "widget_id_seq")
 public class Widget {
+    @Id @Column(name="id")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "widgetIdSeq")
     private Long id;
+
+    /*
+        TODO: Figure out what the OpenJPA strategy is for functionality provided by Eclisplink's @Convert
+     */
+
+    @Transient
     private InternationalString title;
-    private URL url;
+
+    @Basic @Column(name="url")
+    private String url;
 
     /**
      * Gets the persistence unique identifier
@@ -51,11 +65,11 @@ public class Widget {
         this.title = title;
     }
 
-    public URL getUrl() {
+    public String getUrl() {
         return url;
     }
 
-    public void setUrl(URL url) {
+    public void setUrl(String url) {
         this.url = url;
     }
 }

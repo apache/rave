@@ -18,18 +18,41 @@
  */
 package org.apache.rave.portal.model;
 
+import javax.persistence.*;
 import java.util.List;
 
 /**
  * A page, which consists of regions, and which may be owned by a {@link Person} (note the ownership will likely need to
  * become more flexible to enable things like group ownership in the future).
  */
+@Entity
+@Table(name="page")
+@SequenceGenerator(name="pageIdSeq", sequenceName = "page_id_seq")
+@NamedQueries({
+        @NamedQuery(name = "Page.getByUserId", query="SELECT p FROM Page p WHERE p.owner.userId = :userId")
+})
+@Access(AccessType.FIELD)
 public class Page {
+    @Id @Column(name="id")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "pageIdSeq")
     private Long id;
+
+    @Basic @Column(name="name")
     private String name;
+
+    @ManyToOne
+    @JoinColumn(name = "owner_id")
     private Person owner;
+
+    @Basic @Column(name="render_sequence")
     private Long renderSequence;
+
+    @ManyToOne
+    @JoinColumn(name="page_layout_id")
     private PageLayout pageLayout;
+
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name="page_id")
     private List<Region> regions;
 
     /**

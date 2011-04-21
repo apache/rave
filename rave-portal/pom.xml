@@ -23,139 +23,185 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
-  <modelVersion>4.0.0</modelVersion>
+    <modelVersion>4.0.0</modelVersion>
 
-  <parent>
+    <parent>
+        <groupId>org.apache.rave</groupId>
+        <artifactId>rave-project</artifactId>
+        <version>0.1-incubating-SNAPSHOT</version>
+    </parent>
+
     <groupId>org.apache.rave</groupId>
-    <artifactId>rave-project</artifactId>
+    <artifactId>rave-portal</artifactId>
+    <name>Apache Rave :: rave-portal</name>
+    <description>Apache Rave Portal</description>
+    <packaging>war</packaging>
     <version>0.1-incubating-SNAPSHOT</version>
-  </parent>
 
-  <groupId>org.apache.rave</groupId>
-  <artifactId>rave-portal</artifactId>
-  <name>Apache Rave :: rave-portal</name>
-  <description>Apache Rave Portal</description>
-  <packaging>war</packaging>
-  <version>0.1-incubating-SNAPSHOT</version>
-  
-  <properties>
-    <cargo.version>1.1.0-SNAPSHOT</cargo.version>
-    <!-- if you want a remote debugging on a different a address
-         override on command line with -Dcargo.debug.addres=xxxx -->
-    <cargo.debug.address>8000</cargo.debug.address>
-    <!-- if you want to start remote debugging session suspended
-         override on command line with -Dcargo.debug.suspend=y -->
-    <cargo.debug.suspend>n</cargo.debug.suspend>
-    <!-- default empty javaagent
-         if needed you can specify it on the command line with -Djavaagent="..." -->
-    <javaagent></javaagent>
-  </properties>
-  
-  <pluginRepositories>
-    <!-- Temporary codehaus-snapshots repository for cargo 1.1.0-SNAPSHOT plugin -->
-    <pluginRepository>
-      <id>codehaus-snapshots</id>
-      <name>Codehaus SNAPSHOTS</name>
-      <url>http://ci.repository.codehaus.org/</url>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-    </pluginRepository>
-  </pluginRepositories>
-  
-  <dependencies>
-  
-    <dependency>
-      <groupId>org.apache.rave</groupId>
-      <artifactId>rave-shindig</artifactId>
-      <type>war</type>
-      <scope>provided</scope>
-    </dependency>
-  
-    <!-- Spring -->
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-webmvc</artifactId>
-    </dependency>
+    <properties>
+        <cargo.version>1.1.0-SNAPSHOT</cargo.version>
+        <!-- if you want a remote debugging on a different a address
+  override on command line with -Dcargo.debug.addres=xxxx -->
+        <cargo.debug.address>8000</cargo.debug.address>
+        <!-- if you want to start remote debugging session suspended
+  override on command line with -Dcargo.debug.suspend=y -->
+        <cargo.debug.suspend>n</cargo.debug.suspend>
+        <!-- default empty javaagent
+if needed you can specify it on the command line with -Djavaagent="..." -->
+        <javaagent></javaagent>
 
-    <!-- JSTL -->
-    <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>jstl</artifactId>
-    </dependency>
-    
-    <!-- Logging -->
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>jcl-over-slf4j</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-log4j12</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>log4j</groupId>
-      <artifactId>log4j</artifactId>
-    </dependency>
-    
-    <dependency>
-      <groupId>com.ibm.icu</groupId>
-      <artifactId>icu4j</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>commons-lang</groupId>
-      <artifactId>commons-lang</artifactId>
-    </dependency>
-  </dependencies>
+        <com.h2database.version>1.3.154</com.h2database.version>
+    </properties>
 
-  <build>
-    <defaultGoal>install</defaultGoal>
-    <plugins>
-      <plugin>
-        <groupId>org.codehaus.cargo</groupId>
-        <artifactId>cargo-maven2-plugin</artifactId>
-        <version>${cargo.version}</version>
-        <configuration>
-          <wait>true</wait>
-          <configuration>
-            <properties>
-              <cargo.jvmargs>
-                <![CDATA[-Xdebug -Xrunjdwp:transport=dt_socket,address=${cargo.debug.address},server=y,suspend=${cargo.debug.suspend} -noverify ${javaagent}]]>
-              </cargo.jvmargs>
-            </properties>
-            <home>${project.build.directory}/tomcat6x</home>
-            <deployables>
-              <deployable>
-                <groupId>org.apache.rave</groupId>
-                <artifactId>rave-shindig</artifactId>
-                <type>war</type>
-                <properties>
-                  <context>/ROOT</context>
-                </properties>
-              </deployable>
-              <deployable>
-                <groupId>org.apache.rave</groupId>
-                <artifactId>rave-portal</artifactId>
-                <type>war</type>
-                <properties>
-                  <context>/portal</context>
-                </properties>
-              </deployable>
-            </deployables>
-          </configuration>
-          <container>
-            <containerId>tomcat6x</containerId>
-            <zipUrlInstaller>
-              <url>http://archive.apache.org/dist/tomcat/tomcat-6/v6.0.32/bin/apache-tomcat-6.0.32.tar.gz</url>
-            </zipUrlInstaller>
-          </container>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
-  
+    <pluginRepositories>
+        <!-- Temporary codehaus-snapshots repository for cargo 1.1.0-SNAPSHOT plugin -->
+        <pluginRepository>
+            <id>codehaus-snapshots</id>
+            <name>Codehaus SNAPSHOTS</name>
+            <url>http://ci.repository.codehaus.org/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>org.apache.rave</groupId>
+            <artifactId>rave-shindig</artifactId>
+            <type>war</type>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Spring -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-orm</artifactId>
+        </dependency>
+
+
+         <!--Persistence-->
+        <dependency>
+            <groupId>org.apache.openjpa</groupId>
+            <artifactId>openjpa-all</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>${com.h2database.version}</version>
+        </dependency>
+
+        <!-- JSTL -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>jstl</artifactId>
+        </dependency>
+
+        <!-- Logging -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jcl-over-slf4j</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.ibm.icu</groupId>
+            <artifactId>icu4j</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <defaultGoal>install</defaultGoal>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>openjpa-maven-plugin</artifactId>
+                <version>1.2</version>
+                <configuration>
+                    <includes>org/apache/rave/portal/model/*.class</includes>
+                    <addDefaultConstructor>true</addDefaultConstructor>
+                    <!--<enforcePropertyRestrictions>true</enforcePropertyRestrictions>-->
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>enhancer</id>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>enhance</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.cargo</groupId>
+                <artifactId>cargo-maven2-plugin</artifactId>
+                <version>${cargo.version}</version>
+                <configuration>
+                    <wait>true</wait>
+                    <configuration>
+                        <properties>
+                            <cargo.jvmargs>
+                                <![CDATA[-Xdebug -Xrunjdwp:transport=dt_socket,address=${cargo.debug.address},server=y,suspend=${cargo.debug.suspend} -noverify ${javaagent}]]>
+                            </cargo.jvmargs>
+                        </properties>
+                        <home>${project.build.directory}/tomcat6x</home>
+                        <deployables>
+                            <deployable>
+                                <groupId>org.apache.rave</groupId>
+                                <artifactId>rave-shindig</artifactId>
+                                <type>war</type>
+                                <properties>
+                                    <context>/ROOT</context>
+                                </properties>
+                            </deployable>
+                            <deployable>
+                                <groupId>org.apache.rave</groupId>
+                                <artifactId>rave-portal</artifactId>
+                                <type>war</type>
+                                <properties>
+                                    <context>/portal</context>
+                                </properties>
+                            </deployable>
+                        </deployables>
+                    </configuration>
+                    <container>
+                        <containerId>tomcat6x</containerId>
+                        <zipUrlInstaller>
+                            <url>
+                                http://archive.apache.org/dist/tomcat/tomcat-6/v6.0.32/bin/apache-tomcat-6.0.32.tar.gz
+                            </url>
+                        </zipUrlInstaller>
+                    </container>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
 </project>

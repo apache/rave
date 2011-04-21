@@ -23,181 +23,204 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
-  <modelVersion>4.0.0</modelVersion>
+    <modelVersion>4.0.0</modelVersion>
 
-  <parent>
+    <parent>
+        <groupId>org.apache.rave</groupId>
+        <artifactId>rave-master</artifactId>
+        <version>0.1-incubating-SNAPSHOT</version>
+        <relativePath>../rave-master-pom/pom.xml</relativePath>
+    </parent>
+
     <groupId>org.apache.rave</groupId>
-    <artifactId>rave-master</artifactId>
+    <artifactId>rave-project</artifactId>
+    <name>Apache Rave :: rave-project</name>
+    <description>Apache Rave Project</description>
+    <packaging>pom</packaging>
     <version>0.1-incubating-SNAPSHOT</version>
-    <relativePath>../rave-master-pom/pom.xml</relativePath>
-  </parent>
 
-  <groupId>org.apache.rave</groupId>
-  <artifactId>rave-project</artifactId>
-  <name>Apache Rave :: rave-project</name>
-  <description>Apache Rave Project</description>
-  <packaging>pom</packaging>
-  <version>0.1-incubating-SNAPSHOT</version>
-  
-  <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/incubator/rave/trunk</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/incubator/rave/trunk</developerConnection>
-    <url>http://svn.apache.org/viewvc/incubator/rave/trunk/</url>
-  </scm>
-  
-  <properties>
-    <apache.shindig.version>2.0.2</apache.shindig.version>
-    <org.springframework.version>3.0.5.RELEASE</org.springframework.version>
-    <jstl.version>1.2</jstl.version>
-    <javax.servlet.version>2.5</javax.servlet.version>
-    <org.slf4j.version>1.6.1</org.slf4j.version>
-    <log4j.version>1.2.16</log4j.version>
-    <junit.version>4.7</junit.version>
-    <commons-lang.version>2.6</commons-lang.version>
-    <icu4j.version>4.6.1</icu4j.version>
-  </properties>
+    <scm>
+        <connection>scm:svn:http://svn.apache.org/repos/asf/incubator/rave/trunk</connection>
+        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/incubator/rave/trunk</developerConnection>
+        <url>http://svn.apache.org/viewvc/incubator/rave/trunk/</url>
+    </scm>
 
-  <repositories>
-    <repository>
-      <id>java.net</id>
-      <url>http://download.java.net/maven/2/</url>
-    </repository>
-  </repositories>
+    <properties>
+        <apache.shindig.version>2.0.2</apache.shindig.version>
+        <org.springframework.version>3.0.5.RELEASE</org.springframework.version>
+        <jstl.version>1.2</jstl.version>
+        <javax.servlet.version>2.5</javax.servlet.version>
+        <org.slf4j.version>1.6.1</org.slf4j.version>
+        <log4j.version>1.2.16</log4j.version>
+        <junit.version>4.7</junit.version>
+        <commons-lang.version>2.6</commons-lang.version>
+        <icu4j.version>4.6.1</icu4j.version>
+        <easymock.version>3.0</easymock.version>
+        <openjpa-all.version>2.1.0</openjpa-all.version>
+    </properties>
 
-  <!-- Global management of all dependencies -->
-  <dependencyManagement>
+    <repositories>
+        <repository>
+            <id>java.net</id>
+            <url>http://download.java.net/maven/2/</url>
+        </repository>
+    </repositories>
+
+    <!-- Global management of all dependencies -->
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.apache.shindig</groupId>
+                <artifactId>shindig-server</artifactId>
+                <version>${apache.shindig.version}</version>
+                <type>war</type>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-webmvc</artifactId>
+                <version>${org.springframework.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-jdbc</artifactId>
+                <version>${org.springframework.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-orm</artifactId>
+                <version>${org.springframework.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.servlet</groupId>
+                <artifactId>jstl</artifactId>
+                <version>${jstl.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.openjpa</groupId>
+                <artifactId>openjpa-all</artifactId>
+                <version>${openjpa-all.version}</version>
+            </dependency>
+
+            <!-- Logging -->
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${org.slf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>jcl-over-slf4j</artifactId>
+                <version>${org.slf4j.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-log4j12</artifactId>
+                <version>${org.slf4j.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+            <dependency>
+                <groupId>log4j</groupId>
+                <artifactId>log4j</artifactId>
+                <version>${log4j.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+
+            <!-- Language and localization -->
+            <dependency>
+                <groupId>com.ibm.icu</groupId>
+                <artifactId>icu4j</artifactId>
+                <version>${icu4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-lang</groupId>
+                <artifactId>commons-lang</artifactId>
+                <version>${commons-lang.version}</version>
+            </dependency>
+
+            <!-- Rave artifacts -->
+            <dependency>
+                <groupId>org.apache.rave</groupId>
+                <artifactId>rave-shindig</artifactId>
+                <version>${project.version}</version>
+                <type>war</type>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.rave</groupId>
+                <artifactId>rave-portal</artifactId>
+                <version>${project.version}</version>
+                <type>war</type>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
+
+    <!-- Global dependencies (provided or test scope only) -->
     <dependencies>
-      <dependency>
-        <groupId>org.apache.shindig</groupId>
-        <artifactId>shindig-server</artifactId>
-        <version>${apache.shindig.version}</version>
-        <type>war</type>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-webmvc</artifactId>
-        <version>${org.springframework.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>javax.servlet</groupId>
-        <artifactId>jstl</artifactId>
-        <version>${jstl.version}</version>
-      </dependency>
+        <!-- Servlet spec -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>${javax.servlet.version}</version>
+            <scope>provided</scope>
+        </dependency>
 
-      <!-- Logging -->
-      <dependency>
-        <groupId>org.slf4j</groupId>
-        <artifactId>slf4j-api</artifactId>
-        <version>${org.slf4j.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.slf4j</groupId>
-        <artifactId>jcl-over-slf4j</artifactId>
-        <version>${org.slf4j.version}</version>
-        <scope>runtime</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.slf4j</groupId>
-        <artifactId>slf4j-log4j12</artifactId>
-        <version>${org.slf4j.version}</version>
-        <scope>runtime</scope>
-      </dependency>
-      <dependency>
-        <groupId>log4j</groupId>
-        <artifactId>log4j</artifactId>
-        <version>${log4j.version}</version>
-        <scope>runtime</scope>
-      </dependency>
+        <!-- Exclude commons-logging by adding it as a provided dependency -->
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>[1,)</version>
+            <scope>provided</scope>
+        </dependency>
 
-      <!-- Language and localization -->
-      <dependency>
-        <groupId>com.ibm.icu</groupId>
-        <artifactId>icu4j</artifactId>
-        <version>${icu4j.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>commons-lang</groupId>
-        <artifactId>commons-lang</artifactId>
-        <version>${commons-lang.version}</version>
-      </dependency>
-
-      <!-- Rave artifacts -->
-      <dependency>
-        <groupId>org.apache.rave</groupId>
-        <artifactId>rave-shindig</artifactId>
-        <version>${project.version}</version>
-        <type>war</type>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.rave</groupId>
-        <artifactId>rave-portal</artifactId>
-        <version>${project.version}</version>
-        <type>war</type>
-      </dependency>
-
+        <!-- Test -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.easymock</groupId>
+            <artifactId>easymock</artifactId>
+            <version>${easymock.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>${org.springframework.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
-  </dependencyManagement>
 
-  <!-- Global dependencies (provided or test scope only) -->  
-  <dependencies>
-    <!-- Servlet spec -->
-    <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>servlet-api</artifactId>
-      <version>${javax.servlet.version}</version>
-      <scope>provided</scope>
-    </dependency>
-    
-    <!-- Exclude commons-logging by adding it as a provided dependency -->
-    <dependency>
-      <groupId>commons-logging</groupId>
-      <artifactId>commons-logging</artifactId>
-      <version>[1,)</version>
-      <scope>provided</scope>
-    </dependency>
-    
-    <!-- Test -->
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>${junit.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.easymock</groupId>
-      <artifactId>easymock</artifactId>
-      <version>3.0</version>
-      <scope>test</scope>
-    </dependency>
-  </dependencies>
-  
-  <build>
-    <defaultGoal>install</defaultGoal>
+    <build>
+        <defaultGoal>install</defaultGoal>
 
-    <pluginManagement>
-      <plugins>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-compiler-plugin</artifactId>
-          <version>2.3.2</version>
-          <configuration>
-            <source>1.6</source>
-            <target>1.6</target>
-          </configuration>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-war-plugin</artifactId>
-          <version>2.1.1</version>
-        </plugin>
-      </plugins>
-    </pluginManagement>
-    
-  </build>
-  
-  <modules>
-    <module>rave-shindig</module>
-    <module>rave-portal</module>
-  </modules>
-  
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>2.3.2</version>
+                    <configuration>
+                        <source>1.6</source>
+                        <target>1.6</target>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-war-plugin</artifactId>
+                    <version>2.1.1</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
+    </build>
+
+    <modules>
+        <module>rave-shindig</module>
+        <module>rave-portal</module>
+    </modules>
+
 </project>

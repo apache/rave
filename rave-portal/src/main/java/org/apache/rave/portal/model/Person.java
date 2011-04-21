@@ -18,10 +18,17 @@
  */
 package org.apache.rave.portal.model;
 
+import javax.persistence.*;
+
 /**
  * A person
  */
+@Entity
+@Table(name="person")
+@SequenceGenerator(name="personIdSeq", sequenceName = "person_id_seq")
 public class Person {
+    @Id @Column(name="user_id")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "personIdSeq")
     private String userId;
 
     public Person() {

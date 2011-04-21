@@ -18,13 +18,23 @@
  */
 package org.apache.rave.portal.model;
 
+import javax.persistence.*;
 import java.util.List;
 
 /**
  * A region of a page, which can contain widget instances {@link RegionWidget}
  */
+@Entity
+@Table(name="region")
+@SequenceGenerator(name="regionIdSeq", sequenceName = "region_id_seq")
+@Access(AccessType.FIELD)
 public class Region {
+    @Id @Column(name="id")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "regionIdSeq")
     private Long id;
+
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name = "region_id")
     private List<RegionWidget> regionWidgets;
 
     /**

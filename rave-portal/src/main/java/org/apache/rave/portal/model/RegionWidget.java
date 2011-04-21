@@ -18,14 +18,30 @@
  */
 package org.apache.rave.portal.model;
 
+import javax.persistence.*;
+
 /**
  * A widget within a region
  */
+@Entity
+@Table(name="region_widget")
+@SequenceGenerator(name="regionWidgetIdSeq", sequenceName = "region_widget_id_seq")
 public class RegionWidget {
+    @Id @Column(name="id")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "regionWidgetIdSeq")
     private Long id;
+
+    @ManyToOne
+    @JoinColumn(name="widget_id")
     private Widget widget;
+
+    @Basic @Column(name="render_position")
     private String renderPosition;
+
+    @Transient
+    //@Basic @Column(name="collapsed")
     private boolean collapsed;
+
 
     /**
      * Gets the persistence unique identifier
