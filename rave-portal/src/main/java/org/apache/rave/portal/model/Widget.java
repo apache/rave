@@ -18,10 +18,14 @@
  */
 package org.apache.rave.portal.model;
 
-import org.apache.rave.portal.model.util.InternationalString;
-
-import javax.persistence.*;
-import java.net.URL;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 
 /**
  * A widget
