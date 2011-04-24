@@ -27,24 +27,35 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class DefaultUserService implements UserService {
+    private String userId;
+
     @Override
     public Person getAuthenticatedUser() {
         //TODO: Returning random mock data until we hook in real authentication
+        String requestUserId;
         Person person = new Person();
-        String userId;
-        Random random = new Random();
-        switch (random.nextInt(3)) {
-          case 1: 
-            userId = "john.doe";
-            break;
-          case 2: 
-            userId = "jane.doe";
-            break;
-          default:
-            userId = "canonical";
-            break;
+        if (this.userId == null) {
+          Random random = new Random();
+          switch (random.nextInt(3)) {
+            case 1: 
+              requestUserId = "john.doe";
+              break;
+            case 2: 
+              requestUserId = "jane.doe";
+              break;
+            default:
+              requestUserId = "canonical";
+              break;
+          }
+        } else {
+          requestUserId = this.userId;
         }
-        person.setUserId(userId);
+        person.setUserId(requestUserId);
         return person;
+    }
+    
+    @Override
+    public void setAuthenticatedUser(String userId) {
+      this.userId = userId;
     }
 }

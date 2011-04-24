@@ -27,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -52,5 +53,16 @@ public class HomeController {
         List<Page> pages = pageService.getAllPages(user.getUserId());
         model.addAttribute(ModelKeys.PAGES, pages);
         return "home";
+    }
+
+    @RequestMapping(value = "/login")
+    public String getLogin(@RequestParam("userId") String userId, Model model) {
+        // TODO: implement a real login system, currently returning a random user if no "login" has been performed
+        if (userId.equals("canonical") || userId.equals("jane.doe") || userId.equals("john.doe")) {
+          userService.setAuthenticatedUser(userId);
+        } else {
+          model.addAttribute(ModelKeys.ERROR_MESSAGE, "Invalid User ID, using a random user");
+        }
+        return getHome(model);
     }
 }

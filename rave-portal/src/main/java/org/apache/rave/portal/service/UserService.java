@@ -28,4 +28,11 @@ public interface UserService {
      * @return The authenticated user.
      */
     Person getAuthenticatedUser();
+
+    /**
+     * Set the currently authenticated user to the user with a given userId. 
+     * 
+     * @param userId
+     */
+    void setAuthenticatedUser(String userId);
 }
