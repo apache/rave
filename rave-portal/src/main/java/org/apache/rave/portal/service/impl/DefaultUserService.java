@@ -19,6 +19,8 @@
 
 package org.apache.rave.portal.service.impl;
 
+import java.util.Random;
+
 import org.apache.rave.portal.model.Person;
 import org.apache.rave.portal.service.UserService;
 import org.springframework.stereotype.Service;
@@ -27,9 +29,22 @@ import org.springframework.stereotype.Service;
 public class DefaultUserService implements UserService {
     @Override
     public Person getAuthenticatedUser() {
-        //TODO: Returning mock data until we hook in real authentication
+        //TODO: Returning random mock data until we hook in real authentication
         Person person = new Person();
-        person.setUserId("canonical");
+        String userId;
+        Random random = new Random();
+        switch (random.nextInt(3)) {
+          case 1: 
+            userId = "john.doe";
+            break;
+          case 2: 
+            userId = "jane.doe";
+            break;
+          default:
+            userId = "canonical";
+            break;
+        }
+        person.setUserId(userId);
         return person;
     }
 }
