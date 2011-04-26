@@ -26,6 +26,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import java.util.List;
 
 @Repository
@@ -36,8 +37,8 @@ public class JpaPageRepository implements PageRepository {
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<Page> getAllPages(String userId) {
-        Query query = manager.createNamedQuery("Page.getByUserId");
+    public List<Page> getAllPages(Long userId) {
+        TypedQuery<Page> query = manager.createNamedQuery("Page.getByUserId", Page.class);
         query.setParameter("userId", userId);
         return query.getResultList();
     }

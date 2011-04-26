@@ -15,14 +15,26 @@
  -- specific language governing permissions and limitations
  -- under the License.
 
---  --- start person data ---
-insert into person (user_id) values (set(@user_id_1, 'canonical'));
-insert into person (user_id) values (set(@user_id_2, 'john.doe'));
-insert into person (user_id) values (set(@user_id_3, 'jane.doe'));
-insert into person (user_id) values (set(@user_id_4, 'george.doe'));
-insert into person (user_id) values (set(@user_id_5, 'mario.rossi'));
-insert into person (user_id) values (set(@user_id_6, 'maija.m'));
---- end person data ---
+--  --- start user data ---
+insert into user (user_id, username, password, expired, locked, enabled)
+values (set(@user_id_1, next value for user_id_seq), 'canonical', 'canonical', 'N', 'N', 'Y');
+
+insert into user (user_id, username, password, expired, locked, enabled)
+values (set(@user_id_2, next value for user_id_seq), 'john.doe', 'john.doe', 'N', 'N', 'Y');
+
+insert into user (user_id, username, password, expired, locked, enabled)
+values (set(@user_id_3, next value for user_id_seq), 'jane.doe', 'jane.doe', 'N', 'N', 'Y');
+
+insert into user (user_id, username, password, expired, locked, enabled)
+values (set(@user_id_4, next value for user_id_seq), 'george.doe', 'george.doe', 'N', 'N', 'Y');
+
+insert into user (user_id, username, password, expired, locked, enabled)
+values (set(@user_id_5, next value for user_id_seq),'mario.rossi', 'mario.rossi', 'N', 'N', 'Y');
+
+insert into user (user_id, username, password, expired, locked, enabled)
+values (set(@user_id_6, next value for user_id_seq), 'maija.m', 'maija.m', 'N', 'N', 'Y');
+
+--- end user data ---
 
 --- gadget data ---
 -- wikipedia widget

@@ -19,7 +19,7 @@
 package org.apache.rave.portal.web.controller;
 
 import org.apache.rave.portal.model.Page;
-import org.apache.rave.portal.model.Person;
+import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.service.PageService;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.portal.web.util.ModelKeys;
@@ -49,20 +49,9 @@ public class HomeController {
 
     @RequestMapping(value = "/")
     public String getHome(Model model) {
-        Person user = userService.getAuthenticatedUser();
+        User user = userService.getAuthenticatedUser();
         List<Page> pages = pageService.getAllPages(user.getUserId());
         model.addAttribute(ModelKeys.PAGES, pages);
         return "home";
-    }
-
-    @RequestMapping(value = "/login")
-    public String getLogin(@RequestParam("userId") String userId, Model model) {
-        // TODO: implement a real login system, currently returning a random user if no "login" has been performed
-        if (userId.equals("canonical") || userId.equals("jane.doe") || userId.equals("john.doe")) {
-          userService.setAuthenticatedUser(userId);
-        } else {
-          model.addAttribute(ModelKeys.ERROR_MESSAGE, "Invalid User ID, using a random user");
-        }
-        return getHome(model);
     }
 }

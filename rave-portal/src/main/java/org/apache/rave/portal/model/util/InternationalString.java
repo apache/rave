@@ -18,10 +18,10 @@
  */
 package org.apache.rave.portal.model.util;
 
+import org.apache.rave.portal.util.LocalizationUtils;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import org.apache.rave.portal.util.LocalizationUtils;
 
 /**
  * A String that has been internationalized into several Locales. This class is used as a replacement for the String

@@ -19,20 +19,26 @@
 
 package org.apache.rave.portal.service;
 
-import org.apache.rave.portal.model.Person;
+import org.apache.rave.portal.model.User;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
-public interface UserService {
+public interface UserService extends UserDetailsService {
     /**
      * Get the currently authenticated user.
      *
      * @return The authenticated user.
      */
-    Person getAuthenticatedUser();
+    User getAuthenticatedUser();
 
     /**
      * Set the currently authenticated user to the user with a given userId. 
-     * 
-     * @param userId
+     *
+     * @param userId the unique id of the user
      */
-    void setAuthenticatedUser(String userId);
+    void setAuthenticatedUser(long userId);
+
+    /**
+     * Un-sets the currently authenticated user
+     */
+    void clearAuthenticatedUser();
 }

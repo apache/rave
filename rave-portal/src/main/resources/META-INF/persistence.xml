@@ -25,7 +25,7 @@
     		<provider>org.apache.openjpa.persistence.PersistenceProviderImpl</provider>
             <class>org.apache.rave.portal.model.Page</class>
             <class>org.apache.rave.portal.model.Region</class>
-            <class>org.apache.rave.portal.model.Person</class>
+            <class>org.apache.rave.portal.model.User</class>
             <class>org.apache.rave.portal.model.RegionWidget</class>
             <class>org.apache.rave.portal.model.Widget</class>
             <class>org.apache.rave.portal.model.PageLayout</class>

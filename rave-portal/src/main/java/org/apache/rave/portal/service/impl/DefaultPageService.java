@@ -37,7 +37,7 @@ public class DefaultPageService implements PageService {
     }
 
     @Override
-    public List<Page> getAllPages(String userId) {
+    public List<Page> getAllPages(long userId) {
         return pageRepository.getAllPages(userId);
     }
 }

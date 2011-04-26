@@ -29,5 +29,5 @@ public interface PageService {
      * @param userId The user to retrieve pages for.
      * @return A non null possible empty list of pages for the given user.
      */
-    List<Page> getAllPages(String userId);
+    List<Page> getAllPages(long userId);
 }

@@ -22,7 +22,7 @@ import javax.persistence.*;
 import java.util.List;
 
 /**
- * A page, which consists of regions, and which may be owned by a {@link Person} (note the ownership will likely need to
+ * A page, which consists of regions, and which may be owned by a {@link User} (note the ownership will likely need to
  * become more flexible to enable things like group ownership in the future).
  */
 @Entity
@@ -42,7 +42,7 @@ public class Page {
 
     @ManyToOne
     @JoinColumn(name = "owner_id")
-    private Person owner;
+    private User owner;
 
     @Basic @Column(name="render_sequence")
     private Long renderSequence;
@@ -82,15 +82,15 @@ public class Page {
     }
 
     /**
-     * Gets the {@link Person} that owns the page
+     * Gets the {@link User} that owns the page
      *
-     * @return Valid {@link Person}
+     * @return Valid {@link User}
      */
-    public Person getOwner() {
+    public User getOwner() {
         return owner;
     }
 
-    public void setOwner(Person owner) {
+    public void setOwner(User owner) {
         this.owner = owner;
     }
 

@@ -44,7 +44,7 @@ public class PageServiceTest {
 
     @Test
     public void getAllPages() {
-        final String VALID_USER_ID = "jcian";
+        final Long VALID_USER_ID = 1L;
         final List<Page> VALID_PAGES = new ArrayList<Page>();
 
         expect(pageRepository.getAllPages(VALID_USER_ID)).andReturn(VALID_PAGES);

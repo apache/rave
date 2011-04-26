@@ -23,5 +23,5 @@ import org.apache.rave.portal.model.Page;
 import java.util.List;
 
 public interface PageRepository {
-    List<Page> getAllPages(String userId);
+    List<Page> getAllPages(Long userId);
 }

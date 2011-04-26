@@ -18,5 +18,9 @@
  */
 package org.apache.rave.portal.repository;
 
-public interface PersonRepository {
+import org.apache.rave.portal.model.User;
+
+public interface UserRepository {
+    User getById(long userId);
+    User getByUsername(String username);
 }

@@ -20,7 +20,7 @@
 package org.apache.rave.portal.web.controller;
 
 import org.apache.rave.portal.model.Page;
-import org.apache.rave.portal.model.Person;
+import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.service.PageService;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.portal.web.util.ModelKeys;
@@ -50,12 +50,12 @@ public class HomeControllerTest {
 
     @Test
     public void getHome() {
-        final String VALID_USER_ID = "jcian";
+        final Long VALID_USER_ID = 1L;
         final String VALID_VIEW = "home";
         final Model MODEL = new ExtendedModelMap();
         final List<Page> VALID_PAGES = new ArrayList<Page>();
 
-        expect(userService.getAuthenticatedUser()).andReturn(new Person(VALID_USER_ID));
+        expect(userService.getAuthenticatedUser()).andReturn(new User(VALID_USER_ID));
         replay(userService);
 
         expect(pageService.getAllPages(VALID_USER_ID)).andReturn(VALID_PAGES);

@@ -16,9 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.rave.portal.repository;
 
 import org.apache.rave.portal.model.Page;
+import org.apache.rave.portal.model.User;
 import org.hamcrest.CoreMatchers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,36 +30,46 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.List;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations={"file:src/main/webapp/WEB-INF/dataContext.xml", "file:src/main/webapp/WEB-INF/applicationContext.xml"})
-public class JpaPageRepositoryTest {
+public class JpaUserRepositoryTest {
 
     private static final Long USER_ID = 1L;
-    private static final Long INVALID_USER = -1L;
-    private static final String WIDGET_URL = "http://www.google.com/ig/modules/wikipedia.xml";
+    private static final String USER_NAME = "canonical";
+    private static final Long INVALID_USER = -2L;
 
     @Autowired
-    private PageRepository repository;
+    private UserRepository repository;
 
     @Test
-    public void getAllPages_validUser_validPageSet() {
-        List<Page> pages = repository.getAllPages(USER_ID);
-        assertThat(pages, CoreMatchers.notNullValue());
-        assertThat(pages.size(), CoreMatchers.equalTo(1));
-        assertThat(pages.get(0).getRegions().size(), CoreMatchers.equalTo(2));
-        assertThat(pages.get(0).getRegions().get(0).getRegionWidgets().size(), CoreMatchers.equalTo(2));
-        assertThat(pages.get(0).getRegions().get(0).getRegionWidgets().get(0).getWidget().getUrl(), CoreMatchers.equalTo(WIDGET_URL));
+    public void getById_validId() {
+        User user = repository.getById(USER_ID);
+        assertThat(user, CoreMatchers.notNullValue());
+        assertThat(user.getUsername(), is(equalTo(USER_NAME)));
+        assertThat(user.getPassword(), is(equalTo(USER_NAME)));
+        assertThat(user.isAccountNonExpired(), is(true));
     }
     @Test
-    public void getAllPages_invalidUser_emptySet() {
-        List<Page> pages = repository.getAllPages(INVALID_USER);
-        assertThat(pages.isEmpty(), CoreMatchers.is(true));
+    public void getById_invalidId() {
+        User user = repository.getById(INVALID_USER);
+        assertThat(user, is(nullValue()));
     }
     @Test
-    public void getAllPages_nullUser_emptySet() {
-        List<Page> pages = repository.getAllPages(null);
-        assertThat(pages.isEmpty(), CoreMatchers.is(true));
+    public void getByUsername_valid() {
+        User user = repository.getByUsername(USER_NAME);
+        assertThat(user, CoreMatchers.notNullValue());
+        assertThat(user.getUserId(), is(equalTo(USER_ID)));
+        assertThat(user.getPassword(), is(equalTo(USER_NAME)));
+        assertThat(user.isAccountNonExpired(), is(true));
+    }
+    @Test
+    public void getByUsername_invalid() {
+        User user = repository.getById(INVALID_USER);
+        assertThat(user, is(nullValue()));
     }
 }

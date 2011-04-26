@@ -90,6 +90,16 @@ if needed you can specify it on the command line with -Djavaagent="..." -->
             <artifactId>spring-orm</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-config</artifactId>
+        </dependency>
+
 
          <!--Persistence-->
         <dependency>
