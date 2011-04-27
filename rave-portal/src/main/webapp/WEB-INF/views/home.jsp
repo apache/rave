@@ -25,20 +25,7 @@
   <title>Rave Home</title>
 </head>
 <body>
-<h1>Hello ${pages[0].owner.userId}, welcome to Rave!</h1>
-
-<c:if test="${errorMessage != null}">
-   <p class="error">ERROR: ${errorMessage}</p>
-</c:if>
-
-<p>This is very early, alpha quality code. It doesn't do much yet. Note that we don't have authentication right now so
-we are simply selecting a random user each time this page is loaded. Alternatively you can provide a userId request 
-parameter to display a specific user (valid values are "canonical", "jane.doe" and "john.doe").</p>
-
-<form action="login">
-  <label for+"userId">User ID</label><input id="userId" name="userId"/>
-  <input type="submit"/>
-</form>
+<h1>Hello ${pages[0].owner.username}, welcome to Rave!</h1>
 
 <table>
   <tr>
