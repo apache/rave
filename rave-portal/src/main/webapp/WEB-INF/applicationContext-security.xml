@@ -28,9 +28,11 @@
 			    http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.0.xsd">
 
 	<security:http auto-config="true" use-expressions="true" disable-url-rewriting="true">
-		<!-- all urls must be authenticated -->
-		<security:intercept-url pattern="/**"
-			access="isAuthenticated()" />
+	  <!-- all urls must be authenticated -->
+          <security:intercept-url pattern="/**"
+			          access="isAuthenticated()" />
+          <security:form-login/> 
+          <security:logout/>
 	</security:http>
 
 	<security:authentication-manager>

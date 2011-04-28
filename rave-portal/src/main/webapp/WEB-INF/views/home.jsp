@@ -19,12 +19,17 @@
   $Id$
 --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <jsp:useBean id="pages" type="java.util.List<org.apache.rave.portal.model.Page>" scope="request"/>
 <html>
 <head>
   <title>Rave Home</title>
 </head>
 <body>
+<div id="header">
+      <a href="<spring:url value="/j_spring_security_logout" htmlEscape="true" />">Logout</a>
+</div>
+
 <h1>Hello ${pages[0].owner.username}, welcome to Rave!</h1>
 
 <table>
@@ -42,5 +47,7 @@
     </c:forEach>
   </tr>
 </table>
+
+
 </body>
 </html>
