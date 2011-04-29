@@ -75,7 +75,7 @@ public class DataSourcePopulator {
      * @param scriptLocations    {@see setScriptLocations}
      * @param executeScriptQuery {@see setExecuteScriptQuery}
      */
-    public DataSourcePopulator(List<Resource> scriptLocations, String executeScriptQuery, DataSource dataSource, EntityManager entityManager) {
+    public DataSourcePopulator(List<Resource> scriptLocations, String executeScriptQuery) {
         setScriptLocations(scriptLocations);
         setExecuteScriptQuery(executeScriptQuery);
     }

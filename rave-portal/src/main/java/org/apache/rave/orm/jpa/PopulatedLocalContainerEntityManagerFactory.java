@@ -27,10 +27,11 @@ import javax.persistence.spi.PersistenceUnitInfo;
 
 
 /**
+ * {@inheritDoc}
  * Creates a LocalContainerEntityManagerFactoryBean that calls a DataSourcePopulator bean to insert data into the
- * datasource immediately after the factory is initialized
+ * DataSource immediately after the factory is initialized
  */
-public class PopulatedLocalContainerEntityManagerFactory extends LocalContainerEntityManagerFactoryBean{
+public class PopulatedLocalContainerEntityManagerFactory extends LocalContainerEntityManagerFactoryBean {
     private DataSourcePopulator populator;
 
     public PopulatedLocalContainerEntityManagerFactory() {
@@ -41,9 +42,16 @@ public class PopulatedLocalContainerEntityManagerFactory extends LocalContainerE
         this.populator = populator;
     }
 
+    /**
+     * Called after the EntityManagerFactory is initialized and processed.  Delegates to the data populator
+     * any insertion of data into the DataSource
+     *
+     * @param emf the newly created EntityManagerFactory
+     * @param pui the PersistenceUnit that the EntityManagerFactory was initialized for
+     */
     @Override
     protected void postProcessEntityManagerFactory(EntityManagerFactory emf, PersistenceUnitInfo pui) {
-        if(populator != null) {
+        if (populator != null) {
             //Create an entity manager to force initialization of the context and then populate
             emf.createEntityManager().close();
             populator.initialize(this.getDataSource());
