@@ -11,6 +11,10 @@ import java.util.List;
  */
 public class JpaUtil {
     public static <T> T getSingleResult(List<T> list) {
+        if (list == null) {
+            return null;
+        }
+        
         switch(list.size()) {
             case 0:
                 return null;
