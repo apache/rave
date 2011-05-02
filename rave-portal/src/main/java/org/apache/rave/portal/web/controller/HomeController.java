@@ -47,7 +47,7 @@ public class HomeController {
         this.userService = userService;
     }
 
-    @RequestMapping(value = "/")
+    @RequestMapping(value = {"/", "/index.html"})
     public String getHome(Model model) {
         User user = userService.getAuthenticatedUser();
         List<Page> pages = pageService.getAllPages(user.getUserId());
