@@ -38,25 +38,25 @@ values (set(@user_id_6, next value for user_id_seq), 'maija.m', 'maija.m', 'N', 
 
 --- gadget data ---
 -- wikipedia widget
-insert into widget (id, title, url)
-values(set(@wikipedia_widget_id, next value for widget_id_seq), 'Wikipedia','http://www.google.com/ig/modules/wikipedia.xml');
+insert into widget (id, title, url, type)
+values(set(@wikipedia_widget_id, next value for widget_id_seq), 'Wikipedia','http://www.google.com/ig/modules/wikipedia.xml', 'OpenSocial');
 
 -- translate widget
-insert into widget (id, title, url)
-values(set(@translate_widget_id, next value for widget_id_seq), 'Translate Gadget', 'http://www.google.com/ig/modules/dictionary.xml');
+insert into widget (id, title, url, type)
+values(set(@translate_widget_id, next value for widget_id_seq), 'Translate Gadget', 'http://www.google.com/ig/modules/dictionary.xml', 'OpenSocial');
 
 -- nytimes widget
-insert into widget (id, title, url)
-values(set(@nyt_widget_id, next value for widget_id_seq), 'NYTimes.com - Top Stories', 'http://widgets.nytimes.com/packages/html/igoogle/topstories.xml');
+insert into widget (id, title, url, type)
+values(set(@nyt_widget_id, next value for widget_id_seq), 'NYTimes.com - Top Stories', 'http://widgets.nytimes.com/packages/html/igoogle/topstories.xml', 'OpenSocial');
 
 -- google tabbed news widget
-insert into widget (id, title, url)
-values(set(@tabnews_widget_id, next value for widget_id_seq), 'Google News Gadget', 'http://www.gstatic.com/ig/modules/tabnews/tabnews.xml');
+insert into widget (id, title, url, type)
+values(set(@tabnews_widget_id, next value for widget_id_seq), 'Google News Gadget', 'http://www.gstatic.com/ig/modules/tabnews/tabnews.xml', 'OpenSocial');
 -- end widget data ----
 
 -- hamster widget
-insert into widget (id, title, url)
-values(set(@hamster_widget_id, next value for widget_id_seq), 'Pet Hamster', 'http://hosting.gmodules.com/ig/gadgets/file/112581010116074801021/hamster.xml');
+insert into widget (id, title, url, type)
+values(set(@hamster_widget_id, next value for widget_id_seq), 'Pet Hamster', 'http://hosting.gmodules.com/ig/gadgets/file/112581010116074801021/hamster.xml', 'OpenSocial');
 -- end widget data ----
 
 --- start page layout data ---

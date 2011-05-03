@@ -42,6 +42,9 @@ public class Widget {
     @Basic @Column(name="url")
     private String url;
 
+    @Basic @Column(name="type")
+    private String type;
+
     /**
      * Gets the persistence unique identifier
      *
@@ -65,6 +68,13 @@ public class Widget {
 //
 // }
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 
     public String getTitle() {
         return title;

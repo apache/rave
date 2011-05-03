@@ -56,63 +56,22 @@
 </table>
 
 <script src="${opensocial_engine_url}/js/container.js?c=1&container=default&debug=1" type="text/javascript"></script>
+<script src="${pageContext.request.contextPath}/script/rave.js" type="text/javascript"></script>
 <script src="${pageContext.request.contextPath}/script/rave_opensocial.js" type="text/javascript"></script>
 
 <script type="text/javascript">
-    //TODO: Move much of this code out of this page and into the JS namespace Matt created.
-
-    //Create the common container instance.
-    var containerConfig = {};
-    containerConfig[osapi.container.ServiceConfig.API_PATH] = "/rpc";
-    containerConfig[osapi.container.ContainerConfig.RENDER_DEBUG] = "1";
-    var container = new osapi.container.Container(containerConfig);
+    rave.opensocial.init();
 
     //Enumerate all of our regionWidgets and collect up metadata about them.
     var widgets = [];
-    var widgetUrls = [];
     <c:forEach var="region" items="${defaultPage.regions}">
         <c:forEach var="regionWidget" items="${region.regionWidgets}">
-            widgets.push({regionWidgetId: ${regionWidget.id}, widgetUrl: "${regionWidget.widget.url}", userPrefs: {}});
-            widgetUrls.push("${regionWidget.widget.url}");
+            widgets.push({type: '${regionWidget.widget.type}', regionWidgetId: ${regionWidget.id}, widgetUrl: "${regionWidget.widget.url}", userPrefs: {}});
         </c:forEach>
     </c:forEach>
-
-    /**
-     * Tell the common container to pre-load the metadata for all the widgets we're going to ask it to render.  If we
-     * don't do this then when we call navigateGadget for each regionWidget the common container will fetch the metadata
-     * for each one at a time.  We also pass a callback function which will take the metadata retrieved from the preload
-     * so we can get all the default values for userPrefs and pass them along with our navigateGadget call.
-     *
-     * TODO: Prime the common container metadata cache with data we pull from our own persistent store so that we dont have
-     * to have common container fetch metadata on every page render.  See osapi.container.Container.prototype.preloadFromConfig_
-     * function which gets called from the osapi.container.Container constructor to get an idea of how this might be done.
-     *
-     * TODO: Use real userPrefs that we pull from our persistent store instead of the default values pulled from common
-     * containers metadata call.
-     *
-     * TODO: Get real moduleId's based on the regionWidget.id into the iframe URL.  Right now common container uses an
-     * internal counter for the mid parameter value with no external way to set it.
-    */
-    container.preloadGadgets(widgetUrls, function(response) {
-        for (var i = 0; i < widgets.length; i++) {
-            var widget = widgets[i];
-            var widgetMetadata = response[widget.widgetUrl];
-
-            for (var userPref in widgetMetadata.userPrefs) {
-                userPref = widgetMetadata.userPrefs[userPref];
-                widget.userPrefs[userPref.name] = userPref.defaultValue;
-            }
-
-            var renderParams = {};
-            renderParams[osapi.container.RenderParam.VIEW] = "home";
-            renderParams[osapi.container.RenderParam.WIDTH] = 250;
-            renderParams[osapi.container.RenderParam.HEIGHT] = 250;
-            renderParams[osapi.container.RenderParam.USER_PREFS] = widget.userPrefs;
-            var widgetBodyElement = document.getElementById(["widget-", widget.regionWidgetId, "-body"].join(""));
-            var gadgetSite = container.newGadgetSite(widgetBodyElement);
-            container.navigateGadget(gadgetSite , widget.widgetUrl, {}, renderParams);
-        }
-    });
+    //Get a map of widgets keyed by their type
+    var widgetMap = rave.createWidgetMap(widgets);
+    rave.opensocial.initGadgets(widgetMap[rave.opensocial.TYPE]);
 </script>
 
 </body>
