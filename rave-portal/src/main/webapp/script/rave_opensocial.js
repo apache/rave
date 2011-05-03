@@ -25,7 +25,6 @@ rave.opensocial = rave.opensocial || (function() {
     /**
      * Initialization
      */
-
     function initOpenSocial() {
         initContainer();
 
@@ -64,6 +63,7 @@ rave.opensocial = rave.opensocial || (function() {
 
         //break out of the function if there are no OpenSocial gadgets
         if(!gadgets || gadgets.length == 0) return;
+
 
         //Create a list of gadget URLs from the gadget objects
         var gadgetUrls = [];
@@ -112,19 +112,15 @@ rave.opensocial = rave.opensocial || (function() {
     /*
      RPC Callback handlers
      */
-
     /**
      * Resizes the iFrame when gadgets.window.adjustHeight is called
      *
-     * @param height
+     * @param args the RPC event args
      */
-    function resizeIframe(height) {
+    function resizeIframe(args) {
         var max = 0x7FFFFFFF;
-        if (height > max) {
-            height = max;
-        }
-
-        var element = document.getElementById(this.f);
+        var height = args.a > max ? max : args.a;
+        var element = document.getElementById(args.f);
         if (element) {
             element.style.height = height + 'px';
         }
@@ -133,12 +129,12 @@ rave.opensocial = rave.opensocial || (function() {
     /**
      * Sets the chrome title when gadgets.window.setTitle is caled
      *
-     * @param title
+     * @param args RPC event args
      */
-    function setTitle(title) {
-        var element = document.getElementById(this.f + '_title');
+    function setTitle(args) {
+        var element = document.getElementById(args.f + '_title');
         if (element) {
-            element.innerHTML = gadgets.util.escapeString(title);
+            element.innerHTML = gadgets.util.escapeString(args.a);
         }
 
     }

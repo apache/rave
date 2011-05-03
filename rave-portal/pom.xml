@@ -176,12 +176,14 @@ if needed you can specify it on the command line with -Djavaagent="..." -->
                 <executions>
                     <execution>
                         <goals>
+                            <goal>generateManualRunner</goal>
                             <goal>resources</goal>
                             <goal>testResources</goal>
                             <goal>test</goal>
                         </goals>
                         <configuration>
-                            <jsSrcDir>${project.basedir}/src/main/webapp/js</jsSrcDir>
+                            <jsSrcDir>${project.basedir}/src/main/webapp/script/</jsSrcDir>
+                            <debug>true</debug>
                         </configuration>
                     </execution>
                 </executions>
