@@ -56,8 +56,8 @@
 </table>
 
 <script src="${opensocial_engine_url}/js/container.js?c=1&container=default&debug=1" type="text/javascript"></script>
-<script src="${pageContext.request.contextPath}/script/rave.js" type="text/javascript"></script>
-<script src="${pageContext.request.contextPath}/script/rave_opensocial.js" type="text/javascript"></script>
+<script src="<spring:url value="/script/rave.js"/>" type="text/javascript"></script>
+<script src="<spring:url value="/script/rave_opensocial.js"/>" type="text/javascript"></script>
 
 <script type="text/javascript">
     rave.opensocial.init();
