@@ -27,13 +27,7 @@ rave.opensocial = rave.opensocial || (function() {
      */
     function initOpenSocial() {
         initContainer();
-
-        container.rpcRegister('resize_iframe', resizeIframe);
-        container.rpcRegister('set_title', setTitle);
-        container.rpcRegister('requestNavigateTo', requestNavigateTo);
-        //container.rpcRegister('set_pref', null);
-        //container.rpcRegister('pubsub', null);
-
+        registerRpcHooks();
     }
 
     function initContainer() {
@@ -52,6 +46,24 @@ rave.opensocial = rave.opensocial || (function() {
             initContainer();
         }
         return container;
+    }
+
+    /** Resets the current singleton reference while allowing anything with a handle on the
+     *  current singleton to use that instance.
+     */
+    function resetContainer() {
+        container = null;
+    }
+
+    /**
+     * Registers the RPC hooks with the container
+     */
+    function registerRpcHooks() {
+        container.rpcRegister('resize_iframe', resizeIframe);
+        container.rpcRegister('set_title', setTitle);
+        container.rpcRegister('requestNavigateTo', requestNavigateTo);
+        //container.rpcRegister('set_pref', null);
+        //container.rpcRegister('pubsub', null);
     }
 
     /**
@@ -167,7 +179,12 @@ rave.opensocial = rave.opensocial || (function() {
          * Instantiates and renders the given gadgets list
          * @param a list of gadgets to render
          */
-        initGadgets: createGadgetInstances
+        initGadgets: createGadgetInstances,
+
+        /**
+         * Resets the current OpenSocial container
+         */
+        reset: resetContainer
     };
 
 })();
