@@ -47,4 +47,29 @@ describe("Rave", function() {
         });
 
     });
+    
+    describe("getRegionWidgetIdFromDomId", function() {
+
+        it("returns the regionwidgetId from the bodyElementId when the body Id is 3 digits", function() {
+           
+            var id = rave.getRegionWidgetIdFromElementId("widget-203-id");
+            expect(id).toEqual('203');
+        });    
+        it("returns the regionwidgetId from the ElementId when the  Id is 2 digits", function() {
+           
+            var id = rave.getRegionWidgetIdFromElementId("widget-20-id");
+            expect(id).toEqual('20');
+        });    
+        it("returns the regionwidgetId from the ElementId when the  Id is 1 digits", function() {
+           
+            var id = rave.getRegionWidgetIdFromElementId("widget-2-id");
+            expect(id).toEqual('2');
+        });
+
+        it("returns null when the DOM element's id is invalid", function() {
+            var id = rave.getRegionWidgetIdFromElementId("does-not-23");
+            expect(id).toBeNull();
+        });
+
+    });
 });

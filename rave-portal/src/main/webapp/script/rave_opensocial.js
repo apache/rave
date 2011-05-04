@@ -144,7 +144,14 @@ rave.opensocial = rave.opensocial || (function() {
      * @param args RPC event args
      */
     function setTitle(args) {
-        var element = document.getElementById(args.f + '_title');
+
+        //TODO: This implementation relies on parsing of the gadgetHolder's element id
+        //to retrieve the module ID
+        //A patch should be submitted to Shindig's common container code to properly
+        //set the iFrame ID to the module id
+        var bodyId = args.gs.getActiveGadgetHolder().getElement().id;
+        var titleId = "widget-" + rave.getRegionWidgetIdFromElementId(bodyId) + "-title";
+        var element = document.getElementById(titleId);
         if (element) {
             element.innerHTML = gadgets.util.escapeString(args.a);
         }

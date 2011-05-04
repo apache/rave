@@ -34,6 +34,11 @@ var rave = rave || (function(){
         return map;
     }
 
+    function extractRegionWidgetIdFromElementId(elementId) {
+        var tokens = elementId.split("-");
+        return tokens.length > 2 && tokens[0] == "widget" ? tokens[1] : null;
+    }
+
     /**
      * Public API
      */
@@ -43,7 +48,17 @@ var rave = rave || (function(){
          *
          * @param widgets list of widgets to map by type
          */
-        createWidgetMap : mapWidgetsByType
+        createWidgetMap : mapWidgetsByType,
+
+        /**
+         * Parses the given string conforming to a widget's DOM element ID and return
+         * the RegionWidget id
+         *
+         * NOTE: assumes convention of widget-RegionWidgetId-body|title|chrome|etc
+         *
+         * @param elementId the ID of the DOM element containing the widget
+         */
+        getRegionWidgetIdFromElementId : extractRegionWidgetIdFromElementId
     }
 
 })();
