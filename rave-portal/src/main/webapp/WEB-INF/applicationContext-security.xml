@@ -31,7 +31,20 @@
 	  <!-- all urls must be authenticated -->
           <security:intercept-url pattern="/**"
 			          access="isAuthenticated()" />
-          <security:form-login/> 
+           <security:openid-login user-service-ref="userService">
+	        <security:attribute-exchange>
+               	<!-- Supported by MyOpenID.com -->
+				<security:openid-attribute name="firstName" type="http://schema.openid.net/namePerson/first"/>
+				<security:openid-attribute name="lastName" type="http://schema.openid.net/namePerson/last"/>
+				<security:openid-attribute name="email" type="http://schema.openid.net/contact/email" required="true"/>
+				<!-- security:openid-attribute name="language" type="http://schema.openid.net/language/pref"/>
+				<security:openid-attribute name="birthDate" type="http://schema.openid.net/birthDate"/>
+				<security:openid-attribute name="namePerson" type="http://schema.openid.net/namePerson" required="true"/>
+				<security:openid-attribute name="nickname" type="http://schema.openid.net/namePerson/friendly" required="true"/>
+				<security:openid-attribute name="country" type="http://schema.openid.net/contact/country/home"/> 
+				-->
+            </security:attribute-exchange>
+	      </security:openid-login>
           <security:logout/>
 	</security:http>
 
@@ -39,5 +52,4 @@
 		<security:authentication-provider
 			user-service-ref="userService" />
 	</security:authentication-manager>
-
 </beans>

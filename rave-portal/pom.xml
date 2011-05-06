@@ -99,8 +99,18 @@ if needed you can specify it on the command line with -Djavaagent="..." -->
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-config</artifactId>
         </dependency>
-
-
+        <dependency>
+  			<groupId>org.springframework.security</groupId>
+  			<artifactId>spring-security-openid</artifactId>
+  			<version>${org.springframework.version}</version>
+		</dependency>
+		<dependency>
+       		 <groupId>org.openid4java</groupId>
+        	 <artifactId>openid4java-consumer</artifactId>
+        	<version>${org.openid4java.version}</version>
+        	<type>pom</type>
+		</dependency>
+ 		
         <!--Persistence-->
         <dependency>
             <groupId>org.apache.openjpa</groupId>

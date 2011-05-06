@@ -34,6 +34,9 @@ values (set(@user_id_5, next value for user_id_seq),'mario.rossi', 'mario.rossi'
 insert into user (user_id, username, password, expired, locked, enabled)
 values (set(@user_id_6, next value for user_id_seq), 'maija.m', 'maija.m', 'N', 'N', 'Y');
 
+insert into user (user_id, username, password, expired, locked, enabled)
+values (set(@user_id_6, next value for user_id_seq), 'http://rave2011.myopenid.com/', 'unused', 'N', 'N', 'Y');
+
 --- end user data ---
 
 --- gadget data ---
