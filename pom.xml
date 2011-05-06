@@ -57,6 +57,7 @@
         <icu4j.version>4.6.1</icu4j.version>
         <easymock.version>3.0</easymock.version>
         <openjpa-all.version>2.1.0</openjpa-all.version>
+        <org.openid4java.version>0.9.6</org.openid4java.version>
     </properties>
 
     <repositories>
