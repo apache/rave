@@ -10,6 +10,9 @@ import java.util.List;
  *         Time: 10:13 PM
  */
 public class JpaUtil {
+	 //Private constructor for utility classes
+	 public JpaUtil () {;}
+
     public static <T> T getSingleResult(List<T> list) {
         if (list == null) {
             return null;

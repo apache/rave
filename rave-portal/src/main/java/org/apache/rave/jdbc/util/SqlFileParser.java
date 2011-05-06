@@ -93,11 +93,20 @@ public class SqlFileParser {
     }
 
     private void processFile(File file, StringBuilder sql) throws IOException {
-        BufferedReader fileReader = new BufferedReader(new FileReader(file.getAbsoluteFile()));
-        String line = null;
-        while ((line = fileReader.readLine()) != null) {
-            processLine(sql, line);
-        }
+		  BufferedReader fileReader=null;
+		  try {
+				fileReader = new BufferedReader(new FileReader(file.getAbsoluteFile()));
+				String line = null;
+				while ((line = fileReader.readLine()) != null) {
+					 processLine(sql, line);
+				}
+		  }
+		  catch (IOException ioex) {
+				throw (ioex);
+		  }
+		  finally {
+				fileReader.close();
+		  }
     }
 
     private void processLine(StringBuilder sql, String line) throws IOException {

@@ -20,6 +20,9 @@
 package org.apache.rave.portal.web.util;
 
 public class ModelKeys {
+	 //Private, empty constructor for utility class
+	 private ModelKeys () {;}
+
     public final static String PAGES = "pages"; // a list of pages available for the current user
     public final static String ERROR_MESSAGE = "errorMessage"; // an error message to be reported to the user
 }

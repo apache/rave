@@ -36,6 +36,9 @@ import java.util.List;
 public class LocalizationUtils {
     static Logger _logger = LoggerFactory.getLogger(LocalizationUtils.class);
 
+	 //Private, empty constructor for class with only static methods.
+	 private LocalizationUtils() {};
+	 
     /**
      * Returns the first (best) match for an element given the set of locales, or null if there are no suitable
      * elements.
@@ -45,11 +48,13 @@ public class LocalizationUtils {
      * @return a LocalizedString, or null if there are no valid entries
      */
     public static LocalizedString getLocalizedElement(LocalizedString[] elements, String[] locales) {
-        if (elements == null)
+        if (elements == null) {
             return null;
+		  }
         elements = processElementsByLocales(elements, locales);
-        if (elements.length == 0)
+        if (elements.length == 0) {
             return null;
+		  }
         return elements[0];
     }
 
@@ -62,8 +67,9 @@ public class LocalizationUtils {
      * @return the sorted and filtered set of elements
      */
     public static LocalizedString[] processElementsByLocales(LocalizedString[] elements, String[] locales) {
-        if (elements == null)
+        if (elements == null) {
             return null;
+		  }
         List<ULocale> localesList = getProcessedLocaleList(locales);
         Arrays.sort(elements, new LocaleComparator(localesList));
         return filter(elements, localesList);
@@ -76,8 +82,9 @@ public class LocalizationUtils {
      * @return a sorted array of LocalizedString objects
      */
     public static LocalizedString[] processElementsByDefaultLocales(LocalizedString[] elements) {
-        if (elements == null)
+        if (elements == null) {
             return null;
+		  }
         List<ULocale> localesList = getDefaultLocaleList();
         Arrays.sort(elements, new LocaleComparator(localesList));
         return filter(elements, localesList);
@@ -96,27 +103,34 @@ public class LocalizationUtils {
 
         public int compare(LocalizedString o1, LocalizedString o2) {
             // check non-localized values for comparison
-            if (o1.getLang() != null && o2.getLang() == null)
+            if (o1.getLang() != null && o2.getLang() == null) {
                 return -1;
-            if (o1.getLang() == null && o2.getLang() != null)
+				}
+            if (o1.getLang() == null && o2.getLang() != null) {
                 return 1;
-            if (o1.getLang() == null && o2.getLang() == null)
+				}
+            if (o1.getLang() == null && o2.getLang() == null) {
                 return 0;
+				}
 
             // get index position of locales
             int o1i = -1;
             int o2i = -1;
             for (int i = 0; i < locales.size(); i++) {
-                if (o1.getLang().equalsIgnoreCase(locales.get(i).toLanguageTag()))
+                if (o1.getLang().equalsIgnoreCase(locales.get(i).toLanguageTag())) {
                     o1i = i;
-                if (o2.getLang().equalsIgnoreCase(locales.get(i).toLanguageTag()))
+					 }
+                if (o2.getLang().equalsIgnoreCase(locales.get(i).toLanguageTag())) {
                     o2i = i;
+					 }
             }
             // put non-matched after matched
-            if (o1i == -1 && o2i > -1)
+            if (o1i == -1 && o2i > -1) {
                 return 1;
-            if (o1i > -1 && o2i == -1)
+				}
+            if (o1i > -1 && o2i == -1) {
                 return -1;
+				}
 
             // order by match
             return o1i - o2i;
@@ -207,13 +221,16 @@ public class LocalizationUtils {
     public static boolean isValidLanguageTag(String tag) {
         try {
             ULocale locale = ULocale.forLanguageTag(tag);
-            if (locale.toLanguageTag() == null)
+            if (locale.toLanguageTag() == null) {
                 return false;
+				}
             // We don't accept "x" extensions (private use tags)
-            if (locale.getExtension("x".charAt(0)) != null)
+            if (locale.getExtension("x".charAt(0)) != null) {
                 return false;
-            if (!locale.toLanguageTag().equalsIgnoreCase(tag))
+				}
+            if (!locale.toLanguageTag().equalsIgnoreCase(tag)) {
                 return false;
+				}
             return true;
         } catch (Exception e) {
             return false;
