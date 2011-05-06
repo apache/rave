@@ -66,7 +66,9 @@ To build from source code:
 
 To run a local Tomcat instance with rave-shindig and rave-portal deployed:
 
-  - navigate to the rave-portal subdirectory and invoke:
+  - from the top-level rave directory, use the command
+      $mvn cargo:start -f rave-portal/pom.xml
+  - alternatively, navigate to the rave-portal subdirectory and invoke:
       $mvn cargo:start
   - open url http://localhost:8080/ in a browser
   - press Ctrl-C in the console to stop Tomcat again
