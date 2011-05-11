@@ -58,6 +58,7 @@
 <script src="${opensocial_engine_url}/js/container.js?c=1&container=default&debug=1" type="text/javascript"></script>
 <script src="<spring:url value="/script/rave.js"/>" type="text/javascript"></script>
 <script src="<spring:url value="/script/rave_opensocial.js"/>" type="text/javascript"></script>
+<script src="<spring:url value="/script/rave_wookie.js"/>" type="text/javascript"></script>
 
 <script type="text/javascript">
     rave.opensocial.init();
@@ -72,6 +73,7 @@
     //Get a map of widgets keyed by their type
     var widgetMap = rave.createWidgetMap(widgets);
     rave.opensocial.initGadgets(widgetMap[rave.opensocial.TYPE]);
+    rave.wookie.initWidgets(widgetMap[rave.wookie.TYPE]);
 </script>
 
 </body>
