@@ -23,6 +23,7 @@ import org.apache.rave.portal.model.Page;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.service.PageService;
 import org.apache.rave.portal.service.UserService;
+import org.apache.rave.portal.service.WidgetService;
 import org.apache.rave.portal.web.util.ModelKeys;
 import org.hamcrest.CoreMatchers;
 import org.junit.Before;
@@ -39,13 +40,15 @@ import static org.junit.Assert.assertThat;
 public class HomeControllerTest {
     private UserService userService;
     private PageService pageService;
+    private WidgetService widgetService;
     private HomeController homeController;
 
     @Before
     public void setup() {
         userService = createNiceMock(UserService.class);
         pageService = createNiceMock(PageService.class);
-        homeController = new HomeController(pageService, userService);
+        widgetService = createNiceMock(WidgetService.class);
+        homeController = new HomeController(pageService, userService, widgetService);
     }
 
     @Test
