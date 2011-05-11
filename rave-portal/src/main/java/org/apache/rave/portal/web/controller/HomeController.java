@@ -19,9 +19,12 @@
 package org.apache.rave.portal.web.controller;
 
 import org.apache.rave.portal.model.Page;
+import org.apache.rave.portal.model.Region;
+import org.apache.rave.portal.model.RegionWidget;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.service.PageService;
 import org.apache.rave.portal.service.UserService;
+import org.apache.rave.portal.service.WidgetService;
 import org.apache.rave.portal.web.util.ModelKeys;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -40,17 +43,26 @@ import java.util.List;
 public class HomeController {
     private PageService pageService;
     private UserService userService;
+    private WidgetService widgetService;
 
     @Autowired
-    public HomeController(PageService pageService, UserService userService) {
+    public HomeController(PageService pageService, UserService userService, WidgetService widgetService) {
         this.pageService = pageService;
         this.userService = userService;
+        this.widgetService = widgetService;
     }
 
     @RequestMapping(value = {"/", "/index.html"})
     public String getHome(Model model) {
         User user = userService.getAuthenticatedUser();
         List<Page> pages = pageService.getAllPages(user.getUserId());
+        for (Page page: pages){
+            for (Region region: page.getRegions()){
+                for (RegionWidget regionWidget: region.getRegionWidgets()){
+                    regionWidget.setWidget(widgetService.getWidget(user, regionWidget.getId().toString(), regionWidget.getWidget()));
+                }
+            }
+        }
         model.addAttribute(ModelKeys.PAGES, pages);
         return "home";
     }

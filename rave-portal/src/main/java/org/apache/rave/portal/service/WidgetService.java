@@ -18,5 +18,18 @@
  */
 package org.apache.rave.portal.service;
 
+import org.apache.rave.portal.model.User;
+import org.apache.rave.portal.model.Widget;
+
 public interface WidgetService {
+    
+    /**
+     * Gets the object that represents the metadata about the widget for 
+     * the viewer in the current context
+     * @param viewer the current logged in user
+     * @param context the context identifier for where the widget is displayed (e.g. regionwidget id)
+     * @param widget the default widget
+     * @return valid widget
+     */
+    Widget getWidget(User viewer, String context, Widget widget);
 }
