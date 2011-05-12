@@ -17,22 +17,21 @@
   under the License.
   
   $Id$
+--%>
 
---%><%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %><%--
---%><%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %><%--
---%><%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %><%--
---%><jsp:useBean id="pages" type="java.util.List<org.apache.rave.portal.model.Page>" scope="request"/><%--
---%><fmt:setBundle basename="portal" var="portal"/><%--
---%><fmt:message bundle="${portal}" key="portal.opensocial_engine.protocol" var="osProtocol"/><%--
---%><fmt:message bundle="${portal}" key="portal.opensocial_engine.root" var="osRoot"/><%--
---%><fmt:message bundle="${portal}" key="portal.opensocial_engine.gadget_path" var="osGadget"/><%--
---%><c:set var="opensocial_engine_url" value="${osProtocol}://${osRoot}${osGadget}"/>
-<html>
-<head>
-    <title>Rave Home</title>
-</head>
-<body>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib tagdir="/WEB-INF/tags" prefix="rave"%>
 
+<jsp:useBean id="pages" type="java.util.List<org.apache.rave.portal.model.Page>" scope="request"/>
+<fmt:setBundle basename="portal" var="portal"/>
+<fmt:message bundle="${portal}" key="portal.opensocial_engine.protocol" var="osProtocol"/>
+<fmt:message bundle="${portal}" key="portal.opensocial_engine.root" var="osRoot"/>
+<fmt:message bundle="${portal}" key="portal.opensocial_engine.gadget_path" var="osGadget"/>
+<c:set var="opensocial_engine_url" value="${osProtocol}://${osRoot}${osGadget}"/>
+
+<rave:rave_generic_page>
 <div id="header">
     <a href="<spring:url value="/j_spring_security_logout" htmlEscape="true" />">Logout</a>
 </div>
@@ -76,5 +75,4 @@
     rave.wookie.initWidgets(widgetMap[rave.wookie.TYPE]);
 </script>
 
-</body>
-</html>
+</rave:rave_generic_page>
