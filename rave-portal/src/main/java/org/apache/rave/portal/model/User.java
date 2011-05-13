@@ -131,6 +131,7 @@ public class User implements UserDetails {
      *
      * @return <code>true</code> if the user's is not expired valid (ie non-expired), <code>false</code> if no longer valid
      */
+    //REVIEW NOTE: Conflating Account and Credential (non)expiration seems likely to cause confusion at some point. 
     @Override
     public boolean isAccountNonExpired() {
         return isCredentialsNonExpired();

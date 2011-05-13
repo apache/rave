@@ -75,7 +75,6 @@ public class UserServiceTest {
         User result = service.getAuthenticatedUser();
 
         assertThat(result, is(sameInstance(authUser)));
-
     }
 
     @Test(expected = SecurityException.class)

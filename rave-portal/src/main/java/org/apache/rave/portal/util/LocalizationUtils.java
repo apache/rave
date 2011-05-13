@@ -17,9 +17,11 @@
  * under the License.
  */
 package org.apache.rave.portal.util;
-
+//REVIEW NOTE: these may be replaceable with Java 7
+//classes.
 import com.ibm.icu.util.GlobalizationPreferences;
 import com.ibm.icu.util.ULocale;
+
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.rave.portal.model.util.LocalizedString;
 import org.slf4j.Logger;
@@ -78,6 +80,7 @@ public class LocalizationUtils {
     /**
      * Sorts an array of localized elements using default locales (*). This places any localized elements first, then
      * any unlocalized elements
+     * REVIEW COMMMENT: Actually, it appears to filter out anything not in the local list.
      * 
      * @return a sorted array of LocalizedString objects
      */
