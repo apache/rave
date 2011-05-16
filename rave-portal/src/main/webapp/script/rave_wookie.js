@@ -22,7 +22,6 @@ rave.wookie = rave.wookie || (function() {
     var WIDGET_TYPE = "W3C";
 
     function createWidgets(widgets){
-        alert("Wookieeee!");
         if(!widgets || widgets.length == 0) return;
         
         for(var i = 0; i < widgets.length; i++){
