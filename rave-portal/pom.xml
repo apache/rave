@@ -39,7 +39,7 @@
     <version>0.1-incubating-SNAPSHOT</version>
 
     <properties>
-        <cargo.version>1.1.0-SNAPSHOT</cargo.version>
+        <cargo.version>1.1.0</cargo.version>
         <!-- if you want a remote debugging on a different a address
   override on command line with -Dcargo.debug.addres=xxxx -->
         <cargo.debug.address>8000</cargo.debug.address>
