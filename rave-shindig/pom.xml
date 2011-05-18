@@ -38,13 +38,56 @@
   <packaging>war</packaging>
   <version>0.1-incubating-SNAPSHOT</version>
   
+ 	<properties>
+ 		<com.h2database.version>1.3.154</com.h2database.version>
+ 	</properties>
+
   <dependencies>
     <dependency>
       <groupId>org.apache.shindig</groupId>
       <artifactId>shindig-server</artifactId>
       <type>war</type>
     </dependency>
-  </dependencies>
+ 		
+ 		<dependency>
+ 			<groupId>com.h2database</groupId>
+ 			<artifactId>h2</artifactId>
+ 			<version>${com.h2database.version}</version>
+ 		</dependency>
+ 
+ 		<dependency>
+ 			<groupId>org.apache.openjpa</groupId>
+ 			<artifactId>openjpa-all</artifactId>
+ 		</dependency>
+ 
+ 		<dependency>
+ 			<groupId>org.apache.shindig</groupId>
+ 			<artifactId>shindig-social-api</artifactId>
+ 		</dependency>
+ 		
+ 		<dependency>
+      <groupId>org.apache.shindig</groupId>
+      <artifactId>shindig-social-api</artifactId>
+      <type>test-jar</type>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.shindig</groupId>
+      <artifactId>shindig-common</artifactId>
+      <type>test-jar</type>
+    </dependency>
+    
+    <dependency>
+      <groupId>org.apache.shindig</groupId>
+      <artifactId>shindig-gadgets</artifactId>
+    </dependency>
+    
+    <dependency>
+       <groupId>xmlunit</groupId>
+       <artifactId>xmlunit</artifactId>
+       <version>1.3</version>
+       <scope>test</scope>
+    </dependency>
+   </dependencies>
   
   <build>
     <defaultGoal>install</defaultGoal>

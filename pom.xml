@@ -58,6 +58,8 @@
         <easymock.version>3.0</easymock.version>
         <openjpa-all.version>2.1.0</openjpa-all.version>
         <org.openid4java.version>0.9.6</org.openid4java.version>
+        <jersey-server.version>1.6</jersey-server.version>
+        <jersey-spring.version>1.0</jersey-spring.version>
     </properties>
 
     <repositories>
@@ -75,6 +77,31 @@
                 <artifactId>shindig-server</artifactId>
                 <version>${apache.shindig.version}</version>
                 <type>war</type>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.shindig</groupId>
+                <artifactId>shindig-social-api</artifactId>
+                <version>${apache.shindig.version}</version>
+            </dependency>
+            <dependency>
+              <groupId>org.apache.shindig</groupId>
+              <artifactId>shindig-social-api</artifactId>
+              <type>test-jar</type>
+              <scope>test</scope>
+              <version>${apache.shindig.version}</version>
+            </dependency>
+            <dependency>
+              <groupId>org.apache.shindig</groupId>
+              <artifactId>shindig-common</artifactId>
+              <type>test-jar</type>
+              <scope>test</scope>
+              <version>${apache.shindig.version}</version>
+            </dependency>
+            <dependency>
+              <groupId>org.apache.shindig</groupId>
+              <artifactId>shindig-gadgets</artifactId>
+              <scope>test</scope>
+              <version>${apache.shindig.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
@@ -112,6 +139,40 @@
                 <version>${openjpa-all.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>com.sun.jersey</groupId>
+                <artifactId>jersey-spring</artifactId>
+                <version>${jersey-spring.version}</version>
+                <exclusions>
+                  <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring</artifactId>
+                  </exclusion>
+                  <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-core</artifactId>
+                  </exclusion>
+                  <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-web</artifactId>
+                  </exclusion>
+                  <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-beans</artifactId>
+                  </exclusion>
+                  <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-context</artifactId>
+                  </exclusion>
+                </exclusions>
+            </dependency>
+
+            <dependency>
+                <groupId>com.sun.jersey</groupId>
+                <artifactId>jersey-server</artifactId>
+                <version>${jersey-server.version}</version>
+            </dependency>
+  
             <!-- Logging -->
             <dependency>
                 <groupId>org.slf4j</groupId>
@@ -176,6 +237,19 @@
             <scope>provided</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>el-api</artifactId>
+            <version>[1,)</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>jasper-el</artifactId>
+            <version>[1,)</version>
+            <scope>provided</scope>
+        </dependency>
+                
         <!-- Exclude commons-logging by adding it as a provided dependency -->
         <dependency>
             <groupId>commons-logging</groupId>

@@ -66,7 +66,6 @@ if needed you can specify it on the command line with -Djavaagent="..." -->
     </pluginRepositories>
 
     <dependencies>
-
         <dependency>
             <groupId>org.apache.rave</groupId>
             <artifactId>rave-shindig</artifactId>
@@ -100,17 +99,17 @@ if needed you can specify it on the command line with -Djavaagent="..." -->
             <artifactId>spring-security-config</artifactId>
         </dependency>
         <dependency>
-  			<groupId>org.springframework.security</groupId>
-  			<artifactId>spring-security-openid</artifactId>
-  			<version>${org.springframework.version}</version>
-		</dependency>
-		<dependency>
-       		 <groupId>org.openid4java</groupId>
-        	 <artifactId>openid4java-consumer</artifactId>
-        	<version>${org.openid4java.version}</version>
-        	<type>pom</type>
-		</dependency>
- 		
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-openid</artifactId>
+            <version>${org.springframework.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>org.openid4java</groupId>
+          <artifactId>openid4java-consumer</artifactId>
+          <version>${org.openid4java.version}</version>
+          <type>pom</type>
+        </dependency>
+
         <!--Persistence-->
         <dependency>
             <groupId>org.apache.openjpa</groupId>
@@ -122,7 +121,7 @@ if needed you can specify it on the command line with -Djavaagent="..." -->
             <artifactId>h2</artifactId>
             <version>${com.h2database.version}</version>
         </dependency>
-
+        
         <!-- JSTL -->
         <dependency>
             <groupId>javax.servlet</groupId>
@@ -158,8 +157,8 @@ if needed you can specify it on the command line with -Djavaagent="..." -->
     </dependencies>
 
     <build>
-        <defaultGoal>install</defaultGoal>
-        <plugins>
+       <defaultGoal>install</defaultGoal>
+       <plugins>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>openjpa-maven-plugin</artifactId>
