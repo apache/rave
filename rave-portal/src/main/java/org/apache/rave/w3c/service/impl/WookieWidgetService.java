@@ -16,9 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.rave.portal.service.impl;
-
-import java.io.IOException;
+package org.apache.rave.w3c.service.impl;
 
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.Widget;
@@ -29,7 +27,7 @@ import org.apache.rave.portal.service.WidgetService;
 import org.springframework.stereotype.Service;
 
 @Service
-public class DefaultWidgetService implements WidgetService {
+public class WookieWidgetService implements WidgetService {
 	
 	// TODO uncomment when Wookie Connector is available in Maven
     
@@ -37,7 +35,7 @@ public class DefaultWidgetService implements WidgetService {
     private static final String WOOKIE_API_KEY = "TEST"; 
     //private static WookieConnectorService  connectorService;
     
-    public DefaultWidgetService(){   
+    public WookieWidgetService(){
     }
 
     /* (non-Javadoc)

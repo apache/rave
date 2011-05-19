@@ -44,8 +44,9 @@ public class RenderServiceIntegrationTest {
 
     @Test
     public void supportedWidgets() {
-        assertThat(service.getSupportedWidgetTypes().size(), is(equalTo(1)));
+        assertThat(service.getSupportedWidgetTypes().size(), is(equalTo(2)));
         assertThat(service.getSupportedWidgetTypes().contains("OpenSocial"), is(true));
+        assertThat(service.getSupportedWidgetTypes().contains("W3C"), is(true));
     }
 
     @Test

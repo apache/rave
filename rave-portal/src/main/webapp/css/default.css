@@ -98,6 +98,7 @@ h1,h2,h3,h4,h5,h6 {
 
 .widget {
     border: #777 solid 1px;
+    padding: 2px;
 }
 
 #navigation {

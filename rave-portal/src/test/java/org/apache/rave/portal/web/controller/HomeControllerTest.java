@@ -40,15 +40,13 @@ import static org.junit.Assert.assertThat;
 public class HomeControllerTest {
     private UserService userService;
     private PageService pageService;
-    private WidgetService widgetService;
     private HomeController homeController;
 
     @Before
     public void setup() {
         userService = createNiceMock(UserService.class);
         pageService = createNiceMock(PageService.class);
-        widgetService = createNiceMock(WidgetService.class);
-        homeController = new HomeController(pageService, userService, widgetService);
+        homeController = new HomeController(pageService, userService);
     }
 
     @Test

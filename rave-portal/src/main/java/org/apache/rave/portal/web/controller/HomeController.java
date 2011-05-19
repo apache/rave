@@ -30,7 +30,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -43,26 +42,17 @@ import java.util.List;
 public class HomeController {
     private PageService pageService;
     private UserService userService;
-    private WidgetService widgetService;
 
     @Autowired
-    public HomeController(PageService pageService, UserService userService, WidgetService widgetService) {
+    public HomeController(PageService pageService, UserService userService) {
         this.pageService = pageService;
         this.userService = userService;
-        this.widgetService = widgetService;
     }
 
     @RequestMapping(value = {"/", "/index.html"})
     public String getHome(Model model) {
         User user = userService.getAuthenticatedUser();
         List<Page> pages = pageService.getAllPages(user.getUserId());
-        for (Page page: pages){
-            for (Region region: page.getRegions()){
-                for (RegionWidget regionWidget: region.getRegionWidgets()){
-                    regionWidget.setWidget(widgetService.getWidget(user, regionWidget.getId().toString(), regionWidget.getWidget()));
-                }
-            }
-        }
         model.addAttribute(ModelKeys.PAGES, pages);
         return "home";
     }
