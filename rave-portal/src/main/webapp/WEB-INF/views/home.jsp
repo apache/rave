@@ -17,22 +17,21 @@
   under the License.
   
   $Id$
---%>
 
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ taglib prefix="portal" uri="http://www.apache.org/rave/tags" %>
-<%@ taglib tagdir="/WEB-INF/tags" prefix="rave"%>
+--%><%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %><%--
+--%><%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %><%--
+--%><%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %><%--
+--%><%@ taglib prefix="portal" uri="http://www.apache.org/rave/tags" %><%--
+--%><%@ taglib tagdir="/WEB-INF/tags" prefix="rave"%><%--
 
-<jsp:useBean id="pages" type="java.util.List<org.apache.rave.portal.model.Page>" scope="request"/>
-<fmt:setBundle basename="portal" var="portal"/>
-<fmt:message bundle="${portal}" key="portal.opensocial_engine.protocol" var="osProtocol"/>
-<fmt:message bundle="${portal}" key="portal.opensocial_engine.root" var="osRoot"/>
-<fmt:message bundle="${portal}" key="portal.opensocial_engine.gadget_path" var="osGadget"/>
-<c:set var="opensocial_engine_url" value="${osProtocol}://${osRoot}${osGadget}"/>
+--%><jsp:useBean id="pages" type="java.util.List<org.apache.rave.portal.model.Page>" scope="request"/><%--
+--%><fmt:setBundle basename="portal" var="portal"/><%--
+--%><fmt:message bundle="${portal}" key="portal.opensocial_engine.protocol" var="osProtocol"/><%--
+--%><fmt:message bundle="${portal}" key="portal.opensocial_engine.root" var="osRoot"/><%--
+--%><fmt:message bundle="${portal}" key="portal.opensocial_engine.gadget_path" var="osGadget"/><%--
+--%><c:set var="opensocial_engine_url" value="${osProtocol}://${osRoot}${osGadget}"/><%--
 
-<rave:rave_generic_page>
+--%><rave:rave_generic_page>
 <div id="header">
     <a href="<spring:url value="/j_spring_security_logout" htmlEscape="true" />">Logout</a>
 </div>
@@ -63,12 +62,15 @@
 <script src="<spring:url value="/script/rave.js"/>" type="text/javascript"></script>
 <script src="<spring:url value="/script/rave_opensocial.js"/>" type="text/javascript"></script>
 <script src="<spring:url value="/script/rave_wookie.js"/>" type="text/javascript"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js" type="text/javascript"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js" type="text/javascript"></script>
 
 <script type="text/javascript">
-    rave.initProviders();
-    //Get a map of widgets keyed by their type
-    rave.initWidgets(rave.createWidgetMap(widgets));
-    rave.initDragAndDrop();
+    $(function(){
+        rave.initProviders();
+        //Get a map of widgets keyed by their type
+        rave.initWidgets(rave.createWidgetMap(widgets));
+        rave.initDragAndDrop();
+    });
 </script>
-
 </rave:rave_generic_page>

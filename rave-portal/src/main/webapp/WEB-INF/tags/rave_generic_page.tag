@@ -10,8 +10,9 @@ This tag will provide simple template layouts for pages that use it. See for exa
 <html>
   <head>
      <title>Rave Home</title>
+     <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/themes/base/jquery-ui.css"/>
      <link rel="stylesheet" href="css/default.css"/>
-  </head>		  
+  </head>
   <body>
 	<jsp:doBody/>
   </body>

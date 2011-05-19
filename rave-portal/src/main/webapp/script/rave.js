@@ -16,29 +16,69 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-var rave = rave || (function(){
+var rave = rave || (function() {
     var providerList = [];
 
     function initializeProviders() {
-        for(var i=0; i<providerList.length;i++) {
+        for (var i = 0; i < providerList.length; i++) {
             providerList[i].init();
         }
     }
 
     function initializeDragAndDrop() {
+        $(".region").disableSelection();
+        // initialize the sortable regions
+        $(".region").sortable({
+            connectWith: '.region', // defines which regions are dnd-able
+            scroll: true, // don't scroll the window if the user goes outside the areas
+            opacity: 0.5, // the opacity of the object being dragged
+            revert: true, // smooth snap animation
+            cursor: 'move', // the cursor to show while dnd
+            handle: '.widget-title-bar', // the draggable handle
+            forcePlaceholderSize: true, // size the placeholder to the size of the gadget
+            start: function(event, ui) {
+                // highlight the draggable regions
+                $(".region").addClass("region-dragging");
 
+                //for every drag operation, create an overlay for each iframe
+                //to prevent the iframe from intercepting mouse events
+                //which kills drag performance
+                $(".widget").each(function(index, element) {
+                    // create the iframe overlay and size it to the iframe it will be covering
+                    var overlay = $('<div></div>');
+                    var jqElm = $(element);
+                    var styleMap = {
+                        position: "absolute",
+                        height : jqElm.height(),
+                        width : jqElm.width(),
+                        opacity : 0.7,
+                        background : "#FFFFFF"
+                    };
+
+                    // style it and give it the marker class
+                    $(overlay).css(styleMap);
+                    $(overlay).addClass("dnd-overlay");
+                    // add it to the dom before the iframe so it covers it
+                    jqElm.prepend(overlay[0]);
+                });
+            },
+            stop : function(event, ui) {
+                $(".dnd-overlay").remove();
+                $(".region-dragging").removeClass("region-dragging");
+            }
+        });
     }
 
     function initializeWidgets(widgets) {
         //Initialize the widgets for supported providers
-        for(var i=0; i<providerList.length;i++) {
+        for (var i = 0; i < providerList.length; i++) {
             var provider = providerList[i];
             provider.initWidgets(widgets[provider.TYPE]);
         }
     }
 
     function addProviderToList(provider) {
-        if(provider.hasOwnProperty("init")) {
+        if (provider.hasOwnProperty("init")) {
             providerList.push(provider);
         } else {
             throw "Attempted to register invalid provider";
@@ -47,13 +87,13 @@ var rave = rave || (function(){
 
     function mapWidgetsByType(widgets) {
         var map = {};
-        for(var i=0; i < widgets.length; i++) {
+        for (var i = 0; i < widgets.length; i++) {
             var widget = widgets[i];
             var type = widget.type;
-            if(!type) {
+            if (!type) {
                 type = "Unknown";
             }
-            if(!map[type]) {
+            if (!map[type]) {
                 map[type] = [];
             }
             map[type].push(widget);
