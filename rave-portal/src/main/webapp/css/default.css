@@ -87,11 +87,11 @@ h1,h2,h3,h4,h5,h6 {
   background: url(../images/rave_codehilite_bg.gif);
 }
 
-.widgetWrapper {
+.widget-wrapper {
     vertical-align: top;
 }
 
-.widgetChrome {
+.widget-title-bar {
     border: #777 solid 1px;
     color: #333;
 }

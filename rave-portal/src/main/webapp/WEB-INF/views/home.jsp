@@ -43,22 +43,21 @@
     //Define the global widgets variable
     var widgets = [];
 </script>
-<table>
-    <tr>
-        <c:forEach var="region" items="${defaultPage.regions}">
-            <td class="widgetWrapper">
-                <c:forEach var="regionWidget" items="${region.regionWidgets}">
-                    <div class="widgetChrome" id="widget-${regionWidget.id}-chrome">
-                            <span>${regionWidget.widget.title}</span>
-                    </div>
-                    <div class="widget" id="widget-${regionWidget.id}-body">
-                        <portal:render-widget regionWidget="${regionWidget}" />
-                    </div>
-                </c:forEach>
-            </td>
-        </c:forEach>
-    </tr>
-</table>
+<c:forEach var="region" items="${defaultPage.regions}">
+<div class="region" id="region-${region.id}" >
+    <c:forEach var="regionWidget" items="${region.regionWidgets}">
+    <div class="widget-wrapper">
+        <div class="widget-title-bar" >
+            <span id="widget-${regionWidget.id}-title">${regionWidget.widget.title}</span>
+        </div>
+        <div class="widget" id="widget-${regionWidget.id}-body">
+            <portal:render-widget regionWidget="${regionWidget}" />
+        </div>
+    </div>
+    </c:forEach>
+</div>
+</c:forEach>
+<div class="clear-float">&nbsp;</div>
 
 <script src="${opensocial_engine_url}/js/container.js?c=1&container=default&debug=1" type="text/javascript"></script>
 <script src="<spring:url value="/script/rave.js"/>" type="text/javascript"></script>
@@ -66,11 +65,10 @@
 <script src="<spring:url value="/script/rave_wookie.js"/>" type="text/javascript"></script>
 
 <script type="text/javascript">
-    rave.opensocial.init();
+    rave.initProviders();
     //Get a map of widgets keyed by their type
-    var widgetMap = rave.createWidgetMap(widgets);
-    rave.opensocial.initGadgets(widgetMap[rave.opensocial.TYPE]);
-    rave.wookie.initWidgets(widgetMap[rave.wookie.TYPE]);
+    rave.initWidgets(rave.createWidgetMap(widgets));
+    rave.initDragAndDrop();
 </script>
 
 </rave:rave_generic_page>

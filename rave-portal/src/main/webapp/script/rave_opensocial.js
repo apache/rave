@@ -186,7 +186,7 @@ rave.opensocial = rave.opensocial || (function() {
          * Instantiates and renders the given gadgets list
          * @param a list of gadgets to render
          */
-        initGadgets: createGadgetInstances,
+        initWidgets: createGadgetInstances,
 
         /**
          * Resets the current OpenSocial container
@@ -195,3 +195,6 @@ rave.opensocial = rave.opensocial || (function() {
     };
 
 })();
+
+//Register teh widget provider with Rave
+rave.registerProvider(rave.opensocial);

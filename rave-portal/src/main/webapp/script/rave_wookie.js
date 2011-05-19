@@ -39,6 +39,11 @@ rave.wookie = rave.wookie || (function() {
      */
     return {
         TYPE : WIDGET_TYPE,
+
+        /**
+         * Init function required by Rave's initialization infrastructure
+         */
+        init : function() {},
         
         /**
          * Renders the given Widgets list
@@ -50,3 +55,5 @@ rave.wookie = rave.wookie || (function() {
 
 
 })();
+//Register teh widget provider with Rave
+rave.registerProvider(rave.wookie);

@@ -17,6 +17,33 @@
  * under the License.
  */
 var rave = rave || (function(){
+    var providerList = [];
+
+    function initializeProviders() {
+        for(var i=0; i<providerList.length;i++) {
+            providerList[i].init();
+        }
+    }
+
+    function initializeDragAndDrop() {
+
+    }
+
+    function initializeWidgets(widgets) {
+        //Initialize the widgets for supported providers
+        for(var i=0; i<providerList.length;i++) {
+            var provider = providerList[i];
+            provider.initWidgets(widgets[provider.TYPE]);
+        }
+    }
+
+    function addProviderToList(provider) {
+        if(provider.hasOwnProperty("init")) {
+            providerList.push(provider);
+        } else {
+            throw "Attempted to register invalid provider";
+        }
+    }
 
     function mapWidgetsByType(widgets) {
         var map = {};
@@ -44,6 +71,21 @@ var rave = rave || (function(){
      */
     return {
         /**
+         * Initialize all of the registered providers
+         */
+        initProviders : initializeProviders,
+
+        /**
+         * Initializes the given set of widgets
+         * @param widgets a map of widgets by type
+         */
+        initWidgets : initializeWidgets,
+
+        /**
+         * Initialize Rave's drag and drop facilities
+         */
+        initDragAndDrop : initializeDragAndDrop,
+        /**
          * Creates a map of widgets by their type
          *
          * @param widgets list of widgets to map by type
@@ -58,7 +100,15 @@ var rave = rave || (function(){
          *
          * @param elementId the ID of the DOM element containing the widget
          */
-        getRegionWidgetIdFromElementId : extractRegionWidgetIdFromElementId
+        getRegionWidgetIdFromElementId : extractRegionWidgetIdFromElementId,
+
+        /**
+         * Registers a new provider with Rave.  All providers MUST have init and initWidgets functions as well as a
+         * TYPE property exposed in its public API
+         *
+         * @param provider a valid Rave widget provider
+         */
+        registerProvider : addProviderToList
     }
 
 })();
