@@ -36,7 +36,6 @@ public class JpaPageRepository implements PageRepository {
     private EntityManager manager;
 
     @Override
-    @SuppressWarnings("unchecked")
     public List<Page> getAllPages(Long userId) {
         TypedQuery<Page> query = manager.createNamedQuery("Page.getByUserId", Page.class);
         query.setParameter("userId", userId);

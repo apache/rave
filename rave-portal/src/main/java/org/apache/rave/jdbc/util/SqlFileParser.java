@@ -105,7 +105,9 @@ public class SqlFileParser {
 				throw (ioex);
 		  }
 		  finally {
-				fileReader.close();
+				if(fileReader != null) {
+                    fileReader.close();
+                }
 		  }
     }
 

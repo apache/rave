@@ -22,6 +22,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="portal" uri="http://www.apache.org/rave/tags" %>
 <%@ taglib tagdir="/WEB-INF/tags" prefix="rave"%>
 
 <jsp:useBean id="pages" type="java.util.List<org.apache.rave.portal.model.Page>" scope="request"/>
@@ -38,16 +39,21 @@
 
 <c:set var="defaultPage" value="${pages[0]}"/>
 <h1>Hello ${defaultPage.owner.username}, welcome to Rave!</h1>
-
+<script type="text/javascript">
+    //Define the global widgets variable
+    var widgets = [];
+</script>
 <table>
     <tr>
         <c:forEach var="region" items="${defaultPage.regions}">
-            <td>
+            <td class="widgetWrapper">
                 <c:forEach var="regionWidget" items="${region.regionWidgets}">
-                    <div id="widget-${regionWidget.id}-chrome">
-                            ${regionWidget.widget.title}
+                    <div class="widgetChrome" id="widget-${regionWidget.id}-chrome">
+                            <span>${regionWidget.widget.title}</span>
                     </div>
-                    <div id="widget-${regionWidget.id}-body"></div>
+                    <div class="widget" id="widget-${regionWidget.id}-body">
+                        <portal:render-widget regionWidget="${regionWidget}" />
+                    </div>
                 </c:forEach>
             </td>
         </c:forEach>
@@ -61,14 +67,6 @@
 
 <script type="text/javascript">
     rave.opensocial.init();
-
-    //Enumerate all of our regionWidgets and collect up metadata about them.
-    var widgets = [];
-    <c:forEach var="region" items="${defaultPage.regions}">
-        <c:forEach var="regionWidget" items="${region.regionWidgets}">
-            widgets.push({type: '${regionWidget.widget.type}', regionWidgetId: ${regionWidget.id}, widgetUrl: "${regionWidget.widget.url}", userPrefs: {}});
-        </c:forEach>
-    </c:forEach>
     //Get a map of widgets keyed by their type
     var widgetMap = rave.createWidgetMap(widgets);
     rave.opensocial.initGadgets(widgetMap[rave.opensocial.TYPE]);
