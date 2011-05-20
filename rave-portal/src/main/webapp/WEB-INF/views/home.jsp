@@ -68,7 +68,6 @@
 <script type="text/javascript">
     $(function(){
         rave.initProviders();
-        //Get a map of widgets keyed by their type
         rave.initWidgets(rave.createWidgetMap(widgets));
         rave.initDragAndDrop();
     });
