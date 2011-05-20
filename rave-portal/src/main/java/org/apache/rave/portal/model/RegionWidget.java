@@ -19,6 +19,7 @@
 package org.apache.rave.portal.model;
 
 import javax.persistence.*;
+import java.util.Collection;
 
 /**
  * A widget within a region
@@ -41,6 +42,9 @@ public class RegionWidget {
     @Basic @Column(name="collapsed")
     private boolean collapsed;
 
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name = "region_widget_id")
+    private Collection<RegionWidgetPreference> preferences;
 
     /**
      * Gets the persistence unique identifier
@@ -98,5 +102,18 @@ public class RegionWidget {
 
     public void setCollapsed(boolean collapsed) {
         this.collapsed = collapsed;
+    }
+
+    /**
+     * Gets the collection of user defined preferences for this RegionWidget.
+     *
+     * @return The user defined preferences for this RegionWidget.
+     */
+    public Collection<RegionWidgetPreference> getPreferences() {
+        return preferences;
+    }
+
+    public void setPreferences(Collection<RegionWidgetPreference> preferences) {
+        this.preferences = preferences;
     }
 }
