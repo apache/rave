@@ -17,8 +17,18 @@
  * under the License.
  */
 
-package org.apache.rave.w3c.service.impl;
+package org.apache.rave.portal.service;
 
 
-public class WookieWidgetServiceTest {
+import org.junit.Before;
+
+public class RegionServiceTest {
+
+    private RegionService regionService;
+
+    @Before
+    public void setup() {
+        regionService = new DefaultRegionService();
+    }
+
 }

@@ -17,8 +17,22 @@
  * under the License.
  */
 
-package org.apache.rave.w3c.service.impl;
+package org.apache.rave.portal.web.api.rpc.model;
 
+import org.junit.Test;
 
-public class WookieWidgetServiceTest {
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
+public class RpcResultTest {
+
+    @Test
+    public void corretDefault_noError() {
+        assertThat(new RpcResult<String>(false).getErrorCode(), is(equalTo(RpcResult.ErrorCode.NO_ERROR)));
+    }
+    @Test
+    public void corretDefault_error() {
+        assertThat(new RpcResult<String>(true).getErrorCode(), is(equalTo(RpcResult.ErrorCode.INTERNAL_ERROR)));
+    }
 }

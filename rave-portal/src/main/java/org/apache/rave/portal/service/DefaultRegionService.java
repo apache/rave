@@ -17,8 +17,15 @@
  * under the License.
  */
 
-package org.apache.rave.w3c.service.impl;
+package org.apache.rave.portal.service;
 
+import org.apache.rave.portal.model.RegionWidget;
+import org.springframework.stereotype.Service;
 
-public class WookieWidgetServiceTest {
+@Service
+public class DefaultRegionService implements RegionService {
+    @Override
+    public RegionWidget moveRegionWidget(long regionWidgetId, int newPosition, long toRegion, long fromRegion) {
+        return null;
+    }
 }

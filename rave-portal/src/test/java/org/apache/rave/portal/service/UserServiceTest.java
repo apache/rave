@@ -38,11 +38,6 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertThat;
 
-/**
- * @author mfranklin
- *         Date: 4/25/11
- *         Time: 4:16 PM
- */
 public class UserServiceTest {
 
     private static final Long USER_ID = 1234L;

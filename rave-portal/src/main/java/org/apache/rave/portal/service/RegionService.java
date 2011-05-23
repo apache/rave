@@ -17,8 +17,10 @@
  * under the License.
  */
 
-package org.apache.rave.w3c.service.impl;
+package org.apache.rave.portal.service;
 
+import org.apache.rave.portal.model.RegionWidget;
 
-public class WookieWidgetServiceTest {
+public interface RegionService {
+    RegionWidget moveRegionWidget(long regionWidgetId, int newPosition, long toRegion, long fromRegion);
 }
