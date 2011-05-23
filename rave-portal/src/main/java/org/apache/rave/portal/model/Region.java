@@ -33,7 +33,7 @@ public class Region {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "regionIdSeq")
     private Long id;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "region_id")
     private List<RegionWidget> regionWidgets;
 

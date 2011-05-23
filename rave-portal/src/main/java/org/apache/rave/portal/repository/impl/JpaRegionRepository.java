@@ -17,15 +17,33 @@
  * under the License.
  */
 
-package org.apache.rave.portal.service;
+package org.apache.rave.portal.repository.impl;
 
-import org.apache.rave.portal.model.RegionWidget;
-import org.springframework.stereotype.Service;
+import org.apache.rave.portal.model.Region;
+import org.apache.rave.portal.repository.RegionRepository;
+import org.springframework.stereotype.Repository;
 
-@Service
-public class DefaultRegionService implements RegionService {
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
+import static org.apache.rave.portal.repository.impl.util.JpaUtil.getSingleResult;
+import static org.apache.rave.portal.repository.impl.util.JpaUtil.saveOrUpdate;
+
+/**
+ *  */
+
+@Repository
+public class JpaRegionRepository implements RegionRepository {
+    @PersistenceContext
+    private EntityManager manager;
+
     @Override
-    public RegionWidget moveRegionWidget(long regionWidgetId, int newPosition, long toRegion, long fromRegion) {
-        return null;
+    public Region getById(long regionId) {
+        return manager.find(Region.class, regionId);
+    }
+
+    @Override
+    public Region save(Region region) {
+        return saveOrUpdate(region.getId(), manager, region);
     }
 }

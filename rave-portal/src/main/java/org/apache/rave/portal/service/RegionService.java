@@ -22,5 +22,13 @@ package org.apache.rave.portal.service;
 import org.apache.rave.portal.model.RegionWidget;
 
 public interface RegionService {
+    /**
+     * Moves a Region widget's position in a region or across regions
+     * @param regionWidgetId the id of the moved RegionWidget
+     * @param newPosition the new index of the RegionWidget within the target region (0 based index)
+     * @param toRegion the id of the Region to move the RegionWidget to
+     * @param fromRegion the id of the Region where the RegionWidget currently resides
+     * @return the updated RegionWidget
+     */
     RegionWidget moveRegionWidget(long regionWidgetId, int newPosition, long toRegion, long fromRegion);
 }

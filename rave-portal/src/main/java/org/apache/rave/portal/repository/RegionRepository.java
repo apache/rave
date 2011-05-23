@@ -18,5 +18,25 @@
  */
 package org.apache.rave.portal.repository;
 
+
+import org.apache.rave.portal.model.Region;
+
+/**
+ * Provides persistence operations for the {@link Region} class
+ */
 public interface RegionRepository {
+
+    /**
+     * Gets the specified region
+     * @param regionId valid region id
+     * @return the persisted entity or null if the id doesn't exist
+     */
+    Region getById(long regionId);
+
+    /**
+     * Creates or updates the region in the persistence context
+     * @param region valid region to persist
+     * @return the persisted region
+     */
+    Region save(Region region);
 }

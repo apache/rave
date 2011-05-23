@@ -39,12 +39,27 @@ public class RegionWidget {
     @Basic @Column(name="render_position")
     private String renderPosition;
 
+    @Basic @Column(name="render_order")
+    private int renderOrder;
+
     @Basic @Column(name="collapsed")
     private boolean collapsed;
 
     @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "region_widget_id")
     private Collection<RegionWidgetPreference> preferences;
+
+    public RegionWidget() {
+    }
+
+    public RegionWidget(Long id) {
+        this.id = id;
+    }
+
+    public RegionWidget(long id, int renderOrder) {
+        this.id = id;
+        this.renderOrder = renderOrder;
+    }
 
     /**
      * Gets the persistence unique identifier
@@ -89,6 +104,18 @@ public class RegionWidget {
 
     public void setRenderPosition(String renderPosition) {
         this.renderPosition = renderPosition;
+    }
+
+    /**
+     * Gets the order relative to other gadgets in the region
+     * @return the order of the gadget
+     */
+    public int getRenderOrder() {
+        return renderOrder;
+    }
+
+    public void setRenderOrder(int renderOrder) {
+        this.renderOrder = renderOrder;
     }
 
     /**
