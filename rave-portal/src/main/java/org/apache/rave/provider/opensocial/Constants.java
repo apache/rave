@@ -17,8 +17,11 @@
  * under the License.
  */
 
-package org.apache.rave.w3c.service.impl;
+package org.apache.rave.provider.opensocial;
 
-
-public class WookieWidgetServiceTest {
+/**
+ * Constants used while managing OpenSocial widgets
+ */
+public class Constants {
+    public static final String WIDGET_TYPE = "OpenSocial";
 }

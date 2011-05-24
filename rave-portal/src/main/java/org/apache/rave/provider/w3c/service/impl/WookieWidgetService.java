@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.rave.w3c.service.impl;
+package org.apache.rave.provider.w3c.service.impl;
 
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.Widget;

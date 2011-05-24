@@ -17,54 +17,41 @@
  * under the License.
  */
 
-package org.apache.rave.w3c.web.renderer;
-
-import static org.apache.rave.w3c.Constants.WIDGET_TYPE;
+package org.apache.rave.provider.opensocial.web.renderer;
 
 import org.apache.rave.exception.NotSupportedException;
 import org.apache.rave.portal.model.RegionWidget;
-import org.apache.rave.portal.model.Widget;
-import org.apache.rave.portal.service.WidgetService;
 import org.apache.rave.portal.web.renderer.RegionWidgetRenderer;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.apache.rave.provider.opensocial.Constants;
 import org.springframework.stereotype.Component;
 
 /**
- * Renders W3C widgets via the injected Wookie service
+ * Creates a String representing the JavaScript and DOM elements to be inserted into the page
+ * <p/>
+ * //TODO: Create infrastructure for rendering inline gadgets via Caja
  */
 @Component
-public class W3cWidgetRenderer implements RegionWidgetRenderer {
+public class OpenSocialWidgetRenderer implements RegionWidgetRenderer {
 
 
     private static final String IFRAME_MARKUP = "<script type=\"text/javascript\">" +
                                                     "widgets.push({type: '%1$s'," +
                                                                  " regionWidgetId: %2$s," +
-                                                                 " widgetUrl: '%3$s'});" +
+                                                                 " widgetUrl: '%3$s', " +
+                                                                 " userPrefs: {}});" +
                                                 "</script>";
-
-    private static final String INLINE_MARKUP = "";
-
-    private final WidgetService widgetService;
-
-    @Autowired
-    public W3cWidgetRenderer(@Qualifier("wookieWidgetService") WidgetService widgetService) {
-        this.widgetService = widgetService;
-    }
 
     @Override
     public String getSupportedContext() {
-        return WIDGET_TYPE;
+        return Constants.WIDGET_TYPE;
     }
 
     @Override
     public String render(RegionWidget item) {
-        Widget widget = item.getWidget();
-        if(!WIDGET_TYPE.equals(widget.getType())) {
-            throw new NotSupportedException("Invalid widget type passed to renderer: " + widget.getType());
+        String type = item.getWidget().getType();
+        if (!Constants.WIDGET_TYPE.equals(type)) {
+            throw new NotSupportedException("Invalid widget type passed to renderer: " + type);
         }
-        Widget contextualizedWidget = widgetService.getWidget(null, null, widget);
-        String url = contextualizedWidget == null ? null : contextualizedWidget.getUrl();
-        return String.format(IFRAME_MARKUP, WIDGET_TYPE, item.getId(), url);
+        return String.format(IFRAME_MARKUP, Constants.WIDGET_TYPE, item.getId(), item.getWidget().getUrl());
     }
 }

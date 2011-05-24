@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.apache.rave.w3c;
+package org.apache.rave.provider.w3c;
 
 /**
  * Defines constants for W3C widgets

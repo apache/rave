@@ -17,14 +17,15 @@
  * under the License.
  */
 
-package org.apache.rave.w3c.web.renderer;
+package org.apache.rave.provider.w3c.web.renderer;
 
 import org.apache.rave.exception.NotSupportedException;
 import org.apache.rave.portal.model.RegionWidget;
 import org.apache.rave.portal.model.Widget;
 import org.apache.rave.portal.service.WidgetService;
 import org.apache.rave.portal.web.renderer.Renderer;
-import org.apache.rave.w3c.Constants;
+import org.apache.rave.provider.w3c.Constants;
+import org.apache.rave.provider.w3c.web.renderer.W3cWidgetRenderer;
 import org.junit.Before;
 import org.junit.Test;
 

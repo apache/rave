@@ -17,32 +17,40 @@
  * under the License.
  */
 
-package org.apache.rave.opensocial.web.renderer;
+package org.apache.rave.provider.w3c.web.renderer;
+
+import static org.apache.rave.provider.w3c.Constants.WIDGET_TYPE;
 
 import org.apache.rave.exception.NotSupportedException;
 import org.apache.rave.portal.model.RegionWidget;
 import org.apache.rave.portal.model.Widget;
+import org.apache.rave.portal.service.WidgetService;
 import org.apache.rave.portal.web.renderer.RegionWidgetRenderer;
-import org.apache.rave.portal.web.renderer.Renderer;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-import static org.apache.rave.opensocial.Constants.WIDGET_TYPE;
-
 /**
- * Creates a String representing the JavaScript and DOM elements to be inserted into the page
- * <p/>
- * //TODO: Create infrastructure for rendering inline gadgets via Caja
+ * Renders W3C widgets via the injected Wookie service
  */
 @Component
-public class OpenSocialWidgetRenderer implements RegionWidgetRenderer {
+public class W3cWidgetRenderer implements RegionWidgetRenderer {
 
 
     private static final String IFRAME_MARKUP = "<script type=\"text/javascript\">" +
                                                     "widgets.push({type: '%1$s'," +
                                                                  " regionWidgetId: %2$s," +
-                                                                 " widgetUrl: '%3$s', " +
-                                                                 " userPrefs: {}});" +
+                                                                 " widgetUrl: '%3$s'});" +
                                                 "</script>";
+
+    private static final String INLINE_MARKUP = "";
+
+    private final WidgetService widgetService;
+
+    @Autowired
+    public W3cWidgetRenderer(@Qualifier("wookieWidgetService") WidgetService widgetService) {
+        this.widgetService = widgetService;
+    }
 
     @Override
     public String getSupportedContext() {
@@ -51,10 +59,12 @@ public class OpenSocialWidgetRenderer implements RegionWidgetRenderer {
 
     @Override
     public String render(RegionWidget item) {
-        String type = item.getWidget().getType();
-        if (!WIDGET_TYPE.equals(type)) {
-            throw new NotSupportedException("Invalid widget type passed to renderer: " + type);
+        Widget widget = item.getWidget();
+        if(!WIDGET_TYPE.equals(widget.getType())) {
+            throw new NotSupportedException("Invalid widget type passed to renderer: " + widget.getType());
         }
-        return String.format(IFRAME_MARKUP, WIDGET_TYPE, item.getId(), item.getWidget().getUrl());
+        Widget contextualizedWidget = widgetService.getWidget(null, null, widget);
+        String url = contextualizedWidget == null ? null : contextualizedWidget.getUrl();
+        return String.format(IFRAME_MARKUP, WIDGET_TYPE, item.getId(), url);
     }
 }
