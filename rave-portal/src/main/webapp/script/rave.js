@@ -18,55 +18,145 @@
  */
 var rave = rave || (function() {
     var providerList = [];
+    var context = "";
+
+
+    /**
+     * Separate sub-namespace for isolating UI functions and state management
+     *
+     * NOTE: The UI implementation has dependencies on jQuery and jQuery UI
+     */
+    var ui = (function() {
+
+        var uiState = {
+            widget: null,
+            currentRegion: null,
+            targetRegion: null,
+            targetIndex: null
+        };
+
+        function init() {
+            $(".region").disableSelection();
+            // initialize the sortable regions
+            $(".region").sortable({
+                        connectWith: '.region', // defines which regions are dnd-able
+                        scroll: true, // don't scroll the window if the user goes outside the areas
+                        opacity: 0.5, // the opacity of the object being dragged
+                        revert: true, // smooth snap animation
+                        cursor: 'move', // the cursor to show while dnd
+                        handle: '.widget-title-bar', // the draggable handle
+                        forcePlaceholderSize: true, // size the placeholder to the size of the gadget
+                        start: dragStart,
+                        stop : dragStop
+                    });
+        }
+
+        function dragStart(event, ui) {
+            // highlight the draggable regions
+            $(".region").addClass("region-dragging");
+            uiState.widget = ui.item.children(".widget").get(0);
+            uiState.currentRegion = ui.item.parent().get(0);
+
+            //for every drag operation, create an overlay for each iframe
+            //to prevent the iframe from intercepting mouse events
+            //which kills drag performance
+            $(".widget").each(function(index, element) {
+                // create the iframe overlay and size it to the iframe it will be covering
+                var overlay = $('<div></div>');
+                var jqElm = $(element);
+                var styleMap = {
+                    position: "absolute",
+                    height : jqElm.height(),
+                    width : jqElm.width(),
+                    opacity : 0.7,
+                    background : "#FFFFFF"
+                };
+
+                // style it and give it the marker class
+                $(overlay).css(styleMap);
+                $(overlay).addClass("dnd-overlay");
+                // add it to the dom before the iframe so it covers it
+                jqElm.prepend(overlay[0]);
+            });
+        }
+
+        function dragStop(event, ui) {
+            $(".dnd-overlay").remove();
+            $(".region-dragging").removeClass("region-dragging");
+            uiState.targetRegion = ui.item.parent().get(0);
+            uiState.targetIndex = ui.item.index();
+            api.rpc.moveWidget(uiState);
+            clearState();
+        }
+
+        function clearState() {
+            uiState.currentRegion = null;
+            uiState.targetRegion = null;
+            uiState.targetIndex = null;
+            uiState.widget = null;
+        }
+
+        return {
+            init : init
+        }
+
+    })();
+
+    /**
+     * Sub namespace for managing API functions
+     *
+     * Divided into REST and RPC to match server-side API
+     */
+    var api = (function() {
+        var rpcApi = (function() {
+            var path = "api/rpc/";
+
+            function moveWidgetOnPage(state) {
+                $.post(getContext() + path + "page/regionWidget/" + extractObjectIdFromElementId(state.widget.id),
+                        {
+                            operation: "MOVE",
+                            new_position: state.targetIndex,
+                            to_region: extractObjectIdFromElementId(state.targetRegion.id),
+                            from_region: extractObjectIdFromElementId(state.currentRegion.id)
+                        },
+                        function(result) {
+                            if(result.error) { handleRpcError(result); }
+                        }
+                );
+            }
+
+            //TODO: Create a more robust error handling system and interrogation of RPC results
+            function handleRpcError(rpcResult) {
+                switch(rpcResult.errorCode) {
+                    case "NO_ERROR" :
+                        break;
+                    case "INVALID_PARAMS":
+                        alert("Rave attempted to update the server with your recent changes, " +
+                              " but the changes were rejected by the server as invalid.");
+                        break;
+                    case "INTERNAL_ERROR":
+                        alert("Rave attempted to update the server with your recent changes, " +
+                              " but the server encountered an internal error.");
+                        break;
+                }
+                console.log(rpcResult.errorMessage);
+            }
+
+            return {
+                moveWidget : moveWidgetOnPage
+            }
+
+        })();
+
+        return {
+            rpc : rpcApi
+        };
+    })();
 
     function initializeProviders() {
         for (var i = 0; i < providerList.length; i++) {
             providerList[i].init();
         }
-    }
-
-    function initializeDragAndDrop() {
-        $(".region").disableSelection();
-        // initialize the sortable regions
-        $(".region").sortable({
-            connectWith: '.region', // defines which regions are dnd-able
-            scroll: true, // don't scroll the window if the user goes outside the areas
-            opacity: 0.5, // the opacity of the object being dragged
-            revert: true, // smooth snap animation
-            cursor: 'move', // the cursor to show while dnd
-            handle: '.widget-title-bar', // the draggable handle
-            forcePlaceholderSize: true, // size the placeholder to the size of the gadget
-            start: function(event, ui) {
-                // highlight the draggable regions
-                $(".region").addClass("region-dragging");
-
-                //for every drag operation, create an overlay for each iframe
-                //to prevent the iframe from intercepting mouse events
-                //which kills drag performance
-                $(".widget").each(function(index, element) {
-                    // create the iframe overlay and size it to the iframe it will be covering
-                    var overlay = $('<div></div>');
-                    var jqElm = $(element);
-                    var styleMap = {
-                        position: "absolute",
-                        height : jqElm.height(),
-                        width : jqElm.width(),
-                        opacity : 0.7,
-                        background : "#FFFFFF"
-                    };
-
-                    // style it and give it the marker class
-                    $(overlay).css(styleMap);
-                    $(overlay).addClass("dnd-overlay");
-                    // add it to the dom before the iframe so it covers it
-                    jqElm.prepend(overlay[0]);
-                });
-            },
-            stop : function(event, ui) {
-                $(".dnd-overlay").remove();
-                $(".region-dragging").removeClass("region-dragging");
-            }
-        });
     }
 
     function initializeWidgets(widgets) {
@@ -101,9 +191,17 @@ var rave = rave || (function() {
         return map;
     }
 
-    function extractRegionWidgetIdFromElementId(elementId) {
+    function extractObjectIdFromElementId(elementId) {
         var tokens = elementId.split("-");
-        return tokens.length > 2 && tokens[0] == "widget" ? tokens[1] : null;
+        return tokens.length > 2 && tokens[0] == "widget" || tokens[0] == "region" ? tokens[1] : null;
+    }
+
+    function updateContext(contextPath) {
+        context = contextPath;
+    }
+
+    function getContext() {
+        return context;
     }
 
     /**
@@ -124,7 +222,7 @@ var rave = rave || (function() {
         /**
          * Initialize Rave's drag and drop facilities
          */
-        initDragAndDrop : initializeDragAndDrop,
+        initDragAndDrop : ui.init,
         /**
          * Creates a map of widgets by their type
          *
@@ -133,14 +231,17 @@ var rave = rave || (function() {
         createWidgetMap : mapWidgetsByType,
 
         /**
-         * Parses the given string conforming to a widget's DOM element ID and return
+         * Parses the given string conforming to a rave object's DOM element ID and return
          * the RegionWidget id
          *
          * NOTE: assumes convention of widget-RegionWidgetId-body|title|chrome|etc
+         *       Supported rave objects:
+         *          Region
+         *          RegionWidget
          *
          * @param elementId the ID of the DOM element containing the widget
          */
-        getRegionWidgetIdFromElementId : extractRegionWidgetIdFromElementId,
+        getObjectIdFromDomId : extractObjectIdFromElementId,
 
         /**
          * Registers a new provider with Rave.  All providers MUST have init and initWidgets functions as well as a
@@ -148,7 +249,18 @@ var rave = rave || (function() {
          *
          * @param provider a valid Rave widget provider
          */
-        registerProvider : addProviderToList
-    }
+        registerProvider : addProviderToList,
 
+        /**
+         * Sets the context path for the Rave web application
+         *
+         * @param contextPath the context path of the rave webapp
+         */
+        setContext : updateContext,
+
+        /**
+         * Gets the current context
+         */
+        getContext: getContext
+    }
 })();

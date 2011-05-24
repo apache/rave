@@ -26,10 +26,7 @@ import org.apache.rave.portal.web.api.rpc.model.RpcOperation;
 import org.apache.rave.portal.web.api.rpc.model.RpcResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Provides RPC functions via the API.
@@ -44,9 +41,9 @@ public class PageApi {
     public PageApi(RegionService regionService) {
         this.regionService = regionService;
     }
-
     //Generic method for RegionWidget RPC ops
-    @RequestMapping(method = RequestMethod.POST, value = "/regionWidget/{region_widget_id}")
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.POST, value = "regionWidget/{region_widget_id}")
     public RpcResult<RegionWidget> moveRegionWidget(@PathVariable final long region_widget_id,
                                                     @RequestParam final RpcOperation.Type operation,
                                                     @RequestParam final int new_position,

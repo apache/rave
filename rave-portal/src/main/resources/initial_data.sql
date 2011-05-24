@@ -89,15 +89,15 @@ values (set(@page_1_region_1, next value for region_id_seq), @page_1_id);
 INSERT INTO region(id, page_id)
 values (set(@page_1_region_2, next value for region_id_seq), @page_1_id);
 
-INSERT INTO region_widget(id, widget_id, region_id, render_position, collapsed)
-values (next value for region_widget_id_seq, @wikipedia_widget_id, @page_1_region_1, 1, 'N');
-INSERT INTO region_widget(id, widget_id, region_id, render_position, collapsed)
-values (next value for region_widget_id_seq, @translate_widget_id, @page_1_region_1, 2, 'N');
+INSERT INTO region_widget(id, widget_id, region_id, render_order, collapsed)
+values (next value for region_widget_id_seq, @wikipedia_widget_id, @page_1_region_1, 0, 'N');
+INSERT INTO region_widget(id, widget_id, region_id, render_order, collapsed)
+values (next value for region_widget_id_seq, @translate_widget_id, @page_1_region_1, 1, 'N');
 
-INSERT INTO region_widget(id, widget_id, region_id, render_position, collapsed)
-values (next value for region_widget_id_seq, @nyt_widget_id, @page_1_region_2, 1, 'N');
-INSERT INTO region_widget(id, widget_id, region_id, render_position, collapsed)
-values (next value for region_widget_id_seq, @tabnews_widget_id, @page_1_region_2, 2, 'N');
+INSERT INTO region_widget(id, widget_id, region_id, render_order, collapsed)
+values (next value for region_widget_id_seq, @nyt_widget_id, @page_1_region_2, 0, 'N');
+INSERT INTO region_widget(id, widget_id, region_id, render_order, collapsed)
+values (next value for region_widget_id_seq, @tabnews_widget_id, @page_1_region_2, 1, 'N');
 --- End canonical user_id_1 layout ---
 
 --- Layout for user_id_2 ---
@@ -109,15 +109,15 @@ values (set(@page_1_region_1, next value for region_id_seq), @page_1_id);
 INSERT INTO region(id, page_id)
 values (set(@page_1_region_2, next value for region_id_seq), @page_1_id);
 
-INSERT INTO region_widget(id, widget_id, region_id, render_position, collapsed)
-values (next value for region_widget_id_seq, @wikipedia_widget_id, @page_1_region_1, 1, 'N');
-INSERT INTO region_widget(id, widget_id, region_id, render_position, collapsed)
-values (next value for region_widget_id_seq, @hamster_widget_id, @page_1_region_1, 2, 'N');
+INSERT INTO region_widget(id, widget_id, region_id, render_order, collapsed)
+values (next value for region_widget_id_seq, @wikipedia_widget_id, @page_1_region_1, 0, 'N');
+INSERT INTO region_widget(id, widget_id, region_id, render_order, collapsed)
+values (next value for region_widget_id_seq, @hamster_widget_id, @page_1_region_1, 1, 'N');
 
-INSERT INTO region_widget(id, widget_id, region_id, render_position, collapsed)
-values (next value for region_widget_id_seq, @nyt_widget_id, @page_1_region_2, 1, 'N');
-INSERT INTO region_widget(id, widget_id, region_id, render_position, collapsed)
-values (next value for region_widget_id_seq, @tabnews_widget_id, @page_1_region_2, 2, 'N');
+INSERT INTO region_widget(id, widget_id, region_id, render_order, collapsed)
+values (next value for region_widget_id_seq, @nyt_widget_id, @page_1_region_2, 0, 'N');
+INSERT INTO region_widget(id, widget_id, region_id, render_order, collapsed)
+values (next value for region_widget_id_seq, @tabnews_widget_id, @page_1_region_2, 1, 'N');
 --- End canonical user_id_2 layout ---
 
 --- Layout for user_id_3 ---
@@ -129,15 +129,15 @@ values (set(@page_1_region_1, next value for region_id_seq), @page_1_id);
 INSERT INTO region(id, page_id)
 values (set(@page_1_region_2, next value for region_id_seq), @page_1_id);
 
-INSERT INTO region_widget(id, widget_id, region_id, render_position, collapsed)
-values (next value for region_widget_id_seq, @wikipedia_widget_id, @page_1_region_1, 1, 'N');
-INSERT INTO region_widget(id, widget_id, region_id, render_position, collapsed)
-values (next value for region_widget_id_seq, @translate_widget_id, @page_1_region_1, 2, 'N');
+INSERT INTO region_widget(id, widget_id, region_id, render_order, collapsed)
+values (next value for region_widget_id_seq, @wikipedia_widget_id, @page_1_region_1, 0, 'N');
+INSERT INTO region_widget(id, widget_id, region_id, render_order, collapsed)
+values (next value for region_widget_id_seq, @translate_widget_id, @page_1_region_1, 1, 'N');
 
-INSERT INTO region_widget(id, widget_id, region_id, render_position, collapsed)
-values (next value for region_widget_id_seq, @hamster_widget_id, @page_1_region_2, 1, 'N');
-INSERT INTO region_widget(id, widget_id, region_id, render_position, collapsed)
-values (next value for region_widget_id_seq, @tabnews_widget_id, @page_1_region_2, 2, 'N');
+INSERT INTO region_widget(id, widget_id, region_id, render_order, collapsed)
+values (next value for region_widget_id_seq, @hamster_widget_id, @page_1_region_2, 0, 'N');
+INSERT INTO region_widget(id, widget_id, region_id, render_order, collapsed)
+values (next value for region_widget_id_seq, @tabnews_widget_id, @page_1_region_2, 1, 'N');
 --- End canonical user_id_3 layout ---
 
 --- Layout for user_id_6 ---
@@ -149,13 +149,13 @@ values (set(@page_1_region_1, next value for region_id_seq), @page_1_id);
 INSERT INTO region(id, page_id)
 values (set(@page_1_region_2, next value for region_id_seq), @page_1_id);
 
-INSERT INTO region_widget(id, widget_id, region_id, render_position, collapsed)
-values (next value for region_widget_id_seq, @wikipedia_widget_id, @page_1_region_1, 1, 'N');
-INSERT INTO region_widget(id, widget_id, region_id, render_position, collapsed)
-values (next value for region_widget_id_seq, @translate_widget_id, @page_1_region_1, 2, 'N');
+INSERT INTO region_widget(id, widget_id, region_id, render_order, collapsed)
+values (next value for region_widget_id_seq, @wikipedia_widget_id, @page_1_region_1, 0, 'N');
+INSERT INTO region_widget(id, widget_id, region_id, render_order, collapsed)
+values (next value for region_widget_id_seq, @translate_widget_id, @page_1_region_1, 1, 'N');
 
-INSERT INTO region_widget(id, widget_id, region_id, render_position, collapsed)
-values (next value for region_widget_id_seq, @hamster_widget_id, @page_1_region_2, 1, 'N');
-INSERT INTO region_widget(id, widget_id, region_id, render_position, collapsed)
-values (next value for region_widget_id_seq, @tabnews_widget_id, @page_1_region_2, 2, 'N');
+INSERT INTO region_widget(id, widget_id, region_id, render_order, collapsed)
+values (next value for region_widget_id_seq, @hamster_widget_id, @page_1_region_2, 0, 'N');
+INSERT INTO region_widget(id, widget_id, region_id, render_order, collapsed)
+values (next value for region_widget_id_seq, @tabnews_widget_id, @page_1_region_2, 1, 'N');
 --- End canonical user_id_6 layout ---

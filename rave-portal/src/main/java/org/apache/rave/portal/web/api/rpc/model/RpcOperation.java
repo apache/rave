@@ -31,8 +31,10 @@ public abstract class RpcOperation<T> {
     }
 
     /**
+     * Wrapped execution of a given execute method defined by the subclass.  Provides generic mapping of exceptions to
+     * RPC results
      *
-     * @return
+     * @return valid RpcResult object for the type
      */
     public RpcResult<T> getResult(){
         RpcResult<T> result;
@@ -48,8 +50,9 @@ public abstract class RpcOperation<T> {
     }
 
     /**
+     * The method to be overridden that defines the RPC action being performed.
      *
-     * @return
+     * @return the result of the RPC operation
      */
     public abstract T execute();
 }

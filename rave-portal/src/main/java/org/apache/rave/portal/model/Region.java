@@ -34,6 +34,7 @@ public class Region {
     private Long id;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("renderOrder")
     @JoinColumn(name = "region_id")
     private List<RegionWidget> regionWidgets;
 

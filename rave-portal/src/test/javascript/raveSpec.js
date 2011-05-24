@@ -29,7 +29,7 @@ describe("Rave", function() {
                     called = true;
                 },
                 initWidgets: function(widgets) {
-                    for(var i = 0; i<widgets.length;i++) {
+                    for (var i = 0; i < widgets.length; i++) {
                         expect(widgets[i].type).toEqual(type);
                     }
                     widgetsCalled = true;
@@ -62,7 +62,7 @@ describe("Rave", function() {
             expect(
                     function() {
                         rave.registerProvider({badProp: function() {
-                        } })
+                                } })
                     }).toThrow(new Error("Attempted to register invalid provider"));
         });
     });
@@ -70,8 +70,14 @@ describe("Rave", function() {
     describe("initWidgets", function() {
         it("calls the appropriate providers", function() {
             var widgetMap = {
-                "FOO" : [{type:"FOO"}, {type:"FOO"}],
-                "BAR" : [{type:"BAR"}, {type:"BAR"}]
+                "FOO" : [
+                    {type:"FOO"},
+                    {type:"FOO"}
+                ],
+                "BAR" : [
+                    {type:"BAR"},
+                    {type:"BAR"}
+                ]
             };
             var provider1 = getMockProvider("FOO");
             var provider2 = getMockProvider("BAR");
@@ -133,26 +139,151 @@ describe("Rave", function() {
 
     });
 
-    describe("getRegionWidgetIdFromDomId", function() {
+    describe("initDragAndDrop", function() {
+        function createMockJQuery() {
+            console = {
+                log : function(str) {
+
+                }
+            };
+            var sortableArgs = null;
+            $ = function(element) {
+                return {
+                    sortable : function(args) {
+                        sortableArgs = args;
+                        sortableArgs.selector = element;
+                    },
+                    getSortableArgs : function() {
+                        return sortableArgs;
+                    },
+                    disableSelection: function() {
+                    },
+                    remove: function(e) {
+                    },
+                    removeClass: function(e) {
+                    },
+                    addClass: function(e) {
+                    },
+                    each: function(e) {
+                    },
+                    css: function(e) {
+                    },
+                    prepend: function(e) {
+                    }
+                }
+            };
+        }
+
+        function getMockItem() {
+            return  {
+                item : {
+                    parent : function() {
+                        return {
+                            get : function(index) {
+                                if (index == 0) return { id : "region-35"};
+                            }
+                        }
+                    },
+                    children : function(selector) {
+                        if (selector == '.widget') {
+                            return {
+                                get : function(index) {
+                                    if (index == 0) return {id : 'widget-24-body'};
+                                }
+                            }
+                        }
+                    },
+                    index : function() {
+                        return 2
+                    }
+                }
+            };
+        }
+
+        it("Initializes jQuery sortable when init is called", function() {
+            createMockJQuery();
+            rave.initDragAndDrop();
+            var sortableArgs = $().getSortableArgs();
+            expect(sortableArgs).toBeDefined();
+            expect(sortableArgs.selector).toEqual(".region");
+            expect(sortableArgs.connectWith).toEqual(".region");
+            expect(sortableArgs.handle).toEqual(".widget-title-bar");
+            expect(typeof(sortableArgs.start)).toEqual("function");
+            expect(typeof(sortableArgs.stop)).toEqual("function");
+        });
+
+        it("Posts when dragging is stopped", function() {
+            createMockJQuery();
+            rave.initDragAndDrop();
+            var sortableArgs = $().getSortableArgs();
+            var mockItem = getMockItem();
+            $.post = function(url, data, handler) {
+                expect(url).toEqual("api/rpc/page/regionWidget/24");
+                expect(data.to_region).toEqual('35');
+                expect(data.from_region).toEqual('35');
+                expect(data.new_position).toEqual(2);
+                handler({error: false});
+            };
+            sortableArgs.start({}, mockItem);
+            sortableArgs.stop({}, mockItem);
+        });
+        it("displays the appropriate alert when invalid parameters are passed", function() {
+            createMockJQuery();
+            rave.initDragAndDrop();
+            var sortableArgs = $().getSortableArgs();
+            var mockItem = getMockItem();
+            $.post = function(url, data, handler) {
+                handler({error: true, errorCode: "INVALID_PARAMS"});
+            };
+            alert = function(str) {
+                expect(str).toEqual("Rave attempted to update the server with your recent changes, " +
+                              " but the changes were rejected by the server as invalid.");
+            };
+            sortableArgs.start({}, mockItem);
+            sortableArgs.stop({}, mockItem);
+        });
+        it("displays the appropriate alert when a server error occurs", function() {
+            createMockJQuery();
+            rave.initDragAndDrop();
+            var sortableArgs = $().getSortableArgs();
+            var mockItem = getMockItem();
+            $.post = function(url, data, handler) {
+                handler({error: true, errorCode: "INTERNAL_ERROR"});
+            };
+            alert = function(str) {
+                expect(str).toEqual("Rave attempted to update the server with your recent changes, " +
+                              " but the server encountered an internal error.");
+            };
+            sortableArgs.start({}, mockItem);
+            sortableArgs.stop({}, mockItem);
+        });
+    });
+
+    describe("getObjectIdFromDomId", function() {
 
         it("returns the regionwidgetId from the bodyElementId when the body Id is 3 digits", function() {
 
-            var id = rave.getRegionWidgetIdFromElementId("widget-203-id");
+            var id = rave.getObjectIdFromDomId("widget-203-id");
             expect(id).toEqual('203');
         });
         it("returns the regionwidgetId from the ElementId when the  Id is 2 digits", function() {
 
-            var id = rave.getRegionWidgetIdFromElementId("widget-20-id");
+            var id = rave.getObjectIdFromDomId("widget-20-id");
             expect(id).toEqual('20');
         });
         it("returns the regionwidgetId from the ElementId when the  Id is 1 digits", function() {
 
-            var id = rave.getRegionWidgetIdFromElementId("widget-2-id");
+            var id = rave.getObjectIdFromDomId("widget-2-id");
+            expect(id).toEqual('2');
+        });
+        it("returns the regionId from the ElementId when the  Id is 1 digits", function() {
+
+            var id = rave.getObjectIdFromDomId("region-2-id");
             expect(id).toEqual('2');
         });
 
         it("returns null when the DOM element's id is invalid", function() {
-            var id = rave.getRegionWidgetIdFromElementId("does-not-23");
+            var id = rave.getObjectIdFromDomId("does-not-23");
             expect(id).toBeNull();
         });
 

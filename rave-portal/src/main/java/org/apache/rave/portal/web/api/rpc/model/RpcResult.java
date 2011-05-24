@@ -20,7 +20,7 @@
 package org.apache.rave.portal.web.api.rpc.model;
 
 /**
- * Result context for RPC operations for a given type
+ * Generic RPC result context for RPC operations of the given type
  */
 public class RpcResult<T> {
 

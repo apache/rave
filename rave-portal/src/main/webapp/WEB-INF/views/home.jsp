@@ -43,7 +43,7 @@
     var widgets = [];
 </script>
 <c:forEach var="region" items="${defaultPage.regions}">
-<div class="region" id="region-${region.id}" >
+<div class="region" id="region-${region.id}-id" >
     <c:forEach var="regionWidget" items="${region.regionWidgets}">
     <div class="widget-wrapper">
         <div class="widget-title-bar" >
@@ -67,6 +67,7 @@
 
 <script type="text/javascript">
     $(function(){
+        rave.setContext("<spring:url value="/app/" />");
         rave.initProviders();
         rave.initWidgets(rave.createWidgetMap(widgets));
         rave.initDragAndDrop();

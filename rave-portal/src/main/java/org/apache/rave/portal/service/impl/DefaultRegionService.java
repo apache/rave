@@ -25,6 +25,7 @@ import org.apache.rave.portal.repository.RegionRepository;
 import org.apache.rave.portal.service.RegionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -38,6 +39,7 @@ public class DefaultRegionService implements RegionService {
     }
 
     @Override
+    @Transactional
     public RegionWidget moveRegionWidget(long regionWidgetId, int newPosition, long toRegion, long fromRegion) {
         Region target = getFromRepository(toRegion);
         if(toRegion == fromRegion) {

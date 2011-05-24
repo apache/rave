@@ -150,7 +150,7 @@ rave.opensocial = rave.opensocial || (function() {
         //A patch should be submitted to Shindig's common container code to properly
         //set the iFrame ID to the module id
         var bodyId = args.gs.getActiveGadgetHolder().getElement().id;
-        var titleId = "widget-" + rave.getRegionWidgetIdFromElementId(bodyId) + "-title";
+        var titleId = "widget-" + rave.getObjectIdFromDomId(bodyId) + "-title";
         var element = document.getElementById(titleId);
         if (element) {
             element.innerHTML = gadgets.util.escapeString(args.a);
