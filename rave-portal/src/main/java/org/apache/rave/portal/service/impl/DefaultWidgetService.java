@@ -17,32 +17,33 @@
  * under the License.
  */
 
-package org.apache.rave.portal.repository.impl;
+package org.apache.rave.portal.service.impl;
 
-import org.apache.rave.portal.model.Region;
-import org.apache.rave.portal.repository.RegionRepository;
-import org.springframework.stereotype.Repository;
+import org.apache.rave.portal.model.Widget;
+import org.apache.rave.portal.repository.WidgetRepository;
+import org.apache.rave.portal.service.WidgetService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import java.util.List;
 
-import static org.apache.rave.portal.repository.impl.util.JpaUtil.saveOrUpdate;
+@Service
+public class DefaultWidgetService implements WidgetService {
 
-/**
- *  */
+    private final WidgetRepository widgetRepository;
 
-@Repository
-public class JpaRegionRepository implements RegionRepository {
-    @PersistenceContext
-    private EntityManager manager;
-
-    @Override
-    public Region getById(long regionId) {
-        return manager.find(Region.class, regionId);
+    @Autowired
+    public DefaultWidgetService(WidgetRepository widgetRepository) {
+        this.widgetRepository = widgetRepository;
     }
 
     @Override
-    public Region save(Region region) {
-        return saveOrUpdate(region.getId(), manager, region);
+    public List<Widget> getAllWidgets() {
+        return widgetRepository.getAll();
+    }
+
+    @Override
+    public Widget getWidget(long id) {
+        return widgetRepository.getById(id);
     }
 }

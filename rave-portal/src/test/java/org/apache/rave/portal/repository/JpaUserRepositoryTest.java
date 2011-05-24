@@ -19,7 +19,6 @@
 
 package org.apache.rave.portal.repository;
 
-import org.apache.rave.portal.model.Page;
 import org.apache.rave.portal.model.User;
 import org.hamcrest.CoreMatchers;
 import org.junit.Test;
@@ -28,11 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.util.List;
-
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)

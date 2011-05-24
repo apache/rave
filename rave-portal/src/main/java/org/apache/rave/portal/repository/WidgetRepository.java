@@ -18,5 +18,21 @@
  */
 package org.apache.rave.portal.repository;
 
+import org.apache.rave.portal.model.Widget;
+
+import java.util.List;
+
 public interface WidgetRepository {
+    /**
+     * Gets a list of all widgets in the repository
+     * @return a valid List
+     */
+    List<Widget> getAll();
+
+    /**
+     * Gets the widget by its id
+     * @param id the id of the target widget
+     * @return valid widget if exists; null otherwise
+     */
+    Widget getById(long id);
 }

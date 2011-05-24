@@ -20,6 +20,7 @@
 package org.apache.rave.portal.web.renderer;
 
 import org.apache.rave.portal.model.RegionWidget;
+
 import java.util.Collection;
 
 /**

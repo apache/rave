@@ -17,32 +17,10 @@
  * under the License.
  */
 
-package org.apache.rave.portal.repository.impl;
+package org.apache.rave.portal.web.util;
 
-import org.apache.rave.portal.model.Region;
-import org.apache.rave.portal.repository.RegionRepository;
-import org.springframework.stereotype.Repository;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
-import static org.apache.rave.portal.repository.impl.util.JpaUtil.saveOrUpdate;
-
-/**
- *  */
-
-@Repository
-public class JpaRegionRepository implements RegionRepository {
-    @PersistenceContext
-    private EntityManager manager;
-
-    @Override
-    public Region getById(long regionId) {
-        return manager.find(Region.class, regionId);
-    }
-
-    @Override
-    public Region save(Region region) {
-        return saveOrUpdate(region.getId(), manager, region);
-    }
+public class ViewNames {
+    public static final String HOME = "home";
+    public static final String STORE = "store";
+    public static final String WIDGET = "widget";
 }

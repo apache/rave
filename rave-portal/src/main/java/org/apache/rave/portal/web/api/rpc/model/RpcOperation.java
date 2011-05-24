@@ -19,8 +19,6 @@
 
 package org.apache.rave.portal.web.api.rpc.model;
 
-import org.apache.rave.portal.model.RegionWidget;
-
 /**
  * Defines an RPC operation that can be executed to return a given result
  */

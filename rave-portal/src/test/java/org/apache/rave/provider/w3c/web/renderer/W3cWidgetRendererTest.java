@@ -22,10 +22,9 @@ package org.apache.rave.provider.w3c.web.renderer;
 import org.apache.rave.exception.NotSupportedException;
 import org.apache.rave.portal.model.RegionWidget;
 import org.apache.rave.portal.model.Widget;
-import org.apache.rave.portal.service.WidgetService;
+import org.apache.rave.portal.service.WidgetProviderService;
 import org.apache.rave.portal.web.renderer.Renderer;
 import org.apache.rave.provider.w3c.Constants;
-import org.apache.rave.provider.w3c.web.renderer.W3cWidgetRenderer;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -39,11 +38,11 @@ import static org.junit.Assert.assertThat;
 public class W3cWidgetRendererTest {
 
     private Renderer<RegionWidget> renderer;
-    private WidgetService wookieService;
+    private WidgetProviderService wookieService;
 
     @Before
     public void setup() {
-        wookieService = createNiceMock(WidgetService.class);
+        wookieService = createNiceMock(WidgetProviderService.class);
         renderer = new W3cWidgetRenderer(wookieService);
     }
 

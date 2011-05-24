@@ -21,7 +21,6 @@ package org.apache.rave.portal.repository;
 
 import org.apache.rave.portal.model.Region;
 import org.apache.rave.portal.model.RegionWidget;
-import org.hamcrest.CoreMatchers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

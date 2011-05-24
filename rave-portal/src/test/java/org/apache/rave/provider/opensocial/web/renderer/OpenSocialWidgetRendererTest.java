@@ -20,10 +20,10 @@
 package org.apache.rave.provider.opensocial.web.renderer;
 
 import org.apache.rave.exception.NotSupportedException;
-import org.apache.rave.provider.opensocial.Constants;
 import org.apache.rave.portal.model.RegionWidget;
 import org.apache.rave.portal.model.Widget;
 import org.apache.rave.portal.web.renderer.Renderer;
+import org.apache.rave.provider.opensocial.Constants;
 import org.junit.Before;
 import org.junit.Test;
 

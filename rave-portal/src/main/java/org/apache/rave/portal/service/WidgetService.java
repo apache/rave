@@ -16,20 +16,28 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.rave.portal.service;
 
-import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.Widget;
 
+import java.util.List;
+
+/**
+ * Provides widget operations
+ */
 public interface WidgetService {
-    
+
     /**
-     * Gets the object that represents the metadata about the widget for 
-     * the viewer in the current context
-     * @param viewer the current logged in user
-     * @param context the context identifier for where the widget is displayed (e.g. regionwidget id)
-     * @param widget the default widget
-     * @return valid widget
+     * Gets a list of widgets that a user can add to their context
+     * @return valid list of widgets
      */
-    Widget getWidget(User viewer, String context, Widget widget);
+    List<Widget> getAllWidgets();
+
+    /**
+     * Gets the detailed metadata for a widget
+     * @param id the Id of the widget to add
+     * @return a valid widget if one exists for the given id; null otherwise
+     */
+    Widget getWidget(long id);
 }

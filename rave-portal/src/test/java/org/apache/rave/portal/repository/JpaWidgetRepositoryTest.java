@@ -17,48 +17,54 @@
  * under the License.
  */
 
-package org.apache.rave.portal.web.renderer;
+package org.apache.rave.portal.repository;
 
-
-import org.apache.rave.portal.model.RegionWidget;
 import org.apache.rave.portal.model.Widget;
+import org.hamcrest.CoreMatchers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
+import java.util.List;
+
+import static org.easymock.EasyMock.notNull;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 
+@Transactional
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations={"file:src/main/webapp/WEB-INF/dataContext.xml", "file:src/main/webapp/WEB-INF/applicationContext.xml"})
-public class RenderServiceIntegrationTest {
+@ContextConfiguration(locations = {"file:src/main/webapp/WEB-INF/dataContext.xml", "file:src/main/webapp/WEB-INF/applicationContext.xml"})
+public class JpaWidgetRepositoryTest {
+
+    @PersistenceContext
+    private EntityManager sharedManager;
 
     @Autowired
-    private RenderService service;
+    private WidgetRepository repository;
 
     @Test
-    public void supportedWidgets() {
-        assertThat(service.getSupportedWidgetTypes().size(), is(equalTo(2)));
-        assertThat(service.getSupportedWidgetTypes().contains("OpenSocial"), is(true));
-        assertThat(service.getSupportedWidgetTypes().contains("W3C"), is(true));
+    public void getById_valid() {
+        Widget widget = repository.getById(1L);
+        assertThat(widget, is(notNullValue()));
+        assertThat(widget.getId(), is(equalTo(1L)));
     }
 
     @Test
-    public void renderOpenSocial() {
-        Widget w = new Widget();
-        w.setType("OpenSocial");
-        w.setId(1L);
-        w.setTitle("Gadget Title");
-        w.setUrl("http://example.com/gadgets/1");
+    public void getById_invValid() {
+        Widget widget = repository.getById(-1L);
+        assertThat(widget, is(nullValue()));
+    }
 
-        RegionWidget rw = new RegionWidget();
-        rw.setId(2L);
-        rw.setWidget(w);
-
-        String rendered = service.render(rw);
-        assertThat(rendered, is(notNullValue()));
-        assertThat(rendered.contains("widgets.push({"), is(true));
+    @Test
+    public void getAll() {
+        List<Widget> widgets = repository.getAll();
+        assertThat(widgets, is(notNullValue()));
+        assertThat(widgets.size() > 4, is(true));
     }
 }

@@ -26,6 +26,9 @@ import javax.persistence.*;
 @Entity
 @Table(name="widget")
 @SequenceGenerator(name="widgetIdSeq", sequenceName = "widget_id_seq")
+@NamedQueries({
+        @NamedQuery(name = "Widget.getAll", query = "SELECT w from Widget w")
+})
 public class Widget {
     @Id @Column(name="id")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "widgetIdSeq")

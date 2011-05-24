@@ -21,10 +21,8 @@ package org.apache.rave.portal.web.renderer.impl;
 
 import org.apache.rave.exception.NotSupportedException;
 import org.apache.rave.portal.model.RegionWidget;
-import org.apache.rave.portal.model.Widget;
 import org.apache.rave.portal.web.renderer.RegionWidgetRenderer;
 import org.apache.rave.portal.web.renderer.RenderService;
-import org.apache.rave.portal.web.renderer.Renderer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

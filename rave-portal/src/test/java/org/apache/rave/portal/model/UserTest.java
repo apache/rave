@@ -17,11 +17,12 @@
  * under the License.
  */
 package org.apache.rave.portal.model;
-import org.junit.Test;
-import org.junit.Before;
 
-import static org.junit.Assert.assertTrue;
+import org.junit.Before;
+import org.junit.Test;
+
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Tests the User class.

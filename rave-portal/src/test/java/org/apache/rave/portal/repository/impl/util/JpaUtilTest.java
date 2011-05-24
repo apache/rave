@@ -19,11 +19,14 @@
 
 package org.apache.rave.portal.repository.impl.util;
 
+import org.junit.Test;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
+
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.Test;
-import static org.junit.Assert.*;
+
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
 
 /**
  *

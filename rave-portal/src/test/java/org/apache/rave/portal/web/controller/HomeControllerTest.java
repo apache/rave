@@ -23,7 +23,6 @@ import org.apache.rave.portal.model.Page;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.service.PageService;
 import org.apache.rave.portal.service.UserService;
-import org.apache.rave.portal.service.WidgetService;
 import org.apache.rave.portal.web.util.ModelKeys;
 import org.hamcrest.CoreMatchers;
 import org.junit.Before;

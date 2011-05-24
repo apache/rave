@@ -19,30 +19,30 @@
 
 package org.apache.rave.portal.repository.impl;
 
-import org.apache.rave.portal.model.Region;
-import org.apache.rave.portal.repository.RegionRepository;
+
+import org.apache.rave.portal.model.Widget;
+import org.apache.rave.portal.repository.WidgetRepository;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-
-import static org.apache.rave.portal.repository.impl.util.JpaUtil.saveOrUpdate;
-
-/**
- *  */
+import javax.persistence.TypedQuery;
+import java.util.List;
 
 @Repository
-public class JpaRegionRepository implements RegionRepository {
+public class JpaWidgetRepository implements WidgetRepository{
+
     @PersistenceContext
     private EntityManager manager;
 
     @Override
-    public Region getById(long regionId) {
-        return manager.find(Region.class, regionId);
+    public List<Widget> getAll() {
+        TypedQuery<Widget> query = manager.createNamedQuery("Widget.getAll", Widget.class);
+        return query.getResultList();
     }
 
     @Override
-    public Region save(Region region) {
-        return saveOrUpdate(region.getId(), manager, region);
+    public Widget getById(long id) {
+        return manager.find(Widget.class, id);
     }
 }

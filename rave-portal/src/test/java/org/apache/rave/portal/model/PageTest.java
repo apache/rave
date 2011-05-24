@@ -18,12 +18,12 @@
  */
 package org.apache.rave.portal.model;
 
-import org.junit.Test;
-import org.junit.Before;
 import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.assertTrue;
 

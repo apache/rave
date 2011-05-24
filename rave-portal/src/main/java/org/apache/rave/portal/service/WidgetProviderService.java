@@ -16,12 +16,20 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.rave.portal.service;
 
-package org.apache.rave.portal.web.util;
+import org.apache.rave.portal.model.User;
+import org.apache.rave.portal.model.Widget;
 
-public class ModelKeys {
-    public final static String PAGES = "pages"; // a list of pages available for the current user
-    public final static String ERROR_MESSAGE = "errorMessage"; // an error message to be reported to the user
-    public static final String WIDGETS = "widgets"; // a list of widget objects
-    public static final String WIDGET = "widget";
+public interface WidgetProviderService {
+    
+    /**
+     * Gets the object that represents the metadata about the widget for 
+     * the viewer in the current context
+     * @param viewer the current logged in user
+     * @param context the context identifier for where the widget is displayed (e.g. regionwidget id)
+     * @param widget the default widget
+     * @return valid widget
+     */
+    Widget getWidget(User viewer, String context, Widget widget);
 }

@@ -18,18 +18,14 @@
  */
 package org.apache.rave.portal.util;
 
-import org.junit.Test;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertNotNull;
-
-import org.apache.rave.portal.model.util.LocalizedString;
-import org.apache.rave.portal.util.LocalizationUtils;
-
 import com.ibm.icu.util.GlobalizationPreferences;
 import com.ibm.icu.util.ULocale;
+import org.apache.rave.portal.model.util.LocalizedString;
+import org.junit.Test;
 
 import java.util.ArrayList;
+
+import static org.junit.Assert.*;
 
 public class LocalizationUtilsTest {
 	@Test

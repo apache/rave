@@ -16,18 +16,20 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.rave.provider.w3c.service.impl;
 
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.Widget;
-import org.apache.rave.portal.service.WidgetService;
+import org.apache.rave.portal.service.WidgetProviderService;
+import org.springframework.stereotype.Service;
+
 //import org.apache.wookie.connector.framework.WidgetInstance;
 //import org.apache.wookie.connector.framework.WookieConnectorException;
 //import org.apache.wookie.connector.framework.WookieConnectorService;
-import org.springframework.stereotype.Service;
 
 @Service
-public class WookieWidgetService implements WidgetService {
+public class WookieWidgetService implements WidgetProviderService {
 	
 	// TODO uncomment when Wookie Connector is available in Maven
     
@@ -39,7 +41,7 @@ public class WookieWidgetService implements WidgetService {
     }
 
     /* (non-Javadoc)
-     * @see org.apache.rave.portal.service.WidgetService#getWidget(org.apache.rave.portal.model.User)
+     * @see org.apache.rave.portal.service.WidgetProviderService#getWidget(org.apache.rave.portal.model.User)
      */
     @Override
     public Widget getWidget(User viewer, String context, Widget widget) {
