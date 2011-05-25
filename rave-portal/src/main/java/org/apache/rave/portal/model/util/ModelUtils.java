@@ -16,12 +16,22 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.rave.portal.repository;
 
-import org.apache.rave.portal.model.RegionWidget;
+package org.apache.rave.portal.model.util;
 
-public interface RegionWidgetRepository {
-    RegionWidget getById(long regionWidgetId);
+import org.apache.rave.portal.model.RegionWidgetPreference;
 
-    RegionWidget save(RegionWidget regionWidget);
+import java.util.List;
+
+public class ModelUtils {
+    public static void normalizeRegionWidgetPreferences(long regionWidgetId, List<RegionWidgetPreference> preferences) {
+        for (RegionWidgetPreference preference : preferences) {
+            normalizeRegionWidgetPreference(regionWidgetId, preference);
+        }
+    }
+
+    public static void normalizeRegionWidgetPreference(long regionWidgetId, RegionWidgetPreference regionWidgetPreference) {
+        regionWidgetPreference.setRegionWidgetId(regionWidgetId);
+        regionWidgetPreference.setName(regionWidgetPreference.getName().toLowerCase());
+    }
 }

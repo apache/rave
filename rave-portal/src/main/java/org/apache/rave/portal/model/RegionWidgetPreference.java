@@ -36,12 +36,26 @@ public class RegionWidgetPreference {
     private Long id;
 
     @Basic
+    @Column(name = "region_widget_id")
+    private Long regionWidgetId;
+
+    @Basic
     @Column(name = "name")
     private String name;
 
     @Basic
     @Column(name = "value")
     private String value;
+
+    public RegionWidgetPreference() {
+    }
+
+    public RegionWidgetPreference(Long id, Long regionWidgetId, String name, String value) {
+        this.id = id;
+        this.regionWidgetId = regionWidgetId;
+        this.name = name;
+        this.value = value;
+    }
 
     /**
      * Gets the persistence unique identifier
@@ -54,6 +68,18 @@ public class RegionWidgetPreference {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    /**
+     * Gets the ID of the RegionWidget this preference is for
+     * @return The ID of the RegionWidget this preference is for
+     */
+    public Long getRegionWidgetId() {
+        return regionWidgetId;
+    }
+
+    public void setRegionWidgetId(Long regionWidgetId) {
+        this.regionWidgetId = regionWidgetId;
     }
 
     /**

@@ -16,12 +16,32 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.rave.portal.repository;
+
+package org.apache.rave.portal.repository.impl;
 
 import org.apache.rave.portal.model.RegionWidget;
+import org.apache.rave.portal.repository.RegionWidgetRepository;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
-public interface RegionWidgetRepository {
-    RegionWidget getById(long regionWidgetId);
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
-    RegionWidget save(RegionWidget regionWidget);
+import static org.apache.rave.portal.repository.impl.util.JpaUtil.saveOrUpdate;
+
+@Repository
+public class JpaRegionWidgetRepository implements RegionWidgetRepository {
+    @PersistenceContext
+    private EntityManager manager;
+
+    @Override
+    public RegionWidget getById(long regionWidgetId) {
+        return manager.find(RegionWidget.class, regionWidgetId);
+    }
+
+    @Override
+    @Transactional
+    public RegionWidget save(RegionWidget regionWidget) {
+        return saveOrUpdate(regionWidget.getId(), manager, regionWidget);
+    }
 }

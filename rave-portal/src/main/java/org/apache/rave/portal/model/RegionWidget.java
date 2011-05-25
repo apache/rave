@@ -19,35 +19,39 @@
 package org.apache.rave.portal.model;
 
 import javax.persistence.*;
-import java.util.Collection;
+import java.util.List;
 
 /**
  * A widget within a region
  */
 @Entity
-@Table(name="region_widget")
-@SequenceGenerator(name="regionWidgetIdSeq", sequenceName = "region_widget_id_seq")
+@Table(name = "region_widget")
+@SequenceGenerator(name = "regionWidgetIdSeq", sequenceName = "region_widget_id_seq")
 public class RegionWidget {
-    @Id @Column(name="id")
+    @Id
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "regionWidgetIdSeq")
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name="widget_id")
+    @JoinColumn(name = "widget_id")
     private Widget widget;
 
-    @Basic @Column(name="render_position")
+    @Basic
+    @Column(name = "render_position")
     private String renderPosition;
 
-    @Basic @Column(name="render_order")
+    @Basic
+    @Column(name = "render_order")
     private int renderOrder;
 
-    @Basic @Column(name="collapsed")
+    @Basic
+    @Column(name = "collapsed")
     private boolean collapsed;
 
-    @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name = "region_widget_id")
-    private Collection<RegionWidgetPreference> preferences;
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "region_widget_id", referencedColumnName = "id")
+    private List<RegionWidgetPreference> preferences;
 
     public RegionWidget() {
     }
@@ -88,13 +92,11 @@ public class RegionWidget {
     }
 
     /**
-     * Gets the render position of this widget.  When the widget instance in being displayed in a traditional horizontal
-     * or vertical region this will be a number indicating the position of this gadget relative to the others in the
-     * region.  When the widget instance is being displayed on a "desktop" type view (single region where the user can
-     * drag and drop widgets to a particular X and Y coordinate within that region) this value might be an X and Y
-     * coordinate of the upper left hand corner of the widget.  It will be up to the rendering engine (based on the type
-     * of PageLayout associated with the Page this widget is rendering on) to determine how to use the value from this
-     * field.
+     * Gets the render position of this widget.  When the widget instance is being displayed on a "desktop" type view
+     * (single region where the user can drag and drop widgets to a particular X and Y coordinate within that region)
+     * this value might be an X and Y coordinate of the upper left hand corner of the widget.  It will be up to the
+     * rendering engine (based on the type of PageLayout associated with the Page this widget is rendering on) to
+     * determine how to use the value from this field.
      *
      * @return The RegionWidgets position within the Region
      */
@@ -108,6 +110,7 @@ public class RegionWidget {
 
     /**
      * Gets the order relative to other gadgets in the region
+     *
      * @return the order of the gadget
      */
     public int getRenderOrder() {
@@ -136,11 +139,11 @@ public class RegionWidget {
      *
      * @return The user defined preferences for this RegionWidget.
      */
-    public Collection<RegionWidgetPreference> getPreferences() {
+    public List<RegionWidgetPreference> getPreferences() {
         return preferences;
     }
 
-    public void setPreferences(Collection<RegionWidgetPreference> preferences) {
+    public void setPreferences(List<RegionWidgetPreference> preferences) {
         this.preferences = preferences;
     }
 }

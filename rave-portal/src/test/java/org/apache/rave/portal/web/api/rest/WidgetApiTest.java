@@ -16,12 +16,22 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.rave.portal.repository;
 
-import org.apache.rave.portal.model.RegionWidget;
+package org.apache.rave.portal.web.api.rest;
 
-public interface RegionWidgetRepository {
-    RegionWidget getById(long regionWidgetId);
+import org.junit.Before;
+import org.junit.Test;
 
-    RegionWidget save(RegionWidget regionWidget);
+public class WidgetApiTest {
+    WidgetApi widgetApi;
+
+    @Before
+    public void setup() {
+        widgetApi = new WidgetApi();
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void getAllWidgets() {
+        widgetApi.getAllWidgets();
+    }
 }

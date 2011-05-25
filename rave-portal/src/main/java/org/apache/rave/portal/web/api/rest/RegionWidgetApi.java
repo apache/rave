@@ -17,42 +17,63 @@
  * under the License.
  */
 
-package org.apache.rave.portal.web.api;
+package org.apache.rave.portal.web.api.rest;
 
+import org.apache.commons.lang.Validate;
 import org.apache.rave.portal.model.RegionWidgetPreference;
+import org.apache.rave.portal.service.RegionWidgetService;
 import org.apache.rave.portal.web.model.RegionWidgetPreferenceListWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * Handler for all services exposed under the /api/regionWidgets path.
  */
 @Controller
-@RequestMapping("/api/regionWidgets")
+@RequestMapping("/api/rest/regionWidgets")
 public class RegionWidgetApi {
     private static Logger logger = LoggerFactory.getLogger(RegionWidgetApi.class);
 
+    private RegionWidgetService regionWidgetService;
+
+    @Autowired
+    public RegionWidgetApi(RegionWidgetService regionWidgetService) {
+        this.regionWidgetService = regionWidgetService;
+    }
+
     @ResponseBody
     @RequestMapping(value = "/{regionWidgetId}/preferences", method = RequestMethod.PUT)
-    public RegionWidgetPreferenceListWrapper replaceAllRegionWidgetPreferences(@PathVariable String regionWidgetId,
+    public RegionWidgetPreferenceListWrapper replaceAllRegionWidgetPreferences(@PathVariable long regionWidgetId,
                                                                                @RequestBody RegionWidgetPreferenceListWrapper
-                                                                                       regionWidgetPreferences) {
-        logger.debug("PUT received to replace all preferences for regionWidget: " + regionWidgetId + " with data: " +
-                regionWidgetPreferences);
+                                                                                       regionWidgetPreferenceListWrapper) {
+        if (logger.isDebugEnabled()) {
+            logger.debug("PUT received to replace all preferences for regionWidget: " + regionWidgetId + " with data: " +
+                    regionWidgetPreferenceListWrapper);
+        }
 
-        return regionWidgetPreferences;
+        List<RegionWidgetPreference> regionWidgetPreferences = regionWidgetService.saveRegionWidgetPreferences(
+                regionWidgetId, regionWidgetPreferenceListWrapper.getPreferences());
+        return new RegionWidgetPreferenceListWrapper(regionWidgetPreferences);
     }
 
     @ResponseBody
     @RequestMapping(value = "/{regionWidgetId}/preferences/{regionWidgetPreferenceName}", method = RequestMethod.PUT)
-    public RegionWidgetPreference createOrReplaceRegionWidgetPreference(@PathVariable String regionWidgetId,
+    public RegionWidgetPreference createOrReplaceRegionWidgetPreference(@PathVariable long regionWidgetId,
                                                                         @PathVariable String regionWidgetPreferenceName,
                                                                         @RequestBody RegionWidgetPreference regionWidgetPreference) {
-        logger.debug("PUT received to create or replace preference: " + regionWidgetPreferenceName + " for regionWidget: " +
-                regionWidgetId + " with data: " + regionWidgetPreference);
+        if (logger.isDebugEnabled()) {
+            logger.debug("PUT received to create or replace preference: " + regionWidgetPreferenceName + " for regionWidget: " +
+                    regionWidgetId + " with data: " + regionWidgetPreference);
+        }
 
-        return regionWidgetPreference;
+        Validate.isTrue(regionWidgetPreferenceName.equalsIgnoreCase(regionWidgetPreference.getName()),
+                "The preference name in the URL does not match the preference name in the RegionWidgetPreference object.");
+
+        return regionWidgetService.saveRegionWidgetPreference(regionWidgetId, regionWidgetPreference);
     }
 }

@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.apache.rave.portal.web.api;
+package org.apache.rave.portal.web.api.rest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
  * Handler for all services exposed under the /api/widgets path.
  */
 @Controller
-@RequestMapping("/api/widgets")
+@RequestMapping("/api/rest/widgets")
 public class WidgetApi {
     private static Logger logger = LoggerFactory.getLogger(WidgetApi.class);
 
