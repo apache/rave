@@ -17,18 +17,17 @@
  * under the License.
  */
 
-package org.apache.rave.portal.service;
+package org.apache.rave.portal.repository;
 
-import org.apache.rave.portal.model.RegionWidget;
-
-public interface RegionService {
+/**
+ * Defines generic operations for a repository
+ */
+public interface Repository<T> {
     /**
-     * Moves a Region widget's position in a region or across regions
-     * @param regionWidgetId the id of the moved RegionWidget
-     * @param newPosition the new index of the RegionWidget within the target region (0 based index)
-     * @param toRegion the id of the Region to move the RegionWidget to
-     * @param fromRegion the id of the Region where the RegionWidget currently resides
-     * @return the updated RegionWidget
+     * Gets the specified object from the persistence context
+     *
+     * @param id the id of the object of type T to retrieve
+     * @return a valid instance if id exists; null otherwise
      */
-    RegionWidget moveRegionWidget(long regionWidgetId, int newPosition, long toRegion, long fromRegion);
+    T getById(long id);
 }

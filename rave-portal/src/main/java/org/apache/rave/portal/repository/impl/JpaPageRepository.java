@@ -40,4 +40,9 @@ public class JpaPageRepository implements PageRepository {
         query.setParameter("userId", userId);
         return query.getResultList();
     }
+
+    @Override
+    public Page getById(long pageId) {
+        return manager.find(Page.class, pageId);
+    }
 }

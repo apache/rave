@@ -25,9 +25,8 @@ rave.api = rave.api || (function() {
         var path = "api/rpc/";
 
         function moveWidgetOnPage(args) {
-            $.post(rave.getContext() + path + "page/regionWidget/" + rave.getObjectIdFromDomId(args.widget.id),
+            $.post(rave.getContext() + path + "page/regionWidget/" + rave.getObjectIdFromDomId(args.widget.id) + "/move",
                     {
-                        operation: "MOVE",
                         new_position: args.targetIndex,
                         to_region: rave.getObjectIdFromDomId(args.targetRegion.id),
                         from_region: rave.getObjectIdFromDomId(args.currentRegion.id)
@@ -41,9 +40,8 @@ rave.api = rave.api || (function() {
         }
 
         function addWidgetToPage(args) {
-            $.post(rave.getContext() + path + "page/" + args.pageId,
+            $.post(rave.getContext() + path + "page/" + args.pageId + "/widget/add",
                     {
-                        operation: "ADD_COMPONENT",
                         widgetId: args.widgetId
                     },
                     function(result) {

@@ -23,10 +23,6 @@ package org.apache.rave.portal.web.api.rpc.model;
  * Defines an RPC operation that can be executed to return a given result
  */
 public abstract class RpcOperation<T> {
-    public static enum Type {
-        MOVE,
-        DELETE
-    }
 
     /**
      * Wrapped execution of a given execute method defined by the subclass.  Provides generic mapping of exceptions to

@@ -19,9 +19,8 @@
 
 package org.apache.rave.portal.web.api.rpc;
 
-import org.apache.rave.exception.NotSupportedException;
 import org.apache.rave.portal.model.RegionWidget;
-import org.apache.rave.portal.service.RegionService;
+import org.apache.rave.portal.service.PageService;
 import org.apache.rave.portal.web.api.rpc.model.RpcOperation;
 import org.apache.rave.portal.web.api.rpc.model.RpcResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,44 +34,39 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(value = "/api/rpc/page/*")
 public class PageApi {
 
-    private final RegionService regionService;
+    private final PageService pageService;
 
     @Autowired
-    public PageApi(RegionService regionService) {
-        this.regionService = regionService;
+    public PageApi(PageService pageService) {
+        this.pageService = pageService;
     }
-    //Generic method for RegionWidget RPC ops
-    @ResponseBody
-    @RequestMapping(method = RequestMethod.POST, value = "regionWidget/{region_widget_id}")
-    public RpcResult<RegionWidget> moveRegionWidget(@PathVariable final long region_widget_id,
-                                                    @RequestParam final RpcOperation.Type operation,
-                                                    @RequestParam final int new_position,
-                                                    @RequestParam final long to_region,
-                                                    @RequestParam final long from_region) {
-        RpcResult<RegionWidget> result;
-        switch (operation) {
-            case MOVE: {
-                result = new RpcOperation<RegionWidget>() {
-                    @Override
-                    public RegionWidget execute() {
-                        return regionService.moveRegionWidget(region_widget_id, new_position, to_region, from_region);
-                    }
-                }.getResult();
-                break;
-            }
-            case DELETE:
-                result = new RpcOperation<RegionWidget>() {
-                    @Override
-                    public RegionWidget execute() {
-                        throw new NotSupportedException("Not Supported");
-                    }
-                }.getResult();
-                break;
-            default: {
-                result = new RpcResult<RegionWidget>(true, "Invalid Operation Specified: " + operation, RpcResult.ErrorCode.INVALID_PARAMS);
-            }
-        }
 
-        return result;
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.POST, value = "{pageId}/widget/add")
+    public RpcResult<RegionWidget> doPageOperation(@PathVariable final long pageId,
+                                                   @RequestParam final long widgetId) {
+
+        return new RpcOperation<RegionWidget>() {
+            @Override
+            public RegionWidget execute() {
+                return pageService.addWidgetToPage(pageId, widgetId);
+            }
+        }.getResult();
+    }
+
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.POST, value = "regionWidget/{region_widget_id}/move")
+    public RpcResult<RegionWidget> doRegionWidgetOperation(@PathVariable final long region_widget_id,
+                                                           @RequestParam final int new_position,
+                                                           @RequestParam final long to_region,
+                                                           @RequestParam final long from_region) {
+
+
+        return new RpcOperation<RegionWidget>() {
+            @Override
+            public RegionWidget execute() {
+                return pageService.moveRegionWidget(region_widget_id, new_position, to_region, from_region);
+            }
+        }.getResult();
     }
 }

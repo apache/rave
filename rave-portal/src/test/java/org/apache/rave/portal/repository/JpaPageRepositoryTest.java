@@ -28,6 +28,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.List;
 
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -44,20 +45,35 @@ public class JpaPageRepositoryTest {
     @Test
     public void getAllPages_validUser_validPageSet() {
         List<Page> pages = repository.getAllPages(USER_ID);
-        assertThat(pages, CoreMatchers.notNullValue());
-        assertThat(pages.size(), CoreMatchers.equalTo(1));
-        assertThat(pages.get(0).getRegions().size(), CoreMatchers.equalTo(2));
-        assertThat(pages.get(0).getRegions().get(0).getRegionWidgets().size(), CoreMatchers.equalTo(2));
-        assertThat(pages.get(0).getRegions().get(0).getRegionWidgets().get(0).getWidget().getUrl(), CoreMatchers.equalTo(WIDGET_URL));
+        assertThat(pages, is(notNullValue()));
+        assertThat(pages.size(), equalTo(1));
+        assertThat(pages.get(0).getRegions().size(), equalTo(2));
+        assertThat(pages.get(0).getRegions().get(0).getRegionWidgets().size(), equalTo(2));
+        assertThat(pages.get(0).getRegions().get(0).getRegionWidgets().get(0).getWidget().getUrl(), equalTo(WIDGET_URL));
     }
     @Test
     public void getAllPages_invalidUser_emptySet() {
         List<Page> pages = repository.getAllPages(INVALID_USER);
-        assertThat(pages.isEmpty(), CoreMatchers.is(true));
+        assertThat(pages.isEmpty(), is(true));
     }
     @Test
     public void getAllPages_nullUser_emptySet() {
         List<Page> pages = repository.getAllPages(null);
-        assertThat(pages.isEmpty(), CoreMatchers.is(true));
+        assertThat(pages.isEmpty(), is(true));
     }
+    
+    @Test
+    public void getById_valid() {
+        Page p = repository.getById(1L);
+        assertThat(p, is(notNullValue()));
+        assertThat(p.getId(), is(equalTo(1L)));
+    }
+
+    @Test
+    public void getById_invalid() {
+        Page p = repository.getById(-1L);
+        assertThat(p, is(nullValue()));
+    }
+
+    
 }

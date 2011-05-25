@@ -20,7 +20,6 @@ package org.apache.rave.portal.repository;
 
 import org.apache.rave.portal.model.User;
 
-public interface UserRepository {
-    User getById(long userId);
+public interface UserRepository extends Repository<User>{
     User getByUsername(String username);
 }

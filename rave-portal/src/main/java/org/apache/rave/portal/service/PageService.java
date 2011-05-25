@@ -19,6 +19,7 @@
 package org.apache.rave.portal.service;
 
 import org.apache.rave.portal.model.Page;
+import org.apache.rave.portal.model.RegionWidget;
 
 import java.util.List;
 
@@ -30,4 +31,22 @@ public interface PageService {
      * @return A non null possible empty list of pages for the given user.
      */
     List<Page> getAllPages(long userId);
+
+    /**
+     * Moves a Region widget's position in a region or across regions
+     * @param regionWidgetId the id of the moved RegionWidget
+     * @param newPosition the new index of the RegionWidget within the target region (0 based index)
+     * @param toRegion the id of the Region to move the RegionWidget to
+     * @param fromRegion the id of the Region where the RegionWidget currently resides
+     * @return the updated RegionWidget
+     */
+    RegionWidget moveRegionWidget(long regionWidgetId, int newPosition, long toRegion, long fromRegion);
+
+    /**
+     * Creates a new instance of a widget and adds it to the first position of the first region on the page
+     * @param page_id the id of the page to add the widget to
+     * @param widget_id the {@link org.apache.rave.portal.model.Widget} id to add
+     * @return a valid widget instance
+     */
+    RegionWidget addWidgetToPage(long page_id, long widget_id);
 }

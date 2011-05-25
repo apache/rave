@@ -218,11 +218,14 @@ describe("Rave", function() {
             var sortableArgs = $().getSortableArgs();
             var mockItem = getMockItem();
             $.post = function(url, data, handler) {
-                expect(url).toEqual("api/rpc/page/regionWidget/24");
+                expect(url).toEqual("api/rpc/page/regionWidget/24/move");
                 expect(data.to_region).toEqual('35');
                 expect(data.from_region).toEqual('35');
                 expect(data.new_position).toEqual(2);
                 handler({error: false});
+                return {
+                    error: function(a, b, c) {}
+                }
             };
             sortableArgs.start({}, mockItem);
             sortableArgs.stop({}, mockItem);
@@ -234,6 +237,9 @@ describe("Rave", function() {
             var mockItem = getMockItem();
             $.post = function(url, data, handler) {
                 handler({error: true, errorCode: "INVALID_PARAMS"});
+                    return {
+                        error: function(a, b, c) {}
+                    }
             };
             alert = function(str) {
                 expect(str).toEqual("Rave attempted to update the server with your recent changes, " +
@@ -249,6 +255,10 @@ describe("Rave", function() {
             var mockItem = getMockItem();
             $.post = function(url, data, handler) {
                 handler({error: true, errorCode: "INTERNAL_ERROR"});
+
+                    return {
+                        error: function(a, b, c) {}
+                    }
             };
             alert = function(str) {
                 expect(str).toEqual("Rave attempted to update the server with your recent changes, " +
