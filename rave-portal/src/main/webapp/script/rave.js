@@ -85,7 +85,7 @@ var rave = rave || (function() {
             $(".region-dragging").removeClass("region-dragging");
             uiState.targetRegion = ui.item.parent().get(0);
             uiState.targetIndex = ui.item.index();
-            api.rpc.moveWidget(uiState);
+            rave.api.rpc.moveWidget(uiState);
             clearState();
         }
 
@@ -100,57 +100,6 @@ var rave = rave || (function() {
             init : init
         }
 
-    })();
-
-    /**
-     * Sub namespace for managing API functions
-     *
-     * Divided into REST and RPC to match server-side API
-     */
-    var api = (function() {
-        var rpcApi = (function() {
-            var path = "api/rpc/";
-
-            function moveWidgetOnPage(state) {
-                $.post(getContext() + path + "page/regionWidget/" + extractObjectIdFromElementId(state.widget.id),
-                        {
-                            operation: "MOVE",
-                            new_position: state.targetIndex,
-                            to_region: extractObjectIdFromElementId(state.targetRegion.id),
-                            from_region: extractObjectIdFromElementId(state.currentRegion.id)
-                        },
-                        function(result) {
-                            if(result.error) { handleRpcError(result); }
-                        }
-                );
-            }
-
-            //TODO: Create a more robust error handling system and interrogation of RPC results
-            function handleRpcError(rpcResult) {
-                switch(rpcResult.errorCode) {
-                    case "NO_ERROR" :
-                        break;
-                    case "INVALID_PARAMS":
-                        alert("Rave attempted to update the server with your recent changes, " +
-                              " but the changes were rejected by the server as invalid.");
-                        break;
-                    case "INTERNAL_ERROR":
-                        alert("Rave attempted to update the server with your recent changes, " +
-                              " but the server encountered an internal error.");
-                        break;
-                }
-                console.log(rpcResult.errorMessage);
-            }
-
-            return {
-                moveWidget : moveWidgetOnPage
-            }
-
-        })();
-
-        return {
-            rpc : rpcApi
-        };
     })();
 
     function initializeProviders() {

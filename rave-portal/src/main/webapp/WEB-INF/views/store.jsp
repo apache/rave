@@ -22,5 +22,52 @@
 --%><%@ taglib tagdir="/WEB-INF/tags" prefix="rave"%><%--
 
 --%><rave:rave_generic_page>
+<div id="banner">
+    <span class="backToPage">
+        <a href="<spring:url value="/index.html" />">Back to Rave</a>
+    </span>
+</div>
 
+<div id="navigation">
+
+</div>
+<div id="content">
+    <c:forEach var="widget" items="${widgets}">
+        <div class="storeItem">
+            <div class="storeItemLeft">
+                <c:if test="${not empty widget.thumbnailUrl}">
+                    <img class="storeWidgetThumbnail" src="${widget.thumbnailUrl}"
+                         title="${widget.title}" alt="${widget.title}"
+                         width="120" height="60"/>
+                </c:if>
+            </div>
+            <div class="storeItemCenter">
+                <div id="widgetAdded_${widget.id}" class="storeButton">
+                    <button class="storeItemButton"
+                            id="addWidget_${widget.id}"
+                            onclick="rave.api.rpc.addWidgetToPage({widgetId: ${widget.id}, pageId: ${referrer}});">
+                        Add to Page
+                    </button>
+                </div>
+                <a class="secondaryPageItemTitle"
+                   href="<spring:url value="/app/store/widget/${widget.id}" />?referrerId=${referrer}">${widget.title}
+                </a>
+
+                <div class="storeWidgetAuthor">By:
+                ${widget.author}</div>
+                <div class="storeWidgetDesc">${widget.description}</div>
+            </div>
+            <div class="clear-float" >&nbsp;</div>
+        </div>
+    </c:forEach>
+</div>
+<script type="text/javascript">
+    var rave = rave || {
+        getContext : function() {
+            return "<spring:url value="/app/" />";
+        }
+    }
+</script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js" type="text/javascript"></script>
+<script src="<spring:url value="/script/rave_api.js"/>" type="text/javascript"></script>
 </rave:rave_generic_page>

@@ -82,6 +82,10 @@ h1, h2, h3, h4, h5, h6 {
     margin-bottom: 0;
 }
 
+.clear-float {
+    clear: both;
+}
+
 .codehilite {
     background-color: #F00;
     padding: 0.01em 1em;
@@ -95,7 +99,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .widget-title-bar {
-    border: #999 solid 1px;
+    border: #b3c4cf solid 1px;
     color: #333;
 }
 
@@ -104,7 +108,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .widget {
-    border: #999 solid 1px;
+    border: #b3c4cf solid 1px;
     padding: 2px;
 }
 
@@ -121,12 +125,53 @@ h1, h2, h3, h4, h5, h6 {
     border: 1px solid black;
 }
 
+#storeWidgetDetail {
+    width: 100%;
+}
+
+.storeItem {
+    padding: 10px;
+    border: 1px solid #b3c4cf;
+}
+
+.widgetDetailRight {
+    width: 40%;
+}
+
+.storeItemLeft {
+   padding-left: 10px;
+    padding-right: 10px;
+    vertical-align: top;
+    width: 150px;
+
+}
+
+.storeItemCenter {
+    padding-left: 10px;
+    padding-right: 10px;
+    vertical-align: top;
+    margin-left: 150px;
+    float: left;
+    width: 50%;
+}
+
+.storeItems {
+    width: 50%;
+}
+
+.storeButton {
+    float: right;
+}
+
 .ui-sortable-placeholder {
     border: 1px dotted black;
     visibility: visible !important;
     background-color: #DDD;
 }
-.ui-sortable-placeholder * { visibility: hidden; }
+
+.ui-sortable-placeholder * {
+    visibility: hidden;
+}
 
 #navigation {
     border: 1px solid #e6ebed;
@@ -141,6 +186,8 @@ h1, h2, h3, h4, h5, h6 {
     background: none repeat scroll 0 0 #f5f8fa;
     margin: 20px 0 20px 0;
 }
+
+#storeTop
 
 #navigation img {
     padding-bottom: 15px;

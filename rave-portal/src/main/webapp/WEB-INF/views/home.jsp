@@ -32,11 +32,11 @@
 --%><c:set var="opensocial_engine_url" value="${osProtocol}://${osRoot}${osGadget}"/><%--
 
 --%><rave:rave_generic_page>
+<c:set var="defaultPage" value="${pages[0]}"/>
 <div id="header">
     <a href="<spring:url value="/j_spring_security_logout" htmlEscape="true" />">Logout</a>
+    <a href="<spring:url value="/app/store?referrerId=${defaultPage.id}" />">Widget Store</a>
 </div>
-
-<c:set var="defaultPage" value="${pages[0]}"/>
 <h1>Hello ${defaultPage.owner.username}, welcome to Rave!</h1>
 <script type="text/javascript">
     //Define the global widgets variable
@@ -60,6 +60,7 @@
 
 <script src="${opensocial_engine_url}/js/container.js?c=1&container=default&debug=1" type="text/javascript"></script>
 <script src="<spring:url value="/script/rave.js"/>" type="text/javascript"></script>
+<script src="<spring:url value="/script/rave_api.js"/>" type="text/javascript"></script>
 <script src="<spring:url value="/script/rave_opensocial.js"/>" type="text/javascript"></script>
 <script src="<spring:url value="/script/rave_wookie.js"/>" type="text/javascript"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js" type="text/javascript"></script>

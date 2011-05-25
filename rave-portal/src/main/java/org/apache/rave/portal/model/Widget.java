@@ -45,8 +45,20 @@ public class Widget {
     @Basic @Column(name="url")
     private String url;
 
+    @Basic @Column(name="thumbnail_url")
+    private String thumbnailUrl;
+
+    @Basic @Column(name="screenshot_url")
+    private String screenshotUrl;
+
     @Basic @Column(name="type")
     private String type;
+
+    @Basic @Column(name="author")
+    private String author;
+
+    @Basic @Column(name = "description")
+    private String description;
 
     /**
      * Gets the persistence unique identifier
@@ -70,6 +82,39 @@ public class Widget {
 //        this.title = title;
 //
 // }
+
+
+    public String getScreenshotUrl() {
+        return screenshotUrl;
+    }
+
+    public void setScreenshotUrl(String screenshotUrl) {
+        this.screenshotUrl = screenshotUrl;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getThumbnailUrl() {
+        return thumbnailUrl;
+    }
+
+    public void setThumbnailUrl(String thumbnailUrl) {
+        this.thumbnailUrl = thumbnailUrl;
+    }
 
     public String getType() {
         return type;

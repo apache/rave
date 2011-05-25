@@ -27,7 +27,7 @@ This tag will provide simple template layouts for pages that use it. See for exa
   <head>
      <title>Rave Home</title>
      <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/themes/base/jquery-ui.css"/>
-     <link rel="stylesheet" href="css/default.css"/>
+     <link rel="stylesheet" href="<c:url value="/css/default.css" />" />
   </head>
   <body>
 	<jsp:doBody/>

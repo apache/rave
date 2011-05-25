@@ -37,6 +37,8 @@ import static org.junit.Assert.assertThat;
 
 public class WidgetStoreControllerTest {
 
+    private static final long WIDGET_ID = 1L;
+    private static final long REFERRER_ID = 35L;
     private WidgetStoreController controller;
     private WidgetService widgetService;
 
@@ -55,11 +57,12 @@ public class WidgetStoreControllerTest {
         expect(widgetService.getAllWidgets()).andReturn(widgets);
         replay(widgetService);
 
-        String view = controller.view(model);
+        String view = controller.view(model, REFERRER_ID);
 
         verify(widgetService);
         assertThat(view, is(equalTo(ViewNames.STORE)));
         assertThat(model.containsAttribute(ModelKeys.WIDGETS), is(true));
+        assertThat((Long)model.asMap().get(ModelKeys.REFERER), is(equalTo(REFERRER_ID)));
         assertThat(widgets, is(sameInstance(widgets)));
     }
 
@@ -68,10 +71,10 @@ public class WidgetStoreControllerTest {
         Model model = new ExtendedModelMap();
         Widget w = new Widget();
 
-        expect(widgetService.getWidget(1L)).andReturn(w);
+        expect(widgetService.getWidget(WIDGET_ID)).andReturn(w);
         replay(widgetService);
 
-        String view = controller.viewWidget(model, 1L);
+        String view = controller.viewWidget(model, WIDGET_ID, REFERRER_ID);
 
         verify(widgetService);
         assertThat(view, is(equalTo(ViewNames.WIDGET)));

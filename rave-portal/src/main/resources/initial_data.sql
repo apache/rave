@@ -41,8 +41,8 @@ values (set(@user_id_6, next value for user_id_seq), 'http://rave2011.myopenid.c
 
 --- gadget data ---
 -- wikipedia widget
-insert into widget (id, title, url, type)
-values(set(@wikipedia_widget_id, next value for widget_id_seq), 'Wikipedia','http://www.google.com/ig/modules/wikipedia.xml', 'OpenSocial');
+insert into widget (id, title, url, type, description, author)
+values(set(@wikipedia_widget_id, next value for widget_id_seq), 'Wikipedia','http://www.google.com/ig/modules/wikipedia.xml', 'OpenSocial', 'A Wikipedia Search and Go widget. Language choice.', 'James Lee');
 
 -- translate widget
 insert into widget (id, title, url, type)

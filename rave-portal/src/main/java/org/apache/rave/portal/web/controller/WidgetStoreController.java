@@ -28,9 +28,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
-@RequestMapping(value = "/store/*")
+@RequestMapping(value = {"/store/*", "/store" })
 public class WidgetStoreController {
 
     private final WidgetService widgetService;
@@ -41,14 +42,16 @@ public class WidgetStoreController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public String view(Model model) {
+    public String view(Model model, @RequestParam long referrerId) {
         model.addAttribute(ModelKeys.WIDGETS, widgetService.getAllWidgets());
+        model.addAttribute(ModelKeys.REFERER, referrerId);
         return ViewNames.STORE;
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "widget/{widgetId}")
-    public String viewWidget(Model model, @PathVariable long widgetId) {
+    public String viewWidget(Model model, @PathVariable long widgetId, @RequestParam long referrerId) {
         model.addAttribute(ModelKeys.WIDGET, widgetService.getWidget(widgetId));
+        model.addAttribute(ModelKeys.REFERER, referrerId);
         return ViewNames.WIDGET;
     }
 }
