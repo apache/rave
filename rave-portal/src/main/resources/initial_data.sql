@@ -60,6 +60,10 @@ values(set(@tabnews_widget_id, next value for widget_id_seq), 'Google News Gadge
 -- hamster widget
 insert into widget (id, title, url, type)
 values(set(@hamster_widget_id, next value for widget_id_seq), 'Pet Hamster', 'http://hosting.gmodules.com/ig/gadgets/file/112581010116074801021/hamster.xml', 'OpenSocial');
+
+-- slideshare widget
+insert into widget (id, title, url, type)
+values(set(@gifts_widget_id, next value for widget_id_seq), 'Gifts', 'http://opensocial-resources.googlecode.com/svn/samples/tutorial/tags/api-0.8/gifts_1_friends.xml', 'OpenSocial');
 -- end widget data ----
 
 --- start page layout data ---

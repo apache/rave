@@ -35,7 +35,7 @@
 <c:set var="defaultPage" value="${pages[0]}"/>
 <div id="header">
     <a href="<spring:url value="/j_spring_security_logout" htmlEscape="true" />">Logout</a>
-    <a href="<spring:url value="/app/store?referrerId=${defaultPage.id}" />">Widget Store</a>
+    <a href="<spring:url value="/app/store?referringPageId=${defaultPage.id}" />">Widget Store</a>
 </div>
 <h1>Hello ${defaultPage.owner.username}, welcome to Rave!</h1>
 <script type="text/javascript">

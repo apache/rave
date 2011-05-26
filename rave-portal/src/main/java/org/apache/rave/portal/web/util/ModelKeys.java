@@ -24,5 +24,5 @@ public class ModelKeys {
     public final static String ERROR_MESSAGE = "errorMessage"; // an error message to be reported to the user
     public static final String WIDGETS = "widgets"; // a list of widget objects
     public static final String WIDGET = "widget";
-    public static final String REFERER = "referrer";
+    public static final String REFERRING_PAGE_ID = "referringPageId";
 }

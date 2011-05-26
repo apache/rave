@@ -44,14 +44,14 @@ public class WidgetStoreController {
     @RequestMapping(method = RequestMethod.GET)
     public String view(Model model, @RequestParam long referringPageId) {
         model.addAttribute(ModelKeys.WIDGETS, widgetService.getAllWidgets());
-        model.addAttribute(ModelKeys.REFERER, referringPageId);
+        model.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
         return ViewNames.STORE;
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "widget/{widgetId}")
     public String viewWidget(Model model, @PathVariable long widgetId, @RequestParam long referringPageId) {
         model.addAttribute(ModelKeys.WIDGET, widgetService.getWidget(widgetId));
-        model.addAttribute(ModelKeys.REFERER, referringPageId);
+        model.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
         return ViewNames.WIDGET;
     }
 }

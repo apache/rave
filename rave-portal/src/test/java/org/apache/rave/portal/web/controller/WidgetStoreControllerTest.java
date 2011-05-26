@@ -62,7 +62,7 @@ public class WidgetStoreControllerTest {
         verify(widgetService);
         assertThat(view, is(equalTo(ViewNames.STORE)));
         assertThat(model.containsAttribute(ModelKeys.WIDGETS), is(true));
-        assertThat((Long)model.asMap().get(ModelKeys.REFERER), is(equalTo(REFERRER_ID)));
+        assertThat((Long)model.asMap().get(ModelKeys.REFERRING_PAGE_ID), is(equalTo(REFERRER_ID)));
         assertThat(widgets, is(sameInstance(widgets)));
     }
 
