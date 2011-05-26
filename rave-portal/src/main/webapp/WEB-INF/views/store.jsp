@@ -45,12 +45,12 @@
                 <div id="widgetAdded_${widget.id}" class="storeButton">
                     <button class="storeItemButton"
                             id="addWidget_${widget.id}"
-                            onclick="rave.api.rpc.addWidgetToPage({widgetId: ${widget.id}, pageId: ${referrer}});">
+                            onclick="rave.api.rpc.addWidgetToPage({widgetId: ${widget.id}, pageId: ${referringPageId}});">
                         Add to Page
                     </button>
                 </div>
                 <a class="secondaryPageItemTitle"
-                   href="<spring:url value="/app/store/widget/${widget.id}" />?referrerId=${referrer}">${widget.title}
+                   href="<spring:url value="/app/store/widget/${widget.id}" />?referringPageId=${referringPageId}">${widget.title}
                 </a>
 
                 <div class="storeWidgetAuthor">By:

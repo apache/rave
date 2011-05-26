@@ -43,7 +43,7 @@ public class JpaUserRepositoryTest {
 
     @Test
     public void getById_validId() {
-        User user = repository.getById(USER_ID);
+        User user = repository.get(USER_ID);
         assertThat(user, CoreMatchers.notNullValue());
         assertThat(user.getUsername(), is(equalTo(USER_NAME)));
         assertThat(user.getPassword(), is(equalTo(USER_NAME)));
@@ -51,7 +51,7 @@ public class JpaUserRepositoryTest {
     }
     @Test
     public void getById_invalidId() {
-        User user = repository.getById(INVALID_USER);
+        User user = repository.get(INVALID_USER);
         assertThat(user, is(nullValue()));
     }
     @Test
@@ -64,7 +64,7 @@ public class JpaUserRepositoryTest {
     }
     @Test
     public void getByUsername_invalid() {
-        User user = repository.getById(INVALID_USER);
+        User user = repository.get(INVALID_USER);
         assertThat(user, is(nullValue()));
     }
 }

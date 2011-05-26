@@ -20,8 +20,4 @@ package org.apache.rave.portal.repository;
 
 import org.apache.rave.portal.model.RegionWidget;
 
-public interface RegionWidgetRepository {
-    RegionWidget getById(long regionWidgetId);
-
-    RegionWidget save(RegionWidget regionWidget);
-}
+public interface RegionWidgetRepository extends Repository<RegionWidget> { }

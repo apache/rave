@@ -51,7 +51,7 @@ public class RegionWidgetServiceTest {
     public void getRegionWidget_validId() {
         final RegionWidget VALID_REGION_WIDGET = new RegionWidget(VALID_REGION_WIDGET_ID);
 
-        expect(regionWidgetRepository.getById(VALID_REGION_WIDGET_ID)).andReturn(VALID_REGION_WIDGET);
+        expect(regionWidgetRepository.get(VALID_REGION_WIDGET_ID)).andReturn(VALID_REGION_WIDGET);
         replay(regionWidgetRepository);
 
         assertThat(regionWidgetService.getRegionWidget(VALID_REGION_WIDGET_ID), CoreMatchers.sameInstance(VALID_REGION_WIDGET));
@@ -59,7 +59,7 @@ public class RegionWidgetServiceTest {
 
     @Test
     public void getRegionWidget_invalidId() {
-        expect(regionWidgetRepository.getById(INVALID_REGION_WIDGET_ID)).andReturn(null);
+        expect(regionWidgetRepository.get(INVALID_REGION_WIDGET_ID)).andReturn(null);
         replay(regionWidgetRepository);
 
         assertThat(regionWidgetService.getRegionWidget(INVALID_REGION_WIDGET_ID), CoreMatchers.<Object>nullValue());
@@ -80,7 +80,7 @@ public class RegionWidgetServiceTest {
         final RegionWidget VALID_REGION_WIDGET = new RegionWidget(VALID_REGION_WIDGET_ID);
         VALID_REGION_WIDGET.setPreferences(getTestExistingRegionWidgetPreferences());
 
-        expect(regionWidgetRepository.getById(VALID_REGION_WIDGET_ID)).andReturn(VALID_REGION_WIDGET);
+        expect(regionWidgetRepository.get(VALID_REGION_WIDGET_ID)).andReturn(VALID_REGION_WIDGET);
         expect(regionWidgetRepository.save(VALID_REGION_WIDGET)).andReturn(VALID_REGION_WIDGET);
         replay(regionWidgetRepository);
 
@@ -96,7 +96,7 @@ public class RegionWidgetServiceTest {
         final RegionWidget VALID_REGION_WIDGET = new RegionWidget(VALID_REGION_WIDGET_ID);
         VALID_REGION_WIDGET.setPreferences(getTestExistingRegionWidgetPreferences());
 
-        expect(regionWidgetRepository.getById(VALID_REGION_WIDGET_ID)).andReturn(VALID_REGION_WIDGET).anyTimes();
+        expect(regionWidgetRepository.get(VALID_REGION_WIDGET_ID)).andReturn(VALID_REGION_WIDGET).anyTimes();
         expect(regionWidgetRepository.save(VALID_REGION_WIDGET)).andReturn(VALID_REGION_WIDGET).anyTimes();
         replay(regionWidgetRepository);
 

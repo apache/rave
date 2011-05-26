@@ -53,14 +53,14 @@ public class JpaRegionWidgetRepositoryTest {
 
     @Test
     public void getById_validId() {
-        RegionWidget regionWidget = repository.getById(VALID_REGION_WIDGET_ID);
+        RegionWidget regionWidget = repository.get(VALID_REGION_WIDGET_ID);
         assertThat(regionWidget, is(notNullValue()));
         assertThat(regionWidget.getId(), is(equalTo(VALID_REGION_WIDGET_ID)));
     }
 
     @Test
     public void getById_invalidId() {
-        RegionWidget regionWidget = repository.getById(INVALID_REGION_WIDGET_ID);
+        RegionWidget regionWidget = repository.get(INVALID_REGION_WIDGET_ID);
         assertThat(regionWidget, is(nullValue()));
     }
 
@@ -135,7 +135,7 @@ public class JpaRegionWidgetRepositoryTest {
     public void save_cascadeOrphan() {
         long VALID_PREFERENCE_ID = addPreferenceToRegionWidget(VALID_REGION_WIDGET_ID);
 
-        RegionWidget regionWidget = repository.getById(VALID_REGION_WIDGET_ID);
+        RegionWidget regionWidget = repository.get(VALID_REGION_WIDGET_ID);
         regionWidget.getPreferences().remove(0);
 
         RegionWidget saved = repository.save(regionWidget);
@@ -147,7 +147,7 @@ public class JpaRegionWidgetRepositoryTest {
     }
 
     private long addPreferenceToRegionWidget(long validRegionWidgetId) {
-        RegionWidget regionWidget = repository.getById(validRegionWidgetId);
+        RegionWidget regionWidget = repository.get(validRegionWidgetId);
         RegionWidgetPreference regionWidgetPreference = new RegionWidgetPreference(null, validRegionWidgetId,
                 VALID_PREFERENCE_NAME, VALID_PREFERENCE_VALUE);
         regionWidget.getPreferences().add(regionWidgetPreference);

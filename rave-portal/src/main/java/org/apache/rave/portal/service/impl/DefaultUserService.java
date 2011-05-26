@@ -73,7 +73,7 @@ public class DefaultUserService implements UserService {
 
     @Override
     public void setAuthenticatedUser(long userId) {
-        final User user = userRepository.getById(userId);
+        final User user = userRepository.get(userId);
         if(user == null) {
             throw new UsernameNotFoundException("User with id '" + userId + "' was not found!");
         }

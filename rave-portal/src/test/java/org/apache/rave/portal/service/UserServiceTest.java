@@ -95,7 +95,7 @@ public class UserServiceTest {
     @Test
     public void setAuthenticatedUser_valid() {
         final User authUser = new User(USER_ID);
-        expect(repository.getById(USER_ID)).andReturn(authUser).anyTimes();
+        expect(repository.get(USER_ID)).andReturn(authUser).anyTimes();
         replay(repository);
 
         service.setAuthenticatedUser(USER_ID);
@@ -106,7 +106,7 @@ public class UserServiceTest {
     @Test(expected = UsernameNotFoundException.class)
     public void setAuthenticatedUser_invalid_null() {
         final User authUser = new User(USER_ID);
-        expect(repository.getById(USER_ID)).andReturn(null).anyTimes();
+        expect(repository.get(USER_ID)).andReturn(null).anyTimes();
         replay(repository);
 
         service.setAuthenticatedUser(USER_ID);
@@ -133,7 +133,7 @@ public class UserServiceTest {
     @Test(expected = UsernameNotFoundException.class)
     public void loadByUsername_invalid_null() {
         final User authUser = new User(USER_ID);
-        expect(repository.getById(USER_ID)).andReturn(null).anyTimes();
+        expect(repository.get(USER_ID)).andReturn(null).anyTimes();
         replay(repository);
 
         service.setAuthenticatedUser(USER_ID);

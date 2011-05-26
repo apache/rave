@@ -43,7 +43,7 @@ public class DefaultRegionWidgetService implements RegionWidgetService {
 
     @Override
     public RegionWidget getRegionWidget(long regionWidgetId) {
-        return regionWidgetRepository.getById(regionWidgetId);
+        return regionWidgetRepository.get(regionWidgetId);
     }
 
     @Override

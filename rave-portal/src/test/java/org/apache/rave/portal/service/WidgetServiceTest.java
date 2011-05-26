@@ -56,7 +56,7 @@ public class WidgetServiceTest {
     @Test
     public void getWidget() {
         Widget w = new Widget();
-        expect(repository.getById(1L)).andReturn(w);
+        expect(repository.get(1L)).andReturn(w);
         replay(repository);
 
         Widget result = service.getWidget(1L);
@@ -66,7 +66,7 @@ public class WidgetServiceTest {
 
     @Test
     public void getWidget_null() {
-        expect(repository.getById(1L)).andReturn(null);
+        expect(repository.get(1L)).andReturn(null);
         replay(repository);
 
         Widget result = service.getWidget(1L);

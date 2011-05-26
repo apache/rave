@@ -44,6 +44,6 @@ public class DefaultWidgetService implements WidgetService {
 
     @Override
     public Widget getWidget(long id) {
-        return widgetRepository.getById(id);
+        return widgetRepository.get(id);
     }
 }

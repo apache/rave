@@ -19,6 +19,7 @@
 
 package org.apache.rave.portal.repository.impl;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.repository.UserRepository;
 import org.springframework.stereotype.Repository;
@@ -38,7 +39,7 @@ public class JpaUserRepository implements UserRepository{
     private EntityManager manager;
 
     @Override
-    public User getById(long userId) {
+    public User get(long userId) {
         return manager.find(User.class, userId);
     }
 
@@ -47,5 +48,10 @@ public class JpaUserRepository implements UserRepository{
         TypedQuery<User> query = manager.createNamedQuery("User.getByUsername", User.class);
         query.setParameter("username", username);
         return getSingleResult(query.getResultList());
+    }
+
+    @Override
+    public User save(User item) {
+        throw new NotImplementedException("Save is not implemented for this repository");
     }
 }

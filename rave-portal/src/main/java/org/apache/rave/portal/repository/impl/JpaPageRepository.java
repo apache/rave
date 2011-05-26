@@ -19,6 +19,7 @@
 
 package org.apache.rave.portal.repository.impl;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.apache.rave.portal.model.Page;
 import org.apache.rave.portal.repository.PageRepository;
 import org.springframework.stereotype.Repository;
@@ -42,7 +43,12 @@ public class JpaPageRepository implements PageRepository {
     }
 
     @Override
-    public Page getById(long pageId) {
+    public Page get(long pageId) {
         return manager.find(Page.class, pageId);
+    }
+
+    @Override
+    public Page save(Page item) {
+        throw new NotImplementedException("Save is not implemented for this repository");
     }
 }

@@ -18,5 +18,6 @@
  */
 package org.apache.rave.portal.repository;
 
-public interface PageLayoutRepository {
-}
+import org.apache.rave.portal.model.PageLayout;
+
+public interface PageLayoutRepository extends Repository<PageLayout> { }

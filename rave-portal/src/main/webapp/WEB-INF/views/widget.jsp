@@ -27,7 +27,7 @@
         <a href="<spring:url value="/index.html" />">Back to Rave</a>
     </span>
     <span>
-        <a href="<spring:url value="/app/store?referrerId=${referrer}" />">Back to Store</a>
+        <a href="<spring:url value="/app/store?referringPageId=${referringPageId}" />">Back to Store</a>
     </span>
 </div>
 
@@ -59,7 +59,7 @@
                     <div id="widgetAdded_${widget.id}" class="storeButton">
                         <button class="storeItemButton"
                                 id="addWidget_${widget.id}"
-                                onclick="rave.api.rpc.addWidgetToPage({widgetId: ${widget.id}, pageId: ${referrer}});">
+                                onclick="rave.api.rpc.addWidgetToPage({widgetId: ${widget.id}, pageId: ${referringPageId}});">
                             Add to Page
                         </button>
                     </div>

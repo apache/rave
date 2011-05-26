@@ -104,7 +104,7 @@ public class DefaultPageService implements PageService {
     }
 
     private static <T> T getFromRepository(long id, Repository<T> repo) {
-        T object = repo.getById(id);
+        T object = repo.get(id);
         if(object == null) {
             throw new IllegalArgumentException("Could not find object of given id in " + repo.getClass().getSimpleName());
         }

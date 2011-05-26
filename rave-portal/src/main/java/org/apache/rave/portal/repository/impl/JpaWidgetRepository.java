@@ -20,6 +20,7 @@
 package org.apache.rave.portal.repository.impl;
 
 
+import org.apache.commons.lang.NotImplementedException;
 import org.apache.rave.portal.model.Widget;
 import org.apache.rave.portal.repository.WidgetRepository;
 import org.springframework.stereotype.Repository;
@@ -42,7 +43,12 @@ public class JpaWidgetRepository implements WidgetRepository{
     }
 
     @Override
-    public Widget getById(long id) {
+    public Widget get(long id) {
         return manager.find(Widget.class, id);
+    }
+
+    @Override
+    public Widget save(Widget item) {
+        throw new NotImplementedException("Save is not implemented for this repository");
     }
 }

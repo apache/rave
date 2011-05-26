@@ -19,7 +19,6 @@
 package org.apache.rave.portal.repository;
 
 import org.apache.rave.portal.model.Page;
-import org.hamcrest.CoreMatchers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,14 +63,14 @@ public class JpaPageRepositoryTest {
     
     @Test
     public void getById_valid() {
-        Page p = repository.getById(1L);
+        Page p = repository.get(1L);
         assertThat(p, is(notNullValue()));
         assertThat(p.getId(), is(equalTo(1L)));
     }
 
     @Test
     public void getById_invalid() {
-        Page p = repository.getById(-1L);
+        Page p = repository.get(-1L);
         assertThat(p, is(nullValue()));
     }
 

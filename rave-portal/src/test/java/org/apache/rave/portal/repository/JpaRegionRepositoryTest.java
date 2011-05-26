@@ -52,7 +52,7 @@ public class JpaRegionRepositoryTest {
 
     @Test
     public void getById_validId() {
-        Region region = repository.getById(REGION_ID);
+        Region region = repository.get(REGION_ID);
         assertThat(region, is(notNullValue()));
         assertThat(region.getId(), is(equalTo(1L)));
         assertThat(region.getRegionWidgets().size(), is(equalTo(2)));
@@ -60,7 +60,7 @@ public class JpaRegionRepositoryTest {
 
     @Test
     public void getById_invalidId() {
-        Region region = repository.getById(INVALID_REGION_ID);
+        Region region = repository.get(INVALID_REGION_ID);
         assertThat(region, is(nullValue()));
     }
 
@@ -126,7 +126,7 @@ public class JpaRegionRepositoryTest {
 
     @Test
     public void save_cascadeOrphan() {
-        Region region = repository.getById(1L);
+        Region region = repository.get(1L);
         long id = region.getRegionWidgets().get(0).getId();
         region.getRegionWidgets().remove(0);
 

@@ -184,8 +184,8 @@ public class PageServiceTest {
         value.getRegions().add(targetRegion);
         Widget widget = new Widget();
 
-        expect(pageRepository.getById(PAGE_ID)).andReturn(value);
-        expect(widgetRepository.getById(WIDGET_ID)).andReturn(widget);
+        expect(pageRepository.get(PAGE_ID)).andReturn(value);
+        expect(widgetRepository.get(WIDGET_ID)).andReturn(widget);
         expect(regionRepository.save(originalRegion)).andReturn(originalRegion);
         replay(pageRepository);
         replay(regionRepository);
@@ -207,8 +207,8 @@ public class PageServiceTest {
     public void addWidgetToPage_invalidWidget() {
         long PAGE_ID = 1L;
         long WIDGET_ID = -1L;
-        expect(pageRepository.getById(PAGE_ID)).andReturn(new Page());
-        expect(widgetRepository.getById(WIDGET_ID)).andReturn(null);
+        expect(pageRepository.get(PAGE_ID)).andReturn(new Page());
+        expect(widgetRepository.get(WIDGET_ID)).andReturn(null);
         replay(pageRepository);
         replay(regionRepository);
         replay(widgetRepository);
@@ -220,8 +220,8 @@ public class PageServiceTest {
     public void addWidgetToPage_invalidPage() {
         long PAGE_ID = 1L;
         long WIDGET_ID = -1L;
-        expect(pageRepository.getById(PAGE_ID)).andReturn(null);
-        expect(widgetRepository.getById(WIDGET_ID)).andReturn(new Widget());
+        expect(pageRepository.get(PAGE_ID)).andReturn(null);
+        expect(widgetRepository.get(WIDGET_ID)).andReturn(new Widget());
         replay(pageRepository);
         replay(regionRepository);
         replay(widgetRepository);
@@ -240,15 +240,15 @@ public class PageServiceTest {
     }
 
     private void createMoveBetweenRegionsExpectations() {
-        expect(regionRepository.getById(TO_REGION_ID)).andReturn(targetRegion);
-        expect(regionRepository.getById(FROM_REGION_ID)).andReturn(originalRegion);
+        expect(regionRepository.get(TO_REGION_ID)).andReturn(targetRegion);
+        expect(regionRepository.get(FROM_REGION_ID)).andReturn(originalRegion);
         expect(regionRepository.save(targetRegion)).andReturn(targetRegion);
         expect(regionRepository.save(originalRegion)).andReturn(originalRegion);
         replay(regionRepository);
     }
 
     private void createMoveWithinRegionsExpectations() {
-        expect(regionRepository.getById(FROM_REGION_ID)).andReturn(originalRegion);
+        expect(regionRepository.get(FROM_REGION_ID)).andReturn(originalRegion);
         expect(regionRepository.save(originalRegion)).andReturn(originalRegion);
         replay(regionRepository);
     }

@@ -20,7 +20,6 @@
 package org.apache.rave.portal.repository;
 
 import org.apache.rave.portal.model.Widget;
-import org.hamcrest.CoreMatchers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,14 +49,14 @@ public class JpaWidgetRepositoryTest {
 
     @Test
     public void getById_valid() {
-        Widget widget = repository.getById(1L);
+        Widget widget = repository.get(1L);
         assertThat(widget, is(notNullValue()));
         assertThat(widget.getId(), is(equalTo(1L)));
     }
 
     @Test
     public void getById_invValid() {
-        Widget widget = repository.getById(-1L);
+        Widget widget = repository.get(-1L);
         assertThat(widget, is(nullValue()));
     }
 

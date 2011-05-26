@@ -24,12 +24,4 @@ import org.apache.rave.portal.model.Region;
 /**
  * Provides persistence operations for the {@link Region} class
  */
-public interface RegionRepository extends Repository<Region>{
-
-    /**
-     * Creates or updates the region in the persistence context
-     * @param region valid region to persist
-     * @return the persisted region
-     */
-    Region save(Region region);
-}
+public interface RegionRepository extends Repository<Region>{ }

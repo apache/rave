@@ -37,7 +37,7 @@ public class JpaRegionRepository implements RegionRepository {
     private EntityManager manager;
 
     @Override
-    public Region getById(long regionId) {
+    public Region get(long regionId) {
         return manager.find(Region.class, regionId);
     }
 

@@ -24,10 +24,17 @@ package org.apache.rave.portal.repository;
  */
 public interface Repository<T> {
     /**
-     * Gets the specified object from the persistence context
+     * Gets the specified object from the persistence context by its id
      *
      * @param id the id of the object of type T to retrieve
      * @return a valid instance if id exists; null otherwise
      */
-    T getById(long id);
+    T get(long id);
+
+    /**
+     * Save the given item in the repository
+     * @param item the item to save
+     * @return the persisted item
+     */
+    T save(T item);
 }

@@ -35,7 +35,7 @@ public class JpaRegionWidgetRepository implements RegionWidgetRepository {
     private EntityManager manager;
 
     @Override
-    public RegionWidget getById(long regionWidgetId) {
+    public RegionWidget get(long regionWidgetId) {
         return manager.find(RegionWidget.class, regionWidgetId);
     }
 
@@ -44,4 +44,6 @@ public class JpaRegionWidgetRepository implements RegionWidgetRepository {
     public RegionWidget save(RegionWidget regionWidget) {
         return saveOrUpdate(regionWidget.getId(), manager, regionWidget);
     }
+
+
 }
