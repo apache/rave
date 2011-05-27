@@ -27,6 +27,9 @@ import java.util.Iterator;
 import java.util.Map;
 
 public class CollectionUtils {
+
+    private CollectionUtils() {}
+
     /**
      * Helper for the reconcileObjectCollections method.
      */

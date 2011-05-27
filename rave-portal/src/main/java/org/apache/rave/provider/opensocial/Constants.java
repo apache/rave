@@ -23,5 +23,6 @@ package org.apache.rave.provider.opensocial;
  * Constants used while managing OpenSocial widgets
  */
 public class Constants {
+    private Constants() {}
     public static final String WIDGET_TYPE = "OpenSocial";
 }

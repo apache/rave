@@ -24,6 +24,9 @@ import org.apache.rave.portal.model.RegionWidgetPreference;
 import java.util.List;
 
 public class ModelUtils {
+
+    private ModelUtils(){};
+
     public static void normalizeRegionWidgetPreferences(long regionWidgetId, List<RegionWidgetPreference> preferences) {
         for (RegionWidgetPreference preference : preferences) {
             normalizeRegionWidgetPreference(regionWidgetId, preference);

@@ -29,6 +29,8 @@ import java.util.List;
  */
 public class JpaUtil {
 
+    private JpaUtil() {}
+
     /**
      * Gets a single, unique result from the list
      * @param list list of results

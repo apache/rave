@@ -23,5 +23,6 @@ package org.apache.rave.provider.w3c;
  * Defines constants for W3C widgets
  */
 public class Constants {
+    private Constants(){}
     public static final String WIDGET_TYPE = "W3C";
 }

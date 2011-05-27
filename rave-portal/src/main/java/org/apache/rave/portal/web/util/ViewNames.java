@@ -23,6 +23,7 @@ package org.apache.rave.portal.web.util;
  * Defines constants representing the available view names in the system
  */
 public class ViewNames {
+    private ViewNames() {}
     public static final String HOME = "home";
     public static final String STORE = "store";
     public static final String WIDGET = "widget";

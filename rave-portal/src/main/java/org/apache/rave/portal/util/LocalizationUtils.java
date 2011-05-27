@@ -39,7 +39,7 @@ public class LocalizationUtils {
     static Logger _logger = LoggerFactory.getLogger(LocalizationUtils.class);
 
 	 //Private, empty constructor for class with only static methods.
-	 private LocalizationUtils() {};
+	 private LocalizationUtils() {}
 	 
     /**
      * Returns the first (best) match for an element given the set of locales, or null if there are no suitable
