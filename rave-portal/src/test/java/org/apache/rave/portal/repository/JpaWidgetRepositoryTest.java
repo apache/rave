@@ -29,10 +29,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-
 import java.util.List;
 
-import static org.easymock.EasyMock.notNull;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 

@@ -99,6 +99,32 @@ public class RegionWidgetTagTest {
         tag.doStartTag();
     }
 
+
+    @Test(expected = JspException.class)
+    public void doStartTag_IOException() throws JspException, IOException {
+
+        RegionWidget regionWidget = new RegionWidget();
+        Widget widget = new Widget();
+        regionWidget.setWidget(widget);
+        widget.setType("INVALID");
+
+        Set<String> strings = new HashSet<String>();
+        strings.add(WIDGET_TYPE);
+
+        expect(service.getSupportedWidgetTypes()).andReturn(strings);
+        replay(service);
+
+        JspWriter writer = createNiceMock(JspWriter.class);
+        writer.print(RENDERED);
+        expectLastCall().andThrow(new IOException());
+        replay(writer);
+
+        replay(pageContext);
+
+        tag.doStartTag();
+        tag.doStartTag();
+    }
+
     @Test(expected = JspException.class)
     public void doStartTag_unsupportedWidget() throws JspException {
         replay(pageContext);
