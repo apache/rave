@@ -40,6 +40,7 @@
                          title="${widget.title}" alt="${widget.title}"
                          width="120" height="60"/>
                 </c:if>
+                <div class="widgetType">${widget.type}</div>
             </div>
             <div class="storeItemCenter">
                 <div id="widgetAdded_${widget.id}" class="storeButton">

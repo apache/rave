@@ -31,7 +31,7 @@ import org.springframework.stereotype.Component;
 import static org.apache.rave.provider.w3c.Constants.WIDGET_TYPE;
 
 /**
- * Renders W3C widgets via the injected Wookie service
+ * Creates the appropriate markup to represent a W3C widget
  */
 @Component
 public class W3cWidgetRenderer implements RegionWidgetRenderer {
@@ -57,6 +57,11 @@ public class W3cWidgetRenderer implements RegionWidgetRenderer {
         return WIDGET_TYPE;
     }
 
+    /**
+     * Renders a {@link org.apache.rave.portal.model.RegionWidget} as HTML markup
+     * @param item RegionWidget to render
+     * @return valid HTML markup
+     */
     @Override
     public String render(RegionWidget item) {
         Widget widget = item.getWidget();

@@ -30,7 +30,7 @@ public interface Renderer<T> {
     String getSupportedContext();
 
     /**
-     * Renders the item
+     * Renders the item as a String
      * @param item item to render
      * @return String representing the rendered item
      */

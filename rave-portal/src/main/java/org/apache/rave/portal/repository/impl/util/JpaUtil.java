@@ -29,6 +29,13 @@ import java.util.List;
  */
 public class JpaUtil {
 
+    /**
+     * Gets a single, unique result from the list
+     * @param list list of results
+     * @param <T> the type of the result item
+     * @return mull if the list is empty; the item if there is exactly 1 item in the list; exception otherwise
+     * @throws IncorrectResultSizeDataAccessException if there are more than 1 items in the list
+     */
     public static <T> T getSingleResult(List<T> list) {
         if (list == null) {
             return null;
@@ -43,6 +50,16 @@ public class JpaUtil {
                 throw new IncorrectResultSizeDataAccessException(1);
         }
     }
+
+    /**
+     * Persists or merges the entity into the given {@link EntityManager} depending on whether or not the id is null
+     * @param id the ID of the entity being saved or updated
+     * @param entityManager the entity manager to persist or merge to
+     * @param entity the entity to save or update
+     * @param <T> the type of the Entity
+     * @param <I> the type of the Entity's Id
+     * @return the entity in the persistence context
+     */
     public static <T, I> T saveOrUpdate(I id, EntityManager entityManager, T entity) {
         if (id == null) {
             entityManager.persist(entity);

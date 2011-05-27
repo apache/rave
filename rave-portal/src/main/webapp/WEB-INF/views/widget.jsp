@@ -46,6 +46,7 @@
                          width="120" height="60"/>
                 </c:if>
                 <div class="widgetDetailMeta">
+                    <div class="widgetType">${widget.type}</div>
                     <div class="widgetVersion"></div>
                     <div class="widgetLastUpdated"></div>
                 </div>

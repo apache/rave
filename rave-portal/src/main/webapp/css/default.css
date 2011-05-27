@@ -134,15 +134,24 @@ h1, h2, h3, h4, h5, h6 {
     border: 1px solid #b3c4cf;
 }
 
-.widgetDetailRight {
-    width: 40%;
+.widgetDetailLeft {
+    widgth: 150px;
+    vertical-align: top;
 }
+
+.widgetDetailRight {
+    width: 60%;
+    vertical-align: top;
+    padding-left: 10px;
+}
+
 
 .storeItemLeft {
    padding-left: 10px;
-    padding-right: 10px;
-    vertical-align: top;
-    width: 150px;
+   padding-right: 10px;
+   vertical-align: top;
+   width: 150px;
+   float: left;
 
 }
 
@@ -150,7 +159,6 @@ h1, h2, h3, h4, h5, h6 {
     padding-left: 10px;
     padding-right: 10px;
     vertical-align: top;
-    margin-left: 150px;
     float: left;
     width: 50%;
 }

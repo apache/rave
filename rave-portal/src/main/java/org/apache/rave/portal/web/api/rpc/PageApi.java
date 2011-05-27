@@ -28,7 +28,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * Provides RPC functions via the API.
+ * Defines RPC operations for a Page or its components
  */
 @Controller
 @RequestMapping(value = "/api/rpc/page/*")
@@ -41,9 +41,16 @@ public class PageApi {
         this.pageService = pageService;
     }
 
+    /**
+     * Adds a widget to the given page
+     * @param pageId the ID of the {@link org.apache.rave.portal.model.Page} to add the widget to
+     * @param widgetId the ID of the {@link org.apache.rave.portal.model.Widget} to add do the page
+     * @return a {@link RpcOperation} containing the new widget instance ({@link org.apache.rave.portal.model.RegionWidget }) or
+     *         any errors encountered while performing the RPC operation
+     */
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "{pageId}/widget/add")
-    public RpcResult<RegionWidget> doPageOperation(@PathVariable final long pageId,
+    public RpcResult<RegionWidget> addWidgetToPage(@PathVariable final long pageId,
                                                    @RequestParam final long widgetId) {
 
         return new RpcOperation<RegionWidget>() {
@@ -54,18 +61,29 @@ public class PageApi {
         }.getResult();
     }
 
+    /**
+     * Moves a widget to a new location
+     * <p/>
+     * Moves can take place within a region, region to region, or between pages
+     * @param regionWidgetId the ID of the {@link org.apache.rave.portal.model.RegionWidget} to move
+     * @param newPosition the 0 based index within the region where the RegionWidget will now be located
+     * @param toRegion the Id of the {@link org.apache.rave.portal.model.Region } where the widget will now be located
+     * @param fromRegion the Id of the {@link org.apache.rave.portal.model.Region } where the widget is currently located
+     * @return a {@link RpcOperation} containing the updated widget instance ({@link org.apache.rave.portal.model.RegionWidget }) or
+     *         any errors encountered while performing the RPC operation
+     */
     @ResponseBody
-    @RequestMapping(method = RequestMethod.POST, value = "regionWidget/{region_widget_id}/move")
-    public RpcResult<RegionWidget> doRegionWidgetOperation(@PathVariable final long region_widget_id,
-                                                           @RequestParam final int new_position,
-                                                           @RequestParam final long to_region,
-                                                           @RequestParam final long from_region) {
+    @RequestMapping(method = RequestMethod.POST, value = "regionWidget/{regionWidgetId}/move")
+    public RpcResult<RegionWidget> moveWidgetOnPage(@PathVariable final long regionWidgetId,
+                                                    @RequestParam final int newPosition,
+                                                    @RequestParam final long toRegion,
+                                                    @RequestParam final long fromRegion) {
 
 
         return new RpcOperation<RegionWidget>() {
             @Override
             public RegionWidget execute() {
-                return pageService.moveRegionWidget(region_widget_id, new_position, to_region, from_region);
+                return pageService.moveRegionWidget(regionWidgetId, newPosition, toRegion, fromRegion);
             }
         }.getResult();
     }

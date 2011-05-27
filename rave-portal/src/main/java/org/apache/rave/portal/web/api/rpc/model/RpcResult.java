@@ -24,6 +24,9 @@ package org.apache.rave.portal.web.api.rpc.model;
  */
 public class RpcResult<T> {
 
+    /**
+     * Error codes returned to the client for any errors encountered while performing the operation.
+     */
     public static enum ErrorCode {
         NO_ERROR,
         INVALID_PARAMS,
@@ -35,23 +38,57 @@ public class RpcResult<T> {
     private ErrorCode errorCode;
     private T result;
 
+    /**
+     * Constructs a new  instance and sets the default error code to the following:
+     * <p/>
+     * if error is true:
+     *    INTERNAL_ERROR
+     * else
+     *    NO_ERROR
+     *
+     * @param error boolean representing whether an error occurred
+     */
     public RpcResult(boolean error) {
         this.error = error;
         setDefaultCode(error);
     }
 
+    /**
+     * Constructs a new instance, sets a result and sets the default error code to the following:
+     * <p/>
+     * if error is true:
+     *    INTERNAL_ERROR
+     * else
+     *    NO_ERROR
+     *
+     * @param error boolean representing whether an error occurred
+     * @param result the result of the RPC operation
+     */
     public RpcResult(boolean error, T result) {
         this.error = error;
         this.result = result;
         setDefaultCode(error);
     }
 
+    /**
+     * Constructs a new instance with the specified values
+     * @param error  boolean representing whether an error occurred
+     * @param errorMessage the error message to return to the caller
+     * @param errorCode the error code to return to the caller
+     */
     public RpcResult(boolean error, String errorMessage, ErrorCode errorCode) {
         this.error = error;
         this.errorMessage = errorMessage;
         this.errorCode = errorCode;
     }
 
+    /**
+     * Constructs a new instance with the specified values
+     * @param error  boolean representing whether an error occurred
+     * @param errorMessage the error message to return to the caller
+     * @param errorCode the error code to return to the caller
+     * @param result the result of the RPC operation
+     */
     public RpcResult(boolean error, String errorMessage, ErrorCode errorCode, T result) {
         this.error = error;
         this.errorMessage = errorMessage;

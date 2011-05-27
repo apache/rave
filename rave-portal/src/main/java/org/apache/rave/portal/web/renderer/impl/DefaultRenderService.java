@@ -33,6 +33,9 @@ import java.util.Map;
 
 /**
  * Default implementation of {@link RenderService}
+ * <p/>
+ * Retrieves a list of all {@link org.apache.rave.portal.web.renderer.Renderer} beans for supported operations
+ * and delegates rendering operations to them
  */
 @Service
 public class DefaultRenderService implements RenderService {
@@ -50,6 +53,13 @@ public class DefaultRenderService implements RenderService {
         return supportedWidgets.keySet();
     }
 
+    /**
+     * Renders the given widget iff there is a {@link org.apache.rave.portal.web.renderer.RegionWidgetRenderer } for the
+     * widget type
+     * @param widget widget to renderer
+     * @return the String representation of the rendered RegionWidget
+     * @throws {@link org.apache.rave.exception.NotSupportedException}
+     */
     @Override
     public String render(RegionWidget widget) {
         RegionWidgetRenderer renderer = supportedWidgets.get(widget.getWidget().getType());

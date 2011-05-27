@@ -26,7 +26,7 @@ import org.apache.rave.provider.opensocial.Constants;
 import org.springframework.stereotype.Component;
 
 /**
- * Creates a String representing the JavaScript and DOM elements to be inserted into the page
+ * Creates the appropriate markup to represent a W3C widget
  * <p/>
  * //TODO: Create infrastructure for rendering inline gadgets via Caja
  */
@@ -46,6 +46,11 @@ public class OpenSocialWidgetRenderer implements RegionWidgetRenderer {
         return Constants.WIDGET_TYPE;
     }
 
+    /**
+     * Renders a {@link org.apache.rave.portal.model.RegionWidget} as HTML markup
+     * @param item RegionWidget to render
+     * @return valid HTML markup
+     */
     @Override
     public String render(RegionWidget item) {
         String type = item.getWidget().getType();

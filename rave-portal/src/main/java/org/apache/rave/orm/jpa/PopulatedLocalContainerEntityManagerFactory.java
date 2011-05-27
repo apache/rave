@@ -28,6 +28,7 @@ import javax.persistence.spi.PersistenceUnitInfo;
 
 /**
  * {@inheritDoc}
+ * <p/>
  * Creates a LocalContainerEntityManagerFactoryBean that calls a DataSourcePopulator bean to insert data into the
  * DataSource immediately after the factory is initialized
  */

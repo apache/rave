@@ -34,6 +34,7 @@ public interface PageService {
 
     /**
      * Moves a Region widget's position in a region or across regions
+     *
      * @param regionWidgetId the id of the moved RegionWidget
      * @param newPosition the new index of the RegionWidget within the target region (0 based index)
      * @param toRegion the id of the Region to move the RegionWidget to

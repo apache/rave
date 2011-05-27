@@ -21,7 +21,6 @@ package org.apache.rave.portal.web.api.rpc;
 
 import org.apache.rave.portal.model.RegionWidget;
 import org.apache.rave.portal.service.PageService;
-import org.apache.rave.portal.web.api.rpc.model.RpcOperation;
 import org.apache.rave.portal.web.api.rpc.model.RpcResult;
 import org.junit.Before;
 import org.junit.Test;
@@ -54,7 +53,7 @@ public class PageApiTest {
 
         expect(pageService.moveRegionWidget(REGION_WIDGET_ID, NEW_POSITION, TO_REGION, FROM_REGION)).andReturn(new RegionWidget());
         replay(pageService);
-        RpcResult<RegionWidget> result = pageApi.doRegionWidgetOperation(REGION_WIDGET_ID, NEW_POSITION, TO_REGION, FROM_REGION);
+        RpcResult<RegionWidget> result = pageApi.moveWidgetOnPage(REGION_WIDGET_ID, NEW_POSITION, TO_REGION, FROM_REGION);
         verify(pageService);
         assertThat(result, is(notNullValue()));
         assertThat(result.getResult(), is(notNullValue()));
@@ -71,7 +70,7 @@ public class PageApiTest {
         expect(pageService.moveRegionWidget(REGION_WIDGET_ID, NEW_POSITION, TO_REGION, FROM_REGION)).andThrow(new IllegalArgumentException(PARAM_ERROR_MESSAGE));
         replay(pageService);
 
-        RpcResult<RegionWidget> result = pageApi.doRegionWidgetOperation(REGION_WIDGET_ID, NEW_POSITION, TO_REGION, FROM_REGION);
+        RpcResult<RegionWidget> result = pageApi.moveWidgetOnPage(REGION_WIDGET_ID, NEW_POSITION, TO_REGION, FROM_REGION);
         verify(pageService);
         assertThat(result, is(notNullValue()));
         assertThat(result.getResult(), is(nullValue()));
@@ -88,7 +87,7 @@ public class PageApiTest {
         expect(pageService.moveRegionWidget(REGION_WIDGET_ID, NEW_POSITION, TO_REGION, FROM_REGION)).andThrow(new RuntimeException(INTERNAL_ERROR_MESSAGE));
         replay(pageService);
 
-        RpcResult<RegionWidget> result = pageApi.doRegionWidgetOperation(REGION_WIDGET_ID, NEW_POSITION, TO_REGION, FROM_REGION);
+        RpcResult<RegionWidget> result = pageApi.moveWidgetOnPage(REGION_WIDGET_ID, NEW_POSITION, TO_REGION, FROM_REGION);
         verify(pageService);
         assertThat(result, is(notNullValue()));
         assertThat(result.getResult(), is(nullValue()));
@@ -104,7 +103,7 @@ public class PageApiTest {
 
         expect(pageService.addWidgetToPage(PAGE_ID, WIDGET_ID)).andReturn(new RegionWidget());
         replay(pageService);
-        RpcResult result = pageApi.doPageOperation(PAGE_ID, WIDGET_ID);
+        RpcResult result = pageApi.addWidgetToPage(PAGE_ID, WIDGET_ID);
         verify(pageService);
         assertThat(result, is(notNullValue()));
         assertThat(result.getResult(), is(notNullValue()));
@@ -120,7 +119,7 @@ public class PageApiTest {
 
         expect(pageService.addWidgetToPage(PAGE_ID, WIDGET_ID)).andThrow(new IllegalArgumentException(PARAM_ERROR_MESSAGE));
         replay(pageService);
-        RpcResult result = pageApi.doPageOperation(PAGE_ID, WIDGET_ID);
+        RpcResult result = pageApi.addWidgetToPage(PAGE_ID, WIDGET_ID);
         verify(pageService);
         assertThat(result, is(notNullValue()));
         assertThat(result.getResult(), is(nullValue()));
@@ -136,7 +135,7 @@ public class PageApiTest {
 
         expect(pageService.addWidgetToPage(PAGE_ID, WIDGET_ID)).andThrow(new RuntimeException(INTERNAL_ERROR_MESSAGE));
         replay(pageService);
-        RpcResult result = pageApi.doPageOperation(PAGE_ID, WIDGET_ID);
+        RpcResult result = pageApi.addWidgetToPage(PAGE_ID, WIDGET_ID);
         verify(pageService);
         assertThat(result, is(notNullValue()));
         assertThat(result.getResult(), is(nullValue()));

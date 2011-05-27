@@ -42,9 +42,9 @@ describe("Rave API", function() {
 
                 $.post = function(url, data, callback) {
                     expect(url).toEqual("api/rpc/page/regionWidget/3/move");
-                    expect(data.to_region).toEqual("1");
-                    expect(data.from_region).toEqual("2");
-                    expect(data.new_position).toEqual(3);
+                    expect(data.toRegion).toEqual("1");
+                    expect(data.fromRegion).toEqual("2");
+                    expect(data.newPosition).toEqual(3);
                     expect(typeof(callback)).toEqual("function");
                     return {
                         error: function(a, b, c) {}

@@ -36,7 +36,7 @@ public interface WidgetService {
 
     /**
      * Gets the detailed metadata for a widget
-     * @param id the Id of the widget to add
+     * @param id the Id of the widget
      * @return a valid widget if one exists for the given id; null otherwise
      */
     Widget getWidget(long id);

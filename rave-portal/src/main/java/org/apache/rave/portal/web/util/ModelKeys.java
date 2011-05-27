@@ -19,6 +19,9 @@
 
 package org.apache.rave.portal.web.util;
 
+/**
+ * Defines constants representing the available keys used for inserting and retrieving objects from the {@link org.springframework.ui.Model}
+ */
 public class ModelKeys {
     public final static String PAGES = "pages"; // a list of pages available for the current user
     public final static String ERROR_MESSAGE = "errorMessage"; // an error message to be reported to the user

@@ -219,9 +219,9 @@ describe("Rave", function() {
             var mockItem = getMockItem();
             $.post = function(url, data, handler) {
                 expect(url).toEqual("api/rpc/page/regionWidget/24/move");
-                expect(data.to_region).toEqual('35');
-                expect(data.from_region).toEqual('35');
-                expect(data.new_position).toEqual(2);
+                expect(data.toRegion).toEqual('35');
+                expect(data.fromRegion).toEqual('35');
+                expect(data.newPosition).toEqual(2);
                 handler({error: false});
                 return {
                     error: function(a, b, c) {}

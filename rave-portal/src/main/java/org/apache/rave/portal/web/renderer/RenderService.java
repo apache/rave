@@ -24,7 +24,7 @@ import org.apache.rave.portal.model.RegionWidget;
 import java.util.Collection;
 
 /**
- *  Renders the objects as strings that can be inserted into the view
+ *  Renders model objects as strings that can be inserted into the view
  */
 public interface RenderService {
     /**
@@ -34,7 +34,7 @@ public interface RenderService {
     Collection<String> getSupportedWidgetTypes();
 
     /**
-     * Render the widget
+     * Renders the {@link org.apache.rave.portal.model.RegionWidget} as a String
      *
      * @param widget widget to renderer
      * @return a String representing the rendered widget

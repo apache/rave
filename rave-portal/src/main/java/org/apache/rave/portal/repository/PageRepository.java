@@ -22,6 +22,9 @@ import org.apache.rave.portal.model.Page;
 
 import java.util.List;
 
+/**
+ * Provides persistence operations for the {@link org.apache.rave.portal.model.Page} class
+ */
 public interface PageRepository extends Repository<Page> {
     List<Page> getAllPages(Long userId);
 }

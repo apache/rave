@@ -41,6 +41,12 @@ public class WidgetStoreController {
         this.widgetService = widgetService;
     }
 
+    /**
+     * Views the main page of the widget store
+     * @param model model map
+     * @param referringPageId the source {@link org.apache.rave.portal.model.Page } ID
+     * @return the view name of the main store page
+     */
     @RequestMapping(method = RequestMethod.GET)
     public String view(Model model, @RequestParam long referringPageId) {
         model.addAttribute(ModelKeys.WIDGETS, widgetService.getAllWidgets());
@@ -48,6 +54,13 @@ public class WidgetStoreController {
         return ViewNames.STORE;
     }
 
+    /**
+     * Views details of the specified widget
+     * @param model model map
+     * @param widgetId ID of the {@link org.apache.rave.portal.model.Widget } to view
+     * @param referringPageId the source {@link org.apache.rave.portal.model.Page } ID
+     * @return the view name of the widget detail page
+     */
     @RequestMapping(method = RequestMethod.GET, value = "widget/{widgetId}")
     public String viewWidget(Model model, @PathVariable long widgetId, @RequestParam long referringPageId) {
         model.addAttribute(ModelKeys.WIDGET, widgetService.getWidget(widgetId));

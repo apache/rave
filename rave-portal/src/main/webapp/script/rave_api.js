@@ -27,9 +27,9 @@ rave.api = rave.api || (function() {
         function moveWidgetOnPage(args) {
             $.post(rave.getContext() + path + "page/regionWidget/" + rave.getObjectIdFromDomId(args.widget.id) + "/move",
                     {
-                        new_position: args.targetIndex,
-                        to_region: rave.getObjectIdFromDomId(args.targetRegion.id),
-                        from_region: rave.getObjectIdFromDomId(args.currentRegion.id)
+                        newPosition: args.targetIndex,
+                        toRegion: rave.getObjectIdFromDomId(args.targetRegion.id),
+                        fromRegion: rave.getObjectIdFromDomId(args.currentRegion.id)
                     },
                     function(result) {
                         if (result.error) {

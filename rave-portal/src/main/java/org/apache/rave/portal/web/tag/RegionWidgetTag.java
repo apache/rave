@@ -30,7 +30,7 @@ import javax.servlet.jsp.tagext.TagSupport;
 import java.io.IOException;
 
 /**
- * JSP tag that renders a given Widget
+ * JSP tag that renders a RegionWidget
  */
 public class RegionWidgetTag extends TagSupport {
 
@@ -45,6 +45,12 @@ public class RegionWidgetTag extends TagSupport {
         this.regionWidget = regionWidget;
     }
 
+    /**
+     * Delegates rendering of the RegionWidget to the RenderService
+     *
+     * @return EVAL_BODY_INCLUDE if no exception is thrown
+     * @throws JspException if the regionWidget is not set or is not supported by the renderService.
+     */
     @Override
     public int doStartTag() throws JspException {
         if (regionWidget != null && getRenderService().getSupportedWidgetTypes().contains(regionWidget.getWidget().getType())) {
