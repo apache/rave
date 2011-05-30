@@ -18,13 +18,17 @@
  */
 var rave = rave || {};
 /**
- * Namespace that provides client access to Rave server APIs
+ * Namespace that provides client access to Rave server APIs. 
+ * Note required jquery libraries must be imported by the containing page.
  */
 rave.api = rave.api || (function() {
     var rpcApi = (function() {
+		  //Base path to RPC services
         var path = "api/rpc/";
 
+		  //This method is implemented by PageApi.java.  
         function moveWidgetOnPage(args) {
+            //Note context must be set outside this library.  See home.jsp for example.
             $.post(rave.getContext() + path + "page/regionWidget/" + rave.getObjectIdFromDomId(args.widget.id) + "/move",
                     {
                         newPosition: args.targetIndex,
@@ -50,6 +54,18 @@ rave.api = rave.api || (function() {
                         }
                     }).error(handleError);
         }
+
+		  function deleteWidgetOnPage(args) {
+				$.post(rave.getContext() + path + "page/" +args.pageId + "/widget/delete",
+						 {
+							  //TODO must implement
+						 },
+						 function(result) {
+							  if(results.error) {
+									handleRpcError(result);
+							  }
+						 }).error(handleError);
+		  }
 
         function handleError(jqXhr, status, error) {
             alert("Rave encountered an error while trying to contact the server.  Please reload the page and try again. error: " + error);

@@ -103,6 +103,10 @@ var rave = rave || (function() {
     })();
 
     function initializeProviders() {
+		  //Current providers are rave.wookie and rave.opensocial.  
+		  //Providers register themselves when loaded, so 
+		  //JavaScript library importing order is important.
+		  //See home.jsp for example.
         for (var i = 0; i < providerList.length; i++) {
             providerList[i].init();
         }

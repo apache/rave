@@ -196,5 +196,5 @@ rave.opensocial = rave.opensocial || (function() {
 
 })();
 
-//Register teh widget provider with Rave
+//Register the widget provider with Rave
 rave.registerProvider(rave.opensocial);

@@ -55,5 +55,5 @@ rave.wookie = rave.wookie || (function() {
 
 
 })();
-//Register teh widget provider with Rave
+//Register the widget provider with Rave
 rave.registerProvider(rave.wookie);

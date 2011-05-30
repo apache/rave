@@ -20,6 +20,7 @@ package org.apache.rave.portal.service;
 
 import org.apache.rave.portal.model.Page;
 import org.apache.rave.portal.model.RegionWidget;
+import org.apache.rave.portal.model.Region;
 
 import java.util.List;
 
@@ -50,4 +51,12 @@ public interface PageService {
      * @return a valid widget instance
      */
     RegionWidget addWidgetToPage(long page_id, long widget_id);
+
+	 /**
+	  * Deletes a specified widget from the specied page.
+	  * @param page_id the id of the page containing the widget to delete
+	  * @param widget_id the id of the widget to delete.
+	  * @return the updated Region. //TODO need to make sure this is the right return.
+	  */
+	 Region removeWidgetFromPage(long page_id, long widget_id);
 }

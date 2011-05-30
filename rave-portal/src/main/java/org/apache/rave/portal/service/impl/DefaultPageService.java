@@ -65,6 +65,13 @@ public class DefaultPageService implements PageService {
         return findRegionWidgetById(regionWidgetId, target.getRegionWidgets());
     }
 
+	 @Override
+	 @Transactional
+	 public Region removeWidgetFromPage(long pageId, long widgetId){
+		  //TODO must implement.  Returns null for the time being.
+		  return null;
+	 }
+
     @Override
     @Transactional
     public RegionWidget addWidgetToPage(long pageId, long widgetId) {
