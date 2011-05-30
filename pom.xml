@@ -60,6 +60,10 @@
         <org.openid4java.version>0.9.6</org.openid4java.version>
         <jersey-server.version>1.6</jersey-server.version>
         <jersey-spring.version>1.0</jersey-spring.version>
+        
+        <!-- Force maven-filesync-plugin rewrite the Eclipse FileSync plugin configuration with
+            $mvn filesync:generate -Dmaven.filesync.override=true -->
+        <maven.filesync.override>false</maven.filesync.override>
     </properties>
 
     <repositories>
@@ -279,29 +283,44 @@
         </dependency>
     </dependencies>
 
-    <build>
-        <defaultGoal>install</defaultGoal>
+  <build>
+    <defaultGoal>install</defaultGoal>
 
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>2.3.2</version>
-                    <configuration>
-                        <source>1.6</source>
-                        <target>1.6</target>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-war-plugin</artifactId>
-                    <version>2.1.1</version>
-                </plugin>
-            </plugins>
-        </pluginManagement>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>2.3.2</version>
+          <configuration>
+            <source>1.6</source>
+            <target>1.6</target>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-war-plugin</artifactId>
+          <version>2.1.1</version>
+        </plugin>
+        <plugin>
+          <groupId>com.googlecode.mavenfilesync</groupId>
+          <artifactId>maven-filesync-plugin</artifactId>
+          <version>1.0.0</version>
+          <configuration>
+            <override>${maven.filesync.override}</override>
+          </configuration>
+          <executions>
+            <execution>
+              <goals>
+                <goal>generate</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+      </plugins>
+    </pluginManagement>
 
-    </build>
+  </build>
 
     <modules>
         <module>rave-shindig</module>
