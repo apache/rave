@@ -1,4 +1,4 @@
-/*
+ /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -58,7 +58,8 @@ rave.api = rave.api || (function() {
 		  function deleteWidgetOnPage(args) {
 				$.post(rave.getContext() + path + "page/" +args.pageId + "/widget/delete",
 						 {
-							  //TODO must implement
+							  widgetId: args.regionWidgetId,
+                       regionId: rave.getObjectIdFromDomId(args.region.id)						
 						 },
 						 function(result) {
 							  if(results.error) {
@@ -90,7 +91,8 @@ rave.api = rave.api || (function() {
 
         return {
             moveWidget : moveWidgetOnPage,
-            addWidgetToPage : addWidgetToPage
+            addWidgetToPage : addWidgetToPage,
+				removeWidget : deleteWidgetOnPage
         }
 
     })();

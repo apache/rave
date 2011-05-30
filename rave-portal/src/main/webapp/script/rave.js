@@ -156,6 +156,14 @@ var rave = rave || (function() {
     function getContext() {
         return context;
     }
+	 
+	 /**
+	  * Deletes the gadget/widget from the display.
+     * TODO: must be implemented.
+	  */
+	 function deleteWidgetFromPage() {
+		  return null;
+	 }
 
     /**
      * Public API
@@ -176,6 +184,7 @@ var rave = rave || (function() {
          * Initialize Rave's drag and drop facilities
          */
         initDragAndDrop : ui.init,
+
         /**
          * Creates a map of widgets by their type
          *
@@ -214,6 +223,13 @@ var rave = rave || (function() {
         /**
          * Gets the current context
          */
-        getContext: getContext
+        getContext: getContext,
+
+		  /**
+			* Remove a selected gadget from the page
+			*/
+		  deleteGadget : deleteWidgetFromPage
+
+
     }
 })();

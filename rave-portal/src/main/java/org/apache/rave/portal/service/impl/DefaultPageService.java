@@ -67,9 +67,10 @@ public class DefaultPageService implements PageService {
 
 	 @Override
 	 @Transactional
-	 public Region removeWidgetFromPage(long pageId, long widgetId){
+	 public Region removeWidgetFromPage(long regionWidgetId, long regionId){
 		  //TODO must implement.  Returns null for the time being.
-		  return null;
+        Region region = getFromRepository(regionId, regionRepository);
+        return removeWidgetInstance(regionWidgetId, region);
 	 }
 
     @Override
@@ -110,6 +111,14 @@ public class DefaultPageService implements PageService {
         target.getRegionWidgets().add(newPosition, widget);
     }
 
+	 private Region removeWidgetInstance(long regionWidgetId, Region region) {
+        RegionWidget regionWidget = findRegionWidgetById(regionWidgetId, region.getRegionWidgets());
+		  region.getRegionWidgets().remove(regionWidget);		
+		  updateRenderSequences(region.getRegionWidgets());
+		  regionRepository.save(region);
+		  return region;
+	 }
+
     private static <T> T getFromRepository(long id, Repository<T> repo) {
         T object = repo.get(id);
         if(object == null) {
@@ -134,4 +143,5 @@ public class DefaultPageService implements PageService {
         }
         throw new IllegalArgumentException("Invalid RegionWidget ID");
     }
+	 
 }
