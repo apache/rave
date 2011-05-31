@@ -23,10 +23,10 @@ var rave = rave || {};
  */
 rave.api = rave.api || (function() {
     var rpcApi = (function() {
-		  //Base path to RPC services
+      //Base path to RPC services
         var path = "api/rpc/";
 
-		  //This method is implemented by PageApi.java.  
+      //This method is implemented by PageApi.java.  
         function moveWidgetOnPage(args) {
             //Note context must be set outside this library.  See home.jsp for example.
             $.post(rave.getContext() + path + "page/regionWidget/" + rave.getObjectIdFromDomId(args.widget.id) + "/move",
@@ -55,18 +55,21 @@ rave.api = rave.api || (function() {
                     }).error(handleError);
         }
 
-		  function deleteWidgetOnPage(args) {
-				$.post(rave.getContext() + path + "page/" +args.pageId + "/widget/delete",
-						 {
-							  widgetId: args.regionWidgetId,
-                       regionId: rave.getObjectIdFromDomId(args.region.id)						
-						 },
-						 function(result) {
-							  if(results.error) {
-									handleRpcError(result);
-							  }
-						 }).error(handleError);
-		  }
+      function deleteWidgetOnPage(args) {
+        $.post(rave.getContext() + path + "page/" +args.pageId + "/widget/delete",
+             {
+                widgetId: args.regionWidgetId,
+                regionId: rave.getObjectIdFromDomId(args.region.id)            
+             },
+             function(result) {
+                if(result.error && result.error == true) {
+                  handleRpcError(result);
+                } else {
+                	if (args.succCB != null && typeof args.succCB == 'function')
+                		args.succCB();
+                }
+             }).error(handleError);
+      }
 
         function handleError(jqXhr, status, error) {
             alert("Rave encountered an error while trying to contact the server.  Please reload the page and try again. error: " + error);
@@ -92,8 +95,8 @@ rave.api = rave.api || (function() {
         return {
             moveWidget : moveWidgetOnPage,
             addWidgetToPage : addWidgetToPage,
-				removeWidget : deleteWidgetOnPage
-        }
+      removeWidget : deleteWidgetOnPage
+        };
 
     })();
 

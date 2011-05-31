@@ -23,6 +23,7 @@ import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.service.PageService;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.portal.web.util.ModelKeys;
+import org.apache.rave.portal.web.util.ViewNames;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -51,6 +52,6 @@ public class HomeController {
         User user = userService.getAuthenticatedUser();
         List<Page> pages = pageService.getAllPages(user.getUserId());
         model.addAttribute(ModelKeys.PAGES, pages);
-        return "home";
+        return ViewNames.HOME;
     }
 }

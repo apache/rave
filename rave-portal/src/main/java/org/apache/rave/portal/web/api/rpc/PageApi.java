@@ -123,7 +123,7 @@ public class PageApi {
 	 */
 	@ResponseBody
     @RequestMapping(method=RequestMethod.POST, value="{pageId}/widget/delete")	
-    public RpcResult<Region> removeWidgetFromPage(@PathVariable final long widgetId, 
+    public RpcResult<Region> removeWidgetFromPage(@RequestParam final long widgetId, 
 																  @RequestParam final long regionId) {
 		return new RpcOperation<Region>() {
 			@Override

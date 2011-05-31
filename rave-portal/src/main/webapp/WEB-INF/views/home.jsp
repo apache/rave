@@ -37,6 +37,15 @@
     <a href="<spring:url value="/j_spring_security_logout" htmlEscape="true" />">Logout</a>
     <a href="<spring:url value="/app/store?referringPageId=${defaultPage.id}" />">Widget Store</a>
 </div>
+
+<script src="${opensocial_engine_url}/js/container.js?c=1&container=default&debug=1" type="text/javascript"></script>
+<script src="<spring:url value="/script/rave.js"/>" type="text/javascript"></script>
+<script src="<spring:url value="/script/rave_api.js"/>" type="text/javascript"></script>
+<script src="<spring:url value="/script/rave_opensocial.js"/>" type="text/javascript"></script>
+<script src="<spring:url value="/script/rave_wookie.js"/>" type="text/javascript"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js" type="text/javascript"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js" type="text/javascript"></script>
+
 <h1>Hello ${defaultPage.owner.username}, welcome to Rave!</h1>
 <script type="text/javascript">
     //Define the global widgets variable
@@ -46,9 +55,47 @@
 <c:forEach var="region" items="${defaultPage.regions}">
 <div class="region" id="region-${region.id}-id" >
     <c:forEach var="regionWidget" items="${region.regionWidgets}">
-    <div class="widget-wrapper">
+    <!-- FIXME: whether region.id should be included in the id. 
+         I am not sure whether id's of widgets in different regions can be the same.
+         If so, region.id must be included. When a gadget is moved, region id must be updated. 
+         Otherwise, it is not needed.
+    -->
+    <div class="widget-wrapper" id="widget-wrapper-${region.id}-${regionWidget.id}">
         <div class="widget-title-bar" >
             <span id="widget-${regionWidget.id}-title">${regionWidget.widget.title}</span>
+            
+            <span id="widget-${regionWidget.id}-toolbar" style="float:right;">
+              <button id="widget-${regionWidget.id}-max" class="widget-toolbar-btn"></button>
+						  <button id="widget-${regionWidget.id}-remove" class="widget-toolbar-btn"></button>
+						  <script type="text/javascript">
+              $("#widget-${regionWidget.id}-max").button({
+                text: false,
+                icons: {
+                  primary: "ui-icon-arrow-4-diag"
+                }
+              }).click(function() {
+                alert("not implemented yet.");
+              });
+						  $("#widget-${regionWidget.id}-remove").button({
+					      text: false,
+					      icons: {
+					        primary: "ui-icon-close"
+					      }
+					    }).click(function() {
+					      rave.api.rpc.removeWidget({
+					    	  regionWidgetId: "${regionWidget.id}", 
+					    	  pageId: "${defaultPage.id}",
+					    	  region: {
+					    		  id: "region-${region.id}-id"
+					    	  },
+					    	  succCB: function() {
+					    		  $("#widget-wrapper-${region.id}-${regionWidget.id}").remove();
+					    	  }
+					    	});
+					    });
+						  </script>
+						</span>
+            
         </div>
         <div class="widget" id="widget-${regionWidget.id}-body">
 			 <!-- 
@@ -62,14 +109,6 @@
 </div>
 </c:forEach>
 <div class="clear-float">&nbsp;</div>
-
-<script src="${opensocial_engine_url}/js/container.js?c=1&container=default&debug=1" type="text/javascript"></script>
-<script src="<spring:url value="/script/rave.js"/>" type="text/javascript"></script>
-<script src="<spring:url value="/script/rave_api.js"/>" type="text/javascript"></script>
-<script src="<spring:url value="/script/rave_opensocial.js"/>" type="text/javascript"></script>
-<script src="<spring:url value="/script/rave_wookie.js"/>" type="text/javascript"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js" type="text/javascript"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js" type="text/javascript"></script>
 
 <script type="text/javascript">
     $(function(){

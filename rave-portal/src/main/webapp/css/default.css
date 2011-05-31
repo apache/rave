@@ -17,6 +17,7 @@
 
 /**
 * This is the same as rave.css used for the website.
+* FIXME: where is rave.css?
 */
 
 body {
@@ -260,3 +261,8 @@ dt {
     display: inline;
     float: left;
 }
+
+button.widget-toolbar-btn {
+	width: 1em;
+}
+	
