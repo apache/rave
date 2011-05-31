@@ -33,7 +33,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class OpenSocialWidgetRenderer implements RegionWidgetRenderer {
 
-
+	 //Note the widgets.push() call.  This defines the widget objects, which are
+    //added to the widgets[] array in home.jsp.   
     private static final String IFRAME_MARKUP = "<script type=\"text/javascript\">" +
                                                     "widgets.push({type: '%1$s'," +
                                                                  " regionWidgetId: %2$s," +

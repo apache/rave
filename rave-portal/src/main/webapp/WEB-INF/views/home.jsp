@@ -40,6 +40,7 @@
 <h1>Hello ${defaultPage.owner.username}, welcome to Rave!</h1>
 <script type="text/javascript">
     //Define the global widgets variable
+	 //This array will be populated by RegionWidgetRender providers.
     var widgets = [];
 </script>
 <c:forEach var="region" items="${defaultPage.regions}">
@@ -50,6 +51,10 @@
             <span id="widget-${regionWidget.id}-title">${regionWidget.widget.title}</span>
         </div>
         <div class="widget" id="widget-${regionWidget.id}-body">
+			 <!-- 
+					Among other things, the render-widget tag will populate the widgets[] array.  
+					See the markup text in OpenSocialWidgetRenderer.java, for example.
+			 -->
             <portal:render-widget regionWidget="${regionWidget}" />
         </div>
     </div>

@@ -113,10 +113,12 @@ values (set(@page_1_region_1, next value for region_id_seq), @page_1_id);
 INSERT INTO region(id, page_id)
 values (set(@page_1_region_2, next value for region_id_seq), @page_1_id);
 
+--INSERT INTO region_widget(id, widget_id, region_id, render_order, collapsed)
+--values (next value for region_widget_id_seq, @hamster_widget_id, @page_1_region_1, 0, 'N');
 INSERT INTO region_widget(id, widget_id, region_id, render_order, collapsed)
-values (next value for region_widget_id_seq, @wikipedia_widget_id, @page_1_region_1, 0, 'N');
+values (next value for region_widget_id_seq, @translate_widget_id, @page_1_region_1, 0, 'N');
 INSERT INTO region_widget(id, widget_id, region_id, render_order, collapsed)
-values (next value for region_widget_id_seq, @hamster_widget_id, @page_1_region_1, 1, 'N');
+values (next value for region_widget_id_seq, @wikipedia_widget_id, @page_1_region_1, 1, 'N');
 
 INSERT INTO region_widget(id, widget_id, region_id, render_order, collapsed)
 values (next value for region_widget_id_seq, @nyt_widget_id, @page_1_region_2, 0, 'N');

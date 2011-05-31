@@ -97,7 +97,7 @@ var rave = rave || (function() {
         }
 
         return {
-            init : init
+            init : init,
         }
 
     })();
