@@ -19,6 +19,9 @@
 var rave = rave || (function() {
     var providerList = [];
     var context = "";
+    
+    // map widget id to region id
+    var widgetRegionMap = {};
 
 
     /**
@@ -97,7 +100,7 @@ var rave = rave || (function() {
         }
 
         return {
-            init : init,
+            init : init
         }
 
     })();
@@ -164,6 +167,26 @@ var rave = rave || (function() {
 	 function deleteWidgetFromPage() {
 		  return null;
 	 }
+	 
+	 /**
+	  * Map a widget to the region where it is located.
+	  * 
+	  * @param widgetId: id of the widget (not DOM id)
+	  * @param regionId: if it is non null, it is mapped. It it is null or not present, delete the map entry.
+	  */
+	 function mapGadgetToRegion(widgetId, regionId) {
+	     delete widgetRegionMap[widgetId];
+	     if (arguments.length > 1 && regionId != null)
+	         widgetRegionMap[widgetId] = regionId;
+	 }
+	 
+	 /**
+      * Get the region where a widget/gadget belongs to.
+      * @param widgetId: id of the widget. (not DOM id)
+      */
+	 function getGadgetRegion(widgetId) {
+         return widgetRegionMap[widgetId];
+     }
 
     /**
      * Public API
@@ -225,11 +248,19 @@ var rave = rave || (function() {
          */
         getContext: getContext,
 
-		  /**
-			* Remove a selected gadget from the page
-			*/
-		  deleteGadget : deleteWidgetFromPage
+    	/**
+    	* Remove a selected gadget from the page
+    	*/
+    	deleteGadget : deleteWidgetFromPage,
 
-
+    	/**
+    	 * Change or delete gadget to region map entry.
+    	 */
+    	mapGadgetToRegion : mapGadgetToRegion,
+    	
+    	/**
+    	 * Get the region where a widget/gadget belongs to.
+    	 */
+    	getGadgetRegion : getGadgetRegion
     }
 })();

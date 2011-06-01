@@ -60,7 +60,7 @@
          If so, region.id must be included. When a gadget is moved, region id must be updated. 
          Otherwise, it is not needed.
     -->
-    <div class="widget-wrapper" id="widget-wrapper-${region.id}-${regionWidget.id}">
+    <div class="widget-wrapper" id="widget-wrapper-${regionWidget.id}">
         <div class="widget-title-bar" >
             <span id="widget-${regionWidget.id}-title">${regionWidget.widget.title}</span>
             
@@ -81,18 +81,20 @@
 					      icons: {
 					        primary: "ui-icon-close"
 					      }
-					    }).click(function() {
+					    }).unbind("click").click(function() {
+					        alert("remove gadget");
 					      rave.api.rpc.removeWidget({
 					    	  regionWidgetId: "${regionWidget.id}", 
 					    	  pageId: "${defaultPage.id}",
 					    	  region: {
-					    		  id: "region-${region.id}-id"
+					    	      id : rave.getGadgetRegion("${regionWidget.id}")
 					    	  },
 					    	  succCB: function() {
-					    		  $("#widget-wrapper-${region.id}-${regionWidget.id}").remove();
+					    		  $("#widget-wrapper-${regionWidget.id}").remove();
 					    	  }
 					    	});
 					    });
+						  rave.mapGadgetToRegion("${regionWidget.id}", "${region.id}");
 						  </script>
 						</span>
             

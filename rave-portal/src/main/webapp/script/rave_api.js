@@ -28,16 +28,21 @@ rave.api = rave.api || (function() {
 
       //This method is implemented by PageApi.java.  
         function moveWidgetOnPage(args) {
+            var widgetObjectId = rave.getObjectIdFromDomId(args.widget.id);
+            var toRegionObjectId = rave.getObjectIdFromDomId(args.targetRegion.id);
+            var fromRegionObjectId = rave.getObjectIdFromDomId(args.currentRegion.id);
             //Note context must be set outside this library.  See home.jsp for example.
-            $.post(rave.getContext() + path + "page/regionWidget/" + rave.getObjectIdFromDomId(args.widget.id) + "/move",
+            $.post(rave.getContext() + path + "page/regionWidget/" + widgetObjectId + "/move",
                     {
                         newPosition: args.targetIndex,
-                        toRegion: rave.getObjectIdFromDomId(args.targetRegion.id),
-                        fromRegion: rave.getObjectIdFromDomId(args.currentRegion.id)
+                        toRegion: toRegionObjectId,
+                        fromRegion: fromRegionObjectId
                     },
                     function(result) {
                         if (result.error) {
                             handleRpcError(result);
+                        } else {
+                            rave.mapGadgetToRegion(widgetObjectId, toRegionObjectId);
                         }
                     }
             ).error(handleError);
@@ -59,12 +64,13 @@ rave.api = rave.api || (function() {
         $.post(rave.getContext() + path + "page/" +args.pageId + "/widget/delete",
              {
                 widgetId: args.regionWidgetId,
-                regionId: rave.getObjectIdFromDomId(args.region.id)            
+                regionId: args.region.id            
              },
              function(result) {
                 if(result.error && result.error == true) {
                   handleRpcError(result);
                 } else {
+                    rave.mapGadgetToRegion(args.regionWidgetId, null);
                 	if (args.succCB != null && typeof args.succCB == 'function')
                 		args.succCB();
                 }
@@ -95,7 +101,7 @@ rave.api = rave.api || (function() {
         return {
             moveWidget : moveWidgetOnPage,
             addWidgetToPage : addWidgetToPage,
-      removeWidget : deleteWidgetOnPage
+            removeWidget : deleteWidgetOnPage
         };
 
     })();
