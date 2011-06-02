@@ -22,21 +22,41 @@ package org.apache.rave.portal.web.renderer;
 
 import org.apache.rave.portal.model.RegionWidget;
 import org.apache.rave.portal.model.Widget;
+import org.apache.rave.provider.opensocial.repository.impl.ShindigGadgetMetadataRepository;
+import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.web.client.RestOperations;
 
+import static org.easymock.EasyMock.createNiceMock;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations={"file:src/main/webapp/WEB-INF/dataContext.xml", "file:src/main/webapp/WEB-INF/applicationContext.xml"})
+@ContextConfiguration(locations = {"file:src/main/webapp/WEB-INF/dataContext.xml", "file:src/main/webapp/WEB-INF/applicationContext.xml"})
 public class RenderServiceIntegrationTest {
 
     @Autowired
     private RenderService service;
+
+    @Autowired
+    private ShindigGadgetMetadataRepository metadataRepository;
+
+    private RestOperations restOperations;
+
+    @Before
+    public void setup() {
+        restOperations = createNiceMock(RestOperations.class);
+
+        //Replace the real restOperations instance with a mock -- otherwise the call for gadget metadata would fail since
+        //we don't have a shindig server available to hit.
+        ReflectionTestUtils.setField(metadataRepository, "restOperations", restOperations);
+    }
 
     @Test
     public void supportedWidgets() {

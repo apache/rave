@@ -24,22 +24,28 @@ import org.apache.rave.portal.model.RegionWidget;
 import org.apache.rave.portal.model.Widget;
 import org.apache.rave.portal.web.renderer.Renderer;
 import org.apache.rave.provider.opensocial.Constants;
+import org.apache.rave.provider.opensocial.service.OpenSocialService;
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.easymock.EasyMock.createNiceMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-/**
- */
 public class OpenSocialWidgetRendererTest {
-
+    private OpenSocialService openSocialService;
     private Renderer<RegionWidget> renderer;
+
+    private static final String VALID_METADATA = "metadata";
+    private static final String VALID_GADGET_URL = "http://example.com/gadgets/1";
 
     @Before
     public void setup() {
-        renderer = new OpenSocialWidgetRenderer();
+        openSocialService = createNiceMock(OpenSocialService.class);
+        renderer = new OpenSocialWidgetRenderer(openSocialService);
     }
 
     @Test
@@ -49,9 +55,13 @@ public class OpenSocialWidgetRendererTest {
 
     @Test
     public void render_valid() {
+        expect(openSocialService.getGadgetMetadata(VALID_GADGET_URL)).andReturn(VALID_METADATA);
+        replay(openSocialService);
+
         Widget w = new Widget();
+        w.setId(1L);
         w.setType(Constants.WIDGET_TYPE);
-        w.setUrl("http://example.com/gadgets/1");
+        w.setUrl(VALID_GADGET_URL);
         RegionWidget rw = new RegionWidget();
         rw.setId(1L);
         rw.setWidget(w);
@@ -60,6 +70,7 @@ public class OpenSocialWidgetRendererTest {
         assertThat(result.matches(".*regionWidgetId[ ]*:[ ]*1,.*"), is(true));
         assertThat(result.matches(".*type[ ]*:[ ]*'OpenSocial',.*"), is(true));
         assertThat(result.matches(".*widgetUrl[ ]*:[ ]*'http://example.com/gadgets/1',.*"), is(true));
+        assertThat(result.matches(".*metadata[ ]*:[ ]*" + VALID_METADATA + ",.*"), is(true));
     }
 
     @Test
@@ -73,6 +84,7 @@ public class OpenSocialWidgetRendererTest {
         assertThat(result.matches(".*regionWidgetId[ ]*:[ ]*null,.*"), is(true));
         assertThat(result.matches(".*type[ ]*:[ ]*'OpenSocial',.*"), is(true));
         assertThat(result.matches(".*widgetUrl[ ]*:[ ]*'null',.*"), is(true));
+        assertThat(result.matches(".*metadata[ ]*:[ ]*null,.*"), is(true));
     }
 
     @Test(expected = NotSupportedException.class)
@@ -86,5 +98,4 @@ public class OpenSocialWidgetRendererTest {
 
         renderer.render(rw);
     }
-
 }

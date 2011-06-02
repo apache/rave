@@ -23,6 +23,8 @@ import org.apache.rave.exception.NotSupportedException;
 import org.apache.rave.portal.model.RegionWidget;
 import org.apache.rave.portal.web.renderer.RegionWidgetRenderer;
 import org.apache.rave.provider.opensocial.Constants;
+import org.apache.rave.provider.opensocial.service.OpenSocialService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -32,15 +34,22 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class OpenSocialWidgetRenderer implements RegionWidgetRenderer {
+    private OpenSocialService openSocialService;
 
-	 //Note the widgets.push() call.  This defines the widget objects, which are
+    @Autowired
+    public OpenSocialWidgetRenderer(OpenSocialService openSocialService) {
+        this.openSocialService = openSocialService;
+    }
+
+    //Note the widgets.push() call.  This defines the widget objects, which are
     //added to the widgets[] array in home.jsp.   
     private static final String IFRAME_MARKUP = "<script type=\"text/javascript\">" +
-                                                    "widgets.push({type: '%1$s'," +
-                                                                 " regionWidgetId: %2$s," +
-                                                                 " widgetUrl: '%3$s', " +
-                                                                 " userPrefs: {}});" +
-                                                "</script>";
+            "widgets.push({type: '%1$s'," +
+            " regionWidgetId: %2$s," +
+            " widgetUrl: '%3$s', " +
+            " metadata: %4$s," +
+            " userPrefs: {}});" +
+            "</script>";
 
     @Override
     public String getSupportedContext() {
@@ -49,6 +58,7 @@ public class OpenSocialWidgetRenderer implements RegionWidgetRenderer {
 
     /**
      * Renders a {@link org.apache.rave.portal.model.RegionWidget} as HTML markup
+     *
      * @param item RegionWidget to render
      * @return valid HTML markup
      */
@@ -58,6 +68,8 @@ public class OpenSocialWidgetRenderer implements RegionWidgetRenderer {
         if (!Constants.WIDGET_TYPE.equals(type)) {
             throw new NotSupportedException("Invalid widget type passed to renderer: " + type);
         }
-        return String.format(IFRAME_MARKUP, Constants.WIDGET_TYPE, item.getId(), item.getWidget().getUrl());
+
+        return String.format(IFRAME_MARKUP, Constants.WIDGET_TYPE, item.getId(), item.getWidget().getUrl(),
+                openSocialService.getGadgetMetadata(item.getWidget().getUrl()));
     }
 }
