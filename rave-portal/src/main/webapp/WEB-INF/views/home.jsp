@@ -90,6 +90,7 @@
 					 primary: "ui-icon-close"
 					 }
 					 });
+					 rave.mapGadgetToRegion("${regionWidget.id}", "${region.id}");
 				  </script>
 
 				</span>

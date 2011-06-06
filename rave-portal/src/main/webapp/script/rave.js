@@ -116,20 +116,16 @@ var rave = rave || (function() {
 				console.log("RegionWidgetId, RegionId, and PageId:"+args.myRegionWidgetId+" "+args.myRegionId+" "+args.myPageId);
 		  };
 		  function deleteAction(button,args) {
-				alert("Delete:"+button.id+" not yet implemented.");
-				
-				/* TODO: Disabling for now. The underlying assumptions will probably be revised for 0.2
 				rave.api.rpc.removeWidget({
 					 regionWidgetId: args.myRegionWidgetId, 
 					 pageId : args.myPageId,
 					 region: {
-						  id : args.myRegionId
+						  id : rave.getGadgetRegion(args.myRegionWidgetId)
 					 },
 					 succCB: function() {
 						  $("#widget-wrapper-"+args.myRegionWidgetId).remove();
 					 }
 				});
-				*/
 
 		  };
 		  return {
@@ -211,6 +207,7 @@ var rave = rave || (function() {
       * @param widgetId: id of the widget. (not DOM id)
       */
 	 function getGadgetRegion(widgetId) {
+		  console.log("Gadget id and region id: "+widgetId+" "+widgetRegionMap[widgetId])
          return widgetRegionMap[widgetId];
      }
 
