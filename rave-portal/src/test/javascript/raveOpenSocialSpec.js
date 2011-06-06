@@ -101,10 +101,10 @@ describe("Rave OpenSocial", function() {
 
     describe("RPC Hooks", function() {
 
-        function getMockTitleArgs(id) {
+        function getMockTitleArgs(id, arrayOut) {
             return {
                 f : "frameId",
-                a : "TITLE",
+                a : arrayOut ? ["TITLE"] : "TITLE",
                 gs : {
                     getActiveGadgetHolder : function() {
                         return {getElement : function() {
@@ -164,8 +164,18 @@ describe("Rave OpenSocial", function() {
             spyOn(document, "getElementById").andReturn(null);
 
             rave.opensocial.init();
-            container.rpcHooks()["set_title"](getMockTitleArgs("not-in-existence"));
+            container.rpcHooks()["set_title"](getMockTitleArgs("not-in-existence", false));
             expect(true).toBeTruthy();
+        });
+
+        it("set title handles array title args", function() {
+            var mockElement = {innerHTML : "NOTHING"};
+            spyOn(document, "getElementById").andReturn(mockElement);
+
+            rave.opensocial.init();
+            container.rpcHooks()["set_title"](getMockTitleArgs("widget-7-body", true));
+            expect(mockElement.innerHTML).toEqual("TITLE");
+            expect(document.getElementById).toHaveBeenCalledWith("widget-7-title");
         });
     });
 });

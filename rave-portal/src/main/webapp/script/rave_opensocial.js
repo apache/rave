@@ -153,7 +153,8 @@ rave.opensocial = rave.opensocial || (function() {
         var titleId = "widget-" + rave.getObjectIdFromDomId(bodyId) + "-title";
         var element = document.getElementById(titleId);
         if (element) {
-            element.innerHTML = gadgets.util.escapeString(args.a);
+            var a = isArray(args.a) ? args.a[0] : args.a;
+            element.innerHTML = gadgets.util.escapeString(a);
         }
 
     }
@@ -167,6 +168,13 @@ rave.opensocial = rave.opensocial || (function() {
     function requestNavigateTo(view, opt_params) {
         //TODO: Implement this function
         throw "Not Implemented!!!!!";
+    }
+
+    /**
+     * Utility functions
+     */
+    function isArray(o) {
+        return Object.prototype.toString.call(o) == "[object Array]";
     }
 
     /**
