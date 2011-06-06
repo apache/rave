@@ -68,10 +68,11 @@
 				<span id="widget-${regionWidget.id}-toolbar" style="float:right;">
 				  <button id="widget-${regionWidget.id}-max" 
 							 class="widget-toolbar-btn"
-							 onclick="rave.toolbarMaximize(this)"></button>
+							 onclick="rave.toolbarMaximize(this,{myRegionWidgetId:${regionWidget.id},myRegionId:${region.id},myPageId:${defaultPage.id}})">
+				  </button>
 				  <button id="widget-${regionWidget.id}-remove" 
 							 class="widget-toolbar-btn"
-							 onclick="rave.toolbarDelete(this,${regionWidget.id},${region.id},${defaultPage.id})">
+							 onclick="rave.toolbarDelete(this,{myRegionWidgetId:${regionWidget.id},myRegionId:${region.id},myPageId:${defaultPage.id}})">
 				  </button>
 				  <script>
 					 //This decorates the toolbar buttons.  As currently written,

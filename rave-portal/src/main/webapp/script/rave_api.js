@@ -46,6 +46,7 @@ rave.api = rave.api || (function() {
                         }
                     }
             ).error(handleError);
+				console.log("moveWidgetOnPage parameters: WidgetID: "+widgetObjectId+" "+"toRegion: "+toRegionObjectId+" "+"fromRegion: "+fromRegionObjectId);
         }
 
         function addWidgetToPage(args) {

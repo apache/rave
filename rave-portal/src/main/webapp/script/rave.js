@@ -111,23 +111,26 @@ var rave = rave || (function() {
 	 var toolbar = (function() {
 		  function init(){
 		  }
-		  function maximizeAction(button){
-				alert("Maximize: "+button.id+" not yet implemented.");
-				
+		  function maximizeAction(button,args) {
+				alert("Maximize button not yet implemented");
+				console.log("RegionWidgetId, RegionId, and PageId:"+args.myRegionWidgetId+" "+args.myRegionId+" "+args.myPageId);
 		  };
-		  function deleteAction(button,myRegionWidgetId,myRegionId,myPageId){
-//				alert("Delete:"+button.id+" "+myRegionWidgetId+" "+myRegionId+" "+myPageId);
+		  function deleteAction(button,args) {
+				alert("Delete:"+button.id+" not yet implemented.");
+				
+				/* TODO: Disabling for now. The underlying assumptions will probably be revised for 0.2
 				rave.api.rpc.removeWidget({
-					 regionWidgetId: myRegionWidgetId, 
-					 pageId : myPageId,
+					 regionWidgetId: args.myRegionWidgetId, 
+					 pageId : args.myPageId,
 					 region: {
-						  id : myRegionId
+						  id : args.myRegionId
 					 },
 					 succCB: function() {
-						  $("#widget-wrapper-"+myRegionWidgetId).remove();
+						  $("#widget-wrapper-"+args.myRegionWidgetId).remove();
 					 }
 				});
-				rave.mapGadgetToRegion(myRegionWidgetId, myRegionId);
+				*/
+
 		  };
 		  return {
 				maximizeAction : maximizeAction,
@@ -198,8 +201,9 @@ var rave = rave || (function() {
 	  */
 	 function mapGadgetToRegion(widgetId, regionId) {
 	     delete widgetRegionMap[widgetId];
-	     if (arguments.length > 1 && regionId != null)
+	     if (arguments.length > 1 && regionId != null) {
 	         widgetRegionMap[widgetId] = regionId;
+		  }
 	 }
 	 
 	 /**
