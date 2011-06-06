@@ -105,6 +105,36 @@ var rave = rave || (function() {
 
     })();
 
+	 /**
+	  * Group widget toolbar functions
+	  */
+	 var toolbar = (function() {
+		  function init(){
+		  }
+		  function maximizeAction(button){
+				alert("Maximize: "+button.id+" not yet implemented.");
+				
+		  };
+		  function deleteAction(button,myRegionWidgetId,myRegionId,myPageId){
+//				alert("Delete:"+button.id+" "+myRegionWidgetId+" "+myRegionId+" "+myPageId);
+				rave.api.rpc.removeWidget({
+					 regionWidgetId: myRegionWidgetId, 
+					 pageId : myPageId,
+					 region: {
+						  id : myRegionId
+					 },
+					 succCB: function() {
+						  $("#widget-wrapper-"+myRegionWidgetId).remove();
+					 }
+				});
+				rave.mapGadgetToRegion(myRegionWidgetId, myRegionId);
+		  };
+		  return {
+				maximizeAction : maximizeAction,
+				deleteAction : deleteAction
+		  }
+	 })();
+
     function initializeProviders() {
 		  //Current providers are rave.wookie and rave.opensocial.  
 		  //Providers register themselves when loaded, so 
@@ -159,14 +189,6 @@ var rave = rave || (function() {
     function getContext() {
         return context;
     }
-	 
-	 /**
-	  * Deletes the gadget/widget from the display.
-     * TODO: must be implemented.
-	  */
-	 function deleteWidgetFromPage() {
-		  return null;
-	 }
 	 
 	 /**
 	  * Map a widget to the region where it is located.
@@ -248,10 +270,6 @@ var rave = rave || (function() {
          */
         getContext: getContext,
 
-    	/**
-    	* Remove a selected gadget from the page
-    	*/
-    	deleteGadget : deleteWidgetFromPage,
 
     	/**
     	 * Change or delete gadget to region map entry.
@@ -261,6 +279,12 @@ var rave = rave || (function() {
     	/**
     	 * Get the region where a widget/gadget belongs to.
     	 */
-    	getGadgetRegion : getGadgetRegion
+    	  getGadgetRegion : getGadgetRegion,
+
+		  /**
+			* These are exposed toolbar actions, associated with widget toolbar buttons
+			*/
+		  toolbarMaximize : toolbar.maximizeAction,
+		  toolbarDelete : toolbar.deleteAction
     }
 })();

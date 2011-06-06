@@ -64,41 +64,35 @@
         <div class="widget-title-bar" >
             <span id="widget-${regionWidget.id}-title">${regionWidget.widget.title}</span>
             
-            <span id="widget-${regionWidget.id}-toolbar" style="float:right;">
-              <button id="widget-${regionWidget.id}-max" class="widget-toolbar-btn"></button>
-						  <button id="widget-${regionWidget.id}-remove" class="widget-toolbar-btn"></button>
-						  <script>
-              $("#widget-${regionWidget.id}-max").button({
-                text: false,
-                icons: {
-                  primary: "ui-icon-arrow-4-diag"
-                }
-              }).click(function() {
-                alert("not implemented yet.");
-              });
-						  $("#widget-${regionWidget.id}-remove").button({
-					      text: false,
-					      icons: {
-					        primary: "ui-icon-close"
-					      }
-					    }).unbind("click").click(function() {
-					        alert("remove gadget");
-					      rave.api.rpc.removeWidget({
-					    	  regionWidgetId: "${regionWidget.id}", 
-					    	  pageId: "${defaultPage.id}",
-					    	  region: {
-					    	      id : rave.getGadgetRegion("${regionWidget.id}")
-					    	  },
-					    	  succCB: function() {
-					    		  $("#widget-wrapper-${regionWidget.id}").remove();
-					    	  }
-					    	});
-					    });
-						  rave.mapGadgetToRegion("${regionWidget.id}", "${region.id}");
-						  </script>
-						</span>
-            
-        </div>
+				<!-- These are toolbar buttons -->
+				<span id="widget-${regionWidget.id}-toolbar" style="float:right;">
+				  <button id="widget-${regionWidget.id}-max" 
+							 class="widget-toolbar-btn"
+							 onclick="rave.toolbarMaximize(this)"></button>
+				  <button id="widget-${regionWidget.id}-remove" 
+							 class="widget-toolbar-btn"
+							 onclick="rave.toolbarDelete(this,${regionWidget.id},${region.id},${defaultPage.id})">
+				  </button>
+				  <script>
+					 //This decorates the toolbar buttons.  As currently written,
+					 //it needs to be in the forEach loop.
+					 $("#widget-${regionWidget.id}-max").button({
+					 text: false,
+					 icons: {
+					 primary: "ui-icon-arrow-4-diag"
+					 }
+					 });
+
+					 $("#widget-${regionWidget.id}-remove").button({
+					 text: false,
+					 icons: {
+					 primary: "ui-icon-close"
+					 }
+					 });
+				  </script>
+
+				</span>
+		  </div>
         <div class="widget" id="widget-${regionWidget.id}-body">
 			 <!-- 
 					Among other things, the render-widget tag will populate the widgets[] array.  
