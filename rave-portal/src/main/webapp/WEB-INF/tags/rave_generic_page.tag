@@ -1,3 +1,4 @@
+<!DOCTYPE HTML>
 <%--
   Licensed to the Apache Software Foundation (ASF) under one
   or more contributor license agreements.  See the NOTICE file
@@ -16,20 +17,21 @@
   specific language governing permissions and limitations
   under the License.
 
---%><%@ tag language="java" pageEncoding="UTF-8"%><%--
---%><%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%><%--
---%><%@ taglib uri="http://java.sun.com/jstl/core_rt" prefix="c"%><%--
---%><%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%><%--
---%><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"><%--
+--%>
+<%@ tag language="java" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
+<%@ taglib uri="http://java.sun.com/jstl/core_rt" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%--
 This tag will provide simple template layouts for pages that use it. See for example home.jsp.
 --%>
 <html>
   <head>
      <title>Rave Home</title>
-     <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/themes/base/jquery-ui.css"/>
+     <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/themes/base/jquery-ui.css"/>
      <link rel="stylesheet" href="<c:url value="/css/default.css" />" />
   </head>
   <body>
-	<jsp:doBody/>
+  <jsp:doBody/>
   </body>
 </html>

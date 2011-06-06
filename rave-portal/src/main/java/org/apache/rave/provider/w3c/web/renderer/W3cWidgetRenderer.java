@@ -19,6 +19,8 @@
 
 package org.apache.rave.provider.w3c.web.renderer;
 
+import static org.apache.rave.provider.w3c.Constants.WIDGET_TYPE;
+
 import org.apache.rave.exception.NotSupportedException;
 import org.apache.rave.portal.model.RegionWidget;
 import org.apache.rave.portal.model.Widget;
@@ -28,8 +30,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-import static org.apache.rave.provider.w3c.Constants.WIDGET_TYPE;
-
 /**
  * Creates the appropriate markup to represent a W3C widget
  */
@@ -37,7 +37,7 @@ import static org.apache.rave.provider.w3c.Constants.WIDGET_TYPE;
 public class W3cWidgetRenderer implements RegionWidgetRenderer {
 
 
-    private static final String IFRAME_MARKUP = "<script type=\"text/javascript\">" +
+    private static final String IFRAME_MARKUP = "<script>" +
                                                     "widgets.push({type: '%1$s'," +
                                                                  " regionWidgetId: %2$s," +
                                                                  " widgetUrl: '%3$s'});" +

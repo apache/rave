@@ -16,12 +16,14 @@
    specific language governing permissions and limitations
    under the License.
   
---%><%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %><%--
---%><%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %><%--
---%><%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %><%--
---%><%@ taglib tagdir="/WEB-INF/tags" prefix="rave"%><%--
---%><jsp:useBean id="widget" scope="request" class="org.apache.rave.portal.model.Widget" /><%--
---%><rave:rave_generic_page>
+--%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib tagdir="/WEB-INF/tags" prefix="rave"%>
+<jsp:useBean id="widget" scope="request" class="org.apache.rave.portal.model.Widget" />
+
+<rave:rave_generic_page>
 <div id="banner">
     <span class="backToPage">
         <a href="<spring:url value="/index.html" />">Back to Rave</a>
@@ -89,14 +91,14 @@
     </table>
 
 </div>
-<script type="text/javascript">
+<script>
     var rave = rave || {
         getContext : function() {
             return "<spring:url value="/app/" />";
         }
     }
 </script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js" type="text/javascript"></script>
-<script src="<spring:url value="/script/rave_api.js"/>" type="text/javascript"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
+<script src="<spring:url value="/script/rave_api.js"/>"></script>
 
 </rave:rave_generic_page>

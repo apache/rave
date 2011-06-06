@@ -18,36 +18,36 @@
   
   $Id$
 
---%><%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %><%--
---%><%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %><%--
---%><%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %><%--
---%><%@ taglib prefix="portal" uri="http://www.apache.org/rave/tags" %><%--
---%><%@ taglib tagdir="/WEB-INF/tags" prefix="rave"%><%--
+--%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="portal" uri="http://www.apache.org/rave/tags" %>
+<%@ taglib tagdir="/WEB-INF/tags" prefix="rave"%>
+<jsp:useBean id="pages" type="java.util.List<org.apache.rave.portal.model.Page>" scope="request"/>
+<fmt:setBundle basename="portal" var="portal"/>
+<fmt:message bundle="${portal}" key="portal.opensocial_engine.protocol" var="osProtocol"/>
+<fmt:message bundle="${portal}" key="portal.opensocial_engine.root" var="osRoot"/>
+<fmt:message bundle="${portal}" key="portal.opensocial_engine.gadget_path" var="osGadget"/>
+<c:set var="opensocial_engine_url" value="${osProtocol}://${osRoot}${osGadget}"/>
 
---%><jsp:useBean id="pages" type="java.util.List<org.apache.rave.portal.model.Page>" scope="request"/><%--
---%><fmt:setBundle basename="portal" var="portal"/><%--
---%><fmt:message bundle="${portal}" key="portal.opensocial_engine.protocol" var="osProtocol"/><%--
---%><fmt:message bundle="${portal}" key="portal.opensocial_engine.root" var="osRoot"/><%--
---%><fmt:message bundle="${portal}" key="portal.opensocial_engine.gadget_path" var="osGadget"/><%--
---%><c:set var="opensocial_engine_url" value="${osProtocol}://${osRoot}${osGadget}"/><%--
-
---%><rave:rave_generic_page>
+<rave:rave_generic_page>
 <c:set var="defaultPage" value="${pages[0]}"/>
 <div id="header">
     <a href="<spring:url value="/j_spring_security_logout" htmlEscape="true" />">Logout</a>
     <a href="<spring:url value="/app/store?referringPageId=${defaultPage.id}" />">Widget Store</a>
 </div>
 
-<script src="${opensocial_engine_url}/js/container.js?c=1&container=default&debug=1" type="text/javascript"></script>
-<script src="<spring:url value="/script/rave.js"/>" type="text/javascript"></script>
-<script src="<spring:url value="/script/rave_api.js"/>" type="text/javascript"></script>
-<script src="<spring:url value="/script/rave_opensocial.js"/>" type="text/javascript"></script>
-<script src="<spring:url value="/script/rave_wookie.js"/>" type="text/javascript"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js" type="text/javascript"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js" type="text/javascript"></script>
+<script src="${opensocial_engine_url}/js/container.js?c=1&container=default&debug=1"></script>
+<script src="<spring:url value="/script/rave.js"/>"></script>
+<script src="<spring:url value="/script/rave_api.js"/>"></script>
+<script src="<spring:url value="/script/rave_opensocial.js"/>"></script>
+<script src="<spring:url value="/script/rave_wookie.js"/>"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js"></script>
 
 <h1>Hello ${defaultPage.owner.username}, welcome to Rave!</h1>
-<script type="text/javascript">
+<script>
     //Define the global widgets variable
 	 //This array will be populated by RegionWidgetRender providers.
     var widgets = [];
@@ -67,7 +67,7 @@
             <span id="widget-${regionWidget.id}-toolbar" style="float:right;">
               <button id="widget-${regionWidget.id}-max" class="widget-toolbar-btn"></button>
 						  <button id="widget-${regionWidget.id}-remove" class="widget-toolbar-btn"></button>
-						  <script type="text/javascript">
+						  <script>
               $("#widget-${regionWidget.id}-max").button({
                 text: false,
                 icons: {
@@ -112,7 +112,7 @@
 </c:forEach>
 <div class="clear-float">&nbsp;</div>
 
-<script type="text/javascript">
+<script>
     $(function(){
         rave.setContext("<spring:url value="/app/" />");
         rave.initProviders();
