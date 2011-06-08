@@ -71,6 +71,10 @@
             <id>java.net</id>
             <url>http://download.java.net/maven/2/</url>
         </repository>
+        <repository>
+            <id>apache maven snapshot repo</id>
+            <url>http://repository.apache.org/snapshots/</url>
+        </repository>
     </repositories>
 
     <!-- Global management of all dependencies -->
