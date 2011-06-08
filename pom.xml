@@ -29,7 +29,7 @@
         <groupId>org.apache.rave</groupId>
         <artifactId>rave-master</artifactId>
         <version>0.1-incubating-SNAPSHOT</version>
-        <relativePath>../rave-master-pom/pom.xml</relativePath>
+        <relativePath>../rave-master/pom.xml</relativePath>
     </parent>
 
     <groupId>org.apache.rave</groupId>
