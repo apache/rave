@@ -51,14 +51,17 @@ To build from source code:
     The project is built with Apache Maven 3+ (suggested is 3.0.3).
     You need to download and install Maven 3 from: http://maven.apache.org/
 
-  - The Rave project itself (this one) depends on the separate Rave Master
-    project which, while still unreleased, first needs to be build separately
-    and installed *before* this project can be build.
+  - The Rave project itself (this one) depends on the separate Rave Master project
+    which defines general and global settings for the whole of the Rave project,
+    independent of a specific release.
+    As its rave-master-pom is already published to the Apache Snapshots repository,
+    there is no need to check it out manually and build it locally yourself,
+    unless changes are needed on general and global level.
     
-    The Rave Master project can be checked out from:
-      http://svn.apache.org/repos/asf/incubator/rave/rave-master-pom/trunk
-    
-    After check out invoke maven to install it using:
+    If so needed, the Rave Master project can be checked out from:
+      http://svn.apache.org/repos/asf/incubator/rave/rave-master-pom/trunk rave-master-pom
+
+    After check out, cd into rave-master-pom and invoke maven to install it using:
       $mvn install
     
   - To build the Rave project invoke maven in the root directory:
