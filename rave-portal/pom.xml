@@ -275,6 +275,7 @@ if needed you can specify it on the command line with -Djavaagent="..." -->
                     </configuration>
                     <container>
                         <containerId>tomcat6x</containerId>
+                        <timeout>180000</timeout>
                         <zipUrlInstaller>
                             <url>
                                 http://archive.apache.org/dist/tomcat/tomcat-6/v6.0.32/bin/apache-tomcat-6.0.32.tar.gz
