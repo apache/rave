@@ -286,5 +286,30 @@ if needed you can specify it on the command line with -Djavaagent="..." -->
             </plugin>
         </plugins>
     </build>
+    
+    <profiles>
+      <profile>
+        <id>dist</id>
+        <build>
+          <plugins>
+            <plugin>
+                <groupId>org.codehaus.cargo</groupId>
+                <artifactId>cargo-maven2-plugin</artifactId>
+                <version>${cargo.version}</version>
+                <executions>
+                  <execution>
+                    <id>dist</id>
+                    <phase>install</phase>
+                    <goals> 
+                      <goal>configure</goal>
+                      <goal>package</goal>
+                    </goals>
+                  </execution>
+                </executions>
+              </plugin>
+          </plugins>
+        </build>
+      </profile>
+    </profiles>
 
 </project>

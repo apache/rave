@@ -335,4 +335,26 @@
         <module>rave-portal</module>
     </modules>
 
+    <profiles>
+      <profile>
+        <id>dist</id>
+        <build>
+          <defaultGoal>install</defaultGoal>
+          <plugins>
+            <plugin>
+              <artifactId>maven-clean-plugin</artifactId>
+              <executions>
+                <execution>
+                  <phase>validate</phase>
+                  <goals>
+                    <goal>clean</goal>
+                  </goals>
+                </execution>
+              </executions>
+            </plugin>
+          </plugins>
+        </build>
+      </profile>
+    </profiles>
+    
 </project>
