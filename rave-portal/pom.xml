@@ -134,8 +134,8 @@ if needed you can specify it on the command line with -Djavaagent="..." -->
         
         <!-- JSTL -->
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>jstl</artifactId>
+          <groupId>org.glassfish.web</groupId>
+          <artifactId>jstl-impl</artifactId>
         </dependency>
 
         <!-- Logging -->
@@ -163,12 +163,6 @@ if needed you can specify it on the command line with -Djavaagent="..." -->
         <dependency>
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>javax.servlet.jsp</groupId>
-            <artifactId>jsp-api</artifactId>
-            <version>2.1</version>
-            <scope>provided</scope>
         </dependency>
     </dependencies>
 
