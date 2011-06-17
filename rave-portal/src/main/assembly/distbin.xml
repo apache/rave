@@ -29,6 +29,8 @@
   <includeBaseDirectory>true</includeBaseDirectory>
   <fileSets>
     <fileSet>
+		<directoryMode>0700</directoryMode>
+		<fileMode>0644</fileMode>
       <directory>${project.build.directory}/package</directory>
       <excludes>
         <!-- exclude Tomcat packaged LICENSE, NOTICE RELEASE-NOTES and RUNNING.txt files 
@@ -53,6 +55,7 @@
       <outputDirectory>/bin</outputDirectory>
     </fileSet>
     <fileSet>
+		<fileMode>0644</fileMode>
       <directory>${project.basedir}/..</directory>
       <includes>
         <include>DISCLAIMER</include>
@@ -62,6 +65,7 @@
     </fileSet>
     <fileSet>
       <directory>${project.basedir}/src/main/dist</directory>
+		<fileMode>0644</fileMode>
       <excludes>
         <exclude>**/*.sh</exclude>
       </excludes>
