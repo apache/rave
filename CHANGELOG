@@ -5,4 +5,17 @@ See http://issues.apache.org/jira/browse/RAVE-* (where * is the number of the is
 Version 0.1 Released yyyy-mm-dd
 ===============================
 
-  TODO: include JIRA changelog ...
+** Story
+    * [RAVE-12] - Render OpenSocial Gadgets on Page in iFrames
+    * [RAVE-32] - Create basic widget repository
+    * [RAVE-33] - Create the ability to move widgets on a page
+
+** Technical task
+    * [RAVE-14] - Create basic object model to support rendering of widgets
+    * [RAVE-23] - Implement OpenID authentication 
+    * [RAVE-15] - Implement basic JPA persistence layer
+    * [RAVE-16] - Create basic page rendering 
+    * [RAVE-17] - Implement OpenSocial/Shindig Common Container
+    * [RAVE-18] - Implement basic user logon features
+    * [RAVE-19] - Add gadget container-side hooks
+    * [RAVE-66] - jstl-1.2 dependency cannot be resolved anymore from maven repository
