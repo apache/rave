@@ -29,7 +29,7 @@
   <includeBaseDirectory>true</includeBaseDirectory>
   <fileSets>
     <fileSet>
-		<directoryMode>0700</directoryMode>
+		<directoryMode>0755</directoryMode>
 		<fileMode>0644</fileMode>
       <directory>${project.build.directory}/package</directory>
       <excludes>
