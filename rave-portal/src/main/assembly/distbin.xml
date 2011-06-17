@@ -33,7 +33,11 @@
       <excludes>
         <!-- exclude Tomcat packaged LICENSE, NOTICE RELEASE-NOTES and RUNNING.txt files 
              which we provide of our own -->
-        <exclude>*</exclude>
+        <exclude>LICENSE</exclude>
+        <exclude>NOTICE</exclude>
+        <exclude>RELEASE-NOTES</exclude>
+        <exclude>README.txt</exclude>
+        <exclude>.cargo</exclude>
         <!-- exclude Tomcat shell scripts as these should have their execution bit be set (see below) -->
         <exclude>bin/*.sh</exclude>
       </excludes>
