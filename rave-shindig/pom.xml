@@ -63,6 +63,7 @@
  		<dependency>
  			<groupId>org.apache.shindig</groupId>
  			<artifactId>shindig-social-api</artifactId>
+            <scope>provided</scope>
  		</dependency>
  		
  		<dependency>
@@ -75,12 +76,6 @@
       <artifactId>shindig-common</artifactId>
       <type>test-jar</type>
     </dependency>
-    
-    <dependency>
-      <groupId>org.apache.shindig</groupId>
-      <artifactId>shindig-gadgets</artifactId>
-    </dependency>
-    
     <dependency>
        <groupId>xmlunit</groupId>
        <artifactId>xmlunit</artifactId>
