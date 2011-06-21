@@ -58,7 +58,7 @@
         <commons-lang.version>2.6</commons-lang.version>
         <icu4j.version>4.6.1</icu4j.version>
         <easymock.version>3.0</easymock.version>
-        <openjpa-all.version>2.1.0</openjpa-all.version>
+        <openjpa.version>2.1.0</openjpa.version>
         <org.openid4java.version>0.9.6</org.openid4java.version>
         <jersey-server.version>1.6</jersey-server.version>
         <jersey-spring.version>1.0</jersey-spring.version>
@@ -145,8 +145,8 @@
             </dependency>
             <dependency>
                 <groupId>org.apache.openjpa</groupId>
-                <artifactId>openjpa-all</artifactId>
-                <version>${openjpa-all.version}</version>
+                <artifactId>openjpa</artifactId>
+                <version>${openjpa.version}</version>
             </dependency>
 
             <dependency>

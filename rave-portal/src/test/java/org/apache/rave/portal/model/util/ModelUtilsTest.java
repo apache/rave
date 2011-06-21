@@ -19,13 +19,13 @@
 
 package org.apache.rave.portal.model.util;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.rave.portal.model.RegionWidgetPreference;
 import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.List;
 
+import static org.apache.commons.lang.StringUtils.isAllLowerCase;
 import static org.junit.Assert.assertTrue;
 
 public class ModelUtilsTest {
@@ -56,18 +56,4 @@ public class ModelUtilsTest {
                 new RegionWidgetPreference(null, -100L, "UPPERCASENAME", "FOO"));
     }
 
-    //TODO: Figure out how to get commons-lang 2.6 available to our code
-    //copied from commons-lang 2.5 since our openjpa maven dependency seems to fetch us an early version of commons-lang
-    public static boolean isAllLowerCase(String str) {
-        if (str == null || StringUtils.isEmpty(str)) {
-            return false;
-        }
-        int sz = str.length();
-        for (int i = 0; i < sz; i++) {
-            if (Character.isLowerCase(str.charAt(i)) == false) {
-                return false;
-            }
-        }
-        return true;
-    }
 }

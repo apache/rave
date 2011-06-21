@@ -106,12 +106,12 @@ if needed you can specify it on the command line with -Djavaagent="..." -->
           <type>pom</type>
         </dependency>
 
-		<!-- Jackson JSON Mapper -->
-		<dependency>
-			<groupId>org.codehaus.jackson</groupId>
-			<artifactId>jackson-mapper-asl</artifactId>
-			<version>1.8.1</version>
-		</dependency>
+        <!-- Jackson JSON Mapper -->
+        <dependency>
+          <groupId>org.codehaus.jackson</groupId>
+          <artifactId>jackson-mapper-asl</artifactId>
+          <version>1.8.1</version>
+        </dependency>
 
         <!-- JSON Support -->
         <dependency>
@@ -123,7 +123,7 @@ if needed you can specify it on the command line with -Djavaagent="..." -->
         <!--Persistence-->
         <dependency>
             <groupId>org.apache.openjpa</groupId>
-            <artifactId>openjpa-all</artifactId>
+            <artifactId>openjpa</artifactId>
         </dependency>
 
         <dependency>
