@@ -37,7 +37,7 @@
     <name>Apache Rave :: rave-project</name>
     <description>Apache Rave Project</description>
     <packaging>pom</packaging>
-    <version>0.1-incubating</version>
+    <version>0.1-incubating-SNAPSHOT</version>
 
     <scm>
         <connection>scm:svn:http://svn.apache.org/repos/asf/incubator/rave/trunk</connection>
