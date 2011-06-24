@@ -234,6 +234,25 @@
                 <type>war</type>
             </dependency>
 
+            <!-- Test -->
+            <dependency>
+               <groupId>junit</groupId>
+               <artifactId>junit</artifactId>
+               <version>${junit.version}</version>
+               <scope>test</scope>
+            </dependency>
+            <dependency>
+               <groupId>org.easymock</groupId>
+               <artifactId>easymock</artifactId>
+               <version>${easymock.version}</version>
+               <scope>test</scope>
+            </dependency>
+            <dependency>
+               <groupId>org.springframework</groupId>
+               <artifactId>spring-test</artifactId>
+               <version>${org.springframework.version}</version>
+               <scope>test</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -267,7 +286,7 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- Test -->
+        <!-- Test 
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -285,7 +304,7 @@
             <artifactId>spring-test</artifactId>
             <version>${org.springframework.version}</version>
             <scope>test</scope>
-        </dependency>
+        </dependency> -->
     </dependencies>
 
   <build>
