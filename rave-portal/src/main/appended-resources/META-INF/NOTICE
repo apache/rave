@@ -1,0 +1,44 @@
+This product includes unmodified, binary redistributions of software (Spring Framework) developed by
+SpringSource, a division of VMware (http://www.springsource.org), which is licensed under the Apache 2 license.
+
+This product includes unmodified, binary redistributions of software (AOP Alliance) developed by
+AOP Alliance (http://aopalliance.sourceforge.net/), which was developed in the Public Domain.
+
+This product includes unmodified, binary redistributions of software (AspectJ) developed for the
+Eclipse Foundation (http://www.eclipse.org/aspectj), which is licensed under the Eclipse Public License.
+An original copy of the license can be found at http://eclipse.org/legal/epl-v10.html
+
+This product includes unmodified, binary redistributions of software (OpenId4Java) developed by
+Sxip Identity Corporation (http://code.google.com/p/openid4java), which is licensed under the Apache 2 license.
+
+This product includes unmodified, binary redistributions of software (Guice) developed by
+Google Inc (http://code.google.com/p/google-guice), which is licensed under the Apache 2 license.
+
+This product includes unmodified, binary redistributions of software (Java Concurrency in Practice) developed by
+Brian Goetz and Tim Peierls (http://jcip.net), which is licensed under the Apache 2 license.
+
+This product includes unmodified, binary redisributions of software (org.json.*) developed by
+JSON.org (http://json.org)
+
+This software contains unmodified binary redistributions for H2 database engine (http://www.h2database.com/),
+which is dual licensed and available under a modified version of the MPL 1.1 (Mozilla Public License)
+or under the (unmodified) EPL 1.0 (Eclipse Public License).
+An original copy of the license agreement can be found at: http://www.h2database.com/html/license.html
+
+This software contains unmodified, binary redistributions for Serp (http://serp.sourceforge.net), which is licensed under
+the BSD license.
+
+This software contains unmodified, binary redistributions for Jackson (http://jackson.codehaus.org), which is licensed under
+the Apache 2 License.
+
+This software contains unmodified, binary redistributions of software (Glassfish) developed by
+The Oracle Corporation (http://glassfish.java.net), which is licensed under the CDDL.
+An original copy of the license can be found at http://glassfish.java.net/public/CDDL+GPL_1_1.html
+
+This product includes unmodified, binary redistributions of software (slf4j) developed by
+QOS.ch (http://slf4j.org), which is licensed under the MIT license.
+An original copy of the license can be found at http://code.google.com/p/protobuf/source/browse/trunk/COPYING.txt
+
+This product includes unmodified, binary redistributions of software (ICU4J) developed by
+the ICU Project (http://site.icu-project.org), which is licensed under the X License.
+An original copy of the license can be found at http://source.icu-project.org/repos/icu/icu4j/tags/release-4-8/main/shared/licenses/license.html
