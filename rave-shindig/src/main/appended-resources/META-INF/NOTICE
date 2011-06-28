@@ -35,10 +35,10 @@ This product includes unmodified, (Args4J) developed at http://args4j.java.net, 
 An original copy of the license agreement can be found at: http://opensource.org/licenses/mit-license.php
 
 This product includes unmodified, binary redistributions of software (Caja) developed by
-Google Inc (http://code.google.com/p/google-caja), which is licensed under the Apache 2 license.
+Google Inc (http://code.google.com/p/google-caja), which is licensed under the Apache 2.0 license.
 
 This product includes unmodified, binary redistributions of software (Closure Compiler) developed by
-Google Inc (http://code.google.com/p/closure-compiler), which is licensed under the Apache 2 license.
+Google Inc (http://code.google.com/p/closure-compiler), which is licensed under the Apache 2.0 license.
 
 This product includes unmodified, binary redistributions of software (EHCache) developed by
 Terracotta  Inc(http://ehcache.org), which is licensed under the Apache 2 license.
@@ -52,17 +52,17 @@ the ICU Project (http://site.icu-project.org), which is licensed under the X Lic
 An original copy of the license can be found at http://source.icu-project.org/repos/icu/icu4j/tags/release-4-8/main/shared/licenses/license.html
 
 This product includes unmodified, binary redistributions of software (javax.inject) developed by
-The JSR-330 Expert Group (http://code.google.com/p/atinject), which is licensed under the Apache 2 license.
+The JSR-330 Expert Group (http://code.google.com/p/atinject), which is licensed under the Apache 2.0 license.
 
 This product includes unmodified, binary redistributions of software (JDOM) developed by
 The JDOM Project (http://www.jdom.org), which is licensed under the license noted in LICENSE.txt.
 
 This product includes unmodified, binary redistributions of software (Joda Time) developed by
 The Joda project (http://joda.org), which is licensed under the Joda Software License.
-An original copy of the license agreement can be found at http://joda.sourceforge.net/license.html
+An original copy of the license agreement can be found at http://joda.sourceforge.net/licence.html
 
 This product includes unmodified, binary redistributions of software (JUEL) developed by
-Odysseus Software GmbH (http://juel.sourceforge.net), which is licensed under the Apache 2 license.
+Odysseus Software GmbH (http://juel.sourceforge.net), which is licensed under the Apache 2.0 license.
 
 This product includes unmodified, binary redistributions of software (Rome) developed by
 Sun Microsystems, Inc. (http://java.net/projects/rome), which is licensed under the Apache 2.0 license.
@@ -76,25 +76,19 @@ An original copy of the license can be found at http://code.google.com/p/protobu
 
 This product includes unmodified, binary redistributions of software (slf4j) developed by
 QOS.ch (http://slf4j.org), which is licensed under the MIT license.
-An original copy of the license can be found at http://code.google.com/p/protobuf/source/browse/trunk/COPYING.txt
-
-This product includes software (JSUnit) developed by
-Joerg Schaible (http://jsunit.berlios.de/).
+An original copy of the license can be found at http://slf4j.org/license.html
 
 This product includes software (swfobject) developed by
 Geoff Stearns, Michael Williams, and Bobby van der Sluis (http://code.google.com/p/swfobject/)
 
 This product includes software (opensocial-resources) developed by
-The OpenSocial Foundation (http://opensocial-resources.googlecode.com/svn/spec/0.8/)
+The OpenSocial Foundation (http://opensocial-resources.googlecode.com/svn/spec/), which is licensed under the Apache 2.0 License
 
 This product includes software (Zend) developed by
-Zend Technologies Ltd (http://framework.zend.com/).
-
-This product includes software (JSMin) developed by
-Douglas Crockford  (http://www.crockford.com/).
+Zend Technologies Ltd (http://framework.zend.com/), which is licensed under the New BSD license.
 
 This product includes software (OpenAjax Hub) developed by
-OpenAjax Alliance (http://www.openajax.org/)
+OpenAjax Alliance (http://www.openajax.org/), which is licensed under the Apache 2.0 license
 
 
 
