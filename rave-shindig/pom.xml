@@ -26,7 +26,7 @@
   <parent>
     <groupId>org.apache.rave</groupId>
     <artifactId>rave-project</artifactId>
-    <version>0.1-incubating</version>
+    <version>0.2-incubating-SNAPSHOT</version>
   </parent>
 
   <groupId>org.apache.rave</groupId>
@@ -34,7 +34,7 @@
   <name>Apache Rave :: rave-shindig</name>
   <description>Apache Rave Shindig App</description>
   <packaging>war</packaging>
-  <version>0.1-incubating</version>
+  <version>0.2-incubating-SNAPSHOT</version>
 
   <properties>
     <com.h2database.version>1.3.154</com.h2database.version>
