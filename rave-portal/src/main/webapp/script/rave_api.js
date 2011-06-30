@@ -46,7 +46,6 @@ rave.api = rave.api || (function() {
                         }
                     }
             ).error(handleError);
-            console.log("moveWidgetOnPage parameters: WidgetID: "+widgetObjectId+" "+"toRegion: "+toRegionObjectId+" "+"fromRegion: "+fromRegionObjectId);
         }
 
         function addWidgetToPage(args) {
@@ -105,7 +104,7 @@ rave.api = rave.api || (function() {
                             " but the server encountered an internal error.");
                     break;
             }
-            console.log(rpcResult.errorMessage);
+//            console.log(rpcResult.errorMessage);
         }
 
         return {

@@ -113,7 +113,6 @@ var rave = rave || (function() {
 		  }
 		  function maximizeAction(button,args) {
 				alert("Maximize button not yet implemented");
-				console.log("RegionWidgetId, RegionId, and PageId:"+args.myRegionWidgetId+" "+args.myRegionId+" "+args.myPageId);
 		  };
 		  function deleteAction(button,args) {
 				rave.api.rpc.removeWidget({
@@ -207,7 +206,6 @@ var rave = rave || (function() {
       * @param widgetId: id of the widget. (not DOM id)
       */
 	 function getGadgetRegion(widgetId) {
-		  console.log("Gadget id and region id: "+widgetId+" "+widgetRegionMap[widgetId])
          return widgetRegionMap[widgetId];
      }
 
