@@ -46,7 +46,7 @@ rave.api = rave.api || (function() {
                         }
                     }
             ).error(handleError);
-				console.log("moveWidgetOnPage parameters: WidgetID: "+widgetObjectId+" "+"toRegion: "+toRegionObjectId+" "+"fromRegion: "+fromRegionObjectId);
+            console.log("moveWidgetOnPage parameters: WidgetID: "+widgetObjectId+" "+"toRegion: "+toRegionObjectId+" "+"fromRegion: "+fromRegionObjectId);
         }
 
         function addWidgetToPage(args) {
@@ -57,6 +57,14 @@ rave.api = rave.api || (function() {
                     function(result) {
                         if (result.error) {
                             handleRpcError(result);
+                        } else {
+                            var widgetTitle = "The widget";
+                            var addedWidget = result.result != undefined ? result.result.widget : undefined;
+                            
+                            if (addedWidget != undefined && addedWidget.title != undefined && addedWidget.title.length > 0) {
+                                widgetTitle = addedWidget.title;
+                            }
+                            alert(widgetTitle + " has been added to your page");
                         }
                     }).error(handleError);
         }
@@ -72,8 +80,9 @@ rave.api = rave.api || (function() {
                   handleRpcError(result);
                 } else {
                     rave.mapGadgetToRegion(args.regionWidgetId, null);
-                	if (args.succCB != null && typeof args.succCB == 'function')
-                		args.succCB();
+                    if (args.succCB != null && typeof args.succCB == 'function') {
+                        args.succCB();
+                    }
                 }
              }).error(handleError);
       }
