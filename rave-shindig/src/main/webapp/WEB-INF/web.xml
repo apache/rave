@@ -30,7 +30,7 @@
   <context-param>
     <param-name>guice-modules</param-name>
     <param-value>
-      org.apache.shindig.common.PropertiesModule:
+      org.apache.rave.commoncontainer.ConfigurablePropertiesModule:
       org.apache.shindig.gadgets.DefaultGuiceModule:
       org.apache.shindig.social.core.config.SocialApiGuiceModule:
       org.apache.rave.os.JPAOpenSocialModule:
