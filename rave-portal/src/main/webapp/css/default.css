@@ -265,4 +265,17 @@ dt {
 button.widget-toolbar-btn {
 	width: 1em;
 }
-	
+
+fieldset{
+    margin: 0;
+    border:none
+}
+p label {
+    width: 120px;
+    float: left;
+    display: block;
+}
+
+input.long {
+    width:400px;
+}

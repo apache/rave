@@ -29,7 +29,7 @@
 
 <c:set var="opensocial_engine_url" value="${openSocialEnv.engineProtocol}://${openSocialEnv.engineRoot}${openSocialEnv.engineGadgetPath}"/>
 
-<rave:rave_generic_page>
+<rave:rave_generic_page pageTitle="Home - Rave">
 <c:set var="defaultPage" value="${pages[0]}"/>
 <div id="header">
     <a href="<spring:url value="/j_spring_security_logout" htmlEscape="true" />">Logout</a>

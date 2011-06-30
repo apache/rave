@@ -27,28 +27,33 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
 			    http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.0.xsd">
 
-	<security:http auto-config="true" use-expressions="true" disable-url-rewriting="true">
-	  <!-- all urls must be authenticated -->
-          <security:intercept-url pattern="/**"
-			          access="isAuthenticated()" />
-           <security:openid-login user-service-ref="userService">
-	        <security:attribute-exchange>
-               	<!-- Supported by MyOpenID.com -->
-				<security:openid-attribute name="firstName" type="http://schema.openid.net/namePerson/first"/>
-				<security:openid-attribute name="lastName" type="http://schema.openid.net/namePerson/last"/>
-				<security:openid-attribute name="email" type="http://schema.openid.net/contact/email" required="true"/>
-				<!-- security:openid-attribute name="language" type="http://schema.openid.net/language/pref"/>
-				<security:openid-attribute name="birthDate" type="http://schema.openid.net/birthDate"/>
-				<security:openid-attribute name="namePerson" type="http://schema.openid.net/namePerson" required="true"/>
-				<security:openid-attribute name="nickname" type="http://schema.openid.net/namePerson/friendly" required="true"/>
-				<security:openid-attribute name="country" type="http://schema.openid.net/contact/country/home"/> 
-				-->
+    <security:http auto-config="true" use-expressions="true" disable-url-rewriting="true">
+        <security:intercept-url pattern="/login.jsp*" filters="none" />
+        <security:intercept-url pattern="/css/**" access="permitAll"/>
+        <security:intercept-url pattern="/images/**" access="permitAll"/>
+        <security:intercept-url pattern="/script/**" access="permitAll"/>
+        <!-- all urls must be authenticated -->
+        <security:intercept-url pattern="/**"
+                                access="isAuthenticated()"/>
+        <security:openid-login user-service-ref="userService">
+            <security:attribute-exchange>
+                <!-- Supported by MyOpenID.com -->
+                <security:openid-attribute name="firstName" type="http://schema.openid.net/namePerson/first"/>
+                <security:openid-attribute name="lastName" type="http://schema.openid.net/namePerson/last"/>
+                <security:openid-attribute name="email" type="http://schema.openid.net/contact/email" required="true"/>
+                <!-- security:openid-attribute name="language" type="http://schema.openid.net/language/pref"/>
+                    <security:openid-attribute name="birthDate" type="http://schema.openid.net/birthDate"/>
+                    <security:openid-attribute name="namePerson" type="http://schema.openid.net/namePerson" required="true"/>
+                    <security:openid-attribute name="nickname" type="http://schema.openid.net/namePerson/friendly" required="true"/>
+                    <security:openid-attribute name="country" type="http://schema.openid.net/contact/country/home"/>
+                    -->
             </security:attribute-exchange>
-	      </security:openid-login>
-          <security:logout/>
-	</security:http>
+        </security:openid-login>
+        <security:form-login login-page="/login.jsp" />
+        <security:logout/>
+    </security:http>
 
-	<security:authentication-manager>
+    <security:authentication-manager>
 		<security:authentication-provider
 			user-service-ref="userService" />
 	</security:authentication-manager>

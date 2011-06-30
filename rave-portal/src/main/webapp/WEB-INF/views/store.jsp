@@ -22,7 +22,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib tagdir="/WEB-INF/tags" prefix="rave"%>
 
-<rave:rave_generic_page>
+<rave:rave_generic_page pageTitle="Widget Store - Rave">
 <div id="banner">
     <span class="backToPage">
         <a href="<spring:url value="/index.html" />">Back to Rave</a>

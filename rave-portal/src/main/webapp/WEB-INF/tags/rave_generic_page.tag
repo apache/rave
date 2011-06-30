@@ -22,12 +22,14 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ taglib uri="http://java.sun.com/jstl/core_rt" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@ attribute name="pageTitle" required="false" description="The title of the page, will appear in the title bar" %>
 <%--
 This tag will provide simple template layouts for pages that use it. See for example home.jsp.
 --%>
 <html>
   <head>
-     <title>Rave Home</title>
+     <meta charset="UTF-8"/>
+     <title><c:out value="${pageTitle}"/></title>
      <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/themes/base/jquery-ui.css"/>
      <link rel="stylesheet" href="<c:url value="/css/default.css" />" />
   </head>

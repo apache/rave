@@ -23,7 +23,7 @@
 <%@ taglib tagdir="/WEB-INF/tags" prefix="rave"%>
 <jsp:useBean id="widget" scope="request" class="org.apache.rave.portal.model.Widget" />
 
-<rave:rave_generic_page>
+<rave:rave_generic_page pageTitle="${widget.title} - Rave">
 <div id="banner">
     <span class="backToPage">
         <a href="<spring:url value="/index.html" />">Back to Rave</a>
