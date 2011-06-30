@@ -187,8 +187,26 @@ var rave = rave || (function() {
     function getContext() {
         return context;
     }
-	 
-	 /**
+
+    /**
+     * Takes care of the UI part of the widget rendering. Depends heavily on the HTML structure
+     * @param widgets array of widgets
+     */
+    function initGadgetUI(widgets) {
+        $("div[id^='region-']").each(function(regionIndex) {
+            var regionElement = $(this);
+            var regionId = regionElement.attr("id");
+            regionId = regionId.substring("region-".length, regionId.lastIndexOf('-'));
+            regionElement.children("div[id^='widget-wrapper-']").each(function(wrapperIndex) {
+                var widgetElement = $(this);
+                var widgetId = widgetElement.attr("id").substr("widget-wrapper-".length);
+                mapGadgetToRegion(widgetId, regionId);
+                styleGadgetButtons(widgetId);
+            });
+        });
+    }
+
+    /**
 	  * Map a widget to the region where it is located.
 	  * 
 	  * @param widgetId: id of the widget (not DOM id)
@@ -208,6 +226,27 @@ var rave = rave || (function() {
 	 function getGadgetRegion(widgetId) {
          return widgetRegionMap[widgetId];
      }
+
+    /**
+     * Applies styling to the several buttons in the widget / gadget toolbar
+     * @param widgetId identifier of the widget / gadget
+     */
+    function styleGadgetButtons(widgetId) {
+        $("#widget-" + widgetId + "-max").button({
+                    text: false,
+                    icons: {
+                        primary: "ui-icon-arrow-4-diag"
+                    }
+                });
+
+        $("#widget-" + widgetId + "-remove").button({
+                    text: false,
+                    icons: {
+                        primary: "ui-icon-close"
+                    }
+                });
+    }
+
 
     /**
      * Public API
@@ -268,6 +307,8 @@ var rave = rave || (function() {
          * Gets the current context
          */
         getContext: getContext,
+
+        initGadgetUI : initGadgetUI,
 
 
     	/**

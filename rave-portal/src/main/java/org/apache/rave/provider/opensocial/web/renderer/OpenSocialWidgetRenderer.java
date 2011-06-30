@@ -43,13 +43,12 @@ public class OpenSocialWidgetRenderer implements RegionWidgetRenderer {
 
     //Note the widgets.push() call.  This defines the widget objects, which are
     //added to the widgets[] array in home.jsp.   
-    private static final String IFRAME_MARKUP = "<script type=\"text/javascript\">" +
+    private static final String IFRAME_MARKUP =
             "widgets.push({type: '%1$s'," +
             " regionWidgetId: %2$s," +
             " widgetUrl: '%3$s', " +
             " metadata: %4$s," +
-            " userPrefs: {}});" +
-            "</script>";
+            " userPrefs: {}});";
 
     @Override
     public String getSupportedContext() {

@@ -36,28 +36,16 @@
     <a href="<spring:url value="/app/store?referringPageId=${defaultPage.id}" />">Widget Store</a>
 </div>
 
-<script src="${opensocial_engine_url}/js/container.js?c=1&container=default&debug=1"></script>
-<script src="<spring:url value="/script/rave.js"/>"></script>
-<script src="<spring:url value="/script/rave_api.js"/>"></script>
-<script src="<spring:url value="/script/rave_opensocial.js"/>"></script>
-<script src="<spring:url value="/script/rave_wookie.js"/>"></script>
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
-<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js"></script>
 
 <h1>Hello ${defaultPage.owner.username}, welcome to Rave!</h1>
-<script>
-    //Define the global widgets variable
-     //This array will be populated by RegionWidgetRender providers.
-    var widgets = [];
-</script>
 <c:forEach var="region" items="${defaultPage.regions}">
 <div class="region" id="region-${region.id}-id" >
     <c:forEach var="regionWidget" items="${region.regionWidgets}">
-    <!-- FIXME: whether region.id should be included in the id. 
+    <%-- FIXME: whether region.id should be included in the id.
          I am not sure whether id's of widgets in different regions can be the same.
          If so, region.id must be included. When a gadget is moved, region id must be updated. 
          Otherwise, it is not needed.
-    -->
+    --%>
     <div class="widget-wrapper" id="widget-wrapper-${regionWidget.id}">
         <div class="widget-title-bar" >
             <span id="widget-${regionWidget.id}-title">${regionWidget.widget.title}</span>
@@ -72,43 +60,40 @@
                              class="widget-toolbar-btn"
                              onclick="rave.toolbarDelete(this,{myRegionWidgetId:${regionWidget.id},myRegionId:${region.id},myPageId:${defaultPage.id}})">
                   </button>
-                  <script>
-                     //This decorates the toolbar buttons.  As currently written,
-                     //it needs to be in the forEach loop.
-                     $("#widget-${regionWidget.id}-max").button({
-                     text: false,
-                     icons: {
-                     primary: "ui-icon-arrow-4-diag"
-                     }
-                     });
-
-                     $("#widget-${regionWidget.id}-remove").button({
-                     text: false,
-                     icons: {
-                     primary: "ui-icon-close"
-                     }
-                     });
-                     rave.mapGadgetToRegion("${regionWidget.id}", "${region.id}");
-                  </script>
-
                 </span>
           </div>
         <div class="widget" id="widget-${regionWidget.id}-body">
-             <!-- 
-                    Among other things, the render-widget tag will populate the widgets[] array.  
-                    See the markup text in OpenSocialWidgetRenderer.java, for example.
-             -->
-            <portal:render-widget regionWidget="${regionWidget}" />
+            <%-- Widget will be rendered here --%>
         </div>
     </div>
     </c:forEach>
 </div>
 </c:forEach>
 <div class="clear-float">&nbsp;</div>
-
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js"></script>
+<script src="${opensocial_engine_url}/js/container.js?c=1&container=default&debug=1"></script>
+<script src="<spring:url value="/script/rave.js"/>"></script>
+<script src="<spring:url value="/script/rave_api.js"/>"></script>
+<script src="<spring:url value="/script/rave_opensocial.js"/>"></script>
+<script src="<spring:url value="/script/rave_wookie.js"/>"></script>
 <script>
-    $(function(){
+    //Define the global widgets variable
+    //This array will be populated by RegionWidgetRender providers.
+    var widgets = [];
+    <%--
+        Among other things, the render-widget tag will populate the widgets[] array.
+        See the markup text in OpenSocialWidgetRenderer.java, for example.
+     --%>
+    <c:forEach var="region" items="${defaultPage.regions}">
+    <c:forEach var="regionWidget" items="${region.regionWidgets}">
+    <portal:render-widget regionWidget="${regionWidget}" />
+    </c:forEach>
+    </c:forEach>
+
+    $(function() {
         rave.setContext("<spring:url value="/app/" />");
+        rave.initGadgetUI(widgets);
         rave.initProviders();
         rave.initWidgets(rave.createWidgetMap(widgets));
         rave.initDragAndDrop();
