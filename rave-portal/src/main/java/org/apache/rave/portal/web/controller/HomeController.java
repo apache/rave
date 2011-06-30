@@ -22,6 +22,7 @@ import org.apache.rave.portal.model.Page;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.service.PageService;
 import org.apache.rave.portal.service.UserService;
+import org.apache.rave.portal.util.OpenSocialEnvironment;
 import org.apache.rave.portal.web.util.ModelKeys;
 import org.apache.rave.portal.web.util.ViewNames;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +43,9 @@ public class HomeController {
     private UserService userService;
 
     @Autowired
+    private OpenSocialEnvironment openSocialEnvironment;
+
+    @Autowired
     public HomeController(PageService pageService, UserService userService) {
         this.pageService = pageService;
         this.userService = userService;
@@ -52,6 +56,7 @@ public class HomeController {
         User user = userService.getAuthenticatedUser();
         List<Page> pages = pageService.getAllPages(user.getUserId());
         model.addAttribute(ModelKeys.PAGES, pages);
+        model.addAttribute(ModelKeys.OPENSOCIAL_ENVIRONMENT, openSocialEnvironment);
         return ViewNames.HOME;
     }
 }

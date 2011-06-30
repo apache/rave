@@ -24,9 +24,10 @@ package org.apache.rave.portal.web.util;
  */
 public class ModelKeys {
     private ModelKeys() {}
-    public final static String PAGES = "pages"; // a list of pages available for the current user
-    public final static String ERROR_MESSAGE = "errorMessage"; // an error message to be reported to the user
+    public static final String PAGES = "pages"; // a list of pages available for the current user
+    public static final String ERROR_MESSAGE = "errorMessage"; // an error message to be reported to the user
     public static final String WIDGETS = "widgets"; // a list of widget objects
     public static final String WIDGET = "widget";
     public static final String REFERRING_PAGE_ID = "referringPageId";
+    public static final String OPENSOCIAL_ENVIRONMENT = "openSocialEnv";
 }

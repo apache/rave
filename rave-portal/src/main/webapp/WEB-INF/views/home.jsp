@@ -25,11 +25,9 @@
 <%@ taglib prefix="portal" uri="http://www.apache.org/rave/tags" %>
 <%@ taglib tagdir="/WEB-INF/tags" prefix="rave"%>
 <jsp:useBean id="pages" type="java.util.List<org.apache.rave.portal.model.Page>" scope="request"/>
-<fmt:setBundle basename="portal" var="portal"/>
-<fmt:message bundle="${portal}" key="portal.opensocial_engine.protocol" var="osProtocol"/>
-<fmt:message bundle="${portal}" key="portal.opensocial_engine.root" var="osRoot"/>
-<fmt:message bundle="${portal}" key="portal.opensocial_engine.gadget_path" var="osGadget"/>
-<c:set var="opensocial_engine_url" value="${osProtocol}://${osRoot}${osGadget}"/>
+<jsp:useBean id="openSocialEnv" scope="request" type="org.apache.rave.portal.util.OpenSocialEnvironment"/>
+
+<c:set var="opensocial_engine_url" value="${openSocialEnv.engineProtocol}://${openSocialEnv.engineRoot}${openSocialEnv.engineGadgetPath}"/>
 
 <rave:rave_generic_page>
 <c:set var="defaultPage" value="${pages[0]}"/>
@@ -49,7 +47,7 @@
 <h1>Hello ${defaultPage.owner.username}, welcome to Rave!</h1>
 <script>
     //Define the global widgets variable
-	 //This array will be populated by RegionWidgetRender providers.
+     //This array will be populated by RegionWidgetRender providers.
     var widgets = [];
 </script>
 <c:forEach var="region" items="${defaultPage.regions}">
@@ -64,42 +62,42 @@
         <div class="widget-title-bar" >
             <span id="widget-${regionWidget.id}-title">${regionWidget.widget.title}</span>
             
-				<!-- These are toolbar buttons -->
-				<span id="widget-${regionWidget.id}-toolbar" style="float:right;">
-				  <button id="widget-${regionWidget.id}-max" 
-							 class="widget-toolbar-btn"
-							 onclick="rave.toolbarMaximize(this,{myRegionWidgetId:${regionWidget.id},myRegionId:${region.id},myPageId:${defaultPage.id}})">
-				  </button>
-				  <button id="widget-${regionWidget.id}-remove" 
-							 class="widget-toolbar-btn"
-							 onclick="rave.toolbarDelete(this,{myRegionWidgetId:${regionWidget.id},myRegionId:${region.id},myPageId:${defaultPage.id}})">
-				  </button>
-				  <script>
-					 //This decorates the toolbar buttons.  As currently written,
-					 //it needs to be in the forEach loop.
-					 $("#widget-${regionWidget.id}-max").button({
-					 text: false,
-					 icons: {
-					 primary: "ui-icon-arrow-4-diag"
-					 }
-					 });
+                <!-- These are toolbar buttons -->
+                <span id="widget-${regionWidget.id}-toolbar" style="float:right;">
+                  <button id="widget-${regionWidget.id}-max" 
+                             class="widget-toolbar-btn"
+                             onclick="rave.toolbarMaximize(this,{myRegionWidgetId:${regionWidget.id},myRegionId:${region.id},myPageId:${defaultPage.id}})">
+                  </button>
+                  <button id="widget-${regionWidget.id}-remove" 
+                             class="widget-toolbar-btn"
+                             onclick="rave.toolbarDelete(this,{myRegionWidgetId:${regionWidget.id},myRegionId:${region.id},myPageId:${defaultPage.id}})">
+                  </button>
+                  <script>
+                     //This decorates the toolbar buttons.  As currently written,
+                     //it needs to be in the forEach loop.
+                     $("#widget-${regionWidget.id}-max").button({
+                     text: false,
+                     icons: {
+                     primary: "ui-icon-arrow-4-diag"
+                     }
+                     });
 
-					 $("#widget-${regionWidget.id}-remove").button({
-					 text: false,
-					 icons: {
-					 primary: "ui-icon-close"
-					 }
-					 });
-					 rave.mapGadgetToRegion("${regionWidget.id}", "${region.id}");
-				  </script>
+                     $("#widget-${regionWidget.id}-remove").button({
+                     text: false,
+                     icons: {
+                     primary: "ui-icon-close"
+                     }
+                     });
+                     rave.mapGadgetToRegion("${regionWidget.id}", "${region.id}");
+                  </script>
 
-				</span>
-		  </div>
+                </span>
+          </div>
         <div class="widget" id="widget-${regionWidget.id}-body">
-			 <!-- 
-					Among other things, the render-widget tag will populate the widgets[] array.  
-					See the markup text in OpenSocialWidgetRenderer.java, for example.
-			 -->
+             <!-- 
+                    Among other things, the render-widget tag will populate the widgets[] array.  
+                    See the markup text in OpenSocialWidgetRenderer.java, for example.
+             -->
             <portal:render-widget regionWidget="${regionWidget}" />
         </div>
     </div>

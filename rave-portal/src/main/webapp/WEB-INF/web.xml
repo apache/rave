@@ -32,6 +32,7 @@
         <param-name>contextConfigLocation</param-name>
         <param-value>
             /WEB-INF/dataContext.xml
+            classpath:applicationContext-properties.xml
             /WEB-INF/applicationContext.xml
             /WEB-INF/applicationContext-security.xml
         </param-value>

@@ -34,9 +34,6 @@
         http://www.springframework.org/schema/oxm http://www.springframework.org/schema/oxm/spring-oxm-3.0.xsd
         http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
 
-    <!-- make the the portal.properties props available to autowire injectors -->
-    <context:property-placeholder location="classpath:portal.properties"/>
-
     <context:component-scan base-package="org.apache.rave" annotation-config="true" />
 
     <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
@@ -91,5 +88,12 @@
                 </bean>
             </list>
         </property>
+    </bean>
+
+    <!-- Environment variables for opensocial calls from the portal -->
+    <bean id="openSocialEnvironment" class="org.apache.rave.portal.util.OpenSocialEnvironment">
+        <property name="engineProtocol" value="${portal.opensocial_engine.protocol}"/>
+        <property name="engineRoot" value="${portal.opensocial_engine.root}"/>
+        <property name="engineGadgetPath" value="${portal.opensocial_engine.gadget_path}"/>
     </bean>
 </beans>
