@@ -41,4 +41,9 @@ public interface UserService extends UserDetailsService {
      * Un-sets the currently authenticated user
      */
     void clearAuthenticatedUser();
+
+	 /**
+	  * Registers a new user object.
+	  */
+	 void registerNewUser(User user);
 }

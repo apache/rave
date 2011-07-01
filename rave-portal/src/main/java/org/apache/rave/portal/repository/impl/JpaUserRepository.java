@@ -23,12 +23,14 @@ import org.apache.commons.lang.NotImplementedException;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.repository.UserRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 import static org.apache.rave.portal.repository.impl.util.JpaUtil.getSingleResult;
+import static org.apache.rave.portal.repository.impl.util.JpaUtil.saveOrUpdate;
 
 /**
  */
@@ -51,7 +53,9 @@ public class JpaUserRepository implements UserRepository{
     }
 
     @Override
-    public User save(User item) {
-        throw new NotImplementedException("Save is not implemented for this repository");
+	 @Transactional
+    public User save(User user) {
+		  return saveOrUpdate(user.getUserId(),manager,user);
+		  //        throw new NotImplementedException("Save is not implemented for this repository");
     }
 }

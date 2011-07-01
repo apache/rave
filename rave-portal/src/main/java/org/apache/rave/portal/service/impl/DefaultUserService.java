@@ -34,6 +34,7 @@ import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -106,4 +107,9 @@ public class DefaultUserService implements UserService {
         });
         return securityContext;
     }
+
+	 @Override
+	 public void registerNewUser(User user) {
+		  userRepository.save(user);
+	 }
 }
