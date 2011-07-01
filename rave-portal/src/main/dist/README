@@ -14,6 +14,8 @@ RUNNING TOMCAT
 
 From the unpacked RAVE distribution directory, execute the startup script from Rave's bin subdirectory, either startup.sh (linux/unix/osx) or startup.bat (windows). To shut down tomcat, run either shutdown.sh or shutdown.bat, also located in Rave's bin subdirectory. Tomcat logging and error messages are in logs/catalina.out. Unix users can follow output with tail -f logs/catalina.out.
 
+Tomcat by defualt uses the port 8080, if the port is used, an alternative port can be specified in the conf/server.xml. Further details on this configuration can be refered from http://tomcat.apache.org/tomcat-6.0-doc/config/server.html.
+
 BROWSER ACCESS
 
 After starting tomcat, point your browser to http://localhost:8080/portal.  There are currently no known browser restrictions.
