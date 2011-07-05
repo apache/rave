@@ -53,9 +53,7 @@ public class JpaUserRepository implements UserRepository{
     }
 
     @Override
-	 @Transactional
     public User save(User user) {
 		  return saveOrUpdate(user.getUserId(),manager,user);
-		  //        throw new NotImplementedException("Save is not implemented for this repository");
     }
 }

@@ -279,3 +279,9 @@ p label {
 input.long {
     width:400px;
 }
+
+/* Associated with JQuery validation CSS */
+.error {
+	 font: normal 10px arial;
+	 color: #ff0000
+}

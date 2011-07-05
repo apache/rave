@@ -109,6 +109,7 @@ public class DefaultUserService implements UserService {
     }
 
 	 @Override
+	 @Transactional
 	 public void registerNewUser(User user) {
 		  userRepository.save(user);
 	 }
