@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <%--
   Licensed to the Apache Software Foundation (ASF) under one
   or more contributor license agreements.  See the NOTICE file
@@ -17,47 +16,39 @@
   specific language governing permissions and limitations
   under the License.
   --%>
-  <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-  <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
-  <%@ taglib tagdir="/WEB-INF/tags" prefix="rave"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib tagdir="/WEB-INF/tags" prefix="rave"%>
   
-  <rave:rave_generic_page pageTitle="New Account Application - Rave">
-	 <div id="content">
-		<h1>Rave Account Application</h1>
-		<form id="newAccountForm" name="newAccountForm" action="app/newaccount" method="POST">
-		  <fieldset>
-			 <p>
-				<label for="userNameField">Username:</label> <input
-				id="userNameField" type="text" name="userName" class="required" minlength="4"/>
-			 </p>
-			 <p>
-				<label for="passwordField">Password:</label> <input
-				id="passwordField" type="password" name="password" class="required" minlength="4"/>
-			 </p>
-			 <p>
-				<label for="passwordConfirmField">Confirm Password:</label> <input
-				id="passwordConfirmField" type="password" name="passwordConfirmed" class="required" minlength="4" equalTo="#passwordField"/>
-			 </p>
-			 <p>
-				<input type="submit" value="Create Account" />
-			 </p>
-			 
-		  </fieldset>
-		</form>
-	 </div>
-	 <script src="//code.jquery.com/jquery-latest.js"></script>
-	 <!-- 
-			We may want to include this function in the release as a local src.  The JQuery
-			documentation uses an obsolete link that redirects to the link below. Chrome 12, for
-			one, was unable to follow the redirection, breaking the validation.  Unfortunately, it 
-			is also MIT/GPL dual-licensed.
-	 -->
-	 <script src="//view.jquery.com/trunk/plugins/validate/jquery.validate.js"></script>
-	 <script>
-		$(document).ready(function(){
-		$("#newAccountForm").validate();
-			 });
-	 </script>
-	 
-  </rave:rave_generic_page>
+<rave:rave_generic_page pageTitle="New Account Application - Rave">
+<div id="content">
+    <h1>Rave Account Application</h1>
+    <form id="newAccountForm" name="newAccountForm" action="app/newaccount" method="POST">
+        <fieldset>
+            <p>All fields are required</p>
+            <p>
+                <label for="userNameField">Username:</label>
+                <input id="userNameField" type="text" name="userName" required="required" autofocus="autofocus"/>
+            </p>
+            <p>
+                <label for="passwordField">Password:</label>
+                <input id="passwordField" type="password" name="password" required="required"/>
+            </p>
+            <p>
+                <label for="passwordConfirmField">Confirm Password:</label>
+                <input id="passwordConfirmField" type="password" name="passwordConfirm" required="required"/>
+            </p>
+        </fieldset>
+        <fieldset>
+             <input type="submit" value="Create Account" />
+        </fieldset>
+    </form>
+</div>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
+<script src="<c:url value="/script/3rdparty/jquery.validate.min.js"/>"></script>
+<script src="<spring:url value="/script/rave.js"/>"></script>
+<script src="<spring:url value="/script/rave_forms.js"/>"></script>
+
+<script>$(document).ready(rave.forms.validateNewAccountForm());</script>
+</rave:rave_generic_page>
   

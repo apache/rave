@@ -282,6 +282,12 @@ input.long {
 
 /* Associated with JQuery validation CSS */
 .error {
-	 font: normal 10px arial;
-	 color: #ff0000
+    color: #ff0000;
+}
+
+label.error {
+    font-size: 10px;
+    display: block;
+    float: none;
+    margin: 0.5em 0 auto 120px;
 }
