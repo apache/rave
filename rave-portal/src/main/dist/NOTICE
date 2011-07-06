@@ -117,3 +117,7 @@ The OpenSocial Foundation (http://opensocial-resources.googlecode.com/svn/spec/)
 
 This product includes software (OpenAjax Hub) developed by
 OpenAjax Alliance (http://www.openajax.org/), which is licensed under the Apache 2.0 license
+
+This product includes unmodified, source redistributions of software (jQuery Validation Plugin),
+developed by Jörn Zaefferer which is licensed under the MIT license.
+An original copy of the license can be found at http://www.opensource.org/licenses/mit-license.php
