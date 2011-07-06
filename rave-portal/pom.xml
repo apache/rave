@@ -45,7 +45,6 @@
   override on command line with -Dcargo.debug.suspend=y -->
         <cargo.debug.suspend>n</cargo.debug.suspend>
 
-        <com.h2database.version>1.3.154</com.h2database.version>
     </properties>
 
     <dependencies>
@@ -124,7 +123,6 @@
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <version>${com.h2database.version}</version>
         </dependency>
         
         <!-- JSTL -->
