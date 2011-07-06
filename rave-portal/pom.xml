@@ -245,9 +245,6 @@
                         <configuration>
                           <jsSrcDir>${project.basedir}/src/main/webapp/script/</jsSrcDir>
                           <debug>true</debug>
-                          <sourceExcludes>
-                            <exclude>3rdparty/*.js</exclude>
-                          </sourceExcludes>
                         </configuration>
                     </execution>
                 </executions>

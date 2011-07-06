@@ -30,7 +30,7 @@ This tag will provide simple template layouts for pages that use it. See for exa
   <head>
      <meta charset="UTF-8"/>
      <title><c:out value="${pageTitle}"/></title>
-     <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/themes/base/jquery-ui.css"/>
+     <link rel="stylesheet" href="//ajax.aspnetcdn.com/ajax/jquery.ui/1.8.13/themes/base/jquery-ui.css"/>
      <link rel="stylesheet" href="<c:url value="/css/default.css" />" />
   </head>
   <body>

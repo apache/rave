@@ -44,8 +44,8 @@
         </fieldset>
     </form>
 </div>
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
-<script src="<c:url value="/script/3rdparty/jquery.validate.min.js"/>"></script>
+<script src="//ajax.aspnetcdn.com/ajax/jQuery/jquery-1.6.1.min.js"></script>
+<script src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.8.1/jquery.validate.min.js"></script>
 <script src="<spring:url value="/script/rave.js"/>"></script>
 <script src="<spring:url value="/script/rave_forms.js"/>"></script>
 

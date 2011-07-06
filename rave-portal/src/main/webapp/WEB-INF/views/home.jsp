@@ -70,8 +70,8 @@
 </div>
 </c:forEach>
 <div class="clear-float">&nbsp;</div>
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
-<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js"></script>
+<script src="//ajax.aspnetcdn.com/ajax/jQuery/jquery-1.6.1.min.js"></script>
+<script src="//ajax.aspnetcdn.com/ajax/jquery.ui/1.8.13/jquery-ui.min.js"></script>
 <script src="${opensocial_engine_url}/js/container.js?c=1&container=default&debug=1"></script>
 <script src="<spring:url value="/script/rave.js"/>"></script>
 <script src="<spring:url value="/script/rave_api.js"/>"></script>
