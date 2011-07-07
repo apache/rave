@@ -51,7 +51,7 @@ public class Page {
     @JoinColumn(name="page_layout_id")
     private PageLayout pageLayout;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name="page_id")
     private List<Region> regions;
 

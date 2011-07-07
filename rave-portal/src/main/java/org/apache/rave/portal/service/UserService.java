@@ -44,6 +44,17 @@ public interface UserService extends UserDetailsService {
 
 	 /**
 	  * Registers a new user object.
+	  * @param user the new user object to register with the data management system.
 	  */
 	 void registerNewUser(User user);
+
+	 /**
+	  * Return the requested user object using the user's name.
+	  */ 
+	 User getUserByUsername(String userName);
+	 
+	 /**
+	  * Return a user object by the user ID.
+	  */
+	 User getUserById(Long id);
 }

@@ -29,6 +29,8 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
+import static org.apache.rave.portal.repository.impl.util.JpaUtil.saveOrUpdate;
+
 @Repository
 public class JpaPageRepository implements PageRepository {
 
@@ -49,6 +51,7 @@ public class JpaPageRepository implements PageRepository {
 
     @Override
     public Page save(Page item) {
-        throw new NotImplementedException("Save is not implemented for this repository");
+		  return saveOrUpdate(item.getId(),manager,item);
+		  //        throw new NotImplementedException("Save is not implemented for this repository");
     }
 }

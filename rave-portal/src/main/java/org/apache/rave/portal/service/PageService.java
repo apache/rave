@@ -60,4 +60,10 @@ public interface PageService {
 	  * @return the updated Region. //TODO need to make sure this is the right return.
 	  */
 	 Region removeWidgetFromPage(long regionWidgetId, long regionId);
+
+	 /**
+	  * Registers a new page. 
+	  * @param page the page object to register with the data management system.
+	  */
+	 void registerNewPage(Page page);
 }

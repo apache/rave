@@ -27,6 +27,10 @@ import javax.persistence.*;
 @Entity
 @Table(name="page_layout")
 @SequenceGenerator(name="pageLayoutIdSeq", sequenceName = "page_layout_id_seq")
+@NamedQueries({
+    @NamedQuery(name="PageLayout.getByLayoutCode", query = "select pl from PageLayout pl where pl.code = :code")
+})
+
 public class PageLayout {
     @Id @Column(name="id")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "pageLayoutIdSeq")

@@ -68,7 +68,6 @@ public class DefaultPageService implements PageService {
 	 @Override
 	 @Transactional
 	 public Region removeWidgetFromPage(long regionWidgetId, long regionId){
-		  //TODO must implement.  Returns null for the time being.
         Region region = getFromRepository(regionId, regionRepository);
         return removeWidgetInstance(regionWidgetId, region);
 	 }
@@ -81,6 +80,12 @@ public class DefaultPageService implements PageService {
         Region region = page.getRegions().get(0);
         return createWidgetInstance(widget, region, 0);
     }
+
+	 @Override
+	 @Transactional
+	 public void registerNewPage(Page page) {
+		  pageRepository.save(page);
+	 }
 
     private RegionWidget createWidgetInstance(Widget widget, Region region, int position) {
         RegionWidget regionWidget = new RegionWidget();

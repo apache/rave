@@ -113,4 +113,14 @@ public class DefaultUserService implements UserService {
 	 public void registerNewUser(User user) {
 		  userRepository.save(user);
 	 }
+	 
+	 @Override
+	 public User getUserById(Long id) {
+		  return userRepository.get(id);
+	 }
+
+	 @Override
+	 public User getUserByUsername(String userName){
+		  return userRepository.getByUsername(userName);
+	 }
 }
