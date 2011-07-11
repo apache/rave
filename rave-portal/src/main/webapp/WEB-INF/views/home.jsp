@@ -26,18 +26,21 @@
 <%@ taglib tagdir="/WEB-INF/tags" prefix="rave"%>
 <jsp:useBean id="pages" type="java.util.List<org.apache.rave.portal.model.Page>" scope="request"/>
 <jsp:useBean id="openSocialEnv" scope="request" type="org.apache.rave.portal.util.OpenSocialEnvironment"/>
-
 <c:set var="opensocial_engine_url" value="${openSocialEnv.engineProtocol}://${openSocialEnv.engineRoot}${openSocialEnv.engineGadgetPath}"/>
 
 <rave:rave_generic_page pageTitle="Home - Rave">
 <c:set var="defaultPage" value="${pages[0]}"/>
 <div id="header">
-    <a href="<spring:url value="/j_spring_security_logout" htmlEscape="true" />">Logout</a>
-    <a href="<spring:url value="/app/store?referringPageId=${defaultPage.id}" />">Widget Store</a>
+    <div class="header-a">
+        <a href="<spring:url value="/j_spring_security_logout" htmlEscape="true" />">Logout</a>
+    </div>
+    <div class="widget-a">
+        <a href="<spring:url value="/app/store?referringPageId=${defaultPage.id}" />">Widget Store</a>
+    </div>
+    <h1>Hello ${defaultPage.owner.username}, welcome to Rave!</h1>
 </div>
 
-
-<h1>Hello ${defaultPage.owner.username}, welcome to Rave!</h1>
+<div id="content">
 <c:forEach var="region" items="${defaultPage.regions}">
 <div class="region" id="region-${region.id}-id" >
     <c:forEach var="regionWidget" items="${region.regionWidgets}">

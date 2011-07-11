@@ -23,15 +23,17 @@
 <%@ taglib tagdir="/WEB-INF/tags" prefix="rave"%>
 
 <rave:rave_generic_page pageTitle="Widget Store - Rave">
-<div id="banner">
-    <span class="backToPage">
-        <a href="<spring:url value="/index.html" />">Back to Rave</a>
-    </span>
+<div id="header">
+    <div class="header-a">
+        <span class="backToPage">
+            <a href="<spring:url value="/index.html" />">Back to Rave</a>
+        </span>
+    </div>
 </div>
 
-<div id="navigation">
 
-</div>
+
+
 <div id="content">
     <c:forEach var="widget" items="${widgets}">
         <div class="storeItem">

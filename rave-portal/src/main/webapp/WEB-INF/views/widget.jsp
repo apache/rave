@@ -24,20 +24,22 @@
 <jsp:useBean id="widget" scope="request" class="org.apache.rave.portal.model.Widget" />
 
 <rave:rave_generic_page pageTitle="${widget.title} - Rave">
-<div id="banner">
-    <span class="backToPage">
-        <a href="<spring:url value="/index.html" />">Back to Rave</a>
-    </span>
-    <span>
-        <a href="<spring:url value="/app/store?referringPageId=${referringPageId}" />">Back to Store</a>
-    </span>
+<div id="header">
+    <div class="header-a" >
+        <span class="backToPage">
+            <a href="<spring:url value="/index.html" />">Back to Rave</a>
+        </span>
+    </div>
+    <div class="widget-a">
+        <span>
+            <a href="<spring:url value="/app/store?referringPageId=${referringPageId}" />">Back to Store</a>
+        </span>
+    </div>
 </div>
 
-<div id="navigation">
 
-</div>
 <div id="content">
-    <table id="storeWidgetDetail">
+    <div id="widget-content">
         <tr>
             <td class="widgetDetailLeft">
                 <c:if test="${not empty widget.thumbnailUrl}">
@@ -89,7 +91,7 @@
             </td>
         </tr>
     </table>
-
+    </div>
 </div>
 <script>
     var rave = rave || {
