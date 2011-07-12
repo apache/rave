@@ -49,6 +49,10 @@ public class RegionWidget implements BasicEntity{
     @Column(name = "collapsed")
     private boolean collapsed;
 
+    @Basic
+    @Column(name="region_id")
+    private long regionId;
+
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "region_widget_id", referencedColumnName = "id")
     private List<RegionWidgetPreference> preferences;
@@ -119,6 +123,18 @@ public class RegionWidget implements BasicEntity{
 
     public void setRenderOrder(int renderOrder) {
         this.renderOrder = renderOrder;
+    }
+
+    /**
+     * Gets the id of the associated region
+     * @return region's id
+     */
+    public long getRegionId() {
+        return regionId;
+    }
+
+    public void setRegionId(long regionId) {
+        this.regionId = regionId;
     }
 
     /**

@@ -53,14 +53,15 @@ public interface PageService {
     RegionWidget addWidgetToPage(long page_id, long widget_id);
 
 	 /**
-	  * Deletes a specified widget from the specied page.
+	  * Deletes the specified widget from the page.
 	  *
       * @param regionWidgetId the id of the region widget to delete.\
-	  */
-	 void removeWidgetFromPage(long regionWidgetId);
+      * @return the region from which the widget was deleted
+      */
+	 Region removeWidgetFromPage(long regionWidgetId);
 
 	 /**
-	  * Registers a new page. 
+	  * Registers a new page.
 	  * @param page the page object to register with the data management system.
 	  */
 	 void registerNewPage(Page page);

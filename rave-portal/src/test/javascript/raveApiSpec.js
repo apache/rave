@@ -30,7 +30,8 @@ describe("Rave API", function() {
                     expect(data.widgetId).toEqual(2);
                     expect(typeof(callback)).toEqual("function");
                     return {
-                        error: function(a, b, c) {}
+                        error: function(a, b, c) {
+                        }
                     }
                 };
                 rave.api.rpc.addWidgetToPage({pageId: 1, widgetId: 2});
@@ -46,11 +47,32 @@ describe("Rave API", function() {
                     expect(data.newPosition).toEqual(3);
                     expect(typeof(callback)).toEqual("function");
                     return {
-                        error: function(a, b, c) {}
+                        error: function(a, b, c) {
+                        }
                     }
                 };
                 rave.api.rpc.moveWidget({targetRegion: {id:"region-1"}, currentRegion: {id:"region-2"}, targetIndex: 3, widget:{id:"widget-3-body"}});
             });
+        });
+        describe("deleteWidget", function() {
+            it("posts correct values to the RPC service for deleting a widget from the page", function() {
+                var callbackCalled = false;
+                $.post = function(url, data, callback) {
+                    expect(url).toEqual("api/rpc/page/regionWidget/1/delete");
+                    expect(typeof(callback)).toEqual("function");
+                    callback({error:false});
+                    return {
+                        error: function(a, b, c) {
+                        }
+                    }
+                };
+                var callback = function() {
+                    callbackCalled = true
+                };
+                rave.api.rpc.removeWidget({regionWidgetId : 1, successCallback: callback});
+                expect(callbackCalled).toBeTruthy();
+            });
+
         });
         describe("Error handling", function() {
             it("displays the appropriate alert when invalid parameters are passed", function() {
@@ -58,12 +80,13 @@ describe("Rave API", function() {
                 $.post = function(url, data, handler) {
                     handler({error: true, errorCode: "INVALID_PARAMS"});
                     return {
-                        error: function(a, b, c) {}
+                        error: function(a, b, c) {
+                        }
                     }
                 };
                 alert = function(str) {
                     expect(str).toEqual("Rave attempted to update the server with your recent changes, " +
-                            " but the changes were rejected by the server as invalid.");
+                        " but the changes were rejected by the server as invalid.");
                 };
                 rave.api.rpc.moveWidget({targetRegion: {id:"region-1"}, currentRegion: {id:"region-2"}, targetIndex: 3, widget:{id:"widget-3-body"}});
 
@@ -73,12 +96,13 @@ describe("Rave API", function() {
                 $.post = function(url, data, handler) {
                     handler({error: true, errorCode: "INTERNAL_ERROR"});
                     return {
-                        error: function(a, b, c) {}
+                        error: function(a, b, c) {
+                        }
                     }
                 };
                 alert = function(str) {
                     expect(str).toEqual("Rave attempted to update the server with your recent changes, " +
-                            " but the server encountered an internal error.");
+                        " but the server encountered an internal error.");
                 };
                 rave.api.rpc.moveWidget({targetRegion: {id:"region-1"}, currentRegion: {id:"region-2"}, targetIndex: 3, widget:{id:"widget-3-body"}});
             });

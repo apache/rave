@@ -21,6 +21,7 @@ package org.apache.rave.portal.repository;
 
 import org.apache.rave.portal.model.BasicEntity;
 import org.apache.rave.portal.repository.impl.AbstractJpaRepository;
+import org.hamcrest.CoreMatchers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -96,6 +97,17 @@ public class AbstractJpaRepositoryTest {
             assertThat(saved.getId(), is(equalTo(entity.getId())));
         }
 
+    }
+
+    @Test
+    @Rollback(true)
+    public void delete() {
+        for(AbstractJpaRepository repository : repositories) {
+            BasicEntity entity = repository.get(VALID_ENTITY_ID);
+            repository.delete(entity);
+            sharedManager.flush();
+            assertThat(repository.get(VALID_ENTITY_ID), is(nullValue()));
+        }
     }
 
     private BasicEntity constructNewEntityForRepository(AbstractJpaRepository repository) {

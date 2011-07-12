@@ -55,7 +55,7 @@
               </button>
               <button id="widget-${regionWidget.id}-remove"
                       class="widget-toolbar-btn"
-                      onclick="rave.toolbarDelete(this,{myRegionWidgetId:${regionWidget.id},myRegionId:${region.id},myPageId:${defaultPage.id}})">
+                      onclick="rave.toolbarDelete(this,{myRegionWidgetId:${regionWidget.id}})">
               </button>
             </div>
           </div>

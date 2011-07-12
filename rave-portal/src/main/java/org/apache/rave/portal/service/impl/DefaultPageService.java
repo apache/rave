@@ -66,13 +66,10 @@ public class DefaultPageService implements PageService {
 
     @Override
     @Transactional
-    public void removeWidgetFromPage(long regionWidgetId) {
+    public Region removeWidgetFromPage(long regionWidgetId) {
         RegionWidget widget = getFromRepository(regionWidgetId, regionWidgetRepository);
-        if (widget != null) {
-            regionWidgetRepository.delete(widget);
-        } else {
-            throw new IllegalArgumentException("Region widget with id " + regionWidgetId + " was not found in the repository");
-        }
+        regionWidgetRepository.delete(widget);
+        return getFromRepository(widget.getRegionId(), regionRepository);
     }
 
     @Override

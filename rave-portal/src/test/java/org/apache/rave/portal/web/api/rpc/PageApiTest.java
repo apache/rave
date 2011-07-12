@@ -19,9 +19,11 @@
 
 package org.apache.rave.portal.web.api.rpc;
 
+import org.apache.rave.portal.model.Region;
 import org.apache.rave.portal.model.RegionWidget;
 import org.apache.rave.portal.service.PageService;
 import org.apache.rave.portal.web.api.rpc.model.RpcResult;
+import org.hamcrest.CoreMatchers;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -147,24 +149,24 @@ public class PageApiTest {
     @Test
     public void deleteWidget_validParams() {
         final long WIDGET_ID = 3;
-        pageService.removeWidgetFromPage(WIDGET_ID);
-        expectLastCall();
-        RpcResult result = pageApi.removeWidgetFromPage(WIDGET_ID);
+        expect(pageService.removeWidgetFromPage(WIDGET_ID)).andReturn(new Region());
+        replay(pageService);
+
+        RpcResult<Region> result = pageApi.removeWidgetFromPage(WIDGET_ID);
         verify(pageService);
         assertThat(result, is(notNullValue()));
-        assertThat(result.getResult(), is(nullValue()));
+        assertThat(result.getResult(), is(notNullValue()));
         assertThat(result.isError(), is(false));
 
     }
 
    @Test
     public void deleteWidget_invalidParams() {
-        final int PAGE_ID = 1;
         final long WIDGET_ID = 2;
 
-        expect(pageService.addWidgetToPage(PAGE_ID, WIDGET_ID)).andThrow(new IllegalArgumentException(PARAM_ERROR_MESSAGE));
+        expect(pageService.removeWidgetFromPage(WIDGET_ID)).andThrow(new IllegalArgumentException(PARAM_ERROR_MESSAGE));
         replay(pageService);
-        RpcResult result = pageApi.addWidgetToPage(PAGE_ID, WIDGET_ID);
+        RpcResult result = pageApi.removeWidgetFromPage(WIDGET_ID);
         verify(pageService);
         assertThat(result, is(notNullValue()));
         assertThat(result.getResult(), is(nullValue()));
@@ -175,12 +177,11 @@ public class PageApiTest {
 
     @Test
     public void deleteWidget_internalError() {
-        final int PAGE_ID = 1;
         final long WIDGET_ID = 2;
 
-        expect(pageService.addWidgetToPage(PAGE_ID, WIDGET_ID)).andThrow(new RuntimeException(INTERNAL_ERROR_MESSAGE));
+        expect(pageService.removeWidgetFromPage(WIDGET_ID)).andThrow(new RuntimeException(INTERNAL_ERROR_MESSAGE));
         replay(pageService);
-        RpcResult result = pageApi.addWidgetToPage(PAGE_ID, WIDGET_ID);
+        RpcResult result = pageApi.removeWidgetFromPage(WIDGET_ID);
         verify(pageService);
         assertThat(result, is(notNullValue()));
         assertThat(result.getResult(), is(nullValue()));

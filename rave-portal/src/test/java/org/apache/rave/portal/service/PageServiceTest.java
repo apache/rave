@@ -25,6 +25,7 @@ import org.apache.rave.portal.model.RegionWidget;
 import org.apache.rave.portal.model.Widget;
 import org.apache.rave.portal.repository.PageRepository;
 import org.apache.rave.portal.repository.RegionRepository;
+import org.apache.rave.portal.repository.RegionWidgetRepository;
 import org.apache.rave.portal.repository.WidgetRepository;
 import org.apache.rave.portal.service.impl.DefaultPageService;
 import org.hamcrest.CoreMatchers;
@@ -44,6 +45,7 @@ public class PageServiceTest {
     private PageRepository pageRepository;
     private RegionRepository regionRepository;
     private WidgetRepository widgetRepository;
+    private RegionWidgetRepository regionWidgetRepository;
 
     private static final long REGION_WIDGET_ID = 5L;
     private static final long TO_REGION_ID = 1L;
@@ -57,7 +59,8 @@ public class PageServiceTest {
         pageRepository = createNiceMock(PageRepository.class);
         regionRepository = createNiceMock(RegionRepository.class);
         widgetRepository = createNiceMock(WidgetRepository.class);
-        pageService = new DefaultPageService(pageRepository, regionRepository, widgetRepository, null);
+        regionWidgetRepository = createNiceMock(RegionWidgetRepository.class);
+        pageService = new DefaultPageService(pageRepository, regionRepository, widgetRepository, regionWidgetRepository);
 
         targetRegion = new Region();
         targetRegion.setRegionWidgets(new ArrayList<RegionWidget>());
@@ -227,6 +230,37 @@ public class PageServiceTest {
         replay(widgetRepository);
 
         pageService.addWidgetToPage(PAGE_ID, WIDGET_ID);
+    }
+
+    @Test
+    public void removeWidgetFromPage_validWidget() {
+        long WIDGET_ID = 1L;
+        long REGION_ID = 2L;
+        RegionWidget widget = new RegionWidget(WIDGET_ID);
+        widget.setRegionId(REGION_ID);
+        Region region = new Region();
+
+        expect(regionWidgetRepository.get(WIDGET_ID)).andReturn(widget);
+        regionWidgetRepository.delete(widget);
+        expectLastCall();
+        replay(regionWidgetRepository);
+        expect(regionRepository.get(REGION_ID)).andReturn(region);
+        replay(regionRepository);
+
+        Region result = pageService.removeWidgetFromPage(WIDGET_ID);
+        verify(regionWidgetRepository);
+        verify(regionRepository);
+        assertThat(result, is(sameInstance(region)));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void removeWidgetFromPage_invalidWidget() {
+        long WIDGET_ID = -1L;
+        expect(regionWidgetRepository.get(WIDGET_ID)).andReturn(null);
+        replay(regionWidgetRepository);
+        replay(regionRepository);
+
+        pageService.removeWidgetFromPage(WIDGET_ID);
     }
 
     private void verifyPositions(int newPosition, RegionWidget widget, boolean sameRegion) {

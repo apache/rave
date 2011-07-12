@@ -121,8 +121,7 @@ public class PageApi {
 		return new RpcOperation<Region>() {
 			@Override
 			public Region execute() {
-		        pageService.removeWidgetFromPage(regionWidgetId);
-                return null;
+		        return pageService.removeWidgetFromPage(regionWidgetId);
             }
 		}.getResult();
     }

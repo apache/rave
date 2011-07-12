@@ -113,20 +113,15 @@ var rave = rave || (function() {
 		  }
 		  function maximizeAction(button,args) {
 				alert("Maximize button not yet implemented");
-		  };
+		  }
 		  function deleteAction(button,args) {
 				rave.api.rpc.removeWidget({
-					 regionWidgetId: args.myRegionWidgetId, 
-					 pageId : args.myPageId,
-					 region: {
-						  id : rave.getGadgetRegion(args.myRegionWidgetId)
-					 },
-					 succCB: function() {
+					 regionWidgetId: args.myRegionWidgetId,
+					 successCallback: function() {
 						  $("#widget-wrapper-"+args.myRegionWidgetId).remove();
 					 }
 				});
-
-		  };
+		  }
 		  return {
 				maximizeAction : maximizeAction,
 				deleteAction : deleteAction
