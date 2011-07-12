@@ -24,12 +24,16 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 
+@Transactional
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations={"file:src/main/webapp/WEB-INF/dataContext.xml", "file:src/main/webapp/WEB-INF/applicationContext.xml"})
 public class JpaPageRepositoryTest {
@@ -37,6 +41,9 @@ public class JpaPageRepositoryTest {
     private static final Long USER_ID = 1L;
     private static final Long INVALID_USER = -1L;
     private static final String WIDGET_URL = "http://www.google.com/ig/modules/wikipedia.xml";
+
+    @PersistenceContext
+    private EntityManager manager;
 
     @Autowired
     private PageRepository repository;

@@ -23,10 +23,7 @@ import org.apache.rave.portal.model.Page;
 import org.apache.rave.portal.model.Region;
 import org.apache.rave.portal.model.RegionWidget;
 import org.apache.rave.portal.model.Widget;
-import org.apache.rave.portal.repository.PageRepository;
-import org.apache.rave.portal.repository.RegionRepository;
-import org.apache.rave.portal.repository.Repository;
-import org.apache.rave.portal.repository.WidgetRepository;
+import org.apache.rave.portal.repository.*;
 import org.apache.rave.portal.service.PageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,12 +35,14 @@ import java.util.List;
 public class DefaultPageService implements PageService {
     private final PageRepository pageRepository;
     private final RegionRepository regionRepository;
+    private final RegionWidgetRepository regionWidgetRepository;
     private final WidgetRepository widgetRepository;
 
     @Autowired
-    public DefaultPageService(PageRepository pageRepository, RegionRepository regionRepository, WidgetRepository widgetRepository) {
+    public DefaultPageService(PageRepository pageRepository, RegionRepository regionRepository, WidgetRepository widgetRepository, RegionWidgetRepository regionWidgetRepository) {
         this.pageRepository = pageRepository;
         this.regionRepository = regionRepository;
+        this.regionWidgetRepository = regionWidgetRepository;
         this.widgetRepository = widgetRepository;
     }
 
@@ -56,7 +55,7 @@ public class DefaultPageService implements PageService {
     @Transactional
     public RegionWidget moveRegionWidget(long regionWidgetId, int newPosition, long toRegion, long fromRegion) {
         Region target = getFromRepository(toRegion, regionRepository);
-        if(toRegion == fromRegion) {
+        if (toRegion == fromRegion) {
             moveWithinRegion(regionWidgetId, newPosition, target);
         } else {
             moveBetweenRegions(regionWidgetId, newPosition, fromRegion, target);
@@ -65,12 +64,16 @@ public class DefaultPageService implements PageService {
         return findRegionWidgetById(regionWidgetId, target.getRegionWidgets());
     }
 
-	 @Override
-	 @Transactional
-	 public Region removeWidgetFromPage(long regionWidgetId, long regionId){
-        Region region = getFromRepository(regionId, regionRepository);
-        return removeWidgetInstance(regionWidgetId, region);
-	 }
+    @Override
+    @Transactional
+    public void removeWidgetFromPage(long regionWidgetId) {
+        RegionWidget widget = getFromRepository(regionWidgetId, regionWidgetRepository);
+        if (widget != null) {
+            regionWidgetRepository.delete(widget);
+        } else {
+            throw new IllegalArgumentException("Region widget with id " + regionWidgetId + " was not found in the repository");
+        }
+    }
 
     @Override
     @Transactional
@@ -81,11 +84,11 @@ public class DefaultPageService implements PageService {
         return createWidgetInstance(widget, region, 0);
     }
 
-	 @Override
-	 @Transactional
-	 public void registerNewPage(Page page) {
-		  pageRepository.save(page);
-	 }
+    @Override
+    @Transactional
+    public void registerNewPage(Page page) {
+        pageRepository.save(page);
+    }
 
     private RegionWidget createWidgetInstance(Widget widget, Region region, int position) {
         RegionWidget regionWidget = new RegionWidget();
@@ -116,17 +119,9 @@ public class DefaultPageService implements PageService {
         target.getRegionWidgets().add(newPosition, widget);
     }
 
-	 private Region removeWidgetInstance(long regionWidgetId, Region region) {
-        RegionWidget regionWidget = findRegionWidgetById(regionWidgetId, region.getRegionWidgets());
-		  region.getRegionWidgets().remove(regionWidget);		
-		  updateRenderSequences(region.getRegionWidgets());
-		  regionRepository.save(region);
-		  return region;
-	 }
-
     private static <T> T getFromRepository(long id, Repository<T> repo) {
         T object = repo.get(id);
-        if(object == null) {
+        if (object == null) {
             throw new IllegalArgumentException("Could not find object of given id in " + repo.getClass().getSimpleName());
         }
         return object;
@@ -134,19 +129,19 @@ public class DefaultPageService implements PageService {
 
     private static void updateRenderSequences(List<RegionWidget> regionWidgets) {
         int count = 0;
-        for(RegionWidget widget : regionWidgets) {
+        for (RegionWidget widget : regionWidgets) {
             widget.setRenderOrder(count);
             count++;
         }
     }
 
     private static RegionWidget findRegionWidgetById(Long id, List<RegionWidget> regionWidgets) {
-        for(RegionWidget widget : regionWidgets) {
-            if(widget.getId().equals(id)) {
+        for (RegionWidget widget : regionWidgets) {
+            if (widget.getId().equals(id)) {
                 return widget;
             }
         }
         throw new IllegalArgumentException("Invalid RegionWidget ID");
     }
-	 
+
 }

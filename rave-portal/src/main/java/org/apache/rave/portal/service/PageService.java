@@ -54,12 +54,10 @@ public interface PageService {
 
 	 /**
 	  * Deletes a specified widget from the specied page.
-	  * @param widgetId the id of the widget to delete.
-	  * @param regionId the ID of the region containing the widget to delete
-	  * @param pageId the id of the page containing the widget to delete
-	  * @return the updated Region. //TODO need to make sure this is the right return.
+	  *
+      * @param regionWidgetId the id of the region widget to delete.\
 	  */
-	 Region removeWidgetFromPage(long regionWidgetId, long regionId);
+	 void removeWidgetFromPage(long regionWidgetId);
 
 	 /**
 	  * Registers a new page. 

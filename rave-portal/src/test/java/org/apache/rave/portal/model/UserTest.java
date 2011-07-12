@@ -56,7 +56,7 @@ public class UserTest {
 		
 		user1=new User();
 		user1.setUsername(userName);
-		user1.setUserId(id);
+		user1.setId(id);
 		user1.setPassword(userPassword);
 		user1.setEnabled(user1Enabled);
 		user1.setExpired(user1Expired);
@@ -74,14 +74,14 @@ public class UserTest {
 	public void testAccessorMethods(){
 		assertTrue(user1.getUsername().equals(userName));
 		assertTrue(user1.getPassword().equals(userPassword));
-		assertTrue(user1.getUserId().equals(id));
+		assertTrue(user1.getId().equals(id));
 		assertTrue(user1.isEnabled());
 		assertFalse(user2.isEnabled());
 		assertTrue(user3.isEnabled());
 	}
 	public void testAltConstructors(){
-		assertTrue(user1.getUserId()==user2.getUserId());
-		assertTrue(user1.getUserId()==user3.getUserId());
+		assertTrue(user1.getId()==user2.getId());
+		assertTrue(user1.getId()==user3.getId());
 		assertTrue(user1.getUsername().equals(user3.getUsername()));
 	}
 	

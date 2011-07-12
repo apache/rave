@@ -30,20 +30,8 @@ import javax.persistence.PersistenceContext;
 import static org.apache.rave.portal.repository.impl.util.JpaUtil.saveOrUpdate;
 
 @Repository
-public class JpaRegionWidgetRepository implements RegionWidgetRepository {
-    @PersistenceContext
-    private EntityManager manager;
-
-    @Override
-    public RegionWidget get(long regionWidgetId) {
-        return manager.find(RegionWidget.class, regionWidgetId);
+public class JpaRegionWidgetRepository extends AbstractJpaRepository<RegionWidget> implements RegionWidgetRepository {
+    public JpaRegionWidgetRepository() {
+        super(RegionWidget.class);
     }
-
-    @Override
-    @Transactional
-    public RegionWidget save(RegionWidget regionWidget) {
-        return saveOrUpdate(regionWidget.getId(), manager, regionWidget);
-    }
-
-
 }

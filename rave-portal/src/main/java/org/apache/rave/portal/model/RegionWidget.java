@@ -27,7 +27,7 @@ import java.util.List;
 @Entity
 @Table(name = "region_widget")
 @SequenceGenerator(name = "regionWidgetIdSeq", sequenceName = "region_widget_id_seq")
-public class RegionWidget {
+public class RegionWidget implements BasicEntity{
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "regionWidgetIdSeq")

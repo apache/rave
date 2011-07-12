@@ -54,7 +54,7 @@ public class WookieWidgetService implements WidgetProviderService {
     private Widget getWidgetForViewer(Widget widget, String context, User viewer){
         try {
             connectorService = getWookieConnectorService(WOOKIE_SERVER_URL, WOOKIE_API_KEY, context);
-            org.apache.wookie.connector.framework.User user = new org.apache.wookie.connector.framework.User(String.valueOf(viewer.getUserId()), viewer.getUsername());
+            org.apache.wookie.connector.framework.User user = new org.apache.wookie.connector.framework.User(String.valueOf(viewer.getId()), viewer.getUsername());
             connectorService.setCurrentUser(user);
             
             System.out.println("Getting widget:"+widget.getUrl()+" from:" +connectorService.getConnection().getURL());

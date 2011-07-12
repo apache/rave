@@ -29,10 +29,10 @@ import java.util.List;
 @Table(name="page")
 @SequenceGenerator(name="pageIdSeq", sequenceName = "page_id_seq")
 @NamedQueries({
-        @NamedQuery(name = "Page.getByUserId", query="SELECT p FROM Page p WHERE p.owner.userId = :userId")
+        @NamedQuery(name = "Page.getByUserId", query="SELECT p FROM Page p WHERE p.owner.id = :userId")
 })
 @Access(AccessType.FIELD)
-public class Page {
+public class Page implements BasicEntity{
     @Id @Column(name="id")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "pageIdSeq")
     private Long id;

@@ -31,7 +31,7 @@ import javax.persistence.*;
     @NamedQuery(name="PageLayout.getByLayoutCode", query = "select pl from PageLayout pl where pl.code = :code")
 })
 
-public class PageLayout {
+public class PageLayout implements BasicEntity {
     @Id @Column(name="id")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "pageLayoutIdSeq")
     private Long id;

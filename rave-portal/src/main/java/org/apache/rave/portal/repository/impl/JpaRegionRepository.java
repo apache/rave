@@ -28,21 +28,9 @@ import javax.persistence.PersistenceContext;
 
 import static org.apache.rave.portal.repository.impl.util.JpaUtil.saveOrUpdate;
 
-/**
- *  */
-
 @Repository
-public class JpaRegionRepository implements RegionRepository {
-    @PersistenceContext
-    private EntityManager manager;
-
-    @Override
-    public Region get(long regionId) {
-        return manager.find(Region.class, regionId);
-    }
-
-    @Override
-    public Region save(Region region) {
-        return saveOrUpdate(region.getId(), manager, region);
-    }
+public class JpaRegionRepository extends AbstractJpaRepository<Region> implements RegionRepository {
+  public JpaRegionRepository() {
+      super(Region.class);
+  }
 }

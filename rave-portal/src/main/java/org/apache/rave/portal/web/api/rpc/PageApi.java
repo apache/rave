@@ -108,28 +108,22 @@ public class PageApi {
 
 	/**
 	 * Deletes a widget
-	 * 
-	 * @param pageId
-	 *            the ID of the {@link org.apache.rave.portal.model.Page}
-	 *            containing the widget region
-	 * @param regionId
-	 *            the ID of the {@link org.apache.rave.portal.model.Region}
-	 *            containing the widget
-	 * @param widgetId
+	 *
+	 * @param regionWidgetId
 	 *            the ID of the {@link org.apache.rave.portal.model.Widget} to
 	 *            delete
 	 * @return an {@link RpcOperation} containing the updated region or any
 	 *         errors encountered.
 	 */
 	@ResponseBody
-    @RequestMapping(method=RequestMethod.POST, value="{pageId}/widget/delete")	
-    public RpcResult<Region> removeWidgetFromPage(@RequestParam final long widgetId, 
-																  @RequestParam final long regionId) {
+    @RequestMapping(method=RequestMethod.POST, value="regionWidget/{regionWidgetId}/delete")
+    public RpcResult<Region> removeWidgetFromPage(@PathVariable final long regionWidgetId) {
 		return new RpcOperation<Region>() {
 			@Override
 			public Region execute() {
-				 return pageService.removeWidgetFromPage(widgetId, regionId);
-			}
+		        pageService.removeWidgetFromPage(regionWidgetId);
+                return null;
+            }
 		}.getResult();
     }
 

@@ -54,7 +54,7 @@ public class HomeController {
     @RequestMapping(value = {"/", "/index.html"})
     public String getHome(Model model) {
         User user = userService.getAuthenticatedUser();
-        List<Page> pages = pageService.getAllPages(user.getUserId());
+        List<Page> pages = pageService.getAllPages(user.getId());
         model.addAttribute(ModelKeys.PAGES, pages);
         model.addAttribute(ModelKeys.OPENSOCIAL_ENVIRONMENT, openSocialEnvironment);
         return ViewNames.HOME;

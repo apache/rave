@@ -19,30 +19,40 @@
 
 package org.apache.rave.portal.repository.impl;
 
-import org.apache.rave.portal.model.User;
-import org.apache.rave.portal.repository.UserRepository;
-import org.springframework.stereotype.Repository;
+import org.apache.rave.portal.model.BasicEntity;
+import org.apache.rave.portal.repository.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
 
-import static org.apache.rave.portal.repository.impl.util.JpaUtil.getSingleResult;
 import static org.apache.rave.portal.repository.impl.util.JpaUtil.saveOrUpdate;
 
 /**
+ * Provides generic implementations of {@link org.apache.rave.portal.repository.Repository} methods
  */
-@Repository
-public class JpaUserRepository extends AbstractJpaRepository<User> implements UserRepository{
+public abstract class AbstractJpaRepository<T extends BasicEntity> implements Repository<T> {
 
-    public JpaUserRepository() {
-        super(User.class);
+    @PersistenceContext
+    protected EntityManager manager;
+
+    private final Class<T> type;
+
+    protected AbstractJpaRepository(Class<T> type) {
+        this.type = type;
     }
 
     @Override
-    public User getByUsername(String username) {
-        TypedQuery<User> query = manager.createNamedQuery("User.getByUsername", User.class);
-        query.setParameter("username", username);
-        return getSingleResult(query.getResultList());
+    public void delete(T item) {
+        manager.remove(item);
+    }
+
+    @Override
+    public T save(T item) {
+        return saveOrUpdate(item.getId(), manager, item);
+    }
+
+    @Override
+    public T get(long id) {
+        return manager.find(type, id);
     }
 }

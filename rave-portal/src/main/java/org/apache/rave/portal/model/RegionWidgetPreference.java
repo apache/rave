@@ -29,7 +29,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "region_widget_preference")
 @SequenceGenerator(name = "regionWidgetPrefIdSeq", sequenceName = "region_widget_pref_id_seq")
 @XmlRootElement
-public class RegionWidgetPreference {
+public class RegionWidgetPreference implements BasicEntity{
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "regionWidgetPrefIdSeq")

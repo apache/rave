@@ -35,10 +35,10 @@ import java.util.Collection;
 @NamedQueries({
     @NamedQuery(name="User.getByUsername", query = "select u from User u where u.username = :username")
 })
-public class User implements UserDetails {
+public class User implements UserDetails, BasicEntity {
     @Id @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "userIdSeq")
-    private Long userId;
+    private Long id;
 
     @Basic @Column(name = "username")
     private String username;
@@ -58,12 +58,12 @@ public class User implements UserDetails {
     public User() {
     }
 
-    public User(Long userId) {
-        this.userId = userId;
+    public User(Long id) {
+        this.id = id;
     }
 
-    public User(Long userId, String username) {
-        this.userId = userId;
+    public User(Long id, String username) {
+        this.id = id;
         this.username = username;
     }
 
@@ -72,12 +72,12 @@ public class User implements UserDetails {
      *
      * @return The unique identifier for this user.
      */
-    public Long getUserId() {
-        return userId;
+    public Long getId() {
+        return id;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     //TODO: Add GrantedAuthorities to user

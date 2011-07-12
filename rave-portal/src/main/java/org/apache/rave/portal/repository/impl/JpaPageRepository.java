@@ -32,26 +32,16 @@ import java.util.List;
 import static org.apache.rave.portal.repository.impl.util.JpaUtil.saveOrUpdate;
 
 @Repository
-public class JpaPageRepository implements PageRepository {
+public class JpaPageRepository extends AbstractJpaRepository<Page> implements PageRepository{
 
-    @PersistenceContext
-    private EntityManager manager;
+    public JpaPageRepository() {
+        super(Page.class);
+    }
 
     @Override
     public List<Page> getAllPages(Long userId) {
         TypedQuery<Page> query = manager.createNamedQuery("Page.getByUserId", Page.class);
         query.setParameter("userId", userId);
         return query.getResultList();
-    }
-
-    @Override
-    public Page get(long pageId) {
-        return manager.find(Page.class, pageId);
-    }
-
-    @Override
-    public Page save(Page item) {
-		  return saveOrUpdate(item.getId(),manager,item);
-		  //        throw new NotImplementedException("Save is not implemented for this repository");
     }
 }

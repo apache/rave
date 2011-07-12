@@ -29,7 +29,7 @@ import javax.persistence.*;
 @NamedQueries({
         @NamedQuery(name = "Widget.getAll", query = "SELECT w from Widget w")
 })
-public class Widget {
+public class Widget implements BasicEntity{
     @Id @Column(name="id")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "widgetIdSeq")
     private Long id;

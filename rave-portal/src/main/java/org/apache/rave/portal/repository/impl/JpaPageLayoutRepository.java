@@ -35,16 +35,12 @@ import static org.apache.rave.portal.repository.impl.util.JpaUtil.saveOrUpdate;
 /**
  */
 @Repository
-public class JpaPageLayoutRepository implements PageLayoutRepository{
+public class JpaPageLayoutRepository extends AbstractJpaRepository<PageLayout> implements PageLayoutRepository{
 
-    @PersistenceContext
-    private EntityManager manager;
-
-    @Override
-    public PageLayout get(long layoutId) {
-        return manager.find(PageLayout.class, layoutId);
+    public JpaPageLayoutRepository() {
+        super(PageLayout.class);
     }
-	 
+
 	 @Override
 	 public PageLayout getByPageLayoutCode(String codename){
 		  TypedQuery<PageLayout>query = manager.createNamedQuery("PageLayout.getByLayoutCode",PageLayout.class);
@@ -52,8 +48,4 @@ public class JpaPageLayoutRepository implements PageLayoutRepository{
 		  return getSingleResult(query.getResultList());
 	 }
 
-    @Override
-    public PageLayout save(PageLayout pageLayout) {
-		  return saveOrUpdate(pageLayout.getId(),manager,pageLayout);
-    }
 }

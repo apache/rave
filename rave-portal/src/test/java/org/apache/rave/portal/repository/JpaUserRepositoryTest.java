@@ -26,13 +26,21 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 
+@Transactional
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations={"file:src/main/webapp/WEB-INF/dataContext.xml", "file:src/main/webapp/WEB-INF/applicationContext.xml"})
 public class JpaUserRepositoryTest {
+
+    @PersistenceContext
+    private EntityManager manager;
 
     private static final Long USER_ID = 1L;
     private static final String USER_NAME = "canonical";
@@ -58,7 +66,7 @@ public class JpaUserRepositoryTest {
     public void getByUsername_valid() {
         User user = repository.getByUsername(USER_NAME);
         assertThat(user, CoreMatchers.notNullValue());
-        assertThat(user.getUserId(), is(equalTo(USER_ID)));
+        assertThat(user.getId(), is(equalTo(USER_ID)));
         assertThat(user.getPassword(), is(equalTo(USER_NAME)));
         assertThat(user.isAccountNonExpired(), is(true));
     }

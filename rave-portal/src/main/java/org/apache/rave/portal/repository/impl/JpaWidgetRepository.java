@@ -31,24 +31,15 @@ import javax.persistence.TypedQuery;
 import java.util.List;
 
 @Repository
-public class JpaWidgetRepository implements WidgetRepository{
+public class JpaWidgetRepository extends AbstractJpaRepository<Widget> implements WidgetRepository{
 
-    @PersistenceContext
-    private EntityManager manager;
+    public JpaWidgetRepository() {
+        super(Widget.class);
+    }
 
     @Override
     public List<Widget> getAll() {
         TypedQuery<Widget> query = manager.createNamedQuery("Widget.getAll", Widget.class);
         return query.getResultList();
-    }
-
-    @Override
-    public Widget get(long id) {
-        return manager.find(Widget.class, id);
-    }
-
-    @Override
-    public Widget save(Widget item) {
-        throw new NotImplementedException("Save is not implemented for this repository");
     }
 }

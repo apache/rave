@@ -57,7 +57,7 @@ public class PageServiceTest {
         pageRepository = createNiceMock(PageRepository.class);
         regionRepository = createNiceMock(RegionRepository.class);
         widgetRepository = createNiceMock(WidgetRepository.class);
-        pageService = new DefaultPageService(pageRepository, regionRepository, widgetRepository);
+        pageService = new DefaultPageService(pageRepository, regionRepository, widgetRepository, null);
 
         targetRegion = new Region();
         targetRegion.setRegionWidgets(new ArrayList<RegionWidget>());

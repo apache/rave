@@ -44,11 +44,6 @@
 <c:forEach var="region" items="${defaultPage.regions}">
 <div class="region" id="region-${region.id}-id" >
     <c:forEach var="regionWidget" items="${region.regionWidgets}">
-    <%-- FIXME: whether region.id should be included in the id.
-         I am not sure whether id's of widgets in different regions can be the same.
-         If so, region.id must be included. When a gadget is moved, region id must be updated. 
-         Otherwise, it is not needed.
-    --%>
     <div class="widget-wrapper" id="widget-wrapper-${regionWidget.id}">
         <div class="widget-title-bar" >
             <span id="widget-${regionWidget.id}-title">${regionWidget.widget.title}</span>

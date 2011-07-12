@@ -136,8 +136,6 @@ public class JpaRegionRepositoryTest {
 
         assertThat(saved.getRegionWidgets().size(), is(equalTo(1)));
         assertThat(widget, is(nullValue()));
-
-
     }
 
 }
