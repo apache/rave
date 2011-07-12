@@ -41,8 +41,6 @@ rave.api = rave.api || (function() {
                 function(result) {
                     if (result.error) {
                         handleRpcError(result);
-                    } else {
-                        rave.mapGadgetToRegion(widgetObjectId, toRegionObjectId);
                     }
                 }
             ).error(handleError);

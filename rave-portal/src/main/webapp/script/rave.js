@@ -19,10 +19,6 @@
 var rave = rave || (function() {
     var providerList = [];
     var context = "";
-    
-    // map widget id to region id
-    var widgetRegionMap = {};
-
 
     /**
      * Separate sub-namespace for isolating UI functions and state management
@@ -115,14 +111,16 @@ var rave = rave || (function() {
 				alert("Maximize button not yet implemented");
 		  }
 		  function deleteAction(button,args) {
-				rave.api.rpc.removeWidget({
-					 regionWidgetId: args.myRegionWidgetId,
-					 successCallback: function() {
-						  $("#widget-wrapper-"+args.myRegionWidgetId).remove();
-					 }
-				});
-		  }
-		  return {
+              if (confirm("Are you sure you want to remove this gadget from your page")) {
+                  rave.api.rpc.removeWidget({
+                      regionWidgetId: args.myRegionWidgetId,
+                      successCallback: function() {
+                          $("#widget-wrapper-" + args.myRegionWidgetId).remove();
+                      }
+                  });
+              }
+          }
+         return {
 				maximizeAction : maximizeAction,
 				deleteAction : deleteAction
 		  }
@@ -195,32 +193,10 @@ var rave = rave || (function() {
             regionElement.children("div[id^='widget-wrapper-']").each(function(wrapperIndex) {
                 var widgetElement = $(this);
                 var widgetId = widgetElement.attr("id").substr("widget-wrapper-".length);
-                mapGadgetToRegion(widgetId, regionId);
                 styleGadgetButtons(widgetId);
             });
         });
     }
-
-    /**
-	  * Map a widget to the region where it is located.
-	  * 
-	  * @param widgetId: id of the widget (not DOM id)
-	  * @param regionId: if it is non null, it is mapped. It it is null or not present, delete the map entry.
-	  */
-	 function mapGadgetToRegion(widgetId, regionId) {
-	     delete widgetRegionMap[widgetId];
-	     if (arguments.length > 1 && regionId != null) {
-	         widgetRegionMap[widgetId] = regionId;
-		  }
-	 }
-	 
-	 /**
-      * Get the region where a widget/gadget belongs to.
-      * @param widgetId: id of the widget. (not DOM id)
-      */
-	 function getGadgetRegion(widgetId) {
-         return widgetRegionMap[widgetId];
-     }
 
     /**
      * Applies styling to the several buttons in the widget / gadget toolbar
@@ -304,17 +280,6 @@ var rave = rave || (function() {
         getContext: getContext,
 
         initGadgetUI : initGadgetUI,
-
-
-    	/**
-    	 * Change or delete gadget to region map entry.
-    	 */
-    	mapGadgetToRegion : mapGadgetToRegion,
-    	
-    	/**
-    	 * Get the region where a widget/gadget belongs to.
-    	 */
-    	  getGadgetRegion : getGadgetRegion,
 
 		  /**
 			* These are exposed toolbar actions, associated with widget toolbar buttons
