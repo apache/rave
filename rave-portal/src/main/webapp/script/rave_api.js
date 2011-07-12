@@ -104,7 +104,6 @@ rave.api = rave.api || (function() {
                             " but the server encountered an internal error.");
                     break;
             }
-//            console.log(rpcResult.errorMessage);
         }
 
         return {

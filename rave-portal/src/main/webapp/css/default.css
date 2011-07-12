@@ -150,7 +150,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .widget-title-bar {
     color: #FFFFFF;
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#999", endColorstr="#666");
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#999999", endColorstr="#666666");
     background: -moz-linear-gradient(center top , #999 0%, #666 25%) repeat scroll 0 0 transparent;
     background: -webkit-gradient(linear, left top, left bottom, from(#999), to(#666));
    /* background-color: #6699CC;*/

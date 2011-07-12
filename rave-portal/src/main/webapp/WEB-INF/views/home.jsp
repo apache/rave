@@ -52,18 +52,17 @@
     <div class="widget-wrapper" id="widget-wrapper-${regionWidget.id}">
         <div class="widget-title-bar" >
             <span id="widget-${regionWidget.id}-title">${regionWidget.widget.title}</span>
-            
-                <!-- These are toolbar buttons -->
-                <span id="widget-${regionWidget.id}-toolbar" style="float:right;">
-                  <button id="widget-${regionWidget.id}-max" 
-                             class="widget-toolbar-btn"
-                             onclick="rave.toolbarMaximize(this,{myRegionWidgetId:${regionWidget.id},myRegionId:${region.id},myPageId:${defaultPage.id}})">
-                  </button>
-                  <button id="widget-${regionWidget.id}-remove" 
-                             class="widget-toolbar-btn"
-                             onclick="rave.toolbarDelete(this,{myRegionWidgetId:${regionWidget.id},myRegionId:${region.id},myPageId:${defaultPage.id}})">
-                  </button>
-                </span>
+            <!-- These are toolbar buttons -->
+            <div id="widget-${regionWidget.id}-toolbar" style="float:right;">
+              <button id="widget-${regionWidget.id}-max"
+                      class="widget-toolbar-btn"
+                      onclick="rave.toolbarMaximize(this,{myRegionWidgetId:${regionWidget.id},myRegionId:${region.id},myPageId:${defaultPage.id}})">
+              </button>
+              <button id="widget-${regionWidget.id}-remove"
+                      class="widget-toolbar-btn"
+                      onclick="rave.toolbarDelete(this,{myRegionWidgetId:${regionWidget.id},myRegionId:${region.id},myPageId:${defaultPage.id}})">
+              </button>
+            </div>
           </div>
         <div class="widget" id="widget-${regionWidget.id}-body">
             <%-- Widget will be rendered here --%>

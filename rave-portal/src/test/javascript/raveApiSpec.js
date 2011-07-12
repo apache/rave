@@ -21,7 +21,6 @@ describe("Rave API", function() {
     describe("rpc", function() {
 
         $ = {};
-        console = {log : function(msg) {}};
 
         describe("addWidgetToPage", function() {
             it("posts the correct values to RPC service for adding a widget to the page", function() {

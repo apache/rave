@@ -141,11 +141,6 @@ describe("Rave", function() {
 
     describe("initDragAndDrop", function() {
         function createMockJQuery() {
-            console = {
-                log : function(str) {
-
-                }
-            };
             var sortableArgs = null;
             $ = function(element) {
                 return {
