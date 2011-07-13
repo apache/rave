@@ -91,7 +91,7 @@
     </bean>
 
     <!-- Environment variables for opensocial calls from the portal -->
-    <bean id="openSocialEnvironment" class="org.apache.rave.portal.util.OpenSocialEnvironment">
+    <bean id="openSocialEnvironment" class="org.apache.rave.provider.opensocial.config.OpenSocialEnvironment">
         <property name="engineProtocol" value="${portal.opensocial_engine.protocol}"/>
         <property name="engineRoot" value="${portal.opensocial_engine.root}"/>
         <property name="engineGadgetPath" value="${portal.opensocial_engine.gadget_path}"/>

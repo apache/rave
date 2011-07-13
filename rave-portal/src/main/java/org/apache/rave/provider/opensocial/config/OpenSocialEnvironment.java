@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.apache.rave.portal.util;
+package org.apache.rave.provider.opensocial.config;
 
 /**
  * Environment variables for OpenSocial calls from the portal (to Shindig)
