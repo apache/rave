@@ -21,13 +21,13 @@
 */
 
 body {
-    color: white;
+    color: #000000;
     font-family: Arial, Helvetica, sans-serif;
     font-size: 12pt;
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#D7D7D3", endColorstr="#EBEBEB");
     background: -moz-linear-gradient(center top , #D7D7D3 0%, #EBEBEB 50%) repeat scroll 0 0 transparent;
     background: -webkit-gradient(linear, left top, left bottom, from(#D7D7D3), to(#EBEBEB));
-    margin:0px;
+    margin:0;
 }
 
 #banner {
@@ -95,7 +95,7 @@ h1, h2, h3, h4, h5, h6 {
 
 #content {
     background-color: transparent;
-    padding: 0px;
+    padding: 0;
     width: 90%;
     margin-left:auto;
     margin-right:auto;
@@ -140,7 +140,6 @@ h1, h2, h3, h4, h5, h6 {
     background-color: #F00;
     padding: 0.01em 1em;
     border-radius: 10px;
-    background: url(../images/rave_codehilite_bg.gif);
 }
 
 .widget-wrapper {
@@ -153,7 +152,6 @@ h1, h2, h3, h4, h5, h6 {
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#999999", endColorstr="#666666");
     background: -moz-linear-gradient(center top , #999 0%, #666 25%) repeat scroll 0 0 transparent;
     background: -webkit-gradient(linear, left top, left bottom, from(#999), to(#666));
-   /* background-color: #6699CC;*/
     border-radius: 5px 5px 0px 0px;
     padding: 2px;
     border-bottom: solid 1px #CCCCCC;
