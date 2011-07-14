@@ -29,6 +29,7 @@ import org.springframework.core.io.Resource;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -84,10 +85,10 @@ public class ConfigurablePropertiesModule extends PropertiesModule {
 
         try {
             initProperties.load(propertyResource.getInputStream());
-            for (Object key : initProperties.keySet()) {
-                String value = (String) initProperties.get(key);
+            for (Map.Entry entry : initProperties.entrySet()) {
+                String value = (String) entry.getValue();
                 if (value != null && value.contains(CONTEXT_ROOT_PLACEHOLDER)) {
-                    initProperties.put(key,
+                    initProperties.put(entry.getKey(),
                             value.replace((CONTEXT_ROOT_PLACEHOLDER), getContextRoot()));
                 }
             }
