@@ -291,7 +291,7 @@
                             </url>
                         </zipUrlInstaller>
                         <systemProperties>
-                          <shindig.host>wave1.zhenhua.info</shindig.host>
+                          <shindig.host>localhost</shindig.host>
                         </systemProperties>
                     </container>
                 </configuration>
