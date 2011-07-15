@@ -92,7 +92,8 @@
         rave.setContext("<spring:url value="/app/" />");
         rave.initGadgetUI(widgets);
         rave.initProviders();
-        rave.initWidgets(rave.createWidgetMap(widgets));
+        //rave.initWidgets(rave.createWidgetMap(widgets));
+        rave.initWidgets(widgets);
         rave.initDragAndDrop();
     });
 </script>

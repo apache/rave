@@ -17,7 +17,9 @@
  * under the License.
  */
 var rave = rave || (function() {
-    var providerList = [];
+    var WIDGET_PROVIDER_ERROR = "This widget type is currently unsupported.  Check with your administrator and be sure the correct provider is registered.";
+
+    var providerMap = {};
     var context = "";
 
     /**
@@ -131,22 +133,30 @@ var rave = rave || (function() {
 		  //Providers register themselves when loaded, so 
 		  //JavaScript library importing order is important.
 		  //See home.jsp for example.
-        for (var i = 0; i < providerList.length; i++) {
-            providerList[i].init();
+        for (var key in providerMap) {
+            providerMap[key].init();
         }
     }
 
     function initializeWidgets(widgets) {
         //Initialize the widgets for supported providers
-        for (var i = 0; i < providerList.length; i++) {
-            var provider = providerList[i];
-            provider.initWidgets(widgets[provider.TYPE]);
+        for(var i=0; i<widgets.length; i++) {
+            initializeWidget(widgets[i]);
+        }
+    }
+
+    function initializeWidget(widget) {
+        var provider = providerMap[widget.type];
+        if (typeof provider == "undefined") {
+            renderErrorWidget(widget.regionWidgetId, WIDGET_PROVIDER_ERROR);
+        } else {
+            provider.initWidget(widget);
         }
     }
 
     function addProviderToList(provider) {
         if (provider.hasOwnProperty("init")) {
-            providerList.push(provider);
+            providerMap[provider.TYPE] = provider;
         } else {
             throw "Attempted to register invalid provider";
         }
@@ -171,6 +181,10 @@ var rave = rave || (function() {
     function extractObjectIdFromElementId(elementId) {
         var tokens = elementId.split("-");
         return tokens.length > 2 && tokens[0] == "widget" || tokens[0] == "region" ? tokens[1] : null;
+    }
+
+    function renderErrorWidget(id, message) {
+        $("#widget-" + id + "-body").html(message);
     }
 
     function updateContext(contextPath) {
@@ -231,6 +245,10 @@ var rave = rave || (function() {
         /**
          * Initializes the given set of widgets
          * @param widgets a map of widgets by type
+         *
+         * NOTE: widget object must have at a minimum the following properties:
+         *      type,
+         *      regionWidgetId
          */
         initWidgets : initializeWidgets,
 
@@ -260,12 +278,20 @@ var rave = rave || (function() {
         getObjectIdFromDomId : extractObjectIdFromElementId,
 
         /**
-         * Registers a new provider with Rave.  All providers MUST have init and initWidgets functions as well as a
+         * Registers a new provider with Rave.  All providers MUST have init and initWidget functions as well as a
          * TYPE property exposed in its public API
          *
          * @param provider a valid Rave widget provider
          */
         registerProvider : addProviderToList,
+
+        /**
+         * Renders an error in place of the gadget
+         *
+         * @param id the RegionWidgetId of the widget to render in error mode
+         * @param message The message to display to the suer
+         */
+        errorWidget: renderErrorWidget,
 
         /**
          * Sets the context path for the Rave web application

@@ -67,58 +67,62 @@ rave.opensocial = rave.opensocial || (function() {
     }
 
     /**
-     * Creates and renders the list of gadgets
+     * Renders a gadget on the page
      *
-     * @param gadgets list of gadget objects that are to be rendered by the container
+     * @param gadget the gadget object to be rendered by the container
      */
-    function createGadgetInstances(gadgets) {
+    function createGadgetInstance(gadget) {
 
-        //break out of the function if there are no OpenSocial gadgets
-        if(!gadgets || gadgets.length == 0) return;
+        var gadgetMetadata = gadget.metadata;
+        var validationResult = validateMetadata(gadgetMetadata);
+        if (validationResult.valid) {
+            //TODO: Submit a patch to Shindig common container to expose the backing service or add a method to push cached items  into the container config
+            container.service_.addGadgetMetadatas(gadgetMetadata[0].result, null);
 
+            var renderParams = {};
+            renderParams[osapi.container.RenderParam.VIEW] = "home";
+            renderParams[osapi.container.RenderParam.WIDTH] = 250;
+            renderParams[osapi.container.RenderParam.HEIGHT] = 250;
+            renderParams[osapi.container.RenderParam.USER_PREFS] = getCompleteUserPrefSet(gadget.userPrefs, gadgetMetadata[0].result[gadget.widgetUrl].userPrefs);
+            var widgetBodyElement = document.getElementById(["widget-", gadget.regionWidgetId, "-body"].join(""));
+            var gadgetSite = container.newGadgetSite(widgetBodyElement);
+            container.navigateGadget(gadgetSite, gadget.widgetUrl, {}, renderParams);
 
-        //Create a list of gadget URLs from the gadget objects
-        var gadgetUrls = [];
-        for(var i = 0; i < gadgets.length; i++) {
-            gadgetUrls.push(gadgets[i].widgetUrl);
+        } else {
+            rave.errorWidget(gadget.regionWidgetId, "Unable to render OpenSocial Gadget: <br /><br />" + validationResult.error);
         }
 
-        /**
-         * Tell the common container to pre-load the metadata for all the widgets we're going to ask it to render.  If we
-         * don't do this then when we call navigateGadget for each regionWidget the common container will fetch the metadata
-         * for each one at a time.  We also pass a callback function which will take the metadata retrieved from the preload
-         * so we can get all the default values for userPrefs and pass them along with our navigateGadget call.
-         *
-         * TODO: Prime the common container metadata cache with data we pull from our own persistent store so that we dont have
-         * to have common container fetch metadata on every page render.  See osapi.container.Container.prototype.preloadFromConfig_
-         * function which gets called from the osapi.container.Container constructor to get an idea of how this might be done.
-         *
-         * TODO: Use real userPrefs that we pull from our persistent store instead of the default values pulled from common
-         * containers metadata call.
-         *
-         * TODO: Get real moduleId's based on the regionWidget.id into the iframe URL.  Right now common container uses an
-         * internal counter for the mid parameter value with no external way to set it.
-         */
-        container.preloadGadgets(gadgetUrls, function(response) {
-            for (var i = 0; i < gadgets.length; i++) {
-                var gadget = gadgets[i];
-                var gadgetMetadata = response[gadget.widgetUrl];
+    }
 
-                for (var userPref in gadgetMetadata.userPrefs) {
-                    userPref = gadgetMetadata.userPrefs[userPref];
-                    gadget.userPrefs[userPref.name] = userPref.defaultValue;
+    /**
+     * validates the metadata for the current gadget
+     * @param metadatas the list of metadata objects to validate
+     */
+    function validateMetadata(metadatas) {
+        for(var i = 0; i < metadatas.length; i++) {
+            var result = metadatas[i].result;
+            for(var url in result) {
+                if(typeof result[url].error != "undefined") {
+                    return {valid:false, error:result[url].error.message};
                 }
-
-                var renderParams = {};
-                renderParams[osapi.container.RenderParam.VIEW] = "home";
-                renderParams[osapi.container.RenderParam.WIDTH] = 250;
-                renderParams[osapi.container.RenderParam.HEIGHT] = 250;
-                renderParams[osapi.container.RenderParam.USER_PREFS] = gadget.userPrefs;
-                var widgetBodyElement = document.getElementById(["widget-", gadget.regionWidgetId, "-body"].join(""));
-                var gadgetSite = container.newGadgetSite(widgetBodyElement);
-                container.navigateGadget(gadgetSite, gadget.widgetUrl, {}, renderParams);
             }
-        });
+        }
+        return {valid:true};
+    }
+
+    /**
+     * Combines the default user pref list from the metadata with those set by the user
+     * @param setPrefs preferences already set by the user
+     * @param metadataPrefs list of all available metadata objects
+     */
+    function getCompleteUserPrefSet(setPrefs, metadataPrefs) {
+        var combined = {};
+        for (var key in metadataPrefs) {
+            var metaPref = metadataPrefs[key];
+            var userPref = setPrefs[metaPref.name];
+            combined[metaPref.name] = typeof userPref == "undefined" ? metaPref.defaultValue : userPref;
+        }
+        return combined;
     }
 
     /*
@@ -191,10 +195,10 @@ rave.opensocial = rave.opensocial || (function() {
          */
         container: getContainer,
         /**
-         * Instantiates and renders the given gadgets list
-         * @param a list of gadgets to render
+         * Instantiates and renders the given gadget
+         * @param a gadget to render
          */
-        initWidgets: createGadgetInstances,
+        initWidget: createGadgetInstance,
 
         /**
          * Resets the current OpenSocial container

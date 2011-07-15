@@ -21,21 +21,19 @@ describe("Rave", function() {
     function getMockProvider(type) {
         return (function() {
             var called = false;
-            var widgetsCalled = false;
+            var callCount = 0;
             return {
                 TYPE : type,
 
                 init : function() {
                     called = true;
                 },
-                initWidgets: function(widgets) {
-                    for (var i = 0; i < widgets.length; i++) {
-                        expect(widgets[i].type).toEqual(type);
-                    }
-                    widgetsCalled = true;
+                initWidget: function(widget) {
+                    expect(widget.type).toEqual(type);
+                    callCount++;
                 },
-                initWidgetsWasCalled : function() {
-                    return widgetsCalled;
+                initWidgetsWasCalled : function(expected) {
+                    return expected == callCount;
                 },
                 initWasCalled : function() {
                     return called;
@@ -68,24 +66,66 @@ describe("Rave", function() {
     });
 
     describe("initWidgets", function() {
-        it("calls the appropriate providers", function() {
-            var widgetMap = {
-                "FOO" : [
-                    {type:"FOO"},
-                    {type:"FOO"}
-                ],
-                "BAR" : [
-                    {type:"BAR"},
-                    {type:"BAR"}
-                ]
+
+        //Creates a simple mock jquery object that records one call and returns the result of the call
+        function createMockJQuery() {
+            var html;
+            var expression;
+            $ = function(expr) {
+
+                if (typeof expr != "undefined") {
+                    expression = expr;
+                }
+
+                return {
+                    expression : function () {
+                        return expression;
+                    },
+                    html : function (txt) {
+                        if (typeof txt  == "string") {
+                            html = txt;
+                            return $;
+                        } else {
+                            return html;
+                        }
+                    }
+                }
             };
+        }
+
+        it("calls the appropriate providers", function() {
+            var widgetList = [
+                    {type:"FOO"},
+                    {type:"BAR"},
+                    {type:"FOO"},
+                    {type:"BAR"}
+            ];
             var provider1 = getMockProvider("FOO");
             var provider2 = getMockProvider("BAR");
             rave.registerProvider(provider1);
             rave.registerProvider(provider2);
-            rave.initWidgets(widgetMap);
-            expect(provider1.initWidgetsWasCalled()).toBeTruthy();
-            expect(provider2.initWidgetsWasCalled()).toBeTruthy();
+            rave.initWidgets(widgetList);
+            expect(provider1.initWidgetsWasCalled(2)).toBeTruthy();
+            expect(provider2.initWidgetsWasCalled(2)).toBeTruthy();
+        });
+        it("Renders an error gadget when invalid widget is provided", function(){
+            var widgetList = [
+                    {type:"FOO",  regionWidgetId:20},
+                    {type:"BAR",  regionWidgetId:21},
+                    {type:"FOO",  regionWidgetId:22},
+                    {type:"BAR",  regionWidgetId:23},
+                    {type:"NONE", regionWidgetId:43}
+            ];
+            createMockJQuery();
+            var provider1 = getMockProvider("FOO");
+            var provider2 = getMockProvider("BAR");
+            rave.registerProvider(provider1);
+            rave.registerProvider(provider2);
+            rave.initWidgets(widgetList);
+            expect($().expression()).toEqual("#widget-43-body");
+            expect($().html()).toEqual("This widget type is currently unsupported.  Check with your administrator and be sure the correct provider is registered.");
+            expect(provider1.initWidgetsWasCalled(2)).toBeTruthy();
+            expect(provider2.initWidgetsWasCalled(2)).toBeTruthy();
         });
     });
 
