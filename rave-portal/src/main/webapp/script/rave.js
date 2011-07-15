@@ -49,7 +49,8 @@ var rave = rave || (function() {
                         forcePlaceholderSize: true, // size the placeholder to the size of the gadget
                         start: dragStart,
                         stop : dragStop
-                    });
+            });
+            initGadgetUI();
         }
 
         function dragStart(event, ui) {
@@ -97,42 +98,68 @@ var rave = rave || (function() {
             uiState.widget = null;
         }
 
-        return {
-            init : init
+        /**
+         * Takes care of the UI part of the widget rendering. Depends heavily on the HTML structure
+         */
+        function initGadgetUI() {
+            $("div[id^='region-']").each(function(regionIndex) {
+                var regionElement = $(this);
+                var regionId = regionElement.attr("id");
+                regionId = regionId.substring("region-".length, regionId.lastIndexOf('-'));
+                regionElement.children("div[id^='widget-wrapper-']").each(function(wrapperIndex) {
+                    var widgetElement = $(this);
+                    var widgetId = widgetElement.attr("id").substr("widget-wrapper-".length);
+                    styleGadgetButtons(widgetId);
+                });
+            });
         }
+
+        function maximizeAction(args) {
+            alert("Maximize button not yet implemented");
+        }
+
+        function deleteAction(args) {
+            if (confirm("Are you sure you want to remove this gadget from your page")) {
+                rave.api.rpc.removeWidget({
+                    regionWidgetId: args.data.id,
+                    successCallback: function() {
+                        $("#widget-wrapper-" + args.data.id).remove();
+                    }
+                });
+            }
+        }
+
+        /**
+         * Applies styling to the several buttons in the widget / gadget toolbar
+         * @param widgetId identifier of the widget / gadget
+         */
+        function styleGadgetButtons(widgetId) {
+            $("#widget-" + widgetId + "-max").button({
+                text: false,
+                icons: {
+                    primary: "ui-icon-arrow-4-diag"
+                }
+            }).click({id: widgetId}, maximizeAction);
+
+            $("#widget-" + widgetId + "-remove").button({
+                text: false,
+                icons: {
+                    primary: "ui-icon-close"
+                }
+            }).click({id: widgetId},deleteAction);
+        }
+
+        return {
+          init : init
+        };
 
     })();
 
-	 /**
-	  * Group widget toolbar functions
-	  */
-	 var toolbar = (function() {
-		  function init(){
-		  }
-		  function maximizeAction(button,args) {
-				alert("Maximize button not yet implemented");
-		  }
-		  function deleteAction(button,args) {
-              if (confirm("Are you sure you want to remove this gadget from your page")) {
-                  rave.api.rpc.removeWidget({
-                      regionWidgetId: args.myRegionWidgetId,
-                      successCallback: function() {
-                          $("#widget-wrapper-" + args.myRegionWidgetId).remove();
-                      }
-                  });
-              }
-          }
-         return {
-				maximizeAction : maximizeAction,
-				deleteAction : deleteAction
-		  }
-	 })();
-
     function initializeProviders() {
-		  //Current providers are rave.wookie and rave.opensocial.  
-		  //Providers register themselves when loaded, so 
-		  //JavaScript library importing order is important.
-		  //See home.jsp for example.
+        //Current providers are rave.wookie and rave.opensocial.
+        //Providers register themselves when loaded, so
+        //JavaScript library importing order is important.
+        //See home.jsp for example.
         for (var key in providerMap) {
             providerMap[key].init();
         }
@@ -195,43 +222,6 @@ var rave = rave || (function() {
         return context;
     }
 
-    /**
-     * Takes care of the UI part of the widget rendering. Depends heavily on the HTML structure
-     * @param widgets array of widgets
-     */
-    function initGadgetUI(widgets) {
-        $("div[id^='region-']").each(function(regionIndex) {
-            var regionElement = $(this);
-            var regionId = regionElement.attr("id");
-            regionId = regionId.substring("region-".length, regionId.lastIndexOf('-'));
-            regionElement.children("div[id^='widget-wrapper-']").each(function(wrapperIndex) {
-                var widgetElement = $(this);
-                var widgetId = widgetElement.attr("id").substr("widget-wrapper-".length);
-                styleGadgetButtons(widgetId);
-            });
-        });
-    }
-
-    /**
-     * Applies styling to the several buttons in the widget / gadget toolbar
-     * @param widgetId identifier of the widget / gadget
-     */
-    function styleGadgetButtons(widgetId) {
-        $("#widget-" + widgetId + "-max").button({
-                    text: false,
-                    icons: {
-                        primary: "ui-icon-arrow-4-diag"
-                    }
-                });
-
-        $("#widget-" + widgetId + "-remove").button({
-                    text: false,
-                    icons: {
-                        primary: "ui-icon-close"
-                    }
-                });
-    }
-
 
     /**
      * Public API
@@ -255,7 +245,7 @@ var rave = rave || (function() {
         /**
          * Initialize Rave's drag and drop facilities
          */
-        initDragAndDrop : ui.init,
+        initUI : ui.init,
 
         /**
          * Creates a map of widgets by their type
@@ -303,14 +293,6 @@ var rave = rave || (function() {
         /**
          * Gets the current context
          */
-        getContext: getContext,
-
-        initGadgetUI : initGadgetUI,
-
-		  /**
-			* These are exposed toolbar actions, associated with widget toolbar buttons
-			*/
-		  toolbarMaximize : toolbar.maximizeAction,
-		  toolbarDelete : toolbar.deleteAction
+        getContext: getContext
     }
 })();

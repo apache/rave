@@ -179,7 +179,7 @@ describe("Rave", function() {
 
     });
 
-    describe("initDragAndDrop", function() {
+    describe("initUI", function() {
         function createMockJQuery() {
             var sortableArgs = null;
             $ = function(element) {
@@ -237,7 +237,7 @@ describe("Rave", function() {
 
         it("Initializes jQuery sortable when init is called", function() {
             createMockJQuery();
-            rave.initDragAndDrop();
+            rave.initUI();
             var sortableArgs = $().getSortableArgs();
             expect(sortableArgs).toBeDefined();
             expect(sortableArgs.selector).toEqual(".region");
@@ -249,7 +249,7 @@ describe("Rave", function() {
 
         it("Posts when dragging is stopped", function() {
             createMockJQuery();
-            rave.initDragAndDrop();
+            rave.initUI();
             var sortableArgs = $().getSortableArgs();
             var mockItem = getMockItem();
             $.post = function(url, data, handler) {
@@ -267,7 +267,7 @@ describe("Rave", function() {
         });
         it("displays the appropriate alert when invalid parameters are passed", function() {
             createMockJQuery();
-            rave.initDragAndDrop();
+            rave.initUI();
             var sortableArgs = $().getSortableArgs();
             var mockItem = getMockItem();
             $.post = function(url, data, handler) {
@@ -285,7 +285,7 @@ describe("Rave", function() {
         });
         it("displays the appropriate alert when a server error occurs", function() {
             createMockJQuery();
-            rave.initDragAndDrop();
+            rave.initUI();
             var sortableArgs = $().getSortableArgs();
             var mockItem = getMockItem();
             $.post = function(url, data, handler) {
@@ -331,6 +331,10 @@ describe("Rave", function() {
             var id = rave.getObjectIdFromDomId("does-not-23");
             expect(id).toBeNull();
         });
+
+    });
+
+    describe("Handle resize maximize event", function(){
 
     });
 });

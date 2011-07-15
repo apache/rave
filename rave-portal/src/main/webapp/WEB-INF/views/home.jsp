@@ -50,12 +50,10 @@
             <!-- These are toolbar buttons -->
             <div id="widget-${regionWidget.id}-toolbar" style="float:right;">
               <button id="widget-${regionWidget.id}-max"
-                      class="widget-toolbar-btn"
-                      onclick="rave.toolbarMaximize(this,{myRegionWidgetId:${regionWidget.id},myRegionId:${region.id},myPageId:${defaultPage.id}})">
+                      class="widget-toolbar-btn">
               </button>
               <button id="widget-${regionWidget.id}-remove"
-                      class="widget-toolbar-btn"
-                      onclick="rave.toolbarDelete(this,{myRegionWidgetId:${regionWidget.id}})">
+                      class="widget-toolbar-btn">
               </button>
             </div>
           </div>
@@ -90,11 +88,9 @@
 
     $(function() {
         rave.setContext("<spring:url value="/app/" />");
-        rave.initGadgetUI(widgets);
         rave.initProviders();
-        //rave.initWidgets(rave.createWidgetMap(widgets));
         rave.initWidgets(widgets);
-        rave.initDragAndDrop();
+        rave.initUI();
     });
 </script>
 </rave:rave_generic_page>
