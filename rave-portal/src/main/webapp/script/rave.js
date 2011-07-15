@@ -20,6 +20,7 @@ var rave = rave || (function() {
     var WIDGET_PROVIDER_ERROR = "This widget type is currently unsupported.  Check with your administrator and be sure the correct provider is registered.";
 
     var providerMap = {};
+    var widgetByIdMap = {};
     var context = "";
 
     /**
@@ -174,7 +175,9 @@ var rave = rave || (function() {
     function initializeWidgets(widgets) {
         //Initialize the widgets for supported providers
         for(var i=0; i<widgets.length; i++) {
-            initializeWidget(widgets[i]);
+            var widget = widgets[i];
+            initializeWidget(widget);
+            widgetByIdMap[widget.regionWidgetId] = widget;
         }
     }
 
