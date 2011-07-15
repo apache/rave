@@ -29,68 +29,68 @@
 <c:set var="opensocial_engine_url" value="${openSocialEnv.engineProtocol}://${openSocialEnv.engineRoot}${openSocialEnv.engineGadgetPath}"/>
 
 <rave:rave_generic_page pageTitle="Home - Rave">
-<c:set var="defaultPage" value="${pages[0]}"/>
-<div id="header">
-    <div class="header-a">
-        <a href="<spring:url value="/j_spring_security_logout" htmlEscape="true" />">Logout</a>
-    </div>
-    <div class="widget-a">
-        <a href="<spring:url value="/app/store?referringPageId=${defaultPage.id}" />">Widget Store</a>
-    </div>
-    <h1>Hello ${defaultPage.owner.username}, welcome to Rave!</h1>
-</div>
-
-<div id="content">
-<c:forEach var="region" items="${defaultPage.regions}">
-<div class="region" id="region-${region.id}-id" >
-    <c:forEach var="regionWidget" items="${region.regionWidgets}">
-    <div class="widget-wrapper" id="widget-wrapper-${regionWidget.id}">
-        <div class="widget-title-bar" >
-            <span id="widget-${regionWidget.id}-title">${regionWidget.widget.title}</span>
-            <!-- These are toolbar buttons -->
-            <div id="widget-${regionWidget.id}-toolbar" style="float:right;">
-              <button id="widget-${regionWidget.id}-max"
-                      class="widget-toolbar-btn">
-              </button>
-              <button id="widget-${regionWidget.id}-remove"
-                      class="widget-toolbar-btn">
-              </button>
-            </div>
-          </div>
-        <div class="widget" id="widget-${regionWidget.id}-body">
-            <%-- Widget will be rendered here --%>
+    <c:set var="defaultPage" value="${pages[0]}"/>
+    <div id="header">
+        <div class="header-a">
+            <a href="<spring:url value="/j_spring_security_logout" htmlEscape="true" />">Logout</a>
         </div>
+        <div class="widget-a">
+            <a href="<spring:url value="/app/store?referringPageId=${defaultPage.id}" />">Widget Store</a>
+        </div>
+        <h1>Hello ${defaultPage.owner.username}, welcome to Rave!</h1>
     </div>
-    </c:forEach>
-</div>
-</c:forEach>
-<div class="clear-float">&nbsp;</div>
-<script src="//ajax.aspnetcdn.com/ajax/jQuery/jquery-1.6.1.min.js"></script>
-<script src="//ajax.aspnetcdn.com/ajax/jquery.ui/1.8.13/jquery-ui.min.js"></script>
-<script src="${opensocial_engine_url}/js/container.js?c=1&container=default&debug=1"></script>
-<script src="<spring:url value="/script/rave.js"/>"></script>
-<script src="<spring:url value="/script/rave_api.js"/>"></script>
-<script src="<spring:url value="/script/rave_opensocial.js"/>"></script>
-<script src="<spring:url value="/script/rave_wookie.js"/>"></script>
-<script>
-    //Define the global widgets variable
-    //This array will be populated by RegionWidgetRender providers.
-    var widgets = [];
-    <%--
-        Among other things, the render-widget tag will populate the widgets[] array.
-        See the markup text in OpenSocialWidgetRenderer.java, for example.
-     --%>
-    <c:forEach var="region" items="${defaultPage.regions}">
-    <c:forEach var="regionWidget" items="${region.regionWidgets}">
-    <portal:render-widget regionWidget="${regionWidget}" />
-    </c:forEach>
-    </c:forEach>
+    <div id="content">
+        <c:forEach var="region" items="${defaultPage.regions}">
+            <div class="region" id="region-${region.id}-id">
+                <c:forEach var="regionWidget" items="${region.regionWidgets}">
+                    <div class="widget-wrapper" id="widget-${regionWidget.id}-wrapper">
+                        <div class="widget-title-bar">
+                            <span id="widget-${regionWidget.id}-title">${regionWidget.widget.title}</span>
+                            <!-- These are toolbar buttons -->
+                            <div id="widget-${regionWidget.id}-toolbar" style="float:right;">
+                                <button id="widget-${regionWidget.id}-max"
+                                        class="widget-toolbar-btn">
+                                </button>
+                                <button id="widget-${regionWidget.id}-remove"
+                                        class="widget-toolbar-btn">
+                                </button>
+                            </div>
+                        </div>
+                        <div class="widget" id="widget-${regionWidget.id}-body">
+                                <%-- Widget will be rendered here --%>
+                        </div>
+                    </div>
+                </c:forEach>
+            </div>
+        </c:forEach>
+        <div class="clear-float">&nbsp;</div>
+    </div>
+    <script src="//ajax.aspnetcdn.com/ajax/jQuery/jquery-1.6.1.min.js"></script>
+    <script src="//ajax.aspnetcdn.com/ajax/jquery.ui/1.8.13/jquery-ui.min.js"></script>
+    <script src="${opensocial_engine_url}/js/container.js?c=1&container=default&debug=1"></script>
+    <script src="<spring:url value="/script/rave.js"/>"></script>
+    <script src="<spring:url value="/script/rave_api.js"/>"></script>
+    <script src="<spring:url value="/script/rave_opensocial.js"/>"></script>
+    <script src="<spring:url value="/script/rave_wookie.js"/>"></script>
+    <script>
+        //Define the global widgets variable
+        //This array will be populated by RegionWidgetRender providers.
+        var widgets = [];
+        <%--
+           Among other things, the render-widget tag will populate the widgets[] array.
+           See the markup text in OpenSocialWidgetRenderer.java, for example.
+        --%>
+        <c:forEach var="region" items="${defaultPage.regions}">
+        <c:forEach var="regionWidget" items="${region.regionWidgets}">
+        <portal:render-widget regionWidget="${regionWidget}" />
+        </c:forEach>
+        </c:forEach>
 
-    $(function() {
-        rave.setContext("<spring:url value="/app/" />");
-        rave.initProviders();
-        rave.initWidgets(widgets);
-        rave.initUI();
-    });
-</script>
+        $(function() {
+            rave.setContext("<spring:url value="/app/" />");
+            rave.initProviders();
+            rave.initWidgets(widgets);
+            rave.initUI();
+        });
+    </script>
 </rave:rave_generic_page>

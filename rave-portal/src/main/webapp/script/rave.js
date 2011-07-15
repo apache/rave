@@ -46,7 +46,7 @@ var rave = rave || (function() {
                         revert: true, // smooth snap animation
                         cursor: 'move', // the cursor to show while dnd
                         handle: '.widget-title-bar', // the draggable handle
-                        forcePlaceholderSize: true, // size the placeholder to the size of the gadget
+                        forcePlaceholderSize: true, // size the placeholder to the size of the widget
                         start: dragStart,
                         stop : dragStop
             });
@@ -63,22 +63,7 @@ var rave = rave || (function() {
             //to prevent the iframe from intercepting mouse events
             //which kills drag performance
             $(".widget").each(function(index, element) {
-                // create the iframe overlay and size it to the iframe it will be covering
-                var overlay = $('<div></div>');
-                var jqElm = $(element);
-                var styleMap = {
-                    position: "absolute",
-                    height : jqElm.height(),
-                    width : jqElm.width(),
-                    opacity : 0.7,
-                    background : "#FFFFFF"
-                };
-
-                // style it and give it the marker class
-                $(overlay).css(styleMap);
-                $(overlay).addClass("dnd-overlay");
-                // add it to the dom before the iframe so it covers it
-                jqElm.prepend(overlay[0]);
+                addOverlay($(element));
             });
         }
 
@@ -102,36 +87,57 @@ var rave = rave || (function() {
          * Takes care of the UI part of the widget rendering. Depends heavily on the HTML structure
          */
         function initGadgetUI() {
-            $("div[id^='region-']").each(function(regionIndex) {
-                var regionElement = $(this);
-                var regionId = regionElement.attr("id");
-                regionId = regionId.substring("region-".length, regionId.lastIndexOf('-'));
-                regionElement.children("div[id^='widget-wrapper-']").each(function(wrapperIndex) {
-                    var widgetElement = $(this);
-                    var widgetId = widgetElement.attr("id").substr("widget-wrapper-".length);
-                    styleGadgetButtons(widgetId);
-                });
+            $(".widget-wrapper").each(function(){
+                var widgetId = extractObjectIdFromElementId($(this).attr("id"));
+                styleGadgetButtons(widgetId);
             });
         }
 
         function maximizeAction(args) {
-            alert("Maximize button not yet implemented");
+            $("#widget-" + args.data.id + "-wrapper").removeClass("widget-wrapper").addClass("widget-wrapper-canvas");
+            addOverlay($("body"));
+            $("#widget-" + args.data.id + "-max").click({id:args.data.id}, minimizeAction);
+
+        }
+
+        function minimizeAction(args) {
+            $("#widget-" + args.data.id + "-wrapper").removeClass("widget-wrapper-canvas").addClass("widget-wrapper");
+            $(".dnd-overlay").remove();
+            $("#widget-" + args.data.id + "-max").click({id:args.data.id}, maximizeAction);
         }
 
         function deleteAction(args) {
-            if (confirm("Are you sure you want to remove this gadget from your page")) {
+            if (confirm("Are you sure you want to remove this widget from your page")) {
                 rave.api.rpc.removeWidget({
                     regionWidgetId: args.data.id,
                     successCallback: function() {
-                        $("#widget-wrapper-" + args.data.id).remove();
+                        $("#widget-" + args.data.id + "-wrapper").remove();
                     }
                 });
             }
         }
 
+        function addOverlay(jqElm) {
+            var overlay = $('<div></div>');
+            var styleMap = {
+                position: "absolute",
+                height : jqElm.height(),
+                width : jqElm.width(),
+                'z-index': 10,
+                opacity : 0.7,
+                background : "#FFFFFF"
+            };
+
+            // style it and give it the marker class
+            $(overlay).css(styleMap);
+            $(overlay).addClass("dnd-overlay");
+            // add it to the dom before the iframe so it covers it
+            jqElm.prepend(overlay[0]);
+        }
+
         /**
-         * Applies styling to the several buttons in the widget / gadget toolbar
-         * @param widgetId identifier of the widget / gadget
+         * Applies styling to the several buttons in the widget  toolbar
+         * @param widgetId identifier of the region widget
          */
         function styleGadgetButtons(widgetId) {
             $("#widget-" + widgetId + "-max").button({
@@ -276,10 +282,10 @@ var rave = rave || (function() {
         registerProvider : addProviderToList,
 
         /**
-         * Renders an error in place of the gadget
+         * Renders an error in place of the widget
          *
          * @param id the RegionWidgetId of the widget to render in error mode
-         * @param message The message to display to the suer
+         * @param message The message to display to the user
          */
         errorWidget: renderErrorWidget,
 

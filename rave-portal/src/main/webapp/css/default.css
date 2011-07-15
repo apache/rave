@@ -168,6 +168,24 @@ h1, h2, h3, h4, h5, h6 {
     box-shadow: 2px 2px 4px #666666;
     border-radius: 0px 0px 5px 5px;
 }
+
+.widget-wrapper-transitional {
+    position: absolute;
+    z-index: 1000;
+    left:0.25%;
+    top: 51px;
+}
+
+.widget-wrapper-canvas {
+    position: absolute;
+    z-index: 1000;
+    left:0.25%;
+    top: 51px;
+    width: 99.5%;
+    height: 100%;
+    opacity: 1;
+    vertical-align: top;
+}
 .region {
     float: left;
     display: block;
