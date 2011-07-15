@@ -19,80 +19,62 @@
 
 package org.apache.rave.portal.web.controller;
 
-import org.apache.rave.portal.service.UserService;
-import org.apache.rave.portal.service.PageService;
-import org.apache.rave.portal.service.PageLayoutService;
-import org.apache.rave.portal.service.RegionService;
+import org.apache.rave.portal.service.NewAccountService;
 import org.apache.rave.portal.web.util.ModelKeys;
 import org.apache.rave.portal.web.util.ViewNames;
-import org.apache.rave.portal.model.User;
-import org.apache.rave.portal.model.Page;
-import org.apache.rave.portal.model.PageLayout;
-import org.apache.rave.portal.model.Region;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ModelAttribute;
+
 import java.util.List;
 import java.util.ArrayList;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
 @Controller
-@RequestMapping(value = { "/newaccount/*", "/newaccount" })
+//@RequestMapping(value = { "/newaccount/*", "/newaccount" })
 public class NewAccountController {
 
-    private final UserService userService;
-	 private final PageService pageService;
-	 private final PageLayoutService pageLayoutService;
-	 private final RegionService regionService;
-	 
+	 protected final Logger logger=LoggerFactory.getLogger(getClass());
+
+	 private final NewAccountService newAccountService;
+
     @Autowired
-    public NewAccountController(UserService userService, PageService pageService, PageLayoutService pageLayoutService, RegionService regionService) {
-        this.userService = userService;
-		  this.pageService = pageService;
-		  this.pageLayoutService = pageLayoutService;
-		  this.regionService = regionService;
+    public NewAccountController(NewAccountService newAccountService) {
+		  this.newAccountService=newAccountService;
     }
 
-    @RequestMapping(method = RequestMethod.POST)
-	 //Needs to be specified by action.
-	 //TODO: have a more elegant way of adding a user
-	 public String create(Model model, @RequestParam String userName, @RequestParam String password) {	  
-	 //Create a new user object and register it.
-		  User user=new User();
-		  user.setUsername(userName);
-		  user.setPassword(password);
-		  user.setExpired(false);
-		  user.setLocked(false);
-		  user.setEnabled(true);
-		  userService.registerNewUser(user);
-		  
-		  //Return the newly registered user
-		  User registeredUser=userService.getUserByUsername(userName);
-		  
-		  //Create a PageLayout object.  We will default to 
-		  //the two-column layout
-		  PageLayout pageLayout=pageLayoutService.getPageLayoutByCode("columns_2");
+    @RequestMapping(value ="/newaccount.jsp", method = RequestMethod.GET)
+	 public String setUpForm(ModelMap model) {
+		  logger.debug("Initializing form");
+		  //TODO this should use view keys like other pages.
+		  return "newaccount";
+	 }
 
-		  //Create regions
-		  List<Region> regions=new ArrayList<Region>();
-		  Region region1=new Region();
-		  Region region2=new Region();
-		  regions.add(region1);
-		  regions.add(region2);
+    @RequestMapping(value = { "/newaccount/*","/newaccount"}, method = RequestMethod.POST)
+	 public String create(Model model,@RequestParam String userName, @RequestParam String password, @RequestParam String passwordConfirm) {	  
+			logger.debug("Creating a new user account");
 
-		  //Create a Page object and register it.
-		  Page page=new Page();
-		  page.setName("main");
-		  page.setOwner(registeredUser);
-		  page.setPageLayout(pageLayout);
-		  page.setRenderSequence(1L);
-								 page.setRegions(regions);
-		  pageService.registerNewPage(page);
-
-        return "redirect:/";
-    }
-
+			 try {
+			    //TODO need to validate input, Spring-style
+				 newAccountService.createNewAccount(userName,password);
+				 return "redirect:/";
+			 }
+											 
+			  //TODO need to handle more specific exceptions
+			  catch (Exception ex) {
+				  logger.error("Account creation failed: "+ex.getMessage());
+				  //TODO: change this to a viewname
+				  return "newaccount";
+			  }
+	 
+		 }
 }

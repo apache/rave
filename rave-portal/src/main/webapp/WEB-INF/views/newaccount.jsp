@@ -18,12 +18,13 @@
   --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib tagdir="/WEB-INF/tags" prefix="rave"%>
   
 <rave:rave_generic_page pageTitle="New Account Application - Rave">
 <div id="content">
     <h1>Rave Account Application</h1>
-    <form id="newAccountForm" name="newAccountForm" action="app/newaccount" method="POST">
+    <form id="newAccountForm" name="newAccountForm" action="newaccount" method="POST">
         <fieldset>
             <p>All fields are required</p>
             <p>
