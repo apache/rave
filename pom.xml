@@ -61,6 +61,7 @@
         <org.openid4java.version>0.9.6</org.openid4java.version>
         <jersey-server.version>1.6</jersey-server.version>
         <jersey-spring.version>1.0</jersey-spring.version>
+        <guice.version>3.0</guice.version>
 
         <!-- Force maven-filesync-plugin rewrite the Eclipse FileSync plugin configuration with
             $mvn filesync:generate -Dmaven.filesync.override=true -->
@@ -145,6 +146,11 @@
               <groupId>org.springframework</groupId>
               <artifactId>spring-core</artifactId>
               <version>${org.springframework.version}</version>
+            </dependency>
+            <dependency>
+              <groupId>com.google.inject.extensions</groupId>
+              <artifactId>guice-persist</artifactId>
+              <version>${guice.version}</version>
             </dependency>
             <dependency>
               <groupId>org.glassfish.web</groupId>

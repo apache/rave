@@ -19,46 +19,87 @@
 
 package org.apache.shindig.gadgets.oauth;
 
+import java.io.IOException;
+import java.util.Date;
+
+import net.oauth.OAuth;
 import net.oauth.OAuthServiceProvider;
 import org.apache.shindig.auth.SecurityToken;
 import org.apache.shindig.gadgets.oauth.jpa.OAuthConsumerStoreDb;
+import org.apache.shindig.gadgets.oauth.jpa.OAuthTokenInfoDb;
+import org.apache.shindig.gadgets.oauth.service.ConsumerStoreService;
+import org.apache.shindig.gadgets.oauth.service.TokenInfoService;
 import org.apache.shindig.social.core.oauth.OAuthSecurityToken;
+import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Date;
-
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 
 /**
  * Test class for {@link OAuthStoreDb}
  */
 public class OAuthStoreDbTest {
     private static final long NEXT_HOUR = 1000L * 60L * 60L;
+    private static final String GADGET_URI = "http://localhost:8080/samplecontainer/examples/oauth.xml";
+    private static final String SERVICE_NAME = "testService";
+    private static final String CONSUMER_SECRET = "gadgetSecret";
+
+    private SecurityToken token;
+    private OAuthStoreDb oAuthStoreDb;
+    private ConsumerStoreService oAuthStoreService;
+    private TokenInfoService tokenInfoService;
+
     @Test
     public void testGetConsumerKeyAndSecret() throws Exception {
-        //String userId, String appUrl, String appId, String domain,
-        //String container, Long expiresAt
-        SecurityToken token = new OAuthSecurityToken("john.doe", "http://localhost:8080/myapp",
-                "myapp", "localhost", "default", new Date().getTime() + NEXT_HOUR);
-        String serviceName = "testService";
-
-        OAuthStoreDb oAuthStoreDb = new OAuthStoreDb("http://localhost:8080","keys/oauthkey.pem",
-                "consumer-test-key");
 
         OAuthConsumerStoreDb consumerStore = new OAuthConsumerStoreDb();
-        final String gadgetUri = "http://localhost:8080/samplecontainer/examples/oauth.xml";
-        consumerStore.setGadgetUri(gadgetUri);
+        consumerStore.setGadgetUri(GADGET_URI);
         consumerStore.setConsumerKey("gadgetConsumer");
-        consumerStore.setConsumerSecret("gadgetSecret");
+        consumerStore.setConsumerSecret(CONSUMER_SECRET);
         consumerStore.setKeyType(OAuthConsumerStoreDb.KeyType.HMAC_SYMMETRIC);
 
         OAuthServiceProvider provider = new OAuthServiceProvider(null, null, null);
-        final OAuthStore.ConsumerInfo keyAndSecret = oAuthStoreDb.getConsumerKeyAndSecret(token, serviceName, provider);
-        assertNull(keyAndSecret);
 
-        
+        expect(oAuthStoreService.findOAuthConsumerStore(GADGET_URI, SERVICE_NAME))
+                .andReturn(consumerStore);
+        replay(oAuthStoreService);
+
+        final OAuthStore.ConsumerInfo keyAndSecret =
+                oAuthStoreDb.getConsumerKeyAndSecret(token, SERVICE_NAME, provider);
+        assertNotNull(keyAndSecret);
+        assertEquals(OAuth.HMAC_SHA1, keyAndSecret.getConsumer().getProperty(
+                OAuth.OAUTH_SIGNATURE_METHOD));
+
+        verify(oAuthStoreService);
+    }
+
+    @Test
+    public void testGetTokenInfo() throws Exception {
+        final String testTokenName = "testTokenName";
+
+
+        OAuthTokenInfoDb oAuthTokenInfoDb = new OAuthTokenInfoDb();
+        oAuthTokenInfoDb.setTokenName(testTokenName);
+        oAuthTokenInfoDb.setTokenSecret(CONSUMER_SECRET);
+        OAuthStore.ConsumerInfo consumerInfo = createMock(OAuthStore.ConsumerInfo.class);
+
+        expect(tokenInfoService.findOAuthTokenInfo(token.getViewerId(), token.getAppUrl(),
+                OAuthTokenInfoDb.MODULE_ID, testTokenName,
+                SERVICE_NAME)).andReturn(oAuthTokenInfoDb);
+        replay(tokenInfoService);
+
+        final OAuthStore.TokenInfo tokenInfoDb = oAuthStoreDb.getTokenInfo(token, consumerInfo,
+                SERVICE_NAME, testTokenName);
+
+        assertNotNull("Got TokenInfo", tokenInfoDb);
+        assertEquals(CONSUMER_SECRET, tokenInfoDb.getTokenSecret());
+
+        verify(tokenInfoService);
     }
 
     @Test
@@ -66,9 +107,21 @@ public class OAuthStoreDbTest {
         BasicOAuthStoreConsumerKeyAndSecret defaultKey =
                 OAuthStoreDb.loadDefaultKey("keys/oauthkey.pem", "consumer-test-key");
         assertNotNull("defaultKey", defaultKey);
-        assertEquals(BasicOAuthStoreConsumerKeyAndSecret.KeyType.RSA_PRIVATE, defaultKey.getKeyType());
+        assertEquals(BasicOAuthStoreConsumerKeyAndSecret.KeyType.RSA_PRIVATE,
+                defaultKey.getKeyType());
         assertEquals("consumer-test-key", defaultKey.getKeyName());
         final String keyFileContents = "MIICeAIBADANBgkqhkiG9w0BAQEFAASCAmIwggJeAgEAAoGBANXjbMKL9N+9950V7QaDhr7JbF5uJtFgsiCsRjYDT9SaVCaNk2zXRXzqj2acKpAthV0R+4cVeWBN0mDL8CE/Rjo0r+9375DrSpi+jb+hnhYTGfiGbpJrUfCxlOXrvdsw4kZpLVKaj8wZFPb11Cnl5s1QBpPGWs1ij/qj/V04xRwXAgMBAAECgYEA0jXUPFgE8KjpZQ+Zhl9Z3MRlp2Em8XzRVF88GfWjTdXngoR+MehYuO5mxXgSNOUoP1JfHGI0ijux2cRVWrevMdO+0bkezMmgWlBTAqgoidwauX+0NyIRJOOG0anggmSrrf8jocjDLp7ZEhVjmtMzvys6P4RyFaNKXNyxK7J1/LECQQD/fB8vKvenzm9NNEdQyap3d0LYqWd/47NiOCCoS8K/DGVVIZiQQigUOi3ZTY6LV2Eb2RtwRnwBXMsKuQUTHZGDAkEA1lHU2OYGYP7SMu+fxzwFRNx0DrXWqIe0XFQX6EDRbk5H/eKgVt1tER8Mbin/z5utvXXiGJAj6+Eop6uqNPUq3QJAWbFZwVV0XJU8vf38i4BBOG/GKApRK7Tk5TaPQIZYeHoBmUGSLhMLvw4tynxP7tteXEh8OY6FOnU5UyphfbSDwQJBAIC0oesjsH79aMQ4DS77x3pEHdpbry6EWHb99WF/04W3sxovx/SCgyY+DBv4UuydZCgcLAxuO3RDQkP3Hn8xIG0CQQC9keRoDlA7RkwCXq76vEzLUqWiRSeHbXkaniSp7/xqzlw1IeMTtzoqMcJAulNr9W+vKKBYtE3sjXLcmO/CvWk/";
         assertEquals(keyFileContents, defaultKey.getConsumerSecret());
+    }
+
+    @Before
+    public void setup() throws IOException {
+        token = new OAuthSecurityToken("john.doe", GADGET_URI,
+                "myapp", "localhost", "default", new Date().getTime() + NEXT_HOUR);
+        tokenInfoService = createMock(TokenInfoService.class);
+        oAuthStoreService = createMock(ConsumerStoreService.class);
+        
+        oAuthStoreDb = new OAuthStoreDb("http://localhost:8080", "keys/oauthkey.pem",
+                "consumer-test-key", oAuthStoreService, tokenInfoService);
     }
 }

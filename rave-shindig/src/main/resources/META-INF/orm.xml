@@ -85,4 +85,5 @@
   <entity class="org.apache.shindig.social.opensocial.jpa.ApplicationDataMapValueDb">
   </entity>
   <entity class="org.apache.shindig.gadgets.oauth.jpa.OAuthConsumerStoreDb"/>
+  <entity class="org.apache.shindig.gadgets.oauth.jpa.OAuthTokenInfoDb"/>
 </entity-mappings>

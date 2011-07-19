@@ -48,8 +48,9 @@ public class DatabasePopulateContextListener implements ServletContextListener {
 
     public static EntityManager getEntityManager() {
         if (em == null) {
-            if (emf == null)
+            if (emf == null) {
                 emf = Persistence.createEntityManagerFactory(PersistenceUnitName);
+            }
             em = emf.createEntityManager();
         }
         return em;
@@ -58,8 +59,7 @@ public class DatabasePopulateContextListener implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
-        String executeScriptQuery = "SELECT * FROM person";
-        String sqlScripts[] = { "initial_data.sql" };
+        String sqlScripts[] = {"initial_data.sql"};
 
         List<File> scriptLocations = new ArrayList<File>();
         for (String sqlScript : sqlScripts) {
@@ -85,7 +85,6 @@ public class DatabasePopulateContextListener implements ServletContextListener {
         person.setNickname("hoosier");
         person.setSmoker(new EnumDb<Smoker>(Smoker.NO));
 
-        // EntityManager em = emf.createEntityManager();
         EntityManager em = getEntityManager();
         em.getTransaction().begin();
         em.persist(person);

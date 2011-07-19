@@ -19,37 +19,33 @@
 
 package org.apache.shindig.gadgets.oauth;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 import net.oauth.OAuth;
 import net.oauth.OAuthConsumer;
 import net.oauth.OAuthServiceProvider;
 import net.oauth.signature.RSA_SHA1;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.rave.os.DatabasePopulateContextListener;
 import org.apache.shindig.auth.SecurityToken;
 import org.apache.shindig.gadgets.GadgetException;
 import org.apache.shindig.gadgets.oauth.jpa.OAuthConsumerStoreDb;
+import org.apache.shindig.gadgets.oauth.jpa.OAuthTokenInfoDb;
+import org.apache.shindig.gadgets.oauth.service.ConsumerStoreService;
+import org.apache.shindig.gadgets.oauth.service.TokenInfoService;
 import org.springframework.core.io.ClassPathResource;
 
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
-
 /**
- * that retrieves the consumer_key, consumer_secret and key_type from the database
+ * {@link OAuthStore} that retrieves the consumer_key, consumer_secret and key_type from the database
  * <p/>
  * Usage scenario: Rave OpenSocial container is the oauth consumer
  * (oauth data are stored elsewhere, this container tries to fetch data from e.g. Google)
  */
 public class OAuthStoreDb implements OAuthStore {
-    /**
-     * This is the JPA entity manager, shared by all threads accessing this service (need to check
-     * that its really thread safe).
-     */
-    private EntityManager entityManager;
+
+    private ConsumerStoreService oAuthStoreService;
+
+    private TokenInfoService tokenInfoService;
 
     /**
      * Callback to use when no per-key callback URL is found.
@@ -64,26 +60,25 @@ public class OAuthStoreDb implements OAuthStore {
 
     public OAuthStoreDb(String defaultCallbackUrl,
                         String pathToPrivateKey,
-                        String privateKeyName) throws IOException {
-        this(defaultCallbackUrl, pathToPrivateKey, privateKeyName,
-                DatabasePopulateContextListener.getEntityManager());
-    }
-
-    public OAuthStoreDb(String defaultCallbackUrl,
-                        String pathToPrivateKey,
                         String privateKeyName,
-                        EntityManager entityManager) throws IOException {
+                        ConsumerStoreService oAuthStoreService,
+                        TokenInfoService tokenInfoService) throws IOException {
         this.defaultCallbackUrl = defaultCallbackUrl;
         this.defaultKey = loadDefaultKey(pathToPrivateKey, privateKeyName);
-        this.entityManager = entityManager;
+        this.oAuthStoreService = oAuthStoreService;
+        this.tokenInfoService = tokenInfoService;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ConsumerInfo getConsumerKeyAndSecret(SecurityToken securityToken, String serviceName,
                                                 OAuthServiceProvider provider)
             throws GadgetException {
         String gadgetUri = securityToken.getAppUrl();
-        OAuthConsumerStoreDb consumerStoreDb = findOAuthConsumerStore(gadgetUri, serviceName);
+        OAuthConsumerStoreDb consumerStoreDb = oAuthStoreService.findOAuthConsumerStore(
+                gadgetUri, serviceName);
         if (consumerStoreDb == null) {
             return null;
         }
@@ -95,21 +90,53 @@ public class OAuthStoreDb implements OAuthStore {
         return new ConsumerInfo(consumer, consumerStoreDb.getKeyName(), callbackUrl);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public TokenInfo getTokenInfo(SecurityToken securityToken, ConsumerInfo consumerInfo, String serviceName, String tokenName) throws GadgetException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    public TokenInfo getTokenInfo(SecurityToken securityToken, ConsumerInfo consumerInfo,
+                                  String serviceName, String tokenName) throws GadgetException {
+        OAuthTokenInfoDb info = tokenInfoService.findOAuthTokenInfo(
+                securityToken.getViewerId(), securityToken.getAppUrl(),
+                OAuthTokenInfoDb.MODULE_ID, tokenName, serviceName);
+        if (info == null) {
+            return null;
+        }
+
+        return new TokenInfo(info.getAccessToken(), info.getTokenSecret(),
+                info.getSessionHandle(), info.getTokenExpireMillis());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void setTokenInfo(SecurityToken securityToken, ConsumerInfo consumerInfo, String serviceName, String tokenName, TokenInfo tokenInfo) throws GadgetException {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public void setTokenInfo(SecurityToken securityToken, ConsumerInfo consumerInfo,
+                             String serviceName, String tokenName, TokenInfo tokenInfo) throws GadgetException {
+        OAuthTokenInfoDb tokenInfoDb = new OAuthTokenInfoDb(securityToken,
+                serviceName, tokenName, tokenInfo);
+        tokenInfoService.saveOAuthTokenInfo(tokenInfoDb);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void removeToken(SecurityToken securityToken, ConsumerInfo consumerInfo, String serviceName, String tokenName) throws GadgetException {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public void removeToken(SecurityToken securityToken, ConsumerInfo consumerInfo,
+                            String serviceName, String tokenName) throws GadgetException {
+        tokenInfoService.deleteOAuthTokenInfo(
+                securityToken.getViewerId(), securityToken.getAppUrl(),
+                OAuthTokenInfoDb.MODULE_ID, tokenName, serviceName);
     }
 
+    /**
+     * Loads {@link BasicOAuthStoreConsumerKeyAndSecret} needed if there is no specific consumer key and secret
+     *
+     * @param signingKeyFile location of the signing key file on the classpath or filesystem
+     * @param signingKeyName name of the signing key file
+     * @return RSA_PRIVATE key and secret read from the classpath or file system
+     * @throws IOException if the file cannot be read
+     */
     static BasicOAuthStoreConsumerKeyAndSecret loadDefaultKey(
             String signingKeyFile, String signingKeyName) throws IOException {
         InputStream inputStream = new ClassPathResource(signingKeyFile)
@@ -125,7 +152,8 @@ public class OAuthStoreDb implements OAuthStore {
      * Creates an {@link OAuthConsumer} based on the OAuth signature method
      *
      * @param provider        {@link net.oauth.OAuthServiceProvider}
-     * @param consumerStoreDb {@link org.apache.shindig.gadgets.oauth.jpa.OAuthConsumerStoreDb} persistent OAuth consumer keys & secrets
+     * @param consumerStoreDb {@link org.apache.shindig.gadgets.oauth.jpa.OAuthConsumerStoreDb}
+     *                        persistent OAuth consumer keys & secrets
      * @return {@link OAuthConsumer} if the signature method is supported
      */
     private OAuthConsumer createOAuthConsumer(OAuthServiceProvider provider,
@@ -159,19 +187,4 @@ public class OAuthStoreDb implements OAuthStore {
         return consumer;
     }
 
-    OAuthConsumerStoreDb findOAuthConsumerStore(String gadgetUri, String serviceName) {
-        if (StringUtils.isBlank(gadgetUri) || StringUtils.isBlank(serviceName)) {
-            return null;
-        }
-        Query q = entityManager.createQuery("SELECT x FROM OAuthConsumerStoreDb x " +
-                "WHERE x.gadgetUri = :gadgetUriParam and x.serviceName = :serviceNameParam");
-        q.setParameter("gadgetUriParam", gadgetUri).setParameter("serviceNameParam", serviceName);
-        q.setFirstResult(0);
-        q.setMaxResults(1);
-        List<OAuthConsumerStoreDb> results = (List<OAuthConsumerStoreDb>) q.getResultList();
-        if (CollectionUtils.isEmpty(results)) {
-            return null;
-        }
-        return results.get(0);
-    }
 }

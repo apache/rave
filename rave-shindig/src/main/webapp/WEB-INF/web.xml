@@ -34,7 +34,7 @@
       org.apache.shindig.gadgets.DefaultGuiceModule:
       org.apache.shindig.social.core.config.SocialApiGuiceModule:
       org.apache.rave.os.JPAOpenSocialModule:
-      org.apache.shindig.gadgets.oauth.OAuthModule:
+      org.apache.shindig.gadgets.oauth.OAuthModuleDb:
       org.apache.shindig.common.cache.ehcache.EhCacheModule:
       org.apache.shindig.sample.shiro.ShiroGuiceModule:
       org.apache.shindig.sample.container.SampleContainerGuiceModule:
