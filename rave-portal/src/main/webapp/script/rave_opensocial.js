@@ -73,12 +73,13 @@ rave.opensocial = rave.opensocial || (function() {
      * @param gadget the gadget object to be rendered by the container
      */
     function createGadgetInstance(gadget) {
-
         var gadgetMetadata = gadget.metadata;
         var validationResult = validateMetadata(gadgetMetadata);
         if (validationResult.valid) {
             //TODO: Submit a patch to Shindig common container to expose the backing service or add a method to push cached items  into the container config
-            container.service_.addGadgetMetadatas(gadgetMetadata[0].result, null);
+            var commonContainerMetadataWrapper = {};
+            commonContainerMetadataWrapper[gadget.widgetUrl] = gadgetMetadata;
+            container.service_.addGadgetMetadatas(commonContainerMetadataWrapper, null);
             var widgetBodyElement = document.getElementById(["widget-", gadget.regionWidgetId, "-body"].join(""));
             var gadgetSite = container.newGadgetSite(widgetBodyElement);
             siteMap[gadget.regionWidgetId] = gadgetSite;
@@ -133,23 +134,19 @@ rave.opensocial = rave.opensocial || (function() {
         renderParams[osapi.container.RenderParam.VIEW] = view;
         renderParams[osapi.container.RenderParam.WIDTH] = 250;
         renderParams[osapi.container.RenderParam.HEIGHT] = 250;
-        renderParams[osapi.container.RenderParam.USER_PREFS] = getCompleteUserPrefSet(gadget.userPrefs, gadgetMetadata[0].result[gadget.widgetUrl].userPrefs);
+        renderParams[osapi.container.RenderParam.USER_PREFS] = getCompleteUserPrefSet(gadget.userPrefs, gadgetMetadata.userPrefs);
         container.navigateGadget(gadgetSite, gadget.widgetUrl, {}, renderParams);
     }
 
     /**
      * validates the metadata for the current gadget
-     * @param metadatas the list of metadata objects to validate
+     * @param metadata the metadata object to validate
      */
-    function validateMetadata(metadatas) {
-        for(var i = 0; i < metadatas.length; i++) {
-            var result = metadatas[i].result;
-            for(var url in result) {
-                if(typeof result[url].error != "undefined") {
-                    return {valid:false, error:result[url].error.message};
-                }
-            }
+    function validateMetadata(metadata) {
+        if(typeof metadata.error != "undefined") {
+            return {valid:false, error:metadata.error.message};
         }
+
         return {valid:true};
     }
 

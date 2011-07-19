@@ -33,7 +33,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.RestOperations;
 
-import static org.easymock.EasyMock.createNiceMock;
+import static org.easymock.EasyMock.*;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 
@@ -49,9 +49,15 @@ public class RenderServiceIntegrationTest {
 
     private RestOperations restOperations;
 
+    private static final String VALID_METADATA = "[{\"id\":\"gadgets.metadata\",\"result\"" +
+            ":{\"http://www.example.com/gadget.xml\":{\"data-snipped\":\"here-for-brevity\"}}}]";
+
     @Before
     public void setup() {
         restOperations = createNiceMock(RestOperations.class);
+        expect(restOperations.postForObject(anyObject(String.class), anyObject(String.class), anyObject(Class.class)))
+                .andReturn(VALID_METADATA);
+        replay(restOperations);
 
         //Replace the real restOperations instance with a mock -- otherwise the call for gadget metadata would fail since
         //we don't have a shindig server available to hit.
@@ -71,7 +77,7 @@ public class RenderServiceIntegrationTest {
         w.setType("OpenSocial");
         w.setId(1L);
         w.setTitle("Gadget Title");
-        w.setUrl("http://example.com/gadgets/1");
+        w.setUrl("http://www.example.com/gadget.xml");
 
         RegionWidget rw = new RegionWidget();
         rw.setId(2L);

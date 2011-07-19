@@ -33,8 +33,9 @@ public class OpenSocialServiceTest {
     private OpenSocialService openSocialService;
     private GadgetMetadataRepository gadgetMetadataRepository;
 
-    private static final String VALID_GADGET_URL = "http://example.com/gadgets/1";
-    private static final String VALID_METADATA = "metadata";
+    private static final String VALID_GADGET_URL = "http://www.example.com/gadget.xml";
+    private static final String VALID_METADATA = "[{\"id\":\"gadgets.metadata\",\"result\"" +
+            ":{\"http://www.example.com/gadget.xml\":{\"data-snipped\":\"here-for-brevity\"}}}]";
 
     @Before
     public void setup() {

@@ -90,6 +90,22 @@ public class ShindigGadgetMetadataRepository implements GadgetMetadataRepository
             logger.debug("shindig metadata raw response: " + responseString);
         }
 
+        //now trim back the response to just the metadata for the single gadget
+        try {
+            JSONObject responseObject = new JSONArray(responseString).
+                    getJSONObject(0).
+                    getJSONObject("result").
+                    getJSONObject(gadgetUrl);
+            responseString = responseObject.toString();
+
+            if (logger.isDebugEnabled()) {
+                logger.debug("shindig metadata trimmed response: " + responseString);
+            }
+        } catch (JSONException e) {
+            logger.error("Error occurred while processing response from shindig metadata call: " + e.getMessage(), e);
+            throw new IllegalArgumentException(e.getMessage(), e);
+        }
+
         //return the raw JSON
         return responseString;
     }

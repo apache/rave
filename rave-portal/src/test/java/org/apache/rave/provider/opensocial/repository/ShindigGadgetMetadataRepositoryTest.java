@@ -51,7 +51,9 @@ public class ShindigGadgetMetadataRepositoryTest {
             "\"ids\":[\"http://www.example.com/gadget.xml\"],\"container\":\"default\",\"userId\":\"@viewer\"," +
             "\"fields\":[\"iframeUrl\",\"modulePrefs.*\",\"needsTokenRefresh\",\"userPrefs.*\",\"views.preferredHeight\"," +
             "\"views.preferredWidth\",\"expireTimeMs\",\"responseTimeMs\"]}}]";
-    private static final String VALID_METADATA = "metadata";
+    private static final String VALID_METADATA = "[{\"id\":\"gadgets.metadata\",\"result\"" +
+            ":{\"http://www.example.com/gadget.xml\":{\"data-snipped\":\"here-for-brevity\"}}}]";
+    private static final String EXPECTED_METADATA_RESPONSE = "{\"data-snipped\":\"here-for-brevity\"}";
 
     @Before
     public void setup() {
@@ -67,6 +69,6 @@ public class ShindigGadgetMetadataRepositoryTest {
         replay(restOperations);
 
         String result = gadgetMetadataRepository.getGadgetMetadata(VALID_GADGET_URL);
-        assertThat(result, is(sameInstance(VALID_METADATA)));
+        assertThat(result, is(EXPECTED_METADATA_RESPONSE));
     }
 }

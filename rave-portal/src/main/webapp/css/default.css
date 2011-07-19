@@ -162,6 +162,11 @@ h1, h2, h3, h4, h5, h6 {
     cursor: move;
 }
 
+.widget-prefs {
+    border: 1px solid #D3D3D3;
+    background-color: white;
+}
+
 .widget {
     padding: 5px;
     background-color: white;

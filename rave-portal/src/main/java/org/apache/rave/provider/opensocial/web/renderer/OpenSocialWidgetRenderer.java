@@ -28,7 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * Creates the appropriate markup to represent a W3C widget
+ * Creates the appropriate markup to represent an OpenSocial widget
  * <p/>
  * //TODO: Create infrastructure for rendering inline gadgets via Caja
  */

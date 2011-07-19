@@ -39,8 +39,8 @@ public class OpenSocialWidgetRendererTest {
     private OpenSocialService openSocialService;
     private Renderer<RegionWidget> renderer;
 
+    private static final String VALID_GADGET_URL = "http://www.example.com/gadget.xml";
     private static final String VALID_METADATA = "metadata";
-    private static final String VALID_GADGET_URL = "http://example.com/gadgets/1";
 
     @Before
     public void setup() {
@@ -69,7 +69,7 @@ public class OpenSocialWidgetRendererTest {
         String result = renderer.render(rw);
         assertThat(result.matches(".*regionWidgetId[ ]*:[ ]*1,.*"), is(true));
         assertThat(result.matches(".*type[ ]*:[ ]*'OpenSocial',.*"), is(true));
-        assertThat(result.matches(".*widgetUrl[ ]*:[ ]*'http://example.com/gadgets/1',.*"), is(true));
+        assertThat(result.matches(".*widgetUrl[ ]*:[ ]*'http://www.example.com/gadget.xml',.*"), is(true));
         assertThat(result.matches(".*metadata[ ]*:[ ]*" + VALID_METADATA + ",.*"), is(true));
     }
 
@@ -91,7 +91,7 @@ public class OpenSocialWidgetRendererTest {
     public void render_invalid() {
         Widget w = new Widget();
         w.setType("NONE");
-        w.setUrl("http://example.com/gadgets/1");
+        w.setUrl("http://www.example.com/gadget.xml");
         RegionWidget rw = new RegionWidget();
         rw.setId(1L);
         rw.setWidget(w);
