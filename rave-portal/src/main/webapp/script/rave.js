@@ -128,15 +128,24 @@ var rave = rave || (function() {
         }
 
         function maximizeAction(args) {
-            $("#widget-" + args.data.id + "-wrapper").removeClass("widget-wrapper").addClass("widget-wrapper-canvas");
             addOverlay($("body"));
+            $("#widget-" + args.data.id + "-wrapper").removeClass("widget-wrapper").addClass("widget-wrapper-canvas");
             $("#widget-" + args.data.id + "-max").click({id:args.data.id}, minimizeAction);
+            var widget = getWidgetById(args.data.id);
+            if(typeof widget != "undefined" && typeof widget.maximize == "function") {
+                widget.maximize();
+            }
+
         }
 
         function minimizeAction(args) {
-            $("#widget-" + args.data.id + "-wrapper").removeClass("widget-wrapper-canvas").addClass("widget-wrapper");
             $(".dnd-overlay").remove();
+            $("#widget-" + args.data.id + "-wrapper").removeClass("widget-wrapper-canvas").addClass("widget-wrapper");
             $("#widget-" + args.data.id + "-max").click({id:args.data.id}, maximizeAction);
+            var widget = getWidgetById(args.data.id);
+            if(typeof widget != "undefined" && typeof widget.minimize == "function") {
+                widget.minimize();
+            }
         }
 
         function deleteAction(args) {

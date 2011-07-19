@@ -19,9 +19,10 @@
 var rave = rave || {};
 rave.opensocial = rave.opensocial || (function() {
     var WIDGET_TYPE = "OpenSocial";
+    var OFFSET = 10;
+    var MIN_HEIGHT = 250;
 
     var container;
-    var siteMap = {};
 
     /**
      * Initialization
@@ -68,22 +69,18 @@ rave.opensocial = rave.opensocial || (function() {
     }
 
     /**
-     * Renders a gadget on the page
+     * Validates a gadget's metadata and renders it on the page
      *
      * @param gadget the gadget object to be rendered by the container
      */
-    function createGadgetInstance(gadget) {
-        var gadgetMetadata = gadget.metadata;
-        var validationResult = validateMetadata(gadgetMetadata);
+    function validateAndRenderGadget(gadget) {
+        var validationResult = validateMetadata(gadget.metadata);
         if (validationResult.valid) {
             //TODO: Submit a patch to Shindig common container to expose the backing service or add a method to push cached items  into the container config
             var commonContainerMetadataWrapper = {};
-            commonContainerMetadataWrapper[gadget.widgetUrl] = gadgetMetadata;
+            commonContainerMetadataWrapper[gadget.widgetUrl] = gadget.metadata;
             container.service_.addGadgetMetadatas(commonContainerMetadataWrapper, null);
-            var widgetBodyElement = document.getElementById(["widget-", gadget.regionWidgetId, "-body"].join(""));
-            var gadgetSite = container.newGadgetSite(widgetBodyElement);
-            siteMap[gadget.regionWidgetId] = gadgetSite;
-            renderGadgetView("home", gadget, gadgetMetadata, gadgetSite);
+            renderNewGadget(gadget);
         } else {
             rave.errorWidget(gadget.regionWidgetId, "Unable to render OpenSocial Gadget: <br /><br />" + validationResult.error);
         }
@@ -91,51 +88,35 @@ rave.opensocial = rave.opensocial || (function() {
     }
 
     /**
-     * Renders the gadget in canvas view
-     * @param gadget the Rave widget object
+     * Renders a new gadget
+     * @param gadget
      */
-    function renderCanvas(gadget) {
-
-    }
-
-    /**
-     * Renders the gadget in home view
-     * @param gadget the Rave widget object
-     */
-    function renderHome(gadget) {
-
-    }
-
-    /**
-     * Renders an existing gadget in a new view
-     * @param view the view to render the gadget in
-     * @param gadget the Rave widget object
-     */
-    function renderExistingGadgetInView(view, gadget) {
-        var site = siteMap[gadget.regionWidgetId];
-        if(site == null) {
-            rave.errorWidget(gadget.regionWidgetId, "OpenSocial gadget no longer exists in the container!");
-        }
-        else {
-           //var metadata = container.get
-        }
+    function renderNewGadget(gadget) {
+        var widgetBodyElement = document.getElementById(["widget-", gadget.regionWidgetId, "-body"].join(""));
+        gadget.site = container.newGadgetSite(widgetBodyElement);
+        gadget.maximize = function() { renderGadgetView("canvas", this); };
+        gadget.minimize = function() { renderGadgetView("home",   this); };
+        renderGadgetView("home", gadget);
     }
 
     /**
      * Renders a gadget in the given view;
      * @param view the view to render
      * @param gadget the Rave widget object
-     * @param gadgetMetadata the Shindig gadget metadata object
-     * @param gadgetSite the Shindig gadget site object
-     *
      */
-    function renderGadgetView(view, gadget, gadgetMetadata, gadgetSite) {
+    function renderGadgetView(view, gadget) {
         var renderParams = {};
+        var size = getSizeFromElement(gadget.regionWidgetId, view);
         renderParams[osapi.container.RenderParam.VIEW] = view;
-        renderParams[osapi.container.RenderParam.WIDTH] = 250;
-        renderParams[osapi.container.RenderParam.HEIGHT] = 250;
-        renderParams[osapi.container.RenderParam.USER_PREFS] = getCompleteUserPrefSet(gadget.userPrefs, gadgetMetadata.userPrefs);
-        container.navigateGadget(gadgetSite, gadget.widgetUrl, {}, renderParams);
+        renderParams[osapi.container.RenderParam.WIDTH] = size.width;
+        renderParams[osapi.container.RenderParam.HEIGHT] = size.height;
+        renderParams[osapi.container.RenderParam.USER_PREFS] = getCompleteUserPrefSet(gadget.userPrefs, gadget.metadata.userPrefs);
+        container.navigateGadget(gadget.site, gadget.widgetUrl, {}, renderParams);
+    }
+
+    function getSizeFromElement(id, view) {
+        var elem = document.getElementById("widget-" + id + "-wrapper");
+        return {width: elem.clientWidth - OFFSET, height: view == "canvas" ? elem.clientHeight : MIN_HEIGHT};
     }
 
     /**
@@ -238,7 +219,7 @@ rave.opensocial = rave.opensocial || (function() {
          * Instantiates and renders the given gadget
          * @param a gadget to render
          */
-        initWidget: createGadgetInstance,
+        initWidget: validateAndRenderGadget,
 
         /**
          * Resets the current OpenSocial container
