@@ -20,13 +20,10 @@
 package org.apache.rave.portal.repository.impl;
 
 
-import org.apache.commons.lang.NotImplementedException;
 import org.apache.rave.portal.model.Widget;
 import org.apache.rave.portal.repository.WidgetRepository;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.List;
 

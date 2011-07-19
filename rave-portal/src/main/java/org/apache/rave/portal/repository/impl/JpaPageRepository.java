@@ -19,17 +19,12 @@
 
 package org.apache.rave.portal.repository.impl;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.apache.rave.portal.model.Page;
 import org.apache.rave.portal.repository.PageRepository;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.List;
-
-import static org.apache.rave.portal.repository.impl.util.JpaUtil.saveOrUpdate;
 
 @Repository
 public class JpaPageRepository extends AbstractJpaRepository<Page> implements PageRepository{

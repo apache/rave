@@ -19,18 +19,13 @@
 
 package org.apache.rave.portal.repository.impl;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.apache.rave.portal.model.PageLayout;
 import org.apache.rave.portal.repository.PageLayoutRepository;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 import static org.apache.rave.portal.repository.impl.util.JpaUtil.getSingleResult;
-import static org.apache.rave.portal.repository.impl.util.JpaUtil.saveOrUpdate;
 
 /**
  */
