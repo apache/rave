@@ -157,10 +157,7 @@ rave.opensocial = rave.opensocial || (function() {
     function resizeIframe(args) {
         var max = 0x7FFFFFFF;
         var height = args.a > max ? max : args.a;
-        var element = document.getElementById(args.f);
-        if (element) {
-            element.style.height = height + 'px';
-        }
+        args.gs.setHeight(height);
     }
 
     /**

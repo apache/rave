@@ -122,7 +122,7 @@ describe("Rave OpenSocial", function() {
                 a: size,
                 gs: {
                     setHeight : function(value) {
-                        wasCalled = size == value;
+                        called = size == value;
                     }
                 },
                 wasCalled : function() {return called; }
@@ -133,14 +133,14 @@ describe("Rave OpenSocial", function() {
             rave.opensocial.init();
             var args = getMockResizeArgs(25);
             container.rpcHooks()["resize_iframe"](args);
-            //expect(args.wasCalled()).toBeTruthy();
+            expect(args.wasCalled()).toBeTruthy();
         });
 
         it("resizes Iframe to max if height is greater than max", function() {
             rave.opensocial.init();
             var args = getMockResizeArgs(2147483648);
             container.rpcHooks()["resize_iframe"](args);
-            //expect(args.wasCalled()).toBeTruthy();
+            expect(args.wasCalled()).toBeFalsy();
         });
 
         it("set title changes the title DOM node", function() {

@@ -104,6 +104,8 @@ var rave = rave || (function() {
         function dragStop(event, ui) {
             $(".dnd-overlay").remove();
             $(".region-dragging").removeClass("region-dragging");
+            //Fixes a bug where the jQuery style attribute remains set in chrome
+            ui.item.attr("style", "");
             uiState.targetRegion = ui.item.parent().get(0);
             uiState.targetIndex = ui.item.index();
             rave.api.rpc.moveWidget(uiState);

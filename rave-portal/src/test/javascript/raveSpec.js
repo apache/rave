@@ -88,6 +88,9 @@ describe("Rave", function() {
                         } else {
                             return html;
                         }
+                    },
+                    attr: function(a, b) {
+
                     }
                 }
             };
@@ -230,6 +233,9 @@ describe("Rave", function() {
                     },
                     index : function() {
                         return 2
+                    },
+                    attr: function(a,b) {
+
                     }
                 }
             };
