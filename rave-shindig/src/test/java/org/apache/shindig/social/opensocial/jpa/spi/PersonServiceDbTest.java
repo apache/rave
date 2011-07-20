@@ -112,7 +112,7 @@ public class PersonServiceDbTest {
                 .andReturn(myProperty);
         replay(filterable);
         int returnPos = service.addFilterClause(sb, filterable, co, lastPost);
-        // Using the "special filter"
+
         assertEquals(1, returnPos);
         assertEquals("p.myProperty like  ?1", sb.toString());
         assertEquals("%myValue%", co.getFilter());
