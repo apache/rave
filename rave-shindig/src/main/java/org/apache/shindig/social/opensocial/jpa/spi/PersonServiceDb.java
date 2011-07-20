@@ -25,6 +25,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.common.collect.Lists;
+import org.apache.commons.lang.StringUtils;
 import org.apache.rave.os.DatabasePopulateContextListener;
 import org.apache.rave.os.ShindigUtil;
 import org.apache.shindig.auth.SecurityToken;
@@ -41,10 +43,6 @@ import org.apache.shindig.social.opensocial.spi.GroupId;
 import org.apache.shindig.social.opensocial.spi.PersonService;
 import org.apache.shindig.social.opensocial.spi.UserId;
 import org.json.JSONObject;
-
-import com.google.common.collect.Lists;
-import com.google.inject.Inject;
-import com.google.inject.name.Named;
 
 /**
  * Implements the PersonService from the SPI binding to the JPA model and providing queries to
@@ -195,103 +193,111 @@ public class PersonServiceDb implements PersonService {
   }
 
 
-
-  /**
-   * Add a filter clause specified by the collection options.
-   *
-   * @param sb the query builder buffer
-   * @param collectionOptions the options
-   * @param lastPos the last positional parameter that was used so far in the query
-   * @return
-   */
-  private int addFilterClause(StringBuilder sb, FilterCapability filterable,
-      CollectionOptions collectionOptions, int lastPos) {
-    // this makes the filter value saf
-    String filter = filterable.findFilterableProperty(collectionOptions.getFilter(),
-        collectionOptions.getFilterOperation());
-    String filterValue = collectionOptions.getFilterValue();
-    int filterPos = 0;
-    if (FilterSpecification.isValid(filter)) {
-      if (FilterSpecification.isSpecial(filter)) {
-        if (PersonService.HAS_APP_FILTER.equals(filter)) {
-          // Retrieves all friends with any data for this application.
-          // TODO: how do we determine which application is being talked about,
-          // the assumption below is wrong
-          filterPos = lastPos + 1;
-          sb.append(" f.application_id  = ?").append(filterPos);
-        } else if (PersonService.TOP_FRIENDS_FILTER.equals(filter)) {
-          // Retrieves only the user's top friends, this is defined here by the implementation
-          // and there is an assumption that the sort order has already been applied.
-          // to do this we need to modify the collections options
-          // there will only ever b x friends in the list and it will only ever start at 1
-
-          collectionOptions.setFirst(1);
-          collectionOptions.setMax(20);
-
-        } else if (PersonService.ALL_FILTER.equals(filter)) {
-           // select all, ie no filtering
-        } else if (PersonService.IS_WITH_FRIENDS_FILTER.equals(filter)) {
-          filterPos = lastPos + 1;
-          sb.append(" f.friend  = ?").append(filterPos);
+    /**
+     * Add a filter clause specified by the collection options.
+     *
+     * @param sb                the query {@link StringBuilder}
+     * @param filterable        {@link FilterCapability}
+     * @param collectionOptions the options
+     * @param lastPos           the last positional parameter that was used so far in the query
+     * @return position of the parameter for the filter
+     */
+    // TODO: if filter is special, it returns 0 and appends nothing to sb
+    int addFilterClause(StringBuilder sb, FilterCapability filterable,
+                        CollectionOptions collectionOptions, int lastPos) {
+        // this makes the filter value saf
+        String filter = filterable.findFilterableProperty(collectionOptions.getFilter(),
+                collectionOptions.getFilterOperation());
+        String filterValue = collectionOptions.getFilterValue();
+        int filterPos = 0;
+        if (!FilterSpecification.isValid(filter)) {
+            return filterPos;
         }
-      } else {
-        sb.append("p.").append(filter);
-        switch (collectionOptions.getFilterOperation()) {
-        case contains:
-          filterPos = lastPos + 1;
-          sb.append(" like ").append(" ?").append(filterPos);
-          filterValue = '%' + filterValue + '%';
-          collectionOptions.setFilter(filterValue);
-          break;
-        case equals:
-          filterPos = lastPos + 1;
-          sb.append(" = ").append(" ?").append(filterPos);
-          break;
-        case present:
-          sb.append(" is not null ");
-          break;
-        case startsWith:
-          filterPos = lastPos + 1;
-          sb.append(" like ").append(" ?").append(filterPos);
-          filterValue = '%' + filterValue + '%';
-          collectionOptions.setFilter(filterValue);
-          break;
+        
+        if (FilterSpecification.isSpecial(filter)) {
+            if (PersonService.HAS_APP_FILTER.equals(filter)) {
+                // Retrieves all friends with any data for this application.
+                // TODO: how do we determine which application is being talked about,
+                // the assumption below is wrong
+                filterPos = lastPos + 1;
+                sb.append(" f.application_id  = ?").append(filterPos);
+            } else if (PersonService.TOP_FRIENDS_FILTER.equals(filter)) {
+                // Retrieves only the user's top friends, this is defined here by the implementation
+                // and there is an assumption that the sort order has already been applied.
+                // to do this we need to modify the collections options
+                // there will only ever b x friends in the list and it will only ever start at 1
+
+                collectionOptions.setFirst(1);
+                collectionOptions.setMax(20);
+
+            } else if (PersonService.ALL_FILTER.equals(filter)) {
+                // select all, ie no filtering
+            } else if (PersonService.IS_WITH_FRIENDS_FILTER.equals(filter)) {
+                filterPos = lastPos + 1;
+                sb.append(" f.friend  = ?").append(filterPos);
+            }
+        } else {
+            sb.append("p.").append(filter);
+            switch (collectionOptions.getFilterOperation()) {
+                case contains:
+                    filterPos = lastPos + 1;
+                    sb.append(" like ").append(" ?").append(filterPos);
+                    filterValue = '%' + filterValue + '%';
+                    collectionOptions.setFilter(filterValue);
+                    break;
+                case equals:
+                    filterPos = lastPos + 1;
+                    sb.append(" = ").append(" ?").append(filterPos);
+                    break;
+                case present:
+                    sb.append(" is not null ");
+                    break;
+                case startsWith:
+                    filterPos = lastPos + 1;
+                    sb.append(" like ").append(" ?").append(filterPos);
+                    filterValue = '%' + filterValue + '%';
+                    collectionOptions.setFilter(filterValue);
+                    break;
+            }
         }
-      }
+
+        return filterPos;
     }
-    return filterPos;
-  }
 
-  /**
+    /**
    * Add an order clause to the query string.
    *
    * @param sb the buffer for the query string
    * @param collectionOptions the options to use for the order.
    */
-  private void addOrderClause(StringBuilder sb, CollectionOptions collectionOptions) {
-    String sortBy = collectionOptions.getSortBy();
-    if (sortBy != null && sortBy.length() > 0) {
-      if (PersonService.TOP_FRIENDS_SORT.equals(sortBy)) {
-        // TODO sorting by friend.score doesn't work right now because of group by issue (see above TODO)
-        // this assumes that the query is a join with the friends store.
-        sb.append(" order by f.score ");
-      } else {
-        if ("name".equals(sortBy)) {
-          // TODO Is this correct?
-          // If sortBy is name then order by p.name.familyName, p.name.givenName.
-          sb.append(" order by p.name.familyName, p.name.givenName ");
-        } else {
-          sb.append(" order by p.").append(sortBy);
-        }
-        switch (collectionOptions.getSortOrder()) {
-        case ascending:
-          sb.append(" asc ");
-          break;
-        case descending:
-          sb.append(" desc ");
-          break;
-        }
+  void addOrderClause(StringBuilder sb, CollectionOptions collectionOptions) {
+      String sortBy = collectionOptions.getSortBy();
+      if (StringUtils.isBlank(sortBy)) {
+          return;
       }
-    }
+      if (PersonService.TOP_FRIENDS_SORT.equals(sortBy)) {
+          // TODO sorting by friend.score doesn't work right now because of group by issue (see above TODO)
+          // this assumes that the query is a join with the friends store.
+          sb.append(" order by f.score ");
+      } else {
+          if ("name".equals(sortBy)) {
+              // TODO Is this correct?
+              // If sortBy is name then order by p.name.familyName, p.name.givenName.
+              sb.append(" order by p.name.familyName, p.name.givenName ");
+          } else {
+              sb.append(" order by p.").append(sortBy);
+          }
+          if (collectionOptions.getSortOrder() == null) {
+              return;
+          }
+          switch (collectionOptions.getSortOrder()) {
+              case ascending:
+                  sb.append(" asc ");
+                  break;
+              case descending:
+                  sb.append(" desc ");
+                  break;
+          }
+      }
   }
 }
