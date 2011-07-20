@@ -131,6 +131,7 @@ var rave = rave || (function() {
 
         function maximizeAction(args) {
             addOverlay($("body"));
+            $(".region" ).sortable( "option", "disabled", true );
             $("#widget-" + args.data.id + "-wrapper").removeClass("widget-wrapper").addClass("widget-wrapper-canvas");
             $("#widget-" + args.data.id + "-max").click({id:args.data.id}, minimizeAction);
             var widget = getWidgetById(args.data.id);
@@ -142,6 +143,7 @@ var rave = rave || (function() {
 
         function minimizeAction(args) {
             $(".dnd-overlay").remove();
+            $(".region" ).sortable( "option", "disabled", false );
             $("#widget-" + args.data.id + "-wrapper").removeClass("widget-wrapper-canvas").addClass("widget-wrapper");
             $("#widget-" + args.data.id + "-max").click({id:args.data.id}, maximizeAction);
             var widget = getWidgetById(args.data.id);
