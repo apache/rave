@@ -180,14 +180,16 @@ public class PersonServiceDb implements PersonService {
         if (plist != null && !plist.isEmpty()) {
             person = (Person) plist.get(0);
         }
-        String jsonStrRep = beanConverter.convertToString(person);
-        JSONObject jsonRep = new JSONObject(jsonStrRep);
-        if (!fields.isEmpty()) {
-            if (fields.size() != 1 || !fields.contains("id")) {
-                jsonRep = new JSONObject(jsonRep, fields.toArray(new String[fields.size()]));
-            }
+
+        if ((!fields.isEmpty())  && (fields.size() > 1 || !fields.contains(PersonDb.PARAM_PERSONID))) {
+            // JPA returns full object, but request was for a limited set
+            // TODO find out how this can be done in the JQL query instead of in a JSON conversion
+            String jsonStrRep = beanConverter.convertToString(person);
+            JSONObject jsonRep = new JSONObject(jsonStrRep);
+            jsonRep = new JSONObject(jsonRep, fields.toArray(new String[fields.size()]));
+            person = beanConverter.convertToObject(jsonRep.toString(), Person.class);
         }
-        person = beanConverter.convertToObject(jsonRep.toString(), Person.class);
+
         return ImmediateFuture.newInstance(person);
     } catch (Exception je) {
         throw new ProtocolException(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, je.getMessage(), je);

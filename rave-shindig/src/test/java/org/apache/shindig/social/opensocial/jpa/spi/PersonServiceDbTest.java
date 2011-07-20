@@ -21,6 +21,8 @@ package org.apache.shindig.social.opensocial.jpa.spi;
 
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.Future;
 
 import com.google.inject.Guice;
@@ -28,6 +30,7 @@ import com.google.inject.Injector;
 import org.apache.rave.os.model.RaveNameImpl;
 import org.apache.shindig.auth.SecurityToken;
 import org.apache.shindig.common.testing.FakeGadgetToken;
+import org.apache.shindig.protocol.ProtocolException;
 import org.apache.shindig.protocol.model.FilterOperation;
 import org.apache.shindig.protocol.model.SortOrder;
 import org.apache.shindig.social.opensocial.jpa.EnumDb;
@@ -49,6 +52,7 @@ import org.junit.Test;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.fail;
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
@@ -73,11 +77,32 @@ public class PersonServiceDbTest {
     public void testGetPerson() throws Exception {
         UserId userId = new UserId(UserId.Type.userId, "canonical");
         SecurityToken token = new FakeGadgetToken();
+        
         final Future<Person> personFuture = service.getPerson(userId, Collections.<String>emptySet(), token);
         final Person person = personFuture.get();
         assertEquals("canonical", person.getId());
+        assertEquals("Carl", person.getName().getGivenName());
+        assertEquals("Anonical", person.getName().getFamilyName());
         assertEquals(25, person.getAge().intValue());
         assertEquals(Smoker.NO, person.getSmoker().getValue());
+
+        Set<String> limitedFields = new HashSet<String>();
+        limitedFields.add("id");
+        limitedFields.add("name");
+        final Future<Person> personFutureLimited = service.getPerson(userId, limitedFields, token);
+        final Person personLimited = personFutureLimited.get();
+        assertEquals("canonical", personLimited.getId());
+        assertEquals("Carl", personLimited.getName().getGivenName());
+        assertEquals("Anonical", personLimited.getName().getFamilyName());
+        assertEquals(null, personLimited.getAge());
+        assertEquals(null, personLimited.getSmoker());
+
+        UserId noSuchId = new UserId(UserId.Type.userId, "doesnotexist");
+        try{
+            service.getPerson(noSuchId, Collections.<String>emptySet(), token);
+        } catch (ProtocolException e) {
+            fail("Person does not exist");
+        }
     }
 
     /**
