@@ -27,7 +27,7 @@ import javax.persistence.Query;
 import com.google.inject.Inject;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.shindig.gadgets.oauth.jpa.OAuthConsumerStoreDb;
+import org.apache.shindig.gadgets.oauth.model.OAuthConsumerStoreDb;
 import org.apache.shindig.gadgets.oauth.service.ConsumerStoreService;
 
 /**

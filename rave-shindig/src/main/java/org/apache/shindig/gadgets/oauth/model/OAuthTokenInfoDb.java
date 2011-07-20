@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.apache.shindig.gadgets.oauth.jpa;
+package org.apache.shindig.gadgets.oauth.model;
 
 /**
  * Bean for OAuth TokenInfo

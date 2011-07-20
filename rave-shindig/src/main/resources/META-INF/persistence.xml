@@ -23,8 +23,8 @@
   version="2.0">
   <persistence-unit name="raveShindigPersistenceUnit" transaction-type="RESOURCE_LOCAL">
     <provider>org.apache.openjpa.persistence.PersistenceProviderImpl</provider>
-    <class>org.apache.shindig.gadgets.oauth.jpa.OAuthConsumerStoreDb</class>
-    <class>org.apache.shindig.gadgets.oauth.jpa.OAuthTokenInfoDb</class>
+    <class>org.apache.shindig.gadgets.oauth.model.OAuthConsumerStoreDb</class>
+    <class>org.apache.shindig.gadgets.oauth.model.OAuthTokenInfoDb</class>
     <properties>
       <property name="openjpa.RuntimeUnenhancedClasses" value="supported" />
       <property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema" />

@@ -19,7 +19,7 @@
 
 package org.apache.shindig.gadgets.oauth.service;
 
-import org.apache.shindig.gadgets.oauth.jpa.OAuthTokenInfoDb;
+import org.apache.shindig.gadgets.oauth.model.OAuthTokenInfoDb;
 
 /**
  * Service to handle OAuth Tokens

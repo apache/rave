@@ -25,7 +25,7 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import org.apache.shindig.auth.SecurityToken;
 import org.apache.shindig.gadgets.oauth.OAuthStore;
-import org.apache.shindig.gadgets.oauth.jpa.OAuthTokenInfoDb;
+import org.apache.shindig.gadgets.oauth.model.OAuthTokenInfoDb;
 import org.apache.shindig.gadgets.oauth.service.TokenInfoService;
 import org.apache.shindig.social.core.oauth.OAuthSecurityToken;
 import org.apache.shindig.social.opensocial.jpa.openjpa.OpenJPADbModule;

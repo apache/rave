@@ -29,8 +29,8 @@ import net.oauth.signature.RSA_SHA1;
 import org.apache.commons.io.IOUtils;
 import org.apache.shindig.auth.SecurityToken;
 import org.apache.shindig.gadgets.GadgetException;
-import org.apache.shindig.gadgets.oauth.jpa.OAuthConsumerStoreDb;
-import org.apache.shindig.gadgets.oauth.jpa.OAuthTokenInfoDb;
+import org.apache.shindig.gadgets.oauth.model.OAuthConsumerStoreDb;
+import org.apache.shindig.gadgets.oauth.model.OAuthTokenInfoDb;
 import org.apache.shindig.gadgets.oauth.service.ConsumerStoreService;
 import org.apache.shindig.gadgets.oauth.service.TokenInfoService;
 import org.springframework.core.io.ClassPathResource;
@@ -152,7 +152,7 @@ public class OAuthStoreDb implements OAuthStore {
      * Creates an {@link OAuthConsumer} based on the OAuth signature method
      *
      * @param provider        {@link net.oauth.OAuthServiceProvider}
-     * @param consumerStoreDb {@link org.apache.shindig.gadgets.oauth.jpa.OAuthConsumerStoreDb}
+     * @param consumerStoreDb {@link org.apache.shindig.gadgets.oauth.model.OAuthConsumerStoreDb}
      *                        persistent OAuth consumer keys & secrets
      * @return {@link OAuthConsumer} if the signature method is supported
      */

@@ -21,7 +21,7 @@ package org.apache.shindig.gadgets.oauth.service.impl;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import org.apache.shindig.gadgets.oauth.jpa.OAuthConsumerStoreDb;
+import org.apache.shindig.gadgets.oauth.model.OAuthConsumerStoreDb;
 import org.apache.shindig.gadgets.oauth.service.ConsumerStoreService;
 import org.apache.shindig.social.opensocial.jpa.openjpa.OpenJPADbModule;
 import org.junit.Before;
