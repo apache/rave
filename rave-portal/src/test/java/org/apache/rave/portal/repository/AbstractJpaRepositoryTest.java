@@ -51,15 +51,15 @@ public class AbstractJpaRepositoryTest {
     private EntityManager sharedManager;
 
     @Autowired
-    private List<AbstractJpaRepository> repositories;
+    private List<Repository> repositories;
     //NOTE: In order for tests to succeed, there must be an object with id of 1 in the store for every repository
     private static final Long VALID_ENTITY_ID = 1L;
     private static final Long INVALID_ENTITY_ID = -1L;
 
     @Test
     public void getById_validId() {
-        for (AbstractJpaRepository repository : repositories) {
-            BasicEntity entity = repository.get(VALID_ENTITY_ID);
+        for (Repository repository : repositories) {
+            BasicEntity entity = (BasicEntity)repository.get(VALID_ENTITY_ID);
             assertThat(entity, is(notNullValue()));
             assertThat(entity.getId(), is(equalTo(VALID_ENTITY_ID)));
         }
@@ -67,8 +67,8 @@ public class AbstractJpaRepositoryTest {
 
     @Test
     public void getById_invalidId() {
-        for (AbstractJpaRepository repository : repositories) {
-            BasicEntity entity = repository.get(INVALID_ENTITY_ID);
+        for (Repository repository : repositories) {
+            BasicEntity entity = (BasicEntity)repository.get(INVALID_ENTITY_ID);
             assertThat(entity, is(nullValue()));
         }
     }
@@ -76,9 +76,9 @@ public class AbstractJpaRepositoryTest {
     @Test
     @Rollback(true)
     public void save_newEntity() {
-        for (AbstractJpaRepository repository : repositories) {
+        for (Repository repository : repositories) {
             BasicEntity entity = constructNewEntityForRepository(repository);
-            BasicEntity saved = repository.save(entity);
+            BasicEntity saved = (BasicEntity)repository.save(entity);
             sharedManager.flush();
             assertThat(saved, is(sameInstance(entity)));
             assertThat(saved.getId(), is(notNullValue()));
@@ -88,10 +88,10 @@ public class AbstractJpaRepositoryTest {
     @Test
     @Rollback(true)
     public void save_existingEntity() {
-        for (AbstractJpaRepository repository : repositories) {
+        for (Repository repository : repositories) {
             BasicEntity entity = constructNewEntityForRepository(repository);
             entity.setId(VALID_ENTITY_ID);
-            BasicEntity saved = repository.save(entity);
+            BasicEntity saved = (BasicEntity)repository.save(entity);
             sharedManager.flush();
             assertThat(saved, is(not(sameInstance(entity))));
             assertThat(saved.getId(), is(equalTo(entity.getId())));
@@ -102,20 +102,17 @@ public class AbstractJpaRepositoryTest {
     @Test
     @Rollback(true)
     public void delete() {
-        for(AbstractJpaRepository repository : repositories) {
-            BasicEntity entity = repository.get(VALID_ENTITY_ID);
+        for(Repository repository : repositories) {
+            Object entity = repository.get(VALID_ENTITY_ID);
             repository.delete(entity);
             sharedManager.flush();
             assertThat(repository.get(VALID_ENTITY_ID), is(nullValue()));
         }
     }
 
-    private BasicEntity constructNewEntityForRepository(AbstractJpaRepository repository) {
+    private BasicEntity constructNewEntityForRepository(Repository repository) {
         try {
-            Field field = AbstractJpaRepository.class.getDeclaredField("type");
-            field.setAccessible(true);
-            Class<?> objectClass = (Class)field.get(repository);
-            return (BasicEntity) objectClass.newInstance();
+            return (BasicEntity)repository.getType().newInstance();
         } catch (Throwable e) {
             throw new RuntimeException(e);
         }

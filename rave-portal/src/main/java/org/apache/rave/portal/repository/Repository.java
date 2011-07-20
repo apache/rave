@@ -24,6 +24,12 @@ package org.apache.rave.portal.repository;
  */
 public interface Repository<T> {
     /**
+     * Gets the type of the object served by the repository
+     * @return a {@link Class} representing the type of object
+     */
+    Class<T> getType();
+
+    /**
      * Gets the specified object from the persistence context by its id
      *
      * @param id the id of the object of type T to retrieve

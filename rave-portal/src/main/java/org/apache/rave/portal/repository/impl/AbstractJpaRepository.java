@@ -21,6 +21,8 @@ package org.apache.rave.portal.repository.impl;
 
 import org.apache.rave.portal.model.BasicEntity;
 import org.apache.rave.portal.repository.Repository;
+import org.springframework.core.type.ClassMetadata;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -42,17 +44,24 @@ public abstract class AbstractJpaRepository<T extends BasicEntity> implements Re
     }
 
     @Override
-    public void delete(T item) {
-        manager.remove(item);
-    }
-
-    @Override
-    public T save(T item) {
-        return saveOrUpdate(item.getId(), manager, item);
+    public Class<T> getType() {
+        return type;
     }
 
     @Override
     public T get(long id) {
         return manager.find(type, id);
+    }
+
+    @Override
+    @Transactional
+    public T save(T item) {
+        return saveOrUpdate(item.getId(), manager, item);
+    }
+
+    @Override
+    @Transactional
+    public void delete(T item) {
+        manager.remove(item);
     }
 }
