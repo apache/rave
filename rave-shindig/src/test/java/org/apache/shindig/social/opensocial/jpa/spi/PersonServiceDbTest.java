@@ -19,12 +19,30 @@
 
 package org.apache.shindig.social.opensocial.jpa.spi;
 
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.concurrent.Future;
+
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import org.apache.rave.os.model.RaveNameImpl;
+import org.apache.shindig.auth.SecurityToken;
+import org.apache.shindig.common.testing.FakeGadgetToken;
 import org.apache.shindig.protocol.model.FilterOperation;
 import org.apache.shindig.protocol.model.SortOrder;
+import org.apache.shindig.social.opensocial.jpa.EnumDb;
+import org.apache.shindig.social.opensocial.jpa.PersonDb;
 import org.apache.shindig.social.opensocial.jpa.api.FilterCapability;
 import org.apache.shindig.social.opensocial.jpa.api.FilterSpecification;
+import org.apache.shindig.social.opensocial.jpa.openjpa.OpenJPADbModule;
+import org.apache.shindig.social.opensocial.model.Drinker;
+import org.apache.shindig.social.opensocial.model.Name;
+import org.apache.shindig.social.opensocial.model.NetworkPresence;
+import org.apache.shindig.social.opensocial.model.Person;
+import org.apache.shindig.social.opensocial.model.Smoker;
 import org.apache.shindig.social.opensocial.spi.CollectionOptions;
 import org.apache.shindig.social.opensocial.spi.PersonService;
+import org.apache.shindig.social.opensocial.spi.UserId;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -44,7 +62,22 @@ public class PersonServiceDbTest {
 
     @Before
     public void setUp() throws Exception {
-        service = new PersonServiceDb();
+        Injector injector = Guice.createInjector(new OpenJPADbModule());
+        service = injector.getInstance(PersonServiceDb.class);
+        PersonDb person = createPerson();
+        service.savePersonDb(person);
+    }
+
+
+    @Test
+    public void testGetPerson() throws Exception {
+        UserId userId = new UserId(UserId.Type.userId, "canonical");
+        SecurityToken token = new FakeGadgetToken();
+        final Future<Person> personFuture = service.getPerson(userId, Collections.<String>emptySet(), token);
+        final Person person = personFuture.get();
+        assertEquals("canonical", person.getId());
+        assertEquals(25, person.getAge().intValue());
+        assertEquals(Smoker.NO, person.getSmoker().getValue());
     }
 
     /**
@@ -151,6 +184,26 @@ public class PersonServiceDbTest {
         sb = new StringBuilder();
         service.addOrderClause(sb, co);
         assertEquals(" order by p.randomProperty", sb.toString());
-
     }
+
+    private PersonDb createPerson() {
+        PersonDb person = new PersonDb();
+        person.setId("canonical");
+        Name name = new RaveNameImpl();
+        name.setFamilyName("Anonical");
+        name.setGivenName("Carl");
+        person.setName(name);
+        person.setDrinker(new EnumDb<Drinker>(Drinker.NO));
+        person.setGender(Person.Gender.male);
+        person.setNetworkPresence(new EnumDb<NetworkPresence>(NetworkPresence.ONLINE));
+        person.setAboutMe("About me");
+        person.setAge(25);
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(1997, Calendar.SEPTEMBER, 12);
+        person.setBirthday(calendar.getTime());
+        person.setNickname("hoosier");
+        person.setSmoker(new EnumDb<Smoker>(Smoker.NO));
+        return person;
+    }
+
 }

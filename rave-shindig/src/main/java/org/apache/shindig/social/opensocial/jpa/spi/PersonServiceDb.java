@@ -56,13 +56,17 @@ public class PersonServiceDb implements PersonService {
    */
   private EntityManager entityManager;
 
+  private ShindigUtil shindigUtil = new ShindigUtil();
+  private BeanConverter beanConverter = shindigUtil.getBeanConverter();
+
+
   /**
    * Create the PersonServiceDb, injecting an entity manager that is configured with the social
    * model.
    *
    * @param entityManager the entity manager containing the social model.
    */
-//  @Inject
+  //@Inject
   public PersonServiceDb(EntityManager entityManager) {
     this.entityManager = entityManager;
   }
@@ -160,9 +164,6 @@ public class PersonServiceDb implements PersonService {
 
   }
   
-  private ShindigUtil shindigUtil = new ShindigUtil();
-  private BeanConverter beanConverter = shindigUtil.getBeanConverter();
-  
   /**
    * {@inheritDoc}
    */
@@ -182,8 +183,9 @@ public class PersonServiceDb implements PersonService {
         String jsonStrRep = beanConverter.convertToString(person);
         JSONObject jsonRep = new JSONObject(jsonStrRep);
         if (!fields.isEmpty()) {
-            if (fields.size() != 1 || !fields.contains("id"))
+            if (fields.size() != 1 || !fields.contains("id")) {
                 jsonRep = new JSONObject(jsonRep, fields.toArray(new String[fields.size()]));
+            }
         }
         person = beanConverter.convertToObject(jsonRep.toString(), Person.class);
         return ImmediateFuture.newInstance(person);
@@ -300,4 +302,16 @@ public class PersonServiceDb implements PersonService {
           }
       }
   }
+
+    /**
+     * Persists a {@link PersonDb} in the database
+     *
+     * @param person {@link PersonDb}
+     */
+    public void savePersonDb(PersonDb person) {
+        entityManager.getTransaction().begin();
+        entityManager.persist(person);
+        entityManager.flush();
+        entityManager.getTransaction().commit();
+    }
 }
