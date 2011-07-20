@@ -21,9 +21,14 @@ package org.apache.rave.provider.opensocial.web.renderer;
 
 import org.apache.rave.exception.NotSupportedException;
 import org.apache.rave.portal.model.RegionWidget;
+import org.apache.rave.portal.model.RegionWidgetPreference;
 import org.apache.rave.portal.web.renderer.RegionWidgetRenderer;
 import org.apache.rave.provider.opensocial.Constants;
 import org.apache.rave.provider.opensocial.service.OpenSocialService;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -34,6 +39,8 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class OpenSocialWidgetRenderer implements RegionWidgetRenderer {
+    private static Logger logger = LoggerFactory.getLogger(OpenSocialWidgetRenderer.class);
+
     private OpenSocialService openSocialService;
 
     @Autowired
@@ -48,7 +55,7 @@ public class OpenSocialWidgetRenderer implements RegionWidgetRenderer {
             " regionWidgetId: %2$s," +
             " widgetUrl: '%3$s', " +
             " metadata: %4$s," +
-            " userPrefs: {}});";
+            " userPrefs: %5$s});";
 
     @Override
     public String getSupportedContext() {
@@ -68,7 +75,18 @@ public class OpenSocialWidgetRenderer implements RegionWidgetRenderer {
             throw new NotSupportedException("Invalid widget type passed to renderer: " + type);
         }
 
+        JSONObject userPrefs = new JSONObject();
+        if (item.getPreferences() != null) {
+            for (RegionWidgetPreference regionWidgetPreference : item.getPreferences()) {
+                try {
+                    userPrefs.put(regionWidgetPreference.getName(), regionWidgetPreference.getValue());
+                } catch (JSONException e) {
+                    logger.error("Exception caught adding preference to JSONObject: " + regionWidgetPreference, e);
+                }
+            }
+        }
+
         return String.format(IFRAME_MARKUP, Constants.WIDGET_TYPE, item.getId(), item.getWidget().getUrl(),
-                openSocialService.getGadgetMetadata(item.getWidget().getUrl()));
+                openSocialService.getGadgetMetadata(item.getWidget().getUrl()), userPrefs.toString());
     }
 }

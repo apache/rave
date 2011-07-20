@@ -21,12 +21,17 @@ package org.apache.rave.provider.opensocial.web.renderer;
 
 import org.apache.rave.exception.NotSupportedException;
 import org.apache.rave.portal.model.RegionWidget;
+import org.apache.rave.portal.model.RegionWidgetPreference;
 import org.apache.rave.portal.model.Widget;
 import org.apache.rave.portal.web.renderer.Renderer;
 import org.apache.rave.provider.opensocial.Constants;
 import org.apache.rave.provider.opensocial.service.OpenSocialService;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.Arrays;
 
 import static org.easymock.EasyMock.createNiceMock;
 import static org.easymock.EasyMock.expect;
@@ -54,7 +59,7 @@ public class OpenSocialWidgetRendererTest {
     }
 
     @Test
-    public void render_valid() {
+    public void render_valid() throws JSONException {
         expect(openSocialService.getGadgetMetadata(VALID_GADGET_URL)).andReturn(VALID_METADATA);
         replay(openSocialService);
 
@@ -65,12 +70,26 @@ public class OpenSocialWidgetRendererTest {
         RegionWidget rw = new RegionWidget();
         rw.setId(1L);
         rw.setWidget(w);
+        rw.setPreferences(Arrays.asList(new RegionWidgetPreference(1L, 1L, "color", "blue"),
+                new RegionWidgetPreference(2L, 1L, "speed", "fast")));
 
         String result = renderer.render(rw);
-        assertThat(result.matches(".*regionWidgetId[ ]*:[ ]*1,.*"), is(true));
-        assertThat(result.matches(".*type[ ]*:[ ]*'OpenSocial',.*"), is(true));
-        assertThat(result.matches(".*widgetUrl[ ]*:[ ]*'http://www.example.com/gadget.xml',.*"), is(true));
-        assertThat(result.matches(".*metadata[ ]*:[ ]*" + VALID_METADATA + ",.*"), is(true));
+        /*
+            result should look like:
+
+            widgets.push({type: 'OpenSocial', regionWidgetId: 1, widgetUrl: 'http://www.example.com/gadget.xml',
+                metadata: metadata, userPrefs: {"speed":"fast","color":"blue"}});
+        */
+
+        JSONObject jsonObject = new JSONObject(
+                result.substring("widgets.push(".length(), result.length() - ");".length()));
+
+        assertThat((Integer) jsonObject.get("regionWidgetId"), is(equalTo(1)));
+        assertThat((String) jsonObject.get("type"), is(equalTo("OpenSocial")));
+        assertThat((String) jsonObject.get("widgetUrl"), is(equalTo("http://www.example.com/gadget.xml")));
+        assertThat((String) jsonObject.get("metadata"), is(equalTo(VALID_METADATA)));
+        assertThat((String) ((JSONObject) jsonObject.get("userPrefs")).get("color"), is(equalTo("blue")));
+        assertThat((String) ((JSONObject) jsonObject.get("userPrefs")).get("speed"), is(equalTo("fast")));
     }
 
     @Test

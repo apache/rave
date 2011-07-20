@@ -25,7 +25,6 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.apache.commons.lang.StringUtils.isAllLowerCase;
 import static org.junit.Assert.assertTrue;
 
 public class ModelUtilsTest {
@@ -36,7 +35,6 @@ public class ModelUtilsTest {
         RegionWidgetPreference testPreference = new RegionWidgetPreference(null, null, "camelCaseName", "FOO");
         ModelUtils.normalizeRegionWidgetPreference(VALID_REGION_WIDGET_ID, testPreference);
 
-        assertTrue(isAllLowerCase(testPreference.getName()));
         assertTrue(testPreference.getRegionWidgetId() == VALID_REGION_WIDGET_ID);
     }
 
@@ -45,7 +43,6 @@ public class ModelUtilsTest {
         List<RegionWidgetPreference> testPreferences = getTestRegionWidgetPreferences();
         ModelUtils.normalizeRegionWidgetPreferences(VALID_REGION_WIDGET_ID, testPreferences);
         for (RegionWidgetPreference testPreference : testPreferences) {
-            assertTrue(isAllLowerCase(testPreference.getName()));
             assertTrue(testPreference.getRegionWidgetId() == VALID_REGION_WIDGET_ID);
         }
     }
@@ -55,5 +52,4 @@ public class ModelUtilsTest {
                 new RegionWidgetPreference(null, 20L, "lowercasename", "FOO"),
                 new RegionWidgetPreference(null, -100L, "UPPERCASENAME", "FOO"));
     }
-
 }

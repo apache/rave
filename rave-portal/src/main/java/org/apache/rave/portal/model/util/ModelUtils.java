@@ -25,7 +25,7 @@ import java.util.List;
 
 public class ModelUtils {
 
-    private ModelUtils(){};
+    private ModelUtils(){}
 
     public static void normalizeRegionWidgetPreferences(long regionWidgetId, List<RegionWidgetPreference> preferences) {
         for (RegionWidgetPreference preference : preferences) {
@@ -35,6 +35,5 @@ public class ModelUtils {
 
     public static void normalizeRegionWidgetPreference(long regionWidgetId, RegionWidgetPreference regionWidgetPreference) {
         regionWidgetPreference.setRegionWidgetId(regionWidgetId);
-        regionWidgetPreference.setName(regionWidgetPreference.getName().toLowerCase());
     }
 }

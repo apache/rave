@@ -22,6 +22,40 @@ var rave = rave || {};
  * Note required jquery libraries must be imported by the containing page.
  */
 rave.api = rave.api || (function() {
+    function handleError(jqXhr, status, error) {
+        alert("Rave encountered an error while trying to contact the server.  Please reload the page and try again. error: " + error);
+    }
+
+    var restApi = (function() {
+        //Base path to RPC services
+        var path = "api/rest/";
+
+        function saveWidgetPreferences(args) {
+            var preferencesData = {"preferences": []};
+            for (var prefName in args.userPrefs) {
+                preferencesData.preferences.push({"name":prefName, "value":args.userPrefs[prefName]});
+            }
+
+            $.ajax({
+                type: 'PUT',
+                url: rave.getContext() + path + "regionWidgets/" + args.regionWidgetId + "/preferences",
+                data: JSON.stringify(preferencesData),
+                contentType: 'application/json',
+                dataType: 'json',
+                success: function(result) {
+                    if (typeof args.successCallback == 'function') {
+                        args.successCallback();
+                    }
+                },
+                error: handleError
+            });
+        }
+
+        return {
+            saveWidgetPreferences : saveWidgetPreferences
+        };
+    })();
+
     var rpcApi = (function() {
         //Base path to RPC services
         var path = "api/rpc/";
@@ -80,10 +114,6 @@ rave.api = rave.api || (function() {
                 }).error(handleError);
         }
 
-        function handleError(jqXhr, status, error) {
-            alert("Rave encountered an error while trying to contact the server.  Please reload the page and try again. error: " + error);
-        }
-
         //TODO: Create a more robust error handling system and interrogation of RPC results
         function handleRpcError(rpcResult) {
             switch (rpcResult.errorCode) {
@@ -109,6 +139,7 @@ rave.api = rave.api || (function() {
     })();
 
     return {
+        rest : restApi,
         rpc : rpcApi
     };
 })();

@@ -69,6 +69,7 @@
         </c:forEach>
         <div class="clear-float">&nbsp;</div>
     </div>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
     <script src="//ajax.aspnetcdn.com/ajax/jQuery/jquery-1.6.1.min.js"></script>
     <script src="//ajax.aspnetcdn.com/ajax/jquery.ui/1.8.13/jquery-ui.min.js"></script>
     <script src="${opensocial_engine_url}/js/container.js?c=1&container=default&debug=1"></script>

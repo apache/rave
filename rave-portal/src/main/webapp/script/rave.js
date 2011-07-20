@@ -241,17 +241,37 @@ var rave = rave || (function() {
         }
 
         function saveEditPrefsAction(args) {
-            var prefsElement = $("#" + WIDGET_PREFS_CONTENT(args.data.id));
+            var regionWidget = getWidgetById(args.data.id);
+            var prefsElement = $("#" + WIDGET_PREFS_CONTENT(regionWidget.regionWidgetId));
 
-            /**
-             -- Update preferences in the widget object
-             -- Send a batch save to the rest API
-             -- Re-render the widget with the updated preferences
+            var updatedPrefs = {};
+            prefsElement.find("*").filter(":input").each(function(index, element) {
+                switch (element.type) {
+                    case "text":
+                    case "select-one":
+                    case "hidden":
+                        updatedPrefs[element.name] = $(element).val();
+                        break;
+                    case "checkbox":
+                        updatedPrefs[element.name] = $(element).is(':checked').toString();
+                        break;
+                    case "textarea":
+                        var valuesToPersist = [];
+                        var textareaValues = $(element).val().split("\n");
+                        for (var i = 0; i < textareaValues.length; i++) {
+                            var value = $.trim(textareaValues[i]);
+                            if (value.length > 0) {
+                                valuesToPersist.push(value);
+                            }
+                        }
+                        updatedPrefs[element.name] = valuesToPersist.join("|");
+                        break;
+                }
+            });
 
-             $("#widget-17-prefs-content").find("*").filter(":input").each(function(index, element){
-                console.log(element.nodeName, element.type);
-             });
-             */
+            if(typeof regionWidget.savePreferences == "function") {
+                regionWidget.savePreferences(updatedPrefs);
+            }
 
             prefsElement.html("");
             prefsElement.hide();

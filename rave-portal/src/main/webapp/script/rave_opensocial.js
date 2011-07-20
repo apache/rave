@@ -96,6 +96,11 @@ rave.opensocial = rave.opensocial || (function() {
         gadget.site = container.newGadgetSite(widgetBodyElement);
         gadget.maximize = function() { renderGadgetView("canvas", this); };
         gadget.minimize = function() { renderGadgetView("home",   this); };
+        gadget.savePreferences = function(userPrefs) {
+            this.userPrefs = userPrefs;
+            rave.api.rest.saveWidgetPreferences({regionWidgetId: this.regionWidgetId, userPrefs: userPrefs});
+            renderGadgetView("home", this); //TODO: figure out how to get the current view instead of assuming "home"
+        };
         renderGadgetView("home", gadget);
     }
 
