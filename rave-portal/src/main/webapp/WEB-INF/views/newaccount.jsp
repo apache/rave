@@ -24,16 +24,17 @@
 <rave:rave_generic_page pageTitle="New Account Application - Rave">
 <div id="content">
     <h1>Rave Account Application</h1>
-    <form id="newAccountForm" name="newAccountForm" action="newaccount" method="POST">
+    <form:form id="newAccountForm" commandName="newUser" action="newaccount" method="POST">
         <fieldset>
             <p>All fields are required</p>
+				<p><form:errors cssClass="error2"/>
             <p>
                 <label for="userNameField">Username:</label>
-                <input id="userNameField" type="text" name="userName" required="required" autofocus="autofocus"/>
+                <form:input id="userNameField" type="text" path="username" required="required" autofocus="autofocus"/>
             </p>
             <p>
                 <label for="passwordField">Password:</label>
-                <input id="passwordField" type="password" name="password" required="required"/>
+                <form:input id="passwordField" type="password" path="password" required="required"/>
             </p>
             <p>
                 <label for="passwordConfirmField">Confirm Password:</label>
@@ -43,7 +44,7 @@
         <fieldset>
              <input type="submit" value="Create Account" />
         </fieldset>
-    </form>
+    </form:form>
 </div>
 <script src="//ajax.aspnetcdn.com/ajax/jQuery/jquery-1.6.1.min.js"></script>
 <script src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.8.1/jquery.validate.min.js"></script>

@@ -19,13 +19,16 @@
 
 package org.apache.rave.portal.web.controller;
 
+import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.service.NewAccountService;
+import org.apache.rave.portal.web.validator.NewAccountValidator;
 import org.apache.rave.portal.web.util.ModelKeys;
 import org.apache.rave.portal.web.util.ViewNames;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -40,41 +43,58 @@ import org.slf4j.LoggerFactory;
 
 
 @Controller
-//@RequestMapping(value = { "/newaccount/*", "/newaccount" })
 public class NewAccountController {
 
 	 protected final Logger logger=LoggerFactory.getLogger(getClass());
 
 	 private final NewAccountService newAccountService;
+	 private final NewAccountValidator newAccountValidator;
+
 
     @Autowired
-    public NewAccountController(NewAccountService newAccountService) {
+		  public NewAccountController(NewAccountService newAccountService, NewAccountValidator newAccountValidator) {
 		  this.newAccountService=newAccountService;
+		  this.newAccountValidator=newAccountValidator;
     }
 
-    @RequestMapping(value ="/newaccount.jsp", method = RequestMethod.GET)
-	 public String setUpForm(ModelMap model) {
+    @RequestMapping(value ="/newaccount.jsp")
+	 public void setUpForm(ModelMap model) {
 		  logger.debug("Initializing form");
 		  //TODO this should use view keys like other pages.
-		  return "newaccount";
+		  model.addAttribute("newUser",new User());
 	 }
 
-    @RequestMapping(value = { "/newaccount/*","/newaccount"}, method = RequestMethod.POST)
-	 public String create(Model model,@RequestParam String userName, @RequestParam String password, @RequestParam String passwordConfirm) {	  
-			logger.debug("Creating a new user account");
+    @RequestMapping(value = { "/newaccount","/newacount/*"}, method = RequestMethod.POST)
+		  public String create(@ModelAttribute User user, BindingResult results, Model model,@RequestParam String username, @RequestParam String password){
+		  logger.debug("Creating a new user account");
+		  model.addAttribute("newUser",user);
+		  
+		  newAccountValidator.validate(user,results);
+		  if(results.hasErrors()){
+				return "newaccount";
+		  }
 
-			 try {
-			    //TODO need to validate input, Spring-style
-				 newAccountService.createNewAccount(userName,password);
-				 return "redirect:/";
-			 }
-											 
-			  //TODO need to handle more specific exceptions
-			  catch (Exception ex) {
-				  logger.error("Account creation failed: "+ex.getMessage());
-				  //TODO: change this to a viewname
-				  return "newaccount";
-			  }
-	 
-		 }
+		  //Now attempt to create the account.
+		  try {
+				newAccountService.createNewAccount(username,password);
+				return "redirect:/";
+		  }
+		  
+		  catch (org.springframework.dao.IncorrectResultSizeDataAccessException ex) {
+				//This exception is thrown if the account already exists.
+				logger.error("Account creation failed: "+ex.getMessage());
+				results.reject("Account already exists","Unable to create account");
+				//TODO: change this to a viewname
+				return "newaccount";
+				
+		  }
+		  //TODO need to handle more specific exceptions
+		  catch (Exception ex) {
+				logger.error("Account creation failed: "+ex.getMessage());
+				results.reject("Unable to create account:"+ex.getMessage(),"Unable to create account");
+				//TODO: change this to a viewname
+				return "newaccount";
+		  }
+		  
+	 }
 }

@@ -96,4 +96,5 @@
         <property name="engineRoot" value="${portal.opensocial_engine.root}"/>
         <property name="engineGadgetPath" value="${portal.opensocial_engine.gadget_path}"/>
     </bean>
+	 <bean id="newAccountValidator" class="org.apache.rave.portal.web.validator.NewAccountValidator"/>
 </beans>
