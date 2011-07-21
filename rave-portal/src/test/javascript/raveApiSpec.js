@@ -17,11 +17,53 @@
  * under the License.
  */
 describe("Rave API", function() {
+    //create a mock jquery object so we can hang mock functions off of it as needed
+    $ = {};
+
+    describe("rest", function() {
+        describe("saveWidgetPreferences", function() {
+            it("PUTs correct values to the REST service for saving widget preferences", function() {
+                //add a mock for the jquery ajax function to the mock jquery object
+                //this mock function will end up getting called when the saveWidgetPreferences we're testing makes its
+                //ajax call by executing $.ajax({ ... }); - and when that happens it will end up running this implementation
+                //of $.ajax() which in turn sets up a bunch of expectations for jasmine to verify at the end of the test
+                $.ajax = function(args) {
+                    expect(args.url).toEqual("api/rest/regionWidgets/1/preferences");
+                    var userPrefs = JSON.parse(args.data).preferences;
+                    expect(userPrefs.length).toEqual(2);
+                    var foundColorPref = false;
+                    var foundSpeedPref = false;
+                    for (var i = 0; i < userPrefs.length; i++) {
+                        var userPref = userPrefs[i];
+                        if (userPref.name == "color" && userPref.value == "blue") {
+                            foundColorPref = true;
+                        } else if (userPref.name == "speed" && userPref.value == "fast") {
+                            foundSpeedPref = true;
+                        }
+                    }
+                    expect(foundColorPref).toBeTruthy();
+                    expect(foundSpeedPref).toBeTruthy();
+
+                    expect(typeof(callback)).toEqual("function");
+                    callback({error:false});
+                    return {
+                        error: function(a, b, c) {
+                        }
+                    }
+                };
+
+                var callbackCalled = false;
+                var callback = function() {
+                    callbackCalled = true
+                };
+                rave.api.rest.saveWidgetPreferences({regionWidgetId:1, userPrefs:{"color":"blue", "speed":"fast"},
+                    successCallback: callback});
+                expect(callbackCalled).toBeTruthy();
+            });
+        });
+    });
 
     describe("rpc", function() {
-
-        $ = {};
-
         describe("addWidgetToPage", function() {
             it("posts the correct values to RPC service for adding a widget to the page", function() {
 
@@ -37,6 +79,7 @@ describe("Rave API", function() {
                 rave.api.rpc.addWidgetToPage({pageId: 1, widgetId: 2});
             });
         });
+
         describe("moveWidget", function() {
             it("posts the correct values to RPC service for adding a widget to the page", function() {
 
@@ -54,6 +97,7 @@ describe("Rave API", function() {
                 rave.api.rpc.moveWidget({targetRegion: {id:"region-1"}, currentRegion: {id:"region-2"}, targetIndex: 3, widget:{id:"widget-3-body"}});
             });
         });
+
         describe("deleteWidget", function() {
             it("posts correct values to the RPC service for deleting a widget from the page", function() {
                 var callbackCalled = false;
@@ -74,6 +118,7 @@ describe("Rave API", function() {
             });
 
         });
+
         describe("Error handling", function() {
             it("displays the appropriate alert when invalid parameters are passed", function() {
 
@@ -91,6 +136,7 @@ describe("Rave API", function() {
                 rave.api.rpc.moveWidget({targetRegion: {id:"region-1"}, currentRegion: {id:"region-2"}, targetIndex: 3, widget:{id:"widget-3-body"}});
 
             });
+
             it("displays the appropriate alert when a server error occurs", function() {
 
                 $.post = function(url, data, handler) {
@@ -107,8 +153,6 @@ describe("Rave API", function() {
                 rave.api.rpc.moveWidget({targetRegion: {id:"region-1"}, currentRegion: {id:"region-2"}, targetIndex: 3, widget:{id:"widget-3-body"}});
             });
         });
-    })
-
+    });
 
 });
-
