@@ -19,8 +19,6 @@
 
 package org.apache.shindig.gadgets.oauth.service.impl;
 
-import java.util.Date;
-
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import org.apache.shindig.auth.SecurityToken;
@@ -31,6 +29,8 @@ import org.apache.shindig.social.core.oauth.OAuthSecurityToken;
 import org.apache.shindig.social.opensocial.jpa.openjpa.OpenJPADbModule;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.Date;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNull;

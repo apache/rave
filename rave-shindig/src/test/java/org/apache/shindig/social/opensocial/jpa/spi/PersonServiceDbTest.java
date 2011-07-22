@@ -19,12 +19,6 @@
 
 package org.apache.shindig.social.opensocial.jpa.spi;
 
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.concurrent.Future;
-
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import org.apache.rave.os.model.RaveNameImpl;
@@ -38,25 +32,21 @@ import org.apache.shindig.social.opensocial.jpa.PersonDb;
 import org.apache.shindig.social.opensocial.jpa.api.FilterCapability;
 import org.apache.shindig.social.opensocial.jpa.api.FilterSpecification;
 import org.apache.shindig.social.opensocial.jpa.openjpa.OpenJPADbModule;
-import org.apache.shindig.social.opensocial.model.Drinker;
-import org.apache.shindig.social.opensocial.model.Name;
-import org.apache.shindig.social.opensocial.model.NetworkPresence;
-import org.apache.shindig.social.opensocial.model.Person;
-import org.apache.shindig.social.opensocial.model.Smoker;
+import org.apache.shindig.social.opensocial.model.*;
 import org.apache.shindig.social.opensocial.spi.CollectionOptions;
 import org.apache.shindig.social.opensocial.spi.PersonService;
 import org.apache.shindig.social.opensocial.spi.UserId;
 import org.junit.Before;
 import org.junit.Test;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
-import static junit.framework.Assert.fail;
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.Future;
+
+import static junit.framework.Assert.*;
+import static org.easymock.EasyMock.*;
 
 /**
  * Test for {@link PersonServiceDb}

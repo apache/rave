@@ -19,16 +19,15 @@
 
 package org.apache.shindig.gadgets.oauth.service.impl;
 
-import java.util.List;
-
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
-
 import com.google.inject.Inject;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.shindig.gadgets.oauth.model.OAuthConsumerStoreDb;
 import org.apache.shindig.gadgets.oauth.service.ConsumerStoreService;
+
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+import java.util.List;
 
 /**
  * DB (OpenJPA) implementation of {@link ConsumerStoreService}

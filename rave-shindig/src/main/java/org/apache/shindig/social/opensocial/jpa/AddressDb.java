@@ -17,27 +17,14 @@
  */
 package org.apache.shindig.social.opensocial.jpa;
 
-import static javax.persistence.GenerationType.IDENTITY;
-
 import org.apache.shindig.social.opensocial.jpa.api.DbObject;
 import org.apache.shindig.social.opensocial.model.Address;
 import org.apache.shindig.social.opensocial.model.Person;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.DiscriminatorColumn;
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Version;
-
+import javax.persistence.*;
 import java.util.List;
+
+import static javax.persistence.GenerationType.IDENTITY;
 
 /**
  * Address storage, stored in "address", may be joined with other subclasses and if so

@@ -19,13 +19,7 @@ package org.apache.shindig.social.opensocial.jpa;
 
 import org.apache.shindig.social.opensocial.model.Person;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  *

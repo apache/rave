@@ -21,7 +21,6 @@ package org.apache.rave.portal.repository;
 
 import org.apache.rave.persistence.BasicEntity;
 import org.apache.rave.persistence.Repository;
-import org.hamcrest.CoreMatchers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +31,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.lang.reflect.Field;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.*;

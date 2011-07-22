@@ -19,11 +19,7 @@ package org.apache.shindig.social.opensocial.jpa;
 
 import org.apache.shindig.social.opensocial.model.Person;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.PrimaryKeyJoinColumn;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * IM (Instant Message account) Entity, extends the ListField object (and list_field table), joining

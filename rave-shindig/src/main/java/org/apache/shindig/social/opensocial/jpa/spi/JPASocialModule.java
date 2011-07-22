@@ -17,31 +17,16 @@
  */
 package org.apache.shindig.social.opensocial.jpa.spi;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Arrays;
-import java.util.Properties;
-
-import javax.persistence.EntityManager;
-
-import org.apache.commons.io.IOUtils;
+import com.google.inject.AbstractModule;
+import com.google.inject.Scopes;
+import com.google.inject.name.Names;
 import org.apache.rave.os.JPAOpenSocialService;
 import org.apache.shindig.social.opensocial.jpa.openjpa.OpenJPAEntityManagerProvider;
 import org.apache.shindig.social.opensocial.oauth.OAuthDataStore;
-import org.apache.shindig.social.opensocial.spi.ActivityService;
-import org.apache.shindig.social.opensocial.spi.ActivityStreamService;
-import org.apache.shindig.social.opensocial.spi.AlbumService;
-import org.apache.shindig.social.opensocial.spi.AppDataService;
-import org.apache.shindig.social.opensocial.spi.MediaItemService;
-import org.apache.shindig.social.opensocial.spi.MessageService;
-import org.apache.shindig.social.opensocial.spi.PersonService;
+import org.apache.shindig.social.opensocial.spi.*;
 import org.apache.shindig.social.sample.oauth.SampleOAuthDataStore;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.CreationException;
-import com.google.inject.Scopes;
-import com.google.inject.name.Names;
-import com.google.inject.spi.Message;
+import javax.persistence.EntityManager;
 
 /**
  *

@@ -17,11 +17,7 @@
  */
 package org.apache.shindig.social.opensocial.jpa;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.PrimaryKeyJoinColumn;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * This is a property of an application, extending the listfield type, and using the type property

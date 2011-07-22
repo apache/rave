@@ -17,32 +17,17 @@
  */
 package org.apache.shindig.social.opensocial.jpa;
 
-import static javax.persistence.CascadeType.ALL;
-import static javax.persistence.GenerationType.IDENTITY;
-
 import com.google.common.collect.Lists;
 import com.google.common.collect.MapMaker;
-
 import org.apache.shindig.social.opensocial.jpa.api.DbObject;
 
+import javax.persistence.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.MapKey;
-import javax.persistence.OneToMany;
-import javax.persistence.PostLoad;
-import javax.persistence.PrePersist;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-import javax.persistence.Version;
+import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.GenerationType.IDENTITY;
 
 
 /**

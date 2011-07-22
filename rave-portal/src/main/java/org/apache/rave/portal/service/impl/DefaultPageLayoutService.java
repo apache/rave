@@ -20,8 +20,8 @@
 package org.apache.rave.portal.service.impl;
 
 import org.apache.rave.portal.model.PageLayout;
-import org.apache.rave.portal.service.PageLayoutService;
 import org.apache.rave.portal.repository.PageLayoutRepository;
+import org.apache.rave.portal.service.PageLayoutService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

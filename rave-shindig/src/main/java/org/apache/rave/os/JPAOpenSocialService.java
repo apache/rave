@@ -18,29 +18,15 @@
 
 package org.apache.rave.os;
 
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.Future;
-
 import org.apache.shindig.auth.SecurityToken;
 import org.apache.shindig.protocol.ProtocolException;
 import org.apache.shindig.protocol.RestfulCollection;
-import org.apache.shindig.protocol.conversion.BeanConverter;
-import org.apache.shindig.social.opensocial.model.ActivityEntry;
-import org.apache.shindig.social.opensocial.model.Album;
-import org.apache.shindig.social.opensocial.model.MediaItem;
-import org.apache.shindig.social.opensocial.model.Message;
-import org.apache.shindig.social.opensocial.model.MessageCollection;
-import org.apache.shindig.social.opensocial.model.Person;
-import org.apache.shindig.social.opensocial.spi.ActivityStreamService;
-import org.apache.shindig.social.opensocial.spi.AlbumService;
-import org.apache.shindig.social.opensocial.spi.CollectionOptions;
-import org.apache.shindig.social.opensocial.spi.GroupId;
-import org.apache.shindig.social.opensocial.spi.MediaItemService;
-import org.apache.shindig.social.opensocial.spi.MessageService;
-import org.apache.shindig.social.opensocial.spi.UserId;
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.apache.shindig.social.opensocial.model.*;
+import org.apache.shindig.social.opensocial.spi.*;
+
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.Future;
 
 /**
  * Dummy implementation of Shindig OpenSocial SPIs.

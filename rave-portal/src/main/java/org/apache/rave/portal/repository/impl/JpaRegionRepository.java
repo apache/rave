@@ -24,9 +24,6 @@ import org.apache.rave.portal.model.Region;
 import org.apache.rave.portal.repository.RegionRepository;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 
 @Repository
 public class JpaRegionRepository extends AbstractJpaRepository<Region> implements RegionRepository {

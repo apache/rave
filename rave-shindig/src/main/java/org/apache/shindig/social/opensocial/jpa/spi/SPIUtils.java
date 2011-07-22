@@ -19,7 +19,6 @@ package org.apache.shindig.social.opensocial.jpa.spi;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-
 import org.apache.shindig.auth.SecurityToken;
 import org.apache.shindig.social.opensocial.spi.UserId;
 

@@ -19,9 +19,6 @@
 
 package org.apache.shindig.gadgets.oauth;
 
-import java.io.IOException;
-import java.io.InputStream;
-
 import net.oauth.OAuth;
 import net.oauth.OAuthConsumer;
 import net.oauth.OAuthServiceProvider;
@@ -34,6 +31,9 @@ import org.apache.shindig.gadgets.oauth.model.OAuthTokenInfoDb;
 import org.apache.shindig.gadgets.oauth.service.ConsumerStoreService;
 import org.apache.shindig.gadgets.oauth.service.TokenInfoService;
 import org.springframework.core.io.ClassPathResource;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * {@link OAuthStore} that retrieves the consumer_key, consumer_secret and key_type from the database

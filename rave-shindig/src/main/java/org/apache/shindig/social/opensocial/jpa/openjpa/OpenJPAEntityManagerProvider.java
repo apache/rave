@@ -19,7 +19,6 @@ package org.apache.shindig.social.opensocial.jpa.openjpa;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-import com.google.inject.name.Named;
 
 import javax.persistence.EntityManager;
 

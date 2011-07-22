@@ -17,58 +17,24 @@
  */
 package org.apache.shindig.social.opensocial.jpa;
 
-import static javax.persistence.CascadeType.ALL;
-import static javax.persistence.CascadeType.MERGE;
-import static javax.persistence.CascadeType.PERSIST;
-import static javax.persistence.CascadeType.REFRESH;
-import static javax.persistence.GenerationType.IDENTITY;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import org.apache.shindig.protocol.model.Enum;
+import org.apache.shindig.protocol.model.FilterOperation;
+import org.apache.shindig.social.opensocial.jpa.api.DbObject;
+import org.apache.shindig.social.opensocial.jpa.api.FilterCapability;
+import org.apache.shindig.social.opensocial.jpa.api.FilterSpecification;
+import org.apache.shindig.social.opensocial.model.*;
 
+import javax.persistence.*;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.PostLoad;
-import javax.persistence.PrePersist;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.Transient;
-import javax.persistence.Version;
-
-import org.apache.shindig.protocol.model.Enum;
-import org.apache.shindig.protocol.model.FilterOperation;
-import org.apache.shindig.social.opensocial.jpa.api.DbObject;
-import org.apache.shindig.social.opensocial.jpa.api.FilterCapability;
-import org.apache.shindig.social.opensocial.jpa.api.FilterSpecification;
-import org.apache.shindig.social.opensocial.model.Account;
-import org.apache.shindig.social.opensocial.model.Address;
-import org.apache.shindig.social.opensocial.model.BodyType;
-import org.apache.shindig.social.opensocial.model.Drinker;
-import org.apache.shindig.social.opensocial.model.ListField;
-import org.apache.shindig.social.opensocial.model.LookingFor;
-import org.apache.shindig.social.opensocial.model.Name;
-import org.apache.shindig.social.opensocial.model.NetworkPresence;
-import org.apache.shindig.social.opensocial.model.Organization;
-import org.apache.shindig.social.opensocial.model.Person;
-import org.apache.shindig.social.opensocial.model.Smoker;
-import org.apache.shindig.social.opensocial.model.Url;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
+import static javax.persistence.CascadeType.*;
+import static javax.persistence.GenerationType.IDENTITY;
 
 /**
  * Default Implementation of the Person object in the org.apache.shindig.social.opensocial.jpa.

@@ -23,7 +23,6 @@ import org.apache.rave.portal.model.Region;
 import org.apache.rave.portal.model.RegionWidget;
 import org.apache.rave.portal.service.PageService;
 import org.apache.rave.portal.web.api.rpc.model.RpcResult;
-import org.hamcrest.CoreMatchers;
 import org.junit.Before;
 import org.junit.Test;
 

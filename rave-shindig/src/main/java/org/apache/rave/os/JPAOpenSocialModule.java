@@ -17,21 +17,14 @@
  */
 package org.apache.rave.os;
 
+import com.google.inject.AbstractModule;
+import com.google.inject.name.Names;
 import org.apache.shindig.social.opensocial.jpa.spi.ActivityServiceDb;
 import org.apache.shindig.social.opensocial.jpa.spi.AppDataServiceDb;
 import org.apache.shindig.social.opensocial.jpa.spi.PersonServiceDb;
 import org.apache.shindig.social.opensocial.oauth.OAuthDataStore;
-import org.apache.shindig.social.opensocial.spi.ActivityService;
-import org.apache.shindig.social.opensocial.spi.ActivityStreamService;
-import org.apache.shindig.social.opensocial.spi.AlbumService;
-import org.apache.shindig.social.opensocial.spi.AppDataService;
-import org.apache.shindig.social.opensocial.spi.MediaItemService;
-import org.apache.shindig.social.opensocial.spi.MessageService;
-import org.apache.shindig.social.opensocial.spi.PersonService;
+import org.apache.shindig.social.opensocial.spi.*;
 import org.apache.shindig.social.sample.oauth.SampleOAuthDataStore;
-
-import com.google.inject.AbstractModule;
-import com.google.inject.name.Names;
 
 /**
  * Provides bindings for implementations of social API classes using JPA.

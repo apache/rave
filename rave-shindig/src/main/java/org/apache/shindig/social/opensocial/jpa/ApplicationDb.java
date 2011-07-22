@@ -17,22 +17,13 @@
  */
 package org.apache.shindig.social.opensocial.jpa;
 
-import static javax.persistence.GenerationType.IDENTITY;
-
 import org.apache.shindig.social.opensocial.jpa.api.DbObject;
 import org.apache.shindig.social.opensocial.model.ListField;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.MapKey;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Version;
-
+import javax.persistence.*;
 import java.util.Map;
+
+import static javax.persistence.GenerationType.IDENTITY;
 
 /**
  * Stores information about applications

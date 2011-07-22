@@ -19,23 +19,18 @@
 
 package org.apache.rave.portal.service.impl;
 
-import org.apache.rave.portal.service.UserService;
-import org.apache.rave.portal.service.PageService;
-import org.apache.rave.portal.service.PageLayoutService;
-import org.apache.rave.portal.service.RegionService;
-import org.apache.rave.portal.service.NewAccountService;
-import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.Page;
 import org.apache.rave.portal.model.PageLayout;
 import org.apache.rave.portal.model.Region;
+import org.apache.rave.portal.model.User;
+import org.apache.rave.portal.service.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.ArrayList;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.List;
 
 @Service
 public class DefaultNewAccountService implements NewAccountService {

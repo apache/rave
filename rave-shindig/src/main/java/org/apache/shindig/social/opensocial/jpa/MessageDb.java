@@ -17,25 +17,15 @@
  */
 package org.apache.shindig.social.opensocial.jpa;
 
-import static javax.persistence.GenerationType.IDENTITY;
-
-import java.util.Date;
-import java.util.List;
-
 import org.apache.shindig.social.opensocial.jpa.api.DbObject;
 import org.apache.shindig.social.opensocial.model.Message;
 import org.apache.shindig.social.opensocial.model.Url;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.PostLoad;
-import javax.persistence.PrePersist;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-import javax.persistence.Version;
+import javax.persistence.*;
+import java.util.Date;
+import java.util.List;
+
+import static javax.persistence.GenerationType.IDENTITY;
 
 /**
  * Messages are stored in the message table.

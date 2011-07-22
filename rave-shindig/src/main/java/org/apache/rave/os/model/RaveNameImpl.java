@@ -17,14 +17,14 @@
  */
 package org.apache.rave.os.model;
 
-import static javax.persistence.GenerationType.AUTO;
+import org.apache.shindig.social.core.model.NameImpl;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
-import org.apache.shindig.social.core.model.NameImpl;
+import static javax.persistence.GenerationType.AUTO;
 
 /**
  * Glue for JPA.

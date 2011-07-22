@@ -19,12 +19,10 @@
 //TODO is this the right package name convention?
 package org.apache.rave.portal.web.validator;
 
-import org.springframework.validation.Errors;
-import org.springframework.validation.ValidationUtils;
-import org.springframework.validation.Validator;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.validation.Errors;
+import org.springframework.validation.Validator;
 
 
 public class NewAccountValidator implements Validator {

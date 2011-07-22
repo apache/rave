@@ -28,7 +28,6 @@ import org.springframework.web.client.RestOperations;
 
 import static org.easymock.EasyMock.*;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.junit.Assert.assertThat;
 
 public class ShindigGadgetMetadataRepositoryTest {

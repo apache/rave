@@ -19,12 +19,7 @@
 
 package org.apache.rave.portal.service;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
-
-import org.apache.rave.portal.model.User;
-import org.apache.rave.portal.service.impl.DefaultNewAccountService;
 
 public class NewAccountServiceTest {
 

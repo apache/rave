@@ -19,9 +19,6 @@
 
 package org.apache.shindig.gadgets.oauth;
 
-import java.io.IOException;
-import java.util.Date;
-
 import net.oauth.OAuth;
 import net.oauth.OAuthServiceProvider;
 import org.apache.shindig.auth.SecurityToken;
@@ -33,10 +30,10 @@ import org.apache.shindig.social.core.oauth.OAuthSecurityToken;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
+import java.io.IOException;
+import java.util.Date;
+
+import static org.easymock.EasyMock.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 

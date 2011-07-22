@@ -18,8 +18,6 @@
 package org.apache.shindig.social.opensocial.jpa.spi;
 
 import com.google.common.collect.Lists;
-import com.google.inject.Inject;
-
 import org.apache.rave.os.DatabasePopulateContextListener;
 import org.apache.shindig.auth.SecurityToken;
 import org.apache.shindig.common.util.ImmediateFuture;
@@ -34,15 +32,14 @@ import org.apache.shindig.social.opensocial.spi.CollectionOptions;
 import org.apache.shindig.social.opensocial.spi.GroupId;
 import org.apache.shindig.social.opensocial.spi.UserId;
 
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Future;
-
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * The Class ActivityServiceDb.

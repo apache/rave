@@ -20,8 +20,8 @@
 package org.apache.rave.portal.service.impl;
 
 import org.apache.rave.portal.model.Region;
-import org.apache.rave.portal.service.RegionService;
 import org.apache.rave.portal.repository.RegionRepository;
+import org.apache.rave.portal.service.RegionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

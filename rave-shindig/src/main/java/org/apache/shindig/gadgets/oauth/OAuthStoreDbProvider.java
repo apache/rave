@@ -19,17 +19,7 @@
 
 package org.apache.shindig.gadgets.oauth;
 
-import java.io.IOException;
-import java.util.Arrays;
-
-import javax.persistence.EntityManager;
-
-import com.google.inject.CreationException;
-import com.google.inject.Guice;
-import com.google.inject.Inject;
-import com.google.inject.Injector;
-import com.google.inject.Provider;
-import com.google.inject.Singleton;
+import com.google.inject.*;
 import com.google.inject.name.Named;
 import com.google.inject.spi.Message;
 import org.apache.rave.os.DatabasePopulateContextListener;
@@ -38,6 +28,10 @@ import org.apache.shindig.gadgets.oauth.service.TokenInfoService;
 import org.apache.shindig.gadgets.oauth.service.impl.ConsumerStoreServiceDbImpl;
 import org.apache.shindig.gadgets.oauth.service.impl.TokenInfoServiceDbImpl;
 import org.apache.shindig.social.opensocial.jpa.openjpa.OpenJPADbModule;
+
+import javax.persistence.EntityManager;
+import java.io.IOException;
+import java.util.Arrays;
 
 /**
  * {@link com.google.inject.Singleton} {@link Provider} for {@link OAuthStoreDb}

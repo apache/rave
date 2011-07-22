@@ -19,8 +19,8 @@
 package org.apache.rave.portal.service;
 
 import org.apache.rave.portal.model.Page;
-import org.apache.rave.portal.model.RegionWidget;
 import org.apache.rave.portal.model.Region;
+import org.apache.rave.portal.model.RegionWidget;
 
 import java.util.List;
 

@@ -20,11 +20,10 @@ package org.apache.shindig.social.opensocial.jpa.spi;
 import org.apache.shindig.protocol.ProtocolException;
 import org.apache.shindig.social.opensocial.spi.CollectionOptions;
 
-import java.util.List;
-
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  *

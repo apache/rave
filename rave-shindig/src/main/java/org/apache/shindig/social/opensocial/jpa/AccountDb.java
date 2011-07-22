@@ -20,17 +20,7 @@ package org.apache.shindig.social.opensocial.jpa;
 import org.apache.shindig.social.opensocial.jpa.api.DbObject;
 import org.apache.shindig.social.opensocial.model.Account;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.DiscriminatorColumn;
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.Table;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Version;
+import javax.persistence.*;
 
 import static javax.persistence.GenerationType.IDENTITY;
 

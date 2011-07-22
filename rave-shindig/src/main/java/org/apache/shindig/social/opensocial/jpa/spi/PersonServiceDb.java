@@ -17,14 +17,6 @@
  */
 package org.apache.shindig.social.opensocial.jpa.spi;
 
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.Future;
-
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
-import javax.servlet.http.HttpServletResponse;
-
 import com.google.common.collect.Lists;
 import org.apache.commons.lang.StringUtils;
 import org.apache.rave.os.DatabasePopulateContextListener;
@@ -43,6 +35,13 @@ import org.apache.shindig.social.opensocial.spi.GroupId;
 import org.apache.shindig.social.opensocial.spi.PersonService;
 import org.apache.shindig.social.opensocial.spi.UserId;
 import org.json.JSONObject;
+
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.Future;
 
 /**
  * Implements the PersonService from the SPI binding to the JPA model and providing queries to

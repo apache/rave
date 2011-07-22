@@ -17,31 +17,16 @@
  */
 package org.apache.shindig.social.opensocial.jpa;
 
-import static javax.persistence.CascadeType.MERGE;
-import static javax.persistence.CascadeType.PERSIST;
-import static javax.persistence.CascadeType.REFRESH;
-import static javax.persistence.GenerationType.IDENTITY;
-
 import org.apache.shindig.social.opensocial.jpa.api.DbObject;
 import org.apache.shindig.social.opensocial.model.Activity;
 import org.apache.shindig.social.opensocial.model.Address;
 import org.apache.shindig.social.opensocial.model.MediaItem;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.PostLoad;
-import javax.persistence.PrePersist;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-import javax.persistence.Version;
-
+import javax.persistence.*;
 import java.util.List;
+
+import static javax.persistence.CascadeType.*;
+import static javax.persistence.GenerationType.IDENTITY;
 
 /**
  * Media items are stored in the media_item table, Items may be shared amongst activities and are

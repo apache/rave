@@ -23,15 +23,11 @@ package org.apache.shindig.gadgets.oauth.model;
  * Bean for OAuth TokenInfo
  */
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
 import org.apache.shindig.auth.SecurityToken;
 import org.apache.shindig.gadgets.oauth.OAuthStore;
 import org.apache.shindig.social.opensocial.jpa.api.DbObject;
+
+import javax.persistence.*;
 
 import static javax.persistence.GenerationType.IDENTITY;
 

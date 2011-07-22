@@ -24,8 +24,6 @@ import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.repository.UserRepository;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 import static org.apache.rave.persistence.jpa.util.JpaUtil.getSingleResult;
