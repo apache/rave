@@ -32,7 +32,7 @@ public class OverridablePropertyPlaceholderConfigurerTest {
     @Test
     public void testSetLocation() throws Exception {
         System.setProperty("portal.override.properties", "classpath:portal-test.properties");
-        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("applicationContext-test.xml","applicationContext-properties.xml");
+        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("applicationContext-test.xml");
         final StringBuffer testBean = (StringBuffer) context.getBean("testBean");
         assertEquals("Dummy value", testBean.toString());
 
