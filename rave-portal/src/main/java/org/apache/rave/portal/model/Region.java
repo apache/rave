@@ -18,6 +18,8 @@
  */
 package org.apache.rave.portal.model;
 
+import org.apache.rave.persistence.BasicEntity;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -28,7 +30,7 @@ import java.util.List;
 @Table(name="region")
 @SequenceGenerator(name="regionIdSeq", sequenceName = "region_id_seq")
 @Access(AccessType.FIELD)
-public class Region implements BasicEntity{
+public class Region implements BasicEntity {
     @Id @Column(name="id")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "regionIdSeq")
     private Long id;

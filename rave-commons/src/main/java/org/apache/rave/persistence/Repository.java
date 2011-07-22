@@ -17,12 +17,37 @@
  * under the License.
  */
 
-package org.apache.rave.portal.model;
+package org.apache.rave.persistence;
 
 /**
- * Defines common properties implemented by Entities in the model
+ * Defines generic operations for a repository
  */
-public interface BasicEntity {
-    Long getId();
-    void setId(Long id);
+public interface Repository<T> {
+    /**
+     * Gets the type of the object served by the repository
+     * @return a {@link Class} representing the type of object
+     */
+    Class<T> getType();
+
+    /**
+     * Gets the specified object from the persistence context by its id
+     *
+     * @param id the id of the object of type T to retrieve
+     * @return a valid instance if id exists; null otherwise
+     */
+    T get(long id);
+
+    /**
+     * Save the given item in the repository
+     * @param item the item to save
+     * @return the persisted item
+     */
+    T save(T item);
+
+    /**
+     * Deletes the given item from the persistence context
+     *
+     * @param item the item to delete
+     */
+    void delete(T item);
 }

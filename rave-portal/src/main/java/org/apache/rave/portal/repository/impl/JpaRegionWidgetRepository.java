@@ -19,6 +19,7 @@
 
 package org.apache.rave.portal.repository.impl;
 
+import org.apache.rave.persistence.jpa.AbstractJpaRepository;
 import org.apache.rave.portal.model.RegionWidget;
 import org.apache.rave.portal.repository.RegionWidgetRepository;
 import org.springframework.stereotype.Repository;
@@ -27,7 +28,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import static org.apache.rave.portal.repository.impl.util.JpaUtil.saveOrUpdate;
 
 @Repository
 public class JpaRegionWidgetRepository extends AbstractJpaRepository<RegionWidget> implements RegionWidgetRepository {

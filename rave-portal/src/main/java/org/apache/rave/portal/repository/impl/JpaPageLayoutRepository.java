@@ -19,13 +19,15 @@
 
 package org.apache.rave.portal.repository.impl;
 
+import org.apache.rave.persistence.jpa.AbstractJpaRepository;
 import org.apache.rave.portal.model.PageLayout;
 import org.apache.rave.portal.repository.PageLayoutRepository;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.TypedQuery;
 
-import static org.apache.rave.portal.repository.impl.util.JpaUtil.getSingleResult;
+import static org.apache.rave.persistence.jpa.util.JpaUtil.getSingleResult;
+
 
 /**
  */

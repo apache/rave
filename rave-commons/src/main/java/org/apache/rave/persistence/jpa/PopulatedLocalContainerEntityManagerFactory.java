@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.apache.rave.orm.jpa;
+package org.apache.rave.persistence.jpa;
 
 import org.apache.rave.jdbc.util.DataSourcePopulator;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;

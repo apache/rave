@@ -19,6 +19,7 @@
 
 package org.apache.rave.portal.repository.impl;
 
+import org.apache.rave.persistence.jpa.AbstractJpaRepository;
 import org.apache.rave.portal.model.Page;
 import org.apache.rave.portal.repository.PageRepository;
 import org.springframework.stereotype.Repository;

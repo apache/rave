@@ -18,6 +18,7 @@
  */
 package org.apache.rave.portal.repository;
 
+import org.apache.rave.persistence.Repository;
 import org.apache.rave.portal.model.RegionWidget;
 
 public interface RegionWidgetRepository extends Repository<RegionWidget> { }

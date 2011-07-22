@@ -17,27 +17,12 @@
  * under the License.
  */
 
-package org.apache.rave.portal.repository.impl;
+package org.apache.rave.persistence;
 
-
-import org.apache.rave.persistence.jpa.AbstractJpaRepository;
-import org.apache.rave.portal.model.Widget;
-import org.apache.rave.portal.repository.WidgetRepository;
-import org.springframework.stereotype.Repository;
-
-import javax.persistence.TypedQuery;
-import java.util.List;
-
-@Repository
-public class JpaWidgetRepository extends AbstractJpaRepository<Widget> implements WidgetRepository{
-
-    public JpaWidgetRepository() {
-        super(Widget.class);
-    }
-
-    @Override
-    public List<Widget> getAll() {
-        TypedQuery<Widget> query = manager.createNamedQuery("Widget.getAll", Widget.class);
-        return query.getResultList();
-    }
+/**
+ * Defines common properties implemented by Entities in the model
+ */
+public interface BasicEntity {
+    Long getId();
+    void setId(Long id);
 }

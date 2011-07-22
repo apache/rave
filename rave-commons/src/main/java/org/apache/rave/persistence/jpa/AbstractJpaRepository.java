@@ -17,20 +17,19 @@
  * under the License.
  */
 
-package org.apache.rave.portal.repository.impl;
+package org.apache.rave.persistence.jpa;
 
-import org.apache.rave.portal.model.BasicEntity;
-import org.apache.rave.portal.repository.Repository;
-import org.springframework.core.type.ClassMetadata;
+import org.apache.rave.persistence.BasicEntity;
+import org.apache.rave.persistence.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import static org.apache.rave.portal.repository.impl.util.JpaUtil.saveOrUpdate;
+import static org.apache.rave.persistence.jpa.util.JpaUtil.saveOrUpdate;
 
 /**
- * Provides generic implementations of {@link org.apache.rave.portal.repository.Repository} methods
+ * Provides generic implementations of {@link org.apache.rave.persistence.Repository} methods
  */
 public abstract class AbstractJpaRepository<T extends BasicEntity> implements Repository<T> {
 

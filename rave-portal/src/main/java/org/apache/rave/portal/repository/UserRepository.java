@@ -18,8 +18,9 @@
  */
 package org.apache.rave.portal.repository;
 
+import org.apache.rave.persistence.Repository;
 import org.apache.rave.portal.model.User;
 
-public interface UserRepository extends Repository<User>{
+public interface UserRepository extends Repository<User> {
     User getByUsername(String username);
 }

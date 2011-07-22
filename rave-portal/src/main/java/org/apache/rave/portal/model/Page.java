@@ -18,6 +18,8 @@
  */
 package org.apache.rave.portal.model;
 
+import org.apache.rave.persistence.BasicEntity;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -32,7 +34,7 @@ import java.util.List;
         @NamedQuery(name = "Page.getByUserId", query="SELECT p FROM Page p WHERE p.owner.id = :userId")
 })
 @Access(AccessType.FIELD)
-public class Page implements BasicEntity{
+public class Page implements BasicEntity {
     @Id @Column(name="id")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "pageIdSeq")
     private Long id;

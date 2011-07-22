@@ -18,6 +18,7 @@
  */
 package org.apache.rave.portal.model;
 
+import org.apache.rave.persistence.BasicEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 

@@ -19,8 +19,8 @@
 
 package org.apache.rave.portal.repository;
 
-import org.apache.rave.portal.model.BasicEntity;
-import org.apache.rave.portal.repository.impl.AbstractJpaRepository;
+import org.apache.rave.persistence.BasicEntity;
+import org.apache.rave.persistence.Repository;
 import org.hamcrest.CoreMatchers;
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.apache.rave.portal.repository.impl.util;
+package org.apache.rave.persistence.jpa.util;
 
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 
