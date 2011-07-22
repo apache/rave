@@ -50,6 +50,11 @@
     <dependencies>
         <dependency>
             <groupId>org.apache.rave</groupId>
+            <artifactId>rave-commons</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.rave</groupId>
             <artifactId>rave-shindig</artifactId>
             <type>war</type>
             <scope>provided</scope>

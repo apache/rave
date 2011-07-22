@@ -86,6 +86,11 @@
     <!-- Global management of all dependencies -->
     <dependencyManagement>
         <dependencies>
+           <dependency>
+                <groupId>org.apache.rave</groupId>
+                <artifactId>rave-commons</artifactId>
+               <version>${project.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.apache.shindig</groupId>
                 <artifactId>shindig-server</artifactId>
@@ -346,6 +351,7 @@
   </build>
 
     <modules>
+        <module>rave-commons</module>
         <module>rave-shindig</module>
         <module>rave-portal</module>
     </modules>
