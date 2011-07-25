@@ -49,7 +49,7 @@
                             <!-- These are toolbar buttons -->
                             <div id="widget-${regionWidget.id}-toolbar" style="float:right;">
                                 <button id="widget-${regionWidget.id}-prefs"
-                                        class="widget-toolbar-btn">
+                                        class="widget-toolbar-btn widget-toolbar-btn-prefs">
                                 </button>
                                 <button id="widget-${regionWidget.id}-max"
                                         class="widget-toolbar-btn">
@@ -59,7 +59,7 @@
                                 </button>
                             </div>
                         </div>
-                        <div class="widget-prefs" id="widget-${regionWidget.id}-prefs-content" style="display: none;"></div>
+                        <div class="widget-prefs" id="widget-${regionWidget.id}-prefs-content"></div>
                         <div class="widget" id="widget-${regionWidget.id}-body">
                                 <%-- Widget will be rendered here --%>
                         </div>

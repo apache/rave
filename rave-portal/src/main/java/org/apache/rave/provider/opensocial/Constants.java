@@ -25,4 +25,31 @@ package org.apache.rave.provider.opensocial;
 public class Constants {
     private Constants() {}
     public static final String WIDGET_TYPE = "OpenSocial";
+    
+    // opensocial string constants    
+    public static final String USER_PREFS = "userPrefs";
+    public static final String DATA_TYPE = "dataType";
+    // rave / opensocial related constants
+    public static final String HAS_PREFS_TO_EDIT = "hasPrefsToEdit";
+    
+    /*
+     * enum representing all of the valid OpenSocial preference data types
+     */
+    public static enum PrefDataTypes {
+        STRING("STRING"),
+        BOOLEAN("BOOL"),
+        ENUM("ENUM"),
+        LIST("LIST"),
+        HIDDEN("HIDDEN");
+
+        private final String dataType;
+        private PrefDataTypes(String dataType) {
+            this.dataType = dataType;
+        }
+
+        @Override
+        public String toString() {
+            return dataType;
+        }
+    }
 }

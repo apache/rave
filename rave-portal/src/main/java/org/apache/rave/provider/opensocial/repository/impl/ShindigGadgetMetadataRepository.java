@@ -19,6 +19,8 @@
 
 package org.apache.rave.provider.opensocial.repository.impl;
 
+import java.util.Iterator;
+import static org.apache.rave.provider.opensocial.Constants.*;
 import org.apache.rave.provider.opensocial.repository.GadgetMetadataRepository;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -37,7 +39,7 @@ public class ShindigGadgetMetadataRepository implements GadgetMetadataRepository
 
     private RestOperations restOperations;
     private String shindigUrl;
-
+       
     @Autowired
     public ShindigGadgetMetadataRepository(@Qualifier(value = "jsonStringCompatibleRestTemplate") RestOperations restOperations,
                                            @Value("${portal.opensocial_engine.protocol}") String shindigProtocol,
@@ -96,6 +98,24 @@ public class ShindigGadgetMetadataRepository implements GadgetMetadataRepository
                     getJSONObject(0).
                     getJSONObject("result").
                     getJSONObject(gadgetUrl);
+
+            // check to see if this gadget has at least one non-hidden user pref
+            // to determine if we should display the edit prefs button
+            boolean hasPrefsToEdit = false;
+            if (responseObject.has(USER_PREFS)) {
+                JSONObject userPrefs = responseObject.getJSONObject(USER_PREFS);
+                Iterator keys = userPrefs.keys();
+                while(keys.hasNext()) {
+                    String userPrefName = (String) keys.next();
+                    JSONObject userPref = userPrefs.getJSONObject(userPrefName);
+                    if (!PrefDataTypes.HIDDEN.toString().equals(userPref.getString(DATA_TYPE))) {
+                        hasPrefsToEdit = true;
+                        break;
+                    }
+                }
+            }
+
+            responseObject.put(HAS_PREFS_TO_EDIT, hasPrefsToEdit);
             responseString = responseObject.toString();
 
             if (logger.isDebugEnabled()) {

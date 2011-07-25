@@ -51,9 +51,18 @@ public class ShindigGadgetMetadataRepositoryTest {
             "\"fields\":[\"iframeUrl\",\"modulePrefs.*\",\"needsTokenRefresh\",\"userPrefs.*\",\"views.preferredHeight\"," +
             "\"views.preferredWidth\",\"expireTimeMs\",\"responseTimeMs\"]}}]";
     private static final String VALID_METADATA = "[{\"id\":\"gadgets.metadata\",\"result\"" +
-            ":{\"http://www.example.com/gadget.xml\":{\"data-snipped\":\"here-for-brevity\"}}}]";
-    private static final String EXPECTED_METADATA_RESPONSE = "{\"data-snipped\":\"here-for-brevity\"}";
-
+            ":{\"http://www.example.com/gadget.xml\":{\"data-snipped\":\"here-for-brevity\",\"userPrefs\":{\"age\":{\"dataType\":\"STRING\",\"default\":\"0\",\"displayName\":\"Age\"}}   }}}]";
+    private static final String EXPECTED_METADATA_RESPONSE = "{\"userPrefs\":{\"age\":{\"dataType\":\"STRING\",\"default\":\"0\",\"displayName\":\"Age\"}},\"hasPrefsToEdit\":true,\"data-snipped\":\"here-for-brevity\"}";
+   
+    private static final String VALID_METADATA_NO_USERPREFS = "[{\"id\":\"gadgets.metadata\",\"result\"" +
+            ":{\"http://www.example.com/gadget.xml\":{\"data-snipped\":\"here-for-brevity\",\"userPrefs\":{}}}}]";
+    private static final String EXPECTED_METADATA_NO_USERPREFS_RESPONSE = "{\"userPrefs\":{},\"hasPrefsToEdit\":false,\"data-snipped\":\"here-for-brevity\"}";
+   
+    private static final String VALID_METADATA_ONLY_HIDDEN_USERPREFS = "[{\"id\":\"gadgets.metadata\",\"result\"" +
+            ":{\"http://www.example.com/gadget.xml\":{\"data-snipped\":\"here-for-brevity\",\"userPrefs\":{\"age\":{\"dataType\":\"HIDDEN\",\"default\":\"0\",\"displayName\":\"Age\"}}   }}}]";
+    private static final String EXPECTED_METADATA_ONLY_HIDDEN_USERPREFS_RESPONSE = "{\"userPrefs\":{\"age\":{\"dataType\":\"HIDDEN\",\"default\":\"0\",\"displayName\":\"Age\"}},\"hasPrefsToEdit\":false,\"data-snipped\":\"here-for-brevity\"}";
+    
+    
     @Before
     public void setup() {
         restOperations = createNiceMock(RestOperations.class);
@@ -63,11 +72,44 @@ public class ShindigGadgetMetadataRepositoryTest {
 
     @Test
     public void getGadgetMetadata() {
-        expect(restOperations.postForObject(shindigUrl, VALID_SHINDIG_METADATA_RPC_REQUEST, String.class))
-                .andReturn(VALID_METADATA);
+        expect(restOperations.postForObject(shindigUrl, VALID_SHINDIG_METADATA_RPC_REQUEST, String.class)).andReturn(VALID_METADATA);
         replay(restOperations);
 
         String result = gadgetMetadataRepository.getGadgetMetadata(VALID_GADGET_URL);
         assertThat(result, is(EXPECTED_METADATA_RESPONSE));
+        
+        verify(restOperations);
     }
+    
+    @Test
+    public void getGadgetMetadata_noUserPrefs() {
+        expect(restOperations.postForObject(shindigUrl, VALID_SHINDIG_METADATA_RPC_REQUEST, String.class)).andReturn(VALID_METADATA_NO_USERPREFS);
+        replay(restOperations);
+
+        String result = gadgetMetadataRepository.getGadgetMetadata(VALID_GADGET_URL);
+        assertThat(result, is(EXPECTED_METADATA_NO_USERPREFS_RESPONSE));
+        
+        verify(restOperations);
+    }       
+    
+    @Test
+    public void getGadgetMetadata_onlyHiddenUserPrefs() {
+        expect(restOperations.postForObject(shindigUrl, VALID_SHINDIG_METADATA_RPC_REQUEST, String.class)).andReturn(VALID_METADATA_ONLY_HIDDEN_USERPREFS);
+        replay(restOperations);
+
+        String result = gadgetMetadataRepository.getGadgetMetadata(VALID_GADGET_URL);
+        assertThat(result, is(EXPECTED_METADATA_ONLY_HIDDEN_USERPREFS_RESPONSE));
+        
+        verify(restOperations);
+    }      
+    
+    @Test(expected=IllegalArgumentException.class)
+    public void getGadgetMetadata_exceptionParsingResponse() {
+        expect(restOperations.postForObject(shindigUrl, VALID_SHINDIG_METADATA_RPC_REQUEST, String.class)).andReturn("BAD RESPONSE STRING");
+        replay(restOperations);
+
+        gadgetMetadataRepository.getGadgetMetadata(VALID_GADGET_URL);       
+        
+        verify(restOperations);
+    }   
 }

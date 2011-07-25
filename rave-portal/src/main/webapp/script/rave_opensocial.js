@@ -101,6 +101,12 @@ rave.opensocial = rave.opensocial || (function() {
             rave.api.rest.saveWidgetPreferences({regionWidgetId: this.regionWidgetId, userPrefs: userPrefs});
             renderGadgetView("home", this); //TODO: figure out how to get the current view instead of assuming "home"
         };
+        
+        // if the gadget has prefences to edit, display the edit prefs button in the gadget chrome
+        if (gadget.metadata.hasPrefsToEdit) {            
+            $("#widget-" + gadget.regionWidgetId + "-prefs").show();
+        }
+        
         renderGadgetView("home", gadget);
     }
 
