@@ -59,7 +59,7 @@ public class SpringBindingModule extends AbstractModule implements ApplicationCo
         String fullClassName = Proxy.isProxyClass(bean.getClass()) ? bean.toString() : bean.getClass().getName();
         if (fullClassName.matches(basePackage + ".*")) {
             for (final Class clazz : bean.getClass().getInterfaces()) {
-                bind(clazz).toInstance(new Provider() {
+                bind(clazz).toProvider(new Provider() {
                     @Override
                     public Object get() {
                         return applicationContext.getBean(clazz);
