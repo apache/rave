@@ -20,6 +20,7 @@
 package org.apache.rave.inject;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.Provider;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
@@ -57,8 +58,13 @@ public class SpringBindingModule extends AbstractModule implements ApplicationCo
     private void bindInterfaces(Object bean) {
         String fullClassName = Proxy.isProxyClass(bean.getClass()) ? bean.toString() : bean.getClass().getName();
         if (fullClassName.matches(basePackage + ".*")) {
-            for (Class clazz : bean.getClass().getInterfaces()) {
-                bind(clazz).toInstance(bean);
+            for (final Class clazz : bean.getClass().getInterfaces()) {
+                bind(clazz).toInstance(new Provider() {
+                    @Override
+                    public Object get() {
+                        return applicationContext.getBean(clazz);
+                    }
+                });
             }
         }
     }
