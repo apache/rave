@@ -40,7 +40,17 @@
             <input type="submit" value="Login"/>
         </fieldset>
     </form>
-
+	
+	<h2>New User</h2>
+	<form id="newAccount" action="/portal/app/newaccount.jsp" method="get">
+		<fieldset>
+			<p>
+				<label for="createNewAccountButton">Register: </label>
+				<input id="createNewAccountButton" type="submit" value="Create New Account" />
+			</p>
+		</fieldset>
+	</form>
+	
     <h2>OpenID Identity</h2>
     <form id="oidForm" name='oidf' action='j_spring_openid_security_check' method='POST'>
         <fieldset>

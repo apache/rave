@@ -45,6 +45,14 @@
              <input type="submit" value="Create Account" />
         </fieldset>
     </form:form>
+    <form id="loginForm" action="/portal/login.jsp" method="get">
+	<fieldset>
+		<p>
+			<label for="navigateToLoginPageButton">Already Registered? </label>
+			<input id="navigateToLoginPageButton" type="submit" value="User Login" />
+		</p>
+	</fieldset>
+    </form>
 </div>
 <script src="//ajax.aspnetcdn.com/ajax/jQuery/jquery-1.6.1.min.js"></script>
 <script src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.8.1/jquery.validate.min.js"></script>
