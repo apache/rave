@@ -23,61 +23,69 @@
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
          id="Shindig"
          version="2.5">
-  <display-name>Shindig</display-name>
-  <!-- configuration -->
-  <!-- If you have your own Guice module(s), put them here as a colon-separated list. -->
-  <!-- Note that any extras modules are optional -->
-  <context-param>
-    <param-name>guice-modules</param-name>
-    <param-value>
-      org.apache.rave.commoncontainer.ConfigurablePropertiesModule:
-      org.apache.shindig.gadgets.DefaultGuiceModule:
-      org.apache.shindig.social.core.config.SocialApiGuiceModule:
-      org.apache.rave.os.JPAOpenSocialModule:
-      org.apache.shindig.gadgets.oauth.OAuthModuleDb:
-      org.apache.shindig.common.cache.ehcache.EhCacheModule:
-      org.apache.shindig.sample.shiro.ShiroGuiceModule:
-      org.apache.shindig.sample.container.SampleContainerGuiceModule:
-      org.apache.shindig.extras.ShindigExtrasGuiceModule:
-      org.apache.shindig.sample.commoncontainer.auth.CommonContainerAuthGuiceModule
-    </param-value>
-  </context-param>
+    <display-name>Shindig</display-name>
+    <!-- configuration -->
+    <!-- If you have your own Guice module(s), put them here as a colon-separated list. -->
+    <!-- Note that any extras modules are optional -->
+    <context-param>
+        <param-name>guice-modules</param-name>
+        <param-value>
+            org.apache.rave.commoncontainer.ConfigurablePropertiesModule:
+            org.apache.shindig.gadgets.DefaultGuiceModule:
+            org.apache.shindig.social.core.config.SocialApiGuiceModule:
+            org.apache.rave.os.JPAOpenSocialModule:
+            org.apache.shindig.gadgets.oauth.OAuthModuleDb:
+            org.apache.shindig.common.cache.ehcache.EhCacheModule:
+            org.apache.shindig.sample.shiro.ShiroGuiceModule:
+            org.apache.shindig.sample.container.SampleContainerGuiceModule:
+            org.apache.shindig.extras.ShindigExtrasGuiceModule:
+            org.apache.shindig.sample.commoncontainer.auth.CommonContainerAuthGuiceModule
+        </param-value>
+    </context-param>
 
-  <!--
-  Syntax: <key>=<value> separated by a newline
+    <!--
+    Syntax: <key>=<value> separated by a newline
 
-  system.properties specifies the environmental variables that will be set to the JVM System Properties at server startup time.
-  Alternatively, you may add these values in your app server (ex: Tomcat) as
-  VM arguments like this: -Dshindig.host="my.production.shindig.server.com".
+    system.properties specifies the environmental variables that will be set to the JVM System Properties at server startup time.
+    Alternatively, you may add these values in your app server (ex: Tomcat) as
+    VM arguments like this: -Dshindig.host="my.production.shindig.server.com".
 
-  Here are a few properties that can be set for Shindig:
-  shindig.host: the server name that Shindig is deployed and running on
-  shindig.port: the port number of shindig.host server
+    Here are a few properties that can be set for Shindig:
+    shindig.host: the server name that Shindig is deployed and running on
+    shindig.port: the port number of shindig.host server
 
-  Make sure you escape all HTML values for the web.xml to be parsed correctly.
-  -->
-   <context-param>
-  	<param-name>system.properties</param-name>
-     <param-value>
-        shindig.host=
-        shindig.port=
-    	aKey=/shindig/gadgets/proxy?container=default&amp;url=    	
-     </param-value>
-  </context-param>
+    Make sure you escape all HTML values for the web.xml to be parsed correctly.
+    -->
+    <context-param>
+        <param-name>system.properties</param-name>
+        <param-value>
+            shindig.host=
+            shindig.port=
+            aKey=/shindig/gadgets/proxy?container=default&amp;url=
+        </param-value>
+    </context-param>
 
-  <filter>
-    <filter-name>hostFilter</filter-name>
-    <filter-class>org.apache.shindig.common.servlet.HostFilter</filter-class>
-  </filter>
-  <filter-mapping>
-    <filter-name>hostFilter</filter-name>
-    <url-pattern>/gadgets/ifr</url-pattern>
-    <url-pattern>/gadgets/js/*</url-pattern>
-    <url-pattern>/gadgets/proxy/*</url-pattern>
-    <url-pattern>/gadgets/concat</url-pattern>
-    <url-pattern>/rpc/*</url-pattern>
-    <url-pattern>/rest/*</url-pattern>
-  </filter-mapping>
+    <!-- Spring context configuration -->
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>
+            classpath:spring-context.xml
+        </param-value>
+    </context-param>
+
+    <filter>
+        <filter-name>hostFilter</filter-name>
+        <filter-class>org.apache.shindig.common.servlet.HostFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>hostFilter</filter-name>
+        <url-pattern>/gadgets/ifr</url-pattern>
+        <url-pattern>/gadgets/js/*</url-pattern>
+        <url-pattern>/gadgets/proxy/*</url-pattern>
+        <url-pattern>/gadgets/concat</url-pattern>
+        <url-pattern>/rpc/*</url-pattern>
+        <url-pattern>/rest/*</url-pattern>
+    </filter-mapping>
 
     <filter>
         <filter-name>ShiroFilter</filter-name>
@@ -107,245 +115,250 @@
         </init-param>
     </filter>
 
-  <filter>
-    <filter-name>authFilter</filter-name>
-    <filter-class>org.apache.shindig.auth.AuthenticationServletFilter</filter-class>
-  </filter>
+    <filter>
+        <filter-name>authFilter</filter-name>
+        <filter-class>org.apache.shindig.auth.AuthenticationServletFilter</filter-class>
+    </filter>
 
-  <filter>
-    <filter-name>etagFilter</filter-name>
-    <filter-class>org.apache.shindig.gadgets.servlet.ETagFilter</filter-class>
-  </filter>
+    <filter>
+        <filter-name>etagFilter</filter-name>
+        <filter-class>org.apache.shindig.gadgets.servlet.ETagFilter</filter-class>
+    </filter>
 
 
-  <filter-mapping>
-      <filter-name>ShiroFilter</filter-name>
-      <url-pattern>/oauth/authorize</url-pattern>
-  </filter-mapping>
+    <filter-mapping>
+        <filter-name>ShiroFilter</filter-name>
+        <url-pattern>/oauth/authorize</url-pattern>
+    </filter-mapping>
 
-  <filter-mapping>
-      <filter-name>ShiroFilter</filter-name>
-      <url-pattern>*.jsp</url-pattern>
-  </filter-mapping>
+    <filter-mapping>
+        <filter-name>ShiroFilter</filter-name>
+        <url-pattern>*.jsp</url-pattern>
+    </filter-mapping>
 
-  <filter-mapping>
-    <filter-name>authFilter</filter-name>
-    <url-pattern>/social/*</url-pattern>
-    <url-pattern>/gadgets/ifr</url-pattern>
-    <url-pattern>/gadgets/makeRequest</url-pattern>
-    <url-pattern>/gadgets/api/rpc/*</url-pattern>
-    <url-pattern>/gadgets/api/rest/*</url-pattern>
-    <url-pattern>/rpc/*</url-pattern>
-    <url-pattern>/rest/*</url-pattern>
-  </filter-mapping>
+    <filter-mapping>
+        <filter-name>authFilter</filter-name>
+        <url-pattern>/social/*</url-pattern>
+        <url-pattern>/gadgets/ifr</url-pattern>
+        <url-pattern>/gadgets/makeRequest</url-pattern>
+        <url-pattern>/gadgets/api/rpc/*</url-pattern>
+        <url-pattern>/gadgets/api/rest/*</url-pattern>
+        <url-pattern>/rpc/*</url-pattern>
+        <url-pattern>/rest/*</url-pattern>
+    </filter-mapping>
 
-  <filter-mapping>
-    <filter-name>etagFilter</filter-name>
-    <url-pattern>*</url-pattern>
-  </filter-mapping>
+    <filter-mapping>
+        <filter-name>etagFilter</filter-name>
+        <url-pattern>*</url-pattern>
+    </filter-mapping>
 
-	<context-param>
-	    <param-name>db.url</param-name>
-	    <param-value>jdbc:h2:mem:portal</param-value>
-	</context-param>
-	<context-param>
-	    <param-name>db.user</param-name>
-	    <param-value>sa</param-value>
-	</context-param>
-	<context-param>
-	    <param-name>db.password</param-name>
-	    <param-value>sa</param-value>
-	</context-param>
-	<context-param>
-	    <param-name>db.tcpServer</param-name>
-	    <param-value>-tcpAllowOthers</param-value>
-	</context-param>
+    <context-param>
+        <param-name>db.url</param-name>
+        <param-value>jdbc:h2:mem:portal</param-value>
+    </context-param>
+    <context-param>
+        <param-name>db.user</param-name>
+        <param-value>sa</param-value>
+    </context-param>
+    <context-param>
+        <param-name>db.password</param-name>
+        <param-value>sa</param-value>
+    </context-param>
+    <context-param>
+        <param-name>db.tcpServer</param-name>
+        <param-value>-tcpAllowOthers</param-value>
+    </context-param>
 
-  <listener>
-    <listener-class>org.apache.shindig.common.servlet.GuiceServletContextListener</listener-class>
-  </listener>
-  <listener>
-    <listener-class>org.apache.rave.os.DatabasePopulateContextListener</listener-class>
-  </listener>
-  <listener>
-    <listener-class>org.h2.server.web.DbStarter</listener-class>
-  </listener>
+    <listener>
+        <listener-class>org.apache.shindig.common.servlet.GuiceServletContextListener</listener-class>
+    </listener>
+    <listener>
+        <listener-class>org.apache.rave.os.DatabasePopulateContextListener</listener-class>
+    </listener>
+    <listener>
+        <listener-class>org.h2.server.web.DbStarter</listener-class>
+    </listener>
 
-  <!-- Render a Gadget -->
-  <servlet>
-    <servlet-name>xml-to-html</servlet-name>
-    <servlet-class>
-      org.apache.shindig.gadgets.servlet.GadgetRenderingServlet
-    </servlet-class>
-  </servlet>
+    <!-- Initialize Spring LAST -->
+    <listener>
+        <listener-class>org.apache.rave.inject.GuiceBindingSpringContextLoaderListener</listener-class>
+    </listener>
 
-  <servlet>
-    <servlet-name>accel</servlet-name>
-    <servlet-class>
-      org.apache.shindig.gadgets.servlet.HtmlAccelServlet
-    </servlet-class>
-  </servlet>
+    <!-- Render a Gadget -->
+    <servlet>
+        <servlet-name>xml-to-html</servlet-name>
+        <servlet-class>
+            org.apache.shindig.gadgets.servlet.GadgetRenderingServlet
+        </servlet-class>
+    </servlet>
 
-  <!-- Proxy -->
-  <servlet>
-    <servlet-name>proxy</servlet-name>
-    <servlet-class>
-      org.apache.shindig.gadgets.servlet.ProxyServlet
-    </servlet-class>
-  </servlet>
+    <servlet>
+        <servlet-name>accel</servlet-name>
+        <servlet-class>
+            org.apache.shindig.gadgets.servlet.HtmlAccelServlet
+        </servlet-class>
+    </servlet>
 
-  <!-- makeRequest -->
-  <servlet>
-    <servlet-name>makeRequest</servlet-name>
-    <servlet-class>
-      org.apache.shindig.gadgets.servlet.MakeRequestServlet
-    </servlet-class>
-  </servlet>
+    <!-- Proxy -->
+    <servlet>
+        <servlet-name>proxy</servlet-name>
+        <servlet-class>
+            org.apache.shindig.gadgets.servlet.ProxyServlet
+        </servlet-class>
+    </servlet>
 
-  <!-- Concat -->
-  <servlet>
-    <servlet-name>concat</servlet-name>
-    <servlet-class>
-      org.apache.shindig.gadgets.servlet.ConcatProxyServlet
-    </servlet-class>
-  </servlet>
+    <!-- makeRequest -->
+    <servlet>
+        <servlet-name>makeRequest</servlet-name>
+        <servlet-class>
+            org.apache.shindig.gadgets.servlet.MakeRequestServlet
+        </servlet-class>
+    </servlet>
 
-  <!-- OAuth callback -->
-  <servlet>
-    <servlet-name>oauthCallback</servlet-name>
-    <servlet-class>
-      org.apache.shindig.gadgets.servlet.OAuthCallbackServlet
-    </servlet-class>
-  </servlet>
+    <!-- Concat -->
+    <servlet>
+        <servlet-name>concat</servlet-name>
+        <servlet-class>
+            org.apache.shindig.gadgets.servlet.ConcatProxyServlet
+        </servlet-class>
+    </servlet>
 
-  <!-- Metadata RPC -->
-  <servlet>
-    <servlet-name>metadata</servlet-name>
-    <servlet-class>
-      org.apache.shindig.gadgets.servlet.RpcServlet
-    </servlet-class>
-  </servlet>
+    <!-- OAuth callback -->
+    <servlet>
+        <servlet-name>oauthCallback</servlet-name>
+        <servlet-class>
+            org.apache.shindig.gadgets.servlet.OAuthCallbackServlet
+        </servlet-class>
+    </servlet>
 
-  <!-- javascript serving -->
-  <servlet>
-    <servlet-name>js</servlet-name>
-    <servlet-class>org.apache.shindig.gadgets.servlet.JsServlet</servlet-class>
-  </servlet>
+    <!-- Metadata RPC -->
+    <servlet>
+        <servlet-name>metadata</servlet-name>
+        <servlet-class>
+            org.apache.shindig.gadgets.servlet.RpcServlet
+        </servlet-class>
+    </servlet>
 
-  <servlet>
-    <servlet-name>restapiServlet</servlet-name>
-    <servlet-class>
-      org.apache.shindig.protocol.DataServiceServlet
-    </servlet-class>
-    <init-param>
-      <param-name>handlers</param-name>
-      <param-value>org.apache.shindig.handlers</param-value>
-    </init-param>
-  </servlet>
+    <!-- javascript serving -->
+    <servlet>
+        <servlet-name>js</servlet-name>
+        <servlet-class>org.apache.shindig.gadgets.servlet.JsServlet</servlet-class>
+    </servlet>
 
-  <!-- Serve social RPC api -->
-  <servlet>
-    <servlet-name>jsonRpcServlet</servlet-name>
-    <servlet-class>
-      org.apache.shindig.protocol.JsonRpcServlet
-    </servlet-class>
-    <init-param>
-      <param-name>handlers</param-name>
-      <param-value>org.apache.shindig.handlers</param-value>
-    </init-param>
-  </servlet>
+    <servlet>
+        <servlet-name>restapiServlet</servlet-name>
+        <servlet-class>
+            org.apache.shindig.protocol.DataServiceServlet
+        </servlet-class>
+        <init-param>
+            <param-name>handlers</param-name>
+            <param-value>org.apache.shindig.handlers</param-value>
+        </init-param>
+    </servlet>
 
-  <!-- Serve sample OAuth apis -->
-  <servlet>
-    <servlet-name>sampleOAuth</servlet-name>
-    <servlet-class>
-      org.apache.shindig.social.sample.oauth.SampleOAuthServlet
-    </servlet-class>
-  </servlet>
+    <!-- Serve social RPC api -->
+    <servlet>
+        <servlet-name>jsonRpcServlet</servlet-name>
+        <servlet-class>
+            org.apache.shindig.protocol.JsonRpcServlet
+        </servlet-class>
+        <init-param>
+            <param-name>handlers</param-name>
+            <param-value>org.apache.shindig.handlers</param-value>
+        </init-param>
+    </servlet>
 
-  <servlet>
-    <servlet-name>rpcSwf</servlet-name>
-    <servlet-class>
-      org.apache.shindig.gadgets.servlet.RpcSwfServlet
-    </servlet-class>
-  </servlet>
+    <!-- Serve sample OAuth apis -->
+    <servlet>
+        <servlet-name>sampleOAuth</servlet-name>
+        <servlet-class>
+            org.apache.shindig.social.sample.oauth.SampleOAuthServlet
+        </servlet-class>
+    </servlet>
 
-  <servlet-mapping>
-    <servlet-name>js</servlet-name>
-    <url-pattern>/gadgets/js/*</url-pattern>
-  </servlet-mapping>
+    <servlet>
+        <servlet-name>rpcSwf</servlet-name>
+        <servlet-class>
+            org.apache.shindig.gadgets.servlet.RpcSwfServlet
+        </servlet-class>
+    </servlet>
 
-  <servlet-mapping>
-    <servlet-name>proxy</servlet-name>
-    <url-pattern>/gadgets/proxy/*</url-pattern>
-  </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>js</servlet-name>
+        <url-pattern>/gadgets/js/*</url-pattern>
+    </servlet-mapping>
 
-  <servlet-mapping>
-    <servlet-name>makeRequest</servlet-name>
-    <url-pattern>/gadgets/makeRequest</url-pattern>
-  </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>proxy</servlet-name>
+        <url-pattern>/gadgets/proxy/*</url-pattern>
+    </servlet-mapping>
 
-  <servlet-mapping>
-    <servlet-name>jsonRpcServlet</servlet-name>
-    <url-pattern>/rpc/*</url-pattern>
-    <url-pattern>/gadgets/api/rpc/*</url-pattern>
-    <url-pattern>/social/rpc/*</url-pattern>
-  </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>makeRequest</servlet-name>
+        <url-pattern>/gadgets/makeRequest</url-pattern>
+    </servlet-mapping>
 
-  <servlet-mapping>
-    <servlet-name>restapiServlet</servlet-name>
-    <url-pattern>/rest/*</url-pattern>
-    <url-pattern>/gadgets/api/rest/*</url-pattern>
-    <url-pattern>/social/rest/*</url-pattern>
-  </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>jsonRpcServlet</servlet-name>
+        <url-pattern>/rpc/*</url-pattern>
+        <url-pattern>/gadgets/api/rpc/*</url-pattern>
+        <url-pattern>/social/rpc/*</url-pattern>
+    </servlet-mapping>
 
-  <servlet-mapping>
-    <servlet-name>concat</servlet-name>
-    <url-pattern>/gadgets/concat</url-pattern>
-  </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>restapiServlet</servlet-name>
+        <url-pattern>/rest/*</url-pattern>
+        <url-pattern>/gadgets/api/rest/*</url-pattern>
+        <url-pattern>/social/rest/*</url-pattern>
+    </servlet-mapping>
 
-  <servlet-mapping>
-    <servlet-name>oauthCallback</servlet-name>
-    <url-pattern>/gadgets/oauthcallback</url-pattern>
-  </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>concat</servlet-name>
+        <url-pattern>/gadgets/concat</url-pattern>
+    </servlet-mapping>
 
-  <servlet-mapping>
-    <servlet-name>xml-to-html</servlet-name>
-    <url-pattern>/gadgets/ifr</url-pattern>
-  </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>oauthCallback</servlet-name>
+        <url-pattern>/gadgets/oauthcallback</url-pattern>
+    </servlet-mapping>
 
-  <servlet-mapping>
-    <servlet-name>accel</servlet-name>
-    <url-pattern>/gadgets/accel</url-pattern>
-  </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>xml-to-html</servlet-name>
+        <url-pattern>/gadgets/ifr</url-pattern>
+    </servlet-mapping>
 
-  <servlet-mapping>
-    <servlet-name>metadata</servlet-name>
-    <url-pattern>/gadgets/metadata</url-pattern>
-  </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>accel</servlet-name>
+        <url-pattern>/gadgets/accel</url-pattern>
+    </servlet-mapping>
 
-  <servlet-mapping>
-    <servlet-name>sampleOAuth</servlet-name>
-    <url-pattern>/oauth/*</url-pattern>
-  </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>metadata</servlet-name>
+        <url-pattern>/gadgets/metadata</url-pattern>
+    </servlet-mapping>
 
-  <servlet-mapping>
-    <servlet-name>rpcSwf</servlet-name>
-    <url-pattern>/xpc*</url-pattern>
-  </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>sampleOAuth</servlet-name>
+        <url-pattern>/oauth/*</url-pattern>
+    </servlet-mapping>
 
- 
-  <servlet>
-		<servlet-name>H2Console</servlet-name>
-		<servlet-class>org.h2.server.web.WebServlet</servlet-class>
-		<!-- <init-param> <param-name>webAllowOthers</param-name> <param-value></param-value> 
-			</init-param> <init-param> <param-name>trace</param-name> <param-value></param-value> 
-			</init-param> -->
-		<load-on-startup>1</load-on-startup>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>H2Console</servlet-name>
-		<url-pattern>/console/*</url-pattern>
-	</servlet-mapping>
-	
+    <servlet-mapping>
+        <servlet-name>rpcSwf</servlet-name>
+        <url-pattern>/xpc*</url-pattern>
+    </servlet-mapping>
+
+
+    <servlet>
+        <servlet-name>H2Console</servlet-name>
+        <servlet-class>org.h2.server.web.WebServlet</servlet-class>
+        <!-- <init-param> <param-name>webAllowOthers</param-name> <param-value></param-value>
+              </init-param> <init-param> <param-name>trace</param-name> <param-value></param-value>
+              </init-param> -->
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>H2Console</servlet-name>
+        <url-pattern>/console/*</url-pattern>
+    </servlet-mapping>
+
 </web-app>
