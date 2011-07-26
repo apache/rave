@@ -21,9 +21,14 @@ rave.opensocial = rave.opensocial || (function() {
     var WIDGET_TYPE = "OpenSocial";
     var OFFSET = 10;
     var MIN_HEIGHT = 250;
+    var VIEW_NAMES = { 
+        CANVAS : "canvas",
+        DEFAULT : "default",
+        HOME : "home"       
+    }; 
 
     var container;
-
+    
     /**
      * Initialization
      */
@@ -94,12 +99,13 @@ rave.opensocial = rave.opensocial || (function() {
     function renderNewGadget(gadget) {
         var widgetBodyElement = document.getElementById(["widget-", gadget.regionWidgetId, "-body"].join(""));
         gadget.site = container.newGadgetSite(widgetBodyElement);
-        gadget.maximize = function() { renderGadgetView("canvas", this); };
-        gadget.minimize = function() { renderGadgetView("home",   this); };
+        gadget.maximize = function() { renderGadgetView(rave.opensocial.VIEW_NAMES.CANVAS, this); };
+        gadget.minimize = function() { renderGadgetView(rave.opensocial.VIEW_NAMES.HOME,   this); };
         gadget.savePreferences = function(userPrefs) {
             this.userPrefs = userPrefs;
             rave.api.rest.saveWidgetPreferences({regionWidgetId: this.regionWidgetId, userPrefs: userPrefs});
-            renderGadgetView("home", this); //TODO: figure out how to get the current view instead of assuming "home"
+            // re-render the gadget in the same view          
+            renderGadgetView(rave.opensocial.getCurrentView(this.regionWidgetId), this); 
         };
         
         // if the gadget has prefences to edit, display the edit prefs button in the gadget chrome
@@ -107,7 +113,7 @@ rave.opensocial = rave.opensocial || (function() {
             $("#widget-" + gadget.regionWidgetId + "-prefs").show();
         }
         
-        renderGadgetView("home", gadget);
+        renderGadgetView(rave.opensocial.VIEW_NAMES.HOME, gadget);
     }
 
     /**
@@ -127,7 +133,7 @@ rave.opensocial = rave.opensocial || (function() {
 
     function getSizeFromElement(id, view) {
         var elem = document.getElementById("widget-" + id + "-wrapper");
-        return {width: elem.clientWidth - OFFSET, height: view == "canvas" ? elem.clientHeight : MIN_HEIGHT};
+        return {width: elem.clientWidth - OFFSET, height: view == rave.opensocial.VIEW_NAMES.CANVAS ? elem.clientHeight : MIN_HEIGHT};
     }
 
     /**
@@ -155,6 +161,14 @@ rave.opensocial = rave.opensocial || (function() {
             combined[metaPref.name] = typeof userPref == "undefined" ? metaPref.defaultValue : userPref;
         }
         return combined;
+    }
+    
+    /**
+     * Gets the current view name of a gadget
+     * @param regionWidgetId of the gadget
+     */
+    function getCurrentView(regionWidgetId) {
+        return rave.getWidgetById(regionWidgetId).site.getActiveGadgetHolder().getView();
     }
 
     /*
@@ -191,7 +205,7 @@ rave.opensocial = rave.opensocial || (function() {
         }
 
     }
-
+      
     /**
      * Re-renders the gadget in the requested view with the parameters
      *
@@ -215,6 +229,8 @@ rave.opensocial = rave.opensocial || (function() {
      */
     return {
         TYPE : WIDGET_TYPE,
+        
+        VIEW_NAMES : VIEW_NAMES,
         /**
          * Initializes the Rave OpenSocial machinery
          */
@@ -232,7 +248,12 @@ rave.opensocial = rave.opensocial || (function() {
         /**
          * Resets the current OpenSocial container
          */
-        reset: resetContainer
+        reset: resetContainer,
+        /**
+         * Gets the current view name of the given gadget
+         * @param regionWidgetId of the gadget
+         */
+        getCurrentView: getCurrentView
     };
 
 })();

@@ -477,6 +477,11 @@ var rave = rave || (function() {
         /**
          * Gets the current context
          */
-        getContext: getContext
+        getContext: getContext,
+        
+        /**
+         * Gets a widget by id
+         */
+        getWidgetById: getWidgetById
     }
 })();
