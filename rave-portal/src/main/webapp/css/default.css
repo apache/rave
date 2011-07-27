@@ -162,10 +162,40 @@ h1, h2, h3, h4, h5, h6 {
     cursor: move;
 }
 
+/*** various widget preference related classes ***/
 .widget-prefs {
     border: 1px solid #D3D3D3;
     background-color: white;
     display: none;
+}
+
+.widget-prefs-required-text {
+    font-size: 0.8em;  
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.widget-prefs-label {
+    vertical-align: top;
+    font-size: 0.8em;
+    text-align: right;
+}
+
+.widget-prefs-label-required {
+
+}
+
+.widget-prefs-input {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8em;
+}
+
+.widget-prefs-input-required {
+    
+}
+
+.widget-prefs-input-failed-validation {
+    background-color: yellow;
 }
 
 .widget {

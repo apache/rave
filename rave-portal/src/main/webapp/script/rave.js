@@ -29,17 +29,16 @@ var rave = rave || (function() {
      * NOTE: The UI implementation has dependencies on jQuery and jQuery UI
      */
     var ui = (function() {
-        var TEXT_FIELD_TEMPLATE = "<tr><td>{displayName}</td><td><input type='text' id='{name}' name='{name}' value='{value}'></td></tr>";
-        var CHECKBOX_TEMPLATE = "<tr><td>{displayName}</td><td><input type='checkbox' id='{name}' name='{name}' {checked}></td></tr>";
-        var SELECT_FIELD_TEMPLATE = "<tr><td>{displayName}</td><td><select id='{name}' name='{name}'>{options}</select></td></tr>";
+        var TEXT_FIELD_TEMPLATE = "<tr>{prefLabelTemplate}<td><input type='text' id='{name}' name='{name}' value='{value}' class='{class}'></td></tr>";
+        var CHECKBOX_TEMPLATE = "<tr>{prefLabelTemplate}<td><input type='checkbox' id='{name}' name='{name}' class='{class}' {checked}></td></tr>";
+        var SELECT_FIELD_TEMPLATE = "<tr>{prefLabelTemplate}<td><select id='{name}' name='{name}' class='{class}'>{options}</select></td></tr>";
         var SELECT_OPTION_TEMPLATE = "<option value='{value}' {selected}>{displayValue}</option>";
-        var TEXTAREA_TEMPLATE = "<tr><td>{displayName}</td><td><textarea id='{name}' name='{name}' rows='5' cols='12'>{value}</textarea></td></tr>";
+        var TEXTAREA_TEMPLATE = "<tr>{prefLabelTemplate}<td><textarea id='{name}' name='{name}' rows='5' cols='12' class='{class}'>{value}</textarea></td></tr>";
         var HIDDEN_FIELD_TEMPLATE = "<input type='hidden' id='{name}' name='{name}' value='{value}'>";
         var PREFS_SAVE_BUTTON_TEMPLATE = "<button type='button' id='{elementId}'>Save</button>";
         var PREFS_CANCEL_BUTTON_TEMPLATE = "<button type='button' id='{elementId}'>Cancel</button>";
 
-        var NAME_REGEX = /{name}/g;
-        var DISPLAY_NAME_REGEX = /{displayName}/g;
+        var NAME_REGEX = /{name}/g;        
         var VALUE_REGEX = /{value}/g;
         var OPTIONS_REGEX = /{options}/g;
         var SELECTED_REGEX = /{selected}/g;
@@ -47,6 +46,14 @@ var rave = rave || (function() {
         var DISPLAY_VALUE_REGEX = /{displayValue}/g;
         var PIPE_REGEX = /\|/g;
         var ELEMENT_ID_REGEX = /{elementId}/g;
+        var PREF_LABEL_TEMPLATE_REGEX = /{prefLabelTemplate}/g;
+        var CLASS_REGEX = /{class}/g;
+        
+        var WIDGET_PREFS_LABEL_CLASS = "widget-prefs-label";
+        var WIDGET_PREFS_LABEL_REQUIRED_CLASS = "widget-prefs-label-required";
+        var WIDGET_PREFS_INPUT_CLASS = "widget-prefs-input";
+        var WIDGET_PREFS_INPUT_REQUIRED_CLASS = "widget-prefs-input-required";
+        var WIDGET_PREFS_INPUT_FAILED_VALIDATION = "widget-prefs-input-failed-validation";
 
         function WIDGET_PREFS_EDIT_BUTTON(regionWidgetId) {
             return "widget-" + regionWidgetId + "-prefs";
@@ -162,21 +169,74 @@ var rave = rave || (function() {
                 });
             }
         }
+        /**
+         * Utility function to generate the html label for a userPref
+         * based on if it is required or not
+         */
+        function generatePrefLabelMarkup(userPref) {
+            var markup = [];
+            var prefLabel = (userPref.required) ? "* " + userPref.displayName : userPref.displayName;            
+            markup.push("<td class='");
+            markup.push(WIDGET_PREFS_LABEL_CLASS);
+            if (userPref.required) {
+                markup.push(" ");
+                markup.push(WIDGET_PREFS_LABEL_REQUIRED_CLASS);
+            }
+            markup.push("'>");
+            markup.push(prefLabel);
+            markup.push("</td>");
+            return markup.join("");
+        }
+        
+        /**
+         * Utility function to generate the css class(es) of a userPref input
+         * field based on if it is required or not
+         */
+        function generatePrefInputClassMarkup(userPref) {
+            var markup = [];
+            markup.push(WIDGET_PREFS_INPUT_CLASS);            
+            if (userPref.required) {
+                markup.push(" ");
+                markup.push(WIDGET_PREFS_INPUT_REQUIRED_CLASS);
+            }
+            return markup.join("");
+        }
+        
+       /**
+         * Utility function to validate a userPref input element
+         */
+        function validatePrefInput(element) {
+            var isValid = true;
+            var jqEl = $(element);
+            // if the input is required verify it's trimmed input length is > 0
+            if (jqEl.hasClass(WIDGET_PREFS_INPUT_REQUIRED_CLASS)) {
+                isValid = $.trim(jqEl.val()).length > 0;
+            } 
+            
+            return isValid;            
+        }
 
         function editPrefsAction(args) {
             var regionWidget = getWidgetById(args.data.id);
             var userPrefs = regionWidget.metadata.userPrefs;
-
+            var hasRequiredUserPrefs = false;
+            
             var prefsFormMarkup = [];
             prefsFormMarkup.push("<table>");
 
             for (var prefName in userPrefs) {
                 var userPref = userPrefs[prefName];
                 var currentPrefValue = regionWidget.userPrefs[userPref.name];
+                var prefLabelMarkup = generatePrefLabelMarkup(userPref);
+                var prefInputClassMarkup = generatePrefInputClassMarkup(userPref);
+                if (userPref.required) {
+                    hasRequiredUserPrefs = true;
+                }
 
                 switch (userPref.dataType) {
                     case "STRING":
-                        prefsFormMarkup.push(TEXT_FIELD_TEMPLATE.replace(DISPLAY_NAME_REGEX, userPref.displayName)
+                        prefsFormMarkup.push(TEXT_FIELD_TEMPLATE.replace(PREF_LABEL_TEMPLATE_REGEX, prefLabelMarkup)
+                                .replace(CLASS_REGEX, prefInputClassMarkup)
                                 .replace(NAME_REGEX, userPref.name)
                                 .replace(VALUE_REGEX, typeof currentPrefValue != "undefined" ? currentPrefValue :
                                 userPref.defaultValue));
@@ -186,7 +246,8 @@ var rave = rave || (function() {
                                 currentPrefValue === 'true' || currentPrefValue === true :
                                 userPref.defaultValue === 'true' || userPref.defaultValue === true;
 
-                        prefsFormMarkup.push(CHECKBOX_TEMPLATE.replace(DISPLAY_NAME_REGEX, userPref.displayName)
+                        prefsFormMarkup.push(CHECKBOX_TEMPLATE.replace(PREF_LABEL_TEMPLATE_REGEX, prefLabelMarkup)
+                                .replace(CLASS_REGEX, prefInputClassMarkup)
                                 .replace(NAME_REGEX, userPref.name)
                                 .replace(CHECKED_REGEX, checked ? "checked" : ""));
                         break;
@@ -202,14 +263,16 @@ var rave = rave || (function() {
                                     .replace(SELECTED_REGEX, selected ? "selected" : ""));
                         }
 
-                        prefsFormMarkup.push(SELECT_FIELD_TEMPLATE.replace(DISPLAY_NAME_REGEX, userPref.displayName)
+                        prefsFormMarkup.push(SELECT_FIELD_TEMPLATE.replace(PREF_LABEL_TEMPLATE_REGEX, prefLabelMarkup)
+                                .replace(CLASS_REGEX, prefInputClassMarkup)
                                 .replace(NAME_REGEX, userPref.name)
                                 .replace(OPTIONS_REGEX, options.join("")));
                         break;
                     case "LIST":
                         var values = typeof currentPrefValue != "undefined" ? currentPrefValue : userPref.defaultValue;
                         values = values.replace(PIPE_REGEX, "\n");
-                        prefsFormMarkup.push(TEXTAREA_TEMPLATE.replace(DISPLAY_NAME_REGEX, userPref.displayName)
+                        prefsFormMarkup.push(TEXTAREA_TEMPLATE.replace(PREF_LABEL_TEMPLATE_REGEX, prefLabelMarkup)
+                                .replace(CLASS_REGEX, prefInputClassMarkup)
                                 .replace(NAME_REGEX, userPref.name)
                                 .replace(VALUE_REGEX, values));
                         break;
@@ -218,6 +281,11 @@ var rave = rave || (function() {
                                 .replace(VALUE_REGEX, typeof currentPrefValue != "undefined" ? currentPrefValue :
                                 userPref.defaultValue));
                 }
+            }
+            
+            // if this widget has one or more required inputs display the helper message
+            if (hasRequiredUserPrefs) {
+                prefsFormMarkup.push("<tr><td colspan='2' class='widget-prefs-required-text'>* indicates a required input</td></tr>");
             }
 
             prefsFormMarkup.push("<tr><td colspan='2'>");
@@ -245,9 +313,21 @@ var rave = rave || (function() {
             var prefsElement = $("#" + WIDGET_PREFS_CONTENT(regionWidget.regionWidgetId));
 
             var updatedPrefs = {};
+            var hasValidationErrors = false;
+            // note that validation of "required" prefs is only done for text and
+            // textarea types, since those represent STRING and LIST inputs, and
+            // are the only inputs that could potentially contain empty data
             prefsElement.find("*").filter(":input").each(function(index, element) {
                 switch (element.type) {
-                    case "text":
+                    case "text": 
+                        if (!validatePrefInput(element)) {
+                            hasValidationErrors = true;
+                            $(element).addClass(WIDGET_PREFS_INPUT_FAILED_VALIDATION);
+                        } else {                           
+                            updatedPrefs[element.name] = $(element).val();
+                            $(element).removeClass(WIDGET_PREFS_INPUT_FAILED_VALIDATION);
+                        }
+                        break;
                     case "select-one":
                     case "hidden":
                         updatedPrefs[element.name] = $(element).val();
@@ -256,25 +336,37 @@ var rave = rave || (function() {
                         updatedPrefs[element.name] = $(element).is(':checked').toString();
                         break;
                     case "textarea":
-                        var valuesToPersist = [];
-                        var textareaValues = $(element).val().split("\n");
-                        for (var i = 0; i < textareaValues.length; i++) {
-                            var value = $.trim(textareaValues[i]);
-                            if (value.length > 0) {
-                                valuesToPersist.push(value);
+                        if (!validatePrefInput(element)) {
+                            hasValidationErrors = true;
+                            $(element).addClass(WIDGET_PREFS_INPUT_FAILED_VALIDATION);
+                        } else {                       
+                            var valuesToPersist = [];
+                            var textareaValues = $(element).val().split("\n");
+                            for (var i = 0; i < textareaValues.length; i++) {
+                                var value = $.trim(textareaValues[i]);
+                                if (value.length > 0) {
+                                    valuesToPersist.push(value);
+                                }
                             }
+                            updatedPrefs[element.name] = valuesToPersist.join("|"); 
+                            $(element).removeClass(WIDGET_PREFS_INPUT_FAILED_VALIDATION);
                         }
-                        updatedPrefs[element.name] = valuesToPersist.join("|");
                         break;
                 }
             });
 
-            if(typeof regionWidget.savePreferences == "function") {
-                regionWidget.savePreferences(updatedPrefs);
-            }
+            // check to see if one or more input prefs had validation errors
+            if (hasValidationErrors) {
+                // focus on the first input that has validation errors
+                prefsElement.find("." + WIDGET_PREFS_INPUT_FAILED_VALIDATION).first().focus(); 
+            } else {
+                if(typeof regionWidget.savePreferences == "function") {
+                    regionWidget.savePreferences(updatedPrefs);
+                }
 
-            prefsElement.html("");
-            prefsElement.hide();
+                prefsElement.html("");
+                prefsElement.hide();    
+            }            
         }
 
         function cancelEditPrefsAction(args) {
