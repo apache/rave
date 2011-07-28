@@ -50,9 +50,26 @@ rave.api = rave.api || (function() {
                 error: handleError
             });
         }
+        
+        function saveWidgetPreference(args) {
+            $.ajax({
+                type: 'PUT',
+                url: rave.getContext() + path + "regionWidgets/" + args.regionWidgetId + "/preferences/" + args.userPref.prefName,
+                data: JSON.stringify({"name":args.userPref.prefName, "value": args.userPref.prefValue}),
+                contentType: 'application/json',
+                dataType: 'json',
+                success: function(result) {
+                    if (typeof args.successCallback == 'function') {
+                        args.successCallback();
+                    }
+                },
+                error: handleError
+            });
+        }
 
         return {
-            saveWidgetPreferences : saveWidgetPreferences
+            saveWidgetPreferences : saveWidgetPreferences,
+            saveWidgetPreference : saveWidgetPreference
         };
     })();
 

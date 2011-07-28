@@ -69,7 +69,7 @@ rave.opensocial = rave.opensocial || (function() {
         container.rpcRegister('resize_iframe', resizeIframe);
         container.rpcRegister('set_title', setTitle);
         container.rpcRegister('requestNavigateTo', requestNavigateTo);
-        //container.rpcRegister('set_pref', null);
+        container.rpcRegister('set_pref', setPref);
         //container.rpcRegister('pubsub', null);
     }
 
@@ -205,6 +205,23 @@ rave.opensocial = rave.opensocial || (function() {
         }
 
     }
+     
+    /**
+     * Saves a userPref for the widget
+     * 
+     * @param args RPC event args
+     * @param editToken this is an old deprecated parameter but still needs to be in the signature for proper binding
+     * @param prefName the userpref name
+     * @param prefValue the userpref value
+     */ 
+    function setPref(args, editToken, prefName, prefValue) {        
+        var widgetId = rave.getObjectIdFromDomId(args.gs.getActiveGadgetHolder().getElement().id);                               
+        var regionWidget = rave.getWidgetById(widgetId);
+        // update the memory prefs object
+        regionWidget.userPrefs[prefName] = prefValue;
+        // persist it to database
+        rave.api.rest.saveWidgetPreference({regionWidgetId: widgetId, userPref: {prefName: prefName, prefValue: prefValue}});        
+    }
       
     /**
      * Re-renders the gadget in the requested view with the parameters
@@ -223,7 +240,7 @@ rave.opensocial = rave.opensocial || (function() {
     function isArray(o) {
         return Object.prototype.toString.call(o) == "[object Array]";
     }
-
+    
     /**
      * Exposed public API calls
      */

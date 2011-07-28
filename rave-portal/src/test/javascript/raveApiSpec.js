@@ -61,6 +61,33 @@ describe("Rave API", function() {
                 expect(callbackCalled).toBeTruthy();
             });
         });
+        
+        describe("saveWidgetPreference", function() {
+            it("PUTs correct values to the REST service for saving one widget preference", function() {
+                $.ajax = function(args) {
+                    expect(args.url).toEqual("api/rest/regionWidgets/1/preferences/firstname");
+                    var userPref = JSON.parse(args.data);
+                    expect(userPref.name).toEqual("firstname");
+                    expect(userPref.value).toEqual("Tony");                    
+                    
+                    expect(typeof(callback)).toEqual("function");
+                    callback({error:false});
+                    return {
+                        error: function(a, b, c) {
+                        }
+                    }
+                };
+
+                var callbackCalled = false;
+                var callback = function() {
+                    callbackCalled = true
+                };
+                             
+                rave.api.rest.saveWidgetPreference({regionWidgetId: 1, userPref: {prefName: "firstname", prefValue: "Tony"},
+                                                   successCallback: callback});
+                expect(callbackCalled).toBeTruthy();
+            });
+        });
     });
 
     describe("rpc", function() {
