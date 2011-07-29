@@ -59,7 +59,7 @@ a:hover {
 
 #header a:hover {
     color: #F2F2F2;
-    background-color: #e6ebed;
+    background-color: #666666;
     text-decoration: none;
 }
 
@@ -170,7 +170,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .widget-prefs-required-text {
-    font-size: 0.8em;  
+    font-size: 0.8em;
     margin-top: 5px;
     margin-bottom: 5px;
 }
@@ -191,7 +191,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .widget-prefs-input-required {
-    
+
 }
 
 .widget-prefs-input-failed-validation {
