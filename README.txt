@@ -27,6 +27,8 @@ does indicate that the project has yet to be fully endorsed by the ASF.
 
 Release Notes
 =============
+ - Added new runtime capability to override shindig host.  Add -Dshindig.host=servername to $JAVA_OPTS to override the localhost setting
+
 
 Getting Started
 ===============

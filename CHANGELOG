@@ -2,20 +2,51 @@ Apache Rave Change Log
 
 See http://issues.apache.org/jira/browse/RAVE-* (where * is the number of the issue below)
 
-Version 0.1 Released 2011-06-29
+Version 0.2 Released 2011-07-29
 ===============================
 
-** Story
-    * [RAVE-12] - Render OpenSocial Gadgets on Page in iFrames
-    * [RAVE-32] - Create basic widget repository
-    * [RAVE-33] - Create the ability to move widgets on a page
+Release Notes - Rave - Version 0.2-INCUBATING
+
+** Sub-task
+    * [RAVE-36] - Need RAVE-styled login, signup pages
+    * [RAVE-39] - Need to provide skeleton for CSS and tag libraries
+    * [RAVE-40] - Write Jasmine unit tests for W3C Widget JavaScript libraries.
+    * [RAVE-44] - Need message display to user confirming widget addition from repository
+    * [RAVE-79] - Move the inline scripts for rendering the gadgets
+    * [RAVE-83] - Provide a way to override properties from shindig.properties
+    * [RAVE-106] - Enhance RegionWidget model to support storing RegionWidgetPreference's
+    * [RAVE-107] - Create REST API for persisting RegionWidget preferences
+    * [RAVE-108] - Add the metadata required to dynamically generate the preferences UI on the client side into the widget object
+    * [RAVE-109] - Add preferences button to gadget chrome bar which generates the UI for editing preferences onclick
+    * [RAVE-110] - Implement save/cancel handlers for edit prefs UI which use the REST api to persist preferences and re-render the widget with the updated preferences
+    * [RAVE-111] - Implement proper error checking for "required" userprefs
+    * [RAVE-112] - Figure out how to get the current view and re-render in the current view instead of defaulting to the home view when preferences are saved
+    * [RAVE-113] - Implement container side support for set_pref gadgets.rpc call
+    * [RAVE-115] - Dont show the edit preferences button if the gadget does not have any user-editable preferences (either no prefs or all hidden)
 
 ** Technical task
-    * [RAVE-14] - Create basic object model to support rendering of widgets
-    * [RAVE-23] - Implement OpenID authentication 
-    * [RAVE-15] - Implement basic JPA persistence layer
-    * [RAVE-16] - Create basic page rendering 
-    * [RAVE-17] - Implement OpenSocial/Shindig Common Container
-    * [RAVE-18] - Implement basic user logon features
-    * [RAVE-19] - Add gadget container-side hooks
-    * [RAVE-66] - jstl-1.2 dependency cannot be resolved anymore from maven repository
+    * [RAVE-119] - Create Rave Commons Project
+    * [RAVE-120] - Move common components of Rave-Portal/Rave-Shindig to Rave-commons
+    * [RAVE-121] - Add Spring Integration to Rave-Shindig
+
+** Bug
+    * [RAVE-57] - wikipedia gadget is not rendering
+    * [RAVE-58] - Refactor Delete
+    * [RAVE-78] - rave-shindig incorrect dependency scope on shindig-social-api pulls in el-api jar breaking JSPs
+    * [RAVE-86] - Drag and drop error for widgets in IE 9
+    * [RAVE-88] - Gadgets don't render when JavaScript console is not available
+
+** Improvement
+    * [RAVE-45] - Portal host/ip configuration (Non-localhost support)
+    * [RAVE-65] - Add JRebel configuration to the documentation and split up 'source code' page
+    * [RAVE-87] - Move javaagent property to parent pom
+    * [RAVE-91] - CSS and layout updates
+    * [RAVE-94] - Update donated UI
+
+** New Feature
+    * [RAVE-89] - Provide basic new user registration feature
+
+** Story
+    * [RAVE-27] - Implement User Prefs
+    * [RAVE-53] - Need to add support for canvas views, canvas/home view toggling
+
