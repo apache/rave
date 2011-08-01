@@ -16,17 +16,46 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
-package org.apache.rave.portal.web.util;
+package org.apache.rave.portal.model;
 
 /**
- * Defines constants representing the available view names in the system
+ * {@inheritDoc}
+ *
+ * A new user registering into the system
  */
-public class ViewNames {
-    private ViewNames() {}
-    public static final String HOME = "home";
-    public static final String STORE = "store";
-    public static final String WIDGET = "widget";
-    public static final String NEW_ACCOUNT = "newaccount";
-    public static final String REDIRECT = "redirect:/";
+
+public class NewUser {
+	private String username;
+	
+	private String password;
+	
+	private String confirmPassword;
+
+	public NewUser(){
+	}
+	
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public String getConfirmPassword() {
+		return confirmPassword;
+	}
+
+	public void setConfirmPassword(String confirmPassword) {
+		this.confirmPassword = confirmPassword;
+	}
+	
 }

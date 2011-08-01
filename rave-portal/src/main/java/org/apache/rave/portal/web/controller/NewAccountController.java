@@ -19,8 +19,12 @@
 
 package org.apache.rave.portal.web.controller;
 
-import org.apache.rave.portal.model.User;
+import java.util.List;
+
+import org.apache.rave.portal.model.NewUser;
 import org.apache.rave.portal.service.NewAccountService;
+import org.apache.rave.portal.web.util.ModelKeys;
+import org.apache.rave.portal.web.util.ViewNames;
 import org.apache.rave.portal.web.validator.NewAccountValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +33,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -53,40 +58,45 @@ public class NewAccountController {
     @RequestMapping(value ="/newaccount.jsp")
 	 public void setUpForm(ModelMap model) {
 		  logger.debug("Initializing form");
-		  //TODO this should use view keys like other pages.
-		  model.addAttribute("newUser",new User());
+		  //TODO this should use view keys like other pages. (done)
+		  model.addAttribute(ModelKeys.NEW_USER,new NewUser());
 	 }
 
     @RequestMapping(value = { "/newaccount","/newacount/*"}, method = RequestMethod.POST)
-		  public String create(@ModelAttribute User user, BindingResult results, Model model,@RequestParam String username, @RequestParam String password){
+		  public String create(@ModelAttribute NewUser newUser, BindingResult results, Model model,@RequestParam String username, @RequestParam String password){
 		  logger.debug("Creating a new user account");
-		  model.addAttribute("newUser",user);
+		  model.addAttribute(ModelKeys.NEW_USER,newUser);
 		  
-		  newAccountValidator.validate(user,results);
+		  newAccountValidator.validate(newUser,results);
 		  if(results.hasErrors()){
-				return "newaccount";
+			  logger.error("newaccount.jsp: shows validation errors");
+			  //TODO: change this to a viewname (done)
+			  return ViewNames.NEW_ACCOUNT;
 		  }
 
 		  //Now attempt to create the account.
 		  try {
-				newAccountService.createNewAccount(username,password);
-				return "redirect:/";
+			    logger.debug("newaccount.jsp: passed form validation");
+			    
+			    newAccountService.createNewAccount(username,password);
+			    //TODO: change this to a viewname (done)
+				return ViewNames.REDIRECT;
 		  }
 		  
 		  catch (org.springframework.dao.IncorrectResultSizeDataAccessException ex) {
 				//This exception is thrown if the account already exists.
 				logger.error("Account creation failed: "+ex.getMessage());
 				results.reject("Account already exists","Unable to create account");
-				//TODO: change this to a viewname
-				return "newaccount";
+				//TODO: change this to a viewname (done)
+				return ViewNames.NEW_ACCOUNT;
 				
 		  }
 		  //TODO need to handle more specific exceptions
 		  catch (Exception ex) {
 				logger.error("Account creation failed: "+ex.getMessage());
 				results.reject("Unable to create account:"+ex.getMessage(),"Unable to create account");
-				//TODO: change this to a viewname
-				return "newaccount";
+				//TODO: change this to a viewname (done)
+				return ViewNames.NEW_ACCOUNT;
 		  }
 		  
 	 }
