@@ -19,6 +19,8 @@
 package org.apache.rave.portal.model;
 
 import org.apache.rave.persistence.BasicEntity;
+import org.codehaus.jackson.annotate.JsonBackReference;
+import org.codehaus.jackson.annotate.JsonManagedReference;
 
 import javax.persistence.*;
 import java.util.List;
@@ -35,10 +37,26 @@ public class Region implements BasicEntity {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "regionIdSeq")
     private Long id;
 
+    @ManyToOne
+    @JoinColumn(name = "page_id")
+    private Page page;
+
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("renderOrder")
     @JoinColumn(name = "region_id")
     private List<RegionWidget> regionWidgets;
+
+    public Region() {
+    }
+
+    public Region(Long id) {
+        this.id = id;
+    }
+
+    public Region(Long id, Page page) {
+        this.id = id;
+        this.page = page;
+    }
 
     /**
      * Gets the persistence unique identifier
@@ -54,10 +72,25 @@ public class Region implements BasicEntity {
     }
 
     /**
+     * Gets the associated page
+     *
+     * @return the associated page
+     */
+    @JsonBackReference
+    public Page getPage() {
+        return page;
+    }
+
+    public void setPage(Page page) {
+        this.page = page;
+    }
+
+    /**
      * Gets the ordered list of widget instances for the region
      *
      * @return Valid list
      */
+    @JsonManagedReference
     public List<RegionWidget> getRegionWidgets() {
         return regionWidgets;
     }

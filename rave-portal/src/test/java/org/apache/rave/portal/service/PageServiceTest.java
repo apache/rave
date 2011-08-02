@@ -237,7 +237,7 @@ public class PageServiceTest {
         long WIDGET_ID = 1L;
         long REGION_ID = 2L;
         RegionWidget widget = new RegionWidget(WIDGET_ID);
-        widget.setRegionId(REGION_ID);
+        widget.setRegion(new Region(REGION_ID));
         Region region = new Region();
 
         expect(regionWidgetRepository.get(WIDGET_ID)).andReturn(widget);

@@ -19,6 +19,7 @@
 package org.apache.rave.portal.model;
 
 import org.apache.rave.persistence.BasicEntity;
+import org.codehaus.jackson.annotate.JsonManagedReference;
 
 import javax.persistence.*;
 import java.util.List;
@@ -56,6 +57,14 @@ public class Page implements BasicEntity {
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name="page_id")
     private List<Region> regions;
+
+    public Page() {
+    }
+
+    public Page(Long id, User owner) {
+        this.id = id;
+        this.owner = owner;
+    }
 
     /**
      * Gets the persistence unique identifier
@@ -128,6 +137,7 @@ public class Page implements BasicEntity {
      *
      * @return Valid list of {@link Region}s
      */
+    @JsonManagedReference
     public List<Region> getRegions() {
         return regions;
     }

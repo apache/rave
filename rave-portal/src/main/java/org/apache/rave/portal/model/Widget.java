@@ -62,6 +62,14 @@ public class Widget implements BasicEntity {
     @Basic @Column(name = "description")
     private String description;
 
+    public Widget() {
+    }
+
+    public Widget(Long id, String url) {
+        this.id = id;
+        this.url = url;
+    }
+
     /**
      * Gets the persistence unique identifier
      *
@@ -84,7 +92,6 @@ public class Widget implements BasicEntity {
 //        this.title = title;
 //
 // }
-
 
     public String getScreenshotUrl() {
         return screenshotUrl;

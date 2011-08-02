@@ -19,6 +19,7 @@
 package org.apache.rave.portal.model;
 
 import org.apache.rave.persistence.BasicEntity;
+import org.codehaus.jackson.annotate.JsonBackReference;
 
 import javax.persistence.*;
 import java.util.List;
@@ -39,6 +40,10 @@ public class RegionWidget implements BasicEntity {
     @JoinColumn(name = "widget_id")
     private Widget widget;
 
+    @ManyToOne
+    @JoinColumn(name = "region_id")
+    private Region region;
+
     @Basic
     @Column(name = "render_position")
     private String renderPosition;
@@ -50,10 +55,6 @@ public class RegionWidget implements BasicEntity {
     @Basic
     @Column(name = "collapsed")
     private boolean collapsed;
-
-    @Basic
-    @Column(name="region_id")
-    private long regionId;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "region_widget_id", referencedColumnName = "id")
@@ -69,6 +70,12 @@ public class RegionWidget implements BasicEntity {
     public RegionWidget(long id, int renderOrder) {
         this.id = id;
         this.renderOrder = renderOrder;
+    }
+
+    public RegionWidget(Long id, Widget widget, Region region) {
+        this.id = id;
+        this.widget = widget;
+        this.region = region;
     }
 
     /**
@@ -95,6 +102,20 @@ public class RegionWidget implements BasicEntity {
 
     public void setWidget(Widget widget) {
         this.widget = widget;
+    }
+
+    /**
+     * Gets the associated region
+     *
+     * @return the region
+     */
+    @JsonBackReference
+    public Region getRegion() {
+        return region;
+    }
+
+    public void setRegion(Region region) {
+        this.region = region;
     }
 
     /**
@@ -125,18 +146,6 @@ public class RegionWidget implements BasicEntity {
 
     public void setRenderOrder(int renderOrder) {
         this.renderOrder = renderOrder;
-    }
-
-    /**
-     * Gets the id of the associated region
-     * @return region's id
-     */
-    public long getRegionId() {
-        return regionId;
-    }
-
-    public void setRegionId(long regionId) {
-        this.regionId = regionId;
     }
 
     /**

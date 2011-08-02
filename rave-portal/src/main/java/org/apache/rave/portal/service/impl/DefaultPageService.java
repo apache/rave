@@ -73,7 +73,7 @@ public class DefaultPageService implements PageService {
     public Region removeWidgetFromPage(long regionWidgetId) {
         RegionWidget widget = getFromRepository(regionWidgetId, regionWidgetRepository);
         regionWidgetRepository.delete(widget);
-        return getFromRepository(widget.getRegionId(), regionRepository);
+        return getFromRepository(widget.getRegion().getId(), regionRepository);
     }
 
     @Override
