@@ -37,6 +37,23 @@ values (set(@user_id_6, next value for user_id_seq), 'maija.m', 'maija.m', 'N', 
 insert into user (user_id, username, password, expired, locked, enabled)
 values (set(@user_id_6, next value for user_id_seq), 'http://rave2011.myopenid.com/', 'unused', 'N', 'N', 'Y');
 
+insert into user (user_id, username, password, expired, locked, enabled)
+values (set(@user_id_7, next value for user_id_seq), 'one.col', 'one.col', 'N', 'N', 'Y');
+
+insert into user (user_id, username, password, expired, locked, enabled)
+values (set(@user_id_8, next value for user_id_seq), 'twown.col', 'twown.col', 'N', 'N', 'Y');
+
+insert into user (user_id, username, password, expired, locked, enabled)
+values (set(@user_id_9, next value for user_id_seq), 'three.col', 'three.col', 'N', 'N', 'Y');
+
+insert into user (user_id, username, password, expired, locked, enabled)
+values (set(@user_id_10, next value for user_id_seq), 'threewn.col', 'threewn.col', 'N', 'N', 'Y');
+
+insert into user (user_id, username, password, expired, locked, enabled)
+values (set(@user_id_11, next value for user_id_seq), 'four.col', 'four.col', 'N', 'N', 'Y');
+
+insert into user (user_id, username, password, expired, locked, enabled)
+values (set(@user_id_12, next value for user_id_seq), 'fourwn.col', 'fourwn.col', 'N', 'N', 'Y');
 --- end user data ---
 
 --- gadget data ---
@@ -68,15 +85,15 @@ values(set(@gifts_widget_id, next value for widget_id_seq), 'Gifts', 'http://ope
 
 --- start page layout data ---
 insert into page_layout (id, code,  number_of_regions)
-values (next value for page_layout_id_seq, 'columns_1', 1);
+values (set(@one_col_id, next value for page_layout_id_seq), 'columns_1', 1);
 insert into page_layout (id, code,  number_of_regions)
 values (set(@two_col_id, next value for page_layout_id_seq), 'columns_2', 2);
 insert into page_layout (id, code,  number_of_regions)
-values (next value for page_layout_id_seq, 'columns_2wn', 2);
+values (set(@twown_col_id, next value for page_layout_id_seq), 'columns_2wn', 2);
 insert into page_layout (id, code,  number_of_regions)
-values (next value for page_layout_id_seq, 'columns_3', 3);
+values (set(@three_col_id, next value for page_layout_id_seq), 'columns_3', 3);
 insert into page_layout (id, code,  number_of_regions)
-values (next value for page_layout_id_seq, 'columns_3nwn', 3);
+values (set(@threewn_col_id, next value for page_layout_id_seq), 'columns_3nwn', 3);
 insert into page_layout (id, code,  number_of_regions)
 values (next value for page_layout_id_seq, 'columns_4', 4);
 insert into page_layout (id, code,  number_of_regions)
@@ -165,3 +182,128 @@ values (next value for region_widget_id_seq, @hamster_widget_id, @page_1_region_
 INSERT INTO region_widget(id, widget_id, region_id, render_order, collapsed)
 values (next value for region_widget_id_seq, @tabnews_widget_id, @page_1_region_2, 1, 'N');
 --- End canonical user_id_6 layout ---
+
+--- Layout for user_id_7 ---
+INSERT INTO page (id, name, owner_id, render_sequence, page_layout_id)
+values (set(@page_7_id, next value for page_id_seq), 'main', @user_id_7, 1, @one_col_id);
+
+INSERT INTO region(id, page_id)
+values (set(@page_7_region_1, next value for region_id_seq), @page_7_id);
+
+INSERT INTO region_widget(id, widget_id, region_id, render_order, collapsed)
+values (next value for region_widget_id_seq, @hamster_widget_id, @page_7_region_1, 0, 'N');
+INSERT INTO region_widget(id, widget_id, region_id, render_order, collapsed)
+values (next value for region_widget_id_seq, @tabnews_widget_id, @page_7_region_1, 1, 'N');
+--- End asgoyal.one user_id_7 layout ---
+
+--- Layout for user_id_8 ---
+INSERT INTO page (id, name, owner_id, render_sequence, page_layout_id)
+values (set(@page_8_id, next value for page_id_seq), 'main', @user_id_8, 1, @twown_col_id);
+
+INSERT INTO region(id, page_id)
+values (set(@page_8_region_1, next value for region_id_seq), @page_8_id);
+INSERT INTO region(id, page_id)
+values (set(@page_8_region_2, next value for region_id_seq), @page_8_id);
+
+INSERT INTO region_widget(id, widget_id, region_id, render_order, collapsed)
+values (next value for region_widget_id_seq, @hamster_widget_id, @page_8_region_1, 0, 'N');
+INSERT INTO region_widget(id, widget_id, region_id, render_order, collapsed)
+values (next value for region_widget_id_seq, @tabnews_widget_id, @page_8_region_1, 1, 'N');
+
+INSERT INTO region_widget(id, widget_id, region_id, render_order, collapsed)
+values (next value for region_widget_id_seq, @wikipedia_widget_id, @page_8_region_2, 0, 'N');
+INSERT INTO region_widget(id, widget_id, region_id, render_order, collapsed)
+values (next value for region_widget_id_seq, @translate_widget_id, @page_8_region_2, 1, 'N');
+--- End asgoyal.twown user_id_8 layout ---
+
+--- Layout for user_id_9 ---
+INSERT INTO page (id, name, owner_id, render_sequence, page_layout_id)
+values (set(@page_9_id, next value for page_id_seq), 'main', @user_id_9, 1, @three_col_id);
+
+INSERT INTO region(id, page_id)
+values (set(@page_9_region_1, next value for region_id_seq), @page_9_id);
+INSERT INTO region(id, page_id)
+values (set(@page_9_region_2, next value for region_id_seq), @page_9_id);
+INSERT INTO region(id, page_id)
+values (set(@page_9_region_3, next value for region_id_seq), @page_9_id);
+
+INSERT INTO region_widget(id, widget_id, region_id, render_order, collapsed)
+values (next value for region_widget_id_seq, @hamster_widget_id, @page_9_region_2, 0, 'N');
+INSERT INTO region_widget(id, widget_id, region_id, render_order, collapsed)
+values (next value for region_widget_id_seq, @tabnews_widget_id, @page_9_region_3, 1, 'N');
+
+INSERT INTO region_widget(id, widget_id, region_id, render_order, collapsed)
+values (next value for region_widget_id_seq, @wikipedia_widget_id, @page_9_region_1, 0, 'N');
+INSERT INTO region_widget(id, widget_id, region_id, render_order, collapsed)
+values (next value for region_widget_id_seq, @translate_widget_id, @page_9_region_1, 1, 'N');
+--- End asgoyal.three user_id_9 layout ---
+
+--- Layout for user_id_10 ---
+INSERT INTO page (id, name, owner_id, render_sequence, page_layout_id)
+values (set(@page_10_id, next value for page_id_seq), 'main', @user_id_10, 1, @threewn_col_id);
+
+INSERT INTO region(id, page_id)
+values (set(@page_10_region_1, next value for region_id_seq), @page_10_id);
+INSERT INTO region(id, page_id)
+values (set(@page_10_region_2, next value for region_id_seq), @page_10_id);
+INSERT INTO region(id, page_id)
+values (set(@page_10_region_3, next value for region_id_seq), @page_10_id);
+
+INSERT INTO region_widget(id, widget_id, region_id, render_order, collapsed)
+values (next value for region_widget_id_seq, @hamster_widget_id, @page_10_region_2, 0, 'N');
+INSERT INTO region_widget(id, widget_id, region_id, render_order, collapsed)
+values (next value for region_widget_id_seq, @tabnews_widget_id, @page_10_region_3, 1, 'N');
+
+INSERT INTO region_widget(id, widget_id, region_id, render_order, collapsed)
+values (next value for region_widget_id_seq, @wikipedia_widget_id, @page_10_region_1, 0, 'N');
+INSERT INTO region_widget(id, widget_id, region_id, render_order, collapsed)
+values (next value for region_widget_id_seq, @translate_widget_id, @page_10_region_1, 1, 'N');
+--- End asgoyal.threewn user_id_10 layout ---
+
+--- Layout for user_id_11 ---
+INSERT INTO page (id, name, owner_id, render_sequence, page_layout_id)
+values (set(@page_11_id, next value for page_id_seq), 'main', @user_id_11, 1, @four_col_id);
+
+INSERT INTO region(id, page_id)
+values (set(@page_11_region_1, next value for region_id_seq), @page_11_id);
+INSERT INTO region(id, page_id)
+values (set(@page_11_region_2, next value for region_id_seq), @page_11_id);
+INSERT INTO region(id, page_id)
+values (set(@page_11_region_3, next value for region_id_seq), @page_11_id);
+INSERT INTO region(id, page_id)
+values (set(@page_11_region_4, next value for region_id_seq), @page_11_id);
+
+INSERT INTO region_widget(id, widget_id, region_id, render_order, collapsed)
+values (next value for region_widget_id_seq, @hamster_widget_id, @page_11_region_4, 0, 'N');
+INSERT INTO region_widget(id, widget_id, region_id, render_order, collapsed)
+values (next value for region_widget_id_seq, @tabnews_widget_id, @page_11_region_3, 1, 'N');
+
+INSERT INTO region_widget(id, widget_id, region_id, render_order, collapsed)
+values (next value for region_widget_id_seq, @wikipedia_widget_id, @page_11_region_2, 0, 'N');
+INSERT INTO region_widget(id, widget_id, region_id, render_order, collapsed)
+values (next value for region_widget_id_seq, @translate_widget_id, @page_11_region_1, 1, 'N');
+--- End asgoyal.four user_id_11 layout ---
+
+--- Layout for user_id_12 ---
+INSERT INTO page (id, name, owner_id, render_sequence, page_layout_id)
+values (set(@page_12_id, next value for page_id_seq), 'main', @user_id_12, 1, @fourwn_col_id);
+
+INSERT INTO region(id, page_id)
+values (set(@page_12_region_1, next value for region_id_seq), @page_12_id);
+INSERT INTO region(id, page_id)
+values (set(@page_12_region_2, next value for region_id_seq), @page_12_id);
+INSERT INTO region(id, page_id)
+values (set(@page_12_region_3, next value for region_id_seq), @page_12_id);
+INSERT INTO region(id, page_id)
+values (set(@page_12_region_4, next value for region_id_seq), @page_12_id);
+
+INSERT INTO region_widget(id, widget_id, region_id, render_order, collapsed)
+values (next value for region_widget_id_seq, @hamster_widget_id, @page_12_region_4, 0, 'N');
+INSERT INTO region_widget(id, widget_id, region_id, render_order, collapsed)
+values (next value for region_widget_id_seq, @tabnews_widget_id, @page_12_region_3, 1, 'N');
+
+INSERT INTO region_widget(id, widget_id, region_id, render_order, collapsed)
+values (next value for region_widget_id_seq, @wikipedia_widget_id, @page_12_region_2, 0, 'N');
+INSERT INTO region_widget(id, widget_id, region_id, render_order, collapsed)
+values (next value for region_widget_id_seq, @translate_widget_id, @page_12_region_1, 1, 'N');
+--- End asgoyal.fourwn user_id_12 layout ---
