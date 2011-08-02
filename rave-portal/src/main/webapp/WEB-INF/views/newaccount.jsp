@@ -54,6 +54,6 @@
 <script src="<spring:url value="/script/rave.js"/>"></script>
 <script src="<spring:url value="/script/rave_forms.js"/>"></script>
 
-<!--  <script>$(document).ready(rave.forms.validateNewAccountForm());</script> -->
+<script>$(document).ready(rave.forms.validateNewAccountForm());</script>
 </rave:rave_generic_page>
   
