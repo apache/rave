@@ -45,7 +45,29 @@ rave.forms = rave.forms || (function() {
         });
     }
 
+    function validateUserProfileForm() {
+        $("#userProfileForm").validate({
+            rules: {
+                password : {
+                    required: true,
+                    minlength: 4
+                },
+                passwordConfirm : {
+                    required: true,
+                    minlength: 4,
+                    equalTo: "#passwordField"
+                }
+            },
+            messages: {
+                passwordConfirm: {
+                    equalTo: "The password does not match"
+                }
+            }
+        });
+    }
+
     return {
-        validateNewAccountForm : validateNewAccountForm
+        validateNewAccountForm : validateNewAccountForm,
+		  validateUserProfileForm: validateUserProfileForm
     };
 })();

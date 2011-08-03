@@ -31,4 +31,5 @@ public class ModelKeys {
     public static final String REFERRING_PAGE_ID = "referringPageId";
     public static final String OPENSOCIAL_ENVIRONMENT = "openSocialEnv";
     public static final String NEW_USER = "newUser"; //a new user instance created
+	 public static final String USER_PROFILE="userProfile";
 }

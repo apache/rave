@@ -123,4 +123,9 @@ public class DefaultUserService implements UserService {
 	 public User getUserByUsername(String userName){
 		  return userRepository.getByUsername(userName);
 	 }
+
+	 @Override
+	 public void updateUserProfile(User user) {
+		  System.out.println("Updating user profile");
+	 }
 }

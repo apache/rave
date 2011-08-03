@@ -96,7 +96,10 @@
         <property name="engineRoot" value="${portal.opensocial_engine.root}"/>
         <property name="engineGadgetPath" value="${portal.opensocial_engine.gadget_path}"/>
     </bean>
+
+	 <!-- Validators -->
 	<bean id="newAccountValidator" class="org.apache.rave.portal.web.validator.NewAccountValidator"/>
+	<bean id="userProfileValidator" class="org.apache.rave.portal.web.validator.UserProfileValidator"/>
 	
 	<!-- Configuring messages.properties file --> 
 	<bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource" p:basename="messages" />

@@ -56,6 +56,14 @@ public class User implements UserDetails, BasicEntity {
     @Basic @Column(name = "enabled")
     private boolean enabled;
 
+	 @Basic @Column(name="email")
+	 private String email;
+
+	 @Basic @Column(name="openid")
+	 private String openId;
+
+	 private String confirmPassword;
+
     public User() {
     }
 
@@ -150,4 +158,37 @@ public class User implements UserDetails, BasicEntity {
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
+
+	 //The following properties are specific to the user profile.
+	 public String getEmail() {
+		  return email;
+	 }
+	 
+	 public void setEmail(String email) {
+		  this.email=email;
+	 }
+
+	 public String getOpenId() {
+		  return openId;
+	 }
+	 
+	 public void setOpenId(String openId){
+		  this.openId=openId;
+	 }
+	 
+	 public String getConfirmPassword() {
+		  //confirmPassword is not stored persistently, so if the value is not set,
+		  //return the password instead. This will need to be as secure as the password
+		  //field itself. 
+		  if(confirmPassword!=null && confirmPassword.length()>0) {
+				return confirmPassword;
+		  }
+		  else {
+				return password;
+		  }
+	 }
+
+	 public void setConfirmPassword(String confirmPassword) {
+		  this.confirmPassword=confirmPassword;
+	 }
 }

@@ -57,4 +57,10 @@ public interface UserService extends UserDetailsService {
 	  * Return a user object by the user ID.
 	  */
 	 User getUserById(Long id);
+
+	 /**
+	  * Update the user profile information.
+	  * @param user the modified user object
+	  */
+	 void updateUserProfile(User user);
 }
