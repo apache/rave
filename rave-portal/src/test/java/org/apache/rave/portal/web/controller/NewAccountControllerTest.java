@@ -102,7 +102,7 @@ public class NewAccountControllerTest {
 		expect(errors.getAllErrors()).andReturn(errorList).anyTimes();
 		replay(errors);
 		
-		String result = new String(newAccountController.create(newUser, errors, model, username, password));
+		String result = new String(newAccountController.create(newUser, errors, model));
 		errorList = errors.getAllErrors();
 
 		assertThat(errorList.size(), CoreMatchers.equalTo(1));
@@ -138,7 +138,7 @@ public class NewAccountControllerTest {
 		expect(userService.getUserByUsername(username)).andReturn(existingUser).anyTimes();
 		replay(userService);
 		
-		String result = new String(newAccountController.create(newUser, errors, model, username, password));
+		String result = new String(newAccountController.create(newUser, errors, model));
 		errorList = errors.getAllErrors();
 
 		assertThat(errorList.size(), CoreMatchers.equalTo(1));
@@ -167,7 +167,7 @@ public class NewAccountControllerTest {
 		expect(errors.getAllErrors()).andReturn(errorList).anyTimes();
 		replay(errors);
 		
-		String result = new String(newAccountController.create(newUser, errors, model, username, password));
+		String result = new String(newAccountController.create(newUser, errors, model));
 		errorList = errors.getAllErrors();
 
 		assertThat(errorList.size(), CoreMatchers.equalTo(1));
@@ -196,7 +196,7 @@ public class NewAccountControllerTest {
 		expect(errors.getAllErrors()).andReturn(errorList).anyTimes();
 		replay(errors);
 		
-		String result = new String(newAccountController.create(newUser, errors, model, username, password));
+		String result = new String(newAccountController.create(newUser, errors, model));
 		errorList = errors.getAllErrors();
 
 		assertThat(errorList.size(), CoreMatchers.equalTo(2));
@@ -225,7 +225,7 @@ public class NewAccountControllerTest {
 		expect(errors.getAllErrors()).andReturn(errorList).anyTimes();
 		replay(errors);
 		
-		String result = new String(newAccountController.create(newUser, errors, model, username, password));
+		String result = new String(newAccountController.create(newUser, errors, model));
 		errorList = errors.getAllErrors();
 
 		assertThat(errorList.size(), CoreMatchers.equalTo(1));
@@ -253,7 +253,7 @@ public class NewAccountControllerTest {
 		expect(errors.getAllErrors()).andReturn(errorList).anyTimes();
 		replay(errors);
 		
-		String result = new String(newAccountController.create(newUser, errors, model, username, password));
+		String result = new String(newAccountController.create(newUser, errors, model));
 		errorList = errors.getAllErrors();
 
 		assertThat(errorList.size(), CoreMatchers.equalTo(1));
@@ -281,7 +281,7 @@ public class NewAccountControllerTest {
 		expect(errors.getAllErrors()).andReturn(errorList).anyTimes();
 		replay(errors);
 		
-		String result = new String(newAccountController.create(newUser, errors, model, username, password));
+		String result = new String(newAccountController.create(newUser, errors, model));
 		errorList = errors.getAllErrors();
 
 		assertThat(errorList.size(), CoreMatchers.equalTo(1));
@@ -309,7 +309,7 @@ public class NewAccountControllerTest {
 		expect(errors.getAllErrors()).andReturn(errorList).anyTimes();
 		replay(errors);
 		
-		String result = new String(newAccountController.create(newUser, errors, model, username, password));
+		String result = new String(newAccountController.create(newUser, errors, model));
 		errorList = errors.getAllErrors();
 
 		assertThat(errorList.size(), CoreMatchers.equalTo(1));
@@ -339,7 +339,7 @@ public class NewAccountControllerTest {
 		expect(errors.getAllErrors()).andReturn(errorList).anyTimes();
 		replay(errors);
 		
-		String result = new String(newAccountController.create(newUser, errors, model, username, password));
+		String result = new String(newAccountController.create(newUser, errors, model));
 		errorList = errors.getAllErrors();
 
 		assertThat(errorList.size(), CoreMatchers.equalTo(3));
@@ -367,7 +367,7 @@ public class NewAccountControllerTest {
 		expect(errors.getAllErrors()).andReturn(errorList).anyTimes();
 		replay(errors);
 		
-		String result = new String(newAccountController.create(newUser, errors, model, username, password));
+		String result = new String(newAccountController.create(newUser, errors, model));
 		errorList = errors.getAllErrors();
 
 		assertThat(errorList.size(), CoreMatchers.equalTo(0));

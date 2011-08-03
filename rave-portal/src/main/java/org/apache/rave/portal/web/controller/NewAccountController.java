@@ -19,8 +19,6 @@
 
 package org.apache.rave.portal.web.controller;
 
-import java.util.List;
-
 import org.apache.rave.portal.model.NewUser;
 import org.apache.rave.portal.service.NewAccountService;
 import org.apache.rave.portal.web.util.ModelKeys;
@@ -33,11 +31,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 
 
 @Controller
@@ -63,7 +59,7 @@ public class NewAccountController {
 	 }
 
     @RequestMapping(value = { "/newaccount","/newacount/*"}, method = RequestMethod.POST)
-		  public String create(@ModelAttribute NewUser newUser, BindingResult results, Model model,@RequestParam String username, @RequestParam String password){
+		  public String create(@ModelAttribute NewUser newUser, BindingResult results, Model model){
 		  logger.debug("Creating a new user account");
 		  model.addAttribute(ModelKeys.NEW_USER,newUser);
 		  
@@ -77,8 +73,7 @@ public class NewAccountController {
 		  //Now attempt to create the account.
 		  try {
 			    logger.debug("newaccount.jsp: passed form validation");
-			    
-			    newAccountService.createNewAccount(username,password);
+			    newAccountService.createNewAccount(newUser.getUsername(),newUser.getPassword(),newUser.getPageLayout());
 			    //TODO: change this to a viewname (done)
 				return ViewNames.REDIRECT;
 		  }

@@ -18,6 +18,7 @@
  */
 package org.apache.rave.portal.service;
 
+
 public interface NewAccountService {
 
 	 /**
@@ -25,5 +26,5 @@ public interface NewAccountService {
 	  * @param userName is the user name of the new account.
 	  * @param password is the account's password.
 	  */
-	 public void createNewAccount(String userName, String password) throws Exception;
+	 public void createNewAccount(String userName, String password, String pageLayout) throws Exception;
 }

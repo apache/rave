@@ -44,14 +44,14 @@ public class DefaultNewAccountService implements NewAccountService {
 
     @Autowired
     public DefaultNewAccountService(UserService userService, PageService pageService, PageLayoutService pageLayoutService, RegionService regionService) {
-        this.userService = userService;
+          this.userService = userService;
 	 	  this.pageService = pageService;
 	 	  this.pageLayoutService = pageLayoutService;
 	 	  this.regionService = regionService;
     }
 
 	 @Override
-	 public void createNewAccount(String userName, String password) throws Exception {
+	 public void createNewAccount(String userName, String password, String userPageLayout) throws Exception {
 		  User user=new User();
 		  user.setUsername(userName);
 		  user.setPassword(password);
@@ -64,16 +64,16 @@ public class DefaultNewAccountService implements NewAccountService {
 		  //Return the newly registered user
 		  User registeredUser=userService.getUserByUsername(user.getUsername());
 		  
-		  //Create a PageLayout object.  We will default to 
-		  //the two-column layout
-		  PageLayout pageLayout=pageLayoutService.getPageLayoutByCode("columns_2");
+		  //Create a PageLayout object.		  
+		  PageLayout pageLayout=pageLayoutService.getPageLayoutByCode(userPageLayout);
 		  
 		  //Create regions
 		  List<Region> regions=new ArrayList<Region>();
-		  Region region1=new Region();
-		  Region region2=new Region();
-		  regions.add(region1);
-		  regions.add(region2);
+		  int regionCount;
+		  for (regionCount = 0; regionCount < pageLayout.getNumberOfRegions(); regionCount++) {
+			  Region region = new Region();
+			  regions.add(region);
+		  }
 		  
 		  //Create a Page object and register it.
 		  Page page=new Page();

@@ -1,4 +1,4 @@
-<%--
+<sele%--
   Licensed to the Apache Software Foundation (ASF) under one
   or more contributor license agreements.  See the NOTICE file
   distributed with this work for additional information
@@ -42,6 +42,18 @@
                 <label for="passwordConfirmField">Confirm Password:</label>
                 <form:input id="passwordConfirmField" type="password" path="confirmPassword" required="required"/>
             	<form:errors path="confirmPassword" cssClass="error" />
+            </p>
+            <p>
+            	<label for="pageLayoutField">Select Page Layout:</label>
+            	<form:select path="pageLayout">
+            		<form:option value="columns_1" id="columns_1_id">One Column</form:option>
+            		<form:option value="columns_2" id="columns_2_id" selected="selected" xmlns="default namespace">Two Columns</form:option>
+            		<form:option value="columns_2wn" id="columns_2wn_id">Two Columns (wide/narrow)</form:option>
+            		<form:option value="columns_3" id="columns_3_id">Three Columns</form:option>
+            		<form:option value="columns_3nwn" id="columns_3nwn_id">Three Columns (narrow/wide/narrow)</form:option>
+            		<form:option value="columns_4" id="columns_4_id">Four Columns</form:option>
+            		<form:option value="columns_3nwn_1_bottom" id="columns_3nwn_1_bottom">Four Columns (narrow/wide/narrow/bottom)</form:option>
+            	</form:select>
             </p>
         </fieldset>
         <fieldset>

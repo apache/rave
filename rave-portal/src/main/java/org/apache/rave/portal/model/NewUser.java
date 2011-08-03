@@ -30,6 +30,8 @@ public class NewUser {
 	private String password;
 	
 	private String confirmPassword;
+	
+	private String pageLayout;
 
 	public NewUser(){
 	}
@@ -56,6 +58,14 @@ public class NewUser {
 
 	public void setConfirmPassword(String confirmPassword) {
 		this.confirmPassword = confirmPassword;
+	}
+
+	public String getPageLayout() {
+		return pageLayout;
+	}
+
+	public void setPageLayout(String pageLayout) {
+		this.pageLayout = pageLayout;
 	}
 	
 }
