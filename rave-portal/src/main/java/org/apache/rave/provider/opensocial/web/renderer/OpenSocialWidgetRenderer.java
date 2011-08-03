@@ -25,6 +25,7 @@ import org.apache.rave.portal.model.RegionWidgetPreference;
 import org.apache.rave.portal.web.renderer.RegionWidgetRenderer;
 import org.apache.rave.provider.opensocial.Constants;
 import org.apache.rave.provider.opensocial.service.OpenSocialService;
+import org.apache.rave.provider.opensocial.service.SecurityTokenService;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -42,10 +43,12 @@ public class OpenSocialWidgetRenderer implements RegionWidgetRenderer {
     private static Logger logger = LoggerFactory.getLogger(OpenSocialWidgetRenderer.class);
 
     private OpenSocialService openSocialService;
+    private SecurityTokenService securityTokenService;
 
     @Autowired
-    public OpenSocialWidgetRenderer(OpenSocialService openSocialService) {
+    public OpenSocialWidgetRenderer(OpenSocialService openSocialService, SecurityTokenService securityTokenService) {
         this.openSocialService = openSocialService;
+        this.securityTokenService = securityTokenService;
     }
 
     //Note the widgets.push() call.  This defines the widget objects, which are
@@ -54,8 +57,9 @@ public class OpenSocialWidgetRenderer implements RegionWidgetRenderer {
             "widgets.push({type: '%1$s'," +
             " regionWidgetId: %2$s," +
             " widgetUrl: '%3$s', " +
-            " metadata: %4$s," +
-            " userPrefs: %5$s});";
+            " securityToken: '%4$s', " +
+            " metadata: %5$s," +
+            " userPrefs: %6$s});";
 
     @Override
     public String getSupportedContext() {
@@ -87,6 +91,7 @@ public class OpenSocialWidgetRenderer implements RegionWidgetRenderer {
         }
 
         return String.format(IFRAME_MARKUP, Constants.WIDGET_TYPE, item.getId(), item.getWidget().getUrl(),
+                securityTokenService.getEncryptedSecurityToken(item),
                 openSocialService.getGadgetMetadata(item.getWidget().getUrl()), userPrefs.toString());
     }
 }

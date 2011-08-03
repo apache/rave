@@ -60,6 +60,25 @@
             <scope>provided</scope>
         </dependency>
 
+        <!-- Shindig -->
+        <dependency>
+            <groupId>org.apache.shindig</groupId>
+            <artifactId>shindig-common</artifactId>
+            <type>jar</type>
+            <scope>compile</scope>
+            <version>${apache.shindig.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.tomcat</groupId>
+                    <artifactId>jasper-el</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.tomcat</groupId>
+                    <artifactId>el-api</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
         <!-- Spring -->
         <dependency>
             <groupId>org.springframework</groupId>

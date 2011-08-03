@@ -34,6 +34,13 @@
         http://www.springframework.org/schema/oxm http://www.springframework.org/schema/oxm/spring-oxm-3.0.xsd
         http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
 
+    <!-- make the the portal.properties props available to autowire injectors, location of the properties can
+     be overridden by setting a system property "portal.override.properties" -->
+    <bean id="portalPropertyPlaceholder" class="org.apache.rave.util.OverridablePropertyPlaceholderConfigurer">
+        <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE"/>
+        <property name="location" value="classpath:portal.properties"/>
+    </bean>
+
     <context:component-scan base-package="org.apache.rave" annotation-config="true" />
 
     <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">

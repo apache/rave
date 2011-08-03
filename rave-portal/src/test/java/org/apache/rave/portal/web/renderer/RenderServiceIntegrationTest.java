@@ -20,17 +20,22 @@
 package org.apache.rave.portal.web.renderer;
 
 
-import org.apache.rave.portal.model.RegionWidget;
-import org.apache.rave.portal.model.Widget;
+import org.apache.rave.portal.model.*;
 import org.apache.rave.provider.opensocial.repository.impl.ShindigGadgetMetadataRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AbstractAuthenticationToken;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.RestOperations;
+
+import java.util.Arrays;
 
 import static org.easymock.EasyMock.*;
 import static org.hamcrest.CoreMatchers.*;
@@ -51,6 +56,9 @@ public class RenderServiceIntegrationTest {
     private static final String VALID_METADATA = "[{\"id\":\"gadgets.metadata\",\"result\"" +
             ":{\"http://www.example.com/gadget.xml\":{\"data-snipped\":\"here-for-brevity\"}}}]";
 
+    private static final Long VALID_USER_ID = 1234L;
+    private static final String VALID_USER_NAME = "jdoe";
+
     @Before
     public void setup() {
         restOperations = createNiceMock(RestOperations.class);
@@ -61,6 +69,16 @@ public class RenderServiceIntegrationTest {
         //Replace the real restOperations instance with a mock -- otherwise the call for gadget metadata would fail since
         //we don't have a shindig server available to hit.
         ReflectionTestUtils.setField(metadataRepository, "restOperations", restOperations);
+
+        //Setup a mock authenticated user
+        final User authUser = new User(VALID_USER_ID, VALID_USER_NAME);
+        AbstractAuthenticationToken auth = createNiceMock(AbstractAuthenticationToken.class);
+        expect(auth.getPrincipal()).andReturn(authUser).anyTimes();
+        replay(auth);
+
+        SecurityContext context = new SecurityContextImpl();
+        context.setAuthentication(auth);
+        SecurityContextHolder.setContext(context);
     }
 
     @Test
@@ -72,15 +90,18 @@ public class RenderServiceIntegrationTest {
 
     @Test
     public void renderOpenSocial() {
+        Page page = new Page(1L, new User(VALID_USER_ID, VALID_USER_NAME));
+        Region region = new Region(1L, page);
+        page.setRegions(Arrays.asList(region));
+
         Widget w = new Widget();
         w.setType("OpenSocial");
         w.setId(1L);
         w.setTitle("Gadget Title");
         w.setUrl("http://www.example.com/gadget.xml");
 
-        RegionWidget rw = new RegionWidget();
-        rw.setId(2L);
-        rw.setWidget(w);
+        RegionWidget rw = new RegionWidget(1L, w, region);
+        region.setRegionWidgets(Arrays.asList(rw));
 
         String rendered = service.render(rw);
         assertThat(rendered, is(notNullValue()));

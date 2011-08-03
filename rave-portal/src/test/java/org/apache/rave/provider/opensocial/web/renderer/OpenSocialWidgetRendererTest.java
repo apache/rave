@@ -26,6 +26,7 @@ import org.apache.rave.portal.model.Widget;
 import org.apache.rave.portal.web.renderer.Renderer;
 import org.apache.rave.provider.opensocial.Constants;
 import org.apache.rave.provider.opensocial.service.OpenSocialService;
+import org.apache.rave.provider.opensocial.service.SecurityTokenService;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Before;
@@ -40,15 +41,18 @@ import static org.junit.Assert.assertThat;
 
 public class OpenSocialWidgetRendererTest {
     private OpenSocialService openSocialService;
+    private SecurityTokenService securityTokenService;
     private Renderer<RegionWidget> renderer;
 
     private static final String VALID_GADGET_URL = "http://www.example.com/gadget.xml";
     private static final String VALID_METADATA = "metadata";
+    private static final String VALID_SECURITY_TOKEN = "securityToken";
 
     @Before
     public void setup() {
         openSocialService = createNiceMock(OpenSocialService.class);
-        renderer = new OpenSocialWidgetRenderer(openSocialService);
+        securityTokenService = createNiceMock(SecurityTokenService.class);
+        renderer = new OpenSocialWidgetRenderer(openSocialService, securityTokenService);
     }
 
     @Test
@@ -71,12 +75,16 @@ public class OpenSocialWidgetRendererTest {
         rw.setPreferences(Arrays.asList(new RegionWidgetPreference(1L, 1L, "color", "blue"),
                 new RegionWidgetPreference(2L, 1L, "speed", "fast")));
 
+        expect(securityTokenService.getEncryptedSecurityToken(rw)).andReturn(VALID_SECURITY_TOKEN);
+        replay(securityTokenService);
+
         String result = renderer.render(rw);
+
         /*
             result should look like:
 
             widgets.push({type: 'OpenSocial', regionWidgetId: 1, widgetUrl: 'http://www.example.com/gadget.xml',
-                metadata: metadata, userPrefs: {"speed":"fast","color":"blue"}});
+                securityToken: 'securityToken',  metadata: metadata, userPrefs: {"speed":"fast","color":"blue"}});
         */
 
         JSONObject jsonObject = new JSONObject(
@@ -85,6 +93,7 @@ public class OpenSocialWidgetRendererTest {
         assertThat((Integer) jsonObject.get("regionWidgetId"), is(equalTo(1)));
         assertThat((String) jsonObject.get("type"), is(equalTo("OpenSocial")));
         assertThat((String) jsonObject.get("widgetUrl"), is(equalTo("http://www.example.com/gadget.xml")));
+        assertThat((String) jsonObject.get("securityToken"), is(equalTo(VALID_SECURITY_TOKEN)));
         assertThat((String) jsonObject.get("metadata"), is(equalTo(VALID_METADATA)));
         assertThat((String) ((JSONObject) jsonObject.get("userPrefs")).get("color"), is(equalTo("blue")));
         assertThat((String) ((JSONObject) jsonObject.get("userPrefs")).get("speed"), is(equalTo("fast")));
