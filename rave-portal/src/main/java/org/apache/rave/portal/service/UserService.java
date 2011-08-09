@@ -33,7 +33,7 @@ public interface UserService extends UserDetailsService {
     /**
      * Set the currently authenticated user to the user with a given userId. 
      *
-     * @param userId the unique id of the user
+     * @param userId the unique id of the use
      */
     void setAuthenticatedUser(long userId);
 

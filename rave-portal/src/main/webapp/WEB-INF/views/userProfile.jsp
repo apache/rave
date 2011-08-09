@@ -38,7 +38,7 @@
 		  </p>
 		  <p>
 			 <label for="passwordConfirmField">Confirm Password:</label>
-			 <form:input id="passwordConfirmField" type="password" path="confirmPassword" required="required"/>
+			 <input id="passwordConfirmField" type="password" path="confirmPassword" required="required"/>
 			 <form:errors path="confirmPassword" cssClass="error" />
 		  </p>
 		  <p>

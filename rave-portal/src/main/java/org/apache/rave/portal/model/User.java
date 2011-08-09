@@ -191,4 +191,5 @@ public class User implements UserDetails, BasicEntity {
 	 public void setConfirmPassword(String confirmPassword) {
 		  this.confirmPassword=confirmPassword;
 	 }
+
 }

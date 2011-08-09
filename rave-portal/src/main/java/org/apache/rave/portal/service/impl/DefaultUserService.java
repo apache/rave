@@ -58,6 +58,7 @@ public class DefaultUserService implements UserService {
         if(user == null) {
             throw new UsernameNotFoundException("User with username '" + username + "' was not found!");
         }
+		  System.out.println("Can do anything else here too.");
         return user;
     }
 

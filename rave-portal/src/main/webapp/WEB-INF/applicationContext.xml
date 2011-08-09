@@ -111,4 +111,10 @@
 	<!-- Configuring messages.properties file --> 
 	<bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource" p:basename="messages" />
 
+	<!-- Password encoding and salting-->
+	<bean class="org.springframework.security.authentication.encoding.ShaPasswordEncoder" id="passwordEncoder"/>
+	<bean class="org.springframework.security.authentication.dao.ReflectionSaltSource" id="saltSource">
+	  <property name="userPropertyToUse" value="username"/>
+	</bean>
+
 </beans>

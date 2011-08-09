@@ -44,6 +44,9 @@ public class JpaUserRepositoryTest {
 
     private static final Long USER_ID = 1L;
     private static final String USER_NAME = "canonical";
+	 //The password value depends on the hash algorithm and salt used, so this
+	 //may need updating in the future.
+	 private static final String HASHED_SALTED_PASSWORD="b97fd0fa25ba8a504309be2b6651ac6dee167ded";
     private static final Long INVALID_USER = -2L;
 
     @Autowired
@@ -54,7 +57,7 @@ public class JpaUserRepositoryTest {
         User user = repository.get(USER_ID);
         assertThat(user, CoreMatchers.notNullValue());
         assertThat(user.getUsername(), is(equalTo(USER_NAME)));
-        assertThat(user.getPassword(), is(equalTo(USER_NAME)));
+		  assertThat(user.getPassword(), is(equalTo(HASHED_SALTED_PASSWORD)));
         assertThat(user.isAccountNonExpired(), is(true));
     }
     @Test
@@ -67,7 +70,7 @@ public class JpaUserRepositoryTest {
         User user = repository.getByUsername(USER_NAME);
         assertThat(user, CoreMatchers.notNullValue());
         assertThat(user.getId(), is(equalTo(USER_ID)));
-        assertThat(user.getPassword(), is(equalTo(USER_NAME)));
+		  assertThat(user.getPassword(), is(equalTo(HASHED_SALTED_PASSWORD)));
         assertThat(user.isAccountNonExpired(), is(true));
     }
     @Test

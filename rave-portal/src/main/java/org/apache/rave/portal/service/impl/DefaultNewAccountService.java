@@ -27,6 +27,8 @@ import org.apache.rave.portal.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.encoding.PasswordEncoder;
+import org.springframework.security.authentication.dao.SaltSource;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -42,9 +44,16 @@ public class DefaultNewAccountService implements NewAccountService {
 	 private final PageLayoutService pageLayoutService;
 	 private final RegionService regionService;
 
+
+	 @Autowired 
+	 private SaltSource saltSource;
+
+	 @Autowired 
+	 private PasswordEncoder passwordEncoder;
+
     @Autowired
     public DefaultNewAccountService(UserService userService, PageService pageService, PageLayoutService pageLayoutService, RegionService regionService) {
-          this.userService = userService;
+		  this.userService = userService;
 	 	  this.pageService = pageService;
 	 	  this.pageLayoutService = pageLayoutService;
 	 	  this.regionService = regionService;
@@ -54,7 +63,11 @@ public class DefaultNewAccountService implements NewAccountService {
 	 public void createNewAccount(String userName, String password, String userPageLayout) throws Exception {
 		  User user=new User();
 		  user.setUsername(userName);
-		  user.setPassword(password);
+		  //This assumes we use the username for the salt.  If not, the code below will need to change.
+		  //See also applicationContext-security.xml
+		  String saltedHashedPassword=passwordEncoder.encodePassword(password,saltSource.getSalt(user));
+		  logger.debug("Salt Source:"+saltSource.getSalt(user));
+		  user.setPassword(saltedHashedPassword);
 		  
 		  user.setExpired(false);
 		  user.setLocked(false);

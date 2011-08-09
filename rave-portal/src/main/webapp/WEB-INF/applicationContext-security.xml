@@ -57,6 +57,10 @@
   
   <security:authentication-manager>
 	 <security:authentication-provider
-		  user-service-ref="userService" />
+		  user-service-ref="userService">
+		<security:password-encoder ref="passwordEncoder">
+		  <security:salt-source ref="saltSource"/>
+		</security:password-encoder>
+	 </security:authentication-provider>
   </security:authentication-manager>
 </beans>
