@@ -20,8 +20,6 @@
 package org.apache.rave.opensocial.repository;
 
 import org.apache.rave.opensocial.model.Person;
-import org.apache.shindig.protocol.model.FilterOperation;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +33,6 @@ import java.util.List;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
-import static org.apache.shindig.social.opensocial.model.Person.Field.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations={"classpath:spring-test.xml"})
@@ -44,6 +41,8 @@ public class JpaPersonRepositoryTest {
     private static final String VALID_USER = "canonical";
     private static final String VALID_USER2 = "john.doe";
     private static final String VALID_USER3 = "jane.doe";
+    private static final String VALID_USER4 = "george.doe";
+    private static final String VALID_USER5 = "mario.rossi";
     private static final String INVALID_USERNAME = "INVALID_USERNAME";
     private static final String FEMALE = "female";
 
@@ -72,19 +71,40 @@ public class JpaPersonRepositoryTest {
         assertThat(connected.get(0).getUsername(), is(equalTo(VALID_USER2)));
         assertThat(connected.get(1).getUsername(), is(equalTo(VALID_USER3)));
     }
-
-    @Test
-    @Ignore
-    public void findFilteredFriends_valid() {
-        List<Person> connected = repository.findFriends(VALID_USER, GENDER.toString(), FilterOperation.equals, FEMALE);
-        assertThat(connected.size(), is(equalTo(1)));
-        assertThat(connected.get(0).getUsername(), is(equalTo(VALID_USER3)));
-    }
-
     @Test
     public void findFriends_invalid() {
         List<Person> connected = repository.findFriends(INVALID_USERNAME);
         assertThat(connected.isEmpty(), is(true));
     }
+
+    @Test
+    public void findConnected_valid() {
+        List<Person> connected = repository.findAllConnectedPeople(VALID_USER);
+        assertThat(connected.size(), is(equalTo(3)));
+        assertThat(connected.get(0).getUsername(), is(equalTo(VALID_USER2)));
+        assertThat(connected.get(1).getUsername(), is(equalTo(VALID_USER3)));
+        assertThat(connected.get(2).getUsername(), is(equalTo(VALID_USER5)));
+    }
+
+    @Test
+    public void findConnected_invalid() {
+        List<Person> connected = repository.findFriends(INVALID_USERNAME);
+        assertThat(connected.isEmpty(), is(true));
+    }
+
+    @Test
+    public void findByGroup_valid() {
+        List<Person> connected = repository.findByGroup("Party");
+        assertThat(connected.size(), is(equalTo(2)));
+        assertThat(connected.get(0).getUsername(), is(equalTo(VALID_USER)));
+        assertThat(connected.get(1).getUsername(), is(equalTo(VALID_USER5)));
+    }
+
+    @Test
+    public void findByGroup_invalid() {
+        List<Person> connected = repository.findByGroup(INVALID_USERNAME);
+        assertThat(connected.isEmpty(), is(true));
+    }
+
 
 }

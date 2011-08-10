@@ -31,12 +31,15 @@ import java.util.*;
 @SequenceGenerator(name="personIdSeq", sequenceName = "person_id_seq")
 @NamedQueries(value = {
     @NamedQuery(name = Person.FIND_BY_USERNAME, query = "select p from Person p where p.username like :username"),
-    @NamedQuery(name = Person.FIND_FRIENDS_BY_USERNAME, query = "select a.followed from PersonAssociation a where a.follower.username = :username")
+    @NamedQuery(name = Person.FIND_FRIENDS_BY_USERNAME, query = "select a.followed from PersonAssociation a where a.follower.username = :username"),
+    @NamedQuery(name = Person.FIND_BY_GROUP_MEMBERSHIP, query = "select m from Group g join g.members m where exists " +
+            "(select 'found' from g.members b where b.username = :username) and m.username <> :username")
 })
 public class Person implements BasicEntity {
 
     public static final String FIND_BY_USERNAME = "Person.findByUsername";
     public static final String FIND_FRIENDS_BY_USERNAME = "Person.findFriendsByUsername";
+    public static final String FIND_BY_GROUP_MEMBERSHIP = "Person.findByGroupMembership";
     public static final String USERNAME_PARAM = "username";
 
     @Id
@@ -195,7 +198,6 @@ public class Person implements BasicEntity {
             joinColumns = @JoinColumn(name = "follower_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "followed_id", referencedColumnName = "id"))
     private List<Person> friends;
-
 
     @Transient
     private Url profileSong;

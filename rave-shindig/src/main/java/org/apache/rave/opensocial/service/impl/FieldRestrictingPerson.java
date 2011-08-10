@@ -41,6 +41,9 @@ import java.util.*;
  * the field set contains the requested field
  * <p/>
  * Usage of this wrapper is made possible by Shindig's use of a getter based serialization model
+ *
+ * NOTE: Setters will throw a {@link NotSupportedException} as Shindig's SPI has no method for persisting changes to
+ *       a person.
  */
 public class FieldRestrictingPerson implements org.apache.shindig.social.opensocial.model.Person, Serializable {
 
@@ -82,7 +85,6 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
 
     @Override
     public void setAccounts(List<Account> accounts) {
-        //TODO:Configure setter
         throw new NotSupportedException();
     }
 
@@ -103,7 +105,6 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
 
     @Override
     public void setAddresses(List<Address> addresses) {
-        //TODO:Configure setter
         throw new NotSupportedException();
     }
 
@@ -134,7 +135,6 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
 
     @Override
     public void setBirthday(Date birthday) {
-        //TODO:Configure setter
         throw new NotSupportedException();
     }
 
@@ -145,7 +145,6 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
 
     @Override
     public void setBodyType(BodyType bodyType) {
-        //TODO:Configure setter
         throw new NotSupportedException();
     }
 
@@ -156,7 +155,6 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
 
     @Override
     public void setBooks(List<String> books) {
-        //TODO:Configure setter    
         throw new NotSupportedException();
     }
 
@@ -167,7 +165,6 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
 
     @Override
     public void setCars(List<String> cars) {
-        //TODO: Collection Reconciliation  
         throw new NotSupportedException();
     }
 
@@ -188,7 +185,6 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
 
     @Override
     public void setCurrentLocation(Address currentLocation) {
-        //TODO:Configure setter
         throw new NotSupportedException();
     }
 
@@ -209,7 +205,6 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
 
     @Override
     public void setEmails(List<ListField> emails) {
-        //TODO: Do setting
         throw new NotSupportedException();
     }
 
@@ -240,7 +235,6 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
 
     @Override
     public void setFood(List<String> food) {
-        //TODO: Handle Setter
         throw new NotSupportedException();
     }
 
@@ -271,7 +265,6 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
 
     @Override
     public void setHasApp(Boolean hasApp) {
-        //TODO: Handle Setter
         throw new NotSupportedException();
     }
 
@@ -282,7 +275,6 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
 
     @Override
     public void setHeroes(List<String> heroes) {
-        //TODO: Handle Setter
         throw new NotSupportedException();
     }
 
@@ -313,7 +305,6 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
 
     @Override
     public void setIms(List<ListField> ims) {
-        //TODO: Handle Setter
         throw new NotSupportedException();
     }
 
@@ -324,7 +315,6 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
 
     @Override
     public void setInterests(List<String> interests) {
-        //TODO: Handle Setter
         throw new NotSupportedException();
     }
 
@@ -345,7 +335,6 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
 
     @Override
     public void setLanguagesSpoken(List<String> languagesSpoken) {
-        //TODO: Handle Setter
         throw new NotSupportedException();
     }
 
@@ -376,7 +365,6 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
 
     @Override
     public void setLookingFor(List<Enum<LookingFor>> lookingFor) {
-        //TODO: Handle Setter
         throw new NotSupportedException();
     }
 
@@ -387,7 +375,6 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
 
     @Override
     public void setMovies(List<String> movies) {
-        //TODO: Handle Setter
         throw new NotSupportedException();
     }
 
@@ -398,7 +385,6 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
 
     @Override
     public void setMusic(List<String> music) {
-        //TODO: Handle Setter
         throw new NotSupportedException();
     }
 
@@ -409,7 +395,6 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
 
     @Override
     public void setName(Name name) {
-        //TODO:Configure setter
         throw new NotSupportedException();
     }
 
@@ -440,7 +425,6 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
 
     @Override
     public void setOrganizations(List<Organization> organizations) {
-        //TODO:Configure setter
         throw new NotSupportedException();
     }
 
@@ -461,7 +445,6 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
 
     @Override
     public void setPhoneNumbers(List<ListField> phoneNumbers) {
-        //TODO: Handle Setter
         throw new NotSupportedException();
     }
 
@@ -472,7 +455,6 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
 
     @Override
     public void setPhotos(List<ListField> photos) {
-        //TODO: Handle Setter
         throw new NotSupportedException();
     }
 
@@ -503,7 +485,6 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
 
     @Override
     public void setProfileSong(Url profileSong) {
-        //TODO:Configure setter
         throw new NotSupportedException();
     }
 
@@ -514,7 +495,6 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
 
     @Override
     public void setProfileVideo(Url profileVideo) {
-        //TODO:Configure setter
         throw new NotSupportedException();
     }
 
@@ -525,7 +505,6 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
 
     @Override
     public void setQuotes(List<String> quotes) {
-        //TODO: Handle Setter
         throw new NotSupportedException();
     }
 
@@ -596,7 +575,6 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
 
     @Override
     public void setSports(List<String> sports) {
-        //TODO: Handle Setter
         throw new NotSupportedException();
     }
 
@@ -617,7 +595,6 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
 
     @Override
     public void setTags(List<String> tags) {
-        //TODO: Handle Setter
         throw new NotSupportedException();
     }
 
@@ -638,7 +615,6 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
 
     @Override
     public void setTurnOffs(List<String> turnOffs) {
-        //TODO: Handle Setter
         throw new NotSupportedException();
     }
 
@@ -649,7 +625,6 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
 
     @Override
     public void setTurnOns(List<String> turnOns) {
-        //TODO: Handle Setter
         throw new NotSupportedException();
     }
 
@@ -660,19 +635,18 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
 
     @Override
     public void setTvShows(List<String> tvShows) {
-        //TODO: Handle Setter
         throw new NotSupportedException();
     }
 
     @Override
     public List<Url> getUrls() {
+        //TODO:Get URLs
         //return displayField(Field.URLS) ? internal.getUrls() : null;
         return null;
     }
 
     @Override
     public void setUrls(List<Url> urls) {
-        //TODO:Configure setter
         throw new NotSupportedException();
     }
 

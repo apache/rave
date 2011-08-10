@@ -22,20 +22,21 @@
   xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
   version="2.0">
   <persistence-unit name="raveShindigPersistenceUnit" transaction-type="RESOURCE_LOCAL">
-    <provider>org.apache.openjpa.persistence.PersistenceProviderImpl</provider>
-    <class>org.apache.shindig.gadgets.oauth.model.OAuthConsumerStoreDb</class>
-    <class>org.apache.shindig.gadgets.oauth.model.OAuthTokenInfoDb</class>
-    <class>org.apache.rave.opensocial.model.Person</class>
-    <class>org.apache.rave.opensocial.model.Account</class>
-    <class>org.apache.rave.opensocial.model.Address</class>
-    <class>org.apache.rave.opensocial.model.BodyType</class>
-    <class>org.apache.rave.opensocial.model.Group</class>
-    <class>org.apache.rave.opensocial.model.Name</class>
-    <class>org.apache.rave.opensocial.model.Organization</class>
-    <class>org.apache.rave.opensocial.model.Person</class>
-    <class>org.apache.rave.opensocial.model.PersonProperty</class>
-    <class>org.apache.rave.opensocial.model.PersonAssociation</class>
-    <class>org.apache.rave.opensocial.model.Url</class>
+      <provider>org.apache.openjpa.persistence.PersistenceProviderImpl</provider>
+      <class>org.apache.shindig.gadgets.oauth.model.OAuthConsumerStoreDb</class>
+      <class>org.apache.shindig.gadgets.oauth.model.OAuthTokenInfoDb</class>
+      <class>org.apache.rave.opensocial.model.Person</class>
+      <class>org.apache.rave.opensocial.model.Account</class>
+      <class>org.apache.rave.opensocial.model.Address</class>
+      <class>org.apache.rave.opensocial.model.BodyType</class>
+      <class>org.apache.rave.opensocial.model.Group</class>
+      <class>org.apache.rave.opensocial.model.Name</class>
+      <class>org.apache.rave.opensocial.model.Organization</class>
+      <class>org.apache.rave.opensocial.model.Person</class>
+      <class>org.apache.rave.opensocial.model.PersonProperty</class>
+      <class>org.apache.rave.opensocial.model.PersonAssociation</class>
+      <class>org.apache.rave.opensocial.model.Url</class>
+
       <class>org.apache.shindig.social.opensocial.jpa.ApplicationDb</class>
       <class>org.apache.shindig.social.opensocial.jpa.OrganizationDb</class>
       <class>org.apache.shindig.social.opensocial.jpa.PersonPropertyDb</class>
@@ -67,7 +68,6 @@
       <class>org.apache.shindig.social.opensocial.jpa.PersonAccountDb</class>
       <class>org.apache.shindig.social.opensocial.jpa.ApplicationDataMapValueDb</class>
       <class>org.apache.shindig.social.opensocial.jpa.UrlDb</class>
-    
   </persistence-unit>
 
 </persistence>

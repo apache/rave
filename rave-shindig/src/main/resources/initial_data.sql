@@ -40,3 +40,15 @@ VALUES (next value for person_association_id_seq, @person_id_1, @person_id_3);
 
 INSERT INTO person_association(id, follower_id, followed_id)
 VALUES (next value for person_association_id_seq, @person_id_2, @person_id_4);
+
+INSERT INTO groups(id, title, description)
+VALUES (set(@group_id_1, next value for group_id_seq), 'Party', 'Party Group');
+
+INSERT INTO groups(id, title, description)
+VALUES (set(@group_id_2, next value for group_id_seq), 'Portal', 'Portal Group');
+
+INSERT INTO group_members(group_id, person_id)
+VALUES (@group_id_1, @person_id_1);
+
+INSERT INTO group_members(group_id, person_id)
+VALUES (@group_id_1, @person_id_5);
