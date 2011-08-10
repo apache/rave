@@ -118,8 +118,7 @@ public class DefaultPersonService implements PersonService {
         String filter = collectionOptions == null ? null : collectionOptions.getFilter();
         List<org.apache.rave.opensocial.model.Person> current;
         //Currently ignoring TOP FRIENDS as it hasn't been defined what a top friend is
-
-        if(filter == null || filter.equals(PersonService.TOP_FRIENDS_FILTER)) {
+        if(filter == null || filter.equals(PersonService.ALL_FILTER) || filter.equals(PersonService.TOP_FRIENDS_FILTER)) {
             current = repository.findFriends(userId);
 
         } else if(filter.equals(PersonService.HAS_APP_FILTER)) {
@@ -143,7 +142,7 @@ public class DefaultPersonService implements PersonService {
         List<org.apache.rave.opensocial.model.Person> current;
         //Currently ignoring TOP FRIENDS as it hasn't been defined what a top friend is
 
-        if(filter == null || filter.equals(PersonService.TOP_FRIENDS_FILTER)) {
+        if(filter == null || filter.equals(PersonService.ALL_FILTER) ||filter.equals(PersonService.TOP_FRIENDS_FILTER)) {
             current = repository.findAllConnectedPeople(userId);
 
         } else if(filter.equals(PersonService.HAS_APP_FILTER)) {
@@ -166,7 +165,7 @@ public class DefaultPersonService implements PersonService {
         String filter = collectionOptions == null ? null : collectionOptions.getFilter();
         List<org.apache.rave.opensocial.model.Person> current;
 
-        if(filter == null || filter.equals(PersonService.TOP_FRIENDS_FILTER)) {
+        if(filter == null || filter.equals(PersonService.ALL_FILTER) || filter.equals(PersonService.TOP_FRIENDS_FILTER)) {
             current = repository.findByGroup(groupId);
 
         } else if(filter.equals(PersonService.HAS_APP_FILTER)) {

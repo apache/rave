@@ -734,8 +734,10 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
 
     private static List<Enum<LookingFor>> getEnumsFromValues(List<String> values) {
         List<Enum<LookingFor>> looking = new ArrayList<Enum<LookingFor>>();
-        for (String value : values) {
-            looking.add(new EnumImpl<LookingFor>(LookingFor.valueOf(value)));
+        if (values != null) {
+            for (String value : values) {
+                looking.add(new EnumImpl<LookingFor>(LookingFor.valueOf(value)));
+            }
         }
         return looking;
     }

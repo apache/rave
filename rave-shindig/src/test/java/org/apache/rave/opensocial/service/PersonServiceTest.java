@@ -287,6 +287,28 @@ public class PersonServiceTest {
     }
 
     @Test
+    public void getPeople_FriendsAllFilterField() throws ExecutionException, InterruptedException {
+        Set<UserId> ids = getUserIdSet();
+        GroupId groupId = new GroupId(GroupId.Type.friends, GROUP_ID);
+        replay(token);
+
+        CollectionOptions options = new CollectionOptions();
+        String field = PersonService.ALL_FILTER;
+        String value = "AAA";
+        options.setFilter(field);
+        options.setFilterOperation(FilterOperation.contains);
+        options.setFilterValue(value);
+
+        expect(repository.findFriends(ID_2)).andReturn(getDbPersonList());
+        expect(repository.findFriends(ID_3)).andReturn(getDbPersonList());
+        replay(repository);
+
+        Future<RestfulCollection<Person>> people = service.getPeople(ids, groupId, options, null, token);
+        assertThat(people, is(not(nullValue())));
+        verify(repository);
+    }
+
+    @Test
     public void getPeople_friendHasAppFilterField() throws ExecutionException, InterruptedException {
         Set<UserId> ids = getUserIdSet();
         GroupId groupId = new GroupId(GroupId.Type.friends, GROUP_ID);

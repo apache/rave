@@ -18,12 +18,12 @@
 INSERT INTO person(id, username, display_name, gender, status, profile_url, build, eye_color, hair_color,family_name, given_name )
 VALUES (set(@person_id_1, next value for person_id_seq), 'canonical', 'Canonical User', 'male', 'I am alive', 'http://rave.rocks.org/profile', 'skinny', 'orange', 'blue', 'User', 'Canonical');
 
-INSERT INTO person(id, username, display_name)
-VALUES (set(@person_id_2, next value for person_id_seq), 'john.doe', 'John Doe');
+INSERT INTO person(id, username, display_name, gender)
+VALUES (set(@person_id_2, next value for person_id_seq), 'john.doe', 'John Doe', 'male');
 
 
-INSERT INTO person(id, username, display_name)
-VALUES (set(@person_id_3, next value for person_id_seq), 'jane.doe', 'Jane Doe');
+INSERT INTO person(id, username, display_name, gender)
+VALUES (set(@person_id_3, next value for person_id_seq), 'jane.doe', 'Jane Doe', 'female');
 
 
 INSERT INTO person(id, username, display_name)
