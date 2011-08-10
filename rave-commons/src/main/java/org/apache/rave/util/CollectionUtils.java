@@ -21,10 +21,7 @@ package org.apache.rave.util;
 
 import org.apache.commons.lang.Validate;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 public class CollectionUtils {
 
@@ -105,6 +102,34 @@ public class CollectionUtils {
         for (Map.Entry<K, T> updatedObjectEntry : updatedObjects.entrySet()) {
             if (!existingObjects.containsKey(updatedObjectEntry.getKey())) {
                 existingCollection.add(updatedObjectEntry.getValue());
+            }
+        }
+    }
+
+    /**
+     * Converts the wildcard list to a typed list
+     * @param initial the wildcard list
+     * @param <T> the type constraint for the target list
+     * @return the new, type constrained list
+     */
+    public static <T> List<T> toBaseTypedList(List<? extends T> initial) {
+        List<T> list = new ArrayList<T>();
+        for(T f : initial) {
+            list.add(f);
+        }
+        return list;
+    }
+
+    /**
+     * Adds values from the source list to the target list only if they don't already exist in the target
+     * @param source the list to add items from
+     * @param target the list to add items to
+     * @param <T>  the type of the source & target lists
+     */
+    public static <T> void addUniqueValues(List<T> source, List<T> target) {
+        for(T item : source) {
+            if(!target.contains(item)) {
+                target.add(item);
             }
         }
     }

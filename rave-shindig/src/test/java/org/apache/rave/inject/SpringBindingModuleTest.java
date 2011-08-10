@@ -49,10 +49,17 @@ public class SpringBindingModuleTest {
     }
 
     @Test
-    public void bindsScopedBean() {/*
+    public void bindsScopedBean() {
         PersonService personService = injector.getInstance(PersonService.class);
         assertThat(personService, is(notNullValue()));
-        assertThat(personService, is(instanceOf(DefaultPersonService.class)));*/
+        assertThat(personService, is(instanceOf(DefaultPersonService.class)));
+    }
+
+    @Test
+    public void bindsScopedBeanSingleton() {
+        PersonService personService1 = injector.getInstance(PersonService.class);
+        PersonService personService2 = injector.getInstance(PersonService.class);
+        assertThat(personService1, is(sameInstance(personService2)));
     }
 
     @Test

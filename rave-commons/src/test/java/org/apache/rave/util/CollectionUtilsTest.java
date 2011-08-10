@@ -25,9 +25,10 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.*;
 
 public class CollectionUtilsTest {
     private CollectionUtils.CollectionReconciliationHelper<TestObject, String> reconciliationHelper =
@@ -174,6 +175,45 @@ public class CollectionUtilsTest {
         assertFalse(org.apache.commons.collections.CollectionUtils.isEqualCollection(existingObjects, updatedObjects));
         CollectionUtils.reconcileObjectCollections(existingObjects, updatedObjects, reconciliationHelper, true);
         assertTrue(org.apache.commons.collections.CollectionUtils.isEqualCollection(existingObjects, updatedObjects));
+    }
+
+    @Test
+    public void toBaseTypedList() {
+        List<SubTestObject> list = new ArrayList<SubTestObject>();
+        list.add(new SubTestObject("a", "b"));
+        list.add(new SubTestObject("a", "b"));
+        list.add(new SubTestObject("a", "b"));
+
+        List<TestObject> down = CollectionUtils.toBaseTypedList((List<? extends TestObject>)list);
+        assertThat(down.get(0), is(sameInstance((TestObject)list.get(0))));
+        assertThat(down.get(0), is(sameInstance((TestObject)list.get(0))));
+        assertThat(down.get(0), is(sameInstance((TestObject)list.get(0))));
+    }
+
+    @Test
+    public void addUniqueValues() {
+        List<TestObject> source = new ArrayList<TestObject>();
+        TestObject testObject1 = new TestObject("a", "b");
+        TestObject testObject2 = new TestObject("b", "c");
+        TestObject testObject3 = new TestObject("k", "l");
+        source.add(testObject1);
+        source.add(testObject2);
+
+        List<TestObject> target = new ArrayList<TestObject>();
+        target.add(testObject1);
+        target.add(testObject3);
+
+        CollectionUtils.addUniqueValues(source, target);
+        assertThat(target.size(), is(equalTo(3)));
+        assertThat(target.contains(testObject1), is(true));
+        assertThat(target.contains(testObject2), is(true));
+        assertThat(target.contains(testObject3), is(true));
+    }
+
+    private class SubTestObject extends TestObject {
+        private SubTestObject(String name, String value) {
+            super(name, value);
+        }
     }
 
     private class TestObject {

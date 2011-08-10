@@ -53,6 +53,7 @@
           class="org.apache.rave.persistence.jpa.PopulatedLocalContainerEntityManagerFactory">
         <property name="persistenceUnitName" value="raveShindigPersistenceUnit"/>
         <property name="dataSource" ref="dataSource"/>
+        <property name="populator" ref="dataSourcePopulator" />
         <property name="jpaVendorAdapter">
             <bean class="org.springframework.orm.jpa.vendor.OpenJpaVendorAdapter">
                 <property name="showSql" value="true" />
@@ -61,7 +62,8 @@
         <property name="jpaPropertyMap">
             <map>
                 <entry key="openjpa.Log" value="DefaultLevel=WARN, Runtime=INFO, Tool=INFO, SQL=TRACE"/>
-                <entry key="openjpa.RuntimeUnenhancedClasses" value="unsupported"/>
+                <!--<entry key="openjpa.RuntimeUnenhancedClasses" value="unsupported"/>-->
+                <entry key="openjpa.RuntimeUnenhancedClasses" value="warn"/>
                 <entry key="openjpa.jdbc.SynchronizeMappings" value="buildSchema(ForeignKeys=true)"/>
             </map>
         </property>

@@ -21,17 +21,12 @@ package org.apache.shindig.social.opensocial.jpa.spi;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import org.apache.rave.os.model.RaveNameImpl;
 import org.apache.shindig.auth.SecurityToken;
 import org.apache.shindig.common.testing.FakeGadgetToken;
 import org.apache.shindig.protocol.ProtocolException;
 import org.apache.shindig.protocol.model.FilterOperation;
 import org.apache.shindig.protocol.model.SortOrder;
-import org.apache.shindig.social.opensocial.jpa.EnumDb;
-import org.apache.shindig.social.opensocial.jpa.PersonDb;
-import org.apache.shindig.social.opensocial.jpa.api.FilterCapability;
-import org.apache.shindig.social.opensocial.jpa.api.FilterSpecification;
-import org.apache.shindig.social.opensocial.jpa.openjpa.OpenJPADbModule;
+//import org.apache.shindig.social.opensocial.jpa.openjpa.OpenJPADbModule;
 import org.apache.shindig.social.opensocial.model.*;
 import org.apache.shindig.social.opensocial.spi.CollectionOptions;
 import org.apache.shindig.social.opensocial.spi.PersonService;
@@ -52,7 +47,7 @@ import static org.easymock.EasyMock.*;
  * Test for {@link PersonServiceDb}
  */
 public class PersonServiceDbTest {
-    PersonServiceDb service;
+  /*  PersonServiceDb service;
 
     @Before
     public void setUp() throws Exception {
@@ -95,11 +90,11 @@ public class PersonServiceDbTest {
         }
     }
 
-    /**
+    *//**
      * Should return 0 as position to add (or actually ignore) if the filter is invalid
      *
      * @throws Exception if something goes wrong
-     */
+     *//*
     @Test
     public void testAddInvalidFilterClause() throws Exception {
         final String nullString = null;
@@ -117,12 +112,12 @@ public class PersonServiceDbTest {
         verify(filterable);
     }
 
-    /**
+    *//**
      * Shows that a special filter will never return a String in case it's a special operation and
      * returns position 0 ("do not add filter")
      *
      * @throws Exception if something goes wrong
-     */
+     *//*
     @Test
     public void testAddSpecialFilterClause() throws Exception {
         final String specialOperation = FilterSpecification.SPECIAL_OPERATION;
@@ -219,6 +214,6 @@ public class PersonServiceDbTest {
         person.setNickname("hoosier");
         person.setSmoker(new EnumDb<Smoker>(Smoker.NO));
         return person;
-    }
+    }*/
 
 }

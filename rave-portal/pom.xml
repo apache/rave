@@ -19,7 +19,8 @@
   
   $Id$
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
 
@@ -118,17 +119,17 @@
         </dependency>
 
         <dependency>
-          <groupId>org.openid4java</groupId>
-          <artifactId>openid4java-consumer</artifactId>
-          <version>${org.openid4java.version}</version>
-          <type>pom</type>
+            <groupId>org.openid4java</groupId>
+            <artifactId>openid4java-consumer</artifactId>
+            <version>${org.openid4java.version}</version>
+            <type>pom</type>
         </dependency>
 
         <!-- Jackson JSON Mapper -->
         <dependency>
-          <groupId>org.codehaus.jackson</groupId>
-          <artifactId>jackson-mapper-asl</artifactId>
-          <version>1.8.1</version>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-mapper-asl</artifactId>
+            <version>1.8.1</version>
         </dependency>
 
         <!-- JSON Support -->
@@ -148,11 +149,11 @@
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
         </dependency>
-        
+
         <!-- JSTL -->
         <dependency>
-          <groupId>org.glassfish.web</groupId>
-          <artifactId>jstl-impl</artifactId>
+            <groupId>org.glassfish.web</groupId>
+            <artifactId>jstl-impl</artifactId>
         </dependency>
 
         <!-- Logging -->
@@ -198,43 +199,43 @@
     </dependencies>
 
     <build>
-       <defaultGoal>install</defaultGoal>
-       <plugins>
-        <!--
-          fix for war processing of m-r-r-plugin causing the generated NOTICE and LICENSE file to be put under
-          WEB-INF/classes/META-INF
-        -->
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-remote-resources-plugin</artifactId>
-          <executions>
-            <execution>
-              <goals>
-                <goal>process</goal>
-              </goals>
-              <configuration>
-                <outputDirectory>${project.build.directory}/${project.build.finalName}</outputDirectory>
-                <attached>false</attached>
-              </configuration>
-            </execution>
-          </executions>
-        </plugin>
-      <plugin>
-        <groupId>com.googlecode.mavenfilesync</groupId>
-        <artifactId>maven-filesync-plugin</artifactId>
-        <configuration>
-          <mappings>
-            <mapping>
-              <sourceFolder>src/main/webapp</sourceFolder>
-              <destinationFolder>@target/tomcat6x/webapps/portal</destinationFolder>
-            </mapping>
-            <mapping>
-              <sourceFolder>src/main/resources</sourceFolder>
-              <destinationFolder>@target/tomcat6x/webapps/portal/WEB-INF/classes</destinationFolder>
-            </mapping>
-          </mappings>
-        </configuration>
-      </plugin>
+        <defaultGoal>install</defaultGoal>
+        <plugins>
+            <!--
+              fix for war processing of m-r-r-plugin causing the generated NOTICE and LICENSE file to be put under
+              WEB-INF/classes/META-INF
+            -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-remote-resources-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>process</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/${project.build.finalName}</outputDirectory>
+                            <attached>false</attached>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.googlecode.mavenfilesync</groupId>
+                <artifactId>maven-filesync-plugin</artifactId>
+                <configuration>
+                    <mappings>
+                        <mapping>
+                            <sourceFolder>src/main/webapp</sourceFolder>
+                            <destinationFolder>@target/tomcat6x/webapps/portal</destinationFolder>
+                        </mapping>
+                        <mapping>
+                            <sourceFolder>src/main/resources</sourceFolder>
+                            <destinationFolder>@target/tomcat6x/webapps/portal/WEB-INF/classes</destinationFolder>
+                        </mapping>
+                    </mappings>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>openjpa-maven-plugin</artifactId>
@@ -242,7 +243,7 @@
                 <configuration>
                     <includes>org/apache/rave/portal/model/*.class</includes>
                     <addDefaultConstructor>true</addDefaultConstructor>
-                    <!--<enforcePropertyRestrictions>true</enforcePropertyRestrictions>-->
+                    <enforcePropertyRestrictions>true</enforcePropertyRestrictions>
                 </configuration>
                 <executions>
                     <execution>
@@ -253,6 +254,20 @@
                         </goals>
                     </execution>
                 </executions>
+                <dependencies>
+                    <dependency>
+                        <exclusions>
+                            <exclusion>
+                                <groupId>xerces</groupId>
+                                <artifactId>xmlParserAPIs</artifactId>
+                            </exclusion>
+                        </exclusions>
+                        <groupId>org.apache.openjpa</groupId>
+                        <artifactId>openjpa</artifactId>
+                        <version>${openjpa.version}</version>
+
+                    </dependency>
+                </dependencies>
             </plugin>
             <plugin>
                 <groupId>com.github.searls</groupId>
@@ -267,8 +282,8 @@
                             <goal>test</goal>
                         </goals>
                         <configuration>
-                          <jsSrcDir>${project.basedir}/src/main/webapp/script/</jsSrcDir>
-                          <debug>true</debug>
+                            <jsSrcDir>${project.basedir}/src/main/webapp/script/</jsSrcDir>
+                            <debug>true</debug>
                         </configuration>
                     </execution>
                 </executions>
@@ -315,7 +330,7 @@
                             </url>
                         </zipUrlInstaller>
                         <systemProperties>
-                          <shindig.host>localhost</shindig.host>
+                            <shindig.host>localhost</shindig.host>
                         </systemProperties>
                     </container>
                 </configuration>
@@ -323,60 +338,60 @@
         </plugins>
     </build>
 
-  <profiles>
-    <profile>
-      <id>dist</id>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.codehaus.cargo</groupId>
-            <artifactId>cargo-maven2-plugin</artifactId>
-            <version>${cargo.version}</version>
-            <executions>
-              <execution>
-                <id>dist-cargo-package</id>
-                <phase>install</phase>
-                <goals>
-                  <goal>configure</goal>
-                  <goal>package</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-assembly-plugin</artifactId>
-            <version>2.2.1</version>           
-            <configuration>
-              <!-- Do not attach the resulting artifact(s) to the project (e.g. do not deploy) -->
-              <attach>false</attach>
-              <!-- Override finalName -->
-              <finalName>rave-${project.version}</finalName>
-              <!-- Workaround for http://jira.codehaus.org/browse/MASSEMBLY-449 -->
-              <archiverConfig>
-              <fileMode>0644</fileMode>
-              <directoryMode>0755</directoryMode>
-              <defaultDirectoryMode>0755</defaultDirectoryMode>
-              </archiverConfig>
-            </configuration>
-            <executions>
-              <execution>
-                <id>dist-assembly</id>
-                <phase>install</phase>
-                <goals>
-                  <goal>single</goal>
-                </goals>
-                <configuration>
-                  <descriptors>
-                    <descriptor>${project.basedir}/src/main/assembly/distbin.xml</descriptor>
-                  </descriptors>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-  </profiles>
+    <profiles>
+        <profile>
+            <id>dist</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.cargo</groupId>
+                        <artifactId>cargo-maven2-plugin</artifactId>
+                        <version>${cargo.version}</version>
+                        <executions>
+                            <execution>
+                                <id>dist-cargo-package</id>
+                                <phase>install</phase>
+                                <goals>
+                                    <goal>configure</goal>
+                                    <goal>package</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-assembly-plugin</artifactId>
+                        <version>2.2.1</version>
+                        <configuration>
+                            <!-- Do not attach the resulting artifact(s) to the project (e.g. do not deploy) -->
+                            <attach>false</attach>
+                            <!-- Override finalName -->
+                            <finalName>rave-${project.version}</finalName>
+                            <!-- Workaround for http://jira.codehaus.org/browse/MASSEMBLY-449 -->
+                            <archiverConfig>
+                                <fileMode>0644</fileMode>
+                                <directoryMode>0755</directoryMode>
+                                <defaultDirectoryMode>0755</defaultDirectoryMode>
+                            </archiverConfig>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>dist-assembly</id>
+                                <phase>install</phase>
+                                <goals>
+                                    <goal>single</goal>
+                                </goals>
+                                <configuration>
+                                    <descriptors>
+                                        <descriptor>${project.basedir}/src/main/assembly/distbin.xml</descriptor>
+                                    </descriptors>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
 </project>

@@ -51,18 +51,4 @@ public class GuiceBindingSprigContextLoaderListenerTest {
         assertThat((Injector)mockServletContext.getAttribute(GuiceServletContextListener.INJECTOR_ATTRIBUTE), is(not(sameInstance(injector))));
 
     }
-
-    @Test(expected = IllegalStateException.class)
-    public void noGuice() {
-        GuiceBindingSpringContextLoaderListener listener = new GuiceBindingSpringContextLoaderListener();
-
-        MockServletContext mockServletContext = new MockServletContext();
-        mockServletContext.addInitParameter("contextConfigLocation", "classpath:spring-context.xml");
-
-        ServletContextEvent event = createNiceMock(ServletContextEvent.class);
-        expect(event.getServletContext()).andReturn(mockServletContext).anyTimes();
-        replay(event);
-
-        listener.contextInitialized(event);
-    }
 }

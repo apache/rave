@@ -19,6 +19,7 @@
 
 package org.apache.rave.inject;
 
+import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 import org.apache.shindig.common.servlet.GuiceServletContextListener;
@@ -41,18 +42,8 @@ public class GuiceBindingSpringContextLoaderListener extends ContextLoaderListen
         ServletContext servletContext = event.getServletContext();
         //Get a list of Guice module Spring beans from the application context
         Collection<Module> modules = getModulesFromApplicationContext();
-        //Get the current injector from the servlet context
-        Injector injector = getInjector(servletContext);
         //Override the current injector with the new child injector that includes all Spring managed Guice modules
-        overrideInjector(injector.createChildInjector(modules), servletContext);
-    }
-
-    private static Injector getInjector(ServletContext servletContext) {
-        Injector injector = (Injector) servletContext.getAttribute(GuiceServletContextListener.INJECTOR_ATTRIBUTE);
-        if(injector == null) {
-            throw new IllegalStateException("No Guice Injector found in Servlet Context.  Ensure that this listener is loaded AFTER Guice has been initialized");
-        }
-        return injector;
+        overrideInjector(Guice.createInjector(modules), servletContext);
     }
 
     private static void overrideInjector(Injector injector, ServletContext context) {

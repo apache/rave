@@ -25,23 +25,6 @@
          version="2.5">
     <display-name>Shindig</display-name>
     <!-- configuration -->
-    <!-- If you have your own Guice module(s), put them here as a colon-separated list. -->
-    <!-- Note that any extras modules are optional -->
-    <context-param>
-        <param-name>guice-modules</param-name>
-        <param-value>
-            org.apache.rave.commoncontainer.ConfigurablePropertiesModule:
-            org.apache.shindig.gadgets.DefaultGuiceModule:
-            org.apache.shindig.social.core.config.SocialApiGuiceModule:
-            org.apache.rave.os.JPAOpenSocialModule:
-            org.apache.shindig.gadgets.oauth.OAuthModuleDb:
-            org.apache.shindig.common.cache.ehcache.EhCacheModule:
-            org.apache.shindig.sample.shiro.ShiroGuiceModule:
-            org.apache.shindig.sample.container.SampleContainerGuiceModule:
-            org.apache.shindig.extras.ShindigExtrasGuiceModule:
-            org.apache.shindig.sample.commoncontainer.auth.CommonContainerAuthGuiceModule
-        </param-value>
-    </context-param>
 
     <!--
     Syntax: <key>=<value> separated by a newline
@@ -70,6 +53,7 @@
         <param-name>contextConfigLocation</param-name>
         <param-value>
             classpath:spring-context.xml
+            classpath:modules-context.xml
         </param-value>
     </context-param>
 
@@ -169,15 +153,11 @@
         <param-value>-tcpAllowOthers</param-value>
     </context-param>
 
+<!--
     <listener>
         <listener-class>org.apache.shindig.common.servlet.GuiceServletContextListener</listener-class>
     </listener>
-    <listener>
-        <listener-class>org.apache.rave.os.DatabasePopulateContextListener</listener-class>
-    </listener>
-    <listener>
-        <listener-class>org.h2.server.web.DbStarter</listener-class>
-    </listener>
+-->
 
     <!-- Initialize Spring LAST -->
     <listener>
