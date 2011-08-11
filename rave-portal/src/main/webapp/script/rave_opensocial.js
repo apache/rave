@@ -81,15 +81,31 @@ rave.opensocial = rave.opensocial || (function() {
     function validateAndRenderGadget(gadget) {
         var validationResult = validateMetadata(gadget.metadata);
         if (validationResult.valid) {
-            //TODO: Submit a patch to Shindig common container to expose the backing service or add a method to push cached items  into the container config
+            //Put our gadget metadata into the form that the common container is expecting
             var commonContainerMetadataWrapper = {};
             commonContainerMetadataWrapper[gadget.widgetUrl] = gadget.metadata;
-            container.service_.addGadgetMetadatas(commonContainerMetadataWrapper, null);
+
+            //Put our gadget security token data into the form that the common container is expecting
+            var commonContainerTokenData = {};
+            commonContainerTokenData[osapi.container.TokenResponse.TOKEN] = gadget.securityToken;
+            commonContainerTokenData[osapi.container.MetadataResponse.RESPONSE_TIME_MS] = new Date().getTime();
+            var commonContainerTokenWrapper = {};
+            commonContainerTokenWrapper[gadget.widgetUrl] = commonContainerTokenData;
+
+            //Setup the preloadConfig data with all our preload data
+            var preloadConfig = {};
+            preloadConfig[osapi.container.ContainerConfig.PRELOAD_METADATAS] = commonContainerMetadataWrapper;
+            preloadConfig[osapi.container.ContainerConfig.PRELOAD_TOKENS] = commonContainerTokenWrapper;
+            preloadConfig[osapi.container.ContainerConfig.PRELOAD_REF_TIME] = null;
+
+            //Preload our data into the common container
+            //TODO: Submit a patch to Shindig common container to make the preloadFromConfig_ method public so preloaded
+            //gadget metadata and security tokens can be incrementally be pushed into the container cache.
+            container.preloadFromConfig_(preloadConfig);
             renderNewGadget(gadget);
         } else {
             rave.errorWidget(gadget.regionWidgetId, "Unable to render OpenSocial Gadget: <br /><br />" + validationResult.error);
         }
-
     }
 
     /**

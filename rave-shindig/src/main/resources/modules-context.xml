@@ -24,11 +24,11 @@
     <bean class="org.apache.rave.commoncontainer.ConfigurablePropertiesModule" />
     <bean class="org.apache.rave.os.JPAOpenSocialModule" />
     <bean class="org.apache.rave.os.SocialApiGuiceModule" />
+    <bean class="org.apache.shindig.auth.ClasspathAwareDefaultSecurityTokenCodec$TemporarySecurityTokenGuiceModule" />
     <bean class="org.apache.shindig.gadgets.oauth.OAuthModule" />
     <bean class="org.apache.shindig.gadgets.DefaultGuiceModule" />
     <bean class="org.apache.shindig.common.cache.ehcache.EhCacheModule" />
     <bean class="org.apache.shindig.sample.shiro.ShiroGuiceModule" />
     <bean class="org.apache.shindig.sample.container.SampleContainerGuiceModule" />
     <bean class="org.apache.shindig.extras.ShindigExtrasGuiceModule" />
-    <bean class="org.apache.shindig.sample.commoncontainer.auth.CommonContainerAuthGuiceModule" />
 </beans>

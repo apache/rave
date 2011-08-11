@@ -81,6 +81,7 @@
 "gadgets.uri.iframe.lockedDomainSuffix" :  "-a.example.com:8080",
 "gadgets.uri.iframe.unlockedDomain" : "www.example.com:8080",
 "gadgets.uri.iframe.basePath" : "${CONTEXT_ROOT}/gadgets/ifr",
+"gadgets.uri.iframe.alwaysAppendSecurityToken" : true,
 
 "gadgets.uri.js.host" : "http://www.example.com/",
 "gadgets.uri.js.path" : "${CONTEXT_ROOT}/gadgets/js",
@@ -90,7 +91,7 @@
 "gadgets.uri.oauth.callbackTemplate" : "//%host%${CONTEXT_ROOT}/gadgets/oauthcallback",
 
 // Use an insecure security token by default
-"gadgets.securityTokenType" : "insecure",
+//"gadgets.securityTokenType" : "insecure",
 
 // Config param to load Opensocial data for social
 // preloads in data pipelining.  %host% will be
@@ -98,9 +99,8 @@
 "gadgets.osDataUri" : "http://%host%${CONTEXT_ROOT}/rpc",
 
 // Uncomment these to switch to a secure version
-//
-//"gadgets.securityTokenType" : "secure",
-//"gadgets.securityTokenKeyFile" : "/path/to/key/file.txt",
+"gadgets.securityTokenType" : "secure",
+"gadgets.securityTokenKeyFile" : "classpath:security_token_encryption_key.txt",
 
 // URI for the default shindig test instance.
 //"defaultShindigTestHost": "http://${SERVER_HOST}:${SERVER_PORT}",
