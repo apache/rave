@@ -59,11 +59,11 @@ values (set(@user_id_12, next value for user_id_seq), 'fourwn.col', 'fourwn.col'
 --- gadget data ---
 -- wikipedia widget
 insert into widget (id, title, url, type, description, author)
-values(set(@wikipedia_widget_id, next value for widget_id_seq), 'Wikipedia','http://www.google.com/ig/modules/wikipedia.xml', 'OpenSocial', 'A Wikipedia Search and Go widget. Language choice.', 'James Lee');
+values(set(@wikipedia_widget_id, next value for widget_id_seq), 'Wikipedia','http://www.widget-dico.com/wikipedia/google/wikipedia.xml', 'OpenSocial', 'A Wikipedia Search and Go widget. Language choice.', 'WidgetMe');
 
 -- translate widget
-insert into widget (id, title, url, type)
-values(set(@translate_widget_id, next value for widget_id_seq), 'Translate Gadget', 'http://www.google.com/ig/modules/dictionary.xml', 'OpenSocial');
+insert into widget (id, title, url, type, description, author)
+values(set(@translate_widget_id, next value for widget_id_seq), 'Translate Gadget', 'http://www.gstatic.com/ig/modules/dictionary/dictionary.xml','OpenSocial' , 'Google Translation gadget.', 'Google Taiwan');
 
 -- nytimes widget
 insert into widget (id, title, url, type)
