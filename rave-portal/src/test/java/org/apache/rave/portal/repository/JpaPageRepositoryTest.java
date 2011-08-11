@@ -40,7 +40,7 @@ public class JpaPageRepositoryTest {
 
     private static final Long USER_ID = 1L;
     private static final Long INVALID_USER = -1L;
-    private static final String WIDGET_URL = "http://www.google.com/ig/modules/wikipedia.xml";
+    private static final String WIDGET_URL = "http://www.widget-dico.com/wikipedia/google/wikipedia.xml";
 
     @PersistenceContext
     private EntityManager manager;
@@ -67,7 +67,7 @@ public class JpaPageRepositoryTest {
         List<Page> pages = repository.getAllPages(null);
         assertThat(pages.isEmpty(), is(true));
     }
-    
+
     @Test
     public void getById_valid() {
         Page p = repository.get(1L);
@@ -81,5 +81,5 @@ public class JpaPageRepositoryTest {
         assertThat(p, is(nullValue()));
     }
 
-    
+
 }
