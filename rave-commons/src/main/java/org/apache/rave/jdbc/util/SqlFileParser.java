@@ -20,9 +20,6 @@
 package org.apache.rave.jdbc.util;
 
 import org.springframework.core.io.Resource;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.encoding.PasswordEncoder;
-import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -33,7 +30,6 @@ import java.util.Set;
 import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.StringTokenizer;
 
 /**
  * Parses a file looking for create, alter, insert, update, delete or drop commands and appends them to an output
@@ -67,19 +63,14 @@ public class SqlFileParser {
     private Stack<State> stateStack;
     private Resource resource;
 
-	 private PasswordEncoder passwordEncoder;
-
     /**
      * Constructor takes a Spring {@link org.springframework.core.io.Resource}
      *
      * @param resource the initial file to parse
      */
-
     public SqlFileParser(Resource resource) {
         stateStack = new Stack<State>();
         this.resource = resource;
-
-		  passwordEncoder=new ShaPasswordEncoder();
     }
 
     /**
@@ -148,10 +139,6 @@ public class SqlFileParser {
                 break;
             }
             case READSQL: {
-					 //This is specific to Rave's initial_data.sql.
-					 //TODO replace this with an external, pluggable utility class.
-					 line=hashAndSaltPassword(line);
-
                 sql.append(line);
                 //add a space to accommodate line breaks.  Not a big deal if extraneous spaces are added
                 sql.append(" ");
@@ -166,57 +153,9 @@ public class SqlFileParser {
             }
         }
     }
-	 
-	 //TODO: this is specific to initial_data.sql while rest of the class code is 
-	 //general purpose.  Need to find a better way to do this.
-	 private String hashAndSaltPassword(String line) {
-		  String newLine=line;
-
-		  //TODO This will BREAK if the SQL line ever gets changed.
-		  //TODO This is a not very good way to make sure we have the correct line.
-		  if(line.indexOf("@user_id_")>-1 && line.indexOf("user_id_seq")>-1) {
-				StringTokenizer st=new StringTokenizer(newLine,",");
-				if(st.countTokens()>4) {
-					 String userid=st.nextToken();
-					 String userseq=st.nextToken();
-					 String username=st.nextToken();
-					 String password=st.nextToken();
-					 username=stripQuotes(username);
-					 password=stripQuotes(password);
-					 //TODO: This assumes that the user name is used for the salt. This may change.
-					 //See DefaultNewAccountService
-					 String saltedHash=passwordEncoder.encodePassword(password,username);
-					 newLine=replacePassword(newLine,password,saltedHash);
-				}
-				else {
-					 //Line was unexpectedly formatted
-				}
-		  }
-		  else {
-				//Do nothing.
-		  }
-		  
-		  return newLine;
-	 }
-	 
-	 //Used to strip the single quotes around the input string
-	 private String stripQuotes(String quotedString) {
-		  StringBuilder unquoted=new StringBuilder(quotedString);
-		  int index1=unquoted.indexOf("'");
-		  int index2=unquoted.lastIndexOf("'");
-		  return unquoted.substring(index1+1,index2);
-	 }
-
-	 //Replace the password in the original string with the hashed and salted password
-	 private String replacePassword(String line, String password, String hashedPassword) {
-		  StringBuilder newLine=new StringBuilder(line);
-		  newLine=newLine.replace(line.lastIndexOf(password),line.lastIndexOf(password)+password.length(),hashedPassword);
-		  return newLine.toString();
-	 }
 
     private static String getFirstWord(String line) {
         Matcher match = WORD_PATTERN.matcher(line);
         return match.find() ? match.group(1) : null;
     }
-
 }
