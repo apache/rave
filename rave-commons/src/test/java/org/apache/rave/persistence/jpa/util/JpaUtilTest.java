@@ -17,23 +17,39 @@
  * under the License.
  */
 
-package org.apache.rave.persistence.jpa;
+package org.apache.rave.persistence.jpa.util;
 
 import org.apache.rave.persistence.jpa.util.JpaUtil;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 
+import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.easymock.EasyMock.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertThat;
 
 /**
  *
  * @author carlucci
  */
 public class JpaUtilTest {
+
+    private EntityManager mockManager;
+
+    @Before
+    public void setup() {
+        mockManager = createNiceMock(EntityManager.class);
+    }
+
+
     @Test
     public void getSingleResult_emptyList() {        
         List<Object> list = new ArrayList<Object>();        
@@ -58,7 +74,30 @@ public class JpaUtilTest {
     public void getSingleResult_multipleObjectPopulatedList() {                               
         List<Object> populatedList = generatePopulatedList(5);        
         JpaUtil.getSingleResult(populatedList);
-    }    
+    }
+
+    @Test
+    public void saveOrUpdate_save() {
+        Object o = new Object();
+        mockManager.persist(o);
+        expectLastCall();
+        replay(mockManager);
+
+        Object r =JpaUtil.saveOrUpdate(null, mockManager, o);
+        assertThat(r, is(sameInstance(o)));
+        verify(mockManager);
+    }
+
+    @Test
+    public void saveOrUpdate_update() {
+        Object o = new Object();
+        expect(mockManager.merge(o)).andReturn(new Object());
+        replay(mockManager);
+
+        Object r = JpaUtil.saveOrUpdate(new Object(), mockManager, o);
+        assertThat(r, is(not(sameInstance(o))));
+        verify(mockManager);
+    }
     
     // Private helper functions for the tests
     private List<Object> generatePopulatedList(int size) {
