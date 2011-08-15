@@ -20,6 +20,7 @@ package org.apache.rave.opensocial.model;
 
 import org.apache.rave.persistence.BasicEntity;
 
+import javax.annotation.Generated;
 import javax.persistence.*;
 import java.util.*;
 
@@ -554,6 +555,7 @@ public class Person implements BasicEntity {
     }
 
     @Override
+    @Generated("IDE Generated Method")
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (username != null ? username.hashCode() : 0);
@@ -600,6 +602,7 @@ public class Person implements BasicEntity {
     }
 
     @Override
+    @Generated("IDE Generated Method")
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;

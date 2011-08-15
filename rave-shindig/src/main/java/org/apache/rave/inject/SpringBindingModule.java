@@ -29,6 +29,10 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.lang.reflect.Proxy;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 /**
@@ -41,9 +45,11 @@ public class SpringBindingModule extends AbstractModule implements ApplicationCo
 
     private ApplicationContext applicationContext;
     private String basePackage;
+    private Set<Class<?>> mappedClasses;
 
     @Override
     protected void configure() {
+        mappedClasses = new HashSet<Class<?>>();
         bindFromApplicationContext();
     }
 
@@ -59,12 +65,13 @@ public class SpringBindingModule extends AbstractModule implements ApplicationCo
         String fullClassName = Proxy.isProxyClass(bean.getClass()) ? bean.toString() : bean.getClass().getName();
         if (fullClassName.matches(basePackage + ".*")) {
             for (final Class clazz : bean.getClass().getInterfaces()) {
-                bind(clazz).toProvider(new Provider() {
-                    @Override
-                    public Object get() {
-                        return applicationContext.getBean(clazz);
-                    }
-                });
+                //Check to see if we have already bound a provider for this interface.  If we have,
+                //then don't attempt to bind it again as the provider will pull from the application context by type
+                //and any multi-bean errors will be handled at injection time
+                if(!mappedClasses.contains(clazz)) {
+                    bind(clazz).toProvider(new SpringContextProvider(clazz, applicationContext));
+                    mappedClasses.add(clazz);
+                }
             }
         }
     }
@@ -82,4 +89,6 @@ public class SpringBindingModule extends AbstractModule implements ApplicationCo
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         this.applicationContext = applicationContext;
     }
+
+
 }

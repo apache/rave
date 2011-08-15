@@ -21,13 +21,18 @@ package org.apache.rave.inject;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import org.apache.rave.opensocial.model.Organization;
 import org.apache.rave.opensocial.service.impl.DefaultPersonService;
+import org.apache.rave.persistence.BasicEntity;
+import org.apache.rave.persistence.jpa.AbstractJpaRepository;
 import org.apache.shindig.social.opensocial.spi.PersonService;
+import org.hamcrest.CoreMatchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.jpa.LocalEntityManagerFactoryBean;
+import org.springframework.stereotype.Repository;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -66,5 +71,21 @@ public class SpringBindingModuleTest {
     public void bindsProxiedBean() {
         LocalEntityManagerFactoryBean factory = injector.getInstance(LocalEntityManagerFactoryBean.class);
         assertThat(factory, is(not(nullValue())));
+    }
+
+    @Test
+    public void multipleRepositories() {
+        TestRepo repo = injector.getInstance(TestRepo.class);
+        assertThat(repo, is(not(nullValue())));
+    }
+
+    public static interface TestRepo extends org.apache.rave.persistence.Repository<BasicEntity> {}
+
+    @Repository
+    public static class JpaTestRepo extends AbstractJpaRepository<BasicEntity> implements TestRepo {
+
+        protected JpaTestRepo() {
+            super(BasicEntity.class);
+        }
     }
 }
