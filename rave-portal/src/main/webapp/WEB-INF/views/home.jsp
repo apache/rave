@@ -15,7 +15,7 @@
   KIND, either express or implied.  See the License for the
   specific language governing permissions and limitations
   under the License.
-  
+
   $Id$
 
 --%>
@@ -39,8 +39,36 @@
         </div>
         <h1>Hello ${defaultPage.owner.username}, welcome to Rave!</h1>
     </div>
-    <div id="content">
-        <c:forEach var="region" items="${defaultPage.regions}">
+    <div id="dialog" title="Tab data" class="dialog">
+		<form>
+			<fieldset class="ui-helper-reset">
+				<label for="tab_title">Title</label>
+				<input type="text" name="tab_title" id="tab_title" value="" class="ui-widget-content ui-corner-all" />
+				<label for="pageLayoutField">Select Page Layout:</label>
+            	<select>
+            		<option value="columns_1" id="columns_1_id">One Column</option>
+            		<option value="columns_2" id="columns_2_id" selected="selected">Two Columns</option>
+            		<option value="columns_2wn" id="columns_2wn_id">Two Columns (wide/narrow)</option>
+            		<option value="columns_3" id="columns_3_id">Three Columns</option>
+            		<option value="columns_3nwn" id="columns_3nwn_id">Three Columns (narrow/wide/narrow)</option>
+            		<option value="columns_4" id="columns_4_id">Four Columns</option>
+            		<option value="columns_3nwn_1_bottom" id="columns_3nwn_1_bottom">Four Columns (narrow/wide/narrow/bottom)</option>
+            	</select>
+			</fieldset>
+		</form>
+	</div>
+	<button id="add_tab">Add Tab</button>
+      <div id="tabs" class="rave-ui-tabs">
+    <ul class="rave-ui-tabs ui-tabs-nav">
+	<c:forEach var="page" items="${pages}">
+    		<li>
+				<a href="#page-${page.id}-id">${page.name}</a> <span class="ui-icon ui-icon-close">Remove Tab</span>
+			</li>
+	</c:forEach>
+	</ul>
+   <c:forEach var="page" items="${pages}">
+    	<div id="page-${page.id}-id">
+	    <c:forEach var="region" items="${page.regions}">
             <div class="region" id="region-${region.id}-id">
                 <c:forEach var="regionWidget" items="${region.regionWidgets}">
                     <div class="widget-wrapper" id="widget-${regionWidget.id}-wrapper">
@@ -67,6 +95,8 @@
                 </c:forEach>
             </div>
         </c:forEach>
+    	</div>
+         </c:forEach>
         <div class="clear-float">&nbsp;</div>
     </div>
     <script src="//cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
@@ -77,6 +107,7 @@
     <script src="<spring:url value="/script/rave_api.js"/>"></script>
     <script src="<spring:url value="/script/rave_opensocial.js"/>"></script>
     <script src="<spring:url value="/script/rave_wookie.js"/>"></script>
+    <script src="<spring:url value="/script/rave_layout.js"/>"></script>
     <script>
         //Define the global widgets variable
         //This array will be populated by RegionWidgetRender providers.
@@ -85,17 +116,21 @@
            Among other things, the render-widget tag will populate the widgets[] array.
            See the markup text in OpenSocialWidgetRenderer.java, for example.
         --%>
-        <c:forEach var="region" items="${defaultPage.regions}">
+        <c:forEach var="page" items="${pages}">
+        <c:forEach var="region" items="${page.regions}">
         <c:forEach var="regionWidget" items="${region.regionWidgets}">
         <portal:render-widget regionWidget="${regionWidget}" />
         </c:forEach>
         </c:forEach>
-
+        </c:forEach>
         $(function() {
             rave.setContext("<spring:url value="/app/" />");
             rave.initProviders();
             rave.initWidgets(widgets);
             rave.initUI();
         });
+        $(function() {
+    		$( "#tabs" ).tabs();
+    	});
     </script>
 </rave:rave_generic_page>

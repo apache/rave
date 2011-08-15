@@ -16,7 +16,7 @@
   KIND, either express or implied.  See the License for the
   specific language governing permissions and limitations
   under the License.
-  
+
   $Id$
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -300,6 +300,9 @@
                         <configuration>
                             <jsSrcDir>${project.basedir}/src/main/webapp/script/</jsSrcDir>
                             <debug>true</debug>
+                            <sourceExcludes>
+                                  <exclude>rave_layout.js</exclude>
+                            </sourceExcludes>
                         </configuration>
                     </execution>
                 </executions>

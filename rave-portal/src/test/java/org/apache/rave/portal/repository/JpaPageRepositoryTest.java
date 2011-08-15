@@ -52,7 +52,7 @@ public class JpaPageRepositoryTest {
     public void getAllPages_validUser_validPageSet() {
         List<Page> pages = repository.getAllPages(USER_ID);
         assertThat(pages, is(notNullValue()));
-        assertThat(pages.size(), equalTo(1));
+        assertThat(pages.size(), equalTo(2));
         assertThat(pages.get(0).getRegions().size(), equalTo(2));
         assertThat(pages.get(0).getRegions().get(0).getRegionWidgets().size(), equalTo(2));
         assertThat(pages.get(0).getRegions().get(0).getRegionWidgets().get(0).getWidget().getUrl(), equalTo(WIDGET_URL));

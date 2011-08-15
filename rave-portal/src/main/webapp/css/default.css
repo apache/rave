@@ -22,8 +22,8 @@
 
 body {
     color: #000000;
+    font-size: 62.5%;
     font-family: Arial, Helvetica, sans-serif;
-    font-size: 12pt;
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#D7D7D3", endColorstr="#EBEBEB");
     background: -moz-linear-gradient(center top , #D7D7D3 0%, #EBEBEB 50%) repeat scroll 0 0 transparent;
     background: -webkit-gradient(linear, left top, left bottom, from(#D7D7D3), to(#EBEBEB));
@@ -229,6 +229,7 @@ h1, h2, h3, h4, h5, h6 {
     padding: 5px 5px 100px 5px; /*** bottom padding is needed for dnd when region is empty ***/
     margin-right: 20px;
     width:300px;
+    height: 100%;
 }
 
 .region-dragging {
@@ -424,3 +425,20 @@ label.error {
     float: none;
     margin: 0.5em 0 auto 120px;
 }
+
+.rave-ui-tabs .ui-tabs-panel { display: block; border-width: 0; padding: 1em 1.4em; background: #F2F2F2; height: 800px; }
+.rave-ui-tabs .ui-tabs-nav { margin: 0; padding: .2em .2em 0; background: #666666}
+.rave-ui-tabs add_tab { cursor: pointer; }
+#tabs { margin-top: 1em; length: 95%; }
+#tabs li .ui-icon-close { float: left; margin: 0.4em 0.2em 0 0; cursor: pointer; }
+#dialog {
+    width:400px;
+}
+#dialog label { display:block; }
+#dialog input { display:block; }
+#dialog label { margin-top: 0.5em; }
+#dialog input { width: 95%; }
+#dialog textarea { width: 95%; }
+#add_tab { cursor: pointer; }
+
+
