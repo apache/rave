@@ -18,6 +18,7 @@
  */
 package org.apache.rave.portal.model;
 
+import java.io.Serializable;
 import org.apache.rave.persistence.BasicEntity;
 import org.codehaus.jackson.annotate.JsonBackReference;
 import org.codehaus.jackson.annotate.JsonManagedReference;
@@ -32,7 +33,9 @@ import java.util.List;
 @Table(name="region")
 @SequenceGenerator(name="regionIdSeq", sequenceName = "region_id_seq")
 @Access(AccessType.FIELD)
-public class Region implements BasicEntity {
+public class Region implements BasicEntity, Serializable {
+    private static final long serialVersionUID = 1L;
+     
     @Id @Column(name="id")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "regionIdSeq")
     private Long id;
@@ -63,10 +66,12 @@ public class Region implements BasicEntity {
      *
      * @return id The ID of persisted object; null if not persisted
      */
+    @Override
     public Long getId() {
         return id;
     }
 
+    @Override
     public void setId(Long id) {
         this.id = id;
     }
@@ -97,5 +102,32 @@ public class Region implements BasicEntity {
 
     public void setRegionWidgets(List<RegionWidget> regionWidgets) {
         this.regionWidgets = regionWidgets;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Region other = (Region) obj;
+        if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 67 * hash + (this.id != null ? this.id.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public String toString() {
+        return "Region{" + "id=" + id + ", page=" + page + ", regionWidgets=" + regionWidgets + '}';
     }
 }

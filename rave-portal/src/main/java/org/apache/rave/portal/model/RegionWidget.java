@@ -18,6 +18,7 @@
  */
 package org.apache.rave.portal.model;
 
+import java.io.Serializable;
 import org.apache.rave.persistence.BasicEntity;
 import org.codehaus.jackson.annotate.JsonBackReference;
 
@@ -30,7 +31,9 @@ import java.util.List;
 @Entity
 @Table(name = "region_widget")
 @SequenceGenerator(name = "regionWidgetIdSeq", sequenceName = "region_widget_id_seq")
-public class RegionWidget implements BasicEntity {
+public class RegionWidget implements BasicEntity, Serializable {
+    private static final long serialVersionUID = 1L;
+    
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "regionWidgetIdSeq")
@@ -67,8 +70,10 @@ public class RegionWidget implements BasicEntity {
         this.id = id;
     }
 
-    public RegionWidget(long id, int renderOrder) {
+    public RegionWidget(Long id, Widget widget, Region region, int renderOrder) {
         this.id = id;
+        this.widget = widget;
+        this.region = region;
         this.renderOrder = renderOrder;
     }
 
@@ -83,10 +88,12 @@ public class RegionWidget implements BasicEntity {
      *
      * @return id The ID of persisted object; null if not persisted
      */
+    @Override
     public Long getId() {
         return id;
     }
 
+    @Override
     public void setId(Long id) {
         this.id = id;
     }
@@ -172,5 +179,32 @@ public class RegionWidget implements BasicEntity {
 
     public void setPreferences(List<RegionWidgetPreference> preferences) {
         this.preferences = preferences;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final RegionWidget other = (RegionWidget) obj;
+        if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 23 * hash + (this.id != null ? this.id.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public String toString() {
+        return "RegionWidget{" + "id=" + id + ", widget=" + widget + ", region=" + region + ", renderPosition=" + renderPosition + ", renderOrder=" + renderOrder + ", collapsed=" + collapsed + ", preferences=" + preferences + '}';
     }
 }

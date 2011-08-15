@@ -52,6 +52,7 @@ public class PageServiceTest {
     private static final long FROM_REGION_ID = 2L;
     private Region targetRegion;
     private Region originalRegion;
+    private Widget widget;
 
     @Before
     public void setup() {
@@ -62,17 +63,21 @@ public class PageServiceTest {
         regionWidgetRepository = createNiceMock(RegionWidgetRepository.class);
         pageService = new DefaultPageService(pageRepository, regionRepository, widgetRepository, regionWidgetRepository);
 
+        widget = new Widget(1L, "http://dummy.apache.org/widgets/widget.xml");
+        
         targetRegion = new Region();
+        targetRegion.setId(2L);
         targetRegion.setRegionWidgets(new ArrayList<RegionWidget>());
-        targetRegion.getRegionWidgets().add(new RegionWidget(1L, 0));
-        targetRegion.getRegionWidgets().add(new RegionWidget(2L, 1));
-        targetRegion.getRegionWidgets().add(new RegionWidget(3L, 2));
+        targetRegion.getRegionWidgets().add(new RegionWidget(1L, widget, targetRegion, 0));
+        targetRegion.getRegionWidgets().add(new RegionWidget(2L, widget, targetRegion, 1));
+        targetRegion.getRegionWidgets().add(new RegionWidget(3L, widget, targetRegion, 2));
 
         originalRegion = new Region();
+        originalRegion.setId(1L);
         originalRegion.setRegionWidgets(new ArrayList<RegionWidget>());
-        originalRegion.getRegionWidgets().add(new RegionWidget(4L, 0));
-        originalRegion.getRegionWidgets().add(new RegionWidget(5L, 1));
-        originalRegion.getRegionWidgets().add(new RegionWidget(6L, 2));
+        originalRegion.getRegionWidgets().add(new RegionWidget(4L, widget, targetRegion, 0));
+        originalRegion.getRegionWidgets().add(new RegionWidget(5L, widget, targetRegion, 1));
+        originalRegion.getRegionWidgets().add(new RegionWidget(6L, widget, targetRegion, 2));
     }
 
     @Test
@@ -264,13 +269,13 @@ public class PageServiceTest {
     }
 
     private void verifyPositions(int newPosition, RegionWidget widget, boolean sameRegion) {
-        assertThat(widget.getRenderOrder(), is(equalTo(newPosition)));
+        assertThat(widget.getRenderOrder(), is(equalTo(newPosition)));        
+        assertOrder(originalRegion);
+        assertThat(originalRegion.getRegionWidgets().contains(widget), is(sameRegion));
         if (!sameRegion) {
             assertOrder(targetRegion);
             assertThat(targetRegion.getRegionWidgets().contains(widget), is(true));
         }
-        assertOrder(originalRegion);
-        assertThat(originalRegion.getRegionWidgets().contains(widget), is(sameRegion));
     }
 
     private void createMoveBetweenRegionsExpectations() {

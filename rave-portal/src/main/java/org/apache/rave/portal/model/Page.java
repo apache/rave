@@ -18,6 +18,7 @@
  */
 package org.apache.rave.portal.model;
 
+import java.io.Serializable;
 import org.apache.rave.persistence.BasicEntity;
 import org.codehaus.jackson.annotate.JsonManagedReference;
 
@@ -35,7 +36,9 @@ import java.util.List;
         @NamedQuery(name = "Page.getByUserId", query="SELECT p FROM Page p WHERE p.owner.id = :userId")
 })
 @Access(AccessType.FIELD)
-public class Page implements BasicEntity {
+public class Page implements BasicEntity, Serializable {
+    private static final long serialVersionUID = 1L;
+    
     @Id @Column(name="id")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "pageIdSeq")
     private Long id;
@@ -71,10 +74,12 @@ public class Page implements BasicEntity {
      *
      * @return id The ID of persisted object; null if not persisted
      */
+    @Override
     public Long getId() {
         return id;
     }
 
+    @Override
     public void setId(Long id) {
         this.id = id;
     }
@@ -145,4 +150,31 @@ public class Page implements BasicEntity {
     public void setRegions(List<Region> regions) {
         this.regions = regions;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Page other = (Page) obj;
+        if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 89 * hash + (this.id != null ? this.id.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public String toString() {
+        return "Page{" + "id=" + id + ", name=" + name + ", owner=" + owner + ", renderSequence=" + renderSequence + ", pageLayout=" + pageLayout + ", regions=" + regions + '}';
+    }    
 }

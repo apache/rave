@@ -18,6 +18,7 @@
  */
 package org.apache.rave.portal.model;
 
+import java.io.Serializable;
 import org.apache.rave.persistence.BasicEntity;
 
 import javax.persistence.*;
@@ -31,7 +32,9 @@ import javax.persistence.*;
 @NamedQueries({
         @NamedQuery(name = "Widget.getAll", query = "SELECT w from Widget w")
 })
-public class Widget implements BasicEntity {
+public class Widget implements BasicEntity, Serializable {
+    private static final long serialVersionUID = 1L;
+    
     @Id @Column(name="id")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "widgetIdSeq")
     private Long id;
@@ -75,10 +78,12 @@ public class Widget implements BasicEntity {
      *
      * @return id The ID of persisted object; null if not persisted
      */
+    @Override
     public Long getId() {
         return id;
     }
 
+    @Override
     public void setId(Long id) {
         this.id = id;
     }
@@ -147,5 +152,32 @@ public class Widget implements BasicEntity {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Widget other = (Widget) obj;
+        if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 97 * hash + (this.id != null ? this.id.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public String toString() {
+        return "Widget{" + "id=" + id + ", title=" + title + ", url=" + url + ", thumbnailUrl=" + thumbnailUrl + ", screenshotUrl=" + screenshotUrl + ", type=" + type + ", author=" + author + ", description=" + description + '}';
     }
 }

@@ -19,6 +19,7 @@
 
 package org.apache.rave.portal.model;
 
+import java.io.Serializable;
 import org.apache.rave.persistence.BasicEntity;
 
 import javax.persistence.*;
@@ -33,7 +34,9 @@ import javax.persistence.*;
     @NamedQuery(name="PageLayout.getByLayoutCode", query = "select pl from PageLayout pl where pl.code = :code")
 })
 
-public class PageLayout implements BasicEntity {
+public class PageLayout implements BasicEntity, Serializable {
+    private static final long serialVersionUID = 1L;
+    
     @Id @Column(name="id")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "pageLayoutIdSeq")
     private Long id;
@@ -49,10 +52,12 @@ public class PageLayout implements BasicEntity {
      *
      * @return id The ID of persisted object; null if not persisted
      */
+    @Override
     public Long getId() {
         return id;
     }
 
+    @Override
     public void setId(Long id) {
         this.id = id;
     }
@@ -81,5 +86,32 @@ public class PageLayout implements BasicEntity {
 
     public void setNumberOfRegions(Long numberOfRegions) {
         this.numberOfRegions = numberOfRegions;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final PageLayout other = (PageLayout) obj;
+        if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 97 * hash + (this.id != null ? this.id.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public String toString() {
+        return "PageLayout{" + "id=" + id + ", code=" + code + ", numberOfRegions=" + numberOfRegions + '}';
     }
 }

@@ -19,6 +19,7 @@
 
 package org.apache.rave.portal.model;
 
+import java.io.Serializable;
 import org.apache.rave.persistence.BasicEntity;
 
 import javax.persistence.*;
@@ -31,7 +32,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "region_widget_preference")
 @SequenceGenerator(name = "regionWidgetPrefIdSeq", sequenceName = "region_widget_pref_id_seq")
 @XmlRootElement
-public class RegionWidgetPreference implements BasicEntity {
+public class RegionWidgetPreference implements BasicEntity, Serializable {
+    private static final long serialVersionUID = 1L;
+    
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "regionWidgetPrefIdSeq")
@@ -64,10 +67,12 @@ public class RegionWidgetPreference implements BasicEntity {
      *
      * @return id The ID of persisted object; null if not persisted
      */
+    @Override
     public Long getId() {
         return id;
     }
 
+    @Override
     public void setId(Long id) {
         this.id = id;
     }
@@ -108,6 +113,28 @@ public class RegionWidgetPreference implements BasicEntity {
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final RegionWidgetPreference other = (RegionWidgetPreference) obj;
+        if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 97 * hash + (this.id != null ? this.id.hashCode() : 0);
+        return hash;
     }
 
     @Override

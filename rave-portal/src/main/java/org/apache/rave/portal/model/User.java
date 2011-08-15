@@ -18,6 +18,7 @@
  */
 package org.apache.rave.portal.model;
 
+import java.io.Serializable;
 import org.apache.rave.persistence.BasicEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -36,7 +37,9 @@ import java.util.Collection;
 @NamedQueries({
     @NamedQuery(name="User.getByUsername", query = "select u from User u where u.username = :username")
 })
-public class User implements UserDetails, BasicEntity {
+public class User implements UserDetails, BasicEntity, Serializable {
+    private static final long serialVersionUID = 1L;
+    
     @Id @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "userIdSeq")
     private Long id;
@@ -56,13 +59,13 @@ public class User implements UserDetails, BasicEntity {
     @Basic @Column(name = "enabled")
     private boolean enabled;
 
-	 @Basic @Column(name="email")
-	 private String email;
+    @Basic @Column(name="email")
+    private String email;
 
-	 @Basic @Column(name="openid")
-	 private String openId;
+    @Basic @Column(name="openid")
+    private String openId;
 
-	 private String confirmPassword;
+    private String confirmPassword;
 
     public User() {
     }
@@ -81,10 +84,12 @@ public class User implements UserDetails, BasicEntity {
      *
      * @return The unique identifier for this user.
      */
+    @Override
     public Long getId() {
         return id;
     }
 
+    @Override
     public void setId(Long id) {
         this.id = id;
     }
@@ -159,37 +164,63 @@ public class User implements UserDetails, BasicEntity {
         this.enabled = enabled;
     }
 
-	 //The following properties are specific to the user profile.
-	 public String getEmail() {
-		  return email;
-	 }
-	 
-	 public void setEmail(String email) {
-		  this.email=email;
-	 }
+    //The following properties are specific to the user profile.
+    public String getEmail() {
+          return email;
+    }
 
-	 public String getOpenId() {
-		  return openId;
-	 }
-	 
-	 public void setOpenId(String openId){
-		  this.openId=openId;
-	 }
-	 
-	 public String getConfirmPassword() {
-		  //confirmPassword is not stored persistently, so if the value is not set,
-		  //return the password instead. This will need to be as secure as the password
-		  //field itself. 
-		  if(confirmPassword!=null && confirmPassword.length()>0) {
-				return confirmPassword;
-		  }
-		  else {
-				return password;
-		  }
-	 }
+    public void setEmail(String email) {
+          this.email=email;
+    }
 
-	 public void setConfirmPassword(String confirmPassword) {
-		  this.confirmPassword=confirmPassword;
-	 }
+    public String getOpenId() {
+          return openId;
+    }
 
+    public void setOpenId(String openId){
+          this.openId=openId;
+    }
+
+    public String getConfirmPassword() {
+          //confirmPassword is not stored persistently, so if the value is not set,
+          //return the password instead. This will need to be as secure as the password
+          //field itself. 
+          if(confirmPassword!=null && confirmPassword.length()>0) {
+                        return confirmPassword;
+          }
+          else {
+                        return password;
+          }
+    }
+
+    public void setConfirmPassword(String confirmPassword) {
+          this.confirmPassword=confirmPassword;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final User other = (User) obj;
+        if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 67 * hash + (this.id != null ? this.id.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" + "id=" + id + ", username=" + username + ", password=" + password + ", expired=" + expired + ", locked=" + locked + ", enabled=" + enabled + ", email=" + email + ", openId=" + openId + ", confirmPassword=" + confirmPassword + '}';
+    }
 }
