@@ -236,25 +236,6 @@
 				  </execution>
 				</executions>
 			 </plugin>
-            <!--
-              fix for war processing of m-r-r-plugin causing the generated NOTICE and LICENSE file to be put under
-              WEB-INF/classes/META-INF
-            -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-remote-resources-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>process</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${project.build.directory}/${project.build.finalName}</outputDirectory>
-                            <attached>false</attached>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
             <plugin>
                 <groupId>com.googlecode.mavenfilesync</groupId>
                 <artifactId>maven-filesync-plugin</artifactId>
