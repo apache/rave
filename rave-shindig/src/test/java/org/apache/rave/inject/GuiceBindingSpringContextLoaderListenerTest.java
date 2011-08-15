@@ -19,21 +19,27 @@
 
 package org.apache.rave.inject;
 
+import javax.servlet.ServletContextEvent;
+
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 import org.apache.shindig.common.servlet.GuiceServletContextListener;
 import org.junit.Test;
 import org.springframework.mock.web.MockServletContext;
-import javax.servlet.ServletContextEvent;
 
-import static org.easymock.EasyMock.*;
+import static org.easymock.EasyMock.createNiceMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.junit.Assert.assertThat;
 
-public class GuiceBindingSprigContextLoaderListenerTest {
+/**
+ * Test class for {@link GuiceBindingSpringContextLoaderListener}
+ */
+public class GuiceBindingSpringContextLoaderListenerTest {
     @Test
     public void initialize_test() {
         Injector injector = Guice.createInjector(createNiceMock(Module.class));
