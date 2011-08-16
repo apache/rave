@@ -37,7 +37,7 @@
 	 <!-- all urls must be authenticated -->
 	 <security:intercept-url pattern="/**"
 									 access="isAuthenticated()"/>
-	 <security:openid-login user-service-ref="userService">
+	 <security:openid-login user-service-ref="userService" authentication-failure-url="/login.jsp?authfail=openid">
 		<security:attribute-exchange>
 		  <!-- Supported by MyOpenID.com -->
 		  <security:openid-attribute name="firstName" type="http://schema.openid.net/namePerson/first"/>
@@ -51,7 +51,7 @@
 		  -->
 		</security:attribute-exchange>
 	 </security:openid-login>
-	 <security:form-login login-page="/login.jsp" />
+	 <security:form-login login-page="/login.jsp" authentication-failure-url="/login.jsp?authfail=form" />
 	 <security:logout/>
   </security:http>
   

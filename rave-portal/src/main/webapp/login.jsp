@@ -25,6 +25,9 @@
 
     <h2>Username and Password</h2>
     <form id="loginForm" name="loginForm" action="j_spring_security_check" method="post">
+        <c:if test="${param['authfail'] eq 'form'}">
+            <p class="error">The username or password is incorrect.</p>
+        </c:if>
         <fieldset>
             <p>
                 <label for="usernameField">Username: </label>
@@ -42,7 +45,7 @@
     </form>
 	
 	<h2>New User</h2>
-	<form id="newAccount" action="/portal/app/newaccount.jsp" method="get">
+	<form id="newAccount" action="<c:url value="/app/newaccount.jsp"/>" method="get">
 		<fieldset>
 			<p>
 				<label for="createNewAccountButton">Register: </label>
@@ -53,6 +56,9 @@
 	
     <h2>OpenID Identity</h2>
     <form id="oidForm" name='oidf' action='j_spring_openid_security_check' method='POST'>
+        <c:if test="${param['authfail'] eq 'openid'}">
+            <p class="error">OpenID identification failed.</p>
+        </c:if>
         <fieldset>
             <p>
                 <label for="openid_identifier">Identity: </label>
