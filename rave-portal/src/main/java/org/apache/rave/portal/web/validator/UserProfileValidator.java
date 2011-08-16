@@ -31,7 +31,7 @@ import org.springframework.validation.Validator;
 
 public class UserProfileValidator implements Validator {
 
-    protected final Logger logger = LoggerFactory.getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private UserService userService;
 
