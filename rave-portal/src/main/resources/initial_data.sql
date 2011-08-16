@@ -23,7 +23,7 @@ insert into user (user_id, username, password, expired, locked, enabled)
 values (set(@user_id_2, next value for user_id_seq), 'john.doe', '49e5f5c7c7ae8372af9b3063c493f080d16411f5', 'N', 'N', 'Y');
 
 insert into user (user_id, username, password, expired, locked, enabled)
-values (set(@user_id_3, next value for user_id_seq), 'jane.doe', '30dd37e81704bbbd4e235c22990802ae25b187da	', 'N', 'N', 'Y');
+values (set(@user_id_3, next value for user_id_seq), 'jane.doe', '30dd37e81704bbbd4e235c22990802ae25b187da', 'N', 'N', 'Y');
 
 insert into user (user_id, username, password, expired, locked, enabled)
 values (set(@user_id_4, next value for user_id_seq), 'george.doe', '452802e3f2ff8b7b28785f50dfaaaaf80fc1430f', 'N', 'N', 'Y');
