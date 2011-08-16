@@ -54,7 +54,6 @@ public class NewAccountController {
     @RequestMapping(value ="/newaccount.jsp")
 	 public void setUpForm(ModelMap model) {
 		  logger.debug("Initializing form");
-		  //TODO this should use view keys like other pages. (done)
 		  model.addAttribute(ModelKeys.NEW_USER,new NewUser());
 	 }
 
@@ -64,33 +63,31 @@ public class NewAccountController {
 		  model.addAttribute(ModelKeys.NEW_USER,newUser);
 		  
 		  newAccountValidator.validate(newUser,results);
-		  if(results.hasErrors()){
-			  logger.error("newaccount.jsp: shows validation errors");
-			  //TODO: change this to a viewname (done)
+		  if (results.hasErrors()){
+			  logger.info("newaccount.jsp: shows validation errors");
 			  return ViewNames.NEW_ACCOUNT;
 		  }
 
 		  //Now attempt to create the account.
 		  try {
 			    logger.debug("newaccount.jsp: passed form validation");
-			    newAccountService.createNewAccount(newUser.getUsername(),newUser.getPassword(),newUser.getPageLayout());
-			    //TODO: change this to a viewname (done)
+			    newAccountService.createNewAccount(newUser.getUsername(),newUser.getPassword(),
+                        newUser.getPageLayout());
 				return ViewNames.REDIRECT;
-		  }
-		  
-		  catch (org.springframework.dao.IncorrectResultSizeDataAccessException ex) {
+		  } catch (org.springframework.dao.IncorrectResultSizeDataAccessException ex) {
 				//This exception is thrown if the account already exists.
-				logger.error("Account creation failed: "+ex.getMessage());
+				logger.info("Account creation failed: ", ex);
 				results.reject("Account already exists","Unable to create account");
-				//TODO: change this to a viewname (done)
 				return ViewNames.NEW_ACCOUNT;
 				
-		  }
-		  //TODO need to handle more specific exceptions
-		  catch (Exception ex) {
-				logger.error("Account creation failed: "+ex.getMessage());
+		  } catch (Exception ex) {
+              //TODO need to handle more specific exceptions
+              if (logger.isDebugEnabled()) {
+                  logger.error("Account creation failed: ", ex);
+              } else {
+                  logger.error("Account creation failed: ", ex.getMessage());
+              }
 				results.reject("Unable to create account:"+ex.getMessage(),"Unable to create account");
-				//TODO: change this to a viewname (done)
 				return ViewNames.NEW_ACCOUNT;
 		  }
 		  
