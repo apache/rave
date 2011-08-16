@@ -51,7 +51,8 @@ public class NewAccountValidatorTest {
 
     @Test
     public void testSupports() throws Exception {
-        assertTrue(newAccountValidator.supports(NewUser.class));
+        assertTrue("Can validate org.apache.rave.portal.model.NewUser",
+                newAccountValidator.supports(NewUser.class));
     }
 
     @Test
