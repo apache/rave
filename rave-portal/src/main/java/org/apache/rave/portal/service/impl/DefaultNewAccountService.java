@@ -19,20 +19,24 @@
 
 package org.apache.rave.portal.service.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.rave.portal.model.Page;
 import org.apache.rave.portal.model.PageLayout;
 import org.apache.rave.portal.model.Region;
 import org.apache.rave.portal.model.User;
-import org.apache.rave.portal.service.*;
+import org.apache.rave.portal.service.NewAccountService;
+import org.apache.rave.portal.service.PageLayoutService;
+import org.apache.rave.portal.service.PageService;
+import org.apache.rave.portal.service.RegionService;
+import org.apache.rave.portal.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.encoding.PasswordEncoder;
 import org.springframework.security.authentication.dao.SaltSource;
+import org.springframework.security.authentication.encoding.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class DefaultNewAccountService implements NewAccountService {
@@ -61,12 +65,17 @@ public class DefaultNewAccountService implements NewAccountService {
 
 	 @Override
 	 public void createNewAccount(String userName, String password, String userPageLayout) throws Exception {
-		  User user=new User();
+         final User existingUser = userService.getUserByUsername(userName);
+         if (existingUser != null) {
+            throw new IllegalArgumentException("A user already exists for username " + userName);
+         }
+         
+         User user=new User();
 		  user.setUsername(userName);
 		  //This assumes we use the username for the salt.  If not, the code below will need to change.
 		  //See also applicationContext-security.xml
 		  String saltedHashedPassword=passwordEncoder.encodePassword(password,saltSource.getSalt(user));
-		  logger.debug("Salt Source:"+saltSource.getSalt(user));
+		  logger.debug("Salt Source: {}", saltSource.getSalt(user));
 		  user.setPassword(saltedHashedPassword);
 		  
 		  user.setExpired(false);

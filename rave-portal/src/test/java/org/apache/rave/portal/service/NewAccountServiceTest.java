@@ -19,18 +19,95 @@
 
 package org.apache.rave.portal.service;
 
+import org.apache.rave.portal.model.PageLayout;
+import org.apache.rave.portal.model.User;
+import org.apache.rave.portal.service.impl.DefaultNewAccountService;
+import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.security.authentication.dao.SaltSource;
+import org.springframework.security.authentication.encoding.PasswordEncoder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.test.util.ReflectionTestUtils;
 
+import static junit.framework.Assert.fail;
+import static org.easymock.EasyMock.createNiceMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+
+/**
+ * Test class for {@link org.apache.rave.portal.service.impl.DefaultNewAccountService}
+ */
 public class NewAccountServiceTest {
+    private UserService userService;
+    private PageLayoutService pageLayoutService;
 
-	 @Test
-	 public void createNewAccountTest(){
-		  //TODO implement test
-	 }
+    private NewAccountService newAccountService;
 
-	 @Test
-	 public void failedAccountCreationTest() {
-		  //TODO implement test to check failure conditions such as using already
-		  //used user name.
-	 }
+    private final Logger logger = LoggerFactory.getLogger(NewAccountServiceTest.class);
+
+    @Test
+    public void createNewAccountTest() throws Exception {
+        String validUser = "valid.user";
+        String validPass = "valid.password";
+        String validLayout = "valid.layout";
+
+        User newUser = new User();
+        newUser.setUsername(validUser);
+        newUser.setPassword(validPass);
+        newUser.setConfirmPassword(validPass);
+        newUser.setExpired(false);
+        newUser.setLocked(false);
+        newUser.setEnabled(true);
+
+
+        SaltSource saltSource = createNiceMock(SaltSource.class);
+        UserDetails userDetails = createNiceMock(UserDetails.class);
+        expect(userDetails.getUsername()).andReturn("valid.user");
+        expect(userDetails.getPassword()).andReturn("valid.password");
+        expect(saltSource.getSalt(userDetails)).andReturn("salt");
+        PasswordEncoder passwordEncoder = createNiceMock(PasswordEncoder.class);
+        expect(passwordEncoder.encodePassword("valid.password", "salt")).andReturn("valid.password");
+        replay(saltSource, userDetails, passwordEncoder);
+
+        ReflectionTestUtils.setField(newAccountService, "saltSource", saltSource);
+        ReflectionTestUtils.setField(newAccountService, "passwordEncoder", passwordEncoder);
+
+        expect(userService.getUserByUsername(validUser)).andReturn(null);
+        PageLayout pageLayout = new PageLayout();
+        pageLayout.setNumberOfRegions(4L);
+        expect(pageLayoutService.getPageLayoutByCode(validLayout)).andReturn(pageLayout);
+        replay(userService, pageLayoutService);
+
+        newAccountService.createNewAccount(validUser, validPass, validLayout);
+    }
+
+    @Test
+    public void failedAccountCreationTest() throws Exception {
+        String duplicateUserName = "duplicateUserName";
+        User existingUser = new User();
+        existingUser.setUsername(duplicateUserName);
+
+        expect(userService.getUserByUsername(duplicateUserName)).andReturn(existingUser);
+        replay(userService);
+
+        try {
+            newAccountService.createNewAccount(duplicateUserName, "", "");
+            fail();
+        } catch (IllegalArgumentException e) {
+            logger.debug("Expected failure of account creation due to duplicate name");
+        }
+    }
+
+    @Before
+    public void setup() {
+        userService = createNiceMock(UserService.class);
+        PageService pageService = createNiceMock(PageService.class);
+        pageLayoutService = createNiceMock(PageLayoutService.class);
+        RegionService regionService = createNiceMock(RegionService.class);
+
+        newAccountService = new DefaultNewAccountService(userService, pageService, pageLayoutService, regionService);
+
+    }
 }
