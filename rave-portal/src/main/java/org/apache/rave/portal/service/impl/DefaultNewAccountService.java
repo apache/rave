@@ -41,71 +41,48 @@ import org.springframework.stereotype.Service;
 @Service
 public class DefaultNewAccountService implements NewAccountService {
 
-	 protected final Logger logger=LoggerFactory.getLogger(getClass());
+    protected final Logger logger=LoggerFactory.getLogger(getClass());
 
     private final UserService userService;
-	 private final PageService pageService;
-	 private final PageLayoutService pageLayoutService;
-	 private final RegionService regionService;
+    private final PageService pageService;
+    private final PageLayoutService pageLayoutService;
+    private final RegionService regionService;
 
+    @Autowired 
+    private SaltSource saltSource;
 
-	 @Autowired 
-	 private SaltSource saltSource;
-
-	 @Autowired 
-	 private PasswordEncoder passwordEncoder;
+    @Autowired 
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     public DefaultNewAccountService(UserService userService, PageService pageService, PageLayoutService pageLayoutService, RegionService regionService) {
-		  this.userService = userService;
-	 	  this.pageService = pageService;
-	 	  this.pageLayoutService = pageLayoutService;
-	 	  this.regionService = regionService;
+        this.userService = userService;
+        this.pageService = pageService;
+        this.pageLayoutService = pageLayoutService;
+        this.regionService = regionService;
     }
 
-	 @Override
-	 public void createNewAccount(String userName, String password, String userPageLayout) throws Exception {
-         final User existingUser = userService.getUserByUsername(userName);
-         if (existingUser != null) {
+    @Override
+    public void createNewAccount(String userName, String password, String userPageLayout) throws Exception {
+        final User existingUser = userService.getUserByUsername(userName);
+        if (existingUser != null) {
             throw new IllegalArgumentException("A user already exists for username " + userName);
-         }
-         
-         User user=new User();
-		  user.setUsername(userName);
-		  //This assumes we use the username for the salt.  If not, the code below will need to change.
-		  //See also applicationContext-security.xml
-		  String saltedHashedPassword=passwordEncoder.encodePassword(password,saltSource.getSalt(user));
+        }
+        
+        User user=new User();
+        user.setUsername(userName);
+        //This assumes we use the username for the salt.  If not, the code below will need to change.
+        //See also applicationContext-security.xml
+        String saltedHashedPassword=passwordEncoder.encodePassword(password,saltSource.getSalt(user));
 		  logger.debug("Salt Source: {}", saltSource.getSalt(user));
-		  user.setPassword(saltedHashedPassword);
-		  
-		  user.setExpired(false);
-		  user.setLocked(false);
-		  user.setEnabled(true);
-		  userService.registerNewUser(user);
-		  
-		  //Return the newly registered user
-		  User registeredUser=userService.getUserByUsername(user.getUsername());
-		  
-		  //Create a PageLayout object.		  
-		  PageLayout pageLayout=pageLayoutService.getPageLayoutByCode(userPageLayout);
-		  
-		  //Create regions
-		  List<Region> regions=new ArrayList<Region>();
-		  int regionCount;
-		  for (regionCount = 0; regionCount < pageLayout.getNumberOfRegions(); regionCount++) {
-			  Region region = new Region();
-			  regions.add(region);
-		  }
-		  
-		  //Create a Page object and register it.
-		  Page page=new Page();
-		  page.setName("main");
-		  page.setOwner(registeredUser);
-		  page.setPageLayout(pageLayout);
-		  page.setRenderSequence(1L);
-		  page.setRegions(regions);
-		  pageService.registerNewPage(page);
-		  
-	 }
-	 
+        user.setPassword(saltedHashedPassword);
+
+        user.setExpired(false);
+        user.setLocked(false);
+        user.setEnabled(true);
+        userService.registerNewUser(user);
+
+        // Return the newly registered user and create a new default page for them	  
+        pageService.addNewDefaultPage(userService.getUserByUsername(user.getUsername()), userPageLayout);		  
+    }	 
 }

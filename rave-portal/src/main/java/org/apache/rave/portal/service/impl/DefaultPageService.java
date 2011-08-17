@@ -19,6 +19,7 @@
 
 package org.apache.rave.portal.service.impl;
 
+import java.util.ArrayList;
 import org.apache.rave.persistence.Repository;
 import org.apache.rave.portal.model.Page;
 import org.apache.rave.portal.model.Region;
@@ -34,6 +35,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import org.apache.rave.portal.model.PageLayout;
+import org.apache.rave.portal.model.User;
+import org.apache.rave.portal.repository.PageLayoutRepository;
+import org.apache.rave.portal.service.UserService;
+import org.springframework.beans.factory.annotation.Value;
 
 @Service
 public class DefaultPageService implements PageService {
@@ -41,18 +47,47 @@ public class DefaultPageService implements PageService {
     private final RegionRepository regionRepository;
     private final RegionWidgetRepository regionWidgetRepository;
     private final WidgetRepository widgetRepository;
+    private final PageLayoutRepository pageLayoutRepository;
+    private final UserService userService;    
+    private final String defaultPageName;
 
     @Autowired
-    public DefaultPageService(PageRepository pageRepository, RegionRepository regionRepository, WidgetRepository widgetRepository, RegionWidgetRepository regionWidgetRepository) {
+    public DefaultPageService(PageRepository pageRepository, 
+                              RegionRepository regionRepository, 
+                              WidgetRepository widgetRepository, 
+                              RegionWidgetRepository regionWidgetRepository,
+                              PageLayoutRepository pageLayoutRepository,
+                              UserService userService,
+                              @Value("${portal.page.default_name}") String defaultPageName) {
         this.pageRepository = pageRepository;
         this.regionRepository = regionRepository;
         this.regionWidgetRepository = regionWidgetRepository;
         this.widgetRepository = widgetRepository;
+        this.pageLayoutRepository = pageLayoutRepository;
+        this.userService = userService;
+        this.defaultPageName = defaultPageName;
     }
 
     @Override
     public List<Page> getAllPages(long userId) {
         return pageRepository.getAllPages(userId);
+    }
+    
+    @Override
+    @Transactional
+    public Page addNewPage(String pageName, String pageLayoutCode) {                     
+        return addNewPage(userService.getAuthenticatedUser(), pageName, pageLayoutCode);
+    }    
+    
+    @Override
+    @Transactional
+    public Page addNewDefaultPage(User user, String pageLayoutCode) {                       
+        return addNewPage(user, defaultPageName, pageLayoutCode);
+    }       
+    
+    @Override
+    public String getDefaultPageName() {
+        return defaultPageName;
     }
 
     @Override
@@ -83,12 +118,6 @@ public class DefaultPageService implements PageService {
         Widget widget = getFromRepository(widgetId, widgetRepository);
         Region region = page.getRegions().get(0);
         return createWidgetInstance(widget, region, 0);
-    }
-
-    @Override
-    @Transactional
-    public void registerNewPage(Page page) {
-        pageRepository.save(page);
     }
 
     private RegionWidget createWidgetInstance(Widget widget, Region region, int position) {
@@ -145,4 +174,27 @@ public class DefaultPageService implements PageService {
         throw new IllegalArgumentException("Invalid RegionWidget ID");
     }
 
+    private Page addNewPage(User user, String pageName, String pageLayoutCode) {
+        PageLayout pageLayout = pageLayoutRepository.getByPageLayoutCode(pageLayoutCode);
+        
+        // Create regions
+        List<Region> regions = new ArrayList<Region>();
+        int regionCount;
+        for (regionCount = 0; regionCount < pageLayout.getNumberOfRegions(); regionCount++) {
+            Region region = new Region();
+            regions.add(region);
+        }
+
+        // Create a Page object and register it.
+        long renderSequence = getAllPages(user.getId()).size() + 1;
+        Page page = new Page();
+        page.setName(pageName);       
+        page.setOwner(user);
+        page.setPageLayout(pageLayout);
+        page.setRenderSequence(renderSequence);
+        page.setRegions(regions);        
+        pageRepository.save(page);
+        
+        return page;
+    }
 }

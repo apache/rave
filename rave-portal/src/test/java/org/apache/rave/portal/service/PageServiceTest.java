@@ -19,6 +19,9 @@
 
 package org.apache.rave.portal.service;
 
+import org.apache.rave.portal.model.PageLayout;
+import org.apache.rave.portal.model.User;
+import org.apache.rave.portal.repository.PageLayoutRepository;
 import org.apache.rave.portal.model.Page;
 import org.apache.rave.portal.model.Region;
 import org.apache.rave.portal.model.RegionWidget;
@@ -46,13 +49,19 @@ public class PageServiceTest {
     private RegionRepository regionRepository;
     private WidgetRepository widgetRepository;
     private RegionWidgetRepository regionWidgetRepository;
+    private PageLayoutRepository pageLayoutRepository;
+    private UserService userService;
 
     private static final long REGION_WIDGET_ID = 5L;
     private static final long TO_REGION_ID = 1L;
     private static final long FROM_REGION_ID = 2L;
+    private static final String PAGE_LAYOUT_CODE = "layout1";
     private Region targetRegion;
     private Region originalRegion;
-    private Widget widget;
+    private Widget validWidget;
+    private User user;
+    private PageLayout pageLayout;
+    private String defaultPageName = "Main";
 
     @Before
     public void setup() {
@@ -61,23 +70,34 @@ public class PageServiceTest {
         regionRepository = createNiceMock(RegionRepository.class);
         widgetRepository = createNiceMock(WidgetRepository.class);
         regionWidgetRepository = createNiceMock(RegionWidgetRepository.class);
-        pageService = new DefaultPageService(pageRepository, regionRepository, widgetRepository, regionWidgetRepository);
+        pageLayoutRepository = createMock(PageLayoutRepository.class);
+        userService = createMock(UserService.class);
+        pageService = new DefaultPageService(pageRepository, regionRepository, widgetRepository, regionWidgetRepository, pageLayoutRepository, userService, defaultPageName);
 
-        widget = new Widget(1L, "http://dummy.apache.org/widgets/widget.xml");
+        validWidget = new Widget(1L, "http://dummy.apache.org/widgets/widget.xml");
         
         targetRegion = new Region();
         targetRegion.setId(2L);
         targetRegion.setRegionWidgets(new ArrayList<RegionWidget>());
-        targetRegion.getRegionWidgets().add(new RegionWidget(1L, widget, targetRegion, 0));
-        targetRegion.getRegionWidgets().add(new RegionWidget(2L, widget, targetRegion, 1));
-        targetRegion.getRegionWidgets().add(new RegionWidget(3L, widget, targetRegion, 2));
+        targetRegion.getRegionWidgets().add(new RegionWidget(1L, validWidget, targetRegion, 0));
+        targetRegion.getRegionWidgets().add(new RegionWidget(2L, validWidget, targetRegion, 1));
+        targetRegion.getRegionWidgets().add(new RegionWidget(3L, validWidget, targetRegion, 2));
 
         originalRegion = new Region();
         originalRegion.setId(1L);
         originalRegion.setRegionWidgets(new ArrayList<RegionWidget>());
-        originalRegion.getRegionWidgets().add(new RegionWidget(4L, widget, targetRegion, 0));
-        originalRegion.getRegionWidgets().add(new RegionWidget(5L, widget, targetRegion, 1));
-        originalRegion.getRegionWidgets().add(new RegionWidget(6L, widget, targetRegion, 2));
+        originalRegion.getRegionWidgets().add(new RegionWidget(4L, validWidget, targetRegion, 0));
+        originalRegion.getRegionWidgets().add(new RegionWidget(5L, validWidget, targetRegion, 1));
+        originalRegion.getRegionWidgets().add(new RegionWidget(6L, validWidget, targetRegion, 2));
+        
+        user = new User();
+        user.setId(1L);
+        user.setUsername("acarlucci"); 
+        
+        pageLayout = new PageLayout();
+        pageLayout.setId(1L);
+        pageLayout.setCode(PAGE_LAYOUT_CODE);
+        pageLayout.setNumberOfRegions(3L);
     }
 
     @Test
@@ -91,6 +111,99 @@ public class PageServiceTest {
         assertThat(pageService.getAllPages(VALID_USER_ID), CoreMatchers.sameInstance(VALID_PAGES));
     }
 
+    @Test
+    public void createNewPage_noExistingPages() {
+        final String PAGE_NAME = "my new page";
+        final Long EXPECTED_RENDER_SEQUENCE = 1L;
+                      
+        Page expectedPage = new Page();
+        expectedPage.setName(PAGE_NAME);       
+        expectedPage.setOwner(user);
+        expectedPage.setPageLayout(pageLayout);
+        expectedPage.setRenderSequence(EXPECTED_RENDER_SEQUENCE);
+        expectedPage.setRegions(createEmptyRegionList(pageLayout.getNumberOfRegions()));    
+                
+        expect(userService.getAuthenticatedUser()).andReturn(user);
+        expect(pageLayoutRepository.getByPageLayoutCode(PAGE_LAYOUT_CODE)).andReturn(pageLayout);
+        expect(pageRepository.save(expectedPage)).andReturn(expectedPage);
+        expect(pageRepository.getAllPages(user.getId())).andReturn(new ArrayList<Page>());
+        replay(userService);
+        replay(pageLayoutRepository);
+        replay(pageRepository);             
+
+        Page newPage = pageService.addNewPage(PAGE_NAME, PAGE_LAYOUT_CODE);                
+        assertThat(newPage.getRenderSequence(), is(EXPECTED_RENDER_SEQUENCE));
+        assertThat(newPage.getName(), is(PAGE_NAME));
+        assertThat(newPage.getRegions().size(), is(pageLayout.getNumberOfRegions().intValue()));
+        
+        verify(userService);
+        verify(pageLayoutRepository);
+        verify(pageRepository);
+    }
+    
+    @Test
+    public void createNewPage_existingPages() {
+        final String PAGE_NAME = "my new page";
+        final Long EXPECTED_RENDER_SEQUENCE = 2L;
+        List<Page> existingPages = new ArrayList<Page>();
+        existingPages.add(new Page());
+                      
+        Page expectedPage = new Page();
+        expectedPage.setName(PAGE_NAME);       
+        expectedPage.setOwner(user);
+        expectedPage.setPageLayout(pageLayout);
+        expectedPage.setRenderSequence(EXPECTED_RENDER_SEQUENCE);
+        expectedPage.setRegions(createEmptyRegionList(pageLayout.getNumberOfRegions()));    
+                
+        expect(userService.getAuthenticatedUser()).andReturn(user);
+        expect(pageLayoutRepository.getByPageLayoutCode(PAGE_LAYOUT_CODE)).andReturn(pageLayout);
+        expect(pageRepository.save(expectedPage)).andReturn(expectedPage);
+        expect(pageRepository.getAllPages(user.getId())).andReturn(existingPages);
+        replay(userService);
+        replay(pageLayoutRepository);
+        replay(pageRepository);             
+
+        Page newPage = pageService.addNewPage(PAGE_NAME, PAGE_LAYOUT_CODE);                
+        assertThat(newPage.getRenderSequence(), is(EXPECTED_RENDER_SEQUENCE));
+        assertThat(newPage.getName(), is(PAGE_NAME));
+        assertThat(newPage.getRegions().size(), is(pageLayout.getNumberOfRegions().intValue()));
+        
+        verify(userService);
+        verify(pageLayoutRepository);
+        verify(pageRepository);
+    }    
+   
+    @Test
+    public void createNewDefaultPage() {
+        final Long EXPECTED_RENDER_SEQUENCE = 1L;
+                      
+        Page expectedPage = new Page();
+        expectedPage.setName(defaultPageName);       
+        expectedPage.setOwner(user);
+        expectedPage.setPageLayout(pageLayout);
+        expectedPage.setRenderSequence(EXPECTED_RENDER_SEQUENCE);
+        expectedPage.setRegions(createEmptyRegionList(pageLayout.getNumberOfRegions()));    
+                
+        expect(pageLayoutRepository.getByPageLayoutCode(PAGE_LAYOUT_CODE)).andReturn(pageLayout);
+        expect(pageRepository.save(expectedPage)).andReturn(expectedPage);
+        expect(pageRepository.getAllPages(user.getId())).andReturn(new ArrayList<Page>());
+        replay(pageLayoutRepository);
+        replay(pageRepository);             
+
+        Page newPage = pageService.addNewDefaultPage(user, PAGE_LAYOUT_CODE);                
+        assertThat(newPage.getRenderSequence(), is(EXPECTED_RENDER_SEQUENCE));
+        assertThat(newPage.getName(), is(defaultPageName));
+        assertThat(newPage.getRegions().size(), is(pageLayout.getNumberOfRegions().intValue()));
+        
+        verify(pageLayoutRepository);
+        verify(pageRepository);
+    }
+    
+    @Test
+    public void getDefaultPageName() {
+        assertThat(pageService.getDefaultPageName(), is(defaultPageName));
+    }
+  
     @Test
     public void moveRegionWidget_validMiddle() {
         final int newPosition = 0;
@@ -296,5 +409,15 @@ public class PageServiceTest {
         for (int i = 0; i < region.getRegionWidgets().size(); i++) {
             assertThat(region.getRegionWidgets().get(i).getRenderOrder(), is(equalTo(i)));
         }
+    }
+    
+    private List<Region> createEmptyRegionList(long numberOfRegions) {
+        List<Region> regions = new ArrayList<Region>();
+        int regionCount;
+        for (regionCount = 0; regionCount < numberOfRegions; regionCount++) {
+              Region region = new Region();
+              regions.add(region);
+        }
+        return regions;
     }
 }

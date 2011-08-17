@@ -17,22 +17,23 @@
  * under the License.
  */
 
-package org.apache.rave.portal.web.api.rpc.model;
+package org.apache.rave.exception;
 
-import org.junit.Test;
+import org.springframework.dao.DataAccessException;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+/**
+ * Runtime Exception Thrown when a duplicate item is attempted persistence
+ * (such as a unique constraint violation)
+ * 
+ * @author carlucci
+ */
+public class DuplicateItemException extends DataAccessException {
 
-public class RpcResultTest {
-
-    @Test
-    public void correctDefault_noError() {
-        assertThat(new RpcResult<String>(false).getErrorCode(), is(equalTo(RpcResult.ErrorCode.NO_ERROR)));
+    public DuplicateItemException(String msg, Throwable cause) {
+        super(msg, cause);
     }
-    @Test
-    public void correctDefault_error() {
-        assertThat(new RpcResult<String>(true).getErrorCode(), is(equalTo(RpcResult.ErrorCode.INTERNAL_ERROR)));
-    }
+
+    public DuplicateItemException(String msg) {
+        super(msg);
+    }    
 }

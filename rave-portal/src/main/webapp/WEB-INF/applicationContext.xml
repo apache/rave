@@ -68,10 +68,14 @@
         <property name="persistenceUnitName" value="ravePersistenceUnit"/>
         <property name="dataSource" ref="dataSource"/>
         <property name="jpaVendorAdapter">
-            <bean class="org.springframework.orm.jpa.vendor.OpenJpaVendorAdapter">
-                <property name="showSql" value="true" />
-            </bean>
+            <bean class="org.springframework.orm.jpa.vendor.OpenJpaVendorAdapter"
+                  p:databasePlatform="org.apache.openjpa.jdbc.sql.H2Dictionary"
+                  p:database="H2"
+                  p:showSql="true"/>
         </property>
+        <property name="jpaDialect">
+            <bean class="org.apache.rave.portal.repository.impl.H2OpenJpaDialect"/>
+        </property>      
         <property name="jpaPropertyMap">
             <map>
                 <entry key="openjpa.Log" value="DefaultLevel=WARN, Runtime=INFO, Tool=INFO, SQL=TRACE"/>
@@ -80,7 +84,7 @@
             </map>
         </property>
     </bean>
-
+    
     <!-- A RestTemplate instance that can be used to call a web service which expects Content-Type and Accept headers of
     application/json with a pre-built string of JSON data. -->
     <bean id="jsonStringCompatibleRestTemplate" class="org.springframework.web.client.RestTemplate">
@@ -104,17 +108,17 @@
         <property name="engineGadgetPath" value="${portal.opensocial_engine.gadget_path}"/>
     </bean>
 
-	 <!-- Validators -->
-	<bean id="newAccountValidator" class="org.apache.rave.portal.web.validator.NewAccountValidator"/>
-	<bean id="userProfileValidator" class="org.apache.rave.portal.web.validator.UserProfileValidator"/>
+    <!-- Validators -->
+    <bean id="newAccountValidator" class="org.apache.rave.portal.web.validator.NewAccountValidator"/>
+    <bean id="userProfileValidator" class="org.apache.rave.portal.web.validator.UserProfileValidator"/>
 	
-	<!-- Configuring messages.properties file --> 
-	<bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource" p:basename="messages" />
+    <!-- Configuring messages.properties file --> 
+    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource" p:basename="messages" />
 
-	<!-- Password encoding and salting-->
-	<bean class="org.springframework.security.authentication.encoding.ShaPasswordEncoder" id="passwordEncoder"/>
-	<bean class="org.springframework.security.authentication.dao.ReflectionSaltSource" id="saltSource">
-	  <property name="userPropertyToUse" value="username"/>
-	</bean>
+    <!-- Password encoding and salting-->
+    <bean class="org.springframework.security.authentication.encoding.ShaPasswordEncoder" id="passwordEncoder"/>
+    <bean class="org.springframework.security.authentication.dao.ReflectionSaltSource" id="saltSource">
+        <property name="userPropertyToUse" value="username"/>
+    </bean>
 
 </beans>

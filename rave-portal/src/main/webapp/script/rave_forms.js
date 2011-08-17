@@ -65,9 +65,20 @@ rave.forms = rave.forms || (function() {
             }
         });
     }
+    
+    function validatePageForm() {
+        $("#pageForm").validate({
+            rules: {
+                tab_title : {
+                    required: true
+                }
+            }
+        });
+    }
 
     return {
         validateNewAccountForm : validateNewAccountForm,
-		  validateUserProfileForm: validateUserProfileForm
+	validateUserProfileForm: validateUserProfileForm,
+        validatePageForm: validatePageForm
     };
 })();

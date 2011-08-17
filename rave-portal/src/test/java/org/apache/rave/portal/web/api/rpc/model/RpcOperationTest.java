@@ -19,6 +19,7 @@
 
 package org.apache.rave.portal.web.api.rpc.model;
 
+import org.apache.rave.exception.DuplicateItemException;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.*;
@@ -67,4 +68,17 @@ public class RpcOperationTest {
         assertThat(result.getResult(), is(nullValue()));
         assertThat(result.getErrorCode(), is(equalTo(RpcResult.ErrorCode.INTERNAL_ERROR)));
     }
+    @Test
+    public void execute_duplicateItemException() {
+        RpcOperation<String> valid = new RpcOperation<String>() {
+            @Override
+            public String execute() {
+                throw new DuplicateItemException("Duplicate Item Error");
+            }
+        };
+
+        RpcResult<String> result = valid.getResult();
+        assertThat(result.getResult(), is(nullValue()));
+        assertThat(result.getErrorCode(), is(equalTo(RpcResult.ErrorCode.DUPLICATE_ITEM)));
+    }    
 }

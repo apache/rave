@@ -145,6 +145,26 @@ describe("Rave API", function() {
             });
 
         });
+        
+        describe("addPage", function() {
+            it("posts the correct values to RPC service for adding a new page", function() {
+
+                var newPageName = "my new page";
+                var newPageLayoutCode = "layout1";
+
+                $.post = function(url, data, callback) {
+                    expect(url).toEqual("api/rpc/page/add");
+                    expect(data.pageName).toEqual(newPageName);
+                    expect(data.pageLayoutCode).toEqual(newPageLayoutCode);
+                    expect(typeof(callback)).toEqual("function");
+                    return {
+                        error: function(a, b, c) {
+                        }
+                    }
+                };
+                rave.api.rpc.addPage({pageName: newPageName, pageLayoutCode: newPageLayoutCode});
+            });
+        });
 
         describe("Error handling", function() {
             it("displays the appropriate alert when invalid parameters are passed", function() {

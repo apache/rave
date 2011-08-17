@@ -130,6 +130,28 @@ rave.api = rave.api || (function() {
                     }
                 }).error(handleError);
         }
+        
+        function addPage(args) {
+            $.post(rave.getContext() + path + "page/add",
+                {
+                    pageName: args.pageName,
+                    pageLayoutCode: args.pageLayoutCode
+                },
+                function(result) {
+                    if (result.error) {
+                        // check to see if a duplicate page name error occured
+                        if (result.errorCode == 'DUPLICATE_ITEM') {                        
+                            $("#pageFormErrors").html("A page with that name already exists");
+                        } else {                        
+                            handleRpcError(result);
+                        }
+                    } else {
+                        if (typeof args.successCallback == 'function') {
+                            args.successCallback();
+                        }
+                    }
+                }).error(handleError);
+        }
 
         //TODO: Create a more robust error handling system and interrogation of RPC results
         function handleRpcError(rpcResult) {
@@ -143,14 +165,15 @@ rave.api = rave.api || (function() {
                 case "INTERNAL_ERROR":
                     alert("Rave attempted to update the server with your recent changes, " +
                         " but the server encountered an internal error.");
-                    break;
+                    break;                
             }
         }
 
         return {
             moveWidget : moveWidgetOnPage,
             addWidgetToPage : addWidgetToPage,
-            removeWidget : deleteWidgetOnPage
+            removeWidget : deleteWidgetOnPage,
+            addPage: addPage
         };
 
     })();

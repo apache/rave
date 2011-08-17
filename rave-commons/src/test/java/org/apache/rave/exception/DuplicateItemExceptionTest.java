@@ -17,22 +17,35 @@
  * under the License.
  */
 
-package org.apache.rave.portal.web.api.rpc.model;
+package org.apache.rave.exception;
 
 import org.junit.Test;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 
-public class RpcResultTest {
+/**
+ */
+public class DuplicateItemExceptionTest {
 
+    private static final String MESSAGE = "MESSAGE";
+   
     @Test
-    public void correctDefault_noError() {
-        assertThat(new RpcResult<String>(false).getErrorCode(), is(equalTo(RpcResult.ErrorCode.NO_ERROR)));
+    public void stringConstructor() {
+        try {
+            throw new DuplicateItemException(MESSAGE);
+        } catch (DuplicateItemException e) {
+           assertThat(e.getMessage(), is(equalTo(MESSAGE)));
+        }
     }
     @Test
-    public void correctDefault_error() {
-        assertThat(new RpcResult<String>(true).getErrorCode(), is(equalTo(RpcResult.ErrorCode.INTERNAL_ERROR)));
-    }
+    public void stringAndCauseConstructor() {
+        Throwable throwable = new RuntimeException();
+        try {
+            throw new DuplicateItemException(MESSAGE, throwable);
+        } catch (DuplicateItemException e) {
+           assertThat(e.getMessage(), is(equalTo(MESSAGE + "; nested exception is java.lang.RuntimeException")));
+           assertThat(e.getCause(), is(sameInstance(throwable)));
+        }
+    }    
 }

@@ -19,6 +19,7 @@
 
 package org.apache.rave.portal.web.api.rpc;
 
+import org.apache.rave.portal.model.Page;
 import org.apache.rave.portal.model.Region;
 import org.apache.rave.portal.model.RegionWidget;
 import org.apache.rave.portal.service.PageService;
@@ -43,7 +44,7 @@ public class PageApiTest {
 
     @Before
     public void setup() {
-        pageService = createNiceMock(PageService.class);
+        pageService = createMock(PageService.class);
         pageApi = new PageApi(pageService);
     }
 
@@ -181,6 +182,54 @@ public class PageApiTest {
         expect(pageService.removeWidgetFromPage(WIDGET_ID)).andThrow(new RuntimeException(INTERNAL_ERROR_MESSAGE));
         replay(pageService);
         RpcResult result = pageApi.removeWidgetFromPage(WIDGET_ID);
+        verify(pageService);
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getResult(), is(nullValue()));
+        assertThat(result.isError(), is(true));
+        assertThat(result.getErrorCode(), is(RpcResult.ErrorCode.INTERNAL_ERROR));
+        assertThat(result.getErrorMessage(), is(equalTo(INTERNAL_ERROR_MESSAGE)));
+    }
+    
+    @Test
+    public void addPage_validParams() {
+        final String PAGE_NAME = "My New Page";
+        final String PAGE_LAYOUT_CODE = "layout1";
+
+        expect(pageService.addNewPage(PAGE_NAME, PAGE_LAYOUT_CODE)).andReturn(new Page());
+        replay(pageService);
+        RpcResult result = pageApi.addPage(PAGE_NAME, PAGE_LAYOUT_CODE);
+        verify(pageService);
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getResult(), is(notNullValue()));
+        assertThat(result.isError(), is(false));
+        assertThat(result.getErrorCode(), is(RpcResult.ErrorCode.NO_ERROR));
+        assertThat(result.getErrorMessage(), is(nullValue()));
+    }
+    
+    @Test
+    public void addPage_invalidParams() {
+        final String PAGE_NAME = "My New Page";
+        final String PAGE_LAYOUT_CODE = "layout1";
+
+        expect(pageService.addNewPage(PAGE_NAME, PAGE_LAYOUT_CODE)).andThrow(new IllegalArgumentException(PARAM_ERROR_MESSAGE));
+        replay(pageService);
+        RpcResult result = pageApi.addPage(PAGE_NAME, PAGE_LAYOUT_CODE);
+        verify(pageService);
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getResult(), is(nullValue()));
+        assertThat(result.isError(), is(true));
+        assertThat(result.getErrorCode(), is(RpcResult.ErrorCode.INVALID_PARAMS));
+        assertThat(result.getErrorMessage(), is(equalTo(PARAM_ERROR_MESSAGE)));
+    }
+    
+    @Test
+    public void addPage_internalError() {
+        final String PAGE_NAME = "My New Page";
+        final String PAGE_LAYOUT_CODE = "layout1";
+
+        expect(pageService.addNewPage(PAGE_NAME, PAGE_LAYOUT_CODE)).andThrow(new RuntimeException(INTERNAL_ERROR_MESSAGE));
+        replay(pageService);
+        RpcResult result = pageApi.addPage(PAGE_NAME, PAGE_LAYOUT_CODE);
         verify(pageService);
         assertThat(result, is(notNullValue()));
         assertThat(result.getResult(), is(nullValue()));

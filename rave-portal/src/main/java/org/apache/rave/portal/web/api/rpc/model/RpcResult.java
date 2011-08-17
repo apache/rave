@@ -30,7 +30,8 @@ public class RpcResult<T> {
     public static enum ErrorCode {
         NO_ERROR,
         INVALID_PARAMS,
-        INTERNAL_ERROR
+        INTERNAL_ERROR,
+        DUPLICATE_ITEM
     }
 
     private boolean error;

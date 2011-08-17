@@ -23,6 +23,7 @@ import org.apache.rave.portal.model.Region;
 import org.apache.rave.portal.model.RegionWidget;
 
 import java.util.List;
+import org.apache.rave.portal.model.User;
 
 public interface PageService {
     /**
@@ -32,7 +33,34 @@ public interface PageService {
      * @return A non null possible empty list of pages for the given user.
      */
     List<Page> getAllPages(long userId);
-
+    
+    /**
+     * Creates a new page with the supplied pageName and pageLayoutCode
+     * 
+     * @param pageName the name of the new page
+     * @param pageLayoutCode the page layout code
+     * @return the new Page object
+     */
+    Page addNewPage(String pageName, String pageLayoutCode);
+    
+    /**
+     * Creates a new default page for the supplied user using the
+     * supplied pageLayoutCode.  This method should be used for new users
+     * who just registered and need to create the default page
+     * 
+     * @param user
+     * @param pageLayoutCode
+     * @return 
+     */
+    Page addNewDefaultPage(User user, String pageLayoutCode);
+    
+    /**
+     * Get the default page name used by Rave
+     * 
+     * @return the name of the default page used by Rave
+     */
+    String getDefaultPageName();
+    
     /**
      * Moves a Region widget's position in a region or across regions
      *
@@ -52,17 +80,11 @@ public interface PageService {
      */
     RegionWidget addWidgetToPage(long page_id, long widget_id);
 
-	 /**
-	  * Deletes the specified widget from the page.
-	  *
-      * @param regionWidgetId the id of the region widget to delete.\
-      * @return the region from which the widget was deleted
-      */
-	 Region removeWidgetFromPage(long regionWidgetId);
-
-	 /**
-	  * Registers a new page.
-	  * @param page the page object to register with the data management system.
-	  */
-	 void registerNewPage(Page page);
+    /**
+     * Deletes the specified widget from the page.
+     *
+     * @param regionWidgetId the id of the region widget to delete.\
+     * @return the region from which the widget was deleted
+     */
+    Region removeWidgetFromPage(long regionWidgetId);
 }

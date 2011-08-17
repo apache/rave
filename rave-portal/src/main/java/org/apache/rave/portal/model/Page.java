@@ -30,7 +30,7 @@ import java.util.List;
  * become more flexible to enable things like group ownership in the future).
  */
 @Entity
-@Table(name="page")
+@Table(name="page", uniqueConstraints=@UniqueConstraint(columnNames={"owner_id","name"}))
 @SequenceGenerator(name="pageIdSeq", sequenceName = "page_id_seq")
 @NamedQueries({
         @NamedQuery(name = "Page.getByUserId", query="SELECT p FROM Page p WHERE p.owner.id = :userId")
@@ -38,19 +38,19 @@ import java.util.List;
 @Access(AccessType.FIELD)
 public class Page implements BasicEntity, Serializable {
     private static final long serialVersionUID = 1L;
-    
+      
     @Id @Column(name="id")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "pageIdSeq")
     private Long id;
 
-    @Basic @Column(name="name")
+    @Basic(optional=false) @Column(name="name")
     private String name;
 
     @ManyToOne
     @JoinColumn(name = "owner_id")
     private User owner;
 
-    @Basic @Column(name="render_sequence")
+    @Basic(optional=false) @Column(name="render_sequence")
     private Long renderSequence;
 
     @ManyToOne

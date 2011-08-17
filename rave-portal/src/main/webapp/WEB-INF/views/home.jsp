@@ -40,25 +40,26 @@
         <h1>Hello ${defaultPage.owner.username}, welcome to Rave!</h1>
     </div>
     <div id="dialog" title="Tab data" class="dialog">
-		<form>
-			<fieldset class="ui-helper-reset">
-				<label for="tab_title">Title</label>
-				<input type="text" name="tab_title" id="tab_title" value="" class="ui-widget-content ui-corner-all" />
-				<label for="pageLayoutField">Select Page Layout:</label>
-            	<select>
-            		<option value="columns_1" id="columns_1_id">One Column</option>
-            		<option value="columns_2" id="columns_2_id" selected="selected">Two Columns</option>
-            		<option value="columns_2wn" id="columns_2wn_id">Two Columns (wide/narrow)</option>
-            		<option value="columns_3" id="columns_3_id">Three Columns</option>
-            		<option value="columns_3nwn" id="columns_3nwn_id">Three Columns (narrow/wide/narrow)</option>
-            		<option value="columns_4" id="columns_4_id">Four Columns</option>
-            		<option value="columns_3nwn_1_bottom" id="columns_3nwn_1_bottom">Four Columns (narrow/wide/narrow/bottom)</option>
-            	</select>
-			</fieldset>
-		</form>
-	</div>
-	<button id="add_tab">Add Tab</button>
-      <div id="tabs" class="rave-ui-tabs">
+        <form id="pageForm">
+            <div id="pageFormErrors" class="error"></div>
+            <fieldset class="ui-helper-reset">
+                <label for="tab_title">Title</label>
+                <input type="text" name="tab_title" id="tab_title" value="" class="required ui-widget-content ui-corner-all" />
+                <label for="pageLayoutField">Select Page Layout:</label>
+                <select name="pageLayout" id="pageLayout">
+                    <option value="columns_1" id="columns_1_id">One Column</option>
+                    <option value="columns_2" id="columns_2_id" selected="selected">Two Columns</option>
+                    <option value="columns_2wn" id="columns_2wn_id">Two Columns (wide/narrow)</option>
+                    <option value="columns_3" id="columns_3_id">Three Columns</option>
+                    <option value="columns_3nwn" id="columns_3nwn_id">Three Columns (narrow/wide/narrow)</option>
+                    <option value="columns_4" id="columns_4_id">Four Columns</option>
+                    <option value="columns_3nwn_1_bottom" id="columns_3nwn_1_bottom">Four Columns (narrow/wide/narrow/bottom)</option>
+                </select>
+            </fieldset>
+        </form>
+    </div>
+    <button id="add_tab">Add Tab</button>
+    <div id="tabs" class="rave-ui-tabs">
     <ul class="rave-ui-tabs ui-tabs-nav">
 	<c:forEach var="page" items="${pages}">
     		<li>
@@ -102,6 +103,7 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
     <script src="//ajax.aspnetcdn.com/ajax/jQuery/jquery-1.6.1.min.js"></script>
     <script src="//ajax.aspnetcdn.com/ajax/jquery.ui/1.8.13/jquery-ui.min.js"></script>
+    <script src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.8.1/jquery.validate.min.js"></script>
     <script src="${opensocial_engine_url}/js/container.js?c=1&container=default&debug=1"></script>
     <script src="<spring:url value="/script/rave.js"/>"></script>
     <script src="<spring:url value="/script/rave_api.js"/>"></script>
@@ -132,5 +134,8 @@
         $(function() {
     		$( "#tabs" ).tabs();
     	});
+        
+        // initialize the page form validator
+        rave.forms.validateUserProfileForm();
     </script>
 </rave:rave_generic_page>

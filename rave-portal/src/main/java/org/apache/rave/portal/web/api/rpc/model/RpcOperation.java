@@ -19,6 +19,8 @@
 
 package org.apache.rave.portal.web.api.rpc.model;
 
+import org.apache.rave.exception.DuplicateItemException;
+
 /**
  * Defines an RPC operation that can be executed to return a given result
  */
@@ -36,9 +38,11 @@ public abstract class RpcOperation<T> {
             T subject = execute();
             result = new RpcResult<T>(false, subject);
         } catch (IllegalArgumentException e) {
-            result = new RpcResult<T>(true, e.getMessage(), RpcResult.ErrorCode.INVALID_PARAMS);
+            result = createRpcResultError(e, RpcResult.ErrorCode.INVALID_PARAMS);
+        } catch (DuplicateItemException e) {
+            result = createRpcResultError(e, RpcResult.ErrorCode.DUPLICATE_ITEM);
         } catch (Exception e) {
-            result = new RpcResult<T>(true, e.getMessage(), RpcResult.ErrorCode.INTERNAL_ERROR);
+            result = createRpcResultError(e, RpcResult.ErrorCode.INTERNAL_ERROR);            
         }
         return result;
     }
@@ -49,4 +53,8 @@ public abstract class RpcOperation<T> {
      * @return the result of the RPC operation
      */
     public abstract T execute();
+        
+    private RpcResult<T> createRpcResultError(Exception e, RpcResult.ErrorCode errorCode) {      
+        return new RpcResult<T>(true, e.getMessage(), errorCode);
+    }
 }

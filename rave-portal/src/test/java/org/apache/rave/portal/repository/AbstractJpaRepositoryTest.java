@@ -79,9 +79,10 @@ public class AbstractJpaRepositoryTest {
 
     @Test
     @Rollback(true)
-    public void save_newEntity() {
+    public void save_newEntity() throws Exception {
         for (Repository repository : repositories) {
-            BasicEntity entity = constructNewEntityForRepository(repository);
+            BasicEntity entity = constructNewEntityForRepository(repository);            
+            RepositoryTestUtils.populateAllRequiredFieldsInEntity(sharedManager, entity);            
             BasicEntity saved = (BasicEntity)repository.save(entity);
             sharedManager.flush();
             assertThat(saved, is(sameInstance(entity)));
@@ -121,5 +122,5 @@ public class AbstractJpaRepositoryTest {
             throw new RuntimeException(e);
         }
     }
-
+    
 }
