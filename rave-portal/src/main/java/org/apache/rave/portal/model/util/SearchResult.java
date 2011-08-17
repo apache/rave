@@ -61,4 +61,15 @@ public class SearchResult<T extends BasicEntity> {
     public void setPageSize(int pageSize) {
         this.pageSize = pageSize;
     }
+
+    public int getNumberOfPages() {
+        if (pageSize == 0) {
+            return 0;
+        }
+        int numberOfPages = totalResults / pageSize;
+        if (totalResults % pageSize > 0) {
+            numberOfPages++;
+        }
+        return numberOfPages;
+    }
 }

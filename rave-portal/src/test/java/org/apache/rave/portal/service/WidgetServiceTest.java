@@ -36,6 +36,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertThat;
 
 /**
@@ -60,6 +61,23 @@ public class WidgetServiceTest {
 
         List<Widget> result = service.getAllWidgets().getResultSet();
         assertThat(result, is(sameInstance(widgets)));
+    }
+
+    @Test
+    public void getLimitedListOfWidgets() {
+        Widget widget1 = new Widget(1L,"http://example.com/widget1.xml");
+        Widget widget2 = new Widget(2L,"http://example.com/widget2.xml");
+        List<Widget> widgets = new ArrayList<Widget>();
+        widgets.add(widget1);
+        widgets.add(widget2);
+        final int pageSize = 10;
+        expect(repository.getLimitedList(0, pageSize)).andReturn(widgets);
+        replay(repository);
+
+        SearchResult<Widget> result = service.getLimitedListOfWidgets(0, pageSize);
+        assertEquals(pageSize, result.getPageSize());
+        assertSame(widgets, result.getResultSet());
+
     }
 
     @Test

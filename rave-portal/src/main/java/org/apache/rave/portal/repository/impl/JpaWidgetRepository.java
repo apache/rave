@@ -28,10 +28,16 @@ import javax.persistence.TypedQuery;
 import org.apache.rave.persistence.jpa.AbstractJpaRepository;
 import org.apache.rave.portal.model.Widget;
 import org.apache.rave.portal.repository.WidgetRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class JpaWidgetRepository extends AbstractJpaRepository<Widget> implements WidgetRepository {
+
+    private final Logger log = LoggerFactory.getLogger(JpaWidgetRepository.class);
+
+    private int LARGE_PAGESIZE = 1000;
 
     public JpaWidgetRepository() {
         super(Widget.class);
@@ -39,14 +45,26 @@ public class JpaWidgetRepository extends AbstractJpaRepository<Widget> implement
 
     @Override
     public List<Widget> getAll() {
+        log.warn("Requesting potentially large resultset of Widget. No pagesize set.");
         TypedQuery<Widget> query = manager.createNamedQuery("Widget.getAll", Widget.class);
+        return query.getResultList();
+    }
+
+    @Override
+    public List<Widget> getLimitedList(int offset, int pageSize) {
+        TypedQuery<Widget> query = manager.createNamedQuery("Widget.getAll", Widget.class);
+        query.setFirstResult(offset);
+        if (pageSize >= LARGE_PAGESIZE) {
+            log.warn("Requesting potentially large resultset of Widgets. Pagesize is {}", pageSize);
+        }
+        query.setMaxResults(pageSize);
         return query.getResultList();
     }
 
     @Override
     public int getCountAll() {
         Query query = manager.createNamedQuery("Widget.countAll");
-        Number countResult=(Number) query.getSingleResult();
+        Number countResult = (Number) query.getSingleResult();
         return countResult.intValue();
     }
 
@@ -54,12 +72,11 @@ public class JpaWidgetRepository extends AbstractJpaRepository<Widget> implement
     public List<Widget> getByFreeTextSearch(String searchTerm, int offset, int pageSize) {
         TypedQuery<Widget> query = manager.createNamedQuery("Widget.getByFreeText", Widget.class);
         query.setParameter("searchTerm", "%" + searchTerm.toLowerCase() + "%");
-        if (offset > 0) {
-            query.setFirstResult(offset);
+        if (pageSize >= LARGE_PAGESIZE) {
+            log.warn("Requesting potentially large resultset of Widgets. Pagesize is {}", pageSize);
         }
-        if (pageSize > 0) {
-            query.setMaxResults(pageSize);
-        }
+        query.setFirstResult(offset);
+        query.setMaxResults(pageSize);
         return query.getResultList();
     }
 
@@ -67,7 +84,7 @@ public class JpaWidgetRepository extends AbstractJpaRepository<Widget> implement
     public int getCountFreeTextSearch(String searchTerm) {
         Query query = manager.createNamedQuery("Widget.countByFreeText");
         query.setParameter("searchTerm", "%" + searchTerm.toLowerCase() + "%");
-        Number countResult=(Number) query.getSingleResult();
+        Number countResult = (Number) query.getSingleResult();
         return countResult.intValue();
     }
 }

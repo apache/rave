@@ -33,6 +33,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -84,6 +85,14 @@ public class JpaWidgetRepositoryTest {
         List<Widget> widgets = repository.getAll();
         assertThat(widgets, is(notNullValue()));
         assertThat(widgets.size() > 4, is(true));
+    }
+
+    @Test
+    public void getLimitedList() {
+        final int pageSize = 3;
+        List<Widget> widgets = repository.getLimitedList(0, pageSize);
+        assertNotNull(widgets);
+        assertTrue(widgets.size() <= pageSize);
     }
 
     @Test

@@ -103,19 +103,18 @@
             </c:forEach>
         </ul>
         
-        <c:if test="${fn:length(widgets.resultSet) lt widgets.totalResults and widgets.pageSize gt 0}">
+        <c:if test="${widgets.numberOfPages gt 1}">
             <div class="storeBox">
-            <ul class="paging">
-                <c:set var="nrOfPages" value="${widgets.totalResults / widgets.pageSize}"/>
-                <c:forEach var="i" begin="0" end="${nrOfPages}">
-                    <c:url var="pageUrl" value="/app/store/search">
-                        <c:param name="referringPageId" value="${referringPageId}"/>
-                        <c:param name="searchTerm" value="${searchTerm}"/>
-                        <c:param name="offset" value="${i * widgets.pageSize}"/>
-                    </c:url>
-                    <li><a href="<c:out value="${pageUrl}"/>">${i + 1}</a></li>
-                </c:forEach>
-            </ul>
+                <ul class="paging">
+                    <c:forEach var="i" begin="0" end="${widgets.numberOfPages - 1}">
+                        <c:url var="pageUrl" value="">
+                            <c:param name="referringPageId" value="${referringPageId}"/>
+                            <c:param name="searchTerm" value="${searchTerm}"/>
+                            <c:param name="offset" value="${i * widgets.pageSize}"/>
+                        </c:url>
+                        <li><a href="<c:out value="${pageUrl}"/>">${i + 1}</a></li>
+                    </c:forEach>
+                </ul>
             </div>
         </c:if>
     </c:if>

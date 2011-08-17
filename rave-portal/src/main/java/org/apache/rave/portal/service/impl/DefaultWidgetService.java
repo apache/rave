@@ -41,24 +41,29 @@ public class DefaultWidgetService implements WidgetService {
 
     @Override
     public SearchResult<Widget> getAllWidgets() {
-        int count = widgetRepository.getCountAll();
-        List<Widget> widgets = widgetRepository.getAll();
+        final int count = widgetRepository.getCountAll();
+        final List<Widget> widgets = widgetRepository.getAll();
         return new SearchResult<Widget>(widgets, count);
     }
 
     @Override
-    public SearchResult<Widget> getWidgetsByFreeTextSearch(String searchTerm, int offset, int pageSize) {
-        int count;
-        List<Widget> widgets;
-        if (StringUtils.isBlank(searchTerm)) {
-            count = widgetRepository.getCountAll();
-            // TODO a getAll with paging support
-            widgets = widgetRepository.getAll();
+    public SearchResult<Widget> getLimitedListOfWidgets(int offset, int pageSize) {
+        final int count = widgetRepository.getCountAll();
+        final List<Widget> widgets = widgetRepository.getLimitedList(offset, pageSize);
+        final SearchResult<Widget> searchResult = new SearchResult<Widget>(widgets, count);
+        searchResult.setPageSize(pageSize);
+        return searchResult;
+    }
 
-        } else {
-            count = widgetRepository.getCountFreeTextSearch(searchTerm);
-            widgets = widgetRepository.getByFreeTextSearch(searchTerm, offset, pageSize);
+    @Override
+    public SearchResult<Widget> getWidgetsByFreeTextSearch(String searchTerm, int offset, int pageSize) {
+        if (StringUtils.isBlank(searchTerm)) {
+            return getLimitedListOfWidgets(offset, pageSize);
         }
+
+        final int count = widgetRepository.getCountFreeTextSearch(searchTerm);
+        final List<Widget>widgets = widgetRepository.getByFreeTextSearch(searchTerm, offset, pageSize);
+
         final SearchResult<Widget> searchResult = new SearchResult<Widget>(widgets, count);
         searchResult.setPageSize(pageSize);
         return searchResult;

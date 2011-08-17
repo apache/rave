@@ -49,11 +49,14 @@ public class WidgetStoreController {
      *
      * @param model           model map
      * @param referringPageId the source {@link org.apache.rave.portal.model.Page } ID
+     * @param offset          offset within the total amount of results (to enable paging)
      * @return the view name of the main store page
      */
     @RequestMapping(method = RequestMethod.GET)
-    public String view(Model model, @RequestParam long referringPageId) {
-        model.addAttribute(ModelKeys.WIDGETS, widgetService.getAllWidgets());
+    public String view(Model model, @RequestParam long referringPageId,
+                       @RequestParam(required = false, defaultValue = "0") int offset) {
+        model.addAttribute(ModelKeys.WIDGETS,
+                widgetService.getLimitedListOfWidgets(offset, MAXIMUM_WIDGETS_PER_PAGE));
         model.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
         return ViewNames.STORE;
     }

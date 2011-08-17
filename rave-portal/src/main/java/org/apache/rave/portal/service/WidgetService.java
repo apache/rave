@@ -29,10 +29,22 @@ public interface WidgetService {
 
     /**
      * Gets a {@link SearchResult} for {@link Widget}'s that a user can add to their context
+     * <p/>
+     * May return a very large resultset
      *
      * @return SearchResult
      */
     SearchResult<Widget> getAllWidgets();
+
+
+    /**
+     * Gets a limited {@link SearchResult} for {@link Widget}'s  that a user can add to their context.
+     *
+     * @param offset start point within the resultset (for paging)
+     * @param pageSize   maximum number of items to be returned (for paging)
+     * @return SearchResult
+     */
+    SearchResult<Widget> getLimitedListOfWidgets(int offset, int pageSize);
 
     /**
      * Gets a SearchResult for {@link Widget}'s by performing a free text search

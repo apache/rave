@@ -67,10 +67,10 @@ public class WidgetStoreControllerTest {
         List<Widget> widgets = new ArrayList<Widget>();
         SearchResult<Widget> emptyResult = new SearchResult<Widget>(widgets, 0);
 
-        expect(widgetService.getAllWidgets()).andReturn(emptyResult);
+        expect(widgetService.getLimitedListOfWidgets(0, 10)).andReturn(emptyResult);
         replay(widgetService);
 
-        String view = controller.view(model, REFERRER_ID);
+        String view = controller.view(model, REFERRER_ID, 0);
 
         verify(widgetService);
         assertThat(view, is(equalTo(ViewNames.STORE)));
