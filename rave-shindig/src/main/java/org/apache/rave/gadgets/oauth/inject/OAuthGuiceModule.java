@@ -17,19 +17,26 @@
  * under the License.
  */
 
-package org.apache.shindig.gadgets.oauth;
+package org.apache.rave.gadgets.oauth.inject;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.name.Names;
 import org.apache.shindig.common.crypto.BlobCrypter;
+import org.apache.shindig.gadgets.oauth.OAuthFetcherConfig;
+import org.apache.shindig.gadgets.oauth.OAuthModule;
+import org.apache.shindig.gadgets.oauth.OAuthRequest;
 
 /**
- * Replacement for the {@link OAuthModuleDb} . We can't extend {@link OAuthModuleDb} and call
+ * Replacement for the {@link org.apache.shindig.gadgets.oauth.OAuthModule}.
+ * We can't extend {@link org.apache.shindig.gadgets.oauth.OAuthModule} and call
  * super.configure, because Guice does not permit bindig the same thing twice.
- * Therefore some duplicate code, but at least no changes in {@link OAuthModuleDb}
+ * Therefore some duplicate code, but at least no changes in
+ * {@link org.apache.shindig.gadgets.oauth.OAuthModule}
+ * <p/>
+ * OAuthStore is bound to DefaultOAuthStore using Spring
  */
-public class OAuthModuleDb extends AbstractModule {
-
+public class OAuthGuiceModule extends AbstractModule {
+    
     /**
      * {@inheritDoc}
      */
@@ -37,7 +44,6 @@ public class OAuthModuleDb extends AbstractModule {
     protected void configure() {
         bind(BlobCrypter.class).annotatedWith(Names.named(OAuthFetcherConfig.OAUTH_STATE_CRYPTER))
                 .toProvider(OAuthModule.OAuthCrypterProvider.class);
-        bind(OAuthStore.class).toProvider(OAuthStoreDbProvider.class);
         bind(OAuthRequest.class).toProvider(OAuthModule.OAuthRequestProvider.class);
     }
 }

@@ -17,37 +17,37 @@
  * under the License.
  */
 
-package org.apache.shindig.gadgets.oauth.service;
+package org.apache.rave.gadgets.oauth.service;
 
-import org.apache.shindig.gadgets.oauth.model.OAuthTokenInfoDb;
+import org.apache.rave.gadgets.oauth.model.OAuthTokenInfo;
 
 /**
  * Service to handle OAuth Tokens
  */
-public interface TokenInfoService {
-
+public interface OAuthTokenInfoService {
     /**
-     * Retrieves {@link OAuthTokenInfoDb}
+     * Retrieves {@link OAuthTokenInfo}
      *
      * @param userId      unique identifier of gadget viewer
      * @param appUrl      URL of the gadget
      * @param moduleId    the module ID of the application
      * @param tokenName   gadget's nickname for the token to use
      * @param serviceName name of the service provider
-     * @return {@link OAuthTokenInfoDb} or {@literal null} if none matches the criteria
+     * @return {@link OAuthTokenInfo} or {@literal null} if none matches the criteria
      */
-    public OAuthTokenInfoDb findOAuthTokenInfo(String userId, String appUrl, String moduleId,
-                                               String tokenName, String serviceName);
+    public OAuthTokenInfo findOAuthTokenInfo(String userId, String appUrl, String moduleId,
+                                             String tokenName, String serviceName);
 
     /**
-     * Persists the {@link OAuthTokenInfoDb} to the data store
+     * Persists the {@link OAuthTokenInfo} to the data store
      *
-     * @param tokenInfoDb {@link OAuthTokenInfoDb} to save
+     * @param tokenInfo {@link OAuthTokenInfo} to save
+     * @return persisted OAuthTokenInfo
      */
-    void saveOAuthTokenInfo(OAuthTokenInfoDb tokenInfoDb);
+    OAuthTokenInfo saveOAuthTokenInfo(OAuthTokenInfo tokenInfo);
 
     /**
-     * Removes the {@link OAuthTokenInfoDb}'s that match the criteria from the data store
+     * Removes the {@link OAuthTokenInfo}'s that match the criteria from the data store
      *
      * @param userId      unique identifier of the gadget viewer
      * @param appUrl      URL of the gadget
@@ -57,4 +57,5 @@ public interface TokenInfoService {
      */
     void deleteOAuthTokenInfo(String userId, String appUrl, String moduleId,
                               String tokenName, String serviceName);
+
 }

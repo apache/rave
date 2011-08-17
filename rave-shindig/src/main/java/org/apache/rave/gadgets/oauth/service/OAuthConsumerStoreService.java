@@ -17,34 +17,37 @@
  * under the License.
  */
 
-package org.apache.shindig.gadgets.oauth.service;
+package org.apache.rave.gadgets.oauth.service;
 
-import org.apache.shindig.gadgets.oauth.model.OAuthConsumerStoreDb;
+import org.apache.rave.gadgets.oauth.model.OAuthConsumerStore;
 
 /**
- * Service to handle OAuth consumer info
+ * Service to handle OAuth Consumer store
  */
-public interface ConsumerStoreService {
+public interface OAuthConsumerStoreService {
 
     /**
-     * Fetches {@link OAuthConsumerStoreDb} based on the gadget location and the service provider
+     * Fetches {@link OAuthConsumerStore} based on the gadget location and the service provider
      *
      * @param gadgetUri   location of the gadget definition
      * @param serviceName name of the service provider
-     * @return {@link OAuthConsumerStoreDb} or {@literal null} if none matches the criteria
+     * @return {@link OAuthConsumerStore} or {@literal null} if none matches the criteria
      */
-    public OAuthConsumerStoreDb findOAuthConsumerStore(String gadgetUri, String serviceName);
+    public OAuthConsumerStore findByUriAndServiceName(String gadgetUri, String serviceName);
 
     /**
-     * Persists {@link OAuthConsumerStoreDb}
+     * Persists {@link OAuthConsumerStore}
      *
-     * @param consumerStoreDb {@link OAuthConsumerStoreDb} to store
+     * @param oAuthConsumerStore {@link OAuthConsumerStore} to store
+     * @return persisted {@link OAuthConsumerStore}
      */
-    public void save(OAuthConsumerStoreDb consumerStoreDb);
+
+    public OAuthConsumerStore save(OAuthConsumerStore oAuthConsumerStore);
 
     /**
-     * Removes the {@link OAuthConsumerStoreDb} from the database
-     * @param consumerStoreDb {@link OAuthConsumerStoreDb} to delete
+     * Removes the {@link OAuthConsumerStore} from the database
+     *
+     * @param oAuthConsumerStore {@link OAuthConsumerStore} to delete
      */
-    public void delete(OAuthConsumerStoreDb consumerStoreDb);
+    public void delete(OAuthConsumerStore oAuthConsumerStore);
 }

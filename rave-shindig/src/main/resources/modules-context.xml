@@ -25,7 +25,7 @@
     <bean class="org.apache.rave.os.JPAOpenSocialModule" />
     <bean class="org.apache.rave.os.SocialApiGuiceModule" />
     <bean class="org.apache.shindig.auth.ClasspathAwareDefaultSecurityTokenCodec$TemporarySecurityTokenGuiceModule" />
-    <bean class="org.apache.shindig.gadgets.oauth.OAuthModule" />
+    <bean class="org.apache.rave.gadgets.oauth.inject.OAuthGuiceModule"/>
     <bean class="org.apache.shindig.gadgets.DefaultGuiceModule" />
     <bean class="org.apache.shindig.common.cache.ehcache.EhCacheModule" />
     <bean class="org.apache.shindig.sample.shiro.ShiroGuiceModule" />

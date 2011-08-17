@@ -17,13 +17,22 @@
  * under the License.
  */
 
-package org.apache.shindig.gadgets.oauth.model;
+package org.apache.rave.gadgets.oauth.model;
 
-import org.apache.shindig.social.opensocial.jpa.api.DbObject;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
-import javax.persistence.*;
-
-import static javax.persistence.GenerationType.IDENTITY;
+import org.apache.rave.persistence.BasicEntity;
 
 /**
  * Persistent store for OAuth consumer key & secrets.
@@ -50,7 +59,18 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Entity
 @Table(name = "oauth_consumer_store",
         uniqueConstraints = @UniqueConstraint(columnNames = {"gadget_uri", "service_name"}))
-public class OAuthConsumerStoreDb implements DbObject {
+@SequenceGenerator(name = "consumerStoreSeqId", sequenceName = "consumer_store_id_seq")
+@NamedQueries(value = {
+        @NamedQuery(name = OAuthConsumerStore.FIND_BY_URI_AND_SERVICE_NAME,
+                query = "SELECT cs FROM OAuthConsumerStore cs WHERE cs.gadgetUri = :gadgetUriParam AND cs.serviceName = :serviceNameParam")
+        })
+public class OAuthConsumerStore implements BasicEntity {
+
+    public static final String FIND_BY_URI_AND_SERVICE_NAME = "OAuthConsumerStore.findByUriAndServiceName";
+    public static final String GADGET_URI_PARAM = "gadgetUriParam";
+    public static final String SERVICE_NAME_PARAM = "serviceNameParam";
+    private static final int HASH_START = 7;
+    private static final int HASH_INCREASE = 67;
 
     /**
      * enum of KeyType's
@@ -59,10 +79,14 @@ public class OAuthConsumerStoreDb implements DbObject {
         HMAC_SYMMETRIC, RSA_PRIVATE, PLAINTEXT
     }
 
+    /**
+     * The internal object ID used for references to this object. Should be generated
+     * by the underlying storage mechanism
+     */
     @Id
-    @GeneratedValue(strategy = IDENTITY)
-    @Column(name = "oid")
-    private long objectId;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "consumerStoreSeqId")
+    @Column(name = "id")
+    private Long id;
 
     /**
      * URI where the gadget is hosted, e.g. http://www.example.com/mygadget.xml
@@ -111,13 +135,20 @@ public class OAuthConsumerStoreDb implements DbObject {
     @Column(name = "callback_url")
     private String callbackUrl;
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Long getId() {
+        return id;
+    }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public long getObjectId() {
-        return objectId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getGadgetUri() {
@@ -174,5 +205,41 @@ public class OAuthConsumerStoreDb implements DbObject {
 
     public void setCallbackUrl(String callbackUrl) {
         this.callbackUrl = callbackUrl;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final OAuthConsumerStore other = (OAuthConsumerStore) obj;
+        if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = HASH_START;
+        hash = HASH_INCREASE * hash + (this.id != null ? this.id.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public String toString() {
+        return "OAuthConsumerStore{" +
+                "id=" + id +
+                ", gadgetUri='" + gadgetUri + '\'' +
+                ", serviceName='" + serviceName + '\'' +
+                ", consumerKey='" + consumerKey + '\'' +
+                ", consumerSecret='" + consumerSecret + '\'' +
+                ", keyType=" + keyType +
+                ", keyName='" + keyName + '\'' +
+                ", callbackUrl='" + callbackUrl + '\'' +
+                '}';
     }
 }

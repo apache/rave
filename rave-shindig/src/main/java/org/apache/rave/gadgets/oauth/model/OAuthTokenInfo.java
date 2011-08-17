@@ -17,32 +17,80 @@
  * under the License.
  */
 
-package org.apache.shindig.gadgets.oauth.model;
+package org.apache.rave.gadgets.oauth.model;
 
-/**
- * Bean for OAuth TokenInfo
- */
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 
+import org.apache.rave.persistence.BasicEntity;
 import org.apache.shindig.auth.SecurityToken;
 import org.apache.shindig.gadgets.oauth.OAuthStore;
-import org.apache.shindig.social.opensocial.jpa.api.DbObject;
 
-import javax.persistence.*;
-
-import static javax.persistence.GenerationType.IDENTITY;
-
+/**
+ * Bean for OAuth security TokenInfo
+ */
 @Entity
 @Table(name = "oauth_token_info")
-public class OAuthTokenInfoDb implements DbObject {
+@SequenceGenerator(name = "tokenInfoIdSeq", sequenceName = "token_info_id_seq")
+@NamedQueries(value = {
+        @NamedQuery(name = OAuthTokenInfo.FIND_OAUTH_TOKEN_INFO,
+                query = "SELECT ti FROM OAuthTokenInfo ti WHERE ti.userId = :userIdParam AND ti.appUrl = :appUrlParam AND ti.moduleId = :moduleIdParam AND ti.tokenName = :tokenNameParam AND ti.serviceName = :serviceNameParam")
+})
+public class OAuthTokenInfo implements BasicEntity {
+
     /**
      * @see {@link org.apache.shindig.social.core.oauth.OAuthSecurityToken#getModuleId()}
      */
     public static final String MODULE_ID = "NOT_USED";
 
+    /**
+     * Named query identifier to find {@link OAuthTokenInfo}
+     */
+    public static final String FIND_OAUTH_TOKEN_INFO = "OAuthTokenInfo.findOAuthTokenInfo";
+
+    /**
+     * Query param for user id
+     */
+    public static final String USER_ID_PARAM = "userIdParam";
+
+    /**
+     * Query param for the app url
+     */
+    public static final String APP_URL_PARAM = "appUrlParam";
+
+    /**
+     * Identifier of the module. In case of Shindig, use {@link #MODULE_ID}
+     */
+    public static final String MODULE_ID_PARAM = "moduleIdParam";
+
+    /**
+     * Name of the Token
+     */
+    public static final String TOKEN_NAME_PARAM = "tokenNameParam";
+
+    /**
+     * Name of the OAuth service
+     */
+    public static final String SERVICE_NAME_PARAM = "serviceNameParam";
+
+    private static final int HASH_START = 7;
+    private static final int HASH_INCREASE = 67;
+
+    /**
+     * The internal object ID used for references to this object. Should be generated
+     * by the underlying storage mechanism
+     */
     @Id
-    @GeneratedValue(strategy = IDENTITY)
-    @Column(name = "oid")
-    private long objectId;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "tokenInfoIdSeq")
+    @Column(name = "id")
+    private Long id;
 
     @Column(name = "access_token")
     private String accessToken;
@@ -71,12 +119,13 @@ public class OAuthTokenInfoDb implements DbObject {
     @Column(name = "user_id")
     private String userId;
 
-    public OAuthTokenInfoDb() {
+
+    public OAuthTokenInfo() {
         super();
     }
 
-    public OAuthTokenInfoDb(SecurityToken securityToken, String serviceName,
-                            String tokenName, OAuthStore.TokenInfo tokenInfo) {
+    public OAuthTokenInfo(SecurityToken securityToken, String serviceName,
+                          String tokenName, OAuthStore.TokenInfo tokenInfo) {
         this.setAccessToken(tokenInfo.getAccessToken());
         this.setAppUrl(securityToken.getAppUrl());
         this.setModuleId(MODULE_ID);
@@ -88,12 +137,14 @@ public class OAuthTokenInfoDb implements DbObject {
         this.setUserId(securityToken.getViewerId());
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public long getObjectId() {
-        return objectId;
+    public Long getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getAccessToken() {
@@ -166,5 +217,43 @@ public class OAuthTokenInfoDb implements DbObject {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final OAuthTokenInfo other = (OAuthTokenInfo) obj;
+        if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = HASH_START;
+        hash = HASH_INCREASE * hash + (this.id != null ? this.id.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public String toString() {
+        return "OAuthTokenInfo{" +
+                "id=" + id +
+                ", accessToken='" + accessToken + '\'' +
+                ", tokenSecret='" + tokenSecret + '\'' +
+                ", sessionHandle='" + sessionHandle + '\'' +
+                ", tokenExpireMillis=" + tokenExpireMillis +
+                ", appUrl='" + appUrl + '\'' +
+                ", moduleId='" + moduleId + '\'' +
+                ", serviceName='" + serviceName + '\'' +
+                ", tokenName='" + tokenName + '\'' +
+                ", userId='" + userId + '\'' +
+                '}';
     }
 }

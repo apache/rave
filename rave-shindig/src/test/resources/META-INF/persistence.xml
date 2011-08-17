@@ -24,8 +24,8 @@
   <!-- Test config -->
   <persistence-unit name="raveShindigPersistenceUnit" transaction-type="RESOURCE_LOCAL">
     <provider>org.apache.openjpa.persistence.PersistenceProviderImpl</provider>
-    <class>org.apache.shindig.gadgets.oauth.model.OAuthConsumerStoreDb</class>
-    <class>org.apache.shindig.gadgets.oauth.model.OAuthTokenInfoDb</class>
+    <class>org.apache.rave.gadgets.oauth.model.OAuthConsumerStore</class>
+    <class>org.apache.rave.gadgets.oauth.model.OAuthTokenInfo</class>
     <class>org.apache.shindig.social.opensocial.jpa.PersonDb</class>
     <properties>
       <property name="openjpa.RuntimeUnenhancedClasses" value="supported"/>

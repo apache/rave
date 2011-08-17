@@ -68,4 +68,10 @@
             </map>
         </property>
     </bean>
+
+  <bean id="oAuthStore" class="org.apache.rave.gadgets.oauth.inject.DefaultOAuthStore">
+    <constructor-arg name="defaultCallbackUrl" value="${shindig.signing.global-callback-url}"/>
+    <constructor-arg name="pathToPrivateKey" value="${shindig.signing.key-file}"/>
+    <constructor-arg name="privateKeyName" value="${shindig.signing.key-name}"/>
+  </bean>
 </beans>
