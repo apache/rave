@@ -32,12 +32,17 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
+/**
+ * Test class for {@link org.apache.rave.portal.repository.impl.JpaWidgetRepository}
+ */
 @Transactional
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:portal-test-dataContext.xml", "classpath:portal-test-applicationContext.xml"})
@@ -63,9 +68,27 @@ public class JpaWidgetRepositoryTest {
     }
 
     @Test
+    public void getByFreeTextSearch() {
+        List<Widget> widgets = repository.getByFreeTextSearch("gAdGet", 1, 1);
+        assertEquals(1, widgets.size());
+    }
+
+    @Test
+    public void countFreeTextSearch() {
+        int count = repository.getCountFreeTextSearch("gAdGet");
+        assertTrue(count >= 2);
+    }
+
+    @Test
     public void getAll() {
         List<Widget> widgets = repository.getAll();
         assertThat(widgets, is(notNullValue()));
         assertThat(widgets.size() > 4, is(true));
+    }
+
+    @Test
+    public void countAll() {
+        int count = repository.getCountAll();
+        assertTrue(count > 4);
     }
 }

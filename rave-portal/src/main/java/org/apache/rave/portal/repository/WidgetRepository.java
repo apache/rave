@@ -18,16 +18,40 @@
  */
 package org.apache.rave.portal.repository;
 
+import java.util.List;
+
 import org.apache.rave.persistence.Repository;
 import org.apache.rave.portal.model.Widget;
-
-import java.util.List;
 
 public interface WidgetRepository extends Repository<Widget> {
     /**
      * Gets a list of all widgets in the repository
+     *
      * @return a valid List
      */
     List<Widget> getAll();
+
+    /**
+     * @return the total number of {@link Widget}'s in the repository. Useful for paging.
+     */
+    int getCountAll();
+
+    /**
+     * Gets a List of {@link Widget}'s by performing a free text search
+     *
+     * @param searchTerm free text search term
+     * @param offset     start point within the resultset (for paging)
+     * @param pageSize   maximum number of items to be returned (for paging)
+     * @return valid list of widgets, can be empty
+     */
+    List<Widget> getByFreeTextSearch(String searchTerm, int offset, int pageSize);
+
+    /**
+     * Counts the total number of {@link Widget}'s that match the search term. Useful for paging.
+     *
+     * @param searchTerm free text search term
+     * @return total number of {@link Widget}'s that match the search term
+     */
+    int getCountFreeTextSearch(String searchTerm);
 
 }

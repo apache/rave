@@ -31,8 +31,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
-@RequestMapping(value = {"/store/*", "/store" })
+@RequestMapping(value = {"/store/*", "/store"})
 public class WidgetStoreController {
+
+    // TODO make this value configurable through some management interface
+    private static final int MAXIMUM_WIDGETS_PER_PAGE = 10;
 
     private final WidgetService widgetService;
 
@@ -43,7 +46,8 @@ public class WidgetStoreController {
 
     /**
      * Views the main page of the widget store
-     * @param model model map
+     *
+     * @param model           model map
      * @param referringPageId the source {@link org.apache.rave.portal.model.Page } ID
      * @return the view name of the main store page
      */
@@ -56,8 +60,9 @@ public class WidgetStoreController {
 
     /**
      * Views details of the specified widget
-     * @param model model map
-     * @param widgetId ID of the {@link org.apache.rave.portal.model.Widget } to view
+     *
+     * @param model           model map
+     * @param widgetId        ID of the {@link org.apache.rave.portal.model.Widget } to view
      * @param referringPageId the source {@link org.apache.rave.portal.model.Page } ID
      * @return the view name of the widget detail page
      */
@@ -66,5 +71,27 @@ public class WidgetStoreController {
         model.addAttribute(ModelKeys.WIDGET, widgetService.getWidget(widgetId));
         model.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
         return ViewNames.WIDGET;
+    }
+
+    /**
+     * Performs a search in the widget store
+     *
+     * @param model           {@link Model} map
+     * @param referringPageId the source {@link org.apache.rave.portal.model.Page } ID
+     * @param searchTerm          free text searchTerm query
+     * @param offset          offset within the total amount of results (to enable paging)
+     * @return the view name of the main store page
+     */
+    @RequestMapping(method = RequestMethod.GET, value = "/store/search")
+    public String viewSearchResult(Model model, @RequestParam long referringPageId,
+                                   @RequestParam String searchTerm,
+                                   @RequestParam(required = false, defaultValue = "0") int offset) {
+        model.addAttribute(ModelKeys.WIDGETS,
+                widgetService.getWidgetsByFreeTextSearch(searchTerm, offset,
+                        MAXIMUM_WIDGETS_PER_PAGE));
+        model.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
+        model.addAttribute(ModelKeys.SEARCH_TERM, searchTerm);
+        model.addAttribute(ModelKeys.OFFSET, offset);
+        return ViewNames.STORE;
     }
 }

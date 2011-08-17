@@ -19,9 +19,19 @@
 package org.apache.rave.portal.model;
 
 import java.io.Serializable;
-import org.apache.rave.persistence.BasicEntity;
 
-import javax.persistence.*;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+
+import org.apache.rave.persistence.BasicEntity;
 
 /**
  * A widget
@@ -30,7 +40,10 @@ import javax.persistence.*;
 @Table(name="widget")
 @SequenceGenerator(name="widgetIdSeq", sequenceName = "widget_id_seq")
 @NamedQueries({
-        @NamedQuery(name = "Widget.getAll", query = "SELECT w from Widget w")
+        @NamedQuery(name = "Widget.getAll", query = "SELECT w from Widget w"),
+        @NamedQuery(name = "Widget.countAll", query = "SELECT count(w) FROM Widget w"),
+        @NamedQuery(name = "Widget.getByFreeText", query = "SELECT w FROM Widget w WHERE lower(w.title) LIKE :searchTerm OR w.description LIKE :description"),
+        @NamedQuery(name = "Widget.countByFreeText", query = "SELECT count(w) FROM Widget w WHERE lower(w.title) LIKE :searchTerm OR w.description LIKE :description")
 })
 public class Widget implements BasicEntity, Serializable {
     private static final long serialVersionUID = 1L;

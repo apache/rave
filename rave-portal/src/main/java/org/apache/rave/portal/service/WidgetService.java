@@ -20,8 +20,7 @@
 package org.apache.rave.portal.service;
 
 import org.apache.rave.portal.model.Widget;
-
-import java.util.List;
+import org.apache.rave.portal.model.util.SearchResult;
 
 /**
  * Provides widget operations
@@ -29,13 +28,25 @@ import java.util.List;
 public interface WidgetService {
 
     /**
-     * Gets a list of widgets that a user can add to their context
-     * @return valid list of widgets
+     * Gets a {@link SearchResult} for {@link Widget}'s that a user can add to their context
+     *
+     * @return SearchResult
      */
-    List<Widget> getAllWidgets();
+    SearchResult<Widget> getAllWidgets();
+
+    /**
+     * Gets a SearchResult for {@link Widget}'s by performing a free text search
+     *
+     * @param searchTerm free text search term
+     * @param offset     start point within the resultset (for paging)
+     * @param pageSize   maximum number of items to be returned (for paging)
+     * @return SearchResult
+     */
+    SearchResult<Widget> getWidgetsByFreeTextSearch(String searchTerm, int offset, int pageSize);
 
     /**
      * Gets the detailed metadata for a widget
+     *
      * @param id the Id of the widget
      * @return a valid widget if one exists for the given id; null otherwise
      */

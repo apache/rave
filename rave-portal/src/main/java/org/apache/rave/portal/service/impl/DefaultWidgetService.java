@@ -19,13 +19,15 @@
 
 package org.apache.rave.portal.service.impl;
 
+import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
 import org.apache.rave.portal.model.Widget;
+import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.repository.WidgetRepository;
 import org.apache.rave.portal.service.WidgetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class DefaultWidgetService implements WidgetService {
@@ -38,8 +40,28 @@ public class DefaultWidgetService implements WidgetService {
     }
 
     @Override
-    public List<Widget> getAllWidgets() {
-        return widgetRepository.getAll();
+    public SearchResult<Widget> getAllWidgets() {
+        int count = widgetRepository.getCountAll();
+        List<Widget> widgets = widgetRepository.getAll();
+        return new SearchResult<Widget>(widgets, count);
+    }
+
+    @Override
+    public SearchResult<Widget> getWidgetsByFreeTextSearch(String searchTerm, int offset, int pageSize) {
+        int count;
+        List<Widget> widgets;
+        if (StringUtils.isBlank(searchTerm)) {
+            count = widgetRepository.getCountAll();
+            // TODO a getAll with paging support
+            widgets = widgetRepository.getAll();
+
+        } else {
+            count = widgetRepository.getCountFreeTextSearch(searchTerm);
+            widgets = widgetRepository.getByFreeTextSearch(searchTerm, offset, pageSize);
+        }
+        final SearchResult<Widget> searchResult = new SearchResult<Widget>(widgets, count);
+        searchResult.setPageSize(pageSize);
+        return searchResult;
     }
 
     @Override

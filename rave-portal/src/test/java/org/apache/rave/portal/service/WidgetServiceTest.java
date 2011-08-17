@@ -19,19 +19,28 @@
 
 package org.apache.rave.portal.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.rave.portal.model.Widget;
+import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.repository.WidgetRepository;
 import org.apache.rave.portal.service.impl.DefaultWidgetService;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.easymock.EasyMock.*;
-import static org.hamcrest.CoreMatchers.*;
+import static org.easymock.EasyMock.createNiceMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.CoreMatchers.sameInstance;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
+/**
+ * Test for {@link DefaultWidgetService}
+ */
 public class WidgetServiceTest {
 
     private WidgetService service;
@@ -49,7 +58,7 @@ public class WidgetServiceTest {
         expect(repository.getAll()).andReturn(widgets);
         replay(repository);
 
-        List<Widget> result = service.getAllWidgets();
+        List<Widget> result = service.getAllWidgets().getResultSet();
         assertThat(result, is(sameInstance(widgets)));
     }
 
@@ -61,6 +70,28 @@ public class WidgetServiceTest {
 
         Widget result = service.getWidget(1L);
         assertThat(result, is(sameInstance(w)));
+
+    }
+
+    @Test
+    public void getWidgetsForSearchTerm() {
+        String searchTerm = "gAdGet";
+        int offset = 0;
+        int pagesize = 10;
+        int totalResults = 2;
+        Widget widget = new Widget();
+        widget.setId(1L);
+        List<Widget> widgets = new ArrayList<Widget>();
+        widgets.add(widget);
+        
+        expect(repository.getCountFreeTextSearch(searchTerm)).andReturn(totalResults);
+        expect(repository.getByFreeTextSearch(searchTerm, offset, pagesize)).andReturn(widgets);
+        replay(repository);
+
+        SearchResult<Widget> result = service.getWidgetsByFreeTextSearch(searchTerm, offset, pagesize);
+        assertEquals(widget, result.getResultSet().get(0));
+        assertEquals(totalResults, result.getTotalResults());
+        assertEquals(pagesize, result.getPageSize());
 
     }
 

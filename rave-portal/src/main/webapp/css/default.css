@@ -238,6 +238,18 @@ h1, h2, h3, h4, h5, h6 {
     border: 1px solid black;
 }
 
+.storeSearch, .storeBox {
+    margin: 5px auto;
+    width: 60%
+}
+.storeSearch form {
+    margin: 0;
+    float: right;
+}
+.storeSearch form p {
+    margin: 0;
+}
+
 #storeWidgetDetail {
     width: 100%;
 }
@@ -275,6 +287,13 @@ h1, h2, h3, h4, h5, h6 {
     padding-left: 10px;
 }
 
+ul.storeItems {
+    padding: 0;
+}
+
+ul.storeItems li{
+    list-style: none;
+}
 
 .storeItemLeft {
    padding-left: 10px;
@@ -293,10 +312,6 @@ h1, h2, h3, h4, h5, h6 {
     width: 50%;
 }
 
-.storeItems {
-    width: 50%;
-}
-
 .storeButton {
     float: right;
 }
@@ -309,6 +324,15 @@ h1, h2, h3, h4, h5, h6 {
 
 .ui-sortable-placeholder * {
     visibility: hidden;
+}
+
+ul.paging {
+    list-style: none;
+    padding: 0;
+}
+
+ul.paging li {
+    display: inline;
 }
 
 
