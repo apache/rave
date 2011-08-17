@@ -34,5 +34,5 @@ public interface OAuthConsumerStoreRepository extends Repository<OAuthConsumerSt
      * @param serviceName name of the service provider
      * @return {@link OAuthConsumerStore} or {@literal null} if none matches the criteria
      */
-    public OAuthConsumerStore findByUriAndServiceName(String gadgetUri, String serviceName);
+    OAuthConsumerStore findByUriAndServiceName(String gadgetUri, String serviceName);
 }

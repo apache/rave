@@ -35,7 +35,7 @@ public interface OAuthTokenInfoService {
      * @param serviceName name of the service provider
      * @return {@link OAuthTokenInfo} or {@literal null} if none matches the criteria
      */
-    public OAuthTokenInfo findOAuthTokenInfo(String userId, String appUrl, String moduleId,
+    OAuthTokenInfo findOAuthTokenInfo(String userId, String appUrl, String moduleId,
                                              String tokenName, String serviceName);
 
     /**

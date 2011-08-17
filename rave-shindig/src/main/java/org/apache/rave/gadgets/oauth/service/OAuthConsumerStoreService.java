@@ -33,7 +33,7 @@ public interface OAuthConsumerStoreService {
      * @param serviceName name of the service provider
      * @return {@link OAuthConsumerStore} or {@literal null} if none matches the criteria
      */
-    public OAuthConsumerStore findByUriAndServiceName(String gadgetUri, String serviceName);
+    OAuthConsumerStore findByUriAndServiceName(String gadgetUri, String serviceName);
 
     /**
      * Persists {@link OAuthConsumerStore}
@@ -42,12 +42,12 @@ public interface OAuthConsumerStoreService {
      * @return persisted {@link OAuthConsumerStore}
      */
 
-    public OAuthConsumerStore save(OAuthConsumerStore oAuthConsumerStore);
+    OAuthConsumerStore save(OAuthConsumerStore oAuthConsumerStore);
 
     /**
      * Removes the {@link OAuthConsumerStore} from the database
      *
      * @param oAuthConsumerStore {@link OAuthConsumerStore} to delete
      */
-    public void delete(OAuthConsumerStore oAuthConsumerStore);
+    void delete(OAuthConsumerStore oAuthConsumerStore);
 }
