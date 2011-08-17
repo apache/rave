@@ -22,7 +22,7 @@
 
     <bean id="portalPropertyPlaceholder" class="org.apache.rave.util.OverridablePropertyPlaceholderConfigurer">
         <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE"/>
-        <property name="location" value="classpath:portal.properties"/>
+        <property name="location" value="classpath:portal-test.properties"/>
     </bean>
 
     <!-- make the the portal.properties props available to autowire injectors -->

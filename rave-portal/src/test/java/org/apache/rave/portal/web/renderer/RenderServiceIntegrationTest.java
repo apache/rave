@@ -20,7 +20,13 @@
 package org.apache.rave.portal.web.renderer;
 
 
-import org.apache.rave.portal.model.*;
+import java.util.Arrays;
+
+import org.apache.rave.portal.model.Page;
+import org.apache.rave.portal.model.Region;
+import org.apache.rave.portal.model.RegionWidget;
+import org.apache.rave.portal.model.User;
+import org.apache.rave.portal.model.Widget;
 import org.apache.rave.provider.opensocial.repository.impl.ShindigGadgetMetadataRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,14 +41,18 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.RestOperations;
 
-import java.util.Arrays;
-
-import static org.easymock.EasyMock.*;
-import static org.hamcrest.CoreMatchers.*;
+import static org.easymock.EasyMock.anyObject;
+import static org.easymock.EasyMock.createNiceMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"file:src/main/webapp/WEB-INF/dataContext.xml", "file:src/main/webapp/WEB-INF/applicationContext.xml"})
+@ContextConfiguration(locations = {"classpath:portal-test-dataContext.xml", "classpath:portal-test-applicationContext.xml"})
+//@ContextConfiguration(locations = {"file:src/main/webapp/WEB-INF/dataContext.xml", "file:src/main/webapp/WEB-INF/applicationContext.xml"})
 public class RenderServiceIntegrationTest {
 
     @Autowired

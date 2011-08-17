@@ -19,6 +19,9 @@
 
 package org.apache.rave.portal.repository;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.apache.rave.portal.model.User;
 import org.hamcrest.CoreMatchers;
 import org.junit.Test;
@@ -28,15 +31,14 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 @Transactional
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations={"file:src/main/webapp/WEB-INF/dataContext.xml", "file:src/main/webapp/WEB-INF/applicationContext.xml"})
+@ContextConfiguration(locations = {"classpath:portal-test-dataContext.xml", "classpath:portal-test-applicationContext.xml"})
 public class JpaUserRepositoryTest {
 
     @PersistenceContext
@@ -44,9 +46,9 @@ public class JpaUserRepositoryTest {
 
     private static final Long USER_ID = 1L;
     private static final String USER_NAME = "canonical";
-	 //The password value depends on the hash algorithm and salt used, so this
-	 //may need updating in the future.
-	 private static final String HASHED_SALTED_PASSWORD="b97fd0fa25ba8a504309be2b6651ac6dee167ded";
+    //The password value depends on the hash algorithm and salt used, so this
+    //may need updating in the future.
+    private static final String HASHED_SALTED_PASSWORD="b97fd0fa25ba8a504309be2b6651ac6dee167ded";
     private static final Long INVALID_USER = -2L;
 
     @Autowired
@@ -57,7 +59,7 @@ public class JpaUserRepositoryTest {
         User user = repository.get(USER_ID);
         assertThat(user, CoreMatchers.notNullValue());
         assertThat(user.getUsername(), is(equalTo(USER_NAME)));
-		  assertThat(user.getPassword(), is(equalTo(HASHED_SALTED_PASSWORD)));
+        assertThat(user.getPassword(), is(equalTo(HASHED_SALTED_PASSWORD)));
         assertThat(user.isAccountNonExpired(), is(true));
     }
     @Test
@@ -70,7 +72,7 @@ public class JpaUserRepositoryTest {
         User user = repository.getByUsername(USER_NAME);
         assertThat(user, CoreMatchers.notNullValue());
         assertThat(user.getId(), is(equalTo(USER_ID)));
-		  assertThat(user.getPassword(), is(equalTo(HASHED_SALTED_PASSWORD)));
+        assertThat(user.getPassword(), is(equalTo(HASHED_SALTED_PASSWORD)));
         assertThat(user.isAccountNonExpired(), is(true));
     }
     @Test
