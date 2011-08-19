@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.*;
 /**
  * Defines RPC operations for a Page or its components
  */
-@Controller
+@Controller(value="rpcPageApi")
 @RequestMapping(value = "/api/rpc/page/*")
 public class PageApi {
 

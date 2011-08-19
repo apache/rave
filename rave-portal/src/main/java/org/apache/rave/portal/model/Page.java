@@ -30,10 +30,13 @@ import java.util.List;
  * become more flexible to enable things like group ownership in the future).
  */
 @Entity
-@Table(name="page", uniqueConstraints=@UniqueConstraint(columnNames={"owner_id","name"}))
+@Table(name="page", uniqueConstraints={
+                        @UniqueConstraint(columnNames={"owner_id","name"}),
+                        @UniqueConstraint(columnNames={"owner_id","render_sequence"})}
+)
 @SequenceGenerator(name="pageIdSeq", sequenceName = "page_id_seq")
 @NamedQueries({
-        @NamedQuery(name = "Page.getByUserId", query="SELECT p FROM Page p WHERE p.owner.id = :userId")
+        @NamedQuery(name = "Page.getByUserId", query="SELECT p FROM Page p WHERE p.owner.id = :userId ORDER BY p.renderSequence")
 })
 @Access(AccessType.FIELD)
 public class Page implements BasicEntity, Serializable {
@@ -62,6 +65,10 @@ public class Page implements BasicEntity, Serializable {
     private List<Region> regions;
 
     public Page() {
+    }
+    
+    public Page(Long id) {
+        this.id = id;
     }
 
     public Page(Long id, User owner) {

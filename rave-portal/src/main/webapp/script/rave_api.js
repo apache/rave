@@ -66,10 +66,24 @@ rave.api = rave.api || (function() {
                 error: handleError
             });
         }
+        
+        function deletePage(args) {
+            $.ajax({
+                type: 'DELETE',
+                url: rave.getContext() + path + "page/" + args.pageId,                              
+                success: function(result) {
+                    if (typeof args.successCallback == 'function') {
+                        args.successCallback();
+                    }
+                },
+                error: handleError
+            });            
+        }
 
         return {
             saveWidgetPreferences : saveWidgetPreferences,
-            saveWidgetPreference : saveWidgetPreference
+            saveWidgetPreference : saveWidgetPreference,
+            deletePage : deletePage
         };
     })();
 
@@ -147,7 +161,7 @@ rave.api = rave.api || (function() {
                         }
                     } else {
                         if (typeof args.successCallback == 'function') {
-                            args.successCallback();
+                            args.successCallback(result);
                         }
                     }
                 }).error(handleError);

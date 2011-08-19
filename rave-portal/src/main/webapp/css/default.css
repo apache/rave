@@ -449,10 +449,33 @@ label.error {
     float: none;
     margin: 0.5em 0 auto 120px;
 }
-
+/*
 .rave-ui-tabs .ui-tabs-panel { display: block; border-width: 0; padding: 1em 1.4em; background: #F2F2F2; height: 800px; }
 .rave-ui-tabs .ui-tabs-nav { margin: 0; padding: .2em .2em 0; background: #666666}
 .rave-ui-tabs add_tab { cursor: pointer; }
+*/
+.rave-ui-tab {
+    background-color: #FFFFFF;
+    border: 1px solid #B4C4CF;
+    color: #767676;
+    cursor: pointer;
+    display: inline-block;
+    font-style: italic;
+    font-weight: normal;
+    padding: 2px 8px 4px;
+    position: relative;
+    top: 4px;    
+}
+
+.rave-ui-tab-selected {
+    background-color: #EFF3F5;
+    border-bottom: 1px solid #EFF3F5;
+    color: #000000;
+    font-style: normal;
+    font-weight: bold;
+}
+
+
 #tabs { margin-top: 1em; length: 95%; }
 #tabs li .ui-icon-close { float: left; margin: 0.4em 0.2em 0 0; cursor: pointer; }
 #dialog {
@@ -463,6 +486,4 @@ label.error {
 #dialog label { margin-top: 0.5em; }
 #dialog input { width: 95%; }
 #dialog textarea { width: 95%; }
-#add_tab { cursor: pointer; }
-
-
+#add_page { cursor: pointer; }

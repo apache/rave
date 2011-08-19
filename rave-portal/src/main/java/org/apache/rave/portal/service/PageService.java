@@ -27,12 +27,29 @@ import org.apache.rave.portal.model.User;
 
 public interface PageService {
     /**
+     * Gets a page based on the id
+     * 
+     * @param pageId to lookup
+     * @return the Page object 
+     */
+    Page getPage(long pageId);
+    
+    /**
      * Gets all pages for the given user.
      *
      * @param userId The user to retrieve pages for.
      * @return A non null possible empty list of pages for the given user.
      */
     List<Page> getAllPages(long userId);
+    
+    /**
+     * Return the page object from a list of pages given the pageId
+     * 
+     * @param pageId the pageId to look for
+     * @param pages a list of pages to search in
+     * @return the Page object representing the pageId, or null if not found
+     */
+    Page getPageFromList(long pageId, List<Page> pages);
     
     /**
      * Creates a new page with the supplied pageName and pageLayoutCode
@@ -60,6 +77,13 @@ public interface PageService {
      * @return the name of the default page used by Rave
      */
     String getDefaultPageName();
+    
+    /**
+     * Deletes the page with the supplied pageId
+     * 
+     * @param pageId the pageId to delete
+     */
+    void deletePage(long pageId);
     
     /**
      * Moves a Region widget's position in a region or across regions

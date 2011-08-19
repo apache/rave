@@ -28,16 +28,15 @@
 <jsp:useBean id="openSocialEnv" scope="request" type="org.apache.rave.provider.opensocial.config.OpenSocialEnvironment"/>
 <c:set var="opensocial_engine_url" value="${openSocialEnv.engineProtocol}://${openSocialEnv.engineRoot}${openSocialEnv.engineGadgetPath}"/>
 
-<rave:rave_generic_page pageTitle="Home - Rave">
-    <c:set var="defaultPage" value="${pages[0]}"/>
+<rave:rave_generic_page pageTitle="Rave - ${page.name}">    
     <div id="header">
         <div class="header-a">
             <a href="<spring:url value="/j_spring_security_logout" htmlEscape="true" />">Logout</a>
         </div>
         <div class="widget-a">
-            <a href="<spring:url value="/app/store?referringPageId=${defaultPage.id}" />">Widget Store</a>
+            <a href="<spring:url value="/app/store?referringPageId=${page.id}" />">Widget Store</a>
         </div>
-        <h1>Hello ${defaultPage.owner.username}, welcome to Rave!</h1>
+        <h1>Hello ${page.owner.username}, welcome to Rave!</h1>
     </div>
     <div id="dialog" title="Tab data" class="dialog">
         <form id="pageForm">
@@ -58,18 +57,18 @@
             </fieldset>
         </form>
     </div>
-    <button id="add_tab">Add Tab</button>
+    <button id="add_page">Add Page</button>
+    <%-- render the page tabs --%>
     <div id="tabs" class="rave-ui-tabs">
-    <ul class="rave-ui-tabs ui-tabs-nav">
-	<c:forEach var="page" items="${pages}">
-    		<li>
-				<a href="#page-${page.id}-id">${page.name}</a> <span class="ui-icon ui-icon-close">Remove Tab</span>
-			</li>
-	</c:forEach>
-	</ul>
-   <c:forEach var="page" items="${pages}">
-    	<div id="page-${page.id}-id">
-	    <c:forEach var="region" items="${page.regions}">
+        <c:forEach var="userPage" items="${pages}">
+             <div id="tab-${userPage.id}" class="rave-ui-tab<c:if test="${page.id == userPage.id}"> rave-ui-tab-selected</c:if>" onclick="rave.viewPage(${userPage.id});">
+                <span id="pageTitle-${userPage.id}" class="pageTitle">${userPage.name}</span><c:if test="${page.id == userPage.id}"><span class="ui-icon ui-icon-close">Remove Tab</span></c:if>
+            </div>
+        </c:forEach>        
+    </div>   
+    <%--render the main page content (regions/widgets) --%>
+    <div id="pageContent">
+        <c:forEach var="region" items="${page.regions}">
             <div class="region" id="region-${region.id}-id">
                 <c:forEach var="regionWidget" items="${region.regionWidgets}">
                     <div class="widget-wrapper" id="widget-${regionWidget.id}-wrapper">
@@ -96,10 +95,9 @@
                 </c:forEach>
             </div>
         </c:forEach>
-    	</div>
-         </c:forEach>
-        <div class="clear-float">&nbsp;</div>
     </div>
+
+    <div class="clear-float">&nbsp;</div>
     <script src="//cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
     <script src="//ajax.aspnetcdn.com/ajax/jQuery/jquery-1.6.1.min.js"></script>
     <script src="//ajax.aspnetcdn.com/ajax/jquery.ui/1.8.13/jquery-ui.min.js"></script>
@@ -118,24 +116,20 @@
            Among other things, the render-widget tag will populate the widgets[] array.
            See the markup text in OpenSocialWidgetRenderer.java, for example.
         --%>
-        <c:forEach var="page" items="${pages}">
+
         <c:forEach var="region" items="${page.regions}">
-        <c:forEach var="regionWidget" items="${region.regionWidgets}">
-        <portal:render-widget regionWidget="${regionWidget}" />
+            <c:forEach var="regionWidget" items="${region.regionWidgets}">
+                <portal:render-widget regionWidget="${regionWidget}" />
+            </c:forEach>
         </c:forEach>
-        </c:forEach>
-        </c:forEach>
+
         $(function() {
             rave.setContext("<spring:url value="/app/" />");
             rave.initProviders();
             rave.initWidgets(widgets);
-            rave.initUI();
-        });
-        $(function() {
-    		$( "#tabs" ).tabs();
-    	});
-        
-        // initialize the page form validator
-        rave.forms.validateUserProfileForm();
+            rave.initUI();  
+            rave.layout.init();            
+            rave.forms.validateUserProfileForm();
+        });     
     </script>
 </rave:rave_generic_page>

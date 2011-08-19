@@ -52,16 +52,21 @@ public class PageServiceTest {
     private PageLayoutRepository pageLayoutRepository;
     private UserService userService;
 
-    private static final long REGION_WIDGET_ID = 5L;
-    private static final long TO_REGION_ID = 1L;
-    private static final long FROM_REGION_ID = 2L;
-    private static final String PAGE_LAYOUT_CODE = "layout1";
+    private final long REGION_WIDGET_ID = 5L;
+    private final long TO_REGION_ID = 1L;
+    private final long FROM_REGION_ID = 2L;
+    private final String PAGE_LAYOUT_CODE = "layout1";
+    private final long PAGE_ID = 1L;
+    private final long INVALID_PAGE_ID = -1L;
+            
     private Region targetRegion;
     private Region originalRegion;
     private Widget validWidget;
     private User user;
     private PageLayout pageLayout;
     private String defaultPageName = "Main";
+    private Page page;
+    private List<Page> pageList;
 
     @Before
     public void setup() {
@@ -98,6 +103,12 @@ public class PageServiceTest {
         pageLayout.setId(1L);
         pageLayout.setCode(PAGE_LAYOUT_CODE);
         pageLayout.setNumberOfRegions(3L);
+        
+        page = new Page(PAGE_ID, user);
+        
+        pageList = new ArrayList<Page>();        
+        pageList.add(new Page(99L));
+        pageList.add(page);
     }
 
     @Test
@@ -112,7 +123,7 @@ public class PageServiceTest {
     }
 
     @Test
-    public void createNewPage_noExistingPages() {
+    public void addNewPage_noExistingPages() {
         final String PAGE_NAME = "my new page";
         final Long EXPECTED_RENDER_SEQUENCE = 1L;
                       
@@ -142,7 +153,7 @@ public class PageServiceTest {
     }
     
     @Test
-    public void createNewPage_existingPages() {
+    public void addNewPage_existingPages() {
         final String PAGE_NAME = "my new page";
         final Long EXPECTED_RENDER_SEQUENCE = 2L;
         List<Page> existingPages = new ArrayList<Page>();
@@ -174,7 +185,7 @@ public class PageServiceTest {
     }    
    
     @Test
-    public void createNewDefaultPage() {
+    public void addNewDefaultPage() {
         final Long EXPECTED_RENDER_SEQUENCE = 1L;
                       
         Page expectedPage = new Page();
@@ -204,6 +215,30 @@ public class PageServiceTest {
         assertThat(pageService.getDefaultPageName(), is(defaultPageName));
     }
   
+    @Test
+    public void deletePage() {               
+        expect(userService.getAuthenticatedUser()).andReturn(user);
+        expect(pageRepository.get(PAGE_ID)).andReturn(page);
+        replay(userService);
+        replay(pageRepository);
+        pageService.deletePage(PAGE_ID);
+        verify(userService);
+        verify(pageRepository);
+    }
+    
+    @Test
+    public void deletePage_invalidId() {               
+        final long INVALID_PAGE_ID = -999L;
+        
+        expect(userService.getAuthenticatedUser()).andReturn(user);
+        expect(pageRepository.get(INVALID_PAGE_ID)).andReturn(page);
+        replay(userService);
+        replay(pageRepository);
+        pageService.deletePage(INVALID_PAGE_ID);
+        verify(userService);
+        verify(pageRepository);
+    }    
+    
     @Test
     public void moveRegionWidget_validMiddle() {
         final int newPosition = 0;
@@ -296,7 +331,6 @@ public class PageServiceTest {
 
     @Test
     public void addWigetToPage_valid() {
-        final long PAGE_ID = 1L;
         final long WIDGET_ID = 1L;
 
         Page value = new Page();
@@ -326,7 +360,6 @@ public class PageServiceTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void addWidgetToPage_invalidWidget() {
-        long PAGE_ID = 1L;
         long WIDGET_ID = -1L;
         expect(pageRepository.get(PAGE_ID)).andReturn(new Page());
         expect(widgetRepository.get(WIDGET_ID)).andReturn(null);
@@ -339,7 +372,6 @@ public class PageServiceTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void addWidgetToPage_invalidPage() {
-        long PAGE_ID = 1L;
         long WIDGET_ID = -1L;
         expect(pageRepository.get(PAGE_ID)).andReturn(null);
         expect(widgetRepository.get(WIDGET_ID)).andReturn(new Widget());
@@ -380,7 +412,27 @@ public class PageServiceTest {
 
         pageService.removeWidgetFromPage(WIDGET_ID);
     }
+    
+    @Test
+    public void getPage() {
+        expect(pageRepository.get(PAGE_ID)).andReturn(page);
+        replay(pageRepository);
+          
+        assertThat(pageService.getPage(PAGE_ID), is(page));
+        
+        verify(pageRepository);
+    }
+    
+    @Test
+    public void getPageFromList() {
+        assertThat(pageService.getPageFromList(PAGE_ID, pageList), is(page));
+    }
 
+    @Test
+    public void getPageFromList_invalidId() {
+        assertThat(pageService.getPageFromList(INVALID_PAGE_ID, pageList), is(nullValue(Page.class)));
+    }
+    
     private void verifyPositions(int newPosition, RegionWidget widget, boolean sameRegion) {
         assertThat(widget.getRenderOrder(), is(equalTo(newPosition)));        
         assertOrder(originalRegion);

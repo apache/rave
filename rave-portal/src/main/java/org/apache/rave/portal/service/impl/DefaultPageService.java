@@ -69,8 +69,24 @@ public class DefaultPageService implements PageService {
     }
 
     @Override
+    public Page getPage(long pageId) {
+        return pageRepository.get(pageId);
+    }
+    
+    @Override
     public List<Page> getAllPages(long userId) {
         return pageRepository.getAllPages(userId);
+    }
+    
+    @Override
+    public Page getPageFromList(long pageId, List<Page> pages) {
+        Page pageToFind = new Page(pageId);
+        int index = pages.indexOf(pageToFind);
+        if (index == -1) {
+            return null;
+        } else {
+            return pages.get(index);
+        }        
     }
     
     @Override
@@ -90,6 +106,17 @@ public class DefaultPageService implements PageService {
         return defaultPageName;
     }
 
+    @Override
+    @Transactional
+    public void deletePage(long pageId) {                    
+        User user = userService.getAuthenticatedUser();
+        // first delete the page        
+        pageRepository.delete(pageRepository.get(pageId));
+        // now re-sequence the page sequence numbers
+        List<Page> pages = pageRepository.getAllPages(user.getId());
+        updatePageRenderSequences(pages);
+    }    
+    
     @Override
     @Transactional
     public RegionWidget moveRegionWidget(long regionWidgetId, int newPosition, long toRegion, long fromRegion) {
@@ -196,5 +223,19 @@ public class DefaultPageService implements PageService {
         pageRepository.save(page);
         
         return page;
+    }
+        
+    @Transactional(readOnly = false)
+    private void updatePageRenderSequences(List<Page> pages) {       
+        if (pages != null && !pages.isEmpty()) {
+            for (int i = 0; i < pages.size(); i++) {
+                Page p = pages.get(i);                
+                p.setRenderSequence((long)i+1);                               
+            }
+
+            for (Page page : pages) {
+                pageRepository.save(page);
+            }
+        }       
     }
 }

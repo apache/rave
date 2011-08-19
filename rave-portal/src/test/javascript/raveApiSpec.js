@@ -88,6 +88,28 @@ describe("Rave API", function() {
                 expect(callbackCalled).toBeTruthy();
             });
         });
+                
+        describe("deletePage", function() {
+            it("DELETEs the correct Page using the REST service", function() {
+                $.ajax = function(args) {
+                    expect(args.url).toEqual("api/rest/page/9");                                                  
+                    expect(typeof(callback)).toEqual("function");
+                    callback({error:false});
+                    return {
+                        error: function(a, b, c) {
+                        }
+                    }
+                };
+
+                var callbackCalled = false;
+                var callback = function() {
+                    callbackCalled = true
+                };
+                             
+                rave.api.rest.deletePage({pageId: 9, successCallback: callback});
+                expect(callbackCalled).toBeTruthy();
+            });
+        });                
     });
 
     describe("rpc", function() {

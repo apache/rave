@@ -16,21 +16,13 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-$(function() {
-    var $tab_title_input = $( "#tab_title"),
-        $page_layout_input = $("#pageLayout"),
-        $tab_content_input = $( "#tab_content" );
-        
-    var tab_counter = 2;
-    // tabs init with a custom tab template and an "add" callback filling in the content
-    var $tabs = $( "#tabs").tabs({
-            tabTemplate: "<li><a href='#{href}'>#{label}</a> <span class='ui-icon ui-icon-close'>Remove Tab</span></li>",
-            add: function( event, ui ) {
-                    var tab_content = $tab_content_input.val() || "Tab " + tab_counter + " content.";
-                    $( ui.panel ).append( "<p>" + tab_content + "</p>" );
-            }
-    });
 
+var rave = rave || {};
+rave.layout = rave.layout || (function() {
+    var $tab_title_input = $("#tab_title"),
+        $page_layout_input = $("#pageLayout"),
+        $tab_content_input = $("#tab_content");
+        
     // modal dialog init: custom buttons and a "close" callback reseting the form inside
     var $dialog = $( "#dialog" ).dialog({
             autoOpen: false,
@@ -50,8 +42,8 @@ $(function() {
                     $form[ 0 ].reset();
                     $("#pageFormErrors").html("");
             }
-    });
-
+    });        
+   
     // define the form object    
     var $form = $("#pageForm", $dialog);  
 
@@ -64,32 +56,37 @@ $(function() {
             // send the rpc request to create the new page
             rave.api.rpc.addPage({pageName: newPageTitle, 
                                   pageLayoutCode: newPageLayoutCode,
-                                  successCallback: function() { addPageCallback(newPageTitle); } 
-                                 });      
+                                  successCallback: function(result) {                                      
+                                      rave.viewPage(result.result.id); 
+                                  } 
+            });      
         }
     }
-        
-    function addPageCallback(newPageTitle) {
-        // add the new page tab to the list of pages
-        // TODO - in the future this should be changed to redirect to the new page after creating it
-        var pageTitle = newPageTitle;
-        $tabs.tabs("add", "#tabs-" + tab_counter, pageTitle);
-        tab_counter++;
-        
-        $dialog.dialog( "close" );
+    
+    function deletePage(pageId) {
+        // send the rpc request to delete the page
+        rave.api.rest.deletePage({pageId: pageId, successCallback: rave.viewPage});  
     }
+   
+    function init() {
+        // add_page button to open the dialog for creating a new page
+        $( "#add_page" )
+                .button()
+                .click(function() {
+                        $dialog.dialog( "open" );
+                });
 
-    // addTab button: just opens the dialog
-    $( "#add_tab" )
-            .button()
-            .click(function() {
-                    $dialog.dialog( "open" );
-            });
-
-    // close icon: removing the tab on click
-    // note: closable tabs gonna be an option in the future - see http://dev.jqueryui.com/ticket/3924
-    $( "#tabs span.ui-icon-close" ).live( "click", function() {
-            var index = $( "li", $tabs ).index( $( this ).parent() );
-            $tabs.tabs( "remove", index );
-    });
-});
+        // close icon: removing the tab on click
+        // TODO - move this into a common page menu in the future along with edit page, etc
+        $( "#tabs span.ui-icon-close" ).live( "click", function() {
+                var pageId = this.parentNode.id.replace("tab-","");            
+                deletePage(pageId);                       
+        });    
+    }
+   
+    // public rave.layout API
+    return {
+        init: init 
+    };
+    
+})();

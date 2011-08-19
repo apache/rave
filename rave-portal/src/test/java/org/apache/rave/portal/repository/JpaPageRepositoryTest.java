@@ -31,10 +31,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 
 @Transactional
@@ -60,6 +57,14 @@ public class JpaPageRepositoryTest {
         assertThat(pages.get(0).getRegions().size(), equalTo(2));
         assertThat(pages.get(0).getRegions().get(0).getRegionWidgets().size(), equalTo(2));
         assertThat(pages.get(0).getRegions().get(0).getRegionWidgets().get(0).getWidget().getUrl(), equalTo(WIDGET_URL));
+        
+        // test that the query returns the pages in proper render sequence order
+        Long lastRenderSequence = -1L;
+        for (Page p : pages) {
+            Long currentRenderSequence = p.getRenderSequence();
+            assertThat(currentRenderSequence > lastRenderSequence, is(true));
+            lastRenderSequence = currentRenderSequence;
+        }
     }
     @Test
     public void getAllPages_invalidUser_emptySet() {

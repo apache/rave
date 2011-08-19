@@ -31,14 +31,21 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
- * Minimal Home Controller
+ * Page Controller
  * 
- * @version $Id$
+ * @author carlucci
  */
 @Controller
-public class HomeController {
+//@RequestMapping(value={"/page/*","/index.html"})
+public class PageController {
+    protected final Logger logger = LoggerFactory.getLogger(getClass());
+         
     private PageService pageService;
     private UserService userService;
 
@@ -46,15 +53,30 @@ public class HomeController {
     private OpenSocialEnvironment openSocialEnvironment;
 
     @Autowired
-    public HomeController(PageService pageService, UserService userService) {
+    public PageController(PageService pageService, UserService userService) {
         this.pageService = pageService;
         this.userService = userService;
     }
-
-    @RequestMapping(value = {"/", "/index.html"})
-    public String getHome(Model model) {
+ 
+    @RequestMapping(value = {"/page/view", "/index.html"}, method = RequestMethod.GET)
+    public String viewDefault(Model model) {
         User user = userService.getAuthenticatedUser();
         List<Page> pages = pageService.getAllPages(user.getId());
+        model.addAttribute(ModelKeys.PAGE, pages.get(0));
+        model.addAttribute(ModelKeys.PAGES, pages);
+        model.addAttribute(ModelKeys.OPENSOCIAL_ENVIRONMENT, openSocialEnvironment);
+        return ViewNames.HOME;
+    }          
+    
+    @RequestMapping(value = "/page/view/{pageId}", method = RequestMethod.GET)
+    public String view(@PathVariable Long pageId, Model model) {
+        User user = userService.getAuthenticatedUser();
+        logger.debug("attempting to get pageId " + pageId + " for " + user);
+        
+        List<Page> pages = pageService.getAllPages(user.getId());
+        Page page = pageService.getPageFromList(pageId, pages);
+               
+        model.addAttribute(ModelKeys.PAGE, page);
         model.addAttribute(ModelKeys.PAGES, pages);
         model.addAttribute(ModelKeys.OPENSOCIAL_ENVIRONMENT, openSocialEnvironment);
         return ViewNames.HOME;

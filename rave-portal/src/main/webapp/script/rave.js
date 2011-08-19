@@ -499,6 +499,11 @@ var rave = rave || (function() {
         return widgetByIdMap[regionWidgetId];
     }
 
+    function viewPage(pageId) {                
+        var fragment = (pageId != null) ? ("/" + pageId) : "";
+        window.location.href = rave.getContext() + "page/view" + fragment;      
+    }
+
     /**
      * Public API
      */
@@ -574,6 +579,13 @@ var rave = rave || (function() {
         /**
          * Gets a widget by id
          */
-        getWidgetById: getWidgetById
+        getWidgetById: getWidgetById,
+        
+        /**
+         * View a page
+         * 
+         * @param pageId the pageId to view, or if null, the user's default page
+         */
+        viewPage: viewPage
     }
 })();
