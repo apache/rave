@@ -33,6 +33,8 @@ import javax.persistence.spi.PersistenceUnitInfo;
  * DataSource immediately after the factory is initialized
  */
 public class PopulatedLocalContainerEntityManagerFactory extends LocalContainerEntityManagerFactoryBean {
+    private static final long serialVersionUID = 1L;
+
     private DataSourcePopulator populator;
 
     public PopulatedLocalContainerEntityManagerFactory() {

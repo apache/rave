@@ -25,6 +25,7 @@ import org.springframework.core.io.Resource;
 
 import javax.sql.DataSource;
 import java.io.IOException;
+import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -53,7 +54,8 @@ import java.util.List;
  * </code>
  * <p/>
  */
-public class DataSourcePopulator {
+public class DataSourcePopulator implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     private static Logger logger = LoggerFactory.getLogger(DataSourcePopulator.class);
 
@@ -75,8 +77,9 @@ public class DataSourcePopulator {
      * @param executeScriptQuery {@see setExecuteScriptQuery}
      */
     public DataSourcePopulator(List<Resource> scriptLocations, String executeScriptQuery) {
-        setScriptLocations(scriptLocations);
-        setExecuteScriptQuery(executeScriptQuery);
+        this.scriptLocations = scriptLocations;
+        this.executeScriptQuery = executeScriptQuery;
+
     }
 
     /**
@@ -158,7 +161,7 @@ public class DataSourcePopulator {
         boolean result;
         try {
             //If the ResultSet has any rows, the first method will return true
-            result = !executeQuery(conn, executeScriptQuery).first();
+            result = executeScriptQuery == null || !executeQuery(conn, executeScriptQuery).first();
         } catch (SQLException e) {
             //Only return true if the execption we got is that the table was not found
             result = e.getMessage().toLowerCase().matches("table \".*\" not found.*\n*.*");
