@@ -35,7 +35,8 @@ import java.util.Collection;
 @Table(name = "user")
 @SequenceGenerator(name = "userIdSeq", sequenceName = "user_id_seq")
 @NamedQueries({
-    @NamedQuery(name="User.getByUsername", query = "select u from User u where u.username = :username")
+    @NamedQuery(name="User.getByUsername", query = "select u from User u where u.username = :username"),
+    @NamedQuery(name="User.getByUserEmail", query = "select u from User u where u.email = :email")
 })
 public class User implements UserDetails, BasicEntity, Serializable {
     private static final long serialVersionUID = 1L;

@@ -68,6 +68,7 @@ public class UserTest {
 		user3=new User(id,userName);
 		user3.setExpired(user3Expired);
 		user3.setEnabled(user3Enabled);
+
 	}
 	
 	@Test
@@ -95,4 +96,5 @@ public class UserTest {
 		assertTrue("Account and credential nonexpirations handled correctly",user1.isAccountNonExpired() && user1.isCredentialsNonExpired());
 		assertTrue("Account and credential expirations handled correctly",!user2.isAccountNonExpired() && !user2.isCredentialsNonExpired());
 	}
+
 }

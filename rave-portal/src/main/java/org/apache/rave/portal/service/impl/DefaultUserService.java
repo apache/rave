@@ -58,7 +58,6 @@ public class DefaultUserService implements UserService {
         if(user == null) {
             throw new UsernameNotFoundException("User with username '" + username + "' was not found!");
         }
-		  System.out.println("Can do anything else here too.");
         return user;
     }
 
@@ -123,6 +122,11 @@ public class DefaultUserService implements UserService {
 	 @Override
 	 public User getUserByUsername(String userName){
 		  return userRepository.getByUsername(userName);
+	 }
+
+	 @Override
+	 public User getUserByEmail(String userEmail){
+		  return userRepository.getByUserEmail(userEmail);
 	 }
 
 	 @Override

@@ -50,6 +50,7 @@ public class JpaUserRepositoryTest {
     //may need updating in the future.
     private static final String HASHED_SALTED_PASSWORD="b97fd0fa25ba8a504309be2b6651ac6dee167ded";
     private static final Long INVALID_USER = -2L;
+	 private static final String USER_EMAIL = "canonical@test.com";
 
     @Autowired
     private UserRepository repository;
@@ -61,12 +62,15 @@ public class JpaUserRepositoryTest {
         assertThat(user.getUsername(), is(equalTo(USER_NAME)));
         assertThat(user.getPassword(), is(equalTo(HASHED_SALTED_PASSWORD)));
         assertThat(user.isAccountNonExpired(), is(true));
+		  assertThat(user.getEmail(), is(equalTo(USER_EMAIL)));
     }
+
     @Test
     public void getById_invalidId() {
         User user = repository.get(INVALID_USER);
         assertThat(user, is(nullValue()));
     }
+
     @Test
     public void getByUsername_valid() {
         User user = repository.getByUsername(USER_NAME);
@@ -74,10 +78,22 @@ public class JpaUserRepositoryTest {
         assertThat(user.getId(), is(equalTo(USER_ID)));
         assertThat(user.getPassword(), is(equalTo(HASHED_SALTED_PASSWORD)));
         assertThat(user.isAccountNonExpired(), is(true));
+		  assertThat(user.getEmail(), is(equalTo(USER_EMAIL)));
     }
+
     @Test
     public void getByUsername_invalid() {
         User user = repository.get(INVALID_USER);
         assertThat(user, is(nullValue()));
+    }
+
+    @Test
+    public void getByUserEmail_valid() {
+        User user = repository.getByUserEmail(USER_EMAIL);
+        assertThat(user, CoreMatchers.notNullValue());
+        assertThat(user.getId(), is(equalTo(USER_ID)));
+        assertThat(user.getPassword(), is(equalTo(HASHED_SALTED_PASSWORD)));
+        assertThat(user.isAccountNonExpired(), is(true));
+		  assertThat(user.getEmail(), is(equalTo(USER_EMAIL)));
     }
 }

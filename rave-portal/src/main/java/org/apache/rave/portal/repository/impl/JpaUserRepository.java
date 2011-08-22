@@ -43,4 +43,11 @@ public class JpaUserRepository extends AbstractJpaRepository<User> implements Us
         query.setParameter("username", username);
         return getSingleResult(query.getResultList());
     }
+
+    @Override
+    public User getByUserEmail(String userEmail) {
+        TypedQuery<User> query = manager.createNamedQuery("User.getByUserEmail", User.class);
+        query.setParameter("email", userEmail);
+        return getSingleResult(query.getResultList());
+    }
 }

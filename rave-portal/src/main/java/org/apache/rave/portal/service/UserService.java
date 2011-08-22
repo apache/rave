@@ -59,6 +59,11 @@ public interface UserService extends UserDetailsService {
 	 User getUserById(Long id);
 
 	 /**
+	  * Return a user object by the user email.
+	  */
+	 User getUserByEmail(String userEmail);
+
+	 /**
 	  * Update the user profile information.
 	  * @param user the modified user object
 	  */

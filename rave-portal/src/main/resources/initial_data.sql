@@ -16,44 +16,44 @@
  -- under the License.
 
 --  --- start user data ---
-insert into user (user_id, username, password, expired, locked, enabled)
-values (set(@user_id_1, next value for user_id_seq), 'canonical', 'b97fd0fa25ba8a504309be2b6651ac6dee167ded', 'N', 'N', 'Y');
+insert into user (user_id, username, password, expired, locked, enabled, email)
+values (set(@user_id_1, next value for user_id_seq), 'canonical', 'b97fd0fa25ba8a504309be2b6651ac6dee167ded', 'N', 'N', 'Y','canonical@test.com');
 
-insert into user (user_id, username, password, expired, locked, enabled)
-values (set(@user_id_2, next value for user_id_seq), 'john.doe', '49e5f5c7c7ae8372af9b3063c493f080d16411f5', 'N', 'N', 'Y');
+insert into user (user_id, username, password, expired, locked, enabled, email)
+values (set(@user_id_2, next value for user_id_seq), 'john.doe', '49e5f5c7c7ae8372af9b3063c493f080d16411f5', 'N', 'N', 'Y',' ');
 
-insert into user (user_id, username, password, expired, locked, enabled)
-values (set(@user_id_3, next value for user_id_seq), 'jane.doe', '30dd37e81704bbbd4e235c22990802ae25b187da', 'N', 'N', 'Y');
+insert into user (user_id, username, password, expired, locked, enabled, email)
+values (set(@user_id_3, next value for user_id_seq), 'jane.doe', '30dd37e81704bbbd4e235c22990802ae25b187da', 'N', 'N', 'Y',' ');
 
-insert into user (user_id, username, password, expired, locked, enabled)
-values (set(@user_id_4, next value for user_id_seq), 'george.doe', '452802e3f2ff8b7b28785f50dfaaaaf80fc1430f', 'N', 'N', 'Y');
+insert into user (user_id, username, password, expired, locked, enabled, email)
+values (set(@user_id_4, next value for user_id_seq), 'george.doe', '452802e3f2ff8b7b28785f50dfaaaaf80fc1430f', 'N', 'N', 'Y',' ');
 
-insert into user (user_id, username, password, expired, locked, enabled)
-values (set(@user_id_5, next value for user_id_seq),'mario.rossi', '8aadae9f6e73a479cb8a565bcfa6e8de2b074e89', 'N', 'N', 'Y');
+insert into user (user_id, username, password, expired, locked, enabled, email)
+values (set(@user_id_5, next value for user_id_seq),'mario.rossi', '8aadae9f6e73a479cb8a565bcfa6e8de2b074e89', 'N', 'N', 'Y',' ');
 
-insert into user (user_id, username, password, expired, locked, enabled)
-values (set(@user_id_6, next value for user_id_seq), 'maija.m', '18550acca1b36af6cfa41c82e1caab12073475a1', 'N', 'N', 'Y');
+insert into user (user_id, username, password, expired, locked, enabled, email)
+values (set(@user_id_6, next value for user_id_seq), 'maija.m', '18550acca1b36af6cfa41c82e1caab12073475a1', 'N', 'N', 'Y',' ');
 
-insert into user (user_id, username, password, expired, locked, enabled)
-values (set(@user_id_6, next value for user_id_seq), 'http://rave2011.myopenid.com/', 'cdf15c184b7d2539b0cfc29ee9f10bad62793d50', 'N', 'N', 'Y');
+insert into user (user_id, username, password, expired, locked, enabled, email)
+values (set(@user_id_6, next value for user_id_seq), 'http://rave2011.myopenid.com/', 'cdf15c184b7d2539b0cfc29ee9f10bad62793d50', 'N', 'N', 'Y',' ');
 
-insert into user (user_id, username, password, expired, locked, enabled)
-values (set(@user_id_7, next value for user_id_seq), 'one.col', '07acee6193e84ba9ae2f7b2bf26538f2d6e4b0a1', 'N', 'N', 'Y');
+insert into user (user_id, username, password, expired, locked, enabled, email)
+values (set(@user_id_7, next value for user_id_seq), 'one.col', '07acee6193e84ba9ae2f7b2bf26538f2d6e4b0a1', 'N', 'N', 'Y',' ');
 
-insert into user (user_id, username, password, expired, locked, enabled)
-values (set(@user_id_8, next value for user_id_seq), 'twown.col', '24159ea43cbcecb50021cd14a1d41a8079fd9714', 'N', 'N', 'Y');
+insert into user (user_id, username, password, expired, locked, enabled, email)
+values (set(@user_id_8, next value for user_id_seq), 'twown.col', '24159ea43cbcecb50021cd14a1d41a8079fd9714', 'N', 'N', 'Y',' ');
 
-insert into user (user_id, username, password, expired, locked, enabled)
-values (set(@user_id_9, next value for user_id_seq), 'three.col', 'c736434430af90772bfd4351bffa3da04cec0403', 'N', 'N', 'Y');
+insert into user (user_id, username, password, expired, locked, enabled, email)
+values (set(@user_id_9, next value for user_id_seq), 'three.col', 'c736434430af90772bfd4351bffa3da04cec0403', 'N', 'N', 'Y',' ');
 
-insert into user (user_id, username, password, expired, locked, enabled)
-values (set(@user_id_10, next value for user_id_seq), 'threewn.col', 'ad67065a5bc25f86036508971a09a58e9c9131e8', 'N', 'N', 'Y');
+insert into user (user_id, username, password, expired, locked, enabled, email)
+values (set(@user_id_10, next value for user_id_seq), 'threewn.col', 'ad67065a5bc25f86036508971a09a58e9c9131e8', 'N', 'N', 'Y',' ');
 
-insert into user (user_id, username, password, expired, locked, enabled)
-values (set(@user_id_11, next value for user_id_seq), 'four.col', 'c875ce4416fc56cd34c01bd366a3af5468137155', 'N', 'N', 'Y');
+insert into user (user_id, username, password, expired, locked, enabled, email)
+values (set(@user_id_11, next value for user_id_seq), 'four.col', 'c875ce4416fc56cd34c01bd366a3af5468137155', 'N', 'N', 'Y',' ');
 
-insert into user (user_id, username, password, expired, locked, enabled)
-values (set(@user_id_12, next value for user_id_seq), 'fourwn.col', 'eb0b450eff79a33027a41a05051f5609a83667e8', 'N', 'N', 'Y');
+insert into user (user_id, username, password, expired, locked, enabled, email)
+values (set(@user_id_12, next value for user_id_seq), 'fourwn.col', 'eb0b450eff79a33027a41a05051f5609a83667e8', 'N', 'N', 'Y',' ');
 --- end user data ---
 
 --- gadget data ---

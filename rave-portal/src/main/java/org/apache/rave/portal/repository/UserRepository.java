@@ -23,4 +23,5 @@ import org.apache.rave.portal.model.User;
 
 public interface UserRepository extends Repository<User> {
     User getByUsername(String username);
+	 User getByUserEmail(String userEmail);
 }

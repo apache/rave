@@ -44,6 +44,7 @@ public class UserServiceTest {
     private UserService service;
     private UserRepository repository;
     private static final String USER_NAME = "1234";
+	 private static final String USER_EMAIL="test@test.com";
 
     @Before
     public void setup() {
@@ -138,6 +139,18 @@ public class UserServiceTest {
 
         service.setAuthenticatedUser(USER_ID);
     }
+
+	 @Test
+	 public void getUserByEmail_valid() {
+		  final User authUser=new User(USER_ID,USER_NAME);
+		  authUser.setEmail(USER_EMAIL);
+        expect(repository.getByUserEmail(USER_EMAIL)).andReturn(authUser).anyTimes();
+        replay(repository);
+
+        UserDetails result = service.getUserByEmail(USER_EMAIL);
+        assertThat((User)result, is(sameInstance(authUser)));		  
+	 }
+
 
     @Test
     public void clearAuthentication() {
