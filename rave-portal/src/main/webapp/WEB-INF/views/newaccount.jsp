@@ -27,7 +27,7 @@
     <form:form id="newAccountForm" commandName="newUser" action="newaccount" method="POST">
         <fieldset>
             <p>All fields are required</p>
-                <p><form:errors cssClass="error"/>
+            <p><form:errors cssClass="error"/></p>
             <p>
                 <label for="userNameField">Username:</label>
                 <form:input id="userNameField" path="username" required="required" autofocus="autofocus"/>
