@@ -19,6 +19,11 @@
 
 package org.apache.rave.commoncontainer;
 
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.Properties;
+
 import com.google.inject.CreationException;
 import com.google.inject.spi.Message;
 import org.apache.commons.lang.StringUtils;
@@ -26,11 +31,6 @@ import org.apache.shindig.common.PropertiesModule;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
-
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Map;
-import java.util.Properties;
 
 /**
  * Injects everything from the a property file as a Named value.<br/>
@@ -94,7 +94,9 @@ public class ConfigurablePropertiesModule extends PropertiesModule {
             }
         } catch (IOException e) {
             throw new CreationException(Arrays.asList(
-                    new Message("Unable to load properties: " + overrideProperty)));
+                    new Message("Unable to load properties from location: " + overrideProperty
+                            + ". " + e.getMessage())
+            ));
         }
 
         return initProperties;

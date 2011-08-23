@@ -37,7 +37,7 @@ public class JpaWidgetRepository extends AbstractJpaRepository<Widget> implement
 
     private final Logger log = LoggerFactory.getLogger(JpaWidgetRepository.class);
 
-    private int LARGE_PAGESIZE = 1000;
+    private static final int LARGE_PAGESIZE = 1000;
 
     public JpaWidgetRepository() {
         super(Widget.class);
