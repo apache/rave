@@ -33,6 +33,7 @@ public class NewAccountValidator implements Validator {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
+    private static final String USERNAME_PATTERN = "[\\w\\+\\-\\.@]{2,}";
     private UserService userService;
 
     @Autowired
@@ -49,20 +50,20 @@ public class NewAccountValidator implements Validator {
         NewUser newUser = (NewUser) obj;
 
         //check if the username is null or empty
-        if (StringUtils.isBlank(newUser.getUsername())) {
+        final String username = newUser.getUsername();
+        if (StringUtils.isBlank(username)) {
             errors.rejectValue("username", "username.required");
             logger.info("Username required");
         }
 
-        //check if username length is less than 2
-        else if (newUser.getUsername().length() < 2) {
-            errors.rejectValue("username", "username.invalid.length");
+        // at least 2 characters of the following: a-z A-Z 0-9 _ - + . @
+        else if (!username.matches(USERNAME_PATTERN)) {
+            errors.rejectValue("username", "username.invalid.pattern");
             logger.info("Username must be atleast 2 characters long");
         }
 
         //check if username is already in use
-
-        else if (userService.getUserByUsername(newUser.getUsername()) != null) {
+        else if (userService.getUserByUsername(username) != null) {
             errors.rejectValue("username", "username.exits");
             logger.info("Username already exists");
         }

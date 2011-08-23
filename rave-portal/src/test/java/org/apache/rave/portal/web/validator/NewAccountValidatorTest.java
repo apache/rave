@@ -127,6 +127,24 @@ public class NewAccountValidatorTest {
     }
 
     @Test
+    public void testValidationFailsOnIllegalCharacters() throws Exception {
+        NewUser newUser = new NewUser();
+        final String badUsername = "x'; DROP TABLE members; --";
+        newUser.setUsername(badUsername);
+        newUser.setPassword(VALID_PASSWORD);
+        newUser.setConfirmPassword(VALID_PASSWORD);
+        newUser.setPageLayout(VALID_PAGELAYOUT);
+        Errors errors = new BindException(newUser, NEW_USER);
+        expect(mockUserService.getUserByUsername(badUsername)).andReturn(null);
+        replay(mockUserService);
+
+        newAccountValidator.validate(newUser, errors);
+
+        assertTrue("Validation errors", errors.hasErrors());
+        assertNotNull(errors.getFieldError(FIELD_USERNAME));
+    }
+
+    @Test
     public void testValidationFailsOnShortPassword() throws Exception {
         NewUser newUser = new NewUser();
         newUser.setUsername(VALID_NAME);
