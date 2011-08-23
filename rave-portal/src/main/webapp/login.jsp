@@ -38,22 +38,29 @@
                 <label for="passwordField">Password: </label>
                 <input id="passwordField" type="password" name="j_password"/>
             </p>
+            <p>
+                <label for="remember_me" class="checkboxLabel">
+                    <input type='checkbox' name='_spring_security_remember_me' id="remember_me"
+                           value="true"/>
+                    Remember me
+                </label>
+            </p>
         </fieldset>
         <fieldset>
             <input type="submit" value="Login"/>
         </fieldset>
     </form>
-	
-	<h2>New User</h2>
-	<form id="newAccount" action="<c:url value="/app/newaccount.jsp"/>" method="get">
-		<fieldset>
-			<p>
-				<label for="createNewAccountButton">Register: </label>
-				<input id="createNewAccountButton" type="submit" value="Create New Account" />
-			</p>
-		</fieldset>
-	</form>
-	
+    
+    <h2>New User</h2>
+    <form id="newAccount" action="<c:url value="/app/newaccount.jsp"/>" method="get">
+        <fieldset>
+            <p>
+                <label for="createNewAccountButton">Register: </label>
+                <input id="createNewAccountButton" type="submit" value="Create New Account" />
+            </p>
+        </fieldset>
+    </form>
+    
     <h2>OpenID Identity</h2>
     <form id="oidForm" name='oidf' action='j_spring_openid_security_check' method='POST'>
         <c:if test="${param['authfail'] eq 'openid'}">
@@ -63,6 +70,13 @@
             <p>
                 <label for="openid_identifier">Identity: </label>
                 <input type='text' id="openid_identifier" name='openid_identifier' class="long"/>
+            </p>
+            <p>
+                <label for="remember_me_openid" class="checkboxLabel">
+                    <input type='checkbox' name='_spring_security_remember_me' id="remember_me_openid"
+                           value="true"/>
+                    Remember me
+                </label>
             </p>
         </fieldset>
         <fieldset>

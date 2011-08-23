@@ -53,6 +53,7 @@
 	 </security:openid-login>
 	 <security:form-login login-page="/login.jsp" authentication-failure-url="/login.jsp?authfail=form" />
 	 <security:logout/>
+     <security:remember-me/>
   </security:http>
   
   <security:authentication-manager>
