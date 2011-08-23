@@ -23,6 +23,8 @@ import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -40,14 +42,40 @@ import org.apache.rave.persistence.BasicEntity;
 @Table(name="widget")
 @SequenceGenerator(name="widgetIdSeq", sequenceName = "widget_id_seq")
 @NamedQueries({
-        @NamedQuery(name = "Widget.getAll", query = "SELECT w from Widget w"),
-        @NamedQuery(name = "Widget.countAll", query = "SELECT count(w) FROM Widget w"),
-        @NamedQuery(name = "Widget.getByFreeText", query = "SELECT w FROM Widget w WHERE lower(w.title) LIKE :searchTerm OR w.description LIKE :description"),
-        @NamedQuery(name = "Widget.countByFreeText", query = "SELECT count(w) FROM Widget w WHERE lower(w.title) LIKE :searchTerm OR w.description LIKE :description")
+        @NamedQuery(name = Widget.WIDGET_GET_ALL, query = "SELECT w from Widget w"),
+        @NamedQuery(name = Widget.WIDGET_COUNT_ALL, query = "SELECT count(w) FROM Widget w"),
+        @NamedQuery(name = Widget.WIDGET_GET_BY_FREE_TEXT,
+                query = "SELECT w FROM Widget w WHERE lower(w.title) LIKE :searchTerm OR w.description LIKE :description"),
+        @NamedQuery(name = Widget.WIDGET_COUNT_BY_FREE_TEXT,
+                query = "SELECT count(w) FROM Widget w WHERE lower(w.title) LIKE :searchTerm OR w.description LIKE :description"),
+
+        @NamedQuery(name = Widget.WIDGET_GET_BY_STATUS,
+                query = "SELECT w from Widget w WHERE w.widgetStatus = :widgetStatus"),
+        @NamedQuery(name = Widget.WIDGET_COUNT_BY_STATUS,
+                query = "SELECT count(w) FROM Widget w WHERE w.widgetStatus = :widgetStatus"),
+        @NamedQuery(name = Widget.WIDGET_GET_BY_STATUS_AND_FREE_TEXT,
+                query = "SELECT w FROM Widget w WHERE w.widgetStatus = :widgetStatus AND lower(w.title) LIKE :searchTerm OR w.description LIKE :description"),
+        @NamedQuery(name = Widget.WIDGET_COUNT_BY_STATUS_AND_FREE_TEXT,
+                query = "SELECT count(w) FROM Widget w WHERE w.widgetStatus = :widgetStatus AND lower(w.title) LIKE :searchTerm OR w.description LIKE :description")
+
 })
 public class Widget implements BasicEntity, Serializable {
     private static final long serialVersionUID = 1L;
-    
+
+    public static final String PARAM_SEARCH_TERM = "searchTerm";
+    public static final String PARAM_STATUS = "widgetStatus";
+
+    public static final String WIDGET_GET_ALL = "Widget.getAll";
+    public static final String WIDGET_COUNT_ALL = "Widget.countAll";
+    public static final String WIDGET_GET_BY_FREE_TEXT = "Widget.getByFreeText";
+    public static final String WIDGET_COUNT_BY_FREE_TEXT = "Widget.countByFreeText";
+    public static final String WIDGET_GET_BY_STATUS = "Widget.getByStatus";
+    public static final String WIDGET_COUNT_BY_STATUS = "Widget.countByStatus";
+    public static final String WIDGET_GET_BY_STATUS_AND_FREE_TEXT =
+            "Widget.getByStatusAndFreeText";
+    public static final String WIDGET_COUNT_BY_STATUS_AND_FREE_TEXT =
+            "Widget.countByStatusAndFreeText";
+
     @Id @Column(name="id")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "widgetIdSeq")
     private Long id;
@@ -77,6 +105,11 @@ public class Widget implements BasicEntity, Serializable {
 
     @Basic @Column(name = "description")
     private String description;
+
+    @Basic @Column(name = "widget_status")
+    @Enumerated(EnumType.STRING)
+    private WidgetStatus widgetStatus;
+
 
     public Widget() {
     }
@@ -167,6 +200,14 @@ public class Widget implements BasicEntity, Serializable {
         this.url = url;
     }
 
+    public WidgetStatus getWidgetStatus() {
+        return widgetStatus;
+    }
+
+    public void setWidgetStatus(WidgetStatus widgetStatus) {
+        this.widgetStatus = widgetStatus;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {
@@ -191,6 +232,16 @@ public class Widget implements BasicEntity, Serializable {
 
     @Override
     public String toString() {
-        return "Widget{" + "id=" + id + ", title=" + title + ", url=" + url + ", thumbnailUrl=" + thumbnailUrl + ", screenshotUrl=" + screenshotUrl + ", type=" + type + ", author=" + author + ", description=" + description + '}';
+        return "Widget{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", url='" + url + '\'' +
+                ", thumbnailUrl='" + thumbnailUrl + '\'' +
+                ", screenshotUrl='" + screenshotUrl + '\'' +
+                ", type='" + type + '\'' +
+                ", author='" + author + '\'' +
+                ", description='" + description + '\'' +
+                ", widgetStatus=" + widgetStatus +
+                '}';
     }
 }

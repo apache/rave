@@ -56,7 +56,7 @@ public class WidgetStoreController {
     public String view(Model model, @RequestParam long referringPageId,
                        @RequestParam(required = false, defaultValue = "0") int offset) {
         model.addAttribute(ModelKeys.WIDGETS,
-                widgetService.getLimitedListOfWidgets(offset, MAXIMUM_WIDGETS_PER_PAGE));
+                widgetService.getPublishedWidgets(offset, MAXIMUM_WIDGETS_PER_PAGE));
         model.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
         return ViewNames.STORE;
     }
@@ -90,7 +90,7 @@ public class WidgetStoreController {
                                    @RequestParam String searchTerm,
                                    @RequestParam(required = false, defaultValue = "0") int offset) {
         model.addAttribute(ModelKeys.WIDGETS,
-                widgetService.getWidgetsByFreeTextSearch(searchTerm, offset,
+                widgetService.getPublishedWidgetsByFreeTextSearch(searchTerm, offset,
                         MAXIMUM_WIDGETS_PER_PAGE));
         model.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
         model.addAttribute(ModelKeys.SEARCH_TERM, searchTerm);

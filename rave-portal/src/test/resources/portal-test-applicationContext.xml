@@ -58,6 +58,7 @@
         <property name="scriptLocations">
             <list>
                 <value>classpath:initial_data.sql</value>
+                <value>classpath:portal_test_data.sql</value>
             </list>
         </property>
     </bean>

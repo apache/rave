@@ -67,7 +67,7 @@ public class WidgetStoreControllerTest {
         List<Widget> widgets = new ArrayList<Widget>();
         SearchResult<Widget> emptyResult = new SearchResult<Widget>(widgets, 0);
 
-        expect(widgetService.getLimitedListOfWidgets(0, 10)).andReturn(emptyResult);
+        expect(widgetService.getPublishedWidgets(0, 10)).andReturn(emptyResult);
         replay(widgetService);
 
         String view = controller.view(model, REFERRER_ID, 0);
@@ -111,7 +111,8 @@ public class WidgetStoreControllerTest {
         SearchResult<Widget> result = new SearchResult<Widget>(widgets, totalResults);
         result.setPageSize(pagesize);
 
-        expect(widgetService.getWidgetsByFreeTextSearch(searchTerm, offset, pagesize)).andReturn(result);
+        expect(widgetService.getPublishedWidgetsByFreeTextSearch(searchTerm, offset, pagesize))
+                .andReturn(result);
         replay(widgetService);
 
         String view = controller.viewSearchResult(model,REFERRER_ID, searchTerm, offset);

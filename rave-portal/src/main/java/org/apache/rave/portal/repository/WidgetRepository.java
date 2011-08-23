@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.apache.rave.persistence.Repository;
 import org.apache.rave.portal.model.Widget;
+import org.apache.rave.portal.model.WidgetStatus;
 
 public interface WidgetRepository extends Repository<Widget> {
     /**
@@ -64,4 +65,44 @@ public interface WidgetRepository extends Repository<Widget> {
      */
     int getCountFreeTextSearch(String searchTerm);
 
+    /**
+     * Gets a List of {@link Widget}'s in the repository by {@link WidgetStatus}
+     *
+     * @param widgetStatus status of the widget (PREVIEW, PUBLISHED etc)
+     * @param offset       start point within the total resultset
+     * @param pageSize     maximum number of items to be returned (for paging)
+     * @return valid list of widgets, can be empty
+     */
+    List<Widget> getByStatus(WidgetStatus widgetStatus, int offset, int pageSize);
+
+    /**
+     * Counts the total number of {@link Widget}'s filtering on status. Useful for paging.
+     *
+     * @param widgetStatus status of the widget (PREVIEW, PUBLISHED etc)
+     * @return total number of {@link Widget}'s that match the search term
+     */
+    int getCountByStatus(WidgetStatus widgetStatus);
+
+    /**
+     * Gets a List of {@link Widget}'s by performing a free text search filtering on status
+     *
+     * @param widgetStatus status of the widget (PREVIEW, PUBLISHED etc)
+     * @param searchTerm   free text search term
+     * @param offset       start point within the resultset (for paging)
+     * @param pageSize     maximum number of items to be returned (for paging)
+     * @return valid list of widgets, can be empty
+     */
+    List<Widget> getByStatusAndFreeTextSearch(WidgetStatus widgetStatus, String searchTerm,
+                                              int offset, int pageSize);
+
+
+    /**
+     * Counts the total number of {@link Widget}'s by performing a free text search filtering
+     * on status. Useful for paging.
+     *
+     * @param widgetStatus status of the widget (PREVIEW, PUBLISHED etc)
+     * @param searchTerm   free text search term
+     * @return total number of {@link Widget}'s that match the search criteria
+     */
+    int getCountByStatusAndFreeText(WidgetStatus widgetStatus, String searchTerm);
 }

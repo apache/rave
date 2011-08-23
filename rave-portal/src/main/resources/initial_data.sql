@@ -58,29 +58,29 @@ values (set(@user_id_12, next value for user_id_seq), 'fourwn.col', 'eb0b450eff7
 
 --- gadget data ---
 -- wikipedia widget
-insert into widget (id, title, url, type, description, author)
-values(set(@wikipedia_widget_id, next value for widget_id_seq), 'Wikipedia','http://www.widget-dico.com/wikipedia/google/wikipedia.xml', 'OpenSocial', 'A Wikipedia Search and Go widget. Language choice.', 'WidgetMe');
+insert into widget (id, title, url, type, description, author, widget_status)
+values(set(@wikipedia_widget_id, next value for widget_id_seq), 'Wikipedia','http://www.widget-dico.com/wikipedia/google/wikipedia.xml', 'OpenSocial', 'A Wikipedia Search and Go widget. Language choice.', 'WidgetMe', 'PUBLISHED');
 
 -- translate widget
-insert into widget (id, title, url, type, description, author)
-values(set(@translate_widget_id, next value for widget_id_seq), 'Translate Gadget', 'http://www.gstatic.com/ig/modules/dictionary/dictionary.xml','OpenSocial' , 'Google Translation gadget.', 'Google Taiwan');
+insert into widget (id, title, url, type, description, author, widget_status)
+values(set(@translate_widget_id, next value for widget_id_seq), 'Translate Gadget', 'http://www.gstatic.com/ig/modules/dictionary/dictionary.xml','OpenSocial' , 'Google Translation gadget.', 'Google Taiwan', 'PUBLISHED');
 
 -- nytimes widget
-insert into widget (id, title, url, type)
-values(set(@nyt_widget_id, next value for widget_id_seq), 'NYTimes.com - Top Stories', 'http://widgets.nytimes.com/packages/html/igoogle/topstories.xml', 'OpenSocial');
+insert into widget (id, title, url, type, widget_status)
+values(set(@nyt_widget_id, next value for widget_id_seq), 'NYTimes.com - Top Stories', 'http://widgets.nytimes.com/packages/html/igoogle/topstories.xml', 'OpenSocial', 'PUBLISHED');
 
 -- google tabbed news widget
-insert into widget (id, title, url, type)
-values(set(@tabnews_widget_id, next value for widget_id_seq), 'Google News Gadget', 'http://www.gstatic.com/ig/modules/tabnews/tabnews.xml', 'OpenSocial');
+insert into widget (id, title, url, type, widget_status)
+values(set(@tabnews_widget_id, next value for widget_id_seq), 'Google News Gadget', 'http://www.gstatic.com/ig/modules/tabnews/tabnews.xml', 'OpenSocial', 'PUBLISHED');
 -- end widget data ----
 
 -- hamster widget
-insert into widget (id, title, url, type)
-values(set(@hamster_widget_id, next value for widget_id_seq), 'Pet Hamster', 'http://hosting.gmodules.com/ig/gadgets/file/112581010116074801021/hamster.xml', 'OpenSocial');
+insert into widget (id, title, url, type, widget_status)
+values(set(@hamster_widget_id, next value for widget_id_seq), 'Pet Hamster', 'http://hosting.gmodules.com/ig/gadgets/file/112581010116074801021/hamster.xml', 'OpenSocial', 'PUBLISHED');
 
 -- slideshare widget
-insert into widget (id, title, url, type)
-values(set(@gifts_widget_id, next value for widget_id_seq), 'Gifts', 'http://opensocial-resources.googlecode.com/svn/samples/tutorial/tags/api-0.8/gifts_1_friends.xml', 'OpenSocial');
+insert into widget (id, title, url, type, widget_status)
+values(set(@gifts_widget_id, next value for widget_id_seq), 'Gifts', 'http://opensocial-resources.googlecode.com/svn/samples/tutorial/tags/api-0.8/gifts_1_friends.xml', 'OpenSocial', 'PUBLISHED');
 -- end widget data ----
 
 --- start page layout data ---

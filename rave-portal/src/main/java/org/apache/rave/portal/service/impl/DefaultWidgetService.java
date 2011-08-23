@@ -23,6 +23,7 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.rave.portal.model.Widget;
+import org.apache.rave.portal.model.WidgetStatus;
 import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.repository.WidgetRepository;
 import org.apache.rave.portal.service.WidgetService;
@@ -56,13 +57,15 @@ public class DefaultWidgetService implements WidgetService {
     }
 
     @Override
-    public SearchResult<Widget> getWidgetsByFreeTextSearch(String searchTerm, int offset, int pageSize) {
+    public SearchResult<Widget> getWidgetsByFreeTextSearch(String searchTerm,
+                                                           int offset, int pageSize) {
         if (StringUtils.isBlank(searchTerm)) {
             return getLimitedListOfWidgets(offset, pageSize);
         }
 
         final int count = widgetRepository.getCountFreeTextSearch(searchTerm);
-        final List<Widget>widgets = widgetRepository.getByFreeTextSearch(searchTerm, offset, pageSize);
+        final List<Widget> widgets = widgetRepository.getByFreeTextSearch(searchTerm,
+                offset, pageSize);
 
         final SearchResult<Widget> searchResult = new SearchResult<Widget>(widgets, count);
         searchResult.setPageSize(pageSize);
@@ -72,5 +75,33 @@ public class DefaultWidgetService implements WidgetService {
     @Override
     public Widget getWidget(long id) {
         return widgetRepository.get(id);
+    }
+
+    @Override
+    public SearchResult<Widget> getPublishedWidgets(int offset, int pageSize) {
+        final int count = widgetRepository.getCountByStatus(WidgetStatus.PUBLISHED);
+        final List<Widget> widgets = widgetRepository.getByStatus(WidgetStatus.PUBLISHED,
+                offset, pageSize);
+        final SearchResult<Widget> searchResult = new SearchResult<Widget>(widgets, count);
+        searchResult.setPageSize(pageSize);
+        return searchResult;
+    }
+
+    @Override
+    public SearchResult<Widget> getPublishedWidgetsByFreeTextSearch(String searchTerm,
+                                                                    int offset, int pageSize) {
+
+        if (StringUtils.isBlank(searchTerm)) {
+            return getPublishedWidgets(offset, pageSize);
+        }
+
+        final int count = widgetRepository.getCountByStatusAndFreeText(WidgetStatus.PUBLISHED,
+                searchTerm);
+        final List<Widget> widgets = widgetRepository.getByStatusAndFreeTextSearch(
+                WidgetStatus.PUBLISHED, searchTerm, offset, pageSize);
+
+        final SearchResult<Widget> searchResult = new SearchResult<Widget>(widgets, count);
+        searchResult.setPageSize(pageSize);
+        return searchResult;
     }
 }

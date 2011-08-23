@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.rave.portal.model.Widget;
+import org.apache.rave.portal.model.WidgetStatus;
 import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.repository.WidgetRepository;
 import org.apache.rave.portal.service.impl.DefaultWidgetService;
@@ -81,6 +82,24 @@ public class WidgetServiceTest {
     }
 
     @Test
+    public void getPublishedWidgets() {
+        Widget widget1 = new Widget(1L,"http://example.com/widget1.xml");
+        widget1.setWidgetStatus(WidgetStatus.PUBLISHED);
+        Widget widget2 = new Widget(2L,"http://example.com/widget2.xml");
+        widget2.setWidgetStatus(WidgetStatus.PUBLISHED);
+        List<Widget> widgets = new ArrayList<Widget>();
+        widgets.add(widget1);
+        widgets.add(widget2);
+        final int pageSize = 10;
+        expect(repository.getByStatus(WidgetStatus.PUBLISHED, 0, pageSize)).andReturn(widgets);
+        replay(repository);
+
+        SearchResult<Widget> result = service.getPublishedWidgets(0, pageSize);
+        assertEquals(pageSize, result.getPageSize());
+        assertSame(widgets, result.getResultSet());
+    }
+
+    @Test
     public void getWidget() {
         Widget w = new Widget();
         expect(repository.get(1L)).andReturn(w);
@@ -93,9 +112,9 @@ public class WidgetServiceTest {
 
     @Test
     public void getWidgetsForSearchTerm() {
-        String searchTerm = "gAdGet";
+        final String searchTerm = "gAdGet";
         int offset = 0;
-        int pagesize = 10;
+        int pageSize = 10;
         int totalResults = 2;
         Widget widget = new Widget();
         widget.setId(1L);
@@ -103,14 +122,39 @@ public class WidgetServiceTest {
         widgets.add(widget);
         
         expect(repository.getCountFreeTextSearch(searchTerm)).andReturn(totalResults);
-        expect(repository.getByFreeTextSearch(searchTerm, offset, pagesize)).andReturn(widgets);
+        expect(repository.getByFreeTextSearch(searchTerm, offset, pageSize)).andReturn(widgets);
         replay(repository);
 
-        SearchResult<Widget> result = service.getWidgetsByFreeTextSearch(searchTerm, offset, pagesize);
+        SearchResult<Widget> result = service.getWidgetsByFreeTextSearch(searchTerm, offset, pageSize);
         assertEquals(widget, result.getResultSet().get(0));
         assertEquals(totalResults, result.getTotalResults());
-        assertEquals(pagesize, result.getPageSize());
+        assertEquals(pageSize, result.getPageSize());
+    }
 
+
+    @Test
+    public void getPublishedWidgetsForSearchTerm() {
+        final String searchTerm = "gAdGet";
+        int offset = 0;
+        int pageSize = 10;
+        int totalResults = 2;
+        Widget widget = new Widget();
+        widget.setWidgetStatus(WidgetStatus.PUBLISHED);
+        widget.setId(1L);
+        List<Widget> widgets = new ArrayList<Widget>();
+        widgets.add(widget);
+
+        expect(repository.getCountByStatusAndFreeText(WidgetStatus.PUBLISHED, searchTerm))
+                .andReturn(totalResults);
+        expect(repository.getByStatusAndFreeTextSearch(WidgetStatus.PUBLISHED, searchTerm,
+                offset, pageSize)).andReturn(widgets);
+        replay(repository);
+
+        SearchResult<Widget> result = service.getPublishedWidgetsByFreeTextSearch(searchTerm,
+                offset, pageSize);
+        assertEquals(widget, result.getResultSet().get(0));
+        assertEquals(totalResults, result.getTotalResults());
+        assertEquals(pageSize, result.getPageSize());
     }
 
     @Test

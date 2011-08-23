@@ -38,10 +38,11 @@ public interface WidgetService {
 
 
     /**
-     * Gets a limited {@link SearchResult} for {@link Widget}'s  that a user can add to their context.
+     * Gets a limited {@link SearchResult} for {@link Widget}'s that a user can add to their
+     * context.
      *
-     * @param offset start point within the resultset (for paging)
-     * @param pageSize   maximum number of items to be returned (for paging)
+     * @param offset   start point within the resultset (for paging)
+     * @param pageSize maximum number of items to be returned (for paging)
      * @return SearchResult
      */
     SearchResult<Widget> getLimitedListOfWidgets(int offset, int pageSize);
@@ -63,4 +64,24 @@ public interface WidgetService {
      * @return a valid widget if one exists for the given id; null otherwise
      */
     Widget getWidget(long id);
+
+    /**
+     * Gets a {@link SearchResult} for {@link Widget}'s that are published
+     *
+     * @param offset   start point within the resultset (for paging)
+     * @param pageSize maximum number of items to be returned (for paging)
+     * @return SearchResult
+     */
+    SearchResult<Widget> getPublishedWidgets(int offset, int pageSize);
+
+    /**
+     * Gets a SearchResult for published {@link Widget}'s by performing a free text search
+     *
+     * @param searchTerm free text search term
+     * @param offset     start point within the resultset (for paging)
+     * @param pageSize   maximum number of items to be returned (for paging)
+     * @return SearchResult
+     */
+    SearchResult<Widget> getPublishedWidgetsByFreeTextSearch(String searchTerm,
+                                                             int offset, int pageSize);
 }

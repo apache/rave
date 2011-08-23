@@ -19,12 +19,14 @@
 
 package org.apache.rave.portal.repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import org.apache.rave.portal.model.Widget;
+import org.apache.rave.portal.model.WidgetStatus;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +48,8 @@ import static org.junit.Assert.assertThat;
  */
 @Transactional
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:portal-test-dataContext.xml", "classpath:portal-test-applicationContext.xml"})
+@ContextConfiguration(locations = {"classpath:portal-test-dataContext.xml",
+        "classpath:portal-test-applicationContext.xml"})
 public class JpaWidgetRepositoryTest {
 
     @PersistenceContext
@@ -100,4 +103,52 @@ public class JpaWidgetRepositoryTest {
         int count = repository.getCountAll();
         assertTrue(count > 4);
     }
+
+    @Test
+    public void getByStatus() {
+        final int pageSize = 999;
+        List<Widget> published = repository.getByStatus(WidgetStatus.PUBLISHED, 0, pageSize);
+        assertNotNull(published);
+        assertTrue(published.size() > 0);
+
+        List<Widget> preview = repository.getByStatus(WidgetStatus.PREVIEW, 0, pageSize);
+        assertNotNull(preview);
+        assertTrue(preview.size() > 0);
+
+        List<Widget> shouldBeEmpty = new ArrayList<Widget>();
+        for (Widget previewWidget : preview) {
+            if (published.contains(previewWidget)) {
+                // should not happen
+                shouldBeEmpty.add(previewWidget);
+            }
+        }
+        assertEquals(0, shouldBeEmpty.size());
+    }
+
+    @Test
+    public void countByStatus() {
+        int publishedCount = repository.getCountByStatus(WidgetStatus.PUBLISHED);
+        assertTrue(publishedCount > 0);
+    }
+
+    @Test
+    public void getByStatusAndFreeText() {
+        final String searchTerm = "gAdGet";
+        List<Widget> widgets = repository.getByStatusAndFreeTextSearch(WidgetStatus.PUBLISHED,
+                searchTerm, 0, 1);
+        assertEquals(1, widgets.size());
+
+        List<Widget> preview = repository.getByStatusAndFreeTextSearch(WidgetStatus.PREVIEW,
+                searchTerm, 0, 1);
+        assertEquals(0, preview.size());
+    }
+
+    @Test
+    public void countByStatusAndFreeText() {
+        final String searchTerm = "gAdGet";
+        int publishedCount = repository.getCountByStatusAndFreeText(WidgetStatus.PUBLISHED,
+                searchTerm);
+        assertTrue(publishedCount >= 2);
+    }
+
 }
