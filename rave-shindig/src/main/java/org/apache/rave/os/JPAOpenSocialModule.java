@@ -42,12 +42,12 @@ public class JPAOpenSocialModule extends AbstractModule {
             .toInstance("sampledata/canonicaldb.json");
 
         //bind(PersonService.class).to(PersonServiceDb.class);
-        bind(ActivityService.class).to(ActivityServiceDb.class);
-        bind(ActivityStreamService.class).to(JPAOpenSocialService.class);
-        bind(AlbumService.class).to(JPAOpenSocialService.class);
-        bind(MediaItemService.class).to(JPAOpenSocialService.class);
-        bind(AppDataService.class).to(AppDataServiceDb.class);
-        bind(MessageService.class).to(JPAOpenSocialService.class);
+        //bind(ActivityService.class).to(ActivityServiceDb.class);
+        //bind(ActivityStreamService.class).to(JPAOpenSocialService.class);
+        //bind(AlbumService.class).to(JPAOpenSocialService.class);
+        //bind(MediaItemService.class).to(JPAOpenSocialService.class);
+        //bind(AppDataService.class).to(AppDataServiceDb.class);
+        //bind(MessageService.class).to(JPAOpenSocialService.class);
         bind(OAuthDataStore.class).to(SampleOAuthDataStore.class);
     }
 }
