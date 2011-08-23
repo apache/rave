@@ -25,6 +25,8 @@ import org.apache.shindig.common.crypto.BlobCrypter;
 import org.apache.shindig.gadgets.oauth.OAuthFetcherConfig;
 import org.apache.shindig.gadgets.oauth.OAuthModule;
 import org.apache.shindig.gadgets.oauth.OAuthRequest;
+import org.apache.shindig.social.opensocial.oauth.OAuthDataStore;
+import org.apache.shindig.social.sample.oauth.SampleOAuthDataStore;
 
 /**
  * Replacement for the {@link org.apache.shindig.gadgets.oauth.OAuthModule}.
@@ -45,5 +47,10 @@ public class OAuthGuiceModule extends AbstractModule {
         bind(BlobCrypter.class).annotatedWith(Names.named(OAuthFetcherConfig.OAUTH_STATE_CRYPTER))
                 .toProvider(OAuthModule.OAuthCrypterProvider.class);
         bind(OAuthRequest.class).toProvider(OAuthModule.OAuthRequestProvider.class);
+
+        //Required for SampleOAuthDataStore
+        bind(String.class).annotatedWith(Names.named("shindig.canonical.json.db"))
+            .toInstance("sampledata/canonicaldb.json");
+        bind(OAuthDataStore.class).to(SampleOAuthDataStore.class);
     }
 }
