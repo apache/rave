@@ -23,7 +23,7 @@ rave.forms = rave.forms || (function() {
     function validateNewAccountForm() {
         $("#newAccountForm").validate({
             rules: {
-                userName : {
+                username : {
                     required: true,
                     minlength: 2
                 },
@@ -31,14 +31,14 @@ rave.forms = rave.forms || (function() {
                     required: true,
                     minlength: 4
                 },
-                passwordConfirm : {
+                confirmPassword : {
                     required: true,
                     minlength: 4,
                     equalTo: "#passwordField"
                 }
             },
             messages: {
-                passwordConfirm: {
+                confirmPassword: {
                     equalTo: "The password does not match"
                 }
             }

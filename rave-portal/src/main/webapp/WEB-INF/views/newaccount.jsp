@@ -1,4 +1,4 @@
-<sele%--
+<%--
   Licensed to the Apache Software Foundation (ASF) under one
   or more contributor license agreements.  See the NOTICE file
   distributed with this work for additional information
@@ -27,33 +27,33 @@
     <form:form id="newAccountForm" commandName="newUser" action="newaccount" method="POST">
         <fieldset>
             <p>All fields are required</p>
-				<p><form:errors cssClass="error"/>
+                <p><form:errors cssClass="error"/>
             <p>
                 <label for="userNameField">Username:</label>
-                <form:input id="userNameField" type="text" path="username" required="required" autofocus="autofocus"/>
+                <form:input id="userNameField" path="username" required="required" autofocus="autofocus"/>
                 <form:errors path="username" cssClass="error" />
             </p>
             <p>
                 <label for="passwordField">Password:</label>
-                <form:input id="passwordField" type="password" path="password" required="required"/>
-            	<form:errors path="password" cssClass="error" />
+                <form:password id="passwordField" path="password" required="required"/>
+                <form:errors path="password" cssClass="error" />
             </p>
             <p>
                 <label for="passwordConfirmField">Confirm Password:</label>
-                <form:input id="passwordConfirmField" type="password" path="confirmPassword" required="required"/>
-            	<form:errors path="confirmPassword" cssClass="error" />
+                <form:password id="passwordConfirmField" path="confirmPassword" required="required"/>
+                <form:errors path="confirmPassword" cssClass="error" />
             </p>
             <p>
-            	<label for="pageLayoutField">Select Page Layout:</label>
-            	<form:select path="pageLayout">
-            		<form:option value="columns_1" id="columns_1_id">One Column</form:option>
-            		<form:option value="columns_2" id="columns_2_id" selected="selected" xmlns="default namespace">Two Columns</form:option>
-            		<form:option value="columns_2wn" id="columns_2wn_id">Two Columns (wide/narrow)</form:option>
-            		<form:option value="columns_3" id="columns_3_id">Three Columns</form:option>
-            		<form:option value="columns_3nwn" id="columns_3nwn_id">Three Columns (narrow/wide/narrow)</form:option>
-            		<form:option value="columns_4" id="columns_4_id">Four Columns</form:option>
-            		<form:option value="columns_3nwn_1_bottom" id="columns_3nwn_1_bottom">Four Columns (narrow/wide/narrow/bottom)</form:option>
-            	</form:select>
+                <label for="pageLayoutField">Select Page Layout:</label>
+                <form:select path="pageLayout" id="pageLayoutField">
+                    <form:option value="columns_1" id="columns_1_id">One Column</form:option>
+                    <form:option value="columns_2" id="columns_2_id" selected="selected">Two Columns</form:option>
+                    <form:option value="columns_2wn" id="columns_2wn_id">Two Columns (wide/narrow)</form:option>
+                    <form:option value="columns_3" id="columns_3_id">Three Columns</form:option>
+                    <form:option value="columns_3nwn" id="columns_3nwn_id">Three Columns (narrow/wide/narrow)</form:option>
+                    <form:option value="columns_4" id="columns_4_id">Four Columns</form:option>
+                    <form:option value="columns_3nwn_1_bottom" id="columns_3nwn_1_bottom">Four Columns (narrow/wide/narrow/bottom)</form:option>
+                </form:select>
             </p>
         </fieldset>
         <fieldset>
