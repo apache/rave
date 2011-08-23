@@ -52,7 +52,8 @@
     <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>
-            classpath:spring-context.xml
+            classpath:rave-shindig-applicationContext.xml
+            classpath:rave-shindig-dataContext.xml
             classpath:modules-context.xml
         </param-value>
     </context-param>

@@ -19,6 +19,11 @@
 
 package org.apache.rave.opensocial.repository;
 
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.apache.rave.opensocial.model.Person;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,16 +31,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
-import java.util.List;
-
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations={"classpath:spring-test.xml"})
+@ContextConfiguration(locations={"classpath:rave-shindig-test-applicationContext.xml",
+        "classpath:rave-shindig-test-dataContext.xml"})
 public class JpaPersonRepositoryTest {
 
     private static final String VALID_USER = "canonical";

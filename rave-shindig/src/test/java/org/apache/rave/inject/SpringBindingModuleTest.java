@@ -21,12 +21,10 @@ package org.apache.rave.inject;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import org.apache.rave.opensocial.model.Organization;
 import org.apache.rave.opensocial.service.impl.DefaultPersonService;
 import org.apache.rave.persistence.BasicEntity;
 import org.apache.rave.persistence.jpa.AbstractJpaRepository;
 import org.apache.shindig.social.opensocial.spi.PersonService;
-import org.hamcrest.CoreMatchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,12 +34,17 @@ import org.springframework.stereotype.Repository;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.junit.Assert.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations={"classpath:spring-context.xml"})
+@ContextConfiguration(locations={"classpath:rave-shindig-test-applicationContext.xml",
+        "classpath:rave-shindig-test-dataContext.xml"})
 public class SpringBindingModuleTest {
     private Injector injector;
 

@@ -45,7 +45,8 @@ public class GuiceBindingSpringContextLoaderListenerTest {
         Injector injector = Guice.createInjector(createNiceMock(Module.class));
 
         MockServletContext mockServletContext = new MockServletContext();
-        mockServletContext.addInitParameter("contextConfigLocation", "classpath:spring-context.xml");
+        mockServletContext.addInitParameter("contextConfigLocation",
+                "classpath:rave-shindig-test-applicationContext.xml, classpath:rave-shindig-test-dataContext.xml");
         mockServletContext.setAttribute(GuiceServletContextListener.INJECTOR_ATTRIBUTE, injector);
 
         GuiceBindingSpringContextLoaderListener listener = new GuiceBindingSpringContextLoaderListener();

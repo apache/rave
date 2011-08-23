@@ -40,14 +40,6 @@
 
     <tx:annotation-driven transaction-manager="transactionManager" />
 
-    <bean id="dataSourcePopulator" class="org.apache.rave.jdbc.util.DataSourcePopulator" >
-        <property name="executeScriptQuery" value="SELECT * FROM PERSON"/>
-        <property name="scriptLocations">
-            <list>
-                <value>classpath:initial_data.sql</value>
-            </list>
-        </property>
-    </bean>
 
     <bean id="entityManagerFactory"
           class="org.apache.rave.persistence.jpa.PopulatedLocalContainerEntityManagerFactory">

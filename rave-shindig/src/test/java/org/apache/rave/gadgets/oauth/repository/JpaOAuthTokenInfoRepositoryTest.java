@@ -28,6 +28,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -36,8 +37,10 @@ import static org.junit.Assert.assertNull;
 /**
  * Test class for {@link org.apache.rave.gadgets.oauth.repository.impl.JpaOAuthTokenInfoRepository}
  */
+@Transactional
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:spring-test.xml"})
+@ContextConfiguration(locations = {"classpath:rave-shindig-test-applicationContext.xml",
+        "classpath:rave-shindig-test-dataContext.xml"})
 public class JpaOAuthTokenInfoRepositoryTest {
 
     private static final String INVALID_USER = "Invalid user";

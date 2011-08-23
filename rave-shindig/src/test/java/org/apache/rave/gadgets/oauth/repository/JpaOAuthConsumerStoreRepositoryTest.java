@@ -28,6 +28,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
@@ -36,8 +37,10 @@ import static junit.framework.Assert.assertNull;
 /**
  * Test for {@link org.apache.rave.gadgets.oauth.repository.impl.JpaOAuthConsumerStoreRepository}
  */
+@Transactional
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:spring-test.xml"})
+@ContextConfiguration(locations = {"classpath:rave-shindig-test-applicationContext.xml",
+        "classpath:rave-shindig-test-dataContext.xml"})
 public class JpaOAuthConsumerStoreRepositoryTest {
     private static final String GADGET_URI = "http://localhost:8080/samplecontainer/examples/oauth.xml";
     private static final String SERVICE_NAME_GOOGLE = "Google";
