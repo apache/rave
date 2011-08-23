@@ -36,7 +36,7 @@
         <div class="widget-a">
             <a href="<spring:url value="/app/store?referringPageId=${page.id}" />">Widget Store</a>
         </div>
-        <h1>Hello ${page.owner.username}, welcome to Rave!</h1>
+        <h1>Hello <c:out value="${page.owner.username}"/>, welcome to Rave!</h1>
     </div>
     <div id="dialog" title="Tab data" class="dialog">
         <form id="pageForm">
@@ -44,7 +44,7 @@
             <fieldset class="ui-helper-reset">
                 <label for="tab_title">Title</label>
                 <input type="text" name="tab_title" id="tab_title" value="" class="required ui-widget-content ui-corner-all" />
-                <label for="pageLayoutField">Select Page Layout:</label>
+                <label for="pageLayout">Select Page Layout:</label>
                 <select name="pageLayout" id="pageLayout">
                     <option value="columns_1" id="columns_1_id">One Column</option>
                     <option value="columns_2" id="columns_2_id" selected="selected">Two Columns</option>
@@ -62,7 +62,7 @@
     <div id="tabs" class="rave-ui-tabs">
         <c:forEach var="userPage" items="${pages}">
              <div id="tab-${userPage.id}" class="rave-ui-tab<c:if test="${page.id == userPage.id}"> rave-ui-tab-selected</c:if>" onclick="rave.viewPage(${userPage.id});">
-                <span id="pageTitle-${userPage.id}" class="pageTitle">${userPage.name}</span><c:if test="${page.id == userPage.id}"><span class="ui-icon ui-icon-close">Remove Tab</span></c:if>
+                <span id="pageTitle-${userPage.id}" class="pageTitle"><c:out value="${userPage.name}"/></span><c:if test="${page.id == userPage.id}"><span class="ui-icon ui-icon-close">Remove Tab</span></c:if>
             </div>
         </c:forEach>        
     </div>   
@@ -73,7 +73,7 @@
                 <c:forEach var="regionWidget" items="${region.regionWidgets}">
                     <div class="widget-wrapper" id="widget-${regionWidget.id}-wrapper">
                         <div class="widget-title-bar">
-                            <span id="widget-${regionWidget.id}-title">${regionWidget.widget.title}</span>
+                            <span id="widget-${regionWidget.id}-title"><c:out value="${regionWidget.widget.title}"/></span>
                             <!-- These are toolbar buttons -->
                             <div id="widget-${regionWidget.id}-toolbar" style="float:right;">
                                 <button id="widget-${regionWidget.id}-prefs"
@@ -102,7 +102,7 @@
     <script src="//ajax.aspnetcdn.com/ajax/jQuery/jquery-1.6.1.min.js"></script>
     <script src="//ajax.aspnetcdn.com/ajax/jquery.ui/1.8.13/jquery-ui.min.js"></script>
     <script src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.8.1/jquery.validate.min.js"></script>
-    <script src="${opensocial_engine_url}/js/container.js?c=1&container=default&debug=1"></script>
+    <script src="${opensocial_engine_url}/js/container.js?c=1&amp;container=default&amp;debug=1"></script>
     <script src="<spring:url value="/script/rave.js"/>"></script>
     <script src="<spring:url value="/script/rave_api.js"/>"></script>
     <script src="<spring:url value="/script/rave_opensocial.js"/>"></script>
