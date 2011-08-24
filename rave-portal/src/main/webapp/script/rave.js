@@ -137,7 +137,7 @@ var rave = rave || (function() {
         }
 
         function maximizeAction(args) {
-            addOverlay($("body"));
+            addOverlay($("#pageContent"));
             $(".region" ).sortable( "option", "disabled", true );
             $("#widget-" + args.data.id + "-wrapper").removeClass("widget-wrapper").addClass("widget-wrapper-canvas");
             $("#widget-" + args.data.id + "-max").click({id:args.data.id}, minimizeAction);
