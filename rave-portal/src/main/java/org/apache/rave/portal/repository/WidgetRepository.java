@@ -105,4 +105,12 @@ public interface WidgetRepository extends Repository<Widget> {
      * @return total number of {@link Widget}'s that match the search criteria
      */
     int getCountByStatusAndFreeText(WidgetStatus widgetStatus, String searchTerm);
+
+    /**
+     * Searches for a Widget by its url
+     *
+     * @param widgetUrl (unique) url of the Widget
+     * @return {@link Widget} if it can be found, otherwise {@literal null}
+     */
+    Widget getByUrl(String widgetUrl);
 }

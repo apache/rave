@@ -27,6 +27,7 @@ public class ViewNames {
     public static final String HOME = "home";
     public static final String STORE = "store";
     public static final String WIDGET = "widget";
+    public static final String ADD_WIDGET_FORM = "addwidget";
     public static final String NEW_ACCOUNT = "newaccount";
     public static final String USER_PROFILE = "userProfile";
     public static final String REDIRECT = "redirect:/";

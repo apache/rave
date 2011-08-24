@@ -20,87 +20,100 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ taglib tagdir="/WEB-INF/tags" prefix="rave"%>
-<jsp:useBean id="widget" scope="request" class="org.apache.rave.portal.model.Widget" />
-
-<rave:rave_generic_page pageTitle="${widget.title} - Rave">
-<div id="header">
-    <div class="header-a" >
+<%@ taglib tagdir="/WEB-INF/tags" prefix="rave" %>
+<jsp:useBean id="widget" scope="request" class="org.apache.rave.portal.model.Widget"/>
+<fmt:bundle basename="messages"/>
+<fmt:message var="titlesuffix" key="page.general.titlesuffix"/>
+<rave:rave_generic_page pageTitle="${widget.title}${titlesuffix}">
+    <div id="header">
+        <div class="header-a">
         <span class="backToPage">
-            <a href="<spring:url value="/index.html" />">Back to Rave</a>
+            <a href="<spring:url value="/index.html" />"><fmt:message key="page.general.back"/></a>
         </span>
+        </div>
+        <c:if test="${not empty referringPageId}">
+            <div class="widget-a">
+            <span>
+                <a href="<spring:url value="/app/store?referringPageId=${referringPageId}" />">
+                    <fmt:message key="page.widget.backToStore"/>
+                </a>
+            </span>
+            </div>
+        </c:if>
+        <h1><c:out value="${widget.title}"/></h1>
     </div>
-    <div class="widget-a">
-        <span>
-            <a href="<spring:url value="/app/store?referringPageId=${referringPageId}" />">Back to Store</a>
-        </span>
-    </div>
-</div>
 
 
-<div id="content">
-    <div id="widget-content">
-        <tr>
-            <td class="widgetDetailLeft">
+    <div id="content">
+        <div id="widget-content">
+
+            <div class="widgetDetailLeft">
                 <c:if test="${not empty widget.thumbnailUrl}">
                     <img class="storeWidgetThumbnail"
-                         src="${widget.thumbnailUrl}"
-                         title="${widget.title}}"
-                         alt="thumbnail"
+                         src="<c:out value="${widget.thumbnailUrl}"/>"
+                         title="<c:out value="${widget.title}"/>"
+                         alt="<fmt:message key="page.general.thumbnail"/>"
                          width="120" height="60"/>
                 </c:if>
+
                 <div class="widgetDetailMeta">
-                    <div class="widgetType">${widget.type}</div>
-                    <div class="widgetVersion"></div>
-                    <div class="widgetLastUpdated"></div>
+                    <p><fmt:message key="widget.type.${widget.type}" /></p>
                 </div>
-            </td>
-            <td class="widgetDetailRight" style="vertical-align: top; padding-left: 10px;">
+            </div>
+
+            <div class="widgetDetailCenter">
 
                 <div class="storeWidgetDetail">
-                    <div class="secondaryPageItemTitle"
-                         style="display: inline-block; vertical-align: top; padding-top: 5px;">${widget.title}
-                    </div>
-                    <div id="widgetAdded_${widget.id}" class="storeButton">
-                        <button class="storeItemButton"
-                                id="addWidget_${widget.id}"
-                                onclick="rave.api.rpc.addWidgetToPage({widgetId: ${widget.id}, pageId: ${referringPageId}});">
-                            Add to Page
-                        </button>
-                    </div>
+                    <span class="secondaryPageItemTitle"><c:out value="${widget.title}"/></span>
+                    <c:choose>
+                        <c:when test="${widget.widgetStatus eq 'PUBLISHED'}">
+                            <div id="widgetAdded_${widget.id}" class="storeButton">
+                                <button class="storeItemButton"
+                                        id="addWidget_${widget.id}"
+                                        onclick="rave.api.rpc.addWidgetToPage({widgetId: ${widget.id}, pageId: ${referringPageId}});">
+                                    <fmt:message key="page.widget.addToPage"/>
+                                </button>
+                            </div>
+                        </c:when>
+                        <c:when test="${widget.widgetStatus eq 'PREVIEW'}">
+                            <p class="warn"><fmt:message key="widget.widgetStatus.PREVIEW"/></p>
+                        </c:when>
+                    </c:choose>
                 </div>
 
 
-                <div class="storeWidgetAuthor">
-                    By:
-                        ${widget.author}
-                </div>
-                <div class="storeWidgetDesc" >
-                    ${widget.description}
-                </div>
-            </td>
-            <td>
-                <div class="widgetScreenshotTitle">Widget Preview</div>
-                <div class="widgetScreenshot">
-                    <c:if test="${not empty widget.screenshotUrl}">
-                    <img src="${widget.screenshotUrl}"
-                         alt="screenshot"
-                         title="${widget.title} Screenshot"/>
-                    </c:if>
-                </div>
-            </td>
-        </tr>
-    </table>
+                <c:if test="${not empty widget.author}">
+                    <p class="storeWidgetAuthor">
+                        <fmt:message key="widget.author"/> <c:out value="${widget.author}"/>
+                    </p>
+                </c:if>
+
+                <c:if test="${not empty widget.description}">
+                    <p class="storeWidgetDesc"><c:out value="${widget.description}"/></p>
+                </c:if>
+            </div>
+            
+            <div class="widgetDetailRight">
+                <c:if test="${not empty widget.screenshotUrl}">
+                    <div class="widgetScreenshotTitle"><fmt:message key="page.widget.widgetPreview"/></div>
+                    <div class="widgetScreenshot">
+                        <img src="${widget.screenshotUrl}"
+                             alt="<fmt:message key="page.general.screenshot"/>"
+                             title="<c:out value="${widget.title}"/> <fmt:message key="page.general.screenshot"/>"/>
+                    </div>
+                </c:if>
+            </div>
+            <div class="clear-float" >&nbsp;</div>
+        </div>
     </div>
-</div>
-<script>
-    var rave = rave || {
-        getContext : function() {
-            return "<spring:url value="/app/" />";
+    <script>
+        var rave = rave || {
+            getContext : function() {
+                return "<spring:url value="/app/" />";
+            }
         }
-    }
-</script>
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
-<script src="<spring:url value="/script/rave_api.js"/>"></script>
+    </script>
+    <script src="//ajax.aspnetcdn.com/ajax/jQuery/jquery-1.6.1.min.js"></script>
+    <script src="<spring:url value="/script/rave_api.js"/>"></script>
 
 </rave:rave_generic_page>

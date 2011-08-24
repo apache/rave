@@ -54,6 +54,8 @@
         <log4j.version>1.2.16</log4j.version>
         <junit.version>4.7</junit.version>
         <commons-lang.version>2.6</commons-lang.version>
+        <!-- Don't update to commons-validator 1.3.1, it misses a dependency -->
+        <commons-validator.version>1.3.0</commons-validator.version>
         <icu4j.version>4.6.1</icu4j.version>
         <easymock.version>3.0</easymock.version>
         <com.h2database.version>1.3.154</com.h2database.version>
@@ -252,6 +254,13 @@
                 <groupId>commons-lang</groupId>
                 <artifactId>commons-lang</artifactId>
                 <version>${commons-lang.version}</version>
+            </dependency>
+
+            <!-- Validation -->
+            <dependency>
+                <groupId>commons-validator</groupId>
+                <artifactId>commons-validator</artifactId>
+                <version>${commons-validator.version}</version>
             </dependency>
 
             <!-- Rave artifacts -->

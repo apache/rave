@@ -277,16 +277,31 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .widgetDetailLeft {
-    width: 150px;
+   padding-left: 10px;
+   padding-right: 10px;
+   vertical-align: top;
+   width: 150px;
+   float: left;
+}
+
+.widgetDetailCenter {
+    padding-left: 10px;
+    padding-right: 10px;
     vertical-align: top;
+    float: left;
+    width: 50%;
 }
 
 .widgetDetailRight {
-    width: 60%;
-    vertical-align: top;
-    padding-left: 10px;
+  padding: 0 10px;
+  width: 300px;
+  vertical-align: top;
+  float: left;
 }
 
+.widgetScreenshot img {
+  max-width: 280px;
+}
 ul.storeItems {
     padding: 0;
 }
@@ -424,6 +439,8 @@ button.widget-toolbar-btn-prefs {
     display: none;
 }
 
+/* Form fields */
+
 fieldset{
     margin: 0;
     border:none
@@ -432,23 +449,43 @@ p label {
     width: 120px;
     float: left;
     display: block;
+    position: relative;
+}
+
+label.formradio {
+    float: none;
+    left: 0;
+    margin-left: 120px;
+    margin-bottom: 0.4em;
+    margin-right: 0;
+    position: static;
+    top: auto;
+    width: auto;
 }
 
 input.long {
     width:400px;
 }
 
+
 /* Associated with JQuery validation CSS */
 .error {
     color: #ff0000;
 }
 
-label.error {
+span.error, label.error {
     font-size: 10px;
     display: block;
     float: none;
     margin: 0.5em 0 auto 120px;
 }
+
+.warn {
+  font-weight: bold;
+}
+
+/* End of form fields */
+
 /*
 .rave-ui-tabs .ui-tabs-panel { display: block; border-width: 0; padding: 1em 1.4em; background: #F2F2F2; height: 800px; }
 .rave-ui-tabs .ui-tabs-nav { margin: 0; padding: .2em .2em 0; background: #666666}

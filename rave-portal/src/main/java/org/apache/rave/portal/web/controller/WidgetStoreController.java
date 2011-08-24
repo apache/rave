@@ -19,12 +19,17 @@
 
 package org.apache.rave.portal.web.controller;
 
+import org.apache.rave.portal.model.Widget;
+import org.apache.rave.portal.model.WidgetStatus;
 import org.apache.rave.portal.service.WidgetService;
 import org.apache.rave.portal.web.util.ModelKeys;
 import org.apache.rave.portal.web.util.ViewNames;
+import org.apache.rave.portal.web.validator.NewWidgetValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -39,9 +44,12 @@ public class WidgetStoreController {
 
     private final WidgetService widgetService;
 
+    private final NewWidgetValidator widgetValidator;
+
     @Autowired
-    public WidgetStoreController(WidgetService widgetService) {
+    public WidgetStoreController(WidgetService widgetService, NewWidgetValidator validator) {
         this.widgetService = widgetService;
+        this.widgetValidator = validator;
     }
 
     /**
@@ -85,7 +93,7 @@ public class WidgetStoreController {
      * @param offset          offset within the total amount of results (to enable paging)
      * @return the view name of the main store page
      */
-    @RequestMapping(method = RequestMethod.GET, value = "/store/search")
+    @RequestMapping(method = RequestMethod.GET, value = "search")
     public String viewSearchResult(Model model, @RequestParam long referringPageId,
                                    @RequestParam String searchTerm,
                                    @RequestParam(required = false, defaultValue = "0") int offset) {
@@ -96,5 +104,47 @@ public class WidgetStoreController {
         model.addAttribute(ModelKeys.SEARCH_TERM, searchTerm);
         model.addAttribute(ModelKeys.OFFSET, offset);
         return ViewNames.STORE;
+    }
+
+    /**
+     * Shows the Add new Widget form
+     *
+     * @param model {@link Model}
+     * @return the view name of the Add new Widget form
+     */
+    @RequestMapping(method = RequestMethod.GET, value = "addwidget")
+    public String viewAddWidgetForm(Model model) {
+        final Widget widget = new Widget();
+        model.addAttribute(ModelKeys.WIDGET, widget);
+        return ViewNames.ADD_WIDGET_FORM;
+    }
+
+    /**
+     * Validates the form input, if valid, tries to store the Widget data
+     *
+     * @param widget  {@link Widget} as submitted by the user
+     * @param results {@link BindingResult}
+     * @param model   {@link Model}
+     * @return if successful the view name of the widget, otherwise the form
+     */
+    @RequestMapping(method = RequestMethod.POST, value = "doaddwidget")
+    public String viewAddWidgetResult(@ModelAttribute Widget widget, BindingResult results,
+                                      Model model) {
+        widgetValidator.validate(widget, results);
+        if (results.hasErrors()) {
+            model.addAttribute(ModelKeys.WIDGET, widget);
+            return ViewNames.ADD_WIDGET_FORM;
+        }
+        widget.setWidgetStatus(WidgetStatus.PREVIEW);
+
+        final Widget storedWidget = widgetService.registerNewWidget(widget);
+        if (storedWidget == null) {
+            results.reject("page.addwidget.result.exists");
+            model.addAttribute(ModelKeys.WIDGET, widget);
+            return ViewNames.ADD_WIDGET_FORM;
+        }
+
+        model.addAttribute(ModelKeys.WIDGET, storedWidget);
+        return ViewNames.WIDGET;
     }
 }

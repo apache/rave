@@ -75,8 +75,12 @@ values(set(@tabnews_widget_id, next value for widget_id_seq), 'Google News Gadge
 -- end widget data ----
 
 -- hamster widget
-insert into widget (id, title, url, type, widget_status)
-values(set(@hamster_widget_id, next value for widget_id_seq), 'Pet Hamster', 'http://hosting.gmodules.com/ig/gadgets/file/112581010116074801021/hamster.xml', 'OpenSocial', 'PUBLISHED');
+insert into widget (id, title, url, type, widget_status, thumbnail_url)
+values(set(@hamster_widget_id, next value for widget_id_seq), 'Pet Hamster', 'http://hosting.gmodules.com/ig/gadgets/file/112581010116074801021/hamster.xml', 'OpenSocial', 'PUBLISHED', 'http://hosting.gmodules.com/ig/gadgets/file/112581010116074801021/hamsterThumb.png');
+
+-- another hamster widget
+insert into widget (id, title, url, type, description, author, widget_status, thumbnail_url, screenshot_url)
+values(set(@another_hamster_widget_id, next value for widget_id_seq), 'Herbie Hamster Virtual Pet', 'http://hosting.gmodules.com/ig/gadgets/file/109548057311228444554/hamster.xml', 'OpenSocial', 'A cute little hamster for you to feed and look after. Watch him follow your cursor around. Click on the more tab to treat him to a strawberry. Click him then put him on the wheel and watch him play! ***NEW: make Herbie hamster your very own!', 'Naj', 'PUBLISHED', 'http://sites.google.com/site/najartsist/pets-1/herbiet.png', 'http://sites.google.com/site/najartsist/herbie-hamster/herbie.png');
 
 -- slideshare widget
 insert into widget (id, title, url, type, widget_status)

@@ -27,11 +27,15 @@ import org.apache.rave.portal.model.WidgetStatus;
 import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.repository.WidgetRepository;
 import org.apache.rave.portal.service.WidgetService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class DefaultWidgetService implements WidgetService {
+
+    private static Logger logger = LoggerFactory.getLogger(DefaultWidgetService.class);
 
     private final WidgetRepository widgetRepository;
 
@@ -103,5 +107,19 @@ public class DefaultWidgetService implements WidgetService {
         final SearchResult<Widget> searchResult = new SearchResult<Widget>(widgets, count);
         searchResult.setPageSize(pageSize);
         return searchResult;
+    }
+
+    @Override
+    public Widget getWidgetByUrl(String widgetUrl) {
+        return widgetRepository.getByUrl(widgetUrl);
+    }
+
+    @Override
+    public Widget registerNewWidget(Widget widget) {
+        if (getWidgetByUrl(widget.getUrl()) != null) {
+            logger.debug("Trying to add an existing widget for url {}", widget.getUrl());
+            return null;
+        }
+        return widgetRepository.save(widget);
     }
 }

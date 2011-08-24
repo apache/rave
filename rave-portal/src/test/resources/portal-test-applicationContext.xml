@@ -109,6 +109,7 @@
     <!-- Validators -->
     <bean id="newAccountValidator" class="org.apache.rave.portal.web.validator.NewAccountValidator"/>
     <bean id="userProfileValidator" class="org.apache.rave.portal.web.validator.UserProfileValidator"/>
+    <bean id="newWidgetValidator" class="org.apache.rave.portal.web.validator.NewWidgetValidator"/>
 
     <!-- Configuring messages.properties file -->
     <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource"

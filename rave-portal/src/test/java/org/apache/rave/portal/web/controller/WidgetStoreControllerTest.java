@@ -19,20 +19,29 @@
 
 package org.apache.rave.portal.web.controller;
 
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.rave.portal.model.Widget;
+import org.apache.rave.portal.model.WidgetStatus;
 import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.service.WidgetService;
 import org.apache.rave.portal.web.util.ModelKeys;
 import org.apache.rave.portal.web.util.ViewNames;
+import org.apache.rave.portal.web.validator.NewWidgetValidator;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.ui.ExtendedModelMap;
 import org.springframework.ui.Model;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.BindingResult;
 
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertTrue;
 import static org.easymock.EasyMock.createNiceMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
@@ -40,9 +49,8 @@ import static org.easymock.EasyMock.verify;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.sameInstance;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+
 
 /**
  * Test class for {@link WidgetStoreController}
@@ -57,7 +65,8 @@ public class WidgetStoreControllerTest {
     @Before
     public void setup() {
         widgetService = createNiceMock(WidgetService.class);
-        controller = new WidgetStoreController(widgetService);
+        NewWidgetValidator widgetValidator = new NewWidgetValidator();
+        controller = new WidgetStoreController(widgetService, widgetValidator);
     }
 
     @Test
@@ -100,7 +109,7 @@ public class WidgetStoreControllerTest {
         Model model = new ExtendedModelMap();
 
         String searchTerm = "gAdGet";
-        
+
         int offset = 0;
         int pagesize = 10;
         int totalResults = 2;
@@ -115,14 +124,77 @@ public class WidgetStoreControllerTest {
                 .andReturn(result);
         replay(widgetService);
 
-        String view = controller.viewSearchResult(model,REFERRER_ID, searchTerm, offset);
+        String view = controller.viewSearchResult(model, REFERRER_ID, searchTerm, offset);
         verify(widgetService);
 
         assertEquals(ViewNames.STORE, view);
-        final Map<String,Object> modelMap = model.asMap();
+        final Map<String, Object> modelMap = model.asMap();
         assertEquals(searchTerm, modelMap.get(ModelKeys.SEARCH_TERM));
         assertTrue(model.containsAttribute(ModelKeys.WIDGETS));
         assertEquals(offset, modelMap.get(ModelKeys.OFFSET));
         assertEquals(result, modelMap.get(ModelKeys.WIDGETS));
+    }
+
+    @Test
+    public void startAddWidget() {
+        final Model model = new ExtendedModelMap();
+        final String view = controller.viewAddWidgetForm(model);
+        assertEquals("View for add widget form", ViewNames.ADD_WIDGET_FORM, view);
+        final Widget widget = (Widget) model.asMap().get(ModelKeys.WIDGET);
+        assertNotNull("New widget in Model", widget);
+    }
+
+    @Test
+    public void doAddWidget() {
+        final String widgetUrl = "http://example.com/newwidget.xml";
+        final Model model = new ExtendedModelMap();
+        final Widget widget = new Widget();
+        widget.setTitle("Widget title");
+        widget.setUrl(widgetUrl);
+        widget.setType("OpenSocial");
+        final BindingResult errors = new BeanPropertyBindingResult(widget, "widget");
+
+        expect(widgetService.registerNewWidget(widget)).andReturn(widget);
+        replay(widgetService);
+        String view = controller.viewAddWidgetResult(widget, errors, model);
+        verify(widgetService);
+
+        assertEquals(ViewNames.WIDGET, view);
+        assertFalse("Valid widget data", errors.hasErrors());
+        final Widget fromModel = (Widget) model.asMap().get(ModelKeys.WIDGET);
+        assertEquals(widget, fromModel);
+        assertEquals("New widget has state preview", WidgetStatus.PREVIEW, fromModel.getWidgetStatus());
+    }
+
+    @Test
+    public void doAddWidget_existing() {
+        final String widgetUrl = "http://example.com/existingwidget.xml";
+        final Model model = new ExtendedModelMap();
+        final Widget widget = new Widget();
+        widget.setTitle("Widget title");
+        widget.setUrl(widgetUrl);
+        widget.setType("OpenSocial");
+        final BindingResult errors = new BeanPropertyBindingResult(widget, "widget");
+
+        expect(widgetService.registerNewWidget(widget)).andReturn(null);
+        replay(widgetService);
+        String view = controller.viewAddWidgetResult(widget, errors, model);
+        verify(widgetService);
+
+        assertEquals(ViewNames.ADD_WIDGET_FORM, view);
+        assertTrue("Valid widget data", errors.hasErrors());
+        assertNotNull(model.asMap().get(ModelKeys.WIDGET));
+    }
+
+    @Test
+    public void doAddWidget_invalid() {
+        final Widget widget = new Widget();
+        widget.setTitle("Not enough data");
+        final Model model = new ExtendedModelMap();
+        final BindingResult errors = new BeanPropertyBindingResult(widget, "widget");
+        String view = controller.viewAddWidgetResult(widget, errors, model);
+        assertTrue("Invalid widget data", errors.hasErrors());
+        assertEquals(ViewNames.ADD_WIDGET_FORM, view);
+        assertEquals(widget, model.asMap().get(ModelKeys.WIDGET));
     }
 }

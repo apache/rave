@@ -25,6 +25,7 @@ import java.util.List;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.rave.persistence.jpa.AbstractJpaRepository;
 import org.apache.rave.portal.model.Widget;
 import org.apache.rave.portal.model.WidgetStatus;
@@ -115,6 +116,21 @@ public class JpaWidgetRepository extends AbstractJpaRepository<Widget> implement
         return countResult.intValue();
     }
 
+    @Override
+    public Widget getByUrl(String widgetUrl) {
+        if (StringUtils.isBlank(widgetUrl)) {
+            throw new IllegalArgumentException("Widget URL must not be empty");
+        }
+        
+        TypedQuery<Widget> query = manager.createNamedQuery(Widget.WIDGET_GET_BY_URL, Widget.class);
+        // url is a unique field, so no paging needed
+        query.setParameter(Widget.PARAM_URL, widgetUrl);
+        final List<Widget> resultList = query.getResultList();
+        if (resultList.isEmpty()) {
+            return null;
+        }
+        return resultList.get(0);
+    }
 
     /**
      * Performs a query with a limit and offset

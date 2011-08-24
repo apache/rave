@@ -84,4 +84,21 @@ public interface WidgetService {
      */
     SearchResult<Widget> getPublishedWidgetsByFreeTextSearch(String searchTerm,
                                                              int offset, int pageSize);
+
+    /**
+     * Gets a Widget by its (unique) url
+     *
+     * @param widgetUrl url of the Widget
+     * @return {@link Widget} if it exists, otherwise {@literal null}
+     */
+    Widget getWidgetByUrl(String widgetUrl);
+
+
+    /**
+     * Persists a new {@link Widget} if it is not already present in the store
+     *
+     * @param widget new Widget to store
+     * @return Widget if it is new and can be stored, otherwise {@literal null}
+     */
+    Widget registerNewWidget(Widget widget);
 }

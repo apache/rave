@@ -30,6 +30,11 @@
             <a href="<spring:url value="/index.html" />">Back to Rave</a>
         </span>
     </div>
+    <div class="widget-a">
+        <span>
+            <a href="<spring:url value="store/addwidget"/>">Add widget</a>
+        </span>
+    </div>
     <h1>Widget Store</h1>
 </div>
 

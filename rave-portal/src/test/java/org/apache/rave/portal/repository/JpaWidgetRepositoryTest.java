@@ -29,6 +29,8 @@ import org.apache.rave.portal.model.Widget;
 import org.apache.rave.portal.model.WidgetStatus;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -37,6 +39,7 @@ import org.springframework.transaction.annotation.Transactional;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.fail;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -52,6 +55,8 @@ import static org.junit.Assert.assertThat;
         "classpath:portal-test-applicationContext.xml"})
 public class JpaWidgetRepositoryTest {
 
+    private static Logger logger = LoggerFactory.getLogger(JpaWidgetRepositoryTest.class);
+    
     @PersistenceContext
     private EntityManager sharedManager;
 
@@ -69,6 +74,25 @@ public class JpaWidgetRepositoryTest {
     public void getById_invValid() {
         Widget widget = repository.get(-1L);
         assertThat(widget, is(nullValue()));
+    }
+
+    @Test
+    public void getByUrl_valid() {
+        final String widgetUrl =
+                "http://hosting.gmodules.com/ig/gadgets/file/112581010116074801021/hamster.xml";
+        final Widget widget = repository.getByUrl(widgetUrl);
+        assertNotNull(widget);
+        assertEquals(widgetUrl, widget.getUrl());
+    }
+
+    @Test
+    public void getByUrl_empty() {
+        try{
+            repository.getByUrl("");
+            fail();
+        } catch (IllegalArgumentException e) {
+            logger.debug("Expected to fail on empty URL", e.getMessage());
+        }
     }
 
     @Test

@@ -150,6 +150,12 @@
             <artifactId>h2</artifactId>
         </dependency>
 
+        <!-- Validation -->
+        <dependency>
+            <groupId>commons-validator</groupId>
+            <artifactId>commons-validator</artifactId>
+        </dependency>
+
         <!-- JSTL -->
         <dependency>
             <groupId>org.glassfish.web</groupId>

@@ -37,6 +37,8 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertThat;
 
@@ -167,4 +169,45 @@ public class WidgetServiceTest {
 
     }
 
+    @Test
+    public void getWidgetByUrl() {
+        final String widgetUrl =
+                "http://hosting.gmodules.com/ig/gadgets/file/112581010116074801021/hamster.xml";
+        Widget widget = new Widget();
+        widget.setUrl(widgetUrl);
+        expect(repository.getByUrl(widgetUrl)).andReturn(widget);
+        replay(repository);
+
+        Widget result = service.getWidgetByUrl(widgetUrl);
+        assertNotNull(result);
+        assertEquals(result.getUrl(), widgetUrl);
+    }
+
+    @Test
+    public void registerNewWidget() {
+        final String widgetUrl =
+                "http://example.com/newwidget.xml";
+        Widget widget = new Widget();
+        widget.setUrl(widgetUrl);
+        expect(repository.getByUrl(widgetUrl)).andReturn(null);
+        expect(repository.save(widget)).andReturn(widget);
+        replay(repository);
+
+        Widget savedWidget = service.registerNewWidget(widget);
+        assertNotNull(savedWidget);
+        assertEquals(widget.getId(), savedWidget.getId());
+    }
+
+    @Test
+    public void registerExistingWidgetAsNew() {
+        final String widgetUrl =
+                "http://hosting.gmodules.com/ig/gadgets/file/112581010116074801021/hamster.xml";
+        Widget widget = new Widget();
+        widget.setUrl(widgetUrl);
+        expect(repository.getByUrl(widgetUrl)).andReturn(widget);
+        replay(repository);
+
+        Widget noWidget = service.registerNewWidget(widget);
+        assertNull("Widget already exists", noWidget);
+    }
 }
