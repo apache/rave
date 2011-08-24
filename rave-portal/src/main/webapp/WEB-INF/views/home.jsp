@@ -38,53 +38,37 @@
             <a href="<spring:url value="/app/store?referringPageId=${page.id}" />">Widget Store</a>
         </div>
         <h1>Hello <c:out value="${page.owner.username}"/>, welcome to Rave!</h1>
-    </div>
-    <div id="dialog" title="Tab data" class="dialog">
-        <form id="pageForm">
-            <div id="pageFormErrors" class="error"></div>
-            <fieldset class="ui-helper-reset">
-                <label for="tab_title">Title</label>
-                <input type="text" name="tab_title" id="tab_title" value="" class="required ui-widget-content ui-corner-all" />
-                <label for="pageLayout">Select Page Layout:</label>
-                <select name="pageLayout" id="pageLayout">
-                    <option value="columns_1" id="columns_1_id">One Column</option>
-                    <option value="columns_2" id="columns_2_id" selected="selected">Two Columns</option>
-                    <option value="columns_2wn" id="columns_2wn_id">Two Columns (wide/narrow)</option>
-                    <option value="columns_3" id="columns_3_id">Three Columns</option>
-                    <option value="columns_3nwn" id="columns_3nwn_id">Three Columns (narrow/wide/narrow)</option>
-                    <option value="columns_4" id="columns_4_id">Four Columns</option>
-                    <option value="columns_3nwn_1_bottom" id="columns_3nwn_1_bottom">Four Columns (narrow/wide/narrow/bottom)</option>
-                </select>
-            </fieldset>
-        </form>
     </div>    
     <input id="currentPageId" type="hidden" value="${page.id}" />
-    <button id="add_page">Add Page</button>
-    <%-- render the page tabs --%>
-    <div id="tabs" class="rave-ui-tabs">
-        <c:forEach var="userPage" items="${pages}">
-             <%-- determine if the current page in the list matches the page the user is viewing --%>
-             <c:set var="isCurrentPage">
-                 <c:choose>
-                     <c:when test="${page.id == userPage.id}">true</c:when>
-                     <c:otherwise>false</c:otherwise>
-                 </c:choose>
-             </c:set>                             
-             <div id="tab-${userPage.id}" class="rave-ui-tab<c:if test="${isCurrentPage}"> rave-ui-tab-selected</c:if>">
-                <div id="pageTitle-${userPage.id}" class="page-title" onclick="rave.viewPage(${userPage.id});"><c:out value="${userPage.name}"/></div>
-                <c:if test="${isCurrentPage}">                   
-                    <div id="pageMenuWrapper">
-                        <span id="pageMenuButton" class="ui-icon ui-icon-circle-triangle-s"></span>
-                        <div id="pageMenu" class="page-menu">
-                            <div id="pageMenuEdit" class="page-menu-item">Edit Page</div>
-                            <div id="pageMenuDelete" class="page-menu-item<c:if test='${fn:length(pages) == 1}'> page-menu-item-disabled</c:if>">Delete Page</div>
-                            <div id="pageMenuMove" class="page-menu-item">Move Page</div>
+    <div id="tabsHeader">      
+        <%-- render the page tabs --%>
+        <div id="tabs" class="rave-ui-tabs">
+            <c:forEach var="userPage" items="${pages}">
+                 <%-- determine if the current page in the list matches the page the user is viewing --%>
+                 <c:set var="isCurrentPage">
+                     <c:choose>
+                         <c:when test="${page.id == userPage.id}">true</c:when>
+                         <c:otherwise>false</c:otherwise>
+                     </c:choose>
+                 </c:set>                             
+                 <div id="tab-${userPage.id}" class="rave-ui-tab<c:if test="${isCurrentPage}"> rave-ui-tab-selected</c:if>">
+                    <div id="pageTitle-${userPage.id}" class="page-title" onclick="rave.viewPage(${userPage.id});"><c:out value="${userPage.name}"/></div>
+                    <c:if test="${isCurrentPage}">                   
+                        <div id="pageMenuWrapper">
+                            <span id="pageMenuButton" class="ui-icon ui-icon-circle-triangle-s" title="Page Actions Menu"></span>
+                            <div id="pageMenu" class="page-menu">
+                                <div id="pageMenuEdit" class="page-menu-item">Edit Page</div>
+                                <div id="pageMenuDelete" class="page-menu-item<c:if test='${fn:length(pages) == 1}'> page-menu-item-disabled</c:if>">Delete Page</div>
+                                <div id="pageMenuMove" class="page-menu-item">Move Page</div>
+                            </div>
                         </div>
-                    </div>
-                </c:if>
-            </div>
-        </c:forEach>        
-    </div>   
+                    </c:if>
+                </div>
+            </c:forEach>        
+            <%-- display the add page button at the end of the tabs --%>
+            <button id="add_page" title="Add a New Page" style="display: none;"></button>
+        </div>   
+    </div>
     <%--render the main page content (regions/widgets) --%>
     <div id="pageContent">
         <c:forEach var="region" items="${page.regions}">
@@ -114,9 +98,27 @@
                 </c:forEach>
             </div>
         </c:forEach>
+        <div class="clear-float">&nbsp;</div>
     </div>
-
-    <div class="clear-float">&nbsp;</div>
+    <div id="dialog" title="Add a New Page" class="dialog">
+        <form id="pageForm">
+            <div id="pageFormErrors" class="error"></div>
+            <fieldset class="ui-helper-reset">
+                <label for="tab_title">Title</label>
+                <input type="text" name="tab_title" id="tab_title" value="" class="required ui-widget-content ui-corner-all" />
+                <label for="pageLayout">Select Page Layout:</label>
+                <select name="pageLayout" id="pageLayout">
+                    <option value="columns_1" id="columns_1_id">One Column</option>
+                    <option value="columns_2" id="columns_2_id" selected="selected">Two Columns</option>
+                    <option value="columns_2wn" id="columns_2wn_id">Two Columns (wide/narrow)</option>
+                    <option value="columns_3" id="columns_3_id">Three Columns</option>
+                    <option value="columns_3nwn" id="columns_3nwn_id">Three Columns (narrow/wide/narrow)</option>
+                    <option value="columns_4" id="columns_4_id">Four Columns</option>
+                    <option value="columns_3nwn_1_bottom" id="columns_3nwn_1_bottom">Four Columns (narrow/wide/narrow/bottom)</option>
+                </select>
+            </fieldset>
+        </form>
+    </div>    
     <script src="//cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
     <script src="//ajax.aspnetcdn.com/ajax/jQuery/jquery-1.6.1.min.js"></script>
     <script src="//ajax.aspnetcdn.com/ajax/jquery.ui/1.8.13/jquery-ui.min.js"></script>

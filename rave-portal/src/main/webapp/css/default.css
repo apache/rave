@@ -19,11 +19,14 @@
 * This is the same as rave.css used for the website.
 * FIXME: where is rave.css?
 */
+html {
+    background-color: #EBEBEB;
+}
 
 body {
     color: #000000;
     font-size: 62.5%;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: Arial, Helvetica, sans-serif;   
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#D7D7D3", endColorstr="#EBEBEB");
     background: -moz-linear-gradient(center top , #D7D7D3 0%, #EBEBEB 50%) repeat scroll 0 0 transparent;
     background: -webkit-gradient(linear, left top, left bottom, from(#D7D7D3), to(#EBEBEB));
@@ -176,7 +179,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .widget-prefs-label {
-    vertical-align: top;
+    vertical-align: top;    
     font-size: 0.8em;
     text-align: right;
 }
@@ -486,11 +489,16 @@ span.error, label.error {
 
 /* End of form fields */
 
-/*
-.rave-ui-tabs .ui-tabs-panel { display: block; border-width: 0; padding: 1em 1.4em; background: #F2F2F2; height: 800px; }
-.rave-ui-tabs .ui-tabs-nav { margin: 0; padding: .2em .2em 0; background: #666666}
-.rave-ui-tabs add_tab { cursor: pointer; }
-*/
+#tabsHeader {
+    background-color: #FFFFFF;
+}
+
+#tabs {    
+    border-bottom: 1px solid #B4C4CF;
+    padding: 10px 15px 0 13px;
+    white-space: nowrap;
+}
+
 .rave-ui-tab {
     background-color: #FFFFFF;
     border: 1px solid #B4C4CF;
@@ -498,31 +506,43 @@ span.error, label.error {
     display: inline-block;
     font-style: italic;
     font-weight: normal;
-    height: 25px;
+    height: 25px; 
     position: relative;
-    top: 4px;    
+    top: 1px;    
 }
 
 .rave-ui-tab-selected {
-    background-color: #EFF3F5;
-    border-bottom: 1px solid #EFF3F5;
+    background-color: #D7D7D3;
+    border-bottom: 1px solid #D7D7D3;
     color: #000000;
     font-style: normal;
     font-weight: bold;
 }
 
-
-#tabs { margin-top: 1em; length: 95%; }
-#tabs li .ui-icon-close { float: left; margin: 0.4em 0.2em 0 0; cursor: pointer; }
 #dialog {
     width:400px;
+    display: none;
 }
 #dialog label { display:block; }
 #dialog input { display:block; }
 #dialog label { margin-top: 0.5em; }
 #dialog input { width: 95%; }
 #dialog textarea { width: 95%; }
-#add_page { cursor: pointer; }
+#add_page { 
+    cursor: pointer; 
+    width: 18px; 
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 10px;
+    padding-bottom: 4px;
+    padding-top: 3px;
+}
+
+#pageContent {
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#D7D7D3", endColorstr="#EBEBEB");
+    background: -moz-linear-gradient(center top , #D7D7D3 0%, #EBEBEB 50%) repeat scroll 0 0 transparent;
+    background: -webkit-gradient(linear, left top, left bottom, from(#D7D7D3), to(#EBEBEB));
+}
 
 .page-title {
     display: inline-block;

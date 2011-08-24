@@ -150,19 +150,21 @@ rave.layout = rave.layout || (function() {
     function init() {
         // add_page button to open the dialog for creating a new page
         $( "#add_page" )
-                .button()
+                .button({ 
+                    text: false,
+                    icons: {primary:'ui-icon-plusthick'} 
+                })
                 .click(function() {
-                        $dialog.dialog( "open" );
-                });
+                    $dialog.dialog( "open" );
+                })
+                .show();
 
-       pageMenu.init();
-
+        pageMenu.init();
     }
    
     // public rave.layout API
     return {
         init: init,
         getCurrentPageId: getCurrentPageId
-    };
-    
+    };    
 })();
