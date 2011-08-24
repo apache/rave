@@ -524,3 +524,26 @@ span.error, label.error {
 #dialog input { width: 95%; }
 #dialog textarea { width: 95%; }
 #add_page { cursor: pointer; }
+
+/* page menu related styles */
+#pageMenuWrapper {
+    position: relative;   
+    display: inline-block;
+    vertical-align: middle;
+}
+.page-menu {
+    border: 1px solid black; 
+    position: absolute; 
+    display: none; 
+    left: 18px; 
+    top: 0px;
+    width: 80px;   
+    background-color: #FFFFFF;
+    z-index: 1000;
+}
+.page-menu-item {
+    padding: 3px;
+}
+.page-menu-item:hover {
+    background-color: #B4C4CF;
+}

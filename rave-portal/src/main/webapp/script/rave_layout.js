@@ -20,8 +20,7 @@
 var rave = rave || {};
 rave.layout = rave.layout || (function() {
     var $tab_title_input = $("#tab_title"),
-        $page_layout_input = $("#pageLayout"),
-        $tab_content_input = $("#tab_content");
+        $page_layout_input = $("#pageLayout");
         
     // modal dialog init: custom buttons and a "close" callback reseting the form inside
     var $dialog = $( "#dialog" ).dialog({
@@ -46,7 +45,81 @@ rave.layout = rave.layout || (function() {
    
     // define the form object    
     var $form = $("#pageForm", $dialog);  
+    
+    // page menu related functions
+    var pageMenu = (function() {
+        var $button = $("#pageMenuButton");
+        var $menu = $("#pageMenu");
+        var $menuItemEdit = $("#pageMenuEdit");
+        var $menuItemDelete = $("#pageMenuDelete");
+        var $menuItemMove = $("#pageMenuMove");
+        
+        function hideMenu() {
+            $menu.hide();
+        }
+        
+        function showMenu() {
+            $menu.show();
+        }
+        
+        /**
+         * Initializes the private pageMenu closure
+         * - binds click event handler to menu button
+         * - binds menu item click event handlers
+         * - binds body click event handler to close the menu
+         */
+        function init() {
+            // initialize the page menu and button
+            $button.bind('click', function(event) {  
+                $menu.toggle();
+                // prevent the menu button click event from bubbling up to parent 
+                // DOM object event handlers such as the page tab click event
+                event.stopPropagation();
+            });         
 
+            // setup the edit page menu item
+            $menuItemEdit.bind('click', function(event) {
+                alert("Edit not yet implemented!");
+                pageMenu.hide();
+                // prevent the menu button click event from bubbling up to parent 
+                // DOM object event handlers such as the page tab click event
+                event.stopPropagation();
+            });
+
+            // setup the delete page menu item
+            $menuItemDelete.bind('click', function(event) {
+                // send the rpc request to delete the page
+                rave.api.rest.deletePage({pageId: getCurrentPageId(), successCallback: rave.viewPage});  
+                pageMenu.hide();
+                // prevent the menu button click event from bubbling up to parent 
+                // DOM object event handlers such as the page tab click event
+                event.stopPropagation();
+            });
+
+
+            // setup the edit page menu item
+            $menuItemMove.bind('click', function(event) {
+                alert("Move not yet implemented!");
+                pageMenu.hide();
+                // prevent the menu button click event from bubbling up to parent 
+                // DOM object event handlers such as the page tab click event
+                event.stopPropagation();
+            });       
+
+            // close the page menu if the user clicks outside of it           
+            $("html").click(pageMenu.hide);
+        }
+        
+        return {
+            init: init,
+            hide: hideMenu,
+            show: showMenu
+        }
+    })();
+
+    /**
+     * Submits the RPC call to add a new page if form validation passes
+     */        
     function addPage() {
         // if the form has passed validation submit the request
         if ($("#pageForm").valid()) {        
@@ -61,13 +134,18 @@ rave.layout = rave.layout || (function() {
                                   } 
             });      
         }
-    }
+    }      
     
-    function deletePage(pageId) {
-        // send the rpc request to delete the page
-        rave.api.rest.deletePage({pageId: pageId, successCallback: rave.viewPage});  
+    /**
+     * Returns the pageId of the currently viewed page
+     */
+    function getCurrentPageId() {
+        return $("#currentPageId").val();
     }
    
+   /***
+    * initializes the rave.layout namespace code
+    */
     function init() {
         // add_page button to open the dialog for creating a new page
         $( "#add_page" )
@@ -76,17 +154,14 @@ rave.layout = rave.layout || (function() {
                         $dialog.dialog( "open" );
                 });
 
-        // close icon: removing the tab on click
-        // TODO - move this into a common page menu in the future along with edit page, etc
-        $( "#tabs span.ui-icon-close" ).live( "click", function() {
-                var pageId = this.parentNode.id.replace("tab-","");            
-                deletePage(pageId);                       
-        });    
+       pageMenu.init();
+
     }
    
     // public rave.layout API
     return {
-        init: init 
+        init: init,
+        getCurrentPageId: getCurrentPageId
     };
     
 })();

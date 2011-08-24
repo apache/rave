@@ -56,13 +56,32 @@
                 </select>
             </fieldset>
         </form>
-    </div>
+    </div>    
+    <input id="currentPageId" type="hidden" value="${page.id}" />
     <button id="add_page">Add Page</button>
     <%-- render the page tabs --%>
     <div id="tabs" class="rave-ui-tabs">
         <c:forEach var="userPage" items="${pages}">
-             <div id="tab-${userPage.id}" class="rave-ui-tab<c:if test="${page.id == userPage.id}"> rave-ui-tab-selected</c:if>" onclick="rave.viewPage(${userPage.id});">
-                <span id="pageTitle-${userPage.id}" class="pageTitle"><c:out value="${userPage.name}"/></span><c:if test="${page.id == userPage.id}"><span class="ui-icon ui-icon-close">Remove Tab</span></c:if>
+             <%-- determine if the current page in the list matches the page the user is viewing --%>
+             <c:set var="isCurrentPage">
+                 <c:choose>
+                     <c:when test="${page.id == userPage.id}">true</c:when>
+                     <c:otherwise>false</c:otherwise>
+                 </c:choose>
+             </c:set>                 
+            
+             <div id="tab-${userPage.id}" class="rave-ui-tab<c:if test="${isCurrentPage}"> rave-ui-tab-selected</c:if>" onclick="rave.viewPage(${userPage.id});">
+                <span id="pageTitle-${userPage.id}" class="pageTitle"><c:out value="${userPage.name}"/></span>
+                <c:if test="${isCurrentPage}">                   
+                    <div id="pageMenuWrapper">
+                        <span id="pageMenuButton" class="ui-icon ui-icon-circle-triangle-s"></span>
+                        <div id="pageMenu" class="page-menu">
+                            <div id="pageMenuEdit" class="page-menu-item">Edit Page</div>
+                            <div id="pageMenuDelete" class="page-menu-item">Delete Page</div>
+                            <div id="pageMenuMove" class="page-menu-item">Move Page</div>
+                        </div>
+                    </div>
+                </c:if>
             </div>
         </c:forEach>        
     </div>   
