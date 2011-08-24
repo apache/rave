@@ -53,7 +53,7 @@ rave.layout = rave.layout || (function() {
         var $menuItemEdit = $("#pageMenuEdit");
         var $menuItemDelete = $("#pageMenuDelete");
         var $menuItemMove = $("#pageMenuMove");
-        
+                        
         function hideMenu() {
             $menu.hide();
         }
@@ -86,16 +86,17 @@ rave.layout = rave.layout || (function() {
                 event.stopPropagation();
             });
 
-            // setup the delete page menu item
-            $menuItemDelete.bind('click', function(event) {
-                // send the rpc request to delete the page
-                rave.api.rest.deletePage({pageId: getCurrentPageId(), successCallback: rave.viewPage});  
-                pageMenu.hide();
-                // prevent the menu button click event from bubbling up to parent 
-                // DOM object event handlers such as the page tab click event
-                event.stopPropagation();
-            });
-
+            // setup the delete page menu item if it is not disabled
+            if (!$menuItemDelete.hasClass("page-menu-item-disabled")) {                            
+                $menuItemDelete.bind('click', function(event) {
+                    // send the rpc request to delete the page
+                    rave.api.rest.deletePage({pageId: getCurrentPageId(), successCallback: rave.viewPage});  
+                    pageMenu.hide();
+                    // prevent the menu button click event from bubbling up to parent 
+                    // DOM object event handlers such as the page tab click event
+                    event.stopPropagation();
+                });
+            }
 
             // setup the edit page menu item
             $menuItemMove.bind('click', function(event) {

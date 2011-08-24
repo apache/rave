@@ -22,6 +22,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="portal" uri="http://www.apache.org/rave/tags" %>
 <%@ taglib tagdir="/WEB-INF/tags" prefix="rave"%>
 <jsp:useBean id="pages" type="java.util.List<org.apache.rave.portal.model.Page>" scope="request"/>
@@ -68,16 +69,15 @@
                      <c:when test="${page.id == userPage.id}">true</c:when>
                      <c:otherwise>false</c:otherwise>
                  </c:choose>
-             </c:set>                 
-            
-             <div id="tab-${userPage.id}" class="rave-ui-tab<c:if test="${isCurrentPage}"> rave-ui-tab-selected</c:if>" onclick="rave.viewPage(${userPage.id});">
-                <span id="pageTitle-${userPage.id}" class="pageTitle"><c:out value="${userPage.name}"/></span>
+             </c:set>                             
+             <div id="tab-${userPage.id}" class="rave-ui-tab<c:if test="${isCurrentPage}"> rave-ui-tab-selected</c:if>">
+                <div id="pageTitle-${userPage.id}" class="page-title" onclick="rave.viewPage(${userPage.id});"><c:out value="${userPage.name}"/></div>
                 <c:if test="${isCurrentPage}">                   
                     <div id="pageMenuWrapper">
                         <span id="pageMenuButton" class="ui-icon ui-icon-circle-triangle-s"></span>
                         <div id="pageMenu" class="page-menu">
                             <div id="pageMenuEdit" class="page-menu-item">Edit Page</div>
-                            <div id="pageMenuDelete" class="page-menu-item">Delete Page</div>
+                            <div id="pageMenuDelete" class="page-menu-item<c:if test='${fn:length(pages) == 1}'> page-menu-item-disabled</c:if>">Delete Page</div>
                             <div id="pageMenuMove" class="page-menu-item">Move Page</div>
                         </div>
                     </div>
