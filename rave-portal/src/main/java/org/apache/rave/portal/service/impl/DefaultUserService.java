@@ -131,6 +131,7 @@ public class DefaultUserService implements UserService {
 
 	 @Override
 	 public void updateUserProfile(User user) {
-		  System.out.println("Updating user profile");
-	 }
+         // TODO implement this
+         throw new UnsupportedOperationException("Updating user profile");
+ 	 }
 }
