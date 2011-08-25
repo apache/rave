@@ -126,6 +126,15 @@ public class PageApi {
         }.getResult();
     }
     
+
+    /**
+     * Adds a new page
+     * 
+     * @param pageName the new page name
+     * @param pageLayoutCode the layout code for this new page
+     * @return an {@link RpcOperation} containing the new page or any
+     *         errors encountered.
+     */
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "add")
     public RpcResult<Page> addPage(@RequestParam final String pageName,
@@ -135,6 +144,32 @@ public class PageApi {
              public Page execute() {
                  return pageService.addNewPage(pageName, pageLayoutCode);
              }
+        }.getResult();        
+    }
+    
+    /**
+     * Moves a page to a new render position
+     * 
+     * @param pageId the pageId to move
+     * @param moveAfterPageId the pageId to move after in render order
+     * @return an {@link RpcOperation} containing the updated page or any
+     *         errors encountered.
+     */
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.POST, value = "{pageId}/move")
+    public RpcResult<Page> movePage(@PathVariable final long pageId, 
+                                    @RequestParam(required=false) final Long moveAfterPageId) {
+        return new RpcOperation<Page>() {
+            @Override
+            public Page execute() {
+                Page page = null;
+                if (moveAfterPageId == null) {
+                    page = pageService.movePageToDefault(pageId);
+                } else {
+                    page = pageService.movePage(pageId, moveAfterPageId);
+                }
+                return page;
+            }
         }.getResult();        
     }
 }

@@ -34,18 +34,25 @@ import static org.junit.Assert.assertThat;
 /** */
 public class PageApiTest {
 
-    private static final String PARAM_ERROR_MESSAGE = "Target Region does not exist";
-    private static final String INTERNAL_ERROR_MESSAGE = "Internal Error";
+    private final String PARAM_ERROR_MESSAGE = "Target Region does not exist";
+    private final String INTERNAL_ERROR_MESSAGE = "Internal Error";
     private PageApi pageApi;
     private PageService pageService;
-    private static final long REGION_WIDGET_ID = 35;
-    private static final int NEW_POSITION = 3;
+    private final long REGION_WIDGET_ID = 35;
+    private final int NEW_POSITION = 3;
+    private final long PAGE_ID = 20L;
+    private final long PAGE_2_ID = 38L;
+    
+    private Page page, page2;
 
 
     @Before
     public void setup() {
         pageService = createMock(PageService.class);
         pageApi = new PageApi(pageService);
+        
+        page = new Page(PAGE_ID);
+        page2 = new Page(PAGE_2_ID);
     }
 
     @Test
@@ -237,4 +244,34 @@ public class PageApiTest {
         assertThat(result.getErrorCode(), is(RpcResult.ErrorCode.INTERNAL_ERROR));
         assertThat(result.getErrorMessage(), is(equalTo(INTERNAL_ERROR_MESSAGE)));
     }
+    
+    @Test
+    public void movePage_nonNullMoveAfterPageId() {
+        expect(pageService.movePage(PAGE_ID, PAGE_2_ID)).andReturn(page);
+        replay(pageService);
+                
+        RpcResult result = pageApi.movePage(PAGE_ID, PAGE_2_ID);                
+        
+        verify(pageService);        
+        assertThat(result, is(notNullValue()));
+        assertThat((Page)result.getResult(), is(page));
+        assertThat(result.isError(), is(false));
+        assertThat(result.getErrorCode(), is(RpcResult.ErrorCode.NO_ERROR));
+        assertThat(result.getErrorMessage(), is(nullValue()));
+    }    
+    
+    @Test
+    public void movePage_nullMoveAfterPageId() {
+        expect(pageService.movePageToDefault(PAGE_2_ID)).andReturn(page2);
+        replay(pageService);
+                
+        RpcResult result = pageApi.movePage(PAGE_2_ID, null);                
+        
+        verify(pageService);        
+        assertThat(result, is(notNullValue()));
+        assertThat((Page)result.getResult(), is(page2));
+        assertThat(result.isError(), is(false));
+        assertThat(result.getErrorCode(), is(RpcResult.ErrorCode.NO_ERROR));
+        assertThat(result.getErrorMessage(), is(nullValue()));
+    }      
 }

@@ -50,7 +50,13 @@
                          <c:when test="${page.id == userPage.id}">true</c:when>
                          <c:otherwise>false</c:otherwise>
                      </c:choose>
-                 </c:set>                             
+                 </c:set>      
+                 <c:set var="hasOnlyOnePage">
+                      <c:choose>
+                         <c:when test="${fn:length(pages) == 1}">true</c:when>
+                         <c:otherwise>false</c:otherwise>
+                     </c:choose>
+                 </c:set>                       
                  <div id="tab-${userPage.id}" class="rave-ui-tab<c:if test="${isCurrentPage}"> rave-ui-tab-selected</c:if>">
                     <div id="pageTitle-${userPage.id}" class="page-title" onclick="rave.viewPage(${userPage.id});"><c:out value="${userPage.name}"/></div>
                     <c:if test="${isCurrentPage}">                   
@@ -58,8 +64,8 @@
                             <span id="pageMenuButton" class="ui-icon ui-icon-circle-triangle-s" title="Page Actions Menu"></span>
                             <div id="pageMenu" class="page-menu">
                                 <div id="pageMenuEdit" class="page-menu-item">Edit Page</div>
-                                <div id="pageMenuDelete" class="page-menu-item<c:if test='${fn:length(pages) == 1}'> page-menu-item-disabled</c:if>">Delete Page</div>
-                                <div id="pageMenuMove" class="page-menu-item">Move Page</div>
+                                <div id="pageMenuDelete" class="page-menu-item<c:if test='${hasOnlyOnePage}'> page-menu-item-disabled</c:if>">Delete Page</div>
+                                <div id="pageMenuMove" class="page-menu-item<c:if test='${hasOnlyOnePage}'> page-menu-item-disabled</c:if>">Move Page</div>
                             </div>
                         </div>
                     </c:if>
@@ -119,6 +125,21 @@
             </fieldset>
         </form>
     </div>    
+    <div id="movePageDialog" title="Move Page" class="dialog">
+        <div>Move this page:</div>
+        <form id="movePageForm">
+            <select id="moveAfterPageId">
+                <c:if test="${page.renderSequence != 1}">
+                    <option value="-1">To First Tab (Set as Default)</option>
+                </c:if>
+                <c:forEach var="userPage" items="${pages}">
+                    <c:if test="${userPage.id != page.id}">
+                        <option value="${userPage.id}">After <c:out value="${userPage.name}"/></option>
+                    </c:if>
+                </c:forEach>
+            </select>
+        </form>
+    </div>
     <script src="//cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
     <script src="//ajax.aspnetcdn.com/ajax/jQuery/jquery-1.6.1.min.js"></script>
     <script src="//ajax.aspnetcdn.com/ajax/jquery.ui/1.8.13/jquery-ui.min.js"></script>

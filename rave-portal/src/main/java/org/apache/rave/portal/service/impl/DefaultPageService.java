@@ -50,6 +50,8 @@ public class DefaultPageService implements PageService {
     private final PageLayoutRepository pageLayoutRepository;
     private final UserService userService;    
     private final String defaultPageName;
+    
+    private final long MOVE_PAGE_DEFAULT_POSITION_INDEX = -1L;
 
     @Autowired
     public DefaultPageService(PageRepository pageRepository, 
@@ -146,6 +148,18 @@ public class DefaultPageService implements PageService {
         Region region = page.getRegions().get(0);
         return createWidgetInstance(widget, region, 0);
     }
+    
+    @Override
+    @Transactional
+    public Page movePage(long pageId, long moveAfterPageId) {
+        return doMovePage(pageId, moveAfterPageId);
+    }    
+    
+    @Override
+    @Transactional
+    public Page movePageToDefault(long pageId) {    
+        return doMovePage(pageId, MOVE_PAGE_DEFAULT_POSITION_INDEX);    
+    }
 
     private RegionWidget createWidgetInstance(Widget widget, Region region, int position) {
         RegionWidget regionWidget = new RegionWidget();
@@ -237,5 +251,41 @@ public class DefaultPageService implements PageService {
                 pageRepository.save(page);
             }
         }       
-    }
+    } 
+    
+    private Page doMovePage(long pageId, long moveAfterPageId) {
+        // get the logged in user
+        User user = userService.getAuthenticatedUser();
+
+        // get the page to move and the page to move after
+        Page movingPage = pageRepository.get(pageId);
+        Page afterPage = null;
+        int newIndex = 0;
+        
+        // check to see if we should move the page to beginning
+        if (moveAfterPageId != MOVE_PAGE_DEFAULT_POSITION_INDEX) {
+            afterPage = pageRepository.get(moveAfterPageId);
+        }
+
+        // get all of the user's pages
+        // the pageRepository returns an un-modifiable list
+        // so we need to create a modifyable arraylist
+        List<Page> pages = new ArrayList<Page>(pageRepository.getAllPages(user.getId()));
+
+        // first remove it from the list         
+        if (!pages.remove(movingPage)) {
+            throw new RuntimeException("unable to find pageId " + pageId + " attempted to be moved for user " + user);
+        }
+
+        // ...now re-insert in new location
+        if (afterPage != null) {
+            newIndex = pages.indexOf(afterPage) + 1;
+        }
+        pages.add(newIndex, movingPage);
+
+        // persist the new page order
+        updatePageRenderSequences(pages);
+        
+        return movingPage;
+    }    
 }

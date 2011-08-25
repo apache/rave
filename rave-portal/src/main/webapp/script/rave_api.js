@@ -166,6 +166,28 @@ rave.api = rave.api || (function() {
                     }
                 }).error(handleError);
         }
+        
+        function movePage(args) {
+            // the moveAfterPageId attribute could be undefined if moving
+            // to the first position. In that case don't send a moveAfterPageId
+            // post parameter
+            var data = {};
+            if (args.moveAfterPageId) {
+                data["moveAfterPageId"] = args.moveAfterPageId;
+            }
+            
+            $.post(rave.getContext() + path + "page/" + args.pageId + "/move",
+                data,
+                function(result) {
+                    if (result.error) {                   
+                        handleRpcError(result);                        
+                    } else {
+                        if (typeof args.successCallback == 'function') {
+                            args.successCallback(result);
+                        }
+                    }
+                }).error(handleError);
+        }        
 
         //TODO: Create a more robust error handling system and interrogation of RPC results
         function handleRpcError(rpcResult) {
@@ -187,7 +209,8 @@ rave.api = rave.api || (function() {
             moveWidget : moveWidgetOnPage,
             addWidgetToPage : addWidgetToPage,
             removeWidget : deleteWidgetOnPage,
-            addPage: addPage
+            addPage: addPage,
+            movePage: movePage
         };
 
     })();

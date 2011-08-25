@@ -19,6 +19,8 @@
 
 var rave = rave || {};
 rave.layout = rave.layout || (function() {
+    var MOVE_PAGE_DEFAULT_POSITION_IDX = -1;
+    
     var $tab_title_input = $("#tab_title"),
         $page_layout_input = $("#pageLayout");
         
@@ -40,6 +42,26 @@ rave.layout = rave.layout || (function() {
             close: function() {
                     $form[ 0 ].reset();
                     $("#pageFormErrors").html("");
+            }
+    });        
+   
+    // the modal dialog for moving a page
+    var $movePageDialog = $("#movePageDialog").dialog({
+            autoOpen: false,
+            modal: true,
+            buttons: {
+                    Move: function() {
+                            movePage();                            
+                    },
+                    Cancel: function() {
+                            $( this ).dialog( "close" );
+                    }
+            },
+            open: function() {
+                    $("#moveAfterPageId").focus();
+            },
+            close: function() {
+                    $("#movePageForm")[0].reset();                    
             }
     });        
    
@@ -98,14 +120,16 @@ rave.layout = rave.layout || (function() {
                 });
             }
 
-            // setup the edit page menu item
-            $menuItemMove.bind('click', function(event) {
-                alert("Move not yet implemented!");
-                pageMenu.hide();
-                // prevent the menu button click event from bubbling up to parent 
-                // DOM object event handlers such as the page tab click event
-                event.stopPropagation();
-            });       
+            // setup the edit page menu item if it is not disabled
+            if (!$menuItemDelete.hasClass("page-menu-item-disabled")) {
+                $menuItemMove.bind('click', function(event) {
+                    pageMenu.hide();                 
+                    $movePageDialog.dialog("open");                                             
+                    // prevent the menu button click event from bubbling up to parent 
+                    // DOM object event handlers such as the page tab click event
+                    event.stopPropagation();
+                });      
+            }
 
             // close the page menu if the user clicks outside of it           
             $("html").click(pageMenu.hide);
@@ -138,12 +162,29 @@ rave.layout = rave.layout || (function() {
     }      
     
     /**
+     * Submits the RPC call to move the page to a new render sequence
+     */        
+    function movePage() {
+        var moveAfterPageId = $("#moveAfterPageId").val();        
+        var args = { pageId: $("#currentPageId").val(),
+                     successCallback: function(result) { rave.viewPage(result.result.id); }
+                   };
+       
+        if (moveAfterPageId != MOVE_PAGE_DEFAULT_POSITION_IDX) {
+            args["moveAfterPageId"] = moveAfterPageId;
+        }
+                          
+        // send the rpc request to move the new page
+        rave.api.rpc.movePage(args);              
+    }          
+    
+    /**
      * Returns the pageId of the currently viewed page
      */
     function getCurrentPageId() {
         return $("#currentPageId").val();
     }
-   
+       
    /***
     * initializes the rave.layout namespace code
     */

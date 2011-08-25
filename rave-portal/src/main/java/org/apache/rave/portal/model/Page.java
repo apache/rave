@@ -28,12 +28,15 @@ import java.util.List;
 /**
  * A page, which consists of regions, and which may be owned by a {@link User} (note the ownership will likely need to
  * become more flexible to enable things like group ownership in the future).
+ * 
+ * TODO: not all database providers will be able to support deferrable constraints
+ * so for the time being I'm commenting out the owner/render sequence since it
+ * will get updated in batches and blow up
+ * @UniqueConstraint(columnNames={"owner_id","render_sequence"}
+ * 
  */
 @Entity
-@Table(name="page", uniqueConstraints={
-                        @UniqueConstraint(columnNames={"owner_id","name"}),
-                        @UniqueConstraint(columnNames={"owner_id","render_sequence"})}
-)
+@Table(name="page", uniqueConstraints={@UniqueConstraint(columnNames={"owner_id","name"})})
 @SequenceGenerator(name="pageIdSeq", sequenceName = "page_id_seq")
 @NamedQueries({
         @NamedQuery(name = "Page.getByUserId", query="SELECT p FROM Page p WHERE p.owner.id = :userId ORDER BY p.renderSequence")

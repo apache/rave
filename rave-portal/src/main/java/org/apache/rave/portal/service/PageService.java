@@ -111,4 +111,22 @@ public interface PageService {
      * @return the region from which the widget was deleted
      */
     Region removeWidgetFromPage(long regionWidgetId);
+    
+    /**
+     * Moves a page to be rendered after another page in order for a user
+     * 
+     * @param pageId the pageId of the page to move
+     * @param moveAfterPageId the pageId of the page you want to move after or 
+     *                        -1 if you want this to be the first page
+     * @return the updated Page object containing its new render sequence
+     */
+    Page movePage(long pageId, long moveAfterPageId);
+    
+    /**
+     * Moves a page to be rendered as the first page for a user
+     * 
+     * @param pageId the pageId of the page to move to the default position
+     * @return the updated Page object containing its new render sequence
+     */
+    Page movePageToDefault(long pageId);    
 }

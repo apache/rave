@@ -205,6 +205,15 @@ public class RegionWidget implements BasicEntity, Serializable {
 
     @Override
     public String toString() {
-        return "RegionWidget{" + "id=" + id + ", widget=" + widget + ", region=" + region + ", renderPosition=" + renderPosition + ", renderOrder=" + renderOrder + ", collapsed=" + collapsed + ", preferences=" + preferences + '}';
+        StringBuilder sb = new StringBuilder();
+        sb.append("RegionWidget{");
+        sb.append("id=");
+        sb.append(id);
+        sb.append(",widget=");
+        sb.append(widget);
+        sb.append(",region=");
+        sb.append(region);
+        sb.append("}");
+        return sb.toString();
     }
 }
