@@ -190,31 +190,6 @@ public class DefaultPageService implements PageService {
         target.getRegionWidgets().add(newPosition, widget);
     }
 
-    private static <T> T getFromRepository(long id, Repository<T> repo) {
-        T object = repo.get(id);
-        if (object == null) {
-            throw new IllegalArgumentException("Could not find object of given id in " + repo.getClass().getSimpleName());
-        }
-        return object;
-    }
-
-    private static void updateRenderSequences(List<RegionWidget> regionWidgets) {
-        int count = 0;
-        for (RegionWidget widget : regionWidgets) {
-            widget.setRenderOrder(count);
-            count++;
-        }
-    }
-
-    private static RegionWidget findRegionWidgetById(Long id, List<RegionWidget> regionWidgets) {
-        for (RegionWidget widget : regionWidgets) {
-            if (widget.getId().equals(id)) {
-                return widget;
-            }
-        }
-        throw new IllegalArgumentException("Invalid RegionWidget ID");
-    }
-
     private Page addNewPage(User user, String pageName, String pageLayoutCode) {
         PageLayout pageLayout = pageLayoutRepository.getByPageLayoutCode(pageLayoutCode);
         
@@ -238,7 +213,8 @@ public class DefaultPageService implements PageService {
         
         return page;
     }
-        
+
+    //TODO: If there is a reason why this is annotated @Transactional when the calling public method is @Transactional, note it in comments
     @Transactional(readOnly = false)
     private void updatePageRenderSequences(List<Page> pages) {       
         if (pages != null && !pages.isEmpty()) {
@@ -287,5 +263,30 @@ public class DefaultPageService implements PageService {
         updatePageRenderSequences(pages);
         
         return movingPage;
-    }    
+    }
+
+    private static <T> T getFromRepository(long id, Repository<T> repo) {
+        T object = repo.get(id);
+        if (object == null) {
+            throw new IllegalArgumentException("Could not find object of given id in " + repo.getClass().getSimpleName());
+        }
+        return object;
+    }
+
+    private static void updateRenderSequences(List<RegionWidget> regionWidgets) {
+        int count = 0;
+        for (RegionWidget widget : regionWidgets) {
+            widget.setRenderOrder(count);
+            count++;
+        }
+    }
+
+    private static RegionWidget findRegionWidgetById(Long id, List<RegionWidget> regionWidgets) {
+        for (RegionWidget widget : regionWidgets) {
+            if (widget.getId().equals(id)) {
+                return widget;
+            }
+        }
+        throw new IllegalArgumentException("Invalid RegionWidget ID");
+    }
 }

@@ -49,6 +49,7 @@ public class PageController {
     private PageService pageService;
     private UserService userService;
 
+    //TODO (RAVE-99) Figure out a better way to register script blocks so that we don't have to have this cross package dep
     @Autowired
     private OpenSocialEnvironment openSocialEnvironment;
 

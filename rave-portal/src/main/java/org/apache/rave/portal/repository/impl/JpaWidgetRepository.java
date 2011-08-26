@@ -34,6 +34,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
+import static org.apache.rave.persistence.jpa.util.JpaUtil.getSingleResult;
+
 @Repository
 public class JpaWidgetRepository extends AbstractJpaRepository<Widget> implements WidgetRepository {
 
@@ -126,10 +128,7 @@ public class JpaWidgetRepository extends AbstractJpaRepository<Widget> implement
         // url is a unique field, so no paging needed
         query.setParameter(Widget.PARAM_URL, widgetUrl);
         final List<Widget> resultList = query.getResultList();
-        if (resultList.isEmpty()) {
-            return null;
-        }
-        return resultList.get(0);
+        return getSingleResult(resultList);
     }
 
     /**
@@ -140,6 +139,7 @@ public class JpaWidgetRepository extends AbstractJpaRepository<Widget> implement
      * @param pageSize maximum number of items to be returned
      * @return valid list of widgets, can be empty
      */
+    //TODO: Make this generic and move to JpaUtil in commons
     protected List<Widget> getPagedResult(TypedQuery<Widget> query, int offset, int pageSize) {
         if (pageSize >= LARGE_PAGESIZE) {
             log.warn("Requesting potentially large resultset of Widgets. Pagesize is {}", pageSize);

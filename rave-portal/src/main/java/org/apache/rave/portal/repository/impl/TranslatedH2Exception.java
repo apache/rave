@@ -22,6 +22,7 @@ import org.springframework.dao.DataAccessException;
  * 
  * @author ACARLUCCI
  */
+//TODO:  Move this class to commons
 public class TranslatedH2Exception extends DataAccessException {
     private int errorCode;
     private String error;
