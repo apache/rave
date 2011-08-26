@@ -177,8 +177,7 @@ public class MediaItemDb implements MediaItem, DbObject {
    * model field.
    * @see org.apache.shindig.social.opensocial.model.MediaItem
    */
-  @ManyToOne(targetEntity = AddressDb.class, cascade = { PERSIST, MERGE, REFRESH })
-  @JoinColumn(name = "address_id", referencedColumnName = "oid")
+  @Transient
   private Address location;
 
   /**
