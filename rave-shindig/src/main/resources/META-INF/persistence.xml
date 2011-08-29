@@ -38,34 +38,14 @@
       <class>org.apache.rave.gadgets.oauth.model.OAuthConsumerStore</class>
 
       <class>org.apache.shindig.social.opensocial.jpa.ApplicationDb</class>
-      <class>org.apache.shindig.social.opensocial.jpa.OrganizationDb</class>
-      <class>org.apache.shindig.social.opensocial.jpa.PersonPropertyDb</class>
       <class>org.apache.shindig.social.opensocial.jpa.ApplicationDataMapDb</class>
       <class>org.apache.shindig.social.opensocial.jpa.ListFieldDb</class>
       <class>org.apache.shindig.social.opensocial.jpa.MessageDb</class>
-      <class>org.apache.shindig.social.opensocial.jpa.ImDb</class>
-      <class>org.apache.shindig.social.opensocial.jpa.AccountDb</class>
       <class>org.apache.shindig.social.opensocial.jpa.ActivityTemplateParamsDb</class>
-      <class>org.apache.shindig.social.opensocial.jpa.PersonAddressDb</class>
-      <class>org.apache.shindig.social.opensocial.jpa.GroupDb</class>
       <class>org.apache.shindig.social.opensocial.jpa.ActivityDb</class>
-      <class>org.apache.shindig.social.opensocial.jpa.BodyTypeDb</class>
-      <class>org.apache.shindig.social.opensocial.jpa.FriendPropertyDb</class>
-      <class>org.apache.shindig.social.opensocial.jpa.AddressDb</class>
       <class>org.apache.shindig.social.opensocial.jpa.MediaItemDb</class>
-      <class>org.apache.shindig.social.opensocial.jpa.PersonDb</class>
-      <class>org.apache.shindig.social.opensocial.jpa.OrganizationAddressDb</class>
-      <class>org.apache.shindig.social.opensocial.jpa.PhoneDb</class>
-      <class>org.apache.shindig.social.opensocial.jpa.FriendDb</class>
       <class>org.apache.shindig.social.opensocial.jpa.ApplicationPropertyDb</class>
-      <class>org.apache.shindig.social.opensocial.jpa.NameDb</class>
-      <class>org.apache.shindig.social.opensocial.jpa.EmailDb</class>
-      <class>org.apache.shindig.social.opensocial.jpa.PhotoDb</class>
-      <class>org.apache.shindig.social.opensocial.jpa.GroupPropertyDb</class>
-      <class>org.apache.shindig.social.opensocial.jpa.PersonOrganizationDb</class>
-      <class>org.apache.shindig.social.opensocial.jpa.PersonAccountDb</class>
       <class>org.apache.shindig.social.opensocial.jpa.ApplicationDataMapValueDb</class>
-      <class>org.apache.shindig.social.opensocial.jpa.UrlDb</class>
   </persistence-unit>
 
 </persistence>
