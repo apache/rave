@@ -84,13 +84,9 @@ public class DefaultPageService implements PageService {
     public Page getPageFromList(long pageId, List<Page> pages) {
         Page pageToFind = new Page(pageId);
         int index = pages.indexOf(pageToFind);
-        if (index == -1) {
-            return null;
-        } else {
-            return pages.get(index);
-        }        
+        return index == -1 ? null : pages.get(index);
     }
-    
+
     @Override
     @Transactional
     public Page addNewPage(String pageName, String pageLayoutCode) {                     
@@ -115,6 +111,9 @@ public class DefaultPageService implements PageService {
         // first delete the page        
         pageRepository.delete(pageRepository.get(pageId));
         // now re-sequence the page sequence numbers
+
+        //TODO:  We should be able to delete these lines.  If there are gaps in the sequence numbers, then it will still
+        //TODO:  return values in the correct order.  We only need to update sequences when there is a change in order
         List<Page> pages = pageRepository.getAllPages(user.getId());
         updatePageRenderSequences(pages);
     }    
