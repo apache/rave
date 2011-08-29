@@ -28,12 +28,6 @@
     <context:property-placeholder location="classpath:rave.shindig.properties" />
     <context:component-scan base-package="org.apache.rave" annotation-config="true" />
 
-    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-        <property name="url" value="jdbc:h2:mem:portal;DB_CLOSE_DELAY=-1"/>
-        <property name="driverClassName" value="org.h2.Driver"/>
-        <property name="username" value="sa"/>
-        <property name="password" value="local"/>
-    </bean>
 
     <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
         <property name="entityManagerFactory" ref="entityManagerFactory"/>
