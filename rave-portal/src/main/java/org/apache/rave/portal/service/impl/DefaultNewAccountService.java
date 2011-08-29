@@ -19,12 +19,7 @@
 
 package org.apache.rave.portal.service.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.rave.portal.model.Page;
-import org.apache.rave.portal.model.PageLayout;
-import org.apache.rave.portal.model.Region;
+import org.apache.rave.portal.model.NewUser;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.service.NewAccountService;
 import org.apache.rave.portal.service.PageLayoutService;
@@ -45,6 +40,7 @@ public class DefaultNewAccountService implements NewAccountService {
 
     private final UserService userService;
     private final PageService pageService;
+    // TODO why are these unused PageLayoutService and RegionService declared?
     private final PageLayoutService pageLayoutService;
     private final RegionService regionService;
 
@@ -63,18 +59,21 @@ public class DefaultNewAccountService implements NewAccountService {
     }
 
     @Override
-    public void createNewAccount(String userName, String password, String userPageLayout) throws Exception {
-        final User existingUser = userService.getUserByUsername(userName);
-        if (existingUser != null) {
-            throw new IllegalArgumentException("A user already exists for username " + userName);
-        }
-        
+    public void createNewAccount(NewUser newUser) throws Exception {
+        final String userName = newUser.getUsername();
+        final String password = newUser.getPassword();
+        final String userPageLayout = newUser.getPageLayout();
+        final String email = newUser.getEmail();
+
+        throwExceptionIfUserExists(userName, email);
+                
         User user=new User();
         user.setUsername(userName);
+        user.setEmail(email);
         //This assumes we use the username for the salt.  If not, the code below will need to change.
         //See also applicationContext-security.xml
         String saltedHashedPassword=passwordEncoder.encodePassword(password,saltSource.getSalt(user));
-		  logger.debug("Salt Source: {}", saltSource.getSalt(user));
+        logger.debug("Salt Source: {}", saltSource.getSalt(user));
         user.setPassword(saltedHashedPassword);
 
         user.setExpired(false);
@@ -84,5 +83,16 @@ public class DefaultNewAccountService implements NewAccountService {
 
         // Return the newly registered user and create a new default page for them	  
         pageService.addNewDefaultPage(userService.getUserByUsername(user.getUsername()), userPageLayout);		  
-    }	 
+    }
+
+    private void throwExceptionIfUserExists(String userName, String email) {
+        User existingUser = userService.getUserByUsername(userName);
+        if (existingUser != null) {
+            throw new IllegalArgumentException("A user already exists for username " + userName);
+        }
+        existingUser = userService.getUserByEmail(email);
+        if (existingUser != null) {
+            throw new IllegalArgumentException("A user already exists for email " + email);
+        }
+    }
 }
