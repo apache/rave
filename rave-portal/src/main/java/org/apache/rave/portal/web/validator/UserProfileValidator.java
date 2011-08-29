@@ -20,6 +20,7 @@
 package org.apache.rave.portal.web.validator;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.validator.EmailValidator;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.service.UserService;
 import org.slf4j.Logger;
@@ -34,6 +35,7 @@ public class UserProfileValidator implements Validator {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private UserService userService;
+    private static final String FIELD_EMAIL = "email";
 
     @Autowired
     public UserProfileValidator(UserService userService) {
@@ -70,9 +72,38 @@ public class UserProfileValidator implements Validator {
             logger.info("Password mismatch");
         }
 
+        validateEmail(errors, user);
+
+        writeResultToLog(errors);
+    }
+
+    // TODO: copy of NewAccountValidator, should make this generic
+    private void validateEmail(Errors errors, User user) {
+        final String email = user.getEmail();
+        if (StringUtils.isBlank(email)) {
+            errors.rejectValue(FIELD_EMAIL, "email.required");
+        } else if (isInvalidEmailAddress(email)) {
+            errors.rejectValue(FIELD_EMAIL, "email.invalid");
+        } else if (isExistingEmailAddress(user, email)) {
+            errors.rejectValue(FIELD_EMAIL, "email.exists");
+        }
+    }
+
+    private boolean isInvalidEmailAddress(String emailAddress) {
+        return !EmailValidator.getInstance().isValid(emailAddress);
+    }
+
+    private boolean isExistingEmailAddress(User user, String email) {
+        final User userByEmail = userService.getUserByEmail(email);
+        return userByEmail != null && !userByEmail.equals(user);
+    }
+
+        private void writeResultToLog(Errors errors) {
         if (errors.hasErrors()) {
-            for (ObjectError error : errors.getAllErrors()) {
-                logger.info("Validation error: {}", error.toString());
+            if (logger.isInfoEnabled()) {
+                for (ObjectError error : errors.getAllErrors()) {
+                    logger.info("Validation error: {}", error.toString());
+                }
             }
         } else {
             logger.debug("Validation successful");

@@ -58,7 +58,7 @@ public class NewAccountValidator implements Validator {
         validateUsername(errors, newUser);
         validatePassword(errors, newUser);
         validateConfirmPassword(errors, newUser);
-        validateEmail(errors, newUser);
+        validateEmail(errors, newUser.getEmail());
 
         writeResultToLog(errors);
     }
@@ -105,12 +105,12 @@ public class NewAccountValidator implements Validator {
         return !(newUser.getConfirmPassword().equals(newUser.getPassword()));
     }
 
-    private void validateEmail(Errors errors, NewUser newUser) {
-        if (StringUtils.isBlank(newUser.getEmail())) {
+    private void validateEmail(Errors errors, String email) {
+        if (StringUtils.isBlank(email)) {
             errors.rejectValue(FIELD_EMAIL, "email.required");
-        } else if (isInvalidEmailAddress(newUser.getEmail())) {
+        } else if (isInvalidEmailAddress(email)) {
             errors.rejectValue(FIELD_EMAIL, "email.invalid");
-        } else if (isExistingEmailAddress(newUser.getEmail())) {
+        } else if (isExistingEmailAddress(email)) {
             errors.rejectValue(FIELD_EMAIL, "email.exists");
         }
     }

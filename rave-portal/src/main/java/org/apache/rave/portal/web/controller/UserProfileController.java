@@ -52,6 +52,7 @@ public class UserProfileController {
 		  this.userProfileValidator=userProfileValidator;
     }
 
+    // TODO why .jsp?
     @RequestMapping(value ="/userProfile.jsp")
 	 public void setUpForm(ModelMap model) {
 		  logger.debug("Initializing form");
@@ -66,28 +67,19 @@ public class UserProfileController {
 		  
 		  userProfileValidator.validate(user,results);
 		  if(results.hasErrors()){
-			  logger.error("newaccount.jsp: shows validation errors");
+			  logger.info("userProfile.jsp: shows validation errors");
 			  return ViewNames.USER_PROFILE;
 		  }
 
-		  //Now attempt to create the account.
+		  //Now attempt to update the account.
 		  try {
 			    logger.debug("userprofile: passed form validation");
-			    
 			    userService.updateUserProfile(user);
 				return ViewNames.REDIRECT;
 		  }
-		  
-		  catch (org.springframework.dao.IncorrectResultSizeDataAccessException ex) {
-				//This exception is thrown if the account already exists.
-				logger.error("Account creation failed: "+ex.getMessage());
-				results.reject("Account already exists","Unable to create account");
-				return ViewNames.USER_PROFILE;
-				
-		  }
 		  //TODO need to handle more specific exceptions
 		  catch (Exception ex) {
-				logger.error("Account creation failed: "+ex.getMessage());
+				logger.info("Account creation failed: {}", ex.getMessage());
 				results.reject("Unable to create account:"+ex.getMessage(),"Unable to create account");
 				return ViewNames.USER_PROFILE;
 		  }

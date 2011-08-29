@@ -37,6 +37,7 @@ import static org.easymock.EasyMock.createMock;
 public class UserProfileValidatorTest {
     private static final String VALID_NAME = "valid.name";
     private static final String VALID_PASSWORD = "valid.password";
+    private static final String VALID_EMAIL = "valid@example.com";
     private static final String FIELD_PASSWORD = "password";
     private static final String FIELD_CONFIRM_PASSWORD = "confirmPassword";
     private static final String USER = "user";
@@ -54,6 +55,7 @@ public class UserProfileValidatorTest {
         user.setUsername(VALID_NAME);
         user.setPassword(VALID_PASSWORD);
         user.setConfirmPassword(VALID_PASSWORD);
+        user.setEmail(VALID_EMAIL);
 
         Errors errors = new BindException(user, USER);
         validator.validate(user, errors);
@@ -65,6 +67,7 @@ public class UserProfileValidatorTest {
     public void testValidateFailsOnEmptyPassword() throws Exception {
         User user = new User();
         user.setUsername(VALID_NAME);
+        user.setEmail(VALID_EMAIL);
 
         Errors errors = new BindException(user, USER);
         validator.validate(user, errors);
