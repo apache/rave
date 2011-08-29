@@ -19,15 +19,24 @@
 
 package org.apache.rave.persistence.jpa.util;
 
-import org.springframework.dao.IncorrectResultSizeDataAccessException;
+import java.util.List;
 
 import javax.persistence.EntityManager;
-import java.util.List;
+import javax.persistence.TypedQuery;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 
 /**
  * JPA utilities
  */
 public class JpaUtil {
+
+    private static final Logger log = LoggerFactory.getLogger(JpaUtil.class);
+
+    private static final int LARGE_PAGESIZE = 1000;
+
 
     private JpaUtil() {}
 
@@ -69,5 +78,21 @@ public class JpaUtil {
         } else {
             return entityManager.merge(entity);
         }
+    }
+
+    /**
+     * Performs a query with a limit and offset
+     *
+     * @param query    {@link javax.persistence.TypedQuery}
+     * @param offset   start point within the resultset (for paging)
+     * @param pageSize maximum number of items to be returned
+     * @return valid list of entities, can be empty
+     */
+    public static <T> List<T> getPagedResultList(TypedQuery<T> query, int offset, int pageSize) {
+        if (pageSize >= LARGE_PAGESIZE) {
+            log.warn("Requesting potentially large resultset. Pagesize is {}", pageSize);
+        }
+        query.setFirstResult(offset).setMaxResults(pageSize);
+        return query.getResultList();
     }
 }

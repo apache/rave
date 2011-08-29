@@ -34,14 +34,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
+import static org.apache.rave.persistence.jpa.util.JpaUtil.getPagedResultList;
 import static org.apache.rave.persistence.jpa.util.JpaUtil.getSingleResult;
 
 @Repository
 public class JpaWidgetRepository extends AbstractJpaRepository<Widget> implements WidgetRepository {
 
     private final Logger log = LoggerFactory.getLogger(JpaWidgetRepository.class);
-
-    private static final int LARGE_PAGESIZE = 1000;
 
     public JpaWidgetRepository() {
         super(Widget.class);
@@ -57,7 +56,7 @@ public class JpaWidgetRepository extends AbstractJpaRepository<Widget> implement
     @Override
     public List<Widget> getLimitedList(int offset, int pageSize) {
         TypedQuery<Widget> query = manager.createNamedQuery(Widget.WIDGET_GET_ALL, Widget.class);
-        return getPagedResult(query, offset, pageSize);
+        return getPagedResultList(query, offset, pageSize);
     }
 
     @Override
@@ -72,7 +71,7 @@ public class JpaWidgetRepository extends AbstractJpaRepository<Widget> implement
         TypedQuery<Widget> query = manager.createNamedQuery(Widget.WIDGET_GET_BY_FREE_TEXT,
                 Widget.class);
         setFreeTextSearchTerm(query, searchTerm);
-        return getPagedResult(query, offset, pageSize);
+        return getPagedResultList(query, offset, pageSize);
     }
 
     @Override
@@ -88,7 +87,7 @@ public class JpaWidgetRepository extends AbstractJpaRepository<Widget> implement
         TypedQuery<Widget> query = manager.createNamedQuery(Widget.WIDGET_GET_BY_STATUS,
                 Widget.class);
         query.setParameter(Widget.PARAM_STATUS, widgetStatus);
-        return getPagedResult(query, offset, pageSize);
+        return getPagedResultList(query, offset, pageSize);
     }
 
     @Override
@@ -106,7 +105,7 @@ public class JpaWidgetRepository extends AbstractJpaRepository<Widget> implement
                 Widget.WIDGET_GET_BY_STATUS_AND_FREE_TEXT, Widget.class);
         query.setParameter(Widget.PARAM_STATUS, widgetStatus);
         setFreeTextSearchTerm(query, searchTerm);
-        return getPagedResult(query, offset, pageSize);
+        return getPagedResultList(query, offset, pageSize);
     }
 
     @Override
@@ -129,24 +128,6 @@ public class JpaWidgetRepository extends AbstractJpaRepository<Widget> implement
         query.setParameter(Widget.PARAM_URL, widgetUrl);
         final List<Widget> resultList = query.getResultList();
         return getSingleResult(resultList);
-    }
-
-    /**
-     * Performs a query with a limit and offset
-     *
-     * @param query    {@link TypedQuery}
-     * @param offset   start point within the resultset (for paging)
-     * @param pageSize maximum number of items to be returned
-     * @return valid list of widgets, can be empty
-     */
-    //TODO: Make this generic and move to JpaUtil in commons
-    protected List<Widget> getPagedResult(TypedQuery<Widget> query, int offset, int pageSize) {
-        if (pageSize >= LARGE_PAGESIZE) {
-            log.warn("Requesting potentially large resultset of Widgets. Pagesize is {}", pageSize);
-        }
-        query.setFirstResult(offset);
-        query.setMaxResults(pageSize);
-        return query.getResultList();
     }
 
     /**
