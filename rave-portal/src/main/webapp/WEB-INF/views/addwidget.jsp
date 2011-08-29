@@ -39,8 +39,8 @@
     <div id="content">
         <h2><fmt:message key="page.addwidget.form.header"/></h2>
         <form:errors path="widget" cssClass="error" element="p"/>
-        <form:form id="newWidgetForm" action="doaddwidget" commandName="widget" method="POST">
-            <fieldset>
+        <form:form id="newWidgetForm" action="add" commandName="widget" method="POST">
+          <fieldset>
                 <p><fmt:message key="form.some.fields.required"/></p>
 
                 <p>

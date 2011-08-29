@@ -32,7 +32,7 @@
     </div>
     <div class="widget-a">
         <span>
-            <a href="<spring:url value="store/addwidget"/>">Add widget</a>
+            <a href="<spring:url value="store/widget/add"/>">Add widget</a>
         </span>
     </div>
     <h1>Widget Store</h1>
@@ -58,7 +58,6 @@
                 <h2>No widgets found</h2>
             </c:when>
             <c:when test="${empty searchTerm}">
-                <%-- TODO: introduce paging here --%>
                 <h2>Showing ${offset + 1} - ${offset + fn:length(widgets.resultSet)} of ${widgets.totalResults} widgets</h2>
             </c:when>
             <c:when test="${not empty searchTerm and widgets.totalResults eq 0}">

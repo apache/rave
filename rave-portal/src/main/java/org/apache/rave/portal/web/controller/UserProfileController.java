@@ -19,8 +19,6 @@
 
 package org.apache.rave.portal.web.controller;
 
-import java.util.List;
-
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.portal.web.util.ModelKeys;
@@ -33,7 +31,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -70,7 +67,6 @@ public class UserProfileController {
 		  userProfileValidator.validate(user,results);
 		  if(results.hasErrors()){
 			  logger.error("newaccount.jsp: shows validation errors");
-			  //TODO: change this to a viewname (done)
 			  return ViewNames.USER_PROFILE;
 		  }
 
@@ -79,7 +75,6 @@ public class UserProfileController {
 			    logger.debug("userprofile: passed form validation");
 			    
 			    userService.updateUserProfile(user);
-			    //TODO: change this to a viewname (done)
 				return ViewNames.REDIRECT;
 		  }
 		  
@@ -87,7 +82,6 @@ public class UserProfileController {
 				//This exception is thrown if the account already exists.
 				logger.error("Account creation failed: "+ex.getMessage());
 				results.reject("Account already exists","Unable to create account");
-				//TODO: change this to a viewname (done)
 				return ViewNames.USER_PROFILE;
 				
 		  }
@@ -95,7 +89,6 @@ public class UserProfileController {
 		  catch (Exception ex) {
 				logger.error("Account creation failed: "+ex.getMessage());
 				results.reject("Unable to create account:"+ex.getMessage(),"Unable to create account");
-				//TODO: change this to a viewname (done)
 				return ViewNames.USER_PROFILE;
 		  }
 	 }

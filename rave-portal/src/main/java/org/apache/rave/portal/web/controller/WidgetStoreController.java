@@ -112,8 +112,7 @@ public class WidgetStoreController {
      * @param model {@link Model}
      * @return the view name of the Add new Widget form
      */
-    //TODO:  Change the value of this request mapping so that it follows the pattern /store/widget/add
-    @RequestMapping(method = RequestMethod.GET, value = "addwidget")
+    @RequestMapping(method = RequestMethod.GET, value = "widget/add")
     public String viewAddWidgetForm(Model model) {
         final Widget widget = new Widget();
         model.addAttribute(ModelKeys.WIDGET, widget);
@@ -128,10 +127,7 @@ public class WidgetStoreController {
      * @param model   {@link Model}
      * @return if successful the view name of the widget, otherwise the form
      */
-    /*TODO:  Change the value of this request mapping so that it follows the pattern /store/widget/add
-      TODO:  The value can be the same as the GET action as you are mapping based on method & name
-     */
-    @RequestMapping(method = RequestMethod.POST, value = "doaddwidget")
+    @RequestMapping(method = RequestMethod.POST, value = "widget/add")
     public String viewAddWidgetResult(@ModelAttribute Widget widget, BindingResult results,
                                       Model model) {
         widgetValidator.validate(widget, results);
