@@ -20,22 +20,24 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ taglib tagdir="/WEB-INF/tags" prefix="rave"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib tagdir="/WEB-INF/tags" prefix="rave"%>
+<fmt:setBundle basename="messages"/>
 
-<rave:rave_generic_page pageTitle="Widget Store - Rave">
+<fmt:message key="page.store.title" var="pagetitle"/>
+<rave:rave_generic_page pageTitle="${pagetitle}">
 <div id="header">
     <div class="header-a">
         <span class="backToPage">
-            <a href="<spring:url value="/index.html" />">Back to Rave</a>
+            <a href="<spring:url value="/index.html" />"><fmt:message key="page.general.back"/></a>
         </span>
     </div>
     <div class="widget-a">
         <span>
-            <a href="<spring:url value="store/widget/add"/>">Add widget</a>
+            <a href="<spring:url value="/app/store/widget/add"/>"><fmt:message key="page.addwidget.title"/></a>
         </span>
     </div>
-    <h1>Widget Store</h1>
+    <h1>${pagetitle}</h1>
 </div>
 
 <div id="content">
@@ -45,9 +47,10 @@
             <fieldset>
                 <input type="hidden" name="referringPageId" value="${referringPageId}">
                 <p>
-                    <label for="searchTerm">Search in widget store</label>
-                    <input type="search" id="searchTerm" name="searchTerm" value="<c:out value="${searchTerm}"/>"/>
-                    <input type="submit" value="Search">
+                  <label for="searchTerm"><fmt:message key="page.store.search"/></label>
+                  <input type="search" id="searchTerm" name="searchTerm" value="<c:out value="${searchTerm}"/>"/>
+                  <fmt:message key="page.store.search.button" var="searchButtonText"/>
+                  <input type="submit" value="${searchButtonText}">
                 </p>
             </fieldset>
         </form>
@@ -55,18 +58,30 @@
         <c:choose>
             <c:when test="${empty searchTerm and (empty widgets or widgets.totalResults eq 0)}">
                 <%-- Empty db --%>
-                <h2>No widgets found</h2>
+                <fmt:message key="page.store.list.noresult" var="listheader"/>
             </c:when>
             <c:when test="${empty searchTerm}">
-                <h2>Showing ${offset + 1} - ${offset + fn:length(widgets.resultSet)} of ${widgets.totalResults} widgets</h2>
+                <fmt:message key="page.store.list.result.x.to.y" var="listheader">
+                    <fmt:param value="${offset + 1}"/>
+                    <fmt:param value="${offset + fn:length(widgets.resultSet)}"/>
+                    <fmt:param value="${widgets.totalResults}"/>
+                </fmt:message>
             </c:when>
             <c:when test="${not empty searchTerm and widgets.totalResults eq 0}">
-                <h2>No widgets found for '<c:out value="${searchTerm}"/>'</h2>
+                <fmt:message key="page.store.list.search.noresult" var="listheader">
+                    <fmt:param value="${searchTerm}"/>
+                </fmt:message>
             </c:when>
             <c:otherwise>
-                <h2>Showing ${offset + 1} - ${offset + fn:length(widgets.resultSet)} of ${widgets.totalResults} widgets that match '<c:out value="${searchTerm}"/>'</h2>
+                <fmt:message key="page.store.list.search.result.x.to.y" var="listheader">
+                    <fmt:param value="${offset + 1}"/>
+                    <fmt:param value="${offset + fn:length(widgets.resultSet)}"/>
+                    <fmt:param value="${widgets.totalResults}"/>
+                    <fmt:param value="${searchTerm}"/>
+                </fmt:message>
             </c:otherwise>
         </c:choose>
+        <h2>${listheader}</h2>
     </div>
 
     <%--@elvariable id="widgets" type="org.apache.rave.portal.model.util.SearchResult"--%>
@@ -77,7 +92,7 @@
                     <div class="storeItemLeft">
                         <c:if test="${not empty widget.thumbnailUrl}">
                             <img class="storeWidgetThumbnail" src="${widget.thumbnailUrl}"
-                                 title="<c:out value="${widget.title}"/>" alt="Thumbnail for widget <c:out value="${widget.title}"/>"
+                                 title="<c:out value="${widget.title}"/>" alt=""
                                  width="120" height="60"/>
                         </c:if>
                         <div class="widgetType"><c:out value="${widget.type}"/></div>
@@ -87,7 +102,7 @@
                             <button class="storeItemButton"
                                     id="addWidget_${widget.id}"
                                     onclick="rave.api.rpc.addWidgetToPage({widgetId: ${widget.id}, pageId: ${referringPageId}});">
-                                Add to Page
+                                <fmt:message key="page.widget.addToPage"/>
                             </button>
                         </div>
                         <a class="secondaryPageItemTitle"
@@ -96,7 +111,7 @@
                         </a>
 
                         <c:if test="${not empty widget.author}">
-                            <div class="storeWidgetAuthor">By: <c:out value="${widget.author}"/></div>
+                            <div class="storeWidgetAuthor"><fmt:message key="widget.author"/>: <c:out value="${widget.author}"/></div>
                         </c:if>
                         <c:if test="${not empty widget.description}">
                             <div class="storeWidgetDesc"><c:out value="${widget.description}"/></div>

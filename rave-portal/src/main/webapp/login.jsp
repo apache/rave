@@ -17,75 +17,80 @@
   ~ under the License.
   --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib tagdir="/WEB-INF/tags" prefix="rave"%>
-<rave:rave_generic_page pageTitle="Login - Rave">
+<fmt:setBundle basename="messages"/>
+
+<fmt:message key="page.login.title" var="pagetitle"/>
+
+<rave:rave_generic_page pageTitle="${pagetitle}">
 <div id="content">
 
-    <h1>Login</h1>
+    <h1>${pagetitle}</h1>
 
-    <h2>Username and Password</h2>
+    <h2><fmt:message key="page.login.usernamepassword"/></h2>
     <form id="loginForm" name="loginForm" action="j_spring_security_check" method="post">
         <c:if test="${param['authfail'] eq 'form'}">
-            <p class="error">The username or password is incorrect.</p>
+            <p class="error"><fmt:message key="page.login.usernamepassword.fail"/></p>
         </c:if>
         <fieldset>
             <p>
-                <label for="usernameField">Username: </label>
-                <input id="usernameField" type="text" name="j_username"/>
+                <label for="usernameField"><fmt:message key="page.general.username"/></label>
+                <input id="usernameField" type="text" name="j_username" autofocus="autofocus"/>
             </p>
 
             <p>
-                <label for="passwordField">Password: </label>
+                <label for="passwordField"><fmt:message key="page.general.password"/></label>
                 <input id="passwordField" type="password" name="j_password"/>
             </p>
             <p>
                 <label for="remember_me" class="checkboxLabel">
                     <input type='checkbox' name='_spring_security_remember_me' id="remember_me"
                            value="true"/>
-                    Remember me
+                    <fmt:message key="page.login.rememberme"/>
                 </label>
             </p>
         </fieldset>
         <fieldset>
-            <input type="submit" value="Login"/>
+          <fmt:message key="page.login.usernamepassword.login" var="loginButtonText"/>
+            <input type="submit" value="${loginButtonText}"/>
         </fieldset>
     </form>
     
-    <h2>New User</h2>
+    <h2><fmt:message key="page.login.createaccount"/></h2>
     <form id="newAccount" action="<c:url value="/app/newaccount.jsp"/>" method="get">
         <fieldset>
             <p>
-                <label for="createNewAccountButton">Register: </label>
-                <input id="createNewAccountButton" type="submit" value="Create New Account" />
+              <label for="createNewAccountButton"><fmt:message key="page.login.createaccount.label"/></label>
+              <fmt:message key="page.login.createaccount.button" var="createAccountButtonText"/>
+              <input id="createNewAccountButton" type="submit" value="${createAccountButtonText}" />
             </p>
         </fieldset>
     </form>
     
-    <h2>OpenID Identity</h2>
+    <h2><fmt:message key="page.login.openid"/></h2>
     <form id="oidForm" name='oidf' action='j_spring_openid_security_check' method='POST'>
         <c:if test="${param['authfail'] eq 'openid'}">
-            <p class="error">OpenID identification failed.</p>
+            <p class="error"><fmt:message key="page.login.openid.fail"/></p>
         </c:if>
         <fieldset>
             <p>
-                <label for="openid_identifier">Identity: </label>
+                <label for="openid_identifier"><fmt:message key="page.login.openid.identifier"/></label>
                 <input type='text' id="openid_identifier" name='openid_identifier' class="long"/>
             </p>
             <p>
                 <label for="remember_me_openid" class="checkboxLabel">
                     <input type='checkbox' name='_spring_security_remember_me' id="remember_me_openid"
                            value="true"/>
-                    Remember me
+                  <fmt:message key="page.login.rememberme"/>
                 </label>
             </p>
         </fieldset>
         <fieldset>
-            <input type="submit" value="Login with OpenID"/>
+          <fmt:message key="page.login.openid.button" var="openidButtonText"/>
+            <input type="submit" value="${openidButtonText}"/>
         </fieldset>
 
     </form>
 </div>
-<script>
-document.loginForm.j_username.focus();
-</script>
 </rave:rave_generic_page>

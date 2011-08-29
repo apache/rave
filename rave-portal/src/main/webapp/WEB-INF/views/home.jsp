@@ -28,17 +28,20 @@
 <jsp:useBean id="pages" type="java.util.List<org.apache.rave.portal.model.Page>" scope="request"/>
 <jsp:useBean id="openSocialEnv" scope="request" type="org.apache.rave.provider.opensocial.config.OpenSocialEnvironment"/>
 <c:set var="opensocial_engine_url" value="${openSocialEnv.engineProtocol}://${openSocialEnv.engineRoot}${openSocialEnv.engineGadgetPath}"/>
-
-<rave:rave_generic_page pageTitle="Rave - ${page.name}">    
+<fmt:setBundle basename="messages"/>
+<rave:rave_generic_page pageTitle="${page.name}">
     <div id="header">
         <div class="header-a">
-            <a href="<spring:url value="/j_spring_security_logout" htmlEscape="true" />">Logout</a>
+            <a href="<spring:url value="/j_spring_security_logout" htmlEscape="true" />">
+              <fmt:message key="page.general.logout"/></a>
         </div>
         <div class="widget-a">
-            <a href="<spring:url value="/app/store?referringPageId=${page.id}" />">Widget Store</a>
+            <a href="<spring:url value="/app/store?referringPageId=${page.id}" />">
+              <fmt:message key="page.store.title"/>
+            </a>
         </div>
-        <h1>Hello <c:out value="${page.owner.username}"/>, welcome to Rave!</h1>
-    </div>    
+      <h1><fmt:message key="page.home.welcome"><fmt:param value="${page.owner.username}"/></fmt:message></h1>
+    </div>
     <input id="currentPageId" type="hidden" value="${page.id}" />
     <div id="tabsHeader">      
         <%-- render the page tabs --%>
@@ -63,16 +66,19 @@
                         <div id="pageMenuWrapper">
                             <span id="pageMenuButton" class="ui-icon ui-icon-circle-triangle-s" title="Page Actions Menu"></span>
                             <div id="pageMenu" class="page-menu">
-                                <div id="pageMenuEdit" class="page-menu-item">Edit Page</div>
-                                <div id="pageMenuDelete" class="page-menu-item<c:if test='${hasOnlyOnePage}'> page-menu-item-disabled</c:if>">Delete Page</div>
-                                <div id="pageMenuMove" class="page-menu-item<c:if test='${hasOnlyOnePage}'> page-menu-item-disabled</c:if>">Move Page</div>
+                                <div id="pageMenuEdit" class="page-menu-item"><fmt:message key="page.general.editpage"/></div>
+                                <div id="pageMenuDelete" class="page-menu-item<c:if test='${hasOnlyOnePage}'> page-menu-item-disabled</c:if>">
+                                  <fmt:message key="page.general.deletepage"/></div>
+                                <div id="pageMenuMove" class="page-menu-item<c:if test='${hasOnlyOnePage}'> page-menu-item-disabled</c:if>">
+                                  <fmt:message key="page.general.movepage"/></div>
                             </div>
                         </div>
                     </c:if>
                 </div>
             </c:forEach>        
             <%-- display the add page button at the end of the tabs --%>
-            <button id="add_page" title="Add a New Page" style="display: none;"></button>
+            <fmt:message key="page.general.addnewpage" var="addNewPageTitle"/>
+            <button id="add_page" title="${addNewPageTitle}" style="display: none;"></button>
         </div>   
     </div>
     <%--render the main page content (regions/widgets) --%>
@@ -106,35 +112,39 @@
         </c:forEach>
         <div class="clear-float">&nbsp;</div>
     </div>
-    <div id="dialog" title="Add a New Page" class="dialog">
+    <fmt:message key="page.general.addnewpage" var="addNewPageTitle"/>
+    <div id="dialog" title="${addNewPageTitle}" class="dialog">
         <form id="pageForm">
             <div id="pageFormErrors" class="error"></div>
             <fieldset class="ui-helper-reset">
-                <label for="tab_title">Title</label>
+                <label for="tab_title"><fmt:message key="page.general.addpage.title"/></label>
                 <input type="text" name="tab_title" id="tab_title" value="" class="required ui-widget-content ui-corner-all" />
-                <label for="pageLayout">Select Page Layout:</label>
+                <label for="pageLayout"><fmt:message key="page.general.addpage.selectlayout"/></label>
                 <select name="pageLayout" id="pageLayout">
-                    <option value="columns_1" id="columns_1_id">One Column</option>
-                    <option value="columns_2" id="columns_2_id" selected="selected">Two Columns</option>
-                    <option value="columns_2wn" id="columns_2wn_id">Two Columns (wide/narrow)</option>
-                    <option value="columns_3" id="columns_3_id">Three Columns</option>
-                    <option value="columns_3nwn" id="columns_3nwn_id">Three Columns (narrow/wide/narrow)</option>
-                    <option value="columns_4" id="columns_4_id">Four Columns</option>
-                    <option value="columns_3nwn_1_bottom" id="columns_3nwn_1_bottom">Four Columns (narrow/wide/narrow/bottom)</option>
+                    <option value="columns_1" id="columns_1_id"><fmt:message key="page.general.addpage.layout.columns_1"/></option>
+                    <option value="columns_2" id="columns_2_id" selected="selected"><fmt:message key="page.general.addpage.layout.columns_2"/></option>
+                    <option value="columns_2wn" id="columns_2wn_id"><fmt:message key="page.general.addpage.layout.columns_2wn"/></option>
+                    <option value="columns_3" id="columns_3_id"><fmt:message key="page.general.addpage.layout.columns_3"/></option>
+                    <option value="columns_3nwn" id="columns_3nwn_id"><fmt:message key="page.general.addpage.layout.columns_3nwn"/></option>
+                    <option value="columns_4" id="columns_4_id"><fmt:message key="page.general.addpage.layout.columns_4"/></option>
+                    <option value="columns_3nwn_1_bottom" id="columns_3nwn_1_bottom"><fmt:message key="page.general.addpage.layout.columns_3nwn_1_bottom"/></option>
                 </select>
             </fieldset>
         </form>
-    </div>    
-    <div id="movePageDialog" title="Move Page" class="dialog">
-        <div>Move this page:</div>
+    </div>
+    <fmt:message key="page.general.movepage" var="movePageTitle"/>
+    <div id="movePageDialog" title="${movePageTitle}" class="dialog">
+        <div><fmt:message key="page.general.movethispage"/></div>
         <form id="movePageForm">
             <select id="moveAfterPageId">
                 <c:if test="${page.renderSequence != 1}">
-                    <option value="-1">To First Tab (Set as Default)</option>
+                    <option value="-1"><fmt:message key="page.general.movethispage.tofirst"/></option>
                 </c:if>
                 <c:forEach var="userPage" items="${pages}">
                     <c:if test="${userPage.id != page.id}">
-                        <option value="${userPage.id}">After <c:out value="${userPage.name}"/></option>
+                        <option value="${userPage.id}">
+                          <fmt:message key="page.general.movethispage.after"><fmt:param value="${userPage.name}"/></fmt:message>
+                        </option>
                     </c:if>
                 </c:forEach>
             </select>
@@ -158,7 +168,6 @@
            Among other things, the render-widget tag will populate the widgets[] array.
            See the markup text in OpenSocialWidgetRenderer.java, for example.
         --%>
-
         <c:forEach var="region" items="${page.regions}">
             <c:forEach var="regionWidget" items="${region.regionWidgets}">
                 <portal:render-widget regionWidget="${regionWidget}" />

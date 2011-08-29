@@ -23,17 +23,16 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib tagdir="/WEB-INF/tags" prefix="rave" %>
 
-<fmt:bundle basename="messages"/>
-<fmt:message key="page.addwidget.pagetitle" var="pagetitle"/>
-<fmt:message key="page.general.titlesuffix" var="titlesuffix"/>
-<rave:rave_generic_page pageTitle="${pagetitle}${titlesuffix}">
+<fmt:setBundle basename="messages"/>
+<fmt:message key="page.addwidget.title" var="pagetitle"/>
+<rave:rave_generic_page pageTitle="${pagetitle}">
     <div id="header">
         <div class="header-a">
         <span class="backToPage">
             <a href="<spring:url value="/index.html" />"><fmt:message key="page.general.back"/></a>
         </span>
         </div>
-        <h1><fmt:message key="page.addwidget.pagetitle"/></h1>
+        <h1><fmt:message key="page.addwidget.title"/></h1>
     </div>
 
     <div id="content">

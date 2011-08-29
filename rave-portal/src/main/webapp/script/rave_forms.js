@@ -35,6 +35,9 @@ rave.forms = rave.forms || (function() {
                     required: true,
                     minlength: 4,
                     equalTo: "#passwordField"
+                },
+                email : {
+                    required: true
                 }
             },
             messages: {

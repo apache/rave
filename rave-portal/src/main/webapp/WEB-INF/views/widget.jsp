@@ -22,9 +22,8 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib tagdir="/WEB-INF/tags" prefix="rave" %>
 <jsp:useBean id="widget" scope="request" class="org.apache.rave.portal.model.Widget"/>
-<fmt:bundle basename="messages"/>
-<fmt:message var="titlesuffix" key="page.general.titlesuffix"/>
-<rave:rave_generic_page pageTitle="${widget.title}${titlesuffix}">
+<fmt:setBundle basename="messages"/>
+<rave:rave_generic_page pageTitle="${widget.title}">
     <div id="header">
         <div class="header-a">
         <span class="backToPage">
