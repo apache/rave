@@ -44,6 +44,13 @@
                 <form:errors path="confirmPassword" cssClass="error" />
             </p>
             <p>
+              <label for="emailField">Email address:</label>
+              <spring:bind path="email">
+                <input type="email" name="email" id="emailField" required="required"/>
+              </spring:bind>
+              <form:errors path="email" cssClass="error"/>
+            </p>
+            <p>
                 <label for="pageLayoutField">Select Page Layout:</label>
                 <form:select path="pageLayout" id="pageLayoutField">
                     <form:option value="columns_1" id="columns_1_id">One Column</form:option>

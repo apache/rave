@@ -50,7 +50,7 @@ public class JpaUserRepositoryTest {
     //may need updating in the future.
     private static final String HASHED_SALTED_PASSWORD="b97fd0fa25ba8a504309be2b6651ac6dee167ded";
     private static final Long INVALID_USER = -2L;
-	 private static final String USER_EMAIL = "canonical@test.com";
+	 private static final String USER_EMAIL = "canonical@example.com";
 
     @Autowired
     private UserRepository repository;

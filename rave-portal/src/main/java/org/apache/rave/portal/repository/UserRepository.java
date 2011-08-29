@@ -22,6 +22,20 @@ import org.apache.rave.persistence.Repository;
 import org.apache.rave.portal.model.User;
 
 public interface UserRepository extends Repository<User> {
+
+    /**
+     * Gets a {@link User} by its username
+     *
+     * @param username the (unique) name of the user
+     * @return {@link User} if one exists, otherwise {@literal null}
+     */
     User getByUsername(String username);
-	 User getByUserEmail(String userEmail);
+
+    /**
+     * Gets a {@link User} by its email address
+     *
+     * @param userEmail the (unique) email address of the user
+     * @return {@link User} if one exists, otherwise {@literal null}
+     */
+    User getByUserEmail(String userEmail);
 }

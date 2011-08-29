@@ -19,12 +19,15 @@
 package org.apache.rave.portal.service;
 
 
+import org.apache.rave.portal.model.NewUser;
+
 public interface NewAccountService {
 
-	 /**
-	  * Creates a new account using several other Rave services.
-	  * @param userName is the user name of the new account.
-	  * @param password is the account's password.
-	  */
-	 public void createNewAccount(String userName, String password, String pageLayout) throws Exception;
+    /**
+     * Creates a new account using several other Rave services.
+     *
+     * @param newUser the {@link NewUser} from which a new {@link org.apache.rave.portal.model.User} can be created
+     * @throws Exception in case something goes wrong
+     */
+    public void createNewAccount(NewUser newUser) throws Exception;
 }

@@ -33,6 +33,8 @@ public class NewUser {
 	
 	private String pageLayout;
 
+    private String email;
+
 	public NewUser(){
 	}
 	
@@ -67,5 +69,12 @@ public class NewUser {
 	public void setPageLayout(String pageLayout) {
 		this.pageLayout = pageLayout;
 	}
-	
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 }

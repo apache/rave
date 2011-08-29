@@ -19,6 +19,7 @@
 
 package org.apache.rave.portal.service;
 
+import org.apache.rave.portal.model.NewUser;
 import org.apache.rave.portal.model.PageLayout;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.service.impl.DefaultNewAccountService;
@@ -52,14 +53,13 @@ public class NewAccountServiceTest {
         String validUser = "valid.user";
         String validPass = "valid.password";
         String validLayout = "valid.layout";
+        String validEmail = "valid.email";
 
-        User newUser = new User();
+        NewUser newUser = new NewUser();
         newUser.setUsername(validUser);
         newUser.setPassword(validPass);
         newUser.setConfirmPassword(validPass);
-        newUser.setExpired(false);
-        newUser.setLocked(false);
-        newUser.setEnabled(true);
+        newUser.setEmail(validEmail);
 
 
         SaltSource saltSource = createNiceMock(SaltSource.class);
@@ -80,12 +80,14 @@ public class NewAccountServiceTest {
         expect(pageLayoutService.getPageLayoutByCode(validLayout)).andReturn(pageLayout);
         replay(userService, pageLayoutService);
 
-        newAccountService.createNewAccount(validUser, validPass, validLayout);
+        newAccountService.createNewAccount(newUser);
     }
 
     @Test
-    public void failedAccountCreationTest() throws Exception {
+    public void failedAccountCreationTest_duplicateUsername() throws Exception {
         String duplicateUserName = "duplicateUserName";
+        NewUser newUser = new NewUser();
+        newUser.setUsername(duplicateUserName);
         User existingUser = new User();
         existingUser.setUsername(duplicateUserName);
 
@@ -93,12 +95,34 @@ public class NewAccountServiceTest {
         replay(userService);
 
         try {
-            newAccountService.createNewAccount(duplicateUserName, "", "");
+            newAccountService.createNewAccount(newUser);
             fail();
         } catch (IllegalArgumentException e) {
             logger.debug("Expected failure of account creation due to duplicate name");
         }
     }
+
+    @Test
+    public void failedAccountCreationTest_duplicateEmail() throws Exception {
+        String duplicateEmail = "duplicateEmail";
+        NewUser newUser = new NewUser();
+        newUser.setUsername("newUser");
+        newUser.setEmail(duplicateEmail);
+        User existingUser = new User();
+        existingUser.setEmail(duplicateEmail);
+
+        expect(userService.getUserByUsername("newUser")).andReturn(null);
+        expect(userService.getUserByEmail(duplicateEmail)).andReturn(existingUser);
+        replay(userService);
+
+        try {
+            newAccountService.createNewAccount(newUser);
+            fail();
+        } catch (IllegalArgumentException e) {
+            logger.debug("Expected failure of account creation due to duplicate email");
+        }
+    }
+
 
     @Before
     public void setup() {

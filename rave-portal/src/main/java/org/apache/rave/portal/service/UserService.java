@@ -48,20 +48,29 @@ public interface UserService extends UserDetailsService {
 	  */
 	 void registerNewUser(User user);
 
-	 /**
-	  * Return the requested user object using the user's name.
-	  */ 
-	 User getUserByUsername(String userName);
-	 
-	 /**
-	  * Return a user object by the user ID.
-	  */
-	 User getUserById(Long id);
+    /**
+     * Return the requested user object using the user's name.
+     *
+     * @param userName (unique) name of the user
+     * @return {@link User} if one exists, otherwise {@literal null}
+     */
+    User getUserByUsername(String userName);
 
-	 /**
-	  * Return a user object by the user email.
-	  */
-	 User getUserByEmail(String userEmail);
+    /**
+     * Return a user object by the user ID.
+     *
+     * @param id the user ID
+     * @return {@link User} if one exists, otherwise {@literal null}
+     */
+    User getUserById(Long id);
+
+    /**
+     * Return a user object by the user email.
+     *
+     * @param userEmail email address of the user
+     * @return {@link User} if one exists, otherwise {@literal null}
+     */
+    User getUserByEmail(String userEmail);
 
 	 /**
 	  * Update the user profile information.

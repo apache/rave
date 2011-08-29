@@ -21,10 +21,8 @@ VALUES (set(@person_id_1, next value for person_id_seq), 'canonical', 'Canonical
 INSERT INTO person(id, username, display_name, gender)
 VALUES (set(@person_id_2, next value for person_id_seq), 'john.doe', 'John Doe', 'male');
 
-
 INSERT INTO person(id, username, display_name, gender)
 VALUES (set(@person_id_3, next value for person_id_seq), 'jane.doe', 'Jane Doe', 'female');
-
 
 INSERT INTO person(id, username, display_name)
 VALUES (set(@person_id_4, next value for person_id_seq), 'george.doe', 'George Doe');

@@ -20,6 +20,7 @@
 package org.apache.rave.portal.web.validator;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.validator.EmailValidator;
 import org.apache.rave.portal.model.NewUser;
 import org.apache.rave.portal.service.UserService;
 import org.slf4j.Logger;
@@ -31,6 +32,11 @@ import org.springframework.validation.Validator;
 
 public class NewAccountValidator implements Validator {
 
+    private static final int MINIMUM_PASSWORD_LENGTH = 4;
+    private static final String FIELD_USERNAME = "username";
+    private static final String FIELD_PASSWORD = "password";
+    private static final String FIELD_CONFIRM_PASSWORD = "confirmPassword";
+    private static final String FIELD_EMAIL = "email";
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private static final String USERNAME_PATTERN = "[\\w\\+\\-\\.@]{2,}";
@@ -49,55 +55,80 @@ public class NewAccountValidator implements Validator {
         logger.debug("Validator called");
         NewUser newUser = (NewUser) obj;
 
-        //check if the username is null or empty
+        validateUsername(errors, newUser);
+        validatePassword(errors, newUser);
+        validateConfirmPassword(errors, newUser);
+        validateEmail(errors, newUser);
+
+        writeResultToLog(errors);
+    }
+
+    private void validateUsername(Errors errors, NewUser newUser) {
         final String username = newUser.getUsername();
         if (StringUtils.isBlank(username)) {
-            errors.rejectValue("username", "username.required");
+            errors.rejectValue(FIELD_USERNAME, "username.required");
             logger.info("Username required");
-        }
-
-        // at least 2 characters of the following: a-z A-Z 0-9 _ - + . @
-        else if (!username.matches(USERNAME_PATTERN)) {
-            errors.rejectValue("username", "username.invalid.pattern");
-            logger.info("Username must be atleast 2 characters long");
-        }
-
-        //check if username is already in use
-        else if (userService.getUserByUsername(username) != null) {
-            errors.rejectValue("username", "username.exits");
+        } else if (!username.matches(USERNAME_PATTERN)) {
+            errors.rejectValue(FIELD_USERNAME, "username.invalid.pattern");
+            logger.info("Username has invalid pattern");
+        } else if (isExistingUsername(username)) {
+            errors.rejectValue(FIELD_USERNAME, "username.exists");
             logger.info("Username already exists");
         }
+    }
 
+    private boolean isExistingUsername(String username) {
+        return userService.getUserByUsername(username) != null;
+    }
 
-        //check if the password is null
+    private void validatePassword(Errors errors, NewUser newUser) {
         if (StringUtils.isBlank(newUser.getPassword())) {
-            errors.rejectValue("password", "password.required");
+            errors.rejectValue(FIELD_PASSWORD, "password.required");
             logger.info("Password required");
+        } else if (newUser.getPassword().length() < MINIMUM_PASSWORD_LENGTH) {
+            errors.rejectValue(FIELD_PASSWORD, "password.invalid.length");
+            logger.info("Password must be at least {} characters long", MINIMUM_PASSWORD_LENGTH);
         }
+    }
 
-        //check if the password length is less than 4
-        else if (newUser.getPassword().length() < 4) {
-            errors.rejectValue("password", "password.invalid.lenght");
-            logger.info("Password must be atleast 4 characters long");
-        }
-
-        //check if the confirm password is null
+    private void validateConfirmPassword(Errors errors, NewUser newUser) {
         if (StringUtils.isBlank(newUser.getConfirmPassword())) {
-            errors.rejectValue("confirmPassword", "confirmPassword.required");
+            errors.rejectValue(FIELD_CONFIRM_PASSWORD, "confirmPassword.required");
             logger.info("Confirm Password required");
-        }
-
-        //check if the confirm password matches the previous entered password
-        //first check for null
-        if (newUser.getConfirmPassword() != null &&
-                !(newUser.getConfirmPassword().equals(newUser.getPassword()))) {
-            errors.rejectValue("confirmPassword", "confirmPassword.mismatch");
+        } else if (isConfirmPasswordDifferentThanPassword(newUser)) {
+            errors.rejectValue(FIELD_CONFIRM_PASSWORD, "confirmPassword.mismatch");
             logger.info("Password mismatch");
         }
+    }
 
+    private boolean isConfirmPasswordDifferentThanPassword(NewUser newUser) {
+        return !(newUser.getConfirmPassword().equals(newUser.getPassword()));
+    }
+
+    private void validateEmail(Errors errors, NewUser newUser) {
+        if (StringUtils.isBlank(newUser.getEmail())) {
+            errors.rejectValue(FIELD_EMAIL, "email.required");
+        } else if (isInvalidEmailAddress(newUser.getEmail())) {
+            errors.rejectValue(FIELD_EMAIL, "email.invalid");
+        } else if (isExistingEmailAddress(newUser.getEmail())) {
+            errors.rejectValue(FIELD_EMAIL, "email.exists");
+        }
+    }
+
+    private boolean isInvalidEmailAddress(String emailAddress) {
+        return !EmailValidator.getInstance().isValid(emailAddress);
+    }
+
+    private boolean isExistingEmailAddress(String email) {
+        return userService.getUserByEmail(email) != null;
+    }
+
+    private void writeResultToLog(Errors errors) {
         if (errors.hasErrors()) {
-            for (ObjectError error : errors.getAllErrors()) {
-                logger.info("Validation error: " + error.toString());
+            if (logger.isInfoEnabled()) {
+                for (ObjectError error : errors.getAllErrors()) {
+                    logger.info("Validation error: {}", error.toString());
+                }
             }
         } else {
             logger.debug("Validation successful");

@@ -45,7 +45,7 @@ public class User implements UserDetails, BasicEntity, Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "userIdSeq")
     private Long id;
 
-    @Basic @Column(name = "username")
+    @Basic @Column(name = "username", unique = true)
     private String username;
 
     @Basic @Column(name = "password")
@@ -60,12 +60,13 @@ public class User implements UserDetails, BasicEntity, Serializable {
     @Basic @Column(name = "enabled")
     private boolean enabled;
 
-    @Basic @Column(name="email")
+    @Basic @Column(name="email", unique = true)
     private String email;
 
     @Basic @Column(name="openid")
     private String openId;
 
+    @Transient
     private String confirmPassword;
 
     public User() {

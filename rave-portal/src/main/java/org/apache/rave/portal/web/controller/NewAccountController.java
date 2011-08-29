@@ -71,8 +71,7 @@ public class NewAccountController {
 		  //Now attempt to create the account.
 		  try {
 			    logger.debug("newaccount.jsp: passed form validation");
-			    newAccountService.createNewAccount(newUser.getUsername(),newUser.getPassword(),
-                        newUser.getPageLayout());
+			    newAccountService.createNewAccount(newUser);
 				return ViewNames.REDIRECT;
 		  } catch (org.springframework.dao.IncorrectResultSizeDataAccessException ex) {
 				//This exception is thrown if the account already exists.
