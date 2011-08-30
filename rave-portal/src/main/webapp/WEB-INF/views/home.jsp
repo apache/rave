@@ -179,8 +179,7 @@
             rave.initProviders();
             rave.initWidgets(widgets);
             rave.initUI();  
-            rave.layout.init();            
-            rave.forms.validateUserProfileForm();
+            rave.layout.init();
         });     
     </script>
 </rave:rave_generic_page>
