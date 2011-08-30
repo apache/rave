@@ -2,32 +2,9 @@ Apache Rave Change Log
 
 See http://issues.apache.org/jira/browse/RAVE-* (where * is the number of the issue below)
 
-Version 0.2 Released 2011-07-29
-===============================
 
-Release Notes - Rave - Version 0.2-INCUBATING
-
-** Sub-task
-    * [RAVE-36] - Need RAVE-styled login, signup pages
-    * [RAVE-39] - Need to provide skeleton for CSS and tag libraries
-    * [RAVE-40] - Write Jasmine unit tests for W3C Widget JavaScript libraries.
-    * [RAVE-44] - Need message display to user confirming widget addition from repository
-    * [RAVE-79] - Move the inline scripts for rendering the gadgets
-    * [RAVE-83] - Provide a way to override properties from shindig.properties
-    * [RAVE-106] - Enhance RegionWidget model to support storing RegionWidgetPreference's
-    * [RAVE-107] - Create REST API for persisting RegionWidget preferences
-    * [RAVE-108] - Add the metadata required to dynamically generate the preferences UI on the client side into the widget object
-    * [RAVE-109] - Add preferences button to gadget chrome bar which generates the UI for editing preferences onclick
-    * [RAVE-110] - Implement save/cancel handlers for edit prefs UI which use the REST api to persist preferences and re-render the widget with the updated preferences
-    * [RAVE-111] - Implement proper error checking for "required" userprefs
-    * [RAVE-112] - Figure out how to get the current view and re-render in the current view instead of defaulting to the home view when preferences are saved
-    * [RAVE-113] - Implement container side support for set_pref gadgets.rpc call
-    * [RAVE-115] - Dont show the edit preferences button if the gadget does not have any user-editable preferences (either no prefs or all hidden)
-
-** Technical task
-    * [RAVE-119] - Create Rave Commons Project
-    * [RAVE-120] - Move common components of Rave-Portal/Rave-Shindig to Rave-commons
-    * [RAVE-121] - Add Spring Integration to Rave-Shindig
+Rave - Version 0.3-INCUBATING
+===============================================
 
 ** Bug
     * [RAVE-57] - wikipedia gadget is not rendering
@@ -35,6 +12,14 @@ Release Notes - Rave - Version 0.2-INCUBATING
     * [RAVE-78] - rave-shindig incorrect dependency scope on shindig-social-api pulls in el-api jar breaking JSPs
     * [RAVE-86] - Drag and drop error for widgets in IE 9
     * [RAVE-88] - Gadgets don't render when JavaScript console is not available
+    * [RAVE-105] - PersonServiceDb: call addFilterClause with 'special' property adds nothing
+    * [RAVE-117] - "Widget Store" and "Logout" links are disabled when a gadget is in canvas view.
+    * [RAVE-118] - Error messages are not displayed on login.jsp after failed logins
+    * [RAVE-162] - Missing DISCLAIMER file for rave-commons
+    * [RAVE-168] - LICENSE/NOTICE/DISCLAIMER files missing from Maven generated -sources and -javadoc artifacts
+    * [RAVE-190] - javascript form validation only works for password field
+    * [RAVE-197] - JPA*RepositoryTest's cannot be run from an IDE due to classloading issues
+    * [RAVE-208] - Duplicate dataSourcePopulator definition in Rave-Shindig test configuration
 
 ** Improvement
     * [RAVE-45] - Portal host/ip configuration (Non-localhost support)
@@ -42,11 +27,22 @@ Release Notes - Rave - Version 0.2-INCUBATING
     * [RAVE-87] - Move javaagent property to parent pom
     * [RAVE-91] - CSS and layout updates
     * [RAVE-94] - Update donated UI
+    * [RAVE-149] - Upgrade to OpenJPA 2.1.1
+    * [RAVE-169] - Only provide and maintain appendable LICENSE/NOTICE file fragments for rave-commons similar to rave-portal and rave-shindig
+    * [RAVE-191] - Update rave-master-pom to extend apache-10 master pom
+    * [RAVE-196] - Add paging support to "All widgets" view in widget store
 
 ** New Feature
+    * [RAVE-20] - Implement container/shindig auth
     * [RAVE-89] - Provide basic new user registration feature
 
 ** Story
     * [RAVE-27] - Implement User Prefs
     * [RAVE-53] - Need to add support for canvas views, canvas/home view toggling
-
+    * [RAVE-62] - Create a common project and apply common patterns to both rave-portal and rave-shindig
+    * [RAVE-67] - Users can search for a widget in the widget repository using free text search
+    * [RAVE-76] - Users can submit a Widget for inclusion in the Widget Repository
+    * [RAVE-77] - Widgets can be hidden from users until they have been flagged as approved by the site owner
+    * [RAVE-96] - Create tabbed interface
+    * [RAVE-150] - Implement encrypted security token support for OpenSocial widgets
+    * [RAVE-163] - Page Management (CRUD)
