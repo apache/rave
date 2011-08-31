@@ -319,22 +319,13 @@
           <artifactId>el-api</artifactId>
           <version>${el-api.version}</version>
           <scope>provided</scope>
-          <exclusions>
-            <!-- javax el-api-1.0.jar has a dependency (sick!) on commons-logging-1.1.2-SNAPSHOT
-                 As a -SNAPSHOT dependency, maven keeps trying to find it (which it can't)
-            -->
-            <exclusion>
-              <groupId>commons-logging</groupId>
-              <artifactId>commons-logging</artifactId>
-            </exclusion>
-          </exclusions>          
         </dependency>
                 
         <!-- Exclude commons-logging by adding it as a provided dependency -->
         <dependency>
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
-            <version>[1,)</version>
+            <version>1.1.1</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
