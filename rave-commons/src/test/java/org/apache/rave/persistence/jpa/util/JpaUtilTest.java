@@ -19,24 +19,23 @@
 
 package org.apache.rave.persistence.jpa.util;
 
-import org.apache.rave.persistence.jpa.util.JpaUtil;
+import org.apache.rave.persistence.BasicEntity;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.easymock.EasyMock.*;
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.sameInstance;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 
 /**
+ * Test class for {@link JpaUtil}
  *
  * @author carlucci
  */
@@ -98,7 +97,23 @@ public class JpaUtilTest {
         assertThat(r, is(not(sameInstance(o))));
         verify(mockManager);
     }
-    
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void getPagedResultList() {
+        TypedQuery<BasicEntity> query = createNiceMock(TypedQuery.class);
+        List<BasicEntity> emptyList = new ArrayList<BasicEntity>();
+        int offset = 0;
+        int pagesize = 10;
+        // nothing to assert, but at least we know which methods are called in query
+        expect(query.setFirstResult(offset)).andReturn(query);
+        expect(query.setMaxResults(pagesize)).andReturn(query);
+        expect(query.getResultList()).andReturn(emptyList);
+        replay(query);
+        JpaUtil.getPagedResultList(query, offset, pagesize);
+        verify(query);
+    }
+
     // Private helper functions for the tests
     private List<Object> generatePopulatedList(int size) {
         List<Object> list = new ArrayList<Object>();
