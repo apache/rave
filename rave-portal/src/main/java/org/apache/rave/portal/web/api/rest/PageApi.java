@@ -18,8 +18,6 @@
  */
 package org.apache.rave.portal.web.api.rest;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import org.apache.rave.portal.service.PageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +29,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * Handler for all services exposed under the /api/rest/page path.
@@ -57,11 +58,12 @@ public class PageApi {
         response.setStatus(HttpStatus.NO_CONTENT.value());
     }    
     
-    // TODO - when we implement security we can implement different exception
+    // TODO RAVE-240 - when we implement security we can implement different exception
     //        handlers for different errors (unauthorized, resource not found, etc)
     @ExceptionHandler(Exception.class)
     public String handleException(Exception ex, HttpServletRequest request, HttpServletResponse response) {
-        logger.error("Error occured while accessing " + request.getRequestURL(), ex);        
+        // RAVE-240 lowered the log level to info
+        logger.info("Error occured while accessing " + request.getRequestURL(), ex);
         response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
         return ClassUtils.getShortName(ex.getClass());
     }

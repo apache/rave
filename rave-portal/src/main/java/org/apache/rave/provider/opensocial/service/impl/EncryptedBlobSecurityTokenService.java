@@ -112,7 +112,7 @@ public class EncryptedBlobSecurityTokenService implements SecurityTokenService {
             encryptedSecurityToken = encryptedSecurityToken.substring((container + ":").length());
 
             //Decrypt
-            //TODO: This hack is in place until we can get a patch applied to shindig to make the target method public
+            //TODO RAVE-158: This hack is in place until we can get a patch applied to shindig to make the target method public
             Method decryptMethod = BlobCrypterSecurityToken.class.getDeclaredMethod("decrypt", BlobCrypter.class,
                     String.class, String.class, String.class, String.class);
             decryptMethod.setAccessible(true);

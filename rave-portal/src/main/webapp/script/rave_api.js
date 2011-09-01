@@ -189,7 +189,7 @@ rave.api = rave.api || (function() {
                 }).error(handleError);
         }        
 
-        //TODO: Create a more robust error handling system and interrogation of RPC results
+        //TODO RAVE-228: Create a more robust error handling system and interrogation of RPC results
         function handleRpcError(rpcResult) {
             switch (rpcResult.errorCode) {
                 case "NO_ERROR" :

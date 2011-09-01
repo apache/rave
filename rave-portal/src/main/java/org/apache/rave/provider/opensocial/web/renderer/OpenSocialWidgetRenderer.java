@@ -36,7 +36,7 @@ import org.springframework.stereotype.Component;
 /**
  * Creates the appropriate markup to represent an OpenSocial widget
  * <p/>
- * //TODO: Create infrastructure for rendering inline gadgets via Caja
+ * //TODO RAVE-29: Create infrastructure for rendering inline gadgets via Caja
  */
 @Component
 public class OpenSocialWidgetRenderer implements RegionWidgetRenderer {

@@ -33,7 +33,7 @@ import org.springframework.orm.jpa.vendor.OpenJpaDialect;
  * @author CARLUCCI
  */
 
-//TODO:  Move this class to commons
+//TODO RAVE-235:  Move this class to commons
 public class H2OpenJpaDialect extends OpenJpaDialect {
     private static final long serialVersionUID = 1L;
     /**

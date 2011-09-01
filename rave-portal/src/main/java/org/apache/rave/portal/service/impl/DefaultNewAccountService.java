@@ -40,7 +40,7 @@ public class DefaultNewAccountService implements NewAccountService {
 
     private final UserService userService;
     private final PageService pageService;
-    // TODO why are these unused PageLayoutService and RegionService declared?
+    // TODO RAVE-236 why are these unused PageLayoutService and RegionService declared?
     private final PageLayoutService pageLayoutService;
     private final RegionService regionService;
 

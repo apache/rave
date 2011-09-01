@@ -29,7 +29,7 @@ import java.util.List;
  * A page, which consists of regions, and which may be owned by a {@link User} (note the ownership will likely need to
  * become more flexible to enable things like group ownership in the future).
  * 
- * TODO: not all database providers will be able to support deferrable constraints
+ * TODO RAVE-231: not all database providers will be able to support deferrable constraints
  * so for the time being I'm commenting out the owner/render sequence since it
  * will get updated in batches and blow up
  * @UniqueConstraint(columnNames={"owner_id","render_sequence"}

@@ -99,7 +99,7 @@ rave.opensocial = rave.opensocial || (function() {
             preloadConfig[osapi.container.ContainerConfig.PRELOAD_REF_TIME] = null;
 
             //Preload our data into the common container
-            //TODO: Submit a patch to Shindig common container to make the preloadFromConfig_ method public so preloaded
+            //TODO RAVE-158: Submit a patch to Shindig common container to make the preloadFromConfig_ method public so preloaded
             //gadget metadata and security tokens can be incrementally be pushed into the container cache.
             container.preloadFromConfig_(preloadConfig);
             renderNewGadget(gadget);
@@ -208,7 +208,7 @@ rave.opensocial = rave.opensocial || (function() {
      */
     function setTitle(args) {
 
-        //TODO: This implementation relies on parsing of the gadgetHolder's element id
+        //TODO RAVE-229: This implementation relies on parsing of the gadgetHolder's element id
         //to retrieve the module ID
         //A patch should be submitted to Shindig's common container code to properly
         //set the iFrame ID to the module id
@@ -246,7 +246,7 @@ rave.opensocial = rave.opensocial || (function() {
      * @param opt_params
      */
     function requestNavigateTo(view, opt_params) {
-        //TODO: Implement this function
+        //TODO RAVE-230: Implement this function
         throw "Not Implemented!!!!!";
     }
 

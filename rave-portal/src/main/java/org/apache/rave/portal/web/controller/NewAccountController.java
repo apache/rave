@@ -80,7 +80,7 @@ public class NewAccountController {
 				return ViewNames.NEW_ACCOUNT;
 				
 		  } catch (Exception ex) {
-              //TODO need to handle more specific exceptions
+              //TODO RAVE-241 need to handle more specific exceptions
               if (logger.isDebugEnabled()) {
                   logger.error("Account creation failed: ", ex);
               } else {

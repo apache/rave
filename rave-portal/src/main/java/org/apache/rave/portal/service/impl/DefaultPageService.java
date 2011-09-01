@@ -112,8 +112,8 @@ public class DefaultPageService implements PageService {
         pageRepository.delete(pageRepository.get(pageId));
         // now re-sequence the page sequence numbers
 
-        //TODO:  We should be able to delete these lines.  If there are gaps in the sequence numbers, then it will still
-        //TODO:  return values in the correct order.  We only need to update sequences when there is a change in order
+        //TODO RAVE-237:  We should be able to delete these lines.  If there are gaps in the sequence numbers, then it will still
+        //TODO RAVE-237:  return values in the correct order.  We only need to update sequences when there is a change in order
         List<Page> pages = pageRepository.getAllPages(user.getId());
         updatePageRenderSequences(pages);
     }    
@@ -213,7 +213,7 @@ public class DefaultPageService implements PageService {
         return page;
     }
 
-    //TODO: If there is a reason why this is annotated @Transactional when the calling public method is @Transactional, note it in comments
+    //TODO RAVE-238: If there is a reason why this is annotated @Transactional when the calling public method is @Transactional, note it in comments
     @Transactional(readOnly = false)
     private void updatePageRenderSequences(List<Page> pages) {       
         if (pages != null && !pages.isEmpty()) {

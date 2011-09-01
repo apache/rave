@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-//TODO is this the right package name convention?
 package org.apache.rave.portal.web.validator;
 
 import org.apache.commons.lang.StringUtils;
@@ -77,7 +76,6 @@ public class UserProfileValidator implements Validator {
         writeResultToLog(errors);
     }
 
-    // TODO: copy of NewAccountValidator, should make this generic
     private void validateEmail(Errors errors, User user) {
         final String email = user.getEmail();
         if (StringUtils.isBlank(email)) {

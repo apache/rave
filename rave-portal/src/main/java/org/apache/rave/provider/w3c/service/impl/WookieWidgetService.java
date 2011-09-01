@@ -31,7 +31,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class WookieWidgetService implements WidgetProviderService {
 	
-	// TODO uncomment when Wookie Connector is available in Maven
+	// TODO RAVE-68 uncomment when Wookie Connector is available in Maven
     
     private static final String WOOKIE_SERVER_URL = "http://localhost:8080/wookie";
     private static final String WOOKIE_API_KEY = "TEST"; 

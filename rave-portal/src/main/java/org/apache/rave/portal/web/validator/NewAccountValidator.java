@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-//TODO is this the right package name convention?
 package org.apache.rave.portal.web.validator;
 
 import org.apache.commons.lang.StringUtils;

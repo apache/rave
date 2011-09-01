@@ -20,18 +20,10 @@
 package org.apache.rave.opensocial.service.impl;
 
 import org.apache.rave.exception.NotSupportedException;
-import org.apache.rave.opensocial.model.*;
 import org.apache.rave.util.CollectionUtils;
 import org.apache.shindig.protocol.model.Enum;
 import org.apache.shindig.protocol.model.EnumImpl;
 import org.apache.shindig.social.opensocial.model.*;
-import org.apache.shindig.social.opensocial.model.Account;
-import org.apache.shindig.social.opensocial.model.Address;
-import org.apache.shindig.social.opensocial.model.BodyType;
-import org.apache.shindig.social.opensocial.model.Name;
-import org.apache.shindig.social.opensocial.model.Organization;
-import org.apache.shindig.social.opensocial.model.Person;
-import org.apache.shindig.social.opensocial.model.Url;
 
 import java.io.Serializable;
 import java.util.*;
@@ -640,7 +632,7 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
 
     @Override
     public List<Url> getUrls() {
-        //TODO:Get URLs
+        //TODO RAVE-178:Get URLs
         //return displayField(Field.URLS) ? internal.getUrls() : null;
         return null;
     }

@@ -73,7 +73,7 @@ public class Widget implements BasicEntity, Serializable {
     private Long id;
 
     /*
-        TODO 1: Figure out what the OpenJPA strategy is for functionality provided by Eclisplink's @Convert
+        TODO RAVE-234: Figure out what the OpenJPA strategy is for functionality provided by Eclisplink's @Convert
      */
 
     @Basic @Column(name="title")
@@ -126,7 +126,7 @@ public class Widget implements BasicEntity, Serializable {
         this.id = id;
     }
 
-    //See TODO 1
+    //See TODO RAVE-234
 //    public InternationalString getTitle() {
 //        return title;
 //    }

@@ -96,14 +96,13 @@ public class User implements UserDetails, BasicEntity, Serializable {
         this.id = id;
     }
 
-    //TODO: Add GrantedAuthorities to user
-
+    //TODO RAVE-232: Add GrantedAuthorities to user
     @Override
     public Collection<GrantedAuthority> getAuthorities() {
         return null;
     }
 
-    //TODO:Setup Hashing and Salting of Passwords
+    //TODO RAVE-233:Setup Hashing and Salting of Passwords
 
     /**
      * Gets the password stored in the database

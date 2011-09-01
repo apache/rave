@@ -52,7 +52,7 @@ public class UserProfileController {
 		  this.userProfileValidator=userProfileValidator;
     }
 
-    // TODO why .jsp?
+    // TODO RAVE-154 why .jsp?
     @RequestMapping(value ="/userProfile.jsp")
 	 public void setUpForm(ModelMap model) {
 		  logger.debug("Initializing form");
@@ -77,7 +77,7 @@ public class UserProfileController {
 			    userService.updateUserProfile(user);
 				return ViewNames.REDIRECT;
 		  }
-		  //TODO need to handle more specific exceptions
+		  //TODO RAVE-154 need to handle more specific exceptions
 		  catch (Exception ex) {
 				logger.info("Account creation failed: {}", ex.getMessage());
 				results.reject("Unable to create account:"+ex.getMessage(),"Unable to create account");

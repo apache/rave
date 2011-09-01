@@ -39,7 +39,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping(value = {"/store/*", "/store"})
 public class WidgetStoreController {
 
-    // TODO make this value configurable through some management interface
     private static final int MAXIMUM_WIDGETS_PER_PAGE = 10;
 
     private final WidgetService widgetService;

@@ -33,7 +33,7 @@ import java.util.Map;
  * This class will only be here temporarily until we get a patch applied to Shindig to enable loading the token key
  * file from the classpath (which is why it has no test coverage and the weird nested classes).
  *
- * TODO: Remove this class once we have patches in Shindig to load the key file from the classpath.
+ * TODO RAVE-158: Remove this class once we have patches in Shindig to load the key file from the classpath.
  */
 @Singleton
 public class ClasspathAwareDefaultSecurityTokenCodec extends DefaultSecurityTokenCodec {
