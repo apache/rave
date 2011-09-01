@@ -213,8 +213,6 @@ public class DefaultPageService implements PageService {
         return page;
     }
 
-    //TODO RAVE-238: If there is a reason why this is annotated @Transactional when the calling public method is @Transactional, note it in comments
-    @Transactional(readOnly = false)
     private void updatePageRenderSequences(List<Page> pages) {       
         if (pages != null && !pages.isEmpty()) {
             for (int i = 0; i < pages.size(); i++) {
