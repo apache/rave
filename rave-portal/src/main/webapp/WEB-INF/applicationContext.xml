@@ -74,7 +74,7 @@
                   p:showSql="true"/>
         </property>
         <property name="jpaDialect">
-            <bean class="org.apache.rave.portal.repository.impl.H2OpenJpaDialect"/>
+            <bean class="org.apache.rave.persistence.jpa.impl.H2OpenJpaDialect"/>
         </property>      
         <property name="jpaPropertyMap">
             <map>

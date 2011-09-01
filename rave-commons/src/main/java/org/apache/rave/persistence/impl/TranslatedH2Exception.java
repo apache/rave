@@ -13,16 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.rave.portal.repository.impl;
+package org.apache.rave.persistence.impl;
 
 import org.springframework.dao.DataAccessException;
 
 /**
  * Exception class that represents an H2 database exception translated via Spring
  * 
- * @author ACARLUCCI
+ * @author CARLUCCI
  */
-//TODO RAVE-235:  Move this class to commons
 public class TranslatedH2Exception extends DataAccessException {
     private int errorCode;
     private String error;

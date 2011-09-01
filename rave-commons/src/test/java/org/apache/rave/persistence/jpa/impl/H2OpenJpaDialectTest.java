@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.rave.portal.repository.impl;
+package org.apache.rave.persistence.jpa.impl;
 
+import org.apache.rave.persistence.impl.TranslatedH2Exception;
 import org.apache.rave.exception.DuplicateItemException;
 import org.h2.jdbc.JdbcSQLException;
 import org.junit.Before;
@@ -22,11 +23,10 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
 import org.h2.constant.ErrorCode;
-import org.springframework.dao.DataAccessException;
 
 /**
  *
- * @author ACARLUCCI
+ * @author CARLUCCI
  */
 public class H2OpenJpaDialectTest {
     private H2OpenJpaDialect dialect;

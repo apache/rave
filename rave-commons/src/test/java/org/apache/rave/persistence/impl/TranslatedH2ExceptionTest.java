@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.apache.rave.portal.repository.impl;
+package org.apache.rave.persistence.impl;
 
 import org.junit.Before;
 import org.junit.Test;

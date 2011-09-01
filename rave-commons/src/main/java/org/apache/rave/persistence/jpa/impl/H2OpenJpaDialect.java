@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.rave.portal.repository.impl;
+package org.apache.rave.persistence.jpa.impl;
 
+import org.apache.rave.persistence.impl.TranslatedH2Exception;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.rave.exception.DuplicateItemException;
 import org.h2.constant.ErrorCode;
@@ -32,8 +33,6 @@ import org.springframework.orm.jpa.vendor.OpenJpaDialect;
  * 
  * @author CARLUCCI
  */
-
-//TODO RAVE-235:  Move this class to commons
 public class H2OpenJpaDialect extends OpenJpaDialect {
     private static final long serialVersionUID = 1L;
     /**
