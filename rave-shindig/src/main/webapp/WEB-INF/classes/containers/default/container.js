@@ -44,7 +44,7 @@
 
 // Container must be an array; this allows multiple containers
 // to share configuration.
-// TODO: Move out accel container config into a separate accel.js file.
+// TODO (copied from Shindig): Move out accel container config into a separate accel.js file.
 {"gadgets.container" : ["default", "accel"],
 
 // Set of regular expressions to validate the parent parameter. This is

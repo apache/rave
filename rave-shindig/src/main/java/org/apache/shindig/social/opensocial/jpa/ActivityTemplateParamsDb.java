@@ -55,7 +55,7 @@ public class ActivityTemplateParamsDb implements DbObject {
   @ManyToOne(targetEntity = ActivityDb.class, cascade = ALL)
   @JoinColumn(name = "activity_id", referencedColumnName = "oid")
   protected Activity activity;
-  // TODO: <openjpa-1.2.0-r422266:683325 fatal user error>
+  // TODO RAVE-25: <openjpa-1.2.0-r422266:683325 fatal user error>
   // org.apache.openjpa.persistence.ArgumentException: The type of field
   // "org.apache.shindig.social.opensocial.jpa.ActivityTemplateParamsDb.activities"
   // isn't supported

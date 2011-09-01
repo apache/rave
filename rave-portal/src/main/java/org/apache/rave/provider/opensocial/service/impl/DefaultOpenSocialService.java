@@ -35,7 +35,7 @@ public class DefaultOpenSocialService implements OpenSocialService {
 
     @Override
     public String getGadgetMetadata(String gadgetUrl) {
-        //TODO -- Add caching of gadget metadata in this service layer
+        //TODO RAVE-243 -- Add caching of gadget metadata in this service layer
         return gadgetMetadataRepository.getGadgetMetadata(gadgetUrl);
     }
 }
