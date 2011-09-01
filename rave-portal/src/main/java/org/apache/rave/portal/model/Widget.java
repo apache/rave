@@ -20,18 +20,7 @@ package org.apache.rave.portal.model;
 
 import java.io.Serializable;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import org.apache.rave.persistence.BasicEntity;
 
@@ -106,7 +95,7 @@ public class Widget implements BasicEntity, Serializable {
     @Basic @Column(name="author")
     private String author;
 
-    @Basic @Column(name = "description")
+    @Basic @Column(name = "description") @Lob
     private String description;
 
     @Basic @Column(name = "widget_status")

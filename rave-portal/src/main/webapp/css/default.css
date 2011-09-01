@@ -466,7 +466,7 @@ label.formradio {
     width: auto;
 }
 
-input.long {
+input.long, textarea.long {
     width:400px;
 }
 

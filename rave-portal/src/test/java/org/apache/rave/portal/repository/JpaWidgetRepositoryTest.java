@@ -19,12 +19,6 @@
 
 package org.apache.rave.portal.repository;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 import org.apache.rave.portal.model.Widget;
 import org.apache.rave.portal.model.WidgetStatus;
 import org.junit.Test;
@@ -36,14 +30,13 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertTrue;
-import static junit.framework.Assert.fail;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.util.ArrayList;
+import java.util.List;
+
+import static junit.framework.Assert.*;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 
 /**
@@ -173,6 +166,23 @@ public class JpaWidgetRepositoryTest {
         int publishedCount = repository.getCountByStatusAndFreeText(WidgetStatus.PUBLISHED,
                 searchTerm);
         assertTrue(publishedCount >= 2);
+    }
+
+    @Test
+    public void saveWidgetWithLongDescription() {
+        final String url = "http://example.com/doesnotexistyet";
+        final String longDescription = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc dictum sodales erat consequat pulvinar. Pellentesque ut massa mi, sit amet imperdiet diam. Morbi nec magna quis nisi bibendum dignissim. Fusce et rhoncus turpis. Integer mollis magna sit amet nulla convallis placerat dignissim lorem blandit. Nulla magna justo, cursus ac semper sed, pulvinar in turpis. Donec ultricies nibh sed nulla congue ullamcorper. Fusce commodo ultrices nunc, interdum lacinia elit faucibus at. Fusce laoreet ultricies volutpat. ";
+
+        Widget doesnotexist = repository.getByUrl(url);
+        assertNull(doesnotexist);
+
+        Widget widget = new Widget();
+        widget.setTitle("Widget with long description");
+        widget.setUrl(url);
+        widget.setDescription(longDescription);
+        widget = repository.save(widget);
+        assertNotNull(widget.getId());
+        assertEquals(longDescription, widget.getDescription());
     }
 
 }

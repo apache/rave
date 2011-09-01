@@ -69,7 +69,7 @@
 
                 <p>
                     <form:label path="description"><fmt:message key="widget.description"/></form:label>
-                    <form:input path="description" cssClass="long"/>
+                    <form:textarea path="description" cssClass="long"/>
                     <form:errors path="description" cssClass="error"/>
                 </p>
 
