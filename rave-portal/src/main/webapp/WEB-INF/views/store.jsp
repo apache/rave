@@ -69,7 +69,7 @@
             </c:when>
             <c:when test="${not empty searchTerm and widgets.totalResults eq 0}">
                 <fmt:message key="page.store.list.search.noresult" var="listheader">
-                    <fmt:param value="${searchTerm}"/>
+                    <fmt:param><c:out value="${searchTerm}"/></fmt:param>
                 </fmt:message>
             </c:when>
             <c:otherwise>
@@ -77,7 +77,7 @@
                     <fmt:param value="${offset + 1}"/>
                     <fmt:param value="${offset + fn:length(widgets.resultSet)}"/>
                     <fmt:param value="${widgets.totalResults}"/>
-                    <fmt:param value="${searchTerm}"/>
+                    <fmt:param><c:out value="${searchTerm}"/></fmt:param>
                 </fmt:message>
             </c:otherwise>
         </c:choose>

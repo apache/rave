@@ -40,7 +40,9 @@
               <fmt:message key="page.store.title"/>
             </a>
         </div>
-      <h1><fmt:message key="page.home.welcome"><fmt:param value="${page.owner.username}"/></fmt:message></h1>
+      <h1>
+          <fmt:message key="page.home.welcome"><fmt:param><c:out value="${page.owner.username}"/></fmt:param></fmt:message>
+      </h1>
     </div>
     <input id="currentPageId" type="hidden" value="${page.id}" />
     <div id="tabsHeader">      
@@ -143,7 +145,9 @@
                 <c:forEach var="userPage" items="${pages}">
                     <c:if test="${userPage.id != page.id}">
                         <option value="${userPage.id}">
-                          <fmt:message key="page.general.movethispage.after"><fmt:param value="${userPage.name}"/></fmt:message>
+                          <fmt:message key="page.general.movethispage.after">
+                              <fmt:param><c:out value="${userPage.name}"/></fmt:param>
+                          </fmt:message>
                         </option>
                     </c:if>
                 </c:forEach>
