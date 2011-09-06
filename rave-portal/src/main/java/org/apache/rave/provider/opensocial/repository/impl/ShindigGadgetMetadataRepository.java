@@ -19,8 +19,6 @@
 
 package org.apache.rave.provider.opensocial.repository.impl;
 
-import java.util.Iterator;
-import static org.apache.rave.provider.opensocial.Constants.*;
 import org.apache.rave.provider.opensocial.repository.GadgetMetadataRepository;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,6 +30,13 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestOperations;
+
+import java.util.Iterator;
+
+import static org.apache.rave.provider.opensocial.Constants.DATA_TYPE;
+import static org.apache.rave.provider.opensocial.Constants.HAS_PREFS_TO_EDIT;
+import static org.apache.rave.provider.opensocial.Constants.PrefDataTypes;
+import static org.apache.rave.provider.opensocial.Constants.USER_PREFS;
 
 @Repository
 public class ShindigGadgetMetadataRepository implements GadgetMetadataRepository {
@@ -76,20 +81,19 @@ public class ShindigGadgetMetadataRepository implements GadgetMetadataRepository
 
             rpcArray.put(fetchMetadataRpcOperation);
         } catch (JSONException e) {
-            logger.error("Error occurred while generating data for shindig metadata call: " + e.getMessage(), e);
-            throw new IllegalArgumentException(e.getMessage(), e);
+            throw new IllegalArgumentException("Error occurred while generating data for shindig metadata call", e);
         }
 
         //convert the json object to a string
         String postData = rpcArray.toString();
         if (logger.isDebugEnabled()) {
-            logger.debug("requestContent: " + postData);
+            logger.debug("requestContent: {}", postData);
         }
 
         //fire off the request and get the raw JSON back as a string
         String responseString = restOperations.postForObject(shindigUrl, postData, String.class);
         if (logger.isDebugEnabled()) {
-            logger.debug("shindig metadata raw response: " + responseString);
+            logger.debug("shindig metadata raw response: {}", responseString);
         }
 
         //now trim back the response to just the metadata for the single gadget
@@ -119,11 +123,10 @@ public class ShindigGadgetMetadataRepository implements GadgetMetadataRepository
             responseString = responseObject.toString();
 
             if (logger.isDebugEnabled()) {
-                logger.debug("shindig metadata trimmed response: " + responseString);
+                logger.debug("shindig metadata trimmed response: {}", responseString);
             }
         } catch (JSONException e) {
-            logger.error("Error occurred while processing response from shindig metadata call: " + e.getMessage(), e);
-            throw new IllegalArgumentException(e.getMessage(), e);
+            throw new IllegalArgumentException("Error occurred while processing response from shindig metadata call", e);
         }
 
         //return the raw JSON
