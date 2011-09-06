@@ -84,7 +84,7 @@ public class NewAccountController {
               if (logger.isDebugEnabled()) {
                   logger.error("Account creation failed: ", ex);
               } else {
-                  logger.error("Account creation failed: ", ex.getMessage());
+                  logger.error("Account creation failed: {}", ex.getMessage());
               }
 				results.reject("Unable to create account:"+ex.getMessage(),"Unable to create account");
 				return ViewNames.NEW_ACCOUNT;
