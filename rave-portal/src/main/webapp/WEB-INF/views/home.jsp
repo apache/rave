@@ -87,9 +87,10 @@
     <div id="pageContent">
         <c:forEach var="region" items="${page.regions}">
             <div class="region" id="region-${region.id}-id">
-                <c:forEach var="regionWidget" items="${region.regionWidgets}">
-                    <div class="widget-wrapper" id="widget-${regionWidget.id}-wrapper">
+                <c:forEach var="regionWidget" items="${region.regionWidgets}">                                                     
+                   <div class="widget-wrapper" id="widget-${regionWidget.id}-wrapper">
                         <div class="widget-title-bar">
+                            <span id="widget-${regionWidget.id}-collapse" class="widget-toolbar-toggle-collapse" title="Collapse/Restore Widget"></span>
                             <span id="widget-${regionWidget.id}-title"><c:out value="${regionWidget.widget.title}"/></span>
                             <!-- These are toolbar buttons -->
                             <div id="widget-${regionWidget.id}-toolbar" style="float:right;">

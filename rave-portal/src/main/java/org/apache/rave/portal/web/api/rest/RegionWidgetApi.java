@@ -30,6 +30,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import org.apache.rave.portal.model.RegionWidget;
 
 /**
  * Handler for all services exposed under the /api/regionWidgets path.
@@ -75,5 +76,24 @@ public class RegionWidgetApi {
                 "The preference name in the URL does not match the preference name in the RegionWidgetPreference object.");
 
         return regionWidgetService.saveRegionWidgetPreference(regionWidgetId, regionWidgetPreference);
+    }
+        
+    /**
+     * REST call to update the collapsed value of a RegionWidget
+     * 
+     * @param regionWidgetId the ID of the RegionWidget to update
+     * @param collapsed boolean representing the new collapse state
+     * @return the updated RegionWidget object
+     */
+    @ResponseBody
+    @RequestMapping(value = "/{regionWidgetId}/collapsed", method = RequestMethod.PUT)
+    public RegionWidget updateRegionWidgetCollapsedStatus(@PathVariable long regionWidgetId,
+                                                          @RequestBody Boolean collapsed) {
+        if (logger.isDebugEnabled()) {
+            logger.debug("POST received to update regionWidget " +
+                    regionWidgetId + ": " + collapsed);
+        }
+        
+        return regionWidgetService.saveRegionWidgetCollapsedState(regionWidgetId, collapsed);              
     }
 }

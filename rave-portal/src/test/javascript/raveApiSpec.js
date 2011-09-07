@@ -88,6 +88,32 @@ describe("Rave API", function() {
                 expect(callbackCalled).toBeTruthy();
             });
         });
+        
+        describe("saveWidgetCollapsedState", function() {
+            it("PUTs correct values to the REST service for saving the collapsed state of a widget", function() {               
+                
+                $.ajax = function(args) {
+                    expect(args.url).toEqual("api/rest/regionWidgets/7/collapsed");                    
+                    expect(JSON.parse(args.data)).toEqual(true);                                   
+                    expect(typeof(callback)).toEqual("function");
+                    callback({error:false});
+                    return {
+                        error: function(a, b, c) {
+                        }
+                    }
+                };
+
+                var callbackCalled = false;
+                var callback = function() {
+                    callbackCalled = true
+                };
+                             
+                rave.api.rest.saveWidgetCollapsedState({regionWidgetId: 7, 
+                                                        collapsed: true,
+                                                        successCallback: callback});
+                expect(callbackCalled).toBeTruthy();
+            });
+        });        
                 
         describe("deletePage", function() {
             it("DELETEs the correct Page using the REST service", function() {

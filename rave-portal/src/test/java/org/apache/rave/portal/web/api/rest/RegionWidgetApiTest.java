@@ -19,10 +19,11 @@
 
 package org.apache.rave.portal.web.api.rest;
 
+import org.apache.rave.portal.model.RegionWidget;
 import org.apache.rave.portal.model.RegionWidgetPreference;
 import org.apache.rave.portal.service.RegionWidgetService;
 import org.apache.rave.portal.web.model.RegionWidgetPreferenceListWrapper;
-import org.hamcrest.CoreMatchers;
+import static org.hamcrest.CoreMatchers.*;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -61,7 +62,7 @@ public class RegionWidgetApiTest {
                 LIST_WRAPPER);
 
         verify(regionWidgetService);
-        assertThat(result.getPreferences(), CoreMatchers.sameInstance(LIST_WRAPPER.getPreferences()));
+        assertThat(result.getPreferences(), sameInstance(LIST_WRAPPER.getPreferences()));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -89,7 +90,7 @@ public class RegionWidgetApiTest {
                 VALID_PREFERENCE_NAME, PREFERENCE);
 
         verify(regionWidgetService);
-        assertThat(result, CoreMatchers.sameInstance(PREFERENCE));
+        assertThat(result, sameInstance(PREFERENCE));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -110,5 +111,20 @@ public class RegionWidgetApiTest {
         replay(regionWidgetService);
 
         regionWidgetApi.createOrReplaceRegionWidgetPreference(INVALID_REGION_WIDGET_ID, VALID_PREFERENCE_NAME, PREFERENCE);
+    }
+        
+    @Test
+    public void updateRegionWidgetCollapsedStatus() {
+        final boolean COLLAPSED = true;       
+        
+        RegionWidget expectedRegionWidget = new RegionWidget(VALID_REGION_WIDGET_ID);
+        expectedRegionWidget.setCollapsed(COLLAPSED);
+
+        expect(regionWidgetService.saveRegionWidgetCollapsedState(VALID_REGION_WIDGET_ID, COLLAPSED)).andReturn(expectedRegionWidget); 
+        replay(regionWidgetService);
+        RegionWidget result = regionWidgetApi.updateRegionWidgetCollapsedStatus(VALID_REGION_WIDGET_ID, COLLAPSED);
+        verify(regionWidgetService);
+        
+        assertThat(result, sameInstance(expectedRegionWidget));
     }
 }

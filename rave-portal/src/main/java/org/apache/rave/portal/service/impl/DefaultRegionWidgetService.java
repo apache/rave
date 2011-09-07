@@ -31,6 +31,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class DefaultRegionWidgetService implements RegionWidgetService {
@@ -77,6 +78,14 @@ public class DefaultRegionWidgetService implements RegionWidgetService {
         return preference;
     }
 
+    @Override
+    @Transactional
+    public RegionWidget saveRegionWidgetCollapsedState(long regionWidgetId, boolean collapsed) {
+        RegionWidget regionWidget = getValidRegionWidget(regionWidgetId);
+        regionWidget.setCollapsed(collapsed);
+        return saveRegionWidget(regionWidget);
+    }
+    
     private RegionWidget getValidRegionWidget(long regionWidgetId) {
         RegionWidget regionWidget = this.getRegionWidget(regionWidgetId);
         if (regionWidget == null) {

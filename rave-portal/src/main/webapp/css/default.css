@@ -442,6 +442,12 @@ button.widget-toolbar-btn-prefs {
     display: none;
 }
 
+.widget-toolbar-toggle-collapse {
+    display: inline-block;
+    vertical-align: middle;    
+    cursor: pointer;
+}
+
 /* Form fields */
 
 fieldset{

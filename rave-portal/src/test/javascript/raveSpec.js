@@ -343,4 +343,101 @@ describe("Rave", function() {
     describe("Handle resize maximize event", function(){
 
     });
+    
+    describe("isFunction", function() {
+
+        it("returns true when the object is a function", function() {
+            var obj = function() { };
+            var result = rave.isFunction(obj);
+            expect(result).toEqual(true);
+        });
+        it("returns false when the object is a number", function() {
+            var obj = 1;
+            var result = rave.isFunction(obj);
+            expect(result).toEqual(false);
+        });        
+        it("returns false when the object is a string", function() {
+            var obj = "hello";
+            var result = rave.isFunction(obj);
+            expect(result).toEqual(false);
+        }); 
+        it("returns false when the object is an object", function() {
+            var obj = {"myattr" : "myvalue"};
+            var result = rave.isFunction(obj);
+            expect(result).toEqual(false);
+        }); 
+        it("returns false when the object is null", function() {
+            var obj = null;
+            var result = rave.isFunction(obj);
+            expect(result).toEqual(false);
+        }); 
+        it("returns false when the object is undefined", function() {
+            var obj;
+            var result = rave.isFunction(obj);
+            expect(result).toEqual(false);
+        }); 
+    });        
+    
+    describe("toggleCollapseWidgetIcon", function() {
+        //Creates a simple mock jquery object that mocks the functions used in this suite
+        function createMockJQuery() {
+            var expression;
+            var classMap = [];
+            
+            $ = function(expr) {
+
+                if (typeof expr != "undefined") {
+                    expression = expr;
+                }
+
+                return {
+                    expression : function () {
+                        return expression;
+                    },
+                    hasClass : function (className) {
+                        return classMap.indexOf(className) != -1;
+                    },
+                    addClass : function (className) {
+                        classMap.push(className);
+                    },
+                    removeClass: function(className) {                        
+                        var idx = classMap.indexOf(className); 
+                        if (idx != -1) {
+                            classMap.splice(idx, 1); 
+                        }
+                    }
+                }
+            };
+            
+        }
+
+        it("changes icon from normal to collapsed", function() {                                  
+            createMockJQuery();
+            // setup the state so the widget display is "normal"           
+            $().addClass("ui-icon-triangle-1-e");
+           
+            var widgetId = 99;
+           
+            rave.toggleCollapseWidgetIcon(widgetId);
+           
+            expect($().expression()).toEqual("#widget-" + widgetId + "-collapse");            
+            expect($().hasClass("ui-icon-triangle-1-e")).toEqual(false);
+            expect($().hasClass("ui-icon-triangle-1-s")).toEqual(true);                                        
+        });
+        
+        it("changes icon from collapsed to normal", function() {                                  
+            createMockJQuery();
+            // setup the state so the widget display is "normal"           
+            $().addClass("ui-icon-triangle-1-s");
+           
+            var widgetId = 99;
+           
+            rave.toggleCollapseWidgetIcon(widgetId);
+           
+            expect($().expression()).toEqual("#widget-" + widgetId + "-collapse");            
+            expect($().hasClass("ui-icon-triangle-1-s")).toEqual(false);
+            expect($().hasClass("ui-icon-triangle-1-e")).toEqual(true);                                        
+        });        
+       
+    });    
 });

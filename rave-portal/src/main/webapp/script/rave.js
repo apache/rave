@@ -54,6 +54,14 @@ var rave = rave || (function() {
         var WIDGET_PREFS_INPUT_CLASS = "widget-prefs-input";
         var WIDGET_PREFS_INPUT_REQUIRED_CLASS = "widget-prefs-input-required";
         var WIDGET_PREFS_INPUT_FAILED_VALIDATION = "widget-prefs-input-failed-validation";
+        
+        var WIDGET_ICON_BASE_CLASS = "ui-icon";
+        var WIDGET_BTN_MAXIMIZE_CLASS = "ui-icon-arrow-4-diag";
+        var WIDGET_BTN_MINIMIZE_CLASS = "ui-icon-arrowthick-1-sw";
+        var WIDGET_BTN_DELETE_CLASS = "ui-icon-close";
+        var WIDGET_BTN_EDIT_PREFS_CLASS = "ui-icon-pencil";
+        var WIDGET_TOGGLE_DISPLAY_COLLAPSED = "ui-icon-triangle-1-e";
+        var WIDGET_TOGGLE_DISPLAY_NORMAL = "ui-icon-triangle-1-s";             
 
         function WIDGET_PREFS_EDIT_BUTTON(regionWidgetId) {
             return "widget-" + regionWidgetId + "-prefs";
@@ -91,7 +99,7 @@ var rave = rave || (function() {
                         start: dragStart, // event listener for drag start
                         stop : dragStop // event listener for drag stop
             });
-            initGadgetUI();
+            initWidgetUI();
         }
 
         function dragStart(event, ui) {
@@ -129,10 +137,10 @@ var rave = rave || (function() {
         /**
          * Takes care of the UI part of the widget rendering. Depends heavily on the HTML structure
          */
-        function initGadgetUI() {
+        function initWidgetUI() {
             $(".widget-wrapper").each(function(){
                 var widgetId = extractObjectIdFromElementId($(this).attr("id"));
-                styleGadgetButtons(widgetId);
+                styleWidgetButtons(widgetId);
             });
         }
 
@@ -140,24 +148,74 @@ var rave = rave || (function() {
             addOverlay($("#pageContent"));
             $(".region" ).sortable( "option", "disabled", true );
             $("#widget-" + args.data.id + "-wrapper").removeClass("widget-wrapper").addClass("widget-wrapper-canvas");
-            $("#widget-" + args.data.id + "-max").click({id:args.data.id}, minimizeAction);
+            
+            // changes to 'max' button:
+            // 1) clear out the previous max button click event and attach a new one
+            // 2) change the image
+            var $maxButton =  $("#widget-" + args.data.id + "-max");
+            $maxButton.unbind("click");
+            $maxButton.click({id:args.data.id}, minimizeAction);
+            $maxButton.button("option", "icons", {primary:WIDGET_BTN_MINIMIZE_CLASS});
+            
+            // hide the collapse/restore toggle icon in canvas mode
+            $("#widget-" + args.data.id + "-collapse").hide();
             var widget = getWidgetById(args.data.id);
-            if(typeof widget != "undefined" && typeof widget.maximize == "function") {
+            if(typeof widget != "undefined" && isFunction(widget.maximize)) {
                 widget.maximize();
             }
-
         }
 
         function minimizeAction(args) {
             $(".dnd-overlay").remove();
             $(".region" ).sortable( "option", "disabled", false );
             $("#widget-" + args.data.id + "-wrapper").removeClass("widget-wrapper-canvas").addClass("widget-wrapper");
-            $("#widget-" + args.data.id + "-max").click({id:args.data.id}, maximizeAction);
+            
+            // changes to 'max' button:
+            // 1) clear out the previous max button click event and attach a new one
+            // 2) change the image
+            var $maxButton =  $("#widget-" + args.data.id + "-max");
+            $maxButton.unbind("click");
+            $maxButton.click({id:args.data.id}, maximizeAction);            
+            $maxButton.button("option", "icons", {primary:WIDGET_BTN_MAXIMIZE_CLASS});
+                                              
+            // re-show the collapse/restore toggle icon
+            $("#widget-" + args.data.id + "-collapse").show();
             var widget = getWidgetById(args.data.id);
-            if(typeof widget != "undefined" && typeof widget.minimize == "function") {
-                widget.minimize();
+            // if the widget is collapsed execute the collapse function
+            // otherwise execute the minimize function
+            if(typeof widget != "undefined"){
+                if (widget.collapsed && isFunction(widget.collapse)) {
+                    widget.collapse();
+                } else if (isFunction(widget.minimize)) {
+                    widget.minimize();
+                }
             }
         }
+      
+        function toggleCollapseAction(args) {     
+            var regionWidgetId = args.data.id;
+            var widget = getWidgetById(regionWidgetId);    
+            // toggle the collapse state of the widget
+            var newCollapsedValue = !widget.collapsed;
+            var functionArgs = {"regionWidgetId": regionWidgetId, "collapsed": newCollapsedValue};
+            
+            // if this type of widget has a collapse or restore callback invoke it upon
+            // successfull persistence
+            if(typeof widget != "undefined") {                
+                // if this is a collapse action, and the widget has a collapse implementation function,
+                // attach it as a callback function
+                if (newCollapsedValue && isFunction(widget.collapse)) {
+                    functionArgs.successCallback = widget.collapse;                 
+                } 
+                // if this is a restore action, and the widget has a restore implementation function,
+                // attach it as a callback function
+                else if (!newCollapsedValue && isFunction(widget.restore)) {
+                    functionArgs.successCallback = widget.restore;                 
+                }
+            }
+            
+            rave.api.rest.saveWidgetCollapsedState(functionArgs);           
+        }      
 
         function deleteAction(args) {
             if (confirm("Are you sure you want to remove this widget from your page")) {
@@ -319,7 +377,7 @@ var rave = rave || (function() {
             // are the only inputs that could potentially contain empty data
             prefsElement.find("*").filter(":input").each(function(index, element) {
                 switch (element.type) {
-                    case "text": 
+                    case "text":
                         if (!validatePrefInput(element)) {
                             hasValidationErrors = true;
                             $(element).addClass(WIDGET_PREFS_INPUT_FAILED_VALIDATION);
@@ -360,7 +418,7 @@ var rave = rave || (function() {
                 // focus on the first input that has validation errors
                 prefsElement.find("." + WIDGET_PREFS_INPUT_FAILED_VALIDATION).first().focus(); 
             } else {
-                if(typeof regionWidget.savePreferences == "function") {
+                if(isFunction(regionWidget.savePreferences)) {
                     regionWidget.savePreferences(updatedPrefs);
                 }
 
@@ -397,31 +455,66 @@ var rave = rave || (function() {
          * Applies styling to the several buttons in the widget toolbar
          * @param widgetId identifier of the region widget
          */
-        function styleGadgetButtons(widgetId) {
+        function styleWidgetButtons(widgetId) {
+            var widget = rave.getWidgetById(widgetId);
+            
+            // init the maximize button
             $("#widget-" + widgetId + "-max").button({
                 text: false,
                 icons: {
-                    primary: "ui-icon-arrow-4-diag"
+                    primary: WIDGET_BTN_MAXIMIZE_CLASS
                 }
             }).click({id: widgetId}, maximizeAction);
 
+            // init the delete button
             $("#widget-" + widgetId + "-remove").button({
                 text: false,
                 icons: {
-                    primary: "ui-icon-close"
+                    primary: WIDGET_BTN_DELETE_CLASS
                 }
             }).click({id: widgetId}, deleteAction);
 
+            // init the edit preferences button
             $("#" + WIDGET_PREFS_EDIT_BUTTON(widgetId)).button({
                 text: false,
                 icons: {
-                    primary: "ui-icon-pencil"
+                    primary: WIDGET_BTN_EDIT_PREFS_CLASS
                 }
             }).click({id: widgetId}, editPrefsAction);
+                       
+            // init the collapse/restore toggle
+            // conditionally style the icon and setup the event handlers
+            var $toggleCollapseIcon = $("#widget-" + widgetId + "-collapse");
+            $toggleCollapseIcon.hide();
+            $toggleCollapseIcon.addClass(WIDGET_ICON_BASE_CLASS);
+            $toggleCollapseIcon.addClass((widget.collapsed) ? WIDGET_TOGGLE_DISPLAY_COLLAPSED : WIDGET_TOGGLE_DISPLAY_NORMAL);                        
+            $toggleCollapseIcon
+                .click({id: widgetId}, toggleCollapseAction)
+                .mousedown(function(event) {
+                    // don't allow drag and drop when this item is clicked
+                    event.stopPropagation();
+                });       
+            $toggleCollapseIcon.show();
         }
+                
+        /**
+         * Toggles the display of the widget collapse/restore icon.
+         * @param widgetId the widgetId of the rendered widget to toggle the icon for
+         */
+        function toggleCollapseWidgetIcon(widgetId) {
+            var $toggleIcon = $("#widget-" + widgetId + "-collapse");
+            if ($toggleIcon.hasClass(WIDGET_TOGGLE_DISPLAY_COLLAPSED)) {
+                $toggleIcon.removeClass(WIDGET_TOGGLE_DISPLAY_COLLAPSED);
+                $toggleIcon.addClass(WIDGET_TOGGLE_DISPLAY_NORMAL);
+            } else {
+                $toggleIcon.removeClass(WIDGET_TOGGLE_DISPLAY_NORMAL);
+                $toggleIcon.addClass(WIDGET_TOGGLE_DISPLAY_COLLAPSED);
+            }
+        }   
 
         return {
-          init : init
+          init : init,          
+          toggleCollapseWidgetIcon: toggleCollapseWidgetIcon
         };
 
     })();
@@ -502,6 +595,15 @@ var rave = rave || (function() {
     function viewPage(pageId) {                
         var fragment = (pageId != null) ? ("/" + pageId) : "";
         window.location.href = rave.getContext() + "page/view" + fragment;      
+    }
+    
+    /**
+     * Utility function to determine if a javascript object is a function
+     * @param obj the object to check
+     * @return true if object is a function, false otherwise
+     */ 
+    function isFunction(obj) {       
+        return (typeof obj == "function");
     }
 
     /**
@@ -586,6 +688,21 @@ var rave = rave || (function() {
          * 
          * @param pageId the pageId to view, or if null, the user's default page
          */
-        viewPage: viewPage
+        viewPage: viewPage,
+        
+        /**
+         * Toggles the collapse/restore icon of the rendered widget
+         * 
+         * @param widgetId the widgetId of the rendered widget to toggle
+         */
+        toggleCollapseWidgetIcon: ui.toggleCollapseWidgetIcon,
+        
+        /***
+         * Utility function to determine if a javascript object is a function or not
+         * 
+         * @param obj the object to check
+         * @return true if obj is a function, false otherwise
+         */
+        isFunction: isFunction
     }
 })();

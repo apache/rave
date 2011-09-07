@@ -47,6 +47,7 @@ public class OpenSocialWidgetRendererTest {
     private static final String VALID_GADGET_URL = "http://www.example.com/gadget.xml";
     private static final String VALID_METADATA = "metadata";
     private static final String VALID_SECURITY_TOKEN = "securityToken";
+    private static final boolean VALID_COLLAPSED = true;
 
     @Before
     public void setup() {
@@ -71,9 +72,11 @@ public class OpenSocialWidgetRendererTest {
         w.setUrl(VALID_GADGET_URL);
         RegionWidget rw = new RegionWidget();
         rw.setId(1L);
+        rw.setCollapsed(VALID_COLLAPSED);
         rw.setWidget(w);
         rw.setPreferences(Arrays.asList(new RegionWidgetPreference(1L, 1L, "color", "blue"),
-                new RegionWidgetPreference(2L, 1L, "speed", "fast")));
+                                        new RegionWidgetPreference(2L, 1L, "speed", "fast"),
+                                        new RegionWidgetPreference(3L, 1L, null, null)));
 
         expect(securityTokenService.getEncryptedSecurityToken(rw)).andReturn(VALID_SECURITY_TOKEN);
         replay(securityTokenService);
@@ -84,7 +87,7 @@ public class OpenSocialWidgetRendererTest {
             result should look like:
 
             widgets.push({type: 'OpenSocial', regionWidgetId: 1, widgetUrl: 'http://www.example.com/gadget.xml',
-                securityToken: 'securityToken',  metadata: metadata, userPrefs: {"speed":"fast","color":"blue"}});
+                securityToken: 'securityToken',  metadata: metadata, userPrefs: {"speed":"fast","color":"blue"}, collapsed: true});
         */
 
         JSONObject jsonObject = new JSONObject(
@@ -97,6 +100,7 @@ public class OpenSocialWidgetRendererTest {
         assertThat((String) jsonObject.get("metadata"), is(equalTo(VALID_METADATA)));
         assertThat((String) ((JSONObject) jsonObject.get("userPrefs")).get("color"), is(equalTo("blue")));
         assertThat((String) ((JSONObject) jsonObject.get("userPrefs")).get("speed"), is(equalTo("fast")));
+        assertThat((Boolean) jsonObject.get("collapsed"), is(equalTo(VALID_COLLAPSED)));
     }
 
     @Test
@@ -111,6 +115,7 @@ public class OpenSocialWidgetRendererTest {
         assertThat(result.matches(".*type[ ]*:[ ]*'OpenSocial',.*"), is(true));
         assertThat(result.matches(".*widgetUrl[ ]*:[ ]*'null',.*"), is(true));
         assertThat(result.matches(".*metadata[ ]*:[ ]*null,.*"), is(true));
+        assertThat(result.matches(".*collapsed[ ]*:[ ]*false.*"), is(true));
     }
 
     @Test(expected = NotSupportedException.class)

@@ -60,4 +60,13 @@ public interface RegionWidgetService {
      * @return The updated RegionWidgetPreference with all ID numbers populated.
      */
     RegionWidgetPreference saveRegionWidgetPreference(long regionWidgetId, RegionWidgetPreference preference);
+    
+    /**
+     * Saves the collapsed state of the given regionWidgetId
+     * 
+     * @param regionWidgetId The ID of the RegionWidget to save the collapsed value for
+     * @param collapsed the collapsed state of the RegionWidget
+     * @return The updated RegionWidget with the new collapsed value
+     */
+    RegionWidget saveRegionWidgetCollapsedState(long regionWidgetId, boolean collapsed);
 }

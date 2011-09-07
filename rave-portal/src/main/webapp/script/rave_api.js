@@ -67,6 +67,31 @@ rave.api = rave.api || (function() {
             });
         }
         
+        function saveWidgetCollapsedState(args) {
+            $.ajax({
+                type: 'PUT',
+                url: rave.getContext() + path + "regionWidgets/" + args.regionWidgetId + "/collapsed",
+                data: JSON.stringify(args.collapsed),  
+                contentType: 'application/json',
+                dataType: 'json',
+                success: function(result) {
+                    // update the in-memory widget with the new collapsed status
+                    rave.getWidgetById(result.id).collapsed = result.collapsed;
+                    
+                    // toggle the collapse/restore icon
+                    rave.toggleCollapseWidgetIcon(result.id);
+                    
+                    // if the widget has supplied a collapse or restore 
+                    // callback function, invoke it so each widget provider
+                    // can handle the collapse / restore action independently
+                    if (typeof args.successCallback == 'function') {
+                        args.successCallback();
+                    }
+                },
+                error: handleError
+            });                        
+        }
+        
         function deletePage(args) {
             $.ajax({
                 type: 'DELETE',
@@ -83,6 +108,7 @@ rave.api = rave.api || (function() {
         return {
             saveWidgetPreferences : saveWidgetPreferences,
             saveWidgetPreference : saveWidgetPreference,
+            saveWidgetCollapsedState : saveWidgetCollapsedState,
             deletePage : deletePage
         };
     })();

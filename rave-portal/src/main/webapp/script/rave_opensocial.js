@@ -115,13 +115,25 @@ rave.opensocial = rave.opensocial || (function() {
     function renderNewGadget(gadget) {
         var widgetBodyElement = document.getElementById(["widget-", gadget.regionWidgetId, "-body"].join(""));
         gadget.site = container.newGadgetSite(widgetBodyElement);
-        gadget.maximize = function() { renderGadgetView(rave.opensocial.VIEW_NAMES.CANVAS, this); };
-        gadget.minimize = function() { renderGadgetView(rave.opensocial.VIEW_NAMES.HOME,   this); };
+        gadget.maximize = function() { 
+            // always display the gadget in canvas view even if it currently collapsed
+            renderGadgetView(rave.opensocial.VIEW_NAMES.CANVAS, this); 
+        };
+        gadget.minimize = function() { 
+            renderGadgetViewIfNotCollapsed(rave.opensocial.VIEW_NAMES.HOME, this);             
+        };
+        gadget.collapse = function() { 
+            // hide the iframe of the gadget via css
+            $(getGadgetIframeByWidgetId(this.regionWidgetId)).hide();            
+        };
+        gadget.restore = function() {
+             renderGadgetView(rave.opensocial.VIEW_NAMES.HOME, rave.getWidgetById(this.regionWidgetId));
+        };
         gadget.savePreferences = function(userPrefs) {
             this.userPrefs = userPrefs;
             rave.api.rest.saveWidgetPreferences({regionWidgetId: this.regionWidgetId, userPrefs: userPrefs});
-            // re-render the gadget in the same view          
-            renderGadgetView(rave.opensocial.getCurrentView(this.regionWidgetId), this); 
+            // re-render the gadget in the same view if the gadget is not collapsed
+            renderGadgetViewIfNotCollapsed(rave.opensocial.getCurrentView(this.regionWidgetId), this);             
         };
         
         // if the gadget has prefences to edit, display the edit prefs button in the gadget chrome
@@ -129,7 +141,20 @@ rave.opensocial = rave.opensocial || (function() {
             $("#widget-" + gadget.regionWidgetId + "-prefs").show();
         }
         
-        renderGadgetView(rave.opensocial.VIEW_NAMES.HOME, gadget);
+        // if the gadget is not collapsed, render it
+        renderGadgetViewIfNotCollapsed(rave.opensocial.VIEW_NAMES.HOME, gadget);        
+    }
+    
+    /**
+     * Utility function to render a gadget in the supplied view if the gadget's 
+     * collapsed attribute is false
+     * @param view the OpenSocial view to render
+     * @param gadget the OpenSocial gadget to render
+     */ 
+    function renderGadgetViewIfNotCollapsed(view, gadget) {
+        if (!gadget.collapsed) {
+            renderGadgetView(view, gadget);
+        }
     }
 
     /**
@@ -151,6 +176,21 @@ rave.opensocial = rave.opensocial || (function() {
         var elem = document.getElementById("widget-" + id + "-wrapper");
         return {width: elem.clientWidth - OFFSET, height: view == rave.opensocial.VIEW_NAMES.CANVAS ? elem.clientHeight : MIN_HEIGHT};
     }
+
+    /**
+     * Returns the Common Container activeGadgetHolder object for the given widgetId
+     * @param widgetId the widgetId
+     */ 
+    function getActiveGadgetHolderByWidgetId(widgetId) {
+        return rave.getWidgetById(widgetId).site.getActiveGadgetHolder();     
+    }
+
+    /**
+     * Returns the iframe element of the gadget for the given widgetId
+     */
+    function getGadgetIframeByWidgetId(widgetId) {
+        return getActiveGadgetHolderByWidgetId(widgetId).getIframeElement();     
+    }        
 
     /**
      * validates the metadata for the current gadget
@@ -184,7 +224,10 @@ rave.opensocial = rave.opensocial || (function() {
      * @param regionWidgetId of the gadget
      */
     function getCurrentView(regionWidgetId) {
-        return rave.getWidgetById(regionWidgetId).site.getActiveGadgetHolder().getView();
+        // the active gadget holder will be null if the gadget is collapsed
+        // as it won't be rendered on the page
+        var activeGadgetHolder = getActiveGadgetHolderByWidgetId(regionWidgetId);
+        return (activeGadgetHolder == null) ? null : activeGadgetHolder.getView();
     }
 
     /*

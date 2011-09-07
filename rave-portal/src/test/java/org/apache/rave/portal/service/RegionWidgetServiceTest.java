@@ -24,7 +24,7 @@ import org.apache.rave.portal.model.RegionWidget;
 import org.apache.rave.portal.model.RegionWidgetPreference;
 import org.apache.rave.portal.repository.RegionWidgetRepository;
 import org.apache.rave.portal.service.impl.DefaultRegionWidgetService;
-import org.hamcrest.CoreMatchers;
+import static org.hamcrest.CoreMatchers.*;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -57,7 +57,7 @@ public class RegionWidgetServiceTest {
         expect(regionWidgetRepository.get(VALID_REGION_WIDGET_ID)).andReturn(VALID_REGION_WIDGET);
         replay(regionWidgetRepository);
 
-        assertThat(regionWidgetService.getRegionWidget(VALID_REGION_WIDGET_ID), CoreMatchers.sameInstance(VALID_REGION_WIDGET));
+        assertThat(regionWidgetService.getRegionWidget(VALID_REGION_WIDGET_ID), sameInstance(VALID_REGION_WIDGET));
     }
 
     @Test
@@ -65,7 +65,7 @@ public class RegionWidgetServiceTest {
         expect(regionWidgetRepository.get(INVALID_REGION_WIDGET_ID)).andReturn(null);
         replay(regionWidgetRepository);
 
-        assertThat(regionWidgetService.getRegionWidget(INVALID_REGION_WIDGET_ID), CoreMatchers.<Object>nullValue());
+        assertThat(regionWidgetService.getRegionWidget(INVALID_REGION_WIDGET_ID), is(nullValue()));
     }
 
     @Test
@@ -75,7 +75,7 @@ public class RegionWidgetServiceTest {
         expect(regionWidgetRepository.save(VALID_REGION_WIDGET)).andReturn(VALID_REGION_WIDGET);
         replay(regionWidgetRepository);
 
-        assertThat(regionWidgetService.saveRegionWidget(VALID_REGION_WIDGET), CoreMatchers.sameInstance(VALID_REGION_WIDGET));
+        assertThat(regionWidgetService.saveRegionWidget(VALID_REGION_WIDGET), sameInstance(VALID_REGION_WIDGET));
     }
 
     @Test
@@ -116,7 +116,30 @@ public class RegionWidgetServiceTest {
         assertTrue(preferenceCollectionsMatch(existingPreferences, VALID_REGION_WIDGET.getPreferences()));
         assertTrue(preferencesHaveValidRegionWidgetId(VALID_REGION_WIDGET.getPreferences()));
     }
+        
+    @Test
+    public void saveRegionWidgetCollapsedState() {
+        final boolean COLLAPSED = true;
+        RegionWidget regionWidget = new RegionWidget(VALID_REGION_WIDGET_ID);
+        
+        expect(regionWidgetRepository.get(VALID_REGION_WIDGET_ID)).andReturn(regionWidget);                
+        regionWidget.setCollapsed(COLLAPSED);
+        expect(regionWidgetRepository.save(regionWidget)).andReturn(regionWidget);
+        replay(regionWidgetRepository);
 
+        assertThat(regionWidgetService.saveRegionWidgetCollapsedState(VALID_REGION_WIDGET_ID, COLLAPSED).isCollapsed(), is(COLLAPSED));
+    }
+
+    @Test(expected=IllegalArgumentException.class)
+    public void saveRegionWidgetCollapsedState_invalidWidgetId() {
+        final boolean COLLAPSED = true;
+      
+        expect(regionWidgetRepository.get(INVALID_REGION_WIDGET_ID)).andReturn(null);  
+        replay(regionWidgetRepository);
+
+        regionWidgetService.saveRegionWidgetCollapsedState(INVALID_REGION_WIDGET_ID, COLLAPSED);
+    }    
+    
     private boolean preferencesHaveValidRegionWidgetId(List<RegionWidgetPreference> savedPreferences) {
         for (RegionWidgetPreference savedPreference : savedPreferences) {
             if (!savedPreference.getRegionWidgetId().equals(VALID_REGION_WIDGET_ID)) {

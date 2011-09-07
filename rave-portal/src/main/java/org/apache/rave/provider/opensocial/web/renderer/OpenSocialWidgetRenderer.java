@@ -59,7 +59,8 @@ public class OpenSocialWidgetRenderer implements RegionWidgetRenderer {
             " widgetUrl: '%3$s', " +
             " securityToken: '%4$s', " +
             " metadata: %5$s," +
-            " userPrefs: %6$s});";
+            " userPrefs: %6$s," +
+            " collapsed: %7$s});";
 
     @Override
     public String getSupportedContext() {
@@ -92,6 +93,6 @@ public class OpenSocialWidgetRenderer implements RegionWidgetRenderer {
 
         return String.format(IFRAME_MARKUP, Constants.WIDGET_TYPE, item.getId(), item.getWidget().getUrl(),
                 securityTokenService.getEncryptedSecurityToken(item),
-                openSocialService.getGadgetMetadata(item.getWidget().getUrl()), userPrefs.toString());
+                openSocialService.getGadgetMetadata(item.getWidget().getUrl()), userPrefs.toString(), item.isCollapsed());
     }
 }
