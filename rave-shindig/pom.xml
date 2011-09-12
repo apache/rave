@@ -136,7 +136,14 @@
                 <artifactId>openjpa-maven-plugin</artifactId>
                 <version>1.2</version>
                 <configuration>
-                    <!--<includes>org/apache/rave/opensocial/model/*.class</includes>-->
+                    <includes>org/apache/rave/gadgets/oauth/model/*.class,
+                        org/apache/rave/opensocial/model/*.class,
+                        org/apache/shindig/social/opensocial/jpa/*.class
+                    </includes>
+                    <excludes>
+                        org/apache/shindig/social/opensocial/jpa/EnumDb.class,
+                        org/apache/rave/gadgets/oauth/model/OAuthConsumerStore$KeyType.class
+                    </excludes>
                     <addDefaultConstructor>true</addDefaultConstructor>
                     <enforcePropertyRestrictions>true</enforcePropertyRestrictions>
                 </configuration>

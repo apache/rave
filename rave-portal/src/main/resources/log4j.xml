@@ -33,9 +33,8 @@
   <!-- Springframework logger -->
   <logger name="org.springframework">
     <level value="info" />
-    <appender-ref ref="console" />
   </logger>
-  
+
   <!-- Root Logger -->
   <root>
     <priority value="warn" />

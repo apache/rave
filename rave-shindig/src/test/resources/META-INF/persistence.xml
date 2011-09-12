@@ -26,14 +26,6 @@
     <provider>org.apache.openjpa.persistence.PersistenceProviderImpl</provider>
     <class>org.apache.rave.gadgets.oauth.model.OAuthConsumerStore</class>
     <class>org.apache.rave.gadgets.oauth.model.OAuthTokenInfo</class>
-    <properties>
-      <property name="openjpa.RuntimeUnenhancedClasses" value="supported"/>
-      <property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema"/>
-      <property name="openjpa.ConnectionDriverName" value="org.h2.Driver"/>
-      <property name="openjpa.ConnectionURL" value="jdbc:h2:mem:portal;DB_CLOSE_DELAY=-1;LOCK_TIMEOUT=10000"/>
-      <property name="openjpa.ConnectionUserName" value="sa"/>
-      <property name="openjpa.ConnectionPassword" value="sa"/>
-    </properties>
   </persistence-unit>
 
 </persistence>

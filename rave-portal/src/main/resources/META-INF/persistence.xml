@@ -22,7 +22,7 @@
             xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
             version="2.0">
         <persistence-unit name="ravePersistenceUnit" transaction-type="RESOURCE_LOCAL">
-    		<provider>org.apache.openjpa.persistence.PersistenceProviderImpl</provider>
+            <provider>org.apache.openjpa.persistence.PersistenceProviderImpl</provider>
             <class>org.apache.rave.portal.model.Page</class>
             <class>org.apache.rave.portal.model.Region</class>
             <class>org.apache.rave.portal.model.User</class>

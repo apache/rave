@@ -263,6 +263,8 @@
                 <version>1.2</version>
                 <configuration>
                     <includes>org/apache/rave/portal/model/*.class</includes>
+                    <excludes>org/apache/rave/portal/model/NewUser.class,
+                        org/apache/rave/portal/model/WidgetStatus.class</excludes>
                     <addDefaultConstructor>true</addDefaultConstructor>
                     <enforcePropertyRestrictions>true</enforcePropertyRestrictions>
                 </configuration>
@@ -286,7 +288,6 @@
                         <groupId>org.apache.openjpa</groupId>
                         <artifactId>openjpa</artifactId>
                         <version>${openjpa.version}</version>
-
                     </dependency>
                 </dependencies>
             </plugin>
