@@ -34,6 +34,7 @@
      be overridden by setting a system property "portal.override.properties" -->
     <bean id="portalPropertyPlaceholder" class="org.apache.rave.util.OverridablePropertyPlaceholderConfigurer">
         <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE"/>
+        <property name="systemPropertyName" value="portal.override.properties"/>
         <property name="location" value="classpath:portal.properties"/>
     </bean>
 

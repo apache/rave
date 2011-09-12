@@ -26,17 +26,21 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 
 /**
- * Reads property from the default location unless a system property {@literal portal.override.properties} is set
+ * Reads property from the default location unless a system property is set.
+ * The name of the system property is set by the parameter {@literal systemPropertyName}.
  */
 public class OverridablePropertyPlaceholderConfigurer extends PropertyPlaceholderConfigurer {
 
-    private static final String PORTAL_OVERRIDE_PROPERTIES = "portal.override.properties";
     private static final String CLASSPATH = "classpath:";
+    private String systemPropertyName;
 
     @Override
     public void setLocation(Resource location) {
+        if (StringUtils.isBlank(getSystemPropertyName())) {
+            throw new IllegalArgumentException("Missing value for 'systemPropertyName'.");
+        }
         Resource locationResource;
-        final String overrideProperty = System.getProperty(PORTAL_OVERRIDE_PROPERTIES);
+        final String overrideProperty = System.getProperty(getSystemPropertyName());
         
         if (StringUtils.isBlank(overrideProperty)) {
             locationResource = location;
@@ -48,4 +52,11 @@ public class OverridablePropertyPlaceholderConfigurer extends PropertyPlaceholde
         super.setLocation(locationResource);
     }
 
+    public void setSystemPropertyName(String systemPropertyName) {
+        this.systemPropertyName = systemPropertyName;
+    }
+
+    public String getSystemPropertyName() {
+        return systemPropertyName;
+    }
 }
