@@ -18,12 +18,26 @@
  */
 package org.apache.rave.portal.model;
 
-import java.io.Serializable;
 import org.apache.rave.persistence.BasicEntity;
 import org.codehaus.jackson.annotate.JsonBackReference;
 import org.codehaus.jackson.annotate.JsonManagedReference;
 
-import javax.persistence.*;
+import javax.persistence.Access;
+import javax.persistence.AccessType;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -31,13 +45,14 @@ import java.util.List;
  */
 @Entity
 @Table(name="region")
-@SequenceGenerator(name="regionIdSeq", sequenceName = "region_id_seq")
 @Access(AccessType.FIELD)
 public class Region implements BasicEntity, Serializable {
     private static final long serialVersionUID = 1L;
      
     @Id @Column(name="id")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "regionIdSeq")
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "regionIdGenerator")
+    @TableGenerator(name = "regionIdGenerator", table = "RAVE_PORTAL_SEQUENCES", pkColumnName = "SEQ_NAME",
+            valueColumnName = "SEQ_COUNT", pkColumnValue = "region", allocationSize = 1, initialValue = 1)
     private Long id;
 
     @ManyToOne

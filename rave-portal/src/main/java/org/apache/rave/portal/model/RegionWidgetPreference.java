@@ -19,25 +19,33 @@
 
 package org.apache.rave.portal.model;
 
-import java.io.Serializable;
 import org.apache.rave.persistence.BasicEntity;
 
-import javax.persistence.*;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.io.Serializable;
 
 /**
  * A preference for a region widget.
  */
 @Entity
 @Table(name = "region_widget_preference")
-@SequenceGenerator(name = "regionWidgetPrefIdSeq", sequenceName = "region_widget_pref_id_seq")
 @XmlRootElement
 public class RegionWidgetPreference implements BasicEntity, Serializable {
     private static final long serialVersionUID = 1L;
     
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "regionWidgetPrefIdSeq")
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "regionWidgetPreferenceIdGenerator")
+    @TableGenerator(name = "regionWidgetPreferenceIdGenerator", table = "RAVE_PORTAL_SEQUENCES", pkColumnName = "SEQ_NAME",
+            valueColumnName = "SEQ_COUNT", pkColumnValue = "region_widget_preference", allocationSize = 1, initialValue = 1)
     private Long id;
 
     @Basic

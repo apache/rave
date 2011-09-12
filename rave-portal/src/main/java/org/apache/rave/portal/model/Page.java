@@ -18,11 +18,28 @@
  */
 package org.apache.rave.portal.model;
 
-import java.io.Serializable;
 import org.apache.rave.persistence.BasicEntity;
 import org.codehaus.jackson.annotate.JsonManagedReference;
 
-import javax.persistence.*;
+import javax.persistence.Access;
+import javax.persistence.AccessType;
+import javax.persistence.Basic;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
+import javax.persistence.UniqueConstraint;
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -37,7 +54,6 @@ import java.util.List;
  */
 @Entity
 @Table(name="page", uniqueConstraints={@UniqueConstraint(columnNames={"owner_id","name"})})
-@SequenceGenerator(name="pageIdSeq", sequenceName = "page_id_seq")
 @NamedQueries({
         @NamedQuery(name = "Page.getByUserId", query="SELECT p FROM Page p WHERE p.owner.id = :userId ORDER BY p.renderSequence")
 })
@@ -46,7 +62,9 @@ public class Page implements BasicEntity, Serializable {
     private static final long serialVersionUID = 1L;
       
     @Id @Column(name="id")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "pageIdSeq")
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "pageIdGenerator")
+    @TableGenerator(name = "pageIdGenerator", table = "RAVE_PORTAL_SEQUENCES", pkColumnName = "SEQ_NAME",
+            valueColumnName = "SEQ_COUNT", pkColumnValue = "page", allocationSize = 1, initialValue = 1)
     private Long id;
 
     @Basic(optional=false) @Column(name="name")

@@ -19,6 +19,10 @@
 
 package org.apache.rave.gadgets.oauth.model;
 
+import org.apache.rave.persistence.BasicEntity;
+import org.apache.shindig.auth.SecurityToken;
+import org.apache.shindig.gadgets.oauth.OAuthStore;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -26,19 +30,14 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-
-import org.apache.rave.persistence.BasicEntity;
-import org.apache.shindig.auth.SecurityToken;
-import org.apache.shindig.gadgets.oauth.OAuthStore;
+import javax.persistence.TableGenerator;
 
 /**
  * Bean for OAuth security TokenInfo
  */
 @Entity
 @Table(name = "oauth_token_info")
-@SequenceGenerator(name = "tokenInfoIdSeq", sequenceName = "token_info_id_seq")
 @NamedQueries(value = {
         @NamedQuery(name = OAuthTokenInfo.FIND_OAUTH_TOKEN_INFO,
                 query = "SELECT ti FROM OAuthTokenInfo ti WHERE ti.userId = :userIdParam AND ti.appUrl = :appUrlParam AND ti.moduleId = :moduleIdParam AND ti.tokenName = :tokenNameParam AND ti.serviceName = :serviceNameParam")
@@ -84,11 +83,12 @@ public class OAuthTokenInfo implements BasicEntity {
     private static final int HASH_INCREASE = 67;
 
     /**
-     * The internal object ID used for references to this object. Should be generated
-     * by the underlying storage mechanism
+     * The internal object ID used for references to this object.
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "tokenInfoIdSeq")
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "tokenInfoIdGenerator")
+    @TableGenerator(name = "tokenInfoIdGenerator", table = "RAVE_SHINDIG_SEQUENCES", pkColumnName = "SEQ_NAME",
+            valueColumnName = "SEQ_COUNT", pkColumnValue = "token_info", allocationSize = 1, initialValue = 1)
     @Column(name = "id")
     private Long id;
 

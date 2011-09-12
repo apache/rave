@@ -17,7 +17,11 @@
  */
 package org.apache.shindig.social.opensocial.jpa;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.Table;
 
 /**
  * This is a property of an application, extending the listfield type, and using the type property
@@ -33,7 +37,7 @@ public class ApplicationPropertyDb extends ListFieldDb {
    */
   @ManyToOne(targetEntity = ApplicationDb.class)
   @JoinColumn(name = "application_id", referencedColumnName = "oid")
-  protected ApplicationDb application;
+  private ApplicationDb application;
 
   /**
    * @return the application

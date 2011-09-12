@@ -21,14 +21,23 @@ package org.apache.rave.opensocial.model;
 import org.apache.rave.persistence.BasicEntity;
 import org.apache.shindig.social.opensocial.model.Address;
 
-import javax.persistence.*;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import java.util.Date;
 
 /**
  */
 @Entity
 @Table(name = "organization")
-@SequenceGenerator(name = "organizationIdSeq", sequenceName = "organization_id_seq")
 public class Organization implements org.apache.shindig.social.opensocial.model.Organization, BasicEntity {
 
     /**
@@ -36,8 +45,10 @@ public class Organization implements org.apache.shindig.social.opensocial.model.
      * underlying storage mechanism
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "organizationIdSeq")
     @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "organizationIdGenerator")
+    @TableGenerator(name = "organizationIdGenerator", table = "RAVE_SHINDIG_SEQUENCES", pkColumnName = "SEQ_NAME",
+            valueColumnName = "SEQ_COUNT", pkColumnValue = "organization", allocationSize = 1, initialValue = 1)
     private Long id;
 
     @OneToOne

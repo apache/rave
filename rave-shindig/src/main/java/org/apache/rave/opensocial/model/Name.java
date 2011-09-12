@@ -18,7 +18,9 @@
  */
 package org.apache.rave.opensocial.model;
 
-import javax.persistence.*;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
 
 /**
  * The name object, stored in the name table.

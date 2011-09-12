@@ -20,13 +20,19 @@ package org.apache.rave.opensocial.model;
 
 import org.apache.rave.persistence.BasicEntity;
 
-import javax.persistence.*;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
 
 /**
  */
 @Entity
 @Table(name = "address")
-@SequenceGenerator(name = "addressIdSeq", sequenceName = "address_id_seq")
 public class Address implements org.apache.shindig.social.opensocial.model.Address, BasicEntity {
 
     /**
@@ -34,8 +40,10 @@ public class Address implements org.apache.shindig.social.opensocial.model.Addre
      * underlying storage mechanism
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "addressIdSeq")
     @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "addressIdGenerator")
+    @TableGenerator(name = "addressIdGenerator", table = "RAVE_SHINDIG_SEQUENCES", pkColumnName = "SEQ_NAME",
+            valueColumnName = "SEQ_COUNT", pkColumnValue = "address", allocationSize = 1, initialValue = 1)
     private Long id;
 
     /**

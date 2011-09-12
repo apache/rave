@@ -20,7 +20,21 @@ package org.apache.rave.opensocial.model;
 
 import org.apache.rave.persistence.BasicEntity;
 
-import javax.persistence.*;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
 import java.util.List;
 
 /**
@@ -29,7 +43,6 @@ import java.util.List;
  */
 @Entity
 @Table(name = "groups")
-@SequenceGenerator(name = "groupIdSeq", sequenceName = "group_id_seq")
 @NamedQueries(
         @NamedQuery(name = Group.FIND_BY_ID, query="select g from Group g where g.title = :groupId")
 )
@@ -43,21 +56,23 @@ public class Group implements BasicEntity {
      * underlying storage mechanism
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "groupIdSeq")
     @Column(name = "id")
-    protected Long id;
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "groupIdGenerator")
+    @TableGenerator(name = "groupIdGenerator", table = "RAVE_SHINDIG_SEQUENCES", pkColumnName = "SEQ_NAME",
+            valueColumnName = "SEQ_COUNT", pkColumnValue = "groups", allocationSize = 1, initialValue = 1)
+    private Long id;
 
     /**
      * Each group has a group name.
      */
     @Basic
     @Column(name = "title")
-    protected String title;
+    private String title;
 
 
     @Basic
     @Column(name = "description")
-    protected String description;
+    private String description;
 
 
     /**
@@ -65,7 +80,7 @@ public class Group implements BasicEntity {
      */
     @ManyToOne
     @JoinColumn(name = "owner_id", referencedColumnName = "id")
-    protected Person owner;
+    private Person owner;
 
     /**
      * There are many members of a group.
@@ -76,7 +91,7 @@ public class Group implements BasicEntity {
             @JoinColumn(name = "group_id", referencedColumnName = "id"),
             inverseJoinColumns =
             @JoinColumn(name = "person_id", referencedColumnName = "id"))
-    protected List<Person> members;
+    private List<Person> members;
 
     /**
      * @return the owner

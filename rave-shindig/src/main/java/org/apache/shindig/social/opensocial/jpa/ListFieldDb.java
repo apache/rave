@@ -20,9 +20,19 @@ package org.apache.shindig.social.opensocial.jpa;
 import org.apache.shindig.social.opensocial.jpa.api.DbObject;
 import org.apache.shindig.social.opensocial.model.ListField;
 
-import javax.persistence.*;
-
-import static javax.persistence.GenerationType.IDENTITY;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorType;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.MappedSuperclass;
+import javax.persistence.TableGenerator;
+import javax.persistence.Version;
 
 /**
  * List fields represent storage of list of fields potentially with a preferred or primary value.
@@ -31,26 +41,27 @@ import static javax.persistence.GenerationType.IDENTITY;
  * class represented by the record. If there is no type it defaults to ListFieldDb.
  */
 @MappedSuperclass
-//@Table(name="list_field")
 @Inheritance(strategy=InheritanceType.JOINED)
 @DiscriminatorColumn(name="list_field_type", length=30, discriminatorType=DiscriminatorType.STRING)
 @DiscriminatorValue(value="ListFieldDb")
-public class ListFieldDb implements ListField, DbObject {
+public abstract class ListFieldDb implements ListField, DbObject {
   /**
    * The internal object ID used for references to this object. Should be generated 
    * by the underlying storage mechanism
    */
   @Id
-  @GeneratedValue(strategy=IDENTITY)
   @Column(name="oid")
-  protected long objectId;
+  @GeneratedValue(strategy = GenerationType.TABLE, generator = "listFieldIdGenerator")
+  @TableGenerator(name = "listFieldIdGenerator", table = "RAVE_SHINDIG_SEQUENCES", pkColumnName = "SEQ_NAME",
+          valueColumnName = "SEQ_COUNT", pkColumnValue = "list_field", allocationSize = 1, initialValue = 1)
+  private long objectId;
   
   /**
    * An optimistic locking field.
    */
   @Version
   @Column(name="version")
-  protected long version;
+  private long version;
 
   
   /**
@@ -59,7 +70,7 @@ public class ListFieldDb implements ListField, DbObject {
    */
   @Basic
   @Column(name="field_type", length=255)
-  protected String type;
+  private String type;
   
   /**
    * model field.
@@ -67,7 +78,7 @@ public class ListFieldDb implements ListField, DbObject {
    */
   @Basic
   @Column(name="field_value", length=255)
-  protected String value;
+  private String value;
   
   /**
    * model field.
@@ -75,7 +86,7 @@ public class ListFieldDb implements ListField, DbObject {
    */
   @Basic
   @Column(name="primary_field")
-  protected Boolean primary;
+  private Boolean primary;
 
   /**
    * Create a list field.

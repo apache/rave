@@ -21,13 +21,27 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.MapMaker;
 import org.apache.shindig.social.opensocial.jpa.api.DbObject;
 
-import javax.persistence.*;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.MapKey;
+import javax.persistence.OneToMany;
+import javax.persistence.PostLoad;
+import javax.persistence.PrePersist;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
+import javax.persistence.Transient;
+import javax.persistence.Version;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import static javax.persistence.CascadeType.ALL;
-import static javax.persistence.GenerationType.IDENTITY;
 
 
 /**
@@ -54,16 +68,18 @@ public class ApplicationDataMapDb implements DbObject {
    * underlying storage mechanism
    */
   @Id
-  @GeneratedValue(strategy = IDENTITY)
   @Column(name = "oid")
-  protected long objectId;
+  @GeneratedValue(strategy = GenerationType.TABLE, generator = "applicationDataMapIdGenerator")
+  @TableGenerator(name = "applicationDataMapIdGenerator", table = "RAVE_SHINDIG_SEQUENCES", pkColumnName = "SEQ_NAME",
+          valueColumnName = "SEQ_COUNT", pkColumnValue = "application_datamap", allocationSize = 1, initialValue = 1)
+  private long objectId;
 
   /**
    * An optimistic locking field.
    */
   @Version
   @Column(name = "version")
-  protected long version;
+  private long version;
 
   /**
    * A Application Data Map belongs to a set of maps associated with an application.
@@ -71,7 +87,7 @@ public class ApplicationDataMapDb implements DbObject {
    */
   @ManyToOne(targetEntity=ApplicationDb.class)
   @JoinColumn(name="application_id", referencedColumnName="oid")
-  protected ApplicationDb application;
+  private ApplicationDb application;
 
   /**
    * Create map using ApplicationDataMapValueDb such that ApplicationDataMapDb are joined on oid ->
@@ -81,18 +97,18 @@ public class ApplicationDataMapDb implements DbObject {
    */
   @OneToMany(targetEntity=ApplicationDataMapValueDb.class, mappedBy="applicationDataMap", cascade = ALL)
   @MapKey(name="name")
-  protected Map<String, ApplicationDataMapValueDb> valuesDb = new MapMaker().makeMap();
+  private Map<String, ApplicationDataMapValueDb> valuesDb = new MapMaker().makeMap();
 
   /**
    * The transient store for values loaded by the postLoad hook and persisted by the
    * prePersist hook.
    */
   @Transient
-  protected Map<String, String> values;
+  private Map<String, String> values;
 
   @Basic
   @Column(name="person_id", length=255)
-  protected String personId;
+  private String personId;
 
   /**
    * persist the state of object before sending to the db.
@@ -104,12 +120,12 @@ public class ApplicationDataMapDb implements DbObject {
       ApplicationDataMapValueDb a = valuesDb.get(e.getKey());
       if (a == null) {
         a = new ApplicationDataMapValueDb();
-        a.name = e.getKey();
-        a.value = e.getValue();
-        a.applicationDataMap = this;
+        a.setName(e.getKey());
+        a.setValue(e.getValue());
+        a.setApplicationDataMap(this);
         valuesDb.put(e.getKey(), a);
       } else {
-        a.value = e.getValue();
+        a.setValue(e.getValue());
       }
     }
     // remove old entries
@@ -131,7 +147,7 @@ public class ApplicationDataMapDb implements DbObject {
   public void postLoad() {
     values = new MapMaker().makeMap();
     for (Entry<String, ApplicationDataMapValueDb> e : valuesDb.entrySet()) {
-      values.put(e.getKey(), e.getValue().value);
+      values.put(e.getKey(), e.getValue().getValue());
     }
   }
 
@@ -143,7 +159,7 @@ public class ApplicationDataMapDb implements DbObject {
   }
 
   /**
-   * @param applicationData the applicationData to set
+   * @param application the application to set
    */
   public void setApplication(ApplicationDb application) {
     this.application = application;

@@ -20,31 +20,38 @@ package org.apache.rave.opensocial.model;
 
 import org.apache.rave.persistence.BasicEntity;
 
-import javax.persistence.*;
-
-import static javax.persistence.GenerationType.IDENTITY;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
+import javax.persistence.Version;
 
 /**
  */
 @Entity
 @Table(name = "account")
-@SequenceGenerator(name="accountIdSeq", sequenceName = "account_id_seq")
 public class Account implements org.apache.shindig.social.opensocial.model.Account, BasicEntity {
   /**
    * The internal object ID used for references to this object. Should be generated
    * by the underlying storage mechanism
    */
   @Id
-  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "accountIdSeq")
   @Column(name = "id")
-  protected Long id;
+  @GeneratedValue(strategy = GenerationType.TABLE, generator = "accountIdGenerator")
+  @TableGenerator(name = "accountIdGenerator", table = "RAVE_SHINDIG_SEQUENCES", pkColumnName = "SEQ_NAME",
+          valueColumnName = "SEQ_COUNT", pkColumnValue = "account", allocationSize = 1, initialValue = 1)
+  private Long id;
 
   /**
    * An optimistic locking field.
    */
   @Version
   @Column(name = "version")
-  protected long version;
+  private long version;
 
   /**
    * model field.
@@ -52,7 +59,7 @@ public class Account implements org.apache.shindig.social.opensocial.model.Accou
    */
   @Basic
   @Column(name = "domain", length = 255)
-  protected String domain;
+  private String domain;
 
   /**
    * model field.
@@ -60,7 +67,7 @@ public class Account implements org.apache.shindig.social.opensocial.model.Accou
    */
   @Basic
   @Column(name = "user_id", length = 255)
-  protected String userId;
+  private String userId;
 
   /**
    * model field.
@@ -68,7 +75,7 @@ public class Account implements org.apache.shindig.social.opensocial.model.Accou
    */
   @Basic
   @Column(name = "username", length = 255)
-  protected String username;
+  private String username;
 
   /**
    * create an empty account object.

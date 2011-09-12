@@ -18,12 +18,22 @@
  */
 package org.apache.rave.portal.model;
 
-import java.io.Serializable;
 import org.apache.rave.persistence.BasicEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.*;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
+import javax.persistence.Transient;
+import java.io.Serializable;
 import java.util.Collection;
 
 /**
@@ -32,8 +42,8 @@ import java.util.Collection;
  * A user of the system
  */
 @Entity
-@Table(name = "user")
-@SequenceGenerator(name = "userIdSeq", sequenceName = "user_id_seq")
+// user can be a restricted name
+@Table(name = "raveuser")
 @NamedQueries({
     @NamedQuery(name="User.getByUsername", query = "select u from User u where u.username = :username"),
     @NamedQuery(name="User.getByUserEmail", query = "select u from User u where u.email = :email")
@@ -41,8 +51,10 @@ import java.util.Collection;
 public class User implements UserDetails, BasicEntity, Serializable {
     private static final long serialVersionUID = 1L;
     
-    @Id @Column(name = "user_id")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "userIdSeq")
+    @Id @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "raveuserIdGenerator")
+    @TableGenerator(name = "raveuserIdGenerator", table = "RAVE_PORTAL_SEQUENCES", pkColumnName = "SEQ_NAME",
+            valueColumnName = "SEQ_COUNT", pkColumnValue = "raveuser", allocationSize = 1, initialValue = 1)
     private Long id;
 
     @Basic @Column(name = "username", unique = true)

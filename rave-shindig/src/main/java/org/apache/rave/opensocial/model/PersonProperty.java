@@ -22,8 +22,18 @@ package org.apache.rave.opensocial.model;
 import org.apache.rave.persistence.BasicEntity;
 import org.apache.shindig.social.opensocial.model.ListField;
 
-import javax.lang.model.element.TypeElement;
-import javax.persistence.*;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
 
 /**
  * Defines a property of a person
@@ -33,12 +43,13 @@ import javax.persistence.*;
 @DiscriminatorColumn(name="property_type")
 @DiscriminatorValue("basic")
 @Table(name = "person_property")
-@SequenceGenerator(name="personPropertyIdSeq", sequenceName = "person_property_id_seq")
 public class PersonProperty implements BasicEntity, ListField {
 
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "personPropertyIdSeq")
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "personPropertyIdGenerator")
+    @TableGenerator(name = "personPropertyIdGenerator", table = "RAVE_SHINDIG_SEQUENCES", pkColumnName = "SEQ_NAME",
+            valueColumnName = "SEQ_COUNT", pkColumnValue = "person_property", allocationSize = 1, initialValue = 1)
     private Long id;
 
     @Basic

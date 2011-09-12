@@ -21,20 +21,31 @@ package org.apache.rave.opensocial.model;
 
 import org.apache.rave.persistence.BasicEntity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
+import javax.persistence.UniqueConstraint;
 
 /**
  * Represents an association between people
- *
  */
 @Entity
-@Table(name = "person_association")
-@SequenceGenerator(name="personAssocIdSeq", sequenceName = "person_association_id_seq")
-public class PersonAssociation implements BasicEntity{
+@Table(name = "person_association",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"follower_id", "followed_id"})
+)
+public class PersonAssociation implements BasicEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "personAssocIdSeq")
     @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "personAssociationIdGenerator")
+    @TableGenerator(name = "personAssociationIdGenerator", table = "RAVE_SHINDIG_SEQUENCES", pkColumnName = "SEQ_NAME",
+            valueColumnName = "SEQ_COUNT", pkColumnValue = "person_association", allocationSize = 1, initialValue = 1)
     private Long id;
 
     @OneToOne

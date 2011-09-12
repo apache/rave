@@ -18,11 +18,23 @@
  */
 package org.apache.rave.portal.model;
 
-import java.io.Serializable;
 import org.apache.rave.persistence.BasicEntity;
 import org.codehaus.jackson.annotate.JsonBackReference;
 
-import javax.persistence.*;
+import javax.persistence.Basic;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -30,13 +42,14 @@ import java.util.List;
  */
 @Entity
 @Table(name = "region_widget")
-@SequenceGenerator(name = "regionWidgetIdSeq", sequenceName = "region_widget_id_seq")
 public class RegionWidget implements BasicEntity, Serializable {
     private static final long serialVersionUID = 1L;
     
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "regionWidgetIdSeq")
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "regionWidgetIdGenerator")
+    @TableGenerator(name = "regionWidgetIdGenerator", table = "RAVE_PORTAL_SEQUENCES", pkColumnName = "SEQ_NAME",
+            valueColumnName = "SEQ_COUNT", pkColumnValue = "region_widget", allocationSize = 1, initialValue = 1)
     private Long id;
 
     @ManyToOne

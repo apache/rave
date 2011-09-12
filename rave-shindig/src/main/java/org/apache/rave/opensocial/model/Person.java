@@ -21,15 +21,39 @@ package org.apache.rave.opensocial.model;
 import org.apache.rave.persistence.BasicEntity;
 
 import javax.annotation.Generated;
-import javax.persistence.*;
-import java.util.*;
+import javax.persistence.Basic;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Transient;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Represents a person in the persistence context
  */
 @Entity
 @Table(name = "person")
-@SequenceGenerator(name="personIdSeq", sequenceName = "person_id_seq")
 @NamedQueries(value = {
     @NamedQuery(name = Person.FIND_BY_USERNAME, query = "select p from Person p where p.username like :username"),
     @NamedQuery(name = Person.FIND_FRIENDS_BY_USERNAME, query = "select a.followed from PersonAssociation a where a.follower.username = :username"),
@@ -44,8 +68,10 @@ public class Person implements BasicEntity {
     public static final String USERNAME_PARAM = "username";
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "personIdSeq")
     @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "personIdGenerator")
+    @TableGenerator(name = "personIdGenerator", table = "RAVE_SHINDIG_SEQUENCES", pkColumnName = "SEQ_NAME",
+            valueColumnName = "SEQ_COUNT", pkColumnValue = "person", allocationSize = 1, initialValue = 1)
     private Long id;
 
     @Basic

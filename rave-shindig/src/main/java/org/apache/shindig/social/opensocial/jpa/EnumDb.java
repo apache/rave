@@ -51,7 +51,6 @@ public final class EnumDb<E extends Enum.EnumKey> implements Enum<E> {
 
   /** 
    * {@inheritDoc}
-   * @see org.apache.shindig.social.opensocial.model.Enum#getDisplayValue()
    */
   public String getDisplayValue() {
     return displayValue;
@@ -59,7 +58,6 @@ public final class EnumDb<E extends Enum.EnumKey> implements Enum<E> {
 
   /** 
    * {@inheritDoc}
-   * @see org.apache.shindig.social.opensocial.model.Enum#setDisplayValue(java.lang.String)
    */
   public void setDisplayValue(String displayValue) {
     this.displayValue = displayValue;
@@ -67,7 +65,6 @@ public final class EnumDb<E extends Enum.EnumKey> implements Enum<E> {
 
   /** 
    * {@inheritDoc}
-   * @see org.apache.shindig.social.opensocial.model.Enum#getValue()
    */
   public E getValue() {
     return value;
@@ -75,7 +72,6 @@ public final class EnumDb<E extends Enum.EnumKey> implements Enum<E> {
 
   /** 
    * {@inheritDoc}
-   * @see org.apache.shindig.social.opensocial.model.Enum#setValue(org.apache.shindig.social.opensocial.model.Enum.EnumKey)
    */
   public void setValue(E value) {
     this.value = value;

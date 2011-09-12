@@ -19,6 +19,8 @@
 
 package org.apache.rave.gadgets.oauth.model;
 
+import org.apache.rave.persistence.BasicEntity;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -28,11 +30,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.TableGenerator;
 import javax.persistence.UniqueConstraint;
-
-import org.apache.rave.persistence.BasicEntity;
 
 /**
  * Persistent store for OAuth consumer key & secrets.
@@ -59,7 +59,6 @@ import org.apache.rave.persistence.BasicEntity;
 @Entity
 @Table(name = "oauth_consumer_store",
         uniqueConstraints = @UniqueConstraint(columnNames = {"gadget_uri", "service_name"}))
-@SequenceGenerator(name = "consumerStoreSeqId", sequenceName = "consumer_store_id_seq")
 @NamedQueries(value = {
         @NamedQuery(name = OAuthConsumerStore.FIND_BY_URI_AND_SERVICE_NAME,
                 query = "SELECT cs FROM OAuthConsumerStore cs WHERE cs.gadgetUri = :gadgetUriParam AND cs.serviceName = :serviceNameParam")
@@ -80,18 +79,19 @@ public class OAuthConsumerStore implements BasicEntity {
     }
 
     /**
-     * The internal object ID used for references to this object. Should be generated
-     * by the underlying storage mechanism
+     * The internal object ID used for references to this object.
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "consumerStoreSeqId")
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "consumerStoreIdGenerator")
+    @TableGenerator(name = "consumerStoreIdGenerator", table = "RAVE_SHINDIG_SEQUENCES", pkColumnName = "SEQ_NAME",
+            valueColumnName = "SEQ_COUNT", pkColumnValue = "oauth_consumer_store", allocationSize = 1, initialValue = 1)
     @Column(name = "id")
     private Long id;
 
     /**
      * URI where the gadget is hosted, e.g. http://www.example.com/mygadget.xml
      */
-    @Column(name = "gadget_uri", length = 512)
+    @Column(name = "gadget_uri")
     private String gadgetUri;
 
     /**

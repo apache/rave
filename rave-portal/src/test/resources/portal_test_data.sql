@@ -15,8 +15,14 @@
  -- specific language governing permissions and limitations
  -- under the License.
 
+set @widget_seq = 'widget';
+
+
 --- gadget data ---
+
 -- useless knowledge widget
-insert into widget (id, title, url, type, widget_status)
-values(set(@useless_knowledge_widget_id, next value for widget_id_seq), 'Useless Knowledge', 'http://www.great-goofy-gadgets.com/humor/uselessknowledge/uselessknowledge.xml', 'OpenSocial', 'PREVIEW');
+set @widget_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @widget_seq);
+insert into widget (id,title, url, type, widget_status)
+values(@widget_id,'Useless Knowledge', 'http://www.great-goofy-gadgets.com/humor/uselessknowledge/uselessknowledge.xml', 'OpenSocial', 'PREVIEW');
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @widget_seq;
 -- end widget data ----

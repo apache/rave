@@ -21,11 +21,20 @@ import org.apache.shindig.social.opensocial.jpa.api.DbObject;
 import org.apache.shindig.social.opensocial.model.Message;
 import org.apache.shindig.social.opensocial.model.Url;
 
-import javax.persistence.*;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.PostLoad;
+import javax.persistence.PrePersist;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
+import javax.persistence.Transient;
+import javax.persistence.Version;
 import java.util.Date;
 import java.util.List;
-
-import static javax.persistence.GenerationType.IDENTITY;
 
 /**
  * Messages are stored in the message table.
@@ -38,16 +47,18 @@ public class MessageDb implements Message, DbObject {
    * by the underlying storage mechanism
    */
   @Id
-  @GeneratedValue(strategy=IDENTITY)
   @Column(name="oid")
-  protected long objectId;
+  @GeneratedValue(strategy = GenerationType.TABLE, generator = "messageIdGenerator")
+  @TableGenerator(name = "messageIdGenerator", table = "RAVE_SHINDIG_SEQUENCES", pkColumnName = "SEQ_NAME",
+          valueColumnName = "SEQ_COUNT", pkColumnValue = "message", allocationSize = 1, initialValue = 1)
+  private long objectId;
 
   /**
    * An optimistic locking field
    */
   @Version
   @Column(name="version")
-  protected long version;
+  private long version;
 
   /**
    * model field.
@@ -55,7 +66,7 @@ public class MessageDb implements Message, DbObject {
    */
   @Basic
   @Column(name="body", length=255)
-  protected String body;
+  private String body;
 
   /**
    * model field.
@@ -63,7 +74,7 @@ public class MessageDb implements Message, DbObject {
    */
   @Basic
   @Column(name="title", length=255)
-  protected String title;
+  private String title;
 
   /**
    * model field. (database representation of type)
@@ -71,14 +82,14 @@ public class MessageDb implements Message, DbObject {
    */
   @Basic
   @Column(name="message_type")
-  protected String typeDb;
+  private String typeDb;
 
   /**
    * model field.
    * @see org.apache.shindig.social.opensocial.model.Message
    */
   @Transient
-  protected Type type;
+  private Type type;
 
   /**
    * create an empty message.

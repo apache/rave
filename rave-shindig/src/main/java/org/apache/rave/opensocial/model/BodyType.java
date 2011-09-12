@@ -20,9 +20,9 @@
 
 package org.apache.rave.opensocial.model;
 
-import org.apache.rave.persistence.BasicEntity;
-
-import javax.persistence.*;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
 
 /**
  * The body type entity, stored in "body_type"

@@ -19,29 +19,39 @@
 
 package org.apache.rave.portal.model;
 
-import java.io.Serializable;
 import org.apache.rave.persistence.BasicEntity;
 
-import javax.persistence.*;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
+import java.io.Serializable;
 
 /**
  * Represents an organization of regions within a page that is supported by the rendering engine
  */
 @Entity
 @Table(name="page_layout")
-@SequenceGenerator(name="pageLayoutIdSeq", sequenceName = "page_layout_id_seq")
 @NamedQueries({
     @NamedQuery(name="PageLayout.getByLayoutCode", query = "select pl from PageLayout pl where pl.code = :code")
 })
 
 public class PageLayout implements BasicEntity, Serializable {
     private static final long serialVersionUID = 1L;
-    
+
     @Id @Column(name="id")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "pageLayoutIdSeq")
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "pageLayoutIdGenerator")
+    @TableGenerator(name = "pageLayoutIdGenerator", table = "RAVE_PORTAL_SEQUENCES", pkColumnName = "SEQ_NAME",
+            valueColumnName = "SEQ_COUNT", pkColumnValue = "page_layout", allocationSize = 1, initialValue = 1)
     private Long id;
 
-    @Basic @Column(name="code")
+    @Basic @Column(name="code", unique = true)
     private String code;
 
     @Basic @Column(name="number_of_regions")

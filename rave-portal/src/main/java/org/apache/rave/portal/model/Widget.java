@@ -18,18 +18,28 @@
  */
 package org.apache.rave.portal.model;
 
-import java.io.Serializable;
-
-import javax.persistence.*;
-
 import org.apache.rave.persistence.BasicEntity;
+
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Lob;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
+import java.io.Serializable;
 
 /**
  * A widget
  */
 @Entity
 @Table(name="widget")
-@SequenceGenerator(name="widgetIdSeq", sequenceName = "widget_id_seq")
 @NamedQueries({
         @NamedQuery(name = Widget.WIDGET_GET_ALL, query = "SELECT w from Widget w"),
         @NamedQuery(name = Widget.WIDGET_COUNT_ALL, query = "SELECT count(w) FROM Widget w"),
@@ -69,7 +79,9 @@ public class Widget implements BasicEntity, Serializable {
     public static final String WIDGET_GET_BY_URL = "Widget.getByUrl";
 
     @Id @Column(name="id")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "widgetIdSeq")
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "widgetIdGenerator")
+    @TableGenerator(name = "widgetIdGenerator", table = "RAVE_PORTAL_SEQUENCES", pkColumnName = "SEQ_NAME",
+            valueColumnName = "SEQ_COUNT", pkColumnValue = "widget", allocationSize = 1, initialValue = 1)
     private Long id;
 
     /*
