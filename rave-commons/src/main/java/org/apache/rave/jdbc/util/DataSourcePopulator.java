@@ -131,8 +131,7 @@ public class DataSourcePopulator implements Serializable {
                 executeScripts(conn, scriptLocations);
             }
         } catch (SQLException e) {
-            logger.error("Error querying or populating database", e);
-            throw new RuntimeException(e);
+            throw new RuntimeException("Error querying or populating database", e);
         } finally {
             closeConnection(conn);
         }
