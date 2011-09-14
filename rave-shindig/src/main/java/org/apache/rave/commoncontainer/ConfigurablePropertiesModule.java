@@ -19,34 +19,41 @@
 
 package org.apache.rave.commoncontainer;
 
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Map;
-import java.util.Properties;
-
+import com.google.inject.AbstractModule;
 import com.google.inject.CreationException;
+import com.google.inject.name.Names;
 import com.google.inject.spi.Message;
 import org.apache.commons.lang.StringUtils;
-import org.apache.shindig.common.PropertiesModule;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * Injects everything from the a property file as a Named value.<br/>
  * Uses the {@literal shindig.properties} file unless the system property
  * {@literal shindig.override.properties} defines a different location.
  */
-public class ConfigurablePropertiesModule extends PropertiesModule {
+public class ConfigurablePropertiesModule extends AbstractModule {
 
     private static final String DEFAULT_PROPERTIES = "shindig.properties";
     private static final String SHINDIG_OVERRIDE_PROPERTIES = "shindig.override.properties";
 
     private static final String CLASSPATH = "classpath:";
 
-    private static final String CONTEXT_ROOT_PLACEHOLDER = "%contextRoot%";
-    private static final String CONTEXT_ROOT_SYSTEM_PROPERTY = "shindig.contextroot";
+    private final Properties properties;
 
+
+    public ConfigurablePropertiesModule() {
+        super();
+        this.properties = initProperties();
+    }
 
     /**
      * Injects everything from the a property file as a Named value.
@@ -55,64 +62,139 @@ public class ConfigurablePropertiesModule extends PropertiesModule {
      */
     @Override
     protected void configure() {
-        install(new PropertiesModule(loadProperties()));
+        Names.bindProperties(this.binder(), getProperties());
     }
 
-
     /**
-     * If the system property {@literal shindig.override.properties} is set,
-     * it will load the file from that location,
-     * otherwise it will load the default Shindig {@literal shindig.properties} file
+     * Initializes the Properties. Reads the properties file, overrides values by System properties if set.
+     * Replaces placeholders with actual values.
      *
      * @return {@link Properties} for the container
-     * @throws CreationException if the Properties file cannot be read
+     * @throws com.google.inject.CreationException
+     *          if the Properties file cannot be read
      */
-    protected Properties loadProperties() {
-        Properties initProperties = new Properties();
-        final String overrideProperty = System.getProperty(SHINDIG_OVERRIDE_PROPERTIES);
-
-        Resource propertyResource;
-
-        if (StringUtils.isBlank(overrideProperty)) {
-            propertyResource = new ClassPathResource(DEFAULT_PROPERTIES);
-        } else if (overrideProperty.startsWith(CLASSPATH)) {
-            propertyResource = new ClassPathResource(
-                    overrideProperty.trim().substring(CLASSPATH.length()));
-        } else {
-            propertyResource = new FileSystemResource(
-                    overrideProperty.trim());
-        }
-
+    protected Properties initProperties() {
+        Resource propertyResource = getPropertyResource();
         try {
-            initProperties.load(propertyResource.getInputStream());
-            for (Map.Entry entry : initProperties.entrySet()) {
-                String value = (String) entry.getValue();
-                if (value != null && value.contains(CONTEXT_ROOT_PLACEHOLDER)) {
-                    initProperties.put(entry.getKey(),
-                            value.replace((CONTEXT_ROOT_PLACEHOLDER), getContextRoot()));
-                }
-            }
+            Properties initProperties = loadPropertiesFromPropertyResource(propertyResource);
+            overridePropertyValuesWithSystemProperties(initProperties, overridableProperties());
+            replacePlaceholderWithValue(initProperties, "%contextRoot%", getContextRootValue(initProperties));
+            return initProperties;
         } catch (IOException e) {
             throw new CreationException(Arrays.asList(
-                    new Message("Unable to load properties from location: " + overrideProperty
+                    new Message("Unable to load properties from resource"
                             + ". " + e.getMessage())
             ));
         }
-
-        return initProperties;
     }
 
     /**
-     * Should return the context root where the current web module is deployed with.
-     * Useful for testing and working out of the box configs.
-     * If not set uses fixed value of "".
+     * Reads properties from the given {@link Resource}
      *
-     * @return an context path as a string.
+     * @param propertyResource with the properties
+     * @return {@link Properties}
+     * @throws java.io.IOException if the Resource cannot be read
      */
-    private String getContextRoot() {
-        return System.getProperty(CONTEXT_ROOT_SYSTEM_PROPERTY) != null ?
-                System.getProperty(CONTEXT_ROOT_SYSTEM_PROPERTY) : "";
+    private Properties loadPropertiesFromPropertyResource(Resource propertyResource) throws IOException {
+        Properties properties = new Properties();
+        properties.load(propertyResource.getInputStream());
+        return properties;
     }
 
+    /**
+     * Returns a Resource that contains property key-value pairs.
+     * If no system property is set for the resource location, the default location is used
+     *
+     * @return the {@link Resource} with the
+     */
+    private Resource getPropertyResource() {
+        final String overrideProperty = System.getProperty(SHINDIG_OVERRIDE_PROPERTIES);
+        if (StringUtils.isBlank(overrideProperty)) {
+            return new ClassPathResource(DEFAULT_PROPERTIES);
+        } else if (overrideProperty.startsWith(CLASSPATH)) {
+            return new ClassPathResource(overrideProperty.trim().substring(CLASSPATH.length()));
+        } else {
+            return new FileSystemResource(overrideProperty.trim());
+        }
+    }
 
+    /**
+     * If a property is overridable and a system property has been set, the value of the system
+     * property overrides the property that was set in the properties file.
+     *
+     * @param properties               with some property values replaced by system property values
+     * @param overridablePropertyNames List of property names which value can be overridden by a system property
+     *                                 with the same name
+     */
+    static void overridePropertyValuesWithSystemProperties(Properties properties,
+                                                                  List<String> overridablePropertyNames) {
+        for (String propertyName : overridablePropertyNames) {
+            properties.setProperty(propertyName, getOverridablePropertyValue(propertyName, properties));
+        }
+    }
+
+    /**
+     * Replaces the placeholder for contextRoot with the actual value
+     *
+     * @param properties  {@link java.util.Properties}
+     * @param placeholder (part of) property value that should be replaced
+     * @param value       that replaces the placeholder
+     */
+    static void replacePlaceholderWithValue(Properties properties, String placeholder, String value) {
+        for (Map.Entry entry : properties.entrySet()) {
+            String propertyValue = (String) entry.getValue();
+            if (propertyValue != null && propertyValue.contains(placeholder)) {
+                properties.put(entry.getKey(),
+                        propertyValue.replace((placeholder), value));
+            }
+        }
+    }
+
+    /**
+     * Returns the value of a property. First checks if there is a system property set,
+     * if not, then checks if a {@link Properties} contains this property. Otherwise it
+     * returns an empty String.
+     *
+     * @param propertyKey name of the property
+     * @param properties  {@link Properties} that may contain a key by this name
+     * @return value for this propertyKey, can be an empty String
+     */
+    static String getOverridablePropertyValue(String propertyKey, Properties properties) {
+        if (System.getProperty(propertyKey) != null) {
+            return System.getProperty(propertyKey);
+        } else if (properties.get(propertyKey) != null) {
+            return properties.getProperty(propertyKey);
+        } else {
+            return "";
+        }
+    }
+    
+    /**
+     * Looks up the context root property value in a {@link Properties}
+     *
+     * @param properties {@link Properties}
+     * @return value of the context root property, can be {@literal null}
+     */
+    private String getContextRootValue(Properties properties) {
+        return properties.getProperty("shindig.contextroot");
+    }
+
+    /**
+     * @return {@link Properties}
+     */
+    protected Properties getProperties() {
+        return properties;
+    }
+
+    /**
+     *
+     * @return List of property keys that can be overridden by system properties
+     */
+    private static List<String> overridableProperties() {
+        List<String> propertyNames = new ArrayList<String>();
+        propertyNames.add("shindig.host");
+        propertyNames.add("shindig.port");
+        propertyNames.add("shindig.contextroot");
+        return propertyNames;
+    }
 }

@@ -19,8 +19,11 @@
 
 package org.apache.rave.commoncontainer;
 
+import junit.framework.Assert;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 import static org.junit.Assert.assertEquals;
@@ -32,6 +35,17 @@ public class ConfigurablePropertiesModuleTest {
 
     @Test
     public void testDefaultProperties() throws Exception {
+        TestableConfigurablePropertiesModule propertiesModule = new TestableConfigurablePropertiesModule();
+        Properties properties = propertiesModule.getProperties();
+
+        assertEquals("Default container.js location", "res://containers/default/container.js",
+                properties.getProperty("shindig.containers.default"));
+        assertEquals("No contextRoot", "/gadgets/proxy?container=default&url=",
+                properties.getProperty("shindig.content-rewrite.proxy-url"));
+    }
+
+    @Test
+    public void testDefaultProperties_WithReplacedContextRoot() throws Exception {
         System.setProperty("shindig.contextroot", "shindigcontext");
 
         TestableConfigurablePropertiesModule propertiesModule = new TestableConfigurablePropertiesModule();
@@ -41,23 +55,112 @@ public class ConfigurablePropertiesModuleTest {
                 properties.getProperty("shindig.containers.default"));
         assertEquals("Replaced contextRoot", "shindigcontext/gadgets/proxy?container=default&url=",
                 properties.getProperty("shindig.content-rewrite.proxy-url"));
+
+        System.clearProperty("shindig.contextroot");
     }
 
     @Test
     public void testCustomProperties() throws Exception {
-        System.setProperty("shindig.contextroot", "shindigcontext");
-        System.setProperty("shindig.override.properties", "classpath:shindig.test.properties");
+        System.setProperty("shindig.override.properties", "classpath:rave.shindig.custom.properties");
 
         TestableConfigurablePropertiesModule propertiesModule = new TestableConfigurablePropertiesModule();
-        Properties properties = propertiesModule.loadProperties();
+        Properties properties = propertiesModule.initProperties();
+
+        assertEquals("Custom container.js location",
+                "res://containers/default/container.js,res://containers/default/testcontainer.js",
+                properties.getProperty("shindig.containers.default"));
+        assertEquals("Custom contextRoot", "customContext/gadgets/proxy?container=default&url=",
+                properties.getProperty("shindig.content-rewrite.proxy-url"));
+        assertEquals("Custom shindig host", "127.0.0.1",
+                properties.getProperty("shindig.host"));
+
+        System.clearProperty("shindig.override.properties");
+    }
+
+    @Test
+    public void testCustomProperties_WithReplacedContextRoot() throws Exception {
+        System.setProperty("shindig.contextroot", "shindigcontext");
+        System.setProperty("shindig.host", "127.0.0.2");
+        System.setProperty("shindig.override.properties", "classpath:rave.shindig.custom.properties");
+
+        TestableConfigurablePropertiesModule propertiesModule = new TestableConfigurablePropertiesModule();
+        Properties properties = propertiesModule.initProperties();
 
         assertEquals("Custom container.js location",
                 "res://containers/default/container.js,res://containers/default/testcontainer.js",
                 properties.getProperty("shindig.containers.default"));
         assertEquals("Replaced contextRoot", "shindigcontext/gadgets/proxy?container=default&url=",
                 properties.getProperty("shindig.content-rewrite.proxy-url"));
+        assertEquals("Different shindig host", "127.0.0.2",
+                properties.getProperty("shindig.host"));
+
+        System.clearProperty("shindig.contextroot");
+        System.clearProperty("shindig.host");
+        System.clearProperty("shindig.override.properties");
     }
 
+    @Test
+    public void testOverridePropertyValuesWithSystemProperties() throws Exception {
+        final String keyCanBeOverridden = "can.be.overridden";
+        final String keyCannotBeOverridden = "cannot.be.overridden";
+        final String defaultValue = "defaultValue";
+        final String systemValue = "systemValue";
+
+        Properties properties = new Properties();
+        properties.setProperty(keyCanBeOverridden, defaultValue);
+        properties.setProperty(keyCannotBeOverridden, defaultValue);
+
+        List<String> overridableProperties = new ArrayList<String>();
+        overridableProperties.add(keyCanBeOverridden);
+
+        System.setProperty(keyCanBeOverridden, systemValue);
+
+        ConfigurablePropertiesModule.overridePropertyValuesWithSystemProperties(properties, overridableProperties);
+
+        Assert.assertEquals(systemValue, properties.getProperty(keyCanBeOverridden));
+        Assert.assertEquals(defaultValue, properties.getProperty(keyCannotBeOverridden));
+        System.clearProperty(keyCanBeOverridden);
+    }
+
+    @Test
+    public void replacePlaceholderWithValue() throws Exception {
+        Properties properties = new Properties();
+        properties.setProperty("key1", "%placeholder%");
+        properties.setProperty("key2", "Not to be replaced");
+        properties.setProperty("key3", "Contains %placeholder% to replace");
+
+        String placeholder = "%placeholder%";
+        String replaceValue = "myValue";
+
+        ConfigurablePropertiesModule.replacePlaceholderWithValue(properties, placeholder, replaceValue);
+
+        Assert.assertEquals(replaceValue, properties.getProperty("key1"));
+        Assert.assertEquals("Not to be replaced", properties.getProperty("key2"));
+        Assert.assertEquals("Contains myValue to replace", properties.getProperty("key3"));
+    }
+
+    @Test
+    public void testGetOverridablePropertyValue() throws Exception {
+        final String propertyName = "dummyKey";
+
+        Properties properties = new Properties();
+
+        String value = ConfigurablePropertiesModule.getOverridablePropertyValue(propertyName, properties);
+        Assert.assertEquals("", value);
+
+        System.setProperty(propertyName, "systemValue");
+        properties.setProperty(propertyName, "propertiesValue");
+        value = ConfigurablePropertiesModule.getOverridablePropertyValue(propertyName, properties);
+        Assert.assertEquals("systemValue", value);
+
+        System.clearProperty(propertyName);
+        value = ConfigurablePropertiesModule.getOverridablePropertyValue(propertyName, properties);
+        Assert.assertEquals("propertiesValue", value);
+
+        properties.remove(propertyName);
+        value = ConfigurablePropertiesModule.getOverridablePropertyValue(propertyName, properties);
+        Assert.assertEquals("", value);
+    }
 
     /**
      * Inner private class to access {@link org.apache.rave.commoncontainer.ConfigurablePropertiesModule#getProperties()}

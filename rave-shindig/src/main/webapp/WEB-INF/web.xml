@@ -24,29 +24,6 @@
          id="Shindig"
          version="2.5">
     <display-name>Shindig</display-name>
-    <!-- configuration -->
-
-    <!--
-    Syntax: <key>=<value> separated by a newline
-
-    system.properties specifies the environmental variables that will be set to the JVM System Properties at server startup time.
-    Alternatively, you may add these values in your app server (ex: Tomcat) as
-    VM arguments like this: -Dshindig.host="my.production.shindig.server.com".
-
-    Here are a few properties that can be set for Shindig:
-    shindig.host: the server name that Shindig is deployed and running on
-    shindig.port: the port number of shindig.host server
-
-    Make sure you escape all HTML values for the web.xml to be parsed correctly.
-    -->
-    <context-param>
-        <param-name>system.properties</param-name>
-        <param-value>
-            shindig.host=
-            shindig.port=
-            aKey=/shindig/gadgets/proxy?container=default&amp;url=
-        </param-value>
-    </context-param>
 
     <!-- Spring context configuration -->
     <context-param>
