@@ -62,7 +62,23 @@ public class ConfigurablePropertiesModule extends AbstractModule {
      */
     @Override
     protected void configure() {
-        Names.bindProperties(this.binder(), getProperties());
+        bindPropertiesAsConstants();
+        bindNonConstantProperties();
+    }
+
+    private void bindPropertiesAsConstants() {
+        for(String propertyName: constantGuiceProperties()) {
+            this.binder().bindConstant().annotatedWith(Names.named(propertyName))
+                    .to(getProperties().getProperty(propertyName));
+        }
+    }
+
+    private void bindNonConstantProperties() {
+        Properties p = getProperties();
+        for (String overridableProperty : constantGuiceProperties()) {
+            p.remove(overridableProperty);
+        }
+        Names.bindProperties(this.binder(), p);
     }
 
     /**
@@ -197,4 +213,17 @@ public class ConfigurablePropertiesModule extends AbstractModule {
         propertyNames.add("shindig.contextroot");
         return propertyNames;
     }
+
+    /**
+     *
+     * @return List of property keys that should be bound as constants in Guice
+     */
+    private static List<String> constantGuiceProperties() {
+        List<String> propertyNames = new ArrayList<String>();
+        propertyNames.add("shindig.host");
+        propertyNames.add("shindig.port");
+        propertyNames.add("shindig.contextroot");
+        return propertyNames;
+    }
+
 }
