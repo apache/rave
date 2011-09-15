@@ -18,6 +18,7 @@
  */
 package org.apache.rave.portal.web.api.rest;
 
+import org.apache.rave.portal.model.Page;
 import org.apache.rave.portal.service.PageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,10 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.ClassUtils;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -56,7 +54,13 @@ public class PageApi {
         
         // send a 204 back for success since there is no content being returned
         response.setStatus(HttpStatus.NO_CONTENT.value());
-    }    
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "{pageId}", method = RequestMethod.GET)
+    public Page getPage(@PathVariable long pageId) {
+        return pageService.getPage(pageId);
+    }
     
     // TODO RAVE-240 - when we implement security we can implement different exception
     //        handlers for different errors (unauthorized, resource not found, etc)

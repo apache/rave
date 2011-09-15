@@ -18,6 +18,7 @@
  */
 package org.apache.rave.portal.web.api.rest;
 
+import org.apache.rave.portal.model.Page;
 import org.springframework.util.ClassUtils;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.http.HttpStatus;
@@ -47,6 +48,16 @@ public class PageApiTest {
         response = new MockHttpServletResponse();
         pageService = createMock(PageService.class);
         pageApi = new PageApi(pageService);     
+    }
+
+    @Test
+    public void getPage_validId() {
+        Page p = new Page();
+        expect(pageService.getPage(PAGE_ID)).andReturn(p).once();
+        replay(pageService);
+
+        Page returned = pageApi.getPage(PAGE_ID);
+        assertThat(returned, is(sameInstance(p)));
     }
     
     @Test
