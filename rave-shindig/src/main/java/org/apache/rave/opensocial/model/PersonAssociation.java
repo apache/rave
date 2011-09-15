@@ -42,28 +42,28 @@ import javax.persistence.UniqueConstraint;
 public class PersonAssociation implements BasicEntity {
 
     @Id
-    @Column(name = "id")
+    @Column(name = "entity_id")
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "personAssociationIdGenerator")
     @TableGenerator(name = "personAssociationIdGenerator", table = "RAVE_SHINDIG_SEQUENCES", pkColumnName = "SEQ_NAME",
             valueColumnName = "SEQ_COUNT", pkColumnValue = "person_association", allocationSize = 1, initialValue = 1)
-    private Long id;
+    private Long entityId;
 
     @OneToOne
-    @JoinColumn(name="follower_id", referencedColumnName = "id")
+    @JoinColumn(name="follower_id", referencedColumnName = "entity_id")
     Person follower;
 
     @OneToOne
-    @JoinColumn(name="followed_id", referencedColumnName = "id")
+    @JoinColumn(name="followed_id", referencedColumnName = "entity_id")
     Person followed;
 
     @Override
-    public Long getId() {
-        return id;
+    public Long getEntityId() {
+        return entityId;
     }
 
     @Override
-    public void setId(Long id) {
-        this.id = id;
+    public void setEntityId(Long entityId) {
+        this.entityId = entityId;
     }
 
     public Person getFollower() {

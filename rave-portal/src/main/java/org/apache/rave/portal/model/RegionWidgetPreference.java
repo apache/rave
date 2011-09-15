@@ -42,11 +42,11 @@ public class RegionWidgetPreference implements BasicEntity, Serializable {
     private static final long serialVersionUID = 1L;
     
     @Id
-    @Column(name = "id")
+    @Column(name = "entity_id")
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "regionWidgetPreferenceIdGenerator")
     @TableGenerator(name = "regionWidgetPreferenceIdGenerator", table = "RAVE_PORTAL_SEQUENCES", pkColumnName = "SEQ_NAME",
             valueColumnName = "SEQ_COUNT", pkColumnValue = "region_widget_preference", allocationSize = 1, initialValue = 1)
-    private Long id;
+    private Long entityId;
 
     @Basic
     @Column(name = "region_widget_id")
@@ -63,8 +63,8 @@ public class RegionWidgetPreference implements BasicEntity, Serializable {
     public RegionWidgetPreference() {
     }
 
-    public RegionWidgetPreference(Long id, Long regionWidgetId, String name, String value) {
-        this.id = id;
+    public RegionWidgetPreference(Long entityId, Long regionWidgetId, String name, String value) {
+        this.entityId = entityId;
         this.regionWidgetId = regionWidgetId;
         this.name = name;
         this.value = value;
@@ -76,13 +76,13 @@ public class RegionWidgetPreference implements BasicEntity, Serializable {
      * @return id The ID of persisted object; null if not persisted
      */
     @Override
-    public Long getId() {
-        return id;
+    public Long getEntityId() {
+        return entityId;
     }
 
     @Override
-    public void setId(Long id) {
-        this.id = id;
+    public void setEntityId(Long entityId) {
+        this.entityId = entityId;
     }
 
     /**
@@ -132,7 +132,7 @@ public class RegionWidgetPreference implements BasicEntity, Serializable {
             return false;
         }
         final RegionWidgetPreference other = (RegionWidgetPreference) obj;
-        if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
+        if (this.entityId != other.entityId && (this.entityId == null || !this.entityId.equals(other.entityId))) {
             return false;
         }
         return true;
@@ -141,14 +141,14 @@ public class RegionWidgetPreference implements BasicEntity, Serializable {
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 97 * hash + (this.id != null ? this.id.hashCode() : 0);
+        hash = 97 * hash + (this.entityId != null ? this.entityId.hashCode() : 0);
         return hash;
     }
 
     @Override
     public String toString() {
         return "RegionWidgetPreference{" +
-                "id=" + id +
+                "entityId=" + entityId +
                 ", name='" + name + '\'' +
                 ", value='" + value + '\'' +
                 '}';

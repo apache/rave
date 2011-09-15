@@ -26,8 +26,15 @@ import org.junit.Test;
 
 import javax.persistence.EntityManager;
 
-import static org.easymock.EasyMock.*;
-import static org.hamcrest.CoreMatchers.*;
+import static org.easymock.EasyMock.createNiceMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.junit.Assert.assertThat;
 
 /**
@@ -55,7 +62,7 @@ public class AbstractJpaRepositoryTest {
         replay(manager);
 
         TestEntity entity = repository.get(ID);
-        assertThat(entity.getId(), is(equalTo(ID)));
+        assertThat(entity.getEntityId(), is(equalTo(ID)));
         verify(manager);
     }
 
@@ -105,20 +112,20 @@ public class AbstractJpaRepositoryTest {
     }
 
     private class TestEntity implements BasicEntity{
-        private Long id;
+        private Long entityId;
 
-        private TestEntity(Long id) {
-            this.id = id;
+        private TestEntity(Long entityId) {
+            this.entityId = entityId;
         }
 
         @Override
-        public Long getId() {
-            return id;
+        public Long getEntityId() {
+            return entityId;
         }
 
         @Override
-        public void setId(Long id) {
-            this.id = id;
+        public void setEntityId(Long entityId) {
+            this.entityId = entityId;
         }
     }
 }

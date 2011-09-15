@@ -35,8 +35,15 @@ import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.List;
 
-import static junit.framework.Assert.*;
-import static org.hamcrest.CoreMatchers.*;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertNull;
+import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.fail;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 /**
@@ -60,7 +67,7 @@ public class JpaWidgetRepositoryTest {
     public void getById_valid() {
         Widget widget = repository.get(1L);
         assertThat(widget, is(notNullValue()));
-        assertThat(widget.getId(), is(equalTo(1L)));
+        assertThat(widget.getEntityId(), is(equalTo(1L)));
     }
 
     @Test
@@ -181,7 +188,7 @@ public class JpaWidgetRepositoryTest {
         widget.setUrl(url);
         widget.setDescription(longDescription);
         widget = repository.save(widget);
-        assertNotNull(widget.getId());
+        assertNotNull(widget.getEntityId());
         assertEquals(longDescription, widget.getDescription());
     }
 

@@ -19,13 +19,13 @@
 
 package org.apache.rave.portal.service;
 
-import org.apache.rave.portal.model.PageLayout;
-import org.apache.rave.portal.model.User;
-import org.apache.rave.portal.repository.PageLayoutRepository;
 import org.apache.rave.portal.model.Page;
+import org.apache.rave.portal.model.PageLayout;
 import org.apache.rave.portal.model.Region;
 import org.apache.rave.portal.model.RegionWidget;
+import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.Widget;
+import org.apache.rave.portal.repository.PageLayoutRepository;
 import org.apache.rave.portal.repository.PageRepository;
 import org.apache.rave.portal.repository.RegionRepository;
 import org.apache.rave.portal.repository.RegionWidgetRepository;
@@ -38,8 +38,15 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.easymock.EasyMock.*;
-import static org.hamcrest.CoreMatchers.*;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.junit.Assert.assertThat;
 
 public class PageServiceTest {
@@ -82,25 +89,25 @@ public class PageServiceTest {
         validWidget = new Widget(1L, "http://dummy.apache.org/widgets/widget.xml");
         
         targetRegion = new Region();
-        targetRegion.setId(2L);
+        targetRegion.setEntityId(2L);
         targetRegion.setRegionWidgets(new ArrayList<RegionWidget>());
         targetRegion.getRegionWidgets().add(new RegionWidget(1L, validWidget, targetRegion, 0));
         targetRegion.getRegionWidgets().add(new RegionWidget(2L, validWidget, targetRegion, 1));
         targetRegion.getRegionWidgets().add(new RegionWidget(3L, validWidget, targetRegion, 2));
 
         originalRegion = new Region();
-        originalRegion.setId(1L);
+        originalRegion.setEntityId(1L);
         originalRegion.setRegionWidgets(new ArrayList<RegionWidget>());
         originalRegion.getRegionWidgets().add(new RegionWidget(4L, validWidget, targetRegion, 0));
         originalRegion.getRegionWidgets().add(new RegionWidget(5L, validWidget, targetRegion, 1));
         originalRegion.getRegionWidgets().add(new RegionWidget(6L, validWidget, targetRegion, 2));
         
         user = new User();
-        user.setId(1L);
+        user.setEntityId(1L);
         user.setUsername("acarlucci"); 
         
         pageLayout = new PageLayout();
-        pageLayout.setId(1L);
+        pageLayout.setEntityId(1L);
         pageLayout.setCode(PAGE_LAYOUT_CODE);
         pageLayout.setNumberOfRegions(3L);
         
@@ -140,7 +147,7 @@ public class PageServiceTest {
         expect(userService.getAuthenticatedUser()).andReturn(user);
         expect(pageLayoutRepository.getByPageLayoutCode(PAGE_LAYOUT_CODE)).andReturn(pageLayout);
         expect(pageRepository.save(expectedPage)).andReturn(expectedPage);
-        expect(pageRepository.getAllPages(user.getId())).andReturn(new ArrayList<Page>());
+        expect(pageRepository.getAllPages(user.getEntityId())).andReturn(new ArrayList<Page>());
         replay(userService);
         replay(pageLayoutRepository);
         replay(pageRepository);             
@@ -172,7 +179,7 @@ public class PageServiceTest {
         expect(userService.getAuthenticatedUser()).andReturn(user);
         expect(pageLayoutRepository.getByPageLayoutCode(PAGE_LAYOUT_CODE)).andReturn(pageLayout);
         expect(pageRepository.save(expectedPage)).andReturn(expectedPage);
-        expect(pageRepository.getAllPages(user.getId())).andReturn(existingPages);
+        expect(pageRepository.getAllPages(user.getEntityId())).andReturn(existingPages);
         replay(userService);
         replay(pageLayoutRepository);
         replay(pageRepository);             
@@ -200,7 +207,7 @@ public class PageServiceTest {
                 
         expect(pageLayoutRepository.getByPageLayoutCode(PAGE_LAYOUT_CODE)).andReturn(pageLayout);
         expect(pageRepository.save(expectedPage)).andReturn(expectedPage);
-        expect(pageRepository.getAllPages(user.getId())).andReturn(new ArrayList<Page>());
+        expect(pageRepository.getAllPages(user.getEntityId())).andReturn(new ArrayList<Page>());
         replay(pageLayoutRepository);
         replay(pageRepository);             
 
@@ -227,7 +234,7 @@ public class PageServiceTest {
         expect(pageRepository.get(PAGE_ID)).andReturn(page);
         pageRepository.delete(page);
         expectLastCall();
-        expect(pageRepository.getAllPages(user.getId())).andReturn(pageListAfterDelete);
+        expect(pageRepository.getAllPages(user.getEntityId())).andReturn(pageListAfterDelete);
         expect(pageRepository.save(page2)).andReturn(page2);
         replay(userService);
         replay(pageRepository);
@@ -244,7 +251,7 @@ public class PageServiceTest {
         expect(pageRepository.get(INVALID_PAGE_ID)).andReturn(page);
         pageRepository.delete(page);
         expectLastCall();
-        expect(pageRepository.getAllPages(user.getId())).andReturn(pageList);
+        expect(pageRepository.getAllPages(user.getEntityId())).andReturn(pageList);
         expect(pageRepository.save(page2)).andReturn(page2);
         expect(pageRepository.save(page)).andReturn(page);
         replay(userService);
@@ -450,14 +457,14 @@ public class PageServiceTest {
     public void movePage() {               
         expect(userService.getAuthenticatedUser()).andReturn(user);
         expect(pageRepository.get(PAGE_ID)).andReturn(page);
-        expect(pageRepository.get(page2.getId())).andReturn(page2);
-        expect(pageRepository.getAllPages(user.getId())).andReturn(pageList);        
+        expect(pageRepository.get(page2.getEntityId())).andReturn(page2);
+        expect(pageRepository.getAllPages(user.getEntityId())).andReturn(pageList);
         expect(pageRepository.save(page2)).andReturn(page2);
         expect(pageRepository.save(page)).andReturn(page);        
         replay(userService);
         replay(pageRepository);
                           
-        assertThat(pageService.movePage(PAGE_ID, page2.getId()).getRenderSequence(), is(2L));
+        assertThat(pageService.movePage(PAGE_ID, page2.getEntityId()).getRenderSequence(), is(2L));
         assertThat(page2.getRenderSequence(), is(1L));        
       
         verify(userService);        
@@ -468,12 +475,12 @@ public class PageServiceTest {
     public void movePage_invalidPageId() {               
         expect(userService.getAuthenticatedUser()).andReturn(user);
         expect(pageRepository.get(INVALID_PAGE_ID)).andReturn(null);
-        expect(pageRepository.get(page2.getId())).andReturn(page2);
-        expect(pageRepository.getAllPages(user.getId())).andReturn(pageList);               
+        expect(pageRepository.get(page2.getEntityId())).andReturn(page2);
+        expect(pageRepository.getAllPages(user.getEntityId())).andReturn(pageList);
         replay(userService);
         replay(pageRepository);
                           
-        pageService.movePage(INVALID_PAGE_ID, page2.getId());      
+        pageService.movePage(INVALID_PAGE_ID, page2.getEntityId());
       
         verify(userService);        
         verify(pageRepository);
@@ -482,14 +489,14 @@ public class PageServiceTest {
     @Test
     public void movePageToDefault() {               
         expect(userService.getAuthenticatedUser()).andReturn(user);
-        expect(pageRepository.get(page2.getId())).andReturn(page2);
-        expect(pageRepository.getAllPages(user.getId())).andReturn(pageList);        
+        expect(pageRepository.get(page2.getEntityId())).andReturn(page2);
+        expect(pageRepository.getAllPages(user.getEntityId())).andReturn(pageList);
         expect(pageRepository.save(page)).andReturn(page);
         expect(pageRepository.save(page2)).andReturn(page2);        
         replay(userService);
         replay(pageRepository);
                           
-        assertThat(pageService.movePageToDefault(page2.getId()).getRenderSequence(), is(1L));
+        assertThat(pageService.movePageToDefault(page2.getEntityId()).getRenderSequence(), is(1L));
         assertThat(page.getRenderSequence(), is(2L));        
       
         verify(userService);        
@@ -500,7 +507,7 @@ public class PageServiceTest {
     public void movePageToDefault_invalidPageId() {               
         expect(userService.getAuthenticatedUser()).andReturn(user);
         expect(pageRepository.get(INVALID_PAGE_ID)).andReturn(null);
-        expect(pageRepository.getAllPages(user.getId())).andReturn(pageList);              
+        expect(pageRepository.getAllPages(user.getEntityId())).andReturn(pageList);
         replay(userService);
         replay(pageRepository);
                           

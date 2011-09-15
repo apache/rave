@@ -55,7 +55,7 @@ public class OAuthTokenInfo implements BasicEntity {
     public static final String FIND_OAUTH_TOKEN_INFO = "OAuthTokenInfo.findOAuthTokenInfo";
 
     /**
-     * Query param for user id
+     * Query param for user entityId
      */
     public static final String USER_ID_PARAM = "userIdParam";
 
@@ -89,8 +89,8 @@ public class OAuthTokenInfo implements BasicEntity {
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "tokenInfoIdGenerator")
     @TableGenerator(name = "tokenInfoIdGenerator", table = "RAVE_SHINDIG_SEQUENCES", pkColumnName = "SEQ_NAME",
             valueColumnName = "SEQ_COUNT", pkColumnValue = "token_info", allocationSize = 1, initialValue = 1)
-    @Column(name = "id")
-    private Long id;
+    @Column(name = "entity_id")
+    private Long entityId;
 
     @Column(name = "access_token")
     private String accessToken;
@@ -138,13 +138,13 @@ public class OAuthTokenInfo implements BasicEntity {
     }
 
     @Override
-    public Long getId() {
-        return id;
+    public Long getEntityId() {
+        return entityId;
     }
 
     @Override
-    public void setId(Long id) {
-        this.id = id;
+    public void setEntityId(Long entityId) {
+        this.entityId = entityId;
     }
 
     public String getAccessToken() {
@@ -228,7 +228,7 @@ public class OAuthTokenInfo implements BasicEntity {
             return false;
         }
         final OAuthTokenInfo other = (OAuthTokenInfo) obj;
-        if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
+        if (this.entityId != other.entityId && (this.entityId == null || !this.entityId.equals(other.entityId))) {
             return false;
         }
         return true;
@@ -237,14 +237,14 @@ public class OAuthTokenInfo implements BasicEntity {
     @Override
     public int hashCode() {
         int hash = HASH_START;
-        hash = HASH_INCREASE * hash + (this.id != null ? this.id.hashCode() : 0);
+        hash = HASH_INCREASE * hash + (this.entityId != null ? this.entityId.hashCode() : 0);
         return hash;
     }
 
     @Override
     public String toString() {
         return "OAuthTokenInfo{" +
-                "id=" + id +
+                "entityId=" + entityId +
                 ", accessToken='" + accessToken + '\'' +
                 ", tokenSecret='" + tokenSecret + '\'' +
                 ", sessionHandle='" + sessionHandle + '\'' +

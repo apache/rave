@@ -25,16 +25,16 @@ import org.apache.rave.portal.service.UserService;
 import org.apache.rave.portal.web.util.ModelKeys;
 import org.apache.rave.portal.web.util.ViewNames;
 import org.apache.rave.provider.opensocial.config.OpenSocialEnvironment;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * Page Controller
@@ -62,7 +62,7 @@ public class PageController {
     @RequestMapping(value = {"/page/view", "/index.html"}, method = RequestMethod.GET)
     public String viewDefault(Model model) {
         User user = userService.getAuthenticatedUser();
-        List<Page> pages = pageService.getAllPages(user.getId());
+        List<Page> pages = pageService.getAllPages(user.getEntityId());
         model.addAttribute(ModelKeys.PAGE, pages.get(0));
         model.addAttribute(ModelKeys.PAGES, pages);
         model.addAttribute(ModelKeys.OPENSOCIAL_ENVIRONMENT, openSocialEnvironment);
@@ -74,7 +74,7 @@ public class PageController {
         User user = userService.getAuthenticatedUser();
         logger.debug("attempting to get pageId " + pageId + " for " + user);
         
-        List<Page> pages = pageService.getAllPages(user.getId());
+        List<Page> pages = pageService.getAllPages(user.getEntityId());
         Page page = pageService.getPageFromList(pageId, pages);
                
         model.addAttribute(ModelKeys.PAGE, page);

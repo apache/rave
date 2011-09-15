@@ -19,9 +19,6 @@
 
 package org.apache.rave.portal.repository;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 import org.apache.rave.portal.model.User;
 import org.hamcrest.CoreMatchers;
 import org.junit.Test;
@@ -30,6 +27,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -75,7 +75,7 @@ public class JpaUserRepositoryTest {
     public void getByUsername_valid() {
         User user = repository.getByUsername(USER_NAME);
         assertThat(user, CoreMatchers.notNullValue());
-        assertThat(user.getId(), is(equalTo(USER_ID)));
+        assertThat(user.getEntityId(), is(equalTo(USER_ID)));
         assertThat(user.getPassword(), is(equalTo(HASHED_SALTED_PASSWORD)));
         assertThat(user.isAccountNonExpired(), is(true));
 		  assertThat(user.getEmail(), is(equalTo(USER_EMAIL)));
@@ -91,7 +91,7 @@ public class JpaUserRepositoryTest {
     public void getByUserEmail_valid() {
         User user = repository.getByUserEmail(USER_EMAIL);
         assertThat(user, CoreMatchers.notNullValue());
-        assertThat(user.getId(), is(equalTo(USER_ID)));
+        assertThat(user.getEntityId(), is(equalTo(USER_ID)));
         assertThat(user.getPassword(), is(equalTo(HASHED_SALTED_PASSWORD)));
         assertThat(user.isAccountNonExpired(), is(true));
 		  assertThat(user.getEmail(), is(equalTo(USER_EMAIL)));

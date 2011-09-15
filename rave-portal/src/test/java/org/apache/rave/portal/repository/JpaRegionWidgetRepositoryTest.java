@@ -19,11 +19,6 @@
 
 package org.apache.rave.portal.repository;
 
-import java.util.ArrayList;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 import org.apache.rave.portal.model.RegionWidget;
 import org.apache.rave.portal.model.RegionWidgetPreference;
 import org.junit.Test;
@@ -33,6 +28,10 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.util.ArrayList;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -61,7 +60,7 @@ public class JpaRegionWidgetRepositoryTest {
     public void getById_validId() {
         RegionWidget regionWidget = repository.get(VALID_REGION_WIDGET_ID);
         assertThat(regionWidget, is(notNullValue()));
-        assertThat(regionWidget.getId(), is(equalTo(VALID_REGION_WIDGET_ID)));
+        assertThat(regionWidget.getEntityId(), is(equalTo(VALID_REGION_WIDGET_ID)));
     }
 
     @Test
@@ -79,20 +78,20 @@ public class JpaRegionWidgetRepositoryTest {
         RegionWidget saved = repository.save(regionWidget);
         manager.flush();
         assertThat(saved, is(sameInstance(regionWidget)));
-        assertThat(saved.getId(), is(notNullValue()));
+        assertThat(saved.getEntityId(), is(notNullValue()));
     }
 
     @Test
     @Rollback(true)
     public void save_existingEntity() {
         RegionWidget regionWidget = new RegionWidget();
-        regionWidget.setId(VALID_REGION_WIDGET_ID);
+        regionWidget.setEntityId(VALID_REGION_WIDGET_ID);
         regionWidget.setPreferences(new ArrayList<RegionWidgetPreference>());
 
         RegionWidget saved = repository.save(regionWidget);
         manager.flush();
         assertThat(saved, is(not(sameInstance(regionWidget))));
-        assertThat(saved.getId(), is(equalTo(regionWidget.getId())));
+        assertThat(saved.getEntityId(), is(equalTo(regionWidget.getEntityId())));
     }
 
     @Test
@@ -111,7 +110,7 @@ public class JpaRegionWidgetRepositoryTest {
         RegionWidgetPreference actual = saved.getPreferences().get(0);
 
         assertThat(actual, is(sameInstance(regionWidgetPreference)));
-        assertThat(actual.getId(), is(notNullValue()));
+        assertThat(actual.getEntityId(), is(notNullValue()));
     }
 
     @Test
@@ -120,7 +119,7 @@ public class JpaRegionWidgetRepositoryTest {
         long VALID_PREFERENCE_ID = addPreferenceToRegionWidget(VALID_REGION_WIDGET_ID);
 
         RegionWidget regionWidget = new RegionWidget();
-        regionWidget.setId(VALID_REGION_WIDGET_ID);
+        regionWidget.setEntityId(VALID_REGION_WIDGET_ID);
         regionWidget.setPreferences(new ArrayList<RegionWidgetPreference>());
         RegionWidgetPreference regionWidgetPreference = new RegionWidgetPreference(VALID_PREFERENCE_ID,
                 VALID_REGION_WIDGET_ID, VALID_PREFERENCE_NAME, VALID_PREFERENCE_VALUE);
@@ -133,7 +132,7 @@ public class JpaRegionWidgetRepositoryTest {
         RegionWidgetPreference actual = saved.getPreferences().get(0);
 
         assertThat(actual, is(not(sameInstance(regionWidgetPreference))));
-        assertThat(actual.getId(), is(equalTo(regionWidgetPreference.getId())));
+        assertThat(actual.getEntityId(), is(equalTo(regionWidgetPreference.getEntityId())));
     }
 
     @Test
@@ -160,6 +159,6 @@ public class JpaRegionWidgetRepositoryTest {
 
         RegionWidget saved = repository.save(regionWidget);
         manager.flush();
-        return saved.getPreferences().get(0).getId();
+        return saved.getPreferences().get(0).getEntityId();
     }
 }

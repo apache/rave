@@ -87,6 +87,7 @@
     <%--@elvariable id="widgets" type="org.apache.rave.portal.model.util.SearchResult"--%>
     <c:if test="${widgets.totalResults gt 0}">
         <ul class="storeItems">
+        <%--@elvariable id="widget" type="org.apache.rave.portal.model.Widget"--%>
             <c:forEach var="widget" items="${widgets.resultSet}">
                 <li class="storeItem">
                     <div class="storeItemLeft">
@@ -98,15 +99,15 @@
                         <div class="widgetType"><c:out value="${widget.type}"/></div>
                     </div>
                     <div class="storeItemCenter">
-                        <div id="widgetAdded_${widget.id}" class="storeButton">
+                        <div id="widgetAdded_${widget.entityId}" class="storeButton">
                             <button class="storeItemButton"
-                                    id="addWidget_${widget.id}"
-                                    onclick="rave.api.rpc.addWidgetToPage({widgetId: ${widget.id}, pageId: ${referringPageId}});">
+                                    id="addWidget_${widget.entityId}"
+                                    onclick="rave.api.rpc.addWidgetToPage({widgetId: ${widget.entityId}, pageId: ${referringPageId}});">
                                 <fmt:message key="page.widget.addToPage"/>
                             </button>
                         </div>
                         <a class="secondaryPageItemTitle"
-                           href="<spring:url value="/app/store/widget/${widget.id}" />?referringPageId=${referringPageId}">
+                           href="<spring:url value="/app/store/widget/${widget.entityId}" />?referringPageId=${referringPageId}">
                             <c:out value="${widget.title}"/>
                         </a>
 

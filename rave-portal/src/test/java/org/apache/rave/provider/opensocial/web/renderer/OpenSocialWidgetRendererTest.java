@@ -34,7 +34,9 @@ import org.junit.Test;
 
 import java.util.Arrays;
 
-import static org.easymock.EasyMock.*;
+import static org.easymock.EasyMock.createNiceMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -67,11 +69,11 @@ public class OpenSocialWidgetRendererTest {
         replay(openSocialService);
 
         Widget w = new Widget();
-        w.setId(1L);
+        w.setEntityId(1L);
         w.setType(Constants.WIDGET_TYPE);
         w.setUrl(VALID_GADGET_URL);
         RegionWidget rw = new RegionWidget();
-        rw.setId(1L);
+        rw.setEntityId(1L);
         rw.setCollapsed(VALID_COLLAPSED);
         rw.setWidget(w);
         rw.setPreferences(Arrays.asList(new RegionWidgetPreference(1L, 1L, "color", "blue"),
@@ -124,7 +126,7 @@ public class OpenSocialWidgetRendererTest {
         w.setType("NONE");
         w.setUrl("http://www.example.com/gadget.xml");
         RegionWidget rw = new RegionWidget();
-        rw.setId(1L);
+        rw.setEntityId(1L);
         rw.setWidget(w);
 
         renderer.render(rw);

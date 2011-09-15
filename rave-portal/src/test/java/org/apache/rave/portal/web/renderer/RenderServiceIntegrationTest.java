@@ -20,8 +20,6 @@
 package org.apache.rave.portal.web.renderer;
 
 
-import java.util.Arrays;
-
 import org.apache.rave.portal.model.Page;
 import org.apache.rave.portal.model.Region;
 import org.apache.rave.portal.model.RegionWidget;
@@ -40,6 +38,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.RestOperations;
+
+import java.util.Arrays;
 
 import static org.easymock.EasyMock.anyObject;
 import static org.easymock.EasyMock.createNiceMock;
@@ -106,7 +106,7 @@ public class RenderServiceIntegrationTest {
 
         Widget w = new Widget();
         w.setType("OpenSocial");
-        w.setId(1L);
+        w.setEntityId(1L);
         w.setTitle("Gadget Title");
         w.setUrl("http://www.example.com/gadget.xml");
 

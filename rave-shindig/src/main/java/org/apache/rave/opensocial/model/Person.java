@@ -68,11 +68,11 @@ public class Person implements BasicEntity {
     public static final String USERNAME_PARAM = "username";
 
     @Id
-    @Column(name = "id")
+    @Column(name = "entity_id")
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "personIdGenerator")
     @TableGenerator(name = "personIdGenerator", table = "RAVE_SHINDIG_SEQUENCES", pkColumnName = "SEQ_NAME",
             valueColumnName = "SEQ_COUNT", pkColumnValue = "person", allocationSize = 1, initialValue = 1)
-    private Long id;
+    private Long entityId;
 
     @Basic
     @Column(name = "username")
@@ -203,27 +203,27 @@ public class Person implements BasicEntity {
     private Name name;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "person_id", referencedColumnName = "id")
+    @JoinColumn(name = "person_id", referencedColumnName = "entity_id")
     private List<Account> accounts;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinTable(name = "person_address_join",
-            joinColumns = @JoinColumn(name = "address_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name="person_id", referencedColumnName = "id"))
+            joinColumns = @JoinColumn(name = "address_id", referencedColumnName = "entity_id"),
+            inverseJoinColumns = @JoinColumn(name="person_id", referencedColumnName = "entity_id"))
     private List<Address> addresses;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "person_id", referencedColumnName = "id")
+    @JoinColumn(name = "person_id", referencedColumnName = "entity_id")
     private List<Organization> organizations;
 
     @OneToMany(targetEntity = PersonProperty.class)
-    @JoinColumn(name = "person_id", referencedColumnName = "id")
+    @JoinColumn(name = "person_id", referencedColumnName = "entity_id")
     private List<PersonProperty> properties;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "person_friends_jn",
-            joinColumns = @JoinColumn(name = "follower_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "followed_id", referencedColumnName = "id"))
+            joinColumns = @JoinColumn(name = "follower_id", referencedColumnName = "entity_id"),
+            inverseJoinColumns = @JoinColumn(name = "followed_id", referencedColumnName = "entity_id"))
     private List<Person> friends;
 
     @Transient
@@ -241,12 +241,12 @@ public class Person implements BasicEntity {
     @Transient
     private Map<String, List<PersonProperty>> mappedProperties;
 
-    public Long getId() {
-        return id;
+    public Long getEntityId() {
+        return entityId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setEntityId(Long entityId) {
+        this.entityId = entityId;
     }
 
     public String getUsername() {
@@ -583,7 +583,7 @@ public class Person implements BasicEntity {
     @Override
     @Generated("IDE Generated Method")
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
+        int result = entityId != null ? entityId.hashCode() : 0;
         result = 31 * result + (username != null ? username.hashCode() : 0);
         result = 31 * result + (displayName != null ? displayName.hashCode() : 0);
         result = 31 * result + (aboutMe != null ? aboutMe.hashCode() : 0);
@@ -652,7 +652,7 @@ public class Person implements BasicEntity {
         if (happiestWhen != null ? !happiestWhen.equals(person.happiestWhen) : person.happiestWhen != null)
             return false;
         if (humor != null ? !humor.equals(person.humor) : person.humor != null) return false;
-        if (id != null ? !id.equals(person.id) : person.id != null) return false;
+        if (entityId != null ? !entityId.equals(person.entityId) : person.entityId != null) return false;
         if (jobInterests != null ? !jobInterests.equals(person.jobInterests) : person.jobInterests != null)
             return false;
         if (lastUpdated != null ? !lastUpdated.equals(person.lastUpdated) : person.lastUpdated != null) return false;

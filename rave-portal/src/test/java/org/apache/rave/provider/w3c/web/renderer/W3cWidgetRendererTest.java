@@ -28,7 +28,9 @@ import org.apache.rave.provider.w3c.Constants;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.easymock.EasyMock.*;
+import static org.easymock.EasyMock.createNiceMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -57,7 +59,7 @@ public class W3cWidgetRendererTest {
         w.setType(Constants.WIDGET_TYPE);
         w.setUrl("http://example.com/widgets/1");
         RegionWidget rw = new RegionWidget();
-        rw.setId(1L);
+        rw.setEntityId(1L);
         rw.setWidget(w);
 
         Widget wookieWidget = new Widget();
@@ -92,7 +94,7 @@ public class W3cWidgetRendererTest {
         w.setType("NONE");
         w.setUrl("http://example.com/widgets/1");
         RegionWidget rw = new RegionWidget();
-        rw.setId(1L);
+        rw.setEntityId(1L);
         rw.setWidget(w);
 
         renderer.render(rw);

@@ -23,6 +23,6 @@ package org.apache.rave.persistence;
  * Defines common properties implemented by Entities in the model
  */
 public interface BasicEntity {
-    Long getId();
-    void setId(Long id);
+    Long getEntityId();
+    void setEntityId(Long entityId);
 }

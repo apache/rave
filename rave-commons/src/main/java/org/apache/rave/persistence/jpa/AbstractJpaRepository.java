@@ -55,7 +55,7 @@ public abstract class AbstractJpaRepository<T extends BasicEntity> implements Re
     @Override
     @Transactional
     public T save(T item) {
-        return saveOrUpdate(item.getId(), manager, item);
+        return saveOrUpdate(item.getEntityId(), manager, item);
     }
 
     @Override

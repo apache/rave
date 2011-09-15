@@ -22,7 +22,7 @@ set @widget_seq = 'widget';
 
 -- useless knowledge widget
 set @widget_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @widget_seq);
-insert into widget (id,title, url, type, widget_status)
+insert into widget (entity_id,title, url, type, widget_status)
 values(@widget_id,'Useless Knowledge', 'http://www.great-goofy-gadgets.com/humor/uselessknowledge/uselessknowledge.xml', 'OpenSocial', 'PREVIEW');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @widget_seq;
 -- end widget data ----

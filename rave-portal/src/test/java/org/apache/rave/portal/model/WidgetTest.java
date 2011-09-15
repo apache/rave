@@ -53,7 +53,7 @@ public class WidgetTest {
         description = "This is a test widget";
         status = WidgetStatus.PREVIEW;
 
-        widget.setId(id);
+        widget.setEntityId(id);
         widget.setTitle(title);
         widget.setUrl(url);
         widget.setThumbnailUrl(thumbnailUrl);
@@ -66,7 +66,7 @@ public class WidgetTest {
 
     @Test
     public void testAccessorMethods() {
-        assertEquals(id, widget.getId());
+        assertEquals(id, widget.getEntityId());
         assertEquals(title, widget.getTitle());
         assertEquals(url, widget.getUrl());
         assertEquals(thumbnailUrl, widget.getThumbnailUrl());

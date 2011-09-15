@@ -45,11 +45,11 @@ public class Organization implements org.apache.shindig.social.opensocial.model.
      * underlying storage mechanism
      */
     @Id
-    @Column(name = "id")
+    @Column(name = "entity_id")
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "organizationIdGenerator")
     @TableGenerator(name = "organizationIdGenerator", table = "RAVE_SHINDIG_SEQUENCES", pkColumnName = "SEQ_NAME",
             valueColumnName = "SEQ_COUNT", pkColumnValue = "organization", allocationSize = 1, initialValue = 1)
-    private Long id;
+    private Long entityId;
 
     @OneToOne
     private Address address;
@@ -387,12 +387,12 @@ public class Organization implements org.apache.shindig.social.opensocial.model.
 
     /**
      */
-    public Long getId() {
-        return id;
+    public Long getEntityId() {
+        return entityId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setEntityId(Long entityId) {
+        this.entityId = entityId;
     }
 
 }

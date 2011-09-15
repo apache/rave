@@ -32,7 +32,6 @@ import org.apache.shindig.social.opensocial.spi.CollectionOptions;
 import org.apache.shindig.social.opensocial.spi.GroupId;
 import org.apache.shindig.social.opensocial.spi.PersonService;
 import org.apache.shindig.social.opensocial.spi.UserId;
-import org.hamcrest.CoreMatchers;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -42,8 +41,15 @@ import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
-import static org.easymock.EasyMock.*;
-import static org.hamcrest.CoreMatchers.*;
+import static org.easymock.EasyMock.createNiceMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 public class PersonServiceTest {
@@ -459,7 +465,7 @@ public class PersonServiceTest {
 
     private org.apache.rave.opensocial.model.Person getDbPerson() {
         org.apache.rave.opensocial.model.Person dbPerson = new org.apache.rave.opensocial.model.Person();
-        dbPerson.setId(1111L);
+        dbPerson.setEntityId(1111L);
         dbPerson.setUsername(ID_1);
         dbPerson.setDisplayName(DISPLAY_NAME);
         dbPerson.setHappiestWhen(HAPPIEST_WHEN);

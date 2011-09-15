@@ -18,11 +18,6 @@
  */
 package org.apache.rave.portal.repository;
 
-import java.util.List;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 import org.apache.rave.portal.model.Page;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,7 +26,14 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.hamcrest.CoreMatchers.*;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.util.List;
+
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 @Transactional
@@ -81,7 +83,7 @@ public class JpaPageRepositoryTest {
     public void getById_valid() {
         Page p = repository.get(1L);
         assertThat(p, is(notNullValue()));
-        assertThat(p.getId(), is(equalTo(1L)));
+        assertThat(p.getEntityId(), is(equalTo(1L)));
     }
 
     @Test

@@ -46,11 +46,11 @@ import javax.persistence.TableGenerator;
 public class PersonProperty implements BasicEntity, ListField {
 
     @Id
-    @Column(name = "id")
+    @Column(name = "entity_id")
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "personPropertyIdGenerator")
     @TableGenerator(name = "personPropertyIdGenerator", table = "RAVE_SHINDIG_SEQUENCES", pkColumnName = "SEQ_NAME",
             valueColumnName = "SEQ_COUNT", pkColumnValue = "person_property", allocationSize = 1, initialValue = 1)
-    private Long id;
+    private Long entityId;
 
     @Basic
     @Column(name = "field_type")
@@ -107,13 +107,13 @@ public class PersonProperty implements BasicEntity, ListField {
     }
 
     @Override
-    public Long getId() {
-        return id;
+    public Long getEntityId() {
+        return entityId;
     }
 
     @Override
-    public void setId(Long id) {
-        this.id = id;
+    public void setEntityId(Long entityId) {
+        this.entityId = entityId;
     }
 
     @Override
@@ -124,7 +124,7 @@ public class PersonProperty implements BasicEntity, ListField {
         PersonProperty that = (PersonProperty) o;
 
         if (fieldType != null ? !fieldType.equals(that.fieldType) : that.fieldType != null) return false;
-        if (id != null ? !id.equals(that.id) : that.id != null) return false;
+        if (entityId != null ? !entityId.equals(that.entityId) : that.entityId != null) return false;
         if (primary != null ? !primary.equals(that.primary) : that.primary != null) return false;
         if (type != null ? !type.equals(that.type) : that.type != null) return false;
         if (value != null ? !value.equals(that.value) : that.value != null) return false;
@@ -134,7 +134,7 @@ public class PersonProperty implements BasicEntity, ListField {
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
+        int result = entityId != null ? entityId.hashCode() : 0;
         result = 31 * result + (fieldType != null ? fieldType.hashCode() : 0);
         result = 31 * result + (type != null ? type.hashCode() : 0);
         result = 31 * result + (value != null ? value.hashCode() : 0);

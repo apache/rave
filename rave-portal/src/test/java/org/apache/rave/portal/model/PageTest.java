@@ -52,7 +52,7 @@ public class PageTest {
 		regions.add(new Region());
 		regions.add(new Region());
 		
-		page.setId(id);
+		page.setEntityId(id);
 		page.setName(testName);
 		page.setOwner(testOwner);
 		page.setPageLayout(pageLayout);
@@ -67,7 +67,7 @@ public class PageTest {
 	
 	@Test
 	public void testAccessorMethods() {
-		assertTrue(page.getId()==id);
+		assertTrue(page.getEntityId()==id);
 		assertTrue(page.getName().equals(testName));
 		assertTrue(page.getOwner().equals(testOwner));
 		assertTrue(page.getPageLayout().equals(pageLayout));

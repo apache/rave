@@ -68,6 +68,6 @@ public class W3cWidgetRenderer implements RegionWidgetRenderer {
         }
         Widget contextualizedWidget = widgetService.getWidget(null, null, widget);
         String url = contextualizedWidget == null ? null : contextualizedWidget.getUrl();
-        return String.format(IFRAME_MARKUP, WIDGET_TYPE, item.getId(), url);
+        return String.format(IFRAME_MARKUP, WIDGET_TYPE, item.getEntityId(), url);
     }
 }

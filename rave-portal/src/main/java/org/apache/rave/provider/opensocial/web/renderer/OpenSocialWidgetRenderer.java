@@ -91,7 +91,7 @@ public class OpenSocialWidgetRenderer implements RegionWidgetRenderer {
             }
         }
 
-        return String.format(IFRAME_MARKUP, Constants.WIDGET_TYPE, item.getId(), item.getWidget().getUrl(),
+        return String.format(IFRAME_MARKUP, Constants.WIDGET_TYPE, item.getEntityId(), item.getWidget().getUrl(),
                 securityTokenService.getEncryptedSecurityToken(item),
                 openSocialService.getGadgetMetadata(item.getWidget().getUrl()), userPrefs.toString(), item.isCollapsed());
     }

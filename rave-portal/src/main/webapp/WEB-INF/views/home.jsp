@@ -29,6 +29,7 @@
 <jsp:useBean id="openSocialEnv" scope="request" type="org.apache.rave.provider.opensocial.config.OpenSocialEnvironment"/>
 <c:set var="opensocial_engine_url" value="${openSocialEnv.engineProtocol}://${openSocialEnv.engineRoot}${openSocialEnv.engineGadgetPath}"/>
 <fmt:setBundle basename="messages"/>
+<%--@elvariable id="page" type="org.apache.rave.portal.model.Page"--%>
 <rave:rave_generic_page pageTitle="${page.name}">
     <div id="header">
         <div class="header-a">
@@ -36,7 +37,7 @@
               <fmt:message key="page.general.logout"/></a>
         </div>
         <div class="widget-a">
-            <a href="<spring:url value="/app/store?referringPageId=${page.id}" />">
+            <a href="<spring:url value="/app/store?referringPageId=${page.entityId}" />">
               <fmt:message key="page.store.title"/>
             </a>
         </div>
@@ -44,7 +45,7 @@
           <fmt:message key="page.home.welcome"><fmt:param><c:out value="${page.owner.username}"/></fmt:param></fmt:message>
       </h1>
     </div>
-    <input id="currentPageId" type="hidden" value="${page.id}" />
+    <input id="currentPageId" type="hidden" value="${page.entityId}" />
     <div id="tabsHeader">      
         <%-- render the page tabs --%>
         <div id="tabs" class="rave-ui-tabs">
@@ -52,7 +53,7 @@
                  <%-- determine if the current page in the list matches the page the user is viewing --%>
                  <c:set var="isCurrentPage">
                      <c:choose>
-                         <c:when test="${page.id == userPage.id}">true</c:when>
+                         <c:when test="${page.entityId == userPage.entityId}">true</c:when>
                          <c:otherwise>false</c:otherwise>
                      </c:choose>
                  </c:set>      
@@ -62,8 +63,8 @@
                          <c:otherwise>false</c:otherwise>
                      </c:choose>
                  </c:set>                       
-                 <div id="tab-${userPage.id}" class="rave-ui-tab<c:if test="${isCurrentPage}"> rave-ui-tab-selected</c:if>">
-                    <div id="pageTitle-${userPage.id}" class="page-title" onclick="rave.viewPage(${userPage.id});"><c:out value="${userPage.name}"/></div>
+                 <div id="tab-${userPage.entityId}" class="rave-ui-tab<c:if test="${isCurrentPage}"> rave-ui-tab-selected</c:if>">
+                    <div id="pageTitle-${userPage.entityId}" class="page-title" onclick="rave.viewPage(${userPage.entityId});"><c:out value="${userPage.name}"/></div>
                     <c:if test="${isCurrentPage}">                   
                         <div id="pageMenuWrapper">
                             <span id="pageMenuButton" class="ui-icon ui-icon-circle-triangle-s" title="Page Actions Menu"></span>
@@ -86,27 +87,27 @@
     <%--render the main page content (regions/widgets) --%>
     <div id="pageContent">
         <c:forEach var="region" items="${page.regions}">
-            <div class="region" id="region-${region.id}-id">
+            <div class="region" id="region-${region.entityId}-id">
                 <c:forEach var="regionWidget" items="${region.regionWidgets}">                                                     
-                   <div class="widget-wrapper" id="widget-${regionWidget.id}-wrapper">
+                   <div class="widget-wrapper" id="widget-${regionWidget.entityId}-wrapper">
                         <div class="widget-title-bar">
-                            <span id="widget-${regionWidget.id}-collapse" class="widget-toolbar-toggle-collapse" title="Collapse/Restore Widget"></span>
-                            <span id="widget-${regionWidget.id}-title"><c:out value="${regionWidget.widget.title}"/></span>
+                            <span id="widget-${regionWidget.entityId}-collapse" class="widget-toolbar-toggle-collapse" title="Collapse/Restore Widget"></span>
+                            <span id="widget-${regionWidget.entityId}-title"><c:out value="${regionWidget.widget.title}"/></span>
                             <!-- These are toolbar buttons -->
-                            <div id="widget-${regionWidget.id}-toolbar" style="float:right;">
-                                <button id="widget-${regionWidget.id}-prefs"
+                            <div id="widget-${regionWidget.entityId}-toolbar" style="float:right;">
+                                <button id="widget-${regionWidget.entityId}-prefs"
                                         class="widget-toolbar-btn widget-toolbar-btn-prefs">
                                 </button>
-                                <button id="widget-${regionWidget.id}-max"
+                                <button id="widget-${regionWidget.entityId}-max"
                                         class="widget-toolbar-btn">
                                 </button>
-                                <button id="widget-${regionWidget.id}-remove"
+                                <button id="widget-${regionWidget.entityId}-remove"
                                         class="widget-toolbar-btn">
                                 </button>
                             </div>
                         </div>
-                        <div class="widget-prefs" id="widget-${regionWidget.id}-prefs-content"></div>
-                        <div class="widget" id="widget-${regionWidget.id}-body">
+                        <div class="widget-prefs" id="widget-${regionWidget.entityId}-prefs-content"></div>
+                        <div class="widget" id="widget-${regionWidget.entityId}-body">
                                 <%-- Widget will be rendered here --%>
                         </div>
                     </div>
@@ -144,8 +145,8 @@
                     <option value="-1"><fmt:message key="page.general.movethispage.tofirst"/></option>
                 </c:if>
                 <c:forEach var="userPage" items="${pages}">
-                    <c:if test="${userPage.id != page.id}">
-                        <option value="${userPage.id}">
+                    <c:if test="${userPage.entityId != page.entityId}">
+                        <option value="${userPage.entityId}">
                           <fmt:message key="page.general.movethispage.after">
                               <fmt:param><c:out value="${userPage.name}"/></fmt:param>
                           </fmt:message>

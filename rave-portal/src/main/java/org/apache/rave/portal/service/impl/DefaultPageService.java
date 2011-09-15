@@ -19,27 +19,27 @@
 
 package org.apache.rave.portal.service.impl;
 
-import java.util.ArrayList;
 import org.apache.rave.persistence.Repository;
 import org.apache.rave.portal.model.Page;
+import org.apache.rave.portal.model.PageLayout;
 import org.apache.rave.portal.model.Region;
 import org.apache.rave.portal.model.RegionWidget;
+import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.Widget;
+import org.apache.rave.portal.repository.PageLayoutRepository;
 import org.apache.rave.portal.repository.PageRepository;
 import org.apache.rave.portal.repository.RegionRepository;
 import org.apache.rave.portal.repository.RegionWidgetRepository;
 import org.apache.rave.portal.repository.WidgetRepository;
 import org.apache.rave.portal.service.PageService;
+import org.apache.rave.portal.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
-import org.apache.rave.portal.model.PageLayout;
-import org.apache.rave.portal.model.User;
-import org.apache.rave.portal.repository.PageLayoutRepository;
-import org.apache.rave.portal.service.UserService;
-import org.springframework.beans.factory.annotation.Value;
 
 @Service
 public class DefaultPageService implements PageService {
@@ -114,7 +114,7 @@ public class DefaultPageService implements PageService {
 
         //TODO RAVE-237:  We should be able to delete these lines.  If there are gaps in the sequence numbers, then it will still
         //TODO RAVE-237:  return values in the correct order.  We only need to update sequences when there is a change in order
-        List<Page> pages = pageRepository.getAllPages(user.getId());
+        List<Page> pages = pageRepository.getAllPages(user.getEntityId());
         updatePageRenderSequences(pages);
     }    
     
@@ -136,7 +136,7 @@ public class DefaultPageService implements PageService {
     public Region removeWidgetFromPage(long regionWidgetId) {
         RegionWidget widget = getFromRepository(regionWidgetId, regionWidgetRepository);
         regionWidgetRepository.delete(widget);
-        return getFromRepository(widget.getRegion().getId(), regionRepository);
+        return getFromRepository(widget.getRegion().getEntityId(), regionRepository);
     }
 
     @Override
@@ -201,7 +201,7 @@ public class DefaultPageService implements PageService {
         }
 
         // Create a Page object and register it.
-        long renderSequence = getAllPages(user.getId()).size() + 1;
+        long renderSequence = getAllPages(user.getEntityId()).size() + 1;
         Page page = new Page();
         page.setName(pageName);       
         page.setOwner(user);
@@ -243,7 +243,7 @@ public class DefaultPageService implements PageService {
         // get all of the user's pages
         // the pageRepository returns an un-modifiable list
         // so we need to create a modifyable arraylist
-        List<Page> pages = new ArrayList<Page>(pageRepository.getAllPages(user.getId()));
+        List<Page> pages = new ArrayList<Page>(pageRepository.getAllPages(user.getEntityId()));
 
         // first remove it from the list         
         if (!pages.remove(movingPage)) {
@@ -280,7 +280,7 @@ public class DefaultPageService implements PageService {
 
     private static RegionWidget findRegionWidgetById(Long id, List<RegionWidget> regionWidgets) {
         for (RegionWidget widget : regionWidgets) {
-            if (widget.getId().equals(id)) {
+            if (widget.getEntityId().equals(id)) {
                 return widget;
             }
         }

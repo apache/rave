@@ -19,7 +19,11 @@
 
 package org.apache.rave.provider.opensocial.service.impl;
 
-import org.apache.rave.portal.model.*;
+import org.apache.rave.portal.model.Page;
+import org.apache.rave.portal.model.Region;
+import org.apache.rave.portal.model.RegionWidget;
+import org.apache.rave.portal.model.User;
+import org.apache.rave.portal.model.Widget;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.provider.opensocial.exception.SecurityTokenException;
 import org.apache.rave.provider.opensocial.service.SecurityTokenService;
@@ -132,7 +136,7 @@ public class EncryptedBlobSecurityTokenService implements SecurityTokenService {
         SecurityToken securityToken = this.decryptSecurityToken(encryptedSecurityToken);
 
         //Make sure the person is authorized to refresh this token
-        String userId = String.valueOf(userService.getAuthenticatedUser().getId());
+        String userId = String.valueOf(userService.getAuthenticatedUser().getEntityId());
         if (!securityToken.getViewerId().equalsIgnoreCase(userId)) {
             throw new SecurityTokenException("Illegal attempt by user " + userId +
                     " to refresh security token with a viewerId of " + securityToken.getViewerId());
@@ -153,9 +157,9 @@ public class EncryptedBlobSecurityTokenService implements SecurityTokenService {
 
         BlobCrypterSecurityToken securityToken = new BlobCrypterSecurityToken(blobCrypter, container, domain);
         securityToken.setAppUrl(regionWidget.getWidget().getUrl());
-        securityToken.setModuleId(regionWidget.getId());
-        securityToken.setOwnerId(String.valueOf(regionWidget.getRegion().getPage().getOwner().getId()));
-        securityToken.setViewerId(String.valueOf(user.getId()));
+        securityToken.setModuleId(regionWidget.getEntityId());
+        securityToken.setOwnerId(String.valueOf(regionWidget.getRegion().getPage().getOwner().getEntityId()));
+        securityToken.setViewerId(String.valueOf(user.getEntityId()));
         securityToken.setTrustedJson("");
 
         if (logger.isTraceEnabled()) {

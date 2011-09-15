@@ -40,11 +40,11 @@ public class Account implements org.apache.shindig.social.opensocial.model.Accou
    * by the underlying storage mechanism
    */
   @Id
-  @Column(name = "id")
+  @Column(name = "entity_id")
   @GeneratedValue(strategy = GenerationType.TABLE, generator = "accountIdGenerator")
   @TableGenerator(name = "accountIdGenerator", table = "RAVE_SHINDIG_SEQUENCES", pkColumnName = "SEQ_NAME",
           valueColumnName = "SEQ_COUNT", pkColumnValue = "account", allocationSize = 1, initialValue = 1)
-  private Long id;
+  private Long entityId;
 
   /**
    * An optimistic locking field.
@@ -86,7 +86,7 @@ public class Account implements org.apache.shindig.social.opensocial.model.Accou
   /**
    * Create an account object based on domain, userId and username
    * @param domain the domain of the account
-   * @param userId the user id of the account
+   * @param userId the user entityId of the account
    * @param username the username of the account
    */
   public Account(String domain, String userId, String username) {
@@ -147,12 +147,12 @@ public class Account implements org.apache.shindig.social.opensocial.model.Accou
    * {@inheritDoc}
    * @see org.apache.shindig.social.opensocial.jpa.api.DbObject#getObjectId()
    */
-  public Long getId() {
-    return id;
+  public Long getEntityId() {
+    return entityId;
   }
 
-  public void setId(Long id) {
-      this.id = id;
+  public void setEntityId(Long entityId) {
+      this.entityId = entityId;
   }
 
 }

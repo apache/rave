@@ -20,10 +20,6 @@
 package org.apache.rave.portal.web.controller;
 
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.rave.portal.model.Widget;
 import org.apache.rave.portal.model.WidgetStatus;
 import org.apache.rave.portal.model.util.SearchResult;
@@ -37,6 +33,10 @@ import org.springframework.ui.ExtendedModelMap;
 import org.springframework.ui.Model;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
@@ -114,7 +114,7 @@ public class WidgetStoreControllerTest {
         int pagesize = 10;
         int totalResults = 2;
         Widget widget = new Widget();
-        widget.setId(1L);
+        widget.setEntityId(1L);
         List<Widget> widgets = new ArrayList<Widget>();
         widgets.add(widget);
         SearchResult<Widget> result = new SearchResult<Widget>(widgets, totalResults);

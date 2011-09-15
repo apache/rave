@@ -19,9 +19,6 @@
 
 package org.apache.rave.portal.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.rave.portal.model.Widget;
 import org.apache.rave.portal.model.WidgetStatus;
 import org.apache.rave.portal.model.util.SearchResult;
@@ -29,6 +26,9 @@ import org.apache.rave.portal.repository.WidgetRepository;
 import org.apache.rave.portal.service.impl.DefaultWidgetService;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.easymock.EasyMock.createNiceMock;
 import static org.easymock.EasyMock.expect;
@@ -119,7 +119,7 @@ public class WidgetServiceTest {
         int pageSize = 10;
         int totalResults = 2;
         Widget widget = new Widget();
-        widget.setId(1L);
+        widget.setEntityId(1L);
         List<Widget> widgets = new ArrayList<Widget>();
         widgets.add(widget);
         
@@ -142,7 +142,7 @@ public class WidgetServiceTest {
         int totalResults = 2;
         Widget widget = new Widget();
         widget.setWidgetStatus(WidgetStatus.PUBLISHED);
-        widget.setId(1L);
+        widget.setEntityId(1L);
         List<Widget> widgets = new ArrayList<Widget>();
         widgets.add(widget);
 
@@ -195,7 +195,7 @@ public class WidgetServiceTest {
 
         Widget savedWidget = service.registerNewWidget(widget);
         assertNotNull(savedWidget);
-        assertEquals(widget.getId(), savedWidget.getId());
+        assertEquals(widget.getEntityId(), savedWidget.getEntityId());
     }
 
     @Test

@@ -19,11 +19,6 @@
 
 package org.apache.rave.portal.repository;
 
-import java.util.ArrayList;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 import org.apache.rave.portal.model.Region;
 import org.apache.rave.portal.model.RegionWidget;
 import org.junit.Test;
@@ -33,6 +28,10 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.util.ArrayList;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -60,7 +59,7 @@ public class JpaRegionRepositoryTest {
     public void getById_validId() {
         Region region = repository.get(REGION_ID);
         assertThat(region, is(notNullValue()));
-        assertThat(region.getId(), is(equalTo(1L)));
+        assertThat(region.getEntityId(), is(equalTo(1L)));
         assertThat(region.getRegionWidgets().size(), is(equalTo(2)));
     }
 
@@ -78,19 +77,19 @@ public class JpaRegionRepositoryTest {
         Region saved = repository.save(region);
         manager.flush();
         assertThat(saved, is(sameInstance(region)));
-        assertThat(saved.getId(), is(notNullValue()));
+        assertThat(saved.getEntityId(), is(notNullValue()));
     }
 
     @Test
     @Rollback(true)
     public void save_existingEntity() {
         Region region = new Region();
-        region.setId(1L);
+        region.setEntityId(1L);
         region.setRegionWidgets(new ArrayList<RegionWidget>());
         Region saved = repository.save(region);
         manager.flush();
         assertThat(saved, is(not(sameInstance(region))));
-        assertThat(saved.getId(), is(equalTo(region.getId())));
+        assertThat(saved.getEntityId(), is(equalTo(region.getEntityId())));
     }
 
     @Test
@@ -107,17 +106,17 @@ public class JpaRegionRepositoryTest {
         RegionWidget actual = saved.getRegionWidgets().get(0);
 
         assertThat(actual, is(sameInstance(regionWidget)));
-        assertThat(actual.getId(), is(notNullValue()));
+        assertThat(actual.getEntityId(), is(notNullValue()));
     }
 
     @Test
     public void save_cascadeMerge() {
 
         Region region = new Region();
-        region.setId(1L);
+        region.setEntityId(1L);
         region.setRegionWidgets(new ArrayList<RegionWidget>());
         RegionWidget regionWidget = new RegionWidget();
-        regionWidget.setId(1L);
+        regionWidget.setEntityId(1L);
         region.getRegionWidgets().add(regionWidget);
 
         Region saved = repository.save(region);
@@ -127,13 +126,13 @@ public class JpaRegionRepositoryTest {
         RegionWidget actual = saved.getRegionWidgets().get(0);
 
         assertThat(actual, is(not(sameInstance(regionWidget))));
-        assertThat(actual.getId(), is(equalTo(1L)));
+        assertThat(actual.getEntityId(), is(equalTo(1L)));
     }
 
     @Test
     public void save_cascadeOrphan() {
         Region region = repository.get(1L);
-        long id = region.getRegionWidgets().get(0).getId();
+        long id = region.getRegionWidgets().get(0).getEntityId();
         region.getRegionWidgets().remove(0);
 
         Region saved = repository.save(region);

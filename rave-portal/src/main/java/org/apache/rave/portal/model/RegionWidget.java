@@ -46,11 +46,11 @@ public class RegionWidget implements BasicEntity, Serializable {
     private static final long serialVersionUID = 1L;
     
     @Id
-    @Column(name = "id")
+    @Column(name = "entity_id")
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "regionWidgetIdGenerator")
     @TableGenerator(name = "regionWidgetIdGenerator", table = "RAVE_PORTAL_SEQUENCES", pkColumnName = "SEQ_NAME",
             valueColumnName = "SEQ_COUNT", pkColumnValue = "region_widget", allocationSize = 1, initialValue = 1)
-    private Long id;
+    private Long entityId;
 
     @ManyToOne
     @JoinColumn(name = "widget_id")
@@ -73,25 +73,25 @@ public class RegionWidget implements BasicEntity, Serializable {
     private boolean collapsed;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "region_widget_id", referencedColumnName = "id")
+    @JoinColumn(name = "region_widget_id", referencedColumnName = "entity_id")
     private List<RegionWidgetPreference> preferences;
 
     public RegionWidget() {
     }
 
-    public RegionWidget(Long id) {
-        this.id = id;
+    public RegionWidget(Long entityId) {
+        this.entityId = entityId;
     }
 
-    public RegionWidget(Long id, Widget widget, Region region, int renderOrder) {
-        this.id = id;
+    public RegionWidget(Long entityId, Widget widget, Region region, int renderOrder) {
+        this.entityId = entityId;
         this.widget = widget;
         this.region = region;
         this.renderOrder = renderOrder;
     }
 
-    public RegionWidget(Long id, Widget widget, Region region) {
-        this.id = id;
+    public RegionWidget(Long entityId, Widget widget, Region region) {
+        this.entityId = entityId;
         this.widget = widget;
         this.region = region;
     }
@@ -102,13 +102,13 @@ public class RegionWidget implements BasicEntity, Serializable {
      * @return id The ID of persisted object; null if not persisted
      */
     @Override
-    public Long getId() {
-        return id;
+    public Long getEntityId() {
+        return entityId;
     }
 
     @Override
-    public void setId(Long id) {
-        this.id = id;
+    public void setEntityId(Long entityId) {
+        this.entityId = entityId;
     }
 
     /**
@@ -203,7 +203,7 @@ public class RegionWidget implements BasicEntity, Serializable {
             return false;
         }
         final RegionWidget other = (RegionWidget) obj;
-        if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
+        if (this.entityId != other.entityId && (this.entityId == null || !this.entityId.equals(other.entityId))) {
             return false;
         }
         return true;
@@ -212,7 +212,7 @@ public class RegionWidget implements BasicEntity, Serializable {
     @Override
     public int hashCode() {
         int hash = 5;
-        hash = 23 * hash + (this.id != null ? this.id.hashCode() : 0);
+        hash = 23 * hash + (this.entityId != null ? this.entityId.hashCode() : 0);
         return hash;
     }
 
@@ -220,8 +220,8 @@ public class RegionWidget implements BasicEntity, Serializable {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("RegionWidget{");
-        sb.append("id=");
-        sb.append(id);
+        sb.append("entityId=");
+        sb.append(entityId);
         sb.append(",widget=");
         sb.append(widget);
         sb.append(",region=");

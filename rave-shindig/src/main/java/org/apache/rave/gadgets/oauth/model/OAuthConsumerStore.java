@@ -85,8 +85,8 @@ public class OAuthConsumerStore implements BasicEntity {
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "consumerStoreIdGenerator")
     @TableGenerator(name = "consumerStoreIdGenerator", table = "RAVE_SHINDIG_SEQUENCES", pkColumnName = "SEQ_NAME",
             valueColumnName = "SEQ_COUNT", pkColumnValue = "oauth_consumer_store", allocationSize = 1, initialValue = 1)
-    @Column(name = "id")
-    private Long id;
+    @Column(name = "entity_id")
+    private Long entityId;
 
     /**
      * URI where the gadget is hosted, e.g. http://www.example.com/mygadget.xml
@@ -139,16 +139,16 @@ public class OAuthConsumerStore implements BasicEntity {
      * {@inheritDoc}
      */
     @Override
-    public Long getId() {
-        return id;
+    public Long getEntityId() {
+        return entityId;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void setId(Long id) {
-        this.id = id;
+    public void setEntityId(Long entityId) {
+        this.entityId = entityId;
     }
 
     public String getGadgetUri() {
@@ -216,7 +216,7 @@ public class OAuthConsumerStore implements BasicEntity {
             return false;
         }
         final OAuthConsumerStore other = (OAuthConsumerStore) obj;
-        if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
+        if (this.entityId != other.entityId && (this.entityId == null || !this.entityId.equals(other.entityId))) {
             return false;
         }
         return true;
@@ -225,14 +225,14 @@ public class OAuthConsumerStore implements BasicEntity {
     @Override
     public int hashCode() {
         int hash = HASH_START;
-        hash = HASH_INCREASE * hash + (this.id != null ? this.id.hashCode() : 0);
+        hash = HASH_INCREASE * hash + (this.entityId != null ? this.entityId.hashCode() : 0);
         return hash;
     }
 
     @Override
     public String toString() {
         return "OAuthConsumerStore{" +
-                "id=" + id +
+                "entityId=" + entityId +
                 ", gadgetUri='" + gadgetUri + '\'' +
                 ", serviceName='" + serviceName + '\'' +
                 ", consumerKey='" + consumerKey + '\'' +

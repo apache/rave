@@ -66,10 +66,10 @@
                     <span class="secondaryPageItemTitle"><c:out value="${widget.title}"/></span>
                     <c:choose>
                         <c:when test="${widget.widgetStatus eq 'PUBLISHED'}">
-                            <div id="widgetAdded_${widget.id}" class="storeButton">
+                            <div id="widgetAdded_${widget.entityId}" class="storeButton">
                                 <button class="storeItemButton"
-                                        id="addWidget_${widget.id}"
-                                        onclick="rave.api.rpc.addWidgetToPage({widgetId: ${widget.id}, pageId: ${referringPageId}});">
+                                        id="addWidget_${widget.entityId}"
+                                        onclick="rave.api.rpc.addWidgetToPage({widgetId: ${widget.entityId}, pageId: ${referringPageId}});">
                                     <fmt:message key="page.widget.addToPage"/>
                                 </button>
                             </div>

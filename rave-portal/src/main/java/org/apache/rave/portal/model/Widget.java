@@ -78,11 +78,11 @@ public class Widget implements BasicEntity, Serializable {
             "Widget.countByStatusAndFreeText";
     public static final String WIDGET_GET_BY_URL = "Widget.getByUrl";
 
-    @Id @Column(name="id")
+    @Id @Column(name="entity_id")
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "widgetIdGenerator")
     @TableGenerator(name = "widgetIdGenerator", table = "RAVE_PORTAL_SEQUENCES", pkColumnName = "SEQ_NAME",
             valueColumnName = "SEQ_COUNT", pkColumnValue = "widget", allocationSize = 1, initialValue = 1)
-    private Long id;
+    private Long entityID;
 
     /*
         TODO RAVE-234: Figure out what the OpenJPA strategy is for functionality provided by Eclisplink's @Convert
@@ -118,8 +118,8 @@ public class Widget implements BasicEntity, Serializable {
     public Widget() {
     }
 
-    public Widget(Long id, String url) {
-        this.id = id;
+    public Widget(Long entityID, String url) {
+        this.entityID = entityID;
         this.url = url;
     }
 
@@ -129,13 +129,13 @@ public class Widget implements BasicEntity, Serializable {
      * @return id The ID of persisted object; null if not persisted
      */
     @Override
-    public Long getId() {
-        return id;
+    public Long getEntityId() {
+        return entityID;
     }
 
     @Override
-    public void setId(Long id) {
-        this.id = id;
+    public void setEntityId(Long entityId) {
+        this.entityID = entityId;
     }
 
     //See TODO RAVE-234
@@ -221,7 +221,7 @@ public class Widget implements BasicEntity, Serializable {
             return false;
         }
         final Widget other = (Widget) obj;
-        if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
+        if (this.entityID != other.entityID && (this.entityID == null || !this.entityID.equals(other.entityID))) {
             return false;
         }
         return true;
@@ -230,14 +230,14 @@ public class Widget implements BasicEntity, Serializable {
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 97 * hash + (this.id != null ? this.id.hashCode() : 0);
+        hash = 97 * hash + (this.entityID != null ? this.entityID.hashCode() : 0);
         return hash;
     }
 
     @Override
     public String toString() {
         return "Widget{" +
-                "id=" + id +
+                "entityId=" + entityID +
                 ", title='" + title + '\'' +
                 ", url='" + url + '\'' +
                 ", thumbnailUrl='" + thumbnailUrl + '\'' +

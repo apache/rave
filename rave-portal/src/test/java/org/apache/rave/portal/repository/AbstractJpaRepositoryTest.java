@@ -19,11 +19,6 @@
 
 package org.apache.rave.portal.repository;
 
-import java.util.List;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 import org.apache.rave.persistence.BasicEntity;
 import org.apache.rave.persistence.Repository;
 import org.junit.Test;
@@ -33,6 +28,10 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -65,7 +64,7 @@ public class AbstractJpaRepositoryTest {
         for (Repository repository : repositories) {
             BasicEntity entity = (BasicEntity)repository.get(VALID_ENTITY_ID);
             assertThat(entity, is(notNullValue()));
-            assertThat(entity.getId(), is(equalTo(VALID_ENTITY_ID)));
+            assertThat(entity.getEntityId(), is(equalTo(VALID_ENTITY_ID)));
         }
     }
 
@@ -86,7 +85,7 @@ public class AbstractJpaRepositoryTest {
             BasicEntity saved = (BasicEntity)repository.save(entity);
             sharedManager.flush();
             assertThat(saved, is(sameInstance(entity)));
-            assertThat(saved.getId(), is(notNullValue()));
+            assertThat(saved.getEntityId(), is(notNullValue()));
         }
     }
 
@@ -95,11 +94,11 @@ public class AbstractJpaRepositoryTest {
     public void save_existingEntity() {
         for (Repository repository : repositories) {
             BasicEntity entity = constructNewEntityForRepository(repository);
-            entity.setId(VALID_ENTITY_ID);
+            entity.setEntityId(VALID_ENTITY_ID);
             BasicEntity saved = (BasicEntity)repository.save(entity);
             sharedManager.flush();
             assertThat(saved, is(not(sameInstance(entity))));
-            assertThat(saved.getId(), is(equalTo(entity.getId())));
+            assertThat(saved.getEntityId(), is(equalTo(entity.getEntityId())));
         }
 
     }

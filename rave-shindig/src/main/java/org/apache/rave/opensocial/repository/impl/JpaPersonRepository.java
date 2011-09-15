@@ -24,10 +24,8 @@ import org.apache.rave.opensocial.model.Group;
 import org.apache.rave.opensocial.model.Person;
 import org.apache.rave.opensocial.repository.PersonRepository;
 import org.apache.rave.persistence.jpa.AbstractJpaRepository;
-import org.apache.rave.persistence.jpa.util.JpaUtil;
 import org.apache.rave.util.CollectionUtils;
 import org.apache.shindig.protocol.model.FilterOperation;
-import org.springframework.asm.Type;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -107,8 +105,8 @@ public class JpaPersonRepository extends AbstractJpaRepository<Person> implement
 
     @Override
     public List<Person> findByGroup(String groupId) {
-        TypedQuery<Group> query = manager.createNamedQuery(Group.FIND_BY_ID, Group.class);
-        query.setParameter(Group.ID_PARAM, groupId);
+        TypedQuery<Group> query = manager.createNamedQuery(Group.FIND_BY_TITLE, Group.class);
+        query.setParameter(Group.GROUP_ID_PARAM, groupId);
         Group result = getSingleResult(query.getResultList());
         return result == null ? new ArrayList<Person>() : result.getMembers();
     }
