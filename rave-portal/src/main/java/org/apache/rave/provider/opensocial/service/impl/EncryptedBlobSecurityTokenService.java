@@ -145,7 +145,7 @@ public class EncryptedBlobSecurityTokenService implements SecurityTokenService {
         //Create a new RegionWidget instance from it so we can use it to generate a new encrypted token
         RegionWidget regionWidget = new RegionWidget(securityToken.getModuleId(),
                 new Widget(-1L, securityToken.getAppUrl()),
-                new Region(-1L, new Page(-1L, new User(Long.valueOf(securityToken.getOwnerId())))));
+                new Region(-1L, new Page(-1L, new User(Long.valueOf(securityToken.getOwnerId()))), -1));
 
         //Create and return the newly encrypted token
         return getEncryptedSecurityToken(regionWidget);

@@ -22,6 +22,7 @@ rave.layout = rave.layout || (function() {
     var MOVE_PAGE_DEFAULT_POSITION_IDX = -1;
     
     var $tab_title_input = $("#tab_title"),
+        $tab_id = $("#tab_id"),
         $page_layout_input = $("#pageLayout");
         
     // modal dialog init: custom buttons and a "close" callback reseting the form inside
@@ -32,19 +33,35 @@ rave.layout = rave.layout || (function() {
                     Add: function() {
                             addPage();                            
                     },
+
+                    Update: function() {
+                            updatePage();
+                    },
+
                     Cancel: function() {
                             $( this ).dialog( "close" );
                     }
             },
-            open: function() {
+            open: function(event, ui) {
+                    if ($tab_id.val() == '') {
+                        $("#"+this.id).dialog("option", "title", "Add a New Page");
+                        $(":button:contains('Update')").hide();
+                        $(":button:contains('Add')").show();
+                    }
+                    else {
+                        $("#"+this.id).dialog("option", "title", "Update Page");
+                        $(":button:contains('Update')").show();
+                        $(":button:contains('Add')").hide();
+                    }
                     $tab_title_input.focus();
             },
             close: function() {
                     $form[ 0 ].reset();
+                    $tab_id.val('');
                     $("#pageFormErrors").html("");
             }
-    });        
-   
+    });
+
     // the modal dialog for moving a page
     var $movePageDialog = $("#movePageDialog").dialog({
             autoOpen: false,
@@ -101,7 +118,15 @@ rave.layout = rave.layout || (function() {
 
             // setup the edit page menu item
             $menuItemEdit.bind('click', function(event) {
-                alert("Edit not yet implemented!");
+                 rave.api.rpc.getPagePrefs({pageId: getCurrentPageId(),
+                                        successCallback: function(result) {
+                                            $tab_title_input.val(result.result.name);
+                                            $tab_id.val(result.result.entityId);
+                                            $page_layout_input.val(result.result.pageLayout.code);
+                                            $dialog.dialog( "open" );
+                                        }
+                });
+
                 pageMenu.hide();
                 // prevent the menu button click event from bubbling up to parent 
                 // DOM object event handlers such as the page tab click event
@@ -155,19 +180,19 @@ rave.layout = rave.layout || (function() {
             rave.api.rpc.addPage({pageName: newPageTitle, 
                                   pageLayoutCode: newPageLayoutCode,
                                   successCallback: function(result) {                                      
-                                      rave.viewPage(result.result.id); 
+                                      rave.viewPage(result.result.entityId); 
                                   } 
             });      
         }
     }      
-    
+
     /**
      * Submits the RPC call to move the page to a new render sequence
      */        
     function movePage() {
         var moveAfterPageId = $("#moveAfterPageId").val();        
         var args = { pageId: $("#currentPageId").val(),
-                     successCallback: function(result) { rave.viewPage(result.result.id); }
+                     successCallback: function(result) { rave.viewPage(result.result.entityId); }
                    };
        
         if (moveAfterPageId != MOVE_PAGE_DEFAULT_POSITION_IDX) {
@@ -176,7 +201,19 @@ rave.layout = rave.layout || (function() {
                           
         // send the rpc request to move the new page
         rave.api.rpc.movePage(args);              
-    }          
+    }
+
+    function updatePage() {
+        if ($("#pageForm").valid()) {
+            // send the rpc request to update the page
+            rave.api.rpc.updatePagePrefs({pageId: $tab_id.val(),
+                                            title: $tab_title_input.val(),
+                                            layout: $page_layout_input.val(),
+                                            successCallback: function(result) {
+                                                rave.viewPage(result.result.entityId);
+                                            }});
+        }
+    }
     
     /**
      * Returns the pageId of the currently viewed page

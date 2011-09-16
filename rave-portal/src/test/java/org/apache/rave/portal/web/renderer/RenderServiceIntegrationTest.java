@@ -101,7 +101,7 @@ public class RenderServiceIntegrationTest {
     @Test
     public void renderOpenSocial() {
         Page page = new Page(1L, new User(VALID_USER_ID, VALID_USER_NAME));
-        Region region = new Region(1L, page);
+        Region region = new Region(1L, page, 1);
         page.setRegions(Arrays.asList(region));
 
         Widget w = new Widget();

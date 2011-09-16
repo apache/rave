@@ -231,6 +231,53 @@ describe("Rave API", function() {
                 rave.api.rpc.movePage({pageId: pageId, moveAfterPageId: moveAfterPageId});
             });
         });        
+        
+        describe("getPagePrefs", function() {
+            it("gets the correct metadata for a page", function() {
+                var callbackCalled = false;
+                var pageId = 73;
+                $.get = function(url, data, callback) {
+                    expect(url).toEqual("api/rpc/page/get?pageId=" + pageId);                                       
+                    expect(typeof(callback)).toEqual("function");
+                    callback({error:false});
+                    return {
+                        error: function(a, b, c) {
+                        }
+                    }
+                };
+                var callback = function() {
+                    callbackCalled = true;
+                };
+                rave.api.rpc.getPagePrefs({pageId: pageId, successCallback: callback});
+                expect(callbackCalled).toBeTruthy();
+            });
+        });        
+        
+        describe("updatePagePrefs", function() {
+            it("posts the correct values to RPC service for updating page metadata", function() {
+                var pageId = 7;                
+                var newTitle = "New Title";
+                var newLayout = "1_column";
+                var callbackCalled = false;
+
+                $.post = function(url, data, callback) {
+                    expect(url).toEqual("api/rpc/page/" + pageId + "/update");                   
+                    expect(data.name).toEqual(newTitle);
+                    expect(data.layout).toEqual(newLayout);
+                    expect(typeof(callback)).toEqual("function");
+                    callback({error:false});
+                    return {
+                        error: function(a, b, c) {
+                        }
+                    }
+                };
+                var callback = function() {
+                    callbackCalled = true;
+                };
+                rave.api.rpc.updatePagePrefs({pageId: pageId, title: newTitle, layout: newLayout, successCallback: callback});
+                expect(callbackCalled).toBeTruthy();
+            });
+        });                
 
         describe("Error handling", function() {
             it("displays the appropriate alert when invalid parameters are passed", function() {

@@ -111,6 +111,15 @@ public interface PageService {
      * @return the region from which the widget was deleted
      */
     Region removeWidgetFromPage(long regionWidgetId);
+
+    /**
+     * Updates the page properties.
+     *
+     * @param pageId the id of the page to update
+     * @param name the new name for the page
+     * @param pageLayoutCode the new layout for the page
+     */
+    Page updatePage(long pageId, String name, String pageLayoutCode);
     
     /**
      * Moves a page to be rendered after another page in order for a user
@@ -128,5 +137,5 @@ public interface PageService {
      * @param pageId the pageId of the page to move to the default position
      * @return the updated Page object containing its new render sequence
      */
-    Page movePageToDefault(long pageId);    
+    Page movePageToDefault(long pageId);
 }

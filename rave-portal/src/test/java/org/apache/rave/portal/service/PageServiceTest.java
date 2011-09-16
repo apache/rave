@@ -38,15 +38,8 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.expectLastCall;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.hamcrest.CoreMatchers.sameInstance;
+import static org.easymock.EasyMock.*;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 
 public class PageServiceTest {
@@ -515,8 +508,267 @@ public class PageServiceTest {
       
         verify(userService);        
         verify(pageRepository);
-    }       
+    }
     
+    @Test
+    public void updatePage_nameUpdate() {
+        String newName = "new page name";
+        String layoutName = "layout name";
+        
+        PageLayout layout = createStrictMock(PageLayout.class);
+        expect(layout.getNumberOfRegions()).andReturn(new Long(2)).anyTimes();
+//        expect(layout.equals(layout)).andReturn((boolean) true);
+        replay(layout);
+        
+        //create a strict mock that ensures that the appropriate setters are
+        //called, rather than checking the return value from the function
+        Page curPage = createStrictMock(Page.class);
+        expect(curPage.getPageLayout()).andReturn(layout);
+        curPage.setName(newName);
+        curPage.setPageLayout(layout);
+        replay(curPage);
+        
+        expect(pageRepository.get(PAGE_ID)).andReturn(curPage);
+        expect(pageRepository.save(curPage)).andReturn(curPage);
+        replay(pageRepository);
+        
+        
+        expect(pageLayoutRepository.getByPageLayoutCode(layoutName)).andReturn(layout);
+        replay(pageLayoutRepository);
+        
+        pageService.updatePage(PAGE_ID, newName, layoutName);
+        
+        verify(curPage);
+    }
+    
+    
+    @Test
+    public void updatePage_addRegion() {
+        String newName = "new page name";
+        String layoutName = "layout name";
+        
+        List<Region> regions = new ArrayList<Region>();
+        Region region = createStrictMock(Region.class);
+        expect(region.getRenderOrder()).andReturn(1);
+        replay(region);
+        regions.add(new Region());
+        regions.add(region);
+        
+        PageLayout prevLayout = createStrictMock(PageLayout.class);
+        expect(prevLayout.getNumberOfRegions()).andReturn(new Long(2)).anyTimes();
+        replay(prevLayout);
+        
+        PageLayout layout = createStrictMock(PageLayout.class);
+        expect(layout.getNumberOfRegions()).andReturn(new Long(3)).anyTimes();
+//        expect(layout.equals(layout)).andReturn((boolean) true);
+        replay(layout);
+        
+        //create a strict mock that ensures that the appropriate setters are
+        //called, rather than checking the return value from the function
+        Page curPage = createStrictMock(Page.class);
+        expect(curPage.getPageLayout()).andReturn(prevLayout);
+        expect(curPage.getRegions()).andReturn(regions);
+        curPage.setName(newName);
+        curPage.setPageLayout(layout);
+        replay(curPage);
+        
+        expect(pageRepository.get(PAGE_ID)).andReturn(curPage);
+        expect(pageRepository.save(curPage)).andReturn(curPage);
+        replay(pageRepository);
+        
+        expect(pageLayoutRepository.getByPageLayoutCode(layoutName)).andReturn(layout);
+        replay(pageLayoutRepository);
+        
+        pageService.updatePage(PAGE_ID, newName, layoutName);
+        assertThat(regions.size(), is(3));
+        assertThat(regions.get(regions.size()-1).getPage(), is(curPage));
+        
+        verify(curPage);
+    }
+    
+    
+    @Test
+    public void updatePage_removeRegion_noWidgets() {
+        String newName = "new page name";
+        String layoutName = "layout name";
+        
+        List<Region> regions = new ArrayList<Region>();
+        Region region = createStrictMock(Region.class);
+        expect(region.getRegionWidgets()).andReturn(new ArrayList<RegionWidget>());
+        expect(region.getRenderOrder()).andReturn(1);
+        replay(region);
+        regions.add(region);
+        
+        Region deletedRegion = createStrictMock(Region.class);
+        expect(deletedRegion.getRegionWidgets()).andReturn(new ArrayList<RegionWidget>());
+        replay(deletedRegion);
+        regions.add(deletedRegion);
+        
+        PageLayout prevLayout = createStrictMock(PageLayout.class);
+        expect(prevLayout.getNumberOfRegions()).andReturn(new Long(2)).anyTimes();
+        replay(prevLayout);
+        
+        PageLayout layout = createStrictMock(PageLayout.class);
+        expect(layout.getNumberOfRegions()).andReturn(new Long(1)).anyTimes();
+        replay(layout);
+        
+        regionRepository.delete(deletedRegion);
+        expect(regionRepository.save(region)).andReturn(region);
+        replay(regionRepository);
+        
+        //create a strict mock that ensures that the appropriate setters are
+        //called, rather than checking the return value from the function
+        Page curPage = createStrictMock(Page.class);
+        expect(curPage.getPageLayout()).andReturn(prevLayout);
+        expect(curPage.getRegions()).andReturn(regions);
+        curPage.setName(newName);
+        curPage.setPageLayout(layout);
+        replay(curPage);
+        
+        expect(pageRepository.get(PAGE_ID)).andReturn(curPage);
+        expect(pageRepository.save(curPage)).andReturn(curPage);
+        replay(pageRepository);
+        
+        expect(pageLayoutRepository.getByPageLayoutCode(layoutName)).andReturn(layout);
+        replay(pageLayoutRepository);
+        
+        pageService.updatePage(PAGE_ID, newName, layoutName);
+        
+        verify(curPage);
+    }
+    
+    
+    @Test
+    public void updatePage_removeRegion_moveWidgetToEmptyColumn() {
+        String newName = "new page name";
+        String layoutName = "layout name";
+        
+        
+        List<RegionWidget> newLastWidgetColumn = new ArrayList<RegionWidget>();
+        
+        List<Region> regions = new ArrayList<Region>();
+        Region region = createStrictMock(Region.class);
+        expect(region.getRegionWidgets()).andReturn(newLastWidgetColumn).times(2);
+        expect(region.getRenderOrder()).andReturn(1);
+        replay(region);
+        regions.add(region);
+        
+        
+        RegionWidget widget = createStrictMock(RegionWidget.class);
+        widget.setRegion(region);
+        widget.setRenderOrder(1);
+        replay(widget);
+        List<RegionWidget> movedWidgets = new ArrayList<RegionWidget>();
+        movedWidgets.add(widget);
+        
+        Region deletedRegion = createStrictMock(Region.class);
+        expect(deletedRegion.getRegionWidgets()).andReturn(movedWidgets);
+        replay(deletedRegion);
+        regions.add(deletedRegion);
+        
+        PageLayout prevLayout = createStrictMock(PageLayout.class);
+        expect(prevLayout.getNumberOfRegions()).andReturn(new Long(2)).anyTimes();
+        replay(prevLayout);
+        
+        PageLayout layout = createStrictMock(PageLayout.class);
+        expect(layout.getNumberOfRegions()).andReturn(new Long(1)).anyTimes();
+        replay(layout);
+        
+        regionRepository.delete(deletedRegion);
+        expect(regionRepository.save(region)).andReturn(region);
+        replay(regionRepository);
+        
+        //create a strict mock that ensures that the appropriate setters are
+        //called, rather than checking the return value from the function
+        Page curPage = createStrictMock(Page.class);
+        expect(curPage.getPageLayout()).andReturn(prevLayout);
+        expect(curPage.getRegions()).andReturn(regions);
+        curPage.setName(newName);
+        curPage.setPageLayout(layout);
+        replay(curPage);
+        
+        expect(pageRepository.get(PAGE_ID)).andReturn(curPage);
+        expect(pageRepository.save(curPage)).andReturn(curPage);
+        replay(pageRepository);
+        
+        expect(pageLayoutRepository.getByPageLayoutCode(layoutName)).andReturn(layout);
+        replay(pageLayoutRepository);
+        
+        pageService.updatePage(PAGE_ID, newName, layoutName);
+        assertThat(newLastWidgetColumn.size(), is (1));
+        
+        verify(curPage);
+    }
+    
+    
+    @Test
+    public void updatePage_removeRegion_moveWidgetToNonEmptyColumn() {
+        String newName = "new page name";
+        String layoutName = "layout name";
+        
+        
+        RegionWidget widget = createStrictMock(RegionWidget.class);
+        expect(widget.getRenderOrder()).andReturn(0).anyTimes();
+        replay(widget);
+        List<RegionWidget> newLastWidgetColumn = new ArrayList<RegionWidget>();
+        newLastWidgetColumn.add(widget);
+        
+        List<Region> regions = new ArrayList<Region>();
+        Region region = createStrictMock(Region.class);
+        expect(region.getRegionWidgets()).andReturn(newLastWidgetColumn).times(2);
+        expect(region.getRenderOrder()).andReturn(1);
+        replay(region);
+        regions.add(region);
+        
+        
+        widget = createStrictMock(RegionWidget.class);
+        widget.setRegion(region);
+        widget.setRenderOrder(1);
+        expect(widget.getRenderOrder()).andReturn(1).anyTimes();
+        replay(widget);
+        List<RegionWidget> movedWidgets = new ArrayList<RegionWidget>();
+        movedWidgets.add(widget);
+        
+        Region deletedRegion = createStrictMock(Region.class);
+        expect(deletedRegion.getRegionWidgets()).andReturn(movedWidgets);
+        replay(deletedRegion);
+        regions.add(deletedRegion);
+        
+        PageLayout prevLayout = createStrictMock(PageLayout.class);
+        expect(prevLayout.getNumberOfRegions()).andReturn(new Long(2)).anyTimes();
+        replay(prevLayout);
+        
+        PageLayout layout = createStrictMock(PageLayout.class);
+        expect(layout.getNumberOfRegions()).andReturn(new Long(1)).anyTimes();
+        replay(layout);
+        
+        regionRepository.delete(deletedRegion);
+        expect(regionRepository.save(region)).andReturn(region);
+        replay(regionRepository);
+        
+        //create a strict mock that ensures that the appropriate setters are
+        //called, rather than checking the return value from the function
+        Page curPage = createStrictMock(Page.class);
+        expect(curPage.getPageLayout()).andReturn(prevLayout);
+        expect(curPage.getRegions()).andReturn(regions);
+        curPage.setName(newName);
+        curPage.setPageLayout(layout);
+        replay(curPage);
+        
+        expect(pageRepository.get(PAGE_ID)).andReturn(curPage);
+        expect(pageRepository.save(curPage)).andReturn(curPage);
+        replay(pageRepository);
+        
+        expect(pageLayoutRepository.getByPageLayoutCode(layoutName)).andReturn(layout);
+        replay(pageLayoutRepository);
+        
+        pageService.updatePage(PAGE_ID, newName, layoutName);
+        assertThat(newLastWidgetColumn.size(), is (2));
+        assertThat(newLastWidgetColumn.get(0).getRenderOrder(), is (0));
+        assertThat(newLastWidgetColumn.get(1).getRenderOrder(), is (1));
+        
+        verify(curPage);
+    }
     // private methods    
     private void verifyPositions(int newPosition, RegionWidget widget, boolean sameRegion) {
         assertThat(widget.getRenderOrder(), is(equalTo(newPosition)));        

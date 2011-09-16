@@ -160,6 +160,108 @@ public class DefaultPageService implements PageService {
         return doMovePage(pageId, MOVE_PAGE_DEFAULT_POSITION_INDEX);    
     }
 
+    @Override
+    @Transactional
+    public Page updatePage(long pageId, String name, String pageLayoutCode) {
+        Page page = pageRepository.get(pageId);
+        PageLayout newLayout = pageLayoutRepository.getByPageLayoutCode(pageLayoutCode);
+        PageLayout curLayout = page.getPageLayout();
+
+        //if the region lengths of the layouts do not match then adjust the new layout
+        if (isLayoutAdjustmentNeeded(newLayout, curLayout)) {
+            //if the new layout has fewer regions than the previous layout the widgets from the
+            //deleted regions need to be appended to the last valid region in the new layout
+            if (curLayout.getNumberOfRegions() > newLayout.getNumberOfRegions()) {
+                reduceRegionsForPage(page, newLayout.getNumberOfRegions());
+            }
+            //otherwise the new layout has more regions that the previous layout and
+            //new regions need to be added to the page
+            else {
+                long numberOfNewRegionsToAdd = newLayout.getNumberOfRegions() - curLayout.getNumberOfRegions();
+                createAdditionalRegionsForPage(page, numberOfNewRegionsToAdd);
+            }
+        }
+
+        //save the new page properties
+        page.setName(name);
+        page.setPageLayout(newLayout);
+        pageRepository.save(page);
+
+        return page;
+    }
+    
+    /**
+     * Utility function to determine if a Page layout adjustment is needed
+     * which comparing the existing and new PageLayout objects
+     * 
+     * @param newLayout the new PageLayout to be applied to the Page
+     * @param curLayout the existing PageLayout of the Page
+     * @return true if the Page Regions need to be adjusted up or down
+     */
+    private boolean isLayoutAdjustmentNeeded(PageLayout newLayout, PageLayout curLayout) {
+        return newLayout != null && 
+               !curLayout.equals(newLayout) && 
+               !curLayout.getNumberOfRegions().equals(newLayout.getNumberOfRegions());
+    }
+
+    /***
+     * Utility function to create additional empty regions for a page.
+     * 
+     * @param page the Page object to add new regions to
+     * @param numberOfNewRegionsToAdd the number of new Region objects to add to the Page
+     */
+    private void createAdditionalRegionsForPage(Page page, long numberOfNewRegionsToAdd) {
+        //the next render order to use for the region
+        List<Region> regions = page.getRegions();
+        int lastRegionRenderOrder = regions.get(regions.size()-1).getRenderOrder() + 1;
+
+        //add as many missing regions as the new layout requires
+        for (int i=0; i < numberOfNewRegionsToAdd; i++) {
+            Region newRegion = new Region();
+            newRegion.setPage(page);
+            newRegion.setRenderOrder(lastRegionRenderOrder++);
+            regions.add(newRegion);
+        }
+    }
+    /***
+     * Utility function to reduce the regions for a page and move any RegionWidgets
+     * in the Regions getting removed into the region with the largest
+     * remaining render sequence value
+     * 
+     * @param page the Page to remove Regions from
+     * @param newLayout the new PageLayout which will be applied to the Page
+     */
+    private void reduceRegionsForPage(Page page, long numberOfRegionsInNewLayout) {
+        List<Region> regions = page.getRegions();
+        Region lastValidRegion = regions.get((int) (numberOfRegionsInNewLayout-1));
+        
+        //remove all of the extra regions for this new layout and append the widgets
+        while (regions.size() > numberOfRegionsInNewLayout) {
+            Region deletedRegion = regions.remove(regions.size()-1);
+
+            //append the regions widgets to to last valid region in the new layout
+            for (RegionWidget widget : deletedRegion.getRegionWidgets()) {
+                moveRegionWidgetToNewRegion(widget, lastValidRegion);
+            }
+            regionRepository.delete(deletedRegion);
+        }
+        regionRepository.save(lastValidRegion);
+    }
+    
+    /**
+     * Utility function to move a RegionWidget to a new Region
+     * 
+     * @param regionWidget the RegionWidget to move
+     * @param moveToRegion the new Region to move it to
+     */
+    private void moveRegionWidgetToNewRegion(RegionWidget regionWidget, Region moveToRegion) {
+        List<RegionWidget> regionWidgets = moveToRegion.getRegionWidgets();                
+        int renderOrder = regionWidgets.isEmpty() ? 1 : regionWidgets.get(regionWidgets.size()-1).getRenderOrder() + 1;
+        regionWidget.setRegion(moveToRegion);
+        regionWidget.setRenderOrder(renderOrder);
+        moveToRegion.getRegionWidgets().add(regionWidget);        
+    }
+    
     private RegionWidget createWidgetInstance(Widget widget, Region region, int position) {
         RegionWidget regionWidget = new RegionWidget();
         regionWidget.setRenderOrder(position);
@@ -197,6 +299,7 @@ public class DefaultPageService implements PageService {
         int regionCount;
         for (regionCount = 0; regionCount < pageLayout.getNumberOfRegions(); regionCount++) {
             Region region = new Region();
+            region.setRenderOrder(regionCount);
             regions.add(region);
         }
 

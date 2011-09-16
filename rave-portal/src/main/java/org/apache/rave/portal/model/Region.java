@@ -39,6 +39,7 @@ import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import java.io.Serializable;
 import java.util.List;
+import javax.persistence.Basic;
 
 /**
  * A region of a page, which can contain widget instances {@link RegionWidget}
@@ -59,6 +60,10 @@ public class Region implements BasicEntity, Serializable {
     @JoinColumn(name = "page_id")
     private Page page;
 
+    @Basic
+    @Column(name = "render_order")
+    private int renderOrder;
+    
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("renderOrder")
     @JoinColumn(name = "region_id")
@@ -71,9 +76,10 @@ public class Region implements BasicEntity, Serializable {
         this.entityId = entityId;
     }
 
-    public Region(Long entityId, Page page) {
+    public Region(Long entityId, Page page, int renderOrder) {
         this.entityId = entityId;
         this.page = page;
+        this.renderOrder = renderOrder;
     }
 
     /**
@@ -103,6 +109,19 @@ public class Region implements BasicEntity, Serializable {
 
     public void setPage(Page page) {
         this.page = page;
+    }
+    
+    /**
+     * Gets the order relative to regions on the page
+     * 
+     * @return the order of the region
+     */
+    public int getRenderOrder() {
+        return renderOrder;
+    }
+
+    public void setRenderOrder(int renderOrder) {
+        this.renderOrder = renderOrder;
     }
 
     /**

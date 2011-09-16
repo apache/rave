@@ -146,6 +146,30 @@ public class PageApi {
              }
         }.getResult();        
     }
+
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.GET, value="get")
+    public RpcResult<Page> getPage(@RequestParam final long pageId) {
+        return new RpcOperation<Page>() {
+            @Override
+            public Page execute() {
+                return pageService.getPage(pageId);
+            }
+        }.getResult();
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "{pageId}/update", method = RequestMethod.POST)
+    public RpcResult<Page> updatePageProperties(@PathVariable final long pageId,
+                                        @RequestParam final String name,
+                                        @RequestParam final String layout) {
+        return new RpcOperation<Page>() {
+            @Override
+            public Page execute() {
+                return pageService.updatePage(pageId, name, layout);
+            }
+        }.getResult();
+    }
     
     /**
      * Moves a page to a new render position

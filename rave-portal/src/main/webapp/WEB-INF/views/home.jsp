@@ -121,6 +121,7 @@
         <form id="pageForm">
             <div id="pageFormErrors" class="error"></div>
             <fieldset class="ui-helper-reset">
+                <input type="hidden" name="tab_id" id="tab_id" value="" />
                 <label for="tab_title"><fmt:message key="page.general.addpage.title"/></label>
                 <input type="text" name="tab_title" id="tab_title" value="" class="required ui-widget-content ui-corner-all" />
                 <label for="pageLayout"><fmt:message key="page.general.addpage.selectlayout"/></label>

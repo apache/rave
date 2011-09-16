@@ -83,7 +83,7 @@ public class SecurityTokenServiceTest {
         validPerson = new User(VALID_USER_ID, VALID_USER_NAME);
 
         validPage = new Page(1L, validPerson);
-        validRegion = new Region(1L, validPage);
+        validRegion = new Region(1L, validPage, 1);
         validPage.setRegions(Arrays.asList(validRegion));
 
         validWidget = new Widget(1L, VALID_URL);

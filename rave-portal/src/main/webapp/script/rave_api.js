@@ -76,10 +76,10 @@ rave.api = rave.api || (function() {
                 dataType: 'json',
                 success: function(result) {
                     // update the in-memory widget with the new collapsed status
-                    rave.getWidgetById(result.id).collapsed = result.collapsed;
+                    rave.getWidgetById(result.entityId).collapsed = result.collapsed;
                     
                     // toggle the collapse/restore icon
-                    rave.toggleCollapseWidgetIcon(result.id);
+                    rave.toggleCollapseWidgetIcon(result.entityId);
                     
                     // if the widget has supplied a collapse or restore 
                     // callback function, invoke it so each widget provider
@@ -215,6 +215,32 @@ rave.api = rave.api || (function() {
                 }).error(handleError);
         }        
 
+        function updatePagePrefs(args) {
+            $.post(rave.getContext() + path + "page/" + args.pageId + "/update",
+               {"name": args.title, "layout": args.layout},
+               function(result) {
+                   if (result.error) {
+                       handleRpcError(result);
+                   }
+                   else {
+                       if (typeof args.successCallback == 'function') {
+                            args.successCallback(result);
+                       }
+                   }
+               }).error(handleError);
+        }
+
+        function getPagePrefs(args) {
+            $.get(rave.getContext() + path + "page/get?pageId="+args.pageId,
+                  null,
+                  function(result) {
+                    if (typeof args.successCallback == 'function') {
+                        args.successCallback(result);
+                    }
+                  }
+            );
+        }
+
         //TODO RAVE-228: Create a more robust error handling system and interrogation of RPC results
         function handleRpcError(rpcResult) {
             switch (rpcResult.errorCode) {
@@ -236,6 +262,8 @@ rave.api = rave.api || (function() {
             addWidgetToPage : addWidgetToPage,
             removeWidget : deleteWidgetOnPage,
             addPage: addPage,
+            updatePagePrefs: updatePagePrefs,
+            getPagePrefs: getPagePrefs,
             movePage: movePage
         };
 

@@ -246,6 +246,37 @@ public class PageApiTest {
     }
     
     @Test
+    public void getPage() {
+        expect(pageService.getPage(PAGE_ID)).andReturn(page);
+        replay(pageService);
+        
+        RpcResult result = pageApi.getPage(PAGE_ID);
+        
+        verify(pageService);
+        assertThat(result, is(notNullValue()));
+        assertThat((Page)result.getResult(), is (page));
+        assertThat(result.isError(), is(false));
+        assertThat(result.getErrorCode(), is (RpcResult.ErrorCode.NO_ERROR));
+        assertThat(result.getErrorMessage(), is(nullValue()));
+    }
+    @Test
+    public void updatePage() {
+        String pageName = "name";
+        String layoutName = "layout";
+        expect(pageService.updatePage(PAGE_ID, pageName, layoutName)).andReturn(page);
+        replay(pageService);
+        
+        RpcResult result = pageApi.updatePageProperties(PAGE_ID, pageName, layoutName);
+        
+        verify(pageService);
+        assertThat(result, is(notNullValue()));
+        assertThat((Page)result.getResult(), is (page));
+        assertThat(result.isError(), is(false));
+        assertThat(result.getErrorCode(), is (RpcResult.ErrorCode.NO_ERROR));
+        assertThat(result.getErrorMessage(), is(nullValue()));
+    }
+    
+    @Test
     public void movePage_nonNullMoveAfterPageId() {
         expect(pageService.movePage(PAGE_ID, PAGE_2_ID)).andReturn(page);
         replay(pageService);
