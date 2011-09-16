@@ -19,6 +19,8 @@
 package org.apache.rave.portal.web.api.rest;
 
 import org.apache.rave.portal.model.Page;
+import org.apache.rave.portal.model.Region;
+import org.apache.rave.portal.model.RegionWidget;
 import org.apache.rave.portal.service.PageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,10 +60,14 @@ public class PageApi {
 
     @ResponseBody
     @RequestMapping(value = "{pageId}", method = RequestMethod.GET)
-    public Page getPage(@PathVariable long pageId) {
-        return pageService.getPage(pageId);
+    public Page getPage(@PathVariable long pageId, @RequestParam(required=false) boolean export) {
+        Page page = pageService.getPage(pageId);
+        if(export) {
+            modifyForExport(page);
+        }
+        return page;
     }
-    
+
     // TODO RAVE-240 - when we implement security we can implement different exception
     //        handlers for different errors (unauthorized, resource not found, etc)
     @ExceptionHandler(Exception.class)
@@ -70,5 +76,18 @@ public class PageApi {
         logger.info("Error occured while accessing " + request.getRequestURL(), ex);
         response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
         return ClassUtils.getShortName(ex.getClass());
+    }
+
+    private static void modifyForExport(Page page) {
+        page.setOwner(null);
+        for(Region r : page.getRegions()){
+            modifyForExport(r);
+        }
+    }
+
+    private static void modifyForExport(Region r) {
+        for(RegionWidget w : r.getRegionWidgets()) {
+            w.setPreferences(null);
+        }
     }
 }

@@ -18,7 +18,7 @@
  */
 package org.apache.rave.portal.web.api.rest;
 
-import org.apache.rave.portal.model.Page;
+import org.apache.rave.portal.model.*;
 import org.springframework.util.ClassUtils;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.http.HttpStatus;
@@ -26,6 +26,9 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.apache.rave.portal.service.PageService;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.ArrayList;
+
 import static org.junit.Assert.*;
 import static org.easymock.EasyMock.*;
 import static org.hamcrest.CoreMatchers.*;
@@ -56,8 +59,30 @@ public class PageApiTest {
         expect(pageService.getPage(PAGE_ID)).andReturn(p).once();
         replay(pageService);
 
-        Page returned = pageApi.getPage(PAGE_ID);
+        Page returned = pageApi.getPage(PAGE_ID, false);
         assertThat(returned, is(sameInstance(p)));
+    }
+
+    @Test
+    public void getPage_validId_export() {
+        Page p = new Page();
+        p.setRegions(new ArrayList<Region>());
+        p.setOwner(new User());
+        Region region = new Region();
+        region.setRegionWidgets(new ArrayList<RegionWidget>());
+        RegionWidget w = new RegionWidget();
+        w.setPreferences(new ArrayList<RegionWidgetPreference>());
+        w.getPreferences().add(new RegionWidgetPreference());
+        region.getRegionWidgets().add(w);
+        p.getRegions().add(region);
+
+        expect(pageService.getPage(PAGE_ID)).andReturn(p).once();
+        replay(pageService);
+
+        Page returned = pageApi.getPage(PAGE_ID, true);
+        assertThat(returned, is(sameInstance(p)));
+        assertThat(returned.getOwner(), is(nullValue()));
+        assertThat(returned.getRegions().get(0).getRegionWidgets().get(0).getPreferences(), is(nullValue()));
     }
     
     @Test
