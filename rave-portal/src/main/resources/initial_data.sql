@@ -190,6 +190,32 @@ set @gifts_widget_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_na
 insert into widget (entity_id, title, url, type, widget_status)
 values(@gifts_widget_id, 'Gifts', 'http://opensocial-resources.googlecode.com/svn/samples/tutorial/tags/api-0.8/gifts_1_friends.xml', 'OpenSocial', 'PUBLISHED');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @widget_seq;
+
+-- demo widgets from rave-demos
+-- CTSS resource google map
+set @ctss_resources_widget_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @widget_seq);
+insert into widget (entity_id, title, url, type, description, author, widget_status, thumbnail_url, screenshot_url)
+values(@ctss_resources_widget_id, 'List of CTSS Resources - Map View', 'http://localhost:8080/demogadgets/CTSSResourcesMapView.xml', 'OpenSocial', 'This is a gadget developed for Teragrid - OGCE project. Used Google gadgets API to retrieve the information from the Information Services REST Web Service and display the information using Google Maps API. This is a list of available CTSS resources and its details', 'Suresh Deivasigamani', 'PUBLISHED', 'http://img695.imageshack.us/img695/2726/ctssresourcesmapviewscr.png', 'http://img704.imageshack.us/img704/444/ctssresourcesmapview.png');
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @widget_seq;
+
+-- Twitter Gadget
+set @twitter_widget_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @widget_seq);
+insert into widget (entity_id, title, url, type, description, author, widget_status, thumbnail_url, screenshot_url)
+values(@twitter_widget_id, 'Twitter', 'http://localhost:8080/demogadgets/twitter.xml', 'OpenSocial', 'Fully functional, lightweight, AJAX-based twitter user interface with many configuration options including user specified auto-refresh rate, full timeline, pagination, and more.  Control display elements such as user thumbnails, date stamps, and post source.  Specify gadget size based on availble screen footprint, even incorporate into your Gmail account.  Insert symbols, dingbats and emoticons into your tweets using the TwitterGadget Symbols pulldown menu.', 'LOGIKA Corporation', 'PUBLISHED', 'http://www.twittergadget.com/images/thumbnail2.png', 'http://www.twittergadget.com/images/thumbnail2.png');
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @widget_seq;
+
+-- Youtube Gadget
+set @youtube_widget_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @widget_seq);
+insert into widget (entity_id, title, url, type, description, author, widget_status, thumbnail_url, screenshot_url)
+values(@youtube_widget_id, 'Youtube', 'http://localhost:8080/demogadgets/youtubesearch.xml', 'OpenSocial', 'A search module, which searches YouTube by tags like Politics News Life Music Family Photography Art Random Travel Personal Religion Movies Business Thoughts Media Humor Culture Poetry Christmas Writing Books Food Friends.', 'David Olsen', 'PUBLISHED', 'http://www.zytu.com/youtube/youtubesearchthumb.png', 'http://www.zytu.com/youtube/youtubesearchscreen.png');
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @widget_seq;
+
+-- View information
+set @gadgetview_widget_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @widget_seq);
+insert into widget (entity_id, title, url, type, widget_status)
+values(@gadgetview_widget_id, 'Gadget View Type', 'http://localhost:8080/demogadgets/canvas-nav.xml', 'OpenSocial', 'PUBLISHED');
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @widget_seq;
+
 -- end widget data ----
 
 -- User layouts

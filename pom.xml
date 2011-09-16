@@ -16,7 +16,7 @@
   KIND, either express or implied.  See the License for the
   specific language governing permissions and limitations
   under the License.
-  
+
   $Id$
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
@@ -92,6 +92,11 @@
             <dependency>
                 <groupId>org.apache.rave</groupId>
                 <artifactId>rave-commons</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+             <dependency>
+                <groupId>org.apache.rave</groupId>
+                <artifactId>rave-demo-gadgets</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -219,7 +224,7 @@
                 <artifactId>jersey-server</artifactId>
                 <version>${jersey-server.version}</version>
             </dependency>
-  
+
             <!-- Logging -->
             <dependency>
                 <groupId>org.slf4j</groupId>
@@ -321,7 +326,7 @@
             <version>${el-api.version}</version>
             <scope>provided</scope>
         </dependency>
-                
+
         <!-- Exclude commons-logging by adding it as a provided dependency -->
         <dependency>
             <groupId>commons-logging</groupId>
@@ -364,23 +369,23 @@
                             </goals>
                         </execution>
                     </executions>
-                </plugin>                           
+                </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>cobertura-maven-plugin</artifactId>
-                    <version>${cobertura.version}</version>                                                                    
-                </plugin>                     
+                    <version>${cobertura.version}</version>
+                </plugin>
             </plugins>
         </pluginManagement>
 
-    </build>  
+    </build>
     <reporting>
         <plugins>
-            <plugin>        
+            <plugin>
                 <!-- use mvn cobertura:cobertura to generate coverage reports -->
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>cobertura-maven-plugin</artifactId>
-                <version>${cobertura.version}</version>          
+                <version>${cobertura.version}</version>
                 <configuration>
                     <formats>
                         <format>html</format>
@@ -389,11 +394,12 @@
                 </configuration>
             </plugin>
         </plugins>
-    </reporting>  
+    </reporting>
     <modules>
         <module>rave-commons</module>
         <module>rave-shindig</module>
         <module>rave-portal</module>
+        <module>rave-demo-gadgets</module>
     </modules>
     <profiles>
         <profile>
@@ -415,5 +421,5 @@
                 </plugins>
             </build>
         </profile>
-    </profiles>    
+    </profiles>
 </project>

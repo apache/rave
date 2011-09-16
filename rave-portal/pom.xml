@@ -59,6 +59,13 @@
             <type>war</type>
             <scope>provided</scope>
         </dependency>
+         <dependency>
+            <groupId>org.apache.rave</groupId>
+            <artifactId>rave-demo-gadgets</artifactId>
+            <type>war</type>
+   			<version>0.4-incubating-SNAPSHOT</version>
+   			 <scope>provided</scope>
+        </dependency>
 
         <!-- Shindig -->
         <dependency>
@@ -334,6 +341,15 @@
                                 <type>war</type>
                                 <properties>
                                     <context>/ROOT</context>
+                                </properties>
+                            </deployable>
+                            <deployable>
+                                <groupId>org.apache.rave</groupId>
+                                <artifactId>rave-demo-gadgets</artifactId>
+                                <type>war</type>
+                                <!-- I tried giving this name gagdets and it did not work. -->
+                                <properties>
+                                    <context>/demogadgets</context>
                                 </properties>
                             </deployable>
                             <deployable>
