@@ -52,7 +52,7 @@ public class OpenSocialWidgetRenderer implements RegionWidgetRenderer {
     }
 
     //Note the widgets.push() call.  This defines the widget objects, which are
-    //added to the widgets[] array in home.jsp.   
+    //added to the widgets[] array in home.jsp.
     private static final String IFRAME_MARKUP =
             "widgets.push({type: '%1$s'," +
             " regionWidgetId: %2$s," +
@@ -91,8 +91,10 @@ public class OpenSocialWidgetRenderer implements RegionWidgetRenderer {
             }
         }
 
-        return String.format(IFRAME_MARKUP, Constants.WIDGET_TYPE, item.getEntityId(), item.getWidget().getUrl(),
+        String format = String.format(IFRAME_MARKUP, Constants.WIDGET_TYPE, item.getEntityId(), item.getWidget().getUrl(),
                 securityTokenService.getEncryptedSecurityToken(item),
                 openSocialService.getGadgetMetadata(item.getWidget().getUrl()), userPrefs.toString(), item.isCollapsed());
+        logger.debug("Gadget Data: " + format);
+        return format;
     }
 }

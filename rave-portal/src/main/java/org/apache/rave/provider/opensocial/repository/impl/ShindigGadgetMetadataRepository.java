@@ -44,13 +44,14 @@ public class ShindigGadgetMetadataRepository implements GadgetMetadataRepository
 
     private RestOperations restOperations;
     private String shindigUrl;
-       
+
     @Autowired
     public ShindigGadgetMetadataRepository(@Qualifier(value = "jsonStringCompatibleRestTemplate") RestOperations restOperations,
                                            @Value("${portal.opensocial_engine.protocol}") String shindigProtocol,
                                            @Value("${portal.opensocial_engine.root}") String shindigRoot) {
         this.restOperations = restOperations;
         this.shindigUrl = shindigProtocol + "://" + shindigRoot + "/rpc";
+        logger.debug("Shindig render Url: " + shindigUrl);
     }
 
     @Override
