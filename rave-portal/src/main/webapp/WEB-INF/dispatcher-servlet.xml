@@ -44,6 +44,7 @@
     </bean>
 
     <oxm:jaxb2-marshaller id="marshaller">
+        <oxm:class-to-be-bound name="org.apache.rave.portal.model.Page"/>
         <oxm:class-to-be-bound name="org.apache.rave.portal.model.RegionWidgetPreference"/>
         <oxm:class-to-be-bound name="org.apache.rave.portal.web.model.RegionWidgetPreferenceListWrapper"/>
     </oxm:jaxb2-marshaller>
@@ -51,6 +52,7 @@
     <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
         <property name="messageConverters">
             <list>
+            	<bean id="stringHttpMessageConverter" class="org.springframework.http.converter.StringHttpMessageConverter"></bean>
                 <bean class="org.springframework.http.converter.xml.MarshallingHttpMessageConverter"
                       p:marshaller-ref="marshaller" p:unmarshaller-ref="marshaller"/>
             </list>

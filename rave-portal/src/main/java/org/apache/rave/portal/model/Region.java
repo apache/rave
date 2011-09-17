@@ -38,12 +38,17 @@ import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Basic;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
 
 /**
  * A region of a page, which can contain widget instances {@link RegionWidget}
  */
+@XmlAccessorType(XmlAccessType.NONE)
 @Entity
 @Table(name="region")
 @Access(AccessType.FIELD)
@@ -80,6 +85,19 @@ public class Region implements BasicEntity, Serializable {
         this.entityId = entityId;
         this.page = page;
         this.renderOrder = renderOrder;
+    }
+    
+    @SuppressWarnings("unused")
+    @XmlElement(name="widget")
+    /**
+     * Only used for XML serialization, omitting regionwidget
+     */
+    private List<Widget> getWidgets(){
+        ArrayList<Widget> widgets = new ArrayList<Widget>();
+        for (RegionWidget rw: regionWidgets){
+            widgets.add(rw.getWidget());
+        }
+        return widgets;
     }
 
     /**

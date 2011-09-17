@@ -33,11 +33,16 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+
 import java.io.Serializable;
 
 /**
  * A widget
  */
+@XmlAccessorType(XmlAccessType.NONE)
 @Entity
 @Table(name="widget")
 @NamedQueries({
@@ -87,11 +92,12 @@ public class Widget implements BasicEntity, Serializable {
     /*
         TODO RAVE-234: Figure out what the OpenJPA strategy is for functionality provided by Eclisplink's @Convert
      */
-
+    @XmlElement
     @Basic @Column(name="title")
     private String title;
     //private InternationalString title;
 
+    @XmlElement
     @Basic @Column(name="url", unique = true)
     private String url;
 
@@ -101,15 +107,19 @@ public class Widget implements BasicEntity, Serializable {
     @Basic @Column(name="screenshot_url")
     private String screenshotUrl;
 
+    @XmlElement
     @Basic @Column(name="type")
     private String type;
 
+    @XmlElement
     @Basic @Column(name="author")
     private String author;
 
+    @XmlElement
     @Basic @Column(name = "description") @Lob
     private String description;
 
+    @XmlElement(name="status")
     @Basic @Column(name = "widget_status")
     @Enumerated(EnumType.STRING)
     private WidgetStatus widgetStatus;

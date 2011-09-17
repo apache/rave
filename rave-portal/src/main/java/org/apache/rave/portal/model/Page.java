@@ -22,6 +22,12 @@ import org.apache.rave.persistence.BasicEntity;
 import org.codehaus.jackson.annotate.JsonManagedReference;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -36,6 +42,8 @@ import java.util.List;
  * 
  */
 @Entity
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.NONE)
 @Table(name="page", uniqueConstraints={@UniqueConstraint(columnNames={"owner_id","name"})})
 @NamedQueries({
         @NamedQuery(name = "Page.getByUserId", query="SELECT p FROM Page p WHERE p.owner.entityId = :userId ORDER BY p.renderSequence")
@@ -43,13 +51,15 @@ import java.util.List;
 @Access(AccessType.FIELD)
 public class Page implements BasicEntity, Serializable {
     private static final long serialVersionUID = 1L;
-      
+     
+    @XmlAttribute(name="id")
     @Id @Column(name="entity_id")
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "pageIdGenerator")
     @TableGenerator(name = "pageIdGenerator", table = "RAVE_PORTAL_SEQUENCES", pkColumnName = "SEQ_NAME",
             valueColumnName = "SEQ_COUNT", pkColumnValue = "page", allocationSize = 1, initialValue = 1)
     private Long entityId;
 
+    @XmlElement
     @Basic(optional=false) @Column(name="name")
     private String name;
 
@@ -64,6 +74,7 @@ public class Page implements BasicEntity, Serializable {
     @JoinColumn(name="page_layout_id")
     private PageLayout pageLayout;
 
+    @XmlElement(name="region")
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("renderOrder")
     @JoinColumn(name="page_id")
