@@ -25,10 +25,12 @@
        xmlns:tx="http://www.springframework.org/schema/tx"
        xmlns:p="http://www.springframework.org/schema/p"
        xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:aop="http://www.springframework.org/schema/aop"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
         http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
-        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
 
     <!-- make the the portal.properties props available to autowire injectors, location of the properties can
      be overridden by setting a system property "portal.override.properties" -->
@@ -41,9 +43,14 @@
     <!-- bean post-processor for JPA annotations -->
     <context:annotation-config/>
 
+    <!-- enable the use of the @AspectJ style of Spring AOP -->
+    <aop:aspectj-autoproxy />
+
     <!-- base-package scan on org.apache.rave lets junit tests fail from the IDE -->
     <context:component-scan base-package="org.apache.rave.portal"/>
     <context:component-scan base-package="org.apache.rave.provider"/>
+    <context:component-scan base-package="org.apache.rave.service"/>
+    <context:component-scan base-package="org.apache.rave.synchronization"/>
 
     <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
         <property name="entityManagerFactory" ref="entityManagerFactory"/>
@@ -83,7 +90,6 @@
         <property name="username" value="${portal.dataSource.username}"/>
         <property name="password" value="${portal.dataSource.password}"/>
     </bean>
-
     
     <!-- A RestTemplate instance that can be used to call a web service which expects Content-Type and Accept headers of
     application/json with a pre-built string of JSON data. -->

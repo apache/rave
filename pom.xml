@@ -65,6 +65,7 @@
         <jersey-spring.version>1.0</jersey-spring.version>
         <guice.version>3.0</guice.version>
         <cobertura.version>2.5.1</cobertura.version>
+        <org.hamcrest.version>1.1</org.hamcrest.version>
 
         <!-- Force maven-filesync-plugin rewrite the Eclipse FileSync plugin configuration with
             $mvn filesync:generate -Dmaven.filesync.override=true -->
@@ -300,6 +301,12 @@
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-test</artifactId>
                 <version>${org.springframework.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.hamcrest</groupId>
+                <artifactId>hamcrest-all</artifactId>
+                <version>${org.hamcrest.version}</version>
                 <scope>test</scope>
             </dependency>
         </dependencies>

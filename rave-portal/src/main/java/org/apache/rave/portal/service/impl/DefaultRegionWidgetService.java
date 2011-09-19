@@ -25,6 +25,7 @@ import org.apache.rave.portal.model.RegionWidgetPreference;
 import org.apache.rave.portal.model.util.ModelUtils;
 import org.apache.rave.portal.repository.RegionWidgetRepository;
 import org.apache.rave.portal.service.RegionWidgetService;
+import org.apache.rave.synchronization.annotation.Synchronized;
 import org.apache.rave.util.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,6 +54,7 @@ public class DefaultRegionWidgetService implements RegionWidgetService {
     }
 
     @Override
+    @Synchronized(discriminator = "'RegionWidget'", id = "#regionWidgetId")
     public List<RegionWidgetPreference> saveRegionWidgetPreferences(long regionWidgetId,
                                                                     List<RegionWidgetPreference> preferences) {
         RegionWidget regionWidget = this.getValidRegionWidget(regionWidgetId);
@@ -62,6 +64,7 @@ public class DefaultRegionWidgetService implements RegionWidgetService {
     }
 
     @Override
+    @Synchronized(discriminator = "'RegionWidget'", id = "#regionWidgetId")
     public RegionWidgetPreference saveRegionWidgetPreference(long regionWidgetId, RegionWidgetPreference preference) {
         RegionWidget regionWidget = this.getValidRegionWidget(regionWidgetId);
         ModelUtils.normalizeRegionWidgetPreference(regionWidgetId, preference);
