@@ -21,6 +21,7 @@ package org.apache.rave.portal.web.tag;
 
 import org.apache.rave.portal.model.RegionWidget;
 import org.apache.rave.portal.web.renderer.RenderService;
+import org.apache.rave.web.tag.AbstractSingletonBeanDependentTag;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -32,10 +33,13 @@ import java.io.IOException;
 /**
  * JSP tag that renders a RegionWidget
  */
-public class RegionWidgetTag extends TagSupport {
+public class RegionWidgetTag extends AbstractSingletonBeanDependentTag<RenderService> {
 
-    private RenderService renderService;
     private RegionWidget regionWidget;
+
+    public RegionWidgetTag() {
+        super(RenderService.class);
+    }
 
     public RegionWidget getRegionWidget() {
         return regionWidget;
@@ -53,8 +57,8 @@ public class RegionWidgetTag extends TagSupport {
      */
     @Override
     public int doStartTag() throws JspException {
-        if (regionWidget != null && getRenderService().getSupportedWidgetTypes().contains(regionWidget.getWidget().getType())) {
-            writeString(getRenderService().render(regionWidget));
+        if (regionWidget != null && getBean().getSupportedWidgetTypes().contains(regionWidget.getWidget().getType())) {
+            writeString(getBean().render(regionWidget));
         } else {
             throw new JspException("Unsupported regionWidget type or regionWidget not set: " + regionWidget);
         }
@@ -62,26 +66,5 @@ public class RegionWidgetTag extends TagSupport {
         //will accidentally re-use a region widget if the attribute in the JSP is empty
         regionWidget = null;
         return EVAL_BODY_INCLUDE;
-    }
-
-    private void writeString(String output) throws JspException {
-        try {
-            this.pageContext.getOut().print(output);
-        } catch (IOException e) {
-            throw new JspException("Failed to render regionWidget", e);
-        }
-    }
-
-    private RenderService getRenderService() throws JspException {
-        if(renderService == null) {
-            renderService = getRenderServiceFromContext();
-        }
-        return renderService;
-    }
-
-    private RenderService getRenderServiceFromContext() throws JspException {
-        ServletContext currentServletContext = pageContext.getServletContext();
-        ApplicationContext springContext = WebApplicationContextUtils.getRequiredWebApplicationContext(currentServletContext);
-        return springContext.getBean(RenderService.class);
     }
 }
