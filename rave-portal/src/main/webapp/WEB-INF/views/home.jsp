@@ -1,3 +1,4 @@
+<%@ page import="com.sun.xml.internal.ws.wsdl.writer.document.Import" %>
 <%--
   Licensed to the Apache Software Foundation (ASF) under one
   or more contributor license agreements.  See the NOTICE file
@@ -26,8 +27,6 @@
 <%@ taglib prefix="portal" uri="http://www.apache.org/rave/tags" %>
 <%@ taglib tagdir="/WEB-INF/tags" prefix="rave"%>
 <jsp:useBean id="pages" type="java.util.List<org.apache.rave.portal.model.Page>" scope="request"/>
-<jsp:useBean id="openSocialEnv" scope="request" type="org.apache.rave.provider.opensocial.config.OpenSocialEnvironment"/>
-<c:set var="opensocial_engine_url" value="${openSocialEnv.engineProtocol}://${openSocialEnv.engineRoot}${openSocialEnv.engineGadgetPath}"/>
 <fmt:setBundle basename="messages"/>
 <%--@elvariable id="page" type="org.apache.rave.portal.model.Page"--%>
 <rave:rave_generic_page pageTitle="${page.name}">
@@ -157,16 +156,19 @@
             </select>
         </form>
     </div>
+    <portal:render-script location="${'BEFORE_LIB'}" />
     <script src="//cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
     <script src="//ajax.aspnetcdn.com/ajax/jQuery/jquery-1.6.1.min.js"></script>
     <script src="//ajax.aspnetcdn.com/ajax/jquery.ui/1.8.13/jquery-ui.min.js"></script>
     <script src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.8.1/jquery.validate.min.js"></script>
-    <script src="${opensocial_engine_url}/js/container.js?c=1&amp;container=default&amp;debug=1"></script>
+    <portal:render-script location="${'AFTER_LIB'}" />
+    <portal:render-script location="${'BEFORE_RAVE'}" />
     <script src="<spring:url value="/script/rave.js"/>"></script>
     <script src="<spring:url value="/script/rave_api.js"/>"></script>
     <script src="<spring:url value="/script/rave_opensocial.js"/>"></script>
     <script src="<spring:url value="/script/rave_wookie.js"/>"></script>
     <script src="<spring:url value="/script/rave_layout.js"/>"></script>
+    <portal:render-script location="${'AFTER_RAVE'}" />
     <script>
         //Define the global widgets variable
         //This array will be populated by RegionWidgetRender providers.

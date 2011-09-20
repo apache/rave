@@ -37,4 +37,17 @@
             <rtexprvalue>true</rtexprvalue>
         </attribute>
     </tag>
+    <tag>
+        <description>Renders a set of script blocks for the current location</description>
+        <name>render-script</name>
+        <tag-class>org.apache.rave.portal.web.tag.ScriptTag</tag-class>
+        <body-content>JSP</body-content>
+        <attribute>
+            <description>The page location for the scripts</description>
+            <name>location</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>org.apache.rave.portal.web.renderer.ScriptLocation</type>
+        </attribute>
+    </tag>
 </taglib>

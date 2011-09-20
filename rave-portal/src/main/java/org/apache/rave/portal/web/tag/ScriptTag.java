@@ -20,15 +20,54 @@
 package org.apache.rave.portal.web.tag;
 
 import org.apache.rave.portal.web.renderer.RenderService;
+import org.apache.rave.portal.web.renderer.ScriptLocation;
 import org.apache.rave.web.tag.AbstractSingletonBeanDependentTag;
+import serp.bytecode.RetInstruction;
+
+import javax.servlet.jsp.JspException;
+import java.util.List;
 
 /**
  *  Renders a list of registered script blocks according to key
  */
 public class ScriptTag extends AbstractSingletonBeanDependentTag<RenderService>{
 
+    private ScriptLocation location;
 
     public ScriptTag() {
         super(RenderService.class);
+    }
+
+    public ScriptLocation getLocation() {
+        return location;
+    }
+
+    public void setLocation(ScriptLocation location) {
+        this.location = location;
+    }
+
+    @Override
+    public int doStartTag() throws JspException {
+        int returnValue = SKIP_BODY;
+        RenderService renderService = getBean();
+        validateParams(renderService);
+        List<String> scripts = renderService.getScriptBlocks(location);
+        if(scripts != null) {
+            renderScripts(scripts);
+            returnValue = EVAL_BODY_INCLUDE;
+        }
+        return returnValue;
+    }
+
+    private void validateParams(RenderService renderService) throws JspException {
+        if(location == null || renderService == null) {
+            throw new JspException("Invalid configuration.  Ensure that you have correctly configured the application and provided a location to the tag");
+        }
+    }
+
+    private void renderScripts(List<String> scripts) throws JspException {
+        for(String script : scripts) {
+            writeString(script);
+        }
     }
 }

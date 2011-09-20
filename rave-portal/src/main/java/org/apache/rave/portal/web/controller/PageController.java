@@ -49,10 +49,6 @@ public class PageController {
     private PageService pageService;
     private UserService userService;
 
-    //TODO (RAVE-99) Figure out a better way to register script blocks so that we don't have to have this cross package dep
-    @Autowired
-    private OpenSocialEnvironment openSocialEnvironment;
-
     @Autowired
     public PageController(PageService pageService, UserService userService) {
         this.pageService = pageService;
@@ -65,7 +61,6 @@ public class PageController {
         List<Page> pages = pageService.getAllPages(user.getEntityId());
         model.addAttribute(ModelKeys.PAGE, pages.get(0));
         model.addAttribute(ModelKeys.PAGES, pages);
-        model.addAttribute(ModelKeys.OPENSOCIAL_ENVIRONMENT, openSocialEnvironment);
         return ViewNames.HOME;
     }          
     
@@ -79,7 +74,6 @@ public class PageController {
                
         model.addAttribute(ModelKeys.PAGE, page);
         model.addAttribute(ModelKeys.PAGES, pages);
-        model.addAttribute(ModelKeys.OPENSOCIAL_ENVIRONMENT, openSocialEnvironment);
         return ViewNames.HOME;
     }
 }

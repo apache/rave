@@ -19,10 +19,24 @@
 
 package org.apache.rave.provider.opensocial.config;
 
+import org.apache.rave.portal.web.renderer.RenderService;
+import org.apache.rave.portal.web.renderer.ScriptLocation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
+
 /**
  * Environment variables for OpenSocial calls from the portal (to Shindig)
  */
+@Component
 public class OpenSocialEnvironment {
+
+    private static final String SCRIPT_TEMPLATE = "<script src=\"%1$s://%2$s%3$s/js/container.js?c=1&amp;container=default&amp;debug=1\"></script>";
+
+    private RenderService renderService;
+
     /**
      * Protocol for the opensocial engine (http, https)
      */
@@ -36,7 +50,21 @@ public class OpenSocialEnvironment {
      */
     private String engineGadgetPath;
 
+    @PostConstruct
+    public void init() {
+        renderService.registerScriptBlock(String.format(SCRIPT_TEMPLATE, engineProtocol, engineRoot, engineGadgetPath), ScriptLocation.BEFORE_RAVE);
+    }
 
+    public RenderService getRenderService() {
+        return renderService;
+    }
+
+    @Autowired
+    public void setRenderService(RenderService renderService) {
+        this.renderService = renderService;
+    }
+
+    @Value("${portal.opensocial_engine.protocol}")
     public void setEngineProtocol(String engineProtocol) {
         this.engineProtocol = engineProtocol;
     }
@@ -45,6 +73,7 @@ public class OpenSocialEnvironment {
         return engineProtocol;
     }
 
+    @Value("${portal.opensocial_engine.root}")
     public void setEngineRoot(String engineRoot) {
         this.engineRoot = engineRoot;
     }
@@ -53,6 +82,7 @@ public class OpenSocialEnvironment {
         return engineRoot;
     }
 
+    @Value("${portal.opensocial_engine.gadget_path}")
     public void setEngineGadgetPath(String engineGadgetPath) {
         this.engineGadgetPath = engineGadgetPath;
     }
