@@ -21,15 +21,13 @@ package org.apache.rave.portal.web.renderer.impl;
 
 import org.apache.rave.exception.NotSupportedException;
 import org.apache.rave.portal.model.RegionWidget;
-import org.apache.rave.portal.web.renderer.RegionWidgetRenderer;
-import org.apache.rave.portal.web.renderer.RenderService;
+import org.apache.rave.portal.web.renderer.*;
+import org.apache.rave.synchronization.annotation.Synchronized;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import javax.persistence.ExcludeSuperclassListeners;
+import java.util.*;
 
 /**
  * Default implementation of {@link RenderService}
@@ -41,11 +39,13 @@ import java.util.Map;
 public class DefaultRenderService implements RenderService {
 
     private final Map<String, RegionWidgetRenderer> supportedWidgets;
+    private final Map<ScriptLocation, List<String>> scriptRenderers;
 
     @Autowired
     public DefaultRenderService(List<RegionWidgetRenderer> widgetRenderers) {
-        supportedWidgets = new HashMap<String, RegionWidgetRenderer>();
-        mapRenderersByType(supportedWidgets, widgetRenderers);
+        this.supportedWidgets = new HashMap<String, RegionWidgetRenderer>();
+        this.scriptRenderers = new HashMap<ScriptLocation, List<String>>();
+        mapRenderersByType(this.supportedWidgets, widgetRenderers);
     }
 
     @Override
@@ -69,9 +69,28 @@ public class DefaultRenderService implements RenderService {
         return renderer.render(widget);
     }
 
+    @Override
+    public List<String> getScriptBlocks(ScriptLocation location) {
+        return scriptRenderers.get(location);
+    }
 
-    private static void mapRenderersByType(Map<String, RegionWidgetRenderer> map, List<RegionWidgetRenderer> renderers) {
-        for(RegionWidgetRenderer renderer : renderers) {
+    @Override
+    public void registerScriptBlock(String script, ScriptLocation location) {
+        if(!scriptRenderers.containsKey(location)) {
+            addListForLocation(location);
+        }
+        scriptRenderers.get(location).add(script);
+    }
+
+    //Lock then check the map to ensure that only one list of scripts gets added to the map
+    private synchronized void addListForLocation(ScriptLocation location) {
+        if(!scriptRenderers.containsKey(location)) {
+            scriptRenderers.put(location, new ArrayList<String>());
+        }
+    }
+
+    private static <T extends Renderer> void mapRenderersByType(Map<String, T> map, List<T> renderers) {
+        for(T renderer : renderers) {
             map.put(renderer.getSupportedContext(), renderer);
         }
     }

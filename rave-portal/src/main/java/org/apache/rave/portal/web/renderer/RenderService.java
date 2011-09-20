@@ -22,6 +22,7 @@ package org.apache.rave.portal.web.renderer;
 import org.apache.rave.portal.model.RegionWidget;
 
 import java.util.Collection;
+import java.util.List;
 
 /**
  *  Renders model objects as strings that can be inserted into the view
@@ -40,4 +41,19 @@ public interface RenderService {
      * @return a String representing the rendered widget
      */
     String render(RegionWidget widget);
+
+    /**
+     * Retrieves all script blocks registered for the current location in order of their registration
+     *
+     * @param location where the script blocks are intended to be rendered
+     * @return a list of strings representing all script blocks for the location
+     */
+    List<String> getScriptBlocks(ScriptLocation location);
+
+    /**
+     * Registers a script block for inclusion in the page
+     * @param script the string representation of the script block
+     * @param location the location in the page to render the script
+     */
+    void registerScriptBlock(String script, ScriptLocation location);
 }

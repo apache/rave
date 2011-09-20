@@ -122,6 +122,38 @@ public class RenderServiceTest {
         service.render(rw);
     }
 
+    @Test
+    public void registerBlockAndRetrieve_simple() {
+        constructFooRenderService();
+        service.registerScriptBlock(RENDERED_TYPE_1, ScriptLocation.BEFORE_RAVE);
+        List<String> scriptBlocks = service.getScriptBlocks(ScriptLocation.BEFORE_RAVE);
+        assertThat(scriptBlocks.size(), is(equalTo(1)));
+        assertThat(scriptBlocks.get(0), is(equalTo(RENDERED_TYPE_1)));
+    }
+    @Test
+    public void registerBlockAndRetrieve_list() {
+        constructFooRenderService();
+        service.registerScriptBlock(RENDERED_TYPE_1, ScriptLocation.BEFORE_RAVE);
+        service.registerScriptBlock(RENDERED_TYPE_2, ScriptLocation.BEFORE_RAVE);
+        List<String> scriptBlocks = service.getScriptBlocks(ScriptLocation.BEFORE_RAVE);
+        assertThat(scriptBlocks.size(), is(equalTo(2)));
+        assertThat(scriptBlocks.get(0), is(equalTo(RENDERED_TYPE_1)));
+        assertThat(scriptBlocks.get(1), is(equalTo(RENDERED_TYPE_2)));
+    }
+
+    @Test
+    public void registerBlockAndRetrieve_multi() {
+        constructFooRenderService();
+        service.registerScriptBlock(RENDERED_TYPE_1, ScriptLocation.BEFORE_RAVE);
+        service.registerScriptBlock(RENDERED_TYPE_2, ScriptLocation.AFTER_RAVE);
+        List<String> scriptBlocks = service.getScriptBlocks(ScriptLocation.BEFORE_RAVE);
+        assertThat(scriptBlocks.size(), is(equalTo(1)));
+        assertThat(scriptBlocks.get(0), is(equalTo(RENDERED_TYPE_1)));
+        scriptBlocks = service.getScriptBlocks(ScriptLocation.AFTER_RAVE);
+        assertThat(scriptBlocks.size(), is(equalTo(1)));
+        assertThat(scriptBlocks.get(0), is(equalTo(RENDERED_TYPE_2)));
+    }
+
 
     private void constructFooBarRenderService() {
         widgetRenderers.add(widgetRenderer1);
