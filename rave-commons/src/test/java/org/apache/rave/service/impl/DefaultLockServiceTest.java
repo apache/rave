@@ -17,9 +17,8 @@
  * under the License.
  */
 
-package org.apache.rave.service;
+package org.apache.rave.service.impl;
 
-import org.apache.rave.service.impl.DefaultLockService;
 import org.hamcrest.CoreMatchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,8 +35,8 @@ import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.lessThanOrEqualTo;
 import static org.junit.Assert.assertThat;
 
-public class LockServiceTest {
-    private LockService service;
+public class DefaultLockServiceTest {
+    private DefaultLockService service;
 
     private static final String KEY = "KEY";
     private static final String DISCRIMINATOR = "FOO";
@@ -58,6 +57,18 @@ public class LockServiceTest {
     public void borrowLockByDiscriminatorAndId() {
         Lock lock = service.borrowLock(DISCRIMINATOR, String.valueOf(ID));
         assertThat(lock, is(notNullValue()));
+    }
+
+    @Test
+    public void verifyComputedKeyContract() {
+        String expectedKey = DISCRIMINATOR + "-" + ID;
+        DefaultLockService.ReferenceTrackingLock lock =
+                (DefaultLockService.ReferenceTrackingLock) service.borrowLock(DISCRIMINATOR, String.valueOf(ID));
+
+        assertThat(lock.getKey(), is(expectedKey));
+
+        Lock secondLock = service.borrowLock(expectedKey);
+        assertThat(lock, is(sameInstance(secondLock)));
     }
 
     @Test

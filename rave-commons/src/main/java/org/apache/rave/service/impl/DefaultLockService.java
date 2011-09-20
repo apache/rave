@@ -76,7 +76,7 @@ public class DefaultLockService implements LockService {
         }
     }
 
-    private class ReferenceTrackingLock extends ReentrantLock {
+    class ReferenceTrackingLock extends ReentrantLock {
         private String key;
         private volatile int referenceCount;
 
