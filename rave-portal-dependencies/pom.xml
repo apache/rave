@@ -100,6 +100,12 @@
             <artifactId>openid4java-consumer</artifactId>
             <version>${org.openid4java.version}</version>
             <type>pom</type>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.google.code.guice</groupId>
+                    <artifactId>guice</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- JSTL -->
