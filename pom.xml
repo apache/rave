@@ -56,6 +56,8 @@
         <commons-lang.version>2.6</commons-lang.version>
         <!-- Don't update to commons-validator 1.3.1, it misses a dependency -->
         <commons-validator.version>1.3.0</commons-validator.version>
+        <commons-collections.version>3.2.1</commons-collections.version>
+        <commons-codec.version>1.4</commons-codec.version>
         <icu4j.version>4.6.1</icu4j.version>
         <easymock.version>3.0</easymock.version>
         <com.h2database.version>1.3.154</com.h2database.version>
@@ -95,10 +97,43 @@
                 <artifactId>rave-commons</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.apache.rave</groupId>
+                <artifactId>rave-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.rave</groupId>
+                <artifactId>rave-web</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.rave</groupId>
+                <artifactId>rave-opensocial-provider</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.rave</groupId>
+                <artifactId>rave-w3c-provider</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.rave</groupId>
+                <artifactId>rave-portal-resources</artifactId>
+                <version>${project.version}</version>
+                <type>war</type>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.rave</groupId>
+                <artifactId>rave-portal-dependencies</artifactId>
+                <version>${project.version}</version>
+                <type>pom</type>
+            </dependency>
              <dependency>
                 <groupId>org.apache.rave</groupId>
                 <artifactId>rave-demo-gadgets</artifactId>
                 <version>${project.version}</version>
+                <type>war</type>
             </dependency>
             <dependency>
                 <groupId>org.apache.shindig</groupId>
@@ -270,6 +305,19 @@
                 <version>${commons-validator.version}</version>
             </dependency>
 
+            <!-- commons-codec: needed here to enforce proper version instead of relying on transitive dependencies -->
+            <dependency>
+                <groupId>commons-codec</groupId>
+                <artifactId>commons-codec</artifactId>
+                <version>${commons-codec.version}</version>
+            </dependency>
+            
+            <!-- commons-collections: needed here to enforce proper version instead of relying on transitive dependencies -->
+            <dependency>
+                <groupId>commons-collections</groupId>
+                <artifactId>commons-collections</artifactId>
+                <version>${commons-collections.version}</version>
+            </dependency>
             <!-- Rave artifacts -->
             <dependency>
                 <groupId>org.apache.rave</groupId>
@@ -403,10 +451,13 @@
         </plugins>
     </reporting>
     <modules>
-        <module>rave-commons</module>
+        <module>rave-components</module>
+        <module>rave-providers</module>
+        <module>rave-portal-resources</module>
+        <module>rave-portal-dependencies</module>
         <module>rave-shindig</module>
-        <module>rave-portal</module>
         <module>rave-demo-gadgets</module>
+        <module>rave-portal</module>
     </modules>
     <profiles>
         <profile>
