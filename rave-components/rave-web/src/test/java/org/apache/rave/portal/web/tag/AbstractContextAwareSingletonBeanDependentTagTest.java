@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.apache.rave.web.tag;
+package org.apache.rave.portal.web.tag;
 
 
 import org.junit.Before;
@@ -36,11 +36,11 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.junit.Assert.assertThat;
 
-public class AbstractSingletonBeanDependentTagTest {
+public class AbstractContextAwareSingletonBeanDependentTagTest {
     private static final String TEST_STRING = "TEST STRING";
     private final Integer TEST_OBJ_1 = 42;
     private PageContext pageContext;
-    private AbstractSingletonBeanDependentTag tag;
+    private AbstractContextAwareSingletonBeanDependentTag tag;
     private WebApplicationContext context;
 
     @Before
@@ -53,7 +53,7 @@ public class AbstractSingletonBeanDependentTagTest {
         replay(servletContext);
         pageContext = createNiceMock(PageContext.class);
         expect(pageContext.getServletContext()).andReturn(servletContext).anyTimes();
-        tag = new AbstractSingletonBeanDependentTag<Integer>(Integer.class){ };
+        tag = new AbstractContextAwareSingletonBeanDependentTag<Integer>(Integer.class){ };
         tag.setPageContext(pageContext);
     }
 

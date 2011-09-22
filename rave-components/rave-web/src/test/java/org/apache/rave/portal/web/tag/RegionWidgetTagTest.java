@@ -22,11 +22,14 @@ package org.apache.rave.portal.web.tag;
 import org.apache.rave.portal.model.RegionWidget;
 import org.apache.rave.portal.model.Widget;
 import org.apache.rave.portal.web.renderer.RenderService;
+import org.apache.rave.portal.web.renderer.model.RenderContext;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.web.context.WebApplicationContext;
 
 import javax.servlet.ServletContext;
+import javax.servlet.ServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
@@ -49,18 +52,23 @@ public class RegionWidgetTagTest {
     private RegionWidgetTag tag;
     private RenderService service;
     private PageContext pageContext;
+    private RenderContext context;
 
     @Before
     public void setup() throws JspException {
+        context = new RenderContext();
         service = createNiceMock(RenderService.class);
-        WebApplicationContext context = createNiceMock(WebApplicationContext.class);
-        expect(context.getBean(RenderService.class)).andReturn(service).anyTimes();
-        replay(context);
+        WebApplicationContext wContext = createNiceMock(WebApplicationContext.class);
+        expect(wContext.getBean(RenderService.class)).andReturn(service).anyTimes();
+        replay(wContext);
         ServletContext servletContext = createNiceMock(ServletContext.class);
-        expect(servletContext.getAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE)).andReturn(context);
+        expect(servletContext.getAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE)).andReturn(wContext);
         replay(servletContext);
+        ServletRequest request = new MockHttpServletRequest();
+        request.setAttribute("_RENDER_CONTEXT", context);
         pageContext = createNiceMock(PageContext.class);
         expect(pageContext.getServletContext()).andReturn(servletContext).anyTimes();
+        expect(pageContext.getRequest()).andReturn(request).anyTimes();
         tag = new RegionWidgetTag();
         tag.setPageContext(pageContext);
     }
@@ -76,7 +84,7 @@ public class RegionWidgetTagTest {
         strings.add(WIDGET_TYPE);
 
         expect(service.getSupportedWidgetTypes()).andReturn(strings);
-        expect(service.render(regionWidget)).andReturn(RENDERED);
+        expect(service.render(regionWidget, context)).andReturn(RENDERED);
         replay(service);
 
         JspWriter writer = createNiceMock(JspWriter.class);

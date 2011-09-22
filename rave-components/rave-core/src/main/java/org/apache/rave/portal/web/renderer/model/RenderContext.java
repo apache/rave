@@ -17,26 +17,32 @@
  * under the License.
  */
 
-package org.apache.rave.portal.web.renderer;
+package org.apache.rave.portal.web.renderer.model;
+
+import org.apache.rave.portal.model.User;
+
+import java.util.Map;
 
 /**
- * Enumeration of potential render locations for the script block
+ * Represents the current context used for rendering
  */
-public enum ScriptLocation {
-    /**
-     * Renders before any third party Rave dependencies
-     */
-    BEFORE_LIB,
-    /**
-     * Renders immediately after third party Rave dependencies
-     */
-    AFTER_LIB,
-    /**
-     * Renders immediately before the Rave script blocks
-     */
-    BEFORE_RAVE,
-    /**
-     * Renders immediately after the Rave script blocks
-     */
-    AFTER_RAVE
+public class RenderContext {
+    private Map properties;
+    private User user;
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Map getProperties() {
+        return properties;
+    }
+
+    public void setProperties(Map properties) {
+        this.properties = properties;
+    }
 }

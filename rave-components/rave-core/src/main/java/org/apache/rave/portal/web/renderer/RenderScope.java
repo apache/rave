@@ -19,29 +19,16 @@
 
 package org.apache.rave.portal.web.renderer;
 
-import org.apache.rave.portal.model.RegionWidget;
-import org.apache.rave.portal.web.renderer.model.RenderContext;
-
-import java.util.Collection;
-
 /**
- *  Renders model objects as strings that can be inserted into the view
+ * Represents the scope of the particular action
  */
-public interface RenderService {
+public enum RenderScope {
     /**
-     * Gets the types of widgets supported by this rendering service
-     * @return a collection of strings corresponding to the widget types
+     * Indicates that a given action is to be taken against all requests
      */
-    Collection<String> getSupportedWidgetTypes();
-
+    GLOBAL,
     /**
-     * Renders the {@link org.apache.rave.portal.model.RegionWidget} as a String
-     *
-     *
-     * @param widget widget to renderer
-     * @param context the cotnext under which to render the widget
-     * @return a String representing the rendered widget
+     * Indicates that the current action is to be applied only within the scope of the current request
      */
-    String render(RegionWidget widget, RenderContext context);
-
+    CURRENT_REQUEST
 }

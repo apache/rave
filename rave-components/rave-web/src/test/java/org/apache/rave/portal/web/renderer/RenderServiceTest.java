@@ -23,6 +23,7 @@ import org.apache.rave.exception.NotSupportedException;
 import org.apache.rave.portal.model.RegionWidget;
 import org.apache.rave.portal.model.Widget;
 import org.apache.rave.portal.web.renderer.impl.DefaultRenderService;
+import org.apache.rave.portal.web.renderer.model.RenderContext;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -45,6 +46,7 @@ public class RenderServiceTest {
     private List<RegionWidgetRenderer> widgetRenderers;
     private RegionWidgetRenderer widgetRenderer2;
     private RegionWidgetRenderer widgetRenderer1;
+    private RenderContext context;
 
     @Before
     public void setup() {
@@ -91,7 +93,7 @@ public class RenderServiceTest {
         replayMocks();
 
         constructFooBarRenderService();
-        assertThat(service.render(rw), is(equalTo(RENDERED_TYPE_1)));
+        assertThat(service.render(rw, context), is(equalTo(RENDERED_TYPE_1)));
     }
 
     @Test
@@ -105,7 +107,7 @@ public class RenderServiceTest {
         replayMocks();
 
         constructFooBarRenderService();
-        assertThat(service.render(rw), is(equalTo(RENDERED_TYPE_2)));
+        assertThat(service.render(rw, context), is(equalTo(RENDERED_TYPE_2)));
     }
 
     @Test(expected = NotSupportedException.class)
@@ -119,39 +121,7 @@ public class RenderServiceTest {
         replayMocks();
 
         constructFooBarRenderService();
-        service.render(rw);
-    }
-
-    @Test
-    public void registerBlockAndRetrieve_simple() {
-        constructFooRenderService();
-        service.registerScriptBlock(RENDERED_TYPE_1, ScriptLocation.BEFORE_RAVE);
-        List<String> scriptBlocks = service.getScriptBlocks(ScriptLocation.BEFORE_RAVE);
-        assertThat(scriptBlocks.size(), is(equalTo(1)));
-        assertThat(scriptBlocks.get(0), is(equalTo(RENDERED_TYPE_1)));
-    }
-    @Test
-    public void registerBlockAndRetrieve_list() {
-        constructFooRenderService();
-        service.registerScriptBlock(RENDERED_TYPE_1, ScriptLocation.BEFORE_RAVE);
-        service.registerScriptBlock(RENDERED_TYPE_2, ScriptLocation.BEFORE_RAVE);
-        List<String> scriptBlocks = service.getScriptBlocks(ScriptLocation.BEFORE_RAVE);
-        assertThat(scriptBlocks.size(), is(equalTo(2)));
-        assertThat(scriptBlocks.get(0), is(equalTo(RENDERED_TYPE_1)));
-        assertThat(scriptBlocks.get(1), is(equalTo(RENDERED_TYPE_2)));
-    }
-
-    @Test
-    public void registerBlockAndRetrieve_multi() {
-        constructFooRenderService();
-        service.registerScriptBlock(RENDERED_TYPE_1, ScriptLocation.BEFORE_RAVE);
-        service.registerScriptBlock(RENDERED_TYPE_2, ScriptLocation.AFTER_RAVE);
-        List<String> scriptBlocks = service.getScriptBlocks(ScriptLocation.BEFORE_RAVE);
-        assertThat(scriptBlocks.size(), is(equalTo(1)));
-        assertThat(scriptBlocks.get(0), is(equalTo(RENDERED_TYPE_1)));
-        scriptBlocks = service.getScriptBlocks(ScriptLocation.AFTER_RAVE);
-        assertThat(scriptBlocks.size(), is(equalTo(1)));
-        assertThat(scriptBlocks.get(0), is(equalTo(RENDERED_TYPE_2)));
+        service.render(rw, context);
     }
 
 

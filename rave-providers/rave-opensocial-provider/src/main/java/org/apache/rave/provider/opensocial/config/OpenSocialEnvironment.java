@@ -19,8 +19,8 @@
 
 package org.apache.rave.provider.opensocial.config;
 
-import org.apache.rave.portal.web.renderer.RenderService;
 import org.apache.rave.portal.web.renderer.ScriptLocation;
+import org.apache.rave.portal.web.renderer.ScriptManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -35,7 +35,7 @@ public class OpenSocialEnvironment {
 
     private static final String SCRIPT_TEMPLATE = "<script src=\"%1$s://%2$s%3$s/js/container.js?c=1&amp;container=default&amp;debug=1\"></script>";
 
-    private RenderService renderService;
+    private ScriptManager scriptManager;
 
     /**
      * Protocol for the opensocial engine (http, https)
@@ -52,16 +52,16 @@ public class OpenSocialEnvironment {
 
     @PostConstruct
     public void init() {
-        renderService.registerScriptBlock(String.format(SCRIPT_TEMPLATE, engineProtocol, engineRoot, engineGadgetPath), ScriptLocation.BEFORE_RAVE);
+        scriptManager.registerScriptBlock(String.format(SCRIPT_TEMPLATE, engineProtocol, engineRoot, engineGadgetPath), ScriptLocation.BEFORE_RAVE);
     }
 
-    public RenderService getRenderService() {
-        return renderService;
+    public ScriptManager getScriptManager() {
+        return scriptManager;
     }
 
     @Autowired
-    public void setRenderService(RenderService renderService) {
-        this.renderService = renderService;
+    public void setScriptManager(ScriptManager scriptManager) {
+        this.scriptManager = scriptManager;
     }
 
     @Value("${portal.opensocial_engine.protocol}")

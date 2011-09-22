@@ -21,19 +21,12 @@ package org.apache.rave.portal.web.tag;
 
 import org.apache.rave.portal.model.RegionWidget;
 import org.apache.rave.portal.web.renderer.RenderService;
-import org.apache.rave.web.tag.AbstractSingletonBeanDependentTag;
-import org.springframework.context.ApplicationContext;
-import org.springframework.web.context.support.WebApplicationContextUtils;
-
-import javax.servlet.ServletContext;
 import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.tagext.TagSupport;
-import java.io.IOException;
 
 /**
  * JSP tag that renders a RegionWidget
  */
-public class RegionWidgetTag extends AbstractSingletonBeanDependentTag<RenderService> {
+public class RegionWidgetTag extends AbstractContextAwareSingletonBeanDependentTag<RenderService> {
 
     private RegionWidget regionWidget;
 
@@ -58,7 +51,7 @@ public class RegionWidgetTag extends AbstractSingletonBeanDependentTag<RenderSer
     @Override
     public int doStartTag() throws JspException {
         if (regionWidget != null && getBean().getSupportedWidgetTypes().contains(regionWidget.getWidget().getType())) {
-            writeString(getBean().render(regionWidget));
+            writeString(getBean().render(regionWidget, getContext()));
         } else {
             throw new JspException("Unsupported regionWidget type or regionWidget not set: " + regionWidget);
         }

@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.apache.rave.portal.web.renderer;
+package renderer;
 
 
 import org.apache.rave.portal.model.Page;
@@ -25,7 +25,9 @@ import org.apache.rave.portal.model.Region;
 import org.apache.rave.portal.model.RegionWidget;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.Widget;
+import org.apache.rave.portal.web.renderer.RenderService;
 import org.apache.rave.provider.opensocial.repository.impl.ShindigGadgetMetadataRepository;
+import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,11 +42,6 @@ import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.RestOperations;
 
 import java.util.Arrays;
-
-import static org.easymock.EasyMock.anyObject;
-import static org.easymock.EasyMock.createNiceMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -71,10 +68,10 @@ public class RenderServiceIntegrationTest {
 
     @Before
     public void setup() {
-        restOperations = createNiceMock(RestOperations.class);
-        expect(restOperations.postForObject(anyObject(String.class), anyObject(String.class), anyObject(Class.class)))
+        restOperations = EasyMock.createNiceMock(RestOperations.class);
+        EasyMock.expect(restOperations.postForObject(EasyMock.anyObject(String.class), EasyMock.anyObject(String.class), EasyMock.anyObject(Class.class)))
                 .andReturn(VALID_METADATA);
-        replay(restOperations);
+        EasyMock.replay(restOperations);
 
         //Replace the real restOperations instance with a mock -- otherwise the call for gadget metadata would fail since
         //we don't have a shindig server available to hit.
@@ -82,9 +79,9 @@ public class RenderServiceIntegrationTest {
 
         //Setup a mock authenticated user
         final User authUser = new User(VALID_USER_ID, VALID_USER_NAME);
-        AbstractAuthenticationToken auth = createNiceMock(AbstractAuthenticationToken.class);
-        expect(auth.getPrincipal()).andReturn(authUser).anyTimes();
-        replay(auth);
+        AbstractAuthenticationToken auth = EasyMock.createNiceMock(AbstractAuthenticationToken.class);
+        EasyMock.expect(auth.getPrincipal()).andReturn(authUser).anyTimes();
+        EasyMock.replay(auth);
 
         SecurityContext context = new SecurityContextImpl();
         context.setAuthentication(auth);
@@ -112,7 +109,7 @@ public class RenderServiceIntegrationTest {
         RegionWidget rw = new RegionWidget(1L, w, region);
         region.setRegionWidgets(Arrays.asList(rw));
 
-        String rendered = service.render(rw);
+        String rendered = service.render(rw, null);
         assertThat(rendered, is(notNullValue()));
         assertThat(rendered.contains("widgets.push({"), is(true));
     }

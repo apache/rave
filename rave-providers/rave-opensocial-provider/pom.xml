@@ -43,10 +43,6 @@
             <groupId>org.apache.rave</groupId>
             <artifactId>rave-core</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.apache.rave</groupId>
-            <artifactId>rave-web</artifactId>
-        </dependency>
         
         <dependency>
             <groupId>org.slf4j</groupId>

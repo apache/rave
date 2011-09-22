@@ -17,25 +17,30 @@
  * under the License.
  */
 
-package org.apache.rave.web.tag;
+package org.apache.rave.portal.web.tag;
 
+import org.apache.rave.portal.web.renderer.model.RenderContext;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
+import javax.naming.Context;
 import javax.servlet.ServletContext;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Abstract
  */
-public abstract class AbstractSingletonBeanDependentTag<T> extends TagSupport {
+public abstract class AbstractContextAwareSingletonBeanDependentTag<T> extends TagSupport {
 
+    private static final String CONTEXT_KEY = "_RENDER_CONTEXT";
     protected Class<T> clazz;
     private T bean;
 
-    protected AbstractSingletonBeanDependentTag(Class<T> clazz) {
+    protected AbstractContextAwareSingletonBeanDependentTag(Class<T> clazz) {
         this.clazz = clazz;
     }
 
@@ -52,6 +57,16 @@ public abstract class AbstractSingletonBeanDependentTag<T> extends TagSupport {
             bean = getBeanFromContext();
         }
         return bean;
+    }
+
+    protected RenderContext getContext() {
+       RenderContext context = (RenderContext)this.pageContext.getRequest().getAttribute(CONTEXT_KEY);
+       if(context == null) {
+           context = new RenderContext();
+           context.setProperties(new HashMap());
+           this.pageContext.getRequest().setAttribute(CONTEXT_KEY, context);
+       }
+       return context;
     }
 
     private T getBeanFromContext() throws JspException {

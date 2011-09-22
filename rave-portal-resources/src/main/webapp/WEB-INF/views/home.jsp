@@ -19,15 +19,15 @@
 
   $Id$
 
---%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<%@ taglib prefix="portal" uri="http://www.apache.org/rave/tags" %>
-<%@ taglib tagdir="/WEB-INF/tags" prefix="rave"%>
-<jsp:useBean id="pages" type="java.util.List<org.apache.rave.portal.model.Page>" scope="request"/>
-<fmt:setBundle basename="messages"/>
+
+--%><%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %><%--
+--%><%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %><%--
+--%><%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %><%--
+--%><%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %><%--
+--%><%@ taglib prefix="portal" uri="http://www.apache.org/rave/tags" %><%--
+--%><%@ taglib tagdir="/WEB-INF/tags" prefix="rave"%><%--
+--%><jsp:useBean id="pages" type="java.util.List<org.apache.rave.portal.model.Page>" scope="request"/><%--
+--%><fmt:setBundle basename="messages"/>
 <%--@elvariable id="page" type="org.apache.rave.portal.model.Page"--%>
 <rave:rave_generic_page pageTitle="${page.name}">
     <div id="header">

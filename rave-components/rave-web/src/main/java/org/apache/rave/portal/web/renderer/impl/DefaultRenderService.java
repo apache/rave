@@ -21,12 +21,11 @@ package org.apache.rave.portal.web.renderer.impl;
 
 import org.apache.rave.exception.NotSupportedException;
 import org.apache.rave.portal.model.RegionWidget;
+import org.apache.rave.portal.web.renderer.model.RenderContext;
 import org.apache.rave.portal.web.renderer.*;
-import org.apache.rave.synchronization.annotation.Synchronized;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.ExcludeSuperclassListeners;
 import java.util.*;
 
 /**
@@ -39,12 +38,11 @@ import java.util.*;
 public class DefaultRenderService implements RenderService {
 
     private final Map<String, RegionWidgetRenderer> supportedWidgets;
-    private final Map<ScriptLocation, List<String>> scriptRenderers;
+    private final DefaultScriptManager defaultScriptManager = new DefaultScriptManager();
 
     @Autowired
     public DefaultRenderService(List<RegionWidgetRenderer> widgetRenderers) {
         this.supportedWidgets = new HashMap<String, RegionWidgetRenderer>();
-        this.scriptRenderers = new HashMap<ScriptLocation, List<String>>();
         mapRenderersByType(this.supportedWidgets, widgetRenderers);
     }
 
@@ -56,37 +54,19 @@ public class DefaultRenderService implements RenderService {
     /**
      * Renders the given widget iff there is a {@link org.apache.rave.portal.web.renderer.RegionWidgetRenderer } for the
      * widget type
+     *
      * @param widget widget to renderer
+     * @param context
      * @return the String representation of the rendered RegionWidget
      * @throws {@link org.apache.rave.exception.NotSupportedException}
      */
     @Override
-    public String render(RegionWidget widget) {
+    public String render(RegionWidget widget, RenderContext context) {
         RegionWidgetRenderer renderer = supportedWidgets.get(widget.getWidget().getType());
         if(renderer == null) {
             throw new NotSupportedException(widget.getWidget().getType() + " is not supported");
         }
         return renderer.render(widget);
-    }
-
-    @Override
-    public List<String> getScriptBlocks(ScriptLocation location) {
-        return scriptRenderers.get(location);
-    }
-
-    @Override
-    public void registerScriptBlock(String script, ScriptLocation location) {
-        if(!scriptRenderers.containsKey(location)) {
-            addListForLocation(location);
-        }
-        scriptRenderers.get(location).add(script);
-    }
-
-    //Lock then check the map to ensure that only one list of scripts gets added to the map
-    private synchronized void addListForLocation(ScriptLocation location) {
-        if(!scriptRenderers.containsKey(location)) {
-            scriptRenderers.put(location, new ArrayList<String>());
-        }
     }
 
     private static <T extends Renderer> void mapRenderersByType(Map<String, T> map, List<T> renderers) {

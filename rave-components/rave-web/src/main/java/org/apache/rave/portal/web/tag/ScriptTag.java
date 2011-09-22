@@ -19,23 +19,20 @@
 
 package org.apache.rave.portal.web.tag;
 
-import org.apache.rave.portal.web.renderer.RenderService;
 import org.apache.rave.portal.web.renderer.ScriptLocation;
-import org.apache.rave.web.tag.AbstractSingletonBeanDependentTag;
-import serp.bytecode.RetInstruction;
-
+import org.apache.rave.portal.web.renderer.ScriptManager;
 import javax.servlet.jsp.JspException;
 import java.util.List;
 
 /**
  *  Renders a list of registered script blocks according to key
  */
-public class ScriptTag extends AbstractSingletonBeanDependentTag<RenderService>{
+public class ScriptTag extends AbstractContextAwareSingletonBeanDependentTag<ScriptManager> {
 
     private ScriptLocation location;
 
     public ScriptTag() {
-        super(RenderService.class);
+        super(ScriptManager.class);
     }
 
     public ScriptLocation getLocation() {
@@ -49,18 +46,19 @@ public class ScriptTag extends AbstractSingletonBeanDependentTag<RenderService>{
     @Override
     public int doStartTag() throws JspException {
         int returnValue = SKIP_BODY;
-        RenderService renderService = getBean();
-        validateParams(renderService);
-        List<String> scripts = renderService.getScriptBlocks(location);
+        ScriptManager scriptManager = getBean();
+        validateParams(scriptManager);
+        List<String> scripts = scriptManager.getScriptBlocks(location, getContext());
         if(scripts != null) {
             renderScripts(scripts);
             returnValue = EVAL_BODY_INCLUDE;
         }
+        location = null;
         return returnValue;
     }
 
-    private void validateParams(RenderService renderService) throws JspException {
-        if(location == null || renderService == null) {
+    private void validateParams(ScriptManager scriptManager) throws JspException {
+        if(location == null || scriptManager == null) {
             throw new JspException("Invalid configuration.  Ensure that you have correctly configured the application and provided a location to the tag");
         }
     }
