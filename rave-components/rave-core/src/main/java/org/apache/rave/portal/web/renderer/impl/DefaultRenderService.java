@@ -38,7 +38,6 @@ import java.util.*;
 public class DefaultRenderService implements RenderService {
 
     private final Map<String, RegionWidgetRenderer> supportedWidgets;
-    private final DefaultScriptManager defaultScriptManager = new DefaultScriptManager();
 
     @Autowired
     public DefaultRenderService(List<RegionWidgetRenderer> widgetRenderers) {

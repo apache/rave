@@ -22,6 +22,7 @@ package org.apache.rave.portal.web.tag;
 import org.apache.rave.portal.web.renderer.model.RenderContext;
 import org.apache.rave.portal.web.renderer.ScriptLocation;
 import org.apache.rave.portal.web.renderer.ScriptManager;
+import org.hamcrest.CoreMatchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -41,6 +42,7 @@ import java.util.List;
 import static org.easymock.EasyMock.*;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 /**
@@ -94,6 +96,7 @@ public class ScriptTagTest {
         tag.setLocation(ScriptLocation.BEFORE_RAVE);
         int result = tag.doStartTag();
         assertThat(result, is(equalTo(1)));
+        assertThat(tag.getLocation() == null, is(true));
         verify(writer);
     }
 

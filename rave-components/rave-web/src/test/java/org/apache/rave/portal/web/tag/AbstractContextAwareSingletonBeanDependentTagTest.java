@@ -20,11 +20,13 @@
 package org.apache.rave.portal.web.tag;
 
 
+import org.apache.rave.portal.web.renderer.model.RenderContext;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.web.context.WebApplicationContext;
 
 import javax.servlet.ServletContext;
+import javax.servlet.ServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
@@ -32,8 +34,8 @@ import javax.servlet.jsp.PageContext;
 import java.io.IOException;
 
 import static org.easymock.EasyMock.*;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.sameInstance;
+import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertThat;
 
 public class AbstractContextAwareSingletonBeanDependentTagTest {
@@ -97,5 +99,19 @@ public class AbstractContextAwareSingletonBeanDependentTagTest {
         replay(outStream);
 
         tag.writeString(TEST_STRING);
+    }
+
+    @Test
+    public void getContext() {
+        pageContext = createNiceMock(PageContext.class);
+        ServletRequest request = createNiceMock(ServletRequest.class);
+        replay(request);
+        expect(pageContext.getRequest()).andReturn(request).anyTimes();
+        replay(pageContext);
+        tag.setPageContext(pageContext);
+
+        RenderContext context = tag.getContext();
+        assertThat(context, is(not(nullValue())));
+        assertThat(context.getProperties(), is(not(nullValue())));
     }
 }
