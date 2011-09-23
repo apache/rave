@@ -107,7 +107,7 @@
                         </div>
                         <div class="widget-prefs" id="widget-${regionWidget.entityId}-prefs-content"></div>
                         <div class="widget" id="widget-${regionWidget.entityId}-body">
-                                <%-- Widget will be rendered here --%>
+                                <portal:render-widget regionWidget="${regionWidget}" />
                         </div>
                     </div>
                 </c:forEach>
@@ -156,6 +156,11 @@
             </select>
         </form>
     </div>
+    <script>
+        //Define the global widgets variable
+        //This array will be populated by RegionWidgetRender providers.
+        var widgets = [];
+    </script>
     <portal:render-script location="${'BEFORE_LIB'}" />
     <script src="//cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
     <script src="//ajax.aspnetcdn.com/ajax/jQuery/jquery-1.6.1.min.js"></script>
@@ -170,19 +175,6 @@
     <script src="<spring:url value="/script/rave_layout.js"/>"></script>
     <portal:render-script location="${'AFTER_RAVE'}" />
     <script>
-        //Define the global widgets variable
-        //This array will be populated by RegionWidgetRender providers.
-        var widgets = [];
-        <%--
-           Among other things, the render-widget tag will populate the widgets[] array.
-           See the markup text in OpenSocialWidgetRenderer.java, for example.
-        --%>
-        <c:forEach var="region" items="${page.regions}">
-            <c:forEach var="regionWidget" items="${region.regionWidgets}">
-                <portal:render-widget regionWidget="${regionWidget}" />
-            </c:forEach>
-        </c:forEach>
-
         $(function() {
             rave.setContext("<spring:url value="/app/" />");
             rave.initProviders();

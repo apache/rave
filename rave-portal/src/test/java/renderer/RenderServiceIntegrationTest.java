@@ -26,6 +26,9 @@ import org.apache.rave.portal.model.RegionWidget;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.Widget;
 import org.apache.rave.portal.web.renderer.RenderService;
+import org.apache.rave.portal.web.renderer.ScriptLocation;
+import org.apache.rave.portal.web.renderer.ScriptManager;
+import org.apache.rave.portal.web.renderer.model.RenderContext;
 import org.apache.rave.provider.opensocial.repository.impl.ShindigGadgetMetadataRepository;
 import org.easymock.EasyMock;
 import org.junit.Before;
@@ -42,6 +45,8 @@ import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.RestOperations;
 
 import java.util.Arrays;
+import java.util.HashMap;
+
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -54,6 +59,9 @@ public class RenderServiceIntegrationTest {
 
     @Autowired
     private RenderService service;
+
+    @Autowired
+    private ScriptManager scriptManager;
 
     @Autowired
     private ShindigGadgetMetadataRepository metadataRepository;
@@ -109,8 +117,11 @@ public class RenderServiceIntegrationTest {
         RegionWidget rw = new RegionWidget(1L, w, region);
         region.setRegionWidgets(Arrays.asList(rw));
 
-        String rendered = service.render(rw, null);
+        RenderContext context = new RenderContext();
+        context.setProperties(new HashMap());
+        String rendered = service.render(rw, context);
         assertThat(rendered, is(notNullValue()));
-        assertThat(rendered.contains("widgets.push({"), is(true));
+        assertThat(rendered.contains("<!--"), is(true));
+        assertThat(scriptManager.getScriptBlocks(ScriptLocation.AFTER_RAVE, context).size(), is(equalTo(1)));
     }
 }

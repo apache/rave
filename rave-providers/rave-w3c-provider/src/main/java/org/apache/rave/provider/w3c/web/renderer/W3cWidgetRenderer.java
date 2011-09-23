@@ -24,6 +24,7 @@ import org.apache.rave.portal.model.RegionWidget;
 import org.apache.rave.portal.model.Widget;
 import org.apache.rave.portal.service.WidgetProviderService;
 import org.apache.rave.portal.web.renderer.RegionWidgetRenderer;
+import org.apache.rave.portal.web.renderer.model.RenderContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -57,11 +58,13 @@ public class W3cWidgetRenderer implements RegionWidgetRenderer {
 
     /**
      * Renders a {@link org.apache.rave.portal.model.RegionWidget} as HTML markup
+     *
      * @param item RegionWidget to render
+     * @param context
      * @return valid HTML markup
      */
     @Override
-    public String render(RegionWidget item) {
+    public String render(RegionWidget item, RenderContext context) {
         Widget widget = item.getWidget();
         if(!WIDGET_TYPE.equals(widget.getType())) {
             throw new NotSupportedException("Invalid widget type passed to renderer: " + widget.getType());

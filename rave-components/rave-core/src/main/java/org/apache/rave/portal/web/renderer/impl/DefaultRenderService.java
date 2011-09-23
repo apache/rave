@@ -65,7 +65,7 @@ public class DefaultRenderService implements RenderService {
         if(renderer == null) {
             throw new NotSupportedException(widget.getWidget().getType() + " is not supported");
         }
-        return renderer.render(widget);
+        return renderer.render(widget, context);
     }
 
     private static <T extends Renderer> void mapRenderersByType(Map<String, T> map, List<T> renderers) {

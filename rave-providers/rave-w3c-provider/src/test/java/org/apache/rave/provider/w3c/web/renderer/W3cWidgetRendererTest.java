@@ -69,7 +69,7 @@ public class W3cWidgetRendererTest {
         expect(wookieService.getWidget(null, null, w)).andReturn(wookieWidget);
         replay(wookieService);
 
-        String result = renderer.render(rw);
+        String result = renderer.render(rw, null);
         assertThat(result.matches(".*regionWidgetId[ ]*:[ ]*1,.*"), is(true));
         assertThat(result.matches(".*type[ ]*:[ ]*'W3C',.*"), is(true));
         assertThat(result.matches(".*widgetUrl[ ]*:[ ]*'" + WIDGET_INSTANCE + "'.*"), is(true));
@@ -82,7 +82,7 @@ public class W3cWidgetRendererTest {
         RegionWidget rw = new RegionWidget();
         rw.setWidget(w);
 
-        String result = renderer.render(rw);
+        String result = renderer.render(rw, null);
         assertThat(result.matches(".*regionWidgetId[ ]*:[ ]*null,.*"), is(true));
         assertThat(result.matches(".*type[ ]*:[ ]*'W3C',.*"), is(true));
         assertThat(result.matches(".*widgetUrl[ ]*:[ ]*'null'.*"), is(true));
@@ -97,6 +97,6 @@ public class W3cWidgetRendererTest {
         rw.setEntityId(1L);
         rw.setWidget(w);
 
-        renderer.render(rw);
+        renderer.render(rw, null);
     }
 }

@@ -23,20 +23,21 @@ import org.apache.rave.exception.NotSupportedException;
 import org.apache.rave.portal.model.RegionWidget;
 import org.apache.rave.portal.model.RegionWidgetPreference;
 import org.apache.rave.portal.model.Widget;
+import org.apache.rave.portal.web.renderer.RenderScope;
 import org.apache.rave.portal.web.renderer.Renderer;
+import org.apache.rave.portal.web.renderer.ScriptLocation;
+import org.apache.rave.portal.web.renderer.ScriptManager;
+import org.apache.rave.portal.web.renderer.model.RenderContext;
 import org.apache.rave.provider.opensocial.Constants;
 import org.apache.rave.provider.opensocial.service.OpenSocialService;
 import org.apache.rave.provider.opensocial.service.SecurityTokenService;
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Arrays;
 
-import static org.easymock.EasyMock.createNiceMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.*;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -44,18 +45,22 @@ import static org.junit.Assert.assertThat;
 public class OpenSocialWidgetRendererTest {
     private OpenSocialService openSocialService;
     private SecurityTokenService securityTokenService;
+    private ScriptManager scriptManager;
     private Renderer<RegionWidget> renderer;
 
     private static final String VALID_GADGET_URL = "http://www.example.com/gadget.xml";
     private static final String VALID_METADATA = "metadata";
     private static final String VALID_SECURITY_TOKEN = "securityToken";
     private static final boolean VALID_COLLAPSED = true;
+    private RenderContext renderContext;
 
     @Before
     public void setup() {
+        renderContext = new RenderContext();
+        scriptManager = createStrictMock(ScriptManager.class);
         openSocialService = createNiceMock(OpenSocialService.class);
         securityTokenService = createNiceMock(SecurityTokenService.class);
-        renderer = new OpenSocialWidgetRenderer(openSocialService, securityTokenService);
+        renderer = new OpenSocialWidgetRenderer(openSocialService, securityTokenService, scriptManager);
     }
 
     @Test
@@ -80,29 +85,26 @@ public class OpenSocialWidgetRendererTest {
                                         new RegionWidgetPreference(2L, 1L, "speed", "fast"),
                                         new RegionWidgetPreference(3L, 1L, null, null)));
 
+        final String markup =
+            "<script>widgets.push({type: 'OpenSocial'," +
+            " regionWidgetId: 1," +
+            " widgetUrl: '" + VALID_GADGET_URL +"', " +
+            " securityToken: '" + VALID_SECURITY_TOKEN + "', " +
+            " metadata: " + VALID_METADATA + "," +
+            " userPrefs: {\"speed\":\"fast\",\"color\":\"blue\"}," +
+            " collapsed: " + VALID_COLLAPSED + "});</script>";
+
         expect(securityTokenService.getEncryptedSecurityToken(rw)).andReturn(VALID_SECURITY_TOKEN);
         replay(securityTokenService);
 
-        String result = renderer.render(rw);
+        scriptManager.registerScriptBlock(markup, ScriptLocation.AFTER_RAVE, RenderScope.CURRENT_REQUEST, renderContext);
+        expectLastCall();
+        replay(scriptManager);
 
-        /*
-            result should look like:
+        String result = renderer.render(rw, renderContext);
 
-            widgets.push({type: 'OpenSocial', regionWidgetId: 1, widgetUrl: 'http://www.example.com/gadget.xml',
-                securityToken: 'securityToken',  metadata: metadata, userPrefs: {"speed":"fast","color":"blue"}, collapsed: true});
-        */
-
-        JSONObject jsonObject = new JSONObject(
-                result.substring("widgets.push(".length(), result.length() - ");".length()));
-
-        assertThat((Integer) jsonObject.get("regionWidgetId"), is(equalTo(1)));
-        assertThat((String) jsonObject.get("type"), is(equalTo("OpenSocial")));
-        assertThat((String) jsonObject.get("widgetUrl"), is(equalTo("http://www.example.com/gadget.xml")));
-        assertThat((String) jsonObject.get("securityToken"), is(equalTo(VALID_SECURITY_TOKEN)));
-        assertThat((String) jsonObject.get("metadata"), is(equalTo(VALID_METADATA)));
-        assertThat((String) ((JSONObject) jsonObject.get("userPrefs")).get("color"), is(equalTo("blue")));
-        assertThat((String) ((JSONObject) jsonObject.get("userPrefs")).get("speed"), is(equalTo("fast")));
-        assertThat((Boolean) jsonObject.get("collapsed"), is(equalTo(VALID_COLLAPSED)));
+        assertThat(result, is(equalTo("<!-- RegionWidget 1 placeholder -->")));
+        verify(scriptManager);
     }
 
     @Test
@@ -112,12 +114,20 @@ public class OpenSocialWidgetRendererTest {
         RegionWidget rw = new RegionWidget();
         rw.setWidget(w);
 
-        String result = renderer.render(rw);
-        assertThat(result.matches(".*regionWidgetId[ ]*:[ ]*null,.*"), is(true));
-        assertThat(result.matches(".*type[ ]*:[ ]*'OpenSocial',.*"), is(true));
-        assertThat(result.matches(".*widgetUrl[ ]*:[ ]*'null',.*"), is(true));
-        assertThat(result.matches(".*metadata[ ]*:[ ]*null,.*"), is(true));
-        assertThat(result.matches(".*collapsed[ ]*:[ ]*false.*"), is(true));
+        String result = renderer.render(rw, null);
+
+        final String markup =
+            "<script>widgets.push({type: 'OpenSocial'," +
+            " regionWidgetId: null," +
+            " widgetUrl: 'null', " +
+            " securityToken: '" + VALID_SECURITY_TOKEN + "', " +
+            " metadata: null," +
+            " userPrefs: null," +
+            " collapsed: false});</script>";
+
+        scriptManager.registerScriptBlock(markup, ScriptLocation.AFTER_RAVE, RenderScope.CURRENT_REQUEST, null);
+        expectLastCall();
+        replay(scriptManager);
     }
 
     @Test(expected = NotSupportedException.class)
@@ -129,6 +139,6 @@ public class OpenSocialWidgetRendererTest {
         rw.setEntityId(1L);
         rw.setWidget(w);
 
-        renderer.render(rw);
+        renderer.render(rw, null);
     }
 }

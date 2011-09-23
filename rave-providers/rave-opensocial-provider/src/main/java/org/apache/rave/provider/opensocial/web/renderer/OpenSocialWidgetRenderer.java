@@ -23,6 +23,10 @@ import org.apache.rave.exception.NotSupportedException;
 import org.apache.rave.portal.model.RegionWidget;
 import org.apache.rave.portal.model.RegionWidgetPreference;
 import org.apache.rave.portal.web.renderer.RegionWidgetRenderer;
+import org.apache.rave.portal.web.renderer.RenderScope;
+import org.apache.rave.portal.web.renderer.ScriptLocation;
+import org.apache.rave.portal.web.renderer.ScriptManager;
+import org.apache.rave.portal.web.renderer.model.RenderContext;
 import org.apache.rave.provider.opensocial.Constants;
 import org.apache.rave.provider.opensocial.service.OpenSocialService;
 import org.apache.rave.provider.opensocial.service.SecurityTokenService;
@@ -44,23 +48,28 @@ public class OpenSocialWidgetRenderer implements RegionWidgetRenderer {
 
     private OpenSocialService openSocialService;
     private SecurityTokenService securityTokenService;
+    private ScriptManager scriptManager;
 
     @Autowired
-    public OpenSocialWidgetRenderer(OpenSocialService openSocialService, SecurityTokenService securityTokenService) {
+    public OpenSocialWidgetRenderer(OpenSocialService openSocialService,
+                                    SecurityTokenService securityTokenService,
+                                    ScriptManager scriptManager) {
         this.openSocialService = openSocialService;
         this.securityTokenService = securityTokenService;
+        this.scriptManager = scriptManager;
     }
 
     //Note the widgets.push() call.  This defines the widget objects, which are
     //added to the widgets[] array in home.jsp.
-    private static final String IFRAME_MARKUP =
-            "widgets.push({type: '%1$s'," +
+    private static final String SCRIPT_BLOCK =
+            "<script>widgets.push({type: '%1$s'," +
             " regionWidgetId: %2$s," +
             " widgetUrl: '%3$s', " +
             " securityToken: '%4$s', " +
             " metadata: %5$s," +
             " userPrefs: %6$s," +
-            " collapsed: %7$s});";
+            " collapsed: %7$s});</script>";
+    private static final String MARKUP = "<!-- RegionWidget %1$s placeholder -->";
 
     @Override
     public String getSupportedContext() {
@@ -70,16 +79,26 @@ public class OpenSocialWidgetRenderer implements RegionWidgetRenderer {
     /**
      * Renders a {@link org.apache.rave.portal.model.RegionWidget} as HTML markup
      *
+     *
      * @param item RegionWidget to render
+     * @param context the context under which to render the gadget.
      * @return valid HTML markup
      */
     @Override
-    public String render(RegionWidget item) {
+    public String render(RegionWidget item, RenderContext context) {
         String type = item.getWidget().getType();
         if (!Constants.WIDGET_TYPE.equals(type)) {
             throw new NotSupportedException("Invalid widget type passed to renderer: " + type);
         }
 
+        String widgetScript = getWidgetScript(item);
+        scriptManager.registerScriptBlock(widgetScript, ScriptLocation.AFTER_RAVE, RenderScope.CURRENT_REQUEST, context);
+        logger.debug("Gadget Script Data: " + widgetScript);
+
+        return String.format(MARKUP, item.getEntityId());
+    }
+
+    private String getWidgetScript(RegionWidget item) {
         JSONObject userPrefs = new JSONObject();
         if (item.getPreferences() != null) {
             for (RegionWidgetPreference regionWidgetPreference : item.getPreferences()) {
@@ -91,10 +110,8 @@ public class OpenSocialWidgetRenderer implements RegionWidgetRenderer {
             }
         }
 
-        String format = String.format(IFRAME_MARKUP, Constants.WIDGET_TYPE, item.getEntityId(), item.getWidget().getUrl(),
+        return String.format(SCRIPT_BLOCK, Constants.WIDGET_TYPE, item.getEntityId(), item.getWidget().getUrl(),
                 securityTokenService.getEncryptedSecurityToken(item),
                 openSocialService.getGadgetMetadata(item.getWidget().getUrl()), userPrefs.toString(), item.isCollapsed());
-        logger.debug("Gadget Data: " + format);
-        return format;
     }
 }

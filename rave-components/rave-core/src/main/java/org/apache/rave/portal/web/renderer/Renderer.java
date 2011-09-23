@@ -18,6 +18,8 @@
  */
 package org.apache.rave.portal.web.renderer;
 
+import org.apache.rave.portal.web.renderer.model.RenderContext;
+
 /**
  * Provides rendering facilities for the specified type
  */
@@ -31,8 +33,10 @@ public interface Renderer<T> {
 
     /**
      * Renders the item as a String
+     *
      * @param item item to render
+     * @param context
      * @return String representing the rendered item
      */
-    String render(T item);
+    String render(T item, RenderContext context);
 }

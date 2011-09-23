@@ -51,8 +51,8 @@ public class RenderServiceTest {
     @Before
     public void setup() {
         widgetRenderers = new ArrayList<RegionWidgetRenderer>();
-        widgetRenderer2 = createNiceMock(RegionWidgetRenderer.class);
-        widgetRenderer1 = createNiceMock(RegionWidgetRenderer.class);
+        widgetRenderer2 = createStrictMock(RegionWidgetRenderer.class);
+        widgetRenderer1 = createStrictMock(RegionWidgetRenderer.class);
 
         expect(widgetRenderer1.getSupportedContext()).andReturn(SUPPORTED_TYPE_1);
         expect(widgetRenderer2.getSupportedContext()).andReturn(SUPPORTED_TYPE_2);
@@ -89,7 +89,7 @@ public class RenderServiceTest {
         RegionWidget rw = new RegionWidget();
         rw.setWidget(w);
 
-        expect(widgetRenderer1.render(rw)).andReturn(RENDERED_TYPE_1);
+        expect(widgetRenderer1.render(rw, context)).andReturn(RENDERED_TYPE_1);
         replayMocks();
 
         constructFooBarRenderService();
@@ -103,7 +103,7 @@ public class RenderServiceTest {
         RegionWidget rw = new RegionWidget();
         rw.setWidget(w);
 
-        expect(widgetRenderer2.render(rw)).andReturn(RENDERED_TYPE_2);
+        expect(widgetRenderer2.render(rw, context)).andReturn(RENDERED_TYPE_2);
         replayMocks();
 
         constructFooBarRenderService();
