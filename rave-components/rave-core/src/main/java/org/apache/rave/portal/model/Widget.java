@@ -86,7 +86,7 @@ public class Widget implements BasicEntity, Serializable {
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "widgetIdGenerator")
     @TableGenerator(name = "widgetIdGenerator", table = "RAVE_PORTAL_SEQUENCES", pkColumnName = "SEQ_NAME",
             valueColumnName = "SEQ_COUNT", pkColumnValue = "widget", allocationSize = 1, initialValue = 1)
-    private Long entityID;
+    private Long entityId;
 
     /*
         TODO RAVE-234: Figure out what the OpenJPA strategy is for functionality provided by Eclisplink's @Convert
@@ -135,8 +135,8 @@ public class Widget implements BasicEntity, Serializable {
     public Widget() {
     }
 
-    public Widget(Long entityID, String url) {
-        this.entityID = entityID;
+    public Widget(Long entityId, String url) {
+        this.entityId = entityId;
         this.url = url;
     }
 
@@ -147,12 +147,12 @@ public class Widget implements BasicEntity, Serializable {
      */
     @Override
     public Long getEntityId() {
-        return entityID;
+        return entityId;
     }
 
     @Override
     public void setEntityId(Long entityId) {
-        this.entityID = entityId;
+        this.entityId = entityId;
     }
 
     //See TODO RAVE-234
@@ -254,7 +254,7 @@ public class Widget implements BasicEntity, Serializable {
             return false;
         }
         final Widget other = (Widget) obj;
-        if (this.entityID != other.entityID && (this.entityID == null || !this.entityID.equals(other.entityID))) {
+        if (this.entityId != other.entityId && (this.entityId == null || !this.entityId.equals(other.entityId))) {
             return false;
         }
         return true;
@@ -263,14 +263,14 @@ public class Widget implements BasicEntity, Serializable {
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 97 * hash + (this.entityID != null ? this.entityID.hashCode() : 0);
+        hash = 97 * hash + (this.entityId != null ? this.entityId.hashCode() : 0);
         return hash;
     }
 
     @Override
     public String toString() {
         return "Widget{" +
-                "entityId=" + entityID +
+                "entityId=" + entityId +
                 ", title='" + title + '\'' +
                 ", url='" + url + '\'' +
                 ", thumbnailUrl='" + thumbnailUrl + '\'' +
