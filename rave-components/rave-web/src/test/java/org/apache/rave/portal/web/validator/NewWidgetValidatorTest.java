@@ -77,13 +77,15 @@ public class NewWidgetValidatorTest {
         widget.setUrl("http:/this.is/invalid?url=true&reject=true");
         widget.setScreenshotUrl("https://///invalid/screenshot");
         widget.setThumbnailUrl("thumbnail");
+        widget.setTitleUrl("titleUrl");
         Errors errors = new BindException(widget, WIDGET);
 
         newWidgetValidator.validate(widget, errors);
-        assertEquals(3, errors.getErrorCount());
+        assertEquals(4, errors.getErrorCount());
         assertNotNull("Field error on url", errors.getFieldError("url"));
         assertNotNull("Field error on screenshot url", errors.getFieldError("screenshotUrl"));
         assertNotNull("Field error on thumbnail url", errors.getFieldError("thumbnailUrl"));
+        assertNotNull("Field error on title url", errors.getFieldError("titleUrl"));
     }
 
     @Before

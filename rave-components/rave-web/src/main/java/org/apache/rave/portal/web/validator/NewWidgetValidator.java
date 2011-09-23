@@ -91,7 +91,12 @@ public class NewWidgetValidator implements Validator {
 
         String thumbnailUrl = widget.getThumbnailUrl();
         if (StringUtils.isNotBlank(thumbnailUrl) && !validator.isValid(thumbnailUrl)) {
-            errors.rejectValue("thumbnailUrl", "widget.screenshotUrl.malformed");
+            errors.rejectValue("thumbnailUrl", "widget.thumbnailUrl.malformed");
+        }
+
+        String titleUrl = widget.getTitleUrl();
+        if (StringUtils.isNotBlank(titleUrl) && !validator.isValid(titleUrl)) {
+            errors.rejectValue("titleUrl", "widget.titleUrl.malformed");
         }
     }
 }

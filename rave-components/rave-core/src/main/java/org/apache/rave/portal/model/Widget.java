@@ -36,7 +36,6 @@ import javax.persistence.TableGenerator;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
-
 import java.io.Serializable;
 
 /**
@@ -98,6 +97,10 @@ public class Widget implements BasicEntity, Serializable {
     //private InternationalString title;
 
     @XmlElement
+    @Basic @Column(name="title_url")
+    private String titleUrl;
+
+    @XmlElement
     @Basic @Column(name="url", unique = true)
     private String url;
 
@@ -114,6 +117,10 @@ public class Widget implements BasicEntity, Serializable {
     @XmlElement
     @Basic @Column(name="author")
     private String author;
+
+    @XmlElement
+    @Basic @Column(name="author_email")
+    private String authorEmail;
 
     @XmlElement
     @Basic @Column(name = "description") @Lob
@@ -174,6 +181,14 @@ public class Widget implements BasicEntity, Serializable {
         this.author = author;
     }
 
+    public String getAuthorEmail() {
+        return authorEmail;
+    }
+
+    public void setAuthorEmail(String authorEmail) {
+        this.authorEmail = authorEmail;
+    }
+
     public String getDescription() {
         return description;
     }
@@ -204,6 +219,14 @@ public class Widget implements BasicEntity, Serializable {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getTitleUrl() {
+        return titleUrl;
+    }
+
+    public void setTitleUrl(String titleUrl) {
+        this.titleUrl = titleUrl;
     }
 
     public String getUrl() {

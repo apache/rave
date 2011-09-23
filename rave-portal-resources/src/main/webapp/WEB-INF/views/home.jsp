@@ -1,4 +1,3 @@
-<%@ page import="com.sun.xml.internal.ws.wsdl.writer.document.Import" %>
 <%--
   Licensed to the Apache Software Foundation (ASF) under one
   or more contributor license agreements.  See the NOTICE file
@@ -16,8 +15,6 @@
   KIND, either express or implied.  See the License for the
   specific language governing permissions and limitations
   under the License.
-
-  $Id$
 
 
 --%><%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %><%--
@@ -45,7 +42,7 @@
       </h1>
     </div>
     <input id="currentPageId" type="hidden" value="${page.entityId}" />
-    <div id="tabsHeader">      
+    <div id="tabsHeader">
         <%-- render the page tabs --%>
         <div id="tabs" class="rave-ui-tabs">
             <c:forEach var="userPage" items="${pages}">
@@ -55,16 +52,16 @@
                          <c:when test="${page.entityId == userPage.entityId}">true</c:when>
                          <c:otherwise>false</c:otherwise>
                      </c:choose>
-                 </c:set>      
+                 </c:set>
                  <c:set var="hasOnlyOnePage">
                       <c:choose>
                          <c:when test="${fn:length(pages) == 1}">true</c:when>
                          <c:otherwise>false</c:otherwise>
                      </c:choose>
-                 </c:set>                       
+                 </c:set>
                  <div id="tab-${userPage.entityId}" class="rave-ui-tab<c:if test="${isCurrentPage}"> rave-ui-tab-selected</c:if>">
                     <div id="pageTitle-${userPage.entityId}" class="page-title" onclick="rave.viewPage(${userPage.entityId});"><c:out value="${userPage.name}"/></div>
-                    <c:if test="${isCurrentPage}">                   
+                    <c:if test="${isCurrentPage}">
                         <div id="pageMenuWrapper">
                             <span id="pageMenuButton" class="ui-icon ui-icon-circle-triangle-s" title="Page Actions Menu"></span>
                             <div id="pageMenu" class="page-menu">
@@ -77,21 +74,30 @@
                         </div>
                     </c:if>
                 </div>
-            </c:forEach>        
+            </c:forEach>
             <%-- display the add page button at the end of the tabs --%>
             <fmt:message key="page.general.addnewpage" var="addNewPageTitle"/>
             <button id="add_page" title="${addNewPageTitle}" style="display: none;"></button>
-        </div>   
+        </div>
     </div>
     <%--render the main page content (regions/widgets) --%>
     <div id="pageContent">
         <c:forEach var="region" items="${page.regions}">
             <div class="region" id="region-${region.entityId}-id">
-                <c:forEach var="regionWidget" items="${region.regionWidgets}">                                                     
+                <c:forEach var="regionWidget" items="${region.regionWidgets}">
                    <div class="widget-wrapper" id="widget-${regionWidget.entityId}-wrapper">
                         <div class="widget-title-bar">
                             <span id="widget-${regionWidget.entityId}-collapse" class="widget-toolbar-toggle-collapse" title="Collapse/Restore Widget"></span>
-                            <span id="widget-${regionWidget.entityId}-title"><c:out value="${regionWidget.widget.title}"/></span>
+                            <div id="widget-${regionWidget.entityId}-title" class="widget-title">
+                            <c:choose>
+                                <c:when test="${not empty regionWidget.widget.titleUrl}">
+                                    <a href="${regionWidget.widget.titleUrl}" rel="external"><c:out value="${regionWidget.widget.title}"/></a>
+                                </c:when>
+                                <c:otherwise>
+                                    <c:out value="${regionWidget.widget.title}"/>
+                                </c:otherwise>
+                            </c:choose>
+                            </div>
                             <!-- These are toolbar buttons -->
                             <div id="widget-${regionWidget.entityId}-toolbar" style="float:right;">
                                 <button id="widget-${regionWidget.entityId}-prefs"
@@ -179,8 +185,8 @@
             rave.setContext("<spring:url value="/app/" />");
             rave.initProviders();
             rave.initWidgets(widgets);
-            rave.initUI();  
+            rave.initUI();
             rave.layout.init();
-        });     
+        });
     </script>
 </rave:rave_generic_page>

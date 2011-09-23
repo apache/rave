@@ -151,14 +151,14 @@ UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @u
 --- gadget data ---
 -- wikipedia widget
 set @wikipedia_widget_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @widget_seq);
-insert into widget (entity_id, title, url, type, description, author, widget_status)
-values(@wikipedia_widget_id, 'Wikipedia','http://www.widget-dico.com/wikipedia/google/wikipedia.xml', 'OpenSocial', 'A Wikipedia Search and Go widget. Language choice.', 'WidgetMe', 'PUBLISHED');
+insert into widget (entity_id, title, url, type, description, author, widget_status, title_url, author_email)
+values(@wikipedia_widget_id, 'Wikipedia','http://www.widget-dico.com/wikipedia/google/wikipedia.xml', 'OpenSocial', 'A Wikipedia Search and Go widget. Language choice.', 'WidgetMe', 'PUBLISHED', 'http://en.wikipedia.org/wiki/Main_Page', 'google@widgetme.com');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @widget_seq;
 
 -- translate widget
 set @translate_widget_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @widget_seq);
-insert into widget (entity_id, title, url, type, description, author, widget_status)
-values(@translate_widget_id, 'Translate Gadget', 'http://www.gstatic.com/ig/modules/dictionary/dictionary.xml','OpenSocial' , 'Google Translation gadget.', 'Google Taiwan', 'PUBLISHED');
+insert into widget (entity_id, title, url, type, description, author, widget_status, title_url, author_email)
+values(@translate_widget_id, 'Translate Gadget', 'http://www.gstatic.com/ig/modules/dictionary/dictionary.xml','OpenSocial' , 'Google Translation gadget.', 'Google Taiwan', 'PUBLISHED', 'http://translate.google.com/', 'googlemodules+dictionary+201109071@google.com');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @widget_seq;
 
 -- nytimes widget

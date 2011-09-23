@@ -39,12 +39,12 @@
         <h2><fmt:message key="page.addwidget.form.header"/></h2>
         <form:errors path="widget" cssClass="error" element="p"/>
         <form:form id="newWidgetForm" action="add" commandName="widget" method="POST">
-          <fieldset>
+            <fieldset>
                 <p><fmt:message key="form.some.fields.required"/></p>
 
                 <p>
                     <form:label path="title"><fmt:message key="widget.title"/> *</form:label>
-                    <form:input path="title" cssClass="long" required="required" autofocus="autofocus" />
+                    <form:input path="title" cssClass="long" required="required" autofocus="autofocus"/>
                     <form:errors path="title" cssClass="error"/>
                 </p>
 
@@ -78,7 +78,7 @@
                         <label for="thumbnailUrl"><fmt:message key="widget.thumbnailUrl"/></label>
                         <input type="url" name="thumbnailUrl" id="thumbnailUrl"
                                placeholder="http://example.com/thumbnail.png" class="long"
-                                value="<c:out value="${widget.thumbnailUrl}"/>"/>
+                               value="<c:out value="${widget.thumbnailUrl}"/>"/>
                     </spring:bind>
                     <form:errors path="thumbnailUrl" cssClass="error"/>
                 </p>
@@ -88,9 +88,18 @@
                         <label for="screenshotUrl"><fmt:message key="widget.screenshotUrl"/></label>
                         <input type="url" name="screenshotUrl" id="screenshotUrl"
                                placeholder="http://example.com/screenshot.png" class="long"
-                                value="<c:out value="${widget.screenshotUrl}"/>"/>
+                               value="<c:out value="${widget.screenshotUrl}"/>"/>
                     </spring:bind>
                     <form:errors path="screenshotUrl" cssClass="error"/>
+                </p>
+
+                <p>
+                    <spring:bind path="titleUrl">
+                        <label for="titleUrl"><fmt:message key="widget.titleUrl"/></label>
+                        <input type="url" name="titleUrl" id="titleUrl"
+                               class="long" value="<c:out value="${widget.titleUrl}"/>"/>
+                    </spring:bind>
+                    <form:errors path="titleUrl" cssClass="error"/>
                 </p>
 
                 <p>
@@ -98,6 +107,15 @@
                     <form:input path="author" cssClass="long"/>
                     <form:errors path="author" cssClass="error"/>
                 </p>
+                <p>
+                    <spring:bind path="authorEmail">
+                        <label for="authorEmail"><fmt:message key="widget.authorEmail"/></label>
+                        <input type="email" name="authorEmail" id="authorEmail" class="long"
+                                value="<c:out value="${widget.authorEmail}"/>"/>
+                    </spring:bind>
+                    <form:errors path="titleUrl" cssClass="error"/>
+                </p>
+
             </fieldset>
             <fieldset>
                 <fmt:message key="page.addwidget.form.submit" var="submit"/>

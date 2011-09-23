@@ -63,7 +63,16 @@
             <div class="widgetDetailCenter">
 
                 <div class="storeWidgetDetail">
-                    <span class="secondaryPageItemTitle"><c:out value="${widget.title}"/></span>
+                    <span class="secondaryPageItemTitle">
+                        <c:choose>
+                            <c:when test="${not empty widget.titleUrl}">
+                                <a href="<c:out value="${widget.titleUrl}"/>" rel="external"><c:out value="${widget.title}"/></a>
+                            </c:when>
+                            <c:otherwise>
+                                <c:out value="${widget.title}"/>
+                            </c:otherwise>
+                        </c:choose>
+                    </span>
                     <c:choose>
                         <c:when test="${widget.widgetStatus eq 'PUBLISHED'}">
                             <div id="widgetAdded_${widget.entityId}" class="storeButton">
@@ -83,7 +92,14 @@
 
                 <c:if test="${not empty widget.author}">
                     <p class="storeWidgetAuthor">
-                        <fmt:message key="widget.author"/> <c:out value="${widget.author}"/>
+                        <fmt:message key="widget.author"/>
+                        <c:out value=" "/><%-- intentional empty String in the c:out --%>
+                        <c:choose>
+                            <c:when test="${not empty widget.authorEmail}">
+                                <a href="mailto:<c:out value="${widget.authorEmail}"/>"><c:out value="${widget.author}"/></a>
+                            </c:when>
+                            <c:otherwise><c:out value="${widget.author}"/></c:otherwise>
+                        </c:choose>
                     </p>
                 </c:if>
 
