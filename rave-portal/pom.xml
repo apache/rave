@@ -205,6 +205,7 @@
                                     <goal>single</goal>
                                 </goals>
                                 <configuration>
+                                    <finalName>apache-rave-${project.version}</finalName>
                                     <descriptors>
                                         <descriptor>${project.basedir}/src/main/assembly/distbin.xml</descriptor>
                                     </descriptors>

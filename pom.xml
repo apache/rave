@@ -461,6 +461,19 @@
     </modules>
     <profiles>
         <profile>
+            <id>apache-release</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-assembly-plugin</artifactId>
+                        <configuration>
+                            <finalName>apache-rave-${project.version}</finalName>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
             <id>dist</id>
             <build>
                 <defaultGoal>install</defaultGoal>
