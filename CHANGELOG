@@ -3,46 +3,26 @@ Apache Rave Change Log
 See http://issues.apache.org/jira/browse/RAVE-* (where * is the number of the issue below)
 
 
-Rave - Version 0.3-INCUBATING
-===============================================
+Release Notes - Rave - Version 0.4-INCUBATING
+================================================================================================================
 
 ** Bug
-    * [RAVE-57] - wikipedia gadget is not rendering
-    * [RAVE-58] - Refactor Delete
-    * [RAVE-78] - rave-shindig incorrect dependency scope on shindig-social-api pulls in el-api jar breaking JSPs
-    * [RAVE-86] - Drag and drop error for widgets in IE 9
-    * [RAVE-88] - Gadgets don't render when JavaScript console is not available
-    * [RAVE-105] - PersonServiceDb: call addFilterClause with 'special' property adds nothing
-    * [RAVE-117] - "Widget Store" and "Logout" links are disabled when a gadget is in canvas view.
-    * [RAVE-118] - Error messages are not displayed on login.jsp after failed logins
-    * [RAVE-162] - Missing DISCLAIMER file for rave-commons
-    * [RAVE-168] - LICENSE/NOTICE/DISCLAIMER files missing from Maven generated -sources and -javadoc artifacts
-    * [RAVE-190] - javascript form validation only works for password field
-    * [RAVE-197] - JPA*RepositoryTest's cannot be run from an IDE due to classloading issues
-    * [RAVE-208] - Duplicate dataSourcePopulator definition in Rave-Shindig test configuration
+    * [RAVE-225] - Add widget form allows larger description size than database
+    * [RAVE-227] - Feedback text for empty searchresult in widget store shows placeholder instead of searchterm
+    * [RAVE-253] - Bug while change made to url property in portal.properties file
+    * [RAVE-260] - BasicEntity#getId() is incompatible with some Shindig interfaces
+    * [RAVE-275] - Duplicate jar: Guice
 
 ** Improvement
-    * [RAVE-45] - Portal host/ip configuration (Non-localhost support)
-    * [RAVE-65] - Add JRebel configuration to the documentation and split up 'source code' page
-    * [RAVE-87] - Move javaagent property to parent pom
-    * [RAVE-91] - CSS and layout updates
-    * [RAVE-94] - Update donated UI
-    * [RAVE-149] - Upgrade to OpenJPA 2.1.1
-    * [RAVE-169] - Only provide and maintain appendable LICENSE/NOTICE file fragments for rave-commons similar to rave-portal and rave-shindig
-    * [RAVE-191] - Update rave-master-pom to extend apache-10 master pom
-    * [RAVE-196] - Add paging support to "All widgets" view in widget store
-
-** New Feature
-    * [RAVE-20] - Implement container/shindig auth
-    * [RAVE-89] - Provide basic new user registration feature
+    * [RAVE-272] - Link from the gadget to the underlying service
 
 ** Story
-    * [RAVE-27] - Implement User Prefs
-    * [RAVE-53] - Need to add support for canvas views, canvas/home view toggling
-    * [RAVE-62] - Create a common project and apply common patterns to both rave-portal and rave-shindig
-    * [RAVE-67] - Users can search for a widget in the widget repository using free text search
-    * [RAVE-76] - Users can submit a Widget for inclusion in the Widget Repository
-    * [RAVE-77] - Widgets can be hidden from users until they have been flagged as approved by the site owner
-    * [RAVE-96] - Create tabbed interface
-    * [RAVE-150] - Implement encrypted security token support for OpenSocial widgets
-    * [RAVE-163] - Page Management (CRUD)
+    * [RAVE-54] - Support persisted minimization of widgets
+    * [RAVE-97] - Support Dynamic Layouts
+    * [RAVE-99] - Create ability to register new script blocks with Rave 
+    * [RAVE-170] - Rave's trunk code needs to support extensions outside the trunk
+    * [RAVE-201] - Update a Page (title and layout)
+    * [RAVE-244] - Create and document configuration for a different database setup
+    * [RAVE-250] - Rave needs a set of didactic gadgets to illustrate capabilities, support testing, and support 3rd party development 
+    * [RAVE-256] - As a user I want to export a page model so that I can use it elsewhere
+    * [RAVE-262] - Create annotation-based, declarative, object  locking implementation
