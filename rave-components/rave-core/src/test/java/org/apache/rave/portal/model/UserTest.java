@@ -28,73 +28,75 @@ import static org.junit.Assert.assertTrue;
  * Tests the User class.
  */
 public class UserTest {
-	private User user1;
-	private User user2;
-	private User user3;
-	private long id;
-	private String userName;
-	private String userPassword;
-	private boolean user1Expired, user2Expired, user3Expired;
-	private boolean user1Enabled, user2Enabled, user3Enabled;
-	private boolean user1CredExpired, user2CredExpired, user3CredExpired;
-	
-	@Before
-	public void setup(){
-		id=123L;
-		userName="testUser";
-		userPassword="qwerty";
-		user1Enabled=true;
-		user2Enabled=false;
-		user3Enabled=true;
-		user1CredExpired=false;
-		user2CredExpired=true;
-		user3CredExpired=false;
-		user1Expired=false;
-		user2Expired=true;
-		user3Expired=false;
+    private User user1;
+    private User user2;
+    private User user3;
+    private long id;
+    private String userName;
+    private String userPassword;
 
-		
-		user1=new User();
-		user1.setUsername(userName);
-		user1.setEntityId(id);
-		user1.setPassword(userPassword);
-		user1.setEnabled(user1Enabled);
-		user1.setExpired(user1Expired);
-		
-		user2=new User(id);
-		user2.setExpired(user2Expired);
-		user2.setEnabled(user2Enabled);
-		
-		user3=new User(id,userName);
-		user3.setExpired(user3Expired);
-		user3.setEnabled(user3Enabled);
+    @Before
+    public void setup() {
+        id = 123L;
+        userName = "testUser";
+        userPassword = "qwerty";
+        boolean user1Enabled = true;
+        boolean user2Enabled = false;
+        boolean user3Enabled = true;
+        boolean user1Locked = false;
+        boolean user2Locked = true;
+        boolean user3Locked = false;
+        boolean user1Expired = false;
+        boolean user2Expired = true;
+        boolean user3Expired = false;
 
-	}
-	
-	@Test
-	public void testAccessorMethods(){
-		assertTrue(user1.getUsername().equals(userName));
-		assertTrue(user1.getPassword().equals(userPassword));
-		assertTrue(user1.getEntityId().equals(id));
-		assertTrue(user1.isEnabled());
-		assertFalse(user2.isEnabled());
-		assertTrue(user3.isEnabled());
-	}
-	public void testAltConstructors(){
-		assertTrue(user1.getEntityId()==user2.getEntityId());
-		assertTrue(user1.getEntityId()==user3.getEntityId());
-		assertTrue(user1.getUsername().equals(user3.getUsername()));
-	}
-	
-	@Test
-	public void testExpirations() {
-		//Credentials and accounts seem entangled, so need tests
-		//to make sure implementation doesn't chage.
-		assertTrue(user1.isAccountNonExpired());
-		assertFalse(user2.isAccountNonExpired());
-		assertTrue(user3.isAccountNonExpired());
-		assertTrue("Account and credential nonexpirations handled correctly",user1.isAccountNonExpired() && user1.isCredentialsNonExpired());
-		assertTrue("Account and credential expirations handled correctly",!user2.isAccountNonExpired() && !user2.isCredentialsNonExpired());
-	}
+
+        user1 = new User();
+        user1.setUsername(userName);
+        user1.setEntityId(id);
+        user1.setPassword(userPassword);
+        user1.setEnabled(user1Enabled);
+        user1.setExpired(user1Expired);
+        user1.setLocked(user1Locked);
+
+        user2 = new User(id);
+        user2.setExpired(user2Expired);
+        user2.setEnabled(user2Enabled);
+        user2.setLocked(user2Locked);
+
+        user3 = new User(id, userName);
+        user3.setExpired(user3Expired);
+        user3.setEnabled(user3Enabled);
+        user3.setLocked(user3Locked);
+
+    }
+
+    @Test
+    public void testAccessorMethods() {
+        assertTrue(user1.getUsername().equals(userName));
+        assertTrue(user1.getPassword().equals(userPassword));
+        assertTrue(user1.getEntityId().equals(id));
+        assertTrue(user1.isEnabled());
+        assertFalse(user2.isEnabled());
+        assertTrue(user3.isEnabled());
+    }
+
+    @Test
+    public void testAltConstructors() {
+        assertTrue(user1.getEntityId().equals(user2.getEntityId()));
+        assertTrue(user1.getEntityId().equals(user3.getEntityId()));
+        assertTrue(user1.getUsername().equals(user3.getUsername()));
+    }
+
+    @Test
+    public void testExpirations() {
+        //Credentials and accounts seem entangled, so need tests
+        //to make sure implementation doesn't chage.
+        assertTrue(user1.isAccountNonExpired());
+        assertFalse(user2.isAccountNonExpired());
+        assertTrue(user3.isAccountNonExpired());
+        assertTrue("Account and credential nonexpirations handled correctly", user1.isAccountNonExpired() && user1.isCredentialsNonExpired());
+        assertTrue("Account and credential expirations handled correctly", !user2.isAccountNonExpired() && !user2.isCredentialsNonExpired());
+    }
 
 }
