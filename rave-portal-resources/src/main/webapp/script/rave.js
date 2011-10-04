@@ -159,7 +159,7 @@ var rave = rave || (function() {
             
             // hide the collapse/restore toggle icon in canvas mode
             $("#widget-" + args.data.id + "-collapse").hide();
-            var widget = getWidgetById(args.data.id);
+            var widget = rave.getWidgetById(args.data.id);
             if(typeof widget != "undefined" && isFunction(widget.maximize)) {
                 widget.maximize();
             }
@@ -180,7 +180,7 @@ var rave = rave || (function() {
                                               
             // re-show the collapse/restore toggle icon
             $("#widget-" + args.data.id + "-collapse").show();
-            var widget = getWidgetById(args.data.id);
+            var widget = rave.getWidgetById(args.data.id);
             // if the widget is collapsed execute the collapse function
             // otherwise execute the minimize function
             if(typeof widget != "undefined"){
@@ -514,7 +514,9 @@ var rave = rave || (function() {
 
         return {
           init : init,          
-          toggleCollapseWidgetIcon: toggleCollapseWidgetIcon
+          toggleCollapseWidgetIcon: toggleCollapseWidgetIcon,
+          maximizeAction: maximizeAction,
+          minimizeAction: minimizeAction
         };
 
     })();
@@ -703,6 +705,20 @@ var rave = rave || (function() {
          * @param obj the object to check
          * @return true if obj is a function, false otherwise
          */
-        isFunction: isFunction
+        isFunction: isFunction,
+        
+        /***
+         * Maximize the widget view
+         * 
+         * @param args the argument object
+         */
+        maximizeWidget: ui.maximizeAction,
+
+        /***
+         * Minimize the widget view (render in non full-screen mode)
+         * 
+         * @param args the argument object
+         */
+        minimizeWidget: ui.minimizeAction
     }
 })();

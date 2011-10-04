@@ -283,14 +283,25 @@ rave.opensocial = rave.opensocial || (function() {
     }
       
     /**
-     * Re-renders the gadget in the requested view with the parameters
+     * Re-renders the gadget in the requested view
      *
-     * @param view target view
-     * @param opt_params
+     * @param args RPC event args
+     * @param viewName the view name to render
      */
-    function requestNavigateTo(view, opt_params) {
-        //TODO RAVE-230: Implement this function
-        throw "Not Implemented!!!!!";
+    function requestNavigateTo(args, viewName) {       
+        var widgetId = rave.getObjectIdFromDomId(args.gs.getActiveGadgetHolder().getElement().id);
+        var fnArgs = {};
+        fnArgs.data = {}
+        fnArgs.data.id = widgetId;
+        
+        switch(viewName) {
+            case VIEW_NAMES.CANVAS:  
+                rave.maximizeWidget(fnArgs);
+                break;
+            case VIEW_NAMES.HOME:            
+                rave.minimizeWidget(fnArgs);
+                break;
+        }       
     }
 
     /**

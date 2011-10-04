@@ -127,6 +127,19 @@ describe("Rave OpenSocial", function() {
                 },
                 wasCalled : function() {return called; }
             }
+        } 
+        
+        function getMockRequestNavigateToArgs(id) {
+            return {
+                f : "frameId",               
+                gs : {
+                    getActiveGadgetHolder : function() {
+                        return {getElement : function() {
+                            return { id : id }
+                        }}
+                    }
+                }
+            }
         }
 
         it("resizes Iframe if argument is less than height", function() {
@@ -170,5 +183,43 @@ describe("Rave OpenSocial", function() {
             expect(mockElement.innerHTML).toEqual("TITLE");
             expect(document.getElementById).toHaveBeenCalledWith("widget-7-title");
         });
+        
+        it("requestNavigateTo changes the view to CANVAS", function() {
+            var VIEW_NAME = "canvas";
+            var expectedArgs = {};
+            expectedArgs.data = {};
+            expectedArgs.data.id = "7";           
+            spyOn(rave, "maximizeWidget");
+
+            rave.opensocial.init();
+            container.rpcHooks()["requestNavigateTo"](getMockRequestNavigateToArgs("widget-" + expectedArgs.data.id + "-body"), VIEW_NAME);            
+            expect(rave.maximizeWidget).toHaveBeenCalledWith(expectedArgs);
+        });
+        
+        it("requestNavigateTo changes the view to HOME", function() {
+            var VIEW_NAME = "home";
+            var expectedArgs = {};
+            expectedArgs.data = {};
+            expectedArgs.data.id = "7";           
+            spyOn(rave, "minimizeWidget");
+
+            rave.opensocial.init();
+            container.rpcHooks()["requestNavigateTo"](getMockRequestNavigateToArgs("widget-" + expectedArgs.data.id + "-body"), VIEW_NAME);            
+            expect(rave.minimizeWidget).toHaveBeenCalledWith(expectedArgs);
+        });        
+        
+        it("requestNavigateTo does not throw an error if an unknown view is passed", function() {
+            var VIEW_NAME = "___UNKNOWN___";
+            var expectedArgs = {};
+            expectedArgs.data = {};
+            expectedArgs.data.id = "7";           
+            spyOn(rave, "minimizeWidget");
+            spyOn(rave, "maximizeWidget");
+
+            rave.opensocial.init();
+            container.rpcHooks()["requestNavigateTo"](getMockRequestNavigateToArgs("widget-" + expectedArgs.data.id + "-body"), VIEW_NAME);            
+            expect(rave.minimizeWidget).wasNotCalled();
+            expect(rave.maximizeWidget).wasNotCalled();
+        });         
     });
 });

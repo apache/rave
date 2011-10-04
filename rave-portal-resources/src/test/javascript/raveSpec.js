@@ -339,10 +339,6 @@ describe("Rave", function() {
         });
 
     });
-
-    describe("Handle resize maximize event", function(){
-
-    });
     
     describe("isFunction", function() {
 
@@ -440,4 +436,162 @@ describe("Rave", function() {
         });        
        
     });    
+    
+    describe("change widget view state", function(){
+        //Creates a simple mock jquery object that mocks the functions used in this suite
+        function createMockJQuery() {
+            var expression;
+            var classMap = [];                        
+            var valuesMap = {};
+            
+            $ = function(expr) {
+
+                if (typeof expr != "undefined") {
+                    expression = expr;
+                }
+
+                return {
+                    expression : function () {
+                        return expression;
+                    },
+                    hasClass : function (className) {
+                        return classMap.indexOf(className) != -1;
+                    },
+                    addClass : function (className) {
+                        classMap.push(className);
+                    },
+                    removeClass: function(className) {                        
+                        var idx = classMap.indexOf(className); 
+                        if (idx != -1) {
+                            classMap.splice(idx, 1); 
+                        }
+                        return this;
+                    },
+                    sortable: function(option, attrName, attrValue) {
+                        valuesMap["sortableOption"] = option;
+                        valuesMap["sortableAttrName"] = attrName;
+                        valuesMap["sortableAttrValue"] = attrValue;
+                    },
+                    unbind: function(eventName) {
+                        valuesMap["unbindEventName"] = eventName;
+                    },
+                    click: function(args, fn) {
+                        valuesMap["clickArgs"] = args;
+                        valuesMap["clickFn"] = fn;
+                    },
+                    button: function(option, attrName, attrArgs) {
+                        valuesMap["buttonOption"] = option;
+                        valuesMap["buttonAttrName"] = attrName;
+                        valuesMap["buttonAttrArgs"] = attrArgs;
+                    },
+                    hide: function() {
+                        valuesMap["hideWasCalled"] = true;
+                    },
+                    show: function() {
+                        valuesMap["showWasCalled"] = true;
+                    },                    
+                    height: function() {
+                        
+                    },
+                    width: function() {
+                        
+                    },
+                    css: function() {
+                        
+                    },
+                    prepend: function() {
+                        
+                    },
+                    remove: function() {
+                        valuesMap["removeWasCalled"] = true;
+                    },
+                    getValue: function(varName) {
+                        return valuesMap[varName];
+                    }                    
+                }
+            };            
+        }
+        
+        it("successfully maximizes the widget", function() {                                  
+            createMockJQuery();
+            
+            var mockWidget = {   
+                maximizeWasCalled: false,                
+                maximize: function() { this.maximizeWasCalled = true; }
+            }
+                                      
+            var args = {};
+            args.data = {};
+            args.data.id = 99;
+            spyOn(rave, "getWidgetById").andReturn(mockWidget);
+            
+            rave.maximizeWidget(args);                      
+           
+            // verify the sortable parameters                        
+            expect($().getValue("sortableOption")).toEqual("option");
+            expect($().getValue("sortableAttrName")).toEqual("disabled");
+            expect($().getValue("sortableAttrValue")).toEqual(true);            
+            // verify the CSS styles
+            expect($().hasClass("widget-wrapper-canvas")).toEqual(true);
+            expect($().hasClass("widget-wrapper")).toEqual(false);
+            // verify the unbind parameter
+            expect($().getValue("unbindEventName")).toEqual("click");
+            // verify the click parameters
+            expect($().getValue("clickArgs")).toEqual({id: args.data.id});
+            expect(rave.isFunction($().getValue("clickFn"))).toEqual(true);
+            // verify the button parameters
+            expect($().getValue("buttonOption")).toEqual("option");
+            expect($().getValue("buttonAttrName")).toEqual("icons");
+            expect($().getValue("buttonAttrArgs")).toEqual({primary:"ui-icon-arrowthick-1-sw"});                     
+            // verify getWidgetById called
+            expect(rave.getWidgetById).toHaveBeenCalledWith(args.data.id); 
+            // verify hide was called
+            expect($().getValue("hideWasCalled")).toEqual(true);                 
+            // verify widget.maximize was called
+            expect(mockWidget.maximizeWasCalled).toEqual(true);
+                   
+        });        
+        
+        it("successfully minimizes the widget", function() {                                  
+            createMockJQuery();
+            
+            var mockWidget = {   
+                minimizeWasCalled: false,                
+                minimize: function() { this.minimizeWasCalled = true; }
+            }
+                                      
+            var args = {};
+            args.data = {};
+            args.data.id = 99;
+            spyOn(rave, "getWidgetById").andReturn(mockWidget);
+            
+            rave.minimizeWidget(args);                      
+            
+            // verify remove was called
+            expect($().getValue("removeWasCalled")).toEqual(true);        
+            // verify the sortable parameters
+            expect($().getValue("sortableOption")).toEqual("option");
+            expect($().getValue("sortableAttrName")).toEqual("disabled");
+            expect($().getValue("sortableAttrValue")).toEqual(false);            
+            // verify the CSS styles
+            expect($().hasClass("widget-wrapper-canvas")).toEqual(false);
+            expect($().hasClass("widget-wrapper")).toEqual(true);
+            // verify the unbind parameter
+            expect($().getValue("unbindEventName")).toEqual("click");
+            // verify the click parameters
+            expect($().getValue("clickArgs")).toEqual({id: args.data.id});
+            expect(rave.isFunction($().getValue("clickFn"))).toEqual(true);
+            // verify the button parameters
+            expect($().getValue("buttonOption")).toEqual("option");
+            expect($().getValue("buttonAttrName")).toEqual("icons");
+            expect($().getValue("buttonAttrArgs")).toEqual({primary:"ui-icon-arrow-4-diag"});                     
+            // verify show was called
+            expect($().getValue("showWasCalled")).toEqual(true);                 
+            // verify getWidgetById called
+            expect(rave.getWidgetById).toHaveBeenCalledWith(args.data.id);                   
+            // verify widget.minimize was called
+            expect(mockWidget.minimizeWasCalled).toEqual(true);             
+        });          
+        
+    });
 });

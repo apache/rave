@@ -20,29 +20,31 @@
   $Id:$
 -->
 <Module>
-<ModulePrefs title="" author="" author_email="" height="250" description="">
-  <Require feature="dynamic-height" />
-  <Require feature="views" />
-</ModulePrefs>
+    <ModulePrefs title="" author="" author_email="" height="250" description="">
+        <Require feature="dynamic-height" />
+        <Require feature="views" />
+    </ModulePrefs>
 
 
-   <Content type="html" view="home">
-   <![CDATA[
-      Normal view!
-   ]]>
-   </Content>
+    <Content type="html" view="home">
+       <![CDATA[
+          <div>Normal view.</div>
+          <button onclick="gadgets.views.requestNavigateTo('canvas');">Go to Canvas</button>   
+       ]]>
+    </Content>
 
-   <Content type="html" view="canvas">
-   <![CDATA[
-     Canvas view.
-     ]]>
-   </Content>
+    <Content type="html" view="canvas">
+       <![CDATA[
+         <div>Canvas view.</div>
+         <button onclick="gadgets.views.requestNavigateTo('home');">Go to Home</button>
+       ]]>
+    </Content>
 
-<Content type="html" view="default">
-   <![CDATA[
-     Default view.
-     ]]>
-   </Content>
+    <Content type="html" view="default">
+       <![CDATA[
+         Default view.
+       ]]>
+    </Content>
 
- </Module>
+</Module>
 
