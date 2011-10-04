@@ -19,15 +19,17 @@
 
 package org.apache.shindig.auth;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-import org.apache.shindig.config.ContainerConfig;
-
+import java.net.URI;
 import java.net.URL;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+
+import com.google.inject.AbstractModule;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
+import org.apache.shindig.config.ContainerConfig;
 
 /**
  * This class will only be here temporarily until we get a patch applied to Shindig to enable loading the token key
@@ -75,10 +77,11 @@ public class ClasspathAwareDefaultSecurityTokenCodec extends DefaultSecurityToke
             //since the Shindig BlobCrypterSecurityTokenDecoder only supports loading directly from the filesystem...
             if (BlobCrypterSecurityTokenCodec.SECURITY_TOKEN_KEY_FILE.equalsIgnoreCase(name) && value != null
                     && value.startsWith(RESOURCE_PREFIX)) {
-                String resourceName = value.substring(RESOURCE_PREFIX.length());
-                URL resource = this.getClass().getClassLoader().getResource(resourceName);
+                final String resourceName = value.substring(RESOURCE_PREFIX.length());
+                final URL resource = this.getClass().getClassLoader().getResource(resourceName);
                 if (resource != null) {
-                    value = resource.getFile();
+                    final URI resourceUri = URI.create(resource.getFile());
+                    value = resourceUri.getPath();
                 }
             }
 
