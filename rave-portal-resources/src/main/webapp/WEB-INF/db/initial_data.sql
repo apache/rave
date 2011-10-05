@@ -718,19 +718,42 @@ UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @r
 --- End openid user_id_13 layout ---
 
 -- authorities
-set @next_authority_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @granted_authority_seq);
+set @user_authority_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @granted_authority_seq);
 insert into granted_authority (entity_id, authority)
-values (@next_authority_id, 'user');
+values (@user_authority_id, 'ROLE_USER');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @granted_authority_seq;
 
-set @next_authority_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @granted_authority_seq);
+set @admin_authority_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @granted_authority_seq);
 insert into granted_authority (entity_id, authority)
-values (@next_authority_id, 'manager');
-UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @granted_authority_seq;
-
-set @next_authority_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @granted_authority_seq);
-insert into granted_authority (entity_id, authority)
-values (@next_authority_id, 'administrator');
+values (@admin_authority_id, 'ROLE_ADMIN');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @granted_authority_seq;
 
 -- end authorities
+
+-- assign roles
+insert into user_authorities (user_id, authority_id)
+values (@user_id_1, @admin_authority_id);
+insert into user_authorities (user_id, authority_id)
+values (@user_id_2, @user_authority_id);
+insert into user_authorities (user_id, authority_id)
+values (@user_id_3, @user_authority_id);
+insert into user_authorities (user_id, authority_id)
+values (@user_id_4, @user_authority_id);
+insert into user_authorities (user_id, authority_id)
+values (@user_id_5, @user_authority_id);
+insert into user_authorities (user_id, authority_id)
+values (@user_id_6, @user_authority_id);
+insert into user_authorities (user_id, authority_id)
+values (@user_id_7, @user_authority_id);
+insert into user_authorities (user_id, authority_id)
+values (@user_id_8, @user_authority_id);
+insert into user_authorities (user_id, authority_id)
+values (@user_id_9, @user_authority_id);
+insert into user_authorities (user_id, authority_id)
+values (@user_id_10, @user_authority_id);
+insert into user_authorities (user_id, authority_id)
+values (@user_id_11, @user_authority_id);
+insert into user_authorities (user_id, authority_id)
+values (@user_id_12, @user_authority_id);
+insert into user_authorities (user_id, authority_id)
+values (@user_id_13, @user_authority_id);

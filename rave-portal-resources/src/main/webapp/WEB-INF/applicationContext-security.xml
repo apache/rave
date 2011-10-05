@@ -1,67 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Licensed to the Apache Software Foundation (ASF) under one
-  ~ or more contributor license agreements.  See the NOTICE file
-  ~ distributed with this work for additional information
-  ~ regarding copyright ownership.  The ASF licenses this file
-  ~ to you under the Apache License, Version 2.0 (the
-  ~ "License"); you may not use this file except in
-  ~ compliance with the License.  You may obtain a copy of the License at
-  ~
-  ~    http://www.apache.org/licenses/LICENSE-2.0
-  ~
-  ~ Unless required by applicable law or agreed to in writing,
-  ~ software distributed under the License is distributed on an
-  ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-  ~ KIND, either express or implied.  See the License for the
-  ~ specific language governing permissions and limitations
-  ~ under the License.
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License.
   -->
 
 <!--
 	This security file uses the default spring simple form login
 -->
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:security="http://www.springframework.org/schema/security"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
-			    http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.0.xsd">
+       xmlns:security="http://www.springframework.org/schema/security"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+                           http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.0.xsd">
 
-  <security:http auto-config="true" use-expressions="true" disable-url-rewriting="true">
-	 <security:intercept-url pattern="/newaccount.jsp*" access="permitAll"/>
-	 <security:intercept-url pattern="/app/newaccount*" access="permitAll"/>
-	 <security:intercept-url pattern="/login.jsp*" filters="none" />
-	 <security:intercept-url pattern="/css/**" access="permitAll"/>
-	 <security:intercept-url pattern="/images/**" access="permitAll"/>
-	 <security:intercept-url pattern="/script/**" access="permitAll"/>
-	 <!-- all urls must be authenticated -->
-	 <security:intercept-url pattern="/**"
-									 access="isAuthenticated()"/>
-	 <security:openid-login user-service-ref="userService" authentication-failure-url="/login.jsp?authfail=openid">
-		<security:attribute-exchange>
-		  <!-- Supported by MyOpenID.com -->
-		  <security:openid-attribute name="firstName" type="http://schema.openid.net/namePerson/first"/>
-		  <security:openid-attribute name="lastName" type="http://schema.openid.net/namePerson/last"/>
-		  <security:openid-attribute name="email" type="http://schema.openid.net/contact/email" required="true"/>
-		  <!-- security:openid-attribute name="language" type="http://schema.openid.net/language/pref"/>
-				 <security:openid-attribute name="birthDate" type="http://schema.openid.net/birthDate"/>
-				 <security:openid-attribute name="namePerson" type="http://schema.openid.net/namePerson" required="true"/>
-				 <security:openid-attribute name="nickname" type="http://schema.openid.net/namePerson/friendly" required="true"/>
-				 <security:openid-attribute name="country" type="http://schema.openid.net/contact/country/home"/>
-		  -->
-		</security:attribute-exchange>
-	 </security:openid-login>
-	 <security:form-login login-page="/login.jsp" authentication-failure-url="/login.jsp?authfail=form" />
-	 <security:logout/>
-     <security:remember-me/>
-  </security:http>
-  
-  <security:authentication-manager>
-	 <security:authentication-provider
-		  user-service-ref="userService">
-		<security:password-encoder ref="passwordEncoder">
-		  <security:salt-source ref="saltSource"/>
-		</security:password-encoder>
-	 </security:authentication-provider>
-  </security:authentication-manager>
+    <security:http auto-config="true" use-expressions="true" disable-url-rewriting="true">
+        <security:intercept-url pattern="/newaccount.jsp*" access="permitAll"/>
+        <security:intercept-url pattern="/app/newaccount*" access="permitAll"/>
+        <security:intercept-url pattern="/login.jsp*" filters="none"/>
+        <security:intercept-url pattern="/css/**" access="permitAll"/>
+        <security:intercept-url pattern="/images/**" access="permitAll"/>
+        <security:intercept-url pattern="/script/**" access="permitAll"/>
+        <security:intercept-url pattern="/app/admin/**" access="hasRole('ROLE_ADMIN')"/>
+        <!-- all urls must be authenticated -->
+        <security:intercept-url pattern="/**" access="hasAnyRole('ROLE_USER','ROLE_ADMIN')"/>
+        <security:openid-login user-service-ref="userService" authentication-failure-url="/login.jsp?authfail=openid">
+            <security:attribute-exchange>
+                <!-- Supported by MyOpenID.com -->
+                <security:openid-attribute name="firstName" type="http://schema.openid.net/namePerson/first"/>
+                <security:openid-attribute name="lastName" type="http://schema.openid.net/namePerson/last"/>
+                <security:openid-attribute name="email" type="http://schema.openid.net/contact/email" required="true"/>
+            </security:attribute-exchange>
+        </security:openid-login>
+        <security:form-login login-page="/login.jsp" authentication-failure-url="/login.jsp?authfail=form"/>
+        <security:logout/>
+        <security:remember-me/>
+    </security:http>
+
+    <security:authentication-manager>
+        <security:authentication-provider
+                user-service-ref="userService">
+            <security:password-encoder ref="passwordEncoder">
+                <security:salt-source ref="saltSource"/>
+            </security:password-encoder>
+        </security:authentication-provider>
+    </security:authentication-manager>
 </beans>
