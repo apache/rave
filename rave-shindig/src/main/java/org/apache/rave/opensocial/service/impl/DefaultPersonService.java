@@ -186,7 +186,8 @@ public class DefaultPersonService implements PersonService {
     }
 
     private org.apache.rave.opensocial.model.Person getFromRepository(String userId) {
-        org.apache.rave.opensocial.model.Person person = repository.findByUsername(userId);
+        long id = Long.parseLong(userId);
+        org.apache.rave.opensocial.model.Person person = repository.get(id);
         if (person == null) {
             throw new ProtocolException(HttpServletResponse.SC_NOT_FOUND, "The person with the id " + userId + " was not found.");
         }

@@ -77,7 +77,7 @@ public class PersonServiceTest {
         Set<String> fields = new HashSet<String>();
 
         org.apache.rave.opensocial.model.Person dbPerson = getDbPerson();
-        expect(repository.findByUsername(ID_1)).andReturn(dbPerson);
+        expect(repository.get(Long.parseLong(ID_1))).andReturn(dbPerson);
         replay(repository);
 
         Future<Person> personFuture = service.getPerson(id, fields, token);
@@ -98,7 +98,7 @@ public class PersonServiceTest {
         fields.add(Person.Field.ID.toString());
 
         org.apache.rave.opensocial.model.Person dbPerson = getDbPerson();
-        expect(repository.findByUsername(ID_1)).andReturn(dbPerson);
+        expect(repository.get(Long.parseLong(ID_1))).andReturn(dbPerson);
         replay(repository);
 
         Future<Person> personFuture = service.getPerson(id, fields, token);
@@ -116,7 +116,7 @@ public class PersonServiceTest {
         UserId id = new UserId(UserId.Type.userId, ID_1);
 
         org.apache.rave.opensocial.model.Person dbPerson = getDbPerson();
-        expect(repository.findByUsername(ID_1)).andReturn(dbPerson);
+        expect(repository.get(Long.parseLong(ID_1))).andReturn(dbPerson);
         replay(repository);
 
         Future<Person> personFuture = service.getPerson(id, null, token);
@@ -137,7 +137,7 @@ public class PersonServiceTest {
         replay(token);
 
         org.apache.rave.opensocial.model.Person dbPerson = getDbPerson();
-        expect(repository.findByUsername(ID_1)).andReturn(dbPerson);
+        expect(repository.get(Long.parseLong(ID_1))).andReturn(dbPerson);
         replay(repository);
 
         Future<Person> personFuture = service.getPerson(id, null, token);
@@ -154,7 +154,7 @@ public class PersonServiceTest {
     public void getPerson_nullValue() throws ExecutionException, InterruptedException {
         UserId id = new UserId(UserId.Type.userId, ID_2);
 
-        expect(repository.findByUsername(ID_1)).andReturn(null);
+        expect(repository.get(Long.parseLong(ID_1))).andReturn(null);
         replay(repository);
 
         service.getPerson(id, null, token);
@@ -169,7 +169,7 @@ public class PersonServiceTest {
         Set<UserId> ids = getUserIdSet();
         GroupId groupId = new GroupId(GroupId.Type.self, GROUP_ID);
 
-        expect(repository.findByUsername(self)).andReturn(getDbPerson());
+        expect(repository.get(Long.parseLong(self))).andReturn(getDbPerson());
         replay(repository);
 
         Future<RestfulCollection<Person>> people = service.getPeople(ids, groupId, null, null, token);
@@ -465,7 +465,7 @@ public class PersonServiceTest {
 
     private org.apache.rave.opensocial.model.Person getDbPerson() {
         org.apache.rave.opensocial.model.Person dbPerson = new org.apache.rave.opensocial.model.Person();
-        dbPerson.setEntityId(1111L);
+        dbPerson.setEntityId(Long.parseLong(ID_1));
         dbPerson.setUsername(ID_1);
         dbPerson.setDisplayName(DISPLAY_NAME);
         dbPerson.setHappiestWhen(HAPPIEST_WHEN);

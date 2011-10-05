@@ -282,7 +282,7 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
 
     @Override
     public String getId() {
-        return displayField(Field.ID) ? internal.getUsername() : null;
+        return displayField(Field.ID) ? internal.getEntityId().toString() : null;
     }
 
     @Override
