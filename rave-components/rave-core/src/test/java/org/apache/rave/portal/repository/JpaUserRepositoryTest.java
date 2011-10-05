@@ -19,6 +19,8 @@
 
 package org.apache.rave.portal.repository;
 
+import junit.framework.Assert;
+import org.apache.rave.portal.model.Authority;
 import org.apache.rave.portal.model.User;
 import org.hamcrest.CoreMatchers;
 import org.junit.Test;
@@ -31,6 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import static junit.framework.Assert.assertNull;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -48,12 +51,15 @@ public class JpaUserRepositoryTest {
     private static final String USER_NAME = "canonical";
     //The password value depends on the hash algorithm and salt used, so this
     //may need updating in the future.
-    private static final String HASHED_SALTED_PASSWORD="b97fd0fa25ba8a504309be2b6651ac6dee167ded";
+    private static final String HASHED_SALTED_PASSWORD = "b97fd0fa25ba8a504309be2b6651ac6dee167ded";
     private static final Long INVALID_USER = -2L;
-	 private static final String USER_EMAIL = "canonical@example.com";
+    private static final String USER_EMAIL = "canonical@example.com";
 
     @Autowired
     private UserRepository repository;
+
+    @Autowired
+    private AuthorityRepository authorityRepository;
 
     @Test
     public void getById_validId() {
@@ -62,7 +68,7 @@ public class JpaUserRepositoryTest {
         assertThat(user.getUsername(), is(equalTo(USER_NAME)));
         assertThat(user.getPassword(), is(equalTo(HASHED_SALTED_PASSWORD)));
         assertThat(user.isAccountNonExpired(), is(true));
-		  assertThat(user.getEmail(), is(equalTo(USER_EMAIL)));
+        assertThat(user.getEmail(), is(equalTo(USER_EMAIL)));
     }
 
     @Test
@@ -78,7 +84,7 @@ public class JpaUserRepositoryTest {
         assertThat(user.getEntityId(), is(equalTo(USER_ID)));
         assertThat(user.getPassword(), is(equalTo(HASHED_SALTED_PASSWORD)));
         assertThat(user.isAccountNonExpired(), is(true));
-		  assertThat(user.getEmail(), is(equalTo(USER_EMAIL)));
+        assertThat(user.getEmail(), is(equalTo(USER_EMAIL)));
     }
 
     @Test
@@ -94,6 +100,30 @@ public class JpaUserRepositoryTest {
         assertThat(user.getEntityId(), is(equalTo(USER_ID)));
         assertThat(user.getPassword(), is(equalTo(HASHED_SALTED_PASSWORD)));
         assertThat(user.isAccountNonExpired(), is(true));
-		  assertThat(user.getEmail(), is(equalTo(USER_EMAIL)));
+        assertThat(user.getEmail(), is(equalTo(USER_EMAIL)));
+    }
+
+    @Test
+    public void addOrDeleteUserDoesNotAffectAuthority() {
+        Authority authority = authorityRepository.get(1L);
+        Assert.assertNotNull("Existing authority", authority);
+
+        int usercount = authority.getUsers().size();
+        User user = new User();
+        user.setUsername("dummy");
+        authority.addUser(user);
+        authorityRepository.save(authority);
+        assertNull("Persisting an Authority does not persist an unknown user", repository.getByUsername("dummy"));
+        Assert.assertEquals("Authority has 1 more user", usercount + 1, authority.getUsers().size());
+
+        repository.save(user);
+        user = repository.getByUsername("dummy");
+        Assert.assertNotNull(user);
+        Assert.assertEquals("Authority has 1 more user", usercount + 1, authority.getUsers().size());
+
+        repository.delete(user);
+        authority = authorityRepository.get(1L);
+        Assert.assertNotNull("Authority has not been removed after deleting user", authority);
+        Assert.assertEquals("Authority has original amount of users", usercount, authority.getUsers().size());
     }
 }

@@ -30,5 +30,6 @@
             <class>org.apache.rave.portal.model.RegionWidgetPreference</class>
             <class>org.apache.rave.portal.model.Widget</class>
             <class>org.apache.rave.portal.model.PageLayout</class>
+            <class>org.apache.rave.portal.model.Authority</class>
         </persistence-unit>
 </persistence>

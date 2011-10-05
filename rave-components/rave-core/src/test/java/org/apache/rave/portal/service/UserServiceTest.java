@@ -19,6 +19,7 @@
 
 package org.apache.rave.portal.service;
 
+import org.apache.rave.portal.model.Authority;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.repository.UserRepository;
 import org.apache.rave.portal.service.impl.DefaultUserService;
@@ -27,15 +28,20 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import static org.easymock.EasyMock.*;
-import static org.hamcrest.CoreMatchers.*;
+import static org.easymock.EasyMock.createNiceMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.sameInstance;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 public class UserServiceTest {
@@ -103,6 +109,23 @@ public class UserServiceTest {
         assertThat((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal(),
                 is(sameInstance(authUser)));
     }
+
+    @Test
+    public void setAuthenticatedUser_validRole() {
+        final User authUser = new User(USER_ID);
+        final Authority userRole = new Authority("admin");
+        authUser.addAuthority(userRole);
+        expect(repository.get(USER_ID)).andReturn(authUser).anyTimes();
+        replay(repository);
+
+        service.setAuthenticatedUser(USER_ID);
+        assertThat((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal(),
+                is(sameInstance(authUser)));
+        final GrantedAuthority grantedAuthority =
+                SecurityContextHolder.getContext().getAuthentication().getAuthorities().iterator().next();
+        assertEquals("has authority admin", "admin", grantedAuthority.getAuthority());
+    }
+
 
     @Test(expected = UsernameNotFoundException.class)
     public void setAuthenticatedUser_invalid_null() {

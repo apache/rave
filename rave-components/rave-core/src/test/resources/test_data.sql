@@ -30,6 +30,7 @@ set @region_seq = 'region';
 set @region_widget_seq = 'region_widget';
 set @user_seq = 'raveuser';
 set @widget_seq = 'widget';
+set @granted_authority_seq = 'granted_authority';
 
 CREATE TABLE IF NOT EXISTS RAVE_PORTAL_SEQUENCES (seq_name VARCHAR(255) PRIMARY KEY NOT NULL, seq_count BIGINT(19));
 INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@page_seq, 1);
@@ -39,6 +40,7 @@ INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@region_widget_se
 INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values ('region_widget_preference', 1);
 INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@user_seq, 1);
 INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@widget_seq, 1);
+INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@granted_authority_seq, 1);
 
   -- ***********************************************************************************
   -- start page layout data, required to make the portal work ---
@@ -724,3 +726,21 @@ insert into widget (entity_id,title, url, type, widget_status)
 values(@widget_id,'Useless Knowledge', 'http://www.great-goofy-gadgets.com/humor/uselessknowledge/uselessknowledge.xml', 'OpenSocial', 'PREVIEW');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @widget_seq;
 -- end widget data ----
+
+-- authorities
+set @next_authority_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @granted_authority_seq);
+insert into granted_authority (entity_id, authority)
+values (@next_authority_id, 'user');
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @granted_authority_seq;
+
+set @next_authority_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @granted_authority_seq);
+insert into granted_authority (entity_id, authority)
+values (@next_authority_id, 'manager');
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @granted_authority_seq;
+
+set @next_authority_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @granted_authority_seq);
+insert into granted_authority (entity_id, authority)
+values (@next_authority_id, 'administrator');
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @granted_authority_seq;
+
+-- end authorities
