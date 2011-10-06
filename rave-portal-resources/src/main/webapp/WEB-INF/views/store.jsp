@@ -1,22 +1,21 @@
 <%--
-   Licensed to the Apache Software Foundation (ASF) under one
-   or more contributor license agreements.  See the NOTICE file
-   distributed with this work for additional information
-   regarding copyright ownership.  The ASF licenses this file
-   to you under the Apache License, Version 2.0 (the
-   "License"); you may not use this file except in compliance
-   with the License.  You may obtain a copy of the License at
-  
-     http://www.apache.org/licenses/LICENSE-2.0
-  
-   Unless required by applicable law or agreed to in writing,
-   software distributed under the License is distributed on an
-   "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-   KIND, either express or implied.  See the License for the
-   specific language governing permissions and limitations
-   under the License.
-  
---%>
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License.
+  --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -26,19 +25,23 @@
 
 <fmt:message key="page.store.title" var="pagetitle"/>
 <rave:rave_generic_page pageTitle="${pagetitle}">
-<div id="header">
-    <div class="header-a">
-        <span class="backToPage">
-            <a href="<spring:url value="/index.html" />"><fmt:message key="page.general.back"/></a>
-        </span>
-    </div>
-    <div class="widget-a">
-        <span>
-            <a href="<spring:url value="/app/store/widget/add"/>"><fmt:message key="page.addwidget.title"/></a>
-        </span>
-    </div>
+<header>
+    <nav class="topnav">
+        <ul class="horizontal-list">
+            <li>
+                <a href="<spring:url value="/app/store/widget/add"/>"><fmt:message key="page.addwidget.title"/></a>
+            </li>
+            <li>
+                <a href="<spring:url value="/index.html" />"><fmt:message key="page.general.back"/></a>
+            </li>
+            <li>
+                <a href="<spring:url value="/j_spring_security_logout" htmlEscape="true" />">
+                  <fmt:message key="page.general.logout"/></a>
+            </li>
+        </ul>
+    </nav>
     <h1>${pagetitle}</h1>
-</div>
+</header>
 
 <div id="content">
     

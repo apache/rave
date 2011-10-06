@@ -7,7 +7,7 @@
   "License"); you may not use this file except in compliance
   with the License.  You may obtain a copy of the License at
 
-      http://www.apache.org/licenses/LICENSE-2.0
+    http://www.apache.org/licenses/LICENSE-2.0
 
   Unless required by applicable law or agreed to in writing,
   software distributed under the License is distributed on an
@@ -26,14 +26,20 @@
 <fmt:setBundle basename="messages"/>
 <fmt:message key="page.addwidget.title" var="pagetitle"/>
 <rave:rave_generic_page pageTitle="${pagetitle}">
-    <div id="header">
-        <div class="header-a">
-        <span class="backToPage">
-            <a href="<spring:url value="/index.html" />"><fmt:message key="page.general.back"/></a>
-        </span>
-        </div>
+    <header>
+        <nav class="topnav">
+            <ul class="horizontal-list">
+                <li>
+                    <a href="<spring:url value="/index.html" />"><fmt:message key="page.general.back"/></a>
+                </li>
+                <li>
+                    <a href="<spring:url value="/j_spring_security_logout" htmlEscape="true" />">
+                      <fmt:message key="page.general.logout"/></a>
+                </li>
+            </ul>
+        </nav>
         <h1><fmt:message key="page.addwidget.title"/></h1>
-    </div>
+    </header>
 
     <div id="content">
         <h2><fmt:message key="page.addwidget.form.header"/></h2>

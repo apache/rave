@@ -7,7 +7,7 @@
   "License"); you may not use this file except in compliance
   with the License.  You may obtain a copy of the License at
 
-      http://www.apache.org/licenses/LICENSE-2.0
+    http://www.apache.org/licenses/LICENSE-2.0
 
   Unless required by applicable law or agreed to in writing,
   software distributed under the License is distributed on an
@@ -15,32 +15,35 @@
   KIND, either express or implied.  See the License for the
   specific language governing permissions and limitations
   under the License.
-
-
---%><%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %><%--
---%><%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %><%--
---%><%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %><%--
---%><%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %><%--
---%><%@ taglib prefix="portal" uri="http://www.apache.org/rave/tags" %><%--
---%><%@ taglib tagdir="/WEB-INF/tags" prefix="rave"%><%--
---%><jsp:useBean id="pages" type="java.util.List<org.apache.rave.portal.model.Page>" scope="request"/><%--
---%><fmt:setBundle basename="messages"/>
+  --%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="portal" uri="http://www.apache.org/rave/tags" %>
+<%@ taglib tagdir="/WEB-INF/tags" prefix="rave"%>
+<jsp:useBean id="pages" type="java.util.List<org.apache.rave.portal.model.Page>" scope="request"/>
+<fmt:setBundle basename="messages"/>
 <%--@elvariable id="page" type="org.apache.rave.portal.model.Page"--%>
 <rave:rave_generic_page pageTitle="${page.name}">
-    <div id="header">
-        <div class="header-a">
-            <a href="<spring:url value="/j_spring_security_logout" htmlEscape="true" />">
-              <fmt:message key="page.general.logout"/></a>
-        </div>
-        <div class="widget-a">
-            <a href="<spring:url value="/app/store?referringPageId=${page.entityId}" />">
-              <fmt:message key="page.store.title"/>
-            </a>
-        </div>
+    <header>
+        <nav class="topnav">
+            <ul class="horizontal-list">
+                <li>
+                    <a href="<spring:url value="/app/store?referringPageId=${page.entityId}" />">
+                      <fmt:message key="page.store.title"/>
+                    </a>
+                </li>
+                <li>
+                    <a href="<spring:url value="/j_spring_security_logout" htmlEscape="true" />">
+                      <fmt:message key="page.general.logout"/></a>
+                </li>
+            </ul>
+        </nav>
       <h1>
           <fmt:message key="page.home.welcome"><fmt:param><c:out value="${page.owner.username}"/></fmt:param></fmt:message>
       </h1>
-    </div>
+    </header>
     <input id="currentPageId" type="hidden" value="${page.entityId}" />
     <div id="tabsHeader">
         <%-- render the page tabs --%>

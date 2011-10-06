@@ -30,5 +30,10 @@ public class ViewNames {
     public static final String ADD_WIDGET_FORM = "addwidget";
     public static final String NEW_ACCOUNT = "newaccount";
     public static final String USER_PROFILE = "userProfile";
+
+    public static final String ADMIN_HOME = "admin/home";
+    public static final String ADMIN_USERS = "admin/users";
+    public static final String ADMIN_WIDGETS = "admin/widgets";
+
     public static final String REDIRECT = "redirect:/";
 }
