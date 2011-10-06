@@ -19,6 +19,7 @@
 
 package org.apache.rave.portal.web.tag;
 
+import org.apache.rave.portal.model.Region;
 import org.apache.rave.portal.model.RegionWidget;
 import org.apache.rave.portal.model.Widget;
 import org.apache.rave.portal.web.renderer.RenderService;
@@ -138,8 +139,10 @@ public class RegionWidgetTagTest {
         replay(pageContext);
 
         RegionWidget regionWidget = new RegionWidget();
+        Region region = new Region(25L);
         Widget widget = new Widget();
         regionWidget.setWidget(widget);
+        regionWidget.setRegion(region);
         widget.setType("INVALID");
 
         Set<String> strings = new HashSet<String>();

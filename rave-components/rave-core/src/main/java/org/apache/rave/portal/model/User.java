@@ -283,6 +283,6 @@ public class User implements UserDetails, BasicEntity, Serializable {
 
     @Override
     public String toString() {
-        return "User{" + "entityId=" + entityId + ", username=" + username + ", password=" + password + ", expired=" + expired + ", locked=" + locked + ", enabled=" + enabled + ", email=" + email + ", openId=" + openId + ", confirmPassword=" + confirmPassword + '}';
+        return "User{" + "entityId=" + entityId + ", username=" + username + ", expired=" + expired + ", locked=" + locked + ", enabled=" + enabled + ", email=" + email + ", openId=" + openId + '}';
     }
 }

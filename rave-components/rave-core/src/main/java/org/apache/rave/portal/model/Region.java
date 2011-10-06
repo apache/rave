@@ -180,6 +180,6 @@ public class Region implements BasicEntity, Serializable {
 
     @Override
     public String toString() {
-        return "Region{" + "entityId=" + entityId + ", page=" + page + ", regionWidgets=" + regionWidgets + '}';
+        return "Region{" + "entityId=" + entityId + ", pageId=" + page.getEntityId() + ", regionWidgets=" + regionWidgets + '}';
     }
 }

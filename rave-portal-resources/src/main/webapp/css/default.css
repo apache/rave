@@ -603,3 +603,6 @@ span.error, label.error {
     cursor: pointer;
     margin-right: 10px;
 }
+.errorTrace {
+    display: none;
+}

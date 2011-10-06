@@ -224,8 +224,8 @@ public class RegionWidget implements BasicEntity, Serializable {
         sb.append(entityId);
         sb.append(",widget=");
         sb.append(widget);
-        sb.append(",region=");
-        sb.append(region);
+        sb.append(",regionId=");
+        sb.append(region.getEntityId());
         sb.append("}");
         return sb.toString();
     }
