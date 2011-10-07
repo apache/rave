@@ -548,6 +548,15 @@ span.error, label.error {
     cursor: pointer;
     margin-right: 10px;
 }
-.errorTrace {
+#errorStack {
     display: none;
+
+}
+
+.errorMessage {
+    text-align: center;
+    font-size: 150%;
+}
+.errorLogo {
+    text-align: center;
 }
