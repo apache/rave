@@ -5,7 +5,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="portal" uri="http://www.apache.org/rave/tags" %>
 <%@ taglib tagdir="/WEB-INF/tags" prefix="rave"%>
-<rave:rave_generic_page pageTitle="Error: ${errorData.statusCode}">
+<rave:rave_generic_page pageTitle="Error ${requestScope['javax.servlet.error.status_code']}: ${requestScope['javax.servlet.error.exception_type'].simpleName}">
     <header>
       <h1>
           <fmt:message key="page.error.title" />
@@ -23,11 +23,10 @@
         </div>
         <div id="errorStack" title="Error Details" >
             <pre class="errorTrace">
-                ${exception}
+                <c:out value="${requestScope['javax.servlet.error.message']}"/>
 
-                Stack Trace:
-                <c:forEach var="i" items="${exception}">
-                    ${i}
+                <c:forEach var="i" items="${requestScope['javax.servlet.error.exception'].stackTrace}">
+                    <c:out value="${i}" /><br />
                 </c:forEach>
             </pre>
             <button type="button"
