@@ -588,6 +588,8 @@ span.error, label.error {
 
 #errorStack {
     display: none;
+    width: 30%;
+    margin:auto;
 }
 
 .errorMessage {
