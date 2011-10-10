@@ -33,6 +33,7 @@ public class ViewNames {
 
     public static final String ADMIN_HOME = "admin/home";
     public static final String ADMIN_USERS = "admin/users";
+    public static final String ADMIN_USERDETAIL = "admin/userdetail";
     public static final String ADMIN_WIDGETS = "admin/widgets";
 
     public static final String REDIRECT = "redirect:/";

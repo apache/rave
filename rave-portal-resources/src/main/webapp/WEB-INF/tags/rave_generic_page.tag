@@ -30,7 +30,7 @@ This tag will provide simple template layouts for pages that use it. See for exa
 <html>
   <head>
      <meta charset="UTF-8"/>
-     <title><c:out value="${pageTitle}"/><fmt:message key="page.general.titlesuffix"/></title>
+     <title><c:out value="${pageTitle}"/> <fmt:message key="page.general.titlesuffix"/></title>
      <link rel="stylesheet" href="//ajax.aspnetcdn.com/ajax/jquery.ui/1.8.13/themes/base/jquery-ui.css"/>
      <link rel="stylesheet" href="<c:url value="/css/default.css" />" />
      <rave:custom_css/>

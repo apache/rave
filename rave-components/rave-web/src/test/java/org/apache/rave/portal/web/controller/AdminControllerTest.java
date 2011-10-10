@@ -52,6 +52,17 @@ public class AdminControllerTest {
     }
 
     @Test
+    public void testAdminUserDetail() throws Exception {
+        Model model = new ExtendedModelMap();
+        String userid = "dummyUserId";
+        String adminUserDetailView = controller.viewUserDetail(userid, model);
+        assertEquals(ViewNames.ADMIN_USERDETAIL, adminUserDetailView);
+        assertTrue(model.containsAttribute("tabs"));
+        assertEquals(userid, model.asMap().get("userid"));
+
+    }
+
+    @Test
     public void adminWidgets() throws Exception {
         Model model = new ExtendedModelMap();
         String adminWidgetsView = controller.viewWidgets(model);

@@ -23,11 +23,11 @@
 <%@ taglib tagdir="/WEB-INF/tags" prefix="rave" %>
 <fmt:setBundle basename="messages"/>
 
-<fmt:message key="admin.widgets.title" var="pagetitle"/>
+<fmt:message key="admin.userdetail.title" var="pagetitle"/>
 <rave:rave_generic_page pageTitle="${pagetitle}">
     <rave:header pageTitle="${pagetitle}"/>
     <rave:admin_tabsheader/>
     <div id="pageContent">
-        <p>Content goes here</p>
+        <p>User detail goes here</p>
     </div>
 </rave:rave_generic_page>

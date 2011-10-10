@@ -33,8 +33,13 @@ body {
 
 /* general html fields */
 
-header, nav, article, section, footer, ul {
+header, nav, article, section, footer{
     display: block;
+    margin: 0;
+    padding: 0;
+}
+
+ul, ol, table, p {
     margin: 0;
     padding: 0;
 }
@@ -65,10 +70,27 @@ a img {
     clear: both;
 }
 
-.horizontal-list li {
+.horizontal-list li, .paging li {
     display: inline;
     list-style: none;
     padding:0 10px;
+}
+.horizontal-list li:last-child, .paging li:last-child {
+    padding-right: 0;
+}
+
+.paging li {
+    padding: 0;
+}
+
+.paging li:after {
+    margin: 0 10px;
+    content: "|";
+}
+
+.paging li:last-child:after {
+    margin-right: 0;
+    content: "";
 }
 
 #banner {
@@ -140,6 +162,10 @@ header h1 {
     border-bottom: none;
     font-size: 1em;
     margin-bottom: 0;
+}
+
+#content p {
+    margin: 1em 0;
 }
 
 /* Widgets */
@@ -365,28 +391,8 @@ ul.storeItems li{
     visibility: hidden;
 }
 
-ul.paging {
-    list-style: none;
-    padding: 0;
-}
-
-ul.paging li {
-    display: inline;
-}
-
-
-#footer {
-    margin: 20px 150px 20px 250px;
-    border-top: 1px solid #ccc;
-    color: #666;
-    font-size: 0.8em;
-    padding: 0 8px;
-    text-align: center;
-}
-
-
 button.widget-toolbar-btn {
-	width: 1em;
+    width: 1em;
 }
 
 button.widget-toolbar-btn-prefs {
@@ -506,7 +512,7 @@ span.error, label.error {
     padding-top: 3px;
 }
 
-#pageContent {
+#pageContent, .pageContent {
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#D7D7D3", endColorstr="#EBEBEB");
     background: -moz-linear-gradient(center top , #D7D7D3 0%, #EBEBEB 50%) repeat scroll 0 0 transparent;
     background: -webkit-gradient(linear, left top, left bottom, from(#D7D7D3), to(#EBEBEB));
@@ -550,7 +556,6 @@ span.error, label.error {
 }
 #errorStack {
     display: none;
-
 }
 
 .errorMessage {
@@ -559,4 +564,119 @@ span.error, label.error {
 }
 .errorLogo {
     text-align: center;
+}
+
+/** Admin interface **/
+.admincontent {
+    margin: 0 auto;
+    width: 80%;
+    padding:0 20px;
+    font-size:1.1em;
+}
+
+.admincontent .searchbox {
+    float:right;
+    margin-top:1em;
+}
+
+.searchbox form, .searchbox fieldset {
+    display:inline;
+    height:1em;
+    margin:0;
+    padding:0;
+}
+
+.admincontent h2 {
+    margin-top: 0;
+    padding-top:1em;
+}
+
+.admincontent table {
+    margin: 1.5em 0;
+    padding: 0;
+    border-collapse: collapse;
+    font-size: 13px;
+    border: 1px solid #ddd;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+}
+
+.admincontent table th,.admincontent table td {
+    padding: 5px 5px 4px;
+    line-height: 1.5em;
+    text-align: left;
+}
+
+.admincontent table th {
+    padding-top: 4px;
+    font-weight: bold;
+    vertical-align: middle;
+    border-bottom: 1px solid #ddd;
+    background-color: #000000;
+    color: #ffffff;
+}
+
+.admincontent table td {
+    vertical-align: top;
+}
+
+.admincontent table th+th, .admincontent table td+td {
+    border-left: 1px solid #ddd;
+}
+
+.admincontent table tr+tr td {
+    border-top: 1px solid #ddd;
+}
+
+.admincontent table tbody tr:first-child td:first-child {
+    -webkit-border-radius: 4px 0 0 0;
+    -moz-border-radius: 4px 0 0 0;
+    border-radius: 4px 0 0 0;
+}
+
+.admincontent table tbody tr:first-child td:last-child {
+    -webkit-border-radius: 0 4px 0 0;
+    -moz-border-radius: 0 4px 0 0;
+    border-radius: 0 4px 0 0;
+}
+
+.admincontent table tbody tr:last-child td:first-child {
+    -webkit-border-radius: 0 0 0 4px;
+    -moz-border-radius: 0 0 0 4px;
+    border-radius: 0 0 0 4px;
+}
+
+.admincontent table tbody tr:last-child td:last-child {
+    -webkit-border-radius: 0 0 4px 0;
+    -moz-border-radius: 0 0 4px 0;
+    border-radius: 0 0 4px 0;
+}
+
+.admincontent tbody tr:nth-child(odd) {
+    background-color: #D3D3D3;
+}
+
+.admincontent tbody tr:hover {
+    background-color: #B4C4CF;
+}
+
+.admincontent table a, .admincontent table a:visited {
+    color: #000000;
+    text-decoration:none;
+}
+
+.admincontent tbody tr:hover a, .admincontent table a:hover {
+    background-color: transparent;
+    text-decoration: underline;
+}
+
+.booleancell {
+    width: 50px;
+}
+.textcell {
+    width: 150px;
+}
+.largetextcell {
+    width: 300px
 }

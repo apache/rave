@@ -24,6 +24,7 @@ import org.apache.rave.portal.web.model.NavigationMenu;
 import org.apache.rave.portal.web.util.ViewNames;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -44,6 +45,13 @@ public class AdminController {
     public String viewUsers(Model model) {
         addNavigationMenusToModel("users", model);
         return ViewNames.ADMIN_USERS;
+    }
+
+    @RequestMapping(value = "userdetail/{userid}", method = RequestMethod.GET)
+    public String viewUserDetail(@PathVariable("userid") String userid, Model model) {
+        addNavigationMenusToModel("users", model);
+        model.addAttribute("userid", userid);
+        return ViewNames.ADMIN_USERDETAIL;
     }
 
     @RequestMapping(value = "widgets", method = RequestMethod.GET)
