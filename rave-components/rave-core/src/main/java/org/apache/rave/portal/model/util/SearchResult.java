@@ -19,9 +19,9 @@
 
 package org.apache.rave.portal.model.util;
 
-import java.util.List;
-
 import org.apache.rave.persistence.BasicEntity;
+
+import java.util.List;
 
 /**
  * Wrapper for search results.
@@ -29,11 +29,14 @@ import org.apache.rave.persistence.BasicEntity;
 public class SearchResult<T extends BasicEntity> {
     private List<T> resultSet;
     private int pageSize;
+    private int offset;
     private int totalResults;
 
     public SearchResult(List<T> resultset, int totalResults) {
         this.resultSet = resultset;
         this.totalResults = totalResults;
+        this.pageSize = 0;
+        this.offset = 0;
     }
 
     /**
@@ -71,5 +74,24 @@ public class SearchResult<T extends BasicEntity> {
             numberOfPages++;
         }
         return numberOfPages;
+    }
+
+    public int getOffset() {
+        return offset;
+    }
+
+    public void setOffset(int offset) {
+        this.offset = offset;
+    }
+
+    public int getCurrentPage() {
+        if (isFirstPage()) {
+            return 1;
+        }
+        return (offset / pageSize) + 1;
+    }
+
+    private boolean isFirstPage() {
+        return offset == 0 || pageSize == 0 || totalResults < pageSize;
     }
 }

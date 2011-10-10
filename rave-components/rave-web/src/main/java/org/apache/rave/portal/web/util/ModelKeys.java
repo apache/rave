@@ -35,4 +35,5 @@ public class ModelKeys {
     public static final String USER_PROFILE="userProfile";
     public static final String SEARCH_TERM = "searchTerm";
     public static final String OFFSET = "offset";
+    public static final String SEARCHRESULT = "searchResult";
 }

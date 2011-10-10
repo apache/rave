@@ -19,36 +19,62 @@
 
 package org.apache.rave.portal.web.controller;
 
+import org.apache.rave.portal.model.User;
+import org.apache.rave.portal.model.util.SearchResult;
+import org.apache.rave.portal.service.UserService;
+import org.apache.rave.portal.web.util.ModelKeys;
 import org.apache.rave.portal.web.util.ViewNames;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.ui.ExtendedModelMap;
 import org.springframework.ui.Model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
+import static org.easymock.EasyMock.createNiceMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
 
 /**
  * Test for {@link AdminController}
  */
 public class AdminControllerTest {
 
+    private static final String TABS = "tabs";
     AdminController controller;
+    UserService userService;
 
     @Test
     public void adminHome() throws Exception {
         Model model = new ExtendedModelMap();
         String homeView = controller.viewDefault(model);
         assertEquals(ViewNames.ADMIN_HOME, homeView);
-        assertTrue(model.containsAttribute("tabs"));
+        assertTrue(model.containsAttribute(TABS));
     }
 
     @Test
     public void adminUsers() throws Exception {
         Model model = new ExtendedModelMap();
-        String adminUsersView = controller.viewUsers(model);
+        User user1 = new User(123L, "john.doe.sr");
+        User user2 = new User(456L, "john.doe.jr");
+        List<User> users = new ArrayList<User>();
+        users.add(user1);
+        users.add(user2);
+        final int offset = 0;
+        final int pageSize = 10;
+        final int totalResult = 12390;
+        SearchResult<User> searchResult = new SearchResult<User>(users, totalResult);
+
+        expect(userService.getLimitedListOfUsers(offset, pageSize)).andReturn(searchResult);
+        replay(userService);
+
+        String adminUsersView = controller.viewUsers(offset,model);
         assertEquals(ViewNames.ADMIN_USERS, adminUsersView);
-        assertTrue(model.containsAttribute("tabs"));
+        assertEquals(searchResult, model.asMap().get(ModelKeys.SEARCHRESULT));
+        assertTrue(model.containsAttribute(TABS));
     }
 
     @Test
@@ -57,7 +83,7 @@ public class AdminControllerTest {
         String userid = "dummyUserId";
         String adminUserDetailView = controller.viewUserDetail(userid, model);
         assertEquals(ViewNames.ADMIN_USERDETAIL, adminUserDetailView);
-        assertTrue(model.containsAttribute("tabs"));
+        assertTrue(model.containsAttribute(TABS));
         assertEquals(userid, model.asMap().get("userid"));
 
     }
@@ -67,12 +93,14 @@ public class AdminControllerTest {
         Model model = new ExtendedModelMap();
         String adminWidgetsView = controller.viewWidgets(model);
         assertEquals(ViewNames.ADMIN_WIDGETS, adminWidgetsView);
-        assertTrue(model.containsAttribute("tabs"));
+        assertTrue(model.containsAttribute(TABS));
     }
     
 
     @Before
     public void setUp() throws Exception {
         controller = new AdminController();
+        userService = createNiceMock(UserService.class);
+        controller.setUserService(userService);
     }
 }

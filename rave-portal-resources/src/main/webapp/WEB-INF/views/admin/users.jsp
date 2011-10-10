@@ -22,7 +22,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib tagdir="/WEB-INF/tags" prefix="rave" %>
 <fmt:setBundle basename="messages"/>
-<%--@elvariable id="searchResult" type="org.apache.rave.portal.model.util.SearchResult"--%>
+<%--@elvariable id="searchResult" type="org.apache.rave.portal.model.util.SearchResult<org.apache.rave.portal.model.User>"--%>
 
 <fmt:message key="admin.users.title" var="pagetitle"/>
 <rave:rave_generic_page pageTitle="${pagetitle}">
@@ -47,22 +47,22 @@
             </ul>
             <c:choose>
                 <c:when test="${empty searchTerm and (empty searchResult or searchResult.totalResults eq 0)}">
-                    <fmt:message key="page.store.list.noresult" var="listheader"/>
+                    <fmt:message key="admin.list.noresult" var="listheader"/>
                 </c:when>
                 <c:when test="${empty searchTerm}">
-                    <fmt:message key="page.store.list.result.x.to.y" var="listheader">
+                    <fmt:message key="admin.list.result.x.to.y" var="listheader">
                         <fmt:param value="${offset + 1}"/>
                         <fmt:param value="${offset + fn:length(searchResult.resultSet)}"/>
                         <fmt:param value="${searchResult.totalResults}"/>
                     </fmt:message>
                 </c:when>
                 <c:when test="${not empty searchTerm and searchResult.totalResults eq 0}">
-                    <fmt:message key="page.store.list.search.noresult" var="listheader">
+                    <fmt:message key="admin.list.search.noresult" var="listheader">
                         <fmt:param><c:out value="${searchTerm}"/></fmt:param>
                     </fmt:message>
                 </c:when>
                 <c:otherwise>
-                    <fmt:message key="page.store.list.search.result.x.to.y" var="listheader">
+                    <fmt:message key="admin.list.search.result.x.to.y" var="listheader">
                         <fmt:param value="${offset + 1}"/>
                         <fmt:param value="${offset + fn:length(searchResult.resultSet)}"/>
                         <fmt:param value="${searchResult.totalResults}"/>
@@ -70,17 +70,9 @@
                     </fmt:message>
                 </c:otherwise>
             </c:choose>
-            <h2>__${listheader}</h2>
+            <h2>${listheader}</h2>
 
-            <ul class="paging">
-                <li><a href="#">&lt;</a></li>
-                <li><a href="#">1</a></li>
-                <li>2</li>
-                <li><a href="#">3</a></li>
-                <li><a href="#">4</a></li>
-                <li><a href="#">5</a></li>
-                <li><a href="#">&gt;</a></li>
-            </ul>
+            <rave:admin_paging/>
 
             <table class="datatable userstable">
                 <thead>
@@ -91,69 +83,19 @@
                 </tr>
                 </thead>
                 <tbody>
-                <spring:url value="/app/admin/userdetail/john.doe" var="userdetail"/>
-                <tr data-detaillink="${userdetail}">
-                    <td><a href="${userdetail}">canonical</a></td>
-                    <td><a href="${userdetail}">canonical@example.com</a></td>
-                    <td><a href="${userdetail}">X</a></td>
-                </tr>
-                <tr>
-                    <td>john.doe</td>
-                    <td>john.doe@example.com</td>
-                    <td>X</td>
-                </tr>
-                <tr>
-                    <td>jane.doe</td>
-                    <td>jane.doe@example.com</td>
-                    <td>X</td>
-                </tr>
-                <tr>
-                    <td>canonical</td>
-                    <td>canonical@example.com</td>
-                    <td>X</td>
-                </tr>
-                <tr>
-                    <td>john.doe</td>
-                    <td>john.doe@example.com</td>
-                    <td>X</td>
-                </tr>
-                <tr>
-                    <td>jane.doe</td>
-                    <td>jane.doe@example.com</td>
-                    <td>X</td>
-                </tr>
-                <tr>
-                    <td>canonical</td>
-                    <td>canonical@example.com</td>
-                    <td>X</td>
-                </tr>
-                <tr>
-                    <td>john.doe</td>
-                    <td>john.doe@example.com</td>
-                    <td>X</td>
-                </tr>
-                <tr>
-                    <td>jane.doe</td>
-                    <td>jane.doe@example.com</td>
-                    <td>X</td>
-                </tr>
-                <tr>
-                    <td>jane.doe</td>
-                    <td>jane.doe@example.com</td>
-                    <td>X</td>
-                </tr>
+                <c:forEach var="user" items="${searchResult.resultSet}">
+                    <spring:url value="/app/admin/userdetail/${user.entityId}" var="detaillink"/>
+                    <tr data-detaillink="${detaillink}">
+                        <td><a href="${detaillink}"><c:out value="${user.username}"/></a></td>
+                        <td><a href="${detaillink}"><c:out value="${user.email}"/></a></td>
+                        <td><c:if test="${user.enabled}"><a href="${detaillink}">X</a></c:if></td>
+                    </tr>
+                </c:forEach>
                 </tbody>
             </table>
             
-            <ul class="paging">
-                <li><a href="#">&lt;</a></li>
-                <li><a href="#">1</a></li>
-                <li>2</li>
-                <li><a href="#">3</a></li>
-                <li><a href="#">4</a></li>
-                <li><a href="#">5</a></li>
-                <li><a href="#">&gt;</a></li>
-            </ul>
+            <rave:admin_paging/>
+
         </article>
     </div>
 

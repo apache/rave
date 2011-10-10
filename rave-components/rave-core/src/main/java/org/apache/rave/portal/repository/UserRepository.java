@@ -21,6 +21,8 @@ package org.apache.rave.portal.repository;
 import org.apache.rave.persistence.Repository;
 import org.apache.rave.portal.model.User;
 
+import java.util.List;
+
 public interface UserRepository extends Repository<User> {
 
     /**
@@ -38,4 +40,19 @@ public interface UserRepository extends Repository<User> {
      * @return {@link User} if one exists, otherwise {@literal null}
      */
     User getByUserEmail(String userEmail);
+
+    /**
+     * List of Users with a limited resultset
+     *
+     * @param offset   start point within the total resultset
+     * @param pageSize maximum number of items to be returned (for paging)
+     * @return a List of Users with of at most the number of items in pageSize
+     */
+    List<User> getLimitedList(int offset, int pageSize);
+
+    /**
+     * @return the total number of {@link User}'s in the repository. Useful for paging.
+     */
+    int getCountAll();
+
 }

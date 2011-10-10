@@ -24,14 +24,17 @@ import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.repository.UserRepository;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import java.util.List;
 
+import static org.apache.rave.persistence.jpa.util.JpaUtil.getPagedResultList;
 import static org.apache.rave.persistence.jpa.util.JpaUtil.getSingleResult;
 
 /**
  */
 @Repository
-public class JpaUserRepository extends AbstractJpaRepository<User> implements UserRepository{
+public class JpaUserRepository extends AbstractJpaRepository<User> implements UserRepository {
 
     public JpaUserRepository() {
         super(User.class);
@@ -39,15 +42,28 @@ public class JpaUserRepository extends AbstractJpaRepository<User> implements Us
 
     @Override
     public User getByUsername(String username) {
-        TypedQuery<User> query = manager.createNamedQuery("User.getByUsername", User.class);
-        query.setParameter("username", username);
+        TypedQuery<User> query = manager.createNamedQuery(User.USER_GET_BY_USERNAME, User.class);
+        query.setParameter(User.PARAM_USERNAME, username);
         return getSingleResult(query.getResultList());
     }
 
     @Override
     public User getByUserEmail(String userEmail) {
-        TypedQuery<User> query = manager.createNamedQuery("User.getByUserEmail", User.class);
-        query.setParameter("email", userEmail);
+        TypedQuery<User> query = manager.createNamedQuery(User.USER_GET_BY_USER_EMAIL, User.class);
+        query.setParameter(User.PARAM_EMAIL, userEmail);
         return getSingleResult(query.getResultList());
+    }
+
+    @Override
+    public List<User> getLimitedList(int offset, int pageSize) {
+        TypedQuery<User> query = manager.createNamedQuery(User.USER_GET_ALL, User.class);
+        return getPagedResultList(query, offset, pageSize);
+    }
+
+    @Override
+    public int getCountAll() {
+        Query query = manager.createNamedQuery(User.USER_COUNT_ALL);
+        Number countResult = (Number) query.getSingleResult();
+        return countResult.intValue();
     }
 }

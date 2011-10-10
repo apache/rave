@@ -20,6 +20,7 @@
 package org.apache.rave.portal.service;
 
 import org.apache.rave.portal.model.User;
+import org.apache.rave.portal.model.util.SearchResult;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 public interface UserService extends UserDetailsService {
@@ -31,7 +32,7 @@ public interface UserService extends UserDetailsService {
     User getAuthenticatedUser();
 
     /**
-     * Set the currently authenticated user to the user with a given userId. 
+     * Set the currently authenticated user to the user with a given userId.
      *
      * @param userId the unique id of the use
      */
@@ -42,11 +43,12 @@ public interface UserService extends UserDetailsService {
      */
     void clearAuthenticatedUser();
 
-	 /**
-	  * Registers a new user object.
-	  * @param user the new user object to register with the data management system.
-	  */
-	 void registerNewUser(User user);
+    /**
+     * Registers a new user object.
+     *
+     * @param user the new user object to register with the data management system.
+     */
+    void registerNewUser(User user);
 
     /**
      * Return the requested user object using the user's name.
@@ -72,9 +74,19 @@ public interface UserService extends UserDetailsService {
      */
     User getUserByEmail(String userEmail);
 
-	 /**
-	  * Update the user profile information.
-	  * @param user the modified user object
-	  */
-	 void updateUserProfile(User user);
+    /**
+     * Update the user profile information.
+     *
+     * @param user the modified user object
+     */
+    void updateUserProfile(User user);
+
+    /**
+     * Gets a limited {@link SearchResult} for {@link User}'s
+     *
+     * @param offset   start point within the resultset (for paging)
+     * @param pageSize maximum number of items to be returned (for paging)
+     * @return SearchResult
+     */
+    SearchResult<User> getLimitedListOfUsers(int offset, int pageSize);
 }

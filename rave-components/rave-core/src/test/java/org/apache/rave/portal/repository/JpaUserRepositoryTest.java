@@ -32,8 +32,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.List;
 
+import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertNull;
+import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -126,4 +129,20 @@ public class JpaUserRepositoryTest {
         Assert.assertNotNull("Authority has not been removed after deleting user", authority);
         Assert.assertEquals("Authority has original amount of users", usercount, authority.getUsers().size());
     }
+
+    @Test
+    public void getLimitedList() {
+        final int offset = 0;
+        final int pageSize = 5;
+        List<User> users = repository.getLimitedList(offset, pageSize);
+        assertNotNull(users);
+        assertTrue(users.size() <= pageSize);
+    }
+
+    @Test
+    public void countAll() {
+        int count = repository.getCountAll();
+        assertTrue(count >= 6);
+    }
+
 }

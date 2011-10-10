@@ -19,8 +19,6 @@
 
 package org.apache.rave.portal.service.impl;
 
-import java.util.List;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.rave.portal.model.Widget;
 import org.apache.rave.portal.model.WidgetStatus;
@@ -31,6 +29,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class DefaultWidgetService implements WidgetService {
@@ -56,6 +56,7 @@ public class DefaultWidgetService implements WidgetService {
         final int count = widgetRepository.getCountAll();
         final List<Widget> widgets = widgetRepository.getLimitedList(offset, pageSize);
         final SearchResult<Widget> searchResult = new SearchResult<Widget>(widgets, count);
+        searchResult.setOffset(offset);
         searchResult.setPageSize(pageSize);
         return searchResult;
     }
@@ -72,6 +73,7 @@ public class DefaultWidgetService implements WidgetService {
                 offset, pageSize);
 
         final SearchResult<Widget> searchResult = new SearchResult<Widget>(widgets, count);
+        searchResult.setOffset(offset);
         searchResult.setPageSize(pageSize);
         return searchResult;
     }
@@ -87,6 +89,7 @@ public class DefaultWidgetService implements WidgetService {
         final List<Widget> widgets = widgetRepository.getByStatus(WidgetStatus.PUBLISHED,
                 offset, pageSize);
         final SearchResult<Widget> searchResult = new SearchResult<Widget>(widgets, count);
+        searchResult.setOffset(offset);
         searchResult.setPageSize(pageSize);
         return searchResult;
     }
@@ -105,6 +108,7 @@ public class DefaultWidgetService implements WidgetService {
                 WidgetStatus.PUBLISHED, searchTerm, offset, pageSize);
 
         final SearchResult<Widget> searchResult = new SearchResult<Widget>(widgets, count);
+        searchResult.setOffset(offset);
         searchResult.setPageSize(pageSize);
         return searchResult;
     }

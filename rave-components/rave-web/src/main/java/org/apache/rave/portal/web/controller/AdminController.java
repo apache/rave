@@ -19,14 +19,20 @@
 
 package org.apache.rave.portal.web.controller;
 
+import org.apache.rave.portal.model.User;
+import org.apache.rave.portal.model.util.SearchResult;
+import org.apache.rave.portal.service.UserService;
 import org.apache.rave.portal.web.model.NavigationItem;
 import org.apache.rave.portal.web.model.NavigationMenu;
+import org.apache.rave.portal.web.util.ModelKeys;
 import org.apache.rave.portal.web.util.ViewNames;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * Controller for the admin pages
@@ -34,6 +40,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 @RequestMapping(value = {"/admin/*", "/admin"})
 public class AdminController {
+    public static final int DEFAULT_PAGE_SIZE = 10;
+
+    @Autowired
+    private UserService userService;
 
     @RequestMapping(method = RequestMethod.GET)
     public String viewDefault(Model model) {
@@ -42,8 +52,10 @@ public class AdminController {
     }
 
     @RequestMapping(value = "users", method = RequestMethod.GET)
-    public String viewUsers(Model model) {
+    public String viewUsers(@RequestParam(required = false, defaultValue = "0") int offset, Model model) {
         addNavigationMenusToModel("users", model);
+        final SearchResult<User> users = userService.getLimitedListOfUsers(offset, DEFAULT_PAGE_SIZE);
+        model.addAttribute(ModelKeys.SEARCHRESULT, users);
         return ViewNames.ADMIN_USERS;
     }
 
@@ -96,5 +108,9 @@ public class AdminController {
         menu.addNavigationItem(widgets);
 
         return menu;
+    }
+
+    public void setUserService(UserService userService) {
+        this.userService = userService;
     }
 }

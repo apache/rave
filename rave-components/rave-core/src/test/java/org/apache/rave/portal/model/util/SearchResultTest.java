@@ -19,12 +19,12 @@
 
 package org.apache.rave.portal.model.util;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.rave.persistence.BasicEntity;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 
@@ -38,7 +38,6 @@ public class SearchResultTest {
     public void testGetNumberOfPages_noFractal() throws Exception {
         searchResult.setPageSize(15);
         assertEquals("Total results is 1 * page size", 1, searchResult.getNumberOfPages());
-
     }
 
     @Test
@@ -47,11 +46,23 @@ public class SearchResultTest {
         assertEquals("Total results is 1.5 * page size", 2, searchResult.getNumberOfPages());
     }
 
-
     @Test
     public void testGetNumberOfPages_noPageSize() throws Exception {
         searchResult.setPageSize(0);
         assertEquals("Division by 0", 0, searchResult.getNumberOfPages());
+    }
+
+    @Test
+    public void testGetCurrentPage() {
+        assertEquals(0, searchResult.getOffset());
+        assertEquals("No pagesize, current page is 1", 1, searchResult.getCurrentPage());
+        searchResult.setPageSize(50);
+        assertEquals("Pagesize larger than total results", 1, searchResult.getCurrentPage());
+        searchResult.setPageSize(10);
+        assertEquals("First page", 1, searchResult.getCurrentPage());
+        searchResult.setOffset(10);
+        assertEquals(10, searchResult.getOffset());
+        assertEquals("Second page", 2, searchResult.getCurrentPage());
     }
 
     @Before

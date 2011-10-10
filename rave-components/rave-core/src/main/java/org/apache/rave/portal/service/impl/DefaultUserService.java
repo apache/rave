@@ -20,6 +20,7 @@
 package org.apache.rave.portal.service.impl;
 
 import org.apache.rave.portal.model.User;
+import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.repository.UserRepository;
 import org.apache.rave.portal.service.UserService;
 import org.slf4j.Logger;
@@ -35,6 +36,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  *
@@ -53,9 +56,9 @@ public class DefaultUserService implements UserService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException, DataAccessException {
-        log.debug("loadUserByUsername called with: " + username);
+        log.debug("loadUserByUsername called with: {}", username);
         final User user = userRepository.getByUsername(username);
-        if(user == null) {
+        if (user == null) {
             throw new UsernameNotFoundException("User with username '" + username + "' was not found!");
         }
         return user;
@@ -64,7 +67,7 @@ public class DefaultUserService implements UserService {
     @Override
     public User getAuthenticatedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        
+
         if (authentication != null && authentication.getPrincipal() instanceof User) {
             return (User) authentication.getPrincipal();
         } else {
@@ -75,7 +78,7 @@ public class DefaultUserService implements UserService {
     @Override
     public void setAuthenticatedUser(long userId) {
         final User user = userRepository.get(userId);
-        if(user == null) {
+        if (user == null) {
             throw new UsernameNotFoundException("User with id '" + userId + "' was not found!");
         }
         SecurityContext securityContext = createContext(user);
@@ -108,29 +111,39 @@ public class DefaultUserService implements UserService {
         return securityContext;
     }
 
-	 @Override
-	 @Transactional
-	 public void registerNewUser(User user) {
-		  userRepository.save(user);
-	 }
-	 
-	 @Override
-	 public User getUserById(Long id) {
-		  return userRepository.get(id);
-	 }
+    @Override
+    @Transactional
+    public void registerNewUser(User user) {
+        userRepository.save(user);
+    }
 
-	 @Override
-	 public User getUserByUsername(String userName){
-		  return userRepository.getByUsername(userName);
-	 }
+    @Override
+    public User getUserById(Long id) {
+        return userRepository.get(id);
+    }
 
-	 @Override
-	 public User getUserByEmail(String userEmail){
-		  return userRepository.getByUserEmail(userEmail);
-	 }
+    @Override
+    public User getUserByUsername(String userName) {
+        return userRepository.getByUsername(userName);
+    }
 
-	 @Override
-	 public void updateUserProfile(User user) {
-         throw new UnsupportedOperationException("Updating user profile");
- 	 }
+    @Override
+    public User getUserByEmail(String userEmail) {
+        return userRepository.getByUserEmail(userEmail);
+    }
+
+    @Override
+    public void updateUserProfile(User user) {
+        throw new UnsupportedOperationException("Updating user profile is not supported yet");
+    }
+
+    @Override
+    public SearchResult<User> getLimitedListOfUsers(int offset, int pageSize) {
+        final int count = userRepository.getCountAll();
+        final List<User> users = userRepository.getLimitedList(offset, pageSize);
+        final SearchResult<User> searchResult = new SearchResult<User>(users, count);
+        searchResult.setOffset(offset);
+        searchResult.setPageSize(pageSize);
+        return searchResult;
+    }
 }

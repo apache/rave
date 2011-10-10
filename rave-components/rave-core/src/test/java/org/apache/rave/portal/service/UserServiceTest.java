@@ -21,6 +21,7 @@ package org.apache.rave.portal.service;
 
 import org.apache.rave.portal.model.Authority;
 import org.apache.rave.portal.model.User;
+import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.repository.UserRepository;
 import org.apache.rave.portal.service.impl.DefaultUserService;
 import org.junit.After;
@@ -34,6 +35,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.easymock.EasyMock.createNiceMock;
 import static org.easymock.EasyMock.expect;
@@ -50,7 +54,7 @@ public class UserServiceTest {
     private UserService service;
     private UserRepository repository;
     private static final String USER_NAME = "1234";
-	 private static final String USER_EMAIL="test@test.com";
+     private static final String USER_EMAIL="test@test.com";
 
     @Before
     public void setup() {
@@ -129,7 +133,6 @@ public class UserServiceTest {
 
     @Test(expected = UsernameNotFoundException.class)
     public void setAuthenticatedUser_invalid_null() {
-        final User authUser = new User(USER_ID);
         expect(repository.get(USER_ID)).andReturn(null).anyTimes();
         replay(repository);
 
@@ -156,23 +159,22 @@ public class UserServiceTest {
 
     @Test(expected = UsernameNotFoundException.class)
     public void loadByUsername_invalid_null() {
-        final User authUser = new User(USER_ID);
         expect(repository.get(USER_ID)).andReturn(null).anyTimes();
         replay(repository);
 
         service.setAuthenticatedUser(USER_ID);
     }
 
-	 @Test
-	 public void getUserByEmail_valid() {
-		  final User authUser=new User(USER_ID,USER_NAME);
-		  authUser.setEmail(USER_EMAIL);
+     @Test
+     public void getUserByEmail_valid() {
+          final User authUser=new User(USER_ID,USER_NAME);
+          authUser.setEmail(USER_EMAIL);
         expect(repository.getByUserEmail(USER_EMAIL)).andReturn(authUser).anyTimes();
         replay(repository);
 
         UserDetails result = service.getUserByEmail(USER_EMAIL);
-        assertThat((User)result, is(sameInstance(authUser)));		  
-	 }
+        assertThat((User)result, is(sameInstance(authUser)));          
+     }
 
 
     @Test
@@ -181,6 +183,24 @@ public class UserServiceTest {
         SecurityContextHolder.setContext(context);
         service.clearAuthenticatedUser();
         assertThat(SecurityContextHolder.getContext(), not(sameInstance(context)));
+    }
+    
+    @Test
+    public void getLimitedListOfUsers() {
+        User user1 = new User(123L, "john.doe.sr");
+        User user2 = new User(456L, "john.doe.jr");
+        List<User> users = new ArrayList<User>();
+        users.add(user1);
+        users.add(user2);
+        final int offset = 0;
+        final int pageSize = 10;
+        expect(repository.getLimitedList(offset, pageSize)).andReturn(users);
+        replay(repository);
+
+        SearchResult<User> result = service.getLimitedListOfUsers(offset, pageSize);
+        assertEquals(pageSize, result.getPageSize());
+        assertEquals(users.size(), result.getResultSet().size());
+        assertEquals(user1, result.getResultSet().get(0));
     }
 
 

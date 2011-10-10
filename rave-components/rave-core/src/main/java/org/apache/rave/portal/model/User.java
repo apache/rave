@@ -51,11 +51,22 @@ import java.util.Collection;
 // user can be a restricted table name
 @Table(name = "raveuser")
 @NamedQueries({
-        @NamedQuery(name = "User.getByUsername", query = "select u from User u where u.username = :username"),
-        @NamedQuery(name = "User.getByUserEmail", query = "select u from User u where u.email = :email")
+        @NamedQuery(name = User.USER_GET_BY_USERNAME, query = "select u from User u where u.username = :username"),
+        @NamedQuery(name = User.USER_GET_BY_USER_EMAIL, query = "select u from User u where u.email = :email"),
+        @NamedQuery(name = User.USER_GET_ALL, query = "select u from User u order by u.username asc"),
+        @NamedQuery(name = User.USER_COUNT_ALL, query = "select count(u) from User u")
+
 })
 public class User implements UserDetails, BasicEntity, Serializable {
     private static final long serialVersionUID = 1L;
+
+    public static final String USER_GET_BY_USERNAME = "User.getByUsername";
+    public static final String USER_GET_BY_USER_EMAIL = "User.getByUserEmail";
+    public static final String USER_GET_ALL = "User.getAll";
+    public static final String USER_COUNT_ALL = "User.countAll";
+    
+    public static final String PARAM_USERNAME = "username";
+    public static final String PARAM_EMAIL = "email";
 
     @Id
     @Column(name = "entity_id")
