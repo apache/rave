@@ -45,6 +45,12 @@
       </h1>
     </header>
     <input id="currentPageId" type="hidden" value="${page.entityId}" />
+    <c:set var="hasOnlyOnePage">
+        <c:choose>
+            <c:when test="${fn:length(pages) == 1}">true</c:when>
+            <c:otherwise>false</c:otherwise>
+        </c:choose>
+    </c:set>
     <div id="tabsHeader">
         <%-- render the page tabs --%>
         <div id="tabs" class="rave-ui-tabs">
@@ -53,12 +59,6 @@
                  <c:set var="isCurrentPage">
                      <c:choose>
                          <c:when test="${page.entityId == userPage.entityId}">true</c:when>
-                         <c:otherwise>false</c:otherwise>
-                     </c:choose>
-                 </c:set>
-                 <c:set var="hasOnlyOnePage">
-                      <c:choose>
-                         <c:when test="${fn:length(pages) == 1}">true</c:when>
                          <c:otherwise>false</c:otherwise>
                      </c:choose>
                  </c:set>
@@ -103,6 +103,14 @@
                             </div>
                             <!-- These are toolbar buttons -->
                             <div id="widget-${regionWidget.entityId}-toolbar" style="float:right;">
+                                <div id="widget-${regionWidget.entityId}-widget-menu-wrapper" class="widget-menu-wrapper">
+                                    <span id="widget-${regionWidget.entityId}-menu-button" class="widget-menu-button ui-icon ui-icon-circle-triangle-s" title="Widget Actions Menu"></span>   
+                                    <div id="widget-${regionWidget.entityId}-menu" class="widget-menu">  
+                                        <div id="widget-${regionWidget.entityId}-menu-move-item" class="widget-menu-item<c:if test='${hasOnlyOnePage}'> widget-menu-item-disabled</c:if>">
+                                            <fmt:message key="widget.general.movewidget"/>
+                                        </div>   
+                                    </div>       
+                                </div>                                                                
                                 <button id="widget-${regionWidget.entityId}-prefs"
                                         class="widget-toolbar-btn widget-toolbar-btn-prefs">
                                 </button>
@@ -165,6 +173,21 @@
             </select>
         </form>
     </div>
+    <fmt:message key="widget.general.movewidget" var="moveWidgetToPageTitle"/>
+    <div id="moveWidgetDialog" title="${moveWidgetToPageTitle}" class="dialog">
+        <div><fmt:message key="widget.general.movethiswidget"/></div>
+        <form id="moveWidgetForm">
+            <select id="moveToPageId">
+                <c:forEach var="userPage" items="${pages}">
+                    <c:if test="${userPage.entityId != page.entityId}">
+                        <option value="${userPage.entityId}">
+                            <c:out value="${userPage.name}"/>
+                        </option>
+                    </c:if>
+                </c:forEach>
+            </select>
+        </form>
+    </div>        
     <script>
         //Define the global widgets variable
         //This array will be populated by RegionWidgetRender providers.

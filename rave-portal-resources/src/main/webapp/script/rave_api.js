@@ -213,7 +213,27 @@ rave.api = rave.api || (function() {
                         }
                     }
                 }).error(handleError);
-        }        
+        }
+
+        function moveWidgetToPage(args) {
+            var data = {};
+            if (args.toPageId) {
+                data["toPageId"] = args.toPageId;
+                data["regionWidgetId"] = args.regionWidgetId;
+            }
+
+            $.post(rave.getContext() + path + "page/" + args.toPageId + "/moveWidget",
+                data,
+                function(result) {
+                    if (result.error) {
+                        handleRpcError(result);
+                    } else {
+                        if (typeof args.successCallback == 'function') {
+                            args.successCallback(result);
+                        }
+                    }
+                }).error(handleError);
+        }
 
         function updatePagePrefs(args) {
             $.post(rave.getContext() + path + "page/" + args.pageId + "/update",
@@ -264,7 +284,8 @@ rave.api = rave.api || (function() {
             addPage: addPage,
             updatePagePrefs: updatePagePrefs,
             getPagePrefs: getPagePrefs,
-            movePage: movePage
+            movePage: movePage,
+            moveWidgetToPage: moveWidgetToPage
         };
 
     })();

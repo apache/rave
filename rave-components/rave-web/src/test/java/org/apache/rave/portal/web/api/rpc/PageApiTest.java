@@ -56,7 +56,7 @@ public class PageApiTest {
     }
 
     @Test
-    public void moveWidget_validParams() {
+    public void moveWidgetOnPage_validParams() {
         final long TO_REGION = 1;
         final long FROM_REGION = 2;
 
@@ -72,7 +72,7 @@ public class PageApiTest {
     }
 
     @Test
-    public void moveWidget_invalidParams() {
+    public void moveWidgetOnPage_invalidParams() {
         final long TO_REGION = -1;
         final long FROM_REGION = 2;
 
@@ -89,7 +89,7 @@ public class PageApiTest {
     }
 
     @Test
-    public void moveWidget_internalError() {
+    public void moveWidgetOnPage_internalError() {
         final long TO_REGION = 1;
         final long FROM_REGION = 2;
 
@@ -305,4 +305,45 @@ public class PageApiTest {
         assertThat(result.getErrorCode(), is(RpcResult.ErrorCode.NO_ERROR));
         assertThat(result.getErrorMessage(), is(nullValue()));
     }      
+    
+    @Test
+    public void moveWidgetToPage_validParams() {      
+        expect(pageService.moveRegionWidgetToPage(REGION_WIDGET_ID, PAGE_2_ID)).andReturn(new RegionWidget());
+        replay(pageService);
+        RpcResult<RegionWidget> result = pageApi.moveWidgetToPage(PAGE_2_ID, REGION_WIDGET_ID);
+        verify(pageService);
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getResult(), is(notNullValue()));
+        assertThat(result.isError(), is(false));
+        assertThat(result.getErrorCode(), is(RpcResult.ErrorCode.NO_ERROR));
+        assertThat(result.getErrorMessage(), is(nullValue()));
+    }
+
+    @Test
+    public void moveWidgetToPage_invalidParams() {    
+        expect(pageService.moveRegionWidgetToPage(REGION_WIDGET_ID, PAGE_2_ID)).andThrow(new IllegalArgumentException(PARAM_ERROR_MESSAGE));
+        replay(pageService);
+
+        RpcResult<RegionWidget> result = pageApi.moveWidgetToPage(PAGE_2_ID, REGION_WIDGET_ID);
+        verify(pageService);
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getResult(), is(nullValue()));
+        assertThat(result.isError(), is(true));
+        assertThat(result.getErrorCode(), is(RpcResult.ErrorCode.INVALID_PARAMS));
+        assertThat(result.getErrorMessage(), is(equalTo(PARAM_ERROR_MESSAGE)));
+    }
+
+    @Test
+    public void moveWidgetToPage_internalError() {
+        expect(pageService.moveRegionWidgetToPage(REGION_WIDGET_ID, PAGE_2_ID)).andThrow(new RuntimeException(INTERNAL_ERROR_MESSAGE));
+        replay(pageService);
+
+        RpcResult<RegionWidget> result = pageApi.moveWidgetToPage(PAGE_2_ID, REGION_WIDGET_ID);
+        verify(pageService);
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getResult(), is(nullValue()));
+        assertThat(result.isError(), is(true));
+        assertThat(result.getErrorCode(), is(RpcResult.ErrorCode.INTERNAL_ERROR));
+        assertThat(result.getErrorMessage(), is(equalTo(INTERNAL_ERROR_MESSAGE)));
+    }  
 }

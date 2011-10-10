@@ -554,6 +554,38 @@ span.error, label.error {
     cursor: pointer;
     margin-right: 10px;
 }
+
+/* widget menu related styles */
+.widget-menu-wrapper {
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+}
+.widget-menu {
+    border: 1px solid black;
+    position: absolute;
+    display: none;
+    left: 18px;
+    top: 0;
+    width: 80px;
+    background-color: #FFFFFF;
+    z-index: 1000;
+    cursor: pointer;
+}
+.widget-menu-item {
+    padding: 3px;
+    color: #000000;
+}
+.widget-menu-item:hover {
+    background-color: #B4C4CF;
+}
+.widget-menu-item-disabled {
+    color: #D3D3D3;
+}
+.widget-menu-button {
+    cursor: pointer;
+}
+
 #errorStack {
     display: none;
 }

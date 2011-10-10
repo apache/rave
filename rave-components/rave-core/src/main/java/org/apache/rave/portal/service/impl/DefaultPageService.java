@@ -130,6 +130,26 @@ public class DefaultPageService implements PageService {
         target = regionRepository.save(target);
         return findRegionWidgetById(regionWidgetId, target.getRegionWidgets());
     }
+    
+    @Override
+    @Transactional
+    public RegionWidget moveRegionWidgetToPage(long regionWidgetId, long toPageId) {                
+        // Get the new page
+        Page toPage = getFromRepository(toPageId, pageRepository);
+        // Get the region widget
+        RegionWidget regionWidget = getFromRepository(regionWidgetId, regionWidgetRepository);
+        
+        // Move it to first position of the first region
+        Region moveToRegion = toPage.getRegions().get(0);
+        regionWidget.setRenderOrder(0);
+        regionWidget.setRegion(moveToRegion);
+        moveToRegion.getRegionWidgets().add(0, regionWidget);
+        // update the rendersequences of the widgets in this region
+        updateRenderSequences(moveToRegion.getRegionWidgets());
+        // persist it
+        regionRepository.save(moveToRegion);
+        return getFromRepository(regionWidgetId, regionWidgetRepository);        
+    }    
 
     @Override
     @Transactional
@@ -152,8 +172,8 @@ public class DefaultPageService implements PageService {
     @Transactional
     public Page movePage(long pageId, long moveAfterPageId) {
         return doMovePage(pageId, moveAfterPageId);
-    }    
-    
+    }
+
     @Override
     @Transactional
     public Page movePageToDefault(long pageId) {    

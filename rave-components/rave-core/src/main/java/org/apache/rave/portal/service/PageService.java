@@ -21,9 +21,9 @@ package org.apache.rave.portal.service;
 import org.apache.rave.portal.model.Page;
 import org.apache.rave.portal.model.Region;
 import org.apache.rave.portal.model.RegionWidget;
+import org.apache.rave.portal.model.User;
 
 import java.util.List;
-import org.apache.rave.portal.model.User;
 
 public interface PageService {
     /**
@@ -97,6 +97,15 @@ public interface PageService {
     RegionWidget moveRegionWidget(long regionWidgetId, int newPosition, long toRegion, long fromRegion);
 
     /**
+     * Moves a RegionWidget from one page to another
+     *       
+     * @param regionWidgetId  the RegionWidget to move
+     * @param toPageId the new page to move the regionWidgetTo
+     * @return the updated RegionWidget object
+     */
+    RegionWidget moveRegionWidgetToPage(long regionWidgetId, long toPageId);    
+    
+    /**
      * Creates a new instance of a widget and adds it to the first position of the first region on the page
      * @param page_id the id of the page to add the widget to
      * @param widget_id the {@link org.apache.rave.portal.model.Widget} id to add
@@ -137,5 +146,5 @@ public interface PageService {
      * @param pageId the pageId of the page to move to the default position
      * @return the updated Page object containing its new render sequence
      */
-    Page movePageToDefault(long pageId);
+    Page movePageToDefault(long pageId);  
 }

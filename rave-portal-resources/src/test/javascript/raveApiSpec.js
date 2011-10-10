@@ -231,7 +231,27 @@ describe("Rave API", function() {
                 rave.api.rpc.movePage({pageId: pageId, moveAfterPageId: moveAfterPageId});
             });
         });        
-        
+
+        describe("moveWidgetToPage", function() {
+            it("posts the correct values to RPC service for moving a widget to a different page", function() {
+                var currentPageId = 7;
+                var toPageId = 8;
+                var regionWidgetId = 10;
+
+                $.post = function(url, data, callback) {
+                    expect(url).toEqual("api/rpc/page/" + toPageId + "/moveWidget");                   
+                    expect(data.toPageId).toEqual(toPageId);
+                    expect(data.regionWidgetId).toEqual(regionWidgetId);
+                    expect(typeof(callback)).toEqual("function");
+                    return {
+                        error: function(a, b, c) {
+                        }
+                    }
+                };
+                rave.api.rpc.moveWidgetToPage({toPageId: toPageId, regionWidgetId:regionWidgetId});
+            });
+        });
+
         describe("getPagePrefs", function() {
             it("gets the correct metadata for a page", function() {
                 var callbackCalled = false;

@@ -196,4 +196,24 @@ public class PageApi {
             }
         }.getResult();        
     }
+
+    /**
+     * Moves a region widget to a new page
+     *
+     * @param toPageId the pageId to move the region widget to
+     * @param regionWidgetId the regionWidgetId that needs to be moved
+     * @return an {@link RpcOperation} containing the updated RegionWidget or any
+     *         errors encountered.
+     */
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.POST, value = "{toPageId}/moveWidget")
+    public RpcResult<RegionWidget> moveWidgetToPage(@PathVariable final long toPageId,
+                                                    @RequestParam(required=false) final long regionWidgetId) {
+        return new RpcOperation<RegionWidget>() {
+            @Override
+            public RegionWidget execute() {
+                return pageService.moveRegionWidgetToPage(regionWidgetId, toPageId);
+            }
+        }.getResult();
+    }
 }
