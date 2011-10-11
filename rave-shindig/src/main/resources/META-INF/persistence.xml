@@ -34,6 +34,8 @@
       <class>org.apache.rave.opensocial.model.PersonProperty</class>
       <class>org.apache.rave.opensocial.model.PersonAssociation</class>
       <class>org.apache.rave.opensocial.model.Url</class>
+      <class>org.apache.rave.opensocial.model.ApplicationData</class>
+      <class>org.apache.rave.opensocial.repository.impl.JpaApplicationDataRepository$JpaSerializableApplicationData</class>
       <class>org.apache.rave.gadgets.oauth.model.OAuthTokenInfo</class>
       <class>org.apache.rave.gadgets.oauth.model.OAuthConsumerStore</class>
 

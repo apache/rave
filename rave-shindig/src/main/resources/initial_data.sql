@@ -17,6 +17,7 @@
 
 set @token_info_seq = 'token_info';
 set @oauth_consumer_store_seq = 'oauth_consumer_store';
+set @application_data_seq = 'application_data';
 set @person_seq = 'person';
 set @person_association_seq = 'person_association';
 set @groups_seq = 'groups';
@@ -25,6 +26,7 @@ set @group_members_seq = 'group_members';
 CREATE TABLE IF NOT EXISTS RAVE_SHINDIG_SEQUENCES (seq_name VARCHAR(255) PRIMARY KEY NOT NULL, seq_count BIGINT(19));
 INSERT INTO RAVE_SHINDIG_SEQUENCES(seq_name, seq_count) values (@token_info_seq, 1);
 INSERT INTO RAVE_SHINDIG_SEQUENCES(seq_name, seq_count) values (@oauth_consumer_store_seq, 1);
+INSERT INTO RAVE_SHINDIG_SEQUENCES(seq_name, seq_count) values (@application_data_seq, 1);
 INSERT INTO RAVE_SHINDIG_SEQUENCES(seq_name, seq_count) values (@person_seq, 1);
 INSERT INTO RAVE_SHINDIG_SEQUENCES(seq_name, seq_count) values (@person_association_seq, 1);
 INSERT INTO RAVE_SHINDIG_SEQUENCES(seq_name, seq_count) values (@groups_seq, 1);

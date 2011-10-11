@@ -36,14 +36,14 @@ public abstract class AbstractJpaRepository<T extends BasicEntity> implements Re
     @PersistenceContext
     protected EntityManager manager;
 
-    private final Class<T> type;
+    private final Class<? extends T> type;
 
-    protected AbstractJpaRepository(Class<T> type) {
+    protected AbstractJpaRepository(Class<? extends T> type) {
         this.type = type;
     }
 
     @Override
-    public Class<T> getType() {
+    public Class<? extends T> getType() {
         return type;
     }
 

@@ -53,7 +53,7 @@ public class AbstractJpaRepositoryTest {
 
     @Test
     public void getType() {
-        assertThat(repository.getType(), is(equalTo(TestEntity.class)));
+        assertThat((Class<TestEntity>) repository.getType(), is(equalTo(TestEntity.class)));
     }
 
     @Test

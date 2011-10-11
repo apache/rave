@@ -157,8 +157,10 @@
                 <artifactId>openjpa-maven-plugin</artifactId>
                 <version>1.2</version>
                 <configuration>
-                    <includes>org/apache/rave/gadgets/oauth/model/*.class,
+                    <includes>
+                        org/apache/rave/gadgets/oauth/model/*.class,
                         org/apache/rave/opensocial/model/*.class,
+                        org/apache/rave/opensocial/repository/impl/JpaApplicationDataRepository$JpaSerializableApplicationData.class,
                         org/apache/shindig/social/opensocial/jpa/*.class
                     </includes>
                     <excludes>
@@ -201,8 +203,7 @@
                         </mapping>
                         <mapping>
                             <sourceFolder>src/main/resources</sourceFolder>
-                            <destinationFolder>@../rave-portal/target/tomcat6x/webapps/ROOT/WEB-INF/classes
-                            </destinationFolder>
+                            <destinationFolder>@../rave-portal/target/tomcat6x/webapps/ROOT/WEB-INF/classes</destinationFolder>
                         </mapping>
                     </mappings>
                 </configuration>

@@ -21,6 +21,7 @@ package org.apache.rave.opensocial.service.impl;
 
 import com.google.common.collect.Lists;
 import org.apache.rave.opensocial.repository.PersonRepository;
+import org.apache.rave.opensocial.service.SimplePersonService;
 import org.apache.rave.util.CollectionUtils;
 import org.apache.shindig.auth.SecurityToken;
 import org.apache.shindig.common.util.ImmediateFuture;
@@ -44,7 +45,7 @@ import java.util.concurrent.Future;
  * Implementation of the {@link PersonService} SPI
  */
 @Service
-public class DefaultPersonService implements PersonService {
+public class DefaultPersonService implements PersonService, SimplePersonService {
 
     private final PersonRepository repository;
 
@@ -60,7 +61,7 @@ public class DefaultPersonService implements PersonService {
                                                        Set<String> fields,
                                                        SecurityToken token) throws ProtocolException {
 
-        List<org.apache.rave.opensocial.model.Person> people = getPeopleFromRepository(userIds, groupId, token, collectionOptions);
+        List<org.apache.rave.opensocial.model.Person> people = getPeople(userIds, groupId, collectionOptions, token);
         return ImmediateFuture.newInstance(new RestfulCollection<Person>(convertPeople(people, fields)));
     }
 
@@ -69,10 +70,10 @@ public class DefaultPersonService implements PersonService {
         return ImmediateFuture.newInstance(convertPerson(getPersonForId(id, token), fields));
     }
 
-    private List<org.apache.rave.opensocial.model.Person> getPeopleFromRepository(Set<UserId> userIds,
-                                                                                  GroupId groupId,
-                                                                                  SecurityToken token,
-                                                                                  CollectionOptions collectionOptions) {
+    @Override
+    public List<org.apache.rave.opensocial.model.Person> getPeople(Set<UserId> userIds, GroupId groupId,
+                                                                   CollectionOptions collectionOptions,
+                                                                   SecurityToken token) {
         switch (groupId.getType()) {
             case all:
                 return getUniqueListOfConnectedPeople(userIds, collectionOptions, token);
@@ -118,13 +119,13 @@ public class DefaultPersonService implements PersonService {
         String filter = collectionOptions == null ? null : collectionOptions.getFilter();
         List<org.apache.rave.opensocial.model.Person> current;
         //Currently ignoring TOP FRIENDS as it hasn't been defined what a top friend is
-        if(filter == null || filter.equals(PersonService.ALL_FILTER) || filter.equals(PersonService.TOP_FRIENDS_FILTER)) {
+        if (filter == null || filter.equals(PersonService.ALL_FILTER) || filter.equals(PersonService.TOP_FRIENDS_FILTER)) {
             current = repository.findFriends(userId);
 
-        } else if(filter.equals(PersonService.HAS_APP_FILTER)) {
+        } else if (filter.equals(PersonService.HAS_APP_FILTER)) {
             current = repository.findFriends(userId, appId);
 
-        } else if(filter.equals(PersonService.IS_WITH_FRIENDS_FILTER)) {
+        } else if (filter.equals(PersonService.IS_WITH_FRIENDS_FILTER)) {
             current = repository.findFriendsWithFriend(userId, collectionOptions.getFilterValue());
 
         //Represents the default case (filter by field)
@@ -142,13 +143,13 @@ public class DefaultPersonService implements PersonService {
         List<org.apache.rave.opensocial.model.Person> current;
         //Currently ignoring TOP FRIENDS as it hasn't been defined what a top friend is
 
-        if(filter == null || filter.equals(PersonService.ALL_FILTER) ||filter.equals(PersonService.TOP_FRIENDS_FILTER)) {
+        if (filter == null || filter.equals(PersonService.ALL_FILTER) || filter.equals(PersonService.TOP_FRIENDS_FILTER)) {
             current = repository.findAllConnectedPeople(userId);
 
-        } else if(filter.equals(PersonService.HAS_APP_FILTER)) {
+        } else if (filter.equals(PersonService.HAS_APP_FILTER)) {
             current = repository.findAllConnectedPeople(userId, appId);
 
-        } else if(filter.equals(PersonService.IS_WITH_FRIENDS_FILTER)) {
+        } else if (filter.equals(PersonService.IS_WITH_FRIENDS_FILTER)) {
             current = repository.findAllConnectedPeopleWithFriend(userId, collectionOptions.getFilterValue());
 
         //Represents the default case (filter by field)
@@ -165,13 +166,13 @@ public class DefaultPersonService implements PersonService {
         String filter = collectionOptions == null ? null : collectionOptions.getFilter();
         List<org.apache.rave.opensocial.model.Person> current;
 
-        if(filter == null || filter.equals(PersonService.ALL_FILTER) || filter.equals(PersonService.TOP_FRIENDS_FILTER)) {
+        if (filter == null || filter.equals(PersonService.ALL_FILTER) || filter.equals(PersonService.TOP_FRIENDS_FILTER)) {
             current = repository.findByGroup(groupId);
 
-        } else if(filter.equals(PersonService.HAS_APP_FILTER)) {
+        } else if (filter.equals(PersonService.HAS_APP_FILTER)) {
             current = repository.findByGroup(groupId, appId);
 
-        } else if(filter.equals(PersonService.IS_WITH_FRIENDS_FILTER)) {
+        } else if (filter.equals(PersonService.IS_WITH_FRIENDS_FILTER)) {
             current = repository.findByGroupWithFriend(groupId, collectionOptions.getFilterValue());
 
         //Represents the default case (filter by field)
