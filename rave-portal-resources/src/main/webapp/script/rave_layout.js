@@ -191,20 +191,30 @@ rave.layout = rave.layout || (function() {
 
     // widget menu related functions
     var widgetMenu = (function() {
-        var $menu ;
-        var $menuItemMove ;
+        var $menu;
+        var $menuItemMove;
+        var $menuItemDelete;
+        var $menuItemMaximize;
 
-        function hideMenu() {
-            $(".widget-menu-button").each(function(index, element) {
-                if (!$(element).hasClass("widget-menu-item-disabled")) {
-                    $menu = $("#widget-" + rave.getObjectIdFromDomId(this.id) + "-menu");
-                    $menu.hide();
-                }
-            });
-        }
-
-        function showMenu() {
-            $menu.show();
+        /**
+         * Hides the widget menu for a specific widget
+         * @param widgetId the id of the widget to hide the menu for
+         */
+        function hideMenu(widgetId) {
+            $("#widget-" + widgetId + "-menu").hide();
+        }        
+        /**
+         * Hides all widget menus     
+         */
+        function hideAllMenus() {
+            $(".widget-menu").hide();
+        }        
+        /**
+         * Shows the widget menu for a specific widget
+         * @param widgetId the id of the widget to show the menu for
+         */
+        function showMenu(widgetId) {
+            $("#widget-" + widgetId + "-menu").show();
         }
 
         /**
@@ -227,29 +237,97 @@ rave.layout = rave.layout || (function() {
                 }
             });
 
-            $(".widget-menu-item").each(function(index, element) {
-                if (!$(element).hasClass("widget-menu-item-disabled")) {
-                    $(element).bind('click', function(event) {
-                        $menu = $("#widget-" + rave.getObjectIdFromDomId(this.id) + "-menu");
-                        $menuItemMove = $("#widget-" + rave.getObjectIdFromDomId(this.id) + "-menu-move-item") ;
+            // loop over each widget-menu and initialize the menu items
+            // note: the edit prefs menu item is by default rendered disabled
+            //       and it is up to the provider code for that widget to 
+            //       determine if the widget has preferences, and to enable
+            //       the menu item
+            $(".widget-menu").each(function(index, element){
+                var widgetId = rave.getObjectIdFromDomId(element.id);
+                                
+                // setup the move to page menu item
+                $menuItemMove = $("#widget-" + widgetId + "-menu-move-item");
+                if (!$menuItemMove.hasClass("widget-menu-item-disabled")) {
+                    $menuItemMove.bind('click', function(event) {                       
+                        var regionWidgetId = rave.getObjectIdFromDomId(this.id);
                         $moveWidgetDialog
-                            .data('regionWidgetId', rave.getObjectIdFromDomId(this.id))
+                            .data('regionWidgetId', regionWidgetId)
                             .dialog("open");
+                            
+                        // hide the widget menu
+                        rave.layout.hideWidgetMenu(regionWidgetId);                       
+                            
                         // prevent the menu button click event from bubbling up to parent
                         // DOM object event handlers such as the page tab click event
                         event.stopPropagation();
                     });
-                }
+                }    
+                
+                // setup the delete widget menu item
+                $menuItemDelete  = $("#widget-" + widgetId + "-menu-delete-item");
+                if (!$menuItemDelete.hasClass("widget-menu-item-disabled")) {
+                    $menuItemDelete.bind('click', function(event) {                       
+                        var regionWidgetId = rave.getObjectIdFromDomId(this.id); 
+                         // hide the widget menu
+                        rave.layout.hideWidgetMenu(regionWidgetId);                                         
+                        // invoke the rpc call to remove the widget from the page
+                        rave.layout.deleteRegionWidget(regionWidgetId);
+                                                                                                                                                     
+                        // prevent the menu button click event from bubbling up to parent
+                        // DOM object event handlers such as the page tab click event
+                        event.stopPropagation();
+                    });
+                }    
+                
+                // setup the maximize widget menu item
+                $menuItemMaximize  = $("#widget-" + widgetId + "-menu-maximize-item");
+                if (!$menuItemMaximize.hasClass("widget-menu-item-disabled")) {
+                    $menuItemMaximize.bind('click', function(event) {                       
+                        var regionWidgetId = rave.getObjectIdFromDomId(this.id); 
+                         // hide the widget menu
+                        rave.layout.hideWidgetMenu(regionWidgetId);                                         
+                        // maximize the widget
+                        rave.maximizeWidget({data: {id: regionWidgetId}});                                                                                                                                                     
+                        // prevent the menu button click event from bubbling up to parent
+                        // DOM object event handlers such as the page tab click event
+                        event.stopPropagation();
+                    });
+                }                
             });
 
             // close the widget menu if the user clicks outside of it
-            $("html").click(widgetMenu.hide);
+            $("html").click(widgetMenu.hideAll);
+        }
+        
+        /**
+         * Enables the Edit Prefs menu item in the widget menu to be clicked.
+         * Widget providers should use this function when initializing their
+         * widgets after determining if the widget has preferences to modify.
+         * 
+         * @param regionWidgetId the regionWidgetId of the regionWidget menu to enable
+         */
+        function enableEditPrefsMenuItem(regionWidgetId) {
+            // setup the edit prefs widget menu item
+            var $menuItemEditPrefs  = $("#widget-" + regionWidgetId + "-menu-editprefs-item");
+            $menuItemEditPrefs.removeClass("widget-menu-item-disabled");           
+            $menuItemEditPrefs.bind('click', function(event) {                       
+                var regionWidgetId = rave.getObjectIdFromDomId(this.id); 
+                 // hide the widget menu
+                rave.layout.hideWidgetMenu(regionWidgetId);                                         
+                // show the edit prefs region
+                rave.editPrefs(regionWidgetId);
+                // prevent the menu button click event from bubbling up to parent
+                // DOM object event handlers such as the page tab click event
+                event.stopPropagation();
+            });                
         }
 
         return {
             init: init,
-            hide: hideMenu,
-            show: showMenu
+            hideAll: hideAllMenus,
+            hide: hideMenu,            
+            show: showMenu,
+            enableEditPrefsMenuItem: enableEditPrefsMenuItem
         }
     })();
 
@@ -315,6 +393,23 @@ rave.layout = rave.layout || (function() {
     }
     
     /**
+     * Invokes the RPC call to delete a regionWidget from a page
+     * TODO: RAVE-299 - how can we load the confirmation text from the message bundles 
+     * 
+     * @param regionWidgetId the regionWidgetId to delete
+     */
+    function deleteRegionWidget(regionWidgetId) {
+        if (confirm("Are you sure you want to remove this widget from your page?")) {
+            rave.api.rpc.removeWidget({
+                regionWidgetId: regionWidgetId,
+                successCallback: function() {
+                    $("#widget-" + this.regionWidgetId + "-wrapper").remove();
+                }
+            });
+        }
+    }
+    
+    /**
      * Returns the pageId of the currently viewed page
      */
     function getCurrentPageId() {
@@ -343,6 +438,9 @@ rave.layout = rave.layout || (function() {
     // public rave.layout API
     return {
         init: init,
-        getCurrentPageId: getCurrentPageId
+        getCurrentPageId: getCurrentPageId,
+        hideWidgetMenu: widgetMenu.hide,
+        deleteRegionWidget: deleteRegionWidget,
+        enableEditPrefsMenuItem: widgetMenu.enableEditPrefsMenuItem
     };    
 })();

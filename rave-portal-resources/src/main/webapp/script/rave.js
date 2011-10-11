@@ -55,11 +55,8 @@ var rave = rave || (function() {
         var WIDGET_PREFS_INPUT_REQUIRED_CLASS = "widget-prefs-input-required";
         var WIDGET_PREFS_INPUT_FAILED_VALIDATION = "widget-prefs-input-failed-validation";
         
-        var WIDGET_ICON_BASE_CLASS = "ui-icon";
-        var WIDGET_BTN_MAXIMIZE_CLASS = "ui-icon-arrow-4-diag";
+        var WIDGET_ICON_BASE_CLASS = "ui-icon";        
         var WIDGET_BTN_MINIMIZE_CLASS = "ui-icon-arrowthick-1-sw";
-        var WIDGET_BTN_DELETE_CLASS = "ui-icon-close";
-        var WIDGET_BTN_EDIT_PREFS_CLASS = "ui-icon-pencil";
         var WIDGET_TOGGLE_DISPLAY_COLLAPSED = "ui-icon-triangle-1-e";
         var WIDGET_TOGGLE_DISPLAY_NORMAL = "ui-icon-triangle-1-s";             
 
@@ -145,42 +142,36 @@ var rave = rave || (function() {
         }
 
         function maximizeAction(args) {
+            var regionWidgetId = args.data.id;            
+            // display the widget in maximized view
             addOverlay($("#pageContent"));
             $(".region" ).sortable( "option", "disabled", true );
-            $("#widget-" + args.data.id + "-wrapper").removeClass("widget-wrapper").addClass("widget-wrapper-canvas");
-            
-            // changes to 'max' button:
-            // 1) clear out the previous max button click event and attach a new one
-            // 2) change the image
-            var $maxButton =  $("#widget-" + args.data.id + "-max");
-            $maxButton.unbind("click");
-            $maxButton.click({id:args.data.id}, minimizeAction);
-            $maxButton.button("option", "icons", {primary:WIDGET_BTN_MINIMIZE_CLASS});
-            
+            $("#widget-" + regionWidgetId + "-wrapper").removeClass("widget-wrapper").addClass("widget-wrapper-canvas");            
+            // hide the widget menu
+            $("#widget-" + regionWidgetId + "-widget-menu-wrapper").hide();            
+            // display the widget minimize button
+            $("#widget-" + regionWidgetId + "-min").show();                                    
             // hide the collapse/restore toggle icon in canvas mode
-            $("#widget-" + args.data.id + "-collapse").hide();
-            var widget = rave.getWidgetById(args.data.id);
+            $("#widget-" + regionWidgetId + "-collapse").hide();
+            var widget = rave.getWidgetById(regionWidgetId);
             if(typeof widget != "undefined" && isFunction(widget.maximize)) {
                 widget.maximize();
             }
         }
 
         function minimizeAction(args) {
+            var regionWidgetId = args.data.id;     
             $(".dnd-overlay").remove();
             $(".region" ).sortable( "option", "disabled", false );
-            $("#widget-" + args.data.id + "-wrapper").removeClass("widget-wrapper-canvas").addClass("widget-wrapper");
-            
-            // changes to 'max' button:
-            // 1) clear out the previous max button click event and attach a new one
-            // 2) change the image
-            var $maxButton =  $("#widget-" + args.data.id + "-max");
-            $maxButton.unbind("click");
-            $maxButton.click({id:args.data.id}, maximizeAction);            
-            $maxButton.button("option", "icons", {primary:WIDGET_BTN_MAXIMIZE_CLASS});
-                                              
-            // re-show the collapse/restore toggle icon
-            $("#widget-" + args.data.id + "-collapse").show();
-            var widget = rave.getWidgetById(args.data.id);
+            // display the widget in normal view
+            $("#widget-" + regionWidgetId + "-wrapper").removeClass("widget-wrapper-canvas").addClass("widget-wrapper");
+            // hide the widget minimize button
+            $("#widget-" + regionWidgetId + "-min").hide(); 
+            // show the widget menu
+            $("#widget-" + regionWidgetId + "-widget-menu-wrapper").show();                                                                                            
+            // show the collapse/restore toggle icon
+            $("#widget-" + regionWidgetId + "-collapse").show();
+            var widget = rave.getWidgetById(regionWidgetId);
             // if the widget is collapsed execute the collapse function
             // otherwise execute the minimize function
             if(typeof widget != "undefined"){
@@ -216,17 +207,7 @@ var rave = rave || (function() {
             
             rave.api.rest.saveWidgetCollapsedState(functionArgs);           
         }      
-
-        function deleteAction(args) {
-            if (confirm("Are you sure you want to remove this widget from your page")) {
-                rave.api.rpc.removeWidget({
-                    regionWidgetId: args.data.id,
-                    successCallback: function() {
-                        $("#widget-" + args.data.id + "-wrapper").remove();
-                    }
-                });
-            }
-        }
+        
         /**
          * Utility function to generate the html label for a userPref
          * based on if it is required or not
@@ -274,8 +255,8 @@ var rave = rave || (function() {
             return isValid;            
         }
 
-        function editPrefsAction(args) {
-            var regionWidget = getWidgetById(args.data.id);
+        function editPrefsAction(regionWidgetId) {
+            var regionWidget = getWidgetById(regionWidgetId);
             var userPrefs = regionWidget.metadata.userPrefs;
             var hasRequiredUserPrefs = false;
             
@@ -458,30 +439,15 @@ var rave = rave || (function() {
         function styleWidgetButtons(widgetId) {
             var widget = rave.getWidgetById(widgetId);
             
-            // init the maximize button
-            $("#widget-" + widgetId + "-max").button({
+            // init the widget minimize button which is hidden by default
+            // and only renders when widget is in maximized view
+            $("#widget-" + widgetId + "-min").button({
                 text: false,
                 icons: {
-                    primary: WIDGET_BTN_MAXIMIZE_CLASS
+                    primary: WIDGET_BTN_MINIMIZE_CLASS
                 }
-            }).click({id: widgetId}, maximizeAction);
-
-            // init the delete button
-            $("#widget-" + widgetId + "-remove").button({
-                text: false,
-                icons: {
-                    primary: WIDGET_BTN_DELETE_CLASS
-                }
-            }).click({id: widgetId}, deleteAction);
-
-            // init the edit preferences button
-            $("#" + WIDGET_PREFS_EDIT_BUTTON(widgetId)).button({
-                text: false,
-                icons: {
-                    primary: WIDGET_BTN_EDIT_PREFS_CLASS
-                }
-            }).click({id: widgetId}, editPrefsAction);
-                       
+            }).click({id: widgetId}, rave.minimizeWidget);
+                
             // init the collapse/restore toggle
             // conditionally style the icon and setup the event handlers
             var $toggleCollapseIcon = $("#widget-" + widgetId + "-collapse");
@@ -516,7 +482,8 @@ var rave = rave || (function() {
           init : init,          
           toggleCollapseWidgetIcon: toggleCollapseWidgetIcon,
           maximizeAction: maximizeAction,
-          minimizeAction: minimizeAction
+          minimizeAction: minimizeAction,
+          editPrefsAction: editPrefsAction
         };
 
     })();
@@ -719,6 +686,15 @@ var rave = rave || (function() {
          * 
          * @param args the argument object
          */
-        minimizeWidget: ui.minimizeAction
+        minimizeWidget: ui.minimizeAction,
+        
+        /***
+         * Display the inline edit prefs section for widget preferences inside
+         * the widget.
+         * 
+         * @param regionWidgetId the regionWidgetId of the widget
+         * 
+         */
+        editPrefs: ui.editPrefsAction
     }
 })();

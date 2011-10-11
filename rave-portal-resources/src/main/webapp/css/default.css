@@ -407,6 +407,10 @@ button.widget-toolbar-btn-prefs {
     display: none;
 }
 
+button.widget-toolbar-btn-min {
+    display: none;
+}
+
 .widget-toolbar-toggle-collapse {
     display: inline-block;
     vertical-align: middle;
@@ -575,7 +579,7 @@ span.error, label.error {
     display: none;
     left: 18px;
     top: 0;
-    width: 80px;
+    width: 100px;
     background-color: #FFFFFF;
     z-index: 1000;
     cursor: pointer;

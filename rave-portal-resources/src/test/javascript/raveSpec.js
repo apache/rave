@@ -472,9 +472,6 @@ describe("Rave", function() {
                         valuesMap["sortableAttrName"] = attrName;
                         valuesMap["sortableAttrValue"] = attrValue;
                     },
-                    unbind: function(eventName) {
-                        valuesMap["unbindEventName"] = eventName;
-                    },
                     click: function(args, fn) {
                         valuesMap["clickArgs"] = args;
                         valuesMap["clickFn"] = fn;
@@ -485,10 +482,10 @@ describe("Rave", function() {
                         valuesMap["buttonAttrArgs"] = attrArgs;
                     },
                     hide: function() {
-                        valuesMap["hideWasCalled"] = true;
+                        valuesMap["hideWasCalled-" + expression] = true;
                     },
                     show: function() {
-                        valuesMap["showWasCalled"] = true;
+                        valuesMap["showWasCalled-" + expression] = true;
                     },                    
                     height: function() {
                         
@@ -533,20 +530,15 @@ describe("Rave", function() {
             expect($().getValue("sortableAttrValue")).toEqual(true);            
             // verify the CSS styles
             expect($().hasClass("widget-wrapper-canvas")).toEqual(true);
-            expect($().hasClass("widget-wrapper")).toEqual(false);
-            // verify the unbind parameter
-            expect($().getValue("unbindEventName")).toEqual("click");
-            // verify the click parameters
-            expect($().getValue("clickArgs")).toEqual({id: args.data.id});
-            expect(rave.isFunction($().getValue("clickFn"))).toEqual(true);
-            // verify the button parameters
-            expect($().getValue("buttonOption")).toEqual("option");
-            expect($().getValue("buttonAttrName")).toEqual("icons");
-            expect($().getValue("buttonAttrArgs")).toEqual({primary:"ui-icon-arrowthick-1-sw"});                     
+            expect($().hasClass("widget-wrapper")).toEqual(false);           
+            // verify widget menu hide was called
+            expect($().getValue("hideWasCalled-#widget-" + args.data.id + "-widget-menu-wrapper")).toEqual(true);  
+            // verify widget minimize show was called
+            expect($().getValue("showWasCalled-#widget-" + args.data.id + "-min")).toEqual(true);        
             // verify getWidgetById called
             expect(rave.getWidgetById).toHaveBeenCalledWith(args.data.id); 
-            // verify hide was called
-            expect($().getValue("hideWasCalled")).toEqual(true);                 
+            // verify collapse/restore icon hide was called
+            expect($().getValue("hideWasCalled-#widget-" + args.data.id + "-collapse")).toEqual(true);                 
             // verify widget.maximize was called
             expect(mockWidget.maximizeWasCalled).toEqual(true);
                    
@@ -576,22 +568,16 @@ describe("Rave", function() {
             // verify the CSS styles
             expect($().hasClass("widget-wrapper-canvas")).toEqual(false);
             expect($().hasClass("widget-wrapper")).toEqual(true);
-            // verify the unbind parameter
-            expect($().getValue("unbindEventName")).toEqual("click");
-            // verify the click parameters
-            expect($().getValue("clickArgs")).toEqual({id: args.data.id});
-            expect(rave.isFunction($().getValue("clickFn"))).toEqual(true);
-            // verify the button parameters
-            expect($().getValue("buttonOption")).toEqual("option");
-            expect($().getValue("buttonAttrName")).toEqual("icons");
-            expect($().getValue("buttonAttrArgs")).toEqual({primary:"ui-icon-arrow-4-diag"});                     
-            // verify show was called
-            expect($().getValue("showWasCalled")).toEqual(true);                 
+            // verify widget minimize hide was called
+            expect($().getValue("hideWasCalled-#widget-" + args.data.id + "-min")).toEqual(true);                            
+            // verify widget menu show was called
+            expect($().getValue("showWasCalled-#widget-" + args.data.id + "-widget-menu-wrapper")).toEqual(true);                                  
+            // verify collapse/restore icon show was called
+            expect($().getValue("showWasCalled-#widget-" + args.data.id + "-collapse")).toEqual(true);                 
             // verify getWidgetById called
             expect(rave.getWidgetById).toHaveBeenCalledWith(args.data.id);                   
             // verify widget.minimize was called
             expect(mockWidget.minimizeWasCalled).toEqual(true);             
-        });          
-        
+        });                    
     });
 });

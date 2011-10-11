@@ -136,9 +136,9 @@ rave.opensocial = rave.opensocial || (function() {
             renderGadgetViewIfNotCollapsed(rave.opensocial.getCurrentView(this.regionWidgetId), this);             
         };
         
-        // if the gadget has prefences to edit, display the edit prefs button in the gadget chrome
-        if (gadget.metadata.hasPrefsToEdit) {            
-            $("#widget-" + gadget.regionWidgetId + "-prefs").show();
+        // if the gadget has prefences to edit, enable the edit prefs menu item
+        if (gadget.metadata.hasPrefsToEdit) { 
+            rave.layout.enableEditPrefsMenuItem(gadget.regionWidgetId);            
         }
         
         // if the gadget is not collapsed, render it

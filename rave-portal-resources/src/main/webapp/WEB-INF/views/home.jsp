@@ -66,7 +66,7 @@
                     <div id="pageTitle-${userPage.entityId}" class="page-title" onclick="rave.viewPage(${userPage.entityId});"><c:out value="${userPage.name}"/></div>
                     <c:if test="${isCurrentPage}">
                         <div id="pageMenuWrapper">
-                            <span id="pageMenuButton" class="ui-icon ui-icon-circle-triangle-s" title="Page Actions Menu"></span>
+                            <span id="pageMenuButton" class="ui-icon ui-icon-circle-triangle-s" title="<fmt:message key="page.menu.title"/>"></span>
                             <div id="pageMenu" class="page-menu">
                                 <div id="pageMenuEdit" class="page-menu-item"><fmt:message key="page.general.editpage"/></div>
                                 <div id="pageMenuDelete" class="page-menu-item<c:if test='${hasOnlyOnePage}'> page-menu-item-disabled</c:if>">
@@ -90,7 +90,7 @@
                 <c:forEach var="regionWidget" items="${region.regionWidgets}">
                    <div class="widget-wrapper" id="widget-${regionWidget.entityId}-wrapper">
                         <div class="widget-title-bar">
-                            <span id="widget-${regionWidget.entityId}-collapse" class="widget-toolbar-toggle-collapse" title="Collapse/Restore Widget"></span>
+                            <span id="widget-${regionWidget.entityId}-collapse" class="widget-toolbar-toggle-collapse" title="<fmt:message key="widget.chrome.toggle"/>"></span>
                             <div id="widget-${regionWidget.entityId}-title" class="widget-title">
                             <c:choose>
                                 <c:when test="${not empty regionWidget.widget.titleUrl}">
@@ -101,25 +101,33 @@
                                 </c:otherwise>
                             </c:choose>
                             </div>
-                            <!-- These are toolbar buttons -->
+                            <%-- These are toolbar buttons --%>
                             <div id="widget-${regionWidget.entityId}-toolbar" style="float:right;">
                                 <div id="widget-${regionWidget.entityId}-widget-menu-wrapper" class="widget-menu-wrapper">
-                                    <span id="widget-${regionWidget.entityId}-menu-button" class="widget-menu-button ui-icon ui-icon-circle-triangle-s" title="Widget Actions Menu"></span>   
+                                    <span id="widget-${regionWidget.entityId}-menu-button" class="widget-menu-button ui-icon ui-icon-gear" title="<fmt:message key="widget.menu.title"/>"></span>   
                                     <div id="widget-${regionWidget.entityId}-menu" class="widget-menu">  
-                                        <div id="widget-${regionWidget.entityId}-menu-move-item" class="widget-menu-item<c:if test='${hasOnlyOnePage}'> widget-menu-item-disabled</c:if>">
-                                            <fmt:message key="widget.general.movewidget"/>
+                                        <%-- 
+                                            By default the edit prefs item is disabled.
+                                            Each provider's widget initialization will be responsible for enabling this item
+                                            if the widget has preferences to be edited
+                                        --%> 
+                                        <div id="widget-${regionWidget.entityId}-menu-editprefs-item" class="widget-menu-item widget-menu-item-disabled">
+                                            <fmt:message key="widget.menu.editprefs"/>
                                         </div>   
-                                    </div>       
-                                </div>                                                                
-                                <button id="widget-${regionWidget.entityId}-prefs"
-                                        class="widget-toolbar-btn widget-toolbar-btn-prefs">
-                                </button>
-                                <button id="widget-${regionWidget.entityId}-max"
-                                        class="widget-toolbar-btn">
-                                </button>
-                                <button id="widget-${regionWidget.entityId}-remove"
-                                        class="widget-toolbar-btn">
-                                </button>
+                                        <div id="widget-${regionWidget.entityId}-menu-maximize-item" class="widget-menu-item">
+                                            <fmt:message key="widget.menu.maximize"/>
+                                        </div>    
+                                        <div id="widget-${regionWidget.entityId}-menu-move-item" class="widget-menu-item<c:if test='${hasOnlyOnePage}'> widget-menu-item-disabled</c:if>">
+                                            <fmt:message key="widget.menu.movetopage"/>
+                                        </div>   
+                                        <div id="widget-${regionWidget.entityId}-menu-delete-item" class="widget-menu-item">
+                                            <fmt:message key="widget.menu.delete"/>
+                                        </div>                                       
+                                    </div>                                           
+                                </div>           
+                                <%-- the minimize widget button, which is hidden by default and only displays in maximized view --%>    
+                                <button id="widget-${regionWidget.entityId}-min" 
+                                        class="widget-toolbar-btn widget-toolbar-btn-min"></button>
                             </div>
                         </div>
                         <div class="widget-prefs" id="widget-${regionWidget.entityId}-prefs-content"></div>
@@ -173,9 +181,9 @@
             </select>
         </form>
     </div>
-    <fmt:message key="widget.general.movewidget" var="moveWidgetToPageTitle"/>
+    <fmt:message key="widget.menu.movetopage" var="moveWidgetToPageTitle"/>
     <div id="moveWidgetDialog" title="${moveWidgetToPageTitle}" class="dialog">
-        <div><fmt:message key="widget.general.movethiswidget"/></div>
+        <div><fmt:message key="widget.menu.movethiswidget"/></div>
         <form id="moveWidgetForm">
             <select id="moveToPageId">
                 <c:forEach var="userPage" items="${pages}">
