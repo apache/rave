@@ -5,6 +5,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="portal" uri="http://www.apache.org/rave/tags" %>
 <%@ taglib tagdir="/WEB-INF/tags" prefix="rave"%>
+<fmt:setBundle basename="messages"/>
 <rave:rave_generic_page pageTitle="Error ${requestScope['javax.servlet.error.status_code']}: ${requestScope['javax.servlet.error.exception_type'].simpleName}">
     <header>
       <h1>
@@ -13,8 +14,11 @@
     </header>
     <div id="content" >
         <div id="errorMessage">
-            <div class="errorLogo"><img src="<spring:url value="images/error_generic.png" />" alt="Error has occurred"
+            <%-- Image is missing in the codebase --%>
+<%--
+            <div class="errorLogo"><img src="<c:url value="/images/error_generic.png" />" alt="Error has occurred"
                                         title="Error has occurred"/></div>
+--%>
             <div class="errorMessage">
                 <fmt:message key="page.error.message" />
                 &nbsp;<a href="javascript: window.location.reload();"><fmt:message key="page.error.reload" /></a>.<br/>
