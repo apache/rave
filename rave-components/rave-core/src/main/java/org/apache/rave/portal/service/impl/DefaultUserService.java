@@ -146,4 +146,14 @@ public class DefaultUserService implements UserService {
         searchResult.setPageSize(pageSize);
         return searchResult;
     }
+
+    @Override
+    public SearchResult<User> getUsersByFreeTextSearch(String searchTerm, int offset, int pageSize) {
+        final int count = userRepository.getCountByUsernameOrEmail(searchTerm);
+        final List<User> users = userRepository.findByUsernameOrEmail(searchTerm, offset, pageSize);
+        final SearchResult<User> searchResult = new SearchResult<User>(users, count);
+        searchResult.setOffset(offset);
+        searchResult.setPageSize(pageSize);
+        return searchResult;
+    }
 }

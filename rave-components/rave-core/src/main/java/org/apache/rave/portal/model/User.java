@@ -54,7 +54,11 @@ import java.util.Collection;
         @NamedQuery(name = User.USER_GET_BY_USERNAME, query = "select u from User u where u.username = :username"),
         @NamedQuery(name = User.USER_GET_BY_USER_EMAIL, query = "select u from User u where u.email = :email"),
         @NamedQuery(name = User.USER_GET_ALL, query = "select u from User u order by u.username asc"),
-        @NamedQuery(name = User.USER_COUNT_ALL, query = "select count(u) from User u")
+        @NamedQuery(name = User.USER_COUNT_ALL, query = "select count(u) from User u"),
+        @NamedQuery(name = User.USER_FIND_BY_USERNAME_OR_EMAIL, query = "select u from User u " +
+                "where lower(u.username) like :searchTerm or lower(u.email) like :searchTerm order by u.username asc"),
+        @NamedQuery(name = User.USER_COUNT_FIND_BY_USERNAME_OR_EMAIL, query = "select count(u) from User u " +
+                "where lower(u.username) like :searchTerm or lower(u.email) like :searchTerm")
 
 })
 public class User implements UserDetails, BasicEntity, Serializable {
@@ -64,9 +68,12 @@ public class User implements UserDetails, BasicEntity, Serializable {
     public static final String USER_GET_BY_USER_EMAIL = "User.getByUserEmail";
     public static final String USER_GET_ALL = "User.getAll";
     public static final String USER_COUNT_ALL = "User.countAll";
-    
+    public static final String USER_FIND_BY_USERNAME_OR_EMAIL = "User.findByUsernameOrEmail";
+    public static final String USER_COUNT_FIND_BY_USERNAME_OR_EMAIL = "User.countFindByUsernameOrEmail";
+
     public static final String PARAM_USERNAME = "username";
     public static final String PARAM_EMAIL = "email";
+    public static final String PARAM_SEARCHTERM = "searchTerm";
 
     @Id
     @Column(name = "entity_id")

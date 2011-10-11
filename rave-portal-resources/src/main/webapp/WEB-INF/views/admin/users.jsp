@@ -33,17 +33,19 @@
             <ul class="horizontal-list searchbox">
                 <li><a href="<spring:url value="/app/newaccount.jsp"/>">__Add user</a></li>
                 <li>
-                <form action="" method="GET">
+                <form action="<spring:url value="/app/admin/users/search"/>" method="GET">
                     <fieldset>
-                        <input type="hidden" name="referringPageId" value="${referringPageId}">
-                        <label for="searchTerm">__Search users</label>
+                        <label for="searchTerm"><fmt:message key="admin.users.search"/></label>
                         <input type="search" id="searchTerm" name="searchTerm"
                                value="<c:out value="${searchTerm}"/>"/>
                         <fmt:message key="page.store.search.button" var="searchButtonText"/>
-                        <input type="submit" value="${searchButtonText}">
+                        <input type="submit" value="${searchButtonText}"/>
                     </fieldset>
                 </form>
                 </li>
+                <c:if test="${not empty searchTerm}">
+                <li><a href="<spring:url value="/app/admin/users"/>"><fmt:message key="admin.clearsearch"/></a></li>
+                </c:if>
             </ul>
             <c:choose>
                 <c:when test="${empty searchTerm and (empty searchResult or searchResult.totalResults eq 0)}">
@@ -93,7 +95,7 @@
                 </c:forEach>
                 </tbody>
             </table>
-            
+
             <rave:admin_paging/>
 
         </article>

@@ -59,6 +59,16 @@ public class AdminController {
         return ViewNames.ADMIN_USERS;
     }
 
+    @RequestMapping(value = "users/search", method = RequestMethod.GET)
+    public String searchUsers(@RequestParam(required = true) String searchTerm,
+                              @RequestParam(required = false, defaultValue = "0") int offset, Model model) {
+        addNavigationMenusToModel("users", model);
+        final SearchResult<User> users = userService.getUsersByFreeTextSearch(searchTerm, offset, DEFAULT_PAGE_SIZE);
+        model.addAttribute(ModelKeys.SEARCH_TERM, searchTerm);
+        model.addAttribute(ModelKeys.SEARCHRESULT, users);
+        return ViewNames.ADMIN_USERS;
+    }
+
     @RequestMapping(value = "userdetail/{userid}", method = RequestMethod.GET)
     public String viewUserDetail(@PathVariable("userid") String userid, Model model) {
         addNavigationMenusToModel("users", model);

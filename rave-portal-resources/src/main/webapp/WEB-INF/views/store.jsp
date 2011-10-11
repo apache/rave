@@ -53,7 +53,7 @@
                   <label for="searchTerm"><fmt:message key="page.store.search"/></label>
                   <input type="search" id="searchTerm" name="searchTerm" value="<c:out value="${searchTerm}"/>"/>
                   <fmt:message key="page.store.search.button" var="searchButtonText"/>
-                  <input type="submit" value="${searchButtonText}">
+                  <input type="submit" value="${searchButtonText}"/>
                 </p>
             </fieldset>
         </form>

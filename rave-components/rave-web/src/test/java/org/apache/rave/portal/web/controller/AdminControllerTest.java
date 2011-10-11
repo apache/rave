@@ -58,15 +58,9 @@ public class AdminControllerTest {
     @Test
     public void adminUsers() throws Exception {
         Model model = new ExtendedModelMap();
-        User user1 = new User(123L, "john.doe.sr");
-        User user2 = new User(456L, "john.doe.jr");
-        List<User> users = new ArrayList<User>();
-        users.add(user1);
-        users.add(user2);
         final int offset = 0;
         final int pageSize = 10;
-        final int totalResult = 12390;
-        SearchResult<User> searchResult = new SearchResult<User>(users, totalResult);
+        SearchResult<User> searchResult = createSearchResultWithTwoUsers();
 
         expect(userService.getLimitedListOfUsers(offset, pageSize)).andReturn(searchResult);
         replay(userService);
@@ -78,7 +72,27 @@ public class AdminControllerTest {
     }
 
     @Test
-    public void testAdminUserDetail() throws Exception {
+    public void searchUsers() throws Exception {
+        Model model = new ExtendedModelMap();
+
+        final String searchTerm = "Doe";
+        final int offset = 0;
+        final int pageSize = 10;
+        SearchResult<User> searchResult = createSearchResultWithTwoUsers();
+
+        expect(userService.getUsersByFreeTextSearch(searchTerm, offset, pageSize)).andReturn(searchResult);
+        replay(userService);
+
+        String adminUsersView = controller.searchUsers(searchTerm, offset, model);
+        assertEquals(ViewNames.ADMIN_USERS, adminUsersView);
+        assertEquals(searchResult, model.asMap().get(ModelKeys.SEARCHRESULT));
+        assertEquals(searchTerm, model.asMap().get(ModelKeys.SEARCH_TERM));
+        assertTrue(model.containsAttribute(TABS));
+    }
+
+
+    @Test
+    public void adminUserDetail() throws Exception {
         Model model = new ExtendedModelMap();
         String userid = "dummyUserId";
         String adminUserDetailView = controller.viewUserDetail(userid, model);
@@ -102,5 +116,15 @@ public class AdminControllerTest {
         controller = new AdminController();
         userService = createNiceMock(UserService.class);
         controller.setUserService(userService);
+    }
+
+    private static SearchResult<User> createSearchResultWithTwoUsers() {
+        User user1 = new User(123L, "john.doe.sr");
+        User user2 = new User(456L, "john.doe.jr");
+        List<User> users = new ArrayList<User>();
+        users.add(user1);
+        users.add(user2);
+        final int totalResult = 12390;
+        return new SearchResult<User>(users, totalResult);
     }
 }

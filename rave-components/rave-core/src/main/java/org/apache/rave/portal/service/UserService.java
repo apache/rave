@@ -89,4 +89,14 @@ public interface UserService extends UserDetailsService {
      * @return SearchResult
      */
     SearchResult<User> getLimitedListOfUsers(int offset, int pageSize);
+
+    /**
+     * Gets a {@link SearchResult} for {@link User}'s that match the search term
+     *
+     * @param searchTerm free text input to search on users
+     * @param offset   start point within the resultset (for paging)
+     * @param pageSize maximum number of items to be returned (for paging)
+     * @return SearchResult
+     */
+    SearchResult<User> getUsersByFreeTextSearch(String searchTerm, int offset, int pageSize);
 }

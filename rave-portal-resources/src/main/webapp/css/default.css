@@ -93,6 +93,14 @@ a img {
     content: "";
 }
 
+.paging li a, .paging li a:visited {
+    text-decoration: none;
+}
+
+.paging li a:hover {
+    text-decoration: underline;
+}
+
 #banner {
     padding: 0 0 10px 10px;
 }
@@ -606,6 +614,10 @@ span.error, label.error {
     width: 80%;
     padding:0 20px;
     font-size:1.1em;
+}
+
+.admincontent p {
+    margin: 1em 0;
 }
 
 .admincontent .searchbox {

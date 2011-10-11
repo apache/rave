@@ -66,4 +66,19 @@ public class JpaUserRepository extends AbstractJpaRepository<User> implements Us
         Number countResult = (Number) query.getSingleResult();
         return countResult.intValue();
     }
+
+    @Override
+    public List<User> findByUsernameOrEmail(String searchTerm, int offset, int pageSize) {
+        TypedQuery<User> query = manager.createNamedQuery(User.USER_FIND_BY_USERNAME_OR_EMAIL, User.class);
+        query.setParameter(User.PARAM_SEARCHTERM, "%" + searchTerm.toLowerCase() + "%");
+        return getPagedResultList(query, offset, pageSize);
+    }
+
+    @Override
+    public int getCountByUsernameOrEmail(String searchTerm) {
+        Query query = manager.createNamedQuery(User.USER_COUNT_FIND_BY_USERNAME_OR_EMAIL);
+        query.setParameter(User.PARAM_SEARCHTERM, "%" + searchTerm.toLowerCase() + "%");
+        Number countResult = (Number) query.getSingleResult();
+        return countResult.intValue();
+    }
 }

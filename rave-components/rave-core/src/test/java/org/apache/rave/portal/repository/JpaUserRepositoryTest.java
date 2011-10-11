@@ -145,4 +145,21 @@ public class JpaUserRepositoryTest {
         assertTrue(count >= 6);
     }
 
+    @Test
+    public void getSearchResult() {
+        String searchTerm = "Doe";
+        final int offset = 0;
+        final int pageSize = 10;
+        List<User> users = repository.findByUsernameOrEmail(searchTerm, offset, pageSize);
+        assertNotNull(users);
+        assertTrue(users.size() > 0 && users.size() <= pageSize);
+    }
+
+    @Test
+    public void countSearchResult() {
+        String searchTerm = "Doe";
+        int count = repository.getCountByUsernameOrEmail(searchTerm);
+        assertTrue(count > 1);
+    }
+
 }

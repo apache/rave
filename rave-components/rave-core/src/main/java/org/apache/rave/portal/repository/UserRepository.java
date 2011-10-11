@@ -42,7 +42,7 @@ public interface UserRepository extends Repository<User> {
     User getByUserEmail(String userEmail);
 
     /**
-     * List of Users with a limited resultset
+     * List of {@link User}'s with a limited resultset
      *
      * @param offset   start point within the total resultset
      * @param pageSize maximum number of items to be returned (for paging)
@@ -55,4 +55,21 @@ public interface UserRepository extends Repository<User> {
      */
     int getCountAll();
 
+    /**
+     * List of {@link User}'s that match a searchterm in their username or email address
+     *
+     * @param searchTerm search term
+     * @param offset     start point within the total resultset
+     * @param pageSize   maximum number of items to be returned (for paging)
+     * @return a List of Users with of at most the number of items in pageSize
+     */
+    List<User> findByUsernameOrEmail(String searchTerm, int offset, int pageSize);
+
+    /**
+     *
+     * @param searchTerm search term
+     * @return the total number of {@link User}'s that match a searchterm in their username or email address.
+     *         Useful for paging.
+     */
+    int getCountByUsernameOrEmail(String searchTerm);
 }

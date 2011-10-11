@@ -203,5 +203,22 @@ public class UserServiceTest {
         assertEquals(user1, result.getResultSet().get(0));
     }
 
+    @Test
+    public void getUsersByFreeTextSearch() {
+        final String searchTerm = "Doe";
+        User user1 = new User(123L, "john.doe.sr");
+        User user2 = new User(456L, "john.doe.jr");
+        List<User> users = new ArrayList<User>();
+        users.add(user1);
+        users.add(user2);
+        final int offset = 0;
+        final int pageSize = 10;
+        expect(repository.findByUsernameOrEmail(searchTerm, offset, pageSize)).andReturn(users);
+        replay(repository);
 
+        SearchResult<User> result = service.getUsersByFreeTextSearch(searchTerm, offset, pageSize);
+        assertEquals(pageSize, result.getPageSize());
+        assertEquals(users.size(), result.getResultSet().size());
+        assertEquals(user1, result.getResultSet().get(0));
+    }
 }
