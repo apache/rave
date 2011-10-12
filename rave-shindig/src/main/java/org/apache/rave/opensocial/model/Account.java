@@ -145,7 +145,6 @@ public class Account implements org.apache.shindig.social.opensocial.model.Accou
 
   /**
    * {@inheritDoc}
-   * @see org.apache.shindig.social.opensocial.jpa.api.DbObject#getObjectId()
    */
   public Long getEntityId() {
     return entityId;
