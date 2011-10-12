@@ -16,6 +16,7 @@
   specific language governing permissions and limitations
   under the License.
   --%>
+
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -28,60 +29,36 @@
 <rave:rave_generic_page pageTitle="${pagetitle}">
     <rave:header pageTitle="${pagetitle}"/>
     <rave:admin_tabsheader/>
+
     <div class="pageContent">
         <article class="admincontent">
             <ul class="horizontal-list searchbox">
                 <li><a href="<spring:url value="/app/newaccount.jsp"/>">__Add user</a></li>
                 <li>
-                <form action="<spring:url value="/app/admin/users/search"/>" method="GET">
-                    <fieldset>
-                        <label for="searchTerm"><fmt:message key="admin.users.search"/></label>
-                        <input type="search" id="searchTerm" name="searchTerm"
-                               value="<c:out value="${searchTerm}"/>"/>
-                        <fmt:message key="page.store.search.button" var="searchButtonText"/>
-                        <input type="submit" value="${searchButtonText}"/>
-                    </fieldset>
-                </form>
+                    <form action="<spring:url value="/app/admin/users/search"/>" method="GET">
+                        <fieldset>
+                            <label for="searchTerm"><fmt:message key="admin.users.search"/></label>
+                            <input type="search" id="searchTerm" name="searchTerm"
+                                   value="<c:out value="${searchTerm}"/>"/>
+                            <fmt:message key="page.store.search.button" var="searchButtonText"/>
+                            <input type="submit" value="${searchButtonText}"/>
+                        </fieldset>
+                    </form>
                 </li>
                 <c:if test="${not empty searchTerm}">
-                <li><a href="<spring:url value="/app/admin/users"/>"><fmt:message key="admin.clearsearch"/></a></li>
+                    <li><a href="<spring:url value="/app/admin/users"/>"><fmt:message key="admin.clearsearch"/></a></li>
                 </c:if>
             </ul>
-            <c:choose>
-                <c:when test="${empty searchTerm and (empty searchResult or searchResult.totalResults eq 0)}">
-                    <fmt:message key="admin.list.noresult" var="listheader"/>
-                </c:when>
-                <c:when test="${empty searchTerm}">
-                    <fmt:message key="admin.list.result.x.to.y" var="listheader">
-                        <fmt:param value="${offset + 1}"/>
-                        <fmt:param value="${offset + fn:length(searchResult.resultSet)}"/>
-                        <fmt:param value="${searchResult.totalResults}"/>
-                    </fmt:message>
-                </c:when>
-                <c:when test="${not empty searchTerm and searchResult.totalResults eq 0}">
-                    <fmt:message key="admin.list.search.noresult" var="listheader">
-                        <fmt:param><c:out value="${searchTerm}"/></fmt:param>
-                    </fmt:message>
-                </c:when>
-                <c:otherwise>
-                    <fmt:message key="admin.list.search.result.x.to.y" var="listheader">
-                        <fmt:param value="${offset + 1}"/>
-                        <fmt:param value="${offset + fn:length(searchResult.resultSet)}"/>
-                        <fmt:param value="${searchResult.totalResults}"/>
-                        <fmt:param><c:out value="${searchTerm}"/></fmt:param>
-                    </fmt:message>
-                </c:otherwise>
-            </c:choose>
-            <h2>${listheader}</h2>
 
+            <rave:admin_listheader/>
             <rave:admin_paging/>
 
             <table class="datatable userstable">
                 <thead>
                 <tr>
-                    <th class="textcell">Username</th>
-                    <th class="largetextcell">Email</th>
-                    <th class="booleancell">Enabled</th>
+                    <th class="textcell"><fmt:message key="admin.userdata.username"/></th>
+                    <th class="largetextcell"><fmt:message key="admin.userdata.email"/></th>
+                    <th class="booleancell"><fmt:message key="admin.userdata.enabled"/></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -90,7 +67,7 @@
                     <tr data-detaillink="${detaillink}">
                         <td><a href="${detaillink}"><c:out value="${user.username}"/></a></td>
                         <td><a href="${detaillink}"><c:out value="${user.email}"/></a></td>
-                        <td><c:if test="${user.enabled}"><a href="${detaillink}">X</a></c:if></td>
+                        <td><a href="${detaillink}">${user.enabled}</a></td>
                     </tr>
                 </c:forEach>
                 </tbody>

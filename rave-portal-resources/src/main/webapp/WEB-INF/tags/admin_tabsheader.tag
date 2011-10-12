@@ -30,7 +30,8 @@
                         <c:when test="${navItem.selected}">
                             <li class="rave-ui-tab rave-ui-tab-selected">
                                 <div class="page-title">
-                                    <fmt:message key="${navItem.name}"/>
+                                    <a href="<spring:url value="${navItem.url}"/>"><fmt:message
+                                            key="${navItem.name}"/></a>
                                 </div>
                             </li>
                         </c:when>

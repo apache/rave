@@ -26,24 +26,32 @@ import org.apache.rave.portal.web.model.NavigationItem;
 import org.apache.rave.portal.web.model.NavigationMenu;
 import org.apache.rave.portal.web.util.ModelKeys;
 import org.apache.rave.portal.web.util.ViewNames;
+import org.apache.rave.portal.web.validator.UserProfileValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
 /**
  * Controller for the admin pages
  */
 @Controller
+@SessionAttributes({"user"})
 @RequestMapping(value = {"/admin/*", "/admin"})
 public class AdminController {
     public static final int DEFAULT_PAGE_SIZE = 10;
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private UserProfileValidator userProfileValidator;
 
     @RequestMapping(method = RequestMethod.GET)
     public String viewDefault(Model model) {
@@ -70,10 +78,21 @@ public class AdminController {
     }
 
     @RequestMapping(value = "userdetail/{userid}", method = RequestMethod.GET)
-    public String viewUserDetail(@PathVariable("userid") String userid, Model model) {
+    public String viewUserDetail(@PathVariable("userid") Long userid, Model model) {
         addNavigationMenusToModel("users", model);
-        model.addAttribute("userid", userid);
+        final User user = userService.getUserById(userid);
+        model.addAttribute(user);
         return ViewNames.ADMIN_USERDETAIL;
+    }
+
+    @RequestMapping(value = "userdetail/update", method = RequestMethod.POST)
+    public String updateUserDetail(@ModelAttribute("user") User user, BindingResult result) {
+        userProfileValidator.validate(user, result);
+        if (result.hasErrors()) {
+            return ViewNames.ADMIN_USERDETAIL;
+        }
+        userService.updateUserProfile(user);
+        return "redirect:" + user.getEntityId();
     }
 
     @RequestMapping(value = "widgets", method = RequestMethod.GET)
@@ -120,7 +139,11 @@ public class AdminController {
         return menu;
     }
 
-    public void setUserService(UserService userService) {
+    void setUserService(UserService userService) {
         this.userService = userService;
+    }
+
+    void setUserProfileValidator(UserProfileValidator userProfileValidator) {
+        this.userProfileValidator = userProfileValidator;
     }
 }

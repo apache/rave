@@ -204,6 +204,10 @@ public class User implements UserDetails, BasicEntity, Serializable {
         return !locked;
     }
 
+    public boolean isLocked() {
+        return locked;
+    }
+
     public void setLocked(boolean locked) {
         this.locked = locked;
     }
@@ -222,6 +226,10 @@ public class User implements UserDetails, BasicEntity, Serializable {
     @Override
     public boolean isAccountNonExpired() {
         return isCredentialsNonExpired();
+    }
+
+    public boolean isExpired() {
+        return expired;
     }
 
     public void setExpired(boolean expired) {
@@ -301,6 +309,26 @@ public class User implements UserDetails, BasicEntity, Serializable {
 
     @Override
     public String toString() {
-        return "User{" + "entityId=" + entityId + ", username=" + username + ", expired=" + expired + ", locked=" + locked + ", enabled=" + enabled + ", email=" + email + ", openId=" + openId + '}';
+        final StringBuffer sb = new StringBuffer();
+        sb.append("User");
+        sb.append("{entityId=").append(entityId);
+        sb.append(", username='").append(username).append('\'');
+        sb.append(", expired=").append(expired);
+        sb.append(", locked=").append(locked);
+        sb.append(", enabled=").append(enabled);
+        sb.append(", email='").append(email).append('\'');
+        sb.append(", openId='").append(openId).append('\'');
+        sb.append(", authorities=[");
+        boolean first=true;
+        for (Authority a : authorities) {
+            if (!first) {
+                sb.append(',');
+            }
+            sb.append('\'').append(a.getAuthority()).append('\'');
+            first = false;
+        }
+        sb.append(']');
+        sb.append('}');
+        return sb.toString();
     }
 }

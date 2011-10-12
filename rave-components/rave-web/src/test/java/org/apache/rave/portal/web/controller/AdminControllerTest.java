@@ -24,15 +24,19 @@ import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.portal.web.util.ModelKeys;
 import org.apache.rave.portal.web.util.ViewNames;
+import org.apache.rave.portal.web.validator.UserProfileValidator;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.ui.ExtendedModelMap;
 import org.springframework.ui.Model;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.BindingResult;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 import static org.easymock.EasyMock.createNiceMock;
 import static org.easymock.EasyMock.expect;
@@ -44,8 +48,9 @@ import static org.easymock.EasyMock.replay;
 public class AdminControllerTest {
 
     private static final String TABS = "tabs";
-    AdminController controller;
-    UserService userService;
+    private AdminController controller;
+    private UserService userService;
+    private UserProfileValidator userProfileValidator;
 
     @Test
     public void adminHome() throws Exception {
@@ -65,7 +70,7 @@ public class AdminControllerTest {
         expect(userService.getLimitedListOfUsers(offset, pageSize)).andReturn(searchResult);
         replay(userService);
 
-        String adminUsersView = controller.viewUsers(offset,model);
+        String adminUsersView = controller.viewUsers(offset, model);
         assertEquals(ViewNames.ADMIN_USERS, adminUsersView);
         assertEquals(searchResult, model.asMap().get(ModelKeys.SEARCHRESULT));
         assertTrue(model.containsAttribute(TABS));
@@ -94,12 +99,45 @@ public class AdminControllerTest {
     @Test
     public void adminUserDetail() throws Exception {
         Model model = new ExtendedModelMap();
-        String userid = "dummyUserId";
+        Long userid = 123L;
+        User user = new User(userid, "john.doe.sr");
+
+        expect(userService.getUserById(userid)).andReturn(user);
+        replay(userService);
+
         String adminUserDetailView = controller.viewUserDetail(userid, model);
         assertEquals(ViewNames.ADMIN_USERDETAIL, adminUserDetailView);
         assertTrue(model.containsAttribute(TABS));
-        assertEquals(userid, model.asMap().get("userid"));
+        assertEquals(user, model.asMap().get("user"));
+    }
 
+
+    @Test
+    public void updateUserDetail_success() {
+        final Long userid = 123L;
+        final String email = "john.doe.sr@example.net";
+        User user = new User(userid, "john.doe.sr");
+        user.setPassword("secrect");
+        user.setConfirmPassword(user.getConfirmPassword());
+        user.setEmail(email);
+        final BindingResult errors = new BeanPropertyBindingResult(user, "user");
+
+        expect(userService.getUserById(userid)).andReturn(user);
+        expect(userService.getUserByEmail(email)).andReturn(user);
+        replay(userService);
+        final String view = controller.updateUserDetail(user, errors);
+        assertFalse(errors.hasErrors());
+        assertEquals("redirect:" + userid, view);
+    }
+
+    @Test
+    public void updateUserDetail_withErrors() {
+        Long userid = 123L;
+        User user = new User(userid, "john.doe.sr");
+        final BindingResult errors = new BeanPropertyBindingResult(user, "user");
+        final String view = controller.updateUserDetail(user, errors);
+        assertTrue(errors.hasErrors());
+        assertEquals(ViewNames.ADMIN_USERDETAIL, view);
     }
 
     @Test
@@ -109,13 +147,15 @@ public class AdminControllerTest {
         assertEquals(ViewNames.ADMIN_WIDGETS, adminWidgetsView);
         assertTrue(model.containsAttribute(TABS));
     }
-    
+
 
     @Before
     public void setUp() throws Exception {
         controller = new AdminController();
         userService = createNiceMock(UserService.class);
+        userProfileValidator = new UserProfileValidator(userService);
         controller.setUserService(userService);
+        controller.setUserProfileValidator(userProfileValidator);
     }
 
     private static SearchResult<User> createSearchResultWithTwoUsers() {

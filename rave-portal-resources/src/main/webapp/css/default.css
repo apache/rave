@@ -423,7 +423,7 @@ fieldset{
     margin: 0;
     border:none
 }
-p label {
+p label, span.label {
     width: 120px;
     float: left;
     display: block;
@@ -445,6 +445,10 @@ input.long, textarea.long {
     width:400px;
 }
 
+.checkboxlist {
+    float: left;
+    list-style: none;
+}
 
 /* Associated with JQuery validation CSS */
 .error {
