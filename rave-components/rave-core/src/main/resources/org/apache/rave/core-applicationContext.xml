@@ -54,6 +54,7 @@
     <context:component-scan base-package="org.apache.rave.portal.model"/>
     <context:component-scan base-package="org.apache.rave.portal.repository"/>
     <context:component-scan base-package="org.apache.rave.portal.service"/>
+    <context:component-scan base-package="org.apache.rave.portal.security"/>
     
     <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
         <property name="entityManagerFactory" ref="entityManagerFactory"/>

@@ -58,4 +58,16 @@
             </security:password-encoder>
         </security:authentication-provider>
     </security:authentication-manager>
+    
+    <!-- enable the spring security annotations -->
+    <security:global-method-security secured-annotations="enabled" pre-post-annotations="enabled">
+        <security:expression-handler ref="expressionHandler"/>
+    </security:global-method-security>
+    
+    <!-- override the default permissionEvaluator bean used by Spring Security with our custom RavePermissionEvaluator -->
+    <bean id="expressionHandler" class="org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler">
+        <property name="permissionEvaluator">
+            <bean id="permissionEvaluator" class="org.apache.rave.portal.security.impl.RavePermissionEvaluator"/>
+        </property>
+    </bean>
 </beans>
