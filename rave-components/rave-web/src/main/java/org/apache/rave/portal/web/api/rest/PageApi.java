@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.springframework.security.access.AccessDeniedException;
 
 /**
  * Handler for all services exposed under the /api/rest/page path.
@@ -68,6 +69,23 @@ public class PageApi {
         return page;
     }
 
+    /**
+     * Return a 403 response code when any org.springframework.security.access.AccessDeniedException
+     * is thrown from any of the API methods due to security restrictions
+     * 
+     * TODO: this should probably be moved up to an AbstractRestApi class since
+     * it seems common enough for all RestApi controllers
+     * 
+     * @param ex the AccessDeniedException
+     * @param request the http request
+     * @param response the http response
+     */
+    @ExceptionHandler(AccessDeniedException.class) 
+    public void handleAccessDeniedException(Exception ex, HttpServletRequest request, HttpServletResponse response) {
+        logger.info("AccessDeniedException: " + request.getUserPrincipal().getName() + " attempted to access resource " + request.getRequestURL(), ex);
+        response.setStatus(HttpStatus.FORBIDDEN.value());    
+    }
+    
     // TODO RAVE-240 - when we implement security we can implement different exception
     //        handlers for different errors (unauthorized, resource not found, etc)
     @ExceptionHandler(Exception.class)

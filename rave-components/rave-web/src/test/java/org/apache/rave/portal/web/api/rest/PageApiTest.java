@@ -18,6 +18,8 @@
  */
 package org.apache.rave.portal.web.api.rest;
 
+import java.security.Principal;
+import org.springframework.security.access.AccessDeniedException;
 import org.apache.rave.portal.model.*;
 import org.springframework.util.ClassUtils;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -98,11 +100,24 @@ public class PageApiTest {
     }
     
     @Test
-    public void tesHandleException() {
+    public void testHandleException() {
         RuntimeException re = new RuntimeException("error");        
         String value = pageApi.handleException(re, request, response);
         
         assertThat(value, is(ClassUtils.getShortName(re.getClass())));
         assertThat(response.getStatus(), is(HttpStatus.INTERNAL_SERVER_ERROR.value()));   
     }
+    
+    @Test
+    public void testHandleAccessDeniedException() {
+        Principal principal = createMock(Principal.class);                
+        request.setUserPrincipal(principal);
+        AccessDeniedException ade = new AccessDeniedException("error");        
+        
+        expect(principal.getName()).andReturn("theuser");
+        replay(principal);        
+        pageApi.handleAccessDeniedException(ade, request, response);        
+        assertThat(response.getStatus(), is(HttpStatus.FORBIDDEN.value()));   
+        verify(principal);
+    }    
 }

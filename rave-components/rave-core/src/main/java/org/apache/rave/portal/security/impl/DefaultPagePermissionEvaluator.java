@@ -16,41 +16,143 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.rave.portal.security.impl;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import org.apache.rave.portal.model.Page;
+import org.apache.rave.portal.model.User;
+import org.apache.rave.portal.repository.PageRepository;
 import org.apache.rave.portal.security.ModelPermissionEvaluator.Permission;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 /**
  * The default implementation of the ModelPermissionEvaluator for Page objects
  * 
- * NOTE: this is temporarily a stub placeholder to allow the security framework 
- * code to be checked in and not break the autowiring code
- * 
- * TODO: implement this class
- * 
  * @author carlucci
  */
 @Component
 public class DefaultPagePermissionEvaluator extends AbstractModelPermissionEvaluator<Page> {
-
+    private Logger log = LoggerFactory.getLogger(getClass());
+    private PageRepository pageRepository;    
+    
+    @Autowired
+    public DefaultPagePermissionEvaluator(PageRepository pageRepository) {       
+        this.pageRepository = pageRepository;
+    }
+   
     @Override
     public Class<Page> getType() {
         return Page.class;
     }
     
+    /**
+     * Checks to see if the Authentication object has the supplied Permission
+     * on the supplied Page object.  This method invokes the private hasPermission
+     * function with the trustedDomainObject parameter set to false since we don't
+     * know if the model being passed in was modified in any way from the 
+     * actual entity in the database.
+     * 
+     * @param authentication the current Authentication object
+     * @param page the Page model object
+     * @param permission the Permission to check
+     * @return true if the Authentication has the proper permission, false otherwise
+     */
     @Override
-    public boolean hasPermission(Authentication authentication, Page page, Permission permission) {       
-        return true;
+    public boolean hasPermission(Authentication authentication, Page page, Permission permission) {      
+        return hasPermission(authentication, page, permission, false);
     }    
 
+    /**
+     * Checks to see if the Authentication object has the supplied Permission 
+     * for the Entity represented by the targetId(entityId) and targetType(model class name).
+     * This method invokes the private hasPermission function with the 
+     * trustedDomainObject parameter set to true since we must pull the entity
+     * from the database and are guaranteed a trusted domain object,
+     * before performing our permission checks.
+     * 
+     * @param authentication the current Authentication object
+     * @param targetId the entityId of the model to check
+     * @param targetType the class of the model to check
+     * @param permission the Permission to check
+     * @return true if the Authentication has the proper permission, false otherwise
+     */
     @Override
     public boolean hasPermission(Authentication authentication, Serializable targetId, String targetType, Permission permission) {
-        return true;
+        return hasPermission(authentication, pageRepository.get((Long)targetId), permission, true);
     }
     
+    private boolean hasPermission(Authentication authentication, Page page, Permission permission, boolean trustedDomainObject) {       
+        // this is our container of trusted page objects that can be re-used 
+        // in this method so that the same trusted page object doesn't have to
+        // be looked up in the repository multiple times
+        List<Page> trustedPageContainer = new ArrayList<Page>();                           
+        
+        // first execute the AbstractModelPermissionEvaluator's hasPermission function
+        // to see if it allows permission via it's "higher authority" logic                
+        if (super.hasPermission(authentication, page, permission)) {
+            return true;
+        }
+        
+        // perform the security logic depending on the Permission type
+        boolean hasPermission = false;                       
+        switch (permission) { 
+            case ADMINISTER:
+                // if you are here, you are not an administrator, so you can't administer pages              
+                break;
+            case CREATE:                
+                // anyone can create a page
+                hasPermission = true;
+                break;                
+            case DELETE:
+                // users can delete their own page
+                hasPermission = isPageOwner(authentication, page, trustedPageContainer, trustedDomainObject);                
+                break;
+            case READ:
+                // users can read their own page
+                hasPermission = isPageOwner(authentication, page, trustedPageContainer, trustedDomainObject);     
+                break;
+            case UPDATE:
+                // users can update their own page
+                hasPermission = isPageOwner(authentication, page, trustedPageContainer, trustedDomainObject);     
+                break;   
+            default:
+                log.warn("unknown permission: " + permission);
+                break;
+        }
+        
+        return hasPermission;
+    }       
+    
+    // returns a trusted Page object, either from the PageRepository, or the
+    // cached container list
+    private Page getTrustedPage(long pageId, List<Page> trustedPageContainer) {       
+        Page p = null;
+        if (trustedPageContainer.isEmpty()) {           
+            p = pageRepository.get(pageId);
+            trustedPageContainer.add(p);
+        } else {
+            p = trustedPageContainer.get(0);
+        }
+        return p;       
+    }     
+   
+    // checks to see if the Authentication object principal is the owner of the supplied page object 
+    // if trustedDomainObject is false, pull the entity from the database first to ensure
+    // the model object is trusted and hasn't been modified
+    private boolean isPageOwner(Authentication authentication, Page page, List<Page> trustedPageContainer, boolean trustedDomainObject) {        
+        Page trustedPage = null;
+        if (trustedDomainObject) {
+            trustedPage = page;
+        } else {
+            trustedPage = getTrustedPage(page.getEntityId(), trustedPageContainer);
+        }                  
+        
+        return ((User)authentication.getPrincipal()).getUsername().equals(trustedPage.getOwner().getUsername());
+    }             
 }

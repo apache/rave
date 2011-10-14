@@ -66,8 +66,6 @@
     
     <!-- override the default permissionEvaluator bean used by Spring Security with our custom RavePermissionEvaluator -->
     <bean id="expressionHandler" class="org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler">
-        <property name="permissionEvaluator">
-            <bean id="permissionEvaluator" class="org.apache.rave.portal.security.impl.RavePermissionEvaluator"/>
-        </property>
+        <property name="permissionEvaluator" ref="ravePermissionEvaluator" />            
     </bean>
 </beans>

@@ -24,7 +24,14 @@ import org.apache.rave.portal.model.RegionWidget;
 import org.apache.rave.portal.model.User;
 
 import java.util.List;
+import org.springframework.security.access.prepost.PostAuthorize;
 
+/**
+ * TODO the rest of these interface methods need to be annotated with
+ * permission security
+ * 
+ * @author carlucci
+ */
 public interface PageService {
     /**
      * Gets a page based on the id
@@ -32,6 +39,7 @@ public interface PageService {
      * @param pageId to lookup
      * @return the Page object 
      */
+    @PostAuthorize("hasPermission(returnObject, 'read')")    
     Page getPage(long pageId);
     
     /**
