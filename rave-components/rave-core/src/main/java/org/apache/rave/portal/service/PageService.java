@@ -25,10 +25,19 @@ import org.apache.rave.portal.model.User;
 
 import java.util.List;
 import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 /**
- * TODO the rest of these interface methods need to be annotated with
- * permission security
+ * TODO:
+ * 1) RAVE-303: Protect addNewDefaultPage once the code has been re-factored to call 
+ *    this method from PageController when there are 0 pages for a user instead
+ *    of calling it from DefaultNewAccountService (the user is not authenticated
+ *    at that point)
+ * 
+ * 2) Protect the rest of the non Page object related methods here after writing
+ *    the associated Default<Model>PermissionEvaluator classes.  Also,
+ *    determine if those functions should be re-factored into more appropriate
+ *    service classes
  * 
  * @author carlucci
  */
@@ -47,7 +56,8 @@ public interface PageService {
      *
      * @param userId The user to retrieve pages for.
      * @return A non null possible empty list of pages for the given user.
-     */
+     */   
+    @PreAuthorize("hasPermission(new org.apache.rave.portal.security.impl.RaveSecurityContext(#userId, 'org.apache.rave.portal.model.User'), 'org.apache.rave.portal.model.Page', 'read')") 
     List<Page> getAllPages(long userId);
     
     /**
@@ -66,6 +76,7 @@ public interface PageService {
      * @param pageLayoutCode the page layout code
      * @return the new Page object
      */
+    @PostAuthorize("hasPermission(returnObject, 'create')") 
     Page addNewPage(String pageName, String pageLayoutCode);
     
     /**
@@ -76,7 +87,12 @@ public interface PageService {
      * @param user
      * @param pageLayoutCode
      * @return 
-     */
+     */       
+    // TODO: RAVE-303: addNewDefaultPage is currently not security protected because
+    //       the DefaultPagePermissionEvaluator requires an authenticated user.
+    //       This function should be called in PageController if the user has
+    //       0 pages instead of calling it in DefaultNewAccountService.  Once
+    //       refactored there we can protect this method    
     Page addNewDefaultPage(User user, String pageLayoutCode);
     
     /**
@@ -91,6 +107,7 @@ public interface PageService {
      * 
      * @param pageId the pageId to delete
      */
+    @PreAuthorize("hasPermission(#pageId, 'org.apache.rave.portal.model.Page', 'delete')") 
     void deletePage(long pageId);
     
     /**
@@ -136,6 +153,7 @@ public interface PageService {
      * @param name the new name for the page
      * @param pageLayoutCode the new layout for the page
      */
+    @PreAuthorize("hasPermission(#pageId, 'org.apache.rave.portal.model.Page', 'update')") 
     Page updatePage(long pageId, String name, String pageLayoutCode);
     
     /**
@@ -146,6 +164,7 @@ public interface PageService {
      *                        -1 if you want this to be the first page
      * @return the updated Page object containing its new render sequence
      */
+    @PreAuthorize("hasPermission(#pageId, 'org.apache.rave.portal.model.Page', 'update')") 
     Page movePage(long pageId, long moveAfterPageId);
     
     /**
@@ -154,5 +173,6 @@ public interface PageService {
      * @param pageId the pageId of the page to move to the default position
      * @return the updated Page object containing its new render sequence
      */
+    @PreAuthorize("hasPermission(#pageId, 'org.apache.rave.portal.model.Page', 'update')") 
     Page movePageToDefault(long pageId);  
 }

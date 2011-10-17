@@ -77,16 +77,22 @@ public class DefaultPagePermissionEvaluator extends AbstractModelPermissionEvalu
      * before performing our permission checks.
      * 
      * @param authentication the current Authentication object
-     * @param targetId the entityId of the model to check
+     * @param targetId the entityId of the model to check, or a RaveSecurityContext object
      * @param targetType the class of the model to check
      * @param permission the Permission to check
      * @return true if the Authentication has the proper permission, false otherwise
      */
     @Override
     public boolean hasPermission(Authentication authentication, Serializable targetId, String targetType, Permission permission) {
-        return hasPermission(authentication, pageRepository.get((Long)targetId), permission, true);
-    }
-    
+        boolean hasPermission = false;
+        if (targetId instanceof RaveSecurityContext) {
+            hasPermission = verifyRaveSecurityContext(authentication, (RaveSecurityContext)targetId);           
+        } else {
+            hasPermission = hasPermission(authentication, pageRepository.get((Long)targetId), permission, true);
+        }
+        return hasPermission;
+    }  
+        
     private boolean hasPermission(Authentication authentication, Page page, Permission permission, boolean trustedDomainObject) {       
         // this is our container of trusted page objects that can be re-used 
         // in this method so that the same trusted page object doesn't have to
@@ -105,20 +111,11 @@ public class DefaultPagePermissionEvaluator extends AbstractModelPermissionEvalu
             case ADMINISTER:
                 // if you are here, you are not an administrator, so you can't administer pages              
                 break;
-            case CREATE:                
-                // anyone can create a page
-                hasPermission = true;
-                break;                
+            case CREATE:                                                                          
             case DELETE:
-                // users can delete their own page
-                hasPermission = isPageOwner(authentication, page, trustedPageContainer, trustedDomainObject);                
-                break;
             case READ:
-                // users can read their own page
-                hasPermission = isPageOwner(authentication, page, trustedPageContainer, trustedDomainObject);     
-                break;
             case UPDATE:
-                // users can update their own page
+                // anyone can create, delete, read, or update a page that they own                  
                 hasPermission = isPageOwner(authentication, page, trustedPageContainer, trustedDomainObject);     
                 break;   
             default:
@@ -153,6 +150,30 @@ public class DefaultPagePermissionEvaluator extends AbstractModelPermissionEvalu
             trustedPage = getTrustedPage(page.getEntityId(), trustedPageContainer);
         }                  
         
-        return ((User)authentication.getPrincipal()).getUsername().equals(trustedPage.getOwner().getUsername());
+        return isPageOwnerByUsername(authentication, trustedPage.getOwner().getUsername());
     }             
+
+    private boolean isPageOwnerByUsername(Authentication authentication, String username) {
+        return ((User)authentication.getPrincipal()).getUsername().equals(username);
+    }
+    
+    private boolean isPageOwnerById(Authentication authentication, Long userId) {
+        return ((User)authentication.getPrincipal()).getEntityId().equals(userId);
+    }    
+    
+    private boolean verifyRaveSecurityContext(Authentication authentication, RaveSecurityContext raveSecurityContext) {
+        Class<?> clazz = null;
+        try {
+           clazz = Class.forName(raveSecurityContext.getType());
+        } catch (ClassNotFoundException ex) {
+            throw new IllegalArgumentException("unknown class specified in RaveSecurityContext: ", ex);
+        }
+
+        // perform the permissions check based on the class supplied to the RaveSecurityContext object
+        if (User.class == clazz) {
+            return isPageOwnerById(authentication, (Long)raveSecurityContext.getId());
+        } else {
+            throw new IllegalArgumentException("unknown RaveSecurityContext type: " + raveSecurityContext.getType());
+        }
+    }   
 }

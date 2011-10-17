@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
  */
 @Controller
 @RequestMapping("/api/rest/widgets")
-public class WidgetApi {
+public class WidgetApi extends AbstractRestApi {
     private static Logger logger = LoggerFactory.getLogger(WidgetApi.class);
 
     @RequestMapping(value = "/", method = RequestMethod.GET)

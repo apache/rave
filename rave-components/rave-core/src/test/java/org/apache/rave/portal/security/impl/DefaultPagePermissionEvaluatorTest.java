@@ -48,6 +48,7 @@ public class DefaultPagePermissionEvaluatorTest {
     private List<GrantedAuthority> grantedAuthoritiesList;
     
     private final Long VALID_PAGE_ID = 3L;
+    private final Long VALID_USER_ID = 99L;
     private final String VALID_USERNAME = "john.doe";
     private final String VALID_USERNAME2 = "jane.doe";
     
@@ -59,6 +60,7 @@ public class DefaultPagePermissionEvaluatorTest {
         
         user = new User();
         user.setUsername(VALID_USERNAME);
+        user.setEntityId(VALID_USER_ID);
         user2 = new User();
         user2.setUsername(VALID_USERNAME2);
         page = new Page();
@@ -93,12 +95,28 @@ public class DefaultPagePermissionEvaluatorTest {
     }    
     
     @Test
-    public void testHasPermission_3args_create() {                             
+    public void testHasPermission_3args_create_isPageOwner() {                             
         expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
-        replay(mockAuthentication);      
+        expect(mockAuthentication.getPrincipal()).andReturn(user);
+        expect(mockPageRepository.get(VALID_PAGE_ID)).andReturn(page);
+        replay(mockAuthentication); 
+        replay(mockPageRepository);
         assertThat(defaultPagePermissionEvaluator.hasPermission(mockAuthentication, page, Permission.CREATE), is(true));        
         verify(mockAuthentication);
+        verify(mockPageRepository);
     }    
+    
+    @Test
+    public void testHasPermission_3args_create_isNotPageOwner() {                             
+        expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
+        expect(mockAuthentication.getPrincipal()).andReturn(user2);
+        expect(mockPageRepository.get(VALID_PAGE_ID)).andReturn(page);
+        replay(mockAuthentication); 
+        replay(mockPageRepository);
+        assertThat(defaultPagePermissionEvaluator.hasPermission(mockAuthentication, page, Permission.CREATE), is(false));        
+        verify(mockAuthentication);
+        verify(mockPageRepository);
+    }       
     
     @Test
     public void testHasPermission_3args_delete_isPageOwner() {                             
@@ -181,12 +199,28 @@ public class DefaultPagePermissionEvaluatorTest {
     }    
     
     @Test
-    public void testHasPermission_4args_create() {                             
+    public void testHasPermission_4args_create_isPageOwner() {                             
         expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
+        expect(mockAuthentication.getPrincipal()).andReturn(user);
+        expect(mockPageRepository.get(VALID_PAGE_ID)).andReturn(page);
         replay(mockAuthentication);      
+        replay(mockPageRepository);     
         assertThat(defaultPagePermissionEvaluator.hasPermission(mockAuthentication, VALID_PAGE_ID, Page.class.getName(), Permission.CREATE), is(true));        
         verify(mockAuthentication);
+        verify(mockPageRepository);
     }     
+    
+    @Test
+    public void testHasPermission_4args_create_isNotPageOwner() {                             
+        expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
+        expect(mockAuthentication.getPrincipal()).andReturn(user2);
+        expect(mockPageRepository.get(VALID_PAGE_ID)).andReturn(page);
+        replay(mockAuthentication);      
+        replay(mockPageRepository);     
+        assertThat(defaultPagePermissionEvaluator.hasPermission(mockAuthentication, VALID_PAGE_ID, Page.class.getName(), Permission.CREATE), is(false));        
+        verify(mockAuthentication);
+        verify(mockPageRepository);
+    }         
     
     @Test
     public void testHasPermission_4args_delete_isPageOwner() {                             
@@ -259,4 +293,34 @@ public class DefaultPagePermissionEvaluatorTest {
         verify(mockAuthentication);
         verify(mockPageRepository);
     }         
+    
+    @Test
+    public void testHasPermission_4args_update_isPageOwner_withRaveSecurityContextObject() {                             
+        RaveSecurityContext raveSecurityContext = new RaveSecurityContext(VALID_USER_ID, "org.apache.rave.portal.model.User");
+                
+        expect(mockAuthentication.getPrincipal()).andReturn(user);
+        replay(mockAuthentication);      
+        assertThat(defaultPagePermissionEvaluator.hasPermission(mockAuthentication, raveSecurityContext, Page.class.getName(), Permission.UPDATE), is(true));        
+        verify(mockAuthentication);
+    } 
+    
+    @Test(expected=IllegalArgumentException.class)
+    public void testHasPermission_4args_update_isPageOwner_withInvalidRaveSecurityContextType() {                             
+        RaveSecurityContext raveSecurityContext = new RaveSecurityContext(VALID_USER_ID, "java.lang.String");
+                
+        expect(mockAuthentication.getPrincipal()).andReturn(user);
+        replay(mockAuthentication);      
+        defaultPagePermissionEvaluator.hasPermission(mockAuthentication, raveSecurityContext, Page.class.getName(), Permission.UPDATE);        
+        verify(mockAuthentication);
+    }    
+    
+    @Test(expected=IllegalArgumentException.class)
+    public void testHasPermission_4args_update_isPageOwner_withUnknownRaveSecurityContextType() {                             
+        RaveSecurityContext raveSecurityContext = new RaveSecurityContext(VALID_USER_ID, "foo.bar.DummyClass");
+                
+        expect(mockAuthentication.getPrincipal()).andReturn(user);
+        replay(mockAuthentication);      
+        defaultPagePermissionEvaluator.hasPermission(mockAuthentication, raveSecurityContext, Page.class.getName(), Permission.UPDATE);        
+        verify(mockAuthentication);
+    }    
 }

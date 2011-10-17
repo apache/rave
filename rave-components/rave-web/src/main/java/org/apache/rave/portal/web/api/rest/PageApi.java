@@ -27,12 +27,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.ClassUtils;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.springframework.security.access.AccessDeniedException;
 
 /**
  * Handler for all services exposed under the /api/rest/page path.
@@ -41,8 +38,8 @@ import org.springframework.security.access.AccessDeniedException;
  */
 @Controller(value="restPageApi")
 @RequestMapping("/api/rest/page/*")
-public class PageApi {
-    private static Logger logger = LoggerFactory.getLogger(PageApi.class);
+public class PageApi extends AbstractRestApi {
+    private Logger logger = LoggerFactory.getLogger(getClass());
     private PageService pageService;
     
     @Autowired
@@ -62,38 +59,12 @@ public class PageApi {
     @ResponseBody
     @RequestMapping(value = "{pageId}", method = RequestMethod.GET)
     public Page getPage(@PathVariable long pageId, @RequestParam(required=false) boolean export) {
+        logger.debug("GET received for /api/rest/page/" + pageId);        
         Page page = pageService.getPage(pageId);
         if(export) {
             modifyForExport(page);
         }
         return page;
-    }
-
-    /**
-     * Return a 403 response code when any org.springframework.security.access.AccessDeniedException
-     * is thrown from any of the API methods due to security restrictions
-     * 
-     * TODO: this should probably be moved up to an AbstractRestApi class since
-     * it seems common enough for all RestApi controllers
-     * 
-     * @param ex the AccessDeniedException
-     * @param request the http request
-     * @param response the http response
-     */
-    @ExceptionHandler(AccessDeniedException.class) 
-    public void handleAccessDeniedException(Exception ex, HttpServletRequest request, HttpServletResponse response) {
-        logger.info("AccessDeniedException: " + request.getUserPrincipal().getName() + " attempted to access resource " + request.getRequestURL(), ex);
-        response.setStatus(HttpStatus.FORBIDDEN.value());    
-    }
-    
-    // TODO RAVE-240 - when we implement security we can implement different exception
-    //        handlers for different errors (unauthorized, resource not found, etc)
-    @ExceptionHandler(Exception.class)
-    public String handleException(Exception ex, HttpServletRequest request, HttpServletResponse response) {
-        // RAVE-240 lowered the log level to info
-        logger.info("Error occured while accessing " + request.getRequestURL(), ex);
-        response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
-        return ClassUtils.getShortName(ex.getClass());
     }
 
     private static void modifyForExport(Page page) {

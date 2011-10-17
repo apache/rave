@@ -37,8 +37,9 @@ import org.apache.rave.portal.model.RegionWidget;
  */
 @Controller
 @RequestMapping("/api/rest/regionWidgets")
-public class RegionWidgetApi {
+public class RegionWidgetApi extends AbstractRestApi {
     private static Logger logger = LoggerFactory.getLogger(RegionWidgetApi.class);
+    
 
     private RegionWidgetService regionWidgetService;
 

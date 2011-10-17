@@ -42,14 +42,12 @@ import static org.hamcrest.CoreMatchers.*;
 public class PageApiTest {    
     private PageApi pageApi;    
     private PageService pageService;
-    private MockHttpServletRequest request;
     private MockHttpServletResponse response;
     
     private final long PAGE_ID = 1L;
     
     @Before
     public void setUp() {
-        request = new MockHttpServletRequest();
         response = new MockHttpServletResponse();
         pageService = createMock(PageService.class);
         pageApi = new PageApi(pageService);     
@@ -97,27 +95,5 @@ public class PageApiTest {
         
         assertThat(response.getStatus(), is(HttpStatus.NO_CONTENT.value()));   
         verify(pageService);
-    }
-    
-    @Test
-    public void testHandleException() {
-        RuntimeException re = new RuntimeException("error");        
-        String value = pageApi.handleException(re, request, response);
-        
-        assertThat(value, is(ClassUtils.getShortName(re.getClass())));
-        assertThat(response.getStatus(), is(HttpStatus.INTERNAL_SERVER_ERROR.value()));   
-    }
-    
-    @Test
-    public void testHandleAccessDeniedException() {
-        Principal principal = createMock(Principal.class);                
-        request.setUserPrincipal(principal);
-        AccessDeniedException ade = new AccessDeniedException("error");        
-        
-        expect(principal.getName()).andReturn("theuser");
-        replay(principal);        
-        pageApi.handleAccessDeniedException(ade, request, response);        
-        assertThat(response.getStatus(), is(HttpStatus.FORBIDDEN.value()));   
-        verify(principal);
-    }    
+    }  
 }
