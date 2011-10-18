@@ -430,6 +430,97 @@
                     <artifactId>cobertura-maven-plugin</artifactId>
                     <version>${cobertura.version}</version>
                 </plugin>
+                <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+                <plugin>
+                	<groupId>org.eclipse.m2e</groupId>
+                	<artifactId>lifecycle-mapping</artifactId>
+                	<version>1.0.0</version>
+                	<configuration>
+                		<lifecycleMappingMetadata>
+                			<pluginExecutions>
+                				<pluginExecution>
+                					<pluginExecutionFilter>
+                						<groupId>
+                							com.github.searls
+                						</groupId>
+                						<artifactId>
+                							jasmine-maven-plugin
+                						</artifactId>
+                						<versionRange>
+                							[1.0.2-beta-2,)
+                						</versionRange>
+                						<goals>
+                							<goal>testResources</goal>
+                						</goals>
+                					</pluginExecutionFilter>
+                					<action>
+                						<execute />
+                					</action>
+                				</pluginExecution>
+                				<pluginExecution>
+                					<pluginExecutionFilter>
+                						<groupId>
+                							org.codehaus.mojo
+                						</groupId>
+                						<artifactId>
+                							openjpa-maven-plugin
+                						</artifactId>
+                						<versionRange>
+                							[1.2,)
+                						</versionRange>
+                						<goals>
+                							<goal>enhance</goal>
+                						</goals>
+                					</pluginExecutionFilter>
+                					<action>
+                						<execute/>
+                					</action>
+                				</pluginExecution>
+                				<pluginExecution>
+                					<pluginExecutionFilter>
+                						<groupId>
+                							com.googlecode.mavenfilesync
+                						</groupId>
+                						<artifactId>
+                							maven-filesync-plugin
+                						</artifactId>
+                						<versionRange>
+                							[1.0.0,)
+                						</versionRange>
+                						<goals>
+                							<goal>generate</goal>
+                						</goals>
+                					</pluginExecutionFilter>
+                					<action>
+                						<execute/>
+                					</action>
+                				</pluginExecution>
+                				<pluginExecution>
+                					<pluginExecutionFilter>
+                						<groupId>
+                							com.github.searls
+                						</groupId>
+                						<artifactId>
+                							jasmine-maven-plugin
+                						</artifactId>
+                						<versionRange>
+                							[1.0.2-beta-2,)
+                						</versionRange>
+                						<goals>
+                							<goal>resources</goal>
+                							<goal>
+                								generateManualRunner
+                							</goal>
+                						</goals>
+                					</pluginExecutionFilter>
+                					<action>
+                						<execute/>
+                					</action>
+                				</pluginExecution>
+                			</pluginExecutions>
+                		</lifecycleMappingMetadata>
+                	</configuration>
+                </plugin>
             </plugins>
         </pluginManagement>
 
