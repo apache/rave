@@ -197,9 +197,8 @@
         </form>
     </div>        
     <script>
-        //Define the global widgets variable
-        //This array will be populated by RegionWidgetRender providers.
-        var widgets = [];
+        //Define the global widgets map.  This map will be populated by RegionWidgetRender providers.
+        var widgetsByRegionIdMap = {};
     </script>
     <portal:render-script location="${'BEFORE_LIB'}" />
     <script src="//cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
@@ -218,7 +217,7 @@
         $(function() {
             rave.setContext("<spring:url value="/app/" />");
             rave.initProviders();
-            rave.initWidgets(widgets);
+            rave.initWidgets(widgetsByRegionIdMap);
             rave.initUI();
             rave.layout.init();
         });

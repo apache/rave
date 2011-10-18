@@ -20,6 +20,7 @@
 package org.apache.rave.provider.w3c.web.renderer;
 
 import org.apache.rave.exception.NotSupportedException;
+import org.apache.rave.portal.model.Region;
 import org.apache.rave.portal.model.RegionWidget;
 import org.apache.rave.portal.model.Widget;
 import org.apache.rave.portal.service.WidgetProviderService;
@@ -58,9 +59,11 @@ public class W3cWidgetRendererTest {
         Widget w = new Widget();
         w.setType(Constants.WIDGET_TYPE);
         w.setUrl("http://example.com/widgets/1");
+        Region region = new Region(1L);
         RegionWidget rw = new RegionWidget();
         rw.setEntityId(1L);
         rw.setWidget(w);
+        rw.setRegion(region);
 
         Widget wookieWidget = new Widget();
         final String WIDGET_INSTANCE = "http://example.com/widgetinstances/1";
@@ -79,8 +82,10 @@ public class W3cWidgetRendererTest {
     public void render_null() {
         Widget w = new Widget();
         w.setType(Constants.WIDGET_TYPE);
+        Region region = new Region(1L);
         RegionWidget rw = new RegionWidget();
         rw.setWidget(w);
+        rw.setRegion(region);
 
         String result = renderer.render(rw, null);
         assertThat(result.matches(".*regionWidgetId[ ]*:[ ]*null,.*"), is(true));

@@ -20,6 +20,7 @@
 package org.apache.rave.provider.opensocial.web.renderer;
 
 import org.apache.rave.exception.NotSupportedException;
+import org.apache.rave.portal.model.Region;
 import org.apache.rave.portal.model.RegionWidget;
 import org.apache.rave.portal.model.RegionWidgetPreference;
 import org.apache.rave.portal.model.Widget;
@@ -77,16 +78,18 @@ public class OpenSocialWidgetRendererTest {
         w.setEntityId(1L);
         w.setType(Constants.WIDGET_TYPE);
         w.setUrl(VALID_GADGET_URL);
+        Region region = new Region(1L);
         RegionWidget rw = new RegionWidget();
         rw.setEntityId(1L);
         rw.setCollapsed(VALID_COLLAPSED);
         rw.setWidget(w);
+        rw.setRegion(region);
         rw.setPreferences(Arrays.asList(new RegionWidgetPreference(1L, 1L, "color", "blue"),
                                         new RegionWidgetPreference(2L, 1L, "speed", "fast"),
                                         new RegionWidgetPreference(3L, 1L, null, null)));
 
         final String markup =
-            "<script>widgets.push({type: 'OpenSocial'," +
+            "<script>rave.registerWidget(widgetsByRegionIdMap, 1, {type: 'OpenSocial'," +
             " regionWidgetId: 1," +
             " widgetUrl: '" + VALID_GADGET_URL +"', " +
             " securityToken: '" + VALID_SECURITY_TOKEN + "', " +
@@ -111,13 +114,15 @@ public class OpenSocialWidgetRendererTest {
     public void render_null() {
         Widget w = new Widget();
         w.setType(Constants.WIDGET_TYPE);
+        Region region = new Region(1L);
         RegionWidget rw = new RegionWidget();
         rw.setWidget(w);
+        rw.setRegion(region);
 
         String result = renderer.render(rw, null);
 
         final String markup =
-            "<script>widgets.push({type: 'OpenSocial'," +
+            "<script>rave.registerWidget(widgetsByRegionIdMap, 1, {type: 'OpenSocial'," +
             " regionWidgetId: null," +
             " widgetUrl: 'null', " +
             " securityToken: '" + VALID_SECURITY_TOKEN + "', " +

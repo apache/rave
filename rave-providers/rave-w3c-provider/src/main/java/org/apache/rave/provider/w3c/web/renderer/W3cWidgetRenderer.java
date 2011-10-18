@@ -38,9 +38,9 @@ import static org.apache.rave.provider.w3c.Constants.WIDGET_TYPE;
 public class W3cWidgetRenderer implements RegionWidgetRenderer {
 
 
-    private static final String IFRAME_MARKUP = "widgets.push({type: '%1$s'," +
-                                                " regionWidgetId: %2$s," +
-                                                " widgetUrl: '%3$s'});";
+    private static final String IFRAME_MARKUP = "<script>rave.registerWidget(widgetsByRegionIdMap, %1$s, {type: '%2$s'," +
+                                                " regionWidgetId: %3$s," +
+                                                " widgetUrl: '%4$s'});</script>";
 
     private static final String INLINE_MARKUP = "";
 
@@ -71,6 +71,6 @@ public class W3cWidgetRenderer implements RegionWidgetRenderer {
         }
         Widget contextualizedWidget = widgetService.getWidget(null, null, widget);
         String url = contextualizedWidget == null ? null : contextualizedWidget.getUrl();
-        return String.format(IFRAME_MARKUP, WIDGET_TYPE, item.getEntityId(), url);
+        return String.format(IFRAME_MARKUP, item.getRegion().getEntityId(), WIDGET_TYPE, item.getEntityId(), url);
     }
 }

@@ -97,7 +97,8 @@ describe("Rave", function() {
         }
 
         it("calls the appropriate providers", function() {
-            var widgetList = [
+            var widgetsByRegionIdMap = {};
+            widgetsByRegionIdMap[1] = [
                     {type:"FOO"},
                     {type:"BAR"},
                     {type:"FOO"},
@@ -107,12 +108,68 @@ describe("Rave", function() {
             var provider2 = getMockProvider("BAR");
             rave.registerProvider(provider1);
             rave.registerProvider(provider2);
-            rave.initWidgets(widgetList);
+            rave.initWidgets(widgetsByRegionIdMap);
             expect(provider1.initWidgetsWasCalled(2)).toBeTruthy();
             expect(provider2.initWidgetsWasCalled(2)).toBeTruthy();
         });
+
+        it("renders widgets in the appropriate order (first 'row', second 'row', third 'row', ...)", function() {
+            var widgetsByRegionIdMap = {};
+            widgetsByRegionIdMap[1] = [
+                    {type:"FOO", renderOrder:1},
+                    {type:"FOO", renderOrder:4},
+                    {type:"FOO", renderOrder:7},
+                    {type:"FOO", renderOrder:9}
+            ];
+            widgetsByRegionIdMap[2] = [
+                    {type:"FOO", renderOrder:2},
+                    {type:"FOO", renderOrder:5},
+                    {type:"FOO", renderOrder:8},
+                    {type:"FOO", renderOrder:10},
+                    {type:"FOO", renderOrder:11},
+                    {type:"FOO", renderOrder:12}
+            ];
+            widgetsByRegionIdMap[3] = [
+                    {type:"FOO", renderOrder:3},
+                    {type:"FOO", renderOrder:6}
+            ];
+            var widgets = [];
+            var provider1 = getMockProvider("FOO");
+            var originalInitWidgetFunction = provider1.initWidget;
+            provider1.initWidget = function(widget) {
+                originalInitWidgetFunction(widget);
+                widgets.push(widget);
+            };
+            rave.registerProvider(provider1);
+            rave.initWidgets(widgetsByRegionIdMap);
+            expect(provider1.initWidgetsWasCalled(12)).toBeTruthy();
+
+            for (var i = 0; i < 12; i++) {
+                expect(widgets[i].renderOrder).toEqual(i+1);
+            }
+        });
+
+        it("puts widgets in buckets keyed by regionIds", function() {
+            var widgetsByRegionIdMap = {};
+            var regionOneKey = 1;
+            var regionTwoKey = 2;
+            rave.registerWidget(widgetsByRegionIdMap, regionOneKey, {arbitrary:"value"});
+            rave.registerWidget(widgetsByRegionIdMap, regionOneKey, {arbitrary:"value"});
+
+            rave.registerWidget(widgetsByRegionIdMap, regionTwoKey, {arbitrary:"value"});
+
+            rave.registerWidget(widgetsByRegionIdMap, regionOneKey, {arbitrary:"value"});
+            rave.registerWidget(widgetsByRegionIdMap, regionOneKey, {arbitrary:"value"});
+
+            rave.registerWidget(widgetsByRegionIdMap, regionTwoKey, {arbitrary:"value"});
+
+            expect(widgetsByRegionIdMap[regionOneKey].length).toEqual(4);
+            expect(widgetsByRegionIdMap[regionTwoKey].length).toEqual(2);
+        });
+
         it("Renders an error gadget when invalid widget is provided", function(){
-            var widgetList = [
+            var widgetsByRegionIdMap = {};
+            widgetsByRegionIdMap[1] = [
                     {type:"FOO",  regionWidgetId:20},
                     {type:"BAR",  regionWidgetId:21},
                     {type:"FOO",  regionWidgetId:22},
@@ -124,62 +181,12 @@ describe("Rave", function() {
             var provider2 = getMockProvider("BAR");
             rave.registerProvider(provider1);
             rave.registerProvider(provider2);
-            rave.initWidgets(widgetList);
+            rave.initWidgets(widgetsByRegionIdMap);
             expect($().expression()).toEqual("#widget-43-body");
             expect($().html()).toEqual("This widget type is currently unsupported.  Check with your administrator and be sure the correct provider is registered.");
             expect(provider1.initWidgetsWasCalled(2)).toBeTruthy();
             expect(provider2.initWidgetsWasCalled(2)).toBeTruthy();
         });
-    });
-
-    describe("createWidgetMap", function() {
-
-        it("builds a map keyed by type", function() {
-            var widgets = [
-                {regionWidgetId: 0, type: "OpenSocial"},
-                {regionWidgetId: 1, type: "OpenSocial"},
-                {regionWidgetId: 2, type: "W3C"},
-                {regionWidgetId: 3, type: "W3C"}
-            ];
-
-            var map = rave.createWidgetMap(widgets);
-
-            expect(map["OpenSocial"].length).toEqual(2);
-            expect(map["W3C"].length).toEqual(2);
-            expect(map["OpenSocial"]).toContain(widgets[1]);
-            expect(map["W3C"]).toContain(widgets[3]);
-        });
-
-        it("builds a map that has widgets under an Unknown key", function() {
-            var widgets = [
-                {regionWidgetId: 0, type: "OpenSocial"},
-                {regionWidgetId: 1, type: "OpenSocial"},
-                {regionWidgetId: 2, type: "W3C"},
-                {regionWidgetId: 3, type: "W3C"},
-                {regionWidgetId: 4 },
-                {regionWidgetId: 5, type: null }
-            ];
-
-            var map = rave.createWidgetMap(widgets);
-
-            expect(map["OpenSocial"].length).toEqual(2);
-            expect(map["W3C"].length).toEqual(2);
-            expect(map["Unknown"].length).toEqual(2);
-            expect(map["OpenSocial"]).toContain(widgets[1]);
-            expect(map["W3C"]).toContain(widgets[3]);
-            expect(map["Unknown"]).toContain(widgets[4]);
-        });
-
-        it("builds a map with no entries", function() {
-            var widgets = [];
-            var map = rave.createWidgetMap(widgets);
-            var count = 0;
-            for (i in map) {
-                count++;
-            }
-            expect(count).toEqual(0);
-        });
-
     });
 
     describe("initUI", function() {

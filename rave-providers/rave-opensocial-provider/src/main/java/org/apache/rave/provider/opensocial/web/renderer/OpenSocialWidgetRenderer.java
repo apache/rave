@@ -62,13 +62,13 @@ public class OpenSocialWidgetRenderer implements RegionWidgetRenderer {
     //Note the widgets.push() call.  This defines the widget objects, which are
     //added to the widgets[] array in home.jsp.
     private static final String SCRIPT_BLOCK =
-            "<script>widgets.push({type: '%1$s'," +
-            " regionWidgetId: %2$s," +
-            " widgetUrl: '%3$s', " +
-            " securityToken: '%4$s', " +
-            " metadata: %5$s," +
-            " userPrefs: %6$s," +
-            " collapsed: %7$s});</script>";
+            "<script>rave.registerWidget(widgetsByRegionIdMap, %1$s, {type: '%2$s'," +
+            " regionWidgetId: %3$s," +
+            " widgetUrl: '%4$s', " +
+            " securityToken: '%5$s', " +
+            " metadata: %6$s," +
+            " userPrefs: %7$s," +
+            " collapsed: %8$s});</script>";
     private static final String MARKUP = "<!-- RegionWidget %1$s placeholder -->";
 
     @Override
@@ -110,8 +110,8 @@ public class OpenSocialWidgetRenderer implements RegionWidgetRenderer {
             }
         }
 
-        return String.format(SCRIPT_BLOCK, Constants.WIDGET_TYPE, item.getEntityId(), item.getWidget().getUrl(),
-                securityTokenService.getEncryptedSecurityToken(item),
+        return String.format(SCRIPT_BLOCK, item.getRegion().getEntityId(), Constants.WIDGET_TYPE, item.getEntityId(),
+                item.getWidget().getUrl(), securityTokenService.getEncryptedSecurityToken(item),
                 openSocialService.getGadgetMetadata(item.getWidget().getUrl()), userPrefs.toString(), item.isCollapsed());
     }
 }

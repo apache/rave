@@ -488,6 +488,13 @@ var rave = rave || (function() {
 
     })();
 
+    function registerWidget(widgetsByRegionIdMap, regionId, widget) {
+        if (!widgetsByRegionIdMap.hasOwnProperty(regionId)) {
+            widgetsByRegionIdMap[regionId] = [];
+        }
+        widgetsByRegionIdMap[regionId].push(widget);
+    }
+
     function initializeProviders() {
         //Current providers are rave.wookie and rave.opensocial.
         //Providers register themselves when loaded, so
@@ -498,9 +505,33 @@ var rave = rave || (function() {
         }
     }
 
-    function initializeWidgets(widgets) {
+    function initializeWidgets(widgetsByRegionIdMap) {
+        //We get the widget objects in a map keyed by region ID.  The code below converts that map into a flat array
+        //of widgets with all the top widgets in each region first, then the seconds widgets in each region, then the
+        //third, etc until we have all widgets in the array.  This allows us to render widgets from left to right and
+        //top to bottom to give the best user experience possible (rendering the top widgets first).
+        //Note that this strategy relies on the javascript implementation to enumerate object properties in order:
+        //http://stackoverflow.com/questions/280713/elements-order-in-a-for-in-loop
+        //However this should at least get us to render the top "row" first, then the second "row", ... in any browser.
+        //If this turns out to be a major concern we can change the widgetsByRegionIdMap to a 2D array instead of a map.
+        var widgets = [];
+        for (var i = 0; ; i++) {
+            var foundGadgets = false;
+            for (var regionWidgets in widgetsByRegionIdMap) {
+                regionWidgets = widgetsByRegionIdMap[regionWidgets];
+                if (regionWidgets.length > i) {
+                    foundGadgets = true;
+                    widgets.push(regionWidgets[i]);
+                }
+            }
+
+            if (!foundGadgets) {
+                break;
+            }
+        }
+
         //Initialize the widgets for supported providers
-        for(var i=0; i<widgets.length; i++) {
+        for (var i = 0; i < widgets.length; i++) {
             var widget = widgets[i];
             initializeWidget(widget);
             widgetByIdMap[widget.regionWidgetId] = widget;
@@ -522,22 +553,6 @@ var rave = rave || (function() {
         } else {
             throw "Attempted to register invalid provider";
         }
-    }
-
-    function mapWidgetsByType(widgets) {
-        var map = {};
-        for (var i = 0; i < widgets.length; i++) {
-            var widget = widgets[i];
-            var type = widget.type;
-            if (!type) {
-                type = "Unknown";
-            }
-            if (!map[type]) {
-                map[type] = [];
-            }
-            map[type].push(widget);
-        }
-        return map;
     }
 
     function extractObjectIdFromElementId(elementId) {
@@ -580,13 +595,21 @@ var rave = rave || (function() {
      */
     return {
         /**
+         * Registers the specified widget into the widgetsByRegionIdMap under the specified regionId.
+         * @param widgetsByRegionIdMap The map.
+         * @param regionId The regionId.
+         * @param widget The widget.
+         */
+        registerWidget : registerWidget,
+
+        /**
          * Initialize all of the registered providers
          */
         initProviders : initializeProviders,
 
         /**
          * Initializes the given set of widgets
-         * @param widgets a map of widgets by type
+         * @param widgets a map of widgets by regionId
          *
          * NOTE: widget object must have at a minimum the following properties:
          *      type,
@@ -598,13 +621,6 @@ var rave = rave || (function() {
          * Initialize Rave's drag and drop facilities
          */
         initUI : ui.init,
-
-        /**
-         * Creates a map of widgets by their type
-         *
-         * @param widgets list of widgets to map by type
-         */
-        createWidgetMap : mapWidgetsByType,
 
         /**
          * Parses the given string conforming to a rave object's DOM element ID and return
