@@ -47,6 +47,7 @@ import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class UserServiceTest {
 
@@ -220,5 +221,15 @@ public class UserServiceTest {
         assertEquals(pageSize, result.getPageSize());
         assertEquals(users.size(), result.getResultSet().size());
         assertEquals(user1, result.getResultSet().get(0));
+    }
+
+    @Test
+    public void updateUserProfile() {
+        User user = new User(USER_ID, USER_NAME);
+        expect(repository.save(user)).andReturn(user).times(1);
+        replay(repository);
+
+        service.updateUserProfile(user);
+        assertTrue("Save called", true);
     }
 }

@@ -134,7 +134,7 @@ public class DefaultUserService implements UserService {
 
     @Override
     public void updateUserProfile(User user) {
-        throw new UnsupportedOperationException("Updating user profile is not supported yet");
+        userRepository.save(user);
     }
 
     @Override
