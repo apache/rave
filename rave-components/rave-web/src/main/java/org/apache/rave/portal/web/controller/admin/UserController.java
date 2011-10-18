@@ -17,13 +17,11 @@
  * under the License.
  */
 
-package org.apache.rave.portal.web.controller;
+package org.apache.rave.portal.web.controller.admin;
 
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.service.UserService;
-import org.apache.rave.portal.web.model.NavigationItem;
-import org.apache.rave.portal.web.model.NavigationMenu;
 import org.apache.rave.portal.web.util.ModelKeys;
 import org.apache.rave.portal.web.util.ViewNames;
 import org.apache.rave.portal.web.validator.UserProfileValidator;
@@ -39,13 +37,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 /**
- * Controller for the admin pages
+ * Admin controller to manipulate User data
  */
 @Controller
 @SessionAttributes({"user"})
-@RequestMapping(value = {"/admin/*", "/admin"})
-public class AdminController {
-    public static final int DEFAULT_PAGE_SIZE = 10;
+public class UserController {
 
     @Autowired
     private UserService userService;
@@ -53,39 +49,34 @@ public class AdminController {
     @Autowired
     private UserProfileValidator userProfileValidator;
 
-    @RequestMapping(method = RequestMethod.GET)
-    public String viewDefault(Model model) {
-        addNavigationMenusToModel("home", model);
-        return ViewNames.ADMIN_HOME;
-    }
-
-    @RequestMapping(value = "users", method = RequestMethod.GET)
+    @RequestMapping(value = "/admin/users", method = RequestMethod.GET)
     public String viewUsers(@RequestParam(required = false, defaultValue = "0") int offset, Model model) {
-        addNavigationMenusToModel("users", model);
-        final SearchResult<User> users = userService.getLimitedListOfUsers(offset, DEFAULT_PAGE_SIZE);
+        AdminControllerUtil.addNavigationMenusToModel("users", model);
+        final SearchResult<User> users = userService.getLimitedListOfUsers(offset, AdminControllerUtil.DEFAULT_PAGE_SIZE);
         model.addAttribute(ModelKeys.SEARCHRESULT, users);
         return ViewNames.ADMIN_USERS;
     }
 
-    @RequestMapping(value = "users/search", method = RequestMethod.GET)
+    @RequestMapping(value = "/admin/users/search", method = RequestMethod.GET)
     public String searchUsers(@RequestParam(required = true) String searchTerm,
                               @RequestParam(required = false, defaultValue = "0") int offset, Model model) {
-        addNavigationMenusToModel("users", model);
-        final SearchResult<User> users = userService.getUsersByFreeTextSearch(searchTerm, offset, DEFAULT_PAGE_SIZE);
+        AdminControllerUtil.addNavigationMenusToModel("users", model);
+        final SearchResult<User> users = userService.getUsersByFreeTextSearch(
+                searchTerm, offset, AdminControllerUtil.DEFAULT_PAGE_SIZE);
         model.addAttribute(ModelKeys.SEARCH_TERM, searchTerm);
         model.addAttribute(ModelKeys.SEARCHRESULT, users);
         return ViewNames.ADMIN_USERS;
     }
 
-    @RequestMapping(value = "userdetail/{userid}", method = RequestMethod.GET)
+    @RequestMapping(value = "/admin/userdetail/{userid}", method = RequestMethod.GET)
     public String viewUserDetail(@PathVariable("userid") Long userid, Model model) {
-        addNavigationMenusToModel("users", model);
+        AdminControllerUtil.addNavigationMenusToModel("users", model);
         final User user = userService.getUserById(userid);
         model.addAttribute(user);
         return ViewNames.ADMIN_USERDETAIL;
     }
 
-    @RequestMapping(value = "userdetail/update", method = RequestMethod.POST)
+    @RequestMapping(value = "/admin/userdetail/update", method = RequestMethod.POST)
     public String updateUserDetail(@ModelAttribute("user") User user, BindingResult result) {
         userProfileValidator.validate(user, result);
         if (result.hasErrors()) {
@@ -95,50 +86,6 @@ public class AdminController {
         return "redirect:" + user.getEntityId();
     }
 
-    @RequestMapping(value = "widgets", method = RequestMethod.GET)
-    public String viewWidgets(Model model) {
-        addNavigationMenusToModel("widgets", model);
-        return ViewNames.ADMIN_WIDGETS;
-    }
-
-    private void addNavigationMenusToModel(String selectedItem, Model model) {
-        final NavigationMenu topMenu = getTopMenu();
-        model.addAttribute(topMenu.getName(), topMenu);
-        final NavigationMenu tabMenu = getTabMenu(selectedItem);
-        model.addAttribute(tabMenu.getName(), tabMenu);
-    }
-
-    // For the time being hard coded NavigationMenu's
-    private static NavigationMenu getTopMenu() {
-        NavigationMenu menu = new NavigationMenu("topnav");
-
-        NavigationItem raveHome = new NavigationItem("page.general.back", "/");
-        menu.addNavigationItem(raveHome);
-
-        NavigationItem logout = new NavigationItem("page.general.logout", "/j_spring_security_logout");
-        menu.addNavigationItem(logout);
-
-        return menu;
-    }
-
-    private static NavigationMenu getTabMenu(String selectedItem) {
-        NavigationMenu menu = new NavigationMenu("tabs");
-
-        NavigationItem home = new NavigationItem("admin.home.shorttitle", "/app/admin/");
-        home.setSelected("home".equals(selectedItem));
-        menu.addNavigationItem(home);
-
-        NavigationItem users = new NavigationItem("admin.users.shorttitle", "/app/admin/users");
-        users.setSelected("users".equals(selectedItem));
-        menu.addNavigationItem(users);
-
-        NavigationItem widgets = new NavigationItem("admin.widgets.shorttitle", "/app/admin/widgets");
-        widgets.setSelected("widgets".equals(selectedItem));
-        menu.addNavigationItem(widgets);
-
-        return menu;
-    }
-
     void setUserService(UserService userService) {
         this.userService = userService;
     }
@@ -146,4 +93,5 @@ public class AdminController {
     void setUserProfileValidator(UserProfileValidator userProfileValidator) {
         this.userProfileValidator = userProfileValidator;
     }
+
 }

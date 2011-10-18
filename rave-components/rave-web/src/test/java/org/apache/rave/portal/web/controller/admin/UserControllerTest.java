@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.apache.rave.portal.web.controller;
+package org.apache.rave.portal.web.controller.admin;
 
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.util.SearchResult;
@@ -43,22 +43,14 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 
 /**
- * Test for {@link AdminController}
+ * Test for {@link UserController}
  */
-public class AdminControllerTest {
+public class UserControllerTest {
 
     private static final String TABS = "tabs";
-    private AdminController controller;
-    private UserService userService;
-    private UserProfileValidator userProfileValidator;
 
-    @Test
-    public void adminHome() throws Exception {
-        Model model = new ExtendedModelMap();
-        String homeView = controller.viewDefault(model);
-        assertEquals(ViewNames.ADMIN_HOME, homeView);
-        assertTrue(model.containsAttribute(TABS));
-    }
+    private UserController controller;
+    private UserService userService;
 
     @Test
     public void adminUsers() throws Exception {
@@ -140,23 +132,17 @@ public class AdminControllerTest {
         assertEquals(ViewNames.ADMIN_USERDETAIL, view);
     }
 
-    @Test
-    public void adminWidgets() throws Exception {
-        Model model = new ExtendedModelMap();
-        String adminWidgetsView = controller.viewWidgets(model);
-        assertEquals(ViewNames.ADMIN_WIDGETS, adminWidgetsView);
-        assertTrue(model.containsAttribute(TABS));
-    }
-
-
     @Before
     public void setUp() throws Exception {
-        controller = new AdminController();
+        controller = new UserController();
+
         userService = createNiceMock(UserService.class);
-        userProfileValidator = new UserProfileValidator(userService);
         controller.setUserService(userService);
+
+        UserProfileValidator userProfileValidator = new UserProfileValidator(userService);
         controller.setUserProfileValidator(userProfileValidator);
     }
+
 
     private static SearchResult<User> createSearchResultWithTwoUsers() {
         User user1 = new User(123L, "john.doe.sr");
