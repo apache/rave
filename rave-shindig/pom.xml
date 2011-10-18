@@ -29,12 +29,10 @@
         <version>0.5-incubating-SNAPSHOT</version>
     </parent>
 
-    <groupId>org.apache.rave</groupId>
     <artifactId>rave-shindig</artifactId>
     <name>Apache Rave :: rave-shindig</name>
     <description>Apache Rave Shindig App</description>
     <packaging>war</packaging>
-    <version>0.5-incubating-SNAPSHOT</version>
 
     <properties>
     </properties>
