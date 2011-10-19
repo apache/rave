@@ -118,7 +118,8 @@ public class UserServiceTest {
     @Test
     public void setAuthenticatedUser_validRole() {
         final User authUser = new User(USER_ID);
-        final Authority userRole = new Authority("admin");
+        final Authority userRole = new Authority();
+        userRole.setAuthority("admin");
         authUser.addAuthority(userRole);
         expect(repository.get(USER_ID)).andReturn(authUser).anyTimes();
         replay(repository);

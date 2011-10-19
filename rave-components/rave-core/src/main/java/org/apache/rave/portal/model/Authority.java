@@ -45,14 +45,18 @@ import java.util.Collection;
 @Entity
 @Table(name = "granted_authority")
 @NamedQueries({
-        @NamedQuery(name = Authority.GET_BY_AUTHORITY_NAME, query = "SELECT a FROM Authority a WHERE a.authority = :authority")
+        @NamedQuery(name = Authority.GET_BY_AUTHORITY_NAME, query = "SELECT a FROM Authority a WHERE a.authority = :authority"),
+        @NamedQuery(name = Authority.GET_ALL, query = "SELECT a FROM Authority a"),
+        @NamedQuery(name = Authority.COUNT_ALL, query = "SELECT COUNT(a) FROM Authority a")
 })
 public class Authority implements GrantedAuthority, BasicEntity, Serializable {
 
-    private static final long serialVersionUID = -3946689281908099905L;
+    private static final long serialVersionUID = 463209366149842862L;
 
     public static final String PARAM_AUTHORITY_NAME = "authority";
     public static final String GET_BY_AUTHORITY_NAME = "Authority.GetByAuthorityName";
+    public static final String GET_ALL = "Authority.GetAll";
+    public static final String COUNT_ALL = "Authority.CountAll";
 
     @Id
     @Column(name = "entity_id")
@@ -73,17 +77,6 @@ public class Authority implements GrantedAuthority, BasicEntity, Serializable {
      * Default constructor, needed for JPA
      */
     public Authority() {
-        this(null);
-    }
-
-    /**
-     * Utility constructor
-     *
-     * @param authority (unique) name of the authority (role)
-     */
-    public Authority(String authority) {
-        super();
-        this.authority = authority;
         this.users = new ArrayList<User>();
     }
 
@@ -132,4 +125,29 @@ public class Authority implements GrantedAuthority, BasicEntity, Serializable {
         }
         this.users = null;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        Authority authority = (Authority) o;
+
+        if (entityId != null ? !entityId.equals(authority.entityId) : authority.entityId != null) {
+            return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return entityId != null ? entityId.hashCode() : 0;
+    }
+
 }

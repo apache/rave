@@ -22,6 +22,8 @@ package org.apache.rave.portal.repository;
 import org.apache.rave.persistence.Repository;
 import org.apache.rave.portal.model.Authority;
 
+import java.util.List;
+
 /**
  * Repository interface for {@link org.apache.rave.portal.model.Authority}
  */
@@ -34,4 +36,14 @@ public interface AuthorityRepository extends Repository<Authority> {
      * @return Authority if it can be found, otherwise {@literal null}
      */
     Authority getByAuthority(String authorityName);
+
+    /**
+     * @return a List of all {@link Authority}'s.
+     */
+    List<Authority> getAll();
+
+    /**
+     * @return the total number of authorities in the repository
+     */
+    int getCountAll();
 }

@@ -19,8 +19,10 @@
 
 package org.apache.rave.portal.web.controller.admin;
 
+import org.apache.rave.portal.model.Authority;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.util.SearchResult;
+import org.apache.rave.portal.service.AuthorityService;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.portal.web.util.ModelKeys;
 import org.apache.rave.portal.web.util.ViewNames;
@@ -32,15 +34,18 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
-import static org.easymock.EasyMock.createNiceMock;
+import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
 import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
 
 /**
  * Test for {@link UserController}
@@ -51,6 +56,7 @@ public class UserControllerTest {
 
     private UserController controller;
     private UserService userService;
+    private AuthorityService authorityService;
 
     @Test
     public void adminUsers() throws Exception {
@@ -89,23 +95,29 @@ public class UserControllerTest {
 
 
     @Test
-    public void adminUserDetail() throws Exception {
+    public void viewAdminUserDetail() throws Exception {
         Model model = new ExtendedModelMap();
         Long userid = 123L;
         User user = new User(userid, "john.doe.sr");
+        Principal principal = createMock(Principal.class);
 
+        expect(principal.getName()).andReturn("canonical");
         expect(userService.getUserById(userid)).andReturn(user);
-        replay(userService);
+        replay(userService, principal);
 
-        String adminUserDetailView = controller.viewUserDetail(userid, model);
+        String adminUserDetailView = controller.viewUserDetail(userid, model, principal);
+        verify(userService, principal);
+        
         assertEquals(ViewNames.ADMIN_USERDETAIL, adminUserDetailView);
         assertTrue(model.containsAttribute(TABS));
         assertEquals(user, model.asMap().get("user"));
+        assertEquals("canonical", model.asMap().get("loggedInUser"));
     }
 
 
     @Test
     public void updateUserDetail_success() {
+        Model model = new ExtendedModelMap();
         final Long userid = 123L;
         final String email = "john.doe.sr@example.net";
         User user = new User(userid, "john.doe.sr");
@@ -114,30 +126,56 @@ public class UserControllerTest {
         user.setEmail(email);
         final BindingResult errors = new BeanPropertyBindingResult(user, "user");
 
-        expect(userService.getUserById(userid)).andReturn(user);
+        Principal principal = createMock(Principal.class);
+
         expect(userService.getUserByEmail(email)).andReturn(user);
+        userService.updateUserProfile(user);
+        expectLastCall();
         replay(userService);
-        final String view = controller.updateUserDetail(user, errors);
+
+        final String view = controller.updateUserDetail(user, errors, model, principal);
+        verify(userService);
+
         assertFalse(errors.hasErrors());
         assertEquals("redirect:" + userid, view);
     }
 
     @Test
     public void updateUserDetail_withErrors() {
+        Model model = new ExtendedModelMap();
         Long userid = 123L;
         User user = new User(userid, "john.doe.sr");
         final BindingResult errors = new BeanPropertyBindingResult(user, "user");
-        final String view = controller.updateUserDetail(user, errors);
+        Principal principal = createMock(Principal.class);
+
+        expect(principal.getName()).andReturn("canonical");
+        replay(principal);
+        final String view = controller.updateUserDetail(user, errors, model, principal);
+        verify(principal);
+
         assertTrue(errors.hasErrors());
         assertEquals(ViewNames.ADMIN_USERDETAIL, view);
+    }
+
+    @Test
+    public void getAuthoritiesForModelMap() {
+        final SearchResult<Authority> authorities = createSearchResultWithTwoAuthorities();
+        expect(authorityService.getAllAuthorities()).andReturn(authorities);
+        replay(authorityService);
+        final SearchResult<Authority> result = controller.populateAuthorityList();
+        verify(authorityService);
+        assertEquals(authorities, result);
     }
 
     @Before
     public void setUp() throws Exception {
         controller = new UserController();
 
-        userService = createNiceMock(UserService.class);
+        userService = createMock(UserService.class);
         controller.setUserService(userService);
+
+        authorityService = createMock(AuthorityService.class);
+        controller.setAuthorityService(authorityService);
 
         UserProfileValidator userProfileValidator = new UserProfileValidator(userService);
         controller.setUserProfileValidator(userProfileValidator);
@@ -152,5 +190,16 @@ public class UserControllerTest {
         users.add(user2);
         final int totalResult = 12390;
         return new SearchResult<User>(users, totalResult);
+    }
+
+    private static SearchResult<Authority> createSearchResultWithTwoAuthorities() {
+        List<Authority> authorities = new ArrayList<Authority>();
+        Authority foo = new Authority();
+        foo.setAuthority("FOO");
+        Authority bar = new Authority();
+        bar.setAuthority("BAR");
+        authorities.add(foo);
+        authorities.add(bar);
+        return new SearchResult<Authority>(authorities, authorities.size());
     }
 }

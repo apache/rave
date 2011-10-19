@@ -31,8 +31,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertTrue;
@@ -93,7 +95,8 @@ public class JpaAuthorityRepositoryTest {
     @Test
     public void addOrDeleteAuthorityDoesNotAffectUser() {
         final String authorityName = "guest";
-        Authority authority = new Authority(authorityName);
+        Authority authority = new Authority();
+        authority.setAuthority(authorityName);
         User user = userRepository.get(1L);
 
         Assert.assertNotNull("User is not null", user);
@@ -115,5 +118,17 @@ public class JpaAuthorityRepositoryTest {
         user = userRepository.get(1L);
         Assert.assertNotNull("User should not be deleted after removing an authority", user);
         Assert.assertTrue("User should have no authorities", user.getAuthorities().isEmpty());
+    }
+
+    @Test
+    public void getAll() {
+        List<Authority> allAuthorities = repository.getAll();
+        assertFalse("Found authorities", allAuthorities.isEmpty());
+    }
+
+    @Test
+    public void countAll() {
+        int numberOfAuthorities = repository.getCountAll();
+        assertTrue("Found at least 1 Authority", numberOfAuthorities > 0);
     }
 }

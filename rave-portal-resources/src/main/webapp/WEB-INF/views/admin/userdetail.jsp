@@ -16,6 +16,7 @@
   specific language governing permissions and limitations
   under the License.
   --%>
+<%@ page contentType="text/html" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
@@ -25,56 +26,90 @@
 <fmt:setBundle basename="messages"/>
 
 <fmt:message key="admin.userdetail.title" var="pagetitle"/>
+
+<c:set var="canChangeUserStatus" value="${user.username ne loggedInUser}"/>
+
 <rave:rave_generic_page pageTitle="${pagetitle}">
     <rave:header pageTitle="${pagetitle}"/>
     <rave:admin_tabsheader/>
     <div id="pageContent">
         <article class="admincontent">
-            <ul class="horizontal-list searchbox">
-                <li><a href="<spring:url value="/app/admin/users"/>">_back to users</a></li>
+            <ul class="horizontal-list goback">
+                <li><a href="<spring:url value="/app/admin/users"/>"><fmt:message key="admin.userdetail.goback"/></a>
+                </li>
             </ul>
             <h2><c:out value="${user.username}"/></h2>
-            <form:form id="updateUserProfile" action="update" commandName="user" method="POST">
-                <form:errors cssClass="error" element="p"/>
-                <fieldset>
-                    <p>
-                        <label for="email"><fmt:message key="page.general.email"/></label>
-                        <spring:bind path="email">
-                            <input type="email" name="email" id="email" value="<c:out value="${status.value}"/>" class="long"/>
-                        </spring:bind>
-                    </p>
 
-                    <p>
-                        <label for="openIdField"><fmt:message key="page.userprofile.openid.url"/></label>
-                        <spring:bind path="openId">
-                            <input type="url" id="openIdField" name="openId" value="<c:out value="${status.value}"/>" class="long"/>
-                        </spring:bind>
-                        <form:errors path="openId" cssClass="error"/>
-                    </p>
-                    <div>
-                        <span class="label"><fmt:message key="admin.userdata.accountstatus"/></span>
-                        <ul class="checkboxlist">
-                            <li>
-                                <fmt:message key="admin.userdata.enabled" var="labelEnabled"/>
-                                <form:checkbox path="enabled" label="${labelEnabled}" />
-                            </li>
-                            <li>
-                                <fmt:message key="admin.userdata.expired" var="labelExpired"/>
-                                <form:checkbox path="expired" label="${labelExpired}"/>
-                            </li>
-                            <li>
-                                <fmt:message key="admin.userdata.locked" var="labelLocked"/>
-                                <form:checkbox path="locked" label="${labelLocked}"/>
-                            </li>
-                        </ul>
-                    </div>
-                </fieldset>
-                <fieldset>
-                    <fmt:message key="page.userprofile.button" var="updateButtonText"/>
-                    <input type="submit" value="${updateButtonText}"/>
-                </fieldset>
-            </form:form>
-            
+            <div class="rightcolumn">
+
+            </div>
+
+            <div class="leftcolumn">
+                <section class="formbox">
+                    <h3><fmt:message key="admin.userdetail.editdata"/></h3>
+                    <form:form id="updateUserProfile" action="update" commandName="user" method="POST">
+                        <form:errors cssClass="error" element="p"/>
+                        <fieldset>
+                            <p>
+                                <label for="email"><fmt:message key="page.general.email"/></label>
+                                <spring:bind path="email">
+                                    <input type="email" name="email" id="email" value="<c:out value="${status.value}"/>"
+                                           class="long"/>
+                                </spring:bind>
+                            </p>
+
+                            <p>
+                                <label for="openIdField"><fmt:message key="page.userprofile.openid.url"/></label>
+                                <spring:bind path="openId">
+                                    <input type="url" id="openIdField" name="openId"
+                                           value="<c:out value="${status.value}"/>" class="long"/>
+                                </spring:bind>
+                                <form:errors path="openId" cssClass="error"/>
+                            </p>
+
+                            <div>
+                                <span class="label"><fmt:message key="admin.userdata.accountstatus"/></span>
+                                <ul class="checkboxlist">
+                                    <li>
+                                        <fmt:message key="admin.userdata.enabled" var="labelEnabled"/>
+                                        <form:checkbox path="enabled" label="${labelEnabled}"
+                                                       disabled="${canChangeUserStatus ne true}"/>
+                                    </li>
+                                    <li>
+                                        <fmt:message key="admin.userdata.expired" var="labelExpired"/>
+                                        <form:checkbox path="expired" label="${labelExpired}"
+                                                       disabled="${canChangeUserStatus ne true}"/>
+                                    </li>
+                                    <li>
+                                        <fmt:message key="admin.userdata.locked" var="labelLocked"/>
+                                        <form:checkbox path="locked" label="${labelLocked}"
+                                                       disabled="${canChangeUserStatus ne true}"/>
+                                    </li>
+                                </ul>
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <span class="label"><fmt:message key="admin.userdata.authorities"/></span>
+                            <%--@elvariable id="authorities" type="org.apache.rave.portal.model.util.SearchResult<org.apache.rave.portal.model.Authority>"--%>
+                            <ul class="checkboxlist">
+                                <form:checkboxes path="authorities" items="${authorities.resultSet}"
+                                                 itemLabel="authority" itemValue="authority" element="li" />
+                            </ul>
+                        </fieldset>
+                        <fieldset>
+                            <fmt:message key="page.userprofile.button" var="updateButtonText"/>
+                            <input type="submit" value="${updateButtonText}"/>
+                        </fieldset>
+                    </form:form>
+                </section>
+
+            </div>
+
+            <div style="clear:both;">
+
+            </div>
+
+
         </article>
     </div>
 </rave:rave_generic_page>

@@ -17,23 +17,27 @@
  * under the License.
  */
 
-package org.apache.rave.portal.model;
+package org.apache.rave.portal.service;
 
-import org.junit.Test;
-import org.springframework.security.core.GrantedAuthority;
+import org.apache.rave.portal.model.Authority;
+import org.apache.rave.portal.model.util.SearchResult;
 
-import static junit.framework.Assert.assertEquals;
+public interface AuthorityService {
 
-/**
- * Test for {@link Authority}
- */
-public class AuthorityTest {
+    /**
+     * @param entityId unique identifier of the {@link Authority}
+     * @return Authority if it can be found, otherwise {@literal null}
+     */
+    Authority getAuthorityById(long entityId);
 
-    @Test
-    public void testAuthority() throws Exception {
-        GrantedAuthority grantedAuthority = new Authority();
-        ((Authority) grantedAuthority).setAuthority("user");
-        assertEquals("user", grantedAuthority.getAuthority());
+    /**
+     * @param authorityName name of the authority, can be a role (ROLE_USER)
+     * @return Authority if it can be found, otherwise {@literal null}
+     */
+    Authority getAuthorityByName(String authorityName);
 
-    }
+    /**
+     * @return a {@link SearchResult} with all {@link Authority}'s
+     */
+    SearchResult<Authority> getAllAuthorities();
 }

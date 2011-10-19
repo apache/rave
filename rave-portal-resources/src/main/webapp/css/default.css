@@ -633,6 +633,10 @@ span.error, label.error {
     margin-top:1em;
 }
 
+.admincontent .goback {
+    padding-top: 1em;
+}
+
 .searchbox form, .searchbox fieldset {
     display:inline;
     height:1em;
@@ -723,6 +727,22 @@ span.error, label.error {
 .admincontent tbody tr:hover a, .admincontent table a:hover {
     background-color: transparent;
     text-decoration: underline;
+}
+
+.admincontent .leftcolumn {
+    float:left;
+    width: 70%;
+}
+
+.admincontent .rightcolumn {
+    float:right;
+    width: 30%;
+}
+
+.formbox {
+    border:1px solid #B4C4CF;
+    margin:1em 10px;
+    padding: 0 10px;
 }
 
 .booleancell {

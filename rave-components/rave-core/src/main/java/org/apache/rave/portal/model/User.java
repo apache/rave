@@ -173,6 +173,9 @@ public class User implements UserDetails, BasicEntity, Serializable {
         }
     }
 
+    public void setAuthorities(Collection<Authority> newAuthorities) {
+        this.authorities = newAuthorities;
+    }
 
     //TODO RAVE-233:Setup Hashing and Salting of Passwords
 

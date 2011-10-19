@@ -19,8 +19,10 @@
 
 package org.apache.rave.portal.web.controller.admin;
 
+import org.apache.rave.portal.model.Authority;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.util.SearchResult;
+import org.apache.rave.portal.service.AuthorityService;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.portal.web.util.ModelKeys;
 import org.apache.rave.portal.web.util.ViewNames;
@@ -29,12 +31,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
+
+import java.beans.PropertyEditorSupport;
+import java.security.Principal;
 
 /**
  * Admin controller to manipulate User data
@@ -43,15 +50,25 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 @SessionAttributes({"user"})
 public class UserController {
 
+    private static final String SELECTED_ITEM = "users";
+
     @Autowired
     private UserService userService;
 
     @Autowired
+    private AuthorityService authorityService;
+
+    @Autowired
     private UserProfileValidator userProfileValidator;
+
+    @InitBinder
+    public void initBinder(WebDataBinder b) {
+        b.registerCustomEditor(Authority.class, new AuthorityEditor());
+    }
 
     @RequestMapping(value = "/admin/users", method = RequestMethod.GET)
     public String viewUsers(@RequestParam(required = false, defaultValue = "0") int offset, Model model) {
-        AdminControllerUtil.addNavigationMenusToModel("users", model);
+        AdminControllerUtil.addNavigationMenusToModel(SELECTED_ITEM, model);
         final SearchResult<User> users = userService.getLimitedListOfUsers(offset, AdminControllerUtil.DEFAULT_PAGE_SIZE);
         model.addAttribute(ModelKeys.SEARCHRESULT, users);
         return ViewNames.ADMIN_USERS;
@@ -60,7 +77,7 @@ public class UserController {
     @RequestMapping(value = "/admin/users/search", method = RequestMethod.GET)
     public String searchUsers(@RequestParam(required = true) String searchTerm,
                               @RequestParam(required = false, defaultValue = "0") int offset, Model model) {
-        AdminControllerUtil.addNavigationMenusToModel("users", model);
+        AdminControllerUtil.addNavigationMenusToModel(SELECTED_ITEM, model);
         final SearchResult<User> users = userService.getUsersByFreeTextSearch(
                 searchTerm, offset, AdminControllerUtil.DEFAULT_PAGE_SIZE);
         model.addAttribute(ModelKeys.SEARCH_TERM, searchTerm);
@@ -69,29 +86,55 @@ public class UserController {
     }
 
     @RequestMapping(value = "/admin/userdetail/{userid}", method = RequestMethod.GET)
-    public String viewUserDetail(@PathVariable("userid") Long userid, Model model) {
-        AdminControllerUtil.addNavigationMenusToModel("users", model);
-        final User user = userService.getUserById(userid);
-        model.addAttribute(user);
+    public String viewUserDetail(@PathVariable("userid") Long userid, Model model, Principal principal) {
+        AdminControllerUtil.addNavigationMenusToModel(SELECTED_ITEM, model);
+        model.addAttribute(userService.getUserById(userid));
+        model.addAttribute("loggedInUser", principal.getName());
         return ViewNames.ADMIN_USERDETAIL;
     }
 
     @RequestMapping(value = "/admin/userdetail/update", method = RequestMethod.POST)
-    public String updateUserDetail(@ModelAttribute("user") User user, BindingResult result) {
+    public String updateUserDetail(@ModelAttribute("user") User user, BindingResult result,
+                                   Model model, Principal principal) {
         userProfileValidator.validate(user, result);
         if (result.hasErrors()) {
+            model.addAttribute("loggedInUser", principal.getName());
             return ViewNames.ADMIN_USERDETAIL;
         }
         userService.updateUserProfile(user);
         return "redirect:" + user.getEntityId();
     }
 
+    @ModelAttribute("authorities")
+    public SearchResult<Authority> populateAuthorityList() {
+        return authorityService.getAllAuthorities();
+    }
+
+    // setters for unit tests
     void setUserService(UserService userService) {
         this.userService = userService;
+    }
+
+    void setAuthorityService(AuthorityService authorityService) {
+        this.authorityService = authorityService;
     }
 
     void setUserProfileValidator(UserProfileValidator userProfileValidator) {
         this.userProfileValidator = userProfileValidator;
     }
+
+    /**
+     * Mapping between the submitted form value and an {@link Authority}
+     */
+    private class AuthorityEditor extends PropertyEditorSupport {
+
+        @Override
+        public void setAsText(String text) throws IllegalArgumentException {
+            Authority authority = authorityService.getAuthorityByName(text);
+            setValue(authority);
+        }
+
+    }
+
 
 }

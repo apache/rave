@@ -24,7 +24,9 @@ import org.apache.rave.portal.model.Authority;
 import org.apache.rave.portal.repository.AuthorityRepository;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import java.util.List;
 
 import static org.apache.rave.persistence.jpa.util.JpaUtil.getSingleResult;
 
@@ -44,5 +46,18 @@ public class JpaAuthorityRepository extends AbstractJpaRepository<Authority>
         TypedQuery<Authority> query = manager.createNamedQuery(Authority.GET_BY_AUTHORITY_NAME, Authority.class);
         query.setParameter(Authority.PARAM_AUTHORITY_NAME, authorityName);
         return getSingleResult(query.getResultList());
+    }
+
+    @Override
+    public List<Authority> getAll() {
+        TypedQuery<Authority> query = manager.createNamedQuery(Authority.GET_ALL, Authority.class);
+        return query.getResultList();
+    }
+
+    @Override
+    public int getCountAll() {
+        Query query = manager.createNamedQuery(Authority.COUNT_ALL);
+        Number countResult = (Number) query.getSingleResult();
+        return countResult.intValue();
     }
 }
