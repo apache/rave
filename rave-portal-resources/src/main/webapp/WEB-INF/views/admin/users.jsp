@@ -16,7 +16,7 @@
   specific language governing permissions and limitations
   under the License.
   --%>
-
+<%@ page contentType="text/html" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -33,7 +33,7 @@
     <div class="pageContent">
         <article class="admincontent">
             <ul class="horizontal-list searchbox">
-                <li><a href="<spring:url value="/app/newaccount.jsp"/>">__Add user</a></li>
+                <li><a href="<spring:url value="/app/newaccount.jsp"/>"><fmt:message key="admin.users.add"/></a></li>
                 <li>
                     <form action="<spring:url value="/app/admin/users/search"/>" method="GET">
                         <fieldset>

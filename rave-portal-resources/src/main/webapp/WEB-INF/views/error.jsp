@@ -1,4 +1,4 @@
-<%@ page isErrorPage="true" trimDirectiveWhitespaces="true" %>
+<%@ page isErrorPage="true" trimDirectiveWhitespaces="true" pageEncoding="UTF-8" contentType="text/html" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -14,11 +14,6 @@
     </header>
     <div id="content" >
         <div id="errorMessage">
-            <%-- Image is missing in the codebase --%>
-<%--
-            <div class="errorLogo"><img src="<c:url value="/images/error_generic.png" />" alt="Error has occurred"
-                                        title="Error has occurred"/></div>
---%>
             <div class="errorMessage">
                 <fmt:message key="page.error.message" />
                 &nbsp;<a href="javascript: window.location.reload();"><fmt:message key="page.error.reload" /></a>.<br/>
