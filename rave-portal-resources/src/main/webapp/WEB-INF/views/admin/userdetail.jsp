@@ -32,7 +32,7 @@
 <rave:rave_generic_page pageTitle="${pagetitle}">
     <rave:header pageTitle="${pagetitle}"/>
     <rave:admin_tabsheader/>
-    <div id="pageContent">
+    <div class="pageContent">
         <article class="admincontent">
             <ul class="horizontal-list goback">
                 <li><a href="<spring:url value="/app/admin/users"/>"><fmt:message key="admin.userdetail.goback"/></a>

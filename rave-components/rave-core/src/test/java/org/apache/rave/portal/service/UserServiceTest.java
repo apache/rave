@@ -227,7 +227,7 @@ public class UserServiceTest {
     @Test
     public void updateUserProfile() {
         User user = new User(USER_ID, USER_NAME);
-        expect(repository.save(user)).andReturn(user).times(1);
+        expect(repository.save(user)).andReturn(user).once();
         replay(repository);
 
         service.updateUserProfile(user);
