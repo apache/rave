@@ -35,6 +35,12 @@
     <packaging>jar</packaging>
 
     <dependencies>
+         <dependency>
+            <groupId>org.apache.wookie</groupId>
+            <artifactId>wookie-java-connector</artifactId>
+            <scope>compile</scope>
+            <version>0.9.1-incubating-SNAPSHOT</version>
+        </dependency>   
         <dependency>
             <groupId>org.apache.rave</groupId>
             <artifactId>rave-commons</artifactId>

@@ -18,20 +18,20 @@
  */
 var rave = rave || {};
 rave.wookie = rave.wookie || (function() {
-
     var WIDGET_TYPE = "W3C";
+    var OFFSET = 10;
+    var MIN_HEIGHT = 250;
 
-    function createWidgets(widgets){
-        if(!widgets || widgets.length == 0) return;
+    var container;
+    
+    function validateAndRenderWidget(widget){
+        var widgetBodyElement = document.getElementById(["widget-", widget.regionWidgetId, "-body"].join(""));
         
-        for(var i = 0; i < widgets.length; i++){
-            var widgetBodyElement = document.getElementById(["widget-", widgets[i].regionWidgetId, "-body"].join(""));
-            var widgetIframe = document.createElement("iframe");
-            widgetIframe.setAttribute("height",250);
-            widgetIframe.setAttribute("width",250);
-            widgetIframe.setAttribute("src",widgets[i].widgetUrl);
-            widgetBodyElement.appendChild(widgetIframe);
-        }
+        var widgetIframe = document.createElement("iframe");
+        widgetIframe.setAttribute("height",250);
+        widgetIframe.setAttribute("width",250);
+        widgetIframe.setAttribute("src",widget.widgetUrl);
+        widgetBodyElement.appendChild(widgetIframe);
     }
 
     /**
@@ -44,16 +44,16 @@ rave.wookie = rave.wookie || (function() {
          * Init function required by Rave's initialization infrastructure
          */
         init : function() {},
-        
         /**
-         * Renders the given Widgets list
-         * @param a list of widgets to render
+         * Instantiates and renders the given widget
+         * @param a widget to render
          */
-        initWidgets: createWidgets
+        initWidget: validateAndRenderWidget
 
     };
 
 
 })();
+
 //Register the widget provider with Rave
 rave.registerProvider(rave.wookie);

@@ -223,7 +223,17 @@ insert into widget (entity_id, title, url, type, widget_status, description, aut
 values(@user_prefs_demo_widget_id, 'User Prefs Demo', 'http://localhost:8080/demogadgets/user_prefs_demo.xml', 'OpenSocial', 'PUBLISHED', 'An example gadget which demos some of the different capabilities of user preferences.', 'Anthony Carlucci');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @widget_seq;
 
--- end widget data ----
+-- end gadget data ----
+
+-- W3C Widget data
+
+-- simple chat widget
+set @chat_widget_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @widget_seq);
+insert into widget (entity_id, title, url, type, widget_status, description, author)
+values(@chat_widget_id, 'Simple Chat', 'http://wookie.apache.org/widgets/simplechat', 'W3C', 'PUBLISHED', 'NOTE: This is a W3C Widget managed by a Wookie server. It is an ALPHA feature. Must have an Apache Wookie server running on the same machine as the Rave server on port 8888', 'Apache Wookie Community');
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @widget_seq;
+
+-- end W3C Widget data
 
 -- User layouts
 
