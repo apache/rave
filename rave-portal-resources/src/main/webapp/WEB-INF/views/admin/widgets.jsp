@@ -23,12 +23,54 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib tagdir="/WEB-INF/tags" prefix="rave" %>
 <fmt:setBundle basename="messages"/>
+<%--@elvariable id="searchResult" type="org.apache.rave.portal.model.util.SearchResult<org.apache.rave.portal.model.Widget>"--%>
 
 <fmt:message key="admin.widgets.title" var="pagetitle"/>
 <rave:rave_generic_page pageTitle="${pagetitle}">
     <rave:header pageTitle="${pagetitle}"/>
     <rave:admin_tabsheader/>
-    <div id="pageContent">
-        <p>Content goes here</p>
+    <div class="pageContent">
+        <article class="admincontent">
+            <%--<ul class="horizontal-list searchbox">
+                <li>
+                    Searchform goes here
+                </li>
+                <c:if test="${not empty searchTerm}">
+                    <li><a href="<spring:url value="/app/admin/widgets"/>"><fmt:message key="admin.clearsearch"/></a></li>
+                </c:if>
+            </ul>--%>
+            <rave:admin_listheader/>
+            <rave:admin_paging/>
+
+            <table class="datatable widgetstable">
+                <thead>
+                <tr>
+                    <th class="largetextcell"><fmt:message key="widget.title"/></th>
+                    <th class="textcell"><fmt:message key="widget.type"/></th>
+                    <th class="textcell"><fmt:message key="widget.widgetStatus"/></th>
+                </tr>
+                </thead>
+                <tbody>
+                    <c:forEach var="widget" items="${searchResult.resultSet}">
+                        <spring:url value="/app/admin/widgetdetail/${widget.entityId}" var="detaillink"/>
+                        <tr data-detaillink="${detaillink}">
+                            <td><a href="${detaillink}"><c:out value="${widget.title}"/></a></td>
+                            <td><a href="${detaillink}"><fmt:message key="widget.type.${widget.type}" /></a></td>
+                            <td><a href="${detaillink}"><c:out value="${widget.widgetStatus}"/></a></td>
+                        </tr>
+                    </c:forEach>
+                </tbody>
+            </table>
+
+            <rave:admin_paging/>
+
+        </article>
     </div>
+
+    <script src="//ajax.aspnetcdn.com/ajax/jQuery/jquery-1.6.1.min.js"></script>
+    <script src="<spring:url value="/script/rave_admin.js"/>"></script>
+    <script>$(function() {
+        rave.admin.initAdminUi();
+    });</script>
+
 </rave:rave_generic_page>

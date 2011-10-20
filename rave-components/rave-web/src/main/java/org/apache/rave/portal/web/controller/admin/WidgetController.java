@@ -19,22 +19,80 @@
 
 package org.apache.rave.portal.web.controller.admin;
 
+import org.apache.rave.portal.model.Widget;
+import org.apache.rave.portal.model.WidgetStatus;
+import org.apache.rave.portal.model.util.SearchResult;
+import org.apache.rave.portal.service.WidgetService;
+import org.apache.rave.portal.web.util.ModelKeys;
 import org.apache.rave.portal.web.util.ViewNames;
+import org.apache.rave.portal.web.validator.NewWidgetValidator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttributes;
+
+import static org.apache.rave.portal.model.WidgetStatus.values;
 
 /**
  * Admin controller to manipulate Widget data
  */
 @Controller
+@SessionAttributes({"widget"})
 public class WidgetController {
 
+    private static final String SELECTED_ITEM = "widgets";
+
+    @Autowired
+    private WidgetService widgetService;
+
+    @Autowired
+    private NewWidgetValidator widgetValidator;
+
     @RequestMapping(value = "/admin/widgets", method = RequestMethod.GET)
-    public String viewWidgets(Model model) {
-        AdminControllerUtil.addNavigationMenusToModel("widgets", model);
+    public String viewWidgets(@RequestParam(required = false, defaultValue = "0") int offset, Model model) {
+        AdminControllerUtil.addNavigationMenusToModel(SELECTED_ITEM, model);
+        final SearchResult<Widget> widgets =
+                widgetService.getLimitedListOfWidgets(offset, AdminControllerUtil.DEFAULT_PAGE_SIZE);
+        model.addAttribute(ModelKeys.SEARCHRESULT, widgets);
         return ViewNames.ADMIN_WIDGETS;
     }
 
+    @RequestMapping(value = "/admin/widgetdetail/{widgetid}", method = RequestMethod.GET)
+    public String viewWidgetDetail(@PathVariable("widgetid") Long widgetid, Model model) {
+        AdminControllerUtil.addNavigationMenusToModel(SELECTED_ITEM, model);
+        model.addAttribute(widgetService.getWidget(widgetid));
+        return ViewNames.ADMIN_WIDGETDETAIL;
+    }
+
+    @RequestMapping(value = "/admin/widgetdetail/update", method = RequestMethod.POST)
+    public String updateWidgetDetail(@ModelAttribute("widget") Widget widget, BindingResult result) {
+        widgetValidator.validate(widget, result);
+        if (result.hasErrors()) {
+            return ViewNames.ADMIN_WIDGETDETAIL;
+        }
+        widgetService.updateWidget(widget);
+        return "redirect:" + widget.getEntityId();
+    }
+
+    @ModelAttribute("widgetStatus")
+    public WidgetStatus[] getWidgetStatusValues() {
+        return values();
+    }
+
+
+    // setters for unit tests
+    
+    void setWidgetService(WidgetService widgetService) {
+        this.widgetService = widgetService;
+    }
+
+    void setWidgetValidator(NewWidgetValidator widgetValidator) {
+        this.widgetValidator = widgetValidator;
+    }
 }

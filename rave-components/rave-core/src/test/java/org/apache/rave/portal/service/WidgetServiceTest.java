@@ -33,6 +33,7 @@ import java.util.List;
 import static org.easymock.EasyMock.createNiceMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.CoreMatchers.sameInstance;
@@ -41,6 +42,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Test for {@link DefaultWidgetService}
@@ -209,5 +211,20 @@ public class WidgetServiceTest {
 
         Widget noWidget = service.registerNewWidget(widget);
         assertNull("Widget already exists", noWidget);
+    }
+
+    @Test
+    public void updateWidget() {
+        final String widgetUrl =
+                        "http://hosting.gmodules.com/ig/gadgets/file/112581010116074801021/hamster.xml";
+        Widget widget = new Widget();
+        widget.setUrl(widgetUrl);
+        expect(repository.save(widget)).andReturn(widget).once();
+        replay(repository);
+
+        service.updateWidget(widget);
+        verify(repository);
+
+        assertTrue("Save called", true);
     }
 }

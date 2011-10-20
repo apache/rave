@@ -101,4 +101,11 @@ public interface WidgetService {
      * @return Widget if it is new and can be stored, otherwise {@literal null}
      */
     Widget registerNewWidget(Widget widget);
+
+    /**
+     * Updates {@link Widget}
+     *
+     * @param widget to save
+     */
+    void updateWidget(Widget widget);
 }

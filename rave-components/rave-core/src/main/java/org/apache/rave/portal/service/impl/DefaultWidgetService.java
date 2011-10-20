@@ -126,4 +126,9 @@ public class DefaultWidgetService implements WidgetService {
         }
         return widgetRepository.save(widget);
     }
+
+    @Override
+    public void updateWidget(Widget widget) {
+        widgetRepository.save(widget);
+    }
 }

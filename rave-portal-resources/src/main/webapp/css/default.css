@@ -739,6 +739,22 @@ span.error, label.error {
     width: 30%;
 }
 
+.admincontent figure {
+    display: block;
+    margin: 1em 0;
+    width: 100%;
+}
+.admincontent figure.screenshot img {
+    max-width: 100%;
+}
+
+.admincontent figcaption {
+    display: block;
+    margin: 0 0 1em 0;
+    padding: 0;
+    font-style: italic;
+}
+
 .formbox {
     border:1px solid #B4C4CF;
     margin:1em 10px;
