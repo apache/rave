@@ -33,7 +33,15 @@
                 <a href="<spring:url value="/app/store/widget/add"/>"><fmt:message key="page.addwidget.title"/></a>
             </li>
             <li>
-                <a href="<spring:url value="/index.html" />"><fmt:message key="page.general.back"/></a>
+                <c:choose>
+                    <c:when test="${empty referringPageId}">
+                        <spring:url value="/index.html" var="gobackurl" />
+                    </c:when>
+                    <c:otherwise>
+                        <spring:url value="/app/page/view/${referringPageId}" var="gobackurl"/>
+                    </c:otherwise>
+                </c:choose>
+                <a href="<c:out value="${gobackurl}"/>"><fmt:message key="page.general.back"/></a>
             </li>
             <li>
                 <a href="<spring:url value="/j_spring_security_logout" htmlEscape="true" />">
@@ -143,13 +151,13 @@
         </c:if>
     </c:if>
 </div>
-<script>
-    var rave = rave || {
-        getContext : function() {
-            return "<spring:url value="/app/" />";
-        }
-    }
-</script>
+
 <script src="//ajax.aspnetcdn.com/ajax/jQuery/jquery-1.6.1.min.js"></script>
+<script src="<spring:url value="/script/rave.js"/>"></script>
 <script src="<spring:url value="/script/rave_api.js"/>"></script>
+<script>
+    $(function() {
+        rave.setContext("<spring:url value="/app/" />");
+    });
+</script>
 </rave:rave_generic_page>

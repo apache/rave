@@ -20,6 +20,7 @@
 package org.apache.rave.portal.service;
 
 import org.apache.rave.portal.model.Widget;
+import org.apache.rave.portal.model.WidgetRating;
 import org.apache.rave.portal.model.WidgetStatus;
 import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.repository.WidgetRepository;
@@ -30,6 +31,8 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
+import static junit.framework.Assert.assertTrue;
+import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.createNiceMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
@@ -42,12 +45,11 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Test for {@link DefaultWidgetService}
  */
-public class WidgetServiceTest {
+public class DefaultWidgetServiceTest {
 
     private WidgetService service;
     private WidgetRepository repository;
@@ -55,7 +57,8 @@ public class WidgetServiceTest {
     @Before
     public void setup() {
         repository = createNiceMock(WidgetRepository.class);
-        service = new DefaultWidgetService(repository);
+        WidgetRatingService widgetRatingService = createMock(WidgetRatingService.class);
+        service = new DefaultWidgetService(repository, widgetRatingService);
     }
 
     @Test
@@ -226,5 +229,77 @@ public class WidgetServiceTest {
         verify(repository);
 
         assertTrue("Save called", true);
+    }
+
+    @Test
+    public void createWidgetRating() {
+        Widget widget = new Widget(1L, "http://example.com/widget.xml");
+        widget.setRatings(new ArrayList<WidgetRating>());
+        expect(repository.get(1)).andReturn(widget);
+        expect(repository.save(widget)).andReturn(widget);
+        replay(repository);
+
+        WidgetRating newWidgetRating = new WidgetRating(1L, 1L, 1L, 1);
+        service.saveWidgetRating(1L, newWidgetRating);
+
+        List<WidgetRating> ratings = widget.getRatings();
+        assertNotNull(ratings);
+        assertEquals(1, ratings.size());
+        assertEquals(ratings.get(0), newWidgetRating);
+    }
+
+    @Test
+    public void updateWidgetRating() {
+        Widget widget = new Widget();
+        List<WidgetRating> ratings = new ArrayList<WidgetRating>();
+        ratings.add(new WidgetRating(1L, 1L, 1L, 5));
+        widget.setRatings(ratings);
+        expect(repository.get(1)).andReturn(widget);
+        expect(repository.save(widget)).andReturn(widget);
+        replay(repository);
+        
+        WidgetRating newWidgetRating = new WidgetRating();
+        newWidgetRating.setWidgetId(1L);
+        newWidgetRating.setUserId(1L);
+        newWidgetRating.setScore(0);
+        
+        service.saveWidgetRating(1L, newWidgetRating);
+        
+        assertNotNull(ratings);
+        assertEquals(2, ratings.size());
+        assertEquals(ratings.get(1).getScore(), new Integer(0));
+    }
+    
+    @Test
+    public void deleteWidgetRating() {
+        Widget widget = new Widget();
+        List<WidgetRating> ratings = new ArrayList<WidgetRating>();
+        ratings.add(new WidgetRating(123L, 1L, 1L, 5));
+        widget.setRatings(ratings);
+        expect(repository.get(1)).andReturn(widget);
+        expect(repository.save(widget)).andReturn(widget);
+        replay(repository);
+        
+        service.removeWidgetRating(1, 1L);
+        
+        assertNotNull(ratings);
+        assertEquals(1, ratings.size());
+    }
+    
+    @Test
+    public void deleteUnsavedWidgetRating() {
+        Widget widget = new Widget();
+        List<WidgetRating> ratings = new ArrayList<WidgetRating>();
+        ratings.add(new WidgetRating(123L, 1L, 1L, 5));
+        widget.setRatings(ratings);
+        expect(repository.get(1)).andReturn(widget);
+        expect(repository.save(widget)).andReturn(widget);
+        replay(repository);
+        
+        service.removeWidgetRating(1, 2L);
+        
+        assertNotNull(ratings);
+        assertEquals(1, ratings.size());
+        assertEquals(ratings.get(0).getScore(), new Integer(5));
     }
 }

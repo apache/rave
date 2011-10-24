@@ -16,4 +16,8 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
+describe("Rave store", function() {
+    //create a mock jquery object so we can hang mock functions off of it as needed
+    $ = {};
+    
+});

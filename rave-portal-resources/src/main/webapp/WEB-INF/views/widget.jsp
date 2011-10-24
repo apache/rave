@@ -35,7 +35,15 @@
                     </li>
                 </c:if>
                 <li>
-                    <a href="<spring:url value="/index.html" />"><fmt:message key="page.general.back"/></a>
+                    <c:choose>
+                        <c:when test="${empty referringPageId}">
+                            <spring:url value="/index.html" var="gobackurl" />
+                        </c:when>
+                        <c:otherwise>
+                            <spring:url value="/app/page/view/${referringPageId}" var="gobackurl"/>
+                        </c:otherwise>
+                    </c:choose>
+                    <a href="<c:out value="${gobackurl}"/>"><fmt:message key="page.general.back"/></a>
                 </li>
                 <li>
                     <a href="<spring:url value="/j_spring_security_logout" htmlEscape="true" />">
@@ -61,6 +69,20 @@
 
                 <div class="widgetDetailMeta">
                     <p><fmt:message key="widget.type.${widget.type}" /></p>
+                </div>
+                <div class="widgetRating">
+                        <%--@elvariable id="widgetRating" type="org.apache.rave.portal.model.WidgetRating"--%>
+                        <fmt:message key="page.widget.rate"/>
+                        <div id="radio">
+                        <c:set var="likeSelected"><c:if test="${not empty widgetRating and widgetRating.score eq 10}"> checked="checked"</c:if></c:set>
+                        <c:set var="dislikeSelected"><c:if test="${not empty widgetRating and widgetRating.score eq 0}"> checked="checked"</c:if></c:set>
+                        <input type="radio" id="like" name="rating"
+                               data-widget="<c:out value="${widget.entityId}"/>" ${likeSelected}>
+                            <label for="like"><fmt:message key="page.widget.rate.like"/></label>
+                        <input type="radio" id="dislike" name="rating"
+                               data-widget="<c:out value="${widget.entityId}"/>" ${dislikeSelected}>
+                            <label for="dislike"><fmt:message key="page.widget.rate.dislike"/></label>
+                    </div>
                 </div>
             </div>
 
@@ -125,14 +147,16 @@
             <div class="clear-float" >&nbsp;</div>
         </div>
     </div>
-    <script>
-        var rave = rave || {
-            getContext : function() {
-                return "<spring:url value="/app/" />";
-            }
-        }
-    </script>
     <script src="//ajax.aspnetcdn.com/ajax/jQuery/jquery-1.6.1.min.js"></script>
+    <script src="//ajax.aspnetcdn.com/ajax/jquery.ui/1.8.13/jquery-ui.min.js"></script>
+    <script src="<spring:url value="/script/rave.js"/>"></script>
     <script src="<spring:url value="/script/rave_api.js"/>"></script>
+    <script src="<spring:url value="/script/rave_store.js"/>"></script>
+    <script>
+        $(function() {
+            rave.setContext("<spring:url value="/app/" />");
+            rave.store.init();
+        });
+    </script>
 
 </rave:rave_generic_page>

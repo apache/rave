@@ -16,36 +16,20 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-var rave = rave || {};
-rave.store = rave.store || (function() {
-    function init() {
-        $("#radio").buttonset();
 
-        $("#like").button( {
-            icons: {
-                primary: "ui-icon-plus"
-            },
-            text: false
-        });
+package org.apache.rave.portal.repository;
 
-        $("#like").click(function() {
-            rave.api.rest.updateWidgetRating({widgetId: $(this).attr("data-widget"), score: 10});
-        });
+import org.apache.rave.persistence.Repository;
+import org.apache.rave.portal.model.WidgetRating;
 
-        $("#dislike").button( {
-            icons: {
-                primary: "ui-icon-minus"
-            },
-            text: false
-        });
+public interface WidgetRatingRepository extends Repository<WidgetRating> {
 
-        $("#dislike").click(function() {
-            rave.api.rest.updateWidgetRating({widgetId: $(this).attr("data-widget"), score: 0});
-        });
-    }
-
-    return {
-        init:init
-    };
-
-})();
+    /**
+     * Tries to find a {@link WidgetRating} by the id's of a Widget and USer
+     *
+     * @param widgetId unique identifier of a Widget
+     * @param userId   unique identifier of a User
+     * @return {@link WidgetRating} if it exists, otherwise {@literal null}
+     */
+    WidgetRating getByWidgetIdAndUserId(Long widgetId, Long userId);
+}

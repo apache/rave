@@ -20,6 +20,7 @@
 package org.apache.rave.portal.service;
 
 import org.apache.rave.portal.model.Widget;
+import org.apache.rave.portal.model.WidgetRating;
 import org.apache.rave.portal.model.util.SearchResult;
 
 /**
@@ -101,11 +102,28 @@ public interface WidgetService {
      * @return Widget if it is new and can be stored, otherwise {@literal null}
      */
     Widget registerNewWidget(Widget widget);
-
+    
     /**
      * Updates {@link Widget}
      *
      * @param widget to save
      */
     void updateWidget(Widget widget);
+
+    /**
+     * Saves a {@link WidgetRating} for a widget
+     *
+     * @param widgetId unique identifier of a {@link Widget}
+     * @param rating   WidgetRating
+     */
+    void saveWidgetRating(long widgetId, WidgetRating rating);
+
+    /**
+     * Removes the rating of a widget
+     *
+     * @param widgetId unique identifier of a {@link Widget}
+     * @param userId   unique identifier of a {@link org.apache.rave.portal.model.User}
+     */
+    void removeWidgetRating(long widgetId, long userId);
+
 }

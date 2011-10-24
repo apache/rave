@@ -104,8 +104,36 @@ rave.api = rave.api || (function() {
                 error: handleError
             });            
         }
+        
+        function deleteWidgetRating(args) {
+            $.ajax({
+                type: 'DELETE',
+                url: rave.getContext() + path + "widgets/" + args.widgetId + "/rating",
+                success: function(result) {
+                    if (typeof args.successCallback == 'function') {
+                        args.successCallback();
+                    }
+                },
+                error: handleError
+            })
+        }
+        
+        function updateWidgetRating(args) {
+            $.ajax({
+                type: 'POST',
+                url: rave.getContext() + path + "widgets/" + args.widgetId + "/rating?score=" + args.score,
+                success: function(result) {
+                    if (typeof args.successCallback == 'function') {
+                        args.successCallback();
+                    }
+                },
+                error: handleError
+            })
+        }
 
         return {
+            updateWidgetRating: updateWidgetRating,
+            deleteWidgetRating: deleteWidgetRating,
             saveWidgetPreferences : saveWidgetPreferences,
             saveWidgetPreference : saveWidgetPreference,
             saveWidgetCollapsedState : saveWidgetCollapsedState,

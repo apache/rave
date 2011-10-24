@@ -16,36 +16,31 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-var rave = rave || {};
-rave.store = rave.store || (function() {
-    function init() {
-        $("#radio").buttonset();
 
-        $("#like").button( {
-            icons: {
-                primary: "ui-icon-plus"
-            },
-            text: false
-        });
+package org.apache.rave.portal.service;
 
-        $("#like").click(function() {
-            rave.api.rest.updateWidgetRating({widgetId: $(this).attr("data-widget"), score: 10});
-        });
+import org.apache.rave.portal.model.WidgetRating;
 
-        $("#dislike").button( {
-            icons: {
-                primary: "ui-icon-minus"
-            },
-            text: false
-        });
+/**
+ * Interface for {@link org.apache.rave.portal.model.WidgetRating}
+ */
+public interface WidgetRatingService {
 
-        $("#dislike").click(function() {
-            rave.api.rest.updateWidgetRating({widgetId: $(this).attr("data-widget"), score: 0});
-        });
-    }
+    /**
+     * Gets a {@link WidgetRating} for the widgetId and userId
+     *
+     * @param widgetId unique identifier for a Widget
+     * @param userId   unique identifier for a User
+     * @return WidgetRating or {@link null} if there is no such combination
+     */
+    WidgetRating getByWidgetIdAndUserId(Long widgetId, Long userId);
 
-    return {
-        init:init
-    };
+    /**
+     * Updates the score of a {@link WidgetRating}
+     *
+     * @param widgetRating WidgetRating
+     * @param score        value of the rating
+     */
+    void updateScore(WidgetRating widgetRating, Integer score);
 
-})();
+}

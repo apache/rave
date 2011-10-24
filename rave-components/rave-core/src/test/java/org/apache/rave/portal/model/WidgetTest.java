@@ -23,6 +23,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static junit.framework.Assert.assertEquals;
 
 /**
@@ -39,6 +42,7 @@ public class WidgetTest {
     private String author;
     private String description;
     private WidgetStatus status;
+    private List<WidgetRating> ratings;
 
     @Before
     public void setUp() throws Exception {
@@ -52,6 +56,9 @@ public class WidgetTest {
         author = "John Doe";
         description = "This is a test widget";
         status = WidgetStatus.PREVIEW;
+        
+        ratings = new ArrayList<WidgetRating>();
+        ratings.add(new WidgetRating(1L, 1L, 1L, 1));
 
         widget.setEntityId(id);
         widget.setTitle(title);
@@ -62,6 +69,7 @@ public class WidgetTest {
         widget.setAuthor(author);
         widget.setDescription(description);
         widget.setWidgetStatus(status);
+        widget.setRatings(ratings);
     }
 
     @Test
@@ -75,6 +83,7 @@ public class WidgetTest {
         assertEquals(author, widget.getAuthor());
         assertEquals(description, widget.getDescription());
         assertEquals(status, widget.getWidgetStatus());
+        assertEquals(ratings, widget.getRatings());
     }
 
     @After

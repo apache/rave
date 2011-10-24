@@ -19,19 +19,80 @@
 
 package org.apache.rave.portal.web.api.rest;
 
+import org.apache.rave.portal.model.User;
+import org.apache.rave.portal.model.WidgetRating;
+import org.apache.rave.portal.service.UserService;
+import org.apache.rave.portal.service.WidgetService;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.http.HttpStatus;
+import org.springframework.mock.web.MockHttpServletResponse;
+
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
 
 public class WidgetApiTest {
-    WidgetApi widgetApi;
+    private WidgetApi widgetApi;
+    private WidgetService widgetService;
+    private UserService userService;
+    private MockHttpServletResponse response;
 
     @Before
     public void setup() {
-        widgetApi = new WidgetApi();
+        widgetService = createMock(WidgetService.class);
+        userService = createMock(UserService.class);
+        response = createMock(MockHttpServletResponse.class);
+        widgetApi = new WidgetApi(widgetService, userService);
     }
 
     @Test(expected = UnsupportedOperationException.class)
     public void getAllWidgets() {
         widgetApi.getAllWidgets();
+    }
+    
+    @Test
+    public void deleteWidgetRating() {
+        widgetService.removeWidgetRating(1L, 2L);
+        expectLastCall();
+        replay(widgetService);
+        
+        response.setStatus(HttpStatus.NO_CONTENT.value());
+        replay(response);
+
+        User user = new User(2L);
+
+        expect(userService.getAuthenticatedUser()).andReturn(user);
+        replay(userService);
+        widgetApi.deleteWidgetRating(1L, response);
+
+        verify(widgetService, userService);
+        verify(response);
+    }
+    
+    @Test
+    public void updateWidgetRating() {
+        WidgetRating widgetRating = new WidgetRating();
+        widgetRating.setScore(5);
+        widgetRating.setUserId(2L);
+        widgetRating.setWidgetId(1L);
+        widgetService.saveWidgetRating(1L, widgetRating);
+        expectLastCall();
+        replay(widgetService);
+        
+        response.setStatus(HttpStatus.NO_CONTENT.value());
+        replay(response);
+
+        User user = new User(2L);
+
+        expect(userService.getAuthenticatedUser()).andReturn(user);
+        replay(userService);
+
+        widgetApi.setWidgetRating(1L, 5, response);
+        
+        verify(widgetService, userService);
+        verify(response);
     }
 }

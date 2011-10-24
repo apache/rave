@@ -19,11 +19,20 @@
 
 package org.apache.rave.portal.web.api.rest;
 
+import org.apache.rave.portal.model.WidgetRating;
+import org.apache.rave.portal.service.UserService;
+import org.apache.rave.portal.service.WidgetService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * Handler for all services exposed under the /api/widgets path.
@@ -32,10 +41,46 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @RequestMapping("/api/rest/widgets")
 public class WidgetApi extends AbstractRestApi {
     private static Logger logger = LoggerFactory.getLogger(WidgetApi.class);
+    private final WidgetService widgetService;
+    private final UserService userService;
+    
+    @Autowired
+    public WidgetApi(WidgetService widgetService, UserService userService) {
+        this.widgetService = widgetService;
+        this.userService = userService;
+    }
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public void getAllWidgets() {
         logger.debug("GET received for all widgets");
         throw new UnsupportedOperationException("Not yet implemented");
+    }
+    
+    
+    @RequestMapping(value = "/{widgetId}/rating", method = RequestMethod.DELETE)
+    public void deleteWidgetRating(@PathVariable long widgetId, 
+                            HttpServletResponse response) {
+        logger.debug("DELETE WidgetRating received for /api/rest/widgets/{}", widgetId);
+
+        widgetService.removeWidgetRating(widgetId, userService.getAuthenticatedUser().getEntityId());
+        
+        // send a 204 back for success since there is no content being returned
+        response.setStatus(HttpStatus.NO_CONTENT.value());
+    }
+    
+    @RequestMapping(value = "/{widgetId}/rating", method = RequestMethod.POST)
+    public void setWidgetRating(@PathVariable long widgetId,
+                                    @RequestParam(value = "score") Integer score,
+                                    HttpServletResponse response) {
+        logger.debug("POST WidgetRating received for /api/rest/widgets/{} score: {}", widgetId, score);
+
+        WidgetRating widgetRating = new WidgetRating();
+        widgetRating.setScore(score);
+        widgetRating.setUserId(userService.getAuthenticatedUser().getEntityId());
+        widgetRating.setWidgetId(widgetId);
+        widgetService.saveWidgetRating(widgetId, widgetRating);
+        
+        // send a 204 back for success since there is no content being returned
+        response.setStatus(HttpStatus.NO_CONTENT.value());
     }
 }

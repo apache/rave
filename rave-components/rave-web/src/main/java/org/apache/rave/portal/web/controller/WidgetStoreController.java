@@ -19,8 +19,12 @@
 
 package org.apache.rave.portal.web.controller;
 
+import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.Widget;
+import org.apache.rave.portal.model.WidgetRating;
 import org.apache.rave.portal.model.WidgetStatus;
+import org.apache.rave.portal.service.UserService;
+import org.apache.rave.portal.service.WidgetRatingService;
 import org.apache.rave.portal.service.WidgetService;
 import org.apache.rave.portal.web.util.ModelKeys;
 import org.apache.rave.portal.web.util.ViewNames;
@@ -45,10 +49,17 @@ public class WidgetStoreController {
 
     private final NewWidgetValidator widgetValidator;
 
+    private final WidgetRatingService widgetRatingService;
+
+    private final UserService userService;
+
     @Autowired
-    public WidgetStoreController(WidgetService widgetService, NewWidgetValidator validator) {
+    public WidgetStoreController(WidgetService widgetService, NewWidgetValidator validator,
+                                 WidgetRatingService widgetRatingService, UserService userService) {
         this.widgetService = widgetService;
         this.widgetValidator = validator;
+        this.widgetRatingService = widgetRatingService;
+        this.userService = userService;
     }
 
     /**
@@ -80,6 +91,12 @@ public class WidgetStoreController {
     public String viewWidget(Model model, @PathVariable long widgetId, @RequestParam long referringPageId) {
         model.addAttribute(ModelKeys.WIDGET, widgetService.getWidget(widgetId));
         model.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
+
+        final User authenticatedUser = userService.getAuthenticatedUser();
+        final WidgetRating widgetRating =
+                widgetRatingService.getByWidgetIdAndUserId(widgetId, authenticatedUser.getEntityId());
+        model.addAttribute("widgetRating", widgetRating);
+
         return ViewNames.WIDGET;
     }
 

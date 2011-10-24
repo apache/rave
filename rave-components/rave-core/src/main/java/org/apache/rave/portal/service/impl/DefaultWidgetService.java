@@ -21,9 +21,11 @@ package org.apache.rave.portal.service.impl;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.rave.portal.model.Widget;
+import org.apache.rave.portal.model.WidgetRating;
 import org.apache.rave.portal.model.WidgetStatus;
 import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.repository.WidgetRepository;
+import org.apache.rave.portal.service.WidgetRatingService;
 import org.apache.rave.portal.service.WidgetService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,10 +40,12 @@ public class DefaultWidgetService implements WidgetService {
     private static Logger logger = LoggerFactory.getLogger(DefaultWidgetService.class);
 
     private final WidgetRepository widgetRepository;
+    private final WidgetRatingService widgetRatingService;
 
     @Autowired
-    public DefaultWidgetService(WidgetRepository widgetRepository) {
+    public DefaultWidgetService(WidgetRepository widgetRepository, WidgetRatingService widgetRatingService) {
         this.widgetRepository = widgetRepository;
+        this.widgetRatingService = widgetRatingService;
     }
 
     @Override
@@ -130,5 +134,38 @@ public class DefaultWidgetService implements WidgetService {
     @Override
     public void updateWidget(Widget widget) {
         widgetRepository.save(widget);
+    }
+
+    @Override
+    public void saveWidgetRating(long widgetId, WidgetRating rating) {
+        Widget widget = getWidget(widgetId);
+        List<WidgetRating> widgetRatings = widget.getRatings();
+
+        WidgetRating userWidgetRating = getUserWidgetRating(widget.getEntityId(), rating.getUserId());
+        if (userWidgetRating == null) {
+            widgetRatings.add(rating);
+            updateWidget(widget);
+        }
+        else {
+            widgetRatingService.updateScore(userWidgetRating, rating.getScore());
+        }
+    }
+
+    @Override
+    public void removeWidgetRating(long widgetId, long userId) {
+        Widget widget = getWidget(widgetId);
+        List<WidgetRating> widgetRatings = widget.getRatings();
+
+        WidgetRating userWidgetRating = getUserWidgetRating(widget.getEntityId(), userId);
+        if (userWidgetRating == null) {
+            return;
+        }
+        widgetRatings.remove(userWidgetRating);
+        updateWidget(widget);
+
+    }
+
+    private WidgetRating getUserWidgetRating(Long widgetId, Long userId) {
+        return widgetRatingService.getByWidgetIdAndUserId(widgetId, userId);
     }
 }
