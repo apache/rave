@@ -19,6 +19,7 @@
 
 package org.apache.rave.portal.web.controller.admin;
 
+import org.apache.commons.lang.RandomStringUtils;
 import org.apache.rave.portal.model.Authority;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.util.SearchResult;
@@ -39,15 +40,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.support.SessionStatus;
 
 import java.beans.PropertyEditorSupport;
-import java.security.Principal;
 
 /**
  * Admin controller to manipulate User data
  */
 @Controller
-@SessionAttributes({"user"})
+@SessionAttributes({"user", ModelKeys.TOKENCHECK})
 public class UserController {
 
     private static final String SELECTED_ITEM = "users";
@@ -62,8 +63,9 @@ public class UserController {
     private UserProfileValidator userProfileValidator;
 
     @InitBinder
-    public void initBinder(WebDataBinder b) {
-        b.registerCustomEditor(Authority.class, new AuthorityEditor());
+    public void initBinder(WebDataBinder dataBinder) {
+        dataBinder.registerCustomEditor(Authority.class, new AuthorityEditor());
+        dataBinder.setDisallowedFields("entityId", "username", "password", "confirmPassword");
     }
 
     @RequestMapping(value = "/admin/users", method = RequestMethod.GET)
@@ -86,28 +88,36 @@ public class UserController {
     }
 
     @RequestMapping(value = "/admin/userdetail/{userid}", method = RequestMethod.GET)
-    public String viewUserDetail(@PathVariable("userid") Long userid, Model model, Principal principal) {
+    public String viewUserDetail(@PathVariable("userid") Long userid, Model model) {
         AdminControllerUtil.addNavigationMenusToModel(SELECTED_ITEM, model);
         model.addAttribute(userService.getUserById(userid));
-        model.addAttribute("loggedInUser", principal.getName());
+        model.addAttribute(ModelKeys.TOKENCHECK, AdminControllerUtil.generateSessionToken());
         return ViewNames.ADMIN_USERDETAIL;
     }
 
     @RequestMapping(value = "/admin/userdetail/update", method = RequestMethod.POST)
     public String updateUserDetail(@ModelAttribute("user") User user, BindingResult result,
-                                   Model model, Principal principal) {
+                                   @ModelAttribute(ModelKeys.TOKENCHECK) String sessionToken,
+                                   @RequestParam() String token,
+                                   SessionStatus status) {
+        AdminControllerUtil.checkTokens(sessionToken, token, status);
         userProfileValidator.validate(user, result);
         if (result.hasErrors()) {
-            model.addAttribute("loggedInUser", principal.getName());
             return ViewNames.ADMIN_USERDETAIL;
         }
         userService.updateUserProfile(user);
+        status.setComplete();
         return "redirect:" + user.getEntityId();
     }
 
     @ModelAttribute("authorities")
     public SearchResult<Authority> populateAuthorityList() {
         return authorityService.getAllAuthorities();
+    }
+
+    @ModelAttribute("loggedInUser")
+    public String populateLoggedInUsername() {
+        return userService.getAuthenticatedUser().getUsername();
     }
 
     // setters for unit tests
@@ -122,6 +132,11 @@ public class UserController {
     void setUserProfileValidator(UserProfileValidator userProfileValidator) {
         this.userProfileValidator = userProfileValidator;
     }
+
+    private String getRandomToken() {
+        return RandomStringUtils.randomAlphanumeric(256);
+    }
+
 
     /**
      * Mapping between the submitted form value and an {@link Authority}

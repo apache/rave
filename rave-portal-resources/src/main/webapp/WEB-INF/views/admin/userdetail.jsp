@@ -50,6 +50,7 @@
                     <form:form id="updateUserProfile" action="update" commandName="user" method="POST">
                         <form:errors cssClass="error" element="p"/>
                         <fieldset>
+                            <input type="hidden" name="token" value="<c:out value="${tokencheck}"/>"/>
                             <p>
                                 <label for="email"><fmt:message key="page.general.email"/></label>
                                 <spring:bind path="email">

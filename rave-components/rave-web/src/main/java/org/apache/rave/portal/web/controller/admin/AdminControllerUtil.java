@@ -19,9 +19,12 @@
 
 package org.apache.rave.portal.web.controller.admin;
 
+import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.rave.portal.web.model.NavigationItem;
 import org.apache.rave.portal.web.model.NavigationMenu;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.support.SessionStatus;
 
 /**
  * Util class for the admin controllers
@@ -29,8 +32,20 @@ import org.springframework.ui.Model;
 public final class AdminControllerUtil {
 
     public static final int DEFAULT_PAGE_SIZE = 10;
+    private static final int TOKEN_LENGTH = 256;
 
     private AdminControllerUtil() {
+    }
+
+    static String generateSessionToken() {
+        return RandomStringUtils.randomAlphanumeric(TOKEN_LENGTH);
+    }
+
+    public static void checkTokens(String sessionToken, String token, SessionStatus status) {
+        if (StringUtils.length(sessionToken) != TOKEN_LENGTH || !(sessionToken.equals(token))) {
+            status.setComplete();
+            throw new SecurityException("Token does not match");
+        }
     }
 
     static void addNavigationMenusToModel(String selectedItem, Model model) {

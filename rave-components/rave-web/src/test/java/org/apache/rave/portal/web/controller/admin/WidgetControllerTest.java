@@ -31,6 +31,7 @@ import org.springframework.ui.ExtendedModelMap;
 import org.springframework.ui.Model;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.support.SessionStatus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,6 +57,7 @@ public class WidgetControllerTest {
     private WidgetController controller;
     private WidgetService service;
     private NewWidgetValidator validator;
+    private String validToken;
 
     @Test
     public void adminWidgets() throws Exception {
@@ -95,24 +97,45 @@ public class WidgetControllerTest {
         widget.setTitle("Widget title");
         widget.setType("OpenSocial");
         BindingResult errors = new BeanPropertyBindingResult(widget, "widget");
+        SessionStatus sessionStatus = createMock(SessionStatus.class);
 
         service.updateWidget(widget);
+        sessionStatus.setComplete();
         expectLastCall();
-        replay(service);
-        String view = controller.updateWidgetDetail(widget, errors);
-        verify(service);
+        replay(service, sessionStatus);
+        String view = controller.updateWidgetDetail(widget, errors, validToken, validToken, sessionStatus);
+        verify(service, sessionStatus);
 
         assertFalse("No errors", errors.hasErrors());
         assertEquals("redirect:123", view);
 
     }
 
+    @Test(expected = SecurityException.class)
+    public void updateWidget_wrongToken() {
+        Widget widget = new Widget();
+        BindingResult errors = new BeanPropertyBindingResult(widget, "widget");
+        SessionStatus sessionStatus = createMock(SessionStatus.class);
+
+        sessionStatus.setComplete();
+        expectLastCall();
+        replay(sessionStatus);
+
+        String otherToken = AdminControllerUtil.generateSessionToken();
+
+        controller.updateWidgetDetail(widget, errors, "sessionToken", otherToken, sessionStatus);
+
+        verify(sessionStatus);
+        assertFalse("Can't come here", true);
+    }
+
     @Test
     public void updateWidget_invalid() {
         Widget widget = new Widget(123L, "http://broken/url");
         BindingResult errors = new BeanPropertyBindingResult(widget, "widget");
+        SessionStatus sessionStatus = createMock(SessionStatus.class);
 
-        String view = controller.updateWidgetDetail(widget, errors);
+        String view = controller.updateWidgetDetail(widget, errors, validToken, validToken, sessionStatus);
 
         assertTrue("Errors", errors.hasErrors());
         assertEquals(ViewNames.ADMIN_WIDGETDETAIL, view);
@@ -126,6 +149,7 @@ public class WidgetControllerTest {
         controller.setWidgetService(service);
         validator = new NewWidgetValidator();
         controller.setWidgetValidator(validator);
+        validToken = AdminControllerUtil.generateSessionToken();
     }
 
 

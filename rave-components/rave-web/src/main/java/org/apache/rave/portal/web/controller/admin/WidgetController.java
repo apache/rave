@@ -30,12 +30,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.support.SessionStatus;
 
 import static org.apache.rave.portal.model.WidgetStatus.values;
 
@@ -43,7 +46,7 @@ import static org.apache.rave.portal.model.WidgetStatus.values;
  * Admin controller to manipulate Widget data
  */
 @Controller
-@SessionAttributes({"widget"})
+@SessionAttributes({ModelKeys.WIDGET, ModelKeys.TOKENCHECK})
 public class WidgetController {
 
     private static final String SELECTED_ITEM = "widgets";
@@ -53,6 +56,11 @@ public class WidgetController {
 
     @Autowired
     private NewWidgetValidator widgetValidator;
+
+    @InitBinder
+    public void initBinder(WebDataBinder dataBinder) {
+        dataBinder.setDisallowedFields("entityId");
+    }
 
     @RequestMapping(value = "/admin/widgets", method = RequestMethod.GET)
     public String viewWidgets(@RequestParam(required = false, defaultValue = "0") int offset, Model model) {
@@ -67,16 +75,22 @@ public class WidgetController {
     public String viewWidgetDetail(@PathVariable("widgetid") Long widgetid, Model model) {
         AdminControllerUtil.addNavigationMenusToModel(SELECTED_ITEM, model);
         model.addAttribute(widgetService.getWidget(widgetid));
+        model.addAttribute(ModelKeys.TOKENCHECK, AdminControllerUtil.generateSessionToken());
         return ViewNames.ADMIN_WIDGETDETAIL;
     }
 
     @RequestMapping(value = "/admin/widgetdetail/update", method = RequestMethod.POST)
-    public String updateWidgetDetail(@ModelAttribute("widget") Widget widget, BindingResult result) {
+    public String updateWidgetDetail(@ModelAttribute(ModelKeys.WIDGET) Widget widget, BindingResult result,
+                                     @ModelAttribute(ModelKeys.TOKENCHECK) String sessionToken,
+                                     @RequestParam() String token,
+                                     SessionStatus status) {
+        AdminControllerUtil.checkTokens(sessionToken, token, status);
         widgetValidator.validate(widget, result);
         if (result.hasErrors()) {
             return ViewNames.ADMIN_WIDGETDETAIL;
         }
         widgetService.updateWidget(widget);
+        status.setComplete();
         return "redirect:" + widget.getEntityId();
     }
 
@@ -85,9 +99,7 @@ public class WidgetController {
         return values();
     }
 
-
     // setters for unit tests
-    
     void setWidgetService(WidgetService widgetService) {
         this.widgetService = widgetService;
     }
@@ -95,4 +107,5 @@ public class WidgetController {
     void setWidgetValidator(NewWidgetValidator widgetValidator) {
         this.widgetValidator = widgetValidator;
     }
+
 }

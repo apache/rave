@@ -33,8 +33,8 @@ import org.springframework.ui.ExtendedModelMap;
 import org.springframework.ui.Model;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.support.SessionStatus;
 
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,6 +57,7 @@ public class UserControllerTest {
     private UserController controller;
     private UserService userService;
     private AuthorityService authorityService;
+    private String validToken;
 
     @Test
     public void adminUsers() throws Exception {
@@ -99,25 +100,21 @@ public class UserControllerTest {
         Model model = new ExtendedModelMap();
         Long userid = 123L;
         User user = new User(userid, "john.doe.sr");
-        Principal principal = createMock(Principal.class);
 
-        expect(principal.getName()).andReturn("canonical");
         expect(userService.getUserById(userid)).andReturn(user);
-        replay(userService, principal);
+        replay(userService);
 
-        String adminUserDetailView = controller.viewUserDetail(userid, model, principal);
-        verify(userService, principal);
+        String adminUserDetailView = controller.viewUserDetail(userid, model);
+        verify(userService);
         
         assertEquals(ViewNames.ADMIN_USERDETAIL, adminUserDetailView);
         assertTrue(model.containsAttribute(TABS));
         assertEquals(user, model.asMap().get("user"));
-        assertEquals("canonical", model.asMap().get("loggedInUser"));
     }
 
 
     @Test
     public void updateUserDetail_success() {
-        Model model = new ExtendedModelMap();
         final Long userid = 123L;
         final String email = "john.doe.sr@example.net";
         User user = new User(userid, "john.doe.sr");
@@ -126,15 +123,16 @@ public class UserControllerTest {
         user.setEmail(email);
         final BindingResult errors = new BeanPropertyBindingResult(user, "user");
 
-        Principal principal = createMock(Principal.class);
+        SessionStatus sessionStatus = createMock(SessionStatus.class);
 
         expect(userService.getUserByEmail(email)).andReturn(user);
         userService.updateUserProfile(user);
+        sessionStatus.setComplete();
         expectLastCall();
-        replay(userService);
+        replay(userService, sessionStatus);
 
-        final String view = controller.updateUserDetail(user, errors, model, principal);
-        verify(userService);
+        final String view = controller.updateUserDetail(user, errors, validToken, validToken, sessionStatus);
+        verify(userService, sessionStatus);
 
         assertFalse(errors.hasErrors());
         assertEquals("redirect:" + userid, view);
@@ -142,19 +140,36 @@ public class UserControllerTest {
 
     @Test
     public void updateUserDetail_withErrors() {
-        Model model = new ExtendedModelMap();
         Long userid = 123L;
         User user = new User(userid, "john.doe.sr");
         final BindingResult errors = new BeanPropertyBindingResult(user, "user");
-        Principal principal = createMock(Principal.class);
 
-        expect(principal.getName()).andReturn("canonical");
-        replay(principal);
-        final String view = controller.updateUserDetail(user, errors, model, principal);
-        verify(principal);
+        SessionStatus sessionStatus = createMock(SessionStatus.class);
+        replay(sessionStatus);
+        final String view = controller.updateUserDetail(user, errors, validToken, validToken, sessionStatus);
+        verify(sessionStatus);
 
         assertTrue(errors.hasErrors());
         assertEquals(ViewNames.ADMIN_USERDETAIL, view);
+    }
+
+    @Test(expected = SecurityException.class)
+    public void updateUserDetail_wrongToken() {
+        User user = new User(123L, "john.doe.sr");
+        final BindingResult errors = new BeanPropertyBindingResult(user, "user");
+        SessionStatus sessionStatus = createMock(SessionStatus.class);
+        sessionStatus.setComplete();
+
+        expectLastCall();
+        replay(sessionStatus);
+
+        String otherToken = AdminControllerUtil.generateSessionToken();
+
+        controller.updateUserDetail(user, errors, validToken, otherToken, sessionStatus);
+        verify(sessionStatus);
+
+        assertFalse("SecurityException", true);
+
     }
 
     @Test
@@ -179,6 +194,7 @@ public class UserControllerTest {
 
         UserProfileValidator userProfileValidator = new UserProfileValidator(userService);
         controller.setUserProfileValidator(userProfileValidator);
+        validToken = AdminControllerUtil.generateSessionToken();
     }
 
 

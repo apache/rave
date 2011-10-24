@@ -64,6 +64,7 @@
                     <form:form id="updateWidget" action="update" commandName="widget" method="POST">
                         <form:errors cssClass="error" element="p"/>
                         <fieldset>
+                            <input type="hidden" name="token" value="<c:out value="${tokencheck}"/>"/>
                             <p><fmt:message key="form.some.fields.required"/></p>
 
                             <p>
