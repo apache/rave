@@ -56,7 +56,7 @@
                         </fieldset>
                     </form>
                 </li>
-                <c:if test="${not empty searchTerm}">
+                <c:if test="${not empty searchTerm or not empty selectedWidgetType or not empty selectedWidgetStatus}">
                     <li><a href="<spring:url value="/app/admin/widgets"/>"><fmt:message key="admin.clearsearch"/></a></li>
                 </c:if>
             </ul>
