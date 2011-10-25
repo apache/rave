@@ -19,7 +19,6 @@
 
 package org.apache.rave.portal.web.controller.admin;
 
-import org.apache.commons.lang.RandomStringUtils;
 import org.apache.rave.portal.model.Authority;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.util.SearchResult;
@@ -131,10 +130,6 @@ public class UserController {
 
     void setUserProfileValidator(UserProfileValidator userProfileValidator) {
         this.userProfileValidator = userProfileValidator;
-    }
-
-    private String getRandomToken() {
-        return RandomStringUtils.randomAlphanumeric(256);
     }
 
 
