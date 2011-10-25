@@ -50,27 +50,25 @@ import java.util.List;
 @Entity
 @Table(name="widget")
 @NamedQueries({
-        @NamedQuery(name = Widget.WIDGET_GET_ALL, query = "SELECT w from Widget w"),
-        @NamedQuery(name = Widget.WIDGET_COUNT_ALL, query = "SELECT count(w) FROM Widget w"),
+        @NamedQuery(name = Widget.WIDGET_GET_ALL, query = Widget.SELECT_W_FROM_WIDGET_W),
+        @NamedQuery(name = Widget.WIDGET_COUNT_ALL, query = Widget.SELECT_COUNT_W_FROM_WIDGET_W),
+
         @NamedQuery(name = Widget.WIDGET_GET_BY_FREE_TEXT,
-                query = "SELECT w FROM Widget w WHERE lower(w.title) LIKE :searchTerm OR w.description LIKE :description"),
+                query = Widget.SELECT_W_FROM_WIDGET_W + Widget.WHERE_CLAUSE_FREE_TEXT),
         @NamedQuery(name = Widget.WIDGET_COUNT_BY_FREE_TEXT,
-                query = "SELECT count(w) FROM Widget w WHERE lower(w.title) LIKE :searchTerm OR w.description LIKE :description"),
+                query = Widget.SELECT_COUNT_W_FROM_WIDGET_W + Widget.WHERE_CLAUSE_FREE_TEXT),
+
         @NamedQuery(name = Widget.WIDGET_GET_BY_STATUS,
-                query = "SELECT w from Widget w WHERE w.widgetStatus = :widgetStatus"),
+                query = Widget.SELECT_W_FROM_WIDGET_W + Widget.WHERE_CLAUSE_STATUS),
         @NamedQuery(name = Widget.WIDGET_COUNT_BY_STATUS,
-                query = "SELECT count(w) FROM Widget w WHERE w.widgetStatus = :widgetStatus"),
+                query = Widget.SELECT_COUNT_W_FROM_WIDGET_W + Widget.WHERE_CLAUSE_STATUS),
+
         @NamedQuery(name = Widget.WIDGET_GET_BY_STATUS_AND_TYPE_AND_FREE_TEXT,
-                query = "SELECT w FROM Widget w WHERE " +
-                        "(:widgetStatus is null OR :widgetStatus = '' or w.widgetStatus = :widgetStatus)" +
-                        " AND (:type is null OR :type = '' OR w.type = :type)" +
-                        " AND (:searchTerm is null OR :searchTerm = '' OR lower(w.title) LIKE :searchTerm OR w.description LIKE :description)"),
+                query = Widget.SELECT_W_FROM_WIDGET_W + Widget.WHERE_CLAUSE_STATUS_TYPE_FREE_TEXT),
         @NamedQuery(name = Widget.WIDGET_COUNT_BY_STATUS_AND_TYPE_AND_FREE_TEXT,
-                query = "SELECT count(w) FROM Widget w WHERE " +
-                        "(:widgetStatus is null OR :widgetStatus = '' or w.widgetStatus = :widgetStatus)" +
-                        " AND (:type is null OR :type = '' OR w.type = :type)" +
-                        " AND (:searchTerm is null OR :searchTerm = '' OR lower(w.title) LIKE :searchTerm OR w.description LIKE :description)"),
-        @NamedQuery(name = Widget.WIDGET_GET_BY_URL, query = "SELECT w FROM Widget w WHERE w.url = :url")
+                query = Widget.SELECT_COUNT_W_FROM_WIDGET_W + Widget.WHERE_CLAUSE_STATUS_TYPE_FREE_TEXT),
+        
+        @NamedQuery(name = Widget.WIDGET_GET_BY_URL, query = Widget.SELECT_W_FROM_WIDGET_W + Widget.WHERE_CLAUSE_URL)
 })
 public class Widget implements BasicEntity, Serializable {
     private static final long serialVersionUID = 1L;
@@ -86,11 +84,22 @@ public class Widget implements BasicEntity, Serializable {
     public static final String WIDGET_COUNT_BY_FREE_TEXT = "Widget.countByFreeText";
     public static final String WIDGET_GET_BY_STATUS = "Widget.getByStatus";
     public static final String WIDGET_COUNT_BY_STATUS = "Widget.countByStatus";
-    public static final String WIDGET_GET_BY_STATUS_AND_TYPE_AND_FREE_TEXT =
-            "Widget.getByStatusAndTypeAndFreeText";
-    public static final String WIDGET_COUNT_BY_STATUS_AND_TYPE_AND_FREE_TEXT =
-            "Widget.countByStatusAndTypeAndFreeText";
+    public static final String WIDGET_GET_BY_STATUS_AND_TYPE_AND_FREE_TEXT = "Widget.getByStatusAndTypeAndFreeText";
+    public static final String WIDGET_COUNT_BY_STATUS_AND_TYPE_AND_FREE_TEXT = "Widget.countByStatusAndTypeAndFreeText";
     public static final String WIDGET_GET_BY_URL = "Widget.getByUrl";
+
+    static final String SELECT_W_FROM_WIDGET_W = "SELECT w FROM Widget w ";
+    static final String SELECT_COUNT_W_FROM_WIDGET_W = "SELECT count(w) FROM Widget w ";
+
+    static final String WHERE_CLAUSE_STATUS_TYPE_FREE_TEXT =
+            " WHERE (:widgetStatus is null OR :widgetStatus = '' or w.widgetStatus = :widgetStatus)" +
+                    " AND (:type is null OR :type = '' OR w.type = :type)" +
+                    " AND (:searchTerm is null OR :searchTerm = '' " +
+                    " OR lower(w.title) LIKE :searchTerm OR w.description LIKE :description)";
+    static final String WHERE_CLAUSE_FREE_TEXT =
+            " WHERE lower(w.title) LIKE :searchTerm OR w.description LIKE :description";
+    static final String WHERE_CLAUSE_STATUS = " WHERE w.widgetStatus = :widgetStatus";
+    static final String WHERE_CLAUSE_URL = " WHERE w.url = :url";
 
     @Id @Column(name="entity_id")
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "widgetIdGenerator")
