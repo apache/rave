@@ -19,6 +19,9 @@
 
 package org.apache.rave.portal.model;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * (Workflow) status of a Widget.
  */
@@ -28,7 +31,15 @@ public enum WidgetStatus {
 
     private String widgetStatus;
 
-    WidgetStatus(String widgetStatus) {
+    private static final Map<String, WidgetStatus> lookup = new HashMap<String, WidgetStatus>();
+
+    static {
+        for (WidgetStatus ws : WidgetStatus.values()) {
+            lookup.put(ws.toString(), ws);
+        }
+    }
+
+    private WidgetStatus(String widgetStatus) {
         this.widgetStatus = widgetStatus;
     }
 
@@ -40,4 +51,10 @@ public enum WidgetStatus {
     public String toString() {
         return widgetStatus;
     }
+
+    public static WidgetStatus get(String status) {
+        return lookup.get(status);
+    }
+
+    
 }

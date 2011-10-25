@@ -151,9 +151,9 @@ public class DefaultWidgetServiceTest {
         List<Widget> widgets = new ArrayList<Widget>();
         widgets.add(widget);
 
-        expect(repository.getCountByStatusAndFreeText(WidgetStatus.PUBLISHED, searchTerm))
+        expect(repository.getCountByStatusAndTypeAndFreeText(WidgetStatus.PUBLISHED, null, searchTerm))
                 .andReturn(totalResults);
-        expect(repository.getByStatusAndFreeTextSearch(WidgetStatus.PUBLISHED, searchTerm,
+        expect(repository.getByStatusAndTypeAndFreeTextSearch(WidgetStatus.PUBLISHED, null, searchTerm,
                 offset, pageSize)).andReturn(widgets);
         replay(repository);
 
@@ -163,6 +163,34 @@ public class DefaultWidgetServiceTest {
         assertEquals(totalResults, result.getTotalResults());
         assertEquals(pageSize, result.getPageSize());
     }
+
+    @Test
+    public void getPublishedOpenSocialWidgetsForSearchTerm() {
+        final String searchTerm = "gAdGet";
+        int offset = 0;
+        int pageSize = 10;
+        int totalResults = 2;
+        Widget widget = new Widget();
+        widget.setWidgetStatus(WidgetStatus.PUBLISHED);
+        final String type = "OpenSocial";
+        widget.setType(type);
+        widget.setEntityId(1L);
+        List<Widget> widgets = new ArrayList<Widget>();
+        widgets.add(widget);
+
+        expect(repository.getCountByStatusAndTypeAndFreeText(WidgetStatus.PUBLISHED, type, searchTerm))
+                .andReturn(totalResults);
+        expect(repository.getByStatusAndTypeAndFreeTextSearch(WidgetStatus.PUBLISHED, type, searchTerm,
+                offset, pageSize)).andReturn(widgets);
+        replay(repository);
+
+        SearchResult<Widget> result = service.getWidgetsBySearchCriteria(searchTerm, type,
+                WidgetStatus.PUBLISHED.toString(), offset, pageSize);
+        assertEquals(widget, result.getResultSet().get(0));
+        assertEquals(totalResults, result.getTotalResults());
+        assertEquals(pageSize, result.getPageSize());
+    }
+
 
     @Test
     public void getWidget_null() {
@@ -302,4 +330,6 @@ public class DefaultWidgetServiceTest {
         assertEquals(1, ratings.size());
         assertEquals(ratings.get(0).getScore(), new Integer(5));
     }
+
+    
 }

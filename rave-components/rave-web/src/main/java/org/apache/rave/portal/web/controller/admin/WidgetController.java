@@ -41,6 +41,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 
 import static org.apache.rave.portal.model.WidgetStatus.values;
+import static org.apache.rave.portal.web.controller.admin.AdminControllerUtil.DEFAULT_PAGE_SIZE;
 
 /**
  * Admin controller to manipulate Widget data
@@ -66,8 +67,23 @@ public class WidgetController {
     public String viewWidgets(@RequestParam(required = false, defaultValue = "0") int offset, Model model) {
         AdminControllerUtil.addNavigationMenusToModel(SELECTED_ITEM, model);
         final SearchResult<Widget> widgets =
-                widgetService.getLimitedListOfWidgets(offset, AdminControllerUtil.DEFAULT_PAGE_SIZE);
+                widgetService.getLimitedListOfWidgets(offset, DEFAULT_PAGE_SIZE);
         model.addAttribute(ModelKeys.SEARCHRESULT, widgets);
+        return ViewNames.ADMIN_WIDGETS;
+    }
+
+    @RequestMapping(value = "/admin/widgets/search", method = RequestMethod.GET)
+    public String searchWidgets(@RequestParam(required = false) String searchTerm,
+                                @RequestParam(required = false) String widgettype,
+                                @RequestParam(required = false) String widgetstatus,
+                                @RequestParam(required = false, defaultValue = "0") int offset, Model model) {
+        AdminControllerUtil.addNavigationMenusToModel(SELECTED_ITEM, model);
+        final SearchResult<Widget> widgets = widgetService.getWidgetsBySearchCriteria(searchTerm, widgettype,
+                widgetstatus, offset, DEFAULT_PAGE_SIZE);
+        model.addAttribute(ModelKeys.SEARCHRESULT, widgets);
+        model.addAttribute(ModelKeys.SEARCH_TERM, searchTerm);
+        model.addAttribute("selectedWidgetType",widgettype);
+        model.addAttribute("selectedWidgetStatus", widgetstatus);
         return ViewNames.ADMIN_WIDGETS;
     }
 

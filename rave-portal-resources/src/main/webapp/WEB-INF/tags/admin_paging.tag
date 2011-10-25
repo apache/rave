@@ -26,7 +26,9 @@ under the License.
     <ul class="paging">
         <c:if test="${searchResult.currentPage gt 1}">
             <c:url var="pageUrl" value="">
-                <c:param name="searchTerm" value="${searchTerm}"/>
+                <c:if test="${not empty searchTerm}"><c:param name="searchTerm" value="${searchTerm}"/></c:if>
+                <c:if test="${not empty selectedWidgetType}"><c:param name="widgettype" value="${selectedWidgetType}"/></c:if>
+                <c:if test="${not empty selectedWidgetStatus}"><c:param name="widgetstatus" value="${selectedWidgetStatus}"/></c:if>
                 <c:param name="offset" value="${(searchResult.currentPage - 2)  * searchResult.pageSize}"/>
             </c:url>
             <li><a href="<c:out value="${pageUrl}"/>">&lt;</a></li>
@@ -38,7 +40,9 @@ under the License.
                 </c:when>
                 <c:otherwise>
                     <c:url var="pageUrl" value="">
-                        <c:param name="searchTerm" value="${searchTerm}"/>
+                        <c:if test="${not empty searchTerm}"><c:param name="searchTerm" value="${searchTerm}"/></c:if>
+                        <c:if test="${not empty selectedWidgetType}"><c:param name="widgettype" value="${selectedWidgetType}"/></c:if>
+                        <c:if test="${not empty selectedWidgetStatus}"><c:param name="widgetstatus" value="${selectedWidgetStatus}"/></c:if>
                         <c:param name="offset" value="${(i - 1) * searchResult.pageSize}"/>
                     </c:url>
                     <li><a href="<c:out value="${pageUrl}"/>">${i}</a></li>
@@ -47,7 +51,9 @@ under the License.
         </c:forEach>
         <c:if test="${searchResult.currentPage lt searchResult.numberOfPages}">
             <c:url var="pageUrl" value="">
-                <c:param name="searchTerm" value="${searchTerm}"/>
+                <c:if test="${not empty searchTerm}"><c:param name="searchTerm" value="${searchTerm}"/></c:if>
+                <c:if test="${not empty selectedWidgetType}"><c:param name="widgettype" value="${selectedWidgetType}"/></c:if>
+                <c:if test="${not empty selectedWidgetStatus}"><c:param name="widgetstatus" value="${selectedWidgetStatus}"/></c:if>
                 <c:param name="offset" value="${(searchResult.currentPage)  * searchResult.pageSize}"/>
             </c:url>
             <li><a href="<c:out value="${pageUrl}"/>">&gt;</a></li>

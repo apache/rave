@@ -18,11 +18,11 @@
  */
 package org.apache.rave.portal.repository;
 
-import java.util.List;
-
 import org.apache.rave.persistence.Repository;
 import org.apache.rave.portal.model.Widget;
 import org.apache.rave.portal.model.WidgetStatus;
+
+import java.util.List;
 
 public interface WidgetRepository extends Repository<Widget> {
     /**
@@ -92,7 +92,7 @@ public interface WidgetRepository extends Repository<Widget> {
      * @param pageSize     maximum number of items to be returned (for paging)
      * @return valid list of widgets, can be empty
      */
-    List<Widget> getByStatusAndFreeTextSearch(WidgetStatus widgetStatus, String searchTerm,
+    List<Widget> getByStatusAndTypeAndFreeTextSearch(WidgetStatus widgetStatus, String type, String searchTerm,
                                               int offset, int pageSize);
 
 
@@ -104,7 +104,7 @@ public interface WidgetRepository extends Repository<Widget> {
      * @param searchTerm   free text search term
      * @return total number of {@link Widget}'s that match the search criteria
      */
-    int getCountByStatusAndFreeText(WidgetStatus widgetStatus, String searchTerm);
+    int getCountByStatusAndTypeAndFreeText(WidgetStatus widgetStatus, String type, String searchTerm);
 
     /**
      * Searches for a Widget by its url

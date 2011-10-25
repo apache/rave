@@ -101,16 +101,17 @@ public class DefaultWidgetService implements WidgetService {
     @Override
     public SearchResult<Widget> getPublishedWidgetsByFreeTextSearch(String searchTerm,
                                                                     int offset, int pageSize) {
+        return getWidgetsBySearchCriteria(searchTerm, null, WidgetStatus.PUBLISHED.getWidgetStatus(), offset, pageSize);
+    }
 
-        if (StringUtils.isBlank(searchTerm)) {
-            return getPublishedWidgets(offset, pageSize);
-        }
+    @Override
+    public SearchResult<Widget> getWidgetsBySearchCriteria(String searchTerm, String widgetType, String widgetStatus,
+                                                           int offset, int pageSize) {
 
-        final int count = widgetRepository.getCountByStatusAndFreeText(WidgetStatus.PUBLISHED,
-                searchTerm);
-        final List<Widget> widgets = widgetRepository.getByStatusAndFreeTextSearch(
-                WidgetStatus.PUBLISHED, searchTerm, offset, pageSize);
-
+        final WidgetStatus status = StringUtils.isBlank(widgetStatus) ? null : WidgetStatus.get(widgetStatus);
+        final int count = widgetRepository.getCountByStatusAndTypeAndFreeText(status, widgetType, searchTerm);
+        final List<Widget> widgets = widgetRepository.getByStatusAndTypeAndFreeTextSearch(status, widgetType,
+                searchTerm, offset, pageSize);
         final SearchResult<Widget> searchResult = new SearchResult<Widget>(widgets, count);
         searchResult.setOffset(offset);
         searchResult.setPageSize(pageSize);

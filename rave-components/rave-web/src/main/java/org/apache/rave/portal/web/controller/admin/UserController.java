@@ -43,6 +43,8 @@ import org.springframework.web.bind.support.SessionStatus;
 
 import java.beans.PropertyEditorSupport;
 
+import static org.apache.rave.portal.web.controller.admin.AdminControllerUtil.DEFAULT_PAGE_SIZE;
+
 /**
  * Admin controller to manipulate User data
  */
@@ -70,7 +72,7 @@ public class UserController {
     @RequestMapping(value = "/admin/users", method = RequestMethod.GET)
     public String viewUsers(@RequestParam(required = false, defaultValue = "0") int offset, Model model) {
         AdminControllerUtil.addNavigationMenusToModel(SELECTED_ITEM, model);
-        final SearchResult<User> users = userService.getLimitedListOfUsers(offset, AdminControllerUtil.DEFAULT_PAGE_SIZE);
+        final SearchResult<User> users = userService.getLimitedListOfUsers(offset, DEFAULT_PAGE_SIZE);
         model.addAttribute(ModelKeys.SEARCHRESULT, users);
         return ViewNames.ADMIN_USERS;
     }
@@ -80,7 +82,7 @@ public class UserController {
                               @RequestParam(required = false, defaultValue = "0") int offset, Model model) {
         AdminControllerUtil.addNavigationMenusToModel(SELECTED_ITEM, model);
         final SearchResult<User> users = userService.getUsersByFreeTextSearch(
-                searchTerm, offset, AdminControllerUtil.DEFAULT_PAGE_SIZE);
+                searchTerm, offset, DEFAULT_PAGE_SIZE);
         model.addAttribute(ModelKeys.SEARCH_TERM, searchTerm);
         model.addAttribute(ModelKeys.SEARCHRESULT, users);
         return ViewNames.ADMIN_USERS;

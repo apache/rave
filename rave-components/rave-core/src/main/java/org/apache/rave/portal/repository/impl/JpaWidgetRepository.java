@@ -20,11 +20,6 @@
 package org.apache.rave.portal.repository.impl;
 
 
-import java.util.List;
-
-import javax.persistence.Query;
-import javax.persistence.TypedQuery;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.rave.persistence.jpa.AbstractJpaRepository;
 import org.apache.rave.portal.model.Widget;
@@ -33,6 +28,10 @@ import org.apache.rave.portal.repository.WidgetRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
+
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
+import java.util.List;
 
 import static org.apache.rave.persistence.jpa.util.JpaUtil.getPagedResultList;
 import static org.apache.rave.persistence.jpa.util.JpaUtil.getSingleResult;
@@ -99,19 +98,21 @@ public class JpaWidgetRepository extends AbstractJpaRepository<Widget> implement
     }
 
     @Override
-    public List<Widget> getByStatusAndFreeTextSearch(WidgetStatus widgetStatus, String searchTerm,
-                                                     int offset, int pageSize) {
-        TypedQuery<Widget> query = manager.createNamedQuery(
-                Widget.WIDGET_GET_BY_STATUS_AND_FREE_TEXT, Widget.class);
+    public List<Widget> getByStatusAndTypeAndFreeTextSearch(WidgetStatus widgetStatus, String type, String searchTerm,
+                                                            int offset, int pageSize) {
+        TypedQuery<Widget> query = manager.createNamedQuery(Widget.WIDGET_GET_BY_STATUS_AND_TYPE_AND_FREE_TEXT,
+                Widget.class);
         query.setParameter(Widget.PARAM_STATUS, widgetStatus);
+        query.setParameter(Widget.PARAM_TYPE, type);
         setFreeTextSearchTerm(query, searchTerm);
         return getPagedResultList(query, offset, pageSize);
     }
 
     @Override
-    public int getCountByStatusAndFreeText(WidgetStatus widgetStatus, String searchTerm) {
-        Query query = manager.createNamedQuery(Widget.WIDGET_COUNT_BY_STATUS_AND_FREE_TEXT);
+    public int getCountByStatusAndTypeAndFreeText(WidgetStatus widgetStatus, String type, String searchTerm) {
+        Query query = manager.createNamedQuery(Widget.WIDGET_COUNT_BY_STATUS_AND_TYPE_AND_FREE_TEXT);
         query.setParameter(Widget.PARAM_STATUS, widgetStatus);
+        query.setParameter(Widget.PARAM_TYPE, type);
         setFreeTextSearchTerm(query, searchTerm);
         Number countResult = (Number) query.getSingleResult();
         return countResult.intValue();

@@ -70,6 +70,10 @@ a img {
     clear: both;
 }
 
+.hidden {
+    display: none;
+}
+
 .horizontal-list li, .paging li {
     display: inline;
     list-style: none;

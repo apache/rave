@@ -31,14 +31,35 @@
     <rave:admin_tabsheader/>
     <div class="pageContent">
         <article class="admincontent">
-            <%--<ul class="horizontal-list searchbox">
+            <ul class="horizontal-list searchbox">
                 <li>
-                    Searchform goes here
+                    <form action="<spring:url value="/app/admin/widgets/search"/>" method="GET">
+                        <fieldset>
+                            <label for="searchTerm" class="hidden"><fmt:message key="admin.widgets.search"/></label>
+                            <input type="search" id="searchTerm" name="searchTerm"
+                                   value="<c:out value="${searchTerm}"/>"/>
+                            <label for="widgettype"  class="hidden"><fmt:message key="widget.type"/></label>
+                            <select name="widgettype" id="widgettype">
+                                <option value=""><fmt:message key="admin.widgets.search.choosetype"/></option>
+                                <option value="OpenSocial" <c:if test="${selectedWidgetType eq 'OpenSocial'}"> selected="selected"</c:if>><fmt:message key="widget.type.OpenSocial"/></option>
+                                <option value="W3C" <c:if test="${selectedWidgetType eq 'W3C'}"> selected="selected"</c:if>><fmt:message key="widget.type.W3C"/></option>
+                            </select>
+                            <label for="widgetstatus" class="hidden"><fmt:message key="widget.widgetStatus"/></label>
+                            <select name="widgetstatus" id="widgetstatus">
+                                <option value=""><fmt:message key="admin.widgets.search.choosestatus"/></option>
+                                <c:forEach items="${widgetStatus}" var="wStatus">
+                                    <option value="<c:out value="${wStatus.widgetStatus}"/>" <c:if test="${wStatus.widgetStatus eq selectedWidgetStatus}"> selected="selected"</c:if>><c:out value="${wStatus.widgetStatus}"/></option>
+                                </c:forEach>
+                            </select>
+                            <fmt:message key="page.store.search.button" var="searchButtonText"/>
+                            <input type="submit" value="${searchButtonText}"/>
+                        </fieldset>
+                    </form>
                 </li>
                 <c:if test="${not empty searchTerm}">
                     <li><a href="<spring:url value="/app/admin/widgets"/>"><fmt:message key="admin.clearsearch"/></a></li>
                 </c:if>
-            </ul>--%>
+            </ul>
             <rave:admin_listheader/>
             <rave:admin_paging/>
 

@@ -74,6 +74,27 @@ public class WidgetControllerTest {
     }
 
     @Test
+    public void searchWidgets() throws Exception {
+        Model model = new ExtendedModelMap();
+        String searchTerm = "widget";
+        String type = "OpenSocial";
+        String status = "published";
+        SearchResult<Widget> widgetSearchResult = populateWidgetSearchResult();
+        expect(service.getWidgetsBySearchCriteria(searchTerm, type, status, DEFAULT_OFFSET, DEFAULT_PAGESIZE)).andReturn(widgetSearchResult);
+        replay(service);
+
+        String searchView = controller.searchWidgets(searchTerm, type, status, DEFAULT_OFFSET, model);
+        verify(service);
+
+        assertEquals(ViewNames.ADMIN_WIDGETS, searchView);
+        assertEquals(searchTerm, model.asMap().get(ModelKeys.SEARCH_TERM));
+        assertEquals(type, model.asMap().get("selectedWidgetType"));
+        assertEquals(status, model.asMap().get("selectedWidgetStatus"));
+
+
+    }
+
+    @Test
     public void viewAdminWidgetDetail() throws Exception {
         Model model = new ExtendedModelMap();
         Widget widget = new Widget();

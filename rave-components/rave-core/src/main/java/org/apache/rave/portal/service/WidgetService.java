@@ -87,6 +87,19 @@ public interface WidgetService {
                                                              int offset, int pageSize);
 
     /**
+     * Gets a SearchResult for {@link Widget}'s that match the free text search, widget type and status
+     *
+     * @param searchTerm   free text search term
+     * @param widgetType   type of Widget
+     * @param widgetStatus status of the Widget, should match a value in {@link org.apache.rave.portal.model.WidgetStatus}
+     * @param offset       start point within the resultset (for paging)
+     * @param pageSize     maximum number of items to be returned (for paging)
+     * @return SearchResult
+     */
+    SearchResult<Widget> getWidgetsBySearchCriteria(String searchTerm, String widgetType, String widgetStatus,
+                                                    int offset, int pageSize);
+
+    /**
      * Gets a Widget by its (unique) url
      *
      * @param widgetUrl url of the Widget

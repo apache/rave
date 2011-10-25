@@ -155,22 +155,23 @@ public class JpaWidgetRepositoryTest {
     }
 
     @Test
-    public void getByStatusAndFreeText() {
+    public void getByStatusAndTypeAndFreeText() {
         final String searchTerm = "gAdGet";
-        List<Widget> widgets = repository.getByStatusAndFreeTextSearch(WidgetStatus.PUBLISHED,
+        final String type = "OpenSocial";
+        List<Widget> widgets = repository.getByStatusAndTypeAndFreeTextSearch(WidgetStatus.PUBLISHED, type,
                 searchTerm, 0, 1);
         assertEquals(1, widgets.size());
 
-        List<Widget> preview = repository.getByStatusAndFreeTextSearch(WidgetStatus.PREVIEW,
+        List<Widget> preview = repository.getByStatusAndTypeAndFreeTextSearch(WidgetStatus.PREVIEW, type,
                 searchTerm, 0, 1);
         assertEquals(0, preview.size());
     }
 
     @Test
-    public void countByStatusAndFreeText() {
+    public void countByStatusAndTypeAndFreeText() {
         final String searchTerm = "gAdGet";
-        int publishedCount = repository.getCountByStatusAndFreeText(WidgetStatus.PUBLISHED,
-                searchTerm);
+        final String type = "OpenSocial";
+        int publishedCount = repository.getCountByStatusAndTypeAndFreeText(WidgetStatus.PUBLISHED, type, searchTerm);
         assertTrue(publishedCount >= 2);
     }
 

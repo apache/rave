@@ -56,16 +56,20 @@ import java.util.List;
                 query = "SELECT w FROM Widget w WHERE lower(w.title) LIKE :searchTerm OR w.description LIKE :description"),
         @NamedQuery(name = Widget.WIDGET_COUNT_BY_FREE_TEXT,
                 query = "SELECT count(w) FROM Widget w WHERE lower(w.title) LIKE :searchTerm OR w.description LIKE :description"),
-
         @NamedQuery(name = Widget.WIDGET_GET_BY_STATUS,
                 query = "SELECT w from Widget w WHERE w.widgetStatus = :widgetStatus"),
         @NamedQuery(name = Widget.WIDGET_COUNT_BY_STATUS,
                 query = "SELECT count(w) FROM Widget w WHERE w.widgetStatus = :widgetStatus"),
-        @NamedQuery(name = Widget.WIDGET_GET_BY_STATUS_AND_FREE_TEXT,
-                query = "SELECT w FROM Widget w WHERE w.widgetStatus = :widgetStatus AND lower(w.title) LIKE :searchTerm OR w.description LIKE :description"),
-        @NamedQuery(name = Widget.WIDGET_COUNT_BY_STATUS_AND_FREE_TEXT,
-                query = "SELECT count(w) FROM Widget w WHERE w.widgetStatus = :widgetStatus AND lower(w.title) LIKE :searchTerm OR w.description LIKE :description"),
-
+        @NamedQuery(name = Widget.WIDGET_GET_BY_STATUS_AND_TYPE_AND_FREE_TEXT,
+                query = "SELECT w FROM Widget w WHERE " +
+                        "(:widgetStatus is null OR :widgetStatus = '' or w.widgetStatus = :widgetStatus)" +
+                        " AND (:type is null OR :type = '' OR w.type = :type)" +
+                        " AND (:searchTerm is null OR :searchTerm = '' OR lower(w.title) LIKE :searchTerm OR w.description LIKE :description)"),
+        @NamedQuery(name = Widget.WIDGET_COUNT_BY_STATUS_AND_TYPE_AND_FREE_TEXT,
+                query = "SELECT count(w) FROM Widget w WHERE " +
+                        "(:widgetStatus is null OR :widgetStatus = '' or w.widgetStatus = :widgetStatus)" +
+                        " AND (:type is null OR :type = '' OR w.type = :type)" +
+                        " AND (:searchTerm is null OR :searchTerm = '' OR lower(w.title) LIKE :searchTerm OR w.description LIKE :description)"),
         @NamedQuery(name = Widget.WIDGET_GET_BY_URL, query = "SELECT w FROM Widget w WHERE w.url = :url")
 })
 public class Widget implements BasicEntity, Serializable {
@@ -73,6 +77,7 @@ public class Widget implements BasicEntity, Serializable {
 
     public static final String PARAM_SEARCH_TERM = "searchTerm";
     public static final String PARAM_STATUS = "widgetStatus";
+    public static final String PARAM_TYPE = "type";
     public static final String PARAM_URL = "url";
 
     public static final String WIDGET_GET_ALL = "Widget.getAll";
@@ -81,10 +86,10 @@ public class Widget implements BasicEntity, Serializable {
     public static final String WIDGET_COUNT_BY_FREE_TEXT = "Widget.countByFreeText";
     public static final String WIDGET_GET_BY_STATUS = "Widget.getByStatus";
     public static final String WIDGET_COUNT_BY_STATUS = "Widget.countByStatus";
-    public static final String WIDGET_GET_BY_STATUS_AND_FREE_TEXT =
-            "Widget.getByStatusAndFreeText";
-    public static final String WIDGET_COUNT_BY_STATUS_AND_FREE_TEXT =
-            "Widget.countByStatusAndFreeText";
+    public static final String WIDGET_GET_BY_STATUS_AND_TYPE_AND_FREE_TEXT =
+            "Widget.getByStatusAndTypeAndFreeText";
+    public static final String WIDGET_COUNT_BY_STATUS_AND_TYPE_AND_FREE_TEXT =
+            "Widget.countByStatusAndTypeAndFreeText";
     public static final String WIDGET_GET_BY_URL = "Widget.getByUrl";
 
     @Id @Column(name="entity_id")
