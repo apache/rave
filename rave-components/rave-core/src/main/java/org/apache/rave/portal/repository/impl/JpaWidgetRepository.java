@@ -31,6 +31,13 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Order;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.apache.rave.persistence.jpa.util.JpaUtil.getPagedResultList;
@@ -100,23 +107,69 @@ public class JpaWidgetRepository extends AbstractJpaRepository<Widget> implement
     @Override
     public List<Widget> getByStatusAndTypeAndFreeTextSearch(WidgetStatus widgetStatus, String type, String searchTerm,
                                                             int offset, int pageSize) {
-        TypedQuery<Widget> query = manager.createNamedQuery(Widget.WIDGET_GET_BY_STATUS_AND_TYPE_AND_FREE_TEXT,
-                Widget.class);
-        query.setParameter(Widget.PARAM_STATUS, widgetStatus);
-        query.setParameter(Widget.PARAM_TYPE, type);
-        setFreeTextSearchTerm(query, searchTerm);
-        return getPagedResultList(query, offset, pageSize);
+        final CriteriaBuilder cb = manager.getCriteriaBuilder();
+        final CriteriaQuery<Widget> query = cb.createQuery(Widget.class);
+        final Root<Widget> widgetType = query.from(Widget.class);
+        query.where(getStatusAndTypeAndFreeTextPredicates(cb, widgetType, widgetStatus, type, searchTerm));
+        query.orderBy(getOrderByTitleAsc(cb, widgetType));
+
+        return getPagedResultList(manager.createQuery(query), offset, pageSize);
     }
 
     @Override
     public int getCountByStatusAndTypeAndFreeText(WidgetStatus widgetStatus, String type, String searchTerm) {
-        Query query = manager.createNamedQuery(Widget.WIDGET_COUNT_BY_STATUS_AND_TYPE_AND_FREE_TEXT);
-        query.setParameter(Widget.PARAM_STATUS, widgetStatus);
-        query.setParameter(Widget.PARAM_TYPE, type);
-        setFreeTextSearchTerm(query, searchTerm);
-        Number countResult = (Number) query.getSingleResult();
+        final CriteriaBuilder cb = manager.getCriteriaBuilder();
+        final CriteriaQuery<Long> query = cb.createQuery(Long.class);
+        final Root<Widget> widgetType = query.from(Widget.class);
+        query.select(cb.count(widgetType));
+        query.where(getStatusAndTypeAndFreeTextPredicates(cb, widgetType, widgetStatus, type, searchTerm));
+
+        final Long countResult = manager.createQuery(query).getSingleResult();
         return countResult.intValue();
     }
+
+    private Predicate[] getStatusAndTypeAndFreeTextPredicates(CriteriaBuilder cb, Root<Widget> widgetType,
+                                                              WidgetStatus widgetStatus, String type,
+                                                              String searchTerm) {
+        List<Predicate> predicates = new ArrayList<Predicate>();
+        if (StringUtils.isNotBlank(searchTerm)) {
+            predicates.add(
+                    cb.or(
+                            cb.like(cb.lower(getTitleField(widgetType)), getLowercaseWildcardSearchTerm(searchTerm)),
+                            cb.like(cb.lower(getDescriptionField(widgetType)), getLowercaseWildcardSearchTerm(searchTerm))
+                    )
+            );
+        }
+        if (StringUtils.isNotBlank(type)) {
+            predicates.add(cb.and(cb.equal(getTypeField(widgetType), type)));
+        }
+        if (widgetStatus != null) {
+            predicates.add(cb.and(cb.equal(getWidgetStatusField(widgetType), widgetStatus)));
+        }
+
+        return predicates.toArray(new Predicate[predicates.size()]);
+    }
+
+    private Order getOrderByTitleAsc(CriteriaBuilder cb, Root<Widget> widgetType) {
+        return cb.asc(getTitleField(widgetType));
+    }
+
+    private Path<String> getTitleField(Root<Widget> widgetType) {
+        return widgetType.get("title");
+    }
+
+    private Path<String> getDescriptionField(Root<Widget> widgetType) {
+        return widgetType.get("description");
+    }
+
+    private Path<String> getTypeField(Root<Widget> widgetType) {
+        return widgetType.get("type");
+    }
+
+    private Path<WidgetStatus> getWidgetStatusField(Root<Widget> widgetType) {
+        return widgetType.get("widgetStatus");
+    }
+
 
     @Override
     public Widget getByUrl(String widgetUrl) {
@@ -138,6 +191,13 @@ public class JpaWidgetRepository extends AbstractJpaRepository<Widget> implement
      * @param searchTerm free text
      */
     protected void setFreeTextSearchTerm(Query query, final String searchTerm) {
-        query.setParameter(Widget.PARAM_SEARCH_TERM, "%" + searchTerm.toLowerCase() + "%");
+        query.setParameter(Widget.PARAM_SEARCH_TERM, getLowercaseWildcardSearchTerm(searchTerm));
+    }
+    
+    private String getLowercaseWildcardSearchTerm(String searchTerm) {
+        if (StringUtils.isBlank(searchTerm)) {
+            return searchTerm;
+        }
+        return "%" + searchTerm.toLowerCase() + "%";
     }
 }

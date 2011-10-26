@@ -87,13 +87,14 @@ public interface WidgetRepository extends Repository<Widget> {
      * Gets a List of {@link Widget}'s by performing a free text search filtering on status
      *
      * @param widgetStatus status of the widget (PREVIEW, PUBLISHED etc)
+     * @param type         type of Widget (e.g. W3C, OpenSocial)
      * @param searchTerm   free text search term
      * @param offset       start point within the resultset (for paging)
      * @param pageSize     maximum number of items to be returned (for paging)
      * @return valid list of widgets, can be empty
      */
     List<Widget> getByStatusAndTypeAndFreeTextSearch(WidgetStatus widgetStatus, String type, String searchTerm,
-                                              int offset, int pageSize);
+                                                     int offset, int pageSize);
 
 
     /**
@@ -101,6 +102,7 @@ public interface WidgetRepository extends Repository<Widget> {
      * on status. Useful for paging.
      *
      * @param widgetStatus status of the widget (PREVIEW, PUBLISHED etc)
+     * @param type         type of Widget (e.g. W3C, OpenSocial)
      * @param searchTerm   free text search term
      * @return total number of {@link Widget}'s that match the search criteria
      */

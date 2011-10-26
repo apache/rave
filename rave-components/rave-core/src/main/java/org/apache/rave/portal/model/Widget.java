@@ -50,24 +50,19 @@ import java.util.List;
 @Entity
 @Table(name="widget")
 @NamedQueries({
-        @NamedQuery(name = Widget.WIDGET_GET_ALL, query = Widget.SELECT_W_FROM_WIDGET_W),
+        @NamedQuery(name = Widget.WIDGET_GET_ALL, query = Widget.SELECT_W_FROM_WIDGET_W + Widget.ORDER_BY_TITLE_ASC),
         @NamedQuery(name = Widget.WIDGET_COUNT_ALL, query = Widget.SELECT_COUNT_W_FROM_WIDGET_W),
 
         @NamedQuery(name = Widget.WIDGET_GET_BY_FREE_TEXT,
-                query = Widget.SELECT_W_FROM_WIDGET_W + Widget.WHERE_CLAUSE_FREE_TEXT),
+                query = Widget.SELECT_W_FROM_WIDGET_W + Widget.WHERE_CLAUSE_FREE_TEXT + Widget.ORDER_BY_TITLE_ASC),
         @NamedQuery(name = Widget.WIDGET_COUNT_BY_FREE_TEXT,
                 query = Widget.SELECT_COUNT_W_FROM_WIDGET_W + Widget.WHERE_CLAUSE_FREE_TEXT),
 
         @NamedQuery(name = Widget.WIDGET_GET_BY_STATUS,
-                query = Widget.SELECT_W_FROM_WIDGET_W + Widget.WHERE_CLAUSE_STATUS),
+                query = Widget.SELECT_W_FROM_WIDGET_W + Widget.WHERE_CLAUSE_STATUS + Widget.ORDER_BY_TITLE_ASC),
         @NamedQuery(name = Widget.WIDGET_COUNT_BY_STATUS,
                 query = Widget.SELECT_COUNT_W_FROM_WIDGET_W + Widget.WHERE_CLAUSE_STATUS),
 
-        @NamedQuery(name = Widget.WIDGET_GET_BY_STATUS_AND_TYPE_AND_FREE_TEXT,
-                query = Widget.SELECT_W_FROM_WIDGET_W + Widget.WHERE_CLAUSE_STATUS_TYPE_FREE_TEXT),
-        @NamedQuery(name = Widget.WIDGET_COUNT_BY_STATUS_AND_TYPE_AND_FREE_TEXT,
-                query = Widget.SELECT_COUNT_W_FROM_WIDGET_W + Widget.WHERE_CLAUSE_STATUS_TYPE_FREE_TEXT),
-        
         @NamedQuery(name = Widget.WIDGET_GET_BY_URL, query = Widget.SELECT_W_FROM_WIDGET_W + Widget.WHERE_CLAUSE_URL)
 })
 public class Widget implements BasicEntity, Serializable {
@@ -75,7 +70,6 @@ public class Widget implements BasicEntity, Serializable {
 
     public static final String PARAM_SEARCH_TERM = "searchTerm";
     public static final String PARAM_STATUS = "widgetStatus";
-    public static final String PARAM_TYPE = "type";
     public static final String PARAM_URL = "url";
 
     public static final String WIDGET_GET_ALL = "Widget.getAll";
@@ -84,22 +78,16 @@ public class Widget implements BasicEntity, Serializable {
     public static final String WIDGET_COUNT_BY_FREE_TEXT = "Widget.countByFreeText";
     public static final String WIDGET_GET_BY_STATUS = "Widget.getByStatus";
     public static final String WIDGET_COUNT_BY_STATUS = "Widget.countByStatus";
-    public static final String WIDGET_GET_BY_STATUS_AND_TYPE_AND_FREE_TEXT = "Widget.getByStatusAndTypeAndFreeText";
-    public static final String WIDGET_COUNT_BY_STATUS_AND_TYPE_AND_FREE_TEXT = "Widget.countByStatusAndTypeAndFreeText";
     public static final String WIDGET_GET_BY_URL = "Widget.getByUrl";
 
     static final String SELECT_W_FROM_WIDGET_W = "SELECT w FROM Widget w ";
     static final String SELECT_COUNT_W_FROM_WIDGET_W = "SELECT count(w) FROM Widget w ";
 
-    static final String WHERE_CLAUSE_STATUS_TYPE_FREE_TEXT =
-            " WHERE (:widgetStatus is null OR :widgetStatus = '' or w.widgetStatus = :widgetStatus)" +
-                    " AND (:type is null OR :type = '' OR w.type = :type)" +
-                    " AND (:searchTerm is null OR :searchTerm = '' " +
-                    " OR lower(w.title) LIKE :searchTerm OR w.description LIKE :description)";
     static final String WHERE_CLAUSE_FREE_TEXT =
             " WHERE lower(w.title) LIKE :searchTerm OR w.description LIKE :description";
     static final String WHERE_CLAUSE_STATUS = " WHERE w.widgetStatus = :widgetStatus";
     static final String WHERE_CLAUSE_URL = " WHERE w.url = :url";
+    static final String ORDER_BY_TITLE_ASC = " ORDER BY w.title ASC ";
 
     @Id @Column(name="entity_id")
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "widgetIdGenerator")
