@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.apache.rave.portal.service;
+package org.apache.rave.portal.service.impl;
 
 import org.apache.rave.portal.model.Authority;
 import org.apache.rave.portal.model.util.SearchResult;
@@ -29,6 +29,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.rave.portal.service.AuthorityService;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNull;
 import static org.easymock.EasyMock.createMock;

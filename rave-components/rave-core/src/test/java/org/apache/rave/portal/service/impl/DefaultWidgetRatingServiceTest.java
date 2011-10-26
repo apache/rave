@@ -17,10 +17,11 @@
  * under the License.
  */
 
-package org.apache.rave.portal.service;
+package org.apache.rave.portal.service.impl;
 
 import org.apache.rave.portal.model.WidgetRating;
 import org.apache.rave.portal.repository.WidgetRatingRepository;
+import org.apache.rave.portal.service.WidgetRatingService;
 import org.apache.rave.portal.service.impl.DefaultWidgetRatingService;
 import org.junit.Before;
 import org.junit.Test;

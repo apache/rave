@@ -62,7 +62,7 @@ public class DefaultNewAccountService implements NewAccountService {
     public void createNewAccount(NewUser newUser) throws Exception {
         final String userName = newUser.getUsername();
         final String password = newUser.getPassword();
-        final String userPageLayout = newUser.getPageLayout();
+        final String defaultPageLayoutCode = newUser.getPageLayout();
         final String email = newUser.getEmail();
 
         throwExceptionIfUserExists(userName, email);
@@ -72,17 +72,16 @@ public class DefaultNewAccountService implements NewAccountService {
         user.setEmail(email);
         //This assumes we use the username for the salt.  If not, the code below will need to change.
         //See also applicationContext-security.xml
-        String saltedHashedPassword=passwordEncoder.encodePassword(password,saltSource.getSalt(user));
-        logger.debug("Salt Source: {}", saltSource.getSalt(user));
+        Object salt = saltSource.getSalt(user);
+        String saltedHashedPassword=passwordEncoder.encodePassword(password, salt);
+        logger.debug("Salt Source: {}", salt);
         user.setPassword(saltedHashedPassword);
 
         user.setExpired(false);
         user.setLocked(false);
         user.setEnabled(true);
-        userService.registerNewUser(user);
-
-        // Return the newly registered user and create a new default page for them	  
-        pageService.addNewDefaultPage(userService.getUserByUsername(user.getUsername()), userPageLayout);		  
+        user.setDefaultPageLayout(pageLayoutService.getPageLayoutByCode(defaultPageLayoutCode));
+        userService.registerNewUser(user);  
     }
 
     private void throwExceptionIfUserExists(String userName, String email) {

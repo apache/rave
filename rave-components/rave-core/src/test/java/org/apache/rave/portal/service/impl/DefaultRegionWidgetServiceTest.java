@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.apache.rave.portal.service;
+package org.apache.rave.portal.service.impl;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.rave.portal.model.RegionWidget;
@@ -33,11 +33,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.rave.portal.service.RegionWidgetService;
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
-public class RegionWidgetServiceTest {
+public class DefaultRegionWidgetServiceTest {
     private RegionWidgetRepository regionWidgetRepository;
     private RegionWidgetService regionWidgetService;
 

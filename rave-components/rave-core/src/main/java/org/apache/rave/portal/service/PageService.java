@@ -21,24 +21,12 @@ package org.apache.rave.portal.service;
 import org.apache.rave.portal.model.Page;
 import org.apache.rave.portal.model.Region;
 import org.apache.rave.portal.model.RegionWidget;
-import org.apache.rave.portal.model.User;
 
 import java.util.List;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 /**
- * TODO:
- * 1) RAVE-303: Protect addNewDefaultPage once the code has been re-factored to call 
- *    this method from PageController when there are 0 pages for a user instead
- *    of calling it from DefaultNewAccountService (the user is not authenticated
- *    at that point)
- * 
- * 2) Protect the rest of the non Page object related methods here after writing
- *    the associated Default<Model>PermissionEvaluator classes.  Also,
- *    determine if those functions should be re-factored into more appropriate
- *    service classes
- * 
  * @author carlucci
  */
 public interface PageService {
@@ -70,6 +58,14 @@ public interface PageService {
     Page getPageFromList(long pageId, List<Page> pages);
     
     /**
+     * Given a List of Page objects, return the default one
+     * 
+     * @param pages the List of Page objects
+     * @return the default Page in the list
+     */
+    Page getDefaultPageFromList(List<Page> pages);
+    
+    /**
      * Creates a new page with the supplied pageName and pageLayoutCode
      * 
      * @param pageName the name of the new page
@@ -80,20 +76,15 @@ public interface PageService {
     Page addNewPage(String pageName, String pageLayoutCode);
     
     /**
-     * Creates a new default page for the supplied user using the
-     * supplied pageLayoutCode.  This method should be used for new users
-     * who just registered and need to create the default page
+     * Creates a new default page for the supplied user, and uses the 
+     * defaultPageLayout attribute of the User to determine the layout of the
+     * new page.
      * 
-     * @param user
-     * @param pageLayoutCode
-     * @return 
-     */       
-    // TODO: RAVE-303: addNewDefaultPage is currently not security protected because
-    //       the DefaultPagePermissionEvaluator requires an authenticated user.
-    //       This function should be called in PageController if the user has
-    //       0 pages instead of calling it in DefaultNewAccountService.  Once
-    //       refactored there we can protect this method    
-    Page addNewDefaultPage(User user, String pageLayoutCode);
+     * @param userId the entityId of the user to create a default page for
+     * @return the new default Page object for the user
+     */        
+    @PreAuthorize("hasPermission(new org.apache.rave.portal.security.impl.RaveSecurityContext(#userId, 'org.apache.rave.portal.model.User'), 'org.apache.rave.portal.model.Page', 'create')")         
+    Page addNewDefaultPage(long userId);
     
     /**
      * Get the default page name used by Rave

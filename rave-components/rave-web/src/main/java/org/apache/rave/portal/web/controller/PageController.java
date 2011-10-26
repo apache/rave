@@ -18,6 +18,7 @@
  */
 package org.apache.rave.portal.web.controller;
 
+import java.util.ArrayList;
 import org.apache.rave.portal.model.Page;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.service.PageService;
@@ -41,7 +42,6 @@ import java.util.List;
  * @author carlucci
  */
 @Controller
-//@RequestMapping(value={"/page/*","/index.html"})
 public class PageController {
     protected final Logger logger = LoggerFactory.getLogger(getClass());
          
@@ -56,9 +56,8 @@ public class PageController {
  
     @RequestMapping(value = {"/page/view", "/index.html"}, method = RequestMethod.GET)
     public String viewDefault(Model model) {
-        User user = userService.getAuthenticatedUser();
-        List<Page> pages = pageService.getAllPages(user.getEntityId());
-        model.addAttribute(ModelKeys.PAGE, pages.get(0));
+        List<Page> pages = getAllPagesForAuthenticatedUser();
+        model.addAttribute(ModelKeys.PAGE, pageService.getDefaultPageFromList(pages));
         model.addAttribute(ModelKeys.PAGES, pages);
         return ViewNames.HOME;
     }          
@@ -68,11 +67,25 @@ public class PageController {
         User user = userService.getAuthenticatedUser();
         logger.debug("attempting to get pageId " + pageId + " for " + user);
         
-        List<Page> pages = pageService.getAllPages(user.getEntityId());
+        List<Page> pages = getAllPagesForAuthenticatedUser();
         Page page = pageService.getPageFromList(pageId, pages);
                
         model.addAttribute(ModelKeys.PAGE, page);
         model.addAttribute(ModelKeys.PAGES, pages);
         return ViewNames.HOME;
     }
+    
+    private List<Page> getAllPagesForAuthenticatedUser() {
+        User user = userService.getAuthenticatedUser();
+        long userId = user.getEntityId();
+        List<Page> pages = pageService.getAllPages(userId);
+        if (pages.isEmpty()) {
+            // create a new default page for the user
+            logger.info("user " + user.getUsername() + " does not have any pages - creating default page");
+            pageService.addNewDefaultPage(userId);
+            // refresh the pages list which will now have the new page
+            pages = pageService.getAllPages(userId);
+        }
+        return pages;
+    }    
 }

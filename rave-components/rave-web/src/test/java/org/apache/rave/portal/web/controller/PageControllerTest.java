@@ -19,12 +19,12 @@
 
 package org.apache.rave.portal.web.controller;
 
+import org.apache.rave.portal.model.PageLayout;
 import org.apache.rave.portal.model.Page;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.service.PageService;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.portal.web.util.ModelKeys;
-import org.hamcrest.CoreMatchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.ui.ExtendedModelMap;
@@ -33,6 +33,7 @@ import org.springframework.ui.Model;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.hamcrest.CoreMatchers.*;
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.assertThat;
 
@@ -49,6 +50,9 @@ public class PageControllerTest {
     private final Long OTHER_PAGE_ID = 22L;
     private final Long USER_ID = 1L;
     private final String HOME_VIEW = "home";
+    private final String VALID_PAGE_LAYOUT_CODE = "layout98";
+    private User validUser;
+    private PageLayout validPageLayout;
 
     @Before
     public void setup() {
@@ -63,40 +67,84 @@ public class PageControllerTest {
         allPages = new ArrayList<Page>();
         allPages.add(defaultPage);   
         allPages.add(otherPage);            
+        
+        validPageLayout = new PageLayout();
+        validPageLayout.setEntityId(33L);
+        validPageLayout.setCode(VALID_PAGE_LAYOUT_CODE);
+        
+        validUser = new User(USER_ID);
+        validUser.setDefaultPageLayout(validPageLayout);
     }
 
     @Test
     public void view_pageId() {
-        expect(userService.getAuthenticatedUser()).andReturn(new User(USER_ID)); 
+        expect(userService.getAuthenticatedUser()).andReturn(validUser).anyTimes(); 
         expect(pageService.getAllPages(USER_ID)).andReturn(allPages);
         expect(pageService.getPageFromList(OTHER_PAGE_ID, allPages)).andReturn(otherPage);
-        replay(userService);       
-        replay(pageService);
+        replay(userService, pageService);       
 
         String results = pageController.view(OTHER_PAGE_ID, model);
         
-        assertThat(results, CoreMatchers.equalTo(HOME_VIEW));
-        assertThat((Page) model.asMap().get(ModelKeys.PAGE), CoreMatchers.sameInstance(otherPage));
-        assertThat((List<Page>) model.asMap().get(ModelKeys.PAGES), CoreMatchers.sameInstance(allPages));
+        assertThat(results, equalTo(HOME_VIEW));
+        assertThat((Page) model.asMap().get(ModelKeys.PAGE), sameInstance(otherPage));
+        assertThat((List<Page>) model.asMap().get(ModelKeys.PAGES), sameInstance(allPages));
         
-        verify(userService);
-        verify(pageService);
+        verify(userService, pageService);
     }
     
     @Test
+    public void view_pageId_zeroExistingPages() {
+        List<Page> pages = new ArrayList<Page>();
+        
+        assertThat(pages.isEmpty(), is(true));
+        expect(userService.getAuthenticatedUser()).andReturn(validUser).anyTimes(); 
+        expect(pageService.getAllPages(USER_ID)).andReturn(pages).times(2);
+        expect(pageService.addNewDefaultPage(validUser.getEntityId())).andReturn(defaultPage);
+        expect(pageService.getPageFromList(OTHER_PAGE_ID, pages)).andReturn(defaultPage);
+        replay(userService, pageService);         
+        
+        String results = pageController.view(OTHER_PAGE_ID, model);
+        
+        assertThat(results, equalTo(HOME_VIEW));
+        assertThat((Page) model.asMap().get(ModelKeys.PAGE), sameInstance(defaultPage));
+        assertThat((List<Page>) model.asMap().get(ModelKeys.PAGES), sameInstance(pages));
+        
+        verify(userService, pageService);
+    }    
+    
+    @Test
     public void viewDefault_pageId() {
-        expect(userService.getAuthenticatedUser()).andReturn(new User(USER_ID)); 
+        expect(userService.getAuthenticatedUser()).andReturn(validUser).anyTimes(); 
         expect(pageService.getAllPages(USER_ID)).andReturn(allPages);
-        replay(userService);       
-        replay(pageService);
+        expect(pageService.getDefaultPageFromList(allPages)).andReturn(defaultPage);
+        replay(userService, pageService);
 
         String results = pageController.viewDefault(model);
         
-        assertThat(results, CoreMatchers.equalTo(HOME_VIEW));
-        assertThat((Page) model.asMap().get(ModelKeys.PAGE), CoreMatchers.sameInstance(defaultPage));
-        assertThat((List<Page>) model.asMap().get(ModelKeys.PAGES), CoreMatchers.sameInstance(allPages));
+        assertThat(results, equalTo(HOME_VIEW));
+        assertThat((Page) model.asMap().get(ModelKeys.PAGE), sameInstance(defaultPage));
+        assertThat((List<Page>) model.asMap().get(ModelKeys.PAGES), sameInstance(allPages));
         
-        verify(userService);
-        verify(pageService);
+        verify(userService, pageService);
     }
+    
+    @Test
+    public void viewDefault_pageId_zeroExistingPages() {
+        List<Page> pages = new ArrayList<Page>();
+        
+        assertThat(pages.isEmpty(), is(true));
+        expect(userService.getAuthenticatedUser()).andReturn(validUser).anyTimes(); 
+        expect(pageService.getAllPages(USER_ID)).andReturn(pages).times(2);
+        expect(pageService.addNewDefaultPage(validUser.getEntityId())).andReturn(defaultPage);
+        expect(pageService.getDefaultPageFromList(pages)).andReturn(defaultPage);
+        replay(userService, pageService);
+
+        String results = pageController.viewDefault(model);
+        
+        assertThat(results, equalTo(HOME_VIEW));
+        assertThat((Page) model.asMap().get(ModelKeys.PAGE), sameInstance(defaultPage));
+        assertThat((List<Page>) model.asMap().get(ModelKeys.PAGES), sameInstance(pages));
+        
+        verify(userService, pageService);
+    }    
 }

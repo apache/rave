@@ -41,6 +41,7 @@ import javax.persistence.Transient;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import javax.persistence.ManyToOne;
 
 /**
  * {@inheritDoc}
@@ -108,7 +109,11 @@ public class User implements UserDetails, BasicEntity, Serializable {
 
     @Basic
     @Column(name = "openid")
-    private String openId;
+    private String openId;       
+    
+    @ManyToOne
+    @JoinColumn(name="default_page_layout_id")
+    private PageLayout defaultPageLayout;    
 
     @Transient
     private String confirmPassword;
@@ -264,6 +269,14 @@ public class User implements UserDetails, BasicEntity, Serializable {
     public void setOpenId(String openId) {
         this.openId = openId;
     }
+    
+    public PageLayout getDefaultPageLayout() {
+        return defaultPageLayout;
+    }
+
+    public void setDefaultPageLayout(PageLayout defaultPageLayout) {
+        this.defaultPageLayout = defaultPageLayout;
+    }    
 
     public String getConfirmPassword() {
         //confirmPassword is not stored persistently, so if the value is not set,

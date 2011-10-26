@@ -88,6 +88,12 @@ public class DefaultPageService implements PageService {
     }
 
     @Override
+    public Page getDefaultPageFromList(List<Page> pages) {
+        // the first sequenced ordered page is considered the user's default page
+        return (pages == null || pages.isEmpty()) ? null : pages.get(0);
+    }
+    
+    @Override
     @Transactional
     public Page addNewPage(String pageName, String pageLayoutCode) {                     
         return addNewPage(userService.getAuthenticatedUser(), pageName, pageLayoutCode);
@@ -95,8 +101,9 @@ public class DefaultPageService implements PageService {
     
     @Override
     @Transactional
-    public Page addNewDefaultPage(User user, String pageLayoutCode) {                       
-        return addNewPage(user, defaultPageName, pageLayoutCode);
+    public Page addNewDefaultPage(long userId) {        
+        User user = userService.getUserById(userId);
+        return addNewPage(user, defaultPageName, user.getDefaultPageLayout().getCode());
     }       
     
     @Override

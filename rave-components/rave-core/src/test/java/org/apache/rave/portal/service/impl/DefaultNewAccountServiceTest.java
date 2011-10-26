@@ -17,12 +17,16 @@
  * under the License.
  */
 
-package org.apache.rave.portal.service;
+package org.apache.rave.portal.service.impl;
 
 import org.apache.rave.portal.model.NewUser;
 import org.apache.rave.portal.model.PageLayout;
 import org.apache.rave.portal.model.User;
-import org.apache.rave.portal.service.impl.DefaultNewAccountService;
+import org.apache.rave.portal.service.NewAccountService;
+import org.apache.rave.portal.service.PageLayoutService;
+import org.apache.rave.portal.service.PageService;
+import org.apache.rave.portal.service.RegionService;
+import org.apache.rave.portal.service.UserService;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -33,54 +37,80 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import static junit.framework.Assert.fail;
-import static org.easymock.EasyMock.createNiceMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.*;
 
 /**
  * Test class for {@link org.apache.rave.portal.service.impl.DefaultNewAccountService}
  */
-public class NewAccountServiceTest {
+public class DefaultNewAccountServiceTest {
     private UserService userService;
     private PageLayoutService pageLayoutService;
-
+    private PageService pageService;
+    private RegionService regionService;
     private NewAccountService newAccountService;
+    private SaltSource saltSource;
+    private UserDetails userDetails;
+    private PasswordEncoder passwordEncoder;
 
-    private final Logger logger = LoggerFactory.getLogger(NewAccountServiceTest.class);
+    private final String VALID_USER = "valid.user";
+    private final String VALID_PASSWORD = "valid.password";
+    private final String VALID_LAYOUT_CODE = "valid.layout";
+    private final String VALID_EMAIL = "valid.email";
+    private PageLayout validPageLayout;
+    
+    private final Logger logger = LoggerFactory.getLogger(DefaultNewAccountServiceTest.class);
 
+    @Before
+    public void setup() {
+        userService = createMock(UserService.class);
+        pageService = createMock(PageService.class);
+        pageLayoutService = createMock(PageLayoutService.class);
+        regionService = createMock(RegionService.class);
+        saltSource = createMock(SaltSource.class);
+        userDetails = createMock(UserDetails.class);
+        passwordEncoder = createMock(PasswordEncoder.class);
+
+        newAccountService = new DefaultNewAccountService(userService, pageService, pageLayoutService, regionService);
+        
+        validPageLayout = new PageLayout();
+        validPageLayout.setEntityId(99L);
+        validPageLayout.setNumberOfRegions(4L);
+        validPageLayout.setCode(VALID_LAYOUT_CODE);
+    }    
+    
     @Test
     public void createNewAccountTest() throws Exception {
-        String validUser = "valid.user";
-        String validPass = "valid.password";
-        String validLayout = "valid.layout";
-        String validEmail = "valid.email";
-
         NewUser newUser = new NewUser();
-        newUser.setUsername(validUser);
-        newUser.setPassword(validPass);
-        newUser.setConfirmPassword(validPass);
-        newUser.setEmail(validEmail);
-
-
-        SaltSource saltSource = createNiceMock(SaltSource.class);
-        UserDetails userDetails = createNiceMock(UserDetails.class);
-        expect(userDetails.getUsername()).andReturn("valid.user");
-        expect(userDetails.getPassword()).andReturn("valid.password");
-        expect(saltSource.getSalt(userDetails)).andReturn("salt");
-        PasswordEncoder passwordEncoder = createNiceMock(PasswordEncoder.class);
-        expect(passwordEncoder.encodePassword("valid.password", "salt")).andReturn("valid.password");
-        replay(saltSource, userDetails, passwordEncoder);
-
+        newUser.setUsername(VALID_USER);
+        newUser.setPassword(VALID_PASSWORD);
+        newUser.setConfirmPassword(VALID_PASSWORD);
+        newUser.setEmail(VALID_EMAIL);
+        newUser.setPageLayout(VALID_LAYOUT_CODE);
+        
+        User expectedUser = new User();
+        expectedUser.setUsername(newUser.getUsername());
+        expectedUser.setPassword(newUser.getPassword());
+        expectedUser.setEmail(newUser.getEmail());
+        expectedUser.setDefaultPageLayout(validPageLayout);
+        expectedUser.setExpired(false);
+        expectedUser.setLocked(false);
+        expectedUser.setEnabled(true);                
+        
         ReflectionTestUtils.setField(newAccountService, "saltSource", saltSource);
         ReflectionTestUtils.setField(newAccountService, "passwordEncoder", passwordEncoder);
-
-        expect(userService.getUserByUsername(validUser)).andReturn(null);
-        PageLayout pageLayout = new PageLayout();
-        pageLayout.setNumberOfRegions(4L);
-        expect(pageLayoutService.getPageLayoutByCode(validLayout)).andReturn(pageLayout);
-        replay(userService, pageLayoutService);
-
+                
+        expect(saltSource.getSalt(anyObject(UserDetails.class))).andReturn("salt");
+        expect(passwordEncoder.encodePassword("valid.password", "salt")).andReturn("valid.password");              
+        expect(userService.getUserByUsername(VALID_USER)).andReturn(null);
+        expect(userService.getUserByEmail(VALID_EMAIL)).andReturn(null);                
+        expect(pageLayoutService.getPageLayoutByCode(VALID_LAYOUT_CODE)).andReturn(validPageLayout);        
+        userService.registerNewUser(expectedUser);  
+        expectLastCall();                
+        replay(saltSource, userDetails, passwordEncoder, userService, pageLayoutService);        
+               
         newAccountService.createNewAccount(newUser);
+        
+        verify(saltSource, userDetails, passwordEncoder, userService, pageLayoutService);
     }
 
     @Test
@@ -124,14 +154,4 @@ public class NewAccountServiceTest {
     }
 
 
-    @Before
-    public void setup() {
-        userService = createNiceMock(UserService.class);
-        PageService pageService = createNiceMock(PageService.class);
-        pageLayoutService = createNiceMock(PageLayoutService.class);
-        RegionService regionService = createNiceMock(RegionService.class);
-
-        newAccountService = new DefaultNewAccountService(userService, pageService, pageLayoutService, regionService);
-
-    }
 }

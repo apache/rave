@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.apache.rave.portal.service;
+package org.apache.rave.portal.service.impl;
 
 import org.apache.rave.portal.model.Widget;
 import org.apache.rave.portal.model.WidgetRating;
@@ -31,6 +31,8 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.rave.portal.service.WidgetRatingService;
+import org.apache.rave.portal.service.WidgetService;
 import static junit.framework.Assert.assertTrue;
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.createNiceMock;

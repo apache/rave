@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.apache.rave.portal.service;
+package org.apache.rave.portal.service.impl;
 
 import org.apache.rave.portal.model.Authority;
 import org.apache.rave.portal.model.User;
@@ -39,6 +39,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.rave.portal.service.UserService;
 import static org.easymock.EasyMock.createNiceMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
@@ -49,7 +50,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
-public class UserServiceTest {
+public class DefaultUserServiceTest {
 
     private static final Long USER_ID = 1234L;
     private UserService service;
