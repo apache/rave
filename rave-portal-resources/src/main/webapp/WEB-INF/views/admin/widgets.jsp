@@ -63,6 +63,7 @@
             <rave:admin_listheader/>
             <rave:admin_paging/>
 
+            <c:if test="${searchResult.totalResults > 0}">
             <table class="datatable widgetstable">
                 <thead>
                 <tr>
@@ -82,6 +83,7 @@
                     </c:forEach>
                 </tbody>
             </table>
+            </c:if>
 
             <rave:admin_paging/>
 
