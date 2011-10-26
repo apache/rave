@@ -49,12 +49,14 @@ public class DefaultRegionWidgetService implements RegionWidgetService {
     }
 
     @Override
+    @Transactional
     public RegionWidget saveRegionWidget(RegionWidget regionWidget) {
         return regionWidgetRepository.save(regionWidget);
     }
 
     @Override
     @Synchronized(discriminator = "'RegionWidget'", id = "#regionWidgetId")
+    @Transactional
     public List<RegionWidgetPreference> saveRegionWidgetPreferences(long regionWidgetId,
                                                                     List<RegionWidgetPreference> preferences) {
         RegionWidget regionWidget = this.getValidRegionWidget(regionWidgetId);
@@ -65,6 +67,7 @@ public class DefaultRegionWidgetService implements RegionWidgetService {
 
     @Override
     @Synchronized(discriminator = "'RegionWidget'", id = "#regionWidgetId")
+    @Transactional
     public RegionWidgetPreference saveRegionWidgetPreference(long regionWidgetId, RegionWidgetPreference preference) {
         RegionWidget regionWidget = this.getValidRegionWidget(regionWidgetId);
         ModelUtils.normalizeRegionWidgetPreference(regionWidgetId, preference);

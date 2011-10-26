@@ -118,7 +118,10 @@ public interface PageService {
      * @param toRegion the id of the Region to move the RegionWidget to
      * @param fromRegion the id of the Region where the RegionWidget currently resides
      * @return the updated RegionWidget
+     * 
+     * TODO: add a second hasPermission clause for toRegion once the RegionPermissionEvaluator has been created
      */
+    @PreAuthorize("hasPermission(#regionWidgetId, 'org.apache.rave.portal.model.RegionWidget', 'update')")
     RegionWidget moveRegionWidget(long regionWidgetId, int newPosition, long toRegion, long fromRegion);
 
     /**
@@ -128,15 +131,20 @@ public interface PageService {
      * @param toPageId the new page to move the regionWidgetTo
      * @return the updated RegionWidget object
      */
+    @PreAuthorize("hasPermission(#regionWidgetId, 'org.apache.rave.portal.model.RegionWidget', 'update') and " +
+                  "hasPermission(#toPageId, 'org.apache.rave.portal.model.Page', 'update')")
     RegionWidget moveRegionWidgetToPage(long regionWidgetId, long toPageId);    
     
     /**
      * Creates a new instance of a widget and adds it to the first position of the first region on the page
-     * @param page_id the id of the page to add the widget to
-     * @param widget_id the {@link org.apache.rave.portal.model.Widget} id to add
+     * @param pageId the id of the page to add the widget to
+     * @param widgetId the {@link org.apache.rave.portal.model.Widget} id to add
      * @return a valid widget instance
+     * 
+     * TODO: add a second hasPermission clause for Widget once the WidgetPermissionEvaluator has been created     
      */
-    RegionWidget addWidgetToPage(long page_id, long widget_id);
+    @PreAuthorize("hasPermission(#pageId, 'org.apache.rave.portal.model.Page', 'update')") 
+    RegionWidget addWidgetToPage(long pageId, long widgetId);
 
     /**
      * Deletes the specified widget from the page.
@@ -144,6 +152,7 @@ public interface PageService {
      * @param regionWidgetId the id of the region widget to delete.\
      * @return the region from which the widget was deleted
      */
+    @PreAuthorize("hasPermission(#regionWidgetId, 'org.apache.rave.portal.model.RegionWidget', 'delete')")
     Region removeWidgetFromPage(long regionWidgetId);
 
     /**
