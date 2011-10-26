@@ -120,12 +120,12 @@ public class DefaultPageService implements PageService {
     
     @Override
     @Transactional
-    public RegionWidget moveRegionWidget(long regionWidgetId, int newPosition, long toRegion, long fromRegion) {
-        Region target = getFromRepository(toRegion, regionRepository);
-        if (toRegion == fromRegion) {
+    public RegionWidget moveRegionWidget(long regionWidgetId, int newPosition, long toRegionId, long fromRegionId) {
+        Region target = getFromRepository(toRegionId, regionRepository);
+        if (toRegionId == fromRegionId) {
             moveWithinRegion(regionWidgetId, newPosition, target);
         } else {
-            moveBetweenRegions(regionWidgetId, newPosition, fromRegion, target);
+            moveBetweenRegions(regionWidgetId, newPosition, fromRegionId, target);
         }
         target = regionRepository.save(target);
         return findRegionWidgetById(regionWidgetId, target.getRegionWidgets());

@@ -115,14 +115,14 @@ public interface PageService {
      *
      * @param regionWidgetId the id of the moved RegionWidget
      * @param newPosition the new index of the RegionWidget within the target region (0 based index)
-     * @param toRegion the id of the Region to move the RegionWidget to
-     * @param fromRegion the id of the Region where the RegionWidget currently resides
+     * @param toRegionId the id of the Region to move the RegionWidget to
+     * @param fromRegionId the id of the Region where the RegionWidget currently resides
      * @return the updated RegionWidget
-     * 
-     * TODO: add a second hasPermission clause for toRegion once the RegionPermissionEvaluator has been created
      */
-    @PreAuthorize("hasPermission(#regionWidgetId, 'org.apache.rave.portal.model.RegionWidget', 'update')")
-    RegionWidget moveRegionWidget(long regionWidgetId, int newPosition, long toRegion, long fromRegion);
+    @PreAuthorize("hasPermission(#regionWidgetId, 'org.apache.rave.portal.model.RegionWidget', 'update') and " +
+                  "hasPermission(#toRegionId, 'org.apache.rave.portal.model.Region', 'update') and " +
+                  "hasPermission(#fromRegionId, 'org.apache.rave.portal.model.Region', 'update')")
+    RegionWidget moveRegionWidget(long regionWidgetId, int newPosition, long toRegionId, long fromRegionId);
 
     /**
      * Moves a RegionWidget from one page to another
@@ -173,7 +173,8 @@ public interface PageService {
      *                        -1 if you want this to be the first page
      * @return the updated Page object containing its new render sequence
      */
-    @PreAuthorize("hasPermission(#pageId, 'org.apache.rave.portal.model.Page', 'update')") 
+    @PreAuthorize("hasPermission(#pageId, 'org.apache.rave.portal.model.Page', 'update') and " +
+                  "hasPermission(#moveAfterPageId, 'org.apache.rave.portal.model.Page', 'update')")
     Page movePage(long pageId, long moveAfterPageId);
     
     /**
