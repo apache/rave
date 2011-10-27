@@ -41,8 +41,8 @@ INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@region_widget_se
 INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values ('region_widget_preference', 1);
 INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@user_seq, 1);
 INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@widget_seq, 1);
-INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@granted_authority_seq, 1);
 INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@widget_rating_seq, 1);
+INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@granted_authority_seq, 1);
 
   -- ***********************************************************************************
   -- start page layout data, required to make the portal work ---
@@ -268,7 +268,15 @@ INSERT INTO region_widget(entity_id, widget_id, region_id, render_order, collaps
 values (@next_region_widget, @tabnews_widget_id, @page_1_region_2, 1, FALSE);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @region_widget_seq;
 
+set @next_widget_rating = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @widget_rating_seq);
+INSERT INTO widget_rating(entity_id, widget_id, user_id, score)
+values (@next_widget_rating, 1, 1, 0);
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @widget_rating_seq;
 
+set @next_widget_rating = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @widget_rating_seq);
+INSERT INTO widget_rating(entity_id, widget_id, user_id, score)
+values (@next_widget_rating, 2, 1, 10);
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @widget_rating_seq;
 
 set @page_2_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @page_seq);
 INSERT INTO page (entity_id, name, owner_id, render_sequence, page_layout_id)
@@ -746,9 +754,3 @@ values (@next_authority_id, 'administrator');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @granted_authority_seq;
 
 -- end authorities
-
--- Widget rating
-set @next_widget_rating_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @widget_rating_seq);
-insert into widget_rating(entity_id, widget_id, user_id, score)
-values (@next_widget_rating_id, 1, 1, 10);
-UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @widget_rating_seq;

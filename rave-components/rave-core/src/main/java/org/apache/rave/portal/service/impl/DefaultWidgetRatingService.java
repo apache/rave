@@ -26,10 +26,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
-Default implementation for {@link org.apache.rave.portal.service.WidgetRatingService}
+ * Default implementation for {@link org.apache.rave.portal.service.WidgetRatingService}
  */
 @Service
-public class DefaultWidgetRatingService implements WidgetRatingService{
+public class DefaultWidgetRatingService implements WidgetRatingService {
 
     private final WidgetRatingRepository repository;
 
@@ -47,5 +47,24 @@ public class DefaultWidgetRatingService implements WidgetRatingService{
     public void updateScore(WidgetRating widgetRating, Integer score) {
         widgetRating.setScore(score);
         repository.save(widgetRating);
+    }
+
+    @Override
+    public void saveWidgetRating(WidgetRating rating) {
+        WidgetRating existingRating = getByWidgetIdAndUserId(rating.getWidgetId(), rating.getUserId());
+        if (existingRating == null) {
+            repository.save(rating);
+        } else {
+            updateScore(existingRating, rating.getScore());
+        }
+    }
+
+    @Override
+    public void removeWidgetRating(long widgetId, long userId) {
+        WidgetRating widgetRating = repository.getByWidgetIdAndUserId(widgetId, userId);
+        if (widgetRating == null) {
+            return;
+        }
+        repository.delete(widgetRating);
     }
 }

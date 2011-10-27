@@ -71,17 +71,10 @@
                     <p><fmt:message key="widget.type.${widget.type}" /></p>
                 </div>
                 <div class="widgetRating">
-                        <%--@elvariable id="widgetRating" type="org.apache.rave.portal.model.WidgetRating"--%>
-                        <fmt:message key="page.widget.rate"/>
-                        <div id="radio">
-                        <c:set var="likeSelected"><c:if test="${not empty widgetRating and widgetRating.score eq 10}"> checked="checked"</c:if></c:set>
-                        <c:set var="dislikeSelected"><c:if test="${not empty widgetRating and widgetRating.score eq 0}"> checked="checked"</c:if></c:set>
-                        <input type="radio" id="like" name="rating"
-                               data-widget="<c:out value="${widget.entityId}"/>" ${likeSelected}>
-                            <label for="like"><fmt:message key="page.widget.rate.like"/></label>
-                        <input type="radio" id="dislike" name="rating"
-                               data-widget="<c:out value="${widget.entityId}"/>" ${dislikeSelected}>
-                            <label for="dislike"><fmt:message key="page.widget.rate.dislike"/></label>
+                    <fmt:message key="page.widget.rate"/>
+                    <div id="radio" class="ratingButtons">
+                       <input type="radio" id="like-${widget.entityId}" class="widgetLikeButton widgetRatingButton" value="10" name="rating-${widget.entityId}"${widgetStatistics.userRating=='10'?" checked='true'":""}> <label for="like-${widget.entityId}">${widgetStatistics.totalLike}</label>
+                       <input type="radio" id="dislike-${widget.entityId}" class="widgetDislikeButton widgetRatingButton" value="0" name="rating-${widget.entityId}"${widgetStatistics.userRating=='0'?" checked='true'":""}> <label for="dislike-${widget.entityId}">${widgetStatistics.totalDislike}</label>
                     </div>
                 </div>
             </div>

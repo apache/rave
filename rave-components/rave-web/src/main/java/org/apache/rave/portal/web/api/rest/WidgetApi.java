@@ -21,7 +21,7 @@ package org.apache.rave.portal.web.api.rest;
 
 import org.apache.rave.portal.model.WidgetRating;
 import org.apache.rave.portal.service.UserService;
-import org.apache.rave.portal.service.WidgetService;
+import org.apache.rave.portal.service.WidgetRatingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,12 +41,12 @@ import javax.servlet.http.HttpServletResponse;
 @RequestMapping("/api/rest/widgets")
 public class WidgetApi extends AbstractRestApi {
     private static Logger logger = LoggerFactory.getLogger(WidgetApi.class);
-    private final WidgetService widgetService;
+    private final WidgetRatingService widgetRatingService;
     private final UserService userService;
     
     @Autowired
-    public WidgetApi(WidgetService widgetService, UserService userService) {
-        this.widgetService = widgetService;
+    public WidgetApi(WidgetRatingService widgetRatingService, UserService userService) {
+        this.widgetRatingService = widgetRatingService;
         this.userService = userService;
     }
 
@@ -62,7 +62,7 @@ public class WidgetApi extends AbstractRestApi {
                             HttpServletResponse response) {
         logger.debug("DELETE WidgetRating received for /api/rest/widgets/{}", widgetId);
 
-        widgetService.removeWidgetRating(widgetId, userService.getAuthenticatedUser().getEntityId());
+        widgetRatingService.removeWidgetRating(widgetId, userService.getAuthenticatedUser().getEntityId());
         
         // send a 204 back for success since there is no content being returned
         response.setStatus(HttpStatus.NO_CONTENT.value());
@@ -78,7 +78,7 @@ public class WidgetApi extends AbstractRestApi {
         widgetRating.setScore(score);
         widgetRating.setUserId(userService.getAuthenticatedUser().getEntityId());
         widgetRating.setWidgetId(widgetId);
-        widgetService.saveWidgetRating(widgetId, widgetRating);
+        widgetRatingService.saveWidgetRating(widgetRating);
         
         // send a 204 back for success since there is no content being returned
         response.setStatus(HttpStatus.NO_CONTENT.value());

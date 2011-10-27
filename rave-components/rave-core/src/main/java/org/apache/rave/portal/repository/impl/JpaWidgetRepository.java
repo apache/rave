@@ -23,12 +23,15 @@ package org.apache.rave.portal.repository.impl;
 import org.apache.commons.lang.StringUtils;
 import org.apache.rave.persistence.jpa.AbstractJpaRepository;
 import org.apache.rave.portal.model.Widget;
+import org.apache.rave.portal.model.WidgetRating;
 import org.apache.rave.portal.model.WidgetStatus;
+import org.apache.rave.portal.model.util.WidgetStatistics;
 import org.apache.rave.portal.repository.WidgetRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -38,7 +41,9 @@ import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.apache.rave.persistence.jpa.util.JpaUtil.getPagedResultList;
 import static org.apache.rave.persistence.jpa.util.JpaUtil.getSingleResult;
@@ -170,20 +175,6 @@ public class JpaWidgetRepository extends AbstractJpaRepository<Widget> implement
         return widgetType.get("widgetStatus");
     }
 
-
-    @Override
-    public Widget getByUrl(String widgetUrl) {
-        if (StringUtils.isBlank(widgetUrl)) {
-            throw new IllegalArgumentException("Widget URL must not be empty");
-        }
-        
-        TypedQuery<Widget> query = manager.createNamedQuery(Widget.WIDGET_GET_BY_URL, Widget.class);
-        // url is a unique field, so no paging needed
-        query.setParameter(Widget.PARAM_URL, widgetUrl);
-        final List<Widget> resultList = query.getResultList();
-        return getSingleResult(resultList);
-    }
-
     /**
      * Sets input as free text search term to a query
      *
@@ -193,11 +184,107 @@ public class JpaWidgetRepository extends AbstractJpaRepository<Widget> implement
     protected void setFreeTextSearchTerm(Query query, final String searchTerm) {
         query.setParameter(Widget.PARAM_SEARCH_TERM, getLowercaseWildcardSearchTerm(searchTerm));
     }
-    
+
     private String getLowercaseWildcardSearchTerm(String searchTerm) {
         if (StringUtils.isBlank(searchTerm)) {
             return searchTerm;
         }
         return "%" + searchTerm.toLowerCase() + "%";
     }
+
+    @Override
+    public Widget getByUrl(String widgetUrl) {
+        if (StringUtils.isBlank(widgetUrl)) {
+            throw new IllegalArgumentException("Widget URL must not be empty");
+        }
+
+        TypedQuery<Widget> query = manager.createNamedQuery(Widget.WIDGET_GET_BY_URL, Widget.class);
+        // url is a unique field, so no paging needed
+        query.setParameter(Widget.PARAM_URL, widgetUrl);
+        final List<Widget> resultList = query.getResultList();
+        return getSingleResult(resultList);
+    }
+
+    @Override
+    public WidgetStatistics getWidgetStatistics(long widget_id, long user_id) {
+        WidgetStatistics widgetStatistics = new WidgetStatistics();
+
+        Query query = manager.createNamedQuery(WidgetRating.WIDGET_TOTAL_LIKES);
+        query.setParameter(WidgetRating.PARAM_WIDGET_ID, widget_id);
+        widgetStatistics.setTotalLike(((Number) query.getSingleResult()).intValue());
+
+        query = manager.createNamedQuery(WidgetRating.WIDGET_TOTAL_DISLIKES);
+        query.setParameter(WidgetRating.PARAM_WIDGET_ID, widget_id);
+        widgetStatistics.setTotalDislike(((Number) query.getSingleResult()).intValue());
+
+        try {
+            query = manager.createNamedQuery(WidgetRating.WIDGET_USER_RATING);
+            query.setParameter(WidgetRating.PARAM_WIDGET_ID, widget_id);
+            query.setParameter(WidgetRating.PARAM_USER_ID, user_id);
+            widgetStatistics.setUserRating(((Number) query.getSingleResult()).intValue());
+        } catch (NoResultException e) {
+            widgetStatistics.setUserRating(WidgetRating.UNSET);
+        }
+
+        return widgetStatistics;
+    }
+
+    @Override
+    public Map<Long, WidgetRating> getUsersWidgetRatings(long user_id) {
+        TypedQuery<WidgetRating> query =
+                manager.createNamedQuery(WidgetRating.WIDGET_ALL_USER_RATINGS, WidgetRating.class);
+        query.setParameter(WidgetRating.PARAM_USER_ID, user_id);
+
+        Map<Long, WidgetRating> map = new HashMap<Long, WidgetRating>();
+        for (WidgetRating widgetRating : query.getResultList()) {
+            map.put(widgetRating.getWidgetId(), widgetRating);
+        }
+
+        return map;
+    }
+
+    @Override
+    public Map<Long, WidgetStatistics> getAllWidgetStatistics(long userId) {
+        HashMap<Long, WidgetStatistics> map = new HashMap<Long, WidgetStatistics>();
+
+        //Generate the mapping of all likes done for the widgets
+        Query query = manager.createNamedQuery(WidgetRating.WIDGET_ALL_TOTAL_LIKES);
+        for (Object[] result : (List<Object[]>) query.getResultList()) {
+            Long totalLikes = (Long) result[0];
+            Long widgetId = (Long) result[1];
+            WidgetStatistics widgetStatistics = new WidgetStatistics();
+            widgetStatistics.setTotalLike(totalLikes.intValue());
+            map.put(widgetId, widgetStatistics);
+        }
+
+        //Add the mapping of all dislikes done for the widgets
+        query = manager.createNamedQuery(WidgetRating.WIDGET_ALL_TOTAL_DISLIKES);
+        for (Object[] result : (List<Object[]>) query.getResultList()) {
+            Long totalDislikes = (Long) result[0];
+            Long widgetId = (Long) result[1];
+            WidgetStatistics widgetStatistics = map.get(widgetId);
+            if (widgetStatistics == null) {
+                widgetStatistics = new WidgetStatistics();
+                map.put(widgetId, widgetStatistics);
+            }
+            widgetStatistics.setTotalDislike(totalDislikes.intValue());
+        }
+
+        //Add the current user's current rating of the widget
+        Map<Long, WidgetRating> userRatings = getUsersWidgetRatings(userId);
+        for (Map.Entry<Long, WidgetStatistics> entry : map.entrySet()) {
+            //If the user has a widget rating then record it
+            if (userRatings.containsKey(entry.getKey())) {
+                entry.getValue().setUserRating(userRatings.get(entry.getKey()).getScore());
+            }
+            //otherwise set the rating to UNSET
+            else {
+                entry.getValue().setUserRating(WidgetRating.UNSET);
+            }
+        }
+
+        return map;
+    }
+
+
 }

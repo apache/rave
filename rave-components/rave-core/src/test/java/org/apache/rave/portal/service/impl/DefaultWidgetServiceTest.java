@@ -20,21 +20,19 @@
 package org.apache.rave.portal.service.impl;
 
 import org.apache.rave.portal.model.Widget;
-import org.apache.rave.portal.model.WidgetRating;
 import org.apache.rave.portal.model.WidgetStatus;
 import org.apache.rave.portal.model.util.SearchResult;
+import org.apache.rave.portal.model.util.WidgetStatistics;
 import org.apache.rave.portal.repository.WidgetRepository;
-import org.apache.rave.portal.service.impl.DefaultWidgetService;
+import org.apache.rave.portal.service.WidgetService;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
-import org.apache.rave.portal.service.WidgetRatingService;
-import org.apache.rave.portal.service.WidgetService;
 import static junit.framework.Assert.assertTrue;
-import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.createNiceMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
@@ -59,13 +57,13 @@ public class DefaultWidgetServiceTest {
     @Before
     public void setup() {
         repository = createNiceMock(WidgetRepository.class);
-        WidgetRatingService widgetRatingService = createMock(WidgetRatingService.class);
-        service = new DefaultWidgetService(repository, widgetRatingService);
+        service = new DefaultWidgetService(repository);
     }
 
     @Test
     public void getAvailableWidgets() {
         List<Widget> widgets = new ArrayList<Widget>();
+        expect(repository.getCountAll()).andReturn(1);
         expect(repository.getAll()).andReturn(widgets);
         replay(repository);
 
@@ -75,12 +73,13 @@ public class DefaultWidgetServiceTest {
 
     @Test
     public void getLimitedListOfWidgets() {
-        Widget widget1 = new Widget(1L,"http://example.com/widget1.xml");
-        Widget widget2 = new Widget(2L,"http://example.com/widget2.xml");
+        Widget widget1 = new Widget(1L, "http://example.com/widget1.xml");
+        Widget widget2 = new Widget(2L, "http://example.com/widget2.xml");
         List<Widget> widgets = new ArrayList<Widget>();
         widgets.add(widget1);
         widgets.add(widget2);
         final int pageSize = 10;
+        expect(repository.getCountAll()).andReturn(1);
         expect(repository.getLimitedList(0, pageSize)).andReturn(widgets);
         replay(repository);
 
@@ -92,14 +91,15 @@ public class DefaultWidgetServiceTest {
 
     @Test
     public void getPublishedWidgets() {
-        Widget widget1 = new Widget(1L,"http://example.com/widget1.xml");
+        Widget widget1 = new Widget(1L, "http://example.com/widget1.xml");
         widget1.setWidgetStatus(WidgetStatus.PUBLISHED);
-        Widget widget2 = new Widget(2L,"http://example.com/widget2.xml");
+        Widget widget2 = new Widget(2L, "http://example.com/widget2.xml");
         widget2.setWidgetStatus(WidgetStatus.PUBLISHED);
         List<Widget> widgets = new ArrayList<Widget>();
         widgets.add(widget1);
         widgets.add(widget2);
         final int pageSize = 10;
+        expect(repository.getCountByStatus(WidgetStatus.PUBLISHED)).andReturn(1);
         expect(repository.getByStatus(WidgetStatus.PUBLISHED, 0, pageSize)).andReturn(widgets);
         replay(repository);
 
@@ -129,7 +129,7 @@ public class DefaultWidgetServiceTest {
         widget.setEntityId(1L);
         List<Widget> widgets = new ArrayList<Widget>();
         widgets.add(widget);
-        
+
         expect(repository.getCountFreeTextSearch(searchTerm)).andReturn(totalResults);
         expect(repository.getByFreeTextSearch(searchTerm, offset, pageSize)).andReturn(widgets);
         replay(repository);
@@ -249,7 +249,7 @@ public class DefaultWidgetServiceTest {
     @Test
     public void updateWidget() {
         final String widgetUrl =
-                        "http://hosting.gmodules.com/ig/gadgets/file/112581010116074801021/hamster.xml";
+                "http://hosting.gmodules.com/ig/gadgets/file/112581010116074801021/hamster.xml";
         Widget widget = new Widget();
         widget.setUrl(widgetUrl);
         expect(repository.save(widget)).andReturn(widget).once();
@@ -262,76 +262,21 @@ public class DefaultWidgetServiceTest {
     }
 
     @Test
-    public void createWidgetRating() {
-        Widget widget = new Widget(1L, "http://example.com/widget.xml");
-        widget.setRatings(new ArrayList<WidgetRating>());
-        expect(repository.get(1)).andReturn(widget);
-        expect(repository.save(widget)).andReturn(widget);
+    public void widgetStatistics() {
+        expect(repository.getWidgetStatistics(1L, 1L)).andReturn(new WidgetStatistics());
         replay(repository);
 
-        WidgetRating newWidgetRating = new WidgetRating(1L, 1L, 1L, 1);
-        service.saveWidgetRating(1L, newWidgetRating);
-
-        List<WidgetRating> ratings = widget.getRatings();
-        assertNotNull(ratings);
-        assertEquals(1, ratings.size());
-        assertEquals(ratings.get(0), newWidgetRating);
+        service.getWidgetStatistics(1L, 1L);
+        verify(repository);
     }
+
 
     @Test
-    public void updateWidgetRating() {
-        Widget widget = new Widget();
-        List<WidgetRating> ratings = new ArrayList<WidgetRating>();
-        ratings.add(new WidgetRating(1L, 1L, 1L, 5));
-        widget.setRatings(ratings);
-        expect(repository.get(1)).andReturn(widget);
-        expect(repository.save(widget)).andReturn(widget);
+    public void allWidgetStatistics() {
+        expect(repository.getAllWidgetStatistics(1L)).andReturn(new HashMap<Long, WidgetStatistics>());
         replay(repository);
-        
-        WidgetRating newWidgetRating = new WidgetRating();
-        newWidgetRating.setWidgetId(1L);
-        newWidgetRating.setUserId(1L);
-        newWidgetRating.setScore(0);
-        
-        service.saveWidgetRating(1L, newWidgetRating);
-        
-        assertNotNull(ratings);
-        assertEquals(2, ratings.size());
-        assertEquals(ratings.get(1).getScore(), new Integer(0));
-    }
-    
-    @Test
-    public void deleteWidgetRating() {
-        Widget widget = new Widget();
-        List<WidgetRating> ratings = new ArrayList<WidgetRating>();
-        ratings.add(new WidgetRating(123L, 1L, 1L, 5));
-        widget.setRatings(ratings);
-        expect(repository.get(1)).andReturn(widget);
-        expect(repository.save(widget)).andReturn(widget);
-        replay(repository);
-        
-        service.removeWidgetRating(1, 1L);
-        
-        assertNotNull(ratings);
-        assertEquals(1, ratings.size());
-    }
-    
-    @Test
-    public void deleteUnsavedWidgetRating() {
-        Widget widget = new Widget();
-        List<WidgetRating> ratings = new ArrayList<WidgetRating>();
-        ratings.add(new WidgetRating(123L, 1L, 1L, 5));
-        widget.setRatings(ratings);
-        expect(repository.get(1)).andReturn(widget);
-        expect(repository.save(widget)).andReturn(widget);
-        replay(repository);
-        
-        service.removeWidgetRating(1, 2L);
-        
-        assertNotNull(ratings);
-        assertEquals(1, ratings.size());
-        assertEquals(ratings.get(0).getScore(), new Integer(5));
-    }
 
-    
+        service.getAllWidgetStatistics(1L);
+        verify(repository);
+    }
 }

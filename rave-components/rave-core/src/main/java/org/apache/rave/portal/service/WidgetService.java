@@ -20,8 +20,10 @@
 package org.apache.rave.portal.service;
 
 import org.apache.rave.portal.model.Widget;
-import org.apache.rave.portal.model.WidgetRating;
 import org.apache.rave.portal.model.util.SearchResult;
+import org.apache.rave.portal.model.util.WidgetStatistics;
+
+import java.util.Map;
 
 /**
  * Provides widget operations
@@ -117,26 +119,27 @@ public interface WidgetService {
     Widget registerNewWidget(Widget widget);
     
     /**
+     * Generates the widget statistics for a gadget including the user's specific information.
+     * 
+     * @param widgetId id of the widget
+     * @param userId id of the user
+     * @return {@link WidgetStatistics} with the rating information
+     */
+    WidgetStatistics getWidgetStatistics(long widgetId, long userId);
+
+    /**
+     * Generates the mapping of widget statistics for the user.
+     * 
+     * @param userId id of the user
+     * @return Mapping of {@link WidgetStatistics} objects keyed off of the widget's entityId
+     */
+    Map<Long, WidgetStatistics> getAllWidgetStatistics(long userId);
+    
+    /**
      * Updates {@link Widget}
      *
      * @param widget to save
      */
     void updateWidget(Widget widget);
-
-    /**
-     * Saves a {@link WidgetRating} for a widget
-     *
-     * @param widgetId unique identifier of a {@link Widget}
-     * @param rating   WidgetRating
-     */
-    void saveWidgetRating(long widgetId, WidgetRating rating);
-
-    /**
-     * Removes the rating of a widget
-     *
-     * @param widgetId unique identifier of a {@link Widget}
-     * @param userId   unique identifier of a {@link org.apache.rave.portal.model.User}
-     */
-    void removeWidgetRating(long widgetId, long userId);
 
 }

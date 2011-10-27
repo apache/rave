@@ -109,6 +109,14 @@
                                  width="120" height="60"/>
                         </c:if>
                         <div class="widgetType"><c:out value="${widget.type}"/></div>
+                        
+                        <div class="widgetRating">
+                            <fmt:message key="page.widget.rate"/>
+                            <div id="rating-${widget.entityId}" class="ratingButtons">
+                                <input type="radio" id="like-${widget.entityId}" class="widgetLikeButton" name="rating-${widget.entityId}"${widgetsStatistics[widget.entityId].userRating==10?" checked='true'":""}> <label for="like-${widget.entityId}">${widgetsStatistics[widget.entityId]!=null?widgetsStatistics[widget.entityId].totalLike:"0"}</label>
+                                <input type="radio" id="dislike-${widget.entityId}" class="widgetDislikeButton" name="rating-${widget.entityId}"${widgetsStatistics[widget.entityId].userRating==0?" checked='true'":""}> <label for="dislike-${widget.entityId}">${widgetsStatistics[widget.entityId]!=null?widgetsStatistics[widget.entityId].totalDislike:"0"}</label>
+                            </div>
+                        </div>
                     </div>
                     <div class="storeItemCenter">
                         <div id="widgetAdded_${widget.entityId}" class="storeButton">
@@ -153,11 +161,13 @@
 </div>
 
 <script src="//ajax.aspnetcdn.com/ajax/jQuery/jquery-1.6.1.min.js"></script>
+<script src="//ajax.aspnetcdn.com/ajax/jquery.ui/1.8.13/jquery-ui.min.js"></script>
 <script src="<spring:url value="/script/rave.js"/>"></script>
 <script src="<spring:url value="/script/rave_api.js"/>"></script>
+<script src="<spring:url value="/script/rave_store.js"/>"></script>
 <script>
-    $(function() {
-        rave.setContext("<spring:url value="/app/" />");
+    $(function () {
+        rave.store.init();
     });
 </script>
 </rave:rave_generic_page>

@@ -18,34 +18,60 @@
  */
 var rave = rave || {};
 rave.store = rave.store || (function() {
-    function init() {
-        $("#radio").buttonset();
+    
+    function initRatings() {
+        $(".ratingButtons").buttonset();
 
-        $("#like").button( {
-            icons: {
-                primary: "ui-icon-plus"
-            },
-            text: false
+        $(".widgetLikeButton").button( {
+            icons: {primary: "ui-icon-plus"}
+        }).change(function() {
+            var widgetId = this.id.substring("like-".length);
+            rave.api.rest.updateWidgetRating({widgetId: widgetId, score: 10});
+            $(this).button("option", "label", parseInt($(this).button("option", "label")) + 1);
+
+            //if the other button in this pair was checked then ajdust its total, except in IE where
+            //the button has already toggled BEFORE the 'change' event in which case we have to assume
+            //that the user had a contrary selection prior to the change event
+            var dislikeButton = $("#dislike-"+widgetId);
+            if (dislikeButton.get(0).getAttribute("checked") == "true" || this.checked == true) {
+                dislikeButton.get(0).setAttribute("checked", "false");
+                var dislikes = parseInt(dislikeButton.button("option", "label")) - 1;
+                if (dislikes > -1) {
+                    $(dislikeButton).button("option", "label", dislikes);
+                }
+            }
+            
+            //flag this element as the currently checked one
+            this.setAttribute("checked", "true");
+
         });
 
-        $("#like").click(function() {
-            rave.api.rest.updateWidgetRating({widgetId: $(this).attr("data-widget"), score: 10});
-        });
+        $(".widgetDislikeButton").button( {
+            icons: {primary: "ui-icon-minus"}
+        }).change(function() {
+            var widgetId = this.id.substring("dislike-".length);
+            rave.api.rest.updateWidgetRating({widgetId: widgetId, score: 0});
+            $(this).button("option", "label", parseInt($(this).button("option", "label")) + 1);
 
-        $("#dislike").button( {
-            icons: {
-                primary: "ui-icon-minus"
-            },
-            text: false
-        });
-
-        $("#dislike").click(function() {
-            rave.api.rest.updateWidgetRating({widgetId: $(this).attr("data-widget"), score: 0});
+            //if the other button in this pair was checked then ajdust its total, except in IE where
+            //the button has already toggled BEFORE the 'change' event in which case we have to assume
+            //that the user had a contrary selection prior to the change event
+            var likeButton = $("#like-"+widgetId);
+            if (likeButton.get(0).getAttribute("checked") == "true" || this.checked == true) {
+                likeButton.get(0).setAttribute("checked", "false");
+                var likes = parseInt(likeButton.button("option", "label")) - 1;
+                if (likes > -1) {
+                    $("#like-"+widgetId).button("option", "label", likes);
+                }
+            }
+            
+            //flag this element as the currently checked item
+            this.setAttribute("checked", "true");
         });
     }
-
+    
     return {
-        init:init
+        init: initRatings
     };
-
-})();
+    
+}());

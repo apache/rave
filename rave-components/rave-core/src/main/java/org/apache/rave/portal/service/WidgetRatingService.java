@@ -43,4 +43,19 @@ public interface WidgetRatingService {
      */
     void updateScore(WidgetRating widgetRating, Integer score);
 
+    /**
+     * Saves a {@link WidgetRating} for a widget
+     *
+     * @param rating   WidgetRating
+     */
+    void saveWidgetRating(WidgetRating rating);
+
+    /**
+     * Removes the rating of a widget
+     *
+     * @param widgetId unique identifier of a {@link org.apache.rave.portal.model.Widget}
+     * @param userId   unique identifier of a {@link org.apache.rave.portal.model.User}
+     */
+    void removeWidgetRating(long widgetId, long userId);
+
 }

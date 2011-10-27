@@ -22,7 +22,7 @@ package org.apache.rave.portal.web.api.rest;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.WidgetRating;
 import org.apache.rave.portal.service.UserService;
-import org.apache.rave.portal.service.WidgetService;
+import org.apache.rave.portal.service.WidgetRatingService;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
@@ -36,16 +36,16 @@ import static org.easymock.EasyMock.verify;
 
 public class WidgetApiTest {
     private WidgetApi widgetApi;
-    private WidgetService widgetService;
+    private WidgetRatingService widgetRatingService;
     private UserService userService;
     private MockHttpServletResponse response;
 
     @Before
     public void setup() {
-        widgetService = createMock(WidgetService.class);
+        widgetRatingService = createMock(WidgetRatingService.class);
         userService = createMock(UserService.class);
         response = createMock(MockHttpServletResponse.class);
-        widgetApi = new WidgetApi(widgetService, userService);
+        widgetApi = new WidgetApi(widgetRatingService, userService);
     }
 
     @Test(expected = UnsupportedOperationException.class)
@@ -55,9 +55,9 @@ public class WidgetApiTest {
     
     @Test
     public void deleteWidgetRating() {
-        widgetService.removeWidgetRating(1L, 2L);
+        widgetRatingService.removeWidgetRating(1L, 2L);
         expectLastCall();
-        replay(widgetService);
+        replay(widgetRatingService);
         
         response.setStatus(HttpStatus.NO_CONTENT.value());
         replay(response);
@@ -68,7 +68,7 @@ public class WidgetApiTest {
         replay(userService);
         widgetApi.deleteWidgetRating(1L, response);
 
-        verify(widgetService, userService);
+        verify(widgetRatingService, userService);
         verify(response);
     }
     
@@ -78,9 +78,9 @@ public class WidgetApiTest {
         widgetRating.setScore(5);
         widgetRating.setUserId(2L);
         widgetRating.setWidgetId(1L);
-        widgetService.saveWidgetRating(1L, widgetRating);
+        widgetRatingService.saveWidgetRating(widgetRating);
         expectLastCall();
-        replay(widgetService);
+        replay(widgetRatingService);
         
         response.setStatus(HttpStatus.NO_CONTENT.value());
         replay(response);
@@ -92,7 +92,7 @@ public class WidgetApiTest {
 
         widgetApi.setWidgetRating(1L, 5, response);
         
-        verify(widgetService, userService);
+        verify(widgetRatingService, userService);
         verify(response);
     }
 }

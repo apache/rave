@@ -20,9 +20,13 @@ package org.apache.rave.portal.repository;
 
 import org.apache.rave.persistence.Repository;
 import org.apache.rave.portal.model.Widget;
+import org.apache.rave.portal.model.WidgetRating;
 import org.apache.rave.portal.model.WidgetStatus;
+import org.apache.rave.portal.model.util.WidgetStatistics;
 
 import java.util.List;
+import java.util.Map;
+
 
 public interface WidgetRepository extends Repository<Widget> {
     /**
@@ -115,4 +119,29 @@ public interface WidgetRepository extends Repository<Widget> {
      * @return {@link Widget} if it can be found, otherwise {@literal null}
      */
     Widget getByUrl(String widgetUrl);
+    
+    /**
+     * Generates the widget statistics for a gadget including the user's specific information.
+     * 
+     * @param widget_id id of the widget
+     * @param user_id id of the user
+     * @return {@link WidgetStatistics} with the rating information
+     */
+    WidgetStatistics getWidgetStatistics(long widget_id, long user_id);
+
+    /**
+     * Generates the mapping of widget statistics for the user.
+     *
+     * @param userId id of the user
+     * @return Mapping of {@link WidgetStatistics} objects keyed off of the widget's entityId
+     */
+    Map<Long, WidgetStatistics> getAllWidgetStatistics(long userId);
+
+    /**
+     * Generates the mapping of widget ratings for the user.
+     *
+     * @param userId id of the user
+     * @return Mapping of {@link WidgetRating} objects keyed off of the widget's entityId
+     */
+    Map<Long, WidgetRating> getUsersWidgetRatings(long userId);
 }

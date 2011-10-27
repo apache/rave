@@ -21,10 +21,8 @@ package org.apache.rave.portal.web.controller;
 
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.Widget;
-import org.apache.rave.portal.model.WidgetRating;
 import org.apache.rave.portal.model.WidgetStatus;
 import org.apache.rave.portal.service.UserService;
-import org.apache.rave.portal.service.WidgetRatingService;
 import org.apache.rave.portal.service.WidgetService;
 import org.apache.rave.portal.web.util.ModelKeys;
 import org.apache.rave.portal.web.util.ViewNames;
@@ -49,16 +47,13 @@ public class WidgetStoreController {
 
     private final NewWidgetValidator widgetValidator;
 
-    private final WidgetRatingService widgetRatingService;
-
     private final UserService userService;
 
     @Autowired
     public WidgetStoreController(WidgetService widgetService, NewWidgetValidator validator,
-                                 WidgetRatingService widgetRatingService, UserService userService) {
+                                 UserService userService) {
         this.widgetService = widgetService;
         this.widgetValidator = validator;
-        this.widgetRatingService = widgetRatingService;
         this.userService = userService;
     }
 
@@ -73,9 +68,11 @@ public class WidgetStoreController {
     @RequestMapping(method = RequestMethod.GET)
     public String view(Model model, @RequestParam long referringPageId,
                        @RequestParam(required = false, defaultValue = "0") int offset) {
+        User user = userService.getAuthenticatedUser();
         model.addAttribute(ModelKeys.WIDGETS,
                 widgetService.getPublishedWidgets(offset, MAXIMUM_WIDGETS_PER_PAGE));
         model.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
+        model.addAttribute(ModelKeys.WIDGETS_STATISTICS, widgetService.getAllWidgetStatistics(user.getEntityId()));        
         return ViewNames.STORE;
     }
 
@@ -92,11 +89,8 @@ public class WidgetStoreController {
         model.addAttribute(ModelKeys.WIDGET, widgetService.getWidget(widgetId));
         model.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
 
-        final User authenticatedUser = userService.getAuthenticatedUser();
-        final WidgetRating widgetRating =
-                widgetRatingService.getByWidgetIdAndUserId(widgetId, authenticatedUser.getEntityId());
-        model.addAttribute("widgetRating", widgetRating);
-
+        final User user = userService.getAuthenticatedUser();
+        model.addAttribute(ModelKeys.WIDGET_STATISTICS, widgetService.getWidgetStatistics(widgetId, user.getEntityId()));
         return ViewNames.WIDGET;
     }
 
@@ -113,12 +107,15 @@ public class WidgetStoreController {
     public String viewSearchResult(Model model, @RequestParam long referringPageId,
                                    @RequestParam String searchTerm,
                                    @RequestParam(required = false, defaultValue = "0") int offset) {
+        User user = userService.getAuthenticatedUser();
         model.addAttribute(ModelKeys.WIDGETS,
                 widgetService.getPublishedWidgetsByFreeTextSearch(searchTerm, offset,
                         MAXIMUM_WIDGETS_PER_PAGE));
         model.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
         model.addAttribute(ModelKeys.SEARCH_TERM, searchTerm);
         model.addAttribute(ModelKeys.OFFSET, offset);
+        model.addAttribute(ModelKeys.WIDGETS_STATISTICS, widgetService.getAllWidgetStatistics(user.getEntityId()));
+        
         return ViewNames.STORE;
     }
 
@@ -160,7 +157,9 @@ public class WidgetStoreController {
             return ViewNames.ADD_WIDGET_FORM;
         }
 
+        User user = userService.getAuthenticatedUser();
         model.addAttribute(ModelKeys.WIDGET, storedWidget);
+        model.addAttribute(ModelKeys.WIDGET_STATISTICS, widgetService.getWidgetStatistics(storedWidget.getEntityId(), user.getEntityId()));
         return ViewNames.WIDGET;
     }
 }

@@ -25,7 +25,6 @@ import org.apache.rave.portal.model.Widget;
 import org.apache.rave.portal.model.WidgetStatus;
 import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.service.UserService;
-import org.apache.rave.portal.service.WidgetRatingService;
 import org.apache.rave.portal.service.WidgetService;
 import org.apache.rave.portal.web.util.ModelKeys;
 import org.apache.rave.portal.web.util.ViewNames;
@@ -46,7 +45,6 @@ import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertTrue;
-import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.createNiceMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
@@ -66,16 +64,17 @@ public class WidgetStoreControllerTest {
     private static final long REFERRER_ID = 35L;
     private WidgetStoreController controller;
     private WidgetService widgetService;
-    private WidgetRatingService widgetRatingService;
-    private UserService userService;
 
     @Before
     public void setup() {
         widgetService = createNiceMock(WidgetService.class);
-        userService = createNiceMock(UserService.class);
+        UserService userService = createNiceMock(UserService.class);
+        User user = new User();
+        user.setEntityId(1L);
+        expect(userService.getAuthenticatedUser()).andReturn(user);
+        replay(userService);
         NewWidgetValidator widgetValidator = new NewWidgetValidator();
-        widgetRatingService = createMock(WidgetRatingService.class);
-        controller = new WidgetStoreController(widgetService, widgetValidator, widgetRatingService, userService);
+        controller = new WidgetStoreController(widgetService, widgetValidator, userService);
     }
 
     @Test
@@ -101,16 +100,13 @@ public class WidgetStoreControllerTest {
     public void viewWidget() {
         Model model = new ExtendedModelMap();
         Widget w = new Widget(1L, "http://example.com/widget.xml");
-        User user = new User(1L, "john.doe");
 
         expect(widgetService.getWidget(WIDGET_ID)).andReturn(w);
-        expect(userService.getAuthenticatedUser()).andReturn(user);
-        expect(widgetRatingService.getByWidgetIdAndUserId(1L, 1L)).andReturn(null);
-        replay(widgetService, userService, widgetRatingService);
+        replay(widgetService);
 
         String view = controller.viewWidget(model, WIDGET_ID, REFERRER_ID);
 
-        verify(widgetService, userService, widgetRatingService);
+        verify(widgetService);
         assertThat(view, is(equalTo(ViewNames.WIDGET)));
         assertThat(model.containsAttribute(ModelKeys.WIDGET), is(true));
         assertThat(((Widget) model.asMap().get(ModelKeys.WIDGET)), is(sameInstance(w)));
@@ -162,6 +158,7 @@ public class WidgetStoreControllerTest {
         final String widgetUrl = "http://example.com/newwidget.xml";
         final Model model = new ExtendedModelMap();
         final Widget widget = new Widget();
+        widget.setEntityId(1L);
         widget.setTitle("Widget title");
         widget.setUrl(widgetUrl);
         widget.setType("OpenSocial");
