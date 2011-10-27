@@ -42,7 +42,7 @@ public interface RegionWidgetService {
      * @param regionWidget The RegionWidget to save.
      * @return The updated RegionWidget with all ID numbers populated.
      */
-    @PreAuthorize("hasPermission(#regionWidget.regionWidgetId, 'org.apache.rave.portal.model.RegionWidget', 'update')")
+    @PreAuthorize("hasPermission(#regionWidget.entityId, 'org.apache.rave.portal.model.RegionWidget', 'update')")
     RegionWidget saveRegionWidget(RegionWidget regionWidget);
 
     /**
