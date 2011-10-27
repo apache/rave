@@ -151,75 +151,75 @@ UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @u
 --- gadget data ---
 -- wikipedia widget
 set @wikipedia_widget_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @widget_seq);
-insert into widget (entity_id, title, url, type, description, author, widget_status)
-values(@wikipedia_widget_id, 'Wikipedia','http://www.widget-dico.com/wikipedia/google/wikipedia.xml', 'OpenSocial', 'A Wikipedia Search and Go widget. Language choice.', 'WidgetMe', 'PUBLISHED');
+insert into widget (entity_id, title, url, type, description, author, widget_status, owner_id)
+values(@wikipedia_widget_id, 'Wikipedia','http://www.widget-dico.com/wikipedia/google/wikipedia.xml', 'OpenSocial', 'A Wikipedia Search and Go widget. Language choice.', 'WidgetMe', 'PUBLISHED', @user_id_1);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @widget_seq;
 
 -- translate widget
 set @translate_widget_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @widget_seq);
-insert into widget (entity_id, title, url, type, description, author, widget_status)
-values(@translate_widget_id, 'Translate Gadget', 'http://www.gstatic.com/ig/modules/dictionary/dictionary.xml','OpenSocial' , 'Google Translation gadget.', 'Google Taiwan', 'PUBLISHED');
+insert into widget (entity_id, title, url, type, description, author, widget_status, owner_id)
+values(@translate_widget_id, 'Translate Gadget', 'http://www.gstatic.com/ig/modules/dictionary/dictionary.xml','OpenSocial' , 'Google Translation gadget.', 'Google Taiwan', 'PUBLISHED', @user_id_1);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @widget_seq;
 
 -- nytimes widget
 set @nyt_widget_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @widget_seq);
-insert into widget (entity_id, title, url, type, widget_status)
-values(@nyt_widget_id, 'NYTimes.com - Top Stories', 'http://widgets.nytimes.com/packages/html/igoogle/topstories.xml', 'OpenSocial', 'PUBLISHED');
+insert into widget (entity_id, title, url, type, widget_status, owner_id)
+values(@nyt_widget_id, 'NYTimes.com - Top Stories', 'http://widgets.nytimes.com/packages/html/igoogle/topstories.xml', 'OpenSocial', 'PUBLISHED', @user_id_1);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @widget_seq;
 
 -- google tabbed news widget
 set @tabnews_widget_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @widget_seq);
-insert into widget (entity_id, title, url, type, widget_status)
-values(@tabnews_widget_id, 'Google News Gadget', 'http://www.gstatic.com/ig/modules/tabnews/tabnews.xml', 'OpenSocial', 'PUBLISHED');
+insert into widget (entity_id, title, url, type, widget_status, owner_id)
+values(@tabnews_widget_id, 'Google News Gadget', 'http://www.gstatic.com/ig/modules/tabnews/tabnews.xml', 'OpenSocial', 'PUBLISHED', @user_id_1);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @widget_seq;
 
 -- hamster widget
 set @hamster_widget_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @widget_seq);
-insert into widget (entity_id, title, url, type, widget_status, thumbnail_url)
-values(@hamster_widget_id, 'Pet Hamster', 'http://hosting.gmodules.com/ig/gadgets/file/112581010116074801021/hamster.xml', 'OpenSocial', 'PUBLISHED', 'http://hosting.gmodules.com/ig/gadgets/file/112581010116074801021/hamsterThumb.png');
+insert into widget (entity_id, title, url, type, widget_status, thumbnail_url, owner_id)
+values(@hamster_widget_id, 'Pet Hamster', 'http://hosting.gmodules.com/ig/gadgets/file/112581010116074801021/hamster.xml', 'OpenSocial', 'PUBLISHED', 'http://hosting.gmodules.com/ig/gadgets/file/112581010116074801021/hamsterThumb.png', @user_id_1);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @widget_seq;
 
 -- another hamster widget
 set @another_hamster_widget_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @widget_seq);
-insert into widget (entity_id, title, url, type, description, author, widget_status, thumbnail_url, screenshot_url)
-values(@another_hamster_widget_id, 'Herbie Hamster Virtual Pet', 'http://hosting.gmodules.com/ig/gadgets/file/109548057311228444554/hamster.xml', 'OpenSocial', 'A cute little hamster for you to feed and look after. Watch him follow your cursor around. Click on the more tab to treat him to a strawberry. Click him then put him on the wheel and watch him play! ***NEW: make Herbie hamster your very own!', 'Naj', 'PUBLISHED', 'http://sites.google.com/site/najartsist/pets-1/herbiet.png', 'http://sites.google.com/site/najartsist/herbie-hamster/herbie.png');
+insert into widget (entity_id, title, url, type, description, author, widget_status, thumbnail_url, screenshot_url, owner_id)
+values(@another_hamster_widget_id, 'Herbie Hamster Virtual Pet', 'http://hosting.gmodules.com/ig/gadgets/file/109548057311228444554/hamster.xml', 'OpenSocial', 'A cute little hamster for you to feed and look after. Watch him follow your cursor around. Click on the more tab to treat him to a strawberry. Click him then put him on the wheel and watch him play! ***NEW: make Herbie hamster your very own!', 'Naj', 'PUBLISHED', 'http://sites.google.com/site/najartsist/pets-1/herbiet.png', 'http://sites.google.com/site/najartsist/herbie-hamster/herbie.png', @user_id_1);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @widget_seq;
 
 -- slideshare widget
 set @gifts_widget_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @widget_seq);
-insert into widget (entity_id, title, url, type, widget_status)
-values(@gifts_widget_id, 'Gifts', 'http://opensocial-resources.googlecode.com/svn/samples/tutorial/tags/api-0.8/gifts_1_friends.xml', 'OpenSocial', 'PUBLISHED');
+insert into widget (entity_id, title, url, type, widget_status, owner_id)
+values(@gifts_widget_id, 'Gifts', 'http://opensocial-resources.googlecode.com/svn/samples/tutorial/tags/api-0.8/gifts_1_friends.xml', 'OpenSocial', 'PUBLISHED', @user_id_1);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @widget_seq;
 
 -- demo widgets from rave-demos
 -- CTSS resource google map
 set @ctss_resources_widget_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @widget_seq);
-insert into widget (entity_id, title, url, type, description, author, widget_status, thumbnail_url, screenshot_url)
-values(@ctss_resources_widget_id, 'List of CTSS Resources - Map View', 'http://localhost:8080/demogadgets/CTSSResourcesMapView.xml', 'OpenSocial', 'This is a gadget developed for Teragrid - OGCE project. Used Google gadgets API to retrieve the information from the Information Services REST Web Service and display the information using Google Maps API. This is a list of available CTSS resources and its details', 'Suresh Deivasigamani', 'PUBLISHED', 'http://img695.imageshack.us/img695/2726/ctssresourcesmapviewscr.png', 'http://img704.imageshack.us/img704/444/ctssresourcesmapview.png');
+insert into widget (entity_id, title, url, type, description, author, widget_status, thumbnail_url, screenshot_url, owner_id)
+values(@ctss_resources_widget_id, 'List of CTSS Resources - Map View', 'http://localhost:8080/demogadgets/CTSSResourcesMapView.xml', 'OpenSocial', 'This is a gadget developed for Teragrid - OGCE project. Used Google gadgets API to retrieve the information from the Information Services REST Web Service and display the information using Google Maps API. This is a list of available CTSS resources and its details', 'Suresh Deivasigamani', 'PUBLISHED', 'http://img695.imageshack.us/img695/2726/ctssresourcesmapviewscr.png', 'http://img704.imageshack.us/img704/444/ctssresourcesmapview.png', @user_id_1);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @widget_seq;
 
 -- Twitter Gadget
 set @twitter_widget_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @widget_seq);
-insert into widget (entity_id, title, url, type, description, author, widget_status, thumbnail_url, screenshot_url)
-values(@twitter_widget_id, 'Twitter', 'http://localhost:8080/demogadgets/twitter.xml', 'OpenSocial', 'Fully functional, lightweight, AJAX-based twitter user interface with many configuration options including user specified auto-refresh rate, full timeline, pagination, and more.  Control display elements such as user thumbnails, date stamps, and post source.  Specify gadget size based on availble screen footprint, even incorporate into your Gmail account.  Insert symbols, dingbats and emoticons into your tweets using the TwitterGadget Symbols pulldown menu.', 'LOGIKA Corporation', 'PUBLISHED', 'http://www.twittergadget.com/images/thumbnail2.png', 'http://www.twittergadget.com/images/thumbnail2.png');
+insert into widget (entity_id, title, url, type, description, author, widget_status, thumbnail_url, screenshot_url, owner_id)
+values(@twitter_widget_id, 'Twitter', 'http://localhost:8080/demogadgets/twitter.xml', 'OpenSocial', 'Fully functional, lightweight, AJAX-based twitter user interface with many configuration options including user specified auto-refresh rate, full timeline, pagination, and more.  Control display elements such as user thumbnails, date stamps, and post source.  Specify gadget size based on availble screen footprint, even incorporate into your Gmail account.  Insert symbols, dingbats and emoticons into your tweets using the TwitterGadget Symbols pulldown menu.', 'LOGIKA Corporation', 'PUBLISHED', 'http://www.twittergadget.com/images/thumbnail2.png', 'http://www.twittergadget.com/images/thumbnail2.png', @user_id_1);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @widget_seq;
 
 -- Youtube Gadget
 set @youtube_widget_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @widget_seq);
-insert into widget (entity_id, title, url, type, description, author, widget_status, thumbnail_url, screenshot_url)
-values(@youtube_widget_id, 'Youtube', 'http://localhost:8080/demogadgets/youtubesearch.xml', 'OpenSocial', 'A search module, which searches YouTube by tags like Politics News Life Music Family Photography Art Random Travel Personal Religion Movies Business Thoughts Media Humor Culture Poetry Christmas Writing Books Food Friends.', 'David Olsen', 'PUBLISHED', 'http://www.zytu.com/youtube/youtubesearchthumb.png', 'http://www.zytu.com/youtube/youtubesearchscreen.png');
+insert into widget (entity_id, title, url, type, description, author, widget_status, thumbnail_url, screenshot_url, owner_id)
+values(@youtube_widget_id, 'Youtube', 'http://localhost:8080/demogadgets/youtubesearch.xml', 'OpenSocial', 'A search module, which searches YouTube by tags like Politics News Life Music Family Photography Art Random Travel Personal Religion Movies Business Thoughts Media Humor Culture Poetry Christmas Writing Books Food Friends.', 'David Olsen', 'PUBLISHED', 'http://www.zytu.com/youtube/youtubesearchthumb.png', 'http://www.zytu.com/youtube/youtubesearchscreen.png', @user_id_1);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @widget_seq;
 
 -- View information
 set @gadgetview_widget_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @widget_seq);
-insert into widget (entity_id, title, url, type, widget_status)
-values(@gadgetview_widget_id, 'Gadget View Type', 'http://localhost:8080/demogadgets/canvas-nav.xml', 'OpenSocial', 'PUBLISHED');
+insert into widget (entity_id, title, url, type, widget_status, owner_id)
+values(@gadgetview_widget_id, 'Gadget View Type', 'http://localhost:8080/demogadgets/canvas-nav.xml', 'OpenSocial', 'PUBLISHED', @user_id_1);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @widget_seq;
 
 -- View information
 set @user_prefs_demo_widget_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @widget_seq);
-insert into widget (entity_id, title, url, type, widget_status, description, author)
-values(@user_prefs_demo_widget_id, 'User Prefs Demo', 'http://localhost:8080/demogadgets/user_prefs_demo.xml', 'OpenSocial', 'PUBLISHED', 'An example gadget which demos some of the different capabilities of user preferences.', 'Anthony Carlucci');
+insert into widget (entity_id, title, url, type, widget_status, description, author, owner_id)
+values(@user_prefs_demo_widget_id, 'User Prefs Demo', 'http://localhost:8080/demogadgets/user_prefs_demo.xml', 'OpenSocial', 'PUBLISHED', 'An example gadget which demos some of the different capabilities of user preferences.', 'Anthony Carlucci', @user_id_1);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @widget_seq;
 
 -- end widget data ----

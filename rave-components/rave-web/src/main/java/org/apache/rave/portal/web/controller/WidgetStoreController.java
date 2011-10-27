@@ -143,12 +143,14 @@ public class WidgetStoreController {
     @RequestMapping(method = RequestMethod.POST, value = "widget/add")
     public String viewAddWidgetResult(@ModelAttribute Widget widget, BindingResult results,
                                       Model model) {
+        User user = userService.getAuthenticatedUser();                                     
         widgetValidator.validate(widget, results);
         if (results.hasErrors()) {
             model.addAttribute(ModelKeys.WIDGET, widget);
             return ViewNames.ADD_WIDGET_FORM;
         }
         widget.setWidgetStatus(WidgetStatus.PREVIEW);
+        widget.setOwner(user);
 
         final Widget storedWidget = widgetService.registerNewWidget(widget);
         if (storedWidget == null) {
@@ -156,9 +158,8 @@ public class WidgetStoreController {
             model.addAttribute(ModelKeys.WIDGET, widget);
             return ViewNames.ADD_WIDGET_FORM;
         }
-
-        User user = userService.getAuthenticatedUser();
-        model.addAttribute(ModelKeys.WIDGET, storedWidget);
+        
+        model.addAttribute(ModelKeys.WIDGET, storedWidget);       
         model.addAttribute(ModelKeys.WIDGET_STATISTICS, widgetService.getWidgetStatistics(storedWidget.getEntityId(), user.getEntityId()));
         return ViewNames.WIDGET;
     }

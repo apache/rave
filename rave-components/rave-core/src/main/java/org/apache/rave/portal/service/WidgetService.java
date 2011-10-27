@@ -24,6 +24,8 @@ import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.model.util.WidgetStatistics;
 
 import java.util.Map;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 /**
  * Provides widget operations
@@ -66,6 +68,7 @@ public interface WidgetService {
      * @param id the Id of the widget
      * @return a valid widget if one exists for the given id; null otherwise
      */
+    @PostAuthorize("hasPermission(returnObject, 'read')")  
     Widget getWidget(long id);
 
     /**
@@ -107,6 +110,7 @@ public interface WidgetService {
      * @param widgetUrl url of the Widget
      * @return {@link Widget} if it exists, otherwise {@literal null}
      */
+    @PostAuthorize("hasPermission(returnObject, 'read')")
     Widget getWidgetByUrl(String widgetUrl);
 
 
@@ -116,6 +120,7 @@ public interface WidgetService {
      * @param widget new Widget to store
      * @return Widget if it is new and can be stored, otherwise {@literal null}
      */
+    @PreAuthorize("hasPermission(new org.apache.rave.portal.security.impl.RaveSecurityContext(#widget.owner.entityId, 'org.apache.rave.portal.model.User'), 'org.apache.rave.portal.model.Widget', 'create')")    
     Widget registerNewWidget(Widget widget);
     
     /**
@@ -140,6 +145,6 @@ public interface WidgetService {
      *
      * @param widget to save
      */
+    @PreAuthorize("hasPermission(new org.apache.rave.portal.security.impl.RaveSecurityContext(#widget.owner.entityId, 'org.apache.rave.portal.model.User'), 'org.apache.rave.portal.model.Widget', 'update')")        
     void updateWidget(Widget widget);
-
 }

@@ -131,10 +131,9 @@ public interface PageService {
      * @param pageId the id of the page to add the widget to
      * @param widgetId the {@link org.apache.rave.portal.model.Widget} id to add
      * @return a valid widget instance
-     * 
-     * TODO: add a second hasPermission clause for Widget once the WidgetPermissionEvaluator has been created     
      */
-    @PreAuthorize("hasPermission(#pageId, 'org.apache.rave.portal.model.Page', 'update')") 
+    @PreAuthorize("hasPermission(#pageId, 'org.apache.rave.portal.model.Page', 'update') and " +
+                  "hasPermission(#widgetId, 'org.apache.rave.portal.model.Widget', 'read')") 
     RegionWidget addWidgetToPage(long pageId, long widgetId);
 
     /**

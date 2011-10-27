@@ -32,43 +32,35 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import static junit.framework.Assert.assertTrue;
-import static org.easymock.EasyMock.createNiceMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.hamcrest.CoreMatchers.sameInstance;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertThat;
+import static org.easymock.EasyMock.*;
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.*;
 
 /**
  * Test for {@link DefaultWidgetService}
  */
 public class DefaultWidgetServiceTest {
 
-    private WidgetService service;
-    private WidgetRepository repository;
+    private WidgetService widgetService;
+    private WidgetRepository widgetRepository;
 
     @Before
     public void setup() {
-        repository = createNiceMock(WidgetRepository.class);
-        service = new DefaultWidgetService(repository);
+        widgetRepository = createMock(WidgetRepository.class);        
+        widgetService = new DefaultWidgetService(widgetRepository);
     }
 
     @Test
     public void getAvailableWidgets() {
         List<Widget> widgets = new ArrayList<Widget>();
-        expect(repository.getCountAll()).andReturn(1);
-        expect(repository.getAll()).andReturn(widgets);
-        replay(repository);
+        expect(widgetRepository.getCountAll()).andReturn(1);
+        expect(widgetRepository.getAll()).andReturn(widgets);
+        replay(widgetRepository);
 
-        List<Widget> result = service.getAllWidgets().getResultSet();
+        List<Widget> result = widgetService.getAllWidgets().getResultSet();
         assertThat(result, is(sameInstance(widgets)));
+        
+        verify(widgetRepository);
     }
 
     @Test
@@ -79,14 +71,14 @@ public class DefaultWidgetServiceTest {
         widgets.add(widget1);
         widgets.add(widget2);
         final int pageSize = 10;
-        expect(repository.getCountAll()).andReturn(1);
-        expect(repository.getLimitedList(0, pageSize)).andReturn(widgets);
-        replay(repository);
+        expect(widgetRepository.getCountAll()).andReturn(1);
+        expect(widgetRepository.getLimitedList(0, pageSize)).andReturn(widgets);
+        replay(widgetRepository);
 
-        SearchResult<Widget> result = service.getLimitedListOfWidgets(0, pageSize);
+        SearchResult<Widget> result = widgetService.getLimitedListOfWidgets(0, pageSize);
         assertEquals(pageSize, result.getPageSize());
         assertSame(widgets, result.getResultSet());
-
+        verify(widgetRepository);
     }
 
     @Test
@@ -99,24 +91,25 @@ public class DefaultWidgetServiceTest {
         widgets.add(widget1);
         widgets.add(widget2);
         final int pageSize = 10;
-        expect(repository.getCountByStatus(WidgetStatus.PUBLISHED)).andReturn(1);
-        expect(repository.getByStatus(WidgetStatus.PUBLISHED, 0, pageSize)).andReturn(widgets);
-        replay(repository);
+        expect(widgetRepository.getCountByStatus(WidgetStatus.PUBLISHED)).andReturn(1);
+        expect(widgetRepository.getByStatus(WidgetStatus.PUBLISHED, 0, pageSize)).andReturn(widgets);
+        replay(widgetRepository);
 
-        SearchResult<Widget> result = service.getPublishedWidgets(0, pageSize);
+        SearchResult<Widget> result = widgetService.getPublishedWidgets(0, pageSize);
         assertEquals(pageSize, result.getPageSize());
         assertSame(widgets, result.getResultSet());
+        verify(widgetRepository);
     }
 
     @Test
     public void getWidget() {
         Widget w = new Widget();
-        expect(repository.get(1L)).andReturn(w);
-        replay(repository);
+        expect(widgetRepository.get(1L)).andReturn(w);
+        replay(widgetRepository);
 
-        Widget result = service.getWidget(1L);
+        Widget result = widgetService.getWidget(1L);
         assertThat(result, is(sameInstance(w)));
-
+        verify(widgetRepository);
     }
 
     @Test
@@ -130,14 +123,15 @@ public class DefaultWidgetServiceTest {
         List<Widget> widgets = new ArrayList<Widget>();
         widgets.add(widget);
 
-        expect(repository.getCountFreeTextSearch(searchTerm)).andReturn(totalResults);
-        expect(repository.getByFreeTextSearch(searchTerm, offset, pageSize)).andReturn(widgets);
-        replay(repository);
+        expect(widgetRepository.getCountFreeTextSearch(searchTerm)).andReturn(totalResults);
+        expect(widgetRepository.getByFreeTextSearch(searchTerm, offset, pageSize)).andReturn(widgets);
+        replay(widgetRepository);
 
-        SearchResult<Widget> result = service.getWidgetsByFreeTextSearch(searchTerm, offset, pageSize);
+        SearchResult<Widget> result = widgetService.getWidgetsByFreeTextSearch(searchTerm, offset, pageSize);
         assertEquals(widget, result.getResultSet().get(0));
         assertEquals(totalResults, result.getTotalResults());
         assertEquals(pageSize, result.getPageSize());
+        verify(widgetRepository);
     }
 
 
@@ -153,17 +147,18 @@ public class DefaultWidgetServiceTest {
         List<Widget> widgets = new ArrayList<Widget>();
         widgets.add(widget);
 
-        expect(repository.getCountByStatusAndTypeAndFreeText(WidgetStatus.PUBLISHED, null, searchTerm))
+        expect(widgetRepository.getCountByStatusAndTypeAndFreeText(WidgetStatus.PUBLISHED, null, searchTerm))
                 .andReturn(totalResults);
-        expect(repository.getByStatusAndTypeAndFreeTextSearch(WidgetStatus.PUBLISHED, null, searchTerm,
+        expect(widgetRepository.getByStatusAndTypeAndFreeTextSearch(WidgetStatus.PUBLISHED, null, searchTerm,
                 offset, pageSize)).andReturn(widgets);
-        replay(repository);
+        replay(widgetRepository);
 
-        SearchResult<Widget> result = service.getPublishedWidgetsByFreeTextSearch(searchTerm,
+        SearchResult<Widget> result = widgetService.getPublishedWidgetsByFreeTextSearch(searchTerm,
                 offset, pageSize);
         assertEquals(widget, result.getResultSet().get(0));
         assertEquals(totalResults, result.getTotalResults());
         assertEquals(pageSize, result.getPageSize());
+        verify(widgetRepository);
     }
 
     @Test
@@ -180,28 +175,29 @@ public class DefaultWidgetServiceTest {
         List<Widget> widgets = new ArrayList<Widget>();
         widgets.add(widget);
 
-        expect(repository.getCountByStatusAndTypeAndFreeText(WidgetStatus.PUBLISHED, type, searchTerm))
+        expect(widgetRepository.getCountByStatusAndTypeAndFreeText(WidgetStatus.PUBLISHED, type, searchTerm))
                 .andReturn(totalResults);
-        expect(repository.getByStatusAndTypeAndFreeTextSearch(WidgetStatus.PUBLISHED, type, searchTerm,
+        expect(widgetRepository.getByStatusAndTypeAndFreeTextSearch(WidgetStatus.PUBLISHED, type, searchTerm,
                 offset, pageSize)).andReturn(widgets);
-        replay(repository);
+        replay(widgetRepository);
 
-        SearchResult<Widget> result = service.getWidgetsBySearchCriteria(searchTerm, type,
+        SearchResult<Widget> result = widgetService.getWidgetsBySearchCriteria(searchTerm, type,
                 WidgetStatus.PUBLISHED.toString(), offset, pageSize);
         assertEquals(widget, result.getResultSet().get(0));
         assertEquals(totalResults, result.getTotalResults());
         assertEquals(pageSize, result.getPageSize());
+        verify(widgetRepository);
     }
 
 
     @Test
     public void getWidget_null() {
-        expect(repository.get(1L)).andReturn(null);
-        replay(repository);
+        expect(widgetRepository.get(1L)).andReturn(null);
+        replay(widgetRepository);
 
-        Widget result = service.getWidget(1L);
+        Widget result = widgetService.getWidget(1L);
         assertThat(result, is(nullValue()));
-
+        verify(widgetRepository);
     }
 
     @Test
@@ -210,27 +206,29 @@ public class DefaultWidgetServiceTest {
                 "http://hosting.gmodules.com/ig/gadgets/file/112581010116074801021/hamster.xml";
         Widget widget = new Widget();
         widget.setUrl(widgetUrl);
-        expect(repository.getByUrl(widgetUrl)).andReturn(widget);
-        replay(repository);
+        expect(widgetRepository.getByUrl(widgetUrl)).andReturn(widget);
+        replay(widgetRepository);
 
-        Widget result = service.getWidgetByUrl(widgetUrl);
+        Widget result = widgetService.getWidgetByUrl(widgetUrl);
         assertNotNull(result);
         assertEquals(result.getUrl(), widgetUrl);
+        verify(widgetRepository);
     }
 
     @Test
     public void registerNewWidget() {
-        final String widgetUrl =
-                "http://example.com/newwidget.xml";
+        final String widgetUrl = "http://example.com/newwidget.xml";
         Widget widget = new Widget();
         widget.setUrl(widgetUrl);
-        expect(repository.getByUrl(widgetUrl)).andReturn(null);
-        expect(repository.save(widget)).andReturn(widget);
-        replay(repository);
+        expect(widgetRepository.getByUrl(widgetUrl)).andReturn(null);
+        expect(widgetRepository.save(widget)).andReturn(widget);
+        replay(widgetRepository);
 
-        Widget savedWidget = service.registerNewWidget(widget);
+        Widget savedWidget = widgetService.registerNewWidget(widget);
         assertNotNull(savedWidget);
         assertEquals(widget.getEntityId(), savedWidget.getEntityId());
+        
+        verify(widgetRepository);
     }
 
     @Test
@@ -239,11 +237,12 @@ public class DefaultWidgetServiceTest {
                 "http://hosting.gmodules.com/ig/gadgets/file/112581010116074801021/hamster.xml";
         Widget widget = new Widget();
         widget.setUrl(widgetUrl);
-        expect(repository.getByUrl(widgetUrl)).andReturn(widget);
-        replay(repository);
+        expect(widgetRepository.getByUrl(widgetUrl)).andReturn(widget);
+        replay(widgetRepository);
 
-        Widget noWidget = service.registerNewWidget(widget);
+        Widget noWidget = widgetService.registerNewWidget(widget);
         assertNull("Widget already exists", noWidget);
+        verify(widgetRepository);
     }
 
     @Test
@@ -252,31 +251,31 @@ public class DefaultWidgetServiceTest {
                 "http://hosting.gmodules.com/ig/gadgets/file/112581010116074801021/hamster.xml";
         Widget widget = new Widget();
         widget.setUrl(widgetUrl);
-        expect(repository.save(widget)).andReturn(widget).once();
-        replay(repository);
+        expect(widgetRepository.save(widget)).andReturn(widget).once();
+        replay(widgetRepository);
 
-        service.updateWidget(widget);
-        verify(repository);
+        widgetService.updateWidget(widget);
+        verify(widgetRepository);
 
         assertTrue("Save called", true);
     }
 
     @Test
     public void widgetStatistics() {
-        expect(repository.getWidgetStatistics(1L, 1L)).andReturn(new WidgetStatistics());
-        replay(repository);
+        expect(widgetRepository.getWidgetStatistics(1L, 1L)).andReturn(new WidgetStatistics());
+        replay(widgetRepository);
 
-        service.getWidgetStatistics(1L, 1L);
-        verify(repository);
+        widgetService.getWidgetStatistics(1L, 1L);
+        verify(widgetRepository);
     }
 
 
     @Test
     public void allWidgetStatistics() {
-        expect(repository.getAllWidgetStatistics(1L)).andReturn(new HashMap<Long, WidgetStatistics>());
-        replay(repository);
+        expect(widgetRepository.getAllWidgetStatistics(1L)).andReturn(new HashMap<Long, WidgetStatistics>());
+        replay(widgetRepository);
 
-        service.getAllWidgetStatistics(1L);
-        verify(repository);
+        widgetService.getAllWidgetStatistics(1L);
+        verify(widgetRepository);
     }
 }

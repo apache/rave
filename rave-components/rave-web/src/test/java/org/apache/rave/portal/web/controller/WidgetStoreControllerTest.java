@@ -20,6 +20,8 @@
 package org.apache.rave.portal.web.controller;
 
 
+import java.util.HashMap;
+import org.apache.rave.portal.model.util.WidgetStatistics;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.Widget;
 import org.apache.rave.portal.model.WidgetStatus;
@@ -41,18 +43,12 @@ import java.util.List;
 import java.util.Map;
 
 import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertNull;
-import static junit.framework.Assert.assertTrue;
-import static org.easymock.EasyMock.createNiceMock;
+import static org.easymock.EasyMock.*;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.sameInstance;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.*;
 
 
 /**
@@ -64,14 +60,23 @@ public class WidgetStoreControllerTest {
     private static final long REFERRER_ID = 35L;
     private WidgetStoreController controller;
     private WidgetService widgetService;
+    
+    private User validUser;
+    private WidgetStatistics widgetStatistics;
+    private Map<Long, WidgetStatistics> allWidgetStatisticsMap;
 
     @Before
     public void setup() {
-        widgetService = createNiceMock(WidgetService.class);
-        UserService userService = createNiceMock(UserService.class);
-        User user = new User();
-        user.setEntityId(1L);
-        expect(userService.getAuthenticatedUser()).andReturn(user);
+        validUser = new User();
+        validUser.setEntityId(1L);
+        widgetStatistics = new WidgetStatistics();
+        
+        allWidgetStatisticsMap = new HashMap<Long, WidgetStatistics>();
+        allWidgetStatisticsMap.put(WIDGET_ID, widgetStatistics);
+        
+        widgetService = createMock(WidgetService.class);
+        UserService userService = createMock(UserService.class);        
+        expect(userService.getAuthenticatedUser()).andReturn(validUser);
         replay(userService);
         NewWidgetValidator widgetValidator = new NewWidgetValidator();
         controller = new WidgetStoreController(widgetService, widgetValidator, userService);
@@ -85,6 +90,7 @@ public class WidgetStoreControllerTest {
         SearchResult<Widget> emptyResult = new SearchResult<Widget>(widgets, 0);
 
         expect(widgetService.getPublishedWidgets(0, 10)).andReturn(emptyResult);
+        expect(widgetService.getAllWidgetStatistics(validUser.getEntityId())).andReturn(allWidgetStatisticsMap);
         replay(widgetService);
 
         String view = controller.view(model, REFERRER_ID, 0);
@@ -102,6 +108,7 @@ public class WidgetStoreControllerTest {
         Widget w = new Widget(1L, "http://example.com/widget.xml");
 
         expect(widgetService.getWidget(WIDGET_ID)).andReturn(w);
+        expect(widgetService.getWidgetStatistics(WIDGET_ID, validUser.getEntityId())).andReturn(widgetStatistics);
         replay(widgetService);
 
         String view = controller.viewWidget(model, WIDGET_ID, REFERRER_ID);
@@ -129,8 +136,8 @@ public class WidgetStoreControllerTest {
         SearchResult<Widget> result = new SearchResult<Widget>(widgets, totalResults);
         result.setPageSize(pagesize);
 
-        expect(widgetService.getPublishedWidgetsByFreeTextSearch(searchTerm, offset, pagesize))
-                .andReturn(result);
+        expect(widgetService.getPublishedWidgetsByFreeTextSearch(searchTerm, offset, pagesize)).andReturn(result);
+        expect(widgetService.getAllWidgetStatistics(validUser.getEntityId())).andReturn(allWidgetStatisticsMap);
         replay(widgetService);
 
         String view = controller.viewSearchResult(model, REFERRER_ID, searchTerm, offset);
@@ -165,6 +172,7 @@ public class WidgetStoreControllerTest {
         final BindingResult errors = new BeanPropertyBindingResult(widget, "widget");
 
         expect(widgetService.registerNewWidget(widget)).andReturn(widget);
+        expect(widgetService.getWidgetStatistics(WIDGET_ID, validUser.getEntityId())).andReturn(widgetStatistics);
         replay(widgetService);
         String view = controller.viewAddWidgetResult(widget, errors, model);
         verify(widgetService);
@@ -186,7 +194,7 @@ public class WidgetStoreControllerTest {
         widget.setType("OpenSocial");
         final BindingResult errors = new BeanPropertyBindingResult(widget, "widget");
 
-        expect(widgetService.registerNewWidget(widget)).andReturn(null);
+        expect(widgetService.registerNewWidget(widget)).andReturn(null);        
         replay(widgetService);
         String view = controller.viewAddWidgetResult(widget, errors, model);
         verify(widgetService);
