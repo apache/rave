@@ -27,6 +27,6 @@ public interface RegionService {
       * Register a new region
       * @param region the region object to register
       */
-     @PreAuthorize("hasPermission(#region.regionId, 'org.apache.rave.portal.model.Region', 'create')")
+     @PreAuthorize("hasPermission(#region.entityId, 'org.apache.rave.portal.model.Region', 'create')")
      void registerNewRegion(Region region);
 }
