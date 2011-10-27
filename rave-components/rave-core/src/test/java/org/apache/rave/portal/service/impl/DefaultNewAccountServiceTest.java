@@ -19,6 +19,12 @@
 
 package org.apache.rave.portal.service.impl;
 
+import org.springframework.security.core.GrantedAuthority;
+import java.util.ArrayList;
+import java.util.List;
+import org.apache.rave.portal.model.util.SearchResult;
+import org.apache.rave.portal.model.Authority;
+import org.apache.rave.portal.service.AuthorityService;
 import org.apache.rave.portal.model.NewUser;
 import org.apache.rave.portal.model.PageLayout;
 import org.apache.rave.portal.model.User;
@@ -48,6 +54,7 @@ public class DefaultNewAccountServiceTest {
     private PageService pageService;
     private RegionService regionService;
     private NewAccountService newAccountService;
+    private AuthorityService authorityService;
     private SaltSource saltSource;
     private UserDetails userDetails;
     private PasswordEncoder passwordEncoder;
@@ -57,6 +64,8 @@ public class DefaultNewAccountServiceTest {
     private final String VALID_LAYOUT_CODE = "valid.layout";
     private final String VALID_EMAIL = "valid.email";
     private PageLayout validPageLayout;
+    private SearchResult<Authority> validAuthoritySearchResult;
+    private List<Authority> validAuthorityList;
     
     private final Logger logger = LoggerFactory.getLogger(DefaultNewAccountServiceTest.class);
 
@@ -69,13 +78,24 @@ public class DefaultNewAccountServiceTest {
         saltSource = createMock(SaltSource.class);
         userDetails = createMock(UserDetails.class);
         passwordEncoder = createMock(PasswordEncoder.class);
+        authorityService = createMock(AuthorityService.class);
 
-        newAccountService = new DefaultNewAccountService(userService, pageService, pageLayoutService, regionService);
+        newAccountService = new DefaultNewAccountService(userService, pageService, pageLayoutService, regionService, authorityService);
         
         validPageLayout = new PageLayout();
         validPageLayout.setEntityId(99L);
         validPageLayout.setNumberOfRegions(4L);
         validPageLayout.setCode(VALID_LAYOUT_CODE);
+        
+        Authority role1 = new Authority();
+        role1.setAuthority("DEFAULT_ROLE1");
+        Authority role2 = new Authority();
+        role2.setAuthority("DEFAULT_ROLE2");
+        
+        validAuthorityList = new ArrayList<Authority>();
+        validAuthorityList.add(role1);
+        validAuthorityList.add(role2);
+        validAuthoritySearchResult = new SearchResult<Authority>(validAuthorityList, validAuthorityList.size());        
     }    
     
     @Test
@@ -104,9 +124,10 @@ public class DefaultNewAccountServiceTest {
         expect(userService.getUserByUsername(VALID_USER)).andReturn(null);
         expect(userService.getUserByEmail(VALID_EMAIL)).andReturn(null);                
         expect(pageLayoutService.getPageLayoutByCode(VALID_LAYOUT_CODE)).andReturn(validPageLayout);        
+        expect(authorityService.getDefaultAuthorities()).andReturn(validAuthoritySearchResult);
         userService.registerNewUser(expectedUser);  
         expectLastCall();                
-        replay(saltSource, userDetails, passwordEncoder, userService, pageLayoutService);        
+        replay(saltSource, userDetails, passwordEncoder, userService, pageLayoutService, authorityService);        
                
         newAccountService.createNewAccount(newUser);
         

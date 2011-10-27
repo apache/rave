@@ -739,18 +739,18 @@ UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @w
 
 -- authorities
 set @next_authority_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @granted_authority_seq);
-insert into granted_authority (entity_id, authority)
-values (@next_authority_id, 'user');
+insert into granted_authority (entity_id, authority, default_for_new_user)
+values (@next_authority_id, 'user', true);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @granted_authority_seq;
 
 set @next_authority_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @granted_authority_seq);
-insert into granted_authority (entity_id, authority)
-values (@next_authority_id, 'manager');
+insert into granted_authority (entity_id, authority, default_for_new_user)
+values (@next_authority_id, 'manager', false);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @granted_authority_seq;
 
 set @next_authority_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @granted_authority_seq);
-insert into granted_authority (entity_id, authority)
-values (@next_authority_id, 'administrator');
+insert into granted_authority (entity_id, authority, default_for_new_user)
+values (@next_authority_id, 'administrator', false);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @granted_authority_seq;
 
 -- end authorities

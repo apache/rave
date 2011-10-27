@@ -33,11 +33,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertNull;
-import static junit.framework.Assert.assertTrue;
+import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.*;
 
 /**
  *
@@ -125,6 +122,15 @@ public class JpaAuthorityRepositoryTest {
         List<Authority> allAuthorities = repository.getAll();
         assertFalse("Found authorities", allAuthorities.isEmpty());
     }
+    
+    @Test
+    public void getAllDefault() {
+        List<Authority> allAuthorities = repository.getAllDefault();
+        assertThat(allAuthorities.isEmpty(), is(false));
+        for (Authority authority : allAuthorities) {
+            assertThat(authority.isDefaultForNewUser(), is(true));
+        }        
+    }    
 
     @Test
     public void countAll() {

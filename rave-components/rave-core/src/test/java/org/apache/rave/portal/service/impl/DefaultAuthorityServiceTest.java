@@ -30,12 +30,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.rave.portal.service.AuthorityService;
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNull;
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
+import static org.easymock.EasyMock.*;
+
+import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.*;
 
 /**
 Test for {@link org.apache.rave.portal.service.impl.DefaultAuthorityService}
@@ -117,5 +115,27 @@ public class DefaultAuthorityServiceTest {
 
         assertEquals(2, allAuthorities.getTotalResults());
         assertEquals(2, allAuthorities.getResultSet().size());
+    }
+    
+    @Test
+    public void test_getAllDefault() {
+        List<Authority> authorities = new ArrayList<Authority>();
+        Authority foo = new Authority();
+        foo.setAuthority("FOO");
+        foo.setDefaultForNewUser(true);
+        Authority bar = new Authority();
+        bar.setAuthority("BAR");
+        bar.setDefaultForNewUser(true);
+        
+        authorities.add(foo);
+        authorities.add(bar);
+
+        expect(repository.getAllDefault()).andReturn(authorities);
+        replay(repository);
+        SearchResult<Authority> defaultAuthorities = service.getDefaultAuthorities();
+        verify(repository);
+
+        assertThat(defaultAuthorities.getTotalResults(), is(2));
+        assertThat(defaultAuthorities.getResultSet().size(), is(2));
     }
 }

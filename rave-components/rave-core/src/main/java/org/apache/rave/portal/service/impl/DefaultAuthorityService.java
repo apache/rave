@@ -55,4 +55,10 @@ public class DefaultAuthorityService implements AuthorityService {
         final List<Authority> authorities = repository.getAll();
         return new SearchResult<Authority>(authorities, count);
     }
+    
+    @Override
+    public SearchResult<Authority> getDefaultAuthorities() {       
+        final List<Authority> authorities = repository.getAllDefault();
+        return new SearchResult<Authority>(authorities, authorities.size());
+    }    
 }

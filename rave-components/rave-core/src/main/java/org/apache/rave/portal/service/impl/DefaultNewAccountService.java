@@ -21,6 +21,7 @@ package org.apache.rave.portal.service.impl;
 
 import org.apache.rave.portal.model.NewUser;
 import org.apache.rave.portal.model.User;
+import org.apache.rave.portal.service.AuthorityService;
 import org.apache.rave.portal.service.NewAccountService;
 import org.apache.rave.portal.service.PageLayoutService;
 import org.apache.rave.portal.service.PageService;
@@ -43,6 +44,7 @@ public class DefaultNewAccountService implements NewAccountService {
     // TODO RAVE-236 why are these unused PageLayoutService and RegionService declared?
     private final PageLayoutService pageLayoutService;
     private final RegionService regionService;
+    private final AuthorityService authorityService;
 
     @Autowired 
     private SaltSource saltSource;
@@ -51,11 +53,16 @@ public class DefaultNewAccountService implements NewAccountService {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    public DefaultNewAccountService(UserService userService, PageService pageService, PageLayoutService pageLayoutService, RegionService regionService) {
+    public DefaultNewAccountService(UserService userService, 
+                                    PageService pageService, 
+                                    PageLayoutService pageLayoutService, 
+                                    RegionService regionService,
+                                    AuthorityService authorityService) {
         this.userService = userService;
         this.pageService = pageService;
         this.pageLayoutService = pageLayoutService;
         this.regionService = regionService;
+        this.authorityService = authorityService;
     }
 
     @Override
@@ -80,7 +87,8 @@ public class DefaultNewAccountService implements NewAccountService {
         user.setExpired(false);
         user.setLocked(false);
         user.setEnabled(true);
-        user.setDefaultPageLayout(pageLayoutService.getPageLayoutByCode(defaultPageLayoutCode));
+        user.setDefaultPageLayout(pageLayoutService.getPageLayoutByCode(defaultPageLayoutCode));        
+        user.setAuthorities(authorityService.getDefaultAuthorities().getResultSet());                
         userService.registerNewUser(user);  
     }
 

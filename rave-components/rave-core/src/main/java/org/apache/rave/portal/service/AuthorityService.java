@@ -40,4 +40,10 @@ public interface AuthorityService {
      * @return a {@link SearchResult} with all {@link Authority}'s
      */
     SearchResult<Authority> getAllAuthorities();
+    
+     /**
+     * @return a {@link SearchResult} with the list of all default 
+     * {@link Authority}'s
+     */
+    SearchResult<Authority> getDefaultAuthorities();
 }

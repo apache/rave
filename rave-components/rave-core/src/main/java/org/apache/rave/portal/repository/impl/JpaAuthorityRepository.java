@@ -53,6 +53,12 @@ public class JpaAuthorityRepository extends AbstractJpaRepository<Authority>
         TypedQuery<Authority> query = manager.createNamedQuery(Authority.GET_ALL, Authority.class);
         return query.getResultList();
     }
+    
+    @Override
+    public List<Authority> getAllDefault() {
+        TypedQuery<Authority> query = manager.createNamedQuery(Authority.GET_ALL_DEFAULT, Authority.class);
+        return query.getResultList();
+    }    
 
     @Override
     public int getCountAll() {

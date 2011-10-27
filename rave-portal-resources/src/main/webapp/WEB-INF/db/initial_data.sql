@@ -729,13 +729,13 @@ UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @r
 
 -- authorities
 set @user_authority_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @granted_authority_seq);
-insert into granted_authority (entity_id, authority)
-values (@user_authority_id, 'ROLE_USER');
+insert into granted_authority (entity_id, authority, default_for_new_user)
+values (@user_authority_id, 'ROLE_USER', true);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @granted_authority_seq;
 
 set @admin_authority_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @granted_authority_seq);
-insert into granted_authority (entity_id, authority)
-values (@admin_authority_id, 'ROLE_ADMIN');
+insert into granted_authority (entity_id, authority, default_for_new_user)
+values (@admin_authority_id, 'ROLE_ADMIN', false);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @granted_authority_seq;
 
 -- end authorities

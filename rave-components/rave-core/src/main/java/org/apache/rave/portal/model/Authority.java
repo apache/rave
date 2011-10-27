@@ -47,6 +47,7 @@ import java.util.Collection;
 @NamedQueries({
         @NamedQuery(name = Authority.GET_BY_AUTHORITY_NAME, query = "SELECT a FROM Authority a WHERE a.authority = :authority"),
         @NamedQuery(name = Authority.GET_ALL, query = "SELECT a FROM Authority a"),
+        @NamedQuery(name = Authority.GET_ALL_DEFAULT, query = "SELECT a FROM Authority a WHERE a.defaultForNewUser = true"),
         @NamedQuery(name = Authority.COUNT_ALL, query = "SELECT COUNT(a) FROM Authority a")
 })
 public class Authority implements GrantedAuthority, BasicEntity, Serializable {
@@ -56,6 +57,7 @@ public class Authority implements GrantedAuthority, BasicEntity, Serializable {
     public static final String PARAM_AUTHORITY_NAME = "authority";
     public static final String GET_BY_AUTHORITY_NAME = "Authority.GetByAuthorityName";
     public static final String GET_ALL = "Authority.GetAll";
+    public static final String GET_ALL_DEFAULT = "Authority.GetAllDefault";
     public static final String COUNT_ALL = "Authority.CountAll";
 
     @Id
@@ -69,9 +71,12 @@ public class Authority implements GrantedAuthority, BasicEntity, Serializable {
     @Column(name = "authority", unique = true)
     private String authority;
 
-
     @ManyToMany(mappedBy = "authorities", fetch = FetchType.LAZY)
     private Collection<User> users;
+    
+    @Basic
+    @Column(name = "default_for_new_user")
+    private boolean defaultForNewUser;
 
     /**
      * Default constructor, needed for JPA
@@ -98,6 +103,14 @@ public class Authority implements GrantedAuthority, BasicEntity, Serializable {
     public void setAuthority(String authority) {
         this.authority = authority;
     }
+    
+    public boolean isDefaultForNewUser() {
+        return defaultForNewUser;
+    }    
+    
+    public void setDefaultForNewUser(boolean defaultForNewUser) {
+        this.defaultForNewUser = defaultForNewUser;
+    }    
 
     public Collection<User> getUsers() {
         return users;
@@ -149,5 +162,4 @@ public class Authority implements GrantedAuthority, BasicEntity, Serializable {
     public int hashCode() {
         return entityId != null ? entityId.hashCode() : 0;
     }
-
 }

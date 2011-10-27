@@ -41,6 +41,11 @@ public interface AuthorityRepository extends Repository<Authority> {
      * @return a List of all {@link Authority}'s.
      */
     List<Authority> getAll();
+    
+    /**
+     * @return a List of all default {@link Authority}'s.
+     */
+    List<Authority> getAllDefault();
 
     /**
      * @return the total number of authorities in the repository
