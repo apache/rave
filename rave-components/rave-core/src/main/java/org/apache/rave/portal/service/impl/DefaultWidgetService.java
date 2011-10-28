@@ -33,6 +33,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class DefaultWidgetService implements WidgetService {
@@ -122,11 +123,12 @@ public class DefaultWidgetService implements WidgetService {
     }
 
     @Override
+    @Transactional
     public Widget registerNewWidget(Widget widget) {
         if (getWidgetByUrl(widget.getUrl()) != null) {
             logger.debug("Trying to add an existing widget for url {}", widget.getUrl());
             return null;
-        }
+        }                      
         return widgetRepository.save(widget);
     }
 
@@ -141,6 +143,7 @@ public class DefaultWidgetService implements WidgetService {
     }
 
     @Override
+    @Transactional
     public void updateWidget(Widget widget) {
         widgetRepository.save(widget);
     }

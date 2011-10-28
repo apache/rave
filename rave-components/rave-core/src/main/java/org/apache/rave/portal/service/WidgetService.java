@@ -119,12 +119,8 @@ public interface WidgetService {
      *
      * @param widget new Widget to store
      * @return Widget if it is new and can be stored, otherwise {@literal null}
-     * 
-     * TODO: change the security annotation to:
-     * @PostAuthorize("hasPermission(returnObject, 'create')") 
-     * once RAVE-319 has been resolved
      */        
-    @PreAuthorize("hasPermission(new org.apache.rave.portal.security.impl.RaveSecurityContext(#widget.owner.entityId, 'org.apache.rave.portal.model.User'), 'org.apache.rave.portal.model.Widget', 'create')")    
+    @PostAuthorize("hasPermission(returnObject, 'create')") 
     Widget registerNewWidget(Widget widget);
     
     /**
