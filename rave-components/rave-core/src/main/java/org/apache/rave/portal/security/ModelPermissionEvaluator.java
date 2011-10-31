@@ -19,8 +19,9 @@
 
 package org.apache.rave.portal.security;
 
-import java.io.Serializable;
 import org.springframework.security.core.Authentication;
+
+import java.io.Serializable;
 
 /**
  *
@@ -37,7 +38,8 @@ public interface ModelPermissionEvaluator<T> {
         CREATE,        
         DELETE,
         READ,
-        UPDATE;
+        UPDATE,
+        CREATE_OR_UPDATE;
 
         /**
          * Returns the equivalent Permission enum from the supplied string

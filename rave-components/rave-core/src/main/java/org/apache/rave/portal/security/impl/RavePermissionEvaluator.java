@@ -19,18 +19,16 @@
 
 package org.apache.rave.portal.security.impl;
 
-import java.io.Serializable;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import org.apache.rave.persistence.BasicEntity;
 import org.apache.rave.portal.security.ModelPermissionEvaluator;
 import org.apache.rave.portal.security.ModelPermissionEvaluator.Permission;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
+
+import java.io.Serializable;
+import java.util.*;
 
 /**
  * Custom PermissionEvaluator for Rave that stores a map of ModelPermissionEvaluators
@@ -80,16 +78,17 @@ public class RavePermissionEvaluator implements PermissionEvaluator {
      * 
      * @param authentication the Authentication object
      * @param targetDomainObject the domain object needing permission check
-     * @param permission the permission to check
+     * @param permissionString the permission to check
      * @return true if passes the permission check, false otherwise
      */
     @Override
-    public boolean hasPermission(Authentication authentication, Object targetDomainObject, Object permission) {      
-        // find the appropriate ModelPermissionEvaluator from the map based on 
+    public boolean hasPermission(Authentication authentication, Object targetDomainObject, Object permissionString) {
+        // find the appropriate ModelPermissionEvaluator from the map based on
         // the targetDomainObject's class and invoke the hasPermission function
-        return getEvaluator(targetDomainObject.getClass().getName()).hasPermission(authentication, targetDomainObject, Permission.fromString((String)permission));
+        return getEvaluator(targetDomainObject.getClass().getName()).hasPermission(authentication, targetDomainObject,
+                getPermission(targetDomainObject, (String) permissionString));
     }
-   
+
     /**
      * Checks to see if the Authentication object has the supplied permission 
      * on the supplied targetType (model class name) and targetId (entityId).
@@ -99,14 +98,18 @@ public class RavePermissionEvaluator implements PermissionEvaluator {
      * @param authentication the Authentication object
      * @param targetId the entityId of the targetType class
      * @param targetType the class name of the domain object
-     * @param permission  permission the permission to check
+     * @param permissionString  permission the permission to check
      * @return true if passes the permission check, false otherwise
      */
     @Override
-    public boolean hasPermission(Authentication authentication, Serializable targetId, String targetType, Object permission) {  
+    public boolean hasPermission(Authentication authentication, Serializable targetId, String targetType, Object permissionString) {
         // find the appropriate ModelPermissionEvaluator from the map based on 
         // the targetType and invoke the hasPermission function
-        return getEvaluator(targetType).hasPermission(authentication, targetId, targetType, Permission.fromString((String)permission));
+        Permission permission = Permission.fromString((String) permissionString);
+        if (permission == Permission.CREATE_OR_UPDATE) {
+            throw new IllegalArgumentException("CREATE_OR_UPDATE not supported in this context.");
+        }
+        return getEvaluator(targetType).hasPermission(authentication, targetId, targetType, permission);
     }    
      
     private ModelPermissionEvaluator getEvaluator(String targetType) throws IllegalArgumentException {        
@@ -115,5 +118,22 @@ public class RavePermissionEvaluator implements PermissionEvaluator {
             throw new IllegalArgumentException("ModelPermissionEvaluator not found for type " + targetType);
         }
         return mpe;
+    }
+
+    private Permission getPermission(Object targetDomainObject, String permissionString) {
+        Permission permission = Permission.fromString((String) permissionString);
+        if (permission.equals(Permission.CREATE_OR_UPDATE)) {
+            if (targetDomainObject instanceof BasicEntity) {
+                Long id = ((BasicEntity) targetDomainObject).getEntityId();
+                if (id == null) {
+                    permission = Permission.CREATE;
+                } else {
+                    permission = Permission.UPDATE;
+                }
+            } else {
+                throw new IllegalArgumentException("CREATE_OR_UPDATE is currently only supported for BasicEntity types");
+            }
+        }
+        return permission;
     }
 }

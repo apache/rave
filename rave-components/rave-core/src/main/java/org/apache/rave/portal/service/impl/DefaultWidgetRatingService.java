@@ -24,6 +24,7 @@ import org.apache.rave.portal.repository.WidgetRatingRepository;
 import org.apache.rave.portal.service.WidgetRatingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Default implementation for {@link org.apache.rave.portal.service.WidgetRatingService}
@@ -44,23 +45,23 @@ public class DefaultWidgetRatingService implements WidgetRatingService {
     }
 
     @Override
-    public void updateScore(WidgetRating widgetRating, Integer score) {
-        widgetRating.setScore(score);
-        repository.save(widgetRating);
-    }
-
-    @Override
-    public void saveWidgetRating(WidgetRating rating) {
-        WidgetRating existingRating = getByWidgetIdAndUserId(rating.getWidgetId(), rating.getUserId());
-        if (existingRating == null) {
-            repository.save(rating);
+    @Transactional
+    public void saveWidgetRating(Long widgetId, Integer score, Long userId) {
+        WidgetRating rating = getByWidgetIdAndUserId(widgetId, userId);
+        if (rating == null) {
+            rating = new WidgetRating();
+            rating.setScore(score);
+            rating.setUserId(userId);
+            rating.setWidgetId(widgetId);
         } else {
-            updateScore(existingRating, rating.getScore());
+            rating.setScore(score);
         }
+        repository.save(rating);
     }
 
     @Override
-    public void removeWidgetRating(long widgetId, long userId) {
+    @Transactional
+    public void removeWidgetRating(Long widgetId, Long userId) {
         WidgetRating widgetRating = repository.getByWidgetIdAndUserId(widgetId, userId);
         if (widgetRating == null) {
             return;

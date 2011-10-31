@@ -20,7 +20,6 @@
 package org.apache.rave.portal.web.api.rest;
 
 import org.apache.rave.portal.model.User;
-import org.apache.rave.portal.model.WidgetRating;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.portal.service.WidgetRatingService;
 import org.junit.Before;
@@ -28,11 +27,7 @@ import org.junit.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.mock.web.MockHttpServletResponse;
 
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.expectLastCall;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
+import static org.easymock.EasyMock.*;
 
 public class WidgetApiTest {
     private WidgetApi widgetApi;
@@ -74,11 +69,7 @@ public class WidgetApiTest {
     
     @Test
     public void updateWidgetRating() {
-        WidgetRating widgetRating = new WidgetRating();
-        widgetRating.setScore(5);
-        widgetRating.setUserId(2L);
-        widgetRating.setWidgetId(1L);
-        widgetRatingService.saveWidgetRating(widgetRating);
+        widgetRatingService.saveWidgetRating(1L, 5, 2L);
         expectLastCall();
         replay(widgetRatingService);
         

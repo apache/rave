@@ -19,7 +19,6 @@
 
 package org.apache.rave.portal.web.api.rest;
 
-import org.apache.rave.portal.model.WidgetRating;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.portal.service.WidgetRatingService;
 import org.slf4j.Logger;
@@ -73,12 +72,7 @@ public class WidgetApi extends AbstractRestApi {
                                     @RequestParam(value = "score") Integer score,
                                     HttpServletResponse response) {
         logger.debug("POST WidgetRating received for /api/rest/widgets/{} score: {}", widgetId, score);
-
-        WidgetRating widgetRating = new WidgetRating();
-        widgetRating.setScore(score);
-        widgetRating.setUserId(userService.getAuthenticatedUser().getEntityId());
-        widgetRating.setWidgetId(widgetId);
-        widgetRatingService.saveWidgetRating(widgetRating);
+        widgetRatingService.saveWidgetRating(widgetId, score, userService.getAuthenticatedUser().getEntityId());
         
         // send a 204 back for success since there is no content being returned
         response.setStatus(HttpStatus.NO_CONTENT.value());

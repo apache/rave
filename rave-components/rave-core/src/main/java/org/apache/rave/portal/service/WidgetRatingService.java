@@ -20,6 +20,7 @@
 package org.apache.rave.portal.service;
 
 import org.apache.rave.portal.model.WidgetRating;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 /**
  * Interface for {@link org.apache.rave.portal.model.WidgetRating}
@@ -33,22 +34,18 @@ public interface WidgetRatingService {
      * @param userId   unique identifier for a User
      * @return WidgetRating or {@link null} if there is no such combination
      */
+    @PreAuthorize("hasPermission(new org.apache.rave.portal.security.impl.RaveSecurityContext(#userId, 'org.apache.rave.portal.model.User'), 'org.apache.rave.portal.model.WidgetRating', 'read')")
     WidgetRating getByWidgetIdAndUserId(Long widgetId, Long userId);
-
-    /**
-     * Updates the score of a {@link WidgetRating}
-     *
-     * @param widgetRating WidgetRating
-     * @param score        value of the rating
-     */
-    void updateScore(WidgetRating widgetRating, Integer score);
 
     /**
      * Saves a {@link WidgetRating} for a widget
      *
-     * @param rating   WidgetRating
+     * @param widgetId unique identifier of a {@link org.apache.rave.portal.model.Widget}
+     * @param score    value of the rating
+     * @param userId   unique identifier of a {@link org.apache.rave.portal.model.User}
      */
-    void saveWidgetRating(WidgetRating rating);
+    @PreAuthorize("hasPermission(new org.apache.rave.portal.security.impl.RaveSecurityContext(#userId, 'org.apache.rave.portal.model.User'), 'org.apache.rave.portal.model.WidgetRating', 'create')")
+    void saveWidgetRating(Long widgetId, Integer score, Long userId);
 
     /**
      * Removes the rating of a widget
@@ -56,6 +53,7 @@ public interface WidgetRatingService {
      * @param widgetId unique identifier of a {@link org.apache.rave.portal.model.Widget}
      * @param userId   unique identifier of a {@link org.apache.rave.portal.model.User}
      */
-    void removeWidgetRating(long widgetId, long userId);
+    @PreAuthorize("hasPermission(new org.apache.rave.portal.security.impl.RaveSecurityContext(#userId, 'org.apache.rave.portal.model.User'), 'org.apache.rave.portal.model.WidgetRating', 'delete')")
+    void removeWidgetRating(Long widgetId, Long userId);
 
 }

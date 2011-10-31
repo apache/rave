@@ -1,0 +1,314 @@
+package org.apache.rave.portal.security.impl;
+
+import org.apache.rave.portal.model.User;
+import org.apache.rave.portal.model.WidgetRating;
+import org.apache.rave.portal.repository.WidgetRatingRepository;
+import org.apache.rave.portal.security.ModelPermissionEvaluator;
+import org.apache.rave.portal.security.util.AuthenticationUtils;
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.GrantedAuthorityImpl;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.easymock.EasyMock.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
+
+public class DefaultWidgetRatingPermissionEvaluatorTest {
+    private DefaultWidgetRatingPermissionEvaluator defaultWidgetRatingPermissionEvaluator;
+    private WidgetRatingRepository mockWidgetRatingRepository;
+    private Authentication mockAuthentication;
+    private List<GrantedAuthority> grantedAuthoritiesList;
+    private WidgetRating widgetRating;
+    private User user, user2;
+
+    private final Long VALID_USER_ID = 99L;
+    private final Long VALID_USER_ID2 = 100L;
+    private final String VALID_USERNAME = "john.doe";
+    private final String VALID_USERNAME2 = "jane.doe";
+    private final Long VALID_WIDGET_ID = 1L;
+    private final Long  VALID_WIDGET_RATING_ID = 1L;
+
+    @Before
+    public void setUp() {
+        mockWidgetRatingRepository = createMock(WidgetRatingRepository.class);
+        defaultWidgetRatingPermissionEvaluator = new DefaultWidgetRatingPermissionEvaluator(mockWidgetRatingRepository);
+
+        widgetRating = new WidgetRating();
+        widgetRating.setUserId(VALID_USER_ID);
+        widgetRating.setWidgetId(VALID_WIDGET_ID);
+        widgetRating.setEntityId(VALID_WIDGET_ID);
+
+        user = new User();
+        user.setUsername(VALID_USERNAME);
+        user.setEntityId(VALID_USER_ID);
+        user2 = new User();
+        user2.setEntityId(VALID_USER_ID2);
+        user2.setUsername(VALID_USERNAME2);
+
+        mockAuthentication = createMock(Authentication.class);
+        grantedAuthoritiesList = new ArrayList<GrantedAuthority>();
+        grantedAuthoritiesList.add(new GrantedAuthorityImpl("ROLE_USER"));
+
+    }
+
+    @Test
+    public void testGetType() throws ClassNotFoundException {
+        assertThat(defaultWidgetRatingPermissionEvaluator.getType().getName(), is(WidgetRating.class.getName()));
+    }
+
+    @Test
+    public void testHasPermission_3args_administer() {
+        expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
+        replay(mockAuthentication);
+        assertThat(defaultWidgetRatingPermissionEvaluator.hasPermission(mockAuthentication, widgetRating, ModelPermissionEvaluator.Permission.ADMINISTER), is(false));
+        verify(mockAuthentication);
+    }
+
+    // -------------------
+    @Test
+    public void testHasPermission_3args_administer_hasAdminRole() {
+        grantedAuthoritiesList.add(new GrantedAuthorityImpl(AuthenticationUtils.ROLE_ADMIN));
+        expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
+        replay(mockAuthentication);
+        assertThat(defaultWidgetRatingPermissionEvaluator.hasPermission(mockAuthentication, widgetRating, ModelPermissionEvaluator.Permission.ADMINISTER), is(true));
+        verify(mockAuthentication);
+    }
+
+    @Test
+    public void testHasPermission_3args_create_isWidgetRatingOwner() {
+        expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
+        expect(mockAuthentication.getPrincipal()).andReturn(user);
+        expect(mockWidgetRatingRepository.get(VALID_WIDGET_ID)).andReturn(widgetRating);
+        replay(mockAuthentication);
+        replay(mockWidgetRatingRepository);
+        assertThat(defaultWidgetRatingPermissionEvaluator.hasPermission(mockAuthentication, widgetRating, ModelPermissionEvaluator.Permission.CREATE), is(true));
+        verify(mockAuthentication);
+        verify(mockWidgetRatingRepository);
+    }
+
+    @Test
+    public void testHasPermission_3args_create_isNotWidgetRatingOwner() {
+        expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
+        expect(mockAuthentication.getPrincipal()).andReturn(user2);
+        expect(mockWidgetRatingRepository.get(VALID_WIDGET_ID)).andReturn(widgetRating);
+        replay(mockAuthentication);
+        replay(mockWidgetRatingRepository);
+        assertThat(defaultWidgetRatingPermissionEvaluator.hasPermission(mockAuthentication, widgetRating, ModelPermissionEvaluator.Permission.CREATE), is(false));
+        verify(mockAuthentication);
+        verify(mockWidgetRatingRepository);
+    }
+
+    @Test
+    public void testHasPermission_3args_delete_isWidgetRatingOwner() {
+        expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
+        expect(mockAuthentication.getPrincipal()).andReturn(user);
+        expect(mockWidgetRatingRepository.get(VALID_WIDGET_ID)).andReturn(widgetRating);
+        replay(mockAuthentication);
+        replay(mockWidgetRatingRepository);
+        assertThat(defaultWidgetRatingPermissionEvaluator.hasPermission(mockAuthentication, widgetRating, ModelPermissionEvaluator.Permission.DELETE), is(true));
+        verify(mockAuthentication);
+        verify(mockWidgetRatingRepository);
+    }
+
+    @Test
+    public void testHasPermission_3args_delete_isNotWidgetRatingOwner() {
+        expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
+        expect(mockAuthentication.getPrincipal()).andReturn(user2);
+        expect(mockWidgetRatingRepository.get(VALID_WIDGET_ID)).andReturn(widgetRating);
+        replay(mockAuthentication);
+        replay(mockWidgetRatingRepository);
+        assertThat(defaultWidgetRatingPermissionEvaluator.hasPermission(mockAuthentication, widgetRating, ModelPermissionEvaluator.Permission.DELETE), is(false));
+        verify(mockAuthentication);
+        verify(mockWidgetRatingRepository);
+    }
+
+    @Test
+    public void testHasPermission_3args_update_isWidgetRatingOwner() {
+        expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
+        expect(mockAuthentication.getPrincipal()).andReturn(user);
+        expect(mockWidgetRatingRepository.get(VALID_WIDGET_ID)).andReturn(widgetRating);
+        replay(mockAuthentication);
+        replay(mockWidgetRatingRepository);
+        assertThat(defaultWidgetRatingPermissionEvaluator.hasPermission(mockAuthentication, widgetRating, ModelPermissionEvaluator.Permission.UPDATE), is(true));
+        verify(mockAuthentication);
+        verify(mockWidgetRatingRepository);
+    }
+
+    @Test
+    public void testHasPermission_3args_update_isNotWidgetRatingOwner() {
+        expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
+        expect(mockAuthentication.getPrincipal()).andReturn(user2);
+        expect(mockWidgetRatingRepository.get(VALID_WIDGET_ID)).andReturn(widgetRating);
+        replay(mockAuthentication);
+        replay(mockWidgetRatingRepository);
+        assertThat(defaultWidgetRatingPermissionEvaluator.hasPermission(mockAuthentication, widgetRating, ModelPermissionEvaluator.Permission.UPDATE), is(false));
+        verify(mockAuthentication);
+        verify(mockWidgetRatingRepository);
+    }
+
+    @Test
+    public void testHasPermission_3args_read_isWidgetRatingOwner() {
+        expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
+        expect(mockAuthentication.getPrincipal()).andReturn(user);
+        expect(mockWidgetRatingRepository.get(VALID_WIDGET_ID)).andReturn(widgetRating);
+        replay(mockAuthentication);
+        replay(mockWidgetRatingRepository);
+        assertThat(defaultWidgetRatingPermissionEvaluator.hasPermission(mockAuthentication, widgetRating, ModelPermissionEvaluator.Permission.READ), is(true));
+        verify(mockAuthentication);
+        verify(mockWidgetRatingRepository);
+    }
+
+    @Test
+    public void testHasPermission_3args_read_isNotWidgetRatingOwner() {
+        expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
+        expect(mockAuthentication.getPrincipal()).andReturn(user2);
+        expect(mockWidgetRatingRepository.get(VALID_WIDGET_ID)).andReturn(widgetRating);
+        replay(mockAuthentication);
+        replay(mockWidgetRatingRepository);
+        assertThat(defaultWidgetRatingPermissionEvaluator.hasPermission(mockAuthentication, widgetRating, ModelPermissionEvaluator.Permission.READ), is(false));
+        verify(mockAuthentication);
+        verify(mockWidgetRatingRepository);
+    }
+
+    @Test
+    public void testHasPermission_4args_administer() {
+        expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
+        replay(mockAuthentication);
+        assertThat(defaultWidgetRatingPermissionEvaluator.hasPermission(mockAuthentication, VALID_WIDGET_RATING_ID, WidgetRating.class.getName(), ModelPermissionEvaluator.Permission.ADMINISTER), is(false));
+        verify(mockAuthentication);
+    }
+
+    @Test
+    public void testHasPermission_4args_create_isWidgetRatingOwner() {
+        expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
+        expect(mockAuthentication.getPrincipal()).andReturn(user);
+        expect(mockWidgetRatingRepository.get(VALID_WIDGET_RATING_ID)).andReturn(widgetRating);
+        replay(mockAuthentication);
+        replay(mockWidgetRatingRepository);
+        assertThat(defaultWidgetRatingPermissionEvaluator.hasPermission(mockAuthentication, VALID_WIDGET_RATING_ID, WidgetRating.class.getName(), ModelPermissionEvaluator.Permission.CREATE), is(true));
+        verify(mockAuthentication);
+        verify(mockWidgetRatingRepository);
+    }
+
+    @Test
+    public void testHasPermission_4args_create_isNotWidgetRatingOwner() {
+        expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
+        expect(mockAuthentication.getPrincipal()).andReturn(user2);
+        expect(mockWidgetRatingRepository.get(VALID_WIDGET_RATING_ID)).andReturn(widgetRating);
+        replay(mockAuthentication);
+        replay(mockWidgetRatingRepository);
+        assertThat(defaultWidgetRatingPermissionEvaluator.hasPermission(mockAuthentication, VALID_WIDGET_RATING_ID, WidgetRating.class.getName(), ModelPermissionEvaluator.Permission.CREATE), is(false));
+        verify(mockAuthentication);
+        verify(mockWidgetRatingRepository);
+    }
+
+    @Test
+    public void testHasPermission_4args_delete_isWidgetRatingOwner() {
+        expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
+        expect(mockAuthentication.getPrincipal()).andReturn(user);
+        expect(mockWidgetRatingRepository.get(VALID_WIDGET_RATING_ID)).andReturn(widgetRating);
+        replay(mockAuthentication);
+        replay(mockWidgetRatingRepository);
+        assertThat(defaultWidgetRatingPermissionEvaluator.hasPermission(mockAuthentication, VALID_WIDGET_RATING_ID, WidgetRating.class.getName(), ModelPermissionEvaluator.Permission.DELETE), is(true));
+        verify(mockAuthentication);
+        verify(mockWidgetRatingRepository);
+    }
+
+    @Test
+    public void testHasPermission_4args_delete_isNotWidgetRatingOwner() {
+        expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
+        expect(mockAuthentication.getPrincipal()).andReturn(user2);
+        expect(mockWidgetRatingRepository.get(VALID_WIDGET_RATING_ID)).andReturn(widgetRating);
+        replay(mockAuthentication);
+        replay(mockWidgetRatingRepository);
+        assertThat(defaultWidgetRatingPermissionEvaluator.hasPermission(mockAuthentication, VALID_WIDGET_RATING_ID, WidgetRating.class.getName(), ModelPermissionEvaluator.Permission.DELETE), is(false));
+        verify(mockAuthentication);
+        verify(mockWidgetRatingRepository);
+    }
+
+    @Test
+    public void testHasPermission_4args_read_isWidgetRatingOwner() {
+        expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
+        expect(mockAuthentication.getPrincipal()).andReturn(user);
+        expect(mockWidgetRatingRepository.get(VALID_WIDGET_RATING_ID)).andReturn(widgetRating);
+        replay(mockAuthentication);
+        replay(mockWidgetRatingRepository);
+        assertThat(defaultWidgetRatingPermissionEvaluator.hasPermission(mockAuthentication, VALID_WIDGET_RATING_ID, WidgetRating.class.getName(), ModelPermissionEvaluator.Permission.READ), is(true));
+        verify(mockAuthentication);
+        verify(mockWidgetRatingRepository);
+    }
+
+    @Test
+    public void testHasPermission_4args_read_isNotWidgetRatingOwner() {
+        expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
+        expect(mockAuthentication.getPrincipal()).andReturn(user2);
+        expect(mockWidgetRatingRepository.get(VALID_WIDGET_RATING_ID)).andReturn(widgetRating);
+        replay(mockAuthentication);
+        replay(mockWidgetRatingRepository);
+        assertThat(defaultWidgetRatingPermissionEvaluator.hasPermission(mockAuthentication, VALID_WIDGET_RATING_ID, WidgetRating.class.getName(), ModelPermissionEvaluator.Permission.READ), is(false));
+        verify(mockAuthentication);
+        verify(mockWidgetRatingRepository);
+    }
+
+    @Test
+    public void testHasPermission_4args_update_isWidgetRatingOwner() {
+        expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
+        expect(mockAuthentication.getPrincipal()).andReturn(user);
+        expect(mockWidgetRatingRepository.get(VALID_WIDGET_RATING_ID)).andReturn(widgetRating);
+        replay(mockAuthentication);
+        replay(mockWidgetRatingRepository);
+        assertThat(defaultWidgetRatingPermissionEvaluator.hasPermission(mockAuthentication, VALID_WIDGET_RATING_ID, WidgetRating.class.getName(), ModelPermissionEvaluator.Permission.UPDATE), is(true));
+        verify(mockAuthentication);
+        verify(mockWidgetRatingRepository);
+    }
+
+    @Test
+    public void testHasPermission_4args_update_isNotWidgetRatingOwner() {
+        expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
+        expect(mockAuthentication.getPrincipal()).andReturn(user2);
+        expect(mockWidgetRatingRepository.get(VALID_WIDGET_RATING_ID)).andReturn(widgetRating);
+        replay(mockAuthentication);
+        replay(mockWidgetRatingRepository);
+        assertThat(defaultWidgetRatingPermissionEvaluator.hasPermission(mockAuthentication, VALID_WIDGET_RATING_ID, WidgetRating.class.getName(), ModelPermissionEvaluator.Permission.UPDATE), is(false));
+        verify(mockAuthentication);
+        verify(mockWidgetRatingRepository);
+    }
+
+    @Test
+    public void testHasPermission_4args_update_isWidgetRatingOwner_withRaveSecurityContextObject() {
+        RaveSecurityContext raveSecurityContext = new RaveSecurityContext(VALID_USER_ID, "org.apache.rave.portal.model.User");
+
+        expect(mockAuthentication.getPrincipal()).andReturn(user);
+        replay(mockAuthentication);
+        assertThat(defaultWidgetRatingPermissionEvaluator.hasPermission(mockAuthentication, raveSecurityContext, WidgetRating.class.getName(), ModelPermissionEvaluator.Permission.UPDATE), is(true));
+        verify(mockAuthentication);
+    }
+
+    @Test(expected=IllegalArgumentException.class)
+    public void testHasPermission_4args_update_isWidgetRatingOwner_withInvalidRaveSecurityContextType() {
+        RaveSecurityContext raveSecurityContext = new RaveSecurityContext(VALID_USER_ID, "java.lang.String");
+
+        expect(mockAuthentication.getPrincipal()).andReturn(user);
+        replay(mockAuthentication);
+        defaultWidgetRatingPermissionEvaluator.hasPermission(mockAuthentication, raveSecurityContext, WidgetRating.class.getName(), ModelPermissionEvaluator.Permission.UPDATE);
+        verify(mockAuthentication);
+    }
+
+    @Test(expected=IllegalArgumentException.class)
+    public void testHasPermission_4args_update_isWidgetRatingOwner_withUnknownRaveSecurityContextType() {
+        RaveSecurityContext raveSecurityContext = new RaveSecurityContext(VALID_USER_ID, "foo.bar.DummyClass");
+
+        expect(mockAuthentication.getPrincipal()).andReturn(user);
+        replay(mockAuthentication);
+        defaultWidgetRatingPermissionEvaluator.hasPermission(mockAuthentication, raveSecurityContext, WidgetRating.class.getName(), ModelPermissionEvaluator.Permission.UPDATE);
+        verify(mockAuthentication);
+    }
+
+
+}
