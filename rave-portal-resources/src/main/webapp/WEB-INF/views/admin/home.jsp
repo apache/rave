@@ -28,7 +28,13 @@
 <rave:rave_generic_page pageTitle="${pagetitle}">
     <rave:header pageTitle="${pagetitle}"/>
     <rave:admin_tabsheader/>
-    <div id="pageContent">
-        <p>Content goes here</p>
+    <div class="pageContent">
+        <article class="admincontent">
+            <h2><fmt:message key="admin.home.subtitle"/></h2>
+            <fmt:message key="admin.home.intro"/>
+            <div class="clear-float">
+
+            </div>
+        </article>
     </div>
 </rave:rave_generic_page>

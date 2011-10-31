@@ -106,7 +106,7 @@
 
             </div>
 
-            <div style="clear:both;">
+            <div class="clear-float">
 
             </div>
 
