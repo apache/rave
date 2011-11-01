@@ -3,26 +3,31 @@ Apache Rave Change Log
 See http://issues.apache.org/jira/browse/RAVE-* (where * is the number of the issue below)
 
 
-Release Notes - Rave - Version 0.4-INCUBATING
+Release Notes - Rave - Version 0.5-INCUBATING
 ================================================================================================================
 
 ** Bug
-    * [RAVE-225] - Add widget form allows larger description size than database
-    * [RAVE-227] - Feedback text for empty searchresult in widget store shows placeholder instead of searchterm
-    * [RAVE-253] - Bug while change made to url property in portal.properties file
-    * [RAVE-260] - BasicEntity#getId() is incompatible with some Shindig interfaces
-    * [RAVE-275] - Duplicate jar: Guice
-
-** Improvement
-    * [RAVE-272] - Link from the gadget to the underlying service
+    * [RAVE-252] - error in result of osapi.people.getViewer when called in gadget
+    * [RAVE-291] - Exception in Render Service results in JSP exception
+    * [RAVE-292] - Security token encryption key cannot be read if its path contains a space
+    * [RAVE-298] - Page manipulations are unchecked
+    * [RAVE-313] - Incorrect dependency scopes for slf4j and log4j jars
+    * [RAVE-319] - Updating a Widget or Adding a New Widget is not working
+    * [RAVE-304] - Permissions based security for models
 
 ** Story
-    * [RAVE-54] - Support persisted minimization of widgets
-    * [RAVE-97] - Support Dynamic Layouts
-    * [RAVE-99] - Create ability to register new script blocks with Rave 
-    * [RAVE-170] - Rave's trunk code needs to support extensions outside the trunk
-    * [RAVE-201] - Update a Page (title and layout)
-    * [RAVE-244] - Create and document configuration for a different database setup
-    * [RAVE-250] - Rave needs a set of didactic gadgets to illustrate capabilities, support testing, and support 3rd party development 
-    * [RAVE-256] - As a user I want to export a page model so that I can use it elsewhere
-    * [RAVE-262] - Create annotation-based, declarative, object  locking implementation
+    * [RAVE-30] - Render W3C widgets on Page in iFrames
+    * [RAVE-304] - Permissions based security for models
+    * [RAVE-34] - Implement AppData
+    * [RAVE-116] - Create menu in gadget chrome
+    * [RAVE-245] - Integrate Cobertura maven plugin
+    * [RAVE-261] - Move widgets between pages
+    * [RAVE-269] - Widget Render Order
+    * [RAVE-293] - Create basic setup for portal administration pages
+    * [RAVE-300] - As a portal administrator I want to be able to manage User data other than my own
+    * [RAVE-301] - As a portal administrator I want to manage Widget settings
+
+** Task
+    * [RAVE-230] - Implement function requestNavigateTo
+    * [RAVE-232] - Add GrantedAuthorities to user
+    * [RAVE-314] - Add Dutch translations
