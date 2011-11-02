@@ -125,6 +125,24 @@
                 <c:if test="${not empty widget.description}">
                     <p class="storeWidgetDesc"><c:out value="${widget.description}"/></p>
                 </c:if>
+                
+                <div class="new-comment">
+                    <h3>Comment</h3>
+                    <textarea id="newComment-${widget.entityId}" rows="3" cols="50"> </textarea>
+                    
+                    <button id="comment-new-${widget.entityId}" class="commentNewButton"> </button>
+                </div>
+                <c:if test="${not empty widget.comments}">
+                    <c:forEach var="comment" items="${widget.comments}">
+                        <div id="comment-widget-${comment.widgetId}" class="comment">
+                            <c:if test="${userProfile.entityId == comment.user.entityId}">
+                                <button id="comment-delete-${comment.entityId}" class="commentDeleteButton" value="Delete"> </button>
+                                <button id="comment-edit-${comment.entityId}" class="commentEditButton" value="Edit"> </button>
+                            </c:if>
+                            <c:out value="${comment.user.username}"/> - <c:out value="${comment.text}"/> .. <c:out value="${comment.createdDate}"/>
+                        </div>
+                    </c:forEach>
+                </c:if>
             </div>
             
             <div class="widgetDetailRight">
@@ -140,6 +158,9 @@
             <div class="clear-float" >&nbsp;</div>
         </div>
     </div>
+    <div id="editComment-dialog" title="Edit Comment" style="display: none;">
+        <textarea id="editComment" rows="3" cols="50"> </textarea>
+    </div>
     <script src="//ajax.aspnetcdn.com/ajax/jQuery/jquery-1.6.1.min.js"></script>
     <script src="//ajax.aspnetcdn.com/ajax/jquery.ui/1.8.13/jquery-ui.min.js"></script>
     <script src="<spring:url value="/script/rave.js"/>"></script>
@@ -149,6 +170,7 @@
         $(function() {
             rave.setContext("<spring:url value="/app/" />");
             rave.store.init();
+            rave.store.initComments();
         });
     </script>
 

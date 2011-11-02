@@ -31,6 +31,7 @@ set @region_widget_seq = 'region_widget';
 set @user_seq = 'raveuser';
 set @widget_seq = 'widget';
 set @granted_authority_seq = 'granted_authority';
+set @widget_comment_seq = 'widget_comment';
 set @widget_rating_seq = 'widget_rating';
 
 CREATE TABLE IF NOT EXISTS RAVE_PORTAL_SEQUENCES (seq_name VARCHAR(255) PRIMARY KEY NOT NULL, seq_count BIGINT(19));
@@ -41,6 +42,7 @@ INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@region_widget_se
 INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values ('region_widget_preference', 1);
 INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@user_seq, 1);
 INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@widget_seq, 1);
+INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@widget_comment_seq, 1);
 INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@widget_rating_seq, 1);
 INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@granted_authority_seq, 1);
 
@@ -313,6 +315,16 @@ INSERT INTO region_widget(entity_id, widget_id, region_id, render_order, collaps
 values (@next_region_widget, @tabnews_widget_id, @page_2_region_2, 1, FALSE);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @region_widget_seq;
 
+set @next_widget_comment = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE Seq_name = @widget_comment_seq);
+INSERT INTO widget_comment(entity_id, widget_id, user_id, text)
+values (@next_widget_comment, 1, 1, 'test comment');
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @widget_comment_seq;
+
+
+set @next_widget_comment = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE Seq_name = @widget_comment_seq);
+INSERT INTO widget_comment(entity_id, widget_id, user_id, text)
+values (@next_widget_comment, 1, 1, 'another comment');
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @widget_comment_seq;
 --- End canonical user_id_1 layout ---
 
 --- Layout for user_id_2 ---

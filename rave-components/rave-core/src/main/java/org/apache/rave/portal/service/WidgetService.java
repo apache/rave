@@ -131,7 +131,7 @@ public interface WidgetService {
      * @return {@link WidgetStatistics} with the rating information
      */
     WidgetStatistics getWidgetStatistics(long widgetId, long userId);
-
+    
     /**
      * Generates the mapping of widget statistics for the user.
      * 

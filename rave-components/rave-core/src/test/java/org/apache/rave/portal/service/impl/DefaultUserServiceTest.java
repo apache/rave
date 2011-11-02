@@ -19,11 +19,24 @@
 
 package org.apache.rave.portal.service.impl;
 
+import static org.easymock.EasyMock.createNiceMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.sameInstance;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.rave.portal.model.Authority;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.repository.UserRepository;
-import org.apache.rave.portal.service.impl.DefaultUserService;
+import org.apache.rave.portal.service.UserService;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,20 +48,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.rave.portal.service.UserService;
-import static org.easymock.EasyMock.createNiceMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.sameInstance;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 
 public class DefaultUserServiceTest {
 
@@ -176,7 +175,7 @@ public class DefaultUserServiceTest {
         replay(repository);
 
         UserDetails result = service.getUserByEmail(USER_EMAIL);
-        assertThat((User)result, is(sameInstance(authUser)));          
+        assertThat((User)result, is(sameInstance(authUser)));
      }
 
 
@@ -187,7 +186,7 @@ public class DefaultUserServiceTest {
         service.clearAuthenticatedUser();
         assertThat(SecurityContextHolder.getContext(), not(sameInstance(context)));
     }
-    
+
     @Test
     public void getLimitedListOfUsers() {
         User user1 = new User(123L, "john.doe.sr");

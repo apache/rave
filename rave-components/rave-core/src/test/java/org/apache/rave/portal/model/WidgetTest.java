@@ -19,6 +19,8 @@
 
 package org.apache.rave.portal.model;
 
+import java.util.List;
+import java.util.ArrayList;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -42,6 +44,7 @@ public class WidgetTest {
     private String author;
     private String description;
     private WidgetStatus status;
+    private List<WidgetComment> widgetComments;
     private List<WidgetRating> ratings;
 
     @Before
@@ -56,6 +59,7 @@ public class WidgetTest {
         author = "John Doe";
         description = "This is a test widget";
         status = WidgetStatus.PREVIEW;
+        widgetComments = new ArrayList<WidgetComment>();
         
         ratings = new ArrayList<WidgetRating>();
         ratings.add(new WidgetRating(1L, 1L, 1L, 1));
@@ -69,6 +73,7 @@ public class WidgetTest {
         widget.setAuthor(author);
         widget.setDescription(description);
         widget.setWidgetStatus(status);
+        widget.setComments(widgetComments);
         widget.setRatings(ratings);
     }
 
@@ -83,6 +88,7 @@ public class WidgetTest {
         assertEquals(author, widget.getAuthor());
         assertEquals(description, widget.getDescription());
         assertEquals(status, widget.getWidgetStatus());
+        assertEquals(widgetComments,widget.getComments());
         assertEquals(ratings, widget.getRatings());
     }
 

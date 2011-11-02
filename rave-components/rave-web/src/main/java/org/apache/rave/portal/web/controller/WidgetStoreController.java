@@ -91,6 +91,7 @@ public class WidgetStoreController {
 
         final User user = userService.getAuthenticatedUser();
         model.addAttribute(ModelKeys.WIDGET_STATISTICS, widgetService.getWidgetStatistics(widgetId, user.getEntityId()));
+        model.addAttribute(ModelKeys.USER_PROFILE, user);
         return ViewNames.WIDGET;
     }
 
@@ -161,6 +162,7 @@ public class WidgetStoreController {
         
         model.addAttribute(ModelKeys.WIDGET, storedWidget);       
         model.addAttribute(ModelKeys.WIDGET_STATISTICS, widgetService.getWidgetStatistics(storedWidget.getEntityId(), user.getEntityId()));
+        model.addAttribute(ModelKeys.USER_PROFILE, user);
         return ViewNames.WIDGET;
     }
 }

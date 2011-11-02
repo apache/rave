@@ -70,8 +70,56 @@ rave.store = rave.store || (function() {
         });
     }
     
+    function initComments() {
+        
+        $(".commentNewButton").button( {
+            icons: {primary: "ui-icon-disk"},
+            text: false
+        }).click(function() {
+            var widgetId = this.id.substring("comment-new-".length);
+            rave.api.rest.createWidgetComment({widgetId: widgetId, 
+                                                text: $("#newComment-"+widgetId).get(0).value,
+                                                successCallback: function() { window.location.reload(); }});
+        })
+        
+        $(".commentDeleteButton").button( {
+            icons: {primary: "ui-icon-close"},
+            text: false
+        }).click(function() {
+            var commentId = this.id.substring("comment-delete-".length);
+            var widgetId = this.parentNode.id.substring("comment-widget-".length);
+            rave.api.rest.deleteWidgetComment({widgetId: widgetId, 
+                                                commentId: commentId,
+                                                successCallback: function() { window.location.reload(); }});
+        });
+        
+        $(".commentEditButton").button( {
+            icons: {primary: "ui-icon-pencil"},
+            text: false
+        }).click(function() {
+            var commentId = this.id.substring("comment-edit-".length);
+            var widgetId = this.parentNode.id.substring("comment-widget-".length);
+            $("#editComment-dialog").dialog({
+               autoOpen: true,
+               height: 150,
+               width: 350,
+               modal: true,
+               buttons: {
+                   "Update" : function() {
+                       rave.api.rest.updateWidgetComment({widgetId: widgetId,
+                                                            commentId: commentId,
+                                                            text: $("#editComment").get(0).value,
+                                                            successCallback: function() { window.location.reload(); }
+                                                        });
+                   }
+               }
+            });
+        });
+    }
+    
     return {
-        init: initRatings
+        init: initRatings,
+        initComments: initComments
     };
     
 }());

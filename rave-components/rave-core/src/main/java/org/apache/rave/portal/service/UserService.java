@@ -19,6 +19,7 @@
 
 package org.apache.rave.portal.service;
 
+import java.util.Map;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.util.SearchResult;
 import org.springframework.security.core.userdetails.UserDetailsService;

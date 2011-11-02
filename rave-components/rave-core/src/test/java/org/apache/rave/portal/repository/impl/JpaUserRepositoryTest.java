@@ -163,5 +163,4 @@ public class JpaUserRepositoryTest {
         int count = repository.getCountByUsernameOrEmail(searchTerm);
         assertTrue(count > 1);
     }
-
 }

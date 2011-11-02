@@ -130,6 +130,45 @@ rave.api = rave.api || (function() {
                 error: handleError
             })
         }
+        
+        function createWidgetComment(args) {
+            $.ajax({
+                type: 'POST',
+                url: rave.getContext() + path + "widgets/" + args.widgetId + "/comments?text=" + escape(args.text),
+                success: function(result) {
+                    if (typeof args.successCallback == 'function') {
+                        args.successCallback();
+                    }
+                },
+                error: handleError
+            })
+        }
+        
+        function deleteWidgetComment(args) {
+            $.ajax({
+                type: 'DELETE',
+                url: rave.getContext() + path + "widgets/" + args.widgetId + "/comments/" + args.commentId,
+                success: function(result) {
+                    if (typeof args.successCallback == 'function') {
+                        args.successCallback();
+                    }
+                },
+                error: handleError
+            })
+        }
+        
+        function updateWidgetComment(args) {
+            $.ajax({
+                type: 'POST',
+                url: rave.getContext() + path + "widgets/" + args.widgetId + "/comments/" + args.commentId + "?text=" + escape(args.text),
+                success: function(result) {
+                    if (typeof args.successCallback == 'function') {
+                        args.successCallback();
+                    }
+                },
+                error: handleError
+            })
+        }
 
         return {
             updateWidgetRating: updateWidgetRating,
@@ -137,6 +176,9 @@ rave.api = rave.api || (function() {
             saveWidgetPreferences : saveWidgetPreferences,
             saveWidgetPreference : saveWidgetPreference,
             saveWidgetCollapsedState : saveWidgetCollapsedState,
+            createWidgetComment : createWidgetComment,
+            updateWidgetComment : updateWidgetComment,
+            deleteWidgetComment : deleteWidgetComment,
             deletePage : deletePage
         };
     })();

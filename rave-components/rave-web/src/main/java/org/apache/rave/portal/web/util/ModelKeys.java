@@ -39,4 +39,5 @@ public class ModelKeys {
     public static final String OFFSET = "offset";
     public static final String SEARCHRESULT = "searchResult";
     public static final String TOKENCHECK = "tokencheck";
+    public static final String USER_MAP = "userMap";
 }

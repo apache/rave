@@ -274,7 +274,7 @@ public class DefaultWidgetServiceTest {
     public void allWidgetStatistics() {
         expect(widgetRepository.getAllWidgetStatistics(1L)).andReturn(new HashMap<Long, WidgetStatistics>());
         replay(widgetRepository);
-
+    
         widgetService.getAllWidgetStatistics(1L);
         verify(widgetRepository);
     }
