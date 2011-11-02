@@ -17,7 +17,7 @@
   specific language governing permissions and limitations
   under the License.
   --%>
-<%@ tag language="java" pageEncoding="UTF-8"%>
+<%@ tag trimDirectiveWhitespaces="true" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ taglib uri="http://java.sun.com/jstl/core_rt" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
@@ -29,8 +29,8 @@ This tag will provide simple template layouts for pages that use it. See for exa
 --%>
 <html>
   <head>
-     <meta charset="UTF-8"/>
-     <title><c:out value="${pageTitle}"/> <fmt:message key="page.general.titlesuffix"/></title>
+     <meta charset="ISO-8859-1"/>
+     <title><c:out value="${pageTitle} "/> <fmt:message key="page.general.titlesuffix"/></title>
      <link rel="stylesheet" href="//ajax.aspnetcdn.com/ajax/jquery.ui/1.8.13/themes/base/jquery-ui.css"/>
      <link rel="stylesheet" href="<c:url value="/css/default.css" />" />
      <rave:custom_css/>
