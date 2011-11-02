@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.apache.rave.portal.repository;
+package org.apache.rave.portal.repository.impl;
 
 import org.apache.rave.portal.model.WidgetRating;
 import org.junit.Test;
@@ -30,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import org.apache.rave.portal.repository.WidgetRatingRepository;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNull;
 

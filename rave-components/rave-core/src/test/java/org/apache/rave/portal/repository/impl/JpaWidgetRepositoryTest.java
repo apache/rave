@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.apache.rave.portal.repository;
+package org.apache.rave.portal.repository.impl;
 
 import org.apache.rave.portal.model.Widget;
 import org.apache.rave.portal.model.WidgetRating;
@@ -38,6 +38,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.rave.portal.repository.WidgetRepository;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertNull;

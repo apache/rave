@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.apache.rave.portal.repository;
+package org.apache.rave.portal.repository.impl;
 
 import org.apache.rave.portal.model.Region;
 import org.apache.rave.portal.model.RegionWidget;
@@ -33,6 +33,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
 
+import org.apache.rave.portal.repository.RegionRepository;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;

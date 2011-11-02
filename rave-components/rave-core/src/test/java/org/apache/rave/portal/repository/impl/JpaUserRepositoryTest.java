@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.apache.rave.portal.repository;
+package org.apache.rave.portal.repository.impl;
 
 import junit.framework.Assert;
 import org.apache.rave.portal.model.Authority;
@@ -34,6 +34,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 
+import org.apache.rave.portal.repository.AuthorityRepository;
+import org.apache.rave.portal.repository.UserRepository;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertTrue;

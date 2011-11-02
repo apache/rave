@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.rave.portal.repository;
+package org.apache.rave.portal.repository.impl;
 
 import org.apache.rave.portal.model.Page;
 import org.junit.Test;
@@ -30,6 +30,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 
+import org.apache.rave.portal.repository.PageRepository;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
