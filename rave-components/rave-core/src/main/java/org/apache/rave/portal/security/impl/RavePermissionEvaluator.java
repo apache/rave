@@ -83,8 +83,11 @@ public class RavePermissionEvaluator implements PermissionEvaluator {
      */
     @Override
     public boolean hasPermission(Authentication authentication, Object targetDomainObject, Object permissionString) {
+        if (targetDomainObject == null) {
+            return false;
+        }
         // find the appropriate ModelPermissionEvaluator from the map based on
-        // the targetDomainObject's class and invoke the hasPermission function
+        // the targetDomainObject's class and invoke the hasPermission function        
         return getEvaluator(targetDomainObject.getClass().getName()).hasPermission(authentication, targetDomainObject,
                 getPermission(targetDomainObject, (String) permissionString));
     }
