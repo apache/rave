@@ -290,7 +290,8 @@ header h1 {
     display: block;
     padding: 5px 5px 100px 5px; /*** bottom padding is needed for dnd when region is empty ***/
     margin-right: 20px;
-    width:300px;
+    min-width:300px;
+    width: auto;
     height: 100%;
 }
 
