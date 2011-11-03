@@ -31,6 +31,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.ui.ExtendedModelMap;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.support.SessionStatus;
@@ -64,12 +65,13 @@ public class UserControllerTest {
         Model model = new ExtendedModelMap();
         final int offset = 0;
         final int pageSize = 10;
+        final String referer = "http://example.com/index.html";
         SearchResult<User> searchResult = createSearchResultWithTwoUsers();
 
         expect(userService.getLimitedListOfUsers(offset, pageSize)).andReturn(searchResult);
         replay(userService);
 
-        String adminUsersView = controller.viewUsers(offset, model);
+        String adminUsersView = controller.viewUsers(offset, referer, model);
         assertEquals(ViewNames.ADMIN_USERS, adminUsersView);
         assertEquals(searchResult, model.asMap().get(ModelKeys.SEARCHRESULT));
         assertTrue(model.containsAttribute(TABS));
@@ -115,6 +117,7 @@ public class UserControllerTest {
 
     @Test
     public void updateUserDetail_success() {
+        ModelMap modelMap = new ExtendedModelMap();
         final Long userid = 123L;
         final String email = "john.doe.sr@example.net";
         User user = new User(userid, "john.doe.sr");
@@ -131,22 +134,23 @@ public class UserControllerTest {
         expectLastCall();
         replay(userService, sessionStatus);
 
-        final String view = controller.updateUserDetail(user, errors, validToken, validToken, sessionStatus);
+        final String view = controller.updateUserDetail(user, errors, validToken, validToken, modelMap, sessionStatus);
         verify(userService, sessionStatus);
 
         assertFalse(errors.hasErrors());
-        assertEquals("redirect:" + userid, view);
+        assertEquals("redirect:/app/admin/users?action=update", view);
     }
 
     @Test
     public void updateUserDetail_withErrors() {
+        ModelMap modelMap = new ExtendedModelMap();
         Long userid = 123L;
         User user = new User(userid, "john.doe.sr");
         final BindingResult errors = new BeanPropertyBindingResult(user, "user");
 
         SessionStatus sessionStatus = createMock(SessionStatus.class);
         replay(sessionStatus);
-        final String view = controller.updateUserDetail(user, errors, validToken, validToken, sessionStatus);
+        final String view = controller.updateUserDetail(user, errors, validToken, validToken, modelMap, sessionStatus);
         verify(sessionStatus);
 
         assertTrue(errors.hasErrors());
@@ -155,6 +159,7 @@ public class UserControllerTest {
 
     @Test(expected = SecurityException.class)
     public void updateUserDetail_wrongToken() {
+        ModelMap modelMap = new ExtendedModelMap();
         User user = new User(123L, "john.doe.sr");
         final BindingResult errors = new BeanPropertyBindingResult(user, "user");
         SessionStatus sessionStatus = createMock(SessionStatus.class);
@@ -165,7 +170,62 @@ public class UserControllerTest {
 
         String otherToken = AdminControllerUtil.generateSessionToken();
 
-        controller.updateUserDetail(user, errors, validToken, otherToken, sessionStatus);
+        controller.updateUserDetail(user, errors, validToken, otherToken, modelMap, sessionStatus);
+        verify(sessionStatus);
+
+        assertFalse("SecurityException", true);
+
+    }
+    @Test
+    public void deleteUserDetail_success() {
+        ModelMap modelMap = new ExtendedModelMap();
+        final Long userid = 123L;
+        final String email = "john.doe.sr@example.net";
+        User user = new User(userid, "john.doe.sr");
+        user.setPassword("secrect");
+        user.setConfirmPassword(user.getConfirmPassword());
+        user.setEmail(email);
+
+        SessionStatus sessionStatus = createMock(SessionStatus.class);
+
+        userService.deleteUser(user.getEntityId());
+        sessionStatus.setComplete();
+        expectLastCall();
+        replay(userService, sessionStatus);
+
+        final String view = controller.deleteUserDetail(user, validToken, validToken, "true", modelMap, sessionStatus);
+        verify(userService, sessionStatus);
+
+        assertEquals("redirect:/app/admin/users?action=delete", view);
+    }
+
+    @Test
+    public void deleteUserDetail_noConfirmChecked() {
+        ModelMap modelMap = new ExtendedModelMap();
+        Long userid = 123L;
+        User user = new User(userid, "john.doe.sr");
+
+        SessionStatus sessionStatus = createMock(SessionStatus.class);
+        replay(sessionStatus);
+        final String view = controller.deleteUserDetail(user, validToken, validToken, null, modelMap, sessionStatus);
+        verify(sessionStatus);
+
+        assertEquals(ViewNames.ADMIN_USERDETAIL, view);
+    }
+
+    @Test(expected = SecurityException.class)
+    public void deleteUserDetail_wrongToken() {
+        ModelMap modelMap = new ExtendedModelMap();
+        User user = new User(123L, "john.doe.sr");
+        SessionStatus sessionStatus = createMock(SessionStatus.class);
+        sessionStatus.setComplete();
+
+        expectLastCall();
+        replay(sessionStatus);
+
+        String otherToken = AdminControllerUtil.generateSessionToken();
+
+        controller.deleteUserDetail(user, validToken, otherToken, "true", modelMap, sessionStatus);
         verify(sessionStatus);
 
         assertFalse("SecurityException", true);

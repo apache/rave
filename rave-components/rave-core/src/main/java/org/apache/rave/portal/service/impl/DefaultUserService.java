@@ -19,10 +19,10 @@
 
 package org.apache.rave.portal.service.impl;
 
-import java.util.HashMap;
-import java.util.Map;
+import org.apache.rave.portal.model.Page;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.util.SearchResult;
+import org.apache.rave.portal.repository.PageRepository;
 import org.apache.rave.portal.repository.UserRepository;
 import org.apache.rave.portal.service.UserService;
 import org.slf4j.Logger;
@@ -46,14 +46,16 @@ import java.util.List;
  */
 @Service(value = "userService")
 public class DefaultUserService implements UserService {
-    protected static final Logger log = LoggerFactory.getLogger(DefaultUserService.class);
+    private static final Logger log = LoggerFactory.getLogger(DefaultUserService.class);
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+
+    private final PageRepository pageRepository;
 
     @Autowired
-    public DefaultUserService(UserRepository userRepository) {
+    public DefaultUserService(UserRepository userRepository, PageRepository pageRepository) {
         this.userRepository = userRepository;
-
+        this.pageRepository = pageRepository;
     }
 
     @Override
@@ -158,4 +160,19 @@ public class DefaultUserService implements UserService {
         searchResult.setPageSize(pageSize);
         return searchResult;
     }
+
+    @Override
+    @Transactional
+    // TODO RAVE-300: add security check that is is called by admin or the user itself
+    public void deleteUser(Long userId) {
+        User user = userRepository.get(userId);
+        if (user == null) {
+            return;
+        }
+        for (Page page : pageRepository.getAllPages(userId)) {
+            pageRepository.delete(page);
+        }
+        userRepository.delete(user);
+    }
+
 }

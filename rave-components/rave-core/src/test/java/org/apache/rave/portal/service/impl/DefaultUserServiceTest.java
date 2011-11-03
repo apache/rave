@@ -19,22 +19,11 @@
 
 package org.apache.rave.portal.service.impl;
 
-import static org.easymock.EasyMock.createNiceMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.sameInstance;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.rave.portal.model.Authority;
+import org.apache.rave.portal.model.Page;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.util.SearchResult;
+import org.apache.rave.portal.repository.PageRepository;
 import org.apache.rave.portal.repository.UserRepository;
 import org.apache.rave.portal.service.UserService;
 import org.junit.After;
@@ -49,18 +38,36 @@ import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.createNiceMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.sameInstance;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+
 public class DefaultUserServiceTest {
 
     private static final Long USER_ID = 1234L;
     private UserService service;
-    private UserRepository repository;
+    private UserRepository userRepository;
+    private PageRepository pageRepository;
     private static final String USER_NAME = "1234";
-     private static final String USER_EMAIL="test@test.com";
+    private static final String USER_EMAIL = "test@test.com";
 
     @Before
     public void setup() {
-        repository = createNiceMock(UserRepository.class);
-        service = new DefaultUserService(repository);
+        userRepository = createNiceMock(UserRepository.class);
+        pageRepository = createMock(PageRepository.class);
+        service = new DefaultUserService(userRepository, pageRepository);
     }
 
     @After
@@ -107,8 +114,8 @@ public class DefaultUserServiceTest {
     @Test
     public void setAuthenticatedUser_valid() {
         final User authUser = new User(USER_ID);
-        expect(repository.get(USER_ID)).andReturn(authUser).anyTimes();
-        replay(repository);
+        expect(userRepository.get(USER_ID)).andReturn(authUser).anyTimes();
+        replay(userRepository);
 
         service.setAuthenticatedUser(USER_ID);
         assertThat((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal(),
@@ -121,8 +128,8 @@ public class DefaultUserServiceTest {
         final Authority userRole = new Authority();
         userRole.setAuthority("admin");
         authUser.addAuthority(userRole);
-        expect(repository.get(USER_ID)).andReturn(authUser).anyTimes();
-        replay(repository);
+        expect(userRepository.get(USER_ID)).andReturn(authUser).anyTimes();
+        replay(userRepository);
 
         service.setAuthenticatedUser(USER_ID);
         assertThat((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal(),
@@ -135,8 +142,8 @@ public class DefaultUserServiceTest {
 
     @Test(expected = UsernameNotFoundException.class)
     public void setAuthenticatedUser_invalid_null() {
-        expect(repository.get(USER_ID)).andReturn(null).anyTimes();
-        replay(repository);
+        expect(userRepository.get(USER_ID)).andReturn(null).anyTimes();
+        replay(userRepository);
 
         service.setAuthenticatedUser(USER_ID);
     }
@@ -144,8 +151,8 @@ public class DefaultUserServiceTest {
     @Test
     public void loadByUsername_valid() {
         final User authUser = new User(USER_ID, USER_NAME);
-        expect(repository.getByUsername(USER_NAME)).andReturn(authUser).anyTimes();
-        replay(repository);
+        expect(userRepository.getByUsername(USER_NAME)).andReturn(authUser).anyTimes();
+        replay(userRepository);
 
         UserDetails result = service.loadUserByUsername(USER_NAME);
         assertThat((User)result, is(sameInstance(authUser)));
@@ -153,16 +160,16 @@ public class DefaultUserServiceTest {
 
     @Test(expected = UsernameNotFoundException.class)
     public void loadByUsername_invalid_exception() {
-        expect(repository.getByUsername(USER_NAME)).andThrow(new IncorrectResultSizeDataAccessException(1));
-        replay(repository);
+        expect(userRepository.getByUsername(USER_NAME)).andThrow(new IncorrectResultSizeDataAccessException(1));
+        replay(userRepository);
 
         service.setAuthenticatedUser(USER_ID);
     }
 
     @Test(expected = UsernameNotFoundException.class)
     public void loadByUsername_invalid_null() {
-        expect(repository.get(USER_ID)).andReturn(null).anyTimes();
-        replay(repository);
+        expect(userRepository.get(USER_ID)).andReturn(null).anyTimes();
+        replay(userRepository);
 
         service.setAuthenticatedUser(USER_ID);
     }
@@ -171,8 +178,8 @@ public class DefaultUserServiceTest {
      public void getUserByEmail_valid() {
           final User authUser=new User(USER_ID,USER_NAME);
           authUser.setEmail(USER_EMAIL);
-        expect(repository.getByUserEmail(USER_EMAIL)).andReturn(authUser).anyTimes();
-        replay(repository);
+        expect(userRepository.getByUserEmail(USER_EMAIL)).andReturn(authUser).anyTimes();
+        replay(userRepository);
 
         UserDetails result = service.getUserByEmail(USER_EMAIL);
         assertThat((User)result, is(sameInstance(authUser)));
@@ -196,8 +203,8 @@ public class DefaultUserServiceTest {
         users.add(user2);
         final int offset = 0;
         final int pageSize = 10;
-        expect(repository.getLimitedList(offset, pageSize)).andReturn(users);
-        replay(repository);
+        expect(userRepository.getLimitedList(offset, pageSize)).andReturn(users);
+        replay(userRepository);
 
         SearchResult<User> result = service.getLimitedListOfUsers(offset, pageSize);
         assertEquals(pageSize, result.getPageSize());
@@ -215,8 +222,8 @@ public class DefaultUserServiceTest {
         users.add(user2);
         final int offset = 0;
         final int pageSize = 10;
-        expect(repository.findByUsernameOrEmail(searchTerm, offset, pageSize)).andReturn(users);
-        replay(repository);
+        expect(userRepository.findByUsernameOrEmail(searchTerm, offset, pageSize)).andReturn(users);
+        replay(userRepository);
 
         SearchResult<User> result = service.getUsersByFreeTextSearch(searchTerm, offset, pageSize);
         assertEquals(pageSize, result.getPageSize());
@@ -227,10 +234,29 @@ public class DefaultUserServiceTest {
     @Test
     public void updateUserProfile() {
         User user = new User(USER_ID, USER_NAME);
-        expect(repository.save(user)).andReturn(user).once();
-        replay(repository);
+        expect(userRepository.save(user)).andReturn(user).once();
+        replay(userRepository);
 
         service.updateUserProfile(user);
         assertTrue("Save called", true);
     }
+
+    @Test
+    public void deleteUserProfile() {
+        User user = new User(USER_ID, USER_NAME);
+        Page page = new Page(1L, user);
+        List<Page> pages = new ArrayList<Page>();
+        pages.add(page);
+        expect(pageRepository.getAllPages(USER_ID)).andReturn(pages);
+        expect(userRepository.get(USER_ID)).andReturn(user).times(1);
+        pageRepository.delete(page);
+        expectLastCall();
+        replay(userRepository, pageRepository);
+
+        service.deleteUser(USER_ID);
+        verify(userRepository, pageRepository);
+
+        assertTrue("Deleted", true);
+    }
+
 }

@@ -31,6 +31,13 @@
     <rave:admin_tabsheader/>
     <div class="pageContent">
         <article class="admincontent">
+            <c:if test="${actionresult eq 'delete' or actionresult eq 'update'}">
+                <div class="alert-message success">
+                    <p>
+                        <fmt:message key="admin.widgetdetail.action.${actionresult}.success"/>
+                    </p>
+                </div>
+            </c:if>
             <ul class="horizontal-list searchbox">
                 <li>
                     <form action="<spring:url value="/app/admin/widgets/search"/>" method="GET">

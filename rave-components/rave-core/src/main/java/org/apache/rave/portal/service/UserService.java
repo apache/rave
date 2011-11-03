@@ -19,7 +19,6 @@
 
 package org.apache.rave.portal.service;
 
-import java.util.Map;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.util.SearchResult;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -100,4 +99,11 @@ public interface UserService extends UserDetailsService {
      * @return SearchResult
      */
     SearchResult<User> getUsersByFreeTextSearch(String searchTerm, int offset, int pageSize);
+
+    /**
+     * Deletes a User
+     *
+     * @param userId {@link Long} id if the user
+     */
+    void deleteUser(Long userId);
 }

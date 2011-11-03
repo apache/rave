@@ -29,6 +29,7 @@ import org.apache.rave.portal.web.validator.NewWidgetValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -64,12 +65,23 @@ public class WidgetController {
     }
 
     @RequestMapping(value = "/admin/widgets", method = RequestMethod.GET)
-    public String viewWidgets(@RequestParam(required = false, defaultValue = "0") int offset, Model model) {
+    public String viewWidgets(@RequestParam(required = false, defaultValue = "0") int offset,
+                              @RequestParam(required = false) final String action,
+                              Model model) {
         AdminControllerUtil.addNavigationMenusToModel(SELECTED_ITEM, model);
         final SearchResult<Widget> widgets =
                 widgetService.getLimitedListOfWidgets(offset, DEFAULT_PAGE_SIZE);
         model.addAttribute(ModelKeys.SEARCHRESULT, widgets);
+
+        if (isDeleteOrUpdate(action)) {
+            model.addAttribute("actionresult", action);
+        }
+
         return ViewNames.ADMIN_WIDGETS;
+    }
+
+    private boolean isDeleteOrUpdate(String action) {
+        return "update".equals(action) || "delete".equals(action);
     }
 
     @RequestMapping(value = "/admin/widgets/search", method = RequestMethod.GET)
@@ -98,16 +110,19 @@ public class WidgetController {
     @RequestMapping(value = "/admin/widgetdetail/update", method = RequestMethod.POST)
     public String updateWidgetDetail(@ModelAttribute(ModelKeys.WIDGET) Widget widget, BindingResult result,
                                      @ModelAttribute(ModelKeys.TOKENCHECK) String sessionToken,
-                                     @RequestParam() String token,
+                                     @RequestParam String token,
+                                     ModelMap modelMap,
                                      SessionStatus status) {
         AdminControllerUtil.checkTokens(sessionToken, token, status);
         widgetValidator.validate(widget, result);
         if (result.hasErrors()) {
+            AdminControllerUtil.addNavigationMenusToModel(SELECTED_ITEM, (Model) modelMap);
             return ViewNames.ADMIN_WIDGETDETAIL;
         }
         widgetService.updateWidget(widget);
+        modelMap.clear();
         status.setComplete();
-        return "redirect:" + widget.getEntityId();
+        return "redirect:/app/admin/widgets?action=update";
     }
 
     @ModelAttribute("widgetStatus")

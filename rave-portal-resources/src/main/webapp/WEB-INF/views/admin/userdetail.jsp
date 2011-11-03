@@ -41,7 +41,30 @@
             <h2><c:out value="${user.username}"/></h2>
 
             <div class="rightcolumn">
-
+                <%--<section class="formbox">
+                    <h3>_Delete <c:out value=" ${user.username}"/></h3>
+                    <form:form id="deleteUserProfile" action="delete" commandName="user" method="POST">
+                        <fieldset>
+                            <input type="hidden" name="token" value="<c:out value="${tokencheck}"/>"/>
+                            <div>
+                                <ul class="checkboxlist">
+                                    <li>
+                                        <input type="checkbox" name="confirmdelete" id="confirmdelete" value="true"/>
+                                        <label for="confirmdelete"> _Yes I want to delete this user</label>
+                                        <c:if test="${missingConfirm}">
+                                            <p class="error">_Please check</p>
+                                        </c:if>
+                                    </li>
+                                </ul>
+                            </div>
+                            </fieldset>
+                        <fieldset>
+                            <p>
+                                <input type="submit" value="Delete the user"/>
+                            </p>
+                        </fieldset>
+                    </form:form>
+                </section>--%>
             </div>
 
             <div class="leftcolumn">

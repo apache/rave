@@ -30,6 +30,7 @@ import org.apache.rave.portal.web.validator.UserProfileValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -69,12 +70,23 @@ public class UserController {
         dataBinder.setDisallowedFields("entityId", "username", "password", "confirmPassword");
     }
 
-    @RequestMapping(value = "/admin/users", method = RequestMethod.GET)
-    public String viewUsers(@RequestParam(required = false, defaultValue = "0") int offset, Model model) {
+    @RequestMapping(value = {"/admin/users"}, method = RequestMethod.GET)
+    public String viewUsers(@RequestParam(required = false, defaultValue = "0") int offset,
+                            @RequestParam(required = false) final String action,
+                            Model model) {
         AdminControllerUtil.addNavigationMenusToModel(SELECTED_ITEM, model);
         final SearchResult<User> users = userService.getLimitedListOfUsers(offset, DEFAULT_PAGE_SIZE);
         model.addAttribute(ModelKeys.SEARCHRESULT, users);
+
+        if (isDeleteOrUpdate(action)) {
+            model.addAttribute("actionresult", action);
+        }
+
         return ViewNames.ADMIN_USERS;
+    }
+
+    private boolean isDeleteOrUpdate(String action) {
+        return "update".equals(action) || "delete".equals(action);
     }
 
     @RequestMapping(value = "/admin/users/search", method = RequestMethod.GET)
@@ -100,17 +112,39 @@ public class UserController {
     public String updateUserDetail(@ModelAttribute("user") User user, BindingResult result,
                                    @ModelAttribute(ModelKeys.TOKENCHECK) String sessionToken,
                                    @RequestParam() String token,
+                                   ModelMap modelMap,
                                    SessionStatus status) {
         AdminControllerUtil.checkTokens(sessionToken, token, status);
         userProfileValidator.validate(user, result);
         if (result.hasErrors()) {
+            AdminControllerUtil.addNavigationMenusToModel(SELECTED_ITEM, (Model) modelMap);
             return ViewNames.ADMIN_USERDETAIL;
         }
         userService.updateUserProfile(user);
+        modelMap.clear();
         status.setComplete();
-        return "redirect:" + user.getEntityId();
+        return "redirect:/app/admin/users?action=update";
     }
 
+    @RequestMapping(value = "/admin/userdetail/delete", method = RequestMethod.POST)
+    public String deleteUserDetail(@ModelAttribute("user") User user,
+                                   @ModelAttribute(ModelKeys.TOKENCHECK) String sessionToken,
+                                   @RequestParam String token,
+                                   @RequestParam(required = false) String confirmdelete,
+                                   ModelMap modelMap,
+                                   SessionStatus status) {
+        AdminControllerUtil.checkTokens(sessionToken, token, status);
+        if (!Boolean.parseBoolean(confirmdelete)) {
+            AdminControllerUtil.addNavigationMenusToModel(SELECTED_ITEM, (Model) modelMap);
+            modelMap.addAttribute("missingConfirm", true);
+            return ViewNames.ADMIN_USERDETAIL;
+        }
+        userService.deleteUser(user.getEntityId());
+        modelMap.clear();
+        status.setComplete();
+        return "redirect:/app/admin/users?action=delete";
+    }
+    
     @ModelAttribute("authorities")
     public SearchResult<Authority> populateAuthorityList() {
         return authorityService.getAllAuthorities();

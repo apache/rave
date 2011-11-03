@@ -32,6 +32,14 @@
 
     <div class="pageContent">
         <article class="admincontent">
+            <c:if test="${actionresult eq 'delete' or actionresult eq 'update'}">
+                <div class="alert-message success">
+                    <p>
+                        <fmt:message key="admin.userdetail.action.${actionresult}.success"/>
+                    </p>
+                </div>
+            </c:if>
+
             <ul class="horizontal-list searchbox">
                 <li><a href="<spring:url value="/app/newaccount.jsp"/>"><fmt:message key="admin.users.add"/></a></li>
                 <li>

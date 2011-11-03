@@ -29,6 +29,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.ui.ExtendedModelMap;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.support.SessionStatus;
@@ -66,7 +67,7 @@ public class WidgetControllerTest {
         SearchResult<Widget> widgetSearchResult = populateWidgetSearchResult();
         expect(service.getLimitedListOfWidgets(DEFAULT_OFFSET, DEFAULT_PAGESIZE)).andReturn(widgetSearchResult);
         replay(service);
-        String adminWidgetsView = controller.viewWidgets(DEFAULT_OFFSET, model);
+        String adminWidgetsView = controller.viewWidgets(DEFAULT_OFFSET, null, model);
         verify(service);
         assertEquals(ViewNames.ADMIN_WIDGETS, adminWidgetsView);
         assertEquals(widgetSearchResult, model.asMap().get(ModelKeys.SEARCHRESULT));
@@ -119,16 +120,17 @@ public class WidgetControllerTest {
         widget.setType("OpenSocial");
         BindingResult errors = new BeanPropertyBindingResult(widget, "widget");
         SessionStatus sessionStatus = createMock(SessionStatus.class);
+        ModelMap modelMap = new ExtendedModelMap();
 
         service.updateWidget(widget);
         sessionStatus.setComplete();
         expectLastCall();
         replay(service, sessionStatus);
-        String view = controller.updateWidgetDetail(widget, errors, validToken, validToken, sessionStatus);
+        String view = controller.updateWidgetDetail(widget, errors, validToken, validToken, modelMap, sessionStatus);
         verify(service, sessionStatus);
 
         assertFalse("No errors", errors.hasErrors());
-        assertEquals("redirect:123", view);
+        assertEquals("redirect:/app/admin/widgets?action=update", view);
 
     }
 
@@ -137,6 +139,7 @@ public class WidgetControllerTest {
         Widget widget = new Widget();
         BindingResult errors = new BeanPropertyBindingResult(widget, "widget");
         SessionStatus sessionStatus = createMock(SessionStatus.class);
+        ModelMap modelMap = new ExtendedModelMap();
 
         sessionStatus.setComplete();
         expectLastCall();
@@ -144,7 +147,7 @@ public class WidgetControllerTest {
 
         String otherToken = AdminControllerUtil.generateSessionToken();
 
-        controller.updateWidgetDetail(widget, errors, "sessionToken", otherToken, sessionStatus);
+        controller.updateWidgetDetail(widget, errors, "sessionToken", otherToken, modelMap, sessionStatus);
 
         verify(sessionStatus);
         assertFalse("Can't come here", true);
@@ -155,8 +158,9 @@ public class WidgetControllerTest {
         Widget widget = new Widget(123L, "http://broken/url");
         BindingResult errors = new BeanPropertyBindingResult(widget, "widget");
         SessionStatus sessionStatus = createMock(SessionStatus.class);
+        ModelMap modelMap = new ExtendedModelMap();
 
-        String view = controller.updateWidgetDetail(widget, errors, validToken, validToken, sessionStatus);
+        String view = controller.updateWidgetDetail(widget, errors, validToken, validToken, modelMap, sessionStatus);
 
         assertTrue("Errors", errors.hasErrors());
         assertEquals(ViewNames.ADMIN_WIDGETDETAIL, view);
