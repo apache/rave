@@ -25,12 +25,30 @@ rave.wookie = rave.wookie || (function() {
     var container;
     
     function validateAndRenderWidget(widget){
+    
         var widgetBodyElement = document.getElementById(["widget-", widget.regionWidgetId, "-body"].join(""));
         
         var widgetIframe = document.createElement("iframe");
-        widgetIframe.setAttribute("height",250);
-        widgetIframe.setAttribute("width",250);
+
+        if (widget.height){
+          widgetIframe.setAttribute("height",widget.height);
+          widgetIframe.setAttribute("min-height",MIN_HEIGHT+"px");
+        } else {
+          widgetIframe.setAttribute("height",MIN_HEIGHT+"px");
+          widgetIframe.setAttribute("min-height",MIN_HEIGHT+"px");             
+        }
+        if (widget.width) {
+          widgetIframe.setAttribute("style","width: 100%; min-width: "+widget.width);
+        } else {
+          widgetIframe.setAttribute("style","width: 100%");        
+        }
         widgetIframe.setAttribute("src",widget.widgetUrl);
+        widgetIframe.setAttribute("scroll","no");
+        widgetIframe.setAttribute("frameborder","0");
+        widgetIframe.setAttribute("vspace","0");
+        widgetIframe.setAttribute("hspace","0");
+        widgetIframe.setAttribute("marginheight","0");
+        widgetIframe.setAttribute("marginwidth","0");
         widgetBodyElement.appendChild(widgetIframe);
     }
 
