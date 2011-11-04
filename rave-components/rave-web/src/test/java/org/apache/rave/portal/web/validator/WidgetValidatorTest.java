@@ -7,7 +7,7 @@
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
@@ -20,28 +20,33 @@
 package org.apache.rave.portal.web.validator;
 
 import org.apache.rave.portal.model.Widget;
-import org.apache.rave.portal.service.WidgetService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.validation.Errors;
 
+import static junit.framework.Assert.assertTrue;
+
 /**
- * Validator for adding a new {@link Widget}
+ * Test for {@link WidgetValidator}
  */
-public class NewWidgetValidator extends WidgetValidator {
+public class WidgetValidatorTest {
+    WidgetValidator widgetValidator;
 
-    private final WidgetService widgetService;
+    @Before
+    public void setUp() throws Exception {
+        widgetValidator = new MockWidgetValidator();
 
-    @Autowired
-    public NewWidgetValidator(WidgetService widgetService) {
-        super();
-        this.widgetService = widgetService;
     }
 
-    @Override
-    protected final void validateIfWidgetAlreadyExists(Widget widget, Errors errors) {
-        if (widgetService.isRegisteredUrl(widget.getUrl())) {
-            errors.rejectValue(FIELD_URL, "widget.url.exists");
+    @Test
+    public void testSupports() throws Exception {
+        assertTrue("Supports org.apache.rave.portal.model.Widget", widgetValidator.supports(Widget.class));
+    }
+
+    private class MockWidgetValidator extends WidgetValidator {
+
+        @Override
+        protected void validateIfWidgetAlreadyExists(Widget widget, Errors errors) {
         }
     }
-
 }

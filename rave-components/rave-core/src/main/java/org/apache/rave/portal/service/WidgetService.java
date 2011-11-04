@@ -22,10 +22,10 @@ package org.apache.rave.portal.service;
 import org.apache.rave.portal.model.Widget;
 import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.model.util.WidgetStatistics;
-
-import java.util.Map;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
+
+import java.util.Map;
 
 /**
  * Provides widget operations
@@ -113,12 +113,19 @@ public interface WidgetService {
     @PostAuthorize("hasPermission(returnObject, 'read')")
     Widget getWidgetByUrl(String widgetUrl);
 
+    /**
+     * Checks if there is already a {@link Widget} for the given url. Does not need authorization.
+     *
+     * @param widgetUrl url of a widget definition
+     * @return {@literal true} if it exists, otherwise {@literal false}
+     */
+    boolean isRegisteredUrl(String widgetUrl);
 
     /**
      * Persists a new {@link Widget} if it is not already present in the store
      *
      * @param widget new Widget to store
-     * @return Widget if it is new and can be stored, otherwise {@literal null}
+     * @return Widget if it is new and can be stored
      */        
     @PostAuthorize("hasPermission(returnObject, 'create')") 
     Widget registerNewWidget(Widget widget);

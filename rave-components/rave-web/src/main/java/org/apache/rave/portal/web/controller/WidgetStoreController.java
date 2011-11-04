@@ -150,16 +150,12 @@ public class WidgetStoreController {
             model.addAttribute(ModelKeys.WIDGET, widget);
             return ViewNames.ADD_WIDGET_FORM;
         }
+
         widget.setWidgetStatus(WidgetStatus.PREVIEW);
         widget.setOwner(user);
 
         final Widget storedWidget = widgetService.registerNewWidget(widget);
-        if (storedWidget == null) {
-            results.reject("page.addwidget.result.exists");
-            model.addAttribute(ModelKeys.WIDGET, widget);
-            return ViewNames.ADD_WIDGET_FORM;
-        }
-        
+
         model.addAttribute(ModelKeys.WIDGET, storedWidget);       
         model.addAttribute(ModelKeys.WIDGET_STATISTICS, widgetService.getWidgetStatistics(storedWidget.getEntityId(), user.getEntityId()));
         model.addAttribute(ModelKeys.USER_PROFILE, user);

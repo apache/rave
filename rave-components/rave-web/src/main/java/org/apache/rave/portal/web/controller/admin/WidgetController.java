@@ -25,7 +25,7 @@ import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.service.WidgetService;
 import org.apache.rave.portal.web.util.ModelKeys;
 import org.apache.rave.portal.web.util.ViewNames;
-import org.apache.rave.portal.web.validator.NewWidgetValidator;
+import org.apache.rave.portal.web.validator.UpdateWidgetValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -57,7 +57,7 @@ public class WidgetController {
     private WidgetService widgetService;
 
     @Autowired
-    private NewWidgetValidator widgetValidator;
+    private UpdateWidgetValidator widgetValidator;
 
     @InitBinder
     public void initBinder(WebDataBinder dataBinder) {
@@ -94,7 +94,7 @@ public class WidgetController {
                 widgetstatus, offset, DEFAULT_PAGE_SIZE);
         model.addAttribute(ModelKeys.SEARCHRESULT, widgets);
         model.addAttribute(ModelKeys.SEARCH_TERM, searchTerm);
-        model.addAttribute("selectedWidgetType",widgettype);
+        model.addAttribute("selectedWidgetType", widgettype);
         model.addAttribute("selectedWidgetStatus", widgetstatus);
         return ViewNames.ADMIN_WIDGETS;
     }
@@ -135,7 +135,7 @@ public class WidgetController {
         this.widgetService = widgetService;
     }
 
-    void setWidgetValidator(NewWidgetValidator widgetValidator) {
+    void setWidgetValidator(UpdateWidgetValidator widgetValidator) {
         this.widgetValidator = widgetValidator;
     }
 

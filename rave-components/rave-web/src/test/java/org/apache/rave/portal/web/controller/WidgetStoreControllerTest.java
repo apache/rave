@@ -20,12 +20,11 @@
 package org.apache.rave.portal.web.controller;
 
 
-import java.util.HashMap;
-import org.apache.rave.portal.model.util.WidgetStatistics;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.Widget;
 import org.apache.rave.portal.model.WidgetStatus;
 import org.apache.rave.portal.model.util.SearchResult;
+import org.apache.rave.portal.model.util.WidgetStatistics;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.portal.service.WidgetService;
 import org.apache.rave.portal.web.util.ModelKeys;
@@ -39,16 +38,23 @@ import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static junit.framework.Assert.assertEquals;
-import static org.easymock.EasyMock.*;
+import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.sameInstance;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 
 /**
@@ -78,7 +84,7 @@ public class WidgetStoreControllerTest {
         UserService userService = createMock(UserService.class);        
         expect(userService.getAuthenticatedUser()).andReturn(validUser);
         replay(userService);
-        NewWidgetValidator widgetValidator = new NewWidgetValidator();
+        NewWidgetValidator widgetValidator = new NewWidgetValidator(widgetService);
         controller = new WidgetStoreController(widgetService, widgetValidator, userService);
     }
 
@@ -172,6 +178,7 @@ public class WidgetStoreControllerTest {
         final BindingResult errors = new BeanPropertyBindingResult(widget, "widget");
 
         expect(widgetService.registerNewWidget(widget)).andReturn(widget);
+        expect(widgetService.isRegisteredUrl(widgetUrl)).andReturn(false);
         expect(widgetService.getWidgetStatistics(WIDGET_ID, validUser.getEntityId())).andReturn(widgetStatistics);
         replay(widgetService);
         String view = controller.viewAddWidgetResult(widget, errors, model);
@@ -188,13 +195,20 @@ public class WidgetStoreControllerTest {
     public void doAddWidget_existing() {
         final String widgetUrl = "http://example.com/existingwidget.xml";
         final Model model = new ExtendedModelMap();
+
+        final Widget existingWidget = new Widget();
+        existingWidget.setEntityId(123L);
+        existingWidget.setTitle("Widget title");
+        existingWidget.setUrl(widgetUrl);
+        existingWidget.setType("OpenSocial");
+
         final Widget widget = new Widget();
         widget.setTitle("Widget title");
         widget.setUrl(widgetUrl);
         widget.setType("OpenSocial");
         final BindingResult errors = new BeanPropertyBindingResult(widget, "widget");
 
-        expect(widgetService.registerNewWidget(widget)).andReturn(null);        
+        expect(widgetService.isRegisteredUrl(widgetUrl)).andReturn(true);
         replay(widgetService);
         String view = controller.viewAddWidgetResult(widget, errors, model);
         verify(widgetService);

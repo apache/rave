@@ -7,7 +7,7 @@
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
@@ -35,27 +35,28 @@ import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 
 /**
- * Test class for {@link NewWidgetValidator}
+ * Test class for {@link org.apache.rave.portal.web.validator.UpdateWidgetValidator}
  */
-public class NewWidgetValidatorTest {
+public class UpdateWidgetValidatorTest {
 
     private static final String VALID_TITLE = "My widget";
     private static final String VALID_URL = "http://example.com/widget.xml";
     private static final String VALID_TYPE = "OpenSocial";
     private static final String WIDGET = "widget";
 
-    private NewWidgetValidator widgetValidator;
+    private UpdateWidgetValidator widgetValidator;
     private WidgetService widgetService;
 
     @Test
     public void testValidateValidFormData() throws Exception {
         Widget widget = new Widget();
+        widget.setEntityId(123L);
         widget.setTitle(VALID_TITLE);
         widget.setUrl(VALID_URL);
         widget.setType(VALID_TYPE);
         Errors errors = new BindException(widget, WIDGET);
 
-        expect(widgetService.isRegisteredUrl(VALID_URL)).andReturn(false);
+        expect(widgetService.getWidgetByUrl(VALID_URL)).andReturn(widget);
         replay(widgetService);
         widgetValidator.validate(widget, errors);
         verify(widgetService);
@@ -89,7 +90,7 @@ public class NewWidgetValidatorTest {
         newWidget.setUrl(existingUrl);
         Errors errors = new BindException(newWidget, WIDGET);
 
-        expect(widgetService.isRegisteredUrl(existingUrl)).andReturn(true);
+        expect(widgetService.getWidgetByUrl(existingUrl)).andReturn(widget);
         replay(widgetService);
 
         widgetValidator.validate(newWidget, errors);
@@ -120,6 +121,6 @@ public class NewWidgetValidatorTest {
     @Before
     public void setup() {
         widgetService = createMock(WidgetService.class);
-        widgetValidator = new NewWidgetValidator(widgetService);
+        widgetValidator = new UpdateWidgetValidator(widgetService);
     }
 }

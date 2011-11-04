@@ -7,7 +7,7 @@
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
@@ -22,26 +22,29 @@ package org.apache.rave.portal.web.validator;
 import org.apache.rave.portal.model.Widget;
 import org.apache.rave.portal.service.WidgetService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 
 /**
- * Validator for adding a new {@link Widget}
+ * Validator for updating existing widgets. Need admin privileges to use this.
  */
-public class NewWidgetValidator extends WidgetValidator {
+@Component
+public class UpdateWidgetValidator extends WidgetValidator {
 
     private final WidgetService widgetService;
 
     @Autowired
-    public NewWidgetValidator(WidgetService widgetService) {
+    public UpdateWidgetValidator(WidgetService widgetService) {
         super();
         this.widgetService = widgetService;
     }
 
     @Override
     protected final void validateIfWidgetAlreadyExists(Widget widget, Errors errors) {
-        if (widgetService.isRegisteredUrl(widget.getUrl())) {
-            errors.rejectValue(FIELD_URL, "widget.url.exists");
+        Widget existing = widgetService.getWidgetByUrl(widget.getUrl());
+        if (existing == null || existing.getEntityId().equals(widget.getEntityId())) {
+            return;
         }
+        errors.rejectValue(FIELD_URL, "widget.url.exists");
     }
-
 }

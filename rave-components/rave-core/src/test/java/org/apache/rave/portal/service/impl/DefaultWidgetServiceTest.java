@@ -19,6 +19,7 @@
 
 package org.apache.rave.portal.service.impl;
 
+import org.apache.rave.exception.DuplicateItemException;
 import org.apache.rave.portal.model.Widget;
 import org.apache.rave.portal.model.WidgetStatus;
 import org.apache.rave.portal.model.util.SearchResult;
@@ -32,9 +33,19 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import static org.easymock.EasyMock.*;
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.CoreMatchers.sameInstance;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Test for {@link DefaultWidgetService}
@@ -216,6 +227,34 @@ public class DefaultWidgetServiceTest {
     }
 
     @Test
+    public void isRegisteredWidget() {
+        final String widgetUrl =
+                "http://hosting.gmodules.com/ig/gadgets/file/112581010116074801021/hamster.xml";
+        Widget widget = new Widget();
+        widget.setUrl(widgetUrl);
+        expect(widgetRepository.getByUrl(widgetUrl)).andReturn(widget);
+        replay(widgetRepository);
+
+        boolean isExisting = widgetService.isRegisteredUrl(widgetUrl);
+        verify(widgetRepository);
+        assertTrue("Expecting existing widget for url " + widgetUrl, isExisting);
+    }
+
+    @Test
+    public void isNotRegisteredWidget_() {
+        final String widgetUrl =
+                "http://example.com/doesnotexistinrepository.xml";
+        Widget widget = new Widget();
+        widget.setUrl(widgetUrl);
+        expect(widgetRepository.getByUrl(widgetUrl)).andReturn(null);
+        replay(widgetRepository);
+
+        boolean isExisting = widgetService.isRegisteredUrl(widgetUrl);
+        verify(widgetRepository);
+        assertFalse("Not expecting widget for url " + widgetUrl, isExisting);
+    }
+
+    @Test
     public void registerNewWidget() {
         final String widgetUrl = "http://example.com/newwidget.xml";
         Widget widget = new Widget();
@@ -231,7 +270,7 @@ public class DefaultWidgetServiceTest {
         verify(widgetRepository);
     }
 
-    @Test
+    @Test(expected = DuplicateItemException.class)
     public void registerExistingWidgetAsNew() {
         final String widgetUrl =
                 "http://hosting.gmodules.com/ig/gadgets/file/112581010116074801021/hamster.xml";
@@ -240,9 +279,9 @@ public class DefaultWidgetServiceTest {
         expect(widgetRepository.getByUrl(widgetUrl)).andReturn(widget);
         replay(widgetRepository);
 
-        Widget noWidget = widgetService.registerNewWidget(widget);
-        assertNull("Widget already exists", noWidget);
+        widgetService.registerNewWidget(widget);
         verify(widgetRepository);
+        assertFalse("Expecting an exception", true);
     }
 
     @Test

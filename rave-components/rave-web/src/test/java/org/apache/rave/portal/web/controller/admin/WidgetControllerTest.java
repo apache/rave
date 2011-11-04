@@ -24,7 +24,7 @@ import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.service.WidgetService;
 import org.apache.rave.portal.web.util.ModelKeys;
 import org.apache.rave.portal.web.util.ViewNames;
-import org.apache.rave.portal.web.validator.NewWidgetValidator;
+import org.apache.rave.portal.web.validator.UpdateWidgetValidator;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.ui.ExtendedModelMap;
@@ -57,7 +57,7 @@ public class WidgetControllerTest {
 
     private WidgetController controller;
     private WidgetService service;
-    private NewWidgetValidator validator;
+    private UpdateWidgetValidator widgetValidator;
     private String validToken;
 
     @Test
@@ -115,13 +115,15 @@ public class WidgetControllerTest {
 
     @Test
     public void updateWidget_valid() {
-        Widget widget = new Widget(123L, "http://example.com/widget");
+        final String widgetUrl = "http://example.com/widget";
+        Widget widget = new Widget(123L, widgetUrl);
         widget.setTitle("Widget title");
         widget.setType("OpenSocial");
         BindingResult errors = new BeanPropertyBindingResult(widget, "widget");
         SessionStatus sessionStatus = createMock(SessionStatus.class);
         ModelMap modelMap = new ExtendedModelMap();
 
+        expect(service.getWidgetByUrl(widgetUrl)).andReturn(widget);
         service.updateWidget(widget);
         sessionStatus.setComplete();
         expectLastCall();
@@ -172,8 +174,8 @@ public class WidgetControllerTest {
         controller = new WidgetController();
         service = createMock(WidgetService.class);
         controller.setWidgetService(service);
-        validator = new NewWidgetValidator();
-        controller.setWidgetValidator(validator);
+        widgetValidator = new UpdateWidgetValidator(service);
+        controller.setWidgetValidator(widgetValidator);
         validToken = AdminControllerUtil.generateSessionToken();
     }
 

@@ -20,6 +20,7 @@
 package org.apache.rave.portal.service.impl;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.rave.exception.DuplicateItemException;
 import org.apache.rave.portal.model.Widget;
 import org.apache.rave.portal.model.WidgetStatus;
 import org.apache.rave.portal.model.util.SearchResult;
@@ -30,10 +31,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class DefaultWidgetService implements WidgetService {
@@ -123,12 +124,16 @@ public class DefaultWidgetService implements WidgetService {
     }
 
     @Override
+    public boolean isRegisteredUrl(String widgetUrl) {
+        return widgetRepository.getByUrl(widgetUrl) != null;
+    }
+
+    @Override
     @Transactional
     public Widget registerNewWidget(Widget widget) {
         if (getWidgetByUrl(widget.getUrl()) != null) {
-            logger.debug("Trying to add an existing widget for url {}", widget.getUrl());
-            return null;
-        }                      
+            throw new DuplicateItemException("Trying to add an existing widget for url " + widget.getUrl());
+        }
         return widgetRepository.save(widget);
     }
 
