@@ -166,7 +166,15 @@ rave.opensocial = rave.opensocial || (function() {
         var renderParams = {};
         var size = getSizeFromElement(gadget.regionWidgetId, view);
         renderParams[osapi.container.RenderParam.VIEW] = view;
-        renderParams[osapi.container.RenderParam.WIDTH] = size.width;
+        // 
+        // If size.width is passed to the WIDTH param this causes odd behaviour
+        // in Firefox and Opera. By using "100%" instead the gadget fills the 
+        // wrapper width even after maximizing/minimizing or changes in the region 
+        // width caused by other widgets being moved or added
+        //
+        // renderParams[osapi.container.RenderParam.WIDTH] = size.width;
+        //
+        renderParams[osapi.container.RenderParam.WIDTH] = "100%";
         renderParams[osapi.container.RenderParam.HEIGHT] = size.height;
         renderParams[osapi.container.RenderParam.USER_PREFS] = getCompleteUserPrefSet(gadget.userPrefs, gadget.metadata.userPrefs);
         container.navigateGadget(gadget.site, gadget.widgetUrl, {}, renderParams);
