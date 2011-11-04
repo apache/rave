@@ -31,6 +31,7 @@ import org.apache.rave.portal.web.renderer.RenderScope;
 import org.apache.rave.portal.web.renderer.ScriptLocation;
 import org.apache.rave.portal.web.renderer.ScriptManager;
 import org.apache.rave.portal.web.renderer.model.RenderContext;
+import org.apache.rave.provider.w3c.service.impl.W3CWidget;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -60,11 +61,16 @@ public class W3cWidgetRenderer implements RegionWidgetRenderer {
         this.scriptManager = scriptManager;
     }
     
+    /**
+     * The script block template
+     */
     private static final String SCRIPT_BLOCK =
         "<script>rave.registerWidget(widgetsByRegionIdMap, %1$s, {type: '%2$s'," +
         " regionWidgetId: %3$s," +
         " widgetUrl: '%4$s', " +
-        " collapsed: %5$s});</script>";
+        " height: '%5$s', " +
+        " width: '%6$s', " +
+        " collapsed: %7$s});</script>";
     private static final String MARKUP = "<!-- RegionWidget %1$s placeholder -->";
 
 
@@ -94,10 +100,28 @@ public class W3cWidgetRenderer implements RegionWidgetRenderer {
         return String.format(MARKUP, item.getEntityId());
     }
     
+    /**
+     * Create a widget script block
+     * @param item the RegionWidget to create a script block for
+     * @return the script block
+     */
     private String getWidgetScript(RegionWidget item) {
         User user = userService.getAuthenticatedUser();
-        Widget contextualizedWidget = widgetService.getWidget(user, null, item.getWidget());
         
+        //
+        // For the shared data key we use the RegionWidget entity ID.
+        //
+        String sharedDataKey = String.valueOf(item.getEntityId());
+        
+        //
+        // Get the Rave Widget for this regionWidget instance
+        //
+        W3CWidget contextualizedWidget = (W3CWidget) widgetService.getWidget(user, sharedDataKey, item.getWidget());
+        
+        //
+        // TODO make this do something useful; currently these preferences aren't
+        // actually available in the Widget Instance as prefs are managed separately in Wookie
+        //
         JSONObject userPrefs = new JSONObject();
         if (item.getPreferences() != null) {
             for (RegionWidgetPreference regionWidgetPreference : item.getPreferences()) {
@@ -108,8 +132,21 @@ public class W3cWidgetRenderer implements RegionWidgetRenderer {
                 }
             }
         }
+        
+        //
+        // Use width and height attributes if available, otherwise set to "100%"
+        //
+        String width = "100%";
+        String height = "100%";
+        if (contextualizedWidget.getWidth() > 0)
+           width = String.valueOf(contextualizedWidget.getWidth()) + "px";
+        if (contextualizedWidget.getHeight() > 0)
+        	height = String.valueOf(contextualizedWidget.getHeight()) + "px";
 
+        //
+        // Construct and return script block
+        //
         return String.format(SCRIPT_BLOCK, item.getRegion().getEntityId(), WIDGET_TYPE, item.getEntityId(),
-                contextualizedWidget.getUrl(), item.isCollapsed());
+                contextualizedWidget.getUrl(), height, width, item.isCollapsed());
     }
 }

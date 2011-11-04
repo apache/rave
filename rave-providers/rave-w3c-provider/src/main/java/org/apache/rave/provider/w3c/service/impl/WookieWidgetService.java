@@ -22,27 +22,23 @@ package org.apache.rave.provider.w3c.service.impl;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.Widget;
 import org.apache.rave.portal.service.WidgetProviderService;
-/*import org.apache.wookie.connector.framework.WidgetInstance;
+import org.apache.wookie.connector.framework.WidgetInstance;
 import org.apache.wookie.connector.framework.WookieConnectorException;
-import org.apache.wookie.connector.framework.WookieConnectorService;*/
+import org.apache.wookie.connector.framework.WookieConnectorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 
-//import org.apache.wookie.connector.framework.WidgetInstance;
-//import org.apache.wookie.connector.framework.WookieConnectorException;
-
 @Service
 public class WookieWidgetService implements WidgetProviderService {
   private static Logger logger = LoggerFactory.getLogger(WookieWidgetService.class);
 	  
-    // FIXME: shouldn't hard code the server location
+    // FIXME: shouldn't hard code the server location or API key
     private static final String WOOKIE_SERVER_URL = "http://bombax.oucs.ox.ac.uk:8888/wookie";
     private static final String WOOKIE_API_KEY = "TEST"; 
-    private static final String WOOKIE_SHARED_DATA_KEY = "mysharedkey";
-    //private static WookieConnectorService  connectorService;
+    private static WookieConnectorService  connectorService;
     
     public WookieWidgetService(){
     }
@@ -51,18 +47,25 @@ public class WookieWidgetService implements WidgetProviderService {
      * @see org.apache.rave.portal.service.WidgetProviderService#getWidget(org.apache.rave.portal.model.User)
      */
     @Override
-    public Widget getWidget(User viewer, String context, Widget widget) {
+    public Widget getWidget(User viewer, String sharedDataKey, Widget widget) {
         if (widget.getType().equals("W3C")) {
-          return getWidgetForViewer(widget, context, viewer);
+          return getWidgetForViewer(widget, sharedDataKey, viewer);
         } else {
           return null;
         }
     }
     
-    private Widget getWidgetForViewer(Widget widget, String context, User viewer){
-      /*  try {
+    /**
+     * Gets the Widget Instance corresponding to the RegionWidget and the Viewer
+     * @param widget the type of Widget to obtain
+     * @param sharedDataKey the context for data sharing
+     * @param viewer the current viewer
+     * @return a Widget
+     */
+    private W3CWidget getWidgetForViewer(Widget widget, String sharedDataKey, User viewer){
+       try {
             // TODO: parameters for WookieConnectorService should not be fixed in code.
-            connectorService = getWookieConnectorService(WOOKIE_SERVER_URL, WOOKIE_API_KEY, WOOKIE_SHARED_DATA_KEY);
+            connectorService = getWookieConnectorService(WOOKIE_SERVER_URL, WOOKIE_API_KEY, sharedDataKey);
             org.apache.wookie.connector.framework.User user = new org.apache.wookie.connector.framework.User(String.valueOf(viewer.getUsername()), viewer.getUsername());
             connectorService.setCurrentUser(user);
             
@@ -77,9 +80,7 @@ public class WookieWidgetService implements WidgetProviderService {
             logger.error("Problem communicating with Wookie server", e);
             // FIXME: provide a real error widget
             return createWidget(new WidgetInstance("error", "error", e.getMessage(), "100", "100"));
-        }*/
-        //TODO Remove
-        return null;
+        }
     }
 
     /**
@@ -87,11 +88,13 @@ public class WookieWidgetService implements WidgetProviderService {
      * This is a transient object and is not persisted
      * @return
      */
-    /*private Widget createWidget(WidgetInstance instance){
-        Widget widget = new Widget();
+    private W3CWidget createWidget(WidgetInstance instance){
+        W3CWidget widget = new W3CWidget();
         widget.setUrl(instance.getUrl());
         widget.setTitle(instance.getTitle());
         widget.setType("W3C");
+        widget.setHeight(Integer.parseInt(instance.getHeight()));
+        widget.setWidth(Integer.parseInt(instance.getWidth()));
         return widget;
     }
     
@@ -102,7 +105,6 @@ public class WookieWidgetService implements WidgetProviderService {
         connectorService = new WookieConnectorService(serverURL, apiKey, sharedDataKey);
       }
       return connectorService;
-    }*/
-    
+    }
 
 }

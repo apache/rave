@@ -38,6 +38,7 @@ import org.apache.rave.portal.web.renderer.Renderer;
 import org.apache.rave.portal.web.renderer.ScriptManager;
 import org.apache.rave.portal.web.renderer.model.RenderContext;
 import org.apache.rave.provider.w3c.Constants;
+import org.apache.rave.provider.w3c.service.impl.W3CWidget;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -73,7 +74,7 @@ public class W3cWidgetRendererTest {
         expect(userService.getAuthenticatedUser()).andReturn(user);
         replay(userService);
         
-        Widget w = new Widget();
+        W3CWidget w = new W3CWidget();
         w.setType(Constants.WIDGET_TYPE);
         w.setUrl("http://example.com/widgets/1");
         Region region = new Region(1L);
@@ -82,10 +83,10 @@ public class W3cWidgetRendererTest {
         rw.setWidget(w);
         rw.setRegion(region);
 
-        Widget wookieWidget = new Widget();
+        W3CWidget wookieWidget = new W3CWidget();
         wookieWidget.setUrl(VALID_WIDGET_INSTANCE_URL);
 
-        expect(wookieService.getWidget(user, null, w)).andReturn(wookieWidget);
+        expect(wookieService.getWidget(user, rw.getEntityId().toString(), w)).andReturn(wookieWidget);
         replay(wookieService);
 
         String placeholder = renderer.render(rw, renderContext);
