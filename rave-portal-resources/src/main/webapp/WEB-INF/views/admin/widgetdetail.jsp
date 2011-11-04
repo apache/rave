@@ -93,8 +93,8 @@
                             </p>
 
                             <p>
-                                <form:label path="description"><fmt:message key="widget.description"/></form:label>
-                                <form:textarea path="description" cssClass="long"/>
+                                <form:label path="description"><fmt:message key="widget.description"/> *</form:label>
+                                <form:textarea path="description" required="required" cssClass="long"/>
                                 <form:errors path="description" cssClass="error"/>
                             </p>
 

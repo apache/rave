@@ -175,6 +175,7 @@ public class WidgetStoreControllerTest {
         widget.setTitle("Widget title");
         widget.setUrl(widgetUrl);
         widget.setType("OpenSocial");
+        widget.setDescription("Lorem ipsum");
         final BindingResult errors = new BeanPropertyBindingResult(widget, "widget");
 
         expect(widgetService.registerNewWidget(widget)).andReturn(widget);

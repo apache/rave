@@ -42,6 +42,7 @@ public class NewWidgetValidatorTest {
     private static final String VALID_TITLE = "My widget";
     private static final String VALID_URL = "http://example.com/widget.xml";
     private static final String VALID_TYPE = "OpenSocial";
+    private static final String VALID_DESCRIPTION = "Lorem ipsum dolor sit amet.";
     private static final String WIDGET = "widget";
 
     private NewWidgetValidator widgetValidator;
@@ -53,6 +54,7 @@ public class NewWidgetValidatorTest {
         widget.setTitle(VALID_TITLE);
         widget.setUrl(VALID_URL);
         widget.setType(VALID_TYPE);
+        widget.setDescription(VALID_DESCRIPTION);
         Errors errors = new BindException(widget, WIDGET);
 
         expect(widgetService.isRegisteredUrl(VALID_URL)).andReturn(false);
@@ -70,7 +72,7 @@ public class NewWidgetValidatorTest {
 
         widgetValidator.validate(widget, errors);
 
-        assertEquals(3, errors.getErrorCount());
+        assertEquals(4, errors.getErrorCount());
     }
 
     @Test
@@ -81,11 +83,13 @@ public class NewWidgetValidatorTest {
         widget.setEntityId(123L);
         widget.setTitle(VALID_TITLE);
         widget.setType(VALID_TYPE);
+        widget.setDescription(VALID_DESCRIPTION);
         widget.setUrl(existingUrl);
 
         Widget newWidget = new Widget();
         newWidget.setTitle(VALID_TITLE);
         newWidget.setType(VALID_TYPE);
+        newWidget.setDescription(VALID_DESCRIPTION);
         newWidget.setUrl(existingUrl);
         Errors errors = new BindException(newWidget, WIDGET);
 
@@ -107,6 +111,7 @@ public class NewWidgetValidatorTest {
         widget.setScreenshotUrl("https://///invalid/screenshot");
         widget.setThumbnailUrl("thumbnail");
         widget.setTitleUrl("titleUrl");
+        widget.setDescription(VALID_DESCRIPTION);
         Errors errors = new BindException(widget, WIDGET);
 
         widgetValidator.validate(widget, errors);

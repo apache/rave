@@ -78,6 +78,8 @@ public abstract class WidgetValidator implements Validator {
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "title", "widget.title.required");
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, FIELD_URL, "widget.url.required");
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "type", "widget.type.required");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "description", "widget.description.required");
+
     }
 
     /**

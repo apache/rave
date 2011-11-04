@@ -91,8 +91,6 @@ public class WidgetControllerTest {
         assertEquals(searchTerm, model.asMap().get(ModelKeys.SEARCH_TERM));
         assertEquals(type, model.asMap().get("selectedWidgetType"));
         assertEquals(status, model.asMap().get("selectedWidgetStatus"));
-
-
     }
 
     @Test
@@ -119,6 +117,7 @@ public class WidgetControllerTest {
         Widget widget = new Widget(123L, widgetUrl);
         widget.setTitle("Widget title");
         widget.setType("OpenSocial");
+        widget.setDescription("Lorem ipsum");
         BindingResult errors = new BeanPropertyBindingResult(widget, "widget");
         SessionStatus sessionStatus = createMock(SessionStatus.class);
         ModelMap modelMap = new ExtendedModelMap();
