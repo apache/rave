@@ -20,13 +20,15 @@
 package org.apache.rave.portal.repository.impl;
 
 import org.apache.rave.persistence.jpa.AbstractJpaRepository;
+import org.apache.rave.portal.model.Page;
 import org.apache.rave.portal.model.User;
+import org.apache.rave.portal.model.WidgetComment;
+import org.apache.rave.portal.model.WidgetRating;
 import org.apache.rave.portal.repository.UserRepository;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.apache.rave.persistence.jpa.util.JpaUtil.getPagedResultList;
@@ -85,36 +87,47 @@ public class JpaUserRepository extends AbstractJpaRepository<User> implements Us
 
     @Override
     public void removeUser(User user) {
-        final Long userId = user.getEntityId();
-
-        String deleteRegionWidgetPreference = "DELETE FROM REGION_WIDGET_PREFERENCE WHERE REGION_WIDGET_ID IN (";
-        String selectRegionWidget = "SELECT ENTITY_ID FROM REGION_WIDGET WHERE REGION_ID IN (";
-        String deleteRegionWidget = "DELETE FROM REGION_WIDGET WHERE REGION_ID IN (";
-        String selectRegion = "SELECT ENTITY_ID FROM REGION WHERE PAGE_ID IN (";
-        String deleteRegion = "DELETE FROM REGION WHERE PAGE_ID IN (";
-        String selectPage = "SELECT ENTITY_ID FROM PAGE WHERE OWNER_ID = ?";
-        String deletePage = "DELETE FROM PAGE WHERE OWNER_ID = ?";
-
-        String deleteWidgetComment = "DELETE FROM WIDGET_COMMENT WHERE USER_ID = ?";
-        String deleteWidgetRating = "DELETE FROM WIDGET_RATING WHERE USER_ID = ?";
-        String updateWidget = "UPDATE WIDGET SET OWNER_ID = null WHERE OWNER_ID = ?";
-
-        List<String> queryStrings = new ArrayList<String>();
-        queryStrings.add(deleteRegionWidgetPreference + selectRegionWidget + selectRegion + selectPage + ")))");
-        queryStrings.add(deleteRegionWidget + selectRegion + selectPage + "))");
-        queryStrings.add(deleteRegion + selectPage + ")");
-        queryStrings.add(deletePage);
-        queryStrings.add(deleteWidgetComment);
-        queryStrings.add(deleteWidgetRating);
-        queryStrings.add(updateWidget);
-
-        final int userIdParam = 1;
-        for (String queryString : queryStrings) {
-            Query query = manager.createNativeQuery(queryString);
-            query.setParameter(userIdParam, userId);
-            query.executeUpdate();
-        }
+        deletePages(user);
+        deleteWidgetComments(user);
+        deleteWidgetRatings(user);
+        removeUserFromWidget(user);
 
         this.delete(user);
+    }
+
+    private void deletePages(User user) {
+        TypedQuery<Page> pageQuery = manager.createNamedQuery("Page.getByUserId", Page.class);
+        pageQuery.setParameter("userId", user.getEntityId());
+        final List<Page> resultList = pageQuery.getResultList();
+        for (Page p : resultList) {
+            // removing Page removes Region removes RegionWidget removes RegionWidgetPreference
+            manager.remove(p);
+        }
+    }
+
+    private void deleteWidgetRatings(User user) {
+        TypedQuery<WidgetRating> widgetRatingQuery = manager.createNamedQuery(WidgetRating.WIDGET_ALL_USER_RATINGS,
+                WidgetRating.class);
+        widgetRatingQuery.setParameter(WidgetRating.PARAM_USER_ID, user.getEntityId());
+        final List<WidgetRating> resultList = widgetRatingQuery.getResultList();
+        for (WidgetRating widgetRating : resultList) {
+            manager.remove(widgetRating);
+        }
+    }
+
+    private void deleteWidgetComments(User user) {
+        TypedQuery<WidgetComment>widgetCommentQuery =
+                manager.createQuery("SELECT wc FROM WidgetComment wc WHERE wc.user = :user", WidgetComment.class);
+        widgetCommentQuery.setParameter("user", user);
+        final List<WidgetComment> resultList = widgetCommentQuery.getResultList();
+        for (WidgetComment widgetComment : resultList) {
+            manager.remove(widgetComment);
+        }
+    }
+
+    private void removeUserFromWidget(User user) {
+        Query query = manager.createQuery("UPDATE Widget w SET w.owner = null WHERE w.owner = :user");
+        query.setParameter("user", user);
+        query.executeUpdate();
     }
 }
