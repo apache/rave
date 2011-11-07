@@ -23,7 +23,6 @@ import org.apache.rave.portal.model.Authority;
 import org.apache.rave.portal.model.Page;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.util.SearchResult;
-import org.apache.rave.portal.repository.PageRepository;
 import org.apache.rave.portal.repository.UserRepository;
 import org.apache.rave.portal.service.UserService;
 import org.junit.After;
@@ -41,7 +40,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.createNiceMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.expectLastCall;
@@ -59,15 +57,13 @@ public class DefaultUserServiceTest {
     private static final Long USER_ID = 1234L;
     private UserService service;
     private UserRepository userRepository;
-    private PageRepository pageRepository;
     private static final String USER_NAME = "1234";
     private static final String USER_EMAIL = "test@test.com";
 
     @Before
     public void setup() {
         userRepository = createNiceMock(UserRepository.class);
-        pageRepository = createMock(PageRepository.class);
-        service = new DefaultUserService(userRepository, pageRepository);
+        service = new DefaultUserService(userRepository);
     }
 
     @After
@@ -247,14 +243,12 @@ public class DefaultUserServiceTest {
         Page page = new Page(1L, user);
         List<Page> pages = new ArrayList<Page>();
         pages.add(page);
-        expect(pageRepository.getAllPages(USER_ID)).andReturn(pages);
         expect(userRepository.get(USER_ID)).andReturn(user).times(1);
-        pageRepository.delete(page);
         expectLastCall();
-        replay(userRepository, pageRepository);
+        replay(userRepository);
 
         service.deleteUser(USER_ID);
-        verify(userRepository, pageRepository);
+        verify(userRepository);
 
         assertTrue("Deleted", true);
     }

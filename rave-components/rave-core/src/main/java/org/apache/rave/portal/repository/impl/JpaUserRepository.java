@@ -26,6 +26,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.apache.rave.persistence.jpa.util.JpaUtil.getPagedResultList;
@@ -80,5 +81,40 @@ public class JpaUserRepository extends AbstractJpaRepository<User> implements Us
         query.setParameter(User.PARAM_SEARCHTERM, "%" + searchTerm.toLowerCase() + "%");
         Number countResult = (Number) query.getSingleResult();
         return countResult.intValue();
+    }
+
+    @Override
+    public void removeUser(User user) {
+        final Long userId = user.getEntityId();
+
+        String deleteRegionWidgetPreference = "DELETE FROM REGION_WIDGET_PREFERENCE WHERE REGION_WIDGET_ID IN (";
+        String selectRegionWidget = "SELECT ENTITY_ID FROM REGION_WIDGET WHERE REGION_ID IN (";
+        String deleteRegionWidget = "DELETE FROM REGION_WIDGET WHERE REGION_ID IN (";
+        String selectRegion = "SELECT ENTITY_ID FROM REGION WHERE PAGE_ID IN (";
+        String deleteRegion = "DELETE FROM REGION WHERE PAGE_ID IN (";
+        String selectPage = "SELECT ENTITY_ID FROM PAGE WHERE OWNER_ID = ?";
+        String deletePage = "DELETE FROM PAGE WHERE OWNER_ID = ?";
+
+        String deleteWidgetComment = "DELETE FROM WIDGET_COMMENT WHERE USER_ID = ?";
+        String deleteWidgetRating = "DELETE FROM WIDGET_RATING WHERE USER_ID = ?";
+        String updateWidget = "UPDATE WIDGET SET OWNER_ID = null WHERE OWNER_ID = ?";
+
+        List<String> queryStrings = new ArrayList<String>();
+        queryStrings.add(deleteRegionWidgetPreference + selectRegionWidget + selectRegion + selectPage + ")))");
+        queryStrings.add(deleteRegionWidget + selectRegion + selectPage + "))");
+        queryStrings.add(deleteRegion + selectPage + ")");
+        queryStrings.add(deletePage);
+        queryStrings.add(deleteWidgetComment);
+        queryStrings.add(deleteWidgetRating);
+        queryStrings.add(updateWidget);
+
+        final int userIdParam = 1;
+        for (String queryString : queryStrings) {
+            Query query = manager.createNativeQuery(queryString);
+            query.setParameter(userIdParam, userId);
+            query.executeUpdate();
+        }
+
+        this.delete(user);
     }
 }

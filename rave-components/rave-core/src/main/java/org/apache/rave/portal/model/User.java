@@ -32,6 +32,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.PreRemove;
@@ -41,7 +42,7 @@ import javax.persistence.Transient;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
-import javax.persistence.ManyToOne;
+import java.util.Collections;
 
 /**
  * {@inheritDoc}
@@ -297,10 +298,10 @@ public class User implements UserDetails, BasicEntity, Serializable {
 
     @PreRemove
     public void preRemove() {
-        for(Authority authority : authorities) {
+        for (Authority authority : authorities) {
             authority.removeUser(this);
         }
-        this.authorities = null;
+        this.authorities = Collections.emptyList();
     }
 
     @Override

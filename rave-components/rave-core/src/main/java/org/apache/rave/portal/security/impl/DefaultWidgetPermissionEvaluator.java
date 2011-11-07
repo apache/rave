@@ -18,8 +18,9 @@
  */
 package org.apache.rave.portal.security.impl;
 
-import org.apache.rave.portal.model.Widget;
 import org.apache.rave.portal.model.User;
+import org.apache.rave.portal.model.Widget;
+import org.apache.rave.portal.model.WidgetStatus;
 import org.apache.rave.portal.repository.WidgetRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +31,6 @@ import org.springframework.stereotype.Component;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.rave.portal.model.WidgetStatus;
 
 @Component
 public class DefaultWidgetPermissionEvaluator extends AbstractModelPermissionEvaluator<Widget>{
@@ -130,7 +130,7 @@ public class DefaultWidgetPermissionEvaluator extends AbstractModelPermissionEva
     // returns a trusted Widget object, either from the WidgetRepository, or the
     // cached container list
     private Widget getTrustedWidget(long widgetId, List<Widget> trustedWidgetContainer) {
-        Widget widget = null;
+        Widget widget;
         if (trustedWidgetContainer.isEmpty()) {
             widget = widgetRepository.get(widgetId);
             trustedWidgetContainer.add(widget);
@@ -144,7 +144,10 @@ public class DefaultWidgetPermissionEvaluator extends AbstractModelPermissionEva
     // if trustedDomainObject is false, pull the entity from the database first to ensure
     // the model object is trusted and hasn't been modified
     private boolean isWidgetOwner(Authentication authentication, Widget widget, List<Widget> trustedWidgetContainer, boolean trustedDomainObject) {
-        Widget trustedWidget = null;
+        if (widget.getOwner() == null) {
+            return false;
+        }
+        Widget trustedWidget;
         if (trustedDomainObject) {
             trustedWidget = widget;
         } else {
@@ -162,7 +165,7 @@ public class DefaultWidgetPermissionEvaluator extends AbstractModelPermissionEva
     }
     
     private boolean isPublishedWidget(Widget widget, List<Widget> trustedWidgetContainer, boolean trustedDomainObject) {
-        Widget trustedWidget = null;
+        Widget trustedWidget;
         if (trustedDomainObject) {
             trustedWidget = widget;
         } else {
@@ -172,7 +175,7 @@ public class DefaultWidgetPermissionEvaluator extends AbstractModelPermissionEva
     }    
 
     private boolean verifyRaveSecurityContext(Authentication authentication, RaveSecurityContext raveSecurityContext) {
-        Class<?> clazz = null;
+        Class<?> clazz;
         try {
            clazz = Class.forName(raveSecurityContext.getType());
         } catch (ClassNotFoundException ex) {

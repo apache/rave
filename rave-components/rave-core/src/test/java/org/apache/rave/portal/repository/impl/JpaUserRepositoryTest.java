@@ -21,7 +21,10 @@ package org.apache.rave.portal.repository.impl;
 
 import junit.framework.Assert;
 import org.apache.rave.portal.model.Authority;
+import org.apache.rave.portal.model.Page;
 import org.apache.rave.portal.model.User;
+import org.apache.rave.portal.repository.AuthorityRepository;
+import org.apache.rave.portal.repository.UserRepository;
 import org.hamcrest.CoreMatchers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,10 +35,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import java.util.List;
 
-import org.apache.rave.portal.repository.AuthorityRepository;
-import org.apache.rave.portal.repository.UserRepository;
+import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertTrue;
@@ -162,5 +165,22 @@ public class JpaUserRepositoryTest {
         String searchTerm = "Doe";
         int count = repository.getCountByUsernameOrEmail(searchTerm);
         assertTrue(count > 1);
+    }
+
+    @Test
+    public void removeUser() {
+        User user = repository.get(USER_ID);
+        assertNotNull(user);
+        final TypedQuery<Page> pageQuery = manager.createNamedQuery("Page.getByUserId", Page.class);
+        pageQuery.setParameter("userId", USER_ID);
+        List<Page> pages = pageQuery.getResultList();
+        assertFalse("User has pages", pages.isEmpty());
+
+        repository.removeUser(user);
+
+        user = repository.get(USER_ID);
+        assertNull(user);
+        pages = pageQuery.getResultList();
+        assertTrue("User has no pages", pages.isEmpty());
     }
 }

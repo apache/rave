@@ -19,10 +19,8 @@
 
 package org.apache.rave.portal.service.impl;
 
-import org.apache.rave.portal.model.Page;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.util.SearchResult;
-import org.apache.rave.portal.repository.PageRepository;
 import org.apache.rave.portal.repository.UserRepository;
 import org.apache.rave.portal.service.UserService;
 import org.slf4j.Logger;
@@ -50,12 +48,9 @@ public class DefaultUserService implements UserService {
 
     private final UserRepository userRepository;
 
-    private final PageRepository pageRepository;
-
     @Autowired
-    public DefaultUserService(UserRepository userRepository, PageRepository pageRepository) {
+    public DefaultUserService(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.pageRepository = pageRepository;
     }
 
     @Override
@@ -169,10 +164,7 @@ public class DefaultUserService implements UserService {
         if (user == null) {
             return;
         }
-        for (Page page : pageRepository.getAllPages(userId)) {
-            pageRepository.delete(page);
-        }
-        userRepository.delete(user);
+        userRepository.removeUser(user);
     }
 
 }

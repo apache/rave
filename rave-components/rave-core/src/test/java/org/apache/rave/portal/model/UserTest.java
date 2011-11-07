@@ -21,6 +21,10 @@ package org.apache.rave.portal.model;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -97,6 +101,29 @@ public class UserTest {
         assertTrue(user3.isAccountNonExpired());
         assertTrue("Account and credential nonexpirations handled correctly", user1.isAccountNonExpired() && user1.isCredentialsNonExpired());
         assertTrue("Account and credential expirations handled correctly", !user2.isAccountNonExpired() && !user2.isCredentialsNonExpired());
+    }
+
+    @Test
+    public void preRemove() {
+        User user = new User(123L, "DummyUser");
+
+        Collection<Authority> authorities = new ArrayList<Authority>();
+        Authority authority = new Authority();
+        authority.setEntityId(456L);
+        authority.setAuthority("DummyAuthority");
+        authority.addUser(user);
+        authorities.add(authority);
+
+        user.addAuthority(authority);
+
+        assertFalse(user.getAuthorities().isEmpty());
+        assertEquals(authorities, user.getAuthorities());
+        assertEquals(user, authority.getUsers().iterator().next());
+
+        user.preRemove();
+
+        assertTrue(user.getAuthorities().isEmpty());
+        assertTrue(authority.getUsers().isEmpty());
     }
 
 }

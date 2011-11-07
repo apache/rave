@@ -72,4 +72,11 @@ public interface UserRepository extends Repository<User> {
      *         Useful for paging.
      */
     int getCountByUsernameOrEmail(String searchTerm);
+
+    /**
+     * Deletes the User and all its trails in the database
+     *
+     * @param user {@link User} to delete
+     */
+    void removeUser(User user);
 }
