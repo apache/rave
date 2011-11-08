@@ -36,7 +36,7 @@
                       <fmt:message key="page.store.title"/>
                     </a>
                 </li>
-                <sec:authorize access="hasRole('ROLE_ADMIN')">
+                <sec:authorize url="/app/admin/">
                     <li>
                         <a href="<spring:url value="/app/admin/"/>">
                             <fmt:message key="page.general.toadmininterface"/>

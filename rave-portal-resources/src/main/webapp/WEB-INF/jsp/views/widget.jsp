@@ -46,7 +46,7 @@
                     </c:choose>
                     <a href="<c:out value="${gobackurl}"/>"><fmt:message key="page.general.back"/></a>
                 </li>
-                <sec:authorize access="hasRole('ROLE_ADMIN')">
+                <sec:authorize url="/app/admin/">
                     <li>
                         <a href="<spring:url value="/app/admin/"/>">
                             <fmt:message key="page.general.toadmininterface"/>
