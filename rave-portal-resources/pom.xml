@@ -61,8 +61,14 @@
         </dependency>
     </dependencies>
 
-    <build>
-        <plugins>
+	 <build>
+		<resources>
+		  <resource>
+			 <directory>src/main/resources</directory>
+			 <filtering>true</filtering>
+		  </resource>
+		</resources>
+		<plugins>
             <plugin>
                 <groupId>com.googlecode.mavenfilesync</groupId>
                 <artifactId>maven-filesync-plugin</artifactId>

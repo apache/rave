@@ -69,6 +69,9 @@
         <cobertura.version>2.5.1</cobertura.version>
         <org.hamcrest.version>1.1</org.hamcrest.version>
 
+		  <!-- The location of Rave's H2 file DB. No trailing / -->
+		  <portal.datasource.url>/tmp/rave_portal_data</portal.datasource.url>
+
         <!-- Force maven-filesync-plugin rewrite the Eclipse FileSync plugin configuration with
             $mvn filesync:generate -Dmaven.filesync.override=true -->
         <maven.filesync.override>false</maven.filesync.override>
