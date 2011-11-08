@@ -72,7 +72,7 @@ public class WidgetStoreController {
         model.addAttribute(ModelKeys.WIDGETS,
                 widgetService.getPublishedWidgets(offset, MAXIMUM_WIDGETS_PER_PAGE));
         model.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
-        model.addAttribute(ModelKeys.WIDGETS_STATISTICS, widgetService.getAllWidgetStatistics(user.getEntityId()));        
+        model.addAttribute(ModelKeys.WIDGETS_STATISTICS, widgetService.getAllWidgetStatistics(user.getEntityId()));
         return ViewNames.STORE;
     }
 
@@ -116,7 +116,7 @@ public class WidgetStoreController {
         model.addAttribute(ModelKeys.SEARCH_TERM, searchTerm);
         model.addAttribute(ModelKeys.OFFSET, offset);
         model.addAttribute(ModelKeys.WIDGETS_STATISTICS, widgetService.getAllWidgetStatistics(user.getEntityId()));
-        
+
         return ViewNames.STORE;
     }
 
@@ -127,8 +127,9 @@ public class WidgetStoreController {
      * @return the view name of the Add new Widget form
      */
     @RequestMapping(method = RequestMethod.GET, value = "widget/add")
-    public String viewAddWidgetForm(Model model) {
+    public String viewAddWidgetForm(Model model,@RequestParam long referringPageId) {
         final Widget widget = new Widget();
+        model.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
         model.addAttribute(ModelKeys.WIDGET, widget);
         return ViewNames.ADD_WIDGET_FORM;
     }
@@ -143,20 +144,19 @@ public class WidgetStoreController {
      */
     @RequestMapping(method = RequestMethod.POST, value = "widget/add")
     public String viewAddWidgetResult(@ModelAttribute Widget widget, BindingResult results,
-                                      Model model) {
-        User user = userService.getAuthenticatedUser();                                     
+                                      Model model,@RequestParam long referringPageId   ) {
+        User user = userService.getAuthenticatedUser();
         widgetValidator.validate(widget, results);
         if (results.hasErrors()) {
             model.addAttribute(ModelKeys.WIDGET, widget);
             return ViewNames.ADD_WIDGET_FORM;
         }
-
         widget.setWidgetStatus(WidgetStatus.PREVIEW);
         widget.setOwner(user);
 
         final Widget storedWidget = widgetService.registerNewWidget(widget);
-
-        model.addAttribute(ModelKeys.WIDGET, storedWidget);       
+        model.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
+        model.addAttribute(ModelKeys.WIDGET, storedWidget);
         model.addAttribute(ModelKeys.WIDGET_STATISTICS, widgetService.getWidgetStatistics(storedWidget.getEntityId(), user.getEntityId()));
         model.addAttribute(ModelKeys.USER_PROFILE, user);
         return ViewNames.WIDGET;

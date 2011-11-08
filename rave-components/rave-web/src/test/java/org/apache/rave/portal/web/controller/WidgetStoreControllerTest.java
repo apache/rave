@@ -66,7 +66,7 @@ public class WidgetStoreControllerTest {
     private static final long REFERRER_ID = 35L;
     private WidgetStoreController controller;
     private WidgetService widgetService;
-    
+
     private User validUser;
     private WidgetStatistics widgetStatistics;
     private Map<Long, WidgetStatistics> allWidgetStatisticsMap;
@@ -76,12 +76,12 @@ public class WidgetStoreControllerTest {
         validUser = new User();
         validUser.setEntityId(1L);
         widgetStatistics = new WidgetStatistics();
-        
+
         allWidgetStatisticsMap = new HashMap<Long, WidgetStatistics>();
         allWidgetStatisticsMap.put(WIDGET_ID, widgetStatistics);
-        
+
         widgetService = createMock(WidgetService.class);
-        UserService userService = createMock(UserService.class);        
+        UserService userService = createMock(UserService.class);
         expect(userService.getAuthenticatedUser()).andReturn(validUser);
         replay(userService);
         NewWidgetValidator widgetValidator = new NewWidgetValidator(widgetService);
@@ -160,7 +160,7 @@ public class WidgetStoreControllerTest {
     @Test
     public void startAddWidget() {
         final Model model = new ExtendedModelMap();
-        final String view = controller.viewAddWidgetForm(model);
+        final String view = controller.viewAddWidgetForm(model,REFERRER_ID);
         assertEquals("View for add widget form", ViewNames.ADD_WIDGET_FORM, view);
         final Widget widget = (Widget) model.asMap().get(ModelKeys.WIDGET);
         assertNotNull("New widget in Model", widget);
@@ -182,7 +182,7 @@ public class WidgetStoreControllerTest {
         expect(widgetService.isRegisteredUrl(widgetUrl)).andReturn(false);
         expect(widgetService.getWidgetStatistics(WIDGET_ID, validUser.getEntityId())).andReturn(widgetStatistics);
         replay(widgetService);
-        String view = controller.viewAddWidgetResult(widget, errors, model);
+        String view = controller.viewAddWidgetResult(widget, errors, model,REFERRER_ID);
         verify(widgetService);
 
         assertEquals(ViewNames.WIDGET, view);
@@ -211,7 +211,7 @@ public class WidgetStoreControllerTest {
 
         expect(widgetService.isRegisteredUrl(widgetUrl)).andReturn(true);
         replay(widgetService);
-        String view = controller.viewAddWidgetResult(widget, errors, model);
+        String view = controller.viewAddWidgetResult(widget, errors, model,REFERRER_ID);
         verify(widgetService);
 
         assertEquals(ViewNames.ADD_WIDGET_FORM, view);
@@ -225,7 +225,7 @@ public class WidgetStoreControllerTest {
         widget.setTitle("Not enough data");
         final Model model = new ExtendedModelMap();
         final BindingResult errors = new BeanPropertyBindingResult(widget, "widget");
-        String view = controller.viewAddWidgetResult(widget, errors, model);
+        String view = controller.viewAddWidgetResult(widget, errors, model,REFERRER_ID);
         assertTrue("Invalid widget data", errors.hasErrors());
         assertEquals(ViewNames.ADD_WIDGET_FORM, view);
         assertEquals(widget, model.asMap().get(ModelKeys.WIDGET));

@@ -30,7 +30,7 @@
     <nav class="topnav">
         <ul class="horizontal-list">
             <li>
-                <a href="<spring:url value="/app/store/widget/add"/>"><fmt:message key="page.addwidget.title"/></a>
+                <a href="<spring:url value="/app/store/widget/add?referringPageId=${referringPageId}"/>"><fmt:message key="page.addwidget.title"/></a>
             </li>
             <li>
                 <c:choose>
@@ -53,7 +53,7 @@
 </header>
 
 <div id="content">
-    
+
     <div class="storeSearch">
         <form action="<c:url value="/app/store/search"/>" method="GET">
             <fieldset>
@@ -109,7 +109,7 @@
                                  width="120" height="60"/>
                         </c:if>
                         <div class="widgetType"><c:out value="${widget.type}"/></div>
-                        
+
                         <div class="widgetRating">
                             <fmt:message key="page.widget.rate"/>
                             <div id="rating-${widget.entityId}" class="ratingButtons">
@@ -142,7 +142,7 @@
                 </li>
             </c:forEach>
         </ul>
-        
+
         <c:if test="${widgets.numberOfPages gt 1}">
             <div class="storeBox">
                 <ul class="paging">

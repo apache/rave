@@ -29,8 +29,23 @@
     <header>
         <nav class="topnav">
             <ul class="horizontal-list">
+              <c:if test="${not empty referringPageId}">
+                    <li>
+                        <a href="<spring:url value="/app/store?referringPageId=${referringPageId}" />">
+                            <fmt:message key="page.widget.backToStore"/>
+                        </a>
+                    </li>
+                </c:if>
                 <li>
-                    <a href="<spring:url value="/index.html" />"><fmt:message key="page.general.back"/></a>
+                   <c:choose>
+                    <c:when test="${empty referringPageId}">
+                        <spring:url value="/index.html" var="gobackurl" />
+                    </c:when>
+                    <c:otherwise>
+                        <spring:url value="/app/page/view/${referringPageId}" var="gobackurl"/>
+                    </c:otherwise>
+                </c:choose>
+                <a href="<c:out value="${gobackurl}"/>"><fmt:message key="page.general.back"/></a>
                 </li>
                 <li>
                     <a href="<spring:url value="/j_spring_security_logout" htmlEscape="true" />">
@@ -44,7 +59,7 @@
     <div id="content">
         <h2><fmt:message key="page.addwidget.form.header"/></h2>
         <form:errors path="widget" cssClass="error" element="p"/>
-        <form:form id="newWidgetForm" action="add" commandName="widget" method="POST">
+        <form:form id="newWidgetForm" action="add?referringPageId=${referringPageId}" commandName="widget" method="POST">
             <fieldset>
                 <p><fmt:message key="form.some.fields.required"/></p>
 
