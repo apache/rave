@@ -103,7 +103,7 @@ UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @u
 
 set @user_id_5 = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @user_seq);
 insert into raveuser (entity_id, username, password, expired, locked, enabled, email, default_page_layout_id, dtype)
-values (@user_id_5,'mario.rossi', '8aadae9f6e73a479cb8a565bcfa6e8de2b074e89', FALSE, FALSE, TRUE,'mario.rossi@example.com', @three_col_id);
+values (@user_id_5,'mario.rossi', '8aadae9f6e73a479cb8a565bcfa6e8de2b074e89', FALSE, FALSE, TRUE,'mario.rossi@example.com', @three_col_id, 'User');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @user_seq;
 
 set @user_id_6 = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @user_seq);
