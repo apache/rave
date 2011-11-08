@@ -63,7 +63,7 @@ import java.util.Collections;
                 "where lower(u.username) like :"+User.PARAM_SEARCHTERM+" or lower(u.email) like :"+User.PARAM_SEARCHTERM)
 
 })
-public class User implements UserDetails, BasicEntity, Serializable {
+public class User extends Person implements UserDetails, BasicEntity, Serializable {
     private static final long serialVersionUID = 1L;
 
     public static final String USER_GET_BY_USERNAME = "User.getByUsername";
@@ -79,16 +79,6 @@ public class User implements UserDetails, BasicEntity, Serializable {
     public static final String PARAM_SEARCHTERM = "searchTerm";
     public static final String PARAM_WIDGET_ID = "widgetId";
 
-    @Id
-    @Column(name = "entity_id")
-    @GeneratedValue(strategy = GenerationType.TABLE, generator = "raveuserIdGenerator")
-    @TableGenerator(name = "raveuserIdGenerator", table = "RAVE_PORTAL_SEQUENCES", pkColumnName = "SEQ_NAME",
-            valueColumnName = "SEQ_COUNT", pkColumnValue = "raveuser", allocationSize = 1, initialValue = 1)
-    private Long entityId;
-
-    @Basic
-    @Column(name = "username", unique = true)
-    private String username;
 
     @Basic
     @Column(name = "password")
@@ -105,10 +95,6 @@ public class User implements UserDetails, BasicEntity, Serializable {
     @Basic
     @Column(name = "enabled")
     private boolean enabled;
-
-    @Basic
-    @Column(name = "email", unique = true)
-    private String email;
 
     @Basic
     @Column(name = "openid")

@@ -47,70 +47,70 @@ public class Person implements BasicEntity {
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "personIdGenerator")
     @TableGenerator(name = "personIdGenerator", table = "RAVE_PORTAL_SEQUENCES", pkColumnName = "SEQ_NAME",
             valueColumnName = "SEQ_COUNT", pkColumnValue = "raveuser", allocationSize = 1, initialValue = 1)
-    private Long entityId;
+    protected Long entityId;
 
     @Basic
     @Column(name = "username", unique = true)
-    private String username;
+    protected String username;
 
     @Basic
     @Column(name = "email", unique = true)
-    private String email;
+    protected String email;
 
     @Basic
     @Column(name = "display_name")
-    private String displayName;
+    protected String displayName;
 
     @Basic
     @Column(name = "additional_name", length = 255)
-    private String additionalName;
+    protected String additionalName;
 
     @Basic
     @Column(name = "family_name", length = 255)
-    private String familyName;
+    protected String familyName;
 
     @Basic
     @Column(name = "given_name", length = 255)
-    private String givenName;
+    protected String givenName;
 
     @Basic
     @Column(name = "honorific_prefix", length = 255)
-    private String honorificPrefix;
+    protected String honorificPrefix;
 
     @Basic
     @Column(name = "honorific_suffix", length = 255)
-    private String honorificSuffix;
+    protected String honorificSuffix;
 
     @Basic
     @Column(name = "preferred_name")
-    private String preferredName;
+    protected String preferredName;
 
     @Basic
     @Column(name = "about_me")
-    private String aboutMe;
+    protected String aboutMe;
 
     @Basic
     @Column(name = "status")
-    private String status;
+    protected String status;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinTable(name = "person_address_join",
             joinColumns = @JoinColumn(name = "address_id", referencedColumnName = "entity_id"),
             inverseJoinColumns = @JoinColumn(name="person_id", referencedColumnName = "entity_id"))
-    private List<Address> addresses;
+    protected List<Address> addresses;
 
     @OneToMany(targetEntity = PersonProperty.class)
     @JoinColumn(name = "person_id", referencedColumnName = "entity_id")
-    private List<PersonProperty> properties;
+    protected List<PersonProperty> properties;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "person_friends_jn",
             joinColumns = @JoinColumn(name = "follower_id", referencedColumnName = "entity_id"),
             inverseJoinColumns = @JoinColumn(name = "followed_id", referencedColumnName = "entity_id"))
-    private List<Person> friends;
+    protected List<Person> friends;
 
     @Transient
-    private Map<String, List<PersonProperty>> mappedProperties;
+    protected Map<String, List<PersonProperty>> mappedProperties;
 
     public Long getEntityId() {
         return entityId;
