@@ -46,17 +46,20 @@ public class DefaultWidgetRatingService implements WidgetRatingService {
 
     @Override
     @Transactional
-    public void saveWidgetRating(Long widgetId, Integer score, Long userId) {
-        WidgetRating rating = getByWidgetIdAndUserId(widgetId, userId);
-        if (rating == null) {
-            rating = new WidgetRating();
-            rating.setScore(score);
-            rating.setUserId(userId);
-            rating.setWidgetId(widgetId);
+    public void updateScore(WidgetRating widgetRating, Integer score) {
+        widgetRating.setScore(score);
+        repository.save(widgetRating);
+    }
+
+    @Override
+    @Transactional
+    public void saveWidgetRating(WidgetRating rating) {
+        WidgetRating existingRating = getByWidgetIdAndUserId(rating.getWidgetId(), rating.getUserId());
+        if (existingRating == null) {
+            repository.save(rating);
         } else {
-            rating.setScore(score);
+            updateScore(existingRating, rating.getScore());
         }
-        repository.save(rating);
     }
 
     @Override

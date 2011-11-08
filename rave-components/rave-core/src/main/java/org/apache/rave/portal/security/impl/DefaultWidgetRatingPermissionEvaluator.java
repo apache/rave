@@ -108,10 +108,13 @@ public class DefaultWidgetRatingPermissionEvaluator extends AbstractModelPermiss
                 // if you are here, you are not an administrator, so you can't administer WidgetRating
                 break;
             case CREATE:
+                // anyone can create a widgetRating
+                hasPermission = isWidgetRatingOwnerById(authentication, widgetRating.getUserId());
+                break;
             case DELETE:
             case READ:
             case UPDATE:
-                // anyone can create, delete, read, or update a widgetRating that they own
+                // anyone can delete, read, or update a widgetRating that they own
                 hasPermission = isWidgetRatingOwner(authentication, widgetRating, trustedWidgetRatingContainer, trustedDomainObject);
                 break;
             default:

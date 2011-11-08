@@ -19,9 +19,10 @@
 
 package org.apache.rave.portal.web.api.rest;
 
-import java.util.Date;
 import org.apache.rave.portal.model.WidgetComment;
+import org.apache.rave.portal.model.WidgetRating;
 import org.apache.rave.portal.service.UserService;
+import org.apache.rave.portal.service.WidgetCommentService;
 import org.apache.rave.portal.service.WidgetRatingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,8 +33,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+
 import javax.servlet.http.HttpServletResponse;
-import org.apache.rave.portal.service.WidgetCommentService;
+import java.util.Date;
 
 /**
  * Handler for all services exposed under the /api/widgets path.
@@ -128,7 +130,12 @@ public class WidgetApi extends AbstractRestApi {
                                     @RequestParam(value = "score") Integer score,
                                     HttpServletResponse response) {
         logger.debug("POST WidgetRating received for /api/rest/widgets/{} score: {}", widgetId, score);
-        widgetRatingService.saveWidgetRating(widgetId, score, userService.getAuthenticatedUser().getEntityId());
+
+        WidgetRating widgetRating = new WidgetRating();
+        widgetRating.setScore(score);
+        widgetRating.setUserId(userService.getAuthenticatedUser().getEntityId());
+        widgetRating.setWidgetId(widgetId);
+        widgetRatingService.saveWidgetRating(widgetRating);
         
         // send a 204 back for success since there is no content being returned
         response.setStatus(HttpStatus.NO_CONTENT.value());

@@ -26,7 +26,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;
-import static org.easymock.EasyMock.*;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
 
 /**
  * Test for {@link org.apache.rave.portal.service.impl.DefaultWidgetRatingService}
@@ -52,6 +56,19 @@ public class DefaultWidgetRatingServiceTest {
     }
 
     @Test
+    public void updateScore() {
+        WidgetRating widgetRating = createMock(WidgetRating.class);
+        widgetRating.setScore(10);
+
+        expectLastCall().once();
+        expect(repository.save(widgetRating)).andReturn(widgetRating);
+        replay(repository, widgetRating);
+        service.updateScore(widgetRating, 10);
+
+        verify(repository, widgetRating);
+    }
+
+    @Test
     public void saveWidgetRating_new() {
         WidgetRating newRating = new WidgetRating();
         newRating.setWidgetId(2L);
@@ -62,19 +79,23 @@ public class DefaultWidgetRatingServiceTest {
         expect(repository.save(newRating)).andReturn(newRating);
         replay(repository);
 
-        service.saveWidgetRating(2L, 10, 1L);
+        service.saveWidgetRating(newRating);
         verify(repository);
     }
 
     @Test
     public void saveWidgetRating_existing() {
         WidgetRating existingRating = new WidgetRating(1L, 1L, 1L, 5);
+        WidgetRating newRating = new WidgetRating();
+        newRating.setWidgetId(1L);
+        newRating.setUserId(1L);
+        newRating.setScore(10);
 
         expect(repository.getByWidgetIdAndUserId(1L, 1L)).andReturn(existingRating);
         expect(repository.save(existingRating)).andReturn(existingRating);
         replay(repository);
 
-        service.saveWidgetRating(1L, 10, 1L);
+        service.saveWidgetRating(newRating);
         verify(repository);
 
         assertEquals("Updated score", Integer.valueOf(10), existingRating.getScore());

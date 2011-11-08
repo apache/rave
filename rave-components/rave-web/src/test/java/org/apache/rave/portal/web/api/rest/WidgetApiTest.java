@@ -19,20 +19,10 @@
 
 package org.apache.rave.portal.web.api.rest;
 
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.expectLastCall;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
-import static org.junit.Assert.assertEquals;
-
-import java.util.ArrayList;
-
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.Widget;
 import org.apache.rave.portal.model.WidgetComment;
+import org.apache.rave.portal.model.WidgetRating;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.portal.service.WidgetCommentService;
 import org.apache.rave.portal.service.WidgetRatingService;
@@ -40,6 +30,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.mock.web.MockHttpServletResponse;
+
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.assertEquals;
 
 public class WidgetApiTest {
     private WidgetApi widgetApi;
@@ -177,13 +173,18 @@ public class WidgetApiTest {
 
     @Test
     public void updateWidgetRating() {
-        widgetRatingService.saveWidgetRating(1L, 5, VALID_USER_ID);
+        WidgetRating widgetRating = new WidgetRating();
+        widgetRating.setScore(5);
+        widgetRating.setUserId(2L);
+        widgetRating.setWidgetId(1L);
+        widgetRatingService.saveWidgetRating(widgetRating);
         expectLastCall();
         replay(widgetRatingService);
 
         response.setStatus(HttpStatus.NO_CONTENT.value());
         replay(response);
 
+        User user = new User(2L);
         widgetApi.setWidgetRating(1L, 5, response);
 
         verify(widgetRatingService, userService);

@@ -38,14 +38,21 @@ public interface WidgetRatingService {
     WidgetRating getByWidgetIdAndUserId(Long widgetId, Long userId);
 
     /**
+     * Updates the score of a {@link WidgetRating}
+     *
+     * @param widgetRating WidgetRating
+     * @param score        value of the rating
+     */
+    @PreAuthorize("hasPermission(#widgetRating.entityId, 'org.apache.rave.portal.model.WidgetRating', 'update')")
+    void updateScore(WidgetRating widgetRating, Integer score);
+
+    /**
      * Saves a {@link WidgetRating} for a widget
      *
-     * @param widgetId unique identifier of a {@link org.apache.rave.portal.model.Widget}
-     * @param score    value of the rating
-     * @param userId   unique identifier of a {@link org.apache.rave.portal.model.User}
+     * @param rating   WidgetRating
      */
-    @PreAuthorize("hasPermission(new org.apache.rave.portal.security.impl.RaveSecurityContext(#userId, 'org.apache.rave.portal.model.User'), 'org.apache.rave.portal.model.WidgetRating', 'create')")
-    void saveWidgetRating(Long widgetId, Integer score, Long userId);
+    @PreAuthorize("hasPermission(#rating, 'create')")
+    void saveWidgetRating(WidgetRating rating);
 
     /**
      * Removes the rating of a widget

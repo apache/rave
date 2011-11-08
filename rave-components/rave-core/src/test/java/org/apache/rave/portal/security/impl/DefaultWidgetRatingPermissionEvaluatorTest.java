@@ -102,24 +102,18 @@ public class DefaultWidgetRatingPermissionEvaluatorTest {
     public void testHasPermission_3args_create_isWidgetRatingOwner() {
         expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
         expect(mockAuthentication.getPrincipal()).andReturn(user);
-        expect(mockWidgetRatingRepository.get(VALID_WIDGET_ID)).andReturn(widgetRating);
         replay(mockAuthentication);
-        replay(mockWidgetRatingRepository);
         assertThat(defaultWidgetRatingPermissionEvaluator.hasPermission(mockAuthentication, widgetRating, ModelPermissionEvaluator.Permission.CREATE), is(true));
         verify(mockAuthentication);
-        verify(mockWidgetRatingRepository);
     }
 
     @Test
     public void testHasPermission_3args_create_isNotWidgetRatingOwner() {
         expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
         expect(mockAuthentication.getPrincipal()).andReturn(user2);
-        expect(mockWidgetRatingRepository.get(VALID_WIDGET_ID)).andReturn(widgetRating);
         replay(mockAuthentication);
-        replay(mockWidgetRatingRepository);
         assertThat(defaultWidgetRatingPermissionEvaluator.hasPermission(mockAuthentication, widgetRating, ModelPermissionEvaluator.Permission.CREATE), is(false));
         verify(mockAuthentication);
-        verify(mockWidgetRatingRepository);
     }
 
     @Test
