@@ -144,7 +144,6 @@ public class Widget implements BasicEntity, Serializable {
     @JoinColumn(name = "widget_id", referencedColumnName = "entity_id")
     private List<WidgetComment> comments;
 
-    @XmlElement
     @ManyToOne
     @JoinColumn(name = "owner_id")
     private User owner;
