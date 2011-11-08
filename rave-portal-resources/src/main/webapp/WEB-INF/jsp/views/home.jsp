@@ -21,6 +21,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="portal" uri="http://www.apache.org/rave/tags" %>
 <%@ taglib tagdir="/WEB-INF/tags" prefix="rave"%>
 <jsp:useBean id="pages" type="java.util.List<org.apache.rave.portal.model.Page>" scope="request"/>
@@ -35,6 +36,13 @@
                       <fmt:message key="page.store.title"/>
                     </a>
                 </li>
+                <sec:authorize access="hasRole('ROLE_ADMIN')">
+                    <li>
+                        <a href="<spring:url value="/app/admin/"/>">
+                            <fmt:message key="page.general.toadmininterface"/>
+                        </a>
+                    </li>
+                </sec:authorize>
                 <li>
                     <a href="<spring:url value="/j_spring_security_logout" htmlEscape="true" />">
                       <fmt:message key="page.general.logout"/></a>

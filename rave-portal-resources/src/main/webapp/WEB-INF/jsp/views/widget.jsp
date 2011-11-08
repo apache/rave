@@ -20,6 +20,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib tagdir="/WEB-INF/tags" prefix="rave" %>
 <jsp:useBean id="widget" scope="request" class="org.apache.rave.portal.model.Widget"/>
 <fmt:setBundle basename="messages"/>
@@ -45,6 +46,13 @@
                     </c:choose>
                     <a href="<c:out value="${gobackurl}"/>"><fmt:message key="page.general.back"/></a>
                 </li>
+                <sec:authorize access="hasRole('ROLE_ADMIN')">
+                    <li>
+                        <a href="<spring:url value="/app/admin/"/>">
+                            <fmt:message key="page.general.toadmininterface"/>
+                        </a>
+                    </li>
+                </sec:authorize>
                 <li>
                     <a href="<spring:url value="/j_spring_security_logout" htmlEscape="true" />">
                         <fmt:message key="page.general.logout"/></a>
