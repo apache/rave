@@ -24,7 +24,9 @@ package org.apache.rave.portal.web.util;
  */
 public class ViewNames {
     private ViewNames() {}
-    public static final String HOME = "home";
+    private static final String USER_PREFIX = "templates.user.";
+
+    public static final String HOME = USER_PREFIX + "home";
     public static final String STORE = "store";
     public static final String WIDGET = "widget";
     public static final String ADD_WIDGET_FORM = "addwidget";

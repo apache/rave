@@ -35,7 +35,7 @@
     <packaging>war</packaging>
 
     <!--
-     The dependencies should have the scope provided.
+     The dependencies defined here should have the scope provided.
      They are not needed for compilation, only to support JSTL code completion in IDE's.
      -->
     <dependencies>
@@ -57,6 +57,11 @@
         <dependency>
             <groupId>org.apache.rave</groupId>
             <artifactId>rave-web</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tiles</groupId>
+            <artifactId>tiles-jsp</artifactId>
             <scope>provided</scope>
         </dependency>
     </dependencies>

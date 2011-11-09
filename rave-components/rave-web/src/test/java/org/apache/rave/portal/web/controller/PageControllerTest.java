@@ -25,6 +25,7 @@ import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.service.PageService;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.portal.web.util.ModelKeys;
+import org.apache.rave.portal.web.util.ViewNames;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.ui.ExtendedModelMap;
@@ -49,7 +50,6 @@ public class PageControllerTest {
     private final Long DEFAULT_PAGE_ID = 99L;
     private final Long OTHER_PAGE_ID = 22L;
     private final Long USER_ID = 1L;
-    private final String HOME_VIEW = "home";
     private final String VALID_PAGE_LAYOUT_CODE = "layout98";
     private User validUser;
     private PageLayout validPageLayout;
@@ -85,7 +85,7 @@ public class PageControllerTest {
 
         String results = pageController.view(OTHER_PAGE_ID, model);
         
-        assertThat(results, equalTo(HOME_VIEW));
+        assertThat(results, equalTo(ViewNames.HOME));
         assertThat((Page) model.asMap().get(ModelKeys.PAGE), sameInstance(otherPage));
         assertThat((List<Page>) model.asMap().get(ModelKeys.PAGES), sameInstance(allPages));
         
@@ -105,7 +105,7 @@ public class PageControllerTest {
         
         String results = pageController.view(OTHER_PAGE_ID, model);
         
-        assertThat(results, equalTo(HOME_VIEW));
+        assertThat(results, equalTo(ViewNames.HOME));
         assertThat((Page) model.asMap().get(ModelKeys.PAGE), sameInstance(defaultPage));
         assertThat((List<Page>) model.asMap().get(ModelKeys.PAGES), sameInstance(pages));
         
@@ -121,7 +121,7 @@ public class PageControllerTest {
 
         String results = pageController.viewDefault(model);
         
-        assertThat(results, equalTo(HOME_VIEW));
+        assertThat(results, equalTo(ViewNames.HOME));
         assertThat((Page) model.asMap().get(ModelKeys.PAGE), sameInstance(defaultPage));
         assertThat((List<Page>) model.asMap().get(ModelKeys.PAGES), sameInstance(allPages));
         
@@ -141,7 +141,7 @@ public class PageControllerTest {
 
         String results = pageController.viewDefault(model);
         
-        assertThat(results, equalTo(HOME_VIEW));
+        assertThat(results, equalTo(ViewNames.HOME));
         assertThat((Page) model.asMap().get(ModelKeys.PAGE), sameInstance(defaultPage));
         assertThat((List<Page>) model.asMap().get(ModelKeys.PAGES), sameInstance(pages));
         
