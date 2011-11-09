@@ -21,7 +21,6 @@
 <jsp:useBean id="pages" type="java.util.List<org.apache.rave.portal.model.Page>" scope="request"/>
 <fmt:setBundle basename="messages"/>
 <%--@elvariable id="page" type="org.apache.rave.portal.model.Page"--%>
-<rave:rave_generic_page pageTitle="${page.name}">
     <header class="header-mobile">
         <nav class="topnav">
             <ul class="horizontal-list">
@@ -169,4 +168,3 @@
             rave.initWidgets(widgetsByRegionIdMap);           
         });
     </script>
-</rave:rave_generic_page>
