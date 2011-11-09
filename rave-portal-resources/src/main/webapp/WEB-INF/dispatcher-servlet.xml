@@ -58,7 +58,16 @@
             </list>
         </property>
     </bean>
-
+    <mvc:interceptors>
+        <!-- On pre-handle, resolve the device that originated the web 
+             request and put that information into the ServletRequest object.
+             By default it will use the LiteDeviceResolver which only 
+             gives you very basic information, basically is this a 
+             mobile device or not.  A more advanced WurflDeviceResolver 
+             can be used if you need to get more detailed information about
+             the device such as manufacturer, model, screen size, etc.-->
+        <bean class="org.springframework.mobile.device.DeviceResolverHandlerInterceptor" />
+    </mvc:interceptors>
     <bean id="tilesConfigurer" class="org.springframework.web.servlet.view.tiles2.TilesConfigurer">
         <property name="definitions">
             <list>

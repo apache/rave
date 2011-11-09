@@ -19,6 +19,8 @@
 
 package org.apache.rave.portal.web.controller;
 
+import org.apache.rave.portal.web.controller.util.MockHttpUtil;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.apache.rave.portal.model.PageLayout;
 import org.apache.rave.portal.model.Page;
 import org.apache.rave.portal.model.User;
@@ -34,6 +36,7 @@ import org.springframework.ui.Model;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.rave.portal.web.util.ViewNames;
 import static org.hamcrest.CoreMatchers.*;
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.assertThat;
@@ -42,6 +45,7 @@ public class PageControllerTest {
     private UserService userService;
     private PageService pageService;
     private PageController pageController;
+    private MockHttpServletRequest request;
     
     private Model model;
     private Page defaultPage, otherPage;
@@ -60,7 +64,8 @@ public class PageControllerTest {
         pageService = createMock(PageService.class);
         pageController = new PageController(pageService, userService);
         model = new ExtendedModelMap();
-        
+        request = new MockHttpServletRequest();
+                
         defaultPage = new Page(DEFAULT_PAGE_ID);
         otherPage = new Page(OTHER_PAGE_ID);
         
@@ -78,12 +83,14 @@ public class PageControllerTest {
 
     @Test
     public void view_pageId() {
+        MockHttpUtil.setupRequestAsNonMobileUserAgent(request);        
+        
         expect(userService.getAuthenticatedUser()).andReturn(validUser).anyTimes(); 
         expect(pageService.getAllPages(USER_ID)).andReturn(allPages);
         expect(pageService.getPageFromList(OTHER_PAGE_ID, allPages)).andReturn(otherPage);
         replay(userService, pageService);       
 
-        String results = pageController.view(OTHER_PAGE_ID, model);
+        String results = pageController.view(OTHER_PAGE_ID, model, request);
         
         assertThat(results, equalTo(ViewNames.HOME));
         assertThat((Page) model.asMap().get(ModelKeys.PAGE), sameInstance(otherPage));
@@ -93,7 +100,26 @@ public class PageControllerTest {
     }
     
     @Test
+    public void view_pageId_mobileClient() {       
+        MockHttpUtil.setupRequestAsMobileUserAgent(request);
+        
+        expect(userService.getAuthenticatedUser()).andReturn(validUser).anyTimes(); 
+        expect(pageService.getAllPages(USER_ID)).andReturn(allPages);
+        expect(pageService.getPageFromList(OTHER_PAGE_ID, allPages)).andReturn(otherPage);
+        replay(userService, pageService);       
+
+        String results = pageController.view(OTHER_PAGE_ID, model, request);
+        
+        assertThat(results, equalTo(ViewNames.MOBILE_HOME));
+        assertThat((Page) model.asMap().get(ModelKeys.PAGE), sameInstance(otherPage));
+        assertThat((List<Page>) model.asMap().get(ModelKeys.PAGES), sameInstance(allPages));
+        
+        verify(userService, pageService);
+    }
+    
+    @Test
     public void view_pageId_zeroExistingPages() {
+        MockHttpUtil.setupRequestAsNonMobileUserAgent(request);        
         List<Page> pages = new ArrayList<Page>();
         
         assertThat(pages.isEmpty(), is(true));
@@ -103,7 +129,7 @@ public class PageControllerTest {
         expect(pageService.getPageFromList(OTHER_PAGE_ID, pages)).andReturn(defaultPage);
         replay(userService, pageService);         
         
-        String results = pageController.view(OTHER_PAGE_ID, model);
+        String results = pageController.view(OTHER_PAGE_ID, model, request);
         
         assertThat(results, equalTo(ViewNames.HOME));
         assertThat((Page) model.asMap().get(ModelKeys.PAGE), sameInstance(defaultPage));
@@ -114,12 +140,14 @@ public class PageControllerTest {
     
     @Test
     public void viewDefault_pageId() {
+        MockHttpUtil.setupRequestAsNonMobileUserAgent(request);        
+        
         expect(userService.getAuthenticatedUser()).andReturn(validUser).anyTimes(); 
         expect(pageService.getAllPages(USER_ID)).andReturn(allPages);
         expect(pageService.getDefaultPageFromList(allPages)).andReturn(defaultPage);
         replay(userService, pageService);
 
-        String results = pageController.viewDefault(model);
+        String results = pageController.viewDefault(model, request);
         
         assertThat(results, equalTo(ViewNames.HOME));
         assertThat((Page) model.asMap().get(ModelKeys.PAGE), sameInstance(defaultPage));
@@ -130,6 +158,7 @@ public class PageControllerTest {
     
     @Test
     public void viewDefault_pageId_zeroExistingPages() {
+        MockHttpUtil.setupRequestAsNonMobileUserAgent(request);        
         List<Page> pages = new ArrayList<Page>();
         
         assertThat(pages.isEmpty(), is(true));
@@ -139,7 +168,7 @@ public class PageControllerTest {
         expect(pageService.getDefaultPageFromList(pages)).andReturn(defaultPage);
         replay(userService, pageService);
 
-        String results = pageController.viewDefault(model);
+        String results = pageController.viewDefault(model, request);
         
         assertThat(results, equalTo(ViewNames.HOME));
         assertThat((Page) model.asMap().get(ModelKeys.PAGE), sameInstance(defaultPage));

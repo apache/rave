@@ -27,6 +27,7 @@ public class ViewNames {
     private static final String USER_PREFIX = "templates.user.";
 
     public static final String HOME = USER_PREFIX + "home";
+    public static final String MOBILE_HOME = USER_PREFIX + "mobile_home";    
     public static final String STORE = "store";
     public static final String WIDGET = "widget";
     public static final String ADD_WIDGET_FORM = "addwidget";

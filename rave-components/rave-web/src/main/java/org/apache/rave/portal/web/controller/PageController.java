@@ -18,7 +18,6 @@
  */
 package org.apache.rave.portal.web.controller;
 
-import java.util.ArrayList;
 import org.apache.rave.portal.model.Page;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.service.PageService;
@@ -35,6 +34,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import org.apache.rave.portal.web.controller.util.ControllerUtils;
 
 /**
  * Page Controller
@@ -55,15 +56,15 @@ public class PageController {
     }
  
     @RequestMapping(value = {"/page/view", "/index.html"}, method = RequestMethod.GET)
-    public String viewDefault(Model model) {
+    public String viewDefault(Model model, HttpServletRequest request) {
         List<Page> pages = getAllPagesForAuthenticatedUser();
         model.addAttribute(ModelKeys.PAGE, pageService.getDefaultPageFromList(pages));
         model.addAttribute(ModelKeys.PAGES, pages);
-        return ViewNames.HOME;
+        return getDeviceAppropriateView(request);
     }          
     
     @RequestMapping(value = "/page/view/{pageId}", method = RequestMethod.GET)
-    public String view(@PathVariable Long pageId, Model model) {
+    public String view(@PathVariable Long pageId, Model model, HttpServletRequest request) {
         User user = userService.getAuthenticatedUser();
         logger.debug("attempting to get pageId " + pageId + " for " + user);
         
@@ -72,7 +73,7 @@ public class PageController {
                
         model.addAttribute(ModelKeys.PAGE, page);
         model.addAttribute(ModelKeys.PAGES, pages);
-        return ViewNames.HOME;
+        return getDeviceAppropriateView(request);
     }
     
     private List<Page> getAllPagesForAuthenticatedUser() {
@@ -87,5 +88,18 @@ public class PageController {
             pages = pageService.getAllPages(userId);
         }
         return pages;
-    }    
+    }
+    
+    private String getDeviceAppropriateView(HttpServletRequest request) {
+        // return the appropriate View name based on the request.  It
+        // checks to see if the user is on a mobile device or not
+        String viewName = null;
+        if (ControllerUtils.isMobileDevice(request)) {            
+            viewName = ViewNames.MOBILE_HOME;
+        } else {           
+            viewName = ViewNames.HOME;
+        }            
+        
+        return viewName;
+    }
 }

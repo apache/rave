@@ -60,6 +60,10 @@ var rave = rave || (function() {
         var WIDGET_TOGGLE_DISPLAY_COLLAPSED = "ui-icon-triangle-1-e";
         var WIDGET_TOGGLE_DISPLAY_NORMAL = "ui-icon-triangle-1-s";             
 
+        // variable to store whether or not the 
+        // client is a mobile device
+        var mobileState = false;
+
         function WIDGET_PREFS_EDIT_BUTTON(regionWidgetId) {
             return "widget-" + regionWidgetId + "-prefs";
         }
@@ -82,6 +86,14 @@ var rave = rave || (function() {
             targetRegion: null,
             targetIndex: null
         };
+
+        function setMobileState(mobileState) {
+            this.mobileState = mobileState;
+        }
+
+        function getMobileState() {
+            return this.mobileState;
+        }
 
         function init() {
             // initialize the sortable regions
@@ -139,6 +151,24 @@ var rave = rave || (function() {
                 var widgetId = extractObjectIdFromElementId($(this).attr("id"));
                 styleWidgetButtons(widgetId);
             });
+        }
+        
+        function initMobileWidgetUI() {
+            $(".widget-wrapper").each(function(){
+                var widgetId = extractObjectIdFromElementId($(this).attr("id"));                
+                var widget = rave.getWidgetById(widgetId);
+                            
+                // init the collapse/restore toggle for the title bar                
+                $(this).find(".widget-title-bar-mobile").click({id: widgetId}, toggleCollapseAction); 
+                $(this).find(".widget-title-bar-mobile").bind( "touchstart", function(e){alert('Span Clicked!')});
+            });
+        }
+        
+        function toggleMobileWidget(regionWidgetId) {
+            var args = {};
+            args.data = {};            
+            args.data.id = regionWidgetId;
+            toggleCollapseAction(args);
         }
 
         function maximizeAction(args) {
@@ -205,8 +235,30 @@ var rave = rave || (function() {
                 }
             }
             
-            rave.api.rest.saveWidgetCollapsedState(functionArgs);           
+            // don't persist the collapse / restore state if we are in 
+            // mobile mode because we defaulted all widgets to collapsed
+            // when initially rendering the mobile view
+            if (rave.isMobile()) {
+                rave.doWidgetUiCollapse(functionArgs);           
+            } else {
+                rave.api.rest.saveWidgetCollapsedState(functionArgs);           
+            }
         }      
+        
+        function doWidgetUiCollapse(args) {
+            // update the in-memory widget with the new collapsed status
+            rave.getWidgetById(args.regionWidgetId).collapsed = args.collapsed;
+
+            // toggle the collapse/restore icon
+            rave.toggleCollapseWidgetIcon(args.regionWidgetId);
+
+            // if the widget has supplied a collapse or restore 
+            // function, invoke it so each widget provider
+            // can handle the collapse / restore action independently
+            if (typeof args.successCallback == 'function') {
+                args.successCallback();
+            }
+        }
         
         /**
          * Utility function to generate the html label for a userPref
@@ -479,11 +531,16 @@ var rave = rave || (function() {
         }   
 
         return {
-          init : init,          
+          init : init,       
+          initMobile: initMobileWidgetUI,
           toggleCollapseWidgetIcon: toggleCollapseWidgetIcon,
           maximizeAction: maximizeAction,
           minimizeAction: minimizeAction,
-          editPrefsAction: editPrefsAction
+          editPrefsAction: editPrefsAction,
+          setMobileState: setMobileState,
+          getMobileState: getMobileState,
+          doWidgetUiCollapse: doWidgetUiCollapse,
+          toggleMobileWidget: toggleMobileWidget
         };
 
     })();
@@ -515,13 +572,20 @@ var rave = rave || (function() {
         //However this should at least get us to render the top "row" first, then the second "row", ... in any browser.
         //If this turns out to be a major concern we can change the widgetsByRegionIdMap to a 2D array instead of a map.
         var widgets = [];
+        var regionWidget;
         for (var i = 0; ; i++) {
             var foundGadgets = false;
             for (var regionWidgets in widgetsByRegionIdMap) {
                 regionWidgets = widgetsByRegionIdMap[regionWidgets];
                 if (regionWidgets.length > i) {
                     foundGadgets = true;
-                    widgets.push(regionWidgets[i]);
+                    regionWidget = regionWidgets[i];
+                    // if client is viewing in mobile mode
+                    // default to collapsed state
+                    if (rave.isMobile()) {
+                        regionWidget.collapsed = true;
+                    }
+                    widgets.push(regionWidget);
                 }
             }
 
@@ -621,6 +685,10 @@ var rave = rave || (function() {
          * Initialize Rave's drag and drop facilities
          */
         initUI : ui.init,
+        /**
+         * Initialize the mobile UI
+         */
+        initMobileUI : ui.initMobile,
 
         /**
          * Parses the given string conforming to a rave object's DOM element ID and return
@@ -711,6 +779,28 @@ var rave = rave || (function() {
          * @param regionWidgetId the regionWidgetId of the widget
          * 
          */
-        editPrefs: ui.editPrefsAction
+        editPrefs: ui.editPrefsAction,
+        /***
+         * Get the mobile state - used by the UI to render mobile or normal content
+         * 
+         */                
+        isMobile: ui.getMobileState,
+        /***
+         * Set the mobile state - used by the UI to render mobile or normal content
+         * 
+         * @param mobileState boolean to represent the mobile state
+         * 
+         */        
+        setMobile: ui.setMobileState,
+        /**
+         * Performs the client side work of collapsing/restoring a widget
+         * @param args
+         */
+        doWidgetUiCollapse: ui.doWidgetUiCollapse,
+        /**
+         * Toggles a mobile widget collapse/restore
+         * @param args
+         */
+        toggleMobileWidget: ui.toggleMobileWidget
     }
 })();

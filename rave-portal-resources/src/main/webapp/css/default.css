@@ -139,6 +139,10 @@ header h1 {
     color: #F2F2F2;
 }
 
+.header-mobile {
+    height:auto;
+}
+
 .topnav {
     float: right;
     margin-right: 2%;
@@ -189,6 +193,12 @@ header h1 {
     height: 100%;
 }
 
+.widget-mobile {
+    box-shadow: none;
+    border-radius: 0 0 0 0;    
+    padding: 0 0 0 0;
+}
+
 .widget-wrapper-transitional {
     position: absolute;
     z-index: 1000;
@@ -220,6 +230,10 @@ header h1 {
     margin-bottom: 20px;
 }
 
+.widget-wrapper-mobile {
+    margin-bottom: 3px;
+}
+
 .widget-title-bar {
     color: #FFFFFF;
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#999999", endColorstr="#666666");
@@ -233,6 +247,14 @@ header h1 {
 
 .widget-title-bar:hover {
     cursor: move;
+}
+
+.widget-title-bar-mobile {
+    border-radius: 0 0 0 0;
+}
+
+.widget-title-bar-mobile:hover {
+    cursor: pointer;
 }
 
 .widget-title {
@@ -293,6 +315,14 @@ header h1 {
     min-width:300px;
     width: auto;
     height: 100%;
+}
+
+.region-mobile {
+    display: block;
+    width: 100%;
+    padding: 0px 0px 0px 0px;
+    margin-right: 0px;        
+    float: none;
 }
 
 .region-dragging {
@@ -514,6 +544,34 @@ span.error, label.error {
     font-weight: bold;
 }
 
+.rave-ui-tab-mobile {
+    border: none;
+    background-color: #FFFFFF;    
+    color: #767676;
+    font-weight: normal;
+    font-style: normal;
+}
+
+.rave-ui-tab-mobile a, .rave-ui-tab-mobile a:visited {
+    color: #767676;
+    text-decoration: none;
+}
+
+.rave-ui-tab-mobile:hover, .rave-ui-tab-mobile a:hover {
+    color: #000000;
+    border: none;    
+    background-color: #FFFFFF;
+}
+
+.rave-ui-tab-selected-mobile, .rave-ui-tab-selected-mobile:hover {
+    border: 1px solid #B4C4CF;
+    border-bottom: 1px solid #FFFFFF;
+    background-color: #FFFFFF;        
+    color: #000000;
+    font-style: normal;
+    font-weight: bold;
+}
+
 #dialog {
     width:400px;
     display: none;
@@ -537,6 +595,12 @@ span.error, label.error {
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#D7D7D3", endColorstr="#EBEBEB");
     background: -moz-linear-gradient(center top , #D7D7D3 0%, #EBEBEB 50%) repeat scroll 0 0 transparent;
     background: -webkit-gradient(linear, left top, left bottom, from(#D7D7D3), to(#EBEBEB));
+}
+
+.pageContent-mobile {
+    background: none !important;
+    background-color: #FFFFFF !important;
+    margin-top: 3px;
 }
 
 .page-title {

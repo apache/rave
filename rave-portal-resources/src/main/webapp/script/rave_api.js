@@ -74,19 +74,10 @@ rave.api = rave.api || (function() {
                 data: JSON.stringify(args.collapsed),  
                 contentType: 'application/json',
                 dataType: 'json',
-                success: function(result) {
-                    // update the in-memory widget with the new collapsed status
-                    rave.getWidgetById(result.entityId).collapsed = result.collapsed;
-                    
-                    // toggle the collapse/restore icon
-                    rave.toggleCollapseWidgetIcon(result.entityId);
-                    
-                    // if the widget has supplied a collapse or restore 
-                    // callback function, invoke it so each widget provider
-                    // can handle the collapse / restore action independently
-                    if (typeof args.successCallback == 'function') {
-                        args.successCallback();
-                    }
+                success: function(result) {                    
+                    rave.doWidgetUiCollapse({"regionWidgetId": result.entityId, 
+                                             "collapsed": result.collapsed, 
+                                             "successCallback": args.successCallback});                    
                 },
                 error: handleError
             });                        
