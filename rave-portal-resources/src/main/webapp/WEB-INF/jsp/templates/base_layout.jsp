@@ -26,7 +26,9 @@ under the License.
 <html>
 <head>
     <meta charset="ISO-8859-1"/>
-    <title><fmt:message key="${pageTitleKey}"/>&nbsp;<fmt:message key="${pageTitleSuffixKey}"/></title>
+    <title><fmt:message key="${pageTitleKey}"/>
+    <c:if test="${not empty portalSettings and not empty portalSettings['titleSuffix']}">
+        &nbsp;<c:out value="${portalSettings['titleSuffix'].value}"/></c:if></title>
     <link rel="stylesheet" href="//ajax.aspnetcdn.com/ajax/jquery.ui/1.8.13/themes/base/jquery-ui.css"/>
     <link rel="stylesheet" href="<c:url value="/css/default.css" />"/>
     <rave:custom_css/>

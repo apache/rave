@@ -40,4 +40,5 @@ public class ModelKeys {
     public static final String SEARCHRESULT = "searchResult";
     public static final String TOKENCHECK = "tokencheck";
     public static final String USER_MAP = "userMap";
+    public static final String PORTAL_SETTINGS = "portalSettings";
 }

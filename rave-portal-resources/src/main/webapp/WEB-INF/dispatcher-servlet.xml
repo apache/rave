@@ -29,10 +29,14 @@
 
     <!-- Scans the classpath of this application for @Components to deploy as beans -->
     <context:component-scan base-package="org.apache.rave.portal.web.controller"/>
+    <context:component-scan base-package="org.apache.rave.portal.web.interceptors"/>
     <context:component-scan base-package="org.apache.rave.portal.web.api"/>
 
     <!-- Configures the @Controller programming model -->
     <mvc:annotation-driven/>
+    <mvc:interceptors>
+        <bean class="org.apache.rave.portal.web.interceptors.CommonModelHandlerInterceptor"/>
+    </mvc:interceptors>
 
     <!-- Forwards requests to the "/" resource to the "home" view -->
     <mvc:view-controller path="/" view-name="home"/>
@@ -52,7 +56,7 @@
     <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
         <property name="messageConverters">
             <list>
-            	<bean id="stringHttpMessageConverter" class="org.springframework.http.converter.StringHttpMessageConverter"></bean>
+                <bean id="stringHttpMessageConverter" class="org.springframework.http.converter.StringHttpMessageConverter"/>
                 <bean class="org.springframework.http.converter.xml.MarshallingHttpMessageConverter"
                       p:marshaller-ref="marshaller" p:unmarshaller-ref="marshaller"/>
             </list>

@@ -33,6 +33,7 @@ set @widget_seq = 'widget';
 set @granted_authority_seq = 'granted_authority';
 set @widget_comment_seq = 'widget_comment';
 set @widget_rating_seq = 'widget_rating';
+set @portal_preference_seq = 'portal_preference';
 
 CREATE TABLE IF NOT EXISTS RAVE_PORTAL_SEQUENCES (seq_name VARCHAR(255) PRIMARY KEY NOT NULL, seq_count BIGINT(19));
 INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@page_seq, 1);
@@ -45,6 +46,7 @@ INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@widget_seq, 1);
 INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@widget_comment_seq, 1);
 INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@widget_rating_seq, 1);
 INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@granted_authority_seq, 1);
+INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@portal_preference_seq, 1);
 
   -- ***********************************************************************************
   -- start page layout data, required to make the portal work ---
@@ -766,3 +768,23 @@ values (@next_authority_id, 'administrator', false);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @granted_authority_seq;
 
 -- end authorities
+
+-- portal preferences
+set @next_portal_preference_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @portal_preference_seq);
+INSERT INTO portal_preference (entity_id, preference_key)
+values (@next_portal_preference_id, 'color');
+INSERT INTO portalpreference_values
+values (@next_portal_preference_id, 'red');
+INSERT INTO portalpreference_values
+values (@next_portal_preference_id, 'yellow');
+INSERT INTO portalpreference_values
+values (@next_portal_preference_id, 'blue');
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @portal_preference_seq;
+
+set @next_portal_preference_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @portal_preference_seq);
+INSERT INTO portal_preference (entity_id, preference_key)
+values (@next_portal_preference_id, 'title');
+INSERT INTO portalpreference_values
+values (@next_portal_preference_id, 'Rave');
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @portal_preference_seq;
+-- end portal preferences
