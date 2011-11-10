@@ -71,8 +71,8 @@
         <org.hamcrest.version>1.1</org.hamcrest.version>
         <tiles.version>2.2.2</tiles.version>
 
-		  <!-- The location of Rave's H2 file DB. No trailing / -->
-		  <portal.datasource.url>/tmp/rave_portal_data</portal.datasource.url>
+        <!-- The location of Rave's H2 file DB. No trailing / -->
+        <rave.database.location>/tmp/rave_db</rave.database.location>
 
         <!-- Force maven-filesync-plugin rewrite the Eclipse FileSync plugin configuration with
             $mvn filesync:generate -Dmaven.filesync.override=true -->
