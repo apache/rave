@@ -26,6 +26,7 @@ under the License.
 <html>
 <head>
     <meta charset="ISO-8859-1"/>
+    <meta name="viewport" content="width=device-width" />
     <title><fmt:message key="${pageTitleKey}"/>
     <c:if test="${not empty portalSettings and not empty portalSettings['titleSuffix']}">
         &nbsp;<c:out value="${portalSettings['titleSuffix'].value}"/></c:if></title>

@@ -30,7 +30,10 @@ This tag will provide simple template layouts for pages that use it. See for exa
 <html>
   <head>
      <meta charset="ISO-8859-1"/>
-     <title><c:out value="${pageTitle} "/> <fmt:message key="page.general.titlesuffix"/></title>
+      <meta name="viewport" content="width=device-width" />
+     <title><c:out value="${pageTitle} "/>
+         <c:if test="${not empty portalSettings and not empty portalSettings['titleSuffix']}">
+        &nbsp;<c:out value="${portalSettings['titleSuffix'].value}"/></c:if></title>
      <link rel="stylesheet" href="//ajax.aspnetcdn.com/ajax/jquery.ui/1.8.13/themes/base/jquery-ui.css"/>
      <link rel="stylesheet" href="<c:url value="/css/default.css" />" />
      <rave:custom_css/>

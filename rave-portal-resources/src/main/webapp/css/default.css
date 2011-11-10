@@ -196,7 +196,7 @@ header h1 {
 .widget-mobile {
     box-shadow: none;
     border-radius: 0 0 0 0;    
-    padding: 0 0 0 0;
+    padding: 0;
 }
 
 .widget-wrapper-transitional {
@@ -250,7 +250,8 @@ header h1 {
 }
 
 .widget-title-bar-mobile {
-    border-radius: 0 0 0 0;
+    border-radius: 0;
+    line-height: 2.5em;
 }
 
 .widget-title-bar-mobile:hover {
@@ -320,8 +321,8 @@ header h1 {
 .region-mobile {
     display: block;
     width: 100%;
-    padding: 0px 0px 0px 0px;
-    margin-right: 0px;        
+    padding: 0;
+    margin-right: 0;
     float: none;
 }
 
@@ -893,4 +894,63 @@ span.error, label.error {
     text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
     border-color: #57a957 #57a957 #3d773d;
     border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+}
+
+@media all and (max-width: 500px) {
+    body {
+        font-size: 1em;
+    }
+
+    header {
+        height: auto;
+    }
+
+    header h1 {
+        width: 100%;
+        clear: both;
+    }
+
+    .topnav {
+        float: none;
+        display: block;
+    }
+
+    #content, #widget-content {
+        width: 100%;
+        padding: 0;
+    }
+
+    .admincontent {
+        width: auto;
+    }
+
+    .storeSearch, .storeBox, .storeItem {
+        width: 95%;
+    }
+
+    .widgetDetailLeft, .widgetDetailCenter, .widgetDetailRight {
+        float: none;
+        width: auto;
+        margin: 1em 5px;
+    }
+
+    p label, span.label {
+        width: 100%;
+        float: none;
+    }
+
+    input.long, textarea.long {
+        width: 100%;
+    }
+
+    .largetextcell {
+        width: auto;
+    }
+
+    .admincontent .rightcolumn, .admincontent .leftcolumn, .admincontent .searchbox {
+        width: 100%;
+        float: none;
+        margin-top: 0;
+    }
+
 }
