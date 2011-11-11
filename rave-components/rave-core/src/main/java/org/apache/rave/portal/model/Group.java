@@ -16,25 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.rave.opensocial.model;
+package org.apache.rave.portal.model;
 
 import org.apache.rave.persistence.BasicEntity;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table;
-import javax.persistence.TableGenerator;
+import javax.persistence.*;
 import java.util.List;
 
 /**
@@ -58,33 +44,23 @@ public class Group implements BasicEntity {
     @Id
     @Column(name = "entity_id")
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "groupIdGenerator")
-    @TableGenerator(name = "groupIdGenerator", table = "RAVE_SHINDIG_SEQUENCES", pkColumnName = "SEQ_NAME",
+    @TableGenerator(name = "groupIdGenerator", table = "RAVE_PORTAL_SEQUENCES", pkColumnName = "SEQ_NAME",
             valueColumnName = "SEQ_COUNT", pkColumnValue = "groups", allocationSize = 1, initialValue = 1)
     private Long entityId;
 
-    /**
-     * Each group has a group name.
-     */
     @Basic
     @Column(name = "title", unique = true)
     private String title;
-
 
     @Basic
     @Column(name = "description")
     private String description;
 
-
-    /**
-     * There is a single owner of a group.
-     */
     @ManyToOne
     @JoinColumn(name = "owner_id", referencedColumnName = "entity_id")
     private Person owner;
 
-    /**
-     * There are many members of a group.
-     */
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "group_members",
             joinColumns =
@@ -93,16 +69,10 @@ public class Group implements BasicEntity {
             @JoinColumn(name = "person_id", referencedColumnName = "entity_id"))
     private List<Person> members;
 
-    /**
-     * @return the owner
-     */
     public Person getOwner() {
         return owner;
     }
 
-    /**
-     * @param owner the owner to set
-     */
     public void setOwner(Person owner) {
         this.owner = owner;
     }
@@ -115,16 +85,10 @@ public class Group implements BasicEntity {
         this.description = description;
     }
 
-    /**
-     * @return the members
-     */
     public List<Person> getMembers() {
         return members;
     }
 
-    /**
-     * @param members the members to set
-     */
     public void setMembers(List<Person> members) {
         this.members = members;
     }
@@ -133,16 +97,10 @@ public class Group implements BasicEntity {
         return title;
     }
 
-    /**
-     * @param title the name of hte group
-     */
     public void setTitle(String title) {
         this.title  = title;
     }
 
-    /**
-     * @return the entityId
-     */
     public Long getEntityId() {
         return entityId;
     }

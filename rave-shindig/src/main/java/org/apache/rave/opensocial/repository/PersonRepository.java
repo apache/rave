@@ -19,7 +19,7 @@
 
 package org.apache.rave.opensocial.repository;
 
-import org.apache.rave.opensocial.model.Person;
+import org.apache.rave.portal.model.Person;
 import org.apache.rave.persistence.Repository;
 import org.apache.shindig.protocol.model.FilterOperation;
 import org.apache.shindig.social.opensocial.spi.CollectionOptions;

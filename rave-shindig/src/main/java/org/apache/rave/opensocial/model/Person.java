@@ -18,31 +18,7 @@
  */
 package org.apache.rave.opensocial.model;
 
-import org.apache.rave.persistence.BasicEntity;
-
-import javax.annotation.Generated;
-import javax.persistence.Basic;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.TableGenerator;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -52,39 +28,16 @@ import java.util.Map;
 /**
  * Represents a person in the persistence context
  */
-@Entity
-@Table(name = "person")
-@NamedQueries(value = {
-    @NamedQuery(name = Person.FIND_BY_USERNAME, query = "select p from Person p where p.username like :username"),
-    @NamedQuery(name = Person.FIND_FRIENDS_BY_USERNAME, query = "select a.followed from PersonAssociation a where a.follower.username = :username"),
-    @NamedQuery(name = Person.FIND_BY_GROUP_MEMBERSHIP, query = "select m from Group g join g.members m where exists " +
-            "(select 'found' from g.members b where b.username = :username) and m.username <> :username")
-})
-public class Person implements BasicEntity {
 
-    public static final String FIND_BY_USERNAME = "Person.findByUsername";
+public class Person {
+
     public static final String FIND_FRIENDS_BY_USERNAME = "Person.findFriendsByUsername";
     public static final String FIND_BY_GROUP_MEMBERSHIP = "Person.findByGroupMembership";
-    public static final String USERNAME_PARAM = "username";
+    public static final String FIND_BY_USERNAME = org.apache.rave.portal.model.Person.FIND_BY_USERNAME;
+    public static final String USERNAME_PARAM = org.apache.rave.portal.model.Person.USERNAME_PARAM;
 
-    @Id
-    @Column(name = "entity_id")
-    @GeneratedValue(strategy = GenerationType.TABLE, generator = "personIdGenerator")
-    @TableGenerator(name = "personIdGenerator", table = "RAVE_SHINDIG_SEQUENCES", pkColumnName = "SEQ_NAME",
-            valueColumnName = "SEQ_COUNT", pkColumnValue = "person", allocationSize = 1, initialValue = 1)
-    private Long entityId;
-
-    @Basic
-    @Column(name = "username")
-    private String username;
-
-    @Basic
-    @Column(name = "display_name")
-    private String displayName;
-
-    @Basic
-    @Column(name = "about_me")
-    private String aboutMe;
+    @OneToOne
+    private org.apache.rave.portal.model.Person internalPerson;
 
     @Basic
     @Column(name = "age")
@@ -207,71 +160,10 @@ public class Person implements BasicEntity {
     private List<Account> accounts;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinTable(name = "person_address_join",
-            joinColumns = @JoinColumn(name = "address_id", referencedColumnName = "entity_id"),
-            inverseJoinColumns = @JoinColumn(name="person_id", referencedColumnName = "entity_id"))
-    private List<Address> addresses;
-
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "person_id", referencedColumnName = "entity_id")
     private List<Organization> organizations;
 
-    @OneToMany(targetEntity = PersonProperty.class)
-    @JoinColumn(name = "person_id", referencedColumnName = "entity_id")
-    private List<PersonProperty> properties;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "person_friends_jn",
-            joinColumns = @JoinColumn(name = "follower_id", referencedColumnName = "entity_id"),
-            inverseJoinColumns = @JoinColumn(name = "followed_id", referencedColumnName = "entity_id"))
-    private List<Person> friends;
-
-    @Transient
-    private Url profileSong;
-
-    @Transient
-    private Address currentLocation;
-
-    @Transient
-    private Url profileVideo;
-
-    @Transient
-    private List<Url> urls;
-
-    @Transient
-    private Map<String, List<PersonProperty>> mappedProperties;
-
-    public Long getEntityId() {
-        return entityId;
-    }
-
-    public void setEntityId(Long entityId) {
-        this.entityId = entityId;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getDisplayName() {
-        return displayName;
-    }
-
-    public void setDisplayName(String displayName) {
-        this.displayName = displayName;
-    }
-
-    public String getAboutMe() {
-        return aboutMe;
-    }
-
-    public void setAboutMe(String aboutMe) {
-        this.aboutMe = aboutMe;
-    }
 
     public Integer getAge() {
         return age;
@@ -497,52 +389,12 @@ public class Person implements BasicEntity {
         this.name = name;
     }
 
-    public Url getProfileSong() {
-        return profileSong;
-    }
-
-    public void setProfileSong(Url profileSong) {
-        this.profileSong = profileSong;
-    }
-
-    public BodyType getBodyType() {
-        return bodyType;
-    }
-
-    public void setBodyType(BodyType bodyType) {
-        this.bodyType = bodyType;
-    }
-
-    public Address getCurrentLocation() {
-        return currentLocation;
-    }
-
-    public void setCurrentLocation(Address currentLocation) {
-        this.currentLocation = currentLocation;
-    }
-
-    public Url getProfileVideo() {
-        return profileVideo;
-    }
-
-    public void setProfileVideo(Url profileVideo) {
-        this.profileVideo = profileVideo;
-    }
-
     public List<Account> getAccounts() {
         return accounts;
     }
 
     public void setAccounts(List<Account> accounts) {
         this.accounts = accounts;
-    }
-
-    public List<Address> getAddresses() {
-        return addresses;
-    }
-
-    public void setAddresses(List<Address> addresses) {
-        this.addresses = addresses;
     }
 
     public List<Organization> getOrganizations() {
@@ -553,159 +405,6 @@ public class Person implements BasicEntity {
         this.organizations = organizations;
     }
 
-    public List<Url> getUrls() {
-        return urls;
-    }
 
-    public void setUrls(List<Url> urls) {
-        this.urls = urls;
-    }
-
-    public Map<String, List<PersonProperty>> getProperties() {
-        if(mappedProperties == null) {
-            mappedProperties = createPropertyMap(properties);
-        }
-        return mappedProperties;
-    }
-
-    public void setProperties(Map<String, List<PersonProperty>> properties) {
-        //this.properties = properties;
-    }
-
-    public List<Person> getFriends() {
-        return friends;
-    }
-
-    public void setFriends(List<Person> friends) {
-        this.friends = friends;
-    }
-
-    @Override
-    @Generated("IDE Generated Method")
-    public int hashCode() {
-        int result = entityId != null ? entityId.hashCode() : 0;
-        result = 31 * result + (username != null ? username.hashCode() : 0);
-        result = 31 * result + (displayName != null ? displayName.hashCode() : 0);
-        result = 31 * result + (aboutMe != null ? aboutMe.hashCode() : 0);
-        result = 31 * result + (age != null ? age.hashCode() : 0);
-        result = 31 * result + (gender != null ? gender.hashCode() : 0);
-        result = 31 * result + (birthday != null ? birthday.hashCode() : 0);
-        result = 31 * result + (children != null ? children.hashCode() : 0);
-        result = 31 * result + (ethnicity != null ? ethnicity.hashCode() : 0);
-        result = 31 * result + (fashion != null ? fashion.hashCode() : 0);
-        result = 31 * result + (happiestWhen != null ? happiestWhen.hashCode() : 0);
-        result = 31 * result + (humor != null ? humor.hashCode() : 0);
-        result = 31 * result + (jobInterests != null ? jobInterests.hashCode() : 0);
-        result = 31 * result + (lastUpdated != null ? lastUpdated.hashCode() : 0);
-        result = 31 * result + (livingArrangement != null ? livingArrangement.hashCode() : 0);
-        result = 31 * result + (nickname != null ? nickname.hashCode() : 0);
-        result = 31 * result + (pets != null ? pets.hashCode() : 0);
-        result = 31 * result + (politicalViews != null ? politicalViews.hashCode() : 0);
-        result = 31 * result + (preferredUsername != null ? preferredUsername.hashCode() : 0);
-        result = 31 * result + (relationshipStatus != null ? relationshipStatus.hashCode() : 0);
-        result = 31 * result + (religion != null ? religion.hashCode() : 0);
-        result = 31 * result + (romance != null ? romance.hashCode() : 0);
-        result = 31 * result + (scaredOf != null ? scaredOf.hashCode() : 0);
-        result = 31 * result + (sexualOrientation != null ? sexualOrientation.hashCode() : 0);
-        result = 31 * result + (status != null ? status.hashCode() : 0);
-        result = 31 * result + (utcOffset != null ? utcOffset.hashCode() : 0);
-        result = 31 * result + (profileUrl != null ? profileUrl.hashCode() : 0);
-        result = 31 * result + (thumbnailUrl != null ? thumbnailUrl.hashCode() : 0);
-        result = 31 * result + (drinker != null ? drinker.hashCode() : 0);
-        result = 31 * result + (smoker != null ? smoker.hashCode() : 0);
-        result = 31 * result + (networkPresence != null ? networkPresence.hashCode() : 0);
-        result = 31 * result + (bodyType != null ? bodyType.hashCode() : 0);
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (profileSong != null ? profileSong.hashCode() : 0);
-        result = 31 * result + (currentLocation != null ? currentLocation.hashCode() : 0);
-        result = 31 * result + (profileVideo != null ? profileVideo.hashCode() : 0);
-        result = 31 * result + (accounts != null ? accounts.hashCode() : 0);
-        result = 31 * result + (addresses != null ? addresses.hashCode() : 0);
-        result = 31 * result + (organizations != null ? organizations.hashCode() : 0);
-        result = 31 * result + (urls != null ? urls.hashCode() : 0);
-        result = 31 * result + (properties != null ? properties.hashCode() : 0);
-        return result;
-    }
-
-    @Override
-    @Generated("IDE Generated Method")
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Person person = (Person) o;
-
-        if (aboutMe != null ? !aboutMe.equals(person.aboutMe) : person.aboutMe != null) return false;
-        if (accounts != null ? !accounts.equals(person.accounts) : person.accounts != null) return false;
-        if (addresses != null ? !addresses.equals(person.addresses) : person.addresses != null) return false;
-        if (age != null ? !age.equals(person.age) : person.age != null) return false;
-        if (birthday != null ? !birthday.equals(person.birthday) : person.birthday != null) return false;
-        if (bodyType != null ? !bodyType.equals(person.bodyType) : person.bodyType != null) return false;
-        if (children != null ? !children.equals(person.children) : person.children != null) return false;
-        if (currentLocation != null ? !currentLocation.equals(person.currentLocation) : person.currentLocation != null)
-            return false;
-        if (displayName != null ? !displayName.equals(person.displayName) : person.displayName != null) return false;
-        if (drinker != null ? !drinker.equals(person.drinker) : person.drinker != null) return false;
-        if (ethnicity != null ? !ethnicity.equals(person.ethnicity) : person.ethnicity != null) return false;
-        if (fashion != null ? !fashion.equals(person.fashion) : person.fashion != null) return false;
-        if (gender != person.gender) return false;
-        if (happiestWhen != null ? !happiestWhen.equals(person.happiestWhen) : person.happiestWhen != null)
-            return false;
-        if (humor != null ? !humor.equals(person.humor) : person.humor != null) return false;
-        if (entityId != null ? !entityId.equals(person.entityId) : person.entityId != null) return false;
-        if (jobInterests != null ? !jobInterests.equals(person.jobInterests) : person.jobInterests != null)
-            return false;
-        if (lastUpdated != null ? !lastUpdated.equals(person.lastUpdated) : person.lastUpdated != null) return false;
-        if (livingArrangement != null ? !livingArrangement.equals(person.livingArrangement) : person.livingArrangement != null)
-            return false;
-        if (name != null ? !name.equals(person.name) : person.name != null) return false;
-        if (networkPresence != null ? !networkPresence.equals(person.networkPresence) : person.networkPresence != null)
-            return false;
-        if (nickname != null ? !nickname.equals(person.nickname) : person.nickname != null) return false;
-        if (organizations != null ? !organizations.equals(person.organizations) : person.organizations != null)
-            return false;
-        if (pets != null ? !pets.equals(person.pets) : person.pets != null) return false;
-        if (politicalViews != null ? !politicalViews.equals(person.politicalViews) : person.politicalViews != null)
-            return false;
-        if (preferredUsername != null ? !preferredUsername.equals(person.preferredUsername) : person.preferredUsername != null)
-            return false;
-        if (profileSong != null ? !profileSong.equals(person.profileSong) : person.profileSong != null) return false;
-        if (profileUrl != null ? !profileUrl.equals(person.profileUrl) : person.profileUrl != null) return false;
-        if (profileVideo != null ? !profileVideo.equals(person.profileVideo) : person.profileVideo != null)
-            return false;
-        if (properties != null ? !properties.equals(person.properties) : person.properties != null) return false;
-        if (relationshipStatus != null ? !relationshipStatus.equals(person.relationshipStatus) : person.relationshipStatus != null)
-            return false;
-        if (religion != null ? !religion.equals(person.religion) : person.religion != null) return false;
-        if (romance != null ? !romance.equals(person.romance) : person.romance != null) return false;
-        if (scaredOf != null ? !scaredOf.equals(person.scaredOf) : person.scaredOf != null) return false;
-        if (sexualOrientation != null ? !sexualOrientation.equals(person.sexualOrientation) : person.sexualOrientation != null)
-            return false;
-        if (smoker != null ? !smoker.equals(person.smoker) : person.smoker != null) return false;
-        if (status != null ? !status.equals(person.status) : person.status != null) return false;
-        if (thumbnailUrl != null ? !thumbnailUrl.equals(person.thumbnailUrl) : person.thumbnailUrl != null)
-            return false;
-        if (urls != null ? !urls.equals(person.urls) : person.urls != null) return false;
-        if (username != null ? !username.equals(person.username) : person.username != null) return false;
-        if (utcOffset != null ? !utcOffset.equals(person.utcOffset) : person.utcOffset != null) return false;
-
-        return true;
-    }
-
-    private static Map<String, List<PersonProperty>> createPropertyMap(List<PersonProperty> properties) {
-        Map<String, List<PersonProperty>> map = new HashMap<String, List<PersonProperty>>();
-        for(PersonProperty property : properties) {
-            List<PersonProperty> propertyList;
-            String fieldType = property.getFieldType();
-            if(map.containsKey(fieldType)) {
-                propertyList = map.get(fieldType);
-            } else {
-                propertyList = new ArrayList<PersonProperty>();
-                map.put(fieldType, propertyList);
-            }
-            propertyList.add(property);
-        }
-        return map;
-    }
 
 }

@@ -21,6 +21,8 @@ package org.apache.rave.portal.model;
 import org.apache.rave.persistence.BasicEntity;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -28,7 +30,7 @@ import java.util.Map;
  * Represents a person in the persistence context
  */
 @Entity
-@Table(name = "raveuser")
+@Table(name = "person")
 @NamedQueries(value = {
     @NamedQuery(name = Person.FIND_BY_USERNAME, query = "select p from Person p where p.username like :username"),
     @NamedQuery(name = Person.FIND_FRIENDS_BY_USERNAME, query = "select a.followed from PersonAssociation a where a.follower.username = :username"),
@@ -46,7 +48,7 @@ public class Person implements BasicEntity {
     @Column(name = "entity_id")
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "personIdGenerator")
     @TableGenerator(name = "personIdGenerator", table = "RAVE_PORTAL_SEQUENCES", pkColumnName = "SEQ_NAME",
-            valueColumnName = "SEQ_COUNT", pkColumnValue = "raveuser", allocationSize = 1, initialValue = 1)
+            valueColumnName = "SEQ_COUNT", pkColumnValue = "person", allocationSize = 1, initialValue = 1)
     protected Long entityId;
 
     @Basic
@@ -239,5 +241,22 @@ public class Person implements BasicEntity {
     public void setMappedProperties(Map<String, List<PersonProperty>> mappedProperties) {
         this.mappedProperties = mappedProperties;
     }
+
+    private static Map<String, List<PersonProperty>> createPropertyMap(List<PersonProperty> properties) {
+        Map<String, List<PersonProperty>> map = new HashMap<String, List<PersonProperty>>();
+        for(PersonProperty property : properties) {
+            List<PersonProperty> propertyList;
+            String fieldType = property.getType();
+            if(map.containsKey(fieldType)) {
+                propertyList = map.get(fieldType);
+            } else {
+                propertyList = new ArrayList<PersonProperty>();
+                map.put(fieldType, propertyList);
+            }
+            propertyList.add(property);
+        }
+        return map;
+    }
+
 }
 

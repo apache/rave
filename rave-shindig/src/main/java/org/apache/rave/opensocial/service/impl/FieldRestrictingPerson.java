@@ -39,13 +39,13 @@ import java.util.*;
  */
 public class FieldRestrictingPerson implements org.apache.shindig.social.opensocial.model.Person, Serializable {
 
-    private org.apache.rave.opensocial.model.Person internal;
+    private org.apache.rave.portal.model.Person internal;
     private Set<String> fields;
     private Map<String, ?> appData;
     private boolean isOwner;
     private boolean isViewer;
 
-    public FieldRestrictingPerson(org.apache.rave.opensocial.model.Person internal, Set<String> fields) {
+    public FieldRestrictingPerson(org.apache.rave.portal.model.Person internal, Set<String> fields) {
         this.internal = internal;
         this.fields = fields;
     }
@@ -72,7 +72,8 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
 
     @Override
     public List<Account> getAccounts() {
-        return displayField(Field.ACCOUNTS) ? CollectionUtils.<Account>toBaseTypedList(internal.getAccounts()) : null;
+        //return displayField(Field.ACCOUNTS) ? CollectionUtils.<Account>toBaseTypedList(internal.getAccounts()) : null;
+        return null;
     }
 
     @Override
@@ -92,7 +93,8 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
 
     @Override
     public List<Address> getAddresses() {
-        return displayField(Field.ADDRESSES) ? CollectionUtils.<Address>toBaseTypedList(internal.getAddresses()) : null;
+        //return displayField(Field.ADDRESSES) ? CollectionUtils.<Address>toBaseTypedList(internal.getAddresses()) : null;
+        return null;
     }
 
     @Override
@@ -102,12 +104,14 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
 
     @Override
     public Integer getAge() {
-        return displayField(Field.AGE) ? internal.getAge() : null;
+        //return displayField(Field.AGE) ? internal.getAge() : null;
+
+        return null;
     }
 
     @Override
     public void setAge(Integer age) {
-        internal.setAge(age);
+       // internal.setAge(age);
     }
 
     @Override
@@ -122,7 +126,8 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
 
     @Override
     public Date getBirthday() {
-        return displayField(Field.BIRTHDAY) ? internal.getBirthday() : null;
+        //return displayField(Field.BIRTHDAY) ? internal.getBirthday() : null;
+        return null;
     }
 
     @Override
@@ -132,7 +137,8 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
 
     @Override
     public BodyType getBodyType() {
-        return displayField(Field.BODY_TYPE) ? internal.getBodyType() : null;
+        //return displayField(Field.BODY_TYPE) ? internal.getBodyType() : null;
+        return null;
     }
 
     @Override
@@ -162,17 +168,19 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
 
     @Override
     public String getChildren() {
-        return displayField(Field.CHILDREN) ? internal.getChildren() : null;
+        //return displayField(Field.CHILDREN) ? internal.getChildren() : null;
+        return null;
     }
 
     @Override
     public void setChildren(String children) {
-        internal.setChildren(children);
+        //internal.setChildren(children);
     }
 
     @Override
     public Address getCurrentLocation() {
-        return displayField(Field.CURRENT_LOCATION) ? internal.getCurrentLocation() : null;
+        //return displayField(Field.CURRENT_LOCATION) ? internal.getCurrentLocation() : null;
+        return null;
     }
 
     @Override
@@ -182,12 +190,13 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
 
     @Override
     public org.apache.shindig.protocol.model.Enum<Drinker> getDrinker() {
-        return displayField(Field.DRINKER) ? new EnumImpl<Drinker>(Drinker.valueOf(internal.getDrinker())) : null;
+        //return displayField(Field.DRINKER) ? new EnumImpl<Drinker>(Drinker.valueOf(internal.getDrinker())) : null;
+        return null;
     }
 
     @Override
     public void setDrinker(org.apache.shindig.protocol.model.Enum<Drinker> newDrinker) {
-        internal.setDrinker(newDrinker.getValue().toString());
+        //internal.setDrinker(newDrinker.getValue().toString());
     }
 
     @Override
@@ -202,22 +211,24 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
 
     @Override
     public String getEthnicity() {
-        return displayField(Field.ETHNICITY) ? internal.getEthnicity() : null;
+        //return displayField(Field.ETHNICITY) ? internal.getEthnicity() : null;
+        return null;
     }
 
     @Override
     public void setEthnicity(String ethnicity) {
-        internal.setEthnicity(ethnicity);
+        //internal.setEthnicity(ethnicity);
     }
 
     @Override
     public String getFashion() {
-        return displayField(Field.FASHION) ? internal.getFashion() : null;
+        //return displayField(Field.FASHION) ? internal.getFashion() : null;
+        return null;
     }
 
     @Override
     public void setFashion(String fashion) {
-        internal.setFashion(fashion);
+        //internal.setFashion(fashion);
     }
 
     @Override
@@ -232,22 +243,24 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
 
     @Override
     public Gender getGender() {
-        return displayField(Field.GENDER) ? internal.getGender() : null;
+        //return displayField(Field.GENDER) ? internal.getGender() : null;
+        return null;
     }
 
     @Override
     public void setGender(Gender newGender) {
-        internal.setGender(newGender);
+        //internal.setGender(newGender);
     }
 
     @Override
     public String getHappiestWhen() {
-        return displayField(Field.HAPPIEST_WHEN) ? internal.getHappiestWhen() : null;
+        //return displayField(Field.HAPPIEST_WHEN) ? internal.getHappiestWhen() : null;
+        return null;
     }
 
     @Override
     public void setHappiestWhen(String happiestWhen) {
-        internal.setHappiestWhen(happiestWhen);
+        //internal.setHappiestWhen(happiestWhen);
     }
 
     @Override
@@ -272,12 +285,13 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
 
     @Override
     public String getHumor() {
-        return displayField(Field.HUMOR) ? internal.getHumor() : null;
+        //return displayField(Field.HUMOR) ? internal.getHumor() : null;
+        return null;
     }
 
     @Override
     public void setHumor(String humor) {
-        internal.setHumor(humor);
+        //internal.setHumor(humor);
     }
 
     @Override
@@ -312,12 +326,13 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
 
     @Override
     public String getJobInterests() {
-        return displayField(Field.JOB_INTERESTS) ? internal.getJobInterests() : null;
+        //return displayField(Field.JOB_INTERESTS) ? internal.getJobInterests() : null;
+        return null;
     }
 
     @Override
     public void setJobInterests(String jobInterests) {
-        internal.setJobInterests(jobInterests);
+        //internal.setJobInterests(jobInterests);
     }
 
     @Override
@@ -332,22 +347,24 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
 
     @Override
     public Date getUpdated() {
-        return internal.getLastUpdated();
+        //return internal.getLastUpdated();
+        return null;
     }
 
     @Override
     public void setUpdated(Date updated) {
-        internal.setLastUpdated(updated);
+        //internal.setLastUpdated(updated);
     }
 
     @Override
     public String getLivingArrangement() {
-        return displayField(Field.LIVING_ARRANGEMENT) ? internal.getLivingArrangement() : null;
+        //return displayField(Field.LIVING_ARRANGEMENT) ? internal.getLivingArrangement() : null;
+        return null;
     }
 
     @Override
     public void setLivingArrangement(String livingArrangement) {
-        internal.setLivingArrangement(livingArrangement);
+        //internal.setLivingArrangement(livingArrangement);
     }
 
     @Override
@@ -382,7 +399,8 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
 
     @Override
     public Name getName() {
-        return displayField(Field.NAME) ? internal.getName() : null;
+        //return displayField(Field.NAME) ? internal.getName() : null;
+        return null;
     }
 
     @Override
@@ -392,27 +410,30 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
 
     @Override
     public Enum<NetworkPresence> getNetworkPresence() {
-        return displayField(Field.NETWORKPRESENCE) ? new EnumImpl<NetworkPresence>(NetworkPresence.valueOf(internal.getNetworkPresence())) : null;
+        //return displayField(Field.NETWORKPRESENCE) ? new EnumImpl<NetworkPresence>(NetworkPresence.valueOf(internal.getNetworkPresence())) : null;
+        return null;
     }
 
     @Override
     public void setNetworkPresence(Enum<NetworkPresence> networkPresence) {
-        internal.setNetworkPresence(networkPresence.getValue().toString());
+        //internal.setNetworkPresence(networkPresence.getValue().toString());
     }
 
     @Override
     public String getNickname() {
-        return displayField(Field.NICKNAME) ? internal.getNickname() : null;
+        //return displayField(Field.NICKNAME) ? internal.getNickname() : null;
+        return null;
     }
 
     @Override
     public void setNickname(String nickname) {
-        internal.setNickname(nickname);
+        //internal.setNickname(nickname);
     }
 
     @Override
     public List<Organization> getOrganizations() {
-        return displayField(Field.ORGANIZATIONS) ? CollectionUtils.<Organization>toBaseTypedList(internal.getOrganizations()) : null;
+        //return displayField(Field.ORGANIZATIONS) ? CollectionUtils.<Organization>toBaseTypedList(internal.getOrganizations()) : null;
+        return null;
     }
 
     @Override
@@ -422,12 +443,13 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
 
     @Override
     public String getPets() {
-        return displayField(Field.PETS) ? internal.getPets() : null;
+        //return displayField(Field.PETS) ? internal.getPets() : null;
+        return null;
     }
 
     @Override
     public void setPets(String pets) {
-        internal.setPets(pets);
+        //internal.setPets(pets);
     }
 
     @Override
@@ -452,27 +474,30 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
 
     @Override
     public String getPoliticalViews() {
-        return displayField(Field.POLITICAL_VIEWS) ? internal.getPoliticalViews() : null;
+        //return displayField(Field.POLITICAL_VIEWS) ? internal.getPoliticalViews() : null;
+        return null;
     }
 
     @Override
     public void setPoliticalViews(String politicalViews) {
-        internal.setPoliticalViews(politicalViews);
+        //internal.setPoliticalViews(politicalViews);
     }
 
     @Override
     public String getPreferredUsername() {
-        return displayField(Field.PREFERRED_USERNAME) ? internal.getPreferredUsername() : null;
+        //return displayField(Field.PREFERRED_USERNAME) ? internal.getPreferredUsername() : null;
+        return null;
     }
 
     @Override
     public void setPreferredUsername(String preferredString) {
-        internal.setPreferredUsername(preferredString);
+        //internal.setPreferredUsername(preferredString);
     }
 
     @Override
     public Url getProfileSong() {
-        return displayField(Field.PROFILE_SONG) ? internal.getProfileSong() : null;
+        //return displayField(Field.PROFILE_SONG) ? internal.getProfileSong() : null;
+        return null;
     }
 
     @Override
@@ -482,7 +507,8 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
 
     @Override
     public Url getProfileVideo() {
-        return displayField(Field.PROFILE_VIDEO) ? internal.getProfileVideo() : null;
+        //return displayField(Field.PROFILE_VIDEO) ? internal.getProfileVideo() : null;
+        return null;
     }
 
     @Override
@@ -502,62 +528,68 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
 
     @Override
     public String getRelationshipStatus() {
-        return displayField(Field.RELATIONSHIP_STATUS) ? internal.getRelationshipStatus() : null;
+        //return displayField(Field.RELATIONSHIP_STATUS) ? internal.getRelationshipStatus() : null;
+        return null;
     }
 
     @Override
     public void setRelationshipStatus(String relationshipStatus) {
-        internal.setRelationshipStatus(relationshipStatus);
+        //internal.setRelationshipStatus(relationshipStatus);
     }
 
     @Override
     public String getReligion() {
-        return displayField(Field.RELIGION) ? internal.getReligion() : null;
+        //return displayField(Field.RELIGION) ? internal.getReligion() : null;
+        return null;
     }
 
     @Override
     public void setReligion(String religion) {
-        internal.setReligion(religion);
+        //internal.setReligion(religion);
     }
 
     @Override
     public String getRomance() {
-        return displayField(Field.ROMANCE) ? internal.getRomance() : null;
+        //return displayField(Field.ROMANCE) ? internal.getRomance() : null;
+        return null;
     }
 
     @Override
     public void setRomance(String romance) {
-        internal.setRomance(romance);
+        //internal.setRomance(romance);
     }
 
     @Override
     public String getScaredOf() {
-        return displayField(Field.SCARED_OF) ? internal.getScaredOf() : null;
+        //return displayField(Field.SCARED_OF) ? internal.getScaredOf() : null;
+        return null;
     }
 
     @Override
     public void setScaredOf(String scaredOf) {
-        internal.setScaredOf(scaredOf);
+        //internal.setScaredOf(scaredOf);
     }
 
     @Override
     public String getSexualOrientation() {
-        return displayField(Field.SEXUAL_ORIENTATION) ? internal.getSexualOrientation() : null;
+        //return displayField(Field.SEXUAL_ORIENTATION) ? internal.getSexualOrientation() : null;
+        return null;
     }
 
     @Override
     public void setSexualOrientation(String sexualOrientation) {
-        internal.setSexualOrientation(sexualOrientation);
+        //internal.setSexualOrientation(sexualOrientation);
     }
 
     @Override
     public Enum<Smoker> getSmoker() {
-        return displayField(Field.SMOKER) ? new EnumImpl<Smoker>(Smoker.valueOf(internal.getSmoker())) : null;
+        //return displayField(Field.SMOKER) ? new EnumImpl<Smoker>(Smoker.valueOf(internal.getSmoker())) : null;
+        return null;
     }
 
     @Override
     public void setSmoker(Enum<Smoker> newSmoker) {
-        internal.setSmoker(newSmoker.getValue().toString());
+        //internal.setSmoker(newSmoker.getValue().toString());
     }
 
     @Override
@@ -592,12 +624,13 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
 
     @Override
     public Long getUtcOffset() {
-        return displayField(Field.UTC_OFFSET) ? internal.getUtcOffset() : null;
+        //return displayField(Field.UTC_OFFSET) ? internal.getUtcOffset() : null;
+        return null;
     }
 
     @Override
     public void setUtcOffset(Long utcOffset) {
-        internal.setUtcOffset(utcOffset);
+        //internal.setUtcOffset(utcOffset);
     }
 
     @Override
@@ -649,22 +682,24 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
 
     @Override
     public String getProfileUrl() {
-        return displayField(Field.PROFILE_URL) ? internal.getProfileUrl() : null;
+        //return displayField(Field.PROFILE_URL) ? internal.getProfileUrl() : null;
+        return null;
     }
 
     @Override
     public void setProfileUrl(String profileUrl) {
-        internal.setProfileUrl(profileUrl);
+        //internal.setProfileUrl(profileUrl);
     }
 
     @Override
     public String getThumbnailUrl() {
-        return displayField(Field.THUMBNAIL_URL) ? internal.getThumbnailUrl() : null;
+        //return displayField(Field.THUMBNAIL_URL) ? internal.getThumbnailUrl() : null;
+        return null;
     }
 
     @Override
     public void setThumbnailUrl(String thumbnailUrl) {
-        internal.setThumbnailUrl(thumbnailUrl);
+        //internal.setThumbnailUrl(thumbnailUrl);
     }
 
     @Override
@@ -687,7 +722,8 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
     }
 
     private List<? extends ListField> getFromProperties(Field field) {
-        return internal.getProperties().get(field.toString());
+        //return internal.getProperties().get(field.toString());
+        return null;
     }
 
     private List<String> getValuesFromProperties(Field field) {

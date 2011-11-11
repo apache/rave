@@ -61,7 +61,7 @@ public class DefaultPersonService implements PersonService, SimplePersonService 
                                                        Set<String> fields,
                                                        SecurityToken token) throws ProtocolException {
 
-        List<org.apache.rave.opensocial.model.Person> people = getPeople(userIds, groupId, collectionOptions, token);
+        List<org.apache.rave.portal.model.Person> people = getPeople(userIds, groupId, collectionOptions, token);
         return ImmediateFuture.newInstance(new RestfulCollection<Person>(convertPeople(people, fields)));
     }
 
@@ -71,7 +71,7 @@ public class DefaultPersonService implements PersonService, SimplePersonService 
     }
 
     @Override
-    public List<org.apache.rave.opensocial.model.Person> getPeople(Set<UserId> userIds, GroupId groupId,
+    public List<org.apache.rave.portal.model.Person> getPeople(Set<UserId> userIds, GroupId groupId,
                                                                    CollectionOptions collectionOptions,
                                                                    SecurityToken token) {
         switch (groupId.getType()) {
@@ -90,34 +90,34 @@ public class DefaultPersonService implements PersonService, SimplePersonService 
         }
     }
 
-    private List<org.apache.rave.opensocial.model.Person> getUniqueListOfFriends(Set<UserId> userIds,
+    private List<org.apache.rave.portal.model.Person> getUniqueListOfFriends(Set<UserId> userIds,
                                                                                  CollectionOptions collectionOptions,
                                                                                  SecurityToken token) {
 
-        List<org.apache.rave.opensocial.model.Person> people = new ArrayList<org.apache.rave.opensocial.model.Person>();
+        List<org.apache.rave.portal.model.Person> people = new ArrayList<org.apache.rave.portal.model.Person>();
         for (UserId id : userIds) {
             CollectionUtils.addUniqueValues(getFriendsFromRepository(collectionOptions, token.getAppId(), id.getUserId(token)), people);
         }
         return people;
     }
 
-    private List<org.apache.rave.opensocial.model.Person> getUniqueListOfConnectedPeople(Set<UserId> userIds,
+    private List<org.apache.rave.portal.model.Person> getUniqueListOfConnectedPeople(Set<UserId> userIds,
                                                                                          CollectionOptions collectionOptions,
                                                                                          SecurityToken token) {
 
-        List<org.apache.rave.opensocial.model.Person> people = new ArrayList<org.apache.rave.opensocial.model.Person>();
+        List<org.apache.rave.portal.model.Person> people = new ArrayList<org.apache.rave.portal.model.Person>();
         for (UserId id : userIds) {
             CollectionUtils.addUniqueValues(getConnectedPeopleFromRepository(collectionOptions, token.getAppId(), id.getUserId(token)), people);
         }
         return people;
     }
 
-    private List<org.apache.rave.opensocial.model.Person> getFriendsFromRepository(CollectionOptions collectionOptions,
+    private List<org.apache.rave.portal.model.Person> getFriendsFromRepository(CollectionOptions collectionOptions,
                                                                                    String appId,
                                                                                    String userId) {
 
         String filter = collectionOptions == null ? null : collectionOptions.getFilter();
-        List<org.apache.rave.opensocial.model.Person> current;
+        List<org.apache.rave.portal.model.Person> current;
         //Currently ignoring TOP FRIENDS as it hasn't been defined what a top friend is
         if (filter == null || filter.equals(PersonService.ALL_FILTER) || filter.equals(PersonService.TOP_FRIENDS_FILTER)) {
             current = repository.findFriends(userId);
@@ -135,12 +135,12 @@ public class DefaultPersonService implements PersonService, SimplePersonService 
         return current;
     }
 
-    private List<org.apache.rave.opensocial.model.Person> getConnectedPeopleFromRepository(CollectionOptions collectionOptions,
+    private List<org.apache.rave.portal.model.Person> getConnectedPeopleFromRepository(CollectionOptions collectionOptions,
                                                                                            String appId,
                                                                                            String userId) {
 
         String filter = collectionOptions == null ? null : collectionOptions.getFilter();
-        List<org.apache.rave.opensocial.model.Person> current;
+        List<org.apache.rave.portal.model.Person> current;
         //Currently ignoring TOP FRIENDS as it hasn't been defined what a top friend is
 
         if (filter == null || filter.equals(PersonService.ALL_FILTER) || filter.equals(PersonService.TOP_FRIENDS_FILTER)) {
@@ -159,12 +159,12 @@ public class DefaultPersonService implements PersonService, SimplePersonService 
         return current;
     }
 
-    private List<org.apache.rave.opensocial.model.Person> getGroupMembersFromRepository(CollectionOptions collectionOptions,
+    private List<org.apache.rave.portal.model.Person> getGroupMembersFromRepository(CollectionOptions collectionOptions,
                                                                                         String groupId,
                                                                                         String appId) {
 
         String filter = collectionOptions == null ? null : collectionOptions.getFilter();
-        List<org.apache.rave.opensocial.model.Person> current;
+        List<org.apache.rave.portal.model.Person> current;
 
         if (filter == null || filter.equals(PersonService.ALL_FILTER) || filter.equals(PersonService.TOP_FRIENDS_FILTER)) {
             current = repository.findByGroup(groupId);
@@ -182,28 +182,28 @@ public class DefaultPersonService implements PersonService, SimplePersonService 
         return current;
     }
 
-    private org.apache.rave.opensocial.model.Person getPersonForId(UserId id, SecurityToken token) {
+    private org.apache.rave.portal.model.Person getPersonForId(UserId id, SecurityToken token) {
         return getFromRepository(id.getUserId(token));
     }
 
-    private org.apache.rave.opensocial.model.Person getFromRepository(String userId) {
+    private org.apache.rave.portal.model.Person getFromRepository(String userId) {
         long id = Long.parseLong(userId);
-        org.apache.rave.opensocial.model.Person person = repository.get(id);
+        org.apache.rave.portal.model.Person person = repository.get(id);
         if (person == null) {
             throw new ProtocolException(HttpServletResponse.SC_NOT_FOUND, "The person with the id " + userId + " was not found.");
         }
         return person;
     }
 
-    private static List<Person> convertPeople(List<org.apache.rave.opensocial.model.Person> people, Set<String> fields) {
+    private static List<Person> convertPeople(List<org.apache.rave.portal.model.Person> people, Set<String> fields) {
         List<Person> wrappedPeople = new ArrayList<Person>();
-        for (org.apache.rave.opensocial.model.Person person : people) {
+        for (org.apache.rave.portal.model.Person person : people) {
             wrappedPeople.add(convertPerson(person, fields));
         }
         return wrappedPeople;
     }
 
-    private static Person convertPerson(org.apache.rave.opensocial.model.Person person, Set<String> fields) {
+    private static Person convertPerson(org.apache.rave.portal.model.Person person, Set<String> fields) {
         return new FieldRestrictingPerson(person, fields);
     }
 }

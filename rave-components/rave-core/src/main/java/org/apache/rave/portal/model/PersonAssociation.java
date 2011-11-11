@@ -17,20 +17,11 @@
  * under the License.
  */
 
-package org.apache.rave.opensocial.model;
+package org.apache.rave.portal.model;
 
 import org.apache.rave.persistence.BasicEntity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.persistence.TableGenerator;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.*;
 
 /**
  * Represents an association between people
@@ -44,7 +35,7 @@ public class PersonAssociation implements BasicEntity {
     @Id
     @Column(name = "entity_id")
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "personAssociationIdGenerator")
-    @TableGenerator(name = "personAssociationIdGenerator", table = "RAVE_SHINDIG_SEQUENCES", pkColumnName = "SEQ_NAME",
+    @TableGenerator(name = "personAssociationIdGenerator", table = "RAVE_PORTAL_SEQUENCES", pkColumnName = "SEQ_NAME",
             valueColumnName = "SEQ_COUNT", pkColumnValue = "person_association", allocationSize = 1, initialValue = 1)
     private Long entityId;
 

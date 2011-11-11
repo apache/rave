@@ -50,8 +50,6 @@ import java.util.Collections;
  * A user of the system
  */
 @Entity
-// user can be a restricted table name
-@Table(name = "raveuser")
 @NamedQueries({
         @NamedQuery(name = User.USER_GET_BY_USERNAME, query = "select u from User u where u.username = :"+User.PARAM_USERNAME),
         @NamedQuery(name = User.USER_GET_BY_USER_EMAIL, query = "select u from User u where u.email = :"+User.PARAM_EMAIL),

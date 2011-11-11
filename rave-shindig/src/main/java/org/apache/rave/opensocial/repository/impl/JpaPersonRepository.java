@@ -20,8 +20,8 @@
 package org.apache.rave.opensocial.repository.impl;
 
 import org.apache.rave.exception.NotSupportedException;
-import org.apache.rave.opensocial.model.Group;
-import org.apache.rave.opensocial.model.Person;
+import org.apache.rave.portal.model.Group;
+import org.apache.rave.portal.model.Person;
 import org.apache.rave.opensocial.repository.PersonRepository;
 import org.apache.rave.persistence.jpa.AbstractJpaRepository;
 import org.apache.rave.util.CollectionUtils;
