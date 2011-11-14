@@ -35,6 +35,8 @@ public class ViewNames {
     public static final String USER_PROFILE = "userProfile";
 
     public static final String ADMIN_HOME = "admin/home";
+    public static final String ADMIN_PREFERENCES = "admin/preferences";
+    public static final String ADMIN_PREFERENCE_DETAIL = "admin/preferencedetail";
     public static final String ADMIN_USERS = "admin/users";
     public static final String ADMIN_USERDETAIL = "admin/userdetail";
     public static final String ADMIN_WIDGETS = "admin/widgets";

@@ -45,6 +45,9 @@ import org.springframework.web.bind.support.SessionStatus;
 import java.beans.PropertyEditorSupport;
 
 import static org.apache.rave.portal.web.controller.admin.AdminControllerUtil.DEFAULT_PAGE_SIZE;
+import static org.apache.rave.portal.web.controller.admin.AdminControllerUtil.addNavigationMenusToModel;
+import static org.apache.rave.portal.web.controller.admin.AdminControllerUtil.checkTokens;
+import static org.apache.rave.portal.web.controller.admin.AdminControllerUtil.isDeleteOrUpdate;
 
 /**
  * Admin controller to manipulate User data
@@ -74,7 +77,7 @@ public class UserController {
     public String viewUsers(@RequestParam(required = false, defaultValue = "0") int offset,
                             @RequestParam(required = false) final String action,
                             Model model) {
-        AdminControllerUtil.addNavigationMenusToModel(SELECTED_ITEM, model);
+        addNavigationMenusToModel(SELECTED_ITEM, model);
         final SearchResult<User> users = userService.getLimitedListOfUsers(offset, DEFAULT_PAGE_SIZE);
         model.addAttribute(ModelKeys.SEARCHRESULT, users);
 
@@ -85,14 +88,10 @@ public class UserController {
         return ViewNames.ADMIN_USERS;
     }
 
-    private boolean isDeleteOrUpdate(String action) {
-        return "update".equals(action) || "delete".equals(action);
-    }
-
     @RequestMapping(value = "/admin/users/search", method = RequestMethod.GET)
     public String searchUsers(@RequestParam(required = true) String searchTerm,
                               @RequestParam(required = false, defaultValue = "0") int offset, Model model) {
-        AdminControllerUtil.addNavigationMenusToModel(SELECTED_ITEM, model);
+        addNavigationMenusToModel(SELECTED_ITEM, model);
         final SearchResult<User> users = userService.getUsersByFreeTextSearch(
                 searchTerm, offset, DEFAULT_PAGE_SIZE);
         model.addAttribute(ModelKeys.SEARCH_TERM, searchTerm);
@@ -102,7 +101,7 @@ public class UserController {
 
     @RequestMapping(value = "/admin/userdetail/{userid}", method = RequestMethod.GET)
     public String viewUserDetail(@PathVariable("userid") Long userid, Model model) {
-        AdminControllerUtil.addNavigationMenusToModel(SELECTED_ITEM, model);
+        addNavigationMenusToModel(SELECTED_ITEM, model);
         model.addAttribute(userService.getUserById(userid));
         model.addAttribute(ModelKeys.TOKENCHECK, AdminControllerUtil.generateSessionToken());
         return ViewNames.ADMIN_USERDETAIL;
@@ -114,7 +113,7 @@ public class UserController {
                                    @RequestParam() String token,
                                    ModelMap modelMap,
                                    SessionStatus status) {
-        AdminControllerUtil.checkTokens(sessionToken, token, status);
+        checkTokens(sessionToken, token, status);
         userProfileValidator.validate(user, result);
         if (result.hasErrors()) {
             AdminControllerUtil.addNavigationMenusToModel(SELECTED_ITEM, (Model) modelMap);
@@ -133,7 +132,7 @@ public class UserController {
                                    @RequestParam(required = false) String confirmdelete,
                                    ModelMap modelMap,
                                    SessionStatus status) {
-        AdminControllerUtil.checkTokens(sessionToken, token, status);
+        checkTokens(sessionToken, token, status);
         if (!Boolean.parseBoolean(confirmdelete)) {
             AdminControllerUtil.addNavigationMenusToModel(SELECTED_ITEM, (Model) modelMap);
             modelMap.addAttribute("missingConfirm", true);

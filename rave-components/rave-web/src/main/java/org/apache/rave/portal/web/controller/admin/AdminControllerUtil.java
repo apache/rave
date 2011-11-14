@@ -48,6 +48,10 @@ public final class AdminControllerUtil {
         }
     }
 
+    static boolean isDeleteOrUpdate(String action) {
+        return "update".equals(action) || "delete".equals(action);
+    }
+
     static void addNavigationMenusToModel(String selectedItem, Model model) {
         final NavigationMenu topMenu = getTopMenu();
         model.addAttribute(topMenu.getName(), topMenu);
@@ -82,6 +86,10 @@ public final class AdminControllerUtil {
         NavigationItem widgets = new NavigationItem("admin.widgets.shorttitle", "/app/admin/widgets");
         widgets.setSelected("widgets".equals(selectedItem));
         menu.addNavigationItem(widgets);
+
+        NavigationItem preferences = new NavigationItem("admin.preferences.shorttitle", "/app/admin/preferences");
+        preferences.setSelected("preferences".equals(selectedItem));
+        menu.addNavigationItem(preferences);
 
         return menu;
     }

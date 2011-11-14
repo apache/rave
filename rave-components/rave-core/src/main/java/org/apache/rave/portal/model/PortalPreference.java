@@ -35,6 +35,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -137,6 +138,17 @@ public class PortalPreference implements BasicEntity, Serializable {
             return values.get(0);
         }
         throw new NotSupportedException("Cannot return single value for a List of size " + values.size());
+    }
+
+    /**
+     * Sets a single value for a preference. Will overwrite any exisiting value(s)
+     *
+     * @param value String value of the preference
+     */
+    public void setValue(String value) {
+        List<String> values = new ArrayList<String>();
+        values.add(value);
+        this.values = values;
     }
 
 

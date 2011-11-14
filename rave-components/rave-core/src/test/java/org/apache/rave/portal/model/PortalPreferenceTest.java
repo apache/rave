@@ -66,6 +66,17 @@ public class PortalPreferenceTest {
         assertEquals(VALUES, preference.getValues());
     }
 
+    @Test
+    public void testSetValues() throws Exception {
+        PortalPreference preference = new PortalPreference(KEY, VALUES);
+        assertEquals(KEY, preference.getKey());
+        assertEquals(VALUES, preference.getValues());
+        preference.setValue("tree");
+        assertEquals("tree", preference.getValue());
+        assertEquals(1, preference.getValues().size());
+    }
+
+
     @Test(expected = NotSupportedException.class)
     public void getValueFailsForMultiValue() {
         PortalPreference preference = new PortalPreference(KEY, VALUES);

@@ -85,6 +85,7 @@
                                     <input type="email" name="email" id="email" value="<c:out value="${status.value}"/>"
                                            class="long"/>
                                 </spring:bind>
+                                <form:errors path="email" cssClass="error"/>
                             </p>
 
                             <p>

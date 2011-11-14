@@ -15,11 +15,15 @@
  */
 package org.apache.rave.portal.model;
 
-import java.util.Date;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import java.util.Date;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  *
@@ -58,14 +62,14 @@ public class WidgetCommentTest {
     
     @Test
     public void utility() {
+        assertNotNull(widgetComment);
+
         String toString = widgetComment.toString();
         assertNotNull(toString);
-        assertTrue(toString instanceof String);
-        
+
         int hashCode = widgetComment.hashCode();
         assertEquals(hashCode, widgetComment.hashCode());
-        
-        assertFalse(widgetComment.equals(null));
+
         assertFalse(widgetComment.equals(new WidgetComment()));
         assertFalse(widgetComment.equals(new String()));
         assertFalse(new WidgetComment().equals(widgetComment));

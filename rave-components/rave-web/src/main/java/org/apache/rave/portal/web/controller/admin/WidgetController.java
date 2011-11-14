@@ -43,6 +43,9 @@ import org.springframework.web.bind.support.SessionStatus;
 
 import static org.apache.rave.portal.model.WidgetStatus.values;
 import static org.apache.rave.portal.web.controller.admin.AdminControllerUtil.DEFAULT_PAGE_SIZE;
+import static org.apache.rave.portal.web.controller.admin.AdminControllerUtil.addNavigationMenusToModel;
+import static org.apache.rave.portal.web.controller.admin.AdminControllerUtil.checkTokens;
+import static org.apache.rave.portal.web.controller.admin.AdminControllerUtil.isDeleteOrUpdate;
 
 /**
  * Admin controller to manipulate Widget data
@@ -68,7 +71,7 @@ public class WidgetController {
     public String viewWidgets(@RequestParam(required = false, defaultValue = "0") int offset,
                               @RequestParam(required = false) final String action,
                               Model model) {
-        AdminControllerUtil.addNavigationMenusToModel(SELECTED_ITEM, model);
+        addNavigationMenusToModel(SELECTED_ITEM, model);
         final SearchResult<Widget> widgets =
                 widgetService.getLimitedListOfWidgets(offset, DEFAULT_PAGE_SIZE);
         model.addAttribute(ModelKeys.SEARCHRESULT, widgets);
@@ -80,16 +83,12 @@ public class WidgetController {
         return ViewNames.ADMIN_WIDGETS;
     }
 
-    private boolean isDeleteOrUpdate(String action) {
-        return "update".equals(action) || "delete".equals(action);
-    }
-
     @RequestMapping(value = "/admin/widgets/search", method = RequestMethod.GET)
     public String searchWidgets(@RequestParam(required = false) String searchTerm,
                                 @RequestParam(required = false) String widgettype,
                                 @RequestParam(required = false) String widgetstatus,
                                 @RequestParam(required = false, defaultValue = "0") int offset, Model model) {
-        AdminControllerUtil.addNavigationMenusToModel(SELECTED_ITEM, model);
+        addNavigationMenusToModel(SELECTED_ITEM, model);
         final SearchResult<Widget> widgets = widgetService.getWidgetsBySearchCriteria(searchTerm, widgettype,
                 widgetstatus, offset, DEFAULT_PAGE_SIZE);
         model.addAttribute(ModelKeys.SEARCHRESULT, widgets);
@@ -101,7 +100,7 @@ public class WidgetController {
 
     @RequestMapping(value = "/admin/widgetdetail/{widgetid}", method = RequestMethod.GET)
     public String viewWidgetDetail(@PathVariable("widgetid") Long widgetid, Model model) {
-        AdminControllerUtil.addNavigationMenusToModel(SELECTED_ITEM, model);
+        addNavigationMenusToModel(SELECTED_ITEM, model);
         model.addAttribute(widgetService.getWidget(widgetid));
         model.addAttribute(ModelKeys.TOKENCHECK, AdminControllerUtil.generateSessionToken());
         return ViewNames.ADMIN_WIDGETDETAIL;
@@ -113,10 +112,10 @@ public class WidgetController {
                                      @RequestParam String token,
                                      ModelMap modelMap,
                                      SessionStatus status) {
-        AdminControllerUtil.checkTokens(sessionToken, token, status);
+        checkTokens(sessionToken, token, status);
         widgetValidator.validate(widget, result);
         if (result.hasErrors()) {
-            AdminControllerUtil.addNavigationMenusToModel(SELECTED_ITEM, (Model) modelMap);
+            addNavigationMenusToModel(SELECTED_ITEM, (Model) modelMap);
             return ViewNames.ADMIN_WIDGETDETAIL;
         }
         widgetService.updateWidget(widget);
