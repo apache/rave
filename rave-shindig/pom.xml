@@ -40,12 +40,14 @@
     <dependencies>
         <dependency>
             <groupId>org.apache.rave</groupId>
-            <artifactId>rave-commons</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.rave</groupId>
             <artifactId>rave-core</artifactId>
+            <!-- Shindig common adds jsp & el jars to the war that cause conflicts in Tomcat -->
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.shindig</groupId>
+                    <artifactId>shindig-common</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -154,12 +156,12 @@
     <build>
         <defaultGoal>install</defaultGoal>
 
-		  <resources>
-			 <resource>
-				<directory>src/main/resources</directory>
-				<filtering>true</filtering>
-			 </resource>
-		  </resources>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
 
         <plugins>
             <plugin>
