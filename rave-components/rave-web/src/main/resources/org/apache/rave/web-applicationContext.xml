@@ -31,9 +31,4 @@
     <!-- rave-web component base-package scan -->
     <context:component-scan base-package="org.apache.rave.portal.web"/>
 
-    <!-- Validators -->
-    <bean id="newAccountValidator" class="org.apache.rave.portal.web.validator.NewAccountValidator"/>
-    <bean id="userProfileValidator" class="org.apache.rave.portal.web.validator.UserProfileValidator"/>
-    <bean id="newWidgetValidator" class="org.apache.rave.portal.web.validator.NewWidgetValidator"/>
-
 </beans>

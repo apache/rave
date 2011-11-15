@@ -25,10 +25,12 @@ import org.apache.rave.portal.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.Validator;
 
+@Component
 public class NewAccountValidator implements Validator {
 
     private static final int MINIMUM_PASSWORD_LENGTH = 4;
