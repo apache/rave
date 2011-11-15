@@ -38,57 +38,56 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
 public class NewAccountController {
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
-	 protected final Logger logger=LoggerFactory.getLogger(getClass());
-
-	 private final NewAccountService newAccountService;
-	 private final NewAccountValidator newAccountValidator;
+    private final NewAccountService newAccountService;
+    private final NewAccountValidator newAccountValidator;
 
 
     @Autowired
-		  public NewAccountController(NewAccountService newAccountService, NewAccountValidator newAccountValidator) {
-		  this.newAccountService=newAccountService;
-		  this.newAccountValidator=newAccountValidator;
+    public NewAccountController(NewAccountService newAccountService, NewAccountValidator newAccountValidator) {
+        this.newAccountService = newAccountService;
+        this.newAccountValidator = newAccountValidator;
     }
 
-    @RequestMapping(value ="/newaccount.jsp")
-	 public void setUpForm(ModelMap model) {
-		  logger.debug("Initializing form");
-		  model.addAttribute(ModelKeys.NEW_USER,new NewUser());
-	 }
+    @RequestMapping(value = "/newaccount.jsp")
+    public void setUpForm(ModelMap model) {
+        logger.debug("Initializing form");
+        model.addAttribute(ModelKeys.NEW_USER, new NewUser());
+    }
 
-    @RequestMapping(value = { "/newaccount","/newacount/*"}, method = RequestMethod.POST)
-		  public String create(@ModelAttribute NewUser newUser, BindingResult results, Model model){
-		  logger.debug("Creating a new user account");
-		  model.addAttribute(ModelKeys.NEW_USER,newUser);
-		  
-		  newAccountValidator.validate(newUser,results);
-		  if (results.hasErrors()){
-			  logger.info("newaccount.jsp: shows validation errors");
-			  return ViewNames.NEW_ACCOUNT;
-		  }
+    @RequestMapping(value = {"/newaccount", "/newacount/*"}, method = RequestMethod.POST)
+    public String create(@ModelAttribute NewUser newUser, BindingResult results, Model model) {
+        logger.debug("Creating a new user account");
+        model.addAttribute(ModelKeys.NEW_USER, newUser);
 
-		  //Now attempt to create the account.
-		  try {
-			    logger.debug("newaccount.jsp: passed form validation");
-			    newAccountService.createNewAccount(newUser);
-				return ViewNames.REDIRECT;
-		  } catch (org.springframework.dao.IncorrectResultSizeDataAccessException ex) {
-				//This exception is thrown if the account already exists.
-				logger.info("Account creation failed: ", ex);
-				results.reject("Account already exists","Unable to create account");
-				return ViewNames.NEW_ACCOUNT;
-				
-		  } catch (Exception ex) {
-              //TODO RAVE-241 need to handle more specific exceptions
-              if (logger.isDebugEnabled()) {
-                  logger.error("Account creation failed: ", ex);
-              } else {
-                  logger.error("Account creation failed: {}", ex.getMessage());
-              }
-				results.reject("Unable to create account:"+ex.getMessage(),"Unable to create account");
-				return ViewNames.NEW_ACCOUNT;
-		  }
-		  
-	 }
+        newAccountValidator.validate(newUser, results);
+        if (results.hasErrors()) {
+            logger.info("newaccount.jsp: shows validation errors");
+            return ViewNames.NEW_ACCOUNT;
+        }
+
+        //Now attempt to create the account.
+        try {
+            logger.debug("newaccount.jsp: passed form validation");
+            newAccountService.createNewAccount(newUser);
+            return ViewNames.REDIRECT;
+        } catch (org.springframework.dao.IncorrectResultSizeDataAccessException ex) {
+            //This exception is thrown if the account already exists.
+            logger.info("Account creation failed: ", ex);
+            results.reject("Account already exists", "Unable to create account");
+            return ViewNames.NEW_ACCOUNT;
+
+        } catch (Exception ex) {
+            //TODO RAVE-241 need to handle more specific exceptions
+            if (logger.isDebugEnabled()) {
+                logger.error("Account creation failed: ", ex);
+            } else {
+                logger.error("Account creation failed: {}", ex.getMessage());
+            }
+            results.reject("Unable to create account:" + ex.getMessage(), "Unable to create account");
+            return ViewNames.NEW_ACCOUNT;
+        }
+
+    }
 }

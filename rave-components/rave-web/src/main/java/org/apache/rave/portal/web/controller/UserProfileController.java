@@ -40,48 +40,48 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class UserProfileController {
 
-	 protected final Logger logger=LoggerFactory.getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
-	 private final UserService userService;
-	 private final UserProfileValidator userProfileValidator;
+    private final UserService userService;
+    private final UserProfileValidator userProfileValidator;
 
 
     @Autowired
-	 public UserProfileController(UserService userService, UserProfileValidator userProfileValidator) {
-		  this.userService=userService;
-		  this.userProfileValidator=userProfileValidator;
+    public UserProfileController(UserService userService, UserProfileValidator userProfileValidator) {
+        this.userService = userService;
+        this.userProfileValidator = userProfileValidator;
     }
 
     // TODO RAVE-154 why .jsp?
-    @RequestMapping(value ="/userProfile.jsp")
-	 public void setUpForm(ModelMap model) {
-		  logger.debug("Initializing form");
-		  User user=userService.getAuthenticatedUser();
-		  model.addAttribute(ModelKeys.USER_PROFILE,user);
-	 }
+    @RequestMapping(value = "/userProfile.jsp")
+    public void setUpForm(ModelMap model) {
+        logger.debug("Initializing form");
+        User user = userService.getAuthenticatedUser();
+        model.addAttribute(ModelKeys.USER_PROFILE, user);
+    }
 
-    @RequestMapping(value = { "/updateUserProfile","/updateUserProfile/*"}, method = RequestMethod.POST)
-	 public String create(@ModelAttribute User user, BindingResult results, Model model,@RequestParam String username, @RequestParam String password){
-		  logger.debug("Updating user profile.");
-		  model.addAttribute(ModelKeys.USER_PROFILE,user);
-		  
-		  userProfileValidator.validate(user,results);
-		  if(results.hasErrors()){
-			  logger.info("userProfile.jsp: shows validation errors");
-			  return ViewNames.USER_PROFILE;
-		  }
+    @RequestMapping(value = {"/updateUserProfile", "/updateUserProfile/*"}, method = RequestMethod.POST)
+    public String create(@ModelAttribute User user, BindingResult results, Model model, @RequestParam String username, @RequestParam String password) {
+        logger.debug("Updating user profile.");
+        model.addAttribute(ModelKeys.USER_PROFILE, user);
 
-		  //Now attempt to update the account.
-		  try {
-			    logger.debug("userprofile: passed form validation");
-			    userService.updateUserProfile(user);
-				return ViewNames.REDIRECT;
-		  }
-		  //TODO RAVE-154 need to handle more specific exceptions
-		  catch (Exception ex) {
-				logger.info("Account creation failed: {}", ex.getMessage());
-				results.reject("Unable to create account:"+ex.getMessage(),"Unable to create account");
-				return ViewNames.USER_PROFILE;
-		  }
-	 }
+        userProfileValidator.validate(user, results);
+        if (results.hasErrors()) {
+            logger.info("userProfile.jsp: shows validation errors");
+            return ViewNames.USER_PROFILE;
+        }
+
+        //Now attempt to update the account.
+        try {
+            logger.debug("userprofile: passed form validation");
+            userService.updateUserProfile(user);
+            return ViewNames.REDIRECT;
+        }
+        //TODO RAVE-154 need to handle more specific exceptions
+        catch (Exception ex) {
+            logger.info("Account creation failed: {}", ex.getMessage());
+            results.reject("Unable to create account:" + ex.getMessage(), "Unable to create account");
+            return ViewNames.USER_PROFILE;
+        }
+    }
 }

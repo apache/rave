@@ -22,6 +22,7 @@ import org.apache.rave.portal.model.Page;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.service.PageService;
 import org.apache.rave.portal.service.UserService;
+import org.apache.rave.portal.web.controller.util.ControllerUtils;
 import org.apache.rave.portal.web.util.ModelKeys;
 import org.apache.rave.portal.web.util.ViewNames;
 import org.slf4j.Logger;
@@ -33,9 +34,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import java.util.List;
 import javax.servlet.http.HttpServletRequest;
-import org.apache.rave.portal.web.controller.util.ControllerUtils;
+import java.util.List;
 
 /**
  * Page Controller
@@ -44,7 +44,7 @@ import org.apache.rave.portal.web.controller.util.ControllerUtils;
  */
 @Controller
 public class PageController {
-    protected final Logger logger = LoggerFactory.getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
          
     private PageService pageService;
     private UserService userService;
@@ -66,7 +66,7 @@ public class PageController {
     @RequestMapping(value = "/page/view/{pageId}", method = RequestMethod.GET)
     public String view(@PathVariable Long pageId, Model model, HttpServletRequest request) {
         User user = userService.getAuthenticatedUser();
-        logger.debug("attempting to get pageId " + pageId + " for " + user);
+        logger.debug("attempting to get pageId {} for {}", pageId, user);
         
         List<Page> pages = getAllPagesForAuthenticatedUser();
         Page page = pageService.getPageFromList(pageId, pages);
@@ -82,7 +82,7 @@ public class PageController {
         List<Page> pages = pageService.getAllPages(userId);
         if (pages.isEmpty()) {
             // create a new default page for the user
-            logger.info("user " + user.getUsername() + " does not have any pages - creating default page");
+            logger.info("User {} does not have any pages - creating default page", user.getUsername());
             pageService.addNewDefaultPage(userId);
             // refresh the pages list which will now have the new page
             pages = pageService.getAllPages(userId);
@@ -93,13 +93,6 @@ public class PageController {
     private String getDeviceAppropriateView(HttpServletRequest request) {
         // return the appropriate View name based on the request.  It
         // checks to see if the user is on a mobile device or not
-        String viewName = null;
-        if (ControllerUtils.isMobileDevice(request)) {            
-            viewName = ViewNames.MOBILE_HOME;
-        } else {           
-            viewName = ViewNames.HOME;
-        }            
-        
-        return viewName;
+        return ControllerUtils.isMobileDevice(request) ? ViewNames.MOBILE_HOME : ViewNames.HOME;
     }
 }
