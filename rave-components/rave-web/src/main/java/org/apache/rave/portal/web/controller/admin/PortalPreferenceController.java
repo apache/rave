@@ -24,6 +24,7 @@ import org.apache.rave.portal.service.PortalPreferenceService;
 import org.apache.rave.portal.web.model.PortalPreferenceForm;
 import org.apache.rave.portal.web.util.ModelKeys;
 import org.apache.rave.portal.web.util.ViewNames;
+import org.apache.rave.portal.web.validator.PortalPreferenceFormValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -37,13 +38,14 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 
 import java.util.Map;
+import java.util.Set;
 
+import static org.apache.rave.portal.web.controller.admin.AdminControllerUtil.addNavigationMenusToModel;
 import static org.apache.rave.portal.web.controller.admin.AdminControllerUtil.checkTokens;
 import static org.apache.rave.portal.web.controller.admin.AdminControllerUtil.isDeleteOrUpdate;
 
 /**
  * Controller for portal preferences
- * TODO RAVE-355 create unit tests
  */
 @Controller
 @SessionAttributes({"preferenceForm", ModelKeys.TOKENCHECK})
@@ -53,10 +55,13 @@ public class PortalPreferenceController {
     @Autowired
     private PortalPreferenceService preferenceService;
 
+    @Autowired
+    private PortalPreferenceFormValidator formValidator;
+
     @RequestMapping(value = {"/admin/preferences", "/admin/preferences/"}, method = RequestMethod.GET)
     public String viewPreferences(@RequestParam(required = false) final String action, Model model) {
-        AdminControllerUtil.addNavigationMenusToModel(SELECTED_ITEM, model);
-        
+        addNavigationMenusToModel(SELECTED_ITEM, model);
+
         final Map<String, PortalPreference> preferenceMap = preferenceService.getPreferencesAsMap();
 
         model.addAttribute("preferenceMap", preferenceMap);
@@ -70,7 +75,7 @@ public class PortalPreferenceController {
 
     @RequestMapping(value = "/admin/preferencedetail/edit", method = RequestMethod.GET)
     public String editPreferences(Model model) {
-        AdminControllerUtil.addNavigationMenusToModel(SELECTED_ITEM, model);
+        addNavigationMenusToModel(SELECTED_ITEM, model);
         final Map<String, PortalPreference> preferenceMap = preferenceService.getPreferencesAsMap();
 
         PortalPreferenceForm form = new PortalPreferenceForm(preferenceMap);
@@ -83,16 +88,33 @@ public class PortalPreferenceController {
     @RequestMapping(value = "/admin/preferencedetail/update", method = RequestMethod.POST)
     public String updatePreferences(@ModelAttribute("preferenceForm") PortalPreferenceForm form, BindingResult result,
                                     @ModelAttribute(ModelKeys.TOKENCHECK) String sessionToken,
-                                    @RequestParam() String token,
+                                    @RequestParam String token,
                                     ModelMap modelMap,
                                     SessionStatus status) {
         checkTokens(sessionToken, token, status);
-        preferenceService.savePreference(form.getPageSize());
-        preferenceService.savePreference(form.getTitleSuffix());
+
+        formValidator.validate(form, result);
+        if (result.hasErrors()) {
+            addNavigationMenusToModel(SELECTED_ITEM, (Model) modelMap);
+            return ViewNames.ADMIN_PREFERENCE_DETAIL;
+        }
+
+        final Set<Map.Entry<String, PortalPreference>> entries = form.getPreferenceMap().entrySet();
+
+        for (Map.Entry<String, PortalPreference> entry : entries) {
+            preferenceService.savePreference(entry.getValue());
+        }
 
         modelMap.clear();
         status.setComplete();
         return "redirect:/app/admin/preferences?action=update";
     }
 
+    void setFormValidator(PortalPreferenceFormValidator formValidator) {
+        this.formValidator = formValidator;
+    }
+
+    public void setPreferenceService(PortalPreferenceService preferenceService) {
+        this.preferenceService = preferenceService;
+    }
 }

@@ -41,6 +41,7 @@
                         <form:errors cssClass="error" element="p"/>
                         <fieldset>
                             <input type="hidden" name="token" value="<c:out value="${tokencheck}"/>"/>
+                            <p><fmt:message key="form.some.fields.required"/></p>
 
                             <p>
                                 <form:label path="titleSuffix.value"><fmt:message key="admin.preferencedetail.titleSuffix"/></form:label>
@@ -51,7 +52,7 @@
                         <fieldset>
                             <p>
                                 <spring:bind path="pageSize.value">
-                                    <label for="pageSize"><fmt:message key="admin.preferencedetail.pageSize"/></label>
+                                    <label for="pageSize"><fmt:message key="admin.preferencedetail.pageSize"/> *</label>
                                     <input id="pageSize" name="pageSize.value" type="number" step="1"
                                            value="<c:out value="${status.value}"/>"/>
                                 </spring:bind>

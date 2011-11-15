@@ -25,9 +25,11 @@ import org.apache.rave.portal.model.Widget;
 import org.apache.rave.portal.model.WidgetStatus;
 import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.model.util.WidgetStatistics;
+import org.apache.rave.portal.service.PortalPreferenceService;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.portal.service.WidgetService;
 import org.apache.rave.portal.web.util.ModelKeys;
+import org.apache.rave.portal.web.util.PortalPreferenceKeys;
 import org.apache.rave.portal.web.util.ViewNames;
 import org.apache.rave.portal.web.validator.NewWidgetValidator;
 import org.junit.Before;
@@ -81,11 +83,17 @@ public class WidgetStoreControllerTest {
         allWidgetStatisticsMap.put(WIDGET_ID, widgetStatistics);
 
         widgetService = createMock(WidgetService.class);
+
         UserService userService = createMock(UserService.class);
         expect(userService.getAuthenticatedUser()).andReturn(validUser);
         replay(userService);
+
+        PortalPreferenceService preferenceService = createMock(PortalPreferenceService.class);
+        expect(preferenceService.getPreference(PortalPreferenceKeys.PAGE_SIZE)).andReturn(null);
+        replay(preferenceService);
+
         NewWidgetValidator widgetValidator = new NewWidgetValidator(widgetService);
-        controller = new WidgetStoreController(widgetService, widgetValidator, userService);
+        controller = new WidgetStoreController(widgetService, widgetValidator, userService, preferenceService);
     }
 
     @Test

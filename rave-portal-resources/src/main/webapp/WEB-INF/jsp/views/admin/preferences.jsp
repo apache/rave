@@ -27,6 +27,7 @@
     <rave:admin_tabsheader/>
     <div class="pageContent">
         <article class="admincontent">
+            <%--@elvariable id="actionresult" type="java.lang.String"--%>
             <c:if test="${actionresult eq 'delete' or actionresult eq 'update'}">
                 <div class="alert-message success">
                     <p>
@@ -37,28 +38,37 @@
 
             <h2><fmt:message key="admin.preferences.shorttitle"/></h2>
 
-            <table class="datatable preferencestable">
-                <tbody>
-                <spring:url value="/app/admin/preferencedetail/edit" var="detaillink"/>
-                    <%--@elvariable id="preferenceMap" type="java.util.Map<java.lang.String, org.apache.rave.portal.model.PortalPreference>"--%>
-                <c:forEach items="${preferenceMap}" var="entry">
-                    <c:set value="${entry.value}" var="portalPreference"/>
-                    <tr data-detaillink="${detaillink}">
-                        <th scope="row" class="largetextcell">
-                            <a href="${detaillink}"><fmt:message
-                                    key="admin.preferencedetail.${portalPreference.key}"/></a>
-                        </th>
-                        <td class="largetextcell">
-                            <ul>
-                                <c:forEach items="${portalPreference.values}" var="value">
-                                    <li><a href="${detaillink}"><c:out value="${value}"/></a></li>
-                                </c:forEach>
-                            </ul>
-                        </td>
-                    </tr>
-                </c:forEach>
-                </tbody>
-            </table>
+            <spring:url value="/app/admin/preferencedetail/edit" var="detaillink"/>
+
+                <%--@elvariable id="preferenceMap" type="java.util.Map<java.lang.String, org.apache.rave.portal.model.PortalPreference>"--%>
+            <c:choose>
+                <c:when test="${fn:length(preferenceMap) eq 0}">
+                    <a href="<c:out value="${detaillink}"/>"><fmt:message key="admin.preferences.edit"/></a>
+                </c:when>
+                <c:otherwise>
+                    <table class="datatable preferencestable">
+                        <tbody>
+                        <c:forEach items="${preferenceMap}" var="entry">
+                            <c:set value="${entry.value}" var="portalPreference"/>
+                            <tr data-detaillink="<c:out value="${detaillink}"/>">
+                                <th scope="row" class="largetextcell">
+                                    <a href="<c:out value="${detaillink}"/>"><fmt:message
+                                            key="admin.preferencedetail.${portalPreference.key}"/></a>
+                                </th>
+                                <td class="largetextcell">
+                                    <ul>
+                                        <c:forEach items="${portalPreference.values}" var="value">
+                                            <li><a href="<c:out value="${detaillink}"/>"><c:out value="${value}"/></a></li>
+                                        </c:forEach>
+                                    </ul>
+                                </td>
+                            </tr>
+                        </c:forEach>
+                        </tbody>
+                    </table>
+                </c:otherwise>
+            </c:choose>
+
         </article>
     </div>
 </rave:rave_generic_page>

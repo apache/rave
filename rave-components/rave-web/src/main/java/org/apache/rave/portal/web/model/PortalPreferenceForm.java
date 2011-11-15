@@ -21,47 +21,51 @@ package org.apache.rave.portal.web.model;
 
 import org.apache.rave.portal.model.PortalPreference;
 
-import java.util.HashMap;
 import java.util.Map;
+
+import static org.apache.rave.portal.web.util.PortalPreferenceKeys.PAGE_SIZE;
+import static org.apache.rave.portal.web.util.PortalPreferenceKeys.TITLE_SUFFIX;
 
 /**
  * Form object for portal preferences
  */
 public class PortalPreferenceForm {
 
-    public static final String KEY_PAGE_SIZE = "pageSize";
     public static final String DEFAULT_PAGE_SIZE = "10";
-
-    public static final String KEY_TITLE_SUFFIX = "titleSuffix";
-    public static final String DEFAULT_TITLE_SUFFIX = "- Rave";
+    public static final String DEFAULT_TITLE_SUFFIX = "";
 
 
     private Map<String, PortalPreference> preferenceMap;
-    
-    public PortalPreferenceForm() {
-        // TODO RAVE-355 populate preferences if they don't exist in the db
-        this(new HashMap<String, PortalPreference>());
-    }
 
     public PortalPreferenceForm(Map<String, PortalPreference> preferenceMap) {
         super();
         this.preferenceMap = preferenceMap;
+        populateMissingPreferences();
+    }
+
+    private void populateMissingPreferences() {
+        if (getPageSize() == null) {
+            preferenceMap.put(PAGE_SIZE, new PortalPreference(PAGE_SIZE, DEFAULT_PAGE_SIZE));
+        }
+        if (getTitleSuffix() == null) {
+            preferenceMap.put(TITLE_SUFFIX, new PortalPreference(TITLE_SUFFIX, DEFAULT_TITLE_SUFFIX));
+        }
     }
 
     public PortalPreference getPageSize() {
-        return preferenceMap.get(KEY_PAGE_SIZE);
+        return preferenceMap.get(PAGE_SIZE);
     }
 
     public void setPageSize(PortalPreference pageSize) {
-        preferenceMap.put(KEY_PAGE_SIZE, pageSize);
+        preferenceMap.put(PAGE_SIZE, pageSize);
     }
 
     public PortalPreference getTitleSuffix() {
-        return preferenceMap.get(KEY_TITLE_SUFFIX);
+        return preferenceMap.get(TITLE_SUFFIX);
     }
 
     public void setTitleSuffix(PortalPreference titleSuffix) {
-        preferenceMap.put(KEY_TITLE_SUFFIX, titleSuffix);
+        preferenceMap.put(TITLE_SUFFIX, titleSuffix);
     }
 
     public Map<String, PortalPreference> getPreferenceMap() {

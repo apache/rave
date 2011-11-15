@@ -19,12 +19,15 @@
 
 package org.apache.rave.portal.web.controller;
 
+import org.apache.rave.portal.model.PortalPreference;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.Widget;
 import org.apache.rave.portal.model.WidgetStatus;
+import org.apache.rave.portal.service.PortalPreferenceService;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.portal.service.WidgetService;
 import org.apache.rave.portal.web.util.ModelKeys;
+import org.apache.rave.portal.web.util.PortalPreferenceKeys;
 import org.apache.rave.portal.web.util.ViewNames;
 import org.apache.rave.portal.web.validator.NewWidgetValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,12 +52,15 @@ public class WidgetStoreController {
 
     private final UserService userService;
 
+    private final PortalPreferenceService preferenceService;
+
     @Autowired
     public WidgetStoreController(WidgetService widgetService, NewWidgetValidator validator,
-                                 UserService userService) {
+                                 UserService userService, PortalPreferenceService preferenceService) {
         this.widgetService = widgetService;
         this.widgetValidator = validator;
         this.userService = userService;
+        this.preferenceService = preferenceService;
     }
 
     /**
@@ -70,7 +76,7 @@ public class WidgetStoreController {
                        @RequestParam(required = false, defaultValue = "0") int offset) {
         User user = userService.getAuthenticatedUser();
         model.addAttribute(ModelKeys.WIDGETS,
-                widgetService.getPublishedWidgets(offset, MAXIMUM_WIDGETS_PER_PAGE));
+                widgetService.getPublishedWidgets(offset, getPageSize()));
         model.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
         model.addAttribute(ModelKeys.WIDGETS_STATISTICS, widgetService.getAllWidgetStatistics(user.getEntityId()));
         return ViewNames.STORE;
@@ -100,7 +106,7 @@ public class WidgetStoreController {
      *
      * @param model           {@link Model} map
      * @param referringPageId the source {@link org.apache.rave.portal.model.Page } ID
-     * @param searchTerm          free text searchTerm query
+     * @param searchTerm      free text searchTerm query
      * @param offset          offset within the total amount of results (to enable paging)
      * @return the view name of the main store page
      */
@@ -110,8 +116,7 @@ public class WidgetStoreController {
                                    @RequestParam(required = false, defaultValue = "0") int offset) {
         User user = userService.getAuthenticatedUser();
         model.addAttribute(ModelKeys.WIDGETS,
-                widgetService.getPublishedWidgetsByFreeTextSearch(searchTerm, offset,
-                        MAXIMUM_WIDGETS_PER_PAGE));
+                widgetService.getPublishedWidgetsByFreeTextSearch(searchTerm, offset, getPageSize()));
         model.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
         model.addAttribute(ModelKeys.SEARCH_TERM, searchTerm);
         model.addAttribute(ModelKeys.OFFSET, offset);
@@ -123,11 +128,12 @@ public class WidgetStoreController {
     /**
      * Shows the Add new Widget form
      *
-     * @param model {@link Model}
+     * @param model           {@link Model}
+     * @param referringPageId the source {@link org.apache.rave.portal.model.Page } ID
      * @return the view name of the Add new Widget form
      */
     @RequestMapping(method = RequestMethod.GET, value = "widget/add")
-    public String viewAddWidgetForm(Model model,@RequestParam long referringPageId) {
+    public String viewAddWidgetForm(Model model, @RequestParam long referringPageId) {
         final Widget widget = new Widget();
         model.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
         model.addAttribute(ModelKeys.WIDGET, widget);
@@ -137,14 +143,15 @@ public class WidgetStoreController {
     /**
      * Validates the form input, if valid, tries to store the Widget data
      *
-     * @param widget  {@link Widget} as submitted by the user
-     * @param results {@link BindingResult}
-     * @param model   {@link Model}
+     * @param widget          {@link Widget} as submitted by the user
+     * @param results         {@link BindingResult}
+     * @param model           {@link Model}
+     * @param referringPageId the source {@link org.apache.rave.portal.model.Page } ID
      * @return if successful the view name of the widget, otherwise the form
      */
     @RequestMapping(method = RequestMethod.POST, value = "widget/add")
     public String viewAddWidgetResult(@ModelAttribute Widget widget, BindingResult results,
-                                      Model model,@RequestParam long referringPageId   ) {
+                                      Model model, @RequestParam long referringPageId) {
         User user = userService.getAuthenticatedUser();
         widgetValidator.validate(widget, results);
         if (results.hasErrors()) {
@@ -157,8 +164,21 @@ public class WidgetStoreController {
         final Widget storedWidget = widgetService.registerNewWidget(widget);
         model.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
         model.addAttribute(ModelKeys.WIDGET, storedWidget);
-        model.addAttribute(ModelKeys.WIDGET_STATISTICS, widgetService.getWidgetStatistics(storedWidget.getEntityId(), user.getEntityId()));
+        model.addAttribute(ModelKeys.WIDGET_STATISTICS,
+                widgetService.getWidgetStatistics(storedWidget.getEntityId(), user.getEntityId()));
         model.addAttribute(ModelKeys.USER_PROFILE, user);
         return ViewNames.WIDGET;
+    }
+
+    public int getPageSize() {
+        final PortalPreference pageSizePref = preferenceService.getPreference(PortalPreferenceKeys.PAGE_SIZE);
+        if (pageSizePref == null) {
+            return MAXIMUM_WIDGETS_PER_PAGE;
+        }
+        try {
+            return Integer.parseInt(pageSizePref.getValue());
+        } catch (NumberFormatException e) {
+            return MAXIMUM_WIDGETS_PER_PAGE;
+        }
     }
 }

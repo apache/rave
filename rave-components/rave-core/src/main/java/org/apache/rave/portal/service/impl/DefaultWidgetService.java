@@ -27,8 +27,6 @@ import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.model.util.WidgetStatistics;
 import org.apache.rave.portal.repository.WidgetRepository;
 import org.apache.rave.portal.service.WidgetService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,8 +36,6 @@ import java.util.Map;
 
 @Service
 public class DefaultWidgetService implements WidgetService {
-
-    private static Logger logger = LoggerFactory.getLogger(DefaultWidgetService.class);
 
     private final WidgetRepository widgetRepository;
 

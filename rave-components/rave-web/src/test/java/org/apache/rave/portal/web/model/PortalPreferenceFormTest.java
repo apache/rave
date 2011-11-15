@@ -27,10 +27,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNull;
-import static junit.framework.Assert.assertTrue;
-import static org.apache.rave.portal.web.model.PortalPreferenceForm.KEY_PAGE_SIZE;
-import static org.apache.rave.portal.web.model.PortalPreferenceForm.KEY_TITLE_SUFFIX;
+import static org.apache.rave.portal.web.util.PortalPreferenceKeys.PAGE_SIZE;
+import static org.apache.rave.portal.web.util.PortalPreferenceKeys.TITLE_SUFFIX;
 
 /**
  * Test for {@link PortalPreferenceForm}
@@ -40,24 +38,23 @@ public class PortalPreferenceFormTest {
 
     @Before
     public void setUp() throws Exception {
-        PortalPreference titlePref = new PortalPreference(KEY_TITLE_SUFFIX, "Test portal");
-        preferenceMap.put(KEY_TITLE_SUFFIX, titlePref);
-        PortalPreference pageSizePref = new PortalPreference(KEY_PAGE_SIZE, "20");
-        preferenceMap.put(KEY_PAGE_SIZE, pageSizePref);
+        PortalPreference titlePref = new PortalPreference(TITLE_SUFFIX, "Test portal");
+        preferenceMap.put(TITLE_SUFFIX, titlePref);
+        PortalPreference pageSizePref = new PortalPreference(PAGE_SIZE, "20");
+        preferenceMap.put(PAGE_SIZE, pageSizePref);
     }
 
     @Test
-    public void testEmptyConstructor() throws Exception {
-        PortalPreferenceForm form = new PortalPreferenceForm();
-        assertNull(form.getPageSize());
-        assertNull(form.getTitleSuffix());
-        assertTrue(form.getPreferenceMap().isEmpty());
-    }
-
-    @Test
-    public void testPopulatedForm() throws Exception {
+    public void testForm_populatedMap() throws Exception {
         PortalPreferenceForm form = new PortalPreferenceForm(preferenceMap);
         assertEquals("Test portal", form.getTitleSuffix().getValue());
         assertEquals("20", form.getPageSize().getValue());
+    }
+
+    @Test
+    public void testForm_emptyMap() throws Exception {
+        PortalPreferenceForm form = new PortalPreferenceForm(new HashMap<String, PortalPreference>());
+        assertEquals(PortalPreferenceForm.DEFAULT_PAGE_SIZE, form.getPageSize().getValue());
+        assertEquals(PortalPreferenceForm.DEFAULT_TITLE_SUFFIX, form.getTitleSuffix().getValue());
     }
 }
