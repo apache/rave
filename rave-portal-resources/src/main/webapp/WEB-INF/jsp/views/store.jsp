@@ -175,6 +175,7 @@
 <script src="<spring:url value="/script/rave_store.js"/>"></script>
 <script>
     $(function () {
+        rave.setContext("<spring:url value="/app/" />");
         rave.store.init();
     });
 </script>
