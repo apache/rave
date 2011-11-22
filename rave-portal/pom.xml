@@ -67,7 +67,7 @@
             <groupId>org.apache.rave</groupId>
             <artifactId>rave-demo-gadgets</artifactId>
             <type>war</type>
-   			 <scope>provided</scope>
+   	    <scope>provided</scope>
         </dependency>
 
         <!-- Default database -->
@@ -105,7 +105,14 @@
     </dependencies>
 
     <build>
-        <defaultGoal>install</defaultGoal>
+	<defaultGoal>install</defaultGoal>
+	<testResources>
+	  <testResource>
+	      <directory>src/test/resources</directory>
+	      <filtering>true</filtering>
+	  </testResource>
+	</testResources>
+		
         <plugins>
             <plugin>
                 <groupId>org.codehaus.cargo</groupId>

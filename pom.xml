@@ -73,6 +73,7 @@
 
         <!-- The location of Rave's H2 file DB. No trailing / -->
         <rave.database.location>/tmp/rave_db</rave.database.location>
+        <rave.test.database.location>/tmp/rave_test_db</rave.test.database.location>
 
         <!-- Force maven-filesync-plugin rewrite the Eclipse FileSync plugin configuration with
             $mvn filesync:generate -Dmaven.filesync.override=true -->
