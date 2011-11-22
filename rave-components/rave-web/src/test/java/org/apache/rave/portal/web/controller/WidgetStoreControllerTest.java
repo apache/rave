@@ -22,7 +22,6 @@ package org.apache.rave.portal.web.controller;
 
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.Widget;
-import org.apache.rave.portal.model.WidgetStatus;
 import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.model.util.WidgetStatistics;
 import org.apache.rave.portal.service.PortalPreferenceService;
@@ -188,16 +187,12 @@ public class WidgetStoreControllerTest {
 
         expect(widgetService.registerNewWidget(widget)).andReturn(widget);
         expect(widgetService.isRegisteredUrl(widgetUrl)).andReturn(false);
-        expect(widgetService.getWidgetStatistics(WIDGET_ID, validUser.getEntityId())).andReturn(widgetStatistics);
         replay(widgetService);
         String view = controller.viewAddWidgetResult(widget, errors, model,REFERRER_ID);
         verify(widgetService);
 
-        assertEquals(ViewNames.WIDGET, view);
+        assertEquals("redirect:/app/store/widget/" + widget.getEntityId() +     "?referringPageId=" + REFERRER_ID, view);
         assertFalse("Valid widget data", errors.hasErrors());
-        final Widget fromModel = (Widget) model.asMap().get(ModelKeys.WIDGET);
-        assertEquals(widget, fromModel);
-        assertEquals("New widget has state preview", WidgetStatus.PREVIEW, fromModel.getWidgetStatus());
     }
 
     @Test

@@ -162,12 +162,7 @@ public class WidgetStoreController {
         widget.setOwner(user);
 
         final Widget storedWidget = widgetService.registerNewWidget(widget);
-        model.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
-        model.addAttribute(ModelKeys.WIDGET, storedWidget);
-        model.addAttribute(ModelKeys.WIDGET_STATISTICS,
-                widgetService.getWidgetStatistics(storedWidget.getEntityId(), user.getEntityId()));
-        model.addAttribute(ModelKeys.USER_PROFILE, user);
-        return ViewNames.WIDGET;
+        return "redirect:/app/store/widget/" + storedWidget.getEntityId() + "?referringPageId=" + referringPageId;
     }
 
     public int getPageSize() {
