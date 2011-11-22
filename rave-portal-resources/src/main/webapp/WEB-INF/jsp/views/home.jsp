@@ -43,7 +43,12 @@
         </ul>
     </nav>
   <h1>
-      <fmt:message key="page.home.welcome"><fmt:param><c:out value="${page.owner.username}"/></fmt:param></fmt:message>
+      <fmt:message key="page.home.welcome"><fmt:param>
+          <c:choose>
+              <c:when test="${not empty page.owner.displayName}"><c:out value="${page.owner.displayName}"/></c:when>
+              <c:otherwise><c:out value="${page.owner.username}"/></c:otherwise>
+          </c:choose>
+      </fmt:param></fmt:message>
   </h1>
 </header>
 <input id="currentPageId" type="hidden" value="${page.entityId}" />
