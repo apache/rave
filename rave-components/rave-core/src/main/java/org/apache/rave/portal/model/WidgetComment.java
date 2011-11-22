@@ -15,8 +15,8 @@
  */
 package org.apache.rave.portal.model;
 
-import java.io.Serializable;
-import java.util.Date;
+import org.apache.rave.persistence.BasicEntity;
+
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -25,12 +25,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.xml.bind.annotation.XmlRootElement;
-import org.apache.rave.persistence.BasicEntity;
+import java.io.Serializable;
+import java.util.Date;
 
 /**
  * A comment for a widget.
@@ -60,7 +62,7 @@ public class WidgetComment implements BasicEntity, Serializable {
     private User user;
 
     @Basic
-    @Column(name = "text")
+    @Column(name = "text") @Lob
     private String text;
 
     @Basic
@@ -103,14 +105,6 @@ public class WidgetComment implements BasicEntity, Serializable {
     public void setWidgetId(Long widgetId) {
         this.widgetId = widgetId;
     }
-    /*
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }*/
 
     public User getUser() {
         return user;
