@@ -29,6 +29,13 @@
                       <fmt:message key="page.store.title"/>
                     </a>
                 </li>
+                <sec:authorize url="/app/admin/">
+                <li>
+                    <a href="<spring:url value="/app/admin/"/>">
+                        <fmt:message key="page.general.toadmininterface"/>
+                    </a>
+                </li>
+                </sec:authorize>
                 <li>
                     <a href="<spring:url value="/j_spring_security_logout" htmlEscape="true" />">
                       <fmt:message key="page.general.logout"/></a>
