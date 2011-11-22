@@ -92,8 +92,10 @@
 </div>
 <%--render the main page content (regions/widgets) --%>
 <div id="pageContent">
-    <c:forEach var="region" items="${page.regions}">
-        <div class="region" id="region-${region.entityId}-id">
+    <div class="regions">
+    <c:forEach var="region" items="${page.regions}" varStatus="status">
+    <%--@elvariable id="region" type="org.apache.rave.portal.model.Region"--%>
+        <div class="region <c:out value="${page.pageLayout.code}"/>_${status.count}" id="region-${region.entityId}-id">
             <c:forEach var="regionWidget" items="${region.regionWidgets}">
                <div class="widget-wrapper" id="widget-${regionWidget.entityId}-wrapper">
                     <div class="widget-title-bar">
@@ -101,7 +103,7 @@
                         <div id="widget-${regionWidget.entityId}-title" class="widget-title">
                         <c:choose>
                             <c:when test="${not empty regionWidget.widget.titleUrl}">
-                                <a href="${regionWidget.widget.titleUrl}" rel="external"><c:out value="${regionWidget.widget.title}"/></a>
+                                <a href="<c:out value="${regionWidget.widget.titleUrl}"/>" rel="external"><c:out value="${regionWidget.widget.title}"/></a>
                             </c:when>
                             <c:otherwise>
                                 <c:out value="${regionWidget.widget.title}"/>
@@ -145,6 +147,8 @@
             </c:forEach>
         </div>
     </c:forEach>
+    </div>
+
     <div class="clear-float">&nbsp;</div>
 </div>
 <fmt:message key="page.general.addnewpage" var="addNewPageTitle"/>
@@ -212,6 +216,7 @@
 <script src="//ajax.aspnetcdn.com/ajax/jQuery/jquery-1.6.1.min.js"></script>
 <script src="//ajax.aspnetcdn.com/ajax/jquery.ui/1.8.13/jquery-ui.min.js"></script>
 <script src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.8.1/jquery.validate.min.js"></script>
+<!--[if lt IE 9]><script src=//css3-mediaqueries-js.googlecode.com/svn/trunk/css3-mediaqueries.js></script><![endif]-->
 <portal:render-script location="${'AFTER_LIB'}" />
 <portal:render-script location="${'BEFORE_RAVE'}" />
 <script src="<spring:url value="/script/rave.js"/>"></script>

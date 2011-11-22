@@ -76,7 +76,7 @@
     <%-- the mobile view will only show one column of widgets --%>
     <div id="pageContent" class="pageContent-mobile">        
         <c:forEach var="region" items="${page.regions}">
-            <div class="region region-mobile" id="region-${region.entityId}-id">
+            <div class="region-mobile" id="region-${region.entityId}-id">
             <c:forEach var="regionWidget" items="${region.regionWidgets}">
                <div class="widget-wrapper widget-wrapper-mobile" id="widget-${regionWidget.entityId}-wrapper">
                     <div class="widget-title-bar widget-title-bar-mobile" onclick="rave.toggleMobileWidget(${regionWidget.entityId});">

@@ -217,14 +217,6 @@ header h1 {
     vertical-align: top;
 }
 
-.widget-a {
-    color: white;
-    width: 100px;
-    text-align: center;
-    float: right;
-    margin-right: 2%;
-}
-
 .widget-wrapper {
     vertical-align: top;
     margin-bottom: 20px;
@@ -236,6 +228,7 @@ header h1 {
 
 .widget-title-bar {
     color: #FFFFFF;
+    background-color: #666666;
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#999999", endColorstr="#666666");
     background: -moz-linear-gradient(center top , #999 0%, #666 25%) repeat scroll 0 0 transparent;
     background: -webkit-gradient(linear, left top, left bottom, from(#999), to(#666));
@@ -308,12 +301,16 @@ header h1 {
     background-color: yellow;
 }
 
+.regions {
+    width: 100%;
+    overflow-x: hidden;
+}
+
 .region {
     float: left;
     display: block;
-    padding: 5px 5px 100px 5px; /*** bottom padding is needed for dnd when region is empty ***/
+    padding: 5px 0 100px 0; /*** bottom padding is needed for dnd when region is empty ***/
     margin-right: 20px;
-    min-width:300px;
     width: auto;
     height: 100%;
 }
@@ -328,8 +325,58 @@ header h1 {
 
 .region-dragging {
     height: 200%;
-    min-width: 250px;
     border: 1px solid black;
+}
+
+.columns_1_1 {
+    width: 90%;
+}
+
+.columns_2_1, .columns_2_2 {
+    width: 45%;
+}
+
+.columns_2wn_1 {
+    width: 60%;
+}
+
+.columns_2wn_2 {
+    width: 30%;
+}
+
+.columns_3_1, .columns_3_2, .columns_3_3 {
+    width: 30%
+}
+
+.columns_3nwn_1, .columns_3nwn_3 {
+    width: 22%;
+}
+
+.columns_3nwn_2 {
+    width: 45%;
+}
+
+.columns_4_1, .columns_4_2, .columns_4_3, .columns_4_4 {
+    width: 22%;
+}
+
+.columns_3nwn_1_bottom_1, .columns_3nwn_1_bottom_3 {
+    width: 22%;
+    padding-bottom: 5em;
+}
+
+.columns_3nwn_1_bottom_2 {
+    width: 45%;
+    padding-bottom: 5em;
+}
+
+.columns_3nwn_1_bottom_4 {
+    width: 93%;
+    clear: both;
+}
+
+.columns_2_2,  .columns_3_3, .columns_3nwn_3, .columns_4_4, .columns_3nwn_1_bottom_3, .columns_3nwn_1_bottom_4 {
+    margin-right: 0;
 }
 
 .storeSearch, .storeBox {
@@ -451,6 +498,9 @@ button.widget-toolbar-btn-min {
     display: inline-block;
     vertical-align: middle;
     cursor: pointer;
+    /* IE 7 hacks for inline-block */
+    zoom: 1;
+    *display: inline;
 }
 
 /* Form fields */
@@ -525,6 +575,9 @@ span.error, label.error {
     height: 25px;
     position: relative;
     top: 1px;
+    /* IE 7 hacks for inline-block */
+    zoom: 1;
+    *display: inline;
 }
 
 .rave-ui-tab a, .rave-ui-tab a:visited {
@@ -590,6 +643,9 @@ span.error, label.error {
     margin-left: 10px;
     padding-bottom: 4px;
     padding-top: 3px;
+    /* IE 7 hacks for inline-block */
+    zoom: 1;
+    *display: inline;
 }
 
 #pageContent, .pageContent {
@@ -608,6 +664,9 @@ span.error, label.error {
     display: inline-block;
     padding: 5px 10px;
     cursor: pointer;
+    /* IE 7 hacks for inline-block */
+    zoom: 1;
+    *display: inline;
 }
 
 /* page menu related styles */
@@ -615,6 +674,9 @@ span.error, label.error {
     position: relative;
     display: inline-block;
     vertical-align: middle;
+    /* IE 7 hacks for inline-block */
+    zoom: 1;
+    *display: inline;
 }
 .page-menu {
     border: 1px solid black;
@@ -646,6 +708,9 @@ span.error, label.error {
     position: relative;
     display: inline-block;
     vertical-align: middle;
+    /* IE 7 hacks for inline-block */
+    zoom: 1;
+    *display: inline;
 }
 .widget-menu {
     border: 1px solid black;
@@ -903,7 +968,7 @@ span.error, label.error {
 
 @media all and (max-width: 500px) {
     body {
-        font-size: 1em;
+        font-size: 0.8em;
     }
 
     header {
@@ -958,4 +1023,15 @@ span.error, label.error {
         margin-top: 0;
     }
 
+    .region {
+        clear: both;
+        width: 100%;
+        margin: 0;
+        padding: 1em 0;
+    }
+
+    .widget, .widget-title-bar {
+        box-shadow: none;
+        border: 1px solid #767676;
+    }
 }
