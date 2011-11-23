@@ -682,6 +682,23 @@ span.error, label.error {
     *display: inline;
 }
 
+#emptyPageMessage {
+    background-color: #FFFFFF;
+    border: 1px solid #B4C4CF;
+    border-radius: 10px 10px 10px 10px;
+    box-shadow: 1px 1px 0 #D9DADC;
+    font-weight: bold;
+    margin: 20px auto;
+    padding: 20px;
+    text-align: center;
+    width: 300px;  
+    font-size: 1.25em;
+}
+
+#emptyPageMessageWrapper {
+    padding-top: 20px;
+}
+
 /* page menu related styles */
 #pageMenuWrapper {
     position: relative;

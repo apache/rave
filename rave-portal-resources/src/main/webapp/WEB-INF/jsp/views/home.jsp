@@ -92,6 +92,11 @@
 </div>
 <%--render the main page content (regions/widgets) --%>
 <div id="pageContent">
+    <div id="emptyPageMessageWrapper" class="hidden">
+        <div id="emptyPageMessage">
+            <a href="<spring:url value="/app/store?referringPageId=${page.entityId}" />"><fmt:message key="page.general.empty" /></a>
+        </div>
+    </div>
     <div class="regions">
     <c:forEach var="region" items="${page.regions}" varStatus="status">
     <%--@elvariable id="region" type="org.apache.rave.portal.model.Region"--%>

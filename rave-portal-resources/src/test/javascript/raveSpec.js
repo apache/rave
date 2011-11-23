@@ -66,11 +66,11 @@ describe("Rave", function() {
     });
 
     describe("initWidgets", function() {
-
-        //Creates a simple mock jquery object that records one call and returns the result of the call
+        //Creates a mock jquery object with the functions we need in this context
         function createMockJQuery() {
             var html;
             var expression;
+            var classMap = [];
             $ = function(expr) {
 
                 if (typeof expr != "undefined") {
@@ -91,12 +91,29 @@ describe("Rave", function() {
                     },
                     attr: function(a, b) {
 
-                    }
+                    },                    
+                    hasClass : function (className) {
+                        return classMap.indexOf(className) != -1;
+                    },
+                    addClass : function (className) {
+                        classMap.push(className);
+                    },
+                    removeClass: function(className) {                        
+                        var idx = classMap.indexOf(className); 
+                        if (idx != -1) {
+                            classMap.splice(idx, 1); 
+                        }
+                    }   
                 }
-            };
+            };            
         }
 
         it("calls the appropriate providers", function() {
+            var HIDDEN_CLASS = "hidden";            
+            createMockJQuery(); 
+            $().addClass(HIDDEN_CLASS);
+            expect($().hasClass(HIDDEN_CLASS)).toEqual(true);
+            
             var widgetsByRegionIdMap = {};
             widgetsByRegionIdMap[1] = [
                     {type:"FOO"},
@@ -110,10 +127,13 @@ describe("Rave", function() {
             rave.registerProvider(provider2);
             rave.initWidgets(widgetsByRegionIdMap);
             expect(provider1.initWidgetsWasCalled(2)).toBeTruthy();
-            expect(provider2.initWidgetsWasCalled(2)).toBeTruthy();
+            expect(provider2.initWidgetsWasCalled(2)).toBeTruthy();   
+            expect($().hasClass(HIDDEN_CLASS)).toEqual(true);
         });
 
         it("renders widgets in the appropriate order (first 'row', second 'row', third 'row', ...)", function() {
+            createMockJQuery(); 
+            
             var widgetsByRegionIdMap = {};
             widgetsByRegionIdMap[1] = [
                     {type:"FOO", renderOrder:1},
@@ -150,6 +170,8 @@ describe("Rave", function() {
         });
 
         it("puts widgets in buckets keyed by regionIds", function() {
+            createMockJQuery(); 
+             
             var widgetsByRegionIdMap = {};
             var regionOneKey = 1;
             var regionTwoKey = 2;
@@ -168,6 +190,8 @@ describe("Rave", function() {
         });
 
         it("Renders an error gadget when invalid widget is provided", function(){
+            createMockJQuery();  
+             
             var widgetsByRegionIdMap = {};
             widgetsByRegionIdMap[1] = [
                     {type:"FOO",  regionWidgetId:20},
@@ -176,7 +200,7 @@ describe("Rave", function() {
                     {type:"BAR",  regionWidgetId:23},
                     {type:"NONE", regionWidgetId:43}
             ];
-            createMockJQuery();
+            
             var provider1 = getMockProvider("FOO");
             var provider2 = getMockProvider("BAR");
             rave.registerProvider(provider1);
@@ -187,6 +211,18 @@ describe("Rave", function() {
             expect(provider1.initWidgetsWasCalled(2)).toBeTruthy();
             expect(provider2.initWidgetsWasCalled(2)).toBeTruthy();
         });
+        
+        it("Renders the empty page message when page has no widgets", function(){
+            var HIDDEN_CLASS = "hidden";
+            createMockJQuery();  
+            $().addClass(HIDDEN_CLASS);
+            expect($().hasClass(HIDDEN_CLASS)).toEqual(true);
+            
+            var widgetsByRegionIdMap = {};
+                                   
+            rave.initWidgets(widgetsByRegionIdMap);
+            expect($().hasClass(HIDDEN_CLASS)).toEqual(false);           
+        });        
     });
 
     describe("initUI", function() {

@@ -434,7 +434,12 @@ rave.layout = rave.layout || (function() {
             rave.api.rpc.removeWidget({
                 regionWidgetId: regionWidgetId,
                 successCallback: function() {
-                    $("#widget-" + this.regionWidgetId + "-wrapper").remove();
+                    // remove the widget from the dom and the internal memory map
+                    $("#widget-" + this.regionWidgetId + "-wrapper").remove();                    
+                    rave.removeWidgetFromMap(this.regionWidgetId);
+                    if (rave.isPageEmpty()) {
+                        rave.displayEmptyPageMessage();
+                    }
                 }
             });
         }

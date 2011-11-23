@@ -528,7 +528,14 @@ var rave = rave || (function() {
                 $toggleIcon.removeClass(WIDGET_TOGGLE_DISPLAY_NORMAL);
                 $toggleIcon.addClass(WIDGET_TOGGLE_DISPLAY_COLLAPSED);
             }
-        }   
+        }        
+        
+        /**
+         * Displays the "empty page" message on the page
+         */
+        function displayEmptyPageMessage() {            
+            $("#emptyPageMessageWrapper").removeClass("hidden");
+        }
 
         return {
           init : init,       
@@ -540,7 +547,8 @@ var rave = rave || (function() {
           setMobileState: setMobileState,
           getMobileState: getMobileState,
           doWidgetUiCollapse: doWidgetUiCollapse,
-          toggleMobileWidget: toggleMobileWidget
+          toggleMobileWidget: toggleMobileWidget,
+          displayEmptyPageMessage: displayEmptyPageMessage
         };
 
     })();
@@ -562,7 +570,7 @@ var rave = rave || (function() {
         }
     }
 
-    function initializeWidgets(widgetsByRegionIdMap) {
+    function initializeWidgets(widgetsByRegionIdMap) {                           
         //We get the widget objects in a map keyed by region ID.  The code below converts that map into a flat array
         //of widgets with all the top widgets in each region first, then the seconds widgets in each region, then the
         //third, etc until we have all widgets in the array.  This allows us to render widgets from left to right and
@@ -594,11 +602,15 @@ var rave = rave || (function() {
             }
         }
 
-        //Initialize the widgets for supported providers
-        for (var i = 0; i < widgets.length; i++) {
-            var widget = widgets[i];
-            initializeWidget(widget);
-            widgetByIdMap[widget.regionWidgetId] = widget;
+        if (widgets.length == 0) {
+            rave.displayEmptyPageMessage();
+        } else {
+            //Initialize the widgets for supported providers
+            for (var i = 0; i < widgets.length; i++) {
+                var widget = widgets[i];
+                initializeWidget(widget);
+                widgetByIdMap[widget.regionWidgetId] = widget;
+            }           
         }
     }
 
@@ -652,6 +664,21 @@ var rave = rave || (function() {
      */ 
     function isFunction(obj) {       
         return (typeof obj == "function");
+    }
+    
+    /**
+     * Determines if a page is empty (has zero widgets)        
+     */
+    function isPageEmpty() {           
+        return $.isEmptyObject(widgetByIdMap);            
+    }
+    
+    /**
+     * Removes a regionWidgetId from the internal widget map
+     * @param regionWidgetId the region widget id to remove
+     */
+    function removeWidgetFromMap(regionWidgetId) {
+        delete widgetByIdMap[regionWidgetId];
     }
 
     /**
@@ -801,6 +828,21 @@ var rave = rave || (function() {
          * Toggles a mobile widget collapse/restore
          * @param args
          */
-        toggleMobileWidget: ui.toggleMobileWidget
+        toggleMobileWidget: ui.toggleMobileWidget,
+        
+        /**
+         * Determines if a page is empty (has zero widgets)
+         * @param widgetByIdMap the map of widgets on the page
+         */        
+        isPageEmpty: isPageEmpty,
+        /**
+         * Removes a regionWidgetId from the internal widget map
+         * @param regionWidgetId the region widget id to remove
+         */        
+        removeWidgetFromMap: removeWidgetFromMap,
+        /**
+         * Displays the "empty page" message on the page
+         */        
+        displayEmptyPageMessage: ui.displayEmptyPageMessage
     }
 })();
