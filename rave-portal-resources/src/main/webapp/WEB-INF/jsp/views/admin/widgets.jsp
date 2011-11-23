@@ -97,7 +97,7 @@
         </article>
     </div>
 
-    <script src="//ajax.aspnetcdn.com/ajax/jQuery/jquery-1.6.1.min.js"></script>
+    <script src="//ajax.aspnetcdn.com/ajax/jQuery/jquery-1.6.4.min.js"></script>
     <script src="<spring:url value="/script/rave_admin.js"/>"></script>
     <script>$(function() {
         rave.admin.initAdminUi();

@@ -29,31 +29,50 @@ rave.layout = rave.layout || (function() {
     var $dialog = $( "#dialog" ).dialog({
             autoOpen: false,
             modal: true,
-            buttons: {
-                    Add: function() {
-                            addPage();                            
-                    },
-
-                    Update: function() {
-                            updatePage();
-                    },
-
-                    Cancel: function() {
-                            $( this ).dialog( "close" );
+            buttons: [
+                {
+                    text: "Add",
+                    id: "AddPageBtn",
+                    click: function() {
+                        addPage();
                     }
-            },
+                },
+                {
+                    text: "Update",
+                    id: "UpdatePageBtn",
+                    click: function() {
+                        updatePage();
+                    }
+                },
+                {
+                    text: "Cancel",
+                    id: "CancelPageBtn",
+                    click: function() {
+                        $(this).dialog("close");
+                    }
+                }
+            ],
             open: function(event, ui) {
+                    $dialog.unbind("submit");
                     if ($tab_id.val() == '') {
                         $("#"+this.id).dialog("option", "title", "Add a New Page");
-                        $(":button:contains('Update')").hide();
-                        $(":button:contains('Add')").show();
+                        $("#UpdatePageBtn").hide();
+                        $("#AddPageBtn").show();
+                        $dialog.submit(function() {
+                            $("#AddPageBtn").click();
+                            return false;
+                        });
                     }
                     else {
                         $("#"+this.id).dialog("option", "title", "Update Page");
-                        $(":button:contains('Update')").show();
-                        $(":button:contains('Add')").hide();
+                        $("#UpdatePageBtn").show();
+                        $("#AddPageBtn").hide();
+                        $dialog.submit(function() {
+                            $(":button:contains('Update')").click();
+                            return false;
+                        });
+
                     }
-                    $tab_title_input.focus();
             },
             close: function() {
                     $form[ 0 ].reset();
@@ -66,14 +85,20 @@ rave.layout = rave.layout || (function() {
     var $movePageDialog = $("#movePageDialog").dialog({
             autoOpen: false,
             modal: true,
-            buttons: {
-                    Move: function() {
-                            movePage();                            
-                    },
-                    Cancel: function() {
-                            $( this ).dialog( "close" );
+            buttons: [
+                {
+                    text: "Move",
+                    click: function() {
+                        movePage();
                     }
-            },
+                },
+                {
+                    text: "Cancel",
+                    click: function() {
+                        $( this ).dialog( "close" );
+                    }
+                }
+            ],
             open: function() {
                     $("#moveAfterPageId").focus();
             },
@@ -172,14 +197,20 @@ rave.layout = rave.layout || (function() {
     var $moveWidgetDialog = $("#moveWidgetDialog").dialog({
             autoOpen: false,
             modal: true,
-            buttons: {
-                    Move: function() {
-                            moveWidgetToPage($(this).data('regionWidgetId'));
-                    },
-                    Cancel: function() {
-                            $( this ).dialog( "close" );
+            buttons: [
+                {
+                    text: "Move",
+                    click: function() {
+                        moveWidgetToPage($(this).data('regionWidgetId'));
                     }
-            },
+                },
+                {
+                    text: "Cancel",
+                    click: function() {
+                        $(this).dialog("close");
+                    }
+                }
+            ],
             open: function() {
                     $("#moveToPageId").focus();
             },

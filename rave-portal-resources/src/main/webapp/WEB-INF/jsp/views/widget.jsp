@@ -169,8 +169,8 @@
     <div id="editComment-dialog" title="Edit Comment" style="display: none;">
         <textarea id="editComment" rows="3" cols="50"> </textarea>
     </div>
-    <script src="//ajax.aspnetcdn.com/ajax/jQuery/jquery-1.6.1.min.js"></script>
-    <script src="//ajax.aspnetcdn.com/ajax/jquery.ui/1.8.13/jquery-ui.min.js"></script>
+    <script src="//ajax.aspnetcdn.com/ajax/jQuery/jquery-1.6.4.min.js"></script>
+    <script src="//ajax.aspnetcdn.com/ajax/jquery.ui/1.8.16/jquery-ui.min.js"></script>
     <!--[if lt IE 9]><script src=//css3-mediaqueries-js.googlecode.com/svn/trunk/css3-mediaqueries.js></script><![endif]-->
     <script src="<spring:url value="/script/rave.js"/>"></script>
     <script src="<spring:url value="/script/rave_api.js"/>"></script>
