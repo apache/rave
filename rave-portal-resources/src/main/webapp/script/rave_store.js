@@ -87,7 +87,7 @@ rave.store = rave.store || (function() {
             text: false
         }).click(function() {
             var commentId = this.id.substring("comment-delete-".length);
-            var widgetId = this.parentNode.id.substring("comment-widget-".length);
+            var widgetId = this.parentNode.getAttribute('data-widgetid');
             rave.api.rest.deleteWidgetComment({widgetId: widgetId, 
                                                 commentId: commentId,
                                                 successCallback: function() { window.location.reload(); }});
@@ -98,7 +98,7 @@ rave.store = rave.store || (function() {
             text: false
         }).click(function() {
             var commentId = this.id.substring("comment-edit-".length);
-            var widgetId = this.parentNode.id.substring("comment-widget-".length);
+            var widgetId = this.parentNode.getAttribute('data-widgetid');
             $("#editComment-dialog").dialog({
                autoOpen: true,
                height: 150,

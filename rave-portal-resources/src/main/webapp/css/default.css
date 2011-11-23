@@ -79,6 +79,7 @@ a img {
     list-style: none;
     padding:0 10px;
 }
+
 .horizontal-list li:last-child, .paging li:last-child {
     padding-right: 0;
 }
@@ -88,7 +89,6 @@ a img {
 }
 
 .paging li:after {
-    margin: 0 10px;
     content: "|";
 }
 
@@ -99,19 +99,20 @@ a img {
 
 .paging li a, .paging li a:visited {
     text-decoration: none;
+    padding: 0 10px;
 }
 
 .paging li a:hover {
     text-decoration: underline;
 }
 
-#banner {
-    padding: 0 0 10px 10px;
+.paging li .currentPage {
+    padding: 0 10px;
 }
 
 /* Header */
 header {
-    height:50px;
+    height: 3em;
     color: #F2F2F2;
     background-color: #222222;
 }
@@ -135,6 +136,7 @@ header h1 {
     text-transform: lowercase;
     font-size: 1.5em;
     margin: 0 auto;
+    vertical-align: middle;
     width: 80%;
     color: #F2F2F2;
 }
@@ -150,11 +152,9 @@ header h1 {
 /* content */
 #content {
     background-color: transparent;
-    padding: 0;
+    padding: 0 20px;
     width: 90%;
-    margin-left:auto;
-    margin-right:auto;
-    margin-top: 10px;
+    margin: 1em auto 0;
     min-height: 800px;
 }
 
@@ -228,7 +228,6 @@ header h1 {
 
 .widget-title-bar {
     color: #FFFFFF;
-    background-color: #666666;
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#999999", endColorstr="#666666");
     background: -moz-linear-gradient(center top , #999 0%, #666 25%) repeat scroll 0 0 transparent;
     background: -webkit-gradient(linear, left top, left bottom, from(#999), to(#666));
@@ -379,14 +378,17 @@ header h1 {
     margin-right: 0;
 }
 
-.storeSearch, .storeBox {
-    margin: 5px auto;
-    width: 60%
-}
-.storeSearch form {
-    margin: 0;
+.storeSearch {
     float: right;
+    width: 225px;
+    padding: 1em;
 }
+
+.storeBox {
+    margin-right: 275px;
+    padding: 1em;
+}
+
 .storeSearch form p {
     margin: 0;
 }
@@ -397,13 +399,12 @@ header h1 {
 
 .storeItem {
     border: 1px solid #B3C4CF;
-    margin: 5px auto 5px auto;
+    margin: 1em auto;
     padding: 10px;
     background-color: #F2F2F2;
     color: black;
     border-radius: 5px;
     box-shadow: 2px 2px 2px black;
-    width: 60%;
 }
 
 #widget-content {
@@ -443,33 +444,43 @@ header h1 {
 .widgetScreenshot img {
   max-width: 280px;
 }
+
 ul.storeItems {
     padding: 0;
+    margin: 1em auto;
 }
 
 ul.storeItems li{
     list-style: none;
 }
 
-.storeItemLeft {
-   padding-left: 10px;
-   padding-right: 10px;
-   vertical-align: top;
-   width: 150px;
-   float: left;
+.storeItemLeft, .storeItemCenter {
+    vertical-align: top;
+}
 
+.storeItemLeft {
+    float: left;
+    width: 120px;
 }
 
 .storeItemCenter {
-    padding-left: 10px;
-    padding-right: 10px;
-    vertical-align: top;
-    float: left;
-    width: 50%;
+    margin-left: 140px;
 }
 
-.storeButton {
-    float: right;
+.storeWidgetThumbnail {
+    margin-bottom: 1em;
+}
+
+.storeWidgetDesc{
+    margin: 1em 0;
+}
+
+.widgetRating {
+    margin: 1em 0;
+}
+
+.secondaryPageItemTitle {
+    font-size: 1.2em;
 }
 
 .ui-sortable-placeholder {
@@ -505,10 +516,12 @@ button.widget-toolbar-btn-min {
 
 /* Form fields */
 
-fieldset{
+fieldset {
     margin: 0;
-    border:none
+    padding: 0;
+    border: none;
 }
+
 p label, span.label {
     width: 120px;
     float: left;
@@ -966,9 +979,21 @@ span.error, label.error {
     border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
 }
 
-@media all and (max-width: 500px) {
+@media all and (max-width: 900px) {
+    .storeSearch {
+        width: 100%;
+        float: none;
+    }
+
+    .storeBox {
+        margin: 0;
+    }
+}
+
+@media all and (max-width: 550px) {
+
     body {
-        font-size: 0.8em;
+        font-size: 0.75em;
     }
 
     header {
@@ -994,8 +1019,22 @@ span.error, label.error {
         width: auto;
     }
 
-    .storeSearch, .storeBox, .storeItem {
+    .storeSearch, .storeBox {
+        float: none;
         width: 95%;
+        padding: 1em 10px;
+    }
+
+    .storeItem {
+        box-shadow: none;
+        padding: 0 10px;
+    }
+
+
+    .storeItemLeft, .storeItemCenter {
+        width: 100%;
+        float: none;
+        margin: 1em 0;
     }
 
     .widgetDetailLeft, .widgetDetailCenter, .widgetDetailRight {

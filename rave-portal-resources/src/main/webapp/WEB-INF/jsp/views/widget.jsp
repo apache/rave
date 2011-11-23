@@ -75,16 +75,21 @@
                          width="120" height="60"/>
                 </c:if>
 
-                <div class="widgetDetailMeta">
-                    <p><fmt:message key="widget.type.${widget.type}" /></p>
-                </div>
-                <div class="widgetRating">
-                    <fmt:message key="page.widget.rate"/>
-                    <div id="radio" class="ratingButtons">
-                       <input type="radio" id="like-${widget.entityId}" class="widgetLikeButton widgetRatingButton" value="10" name="rating-${widget.entityId}"${widgetStatistics.userRating=='10'?" checked='true'":""}> <label for="like-${widget.entityId}">${widgetStatistics.totalLike}</label>
-                       <input type="radio" id="dislike-${widget.entityId}" class="widgetDislikeButton widgetRatingButton" value="0" name="rating-${widget.entityId}"${widgetStatistics.userRating=='0'?" checked='true'":""}> <label for="dislike-${widget.entityId}">${widgetStatistics.totalDislike}</label>
-                    </div>
-                </div>
+                <c:choose>
+                        <c:when test="${widget.widgetStatus eq 'PUBLISHED'}">
+                            <div id="widgetAdded_${widget.entityId}" class="storeButton">
+                                <button class="storeItemButton"
+                                        id="addWidget_${widget.entityId}"
+                                        onclick="rave.api.rpc.addWidgetToPage({widgetId: ${widget.entityId}, pageId: ${referringPageId}, redirectAfterAdd:true});">
+                                    <fmt:message key="page.widget.addToPage"/>
+                                </button>
+                            </div>
+                        </c:when>
+                        <c:when test="${widget.widgetStatus eq 'PREVIEW'}">
+                            <p class="warn"><fmt:message key="widget.widgetStatus.PREVIEW"/></p>
+                        </c:when>
+                    </c:choose>
+
             </div>
 
             <div class="widgetDetailCenter">
@@ -100,20 +105,7 @@
                             </c:otherwise>
                         </c:choose>
                     </span>
-                    <c:choose>
-                        <c:when test="${widget.widgetStatus eq 'PUBLISHED'}">
-                            <div id="widgetAdded_${widget.entityId}" class="storeButton">
-                                <button class="storeItemButton"
-                                        id="addWidget_${widget.entityId}"
-                                        onclick="rave.api.rpc.addWidgetToPage({widgetId: ${widget.entityId}, pageId: ${referringPageId}});">
-                                    <fmt:message key="page.widget.addToPage"/>
-                                </button>
-                            </div>
-                        </c:when>
-                        <c:when test="${widget.widgetStatus eq 'PREVIEW'}">
-                            <p class="warn"><fmt:message key="widget.widgetStatus.PREVIEW"/></p>
-                        </c:when>
-                    </c:choose>
+
                 </div>
 
 
@@ -133,24 +125,38 @@
                 <c:if test="${not empty widget.description}">
                     <p class="storeWidgetDesc"><c:out value="${widget.description}"/></p>
                 </c:if>
-                
-                <div class="new-comment">
-                    <h3>Comment</h3>
-                    <textarea id="newComment-${widget.entityId}" rows="3" cols="50"> </textarea>
-                    
-                    <button id="comment-new-${widget.entityId}" class="commentNewButton"> </button>
+
+                <div class="widgetRating">
+                    <fmt:message key="page.widget.rate"/>
+                    <div id="radio" class="ratingButtons">
+                       <input type="radio" id="like-${widget.entityId}" class="widgetLikeButton widgetRatingButton" value="10" name="rating-${widget.entityId}"${widgetStatistics.userRating=='10'?" checked='true'":""}> <label for="like-${widget.entityId}">${widgetStatistics.totalLike}</label>
+                       <input type="radio" id="dislike-${widget.entityId}" class="widgetDislikeButton widgetRatingButton" value="0" name="rating-${widget.entityId}"${widgetStatistics.userRating=='0'?" checked='true'":""}> <label for="dislike-${widget.entityId}">${widgetStatistics.totalDislike}</label>
+                    </div>
                 </div>
-                <c:if test="${not empty widget.comments}">
-                    <c:forEach var="comment" items="${widget.comments}">
-                        <div id="comment-widget-${comment.widgetId}" class="comment">
-                            <c:if test="${userProfile.entityId == comment.user.entityId}">
-                                <button id="comment-delete-${comment.entityId}" class="commentDeleteButton" value="Delete"> </button>
-                                <button id="comment-edit-${comment.entityId}" class="commentEditButton" value="Edit"> </button>
-                            </c:if>
-                            <c:out value="${comment.user.username}"/> - <c:out value="${comment.text}"/> .. <c:out value="${comment.createdDate}"/>
-                        </div>
-                    </c:forEach>
-                </c:if>
+
+                <div class="widgetComments">
+                    <div class="new-comment">
+                        <h3>Comment</h3>
+                        <textarea id="newComment-${widget.entityId}" rows="3" cols="50"> </textarea>
+
+                        <button id="comment-new-${widget.entityId}" class="commentNewButton"> </button>
+                    </div>
+                    <c:if test="${not empty widget.comments}">
+                        <c:forEach var="comment" items="${widget.comments}">
+                                <div class="comment" data-widgetid="<c:out value="${comment.widgetId}"/>">
+                                    <c:if test="${userProfile.entityId == comment.user.entityId}">
+                                        <button id="comment-delete-${comment.entityId}" class="commentDeleteButton" value="Delete"> </button>
+                                        <button id="comment-edit-${comment.entityId}" class="commentEditButton" value="Edit"> </button>
+                                    </c:if>
+                                    <fmt:formatDate value="${comment.createdDate}" type="both" var="commentDate"/>
+                                    <p><c:out value="${comment.user.username} (${commentDate})"/></p>
+                                    <p><c:out value="${comment.text}"/></p>
+
+                                </div>
+                        </c:forEach>
+                    </c:if>
+                </div>
+
             </div>
             
             <div class="widgetDetailRight">
