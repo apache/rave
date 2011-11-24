@@ -92,8 +92,8 @@
 </div>
 <%--render the main page content (regions/widgets) --%>
 <div id="pageContent">
-    <div id="emptyPageMessageWrapper" class="hidden">
-        <div id="emptyPageMessage">
+    <div id="emptyPageMessageWrapper" class="emptyPageMessageWrapper hidden">
+        <div class="emptyPageMessage">
             <a href="<spring:url value="/app/store?referringPageId=${page.entityId}" />"><fmt:message key="page.general.empty" /></a>
         </div>
     </div>

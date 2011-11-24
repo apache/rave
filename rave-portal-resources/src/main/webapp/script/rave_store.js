@@ -80,14 +80,14 @@ rave.store = rave.store || (function() {
             rave.api.rest.createWidgetComment({widgetId: widgetId, 
                                                 text: $("#newComment-"+widgetId).get(0).value,
                                                 successCallback: function() { window.location.reload(); }});
-        })
+        });
         
         $(".commentDeleteButton").button( {
             icons: {primary: "ui-icon-close"},
             text: false
         }).click(function() {
             var commentId = this.id.substring("comment-delete-".length);
-            var widgetId = this.parentNode.getAttribute('data-widgetid');
+            var widgetId = this.getAttribute('data-widgetid');
             rave.api.rest.deleteWidgetComment({widgetId: widgetId, 
                                                 commentId: commentId,
                                                 successCallback: function() { window.location.reload(); }});
@@ -98,21 +98,26 @@ rave.store = rave.store || (function() {
             text: false
         }).click(function() {
             var commentId = this.id.substring("comment-edit-".length);
-            var widgetId = this.parentNode.getAttribute('data-widgetid');
+            var widgetId = this.getAttribute('data-widgetid');
+            var commentText = $(this).parent().find(".commentText").text();
+            $("#editComment").text(commentText);
             $("#editComment-dialog").dialog({
                autoOpen: true,
                height: 150,
                width: 350,
                modal: true,
-               buttons: {
-                   "Update" : function() {
-                       rave.api.rest.updateWidgetComment({widgetId: widgetId,
+               buttons : [
+                    {
+                        text : "Update",
+                        click : function() {
+                           rave.api.rest.updateWidgetComment({widgetId: widgetId,
                                                             commentId: commentId,
                                                             text: $("#editComment").get(0).value,
                                                             successCallback: function() { window.location.reload(); }
-                                                        });
-                   }
-               }
+                                                        })
+                        }
+                    }
+               ]
             });
         });
     }

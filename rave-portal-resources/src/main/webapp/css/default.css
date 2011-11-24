@@ -47,6 +47,26 @@ ul, ol, table, p {
 h1, h2, h3, h4, h5, h6 {
     color: #193240;
     text-transform: uppercase;
+    font-weight: normal;
+    margin: 10px 0 15px;
+    padding: 5px 0;
+}
+
+h1 {
+    font-size: 1.4em;
+    padding: 15px;
+}
+
+h2 {
+    font-size: 1.2em;
+    margin-top: 2em;
+    border-bottom: 1px solid #a3afb6;
+}
+
+h3, h4, h5, h6 {
+    border-bottom: none;
+    font-size: 1em;
+    margin-bottom: 0;
 }
 
 dt {
@@ -133,9 +153,11 @@ header a:hover {
 }
 header h1 {
     text-align: center;
-    text-transform: lowercase;
+    text-transform: none;
     font-size: 1.5em;
+    font-weight: bold;
     margin: 0 auto;
+    padding: 0;
     vertical-align: middle;
     width: 80%;
     color: #F2F2F2;
@@ -156,28 +178,6 @@ header h1 {
     width: 90%;
     margin: 1em auto 0;
     min-height: 800px;
-}
-
-#content h1, h2, h3, h4, h5, h6 {
-    font-weight: normal;
-    margin: 10px 0 15px;
-    padding: 5px 0;
-}
-#content h1 {
-    font-size: 1.4em;
-    padding: 15px;
-}
-
-#content h2 {
-    font-size: 1.2em;
-    margin-top: 2em;
-    border-bottom: 1px solid #a3afb6;
-}
-
-#content h3, h4, h5, h6 {
-    border-bottom: none;
-    font-size: 1em;
-    margin-bottom: 0;
 }
 
 #content p {
@@ -228,6 +228,7 @@ header h1 {
 
 .widget-title-bar {
     color: #FFFFFF;
+    background: #767676; /* IE 7*/
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#999999", endColorstr="#666666");
     background: -moz-linear-gradient(center top , #999 0%, #666 25%) repeat scroll 0 0 transparent;
     background: -webkit-gradient(linear, left top, left bottom, from(#999), to(#666));
@@ -301,17 +302,21 @@ header h1 {
 }
 
 .regions {
-    width: 100%;
-    overflow-x: hidden;
+    width: 98%;
+    margin: 1em auto;
 }
 
 .region {
     float: left;
     display: block;
-    padding: 5px 0 100px 0; /*** bottom padding is needed for dnd when region is empty ***/
+    padding: 5px 0;
     margin-right: 20px;
     width: auto;
     height: 100%;
+}
+
+.region.region-dragging {
+    padding: 100px 0; /*** bottom padding is needed for dnd when region is empty ***/
 }
 
 .region-mobile {
@@ -361,12 +366,10 @@ header h1 {
 
 .columns_3nwn_1_bottom_1, .columns_3nwn_1_bottom_3 {
     width: 22%;
-    padding-bottom: 5em;
 }
 
 .columns_3nwn_1_bottom_2 {
     width: 45%;
-    padding-bottom: 5em;
 }
 
 .columns_3nwn_1_bottom_4 {
@@ -407,42 +410,46 @@ header h1 {
     box-shadow: 2px 2px 2px black;
 }
 
-#widget-content {
-    color: #222222;
-    background-color: #F2F2F2;
-    box-shadow: 5px 5px 5px black;
-    border-radius: 5px;
-    margin-left: auto;
-    margin-right: auto;
-    padding: 10px;
-    width: 1024px;
+.widget-content {
+    width: 80%;
+    margin: 0 auto;
+    padding: 1em 1%;
+    max-width: 960px;
 }
 
-.widgetDetailLeft {
-   padding-left: 10px;
-   padding-right: 10px;
-   vertical-align: top;
-   width: 150px;
-   float: left;
+.detailWidgetInfo {
+    margin: 0 30% 0 0;
 }
 
-.widgetDetailCenter {
-    padding-left: 10px;
-    padding-right: 10px;
-    vertical-align: top;
-    float: left;
-    width: 50%;
+.detailWidgetPreview {
+    width: 28%;
+    margin: 0 0 1em 2%;
+    float: right;
 }
 
-.widgetDetailRight {
-  padding: 0 10px;
-  width: 300px;
-  vertical-align: top;
-  float: left;
+.detailWidgetScreenshot img, .detailWidgetThumbnail img {
+    max-width: 100%;
+    margin-bottom: 1em;
 }
 
-.widgetScreenshot img {
-  max-width: 280px;
+.detailWidgetThumbnail {
+    display: none;
+}
+
+.new-comment {
+    margin: 1em 0;
+}
+
+.new-comment textarea {
+    max-width: 95%;
+}
+
+.comment {
+    margin: 1em 0 2em 0;
+}
+
+ul.comments li {
+    list-style: none;
 }
 
 ul.storeItems {
@@ -682,7 +689,7 @@ span.error, label.error {
     *display: inline;
 }
 
-#emptyPageMessage {
+.emptyPageMessage {
     background-color: #FFFFFF;
     border: 1px solid #B4C4CF;
     border-radius: 10px 10px 10px 10px;
@@ -695,7 +702,7 @@ span.error, label.error {
     font-size: 1.25em;
 }
 
-#emptyPageMessageWrapper {
+.emptyPageMessageWrapper {
     padding-top: 20px;
 }
 
@@ -812,6 +819,7 @@ span.error, label.error {
 .admincontent h2 {
     margin-top: 0;
     padding-top:1em;
+    border: none;
 }
 
 .admincontent table {
@@ -971,11 +979,11 @@ span.error, label.error {
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
 }
 
-.alert-message p {
+.alert-message p, #content .alert-message p {
     margin: 0;
 }
 
-.alert-message div {
+.alert-message div, #content .alert-message div {
     margin-top: 5px;
     margin-bottom: 2px;
     line-height: 28px;
@@ -993,6 +1001,21 @@ span.error, label.error {
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr = '#62c462', endColorstr = '#57a957', GradientType = 0);
     text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
     border-color: #57a957 #57a957 #3d773d;
+    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+}
+
+.alert-message.info {
+    background-color: #767676;
+    background-repeat: repeat-x;
+    background-image: -moz-linear-gradient(top, #999999, #666666);
+    background-image: -ms-linear-gradient(top, #999999, #666666);
+    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #999999), color-stop(100%, #666666));
+    background-image: -webkit-linear-gradient(top, #999999, #666666);
+    background-image: -o-linear-gradient(top, #999999, #666666);
+    background-image: linear-gradient(top, #999999, #666666);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr = '#999999', endColorstr = '#666666', GradientType = 0);
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+    border-color: #767676 #767676 #3d773d;
     border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
 }
 
@@ -1027,8 +1050,13 @@ span.error, label.error {
         display: block;
     }
 
-    #content, #widget-content {
+    #content {
         width: 100%;
+        padding: 0;
+    }
+
+    h2, h3, h4, h5, h6 {
+        margin: 0 0 1em 0;
         padding: 0;
     }
 
@@ -1038,8 +1066,8 @@ span.error, label.error {
 
     .storeSearch, .storeBox {
         float: none;
-        width: 95%;
-        padding: 1em 10px;
+        width: 98%;
+        padding: 1em 1%;
     }
 
     .storeItem {
@@ -1047,17 +1075,32 @@ span.error, label.error {
         padding: 0 10px;
     }
 
-
     .storeItemLeft, .storeItemCenter {
         width: 100%;
         float: none;
         margin: 1em 0;
     }
 
-    .widgetDetailLeft, .widgetDetailCenter, .widgetDetailRight {
+    .widget-content {
+        width: 95%;
+        padding: 1em 10px;
+    }
+
+    .detailWidgetInfo, .detailWidgetPreview, .widgetComments {
+        width: 98%;
+        padding: 0 1%;
+    }
+
+    .detailWidgetPreview {
         float: none;
-        width: auto;
-        margin: 1em 5px;
+    }
+
+    .detailWidgetScreenshot {
+        display: none;
+    }
+
+    .detailWidgetThumbnail {
+        display: block;
     }
 
     p label, span.label {
@@ -1089,5 +1132,10 @@ span.error, label.error {
     .widget, .widget-title-bar {
         box-shadow: none;
         border: 1px solid #767676;
+    }
+
+    .emptyPageMessage {
+        width: 80%;
+        padding: 1em 5px;
     }
 }

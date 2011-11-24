@@ -68,7 +68,7 @@ rave.layout = rave.layout || (function() {
                         $("#UpdatePageBtn").show();
                         $("#AddPageBtn").hide();
                         $dialog.submit(function() {
-                            $(":button:contains('Update')").click();
+                            $("#UpdatePageBtn").click();
                             return false;
                         });
 

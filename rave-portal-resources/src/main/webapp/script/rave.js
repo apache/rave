@@ -606,8 +606,8 @@ var rave = rave || (function() {
             rave.displayEmptyPageMessage();
         } else {
             //Initialize the widgets for supported providers
-            for (var i = 0; i < widgets.length; i++) {
-                var widget = widgets[i];
+            for (var j = 0; j < widgets.length; j++) {
+                var widget = widgets[j];
                 initializeWidget(widget);
                 widgetByIdMap[widget.regionWidgetId] = widget;
             }           
