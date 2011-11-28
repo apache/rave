@@ -27,6 +27,16 @@ public class ModelUtils {
 
     private ModelUtils(){}
 
+    /**
+     * Represents the format used when converting {@link java.util.Date} objects to string representations for persistence
+     *
+     * ISO-8601 Compliant
+     *
+     * YYYY-MM-DDThh:mm:ssTZD (eg 1997-07-16T19:20:30+0100)
+     */
+
+    public static final String STANDARD_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ";
+
     public static void normalizeRegionWidgetPreferences(long regionWidgetId, List<RegionWidgetPreference> preferences) {
         for (RegionWidgetPreference preference : preferences) {
             normalizeRegionWidgetPreference(regionWidgetId, preference);

@@ -133,4 +133,21 @@ public class CollectionUtils {
             }
         }
     }
+
+    /**
+     * Gets a single value from a list
+     * @param list the list to get the value from
+     * @param <T> class of objects in the list
+     * @return the 0th element if the list has only 1 value, null if the list is empty or an exception if there is more than one element
+     */
+    public static <T> T getSingleValue(List<T> list) {
+        switch (list.size()) {
+            case 0:
+                return null;
+            case 1:
+                return list.get(0);
+            default:
+                throw new IllegalArgumentException("Expected 0 or 1 items in the collection but found " + list.size());
+        }
+    }
 }

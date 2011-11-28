@@ -4,6 +4,10 @@ import org.apache.rave.persistence.BasicEntity;
 
 import javax.persistence.*;
 
+/**
+ * A generic extension model for the {@link Person} that allows implementers to
+ * add fields to the Person not initially envisioned
+ */
 @Entity
 @Table(name = "person_property")
 public class PersonProperty implements BasicEntity {
@@ -15,21 +19,52 @@ public class PersonProperty implements BasicEntity {
             valueColumnName = "SEQ_COUNT", pkColumnValue = "person_property", allocationSize = 1, initialValue = 1)
     private Long entityId;
 
+    /**
+     * The property type (IM, PhoneNumber, etc)
+     */
     @Basic
     @Column(name = "type")
     private String type;
 
+    /**
+     * The value of the field
+     */
     @Basic
     @Column(name = "value")
     private String value;
 
+    /**
+     * The distinguishing qualifier (Home, Work, etc)
+     */
     @Basic
     @Column(name = "qualifier")
     private String qualifier;
 
+    /**
+     * Extended information related to the value
+     */
+    @Basic
+    @Column(name = "extended_value")
+    private String extendedValue;
+
+    /**
+     * Determines whether or not the property is the designated primary for the type
+     */
     @Basic
     @Column(name = "primary_value")
     private Boolean primary;
+
+    public PersonProperty() {
+    }
+
+    public PersonProperty(Long entityId, String type, String value, String extendedValue, String qualifier, Boolean primary) {
+        this.entityId = entityId;
+        this.type = type;
+        this.value = value;
+        this.qualifier = qualifier;
+        this.primary = primary;
+        this.extendedValue = extendedValue;
+    }
 
     public Long getEntityId() {
         return entityId;
@@ -69,5 +104,13 @@ public class PersonProperty implements BasicEntity {
 
     public void setPrimary(Boolean primary) {
         this.primary = primary;
+    }
+
+    public String getExtendedValue() {
+        return extendedValue;
+    }
+
+    public void setExtendedValue(String extendedValue) {
+        this.extendedValue = extendedValue;
     }
 }

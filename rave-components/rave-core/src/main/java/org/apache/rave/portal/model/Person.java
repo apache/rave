@@ -258,7 +258,7 @@ public class Person implements BasicEntity {
         this.mappedProperties = mappedProperties;
     }
 
-    private static Map<String, List<PersonProperty>> createPropertyMap(List<PersonProperty> properties) {
+    protected static Map<String, List<PersonProperty>> createPropertyMap(List<PersonProperty> properties) {
         Map<String, List<PersonProperty>> map = new HashMap<String, List<PersonProperty>>();
         for(PersonProperty property : properties) {
             List<PersonProperty> propertyList;
