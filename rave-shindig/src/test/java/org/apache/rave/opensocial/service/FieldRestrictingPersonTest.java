@@ -357,6 +357,12 @@ public class FieldRestrictingPersonTest {
     }
 
     @Test
+    public void getProfileSong_notset() {
+        Person p = new FieldRestrictingPerson(getTestPerson(), getFieldSet(Person.Field.BOOKS));
+        assertThat(p.getProfileSong(), is(nullValue()));
+    }
+
+    @Test
     public void getProfileVideo_set() {
         Person p = new FieldRestrictingPerson(getTestPerson(), getFieldSet(Person.Field.PROFILE_VIDEO));
         assertThat(p.getProfileVideo(), is(nullValue()));

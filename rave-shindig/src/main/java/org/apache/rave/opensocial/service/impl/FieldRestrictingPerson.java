@@ -35,8 +35,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import static org.apache.rave.util.CollectionUtils.getSingleValue;
+
 /**
- * Wraps a {@link org.apache.rave.opensocial.model.Person} model object and returns values only if
+ * Wraps a {@link org.apache.rave.portal.model.Person} model object and returns values only if
  * the field set contains the requested field
  * <p/>
  * Usage of this wrapper is made possible by Shindig's use of a getter based serialization model
@@ -56,9 +58,9 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
     public FieldRestrictingPerson(org.apache.rave.portal.model.Person internal, Set<String> fields) {
         this.internal = internal;
         this.fields = fields;
-        if(internal != null && internal.getProperties() != null) {
-            this.propertyMap = createPropertyMap(internal.getProperties());
-        }
+        this.propertyMap = internal != null && internal.getProperties() != null ?
+                createPropertyMap(internal.getProperties()) :
+                new HashMap<String, List<PersonProperty>>();
     }
 
     //REQUIRED FIELD
@@ -516,8 +518,7 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
 
     @Override
     public Url getProfileSong() {
-        PersonProperty property = CollectionUtils.getSingleValue(getFromProperties(Field.PROFILE_SONG));
-        return convertToUrl(property);
+        return displayField(Field.PROFILE_SONG) ? convertToUrl(getSingleValue(getFromProperties(Field.PROFILE_SONG))) : null;
     }
 
     @Override
@@ -527,8 +528,7 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
 
     @Override
     public Url getProfileVideo() {
-        PersonProperty property = CollectionUtils.getSingleValue(getFromProperties(Field.PROFILE_VIDEO));
-        return property == null ? null :convertToUrl(property);
+        return displayField(Field.PROFILE_SONG) ? convertToUrl(getSingleValue(getFromProperties(Field.PROFILE_VIDEO))) : null;
     }
 
     @Override
