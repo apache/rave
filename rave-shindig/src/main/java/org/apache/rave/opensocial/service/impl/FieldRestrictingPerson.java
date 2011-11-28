@@ -739,7 +739,7 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
     }
 
     private boolean displayField(Field field) {
-        return fields != null && fields.contains(field.toString());
+        return fields == null || fields.isEmpty() || fields.contains(field.toString());
     }
 
     private List<PersonProperty> getFromProperties(Field field) {

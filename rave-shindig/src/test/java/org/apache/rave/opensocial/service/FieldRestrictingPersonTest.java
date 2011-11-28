@@ -88,12 +88,12 @@ public class FieldRestrictingPersonTest {
     @Test
     public void getUsername_null() {
         Person p = new FieldRestrictingPerson(getTestPerson(), null);
-        assertThat(p.getPreferredUsername(), is(nullValue()));
+        assertThat(p.getPreferredUsername(), is(equalTo(USERNAME)));
     }
     @Test
     public void getUsername_empty() {
         Person p = new FieldRestrictingPerson(getTestPerson(), new HashSet<String>());
-        assertThat(p.getPreferredUsername(), is(nullValue()));
+        assertThat(p.getPreferredUsername(), is(equalTo(USERNAME)));
     }
     @Test
     public void getUsername_valid() {
