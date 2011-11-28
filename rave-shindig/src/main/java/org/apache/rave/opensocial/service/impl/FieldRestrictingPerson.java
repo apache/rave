@@ -27,7 +27,8 @@ import org.apache.shindig.protocol.model.Enum;
 import org.apache.shindig.protocol.model.EnumImpl;
 import org.apache.shindig.social.core.model.BodyTypeImpl;
 import org.apache.shindig.social.core.model.ListFieldImpl;
-import org.apache.shindig.social.core.model.UrlImpl;
+import org.apache.shindig.social.core.model.UrlImpl;  
+import org.apache.shindig.social.core.model.NameImpl;
 import org.apache.shindig.social.opensocial.model.*;
 
 import java.io.Serializable;
@@ -425,7 +426,15 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
 
     @Override
     public Name getName() {
-        //return displayField(Field.NAME) ? internal.getName() : null;
+        if (displayField(Field.NAME)) {
+            Name name = new NameImpl();
+            name.setGivenName(internal.getGivenName());
+            name.setFamilyName(internal.getFamilyName());
+            name.setAdditionalName(internal.getAdditionalName());
+            name.setFormatted(internal.getDisplayName());
+            name.setHonorificPrefix(internal.getHonorificPrefix());
+            return name;
+        }
         return null;
     }
 
