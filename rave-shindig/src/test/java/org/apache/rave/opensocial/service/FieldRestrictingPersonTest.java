@@ -562,7 +562,7 @@ public class FieldRestrictingPersonTest {
     }
 
     private org.apache.rave.portal.model.Person getTestPerson() {
-        org.apache.rave.portal.model.Person person = new PropertyMappingPerson();
+        org.apache.rave.portal.model.Person person = new org.apache.rave.portal.model.Person();
         person.setEntityId(1L);
         person.setUsername(USERNAME);
         person.setAboutMe(ABOUT_ME);
@@ -627,13 +627,5 @@ public class FieldRestrictingPersonTest {
             valid = false;
         }
         return valid;
-    }
-
-    private static class PropertyMappingPerson extends org.apache.rave.portal.model.Person {
-        @Override
-        public void setProperties(List<PersonProperty> properties) {
-            super.setProperties(properties);
-            super.setMappedProperties(createPropertyMap(properties));
-        }
     }
 }

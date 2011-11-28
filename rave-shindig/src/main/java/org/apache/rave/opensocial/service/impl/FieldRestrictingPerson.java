@@ -51,10 +51,12 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
     private Map<String, ?> appData;
     private boolean isOwner;
     private boolean isViewer;
+    private Map<String, List<PersonProperty>> propertyMap;
 
     public FieldRestrictingPerson(org.apache.rave.portal.model.Person internal, Set<String> fields) {
         this.internal = internal;
         this.fields = fields;
+        this.propertyMap = createPropertyMap(internal.getProperties());
     }
 
     //REQUIRED FIELD
@@ -739,8 +741,8 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
     }
 
     private List<PersonProperty> getFromProperties(Field field) {
-        return internal.getMappedProperties().containsKey(field.toString()) ?
-                internal.getMappedProperties().get(field.toString()) :
+        return propertyMap.containsKey(field.toString()) ?
+                propertyMap.get(field.toString()) :
                 new ArrayList<PersonProperty>();
     }
 
@@ -798,5 +800,21 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
 
     private static Url convertToUrl(PersonProperty property) {
         return new UrlImpl(property.getValue(), property.getExtendedValue(), property.getQualifier());
+    }
+
+    protected static Map<String, List<PersonProperty>> createPropertyMap(List<PersonProperty> properties) {
+        Map<String, List<PersonProperty>> map = new HashMap<String, List<PersonProperty>>();
+        for(PersonProperty property : properties) {
+            List<PersonProperty> propertyList;
+            String fieldType = property.getType();
+            if(map.containsKey(fieldType)) {
+                propertyList = map.get(fieldType);
+            } else {
+                propertyList = new ArrayList<PersonProperty>();
+                map.put(fieldType, propertyList);
+            }
+            propertyList.add(property);
+        }
+        return map;
     }
 }

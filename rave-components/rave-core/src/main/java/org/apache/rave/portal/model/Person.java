@@ -127,9 +127,6 @@ public class Person implements BasicEntity {
             inverseJoinColumns = @JoinColumn(name = "followed_id", referencedColumnName = "entity_id"))
     protected List<Person> friends;
 
-    @Transient
-    protected Map<String, List<PersonProperty>> mappedProperties;
-
     public Long getEntityId() {
         return entityId;
     }
@@ -248,30 +245,6 @@ public class Person implements BasicEntity {
 
     public void setFriends(List<Person> friends) {
         this.friends = friends;
-    }
-
-    public Map<String, List<PersonProperty>> getMappedProperties() {
-        return mappedProperties;
-    }
-
-    public void setMappedProperties(Map<String, List<PersonProperty>> mappedProperties) {
-        this.mappedProperties = mappedProperties;
-    }
-
-    protected static Map<String, List<PersonProperty>> createPropertyMap(List<PersonProperty> properties) {
-        Map<String, List<PersonProperty>> map = new HashMap<String, List<PersonProperty>>();
-        for(PersonProperty property : properties) {
-            List<PersonProperty> propertyList;
-            String fieldType = property.getType();
-            if(map.containsKey(fieldType)) {
-                propertyList = map.get(fieldType);
-            } else {
-                propertyList = new ArrayList<PersonProperty>();
-                map.put(fieldType, propertyList);
-            }
-            propertyList.add(property);
-        }
-        return map;
     }
 
 }
