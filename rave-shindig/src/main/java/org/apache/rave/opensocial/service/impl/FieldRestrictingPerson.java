@@ -56,7 +56,9 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
     public FieldRestrictingPerson(org.apache.rave.portal.model.Person internal, Set<String> fields) {
         this.internal = internal;
         this.fields = fields;
-        this.propertyMap = createPropertyMap(internal.getProperties());
+        if(internal != null && internal.getProperties() != null) {
+            this.propertyMap = createPropertyMap(internal.getProperties());
+        }
     }
 
     //REQUIRED FIELD
