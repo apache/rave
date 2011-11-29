@@ -34,9 +34,9 @@ import java.io.IOException;
 @Service
 public class WookieWidgetService implements WidgetProviderService {
   private static Logger logger = LoggerFactory.getLogger(WookieWidgetService.class);
-	  
-    // FIXME: shouldn't hard code the server location or API key
-    private static final String WOOKIE_SERVER_URL = "http://bombax.oucs.ox.ac.uk:8888/wookie";
+
+    // TODO RAVE-373: shouldn't hard code the server location or API key
+    private static final String WOOKIE_SERVER_URL = "http://localhost:8080/wookie";
     private static final String WOOKIE_API_KEY = "TEST"; 
     private static WookieConnectorService  connectorService;
     
