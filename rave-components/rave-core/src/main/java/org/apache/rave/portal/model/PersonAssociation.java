@@ -72,4 +72,21 @@ public class PersonAssociation implements BasicEntity {
     public void setFollowed(Person followed) {
         this.followed = followed;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        PersonAssociation that = (PersonAssociation) o;
+
+        if (entityId != null ? !entityId.equals(that.entityId) : that.entityId != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return entityId != null ? entityId.hashCode() : 0;
+    }
 }

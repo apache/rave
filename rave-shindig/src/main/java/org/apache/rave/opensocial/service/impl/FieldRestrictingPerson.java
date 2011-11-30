@@ -20,16 +20,15 @@
 package org.apache.rave.opensocial.service.impl;
 
 import org.apache.rave.exception.NotSupportedException;
-import org.apache.rave.portal.model.PersonProperty;
+import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.model.util.ModelUtils;
 import org.apache.rave.util.CollectionUtils;
 import org.apache.shindig.protocol.model.Enum;
 import org.apache.shindig.protocol.model.EnumImpl;
-import org.apache.shindig.social.core.model.BodyTypeImpl;
-import org.apache.shindig.social.core.model.ListFieldImpl;
-import org.apache.shindig.social.core.model.UrlImpl;  
-import org.apache.shindig.social.core.model.NameImpl;
+import org.apache.shindig.social.core.model.*;
 import org.apache.shindig.social.opensocial.model.*;
+import org.apache.shindig.social.opensocial.model.Address;
+import org.apache.shindig.social.opensocial.model.Organization;
 
 import java.io.Serializable;
 import java.text.ParseException;
@@ -87,7 +86,10 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
 
     @Override
     public List<Account> getAccounts() {
-        //return displayField(Field.ACCOUNTS) ? CollectionUtils.<Account>toBaseTypedList(internal.getAccounts()) : null;
+        if(displayField(Field.ACCOUNTS)) {
+            List<PersonProperty> properties = getFromProperties(Field.ACCOUNTS);
+            return convertAccounts(properties);
+        }
         return null;
     }
 
@@ -108,8 +110,7 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
 
     @Override
     public List<Address> getAddresses() {
-        //return displayField(Field.ADDRESSES) ? CollectionUtils.<Address>toBaseTypedList(internal.getAddresses()) : null;
-        return null;
+        return displayField(Field.ADDRESSES) ? convertAddresses(internal.getAddresses()) : null;        
     }
 
     @Override
@@ -199,9 +200,23 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
         throw new NotSupportedException();
     }
 
+    /**
+     * Since addresses are stored as a first class relation to the Rave person, the simplest way to set current location
+     * is to store a pointer in the properties to the qualifier for the address in the list.
+     *
+     * NOTE: This requires that the qualifier be set on all addresses
+     * @return a valid address if the qualifier is found; null otherwise
+     */
     @Override
     public Address getCurrentLocation() {
-        //return displayField(Field.CURRENT_LOCATION) ? internal.getCurrentLocation() : null;
+        String qualifier = getSingleValueFromProperties(Field.CURRENT_LOCATION);
+        if(qualifier != null) {
+            for(org.apache.rave.portal.model.Address address : internal.getAddresses()) {
+                if(qualifier.equals(address.getQualifier())) {
+                    return convertAddress(address);
+                }
+            }
+        }
         return null;
     }
 
@@ -294,7 +309,7 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
 
     @Override
     public Boolean getHasApp() {
-        return displayField(Field.HAS_APP) ? false : null;
+        return null;
     }
 
     @Override
@@ -466,8 +481,7 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
 
     @Override
     public List<Organization> getOrganizations() {
-        //return displayField(Field.ORGANIZATIONS) ? CollectionUtils.<Organization>toBaseTypedList(internal.getOrganizations()) : null;
-        return null;
+        return displayField(Field.ORGANIZATIONS) ? convertOrganizations(internal.getOrganizations()) : null;
     }
 
     @Override
@@ -812,8 +826,33 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
     private static Url convertToUrl(PersonProperty property) {
         return new UrlImpl(property.getValue(), property.getExtendedValue(), property.getQualifier());
     }
+    
+    private List<Address> convertAddresses(List<org.apache.rave.portal.model.Address> addresses) {
+        List<Address> converted = new ArrayList<Address>();
+        if(addresses != null) {
+            for(org.apache.rave.portal.model.Address address : addresses) {
+                converted.add(convertAddress(address));
+            }
+        }
+        return converted;
+    }
 
-    protected static Map<String, List<PersonProperty>> createPropertyMap(List<PersonProperty> properties) {
+    private Address convertAddress(org.apache.rave.portal.model.Address address) {
+        Address converted = new AddressImpl(address.getFormatted());
+        converted.setCountry(address.getCountry());
+        converted.setLatitude(address.getLatitude());
+        converted.setLocality(address.getLocality());
+        converted.setLongitude(address.getLongitude());
+        converted.setPostalCode(address.getPostalCode());
+        converted.setRegion(address.getRegion());
+        converted.setStreetAddress(address.getStreetAddress());
+        converted.setType(address.getQualifier());
+        converted.setPrimary(address.getPrimary());
+        return converted;
+    }
+
+
+    private static Map<String, List<PersonProperty>> createPropertyMap(List<PersonProperty> properties) {
         Map<String, List<PersonProperty>> map = new HashMap<String, List<PersonProperty>>();
         for(PersonProperty property : properties) {
             List<PersonProperty> propertyList;
@@ -827,5 +866,47 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
             propertyList.add(property);
         }
         return map;
+    }
+
+    private static List<Account> convertAccounts(List<PersonProperty> properties) {
+        List<Account> accounts = new ArrayList<Account>();
+        for(PersonProperty property : properties) {
+            Account account = convertToAccount(property);
+            accounts.add(account);
+        }
+        return accounts;
+    }
+
+    private static Account convertToAccount(PersonProperty property) {
+        Account account = new AccountImpl();
+        account.setUsername(property.getValue());
+        account.setUserId(property.getExtendedValue());
+        account.setDomain(property.getQualifier());
+        return account;
+    }
+
+    private List<Organization> convertOrganizations(List<org.apache.rave.portal.model.Organization> organizations) {
+        List<Organization> converted = new ArrayList<Organization>();
+        if(organizations != null) {
+            for(org.apache.rave.portal.model.Organization org : organizations) {
+                converted.add(convertOrganization(org));
+            }
+        }
+        return converted;
+    }
+
+    private Organization convertOrganization(org.apache.rave.portal.model.Organization org) {
+        Organization converted = new OrganizationImpl();
+        converted.setAddress(convertAddress(org.getAddress()));
+        converted.setDescription(org.getDescription());
+        converted.setStartDate(org.getStartDate());
+        converted.setEndDate(org.getEndDate());
+        converted.setField(org.getField());
+        converted.setName(org.getName());
+        converted.setSubField(org.getSubField());
+        converted.setType(org.getQualifier());
+        converted.setTitle(org.getTitle());
+        converted.setWebpage(org.getWebpage());
+        return converted;
     }
 }

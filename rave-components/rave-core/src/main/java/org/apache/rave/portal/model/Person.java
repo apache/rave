@@ -112,17 +112,21 @@ public class Person implements BasicEntity {
     protected String status;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinTable(name = "person_address_join",
+    @JoinTable(name = "person_address_jn",
             joinColumns = @JoinColumn(name = "address_id", referencedColumnName = "entity_id"),
             inverseJoinColumns = @JoinColumn(name="person_id", referencedColumnName = "entity_id"))
     protected List<Address> addresses;
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name="person_id", referencedColumnName = "entity_id")
+    protected List<Organization> organizations;
 
     @OneToMany(targetEntity = PersonProperty.class)
     @JoinColumn(name = "person_id", referencedColumnName = "entity_id")
     protected List<PersonProperty> properties;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "person_friends_jn",
+    @JoinTable(name = "person_association",
             joinColumns = @JoinColumn(name = "follower_id", referencedColumnName = "entity_id"),
             inverseJoinColumns = @JoinColumn(name = "followed_id", referencedColumnName = "entity_id"))
     protected List<Person> friends;
@@ -247,5 +251,29 @@ public class Person implements BasicEntity {
         this.friends = friends;
     }
 
+    public List<Organization> getOrganizations() {
+        return organizations;
+    }
+
+    public void setOrganizations(List<Organization> organizations) {
+        this.organizations = organizations;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Person person = (Person) o;
+
+        if (entityId != null ? !entityId.equals(person.entityId) : person.entityId != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return entityId != null ? entityId.hashCode() : 0;
+    }
 }
 

@@ -73,12 +73,21 @@ public class FieldRestrictingPersonTest {
     private static final String IM_2 = "skypename";
     private static final String LINK_VALUE = "linkValue";
     private static final String LINK_TEXT = "linkText";
+    private static final String STREET = "1 Long Road";
+    private static final String CITY = "Big City";
+    private static final String STATE = "TX";
+    private static final String COUNTRY = "USA";
+    private static final float LATITUDE = 10234.12F;
+    private static final float LONGITUDE = 0.0F;
+    private static final String POSTAL_CODE = "00000";
+    private static final String QUALIFIER = "Home";
+    private static final String ID = "1";
 
 
     @Test
     public void getId() {
         Person p = new FieldRestrictingPerson(getTestPerson(), null);
-        assertThat(p.getId(), is(equalTo("1")));
+        assertThat(p.getId(), is(equalTo(ID)));
     }
     @Test
     public void getDisplayName() {
@@ -386,6 +395,32 @@ public class FieldRestrictingPersonTest {
         assertThat(p.getStatus(), is(equalTo(STATUS)));
     }
 
+    @Test
+    public void getAddresses_set() {
+        Person p = new FieldRestrictingPerson(getTestPerson(), getFieldSet(Person.Field.ADDRESSES));
+        assertThat(p.getAddresses().size(), is(equalTo(2)));
+        assertThat(p.getAddresses().get(1).getStreetAddress(), is(equalTo(STREET)));
+        assertThat(p.getAddresses().get(1).getLocality(), is(equalTo(CITY)));
+        assertThat(p.getAddresses().get(1).getRegion(), is(equalTo(STATE)));
+        assertThat(p.getAddresses().get(1).getCountry(), is(equalTo(COUNTRY)));
+        assertThat(p.getAddresses().get(1).getLatitude(), is(equalTo(LATITUDE)));
+        assertThat(p.getAddresses().get(1).getLongitude(), is(equalTo(LONGITUDE)));
+        assertThat(p.getAddresses().get(1).getPostalCode(), is(equalTo(POSTAL_CODE)));
+        assertThat(p.getAddresses().get(1).getType(), is(equalTo(QUALIFIER)));
+    }
+
+    @Test
+    public void getCurrentLocation_set() {
+        Person p = new FieldRestrictingPerson(getTestPerson(), getFieldSet(Person.Field.CURRENT_LOCATION));
+        assertThat(p.getCurrentLocation().getStreetAddress(), is(equalTo(STREET)));
+    }
+
+    @Test
+    public void getCurrentLocation_notset() {
+        Person p = new FieldRestrictingPerson(getTestPerson(), getFieldSet(Person.Field.ADDRESSES));
+        assertThat(p.getCurrentLocation(), is(nullValue()));
+    }
+
     @Test(expected = NotSupportedException.class)
     public void setStatus() {
         new FieldRestrictingPerson(null, null).setStatus(SUFFIX);
@@ -600,7 +635,6 @@ public class FieldRestrictingPersonTest {
         person.setHonorificSuffix(SUFFIX);
         person.setPreferredName(PREFERRED_NAME);
         person.setStatus(STATUS);
-        person.setAddresses(null);
         List<PersonProperty> properties = new ArrayList<PersonProperty>();
         properties.add(new PersonProperty(1L, "gender", Person.Gender.female.toString(), null, "", false));
         properties.add(new PersonProperty(1L, "drinker", Drinker.HEAVILY.toString(), null, "", false));
@@ -617,7 +651,23 @@ public class FieldRestrictingPersonTest {
         properties.add(new PersonProperty(1L, "activities", ACTIVITY_2, null, "", false));
         properties.add(new PersonProperty(1L, "profileSong", LINK_VALUE, LINK_TEXT, null, false));
         properties.add(new PersonProperty(1L, "lookingFor", LookingFor.FRIENDS.toString(), null, null, false));
+        properties.add(new PersonProperty(1L, "currentLocation", QUALIFIER, null, null, null));
+        properties.add(new PersonProperty(1L, "account", IM_1, "1", IM_PROVIDER_1, false));
         person.setProperties(properties);
+        org.apache.rave.portal.model.Address address = new org.apache.rave.portal.model.Address();
+        address.setCountry(COUNTRY);
+        address.setLatitude(LATITUDE);
+        address.setLongitude(LONGITUDE);
+        address.setLocality(CITY);
+        address.setRegion(STATE);
+        address.setPostalCode(POSTAL_CODE);
+        address.setStreetAddress(STREET);
+        address.setQualifier(QUALIFIER);
+        List<org.apache.rave.portal.model.Address> addresses = new ArrayList<org.apache.rave.portal.model.Address>();
+        addresses.add(new org.apache.rave.portal.model.Address());
+        addresses.add(address);
+        person.setAddresses(addresses);
+
         return person;
     }
 

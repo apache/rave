@@ -113,4 +113,21 @@ public class PersonProperty implements BasicEntity {
     public void setExtendedValue(String extendedValue) {
         this.extendedValue = extendedValue;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        PersonProperty that = (PersonProperty) o;
+
+        if (entityId != null ? !entityId.equals(that.entityId) : that.entityId != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return entityId != null ? entityId.hashCode() : 0;
+    }
 }
