@@ -26,7 +26,7 @@
     <parent>
         <groupId>org.apache.rave</groupId>
         <artifactId>rave-project</artifactId>
-        <version>0.6-incubating-SNAPSHOT</version>
+        <version>0.6-incubating</version>
     </parent>
 
     <groupId>org.apache.rave</groupId>
@@ -43,7 +43,7 @@
         <!-- if you want to start remote debugging session suspended
   override on command line with -Dcargo.debug.suspend=y -->
         <cargo.debug.suspend>n</cargo.debug.suspend>
-        <cargo.args></cargo.args>
+        <cargo.args />
     </properties>
 
     <dependencies>

@@ -25,13 +25,13 @@
 	<parent>
 		<groupId>org.apache.rave</groupId>
 		<artifactId>rave-project</artifactId>
-		<version>0.6-incubating-SNAPSHOT</version>
+		<version>0.6-incubating</version>
 	</parent>
 
 	<groupId>org.apache.rave</groupId>
 	<artifactId>rave-demo-gadgets</artifactId>
 	<packaging>war</packaging>
-	<version>0.6-incubating-SNAPSHOT</version>
+	<version>0.6-incubating</version>
 	<name>Apache Rave :: Demo Gadgets</name>
     <description>Apache Rave Demo Gadgets</description>
     <build>
