@@ -31,4 +31,9 @@
     <!-- rave-w3c-provider base-package scan -->
     <context:component-scan base-package="org.apache.rave.provider.w3c"/>
 
+    <bean id="wookieWidgetService" class="org.apache.rave.provider.w3c.service.impl.WookieWidgetService">
+        <constructor-arg name="wookieServerUrl" value="${provider.wookie.wookieServerUrl}"/>
+        <constructor-arg name="wookieApiKey" value="${provider.wookie.wookieApiKey}"/>
+    </bean>
+
 </beans>

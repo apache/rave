@@ -27,20 +27,19 @@ import org.apache.wookie.connector.framework.WookieConnectorException;
 import org.apache.wookie.connector.framework.WookieConnectorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 
-@Service
 public class WookieWidgetService implements WidgetProviderService {
   private static Logger logger = LoggerFactory.getLogger(WookieWidgetService.class);
 
-    // TODO RAVE-373: shouldn't hard code the server location or API key
-    private static final String WOOKIE_SERVER_URL = "http://localhost:8080/wookie";
-    private static final String WOOKIE_API_KEY = "TEST"; 
+    private final String wookieServerUrl; // = "http://localhost:8080/wookie";
+    private final String wookieApiKey; // = "TEST";
     private static WookieConnectorService  connectorService;
-    
-    public WookieWidgetService(){
+
+    public WookieWidgetService(String wookieServerUrl, String wookieApiKey){
+        this.wookieServerUrl = wookieServerUrl;
+        this.wookieApiKey = wookieApiKey;
     }
 
     /* (non-Javadoc)
@@ -65,7 +64,7 @@ public class WookieWidgetService implements WidgetProviderService {
     private W3CWidget getWidgetForViewer(Widget widget, String sharedDataKey, User viewer){
        try {
             // TODO: parameters for WookieConnectorService should not be fixed in code.
-            connectorService = getWookieConnectorService(WOOKIE_SERVER_URL, WOOKIE_API_KEY, sharedDataKey);
+            connectorService = getWookieConnectorService(wookieServerUrl, wookieApiKey, sharedDataKey);
             org.apache.wookie.connector.framework.User user = new org.apache.wookie.connector.framework.User(String.valueOf(viewer.getUsername()), viewer.getUsername());
             connectorService.setCurrentUser(user);
             
