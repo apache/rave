@@ -82,6 +82,17 @@ public class WidgetStoreController {
         return ViewNames.STORE;
     }
 
+    @RequestMapping(method = RequestMethod.GET, value="mine")
+    public String viewMine(Model model, @RequestParam long referringPageId,
+                       @RequestParam(required = false, defaultValue = "0") int offset) {
+        User user = userService.getAuthenticatedUser();
+        model.addAttribute(ModelKeys.WIDGETS,
+                widgetService.getWidgetsByOwner(user.getEntityId(), offset, getPageSize()));
+                model.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
+        model.addAttribute(ModelKeys.WIDGETS_STATISTICS, widgetService.getAllWidgetStatistics(user.getEntityId()));
+        return ViewNames.STORE;
+    }
+
     /**
      * Views details of the specified widget
      *

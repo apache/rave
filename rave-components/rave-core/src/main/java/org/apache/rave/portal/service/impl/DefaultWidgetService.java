@@ -21,10 +21,12 @@ package org.apache.rave.portal.service.impl;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.rave.exception.DuplicateItemException;
+import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.Widget;
 import org.apache.rave.portal.model.WidgetStatus;
 import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.model.util.WidgetStatistics;
+import org.apache.rave.portal.repository.UserRepository;
 import org.apache.rave.portal.repository.WidgetRepository;
 import org.apache.rave.portal.service.WidgetService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,10 +40,12 @@ import java.util.Map;
 public class DefaultWidgetService implements WidgetService {
 
     private final WidgetRepository widgetRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public DefaultWidgetService(WidgetRepository widgetRepository) {
+    public DefaultWidgetService(WidgetRepository widgetRepository, UserRepository userRepository) {
         this.widgetRepository = widgetRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -109,6 +113,17 @@ public class DefaultWidgetService implements WidgetService {
         final List<Widget> widgets = widgetRepository.getByStatusAndTypeAndFreeTextSearch(status, widgetType,
                 searchTerm, offset, pageSize);
         final SearchResult<Widget> searchResult = new SearchResult<Widget>(widgets, count);
+        searchResult.setOffset(offset);
+        searchResult.setPageSize(pageSize);
+        return searchResult;
+    }
+
+    @Override
+    public SearchResult<Widget> getWidgetsByOwner(Long ownerId, int offset, int pageSize) {
+        final User user = userRepository.get(ownerId);
+        final int count = widgetRepository.getCountByOwner(user, offset, pageSize);
+        final List<Widget> widgets = widgetRepository.getByOwner(user, offset, pageSize);
+        final SearchResult<Widget> searchResult = new SearchResult<Widget>(widgets,  count);
         searchResult.setOffset(offset);
         searchResult.setPageSize(pageSize);
         return searchResult;

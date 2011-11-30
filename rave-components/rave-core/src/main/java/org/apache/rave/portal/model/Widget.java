@@ -55,6 +55,11 @@ import org.apache.rave.persistence.BasicEntity;
         @NamedQuery(name = Widget.WIDGET_GET_ALL, query = Widget.SELECT_W_FROM_WIDGET_W + Widget.ORDER_BY_TITLE_ASC),
         @NamedQuery(name = Widget.WIDGET_COUNT_ALL, query = Widget.SELECT_COUNT_W_FROM_WIDGET_W),
 
+        @NamedQuery(name = Widget.WIDGET_GET_BY_OWNER,
+                query = Widget.SELECT_W_FROM_WIDGET_W + Widget.WHERE_CLAUSE_OWNER + Widget.ORDER_BY_TITLE_ASC),
+        @NamedQuery(name = Widget.WIDGET_COUNT_BY_OWNER,
+                query = Widget.SELECT_COUNT_W_FROM_WIDGET_W + Widget.WHERE_CLAUSE_OWNER),
+
         @NamedQuery(name = Widget.WIDGET_GET_BY_FREE_TEXT,
                 query = Widget.SELECT_W_FROM_WIDGET_W + Widget.WHERE_CLAUSE_FREE_TEXT + Widget.ORDER_BY_TITLE_ASC),
         @NamedQuery(name = Widget.WIDGET_COUNT_BY_FREE_TEXT,
@@ -73,9 +78,12 @@ public class Widget implements BasicEntity, Serializable {
     public static final String PARAM_SEARCH_TERM = "searchTerm";
     public static final String PARAM_STATUS = "widgetStatus";
     public static final String PARAM_URL = "url";
+    public static final String PARAM_OWNER = "owner";
 
     public static final String WIDGET_GET_ALL = "Widget.getAll";
     public static final String WIDGET_COUNT_ALL = "Widget.countAll";
+    public static final String WIDGET_GET_BY_OWNER = "Widget.getByOwner";
+    public static final String WIDGET_COUNT_BY_OWNER = "Widget.countByOwner";
     public static final String WIDGET_GET_BY_FREE_TEXT = "Widget.getByFreeText";
     public static final String WIDGET_COUNT_BY_FREE_TEXT = "Widget.countByFreeText";
     public static final String WIDGET_GET_BY_STATUS = "Widget.getByStatus";
@@ -86,9 +94,10 @@ public class Widget implements BasicEntity, Serializable {
     static final String SELECT_COUNT_W_FROM_WIDGET_W = "SELECT count(w) FROM Widget w ";
 
     static final String WHERE_CLAUSE_FREE_TEXT =
-            " WHERE lower(w.title) LIKE :searchTerm OR w.description LIKE :description";
-    static final String WHERE_CLAUSE_STATUS = " WHERE w.widgetStatus = :widgetStatus";
-    static final String WHERE_CLAUSE_URL = " WHERE w.url = :url";
+            " WHERE lower(w.title) LIKE :"+PARAM_SEARCH_TERM+" OR w.description LIKE :description";
+    static final String WHERE_CLAUSE_STATUS = " WHERE w.widgetStatus = :"+PARAM_STATUS;
+    static final String WHERE_CLAUSE_URL = " WHERE w.url = :"+PARAM_URL;
+    static final String WHERE_CLAUSE_OWNER = " WHERE w.owner = :"+PARAM_OWNER;
     static final String ORDER_BY_TITLE_ASC = " ORDER BY w.title ASC ";
 
     @Id @Column(name="entity_id")

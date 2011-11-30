@@ -104,6 +104,8 @@ public interface WidgetService {
     SearchResult<Widget> getWidgetsBySearchCriteria(String searchTerm, String widgetType, String widgetStatus,
                                                     int offset, int pageSize);
 
+    SearchResult<Widget> getWidgetsByOwner(Long ownerId, int offset, int pageSize);
+
     /**
      * Gets a Widget by its (unique) url
      *

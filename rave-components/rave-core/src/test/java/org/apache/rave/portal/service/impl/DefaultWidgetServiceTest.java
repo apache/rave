@@ -20,10 +20,12 @@
 package org.apache.rave.portal.service.impl;
 
 import org.apache.rave.exception.DuplicateItemException;
+import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.Widget;
 import org.apache.rave.portal.model.WidgetStatus;
 import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.model.util.WidgetStatistics;
+import org.apache.rave.portal.repository.UserRepository;
 import org.apache.rave.portal.repository.WidgetRepository;
 import org.apache.rave.portal.service.WidgetService;
 import org.junit.Before;
@@ -54,11 +56,13 @@ public class DefaultWidgetServiceTest {
 
     private WidgetService widgetService;
     private WidgetRepository widgetRepository;
+    private UserRepository userRepository;
 
     @Before
     public void setup() {
-        widgetRepository = createMock(WidgetRepository.class);        
-        widgetService = new DefaultWidgetService(widgetRepository);
+        widgetRepository = createMock(WidgetRepository.class);
+        userRepository = createMock(UserRepository.class);
+        widgetService = new DefaultWidgetService(widgetRepository, userRepository);
     }
 
     @Test
@@ -200,6 +204,31 @@ public class DefaultWidgetServiceTest {
         verify(widgetRepository);
     }
 
+    @Test
+    public void getWidgetsByOwner() {
+        final int offset = 0;
+        final int pageSize = 10;
+        final User user = new User(5L);
+        expect(userRepository.get(user.getEntityId())).andReturn(user);
+        replay(userRepository);
+
+        final List<Widget> widgets = new ArrayList();
+        final Widget widget = new Widget(3L, "http://www.widgetsRus.com/");
+        widgets.add(widget);
+
+        expect(widgetRepository.getCountByOwner(user, offset, pageSize)).andReturn(widgets.size());
+        expect(widgetRepository.getByOwner(user, offset, pageSize)).andReturn(widgets);
+        replay(widgetRepository);
+
+        SearchResult<Widget> result = widgetService.getWidgetsByOwner(user.getEntityId(), offset, pageSize);
+        assertNotNull(result);
+        assertEquals(offset, result.getOffset());
+        assertEquals(pageSize, result.getPageSize());
+        assertEquals(widgets, result.getResultSet());
+
+        verify(userRepository);
+        verify(widgetRepository);
+    }
 
     @Test
     public void getWidget_null() {

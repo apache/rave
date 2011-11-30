@@ -19,6 +19,7 @@
 
 package org.apache.rave.portal.repository.impl;
 
+import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.Widget;
 import org.apache.rave.portal.model.WidgetRating;
 import org.apache.rave.portal.model.WidgetStatus;
@@ -177,6 +178,19 @@ public class JpaWidgetRepositoryTest {
         final String type = "OpenSocial";
         int publishedCount = repository.getCountByStatusAndTypeAndFreeText(WidgetStatus.PUBLISHED, type, searchTerm);
         assertTrue(publishedCount >= 2);
+    }
+
+    @Test
+    public void getByOwner() {
+        final User user = new User(2L);
+        List<Widget> widgets = repository.getByOwner(user, 0, 10);
+        assertEquals(1, widgets.size());
+    }
+
+    @Test
+    public void getCountByOwner() {
+        final User user = new User(2L);
+        assertEquals(1, repository.getCountByOwner(user, 0, 10));
     }
 
     @Test

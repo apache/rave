@@ -22,6 +22,7 @@ package org.apache.rave.portal.repository.impl;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.rave.persistence.jpa.AbstractJpaRepository;
+import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.Widget;
 import org.apache.rave.portal.model.WidgetRating;
 import org.apache.rave.portal.model.WidgetStatus;
@@ -130,6 +131,21 @@ public class JpaWidgetRepository extends AbstractJpaRepository<Widget> implement
         query.where(getStatusAndTypeAndFreeTextPredicates(cb, widgetType, widgetStatus, type, searchTerm));
 
         final Long countResult = manager.createQuery(query).getSingleResult();
+        return countResult.intValue();
+    }
+
+    @Override
+    public List<Widget> getByOwner(User owner, int offset, int pageSize) {
+        TypedQuery<Widget> query = manager.createNamedQuery(Widget.WIDGET_GET_BY_OWNER, Widget.class);
+        query.setParameter(Widget.PARAM_OWNER, owner);
+        return getPagedResultList(query, offset, pageSize);
+    }
+
+    @Override
+    public int getCountByOwner(User owner, int offset, int pageSize) {
+        Query query = manager.createNamedQuery(Widget.WIDGET_COUNT_BY_OWNER);
+        query.setParameter(Widget.PARAM_OWNER, owner);
+        Number countResult = (Number) query.getSingleResult();
         return countResult.intValue();
     }
 

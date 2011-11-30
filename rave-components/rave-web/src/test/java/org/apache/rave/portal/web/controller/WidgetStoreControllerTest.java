@@ -111,6 +111,27 @@ public class WidgetStoreControllerTest {
         verify(widgetService);
         assertThat(view, is(equalTo(ViewNames.STORE)));
         assertThat(model.containsAttribute(ModelKeys.WIDGETS), is(true));
+        assertThat(model.containsAttribute(ModelKeys.WIDGETS_STATISTICS), is(true));
+        assertThat((Long) model.asMap().get(ModelKeys.REFERRING_PAGE_ID), is(equalTo(REFERRER_ID)));
+        assertThat(widgets, is(sameInstance(emptyResult.getResultSet())));
+    }
+
+    @Test
+    public void viewMine() {
+        Model model = new ExtendedModelMap();
+        List<Widget> widgets = new ArrayList<Widget>();
+        SearchResult<Widget> emptyResult = new SearchResult<Widget>(widgets, 0);
+
+        expect(widgetService.getWidgetsByOwner(validUser.getEntityId(), 0, 10)).andReturn(emptyResult);
+        expect(widgetService.getAllWidgetStatistics(validUser.getEntityId())).andReturn(allWidgetStatisticsMap);
+        replay(widgetService);
+
+        String view = controller.viewMine(model, REFERRER_ID, 0);
+
+        verify(widgetService);
+        assertThat(view, is(equalTo(ViewNames.STORE)));
+        assertThat(model.containsAttribute(ModelKeys.WIDGETS), is(true));
+        assertThat(model.containsAttribute(ModelKeys.WIDGETS_STATISTICS), is(true));
         assertThat((Long) model.asMap().get(ModelKeys.REFERRING_PAGE_ID), is(equalTo(REFERRER_ID)));
         assertThat(widgets, is(sameInstance(emptyResult.getResultSet())));
     }
@@ -129,6 +150,7 @@ public class WidgetStoreControllerTest {
         verify(widgetService);
         assertThat(view, is(equalTo(ViewNames.WIDGET)));
         assertThat(model.containsAttribute(ModelKeys.WIDGET), is(true));
+        assertThat(model.containsAttribute(ModelKeys.WIDGET_STATISTICS), is(true));
         assertThat(((Widget) model.asMap().get(ModelKeys.WIDGET)), is(sameInstance(w)));
         assertNull(model.asMap().get("widgetRating"));
     }
@@ -160,6 +182,7 @@ public class WidgetStoreControllerTest {
         final Map<String, Object> modelMap = model.asMap();
         assertEquals(searchTerm, modelMap.get(ModelKeys.SEARCH_TERM));
         assertTrue(model.containsAttribute(ModelKeys.WIDGETS));
+        assertThat(model.containsAttribute(ModelKeys.WIDGETS_STATISTICS), is(true));
         assertEquals(offset, modelMap.get(ModelKeys.OFFSET));
         assertEquals(result, modelMap.get(ModelKeys.WIDGETS));
     }

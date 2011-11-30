@@ -83,6 +83,13 @@
                 </p>
             </fieldset>
         </form>
+
+        <div>
+            <a href="<spring:url value="/app/store/mine?referringPageId=${referringPageId}"/>"><fmt:message key="page.store.list.widgets.mine"/></a>
+        </div>
+        <div>
+            <a href="<spring:url value="/app/store?referringPageId=${referringPageId}"/>"><fmt:message key="page.store.list.widgets.all"/></a>
+        </div>
     </section>
 
     <section class="storeBox">
@@ -223,7 +230,6 @@
                 </ul>
 
             </c:if>
-
         </c:if>
     </section>
 

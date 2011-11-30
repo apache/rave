@@ -19,6 +19,7 @@
 package org.apache.rave.portal.repository;
 
 import org.apache.rave.persistence.Repository;
+import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.Widget;
 import org.apache.rave.portal.model.WidgetRating;
 import org.apache.rave.portal.model.WidgetStatus;
@@ -111,6 +112,10 @@ public interface WidgetRepository extends Repository<Widget> {
      * @return total number of {@link Widget}'s that match the search criteria
      */
     int getCountByStatusAndTypeAndFreeText(WidgetStatus widgetStatus, String type, String searchTerm);
+
+    List<Widget> getByOwner(User owner, int offset, int pageSize);
+
+    int getCountByOwner(User owner, int offset, int pageSize);
 
     /**
      * Searches for a Widget by its url
