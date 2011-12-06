@@ -173,6 +173,11 @@ public class UserController {
         this.userProfileValidator = userProfileValidator;
     }
 
+    // setters for unit tests
+    public void setPreferenceService(PortalPreferenceService preferenceService) {
+            this.preferenceService = preferenceService;
+    }
+
 
     /**
      * Mapping between the submitted form value and an {@link Authority}

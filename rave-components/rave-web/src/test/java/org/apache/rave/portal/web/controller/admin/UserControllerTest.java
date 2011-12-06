@@ -23,8 +23,10 @@ import org.apache.rave.portal.model.Authority;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.service.AuthorityService;
+import org.apache.rave.portal.service.PortalPreferenceService;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.portal.web.util.ModelKeys;
+import org.apache.rave.portal.web.util.PortalPreferenceKeys;
 import org.apache.rave.portal.web.util.ViewNames;
 import org.apache.rave.portal.web.validator.UserProfileValidator;
 import org.junit.Before;
@@ -58,6 +60,7 @@ public class UserControllerTest {
     private UserController controller;
     private UserService userService;
     private AuthorityService authorityService;
+    private PortalPreferenceService preferenceService;
     private String validToken;
 
     @Test
@@ -248,6 +251,9 @@ public class UserControllerTest {
 
         userService = createMock(UserService.class);
         controller.setUserService(userService);
+
+        preferenceService = createMock(PortalPreferenceService.class);
+        controller.setPreferenceService(preferenceService);
 
         authorityService = createMock(AuthorityService.class);
         controller.setAuthorityService(authorityService);

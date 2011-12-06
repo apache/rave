@@ -21,8 +21,10 @@ package org.apache.rave.portal.web.controller.admin;
 
 import org.apache.rave.portal.model.Widget;
 import org.apache.rave.portal.model.util.SearchResult;
+import org.apache.rave.portal.service.PortalPreferenceService;
 import org.apache.rave.portal.service.WidgetService;
 import org.apache.rave.portal.web.util.ModelKeys;
+import org.apache.rave.portal.web.util.PortalPreferenceKeys;
 import org.apache.rave.portal.web.util.ViewNames;
 import org.apache.rave.portal.web.validator.UpdateWidgetValidator;
 import org.junit.Before;
@@ -58,15 +60,21 @@ public class WidgetControllerTest {
     private WidgetController controller;
     private WidgetService service;
     private UpdateWidgetValidator widgetValidator;
+    private PortalPreferenceService preferenceService;
     private String validToken;
 
     @Test
     public void adminWidgets() throws Exception {
         Model model = new ExtendedModelMap();
+        PortalPreferenceService preferenceService = createMock(PortalPreferenceService.class);
+        expect(preferenceService.getPreference(PortalPreferenceKeys.PAGE_SIZE)).andReturn(null);
+        replay(preferenceService);
 
         SearchResult<Widget> widgetSearchResult = populateWidgetSearchResult();
         expect(service.getLimitedListOfWidgets(DEFAULT_OFFSET, DEFAULT_PAGESIZE)).andReturn(widgetSearchResult);
         replay(service);
+
+
         String adminWidgetsView = controller.viewWidgets(DEFAULT_OFFSET, null, model);
         verify(service);
         assertEquals(ViewNames.ADMIN_WIDGETS, adminWidgetsView);
@@ -80,9 +88,14 @@ public class WidgetControllerTest {
         String searchTerm = "widget";
         String type = "OpenSocial";
         String status = "published";
+        PortalPreferenceService preferenceService = createMock(PortalPreferenceService.class);
+        expect(preferenceService.getPreference(PortalPreferenceKeys.PAGE_SIZE)).andReturn(null);
+        replay(preferenceService);
+
         SearchResult<Widget> widgetSearchResult = populateWidgetSearchResult();
         expect(service.getWidgetsBySearchCriteria(searchTerm, type, status, DEFAULT_OFFSET, DEFAULT_PAGESIZE)).andReturn(widgetSearchResult);
         replay(service);
+
 
         String searchView = controller.searchWidgets(searchTerm, type, status, DEFAULT_OFFSET, model);
         verify(service);
@@ -176,6 +189,8 @@ public class WidgetControllerTest {
         widgetValidator = new UpdateWidgetValidator(service);
         controller.setWidgetValidator(widgetValidator);
         validToken = AdminControllerUtil.generateSessionToken();
+        preferenceService = createMock(PortalPreferenceService.class);
+        controller.setPreferenceService(preferenceService);
     }
 
 

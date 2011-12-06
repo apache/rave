@@ -143,6 +143,11 @@ public class WidgetController {
     void setWidgetValidator(UpdateWidgetValidator widgetValidator) {
         this.widgetValidator = widgetValidator;
     }
+    // setters for unit tests
+    public void setPreferenceService(PortalPreferenceService preferenceService) {
+            this.preferenceService = preferenceService;
+    }
+
 
     public int getPageSize() {
         final PortalPreference pageSizePref = preferenceService.getPreference(PortalPreferenceKeys.PAGE_SIZE);
