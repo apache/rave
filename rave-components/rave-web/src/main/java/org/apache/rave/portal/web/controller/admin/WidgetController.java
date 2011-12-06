@@ -19,11 +19,14 @@
 
 package org.apache.rave.portal.web.controller.admin;
 
+import org.apache.rave.portal.model.PortalPreference;
 import org.apache.rave.portal.model.Widget;
 import org.apache.rave.portal.model.WidgetStatus;
 import org.apache.rave.portal.model.util.SearchResult;
+import org.apache.rave.portal.service.PortalPreferenceService;
 import org.apache.rave.portal.service.WidgetService;
 import org.apache.rave.portal.web.util.ModelKeys;
+import org.apache.rave.portal.web.util.PortalPreferenceKeys;
 import org.apache.rave.portal.web.util.ViewNames;
 import org.apache.rave.portal.web.validator.UpdateWidgetValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,6 +65,9 @@ public class WidgetController {
     @Autowired
     private UpdateWidgetValidator widgetValidator;
 
+    @Autowired
+    private PortalPreferenceService preferenceService;
+
     @InitBinder
     public void initBinder(WebDataBinder dataBinder) {
         dataBinder.setDisallowedFields("entityId");
@@ -73,7 +79,7 @@ public class WidgetController {
                               Model model) {
         addNavigationMenusToModel(SELECTED_ITEM, model);
         final SearchResult<Widget> widgets =
-                widgetService.getLimitedListOfWidgets(offset, DEFAULT_PAGE_SIZE);
+                widgetService.getLimitedListOfWidgets(offset, getPageSize());
         model.addAttribute(ModelKeys.SEARCHRESULT, widgets);
 
         if (isDeleteOrUpdate(action)) {
@@ -90,7 +96,7 @@ public class WidgetController {
                                 @RequestParam(required = false, defaultValue = "0") int offset, Model model) {
         addNavigationMenusToModel(SELECTED_ITEM, model);
         final SearchResult<Widget> widgets = widgetService.getWidgetsBySearchCriteria(searchTerm, widgettype,
-                widgetstatus, offset, DEFAULT_PAGE_SIZE);
+                widgetstatus, offset, getPageSize());
         model.addAttribute(ModelKeys.SEARCHRESULT, widgets);
         model.addAttribute(ModelKeys.SEARCH_TERM, searchTerm);
         model.addAttribute("selectedWidgetType", widgettype);
@@ -138,4 +144,15 @@ public class WidgetController {
         this.widgetValidator = widgetValidator;
     }
 
+    public int getPageSize() {
+        final PortalPreference pageSizePref = preferenceService.getPreference(PortalPreferenceKeys.PAGE_SIZE);
+        if (pageSizePref == null) {
+            return DEFAULT_PAGE_SIZE;
+        }
+        try {
+            return Integer.parseInt(pageSizePref.getValue());
+        } catch (NumberFormatException e) {
+            return DEFAULT_PAGE_SIZE;
+        }
+    }
 }

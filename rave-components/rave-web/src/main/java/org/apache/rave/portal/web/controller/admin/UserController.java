@@ -20,11 +20,14 @@
 package org.apache.rave.portal.web.controller.admin;
 
 import org.apache.rave.portal.model.Authority;
+import org.apache.rave.portal.model.PortalPreference;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.service.AuthorityService;
+import org.apache.rave.portal.service.PortalPreferenceService;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.portal.web.util.ModelKeys;
+import org.apache.rave.portal.web.util.PortalPreferenceKeys;
 import org.apache.rave.portal.web.util.ViewNames;
 import org.apache.rave.portal.web.validator.UserProfileValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,6 +70,9 @@ public class UserController {
     @Autowired
     private UserProfileValidator userProfileValidator;
 
+    @Autowired
+    private PortalPreferenceService preferenceService;
+
     @InitBinder
     public void initBinder(WebDataBinder dataBinder) {
         dataBinder.registerCustomEditor(Authority.class, new AuthorityEditor());
@@ -78,7 +84,7 @@ public class UserController {
                             @RequestParam(required = false) final String action,
                             Model model) {
         addNavigationMenusToModel(SELECTED_ITEM, model);
-        final SearchResult<User> users = userService.getLimitedListOfUsers(offset, DEFAULT_PAGE_SIZE);
+        final SearchResult<User> users = userService.getLimitedListOfUsers(offset, getPageSize());
         model.addAttribute(ModelKeys.SEARCHRESULT, users);
 
         if (isDeleteOrUpdate(action)) {
@@ -93,7 +99,7 @@ public class UserController {
                               @RequestParam(required = false, defaultValue = "0") int offset, Model model) {
         addNavigationMenusToModel(SELECTED_ITEM, model);
         final SearchResult<User> users = userService.getUsersByFreeTextSearch(
-                searchTerm, offset, DEFAULT_PAGE_SIZE);
+                searchTerm, offset, getPageSize());
         model.addAttribute(ModelKeys.SEARCH_TERM, searchTerm);
         model.addAttribute(ModelKeys.SEARCHRESULT, users);
         return ViewNames.ADMIN_USERS;
@@ -180,6 +186,16 @@ public class UserController {
         }
 
     }
-
+   public int getPageSize() {
+        final PortalPreference pageSizePref = preferenceService.getPreference(PortalPreferenceKeys.PAGE_SIZE);
+        if (pageSizePref == null) {
+            return DEFAULT_PAGE_SIZE;
+        }
+        try {
+            return Integer.parseInt(pageSizePref.getValue());
+        } catch (NumberFormatException e) {
+            return DEFAULT_PAGE_SIZE;
+        }
+    }
 
 }
