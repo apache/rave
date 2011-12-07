@@ -29,11 +29,15 @@ set @page_layout_seq = 'page_layout';
 set @region_seq = 'region';
 set @region_widget_seq = 'region_widget';
 set @user_seq = 'person';
+set @person_association_seq = 'person_association';
+set @groups_seq = 'groups';
+set @group_members_seq = 'group_members';
 set @widget_seq = 'widget';
 set @granted_authority_seq = 'granted_authority';
 set @widget_comment_seq = 'widget_comment';
 set @widget_rating_seq = 'widget_rating';
 set @portal_preference_seq = 'portal_preference';
+
 
 CREATE TABLE IF NOT EXISTS RAVE_PORTAL_SEQUENCES (seq_name VARCHAR(255) PRIMARY KEY NOT NULL, seq_count BIGINT(19));
 INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@page_seq, 1);
@@ -42,6 +46,9 @@ INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@region_seq, 1);
 INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@region_widget_seq, 1);
 INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values ('region_widget_preference', 1);
 INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@user_seq, 1);
+INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@person_association_seq, 1);
+INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@groups_seq, 1);
+INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@group_members_seq, 1);
 INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@widget_seq, 1);
 INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@widget_comment_seq, 1);
 INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@widget_rating_seq, 1);
@@ -154,6 +161,45 @@ values (@user_id_13, 'http://rave2011.myopenid.com/', 'cdf15c184b7d2539b0cfc29ee
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @user_seq;
 
 --- end user data ---
+
+-- user association data --
+set @next_person_association = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @person_association_seq);
+INSERT INTO person_association(entity_id, follower_id, followed_id)
+VALUES (@next_person_association, @person_id_1, @person_id_2);
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @person_association_seq;
+
+set @next_person_association = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @person_association_seq);
+INSERT INTO person_association(entity_id, follower_id, followed_id)
+VALUES (@next_person_association, @person_id_1, @person_id_3);
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @person_association_seq;
+
+set @next_person_association = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @person_association_seq);
+INSERT INTO person_association(entity_id, follower_id, followed_id)
+VALUES (@next_person_association, @person_id_2, @person_id_4);
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @person_association_seq;
+
+-- end user association data --
+
+-- group data --
+set @group_id_1 = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @groups_seq);
+INSERT INTO groups(entity_id, title, description)
+VALUES (@group_id_1, 'Party', 'Party Group');
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @groups_seq;
+
+set @group_id_2 = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @groups_seq);
+INSERT INTO groups(entity_id, title, description)
+VALUES (@group_id_2, 'Portal', 'Portal Group');
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @groups_seq;
+
+-- end group data --
+
+-- group members data --
+INSERT INTO group_members(group_id, person_id)
+VALUES (@group_id_1, @person_id_1);
+
+INSERT INTO group_members(group_id, person_id)
+VALUES (@group_id_1, @person_id_5);
+-- end group members data --
 
 --- gadget data ---
 -- wikipedia widget
