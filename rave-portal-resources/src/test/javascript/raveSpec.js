@@ -211,6 +211,19 @@ describe("Rave", function() {
             expect(provider1.initWidgetsWasCalled(2)).toBeTruthy();
             expect(provider2.initWidgetsWasCalled(2)).toBeTruthy();
         });
+
+        it("Renders a disabled gadget when disabled flag is set", function(){
+            createMockJQuery();
+
+            var widgetsByRegionIdMap = {};
+            widgetsByRegionIdMap[1] = [
+                    {type:"DISABLED",  regionWidgetId:20, disabledMessage: "Widget disabled"}
+            ];
+
+            rave.initWidgets(widgetsByRegionIdMap);
+            expect($().expression()).toEqual("#widget-20-body");
+            expect($().html()).toEqual("Widget disabled");
+        });
         
         it("Renders the empty page message when page has no widgets", function(){
             var HIDDEN_CLASS = "hidden";

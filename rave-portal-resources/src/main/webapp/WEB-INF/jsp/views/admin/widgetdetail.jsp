@@ -99,6 +99,18 @@
                             </p>
 
                             <p>
+                                <form:label path="disableRendering"><fmt:message key="widget.disableRendering"/></form:label>
+                                <form:checkbox path="disableRendering" id="disableRendering"/>
+                                <form:errors path="disableRendering" cssClass="error"/>
+                            </p>
+
+                            <p>
+                                <form:label path="disableRenderingMessage"><fmt:message key="widget.disableRenderingMessage"/></form:label>
+                                <form:input path="disableRenderingMessage" cssClass="long" autofocus="autofocus"/>
+                                <form:errors path="disableRenderingMessage" cssClass="error"/>
+                            </p>
+
+                            <p>
                                 <form:label path="widgetStatus"><fmt:message key="widget.widgetStatus"/></form:label>
                                 <form:select path="widgetStatus" items="${widgetStatus}"/>
                             </p>

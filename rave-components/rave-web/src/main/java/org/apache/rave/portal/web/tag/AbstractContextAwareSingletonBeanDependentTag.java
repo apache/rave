@@ -23,13 +23,11 @@ import org.apache.rave.portal.web.renderer.model.RenderContext;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
-import javax.naming.Context;
 import javax.servlet.ServletContext;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Abstract
@@ -70,6 +68,10 @@ public abstract class AbstractContextAwareSingletonBeanDependentTag<T> extends T
     }
 
     private T getBeanFromContext() throws JspException {
+        return getBeanFromContext(clazz);
+    }
+
+    protected <E> E getBeanFromContext(Class<E> clazz ) throws JspException {
         ServletContext currentServletContext = pageContext.getServletContext();
         ApplicationContext springContext = WebApplicationContextUtils.getRequiredWebApplicationContext(currentServletContext);
         return springContext.getBean(clazz);

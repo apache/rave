@@ -615,6 +615,10 @@ var rave = rave || (function() {
     }
 
     function initializeWidget(widget) {
+        if (widget.type == "DISABLED") {
+            renderDisabledWidget(widget.regionWidgetId, unescape(widget.disabledMessage));
+            return;
+        }
         var provider = providerMap[widget.type];
         if (typeof provider == "undefined") {
             renderErrorWidget(widget.regionWidgetId, WIDGET_PROVIDER_ERROR);
@@ -637,6 +641,10 @@ var rave = rave || (function() {
     }
 
     function renderErrorWidget(id, message) {
+        $("#widget-" + id + "-body").html(message);
+    }
+
+    function renderDisabledWidget(id, message) {
         $("#widget-" + id + "-body").html(message);
     }
 

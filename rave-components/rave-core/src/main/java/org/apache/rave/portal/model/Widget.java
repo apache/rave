@@ -157,6 +157,14 @@ public class Widget implements BasicEntity, Serializable {
     @JoinColumn(name = "owner_id")
     private User owner;
 
+    @XmlElement
+    @Basic @Column(name = "disable_rendering")
+    private boolean disableRendering;
+
+    @XmlElement
+    @Basic @Column(name = "disable_rendering_message")
+    private String disableRenderingMessage;
+
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "widget_id", referencedColumnName = "entity_id")
     private List<WidgetRating> ratings;
@@ -303,6 +311,22 @@ public class Widget implements BasicEntity, Serializable {
         this.ratings = ratings;
     }
 
+    public boolean isDisableRendering() {
+        return disableRendering;
+    }
+
+    public void setDisableRendering(boolean disableRendering) {
+        this.disableRendering = disableRendering;
+    }
+
+    public String getDisableRenderingMessage() {
+        return disableRenderingMessage;
+    }
+
+    public void setDisableRenderingMessage(String disableRenderingMessage) {
+        this.disableRenderingMessage = disableRenderingMessage;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {
@@ -337,7 +361,9 @@ public class Widget implements BasicEntity, Serializable {
                 ", author='" + author + '\'' +
                 ", description='" + description + '\'' +
                 ", widgetStatus=" + widgetStatus + '\'' +
-                ", owner=" + owner +
+                ", owner=" + owner + '\'' +
+                ", disable_rendering=" + disableRendering + '\'' +
+                ", disable_rendering_message=" + disableRenderingMessage +
                 '}';
     }
 }
