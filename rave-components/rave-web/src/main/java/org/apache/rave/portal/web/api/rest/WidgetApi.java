@@ -55,7 +55,7 @@ public class WidgetApi extends AbstractRestApi {
         this.userService = userService;
     }
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET)
     public void getAllWidgets() {
         logger.debug("GET received for all widgets");
         throw new UnsupportedOperationException("Not yet implemented");
