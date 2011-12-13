@@ -24,23 +24,25 @@ package org.apache.rave.portal.web.util;
  */
 public class ViewNames {
     private ViewNames() {}
+
     private static final String USER_PREFIX = "templates.user.";
+    private static final String ADMIN_PREFIX = "templates.admin.";
 
     public static final String HOME = USER_PREFIX + "home";
-    public static final String MOBILE_HOME = USER_PREFIX + "mobile_home";    
-    public static final String STORE = "store";
-    public static final String WIDGET = "widget";
-    public static final String ADD_WIDGET_FORM = "addwidget";
-    public static final String NEW_ACCOUNT = "newaccount";
-    public static final String USER_PROFILE = "userProfile";
+    public static final String MOBILE_HOME = USER_PREFIX + "mobile_home";
+    public static final String STORE = USER_PREFIX + "store";
+    public static final String WIDGET = USER_PREFIX + "widget";
+    public static final String ADD_WIDGET_FORM = USER_PREFIX + "addwidget";
+    public static final String NEW_ACCOUNT = USER_PREFIX + "newaccount";
+    public static final String USER_PROFILE = USER_PREFIX + "userProfile";
 
-    public static final String ADMIN_HOME = "admin/home";
-    public static final String ADMIN_PREFERENCES = "admin/preferences";
-    public static final String ADMIN_PREFERENCE_DETAIL = "admin/preferencedetail";
-    public static final String ADMIN_USERS = "admin/users";
-    public static final String ADMIN_USERDETAIL = "admin/userdetail";
-    public static final String ADMIN_WIDGETS = "admin/widgets";
-    public static final String ADMIN_WIDGETDETAIL = "admin/widgetdetail";
+    public static final String ADMIN_HOME = ADMIN_PREFIX + "home";
+    public static final String ADMIN_PREFERENCES = ADMIN_PREFIX + "preferences";
+    public static final String ADMIN_PREFERENCE_DETAIL = ADMIN_PREFIX + "preferencedetail";
+    public static final String ADMIN_USERS = ADMIN_PREFIX + "users";
+    public static final String ADMIN_USERDETAIL = ADMIN_PREFIX + "userdetail";
+    public static final String ADMIN_WIDGETS = ADMIN_PREFIX + "widgets";
+    public static final String ADMIN_WIDGETDETAIL = ADMIN_PREFIX + "widgetdetail";
 
     public static final String REDIRECT = "redirect:/";
 }

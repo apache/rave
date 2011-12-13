@@ -25,7 +25,6 @@
     <!-- BASE DEFINITIONS FOR THE ENTIRE APPLICATION -->
     <definition name="templates.base" template="/WEB-INF/jsp/templates/base_layout.jsp">
         <put-attribute name="pageTitleKey" value="page.general.title"/>
-        <put-attribute name="pageTitleSuffixKey" value="page.general.titlesuffix"/>
         <put-attribute name="header" value="/WEB-INF/jsp/common/header.jsp"/>
         <put-attribute name="footer" value="/WEB-INF/jsp/common/footer.jsp"/>
     </definition>
@@ -37,5 +36,9 @@
     </definition>
 
     <!-- ADMIN ONLY PAGES -->
+    <definition name="templates.admin.*" extends="templates.base">
+        <put-attribute name="pageTitleKey" value="admin.{1}.title"/>
+        <put-attribute name="body" value="/WEB-INF/jsp/views/admin/{1}.jsp"/>
+    </definition>
 
 </tiles-definitions>

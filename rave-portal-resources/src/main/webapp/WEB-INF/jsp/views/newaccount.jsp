@@ -17,15 +17,8 @@
   under the License.
   --%>
 <%@ page language="java" trimDirectiveWhitespaces="true" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ taglib tagdir="/WEB-INF/tags" prefix="rave"%>
-
+<%@ include file="/WEB-INF/jsp/includes/taglibs.jsp" %>
 <fmt:setBundle basename="messages"/>
-<fmt:message key="page.newaccount.title" var="pagetitle"/>
-<rave:rave_generic_page pageTitle="${pagetitle}">
 <div id="content">
     <h1>${pagetitle}</h1>
     <form:form id="newAccountForm" commandName="newUser" action="newaccount" method="POST">
@@ -79,5 +72,3 @@
 <script src="<spring:url value="/script/rave_forms.js"/>"></script>
 
 <script>$(document).ready(rave.forms.validateNewAccountForm());</script>
-</rave:rave_generic_page>
-  

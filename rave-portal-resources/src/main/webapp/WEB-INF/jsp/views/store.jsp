@@ -17,16 +17,9 @@
   under the License.
   --%>
 <%@ page language="java" trimDirectiveWhitespaces="true" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
-<%@ taglib tagdir="/WEB-INF/tags" prefix="rave" %>
+<%@ include file="/WEB-INF/jsp/includes/taglibs.jsp" %>
 <fmt:setBundle basename="messages"/>
 
-<fmt:message key="page.store.title" var="pagetitle"/>
-<rave:rave_generic_page pageTitle="${pagetitle}">
 <header>
     <nav class="topnav">
         <ul class="horizontal-list">
@@ -247,4 +240,3 @@
         rave.store.init();
     });
 </script>
-</rave:rave_generic_page>

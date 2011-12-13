@@ -17,24 +17,18 @@
   under the License.
   --%>
 <%@ page language="java" trimDirectiveWhitespaces="true" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<%@ taglib tagdir="/WEB-INF/tags" prefix="rave" %>
+<%@ include file="/WEB-INF/jsp/includes/taglibs.jsp" %>
 <fmt:setBundle basename="messages"/>
 
-<fmt:message key="admin.home.title" var="pagetitle"/>
-<rave:rave_generic_page pageTitle="${pagetitle}">
-    <rave:header pageTitle="${pagetitle}"/>
-    <rave:admin_tabsheader/>
-    <div class="pageContent">
-        <article class="admincontent">
-            <h2><fmt:message key="admin.home.subtitle"/></h2>
-            <fmt:message key="admin.home.intro"/>
-            <div class="clear-float">
+<fmt:message key="${pageTitleKey}" var="pagetitle"/>
+<rave:header pageTitle="${pagetitle}"/>
+<rave:admin_tabsheader/>
+<div class="pageContent">
+    <article class="admincontent">
+        <h2><fmt:message key="admin.home.subtitle"/></h2>
+        <fmt:message key="admin.home.intro"/>
+        <div class="clear-float">
 
-            </div>
-        </article>
-    </div>
-</rave:rave_generic_page>
+        </div>
+    </article>
+</div>
