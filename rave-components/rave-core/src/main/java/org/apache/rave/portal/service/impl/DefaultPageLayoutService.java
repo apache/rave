@@ -25,18 +25,25 @@ import org.apache.rave.portal.service.PageLayoutService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class DefaultPageLayoutService implements PageLayoutService {
-	 private final PageLayoutRepository pageLayoutRepository;
+    private final PageLayoutRepository pageLayoutRepository;
 
-	 @Autowired
-	 public DefaultPageLayoutService(PageLayoutRepository pageLayoutRepository) {
-		  this.pageLayoutRepository=pageLayoutRepository;
-	 }
+    @Autowired
+    public DefaultPageLayoutService(PageLayoutRepository pageLayoutRepository) {
+        this.pageLayoutRepository = pageLayoutRepository;
+    }
 
-	 @Override
-	 public PageLayout getPageLayoutByCode(String code) {
-		  return pageLayoutRepository.getByPageLayoutCode(code);
-	 }
+    @Override
+    public PageLayout getPageLayoutByCode(String code) {
+        return pageLayoutRepository.getByPageLayoutCode(code);
+    }
+
+    @Override
+    public List<PageLayout> getAll() {
+        return pageLayoutRepository.getAll();
+    }
 }
 

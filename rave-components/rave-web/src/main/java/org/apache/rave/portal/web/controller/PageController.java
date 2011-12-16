@@ -19,7 +19,9 @@
 package org.apache.rave.portal.web.controller;
 
 import org.apache.rave.portal.model.Page;
+import org.apache.rave.portal.model.PageLayout;
 import org.apache.rave.portal.model.User;
+import org.apache.rave.portal.service.PageLayoutService;
 import org.apache.rave.portal.service.PageService;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.portal.web.controller.util.ControllerUtils;
@@ -48,19 +50,21 @@ public class PageController {
          
     private PageService pageService;
     private UserService userService;
+    private PageLayoutService pageLayoutService;
 
     @Autowired
-    public PageController(PageService pageService, UserService userService) {
+    public PageController(PageService pageService, UserService userService, PageLayoutService pageLayoutService) {
         this.pageService = pageService;
         this.userService = userService;
+        this.pageLayoutService = pageLayoutService;
     }
  
     @RequestMapping(value = {"/page/view", "/index.html"}, method = RequestMethod.GET)
     public String viewDefault(Model model, HttpServletRequest request) {
         List<Page> pages = getAllPagesForAuthenticatedUser();
         Page page = pageService.getDefaultPageFromList(pages);
-        model.addAttribute(ModelKeys.PAGE, page);
-        model.addAttribute(ModelKeys.PAGES, pages);
+        List<PageLayout> pageLayouts = pageLayoutService.getAll();
+        addAttributesToModel(model, page, pages, pageLayouts);
         return ControllerUtils.getDeviceAppropriateView(request, ViewNames.getPageView(page.getPageLayout().getCode()), ViewNames.MOBILE_HOME);
     }          
     
@@ -71,9 +75,8 @@ public class PageController {
         
         List<Page> pages = getAllPagesForAuthenticatedUser();
         Page page = pageService.getPageFromList(pageId, pages);
-               
-        model.addAttribute(ModelKeys.PAGE, page);
-        model.addAttribute(ModelKeys.PAGES, pages);
+        List<PageLayout> pageLayouts = pageLayoutService.getAll();
+        addAttributesToModel(model, page, pages, pageLayouts);
         return ControllerUtils.getDeviceAppropriateView(request, ViewNames.getPageView(page.getPageLayout().getCode()), ViewNames.MOBILE_HOME);
     }
     
@@ -89,5 +92,11 @@ public class PageController {
             pages = pageService.getAllPages(userId);
         }
         return pages;
+    }
+    
+    private void addAttributesToModel(Model model, Page page, List<Page> pages, List<PageLayout> pageLayouts) {
+        model.addAttribute(ModelKeys.PAGE, page);
+        model.addAttribute(ModelKeys.PAGES, pages);
+        model.addAttribute(ModelKeys.PAGE_LAYOUTS, pageLayouts);
     }
 }

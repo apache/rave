@@ -20,6 +20,9 @@ package org.apache.rave.portal.service;
 
 import org.apache.rave.portal.model.PageLayout;
 
+import java.util.List;
+
 public interface PageLayoutService {
-	 public PageLayout getPageLayoutByCode(String code);
+	PageLayout getPageLayoutByCode(String code);
+    List<PageLayout> getAll();
 }

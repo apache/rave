@@ -26,6 +26,8 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.TypedQuery;
 
+import java.util.List;
+
 import static org.apache.rave.persistence.jpa.util.JpaUtil.getSingleResult;
 
 
@@ -40,9 +42,14 @@ public class JpaPageLayoutRepository extends AbstractJpaRepository<PageLayout> i
 
 	 @Override
 	 public PageLayout getByPageLayoutCode(String codename){
-		  TypedQuery<PageLayout>query = manager.createNamedQuery("PageLayout.getByLayoutCode",PageLayout.class);
+		  TypedQuery<PageLayout>query = manager.createNamedQuery(PageLayout.PAGELAYOUT_GET_BY_LAYOUT_CODE,PageLayout.class);
 		  query.setParameter("code",codename);
 		  return getSingleResult(query.getResultList());
 	 }
+
+    @Override
+    public List<PageLayout> getAll() {
+        return manager.createNamedQuery(PageLayout.PAGELAYOUT_GET_ALL, PageLayout.class).getResultList();
+    }
 
 }

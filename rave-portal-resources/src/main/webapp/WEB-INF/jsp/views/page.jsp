@@ -20,6 +20,7 @@
 <%@ include file="/WEB-INF/jsp/includes/taglibs.jsp" %>
 <fmt:setBundle basename="messages"/>
 <jsp:useBean id="pages" type="java.util.List<org.apache.rave.portal.model.Page>" scope="request"/>
+<jsp:useBean id="pageLayouts" type="java.util.List<org.apache.rave.portal.model.PageLayout>" scope="request"/>
 <%--@elvariable id="page" type="org.apache.rave.portal.model.Page"--%>
 <header>
     <nav class="topnav">
@@ -113,14 +114,9 @@
             <input type="text" name="tab_title" id="tab_title" value="" class="required ui-widget-content ui-corner-all" />
             <label for="pageLayout"><fmt:message key="page.general.addpage.selectlayout"/></label>
             <select name="pageLayout" id="pageLayout">
-                <option value="columns_1" id="columns_1_id"><fmt:message key="page.general.addpage.layout.columns_1"/></option>
-                <option value="columns_2" id="columns_2_id" selected="selected"><fmt:message key="page.general.addpage.layout.columns_2"/></option>
-                <option value="columns_2wn" id="columns_2wn_id"><fmt:message key="page.general.addpage.layout.columns_2wn"/></option>
-                <option value="columns_3" id="columns_3_id"><fmt:message key="page.general.addpage.layout.columns_3"/></option>
-                <option value="columns_3nwn" id="columns_3nwn_id"><fmt:message key="page.general.addpage.layout.columns_3nwn"/></option>
-                <option value="columns_3_newuser" id="columns_4_newuser_id"><fmt:message key="page.general.addpage.layout.columns_3_newuser"/></option>
-                <option value="columns_4" id="columns_4_id"><fmt:message key="page.general.addpage.layout.columns_4"/></option>
-                <option value="columns_3nwn_1_bottom" id="columns_3nwn_1_bottom"><fmt:message key="page.general.addpage.layout.columns_3nwn_1_bottom"/></option>
+                <c:forEach var="pageLayout" items="${pageLayouts}">
+                    <option value="${pageLayout.code}" id="${pageLayout.code}_id"><fmt:message key="page.general.addpage.layout.${pageLayout.code}"/></option>
+                </c:forEach>
             </select>
         </fieldset>
     </form>

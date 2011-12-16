@@ -39,12 +39,17 @@ import java.io.Serializable;
 @Entity
 @Table(name="page_layout")
 @NamedQueries({
-    @NamedQuery(name="PageLayout.getByLayoutCode", query = "select pl from PageLayout pl where pl.code = :code")
+    @NamedQuery(name=PageLayout.PAGELAYOUT_GET_BY_LAYOUT_CODE, query = "select pl from PageLayout pl where pl.code = :code"),
+    @NamedQuery(name=PageLayout.PAGELAYOUT_GET_ALL, query="select pl from PageLayout pl order by pl.renderSequence")
 })
 
 public class PageLayout implements BasicEntity, Serializable {
     private static final long serialVersionUID = 1L;
 
+    // static string identifiers for JPA queries
+    public static final String PAGELAYOUT_GET_BY_LAYOUT_CODE = "PageLayout.getByLayoutCode";
+    public static final String PAGELAYOUT_GET_ALL = "PageLayout.getAll";
+    
     @Id @Column(name="entity_id")
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "pageLayoutIdGenerator")
     @TableGenerator(name = "pageLayoutIdGenerator", table = "RAVE_PORTAL_SEQUENCES", pkColumnName = "SEQ_NAME",
@@ -56,6 +61,9 @@ public class PageLayout implements BasicEntity, Serializable {
 
     @Basic @Column(name="number_of_regions")
     private Long numberOfRegions;
+
+    @Basic(optional=false) @Column(name="render_sequence")
+    private Long renderSequence;
 
     /**
      * Gets the persistence unique identifier
@@ -96,6 +104,14 @@ public class PageLayout implements BasicEntity, Serializable {
 
     public void setNumberOfRegions(Long numberOfRegions) {
         this.numberOfRegions = numberOfRegions;
+    }
+
+    public Long getRenderSequence() {
+        return renderSequence;
+    }
+
+    public void setRenderSequence(Long renderSequence) {
+        this.renderSequence = renderSequence;
     }
 
     @Override

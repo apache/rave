@@ -21,6 +21,9 @@ package org.apache.rave.portal.repository;
 import org.apache.rave.persistence.Repository;
 import org.apache.rave.portal.model.PageLayout;
 
+import java.util.List;
+
 public interface PageLayoutRepository extends Repository<PageLayout> {
-	 PageLayout getByPageLayoutCode(String codename);
+    PageLayout getByPageLayoutCode(String codename);
+    List<PageLayout> getAll();
 }
