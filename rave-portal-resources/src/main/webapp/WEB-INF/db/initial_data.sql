@@ -90,6 +90,11 @@ set @fourwn_col_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name
 insert into page_layout (entity_id, code,  number_of_regions)
 values (@fourwn_col_id, 'columns_3nwn_1_bottom', 4);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_layout_seq;
+
+set @newuser_col_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @page_layout_seq);
+insert into page_layout (entity_id, code,  number_of_regions)
+values (@newuser_col_id, 'columns_3_newuser', 3);
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_layout_seq;
 --- end page layout data ----
 
   -- ***********************************************************************************
@@ -292,7 +297,7 @@ UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @w
 --- Layout for user_id_1 ---
 set @page_1_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @page_seq);
 INSERT INTO page (entity_id, name, owner_id, render_sequence, page_layout_id)
-values (@page_1_id, 'Main', @user_id_1, 1, @two_col_id);
+values (@page_1_id, 'Main', @user_id_1, 1, @newuser_col_id);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_seq;
 
 
@@ -306,6 +311,10 @@ INSERT INTO region(entity_id, page_id, render_order)
 values (@page_1_region_2, @page_1_id, 2);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @region_seq;
 
+set @page_1_region_3 = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @region_seq);
+INSERT INTO region(entity_id, page_id, render_order)
+values (@page_1_region_3, @page_1_id, 3);
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @region_seq;
 
 set @next_region_widget = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @region_widget_seq);
 INSERT INTO region_widget(entity_id, widget_id, region_id, render_order, collapsed)
@@ -314,17 +323,17 @@ UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @r
 
 set @next_region_widget = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @region_widget_seq);
 INSERT INTO region_widget(entity_id, widget_id, region_id, render_order, collapsed)
-values (@next_region_widget, @translate_widget_id, @page_1_region_1, 1, FALSE);
+values (@next_region_widget, @translate_widget_id, @page_1_region_2, 0, FALSE);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @region_widget_seq;
 
 set @next_region_widget = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @region_widget_seq);
 INSERT INTO region_widget(entity_id, widget_id, region_id, render_order, collapsed)
-values (@next_region_widget, @nyt_widget_id, @page_1_region_2, 0, FALSE);
+values (@next_region_widget, @nyt_widget_id, @page_1_region_3, 0, FALSE);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @region_widget_seq;
 
 set @next_region_widget = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @region_widget_seq);
 INSERT INTO region_widget(entity_id, widget_id, region_id, render_order, collapsed)
-values (@next_region_widget, @tabnews_widget_id, @page_1_region_2, 1, FALSE);
+values (@next_region_widget, @tabnews_widget_id, @page_1_region_3, 1, FALSE);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @region_widget_seq;
 
 
@@ -369,7 +378,7 @@ UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @r
 --- Layout for user_id_2 ---
 set @page_1_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @page_seq);
 INSERT INTO page (entity_id, name, owner_id, render_sequence, page_layout_id)
-values (@page_1_id, 'Main', @user_id_2, 1, @two_col_id);
+values (@page_1_id, 'Main', @user_id_2, 1, @newuser_col_id);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_seq;
 
 set @page_1_region_1 = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @region_seq);
@@ -380,6 +389,11 @@ UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @r
 set @page_1_region_2 = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @region_seq);
 INSERT INTO region(entity_id, page_id, render_order)
 values (@page_1_region_2, @page_1_id, 2);
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @region_seq;
+
+set @page_1_region_3 = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @region_seq);
+INSERT INTO region(entity_id, page_id, render_order)
+values (@page_1_region_3, @page_1_id, 3);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @region_seq;
 
 set @next_region_widget = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @region_widget_seq);
@@ -389,24 +403,24 @@ UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @r
 
 set @next_region_widget = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @region_widget_seq);
 INSERT INTO region_widget(entity_id, widget_id, region_id, render_order, collapsed)
-values (@next_region_widget, @wikipedia_widget_id, @page_1_region_1, 1, FALSE);
+values (@next_region_widget, @wikipedia_widget_id, @page_1_region_2, 0, FALSE);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @region_widget_seq;
 
 set @next_region_widget = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @region_widget_seq);
 INSERT INTO region_widget(entity_id, widget_id, region_id, render_order, collapsed)
-values (@next_region_widget, @nyt_widget_id, @page_1_region_2, 0, FALSE);
+values (@next_region_widget, @nyt_widget_id, @page_1_region_3, 0, FALSE);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @region_widget_seq;
 
 set @next_region_widget = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @region_widget_seq);
 INSERT INTO region_widget(entity_id, widget_id, region_id, render_order, collapsed)
-values (@next_region_widget, @tabnews_widget_id, @page_1_region_2, 1, FALSE);
+values (@next_region_widget, @tabnews_widget_id, @page_1_region_3, 1, FALSE);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @region_widget_seq;
 --- End john.doe user_id_2 layout ---
 
 --- Layout for user_id_3 ---
 set @page_1_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @page_seq);
 INSERT INTO page (entity_id, name, owner_id, render_sequence, page_layout_id)
-values (@page_1_id, 'Main', @user_id_3, 1, @two_col_id);
+values (@page_1_id, 'Main', @user_id_3, 1, @newuser_col_id);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_seq;
 
 set @page_1_region_1 = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @region_seq);
@@ -419,6 +433,11 @@ INSERT INTO region(entity_id, page_id, render_order)
 values (@page_1_region_2, @page_1_id, 2);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @region_seq;
 
+set @page_1_region_3 = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @region_seq);
+INSERT INTO region(entity_id, page_id, render_order)
+values (@page_1_region_3, @page_1_id, 3);
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @region_seq;
+
 set @next_region_widget = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @region_widget_seq);
 INSERT INTO region_widget(entity_id, widget_id, region_id, render_order, collapsed)
 values (@next_region_widget, @wikipedia_widget_id, @page_1_region_1, 0, FALSE);
@@ -426,17 +445,17 @@ UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @r
 
 set @next_region_widget = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @region_widget_seq);
 INSERT INTO region_widget(entity_id, widget_id, region_id, render_order, collapsed)
-values (@next_region_widget, @translate_widget_id, @page_1_region_1, 1, FALSE);
+values (@next_region_widget, @translate_widget_id, @page_1_region_2, 0, FALSE);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @region_widget_seq;
 
 set @next_region_widget = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @region_widget_seq);
 INSERT INTO region_widget(entity_id, widget_id, region_id, render_order, collapsed)
-values (@next_region_widget, @hamster_widget_id, @page_1_region_2, 0, FALSE);
+values (@next_region_widget, @hamster_widget_id, @page_1_region_3, 0, FALSE);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @region_widget_seq;
 
 set @next_region_widget = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @region_widget_seq);
 INSERT INTO region_widget(entity_id, widget_id, region_id, render_order, collapsed)
-values (@next_region_widget, @tabnews_widget_id, @page_1_region_2, 1, FALSE);
+values (@next_region_widget, @tabnews_widget_id, @page_1_region_3, 1, FALSE);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @region_widget_seq;
 --- End jane.doe user_id_3 layout ---
 

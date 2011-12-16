@@ -20,9 +20,14 @@
 package org.apache.rave.portal.web.controller.util;
 
 import javax.servlet.http.HttpServletRequest;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.mobile.device.DeviceUtils;
 
 public class ControllerUtils {
+    private static final Logger log = LoggerFactory.getLogger(ControllerUtils.class);
+
     /**
      * Utility function to determine if this HttpServletRequest 
      * is coming from a mobile client 
@@ -32,5 +37,20 @@ public class ControllerUtils {
      */
     public static boolean isMobileDevice(HttpServletRequest request) {
         return DeviceUtils.getCurrentDevice(request).isMobile();
-    }    
+    }
+
+    public static String getDeviceAppropriateView(HttpServletRequest request, String defaultView, String mobileView) {
+        // return the appropriate View name based on the request.  It
+        // checks to see if the user is on a mobile device or not
+        String viewName = null;
+        if (ControllerUtils.isMobileDevice(request)) {
+            log.debug("mobile device detected - viewing default mobile page template");
+            viewName = mobileView;
+        } else {
+            log.debug("non-mobile device detected - viewing regular page layout");
+            viewName = defaultView;
+        }
+        log.debug("viewName: " + viewName);
+        return viewName;
+    }
 }

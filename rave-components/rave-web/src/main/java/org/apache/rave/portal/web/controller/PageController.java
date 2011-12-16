@@ -58,9 +58,10 @@ public class PageController {
     @RequestMapping(value = {"/page/view", "/index.html"}, method = RequestMethod.GET)
     public String viewDefault(Model model, HttpServletRequest request) {
         List<Page> pages = getAllPagesForAuthenticatedUser();
-        model.addAttribute(ModelKeys.PAGE, pageService.getDefaultPageFromList(pages));
+        Page page = pageService.getDefaultPageFromList(pages);
+        model.addAttribute(ModelKeys.PAGE, page);
         model.addAttribute(ModelKeys.PAGES, pages);
-        return getDeviceAppropriateView(request);
+        return ControllerUtils.getDeviceAppropriateView(request, ViewNames.getPageView(page.getPageLayout().getCode()), ViewNames.MOBILE_HOME);
     }          
     
     @RequestMapping(value = "/page/view/{pageId}", method = RequestMethod.GET)
@@ -73,7 +74,7 @@ public class PageController {
                
         model.addAttribute(ModelKeys.PAGE, page);
         model.addAttribute(ModelKeys.PAGES, pages);
-        return getDeviceAppropriateView(request);
+        return ControllerUtils.getDeviceAppropriateView(request, ViewNames.getPageView(page.getPageLayout().getCode()), ViewNames.MOBILE_HOME);
     }
     
     private List<Page> getAllPagesForAuthenticatedUser() {
@@ -88,11 +89,5 @@ public class PageController {
             pages = pageService.getAllPages(userId);
         }
         return pages;
-    }
-    
-    private String getDeviceAppropriateView(HttpServletRequest request) {
-        // return the appropriate View name based on the request.  It
-        // checks to see if the user is on a mobile device or not
-        return ControllerUtils.isMobileDevice(request) ? ViewNames.MOBILE_HOME : ViewNames.HOME;
     }
 }

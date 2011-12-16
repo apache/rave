@@ -381,6 +381,41 @@ header h1 {
     margin-right: 0;
 }
 
+.columns_3_newuser_1, .columns_3_newuser_2 {
+    width: 46%;
+}
+
+.columns_3_newuser_3 {
+    width: 93%;
+    clear: both;
+}
+
+.columns_3_newuser_static {
+    float: left;
+    height: 100%;
+    margin-right: 5px;
+    width: 30%;
+}
+
+.columns_3_newuser_static ul {
+    margin-top: 15px;
+}
+
+.columns_3_newuser_static ul li {
+    margin-left: 20px;
+}
+
+.columns_3_newuser_widgets {
+    float: left;
+    width: 65%;
+}
+
+.columns_3_newuser_subtitle {
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+}
+
 .storeSearch {
     float: right;
     width: 225px;

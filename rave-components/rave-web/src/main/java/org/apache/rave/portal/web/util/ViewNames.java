@@ -28,7 +28,7 @@ public class ViewNames {
     private static final String USER_PREFIX = "templates.user.";
     private static final String ADMIN_PREFIX = "templates.admin.";
 
-    public static final String HOME = USER_PREFIX + "home";
+    public static final String PAGE = USER_PREFIX + "page";
     public static final String MOBILE_HOME = USER_PREFIX + "mobile_home";
     public static final String STORE = USER_PREFIX + "store";
     public static final String WIDGET = USER_PREFIX + "widget";
@@ -45,4 +45,8 @@ public class ViewNames {
     public static final String ADMIN_WIDGETDETAIL = ADMIN_PREFIX + "widgetdetail";
 
     public static final String REDIRECT = "redirect:/";
+
+    public static String getPageView(String layoutName) {
+        return new StringBuilder(PAGE).append(".").append(layoutName).toString();
+    }
 }

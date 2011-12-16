@@ -18,23 +18,24 @@
  */
 package org.apache.rave.portal.web.controller.util;
 
-import org.springframework.mock.web.MockHttpServletRequest;
-import javax.servlet.http.HttpServletRequest;
-import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
-import static org.easymock.EasyMock.*;
-import static org.hamcrest.CoreMatchers.*;
+import org.springframework.mobile.device.DeviceResolver;
+import org.springframework.mobile.device.DeviceUtils;
+import org.springframework.mobile.device.LiteDeviceResolver;
+import org.springframework.mock.web.MockHttpServletRequest;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 public class ControllerUtilsTest {
-    private MockHttpServletRequest request;    
+    private MockHttpServletRequest request;
+    private DeviceResolver deviceResolver;
     
     @Before
     public void setUp() {
         request = new MockHttpServletRequest();
+        deviceResolver = new LiteDeviceResolver();
     }
     
     @Test
@@ -47,5 +48,25 @@ public class ControllerUtilsTest {
     public void testIsMobileDevice_nonMobileClient() {
         MockHttpUtil.setupRequestAsNonMobileUserAgent(request);        
         assertThat(ControllerUtils.isMobileDevice(request), is(false));       
+    }
+
+    @Test
+    public void testGetDeviceAppropriateView_defaultView() {
+        String defaultView = "defaultView";
+        String mobileView = "mobileView";
+
+        request.addHeader("User-Agent", "MSIE");
+        request.setAttribute(DeviceUtils.CURRENT_DEVICE_ATTRIBUTE, deviceResolver.resolveDevice(request));
+        assertThat(ControllerUtils.getDeviceAppropriateView(request, defaultView, mobileView), is(defaultView));
+    }
+
+    @Test
+    public void testGetDeviceAppropriateView_mobileView() {
+        String defaultView = "defaultView";
+        String mobileView = "mobileView";
+
+        request.addHeader("User-Agent", "Blackberry");
+        request.setAttribute(DeviceUtils.CURRENT_DEVICE_ATTRIBUTE, deviceResolver.resolveDevice(request));
+        assertThat(ControllerUtils.getDeviceAppropriateView(request, defaultView, mobileView), is(mobileView));
     }
 }

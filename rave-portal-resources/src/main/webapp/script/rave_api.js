@@ -183,7 +183,7 @@ rave.api = rave.api || (function() {
             var widgetObjectId = rave.getObjectIdFromDomId(args.widget.id);
             var toRegionObjectId = rave.getObjectIdFromDomId(args.targetRegion.id);
             var fromRegionObjectId = rave.getObjectIdFromDomId(args.currentRegion.id);
-            //Note context must be set outside this library.  See home.jsp for example.
+            //Note context must be set outside this library.  See page.jsp for example.
             $.post(rave.getContext() + path + "page/regionWidget/" + widgetObjectId + "/move",
                 {
                     newPosition: args.targetIndex,

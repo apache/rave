@@ -65,17 +65,19 @@ public class PageControllerTest {
         pageController = new PageController(pageService, userService);
         model = new ExtendedModelMap();
         request = new MockHttpServletRequest();
-                
-        defaultPage = new Page(DEFAULT_PAGE_ID);
-        otherPage = new Page(OTHER_PAGE_ID);
-        
-        allPages = new ArrayList<Page>();
-        allPages.add(defaultPage);   
-        allPages.add(otherPage);            
-        
+
         validPageLayout = new PageLayout();
         validPageLayout.setEntityId(33L);
         validPageLayout.setCode(VALID_PAGE_LAYOUT_CODE);
+
+        defaultPage = new Page(DEFAULT_PAGE_ID);
+        defaultPage.setPageLayout(validPageLayout);
+        otherPage = new Page(OTHER_PAGE_ID);
+        otherPage.setPageLayout(validPageLayout);
+        
+        allPages = new ArrayList<Page>();
+        allPages.add(defaultPage);   
+        allPages.add(otherPage);
         
         validUser = new User(USER_ID);
         validUser.setDefaultPageLayout(validPageLayout);
@@ -92,7 +94,7 @@ public class PageControllerTest {
 
         String results = pageController.view(OTHER_PAGE_ID, model, request);
         
-        assertThat(results, equalTo(ViewNames.HOME));
+        assertThat(results, equalTo(ViewNames.getPageView(VALID_PAGE_LAYOUT_CODE)));
         assertThat((Page) model.asMap().get(ModelKeys.PAGE), sameInstance(otherPage));
         assertThat((List<Page>) model.asMap().get(ModelKeys.PAGES), sameInstance(allPages));
         
@@ -131,7 +133,7 @@ public class PageControllerTest {
         
         String results = pageController.view(OTHER_PAGE_ID, model, request);
         
-        assertThat(results, equalTo(ViewNames.HOME));
+        assertThat(results, equalTo(ViewNames.getPageView(VALID_PAGE_LAYOUT_CODE)));
         assertThat((Page) model.asMap().get(ModelKeys.PAGE), sameInstance(defaultPage));
         assertThat((List<Page>) model.asMap().get(ModelKeys.PAGES), sameInstance(pages));
         
@@ -149,7 +151,7 @@ public class PageControllerTest {
 
         String results = pageController.viewDefault(model, request);
         
-        assertThat(results, equalTo(ViewNames.HOME));
+        assertThat(results, equalTo(ViewNames.getPageView(VALID_PAGE_LAYOUT_CODE)));
         assertThat((Page) model.asMap().get(ModelKeys.PAGE), sameInstance(defaultPage));
         assertThat((List<Page>) model.asMap().get(ModelKeys.PAGES), sameInstance(allPages));
         
@@ -170,7 +172,7 @@ public class PageControllerTest {
 
         String results = pageController.viewDefault(model, request);
         
-        assertThat(results, equalTo(ViewNames.HOME));
+        assertThat(results, equalTo(ViewNames.getPageView(VALID_PAGE_LAYOUT_CODE)));
         assertThat((Page) model.asMap().get(ModelKeys.PAGE), sameInstance(defaultPage));
         assertThat((List<Page>) model.asMap().get(ModelKeys.PAGES), sameInstance(pages));
         

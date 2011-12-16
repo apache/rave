@@ -38,8 +38,8 @@
         <bean class="org.apache.rave.portal.web.interceptors.CommonModelHandlerInterceptor"/>
     </mvc:interceptors>
 
-    <!-- Forwards requests to the "/" resource to the "home" view -->
-    <mvc:view-controller path="/" view-name="home"/>
+    <!-- Forwards requests to the "/" resource to the "page" view -->
+    <mvc:view-controller path="/" view-name="page"/>
 
     <!-- Resolves view names to protected .jsp resources within the /WEB-INF/views directory -->
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
