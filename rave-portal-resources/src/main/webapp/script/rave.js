@@ -537,6 +537,25 @@ var rave = rave || (function() {
             $("#emptyPageMessageWrapper").removeClass("hidden");
         }
 
+        function displayUsersOfWidget(widgetId) {
+            rave.api.rest.getUsersForWidget({widgetId: widgetId, successCallback: function(data){
+                var html = "<ul class='widget-users'>";
+                for (var i=0; i < data.length; i++) {
+                    var person = data[i];
+                    var name = (person.displayName) ? person.displayName :
+                                                      ((person.preferredName) ? person.preferredName : person.givenName) + " " + person.familyName;
+
+                    html += "<li class='widget-user'>" + name + "</li>";
+                }
+                html+="</ul>";
+
+                $("<div class='dialog widget-users-dialog' title='" + $("#widget-" + widgetId + "-title").text().trim() + " has been added by...'>" + html + "</div>").dialog({
+                    modal: true,
+                    buttons: [{text: "Close", click: function(){$(this).dialog("close");}}]
+                });
+            }});
+        }
+
         return {
           init : init,       
           initMobile: initMobileWidgetUI,
@@ -548,7 +567,8 @@ var rave = rave || (function() {
           getMobileState: getMobileState,
           doWidgetUiCollapse: doWidgetUiCollapse,
           toggleMobileWidget: toggleMobileWidget,
-          displayEmptyPageMessage: displayEmptyPageMessage
+          displayEmptyPageMessage: displayEmptyPageMessage,
+          displayUsersOfWidget: displayUsersOfWidget
         };
 
     })();
@@ -851,6 +871,11 @@ var rave = rave || (function() {
         /**
          * Displays the "empty page" message on the page
          */        
-        displayEmptyPageMessage: ui.displayEmptyPageMessage
+        displayEmptyPageMessage: ui.displayEmptyPageMessage,
+
+        /**
+         * Displays the users of a supplied widgetId in a dialog box
+         */
+        displayUsersOfWidget: ui.displayUsersOfWidget
     }
 })();

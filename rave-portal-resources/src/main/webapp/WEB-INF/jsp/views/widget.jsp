@@ -62,17 +62,11 @@
     <div class="widget-content">
 
         <h2>
-            <c:choose>
-                <c:when test="${not empty widget.titleUrl}">
-                    <a href="<c:out value="${widget.titleUrl}"/>" rel="external"><c:out
-                            value="${widget.title}"/></a>
-                </c:when>
-                <c:otherwise>
-                    <c:out value="${widget.title}"/>
-                </c:otherwise>
-            </c:choose>
+            <c:set var="widgetHasTitleUrl" value="${not empty widget.titleUrl}" />
+            <c:if test="${widgetHasTitleUrl}"><a href="<c:out value="${widget.titleUrl}"/>"rel="external"></c:if>
+            <span id="widget-${widget.entityId}-title"><c:out value="${widget.title}"/></span>
+            <c:if test="${widgetHasTitleUrl}"></a></c:if>
         </h2>
-
 
         <div class="detailWidgetPreview">
             <c:if test="${not empty widget.screenshotUrl}">
@@ -141,7 +135,12 @@
                     <label for="dislike-${widget.entityId}">${widgetStatistics.totalDislike}</label>
                 </div>
             </div>
-
+            <div class="widgetUserCount">
+                <c:set var="widgetUserCountGreaterThanZero" value="${widgetStatistics != null && widgetStatistics.totalUserCount > 0}" />
+                <c:if test="${widgetUserCountGreaterThanZero}"><a href="javascript:void(0);" onclick="rave.displayUsersOfWidget(${widget.entityId});"></c:if>
+                <fmt:formatNumber groupingUsed="true" value="${widgetStatistics.totalUserCount}" />&nbsp;<fmt:message key="page.widget.usercount"/>
+                <c:if test="${widgetUserCountGreaterThanZero}"></a></c:if>
+            </div>
         </div>
 
         <div class="widgetComments">

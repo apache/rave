@@ -135,7 +135,29 @@ describe("Rave API", function() {
                 rave.api.rest.deletePage({pageId: 9, successCallback: callback});
                 expect(callbackCalled).toBeTruthy();
             });
-        });                
+        });
+
+        describe("getUsersForWidget", function() {
+            it("GETs the widget users using the REST service", function() {
+                $.ajax = function(args) {
+                    expect(args.url).toEqual("api/rest/widgets/23/users");
+                    expect(typeof(callback)).toEqual("function");
+                    callback({error:false});
+                    return {
+                        error: function(a, b, c) {
+                        }
+                    }
+                };
+
+                var callbackCalled = false;
+                var callback = function() {
+                    callbackCalled = true
+                };
+
+                rave.api.rest.getUsersForWidget({widgetId: 23, successCallback: callback});
+                expect(callbackCalled).toBeTruthy();
+            });
+        });
     });
 
     describe("rpc", function() {

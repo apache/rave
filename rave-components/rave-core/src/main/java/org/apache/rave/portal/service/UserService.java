@@ -19,9 +19,12 @@
 
 package org.apache.rave.portal.service;
 
+import org.apache.rave.portal.model.Person;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.util.SearchResult;
 import org.springframework.security.core.userdetails.UserDetailsService;
+
+import java.util.List;
 
 public interface UserService extends UserDetailsService {
     /**
@@ -106,4 +109,12 @@ public interface UserService extends UserDetailsService {
      * @param userId {@link Long} id if the user
      */
     void deleteUser(Long userId);
+
+    /**
+     * List of persons whom have added the supplied widget to one or more pages
+     *
+     * @param widgetId the entityId of the Widget to search
+     * @return List of Person objects in alphabetical order sorted by familyname, givenname
+     */
+    List<Person> getAllByAddedWidget(long widgetId);
 }

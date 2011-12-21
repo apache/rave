@@ -25,7 +25,6 @@ import org.apache.rave.portal.model.Page;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.repository.AuthorityRepository;
 import org.apache.rave.portal.repository.UserRepository;
-import org.hamcrest.CoreMatchers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,14 +37,8 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertNull;
-import static junit.framework.Assert.assertTrue;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.*;
 
 @Transactional
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -62,6 +55,7 @@ public class JpaUserRepositoryTest {
     private static final String HASHED_SALTED_PASSWORD = "b97fd0fa25ba8a504309be2b6651ac6dee167ded";
     private static final Long INVALID_USER = -2L;
     private static final String USER_EMAIL = "canonical@example.com";
+    private static final Long VALID_WIDGET_ID = 1L;
 
     @Autowired
     private UserRepository repository;
@@ -72,7 +66,7 @@ public class JpaUserRepositoryTest {
     @Test
     public void getById_validId() {
         User user = repository.get(USER_ID);
-        assertThat(user, CoreMatchers.notNullValue());
+        assertThat(user, notNullValue());
         assertThat(user.getUsername(), is(equalTo(USER_NAME)));
         assertThat(user.getPassword(), is(equalTo(HASHED_SALTED_PASSWORD)));
         assertThat(user.isAccountNonExpired(), is(true));
@@ -88,7 +82,7 @@ public class JpaUserRepositoryTest {
     @Test
     public void getByUsername_valid() {
         User user = repository.getByUsername(USER_NAME);
-        assertThat(user, CoreMatchers.notNullValue());
+        assertThat(user, notNullValue());
         assertThat(user.getEntityId(), is(equalTo(USER_ID)));
         assertThat(user.getPassword(), is(equalTo(HASHED_SALTED_PASSWORD)));
         assertThat(user.isAccountNonExpired(), is(true));
@@ -104,7 +98,7 @@ public class JpaUserRepositoryTest {
     @Test
     public void getByUserEmail_valid() {
         User user = repository.getByUserEmail(USER_EMAIL);
-        assertThat(user, CoreMatchers.notNullValue());
+        assertThat(user, notNullValue());
         assertThat(user.getEntityId(), is(equalTo(USER_ID)));
         assertThat(user.getPassword(), is(equalTo(HASHED_SALTED_PASSWORD)));
         assertThat(user.isAccountNonExpired(), is(true));
@@ -182,5 +176,19 @@ public class JpaUserRepositoryTest {
         assertNull(user);
         pages = pageQuery.getResultList();
         assertTrue("User has no pages", pages.isEmpty());
+    }
+
+    @Test
+    public void getAllByAddedWidget() {
+        String searchTerm = "Doe";
+        List<User> users = repository.getAllByAddedWidget(VALID_WIDGET_ID);
+        // verify that the names are in alphabetical order
+        assertThat(users.isEmpty(), is(false));
+        String previousFamilyName = "";
+        for (User user : users) {
+            String familyName = user.getFamilyName();
+            assertThat(previousFamilyName.compareTo(familyName) <= 0 , is(true));
+            previousFamilyName = familyName;
+        }
     }
 }

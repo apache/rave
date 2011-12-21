@@ -19,10 +19,7 @@
 
 package org.apache.rave.portal.web.api.rest;
 
-import org.apache.rave.portal.model.User;
-import org.apache.rave.portal.model.Widget;
-import org.apache.rave.portal.model.WidgetComment;
-import org.apache.rave.portal.model.WidgetRating;
+import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.portal.service.WidgetCommentService;
 import org.apache.rave.portal.service.WidgetRatingService;
@@ -32,10 +29,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.mock.web.MockHttpServletResponse;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
+import java.awt.*;
+import java.util.*;
+import java.util.List;
 
+import static org.hamcrest.CoreMatchers.*;
 import static org.easymock.EasyMock.*;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class WidgetApiTest {
     private WidgetApi widgetApi;
@@ -45,6 +45,9 @@ public class WidgetApiTest {
     private MockHttpServletResponse response;
 
     private final Long VALID_USER_ID = 5L;
+    private final Long VALID_WIDGET_ID = 10L;
+    
+    private User user;
 
     @Before
     public void setup() {
@@ -52,10 +55,8 @@ public class WidgetApiTest {
         widgetRatingService = createMock(WidgetRatingService.class);
         userService = createMock(UserService.class);
 
-        User user = new User();
+        user = new User();
         user.setEntityId(VALID_USER_ID);
-        expect(userService.getAuthenticatedUser()).andReturn(user);
-        replay(userService);
 
         response = createMock(MockHttpServletResponse.class);
         widgetApi = new WidgetApi(widgetRatingService, widgetCommentService, userService);
@@ -76,12 +77,12 @@ public class WidgetApiTest {
 
         HttpServletResponse httpServletResponse = createMock(HttpServletResponse.class);
         httpServletResponse.setStatus(HttpStatus.NO_CONTENT.value());
-        replay(httpServletResponse);
+        expect(userService.getAuthenticatedUser()).andReturn(user);
+        replay(userService, httpServletResponse);
 
         widgetApi.createWidgetComment(1L, comment, httpServletResponse);
 
-        verify(userService);
-        verify(httpServletResponse);
+        verify(userService, httpServletResponse);
     }
 
     @Test
@@ -105,9 +106,10 @@ public class WidgetApiTest {
         widgetComment.setText(message);
         widgetComment.setUser(new User(VALID_USER_ID, "John.Doe"));
 
+        expect(userService.getAuthenticatedUser()).andReturn(user);
         expect(widgetCommentService.getWidgetComment(3L)).andReturn(null);
         widgetCommentService.saveWidgetComment(widgetComment);
-        replay(widgetCommentService);
+        replay(userService, widgetCommentService);
 
         HttpServletResponse httpServletResponse = createMock(HttpServletResponse.class);
         httpServletResponse.setStatus(HttpStatus.NO_CONTENT.value());
@@ -115,8 +117,7 @@ public class WidgetApiTest {
 
         widgetApi.updateWidgetComment(2L, 3L, message, httpServletResponse);
 
-        verify(widgetCommentService);
-        verify(httpServletResponse);
+        verify(userService, widgetCommentService, httpServletResponse);
     }
 
     @Test
@@ -137,8 +138,7 @@ public class WidgetApiTest {
 
         assertEquals(message, widgetComment.getText());
 
-        verify(widgetCommentService);
-        verify(httpServletResponse);
+        verify(widgetCommentService, httpServletResponse);
     }
 
     @Test
@@ -158,17 +158,13 @@ public class WidgetApiTest {
 
     @Test
     public void deleteWidgetRating() {
+        expect(userService.getAuthenticatedUser()).andReturn(user);
         widgetRatingService.removeWidgetRating(1L, VALID_USER_ID);
         expectLastCall();
-        replay(widgetRatingService);
-
         response.setStatus(HttpStatus.NO_CONTENT.value());
-        replay(response);
-
+        replay(userService, widgetRatingService, response);
         widgetApi.deleteWidgetRating(1L, response);
-
-        verify(widgetRatingService, userService);
-        verify(response);
+        verify(widgetRatingService, userService, response);
     }
 
     @Test
@@ -177,17 +173,28 @@ public class WidgetApiTest {
         widgetRating.setScore(5);
         widgetRating.setUserId(2L);
         widgetRating.setWidgetId(1L);
+        expect(userService.getAuthenticatedUser()).andReturn(user);
         widgetRatingService.saveWidgetRating(widgetRating);
         expectLastCall();
-        replay(widgetRatingService);
-
         response.setStatus(HttpStatus.NO_CONTENT.value());
-        replay(response);
+        replay(userService, widgetRatingService, response);
 
         User user = new User(2L);
         widgetApi.setWidgetRating(1L, 5, response);
 
-        verify(widgetRatingService, userService);
-        verify(response);
+        verify(widgetRatingService, userService, response);
+    }
+
+    @Test
+    public void getAllUsers() {
+        List<Person> persons = new ArrayList<Person>();
+        persons.add(new Person());
+        persons.add(new Person());
+        
+        expect(userService.getAllByAddedWidget(VALID_WIDGET_ID)).andReturn(persons);
+        replay(userService);
+        assertThat(widgetApi.getAllUsers(VALID_WIDGET_ID), sameInstance(persons));
+
+        verify(userService);
     }
 }

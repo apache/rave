@@ -19,6 +19,7 @@
 
 package org.apache.rave.portal.service.impl;
 
+import org.apache.rave.portal.model.Person;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.repository.UserRepository;
@@ -37,6 +38,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -167,4 +169,13 @@ public class DefaultUserService implements UserService {
         userRepository.removeUser(user);
     }
 
+    @Override
+    public List<Person> getAllByAddedWidget(long widgetId) {
+        List<Person> persons = new ArrayList<Person>();
+        List<User> users = userRepository.getAllByAddedWidget(widgetId);
+        for (User u : users) {
+            persons.add(u.toPerson());
+        }
+        return persons;
+    }
 }

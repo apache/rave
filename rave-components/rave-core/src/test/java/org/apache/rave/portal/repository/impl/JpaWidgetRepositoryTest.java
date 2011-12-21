@@ -218,11 +218,13 @@ public class JpaWidgetRepositoryTest {
         assertEquals(0, gadgetOne.getTotalLike());
         assertEquals(1, gadgetOne.getTotalDislike());
         assertEquals(0, gadgetOne.getUserRating());
+        assertEquals(10, gadgetOne.getTotalUserCount());
         
         WidgetStatistics gadgetTwo = widgetStatistics.get(2L);
         assertEquals(1, gadgetTwo.getTotalLike());
         assertEquals(0, gadgetTwo.getTotalDislike());
         assertEquals(10, gadgetTwo.getUserRating());
+        assertEquals(10, gadgetOne.getTotalUserCount());
     }
     
     @Test
@@ -260,11 +262,12 @@ public class JpaWidgetRepositoryTest {
         assertNotNull(widgetStatistics);
         assertEquals(0, widgetStatistics.getTotalLike());
         assertEquals(1, widgetStatistics.getTotalDislike());
+        assertEquals(10, widgetStatistics.getTotalUserCount());
         assertEquals(WidgetRating.DISLIKE.intValue(), widgetStatistics.getUserRating());
     }
     
     @Test
-    public void getPositiveWidgetStatsitics() {
+    public void getPositiveWidgetStatistics() {
         Widget widget = repository.get(2L);
         List<WidgetRating> ratings = widget.getRatings();
         assertNotNull(ratings);
@@ -274,6 +277,7 @@ public class JpaWidgetRepositoryTest {
         assertNotNull(widgetStatistics);
         assertEquals(1, widgetStatistics.getTotalLike());
         assertEquals(0, widgetStatistics.getTotalDislike());
+        assertEquals(10, widgetStatistics.getTotalUserCount());
         assertEquals(WidgetRating.LIKE.intValue(), widgetStatistics.getUserRating());
     }
     
@@ -289,7 +293,7 @@ public class JpaWidgetRepositoryTest {
         assertEquals(0, widgetStatistics.getTotalDislike());
         assertEquals(0, widgetStatistics.getTotalLike());
         assertEquals(WidgetRating.UNSET.intValue(), widgetStatistics.getUserRating());
-    }
+    }  
     
     @Test
     public void addWidgetRating() {

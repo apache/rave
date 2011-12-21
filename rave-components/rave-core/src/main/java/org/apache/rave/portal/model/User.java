@@ -22,23 +22,7 @@ import org.apache.rave.persistence.BasicEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.PreRemove;
-import javax.persistence.Table;
-import javax.persistence.TableGenerator;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -58,8 +42,8 @@ import java.util.Collections;
         @NamedQuery(name = User.USER_FIND_BY_USERNAME_OR_EMAIL, query = "select u from User u " +
                 "where lower(u.username) like :"+User.PARAM_SEARCHTERM+" or lower(u.email) like :"+User.PARAM_SEARCHTERM+" order by u.username asc"),
         @NamedQuery(name = User.USER_COUNT_FIND_BY_USERNAME_OR_EMAIL, query = "select count(u) from User u " +
-                "where lower(u.username) like :"+User.PARAM_SEARCHTERM+" or lower(u.email) like :"+User.PARAM_SEARCHTERM)
-
+                "where lower(u.username) like :"+User.PARAM_SEARCHTERM+" or lower(u.email) like :"+User.PARAM_SEARCHTERM),
+        @NamedQuery(name = User.USER_GET_ALL_FOR_ADDED_WIDGET, query = "select distinct(rw.region.page.owner) from RegionWidget rw where rw.widget.entityId = :widgetId order by rw.region.page.owner.familyName, rw.region.page.owner.givenName")
 })
 public class User extends Person implements UserDetails, BasicEntity, Serializable {
     private static final long serialVersionUID = 1L;
@@ -71,6 +55,7 @@ public class User extends Person implements UserDetails, BasicEntity, Serializab
     public static final String USER_FIND_BY_USERNAME_OR_EMAIL = "User.findByUsernameOrEmail";
     public static final String USER_COUNT_FIND_BY_USERNAME_OR_EMAIL = "User.countFindByUsernameOrEmail";
     public static final String USER_GET_COMMENTERS = "User.getCommenters";
+    public static final String USER_GET_ALL_FOR_ADDED_WIDGET = "User.getAllForAddedWidget";
 
     public static final String PARAM_USERNAME = "username";
     public static final String PARAM_EMAIL = "email";
@@ -333,5 +318,32 @@ public class User extends Person implements UserDetails, BasicEntity, Serializab
         sb.append(']');
         sb.append('}');
         return sb.toString();
+    }
+
+    /**
+     * Conversion function to create a new Person object based off of this User class.  This is useful for when you
+     * have a User object and want to pass on the Person data without the User class data (like password, etc)
+     * 
+     * @return a Person object representing the data contained in this class
+     */
+    public Person toPerson() {
+        Person p = new Person();
+        p.setAboutMe(this.getAboutMe());
+        p.setAdditionalName(this.getAdditionalName());
+        p.setAddresses(this.getAddresses());
+        p.setDisplayName(this.getDisplayName());
+        p.setEmail(this.getEmail());
+        p.setEntityId(this.getEntityId());
+        p.setFamilyName(this.getFamilyName());
+        p.setFriends(this.getFriends());
+        p.setGivenName(this.getGivenName());
+        p.setHonorificPrefix(this.getHonorificPrefix());
+        p.setHonorificSuffix(this.getHonorificSuffix());
+        p.setOrganizations(this.getOrganizations());
+        p.setPreferredName(this.getPreferredName());
+        p.setProperties(this.getProperties());
+        p.setStatus(this.getStatus());
+        p.setUsername(this.getUsername());
+        return p;
     }
 }

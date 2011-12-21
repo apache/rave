@@ -95,6 +95,13 @@ public class JpaUserRepository extends AbstractJpaRepository<User> implements Us
         this.delete(user);
     }
 
+    @Override
+    public List<User> getAllByAddedWidget(long widgetId) {
+        TypedQuery<User> query = manager.createNamedQuery(User.USER_GET_ALL_FOR_ADDED_WIDGET, User.class);
+        query.setParameter(User.PARAM_WIDGET_ID, widgetId);
+        return query.getResultList();
+    }
+
     private void deletePages(User user) {
         TypedQuery<Page> pageQuery = manager.createNamedQuery("Page.getByUserId", Page.class);
         pageQuery.setParameter("userId", user.getEntityId());

@@ -143,7 +143,9 @@
             <ul class="storeItems">
                     <%--@elvariable id="widget" type="org.apache.rave.portal.model.Widget"--%>
                 <c:forEach var="widget"
-                           items="${widgets.resultSet}"><%--@elvariable id="widgetsStatistics" type="org.apache.rave.portal.model.util.WidgetStatistics"--%>
+                           items="${widgets.resultSet}">
+                    <%--@elvariable id="widgetsStatistics" type="org.apache.rave.portal.model.util.WidgetStatistics"--%>
+                    <c:set var="widgetStatistics" value="${widgetsStatistics[widget.entityId]}" />
                     <li class="storeItem">
 
                         <div class="storeItemLeft">
@@ -165,7 +167,8 @@
 
                         <div class="storeItemCenter">
 
-                            <a class="secondaryPageItemTitle"
+                            <a id="widget-${widget.entityId}-title"
+                               class="secondaryPageItemTitle"
                                href="<spring:url value="/app/store/widget/${widget.entityId}" />?referringPageId=${referringPageId}">
                                 <c:out value="${widget.title}"/>
                             </a>
@@ -180,17 +183,23 @@
                             </c:if>
                             <div class="widgetRating">
                                 <fmt:message key="page.widget.rate"/>
-                                <c:set var="totalLikes" value="${widgetsStatistics[widget.entityId].totalLike}"/>
-                                <c:set var="totalDislikes" value="${widgetsStatistics[widget.entityId].totalDislike}"/>
+                                <c:set var="totalLikes" value="${widgetStatistics.totalLike}"/>
+                                <c:set var="totalDislikes" value="${widgetStatistics.totalDislike}"/>
 
                                 <div id="rating-${widget.entityId}" class="ratingButtons">
                                     <input type="radio" id="like-${widget.entityId}" class="widgetLikeButton"
-                                           name="rating-${widget.entityId}"${widgetsStatistics[widget.entityId].userRating==10?" checked='true'":""}>
-                                    <label for="like-${widget.entityId}">${widgetsStatistics[widget.entityId]!=null?widgetsStatistics[widget.entityId].totalLike:"0"}</label>
+                                           name="rating-${widget.entityId}"${widgetStatistics.userRating==10?" checked='true'":""}>
+                                    <label for="like-${widget.entityId}">${widgetStatistics!=null?widgetStatistics.totalLike:"0"}</label>
                                     <input type="radio" id="dislike-${widget.entityId}" class="widgetDislikeButton"
-                                           name="rating-${widget.entityId}"${widgetsStatistics[widget.entityId].userRating==0?" checked='true'":""}>
-                                    <label for="dislike-${widget.entityId}">${widgetsStatistics[widget.entityId]!=null?widgetsStatistics[widget.entityId].totalDislike:"0"}</label>
+                                           name="rating-${widget.entityId}"${widgetStatistics.userRating==0?" checked='true'":""}>
+                                    <label for="dislike-${widget.entityId}">${widgetStatistics!=null?widgetStatistics.totalDislike:"0"}</label>
                                 </div>
+                            </div>
+                            <div class="widgetUserCount">
+                                <c:set var="widgetUserCountGreaterThanZero" value="${widgetStatistics != null && widgetStatistics.totalUserCount > 0}" />
+                                <c:if test="${widgetUserCountGreaterThanZero}"><a href="javascript:void(0);" onclick="rave.displayUsersOfWidget(${widget.entityId});"></c:if>
+                                    <fmt:formatNumber groupingUsed="true" value="${widgetStatistics!=null?widgetStatistics.totalUserCount:0}" />&nbsp;<fmt:message key="page.widget.usercount"/>
+                                <c:if test="${widgetUserCountGreaterThanZero}"></a></c:if>
                             </div>
                         </div>
 

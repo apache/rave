@@ -15,14 +15,11 @@
  */
 package org.apache.rave.portal.model.util;
 
-/**
- *
- * @author ISIS
- */
 public class WidgetStatistics {
     private int totalLike;
     private int totalDislike;
     private int userRating;
+    private int totalUserCount;
     
     public void setTotalLike(int totalLike) {
         this.totalLike = totalLike;
@@ -44,13 +41,22 @@ public class WidgetStatistics {
     public int getUserRating() {
         return userRating;
     }
-    
+
+    public int getTotalUserCount() {
+        return totalUserCount;
+    }
+
+    public void setTotalUserCount(int totalUserCount) {
+        this.totalUserCount = totalUserCount;
+    }
+
     @Override
     public String toString() {
         return "WidgetStatistics{" +
                 "totalLike=" + totalLike +
                 ", totalDislike=" + totalDislike + 
-                ", userRating=" + userRating + 
+                ", userRating=" + userRating +
+                ", totalUserCount=" + totalUserCount +
                 '}';
     }
 }

@@ -79,4 +79,12 @@ public interface UserRepository extends Repository<User> {
      * @param user {@link User} to delete
      */
     void removeUser(User user);
+
+    /**
+     * List of users whom have added the supplied widget to one or more pages
+     *
+     * @param widgetId the entityId of the Widget to search
+     * @return List of User objects in alphabetical order sorted by familyname, givenname
+     */
+    List<User> getAllByAddedWidget(long widgetId);
 }

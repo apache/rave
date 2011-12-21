@@ -21,6 +21,7 @@ package org.apache.rave.portal.service.impl;
 
 import org.apache.rave.portal.model.Authority;
 import org.apache.rave.portal.model.Page;
+import org.apache.rave.portal.model.Person;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.repository.UserRepository;
@@ -40,17 +41,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.easymock.EasyMock.createNiceMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.expectLastCall;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.sameInstance;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.easymock.EasyMock.*;
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.*;
 
 public class DefaultUserServiceTest {
 
@@ -59,10 +52,11 @@ public class DefaultUserServiceTest {
     private UserRepository userRepository;
     private static final String USER_NAME = "1234";
     private static final String USER_EMAIL = "test@test.com";
+    private static final Long VALID_WIDGET_ID = 1L;
 
     @Before
     public void setup() {
-        userRepository = createNiceMock(UserRepository.class);
+        userRepository = createMock(UserRepository.class);
         service = new DefaultUserService(userRepository);
     }
 
@@ -85,6 +79,7 @@ public class DefaultUserServiceTest {
         User result = service.getAuthenticatedUser();
 
         assertThat(result, is(sameInstance(authUser)));
+        verify(auth);
     }
 
     @Test(expected = SecurityException.class)
@@ -105,7 +100,9 @@ public class DefaultUserServiceTest {
         SecurityContextHolder.setContext(context);
 
         service.getAuthenticatedUser();
+        verify(auth);
     }
+    
 
     @Test
     public void setAuthenticatedUser_valid() {
@@ -116,6 +113,7 @@ public class DefaultUserServiceTest {
         service.setAuthenticatedUser(USER_ID);
         assertThat((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal(),
                 is(sameInstance(authUser)));
+        verify(userRepository);
     }
 
     @Test
@@ -133,6 +131,7 @@ public class DefaultUserServiceTest {
         final GrantedAuthority grantedAuthority =
                 SecurityContextHolder.getContext().getAuthentication().getAuthorities().iterator().next();
         assertEquals("has authority admin", "admin", grantedAuthority.getAuthority());
+        verify(userRepository);
     }
 
 
@@ -142,6 +141,7 @@ public class DefaultUserServiceTest {
         replay(userRepository);
 
         service.setAuthenticatedUser(USER_ID);
+        verify(userRepository);
     }
 
     @Test
@@ -152,14 +152,15 @@ public class DefaultUserServiceTest {
 
         UserDetails result = service.loadUserByUsername(USER_NAME);
         assertThat((User)result, is(sameInstance(authUser)));
+        verify(userRepository);
     }
 
     @Test(expected = UsernameNotFoundException.class)
     public void loadByUsername_invalid_exception() {
-        expect(userRepository.getByUsername(USER_NAME)).andThrow(new IncorrectResultSizeDataAccessException(1));
+        expect(userRepository.getByUsername(USER_NAME)).andReturn(null);
         replay(userRepository);
-
-        service.setAuthenticatedUser(USER_ID);
+        service.loadUserByUsername(USER_NAME);
+        verify(userRepository);
     }
 
     @Test(expected = UsernameNotFoundException.class)
@@ -168,6 +169,7 @@ public class DefaultUserServiceTest {
         replay(userRepository);
 
         service.setAuthenticatedUser(USER_ID);
+        verify(userRepository);
     }
 
      @Test
@@ -179,6 +181,7 @@ public class DefaultUserServiceTest {
 
         UserDetails result = service.getUserByEmail(USER_EMAIL);
         assertThat((User)result, is(sameInstance(authUser)));
+        verify(userRepository);
      }
 
 
@@ -199,6 +202,7 @@ public class DefaultUserServiceTest {
         users.add(user2);
         final int offset = 0;
         final int pageSize = 10;
+        expect(userRepository.getCountAll()).andReturn(users.size());
         expect(userRepository.getLimitedList(offset, pageSize)).andReturn(users);
         replay(userRepository);
 
@@ -206,6 +210,7 @@ public class DefaultUserServiceTest {
         assertEquals(pageSize, result.getPageSize());
         assertEquals(users.size(), result.getResultSet().size());
         assertEquals(user1, result.getResultSet().get(0));
+        verify(userRepository);
     }
 
     @Test
@@ -218,6 +223,7 @@ public class DefaultUserServiceTest {
         users.add(user2);
         final int offset = 0;
         final int pageSize = 10;
+        expect(userRepository.getCountByUsernameOrEmail(searchTerm)).andReturn(users.size());
         expect(userRepository.findByUsernameOrEmail(searchTerm, offset, pageSize)).andReturn(users);
         replay(userRepository);
 
@@ -225,6 +231,7 @@ public class DefaultUserServiceTest {
         assertEquals(pageSize, result.getPageSize());
         assertEquals(users.size(), result.getResultSet().size());
         assertEquals(user1, result.getResultSet().get(0));
+        verify(userRepository);
     }
 
     @Test
@@ -235,6 +242,7 @@ public class DefaultUserServiceTest {
 
         service.updateUserProfile(user);
         assertTrue("Save called", true);
+        verify(userRepository);
     }
 
     @Test
@@ -244,6 +252,7 @@ public class DefaultUserServiceTest {
         List<Page> pages = new ArrayList<Page>();
         pages.add(page);
         expect(userRepository.get(USER_ID)).andReturn(user).times(1);
+        userRepository.removeUser(user);
         expectLastCall();
         replay(userRepository);
 
@@ -253,4 +262,21 @@ public class DefaultUserServiceTest {
         assertTrue("Deleted", true);
     }
 
+    @Test
+    public void getAllByAddedWidget() {
+        List<User> userList = new ArrayList<User>();
+        userList.add(new User());
+        userList.add(new User());
+
+        List<Person> personList = new ArrayList<Person>();
+        personList.add(userList.get(0).toPerson());
+        personList.add(userList.get(1).toPerson());
+        
+        expect(userRepository.getAllByAddedWidget(VALID_WIDGET_ID)).andReturn(userList);
+        replay(userRepository);
+
+        assertThat(service.getAllByAddedWidget(VALID_WIDGET_ID), is(personList));
+        
+        verify(userRepository);
+    }
 }

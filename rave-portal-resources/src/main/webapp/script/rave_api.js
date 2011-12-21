@@ -161,6 +161,19 @@ rave.api = rave.api || (function() {
             })
         }
 
+        function getUsersForWidget(args) {
+            $.ajax({
+                type: 'GET',
+                url: rave.getContext() + path + "widgets/" + args.widgetId + "/users",
+                success: function(result) {
+                    if (typeof args.successCallback == 'function') {
+                        args.successCallback(result);
+                    }
+                },
+                error: handleError
+            })
+        }
+
         return {
             updateWidgetRating: updateWidgetRating,
             deleteWidgetRating: deleteWidgetRating,
@@ -170,7 +183,8 @@ rave.api = rave.api || (function() {
             createWidgetComment : createWidgetComment,
             updateWidgetComment : updateWidgetComment,
             deleteWidgetComment : deleteWidgetComment,
-            deletePage : deletePage
+            deletePage : deletePage,
+            getUsersForWidget: getUsersForWidget
         };
     })();
 

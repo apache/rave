@@ -21,19 +21,7 @@ package org.apache.rave.portal.model;
 import org.apache.rave.persistence.BasicEntity;
 import org.codehaus.jackson.annotate.JsonBackReference;
 
-import javax.persistence.Basic;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.TableGenerator;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
 
@@ -42,9 +30,20 @@ import java.util.List;
  */
 @Entity
 @Table(name = "region_widget")
+@NamedQueries({
+        @NamedQuery(name = RegionWidget.REGION_WIDGET_GET_DISTINCT_USER_COUNT_ALL_WIDGETS,
+                    query = "select rw.widget.entityId, count(distinct rw.region.page.owner) from RegionWidget rw group by rw.widget.entityId"),
+        @NamedQuery(name = RegionWidget.REGION_WIDGET_GET_DISTINCT_USER_COUNT_SINGLE_WIDGET,
+                    query = "select count(distinct rw.region.page.owner) from RegionWidget rw where rw.widget.entityId = :widgetId")
+})
 public class RegionWidget implements BasicEntity, Serializable {
     private static final long serialVersionUID = 1L;
-    
+
+    public static final String REGION_WIDGET_GET_DISTINCT_USER_COUNT_ALL_WIDGETS = "RegionWidget.getDistinctUserCountForAllWidgets";
+    public static final String REGION_WIDGET_GET_DISTINCT_USER_COUNT_SINGLE_WIDGET = "RegionWidget.getDistinctUserCount";
+
+    public static final String PARAM_WIDGET_ID = "widgetId";
+
     @Id
     @Column(name = "entity_id")
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "regionWidgetIdGenerator")

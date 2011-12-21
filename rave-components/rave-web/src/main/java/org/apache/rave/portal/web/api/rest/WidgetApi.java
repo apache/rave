@@ -19,6 +19,8 @@
 
 package org.apache.rave.portal.web.api.rest;
 
+import org.apache.rave.portal.model.Person;
+import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.WidgetComment;
 import org.apache.rave.portal.model.WidgetRating;
 import org.apache.rave.portal.service.UserService;
@@ -29,13 +31,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Handler for all services exposed under the /api/widgets path.
@@ -139,5 +140,11 @@ public class WidgetApi extends AbstractRestApi {
         
         // send a 204 back for success since there is no content being returned
         response.setStatus(HttpStatus.NO_CONTENT.value());
+    }
+
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.GET, value = "/{widgetId}/users")
+    public List<Person> getAllUsers(@PathVariable long widgetId) {
+        return userService.getAllByAddedWidget(widgetId);
     }
 }
