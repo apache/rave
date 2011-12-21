@@ -35,70 +35,102 @@
         </param-value>
     </context-param>
 
-    <filter>
+    <!--
+      Syntax: <key>=<value> separated by a newline
+
+      system.properties specifies the environmental variables that will be set to the JVM System Properties at server startup time.
+      Alternatively, you may add these values in your app server (ex: Tomcat) as
+      VM arguments like this: -Dshindig.host="my.production.shindig.server.com".
+
+      Here are a few properties that can be set for Shindig:
+      shindig.host: the server name that Shindig is deployed and running on
+      shindig.port: the port number of shindig.host server
+
+      Make sure you escape all HTML values for the web.xml to be parsed correctly.
+      -->
+       <context-param>
+         <param-name>system.properties</param-name>
+         <param-value>
+         <![CDATA[
+            shindig.host=
+            shindig.port=
+            aKey=/shindig/gadgets/proxy?container=default&url=
+         ]]>
+         </param-value>
+      </context-param>
+
+      <filter>
         <filter-name>hostFilter</filter-name>
         <filter-class>org.apache.shindig.common.servlet.HostFilter</filter-class>
-    </filter>
-    <filter-mapping>
+      </filter>
+      <filter-mapping>
         <filter-name>hostFilter</filter-name>
         <url-pattern>/gadgets/ifr</url-pattern>
         <url-pattern>/gadgets/js/*</url-pattern>
         <url-pattern>/gadgets/proxy/*</url-pattern>
         <url-pattern>/gadgets/concat</url-pattern>
+        <url-pattern>/gadgets/makeRequest</url-pattern>
         <url-pattern>/rpc/*</url-pattern>
         <url-pattern>/rest/*</url-pattern>
-    </filter-mapping>
+      </filter-mapping>
 
-    <filter>
-        <filter-name>ShiroFilter</filter-name>
-        <filter-class>org.apache.shiro.web.servlet.IniShiroFilter</filter-class>
-        <init-param>
-            <param-name>config</param-name>
-            <param-value>
-                # The ShiroFilter configuration is very powerful and flexible, while still remaining succinct.
-                # Please read the comprehensive example, with full comments and explanations, in the JavaDoc:
-                #
-                # http://www.jsecurity.org/api/org/jsecurity/web/servlet/JSecurityFilter.html
-                [main]
-                shindigSampleRealm = org.apache.shindig.sample.shiro.SampleShiroRealm
-                securityManager.realm = $shindigSampleRealm
-                authc.loginUrl = /login.jsp
+        <filter>
+            <filter-name>ShiroFilter</filter-name>
+            <filter-class>org.apache.shiro.web.servlet.IniShiroFilter</filter-class>
+            <init-param>
+                <param-name>config</param-name>
+                <param-value>
+                <![CDATA[
+                    # The ShiroFilter configuration is very powerful and flexible, while still remaining succinct.
+                    # Please read the comprehensive example, with full comments and explanations, in the JavaDoc:
+                    #
+                    # http://www.jsecurity.org/api/org/jsecurity/web/servlet/JSecurityFilter.html
+                    [main]
+                    shindigSampleRealm = org.apache.shindig.sample.shiro.SampleShiroRealm
+                    securityManager.realm = $shindigSampleRealm
+                    authc.loginUrl = /login.jsp
 
-                [urls]
-                # The /login.jsp is not restricted to authenticated users (otherwise no one could log in!), but
-                # the 'authc' filter must still be specified for it so it can process that url's
-                # login submissions. It is 'smart' enough to allow those requests through as specified by the
-                # shiro.loginUrl above.
-                /login.jsp = authc
+                    [urls]
+                    # The /login.jsp is not restricted to authenticated users (otherwise no one could log in!), but
+                    # the 'authc' filter must still be specified for it so it can process that url's
+                    # login submissions. It is 'smart' enough to allow those requests through as specified by the
+                    # shiro.loginUrl above.
+                    /login.jsp = authc
 
-                /oauth/authorize/** = authc
+                    /oauth/authorize/** = authc
+                    /oauth2/authorize/** = authc
+                ]]>
+                </param-value>
+            </init-param>
+        </filter>
 
-            </param-value>
-        </init-param>
-    </filter>
-
-    <filter>
+      <filter>
         <filter-name>authFilter</filter-name>
         <filter-class>org.apache.shindig.auth.AuthenticationServletFilter</filter-class>
-    </filter>
+      </filter>
 
-    <filter>
+      <filter>
         <filter-name>etagFilter</filter-name>
         <filter-class>org.apache.shindig.gadgets.servlet.ETagFilter</filter-class>
-    </filter>
+      </filter>
 
 
-    <filter-mapping>
-        <filter-name>ShiroFilter</filter-name>
-        <url-pattern>/oauth/authorize</url-pattern>
-    </filter-mapping>
+      <filter-mapping>
+          <filter-name>ShiroFilter</filter-name>
+          <url-pattern>/oauth/authorize</url-pattern>
+      </filter-mapping>
 
-    <filter-mapping>
-        <filter-name>ShiroFilter</filter-name>
-        <url-pattern>*.jsp</url-pattern>
-    </filter-mapping>
+      <filter-mapping>
+          <filter-name>ShiroFilter</filter-name>
+          <url-pattern>/oauth2/authorize</url-pattern>
+      </filter-mapping>
 
-    <filter-mapping>
+      <filter-mapping>
+          <filter-name>ShiroFilter</filter-name>
+          <url-pattern>*.jsp</url-pattern>
+      </filter-mapping>
+
+      <filter-mapping>
         <filter-name>authFilter</filter-name>
         <url-pattern>/social/*</url-pattern>
         <url-pattern>/gadgets/ifr</url-pattern>
@@ -107,17 +139,17 @@
         <url-pattern>/gadgets/api/rest/*</url-pattern>
         <url-pattern>/rpc/*</url-pattern>
         <url-pattern>/rest/*</url-pattern>
-    </filter-mapping>
+      </filter-mapping>
 
-    <filter-mapping>
+      <filter-mapping>
         <filter-name>etagFilter</filter-name>
         <url-pattern>*</url-pattern>
-    </filter-mapping>
+      </filter-mapping>
 
 <!--
-    <listener>
+      <listener>
         <listener-class>org.apache.shindig.common.servlet.GuiceServletContextListener</listener-class>
-    </listener>
+      </listener>
 -->
 
     <!-- Initialize Spring LAST -->
@@ -125,167 +157,192 @@
         <listener-class>org.apache.rave.inject.GuiceBindingSpringContextLoaderListener</listener-class>
     </listener>
 
-    <!-- Render a Gadget -->
-    <servlet>
+      <!-- Render a Gadget -->
+      <servlet>
         <servlet-name>xml-to-html</servlet-name>
         <servlet-class>
-            org.apache.shindig.gadgets.servlet.GadgetRenderingServlet
+          org.apache.shindig.gadgets.servlet.GadgetRenderingServlet
         </servlet-class>
-    </servlet>
+      </servlet>
 
-    <servlet>
+      <servlet>
         <servlet-name>accel</servlet-name>
         <servlet-class>
-            org.apache.shindig.gadgets.servlet.HtmlAccelServlet
+          org.apache.shindig.gadgets.servlet.HtmlAccelServlet
         </servlet-class>
-    </servlet>
+      </servlet>
 
-    <!-- Proxy -->
-    <servlet>
+      <!-- Proxy -->
+      <servlet>
         <servlet-name>proxy</servlet-name>
         <servlet-class>
-            org.apache.shindig.gadgets.servlet.ProxyServlet
+          org.apache.shindig.gadgets.servlet.ProxyServlet
         </servlet-class>
-    </servlet>
+      </servlet>
 
-    <!-- makeRequest -->
-    <servlet>
+      <!-- makeRequest -->
+      <servlet>
         <servlet-name>makeRequest</servlet-name>
         <servlet-class>
-            org.apache.shindig.gadgets.servlet.MakeRequestServlet
+          org.apache.shindig.gadgets.servlet.MakeRequestServlet
         </servlet-class>
-    </servlet>
+      </servlet>
 
-    <!-- Concat -->
-    <servlet>
+      <!-- Concat -->
+      <servlet>
         <servlet-name>concat</servlet-name>
         <servlet-class>
-            org.apache.shindig.gadgets.servlet.ConcatProxyServlet
+          org.apache.shindig.gadgets.servlet.ConcatProxyServlet
         </servlet-class>
-    </servlet>
+      </servlet>
 
-    <!-- OAuth callback -->
-    <servlet>
+      <!-- OAuth callback -->
+      <servlet>
         <servlet-name>oauthCallback</servlet-name>
         <servlet-class>
-            org.apache.shindig.gadgets.servlet.OAuthCallbackServlet
+          org.apache.shindig.gadgets.servlet.OAuthCallbackServlet
         </servlet-class>
-    </servlet>
+      </servlet>
 
-    <!-- Metadata RPC -->
-    <servlet>
+      <!-- OAuth2 callback -->
+      <servlet>
+        <servlet-name>oauth2callback</servlet-name>
+        <servlet-class>
+          org.apache.shindig.gadgets.servlet.OAuth2CallbackServlet
+        </servlet-class>
+      </servlet>
+
+      <!-- Metadata RPC -->
+      <servlet>
         <servlet-name>metadata</servlet-name>
         <servlet-class>
-            org.apache.shindig.gadgets.servlet.RpcServlet
+          org.apache.shindig.gadgets.servlet.RpcServlet
         </servlet-class>
-    </servlet>
+      </servlet>
 
-    <!-- javascript serving -->
-    <servlet>
+      <!-- javascript serving -->
+      <servlet>
         <servlet-name>js</servlet-name>
         <servlet-class>org.apache.shindig.gadgets.servlet.JsServlet</servlet-class>
-    </servlet>
+      </servlet>
 
-    <servlet>
+      <servlet>
         <servlet-name>restapiServlet</servlet-name>
         <servlet-class>
-            org.apache.shindig.protocol.DataServiceServlet
+          org.apache.shindig.protocol.DataServiceServlet
         </servlet-class>
         <init-param>
-            <param-name>handlers</param-name>
-            <param-value>org.apache.shindig.handlers</param-value>
+          <param-name>handlers</param-name>
+          <param-value>org.apache.shindig.handlers</param-value>
         </init-param>
-    </servlet>
+      </servlet>
 
-    <!-- Serve social RPC api -->
-    <servlet>
+      <!-- Serve social RPC api -->
+      <servlet>
         <servlet-name>jsonRpcServlet</servlet-name>
         <servlet-class>
-            org.apache.shindig.protocol.JsonRpcServlet
+          org.apache.shindig.protocol.JsonRpcServlet
         </servlet-class>
         <init-param>
-            <param-name>handlers</param-name>
-            <param-value>org.apache.shindig.handlers</param-value>
+          <param-name>handlers</param-name>
+          <param-value>org.apache.shindig.handlers</param-value>
         </init-param>
-    </servlet>
+      </servlet>
 
-    <!-- Serve sample OAuth apis -->
-    <servlet>
+      <!-- Serve sample OAuth apis -->
+      <servlet>
         <servlet-name>sampleOAuth</servlet-name>
         <servlet-class>
-            org.apache.shindig.social.sample.oauth.SampleOAuthServlet
+          org.apache.shindig.social.sample.oauth.SampleOAuthServlet
         </servlet-class>
-    </servlet>
+      </servlet>
 
-    <servlet>
+      <!-- Serve OAuth 2 APIs -->
+      <servlet>
+        <servlet-name>OAuth2Servlet</servlet-name>
+        <servlet-class>
+          org.apache.shindig.social.core.oauth2.OAuth2Servlet
+        </servlet-class>
+      </servlet>
+
+      <servlet>
         <servlet-name>rpcSwf</servlet-name>
         <servlet-class>
-            org.apache.shindig.gadgets.servlet.RpcSwfServlet
+          org.apache.shindig.gadgets.servlet.RpcSwfServlet
         </servlet-class>
-    </servlet>
+      </servlet>
 
-    <servlet-mapping>
+      <servlet-mapping>
         <servlet-name>js</servlet-name>
         <url-pattern>/gadgets/js/*</url-pattern>
-    </servlet-mapping>
+      </servlet-mapping>
 
-    <servlet-mapping>
+      <servlet-mapping>
         <servlet-name>proxy</servlet-name>
         <url-pattern>/gadgets/proxy/*</url-pattern>
-    </servlet-mapping>
+      </servlet-mapping>
 
-    <servlet-mapping>
+      <servlet-mapping>
         <servlet-name>makeRequest</servlet-name>
         <url-pattern>/gadgets/makeRequest</url-pattern>
-    </servlet-mapping>
+      </servlet-mapping>
 
-    <servlet-mapping>
+      <servlet-mapping>
         <servlet-name>jsonRpcServlet</servlet-name>
         <url-pattern>/rpc/*</url-pattern>
         <url-pattern>/gadgets/api/rpc/*</url-pattern>
         <url-pattern>/social/rpc/*</url-pattern>
-    </servlet-mapping>
+      </servlet-mapping>
 
-    <servlet-mapping>
+      <servlet-mapping>
         <servlet-name>restapiServlet</servlet-name>
         <url-pattern>/rest/*</url-pattern>
         <url-pattern>/gadgets/api/rest/*</url-pattern>
         <url-pattern>/social/rest/*</url-pattern>
-    </servlet-mapping>
+      </servlet-mapping>
 
-    <servlet-mapping>
+      <servlet-mapping>
         <servlet-name>concat</servlet-name>
         <url-pattern>/gadgets/concat</url-pattern>
-    </servlet-mapping>
+      </servlet-mapping>
 
-    <servlet-mapping>
+      <servlet-mapping>
         <servlet-name>oauthCallback</servlet-name>
         <url-pattern>/gadgets/oauthcallback</url-pattern>
-    </servlet-mapping>
+      </servlet-mapping>
 
-    <servlet-mapping>
+      <servlet-mapping>
+        <servlet-name>oauth2callback</servlet-name>
+        <url-pattern>/gadgets/oauth2callback</url-pattern>
+      </servlet-mapping>
+
+      <servlet-mapping>
         <servlet-name>xml-to-html</servlet-name>
         <url-pattern>/gadgets/ifr</url-pattern>
-    </servlet-mapping>
+      </servlet-mapping>
 
-    <servlet-mapping>
+      <servlet-mapping>
         <servlet-name>accel</servlet-name>
         <url-pattern>/gadgets/accel</url-pattern>
-    </servlet-mapping>
+      </servlet-mapping>
 
-    <servlet-mapping>
+      <servlet-mapping>
         <servlet-name>metadata</servlet-name>
         <url-pattern>/gadgets/metadata</url-pattern>
-    </servlet-mapping>
+      </servlet-mapping>
 
-    <servlet-mapping>
+      <servlet-mapping>
         <servlet-name>sampleOAuth</servlet-name>
         <url-pattern>/oauth/*</url-pattern>
-    </servlet-mapping>
+      </servlet-mapping>
 
-    <servlet-mapping>
+      <servlet-mapping>
+        <servlet-name>OAuth2Servlet</servlet-name>
+        <url-pattern>/oauth2/*</url-pattern>
+      </servlet-mapping>
+
+      <servlet-mapping>
         <servlet-name>rpcSwf</servlet-name>
         <url-pattern>/xpc*</url-pattern>
-    </servlet-mapping>
-
-</web-app>
+      </servlet-mapping>
+    </web-app>

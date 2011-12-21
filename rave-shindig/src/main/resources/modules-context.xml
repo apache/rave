@@ -22,12 +22,16 @@
 
     <!-- Define the Default Guice Modules Here-->
     <bean class="org.apache.rave.commoncontainer.ConfigurablePropertiesModule" />
-    <bean class="org.apache.shindig.social.core.config.SocialApiGuiceModule" />
-    <bean class="org.apache.shindig.auth.ClasspathAwareDefaultSecurityTokenCodec$TemporarySecurityTokenGuiceModule" />
-    <bean class="org.apache.rave.gadgets.oauth.inject.OAuthGuiceModule"/>
     <bean class="org.apache.shindig.gadgets.DefaultGuiceModule" />
+    <bean class="org.apache.shindig.social.core.config.SocialApiGuiceModule" />
+    <bean class="org.apache.rave.gadgets.oauth.inject.OAuthGuiceModule"/>
+    <bean class="org.apache.shindig.gadgets.oauth2.OAuth2Module"/>
+    <bean class="org.apache.shindig.gadgets.oauth2.OAuth2MessageModule"/>
+    <bean class="org.apache.shindig.gadgets.oauth2.handler.OAuth2HandlerModule"/>
+    <bean class="org.apache.shindig.gadgets.oauth2.persistence.sample.OAuth2PersistenceModule"/>
     <bean class="org.apache.shindig.common.cache.ehcache.EhCacheModule" />
     <bean class="org.apache.shindig.sample.shiro.ShiroGuiceModule" />
     <bean class="org.apache.shindig.sample.container.SampleContainerGuiceModule" />
     <bean class="org.apache.shindig.extras.ShindigExtrasGuiceModule" />
+    <bean class="org.apache.shindig.gadgets.admin.GadgetAdminModule" />
 </beans>

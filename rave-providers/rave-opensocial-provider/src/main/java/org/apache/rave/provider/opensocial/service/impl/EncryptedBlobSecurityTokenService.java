@@ -19,19 +19,16 @@
 
 package org.apache.rave.provider.opensocial.service.impl;
 
-import org.apache.rave.portal.model.Page;
-import org.apache.rave.portal.model.Region;
-import org.apache.rave.portal.model.RegionWidget;
-import org.apache.rave.portal.model.User;
-import org.apache.rave.portal.model.Widget;
+import org.apache.commons.io.FileUtils;
+import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.provider.opensocial.exception.SecurityTokenException;
 import org.apache.rave.provider.opensocial.service.SecurityTokenService;
+import org.apache.shindig.auth.AbstractSecurityToken;
 import org.apache.shindig.auth.BlobCrypterSecurityToken;
 import org.apache.shindig.auth.SecurityToken;
 import org.apache.shindig.common.crypto.BasicBlobCrypter;
 import org.apache.shindig.common.crypto.BlobCrypter;
-import org.apache.shindig.common.util.CharsetUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +38,8 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class EncryptedBlobSecurityTokenService implements SecurityTokenService {
@@ -66,18 +64,18 @@ public class EncryptedBlobSecurityTokenService implements SecurityTokenService {
         this.domain = domain;
 
         if (encryptionKey.startsWith(EMBEDDED_KEY_PREFIX)) {
-            byte[] key = CharsetUtil.getUtf8Bytes(encryptionKey.substring(EMBEDDED_KEY_PREFIX.length()));
-            this.blobCrypter = new BasicBlobCrypter(key);
+            this.blobCrypter = new BasicBlobCrypter(encryptionKey.substring(EMBEDDED_KEY_PREFIX.length()));
         } else if (encryptionKey.startsWith(CLASSPATH_KEY_PREFIX)) {
             try {
                 File file = new ClassPathResource(encryptionKey.substring(CLASSPATH_KEY_PREFIX.length())).getFile();
-                this.blobCrypter = new BasicBlobCrypter(file);
+                this.blobCrypter = new BasicBlobCrypter(FileUtils.readFileToString(file, "UTF-8"));
             } catch (IOException e) {
                 throw new SecurityException("Unable to load encryption key from classpath resource: " + encryptionKey);
             }
         } else {
             try {
-                this.blobCrypter = new BasicBlobCrypter(new File(encryptionKey));
+                File file = new File(encryptionKey);
+                this.blobCrypter = new BasicBlobCrypter(FileUtils.readFileToString(file, "UTF-8"));
             } catch (IOException e) {
                 throw new SecurityException("Unable to load encryption key from file: " + encryptionKey);
             }
@@ -116,12 +114,8 @@ public class EncryptedBlobSecurityTokenService implements SecurityTokenService {
             encryptedSecurityToken = encryptedSecurityToken.substring((container + ":").length());
 
             //Decrypt
-            //TODO RAVE-158: This hack is in place until we can get a patch applied to shindig to make the target method public
-            Method decryptMethod = BlobCrypterSecurityToken.class.getDeclaredMethod("decrypt", BlobCrypter.class,
-                    String.class, String.class, String.class, String.class);
-            decryptMethod.setAccessible(true);
-            securityToken = (SecurityToken) decryptMethod.invoke(null, blobCrypter, container, domain,
-                    encryptedSecurityToken, null);
+            Map<String, String> values = blobCrypter.unwrap(encryptedSecurityToken);
+            securityToken = new BlobCrypterSecurityToken(container, domain, null, values);
         } catch (Exception e) {
             throw new SecurityTokenException("Error creating security token from encrypted string: " +
                     encryptedSecurityToken, e);
@@ -155,12 +149,15 @@ public class EncryptedBlobSecurityTokenService implements SecurityTokenService {
             throws SecurityTokenException {
         User user = userService.getAuthenticatedUser();
 
-        BlobCrypterSecurityToken securityToken = new BlobCrypterSecurityToken(blobCrypter, container, domain);
-        securityToken.setAppUrl(regionWidget.getWidget().getUrl());
-        securityToken.setModuleId(regionWidget.getEntityId());
-        securityToken.setOwnerId(String.valueOf(regionWidget.getRegion().getPage().getOwner().getEntityId()));
-        securityToken.setViewerId(String.valueOf(user.getEntityId()));
-        securityToken.setTrustedJson("");
+        Map<String, String> values = new HashMap<String, String>();
+        values.put(AbstractSecurityToken.Keys.APP_URL.getKey(), regionWidget.getWidget().getUrl());
+        values.put(AbstractSecurityToken.Keys.MODULE_ID.getKey(), String.valueOf(regionWidget.getEntityId()));
+        values.put(AbstractSecurityToken.Keys.OWNER.getKey(),
+                String.valueOf(regionWidget.getRegion().getPage().getOwner().getEntityId()));
+        values.put(AbstractSecurityToken.Keys.VIEWER.getKey(), String.valueOf(user.getEntityId()));
+        values.put(AbstractSecurityToken.Keys.TRUSTED_JSON.getKey(), "");
+
+        BlobCrypterSecurityToken securityToken = new BlobCrypterSecurityToken(container, domain, null, values);
 
         if (logger.isTraceEnabled()) {
             logger.trace("Token created for regionWidget " + regionWidget.toString() + " and user " + user.toString());
@@ -173,7 +170,7 @@ public class EncryptedBlobSecurityTokenService implements SecurityTokenService {
         String encryptedToken = null;
 
         try {
-            encryptedToken = securityToken.encrypt();
+            encryptedToken = container + ":" + blobCrypter.wrap(securityToken.toMap());
             if (logger.isTraceEnabled()) {
                 logger.trace("Encrypted token created from security token: " + securityToken.toString() +
                         " -- encrypted token is: " + encryptedToken);

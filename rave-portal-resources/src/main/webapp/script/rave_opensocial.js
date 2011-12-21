@@ -99,9 +99,7 @@ rave.opensocial = rave.opensocial || (function() {
             preloadConfig[osapi.container.ContainerConfig.PRELOAD_REF_TIME] = null;
 
             //Preload our data into the common container
-            //TODO RAVE-158: Submit a patch to Shindig common container to make the preloadFromConfig_ method public so preloaded
-            //gadget metadata and security tokens can be incrementally be pushed into the container cache.
-            container.preloadFromConfig_(preloadConfig);
+            container.preloadCaches(preloadConfig);
             renderNewGadget(gadget);
         } else {
             rave.errorWidget(gadget.regionWidgetId, "Unable to render OpenSocial Gadget: <br /><br />" + validationResult.error);

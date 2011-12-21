@@ -40,8 +40,8 @@ public class ConfigurablePropertiesModuleTest {
 
         assertEquals("Default container.js location", "res://containers/default/container.js",
                 properties.getProperty("shindig.containers.default"));
-        assertEquals("No contextRoot", "/gadgets/proxy?container=default&url=",
-                properties.getProperty("shindig.content-rewrite.proxy-url"));
+        assertEquals("No contextRoot", "http://%authority%/gadgets/oauthcallback",
+                properties.getProperty("shindig.signing.global-callback-url"));
     }
 
     @Test
@@ -53,8 +53,8 @@ public class ConfigurablePropertiesModuleTest {
 
         assertEquals("Default container.js location", "res://containers/default/container.js",
                 properties.getProperty("shindig.containers.default"));
-        assertEquals("Replaced contextRoot", "shindigcontext/gadgets/proxy?container=default&url=",
-                properties.getProperty("shindig.content-rewrite.proxy-url"));
+        assertEquals("Replaced contextRoot", "http://%authority%shindigcontext/gadgets/oauthcallback",
+                properties.getProperty("shindig.signing.global-callback-url"));
 
         System.clearProperty("shindig.contextroot");
     }
@@ -69,8 +69,8 @@ public class ConfigurablePropertiesModuleTest {
         assertEquals("Custom container.js location",
                 "res://containers/default/container.js,res://containers/default/testcontainer.js",
                 properties.getProperty("shindig.containers.default"));
-        assertEquals("Custom contextRoot", "customContext/gadgets/proxy?container=default&url=",
-                properties.getProperty("shindig.content-rewrite.proxy-url"));
+        assertEquals("Custom contextRoot", "http://%authority%customContext/gadgets/oauthcallback",
+                properties.getProperty("shindig.signing.global-callback-url"));
         assertEquals("Custom shindig host", "127.0.0.1",
                 properties.getProperty("shindig.host"));
 
@@ -89,8 +89,8 @@ public class ConfigurablePropertiesModuleTest {
         assertEquals("Custom container.js location",
                 "res://containers/default/container.js,res://containers/default/testcontainer.js",
                 properties.getProperty("shindig.containers.default"));
-        assertEquals("Replaced contextRoot", "shindigcontext/gadgets/proxy?container=default&url=",
-                properties.getProperty("shindig.content-rewrite.proxy-url"));
+        assertEquals("Replaced contextRoot", "http://%authority%shindigcontext/gadgets/oauthcallback",
+                properties.getProperty("shindig.signing.global-callback-url"));
         assertEquals("Different shindig host", "127.0.0.2",
                 properties.getProperty("shindig.host"));
 

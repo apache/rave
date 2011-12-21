@@ -33,9 +33,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Set;
 import java.util.concurrent.Future;
 
-/**
-
- */
 @Service
 public class DefaultMediaItemService implements MediaItemService {
     @Override

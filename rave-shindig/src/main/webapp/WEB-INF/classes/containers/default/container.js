@@ -26,7 +26,7 @@
 //  change
 //		{"gadgets.container" : ["default"],
 //  to
-//		﻿{"gadgets.container" : ["myContainer"],
+//		{"gadgets.container" : ["myContainer"],
 // And make your changes that you need to myContainer.js.
 // Just make sure on the iframe URL you specify &container=myContainer
 // for it to use that config.
@@ -44,7 +44,10 @@
 
 // Container must be an array; this allows multiple containers
 // to share configuration.
-// TODO (copied from Shindig): Move out accel container config into a separate accel.js file.
+
+// Note that you can embed values directly or you can choose to have values read from a file on disk
+// or read from the classpath ("foo-key" : "file:///foo-file.txt" || "foo-key" : "res://foo-file.txt")
+// TODO: Move out accel container config into a separate accel.js file.
 {"gadgets.container" : ["default", "accel"],
 
 // Set of regular expressions to validate the parent parameter. This is
@@ -56,11 +59,16 @@
 "gadgets.parent" : null,
 
 // Should all gadgets be forced on to a locked domain?
-"gadgets.lockedDomainRequired" : false,
+"gadgets.uri.iframe.lockedDomainRequired" : false,
 
 // DNS domain on which gadgets should render.
-"gadgets.lockedDomainSuffix" : "-a.example.com:8080",
-	
+// Default Uri config: these must be overridden - specified here for testing purposes
+"gadgets.uri.iframe.unlockedDomain": "${Cur['defaultShindigTestAuthority']}",
+// When setting up the server to enable locked domains, you should set this to something that does not
+// attempt to use the authority at all.  Ideally it would be another hostname that points to this server.
+// Example: unlockedDomain="shindig.example.com" lockedDomainSuffix="-locked.gadgets.example.com"
+"gadgets.uri.iframe.lockedDomainSuffix": "${Cur['defaultShindigTestAuthority']}",
+
 // Origins for CORS requests and/or Referer validation
 // Indicate a set of origins or an entry with * to indicate that all origins are allowed
 "gadgets.parentOrigins" : ["*"],
@@ -71,45 +79,36 @@
 // query parameters will be added.
 "gadgets.iframeBaseUri" : "${CONTEXT_ROOT}/gadgets/ifr",
 "gadgets.uri.iframe.basePath" : "${CONTEXT_ROOT}/gadgets/ifr",
+"gadgets.uri.iframe.alwaysAppendSecurityToken" : true,
 
 // jsUriTemplate will have %host% and %js% substituted.
 // No locked domain special cases, but jsUriTemplate must
 // never conflict with a lockedDomainSuffix.
 "gadgets.jsUriTemplate" : "http://%host%${CONTEXT_ROOT}/gadgets/js/%js%",
 
-//New configuration for iframeUri generation:
-"gadgets.uri.iframe.lockedDomainSuffix" :  "-a.example.com:8080",
-"gadgets.uri.iframe.unlockedDomain" : "www.example.com:8080",
-"gadgets.uri.iframe.basePath" : "${CONTEXT_ROOT}/gadgets/ifr",
-"gadgets.uri.iframe.alwaysAppendSecurityToken" : true,
-
 "gadgets.uri.js.host" : "http://www.example.com/",
 "gadgets.uri.js.path" : "${CONTEXT_ROOT}/gadgets/js",
-	
-	
+
 // Callback URL.  Scheme relative URL for easy switch between https/http.
 "gadgets.uri.oauth.callbackTemplate" : "//%host%${CONTEXT_ROOT}/gadgets/oauthcallback",
-
-// Use an insecure security token by default
-//"gadgets.securityTokenType" : "insecure",
 
 // Config param to load Opensocial data for social
 // preloads in data pipelining.  %host% will be
 // substituted with the current host.
 "gadgets.osDataUri" : "http://%host%${CONTEXT_ROOT}/rpc",
 
-// Uncomment these to switch to a secure version
+// Use an insecure security token by default
+//"gadgets.securityTokenType" : "insecure",
+
+// Uncomment the securityTokenType and one of the securityTokenKey's to switch to a secure version.
+// Note that you can choose to use an embedded key, a filesystem reference or a classpath reference.
+// The best way to generate a key is to do something like this:
+// dd if=/dev/random bs=32 count=1 | openssl base64
+//
 "gadgets.securityTokenType" : "secure",
-"gadgets.securityTokenKeyFile" : "classpath:security_token_encryption_key.txt",
-
-// URI for the default shindig test instance.
-//"defaultShindigTestHost": "http://${SERVER_HOST}:${SERVER_PORT}",
-"defaultShindigTestHost":"http://%authority%",
-
-
-// Authority (host:port without scheme) for the proxy and concat servlets.
-//"defaultShindigProxyConcatAuthority": "${SERVER_HOST}:${SERVER_PORT}",
-"defaultShindigProxyConcatAuthority":"%authority%",
+//"gadgets.securityTokenKey" : "default-insecure-embedded-key",
+//"gadgets.securityTokenKey" : "file:///path/to/key/file.txt",
+"gadgets.securityTokenKey" : "res://security_token_encryption_key.txt",
 
 // OS 2.0 Gadget DOCTYPE: used in Gadgets with @specificationVersion 2.0 or greater and
 // quirksmode on Gadget has not been set.
@@ -117,12 +116,15 @@
 "gadgets.doctype_pubid" : "",
 "gadgets.doctype_sysid" : "",
 
-// Default Uri config: these must be overridden - specified here for testing purposes
-"gadgets.uri.iframe.unlockedDomain": "${Cur['defaultShindigTestHost']}",
-"gadgets.uri.iframe.lockedDomainSuffix": "${Cur['defaultShindigTestHost']}",
+
+// Authority (host:port without scheme) for the default shindig test instance.
+"defaultShindigTestAuthority":"%authority%",
+
+// Authority (host:port without scheme) for the proxy and concat servlets.
+"defaultShindigProxyConcatAuthority":"%authority%",
 
 // Default Js Uri config: also must be overridden.
-"gadgets.uri.js.host": "${Cur['defaultShindigTestHost']}",
+"gadgets.uri.js.host": "//${Cur['defaultShindigTestAuthority']}",
 "gadgets.uri.js.path": "${CONTEXT_ROOT}/gadgets/js",
 
 // Default concat Uri config; used for testing.
@@ -133,6 +135,12 @@
 // Default proxy Uri config; used for testing.
 "gadgets.uri.proxy.host" : "${Cur['defaultShindigProxyConcatAuthority']}",
 "gadgets.uri.proxy.path" : "${CONTEXT_ROOT}/gadgets/proxy",
+
+//Enables/Disables feature administration
+"gadgets.admin.enableFeatureAdministration" : "false",
+
+//Enables whitelist checks
+"gadgets.admin.enableGadgetWhitelist" : "false",
 
 // This config data will be passed down to javascript. Please
 // configure your object using the feature name rather than
@@ -158,6 +166,11 @@
       "isOnlyVisible" : true,
       "urlTemplate" : "http://localhost${CONTEXT_ROOT}/gadgets/canvas?{var}",
       "aliases" : ["FULL_PAGE"]
+    },
+    "default" : {
+      "isOnlyVisible" : false,
+      "urlTemplate" : "http://localhost${CONTEXT_ROOT}/gadgets/default?{var}",
+      "aliases" : ["home", "profile", "canvas"]
     }
   },
   "tabs": {
@@ -287,7 +300,7 @@
   },
   "osapi" : {
     // The endpoints to query for available JSONRPC/REST services
-    "endPoints" : [ "http://%host%${CONTEXT_ROOT}/rpc" ]
+    "endPoints" : [ "//%host%${CONTEXT_ROOT}/rpc" ]
   },
   "osml": {
     // OSML library resource.  Can be set to null or the empty string to disable OSML
@@ -298,6 +311,9 @@
     "serverBase": "${CONTEXT_ROOT}/gadgets/"
   },
   "container" : {
-    "relayPath": "${CONTEXT_ROOT}/gadgets/files/container/rpc_relay.html"
+    "relayPath": "${CONTEXT_ROOT}/gadgets/files/container/rpc_relay.html",
+
+    //Enables/Disables the RPC arbitrator functionality in the common container
+    "enableRpcArbitration": false
   }
 }}

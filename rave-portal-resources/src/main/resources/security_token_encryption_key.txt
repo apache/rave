@@ -17,7 +17,6 @@ under the License.
 
 --
 
-Note that the Shindig code that reads this file only reads the first line, so the actual encryption key at runtime when
-using this key file ends up being just the first line in this file (normally this file would just contain a single line
-with the encryption key).  See the source of the Shindig Java class org.apache.shindig.common.crypto.BasicBlobCrypter
-for more info on how this key is used and how to generate a secure key.
+Note that this file would normally just contain a single line with the encryption key...  See the source of the Shindig 
+Java class org.apache.shindig.common.crypto.BasicBlobCrypter for more info on how this key is used and how to generate 
+a secure key.
