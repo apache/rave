@@ -52,7 +52,7 @@
         </h1>
     </header>
     <input id="currentPageId" type="hidden" value="${page.entityId}" />
-    <c:set var="hasOnlyOnePage">
+    <c:set var="hasOnlyOnePage" scope="request">
         <c:choose>
             <c:when test="${fn:length(pages) == 1}">true</c:when>
             <c:otherwise>false</c:otherwise>
