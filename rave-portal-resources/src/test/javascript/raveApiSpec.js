@@ -293,7 +293,23 @@ describe("Rave API", function() {
                 rave.api.rpc.getPagePrefs({pageId: pageId, successCallback: callback});
                 expect(callbackCalled).toBeTruthy();
             });
-        });        
+        });
+
+        describe("getWidgetMetadata", function() {
+            it("gets the metadata metadata for a url provided", function() {
+                $.post = function(url, data, callback) {
+                    expect(url).toEqual("api/rpc/widget/metadata/get");
+                    expect(data.url).toEqual("http://www.gstatic.com/ig/modules/tabnews/tabnews.xml");
+                    expect(data.type).toEqual("OpenSocial");
+                    expect(typeof(callback)).toEqual("function");
+                    return {
+                        error: function(a, b, c) {
+                        }
+                    }
+                };
+                rave.api.rpc.getWidgetMetadata({url: "http://www.gstatic.com/ig/modules/tabnews/tabnews.xml", type: "OpenSocial"});
+            });
+        });
         
         describe("updatePagePrefs", function() {
             it("posts the correct values to RPC service for updating page metadata", function() {

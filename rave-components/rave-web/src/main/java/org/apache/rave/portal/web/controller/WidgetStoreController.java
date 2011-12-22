@@ -167,6 +167,7 @@ public class WidgetStoreController {
         widgetValidator.validate(widget, results);
         if (results.hasErrors()) {
             model.addAttribute(ModelKeys.WIDGET, widget);
+            model.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
             return ViewNames.ADD_WIDGET_FORM;
         }
         widget.setWidgetStatus(WidgetStatus.PREVIEW);

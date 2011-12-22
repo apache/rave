@@ -352,6 +352,27 @@ rave.api = rave.api || (function() {
             }
         }
 
+        function getWidgetMetadata(args) {
+            var url = args.url;
+            var providerType = args.providerType;
+            if ( url == null || providerType == null ) {
+                alert('Both url and type are needed to get the metadata');
+                return;
+            }
+            $.post(rave.getContext() + path + "widget/metadata/get",
+               {"url": url, "type": providerType},
+               function(result) {
+                   if (result.error) {
+                       alert("Unable to parse Widget for its metadata.\n\nPlease verify that the url is pointing to a valid Widget of the type specified.");
+                   }
+                   else {
+                       if (typeof args.successCallback == 'function') {
+                            args.successCallback(result);
+                       }
+                   }
+               }).error(handleError);
+        }
+
         return {
             moveWidget : moveWidgetOnPage,
             addWidgetToPage : addWidgetToPage,
@@ -360,7 +381,8 @@ rave.api = rave.api || (function() {
             updatePagePrefs: updatePagePrefs,
             getPagePrefs: getPagePrefs,
             movePage: movePage,
-            moveWidgetToPage: moveWidgetToPage
+            moveWidgetToPage: moveWidgetToPage,
+            getWidgetMetadata: getWidgetMetadata
         };
 
     })();

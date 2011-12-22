@@ -64,12 +64,6 @@
             <p><fmt:message key="form.some.fields.required"/></p>
 
             <p>
-                <form:label path="title"><fmt:message key="widget.title"/> *</form:label>
-                <form:input path="title" cssClass="long" required="required" autofocus="autofocus"/>
-                <form:errors path="title" cssClass="error"/>
-            </p>
-
-            <p>
                 <spring:bind path="url">
                     <label for="url"><fmt:message key="widget.url"/> *</label>
                     <input type="url" name="url" id="url"
@@ -88,59 +82,99 @@
                 <form:errors path="type" cssClass="error"/>
             </p>
 
-            <p>
-                <form:label path="description"><fmt:message key="widget.description"/> *</form:label>
-                <form:textarea path="description" required="required" cssClass="long"/>
-                <form:errors path="description" cssClass="error"/>
-            </p>
+            <a href="#" class="storeItemButton"
+                    id="fetchMetadataButton"
+                    onclick="rave.api.rpc.getWidgetMetadata({
+                                url: $('#url').get(0).value,
+                                providerType: $('input:radio[name=type]:checked').val(),
+                                successCallback: function(result) {
+                                    var widget = result.result;
+                                    $('#title').val(widget.title);
+                                    $('#description').val(widget.description);
+                                    $('#thumbnailUrl').val(widget.thumbnailUrl);
+                                    $('#screenshotUrl').val(widget.screenshotUrl);
+                                    $('#titleUrl').val(widget.titleUrl);
+                                    $('#author').val(widget.author);
+                                    $('#authorEmail').val(widget.authorEmail);
+                                    $('#addWidgetForm').show();
+                                    $('#addWidgetFormSubmit').show();
+                                }
+                            });">
+                    <fmt:message key="page.getWidgetMetadata.button"/>
+            </a>
 
-            <p>
-                <spring:bind path="thumbnailUrl">
-                    <label for="thumbnailUrl"><fmt:message key="widget.thumbnailUrl"/></label>
-                    <input type="url" name="thumbnailUrl" id="thumbnailUrl"
-                           placeholder="http://example.com/thumbnail.png" class="long"
-                           value="<c:out value="${widget.thumbnailUrl}"/>"/>
-                </spring:bind>
-                <form:errors path="thumbnailUrl" cssClass="error"/>
-            </p>
+            <div id="addWidgetForm">
+                <p>
+                    <form:label path="title"><fmt:message key="widget.title"/> *</form:label>
+                    <form:input path="title" cssClass="long" required="required" autofocus="autofocus"/>
+                    <form:errors path="title" cssClass="error"/>
+                </p>
 
-            <p>
-                <spring:bind path="screenshotUrl">
-                    <label for="screenshotUrl"><fmt:message key="widget.screenshotUrl"/></label>
-                    <input type="url" name="screenshotUrl" id="screenshotUrl"
-                           placeholder="http://example.com/screenshot.png" class="long"
-                           value="<c:out value="${widget.screenshotUrl}"/>"/>
-                </spring:bind>
-                <form:errors path="screenshotUrl" cssClass="error"/>
-            </p>
+                <p>
+                    <form:label path="description"><fmt:message key="widget.description"/> *</form:label>
+                    <form:textarea path="description" required="required" cssClass="long"/>
+                    <form:errors path="description" cssClass="error"/>
+                </p>
 
-            <p>
-                <spring:bind path="titleUrl">
-                    <label for="titleUrl"><fmt:message key="widget.titleUrl"/></label>
-                    <input type="url" name="titleUrl" id="titleUrl"
-                           class="long" value="<c:out value="${widget.titleUrl}"/>"/>
-                </spring:bind>
-                <form:errors path="titleUrl" cssClass="error"/>
-            </p>
+                <p>
+                    <spring:bind path="thumbnailUrl">
+                        <label for="thumbnailUrl"><fmt:message key="widget.thumbnailUrl"/></label>
+                        <input type="url" name="thumbnailUrl" id="thumbnailUrl"
+                               placeholder="http://example.com/thumbnail.png" class="long"
+                               value="<c:out value="${widget.thumbnailUrl}"/>"/>
+                    </spring:bind>
+                    <form:errors path="thumbnailUrl" cssClass="error"/>
+                </p>
 
-            <p>
-                <form:label path="author"><fmt:message key="widget.author"/></form:label>
-                <form:input path="author" cssClass="long"/>
-                <form:errors path="author" cssClass="error"/>
-            </p>
-            <p>
-                <spring:bind path="authorEmail">
-                    <label for="authorEmail"><fmt:message key="widget.authorEmail"/></label>
-                    <input type="email" name="authorEmail" id="authorEmail" class="long"
-                            value="<c:out value="${widget.authorEmail}"/>"/>
-                </spring:bind>
-                <form:errors path="titleUrl" cssClass="error"/>
-            </p>
+                <p>
+                    <spring:bind path="screenshotUrl">
+                        <label for="screenshotUrl"><fmt:message key="widget.screenshotUrl"/></label>
+                        <input type="url" name="screenshotUrl" id="screenshotUrl"
+                               placeholder="http://example.com/screenshot.png" class="long"
+                               value="<c:out value="${widget.screenshotUrl}"/>"/>
+                    </spring:bind>
+                    <form:errors path="screenshotUrl" cssClass="error"/>
+                </p>
 
-        </fieldset>
-        <fieldset>
-            <fmt:message key="page.addwidget.form.submit" var="submit"/>
-            <input type="submit" value="${submit}"/>
-        </fieldset>
+                <p>
+                    <spring:bind path="titleUrl">
+                        <label for="titleUrl"><fmt:message key="widget.titleUrl"/></label>
+                        <input type="url" name="titleUrl" id="titleUrl"
+                               class="long" value="<c:out value="${widget.titleUrl}"/>"/>
+                    </spring:bind>
+                    <form:errors path="titleUrl" cssClass="error"/>
+                </p>
+
+                <p>
+                    <form:label path="author"><fmt:message key="widget.author"/></form:label>
+                    <form:input path="author" cssClass="long"/>
+                    <form:errors path="author" cssClass="error"/>
+                </p>
+                <p>
+                    <spring:bind path="authorEmail">
+                        <label for="authorEmail"><fmt:message key="widget.authorEmail"/></label>
+                        <input type="email" name="authorEmail" id="authorEmail" class="long"
+                                value="<c:out value="${widget.authorEmail}"/>"/>
+                    </spring:bind>
+                    <form:errors path="titleUrl" cssClass="error"/>
+                </p>
+            </div>
+            </fieldset>
+            <div id="addWidgetFormSubmit">
+                <fieldset>
+                    <fmt:message key="page.addwidget.form.submit" var="submit"/>
+                    <input type="submit" value="${submit}"/>
+                </fieldset>
+            </div>
     </form:form>
 </div>
+<script src="//ajax.aspnetcdn.com/ajax/jQuery/jquery-1.6.4.min.js"></script>
+<script src="//ajax.aspnetcdn.com/ajax/jquery.ui/1.8.16/jquery-ui.min.js"></script>
+<script src="<spring:url value="/script/rave.js"/>"></script>
+<script src="<spring:url value="/script/rave_api.js"/>"></script>
+<script>
+    $(function() {
+        rave.setContext("<spring:url value="/app/" />");
+        $('#addWidgetForm').hide();
+        $('#addWidgetFormSubmit').hide();
+    });</script>
