@@ -162,7 +162,7 @@ rave.layout = rave.layout || (function() {
             if (!$menuItemDelete.hasClass("page-menu-item-disabled")) {                            
                 $menuItemDelete.bind('click', function(event) {
                     // send the rpc request to delete the page
-                    rave.api.rest.deletePage({pageId: getCurrentPageId(), successCallback: rave.viewPage});  
+                    rave.api.rest.deletePage({pageId: getCurrentPageId(), successCallback: rave.viewPage});
                     pageMenu.hide();
                     // prevent the menu button click event from bubbling up to parent 
                     // DOM object event handlers such as the page tab click event
@@ -323,7 +323,22 @@ rave.layout = rave.layout || (function() {
                         // DOM object event handlers such as the page tab click event
                         event.stopPropagation();
                     });
-                }                
+                }
+
+                // setup the about this widget menu item
+                $menuItemAbout  = $("#widget-" + widgetId + "-menu-about-item");
+                if (!$menuItemAbout.hasClass("widget-menu-item-disabled")) {
+                    $menuItemAbout.bind('click', function(event) {
+                        var regionWidget = rave.getRegionWidgetById(rave.getObjectIdFromDomId(this.id));
+                        // hide the widget menu
+                        rave.layout.hideWidgetMenu(regionWidget.regionWidgetId);
+                        // go to the widget detail page
+                        rave.viewWidgetDetail(regionWidget.widgetId, getCurrentPageId());
+                        // prevent the menu button click event from bubbling up to parent
+                        // DOM object event handlers such as the page tab click event
+                        event.stopPropagation();
+                    });
+                }
             });
 
             // close the widget menu if the user clicks outside of it

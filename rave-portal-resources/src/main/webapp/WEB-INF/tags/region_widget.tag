@@ -63,6 +63,9 @@ Template for rendering a RegionWidget including wrapper chrome, toolbars, menus,
                     <div id="widget-${regionWidget.entityId}-menu-delete-item" class="widget-menu-item">
                         <fmt:message key="widget.menu.delete"/>
                     </div>
+                    <div id="widget-${regionWidget.entityId}-menu-about-item" class="widget-menu-item widget-menu-item-divider">
+                        <fmt:message key="widget.menu.about"/>
+                    </div>
                 </div>
             </div>
             <%-- the minimize widget button, which is hidden by default and only displays in maximized view --%>

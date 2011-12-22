@@ -70,7 +70,8 @@ public class W3cWidgetRenderer implements RegionWidgetRenderer {
         " widgetUrl: '%4$s', " +
         " height: '%5$s', " +
         " width: '%6$s', " +
-        " collapsed: %7$s});</script>";
+        " collapsed: %7$s, " +
+        " widgetId: %8$s});</script>";
     private static final String MARKUP = "<!-- RegionWidget %1$s placeholder -->";
 
 
@@ -146,7 +147,14 @@ public class W3cWidgetRenderer implements RegionWidgetRenderer {
         //
         // Construct and return script block
         //
-        return String.format(SCRIPT_BLOCK, item.getRegion().getEntityId(), WIDGET_TYPE, item.getEntityId(),
-                contextualizedWidget.getUrl(), height, width, item.isCollapsed());
+        return String.format(SCRIPT_BLOCK,
+                item.getRegion().getEntityId(),
+                WIDGET_TYPE,
+                item.getEntityId(),
+                contextualizedWidget.getUrl(),
+                height,
+                width,
+                item.isCollapsed(),
+                item.getWidget().getEntityId());
     }
 }

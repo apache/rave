@@ -576,7 +576,7 @@ describe("Rave", function() {
             var args = {};
             args.data = {};
             args.data.id = 99;
-            spyOn(rave, "getWidgetById").andReturn(mockWidget);
+            spyOn(rave, "getRegionWidgetById").andReturn(mockWidget);
             
             rave.maximizeWidget(args);                      
            
@@ -591,8 +591,8 @@ describe("Rave", function() {
             expect($().getValue("hideWasCalled-#widget-" + args.data.id + "-widget-menu-wrapper")).toEqual(true);  
             // verify widget minimize show was called
             expect($().getValue("showWasCalled-#widget-" + args.data.id + "-min")).toEqual(true);        
-            // verify getWidgetById called
-            expect(rave.getWidgetById).toHaveBeenCalledWith(args.data.id); 
+            // verify getRegionWidgetById called
+            expect(rave.getRegionWidgetById).toHaveBeenCalledWith(args.data.id); 
             // verify collapse/restore icon hide was called
             expect($().getValue("hideWasCalled-#widget-" + args.data.id + "-collapse")).toEqual(true);                 
             // verify widget.maximize was called
@@ -611,7 +611,7 @@ describe("Rave", function() {
             var args = {};
             args.data = {};
             args.data.id = 99;
-            spyOn(rave, "getWidgetById").andReturn(mockWidget);
+            spyOn(rave, "getRegionWidgetById").andReturn(mockWidget);
             
             rave.minimizeWidget(args);                      
             
@@ -630,8 +630,8 @@ describe("Rave", function() {
             expect($().getValue("showWasCalled-#widget-" + args.data.id + "-widget-menu-wrapper")).toEqual(true);                                  
             // verify collapse/restore icon show was called
             expect($().getValue("showWasCalled-#widget-" + args.data.id + "-collapse")).toEqual(true);                 
-            // verify getWidgetById called
-            expect(rave.getWidgetById).toHaveBeenCalledWith(args.data.id);                   
+            // verify getRegionWidgetById called
+            expect(rave.getRegionWidgetById).toHaveBeenCalledWith(args.data.id);                   
             // verify widget.minimize was called
             expect(mockWidget.minimizeWasCalled).toEqual(true);             
         });                    

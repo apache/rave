@@ -95,7 +95,8 @@ public class OpenSocialWidgetRendererTest {
             " securityToken: '" + VALID_SECURITY_TOKEN + "', " +
             " metadata: " + VALID_METADATA + "," +
             " userPrefs: {\"speed\":\"fast\",\"color\":\"blue\"}," +
-            " collapsed: " + VALID_COLLAPSED + "});</script>";
+            " collapsed: " + VALID_COLLAPSED + ", " +
+            " widgetId: 1});</script>";
 
         expect(securityTokenService.getEncryptedSecurityToken(rw)).andReturn(VALID_SECURITY_TOKEN);
         replay(securityTokenService);
@@ -128,7 +129,8 @@ public class OpenSocialWidgetRendererTest {
             " securityToken: '" + VALID_SECURITY_TOKEN + "', " +
             " metadata: null," +
             " userPrefs: null," +
-            " collapsed: false});</script>";
+            " collapsed: false, " +
+            " widgetId: null});</script>";
 
         scriptManager.registerScriptBlock(markup, ScriptLocation.AFTER_RAVE, RenderScope.CURRENT_REQUEST, null);
         expectLastCall();

@@ -156,7 +156,7 @@ var rave = rave || (function() {
         function initMobileWidgetUI() {
             $(".widget-wrapper").each(function(){
                 var widgetId = extractObjectIdFromElementId($(this).attr("id"));                
-                var widget = rave.getWidgetById(widgetId);
+                var widget = rave.getRegionWidgetById(widgetId);
                             
                 // init the collapse/restore toggle for the title bar                
                 $(this).find(".widget-title-bar-mobile").click({id: widgetId}, toggleCollapseAction); 
@@ -183,7 +183,7 @@ var rave = rave || (function() {
             $("#widget-" + regionWidgetId + "-min").show();                                    
             // hide the collapse/restore toggle icon in canvas mode
             $("#widget-" + regionWidgetId + "-collapse").hide();
-            var widget = rave.getWidgetById(regionWidgetId);
+            var widget = rave.getRegionWidgetById(regionWidgetId);
             if(typeof widget != "undefined" && isFunction(widget.maximize)) {
                 widget.maximize();
             }
@@ -201,7 +201,7 @@ var rave = rave || (function() {
             $("#widget-" + regionWidgetId + "-widget-menu-wrapper").show();                                                                                            
             // show the collapse/restore toggle icon
             $("#widget-" + regionWidgetId + "-collapse").show();
-            var widget = rave.getWidgetById(regionWidgetId);
+            var widget = rave.getRegionWidgetById(regionWidgetId);
             // if the widget is collapsed execute the collapse function
             // otherwise execute the minimize function
             if(typeof widget != "undefined"){
@@ -215,7 +215,7 @@ var rave = rave || (function() {
       
         function toggleCollapseAction(args) {     
             var regionWidgetId = args.data.id;
-            var widget = getWidgetById(regionWidgetId);    
+            var widget = getRegionWidgetById(regionWidgetId);
             // toggle the collapse state of the widget
             var newCollapsedValue = !widget.collapsed;
             var functionArgs = {"regionWidgetId": regionWidgetId, "collapsed": newCollapsedValue};
@@ -247,7 +247,7 @@ var rave = rave || (function() {
         
         function doWidgetUiCollapse(args) {
             // update the in-memory widget with the new collapsed status
-            rave.getWidgetById(args.regionWidgetId).collapsed = args.collapsed;
+            rave.getRegionWidgetById(args.regionWidgetId).collapsed = args.collapsed;
 
             // toggle the collapse/restore icon
             rave.toggleCollapseWidgetIcon(args.regionWidgetId);
@@ -308,7 +308,7 @@ var rave = rave || (function() {
         }
 
         function editPrefsAction(regionWidgetId) {
-            var regionWidget = getWidgetById(regionWidgetId);
+            var regionWidget = getRegionWidgetById(regionWidgetId);
             var userPrefs = regionWidget.metadata.userPrefs;
             var hasRequiredUserPrefs = false;
             
@@ -400,7 +400,7 @@ var rave = rave || (function() {
         }
 
         function saveEditPrefsAction(args) {
-            var regionWidget = getWidgetById(args.data.id);
+            var regionWidget = getRegionWidgetById(args.data.id);
             var prefsElement = $("#" + WIDGET_PREFS_CONTENT(regionWidget.regionWidgetId));
 
             var updatedPrefs = {};
@@ -489,7 +489,7 @@ var rave = rave || (function() {
          * @param widgetId identifier of the region widget
          */
         function styleWidgetButtons(widgetId) {
-            var widget = rave.getWidgetById(widgetId);
+            var widget = rave.getRegionWidgetById(widgetId);
             
             // init the widget minimize button which is hidden by default
             // and only renders when widget is in maximized view
@@ -676,13 +676,17 @@ var rave = rave || (function() {
         return context;
     }
 
-    function getWidgetById(regionWidgetId) {
+    function getRegionWidgetById(regionWidgetId) {
         return widgetByIdMap[regionWidgetId];
     }
 
     function viewPage(pageId) {                
         var fragment = (pageId != null) ? ("/" + pageId) : "";
         window.location.href = rave.getContext() + "page/view" + fragment;      
+    }
+
+    function viewWidgetDetail(widgetId, referringPageId) {
+        window.location.href = rave.getContext() + "store/widget/" + widgetId + "?referringPageId=" + referringPageId;
     }
     
     /**
@@ -787,9 +791,9 @@ var rave = rave || (function() {
         getContext: getContext,
         
         /**
-         * Gets a widget by id
+         * Gets a regionwidget by region widget id
          */
-        getWidgetById: getWidgetById,
+        getRegionWidgetById: getRegionWidgetById,
         
         /**
          * View a page
@@ -797,6 +801,14 @@ var rave = rave || (function() {
          * @param pageId the pageId to view, or if null, the user's default page
          */
         viewPage: viewPage,
+
+        /**
+         * View the widget detail page of a widget
+         *
+         * @param widgetId to widgetId to view
+         * @param referringPageId the entityId of the page the call is coming from
+         */
+        viewWidgetDetail: viewWidgetDetail,
         
         /**
          * Toggles the collapse/restore icon of the rendered widget

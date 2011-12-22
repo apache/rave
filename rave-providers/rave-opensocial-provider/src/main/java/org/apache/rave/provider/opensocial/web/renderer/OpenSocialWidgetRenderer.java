@@ -68,7 +68,8 @@ public class OpenSocialWidgetRenderer implements RegionWidgetRenderer {
             " securityToken: '%5$s', " +
             " metadata: %6$s," +
             " userPrefs: %7$s," +
-            " collapsed: %8$s});</script>";
+            " collapsed: %8$s, " +
+            " widgetId: %9$s});</script>";
     private static final String MARKUP = "<!-- RegionWidget %1$s placeholder -->";
 
     @Override
@@ -110,8 +111,15 @@ public class OpenSocialWidgetRenderer implements RegionWidgetRenderer {
             }
         }
 
-        return String.format(SCRIPT_BLOCK, item.getRegion().getEntityId(), Constants.WIDGET_TYPE, item.getEntityId(),
-                item.getWidget().getUrl(), securityTokenService.getEncryptedSecurityToken(item),
-                openSocialService.getGadgetMetadata(item.getWidget().getUrl()), userPrefs.toString(), item.isCollapsed());
+        return String.format(SCRIPT_BLOCK,
+                item.getRegion().getEntityId(),
+                Constants.WIDGET_TYPE,
+                item.getEntityId(),
+                item.getWidget().getUrl(),
+                securityTokenService.getEncryptedSecurityToken(item),
+                openSocialService.getGadgetMetadata(item.getWidget().getUrl()),
+                userPrefs.toString(),
+                item.isCollapsed(),
+                item.getWidget().getEntityId());
     }
 }

@@ -125,7 +125,7 @@ rave.opensocial = rave.opensocial || (function() {
             $(getGadgetIframeByWidgetId(this.regionWidgetId)).hide();            
         };
         gadget.restore = function() {
-             renderGadgetView(rave.opensocial.VIEW_NAMES.HOME, rave.getWidgetById(this.regionWidgetId));
+             renderGadgetView(rave.opensocial.VIEW_NAMES.HOME, rave.getRegionWidgetById(this.regionWidgetId));
         };
         gadget.savePreferences = function(userPrefs) {
             this.userPrefs = userPrefs;
@@ -188,7 +188,7 @@ rave.opensocial = rave.opensocial || (function() {
      * @param widgetId the widgetId
      */ 
     function getActiveGadgetHolderByWidgetId(widgetId) {
-        return rave.getWidgetById(widgetId).site.getActiveGadgetHolder();     
+        return rave.getRegionWidgetById(widgetId).site.getActiveGadgetHolder();     
     }
 
     /**
@@ -281,7 +281,7 @@ rave.opensocial = rave.opensocial || (function() {
      */ 
     function setPref(args, editToken, prefName, prefValue) {        
         var widgetId = rave.getObjectIdFromDomId(args.gs.getActiveGadgetHolder().getElement().id);                               
-        var regionWidget = rave.getWidgetById(widgetId);
+        var regionWidget = rave.getRegionWidgetById(widgetId);
         // update the memory prefs object
         regionWidget.userPrefs[prefName] = prefValue;
         // persist it to database
