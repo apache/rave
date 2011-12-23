@@ -556,6 +556,16 @@ var rave = rave || (function() {
             }});
         }
 
+        function showInfoMessage(message) {
+            $("<div />", {class:'topbar-message', text:message})
+                    .hide()
+                    .prependTo("body")
+                    .slideDown('fast').delay(5000)
+                    .slideUp(function () {
+                        $(this).remove();
+                    });
+        }
+
         return {
           init : init,       
           initMobile: initMobileWidgetUI,
@@ -568,7 +578,8 @@ var rave = rave || (function() {
           doWidgetUiCollapse: doWidgetUiCollapse,
           toggleMobileWidget: toggleMobileWidget,
           displayEmptyPageMessage: displayEmptyPageMessage,
-          displayUsersOfWidget: displayUsersOfWidget
+          displayUsersOfWidget: displayUsersOfWidget,
+          showInfoMessage: showInfoMessage
         };
 
     })();
@@ -744,6 +755,7 @@ var rave = rave || (function() {
          * Initialize Rave's drag and drop facilities
          */
         initUI : ui.init,
+
         /**
          * Initialize the mobile UI
          */
@@ -847,11 +859,13 @@ var rave = rave || (function() {
          * 
          */
         editPrefs: ui.editPrefsAction,
+
         /***
          * Get the mobile state - used by the UI to render mobile or normal content
          * 
          */                
         isMobile: ui.getMobileState,
+
         /***
          * Set the mobile state - used by the UI to render mobile or normal content
          * 
@@ -859,11 +873,13 @@ var rave = rave || (function() {
          * 
          */        
         setMobile: ui.setMobileState,
+
         /**
          * Performs the client side work of collapsing/restoring a widget
          * @param args
          */
         doWidgetUiCollapse: ui.doWidgetUiCollapse,
+
         /**
          * Toggles a mobile widget collapse/restore
          * @param args
@@ -875,11 +891,13 @@ var rave = rave || (function() {
          * @param widgetByIdMap the map of widgets on the page
          */        
         isPageEmpty: isPageEmpty,
+
         /**
          * Removes a regionWidgetId from the internal widget map
          * @param regionWidgetId the region widget id to remove
          */        
         removeWidgetFromMap: removeWidgetFromMap,
+
         /**
          * Displays the "empty page" message on the page
          */        
@@ -888,6 +906,12 @@ var rave = rave || (function() {
         /**
          * Displays the users of a supplied widgetId in a dialog box
          */
-        displayUsersOfWidget: ui.displayUsersOfWidget
+        displayUsersOfWidget: ui.displayUsersOfWidget,
+
+        /**
+         * Displays an info message at the top of the page.
+         * @param message The message to display.
+         */
+        showInfoMessage: ui.showInfoMessage
     }
 })();

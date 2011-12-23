@@ -227,7 +227,7 @@ rave.api = rave.api || (function() {
                         if (addedWidget != undefined && addedWidget.title != undefined && addedWidget.title.length > 0) {
                             widgetTitle = addedWidget.title;
                         }
-                        alert(widgetTitle + " has been added to your page");
+                        rave.showInfoMessage(widgetTitle + " has been added to your page");
                     }
                 }).error(handleError);
         }
@@ -254,7 +254,7 @@ rave.api = rave.api || (function() {
                 },
                 function(result) {
                     if (result.error) {
-                        // check to see if a duplicate page name error occured
+                        // check to see if a duplicate page name error occurred
                         if (result.errorCode == 'DUPLICATE_ITEM') {                        
                             $("#pageFormErrors").html("A page with that name already exists");
                         } else {                        

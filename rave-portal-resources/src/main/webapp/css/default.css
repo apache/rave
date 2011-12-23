@@ -1071,6 +1071,19 @@ span.error, label.error {
     border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
 }
 
+.topbar-message {
+    position: relative;
+    top: 0;
+    left: 0;
+    background-color: #57a957;
+    line-height: 28px;
+    width: 100%;
+    padding-top: 8px;
+    text-align: center;
+    font-size: 14px;
+}
+
+
 @media all and (max-width: 900px) {
     .storeSearch {
         width: 100%;
