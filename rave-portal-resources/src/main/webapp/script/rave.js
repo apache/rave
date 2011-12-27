@@ -557,7 +557,7 @@ var rave = rave || (function() {
         }
 
         function showInfoMessage(message) {
-            $("<div />", {class:'topbar-message', text:message})
+            $("<div />", {'class':'topbar-message', 'text':message})
                     .hide()
                     .prependTo("body")
                     .slideDown('fast').delay(5000)
