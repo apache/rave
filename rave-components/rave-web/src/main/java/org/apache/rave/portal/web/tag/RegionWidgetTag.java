@@ -40,7 +40,8 @@ public class RegionWidgetTag extends AbstractContextAwareSingletonBeanDependentT
             "<script>rave.registerWidget(widgetsByRegionIdMap, %1$s, {type: 'DISABLED'," +
             " regionWidgetId: %2$s," +
             " disabledMessage: '%3$s'," +
-            " collapsed: %4$s});</script>";
+            " collapsed: %4$s," +
+            " widgetId: %5$s});</script>";
 
     public RegionWidgetTag() {
         super(RenderService.class);
@@ -69,7 +70,8 @@ public class RegionWidgetTag extends AbstractContextAwareSingletonBeanDependentT
                 String widgetScript = String.format(DISABLED_SCRIPT_BLOCK, regionWidget.getRegion().getEntityId(),
                         regionWidget.getEntityId(),
                         StringEscapeUtils.escapeJavaScript(regionWidget.getWidget().getDisableRenderingMessage()),
-                        regionWidget.isCollapsed());
+                        regionWidget.isCollapsed(),
+                        regionWidget.getWidget().getEntityId());
                 scriptManager.registerScriptBlock(widgetScript, ScriptLocation.AFTER_RAVE, RenderScope.CURRENT_REQUEST, getContext());
             } else {
                 writeString(getBean().render(regionWidget, getContext()));

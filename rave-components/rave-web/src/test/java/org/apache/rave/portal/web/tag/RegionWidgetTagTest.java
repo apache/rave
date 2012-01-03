@@ -19,10 +19,14 @@
 
 package org.apache.rave.portal.web.tag;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.rave.portal.model.Region;
 import org.apache.rave.portal.model.RegionWidget;
 import org.apache.rave.portal.model.Widget;
+import org.apache.rave.portal.web.renderer.RenderScope;
 import org.apache.rave.portal.web.renderer.RenderService;
+import org.apache.rave.portal.web.renderer.ScriptLocation;
+import org.apache.rave.portal.web.renderer.ScriptManager;
 import org.apache.rave.portal.web.renderer.model.RenderContext;
 import org.junit.Before;
 import org.junit.Test;
@@ -39,8 +43,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static org.easymock.EasyMock.*;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 
 /**
@@ -54,16 +57,19 @@ public class RegionWidgetTagTest {
     private RenderService service;
     private PageContext pageContext;
     private RenderContext context;
+    private ScriptManager scriptManager;
 
     @Before
     public void setup() throws JspException {
         context = new RenderContext();
         service = createNiceMock(RenderService.class);
+        scriptManager = createMock(ScriptManager.class);
         WebApplicationContext wContext = createNiceMock(WebApplicationContext.class);
         expect(wContext.getBean(RenderService.class)).andReturn(service).anyTimes();
+        expect(wContext.getBean(ScriptManager.class)).andReturn(scriptManager).anyTimes();
         replay(wContext);
         ServletContext servletContext = createNiceMock(ServletContext.class);
-        expect(servletContext.getAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE)).andReturn(wContext);
+        expect(servletContext.getAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE)).andReturn(wContext).anyTimes();
         replay(servletContext);
         ServletRequest request = new MockHttpServletRequest();
         request.setAttribute("_RENDER_CONTEXT", context);
@@ -153,5 +159,45 @@ public class RegionWidgetTagTest {
 
         tag.setRegionWidget(regionWidget);
         tag.doStartTag();
+    }
+
+    @Test
+    public void doStartTag_disabledWidget() throws IOException, JspException {
+        final String DISABLED_WIDGET_MESSAGE = "THIS IS DISABLED";
+
+        Widget widget = new Widget();
+        widget.setEntityId(8L);
+        widget.setType(WIDGET_TYPE);
+        widget.setDisableRendering(true);
+        widget.setDisableRenderingMessage(DISABLED_WIDGET_MESSAGE);
+
+        RegionWidget regionWidget = new RegionWidget();
+        regionWidget.setEntityId(99L);
+        regionWidget.setWidget(widget);
+        regionWidget.setRegion(new Region(2L));
+
+        Set<String> strings = new HashSet<String>();
+        strings.add(WIDGET_TYPE);
+
+        expect(service.getSupportedWidgetTypes()).andReturn(strings);
+        scriptManager.registerScriptBlock(anyObject(String.class), anyObject(ScriptLocation.AFTER_RAVE.getClass()), anyObject(RenderScope.CURRENT_REQUEST.getClass()), anyObject(RenderContext.class));
+        expectLastCall();
+        replay(service, scriptManager);
+
+        JspWriter writer = createNiceMock(JspWriter.class);
+        expect(pageContext.getOut()).andReturn(writer);
+        replay(pageContext, writer);
+
+        tag.setRegionWidget(regionWidget);
+        int result = tag.doStartTag();
+        assertThat(result, is(equalTo(1)));
+        verify(writer);
+    }
+
+    @Test
+    public void getRegionWidget() throws IOException, JspException {
+        RegionWidget regionWidget = new RegionWidget();
+        tag.setRegionWidget(regionWidget);
+        assertThat(tag.getRegionWidget(), sameInstance(regionWidget));
     }
 }
