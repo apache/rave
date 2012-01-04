@@ -154,8 +154,6 @@ public class User extends Person implements UserDetails, BasicEntity, Serializab
         this.authorities = newAuthorities;
     }
 
-    //TODO RAVE-233:Setup Hashing and Salting of Passwords
-
     /**
      * Gets the password stored in the database
      *
