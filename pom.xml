@@ -35,12 +35,12 @@
     <name>Apache Rave :: rave-project</name>
     <description>Apache Rave Project</description>
     <packaging>pom</packaging>
-    <version>0.7-incubating-SNAPSHOT</version>
+    <version>0.7-incubating</version>
 
     <scm>
-        <connection>scm:svn:http://svn.apache.org/repos/asf/incubator/rave/trunk</connection>
-        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/incubator/rave/trunk</developerConnection>
-        <url>http://svn.apache.org/viewvc/incubator/rave/trunk/</url>
+        <connection>scm:svn:http://svn.apache.org/repos/asf/incubator/rave/tags/0.7-incubating</connection>
+        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/incubator/rave/tags/0.7-incubating</developerConnection>
+        <url>http://svn.apache.org/viewvc/incubator/rave/tags/0.7-incubating</url>
     </scm>
 
     <properties>
