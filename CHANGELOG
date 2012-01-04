@@ -3,31 +3,25 @@ Apache Rave Change Log
 See http://issues.apache.org/jira/browse/RAVE-* (where * is the number of the issue below)
 
 
-Release Notes - Rave - Version 0.5-INCUBATING
+Release Notes - Rave - Version 0.7-INCUBATING
 ================================================================================================================
 
 ** Bug
-    * [RAVE-252] - error in result of osapi.people.getViewer when called in gadget
-    * [RAVE-291] - Exception in Render Service results in JSP exception
-    * [RAVE-292] - Security token encryption key cannot be read if its path contains a space
-    * [RAVE-298] - Page manipulations are unchecked
-    * [RAVE-313] - Incorrect dependency scopes for slf4j and log4j jars
-    * [RAVE-319] - Updating a Widget or Adding a New Widget is not working
-    * [RAVE-304] - Permissions based security for models
+    * [RAVE-380] - Disable ehcache phone home
+    * [RAVE-388] - Bad construction of widgets' URL in Rave Portal
+    * [RAVE-395] - Widget Menu: Move to Page item should be disabled when user only has one page
+    * [RAVE-398] - Widgets not rendering in IE
+
+** Improvement
+    * [RAVE-158] - Remove the hacks that are in place while we wait for Shindig patches to become available in a stable Shindig release.
+    * [RAVE-376] - Number of items per page for User and Widget list on admin interface
+    * [RAVE-377] - Change the link on Admin Interface home to open document in new window
+    * [RAVE-394] - Create an item in the Widget menu to go directly to its Widget Detail pages
 
 ** Story
-    * [RAVE-30] - Render W3C widgets on Page in iFrames
-    * [RAVE-304] - Permissions based security for models
-    * [RAVE-34] - Implement AppData
-    * [RAVE-116] - Create menu in gadget chrome
-    * [RAVE-245] - Integrate Cobertura maven plugin
-    * [RAVE-261] - Move widgets between pages
-    * [RAVE-269] - Widget Render Order
-    * [RAVE-293] - Create basic setup for portal administration pages
-    * [RAVE-300] - As a portal administrator I want to be able to manage User data other than my own
-    * [RAVE-301] - As a portal administrator I want to manage Widget settings
+    * [RAVE-69] - Widget metadata can be imported into the Widget Repository from Shindig
+    * [RAVE-73] - Users can see the most popular widgets in the Widget Repository
+    * [RAVE-97] - Support Dynamic Layouts
+    * [RAVE-161] - Set up sandbox for Science Gateways use cases in Rave SVN.
+    * [RAVE-210] - Administrators should be able to disable widgets
 
-** Task
-    * [RAVE-230] - Implement function requestNavigateTo
-    * [RAVE-232] - Add GrantedAuthorities to user
-    * [RAVE-314] - Add Dutch translations
