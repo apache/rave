@@ -172,7 +172,12 @@
                                href="<spring:url value="/app/store/widget/${widget.entityId}" />?referringPageId=${referringPageId}">
                                 <c:out value="${widget.title}"/>
                             </a>
-
+                            <c:if test="${widget.disableRendering}">
+                                <div class="storeWidgetDisabled">
+                                    <span class="widget-disabled-icon-store ui-icon ui-icon-alert" title="<fmt:message key="widget.chrome.disabled"/>"></span>
+                                    <c:out value="${widget.disableRenderingMessage}" escapeXml="true" />
+                                </div>
+                            </c:if>
                             <c:if test="${not empty widget.author}">
                                 <div class="storeWidgetAuthor"><fmt:message key="widget.author"/>: <c:out
                                         value="${widget.author}"/></div>

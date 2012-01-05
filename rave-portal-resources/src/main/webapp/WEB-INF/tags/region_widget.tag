@@ -72,6 +72,10 @@ Template for rendering a RegionWidget including wrapper chrome, toolbars, menus,
             <button id="widget-${regionWidget.entityId}-min"
                     class="widget-toolbar-btn widget-toolbar-btn-min"></button>
         </div>
+        <%-- if widget is disabled then display notification in titlebar --%>
+        <c:if test="${regionWidget.widget.disableRendering}">
+            <span id="widget-${regionWidget.entityId}-disabled" class="widget-disabled-icon ui-icon ui-icon-alert" title="<fmt:message key="widget.chrome.disabled"/>"></span>
+        </c:if>
     </div>
     <div class="widget-prefs" id="widget-${regionWidget.entityId}-prefs-content"></div>
     <div class="widget" id="widget-${regionWidget.entityId}-body">

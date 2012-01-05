@@ -265,6 +265,17 @@ header h1 {
     text-decoration: underline;
 }
 
+.widget-disabled-icon {
+    float: right;
+    cursor: default;
+}
+
+.widget-disabled-icon-store {
+    cursor: default;
+    display: inline-block;
+    vertical-align: middle;
+}
+
 /*** various widget preference related classes ***/
 .widget-prefs {
     border: 1px solid #D3D3D3;
@@ -527,6 +538,13 @@ ul.storeItems li{
 
 .storeWidgetDesc{
     margin: 1em 0;
+}
+
+.storeWidgetDisabled {
+    background-color: #FCE8D7;
+    border: 1px solid #B3C4CF;
+    margin: 3px;
+    padding: 3px;
 }
 
 .widgetRating {
