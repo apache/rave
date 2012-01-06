@@ -123,7 +123,7 @@
                     <configuration>
                         <properties>
                             <cargo.jvmargs>
-                                <![CDATA[-Xdebug -Xrunjdwp:transport=dt_socket,address=${cargo.debug.address},server=y,suspend=${cargo.debug.suspend} -noverify ${javaagent} ${cargo.args}]]>
+                                <![CDATA[-Dh2.bindAddress="localhost" -Xdebug -Xrunjdwp:transport=dt_socket,address=${cargo.debug.address},server=y,suspend=${cargo.debug.suspend} -noverify ${javaagent} ${cargo.args}]]>
                             </cargo.jvmargs>
                             <cargo.tomcat.context.reloadable>true</cargo.tomcat.context.reloadable>
                         </properties>
