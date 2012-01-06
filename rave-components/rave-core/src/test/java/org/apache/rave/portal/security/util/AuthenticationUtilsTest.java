@@ -18,8 +18,11 @@
  */
 package org.apache.rave.portal.security.util;
 
+import org.easymock.EasyMock;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.GrantedAuthorityImpl;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
+import java.util.Collection;
 import java.util.List;
 import java.util.ArrayList;
 import org.junit.Before;
@@ -45,9 +48,9 @@ public class AuthenticationUtilsTest {
     @Test
     public void testHasRole() {    
         List<GrantedAuthority> grantedAuthoritiesList = new ArrayList<GrantedAuthority>();
-        grantedAuthoritiesList.add(new GrantedAuthorityImpl(VALID_ROLE));
-                
-        expect(authentication.getAuthorities()).andReturn(grantedAuthoritiesList).anyTimes();
+        grantedAuthoritiesList.add(new SimpleGrantedAuthority(VALID_ROLE));
+
+        EasyMock.<Collection<? extends GrantedAuthority>>expect(authentication.getAuthorities()).andReturn(grantedAuthoritiesList).anyTimes();
         replay(authentication);
         
         assertThat(AuthenticationUtils.hasRole(authentication, VALID_ROLE), is(true));
@@ -60,9 +63,9 @@ public class AuthenticationUtilsTest {
     @Test
     public void testIsAdmin_validAdmin() {
         List<GrantedAuthority> grantedAuthoritiesList = new ArrayList<GrantedAuthority>();
-        grantedAuthoritiesList.add(new GrantedAuthorityImpl(AuthenticationUtils.ROLE_ADMIN));
-                
-        expect(authentication.getAuthorities()).andReturn(grantedAuthoritiesList);
+        grantedAuthoritiesList.add(new SimpleGrantedAuthority(AuthenticationUtils.ROLE_ADMIN));
+
+        EasyMock.<Collection<? extends GrantedAuthority>>expect(authentication.getAuthorities()).andReturn(grantedAuthoritiesList);
         replay(authentication);
         
         assertThat(AuthenticationUtils.isAdmin(authentication), is(true));
@@ -71,9 +74,9 @@ public class AuthenticationUtilsTest {
     @Test
     public void testIsAdmin_notValidAdmin() {
         List<GrantedAuthority> grantedAuthoritiesList = new ArrayList<GrantedAuthority>();
-        grantedAuthoritiesList.add(new GrantedAuthorityImpl(VALID_ROLE));
-                
-        expect(authentication.getAuthorities()).andReturn(grantedAuthoritiesList);
+        grantedAuthoritiesList.add(new SimpleGrantedAuthority(VALID_ROLE));
+
+        EasyMock.<Collection<? extends GrantedAuthority>>expect(authentication.getAuthorities()).andReturn(grantedAuthoritiesList);
         replay(authentication);
         
         assertThat(AuthenticationUtils.isAdmin(authentication), is(false));

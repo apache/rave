@@ -45,7 +45,7 @@
 
     <properties>
         <apache.shindig.version>3.0.0-beta4</apache.shindig.version>
-        <org.springframework.version>3.0.5.RELEASE</org.springframework.version>
+        <org.springframework.version>3.1.0.RELEASE</org.springframework.version>
         <org.springframework.mobile.version>1.0.0.M3</org.springframework.mobile.version>        
         <jstl.version>1.2</jstl.version>
         <javax.servlet.version>2.5</javax.servlet.version>
@@ -203,9 +203,34 @@
                 <version>${org.springframework.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-expression</artifactId>
+                <version>${org.springframework.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-tx</artifactId>
+                <version>${org.springframework.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-aop</artifactId>
+                <version>${org.springframework.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.springframework.security</groupId>
                 <artifactId>spring-security-web</artifactId>
                 <version>${org.springframework.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.springframework</groupId>
+                        <artifactId>spring-web</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.springframework</groupId>
+                        <artifactId>spring-beans</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.springframework.security</groupId>
@@ -225,7 +250,12 @@
             <dependency>
                  <groupId>org.springframework.mobile</groupId>
                  <artifactId>spring-mobile-device</artifactId>
-                 <version>${org.springframework.mobile.version}</version>
+                 <version>${org.springframework.mobile.version}</version>  <exclusions>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-web</artifactId>
+                </exclusion>
+            </exclusions>
             </dependency>                        
             <dependency>
                 <groupId>com.google.inject.extensions</groupId>

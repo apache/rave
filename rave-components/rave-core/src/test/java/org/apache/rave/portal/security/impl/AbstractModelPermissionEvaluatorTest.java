@@ -20,17 +20,20 @@ package org.apache.rave.portal.security.impl;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import org.apache.rave.portal.security.ModelPermissionEvaluator.Permission;
 import org.apache.rave.portal.security.util.AuthenticationUtils;
 import static org.junit.Assert.*;
 import static org.easymock.EasyMock.*;
 import static org.hamcrest.CoreMatchers.*;
+
+import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.GrantedAuthorityImpl;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 /**
  *
@@ -57,9 +60,9 @@ public class AbstractModelPermissionEvaluatorTest {
     @Test
     public void testHasPermission_authenticationUserIsAdmin() {        
         List<GrantedAuthority> grantedAuthoritiesList = new ArrayList<GrantedAuthority>();
-        grantedAuthoritiesList.add(new GrantedAuthorityImpl(AuthenticationUtils.ROLE_ADMIN));
-                
-        expect(authentication.getAuthorities()).andReturn(grantedAuthoritiesList);
+        grantedAuthoritiesList.add(new SimpleGrantedAuthority(AuthenticationUtils.ROLE_ADMIN));
+
+        EasyMock.<Collection<? extends GrantedAuthority>>expect(authentication.getAuthorities()).andReturn(grantedAuthoritiesList);
         replay(authentication);
         assertThat(fooModelPermissionEvaluator.hasPermission(authentication, fooModel, Permission.READ), is(true));
         verify(authentication);
@@ -68,9 +71,9 @@ public class AbstractModelPermissionEvaluatorTest {
     @Test
     public void testHasPermission_authenticationUserIsNotAdmin() {        
         List<GrantedAuthority> grantedAuthoritiesList = new ArrayList<GrantedAuthority>();
-        grantedAuthoritiesList.add(new GrantedAuthorityImpl("ROLE_THAT_IS_NOT_ADMIN"));
-                
-        expect(authentication.getAuthorities()).andReturn(grantedAuthoritiesList);
+        grantedAuthoritiesList.add(new SimpleGrantedAuthority("ROLE_THAT_IS_NOT_ADMIN"));
+
+        EasyMock.<Collection<? extends GrantedAuthority>>expect(authentication.getAuthorities()).andReturn(grantedAuthoritiesList);
         replay(authentication);
         assertThat(fooModelPermissionEvaluator.hasPermission(authentication, fooModel, Permission.READ), is(false));
         verify(authentication);

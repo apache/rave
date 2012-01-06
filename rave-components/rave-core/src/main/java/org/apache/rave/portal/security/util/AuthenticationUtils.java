@@ -39,7 +39,7 @@ public class AuthenticationUtils {
      * @return true if the role is found, false otherwise
      */
     public static boolean hasRole(Authentication authentication, String role) {
-        Collection<GrantedAuthority> grantedAuthorities = authentication.getAuthorities();
+        Collection<? extends GrantedAuthority> grantedAuthorities = authentication.getAuthorities();
         if (grantedAuthorities == null || role == null || role.isEmpty()) {
             return false;
         }

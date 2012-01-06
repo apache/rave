@@ -17,9 +17,12 @@ package org.apache.rave.portal.security.impl;
 
 import org.apache.rave.portal.security.util.AuthenticationUtils;
 import org.apache.rave.portal.model.WidgetComment;
-import org.springframework.security.core.authority.GrantedAuthorityImpl;
+import org.easymock.EasyMock;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import java.util.ArrayList;
 import org.springframework.security.core.GrantedAuthority;
+
+import java.util.Collection;
 import java.util.List;
 import org.apache.rave.portal.model.User;
 import org.springframework.security.core.Authentication;
@@ -64,7 +67,7 @@ public class DefaultWidgetCommentPermissionEvaluatorTest {
         widgetComment.setEntityId(VALID_COMMENT_ID);
         widgetComment.setUser(user);
         grantedAuthoritiesList = new ArrayList<GrantedAuthority>();
-        grantedAuthoritiesList.add(new GrantedAuthorityImpl("ROLE_USER"));
+        grantedAuthoritiesList.add(new SimpleGrantedAuthority("ROLE_USER"));
     }
     
     @Test
@@ -74,7 +77,7 @@ public class DefaultWidgetCommentPermissionEvaluatorTest {
     
     @Test
     public void verifyNotAdministrator() {
-        expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
+        EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
         replay(mockAuthentication);
         
         assertThat(defaultWidgetCommentPermissionEvaluator.hasPermission(mockAuthentication, null, Permission.ADMINISTER), is(false));
@@ -86,7 +89,7 @@ public class DefaultWidgetCommentPermissionEvaluatorTest {
     public void verifyAdministrator() {
         List myGrantedAuthoritiesList = new ArrayList();
         myGrantedAuthoritiesList.addAll(grantedAuthoritiesList);
-        myGrantedAuthoritiesList.add(new GrantedAuthorityImpl(AuthenticationUtils.ROLE_ADMIN));
+        myGrantedAuthoritiesList.add(new SimpleGrantedAuthority(AuthenticationUtils.ROLE_ADMIN));
         
         expect(mockAuthentication.getAuthorities()).andReturn(myGrantedAuthoritiesList);
         replay(mockAuthentication);
@@ -97,7 +100,7 @@ public class DefaultWidgetCommentPermissionEvaluatorTest {
     
     @Test 
     public void testOwnerPermissions() {
-        expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList).anyTimes();
+        EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList).anyTimes();
         expect(mockAuthentication.getPrincipal()).andReturn(user).anyTimes();
         replay(mockAuthentication);
         expect(mockWidgetCommentRepository.get(VALID_COMMENT_ID)).andReturn(widgetComment).anyTimes();
@@ -116,7 +119,7 @@ public class DefaultWidgetCommentPermissionEvaluatorTest {
     
     @Test
     public void testNonOwnerPermissions() {
-        expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList).anyTimes();
+        EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList).anyTimes();
         expect(mockAuthentication.getPrincipal()).andReturn(user2).anyTimes();
         replay(mockAuthentication);
         expect(mockWidgetCommentRepository.get(VALID_COMMENT_ID)).andReturn(widgetComment).anyTimes();
@@ -136,7 +139,7 @@ public class DefaultWidgetCommentPermissionEvaluatorTest {
     
     @Test
     public void testOwnerPermissionsById() {
-        expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList).anyTimes();
+        EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList).anyTimes();
         expect(mockAuthentication.getPrincipal()).andReturn(user).anyTimes();
         replay(mockAuthentication);
         expect(mockWidgetCommentRepository.get(VALID_COMMENT_ID)).andReturn(widgetComment).anyTimes();
@@ -156,7 +159,7 @@ public class DefaultWidgetCommentPermissionEvaluatorTest {
     
     @Test
     public void testNonOwnerPermissionsById() {
-        expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList).anyTimes();
+        EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList).anyTimes();
         expect(mockAuthentication.getPrincipal()).andReturn(user2).anyTimes();
         replay(mockAuthentication);
         expect(mockWidgetCommentRepository.get(VALID_COMMENT_ID)).andReturn(widgetComment).anyTimes();
@@ -211,8 +214,8 @@ public class DefaultWidgetCommentPermissionEvaluatorTest {
     @Test
     public void testCreationPremission() {
         //Widget.entityId is not set in this case
-        
-        expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList).anyTimes();
+
+        EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList).anyTimes();
         expect(mockAuthentication.getPrincipal()).andReturn(user).anyTimes();
         replay(mockAuthentication);
         
