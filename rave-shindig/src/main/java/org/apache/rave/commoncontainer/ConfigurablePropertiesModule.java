@@ -42,7 +42,7 @@ import java.util.Properties;
  */
 public class ConfigurablePropertiesModule extends AbstractModule {
 
-    private static final String DEFAULT_PROPERTIES = "shindig.properties";
+    private static final String DEFAULT_PROPERTIES = "rave.shindig.properties";
     private static final String SHINDIG_OVERRIDE_PROPERTIES = "shindig.override.properties";
 
     private static final String CLASSPATH = "classpath:";
