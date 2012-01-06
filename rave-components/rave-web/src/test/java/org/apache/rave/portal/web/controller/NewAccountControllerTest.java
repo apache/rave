@@ -24,20 +24,26 @@ import java.util.List;
 
 import org.apache.rave.portal.model.NewUser;
 import org.apache.rave.portal.model.User;
+import org.apache.rave.portal.service.CaptchaService;
 import org.apache.rave.portal.service.NewAccountService;
 import org.apache.rave.portal.service.UserService;
+import org.apache.rave.portal.service.impl.ReCaptchaService;
 import org.apache.rave.portal.web.util.ModelKeys;
 import org.apache.rave.portal.web.util.ViewNames;
 import org.apache.rave.portal.web.validator.NewAccountValidator;
 
+import org.easymock.EasyMock;
 import org.hamcrest.CoreMatchers;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ObjectError;
+
+import javax.servlet.http.HttpServletRequest;
 
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.assertThat;
@@ -52,27 +58,31 @@ public class NewAccountControllerTest {
 	private NewAccountController newAccountController;
 	private NewAccountService newAccountService;
 	private NewAccountValidator newAccountValidator;
+	private CaptchaService captchaService;
+    private MockHttpServletRequest request;
 	private UserService userService;
 	
 	@Before
 	public void setup() {
 		newAccountService = createNiceMock(NewAccountService.class);
 		userService = createNiceMock(UserService.class);
+        request = new MockHttpServletRequest();
 		newAccountValidator = new NewAccountValidator(userService);
-		newAccountController = new NewAccountController(newAccountService, newAccountValidator);
+		captchaService = new ReCaptchaService(false, null, null, false, "error message");
+		newAccountController = new NewAccountController(newAccountService, newAccountValidator, captchaService);
 	}
 	
 	@Test
 	public void setUpForm_ShouldAddAttributeForNewUser() {
 		final ModelMap model = new ModelMap();
 		String newUser = new String(ModelKeys.NEW_USER);
-		newAccountController.setUpForm(model);
+		newAccountController.setUpForm(model, request);
 		
 		//assert that the model is not null
 		assertThat(model, CoreMatchers.notNullValue());
 		
-		//assert that the model size is one
-		assertThat(model.size(), CoreMatchers.equalTo(1));
+		//assert that the model size is two
+		assertThat(model.size(), CoreMatchers.equalTo(2));
 		
 		//assert that the model does contain an attribute associated with newUser after setUpForm() is called
 		assertThat(model.containsAttribute(newUser), CoreMatchers.equalTo(true)); 
@@ -101,8 +111,9 @@ public class NewAccountControllerTest {
 		expect(errors.hasErrors()).andReturn(true).anyTimes();		
 		expect(errors.getAllErrors()).andReturn(errorList).anyTimes();
 		replay(errors);
-		
-		String result = new String(newAccountController.create(newUser, errors, model));
+
+        replay(model);
+		String result = new String(newAccountController.create(newUser, errors, model, request));
 		errorList = errors.getAllErrors();
 
 		assertThat(errorList.size(), CoreMatchers.equalTo(1));
@@ -130,15 +141,16 @@ public class NewAccountControllerTest {
 		existingUser.setPassword(password);
 		
 		errorList.add(error);
-		
+
+
 		expect(errors.hasErrors()).andReturn(true).anyTimes();		
 		expect(errors.getAllErrors()).andReturn(errorList).anyTimes();
 		replay(errors);
 		
 		expect(userService.getUserByUsername(username)).andReturn(existingUser).anyTimes();
 		replay(userService);
-		
-		String result = new String(newAccountController.create(newUser, errors, model));
+		replay(model);
+		String result = new String(newAccountController.create(newUser, errors, model, request));
 		errorList = errors.getAllErrors();
 
 		assertThat(errorList.size(), CoreMatchers.equalTo(1));
@@ -166,8 +178,9 @@ public class NewAccountControllerTest {
 		expect(errors.hasErrors()).andReturn(true).anyTimes();		
 		expect(errors.getAllErrors()).andReturn(errorList).anyTimes();
 		replay(errors);
-		
-		String result = new String(newAccountController.create(newUser, errors, model));
+		replay(model);
+
+		String result = new String(newAccountController.create(newUser, errors, model, request));
 		errorList = errors.getAllErrors();
 
 		assertThat(errorList.size(), CoreMatchers.equalTo(1));
@@ -195,8 +208,8 @@ public class NewAccountControllerTest {
 		expect(errors.hasErrors()).andReturn(true).anyTimes();		
 		expect(errors.getAllErrors()).andReturn(errorList).anyTimes();
 		replay(errors);
-		
-		String result = new String(newAccountController.create(newUser, errors, model));
+		replay(model);
+		String result = new String(newAccountController.create(newUser, errors, model, request));
 		errorList = errors.getAllErrors();
 
 		assertThat(errorList.size(), CoreMatchers.equalTo(2));
@@ -224,8 +237,9 @@ public class NewAccountControllerTest {
 		expect(errors.hasErrors()).andReturn(true).anyTimes();		
 		expect(errors.getAllErrors()).andReturn(errorList).anyTimes();
 		replay(errors);
-		
-		String result = new String(newAccountController.create(newUser, errors, model));
+
+        replay(model);
+		String result = new String(newAccountController.create(newUser, errors, model, request));
 		errorList = errors.getAllErrors();
 
 		assertThat(errorList.size(), CoreMatchers.equalTo(1));
@@ -252,8 +266,8 @@ public class NewAccountControllerTest {
 		expect(errors.hasErrors()).andReturn(true).anyTimes();		
 		expect(errors.getAllErrors()).andReturn(errorList).anyTimes();
 		replay(errors);
-		
-		String result = new String(newAccountController.create(newUser, errors, model));
+		replay(model);
+		String result = new String(newAccountController.create(newUser, errors, model, request));
 		errorList = errors.getAllErrors();
 
 		assertThat(errorList.size(), CoreMatchers.equalTo(1));
@@ -280,8 +294,8 @@ public class NewAccountControllerTest {
 		expect(errors.hasErrors()).andReturn(true).anyTimes();		
 		expect(errors.getAllErrors()).andReturn(errorList).anyTimes();
 		replay(errors);
-		
-		String result = new String(newAccountController.create(newUser, errors, model));
+		replay(model);
+		String result = new String(newAccountController.create(newUser, errors, model, request));
 		errorList = errors.getAllErrors();
 
 		assertThat(errorList.size(), CoreMatchers.equalTo(1));
@@ -308,8 +322,8 @@ public class NewAccountControllerTest {
 		expect(errors.hasErrors()).andReturn(true).anyTimes();		
 		expect(errors.getAllErrors()).andReturn(errorList).anyTimes();
 		replay(errors);
-		
-		String result = new String(newAccountController.create(newUser, errors, model));
+        replay(model);
+		String result = new String(newAccountController.create(newUser, errors, model, request));
 		errorList = errors.getAllErrors();
 
 		assertThat(errorList.size(), CoreMatchers.equalTo(1));
@@ -338,8 +352,9 @@ public class NewAccountControllerTest {
 		expect(errors.hasErrors()).andReturn(true).anyTimes();		
 		expect(errors.getAllErrors()).andReturn(errorList).anyTimes();
 		replay(errors);
-		
-		String result = new String(newAccountController.create(newUser, errors, model));
+
+        replay(model);
+		String result = new String(newAccountController.create(newUser, errors, model, request));
 		errorList = errors.getAllErrors();
 
 		assertThat(errorList.size(), CoreMatchers.equalTo(3));
@@ -367,7 +382,7 @@ public class NewAccountControllerTest {
 		expect(errors.getAllErrors()).andReturn(errorList).anyTimes();
 		replay(errors);
 		
-		String result = new String(newAccountController.create(newUser, errors, model));
+		String result = new String(newAccountController.create(newUser, errors, model, request));
 		errorList = errors.getAllErrors();
 
 		assertThat(errorList.size(), CoreMatchers.equalTo(0));
