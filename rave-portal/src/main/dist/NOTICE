@@ -117,3 +117,6 @@ The OpenSocial Foundation (http://opensocial-resources.googlecode.com/svn/spec/)
 
 This product includes software (OpenAjax Hub) developed by
 OpenAjax Alliance (http://www.openajax.org/), which is licensed under the Apache 2.0 license
+
+This product includes unmodified, binary redistributions of software (recaptcha4j) developed by the recaptcha4j
+project (http://code.google.com/p/recaptcha4j/), which is under the Apache 2.0 license.
