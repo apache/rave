@@ -37,8 +37,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.authentication.dao.SaltSource;
-import org.springframework.security.authentication.encoding.PasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -55,7 +54,7 @@ public class DefaultNewAccountServiceTest {
     private RegionService regionService;
     private NewAccountService newAccountService;
     private AuthorityService authorityService;
-    private SaltSource saltSource;
+
     private UserDetails userDetails;
     private PasswordEncoder passwordEncoder;
 
@@ -75,7 +74,6 @@ public class DefaultNewAccountServiceTest {
         pageService = createMock(PageService.class);
         pageLayoutService = createMock(PageLayoutService.class);
         regionService = createMock(RegionService.class);
-        saltSource = createMock(SaltSource.class);
         userDetails = createMock(UserDetails.class);
         passwordEncoder = createMock(PasswordEncoder.class);
         authorityService = createMock(AuthorityService.class);
@@ -116,22 +114,22 @@ public class DefaultNewAccountServiceTest {
         expectedUser.setLocked(false);
         expectedUser.setEnabled(true);                
         
-        ReflectionTestUtils.setField(newAccountService, "saltSource", saltSource);
+
         ReflectionTestUtils.setField(newAccountService, "passwordEncoder", passwordEncoder);
                 
-        expect(saltSource.getSalt(anyObject(UserDetails.class))).andReturn("salt");
-        expect(passwordEncoder.encodePassword("valid.password", "salt")).andReturn("valid.password");              
+
+        expect(passwordEncoder.encode("valid.password")).andReturn("valid.password");
         expect(userService.getUserByUsername(VALID_USER)).andReturn(null);
         expect(userService.getUserByEmail(VALID_EMAIL)).andReturn(null);                
         expect(pageLayoutService.getPageLayoutByCode(VALID_LAYOUT_CODE)).andReturn(validPageLayout);        
         expect(authorityService.getDefaultAuthorities()).andReturn(validAuthoritySearchResult);
         userService.registerNewUser(expectedUser);  
         expectLastCall();                
-        replay(saltSource, userDetails, passwordEncoder, userService, pageLayoutService, authorityService);        
+        replay(userDetails, passwordEncoder, userService, pageLayoutService, authorityService);
                
         newAccountService.createNewAccount(newUser);
         
-        verify(saltSource, userDetails, passwordEncoder, userService, pageLayoutService);
+        verify(userDetails, passwordEncoder, userService, pageLayoutService);
     }
 
     @Test

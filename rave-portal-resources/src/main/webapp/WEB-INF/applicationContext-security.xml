@@ -55,9 +55,7 @@
     <security:authentication-manager>
         <security:authentication-provider
                 user-service-ref="userService">
-            <security:password-encoder ref="passwordEncoder">
-                <security:salt-source ref="saltSource"/>
-            </security:password-encoder>
+            <security:password-encoder ref="passwordEncoder" />
         </security:authentication-provider>
     </security:authentication-manager>
     

@@ -30,8 +30,8 @@ import org.apache.rave.portal.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.dao.SaltSource;
-import org.springframework.security.authentication.encoding.PasswordEncoder;
+
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -47,10 +47,7 @@ public class DefaultNewAccountService implements NewAccountService {
     private final AuthorityService authorityService;
 
     @Autowired 
-    private SaltSource saltSource;
-
-    @Autowired 
-    private PasswordEncoder passwordEncoder;
+    private PasswordEncoder  passwordEncoder;
 
     @Autowired
     public DefaultNewAccountService(UserService userService, 
@@ -77,12 +74,8 @@ public class DefaultNewAccountService implements NewAccountService {
         User user=new User();
         user.setUsername(userName);
         user.setEmail(email);
-        //This assumes we use the username for the salt.  If not, the code below will need to change.
-        //See also applicationContext-security.xml
-        Object salt = saltSource.getSalt(user);
-        String saltedHashedPassword=passwordEncoder.encodePassword(password, salt);
-        logger.debug("Salt Source: {}", salt);
-        user.setPassword(saltedHashedPassword);
+        String hashedPassword = passwordEncoder.encode(password);
+        user.setPassword(hashedPassword);
 
         user.setExpired(false);
         user.setLocked(false);

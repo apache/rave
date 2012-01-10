@@ -95,10 +95,9 @@
         <property name="password" value="${portal.dataSource.password}"/>
     </bean>
     
-    <!-- Password encoding and salting-->
-    <bean class="org.springframework.security.authentication.encoding.ShaPasswordEncoder" id="passwordEncoder"/>
-    <bean class="org.springframework.security.authentication.dao.ReflectionSaltSource" id="saltSource">
-        <property name="userPropertyToUse" value="username"/>
+    <!-- Password encoding -->
+    <bean class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" id="passwordEncoder">
+        <!--<constructor-arg index="0" value="10"/>-->
     </bean>
 
 </beans>
