@@ -24,49 +24,55 @@ rave.store = rave.store || (function() {
 
         $(".widgetLikeButton").button( {
             icons: {primary: "ui-icon-plus"}
-        }).change(function() {
-            var widgetId = this.id.substring("like-".length);
-            rave.api.rest.updateWidgetRating({widgetId: widgetId, score: 10});
-            $(this).button("option", "label", parseInt($(this).button("option", "label")) + 1);
-
-            //if the other button in this pair was checked then ajdust its total, except in IE where
-            //the button has already toggled BEFORE the 'change' event in which case we have to assume
-            //that the user had a contrary selection prior to the change event
-            var dislikeButton = $("#dislike-"+widgetId);
-            if (dislikeButton.get(0).getAttribute("checked") == "true" || this.checked == true) {
-                dislikeButton.get(0).setAttribute("checked", "false");
-                var dislikes = parseInt(dislikeButton.button("option", "label")) - 1;
-                if (dislikes > -1) {
-                    $(dislikeButton).button("option", "label", dislikes);
-                }
-            }
-            
-            //flag this element as the currently checked one
-            this.setAttribute("checked", "true");
-
+        }).click(function() {
+        	
+        	//check if like radio button is not checked already
+        	if(this.getAttribute("checked") != "true") {
+        		
+        		//retrieve widget id
+        		var widgetId = this.id.substring("like-".length);
+        		
+        		//update the widget score in database
+        		rave.api.rest.updateWidgetRating({widgetId: widgetId, score: 10});
+        		
+        		//call update widget rating handler function
+        		var widgetRating = {
+        				widgetId: widgetId, 
+					    widgetLikeButton: this, 
+					    widgetDislikeButton: $("#dislike-"+widgetId),
+						isLike: true
+        		};
+        		
+        		//update the widget ratings on web page
+        		rave.api.handler.widgetRatingHandler(widgetRating);
+            	
+        	}
         });
 
         $(".widgetDislikeButton").button( {
             icons: {primary: "ui-icon-minus"}
-        }).change(function() {
-            var widgetId = this.id.substring("dislike-".length);
-            rave.api.rest.updateWidgetRating({widgetId: widgetId, score: 0});
-            $(this).button("option", "label", parseInt($(this).button("option", "label")) + 1);
-
-            //if the other button in this pair was checked then ajdust its total, except in IE where
-            //the button has already toggled BEFORE the 'change' event in which case we have to assume
-            //that the user had a contrary selection prior to the change event
-            var likeButton = $("#like-"+widgetId);
-            if (likeButton.get(0).getAttribute("checked") == "true" || this.checked == true) {
-                likeButton.get(0).setAttribute("checked", "false");
-                var likes = parseInt(likeButton.button("option", "label")) - 1;
-                if (likes > -1) {
-                    $("#like-"+widgetId).button("option", "label", likes);
-                }
-            }
-            
-            //flag this element as the currently checked item
-            this.setAttribute("checked", "true");
+        }).click(function() {
+        	
+        	//check if dislike radio button is not checked already
+        	if(this.getAttribute("checked") != "true") {
+            	
+        		//retrieve widget id
+        		var widgetId = this.id.substring("dislike-".length);
+        		
+        		//update the widget score in database
+        		rave.api.rest.updateWidgetRating({widgetId: widgetId, score: 0});
+        		
+        		//call update widget rating handler function
+        		var widgetRating = {
+        				widgetId: widgetId, 
+					    widgetLikeButton: $("#like-"+widgetId), 
+					    widgetDislikeButton: this,
+						isLike: false
+        		};
+        		
+        		//update the widget ratings on web page
+        		rave.api.handler.widgetRatingHandler(widgetRating);
+        	}
         });
     }
     

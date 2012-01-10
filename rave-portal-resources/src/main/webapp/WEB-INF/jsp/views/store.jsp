@@ -188,24 +188,45 @@
                             </c:if>
                             <div class="widgetRating">
                                 <fmt:message key="page.widget.rate"/>
-                                <c:set var="totalLikes" value="${widgetStatistics.totalLike}"/>
-                                <c:set var="totalDislikes" value="${widgetStatistics.totalDislike}"/>
-
+                                
                                 <div id="rating-${widget.entityId}" class="ratingButtons">
+                                    <form>
+				    					<input type="hidden" id="rate-${widget.entityId}" 
+							 				   value="${widgetsStatistics[widget.entityId]!=null?widgetsStatistics[widget.entityId].userRating:"-1"}">
+				    				</form>
                                     <input type="radio" id="like-${widget.entityId}" class="widgetLikeButton"
-                                           name="rating-${widget.entityId}"${widgetStatistics.userRating==10?" checked='true'":""}>
-                                    <label for="like-${widget.entityId}">${widgetStatistics!=null?widgetStatistics.totalLike:"0"}</label>
+                                            name="rating-${widget.entityId}"${widgetsStatistics[widget.entityId].userRating==10?" checked='true'":""}>
+                                    <label for="like-${widget.entityId}"></label>
                                     <input type="radio" id="dislike-${widget.entityId}" class="widgetDislikeButton"
-                                           name="rating-${widget.entityId}"${widgetStatistics.userRating==0?" checked='true'":""}>
-                                    <label for="dislike-${widget.entityId}">${widgetStatistics!=null?widgetStatistics.totalDislike:"0"}</label>
+                                            name="rating-${widget.entityId}"${widgetsStatistics[widget.entityId].userRating==0?" checked='true'":""}>
+                                    <label for="dislike-${widget.entityId}"> </label>
+                                    
+                                    <!-- Displaying the likes and dislikes rating along with total votes -->
+                                    
                                 </div>
                             </div>
-                            <div class="widgetUserCount">
-                                <c:set var="widgetUserCountGreaterThanZero" value="${widgetStatistics != null && widgetStatistics.totalUserCount > 0}" />
-                                <c:if test="${widgetUserCountGreaterThanZero}"><a href="javascript:void(0);" onclick="rave.displayUsersOfWidget(${widget.entityId});"></c:if>
-                                    <fmt:formatNumber groupingUsed="true" value="${widgetStatistics!=null?widgetStatistics.totalUserCount:0}" />&nbsp;<fmt:message key="page.widget.usercount"/>
-                                <c:if test="${widgetUserCountGreaterThanZero}"></a></c:if>
-                            </div>
+                            <ul class="horizontal-list">
+                            	<!-- display total likes -->
+                                <li>
+                                  	<c:set var="widgetLikes">
+                                   		${widgetsStatistics[widget.entityId]!=null?widgetsStatistics[widget.entityId].totalLike:"0"}
+                                   	</c:set>
+                                   	<fmt:message key="page.widget.rate.likes"/><label id="totalLikes-${widget.entityId}" data-rave-widget-likes="${widgetLikes}">${widgetLikes}</label>
+                                </li>
+                                <!-- display total dislikes  -->
+                                <li>
+                                  	<c:set var="widgetDislikes">
+                                   		${widgetsStatistics[widget.entityId]!=null?widgetsStatistics[widget.entityId].totalDislike:"0"}
+                                   	</c:set>
+                                   	<fmt:message key="page.widget.rate.dislikes"/><label id="totalDislikes-${widget.entityId}" data-rave-widget-dislikes="${widgetDislikes}">${widgetDislikes}</label>
+                            	</li>
+                            	<li class="widgetUserCount">
+                                	<c:set var="widgetUserCountGreaterThanZero" value="${widgetStatistics != null && widgetStatistics.totalUserCount > 0}" />
+                                	<c:if test="${widgetUserCountGreaterThanZero}"><a href="javascript:void(0);" onclick="rave.displayUsersOfWidget(${widget.entityId});"></c:if>
+                                    	<fmt:formatNumber groupingUsed="true" value="${widgetStatistics!=null?widgetStatistics.totalUserCount:0}" />&nbsp;<fmt:message key="page.widget.usercount"/>
+                                	<c:if test="${widgetUserCountGreaterThanZero}"></a></c:if>
+                            	</li>
+                            </ul>
                         </div>
 
                         <div class="clear-float"></div>

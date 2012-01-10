@@ -387,9 +387,141 @@ rave.api = rave.api || (function() {
 
     })();
 
+    /*
+     *	Handler functions to handle modifications on user events 
+     */
+    var handlerApi = (function() {
+    	
+    	//function to handle widget rating changes
+    	function widgetRatingHandler(widgetRating) {
+    		
+    		//retrieving the current total likes
+    		var likeTotalLabel = document.getElementById("totalLikes-"+ widgetRating.widgetId);
+    		var likeTotal = likeTotalLabel.getAttribute("data-rave-widget-likes"); 
+    		
+    		//retrieving the current total dislikes
+    		var dislikeTotalLabel = document.getElementById("totalDislikes-"+ widgetRating.widgetId);
+			var dislikeTotal = dislikeTotalLabel.getAttribute("data-rave-widget-dislikes"); 
+    		
+			//initializing temporary variables
+			var incrementingTotal = -1;
+			var decrementingTotal = -1;
+			var curButton = "";
+			var prevButton = "";
+			var prevRating = -1;
+			
+			//check if like rating needs to be updated
+    		if(widgetRating.isLike) {
+    			
+    			//set incrementing total to like total
+    			incrementingTotal = likeTotal;
+    			
+    			//set the incrementing total label to like total label
+    			incrementingTotalLabel = likeTotalLabel;
+    			
+    			//set decrementing total to dislike total
+    			decrementingTotal = dislikeTotal;
+    			
+    			//set the decrementing total label to dislike total label
+    			decrementingTotalLabel = dislikeTotalLabel;
+    			
+    			//set the current clicked button to like button
+    			curButton = widgetRating.widgetLikeButton;
+    			
+    			//set the previous clicked button to dislike button
+    			prevButton = widgetRating.widgetDislikeButton;
+    			
+    			//set the previous rating to 0 to check if dislike was clicked earlier 
+    			prevRating = 0;
+    		}
+    		
+    		//check if dislike rating needs to be updated
+    		else {
+    			    			
+    			//set incrementing total to dislike total
+    			incrementingTotal = dislikeTotal;
+    			
+    			//set the incrementing total label to dislike total label
+    			incrementingTotalLabel = dislikeTotalLabel;
+    			
+    			//set decrementing total to like total
+    			decrementingTotal = likeTotal;
+    			
+    			//set the decrementing total label to like total label
+    			decrementingTotalLabel = likeTotalLabel;
+    			
+    			//set the current clicked button to dislike button
+    			curButton = widgetRating.widgetDislikeButton;
+    			
+    			//set the previous clicked button to like button
+    			prevButton = widgetRating.widgetLikeButton;
+    			
+    			//set the previous rating to 10 to check if like was clicked earlier 
+    			prevRating = 10;
+    		}
+        		        		
+    		//update incrementing total
+        	incrementingTotal = parseInt(incrementingTotal) + 1;
+        	if(incrementingTotalLabel == likeTotalLabel) {
+        		incrementingTotalLabel.setAttribute("data-rave-widget-likes", incrementingTotal);
+        		incrementingTotalLabel.innerHTML = incrementingTotal;
+        	}
+        	else {
+        		incrementingTotalLabel.setAttribute("data-rave-widget-dislikes", incrementingTotal);
+        		incrementingTotalLabel.innerHTML = incrementingTotal;
+        	}
+        	
+        	//get the value of hidden user rating 
+        	var hiddenButton = document.getElementById("rate-"+ widgetRating.widgetId);
+        	var userPrevRate = hiddenButton.value;
+
+        	//if the other button in this pair was checked then ajdust its total, except in IE where
+        	//the button has already toggled BEFORE the 'change' event in which case we have to assume
+        	//that the user had a contrary selection prior to the change event
+        	if (prevButton.get(0).getAttribute("checked") == "true" || curButton.checked == true) {
+        		prevButton.get(0).setAttribute("checked", "false");
+			
+        		//remove the previous rating made by the user if any by checking change in userRating
+        		if(parseInt(userPrevRate) == prevRating) {
+        			       				
+        			//update decrementing total
+        			if(parseInt(decrementingTotal) - 1 > -1) {
+        				decrementingTotal = parseInt(decrementingTotal) - 1;
+        				if(decrementingTotalLabel == likeTotalLabel) {
+        					decrementingTotalLabel.setAttribute("data-rave-widget-likes", decrementingTotal);
+        					decrementingTotalLabel.innerHTML = decrementingTotal;
+        				}
+        				else {
+        					decrementingTotalLabel.setAttribute("data-rave-widget-dislikes", decrementingTotal);
+        					decrementingTotalLabel.innerHTML = decrementingTotal;
+        				}
+        			}
+        		}
+            		
+        	}
+            
+        	//flag this element as the currently checked one
+        	curButton.setAttribute("checked", "true");
+
+        	//set the user rating of the hidden field
+        	if(widgetRating.isLike) {
+        		hiddenButton.value = "10";
+        	}
+        	else{
+        		hiddenButton.value = "0";
+        	}
+    	}
+    	
+    	return {
+    		widgetRatingHandler : widgetRatingHandler
+    	};
+    	
+    })();
+
     return {
         rest : restApi,
-        rpc : rpcApi
+        rpc : rpcApi,
+        handler : handlerApi
     };
 })();
 
