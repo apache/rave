@@ -68,9 +68,9 @@
             <c:forEach var="user" items="${searchResult.resultSet}">
                 <spring:url value="/app/admin/userdetail/${user.entityId}" var="detaillink"/>
                 <tr data-detaillink="${detaillink}">
-                    <td><a href="${detaillink}"><c:out value="${user.username}"/></a></td>
-                    <td><a href="${detaillink}"><c:out value="${user.email}"/></a></td>
-                    <td><a href="${detaillink}">${user.enabled}</a></td>
+                    <td><c:out value="${user.username}"/></td>
+                    <td><c:out value="${user.email}"/></td>
+                    <td>${user.enabled}</td>
                 </tr>
             </c:forEach>
             </tbody>

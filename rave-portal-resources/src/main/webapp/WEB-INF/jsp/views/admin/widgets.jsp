@@ -77,9 +77,9 @@
                 <c:forEach var="widget" items="${searchResult.resultSet}">
                     <spring:url value="/app/admin/widgetdetail/${widget.entityId}" var="detaillink"/>
                     <tr data-detaillink="${detaillink}">
-                        <td><a href="${detaillink}"><c:out value="${widget.title}"/></a></td>
-                        <td><a href="${detaillink}"><fmt:message key="widget.type.${widget.type}" /></a></td>
-                        <td><a href="${detaillink}"><c:out value="${widget.widgetStatus}"/></a></td>
+                        <td><c:out value="${widget.title}"/></td>
+                        <td><fmt:message key="widget.type.${widget.type}" /></td>
+                        <td><c:out value="${widget.widgetStatus}"/></td>
                     </tr>
                 </c:forEach>
             </tbody>

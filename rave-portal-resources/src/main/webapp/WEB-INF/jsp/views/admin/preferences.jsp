@@ -50,13 +50,12 @@
                         <c:set value="${entry.value}" var="portalPreference"/>
                         <tr data-detaillink="<c:out value="${detaillink}"/>">
                             <th scope="row" class="largetextcell">
-                                <a href="<c:out value="${detaillink}"/>"><fmt:message
-                                        key="admin.preferencedetail.${portalPreference.key}"/></a>
+                                <fmt:message key="admin.preferencedetail.${portalPreference.key}"/>
                             </th>
                             <td class="largetextcell">
                                 <ul>
                                     <c:forEach items="${portalPreference.values}" var="value">
-                                        <li><a href="<c:out value="${detaillink}"/>"><c:out value="${value}"/></a></li>
+                                        <li><c:out value="${value}"/></li>
                                     </c:forEach>
                                 </ul>
                             </td>
@@ -69,3 +68,8 @@
 
     </article>
 </div>
+<script src="//ajax.aspnetcdn.com/ajax/jQuery/jquery-1.6.4.min.js"></script>
+<script src="<spring:url value="/script/rave_admin.js"/>"></script>
+<script>$(function() {
+    rave.admin.initAdminUi();
+});</script>

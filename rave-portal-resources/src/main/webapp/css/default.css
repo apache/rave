@@ -1038,6 +1038,10 @@ span.error, label.error {
     font-style: italic;
 }
 
+.datatable tbody tr {
+    cursor: pointer;
+}
+
 .formbox {
     border: 1px solid #B4C4CF;
     margin: 1em 10px;
