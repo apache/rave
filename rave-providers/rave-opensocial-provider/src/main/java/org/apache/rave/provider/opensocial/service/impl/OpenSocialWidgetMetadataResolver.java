@@ -61,52 +61,13 @@ public class OpenSocialWidgetMetadataResolver implements WidgetMetadataResolver 
                 if (query != null) {
                     JSONObject jsonModulePrefsObject = (JSONObject) new JSONTokener(query).nextValue();
                     if (jsonModulePrefsObject != null) {
-                        //Wrapped every element into individual try/catch as if any of the element is coming null getString throws JSONException.
-                        try {
-                            String title = jsonModulePrefsObject.getString("title");
-                            widget.setTitle(title);
-                        } catch (JSONException e) {
-                            logger.info("Error while reading: " + e.getLocalizedMessage(), e);
-                        }
-                        try {
-                            String titleUrl = jsonModulePrefsObject.getString("titleUrl");
-                            widget.setTitleUrl(titleUrl);
-
-                        } catch (JSONException e) {
-                            logger.info("Error while reading: " + e.getLocalizedMessage(), e);
-                        }
-                        try {
-                            String description = jsonModulePrefsObject.getString("description");
-                            widget.setDescription(description);
-                        } catch (JSONException e) {
-                            logger.info("Error while reading: " + e.getLocalizedMessage(), e);
-                        }
-                        try {
-                            String author = jsonModulePrefsObject.getString("author");
-                            widget.setAuthor(author);
-                        } catch (JSONException e) {
-                            logger.info("Error while reading: " + e.getLocalizedMessage(), e);
-                        }
-                        try {
-                            String authorEmail = jsonModulePrefsObject.getString("authorEmail");
-                            widget.setAuthorEmail(authorEmail);
-
-                        } catch (JSONException e) {
-                            logger.info("Error while reading: " + e.getLocalizedMessage(), e);
-                        }
-
-                        try {
-                            String thumbnailUrl = jsonModulePrefsObject.getString("thumbnail");
-                            widget.setThumbnailUrl(thumbnailUrl);
-                        } catch (JSONException e) {
-                            logger.info("Error while reading: " + e.getLocalizedMessage(), e);
-                        }
-                        try {
-                            String screenShot = jsonModulePrefsObject.getString("screenshot");
-                            widget.setScreenshotUrl(screenShot);
-                        } catch (JSONException e) {
-                            logger.info("Error while reading: " + e.getLocalizedMessage(), e);
-                        }
+                        widget.setTitle(parseProperty(jsonModulePrefsObject, "title"));
+                        widget.setTitleUrl(parseProperty(jsonModulePrefsObject, "titleUrl"));
+                        widget.setDescription(parseProperty(jsonModulePrefsObject, "description"));
+                        widget.setAuthor(parseProperty(jsonModulePrefsObject, "author"));
+                        widget.setAuthorEmail(parseProperty(jsonModulePrefsObject, "authorEmail"));
+                        widget.setThumbnailUrl(parseProperty(jsonModulePrefsObject, "thumbnail"));
+                        widget.setScreenshotUrl(parseProperty(jsonModulePrefsObject, "screenshot"));
                         widget.setUrl(url);
                         widget.setType(getSupportedContext());
                     }
@@ -132,4 +93,19 @@ public class OpenSocialWidgetMetadataResolver implements WidgetMetadataResolver 
         }
         return widget;
     }
+    /**
+     * getString give error for empty property
+     * @param prefsObject
+     * @param name
+     * @return
+     */
+    private String parseProperty(JSONObject prefsObject, String name){
+        try {
+            return prefsObject.getString(name);
+
+        } catch (JSONException e) {
+            logger.error("Error while reading: " + e.getLocalizedMessage(), e);
+        }
+        return null;
+ }
 }
