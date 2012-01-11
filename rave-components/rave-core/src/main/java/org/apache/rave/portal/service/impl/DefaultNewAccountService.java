@@ -19,6 +19,7 @@
 
 package org.apache.rave.portal.service.impl;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.rave.portal.model.NewUser;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.service.AuthorityService;
@@ -90,9 +91,16 @@ public class DefaultNewAccountService implements NewAccountService {
         if (existingUser != null) {
             throw new IllegalArgumentException("A user already exists for username " + userName);
         }
-        existingUser = userService.getUserByEmail(email);
-        if (existingUser != null) {
-            throw new IllegalArgumentException("A user already exists for email " + email);
+
+        //Implementors who use an alternative store for profile data probably wont be including email when creating new
+        //Rave accounts -- they will likely only be setting username to create a stub entry in the database just so they
+        //have something to tie the rest of the Rave entities to.  All the other profile data (like email) will be looked
+        //up elsewhere.
+        if (StringUtils.isNotEmpty(email)) {
+            existingUser = userService.getUserByEmail(email);
+            if (existingUser != null) {
+                throw new IllegalArgumentException("A user already exists for email " + email);
+            }
         }
     }
 }

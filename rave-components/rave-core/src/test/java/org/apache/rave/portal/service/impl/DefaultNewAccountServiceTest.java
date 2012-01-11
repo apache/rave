@@ -113,10 +113,8 @@ public class DefaultNewAccountServiceTest {
         expectedUser.setExpired(false);
         expectedUser.setLocked(false);
         expectedUser.setEnabled(true);                
-        
 
         ReflectionTestUtils.setField(newAccountService, "passwordEncoder", passwordEncoder);
-                
 
         expect(passwordEncoder.encode("valid.password")).andReturn("valid.password");
         expect(userService.getUserByUsername(VALID_USER)).andReturn(null);
@@ -129,6 +127,40 @@ public class DefaultNewAccountServiceTest {
                
         newAccountService.createNewAccount(newUser);
         
+        verify(userDetails, passwordEncoder, userService, pageLayoutService);
+    }
+
+    @Test
+    public void createNewAccountTest_blankEmail() throws Exception {
+        NewUser newUser = new NewUser();
+        newUser.setUsername(VALID_USER);
+        newUser.setPassword(VALID_PASSWORD);
+        newUser.setConfirmPassword(VALID_PASSWORD);
+        newUser.setEmail("");
+        newUser.setPageLayout(VALID_LAYOUT_CODE);
+
+        User expectedUser = new User();
+        expectedUser.setUsername(newUser.getUsername());
+        expectedUser.setPassword(newUser.getPassword());
+        expectedUser.setEmail(newUser.getEmail());
+        expectedUser.setDefaultPageLayout(validPageLayout);
+        expectedUser.setExpired(false);
+        expectedUser.setLocked(false);
+        expectedUser.setEnabled(true);
+
+        ReflectionTestUtils.setField(newAccountService, "passwordEncoder", passwordEncoder);
+
+        expect(passwordEncoder.encode("valid.password")).andReturn("valid.password");
+        expect(userService.getUserByUsername(VALID_USER)).andReturn(null);
+        //if the email is blank getUserByEmail should not be called so dont expect it
+        expect(pageLayoutService.getPageLayoutByCode(VALID_LAYOUT_CODE)).andReturn(validPageLayout);
+        expect(authorityService.getDefaultAuthorities()).andReturn(validAuthoritySearchResult);
+        userService.registerNewUser(expectedUser);
+        expectLastCall();
+        replay(userDetails, passwordEncoder, userService, pageLayoutService, authorityService);
+
+        newAccountService.createNewAccount(newUser);
+
         verify(userDetails, passwordEncoder, userService, pageLayoutService);
     }
 
@@ -171,6 +203,5 @@ public class DefaultNewAccountServiceTest {
             logger.debug("Expected failure of account creation due to duplicate email");
         }
     }
-
 
 }
