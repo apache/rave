@@ -33,6 +33,8 @@
             <class>org.apache.rave.portal.model.WidgetRating</class>
             <class>org.apache.rave.portal.model.PageLayout</class>
             <class>org.apache.rave.portal.model.Authority</class>
+            <class>org.apache.rave.portal.model.Tag</class>
+            <class>org.apache.rave.portal.model.WidgetTag</class>
             <class>org.apache.rave.portal.model.PortalPreference</class>
         </persistence-unit>
 </persistence>

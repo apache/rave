@@ -20,21 +20,18 @@
 package org.apache.rave.portal.web.api.rest;
 
 import org.apache.rave.portal.model.*;
-import org.apache.rave.portal.service.UserService;
-import org.apache.rave.portal.service.WidgetCommentService;
-import org.apache.rave.portal.service.WidgetRatingService;
+import org.apache.rave.portal.service.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.mock.web.MockHttpServletResponse;
 
 import javax.servlet.http.HttpServletResponse;
-import java.awt.*;
-import java.util.*;
+import java.util.ArrayList;
 import java.util.List;
 
-import static org.hamcrest.CoreMatchers.*;
 import static org.easymock.EasyMock.*;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
 public class WidgetApiTest {
@@ -42,24 +39,33 @@ public class WidgetApiTest {
     private WidgetCommentService widgetCommentService;
     private WidgetRatingService widgetRatingService;
     private UserService userService;
+    private WidgetTagService widgetTagService;
+    private TagService tagService;
     private MockHttpServletResponse response;
 
     private final Long VALID_USER_ID = 5L;
     private final Long VALID_WIDGET_ID = 10L;
-    
+
     private User user;
+    private List<Tag> tagList;
 
     @Before
     public void setup() {
         widgetCommentService = createMock(WidgetCommentService.class);
         widgetRatingService = createMock(WidgetRatingService.class);
         userService = createMock(UserService.class);
+        tagService = createMock(TagService.class);
+        widgetTagService = createMock(WidgetTagService.class);
 
         user = new User();
         user.setEntityId(VALID_USER_ID);
 
+        tagList = new ArrayList<Tag>();
+        tagList.add(new Tag(1L, "tag1"));
+        tagList.add(new Tag(2L, "tag2"));
+
         response = createMock(MockHttpServletResponse.class);
-        widgetApi = new WidgetApi(widgetRatingService, widgetCommentService, userService);
+        widgetApi = new WidgetApi(widgetRatingService, widgetCommentService, userService, tagService, widgetTagService);
     }
 
     @Test(expected = UnsupportedOperationException.class)
@@ -190,11 +196,97 @@ public class WidgetApiTest {
         List<Person> persons = new ArrayList<Person>();
         persons.add(new Person());
         persons.add(new Person());
-        
+
         expect(userService.getAllByAddedWidget(VALID_WIDGET_ID)).andReturn(persons);
         replay(userService);
         assertThat(widgetApi.getAllUsers(VALID_WIDGET_ID), sameInstance(persons));
 
         verify(userService);
+    }
+    
+    @Test
+    public void getTags() {
+        expect(tagService.getAvailableTagsByWidgetId(VALID_WIDGET_ID)).andReturn(tagList);
+        replay(tagService);
+        
+        assertThat(widgetApi.getTags(VALID_WIDGET_ID), is(tagList));
+        verify(tagService);
+    }
+
+    @Test
+    public void getAllTags() {
+        expect(tagService.getAllTags()).andReturn(tagList);
+        replay(tagService);
+
+        assertThat(widgetApi.getAllTags(), is(tagList));
+        verify(tagService);
+    }
+
+    @Test
+    public void createWidgetTag_newTag() {
+        final String TAG_TEXT = "mytag";
+        Tag tag = new Tag(1L, TAG_TEXT);
+        WidgetTag widgetTag = new WidgetTag();
+        widgetTag.setTag(tag);
+                        
+        expect(widgetTagService.getWidgetTagByWidgetIdAndKeyword(VALID_WIDGET_ID, TAG_TEXT)).andReturn(null);
+        expect(userService.getAuthenticatedUser()).andReturn(user);
+        expect(tagService.getTagByKeyword(TAG_TEXT)).andReturn(null);
+        widgetTagService.saveWidgetTag(widgetTag);
+        expectLastCall();
+        replay(widgetTagService, userService, tagService);
+        widgetApi.createWidgetTag(VALID_WIDGET_ID, TAG_TEXT, response);
+        verify(widgetTagService, userService, tagService);
+    }
+
+    @Test
+    public void createWidgetTag_newTag_existsForOtherWidget() {
+        final String TAG_TEXT = "mytag";
+        Tag tag = new Tag(1L, TAG_TEXT);
+        WidgetTag widgetTag = new WidgetTag();
+        widgetTag.setTag(tag);
+
+        expect(widgetTagService.getWidgetTagByWidgetIdAndKeyword(VALID_WIDGET_ID, TAG_TEXT)).andReturn(null);
+        expect(userService.getAuthenticatedUser()).andReturn(user);
+        expect(tagService.getTagByKeyword(TAG_TEXT)).andReturn(tag);
+        widgetTagService.saveWidgetTag(widgetTag);
+        expectLastCall();
+        replay(widgetTagService, userService, tagService);
+        widgetApi.createWidgetTag(VALID_WIDGET_ID, TAG_TEXT, response);
+        verify(widgetTagService, userService, tagService);
+    }
+
+    @Test
+    public void createWidgetTag_nullText() {
+        final String TAG_TEXT = null;
+        Tag tag = new Tag(1L, TAG_TEXT);
+        WidgetTag widgetTag = new WidgetTag();
+        widgetTag.setTag(tag);
+
+        widgetApi.createWidgetTag(VALID_WIDGET_ID, TAG_TEXT, response);
+    }
+
+    @Test
+    public void createWidgetTag_emptyText() {
+        final String TAG_TEXT = "      ";
+        Tag tag = new Tag(1L, TAG_TEXT);
+        WidgetTag widgetTag = new WidgetTag();
+        widgetTag.setTag(tag);
+
+        widgetApi.createWidgetTag(VALID_WIDGET_ID, TAG_TEXT, response);
+    }
+
+    @Test
+    public void createWidgetTag_existingTag() {
+        final String TAG_TEXT = "mytag";
+        Tag tag = new Tag(1L, TAG_TEXT);
+        WidgetTag widgetTag = new WidgetTag();
+        widgetTag.setEntityId(9L);
+        widgetTag.setTag(tag);
+
+        expect(widgetTagService.getWidgetTagByWidgetIdAndKeyword(VALID_WIDGET_ID, TAG_TEXT)).andReturn(widgetTag);
+        replay(widgetTagService);
+        widgetApi.createWidgetTag(VALID_WIDGET_ID, TAG_TEXT, response);
+        verify(widgetTagService);
     }
 }

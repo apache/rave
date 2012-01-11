@@ -174,6 +174,35 @@ rave.api = rave.api || (function() {
             })
         }
 
+        function createWidgetTag(args) {
+            $.ajax({
+                type:'POST',
+                url:rave.getContext() + path + "widgets/" + args.widgetId + "/tags?tagText=" + escape(args.text),
+                success:function (result) {
+                    if (typeof args.successCallback == 'function') {
+                        args.successCallback();
+                    }
+                },
+                error:handleError
+            })
+        }
+
+        function getTags(args) {
+            $.ajax({
+                type:'GET',
+                url:rave.getContext() + path + "widgets/"+args.widgetId  + "/tags",
+                dataType:"json",
+                success:function (data) {
+                    if (typeof args.successCallback == 'function') {
+                        args.successCallback(data);
+                    }
+                }
+            });
+
+
+        }
+
+
         return {
             updateWidgetRating: updateWidgetRating,
             deleteWidgetRating: deleteWidgetRating,
@@ -184,7 +213,9 @@ rave.api = rave.api || (function() {
             updateWidgetComment : updateWidgetComment,
             deleteWidgetComment : deleteWidgetComment,
             deletePage : deletePage,
-            getUsersForWidget: getUsersForWidget
+            getUsersForWidget: getUsersForWidget,
+            createWidgetTag: createWidgetTag,
+            getTags: getTags
         };
     })();
 

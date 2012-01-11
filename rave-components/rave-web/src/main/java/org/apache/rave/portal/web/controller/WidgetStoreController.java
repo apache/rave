@@ -23,7 +23,9 @@ import org.apache.rave.portal.model.PortalPreference;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.Widget;
 import org.apache.rave.portal.model.WidgetStatus;
+import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.service.PortalPreferenceService;
+import org.apache.rave.portal.service.TagService;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.portal.service.WidgetService;
 import org.apache.rave.portal.web.util.ModelKeys;
@@ -34,11 +36,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping(value = {"/store/*", "/store"})
@@ -54,6 +52,7 @@ public class WidgetStoreController {
 
     private final PortalPreferenceService preferenceService;
 
+
     @Autowired
     public WidgetStoreController(WidgetService widgetService, NewWidgetValidator validator,
                                  UserService userService, PortalPreferenceService preferenceService) {
@@ -61,6 +60,7 @@ public class WidgetStoreController {
         this.widgetValidator = validator;
         this.userService = userService;
         this.preferenceService = preferenceService;
+
     }
 
     /**
@@ -82,13 +82,13 @@ public class WidgetStoreController {
         return ViewNames.STORE;
     }
 
-    @RequestMapping(method = RequestMethod.GET, value="mine")
+    @RequestMapping(method = RequestMethod.GET, value = "mine")
     public String viewMine(Model model, @RequestParam long referringPageId,
-                       @RequestParam(required = false, defaultValue = "0") int offset) {
+                           @RequestParam(required = false, defaultValue = "0") int offset) {
         User user = userService.getAuthenticatedUser();
         model.addAttribute(ModelKeys.WIDGETS,
                 widgetService.getWidgetsByOwner(user.getEntityId(), offset, getPageSize()));
-                model.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
+        model.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
         model.addAttribute(ModelKeys.WIDGETS_STATISTICS, widgetService.getAllWidgetStatistics(user.getEntityId()));
         return ViewNames.STORE;
     }

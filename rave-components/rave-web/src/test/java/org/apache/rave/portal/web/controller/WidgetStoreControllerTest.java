@@ -25,6 +25,7 @@ import org.apache.rave.portal.model.Widget;
 import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.model.util.WidgetStatistics;
 import org.apache.rave.portal.service.PortalPreferenceService;
+import org.apache.rave.portal.service.TagService;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.portal.service.WidgetService;
 import org.apache.rave.portal.web.util.ModelKeys;
@@ -92,7 +93,8 @@ public class WidgetStoreControllerTest {
         replay(preferenceService);
 
         NewWidgetValidator widgetValidator = new NewWidgetValidator(widgetService);
-        controller = new WidgetStoreController(widgetService, widgetValidator, userService, preferenceService);
+        controller = new WidgetStoreController(widgetService, widgetValidator, userService,
+                preferenceService);
     }
 
     @Test

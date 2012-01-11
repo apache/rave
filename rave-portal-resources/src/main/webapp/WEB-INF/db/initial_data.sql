@@ -37,6 +37,8 @@ set @granted_authority_seq = 'granted_authority';
 set @widget_comment_seq = 'widget_comment';
 set @widget_rating_seq = 'widget_rating';
 set @portal_preference_seq = 'portal_preference';
+set @tag_seq = 'tag';
+set @widget_tag_seq = 'widget_tag';
 
 
 CREATE TABLE IF NOT EXISTS RAVE_PORTAL_SEQUENCES (seq_name VARCHAR(255) PRIMARY KEY NOT NULL, seq_count BIGINT(19));
@@ -54,6 +56,9 @@ INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@widget_comment_s
 INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@widget_rating_seq, 1);
 INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@granted_authority_seq, 1);
 INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@portal_preference_seq, 1);
+INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@tag_seq, 1);
+INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@widget_tag_seq, 1);
+
   -- ***********************************************************************************
   -- start page layout data, required to make the portal work ---
 set @one_col_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @page_layout_seq);

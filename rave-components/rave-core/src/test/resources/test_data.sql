@@ -34,6 +34,8 @@ set @granted_authority_seq = 'granted_authority';
 set @widget_comment_seq = 'widget_comment';
 set @widget_rating_seq = 'widget_rating';
 set @portal_preference_seq = 'portal_preference';
+set @tag_seq = 'tag';
+set @widget_tag_seq = 'widget_tag';
 
 CREATE TABLE IF NOT EXISTS RAVE_PORTAL_SEQUENCES (seq_name VARCHAR(255) PRIMARY KEY NOT NULL, seq_count BIGINT(19));
 INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@page_seq, 1);
@@ -47,6 +49,9 @@ INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@widget_comment_s
 INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@widget_rating_seq, 1);
 INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@granted_authority_seq, 1);
 INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@portal_preference_seq, 1);
+INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@tag_seq, 1);
+INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@widget_tag_seq, 1);
+
 
   -- ***********************************************************************************
   -- start page layout data, required to make the portal work ---
@@ -788,3 +793,24 @@ INSERT INTO portalpreference_values
 values (@next_portal_preference_id, 'Rave');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @portal_preference_seq;
 -- end portal preferences
+
+set @tag_1_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @tag_seq);
+insert into tag (entity_id, keyword)
+values (@tag_1_id, 'news');
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @tag_seq;
+
+set @tag_2_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @tag_seq);
+insert into tag (entity_id, keyword)
+values (@tag_2_id, 'wikipedia');
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @tag_seq;
+
+
+set @next_widget_tag_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @widget_tag_seq);
+insert into widget_tag (entity_id, widget_id, tag_id)
+values (@next_widget_tag_id, 3,1);
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @widget_tag_seq;
+
+set @next_widget_tag_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @widget_tag_seq);
+insert into widget_tag (entity_id, widget_id, tag_id)
+values (@next_widget_tag_id, 1,2);
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @widget_tag_seq;

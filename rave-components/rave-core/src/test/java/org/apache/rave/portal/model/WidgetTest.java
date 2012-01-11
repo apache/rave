@@ -19,19 +19,19 @@
 
 package org.apache.rave.portal.model;
 
-import java.util.List;
-import java.util.ArrayList;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
 
 /**
-Test for {@link Widget}
+ * Test for {@link Widget}
  */
 public class WidgetTest {
     private Widget widget;
@@ -46,10 +46,11 @@ public class WidgetTest {
     private WidgetStatus status;
     private List<WidgetComment> widgetComments;
     private List<WidgetRating> ratings;
-
+    private List<WidgetTag> tags;
+    
     @Before
     public void setUp() throws Exception {
-        widget= new Widget();
+        widget = new Widget();
         id = 3511L;
         title = "Test Widget";
         url = "http://example.com/widget.xml";
@@ -60,9 +61,16 @@ public class WidgetTest {
         description = "This is a test widget";
         status = WidgetStatus.PREVIEW;
         widgetComments = new ArrayList<WidgetComment>();
+
+        Tag tag=new Tag(1L, "test") ;
+        Tag tag1=new Tag(2L, "test1") ;
         
         ratings = new ArrayList<WidgetRating>();
         ratings.add(new WidgetRating(1L, 1L, 1L, 1));
+        
+        tags = new ArrayList<WidgetTag>();
+        tags.add(new WidgetTag(1L, 1L, new User(), new Date(), tag)) ;
+        tags.add(new WidgetTag(2L,1L, new User(), new Date(), tag1)) ;
 
         widget.setEntityId(id);
         widget.setTitle(title);
@@ -75,6 +83,8 @@ public class WidgetTest {
         widget.setWidgetStatus(status);
         widget.setComments(widgetComments);
         widget.setRatings(ratings);
+        widget.setTags(tags);
+
     }
 
     @Test
@@ -88,8 +98,11 @@ public class WidgetTest {
         assertEquals(author, widget.getAuthor());
         assertEquals(description, widget.getDescription());
         assertEquals(status, widget.getWidgetStatus());
-        assertEquals(widgetComments,widget.getComments());
+        assertEquals(widgetComments, widget.getComments());
         assertEquals(ratings, widget.getRatings());
+        assertEquals(tags, widget.getTags());
+
+
     }
 
     @After

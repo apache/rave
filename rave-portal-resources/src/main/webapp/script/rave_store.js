@@ -127,10 +127,44 @@ rave.store = rave.store || (function() {
             });
         });
     }
-    
+
+    function initTags(widgetId) {
+
+        $(".tagNewButton").button({
+            icons:{primary:"ui-icon-disk"},
+            text:false
+        }).click(function () {
+                var widgetId = this.id.substring("tag-new-".length);
+                rave.api.rest.createWidgetTag({widgetId:widgetId,
+                    text:$("#tags").get(0).value,
+                    successCallback:function () {
+                        window.location.reload();
+                    }});
+            });
+//    load the tag by widgetId
+        rave.api.rest.getTags({ widgetId:widgetId,
+            successCallback:function (data) {
+                var result = ($.map(data, function (tag) {
+                    return {
+                        label:tag.keyword,
+                        value:tag.keyword
+                    }
+                }));
+
+                $("#tags").autocomplete({
+                    source:result
+                })
+            }
+        })
+
+
+    }
+
+
     return {
         init: initRatings,
-        initComments: initComments
-    };
+        initComments: initComments,
+        initTags: initTags
+    };                             
     
 }());

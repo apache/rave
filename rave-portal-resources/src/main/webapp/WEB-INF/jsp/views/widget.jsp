@@ -62,8 +62,9 @@
     <div class="widget-content">
 
         <h2>
-            <c:set var="widgetHasTitleUrl" value="${not empty widget.titleUrl}" />
-            <c:if test="${widgetHasTitleUrl}"><a href="<c:out value="${widget.titleUrl}"/>"rel="external"></c:if>
+            <c:set var="widgetHasTitleUrl" value="${not empty widget.titleUrl}"/>
+            <c:if test="${widgetHasTitleUrl}"><a href="<c:out value="${widget.titleUrl}"/>" rel="external">
+            </c:if>
             <span id="widget-${widget.entityId}-title"><c:out value="${widget.title}"/></span>
             <c:if test="${widgetHasTitleUrl}"></a></c:if>
         </h2>
@@ -105,8 +106,9 @@
             </c:choose>
             <c:if test="${widget.disableRendering}">
                 <div class="storeWidgetDisabled">
-                    <span class="widget-disabled-icon-store ui-icon ui-icon-alert" title="<fmt:message key="widget.chrome.disabled"/>"></span>
-                    <c:out value="${widget.disableRenderingMessage}" escapeXml="true" />
+                    <span class="widget-disabled-icon-store ui-icon ui-icon-alert"
+                          title="<fmt:message key="widget.chrome.disabled"/>"></span>
+                    <c:out value="${widget.disableRenderingMessage}" escapeXml="true"/>
                 </div>
             </c:if>
             <c:if test="${not empty widget.author}">
@@ -141,13 +143,35 @@
                 </div>
             </div>
             <div class="widgetUserCount">
-                <c:set var="widgetUserCountGreaterThanZero" value="${widgetStatistics != null && widgetStatistics.totalUserCount > 0}" />
-                <c:if test="${widgetUserCountGreaterThanZero}"><a href="javascript:void(0);" onclick="rave.displayUsersOfWidget(${widget.entityId});"></c:if>
-                <fmt:formatNumber groupingUsed="true" value="${widgetStatistics.totalUserCount}" />&nbsp;<fmt:message key="page.widget.usercount"/>
+                <c:set var="widgetUserCountGreaterThanZero"
+                       value="${widgetStatistics != null && widgetStatistics.totalUserCount > 0}"/>
+                <c:if test="${widgetUserCountGreaterThanZero}"><a href="javascript:void(0);"
+                                                                  onclick="rave.displayUsersOfWidget(${widget.entityId});"></c:if>
+                <fmt:formatNumber groupingUsed="true" value="${widgetStatistics.totalUserCount}"/>&nbsp;<fmt:message
+                        key="page.widget.usercount"/>
                 <c:if test="${widgetUserCountGreaterThanZero}"></a></c:if>
             </div>
         </div>
 
+        <%--//Tag section--%>
+        <div class="widgetTags">
+            <c:if test="${not empty widget.tags}">
+                <fmt:message key="page.widget.tags.title"/>
+                <table id="tagsRow">
+                    <tr>
+                        <c:forEach var="tag" items="${widget.tags}">
+                        <td class="storeWidgetDesc"><c:out value="${tag.tag.keyword}"/></td>
+                        </c:forEach>
+                     </tr>
+                </table>
+            </c:if>
+
+            <div id="tagInput">
+                <fmt:message key="page.widget.tags.add"/> </br>
+                <input id="tags">
+                <button id="tag-new-${widget.entityId}" class="tagNewButton"></button>
+            </div>
+        </div>
         <div class="widgetComments">
             <div class="new-comment">
                 <h3><fmt:message key="page.widget.comments"/></h3>
@@ -156,29 +180,29 @@
             </div>
             <c:if test="${not empty widget.comments}">
                 <ul class="comments">
-                <c:forEach var="comment" items="${widget.comments}">
-                    <li class="comment">
+                    <c:forEach var="comment" items="${widget.comments}">
+                        <li class="comment">
 
-                       <fmt:formatDate value="${comment.createdDate}" type="both" var="commentDate"/>
-                        <c:choose>
-                            <c:when test="${not empty comment.user.displayName}">
-                                <c:out value="${comment.user.displayName}"/>
-                            </c:when>
-                            <c:otherwise><c:out value="${comment.user.username}"/></c:otherwise>
-                        </c:choose>
-                        <c:out value=" - ${commentDate} "/>
+                            <fmt:formatDate value="${comment.createdDate}" type="both" var="commentDate"/>
+                            <c:choose>
+                                <c:when test="${not empty comment.user.displayName}">
+                                    <c:out value="${comment.user.displayName}"/>
+                                </c:when>
+                                <c:otherwise><c:out value="${comment.user.username}"/></c:otherwise>
+                            </c:choose>
+                            <c:out value=" - ${commentDate} "/>
 
-                        <c:if test="${userProfile.entityId eq comment.user.entityId}">
-                            <button id="comment-delete-${comment.entityId}" class="commentDeleteButton"
-                                    value="Delete" data-widgetid="<c:out value="${comment.widgetId}"/>"></button>
-                            <button id="comment-edit-${comment.entityId}" class="commentEditButton" value="Edit"
-                                    data-widgetid="<c:out value="${comment.widgetId}"/>"></button>
-                        </c:if>
+                            <c:if test="${userProfile.entityId eq comment.user.entityId}">
+                                <button id="comment-delete-${comment.entityId}" class="commentDeleteButton"
+                                        value="Delete" data-widgetid="<c:out value="${comment.widgetId}"/>"></button>
+                                <button id="comment-edit-${comment.entityId}" class="commentEditButton" value="Edit"
+                                        data-widgetid="<c:out value="${comment.widgetId}"/>"></button>
+                            </c:if>
 
-                        <p class="commentText"><c:out value="${comment.text}"/></p>
+                            <p class="commentText"><c:out value="${comment.text}"/></p>
 
-                    </li>
-                </c:forEach>
+                        </li>
+                    </c:forEach>
                 </ul>
             </c:if>
         </div>
@@ -199,9 +223,11 @@
 <script src="<spring:url value="/script/rave_api.js"/>"></script>
 <script src="<spring:url value="/script/rave_store.js"/>"></script>
 <script>
-    $(function() {
+    $(function () {
         rave.setContext("<spring:url value="/app/" />");
         rave.store.init();
         rave.store.initComments();
+        rave.store.initTags("<c:out value="${widget.entityId}"/>");
+
     });
 </script>

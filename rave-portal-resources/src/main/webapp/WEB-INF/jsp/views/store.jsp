@@ -188,10 +188,10 @@
                             </c:if>
                             <div class="widgetRating">
                                 <fmt:message key="page.widget.rate"/>
-                                
+
                                 <div id="rating-${widget.entityId}" class="ratingButtons">
                                     <form>
-				    					<input type="hidden" id="rate-${widget.entityId}" 
+				    					<input type="hidden" id="rate-${widget.entityId}"
 							 				   value="${widgetsStatistics[widget.entityId]!=null?widgetsStatistics[widget.entityId].userRating:"-1"}">
 				    				</form>
                                     <input type="radio" id="like-${widget.entityId}" class="widgetLikeButton"
@@ -200,11 +200,23 @@
                                     <input type="radio" id="dislike-${widget.entityId}" class="widgetDislikeButton"
                                             name="rating-${widget.entityId}"${widgetsStatistics[widget.entityId].userRating==0?" checked='true'":""}>
                                     <label for="dislike-${widget.entityId}"> </label>
-                                    
+
                                     <!-- Displaying the likes and dislikes rating along with total votes -->
-                                    
+
                                 </div>
                             </div>
+                            <c:if test="${not empty widget.tags}">
+                                <table class="widgetTags">
+                                    <tr>
+                                        <td>
+                                            <fmt:message key="page.widget.tags.title"/>
+                                        </td>
+                                        <c:forEach var="tag" items="${widget.tags}">
+                                            <td class="storeWidgetDesc"><c:out value="${tag.tag.keyword}"/></td>
+                                        </c:forEach>
+                                    </tr>
+                                </table>
+                            </c:if>
                             <ul class="horizontal-list">
                             	<!-- display total likes -->
                                 <li>

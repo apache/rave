@@ -25,15 +25,15 @@ body {
     color: #000000;
     font-size: 62.5%;
     font-family: Arial, Helvetica, sans-serif;
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#D7D7D3", endColorstr="#EBEBEB");
-    background: -moz-linear-gradient(center top , #D7D7D3 0%, #EBEBEB 50%) repeat scroll 0 0 transparent;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr = "#D7D7D3", endColorstr = "#EBEBEB");
+    background: -moz-linear-gradient(center top, #D7D7D3 0%, #EBEBEB 50%) repeat scroll 0 0 transparent;
     background: -webkit-gradient(linear, left top, left bottom, from(#D7D7D3), to(#EBEBEB));
-    margin:0;
+    margin: 0;
 }
 
 /* general html fields */
 
-header, nav, article, section, footer{
+header, nav, article, section, footer {
     display: block;
     margin: 0;
     padding: 0;
@@ -97,7 +97,7 @@ a img {
 .horizontal-list li, .paging li {
     display: inline;
     list-style: none;
-    padding:0 10px;
+    padding: 0 10px;
 }
 
 .horizontal-list li:last-child, .paging li:last-child {
@@ -151,6 +151,7 @@ header a:hover {
     background-color: #666666;
     text-decoration: none;
 }
+
 header h1 {
     text-align: center;
     text-transform: none;
@@ -164,13 +165,14 @@ header h1 {
 }
 
 .header-mobile {
-    height:auto;
+    height: auto;
 }
 
 .topnav {
     float: right;
     margin-right: 2%;
 }
+
 /* content */
 #content {
     background-color: transparent;
@@ -195,21 +197,21 @@ header h1 {
 
 .widget-mobile {
     box-shadow: none;
-    border-radius: 0 0 0 0;    
+    border-radius: 0 0 0 0;
     padding: 0;
 }
 
 .widget-wrapper-transitional {
     position: absolute;
     z-index: 1000;
-    left:0.25%;
+    left: 0.25%;
     top: 51px;
 }
 
 .widget-wrapper-canvas {
     position: absolute;
     z-index: 1000;
-    left:0.25%;
+    left: 0.25%;
     top: 72px;
     width: 99.5%;
     height: 100%;
@@ -229,8 +231,8 @@ header h1 {
 .widget-title-bar {
     color: #FFFFFF;
     background: #767676; /* IE 7*/
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#999999", endColorstr="#666666");
-    background: -moz-linear-gradient(center top , #999 0%, #666 25%) repeat scroll 0 0 transparent;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr = "#999999", endColorstr = "#666666");
+    background: -moz-linear-gradient(center top, #999 0%, #666 25%) repeat scroll 0 0 transparent;
     background: -webkit-gradient(linear, left top, left bottom, from(#999), to(#666));
     border-radius: 5px 5px 0 0;
     padding: 2px;
@@ -388,7 +390,7 @@ header h1 {
     clear: both;
 }
 
-.columns_2_2,  .columns_3_3, .columns_3nwn_3, .columns_4_4, .columns_3nwn_1_bottom_3, .columns_3nwn_1_bottom_4 {
+.columns_2_2, .columns_3_3, .columns_3nwn_3, .columns_4_4, .columns_3nwn_1_bottom_3, .columns_3nwn_1_bottom_4 {
     margin-right: 0;
 }
 
@@ -515,7 +517,7 @@ ul.storeItems {
     margin: 1em auto;
 }
 
-ul.storeItems li{
+ul.storeItems li {
     list-style: none;
 }
 
@@ -536,7 +538,7 @@ ul.storeItems li{
     margin-bottom: 1em;
 }
 
-.storeWidgetDesc{
+.storeWidgetDesc {
     margin: 1em 0;
 }
 
@@ -613,7 +615,7 @@ label.formradio {
 }
 
 input.long, textarea.long {
-    width:400px;
+    width: 400px;
 }
 
 .checkboxlist {
@@ -634,7 +636,7 @@ span.error, label.error {
 }
 
 .warn {
-  font-weight: bold;
+    font-weight: bold;
 }
 
 /* End of form fields */
@@ -685,7 +687,7 @@ span.error, label.error {
 
 .rave-ui-tab-mobile {
     border: none;
-    background-color: #FFFFFF;    
+    background-color: #FFFFFF;
     color: #767676;
     font-weight: normal;
     font-style: normal;
@@ -698,28 +700,44 @@ span.error, label.error {
 
 .rave-ui-tab-mobile:hover, .rave-ui-tab-mobile a:hover {
     color: #000000;
-    border: none;    
+    border: none;
     background-color: #FFFFFF;
 }
 
 .rave-ui-tab-selected-mobile, .rave-ui-tab-selected-mobile:hover {
     border: 1px solid #B4C4CF;
     border-bottom: 1px solid #FFFFFF;
-    background-color: #FFFFFF;        
+    background-color: #FFFFFF;
     color: #000000;
     font-style: normal;
     font-weight: bold;
 }
 
 #dialog {
-    width:400px;
+    width: 400px;
     display: none;
 }
-#dialog label { display:block; }
-#dialog input { display:block; }
-#dialog label { margin-top: 0.5em; }
-#dialog input { width: 95%; }
-#dialog textarea { width: 95%; }
+
+#dialog label {
+    display: block;
+}
+
+#dialog input {
+    display: block;
+}
+
+#dialog label {
+    margin-top: 0.5em;
+}
+
+#dialog input {
+    width: 95%;
+}
+
+#dialog textarea {
+    width: 95%;
+}
+
 #add_page {
     cursor: pointer;
     width: 18px;
@@ -734,8 +752,8 @@ span.error, label.error {
 }
 
 #pageContent, .pageContent {
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#D7D7D3", endColorstr="#EBEBEB");
-    background: -moz-linear-gradient(center top , #D7D7D3 0%, #EBEBEB 50%) repeat scroll 0 0 transparent;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr = "#D7D7D3", endColorstr = "#EBEBEB");
+    background: -moz-linear-gradient(center top, #D7D7D3 0%, #EBEBEB 50%) repeat scroll 0 0 transparent;
     background: -webkit-gradient(linear, left top, left bottom, from(#D7D7D3), to(#EBEBEB));
 }
 
@@ -763,7 +781,7 @@ span.error, label.error {
     margin: 20px auto;
     padding: 20px;
     text-align: center;
-    width: 300px;  
+    width: 300px;
     font-size: 1.25em;
 }
 
@@ -780,6 +798,7 @@ span.error, label.error {
     zoom: 1;
     *display: inline;
 }
+
 .page-menu {
     border: 1px solid black;
     position: absolute;
@@ -791,15 +810,19 @@ span.error, label.error {
     z-index: 1000;
     cursor: pointer;
 }
+
 .page-menu-item {
     padding: 3px;
 }
+
 .page-menu-item:hover {
     background-color: #B4C4CF;
 }
+
 .page-menu-item-disabled {
     color: #D3D3D3;
 }
+
 #pageMenuButton {
     cursor: pointer;
     margin-right: 10px;
@@ -814,6 +837,7 @@ span.error, label.error {
     zoom: 1;
     *display: inline;
 }
+
 .widget-menu {
     border: 1px solid black;
     position: absolute;
@@ -825,13 +849,16 @@ span.error, label.error {
     z-index: 1000;
     cursor: pointer;
 }
+
 .widget-menu-item {
     padding: 3px;
     color: #000000;
 }
+
 .widget-menu-item:hover {
     background-color: #B4C4CF;
 }
+
 .widget-menu-item-disabled {
     color: #D3D3D3;
 }
@@ -844,16 +871,23 @@ span.error, label.error {
     cursor: pointer;
 }
 
+.widget-tags-select {
+
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+}
+
 #errorStack {
     display: none;
     width: 30%;
-    margin:auto;
+    margin: auto;
 }
 
 .errorMessage {
     text-align: center;
     font-size: 150%;
 }
+
 .errorLogo {
     text-align: center;
 }
@@ -862,8 +896,8 @@ span.error, label.error {
 .admincontent {
     margin: 0 auto;
     width: 80%;
-    padding:1em 20px;
-    font-size:1.1em;
+    padding: 1em 20px;
+    font-size: 1.1em;
 }
 
 .admincontent p {
@@ -871,8 +905,8 @@ span.error, label.error {
 }
 
 .admincontent .searchbox {
-    float:right;
-    margin-top:1em;
+    float: right;
+    margin-top: 1em;
 }
 
 .admincontent .goback {
@@ -880,15 +914,15 @@ span.error, label.error {
 }
 
 .searchbox form, .searchbox fieldset {
-    display:inline;
-    height:1em;
-    margin:0;
-    padding:0;
+    display: inline;
+    height: 1em;
+    margin: 0;
+    padding: 0;
 }
 
 .admincontent h2 {
     margin-top: 0;
-    padding-top:1em;
+    padding-top: 1em;
     border: none;
 }
 
@@ -903,7 +937,7 @@ span.error, label.error {
     border-radius: 4px;
 }
 
-.admincontent table th,.admincontent table td {
+.admincontent table th, .admincontent table td {
     padding: 5px 5px 4px;
     line-height: 1.5em;
     text-align: left;
@@ -964,12 +998,12 @@ span.error, label.error {
 
 .admincontent th a, .admincontent th a:visited {
     color: #FFFFFF;
-    text-decoration:none;
+    text-decoration: none;
 }
 
 .admincontent td a, .admincontent td a:visited {
     color: #000000;
-    text-decoration:none;
+    text-decoration: none;
 }
 
 .admincontent tbody tr:hover a, .admincontent table a:hover {
@@ -978,12 +1012,12 @@ span.error, label.error {
 }
 
 .admincontent .leftcolumn {
-    float:left;
+    float: left;
     width: 70%;
 }
 
 .admincontent .rightcolumn {
-    float:right;
+    float: right;
     width: 30%;
 }
 
@@ -992,6 +1026,7 @@ span.error, label.error {
     margin: 1em 0;
     width: 100%;
 }
+
 .admincontent figure.screenshot img {
     max-width: 100%;
 }
@@ -1004,8 +1039,8 @@ span.error, label.error {
 }
 
 .formbox {
-    border:1px solid #B4C4CF;
-    margin:1em 10px;
+    border: 1px solid #B4C4CF;
+    margin: 1em 10px;
     padding: 0 10px;
 }
 
@@ -1101,7 +1136,6 @@ span.error, label.error {
     font-size: 14px;
 }
 
-
 @media all and (max-width: 900px) {
     .storeSearch {
         width: 100%;
@@ -1169,7 +1203,7 @@ span.error, label.error {
         padding: 1em 10px;
     }
 
-    .detailWidgetInfo, .detailWidgetPreview, .widgetComments {
+    .detailWidgetInfo, .detailWidgetPreview, .widgetComments, .widgetTags {
         width: 98%;
         padding: 0 1%;
     }

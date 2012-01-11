@@ -18,39 +18,22 @@
  */
 package org.apache.rave.portal.model;
 
-import java.io.Serializable;
-import java.util.List;
+import org.apache.rave.persistence.BasicEntity;
 
-import javax.persistence.Basic;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.TableGenerator;
+import javax.persistence.*;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
-
-import org.apache.rave.persistence.BasicEntity;
+import java.io.Serializable;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * A widget
  */
 @XmlAccessorType(XmlAccessType.NONE)
 @Entity
-@Table(name="widget")
+@Table(name = "widget")
 @NamedQueries({
         @NamedQuery(name = Widget.WIDGET_GET_ALL, query = Widget.SELECT_W_FROM_WIDGET_W + Widget.ORDER_BY_TITLE_ASC),
         @NamedQuery(name = Widget.WIDGET_COUNT_ALL, query = Widget.SELECT_COUNT_W_FROM_WIDGET_W),
@@ -94,13 +77,14 @@ public class Widget implements BasicEntity, Serializable {
     static final String SELECT_COUNT_W_FROM_WIDGET_W = "SELECT count(w) FROM Widget w ";
 
     static final String WHERE_CLAUSE_FREE_TEXT =
-            " WHERE lower(w.title) LIKE :"+PARAM_SEARCH_TERM+" OR w.description LIKE :description";
-    static final String WHERE_CLAUSE_STATUS = " WHERE w.widgetStatus = :"+PARAM_STATUS;
-    static final String WHERE_CLAUSE_URL = " WHERE w.url = :"+PARAM_URL;
-    static final String WHERE_CLAUSE_OWNER = " WHERE w.owner = :"+PARAM_OWNER;
+            " WHERE lower(w.title) LIKE :" + PARAM_SEARCH_TERM + " OR w.description LIKE :description";
+    static final String WHERE_CLAUSE_STATUS = " WHERE w.widgetStatus = :" + PARAM_STATUS;
+    static final String WHERE_CLAUSE_URL = " WHERE w.url = :" + PARAM_URL;
+    static final String WHERE_CLAUSE_OWNER = " WHERE w.owner = :" + PARAM_OWNER;
     static final String ORDER_BY_TITLE_ASC = " ORDER BY w.title ASC ";
 
-    @Id @Column(name="entity_id")
+    @Id
+    @Column(name = "entity_id")
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "widgetIdGenerator")
     @TableGenerator(name = "widgetIdGenerator", table = "RAVE_PORTAL_SEQUENCES", pkColumnName = "SEQ_NAME",
             valueColumnName = "SEQ_COUNT", pkColumnValue = "widget", allocationSize = 1, initialValue = 1)
@@ -110,42 +94,53 @@ public class Widget implements BasicEntity, Serializable {
         TODO RAVE-234: Figure out what the OpenJPA strategy is for functionality provided by Eclisplink's @Convert
      */
     @XmlElement
-    @Basic @Column(name="title")
+    @Basic
+    @Column(name = "title")
     private String title;
     //private InternationalString title;
 
     @XmlElement
-    @Basic @Column(name="title_url")
+    @Basic
+    @Column(name = "title_url")
     private String titleUrl;
 
     @XmlElement
-    @Basic @Column(name="url", unique = true)
+    @Basic
+    @Column(name = "url", unique = true)
     private String url;
 
-    @Basic @Column(name="thumbnail_url")
+    @Basic
+    @Column(name = "thumbnail_url")
     private String thumbnailUrl;
 
-    @Basic @Column(name="screenshot_url")
+    @Basic
+    @Column(name = "screenshot_url")
     private String screenshotUrl;
 
     @XmlElement
-    @Basic @Column(name="type")
+    @Basic
+    @Column(name = "type")
     private String type;
 
     @XmlElement
-    @Basic @Column(name="author")
+    @Basic
+    @Column(name = "author")
     private String author;
 
     @XmlElement
-    @Basic @Column(name="author_email")
+    @Basic
+    @Column(name = "author_email")
     private String authorEmail;
 
     @XmlElement
-    @Basic @Column(name = "description") @Lob
+    @Basic
+    @Column(name = "description")
+    @Lob
     private String description;
 
-    @XmlElement(name="status")
-    @Basic @Column(name = "widget_status")
+    @XmlElement(name = "status")
+    @Basic
+    @Column(name = "widget_status")
     @Enumerated(EnumType.STRING)
     private WidgetStatus widgetStatus;
 
@@ -158,16 +153,24 @@ public class Widget implements BasicEntity, Serializable {
     private User owner;
 
     @XmlElement
-    @Basic @Column(name = "disable_rendering")
+    @Basic
+    @Column(name = "disable_rendering")
     private boolean disableRendering;
 
     @XmlElement
-    @Basic @Column(name = "disable_rendering_message")
+    @Basic
+    @Column(name = "disable_rendering_message")
     private String disableRenderingMessage;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "widget_id", referencedColumnName = "entity_id")
     private List<WidgetRating> ratings;
+
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "widget_id", referencedColumnName = "entity_id")
+    private List<WidgetTag> tags;
+
 
     public Widget() {
     }
@@ -325,6 +328,14 @@ public class Widget implements BasicEntity, Serializable {
 
     public void setDisableRenderingMessage(String disableRenderingMessage) {
         this.disableRenderingMessage = disableRenderingMessage;
+    }
+
+    public List<WidgetTag> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<WidgetTag> tags) {
+        this.tags = tags;
     }
 
     @Override
