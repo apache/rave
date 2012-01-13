@@ -94,7 +94,7 @@ public class OpenSocialWidgetMetadataResolver implements WidgetMetadataResolver 
         return widget;
     }
     /**
-     * getString give error for empty property
+     * getString give error for null property
      * @param prefsObject
      * @param name
      * @return
