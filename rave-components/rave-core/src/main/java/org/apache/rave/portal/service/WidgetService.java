@@ -68,7 +68,7 @@ public interface WidgetService {
      * @param id the Id of the widget
      * @return a valid widget if one exists for the given id; null otherwise
      */
-    @PostAuthorize("hasPermission(returnObject, 'read')")  
+    @PostAuthorize("returnObject == null or hasPermission(returnObject, 'read')")
     Widget getWidget(long id);
 
     /**
@@ -112,7 +112,7 @@ public interface WidgetService {
      * @param widgetUrl url of the Widget
      * @return {@link Widget} if it exists, otherwise {@literal null}
      */
-    @PostAuthorize("hasPermission(returnObject, 'read')")
+//    @PostAuthorize("hasPermission(returnObject, 'read')")
     Widget getWidgetByUrl(String widgetUrl);
 
     /**
@@ -128,32 +128,32 @@ public interface WidgetService {
      *
      * @param widget new Widget to store
      * @return Widget if it is new and can be stored
-     */        
-    @PostAuthorize("hasPermission(returnObject, 'create')") 
+     */
+    @PostAuthorize("hasPermission(returnObject, 'create')")
     Widget registerNewWidget(Widget widget);
-    
+
     /**
      * Generates the widget statistics for a gadget including the user's specific information.
-     * 
+     *
      * @param widgetId id of the widget
      * @param userId id of the user
      * @return {@link WidgetStatistics} with the rating information
      */
     WidgetStatistics getWidgetStatistics(long widgetId, long userId);
-    
+
     /**
      * Generates the mapping of widget statistics for the user.
-     * 
+     *
      * @param userId id of the user
      * @return Mapping of {@link WidgetStatistics} objects keyed off of the widget's entityId
      */
     Map<Long, WidgetStatistics> getAllWidgetStatistics(long userId);
-    
+
     /**
      * Updates {@link Widget}
      *
      * @param widget to save
      */
-    @PreAuthorize("hasPermission(#widget.entityId, 'org.apache.rave.portal.model.Widget', 'update')")        
+    @PreAuthorize("hasPermission(#widget.entityId, 'org.apache.rave.portal.model.Widget', 'update')")
     void updateWidget(Widget widget);
 }
