@@ -102,7 +102,7 @@ rave.opensocial = rave.opensocial || (function() {
             container.preloadCaches(preloadConfig);
             renderNewGadget(gadget);
         } else {
-            rave.errorWidget(gadget.regionWidgetId, "Unable to render OpenSocial Gadget: <br /><br />" + validationResult.error);
+            rave.errorWidget(gadget.regionWidgetId, rave.getClientMessage("opensocial.render_error") +  "<br /><br />" + validationResult.error);
         }
     }
 

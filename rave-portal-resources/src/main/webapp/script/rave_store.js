@@ -114,7 +114,7 @@ rave.store = rave.store || (function() {
                modal: true,
                buttons : [
                     {
-                        text : "Update",
+                        text : rave.getClientMessage("common.update"),
                         click : function() {
                            rave.api.rest.updateWidgetComment({widgetId: widgetId,
                                                             commentId: commentId,

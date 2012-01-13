@@ -91,5 +91,6 @@ under the License.
 <script src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.8.1/jquery.validate.min.js"></script>
 <script src="<spring:url value="/script/rave.js"/>"></script>
 <script src="<spring:url value="/script/rave_forms.js"/>"></script>
+<script src="<spring:url value="/app/messagebundle/rave_client_messages.js"/>"></script>
 
 <script>$(document).ready(rave.forms.validateNewAccountForm());</script>

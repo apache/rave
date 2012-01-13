@@ -172,6 +172,7 @@
 <script src="//ajax.aspnetcdn.com/ajax/jquery.ui/1.8.16/jquery-ui.min.js"></script>
 <script src="<spring:url value="/script/rave.js"/>"></script>
 <script src="<spring:url value="/script/rave_api.js"/>"></script>
+<script src="<spring:url value="/app/messagebundle/rave_client_messages.js"/>"></script>
 <script>
     $(function() {
         rave.setContext("<spring:url value="/app/" />");

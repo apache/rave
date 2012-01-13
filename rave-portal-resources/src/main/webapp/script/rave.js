@@ -17,11 +17,10 @@
  * under the License.
  */
 var rave = rave || (function() {
-    var WIDGET_PROVIDER_ERROR = "This widget type is currently unsupported.  Check with your administrator and be sure the correct provider is registered.";
-
     var providerMap = {};
     var widgetByIdMap = {};
     var context = "";
+    var clientMessages = {};
 
     /**
      * Separate sub-namespace for isolating UI functions and state management
@@ -35,8 +34,8 @@ var rave = rave || (function() {
         var SELECT_OPTION_TEMPLATE = "<option value='{value}' {selected}>{displayValue}</option>";
         var TEXTAREA_TEMPLATE = "<tr>{prefLabelTemplate}<td><textarea id='{name}' name='{name}' rows='5' cols='12' class='{class}'>{value}</textarea></td></tr>";
         var HIDDEN_FIELD_TEMPLATE = "<input type='hidden' id='{name}' name='{name}' value='{value}'>";
-        var PREFS_SAVE_BUTTON_TEMPLATE = "<button type='button' id='{elementId}'>Save</button>";
-        var PREFS_CANCEL_BUTTON_TEMPLATE = "<button type='button' id='{elementId}'>Cancel</button>";
+        var PREFS_SAVE_BUTTON_TEMPLATE = "<button type='button' id='{elementId}'>{buttonText}</button>";
+        var PREFS_CANCEL_BUTTON_TEMPLATE = "<button type='button' id='{elementId}'>{buttonText}</button>";
 
         var NAME_REGEX = /{name}/g;        
         var VALUE_REGEX = /{value}/g;
@@ -48,6 +47,7 @@ var rave = rave || (function() {
         var ELEMENT_ID_REGEX = /{elementId}/g;
         var PREF_LABEL_TEMPLATE_REGEX = /{prefLabelTemplate}/g;
         var CLASS_REGEX = /{class}/g;
+        var BUTTON_TEXT_REGEX = /{buttonText}/g;
         
         var WIDGET_PREFS_LABEL_CLASS = "widget-prefs-label";
         var WIDGET_PREFS_LABEL_REQUIRED_CLASS = "widget-prefs-label-required";
@@ -159,8 +159,7 @@ var rave = rave || (function() {
                 var widget = rave.getRegionWidgetById(widgetId);
                             
                 // init the collapse/restore toggle for the title bar                
-                $(this).find(".widget-title-bar-mobile").click({id: widgetId}, toggleCollapseAction); 
-                $(this).find(".widget-title-bar-mobile").bind( "touchstart", function(e){alert('Span Clicked!')});
+                $(this).find(".widget-title-bar-mobile").click({id: widgetId}, toggleCollapseAction);
             });
         }
         
@@ -376,16 +375,15 @@ var rave = rave || (function() {
             
             // if this widget has one or more required inputs display the helper message
             if (hasRequiredUserPrefs) {
-                prefsFormMarkup.push("<tr><td colspan='2' class='widget-prefs-required-text'>* indicates a required input</td></tr>");
+                prefsFormMarkup.push("<tr><td colspan='2' class='widget-prefs-required-text'>" + rave.getClientMessage("widget.prefs.required.title") + "</td></tr>");
             }
 
             prefsFormMarkup.push("<tr><td colspan='2'>");
-            prefsFormMarkup.push(PREFS_SAVE_BUTTON_TEMPLATE.replace(ELEMENT_ID_REGEX,
-                    WIDGET_PREFS_SAVE_BUTTON(regionWidget.regionWidgetId)));
-            prefsFormMarkup.push(PREFS_CANCEL_BUTTON_TEMPLATE.replace(ELEMENT_ID_REGEX,
-                    WIDGET_PREFS_CANCEL_BUTTON(regionWidget.regionWidgetId)));
+            prefsFormMarkup.push(PREFS_SAVE_BUTTON_TEMPLATE.replace(ELEMENT_ID_REGEX, WIDGET_PREFS_SAVE_BUTTON(regionWidget.regionWidgetId))
+                                                           .replace(BUTTON_TEXT_REGEX, rave.getClientMessage("common.save")));
+            prefsFormMarkup.push(PREFS_CANCEL_BUTTON_TEMPLATE.replace(ELEMENT_ID_REGEX, WIDGET_PREFS_CANCEL_BUTTON(regionWidget.regionWidgetId))
+                                                             .replace(BUTTON_TEXT_REGEX, rave.getClientMessage("common.cancel")));
             prefsFormMarkup.push("</td></tr>");
-
             prefsFormMarkup.push("</table>");
 
             var prefsElement = $("#" + WIDGET_PREFS_CONTENT(regionWidget.regionWidgetId));
@@ -549,7 +547,7 @@ var rave = rave || (function() {
                 }
                 html+="</ul>";
 
-                $("<div class='dialog widget-users-dialog' title='" + $("#widget-" + widgetId + "-title").text().trim() + " has been added by...'>" + html + "</div>").dialog({
+                $("<div class='dialog widget-users-dialog' title='" + $("#widget-" + widgetId + "-title").text().trim() + " " + rave.getClientMessage("widget.users.added_by") + "'>" + html + "</div>").dialog({
                     modal: true,
                     buttons: [{text: "Close", click: function(){$(this).dialog("close");}}]
                 });
@@ -583,6 +581,14 @@ var rave = rave || (function() {
         };
 
     })();
+
+    function getClientMessage(key) {
+        return clientMessages[key];
+    }
+
+    function addClientMessage(key, message) {
+        return clientMessages[key] = message;
+    }
 
     function registerWidget(widgetsByRegionIdMap, regionId, widget) {
         if (!widgetsByRegionIdMap.hasOwnProperty(regionId)) {
@@ -652,7 +658,7 @@ var rave = rave || (function() {
         }
         var provider = providerMap[widget.type];
         if (typeof provider == "undefined") {
-            renderErrorWidget(widget.regionWidgetId, WIDGET_PROVIDER_ERROR);
+            renderErrorWidget(widget.regionWidgetId, rave.getClientMessage("widget.provider.error"));
         } else {
             provider.initWidget(widget);
         }
@@ -912,6 +918,21 @@ var rave = rave || (function() {
          * Displays an info message at the top of the page.
          * @param message The message to display.
          */
-        showInfoMessage: ui.showInfoMessage
+        showInfoMessage: ui.showInfoMessage,
+
+        /**
+         * Returns a language specific message based on the supplied key
+         *
+         * @param key the key of the message
+         */
+        getClientMessage: getClientMessage,
+
+        /**
+         * Adds a message to the internal client message map
+         *
+         * @param key
+         * @param message
+         */
+        addClientMessage: addClientMessage
     }
 })();

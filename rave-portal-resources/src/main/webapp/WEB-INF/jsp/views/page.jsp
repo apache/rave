@@ -173,6 +173,7 @@
 <script src="<spring:url value="/script/rave_opensocial.js"/>"></script>
 <script src="<spring:url value="/script/rave_wookie.js"/>"></script>
 <script src="<spring:url value="/script/rave_layout.js"/>"></script>
+<script src="<spring:url value="/app/messagebundle/rave_client_messages.js"/>"></script>
 <portal:render-script location="${'AFTER_RAVE'}" />
 <script>
     $(function() {

@@ -23,7 +23,7 @@ var rave = rave || {};
  */
 rave.api = rave.api || (function() {
     function handleError(jqXhr, status, error) {
-        alert("Rave encountered an error while trying to contact the server.  Please reload the page and try again. error: " + error);
+        alert(rave.getClientMessage("api.error") + error);
     }
 
     var restApi = (function() {
@@ -252,13 +252,13 @@ rave.api = rave.api || (function() {
                     if (result.error) {
                         handleRpcError(result);
                     } else {
-                        var widgetTitle = "The widget";
+                        var widgetTitle = rave.getClientMessage("widget.add_prefix");
                         var addedWidget = result.result != undefined ? result.result.widget : undefined;
 
                         if (addedWidget != undefined && addedWidget.title != undefined && addedWidget.title.length > 0) {
                             widgetTitle = addedWidget.title;
                         }
-                        rave.showInfoMessage(widgetTitle + " has been added to your page");
+                        rave.showInfoMessage(widgetTitle + rave.getClientMessage("widget.add_suffix"));
                     }
                 }).error(handleError);
         }
@@ -287,7 +287,7 @@ rave.api = rave.api || (function() {
                     if (result.error) {
                         // check to see if a duplicate page name error occurred
                         if (result.errorCode == 'DUPLICATE_ITEM') {                        
-                            $("#pageFormErrors").html("A page with that name already exists");
+                            $("#pageFormErrors").html(rave.getClientMessage("page.duplicate_name"));
                         } else {                        
                             handleRpcError(result);
                         }
@@ -373,12 +373,10 @@ rave.api = rave.api || (function() {
                 case "NO_ERROR" :
                     break;
                 case "INVALID_PARAMS":
-                    alert("Rave attempted to update the server with your recent changes, " +
-                        " but the changes were rejected by the server as invalid.");
+                    alert(rave.getClientMessage("api.rpc.error.invalid_params"));
                     break;
                 case "INTERNAL_ERROR":
-                    alert("Rave attempted to update the server with your recent changes, " +
-                        " but the server encountered an internal error.");
+                    alert(rave.getClientMessage("api.rpc.error.internal"));
                     break;                
             }
         }
@@ -387,14 +385,14 @@ rave.api = rave.api || (function() {
             var url = args.url;
             var providerType = args.providerType;
             if ( url == null || providerType == null ) {
-                alert('Both url and type are needed to get the metadata');
+                alert(rave.getClientMessage("api.widget_metadata.invalid_params"));
                 return;
             }
             $.post(rave.getContext() + path + "widget/metadata/get",
                {"url": url, "type": providerType},
                function(result) {
                    if (result.error) {
-                       alert("Unable to parse Widget for its metadata.\n\nPlease verify that the url is pointing to a valid Widget of the type specified.");
+                       alert(rave.getClientMessage("api.widget_metadata.parse_error"));
                    }
                    else {
                        if (typeof args.successCallback == 'function') {

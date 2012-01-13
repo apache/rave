@@ -42,6 +42,16 @@ describe("Rave", function() {
         })();
     }
 
+    describe("client message add and get", function() {
+        it("adds a client message to the internal map based on a key and verifies it can be returned via getter", function() {
+            var theKey = "myKey";
+            var theMessage = "my message";
+            expect(rave.getClientMessage(theKey)).toEqual(null);
+            rave.addClientMessage(theKey, theMessage);
+            expect(rave.getClientMessage(theKey)).toEqual(theMessage);
+        });
+    });
+
     describe("initProviders", function() {
 
         it("initializes all providers", function() {
@@ -205,6 +215,7 @@ describe("Rave", function() {
             var provider2 = getMockProvider("BAR");
             rave.registerProvider(provider1);
             rave.registerProvider(provider2);
+            rave.addClientMessage("widget.provider.error", "This widget type is currently unsupported.  Check with your administrator and be sure the correct provider is registered.");
             rave.initWidgets(widgetsByRegionIdMap);
             expect($().expression()).toEqual("#widget-43-body");
             expect($().html()).toEqual("This widget type is currently unsupported.  Check with your administrator and be sure the correct provider is registered.");
@@ -328,7 +339,10 @@ describe("Rave", function() {
             sortableArgs.stop({}, mockItem);
         });
         it("displays the appropriate alert when invalid parameters are passed", function() {
+            var errorText = "Rave attempted to update the server with your recent changes, but the changes were rejected by the server as invalid.";
             createMockJQuery();
+
+            rave.addClientMessage("api.rpc.error.invalid_params", errorText);
             rave.initUI();
             var sortableArgs = $().getSortableArgs();
             var mockItem = getMockItem();
@@ -339,14 +353,16 @@ describe("Rave", function() {
                     }
             };
             alert = function(str) {
-                expect(str).toEqual("Rave attempted to update the server with your recent changes, " +
-                              " but the changes were rejected by the server as invalid.");
+                expect(str).toEqual(errorText);
             };
             sortableArgs.start({}, mockItem);
             sortableArgs.stop({}, mockItem);
         });
         it("displays the appropriate alert when a server error occurs", function() {
+            var errorText = "Rave attempted to update the server with your recent changes, but the server encountered an internal error.";
             createMockJQuery();
+
+            rave.addClientMessage("api.rpc.error.internal", errorText);
             rave.initUI();
             var sortableArgs = $().getSortableArgs();
             var mockItem = getMockItem();
@@ -358,8 +374,7 @@ describe("Rave", function() {
                     }
             };
             alert = function(str) {
-                expect(str).toEqual("Rave attempted to update the server with your recent changes, " +
-                              " but the server encountered an internal error.");
+                expect(str).toEqual(errorText);
             };
             sortableArgs.start({}, mockItem);
             sortableArgs.stop({}, mockItem);

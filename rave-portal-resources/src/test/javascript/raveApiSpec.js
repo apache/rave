@@ -339,6 +339,7 @@ describe("Rave API", function() {
 
         describe("Error handling", function() {
             it("displays the appropriate alert when invalid parameters are passed", function() {
+                var errorText = "Rave attempted to update the server with your recent changes, but the changes were rejected by the server as invalid.";
 
                 $.post = function(url, data, handler) {
                     handler({error: true, errorCode: "INVALID_PARAMS"});
@@ -348,15 +349,16 @@ describe("Rave API", function() {
                     }
                 };
                 alert = function(str) {
-                    expect(str).toEqual("Rave attempted to update the server with your recent changes, " +
-                        " but the changes were rejected by the server as invalid.");
+                    expect(str).toEqual(errorText);
                 };
+
+                rave.addClientMessage("api.rpc.error.invalid_params", errorText);
                 rave.api.rpc.moveWidget({targetRegion: {id:"region-1"}, currentRegion: {id:"region-2"}, targetIndex: 3, widget:{id:"widget-3-body"}});
 
             });
 
             it("displays the appropriate alert when a server error occurs", function() {
-
+                var errorText = "Rave attempted to update the server with your recent changes, but the server encountered an internal error.";
                 $.post = function(url, data, handler) {
                     handler({error: true, errorCode: "INTERNAL_ERROR"});
                     return {
@@ -365,9 +367,9 @@ describe("Rave API", function() {
                     }
                 };
                 alert = function(str) {
-                    expect(str).toEqual("Rave attempted to update the server with your recent changes, " +
-                        " but the server encountered an internal error.");
+                    expect(str).toEqual(errorText);
                 };
+                rave.addClientMessage("api.rpc.error.internal", errorText);
                 rave.api.rpc.moveWidget({targetRegion: {id:"region-1"}, currentRegion: {id:"region-2"}, targetIndex: 3, widget:{id:"widget-3-body"}});
             });
         });

@@ -42,7 +42,7 @@ rave.forms = rave.forms || (function() {
             },
             messages: {
                 confirmPassword: {
-                    equalTo: "The password does not match"
+                    equalTo: rave.getClientMessage("form.password.invalid_match")
                 }
             }
         });
@@ -63,7 +63,7 @@ rave.forms = rave.forms || (function() {
             },
             messages: {
                 passwordConfirm: {
-                    equalTo: "The password does not match"
+                    equalTo: rave.getClientMessage("form.password.invalid_match")
                 }
             }
         });
@@ -81,7 +81,7 @@ rave.forms = rave.forms || (function() {
 
     return {
         validateNewAccountForm : validateNewAccountForm,
-	validateUserProfileForm: validateUserProfileForm,
+	    validateUserProfileForm: validateUserProfileForm,
         validatePageForm: validatePageForm
     };
 })();

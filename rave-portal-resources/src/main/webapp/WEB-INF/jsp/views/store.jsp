@@ -281,6 +281,7 @@
 <script src="<spring:url value="/script/rave.js"/>"></script>
 <script src="<spring:url value="/script/rave_api.js"/>"></script>
 <script src="<spring:url value="/script/rave_store.js"/>"></script>
+<script src="<spring:url value="/app/messagebundle/rave_client_messages.js"/>"></script>
 <script>
     $(function () {
         rave.setContext("<spring:url value="/app/" />");
