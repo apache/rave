@@ -23,8 +23,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.ui.ExtendedModelMap;
-import org.springframework.ui.Model;
 
 import java.util.Locale;
 
@@ -45,6 +43,7 @@ public class MessageBundleControllerTest {
 
     @Test
     public void getClientMessages_defaultLocale() {
+        Locale.setDefault(Locale.US);
         final String EXPECTED_JS = buildExpectedJavaScript("mother", "father", "text with \\\"quotes\\\"");
         assertThat(messageBundleController.getClientMessages(request, response), is(EXPECTED_JS));
         assertThat(response.getContentType(), is("application/javascript"));
