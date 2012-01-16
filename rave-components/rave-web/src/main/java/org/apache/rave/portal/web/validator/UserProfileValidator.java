@@ -43,7 +43,7 @@ public class UserProfileValidator implements Validator {
         this.userService = userService;
     }
 
-    public boolean supports(Class aClass) {
+    public boolean supports(Class<?> aClass) {
         return User.class.isAssignableFrom(aClass);
     }
 

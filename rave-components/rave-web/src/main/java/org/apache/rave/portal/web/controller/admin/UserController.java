@@ -31,6 +31,7 @@ import org.apache.rave.portal.web.util.PortalPreferenceKeys;
 import org.apache.rave.portal.web.util.ViewNames;
 import org.apache.rave.portal.web.validator.UserProfileValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -75,6 +76,7 @@ public class UserController {
 
     @InitBinder
     public void initBinder(WebDataBinder dataBinder) {
+        dataBinder.registerCustomEditor(GrantedAuthority.class, new AuthorityEditor());
         dataBinder.registerCustomEditor(Authority.class, new AuthorityEditor());
         dataBinder.setDisallowedFields("entityId", "username", "password", "confirmPassword");
     }
