@@ -19,20 +19,17 @@
 package org.apache.rave.portal.web.controller;
 
 import org.apache.commons.lang.StringEscapeUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
 
 /**
  * MessageBundle Controller
@@ -40,28 +37,35 @@ import java.util.ResourceBundle;
 @Controller
 @RequestMapping("/messagebundle/*")
 public class MessageBundleController  {
-    private final Logger logger = LoggerFactory.getLogger(getClass());
     private final String CLIENT_MESSAGE_IDENTIFIER = "_rave_client.";
     private final String CLIENT_MESSAGES_BUNDLE_NAME = "messages";
+    private final String JAVASCRIPT_CONTENT_TYPE = "text/javascript";
+    private final Integer CLIENT_MESSAGE_BUNDLE_CACHE_CONTROL_MAX_AGE = 60 * 60 * 24;   // 24 hours
+    private Map<Locale, String> clientMessagesCache;
+    private AcceptHeaderLocaleResolver acceptHeaderLocaleResolver;
+    private HttpHeaders clientMessagesResponseHeaders;
 
+    public MessageBundleController() {
+        clientMessagesCache = new HashMap<Locale, String>();
+        acceptHeaderLocaleResolver = new AcceptHeaderLocaleResolver();
+        clientMessagesResponseHeaders = new HttpHeaders();
+
+        // set the common response headers that will be used by the getClientMessages response
+        clientMessagesResponseHeaders.setCacheControl("max-age=" + CLIENT_MESSAGE_BUNDLE_CACHE_CONTROL_MAX_AGE);
+        clientMessagesResponseHeaders.setContentType(MediaType.parseMediaType(JAVASCRIPT_CONTENT_TYPE));
+    }
+        
     /**
      * Returns a javascript initialization script which adds language specific client-side messages needed for use
      * in the Rave javascript namespace.  It uses the Locale specified by the client's browser to determine
      * which message bundle language to use.
      *
      * @param request  The incoming HttpServletRequest
-     * @param response The outgoing HttpServletResponse
      * @return the JavaScript content to load from the client
      */
     @RequestMapping(value = {"/rave_client_messages.js"}, method = RequestMethod.GET)
-    @ResponseBody
-    public String getClientMessages(HttpServletRequest request, HttpServletResponse response) {
-        response.setContentType("application/javascript");
-
-        AcceptHeaderLocaleResolver acceptHeaderLocaleResolver = new AcceptHeaderLocaleResolver();
-        ResourceBundle resourceBundle = ResourceBundle.getBundle(CLIENT_MESSAGES_BUNDLE_NAME, acceptHeaderLocaleResolver.resolveLocale(request));
-
-        return convertClientMessagesMapToJavaScriptOutput(convertResourceBundleToClientMessagesMap(resourceBundle));
+    public ResponseEntity<String> getClientMessages(HttpServletRequest request) {               
+        return new ResponseEntity<String>(getClientMessagesJSForLocale(acceptHeaderLocaleResolver.resolveLocale(request)), clientMessagesResponseHeaders, HttpStatus.OK);
     }
 
     private Map<String, String> convertResourceBundleToClientMessagesMap(ResourceBundle resourceBundle) {
@@ -70,9 +74,9 @@ public class MessageBundleController  {
         while (keys.hasMoreElements()) {
             String key = keys.nextElement();
             // only load the messages that are specifically used by the client code for performance reasons
-            // strip off the client. part of the key
+            // strip off the _rave_client. part of the key
             if (key.startsWith(CLIENT_MESSAGE_IDENTIFIER)) {
-                map.put(key.replaceFirst(CLIENT_MESSAGE_IDENTIFIER,""), StringEscapeUtils.escapeJavaScript(resourceBundle.getString(key)));
+                map.put(key.replaceFirst(CLIENT_MESSAGE_IDENTIFIER, ""), StringEscapeUtils.escapeJavaScript(resourceBundle.getString(key)));
             }
         }
         return map;
@@ -84,5 +88,30 @@ public class MessageBundleController  {
             sb.append("rave.addClientMessage(\"" + mapEntry.getKey() + "\",\"" + mapEntry.getValue() + "\");");
         }
         return sb.toString();
+    }
+    
+    private String getClientMessagesJSForLocale(Locale locale) {
+        String javascriptOutput = getClientMessagesJSFromCache(locale);
+        if (javascriptOutput == null) {
+            javascriptOutput = getClientMessagesJSFromBundle(locale);
+        }
+        return javascriptOutput;
+    }
+    
+    private String getClientMessagesJSFromCache(Locale locale) {
+        return clientMessagesCache.get(locale);
+    }
+    
+    private String getClientMessagesJSFromBundle(Locale locale) {
+        String javascriptOutput = convertClientMessagesMapToJavaScriptOutput(
+                convertResourceBundleToClientMessagesMap(
+                    ResourceBundle.getBundle(CLIENT_MESSAGES_BUNDLE_NAME, locale)));
+
+        cacheClientMessages(locale, javascriptOutput);
+        return javascriptOutput;
+    }
+    
+    private void cacheClientMessages(Locale locale, String javascriptOutput) {
+        clientMessagesCache.put(locale, javascriptOutput);
     }
 }

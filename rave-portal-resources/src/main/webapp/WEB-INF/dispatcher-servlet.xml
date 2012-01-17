@@ -56,7 +56,22 @@
     <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
         <property name="messageConverters">
             <list>
-                <bean id="stringHttpMessageConverter" class="org.springframework.http.converter.StringHttpMessageConverter"/>
+                <bean id="stringHttpMessageConverter" class="org.springframework.http.converter.StringHttpMessageConverter">
+                    <property name="supportedMediaTypes">
+                        <list>
+                            <bean class="org.springframework.http.MediaType">
+                                <constructor-arg index="0" value="text"/>
+                                <constructor-arg index="1" value="plain"/>
+                                <constructor-arg index="2" value="UTF-8"/>
+                            </bean>
+                            <bean class="org.springframework.http.MediaType">
+                                <constructor-arg index="0" value="text"/>
+                                <constructor-arg index="1" value="javascript"/>
+                                <constructor-arg index="2" value="UTF-8"/>
+                            </bean>
+                        </list>
+                    </property>
+                </bean>
                 <bean class="org.springframework.http.converter.xml.MarshallingHttpMessageConverter"
                       p:marshaller-ref="marshaller" p:unmarshaller-ref="marshaller"/>
             </list>

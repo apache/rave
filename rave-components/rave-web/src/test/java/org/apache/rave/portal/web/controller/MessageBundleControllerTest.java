@@ -21,32 +21,39 @@ package org.apache.rave.portal.web.controller;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.mock.web.MockHttpServletResponse;
 
 import java.util.Locale;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.*;
 
 public class MessageBundleControllerTest {
     private MessageBundleController messageBundleController;
     private MockHttpServletRequest request;
-    private MockHttpServletResponse response;
+    private final Integer EXPECTED_CLIENT_MESSAGE_BUNDLE_MAX_AGE = 60 * 60 * 24;
+    private final String EXPECTED_JAVASCRIPT_CONTENT_TYPE = "text/javascript";
+    private HttpHeaders expectedHeaders;
 
     @Before
     public void setup() {        
         messageBundleController = new MessageBundleController();
         request = new MockHttpServletRequest();
-        response = new MockHttpServletResponse();
+
+        expectedHeaders = new HttpHeaders();
+        expectedHeaders.setCacheControl("max-age=" + EXPECTED_CLIENT_MESSAGE_BUNDLE_MAX_AGE);
+        expectedHeaders.setContentType(MediaType.parseMediaType(EXPECTED_JAVASCRIPT_CONTENT_TYPE));
     }
 
     @Test
-    public void getClientMessages_defaultLocale() {
+    public void getClientMessages_defaultLocale() {                               
         Locale.setDefault(Locale.US);
         final String EXPECTED_JS = buildExpectedJavaScript("mother", "father", "text with \\\"quotes\\\"");
-        assertThat(messageBundleController.getClientMessages(request, response), is(EXPECTED_JS));
-        assertThat(response.getContentType(), is("application/javascript"));
+        assertResponseEntity(messageBundleController.getClientMessages(request), EXPECTED_JS, HttpStatus.OK);
     }
 
     @Test
@@ -55,11 +62,28 @@ public class MessageBundleControllerTest {
         request.addPreferredLocale(nlLocale);
 
         final String EXPECTED_JS = buildExpectedJavaScript("moeder", "vader", "tekst met \\\"quotes\\\"");
-        assertThat(messageBundleController.getClientMessages(request, response), is(EXPECTED_JS));
-        assertThat(response.getContentType(), is("application/javascript"));
+        assertResponseEntity(messageBundleController.getClientMessages(request), EXPECTED_JS, HttpStatus.OK);
     }
-    
-    
+
+    @Test
+    public void getClientMessages_cachedRequest() {
+        Locale nlLocale = new Locale("nl","NL");
+        request.addPreferredLocale(nlLocale);
+
+        final String EXPECTED_UNCACHED_JS = buildExpectedJavaScript("moeder", "vader", "tekst met \\\"quotes\\\"");
+        final String EXPECTED_CACHED_JS = buildExpectedJavaScript("moeder", "vader", "tekst met \\\"quotes\\\"");
+
+        assertResponseEntity(messageBundleController.getClientMessages(request), EXPECTED_UNCACHED_JS, HttpStatus.OK);
+        assertResponseEntity(messageBundleController.getClientMessages(request), EXPECTED_CACHED_JS, HttpStatus.OK);
+    }
+
+    private void assertResponseEntity(ResponseEntity<String> responseEntity, String expectedBody, HttpStatus expectedHttpStatus) {
+        assertThat(responseEntity.getBody(), is(expectedBody));
+        assertThat(responseEntity.getStatusCode(), is(expectedHttpStatus));
+        assertThat(responseEntity.getHeaders().getContentType(), is(MediaType.parseMediaType(EXPECTED_JAVASCRIPT_CONTENT_TYPE)));
+        assertThat(responseEntity.getHeaders().getCacheControl(), is("max-age=" + EXPECTED_CLIENT_MESSAGE_BUNDLE_MAX_AGE));
+    }
+
     private String buildExpectedJavaScript(String test1, String test2, String test3) {
         StringBuilder sb = new StringBuilder();
         sb.append("rave.addClientMessage(\"test1\",\"");
