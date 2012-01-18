@@ -28,7 +28,15 @@
         http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
         http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
 
-    <!-- rave-web component base-package scan -->
-    <context:component-scan base-package="org.apache.rave.portal.web"/>
+    <!--
+    rave-web component base-package scan
+
+    NOTE: The controllers (o.a.r.p.w.api and o.a.r.p.w.controller packages) are scanned in dispatcher-servlet.xml
+    as this is a requirement of Spring. All other necessary org.apache.rave.portal.web.<packages> are scanned here
+    in web-applicationContext.xml.  This is to prevent duplicate bean scanning of o.a.r.p.web.* components which can
+    cause problems.
+    -->
+    <context:component-scan base-package="org.apache.rave.portal.web.renderer"/>
+    <context:component-scan base-package="org.apache.rave.portal.web.validator"/>
 
 </beans>

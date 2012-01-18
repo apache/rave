@@ -27,15 +27,29 @@
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
         http://www.springframework.org/schema/oxm http://www.springframework.org/schema/oxm/spring-oxm-3.0.xsd">
 
-    <!-- Scans the classpath of this application for @Components to deploy as beans -->
+    <!--
+    Scans the classpath of this application for @Components to deploy as beans
+    NOTE: only the controllers (api and controller packages) are scanned here in dispatcher-servlet.xml. All other
+    org.apache.rave.portal.web.<packages> are scanned in web-applicationContext.xml.  This is to prevent duplicate
+    bean scanning of o.a.r.p.web.* components which can cause problems.
+    -->
     <context:component-scan base-package="org.apache.rave.portal.web.controller"/>
-    <context:component-scan base-package="org.apache.rave.portal.web.interceptors"/>
     <context:component-scan base-package="org.apache.rave.portal.web.api"/>
 
     <!-- Configures the @Controller programming model -->
     <mvc:annotation-driven/>
     <mvc:interceptors>
         <bean class="org.apache.rave.portal.web.interceptors.CommonModelHandlerInterceptor"/>
+        <!--
+            On pre-handle, resolve the device that originated the web
+            request and put that information into the ServletRequest object.
+            By default it will use the LiteDeviceResolver which only
+            gives you very basic information, basically "is this a
+            mobile device or not?".  A more advanced WurflDeviceResolver
+            can be used if you need to get more detailed information about
+            the device such as manufacturer, model, screen size, etc.
+        -->
+        <bean class="org.springframework.mobile.device.DeviceResolverHandlerInterceptor" />
     </mvc:interceptors>
 
     <!-- Forwards requests to the "/" resource to the "page" view -->
@@ -77,16 +91,6 @@
             </list>
         </property>
     </bean>
-    <mvc:interceptors>
-        <!-- On pre-handle, resolve the device that originated the web 
-             request and put that information into the ServletRequest object.
-             By default it will use the LiteDeviceResolver which only 
-             gives you very basic information, basically is this a 
-             mobile device or not.  A more advanced WurflDeviceResolver 
-             can be used if you need to get more detailed information about
-             the device such as manufacturer, model, screen size, etc.-->
-        <bean class="org.springframework.mobile.device.DeviceResolverHandlerInterceptor" />
-    </mvc:interceptors>
     <bean id="tilesConfigurer" class="org.springframework.web.servlet.view.tiles2.TilesConfigurer">
         <property name="definitions">
             <list>

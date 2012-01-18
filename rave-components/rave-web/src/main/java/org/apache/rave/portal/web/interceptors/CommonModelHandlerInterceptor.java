@@ -33,7 +33,6 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Adds attributes to the ModelMap that are needed in every view
  */
-@Component
 public class CommonModelHandlerInterceptor extends HandlerInterceptorAdapter {
 
     private final PortalPreferenceService preferenceService;
