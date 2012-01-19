@@ -28,6 +28,9 @@ under the License.
     <tiles:putAttribute name="body">
         <div id="content">
             <h1>${pagetitle}</h1>
+            
+            <!-- Login information (required) -->
+            <h2><fmt:message key="page.general.login.information"/></h2>
             <form:form id="newAccountForm" commandName="newUser" action="newaccount" method="POST">
                 <fieldset>
                     <p><fmt:message key="form.all.fields.required"/></p>
@@ -78,7 +81,34 @@ under the License.
                         </form:select>
                     </p>
                 </fieldset>
+                
                 <fieldset>${captchaHtml}</fieldset>
+                
+                <!-- Personal information optional -->
+                <h2><fmt:message key="page.general.personal.information"/></h2>
+                <fieldset>
+                	<p>
+                        <label for="firstNameField"><fmt:message key="page.general.first.name"/></label>
+                        <form:input id="firstNameField" path="firstName" autofocus="autofocus"/>
+                    </p>
+                    <p>
+                        <label for="lastNameField"><fmt:message key="page.general.last.name"/></label>
+                        <form:input id="lastNameField" path="lastName" autofocus="autofocus"/>
+                    </p>
+                    <p>
+                        <label for="displayNameField"><fmt:message key="page.general.display.name"/></label>
+                        <form:input id="displayNameField" path="displayName" autofocus="autofocus"/>
+                    </p>
+                    <p>
+                        <label for="statusField"><fmt:message key="page.general.status"/></label>
+                        <form:input id="statusField" path="status" autofocus="autofocus"/>
+                    </p>
+                    <p>
+                        <label for="aboutMeField"><fmt:message key="page.general.about.me"/></label>
+                        <form:textarea id="aboutMeField" path="aboutMe" autofocus="autofocus"/>
+                    </p>
+                </fieldset>
+                	
                 <fieldset>
                     <fmt:message key="page.newaccount.button" var="submitButtonText"/>
                     <input type="submit" value="${submitButtonText}"/>
