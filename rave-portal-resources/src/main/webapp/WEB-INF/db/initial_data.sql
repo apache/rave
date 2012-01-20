@@ -39,7 +39,7 @@ set @widget_rating_seq = 'widget_rating';
 set @portal_preference_seq = 'portal_preference';
 set @tag_seq = 'tag';
 set @widget_tag_seq = 'widget_tag';
-
+set @widget_category_seq = 'widget_category';
 
 CREATE TABLE IF NOT EXISTS RAVE_PORTAL_SEQUENCES (seq_name VARCHAR(255) PRIMARY KEY NOT NULL, seq_count BIGINT(19));
 INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@page_seq, 1);
@@ -58,6 +58,7 @@ INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@granted_authorit
 INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@portal_preference_seq, 1);
 INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@tag_seq, 1);
 INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@widget_tag_seq, 1);
+INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@widget_category_seq, 1);
 
   -- ***********************************************************************************
   -- start page layout data, required to make the portal work ---
@@ -860,3 +861,29 @@ INSERT INTO portalpreference_values
 values (@next_portal_preference_id, '10');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @portal_preference_seq;
 -- end portal preferences
+
+-- widget category
+set @next_widget_category_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @widget_category_seq);
+insert into widget_category (entity_id, text, created_user_id, created_date, last_modified_user_id, last_modified_date)
+values (@next_widget_category_id, 'Technology', @user_id_1, '2012-01-19', @user_id_1, '2012-01-19');
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @widget_category_seq;
+
+set @next_widget_category_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @widget_category_seq);
+insert into widget_category (entity_id, text, created_user_id, created_date, last_modified_user_id, last_modified_date)
+values (@next_widget_category_id, 'News', @user_id_1, '2012-01-19', @user_id_1, '2012-01-19');
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @widget_category_seq;
+
+set @next_widget_category_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @widget_category_seq);
+insert into widget_category (entity_id, text, created_user_id, created_date, last_modified_user_id, last_modified_date)
+values (@next_widget_category_id, 'Travel', @user_id_1, '2012-01-19', @user_id_1, '2012-01-19');
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @widget_category_seq;
+
+set @next_widget_category_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @widget_category_seq);
+insert into widget_category (entity_id, text, created_user_id, created_date, last_modified_user_id, last_modified_date)
+values (@next_widget_category_id, 'Projects', @user_id_1, '2012-01-19', @user_id_1, '2012-01-19');
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @widget_category_seq;
+
+set @next_widget_category_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @widget_category_seq);
+insert into widget_category (entity_id, text, created_user_id, created_date, last_modified_user_id, last_modified_date)
+values (@next_widget_category_id, 'Communications', @user_id_1, '2012-01-19', @user_id_1, '2012-01-19');
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @widget_category_seq;
