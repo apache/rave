@@ -123,7 +123,7 @@ public class DefaultWidgetService implements WidgetService {
         final User user = userRepository.get(ownerId);
         final int count = widgetRepository.getCountByOwner(user, offset, pageSize);
         final List<Widget> widgets = widgetRepository.getByOwner(user, offset, pageSize);
-        final SearchResult<Widget> searchResult = new SearchResult<Widget>(widgets,  count);
+        final SearchResult<Widget> searchResult = new SearchResult<Widget>(widgets, count);
         searchResult.setOffset(offset);
         searchResult.setPageSize(pageSize);
         return searchResult;
@@ -164,4 +164,14 @@ public class DefaultWidgetService implements WidgetService {
         widgetRepository.save(widget);
     }
 
+    @Override
+    public SearchResult<Widget> getWidgetsByTag(String tagKeyWord, int offset, int pageSize) {
+
+        int count = widgetRepository.getCountByTag(tagKeyWord);
+        List<Widget> widgets = widgetRepository.getWidgetsByTag(tagKeyWord, offset, pageSize);
+        SearchResult<Widget> searchResult = new SearchResult<Widget>(widgets, count);
+        searchResult.setOffset(offset);
+        searchResult.setPageSize(pageSize);
+        return searchResult;
+    }
 }

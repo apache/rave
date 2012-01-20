@@ -156,15 +156,26 @@ rave.store = rave.store || (function() {
                 })
             }
         })
-
-
     }
 
+    function initWidgetsTag(referringPageId) {
+           // tag list box
+           $("#tagList").change(function() {
+               var selected = $("#tagList option:selected").text();
+               selected=$.trim(selected)
+               if (selected.length > 1) {
+                   document.location.href = rave.getContext() + "store/tag?keyword=" + selected
+                           +"&referringPageId="+referringPageId;
+               }
+           });
+
+       }
 
     return {
         init: initRatings,
         initComments: initComments,
-        initTags: initTags
+        initTags: initTags,
+        initWidgetsTag:initWidgetsTag
     };                             
     
 }());

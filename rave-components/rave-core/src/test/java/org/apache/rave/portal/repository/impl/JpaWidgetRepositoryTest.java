@@ -43,6 +43,7 @@ import java.util.Map;
 import static junit.framework.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Test class for {@link org.apache.rave.portal.repository.impl.JpaWidgetRepository}
@@ -355,9 +356,31 @@ public class JpaWidgetRepositoryTest {
         widget = repository.get(1L);
         assertNotNull(widget);
         assertEquals(widget.getTags().iterator().next().getTag().getKeyword(), "wikipedia");
-
-
     }
 
+    @Test
+    public void getWidgetsByTag() {
+      String tag = "news";
+        List<Widget> widgets = repository.getWidgetsByTag(tag, 0, 10);
+        assertTrue(widgets.size() == 1);
+        assertTrue(widgets.iterator().next().getEntityId() == 3);
+        assertTrue(repository.getCountByTag(tag) == 1);
+
+        tag = "wikipedia";
+        widgets = repository.getWidgetsByTag(tag, 0, 10);
+        assertTrue(widgets.size() == 1);
+        assertTrue(widgets.iterator().next().getEntityId() == 1);
+        assertTrue(repository.getCountByTag(tag) == 1);
+
+        tag = "aaanews";
+        widgets = repository.getWidgetsByTag(tag, 0, 10);
+        assertTrue(widgets.size() == 0);
+        assertTrue(repository.getCountByTag(tag) == 0);
+
+        widgets = repository.getWidgetsByTag("NEWS", 0, 10);
+        assertTrue(widgets.size() == 1);
+        assertTrue(widgets.iterator().next().getEntityId() == 3);
+        assertTrue(repository.getCountByTag("NEWS") == 1);
+    }
 
 }

@@ -21,6 +21,7 @@ package org.apache.rave.portal.repository.impl;
 
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.openjpa.jdbc.kernel.exps.ToLowerCase;
 import org.apache.rave.persistence.jpa.AbstractJpaRepository;
 import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.model.util.WidgetStatistics;
@@ -250,6 +251,23 @@ public class JpaWidgetRepository extends AbstractJpaRepository<Widget> implement
         }
 
         return map;
+    }
+
+    @Override
+    public List<Widget> getWidgetsByTag(String tagKeyword, int offset, int pageSize) {
+        if (tagKeyword!=null) tagKeyword =tagKeyword.toLowerCase();
+        TypedQuery<Widget> query = manager.createNamedQuery(Widget.WIDGET_GET_BY_TAG, Widget.class);
+        query.setParameter(Widget.PARAM_TAG, tagKeyword.toLowerCase());
+        return getPagedResultList(query, offset, pageSize);
+    }
+
+    @Override
+    public int getCountByTag(String tagKeyword) {
+        if (tagKeyword!=null) tagKeyword =tagKeyword.toLowerCase();
+        Query query = manager.createNamedQuery(Widget.WIDGET_COUNT_BY_TAG);
+        query.setParameter(Widget.PARAM_TAG,tagKeyword);
+        Number countResult = (Number) query.getSingleResult();
+        return countResult.intValue();
     }
 
     /**

@@ -149,4 +149,23 @@ public interface WidgetRepository extends Repository<Widget> {
      * @return Mapping of {@link WidgetRating} objects keyed off of the widget's entityId
      */
     Map<Long, WidgetRating> getUsersWidgetRatings(long userId);
+
+    /**
+	  * Gets a List of {@link Widget}'s by performing a tag search
+	  *
+     * @param tagKeyWord free text tag keyword
+     * @param offset     start point within the resultSet (for paging)
+     * @param pageSize   maximum number of items to be returned (for paging)
+     * @return valid list of widgets, can be empty
+     */
+     List<Widget> getWidgetsByTag(String tagKeyWord, int offset, int pageSize);
+ 
+    /**
+     * Counts the total number of {@link Widget}'s that match tag keyword. Useful for paging.
+     *
+     * @param  tagKeyword  tag keyword text
+     * @return total number of {@link Widget}'s that match tag key word
+     */
+     int getCountByTag(String tagKeyword);
+
 }

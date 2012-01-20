@@ -53,7 +53,10 @@ import java.util.List;
         @NamedQuery(name = Widget.WIDGET_COUNT_BY_STATUS,
                 query = Widget.SELECT_COUNT_W_FROM_WIDGET_W + Widget.WHERE_CLAUSE_STATUS),
 
-        @NamedQuery(name = Widget.WIDGET_GET_BY_URL, query = Widget.SELECT_W_FROM_WIDGET_W + Widget.WHERE_CLAUSE_URL)
+        @NamedQuery(name = Widget.WIDGET_GET_BY_URL, query = Widget.SELECT_W_FROM_WIDGET_W + Widget.WHERE_CLAUSE_URL) ,
+
+        @NamedQuery(name = Widget.WIDGET_GET_BY_TAG, query = Widget.SELECT_W_FROM_WIDGET_W + Widget.JOIN_TAGS+Widget.ORDER_BY_TITLE_ASC),
+        @NamedQuery(name = Widget.WIDGET_COUNT_BY_TAG, query = Widget.SELECT_COUNT_W_FROM_WIDGET_W + Widget.JOIN_TAGS)
 })
 public class Widget implements BasicEntity, Serializable {
     private static final long serialVersionUID = 1L;
@@ -62,6 +65,7 @@ public class Widget implements BasicEntity, Serializable {
     public static final String PARAM_STATUS = "widgetStatus";
     public static final String PARAM_URL = "url";
     public static final String PARAM_OWNER = "owner";
+     public static final String PARAM_TAG = "keyword";
 
     public static final String WIDGET_GET_ALL = "Widget.getAll";
     public static final String WIDGET_COUNT_ALL = "Widget.countAll";
@@ -72,6 +76,8 @@ public class Widget implements BasicEntity, Serializable {
     public static final String WIDGET_GET_BY_STATUS = "Widget.getByStatus";
     public static final String WIDGET_COUNT_BY_STATUS = "Widget.countByStatus";
     public static final String WIDGET_GET_BY_URL = "Widget.getByUrl";
+    public static final String WIDGET_GET_BY_TAG = "Widget.getByTag";
+    public static final String WIDGET_COUNT_BY_TAG = "Widget.countByTag";
 
     static final String SELECT_W_FROM_WIDGET_W = "SELECT w FROM Widget w ";
     static final String SELECT_COUNT_W_FROM_WIDGET_W = "SELECT count(w) FROM Widget w ";
@@ -81,7 +87,11 @@ public class Widget implements BasicEntity, Serializable {
     static final String WHERE_CLAUSE_STATUS = " WHERE w.widgetStatus = :" + PARAM_STATUS;
     static final String WHERE_CLAUSE_URL = " WHERE w.url = :" + PARAM_URL;
     static final String WHERE_CLAUSE_OWNER = " WHERE w.owner = :" + PARAM_OWNER;
+    static final String WIDGET_TAG_BY_KEYWORD=" (select t.widgetId from WidgetTag t where lower(t.tag.keyword)=:"+PARAM_TAG+")";
+    static final String JOIN_TAGS=" WHERE w.entityId in"+WIDGET_TAG_BY_KEYWORD;
+
     static final String ORDER_BY_TITLE_ASC = " ORDER BY w.title ASC ";
+
 
     @Id
     @Column(name = "entity_id")

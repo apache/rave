@@ -36,6 +36,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
@@ -52,14 +53,18 @@ public class WidgetStoreController {
 
     private final PortalPreferenceService preferenceService;
 
+    private final TagService tagService;
+
 
     @Autowired
     public WidgetStoreController(WidgetService widgetService, NewWidgetValidator validator,
-                                 UserService userService, PortalPreferenceService preferenceService) {
+                                 UserService userService, PortalPreferenceService preferenceService,
+                                 TagService tagService) {
         this.widgetService = widgetService;
         this.widgetValidator = validator;
         this.userService = userService;
         this.preferenceService = preferenceService;
+        this.tagService=tagService;
 
     }
 
@@ -79,6 +84,7 @@ public class WidgetStoreController {
                 widgetService.getPublishedWidgets(offset, getPageSize()));
         model.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
         model.addAttribute(ModelKeys.WIDGETS_STATISTICS, widgetService.getAllWidgetStatistics(user.getEntityId()));
+        model.addAttribute(ModelKeys.TAGS, tagService.getAllTags());
         return ViewNames.STORE;
     }
 
@@ -90,6 +96,7 @@ public class WidgetStoreController {
                 widgetService.getWidgetsByOwner(user.getEntityId(), offset, getPageSize()));
         model.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
         model.addAttribute(ModelKeys.WIDGETS_STATISTICS, widgetService.getAllWidgetStatistics(user.getEntityId()));
+        model.addAttribute(ModelKeys.TAGS, tagService.getAllTags());
         return ViewNames.STORE;
     }
 
@@ -105,10 +112,10 @@ public class WidgetStoreController {
     public String viewWidget(Model model, @PathVariable long widgetId, @RequestParam long referringPageId) {
         model.addAttribute(ModelKeys.WIDGET, widgetService.getWidget(widgetId));
         model.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
-
         final User user = userService.getAuthenticatedUser();
         model.addAttribute(ModelKeys.WIDGET_STATISTICS, widgetService.getWidgetStatistics(widgetId, user.getEntityId()));
         model.addAttribute(ModelKeys.USER_PROFILE, user);
+        model.addAttribute(ModelKeys.TAGS, tagService.getAllTags());
         return ViewNames.WIDGET;
     }
 
@@ -132,7 +139,31 @@ public class WidgetStoreController {
         model.addAttribute(ModelKeys.SEARCH_TERM, searchTerm);
         model.addAttribute(ModelKeys.OFFSET, offset);
         model.addAttribute(ModelKeys.WIDGETS_STATISTICS, widgetService.getAllWidgetStatistics(user.getEntityId()));
+        model.addAttribute(ModelKeys.TAGS, tagService.getAllTags());
+       return ViewNames.STORE;
+    }
 
+    /**
+     * Performs a search in the widget store by tag keyword
+     *
+     * @param model           {@link Model} map
+     * @param referringPageId the source {@link org.apache.rave.portal.model.Page } ID
+     * @param keyword     free text tag keyword
+     * @param offset          offset within the total amount of results (to enable paging)
+     * @return the view name of the main store page
+     */
+    @RequestMapping(method = RequestMethod.GET, value = "tag")
+    public String viewTagResult(Model model, @RequestParam long referringPageId,
+                                   @RequestParam String keyword,
+                                   @RequestParam(required = false, defaultValue = "0") int offset) {
+        User user = userService.getAuthenticatedUser();
+        model.addAttribute(ModelKeys.WIDGETS,
+                widgetService.getWidgetsByTag(keyword, offset, getPageSize()));
+         model.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
+        model.addAttribute(ModelKeys.OFFSET, offset);
+        model.addAttribute(ModelKeys.WIDGETS_STATISTICS, widgetService.getAllWidgetStatistics(user.getEntityId()));
+        model.addAttribute(ModelKeys.TAGS, tagService.getAllTags());
+        model.addAttribute(ModelKeys.SELECTED_TAG, keyword);
         return ViewNames.STORE;
     }
 
@@ -188,4 +219,6 @@ public class WidgetStoreController {
             return MAXIMUM_WIDGETS_PER_PAGE;
         }
     }
+
+
 }

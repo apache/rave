@@ -68,7 +68,7 @@ public class WidgetStoreControllerTest {
     private static final long REFERRER_ID = 35L;
     private WidgetStoreController controller;
     private WidgetService widgetService;
-
+    private TagService tagService;
     private User validUser;
     private WidgetStatistics widgetStatistics;
     private Map<Long, WidgetStatistics> allWidgetStatisticsMap;
@@ -83,6 +83,7 @@ public class WidgetStoreControllerTest {
         allWidgetStatisticsMap.put(WIDGET_ID, widgetStatistics);
 
         widgetService = createMock(WidgetService.class);
+        tagService = createMock(TagService.class);
 
         UserService userService = createMock(UserService.class);
         expect(userService.getAuthenticatedUser()).andReturn(validUser);
@@ -94,7 +95,7 @@ public class WidgetStoreControllerTest {
 
         NewWidgetValidator widgetValidator = new NewWidgetValidator(widgetService);
         controller = new WidgetStoreController(widgetService, widgetValidator, userService,
-                preferenceService);
+                preferenceService, tagService);
     }
 
     @Test
@@ -116,6 +117,8 @@ public class WidgetStoreControllerTest {
         assertThat(model.containsAttribute(ModelKeys.WIDGETS_STATISTICS), is(true));
         assertThat((Long) model.asMap().get(ModelKeys.REFERRING_PAGE_ID), is(equalTo(REFERRER_ID)));
         assertThat(widgets, is(sameInstance(emptyResult.getResultSet())));
+        assertThat(model.containsAttribute(ModelKeys.TAGS), is(true));
+
     }
 
     @Test
@@ -136,6 +139,8 @@ public class WidgetStoreControllerTest {
         assertThat(model.containsAttribute(ModelKeys.WIDGETS_STATISTICS), is(true));
         assertThat((Long) model.asMap().get(ModelKeys.REFERRING_PAGE_ID), is(equalTo(REFERRER_ID)));
         assertThat(widgets, is(sameInstance(emptyResult.getResultSet())));
+        assertThat(model.containsAttribute(ModelKeys.TAGS), is(true));
+
     }
 
     @Test
@@ -155,6 +160,7 @@ public class WidgetStoreControllerTest {
         assertThat(model.containsAttribute(ModelKeys.WIDGET_STATISTICS), is(true));
         assertThat(((Widget) model.asMap().get(ModelKeys.WIDGET)), is(sameInstance(w)));
         assertNull(model.asMap().get("widgetRating"));
+
     }
 
     @Test
@@ -187,6 +193,8 @@ public class WidgetStoreControllerTest {
         assertThat(model.containsAttribute(ModelKeys.WIDGETS_STATISTICS), is(true));
         assertEquals(offset, modelMap.get(ModelKeys.OFFSET));
         assertEquals(result, modelMap.get(ModelKeys.WIDGETS));
+        assertThat(model.containsAttribute(ModelKeys.TAGS), is(true));
+
     }
 
     @Test
