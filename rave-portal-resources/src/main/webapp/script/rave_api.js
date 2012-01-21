@@ -258,7 +258,7 @@ rave.api = rave.api || (function() {
                         if (addedWidget != undefined && addedWidget.title != undefined && addedWidget.title.length > 0) {
                             widgetTitle = addedWidget.title;
                         }
-                        rave.showInfoMessage(widgetTitle + rave.getClientMessage("widget.add_suffix"));
+                        rave.showInfoMessage(widgetTitle + ' ' + rave.getClientMessage("widget.add_suffix"));
                     }
                 }).error(handleError);
         }
