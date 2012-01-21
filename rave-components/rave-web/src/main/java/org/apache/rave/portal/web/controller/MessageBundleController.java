@@ -29,7 +29,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+import java.util.ResourceBundle;
 
 /**
  * MessageBundle Controller
@@ -37,10 +41,10 @@ import java.util.*;
 @Controller
 @RequestMapping("/messagebundle/*")
 public class MessageBundleController  {
-    private final String CLIENT_MESSAGE_IDENTIFIER = "_rave_client.";
-    private final String CLIENT_MESSAGES_BUNDLE_NAME = "messages";
-    private final String JAVASCRIPT_CONTENT_TYPE = "text/javascript";
-    private final Integer CLIENT_MESSAGE_BUNDLE_CACHE_CONTROL_MAX_AGE = 60 * 60 * 24;   // 24 hours
+    private static final String CLIENT_MESSAGE_IDENTIFIER = "_rave_client.";
+    private static final String CLIENT_MESSAGES_BUNDLE_NAME = "messages";
+    private static final String JAVASCRIPT_CONTENT_TYPE = "text/javascript";
+    private static final Integer CLIENT_MESSAGE_BUNDLE_CACHE_CONTROL_MAX_AGE = 60 * 60 * 24;   // 24 hours
     private Map<Locale, String> clientMessagesCache;
     private AcceptHeaderLocaleResolver acceptHeaderLocaleResolver;
     private HttpHeaders clientMessagesResponseHeaders;
@@ -64,7 +68,7 @@ public class MessageBundleController  {
      * @return the JavaScript content to load from the client
      */
     @RequestMapping(value = {"/rave_client_messages.js"}, method = RequestMethod.GET)
-    public ResponseEntity<String> getClientMessages(HttpServletRequest request) {               
+    public ResponseEntity<String> getClientMessages(HttpServletRequest request) {
         return new ResponseEntity<String>(getClientMessagesJSForLocale(acceptHeaderLocaleResolver.resolveLocale(request)), clientMessagesResponseHeaders, HttpStatus.OK);
     }
 
