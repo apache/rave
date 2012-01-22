@@ -29,8 +29,8 @@ import org.springframework.mock.web.MockHttpServletRequest;
 
 import java.util.Locale;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 public class MessageBundleControllerTest {
     private MessageBundleController messageBundleController;
@@ -51,7 +51,6 @@ public class MessageBundleControllerTest {
 
     @Test
     public void getClientMessages_defaultLocale() {                               
-        Locale.setDefault(Locale.US);
         final String EXPECTED_JS = buildExpectedJavaScript("mother", "father", "text with \\\"quotes\\\"");
         assertResponseEntity(messageBundleController.getClientMessages(request), EXPECTED_JS, HttpStatus.OK);
     }

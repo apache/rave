@@ -57,8 +57,9 @@ public class MessageBundleController  {
         // set the common response headers that will be used by the getClientMessages response
         clientMessagesResponseHeaders.setCacheControl("max-age=" + CLIENT_MESSAGE_BUNDLE_CACHE_CONTROL_MAX_AGE);
         clientMessagesResponseHeaders.setContentType(MediaType.parseMediaType(JAVASCRIPT_CONTENT_TYPE));
+        Locale.setDefault(Locale.ENGLISH);
     }
-        
+
     /**
      * Returns a javascript initialization script which adds language specific client-side messages needed for use
      * in the Rave javascript namespace.  It uses the Locale specified by the client's browser to determine
@@ -85,11 +86,15 @@ public class MessageBundleController  {
         }
         return map;
     }
-    
+
     private String convertClientMessagesMapToJavaScriptOutput(Map<String, String> clientMessagesMap) {
         StringBuilder sb = new StringBuilder();
+        final String add_client_message = "rave.addClientMessage(\"";
+        final String key_value_separator = "\",\"";
+        final String message_suffix = "\");";
         for (Map.Entry<String, String> mapEntry : clientMessagesMap.entrySet()) {
-            sb.append("rave.addClientMessage(\"" + mapEntry.getKey() + "\",\"" + mapEntry.getValue() + "\");");
+            sb.append(add_client_message).append(mapEntry.getKey()).append(key_value_separator);
+            sb.append(mapEntry.getValue()).append(message_suffix);
         }
         return sb.toString();
     }
