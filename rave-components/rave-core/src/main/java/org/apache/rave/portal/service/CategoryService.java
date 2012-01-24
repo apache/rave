@@ -19,55 +19,54 @@
 
 package org.apache.rave.portal.service;
 
-import org.apache.rave.portal.model.Tag;
+import org.apache.rave.portal.model.Category;
 import org.apache.rave.portal.model.User;
-import org.apache.rave.portal.model.WidgetCategory;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
 
-public interface WidgetCategoryService {
+public interface CategoryService {
 
     /**
-     * @param entityId unique identifier of the {@link org.apache.rave.portal.model.WidgetCategory}
-     * @return WidgetCategory if it can be found, otherwise {@literal null}
+     * @param entityId unique identifier of the {@link org.apache.rave.portal.model.Category}
+     * @return Category if it can be found, otherwise {@literal null}
      */
     @PostAuthorize("returnObject == null or hasPermission(returnObject, 'read')")
-    WidgetCategory get(long entityId);
+    Category get(long entityId);
 
     /**
-     * @return a {@link java.util.List} with all {@link org.apache.rave.portal.model.WidgetCategory}'s
+     * @return a {@link java.util.List} with all {@link org.apache.rave.portal.model.Category}'s
      */
     @PostFilter("hasPermission(filterObject, 'read')")
-    List<WidgetCategory> getAll();
+    List<Category> getAll();
 
     /**
-     * Creates a new WidgetCategory object
+     * Creates a new Category object
      * @param text the category text value
      * @param createdUser the user creating this category
-     * @return a WidgetCategory object representing the new entity
+     * @return a Category object representing the new entity
      */
     @PostAuthorize("hasPermission(returnObject, 'create')")
-    WidgetCategory create(String text, User createdUser);
+    Category create(String text, User createdUser);
 
     /**
      * Updates a widget category
      *
-     * @param widgetCategoryId  the entityId of the WidgetCategory to update
+     * @param categoryId  the entityId of the Category to update
      * @param text the new text value
      * @param lastModifiedUser the user performing the update
-     * @return the updated WidgetCategory object
+     * @return the updated Category object
      */
-    @PreAuthorize("hasPermission(#widgetCategoryId, 'org.apache.rave.portal.model.WidgetCategory', 'update')")
-    WidgetCategory update(long widgetCategoryId, String text, User lastModifiedUser);
+    @PreAuthorize("hasPermission(#categoryId, 'org.apache.rave.portal.model.Category', 'update')")
+    Category update(long categoryId, String text, User lastModifiedUser);
 
     /**
-     * Deletes a WidgetCategory
+     * Deletes a Category
      *
-     * @param widgetCategory
+     * @param category
      */
-    @PreAuthorize("hasPermission(#widgetCategory.entityId, 'org.apache.rave.portal.model.WidgetCategory', 'delete')")
-    void delete(WidgetCategory widgetCategory);
+    @PreAuthorize("hasPermission(#category.entityId, 'org.apache.rave.portal.model.Category', 'delete')")
+    void delete(Category category);
 }

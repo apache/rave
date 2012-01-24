@@ -20,24 +20,24 @@
 package org.apache.rave.portal.repository.impl;
 
 import org.apache.rave.persistence.jpa.AbstractJpaRepository;
-import org.apache.rave.portal.model.WidgetCategory;
-import org.apache.rave.portal.repository.WidgetCategoryRepository;
+import org.apache.rave.portal.model.Category;
+import org.apache.rave.portal.repository.CategoryRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 /**
- * JPA implementation for {@link org.apache.rave.portal.repository.WidgetCategoryRepository}
+ * JPA implementation for {@link org.apache.rave.portal.repository.CategoryRepository}
  */
 @Repository
-public class JpaWidgetCategoryRepository extends AbstractJpaRepository<WidgetCategory> implements WidgetCategoryRepository {
+public class JpaCategoryRepository extends AbstractJpaRepository<Category> implements CategoryRepository {
 
-    public JpaWidgetCategoryRepository() {
-        super(WidgetCategory.class);
+    public JpaCategoryRepository() {
+        super(Category.class);
     }
 
     @Override
-    public List<WidgetCategory> getAll() {
-        return manager.createNamedQuery(WidgetCategory.GET_ALL, WidgetCategory.class).getResultList();
+    public List<Category> getAll() {
+        return manager.createNamedQuery(Category.GET_ALL, Category.class).getResultList();
     }
 }

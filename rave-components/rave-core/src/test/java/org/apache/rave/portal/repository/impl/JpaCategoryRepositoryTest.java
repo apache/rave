@@ -20,11 +20,9 @@
 package org.apache.rave.portal.repository.impl;
 
 import org.apache.openjpa.persistence.PersistenceException;
-import org.apache.rave.portal.model.Tag;
+import org.apache.rave.portal.model.Category;
 import org.apache.rave.portal.model.User;
-import org.apache.rave.portal.model.WidgetCategory;
-import org.apache.rave.portal.repository.TagRepository;
-import org.apache.rave.portal.repository.WidgetCategoryRepository;
+import org.apache.rave.portal.repository.CategoryRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,23 +42,23 @@ import static org.hamcrest.CoreMatchers.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:test-dataContext.xml", "classpath:test-applicationContext.xml"})
 
-public class JpaWidgetCategoryRepositoryTest {
+public class JpaCategoryRepositoryTest {
 
     @PersistenceContext
     private EntityManager manager;
 
     @Autowired
-    private WidgetCategoryRepository repository;
+    private CategoryRepository repository;
 
     private static final String DUPLICATE_TEXT_VALUE = "Sample Category";
 
     @Test
     public void getAll() {
-        List<WidgetCategory> list = repository.getAll();
+        List<Category> list = repository.getAll();
         assertThat(list.size(), is(2));
         // verify proper sorting alphabetical by text attribute
         String lastText = "";
-        for (WidgetCategory wc : list) {
+        for (Category wc : list) {
             String currentText = wc.getText();
             assertThat(currentText.compareTo(lastText) > 0, is(true));
             lastText = currentText;
@@ -75,7 +73,7 @@ public class JpaWidgetCategoryRepositoryTest {
         Date now = new Date();
         User user = new User(1L);
         
-        WidgetCategory wc = new WidgetCategory();
+        Category wc = new Category();
         wc.setText(DUPLICATE_TEXT_VALUE);
         wc.setCreatedDate(now);
         wc.setCreatedUser(user);

@@ -26,20 +26,20 @@ import java.util.Date;
  * A category for a widget.
  */
 @Entity
-@Table(name = "widget_category")
+@Table(name = "category")
 @XmlRootElement
 @NamedQueries({
-        @NamedQuery(name = WidgetCategory.GET_ALL, query = "select wc from WidgetCategory wc order by wc.text")
+        @NamedQuery(name = Category.GET_ALL, query = "select c from Category c order by c.text")
 })
-public class WidgetCategory implements BasicEntity, Serializable {
+public class Category implements BasicEntity, Serializable {
     // constants for JPA query names
-    public static final String GET_ALL = "WidgetCategory.getAll";
+    public static final String GET_ALL = "Category.getAll";
 
     @Id
     @Column(name = "entity_id")
-    @GeneratedValue(strategy = GenerationType.TABLE, generator = "widgetCategoryIdGenerator")
-    @TableGenerator(name = "widgetCategoryIdGenerator", table = "RAVE_PORTAL_SEQUENCES", pkColumnName = "SEQ_NAME",
-                    valueColumnName = "SEQ_COUNT", pkColumnValue = "widget_category",
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "categoryIdGenerator")
+    @TableGenerator(name = "categoryIdGenerator", table = "RAVE_PORTAL_SEQUENCES", pkColumnName = "SEQ_NAME",
+                    valueColumnName = "SEQ_COUNT", pkColumnValue = "category",
                     allocationSize = 1, initialValue = 1)
     private Long entityId;
 
@@ -66,11 +66,11 @@ public class WidgetCategory implements BasicEntity, Serializable {
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date lastModifiedDate;
 
-    public WidgetCategory() {
+    public Category() {
 
     }
 
-    public WidgetCategory(Long entityId, String text, User createdUser, Date createdDate, User lastModifiedUser, Date lastModifiedDate) {
+    public Category(Long entityId, String text, User createdUser, Date createdDate, User lastModifiedUser, Date lastModifiedDate) {
         this.entityId = entityId;
         this.text = text;
         this.createdUser = createdUser;
@@ -137,7 +137,7 @@ public class WidgetCategory implements BasicEntity, Serializable {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final WidgetCategory other = (WidgetCategory) obj;
+        final Category other = (Category) obj;
         if (this.entityId != other.entityId && (this.entityId == null || !this.entityId.equals(other.entityId))) {
             return false;
         }
@@ -153,7 +153,7 @@ public class WidgetCategory implements BasicEntity, Serializable {
 
     @Override
     public String toString() {
-        return "WidgetCategory{" +
+        return "Category{" +
                 "entityId=" + entityId +
                 ", text='" + text + '\'' +
                 '}';

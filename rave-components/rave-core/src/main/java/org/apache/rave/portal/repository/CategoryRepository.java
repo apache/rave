@@ -16,14 +16,14 @@
 package org.apache.rave.portal.repository;
 
 import org.apache.rave.persistence.Repository;
-import org.apache.rave.portal.model.WidgetCategory;
+import org.apache.rave.portal.model.Category;
 import java.util.List;
 
-public interface WidgetCategoryRepository extends Repository<WidgetCategory> {
+public interface CategoryRepository extends Repository<Category> {
     /**
-     * Gets a list of <strong>all</strong> WidgetCategory objects in the repository
+     * Gets a list of <strong>all</strong> Category objects in the repository
      *
      * @return a valid List
      */
-    List<WidgetCategory> getAll();
+    List<Category> getAll();
 }

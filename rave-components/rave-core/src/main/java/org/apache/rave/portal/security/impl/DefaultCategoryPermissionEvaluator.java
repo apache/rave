@@ -18,9 +18,9 @@
  */
 package org.apache.rave.portal.security.impl;
 
-import org.apache.rave.portal.model.WidgetCategory;
+import org.apache.rave.portal.model.Category;
 import org.apache.rave.portal.model.User;
-import org.apache.rave.portal.repository.WidgetCategoryRepository;
+import org.apache.rave.portal.repository.CategoryRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,38 +32,38 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The default implementation of the ModelPermissionEvaluator for WidgetCategory objects
+ * The default implementation of the ModelPermissionEvaluator for Category objects
  */
 @Component
-public class DefaultWidgetCategoryPermissionEvaluator extends AbstractModelPermissionEvaluator<WidgetCategory> {
+public class DefaultCategoryPermissionEvaluator extends AbstractModelPermissionEvaluator<Category> {
     private Logger log = LoggerFactory.getLogger(getClass());
-    private WidgetCategoryRepository widgetCategoryRepository;
+    private CategoryRepository categoryRepository;
 
     @Autowired
-    public DefaultWidgetCategoryPermissionEvaluator(WidgetCategoryRepository widgetCategoryRepository) {
-        this.widgetCategoryRepository = widgetCategoryRepository;
+    public DefaultCategoryPermissionEvaluator(CategoryRepository categoryRepository) {
+        this.categoryRepository = categoryRepository;
     }
    
     @Override
-    public Class<WidgetCategory> getType() {
-        return WidgetCategory.class;
+    public Class<Category> getType() {
+        return Category.class;
     }
     
     /**
      * Checks to see if the Authentication object has the supplied Permission
-     * on the supplied WidgetCategory object.  This method invokes the private hasPermission
+     * on the supplied Category object.  This method invokes the private hasPermission
      * function with the trustedDomainObject parameter set to false since we don't
      * know if the model being passed in was modified in any way from the 
      * actual entity in the database.
      * 
      * @param authentication the current Authentication object
-     * @param widgetCategory the WidgetCategory model object
+     * @param category the Category model object
      * @param permission the Permission to check
      * @return true if the Authentication has the proper permission, false otherwise
      */
     @Override
-    public boolean hasPermission(Authentication authentication, WidgetCategory widgetCategory, Permission permission) {      
-        return hasPermission(authentication, widgetCategory, permission, false);
+    public boolean hasPermission(Authentication authentication, Category category, Permission permission) {
+        return hasPermission(authentication, category, permission, false);
     }    
 
     /**
@@ -86,20 +86,20 @@ public class DefaultWidgetCategoryPermissionEvaluator extends AbstractModelPermi
         if (targetId instanceof RaveSecurityContext) {
             hasPermission = verifyRaveSecurityContext(authentication, (RaveSecurityContext)targetId);           
         } else {
-            hasPermission = hasPermission(authentication, widgetCategoryRepository.get((Long)targetId), permission, true);
+            hasPermission = hasPermission(authentication, categoryRepository.get((Long)targetId), permission, true);
         }
         return hasPermission;
     }  
         
-    private boolean hasPermission(Authentication authentication, WidgetCategory widgetCategory, Permission permission, boolean trustedDomainObject) {       
-        // this is our container of trusted widgetCategory objects that can be re-used 
-        // in this method so that the same trusted widgetCategory object doesn't have to
+    private boolean hasPermission(Authentication authentication, Category category, Permission permission, boolean trustedDomainObject) {
+        // this is our container of trusted category objects that can be re-used
+        // in this method so that the same trusted category object doesn't have to
         // be looked up in the repository multiple times
-        List<WidgetCategory> trustedWidgetCategoryContainer = new ArrayList<WidgetCategory>();                           
+        List<Category> trustedCategoryContainer = new ArrayList<Category>();
         
         // first execute the AbstractModelPermissionEvaluator's hasPermission function
         // to see if it allows permission via it's "higher authority" logic                
-        if (super.hasPermission(authentication, widgetCategory, permission)) {
+        if (super.hasPermission(authentication, category, permission)) {
             return true;
         }
         
@@ -107,11 +107,11 @@ public class DefaultWidgetCategoryPermissionEvaluator extends AbstractModelPermi
         boolean hasPermission = false;                       
         switch (permission) {
             case READ:
-                // all users can read any WidgetCategory
+                // all users can read any Category
                 hasPermission = true;
                 break;
             // if you are here, you are not an administrator, and thus can't
-            // administer, create, update, or delete a WidgetCategory
+            // administer, create, update, or delete a Category
             case ADMINISTER:
             case CREATE:
             case DELETE:
@@ -125,38 +125,38 @@ public class DefaultWidgetCategoryPermissionEvaluator extends AbstractModelPermi
         return hasPermission;
     }       
     
-    // returns a trusted WidgetCategory object, either from the WidgetCategoryRepository, or the
+    // returns a trusted Category object, either from the CategoryRepository, or the
     // cached container list
-    private WidgetCategory getTrustedWidgetCategory(long widgetCategoryId, List<WidgetCategory> trustedWidgetCategoryContainer) {
-        WidgetCategory p = null;
-        if (trustedWidgetCategoryContainer.isEmpty()) {
-            p = widgetCategoryRepository.get(widgetCategoryId);
-            trustedWidgetCategoryContainer.add(p);
+    private Category getTrustedCategory(long categoryId, List<Category> trustedCategoryContainer) {
+        Category p = null;
+        if (trustedCategoryContainer.isEmpty()) {
+            p = categoryRepository.get(categoryId);
+            trustedCategoryContainer.add(p);
         } else {
-            p = trustedWidgetCategoryContainer.get(0);
+            p = trustedCategoryContainer.get(0);
         }
         return p;
     }
    
-    // checks to see if the Authentication object principal is the owner of the supplied widgetCategory object
+    // checks to see if the Authentication object principal is the owner of the supplied category object
     // if trustedDomainObject is false, pull the entity from the database first to ensure
     // the model object is trusted and hasn't been modified
-    private boolean isWidgetCategoryCreatedUser(Authentication authentication, WidgetCategory widgetCategory, List<WidgetCategory> trustedWidgetCategoryContainer, boolean trustedDomainObject) {
-        WidgetCategory trustedWidgetCategory = null;
+    private boolean isCategoryCreatedUser(Authentication authentication, Category category, List<Category> trustedCategoryContainer, boolean trustedDomainObject) {
+        Category trustedCategory = null;
         if (trustedDomainObject) {
-            trustedWidgetCategory = widgetCategory;
+            trustedCategory = category;
         } else {
-            trustedWidgetCategory = getTrustedWidgetCategory(widgetCategory.getEntityId(), trustedWidgetCategoryContainer);
+            trustedCategory = getTrustedCategory(category.getEntityId(), trustedCategoryContainer);
         }
 
-        return isWidgetCategoryCreatedUserByUsername(authentication, trustedWidgetCategory.getCreatedUser().getUsername());
+        return isCategoryCreatedUserByUsername(authentication, trustedCategory.getCreatedUser().getUsername());
     }
 
-    private boolean isWidgetCategoryCreatedUserByUsername(Authentication authentication, String username) {
+    private boolean isCategoryCreatedUserByUsername(Authentication authentication, String username) {
         return ((User)authentication.getPrincipal()).getUsername().equals(username);
     }
 
-    private boolean isWidgetCategoryCreatedUserById(Authentication authentication, Long userId) {
+    private boolean isCategoryCreatedUserById(Authentication authentication, Long userId) {
         return ((User)authentication.getPrincipal()).getEntityId().equals(userId);
     }
 
@@ -170,7 +170,7 @@ public class DefaultWidgetCategoryPermissionEvaluator extends AbstractModelPermi
 
         // perform the permissions check based on the class supplied to the RaveSecurityContext object
         if (User.class == clazz) {
-            return isWidgetCategoryCreatedUserById(authentication, (Long) raveSecurityContext.getId());
+            return isCategoryCreatedUserById(authentication, (Long) raveSecurityContext.getId());
         } else {
             throw new IllegalArgumentException("unknown RaveSecurityContext type: " + raveSecurityContext.getType());
         }
