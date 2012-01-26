@@ -105,7 +105,7 @@
     <div class="clear-float">&nbsp;</div>
 </div>
 <fmt:message key="page.general.addnewpage" var="addNewPageTitle"/>
-<div id="dialog" title="${addNewPageTitle}" class="dialog">
+<div id="dialog" title="${addNewPageTitle}" class="dialog hidden">
     <form id="pageForm">
         <div id="pageFormErrors" class="error"></div>
         <fieldset class="ui-helper-reset">
@@ -122,7 +122,7 @@
     </form>
 </div>
 <fmt:message key="page.general.movepage" var="movePageTitle"/>
-<div id="movePageDialog" title="${movePageTitle}" class="dialog">
+<div id="movePageDialog" title="${movePageTitle}" class="dialog hidden">
     <div><fmt:message key="page.general.movethispage"/></div>
     <form id="movePageForm">
         <select id="moveAfterPageId">
@@ -142,7 +142,7 @@
     </form>
 </div>
 <fmt:message key="widget.menu.movetopage" var="moveWidgetToPageTitle"/>
-<div id="moveWidgetDialog" title="${moveWidgetToPageTitle}" class="dialog">
+<div id="moveWidgetDialog" title="${moveWidgetToPageTitle}" class="dialog hidden">
     <div><fmt:message key="widget.menu.movethiswidget"/></div>
     <form id="moveWidgetForm">
         <select id="moveToPageId">
