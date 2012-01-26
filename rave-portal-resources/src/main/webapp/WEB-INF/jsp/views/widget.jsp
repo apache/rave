@@ -172,6 +172,18 @@
                 <button id="tag-new-${widget.entityId}" class="tagNewButton"></button>
             </div>
         </div>
+        <c:if test="${not empty widget.categories}">
+            <div class="widgetCategories">
+                <fmt:message key="widget.categories"/>
+                <table id="categoriesRow">
+                    <tr>
+                        <c:forEach var="category" items="${widget.categories}">
+                            <td class="storeWidgetDesc"><c:out value="${category.text}"/></td>
+                        </c:forEach>
+                    </tr>
+                </table>
+            </div>
+        </c:if>
         <div class="widgetComments">
             <div class="new-comment">
                 <h3><fmt:message key="page.widget.comments"/></h3>

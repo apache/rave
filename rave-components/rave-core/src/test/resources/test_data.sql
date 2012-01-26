@@ -817,13 +817,30 @@ insert into widget_tag (entity_id, widget_id, tag_id)
 values (@next_widget_tag_id, 1,2);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @widget_tag_seq;
 
--- widget category
-set @next_category_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @category_seq);
+-- category
+set @category_id1 = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @category_seq);
 insert into category (entity_id, text, created_user_id, created_date, last_modified_user_id, last_modified_date)
-values (@next_category_id, 'Sample Category', @user_id_1, '2012-01-19', @user_id_2, '2012-01-22');
+values (@category_id1, 'Sample Category', @user_id_1, '2012-01-19', @user_id_2, '2012-01-22');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @category_seq;
 
-set @next_category_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @category_seq);
+set @category_id2 = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @category_seq);
 insert into category (entity_id, text, created_user_id, created_date, last_modified_user_id, last_modified_date)
-values (@next_category_id, 'AAA Category', @user_id_1, '2012-01-19', @user_id_2, '2012-01-19');
+values (@category_id2, 'AAA Category', @user_id_1, '2012-01-19', @user_id_2, '2012-01-19');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @category_seq;
+
+set @category_id3 = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @category_seq);
+insert into category (entity_id, text, created_user_id, created_date, last_modified_user_id, last_modified_date)
+values (@category_id3, 'News Category', @user_id_1, '2012-01-19', @user_id_2, '2012-01-19');
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @category_seq;
+
+set @category_id4 = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @category_seq);
+insert into category (entity_id, text, created_user_id, created_date, last_modified_user_id, last_modified_date)
+values (@category_id4, 'Technology Category', @user_id_1, '2012-01-19', @user_id_2, '2012-01-19');
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @category_seq;
+
+-- widget category
+insert into widget_category (widget_id, category_id)
+values (@wikipedia_widget_id, @category_id4);
+insert into widget_category (widget_id, category_id)
+values (@wikipedia_widget_id, @category_id2);
+

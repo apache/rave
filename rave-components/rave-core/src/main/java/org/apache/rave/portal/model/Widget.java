@@ -25,7 +25,6 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -176,11 +175,17 @@ public class Widget implements BasicEntity, Serializable {
     @JoinColumn(name = "widget_id", referencedColumnName = "entity_id")
     private List<WidgetRating> ratings;
 
-
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "widget_id", referencedColumnName = "entity_id")
     private List<WidgetTag> tags;
 
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name="widget_category",
+            joinColumns=@JoinColumn(name="widget_id", referencedColumnName = "entity_id"),
+            inverseJoinColumns=@JoinColumn(name="category_id", referencedColumnName = "entity_id")
+    )
+    @OrderBy("text")
+    private List<Category> categories;
 
     public Widget() {
     }
@@ -346,6 +351,14 @@ public class Widget implements BasicEntity, Serializable {
 
     public void setTags(List<WidgetTag> tags) {
         this.tags = tags;
+    }
+
+    public List<Category> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(List<Category> categories) {
+        this.categories = categories;
     }
 
     @Override

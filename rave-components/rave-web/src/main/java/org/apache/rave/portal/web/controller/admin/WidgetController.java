@@ -19,12 +19,15 @@
 
 package org.apache.rave.portal.web.controller.admin;
 
+import org.apache.rave.portal.model.Category;
 import org.apache.rave.portal.model.PortalPreference;
 import org.apache.rave.portal.model.Widget;
 import org.apache.rave.portal.model.WidgetStatus;
 import org.apache.rave.portal.model.util.SearchResult;
+import org.apache.rave.portal.service.CategoryService;
 import org.apache.rave.portal.service.PortalPreferenceService;
 import org.apache.rave.portal.service.WidgetService;
+import org.apache.rave.portal.web.controller.util.CategoryEditor;
 import org.apache.rave.portal.web.util.ModelKeys;
 import org.apache.rave.portal.web.util.PortalPreferenceKeys;
 import org.apache.rave.portal.web.util.ViewNames;
@@ -43,6 +46,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
+
+import java.beans.PropertyEditorSupport;
+import java.util.ArrayList;
 
 import static org.apache.rave.portal.model.WidgetStatus.values;
 import static org.apache.rave.portal.web.controller.admin.AdminControllerUtil.DEFAULT_PAGE_SIZE;
@@ -67,10 +73,17 @@ public class WidgetController {
 
     @Autowired
     private PortalPreferenceService preferenceService;
+    
+    @Autowired
+    private CategoryService categoryService;
+
+    @Autowired
+    private CategoryEditor categoryEditor;
 
     @InitBinder
     public void initBinder(WebDataBinder dataBinder) {
         dataBinder.setDisallowedFields("entityId");
+        dataBinder.registerCustomEditor(Category.class, categoryEditor);
     }
 
     @RequestMapping(value = "/admin/widgets", method = RequestMethod.GET)
@@ -109,6 +122,8 @@ public class WidgetController {
         addNavigationMenusToModel(SELECTED_ITEM, model);
         model.addAttribute(widgetService.getWidget(widgetid));
         model.addAttribute(ModelKeys.TOKENCHECK, AdminControllerUtil.generateSessionToken());
+        model.addAttribute(ModelKeys.CATEGORIES, categoryService.getAll());
+
         return ViewNames.ADMIN_WIDGETDETAIL;
     }
 
@@ -122,6 +137,7 @@ public class WidgetController {
         widgetValidator.validate(widget, result);
         if (result.hasErrors()) {
             addNavigationMenusToModel(SELECTED_ITEM, (Model) modelMap);
+            modelMap.addAttribute(ModelKeys.CATEGORIES, categoryService.getAll());
             return ViewNames.ADMIN_WIDGETDETAIL;
         }
         widgetService.updateWidget(widget);
@@ -148,6 +164,15 @@ public class WidgetController {
             this.preferenceService = preferenceService;
     }
 
+    // setters for unit tests
+    public void setCategoryService(CategoryService categoryService) {
+        this.categoryService = categoryService;
+    }
+
+    // setters for unit tests
+    public void setCategoryEditor(CategoryEditor categoryEditor) {
+        this.categoryEditor = categoryEditor;
+    }
 
     public int getPageSize() {
         final PortalPreference pageSizePref = preferenceService.getPreference(PortalPreferenceKeys.PAGE_SIZE);

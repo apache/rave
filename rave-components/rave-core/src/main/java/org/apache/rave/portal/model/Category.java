@@ -21,6 +21,7 @@ import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * A category for a widget.
@@ -65,6 +66,14 @@ public class Category implements BasicEntity, Serializable {
     @Column(name ="last_modified_date")
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date lastModifiedDate;
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name="widget_category",
+               joinColumns=@JoinColumn(name="category_id", referencedColumnName = "entity_id"),
+               inverseJoinColumns=@JoinColumn(name="widget_id", referencedColumnName = "entity_id")
+    )
+    @OrderBy("title")
+    private List<Widget> widgets;
 
     public Category() {
 
@@ -127,6 +136,14 @@ public class Category implements BasicEntity, Serializable {
 
     public void setLastModifiedDate(Date lastModifiedDate) {
         this.lastModifiedDate = lastModifiedDate;
+    }
+
+    public List<Widget> getWidgets() {
+        return widgets;
+    }
+
+    public void setWidgets(List<Widget> widgets) {
+        this.widgets = widgets;
     }
 
     @Override

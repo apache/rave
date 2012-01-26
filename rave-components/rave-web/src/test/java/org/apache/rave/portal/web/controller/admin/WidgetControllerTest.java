@@ -19,34 +19,34 @@
 
 package org.apache.rave.portal.web.controller.admin;
 
+import org.apache.rave.portal.model.Category;
 import org.apache.rave.portal.model.Widget;
 import org.apache.rave.portal.model.util.SearchResult;
+import org.apache.rave.portal.service.CategoryService;
 import org.apache.rave.portal.service.PortalPreferenceService;
 import org.apache.rave.portal.service.WidgetService;
+import org.apache.rave.portal.web.controller.util.CategoryEditor;
 import org.apache.rave.portal.web.util.ModelKeys;
 import org.apache.rave.portal.web.util.PortalPreferenceKeys;
 import org.apache.rave.portal.web.util.ViewNames;
 import org.apache.rave.portal.web.validator.UpdateWidgetValidator;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.ui.ExtendedModelMap;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.support.SessionStatus;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.expectLastCall;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
+import static org.junit.Assert.*;
+import static org.easymock.EasyMock.*;
+import static org.hamcrest.CoreMatchers.*;
 
 /**
  * Test for {@link WidgetController}
@@ -61,7 +61,33 @@ public class WidgetControllerTest {
     private WidgetService service;
     private UpdateWidgetValidator widgetValidator;
     private PortalPreferenceService preferenceService;
+    private CategoryService categoryService;
     private String validToken;
+    private List<Category> categories;
+    private WebDataBinder webDataBinder;
+    private CategoryEditor categoryEditor;
+
+    @Before
+    public void setUp() throws Exception {
+        controller = new WidgetController();
+        service = createMock(WidgetService.class);
+        controller.setWidgetService(service);
+        widgetValidator = new UpdateWidgetValidator(service);
+        controller.setWidgetValidator(widgetValidator);
+        validToken = AdminControllerUtil.generateSessionToken();
+        preferenceService = createMock(PortalPreferenceService.class);
+        controller.setPreferenceService(preferenceService);
+        categoryService = createMock(CategoryService.class);
+        controller.setCategoryService(categoryService);
+
+        categories = new ArrayList<Category>();
+        categories.add(new Category());
+        categories.add(new Category());
+
+        webDataBinder = createMock(WebDataBinder.class);
+        categoryEditor = new CategoryEditor(categoryService);
+        controller.setCategoryEditor(categoryEditor);
+    }
 
     @Test
     public void adminWidgets() throws Exception {
@@ -115,13 +141,16 @@ public class WidgetControllerTest {
         widget.setTitle("My widget");
 
         expect(service.getWidget(entityId)).andReturn(widget);
-        replay(service);
+        expect(categoryService.getAll()).andReturn(categories);
+        replay(service, categoryService);
         String adminWidgetDetailView = controller.viewWidgetDetail(entityId, model);
-        verify(service);
+        verify(service, categoryService);
 
         assertEquals(ViewNames.ADMIN_WIDGETDETAIL, adminWidgetDetailView);
         assertTrue(model.containsAttribute(TABS));
         assertEquals(widget, model.asMap().get("widget"));
+        assertThat(model.containsAttribute(ModelKeys.CATEGORIES), is(true));
+        assertThat((List<Category>) model.asMap().get(ModelKeys.CATEGORIES), is(categories));
     }
 
     @Test
@@ -181,16 +210,15 @@ public class WidgetControllerTest {
 
     }
 
-    @Before
-    public void setUp() throws Exception {
-        controller = new WidgetController();
-        service = createMock(WidgetService.class);
-        controller.setWidgetService(service);
-        widgetValidator = new UpdateWidgetValidator(service);
-        controller.setWidgetValidator(widgetValidator);
-        validToken = AdminControllerUtil.generateSessionToken();
-        preferenceService = createMock(PortalPreferenceService.class);
-        controller.setPreferenceService(preferenceService);
+    @Test
+    public void initBinder() {
+        webDataBinder.setDisallowedFields("entityId");
+        expectLastCall();
+        webDataBinder.registerCustomEditor(Category.class, categoryEditor);
+        expectLastCall();
+        replay(webDataBinder);
+        controller.initBinder(webDataBinder);
+        verify(webDataBinder);
     }
 
 

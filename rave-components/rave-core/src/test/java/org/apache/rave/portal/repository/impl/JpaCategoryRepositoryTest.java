@@ -55,7 +55,7 @@ public class JpaCategoryRepositoryTest {
     @Test
     public void getAll() {
         List<Category> list = repository.getAll();
-        assertThat(list.size(), is(2));
+        assertThat(list.size(), is(4));
         // verify proper sorting alphabetical by text attribute
         String lastText = "";
         for (Category wc : list) {

@@ -46,7 +46,7 @@ public class DefaultCategoryPermissionEvaluatorTest {
     private Authentication mockAuthentication;
     private List<GrantedAuthority> grantedAuthorities;
 
-    private final Long VALID_CATEGORY_ID = 22L;
+    private final Long VALID_WIDGET_CATEGORY_ID = 22L;
     private final Long VALID_USER_ID = 99L;
     private final String VALID_USERNAME = "john.doe";
     private final String VALID_USERNAME2 = "jane.doe";
@@ -64,7 +64,7 @@ public class DefaultCategoryPermissionEvaluatorTest {
         user2.setUsername(VALID_USERNAME2);
         
         category = new Category();
-        category.setEntityId(VALID_CATEGORY_ID);
+        category.setEntityId(VALID_WIDGET_CATEGORY_ID);
         category.setCreatedUser(user);
 
         grantedAuthorities = new ArrayList<GrantedAuthority>();
@@ -156,52 +156,52 @@ public class DefaultCategoryPermissionEvaluatorTest {
     public void testHasPermission_4args_administer() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthorities);
         replay(mockAuthentication);
-        assertThat(defaultCategoryPermissionEvaluator.hasPermission(mockAuthentication, VALID_CATEGORY_ID, Widget.class.getName(), ModelPermissionEvaluator.Permission.ADMINISTER), is(false));
+        assertThat(defaultCategoryPermissionEvaluator.hasPermission(mockAuthentication, VALID_WIDGET_CATEGORY_ID, Widget.class.getName(), ModelPermissionEvaluator.Permission.ADMINISTER), is(false));
         verify(mockAuthentication);
     }
 
     @Test
     public void testHasPermission_4args_create() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthorities);
-        expect(mockCategoryRepository.get(VALID_CATEGORY_ID)).andReturn(category);
+        expect(mockCategoryRepository.get(VALID_WIDGET_CATEGORY_ID)).andReturn(category);
         replay(mockAuthentication, mockCategoryRepository);
-        assertThat(defaultCategoryPermissionEvaluator.hasPermission(mockAuthentication, VALID_CATEGORY_ID, Widget.class.getName(), ModelPermissionEvaluator.Permission.CREATE), is(false));
+        assertThat(defaultCategoryPermissionEvaluator.hasPermission(mockAuthentication, VALID_WIDGET_CATEGORY_ID, Widget.class.getName(), ModelPermissionEvaluator.Permission.CREATE), is(false));
         verify(mockAuthentication, mockCategoryRepository);
     }
 
     @Test
     public void testHasPermission_4args_delete() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthorities);
-        expect(mockCategoryRepository.get(VALID_CATEGORY_ID)).andReturn(category);
+        expect(mockCategoryRepository.get(VALID_WIDGET_CATEGORY_ID)).andReturn(category);
         replay(mockAuthentication, mockCategoryRepository);
-        assertThat(defaultCategoryPermissionEvaluator.hasPermission(mockAuthentication, VALID_CATEGORY_ID, Widget.class.getName(), ModelPermissionEvaluator.Permission.DELETE), is(false));
+        assertThat(defaultCategoryPermissionEvaluator.hasPermission(mockAuthentication, VALID_WIDGET_CATEGORY_ID, Widget.class.getName(), ModelPermissionEvaluator.Permission.DELETE), is(false));
         verify(mockAuthentication, mockCategoryRepository);
     }
 
     @Test
     public void testHasPermission_4args_read_isCreatedUser() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthorities);
-        expect(mockCategoryRepository.get(VALID_CATEGORY_ID)).andReturn(category);
+        expect(mockCategoryRepository.get(VALID_WIDGET_CATEGORY_ID)).andReturn(category);
         replay(mockAuthentication, mockCategoryRepository);
-        assertThat(defaultCategoryPermissionEvaluator.hasPermission(mockAuthentication, VALID_CATEGORY_ID, Widget.class.getName(), ModelPermissionEvaluator.Permission.READ), is(true));
+        assertThat(defaultCategoryPermissionEvaluator.hasPermission(mockAuthentication, VALID_WIDGET_CATEGORY_ID, Widget.class.getName(), ModelPermissionEvaluator.Permission.READ), is(true));
         verify(mockAuthentication, mockCategoryRepository);
     }
 
     @Test
     public void testHasPermission_4args_read_isNotCreatedUser() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthorities);
-        expect(mockCategoryRepository.get(VALID_CATEGORY_ID)).andReturn(category);
+        expect(mockCategoryRepository.get(VALID_WIDGET_CATEGORY_ID)).andReturn(category);
         replay(mockAuthentication, mockCategoryRepository);
-        assertThat(defaultCategoryPermissionEvaluator.hasPermission(mockAuthentication, VALID_CATEGORY_ID, Widget.class.getName(), ModelPermissionEvaluator.Permission.READ), is(true));
+        assertThat(defaultCategoryPermissionEvaluator.hasPermission(mockAuthentication, VALID_WIDGET_CATEGORY_ID, Widget.class.getName(), ModelPermissionEvaluator.Permission.READ), is(true));
         verify(mockAuthentication, mockCategoryRepository);
     }
 
     @Test
     public void testHasPermission_4args_update() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthorities);
-        expect(mockCategoryRepository.get(VALID_CATEGORY_ID)).andReturn(category);
+        expect(mockCategoryRepository.get(VALID_WIDGET_CATEGORY_ID)).andReturn(category);
         replay(mockAuthentication, mockCategoryRepository);
-        assertThat(defaultCategoryPermissionEvaluator.hasPermission(mockAuthentication, VALID_CATEGORY_ID, Widget.class.getName(), ModelPermissionEvaluator.Permission.UPDATE), is(false));
+        assertThat(defaultCategoryPermissionEvaluator.hasPermission(mockAuthentication, VALID_WIDGET_CATEGORY_ID, Widget.class.getName(), ModelPermissionEvaluator.Permission.UPDATE), is(false));
         verify(mockAuthentication, mockCategoryRepository);
     }
 

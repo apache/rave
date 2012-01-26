@@ -143,6 +143,13 @@
 					<form:select path="widgetStatus" items="${widgetStatus}" />
 				</p>
 
+                <p>
+                    <form:label path="categories">
+                        <fmt:message key="widget.categories" />
+                    </form:label>
+                    <form:select path="categories" items="${categories}" multiple="true" itemLabel="text" size="10" />
+                </p>
+
 				<p>
 					<spring:bind path="thumbnailUrl">
 						<label for="thumbnailUrl"><fmt:message

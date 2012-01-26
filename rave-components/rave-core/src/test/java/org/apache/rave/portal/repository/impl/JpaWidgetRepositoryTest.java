@@ -19,10 +19,7 @@
 
 package org.apache.rave.portal.repository.impl;
 
-import org.apache.rave.portal.model.User;
-import org.apache.rave.portal.model.Widget;
-import org.apache.rave.portal.model.WidgetRating;
-import org.apache.rave.portal.model.WidgetStatus;
+import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.model.util.WidgetStatistics;
 import org.apache.rave.portal.repository.WidgetRepository;
 import org.junit.Test;
@@ -37,6 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -383,4 +381,54 @@ public class JpaWidgetRepositoryTest {
         assertTrue(repository.getCountByTag("NEWS") == 1);
     }
 
+    @Test
+    public void addWidgetCategory() {
+        final long WIDGET_ID = 1L;
+        final User user = new User(1L);
+
+        Category category = new Category();
+        category.setEntityId(1L);
+        category.setText("Sample Category");
+        category.setCreatedUser(user);
+        category.setCreatedDate(new Date());
+        category.setLastModifiedUser(user);
+        category.setLastModifiedDate(new Date());
+        sharedManager.merge(category);
+
+
+        Widget widget = repository.get(WIDGET_ID);        
+        assertThat(widget.getCategories().size(), is(2));
+
+        widget.getCategories().add(category);                
+        repository.save(widget);
+        
+        Widget reloadedWidget = repository.get(WIDGET_ID);
+        assertThat(reloadedWidget.getCategories().size(), is(3));
+        
+        // test that category is in list
+        boolean foundNewCategory = false;
+        for (Category c : reloadedWidget.getCategories()) {
+            if (c.getEntityId().equals(WIDGET_ID)) {
+                foundNewCategory = true;
+                break;
+            }
+        }
+        
+        assertThat(foundNewCategory, is(true));
+    }
+
+    @Test
+    public void removeWidgetCategory() {
+        final long WIDGET_ID = 1L;
+
+        Widget widget = repository.get(WIDGET_ID);
+        assertThat(widget.getCategories().size(), is(2));
+
+        widget.getCategories().remove(0);
+        repository.save(widget);
+
+        Widget reloadedWidget = repository.get(WIDGET_ID);
+        assertThat(reloadedWidget.getCategories().size(), is(1));
+        assertThat(reloadedWidget.getCategories().get(0).getEntityId(), is(4L));
+    }    
 }

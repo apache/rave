@@ -237,6 +237,18 @@
                                 </tr>
                             </table>
                         </c:if>
+                        <c:if test="${not empty widget.categories}">
+                            <table class="widgetCategories">
+                                <tr>
+                                    <td>
+                                        <fmt:message key="widget.categories"/>
+                                    </td>
+                                    <c:forEach var="category" items="${widget.categories}">
+                                        <td class="storeWidgetDesc"><c:out value="${category.text}"/></td>
+                                    </c:forEach>
+                                </tr>
+                            </table>
+                        </c:if>
                         <ul class="horizontal-list">
                             <!-- display total likes -->
                             <li>

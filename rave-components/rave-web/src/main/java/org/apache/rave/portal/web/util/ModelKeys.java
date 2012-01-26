@@ -44,4 +44,5 @@ public class ModelKeys {
     public static final String PORTAL_SETTINGS = "portalSettings";
     public static final String TAGS="tags" ;
     public static final String SELECTED_TAG="selectedTag" ;
+    public static final String CATEGORIES = "categories";
 }
