@@ -16,6 +16,7 @@
 package org.apache.rave.portal.model;
 
 import org.apache.rave.persistence.BasicEntity;
+import org.codehaus.jackson.annotate.JsonIgnore;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -138,6 +139,7 @@ public class Category implements BasicEntity, Serializable {
         this.lastModifiedDate = lastModifiedDate;
     }
 
+    @JsonIgnore
     public List<Widget> getWidgets() {
         return widgets;
     }
