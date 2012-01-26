@@ -26,6 +26,8 @@ simply render each region one after another and rely on CSS to style and positio
 <%@ attribute name="page" type="org.apache.rave.portal.model.Page" required="true" description="The Page object" %>
 
 <%--@elvariable id="region" type="org.apache.rave.portal.model.Region"--%>
-<c:forEach var="region" items="${page.regions}" varStatus="status">
-    <rave:region region="${region}" regionIdx="${status.count}" />
-</c:forEach>
+<div class="widgetRow bottomRow">
+    <c:forEach var="region" items="${page.regions}" varStatus="status">
+        <rave:region region="${region}" regionIdx="${status.count}" />
+    </c:forEach>
+</div>

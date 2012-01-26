@@ -37,7 +37,7 @@ var rave = rave || (function() {
         var PREFS_SAVE_BUTTON_TEMPLATE = "<button type='button' id='{elementId}'>{buttonText}</button>";
         var PREFS_CANCEL_BUTTON_TEMPLATE = "<button type='button' id='{elementId}'>{buttonText}</button>";
 
-        var NAME_REGEX = /{name}/g;        
+        var NAME_REGEX = /{name}/g;
         var VALUE_REGEX = /{value}/g;
         var OPTIONS_REGEX = /{options}/g;
         var SELECTED_REGEX = /{selected}/g;
@@ -48,19 +48,19 @@ var rave = rave || (function() {
         var PREF_LABEL_TEMPLATE_REGEX = /{prefLabelTemplate}/g;
         var CLASS_REGEX = /{class}/g;
         var BUTTON_TEXT_REGEX = /{buttonText}/g;
-        
+
         var WIDGET_PREFS_LABEL_CLASS = "widget-prefs-label";
         var WIDGET_PREFS_LABEL_REQUIRED_CLASS = "widget-prefs-label-required";
         var WIDGET_PREFS_INPUT_CLASS = "widget-prefs-input";
         var WIDGET_PREFS_INPUT_REQUIRED_CLASS = "widget-prefs-input-required";
         var WIDGET_PREFS_INPUT_FAILED_VALIDATION = "widget-prefs-input-failed-validation";
-        
-        var WIDGET_ICON_BASE_CLASS = "ui-icon";        
+
+        var WIDGET_ICON_BASE_CLASS = "ui-icon";
         var WIDGET_BTN_MINIMIZE_CLASS = "ui-icon-arrowthick-1-sw";
         var WIDGET_TOGGLE_DISPLAY_COLLAPSED = "ui-icon-triangle-1-e";
-        var WIDGET_TOGGLE_DISPLAY_NORMAL = "ui-icon-triangle-1-s";             
+        var WIDGET_TOGGLE_DISPLAY_NORMAL = "ui-icon-triangle-1-s";
 
-        // variable to store whether or not the 
+        // variable to store whether or not the
         // client is a mobile device
         var mobileState = false;
 
@@ -105,15 +105,22 @@ var rave = rave || (function() {
                         cursor: 'move', // the cursor to show while dnd
                         handle: '.widget-title-bar', // the draggable handle
                         forcePlaceholderSize: true, // size the placeholder to the size of the widget
+                        tolerance: 'pointer', // change dnd drop zone on mouse-over
                         start: dragStart, // event listener for drag start
-                        stop : dragStop // event listener for drag stop
+                        stop : dragStop, // event listener for drag stop
+                        over: dragOver // event listener for drag over
             });
             initWidgetUI();
         }
 
         function dragStart(event, ui) {
+            adjustRowRegionsHeights();
+
             // highlight the draggable regions
-            $(".region").addClass("region-dragging");
+            $(".region").addClass("regionDragging");
+            // remove invisible border so nothing moves
+            $(".region").removeClass("regionNonDragging");
+
             uiState.widget = ui.item.children(".widget").get(0);
             uiState.currentRegion = ui.item.parent().get(0);
 
@@ -126,14 +133,126 @@ var rave = rave || (function() {
         }
 
         function dragStop(event, ui) {
+            // reset padding to 0 after drag on all rows
+            if ($(".widgetRow").length){
+                var rows = $(".regions").find(".widgetRow");
+                rows.each(resetRowsRegionsHeight);
+            }
+
+            // remove the draggable regions visible border
+            $(".region").removeClass("regionDragging");
+            // add an invisible border so nothing moves
+            $(".region").addClass("regionNonDragging");
+
             $(".dnd-overlay").remove();
-            $(".region-dragging").removeClass("region-dragging");
             //Fixes a bug where the jQuery style attribute remains set in chrome
             ui.item.attr("style", "");
             uiState.targetRegion = ui.item.parent().get(0);
             uiState.targetIndex = ui.item.index();
             rave.api.rpc.moveWidget(uiState);
             clearState();
+        }
+
+        function dragOver(event, ui){
+            adjustRowRegionsHeights();
+        }
+
+        // dynamically adjust heights of all regions
+        function adjustRowRegionsHeights(){
+            // handle region areas for upper rows
+            if ($(".upperRow").length){
+                var rows = $(".regions").find(".upperRow");
+                rows.each(adjustUpperRowRegionsHeight);
+            }
+
+            // handle region areas for the bottom row
+            if ($(".bottomRow").length){
+                var row = $(".regions").find(".bottomRow");
+                adjustBottomRowRegionsHeight(row)
+            }
+        }
+
+        // adjusts the padding-bottom value of all regions in bottom row to either fill the empty space or
+        // act as an upper row
+        function adjustBottomRowRegionsHeight (row){
+            resetRowsRegionsHeight(row);
+            var bodyHeight = $('body').outerHeight();
+            var windowHeight = $(window).height();
+            // Instances where no scroll bar currently exists
+            if (windowHeight >= bodyHeight){
+                var pageHeight = $("#pageContent").outerHeight();
+                var headerHeight = bodyHeight - pageHeight;
+                var upperRegionsMaxHeights = 0;
+                if ($(".upperRow").length){
+                    var rows = $(".regions").find(".upperRow");
+                    for (var x = 0; x < rows.length; x++){
+                        var rowMaxHeight = getRowRegionsMaxHeight(rows.get(x)) ;
+                        upperRegionsMaxHeights = upperRegionsMaxHeights + rowMaxHeight;
+                    }
+                }
+                // determine maximum size possible for bottom region
+                // 50 px of buffer also removed to prevent scroll-bar from appearing in any cases
+                var bottomPadding = (windowHeight - 50) - (upperRegionsMaxHeights + headerHeight);
+
+                setRowsRegionsHeight(row, bottomPadding);
+            }
+            // Instances where scroll bar currently exists, can default to upper row behavior
+            else {
+                adjustUpperRowRegionsHeight(row);
+            }
+            // refresh sortables cached positions
+            $(".region").sortable("refreshPositions");
+        }
+
+
+        // adjusts the padding-bottom value of all regions in upper rows to match the value of the
+        // tallest region in the row
+        function adjustUpperRowRegionsHeight (row){
+            // when called by each, first argument is a number instead of a row value
+            var row = (typeof row === 'number') ? $(this) : row;
+
+            resetRowsRegionsHeight(row);
+
+            // sets total region height to the height of tallest region
+            setRowsRegionsHeight(row, getRowRegionsMaxHeight(row));
+
+            // refresh sortables cached positions
+            $(".region").sortable("refreshPositions");
+        }
+
+        // Returns the height of the tallest region in row, minimum 100 px
+        function getRowRegionsMaxHeight (row){
+            var rowChildren = $(row).children();
+            var maxHeight = 100;
+            for (var x = 0; x < rowChildren.length; x++){
+                if ($(rowChildren.get(x)).outerHeight() > maxHeight){
+                    maxHeight = $(rowChildren.get(x)).outerHeight();
+                }
+            }
+            return maxHeight;
+        }
+
+        // Restores the padding-bottom value to the original for all regions in given row
+        function resetRowsRegionsHeight (row) {
+            // when called by each, first argument is a number instead of a row value
+            var row = (typeof row === 'number') ? $(this) : row;
+
+            var rowChildren = $(row).children();
+            for (var x = 0; x < rowChildren.length; x++){
+                // reset to 5, the initial value before dragging
+                $(rowChildren.get(x)).css("padding-bottom", 5);
+            }
+        }
+
+        // Sets the padding-bottom value, so that the total height is the given value for all regions in given row
+        function setRowsRegionsHeight (row, maxHeight) {
+            var rowChildren = $(row).children();
+            for (var x = 0; x < rowChildren.length; x++){
+                if ($(rowChildren.get(x)).outerHeight() != maxHeight){
+                    var defaultPadding = parseInt($(rowChildren.get(x)).css("padding-bottom").replace("px", ""));
+                    $(rowChildren.get(x)).css("padding-bottom", (defaultPadding + maxHeight - $(rowChildren.get(x)).outerHeight()));
+                }
+            }
         }
 
         function clearState() {
@@ -152,34 +271,34 @@ var rave = rave || (function() {
                 styleWidgetButtons(widgetId);
             });
         }
-        
+
         function initMobileWidgetUI() {
             $(".widget-wrapper").each(function(){
-                var widgetId = extractObjectIdFromElementId($(this).attr("id"));                
+                var widgetId = extractObjectIdFromElementId($(this).attr("id"));
                 var widget = rave.getRegionWidgetById(widgetId);
-                            
-                // init the collapse/restore toggle for the title bar                
+
+                // init the collapse/restore toggle for the title bar
                 $(this).find(".widget-title-bar-mobile").click({id: widgetId}, toggleCollapseAction);
             });
         }
-        
+
         function toggleMobileWidget(regionWidgetId) {
             var args = {};
-            args.data = {};            
+            args.data = {};
             args.data.id = regionWidgetId;
             toggleCollapseAction(args);
         }
 
         function maximizeAction(args) {
-            var regionWidgetId = args.data.id;            
+            var regionWidgetId = args.data.id;
             // display the widget in maximized view
             addOverlay($("#pageContent"));
             $(".region" ).sortable( "option", "disabled", true );
-            $("#widget-" + regionWidgetId + "-wrapper").removeClass("widget-wrapper").addClass("widget-wrapper-canvas");            
+            $("#widget-" + regionWidgetId + "-wrapper").removeClass("widget-wrapper").addClass("widget-wrapper-canvas");
             // hide the widget menu
-            $("#widget-" + regionWidgetId + "-widget-menu-wrapper").hide();            
+            $("#widget-" + regionWidgetId + "-widget-menu-wrapper").hide();
             // display the widget minimize button
-            $("#widget-" + regionWidgetId + "-min").show();                                    
+            $("#widget-" + regionWidgetId + "-min").show();
             // hide the collapse/restore toggle icon in canvas mode
             $("#widget-" + regionWidgetId + "-collapse").hide();
             var widget = rave.getRegionWidgetById(regionWidgetId);
@@ -189,15 +308,15 @@ var rave = rave || (function() {
         }
 
         function minimizeAction(args) {
-            var regionWidgetId = args.data.id;     
+            var regionWidgetId = args.data.id;
             $(".dnd-overlay").remove();
             $(".region" ).sortable( "option", "disabled", false );
             // display the widget in normal view
             $("#widget-" + regionWidgetId + "-wrapper").removeClass("widget-wrapper-canvas").addClass("widget-wrapper");
             // hide the widget minimize button
-            $("#widget-" + regionWidgetId + "-min").hide(); 
+            $("#widget-" + regionWidgetId + "-min").hide();
             // show the widget menu
-            $("#widget-" + regionWidgetId + "-widget-menu-wrapper").show();                                                                                            
+            $("#widget-" + regionWidgetId + "-widget-menu-wrapper").show();
             // show the collapse/restore toggle icon
             $("#widget-" + regionWidgetId + "-collapse").show();
             var widget = rave.getRegionWidgetById(regionWidgetId);
@@ -211,39 +330,39 @@ var rave = rave || (function() {
                 }
             }
         }
-      
-        function toggleCollapseAction(args) {     
+
+        function toggleCollapseAction(args) {
             var regionWidgetId = args.data.id;
             var widget = getRegionWidgetById(regionWidgetId);
             // toggle the collapse state of the widget
             var newCollapsedValue = !widget.collapsed;
             var functionArgs = {"regionWidgetId": regionWidgetId, "collapsed": newCollapsedValue};
-            
+
             // if this type of widget has a collapse or restore callback invoke it upon
-            // successfull persistence
-            if(typeof widget != "undefined") {                
+            // successful persistence
+            if(typeof widget != "undefined") {
                 // if this is a collapse action, and the widget has a collapse implementation function,
                 // attach it as a callback function
                 if (newCollapsedValue && isFunction(widget.collapse)) {
-                    functionArgs.successCallback = widget.collapse;                 
-                } 
+                    functionArgs.successCallback = widget.collapse;
+                }
                 // if this is a restore action, and the widget has a restore implementation function,
                 // attach it as a callback function
                 else if (!newCollapsedValue && isFunction(widget.restore)) {
-                    functionArgs.successCallback = widget.restore;                 
+                    functionArgs.successCallback = widget.restore;
                 }
             }
-            
-            // don't persist the collapse / restore state if we are in 
+
+            // don't persist the collapse / restore state if we are in
             // mobile mode because we defaulted all widgets to collapsed
             // when initially rendering the mobile view
             if (rave.isMobile()) {
-                rave.doWidgetUiCollapse(functionArgs);           
+                rave.doWidgetUiCollapse(functionArgs);
             } else {
-                rave.api.rest.saveWidgetCollapsedState(functionArgs);           
+                rave.api.rest.saveWidgetCollapsedState(functionArgs);
             }
-        }      
-        
+        }
+
         function doWidgetUiCollapse(args) {
             // update the in-memory widget with the new collapsed status
             rave.getRegionWidgetById(args.regionWidgetId).collapsed = args.collapsed;
@@ -251,21 +370,21 @@ var rave = rave || (function() {
             // toggle the collapse/restore icon
             rave.toggleCollapseWidgetIcon(args.regionWidgetId);
 
-            // if the widget has supplied a collapse or restore 
+            // if the widget has supplied a collapse or restore
             // function, invoke it so each widget provider
             // can handle the collapse / restore action independently
             if (typeof args.successCallback == 'function') {
                 args.successCallback();
             }
         }
-        
+
         /**
          * Utility function to generate the html label for a userPref
          * based on if it is required or not
          */
         function generatePrefLabelMarkup(userPref) {
             var markup = [];
-            var prefLabel = (userPref.required) ? "* " + userPref.displayName : userPref.displayName;            
+            var prefLabel = (userPref.required) ? "* " + userPref.displayName : userPref.displayName;
             markup.push("<td class='");
             markup.push(WIDGET_PREFS_LABEL_CLASS);
             if (userPref.required) {
@@ -277,21 +396,21 @@ var rave = rave || (function() {
             markup.push("</td>");
             return markup.join("");
         }
-        
+
         /**
          * Utility function to generate the css class(es) of a userPref input
          * field based on if it is required or not
          */
         function generatePrefInputClassMarkup(userPref) {
             var markup = [];
-            markup.push(WIDGET_PREFS_INPUT_CLASS);            
+            markup.push(WIDGET_PREFS_INPUT_CLASS);
             if (userPref.required) {
                 markup.push(" ");
                 markup.push(WIDGET_PREFS_INPUT_REQUIRED_CLASS);
             }
             return markup.join("");
         }
-        
+
        /**
          * Utility function to validate a userPref input element
          */
@@ -301,16 +420,16 @@ var rave = rave || (function() {
             // if the input is required verify it's trimmed input length is > 0
             if (jqEl.hasClass(WIDGET_PREFS_INPUT_REQUIRED_CLASS)) {
                 isValid = $.trim(jqEl.val()).length > 0;
-            } 
-            
-            return isValid;            
+            }
+
+            return isValid;
         }
 
         function editPrefsAction(regionWidgetId) {
             var regionWidget = getRegionWidgetById(regionWidgetId);
             var userPrefs = regionWidget.metadata.userPrefs;
             var hasRequiredUserPrefs = false;
-            
+
             var prefsFormMarkup = [];
             prefsFormMarkup.push("<table>");
 
@@ -372,7 +491,7 @@ var rave = rave || (function() {
                                 userPref.defaultValue));
                 }
             }
-            
+
             // if this widget has one or more required inputs display the helper message
             if (hasRequiredUserPrefs) {
                 prefsFormMarkup.push("<tr><td colspan='2' class='widget-prefs-required-text'>" + rave.getClientMessage("widget.prefs.required.title") + "</td></tr>");
@@ -412,7 +531,7 @@ var rave = rave || (function() {
                         if (!validatePrefInput(element)) {
                             hasValidationErrors = true;
                             $(element).addClass(WIDGET_PREFS_INPUT_FAILED_VALIDATION);
-                        } else {                           
+                        } else {
                             updatedPrefs[element.name] = $(element).val();
                             $(element).removeClass(WIDGET_PREFS_INPUT_FAILED_VALIDATION);
                         }
@@ -428,7 +547,7 @@ var rave = rave || (function() {
                         if (!validatePrefInput(element)) {
                             hasValidationErrors = true;
                             $(element).addClass(WIDGET_PREFS_INPUT_FAILED_VALIDATION);
-                        } else {                       
+                        } else {
                             var valuesToPersist = [];
                             var textareaValues = $(element).val().split("\n");
                             for (var i = 0; i < textareaValues.length; i++) {
@@ -437,7 +556,7 @@ var rave = rave || (function() {
                                     valuesToPersist.push(value);
                                 }
                             }
-                            updatedPrefs[element.name] = valuesToPersist.join("|"); 
+                            updatedPrefs[element.name] = valuesToPersist.join("|");
                             $(element).removeClass(WIDGET_PREFS_INPUT_FAILED_VALIDATION);
                         }
                         break;
@@ -447,15 +566,15 @@ var rave = rave || (function() {
             // check to see if one or more input prefs had validation errors
             if (hasValidationErrors) {
                 // focus on the first input that has validation errors
-                prefsElement.find("." + WIDGET_PREFS_INPUT_FAILED_VALIDATION).first().focus(); 
+                prefsElement.find("." + WIDGET_PREFS_INPUT_FAILED_VALIDATION).first().focus();
             } else {
                 if(isFunction(regionWidget.savePreferences)) {
                     regionWidget.savePreferences(updatedPrefs);
                 }
 
                 prefsElement.html("");
-                prefsElement.hide();    
-            }            
+                prefsElement.hide();
+            }
         }
 
         function cancelEditPrefsAction(args) {
@@ -488,7 +607,7 @@ var rave = rave || (function() {
          */
         function styleWidgetButtons(widgetId) {
             var widget = rave.getRegionWidgetById(widgetId);
-            
+
             // init the widget minimize button which is hidden by default
             // and only renders when widget is in maximized view
             $("#widget-" + widgetId + "-min").button({
@@ -497,22 +616,22 @@ var rave = rave || (function() {
                     primary: WIDGET_BTN_MINIMIZE_CLASS
                 }
             }).click({id: widgetId}, rave.minimizeWidget);
-                
+
             // init the collapse/restore toggle
             // conditionally style the icon and setup the event handlers
             var $toggleCollapseIcon = $("#widget-" + widgetId + "-collapse");
             $toggleCollapseIcon.hide();
             $toggleCollapseIcon.addClass(WIDGET_ICON_BASE_CLASS);
-            $toggleCollapseIcon.addClass((widget.collapsed) ? WIDGET_TOGGLE_DISPLAY_COLLAPSED : WIDGET_TOGGLE_DISPLAY_NORMAL);                        
+            $toggleCollapseIcon.addClass((widget.collapsed) ? WIDGET_TOGGLE_DISPLAY_COLLAPSED : WIDGET_TOGGLE_DISPLAY_NORMAL);
             $toggleCollapseIcon
                 .click({id: widgetId}, toggleCollapseAction)
                 .mousedown(function(event) {
                     // don't allow drag and drop when this item is clicked
                     event.stopPropagation();
-                });       
+                });
             $toggleCollapseIcon.show();
         }
-                
+
         /**
          * Toggles the display of the widget collapse/restore icon.
          * @param widgetId the widgetId of the rendered widget to toggle the icon for
@@ -526,12 +645,12 @@ var rave = rave || (function() {
                 $toggleIcon.removeClass(WIDGET_TOGGLE_DISPLAY_NORMAL);
                 $toggleIcon.addClass(WIDGET_TOGGLE_DISPLAY_COLLAPSED);
             }
-        }        
-        
+        }
+
         /**
          * Displays the "empty page" message on the page
          */
-        function displayEmptyPageMessage() {            
+        function displayEmptyPageMessage() {
             $("#emptyPageMessageWrapper").removeClass("hidden");
         }
 
@@ -565,7 +684,7 @@ var rave = rave || (function() {
         }
 
         return {
-          init : init,       
+          init : init,
           initMobile: initMobileWidgetUI,
           toggleCollapseWidgetIcon: toggleCollapseWidgetIcon,
           maximizeAction: maximizeAction,
@@ -607,7 +726,7 @@ var rave = rave || (function() {
         }
     }
 
-    function initializeWidgets(widgetsByRegionIdMap) {                           
+    function initializeWidgets(widgetsByRegionIdMap) {
         //We get the widget objects in a map keyed by region ID.  The code below converts that map into a flat array
         //of widgets with all the top widgets in each region first, then the seconds widgets in each region, then the
         //third, etc until we have all widgets in the array.  This allows us to render widgets from left to right and
@@ -647,7 +766,7 @@ var rave = rave || (function() {
                 var widget = widgets[j];
                 initializeWidget(widget);
                 widgetByIdMap[widget.regionWidgetId] = widget;
-            }           
+            }
         }
     }
 
@@ -697,31 +816,31 @@ var rave = rave || (function() {
         return widgetByIdMap[regionWidgetId];
     }
 
-    function viewPage(pageId) {                
+    function viewPage(pageId) {
         var fragment = (pageId != null) ? ("/" + pageId) : "";
-        window.location.href = rave.getContext() + "page/view" + fragment;      
+        window.location.href = rave.getContext() + "page/view" + fragment;
     }
 
     function viewWidgetDetail(widgetId, referringPageId) {
         window.location.href = rave.getContext() + "store/widget/" + widgetId + "?referringPageId=" + referringPageId;
     }
-    
+
     /**
      * Utility function to determine if a javascript object is a function
      * @param obj the object to check
      * @return true if object is a function, false otherwise
-     */ 
-    function isFunction(obj) {       
+     */
+    function isFunction(obj) {
         return (typeof obj == "function");
     }
-    
+
     /**
-     * Determines if a page is empty (has zero widgets)        
+     * Determines if a page is empty (has zero widgets)
      */
-    function isPageEmpty() {           
-        return $.isEmptyObject(widgetByIdMap);            
+    function isPageEmpty() {
+        return $.isEmptyObject(widgetByIdMap);
     }
-    
+
     /**
      * Removes a regionWidgetId from the internal widget map
      * @param regionWidgetId the region widget id to remove
@@ -807,15 +926,15 @@ var rave = rave || (function() {
          * Gets the current context
          */
         getContext: getContext,
-        
+
         /**
          * Gets a regionwidget by region widget id
          */
         getRegionWidgetById: getRegionWidgetById,
-        
+
         /**
          * View a page
-         * 
+         *
          * @param pageId the pageId to view, or if null, the user's default page
          */
         viewPage: viewPage,
@@ -827,57 +946,57 @@ var rave = rave || (function() {
          * @param referringPageId the entityId of the page the call is coming from
          */
         viewWidgetDetail: viewWidgetDetail,
-        
+
         /**
          * Toggles the collapse/restore icon of the rendered widget
-         * 
+         *
          * @param widgetId the widgetId of the rendered widget to toggle
          */
         toggleCollapseWidgetIcon: ui.toggleCollapseWidgetIcon,
-        
+
         /***
          * Utility function to determine if a javascript object is a function or not
-         * 
+         *
          * @param obj the object to check
          * @return true if obj is a function, false otherwise
          */
         isFunction: isFunction,
-        
+
         /***
          * Maximize the widget view
-         * 
+         *
          * @param args the argument object
          */
         maximizeWidget: ui.maximizeAction,
 
         /***
          * Minimize the widget view (render in non full-screen mode)
-         * 
+         *
          * @param args the argument object
          */
         minimizeWidget: ui.minimizeAction,
-        
+
         /***
          * Display the inline edit prefs section for widget preferences inside
          * the widget.
-         * 
+         *
          * @param regionWidgetId the regionWidgetId of the widget
-         * 
+         *
          */
         editPrefs: ui.editPrefsAction,
 
         /***
          * Get the mobile state - used by the UI to render mobile or normal content
-         * 
-         */                
+         *
+         */
         isMobile: ui.getMobileState,
 
         /***
          * Set the mobile state - used by the UI to render mobile or normal content
-         * 
+         *
          * @param mobileState boolean to represent the mobile state
-         * 
-         */        
+         *
+         */
         setMobile: ui.setMobileState,
 
         /**
@@ -891,22 +1010,22 @@ var rave = rave || (function() {
          * @param args
          */
         toggleMobileWidget: ui.toggleMobileWidget,
-        
+
         /**
          * Determines if a page is empty (has zero widgets)
          * @param widgetByIdMap the map of widgets on the page
-         */        
+         */
         isPageEmpty: isPageEmpty,
 
         /**
          * Removes a regionWidgetId from the internal widget map
          * @param regionWidgetId the region widget id to remove
-         */        
+         */
         removeWidgetFromMap: removeWidgetFromMap,
 
         /**
          * Displays the "empty page" message on the page
-         */        
+         */
         displayEmptyPageMessage: ui.displayEmptyPageMessage,
 
         /**

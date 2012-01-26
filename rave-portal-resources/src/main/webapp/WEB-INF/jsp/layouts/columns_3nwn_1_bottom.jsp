@@ -18,4 +18,12 @@
   ~ under the License.
   --%>
 
-<rave:simple_regions page="${page}" />
+<div class="widgetRow upperRow">
+    <rave:region region="${page.regions[0]}" regionIdx="1" />
+    <rave:region region="${page.regions[1]}" regionIdx="2" />
+    <rave:region region="${page.regions[2]}" regionIdx="3" />
+</div>
+
+<div class="widgetRow bottomRow">
+    <rave:region region="${page.regions[3]}" regionIdx="4" />
+</div>

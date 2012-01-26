@@ -222,6 +222,8 @@ header h1 {
 .widget-wrapper {
     vertical-align: top;
     margin-bottom: 20px;
+    /* prevents adjusting of other gadgets when gadget is being dragged */
+    border: 1px solid transparent;
 }
 
 .widget-wrapper-mobile {
@@ -328,8 +330,9 @@ header h1 {
     height: 100%;
 }
 
-.region.region-dragging {
-    padding: 100px 0; /*** bottom padding is needed for dnd when region is empty ***/
+.widgetRow {
+    display: inline;
+    margin-bottom: 5px;
 }
 
 .region-mobile {
@@ -340,9 +343,12 @@ header h1 {
     float: none;
 }
 
-.region-dragging {
-    height: 200%;
+.regionDragging {
     border: 1px solid black;
+}
+
+.region.regionNonDragging{
+	border: 1px solid transparent;
 }
 
 .columns_1_1 {
@@ -558,9 +564,10 @@ ul.storeItems li {
 }
 
 .ui-sortable-placeholder {
-    border: 1px dotted black;
+    background-color: #DDDDDD;
+    border: 1px dashed #767676;
     visibility: visible !important;
-    background-color: #DDD;
+
 }
 
 .ui-sortable-placeholder * {
