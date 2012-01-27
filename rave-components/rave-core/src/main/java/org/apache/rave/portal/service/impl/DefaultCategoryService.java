@@ -42,6 +42,8 @@ public class DefaultCategoryService implements CategoryService {
         return categoryRepository.get(entityId);
     }
 
+
+
     @Override
     public List<Category> getAll() {
         return categoryRepository.getAll();
@@ -75,6 +77,7 @@ public class DefaultCategoryService implements CategoryService {
     @Override
     @Transactional
     public void delete(Category category) {
-        categoryRepository.delete(category);
+        Category categoryToBeDeleted = categoryRepository.get(category.getEntityId());
+        categoryRepository.delete(categoryToBeDeleted);
     }
 }

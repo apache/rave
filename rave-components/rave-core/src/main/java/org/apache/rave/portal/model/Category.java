@@ -68,7 +68,7 @@ public class Category implements BasicEntity, Serializable {
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date lastModifiedDate;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name="widget_category",
                joinColumns=@JoinColumn(name="category_id", referencedColumnName = "entity_id"),
                inverseJoinColumns=@JoinColumn(name="widget_id", referencedColumnName = "entity_id")

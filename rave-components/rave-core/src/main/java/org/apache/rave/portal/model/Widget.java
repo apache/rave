@@ -179,7 +179,7 @@ public class Widget implements BasicEntity, Serializable {
     @JoinColumn(name = "widget_id", referencedColumnName = "entity_id")
     private List<WidgetTag> tags;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name="widget_category",
             joinColumns=@JoinColumn(name="widget_id", referencedColumnName = "entity_id"),
             inverseJoinColumns=@JoinColumn(name="category_id", referencedColumnName = "entity_id")

@@ -146,6 +146,7 @@ public class DefaultCategoryServiceTest {
 
     @Test
     public void delete() {
+        expect(repository.get(validCategory.getEntityId())).andReturn(validCategory);
         repository.delete(validCategory);
         expectLastCall();
         replay(repository);

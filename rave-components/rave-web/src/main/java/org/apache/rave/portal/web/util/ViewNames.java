@@ -43,6 +43,8 @@ public class ViewNames {
     public static final String ADMIN_USERDETAIL = ADMIN_PREFIX + "userdetail";
     public static final String ADMIN_WIDGETS = ADMIN_PREFIX + "widgets";
     public static final String ADMIN_WIDGETDETAIL = ADMIN_PREFIX + "widgetdetail";
+    public static final String ADMIN_CATEGORIES = ADMIN_PREFIX + "categories";
+    public static final String ADMIN_CATEGORY_DETAIL = ADMIN_PREFIX + "categoryDetail";
 
     public static final String REDIRECT = "redirect:/";
 

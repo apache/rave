@@ -52,7 +52,7 @@ public interface CategoryService {
     Category create(String text, User createdUser);
 
     /**
-     * Updates a widget category
+     * Updates a Category
      *
      * @param categoryId  the entityId of the Category to update
      * @param text the new text value

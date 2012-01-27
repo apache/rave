@@ -32,6 +32,7 @@ public class ModelKeys {
     public static final String WIDGET = "widget";
     public static final String WIDGET_STATISTICS = "widgetStatistics"; //statistics for a single widget
     public static final String WIDGETS_STATISTICS = "widgetsStatistics"; //list of statistics for a list of widgets
+    public static final String CATEGORY = "category"; //category
     public static final String REFERRING_PAGE_ID = "referringPageId";
     public static final String OPENSOCIAL_ENVIRONMENT = "openSocialEnv";
     public static final String NEW_USER = "newUser"; //a new user instance created
