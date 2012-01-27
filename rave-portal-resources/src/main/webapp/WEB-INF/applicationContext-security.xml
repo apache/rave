@@ -52,13 +52,32 @@
         <security:remember-me/>
     </security:http>
 
+    <security:ldap-server ldif="classpath:users.ldiff" root="dc=rave,dc=apache,dc=org" />
+
     <security:authentication-manager>
+        <security:ldap-authentication-provider
+                group-search-filter="member={0}"
+                group-search-base="ou=groups"
+                user-search-base="ou=people"
+                user-search-filter="uid={0}"
+                user-context-mapper-ref="raveUserContextMapper"/>
+
         <security:authentication-provider
                 user-service-ref="userService">
-            <security:password-encoder ref="passwordEncoder" />
+            <security:password-encoder ref="passwordEncoder"/>
         </security:authentication-provider>
     </security:authentication-manager>
-    
+
+
+
+    <bean id="raveUserContextMapper" class="org.apache.rave.portal.web.security.LdapUserDetailsContextMapper" >
+        <constructor-arg name="userService" ref="userService"/>
+        <constructor-arg name="newAccountService" ref="defaultNewAccountService"/>
+        <constructor-arg name="mailAttributeName" value="mail"/>
+        <constructor-arg name="displayNameAttributeName" value="displayName"/>
+        <constructor-arg name="pageLayoutCode" value="columns_3"/>
+    </bean>
+
     <!-- enable the spring security annotations -->
     <security:global-method-security secured-annotations="enabled" pre-post-annotations="enabled">
         <security:expression-handler ref="expressionHandler"/>

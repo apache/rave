@@ -55,6 +55,11 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-ldap</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>org.apache.rave</groupId>
             <artifactId>rave-web</artifactId>
             <scope>provided</scope>
@@ -66,14 +71,14 @@
         </dependency>
     </dependencies>
 
-	 <build>
-		<resources>
-		  <resource>
-			 <directory>src/main/resources</directory>
-			 <filtering>true</filtering>
-		  </resource>
-		</resources>
-		<plugins>
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+        <plugins>
             <plugin>
                 <groupId>com.googlecode.mavenfilesync</groupId>
                 <artifactId>maven-filesync-plugin</artifactId>

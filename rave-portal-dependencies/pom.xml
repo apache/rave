@@ -55,7 +55,7 @@
             <groupId>org.apache.rave</groupId>
             <artifactId>rave-w3c-provider</artifactId>
         </dependency>
-        
+
         <!-- Spring -->
         <dependency>
             <groupId>org.springframework</groupId>
@@ -94,6 +94,11 @@
         </dependency>
 
         <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-ldap</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-oxm</artifactId>
             <version>${org.springframework.version}</version>
@@ -111,6 +116,12 @@
                     <artifactId>guice</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+
+        <!-- Apache DS (LDAP) -->
+        <dependency>
+            <groupId>org.apache.directory.server</groupId>
+            <artifactId>apacheds-core</artifactId>
         </dependency>
 
         <!-- JSTL -->
@@ -134,7 +145,7 @@
             <groupId>org.apache.tiles</groupId>
             <artifactId>tiles-jsp</artifactId>
         </dependency>
-        
+
     </dependencies>
 
 </project>
