@@ -19,30 +19,32 @@
 
 package org.apache.rave.portal.service.impl;
 
-import org.springframework.security.core.GrantedAuthority;
-import java.util.ArrayList;
-import java.util.List;
-import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.model.Authority;
-import org.apache.rave.portal.service.AuthorityService;
 import org.apache.rave.portal.model.NewUser;
 import org.apache.rave.portal.model.PageLayout;
 import org.apache.rave.portal.model.User;
+import org.apache.rave.portal.model.util.SearchResult;
+import org.apache.rave.portal.service.AuthorityService;
 import org.apache.rave.portal.service.NewAccountService;
 import org.apache.rave.portal.service.PageLayoutService;
-import org.apache.rave.portal.service.PageService;
-import org.apache.rave.portal.service.RegionService;
 import org.apache.rave.portal.service.UserService;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static junit.framework.Assert.fail;
-import static org.easymock.EasyMock.*;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
 
 /**
  * Test class for {@link org.apache.rave.portal.service.impl.DefaultNewAccountService}
@@ -50,8 +52,6 @@ import static org.easymock.EasyMock.*;
 public class DefaultNewAccountServiceTest {
     private UserService userService;
     private PageLayoutService pageLayoutService;
-    private PageService pageService;
-    private RegionService regionService;
     private NewAccountService newAccountService;
     private AuthorityService authorityService;
 
@@ -71,14 +71,12 @@ public class DefaultNewAccountServiceTest {
     @Before
     public void setup() {
         userService = createMock(UserService.class);
-        pageService = createMock(PageService.class);
         pageLayoutService = createMock(PageLayoutService.class);
-        regionService = createMock(RegionService.class);
         userDetails = createMock(UserDetails.class);
         passwordEncoder = createMock(PasswordEncoder.class);
         authorityService = createMock(AuthorityService.class);
 
-        newAccountService = new DefaultNewAccountService(userService, pageService, pageLayoutService, regionService, authorityService);
+        newAccountService = new DefaultNewAccountService(userService, pageLayoutService, authorityService);
         
         validPageLayout = new PageLayout();
         validPageLayout.setEntityId(99L);

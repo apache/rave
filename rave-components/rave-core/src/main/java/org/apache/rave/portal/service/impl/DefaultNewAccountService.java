@@ -25,41 +25,27 @@ import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.service.AuthorityService;
 import org.apache.rave.portal.service.NewAccountService;
 import org.apache.rave.portal.service.PageLayoutService;
-import org.apache.rave.portal.service.PageService;
-import org.apache.rave.portal.service.RegionService;
 import org.apache.rave.portal.service.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class DefaultNewAccountService implements NewAccountService {
 
-    protected final Logger logger=LoggerFactory.getLogger(getClass());
-
     private final UserService userService;
-    private final PageService pageService;
-    // TODO RAVE-236 why are these unused PageLayoutService and RegionService declared?
     private final PageLayoutService pageLayoutService;
-    private final RegionService regionService;
     private final AuthorityService authorityService;
 
     @Autowired 
     private PasswordEncoder  passwordEncoder;
 
     @Autowired
-    public DefaultNewAccountService(UserService userService, 
-                                    PageService pageService, 
-                                    PageLayoutService pageLayoutService, 
-                                    RegionService regionService,
+    public DefaultNewAccountService(UserService userService,
+                                    PageLayoutService pageLayoutService,
                                     AuthorityService authorityService) {
         this.userService = userService;
-        this.pageService = pageService;
         this.pageLayoutService = pageLayoutService;
-        this.regionService = regionService;
         this.authorityService = authorityService;
     }
 
