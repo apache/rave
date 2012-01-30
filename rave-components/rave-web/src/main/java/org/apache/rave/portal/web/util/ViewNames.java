@@ -24,7 +24,6 @@ package org.apache.rave.portal.web.util;
  */
 public class ViewNames {
     private ViewNames() {}
-
     private static final String USER_PREFIX = "templates.user.";
     private static final String ADMIN_PREFIX = "templates.admin.";
 
@@ -35,6 +34,7 @@ public class ViewNames {
     public static final String ADD_WIDGET_FORM = USER_PREFIX + "addwidget";
     public static final String NEW_ACCOUNT = USER_PREFIX + "newaccount";
     public static final String USER_PROFILE = USER_PREFIX + "userProfile";
+    public static final String USER_INFO = USER_PREFIX + "profile";
 
     public static final String ADMIN_HOME = ADMIN_PREFIX + "home";
     public static final String ADMIN_PREFERENCES = ADMIN_PREFIX + "preferences";
@@ -47,6 +47,9 @@ public class ViewNames {
     public static final String ADMIN_CATEGORY_DETAIL = ADMIN_PREFIX + "categoryDetail";
 
     public static final String REDIRECT = "redirect:/";
+
+    public static final String POSTS_TAG_PAGE = "postsTagPage";
+    public static final String ABOUT_TAG_PAGE = "aboutTagPage";
 
     public static String getPageView(String layoutName) {
         return new StringBuilder(PAGE).append(".").append(layoutName).toString();

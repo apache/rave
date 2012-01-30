@@ -25,6 +25,13 @@
 <header>
     <nav class="topnav">
         <ul class="horizontal-list">
+        	<li>
+                <a href="<spring:url value="/app/userInfo?referringPageId=${page.entityId}" />">
+                  <fmt:message key="page.profile.title">
+                  	<fmt:param><c:out value="${page.owner.displayName}"/></fmt:param>
+                  </fmt:message>
+                </a>
+            </li>
             <li>
                 <a href="<spring:url value="/app/store?referringPageId=${page.entityId}" />">
                   <fmt:message key="page.store.title"/>

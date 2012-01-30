@@ -1147,6 +1147,51 @@ span.error, label.error {
     font-size: 14px;
 }
 
+/*CSS style for user profile tabs*/
+.profile-submenu ul {
+	height: 2.5em;
+	background-color: #41627E;
+	text-align: center;
+}
+
+.profile-submenu li {
+	display: inline;
+    list-style: none;
+    padding: 0 10px;
+    color: #FFFFFF;
+    font-size: 1.5em;
+}
+
+.profile-tag {
+	display: inline;
+}
+
+.profile-tag:hover {
+	background:#A9BCF5;
+	color:#000000;
+	cursor:pointer;
+}
+
+.profile-tag-page {
+	display: none;
+}
+
+.profile-info-hidden {
+    display: none;
+}
+
+.profile-info-visible {
+	display: inline;
+}
+
+table.profile-table {
+	width: 100%;
+}
+td.profile-body-column {
+	width: 100%;
+	vertical-align: top;
+}
+
 @media all and (max-width: 900px) {
     .storeSearch {
         width: 100%;

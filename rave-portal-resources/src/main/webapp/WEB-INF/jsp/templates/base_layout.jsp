@@ -22,6 +22,7 @@ under the License.
 <fmt:setBundle basename="messages"/>
 <%-- Expose any attributes defined in the tiles-defs.xml to the request scope for use in other tiles --%>
 <tiles:importAttribute scope="request"/>
+<c:set var="profileTitleKey" value="page.profile.title" />
 <%--@elvariable id="page" type="org.apache.rave.portal.model.Page"--%>
 <!DOCTYPE html>
 <html>
@@ -33,6 +34,11 @@ under the License.
         <c:choose>
             <c:when test="${not empty page}">
                 <c:out value="${page.name}" escapeXml="true" />
+            </c:when>
+            <c:when test="${pageTitleKey == profileTitleKey}">
+            	<fmt:message key="${pageTitleKey}">
+   					<fmt:param><c:out value="${userProfile.displayName}" /></fmt:param>
+				</fmt:message>
             </c:when>
             <c:otherwise>
                 <fmt:message key="${pageTitleKey}"/>

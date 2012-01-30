@@ -540,9 +540,61 @@ rave.api = rave.api || (function() {
         		hiddenButton.value = "0";
         	}
     	}
+
+    	//function to toggle sliding down and up of user profile tabs
+    	function userProfileTabHandler(profileTab) {
+    			//parsing profile tab id to obtain panel id
+    			var panelId = "#" + profileTab.id.substring(0, profileTab.id.indexOf("Tab")) + "Panel";
+    			$(panelId).slideToggle("slow");
+    	}
+    	
+    	//function to toggle hide and show of tag pages
+    	function userProfileTagHandler(profileTag, defaultTagPage) {
+    		
+    			//first close any tag pages if open
+    			$(".profile-tag-page").hide();
+    			
+    			//show default tag page is set true
+    			if(defaultTagPage != null) {
+    				$(defaultTagPage).show();
+    			}
+    			
+    			else {
+    				//extract the tag page id from profile tag id
+    				var tagPageId = "#" + profileTag.id + "Page";
+    				//show the requested tag page
+    				$(tagPageId).show();
+    			}
+    	}
+    	
+    	function userProfileEditHandler(isEdit) {
+    		//get the edit element
+    		var profileInfo = document.getElementById("profileInfo");
+    		//extract hidden fields through their class
+    		var hiddenFields = "." + profileInfo.value + "-hidden";
+    		//extract labels through their class
+    		var visibleFields = "." + profileInfo.value + "-visible";
+    		    		
+    		if(isEdit) {
+    			//make hidden fields visible
+    			$(hiddenFields).show();
+    			//make visible fields invisible
+    			$(visibleFields).hide();
+    		}
+    		
+    		else {
+    			//make hidden fields invisible
+    			$(hiddenFields).hide();
+    			//make visible fields visible
+    			$(visibleFields).show();
+    		}
+    	}
     	
     	return {
-    		widgetRatingHandler : widgetRatingHandler
+    		widgetRatingHandler : widgetRatingHandler,
+    		userProfileTabHandler : userProfileTabHandler,
+    		userProfileTagHandler : userProfileTagHandler,
+    		userProfileEditHandler : userProfileEditHandler
     	};
     	
     })();

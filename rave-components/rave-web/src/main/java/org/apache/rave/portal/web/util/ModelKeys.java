@@ -24,6 +24,7 @@ package org.apache.rave.portal.web.util;
  */
 public class ModelKeys {
     private ModelKeys() {}
+
     public static final String PAGE = "page"; // the current page object
     public static final String PAGES = "pages"; // a list of pages available for the current user
     public static final String PAGE_LAYOUTS = "pageLayouts"; // a list of all the possible page layouts
@@ -43,8 +44,9 @@ public class ModelKeys {
     public static final String TOKENCHECK = "tokencheck";
     public static final String USER_MAP = "userMap";
     public static final String PORTAL_SETTINGS = "portalSettings";
-    public static final String TAGS = "tags";
-    public static final String SELECTED_TAG = "selectedTag";
+    public static final String TAGS="tags" ;
+    public static final String SELECTED_TAG="selectedTag" ;
     public static final String CATEGORIES = "categories";
     public static final String SELECTED_CATEGORY = "selectedCategory";
+    public static final String DEFAULT_TAG_PAGE = "defaultTagPage";
 }
