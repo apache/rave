@@ -3,17 +3,8 @@ which is dual licensed and available under a modified version of the MPL 1.1 (Mo
 or under the (unmodified) EPL 1.0 (Eclipse Public License).
 An original copy of the license agreement can be found at: http://www.h2database.com/html/license.html
 
-This product includes unmodified, binary redistributions of software (Guice) developed by
-Google Inc (http://code.google.com/p/google-guice), which is licensed under the Apache 2 license.
-
 This product includes unmodified, binary redistributions of software (AOP Alliance) developed by
 AOP Alliance (http://aopalliance.sourceforge.net/), which was developed in the Public Domain.
-
-This product includes unmodified, binary redistributions of software (Guava) developed by
-Google Inc (http://code.google.com/p/guava-libraries), which is licensed under the Apache 2 license.
-
-This product includes unmodified, binary redistributions of software (OAuth core) developed by
-John Kristian, Praveen Alavilli and Dirk Balfanz (http://oauth.googlecode.com/svn/code/java/core/), which is licensed under the Apache 2 license.
 
 This product includes unmodified, binary redistributions of software (XStream) developed by
 Joe Walnes and XStream Committers (http://xstream.codehaus.org/), which is licensed under the BSD license.
@@ -28,12 +19,6 @@ Marijn Haverbeke (http://www.codemirror.net/).
 This product includes unmodified, (Args4J) developed at http://args4j.java.net, which is licensed under the MIT License.
 An original copy of the license agreement can be found at: http://opensource.org/licenses/mit-license.php
 
-This product includes unmodified, binary redistributions of software (Caja) developed by
-Google Inc (http://code.google.com/p/google-caja), which is licensed under the Apache 2.0 license.
-
-This product includes unmodified, binary redistributions of software (Closure Compiler) developed by
-Google Inc (http://code.google.com/p/closure-compiler), which is licensed under the Apache 2.0 license.
-
 This product includes unmodified, binary redistributions of software (EHCache) developed by
 Terracotta  Inc(http://ehcache.org), which is licensed under the Apache 2 license.
 
@@ -44,9 +29,6 @@ An original copy of the license can be found at http://htmlparser.sourceforge.ne
 This product includes unmodified, binary redistributions of software (ICU4J) developed by
 the ICU Project (http://site.icu-project.org), which is licensed under the X License.
 An original copy of the license can be found at http://source.icu-project.org/repos/icu/icu4j/tags/release-4-8/main/shared/licenses/license.html
-
-This product includes unmodified, binary redistributions of software (javax.inject) developed by
-The JSR-330 Expert Group (http://code.google.com/p/atinject), which is licensed under the Apache 2.0 license.
 
 This product includes unmodified, binary redistributions of software (JDOM) developed by
 The JDOM Project (http://www.jdom.org), which is licensed under the license noted in LICENSE.txt.
@@ -63,10 +45,6 @@ Sun Microsystems, Inc. (http://java.net/projects/rome), which is licensed under 
 
 This product includes unmodified, binary redistributions of software (neko) developed by
 Andy Clark, Marc Guillemo (http://nekohtml.sourceforge.net), which is licensed under the Apache 2.0 license.
-
-This product includes unmodified, binary redistributions of software (Protocol Buffers) developed by
-Google Inc. (http://code.google.com/p/protobuf), which is licensed under the New BSD license.
-An original copy of the license can be found at http://code.google.com/p/protobuf/source/browse/trunk/COPYING.txt
 
 This product includes unmodified, binary redistributions of software (slf4j) developed by
 QOS.ch (http://slf4j.org), which is licensed under the MIT license.
