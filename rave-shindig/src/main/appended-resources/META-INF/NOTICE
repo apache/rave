@@ -1,6 +1,6 @@
 This software contains unmodified binary redistributions for H2 database engine (http://www.h2database.com/),
 which is dual licensed and available under a modified version of the MPL 1.1 (Mozilla Public License)
-or under the (unmodified) EPL 1.0 (Eclipse Public License).
+or under the (unmodified) EPL 1.0 (Eclipse Public License), and included here using the Apache 2.0 license.
 An original copy of the license agreement can be found at: http://www.h2database.com/html/license.html
 
 This product includes unmodified, binary redistributions of software (AOP Alliance) developed by
@@ -14,8 +14,9 @@ An original copy of the license can be found at http://htmlparser.sourceforge.ne
 
 This product includes software developed by the Joda project (http://www.joda.org/).
 
-This product includes unmodified, binary redistributions of software (Rome) developed by
-Sun Microsystems, Inc. (http://java.net/projects/rome), which is licensed under the Apache 2.0 license.
+This product includes unmodified, binary redistributions of software (ROME Modules) developed by
+Sun Microsystems, Inc. (https://rometools.jira.com/wiki/display/MODULES/Home),
+which is dual licensed under the LGPL or the Apache 2.0 license, and included here using the Apache 2.0 license.
 
 This product includes unmodified, binary redistributions of software (neko) developed by
 Andy Clark, Marc Guillemo (http://nekohtml.sourceforge.net), which is licensed under the Apache 2.0 license.
