@@ -167,4 +167,14 @@ public interface WidgetService {
      */
     SearchResult<Widget> getWidgetsByTag(String tagKeyWord, int offset, int pageSize);
 
+    /**
+     * Get a SearchResult for {@link Widget}s by category
+     * 
+     * @param categoryId category to search against
+     * @param offset     start point within the resultSet (for paging)
+     * @param pageSize   maximum number of items to be returned (for paging)
+     * @return           SearchResult
+     */
+    SearchResult<Widget> getWidgetsByCategory(long categoryId, int offset, int pageSize);
+
 }

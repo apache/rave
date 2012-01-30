@@ -886,7 +886,7 @@ span.error, label.error {
 
 #errorStack {
     display: none;
-    width: 30%;
+    width: 90%;
     margin: auto;
 }
 

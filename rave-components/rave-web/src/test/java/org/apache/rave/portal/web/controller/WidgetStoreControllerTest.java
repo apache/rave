@@ -20,12 +20,15 @@
 package org.apache.rave.portal.web.controller;
 
 
+import org.apache.rave.portal.model.Category;
+import org.apache.rave.portal.model.Tag;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.Widget;
 import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.model.util.WidgetStatistics;
 import org.apache.rave.portal.service.PortalPreferenceService;
 import org.apache.rave.portal.service.TagService;
+import org.apache.rave.portal.service.CategoryService;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.portal.service.WidgetService;
 import org.apache.rave.portal.web.util.ModelKeys;
@@ -69,6 +72,7 @@ public class WidgetStoreControllerTest {
     private WidgetStoreController controller;
     private WidgetService widgetService;
     private TagService tagService;
+    private CategoryService categoryService;
     private User validUser;
     private WidgetStatistics widgetStatistics;
     private Map<Long, WidgetStatistics> allWidgetStatisticsMap;
@@ -84,6 +88,7 @@ public class WidgetStoreControllerTest {
 
         widgetService = createMock(WidgetService.class);
         tagService = createMock(TagService.class);
+        categoryService = createMock(CategoryService.class);
 
         UserService userService = createMock(UserService.class);
         expect(userService.getAuthenticatedUser()).andReturn(validUser);
@@ -95,7 +100,7 @@ public class WidgetStoreControllerTest {
 
         NewWidgetValidator widgetValidator = new NewWidgetValidator(widgetService);
         controller = new WidgetStoreController(widgetService, widgetValidator, userService,
-                preferenceService, tagService);
+                preferenceService, tagService, categoryService);
     }
 
     @Test
@@ -118,6 +123,7 @@ public class WidgetStoreControllerTest {
         assertThat((Long) model.asMap().get(ModelKeys.REFERRING_PAGE_ID), is(equalTo(REFERRER_ID)));
         assertThat(widgets, is(sameInstance(emptyResult.getResultSet())));
         assertThat(model.containsAttribute(ModelKeys.TAGS), is(true));
+        assertThat(model.containsAttribute(ModelKeys.CATEGORIES), is(true));
 
     }
 
@@ -140,6 +146,7 @@ public class WidgetStoreControllerTest {
         assertThat((Long) model.asMap().get(ModelKeys.REFERRING_PAGE_ID), is(equalTo(REFERRER_ID)));
         assertThat(widgets, is(sameInstance(emptyResult.getResultSet())));
         assertThat(model.containsAttribute(ModelKeys.TAGS), is(true));
+        assertThat(model.containsAttribute(ModelKeys.CATEGORIES), is(true));
 
     }
 
@@ -148,6 +155,9 @@ public class WidgetStoreControllerTest {
         Model model = new ExtendedModelMap();
         Widget w = new Widget(1L, "http://example.com/widget.xml");
 
+        expect(widgetService.getAllWidgetStatistics(validUser.getEntityId())).andReturn(allWidgetStatisticsMap);
+        expect(tagService.getAllTags()).andReturn(new ArrayList<Tag>());
+        expect(categoryService.getAll()).andReturn(new ArrayList<Category>());
         expect(widgetService.getWidget(WIDGET_ID)).andReturn(w);
         expect(widgetService.getWidgetStatistics(WIDGET_ID, validUser.getEntityId())).andReturn(widgetStatistics);
         replay(widgetService);
@@ -158,8 +168,38 @@ public class WidgetStoreControllerTest {
         assertThat(view, is(equalTo(ViewNames.WIDGET)));
         assertThat(model.containsAttribute(ModelKeys.WIDGET), is(true));
         assertThat(model.containsAttribute(ModelKeys.WIDGET_STATISTICS), is(true));
+        assertThat(model.containsAttribute(ModelKeys.TAGS), is(true));
+        assertThat(model.containsAttribute(ModelKeys.CATEGORIES), is(true));
+        assertThat(model.containsAttribute(ModelKeys.REFERRING_PAGE_ID), is(true));
         assertThat(((Widget) model.asMap().get(ModelKeys.WIDGET)), is(sameInstance(w)));
         assertNull(model.asMap().get("widgetRating"));
+
+    }
+
+    @Test
+    public void viewCategoryResult_valid() {
+        Model model = new ExtendedModelMap();
+        long categoryId = 1L;
+        int offset = 0;
+        int pageSize = 10;
+        SearchResult<Widget> searchResults = new SearchResult<Widget>(new ArrayList<Widget>(),0);
+        expect(widgetService.getAllWidgetStatistics(validUser.getEntityId())).andReturn(allWidgetStatisticsMap);
+        expect(tagService.getAllTags()).andReturn(new ArrayList<Tag>());
+        expect(categoryService.getAll()).andReturn(new ArrayList<Category>());
+        expect(widgetService.getWidgetsByCategory(categoryId, offset, pageSize)).andReturn(searchResults);
+        replay(widgetService, tagService, categoryService);
+
+        String view = controller.viewCategoryResult(REFERRER_ID, categoryId, offset, model);
+
+        verify(widgetService, tagService, categoryService);
+        assertThat(view, is(equalTo(ViewNames.STORE)));
+        assertThat(model.containsAttribute(ModelKeys.WIDGETS), is(true));
+        assertThat(model.containsAttribute(ModelKeys.WIDGETS_STATISTICS), is(true));
+        assertThat(model.containsAttribute(ModelKeys.TAGS), is(true));
+        assertThat(model.containsAttribute(ModelKeys.CATEGORIES), is(true));
+        assertThat(model.containsAttribute(ModelKeys.REFERRING_PAGE_ID), is(true));
+        assertThat(model.containsAttribute(ModelKeys.OFFSET), is(true));
+        assertThat(model.containsAttribute(ModelKeys.SELECTED_CATEGORY), is(true));
 
     }
 
@@ -194,6 +234,7 @@ public class WidgetStoreControllerTest {
         assertEquals(offset, modelMap.get(ModelKeys.OFFSET));
         assertEquals(result, modelMap.get(ModelKeys.WIDGETS));
         assertThat(model.containsAttribute(ModelKeys.TAGS), is(true));
+        assertThat(model.containsAttribute(ModelKeys.CATEGORIES), is(true));
 
     }
 

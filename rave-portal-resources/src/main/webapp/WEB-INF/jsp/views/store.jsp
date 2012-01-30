@@ -73,22 +73,45 @@
                 </c:if>
             </p>
             <c:if test="${not empty tags}">
-                <fmt:message key="page.store.list.widgets.tag"/>
-                <select name="tagList" id="tagList" style="width:100px" >
-                    <option value="  "></option>
-                    <c:forEach var="tag" items="${tags}">
-                        <c:choose>
-                            <c:when test="${selectedTag==tag.keyword}">
-                                <option selected>
-                            </c:when>
-                            <c:otherwise>
-                                <option>
-                            </c:otherwise>
-                        </c:choose>
-                        <c:out value="${tag.keyword}"/>
-                        </option>
-                    </c:forEach>
-                </select>
+                <div>
+                    <fmt:message key="page.store.list.widgets.tag"/>
+                    <select name="tagList" id="tagList" style="min-width:100px" >
+                        <option value="  "></option>
+                        <c:forEach var="tag" items="${tags}">
+                            <c:choose>
+                                <c:when test="${selectedTag==tag.keyword}">
+                                    <option selected>
+                                </c:when>
+                                <c:otherwise>
+                                    <option>
+                                </c:otherwise>
+                            </c:choose>
+                            <c:out value="${tag.keyword}"/>
+                            </option>
+                        </c:forEach>
+                    </select>
+                </div>
+            </c:if>
+
+            <c:if test="${not empty categories}">
+                <div>
+                    <fmt:message key="page.store.list.widgets.category"/>
+                    <select name="categoryList" id="categoryList" style="min-width:100px" >
+                        <option value="  "></option>
+                        <c:forEach var="category" items="${categories}">
+                            <c:choose>
+                                <c:when test="${selectedCategory==category.entityId}">
+                                    <option value="${category.entityId}" selected>
+                                </c:when>
+                                <c:otherwise>
+                                    <option value="${category.entityId}">
+                                </c:otherwise>
+                            </c:choose>
+                            <c:out value="${category.text}"/>
+                            </option>
+                        </c:forEach>
+                    </select>
+                </div>
             </c:if>
         </fieldset>
     </form>
@@ -324,9 +347,6 @@
 <script>
     $(function () {
         rave.setContext("<spring:url value="/app/" />");
-        rave.store.init();
-        rave.store.initWidgetsTag('<c:out value="${referringPageId}"/>');
+        rave.store.init('<c:out value="${referringPageId}"/>');
     });
-
-
 </script>

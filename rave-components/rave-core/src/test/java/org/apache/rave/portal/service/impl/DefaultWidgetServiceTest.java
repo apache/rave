@@ -20,11 +20,13 @@
 package org.apache.rave.portal.service.impl;
 
 import org.apache.rave.exception.DuplicateItemException;
+import org.apache.rave.portal.model.Category;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.Widget;
 import org.apache.rave.portal.model.WidgetStatus;
 import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.model.util.WidgetStatistics;
+import org.apache.rave.portal.repository.CategoryRepository;
 import org.apache.rave.portal.repository.UserRepository;
 import org.apache.rave.portal.repository.WidgetRepository;
 import org.apache.rave.portal.service.WidgetService;
@@ -47,12 +49,14 @@ public class DefaultWidgetServiceTest {
     private WidgetService widgetService;
     private WidgetRepository widgetRepository;
     private UserRepository userRepository;
+    private CategoryRepository categoryRepository;
 
     @Before
     public void setup() {
         widgetRepository = createMock(WidgetRepository.class);
         userRepository = createMock(UserRepository.class);
-        widgetService = new DefaultWidgetService(widgetRepository, userRepository);
+        categoryRepository = createMock(CategoryRepository.class);
+        widgetService = new DefaultWidgetService(widgetRepository, userRepository, categoryRepository);
     }
 
     @Test
@@ -337,6 +341,29 @@ public class DefaultWidgetServiceTest {
         verify(widgetRepository);
     }
 
-
+    @Test
+    public void getWidgetsByCategory_valid(){
+        long id = 1L;
+        int offset = 0;
+        int pageSize = 10; 
+        String categoryText = "Social";
+        Widget w = new Widget();
+        List<Category> categories = new ArrayList<Category>();
+        Category c = new Category();
+        List<Widget> widgets = new ArrayList<Widget>();
+        widgets.add(w);
+        c.setWidgets(widgets);
+        c.setEntityId(id);
+        c.setText(categoryText);
+        categories.add(c);
+        w.setCategories(categories);
+        expect(categoryRepository.get(id)).andReturn(c);
+        replay(categoryRepository);
+        SearchResult<Widget> result = widgetService.getWidgetsByCategory(id,offset,pageSize);
+        verify(categoryRepository);
+        assertEquals("number of widgets", 1, result.getTotalResults());
+        assertSame(w, result.getResultSet().get(0));
+        assertEquals(c.getEntityId(), result.getResultSet().get(0).getCategories().get(0).getEntityId());
+    }
 
 }

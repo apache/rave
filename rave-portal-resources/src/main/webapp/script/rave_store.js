@@ -141,7 +141,7 @@ rave.store = rave.store || (function() {
                         window.location.reload();
                     }});
             });
-//    load the tag by widgetId
+        //    load the tag by widgetId
         rave.api.rest.getTags({ widgetId:widgetId,
             successCallback:function (data) {
                 var result = ($.map(data, function (tag) {
@@ -159,23 +159,43 @@ rave.store = rave.store || (function() {
     }
 
     function initWidgetsTag(referringPageId) {
-           // tag list box
-           $("#tagList").change(function() {
-               var selected = $("#tagList option:selected").text();
-               selected=$.trim(selected)
-               if (selected.length > 1) {
-                   document.location.href = rave.getContext() + "store/tag?keyword=" + selected
+        if (referringPageId != null){
+            // tag list box
+            $("#tagList").change(function() {
+                var selected = $("#tagList option:selected").text();
+                selected=$.trim(selected)
+                if (selected.length > 1) {
+                    document.location.href = rave.getContext() + "store/tag?keyword=" + selected
                            +"&referringPageId="+referringPageId;
-               }
-           });
+                }
+            });
+        }
+    }
 
-       }
+    function initWidgetsCategory(referringPageId) {
+        if (referringPageId != null){
+            // category list box
+            $("#categoryList").change(function() {
+                var selected = $("#categoryList option:selected").val();
+                selected = parseInt(selected);
+                if (!isNaN(selected)) {
+                   document.location.href = rave.getContext() + "store/category?categoryId=" + selected
+                           +"&referringPageId="+referringPageId;
+                }
+            });
+        }
+    }
+
+    function init(referringPageId){
+        initRatings();
+        initComments();
+        initWidgetsTag(referringPageId);
+        initWidgetsCategory(referringPageId);
+    }
 
     return {
-        init: initRatings,
-        initComments: initComments,
-        initTags: initTags,
-        initWidgetsTag:initWidgetsTag
-    };                             
+        init: init,
+        initTags: initTags
+    };
     
 }());
