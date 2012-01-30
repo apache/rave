@@ -12,10 +12,6 @@ This product includes unmodified, binary redistributions of software (HTML Parse
 the HTML Parser community (http://htmlparser.sourceforge.net), which is licensed under the Common Public License.
 An original copy of the license can be found at http://htmlparser.sourceforge.net/license.html
 
-This product includes unmodified, binary redistributions of software (ICU4J) developed by
-the ICU Project (http://site.icu-project.org), which is licensed under the X License.
-An original copy of the license can be found at http://source.icu-project.org/repos/icu/icu4j/tags/release-4-8/main/shared/licenses/license.html
-
 This product includes unmodified, binary redistributions of software (JDOM) developed by
 The JDOM Project (http://www.jdom.org), which is licensed under the license noted in LICENSE.txt.
 
