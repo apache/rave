@@ -1,6 +1,6 @@
 This software contains unmodified binary redistributions for H2 database engine (http://www.h2database.com/),
 which is dual licensed and available under a modified version of the MPL 1.1 (Mozilla Public License)
-or under the (unmodified) EPL 1.0 (Eclipse Public License), and included here using the Apache 2.0 license.
+or under the (unmodified) EPL 1.0 (Eclipse Public License), and included here using the EPL 1.0 license.
 An original copy of the license agreement can be found at: http://www.h2database.com/html/license.html
 
 This product includes unmodified, binary redistributions of software (AOP Alliance) developed by
