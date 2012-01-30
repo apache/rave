@@ -3,9 +3,6 @@ which is dual licensed and available under a modified version of the MPL 1.1 (Mo
 or under the (unmodified) EPL 1.0 (Eclipse Public License).
 An original copy of the license agreement can be found at: http://www.h2database.com/html/license.html
 
-This product includes unmodified, binary redisributions of software (org.json.*) developed by
-JSON.org (http://json.org)
-
 This product includes unmodified, binary redistributions of software (Guice) developed by
 Google Inc (http://code.google.com/p/google-guice), which is licensed under the Apache 2 license.
 
