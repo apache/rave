@@ -32,4 +32,10 @@ OpenJPA elects to include this software in this distribution under the CDDL lice
 You can obtain a copy of the License at: https://glassfish.dev.java.net/public/CDDL+GPL.html
 OpenJPA includes software written by Miroslav Nachev
 
+This product includes software (Gadget Server, Gadget Container)
+originally developed by Google Inc. (http://code.google.com/) and licensed
+to the ASF as initial contribution for Shindig.
 
+This product contains software (sha1 JS impl) developed by Google Inc.
+
+This product contains software (Apache Shindig Wave feature) Copyright 2010 Google Inc.
