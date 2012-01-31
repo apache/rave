@@ -26,3 +26,10 @@ This software contains unmodified, binary redistributions of software (JSP Stand
 The Oracle Corporation (http://jstl.java.net/), which is licensed under the CDDL 1.0.
 An original copy of the license can be found at https://glassfish.dev.java.net/public/CDDL+GPL.html
 
+This product includes Apache OpenJPA which includes the persistence and orm schemas from the JPA specifications.
+Copyright 2005-2007 Sun Microsystems, Inc. All rights reserved.
+OpenJPA elects to include this software in this distribution under the CDDL license. 
+You can obtain a copy of the License at: https://glassfish.dev.java.net/public/CDDL+GPL.html
+OpenJPA includes software written by Miroslav Nachev
+
+
