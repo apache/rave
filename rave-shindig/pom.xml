@@ -170,6 +170,21 @@
 
         <plugins>
             <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-war-plugin</artifactId>
+              <configuration>
+                <overlays>
+                  <overlay>
+                    <groupId>org.apache.shindig</groupId>
+                    <artifactId>shindig-server</artifactId>
+                    <excludes>
+                      <exclude>WEB-INF/lib/json-20070829.jar</exclude>
+                    </excludes>
+                  </overlay>
+                </overlays>
+              </configuration>
+            </plugin>
+            <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>openjpa-maven-plugin</artifactId>
                 <version>1.2</version>

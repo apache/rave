@@ -59,7 +59,7 @@
         <commons-validator.version>1.3.0</commons-validator.version>
         <commons-collections.version>3.2.1</commons-collections.version>
         <commons-codec.version>1.4</commons-codec.version>
-        <icu4j.version>4.6.1</icu4j.version>
+        <icu4j.version>4.8.1.1</icu4j.version>
         <easymock.version>3.0</easymock.version>
         <com.h2database.version>1.3.154</com.h2database.version>
         <openjpa.version>2.1.1</openjpa.version>
