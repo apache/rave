@@ -18,7 +18,11 @@ This product includes unmodified, binary redistributions of software (ROME Modul
 Sun Microsystems, Inc. (https://rometools.jira.com/wiki/display/MODULES/Home),
 which is dual licensed under the LGPL or the Apache 2.0 license, and included here using the Apache 2.0 license.
 
-
 This product includes unmodified, binary redistributions of software (AspectJ) developed by the Eclipse Foundation
 (http://www.eclipse.org/aspectj/), under the (unmodified) EPL 1.0 (Eclipse Public License).
 An original copy of the license agreement can be found at: http://www.eclipse.org/legal/epl-v10.html
+
+This software contains unmodified, binary redistributions of software (JSP Standard Tag Library) developed by
+The Oracle Corporation (http://jstl.java.net/), which is licensed under the CDDL 1.0.
+An original copy of the license can be found at https://glassfish.dev.java.net/public/CDDL+GPL.html
+
