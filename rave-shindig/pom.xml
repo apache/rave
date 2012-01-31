@@ -41,11 +41,20 @@
         <dependency>
             <groupId>org.apache.rave</groupId>
             <artifactId>rave-core</artifactId>
-            <!-- Shindig common adds jsp & el jars to the war that cause conflicts in Tomcat -->
             <exclusions>
+                <!-- Shindig common adds jsp & el jars to the war that cause conflicts in Tomcat -->
                 <exclusion>
                     <groupId>org.apache.shindig</groupId>
                     <artifactId>shindig-common</artifactId>
+                </exclusion>
+                <!--
+                    Shindig contains JSON files with "comments" as if they were JavaScript files.
+                    The JSON parser that ships with rave-core isn't as lenient as older versions and throws an exception
+                    on comments.
+                 -->
+                <exclusion>
+                    <groupId>org.json</groupId>
+                    <artifactId>json</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -156,11 +165,11 @@
     <build>
         <defaultGoal>install</defaultGoal>
         <testResources>
-	   <testResource>
-	       <directory>src/test/resources</directory>
-	       <filtering>true</filtering>
-	   </testResource>
-	</testResources>
+            <testResource>
+                <directory>src/test/resources</directory>
+                <filtering>true</filtering>
+            </testResource>
+        </testResources>
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
@@ -177,9 +186,6 @@
                   <overlay>
                     <groupId>org.apache.shindig</groupId>
                     <artifactId>shindig-server</artifactId>
-                    <excludes>
-                      <exclude>WEB-INF/lib/json-20070829.jar</exclude>
-                    </excludes>
                   </overlay>
                 </overlays>
               </configuration>
