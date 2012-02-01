@@ -42,10 +42,6 @@ This software contains unmodified, binary redistributions of software (Glassfish
 The Oracle Corporation (http://glassfish.java.net), which is licensed under the CDDL.
 An original copy of the license can be found at http://glassfish.java.net/public/CDDL+GPL_1_1.html
 
-This product includes unmodified, binary redistributions of software (slf4j) developed by
-QOS.ch (http://slf4j.org), which is licensed under the MIT license.
-An original copy of the license can be found at http://slf4j.org/license.html
-
 This product includes unmodified, binary redistributions of software (ICU4J) developed by
 the ICU Project (http://site.icu-project.org), which is licensed under the X License.
 An original copy of the license can be found at http://source.icu-project.org/repos/icu/icu4j/tags/release-4-8/main/shared/licenses/license.html
