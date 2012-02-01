@@ -15,17 +15,10 @@ An original copy of the license can be found at http://eclipse.org/legal/epl-v10
 This product includes unmodified, binary redistributions of software (Joda Time) developed by
 The Joda project (http://joda.org), which is licensed under the Joda Software License.
 
-This product includes unmodified, binary redistributions of software (OpenId4Java) developed by
-Sxip Identity Corporation (http://code.google.com/p/openid4java), which is licensed under the Apache 2 license.
-
-This product includes unmodified, binary redistributions of software (Guice) developed by
-Google Inc (http://code.google.com/p/google-guice), which is licensed under the Apache 2 license.
-
 This product includes unmodified, binary & source redistributions of software (Java Concurrency in Practice) developed by
 Brian Goetz and Tim Peierls (http://jcip.net), which is licensed under the Creative Commons Attribution License.
 
-This product includes unmodified, binary redisributions of software (org.json.*) developed by
-JSON.org (http://json.org)
+This product includes unmodified, binary redisributions of software (org.json.*) developed by JSON.org (http://json.org)
 
 This software contains unmodified binary redistributions for H2 database engine (http://www.h2database.com/),
 which is dual licensed and available under a modified version of the MPL 1.1 (Mozilla Public License)
