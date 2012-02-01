@@ -15,8 +15,6 @@ The Joda project (http://joda.org), which is licensed under the Joda Software Li
 This product includes unmodified, binary & source redistributions of software (Java Concurrency in Practice) developed by
 Brian Goetz and Tim Peierls (http://jcip.net), which is licensed under the Creative Commons Attribution License.
 
-This product includes unmodified, binary redisributions of software (org.json.*) developed by JSON.org (http://json.org)
-
 This software contains unmodified binary redistributions for H2 database engine (http://www.h2database.com/),
 which is dual licensed and available under a modified version of the MPL 1.1 (Mozilla Public License)
 or under the (unmodified) EPL 1.0 (Eclipse Public License).
