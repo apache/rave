@@ -9,6 +9,7 @@ AOP Alliance (http://aopalliance.sourceforge.net/), which was developed in the P
 
 This product includes unmodified, binary redistributions of software (AspectJ) developed for the
 Eclipse Foundation (http://www.eclipse.org/aspectj), which is licensed under the Eclipse Public License.
+Source code for this project can be found at http://dev.eclipse.org/viewcvs/viewvc.cgi/org.aspectj/?root=Tools_Project
 An original copy of the license can be found at http://eclipse.org/legal/epl-v10.html
 
 This product includes unmodified, binary redistributions of software (OpenId4Java) developed by
