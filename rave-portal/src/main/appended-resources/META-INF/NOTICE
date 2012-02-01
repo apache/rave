@@ -18,7 +18,7 @@ Sxip Identity Corporation (http://code.google.com/p/openid4java), which is licen
 This product includes unmodified, binary redistributions of software (Guice) developed by
 Google Inc (http://code.google.com/p/google-guice), which is licensed under the Apache 2 license.
 
-This product includes unmodified, binary redistributions of software (Java Concurrency in Practice) developed by
+This product includes unmodified, binary & source redistributions of software (Java Concurrency in Practice) developed by
 Brian Goetz and Tim Peierls (http://jcip.net), which is licensed under the Creative Commons Attribution License.
 
 This product includes unmodified, binary redisributions of software (org.json.*) developed by
