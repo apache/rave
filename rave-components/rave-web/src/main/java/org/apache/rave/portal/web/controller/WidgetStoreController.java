@@ -35,7 +35,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping(value = {"/store/*", "/store"})
+@RequestMapping(value = { "/store/*", "/store" })
 public class WidgetStoreController {
 
     private static final int MAXIMUM_WIDGETS_PER_PAGE = 10;
@@ -53,39 +53,39 @@ public class WidgetStoreController {
     private final CategoryService categoryService;
 
     @Autowired
-    public WidgetStoreController(WidgetService widgetService, NewWidgetValidator validator,
-                                 UserService userService, PortalPreferenceService preferenceService,
-                                 TagService tagService,
-                                 CategoryService categoryService) {
+    public WidgetStoreController(WidgetService widgetService, NewWidgetValidator validator, UserService userService,
+            PortalPreferenceService preferenceService, TagService tagService, CategoryService categoryService) {
         this.widgetService = widgetService;
         this.widgetValidator = validator;
         this.userService = userService;
         this.preferenceService = preferenceService;
-        this.tagService=tagService;
-        this.categoryService=categoryService;
+        this.tagService = tagService;
+        this.categoryService = categoryService;
     }
 
     /**
      * Views the main page of the widget store
      *
-     * @param model           model map
-     * @param referringPageId the source {@link org.apache.rave.portal.model.Page } ID
-     * @param offset          offset within the total amount of results (to enable paging)
+     * @param model
+     *            model map
+     * @param referringPageId
+     *            the source {@link org.apache.rave.portal.model.Page } ID
+     * @param offset
+     *            offset within the total amount of results (to enable paging)
      * @return the view name of the main store page
      */
     @RequestMapping(method = RequestMethod.GET)
     public String view(Model model, @RequestParam long referringPageId,
-                       @RequestParam(required = false, defaultValue = "0") int offset) {
+            @RequestParam(required = false, defaultValue = "0") int offset) {
         User user = userService.getAuthenticatedUser();
         widgetStoreModelHelper(model, referringPageId, user);
-        model.addAttribute(ModelKeys.WIDGETS,
-                widgetService.getPublishedWidgets(offset, getPageSize()));
+        model.addAttribute(ModelKeys.WIDGETS, widgetService.getPublishedWidgets(offset, getPageSize()));
         return ViewNames.STORE;
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "mine")
     public String viewMine(Model model, @RequestParam long referringPageId,
-                           @RequestParam(required = false, defaultValue = "0") int offset) {
+            @RequestParam(required = false, defaultValue = "0") int offset) {
         User user = userService.getAuthenticatedUser();
         widgetStoreModelHelper(model, referringPageId, user);
         model.addAttribute(ModelKeys.WIDGETS,
@@ -96,14 +96,17 @@ public class WidgetStoreController {
     /**
      * Views details of the specified widget
      *
-     * @param model           model map
-     * @param widgetId        ID of the {@link org.apache.rave.portal.model.Widget } to view
-     * @param referringPageId the source {@link org.apache.rave.portal.model.Page } ID
+     * @param model
+     *            model map
+     * @param widgetId
+     *            ID of the {@link org.apache.rave.portal.model.Widget } to view
+     * @param referringPageId
+     *            the source {@link org.apache.rave.portal.model.Page } ID
      * @return the view name of the widget detail page
      */
     @RequestMapping(method = RequestMethod.GET, value = "widget/{widgetId}")
     public String viewWidget(Model model, @PathVariable long widgetId, @RequestParam long referringPageId) {
-        final User user = userService.getAuthenticatedUser(); 
+        final User user = userService.getAuthenticatedUser();
         widgetStoreModelHelper(model, referringPageId, user);
         model.addAttribute(ModelKeys.WIDGET, widgetService.getWidget(widgetId));
         model.addAttribute(ModelKeys.WIDGET_STATISTICS, widgetService.getWidgetStatistics(widgetId, user.getEntityId()));
@@ -114,55 +117,63 @@ public class WidgetStoreController {
     /**
      * Performs a search in the widget store
      *
-     * @param model           {@link Model} map
-     * @param referringPageId the source {@link org.apache.rave.portal.model.Page } ID
-     * @param searchTerm      free text searchTerm query
-     * @param offset          offset within the total amount of results (to enable paging)
+     * @param model
+     *            {@link Model} map
+     * @param referringPageId
+     *            the source {@link org.apache.rave.portal.model.Page } ID
+     * @param searchTerm
+     *            free text searchTerm query
+     * @param offset
+     *            offset within the total amount of results (to enable paging)
      * @return the view name of the main store page
      */
     @RequestMapping(method = RequestMethod.GET, value = "search")
-    public String viewSearchResult(Model model, @RequestParam long referringPageId,
-                                   @RequestParam String searchTerm,
-                                   @RequestParam(required = false, defaultValue = "0") int offset) {
+    public String viewSearchResult(Model model, @RequestParam long referringPageId, @RequestParam String searchTerm,
+            @RequestParam(required = false, defaultValue = "0") int offset) {
         User user = userService.getAuthenticatedUser();
         widgetStoreModelHelper(model, referringPageId, user);
         model.addAttribute(ModelKeys.WIDGETS,
                 widgetService.getPublishedWidgetsByFreeTextSearch(searchTerm, offset, getPageSize()));
         model.addAttribute(ModelKeys.SEARCH_TERM, searchTerm);
         model.addAttribute(ModelKeys.OFFSET, offset);
-       return ViewNames.STORE;
+        return ViewNames.STORE;
     }
 
     /**
      * Performs a search in the widget store by tag keyword
      *
-     * @param model           {@link Model} map
-     * @param referringPageId the source {@link org.apache.rave.portal.model.Page } ID
-     * @param keyword     free text tag keyword
-     * @param offset          offset within the total amount of results (to enable paging)
+     * @param model
+     *            {@link Model} map
+     * @param referringPageId
+     *            the source {@link org.apache.rave.portal.model.Page } ID
+     * @param keyword
+     *            free text tag keyword
+     * @param offset
+     *            offset within the total amount of results (to enable paging)
      * @return the view name of the main store page
      */
     @RequestMapping(method = RequestMethod.GET, value = "tag")
-    public String viewTagResult(Model model, @RequestParam long referringPageId,
-                                   @RequestParam String keyword,
-                                   @RequestParam(required = false, defaultValue = "0") int offset) {
+    public String viewTagResult(Model model, @RequestParam long referringPageId, @RequestParam String keyword,
+            @RequestParam(required = false, defaultValue = "0") int offset) {
         User user = userService.getAuthenticatedUser();
         widgetStoreModelHelper(model, referringPageId, user);
-        model.addAttribute(ModelKeys.WIDGETS,
-                widgetService.getWidgetsByTag(keyword, offset, getPageSize()));
+        model.addAttribute(ModelKeys.WIDGETS, widgetService.getWidgetsByTag(keyword, offset, getPageSize()));
         model.addAttribute(ModelKeys.OFFSET, offset);
         model.addAttribute(ModelKeys.SELECTED_TAG, keyword);
         return ViewNames.STORE;
     }
-    
+
     @RequestMapping(method = RequestMethod.GET, value = "category")
     public String viewCategoryResult(@RequestParam(required = true) long referringPageId,
-                                     @RequestParam(required = true) long categoryId,
-                                     @RequestParam(required = false, defaultValue = "0") int offset,
-                                     Model model){
+            @RequestParam(required = true) long categoryId,
+            @RequestParam(required = false, defaultValue = "0") int offset, Model model) {
         User authenticatedUser = userService.getAuthenticatedUser();
         widgetStoreModelHelper(model, referringPageId, authenticatedUser);
-        model.addAttribute(ModelKeys.WIDGETS, widgetService.getWidgetsByCategory(categoryId, offset,getPageSize()));
+        if (categoryId > 0) {
+            model.addAttribute(ModelKeys.WIDGETS, widgetService.getWidgetsByCategory(categoryId, offset, getPageSize()));
+        } else {
+            model.addAttribute(ModelKeys.WIDGETS, widgetService.getPublishedWidgets(offset, getPageSize()));
+        }
         model.addAttribute(ModelKeys.OFFSET, offset);
         model.addAttribute(ModelKeys.SELECTED_CATEGORY, categoryId);
         return ViewNames.STORE;
@@ -171,8 +182,10 @@ public class WidgetStoreController {
     /**
      * Shows the Add new Widget form
      *
-     * @param model           {@link Model}
-     * @param referringPageId the source {@link org.apache.rave.portal.model.Page } ID
+     * @param model
+     *            {@link Model}
+     * @param referringPageId
+     *            the source {@link org.apache.rave.portal.model.Page } ID
      * @return the view name of the Add new Widget form
      */
     @RequestMapping(method = RequestMethod.GET, value = "widget/add")
@@ -186,15 +199,19 @@ public class WidgetStoreController {
     /**
      * Validates the form input, if valid, tries to store the Widget data
      *
-     * @param widget          {@link Widget} as submitted by the user
-     * @param results         {@link BindingResult}
-     * @param model           {@link Model}
-     * @param referringPageId the source {@link org.apache.rave.portal.model.Page } ID
+     * @param widget
+     *            {@link Widget} as submitted by the user
+     * @param results
+     *            {@link BindingResult}
+     * @param model
+     *            {@link Model}
+     * @param referringPageId
+     *            the source {@link org.apache.rave.portal.model.Page } ID
      * @return if successful the view name of the widget, otherwise the form
      */
     @RequestMapping(method = RequestMethod.POST, value = "widget/add")
-    public String viewAddWidgetResult(@ModelAttribute Widget widget, BindingResult results,
-                                      Model model, @RequestParam long referringPageId) {
+    public String viewAddWidgetResult(@ModelAttribute Widget widget, BindingResult results, Model model,
+            @RequestParam long referringPageId) {
         User user = userService.getAuthenticatedUser();
         widgetValidator.validate(widget, results);
         if (results.hasErrors()) {
@@ -212,11 +229,14 @@ public class WidgetStoreController {
     /**
      * Add common model attributes to the model
      *
-     * @param model             Model to add to
-     * @param referringPageId   Page to refer back to
-     * @param user              Current authenticated User
+     * @param model
+     *            Model to add to
+     * @param referringPageId
+     *            Page to refer back to
+     * @param user
+     *            Current authenticated User
      */
-    private void widgetStoreModelHelper(Model model, long referringPageId, User user){
+    private void widgetStoreModelHelper(Model model, long referringPageId, User user) {
         model.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
         model.addAttribute(ModelKeys.WIDGETS_STATISTICS, widgetService.getAllWidgetStatistics(user.getEntityId()));
         model.addAttribute(ModelKeys.TAGS, tagService.getAllTags());

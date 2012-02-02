@@ -97,7 +97,7 @@
                 <div>
                     <fmt:message key="page.store.list.widgets.category"/>
                     <select name="categoryList" id="categoryList" style="min-width:100px" >
-                        <option value="  "></option>
+                        <option value="0"></option>
                         <c:forEach var="category" items="${categories}">
                             <c:choose>
                                 <c:when test="${selectedCategory==category.entityId}">
