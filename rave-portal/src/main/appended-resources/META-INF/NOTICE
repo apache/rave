@@ -15,8 +15,7 @@ OpenJPA elects to include this software in this distribution under the CDDL lice
 You can obtain a copy of the License at: https://glassfish.dev.java.net/public/CDDL+GPL.html
 OpenJPA includes software written by Miroslav Nachev
 
-This product includes unmodified, binary redistributions of software (Joda Time) developed by
-The Joda project (http://joda.org), which is licensed under the Joda Software License.
+This product includes software developed by the Joda project (http://www.joda.org/).
 
 This product includes unmodified, binary & source redistributions of software (Java Concurrency in Practice) developed by
 Brian Goetz and Tim Peierls (http://jcip.net), which is licensed under the Creative Commons Attribution License.
