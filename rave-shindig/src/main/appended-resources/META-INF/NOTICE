@@ -12,6 +12,8 @@ This product includes unmodified, binary redistributions of software (HTML Parse
 the HTML Parser community (http://htmlparser.sourceforge.net), which is licensed under the Common Public License.
 An original copy of the license can be found at http://htmlparser.sourceforge.net/license.html
 
+This product includes software developed by the Joda project (http://www.joda.org/).
+
 This product includes unmodified, binary redistributions of software (ROME Modules) developed by
 Sun Microsystems, Inc. (https://rometools.jira.com/wiki/display/MODULES/Home),
 which is dual licensed under the LGPL or the Apache 2.0 license, and included here using the Apache 2.0 license.
