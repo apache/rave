@@ -9,6 +9,12 @@ Eclipse Foundation (http://www.eclipse.org/aspectj), which is licensed under the
 Source code for this project can be found at http://dev.eclipse.org/viewcvs/viewvc.cgi/org.aspectj/?root=Tools_Project
 An original copy of the license can be found at http://eclipse.org/legal/epl-v10.html
 
+This product includes Apache OpenJPA which includes the persistence and orm schemas from the JPA specifications.
+Copyright 2005-2007 Sun Microsystems, Inc. All rights reserved.
+OpenJPA elects to include this software in this distribution under the CDDL license.
+You can obtain a copy of the License at: https://glassfish.dev.java.net/public/CDDL+GPL.html
+OpenJPA includes software written by Miroslav Nachev
+
 This product includes unmodified, binary redistributions of software (Joda Time) developed by
 The Joda project (http://joda.org), which is licensed under the Joda Software License.
 
