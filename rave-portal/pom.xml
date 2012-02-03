@@ -176,7 +176,7 @@
                             <!-- Documentation: http://incubator.apache.org/rave/documentation/host-configuration.html -->
                             <!--
                                 <portal.override.properties>/path/to/custom.portal.properties</portal.override.properties>
-                                <shindig.override.properties>/path/to/custom.shindig.properties</shindig.override.properties>
+                                <rave-shindig.override.properties>/path/to/custom.shindig.properties</rave-shindig.override.properties>
                                 <shindig.host>localhost</shindig.host>
                                 <shindig.port>8080</shindig.port>
                                 <shindig.contextroot />

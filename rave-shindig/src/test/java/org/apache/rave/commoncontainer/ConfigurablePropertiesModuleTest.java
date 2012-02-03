@@ -61,7 +61,7 @@ public class ConfigurablePropertiesModuleTest {
 
     @Test
     public void testCustomProperties() throws Exception {
-        System.setProperty("shindig.override.properties", "classpath:rave.shindig.custom.properties");
+        System.setProperty("rave-shindig.override.properties", "classpath:rave.shindig.custom.properties");
 
         TestableConfigurablePropertiesModule propertiesModule = new TestableConfigurablePropertiesModule();
         Properties properties = propertiesModule.initProperties();
@@ -74,14 +74,14 @@ public class ConfigurablePropertiesModuleTest {
         assertEquals("Custom shindig host", "127.0.0.1",
                 properties.getProperty("shindig.host"));
 
-        System.clearProperty("shindig.override.properties");
+        System.clearProperty("rave-shindig.override.properties");
     }
 
     @Test
     public void testCustomProperties_WithReplacedContextRoot() throws Exception {
         System.setProperty("shindig.contextroot", "shindigcontext");
         System.setProperty("shindig.host", "127.0.0.2");
-        System.setProperty("shindig.override.properties", "classpath:rave.shindig.custom.properties");
+        System.setProperty("rave-shindig.override.properties", "classpath:rave.shindig.custom.properties");
 
         TestableConfigurablePropertiesModule propertiesModule = new TestableConfigurablePropertiesModule();
         Properties properties = propertiesModule.initProperties();
@@ -96,7 +96,7 @@ public class ConfigurablePropertiesModuleTest {
 
         System.clearProperty("shindig.contextroot");
         System.clearProperty("shindig.host");
-        System.clearProperty("shindig.override.properties");
+        System.clearProperty("rave-shindig.override.properties");
     }
 
     @Test

@@ -37,13 +37,13 @@ import java.util.Properties;
 
 /**
  * Injects everything from the a property file as a Named value.<br/>
- * Uses the {@literal shindig.properties} file unless the system property
- * {@literal shindig.override.properties} defines a different location.
+ * Uses the {@literal rave.shindig.properties} file unless the system property
+ * {@literal rave-shindig.override.properties} defines a different location.
  */
 public class ConfigurablePropertiesModule extends AbstractModule {
 
     private static final String DEFAULT_PROPERTIES = "rave.shindig.properties";
-    private static final String SHINDIG_OVERRIDE_PROPERTIES = "shindig.override.properties";
+    private static final String SHINDIG_OVERRIDE_PROPERTIES = "rave-shindig.override.properties";
 
     private static final String CLASSPATH = "classpath:";
 
