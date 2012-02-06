@@ -3,25 +3,40 @@ Apache Rave Change Log
 See http://issues.apache.org/jira/browse/RAVE-* (where * is the number of the issue below)
 
 
-Release Notes - Rave - Version 0.7-INCUBATING
+Release Notes - Rave - Version 0.8-INCUBATING
 ================================================================================================================
 
+** Sub-task
+    * [RAVE-410] - Use bcrypt for password hashing
+    * [RAVE-421] - New accounts need to optionally collect additional information for the Person class, such as display name, first and last name, etc.
+    * [RAVE-423] - Improve Performance
+    * [RAVE-451] - Navigate Widget Repository via Category need have show all
+
+** Technical task
+    * [RAVE-433] - Widget Category Admin Interface
+    * [RAVE-434] - Widget Category Assignment
+    * [RAVE-435] - Navigate Widget Repository via Category
+
 ** Bug
-    * [RAVE-380] - Disable ehcache phone home
-    * [RAVE-388] - Bad construction of widgets' URL in Rave Portal
-    * [RAVE-395] - Widget Menu: Move to Page item should be disabled when user only has one page
-    * [RAVE-398] - Widgets not rendering in IE
+    * [RAVE-263] - drag & drop target column heights
+    * [RAVE-374] - Maximized gadgets partially cover the top left page tabs. 
+    * [RAVE-383] - Update Widget throws error
+    * [RAVE-424] - Assigning admin role to new user fails
+    * [RAVE-439] - Update copyright year to 2012 on all NOTICE files
+    * [RAVE-445] - Form elements that should be hidden by default render briefly when page first loads
+    * [RAVE-453] - Duplicate jars encountered in rave-shindig
 
 ** Improvement
-    * [RAVE-158] - Remove the hacks that are in place while we wait for Shindig patches to become available in a stable Shindig release.
-    * [RAVE-376] - Number of items per page for User and Widget list on admin interface
-    * [RAVE-377] - Change the link on Admin Interface home to open document in new window
-    * [RAVE-394] - Create an item in the Widget menu to go directly to its Widget Detail pages
+    * [RAVE-299] - Create mechanism for using message bundle text inside javascript code
+    * [RAVE-360] - New Account page needs to be updated to let user enter more information
+    * [RAVE-407] - Improve visibility of disabled Widget state
+    * [RAVE-409] - Upgrade Spring to 3.1.0.RELEASE
+    * [RAVE-414] - Generate source jars as part of maven build process
+    * [RAVE-420] - NewAccountService should allow for creating new accounts which do not include an email
+    * [RAVE-437] - Check and cleanup NOTICE files to only include notices for 3rd party usages which require a notice
 
 ** Story
-    * [RAVE-69] - Widget metadata can be imported into the Widget Repository from Shindig
-    * [RAVE-73] - Users can see the most popular widgets in the Widget Repository
-    * [RAVE-97] - Support Dynamic Layouts
-    * [RAVE-161] - Set up sandbox for Science Gateways use cases in Rave SVN.
-    * [RAVE-210] - Administrators should be able to disable widgets
-
+    * [RAVE-70] - Users can tag Widgets in the Widget Repository
+    * [RAVE-72] - Users can get Widgets from the Widget Repository that match a tag
+    * [RAVE-432] - Widget Categories
+    * [RAVE-444] - Add LDAP authentication
