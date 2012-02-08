@@ -55,8 +55,7 @@
         <log4j.version>1.2.16</log4j.version>
         <junit.version>4.7</junit.version>
         <commons-lang.version>2.6</commons-lang.version>
-        <!-- Don't update to commons-validator 1.3.1, it misses a dependency -->
-        <commons-validator.version>1.3.0</commons-validator.version>
+        <commons-validator.version>1.4.0</commons-validator.version>
         <commons-collections.version>3.2.1</commons-collections.version>
         <commons-codec.version>1.4</commons-codec.version>
         <icu4j.version>4.8.1.1</icu4j.version>
@@ -367,7 +366,7 @@
                 <artifactId>commons-codec</artifactId>
                 <version>${commons-codec.version}</version>
             </dependency>
-            
+
             <!-- commons-collections: needed here to enforce proper version instead of relying on transitive dependencies -->
             <dependency>
                 <groupId>commons-collections</groupId>

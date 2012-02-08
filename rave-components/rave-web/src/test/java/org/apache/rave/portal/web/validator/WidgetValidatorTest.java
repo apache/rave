@@ -19,12 +19,15 @@
 
 package org.apache.rave.portal.web.validator;
 
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertTrue;
+
+import org.apache.commons.validator.routines.RegexValidator;
+import org.apache.commons.validator.routines.UrlValidator;
 import org.apache.rave.portal.model.Widget;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.validation.Errors;
-
-import static junit.framework.Assert.assertTrue;
 
 /**
  * Test for {@link WidgetValidator}
@@ -43,7 +46,28 @@ public class WidgetValidatorTest {
         assertTrue("Supports org.apache.rave.portal.model.Widget", widgetValidator.supports(Widget.class));
     }
 
-    private class MockWidgetValidator extends WidgetValidator {
+  /*
+    * Testing the same method of URL validator used in validate method. Its was really hard to create Error object
+    */
+ @Test
+ public void testValidation() throws Exception {
+      RegexValidator regex = new RegexValidator(new String[]{"http","https","((localhost)(:[0-9]+))",".*\\.linux-server(:[0-9]+)"});
+      UrlValidator validator = new UrlValidator(regex, 0);
+      assertTrue("localhost URL should validate",
+                validator.isValid("http://localhost:8080/demogadgets/CTSSResourcesMapView.xml"));
+        assertTrue("127.0.0.1 should validate",
+                validator.isValid("http://127.0.0.1:8080/demogadgets/CTSSResourcesMapView.xml"));
+        assertTrue("my.linux-server should validate",
+                validator.isValid("http://my.linux-server:8080/demogadgets/CTSSResourcesMapView.xml"));
+
+        assertFalse("broke.my-test should not validate",
+                validator.isValid("http://broke.my-test/test/index.html"));
+
+        assertTrue("www.apache.org should still validate",
+                validator.isValid("http://www.apache.org/test/index.html"));
+    }
+
+     private class MockWidgetValidator extends WidgetValidator {
 
         @Override
         protected void validateIfWidgetAlreadyExists(Widget widget, Errors errors) {

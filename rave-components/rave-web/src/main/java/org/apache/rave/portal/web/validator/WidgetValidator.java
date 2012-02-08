@@ -20,7 +20,8 @@
 package org.apache.rave.portal.web.validator;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.validator.UrlValidator;
+import org.apache.commons.validator.routines.RegexValidator;
+import org.apache.commons.validator.routines.UrlValidator;
 import org.apache.rave.portal.model.Widget;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
@@ -36,8 +37,8 @@ public abstract class WidgetValidator implements Validator {
 
     public WidgetValidator() {
         super();
-        String[] allowedSchemes = {"http", "https"};
-        urlValidator = new UrlValidator(allowedSchemes);
+        RegexValidator regex = new RegexValidator(new String[] {"http", "https","((localhost)(:[0-9]+))"});
+        urlValidator = new UrlValidator(regex, 0);
     }
 
     /**
@@ -63,7 +64,7 @@ public abstract class WidgetValidator implements Validator {
     }
 
     /**
-     * Checks if a Widget already exists for this URL. 
+     * Checks if a Widget already exists for this URL.
      * @param widget {@link Widget} to validate
      * @param errors {@link Errors}
      */
