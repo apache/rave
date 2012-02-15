@@ -37,6 +37,7 @@ set @portal_preference_seq = 'portal_preference';
 set @tag_seq = 'tag';
 set @widget_tag_seq = 'widget_tag';
 set @category_seq = 'category';
+set @page_type_seq = 'page_type';
 
 CREATE TABLE IF NOT EXISTS RAVE_PORTAL_SEQUENCES (seq_name VARCHAR(255) PRIMARY KEY NOT NULL, seq_count BIGINT(19));
 INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@page_seq, 1);
@@ -53,6 +54,7 @@ INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@portal_preferenc
 INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@tag_seq, 1);
 INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@widget_tag_seq, 1);
 INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@category_seq, 1);
+INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@page_type_seq, 1);
 
 
   -- ***********************************************************************************
@@ -91,7 +93,25 @@ set @fourwn_col_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name
 insert into page_layout (entity_id, code,  number_of_regions, render_sequence)
 values (@fourwn_col_id, 'columns_3nwn_1_bottom', 4, 6);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_layout_seq;
+
+set @person_profile_layout_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @page_layout_seq);
+insert into page_layout (entity_id, code,  number_of_regions, render_sequence)
+values (@person_profile_layout_id, 'person_profile', 1, 7);
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_layout_seq;
 --- end page layout data ----
+
+-- page types
+set @user_page_type_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @page_type_seq);
+insert into page_type (entity_id, code, description)
+values (@user_page_type_id, 'USER', 'Standard user pages which are only accessible by the page owner');
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_type_seq;
+
+set @person_profile_page_type_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @page_type_seq);
+insert into page_type (entity_id, code, description)
+values (@person_profile_page_type_id, 'PERSON_PROFILE', 'Person Profile pages which are only accessible by anyone and contain Person Profile information');
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_type_seq;
+
+-- end page types
 
   -- ***********************************************************************************
   --- start user data ---
@@ -243,10 +263,9 @@ UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @w
 
 --- Layout for user_id_1 ---
 set @page_1_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @page_seq);
-INSERT INTO page (entity_id, name, owner_id, render_sequence, page_layout_id)
-values (@page_1_id, 'Main', @user_id_1, 1, @two_col_id);
+INSERT INTO page (entity_id, name, owner_id, render_sequence, page_layout_id, page_type_id)
+values (@page_1_id, 'Main', @user_id_1, 1, @two_col_id, @user_page_type_id);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_seq;
-
 
 set @page_1_region_1 = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @region_seq);
 INSERT INTO region(entity_id, page_id, render_order)
@@ -290,8 +309,8 @@ values (@next_widget_rating, 2, 1, 10);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @widget_rating_seq;
 
 set @page_2_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @page_seq);
-INSERT INTO page (entity_id, name, owner_id, render_sequence, page_layout_id)
-values (@page_2_id, 'Social', @user_id_1, 2, @two_col_id);
+INSERT INTO page (entity_id, name, owner_id, render_sequence, page_layout_id, page_type_id)
+values (@page_2_id, 'Social', @user_id_1, 2, @two_col_id, @user_page_type_id);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_seq;
 
 set @page_2_region_1 = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @region_seq);
@@ -334,12 +353,19 @@ set @next_widget_comment = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE Se
 INSERT INTO widget_comment(entity_id, widget_id, user_id, text)
 values (@next_widget_comment, 1, 1, 'another comment');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @widget_comment_seq;
+
+-- person profile page for user 1
+set @person_profile_page_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @page_seq);
+INSERT INTO page (entity_id, name, owner_id, render_sequence, page_layout_id, page_type_id)
+values (@person_profile_page_id , 'Person Profile', @user_id_1, -1, @person_profile_layout_id, @person_profile_page_type_id);
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_seq;
+
 --- End canonical user_id_1 layout ---
 
 --- Layout for user_id_2 ---
 set @page_1_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @page_seq);
-INSERT INTO page (entity_id, name, owner_id, render_sequence, page_layout_id)
-values (@page_1_id, 'Main', @user_id_2, 1, @two_col_id);
+INSERT INTO page (entity_id, name, owner_id, render_sequence, page_layout_id, page_type_id)
+values (@page_1_id, 'Main', @user_id_2, 1, @two_col_id, @user_page_type_id);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_seq;
 
 set @page_1_region_1 = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @region_seq);
@@ -488,8 +514,8 @@ UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @r
 
 --- Layout for user_id_8 ---
 set @page_8_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @page_seq);
-INSERT INTO page (entity_id, name, owner_id, render_sequence, page_layout_id)
-values (@page_8_id, 'Main', @user_id_8, 1, @twown_col_id);
+INSERT INTO page (entity_id, name, owner_id, render_sequence, page_layout_id, page_type_id)
+values (@page_8_id, 'Main', @user_id_8, 1, @twown_col_id, @user_page_type_id);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_seq;
 
 set @page_8_region_1 = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @region_seq);
@@ -525,8 +551,8 @@ UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @r
 
 --- Layout for user_id_9 ---
 set @page_9_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @page_seq);
-INSERT INTO page (entity_id, name, owner_id, render_sequence, page_layout_id)
-values (@page_9_id, 'Main', @user_id_9, 1, @three_col_id);
+INSERT INTO page (entity_id, name, owner_id, render_sequence, page_layout_id, page_type_id)
+values (@page_9_id, 'Main', @user_id_9, 1, @three_col_id, @user_page_type_id);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_seq;
 
 set @page_9_region_1 = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @region_seq);
@@ -567,8 +593,8 @@ UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @r
 
 --- Layout for user_id_10 ---
 set @page_10_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @page_seq);
-INSERT INTO page (entity_id, name, owner_id, render_sequence, page_layout_id)
-values (@page_10_id, 'Main', @user_id_10, 1, @threewn_col_id);
+INSERT INTO page (entity_id, name, owner_id, render_sequence, page_layout_id, page_type_id)
+values (@page_10_id, 'Main', @user_id_10, 1, @threewn_col_id, @user_page_type_id);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_seq;
 
 set @page_10_region_1 = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @region_seq);
@@ -609,8 +635,8 @@ UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @r
 
 --- Layout for user_id_11 ---
 set @page_11_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @page_seq);
-INSERT INTO page (entity_id, name, owner_id, render_sequence, page_layout_id)
-values (@page_11_id, 'Main', @user_id_11, 1, @four_col_id);
+INSERT INTO page (entity_id, name, owner_id, render_sequence, page_layout_id, page_type_id)
+values (@page_11_id, 'Main', @user_id_11, 1, @four_col_id, @user_page_type_id);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_seq;
 
 set @page_11_region_1 = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @region_seq);
@@ -657,8 +683,8 @@ UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @r
 
 --- Layout for user_id_12 ---
 set @page_12_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @page_seq);
-INSERT INTO page (entity_id, name, owner_id, render_sequence, page_layout_id)
-values (@page_12_id, 'Main', @user_id_12, 1, @fourwn_col_id);
+INSERT INTO page (entity_id, name, owner_id, render_sequence, page_layout_id, page_type_id)
+values (@page_12_id, 'Main', @user_id_12, 1, @fourwn_col_id, @user_page_type_id);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_seq;
 
 set @page_12_region_1 = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @region_seq);
@@ -704,8 +730,8 @@ UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @r
 
 --- Layout for user_id_13 ---
 set @page_13_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @page_seq);
-INSERT INTO page (entity_id, name, owner_id, render_sequence, page_layout_id)
-values (@page_13_id, 'Main', @user_id_13, 1, @fourwn_col_id);
+INSERT INTO page (entity_id, name, owner_id, render_sequence, page_layout_id, page_type_id)
+values (@page_13_id, 'Main', @user_id_13, 1, @fourwn_col_id, @user_page_type_id);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_seq;
 
 set @page_13_region_1 = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @region_seq);

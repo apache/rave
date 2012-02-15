@@ -46,11 +46,13 @@ import java.util.List;
 @XmlAccessorType(XmlAccessType.NONE)
 @Table(name="page", uniqueConstraints={@UniqueConstraint(columnNames={"owner_id","name"})})
 @NamedQueries({
-        @NamedQuery(name = "Page.getByUserId", query="SELECT p FROM Page p WHERE p.owner.entityId = :userId ORDER BY p.renderSequence")
+        @NamedQuery(name = Page.GET_BY_USER_ID_AND_PAGE_TYPE_ID, query="SELECT p FROM Page p WHERE p.owner.entityId = :userId and p.pageType.entityId = :pageTypeId ORDER BY p.renderSequence")
 })
 @Access(AccessType.FIELD)
 public class Page implements BasicEntity, Serializable {
     private static final long serialVersionUID = 1L;
+    
+    public static final String GET_BY_USER_ID_AND_PAGE_TYPE_ID = "Page.getByUserIdAndPageTypeId";
      
     @XmlAttribute(name="id")
     @Id @Column(name="entity_id")
@@ -79,6 +81,10 @@ public class Page implements BasicEntity, Serializable {
     @OrderBy("renderOrder")
     @JoinColumn(name="page_id")
     private List<Region> regions;
+
+    @ManyToOne
+    @JoinColumn(name="page_type_id")
+    private PageType pageType;
 
     public Page() {
     }
@@ -174,6 +180,14 @@ public class Page implements BasicEntity, Serializable {
         this.regions = regions;
     }
 
+    public PageType getPageType() {
+        return pageType;
+    }
+
+    public void setPageType(PageType pageType) {
+        this.pageType = pageType;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {
@@ -198,6 +212,6 @@ public class Page implements BasicEntity, Serializable {
 
     @Override
     public String toString() {
-        return "Page{" + "entityId=" + entityId + ", name=" + name + ", owner=" + owner + ", renderSequence=" + renderSequence + ", pageLayout=" + pageLayout + ", regions=" + regions + '}';
+        return "Page{" + "entityId=" + entityId + ", name=" + name + ", owner=" + owner + ", renderSequence=" + renderSequence + ", pageLayout=" + pageLayout + ", regions=" + regions + ", pageType=" + pageType + "}";
     }    
 }

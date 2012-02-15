@@ -27,7 +27,7 @@ import java.io.Serializable;
  *
  * For example, verifying that the supplied userId to a function is the 
  * current authenticated user, when the function returns a List of Page objects.  
- * See org.apache.rave.portal.service.DefaultPageService.getAllPages for an 
+ * See org.apache.rave.portal.service.DefaultPageService.getAllUserPages for an
  * example of usage.
  * 
  * @author carlucci

@@ -202,7 +202,7 @@ public class PageApiTest {
         final String PAGE_NAME = "My New Page";
         final String PAGE_LAYOUT_CODE = "layout1";
 
-        expect(pageService.addNewPage(PAGE_NAME, PAGE_LAYOUT_CODE)).andReturn(new Page());
+        expect(pageService.addNewUserPage(PAGE_NAME, PAGE_LAYOUT_CODE)).andReturn(new Page());
         replay(pageService);
         RpcResult result = pageApi.addPage(PAGE_NAME, PAGE_LAYOUT_CODE);
         verify(pageService);
@@ -218,7 +218,7 @@ public class PageApiTest {
         final String PAGE_NAME = "My New Page";
         final String PAGE_LAYOUT_CODE = "layout1";
 
-        expect(pageService.addNewPage(PAGE_NAME, PAGE_LAYOUT_CODE)).andThrow(new IllegalArgumentException(PARAM_ERROR_MESSAGE));
+        expect(pageService.addNewUserPage(PAGE_NAME, PAGE_LAYOUT_CODE)).andThrow(new IllegalArgumentException(PARAM_ERROR_MESSAGE));
         replay(pageService);
         RpcResult result = pageApi.addPage(PAGE_NAME, PAGE_LAYOUT_CODE);
         verify(pageService);
@@ -234,7 +234,7 @@ public class PageApiTest {
         final String PAGE_NAME = "My New Page";
         final String PAGE_LAYOUT_CODE = "layout1";
 
-        expect(pageService.addNewPage(PAGE_NAME, PAGE_LAYOUT_CODE)).andThrow(new RuntimeException(INTERNAL_ERROR_MESSAGE));
+        expect(pageService.addNewUserPage(PAGE_NAME, PAGE_LAYOUT_CODE)).andThrow(new RuntimeException(INTERNAL_ERROR_MESSAGE));
         replay(pageService);
         RpcResult result = pageApi.addPage(PAGE_NAME, PAGE_LAYOUT_CODE);
         verify(pageService);

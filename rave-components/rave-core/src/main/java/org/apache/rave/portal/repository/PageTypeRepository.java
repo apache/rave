@@ -19,21 +19,41 @@
 package org.apache.rave.portal.repository;
 
 import org.apache.rave.persistence.Repository;
-import org.apache.rave.portal.model.Page;
 import org.apache.rave.portal.model.PageType;
 
 import java.util.List;
 
 /**
- * Provides persistence operations for the {@link org.apache.rave.portal.model.Page} class
+ * Provides persistence operations for the {@link org.apache.rave.portal.model.PageType} class
  */
-public interface PageRepository extends Repository<Page> {
+public interface PageTypeRepository extends Repository<PageType> {
     /**
-     * Returns all pages of a given PageType owned by the user
+     * Returns all page types
      *
-     * @param userId the userId to search by
-     * @param pageTypeId the pageTypeId to search by
-     * @return a list of all the Page objects owned by userId of type pageTypeId
+     * @return a list of all the PageTypes in the database
+     *
+     **/
+    List<PageType> getAll();
+
+    /**
+     * Returns a PageType object with the supplied code
+     *
+     * @param code
+     * @return the PageType object with the supplied code
      */
-    List<Page> getAllPages(Long userId, Long pageTypeId);
+    PageType getByCode(String code);
+
+    /**
+     * Returns the User PageType
+     *
+     * @return the User PageType
+     */
+    PageType getUserPageType();
+
+    /**
+     * Returns the Person Profile Page Type
+     *
+     * @return the Person Profile page type
+     */
+    PageType getPersonProfilePageType();
 }

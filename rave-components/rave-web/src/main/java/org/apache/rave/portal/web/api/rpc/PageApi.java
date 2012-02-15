@@ -142,7 +142,7 @@ public class PageApi {
         return new RpcOperation<Page>() {
              @Override
              public Page execute() {
-                 return pageService.addNewPage(pageName, pageLayoutCode);
+                 return pageService.addNewUserPage(pageName, pageLayoutCode);
              }
         }.getResult();        
     }

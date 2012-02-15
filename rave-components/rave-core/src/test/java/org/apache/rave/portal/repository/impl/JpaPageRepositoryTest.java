@@ -45,6 +45,8 @@ public class JpaPageRepositoryTest {
     private static final Long USER_ID = 1L;
     private static final Long INVALID_USER = -1L;
     private static final String WIDGET_URL = "http://www.widget-dico.com/wikipedia/google/wikipedia.xml";
+    private static final Long USER_PAGE_TYPE_ID = 1L;
+    private static final Long PERSON_PROFILE_PAGE_TYPE_ID = 2L;
 
     @PersistenceContext
     private EntityManager manager;
@@ -54,7 +56,7 @@ public class JpaPageRepositoryTest {
 
     @Test
     public void getAllPages_validUser_validPageSet() {
-        List<Page> pages = repository.getAllPages(USER_ID);
+        List<Page> pages = repository.getAllPages(USER_ID, USER_PAGE_TYPE_ID);
         assertThat(pages, is(notNullValue()));
         assertThat(pages.size(), equalTo(2));
         assertThat(pages.get(0).getRegions().size(), equalTo(2));
@@ -71,12 +73,12 @@ public class JpaPageRepositoryTest {
     }
     @Test
     public void getAllPages_invalidUser_emptySet() {
-        List<Page> pages = repository.getAllPages(INVALID_USER);
+        List<Page> pages = repository.getAllPages(INVALID_USER, USER_PAGE_TYPE_ID);
         assertThat(pages.isEmpty(), is(true));
     }
     @Test
     public void getAllPages_nullUser_emptySet() {
-        List<Page> pages = repository.getAllPages(null);
+        List<Page> pages = repository.getAllPages(null, USER_PAGE_TYPE_ID);
         assertThat(pages.isEmpty(), is(true));
     }
 

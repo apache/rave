@@ -22,8 +22,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.rave.portal.model.Page;
+import org.apache.rave.portal.model.PageType;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.repository.PageRepository;
+import org.apache.rave.portal.repository.PageTypeRepository;
 import org.apache.rave.portal.security.ModelPermissionEvaluator.Permission;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,11 +41,17 @@ import org.springframework.stereotype.Component;
 @Component
 public class DefaultPagePermissionEvaluator extends AbstractModelPermissionEvaluator<Page> {
     private Logger log = LoggerFactory.getLogger(getClass());
-    private PageRepository pageRepository;    
+    private PageRepository pageRepository;
+    
+    private final String PERSON_PROFILE_PAGE_TYPE_CODE;
+    private final String USER_PAGE_TYPE_CODE;
     
     @Autowired
-    public DefaultPagePermissionEvaluator(PageRepository pageRepository) {       
+    public DefaultPagePermissionEvaluator(PageRepository pageRepository, PageTypeRepository pageTypeRepository) {       
         this.pageRepository = pageRepository;
+
+        PERSON_PROFILE_PAGE_TYPE_CODE = pageTypeRepository.getPersonProfilePageType().getCode();
+        USER_PAGE_TYPE_CODE = pageTypeRepository.getUserPageType().getCode();
     }
    
     @Override
@@ -112,12 +120,15 @@ public class DefaultPagePermissionEvaluator extends AbstractModelPermissionEvalu
                 // if you are here, you are not an administrator, so you can't administer pages              
                 break;
             case CREATE:                                                                          
-            case DELETE:
-            case READ:
+            case DELETE:            
             case UPDATE:
-                // anyone can create, delete, read, or update a page that they own                  
+                // anyone can create, delete, or update a page that they own                  
                 hasPermission = isPageOwner(authentication, page, trustedPageContainer, trustedDomainObject);     
-                break;   
+                break;
+            case READ:
+                // anyone can read a USER page they own or anyone's PERSON_PROFILE page
+                hasPermission = isReadablePage(authentication, page, trustedPageContainer, trustedDomainObject);
+                break;
             default:
                 log.warn("unknown permission: " + permission);
                 break;
@@ -175,5 +186,13 @@ public class DefaultPagePermissionEvaluator extends AbstractModelPermissionEvalu
         } else {
             throw new IllegalArgumentException("unknown RaveSecurityContext type: " + raveSecurityContext.getType());
         }
-    }   
+    }
+
+    // anyone can read a USER page they own or anyone's PERSON_PROFILE page
+    private boolean isReadablePage(Authentication authentication, Page page, List<Page> trustedPageContainer, boolean trustedDomainObject) {
+        String pageTypeCode = (page.getPageType() == null) ? "" : page.getPageType().getCode();
+        return PERSON_PROFILE_PAGE_TYPE_CODE.equals(pageTypeCode) ||
+               isPageOwner(authentication, page, trustedPageContainer, trustedDomainObject);
+
+    }
 }

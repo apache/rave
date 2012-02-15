@@ -37,7 +37,6 @@ import org.springframework.ui.Model;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.rave.portal.web.util.ViewNames;
 import static org.hamcrest.CoreMatchers.*;
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.assertThat;
@@ -95,7 +94,7 @@ public class PageControllerTest {
         MockHttpUtil.setupRequestAsNonMobileUserAgent(request);        
         
         expect(userService.getAuthenticatedUser()).andReturn(validUser).anyTimes(); 
-        expect(pageService.getAllPages(USER_ID)).andReturn(allPages);
+        expect(pageService.getAllUserPages(USER_ID)).andReturn(allPages);
         expect(pageService.getPageFromList(OTHER_PAGE_ID, allPages)).andReturn(otherPage);
         expect(pageLayoutService.getAll()).andReturn(allPageLayouts);
         replay(userService, pageService, pageLayoutService);
@@ -115,7 +114,7 @@ public class PageControllerTest {
         MockHttpUtil.setupRequestAsMobileUserAgent(request);
         
         expect(userService.getAuthenticatedUser()).andReturn(validUser).anyTimes(); 
-        expect(pageService.getAllPages(USER_ID)).andReturn(allPages);
+        expect(pageService.getAllUserPages(USER_ID)).andReturn(allPages);
         expect(pageService.getPageFromList(OTHER_PAGE_ID, allPages)).andReturn(otherPage);
         expect(pageLayoutService.getAll()).andReturn(allPageLayouts);
         replay(userService, pageService, pageLayoutService);
@@ -137,8 +136,8 @@ public class PageControllerTest {
         
         assertThat(pages.isEmpty(), is(true));
         expect(userService.getAuthenticatedUser()).andReturn(validUser).anyTimes(); 
-        expect(pageService.getAllPages(USER_ID)).andReturn(pages).times(2);
-        expect(pageService.addNewDefaultPage(validUser.getEntityId())).andReturn(defaultPage);
+        expect(pageService.getAllUserPages(USER_ID)).andReturn(pages).times(2);
+        expect(pageService.addNewDefaultUserPage(validUser.getEntityId())).andReturn(defaultPage);
         expect(pageService.getPageFromList(OTHER_PAGE_ID, pages)).andReturn(defaultPage);
         expect(pageLayoutService.getAll()).andReturn(allPageLayouts);
         replay(userService, pageService, pageLayoutService);
@@ -158,7 +157,7 @@ public class PageControllerTest {
         MockHttpUtil.setupRequestAsNonMobileUserAgent(request);        
         
         expect(userService.getAuthenticatedUser()).andReturn(validUser).anyTimes(); 
-        expect(pageService.getAllPages(USER_ID)).andReturn(allPages);
+        expect(pageService.getAllUserPages(USER_ID)).andReturn(allPages);
         expect(pageService.getDefaultPageFromList(allPages)).andReturn(defaultPage);
         expect(pageLayoutService.getAll()).andReturn(allPageLayouts);
         replay(userService, pageService, pageLayoutService);
@@ -180,8 +179,8 @@ public class PageControllerTest {
         
         assertThat(pages.isEmpty(), is(true));
         expect(userService.getAuthenticatedUser()).andReturn(validUser).anyTimes(); 
-        expect(pageService.getAllPages(USER_ID)).andReturn(pages).times(2);
-        expect(pageService.addNewDefaultPage(validUser.getEntityId())).andReturn(defaultPage);
+        expect(pageService.getAllUserPages(USER_ID)).andReturn(pages).times(2);
+        expect(pageService.addNewDefaultUserPage(validUser.getEntityId())).andReturn(defaultPage);
         expect(pageService.getDefaultPageFromList(pages)).andReturn(defaultPage);
         expect(pageLayoutService.getAll()).andReturn(allPageLayouts);
         replay(userService, pageService, pageLayoutService);

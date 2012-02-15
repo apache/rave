@@ -46,7 +46,7 @@ public interface PageService {
      * @return A non null possible empty list of pages for the given user.
      */   
     @PreAuthorize("hasPermission(new org.apache.rave.portal.security.impl.RaveSecurityContext(#userId, 'org.apache.rave.portal.model.User'), 'org.apache.rave.portal.model.Page', 'read')") 
-    List<Page> getAllPages(long userId);
+    List<Page> getAllUserPages(long userId);
     
     /**
      * Return the page object from a list of pages given the pageId
@@ -66,17 +66,17 @@ public interface PageService {
     Page getDefaultPageFromList(List<Page> pages);
     
     /**
-     * Creates a new page with the supplied pageName and pageLayoutCode
+     * Creates a new user page with the supplied pageName and pageLayoutCode
      * 
      * @param pageName the name of the new page
      * @param pageLayoutCode the page layout code
      * @return the new Page object
      */
     @PostAuthorize("hasPermission(returnObject, 'create')") 
-    Page addNewPage(String pageName, String pageLayoutCode);
+    Page addNewUserPage(String pageName, String pageLayoutCode);
     
     /**
-     * Creates a new default page for the supplied user, and uses the 
+     * Creates a new default user page for the supplied user, and uses the
      * defaultPageLayout attribute of the User to determine the layout of the
      * new page.
      * 
@@ -84,7 +84,7 @@ public interface PageService {
      * @return the new default Page object for the user
      */        
     @PreAuthorize("hasPermission(new org.apache.rave.portal.security.impl.RaveSecurityContext(#userId, 'org.apache.rave.portal.model.User'), 'org.apache.rave.portal.model.Page', 'create')")         
-    Page addNewDefaultPage(long userId);
+    Page addNewDefaultUserPage(long userId);
     
     /**
      * Get the default page name used by Rave

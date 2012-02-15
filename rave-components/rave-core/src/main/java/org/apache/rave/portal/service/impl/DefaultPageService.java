@@ -26,11 +26,7 @@ import org.apache.rave.portal.model.Region;
 import org.apache.rave.portal.model.RegionWidget;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.Widget;
-import org.apache.rave.portal.repository.PageLayoutRepository;
-import org.apache.rave.portal.repository.PageRepository;
-import org.apache.rave.portal.repository.RegionRepository;
-import org.apache.rave.portal.repository.RegionWidgetRepository;
-import org.apache.rave.portal.repository.WidgetRepository;
+import org.apache.rave.portal.repository.*;
 import org.apache.rave.portal.service.PageService;
 import org.apache.rave.portal.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,10 +44,13 @@ public class DefaultPageService implements PageService {
     private final RegionWidgetRepository regionWidgetRepository;
     private final WidgetRepository widgetRepository;
     private final PageLayoutRepository pageLayoutRepository;
+    private final PageTypeRepository pageTypeRepository;
     private final UserService userService;    
     private final String defaultPageName;
     
     private final long MOVE_PAGE_DEFAULT_POSITION_INDEX = -1L;
+    private final long USER_PAGE_TYPE_ID;
+    private final long PERSON_PROFILE_PAGE_TYPE_ID;
 
     @Autowired
     public DefaultPageService(PageRepository pageRepository, 
@@ -59,6 +58,7 @@ public class DefaultPageService implements PageService {
                               WidgetRepository widgetRepository, 
                               RegionWidgetRepository regionWidgetRepository,
                               PageLayoutRepository pageLayoutRepository,
+                              PageTypeRepository pageTypeRepository,
                               UserService userService,
                               @Value("${portal.page.default_name}") String defaultPageName) {
         this.pageRepository = pageRepository;
@@ -66,8 +66,12 @@ public class DefaultPageService implements PageService {
         this.regionWidgetRepository = regionWidgetRepository;
         this.widgetRepository = widgetRepository;
         this.pageLayoutRepository = pageLayoutRepository;
+        this.pageTypeRepository = pageTypeRepository;
         this.userService = userService;
         this.defaultPageName = defaultPageName;
+
+        USER_PAGE_TYPE_ID = pageTypeRepository.getUserPageType().getEntityId();
+        PERSON_PROFILE_PAGE_TYPE_ID = pageTypeRepository.getPersonProfilePageType().getEntityId();
     }
 
     @Override
@@ -76,8 +80,8 @@ public class DefaultPageService implements PageService {
     }
     
     @Override
-    public List<Page> getAllPages(long userId) {
-        return pageRepository.getAllPages(userId);
+    public List<Page> getAllUserPages(long userId) {
+        return pageRepository.getAllPages(userId, USER_PAGE_TYPE_ID);
     }
     
     @Override
@@ -95,15 +99,15 @@ public class DefaultPageService implements PageService {
     
     @Override
     @Transactional
-    public Page addNewPage(String pageName, String pageLayoutCode) {                     
-        return addNewPage(userService.getAuthenticatedUser(), pageName, pageLayoutCode);
+    public Page addNewUserPage(String pageName, String pageLayoutCode) {
+        return addNewUserPage(userService.getAuthenticatedUser(), pageName, pageLayoutCode);
     }    
     
     @Override
     @Transactional
-    public Page addNewDefaultPage(long userId) {        
+    public Page addNewDefaultUserPage(long userId) {
         User user = userService.getUserById(userId);
-        return addNewPage(user, defaultPageName, user.getDefaultPageLayout().getCode());
+        return addNewUserPage(user, defaultPageName, user.getDefaultPageLayout().getCode());
     }       
     
     @Override
@@ -121,7 +125,7 @@ public class DefaultPageService implements PageService {
 
         //TODO RAVE-237:  We should be able to delete these lines.  If there are gaps in the sequence numbers, then it will still
         //TODO RAVE-237:  return values in the correct order.  We only need to update sequences when there is a change in order
-        List<Page> pages = pageRepository.getAllPages(user.getEntityId());
+        List<Page> pages = pageRepository.getAllPages(user.getEntityId(), USER_PAGE_TYPE_ID);
         updatePageRenderSequences(pages);
     }    
     
@@ -256,7 +260,7 @@ public class DefaultPageService implements PageService {
      * remaining render sequence value
      * 
      * @param page the Page to remove Regions from
-     * @param newLayout the new PageLayout which will be applied to the Page
+     * @param numberOfRegionsInNewLayout the number of regions in the new layout
      */
     private void reduceRegionsForPage(Page page, long numberOfRegionsInNewLayout) {
         List<Region> regions = page.getRegions();
@@ -318,7 +322,7 @@ public class DefaultPageService implements PageService {
         target.getRegionWidgets().add(newPosition, widget);
     }
 
-    private Page addNewPage(User user, String pageName, String pageLayoutCode) {
+    private Page addNewUserPage(User user, String pageName, String pageLayoutCode) {
         PageLayout pageLayout = pageLayoutRepository.getByPageLayoutCode(pageLayoutCode);
         
         // Create regions
@@ -331,13 +335,15 @@ public class DefaultPageService implements PageService {
         }
 
         // Create a Page object and register it.
-        long renderSequence = getAllPages(user.getEntityId()).size() + 1;
+        long renderSequence = getAllUserPages(user.getEntityId()).size() + 1;
         Page page = new Page();
         page.setName(pageName);       
         page.setOwner(user);
         page.setPageLayout(pageLayout);
         page.setRenderSequence(renderSequence);
-        page.setRegions(regions);        
+        page.setRegions(regions);
+        // set this as a "user" page type
+        page.setPageType(pageTypeRepository.get(USER_PAGE_TYPE_ID));
         pageRepository.save(page);
         
         return page;
@@ -373,7 +379,7 @@ public class DefaultPageService implements PageService {
         // get all of the user's pages
         // the pageRepository returns an un-modifiable list
         // so we need to create a modifyable arraylist
-        List<Page> pages = new ArrayList<Page>(pageRepository.getAllPages(user.getEntityId()));
+        List<Page> pages = new ArrayList<Page>(pageRepository.getAllPages(user.getEntityId(), USER_PAGE_TYPE_ID));
 
         // first remove it from the list         
         if (!pages.remove(movingPage)) {

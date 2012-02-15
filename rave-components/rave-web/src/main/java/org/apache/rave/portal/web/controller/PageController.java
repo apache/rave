@@ -83,13 +83,13 @@ public class PageController {
     private List<Page> getAllPagesForAuthenticatedUser() {
         User user = userService.getAuthenticatedUser();
         long userId = user.getEntityId();
-        List<Page> pages = pageService.getAllPages(userId);
+        List<Page> pages = pageService.getAllUserPages(userId);
         if (pages.isEmpty()) {
             // create a new default page for the user
             logger.info("User {} does not have any pages - creating default page", user.getUsername());
-            pageService.addNewDefaultPage(userId);
+            pageService.addNewDefaultUserPage(userId);
             // refresh the pages list which will now have the new page
-            pages = pageService.getAllPages(userId);
+            pages = pageService.getAllUserPages(userId);
         }
         return pages;
     }

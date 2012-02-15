@@ -87,6 +87,8 @@ public class JpaUserRepository extends AbstractJpaRepository<User> implements Us
 
     @Override
     public void removeUser(User user) {
+        // TODO: this logic should not be here - it should be in the deleteUser service method so we can utilize
+        // the other model object's repositories instead of accessing other models from this repository
         deletePages(user);
         deleteWidgetComments(user);
         deleteWidgetRatings(user);
@@ -103,8 +105,10 @@ public class JpaUserRepository extends AbstractJpaRepository<User> implements Us
     }
 
     private void deletePages(User user) {
-        TypedQuery<Page> pageQuery = manager.createNamedQuery("Page.getByUserId", Page.class);
+        TypedQuery<Page> pageQuery = manager.createNamedQuery(Page.GET_BY_USER_ID_AND_PAGE_TYPE_ID, Page.class);
         pageQuery.setParameter("userId", user.getEntityId());
+        // TODO unhardcode this
+        pageQuery.setParameter("pageTypeId", 1L);
         final List<Page> resultList = pageQuery.getResultList();
         for (Page p : resultList) {
             // removing Page removes Region removes RegionWidget removes RegionWidgetPreference

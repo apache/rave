@@ -16,24 +16,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.rave.portal.repository;
 
-import org.apache.rave.persistence.Repository;
-import org.apache.rave.portal.model.Page;
-import org.apache.rave.portal.model.PageType;
-
-import java.util.List;
-
-/**
- * Provides persistence operations for the {@link org.apache.rave.portal.model.Page} class
- */
-public interface PageRepository extends Repository<Page> {
-    /**
-     * Returns all pages of a given PageType owned by the user
-     *
-     * @param userId the userId to search by
-     * @param pageTypeId the pageTypeId to search by
-     * @return a list of all the Page objects owned by userId of type pageTypeId
-     */
-    List<Page> getAllPages(Long userId, Long pageTypeId);
+public final class RepositoryConstants {
+    // these values should mirror what is inserted into the database
+    // for the Page Type codes
+    public final class PageType {
+        public final static String USER = "USER";
+        public final static String PERSON_PROFILE = "PERSON_PROFILE";
+    }
 }

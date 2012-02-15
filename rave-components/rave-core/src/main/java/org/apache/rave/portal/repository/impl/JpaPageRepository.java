@@ -21,6 +21,7 @@ package org.apache.rave.portal.repository.impl;
 
 import org.apache.rave.persistence.jpa.AbstractJpaRepository;
 import org.apache.rave.portal.model.Page;
+import org.apache.rave.portal.model.PageType;
 import org.apache.rave.portal.repository.PageRepository;
 import org.springframework.stereotype.Repository;
 
@@ -35,9 +36,10 @@ public class JpaPageRepository extends AbstractJpaRepository<Page> implements Pa
     }
 
     @Override
-    public List<Page> getAllPages(Long userId) {
-        TypedQuery<Page> query = manager.createNamedQuery("Page.getByUserId", Page.class);
+    public List<Page> getAllPages(Long userId, Long pageTypeId) {
+        TypedQuery<Page> query = manager.createNamedQuery(Page.GET_BY_USER_ID_AND_PAGE_TYPE_ID, Page.class);
         query.setParameter("userId", userId);
+        query.setParameter("pageTypeId", pageTypeId);
         return query.getResultList();
     }
 }
