@@ -22,7 +22,7 @@ package org.apache.rave.portal.service.impl;
 import org.apache.rave.portal.model.Person;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.util.SearchResult;
-import org.apache.rave.portal.repository.UserRepository;
+import org.apache.rave.portal.repository.*;
 import org.apache.rave.portal.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,10 +49,25 @@ public class DefaultUserService implements UserService {
     private static final Logger log = LoggerFactory.getLogger(DefaultUserService.class);
 
     private final UserRepository userRepository;
+    private final PageRepository pageRepository;
+    private final PageTypeRepository pageTypeRepository;
+    private final WidgetRatingRepository widgetRatingRepository;
+    private final WidgetCommentRepository widgetCommentRepository;
+    private final WidgetRepository widgetRepository;
 
     @Autowired
-    public DefaultUserService(UserRepository userRepository) {
+    public DefaultUserService(UserRepository userRepository,
+                              PageRepository pageRepository,
+                              PageTypeRepository pageTypeRepository,
+                              WidgetRatingRepository widgetRatingRepository,
+                              WidgetCommentRepository widgetCommentRepository,
+                              WidgetRepository widgetRepository) {
         this.userRepository = userRepository;
+        this.pageRepository = pageRepository;
+        this.pageTypeRepository = pageTypeRepository;
+        this.widgetRatingRepository = widgetRatingRepository;
+        this.widgetCommentRepository = widgetCommentRepository;
+        this.widgetRepository = widgetRepository;
     }
 
     @Override
@@ -162,11 +177,28 @@ public class DefaultUserService implements UserService {
     @Transactional
     // TODO RAVE-300: add security check that is is called by admin or the user itself
     public void deleteUser(Long userId) {
+        log.info("about to delete userId: " + userId);
         User user = userRepository.get(userId);
         if (user == null) {
+            log.warn("unable to find userId " + userId + " to delete");
             return;
         }
-        userRepository.removeUser(user);
+        
+        final String username = user.getUsername();
+
+        // delete all User type pages
+        int numDeletedPages = pageRepository.deletePages(userId, pageTypeRepository.getUserPageType().getEntityId());        
+        // delete all the widget comments
+        int numWidgetComments = widgetCommentRepository.deleteAll(userId);
+        // delete all the widget ratings
+        int numWidgetRatings = widgetRatingRepository.deleteAll(userId);
+        // unassign the user from any widgets where they were the owner
+        int numWidgetsOwned = widgetRepository.unassignWidgetOwner(userId);
+        // finally delete the user
+        userRepository.delete(user);
+        log.info("Deleted user [" + userId + "," + username + "] - numPages: " + numDeletedPages +
+                 ", numWidgetComments: " + numWidgetComments + ", numWidgetRatings: " + numWidgetRatings +
+                 ", numWidgetsOwned: " + numWidgetsOwned);
     }
 
     @Override

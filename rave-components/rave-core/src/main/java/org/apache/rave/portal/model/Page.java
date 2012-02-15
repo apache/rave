@@ -46,13 +46,15 @@ import java.util.List;
 @XmlAccessorType(XmlAccessType.NONE)
 @Table(name="page", uniqueConstraints={@UniqueConstraint(columnNames={"owner_id","name"})})
 @NamedQueries({
-        @NamedQuery(name = Page.GET_BY_USER_ID_AND_PAGE_TYPE_ID, query="SELECT p FROM Page p WHERE p.owner.entityId = :userId and p.pageType.entityId = :pageTypeId ORDER BY p.renderSequence")
+        @NamedQuery(name = Page.GET_BY_USER_ID_AND_PAGE_TYPE_ID, query="SELECT p FROM Page p WHERE p.owner.entityId = :userId and p.pageType.entityId = :pageTypeId ORDER BY p.renderSequence"),
+        @NamedQuery(name = Page.DELETE_BY_USER_ID_AND_PAGE_TYPE_ID, query="DELETE FROM Page p WHERE p.owner.entityId = :userId and p.pageType.entityId = :pageTypeId")
 })
 @Access(AccessType.FIELD)
 public class Page implements BasicEntity, Serializable {
     private static final long serialVersionUID = 1L;
     
     public static final String GET_BY_USER_ID_AND_PAGE_TYPE_ID = "Page.getByUserIdAndPageTypeId";
+    public static final String DELETE_BY_USER_ID_AND_PAGE_TYPE_ID = "Page.deleteByUserIdAndPageTypeId";
      
     @XmlAttribute(name="id")
     @Id @Column(name="entity_id")

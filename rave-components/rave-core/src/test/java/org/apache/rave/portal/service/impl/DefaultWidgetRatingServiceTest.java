@@ -25,12 +25,9 @@ import org.apache.rave.portal.service.WidgetRatingService;
 import org.junit.Before;
 import org.junit.Test;
 
-import static junit.framework.Assert.assertEquals;
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.expectLastCall;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
+import static org.junit.Assert.*;
+import static org.easymock.EasyMock.*;
+import static org.hamcrest.CoreMatchers.*;
 
 /**
  * Test for {@link org.apache.rave.portal.service.impl.DefaultWidgetRatingService}
@@ -53,6 +50,7 @@ public class DefaultWidgetRatingServiceTest {
         replay(repository);
         final WidgetRating rating = service.getByWidgetIdAndUserId(2L, 3L);
         assertEquals("Score is 5", Integer.valueOf(5), rating.getScore());
+        verify(repository);
     }
 
     @Test
@@ -111,15 +109,26 @@ public class DefaultWidgetRatingServiceTest {
         replay(repository);
 
         service.removeWidgetRating(1L, 1L);
+        verify(repository);
     }
 
     @Test
     public void removeWidgetRating_notExisting() {
-
         expect(repository.getByWidgetIdAndUserId(1L, 2L)).andReturn(null);
         expectLastCall();
         replay(repository);
-
         service.removeWidgetRating(1L, 2L);
+        verify(repository);
+    }
+    
+    @Test
+    public void deleteAll() {
+        final Long USER_ID = 33L;
+        final int EXPECTED_COUNT = 43;
+        
+        expect(repository.deleteAll(USER_ID)).andReturn(EXPECTED_COUNT);
+        replay(repository);
+        assertThat(service.removeAllWidgetRatings(USER_ID), is(EXPECTED_COUNT));
+        verify(repository);
     }
 }

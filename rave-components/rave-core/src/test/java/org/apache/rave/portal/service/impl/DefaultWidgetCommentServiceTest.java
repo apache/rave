@@ -19,7 +19,9 @@ import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 import org.apache.rave.portal.model.WidgetComment;
 import org.apache.rave.portal.repository.WidgetCommentRepository;
@@ -70,6 +72,17 @@ public class DefaultWidgetCommentServiceTest {
         replay(widgetCommentRepository);
 
         widgetCommentService.removeWidgetComment(1L);
+        verify(widgetCommentRepository);
+    }
+
+    @Test
+    public void deleteAll() {
+        final Long USER_ID = 33L;
+        final int EXPECTED_COUNT = 43;
+
+        expect(widgetCommentRepository.deleteAll(USER_ID)).andReturn(EXPECTED_COUNT);
+        replay(widgetCommentRepository);
+        assertThat(widgetCommentService.deleteAll(USER_ID), is(EXPECTED_COUNT));
         verify(widgetCommentRepository);
     }
 }

@@ -167,24 +167,6 @@ public class JpaUserRepositoryTest {
     }
 
     @Test
-    public void removeUser() {
-        User user = repository.get(USER_ID);
-        assertNotNull(user);
-        final TypedQuery<Page> pageQuery = manager.createNamedQuery(Page.GET_BY_USER_ID_AND_PAGE_TYPE_ID, Page.class);
-        pageQuery.setParameter("userId", USER_ID);
-        pageQuery.setParameter("pageTypeId", 1L);
-        List<Page> pages = pageQuery.getResultList();
-        assertFalse("User has pages", pages.isEmpty());
-
-        repository.removeUser(user);
-
-        user = repository.get(USER_ID);
-        assertNull(user);
-        pages = pageQuery.getResultList();
-        assertTrue("User has no pages", pages.isEmpty());
-    }
-
-    @Test
     public void getAllByAddedWidget() {
         String searchTerm = "Doe";
         List<User> users = repository.getAllByAddedWidget(VALID_WIDGET_ID);

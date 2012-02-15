@@ -27,6 +27,7 @@ import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,7 +47,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * Test class for {@link org.apache.rave.portal.repository.impl.JpaWidgetRepository}
  */
-@Transactional
+@Transactional(readOnly = true)
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:test-dataContext.xml", "classpath:test-applicationContext.xml"})
 public class JpaWidgetRepositoryTest {
@@ -186,6 +187,8 @@ public class JpaWidgetRepositoryTest {
     }
 
     @Test
+    @Transactional(readOnly = false)
+    @Rollback
     public void saveWidgetWithLongDescription() {
         final String url = "http://example.com/doesnotexistyet";
         final String longDescription = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc dictum sodales erat consequat pulvinar. Pellentesque ut massa mi, sit amet imperdiet diam. Morbi nec magna quis nisi bibendum dignissim. Fusce et rhoncus turpis. Integer mollis magna sit amet nulla convallis placerat dignissim lorem blandit. Nulla magna justo, cursus ac semper sed, pulvinar in turpis. Donec ultricies nibh sed nulla congue ullamcorper. Fusce commodo ultrices nunc, interdum lacinia elit faucibus at. Fusce laoreet ultricies volutpat. ";
@@ -288,6 +291,8 @@ public class JpaWidgetRepositoryTest {
     }
 
     @Test
+    @Transactional(readOnly = false)
+    @Rollback    
     public void addWidgetRating() {
         Widget widget = repository.get(3L);
         assertNotNull(widget.getRatings());
@@ -311,6 +316,8 @@ public class JpaWidgetRepositoryTest {
     }
 
     @Test
+    @Transactional(readOnly = false)
+    @Rollback    
     public void updateWidgetRating() {
         Widget widget = repository.get(4L);
         assertNotNull(widget.getRatings());
@@ -382,6 +389,8 @@ public class JpaWidgetRepositoryTest {
     }
 
     @Test
+    @Transactional(readOnly = false)
+    @Rollback    
     public void addWidgetCategory() {
         final long WIDGET_ID = 1L;
         final User user = new User(1L);
@@ -418,6 +427,8 @@ public class JpaWidgetRepositoryTest {
     }
 
     @Test
+    @Transactional(readOnly = false)
+    @Rollback    
     public void removeWidgetCategory() {
         final long WIDGET_ID = 1L;
 
@@ -430,5 +441,21 @@ public class JpaWidgetRepositoryTest {
         Widget reloadedWidget = repository.get(WIDGET_ID);
         assertThat(reloadedWidget.getCategories().size(), is(1));
         assertThat(reloadedWidget.getCategories().get(0).getEntityId(), is(4L));
-    }    
+    }
+
+    @Test
+    @Transactional(readOnly = false)
+    @Rollback
+    public void unassignWidgetOwner() {
+        final long WIDGET_ID = 2L;
+        final long USER_ID = 1L;
+        final int NUM_WIDGETS_OWNED_BY_USER = 11;
+        
+        Widget widget = repository.get(WIDGET_ID);
+        assertThat(widget.getOwner().getEntityId(), is(USER_ID));        
+        assertThat(repository.unassignWidgetOwner(USER_ID), is(NUM_WIDGETS_OWNED_BY_USER));
+        sharedManager.flush();
+        sharedManager.refresh(widget);
+        assertThat(widget.getOwner(), is(nullValue(User.class)));
+    }
 }

@@ -32,4 +32,12 @@ public interface WidgetRatingRepository extends Repository<WidgetRating> {
      * @return {@link WidgetRating} if it exists, otherwise {@literal null}
      */
     WidgetRating getByWidgetIdAndUserId(Long widgetId, Long userId);
+
+    /**
+     * Delete all Widget Ratings for a userId
+     *
+     * @param userId
+     * @return count of ratings deleted
+     */
+    int deleteAll(Long userId);
 }

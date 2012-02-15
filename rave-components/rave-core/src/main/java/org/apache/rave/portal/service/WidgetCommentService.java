@@ -30,4 +30,12 @@ public interface WidgetCommentService {
     @PreAuthorize("hasPermission(#id, 'org.apache.rave.portal.model.WidgetComment', 'delete')") 
     void removeWidgetComment(Long id);
 
+    /**
+     * Deletes all Widget Comments for a userId
+     *
+     * @param userId
+     * @return number of comments deleted
+     */
+    @PreAuthorize("hasPermission(new org.apache.rave.portal.security.impl.RaveSecurityContext(#userId, 'org.apache.rave.portal.model.User'), 'org.apache.rave.portal.model.WidgetComment', 'delete')")
+    int deleteAll(Long userId);
 }

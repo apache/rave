@@ -86,59 +86,9 @@ public class JpaUserRepository extends AbstractJpaRepository<User> implements Us
     }
 
     @Override
-    public void removeUser(User user) {
-        // TODO: this logic should not be here - it should be in the deleteUser service method so we can utilize
-        // the other model object's repositories instead of accessing other models from this repository
-        deletePages(user);
-        deleteWidgetComments(user);
-        deleteWidgetRatings(user);
-        removeUserFromWidget(user);
-
-        this.delete(user);
-    }
-
-    @Override
     public List<User> getAllByAddedWidget(long widgetId) {
         TypedQuery<User> query = manager.createNamedQuery(User.USER_GET_ALL_FOR_ADDED_WIDGET, User.class);
         query.setParameter(User.PARAM_WIDGET_ID, widgetId);
         return query.getResultList();
-    }
-
-    private void deletePages(User user) {
-        TypedQuery<Page> pageQuery = manager.createNamedQuery(Page.GET_BY_USER_ID_AND_PAGE_TYPE_ID, Page.class);
-        pageQuery.setParameter("userId", user.getEntityId());
-        // TODO unhardcode this
-        pageQuery.setParameter("pageTypeId", 1L);
-        final List<Page> resultList = pageQuery.getResultList();
-        for (Page p : resultList) {
-            // removing Page removes Region removes RegionWidget removes RegionWidgetPreference
-            manager.remove(p);
-        }
-    }
-
-    private void deleteWidgetRatings(User user) {
-        TypedQuery<WidgetRating> widgetRatingQuery = manager.createNamedQuery(WidgetRating.WIDGET_ALL_USER_RATINGS,
-                WidgetRating.class);
-        widgetRatingQuery.setParameter(WidgetRating.PARAM_USER_ID, user.getEntityId());
-        final List<WidgetRating> resultList = widgetRatingQuery.getResultList();
-        for (WidgetRating widgetRating : resultList) {
-            manager.remove(widgetRating);
-        }
-    }
-
-    private void deleteWidgetComments(User user) {
-        TypedQuery<WidgetComment>widgetCommentQuery =
-                manager.createQuery("SELECT wc FROM WidgetComment wc WHERE wc.user = :user", WidgetComment.class);
-        widgetCommentQuery.setParameter("user", user);
-        final List<WidgetComment> resultList = widgetCommentQuery.getResultList();
-        for (WidgetComment widgetComment : resultList) {
-            manager.remove(widgetComment);
-        }
-    }
-
-    private void removeUserFromWidget(User user) {
-        Query query = manager.createQuery("UPDATE Widget w SET w.owner = null WHERE w.owner = :user");
-        query.setParameter("user", user);
-        query.executeUpdate();
     }
 }

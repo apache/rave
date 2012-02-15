@@ -52,7 +52,9 @@ import java.io.Serializable;
         @NamedQuery(name = WidgetRating.WIDGET_RATING_BY_WIDGET_AND_USER,
                 query = "SELECT wr FROM WidgetRating wr WHERE wr.widgetId = :widgetId AND wr.userId = :userId"),
         @NamedQuery(name = WidgetRating.WIDGET_USER_RATING,
-                query = "SELECT wr.score FROM WidgetRating wr WHERE wr.widgetId = :widgetId AND wr.userId = :userId")
+                query = "SELECT wr.score FROM WidgetRating wr WHERE wr.widgetId = :widgetId AND wr.userId = :userId"),
+        @NamedQuery(name = WidgetRating.DELETE_ALL_BY_USER,
+                query="DELETE FROM WidgetRating wr WHERE wr.userId = :userId")
 })
 @XmlRootElement
 public class WidgetRating implements BasicEntity, Serializable {
@@ -64,6 +66,7 @@ public class WidgetRating implements BasicEntity, Serializable {
     public static final String WIDGET_ALL_USER_RATINGS = "widget_all_user_ratings";
     public static final String WIDGET_RATING_BY_WIDGET_AND_USER = "widget_rating_by_widget_and_user";
     public static final String WIDGET_USER_RATING = "widget_user_rating";
+    public static final String DELETE_ALL_BY_USER = "delete_all_for_user";
 
     public static final String PARAM_WIDGET_ID = "widgetId";
     public static final String PARAM_USER_ID = "userId";

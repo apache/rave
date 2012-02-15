@@ -20,12 +20,7 @@
 package org.apache.rave.portal.service.impl;
 
 import org.apache.rave.persistence.Repository;
-import org.apache.rave.portal.model.Page;
-import org.apache.rave.portal.model.PageLayout;
-import org.apache.rave.portal.model.Region;
-import org.apache.rave.portal.model.RegionWidget;
-import org.apache.rave.portal.model.User;
-import org.apache.rave.portal.model.Widget;
+import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.repository.*;
 import org.apache.rave.portal.service.PageService;
 import org.apache.rave.portal.service.UserService;
@@ -127,7 +122,13 @@ public class DefaultPageService implements PageService {
         //TODO RAVE-237:  return values in the correct order.  We only need to update sequences when there is a change in order
         List<Page> pages = pageRepository.getAllPages(user.getEntityId(), USER_PAGE_TYPE_ID);
         updatePageRenderSequences(pages);
-    }    
+    }
+
+    @Override
+    @Transactional
+    public int deletePages(long userId, long pageTypeId) {
+        return pageRepository.deletePages(userId, pageTypeId);
+    }
     
     @Override
     @Transactional
@@ -189,6 +190,16 @@ public class DefaultPageService implements PageService {
     @Transactional
     public Page movePageToDefault(long pageId) {    
         return doMovePage(pageId, MOVE_PAGE_DEFAULT_POSITION_INDEX);    
+    }
+
+    @Override
+    public PageType getUserPageType() {
+        return pageTypeRepository.getUserPageType();
+    }
+
+    @Override
+    public PageType getPersonProfilePageType() {
+        return pageTypeRepository.getPersonProfilePageType();
     }
 
     @Override
@@ -343,7 +354,7 @@ public class DefaultPageService implements PageService {
         page.setRenderSequence(renderSequence);
         page.setRegions(regions);
         // set this as a "user" page type
-        page.setPageType(pageTypeRepository.get(USER_PAGE_TYPE_ID));
+        page.setPageType(pageTypeRepository.getUserPageType());
         pageRepository.save(page);
         
         return page;

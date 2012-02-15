@@ -71,4 +71,10 @@ public class DefaultWidgetRatingService implements WidgetRatingService {
         }
         repository.delete(widgetRating);
     }
+
+    @Override
+    @Transactional
+    public int removeAllWidgetRatings(Long userId) {
+        return repository.deleteAll(userId);
+    }
 }

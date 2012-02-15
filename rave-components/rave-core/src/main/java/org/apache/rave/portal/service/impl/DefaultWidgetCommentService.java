@@ -49,5 +49,10 @@ public class DefaultWidgetCommentService implements WidgetCommentService {
     public void removeWidgetComment(Long id) {
         widgetCommentRepository.delete(getWidgetComment(id));
     }
-        
+
+    @Override
+    @Transactional
+    public int deleteAll(Long userId) {
+        return widgetCommentRepository.deleteAll(userId);
+    }
 }

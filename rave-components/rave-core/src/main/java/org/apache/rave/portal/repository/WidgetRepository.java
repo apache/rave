@@ -168,4 +168,11 @@ public interface WidgetRepository extends Repository<Widget> {
      */
      int getCountByTag(String tagKeyword);
 
+    /**
+     * Sets the widget owner to null for any widgets owned by the supplied userId
+     *
+     * @param userId the widget owner to unassign
+     * @return the number of widgets updated
+     */
+     int unassignWidgetOwner(long userId);
 }

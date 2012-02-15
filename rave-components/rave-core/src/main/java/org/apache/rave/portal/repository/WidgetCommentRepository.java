@@ -18,10 +18,12 @@ package org.apache.rave.portal.repository;
 import org.apache.rave.persistence.Repository;
 import org.apache.rave.portal.model.WidgetComment;
 
-/**
- *
- * @author ISIS
- */
 public interface WidgetCommentRepository extends Repository<WidgetComment> {
-    
+    /**
+     * Delete all Widget Comments for a userId
+     *
+     * @param userId
+     * @return count of comments deleted
+     */
+    int deleteAll(Long userId);
 }

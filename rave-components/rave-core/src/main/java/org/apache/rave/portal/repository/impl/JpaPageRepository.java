@@ -24,6 +24,7 @@ import org.apache.rave.portal.model.Page;
 import org.apache.rave.portal.model.PageType;
 import org.apache.rave.portal.repository.PageRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.TypedQuery;
 import java.util.List;
@@ -41,5 +42,13 @@ public class JpaPageRepository extends AbstractJpaRepository<Page> implements Pa
         query.setParameter("userId", userId);
         query.setParameter("pageTypeId", pageTypeId);
         return query.getResultList();
+    }
+
+    @Override
+    public int deletePages(Long userId, Long pageTypeId) {
+        TypedQuery<Page> query = manager.createNamedQuery(Page.DELETE_BY_USER_ID_AND_PAGE_TYPE_ID, Page.class);
+        query.setParameter("userId", userId);
+        query.setParameter("pageTypeId", pageTypeId);
+        return query.executeUpdate();
     }
 }

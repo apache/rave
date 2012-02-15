@@ -74,13 +74,6 @@ public interface UserRepository extends Repository<User> {
     int getCountByUsernameOrEmail(String searchTerm);
 
     /**
-     * Deletes the User and all its trails in the database
-     *
-     * @param user {@link User} to delete
-     */
-    void removeUser(User user);
-
-    /**
      * List of users whom have added the supplied widget to one or more pages
      *
      * @param widgetId the entityId of the Widget to search

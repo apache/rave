@@ -19,9 +19,11 @@
 package org.apache.rave.portal.repository.impl;
 
 import org.apache.rave.portal.model.Page;
+import org.hamcrest.CoreMatchers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,13 +33,10 @@ import javax.persistence.PersistenceContext;
 import java.util.List;
 
 import org.apache.rave.portal.repository.PageRepository;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.*;
 
-@Transactional
+@Transactional(readOnly=true)
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:test-dataContext.xml", "classpath:test-applicationContext.xml"})
 public class JpaPageRepositoryTest {
@@ -95,5 +94,15 @@ public class JpaPageRepositoryTest {
         assertThat(p, is(nullValue()));
     }
 
-
+    @Test
+    @Transactional(readOnly=false)
+    @Rollback(true)
+    public void deletePages_userPageType() {
+        int numPages = repository.getAllPages(USER_ID, USER_PAGE_TYPE_ID).size();
+        assertThat(numPages > 0, is(true));
+        int deletedPages = repository.deletePages(USER_ID, USER_PAGE_TYPE_ID);
+        assertThat(deletedPages, is(numPages));
+        // ensure pages are deleted
+        assertThat(repository.getAllPages(USER_ID, USER_PAGE_TYPE_ID).isEmpty(), is(true));
+    }
 }

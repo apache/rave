@@ -19,7 +19,7 @@
 
 package org.apache.rave.portal.repository.impl;
 
-import org.apache.rave.portal.model.WidgetRating;
+import org.apache.rave.portal.repository.WidgetCommentRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,39 +31,23 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import org.apache.rave.portal.repository.WidgetRatingRepository;
-import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.*;
 
 /**
- * Test for {@link org.apache.rave.portal.repository.impl.JpaWidgetRatingRepository}
+ * Test for {@link JpaWidgetCommentRepository}
  */
 @Transactional(readOnly=true)
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:test-dataContext.xml", "classpath:test-applicationContext.xml"})
-public class JpaWidgetRatingRepositoryTest {
-    private Long VALID_WIDGET_ID = 1L;
+public class JpaWidgetCommentRepositoryTest {
     private Long VALID_USER_ID = 1L;
-    private Long VALID_WIDGET_RATING_ID = 1L;
-
-    private Long INVALID_WIDGET_ID = 123L;
-    private Long INVALID_USER_ID = 234L;
     
     @PersistenceContext
     private EntityManager sharedManager;
 
     @Autowired
-    private WidgetRatingRepository repository;
-
-    @Test
-    public void getByWidgetIdAndUserId_found() {
-        assertThat(repository.get(VALID_WIDGET_RATING_ID), is(repository.getByWidgetIdAndUserId(VALID_WIDGET_ID, VALID_USER_ID)));
-    }
-
-    @Test
-    public void getByWidgetIdAndUserId_missing() {
-        assertThat(repository.getByWidgetIdAndUserId(INVALID_WIDGET_ID, INVALID_USER_ID), is(nullValue(WidgetRating.class)));       
-    }
+    private WidgetCommentRepository repository;
 
     @Test
     @Transactional(readOnly=false)

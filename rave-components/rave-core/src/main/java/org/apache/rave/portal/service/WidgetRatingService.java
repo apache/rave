@@ -63,4 +63,12 @@ public interface WidgetRatingService {
     @PreAuthorize("hasPermission(new org.apache.rave.portal.security.impl.RaveSecurityContext(#userId, 'org.apache.rave.portal.model.User'), 'org.apache.rave.portal.model.WidgetRating', 'delete')")
     void removeWidgetRating(Long widgetId, Long userId);
 
+    /**
+     * Removes all widget ratings for a userId, for all widgets
+     *
+     * @param userId
+     * @return the number of widget ratings deleted
+     */
+    @PreAuthorize("hasPermission(new org.apache.rave.portal.security.impl.RaveSecurityContext(#userId, 'org.apache.rave.portal.model.User'), 'org.apache.rave.portal.model.WidgetRating', 'delete')")
+    int removeAllWidgetRatings(Long userId);
 }

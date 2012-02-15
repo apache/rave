@@ -54,6 +54,7 @@ public class DefaultPageServiceTest {
     private final Long VALID_REGION_WIDGET_ID = 1L;
     private final Long INVALID_REGION_WIDGET_ID = 100L;
     private final Long USER_PAGE_TYPE_ID = 1L;
+    private final Long VALID_USER_ID = 9876L;
             
     private Region targetRegion;
     private Region originalRegion;
@@ -128,7 +129,6 @@ public class DefaultPageServiceTest {
 
     @Test
     public void getAllPages() {
-        final Long VALID_USER_ID = 1L;
         final List<Page> VALID_PAGES = new ArrayList<Page>();
 
         expect(pageRepository.getAllPages(VALID_USER_ID, userPageType.getEntityId())).andReturn(VALID_PAGES);
@@ -214,7 +214,7 @@ public class DefaultPageServiceTest {
         expect(pageLayoutRepository.getByPageLayoutCode(PAGE_LAYOUT_CODE)).andReturn(pageLayout);
         expect(pageRepository.save(expectedPage)).andReturn(expectedPage);
         expect(pageRepository.getAllPages(user.getEntityId(), userPageType.getEntityId())).andReturn(new ArrayList<Page>());
-        expect(pageTypeRepository.get(USER_PAGE_TYPE_ID)).andReturn(userPageType);
+        expect(pageTypeRepository.getUserPageType()).andReturn(userPageType);
         replay(userService, pageLayoutRepository, pageRepository, pageTypeRepository);
 
         Page newPage = pageService.addNewDefaultUserPage(user.getEntityId());
@@ -264,7 +264,17 @@ public class DefaultPageServiceTest {
         pageService.deletePage(INVALID_PAGE_ID);
         verify(userService);
         verify(pageRepository);
+    }
+
+    @Test
+    public void deletePages() {                      
+        final int EXPECTED_DELETED_PAGE_COUNT = 7;
+        expect(pageRepository.deletePages(VALID_USER_ID, USER_PAGE_TYPE_ID)).andReturn(EXPECTED_DELETED_PAGE_COUNT);     
+        replay(pageRepository);
+        assertThat(pageService.deletePages(VALID_USER_ID, USER_PAGE_TYPE_ID), is(EXPECTED_DELETED_PAGE_COUNT));
+        verify(pageRepository);
     }    
+    
     
     @Test
     public void moveRegionWidget_validMiddle() {
@@ -890,5 +900,21 @@ public class DefaultPageServiceTest {
         expect(regionWidgetRepository.get(WIDGET_ID)).andReturn(null);
 
         pageService.moveRegionWidgetToPage(VALID_REGION_WIDGET_ID, TO_PAGE_ID);
+    }
+    
+    @Test
+    public void getUserPageType() {
+        expect(pageTypeRepository.getUserPageType()).andReturn(userPageType);
+        replay(pageTypeRepository);
+        assertThat(pageService.getUserPageType(), is(userPageType));
+        verify(pageTypeRepository);
+    }
+
+    @Test
+    public void getPersonProfilePageType() {
+        expect(pageTypeRepository.getPersonProfilePageType()).andReturn(personProfilePageType);
+        replay(pageTypeRepository);
+        assertThat(pageService.getPersonProfilePageType(), is(personProfilePageType));
+        verify(pageTypeRepository);
     }
 }

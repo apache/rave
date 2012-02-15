@@ -55,7 +55,8 @@ import java.util.List;
         @NamedQuery(name = Widget.WIDGET_GET_BY_URL, query = Widget.SELECT_W_FROM_WIDGET_W + Widget.WHERE_CLAUSE_URL) ,
 
         @NamedQuery(name = Widget.WIDGET_GET_BY_TAG, query = Widget.SELECT_W_FROM_WIDGET_W + Widget.JOIN_TAGS+Widget.ORDER_BY_TITLE_ASC),
-        @NamedQuery(name = Widget.WIDGET_COUNT_BY_TAG, query = Widget.SELECT_COUNT_W_FROM_WIDGET_W + Widget.JOIN_TAGS)
+        @NamedQuery(name = Widget.WIDGET_COUNT_BY_TAG, query = Widget.SELECT_COUNT_W_FROM_WIDGET_W + Widget.JOIN_TAGS),
+        @NamedQuery(name = Widget.WIDGET_UNASSIGN_OWNER, query = "UPDATE Widget w SET w.owner = null WHERE w.owner.entityId = :owner")
 })
 public class Widget implements BasicEntity, Serializable {
     private static final long serialVersionUID = 1L;
@@ -77,6 +78,7 @@ public class Widget implements BasicEntity, Serializable {
     public static final String WIDGET_GET_BY_URL = "Widget.getByUrl";
     public static final String WIDGET_GET_BY_TAG = "Widget.getByTag";
     public static final String WIDGET_COUNT_BY_TAG = "Widget.countByTag";
+    public static final String WIDGET_UNASSIGN_OWNER = "Widget.unassignOwner";
 
     static final String SELECT_W_FROM_WIDGET_W = "SELECT w FROM Widget w ";
     static final String SELECT_COUNT_W_FROM_WIDGET_W = "SELECT count(w) FROM Widget w ";

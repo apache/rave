@@ -20,10 +20,19 @@ import org.apache.rave.portal.model.WidgetComment;
 import org.apache.rave.portal.repository.WidgetCommentRepository;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.TypedQuery;
+
 @Repository
 public class JpaWidgetCommentRepository extends AbstractJpaRepository<WidgetComment> implements WidgetCommentRepository {
     
-    JpaWidgetCommentRepository() {
+    public JpaWidgetCommentRepository() {
         super(WidgetComment.class);
+    }
+
+    @Override
+    public int deleteAll(Long userId) {
+        TypedQuery<WidgetComment> query = manager.createNamedQuery(WidgetComment.DELETE_ALL_BY_USER, WidgetComment.class);
+        query.setParameter("userId", userId);
+        return query.executeUpdate();
     }
 }

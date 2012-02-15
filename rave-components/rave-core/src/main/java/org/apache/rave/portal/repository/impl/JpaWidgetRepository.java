@@ -270,6 +270,13 @@ public class JpaWidgetRepository extends AbstractJpaRepository<Widget> implement
         return countResult.intValue();
     }
 
+    @Override
+    public int unassignWidgetOwner(long userId) {
+        Query query = manager.createNamedQuery(Widget.WIDGET_UNASSIGN_OWNER);
+        query.setParameter(Widget.PARAM_OWNER, userId);
+        return query.executeUpdate();
+    }
+
     /**
      * Sets input as free text search term to a query
      *

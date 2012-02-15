@@ -35,7 +35,7 @@ import static org.apache.rave.persistence.jpa.util.JpaUtil.getSingleResult;
 @Repository
 public class JpaWidgetRatingRepository extends AbstractJpaRepository<WidgetRating> implements WidgetRatingRepository {
 
-    protected JpaWidgetRatingRepository() {
+    public JpaWidgetRatingRepository() {
         super(WidgetRating.class);
     }
 
@@ -47,5 +47,12 @@ public class JpaWidgetRatingRepository extends AbstractJpaRepository<WidgetRatin
         query.setParameter(WidgetRating.PARAM_USER_ID, userId);
         final List<WidgetRating> resultList = query.getResultList();
         return getSingleResult(resultList);
+    }
+
+    @Override
+    public int deleteAll(Long userId) {
+        TypedQuery<WidgetRating> query = manager.createNamedQuery(WidgetRating.DELETE_ALL_BY_USER, WidgetRating.class);
+        query.setParameter("userId", userId);
+        return query.executeUpdate();
     }
 }

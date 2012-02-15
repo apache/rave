@@ -19,6 +19,7 @@
 package org.apache.rave.portal.service;
 
 import org.apache.rave.portal.model.Page;
+import org.apache.rave.portal.model.PageType;
 import org.apache.rave.portal.model.Region;
 import org.apache.rave.portal.model.RegionWidget;
 
@@ -100,6 +101,15 @@ public interface PageService {
      */
     @PreAuthorize("hasPermission(#pageId, 'org.apache.rave.portal.model.Page', 'delete')") 
     void deletePage(long pageId);
+
+    /**
+     * Deletes all pages of the supplied pageTypeId for the userId
+     *
+     * @param userId
+     * @param pageTypeId
+     */
+    @PreAuthorize("hasPermission(new org.apache.rave.portal.security.impl.RaveSecurityContext(#userId, 'org.apache.rave.portal.model.User'), 'org.apache.rave.portal.model.Page', 'delete')")
+    int deletePages(long userId, long pageTypeId);
     
     /**
      * Moves a Region widget's position in a region or across regions
@@ -174,5 +184,19 @@ public interface PageService {
      * @return the updated Page object containing its new render sequence
      */
     @PreAuthorize("hasPermission(#pageId, 'org.apache.rave.portal.model.Page', 'update')") 
-    Page movePageToDefault(long pageId);  
+    Page movePageToDefault(long pageId);
+
+    /**
+     * Returns the PageType object representing User pages
+     *
+     * @return  the User PageType object
+     */
+    PageType getUserPageType();
+
+    /**
+     * Returns the PageType object representing Person Profile pages
+     *
+     * @return  the Person Profile PageType object
+     */
+    PageType getPersonProfilePageType();
 }
