@@ -37,11 +37,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping(value = {"/userInfo/*", "/userInfo", "/userInfo/"})
@@ -55,6 +51,26 @@ public class ProfileController {
 	public ProfileController(UserService userService) {
 		this.userService = userService;
 	}
+
+    /**
+	 * Views the main page of another user's profile
+	 *
+     * @param username			    username (allows for a period in the username)
+     * @param model                 {@link Model} map
+     * @param referringPageId		page reference id (optional)
+	 * @return the view name of the user profile page
+	 */
+	@RequestMapping(value = {"/person/{username:.*}"}, method = RequestMethod.GET)
+	public String setUpPersonProfile(@PathVariable String username, ModelMap model, @RequestParam(required=false) Long referringPageId) {
+		logger.debug("Initializing User Info page");
+
+		User user = userService.getUserByUsername(username);
+
+		//set the posts tag page as default for first setup
+        addAttributesToModel(model, user, referringPageId, ViewNames.ABOUT_TAG_PAGE);
+
+		return ViewNames.ALL_USER_INFO;
+	}
 	
 	/**
 	 * Views the main page of the user profile
@@ -65,14 +81,14 @@ public class ProfileController {
 	 */
 	@RequestMapping(method = RequestMethod.GET)
 	public String setUpForm(ModelMap model, 
-							@RequestParam long referringPageId) {
+							@RequestParam Long referringPageId) {
 		logger.debug("Initializing User Info page");
 		
 		User user = userService.getAuthenticatedUser();
 		
 		//set the posts tag page as default for first setup 
         addAttributesToModel(model, user, referringPageId, ViewNames.ABOUT_TAG_PAGE);
-			        
+
 		return ViewNames.USER_INFO;
 	}
 	
@@ -86,7 +102,7 @@ public class ProfileController {
 	 */
 	@RequestMapping(method = RequestMethod.POST)
 	public String updateUserProfile(ModelMap model, 
-									@RequestParam long referringPageId,
+									@RequestParam Long referringPageId,
 									@ModelAttribute("updatedUser") User updatedUser) {
 		logger.debug("Updating User's profile information");
 		
@@ -112,7 +128,7 @@ public class ProfileController {
 	/*
 	 * Function to add attributes to model map
 	 */
-	private void addAttributesToModel(ModelMap model, User user, long referringPageId, String defaultTagPage) {
+	private void addAttributesToModel(ModelMap model, User user, Long referringPageId, String defaultTagPage) {
     	model.addAttribute(ModelKeys.USER_PROFILE, user);
     	model.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
     	model.addAttribute(ModelKeys.DEFAULT_TAG_PAGE, defaultTagPage);

@@ -35,6 +35,7 @@ public class ViewNames {
     public static final String NEW_ACCOUNT = USER_PREFIX + "newaccount";
     public static final String USER_PROFILE = USER_PREFIX + "userProfile";
     public static final String USER_INFO = USER_PREFIX + "profile";
+    public static final String ALL_USER_INFO = USER_PREFIX + "personProfile";
 
     public static final String ADMIN_HOME = ADMIN_PREFIX + "home";
     public static final String ADMIN_PREFERENCES = ADMIN_PREFIX + "preferences";

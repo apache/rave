@@ -50,18 +50,18 @@ private ProfileController userInfoController;
 	}
 	
 	@Test
-	public void setUpForm_ShouldAddAttributeForAuthenticatedUser() {
-		//creating a mock authenticated user
-		final User authUser = new User();
+	public void setUpPersonProfile_ShouldAddAttributeForUser() {
+		//creating a mock user
+		final User user = new User();
 		final ModelMap model = new ModelMap();
 		final int modelSize = 3;
-		final long referringPageId = 1L;
+		final String username="Canonical";
 		String userProfile = new String(ModelKeys.USER_PROFILE);
 		
-		expect(userService.getAuthenticatedUser()).andReturn(authUser).anyTimes();
+		expect(userService.getUserByUsername(username)).andReturn(user).anyTimes();
 		replay(userService);
 		
-		userInfoController.setUpForm(model, referringPageId);
+		userInfoController.setUpPersonProfile(username, model, null);
 		
 		//assert that the model is not null
 		assertThat(model, CoreMatchers.notNullValue());
@@ -75,6 +75,35 @@ private ProfileController userInfoController;
 		//assert that the model does not contain authenticated user as null
 		assertThat(model.get(userProfile), CoreMatchers.notNullValue());
 		
+		verify(userService);
+	}
+
+    @Test
+	public void setUpForm_ShouldAddAttributeForAuthenticatedUser() {
+		//creating a mock authenticated user
+		final User authUser = new User();
+		final ModelMap model = new ModelMap();
+		final int modelSize = 3;
+		final long referringPageId = 1L;
+		String userProfile = new String(ModelKeys.USER_PROFILE);
+
+		expect(userService.getAuthenticatedUser()).andReturn(authUser).anyTimes();
+		replay(userService);
+
+		userInfoController.setUpForm(model, referringPageId);
+
+		//assert that the model is not null
+		assertThat(model, CoreMatchers.notNullValue());
+
+		//assert that the model size is three
+		assertThat(model.size(), CoreMatchers.equalTo(modelSize));
+
+		//assert that the model does contain an attribute associated with the authenticated user after setUpForm() is called
+		assertThat(model.containsAttribute(userProfile), CoreMatchers.equalTo(true));
+
+		//assert that the model does not contain authenticated user as null
+		assertThat(model.get(userProfile), CoreMatchers.notNullValue());
+
 		verify(userService);
 	}
 	
