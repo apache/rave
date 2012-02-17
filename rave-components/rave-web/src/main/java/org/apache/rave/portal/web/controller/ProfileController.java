@@ -61,8 +61,8 @@ public class ProfileController {
 	 * @return the view name of the user profile page
 	 */
 	@RequestMapping(value = {"/person/{username:.*}"}, method = RequestMethod.GET)
-	public String setUpPersonProfile(@PathVariable String username, ModelMap model, @RequestParam(required=false) Long referringPageId) {
-		logger.debug("Initializing User Info page");
+	public String viewPersonProfile(@PathVariable String username, ModelMap model, @RequestParam(required = false) Long referringPageId) {
+		logger.debug("Viewing person profile for: " + username);
 
 		User user = userService.getUserByUsername(username);
 

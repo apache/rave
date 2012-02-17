@@ -50,7 +50,7 @@ private ProfileController userInfoController;
 	}
 	
 	@Test
-	public void setUpPersonProfile_ShouldAddAttributeForUser() {
+	public void viewPersonProfile_ShouldAddAttributeForUser() {
 		//creating a mock user
 		final User user = new User();
 		final ModelMap model = new ModelMap();
@@ -61,7 +61,7 @@ private ProfileController userInfoController;
 		expect(userService.getUserByUsername(username)).andReturn(user).anyTimes();
 		replay(userService);
 		
-		userInfoController.setUpPersonProfile(username, model, null);
+		userInfoController.viewPersonProfile(username, model, null);
 		
 		//assert that the model is not null
 		assertThat(model, CoreMatchers.notNullValue());
