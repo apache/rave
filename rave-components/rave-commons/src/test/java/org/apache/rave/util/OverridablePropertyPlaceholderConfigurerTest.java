@@ -19,10 +19,11 @@
 
 package org.apache.rave.util;
 
-import org.junit.Test;
+import org.junit.*;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.*;
 
 /**
  * Test for {@link OverridablePropertyPlaceholderConfigurer}
@@ -30,11 +31,19 @@ import static org.junit.Assert.assertEquals;
 public class OverridablePropertyPlaceholderConfigurerTest {
     
     @Test
-    public void testSetLocation() throws Exception {
+    public void setLocation()  {
         System.setProperty("portal.override.properties", "classpath:portal-test.properties");
         ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("applicationContext-test.xml");
         final StringBuffer testBean = (StringBuffer) context.getBean("testBean");
         assertEquals("Dummy value", testBean.toString());
+    }
 
+    @Test
+    public void testGetResolvedProps() {
+        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("applicationContext-test.xml");
+        final OverridablePropertyPlaceholderConfigurer portalPropertyPlaceholder = (OverridablePropertyPlaceholderConfigurer) context.getBean("portalPropertyPlaceholder");
+
+        assertThat(portalPropertyPlaceholder.getResolvedProps().get("portal.opensocial_engine.root"), is("127.0.0.1:8080"));
+        assertThat(portalPropertyPlaceholder.getResolvedProps().get("dummy.key"), is("Dummy value"));
     }
 }

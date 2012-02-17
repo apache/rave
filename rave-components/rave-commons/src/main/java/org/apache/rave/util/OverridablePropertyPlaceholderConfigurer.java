@@ -20,10 +20,14 @@
 package org.apache.rave.util;
 
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
+
+import java.util.*;
 
 /**
  * Reads property from the default location unless a system property is set.
@@ -33,6 +37,7 @@ public class OverridablePropertyPlaceholderConfigurer extends PropertyPlaceholde
 
     private static final String CLASSPATH = "classpath:";
     private String systemPropertyName;
+    private Map<String, String> resolvedProps;
 
     @Override
     public void setLocation(Resource location) {
@@ -52,11 +57,27 @@ public class OverridablePropertyPlaceholderConfigurer extends PropertyPlaceholde
         super.setLocation(locationResource);
     }
 
+    @Override
+    protected void processProperties(ConfigurableListableBeanFactory beanFactoryToProcess, Properties props) throws BeansException {
+        super.processProperties(beanFactoryToProcess, props);
+
+        // load the application properties into a map that is exposed via public getter
+        resolvedProps = new HashMap<String, String>();
+        for (Object key : props.keySet()) {
+            String keyStr = key.toString();
+            resolvedProps.put(keyStr, resolvePlaceholder(keyStr, props, SYSTEM_PROPERTIES_MODE_OVERRIDE));
+        }
+    }
+
     public void setSystemPropertyName(String systemPropertyName) {
         this.systemPropertyName = systemPropertyName;
     }
 
     public String getSystemPropertyName() {
         return systemPropertyName;
+    }
+
+    public Map<String, String> getResolvedProps() {
+        return Collections.unmodifiableMap(resolvedProps);
     }
 }
