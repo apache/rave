@@ -51,7 +51,7 @@ public class JpaPageLayoutRepositoryTest {
     @Test
     public void getAll() {
         List<PageLayout> pageLayouts = repository.getAll();
-        assertThat(pageLayouts.isEmpty(), is(false));
+        assertThat(pageLayouts.size(), is(8));
         
         // test that the query returns the pages in proper render sequence order
         Long lastRenderSequence = -1L;
@@ -61,6 +61,20 @@ public class JpaPageLayoutRepositoryTest {
             lastRenderSequence = currentRenderSequence;
         }
     }
+
+    @Test
+    public void getAllUserSelectable() {
+        List<PageLayout> pageLayouts = repository.getAllUserSelectable();
+        assertThat(pageLayouts.size(), is(7));
+        // test that the query returns the pages in proper render sequence order
+        Long lastRenderSequence = -1L;
+        for (PageLayout pl : pageLayouts) {
+            Long currentRenderSequence = pl.getRenderSequence();
+            assertThat(currentRenderSequence > lastRenderSequence, is(true));
+            lastRenderSequence = currentRenderSequence;
+            assertThat(pl.isUserSelectable(), is(true));
+        }
+    }    
     
     @Test
     public void getByPageLayoutCode() {

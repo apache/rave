@@ -62,6 +62,18 @@ public class DefaultPageLayoutServiceTest {
 
         verify(pageLayoutRepository);
     }
+
+    @Test
+    public void getAllUserSelectable() {
+        final List<PageLayout> VALID_PAGE_LAYOUTS = new ArrayList<PageLayout>();
+
+        expect(pageLayoutRepository.getAllUserSelectable()).andReturn(VALID_PAGE_LAYOUTS);
+        replay(pageLayoutRepository);
+
+        assertThat(pageLayoutService.getAllUserSelectable(), sameInstance(VALID_PAGE_LAYOUTS));
+
+        verify(pageLayoutRepository);
+    }
     
     @Test
     public void getPageLayoutByCode() {

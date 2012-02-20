@@ -45,5 +45,10 @@ public class DefaultPageLayoutService implements PageLayoutService {
     public List<PageLayout> getAll() {
         return pageLayoutRepository.getAll();
     }
+
+    @Override
+    public List<PageLayout> getAllUserSelectable() {
+        return pageLayoutRepository.getAllUserSelectable();
+    }
 }
 

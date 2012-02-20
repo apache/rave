@@ -96,7 +96,7 @@ public class PageControllerTest {
         expect(userService.getAuthenticatedUser()).andReturn(validUser).anyTimes(); 
         expect(pageService.getAllUserPages(USER_ID)).andReturn(allPages);
         expect(pageService.getPageFromList(OTHER_PAGE_ID, allPages)).andReturn(otherPage);
-        expect(pageLayoutService.getAll()).andReturn(allPageLayouts);
+        expect(pageLayoutService.getAllUserSelectable()).andReturn(allPageLayouts);
         replay(userService, pageService, pageLayoutService);
 
         String results = pageController.view(OTHER_PAGE_ID, model, request);
@@ -116,7 +116,7 @@ public class PageControllerTest {
         expect(userService.getAuthenticatedUser()).andReturn(validUser).anyTimes(); 
         expect(pageService.getAllUserPages(USER_ID)).andReturn(allPages);
         expect(pageService.getPageFromList(OTHER_PAGE_ID, allPages)).andReturn(otherPage);
-        expect(pageLayoutService.getAll()).andReturn(allPageLayouts);
+        expect(pageLayoutService.getAllUserSelectable()).andReturn(allPageLayouts);
         replay(userService, pageService, pageLayoutService);
 
         String results = pageController.view(OTHER_PAGE_ID, model, request);
@@ -139,7 +139,7 @@ public class PageControllerTest {
         expect(pageService.getAllUserPages(USER_ID)).andReturn(pages).times(2);
         expect(pageService.addNewDefaultUserPage(validUser.getEntityId())).andReturn(defaultPage);
         expect(pageService.getPageFromList(OTHER_PAGE_ID, pages)).andReturn(defaultPage);
-        expect(pageLayoutService.getAll()).andReturn(allPageLayouts);
+        expect(pageLayoutService.getAllUserSelectable()).andReturn(allPageLayouts);
         replay(userService, pageService, pageLayoutService);
         
         String results = pageController.view(OTHER_PAGE_ID, model, request);
@@ -159,7 +159,7 @@ public class PageControllerTest {
         expect(userService.getAuthenticatedUser()).andReturn(validUser).anyTimes(); 
         expect(pageService.getAllUserPages(USER_ID)).andReturn(allPages);
         expect(pageService.getDefaultPageFromList(allPages)).andReturn(defaultPage);
-        expect(pageLayoutService.getAll()).andReturn(allPageLayouts);
+        expect(pageLayoutService.getAllUserSelectable()).andReturn(allPageLayouts);
         replay(userService, pageService, pageLayoutService);
 
         String results = pageController.viewDefault(model, request);
@@ -182,7 +182,7 @@ public class PageControllerTest {
         expect(pageService.getAllUserPages(USER_ID)).andReturn(pages).times(2);
         expect(pageService.addNewDefaultUserPage(validUser.getEntityId())).andReturn(defaultPage);
         expect(pageService.getDefaultPageFromList(pages)).andReturn(defaultPage);
-        expect(pageLayoutService.getAll()).andReturn(allPageLayouts);
+        expect(pageLayoutService.getAllUserSelectable()).andReturn(allPageLayouts);
         replay(userService, pageService, pageLayoutService);
 
         String results = pageController.viewDefault(model, request);

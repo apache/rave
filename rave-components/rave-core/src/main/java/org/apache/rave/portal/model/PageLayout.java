@@ -40,7 +40,8 @@ import java.io.Serializable;
 @Table(name="page_layout")
 @NamedQueries({
     @NamedQuery(name=PageLayout.PAGELAYOUT_GET_BY_LAYOUT_CODE, query = "select pl from PageLayout pl where pl.code = :code"),
-    @NamedQuery(name=PageLayout.PAGELAYOUT_GET_ALL, query="select pl from PageLayout pl order by pl.renderSequence")
+    @NamedQuery(name=PageLayout.PAGELAYOUT_GET_ALL, query="select pl from PageLayout pl order by pl.renderSequence"),
+    @NamedQuery(name=PageLayout.PAGELAYOUT_GET_ALL_USER_SELECTABLE, query="select pl from PageLayout pl where pl.userSelectable = true order by pl.renderSequence")
 })
 
 public class PageLayout implements BasicEntity, Serializable {
@@ -49,6 +50,7 @@ public class PageLayout implements BasicEntity, Serializable {
     // static string identifiers for JPA queries
     public static final String PAGELAYOUT_GET_BY_LAYOUT_CODE = "PageLayout.getByLayoutCode";
     public static final String PAGELAYOUT_GET_ALL = "PageLayout.getAll";
+    public static final String PAGELAYOUT_GET_ALL_USER_SELECTABLE = "PageLayout.getAllUserSelectable";
     
     @Id @Column(name="entity_id")
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "pageLayoutIdGenerator")
@@ -64,6 +66,10 @@ public class PageLayout implements BasicEntity, Serializable {
 
     @Basic(optional=false) @Column(name="render_sequence")
     private Long renderSequence;
+
+    @Basic
+    @Column(name = "user_selectable")
+    private boolean userSelectable;
 
     /**
      * Gets the persistence unique identifier
@@ -112,6 +118,14 @@ public class PageLayout implements BasicEntity, Serializable {
 
     public void setRenderSequence(Long renderSequence) {
         this.renderSequence = renderSequence;
+    }
+
+    public boolean isUserSelectable() {
+        return userSelectable;
+    }
+
+    public void setUserSelectable(boolean userSelectable) {
+        this.userSelectable = userSelectable;
     }
 
     @Override

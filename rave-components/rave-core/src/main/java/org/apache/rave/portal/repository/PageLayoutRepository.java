@@ -26,4 +26,5 @@ import java.util.List;
 public interface PageLayoutRepository extends Repository<PageLayout> {
     PageLayout getByPageLayoutCode(String codename);
     List<PageLayout> getAll();
+    List<PageLayout> getAllUserSelectable();
 }

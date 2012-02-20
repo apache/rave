@@ -25,4 +25,5 @@ import java.util.List;
 public interface PageLayoutService {
 	PageLayout getPageLayoutByCode(String code);
     List<PageLayout> getAll();
+    List<PageLayout> getAllUserSelectable();
 }

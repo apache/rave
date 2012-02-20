@@ -63,7 +63,7 @@ public class PageController {
     public String viewDefault(Model model, HttpServletRequest request) {
         List<Page> pages = getAllPagesForAuthenticatedUser();
         Page page = pageService.getDefaultPageFromList(pages);
-        List<PageLayout> pageLayouts = pageLayoutService.getAll();
+        List<PageLayout> pageLayouts = pageLayoutService.getAllUserSelectable();
         addAttributesToModel(model, page, pages, pageLayouts);
         return ControllerUtils.getDeviceAppropriateView(request, ViewNames.getPageView(page.getPageLayout().getCode()), ViewNames.MOBILE_HOME);
     }          
@@ -75,7 +75,7 @@ public class PageController {
         
         List<Page> pages = getAllPagesForAuthenticatedUser();
         Page page = pageService.getPageFromList(pageId, pages);
-        List<PageLayout> pageLayouts = pageLayoutService.getAll();
+        List<PageLayout> pageLayouts = pageLayoutService.getAllUserSelectable();
         addAttributesToModel(model, page, pages, pageLayouts);
         return ControllerUtils.getDeviceAppropriateView(request, ViewNames.getPageView(page.getPageLayout().getCode()), ViewNames.MOBILE_HOME);
     }

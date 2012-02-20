@@ -40,16 +40,20 @@ public class JpaPageLayoutRepository extends AbstractJpaRepository<PageLayout> i
         super(PageLayout.class);
     }
 
-	 @Override
-	 public PageLayout getByPageLayoutCode(String codename){
-		  TypedQuery<PageLayout>query = manager.createNamedQuery(PageLayout.PAGELAYOUT_GET_BY_LAYOUT_CODE,PageLayout.class);
-		  query.setParameter("code",codename);
-		  return getSingleResult(query.getResultList());
-	 }
+    @Override
+    public PageLayout getByPageLayoutCode(String codename){
+        TypedQuery<PageLayout>query = manager.createNamedQuery(PageLayout.PAGELAYOUT_GET_BY_LAYOUT_CODE,PageLayout.class);
+        query.setParameter("code",codename);
+        return getSingleResult(query.getResultList());
+    }
 
     @Override
     public List<PageLayout> getAll() {
         return manager.createNamedQuery(PageLayout.PAGELAYOUT_GET_ALL, PageLayout.class).getResultList();
     }
 
+    @Override
+    public List<PageLayout> getAllUserSelectable() {
+        return manager.createNamedQuery(PageLayout.PAGELAYOUT_GET_ALL_USER_SELECTABLE, PageLayout.class).getResultList();
+    }
 }
