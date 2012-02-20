@@ -186,6 +186,13 @@ header h1 {
     margin: 1em 0;
 }
 
+#personProfileContent {
+    background-color: transparent;
+    padding: 0 20px;
+    width: 90%;
+    margin: 1em auto 0;
+}
+
 /* Widgets */
 .widget {
     padding: 5px;
@@ -355,7 +362,7 @@ header h1 {
     width: 90%;
 }
 
-.columns_2_1, .columns_2_2 {
+.columns_2_1, .columns_2_2, .person_profile_1, .person_profile_2 {
     width: 45%;
 }
 
@@ -396,7 +403,7 @@ header h1 {
     clear: both;
 }
 
-.columns_2_2, .columns_3_3, .columns_3nwn_3, .columns_4_4, .columns_3nwn_1_bottom_3, .columns_3nwn_1_bottom_4 {
+.columns_2_2, .columns_3_3, .columns_3nwn_3, .columns_4_4, .columns_3nwn_1_bottom_3, .columns_3nwn_1_bottom_4, .person_profile_2 {
     margin-right: 0;
 }
 

@@ -44,6 +44,7 @@ public class DefaultPagePermissionEvaluator extends AbstractModelPermissionEvalu
     private PageRepository pageRepository;
     
     private final String PERSON_PROFILE_PAGE_TYPE_CODE;
+    private final String SUB_PAGE_PAGE_TYPE_CODE;
     private final String USER_PAGE_TYPE_CODE;
     
     @Autowired
@@ -51,6 +52,7 @@ public class DefaultPagePermissionEvaluator extends AbstractModelPermissionEvalu
         this.pageRepository = pageRepository;
 
         PERSON_PROFILE_PAGE_TYPE_CODE = pageTypeRepository.getPersonProfilePageType().getCode();
+        SUB_PAGE_PAGE_TYPE_CODE = pageTypeRepository.getSubPagePageType().getCode();
         USER_PAGE_TYPE_CODE = pageTypeRepository.getUserPageType().getCode();
     }
    
@@ -188,11 +190,15 @@ public class DefaultPagePermissionEvaluator extends AbstractModelPermissionEvalu
         }
     }
 
-    // anyone can read a USER page they own or anyone's PERSON_PROFILE page
+    // anyone can read a User page they own or anyone's Person Profile page and sub-pages
     private boolean isReadablePage(Authentication authentication, Page page, List<Page> trustedPageContainer, boolean trustedDomainObject) {
-        String pageTypeCode = (page.getPageType() == null) ? "" : page.getPageType().getCode();
-        return PERSON_PROFILE_PAGE_TYPE_CODE.equals(pageTypeCode) ||
+        return isPersonProfilePageOrSubPage(page) ||
                isPageOwner(authentication, page, trustedPageContainer, trustedDomainObject);
-
     }
+    
+    private boolean isPersonProfilePageOrSubPage(Page page) {
+        String pageTypeCode = (page.getPageType() == null) ? "" : page.getPageType().getCode();
+        String parentPageTypeCode = (page.getParentPage() == null) ? "" : page.getParentPage().getPageType().getCode();
+        return PERSON_PROFILE_PAGE_TYPE_CODE.equals(pageTypeCode) || PERSON_PROFILE_PAGE_TYPE_CODE.equals(parentPageTypeCode);
+    }  
 }

@@ -29,6 +29,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,6 +47,7 @@ public class DefaultPageService implements PageService {
     private final long MOVE_PAGE_DEFAULT_POSITION_INDEX = -1L;
     private final long USER_PAGE_TYPE_ID;
     private final long PERSON_PROFILE_PAGE_TYPE_ID;
+    private final long SUB_PAGE_PAGE_TYPE_ID;
 
     @Autowired
     public DefaultPageService(PageRepository pageRepository, 
@@ -67,6 +69,7 @@ public class DefaultPageService implements PageService {
 
         USER_PAGE_TYPE_ID = pageTypeRepository.getUserPageType().getEntityId();
         PERSON_PROFILE_PAGE_TYPE_ID = pageTypeRepository.getPersonProfilePageType().getEntityId();
+        SUB_PAGE_PAGE_TYPE_ID = pageTypeRepository.getSubPagePageType().getEntityId();
     }
 
     @Override
@@ -78,7 +81,12 @@ public class DefaultPageService implements PageService {
     public List<Page> getAllUserPages(long userId) {
         return pageRepository.getAllPages(userId, USER_PAGE_TYPE_ID);
     }
-    
+
+    @Override
+    public List<Page> getAllPersonProfilePages(long userId) {
+        return pageRepository.getAllPages(userId, PERSON_PROFILE_PAGE_TYPE_ID);
+    }
+
     @Override
     public Page getPageFromList(long pageId, List<Page> pages) {
         Page pageToFind = new Page(pageId);
@@ -96,15 +104,55 @@ public class DefaultPageService implements PageService {
     @Transactional
     public Page addNewUserPage(String pageName, String pageLayoutCode) {
         return addNewUserPage(userService.getAuthenticatedUser(), pageName, pageLayoutCode);
-    }    
+    }
     
     @Override
     @Transactional
     public Page addNewDefaultUserPage(long userId) {
         User user = userService.getUserById(userId);
         return addNewUserPage(user, defaultPageName, user.getDefaultPageLayout().getCode());
-    }       
-    
+    }
+
+    @Override
+    @Transactional
+    public Page addNewSubPage(String pageName, String pageLayoutCode, Page parentPage) {
+        User user = userService.getAuthenticatedUser();
+        PageLayout pageLayout = pageLayoutRepository.getByPageLayoutCode(pageLayoutCode);
+
+        // Create regions
+        List<Region> regions = new ArrayList<Region>();
+        List<Page> parentsSubPages = new ArrayList<Page>();
+        int regionCount;
+        for (regionCount = 0; regionCount < pageLayout.getNumberOfRegions(); regionCount++) {
+            Region region = new Region();
+            region.setRenderOrder(regionCount);
+            regions.add(region);
+        }
+
+        // Create a Page object and register it.
+        long renderSequence = (parentPage.getSubPages() != null) ? parentPage.getSubPages().size() + 1 : 1;
+        Page page = new Page();
+        page.setName(pageName);
+        page.setOwner(user);
+        page.setPageLayout(pageLayout);
+        page.setRenderSequence(renderSequence);
+        page.setRegions(regions);
+        // set this as a "sub-page" page type
+        page.setPageType(pageTypeRepository.getSubPagePageType());
+
+        // Properly sets both sides of the circular parent-child reference
+        page.setParentPage(parentPage);
+        if (parentPage.getSubPages() != null){
+            parentsSubPages = parentPage.getSubPages();
+        }
+        parentsSubPages.add(page);
+        parentPage.setSubPages(parentsSubPages);
+
+        pageRepository.save(page);
+
+        return page;
+    }
+
     @Override
     public String getDefaultPageName() {
         return defaultPageName;
@@ -200,6 +248,11 @@ public class DefaultPageService implements PageService {
     @Override
     public PageType getPersonProfilePageType() {
         return pageTypeRepository.getPersonProfilePageType();
+    }
+
+    @Override
+    public PageType getSubPagePageType() {
+        return pageTypeRepository.getSubPagePageType();
     }
 
     @Override

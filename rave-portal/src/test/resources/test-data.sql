@@ -91,6 +91,11 @@ insert into page_type (entity_id, code, description)
 values (@person_profile_page_type_id, 'PERSON_PROFILE', 'Person Profile pages which are only accessible by anyone and contain Person Profile information');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_type_seq;
 
+set @sub_page_type_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @page_type_seq);
+insert into page_type (entity_id, code, description)
+values (@sub_page_type_id, 'SUB_PAGE', 'Sub pages are contained within another page');
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_type_seq;
+
 -- end page types
 
   -- ***********************************************************************************

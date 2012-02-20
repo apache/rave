@@ -55,7 +55,7 @@ public class Page implements BasicEntity, Serializable {
     
     public static final String GET_BY_USER_ID_AND_PAGE_TYPE_ID = "Page.getByUserIdAndPageTypeId";
     public static final String DELETE_BY_USER_ID_AND_PAGE_TYPE_ID = "Page.deleteByUserIdAndPageTypeId";
-     
+
     @XmlAttribute(name="id")
     @Id @Column(name="entity_id")
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "pageIdGenerator")
@@ -70,6 +70,13 @@ public class Page implements BasicEntity, Serializable {
     @ManyToOne
     @JoinColumn(name = "owner_id")
     private User owner;
+
+    @OneToOne(cascade=CascadeType.ALL)
+    @JoinColumn(name="parent_page_id")
+    private Page parentPage;
+
+    @OneToMany(cascade=CascadeType.ALL, mappedBy="parentPage")
+    private List<Page> subPages;
 
     @Basic(optional=false) @Column(name="render_sequence")
     private Long renderSequence;
@@ -190,6 +197,22 @@ public class Page implements BasicEntity, Serializable {
         this.pageType = pageType;
     }
 
+    public Page getParentPage() {
+        return parentPage;
+    }
+
+    public void setParentPage(Page parentPage) {
+        this.parentPage = parentPage;
+    }
+
+    public List<Page> getSubPages() {
+        return subPages;
+    }
+
+    public void setSubPages(List<Page> subPages) {
+        this.subPages = subPages;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {
@@ -214,6 +237,6 @@ public class Page implements BasicEntity, Serializable {
 
     @Override
     public String toString() {
-        return "Page{" + "entityId=" + entityId + ", name=" + name + ", owner=" + owner + ", renderSequence=" + renderSequence + ", pageLayout=" + pageLayout + ", regions=" + regions + ", pageType=" + pageType + "}";
+        return "Page{" + "entityId=" + entityId + ", name=" + name + ", owner=" + owner + ", parentPage=" + parentPage + ", renderSequence=" + renderSequence + ", pageLayout=" + pageLayout + ", regions=" + regions + ", pageType=" + pageType + "}";
     }    
 }

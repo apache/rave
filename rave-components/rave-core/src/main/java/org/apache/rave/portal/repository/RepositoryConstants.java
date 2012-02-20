@@ -25,5 +25,6 @@ public final class RepositoryConstants {
     public final class PageType {
         public final static String USER = "USER";
         public final static String PERSON_PROFILE = "PERSON_PROFILE";
+        public final static String SUB_PAGE = "SUB_PAGE";
     }
 }

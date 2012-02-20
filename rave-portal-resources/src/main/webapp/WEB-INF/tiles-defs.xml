@@ -35,6 +35,11 @@
         <put-attribute name="layout" value="/WEB-INF/jsp/layouts/{1}.jsp"/>
     </definition>
 
+    <definition name="templates.user.personProfile.*" extends="templates.base">
+        <put-attribute name="body" value="/WEB-INF/jsp/views/personProfile.jsp"/>
+        <put-attribute name="layout" value="/WEB-INF/jsp/layouts/{1}.jsp"/>
+    </definition>
+
     <definition name="templates.user.*" extends="templates.base">
         <put-attribute name="pageTitleKey" value="page.{1}.title"/>
         <put-attribute name="body" value="/WEB-INF/jsp/views/{1}.jsp"/>

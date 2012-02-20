@@ -60,4 +60,9 @@ public class JpaPageTypeRepository extends AbstractJpaRepository<PageType> imple
     public PageType getPersonProfilePageType() {
         return getByCode(RepositoryConstants.PageType.PERSON_PROFILE);
     }
+
+    @Override
+    public PageType getSubPagePageType() {
+        return getByCode(RepositoryConstants.PageType.SUB_PAGE);
+    }
 }

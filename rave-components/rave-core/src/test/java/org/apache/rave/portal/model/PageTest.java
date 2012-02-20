@@ -33,8 +33,11 @@ import static org.junit.Assert.assertTrue;
 public class PageTest {
 	private Page page;
 	private long id;
+	private long parentId;
 	private String testName;
 	private User testOwner;
+    private Page parentPage;
+    private List<Page> subPages;
 	private PageLayout pageLayout;
 	private long renderSequence;
 	private List<Region> regions;
@@ -43,18 +46,25 @@ public class PageTest {
 	public void setup(){
 		page=new Page();
 		id=19191991L;
+        parentId = 12345L;
 		testName="testName";
 		testOwner=new User(id);
+        parentPage = new Page(parentId);
+        subPages = new ArrayList<Page>();
+        subPages.add(new Page());
+        subPages.add(new Page());
 		pageLayout=new PageLayout();
 		renderSequence=1223L;
 		
 		regions=new ArrayList<Region>();
 		regions.add(new Region());
 		regions.add(new Region());
-		
+
 		page.setEntityId(id);
 		page.setName(testName);
 		page.setOwner(testOwner);
+		page.setParentPage(parentPage);
+		page.setSubPages(subPages);
 		page.setPageLayout(pageLayout);
 		page.setRenderSequence(renderSequence);
 		page.setRegions(regions);
@@ -70,6 +80,8 @@ public class PageTest {
 		assertTrue(page.getEntityId()==id);
 		assertTrue(page.getName().equals(testName));
 		assertTrue(page.getOwner().equals(testOwner));
+		assertTrue(page.getParentPage().equals(parentPage));
+		assertTrue(page.getSubPages().equals(subPages));
 		assertTrue(page.getPageLayout().equals(pageLayout));
 		assertTrue(page.getRenderSequence()==renderSequence);
 	}
@@ -77,5 +89,10 @@ public class PageTest {
 	@Test
 	public void testRegions(){
 		assertTrue(page.getRegions().containsAll(regions));
+	}
+
+    @Test
+	public void testSubPages(){
+		assertTrue(page.getSubPages().containsAll(subPages));
 	}
 }

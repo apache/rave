@@ -46,10 +46,14 @@ public class ProfileController {
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 	
 	private final UserService userService;
-				    
+	private final PageService pageService;
+	private final PageLayoutService pageLayoutService;
+
 	@Autowired
-	public ProfileController(UserService userService) {
+	public ProfileController(UserService userService, PageService pageService, PageLayoutService pageLayoutService) {
 		this.userService = userService;
+        this.pageService = pageService;
+        this.pageLayoutService = pageLayoutService;
 	}
 
     /**
@@ -63,13 +67,11 @@ public class ProfileController {
 	@RequestMapping(value = {"/person/{username:.*}"}, method = RequestMethod.GET)
 	public String viewPersonProfile(@PathVariable String username, ModelMap model, @RequestParam(required = false) Long referringPageId) {
 		logger.debug("Viewing person profile for: " + username);
-
 		User user = userService.getUserByUsername(username);
-
-		//set the posts tag page as default for first setup
+        Page personProfilePage = pageService.getDefaultPageFromList(pageService.getAllPersonProfilePages(user.getEntityId()));
         addAttributesToModel(model, user, referringPageId, ViewNames.ABOUT_TAG_PAGE);
-
-		return ViewNames.ALL_USER_INFO;
+        model.addAttribute(ModelKeys.PAGE, personProfilePage);
+		return ViewNames.getPersonPageView(personProfilePage.getPageLayout().getCode());
 	}
 	
 	/**

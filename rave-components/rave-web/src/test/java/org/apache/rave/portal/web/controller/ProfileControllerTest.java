@@ -21,13 +21,20 @@ package org.apache.rave.portal.web.controller;
 
 import static org.junit.Assert.*;
 
+import org.apache.rave.portal.model.Page;
+import org.apache.rave.portal.model.PageLayout;
 import org.apache.rave.portal.model.User;
+import org.apache.rave.portal.service.PageLayoutService;
+import org.apache.rave.portal.service.PageService;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.portal.web.util.ModelKeys;
 import org.hamcrest.CoreMatchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.ui.ModelMap;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
@@ -42,11 +49,41 @@ public class ProfileControllerTest {
 private ProfileController userInfoController;
 	
 	private UserService userService;
-	
+	private PageService pageService;
+	private PageLayoutService pageLayoutService;
+
+    private Page defaultPage, otherPage;
+    private List<Page> allProfilePages;
+    private List<PageLayout> allPageLayouts;
+
+    private final Long DEFAULT_PAGE_ID = 99L;
+    private final Long OTHER_PAGE_ID = 22L;
+    private final Long USER_ID = 1L;
+    private final String VALID_PAGE_LAYOUT_CODE = "layout98";
+    private PageLayout validPageLayout;
+
 	@Before
 	public void setup() {
 		userService = createMock(UserService.class);
-		userInfoController = new ProfileController(userService);
+		pageService = createMock(PageService.class);
+		pageLayoutService = createMock(PageLayoutService.class);
+		userInfoController = new ProfileController(userService, pageService, pageLayoutService);
+
+        validPageLayout = new PageLayout();
+        validPageLayout.setEntityId(33L);
+        validPageLayout.setCode(VALID_PAGE_LAYOUT_CODE);
+
+        defaultPage = new Page(DEFAULT_PAGE_ID);
+        defaultPage.setPageLayout(validPageLayout);
+        otherPage = new Page(OTHER_PAGE_ID);
+        otherPage.setPageLayout(validPageLayout);
+
+        allProfilePages = new ArrayList<Page>();
+        allProfilePages.add(defaultPage);
+        allProfilePages.add(otherPage);
+
+        allPageLayouts = new ArrayList<PageLayout>();
+        allPageLayouts.add(validPageLayout);
 	}
 	
 	@Test
@@ -54,13 +91,21 @@ private ProfileController userInfoController;
 		//creating a mock user
 		final User user = new User();
 		final ModelMap model = new ModelMap();
-		final int modelSize = 3;
+		final int modelSize = 4;
 		final String username="Canonical";
+        user.setUsername(username);
+        user.setEntityId(USER_ID);
 		String userProfile = new String(ModelKeys.USER_PROFILE);
 		
 		expect(userService.getUserByUsername(username)).andReturn(user).anyTimes();
+        expect(pageService.getAllPersonProfilePages(user.getEntityId())).andReturn(allProfilePages);
+        expect(pageService.getDefaultPageFromList(allProfilePages)).andReturn(defaultPage);
+        expect(pageLayoutService.getAll()).andReturn(allPageLayouts);
+
 		replay(userService);
-		
+        replay(pageService);
+        replay(pageLayoutService);
+
 		userInfoController.viewPersonProfile(username, model, null);
 		
 		//assert that the model is not null

@@ -46,6 +46,10 @@ public class JpaPageRepositoryTest {
     private static final String WIDGET_URL = "http://www.widget-dico.com/wikipedia/google/wikipedia.xml";
     private static final Long USER_PAGE_TYPE_ID = 1L;
     private static final Long PERSON_PROFILE_PAGE_TYPE_ID = 2L;
+    private static final Long SUB_PAGE_PAGE_TYPE_ID = 3L;
+
+    private static final Long VALID_PARENT_PAGE_ID = 3L;
+    private static final Long INVALID_PARENT_PAGE_ID = -1L;
 
     @PersistenceContext
     private EntityManager manager;
@@ -54,7 +58,7 @@ public class JpaPageRepositoryTest {
     private PageRepository repository;
 
     @Test
-    public void getAllPages_validUser_validPageSet() {
+    public void getAllPages_validUser_validUserPageSet() {
         List<Page> pages = repository.getAllPages(USER_ID, USER_PAGE_TYPE_ID);
         assertThat(pages, is(notNullValue()));
         assertThat(pages.size(), equalTo(2));
@@ -70,11 +74,46 @@ public class JpaPageRepositoryTest {
             lastRenderSequence = currentRenderSequence;
         }
     }
+
+    @Test
+    public void getAllPages_validUser_validPersonProfilePageSet() {
+        List<Page> pages = repository.getAllPages(USER_ID, PERSON_PROFILE_PAGE_TYPE_ID);
+        assertThat(pages, is(notNullValue()));
+        assertThat(pages.size(), equalTo(1));
+        assertThat(pages.get(0).getRegions().size(), equalTo(2));
+
+        // test that the query returns the pages in proper render sequence order
+        Long lastRenderSequence = -1L;
+        for (Page p : pages) {
+            Long currentRenderSequence = p.getRenderSequence();
+            assertThat(currentRenderSequence > lastRenderSequence, is(true));
+            lastRenderSequence = currentRenderSequence;
+        }
+    }
+
+    @Test
+    public void getAllPages_validUser_validSubPagePageSet() {
+        List<Page> pages = repository.getAllPages(USER_ID, SUB_PAGE_PAGE_TYPE_ID);
+        assertThat(pages, is(notNullValue()));
+        assertThat(pages.size(), equalTo(2));
+        assertThat(pages.get(0).getRegions().size(), equalTo(2));
+        assertThat(pages.get(0).getParentPage().getEntityId(), equalTo(3L));
+
+        // test that the query returns the pages in proper render sequence order
+        Long lastRenderSequence = -1L;
+        for (Page p : pages) {
+            Long currentRenderSequence = p.getRenderSequence();
+            assertThat(currentRenderSequence > lastRenderSequence, is(true));
+            lastRenderSequence = currentRenderSequence;
+        }
+    }
+
     @Test
     public void getAllPages_invalidUser_emptySet() {
         List<Page> pages = repository.getAllPages(INVALID_USER, USER_PAGE_TYPE_ID);
         assertThat(pages.isEmpty(), is(true));
     }
+
     @Test
     public void getAllPages_nullUser_emptySet() {
         List<Page> pages = repository.getAllPages(null, USER_PAGE_TYPE_ID);
@@ -82,10 +121,24 @@ public class JpaPageRepositoryTest {
     }
 
     @Test
-    public void getById_valid() {
-        Page p = repository.get(1L);
+    public void getById_valid_userPage() {
+        Page p = repository.get(USER_PAGE_TYPE_ID);
         assertThat(p, is(notNullValue()));
-        assertThat(p.getEntityId(), is(equalTo(1L)));
+        assertThat(p.getEntityId(), is(equalTo(USER_PAGE_TYPE_ID)));
+    }
+
+    @Test
+    public void getById_valid_personProfilePage() {
+        Page p = repository.get(PERSON_PROFILE_PAGE_TYPE_ID);
+        assertThat(p, is(notNullValue()));
+        assertThat(p.getEntityId(), is(equalTo(PERSON_PROFILE_PAGE_TYPE_ID)));
+    }
+
+    @Test
+    public void getById_valid_subPagePage() {
+        Page p = repository.get(SUB_PAGE_PAGE_TYPE_ID);
+        assertThat(p, is(notNullValue()));
+        assertThat(p.getEntityId(), is(equalTo(SUB_PAGE_PAGE_TYPE_ID)));
     }
 
     @Test

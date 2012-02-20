@@ -30,9 +30,11 @@ import java.util.List;
 
 import org.apache.rave.portal.service.PageService;
 import org.apache.rave.portal.service.UserService;
+
 import static org.easymock.EasyMock.*;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class DefaultPageServiceTest {
     private PageService pageService;
@@ -64,12 +66,13 @@ public class DefaultPageServiceTest {
     private String defaultPageName = "Main";
     private Page page, page2;
     private List<Page> pageList;
-    private PageType userPageType, personProfilePageType;
+    private PageType userPageType, personProfilePageType, subPagePageType;
 
     @Before
     public void setup() {
         userPageType = new PageType(USER_PAGE_TYPE_ID, "USER", "User Page Type");
         personProfilePageType = new PageType(2L, "PERSON_PROFILE", "PP Page Type");
+        subPagePageType = new PageType(3L, "SUB_PAGE", "Sub Page Page Type");
 
         pageRepository = createMock(PageRepository.class);
         regionRepository = createMock(RegionRepository.class);
@@ -81,7 +84,8 @@ public class DefaultPageServiceTest {
 
         // mock methods that will execute in DefaultPageService constructor
         expect(pageTypeRepository.getUserPageType()).andReturn(userPageType);
-        expect(pageTypeRepository.getPersonProfilePageType()).andReturn(userPageType);
+        expect(pageTypeRepository.getPersonProfilePageType()).andReturn(personProfilePageType);
+        expect(pageTypeRepository.getSubPagePageType()).andReturn(subPagePageType);
         replay(pageTypeRepository);
         pageService = new DefaultPageService(pageRepository, regionRepository, widgetRepository, regionWidgetRepository, 
                                              pageLayoutRepository, pageTypeRepository, userService, defaultPageName);
@@ -135,6 +139,8 @@ public class DefaultPageServiceTest {
         replay(pageRepository);
 
         assertThat(pageService.getAllUserPages(VALID_USER_ID), CoreMatchers.sameInstance(VALID_PAGES));
+        
+        verify(pageRepository);
     }
 
     @Test
@@ -148,23 +154,22 @@ public class DefaultPageServiceTest {
         expectedPage.setPageLayout(pageLayout);
         expectedPage.setRenderSequence(EXPECTED_RENDER_SEQUENCE);
         expectedPage.setRegions(createEmptyRegionList(pageLayout.getNumberOfRegions()));    
-                
+        expectedPage.setPageType(userPageType);
+
         expect(userService.getAuthenticatedUser()).andReturn(user);
         expect(pageLayoutRepository.getByPageLayoutCode(PAGE_LAYOUT_CODE)).andReturn(pageLayout);
+        expect(pageTypeRepository.getUserPageType()).andReturn(userPageType);
         expect(pageRepository.save(expectedPage)).andReturn(expectedPage);
         expect(pageRepository.getAllPages(user.getEntityId(), userPageType.getEntityId())).andReturn(new ArrayList<Page>());
-        replay(userService);
-        replay(pageLayoutRepository);
-        replay(pageRepository);             
+        replay(userService, pageLayoutRepository, pageTypeRepository, pageRepository);
 
         Page newPage = pageService.addNewUserPage(PAGE_NAME, PAGE_LAYOUT_CODE);
         assertThat(newPage.getRenderSequence(), is(EXPECTED_RENDER_SEQUENCE));
         assertThat(newPage.getName(), is(PAGE_NAME));
         assertThat(newPage.getRegions().size(), is(pageLayout.getNumberOfRegions().intValue()));
-        
-        verify(userService);
-        verify(pageLayoutRepository);
-        verify(pageRepository);
+        assertThat(newPage.getPageType(), is(userPageType));
+
+        verify(userService, pageLayoutRepository, pageTypeRepository, pageRepository);
     }
     
     @Test
@@ -183,21 +188,97 @@ public class DefaultPageServiceTest {
                 
         expect(userService.getAuthenticatedUser()).andReturn(user);
         expect(pageLayoutRepository.getByPageLayoutCode(PAGE_LAYOUT_CODE)).andReturn(pageLayout);
+        expect(pageTypeRepository.getUserPageType()).andReturn(userPageType);
         expect(pageRepository.save(expectedPage)).andReturn(expectedPage);
         expect(pageRepository.getAllPages(user.getEntityId(), userPageType.getEntityId())).andReturn(existingPages);
-        replay(userService);
-        replay(pageLayoutRepository);
-        replay(pageRepository);             
+        replay(userService, pageLayoutRepository, pageTypeRepository, pageRepository);
 
         Page newPage = pageService.addNewUserPage(PAGE_NAME, PAGE_LAYOUT_CODE);
         assertThat(newPage.getRenderSequence(), is(EXPECTED_RENDER_SEQUENCE));
         assertThat(newPage.getName(), is(PAGE_NAME));
         assertThat(newPage.getRegions().size(), is(pageLayout.getNumberOfRegions().intValue()));
+        assertThat(newPage.getPageType(), is(userPageType));
         
-        verify(userService);
-        verify(pageLayoutRepository);
-        verify(pageRepository);
-    }    
+        verify(userService, pageLayoutRepository, pageTypeRepository, pageRepository);
+    }
+
+    @Test
+    public void addNewSubPage_noExistingPages() {
+        final String PAGE_NAME = "my new page";
+        final String PARENT_PAGE_NAME = "my parent page";
+        final Long EXPECTED_RENDER_SEQUENCE = 1L;
+        final Long EXPECTED_PARENT_RENDER_SEQUENCE = 1L;
+
+        Page expectedPage = new Page();
+        expectedPage.setName(PAGE_NAME);
+        expectedPage.setOwner(user);
+        expectedPage.setPageLayout(pageLayout);
+        expectedPage.setRenderSequence(EXPECTED_RENDER_SEQUENCE);
+        expectedPage.setRegions(createEmptyRegionList(pageLayout.getNumberOfRegions()));
+
+        Page parentPage = new Page();
+        parentPage.setName(PARENT_PAGE_NAME);
+        parentPage.setOwner(user);
+        parentPage.setPageLayout(pageLayout);
+        parentPage.setRenderSequence(EXPECTED_RENDER_SEQUENCE);
+        parentPage.setRegions(createEmptyRegionList(pageLayout.getNumberOfRegions()));
+
+        expect(userService.getAuthenticatedUser()).andReturn(user);
+        expect(pageLayoutRepository.getByPageLayoutCode(PAGE_LAYOUT_CODE)).andReturn(pageLayout);
+        expect(pageTypeRepository.getSubPagePageType()).andReturn(subPagePageType);
+        expect(pageRepository.save(expectedPage)).andReturn(expectedPage);
+        replay(userService, pageLayoutRepository, pageTypeRepository, pageRepository);
+
+        Page newPage = pageService.addNewSubPage(PAGE_NAME, PAGE_LAYOUT_CODE, parentPage);
+        assertThat(newPage.getRenderSequence(), is(EXPECTED_RENDER_SEQUENCE));
+        assertThat(newPage.getName(), is(PAGE_NAME));
+        assertThat(newPage.getRegions().size(), is(pageLayout.getNumberOfRegions().intValue()));
+        assertThat(newPage.getPageType(), is(subPagePageType));
+        assertThat(newPage.getParentPage(), is(parentPage));
+        assertTrue(parentPage.getSubPages().contains(newPage));
+
+        verify(userService, pageLayoutRepository, pageTypeRepository, pageRepository);
+    }
+
+    @Test
+    public void addNewSubPage_existingPages() {
+        final String PAGE_NAME = "my new page";
+        final String PARENT_PAGE_NAME = "my parent page";
+        final Long EXPECTED_RENDER_SEQUENCE = 2L;
+        List<Page> existingPages = new ArrayList<Page>();
+        existingPages.add(new Page());
+
+        Page expectedPage = new Page();
+        expectedPage.setName(PAGE_NAME);
+        expectedPage.setOwner(user);
+        expectedPage.setPageLayout(pageLayout);
+        expectedPage.setRenderSequence(EXPECTED_RENDER_SEQUENCE);
+        expectedPage.setRegions(createEmptyRegionList(pageLayout.getNumberOfRegions()));
+
+        Page parentPage = new Page();
+        parentPage.setName(PARENT_PAGE_NAME);
+        parentPage.setOwner(user);
+        parentPage.setPageLayout(pageLayout);
+        parentPage.setRenderSequence(EXPECTED_RENDER_SEQUENCE);
+        parentPage.setRegions(createEmptyRegionList(pageLayout.getNumberOfRegions()));
+        parentPage.setSubPages(existingPages);
+
+        expect(userService.getAuthenticatedUser()).andReturn(user);
+        expect(pageLayoutRepository.getByPageLayoutCode(PAGE_LAYOUT_CODE)).andReturn(pageLayout);
+        expect(pageTypeRepository.getSubPagePageType()).andReturn(subPagePageType);
+        expect(pageRepository.save(expectedPage)).andReturn(expectedPage);
+        replay(userService, pageLayoutRepository, pageTypeRepository, pageRepository);
+
+        Page newPage = pageService.addNewSubPage(PAGE_NAME, PAGE_LAYOUT_CODE, parentPage);
+        assertThat(newPage.getRenderSequence(), is(EXPECTED_RENDER_SEQUENCE));
+        assertThat(newPage.getName(), is(PAGE_NAME));
+        assertThat(newPage.getRegions().size(), is(pageLayout.getNumberOfRegions().intValue()));
+        assertThat(newPage.getPageType(), is(subPagePageType));
+        assertThat(newPage.getParentPage(), is(parentPage));
+        assertTrue(parentPage.getSubPages().contains(newPage));
+
+        verify(userService, pageLayoutRepository, pageTypeRepository, pageRepository);
+    }
    
     @Test
     public void addNewDefaultUserPage() {
@@ -915,6 +996,14 @@ public class DefaultPageServiceTest {
         expect(pageTypeRepository.getPersonProfilePageType()).andReturn(personProfilePageType);
         replay(pageTypeRepository);
         assertThat(pageService.getPersonProfilePageType(), is(personProfilePageType));
+        verify(pageTypeRepository);
+    }
+
+    @Test
+    public void getSubPagePageType() {
+        expect(pageTypeRepository.getSubPagePageType()).andReturn(subPagePageType);
+        replay(pageTypeRepository);
+        assertThat(pageService.getSubPagePageType(), is(subPagePageType));
         verify(pageTypeRepository);
     }
 }

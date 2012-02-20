@@ -56,4 +56,11 @@ public interface PageTypeRepository extends Repository<PageType> {
      * @return the Person Profile page type
      */
     PageType getPersonProfilePageType();
+
+    /**
+     * Returns the Sub page page Type
+     *
+     * @return the Sub page page type
+     */
+    PageType getSubPagePageType();
 }

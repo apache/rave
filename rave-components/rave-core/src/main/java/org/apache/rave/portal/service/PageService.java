@@ -25,6 +25,7 @@ import org.apache.rave.portal.model.RegionWidget;
 
 import java.util.List;
 import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 /**
@@ -41,7 +42,7 @@ public interface PageService {
     Page getPage(long pageId);
     
     /**
-     * Gets all pages for the given user.
+     * Gets all user pages for the given user.
      *
      * @param userId The user to retrieve pages for.
      * @return A non null possible empty list of pages for the given user.
@@ -50,8 +51,17 @@ public interface PageService {
     List<Page> getAllUserPages(long userId);
     
     /**
+     * Gets all person profile pages for the given user.
+     *
+     * @param userId The user to retrieve pages for.
+     * @return A non null possible empty list of pages for the given user.
+     */
+    @PostFilter("hasPermission(filterObject, 'read')")
+    List<Page> getAllPersonProfilePages(long userId);
+
+    /**
      * Return the page object from a list of pages given the pageId
-     * 
+     *
      * @param pageId the pageId to look for
      * @param pages a list of pages to search in
      * @return the Page object representing the pageId, or null if not found
@@ -86,7 +96,18 @@ public interface PageService {
      */        
     @PreAuthorize("hasPermission(new org.apache.rave.portal.security.impl.RaveSecurityContext(#userId, 'org.apache.rave.portal.model.User'), 'org.apache.rave.portal.model.Page', 'create')")         
     Page addNewDefaultUserPage(long userId);
-    
+
+    /**
+     * Creates a new sub page with the supplied pageName and pageLayoutCode for the parentPage
+     *
+     * @param pageName the name of the new page
+     * @param pageLayoutCode the page layout code
+     * @param parentPage the parent of the subpage
+     * @return the new Page object
+     */
+    @PostAuthorize("hasPermission(returnObject, 'create')")
+    Page addNewSubPage(String pageName, String pageLayoutCode, Page parentPage);
+
     /**
      * Get the default page name used by Rave
      * 
@@ -199,4 +220,11 @@ public interface PageService {
      * @return  the Person Profile PageType object
      */
     PageType getPersonProfilePageType();
+
+    /**
+     * Returns the PageType object representing sub pages
+     *
+     * @return  the Sub Page PageType object
+     */
+    PageType getSubPagePageType();
 }
