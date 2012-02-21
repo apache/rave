@@ -40,14 +40,10 @@ public class DefaultPageService implements PageService {
     private final RegionWidgetRepository regionWidgetRepository;
     private final WidgetRepository widgetRepository;
     private final PageLayoutRepository pageLayoutRepository;
-    private final PageTypeRepository pageTypeRepository;
     private final UserService userService;    
     private final String defaultPageName;
     
     private final long MOVE_PAGE_DEFAULT_POSITION_INDEX = -1L;
-    private final long USER_PAGE_TYPE_ID;
-    private final long PERSON_PROFILE_PAGE_TYPE_ID;
-    private final long SUB_PAGE_PAGE_TYPE_ID;
 
     @Autowired
     public DefaultPageService(PageRepository pageRepository, 
@@ -55,7 +51,6 @@ public class DefaultPageService implements PageService {
                               WidgetRepository widgetRepository, 
                               RegionWidgetRepository regionWidgetRepository,
                               PageLayoutRepository pageLayoutRepository,
-                              PageTypeRepository pageTypeRepository,
                               UserService userService,
                               @Value("${portal.page.default_name}") String defaultPageName) {
         this.pageRepository = pageRepository;
@@ -63,13 +58,8 @@ public class DefaultPageService implements PageService {
         this.regionWidgetRepository = regionWidgetRepository;
         this.widgetRepository = widgetRepository;
         this.pageLayoutRepository = pageLayoutRepository;
-        this.pageTypeRepository = pageTypeRepository;
         this.userService = userService;
         this.defaultPageName = defaultPageName;
-
-        USER_PAGE_TYPE_ID = pageTypeRepository.getUserPageType().getEntityId();
-        PERSON_PROFILE_PAGE_TYPE_ID = pageTypeRepository.getPersonProfilePageType().getEntityId();
-        SUB_PAGE_PAGE_TYPE_ID = pageTypeRepository.getSubPagePageType().getEntityId();
     }
 
     @Override
@@ -79,12 +69,12 @@ public class DefaultPageService implements PageService {
     
     @Override
     public List<Page> getAllUserPages(long userId) {
-        return pageRepository.getAllPages(userId, USER_PAGE_TYPE_ID);
+        return pageRepository.getAllPages(userId, PageType.USER);
     }
 
     @Override
     public List<Page> getAllPersonProfilePages(long userId) {
-        return pageRepository.getAllPages(userId, PERSON_PROFILE_PAGE_TYPE_ID);
+        return pageRepository.getAllPages(userId, PageType.PERSON_PROFILE);
     }
 
     @Override
@@ -138,7 +128,7 @@ public class DefaultPageService implements PageService {
         page.setRenderSequence(renderSequence);
         page.setRegions(regions);
         // set this as a "sub-page" page type
-        page.setPageType(pageTypeRepository.getSubPagePageType());
+        page.setPageType(PageType.SUB_PAGE);
 
         // Properly sets both sides of the circular parent-child reference
         page.setParentPage(parentPage);
@@ -168,14 +158,14 @@ public class DefaultPageService implements PageService {
 
         //TODO RAVE-237:  We should be able to delete these lines.  If there are gaps in the sequence numbers, then it will still
         //TODO RAVE-237:  return values in the correct order.  We only need to update sequences when there is a change in order
-        List<Page> pages = pageRepository.getAllPages(user.getEntityId(), USER_PAGE_TYPE_ID);
+        List<Page> pages = pageRepository.getAllPages(user.getEntityId(), PageType.USER);
         updatePageRenderSequences(pages);
     }
 
     @Override
     @Transactional
-    public int deletePages(long userId, long pageTypeId) {
-        return pageRepository.deletePages(userId, pageTypeId);
+    public int deletePages(long userId, PageType pageType) {
+        return pageRepository.deletePages(userId, pageType);
     }
     
     @Override
@@ -238,21 +228,6 @@ public class DefaultPageService implements PageService {
     @Transactional
     public Page movePageToDefault(long pageId) {    
         return doMovePage(pageId, MOVE_PAGE_DEFAULT_POSITION_INDEX);    
-    }
-
-    @Override
-    public PageType getUserPageType() {
-        return pageTypeRepository.getUserPageType();
-    }
-
-    @Override
-    public PageType getPersonProfilePageType() {
-        return pageTypeRepository.getPersonProfilePageType();
-    }
-
-    @Override
-    public PageType getSubPagePageType() {
-        return pageTypeRepository.getSubPagePageType();
     }
 
     @Override
@@ -407,7 +382,7 @@ public class DefaultPageService implements PageService {
         page.setRenderSequence(renderSequence);
         page.setRegions(regions);
         // set this as a "user" page type
-        page.setPageType(pageTypeRepository.getUserPageType());
+        page.setPageType(PageType.USER);
         pageRepository.save(page);
         
         return page;
@@ -443,7 +418,7 @@ public class DefaultPageService implements PageService {
         // get all of the user's pages
         // the pageRepository returns an un-modifiable list
         // so we need to create a modifyable arraylist
-        List<Page> pages = new ArrayList<Page>(pageRepository.getAllPages(user.getEntityId(), USER_PAGE_TYPE_ID));
+        List<Page> pages = new ArrayList<Page>(pageRepository.getAllPages(user.getEntityId(), PageType.USER));
 
         // first remove it from the list         
         if (!pages.remove(movingPage)) {

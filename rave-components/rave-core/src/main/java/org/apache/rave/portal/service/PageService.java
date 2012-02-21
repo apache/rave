@@ -124,13 +124,13 @@ public interface PageService {
     void deletePage(long pageId);
 
     /**
-     * Deletes all pages of the supplied pageTypeId for the userId
+     * Deletes all pages of the supplied pageType for the userId
      *
      * @param userId
-     * @param pageTypeId
+     * @param pageType
      */
     @PreAuthorize("hasPermission(new org.apache.rave.portal.security.impl.RaveSecurityContext(#userId, 'org.apache.rave.portal.model.User'), 'org.apache.rave.portal.model.Page', 'delete')")
-    int deletePages(long userId, long pageTypeId);
+    int deletePages(long userId, PageType pageType);
     
     /**
      * Moves a Region widget's position in a region or across regions
@@ -206,25 +206,4 @@ public interface PageService {
      */
     @PreAuthorize("hasPermission(#pageId, 'org.apache.rave.portal.model.Page', 'update')") 
     Page movePageToDefault(long pageId);
-
-    /**
-     * Returns the PageType object representing User pages
-     *
-     * @return  the User PageType object
-     */
-    PageType getUserPageType();
-
-    /**
-     * Returns the PageType object representing Person Profile pages
-     *
-     * @return  the Person Profile PageType object
-     */
-    PageType getPersonProfilePageType();
-
-    /**
-     * Returns the PageType object representing sub pages
-     *
-     * @return  the Sub Page PageType object
-     */
-    PageType getSubPagePageType();
 }

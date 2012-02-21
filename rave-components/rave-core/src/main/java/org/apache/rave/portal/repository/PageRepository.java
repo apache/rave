@@ -32,16 +32,16 @@ public interface PageRepository extends Repository<Page> {
      * Returns all pages of a given PageType owned by the user
      *
      * @param userId the userId to search by
-     * @param pageTypeId the pageTypeId to search by
-     * @return a list of all the Page objects owned by userId of type pageTypeId
+     * @param pageType the pageType to search by
+     * @return a list of all the Page objects owned by userId of type pageType
      */
-    List<Page> getAllPages(Long userId, Long pageTypeId);
+    List<Page> getAllPages(Long userId, PageType pageType);
 
     /**
-     * Delete all pages for a userId of the supplied pageTypeId
+     * Delete all pages for a userId of the supplied pageType
      * @param userId
-     * @param pageTypeId
+     * @param pageType
      * @return the number of pages deleted
      */
-    int deletePages(Long userId, Long pageTypeId);
+    int deletePages(Long userId, PageType pageType);
 }

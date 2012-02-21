@@ -19,6 +19,7 @@
 
 package org.apache.rave.portal.service.impl;
 
+import org.apache.rave.portal.model.PageType;
 import org.apache.rave.portal.model.Person;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.util.SearchResult;
@@ -50,7 +51,6 @@ public class DefaultUserService implements UserService {
 
     private final UserRepository userRepository;
     private final PageRepository pageRepository;
-    private final PageTypeRepository pageTypeRepository;
     private final WidgetRatingRepository widgetRatingRepository;
     private final WidgetCommentRepository widgetCommentRepository;
     private final WidgetRepository widgetRepository;
@@ -58,13 +58,11 @@ public class DefaultUserService implements UserService {
     @Autowired
     public DefaultUserService(UserRepository userRepository,
                               PageRepository pageRepository,
-                              PageTypeRepository pageTypeRepository,
                               WidgetRatingRepository widgetRatingRepository,
                               WidgetCommentRepository widgetCommentRepository,
                               WidgetRepository widgetRepository) {
         this.userRepository = userRepository;
         this.pageRepository = pageRepository;
-        this.pageTypeRepository = pageTypeRepository;
         this.widgetRatingRepository = widgetRatingRepository;
         this.widgetCommentRepository = widgetCommentRepository;
         this.widgetRepository = widgetRepository;
@@ -187,7 +185,7 @@ public class DefaultUserService implements UserService {
         final String username = user.getUsername();
 
         // delete all User type pages
-        int numDeletedPages = pageRepository.deletePages(userId, pageTypeRepository.getUserPageType().getEntityId());        
+        int numDeletedPages = pageRepository.deletePages(userId, PageType.USER);
         // delete all the widget comments
         int numWidgetComments = widgetCommentRepository.deleteAll(userId);
         // delete all the widget ratings

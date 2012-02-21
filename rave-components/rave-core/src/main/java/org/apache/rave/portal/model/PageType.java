@@ -18,96 +18,40 @@
  */
 package org.apache.rave.portal.model;
 
-import org.apache.rave.persistence.BasicEntity;
+import java.util.HashMap;
+import java.util.Map;
 
-import javax.persistence.*;
-import java.io.Serializable;
+/**
+ * The type of a Page object
+ */
+public enum PageType {
+    USER("user"),
+    PERSON_PROFILE("person_profile"),
+    SUB_PAGE("sub_page");
 
-@Entity
-@Table(name="page_type")
-@NamedQueries({
-        @NamedQuery(name = "PageType.getByCode", query="SELECT pt FROM PageType pt WHERE pt.code = :code"),
-        @NamedQuery(name = "PageType.getAll", query="SELECT pt FROM PageType pt ORDER BY pt.code")
-})
-@Access(AccessType.FIELD)
-public class PageType implements BasicEntity, Serializable {
-    private static final long serialVersionUID = 1L;
+    private String pageType;
+    private static final Map<String, PageType> lookup = new HashMap<String, PageType>();
 
-    @Id @Column(name="entity_id")
-    @GeneratedValue(strategy = GenerationType.TABLE, generator = "pageTypeIdGenerator")
-    @TableGenerator(name = "pageTypeIdGenerator", table = "RAVE_PORTAL_SEQUENCES", pkColumnName = "SEQ_NAME",
-                    valueColumnName = "SEQ_COUNT", pkColumnValue = "page_type", allocationSize = 1, initialValue = 1)
-    private Long entityId;
-
-    @Basic(optional=false)
-    @Column(name="code", unique=true)
-    private String code;
-
-    @Basic(optional=false) @Column(name="description")
-    private String description;
-
-    public PageType() {
-
+    static {
+        for (PageType pt : PageType.values()) {
+            lookup.put(pt.toString(), pt);
+        }
     }
 
-    public PageType(Long entityId) {
-        this.entityId = entityId;
+    private PageType(String pageType) {
+        this.pageType = pageType;
     }
 
-    public PageType(Long entityId, String code, String description) {
-        this.entityId = entityId;
-        this.code = code;
-        this.description = description;
-    }
-
-    public Long getEntityId() {
-        return entityId;
-    }
-
-    public void setEntityId(Long entityId) {
-        this.entityId = entityId;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        PageType pageType = (PageType) o;
-
-        if (!entityId.equals(pageType.entityId)) return false;
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        return entityId.hashCode();
+    public String getPageType() {
+        return pageType;
     }
 
     @Override
     public String toString() {
-        return "PageType{" +
-                "entityId=" + entityId +
-                ", code='" + code + '\'' +
-                ", description='" + description + '\'' +
-                '}';
+        return pageType;
     }
 
+    public static PageType get(String pageType) {
+        return lookup.get(pageType);
+    }
 }

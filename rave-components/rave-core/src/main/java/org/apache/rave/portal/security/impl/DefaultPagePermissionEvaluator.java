@@ -18,20 +18,19 @@
  */
 package org.apache.rave.portal.security.impl;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 import org.apache.rave.portal.model.Page;
 import org.apache.rave.portal.model.PageType;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.repository.PageRepository;
-import org.apache.rave.portal.repository.PageTypeRepository;
-import org.apache.rave.portal.security.ModelPermissionEvaluator.Permission;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The default implementation of the ModelPermissionEvaluator for Page objects
@@ -41,19 +40,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class DefaultPagePermissionEvaluator extends AbstractModelPermissionEvaluator<Page> {
     private Logger log = LoggerFactory.getLogger(getClass());
-    private PageRepository pageRepository;
-    
-    private final String PERSON_PROFILE_PAGE_TYPE_CODE;
-    private final String SUB_PAGE_PAGE_TYPE_CODE;
-    private final String USER_PAGE_TYPE_CODE;
+    private PageRepository pageRepository;   
     
     @Autowired
-    public DefaultPagePermissionEvaluator(PageRepository pageRepository, PageTypeRepository pageTypeRepository) {       
-        this.pageRepository = pageRepository;
-
-        PERSON_PROFILE_PAGE_TYPE_CODE = pageTypeRepository.getPersonProfilePageType().getCode();
-        SUB_PAGE_PAGE_TYPE_CODE = pageTypeRepository.getSubPagePageType().getCode();
-        USER_PAGE_TYPE_CODE = pageTypeRepository.getUserPageType().getCode();
+    public DefaultPagePermissionEvaluator(PageRepository pageRepository) {       
+        this.pageRepository = pageRepository;        
     }
    
     @Override
@@ -197,8 +188,8 @@ public class DefaultPagePermissionEvaluator extends AbstractModelPermissionEvalu
     }
     
     private boolean isPersonProfilePageOrSubPage(Page page) {
-        String pageTypeCode = (page.getPageType() == null) ? "" : page.getPageType().getCode();
-        String parentPageTypeCode = (page.getParentPage() == null) ? "" : page.getParentPage().getPageType().getCode();
-        return PERSON_PROFILE_PAGE_TYPE_CODE.equals(pageTypeCode) || PERSON_PROFILE_PAGE_TYPE_CODE.equals(parentPageTypeCode);
+        PageType pageType = page.getPageType();
+        PageType parentPageType = (page.getParentPage() == null) ? null : page.getParentPage().getPageType();
+        return PageType.PERSON_PROFILE.equals(pageType) || PageType.PERSON_PROFILE.equals(parentPageType);
     }  
 }

@@ -37,18 +37,18 @@ public class JpaPageRepository extends AbstractJpaRepository<Page> implements Pa
     }
 
     @Override
-    public List<Page> getAllPages(Long userId, Long pageTypeId) {
-        TypedQuery<Page> query = manager.createNamedQuery(Page.GET_BY_USER_ID_AND_PAGE_TYPE_ID, Page.class);
+    public List<Page> getAllPages(Long userId, PageType pageType) {
+        TypedQuery<Page> query = manager.createNamedQuery(Page.GET_BY_USER_ID_AND_PAGE_TYPE, Page.class);
         query.setParameter("userId", userId);
-        query.setParameter("pageTypeId", pageTypeId);
+        query.setParameter("pageType", pageType);
         return query.getResultList();
     }
 
     @Override
-    public int deletePages(Long userId, Long pageTypeId) {
-        TypedQuery<Page> query = manager.createNamedQuery(Page.DELETE_BY_USER_ID_AND_PAGE_TYPE_ID, Page.class);
+    public int deletePages(Long userId, PageType pageType) {
+        TypedQuery<Page> query = manager.createNamedQuery(Page.DELETE_BY_USER_ID_AND_PAGE_TYPE, Page.class);
         query.setParameter("userId", userId);
-        query.setParameter("pageTypeId", pageTypeId);
+        query.setParameter("pageType", pageType);
         return query.executeUpdate();
     }
 }

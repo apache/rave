@@ -19,6 +19,7 @@
 package org.apache.rave.portal.repository.impl;
 
 import org.apache.rave.portal.model.Page;
+import org.apache.rave.portal.model.PageType;
 import org.hamcrest.CoreMatchers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -44,9 +45,9 @@ public class JpaPageRepositoryTest {
     private static final Long USER_ID = 1L;
     private static final Long INVALID_USER = -1L;
     private static final String WIDGET_URL = "http://www.widget-dico.com/wikipedia/google/wikipedia.xml";
-    private static final Long USER_PAGE_TYPE_ID = 1L;
-    private static final Long PERSON_PROFILE_PAGE_TYPE_ID = 2L;
-    private static final Long SUB_PAGE_PAGE_TYPE_ID = 3L;
+    private static final Long USER_PAGE_ID = 1L;
+    private static final Long PERSON_PROFILE_PAGE_ID = 3L;
+    private static final Long SUB_PAGE_ID = 4L;
 
     private static final Long VALID_PARENT_PAGE_ID = 3L;
     private static final Long INVALID_PARENT_PAGE_ID = -1L;
@@ -59,7 +60,7 @@ public class JpaPageRepositoryTest {
 
     @Test
     public void getAllPages_validUser_validUserPageSet() {
-        List<Page> pages = repository.getAllPages(USER_ID, USER_PAGE_TYPE_ID);
+        List<Page> pages = repository.getAllPages(USER_ID, PageType.USER);
         assertThat(pages, is(notNullValue()));
         assertThat(pages.size(), equalTo(2));
         assertThat(pages.get(0).getRegions().size(), equalTo(2));
@@ -77,7 +78,7 @@ public class JpaPageRepositoryTest {
 
     @Test
     public void getAllPages_validUser_validPersonProfilePageSet() {
-        List<Page> pages = repository.getAllPages(USER_ID, PERSON_PROFILE_PAGE_TYPE_ID);
+        List<Page> pages = repository.getAllPages(USER_ID, PageType.PERSON_PROFILE);
         assertThat(pages, is(notNullValue()));
         assertThat(pages.size(), equalTo(1));
         assertThat(pages.get(0).getRegions().size(), equalTo(2));
@@ -93,7 +94,7 @@ public class JpaPageRepositoryTest {
 
     @Test
     public void getAllPages_validUser_validSubPagePageSet() {
-        List<Page> pages = repository.getAllPages(USER_ID, SUB_PAGE_PAGE_TYPE_ID);
+        List<Page> pages = repository.getAllPages(USER_ID, PageType.SUB_PAGE);
         assertThat(pages, is(notNullValue()));
         assertThat(pages.size(), equalTo(2));
         assertThat(pages.get(0).getRegions().size(), equalTo(2));
@@ -110,35 +111,43 @@ public class JpaPageRepositoryTest {
 
     @Test
     public void getAllPages_invalidUser_emptySet() {
-        List<Page> pages = repository.getAllPages(INVALID_USER, USER_PAGE_TYPE_ID);
+        List<Page> pages = repository.getAllPages(INVALID_USER, PageType.USER);
         assertThat(pages.isEmpty(), is(true));
     }
 
     @Test
     public void getAllPages_nullUser_emptySet() {
-        List<Page> pages = repository.getAllPages(null, USER_PAGE_TYPE_ID);
+        List<Page> pages = repository.getAllPages(null, PageType.USER);
         assertThat(pages.isEmpty(), is(true));
     }
 
     @Test
     public void getById_valid_userPage() {
-        Page p = repository.get(USER_PAGE_TYPE_ID);
+        Page p = repository.get(USER_PAGE_ID);
         assertThat(p, is(notNullValue()));
-        assertThat(p.getEntityId(), is(equalTo(USER_PAGE_TYPE_ID)));
+        assertThat(p.getEntityId(), is(equalTo(USER_PAGE_ID)));
+        assertThat(p.getPageType(), is(PageType.USER));
+        assertThat(p.getParentPage(), is(nullValue(Page.class)));
+        assertThat(p.getSubPages().isEmpty(), is(true));
     }
 
     @Test
     public void getById_valid_personProfilePage() {
-        Page p = repository.get(PERSON_PROFILE_PAGE_TYPE_ID);
-        assertThat(p, is(notNullValue()));
-        assertThat(p.getEntityId(), is(equalTo(PERSON_PROFILE_PAGE_TYPE_ID)));
+        Page p = repository.get(PERSON_PROFILE_PAGE_ID);
+        assertThat(p.getEntityId(), is(equalTo(PERSON_PROFILE_PAGE_ID)));
+        assertThat(p.getPageType(), is(PageType.PERSON_PROFILE));
+        assertThat(p.getParentPage(), is(nullValue(Page.class)));
+        assertThat(p.getSubPages().isEmpty(), is(false));
     }
 
     @Test
     public void getById_valid_subPagePage() {
-        Page p = repository.get(SUB_PAGE_PAGE_TYPE_ID);
+        Page p = repository.get(SUB_PAGE_ID);
         assertThat(p, is(notNullValue()));
-        assertThat(p.getEntityId(), is(equalTo(SUB_PAGE_PAGE_TYPE_ID)));
+        assertThat(p.getEntityId(), is(equalTo(SUB_PAGE_ID)));
+        assertThat(p.getPageType(), is(PageType.SUB_PAGE));
+        assertThat(p.getParentPage(), is(notNullValue(Page.class)));
+        assertThat(p.getSubPages().isEmpty(), is(true));
     }
 
     @Test
@@ -151,11 +160,11 @@ public class JpaPageRepositoryTest {
     @Transactional(readOnly=false)
     @Rollback(true)
     public void deletePages_userPageType() {
-        int numPages = repository.getAllPages(USER_ID, USER_PAGE_TYPE_ID).size();
+        int numPages = repository.getAllPages(USER_ID, PageType.USER).size();
         assertThat(numPages > 0, is(true));
-        int deletedPages = repository.deletePages(USER_ID, USER_PAGE_TYPE_ID);
+        int deletedPages = repository.deletePages(USER_ID, PageType.USER);
         assertThat(deletedPages, is(numPages));
         // ensure pages are deleted
-        assertThat(repository.getAllPages(USER_ID, USER_PAGE_TYPE_ID).isEmpty(), is(true));
+        assertThat(repository.getAllPages(USER_ID, PageType.USER).isEmpty(), is(true));
     }
 }

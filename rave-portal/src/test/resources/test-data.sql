@@ -30,7 +30,6 @@ set @region_seq = 'region';
 set @region_widget_seq = 'region_widget';
 set @user_seq = 'person';
 set @widget_seq = 'widget';
-set @page_type_seq = 'page_type';
 
 CREATE TABLE IF NOT EXISTS RAVE_PORTAL_SEQUENCES (seq_name VARCHAR(255) PRIMARY KEY NOT NULL, seq_count BIGINT(19));
 INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@page_seq, 1);
@@ -40,7 +39,6 @@ INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@region_widget_se
 INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values ('region_widget_preference', 1);
 INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@user_seq, 1);
 INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@widget_seq, 1);
-INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@page_type_seq, 1);
 
   -- ***********************************************************************************
   -- start page layout data, required to make the portal work ---
@@ -79,24 +77,6 @@ insert into page_layout (entity_id, code,  number_of_regions, render_sequence, u
 values (@fourwn_col_id, 'columns_3nwn_1_bottom', 4, 6, true);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_layout_seq;
 --- end page layout data ----
-
--- page types
-set @user_page_type_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @page_type_seq);
-insert into page_type (entity_id, code, description)
-values (@user_page_type_id, 'USER', 'Standard user pages which are only accessible by the page owner');
-UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_type_seq;
-
-set @person_profile_page_type_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @page_type_seq);
-insert into page_type (entity_id, code, description)
-values (@person_profile_page_type_id, 'PERSON_PROFILE', 'Person Profile pages which are only accessible by anyone and contain Person Profile information');
-UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_type_seq;
-
-set @sub_page_type_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @page_type_seq);
-insert into page_type (entity_id, code, description)
-values (@sub_page_type_id, 'SUB_PAGE', 'Sub pages are contained within another page');
-UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_type_seq;
-
--- end page types
 
   -- ***********************************************************************************
   --- start user data ---

@@ -46,15 +46,15 @@ import java.util.List;
 @XmlAccessorType(XmlAccessType.NONE)
 @Table(name="page", uniqueConstraints={@UniqueConstraint(columnNames={"owner_id","name"})})
 @NamedQueries({
-        @NamedQuery(name = Page.GET_BY_USER_ID_AND_PAGE_TYPE_ID, query="SELECT p FROM Page p WHERE p.owner.entityId = :userId and p.pageType.entityId = :pageTypeId ORDER BY p.renderSequence"),
-        @NamedQuery(name = Page.DELETE_BY_USER_ID_AND_PAGE_TYPE_ID, query="DELETE FROM Page p WHERE p.owner.entityId = :userId and p.pageType.entityId = :pageTypeId")
+        @NamedQuery(name = Page.GET_BY_USER_ID_AND_PAGE_TYPE, query="SELECT p FROM Page p WHERE p.owner.entityId = :userId and p.pageType = :pageType ORDER BY p.renderSequence"),
+        @NamedQuery(name = Page.DELETE_BY_USER_ID_AND_PAGE_TYPE, query="DELETE FROM Page p WHERE p.owner.entityId = :userId and p.pageType = :pageType")
 })
 @Access(AccessType.FIELD)
 public class Page implements BasicEntity, Serializable {
     private static final long serialVersionUID = 1L;
     
-    public static final String GET_BY_USER_ID_AND_PAGE_TYPE_ID = "Page.getByUserIdAndPageTypeId";
-    public static final String DELETE_BY_USER_ID_AND_PAGE_TYPE_ID = "Page.deleteByUserIdAndPageTypeId";
+    public static final String GET_BY_USER_ID_AND_PAGE_TYPE = "Page.getByUserIdAndPageType";
+    public static final String DELETE_BY_USER_ID_AND_PAGE_TYPE = "Page.deleteByUserIdAndPageType";
 
     @XmlAttribute(name="id")
     @Id @Column(name="entity_id")
@@ -75,7 +75,7 @@ public class Page implements BasicEntity, Serializable {
     @JoinColumn(name="parent_page_id")
     private Page parentPage;
 
-    @OneToMany(cascade=CascadeType.ALL, mappedBy="parentPage")
+    @OneToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL, mappedBy="parentPage")
     private List<Page> subPages;
 
     @Basic(optional=false) @Column(name="render_sequence")
@@ -91,8 +91,9 @@ public class Page implements BasicEntity, Serializable {
     @JoinColumn(name="page_id")
     private List<Region> regions;
 
-    @ManyToOne
-    @JoinColumn(name="page_type_id")
+    @Basic
+    @Column(name = "page_type")
+    @Enumerated(EnumType.STRING)
     private PageType pageType;
 
     public Page() {
