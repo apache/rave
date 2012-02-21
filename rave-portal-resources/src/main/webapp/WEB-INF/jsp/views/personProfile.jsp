@@ -71,48 +71,60 @@
    	</nav>
 	<h1>${pageTitle}</h1>
 </header>
-<div id="personProfileContent">
-	<!-- Display personal information of user-->
-	<h2><fmt:message key="page.personProfile.personal.info" /></h2>
-	<p>
-		<fmt:message key="page.personProfile.first.name"/>
-		<c:out value="${userProfile.givenName}"/>
-	</p>
-	<p>
-		<fmt:message key="page.personProfile.last.name"/> 
-		<c:out value="${userProfile.familyName}"/>
-	</p>
-	<p>
-    	<fmt:message key="page.personProfile.display.name"/>
-        <c:out value="${userProfile.displayName}"/>
-	</p>
-      	
-    <!-- Display basic information of user -->
-    <h2><fmt:message key="page.personProfile.basic.info" /></h2>
-	<p>
-		<fmt:message key="page.personProfile.about.me"/>
-		<c:out value=" ${userProfile.aboutMe}"/>
-	</p>
-	<p>
-		<fmt:message key="page.personProfile.status"/>
-		<c:out value=" ${userProfile.status}"/>    		
-	</p> 			
-    
-    <!-- Display contact information of user -->
-    <h2><fmt:message key="page.personProfile.contact.info" /></h2>
-	<p>
-		<fmt:message key="page.personProfile.email"/>
-		<c:out value=" ${userProfile.email}"/>    		
-	</p>
-</div>
-<%--render the main page content (regions/widgets) --%>
-<div id="pageContent">
-    <div class="regions">
-        <%-- insert the region layout template --%>
-        <tiles:insertTemplate template="${layout}"/>
+<div id="person-profile-left">
+    <div id="personProfileContent">
+        <!-- Display personal information of user-->
+        <h2><fmt:message key="page.personProfile.personal.info" /></h2>
+        <p>
+            <fmt:message key="page.personProfile.first.name"/>
+            <c:out value="${userProfile.givenName}"/>
+        </p>
+        <p>
+            <fmt:message key="page.personProfile.last.name"/> 
+            <c:out value="${userProfile.familyName}"/>
+        </p>
+        <p>
+            <fmt:message key="page.personProfile.display.name"/>
+            <c:out value="${userProfile.displayName}"/>
+        </p>
+            
+        <!-- Display basic information of user -->
+        <h2><fmt:message key="page.personProfile.basic.info" /></h2>
+        <p>
+            <fmt:message key="page.personProfile.about.me"/>
+            <c:out value=" ${userProfile.aboutMe}"/>
+        </p>
+        <p>
+            <fmt:message key="page.personProfile.status"/>
+            <c:out value=" ${userProfile.status}"/>    		
+        </p> 			
+        
+        <!-- Display contact information of user -->
+        <h2><fmt:message key="page.personProfile.contact.info" /></h2>
+        <p>
+            <fmt:message key="page.personProfile.email"/>
+            <c:out value=" ${userProfile.email}"/>    		
+        </p>
     </div>
-    <div class="clear-float">&nbsp;</div>
+    <%--render the sub pages --%>
+    <div id="pageContent">
+        <div class="regions">
+            <%-- insert the region layout template --%>
+            <tiles:insertTemplate template="${layout}"/>
+        </div>
+        <div class="clear-float">&nbsp;</div>
+    </div>
 </div>
+<div id="person-profile-right">
+    <div>
+        <%-- render the person profile parent page region/widgets --%>
+        <c:forEach var="region" items="${page.regions}" varStatus="status">
+            <rave:region region="${region}" regionIdx="${status.count}" />
+        </c:forEach>
+    </div>
+</div>
+<div class="clear-float">&nbsp;</div>
+
 <script>
     //Define the global widgets map.  This map will be populated by RegionWidgetRender providers.
     var widgetsByRegionIdMap = {};
@@ -130,6 +142,7 @@
 <script src="<spring:url value="/script/rave_opensocial.js"/>"></script>
 <script src="<spring:url value="/script/rave_wookie.js"/>"></script>
 <script src="<spring:url value="/script/rave_layout.js"/>"></script>
+<script src="<spring:url value="/script/rave_person_profile.js"/>"></script>
 <script src="<spring:url value="/app/messagebundle/rave_client_messages.js"/>"></script>
 <portal:render-script location="${'AFTER_RAVE'}" />
 <script>
@@ -139,5 +152,6 @@
         rave.initWidgets(widgetsByRegionIdMap);
         rave.initUI();
         rave.layout.init();
+        rave.personprofile.init();
     });
 </script>

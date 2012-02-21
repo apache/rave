@@ -17,9 +17,20 @@
   specific language governing permissions and limitations
   under the License.
   --%>
-
-<div class="widgetRow bottomRow">
-    <c:forEach var="region" items="${page.regions}" varStatus="status">
-        <rave:region region="${region}" regionIdx="${status.count}" />
+<div id="personProfileSubPages">
+    <ul>
+        <!-- first render the tabs -->
+        <c:forEach var="subPage" items="${page.subPages}" varStatus="subPageStatus">
+            <li><a href="#subpage-${subPage.entityId}"><c:out value="${subPage.name}"/></a></li>
+        </c:forEach>
+    </ul>
+    <!-- now render the sub page bodies -->
+    <c:forEach var="subPage" items="${page.subPages}" varStatus="subPageStatus">
+        <div id="subpage-${subPage.entityId}">
+            <c:forEach var="subPageRegion" items="${subPage.regions}" varStatus="subPageRegionStatus">
+                <rave:region region="${subPageRegion}" regionIdx="${subPageRegionStatus.count}" />
+            </c:forEach>
+            <div class="clear-float">&nbsp;</div>
+        </div>
     </c:forEach>
 </div>
