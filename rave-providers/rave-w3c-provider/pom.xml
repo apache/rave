@@ -39,7 +39,7 @@
             <groupId>org.apache.wookie</groupId>
             <artifactId>wookie-java-connector</artifactId>
             <scope>compile</scope>
-            <version>0.9.1-incubating</version>
+            <version>0.9.2-incubating</version>
         </dependency>
         <dependency>
             <groupId>org.apache.rave</groupId>
