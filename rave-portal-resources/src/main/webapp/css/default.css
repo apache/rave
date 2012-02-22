@@ -39,6 +39,10 @@ header, nav, article, section, footer {
     padding: 0;
 }
 
+header {
+    line-height: 3em;
+}
+
 ul, ol, table, p {
     margin: 0;
     padding: 0;
@@ -144,6 +148,8 @@ header img {
 header a, header a:visited {
     color: #F2F2F2;
     text-decoration: none;
+    padding: 2px;
+    font-weight: bold;
 }
 
 header a:hover {
@@ -153,14 +159,13 @@ header a:hover {
 }
 
 header h1 {
-    text-align: center;
     text-transform: none;
     font-size: 1.5em;
     font-weight: bold;
     margin: 0 auto;
-    padding: 0;
+    padding: 0 0 0 15px;
     vertical-align: middle;
-    width: 80%;
+    width: 100%;
     color: #F2F2F2;
 }
 
@@ -170,7 +175,8 @@ header h1 {
 
 .topnav {
     float: right;
-    margin-right: 2%;
+    margin-right: 15px;
+    font-size: 1.1em;
 }
 
 /* content */
@@ -785,6 +791,7 @@ span.error, label.error {
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr = "#D7D7D3", endColorstr = "#EBEBEB");
     background: -moz-linear-gradient(center top, #D7D7D3 0%, #EBEBEB 50%) repeat scroll 0 0 transparent;
     background: -webkit-gradient(linear, left top, left bottom, from(#D7D7D3), to(#EBEBEB));
+    font-size: 1.1em;
 }
 
 .pageContent-mobile {
