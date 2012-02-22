@@ -24,12 +24,11 @@
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:tx="http://www.springframework.org/schema/tx"
        xmlns:p="http://www.springframework.org/schema/p"
-       xmlns:util="http://www.springframework.org/schema/util"
        xmlns:aop="http://www.springframework.org/schema/aop"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
         http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
-        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd
+
         http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
 
     <!-- make the the portal.properties props available to autowire injectors, location of the properties can
@@ -44,7 +43,7 @@
     <context:annotation-config/>
 
     <!-- enable the use of the @AspectJ style of Spring AOP -->
-    <aop:aspectj-autoproxy />
+    <aop:aspectj-autoproxy/>
 
     <!-- rave-common component base-package scan (maybe move to a separate common-applicationContext.xml?) -->
     <context:component-scan base-package="org.apache.rave.service"/>
@@ -55,18 +54,18 @@
     <context:component-scan base-package="org.apache.rave.portal.repository"/>
     <context:component-scan base-package="org.apache.rave.portal.service"/>
     <context:component-scan base-package="org.apache.rave.portal.security"/>
-    
+
     <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
         <property name="entityManagerFactory" ref="entityManagerFactory"/>
     </bean>
 
-    <tx:annotation-driven transaction-manager="transactionManager" />
+    <tx:annotation-driven transaction-manager="transactionManager"/>
 
     <bean id="entityManagerFactory"
           class="org.apache.rave.persistence.jpa.PopulatedLocalContainerEntityManagerFactory">
-        <property name="populator" ref="dataSourcePopulator" />
+        <property name="populator" ref="dataSourcePopulator"/>
         <property name="loadTimeWeaver">
-          <bean class="org.springframework.instrument.classloading.InstrumentationLoadTimeWeaver"/>
+            <bean class="org.springframework.instrument.classloading.InstrumentationLoadTimeWeaver"/>
         </property>
         <property name="persistenceUnitName" value="ravePersistenceUnit"/>
         <property name="dataSource" ref="dataSource"/>
@@ -94,10 +93,49 @@
         <property name="username" value="${portal.dataSource.username}"/>
         <property name="password" value="${portal.dataSource.password}"/>
     </bean>
-    
+
     <!-- Password encoding -->
     <bean class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" id="passwordEncoder">
         <!--<constructor-arg index="0" value="10"/>-->
     </bean>
+
+    <!-- email settings -->
+    <bean id="emailServiceMailMessage" class="org.springframework.mail.SimpleMailMessage">
+        <property name="from" value="${portal.mail.sender}"/>
+        <property name="replyTo" value="${portal.mail.replyto}"/>
+    </bean>
+
+    <bean id="freemarkerMailConfiguration" class="org.springframework.ui.freemarker.FreeMarkerConfigurationFactoryBean">
+        <property name="templateLoaderPath" value="/WEB-INF/mailtemplates"/>
+    </bean>
+    <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+        <property name="host" value="${portal.mail.host}"/>
+        <property name="password" value="${portal.mail.password}"/>
+        <property name="username" value="${portal.mail.username}"/>
+        <property name="port" value="${portal.mail.port}"/>
+        <property name="protocol" value="${portal.mail.protocol}"/>
+        <!-- NOTE: if using Gmail, you'll need following properties-->
+        <!--<property name="javaMailProperties">
+            <props>
+                <prop key="mail.smtp.auth">true</prop>
+                <prop key="mail.smtp.starttls.enable">true</prop>
+                <prop key="mail.smtp.timeout">8500</prop>
+            </props>
+        </property>-->
+    </bean>
+    <!--
+     NOTE: to use mail session you'll need to configure following within catalina_home/conf/context.xml
+        <Resource name="mail/Session" auth="Container" type="javax.mail.Session" mail.smtp.host="my.mail.host"/>
+
+        Further, activation & mail jars needs to be placed within catalina_home/lib folder
+     -->
+  <!--
+  <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+        <property name="session" ref="mailSession"/>
+    </bean>
+    <bean id="mailSession" class="org.springframework.jndi.JndiObjectFactoryBean">
+        <property name="jndiName" value="java:comp/env/mail/Session"/>
+    </bean>
+    -->
 
 </beans>

@@ -28,6 +28,10 @@
     <tiles:putAttribute name="body">
         <div id="content">
 
+            <c:if test="${not empty message}">
+                <div class="topbar-message">${message}</div>
+            </c:if>
+
             <h1><fmt:message key="${pageTitleKey}"/></h1>
 
             <h2><fmt:message key="page.login.usernamepassword"/></h2>
@@ -54,23 +58,49 @@
                     </p>
                 </fieldset>
                 <fieldset>
-                  <fmt:message key="page.login.usernamepassword.login" var="loginButtonText"/>
+                    <fmt:message key="page.login.usernamepassword.login" var="loginButtonText"/>
                     <input type="submit" value="${loginButtonText}"/>
                 </fieldset>
             </form>
 
+            <h2><fmt:message key="page.login.forgot.password"/></h2>
+
+            <form id="newPassword" action="<c:url value="/app/newpassword"/>" method="get">
+                <fieldset>
+                    <p>
+                        <label for="requestNewPasswordButton"><fmt:message
+                                key="page.login.forgot.password.label"/></label>
+                        <fmt:message key="page.login.forgot.password.button" var="requestNewPasswordButtonText"/>
+                        <input id="requestNewPasswordButton" type="submit" value="${requestNewPasswordButtonText}"/>
+                    </p>
+                </fieldset>
+            </form>
+            <h2><fmt:message key="page.login.forgot.username"/></h2>
+
+            <form id="newPassword" action="<c:url value="/app/retrieveusername"/>" method="get">
+                <fieldset>
+                    <p>
+                        <label for="requestNewUsernameButton"><fmt:message
+                                key="page.login.forgot.username.label"/></label>
+                        <fmt:message key="page.login.forgot.username.button" var="requestNewUsernameButton"/>
+                        <input id="requestNewUsernameButton" type="submit" value="${requestNewUsernameButton}"/>
+                    </p>
+                </fieldset>
+            </form>
             <h2><fmt:message key="page.login.createaccount"/></h2>
+
             <form id="newAccount" action="<c:url value="/app/newaccount.jsp"/>" method="get">
                 <fieldset>
                     <p>
-                      <label for="createNewAccountButton"><fmt:message key="page.login.createaccount.label"/></label>
-                      <fmt:message key="page.login.createaccount.button" var="createAccountButtonText"/>
-                      <input id="createNewAccountButton" type="submit" value="${createAccountButtonText}" />
+                        <label for="createNewAccountButton"><fmt:message key="page.login.createaccount.label"/></label>
+                        <fmt:message key="page.login.createaccount.button" var="createAccountButtonText"/>
+                        <input id="createNewAccountButton" type="submit" value="${createAccountButtonText}"/>
                     </p>
                 </fieldset>
             </form>
 
             <h2><fmt:message key="page.login.openid"/></h2>
+
             <form id="oidForm" name='oidf' action='j_spring_openid_security_check' method='POST'>
                 <c:if test="${param['authfail'] eq 'openid'}">
                     <p class="error"><fmt:message key="page.login.openid.fail"/></p>
@@ -84,12 +114,12 @@
                         <label for="remember_me_openid" class="checkboxLabel">
                             <input type='checkbox' name='_spring_security_remember_me' id="remember_me_openid"
                                    value="true"/>
-                          <fmt:message key="page.login.rememberme"/>
+                            <fmt:message key="page.login.rememberme"/>
                         </label>
                     </p>
                 </fieldset>
                 <fieldset>
-                  <fmt:message key="page.login.openid.button" var="openidButtonText"/>
+                    <fmt:message key="page.login.openid.button" var="openidButtonText"/>
                     <input type="submit" value="${openidButtonText}"/>
                 </fieldset>
 

@@ -49,4 +49,5 @@ public class ModelKeys {
     public static final String CATEGORIES = "categories";
     public static final String SELECTED_CATEGORY = "selectedCategory";
     public static final String DEFAULT_TAG_PAGE = "defaultTagPage";
+    public static final String CAPTCHA_HTML = "captchaHtml";
 }

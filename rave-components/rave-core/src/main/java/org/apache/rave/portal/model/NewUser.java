@@ -38,6 +38,7 @@ public class NewUser {
     private String displayName;
     private String status;
     private String aboutMe;
+    private String forgotPasswordHash;
 
 	public NewUser(){
 	}
@@ -181,5 +182,12 @@ public class NewUser {
 	public void setAboutMe(String aboutMe) {
 		this.aboutMe = aboutMe;
 	}
-	
+
+    public String getForgotPasswordHash() {
+        return forgotPasswordHash;
+    }
+
+    public void setForgotPasswordHash(String forgotPasswordHash) {
+        this.forgotPasswordHash = forgotPasswordHash;
+    }
 }

@@ -57,7 +57,7 @@ public class NewAccountController {
     @RequestMapping(value = "/newaccount.jsp")
     public void setUpForm(ModelMap model, HttpServletRequest request) {
         logger.debug("Initializing form");
-        model.addAttribute("captchaHtml", captchaService.createHtml(request));
+        model.addAttribute(ModelKeys.CAPTCHA_HTML, captchaService.createHtml(request));
         model.addAttribute(ModelKeys.NEW_USER, new NewUser());
     }
 
@@ -108,6 +108,6 @@ public class NewAccountController {
     }
 
     private void initializeCaptcha(Model model, HttpServletRequest request) {
-        model.addAttribute("captchaHtml", captchaService.createHtml(request));
+        model.addAttribute(ModelKeys.CAPTCHA_HTML, captchaService.createHtml(request));
     }
 }

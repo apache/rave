@@ -88,6 +88,12 @@
             <scope>runtime</scope>
         </dependency>
 
+        <!-- mail-->
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+        </dependency>
+
         <!-- Test -->
         <dependency>
             <groupId>junit</groupId>
@@ -182,6 +188,18 @@
                                 <shindig.contextroot />
                             -->
                         </systemProperties>
+                        <dependencies>
+                            <dependency>
+                                <groupId>javax.mail</groupId>
+                                <artifactId>mail</artifactId>
+                                <classpath>shared</classpath>
+                            </dependency>
+                            <dependency>
+                                <groupId>javax.activation</groupId>
+                                <artifactId>activation</artifactId>
+                                <classpath>shared</classpath>
+                            </dependency>
+                        </dependencies>
                     </container>
                 </configuration>
             </plugin>

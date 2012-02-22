@@ -19,15 +19,22 @@
 
 package org.apache.rave.portal.service.impl;
 
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.rave.portal.model.NewUser;
+
 import org.apache.rave.portal.model.PageType;
+
 import org.apache.rave.portal.model.Person;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.repository.*;
+import org.apache.rave.portal.service.EmailService;
 import org.apache.rave.portal.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -36,11 +43,14 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.codec.Base64;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.*;
 
 /**
  *
@@ -54,6 +64,27 @@ public class DefaultUserService implements UserService {
     private final WidgetRatingRepository widgetRatingRepository;
     private final WidgetCommentRepository widgetCommentRepository;
     private final WidgetRepository widgetRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private EmailService emailService;
+
+    @Value("${portal.mail.passwordservice.subject}")
+    private String passwordReminderSubject;
+
+    @Value("${portal.mail.passwordservice.template}")
+    private String passwordReminderTemplate;
+
+    @Value("${portal.mail.username.subject}")
+    private String userNameReminderSubject;
+
+    @Value("${portal.mail.username.template}")
+    private String userNameReminderTemplate;
+
+    @Value("${portal.mail.service.baseurl}")
+    private String baseUrl;
 
     @Autowired
     public DefaultUserService(UserRepository userRepository,
@@ -107,6 +138,8 @@ public class DefaultUserService implements UserService {
     private SecurityContext createContext(final User user) {
         SecurityContext securityContext = new SecurityContextImpl();
         securityContext.setAuthentication(new AbstractAuthenticationToken(user.getAuthorities()) {
+            private static final long serialVersionUID = 1L;
+
             @Override
             public Object getCredentials() {
                 return "N/A";
@@ -181,7 +214,7 @@ public class DefaultUserService implements UserService {
             log.warn("unable to find userId " + userId + " to delete");
             return;
         }
-        
+
         final String username = user.getUsername();
 
         // delete all User type pages
@@ -194,7 +227,7 @@ public class DefaultUserService implements UserService {
         int numWidgetsOwned = widgetRepository.unassignWidgetOwner(userId);
         // finally delete the user
         userRepository.delete(user);
-        log.info("Deleted user [" + userId + "," + username + "] - numPages: " + numDeletedPages +
+        log.info("Deleted user [" + userId + ',' + username + "] - numPages: " + numDeletedPages +
                  ", numWidgetComments: " + numWidgetComments + ", numWidgetRatings: " + numWidgetRatings +
                  ", numWidgetsOwned: " + numWidgetsOwned);
     }
@@ -208,4 +241,84 @@ public class DefaultUserService implements UserService {
         }
         return persons;
     }
+
+    @Override
+    public void updatePassword(NewUser newUser) {
+        log.debug("Changing password  for user {}", newUser);
+        User user = userRepository.getByForgotPasswordHash(newUser.getForgotPasswordHash());
+        if (user == null) {
+            throw new IllegalArgumentException("Could not find user for forgotPasswordHash " + newUser.getForgotPasswordHash());
+        }
+        String saltedHashedPassword = passwordEncoder.encode(newUser.getPassword());
+        user.setPassword(saltedHashedPassword);
+        // reset password hash and time
+        user.setForgotPasswordHash(null);
+        user.setForgotPasswordTime(null);
+        userRepository.save(user);
+
+    }
+
+
+    @Override
+    public void sendUserNameReminder(NewUser newUser) {
+        log.debug("Calling send username  {}", newUser);
+        User user = userRepository.getByUserEmail(newUser.getEmail());
+        if (user == null) {
+            throw new IllegalArgumentException("Could not find user for email " + newUser.getEmail());
+        }
+        String to = user.getUsername() + " <" + user.getEmail() + '>';
+        Map<String, Object> templateData = new HashMap<String, Object>();
+        templateData.put("user", user);
+        emailService.sendEmail(to, userNameReminderSubject, userNameReminderTemplate, templateData);
+
+    }
+
+
+    @Override
+    public void sendPasswordReminder(NewUser newUser) {
+        log.debug("Calling send password change link for user {}", newUser);
+        User user = userRepository.getByUserEmail(newUser.getEmail());
+        if (user == null) {
+            throw new IllegalArgumentException("Could not find user for email " + newUser.getEmail());
+        }
+        // create user hash:
+        String input = user.getEmail() + user.getUsername() + String.valueOf(user.getEntityId()) + System.nanoTime();
+        // hash needs to be URL friendly:
+        String safeString = new String(Base64.encode(passwordEncoder.encode(input).getBytes()));
+        String  hashedInput = safeString.replaceAll("[/=]", "A");
+        user.setForgotPasswordHash(hashedInput);
+        user.setForgotPasswordTime(Calendar.getInstance().getTime());
+        userRepository.save(user);
+        String to = user.getUsername() + " <" + user.getEmail() + '>';
+        Map<String, Object> templateData = new HashMap<String, Object>();
+        templateData.put("user", user);
+        templateData.put("reminderUrl", baseUrl + hashedInput);
+        emailService.sendEmail(to, passwordReminderSubject, passwordReminderTemplate, templateData);
+    }
+
+
+    @Override
+    public boolean isValidReminderRequest(String forgotPasswordHash, int nrOfMinutesValid) {
+        if (StringUtils.isBlank(forgotPasswordHash)) {
+            return false;
+        }
+
+        User userForHash = userRepository.getByForgotPasswordHash(forgotPasswordHash);
+        if (userForHash == null) {
+            return false;
+        }
+        Date requestTime = userForHash.getForgotPasswordTime();
+        Calendar expiredDate = Calendar.getInstance();
+        expiredDate.add(Calendar.MINUTE, nrOfMinutesValid);
+
+        if (requestTime == null || requestTime.after(expiredDate.getTime())) {
+            // reset,  this is invalid state
+            userForHash.setForgotPasswordHash(null);
+            userForHash.setForgotPasswordTime(null);
+            userRepository.save(userForHash);
+            return false;
+        }
+        return true;
+    }
+
 }

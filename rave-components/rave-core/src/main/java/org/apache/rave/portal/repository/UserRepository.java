@@ -21,6 +21,7 @@ package org.apache.rave.portal.repository;
 import org.apache.rave.persistence.Repository;
 import org.apache.rave.portal.model.User;
 
+import java.util.Date;
 import java.util.List;
 
 public interface UserRepository extends Repository<User> {
@@ -80,4 +81,14 @@ public interface UserRepository extends Repository<User> {
      * @return List of User objects in alphabetical order sorted by familyname, givenname
      */
     List<User> getAllByAddedWidget(long widgetId);
+
+    /**
+     * Gets a {@link User} by generated forgot email hash
+     *
+     * @param hash unique generated hash
+     * @return {@link User} if one exists for given hash, otherwise {@literal null}
+     */
+    User getByForgotPasswordHash(String hash);
+
 }
+

@@ -30,17 +30,20 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.Validator;
 
+import java.util.regex.Pattern;
+
 @Component
 public class NewAccountValidator implements Validator {
 
     private static final int MINIMUM_PASSWORD_LENGTH = 4;
     private static final String FIELD_USERNAME = "username";
-    private static final String FIELD_PASSWORD = "password";
+    protected static final String FIELD_PASSWORD = "password";
     private static final String FIELD_CONFIRM_PASSWORD = "confirmPassword";
-    private static final String FIELD_EMAIL = "email";
+    protected static final String FIELD_EMAIL = "email";
     private final Logger logger = LoggerFactory.getLogger(getClass());
+    private static final String USERNAME_MASK = "[\\w\\+\\-\\.@]{2,}";
 
-    private static final String USERNAME_PATTERN = "[\\w\\+\\-\\.@]{2,}";
+    private static final Pattern USERNAME_PATTERN = Pattern.compile(USERNAME_MASK);
     private UserService userService;
 
     @Autowired
@@ -48,7 +51,7 @@ public class NewAccountValidator implements Validator {
         this.userService = userService;
     }
 
-    public boolean supports(Class aClass) {
+    public boolean supports(Class<?> aClass) {
         return NewUser.class.isAssignableFrom(aClass);
     }
 
@@ -69,7 +72,7 @@ public class NewAccountValidator implements Validator {
         if (StringUtils.isBlank(username)) {
             errors.rejectValue(FIELD_USERNAME, "username.required");
             logger.info("Username required");
-        } else if (!username.matches(USERNAME_PATTERN)) {
+        } else if (!USERNAME_PATTERN.matcher(username).matches()) {
             errors.rejectValue(FIELD_USERNAME, "username.invalid.pattern");
             logger.info("Username has invalid pattern");
         } else if (isExistingUsername(username)) {
@@ -82,7 +85,7 @@ public class NewAccountValidator implements Validator {
         return userService.getUserByUsername(username) != null;
     }
 
-    private void validatePassword(Errors errors, NewUser newUser) {
+    protected void validatePassword(Errors errors, NewUser newUser) {
         if (StringUtils.isBlank(newUser.getPassword())) {
             errors.rejectValue(FIELD_PASSWORD, "password.required");
             logger.info("Password required");
@@ -92,7 +95,7 @@ public class NewAccountValidator implements Validator {
         }
     }
 
-    private void validateConfirmPassword(Errors errors, NewUser newUser) {
+    protected void validateConfirmPassword(Errors errors, NewUser newUser) {
         if (StringUtils.isBlank(newUser.getConfirmPassword())) {
             errors.rejectValue(FIELD_CONFIRM_PASSWORD, "confirmPassword.required");
             logger.info("Confirm Password required");
@@ -116,15 +119,15 @@ public class NewAccountValidator implements Validator {
         }
     }
 
-    private boolean isInvalidEmailAddress(String emailAddress) {
+    protected boolean isInvalidEmailAddress(String emailAddress) {
         return !EmailValidator.getInstance().isValid(emailAddress);
     }
 
-    private boolean isExistingEmailAddress(String email) {
+    protected boolean isExistingEmailAddress(String email) {
         return userService.getUserByEmail(email) != null;
     }
 
-    private void writeResultToLog(Errors errors) {
+    protected void writeResultToLog(Errors errors) {
         if (errors.hasErrors()) {
             if (logger.isInfoEnabled()) {
                 for (ObjectError error : errors.getAllErrors()) {
@@ -134,5 +137,9 @@ public class NewAccountValidator implements Validator {
         } else {
             logger.debug("Validation successful");
         }
+    }
+
+    public UserService getUserService() {
+        return userService;
     }
 }

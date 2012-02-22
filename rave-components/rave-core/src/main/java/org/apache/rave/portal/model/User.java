@@ -27,6 +27,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 
 /**
  * {@inheritDoc}
@@ -38,6 +39,7 @@ import java.util.Collections;
         @NamedQuery(name = User.USER_GET_BY_USERNAME, query = "select u from User u where u.username = :"+User.PARAM_USERNAME),
         @NamedQuery(name = User.USER_GET_BY_USER_EMAIL, query = "select u from User u where u.email = :"+User.PARAM_EMAIL),
         @NamedQuery(name = User.USER_GET_ALL, query = "select u from User u order by u.username asc"),
+        @NamedQuery(name = User.USER_GET_BY_FORGOT_PASSWORD_HASH, query = "select u from User u where u.forgotPasswordHash = :" + User.PARAM_FORGOT_PASSWORD_HASH),
         @NamedQuery(name = User.USER_COUNT_ALL, query = "select count(u) from User u"),
         @NamedQuery(name = User.USER_FIND_BY_USERNAME_OR_EMAIL, query = "select u from User u " +
                 "where lower(u.username) like :"+User.PARAM_SEARCHTERM+" or lower(u.email) like :"+User.PARAM_SEARCHTERM+" order by u.username asc"),
@@ -56,8 +58,10 @@ public class User extends Person implements UserDetails, BasicEntity, Serializab
     public static final String USER_COUNT_FIND_BY_USERNAME_OR_EMAIL = "User.countFindByUsernameOrEmail";
     public static final String USER_GET_COMMENTERS = "User.getCommenters";
     public static final String USER_GET_ALL_FOR_ADDED_WIDGET = "User.getAllForAddedWidget";
+    public static final String USER_GET_BY_FORGOT_PASSWORD_HASH = "User.getByForgotPasswordHash";
 
     public static final String PARAM_USERNAME = "username";
+    public static final String PARAM_FORGOT_PASSWORD_HASH = "forgotPasswordHash";
     public static final String PARAM_EMAIL = "email";
     public static final String PARAM_SEARCHTERM = "searchTerm";
     public static final String PARAM_WIDGET_ID = "widgetId";
@@ -81,8 +85,17 @@ public class User extends Person implements UserDetails, BasicEntity, Serializab
 
     @Basic
     @Column(name = "openid")
-    private String openId;       
-    
+    private String openId;
+
+    @Basic
+    @Column(name = "forgotPasswordHash", unique = true)
+    private String forgotPasswordHash;
+
+    @Basic
+    @Column(name = "password_hash_time")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date forgotPasswordTime;
+
     @ManyToOne
     @JoinColumn(name="default_page_layout_id")
     private PageLayout defaultPageLayout;    
@@ -239,7 +252,23 @@ public class User extends Person implements UserDetails, BasicEntity, Serializab
     public void setOpenId(String openId) {
         this.openId = openId;
     }
-    
+
+    public String getForgotPasswordHash() {
+        return forgotPasswordHash;
+    }
+
+    public void setForgotPasswordHash(String forgotPasswordHash) {
+        this.forgotPasswordHash = forgotPasswordHash;
+    }
+
+    public Date getForgotPasswordTime() {
+        return forgotPasswordTime;
+    }
+
+    public void setForgotPasswordTime(Date forgotPasswordTime) {
+        this.forgotPasswordTime = forgotPasswordTime;
+    }
+
     public PageLayout getDefaultPageLayout() {
         return defaultPageLayout;
     }

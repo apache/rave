@@ -19,12 +19,13 @@
 
 package org.apache.rave.portal.service;
 
+import java.util.List;
+
+import org.apache.rave.portal.model.NewUser;
 import org.apache.rave.portal.model.Person;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.util.SearchResult;
 import org.springframework.security.core.userdetails.UserDetailsService;
-
-import java.util.List;
 
 public interface UserService extends UserDetailsService {
     /**
@@ -97,8 +98,8 @@ public interface UserService extends UserDetailsService {
      * Gets a {@link SearchResult} for {@link User}'s that match the search term
      *
      * @param searchTerm free text input to search on users
-     * @param offset   start point within the resultset (for paging)
-     * @param pageSize maximum number of items to be returned (for paging)
+     * @param offset     start point within the resultset (for paging)
+     * @param pageSize   maximum number of items to be returned (for paging)
      * @return SearchResult
      */
     SearchResult<User> getUsersByFreeTextSearch(String searchTerm, int offset, int pageSize);
@@ -117,4 +118,38 @@ public interface UserService extends UserDetailsService {
      * @return List of Person objects in alphabetical order sorted by familyname, givenname
      */
     List<Person> getAllByAddedWidget(long widgetId);
+
+    /**
+     * Sends an email which contains link for changing user password
+     *
+     * @param user the {@link org.apache.rave.portal.model.NewUser} which requested password change
+     */
+    void sendPasswordReminder(NewUser user);
+
+    /**
+     * Sends an email which contains username
+     *
+     * @param user the {@link org.apache.rave.portal.model.NewUser} which requested username reminder
+     */
+    void sendUserNameReminder(NewUser user);
+
+
+    /**
+     * Changes password for given user
+     *
+     * @param user the {@link org.apache.rave.portal.model.NewUser} which requested password change
+     * @throws Exception in case something goes wrong
+     */
+    void updatePassword(NewUser user);
+
+    /**
+     * Check if username/email reminder request is still valid (not expired)
+     *
+     * @param forgotPasswordHash hash provided by user
+     * @return true if forgotPasswordHash is stil within given time range
+     * @throws Exception in case something goes wrong
+     */
+    boolean isValidReminderRequest(String forgotPasswordHash, int nrOfMinutesValid);
+
+
 }

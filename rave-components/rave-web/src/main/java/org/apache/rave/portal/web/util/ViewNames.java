@@ -22,7 +22,7 @@ package org.apache.rave.portal.web.util;
 /**
  * Defines constants representing the available view names in the system
  */
-public class ViewNames {
+public final class ViewNames {
     private ViewNames() {}
     private static final String USER_PREFIX = "templates.user.";
     private static final String ADMIN_PREFIX = "templates.admin.";
@@ -47,13 +47,24 @@ public class ViewNames {
     public static final String ADMIN_CATEGORIES = ADMIN_PREFIX + "categories";
     public static final String ADMIN_CATEGORY_DETAIL = ADMIN_PREFIX + "categoryDetail";
 
+    // password reminder / changing
+    public static final String NEW_PASSWORD_REQUEST = USER_PREFIX + "newpassword";
+    public static final String USERNAME_REQUEST = USER_PREFIX + "retrieveusername";
+    public static final String PASSWORD_CHANGE = USER_PREFIX + "changepassword";
+
+
+
     public static final String REDIRECT = "redirect:/";
 
     public static final String POSTS_TAG_PAGE = "postsTagPage";
     public static final String ABOUT_TAG_PAGE = "aboutTagPage";
 
+    public static final String REDIRECT_NEW_PASSWORD = REDIRECT + "app/newpassword";
+    public static final String REDIRECT_RETRIEVE_USERNAME = REDIRECT + "app/retrieveusername";
+
+
     public static String getPageView(String layoutName) {
-        return new StringBuilder(PAGE).append(".").append(layoutName).toString();
+        return new StringBuilder(PAGE).append('.').append(layoutName).toString();
     }
 
     public static String getPersonPageView(String layoutName) {

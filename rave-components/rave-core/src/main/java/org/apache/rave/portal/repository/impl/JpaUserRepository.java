@@ -29,6 +29,8 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+
+import java.util.Date;
 import java.util.List;
 
 import static org.apache.rave.persistence.jpa.util.JpaUtil.getPagedResultList;
@@ -91,4 +93,12 @@ public class JpaUserRepository extends AbstractJpaRepository<User> implements Us
         query.setParameter(User.PARAM_WIDGET_ID, widgetId);
         return query.getResultList();
     }
+
+    @Override
+    public User getByForgotPasswordHash(String hash) {
+        TypedQuery<User> query = manager.createNamedQuery(User.USER_GET_BY_FORGOT_PASSWORD_HASH, User.class);
+        query.setParameter(User.PARAM_FORGOT_PASSWORD_HASH, hash);
+        return getSingleResult(query.getResultList());
+    }
+
 }
