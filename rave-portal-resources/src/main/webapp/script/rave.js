@@ -97,7 +97,7 @@ var rave = rave || (function() {
 
         function init() {
             // initialize the sortable regions
-            $(".region").sortable({
+            getNonLockedRegions().sortable({
                         connectWith: '.region', // defines which regions are dnd-able
                         scroll: true, // whether to scroll the window if the user goes outside the areas
                         opacity: 0.5, // the opacity of the object being dragged
@@ -115,11 +115,11 @@ var rave = rave || (function() {
 
         function dragStart(event, ui) {
             adjustRowRegionsHeights();
-
+            var $regions = getNonLockedRegions();
             // highlight the draggable regions
-            $(".region").addClass("regionDragging");
+            $regions.addClass("regionDragging");
             // remove invisible border so nothing moves
-            $(".region").removeClass("regionNonDragging");
+            $regions.removeClass("regionNonDragging");
 
             uiState.widget = ui.item.children(".widget").get(0);
             uiState.currentRegion = ui.item.parent().get(0);
@@ -133,16 +133,18 @@ var rave = rave || (function() {
         }
 
         function dragStop(event, ui) {
+            var $regions = getNonLockedRegions();
+
             // reset padding to 0 after drag on all rows
             if ($(".widgetRow").length){
-                var rows = $(".regions").find(".widgetRow");
+                var rows = $regions.find(".widgetRow");
                 rows.each(resetRowsRegionsHeight);
             }
 
             // remove the draggable regions visible border
-            $(".region").removeClass("regionDragging");
+            $regions.removeClass("regionDragging");
             // add an invisible border so nothing moves
-            $(".region").addClass("regionNonDragging");
+            $regions.addClass("regionNonDragging");
 
             $(".dnd-overlay").remove();
             //Fixes a bug where the jQuery style attribute remains set in chrome
@@ -201,7 +203,7 @@ var rave = rave || (function() {
                 adjustUpperRowRegionsHeight(row);
             }
             // refresh sortables cached positions
-            $(".region").sortable("refreshPositions");
+            getNonLockedRegions().sortable("refreshPositions");
         }
 
 
@@ -217,7 +219,7 @@ var rave = rave || (function() {
             setRowsRegionsHeight(row, getRowRegionsMaxHeight(row));
 
             // refresh sortables cached positions
-            $(".region").sortable("refreshPositions");
+            getNonLockedRegions().sortable("refreshPositions");
         }
 
         // Returns the height of the tallest region in row, minimum 100 px
@@ -302,7 +304,7 @@ var rave = rave || (function() {
         function minimizeAction(args) {
             var regionWidgetId = args.data.id;
             $(".dnd-overlay").remove();
-            $(".region" ).sortable( "option", "disabled", false );
+            getNonLockedRegions().sortable( "option", "disabled", false );
             // display the widget in normal view
             $("#widget-" + regionWidgetId + "-wrapper").removeClass("widget-wrapper-canvas").addClass("widget-wrapper");
             // hide the widget minimize button
@@ -606,7 +608,7 @@ var rave = rave || (function() {
 
         function openFullScreenOverlay(regionWidgetId) {
             addOverlay($("#pageContent"));
-            $(".region").sortable("option", "disabled", true);
+            getNonLockedRegions().sortable("option", "disabled", true);
             $("#widget-" + regionWidgetId + "-wrapper").removeClass("widget-wrapper").addClass("widget-wrapper-canvas");
             // hide the widget menu
             $("#widget-" + regionWidgetId + "-widget-menu-wrapper").hide();
@@ -696,6 +698,10 @@ var rave = rave || (function() {
                     .slideUp(function () {
                         $(this).remove();
                     });
+        }
+
+        function getNonLockedRegions() {
+            return $(".region:not(.region-locked)");
         }
 
         return {

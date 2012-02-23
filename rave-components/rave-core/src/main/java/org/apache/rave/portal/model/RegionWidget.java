@@ -75,6 +75,10 @@ public class RegionWidget implements BasicEntity, Serializable {
     @JoinColumn(name = "region_widget_id", referencedColumnName = "entity_id")
     private List<RegionWidgetPreference> preferences;
 
+    @Basic(optional = false)
+    @Column(name = "locked")
+    private boolean locked;
+
     public RegionWidget() {
     }
 
@@ -191,6 +195,14 @@ public class RegionWidget implements BasicEntity, Serializable {
 
     public void setPreferences(List<RegionWidgetPreference> preferences) {
         this.preferences = preferences;
+    }
+
+    public boolean isLocked() {
+        return locked;
+    }
+
+    public void setLocked(boolean locked) {
+        this.locked = locked;
     }
 
     @Override

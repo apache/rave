@@ -54,6 +54,10 @@ public class PageTemplateRegion implements BasicEntity, Serializable {
     @OrderBy("renderSequence")
     @JoinColumn(name = "page_template_region_id")
     private List<PageTemplateWidget> pageTemplateWidgets;
+    
+    @Basic(optional = false)
+    @Column(name = "locked")
+    private boolean locked;
 
     @Override
     public Long getEntityId() {
@@ -87,5 +91,13 @@ public class PageTemplateRegion implements BasicEntity, Serializable {
 
     public void setPageTemplateWidgets(List<PageTemplateWidget> pageTemplateWidgets) {
         this.pageTemplateWidgets = pageTemplateWidgets;
+    }
+
+    public boolean isLocked() {
+        return locked;
+    }
+
+    public void setLocked(boolean locked) {
+        this.locked = locked;
     }
 }

@@ -449,7 +449,7 @@ public class JpaWidgetRepositoryTest {
     public void unassignWidgetOwner() {
         final long WIDGET_ID = 2L;
         final long USER_ID = 1L;
-        final int NUM_WIDGETS_OWNED_BY_USER = 11;
+        final int NUM_WIDGETS_OWNED_BY_USER = 16;
         
         Widget widget = repository.get(WIDGET_ID);
         assertThat(widget.getOwner().getEntityId(), is(USER_ID));        

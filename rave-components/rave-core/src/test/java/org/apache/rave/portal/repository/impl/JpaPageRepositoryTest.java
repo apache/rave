@@ -80,8 +80,8 @@ public class JpaPageRepositoryTest {
     public void getAllPages_validUser_validPersonProfilePageSet() {
         List<Page> pages = repository.getAllPages(USER_ID, PageType.PERSON_PROFILE);
         assertThat(pages, is(notNullValue()));
-        assertThat(pages.size(), equalTo(1));
-        assertThat(pages.get(0).getRegions().size(), equalTo(2));
+        assertThat(pages.size(), is(1));
+        assertThat(pages.get(0).getRegions().size(), is(1));
 
         // test that the query returns the pages in proper render sequence order
         Long lastRenderSequence = -1L;
@@ -96,9 +96,9 @@ public class JpaPageRepositoryTest {
     public void getAllPages_validUser_validSubPagePageSet() {
         List<Page> pages = repository.getAllPages(USER_ID, PageType.SUB_PAGE);
         assertThat(pages, is(notNullValue()));
-        assertThat(pages.size(), equalTo(2));
-        assertThat(pages.get(0).getRegions().size(), equalTo(2));
-        assertThat(pages.get(0).getParentPage().getEntityId(), equalTo(3L));
+        assertThat(pages.size(), is(2));
+        assertThat(pages.get(0).getRegions().size(), is(1));
+        assertThat(pages.get(0).getParentPage().getEntityId(), is(3L));
 
         // test that the query returns the pages in proper render sequence order
         Long lastRenderSequence = -1L;

@@ -313,7 +313,7 @@ describe("Rave", function() {
             rave.initUI();
             var sortableArgs = $().getSortableArgs();
             expect(sortableArgs).toBeDefined();
-            expect(sortableArgs.selector).toEqual(".region");
+            expect(sortableArgs.selector).toEqual(".region:not(.region-locked)");
             expect(sortableArgs.connectWith).toEqual(".region");
             expect(sortableArgs.handle).toEqual(".widget-title-bar");
             expect(typeof(sortableArgs.start)).toEqual("function");

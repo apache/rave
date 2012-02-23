@@ -53,6 +53,7 @@ public class OpenSocialWidgetRendererTest {
     private static final String VALID_METADATA = "metadata";
     private static final String VALID_SECURITY_TOKEN = "securityToken";
     private static final boolean VALID_COLLAPSED = true;
+    private static final boolean VALID_LOCKED = false;
     private RenderContext renderContext;
 
     @Before
@@ -96,7 +97,9 @@ public class OpenSocialWidgetRendererTest {
             " metadata: " + VALID_METADATA + "," +
             " userPrefs: {\"speed\":\"fast\",\"color\":\"blue\"}," +
             " collapsed: " + VALID_COLLAPSED + ", " +
-            " widgetId: 1});</script>";
+            " widgetId: 1," +
+            " locked: " + VALID_LOCKED +
+            "});</script>";
 
         expect(securityTokenService.getEncryptedSecurityToken(rw)).andReturn(VALID_SECURITY_TOKEN);
         replay(securityTokenService);
@@ -120,21 +123,22 @@ public class OpenSocialWidgetRendererTest {
         rw.setWidget(w);
         rw.setRegion(region);
 
-        String result = renderer.render(rw, null);
-
         final String markup =
             "<script>rave.registerWidget(widgetsByRegionIdMap, 1, {type: 'OpenSocial'," +
             " regionWidgetId: null," +
             " widgetUrl: 'null', " +
-            " securityToken: '" + VALID_SECURITY_TOKEN + "', " +
+            " securityToken: 'null', " +
             " metadata: null," +
-            " userPrefs: null," +
+            " userPrefs: {}," +
             " collapsed: false, " +
-            " widgetId: null});</script>";
+            " widgetId: null," +
+            " locked: false});</script>";
 
         scriptManager.registerScriptBlock(markup, ScriptLocation.AFTER_RAVE, RenderScope.CURRENT_REQUEST, null);
         expectLastCall();
         replay(scriptManager);
+        String result = renderer.render(rw, null);
+        verify(scriptManager);
     }
 
     @Test(expected = NotSupportedException.class)

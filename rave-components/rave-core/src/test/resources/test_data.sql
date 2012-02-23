@@ -37,6 +37,9 @@ set @portal_preference_seq = 'portal_preference';
 set @tag_seq = 'tag';
 set @widget_tag_seq = 'widget_tag';
 set @category_seq = 'category';
+set @page_template_seq = 'page_template';
+set @page_template_region_seq = 'page_template_region';
+set @page_template_widget_seq = 'page_template_widget';
 
 CREATE TABLE IF NOT EXISTS RAVE_PORTAL_SEQUENCES (seq_name VARCHAR(255) PRIMARY KEY NOT NULL, seq_count BIGINT(19));
 INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@page_seq, 1);
@@ -53,6 +56,9 @@ INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@portal_preferenc
 INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@tag_seq, 1);
 INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@widget_tag_seq, 1);
 INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@category_seq, 1);
+INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@page_template_seq, 1);
+INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@page_template_region_seq, 1);
+INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@page_template_widget_seq, 1);
 
 
   -- ***********************************************************************************
@@ -94,7 +100,7 @@ UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @p
 
 set @person_profile_layout_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @page_layout_seq);
 insert into page_layout (entity_id, code,  number_of_regions, render_sequence, user_selectable)
-values (@person_profile_layout_id, 'person_profile', 2, 7, false);
+values (@person_profile_layout_id, 'person_profile', 1, 8, false);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_layout_seq;
 --- end page layout data ----
 
@@ -243,6 +249,37 @@ insert into widget (entity_id, title, url, type, widget_status, description, aut
 values(@user_prefs_demo_widget_id, 'User Prefs Demo', 'http://localhost:8080/demogadgets/user_prefs_demo.xml', 'OpenSocial', 'PUBLISHED', 'An example gadget which demos some of the different capabilities of user preferences.', 'Anthony Carlucci', @user_id_1);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @widget_seq;
 
+-- my activity
+set @my_activity_widget_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @widget_seq);
+insert into widget (entity_id, title, url, type, widget_status, description, author, owner_id)
+values(@my_activity_widget_id, 'My Activity', 'http://localhost:8080/demogadgets/my_activity.xml', 'OpenSocial', 'PUBLISHED', 'Static widget of activities for demoing on the Person Profile page', 'Anthony Carlucci', @user_id_1);
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @widget_seq;
+
+-- schedule
+set @schedule_widget_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @widget_seq);
+insert into widget (entity_id, title, url, type, widget_status, description, author, owner_id)
+values(@schedule_widget_id, 'Current Schedule', 'http://localhost:8080/demogadgets/schedule.xml', 'OpenSocial', 'PUBLISHED', 'Static widget of a schedule for demoing on the Person Profile page', 'Anthony Carlucci', @user_id_1);
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @widget_seq;
+
+-- favorite websites
+set @favorite_websites_widget_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @widget_seq);
+insert into widget (entity_id, title, url, type, widget_status, description, author, owner_id)
+values(@favorite_websites_widget_id, 'Favorite Websites', 'http://localhost:8080/demogadgets/favorite_websites.xml', 'OpenSocial', 'PUBLISHED', 'Static widget of favorite websites for demoing on the Person Profile page', 'Anthony Carlucci', @user_id_1);
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @widget_seq;
+
+-- my groups
+set @my_groups_widget_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @widget_seq);
+insert into widget (entity_id, title, url, type, widget_status, description, author, owner_id)
+values(@my_groups_widget_id, 'My Groups', 'http://localhost:8080/demogadgets/my_groups.xml', 'OpenSocial', 'PUBLISHED', 'Static widget of groups for demoing on the Person Profile page', 'Anthony Carlucci', @user_id_1);
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @widget_seq;
+
+-- work experience
+set @work_experience_widget_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @widget_seq);
+insert into widget (entity_id, title, url, type, widget_status, description, author, owner_id)
+values(@work_experience_widget_id, 'Work Experience', 'http://localhost:8080/demogadgets/work_experience.xml', 'OpenSocial', 'PUBLISHED', 'Static widget of work experience for demoing on the Person Profile page', 'Anthony Carlucci', @user_id_1);
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @widget_seq;
+
+
 -- end widget data ----
 
 -- User layouts
@@ -350,30 +387,20 @@ INSERT INTO region(entity_id, page_id, render_order)
 values (@person_profile_page_region_1, @person_profile_page_id, 1);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @region_seq;
 
-set @person_profile_page_region_2 = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @region_seq);
-INSERT INTO region(entity_id, page_id, render_order)
-values (@person_profile_page_region_2, @person_profile_page_id, 2);
-UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @region_seq;
-
 set @next_region_widget = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @region_widget_seq);
 INSERT INTO region_widget(entity_id, widget_id, region_id, render_order, collapsed)
-values (@next_region_widget, @wikipedia_widget_id, @person_profile_page_region_1, 0, FALSE);
+values (@next_region_widget, @my_groups_widget_id, @person_profile_page_region_1, 0, FALSE);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @region_widget_seq;
 
 set @next_region_widget = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @region_widget_seq);
 INSERT INTO region_widget(entity_id, widget_id, region_id, render_order, collapsed)
-values (@next_region_widget, @translate_widget_id, @person_profile_page_region_1, 1, FALSE);
-UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @region_widget_seq;
-
-set @next_region_widget = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @region_widget_seq);
-INSERT INTO region_widget(entity_id, widget_id, region_id, render_order, collapsed)
-values (@next_region_widget, @nyt_widget_id, @person_profile_page_region_2, 0, FALSE);
+values (@next_region_widget, @work_experience_widget_id, @person_profile_page_region_1, 1, FALSE);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @region_widget_seq;
 
 -- sub pages for profile page for user 1
 set @sub_page_1_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @page_seq);
 INSERT INTO page (entity_id, name, owner_id, parent_page_id, render_sequence, page_layout_id, page_type)
-values (@sub_page_1_id , 'Person Profile Sub Page 1', @user_id_1, @person_profile_page_id, 1, @two_col_id, 'SUB_PAGE');
+values (@sub_page_1_id , 'About', @user_id_1, @person_profile_page_id, 1, @one_col_id, 'SUB_PAGE');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_seq;
 
 set @sub_page_1_region_1 = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @region_seq);
@@ -381,14 +408,19 @@ INSERT INTO region(entity_id, page_id, render_order)
 values (@sub_page_1_region_1, @sub_page_1_id, 1);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @region_seq;
 
-set @sub_page_1_region_2 = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @region_seq);
-INSERT INTO region(entity_id, page_id, render_order)
-values (@sub_page_1_region_2, @sub_page_1_id, 2);
-UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @region_seq;
+set @next_region_widget = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @region_widget_seq);
+INSERT INTO region_widget(entity_id, widget_id, region_id, render_order, collapsed)
+values (@next_region_widget, @favorite_websites_widget_id , @sub_page_1_region_1, 0, FALSE);
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @region_widget_seq;
+
+set @next_region_widget = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @region_widget_seq);
+INSERT INTO region_widget(entity_id, widget_id, region_id, render_order, collapsed)
+values (@next_region_widget, @schedule_widget_id, @sub_page_1_region_1, 1, FALSE);
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @region_widget_seq;
 
 set @sub_page_2_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @page_seq);
 INSERT INTO page (entity_id, name, owner_id, parent_page_id, render_sequence, page_layout_id, page_type)
-values (@sub_page_2_id , 'Person Profile Sub Page 2', @user_id_1, @person_profile_page_id, 2, @two_col_id, 'SUB_PAGE');
+values (@sub_page_2_id , 'My Activity', @user_id_1, @person_profile_page_id, 2, @one_col_id, 'SUB_PAGE');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_seq;
 
 set @sub_page_2_region_1 = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @region_seq);
@@ -396,10 +428,10 @@ INSERT INTO region(entity_id, page_id, render_order)
 values (@sub_page_2_region_1, @sub_page_2_id, 1);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @region_seq;
 
-set @sub_page_2_region_2 = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @region_seq);
-INSERT INTO region(entity_id, page_id, render_order)
-values (@sub_page_2_region_2, @sub_page_2_id, 2);
-UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @region_seq;
+set @next_region_widget = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @region_widget_seq);
+INSERT INTO region_widget(entity_id, widget_id, region_id, render_order, collapsed)
+values (@next_region_widget, @my_activity_widget_id, @sub_page_2_region_1, 0, FALSE);
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @region_widget_seq;
 --- End canonical user_id_1 layout ---
 
 --- Layout for user_id_2 ---
@@ -910,3 +942,75 @@ values (@wikipedia_widget_id, @category_id4);
 insert into widget_category (widget_id, category_id)
 values (@wikipedia_widget_id, @category_id2);
 
+----------------------------------------
+-- person profile parent page templates
+----------------------------------------
+-- page
+set @person_profile_page_template_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @page_template_seq);
+insert into page_template (entity_id, page_type, page_layout_id, title, description, parent_page_template_id, render_sequence, default_template)
+values (@person_profile_page_template_id, 'PERSON_PROFILE', @person_profile_layout_id, 'Person Profile', 'Template for person profile pages', null, 0, true);
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_template_seq;
+
+-- regions
+set @person_profile_page_template_region_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @page_template_region_seq);
+insert into page_template_region (entity_id, render_sequence, page_template_id, locked)
+values (@person_profile_page_template_region_id, 0, @person_profile_page_template_id, true);
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_template_region_seq;
+
+-- widgets
+set @next_person_profile_page_template_widget_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @page_template_widget_seq);
+insert into page_template_widget (entity_id, page_template_region_id, render_sequence, widget_id, locked)
+values (@next_person_profile_page_template_widget_id, @person_profile_page_template_region_id, 0, @my_groups_widget_id, true);
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_template_widget_seq;
+
+set @next_person_profile_page_template_widget_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @page_template_widget_seq);
+insert into page_template_widget (entity_id, page_template_region_id, render_sequence, widget_id, locked)
+values (@next_person_profile_page_template_widget_id, @person_profile_page_template_region_id, 1, @work_experience_widget_id, true);
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_template_widget_seq;
+
+------------------------------------------
+-- person profile about sub page templates
+------------------------------------------
+-- page
+set @person_profile_subpage1_template_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @page_template_seq);
+insert into page_template (entity_id, page_type, page_layout_id, title, description, parent_page_template_id, render_sequence, default_template)
+values (@person_profile_subpage1_template_id, 'SUB_PAGE', @one_col_id, 'About', 'Template for the About sub page for the person profile', @person_profile_page_template_id, 0, false);
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_template_seq;
+
+-- regions
+set @person_profile_subpage1_template_region_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @page_template_region_seq);
+insert into page_template_region (entity_id, render_sequence, page_template_id, locked)
+values (@person_profile_subpage1_template_region_id, 0, @person_profile_subpage1_template_id, true);
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_template_region_seq;
+
+-- widgets
+set @next_person_profile_subpage1_template_widget_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @page_template_widget_seq);
+insert into page_template_widget (entity_id, page_template_region_id, render_sequence, widget_id, locked)
+values (@next_person_profile_subpage1_template_widget_id, @person_profile_subpage1_template_region_id, 0, @favorite_websites_widget_id, true);
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_template_widget_seq;
+
+set @next_person_profile_subpage1_template_widget_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @page_template_widget_seq);
+insert into page_template_widget (entity_id, page_template_region_id, render_sequence, widget_id, locked)
+values (@next_person_profile_subpage1_template_widget_id, @person_profile_subpage1_template_region_id, 1, @schedule_widget_id, true);
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_template_widget_seq;
+
+--------------------------------------------------
+-- person profile my activities sub page templates
+--------------------------------------------------
+-- page
+set @person_profile_subpage2_template_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @page_template_seq);
+insert into page_template (entity_id, page_type, page_layout_id, title, description, parent_page_template_id, render_sequence, default_template)
+values (@person_profile_subpage2_template_id, 'SUB_PAGE', @one_col_id, 'My Activity', 'Template for the My Activity sub page for the person profile', @person_profile_page_template_id, 1, false);
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_template_seq;
+
+-- regions
+set @person_profile_subpage2_template_region_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @page_template_region_seq);
+insert into page_template_region (entity_id, render_sequence, page_template_id, locked)
+values (@person_profile_subpage2_template_region_id, 0, @person_profile_subpage2_template_id, true);
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_template_region_seq;
+
+-- widgets
+set @next_person_profile_subpage2_template_widget_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @page_template_widget_seq);
+insert into page_template_widget (entity_id, page_template_region_id, render_sequence, widget_id, locked)
+values (@next_person_profile_subpage2_template_widget_id, @person_profile_subpage2_template_region_id, 0, @my_activity_widget_id, true);
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_template_widget_seq;

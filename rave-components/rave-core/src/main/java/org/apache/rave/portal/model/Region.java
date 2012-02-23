@@ -74,6 +74,10 @@ public class Region implements BasicEntity, Serializable {
     @JoinColumn(name = "region_id")
     private List<RegionWidget> regionWidgets;
 
+    @Basic(optional = false)
+    @Column(name = "locked")
+    private boolean locked;
+
     public Region() {
     }
 
@@ -156,6 +160,14 @@ public class Region implements BasicEntity, Serializable {
         this.regionWidgets = regionWidgets;
     }
 
+    public boolean isLocked() {
+        return locked;
+    }
+
+    public void setLocked(boolean locked) {
+        this.locked = locked;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {
@@ -180,6 +192,6 @@ public class Region implements BasicEntity, Serializable {
 
     @Override
     public String toString() {
-        return "Region{" + "entityId=" + entityId + ", pageId=" + page.getEntityId() + ", regionWidgets=" + regionWidgets + '}';
+        return "Region{" + "entityId=" + entityId + ", pageId=" + ((page == null) ? null : page.getEntityId()) + ", regionWidgets=" + regionWidgets + '}';
     }
 }

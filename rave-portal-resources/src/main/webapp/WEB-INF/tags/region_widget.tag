@@ -26,11 +26,14 @@ Template for rendering a RegionWidget including wrapper chrome, toolbars, menus,
 <%@ taglib prefix="portal" uri="http://www.apache.org/rave/tags" %>
 <%@ attribute name="regionWidget" type="org.apache.rave.portal.model.RegionWidget" required="true" description="The regionWidget object" %>
 
+<c:set var="isLocked" value="${regionWidget.locked}" />
 <fmt:setBundle basename="messages"/>
 <%--@elvariable id="regionWidget" type="org.apache.rave.portal.model.RegionWidget"--%>
-<div class="widget-wrapper" id="widget-${regionWidget.entityId}-wrapper">
-    <div class="widget-title-bar">
-        <span id="widget-${regionWidget.entityId}-collapse" class="widget-toolbar-toggle-collapse" title="<fmt:message key="widget.chrome.toggle"/>"></span>
+<div class="widget-wrapper<c:if test="${isLocked}"> widget-wrapper-locked</c:if>" id="widget-${regionWidget.entityId}-wrapper">
+    <div class="widget-title-bar<c:if test="${isLocked}"> widget-title-bar-locked</c:if>">
+        <c:if test="${!isLocked}">
+            <span id="widget-${regionWidget.entityId}-collapse" class="widget-toolbar-toggle-collapse" title="<fmt:message key="widget.chrome.toggle"/>"></span>
+        </c:if>
         <div id="widget-${regionWidget.entityId}-title" class="widget-title">
             <c:choose>
                 <c:when test="${not empty regionWidget.widget.titleUrl}">
@@ -42,7 +45,7 @@ Template for rendering a RegionWidget including wrapper chrome, toolbars, menus,
             </c:choose>
         </div>
         <%-- These are toolbar buttons --%>
-        <div id="widget-${regionWidget.entityId}-toolbar" style="float:right;">
+        <div id="widget-${regionWidget.entityId}-toolbar" style="float:right;" <c:if test="${isLocked}">class="hidden"</c:if>>
             <div id="widget-${regionWidget.entityId}-widget-menu-wrapper" class="widget-menu-wrapper">
                 <span id="widget-${regionWidget.entityId}-menu-button" class="widget-menu-button ui-icon ui-icon-gear" title="<fmt:message key="widget.menu.title"/>"></span>
                 <div id="widget-${regionWidget.entityId}-menu" class="widget-menu">

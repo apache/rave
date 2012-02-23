@@ -116,6 +116,8 @@ public class DefaultPageService implements PageService {
         for (regionCount = 0; regionCount < pageLayout.getNumberOfRegions(); regionCount++) {
             Region region = new Region();
             region.setRenderOrder(regionCount);
+            // TODO: this should eventually be defined by the PageTemplateRegion.locked field
+            region.setLocked(false);
             regions.add(region);
         }
 
@@ -172,6 +174,10 @@ public class DefaultPageService implements PageService {
     @Transactional
     public RegionWidget moveRegionWidget(long regionWidgetId, int newPosition, long toRegionId, long fromRegionId) {
         Region target = getFromRepository(toRegionId, regionRepository);
+        // verify that the target Region and the RegionWidget are not locked and can be modified
+        RegionWidget regionWidget = regionWidgetRepository.get(regionWidgetId);
+        verifyRegionWidgetIsNotLocked(regionWidget);
+        verifyRegionIsNotLocked(target);
         if (toRegionId == fromRegionId) {
             moveWithinRegion(regionWidgetId, newPosition, target);
         } else {
@@ -191,6 +197,11 @@ public class DefaultPageService implements PageService {
         
         // Move it to first position of the first region
         Region moveToRegion = toPage.getRegions().get(0);
+
+        // verify the region widget, source, and target regions not locked
+        verifyRegionWidgetIsNotLocked(regionWidget);
+        verifyRegionIsNotLocked(moveToRegion);
+                
         regionWidget.setRenderOrder(0);
         regionWidget.setRegion(moveToRegion);
         moveToRegion.getRegionWidgets().add(0, regionWidget);
@@ -204,9 +215,10 @@ public class DefaultPageService implements PageService {
     @Override
     @Transactional
     public Region removeWidgetFromPage(long regionWidgetId) {
-        RegionWidget widget = getFromRepository(regionWidgetId, regionWidgetRepository);
-        regionWidgetRepository.delete(widget);
-        return getFromRepository(widget.getRegion().getEntityId(), regionRepository);
+        RegionWidget regionWidget = getFromRepository(regionWidgetId, regionWidgetRepository);
+        verifyRegionWidgetIsNotLocked(regionWidget);
+        regionWidgetRepository.delete(regionWidget);
+        return getFromRepository(regionWidget.getRegion().getEntityId(), regionRepository);
     }
 
     @Override
@@ -215,6 +227,7 @@ public class DefaultPageService implements PageService {
         Page page = getFromRepository(pageId, pageRepository);
         Widget widget = getFromRepository(widgetId, widgetRepository);
         Region region = page.getRegions().get(0);
+        verifyRegionIsNotLocked(region);
         return createWidgetInstance(widget, region, 0);
     }
     
@@ -290,6 +303,7 @@ public class DefaultPageService implements PageService {
             Region newRegion = new Region();
             newRegion.setPage(page);
             newRegion.setRenderOrder(lastRegionRenderOrder++);
+            newRegion.setLocked(false);
             regions.add(newRegion);
         }
     }
@@ -336,6 +350,8 @@ public class DefaultPageService implements PageService {
         RegionWidget regionWidget = new RegionWidget();
         regionWidget.setRenderOrder(position);
         regionWidget.setWidget(widget);
+        // TODO: this should eventually be defined by the PageTemplateWidget.locked field
+        regionWidget.setLocked(false);
         region.getRegionWidgets().add(position, regionWidget);
         updateRenderSequences(region.getRegionWidgets());
         Region persistedRegion = regionRepository.save(region);
@@ -370,6 +386,8 @@ public class DefaultPageService implements PageService {
         for (regionCount = 0; regionCount < pageLayout.getNumberOfRegions(); regionCount++) {
             Region region = new Region();
             region.setRenderOrder(regionCount);
+            // TODO: this should eventually be defined by the PageTemplateRegion.locked field
+            region.setLocked(false);
             regions.add(region);
         }
 
@@ -460,5 +478,25 @@ public class DefaultPageService implements PageService {
             }
         }
         throw new IllegalArgumentException("Invalid RegionWidget ID");
+    }
+
+    private void verifyRegionIsNotLocked(Region region) {
+        if (region == null) {
+            throw new IllegalArgumentException("region is null");
+        }
+        if (region.isLocked()) {
+            throw new UnsupportedOperationException("Can't modify locked Region: " + region);
+        }
+    }
+
+    private void verifyRegionWidgetIsNotLocked(RegionWidget regionWidget) {
+        if (regionWidget == null) {
+            throw new IllegalArgumentException("regionWidget is null");
+        }
+        if (regionWidget.isLocked()) {
+            throw new UnsupportedOperationException("Can't modify locked RegionWidget: " + regionWidget);
+        }
+        // also traverse up and make sure its region is also not locked
+        verifyRegionIsNotLocked(regionWidget.getRegion());
     }
 }

@@ -199,10 +199,13 @@ header h1 {
     margin: 1em auto 0;
 }
 
+.person-profile-page-content {
+    background: none !important;
+}
+
 #person-profile-left {
     float: left;
     width: 65%;
-    border-right: 1px solid black;
     margin-right: 5px;
 }
 
@@ -269,6 +272,10 @@ header h1 {
 
 .widget-title-bar:hover {
     cursor: move;
+}
+
+.widget-title-bar-locked:hover {
+    cursor: default !important;
 }
 
 .widget-title-bar-mobile {

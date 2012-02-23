@@ -36,5 +36,8 @@
             <class>org.apache.rave.portal.model.Tag</class>
             <class>org.apache.rave.portal.model.WidgetTag</class>
             <class>org.apache.rave.portal.model.PortalPreference</class>
+            <class>org.apache.rave.portal.model.PageTemplate</class>
+            <class>org.apache.rave.portal.model.PageTemplateRegion</class>
+            <class>org.apache.rave.portal.model.PageTemplateWidget</class>
         </persistence-unit>
 </persistence>

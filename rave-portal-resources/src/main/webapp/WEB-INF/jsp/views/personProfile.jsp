@@ -107,7 +107,7 @@
         </p>
     </div>
     <%--render the sub pages --%>
-    <div id="pageContent">
+    <div id="pageContent" class="person-profile-page-content">
         <div class="regions">
             <%-- insert the region layout template --%>
             <tiles:insertTemplate template="${layout}"/>

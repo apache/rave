@@ -53,6 +53,10 @@ public class PageTemplateWidget implements BasicEntity, Serializable {
     @ManyToOne(optional = false)
     private Widget widget;
 
+    @Basic(optional = false)
+    @Column(name = "locked")
+    private boolean locked;
+
     @Override
     public Long getEntityId() {
         return entityId;
@@ -85,5 +89,13 @@ public class PageTemplateWidget implements BasicEntity, Serializable {
 
     public void setWidget(Widget widget) {
         this.widget = widget;
+    }
+
+    public boolean isLocked() {
+        return locked;
+    }
+
+    public void setLocked(boolean locked) {
+        this.locked = locked;
     }
 }

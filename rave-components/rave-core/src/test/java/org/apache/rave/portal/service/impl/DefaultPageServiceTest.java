@@ -57,9 +57,9 @@ public class DefaultPageServiceTest {
     private final Long USER_PAGE_TYPE_ID = 1L;
     private final Long VALID_USER_ID = 9876L;
             
-    private Region targetRegion;
-    private Region originalRegion;
+    private Region targetRegion, originalRegion, lockedRegion;
     private Widget validWidget;
+    private RegionWidget validRegionWidget;
     private User user;
     private PageLayout pageLayout;
     private String defaultPageName = "Main";
@@ -79,20 +79,32 @@ public class DefaultPageServiceTest {
                                              pageLayoutRepository, userService, defaultPageName);
         
         validWidget = new Widget(1L, "http://dummy.apache.org/widgets/widget.xml");
-        
+
+        page = new Page(PAGE_ID, user);
+        page.setRenderSequence(1L);
+        page2 = new Page(99L, user);
+        page2.setRenderSequence(2L);
+
         targetRegion = new Region();
         targetRegion.setEntityId(2L);
+        targetRegion.setLocked(false);
         targetRegion.setRegionWidgets(new ArrayList<RegionWidget>());
         targetRegion.getRegionWidgets().add(new RegionWidget(1L, validWidget, targetRegion, 0));
         targetRegion.getRegionWidgets().add(new RegionWidget(2L, validWidget, targetRegion, 1));
         targetRegion.getRegionWidgets().add(new RegionWidget(3L, validWidget, targetRegion, 2));
+        targetRegion.setPage(page);
 
         originalRegion = new Region();
         originalRegion.setEntityId(1L);
+        originalRegion.setLocked(false);
         originalRegion.setRegionWidgets(new ArrayList<RegionWidget>());
         originalRegion.getRegionWidgets().add(new RegionWidget(4L, validWidget, targetRegion, 0));
         originalRegion.getRegionWidgets().add(new RegionWidget(5L, validWidget, targetRegion, 1));
         originalRegion.getRegionWidgets().add(new RegionWidget(6L, validWidget, targetRegion, 2));
+        
+        lockedRegion = new Region();
+        lockedRegion.setLocked(true);
+        lockedRegion.setPage(page);
         
         pageLayout = new PageLayout();
         pageLayout.setEntityId(1L);
@@ -102,20 +114,20 @@ public class DefaultPageServiceTest {
         user = new User();
         user.setEntityId(1L);
         user.setUsername("acarlucci"); 
-        user.setDefaultPageLayout(pageLayout);                
-        
-        page = new Page(PAGE_ID, user);
-        page.setRenderSequence(1L);
-        page2 = new Page(99L, user);
-        page2.setRenderSequence(2L);
+        user.setDefaultPageLayout(pageLayout);
         
         pageList = new ArrayList<Page>();        
         pageList.add(page2);
         pageList.add(page);
+
+        validRegionWidget = new RegionWidget();
+        validRegionWidget.setEntityId(VALID_REGION_WIDGET_ID);
+        validRegionWidget.setWidget(validWidget);
+        validRegionWidget.setRegion(originalRegion);
     }
 
     @Test
-    public void getAllPages() {
+    public void getAllUserPages() {
         final List<Page> VALID_PAGES = new ArrayList<Page>();
 
         expect(pageRepository.getAllPages(VALID_USER_ID, PageType.USER)).andReturn(VALID_PAGES);
@@ -123,6 +135,19 @@ public class DefaultPageServiceTest {
 
         assertThat(pageService.getAllUserPages(VALID_USER_ID), CoreMatchers.sameInstance(VALID_PAGES));
         
+        verify(pageRepository);
+    }
+
+
+    @Test
+    public void getAllPersonProfilePages() {
+        final List<Page> VALID_PAGES = new ArrayList<Page>();
+
+        expect(pageRepository.getAllPages(VALID_USER_ID, PageType.PERSON_PROFILE)).andReturn(VALID_PAGES);
+        replay(pageRepository);
+
+        assertThat(pageService.getAllPersonProfilePages(VALID_USER_ID), CoreMatchers.sameInstance(VALID_PAGES));
+
         verify(pageRepository);
     }
 
@@ -179,7 +204,11 @@ public class DefaultPageServiceTest {
         assertThat(newPage.getName(), is(PAGE_NAME));
         assertThat(newPage.getRegions().size(), is(pageLayout.getNumberOfRegions().intValue()));
         assertThat(newPage.getPageType(), is(PageType.USER));
-        
+
+        for (Region region : newPage.getRegions()) {
+            assertThat(region.isLocked(), is(false));
+        }
+
         verify(userService, pageLayoutRepository,  pageRepository);
     }
 
@@ -340,9 +369,12 @@ public class DefaultPageServiceTest {
         final int newPosition = 0;
         createMoveBetweenRegionsExpectations();
 
+        expect(regionWidgetRepository.get(REGION_WIDGET_ID)).andReturn(validRegionWidget);
+        replay(regionWidgetRepository);
+        
         RegionWidget widget = pageService.moveRegionWidget(REGION_WIDGET_ID, newPosition, TO_REGION_ID, FROM_REGION_ID);
 
-        verify(regionRepository);
+        verify(regionRepository, regionWidgetRepository);
         verifyPositions(newPosition, widget, false);
     }
 
@@ -351,9 +383,12 @@ public class DefaultPageServiceTest {
         final int newPosition = 1;
         createMoveBetweenRegionsExpectations();
 
+        expect(regionWidgetRepository.get(REGION_WIDGET_ID)).andReturn(validRegionWidget);
+        replay(regionWidgetRepository);
+
         RegionWidget widget = pageService.moveRegionWidget(REGION_WIDGET_ID, newPosition, TO_REGION_ID, FROM_REGION_ID);
 
-        verify(regionRepository);
+        verify(regionRepository, regionWidgetRepository);
         verifyPositions(newPosition, widget, false);
     }
 
@@ -362,9 +397,12 @@ public class DefaultPageServiceTest {
         final int newPosition = 2;
         createMoveBetweenRegionsExpectations();
 
+        expect(regionWidgetRepository.get(REGION_WIDGET_ID)).andReturn(validRegionWidget);
+        replay(regionWidgetRepository);
+
         RegionWidget widget = pageService.moveRegionWidget(REGION_WIDGET_ID, newPosition, TO_REGION_ID, FROM_REGION_ID);
 
-        verify(regionRepository);
+        verify(regionRepository, regionWidgetRepository);
         verifyPositions(newPosition, widget, false);
     }
 
@@ -373,9 +411,12 @@ public class DefaultPageServiceTest {
         final int newPosition = 0;
         createMoveWithinRegionsExpectations();
 
+        expect(regionWidgetRepository.get(REGION_WIDGET_ID)).andReturn(validRegionWidget);
+        replay(regionWidgetRepository);
+
         RegionWidget widget = pageService.moveRegionWidget(REGION_WIDGET_ID, newPosition, FROM_REGION_ID, FROM_REGION_ID);
 
-        verify(regionRepository);
+        verify(regionRepository, regionWidgetRepository);
         verifyPositions(newPosition, widget, true);
     }
 
@@ -384,9 +425,12 @@ public class DefaultPageServiceTest {
         final int newPosition = 1;
         createMoveWithinRegionsExpectations();
 
+        expect(regionWidgetRepository.get(REGION_WIDGET_ID)).andReturn(validRegionWidget);
+        replay(regionWidgetRepository);
+
         RegionWidget widget = pageService.moveRegionWidget(REGION_WIDGET_ID, newPosition, FROM_REGION_ID, FROM_REGION_ID);
 
-        verify(regionRepository);
+        verify(regionRepository, regionWidgetRepository);
         verifyPositions(newPosition, widget, true);
     }
 
@@ -395,22 +439,70 @@ public class DefaultPageServiceTest {
         final int newPosition = 2;
         createMoveWithinRegionsExpectations();
 
+        expect(regionWidgetRepository.get(REGION_WIDGET_ID)).andReturn(validRegionWidget);
+        replay(regionWidgetRepository);
+
         RegionWidget widget = pageService.moveRegionWidget(REGION_WIDGET_ID, newPosition, FROM_REGION_ID, FROM_REGION_ID);
 
-        verify(regionRepository);
+        verify(regionRepository, regionWidgetRepository);
         verifyPositions(newPosition, widget, true);
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void moveRegionWidget_lockedSourceRegion() {
+        originalRegion.setLocked(true);
+
+        final int newPosition = 0;
+        createMoveWithinRegionsExpectations();
+
+        expect(regionWidgetRepository.get(REGION_WIDGET_ID)).andReturn(validRegionWidget);
+        replay(regionWidgetRepository);
+
+        pageService.moveRegionWidget(REGION_WIDGET_ID, newPosition, FROM_REGION_ID, FROM_REGION_ID);
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void moveRegionWidget_lockedTargetRegion() {
+        targetRegion.setLocked(true);
+
+        final int newPosition = 1;
+        createMoveBetweenRegionsExpectations();
+
+        expect(regionWidgetRepository.get(REGION_WIDGET_ID)).andReturn(validRegionWidget);
+        replay(regionWidgetRepository);
+
+        pageService.moveRegionWidget(REGION_WIDGET_ID, newPosition, TO_REGION_ID, FROM_REGION_ID);
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void moveRegionWidget_lockedRegionWidget() {
+        validRegionWidget.setLocked(true);
+
+        final int newPosition = 1;
+        createMoveBetweenRegionsExpectations();
+
+        expect(regionWidgetRepository.get(REGION_WIDGET_ID)).andReturn(validRegionWidget);
+        replay(regionWidgetRepository);
+
+        pageService.moveRegionWidget(REGION_WIDGET_ID, newPosition, TO_REGION_ID, FROM_REGION_ID);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void moveRegionWidget_invalidWidget() {
         createMoveBetweenRegionsExpectations();
+        expect(regionWidgetRepository.get(-1L)).andReturn(null);
+        replay(regionWidgetRepository);
         pageService.moveRegionWidget(-1L, 0, 1L, 2L);
+        verify(regionWidgetRepository);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void moveRegionWidget_invalidWidget_sameRegion() {
         createMoveBetweenRegionsExpectations();
+        expect(regionWidgetRepository.get(-1L)).andReturn(null);
+        replay(regionWidgetRepository);
         pageService.moveRegionWidget(-1L, 0, 1L, 1L);
+        verify(regionWidgetRepository);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -452,6 +544,66 @@ public class DefaultPageServiceTest {
 
     }
 
+    @Test(expected = UnsupportedOperationException.class)
+    public void addWigetToPage_lockedRegion() {
+        originalRegion.setLocked(true);
+        final long WIDGET_ID = 1L;
+
+        Page value = new Page();
+        value.setRegions(new ArrayList<Region>());
+        value.getRegions().add(originalRegion);
+        value.getRegions().add(targetRegion);
+        Widget widget = new Widget();
+
+        expect(pageRepository.get(PAGE_ID)).andReturn(value);
+        expect(widgetRepository.get(WIDGET_ID)).andReturn(widget);
+        expect(regionRepository.save(originalRegion)).andReturn(originalRegion);
+        replay(pageRepository);
+        replay(regionRepository);
+        replay(widgetRepository);
+
+        RegionWidget instance = pageService.addWidgetToPage(PAGE_ID, WIDGET_ID);
+
+        verify(pageRepository);
+        verify(regionRepository);
+        verify(widgetRepository);
+
+        verifyPositions(0, instance, true);
+        assertThat(originalRegion.getRegionWidgets().get(0), is(sameInstance(instance)));
+        assertThat(instance.getWidget(), is(sameInstance(widget)));
+
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void addWigetToPage_nullRegion() {
+        originalRegion = null;
+        final long WIDGET_ID = 1L;
+
+        Page value = new Page();
+        value.setRegions(new ArrayList<Region>());
+        value.getRegions().add(originalRegion);
+        value.getRegions().add(targetRegion);
+        Widget widget = new Widget();
+
+        expect(pageRepository.get(PAGE_ID)).andReturn(value);
+        expect(widgetRepository.get(WIDGET_ID)).andReturn(widget);
+        expect(regionRepository.save(originalRegion)).andReturn(originalRegion);
+        replay(pageRepository);
+        replay(regionRepository);
+        replay(widgetRepository);
+
+        RegionWidget instance = pageService.addWidgetToPage(PAGE_ID, WIDGET_ID);
+
+        verify(pageRepository);
+        verify(regionRepository);
+        verify(widgetRepository);
+
+        verifyPositions(0, instance, true);
+        assertThat(originalRegion.getRegionWidgets().get(0), is(sameInstance(instance)));
+        assertThat(instance.getWidget(), is(sameInstance(widget)));
+
+    }    
+
     @Test(expected = IllegalArgumentException.class)
     public void addWidgetToPage_invalidWidget() {
         long WIDGET_ID = -1L;
@@ -480,12 +632,12 @@ public class DefaultPageServiceTest {
     public void removeWidgetFromPage_validWidget() {
         long WIDGET_ID = 1L;
         long REGION_ID = 2L;
-        RegionWidget widget = new RegionWidget(WIDGET_ID);
-        widget.setRegion(new Region(REGION_ID));
+        RegionWidget regionWidget = new RegionWidget(WIDGET_ID);
+        regionWidget.setRegion(new Region(REGION_ID));
         Region region = new Region();
 
-        expect(regionWidgetRepository.get(WIDGET_ID)).andReturn(widget);
-        regionWidgetRepository.delete(widget);
+        expect(regionWidgetRepository.get(WIDGET_ID)).andReturn(regionWidget);
+        regionWidgetRepository.delete(regionWidget);
         expectLastCall();
         replay(regionWidgetRepository);
         expect(regionRepository.get(REGION_ID)).andReturn(region);
@@ -495,6 +647,45 @@ public class DefaultPageServiceTest {
         verify(regionWidgetRepository);
         verify(regionRepository);
         assertThat(result, is(sameInstance(region)));
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void removeWidgetFromPage_lockedRegion() {
+        long WIDGET_ID = 1L;
+        long REGION_ID = 2L;
+        Region region = new Region(REGION_ID);
+        region.setLocked(true);
+        RegionWidget regionWidget = new RegionWidget(WIDGET_ID);
+        regionWidget.setRegion(region);
+
+        expect(regionWidgetRepository.get(WIDGET_ID)).andReturn(regionWidget);
+        regionWidgetRepository.delete(regionWidget);
+        expectLastCall();
+        replay(regionWidgetRepository);
+        expect(regionRepository.get(REGION_ID)).andReturn(region);
+        replay(regionRepository);
+
+        pageService.removeWidgetFromPage(WIDGET_ID);
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void removeWidgetFromPage_lockedRegionWidget() {
+        long WIDGET_ID = 1L;
+        long REGION_ID = 2L;
+        Region region = new Region(REGION_ID);
+        region.setLocked(true);
+        RegionWidget regionWidget = new RegionWidget(WIDGET_ID);
+        regionWidget.setLocked(true);
+        regionWidget.setRegion(region);
+
+        expect(regionWidgetRepository.get(WIDGET_ID)).andReturn(regionWidget);
+        regionWidgetRepository.delete(regionWidget);
+        expectLastCall();
+        replay(regionWidgetRepository);
+        expect(regionRepository.get(REGION_ID)).andReturn(region);
+        replay(regionRepository);
+
+        pageService.removeWidgetFromPage(WIDGET_ID);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -876,7 +1067,7 @@ public class DefaultPageServiceTest {
         }
     }
 
-    private void createMoveBetweenRegionsExpectations() {
+    private void createMoveBetweenRegionsExpectations() {        
         expect(regionRepository.get(TO_REGION_ID)).andReturn(targetRegion);
         expect(regionRepository.get(FROM_REGION_ID)).andReturn(originalRegion);
         expect(regionRepository.save(targetRegion)).andReturn(targetRegion);
@@ -922,7 +1113,11 @@ public class DefaultPageServiceTest {
         toPageValue.getRegions().add(originalRegion);
         toPageValue.getRegions().add(targetRegion);
 
+        Region region = new Region();
+        region.setLocked(false);
+        
         RegionWidget regionWidget = new RegionWidget(VALID_REGION_WIDGET_ID);
+        regionWidget.setRegion(region);
 
         expect(pageRepository.get(TO_PAGE_ID)).andReturn(toPageValue);
         expect(regionWidgetRepository.get(WIDGET_ID)).andReturn(regionWidget).times(2);
@@ -960,4 +1155,98 @@ public class DefaultPageServiceTest {
 
         pageService.moveRegionWidgetToPage(VALID_REGION_WIDGET_ID, TO_PAGE_ID);
     }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void moveRegionWidgetToPage_lockedRegionWidget() {
+        final long WIDGET_ID = 1L;
+        final long CURRENT_PAGE_ID = 1L;
+        final long TO_PAGE_ID = 2L;
+
+        Page currentPageValue = new Page();
+        currentPageValue.setRegions(new ArrayList<Region>());
+        currentPageValue.getRegions().add(originalRegion);
+        currentPageValue.getRegions().add(targetRegion);
+
+        Page toPageValue = new Page();
+        toPageValue.setRegions(new ArrayList<Region>());
+        toPageValue.getRegions().add(originalRegion);
+        toPageValue.getRegions().add(targetRegion);
+
+        Region region = new Region();
+        region.setLocked(false);
+
+        RegionWidget regionWidget = new RegionWidget(VALID_REGION_WIDGET_ID);
+        regionWidget.setRegion(region);
+        regionWidget.setLocked(true);
+
+        expect(pageRepository.get(TO_PAGE_ID)).andReturn(toPageValue);
+        expect(regionWidgetRepository.get(WIDGET_ID)).andReturn(regionWidget).times(2);
+        replay(pageRepository,regionWidgetRepository);
+
+        pageService.moveRegionWidgetToPage(VALID_REGION_WIDGET_ID, TO_PAGE_ID);
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void moveRegionWidgetToPage_lockedTargetRegion() {
+        targetRegion.setLocked(true);
+
+        final long WIDGET_ID = 1L;
+        final long CURRENT_PAGE_ID = 1L;
+        final long TO_PAGE_ID = 2L;
+
+        Page currentPageValue = new Page();
+        currentPageValue.setRegions(new ArrayList<Region>());
+        currentPageValue.getRegions().add(originalRegion);
+        currentPageValue.getRegions().add(targetRegion);
+
+        Page toPageValue = new Page();
+        toPageValue.setRegions(new ArrayList<Region>());
+        toPageValue.getRegions().add(originalRegion);
+        toPageValue.getRegions().add(targetRegion);
+
+        Region region = new Region();
+        region.setLocked(false);
+
+        RegionWidget regionWidget = new RegionWidget(VALID_REGION_WIDGET_ID);
+        regionWidget.setRegion(region);
+        regionWidget.setLocked(true);
+
+        expect(pageRepository.get(TO_PAGE_ID)).andReturn(toPageValue);
+        expect(regionWidgetRepository.get(WIDGET_ID)).andReturn(regionWidget).times(2);
+        replay(pageRepository,regionWidgetRepository);
+
+        pageService.moveRegionWidgetToPage(VALID_REGION_WIDGET_ID, TO_PAGE_ID);
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void moveRegionWidgetToPage_lockedSourceRegion() {
+        originalRegion.setLocked(true);
+
+        final long WIDGET_ID = 1L;
+        final long CURRENT_PAGE_ID = 1L;
+        final long TO_PAGE_ID = 2L;
+
+        Page currentPageValue = new Page();
+        currentPageValue.setRegions(new ArrayList<Region>());
+        currentPageValue.getRegions().add(originalRegion);
+        currentPageValue.getRegions().add(targetRegion);
+
+        Page toPageValue = new Page();
+        toPageValue.setRegions(new ArrayList<Region>());
+        toPageValue.getRegions().add(originalRegion);
+        toPageValue.getRegions().add(targetRegion);
+
+        Region region = new Region();
+        region.setLocked(false);
+
+        RegionWidget regionWidget = new RegionWidget(VALID_REGION_WIDGET_ID);
+        regionWidget.setRegion(region);
+        regionWidget.setLocked(true);
+
+        expect(pageRepository.get(TO_PAGE_ID)).andReturn(toPageValue);
+        expect(regionWidgetRepository.get(WIDGET_ID)).andReturn(regionWidget).times(2);
+        replay(pageRepository,regionWidgetRepository);
+
+        pageService.moveRegionWidgetToPage(VALID_REGION_WIDGET_ID, TO_PAGE_ID);
+    } 
 }

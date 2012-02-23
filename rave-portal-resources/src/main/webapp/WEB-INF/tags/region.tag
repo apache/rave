@@ -30,7 +30,7 @@ Template for rendering a Region on a page
 <fmt:setBundle basename="messages"/>
 
 <%--@elvariable id="region" type="org.apache.rave.portal.model.Region"--%>
-<div class="region <c:out value="${region.page.pageLayout.code}"/>_${regionIdx} regionNonDragging" id="region-${region.entityId}-id">
+<div class="region<c:if test="${region.locked}"> region-locked</c:if> <c:out value="${region.page.pageLayout.code}"/>_${regionIdx} regionNonDragging" id="region-${region.entityId}-id">
     <c:forEach var="regionWidget" items="${region.regionWidgets}">
         <rave:region_widget regionWidget="${regionWidget}"/>
     </c:forEach>
