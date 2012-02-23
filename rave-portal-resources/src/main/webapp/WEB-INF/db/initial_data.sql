@@ -328,6 +328,54 @@ insert into widget (entity_id, title, url, type, widget_status, description, aut
 values(@work_experience_widget_id, 'Work Experience', 'http://localhost:8080/demogadgets/work_experience.xml', 'OpenSocial', 'PUBLISHED', 'Static widget of work experience for demoing on the Person Profile page', 'Anthony Carlucci', @user_id_1);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @widget_seq;
 
+-- Activity Streams
+set @activity_streams_widget_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @widget_seq);
+insert into widget (entity_id, title, url, type, widget_status, description, author, owner_id)
+values(@activity_streams_widget_id, 'Activity Streams', 'http://localhost:8080/samplecontainer/examples/ActivityStreams/ActivityStreamGadget.xml', 'OpenSocial', 'PUBLISHED', 'Sample Activity Streams gadget from Shindig', 'Apache Shindig', @user_id_1);
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @widget_seq;
+
+-- Embedded Experiences AlbumViewer
+set @ee_album_viewer_widget_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @widget_seq);
+insert into widget (entity_id, title, url, type, widget_status, description, author, owner_id)
+values(@ee_album_viewer_widget_id, 'Album Viewer', 'http://localhost:8080/samplecontainer/examples/embeddedexperiences/AlbumViewer.xml', 'OpenSocial', 'PUBLISHED', 'Sample Embedded Experience gadget from Shindig', 'Apache Shindig', @user_id_1);
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @widget_seq;
+
+-- Embedded Experiences PhotoList
+set @ee_photo_list_widget_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @widget_seq);
+insert into widget (entity_id, title, url, type, widget_status, description, author, owner_id)
+values(@ee_photo_list_widget_id, 'Photo List', 'http://localhost:8080/samplecontainer/examples/embeddedexperiences/PhotoList.xml', 'OpenSocial', 'PUBLISHED', 'Sample Embedded Experience gadget from Shindig', 'Apache Shindig', @user_id_1);
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @widget_seq;
+
+-- Embedded Experiences OAuth2 Facebook
+set @oauth2_facebook_widget_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @widget_seq);
+insert into widget (entity_id, title, url, type, widget_status, description, author, owner_id)
+values(@oauth2_facebook_widget_id, 'OAuth2 Facebook', 'http://localhost:8080/samplecontainer/examples/oauth2/oauth2_facebook.xml', 'OpenSocial', 'PUBLISHED', 'Sample Facebook gadget from Shindig', 'Apache Shindig', @user_id_1);
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @widget_seq;
+
+-- OHLOH LANGUAGE
+set @ohloh_languages_widget_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @widget_seq);
+insert into widget (entity_id, title, url, type, widget_status, description, author, owner_id)
+values(@ohloh_languages_widget_id, 'Ohloh Apache Rave Fanguages', 'http://www.ohloh.net/p/521520/widgets/project_languages.xml', 'OpenSocial', 'PUBLISHED', 'Ohloh is an open source network that connects people through the software they create and use. Ohloh gadgets provide detailed statistics about open source software projects and developers.', 'Ohloh', @user_id_1);
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @widget_seq;
+
+-- OHLOH factoids
+set @ohloh_factoids_widget_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @widget_seq);
+insert into widget (entity_id, title, url, type, widget_status, description, author, owner_id)
+values(@ohloh_factoids_widget_id, 'Ohloh Apache Rave Factoids', 'http://www.ohloh.net/p/521520/widgets/project_factoids.xml', 'OpenSocial', 'PUBLISHED', 'Ohloh is an open source network that connects people through the software they create and use. Ohloh gadgets provide detailed statistics about open source software projects and developers.', 'Ohloh', @user_id_1);
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @widget_seq;
+
+-- OHLOH COCOMO
+set @ohloh_cocomo_widget_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @widget_seq);
+insert into widget (entity_id, title, url, type, widget_status, description, author, owner_id)
+values(@ohloh_cocomo_widget_id, 'Ohloh Apache Rave COCOMO Estimates', 'http://www.ohloh.net/p/521520/widgets/project_cocomo.xml', 'OpenSocial', 'PUBLISHED', 'Ohloh is an open source network that connects people through the software they create and use. Ohloh gadgets provide detailed statistics about open source software projects and developers.', 'Ohloh', @user_id_1);
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @widget_seq;
+
+-- OHLOH COCOMO
+set @ohloh_stats_widget_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @widget_seq);
+insert into widget (entity_id, title, url, type, widget_status, description, author, owner_id)
+values(@ohloh_stats_widget_id, 'Ohloh Apache Rave Stats', 'http://www.ohloh.net/p/521520/widgets/project_basic_stats.xml', 'OpenSocial', 'PUBLISHED', 'Ohloh is an open source network that connects people through the software they create and use. Ohloh gadgets provide detailed statistics about open source software projects and developers.', 'Ohloh', @user_id_1);
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @widget_seq;
+
 -- end gadget data ----
 
 -- W3C Widget data
@@ -366,12 +414,12 @@ UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @r
 
 set @next_region_widget = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @region_widget_seq);
 INSERT INTO region_widget(entity_id, widget_id, region_id, render_order, collapsed)
-values (@next_region_widget, @wikipedia_widget_id, @page_1_region_1, 0, FALSE);
+values (@next_region_widget, @ohloh_stats_widget_id, @page_1_region_1, 0, FALSE);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @region_widget_seq;
 
 set @next_region_widget = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @region_widget_seq);
 INSERT INTO region_widget(entity_id, widget_id, region_id, render_order, collapsed)
-values (@next_region_widget, @translate_widget_id, @page_1_region_2, 0, FALSE);
+values (@next_region_widget, @ohloh_factoids_widget_id, @page_1_region_2, 0, FALSE);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @region_widget_seq;
 
 set @next_region_widget = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @region_widget_seq);
@@ -381,7 +429,12 @@ UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @r
 
 set @next_region_widget = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @region_widget_seq);
 INSERT INTO region_widget(entity_id, widget_id, region_id, render_order, collapsed)
-values (@next_region_widget, @tabnews_widget_id, @page_1_region_3, 1, FALSE);
+values (@next_region_widget, @ohloh_cocomo_widget_id, @page_1_region_3, 1, FALSE);
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @region_widget_seq;
+
+set @next_region_widget = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @region_widget_seq);
+INSERT INTO region_widget(entity_id, widget_id, region_id, render_order, collapsed)
+values (@next_region_widget, @youtube_widget_id, @page_1_region_3, 1, FALSE);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @region_widget_seq;
 
 
@@ -403,22 +456,17 @@ UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @r
 
 set @next_region_widget = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @region_widget_seq);
 INSERT INTO region_widget(entity_id, widget_id, region_id, render_order, collapsed)
-values (@next_region_widget, @nyt_widget_id, @page_2_region_1, 0, FALSE);
+values (@next_region_widget, @my_activity_widget_id, @page_2_region_1, 0, FALSE);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @region_widget_seq;
 
 set @next_region_widget = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @region_widget_seq);
 INSERT INTO region_widget(entity_id, widget_id, region_id, render_order, collapsed)
-values (@next_region_widget, @translate_widget_id, @page_2_region_1, 1, FALSE);
+values (@next_region_widget, @activity_streams_widget_id, @page_2_region_1, 1, FALSE);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @region_widget_seq;
 
 set @next_region_widget = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @region_widget_seq);
 INSERT INTO region_widget(entity_id, widget_id, region_id, render_order, collapsed)
-values (@next_region_widget, @wikipedia_widget_id, @page_2_region_2, 0, FALSE);
-UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @region_widget_seq;
-
-set @next_region_widget = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @region_widget_seq);
-INSERT INTO region_widget(entity_id, widget_id, region_id, render_order, collapsed)
-values (@next_region_widget, @tabnews_widget_id, @page_2_region_2, 1, FALSE);
+values (@next_region_widget, @twitter_widget_id, @page_2_region_2, 1, FALSE);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @region_widget_seq;
 
 -- person profile page for user 1
