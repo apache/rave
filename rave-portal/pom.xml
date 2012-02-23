@@ -47,6 +47,15 @@
     </properties>
 
     <dependencies>
+
+    	<dependency>
+            <groupId>org.apache.wookie</groupId>
+            <artifactId>wookie</artifactId>
+            <version>0.9.2-incubating</version>
+            <type>war</type>
+            <scope>provided</scope>
+        </dependency>
+
         <dependency>
             <groupId>org.apache.rave</groupId>
             <artifactId>rave-portal-dependencies</artifactId>
@@ -135,12 +144,20 @@
                     <configuration>
                         <properties>
                             <cargo.jvmargs>
-                                <![CDATA[-Dh2.bindAddress="localhost" -Xdebug -Xrunjdwp:transport=dt_socket,address=${cargo.debug.address},server=y,suspend=${cargo.debug.suspend} -noverify ${javaagent} ${cargo.args}]]>
+                                <![CDATA[-Dh2.bindAddress="localhost" -Xdebug -XX:MaxPermSize=256m -Xrunjdwp:transport=dt_socket,address=${cargo.debug.address},server=y,suspend=${cargo.debug.suspend} -noverify ${javaagent} ${cargo.args}]]>
                             </cargo.jvmargs>
                             <cargo.tomcat.context.reloadable>true</cargo.tomcat.context.reloadable>
                         </properties>
                         <home>${project.build.directory}/tomcat6x</home>
                         <deployables>
+	                        <deployable>
+		                        <groupId>org.apache.wookie</groupId>
+		                        <artifactId>wookie</artifactId>
+		                        <type>war</type>
+		                        <properties>
+			                        <context>/wookie</context>
+		                        </properties>
+	                       </deployable>
                             <deployable>
                                 <groupId>org.apache.rave</groupId>
                                 <artifactId>rave-shindig</artifactId>
