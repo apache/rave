@@ -292,15 +292,7 @@ var rave = rave || (function() {
         function maximizeAction(args) {
             var regionWidgetId = args.data.id;
             // display the widget in maximized view
-            addOverlay($("#pageContent"));
-            $(".region" ).sortable( "option", "disabled", true );
-            $("#widget-" + regionWidgetId + "-wrapper").removeClass("widget-wrapper").addClass("widget-wrapper-canvas");
-            // hide the widget menu
-            $("#widget-" + regionWidgetId + "-widget-menu-wrapper").hide();
-            // display the widget minimize button
-            $("#widget-" + regionWidgetId + "-min").show();
-            // hide the collapse/restore toggle icon in canvas mode
-            $("#widget-" + regionWidgetId + "-collapse").hide();
+            openFullScreenOverlay(regionWidgetId);
             var widget = rave.getRegionWidgetById(regionWidgetId);
             if(typeof widget != "undefined" && isFunction(widget.maximize)) {
                 widget.maximize();
@@ -328,6 +320,17 @@ var rave = rave || (function() {
                 } else if (isFunction(widget.minimize)) {
                     widget.minimize();
                 }
+            }
+        }
+
+        function editCustomPrefsAction(args) {
+            var regionWidgetId = args.data.id;
+
+            // display the custom edit prefs for the widget in maximized view
+            openFullScreenOverlay(regionWidgetId);
+            var widget = rave.getRegionWidgetById(regionWidgetId);
+            if(typeof widget != "undefined" ) {
+                widget.editCustomPrefs();
             }
         }
 
@@ -601,6 +604,18 @@ var rave = rave || (function() {
             jqElm.prepend(overlay[0]);
         }
 
+        function openFullScreenOverlay(regionWidgetId) {
+            addOverlay($("#pageContent"));
+            $(".region").sortable("option", "disabled", true);
+            $("#widget-" + regionWidgetId + "-wrapper").removeClass("widget-wrapper").addClass("widget-wrapper-canvas");
+            // hide the widget menu
+            $("#widget-" + regionWidgetId + "-widget-menu-wrapper").hide();
+            // display the widget minimize button
+            $("#widget-" + regionWidgetId + "-min").show();
+            // hide the collapse/restore toggle icon in canvas mode
+            $("#widget-" + regionWidgetId + "-collapse").hide();
+        }
+
         /**
          * Applies styling to the several buttons in the widget toolbar
          * @param widgetId identifier of the region widget
@@ -690,6 +705,7 @@ var rave = rave || (function() {
           maximizeAction: maximizeAction,
           minimizeAction: minimizeAction,
           editPrefsAction: editPrefsAction,
+          editCustomPrefsAction: editCustomPrefsAction,
           setMobileState: setMobileState,
           getMobileState: getMobileState,
           doWidgetUiCollapse: doWidgetUiCollapse,
@@ -984,6 +1000,13 @@ var rave = rave || (function() {
          *
          */
         editPrefs: ui.editPrefsAction,
+
+        /***
+         * "Preferences" view
+         *
+         * @param args the argument object
+         */
+        editCustomPrefs: ui.editCustomPrefsAction,
 
         /***
          * Get the mobile state - used by the UI to render mobile or normal content

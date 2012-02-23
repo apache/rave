@@ -24,7 +24,8 @@ rave.opensocial = rave.opensocial || (function() {
     var VIEW_NAMES = { 
         CANVAS : "canvas",
         DEFAULT : "default",
-        HOME : "home"       
+        HOME : "home",
+        PREFERENCES: "preferences"
     }; 
 
     var container;
@@ -133,10 +134,20 @@ rave.opensocial = rave.opensocial || (function() {
             // re-render the gadget in the same view if the gadget is not collapsed
             renderGadgetViewIfNotCollapsed(rave.opensocial.getCurrentView(this.regionWidgetId), this);             
         };
-        
-        // if the gadget has prefences to edit, enable the edit prefs menu item
-        if (gadget.metadata.hasPrefsToEdit) { 
-            rave.layout.enableEditPrefsMenuItem(gadget.regionWidgetId);            
+        gadget.editCustomPrefs = function() {
+            // display the gadget in custom edit prefs view
+            renderGadgetView(rave.opensocial.VIEW_NAMES.PREFERENCES, this);
+        };
+
+        // if the gadget has prefences to edit, or has the Preferences view
+        // enable the edit prefs menu item
+        if (gadget.metadata.hasPrefsToEdit || gadget.metadata.views.preferences) {
+            if ( gadget.metadata.views.preferences != undefined ) {
+                rave.layout.enableEditPrefsMenuItem(gadget.regionWidgetId, true);
+            }
+            else {
+                rave.layout.enableEditPrefsMenuItem(gadget.regionWidgetId, false);
+            }
         }
         
         // if the gadget is not collapsed, render it
@@ -306,6 +317,9 @@ rave.opensocial = rave.opensocial || (function() {
                 break;
             case VIEW_NAMES.HOME:            
                 rave.minimizeWidget(fnArgs);
+                break;
+            case VIEW_NAMES.PREFERENCES:
+                rave.editCustomPrefs(fnArgs);
                 break;
         }       
     }

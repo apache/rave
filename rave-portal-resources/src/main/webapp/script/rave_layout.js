@@ -347,22 +347,27 @@ rave.layout = rave.layout || (function() {
         }
         
         /**
-         * Enables the Edit Prefs menu item in the widget menu to be clicked.
+         * Enables the Edit Prefs including the Preferences view (Custom Edit Prefs)
+         * menu item in the widget menu to be clicked.
          * Widget providers should use this function when initializing their
          * widgets after determining if the widget has preferences to modify.
          * 
          * @param regionWidgetId the regionWidgetId of the regionWidget menu to enable
+         * @param isPreferencesView boolean to indicate whether "preferences" view or the default prefs view
          */
-        function enableEditPrefsMenuItem(regionWidgetId) {
+        function enableEditPrefsMenuItem(regionWidgetId, isPreferencesView) {
             // setup the edit prefs widget menu item
             var $menuItemEditPrefs  = $("#widget-" + regionWidgetId + "-menu-editprefs-item");
             $menuItemEditPrefs.removeClass("widget-menu-item-disabled");           
             $menuItemEditPrefs.bind('click', function(event) {                       
                 var regionWidgetId = rave.getObjectIdFromDomId(this.id); 
                  // hide the widget menu
-                rave.layout.hideWidgetMenu(regionWidgetId);                                         
-                // show the edit prefs region
-                rave.editPrefs(regionWidgetId);
+                rave.layout.hideWidgetMenu(regionWidgetId);
+                // show the regular edit prefs or the Custom Edit Prefs(preferences) region
+                if ( isPreferencesView )
+                    rave.editCustomPrefs({data: {id: regionWidgetId}});
+                else
+                    rave.editPrefs(regionWidgetId);
                 // prevent the menu button click event from bubbling up to parent
                 // DOM object event handlers such as the page tab click event
                 event.stopPropagation();

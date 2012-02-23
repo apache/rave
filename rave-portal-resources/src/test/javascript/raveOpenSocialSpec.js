@@ -206,8 +206,20 @@ describe("Rave OpenSocial", function() {
             rave.opensocial.init();
             container.rpcHooks()["requestNavigateTo"](getMockRequestNavigateToArgs("widget-" + expectedArgs.data.id + "-body"), VIEW_NAME);            
             expect(rave.minimizeWidget).toHaveBeenCalledWith(expectedArgs);
-        });        
-        
+        });
+
+        it("requestNavigateTo changes the view to PREFERENCES", function() {
+            var VIEW_NAME = "preferences";
+            var expectedArgs = {};
+            expectedArgs.data = {};
+            expectedArgs.data.id = "7";
+            spyOn(rave, "editCustomPrefs");
+
+            rave.opensocial.init();
+            container.rpcHooks()["requestNavigateTo"](getMockRequestNavigateToArgs("widget-" + expectedArgs.data.id + "-body"), VIEW_NAME);
+            expect(rave.editCustomPrefs).toHaveBeenCalledWith(expectedArgs);
+        });
+
         it("requestNavigateTo does not throw an error if an unknown view is passed", function() {
             var VIEW_NAME = "___UNKNOWN___";
             var expectedArgs = {};
