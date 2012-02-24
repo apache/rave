@@ -15,4 +15,4 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-export JAVA_OPTS="$JAVA_OPTS -Xmx512m -XX:MaxPermSize=128m"
+export JAVA_OPTS="$JAVA_OPTS -Xmx512m -XX:MaxPermSize=256m"
