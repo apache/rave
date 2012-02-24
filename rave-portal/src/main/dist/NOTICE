@@ -103,4 +103,15 @@ attributions:
    
 This product includes unmodified, binary redistributions of software (freemarker) developed by the Visigoth Software Society
 project (http://freemarker.sourceforge.net/), which is under the  BSD-style license.
+
+This product includes software (Walkthrough Widget) developed by OpenDirective for the University of Oxford.
+	
+This software contains unmodified binary redistributions of software (javax.activation) developed by 
+Sun Microsystems, Inc. (http://java.sun.com/javase/technologies/desktop/javabeans/jaf/index.jsp), 
+which is licensed under the CDDL 1.0. An original copy of the license can be found at 
+http://glassfish.java.net/public/CDDLv1.0.html
+
+This software contains unmodified binary redistributions of software (mail) developed by 
+Sun Microsystems, Inc. (https://glassfish.dev.java.net/javaee5/mail), which is licensed under the CDDL 1.0.
+An original copy of the license can be found at https://glassfish.dev.java.net/public/CDDL+GPL.html
    
