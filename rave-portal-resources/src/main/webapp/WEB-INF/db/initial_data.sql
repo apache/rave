@@ -218,10 +218,16 @@ UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @g
 
 -- group members data --
 INSERT INTO group_members(group_id, person_id)
-VALUES (@group_id_1, @person_id_1);
+VALUES (@group_id_1, @user_id_1);
 
 INSERT INTO group_members(group_id, person_id)
-VALUES (@group_id_1, @person_id_5);
+VALUES (@group_id_1, @user_id_5);
+
+INSERT INTO group_members(group_id, person_id)
+VALUES (@group_id_2, @user_id_1);
+
+INSERT INTO group_members(group_id, person_id)
+VALUES (@group_id_2, @user_id_2);
 -- end group members data --
 
 --- gadget data ---
