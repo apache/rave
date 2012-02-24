@@ -26,7 +26,8 @@
     <nav class="topnav">
         <ul class="horizontal-list">
         	<li>
-                <a href="<spring:url value="/app/userInfo?referringPageId=${page.entityId}" />">
+                <c:set var="profileUrl">/app/person/<sec:authentication property="principal.username" />?referringPageId=${page.entityId}</c:set>
+                <a href="<spring:url value="${profileUrl}" />">
                   <fmt:message key="page.profile.title">
                   	<fmt:param><c:out value="${page.owner.displayName}"/></fmt:param>
                   </fmt:message>

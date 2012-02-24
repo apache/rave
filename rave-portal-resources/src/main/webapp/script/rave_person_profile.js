@@ -20,7 +20,24 @@
 var rave = rave || {};
 rave.personprofile = rave.personprofile || (function() {
 	function init() {
+        // setup the sub page tabs
         $("#personProfileSubPages").tabs();
+
+        // setup the edit button if it exists
+        var $editButton = $("#profileEdit");
+        if ($editButton) {
+            $editButton.click(function() {
+                rave.api.handler.userProfileEditHandler(true);
+            });
+        }
+
+        // setup the cancel button if it exists
+        var $cancelButton = $("#cancelEdit");
+        if ($cancelButton) {
+            $cancelButton.click(function() {
+                rave.api.handler.userProfileEditHandler(false);
+            });
+        }
     }
 	
 	return {

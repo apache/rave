@@ -34,7 +34,6 @@ public final class ViewNames {
     public static final String ADD_WIDGET_FORM = USER_PREFIX + "addwidget";
     public static final String NEW_ACCOUNT = USER_PREFIX + "newaccount";
     public static final String USER_PROFILE = USER_PREFIX + "userProfile";
-    public static final String USER_INFO = USER_PREFIX + "profile";
     public static final String PERSON_PROFILE = USER_PREFIX + "personProfile";
 
     public static final String ADMIN_HOME = ADMIN_PREFIX + "home";
@@ -52,13 +51,7 @@ public final class ViewNames {
     public static final String USERNAME_REQUEST = USER_PREFIX + "retrieveusername";
     public static final String PASSWORD_CHANGE = USER_PREFIX + "changepassword";
 
-
-
     public static final String REDIRECT = "redirect:/";
-
-    public static final String POSTS_TAG_PAGE = "postsTagPage";
-    public static final String ABOUT_TAG_PAGE = "aboutTagPage";
-
     public static final String REDIRECT_NEW_PASSWORD = REDIRECT + "app/newpassword";
     public static final String REDIRECT_RETRIEVE_USERNAME = REDIRECT + "app/retrieveusername";
 

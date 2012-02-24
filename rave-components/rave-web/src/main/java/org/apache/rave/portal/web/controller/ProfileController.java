@@ -40,20 +40,18 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping(value = {"/userInfo/*", "/userInfo", "/userInfo/"})
+@RequestMapping(value = {"/person/*", "/person"})
 public class ProfileController {
 
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 	
 	private final UserService userService;
 	private final PageService pageService;
-	private final PageLayoutService pageLayoutService;
 
 	@Autowired
-	public ProfileController(UserService userService, PageService pageService, PageLayoutService pageLayoutService) {
+	public ProfileController(UserService userService, PageService pageService) {
 		this.userService = userService;
         this.pageService = pageService;
-        this.pageLayoutService = pageLayoutService;
 	}
 
     /**
@@ -64,34 +62,14 @@ public class ProfileController {
      * @param referringPageId		page reference id (optional)
 	 * @return the view name of the user profile page
 	 */
-	@RequestMapping(value = {"/person/{username:.*}"}, method = RequestMethod.GET)
-	public String viewPersonProfile(@PathVariable String username, ModelMap model, @RequestParam(required = false) Long referringPageId) {
+	@RequestMapping(value = {"/{username:.*}"}, method = RequestMethod.GET)
+	public String viewProfile(@PathVariable String username, ModelMap model, @RequestParam(required = false) Long referringPageId) {
 		logger.debug("Viewing person profile for: " + username);
 		User user = userService.getUserByUsername(username);
         Page personProfilePage = pageService.getDefaultPageFromList(pageService.getAllPersonProfilePages(user.getEntityId()));
-        addAttributesToModel(model, user, referringPageId, ViewNames.ABOUT_TAG_PAGE);
+        addAttributesToModel(model, user, referringPageId);
         model.addAttribute(ModelKeys.PAGE, personProfilePage);
 		return ViewNames.getPersonPageView(personProfilePage.getPageLayout().getCode());
-	}
-	
-	/**
-	 * Views the main page of the user profile
-	 *
-	 * @param model           			{@link Model} map
-	 * @param referringPageId			page reference id
-	 * @return the view name of the user profile page
-	 */
-	@RequestMapping(method = RequestMethod.GET)
-	public String setUpForm(ModelMap model, 
-							@RequestParam Long referringPageId) {
-		logger.debug("Initializing User Info page");
-		
-		User user = userService.getAuthenticatedUser();
-		
-		//set the posts tag page as default for first setup 
-        addAttributesToModel(model, user, referringPageId, ViewNames.ABOUT_TAG_PAGE);
-
-		return ViewNames.USER_INFO;
 	}
 	
 	/**
@@ -102,37 +80,36 @@ public class ProfileController {
 	 * @param updatedUser				Updated user information 
 	 * @return the view name of the user profile page
 	 */
-	@RequestMapping(method = RequestMethod.POST)
-	public String updateUserProfile(ModelMap model, 
-									@RequestParam Long referringPageId,
-									@ModelAttribute("updatedUser") User updatedUser) {
-		logger.debug("Updating User's profile information");
-		
-		User user = userService.getAuthenticatedUser();
-				                
+    @RequestMapping(method = RequestMethod.POST)
+    public String updateProfile(ModelMap model,
+                                @RequestParam(required = false) Long referringPageId,
+                                @ModelAttribute("updatedUser") User updatedUser) {
+        logger.info("Updating " + updatedUser.getUsername() + " profile information");
+
+        User user = userService.getAuthenticatedUser();
+
         //set the updated fields for optional information
-		user.setGivenName(updatedUser.getGivenName());
-		user.setFamilyName(updatedUser.getFamilyName());
-		user.setDisplayName(updatedUser.getDisplayName());
-		user.setAboutMe(updatedUser.getAboutMe());
-		user.setStatus(updatedUser.getStatus());
-		user.setEmail(updatedUser.getEmail());
-		
-		//update the user profile
-		userService.updateUserProfile(user);
-			        
-		//set about tag page as default page for the changes to be visible
-		addAttributesToModel(model, user, referringPageId, ViewNames.ABOUT_TAG_PAGE);
-		
-		return ViewNames.USER_INFO;
-	}
+        user.setGivenName(updatedUser.getGivenName());
+        user.setFamilyName(updatedUser.getFamilyName());
+        user.setDisplayName(updatedUser.getDisplayName());
+        user.setAboutMe(updatedUser.getAboutMe());
+        user.setStatus(updatedUser.getStatus());
+        user.setEmail(updatedUser.getEmail());
+
+        //update the user profile
+        userService.updateUserProfile(user);
+
+        //set about tag page as default page for the changes to be visible
+        addAttributesToModel(model, user, referringPageId);
+
+        return ViewNames.REDIRECT + "app/person/" + user.getUsername();
+    }
 	
 	/*
 	 * Function to add attributes to model map
 	 */
-	private void addAttributesToModel(ModelMap model, User user, Long referringPageId, String defaultTagPage) {
+	private void addAttributesToModel(ModelMap model, User user, Long referringPageId) {
     	model.addAttribute(ModelKeys.USER_PROFILE, user);
     	model.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
-    	model.addAttribute(ModelKeys.DEFAULT_TAG_PAGE, defaultTagPage);
     }
 }
