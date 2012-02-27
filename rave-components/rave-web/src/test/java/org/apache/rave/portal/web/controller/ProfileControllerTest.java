@@ -33,6 +33,7 @@ import org.apache.rave.portal.web.util.ViewNames;
 import org.hamcrest.CoreMatchers;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.ui.ModelMap;
 
 import java.util.ArrayList;
@@ -91,10 +92,13 @@ public class ProfileControllerTest {
         user.setUsername(username);
         user.setEntityId(USER_ID);
 		String userProfile = new String(ModelKeys.USER_PROFILE);
+        Page personProfile = new Page();
+        PageLayout pageLayout = new PageLayout();
+        pageLayout.setCode(VALID_PAGE_LAYOUT_CODE);
+        personProfile.setPageLayout(pageLayout);
 		
-		expect(userService.getUserByUsername(username)).andReturn(user).anyTimes();
-        expect(pageService.getAllPersonProfilePages(user.getEntityId())).andReturn(allProfilePages);
-        expect(pageService.getDefaultPageFromList(allProfilePages)).andReturn(defaultPage);
+		expect(userService.getUserByUsername(username)).andReturn(user).once();
+        expect(pageService.getPersonProfilePage(user.getEntityId())).andReturn(personProfile);
 
 		replay(userService, pageService);
 
@@ -116,6 +120,27 @@ public class ProfileControllerTest {
 		
 		verify(userService, pageService);
 	}
+
+    @Test(expected = UsernameNotFoundException.class)
+    public void viewPersonProfile_invalidUser() {
+        //creating a mock user
+        final User user = null;
+        final ModelMap model = new ModelMap();
+        final int modelSize = 4;
+        final String username="Canonical";
+        Page personProfile = new Page();
+        PageLayout pageLayout = new PageLayout();
+        pageLayout.setCode("person_profile");
+        personProfile.setPageLayout(pageLayout);
+
+        expect(userService.getUserByUsername(username)).andThrow(new UsernameNotFoundException("Username does not exist"));
+
+        replay(userService, pageService);
+
+        profileController.viewProfile(username, model, null);
+
+        verify(userService, pageService);
+    }
 
 	@Test
 	public void updateProfile_ShouldUpdateAuthenticatedUser() {

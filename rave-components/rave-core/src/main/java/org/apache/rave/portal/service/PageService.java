@@ -18,15 +18,12 @@
  */
 package org.apache.rave.portal.service;
 
-import org.apache.rave.portal.model.Page;
-import org.apache.rave.portal.model.PageType;
-import org.apache.rave.portal.model.Region;
-import org.apache.rave.portal.model.RegionWidget;
-
-import java.util.List;
+import org.apache.rave.portal.model.*;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
+
+import java.util.List;
 
 /**
  * @author carlucci
@@ -51,13 +48,13 @@ public interface PageService {
     List<Page> getAllUserPages(long userId);
     
     /**
-     * Gets all person profile pages for the given user.
+     * Gets the profile page for the given user.
      *
-     * @param userId The user to retrieve pages for.
-     * @return A non null possible empty list of pages for the given user.
+     * @param userId The user to retrieve the page for.
+     * @return The profile page
      */
-    @PostFilter("hasPermission(filterObject, 'read')")
-    List<Page> getAllPersonProfilePages(long userId);
+    @PostAuthorize("hasPermission(returnObject, 'read')")
+    Page getPersonProfilePage(long userId);
 
     /**
      * Return the page object from a list of pages given the pageId

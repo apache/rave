@@ -48,6 +48,7 @@ public class DefaultUserServiceTest {
     private UserService service;
     private UserRepository userRepository;
     private PageRepository pageRepository;
+    private PageTemplateRepository pageTemplateRepository;
     private WidgetCommentRepository widgetCommentRepository;
     private WidgetRatingRepository widgetRatingRepository;
     private WidgetRepository widgetRepository;
@@ -61,11 +62,12 @@ public class DefaultUserServiceTest {
     public void setup() {
         userRepository = createMock(UserRepository.class);
         pageRepository = createMock(PageRepository.class);
+        pageTemplateRepository = createMock(PageTemplateRepository.class);
         widgetCommentRepository = createMock(WidgetCommentRepository.class);
         widgetRatingRepository = createMock(WidgetRatingRepository.class);
         widgetRepository = createMock(WidgetRepository.class);
 
-        service = new DefaultUserService(userRepository, pageRepository, widgetRatingRepository, widgetCommentRepository, widgetRepository);
+        service = new DefaultUserService(pageRepository, userRepository, widgetRatingRepository, widgetCommentRepository, widgetRepository, pageTemplateRepository);
     }
 
     @After
@@ -265,6 +267,7 @@ public class DefaultUserServiceTest {
         
         expect(userRepository.get(USER_ID)).andReturn(user);
         expect(pageRepository.deletePages(USER_ID, PageType.USER)).andReturn(pages.size());
+        expect(pageRepository.deletePages(USER_ID, PageType.PERSON_PROFILE)).andReturn(pages.size());
         expect(widgetCommentRepository.deleteAll(USER_ID)).andReturn(NUM_COMMENTS);
         expect(widgetRatingRepository.deleteAll(USER_ID)).andReturn(NUM_RATINGS);       
         expect(widgetRepository.unassignWidgetOwner(USER_ID)).andReturn( NUM_WIDGETS_OWNED);       
@@ -303,5 +306,16 @@ public class DefaultUserServiceTest {
         assertThat(service.getAllByAddedWidget(VALID_WIDGET_ID), is(personList));
         
         verify(userRepository);
+    }
+
+    @Test
+    public void registerNewUser_valid(){
+        User user = new User();
+        expect(userRepository.save(user)).andReturn(user).once();
+        expect(pageTemplateRepository.getDefaultPersonPage()).andReturn(new PageTemplate()).once();
+        expect(pageRepository.createPersonPageForUser(isA(User.class), isA(PageTemplate.class))).andReturn(new Page());
+        replay(userRepository, pageTemplateRepository, pageRepository);
+        service.registerNewUser(user);
+        verify(userRepository, pageTemplateRepository, pageRepository);
     }
 }

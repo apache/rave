@@ -28,13 +28,15 @@ import java.util.List;
 @Entity
 @Table(name="page_template")
 @NamedQueries({
-        @NamedQuery(name = "PageTemplate.findByPageTemplateId", query = "SELECT p FROM PageTemplate p WHERE p.entityId = :id"),
-        @NamedQuery(name = "PageTemplate.findAll", query = "SELECT p FROM PageTemplate p ORDER BY p.renderSequence, p.title")
+        @NamedQuery(name = PageTemplate.PAGE_TEMPLATE_GET_ALL, query = "SELECT p FROM PageTemplate p ORDER BY p.renderSequence"),
+        @NamedQuery(name = PageTemplate.PAGE_TEMPLATE_GET_DEFAULT_PERSON_PAGE, query = "SELECT p FROM PageTemplate p WHERE p.defaultTemplate = true and p.pageType = :pageType")
 })
 @Access(AccessType.FIELD)
 public class PageTemplate implements BasicEntity, Serializable {
 
     private static final long serialVersionUID = 1L;
+    public static final String PAGE_TEMPLATE_GET_ALL = "PageTemplate.getAll";
+    public static final String PAGE_TEMPLATE_GET_DEFAULT_PERSON_PAGE = "PageTemplate.getDefaultPersonPage";
 
     @Id
     @Column(name="entity_id")
@@ -43,8 +45,8 @@ public class PageTemplate implements BasicEntity, Serializable {
             valueColumnName = "SEQ_COUNT", pkColumnValue = "page_template", allocationSize = 1, initialValue = 1)
     private Long entityId;
 
-    @Basic @Column(name="title", unique = false)
-    private String title;
+    @Basic @Column(name="name", unique = false)
+    private String name;
     
     @Basic @Column(name="description", unique = false)
     private String description;
@@ -59,6 +61,7 @@ public class PageTemplate implements BasicEntity, Serializable {
     private PageTemplate parentPageTemplate;
 
     @OneToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL, mappedBy="parentPageTemplate")
+    @OrderBy("renderSequence")
     private List<PageTemplate> subPageTemplates;
 
     @ManyToOne
@@ -96,12 +99,12 @@ public class PageTemplate implements BasicEntity, Serializable {
         this.pageType = pageType;
     }
 
-    public String getTitle() {
-        return title;
+    public String getName() {
+        return name;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDescription() {

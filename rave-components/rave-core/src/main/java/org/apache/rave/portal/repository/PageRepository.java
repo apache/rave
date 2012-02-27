@@ -20,7 +20,9 @@ package org.apache.rave.portal.repository;
 
 import org.apache.rave.persistence.Repository;
 import org.apache.rave.portal.model.Page;
+import org.apache.rave.portal.model.PageTemplate;
 import org.apache.rave.portal.model.PageType;
+import org.apache.rave.portal.model.User;
 
 import java.util.List;
 
@@ -44,4 +46,20 @@ public interface PageRepository extends Repository<Page> {
      * @return the number of pages deleted
      */
     int deletePages(Long userId, PageType pageType);
+
+    /**
+     * Create Person Page from PageTemplate for the given user
+     * @param user User
+     * @param pt PageTemplate
+     * @return Page
+     */
+    Page createPersonPageForUser(User user, PageTemplate pt);
+
+    /**
+     * Determine if the given user has a person page
+     *
+     * @param userId
+     * @return boolean
+     */
+    boolean hasPersonPage(long userId);
 }

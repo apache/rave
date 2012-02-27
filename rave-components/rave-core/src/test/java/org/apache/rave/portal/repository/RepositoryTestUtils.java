@@ -18,13 +18,14 @@
  */
 package org.apache.rave.portal.repository;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
-import javax.persistence.Entity;
-import javax.persistence.EntityManager;
 import org.apache.openjpa.meta.FieldMetaData;
 import org.apache.openjpa.persistence.JPAFacadeHelper;
 import org.apache.rave.persistence.BasicEntity;
+import org.apache.rave.portal.model.PageType;
+
+import javax.persistence.EntityManager;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 
 /**
  *
@@ -82,6 +83,8 @@ public class RepositoryTestUtils {
                 setterMethod.invoke(entity, new Long(1L)); 
             } else if (getterMethod.getReturnType().equals(Integer.class)) {
                 setterMethod.invoke(entity, new Integer(1)); 
+            } else if (getterMethod.getReturnType().equals(PageType.class)){
+                setterMethod.invoke(entity, PageType.USER);
             }
         }           
     }    

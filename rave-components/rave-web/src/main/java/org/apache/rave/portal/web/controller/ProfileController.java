@@ -19,14 +19,8 @@
 
 package org.apache.rave.portal.web.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.rave.portal.model.NewUser;
 import org.apache.rave.portal.model.Page;
-import org.apache.rave.portal.model.PageLayout;
 import org.apache.rave.portal.model.User;
-import org.apache.rave.portal.service.PageLayoutService;
 import org.apache.rave.portal.service.PageService;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.portal.web.util.ModelKeys;
@@ -34,6 +28,7 @@ import org.apache.rave.portal.web.util.ViewNames;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -66,7 +61,7 @@ public class ProfileController {
 	public String viewProfile(@PathVariable String username, ModelMap model, @RequestParam(required = false) Long referringPageId) {
 		logger.debug("Viewing person profile for: " + username);
 		User user = userService.getUserByUsername(username);
-        Page personProfilePage = pageService.getDefaultPageFromList(pageService.getAllPersonProfilePages(user.getEntityId()));
+        Page personProfilePage = pageService.getPersonProfilePage(user.getEntityId());
         addAttributesToModel(model, user, referringPageId);
         model.addAttribute(ModelKeys.PAGE, personProfilePage);
 		return ViewNames.getPersonPageView(personProfilePage.getPageLayout().getCode());

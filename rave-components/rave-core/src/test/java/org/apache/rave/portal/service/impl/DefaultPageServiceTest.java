@@ -21,15 +21,14 @@ package org.apache.rave.portal.service.impl;
 
 import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.repository.*;
+import org.apache.rave.portal.service.PageService;
+import org.apache.rave.portal.service.UserService;
 import org.hamcrest.CoreMatchers;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import org.apache.rave.portal.service.PageService;
-import org.apache.rave.portal.service.UserService;
 
 import static org.easymock.EasyMock.*;
 import static org.hamcrest.CoreMatchers.*;
@@ -40,6 +39,7 @@ public class DefaultPageServiceTest {
     private PageService pageService;
 
     private PageRepository pageRepository;
+    private PageTemplateRepository pageTemplateRepository;
     private RegionRepository regionRepository;
     private WidgetRepository widgetRepository;
     private RegionWidgetRepository regionWidgetRepository;
@@ -69,13 +69,14 @@ public class DefaultPageServiceTest {
     @Before
     public void setup() {
         pageRepository = createMock(PageRepository.class);
+        pageTemplateRepository = createMock(PageTemplateRepository.class);
         regionRepository = createMock(RegionRepository.class);
         widgetRepository = createMock(WidgetRepository.class);
         regionWidgetRepository = createMock(RegionWidgetRepository.class);
         pageLayoutRepository = createMock(PageLayoutRepository.class);
         userService = createMock(UserService.class);
        
-        pageService = new DefaultPageService(pageRepository, regionRepository, widgetRepository, regionWidgetRepository, 
+        pageService = new DefaultPageService(pageRepository, pageTemplateRepository, regionRepository, widgetRepository, regionWidgetRepository,
                                              pageLayoutRepository, userService, defaultPageName);
         
         validWidget = new Widget(1L, "http://dummy.apache.org/widgets/widget.xml");
@@ -140,15 +141,35 @@ public class DefaultPageServiceTest {
 
 
     @Test
-    public void getAllPersonProfilePages() {
-        final List<Page> VALID_PAGES = new ArrayList<Page>();
+    public void getAllPersonProfilePages_userHasPersonPage() {
+        List<Page> VALID_PAGES = new ArrayList<Page>();
+        Page personPage = new Page();
+        VALID_PAGES.add(personPage);
 
         expect(pageRepository.getAllPages(VALID_USER_ID, PageType.PERSON_PROFILE)).andReturn(VALID_PAGES);
-        replay(pageRepository);
+        replay(pageRepository,userService,pageTemplateRepository);
 
-        assertThat(pageService.getAllPersonProfilePages(VALID_USER_ID), CoreMatchers.sameInstance(VALID_PAGES));
+        assertThat(pageService.getPersonProfilePage(VALID_USER_ID), CoreMatchers.sameInstance(personPage));
 
-        verify(pageRepository);
+        verify(pageRepository,userService,pageTemplateRepository);
+    }
+
+    @Test
+    public void getAllPersonProfilePages_noPersonPage() {
+        List<Page> VALID_PAGES = new ArrayList<Page>();
+        Page personPage = new Page();
+        PageTemplate pageTemplate = new PageTemplate();
+        User user = new User();
+
+        expect(pageRepository.getAllPages(VALID_USER_ID, PageType.PERSON_PROFILE)).andReturn(VALID_PAGES);
+        expect(userService.getUserById(isA(Long.class))).andReturn(user).once();
+        expect(pageTemplateRepository.getDefaultPersonPage()).andReturn(pageTemplate).once();
+        expect(pageRepository.createPersonPageForUser(user,pageTemplate)).andReturn(personPage);
+        replay(pageRepository, userService, pageTemplateRepository);
+
+        assertThat(pageService.getPersonProfilePage(VALID_USER_ID), CoreMatchers.sameInstance(personPage));
+
+        verify(pageRepository, userService, pageTemplateRepository);
     }
 
     @Test

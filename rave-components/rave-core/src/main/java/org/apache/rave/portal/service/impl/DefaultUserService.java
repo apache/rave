@@ -22,9 +22,7 @@ package org.apache.rave.portal.service.impl;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.rave.portal.model.NewUser;
-
 import org.apache.rave.portal.model.PageType;
-
 import org.apache.rave.portal.model.Person;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.util.SearchResult;
@@ -48,8 +46,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.*;
 
 /**
@@ -61,6 +57,7 @@ public class DefaultUserService implements UserService {
 
     private final UserRepository userRepository;
     private final PageRepository pageRepository;
+    private final PageTemplateRepository pageTemplateRepository;
     private final WidgetRatingRepository widgetRatingRepository;
     private final WidgetCommentRepository widgetCommentRepository;
     private final WidgetRepository widgetRepository;
@@ -87,16 +84,18 @@ public class DefaultUserService implements UserService {
     private String baseUrl;
 
     @Autowired
-    public DefaultUserService(UserRepository userRepository,
-                              PageRepository pageRepository,
+    public DefaultUserService(PageRepository pageRepository,
+                              UserRepository userRepository,
                               WidgetRatingRepository widgetRatingRepository,
                               WidgetCommentRepository widgetCommentRepository,
-                              WidgetRepository widgetRepository) {
+                              WidgetRepository widgetRepository, 
+                              PageTemplateRepository pageTemplateRepository) {
         this.userRepository = userRepository;
         this.pageRepository = pageRepository;
         this.widgetRatingRepository = widgetRatingRepository;
         this.widgetCommentRepository = widgetCommentRepository;
         this.widgetRepository = widgetRepository;
+        this.pageTemplateRepository = pageTemplateRepository;
     }
 
     @Override
@@ -161,7 +160,8 @@ public class DefaultUserService implements UserService {
     @Override
     @Transactional
     public void registerNewUser(User user) {
-        userRepository.save(user);
+        User managedUser = userRepository.save(user);
+        pageRepository.createPersonPageForUser(managedUser, pageTemplateRepository.getDefaultPersonPage());
     }
 
     @Override
@@ -219,6 +219,8 @@ public class DefaultUserService implements UserService {
 
         // delete all User type pages
         int numDeletedPages = pageRepository.deletePages(userId, PageType.USER);
+        // delete all person pages
+        int numDeletedPersonPages = pageRepository.deletePages(userId, PageType.PERSON_PROFILE);
         // delete all the widget comments
         int numWidgetComments = widgetCommentRepository.deleteAll(userId);
         // delete all the widget ratings
@@ -227,9 +229,9 @@ public class DefaultUserService implements UserService {
         int numWidgetsOwned = widgetRepository.unassignWidgetOwner(userId);
         // finally delete the user
         userRepository.delete(user);
-        log.info("Deleted user [" + userId + ',' + username + "] - numPages: " + numDeletedPages +
-                 ", numWidgetComments: " + numWidgetComments + ", numWidgetRatings: " + numWidgetRatings +
-                 ", numWidgetsOwned: " + numWidgetsOwned);
+        log.info("Deleted user [" + userId + ',' + username + "] - numPages: " + numDeletedPages + ", numPersonPages:" +
+                 numDeletedPersonPages + ", numWidgetComments: " + numWidgetComments + ", numWidgetRatings: " +
+                 numWidgetRatings + ", numWidgetsOwned: " + numWidgetsOwned);
     }
 
     @Override
@@ -320,5 +322,4 @@ public class DefaultUserService implements UserService {
         }
         return true;
     }
-
 }

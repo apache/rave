@@ -19,8 +19,13 @@
 package org.apache.rave.portal.repository.impl;
 
 import org.apache.rave.portal.model.Page;
+import org.apache.rave.portal.model.PageTemplate;
 import org.apache.rave.portal.model.PageType;
-import org.hamcrest.CoreMatchers;
+import org.apache.rave.portal.model.User;
+import org.apache.rave.portal.repository.PageRepository;
+import org.apache.rave.portal.repository.PageTemplateRepository;
+import org.apache.rave.portal.repository.UserRepository;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +38,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 
-import org.apache.rave.portal.repository.PageRepository;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
@@ -43,6 +47,7 @@ import static org.junit.Assert.*;
 public class JpaPageRepositoryTest {
 
     private static final Long USER_ID = 1L;
+    private static final Long CREATED_USER_ID = 6L;
     private static final Long INVALID_USER = -1L;
     private static final String WIDGET_URL = "http://www.widget-dico.com/wikipedia/google/wikipedia.xml";
     private static final Long USER_PAGE_ID = 1L;
@@ -57,6 +62,21 @@ public class JpaPageRepositoryTest {
 
     @Autowired
     private PageRepository repository;
+    
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private PageTemplateRepository pageTemplateRepository;
+
+    private User user;
+    private PageTemplate defaultPageTemplate;
+    
+    @Before
+    public void setup(){
+        user = userRepository.get(CREATED_USER_ID);
+        defaultPageTemplate = pageTemplateRepository.getDefaultPersonPage();
+    }
 
     @Test
     public void getAllPages_validUser_validUserPageSet() {
@@ -116,6 +136,12 @@ public class JpaPageRepositoryTest {
     }
 
     @Test
+    public void getAllPages_person_profile_invalidUser_emptySet() {
+        List<Page> pages = repository.getAllPages(INVALID_USER, PageType.PERSON_PROFILE);
+        assertThat(pages.isEmpty(), is(true));
+    }
+
+    @Test
     public void getAllPages_nullUser_emptySet() {
         List<Page> pages = repository.getAllPages(null, PageType.USER);
         assertThat(pages.isEmpty(), is(true));
@@ -166,5 +192,53 @@ public class JpaPageRepositoryTest {
         assertThat(deletedPages, is(numPages));
         // ensure pages are deleted
         assertThat(repository.getAllPages(USER_ID, PageType.USER).isEmpty(), is(true));
+    }
+    
+    @Test
+    @Transactional(readOnly = false)
+    @Rollback(true)
+    public void createPersonPageForUser_validUser(){
+        Page page = repository.createPersonPageForUser(user, defaultPageTemplate);
+        assertSame(user, page.getOwner());
+        assertEquals(page.getName(), defaultPageTemplate.getName());
+        assertNull(page.getParentPage());
+        assertEquals(2, page.getSubPages().size());
+        assertNotNull(page.getRenderSequence());
+        assertNotNull(page.getPageLayout());
+        assertEquals("person_profile", page.getPageLayout().getCode());
+        assertEquals(1, page.getRegions().size());
+        assertEquals(PageType.PERSON_PROFILE, page.getPageType());
+        Page subPage1 = page.getSubPages().get(0);
+        Page subPage2 = page.getSubPages().get(1);
+        assertEquals("Widgets on sub page 1", 2, subPage1.getRegions().get(0).getRegionWidgets().size());
+        assertEquals("Widgets on sub page 2", 1, subPage2.getRegions().get(0).getRegionWidgets().size());
+        assertEquals("Regions on sub page 1", 1, subPage1.getRegions().size());
+        assertEquals("Regions on sub page 2", 1, subPage2.getRegions().size());
+        assertNull("no sub pages of sub page 1", subPage1.getSubPages());
+        assertNull("no sub pages of sub page 2", subPage2.getSubPages());
+        assertEquals("sub page 1 refers to parent page", page.getEntityId(), subPage1.getParentPage().getEntityId());
+        assertEquals("sub page 2 refers to parent page", page.getEntityId(), subPage2.getParentPage().getEntityId());
+        assertEquals("sub page 1 regions refers to sub page 1", subPage1.getEntityId(), subPage1.getRegions().get(0).getPage().getEntityId());
+        assertEquals("sub page 2 regions refers to sub page 2", subPage2.getEntityId(), subPage2.getRegions().get(0).getPage().getEntityId());
+        assertEquals("sub page 1 has one column layout", "columns_1", subPage1.getPageLayout().getCode());
+        assertEquals("sub page 2 has one column layout", "columns_1", subPage2.getPageLayout().getCode());
+        assertEquals(PageType.SUB_PAGE, subPage1.getPageType());
+        assertEquals(defaultPageTemplate.getSubPageTemplates().get(0).getName(), subPage1.getName());
+        assertEquals(PageType.SUB_PAGE, subPage2.getPageType());
+        assertEquals(defaultPageTemplate.getSubPageTemplates().get(1).getName(), subPage2.getName());
+        assertSame(user, subPage1.getOwner());
+        assertSame(user, subPage2.getOwner());
+        assertNotNull(subPage1.getRenderSequence());
+        assertNotNull(subPage2.getRenderSequence());
+    }
+    
+    @Test
+    public void hasPersonPage_true(){
+        assertTrue(repository.hasPersonPage(USER_ID));
+    }
+
+    @Test
+    public void hasPersonPage_false(){
+        assertFalse(repository.hasPersonPage(CREATED_USER_ID));
     }
 }

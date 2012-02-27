@@ -16,15 +16,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.rave.portal.repository;
 
-public final class RepositoryConstants {
-    // these values should mirror what is inserted into the database
-    // for the Page Type codes
-    public final class PageType {
-        public final static String USER = "USER";
-        public final static String PERSON_PROFILE = "PERSON_PROFILE";
-        public final static String SUB_PAGE = "SUB_PAGE";
-    }
+import org.apache.rave.portal.model.PageTemplate;
+
+import java.util.List;
+
+public interface PageTemplateRepository {
+
+    List<PageTemplate> getAll();
+    PageTemplate getDefaultPersonPage();
 }

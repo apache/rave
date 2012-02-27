@@ -120,7 +120,7 @@
                 </p>
             </fieldset>
             <%-- only display the edit profile button if the current logged in user matches the profile being viewed --%>
-            <c:set var="currentUsername"><sec:authentication property="principal.username" /></c:set>
+            <c:set var="currentUsername"><sec:authentication property="principal.username" htmlEscape="false" /></c:set>
             <c:if test="${currentUsername == userProfile.username}">
                 <fieldset>
                     <p>

@@ -29,7 +29,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,20 +39,23 @@ public class DefaultPageService implements PageService {
     private final RegionWidgetRepository regionWidgetRepository;
     private final WidgetRepository widgetRepository;
     private final PageLayoutRepository pageLayoutRepository;
-    private final UserService userService;    
+    private final UserService userService;
+    private final PageTemplateRepository pageTemplateRepository;
     private final String defaultPageName;
     
     private final long MOVE_PAGE_DEFAULT_POSITION_INDEX = -1L;
 
     @Autowired
-    public DefaultPageService(PageRepository pageRepository, 
-                              RegionRepository regionRepository, 
-                              WidgetRepository widgetRepository, 
+    public DefaultPageService(PageRepository pageRepository,
+                              PageTemplateRepository pageTemplateRepository,
+                              RegionRepository regionRepository,
+                              WidgetRepository widgetRepository,
                               RegionWidgetRepository regionWidgetRepository,
                               PageLayoutRepository pageLayoutRepository,
                               UserService userService,
                               @Value("${portal.page.default_name}") String defaultPageName) {
         this.pageRepository = pageRepository;
+        this.pageTemplateRepository = pageTemplateRepository;
         this.regionRepository = regionRepository;
         this.regionWidgetRepository = regionWidgetRepository;
         this.widgetRepository = widgetRepository;
@@ -73,8 +75,16 @@ public class DefaultPageService implements PageService {
     }
 
     @Override
-    public List<Page> getAllPersonProfilePages(long userId) {
-        return pageRepository.getAllPages(userId, PageType.PERSON_PROFILE);
+    @Transactional
+    public Page getPersonProfilePage(long userId) {
+        List<Page> profilePages = pageRepository.getAllPages(userId, PageType.PERSON_PROFILE);
+        Page personPage = null;
+        if (profilePages.isEmpty()){
+            personPage = pageRepository.createPersonPageForUser(userService.getUserById(userId),pageTemplateRepository.getDefaultPersonPage());
+        } else {
+            personPage = profilePages.get(0);
+        }
+        return personPage;
     }
 
     @Override
@@ -272,7 +282,7 @@ public class DefaultPageService implements PageService {
 
         return page;
     }
-    
+
     /**
      * Utility function to determine if a Page layout adjustment is needed
      * which comparing the existing and new PageLayout objects
