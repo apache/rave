@@ -188,9 +188,16 @@
                        items="${widgets.resultSet}">
                 <%--@elvariable id="widgetsStatistics" type="org.apache.rave.portal.model.util.WidgetStatistics"--%>
                 <c:set var="widgetStatistics" value="${widgetsStatistics[widget.entityId]}"/>
-                <li class="storeItem">
+                <c:choose>
+                    <c:when test='${widget.featured == "true"}' >
+                        <li class="storeItem storeItemFeatured">
+                    </c:when>
+                    <c:otherwise>
+                        <li class="storeItem">
+                    </c:otherwise>
+                </c:choose>
 
-                    <div class="storeItemLeft">
+                <div class="storeItemLeft">
                         <c:if test="${not empty widget.thumbnailUrl}">
                             <img class="storeWidgetThumbnail" src="${widget.thumbnailUrl}"
                                  title="<c:out value="${widget.title}"/>" alt=""

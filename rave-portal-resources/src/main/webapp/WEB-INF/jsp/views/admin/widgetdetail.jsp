@@ -120,12 +120,20 @@
 				</p>
 
 				<p>
-					<form:label path="disableRendering">
-						<fmt:message key="widget.disableRendering" />
+					<form:label path="featured">
+						<fmt:message key="page.general.checkBox.featured" />
 					</form:label>
-					<form:checkbox path="disableRendering" id="disableRendering" />
-					<form:errors path="disableRendering" cssClass="error" />
+					<form:checkbox path="featured" id="featured" />
+					<form:errors path="featured" cssClass="error" />
 				</p>
+
+                <p>
+                		<form:label path="disableRendering">
+                		<fmt:message key="widget.disableRendering" />
+                		</form:label>
+                		<form:checkbox path="disableRendering" id="disableRendering" />
+                		<form:errors path="disableRendering" cssClass="error" />
+                </p>
 
 				<p>
 					<form:label path="disableRenderingMessage">

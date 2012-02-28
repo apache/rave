@@ -500,6 +500,10 @@ header h1 {
     box-shadow: 2px 2px 2px black;
 }
 
+.storeItemFeatured {
+    background-color: #D5EAF9;
+}
+
 .widget-users-dialog {
     height: 200px;
 }

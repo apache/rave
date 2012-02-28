@@ -163,8 +163,8 @@ UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @w
 
 -- nytimes widget
 set @nyt_widget_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @widget_seq);
-insert into widget (entity_id, title, url, type, widget_status, owner_id)
-values(@nyt_widget_id, 'NYTimes.com - Top Stories', 'http://widgets.nytimes.com/packages/html/igoogle/topstories.xml', 'OpenSocial', 'PUBLISHED', @user_id_1);
+insert into widget (entity_id, title, url, type, widget_status, owner_id, featured)
+values(@nyt_widget_id, 'NYTimes.com - Top Stories', 'http://widgets.nytimes.com/packages/html/igoogle/topstories.xml', 'OpenSocial', 'PUBLISHED', @user_id_1, TRUE );
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @widget_seq;
 
 -- google tabbed news widget

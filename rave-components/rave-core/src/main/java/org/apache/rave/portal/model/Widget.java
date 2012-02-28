@@ -65,7 +65,7 @@ public class Widget implements BasicEntity, Serializable {
     public static final String PARAM_STATUS = "widgetStatus";
     public static final String PARAM_URL = "url";
     public static final String PARAM_OWNER = "owner";
-     public static final String PARAM_TAG = "keyword";
+    public static final String PARAM_TAG = "keyword";
 
     public static final String WIDGET_GET_ALL = "Widget.getAll";
     public static final String WIDGET_COUNT_ALL = "Widget.countAll";
@@ -91,7 +91,7 @@ public class Widget implements BasicEntity, Serializable {
     static final String WIDGET_TAG_BY_KEYWORD=" (select t.widgetId from WidgetTag t where lower(t.tag.keyword)=:"+PARAM_TAG+")";
     static final String JOIN_TAGS=" WHERE w.entityId in"+WIDGET_TAG_BY_KEYWORD;
 
-    static final String ORDER_BY_TITLE_ASC = " ORDER BY w.title ASC ";
+    static final String ORDER_BY_TITLE_ASC = " ORDER BY w.featured DESC, w.title ASC ";
 
 
     @Id
@@ -188,6 +188,11 @@ public class Widget implements BasicEntity, Serializable {
     )
     @OrderBy("text")
     private List<Category> categories;
+
+    @XmlElement
+    @Basic
+    @Column(name = "featured")
+    private boolean featured;
 
     public Widget() {
     }
@@ -363,6 +368,14 @@ public class Widget implements BasicEntity, Serializable {
         this.categories = categories;
     }
 
+    public boolean isFeatured() {
+        return featured;
+    }
+
+    public void setFeatured(boolean featured) {
+        this.featured = featured;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {
@@ -398,6 +411,7 @@ public class Widget implements BasicEntity, Serializable {
                 ", description='" + description + '\'' +
                 ", widgetStatus=" + widgetStatus + '\'' +
                 ", owner=" + owner + '\'' +
+                ", featured=" + featured + '\'' +
                 ", disable_rendering=" + disableRendering + '\'' +
                 ", disable_rendering_message=" + disableRenderingMessage +
                 '}';
