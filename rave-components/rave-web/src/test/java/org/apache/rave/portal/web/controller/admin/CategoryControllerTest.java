@@ -31,8 +31,15 @@ import org.springframework.web.bind.support.SessionStatus;
 import java.util.ArrayList;
 import java.util.List;
 
-import static junit.framework.Assert.*;
-import static org.easymock.EasyMock.*;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertSame;
+import static junit.framework.Assert.assertTrue;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
 
 /**
  * Test for {@link CategoryController}
@@ -44,9 +51,9 @@ public class CategoryControllerTest {
     private CategoryService categoryService;
     private String validToken;
     
-    private static String UPDATE = "update";
-    private static String DELETE = "delete";
-    private static String CREATE = "create";
+    private static final String UPDATE = "update";
+    private static final String DELETE = "delete";
+    private static final String CREATE = "create";
 
     @Before
     public void setup() {
