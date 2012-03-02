@@ -180,7 +180,7 @@ public class DataSourcePopulator implements Serializable {
     }
 
     protected static ResultSet executeQuery(Connection conn, String executeScriptQuery) throws SQLException {
-        Statement statement = conn.createStatement();
+        Statement statement = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         return statement.executeQuery(executeScriptQuery);
     }
 
