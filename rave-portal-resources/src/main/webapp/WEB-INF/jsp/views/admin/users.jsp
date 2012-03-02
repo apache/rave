@@ -35,7 +35,7 @@
         </c:if>
 
         <ul class="horizontal-list searchbox">
-            <li><a href="<spring:url value="/app/newaccount.jsp"/>"><fmt:message key="admin.users.add"/></a></li>
+            <li><a href="<spring:url value="/app/admin/adduser"/>"><fmt:message key="admin.users.add"/></a></li>
             <li>
                 <form action="<spring:url value="/app/admin/users/search"/>" method="GET">
                     <fieldset>

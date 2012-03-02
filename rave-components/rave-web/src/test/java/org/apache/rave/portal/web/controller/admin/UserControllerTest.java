@@ -20,14 +20,16 @@
 package org.apache.rave.portal.web.controller.admin;
 
 import org.apache.rave.portal.model.Authority;
+import org.apache.rave.portal.model.NewUser;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.service.AuthorityService;
+import org.apache.rave.portal.service.NewAccountService;
 import org.apache.rave.portal.service.PortalPreferenceService;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.portal.web.util.ModelKeys;
-import org.apache.rave.portal.web.util.PortalPreferenceKeys;
 import org.apache.rave.portal.web.util.ViewNames;
+import org.apache.rave.portal.web.validator.NewAccountValidator;
 import org.apache.rave.portal.web.validator.UserProfileValidator;
 import org.junit.Before;
 import org.junit.Test;
@@ -45,6 +47,7 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.createNiceMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.expectLastCall;
 import static org.easymock.EasyMock.replay;
@@ -59,6 +62,7 @@ public class UserControllerTest {
 
     private UserController controller;
     private UserService userService;
+    private NewAccountService newAccountService;
     private AuthorityService authorityService;
     private PortalPreferenceService preferenceService;
     private String validToken;
@@ -236,6 +240,70 @@ public class UserControllerTest {
     }
 
     @Test
+    public void setupForm() {
+        ModelMap modelMap = new ExtendedModelMap();
+        final String viewName = controller.setUpForm(modelMap);
+        assertEquals(ViewNames.ADMIN_NEW_ACCOUNT, viewName);
+        assertTrue(modelMap.containsAttribute(TABS));
+        assertTrue(modelMap.get(ModelKeys.NEW_USER) instanceof NewUser);
+    }
+
+    @Test
+    public void create_ValidFormSubmitted() throws Exception {
+        final Model model = createNiceMock(Model.class);
+        final NewUser newUser = new NewUser();
+        final BindingResult errors = new BeanPropertyBindingResult(newUser, ModelKeys.NEW_USER);
+        final String username = "username";
+        final String password = "password";
+        final String email = "newuser@example.com";
+        final String confirmPassword = password;
+
+        newUser.setUsername(username);
+        newUser.setPassword(password);
+        newUser.setConfirmPassword(confirmPassword);
+        newUser.setEmail(email);
+
+        expect(userService.getUserByUsername(username)).andReturn(null);
+        expect(userService.getUserByEmail(email)).andReturn(null);
+
+        newAccountService.createNewAccount(newUser);
+
+        expectLastCall();
+        replay(userService, model, newAccountService);
+
+        String result = controller.create(newUser, errors, model);
+        verify(userService, model, newAccountService);
+
+        assertFalse(errors.hasErrors());
+        assertEquals(ViewNames.ADMIN_HOME, result);
+    }
+    @Test
+    public void create_EmptyForm() throws Exception {
+        final Model model = createNiceMock(Model.class);
+        final NewUser newUser = new NewUser();
+        final BindingResult errors = new BeanPropertyBindingResult(newUser, ModelKeys.NEW_USER);
+        final String username = "";
+        final String password = "";
+        final String email = "";
+        final String confirmPassword = password;
+
+        newUser.setUsername(username);
+        newUser.setPassword(password);
+        newUser.setConfirmPassword(confirmPassword);
+        newUser.setEmail(email);
+
+        newAccountService.createNewAccount(newUser);
+
+        replay(model);
+
+        String result = controller.create(newUser, errors, model);
+        verify(model);
+
+        assertTrue(errors.hasErrors());
+        assertEquals(ViewNames.ADMIN_NEW_ACCOUNT, result);
+    }
+
+    @Test
     public void getAuthoritiesForModelMap() {
         final SearchResult<Authority> authorities = createSearchResultWithTwoAuthorities();
         expect(authorityService.getAllAuthorities()).andReturn(authorities);
@@ -261,6 +329,12 @@ public class UserControllerTest {
         UserProfileValidator userProfileValidator = new UserProfileValidator(userService);
         controller.setUserProfileValidator(userProfileValidator);
         validToken = AdminControllerUtil.generateSessionToken();
+
+        final NewAccountValidator validator = new NewAccountValidator(userService);
+        controller.setNewAccountValidator(validator);
+
+        newAccountService = createMock(NewAccountService.class);
+        controller.setNewAccountService(newAccountService);
     }
 
 
