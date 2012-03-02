@@ -22,7 +22,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
     <bean id="dataSourcePopulator" class="org.apache.rave.jdbc.util.DataSourcePopulator">
-        <property name="executeScriptQuery" value="SELECT * FROM PERSON"/>
+        <property name="executeScriptQuery" value="SELECT * FROM RAVE_SHINDIG_SEQUENCES"/>
         <property name="scriptLocations">
             <list>
                 <value>classpath:initial_data.sql</value>
