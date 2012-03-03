@@ -3,40 +3,25 @@ Apache Rave Change Log
 See http://issues.apache.org/jira/browse/RAVE-* (where * is the number of the issue below)
 
 
-Release Notes - Rave - Version 0.8-INCUBATING
+Release Notes - Rave - Version 0.9-INCUBATING
 ================================================================================================================
-
-** Sub-task
-    * [RAVE-410] - Use bcrypt for password hashing
-    * [RAVE-421] - New accounts need to optionally collect additional information for the Person class, such as display name, first and last name, etc.
-    * [RAVE-423] - Improve Performance
-    * [RAVE-451] - Navigate Widget Repository via Category need have show all
-
-** Technical task
-    * [RAVE-433] - Widget Category Admin Interface
-    * [RAVE-434] - Widget Category Assignment
-    * [RAVE-435] - Navigate Widget Repository via Category
-
 ** Bug
-    * [RAVE-263] - drag & drop target column heights
-    * [RAVE-374] - Maximized gadgets partially cover the top left page tabs. 
-    * [RAVE-383] - Update Widget throws error
-    * [RAVE-424] - Assigning admin role to new user fails
-    * [RAVE-439] - Update copyright year to 2012 on all NOTICE files
-    * [RAVE-445] - Form elements that should be hidden by default render briefly when page first loads
-    * [RAVE-453] - Duplicate jars encountered in rave-shindig
+    * [RAVE-375] - Create user from Admin interface
+    * [RAVE-478] - Portal does not start without pre-population from initial_data.sql
+    * [RAVE-489] - Groups aren't populated with Person's in the initial_data
+    * [RAVE-490] - PermGen Error when using the distribution package
+    * [RAVE-494] - "Categories" is not highlighted in admin module
+    * [RAVE-497] - Set default hostname and port for OAuth callback url's in rave.shindig.properties
+    * [RAVE-498] - rave-shindig intial_data.sql is never executed
+    * [RAVE-502] - Unable to load an initial_data.sql file in Oracle
+
+** Epic
+    * [RAVE-456] - View Person Profiles
 
 ** Improvement
-    * [RAVE-299] - Create mechanism for using message bundle text inside javascript code
-    * [RAVE-360] - New Account page needs to be updated to let user enter more information
-    * [RAVE-407] - Improve visibility of disabled Widget state
-    * [RAVE-409] - Upgrade Spring to 3.1.0.RELEASE
-    * [RAVE-414] - Generate source jars as part of maven build process
-    * [RAVE-420] - NewAccountService should allow for creating new accounts which do not include an email
-    * [RAVE-437] - Check and cleanup NOTICE files to only include notices for 3rd party usages which require a notice
-
-** Story
-    * [RAVE-70] - Users can tag Widgets in the Widget Repository
-    * [RAVE-72] - Users can get Widgets from the Widget Repository that match a tag
-    * [RAVE-432] - Widget Categories
-    * [RAVE-444] - Add LDAP authentication
+    * [RAVE-470] - IDE Settings and debugging
+    * [RAVE-471] - Add ability to read the application properties entries from JSP pages
+    * [RAVE-474] - Extend Vanilla extension to also overlay rave-shindig
+    * [RAVE-476] - Filter Page Layouts available for user selection
+    * [RAVE-480] - Update CSS for Header
+    * [RAVE-487] - Add additional gadgets from Shindig & Ohloh.net to the store
