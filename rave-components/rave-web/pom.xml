@@ -26,7 +26,7 @@
     <parent>
         <artifactId>rave-components</artifactId>
         <groupId>org.apache.rave</groupId>
-        <version>0.9-incubating</version>
+        <version>0.10-incubating-SNAPSHOT</version>
     </parent>
 
     <artifactId>rave-web</artifactId>
