@@ -164,6 +164,15 @@ public class JpaPageRepositoryTest {
         assertThat(p.getPageType(), is(PageType.PERSON_PROFILE));
         assertThat(p.getParentPage(), is(nullValue(Page.class)));
         assertThat(p.getSubPages().isEmpty(), is(false));
+
+        // verify that the sub pages are in proper order
+        Long lastRenderSequence = -1L;
+        for (Page subPage : p.getSubPages()) {
+            Long currentRenderSequence = subPage.getRenderSequence();
+            assertThat(currentRenderSequence > lastRenderSequence, is(true));
+            lastRenderSequence = currentRenderSequence;
+        }
+        
     }
 
     @Test

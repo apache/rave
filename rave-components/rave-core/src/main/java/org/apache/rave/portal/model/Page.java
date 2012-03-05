@@ -78,6 +78,7 @@ public class Page implements BasicEntity, Serializable {
     private Page parentPage;
 
     @OneToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL, mappedBy="parentPage")
+    @OrderBy("renderSequence")
     private List<Page> subPages;
 
     @Basic(optional=false) @Column(name="render_sequence")
