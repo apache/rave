@@ -58,7 +58,13 @@ public class PageController {
         this.userService = userService;
         this.pageLayoutService = pageLayoutService;
     }
- 
+
+    @RequestMapping(value = {"/login"}, method = RequestMethod.GET)
+    public String login() {
+        return ViewNames.LOGIN_PAGE;
+    }
+
+
     @RequestMapping(value = {"/page/view", "/index.html"}, method = RequestMethod.GET)
     public String viewDefault(Model model, HttpServletRequest request) {
         List<Page> pages = getAllPagesForAuthenticatedUser();

@@ -28,6 +28,7 @@ import org.apache.rave.portal.web.validator.NewAccountValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -35,6 +36,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -45,6 +47,9 @@ public class NewAccountController {
     private final NewAccountService newAccountService;
     private final NewAccountValidator newAccountValidator;
     private final CaptchaService captchaService;
+
+    @Value("#{messages['page.newaccount.message.created']}")
+    private String messageSuccess;
 
 
     @Autowired
@@ -62,7 +67,7 @@ public class NewAccountController {
     }
 
     @RequestMapping(value = {"/newaccount", "/newacount/*"}, method = RequestMethod.POST)
-    public String create(@ModelAttribute NewUser newUser, BindingResult results, Model model, HttpServletRequest request) {
+    public String create(@ModelAttribute NewUser newUser, BindingResult results, Model model, HttpServletRequest request,  RedirectAttributes redirectAttributes) {
         logger.debug("Creating a new user account");
         model.addAttribute(ModelKeys.NEW_USER, newUser);
 
@@ -79,7 +84,8 @@ public class NewAccountController {
 
             if (captchaService.isValid(request)) {
                 newAccountService.createNewAccount(newUser);
-                return ViewNames.REDIRECT;
+                redirectAttributes.addFlashAttribute(ModelKeys.REDIRECT_MESSAGE, messageSuccess);
+                return ViewNames.REDIRECT_LOGIN;
             } else {
                 logger.debug("newaccount.jsp: failed  captcha validation");
                 results.reject("Captcha validation failed", "Unable to create account, captcha validation failed");

@@ -52,7 +52,16 @@ public final class ViewNames {
     public static final String USERNAME_REQUEST = USER_PREFIX + "retrieveusername";
     public static final String PASSWORD_CHANGE = USER_PREFIX + "changepassword";
 
+
+
     public static final String REDIRECT = "redirect:/";
+
+    public static final String LOGIN_PAGE = "login";
+    public static final String REDIRECT_LOGIN = REDIRECT +LOGIN_PAGE;
+
+    public static final String POSTS_TAG_PAGE = "postsTagPage";
+    public static final String ABOUT_TAG_PAGE = "aboutTagPage";
+
     public static final String REDIRECT_NEW_PASSWORD = REDIRECT + "app/newpassword";
     public static final String REDIRECT_RETRIEVE_USERNAME = REDIRECT + "app/retrieveusername";
 
@@ -62,6 +71,6 @@ public final class ViewNames {
     }
 
     public static String getPersonPageView(String layoutName) {
-        return new StringBuilder(PERSON_PROFILE).append(".").append(layoutName).toString();
+        return new StringBuilder(PERSON_PROFILE).append('.').append(layoutName).toString();
     }
 }

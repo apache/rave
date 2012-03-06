@@ -36,6 +36,7 @@ import org.apache.rave.portal.web.validator.UserProfileValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -50,6 +51,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.beans.PropertyEditorSupport;
 
@@ -86,6 +88,10 @@ public class UserController {
 
     @Autowired
     private NewAccountService newAccountService;
+
+    @Value("#{messages['page.newaccount.message.created']}")
+    private String messageSuccess;
+
 
     @InitBinder(value = {"user"})
     public void initBinder(WebDataBinder dataBinder) {
@@ -176,7 +182,8 @@ public class UserController {
     }
 
     @RequestMapping(value = {"/admin/newaccount", "/admin/newaccount/*"}, method = RequestMethod.POST)
-    public String create(@ModelAttribute NewUser newUser, BindingResult results, Model model) {
+    public String create(@ModelAttribute NewUser newUser, BindingResult results, Model model,
+                         RedirectAttributes redirectAttributes) {
         logger.debug("Creating a new user account");
         model.addAttribute(ModelKeys.NEW_USER, newUser);
         newAccountValidator.validate(newUser, results);
@@ -188,8 +195,8 @@ public class UserController {
         try {
             logger.debug("newaccount.jsp: passed form validation");
             newAccountService.createNewAccount(newUser);
-            addNavigationMenusToModel("home", model);
-            return ViewNames.ADMIN_HOME;
+            redirectAttributes.addFlashAttribute(ModelKeys.REDIRECT_MESSAGE, messageSuccess);
+            return "redirect:/app/admin/users";
         } catch (org.springframework.dao.IncorrectResultSizeDataAccessException ex) {
             addNavigationMenusToModel(SELECTED_ITEM, model);
             logger.info("Account creation failed: ", ex);

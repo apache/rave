@@ -51,6 +51,8 @@ public class ChangePasswordController {
     private static Logger log = LoggerFactory.getLogger(ChangePasswordController.class);
     private final UserService userService;
     private final ChangePasswordValidator passwordValidator;
+    @Value("#{messages['page.newpassword.message.success']}")
+    private String messagePasswordChanged;
 
 
     @Autowired
@@ -61,7 +63,7 @@ public class ChangePasswordController {
 
 
     @RequestMapping(value = {"/changepassword/{passwordHash:.*}"}, method = RequestMethod.GET)
-    public String initialize(Model model, @PathVariable("passwordHash") String passwordHash, RedirectAttributes redirectAttributes) {
+    public String initialize(Model model, @PathVariable("passwordHash") String passwordHash) {
         log.debug("Requesting user for hash: {}", passwordHash);
         NewUser user = new NewUser();
         model.addAttribute(ModelKeys.NEW_USER, user);
@@ -71,7 +73,7 @@ public class ChangePasswordController {
 
 
     @RequestMapping(value = {"/changepassword", "/changepassword/**"}, method = RequestMethod.POST)
-    public String update(@ModelAttribute NewUser newUser, BindingResult results, Model model) {
+    public String update(@ModelAttribute NewUser newUser, BindingResult results, Model model, RedirectAttributes redirectAttributes) {
         log.debug("updating user password for hash {}", newUser.getForgotPasswordHash());
         model.addAttribute(ModelKeys.NEW_USER, newUser);
         passwordValidator.validate(newUser, results);
@@ -83,7 +85,8 @@ public class ChangePasswordController {
         try {
             log.debug("Submitted passwords were valid");
             userService.updatePassword(newUser);
-            return ViewNames.REDIRECT;
+            redirectAttributes.addFlashAttribute(ModelKeys.REDIRECT_MESSAGE, messagePasswordChanged);
+            return ViewNames.REDIRECT_LOGIN ;
         } catch (Exception ex) {
             results.reject("Unable to change password:" + ex.getMessage(), "Unable to change password.");
             return ViewNames.PASSWORD_CHANGE;

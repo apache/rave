@@ -7,7 +7,7 @@
   ~ "License"); you may not use this file except in compliance
   ~ with the License.  You may obtain a copy of the License at
   ~
-  ~   http://www.apache.org/licenses/LICENSE-2.0
+  ~      http://www.apache.org/licenses/LICENSE-2.0
   ~
   ~ Unless required by applicable law or agreed to in writing,
   ~ software distributed under the License is distributed on an
@@ -35,6 +35,7 @@
             <h1><fmt:message key="${pageTitleKey}"/></h1>
 
             <h2><fmt:message key="page.login.usernamepassword"/></h2>
+
             <form id="loginForm" name="loginForm" action="j_spring_security_check" method="post">
                 <c:if test="${param['authfail'] eq 'form'}">
                     <p class="error"><fmt:message key="page.login.usernamepassword.fail"/></p>
@@ -49,6 +50,7 @@
                         <label for="passwordField"><fmt:message key="page.general.password"/></label>
                         <input id="passwordField" type="password" name="j_password"/>
                     </p>
+
                     <p>
                         <label for="remember_me" class="checkboxLabel">
                             <input type='checkbox' name='_spring_security_remember_me' id="remember_me"
@@ -66,37 +68,37 @@
             <h2><fmt:message key="page.login.forgot.password"/></h2>
 
             <form id="newPassword" action="<c:url value="/app/newpassword"/>" method="get">
-                <fieldset>
-                    <p>
-                        <label for="requestNewPasswordButton"><fmt:message
-                                key="page.login.forgot.password.label"/></label>
-                        <fmt:message key="page.login.forgot.password.button" var="requestNewPasswordButtonText"/>
-                        <input id="requestNewPasswordButton" type="submit" value="${requestNewPasswordButtonText}"/>
-                    </p>
-                </fieldset>
+            <fieldset>
+                <p>
+                    <label for="requestNewPasswordButton"><fmt:message
+                            key="page.login.forgot.password.label"/></label>
+                    <fmt:message key="page.login.forgot.password.button" var="requestNewPasswordButtonText"/>
+                    <input id="requestNewPasswordButton" type="submit" value="${requestNewPasswordButtonText}"/>
+                </p>
+            </fieldset>
             </form>
             <h2><fmt:message key="page.login.forgot.username"/></h2>
 
             <form id="newPassword" action="<c:url value="/app/retrieveusername"/>" method="get">
-                <fieldset>
-                    <p>
-                        <label for="requestNewUsernameButton"><fmt:message
-                                key="page.login.forgot.username.label"/></label>
-                        <fmt:message key="page.login.forgot.username.button" var="requestNewUsernameButton"/>
-                        <input id="requestNewUsernameButton" type="submit" value="${requestNewUsernameButton}"/>
-                    </p>
-                </fieldset>
+            <fieldset>
+                <p>
+                    <label for="requestNewUsernameButton"><fmt:message
+                            key="page.login.forgot.username.label"/></label>
+                    <fmt:message key="page.login.forgot.username.button" var="requestNewUsernameButton"/>
+                    <input id="requestNewUsernameButton" type="submit" value="${requestNewUsernameButton}"/>
+                </p>
+            </fieldset>
             </form>
             <h2><fmt:message key="page.login.createaccount"/></h2>
 
             <form id="newAccount" action="<c:url value="/app/newaccount.jsp"/>" method="get">
-                <fieldset>
-                    <p>
-                        <label for="createNewAccountButton"><fmt:message key="page.login.createaccount.label"/></label>
-                        <fmt:message key="page.login.createaccount.button" var="createAccountButtonText"/>
-                        <input id="createNewAccountButton" type="submit" value="${createAccountButtonText}"/>
-                    </p>
-                </fieldset>
+            <fieldset>
+                <p>
+                    <label for="createNewAccountButton"><fmt:message key="page.login.createaccount.label"/></label>
+                    <fmt:message key="page.login.createaccount.button" var="createAccountButtonText"/>
+                    <input id="createNewAccountButton" type="submit" value="${createAccountButtonText}"/>
+                </p>
+            </fieldset>
             </form>
 
             <h2><fmt:message key="page.login.openid"/></h2>
@@ -110,6 +112,7 @@
                         <label for="openid_identifier"><fmt:message key="page.login.openid.identifier"/></label>
                         <input type='text' id="openid_identifier" name='openid_identifier' class="long"/>
                     </p>
+
                     <p>
                         <label for="remember_me_openid" class="checkboxLabel">
                             <input type='checkbox' name='_spring_security_remember_me' id="remember_me_openid"

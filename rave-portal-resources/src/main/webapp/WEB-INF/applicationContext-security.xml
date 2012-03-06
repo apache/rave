@@ -29,22 +29,25 @@
           http://www.springframework.org/schema/security
           http://www.springframework.org/schema/security/spring-security-3.1.xsd">
 
-    <security:http pattern="/login.jsp*" security="none"/>
+
+
     <security:http auto-config="true" use-expressions="true" disable-url-rewriting="true">
 
+
+        <security:intercept-url pattern="/login" access="permitAll"/>
         <security:intercept-url pattern="/newaccount.jsp*" access="permitAll"/>
         <security:intercept-url pattern="/app/newaccount*" access="permitAll"/>
         <security:intercept-url pattern="/app/newpassword/**" access="permitAll"/>
         <security:intercept-url pattern="/app/retrieveusername/**" access="permitAll"/>
         <security:intercept-url pattern="/app/changepassword/**" access="permitAll"/>
-
+        <security:intercept-url pattern="/app/messagebundle/*.js" access="permitAll"/>
         <security:intercept-url pattern="/css/**" access="permitAll"/>
         <security:intercept-url pattern="/images/**" access="permitAll"/>
         <security:intercept-url pattern="/script/**" access="permitAll"/>
         <security:intercept-url pattern="/app/admin/**" access="hasRole('ROLE_ADMIN')"/>
         <!-- all urls must be authenticated -->
         <security:intercept-url pattern="/**" access="hasAnyRole('ROLE_USER','ROLE_ADMIN')"/>
-        <security:openid-login user-service-ref="userService" authentication-failure-url="/login.jsp?authfail=openid">
+        <security:openid-login user-service-ref="userService" authentication-failure-url="/login?authfail=openid">
             <security:attribute-exchange>
                 <!-- Supported by MyOpenID.com -->
                 <security:openid-attribute name="firstName" type="http://schema.openid.net/namePerson/first"/>
@@ -52,7 +55,7 @@
                 <security:openid-attribute name="email" type="http://schema.openid.net/contact/email" required="true"/>
             </security:attribute-exchange>
         </security:openid-login>
-        <security:form-login login-page="/login.jsp" authentication-failure-url="/login.jsp?authfail=form"/>
+        <security:form-login login-page="/login" default-target-url="/" authentication-failure-url="/login?authfail=form" />
         <security:logout/>
         <security:remember-me/>
     </security:http>

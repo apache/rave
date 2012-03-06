@@ -33,6 +33,9 @@
                 </p>
             </div>
         </c:if>
+        <c:if test="${not empty message}">
+            <div class="alert-message success"><p>${message}</p></div>
+        </c:if>
 
         <ul class="horizontal-list searchbox">
             <li><a href="<spring:url value="/app/admin/adduser"/>"><fmt:message key="admin.users.add"/></a></li>

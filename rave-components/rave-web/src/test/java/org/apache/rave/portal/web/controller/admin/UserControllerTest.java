@@ -39,6 +39,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -251,6 +252,7 @@ public class UserControllerTest {
     @Test
     public void create_ValidFormSubmitted() throws Exception {
         final Model model = createNiceMock(Model.class);
+        final RedirectAttributes redirectAttributes = createNiceMock(RedirectAttributes.class);
         final NewUser newUser = new NewUser();
         final BindingResult errors = new BeanPropertyBindingResult(newUser, ModelKeys.NEW_USER);
         final String username = "username";
@@ -269,17 +271,18 @@ public class UserControllerTest {
         newAccountService.createNewAccount(newUser);
 
         expectLastCall();
-        replay(userService, model, newAccountService);
+        replay(userService, model, newAccountService, redirectAttributes);
 
-        String result = controller.create(newUser, errors, model);
-        verify(userService, model, newAccountService);
+        String result = controller.create(newUser, errors, model, redirectAttributes);
+        verify(userService, model, newAccountService, redirectAttributes);
 
         assertFalse(errors.hasErrors());
-        assertEquals(ViewNames.ADMIN_HOME, result);
+        assertEquals("redirect:/app/admin/users", result);
     }
     @Test
     public void create_EmptyForm() throws Exception {
         final Model model = createNiceMock(Model.class);
+        final RedirectAttributes redirectAttributes = createNiceMock(RedirectAttributes.class);
         final NewUser newUser = new NewUser();
         final BindingResult errors = new BeanPropertyBindingResult(newUser, ModelKeys.NEW_USER);
         final String username = "";
@@ -296,7 +299,7 @@ public class UserControllerTest {
 
         replay(model);
 
-        String result = controller.create(newUser, errors, model);
+        String result = controller.create(newUser, errors, model, redirectAttributes);
         verify(model);
 
         assertTrue(errors.hasErrors());
