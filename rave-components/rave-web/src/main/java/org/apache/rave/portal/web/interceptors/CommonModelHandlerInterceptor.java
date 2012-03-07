@@ -21,6 +21,7 @@ package org.apache.rave.portal.web.interceptors;
 
 import org.apache.rave.portal.service.PortalPreferenceService;
 import org.apache.rave.portal.web.util.ModelKeys;
+import org.apache.rave.service.StaticContentFetcherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.ModelMap;
@@ -36,10 +37,12 @@ import javax.servlet.http.HttpServletResponse;
 public class CommonModelHandlerInterceptor extends HandlerInterceptorAdapter {
 
     private final PortalPreferenceService preferenceService;
+    private final StaticContentFetcherService staticContentFetcherService;
 
     @Autowired
-    public CommonModelHandlerInterceptor(PortalPreferenceService preferenceService) {
+    public CommonModelHandlerInterceptor(PortalPreferenceService preferenceService, StaticContentFetcherService staticContentFetcherService) {
         this.preferenceService = preferenceService;
+        this.staticContentFetcherService = staticContentFetcherService;
     }
 
     @Override
@@ -47,6 +50,7 @@ public class CommonModelHandlerInterceptor extends HandlerInterceptorAdapter {
         if (modelAndView != null) {
             ModelMap map = modelAndView.getModelMap();
             map.addAttribute(ModelKeys.PORTAL_SETTINGS, preferenceService.getPreferencesAsMap());
+            map.addAttribute(ModelKeys.STATIC_CONTENT_CACHE, staticContentFetcherService);
         }
         super.postHandle(request, response, handler, modelAndView);
     }

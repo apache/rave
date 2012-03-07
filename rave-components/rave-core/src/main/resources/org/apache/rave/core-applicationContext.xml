@@ -124,13 +124,13 @@
         </property>-->
     </bean>
     <!--
-     NOTE: to use mail session you'll need to configure following within catalina_home/conf/context.xml
-        <Resource name="mail/Session" auth="Container" type="javax.mail.Session" mail.smtp.host="my.mail.host"/>
+    NOTE: to use mail session you'll need to configure following within catalina_home/conf/context.xml
+    <Resource name="mail/Session" auth="Container" type="javax.mail.Session" mail.smtp.host="my.mail.host"/>
 
-        Further, activation & mail jars needs to be placed within catalina_home/lib folder
-     -->
-  <!--
-  <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+    Further, activation & mail jars needs to be placed within catalina_home/lib folder
+    -->
+    <!--
+    <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
         <property name="session" ref="mailSession"/>
     </bean>
     <bean id="mailSession" class="org.springframework.jndi.JndiObjectFactoryBean">
@@ -138,4 +138,53 @@
     </bean>
     -->
 
+    <bean id="restTemplate" class="org.springframework.web.client.RestTemplate" />
+
+    <bean id="staticContentCache" class="org.apache.rave.service.impl.DefaultStaticContentFetcherService">
+        <constructor-arg ref="restTemplate"/>
+        <constructor-arg>
+            <list>
+                <!-- example of a Static Content source that doesn't have any string token placeholders in its content body
+                <bean class="org.apache.rave.model.StaticContent">
+                    <constructor-arg index="0" value="standardCompanyHeader"/>
+                    <constructor-arg index="1" value="${company.header.host}/content/standard_header.html"/>
+                    <constructor-arg index="2">
+                        <null/>
+                    </constructor-arg>
+                </bean>
+                -->
+                <!-- example of a Static Content source that has string token placeholders
+                <bean class="org.apache.rave.model.StaticContent">
+                    <constructor-arg index="0" value="environmentSpecificContent"/>
+                    <constructor-arg index="1" value="${company.header.host}/content/footer.html"/>
+                    <constructor-arg index="2">
+                        <map>
+                            <entry key="\{supportEmail\}" value="${raveproperty.supportemail}"/>
+                            <entry key="\{productVersion\}" value="${raveproperty.version}"/>
+                        </map>
+                    </constructor-arg>
+                </bean>
+                -->
+            </list>
+        </constructor-arg>
+    </bean>
+
+    <!-- example on how to setup a Spring Timer to refresh the Static Content cache at a fixed interval
+    <bean id="refreshStaticContentCacheScheduledTask" class="org.springframework.scheduling.timer.ScheduledTimerTask">
+        <property name="delay" value="5000"/>
+        <property name="period" value="300000"/>
+        <property name="timerTask">
+            <bean class="org.springframework.scheduling.timer.MethodInvokingTimerTaskFactoryBean"
+                  p:targetObject-ref="staticContentCache" p:targetMethod="refreshAll"/>
+        </property>
+    </bean>
+    <bean id="timerFactory" class="org.springframework.scheduling.timer.TimerFactoryBean">
+        <property name="daemon" value="true"/>
+        <property name="scheduledTimerTasks">
+            <list>
+                <ref local="refreshStaticContentCacheScheduledTask"/>
+            </list>
+        </property>
+    </bean>
+    -->
 </beans>

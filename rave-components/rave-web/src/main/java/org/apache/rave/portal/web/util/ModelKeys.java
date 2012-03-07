@@ -51,4 +51,5 @@ public class ModelKeys {
     public static final String DEFAULT_TAG_PAGE = "defaultTagPage";
     public static final String CAPTCHA_HTML = "captchaHtml";
     public static final String REDIRECT_MESSAGE = "message";
+    public static final String STATIC_CONTENT_CACHE = "staticContentCache";
 }

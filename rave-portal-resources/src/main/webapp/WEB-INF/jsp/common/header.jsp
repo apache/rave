@@ -17,3 +17,8 @@ specific language governing permissions and limitations
 under the License.
 --%>
 <%-- Common header will go here... --%>
+
+<%-- example on how to render static content from the cache using the tag library
+<%@ include file="/WEB-INF/jsp/includes/taglibs.jsp" %>
+<portal:render-static-content contentKey="standardCompanyHeader" />
+--%>

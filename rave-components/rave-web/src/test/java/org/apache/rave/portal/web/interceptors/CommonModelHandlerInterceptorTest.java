@@ -22,6 +22,7 @@ package org.apache.rave.portal.web.interceptors;
 import org.apache.rave.portal.model.PortalPreference;
 import org.apache.rave.portal.service.PortalPreferenceService;
 import org.apache.rave.portal.web.util.ModelKeys;
+import org.apache.rave.service.StaticContentFetcherService;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -31,12 +32,9 @@ import org.springframework.web.servlet.ModelAndView;
 import java.util.HashMap;
 import java.util.Map;
 
-import static junit.framework.Assert.assertNull;
-import static junit.framework.Assert.assertTrue;
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
+import static org.junit.Assert.*;
+import static org.easymock.EasyMock.*;
+import static org.hamcrest.CoreMatchers.*;
 
 /**
  * Test for {@link CommonModelHandlerInterceptor}
@@ -45,11 +43,14 @@ public class CommonModelHandlerInterceptorTest {
 
     CommonModelHandlerInterceptor interceptor;
     PortalPreferenceService portalPreferenceService;
+    StaticContentFetcherService staticContentFetcherService;
 
     @Before
     public void setUp() throws Exception {
         portalPreferenceService = createMock(PortalPreferenceService.class);
-        interceptor = new CommonModelHandlerInterceptor(portalPreferenceService);
+        staticContentFetcherService = createMock(StaticContentFetcherService.class);
+        
+        interceptor = new CommonModelHandlerInterceptor(portalPreferenceService, staticContentFetcherService);
     }
 
     @Test
@@ -66,7 +67,9 @@ public class CommonModelHandlerInterceptorTest {
         interceptor.postHandle(request, response, handler, modelAndView);
         verify(portalPreferenceService);
 
-        assertTrue(modelAndView.getModelMap().containsKey(ModelKeys.PORTAL_SETTINGS));
+        Map<String, Object> modelMap = modelAndView.getModelMap();
+        assertThat((Map<String, PortalPreference>) modelMap.get(ModelKeys.PORTAL_SETTINGS), sameInstance(preferenceMap));
+        assertThat((StaticContentFetcherService) modelMap.get(ModelKeys.STATIC_CONTENT_CACHE), sameInstance(staticContentFetcherService));
     }
     @Test
     public void testPostHandle_noModelAndView() throws Exception {
@@ -76,6 +79,6 @@ public class CommonModelHandlerInterceptorTest {
         ModelAndView modelAndView = null;
 
         interceptor.postHandle(request, response, handler, modelAndView);
-        assertNull(modelAndView);
+        assertThat(modelAndView, is(nullValue(ModelAndView.class)));
     }
 }
