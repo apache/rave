@@ -114,4 +114,17 @@ http://glassfish.java.net/public/CDDLv1.0.html
 This software contains unmodified binary redistributions of software (mail) developed by 
 Sun Microsystems, Inc. (https://glassfish.dev.java.net/javaee5/mail), which is licensed under the CDDL 1.0.
 An original copy of the license can be found at https://glassfish.dev.java.net/public/CDDL+GPL.html
+
+Portions of Derby were originally developed by International Business Machines Corporation and are
+licensed to the Apache Software Foundation under the "Software Grant and Corporate Contribution License Agreement",
+informally known as the "Derby CLA". The following copyright notice(s) were affixed to portions of the code
+with which this file is now or was at one time distributed and are placed here unaltered.
+
+   (C) Copyright 1997,2004 International Business Machines Corporation.  All rights reserved.
+
+   (C) Copyright IBM Corp. 2003.
+
+The portion of the functionTests under 'nist' was originally developed by the National Institute of Standards and Technology (NIST),
+an agency of the United States Department of Commerce, and adapted by International Business Machines Corporation in accordance with the NIST
+Software Acknowledgment and Redistribution document at http://www.itl.nist.gov/div897/ctg/sql_form.htm
    
