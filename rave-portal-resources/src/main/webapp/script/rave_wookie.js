@@ -21,13 +21,14 @@ rave.wookie = rave.wookie || (function() {
     var WIDGET_TYPE = "W3C";
     var OFFSET = 10;
     var MIN_HEIGHT = 250;
-
+    // keep this value so we can show the widget in the maximize view even when its collapsed
+    var userCollapsed;
     var container;
-    
+
     function validateAndRenderWidget(widget){
-    
+    	userCollapsed = widget.collapsed;
         var widgetBodyElement = document.getElementById(["widget-", widget.regionWidgetId, "-body"].join(""));
-        
+
         var widgetIframe = document.createElement("iframe");
 
         if (widget.height){
@@ -35,13 +36,12 @@ rave.wookie = rave.wookie || (function() {
           widgetIframe.setAttribute("min-height",MIN_HEIGHT+"px");
         } else {
           widgetIframe.setAttribute("height",MIN_HEIGHT+"px");
-          widgetIframe.setAttribute("min-height",MIN_HEIGHT+"px");             
+          widgetIframe.setAttribute("min-height",MIN_HEIGHT+"px");
         }
-        if (widget.width) {
-          widgetIframe.setAttribute("style","width: 100%; min-width: "+widget.width);
-        } else {
-          widgetIframe.setAttribute("style","width: 100%");        
-        }
+        // Rendering the widgets width causes the w3c widget to appear outside of the
+        // container object in some browsers.  Setting to 100% seems to fix this. 
+        // (there is something similar in the rave_opensocial.js file)
+        widgetIframe.setAttribute("style","width: 100%");
         widgetIframe.setAttribute("src",widget.widgetUrl);
         widgetIframe.setAttribute("scroll","no");
         widgetIframe.setAttribute("frameborder","0");
@@ -50,6 +50,30 @@ rave.wookie = rave.wookie || (function() {
         widgetIframe.setAttribute("marginheight","0");
         widgetIframe.setAttribute("marginwidth","0");
         widgetBodyElement.appendChild(widgetIframe);
+        // collapse/restore functions
+        widget.collapse = function() {
+            $(widgetIframe).hide();
+        };
+        widget.restore = function() {
+            $(widgetIframe).show();
+        };
+        widget.maximize = function() {
+            // always display the widget in canvas view even if it currently collapsed
+            if (widget.collapsed){
+                userCollapsed = true;
+                $(widgetIframe).show();
+            }
+        };
+        widget.minimize = function() {
+            if (widget.collapsed){
+                userCollapsed = false;
+                $(widgetIframe).hide();
+            }
+        };
+        // if in the collapsed state, hide the layer
+        if (widget.collapsed){
+            $(widgetIframe).hide();
+        }
     }
 
     /**
