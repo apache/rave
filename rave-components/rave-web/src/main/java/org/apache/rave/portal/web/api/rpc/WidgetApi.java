@@ -65,4 +65,19 @@ public class WidgetApi {
             }
         }.getResult();
     }
+
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.POST, value = "metadatagroup/get")
+    public RpcResult<Widget[]> getWidgetMetadataGroup(@RequestParam final String url,
+                                               @RequestParam final String type) {
+        return new RpcOperation<Widget[]>() {
+            @Override
+            public Widget[] execute() {
+                if (widgetMetadataResolverMap.get(type) == null) {
+                    throw new IllegalArgumentException("Get Metadata group for provider " + type + " is not implemented");
+                }
+                return widgetMetadataResolverMap.get(type).getMetadataGroup(url);
+            }
+        }.getResult();
+    }
 }

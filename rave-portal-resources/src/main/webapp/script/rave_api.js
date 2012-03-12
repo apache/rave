@@ -402,6 +402,27 @@ rave.api = rave.api || (function() {
                }).error(handleError);
         }
 
+        function getWidgetMetadataGroup(args) {
+            var url = args.url;
+            var providerType = args.providerType;
+            if ( url == null || providerType == null ) {
+                alert(rave.getClientMessage("api.widget_metadata.invalid_params"));
+                return;
+            }
+            $.post(rave.getContext() + path + "widget/metadatagroup/get",
+               {"url": url, "type": providerType},
+               function(result) {
+                   if (result.error) {
+                       alert(rave.getClientMessage("api.widget_metadata.parse_error"));
+                   }
+                   else {
+                       if (typeof args.successCallback == 'function') {
+                            args.successCallback(result);
+                       }
+                   }
+               }).error(handleError);
+        }
+
         return {
             moveWidget : moveWidgetOnPage,
             addWidgetToPage : addWidgetToPage,
@@ -411,7 +432,8 @@ rave.api = rave.api || (function() {
             getPagePrefs: getPagePrefs,
             movePage: movePage,
             moveWidgetToPage: moveWidgetToPage,
-            getWidgetMetadata: getWidgetMetadata
+            getWidgetMetadata: getWidgetMetadata,
+            getWidgetMetadataGroup: getWidgetMetadataGroup
         };
 
     })();

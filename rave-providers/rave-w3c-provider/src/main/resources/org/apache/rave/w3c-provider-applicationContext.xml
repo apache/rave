@@ -20,11 +20,29 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
-        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
+        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
 
     <!-- rave-w3c-provider base-package scan -->
     <context:component-scan base-package="org.apache.rave.provider.w3c"/>
+
+    <!-- A RestTemplate instance that can be used to call a web service which expects Content-Type
+    and Accept headers of application/xml -->
+    <bean id="xmlStringCompatibleRestTemplate" class="org.springframework.web.client.RestTemplate">
+        <property name="messageConverters">
+            <list>
+                <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                    <property name="supportedMediaTypes">
+                        <list>
+                            <util:constant static-field="org.springframework.http.MediaType.TEXT_XML"/>
+                        </list>
+                    </property>
+                </bean>
+            </list>
+        </property>
+    </bean>
 
     <bean id="wookieWidgetService" class="org.apache.rave.provider.w3c.service.impl.WookieWidgetService">
         <constructor-arg name="wookieServerUrl" value="${provider.wookie.wookieServerUrl}"/>

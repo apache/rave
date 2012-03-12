@@ -24,4 +24,5 @@ import org.apache.rave.portal.model.Widget;
 public interface WidgetMetadataResolver {
     String getSupportedContext();
     Widget getMetadata(String url);
+    Widget[] getMetadataGroup(String url);
 }

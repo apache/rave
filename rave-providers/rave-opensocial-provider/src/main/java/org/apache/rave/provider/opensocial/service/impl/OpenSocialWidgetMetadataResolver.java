@@ -108,4 +108,10 @@ public class OpenSocialWidgetMetadataResolver implements WidgetMetadataResolver 
         }
         return null;
  }
+
+    @Override
+    public Widget[] getMetadataGroup(String groupUrl) {
+      // not implemented
+      return null;
+    }
 }
