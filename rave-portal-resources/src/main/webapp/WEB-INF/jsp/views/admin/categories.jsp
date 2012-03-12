@@ -54,20 +54,18 @@
                     <fieldset>
                         <p>
                             <fmt:message key="admin.category.create" var="createCategoryMsg"/>
-			    <input type="submit" value="${createCategoryMsg}"/>
+                            <input type="submit" value="${createCategoryMsg}"/>
                         </p>
                     </fieldset>
                 </form:form>
             </section>
         </div>
 
-
-
         <div class="leftcolumn">
         <table class="datatable categoryTable">
             <thead>
             <tr>
-                <th class="largetextcell"><fmt:message key="admin.categoryData.text"/></th>
+                <th class="textcell"><fmt:message key="admin.categoryData.text"/></th>
                 <th class="textcell"><fmt:message key="admin.categoryData.createdBy"/></th>
                 <th class="textcell"><fmt:message key="admin.categoryData.createdDate"/></th>
                 <th class="textcell"><fmt:message key="admin.categoryData.modifiedBy"/></th>
@@ -79,20 +77,20 @@
                 <spring:url value="/app/admin/category/edit?id=${category.entityId}" var="detaillink"/>
 
                 <tr data-detaillink="${detaillink}">
-                    <td class="largetextcell">
+                    <td class="textcell">
                         <c:out value="${category.text}"/>
                     </td>
                     <td class="textcell">
                         <c:out value="${category.createdUser.username}"/>
                     </td>
                     <td class="textcell">
-                        <c:out value="${category.createdDate}"/>
+                        <fmt:formatDate value="${category.createdDate}" dateStyle="short" type="both" />
                     </td>
                     <td class="textcell">
                         <c:out value="${category.lastModifiedUser.username}"/>
                     </td>
                     <td class="textcell">
-                        <c:out value="${category.lastModifiedDate}"/>
+                        <fmt:formatDate value="${category.lastModifiedDate}" dateStyle="short" type="both" />
                     </td>
                 </tr>
             </c:forEach>

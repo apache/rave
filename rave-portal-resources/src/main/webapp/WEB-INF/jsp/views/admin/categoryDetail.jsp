@@ -55,7 +55,7 @@
                         <fieldset>
                             <p>
                                 <fmt:message key="admin.category.delete" var="deleteCategoryMsg"/>
-				<input type="submit" value="${deleteCategoryMsg}"/>
+                                <input type="submit" value="${deleteCategoryMsg}"/>
                             </p>
                         </fieldset>
                     </form:form>
@@ -80,7 +80,7 @@
                         </p>
                     </fieldset>
                     <fieldset>
-			<fmt:message key="admin.category.update" var="updateCategoryMsg" />
+                        <fmt:message key="admin.category.update" var="updateCategoryMsg"/>
                         <input type="submit" value="${updateCategoryMsg}"/>
                     </fieldset>
                 </form:form>
