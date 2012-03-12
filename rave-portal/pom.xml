@@ -150,14 +150,14 @@
                         </properties>
                         <home>${project.build.directory}/tomcat6x</home>
                         <deployables>
-	                        <deployable>
-		                        <groupId>org.apache.wookie</groupId>
-		                        <artifactId>wookie</artifactId>
-		                        <type>war</type>
-		                        <properties>
-			                        <context>/wookie</context>
-		                        </properties>
-	                       </deployable>
+                            <deployable>
+                                <groupId>org.apache.wookie</groupId>
+                                <artifactId>wookie</artifactId>
+                                <type>war</type>
+                                <properties>
+                                    <context>/wookie</context>
+                                </properties>
+                           </deployable>
                             <deployable>
                                 <groupId>org.apache.rave</groupId>
                                 <artifactId>rave-shindig</artifactId>
@@ -184,6 +184,13 @@
                                 </properties>
                             </deployable>
                         </deployables>
+                        <configfiles>
+                            <configfile>
+                                <file>${project.basedir}/../rave-portal-resources/src/main/dist/conf/tomcat-users.xml</file>
+                                <todir>conf/</todir>
+                                <tofile>tomcat-users.xml</tofile>
+                            </configfile>
+                        </configfiles>
                     </configuration>
                     <container>
                         <containerId>tomcat6x</containerId>
