@@ -19,6 +19,8 @@
 
 package org.apache.rave.provider.w3c.repository;
 
+import org.apache.rave.portal.model.Widget;
+
 public interface W3CWidgetMetadataRepository {
     /**
      * Fetches widget metadata for the widget via
@@ -28,5 +30,11 @@ public interface W3CWidgetMetadataRepository {
      * @param widgetGuid The widget to fetch metadata for.
      * @return The string response from the w3c widget server.
      */
-    public String getWidgetMetadata(String widgetGuid);
+    public Widget getWidgetMetadata(String widgetGuid);
+    
+    /**
+     * Fetches widget metadata for all available widgets
+     * @return an array of Widget objects representing available W3C widgets
+     */
+    public Widget[] getWidgetMetadata();
 }

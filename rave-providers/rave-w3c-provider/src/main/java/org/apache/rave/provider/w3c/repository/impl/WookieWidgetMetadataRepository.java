@@ -19,15 +19,16 @@
 
 package org.apache.rave.provider.w3c.repository.impl;
 
+import org.apache.rave.portal.model.Widget;
+import org.apache.rave.portal.service.WidgetProviderService;
 import org.apache.rave.provider.w3c.repository.W3CWidgetMetadataRepository;
+import org.apache.rave.provider.w3c.service.impl.WookieWidgetService;
+import org.apache.wookie.connector.framework.WookieConnectorException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestOperations;
 
 /**
  * Handles the call to wookies metadata service
@@ -36,15 +37,11 @@ import org.springframework.web.client.RestOperations;
 @Repository
 public class WookieWidgetMetadataRepository implements W3CWidgetMetadataRepository {
     private static Logger logger = LoggerFactory.getLogger(WookieWidgetMetadataRepository.class);
-    private RestOperations restOperations;
-    private String wookieUrl;
+    private WookieWidgetService widgetService;
 
     @Autowired
-    public WookieWidgetMetadataRepository(@Qualifier(value = "xmlStringCompatibleRestTemplate") RestOperations restOperations,
-                                          @Value("${provider.wookie.wookieServerUrl}") String wookieRoot) {
-        this.restOperations = restOperations;
-        this.wookieUrl = wookieRoot + "/widgets/";
-        logger.debug("Wookie render Url: {}", wookieUrl);
+    public WookieWidgetMetadataRepository(@Qualifier("wookieWidgetService") WidgetProviderService widgetService) {
+    	this.widgetService = (WookieWidgetService) widgetService;
     }
 
     /*
@@ -52,15 +49,26 @@ public class WookieWidgetMetadataRepository implements W3CWidgetMetadataReposito
      * @see org.apache.rave.provider.w3c.repository.W3CWidgetMetadataRepository#getWidgetMetadata(java.lang.String)
      */
     @Override
-    public String getWidgetMetadata(String widgetGuid) {
-        String responseString = null;
+    public Widget getWidgetMetadata(String widgetGuid) {
         try {
-            responseString = restOperations.getForObject(wookieUrl + widgetGuid, String.class);
-        } catch (RestClientException e) {
+        	return this.widgetService.getWidget(widgetGuid);
+        } catch (WookieConnectorException e) {
             throw new IllegalArgumentException("Error occurred while processing response from wookie metadata call", e);
         }
-        // return the raw xml
-        return responseString;
     }
+
+	/* (non-Javadoc)
+	 * @see org.apache.rave.provider.w3c.repository.W3CWidgetMetadataRepository#getWidgetMetadata()
+	 */
+	@Override
+	public Widget[] getWidgetMetadata() {
+		try {
+			return this.widgetService.getWidgets();
+		} catch (WookieConnectorException e) {
+            throw new IllegalArgumentException("Error occurred while processing response from wookie metadata call", e);
+		}
+	}
+    
+    
 
 }

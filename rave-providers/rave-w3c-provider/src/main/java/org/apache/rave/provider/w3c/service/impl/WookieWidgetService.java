@@ -29,6 +29,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 
 public class WookieWidgetService implements WidgetProviderService {
   private static Logger logger = LoggerFactory.getLogger(WookieWidgetService.class);
@@ -52,6 +54,35 @@ public class WookieWidgetService implements WidgetProviderService {
         } else {
           return null;
         }
+    }
+    
+    /**
+     * Get all widgets available from the configured Wookie server
+     * @return an array of available widgets
+     * @throws WookieConnectorException
+     */
+    public Widget[] getWidgets() throws WookieConnectorException{
+        connectorService = getWookieConnectorService(wookieServerUrl, wookieApiKey, null);    
+    	Collection<org.apache.wookie.connector.framework.Widget> widgets = connectorService.getAvailableWidgets().values();
+    	ArrayList<Widget> raveWidgets = new ArrayList<Widget>();
+    	for (org.apache.wookie.connector.framework.Widget wookieWidget: widgets){
+    		Widget widget = new Widget();
+    		widget.setUrl(wookieWidget.getIdentifier());
+    		widget.setDescription(wookieWidget.getDescription());
+    		widget.setTitle(wookieWidget.getTitle());
+    		widget.setThumbnailUrl(wookieWidget.getIcon().toString());
+    		raveWidgets.add(widget);
+    	}
+    	return raveWidgets.toArray(new Widget[raveWidgets.size()]);
+    }
+    
+    public Widget getWidget(String url) throws WookieConnectorException{
+    	for (Widget widget: getWidgets()){
+    		if (widget.getUrl().equalsIgnoreCase(url)){
+    			return widget;
+    		}
+    	}
+    	return null;
     }
     
     /**
@@ -100,9 +131,7 @@ public class WookieWidgetService implements WidgetProviderService {
     
     // Get the wookie service connector
     private WookieConnectorService getWookieConnectorService(String serverURL, String apiKey, String sharedDataKey ) throws WookieConnectorException {
-      if (connectorService == null) {
-        connectorService = new WookieConnectorService(serverURL, apiKey, sharedDataKey);
-      }
+      connectorService = new WookieConnectorService(serverURL, apiKey, sharedDataKey);
       return connectorService;
     }
 

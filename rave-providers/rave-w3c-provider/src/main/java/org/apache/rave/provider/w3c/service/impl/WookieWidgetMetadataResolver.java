@@ -21,26 +21,15 @@ package org.apache.rave.provider.w3c.service.impl;
 
 import org.apache.rave.portal.model.Widget;
 import org.apache.rave.portal.service.WidgetMetadataResolver;
+import org.apache.rave.portal.service.WidgetProviderService;
 import org.apache.rave.provider.w3c.Constants;
 import org.apache.rave.provider.w3c.repository.W3CWidgetMetadataRepository;
+import org.apache.rave.provider.w3c.repository.impl.WookieWidgetMetadataRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.IOException;
-import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.List;
 
 @Component
 public class WookieWidgetMetadataResolver implements WidgetMetadataResolver {
@@ -48,8 +37,8 @@ public class WookieWidgetMetadataResolver implements WidgetMetadataResolver {
     private W3CWidgetMetadataRepository widgetMetadataRepository;
 
     @Autowired
-    public WookieWidgetMetadataResolver(W3CWidgetMetadataRepository widgetMetadataRepository){
-        this.widgetMetadataRepository = widgetMetadataRepository;
+    public WookieWidgetMetadataResolver(@Qualifier("wookieWidgetService") WidgetProviderService widgetService){
+        this.widgetMetadataRepository = new WookieWidgetMetadataRepository(widgetService);
     }
 
     /*
@@ -66,9 +55,7 @@ public class WookieWidgetMetadataResolver implements WidgetMetadataResolver {
      */
     public Widget getMetadata(String url) {
         try {
-            String xmlResult = widgetMetadataRepository.getWidgetMetadata(url);
-            Widget[] widgets = processResponse(xmlResult);
-            return widgets[0];
+            return widgetMetadataRepository.getWidgetMetadata(url);
         } catch (Exception e) {
             throw new IllegalArgumentException("Error occurred while processing response for Widget metadata call", e);
         }
@@ -81,84 +68,10 @@ public class WookieWidgetMetadataResolver implements WidgetMetadataResolver {
     @Override
     public Widget[] getMetadataGroup(String url) {
         try {
-            String xmlResult = widgetMetadataRepository.getWidgetMetadata(url);
-            return processResponse(xmlResult);
+            return widgetMetadataRepository.getWidgetMetadata();
         } catch (Exception e) {
             throw new IllegalArgumentException("Error occurred while processing response for Widget (group) metadata call", e);
         }
-    }
-
-    /**
-     * Method sets up the xml parsing routine. (from a string supplied from wookie)
-     * @param rawXml - raw xml string
-     * @return an array of widgets
-     */
-    private Widget[] processResponse(String rawXml){
-        Widget[] widgets = null;
-        try {
-            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-            DocumentBuilder db = dbf.newDocumentBuilder();
-            Document xml = db.parse(new InputSource(new StringReader(rawXml)));
-            widgets = parseWookieAdvert(xml);
-        } catch (ParserConfigurationException e) {
-            throw new IllegalArgumentException("Error occurred while processing response for Widget metadata call", e);
-        } catch (SAXException e) {
-            throw new IllegalArgumentException("Error occurred while processing response for Widget metadata call", e);
-        } catch (IOException e) {
-            throw new IllegalArgumentException("Error occurred while processing response for Widget metadata call", e);
-        }
-        return widgets;
-    }
-
-    /**
-     * Method to parse an xml response from wookie into a set of Widget objects
-     * @param xml -a w3c dom document
-     * @return an array of widgets
-     */
-    private Widget[] parseWookieAdvert(Document xml){
-        List<Widget> widgets = new ArrayList<Widget>();
-        Widget widget;
-        Element currentElement = null;
-        Element rootEl = xml.getDocumentElement();
-        NodeList widgetNodes = rootEl.getElementsByTagName("widget");
-        if(widgetNodes != null && widgetNodes.getLength() > 0) {
-            for(int i = 0 ; i < widgetNodes.getLength();i++) {
-                widget = new Widget();
-                widget.setType(getSupportedContext());
-                // get the guid
-                Element el = (Element)widgetNodes.item(i);
-                widget.setUrl(el.getAttribute("identifier"));
-                // get the title
-                Node titleNode = el.getElementsByTagName("title").item(0);
-                if(titleNode != null){
-                    currentElement = (Element)titleNode;
-                    widget.setTitle(currentElement.getTextContent());
-                }
-                // get the description
-                Node descriptionNode = el.getElementsByTagName("description").item(0);
-                if(descriptionNode != null){
-                    currentElement = (Element)descriptionNode;
-                    widget.setDescription(currentElement.getTextContent());
-                }
-                // get the icon
-                Node iconNode = el.getElementsByTagName("icon").item(0);
-                if(iconNode != null){
-                    currentElement = (Element)iconNode;
-                    widget.setThumbnailUrl(currentElement.getTextContent());
-                }
-                // get the icon
-                Node authorNode = el.getElementsByTagName("author").item(0);
-                if(authorNode != null){
-                    currentElement = (Element)authorNode;
-                    widget.setAuthor(currentElement.getTextContent());
-                }
-                // add to the list
-                widgets.add(widget);
-            }
-        }
-        Widget[] widgetsArr = new Widget[widgets.size()];
-        widgetsArr = widgets.toArray(widgetsArr);
-        return widgetsArr;
     }
 
 }
