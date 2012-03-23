@@ -344,16 +344,10 @@
 
 </div>
 
-<script src="//ajax.aspnetcdn.com/ajax/jQuery/jquery-1.6.4.min.js"></script>
-<script src="//ajax.aspnetcdn.com/ajax/jquery.ui/1.8.16/jquery-ui.min.js"></script>
-<!--[if lt IE 9]><script src=//css3-mediaqueries-js.googlecode.com/svn/trunk/css3-mediaqueries.js></script><![endif]-->
-<script src="<spring:url value="/script/rave.js"/>"></script>
-<script src="<spring:url value="/script/rave_api.js"/>"></script>
-<script src="<spring:url value="/script/rave_store.js"/>"></script>
-<script src="<spring:url value="/app/messagebundle/rave_client_messages.js"/>"></script>
-<script>
-    $(function () {
-        rave.setContext("<spring:url value="/app/" />");
-        rave.store.init('<c:out value="${referringPageId}"/>');
-    });
-</script>
+<portal:register-init-script location="${'AFTER_RAVE'}">
+    <script>
+        $(function () {
+            rave.store.init('<c:out value="${referringPageId}"/>');
+        });
+    </script>
+</portal:register-init-script>

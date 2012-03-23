@@ -64,10 +64,9 @@
         </fieldset>
     </form:form>
 </div>
-<script src="//ajax.aspnetcdn.com/ajax/jQuery/jquery-1.6.4.min.js"></script>
-<script src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.8.1/jquery.validate.min.js"></script>
-<script src="<spring:url value="/script/rave.js"/>"></script>
-<script src="<spring:url value="/script/rave_forms.js"/>"></script>
-<script src="<spring:url value="/app/messagebundle/rave_client_messages.js"/>"></script>
 
-<script>$(document).ready(rave.forms.validateUserProfileForm());</script>
+<portal:register-init-script location="${'AFTER_RAVE'}">
+    <script>
+        $(document).ready(rave.forms.validateUserProfileForm());
+    </script>
+</portal:register-init-script>

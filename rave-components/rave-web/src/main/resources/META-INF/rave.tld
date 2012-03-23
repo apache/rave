@@ -63,5 +63,30 @@
             <type>java.lang.String</type>
         </attribute>
     </tag>
-
+    <tag>
+        <description>Registers a script block for later inclusion in a JSP page</description>
+        <name>register-init-script</name>
+        <tag-class>org.apache.rave.portal.web.tag.RegisterInitializationScriptTag</tag-class>
+        <body-content>JSP</body-content>
+        <attribute>
+            <description>The page location for the scripts</description>
+            <name>location</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>org.apache.rave.portal.web.renderer.ScriptLocation</type>
+        </attribute>
+    </tag>
+    <tag>
+        <description>Renders the initialization script block</description>
+        <name>render-init-script</name>
+        <tag-class>org.apache.rave.portal.web.tag.RenderInitializationScriptTag</tag-class>
+        <body-content>JSP</body-content>
+        <attribute>
+            <description>The page location for the scripts</description>
+            <name>location</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>org.apache.rave.portal.web.renderer.ScriptLocation</type>
+        </attribute>
+    </tag>
 </taglib>

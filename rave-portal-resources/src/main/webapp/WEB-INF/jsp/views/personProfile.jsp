@@ -154,33 +154,22 @@
 </div>
 <div class="clear-float">&nbsp;</div>
 
-<script>
-    //Define the global widgets map.  This map will be populated by RegionWidgetRender providers.
-    var widgetsByRegionIdMap = {};
-</script>
-<portal:render-script location="${'BEFORE_LIB'}" />
-<script src="//cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
-<script src="//ajax.aspnetcdn.com/ajax/jQuery/jquery-1.6.4.min.js"></script>
-<script src="//ajax.aspnetcdn.com/ajax/jquery.ui/1.8.16/jquery-ui.min.js"></script>
-<script src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.8.1/jquery.validate.min.js"></script>
-<!--[if lt IE 9]><script src=//css3-mediaqueries-js.googlecode.com/svn/trunk/css3-mediaqueries.js></script><![endif]-->
-<portal:render-script location="${'AFTER_LIB'}" />
-<portal:render-script location="${'BEFORE_RAVE'}" />
-<script src="<spring:url value="/script/rave.js"/>"></script>
-<script src="<spring:url value="/script/rave_api.js"/>"></script>
-<script src="<spring:url value="/script/rave_opensocial.js"/>"></script>
-<script src="<spring:url value="/script/rave_wookie.js"/>"></script>
-<script src="<spring:url value="/script/rave_layout.js"/>"></script>
-<script src="<spring:url value="/script/rave_person_profile.js"/>"></script>
-<script src="<spring:url value="/app/messagebundle/rave_client_messages.js"/>"></script>
-<portal:render-script location="${'AFTER_RAVE'}" />
-<script>
-    $(function () {
-        rave.setContext("<spring:url value="/app/" />");
-        rave.initProviders();
-        rave.initWidgets(widgetsByRegionIdMap);
-        rave.initUI();
-        rave.layout.init();
-        rave.personprofile.init();
-    });
-</script>
+<portal:register-init-script location="${'BEFORE_RAVE'}">
+    <script>
+        //Define the global widgets map.  This map will be populated by RegionWidgetRender providers.
+        var widgetsByRegionIdMap = {};
+    </script>
+</portal:register-init-script>
+
+<portal:register-init-script location="${'AFTER_RAVE'}">
+    <script>
+        $(function () {
+            rave.setContext("<spring:url value="/app/" />");
+            rave.initProviders();
+            rave.initWidgets(widgetsByRegionIdMap);
+            rave.initUI();
+            rave.layout.init();
+            rave.personprofile.init();
+        });
+    </script>
+</portal:register-init-script>

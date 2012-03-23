@@ -179,11 +179,12 @@
             </div>
     </form:form>
 </div>
-<script src="//ajax.aspnetcdn.com/ajax/jQuery/jquery-1.6.4.min.js"></script>
-<script src="//ajax.aspnetcdn.com/ajax/jquery.ui/1.8.16/jquery-ui.min.js"></script>
-<script src="<spring:url value="/script/rave.js"/>"></script>
-<script src="<spring:url value="/script/rave_api.js"/>"></script>
-<script src="<spring:url value="/app/messagebundle/rave_client_messages.js"/>"></script>
+<div id="w3cBrowseForm" title="Browse available W3C widgets">
+    <ul id="w3cwidgetsList" class="storeItems">
+    </ul>
+</div>
+
+<portal:register-init-script location="${'AFTER_RAVE'}">
 <script>
     $(function() {
         rave.setContext("<spring:url value="/app/" />");
@@ -324,9 +325,6 @@
         }
         $("#w3cBrowseForm").dialog("close");
     }
-    </script>
+</script>
+</portal:register-init-script>
 
-    <div id="w3cBrowseForm" title="Browse available W3C widgets">
-        <ul id="w3cwidgetsList" class="storeItems">
-        </ul>
-    </div>

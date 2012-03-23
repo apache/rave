@@ -64,8 +64,3 @@
         </div>
     </tiles:putAttribute>
 </tiles:insertDefinition>
-<script src="//ajax.aspnetcdn.com/ajax/jQuery/jquery-1.6.4.min.js"></script>
-<script src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.8.1/jquery.validate.min.js"></script>
-<script src="<spring:url value="
-/script/rave.js"/>"></script>
-<script src="<spring:url value="/script/rave_forms.js"/>"></script>

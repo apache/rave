@@ -57,9 +57,6 @@ under the License.
     <link rel="stylesheet" href="//ajax.aspnetcdn.com/ajax/jquery.ui/1.8.13/themes/base/jquery-ui.css"/>
     <link rel="stylesheet" href="<c:url value="/css/default.css" />"/>
     <rave:custom_css/>
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
 </head>
 <body>
 <%-- Header Content --%>
@@ -68,5 +65,11 @@ under the License.
 <tiles:insertAttribute name="body"/>
 <%-- Footer Content --%>
 <tiles:insertAttribute name="footer"/>
+<%-- render any script that needs to execute pre-src includes --%>
+<portal:render-init-script location="${'BEFORE_RAVE'}" />
+<%-- render the javascript src includes at the bottom of the page for performance --%>
+<rave:rave_js/>
+<%-- render any script that needs to execute post-src includes --%>
+<portal:render-init-script location="${'AFTER_RAVE'}" />
 </body>
 </html>

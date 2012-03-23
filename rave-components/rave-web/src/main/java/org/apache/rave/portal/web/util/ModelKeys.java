@@ -52,4 +52,7 @@ public class ModelKeys {
     public static final String CAPTCHA_HTML = "captchaHtml";
     public static final String REDIRECT_MESSAGE = "message";
     public static final String STATIC_CONTENT_CACHE = "staticContentCache";
+    public static final String BEFORE_RAVE_INIT_SCRIPT = "beforeRaveInitScript";
+    public static final String AFTER_RAVE_INIT_SCRIPT = "afterRaveInitScript";
+
 }
