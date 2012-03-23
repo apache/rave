@@ -164,7 +164,6 @@
 <portal:register-init-script location="${'AFTER_RAVE'}">
     <script>
         $(function () {
-            rave.setContext("<spring:url value="/app/" />");
             rave.initProviders();
             rave.initWidgets(widgetsByRegionIdMap);
             rave.initUI();

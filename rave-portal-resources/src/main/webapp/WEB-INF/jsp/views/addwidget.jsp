@@ -187,7 +187,6 @@
 <portal:register-init-script location="${'AFTER_RAVE'}">
 <script>
     $(function() {
-        rave.setContext("<spring:url value="/app/" />");
         $('#addWidgetForm').hide();
         $('#addWidgetFormSubmit').hide();
         $('#w3cBrowseLink').hide();

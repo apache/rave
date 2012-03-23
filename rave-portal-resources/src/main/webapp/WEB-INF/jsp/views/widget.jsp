@@ -232,7 +232,6 @@
 <portal:register-init-script location="${'AFTER_RAVE'}">
     <script>
         $(function () {
-            rave.setContext("<spring:url value="/app/" />");
             rave.store.init('<c:out value="${referringPageId}"/>');
             rave.store.initTags("<c:out value="${widget.entityId}"/>");
         });

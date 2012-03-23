@@ -167,7 +167,6 @@
     <script>
         $(function() {
             rave.setMobile(true);
-            rave.setContext("<spring:url value="/app/" />");
             rave.initProviders();
             rave.initWidgets(widgetsByRegionIdMap);           
         });
