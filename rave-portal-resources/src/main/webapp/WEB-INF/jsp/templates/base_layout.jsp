@@ -69,6 +69,8 @@ under the License.
 <portal:render-init-script location="${'BEFORE_RAVE'}" />
 <%-- render the javascript src includes at the bottom of the page for performance --%>
 <rave:rave_js/>
+<%-- render custom javascript from extension projects if the tag is overlayed --%>
+<rave:custom_js/>
 <%-- render any script that needs to execute post-src includes --%>
 <portal:render-init-script location="${'AFTER_RAVE'}" />
 </body>
