@@ -51,7 +51,7 @@
         <javax.servlet.version>2.5</javax.servlet.version>
         <jsp-api.version>2.1</jsp-api.version>
         <el-api.version>1.0</el-api.version>
-        <org.slf4j.version>1.6.1</org.slf4j.version>
+        <org.slf4j.version>1.5.11</org.slf4j.version>
         <log4j.version>1.2.16</log4j.version>
         <junit.version>4.7</junit.version>
         <commons-lang.version>2.6</commons-lang.version>
@@ -122,7 +122,12 @@
             </dependency>
             <dependency>
                 <groupId>org.apache.rave</groupId>
-                <artifactId>rave-opensocial-provider</artifactId>
+                <artifactId>rave-opensocial-client</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.rave</groupId>
+                <artifactId>rave-opensocial-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -671,7 +676,6 @@
         <module>rave-providers</module>
         <module>rave-portal-resources</module>
         <module>rave-portal-dependencies</module>
-        <module>rave-shindig</module>
         <module>rave-demo-gadgets</module>
         <module>rave-portal</module>
     </modules>

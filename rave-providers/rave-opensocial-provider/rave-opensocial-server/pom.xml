@@ -17,27 +17,25 @@
   specific language governing permissions and limitations
   under the License.
 
-  $Id$
+  $Id: pom.xml 1296696 2012-03-03 20:36:14Z mfranklin $
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <artifactId>rave-providers</artifactId>
+        <artifactId>rave-opensocial-provider</artifactId>
         <groupId>org.apache.rave</groupId>
         <version>0.10-incubating-SNAPSHOT</version>
     </parent>
 
-    <artifactId>rave-opensocial-provider</artifactId>
-    <name>Apache Rave :: rave-opensocial-provider</name>
-    <description>Apache Rave OpenSocial Provider</description>
+    <artifactId>rave-opensocial-server</artifactId>
+    <name>Apache Rave :: rave-opensocial-server</name>
+    <description>Apache Rave OpenSocial Server Component</description>
     <packaging>pom</packaging>
 
     <modules>
-        <module>rave-opensocial-client</module>
-        <module>rave-opensocial-core</module>
-        <module>rave-opensocial-server</module>
+        <module>rave-shindig</module>
     </modules>
 
 </project>
