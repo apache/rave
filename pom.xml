@@ -155,17 +155,6 @@
                 <type>war</type>
             </dependency>
             <dependency>
-                <groupId>org.apache.wookie</groupId>
-                <artifactId>wookie</artifactId>
-                <version>${apache.wookie.version}</version>
-                <type>war</type>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.wookie</groupId>
-                <artifactId>wookie-java-connector</artifactId>
-                <version>${apache.wookie.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.apache.shindig</groupId>
                 <artifactId>shindig-server</artifactId>
                 <version>${apache.shindig.version}</version>
