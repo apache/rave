@@ -63,6 +63,19 @@
             <artifactId>shindig-server</artifactId>
             <type>war</type>
         </dependency>
+
+        <!-- log4j logging -->        
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -89,6 +102,10 @@
                   <overlay>
                     <groupId>org.apache.shindig</groupId>
                     <artifactId>shindig-server</artifactId>
+                    <excludes>
+                      <exclude>WEB-INF/lib/commons-logging-*.jar</exclude>
+                      <exclude>WEB-INF/lib/slf4j-*.jar</exclude>
+                    </excludes>
                   </overlay>
                 </overlays>
               </configuration>
