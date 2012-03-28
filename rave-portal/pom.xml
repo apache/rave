@@ -26,10 +26,9 @@
     <parent>
         <groupId>org.apache.rave</groupId>
         <artifactId>rave-project</artifactId>
-        <version>0.10-incubating-SNAPSHOT</version>
+        <version>0.10-SNAPSHOT</version>
     </parent>
 
-    <groupId>org.apache.rave</groupId>
     <artifactId>rave-portal</artifactId>
     <name>Apache Rave :: rave-portal</name>
     <description>Apache Rave Portal</description>

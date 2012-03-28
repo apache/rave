@@ -1,4 +1,4 @@
-Apache Rave (incubating) - README.txt
+Apache Rave - README.txt
 Licensed under Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0
 --------------------------------------------------------------------------------
 
@@ -15,16 +15,6 @@ For the OpenSocial container and services the (Java) Apache Shindig will be
 integrated. At a later stage further generalization is envisioned to also
 transparently support W3C Widgets using Apache Wookie.
 
-Disclaimer
-==========
-Apache Rave is an effort undergoing incubation at The Apache Software
-Foundation (ASF), sponsored by the Apache Incubator PMC. Incubation is required
-of all newly accepted projects until a further review indicates that the
-infrastructure, communications, and decision making process have stabilized in a
-manner consistent with other successful ASF projects. While incubation status is
-not necessarily a reflection of the completeness or stability of the code, it
-does indicate that the project has yet to be fully endorsed by the ASF.
-
 Release Notes
 =============
  - Added new runtime capability to override shindig host.  Add -Dshindig.host=servername to $JAVA_OPTS to override the localhost setting
@@ -33,10 +23,10 @@ Release Notes
 Getting Started
 ===============
 Please visit the project website for the latest information:
-    http://incubator.apache.org/rave/
+    http://rave.apache.org/
 
 Along with the developer mailing list archive:
-    http://mail-archives.apache.org/mod_mbox/incubator-rave-dev/
+    http://mail-archives.apache.org/mod_mbox/rave-dev/
 
 
 System Requirements
@@ -60,7 +50,7 @@ To build from source code:
     unless changes are needed on general and global level.
     
     If so needed, the Rave Master project can be checked out from:
-      http://svn.apache.org/repos/asf/incubator/rave/rave-master-pom/trunk rave-master-pom
+      http://svn.apache.org/repos/asf/rave/rave-master-pom/trunk rave-master-pom
 
     After check out, cd into rave-master-pom and invoke maven to install it using:
       $mvn install

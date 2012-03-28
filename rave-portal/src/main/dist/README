@@ -2,7 +2,7 @@ Apache Rave Demo - README
 
 ABOUT
 
-Apache Rave is a new web and social mashup engine. Its goal is to provide an out-of-the-box as well as an extendible lightweight Java platform to host, serve and aggregate (Open)Social Gadgets and services through a highly customizable and Web 2.0 friendly front-end. For more information, see http://incubator.apache.org/rave/
+Apache Rave is a new web and social mashup engine. Its goal is to provide an out-of-the-box as well as an extendible lightweight Java platform to host, serve and aggregate (Open)Social Gadgets and services through a highly customizable and Web 2.0 friendly front-end. For more information, see http://rave.apache.org/
 
 The binary release includes Tomcat 6 and two WAR files: Apache Rave and Apache Shindig.  This is a self-contained release: you should be able to run Rave with no additional downloads.
 
@@ -31,9 +31,8 @@ This is a very early release of Rave that the developers hope will prompt greate
 
 LINKS/REFERENCES
 
-Apache Rave Incubator Web Site: http://incubator.apache.org/rave/
-Apache Rave Source Code (SVN Browse): http://svn.apache.org/viewvc/incubator/rave/
+Apache Rave Web Site: http://rave.apache.org/
+Apache Rave Source Code (SVN Browse): http://svn.apache.org/viewvc/rave/
 Apache Rave Issue Tracker: https://issues.apache.org/jira/browse/rave
-Apache Rave Mailing Lists: http://incubator.apache.org/rave/mailing-lists.html
-Apache Incubator (General Information): http://incubator.apache.org/
+Apache Rave Mailing Lists: http://rave.apache.org/mailing-lists.html
 

@@ -58,7 +58,6 @@
 		<fileMode>0644</fileMode>
       <directory>${project.basedir}/..</directory>
       <includes>
-        <include>DISCLAIMER</include>
         <include>CHANGELOG</include>
       </includes>
       <outputDirectory>/</outputDirectory>
