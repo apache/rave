@@ -50,7 +50,6 @@
     	<dependency>
             <groupId>org.apache.wookie</groupId>
             <artifactId>wookie</artifactId>
-            <version>0.9.2-incubating</version>
             <type>war</type>
             <scope>provided</scope>
         </dependency>
@@ -202,7 +201,7 @@
                         </zipUrlInstaller>
                         <systemProperties>
                             <net.sf.ehcache.skipUpdateCheck>true</net.sf.ehcache.skipUpdateCheck>
-                            <!-- Documentation: http://incubator.apache.org/rave/documentation/host-configuration.html -->
+                            <!-- Documentation: http://rave.apache.org/documentation/host-configuration.html -->
                             <!--
                                 <portal.override.properties>/path/to/custom.portal.properties</portal.override.properties>
                                 <rave-shindig.override.properties>/path/to/custom.shindig.properties</rave-shindig.override.properties>
