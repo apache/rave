@@ -27,7 +27,7 @@
     <Content type="html" view="home">
        <![CDATA[
           <ul>
-               <li><a href="http://incubator.apache.org/rave/" target="_top">Apache Rave</a>
+               <li><a href="http://rave.apache.org/" target="_top">Apache Rave</a>
                <li><a href="http://docs.oracle.com/javase/6/docs/" target="_top">JavaDocs</a>
           </ul>
           <script>
