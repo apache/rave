@@ -76,6 +76,11 @@
             <resource>
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
+                <!-- exclude the wro4j config files from the WAR as they are only needed for build -->
+                <excludes>
+                    <exclude>**/wro.properties</exclude>
+                    <exclude>**/wro.xml</exclude>
+                </excludes>
             </resource>
         </resources>
         <plugins>
@@ -111,11 +116,46 @@
                             <jsSrcDir>${project.basedir}/src/main/webapp/script/</jsSrcDir>
                             <debug>true</debug>
                             <sourceExcludes>
-                                  <exclude>rave_layout.js</exclude>
+                                <exclude>rave_layout.js</exclude>
+                                <!-- exclude the combined js file from our tests, created by the wro4j plugin  -->
+                                <exclude>all.min.js</exclude>
                             </sourceExcludes>
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <!--
+               wro4j maven plugin is used for optimization (concatenation, minification, etc) of our static resources
+               it is invoked as part of the compile phase of the maven lifecycle
+            -->
+            <plugin>
+                <groupId>ro.isdc.wro4j</groupId>
+                <artifactId>wro4j-maven-plugin</artifactId>
+                <version>1.4.4</version>
+                <executions>
+                    <execution>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <!-- wro.properties defines which pre and post processors to execute -->
+                    <extraConfigFile>${basedir}/src/main/resources/wro.properties</extraConfigFile>
+                    <!-- wro.xml defines the resource groups -->
+                    <wroFile>${basedir}/src/main/resources/wro.xml</wroFile>
+                    <!-- targetGroups is the set of resource groups, defined in wro.xml, that you want to process -->
+                    <targetGroups>rave_all.min</targetGroups>
+                    <!-- minimize instructs the processors to handle their minimization work -->
+                    <minimize>true</minimize>
+                    <!-- location of the javascript after processing -->
+                    <jsDestinationFolder>${project.build.directory}/${project.build.finalName}/script/</jsDestinationFolder>
+                    <!-- location of webapp directory that wro4j uses for its location context -->
+                    <contextFolder>${basedir}/src/main/webapp/</contextFolder>
+                    <wroManagerFactory>ro.isdc.wro.maven.plugin.manager.factory.ConfigurableWroManagerFactory</wroManagerFactory>
+                    <ignoreMissingResources>false</ignoreMissingResources>
+                </configuration>
             </plugin>
         </plugins>
     </build>
