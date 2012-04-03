@@ -41,9 +41,9 @@ public class JpaPageTemplateRepository extends AbstractJpaRepository<PageTemplat
     }
 
     @Override
-    public PageTemplate getDefaultPersonPage() {
-        TypedQuery<PageTemplate> query = manager.createNamedQuery(PageTemplate.PAGE_TEMPLATE_GET_DEFAULT_PERSON_PAGE, PageTemplate.class);
-        query.setParameter("pageType", PageType.PERSON_PROFILE);
+    public PageTemplate getDefaultPage(PageType pageType) {
+        TypedQuery<PageTemplate> query = manager.createNamedQuery(PageTemplate.PAGE_TEMPLATE_GET_DEFAULT_PAGE_BY_TYPE, PageTemplate.class);
+        query.setParameter("pageType", pageType);
         return query.getSingleResult();
     }
 }

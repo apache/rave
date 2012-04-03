@@ -48,12 +48,12 @@ public interface PageRepository extends Repository<Page> {
     int deletePages(Long userId, PageType pageType);
 
     /**
-     * Create Person Page from PageTemplate for the given user
+     * Create either a Person or User Page from PageTemplate for the given user
      * @param user User
      * @param pt PageTemplate
      * @return Page
      */
-    Page createPersonPageForUser(User user, PageTemplate pt);
+    Page createPageForUser(User user, PageTemplate pt);
 
     /**
      * Determine if the given user has a person page

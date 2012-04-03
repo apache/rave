@@ -60,7 +60,7 @@ public class JpaPageRepository extends AbstractJpaRepository<Page> implements Pa
     }
 
     @Override
-    public Page createPersonPageForUser(User user, PageTemplate pt) {
+    public Page createPageForUser(User user, PageTemplate pt) {
         Page personPageFromTemplate = convert(pt, user);
         return save(personPageFromTemplate);
     }

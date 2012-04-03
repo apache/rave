@@ -66,7 +66,7 @@ public class JpaPageTemplateRepositoryTest {
     @Test
     public void getDefaultPersonPage_valid(){
         // get default page template
-        PageTemplate pt = pageTemplateRepository.getDefaultPersonPage();
+        PageTemplate pt = pageTemplateRepository.getDefaultPage(PageType.PERSON_PROFILE);
         // default page tests
         assertNotNull(pt);
         assertEquals("Template for person profile pages", pt.getDescription());
@@ -152,5 +152,41 @@ public class JpaPageTemplateRepositoryTest {
         assertNotNull(sp2w1.getWidget());
         assertTrue(sp2w1.isLocked());
 
+    }
+
+
+    @Test
+    public void getDefaultUserPage_valid(){
+        // get default page template
+        PageTemplate pt = pageTemplateRepository.getDefaultPage(PageType.USER);
+        // default page tests
+        assertNotNull(pt);
+        assertEquals("User profile pages", pt.getDescription());
+        assertEquals("User Profile", pt.getName());
+        assertEquals(PageType.USER, pt.getPageType());
+        assertEquals(0, pt.getRenderSequence());
+        assertTrue(pt.isDefaultTemplate());
+        assertEquals("# of regions for parent page", 1, pt.getPageTemplateRegions().size());
+        assertEquals("person_profile", pt.getPageLayout().getCode());
+        assertEquals("# of widgets on parent page region", 2, pt.getPageTemplateRegions().get(0).getPageTemplateWidgets().size());
+
+        // parent page region tests
+        PageTemplateRegion ptRegion1 = pt.getPageTemplateRegions().get(0);
+        assertEquals(pt.getEntityId(), ptRegion1.getPageTemplate().getEntityId());
+        assertEquals(0, ptRegion1.getRenderSequence());
+        assertEquals(2, ptRegion1.getPageTemplateWidgets().size());
+        assertTrue(ptRegion1.isLocked());
+        // parent page region 1 widget 1 tests
+        PageTemplateWidget ptw1 = ptRegion1.getPageTemplateWidgets().get(0);
+        assertEquals(ptw1.getPageTemplateRegion().getEntityId(), ptRegion1.getEntityId());
+        assertEquals(0, ptw1.getRenderSeq());
+        assertNotNull(ptw1.getWidget());
+        assertTrue(ptw1.isLocked());
+        // parent page region widget 2 tests
+        PageTemplateWidget ptw2 = ptRegion1.getPageTemplateWidgets().get(1);
+        assertEquals(ptw2.getPageTemplateRegion().getEntityId(), ptRegion1.getEntityId());
+        assertEquals(1, ptw2.getRenderSeq());
+        assertNotNull(ptw2.getWidget());
+        assertTrue(ptw2.isLocked());
     }
 }

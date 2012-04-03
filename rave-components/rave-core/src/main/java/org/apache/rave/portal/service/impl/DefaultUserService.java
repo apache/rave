@@ -161,7 +161,7 @@ public class DefaultUserService implements UserService {
     @Transactional
     public void registerNewUser(User user) {
         User managedUser = userRepository.save(user);
-        pageRepository.createPersonPageForUser(managedUser, pageTemplateRepository.getDefaultPersonPage());
+        pageRepository.createPageForUser(managedUser, pageTemplateRepository.getDefaultPage(PageType.PERSON_PROFILE));
     }
 
     @Override

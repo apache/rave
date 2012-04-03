@@ -29,14 +29,14 @@ import java.util.List;
 @Table(name="page_template")
 @NamedQueries({
         @NamedQuery(name = PageTemplate.PAGE_TEMPLATE_GET_ALL, query = "SELECT p FROM PageTemplate p ORDER BY p.renderSequence"),
-        @NamedQuery(name = PageTemplate.PAGE_TEMPLATE_GET_DEFAULT_PERSON_PAGE, query = "SELECT p FROM PageTemplate p WHERE p.defaultTemplate = true and p.pageType = :pageType")
+        @NamedQuery(name = PageTemplate.PAGE_TEMPLATE_GET_DEFAULT_PAGE_BY_TYPE, query = "SELECT p FROM PageTemplate p WHERE p.defaultTemplate = true and p.pageType = :pageType")
 })
 @Access(AccessType.FIELD)
 public class PageTemplate implements BasicEntity, Serializable {
 
     private static final long serialVersionUID = 1L;
     public static final String PAGE_TEMPLATE_GET_ALL = "PageTemplate.getAll";
-    public static final String PAGE_TEMPLATE_GET_DEFAULT_PERSON_PAGE = "PageTemplate.getDefaultPersonPage";
+    public static final String PAGE_TEMPLATE_GET_DEFAULT_PAGE_BY_TYPE = "PageTemplate.getDefaultPage";
 
     @Id
     @Column(name="entity_id")

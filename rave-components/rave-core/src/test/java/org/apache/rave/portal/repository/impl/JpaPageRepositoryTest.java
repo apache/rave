@@ -75,7 +75,7 @@ public class JpaPageRepositoryTest {
     @Before
     public void setup(){
         user = userRepository.get(CREATED_USER_ID);
-        defaultPageTemplate = pageTemplateRepository.getDefaultPersonPage();
+        defaultPageTemplate = pageTemplateRepository.getDefaultPage(PageType.PERSON_PROFILE);
     }
 
     @Test
@@ -206,8 +206,8 @@ public class JpaPageRepositoryTest {
     @Test
     @Transactional(readOnly = false)
     @Rollback(true)
-    public void createPersonPageForUser_validUser(){
-        Page page = repository.createPersonPageForUser(user, defaultPageTemplate);
+    public void createPageForUser_validUser(){
+        Page page = repository.createPageForUser(user, defaultPageTemplate);
         assertSame(user, page.getOwner());
         assertEquals(page.getName(), defaultPageTemplate.getName());
         assertNull(page.getParentPage());

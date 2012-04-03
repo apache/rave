@@ -19,11 +19,12 @@
 package org.apache.rave.portal.repository;
 
 import org.apache.rave.portal.model.PageTemplate;
+import org.apache.rave.portal.model.PageType;
 
 import java.util.List;
 
 public interface PageTemplateRepository {
 
     List<PageTemplate> getAll();
-    PageTemplate getDefaultPersonPage();
+    PageTemplate getDefaultPage(PageType pageType);
 }
