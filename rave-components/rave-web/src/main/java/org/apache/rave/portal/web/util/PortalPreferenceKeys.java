@@ -23,11 +23,9 @@ package org.apache.rave.portal.web.util;
  * Utility class for {@link org.apache.rave.portal.model.PortalPreference} keys
  */
 public final class PortalPreferenceKeys {
-    private PortalPreferenceKeys() {
-
-    }
+    private PortalPreferenceKeys() { }
 
     public static final String TITLE_SUFFIX = "titleSuffix";
     public static final String PAGE_SIZE = "pageSize";
-
+    public static final String JAVASCRIPT_DEBUG_MODE = "javaScriptDebugMode";
 }

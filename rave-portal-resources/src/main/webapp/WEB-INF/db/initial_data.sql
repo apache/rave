@@ -956,6 +956,13 @@ values (@next_portal_preference_id, 'pageSize');
 INSERT INTO portalpreference_values
 values (@next_portal_preference_id, '10');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @portal_preference_seq;
+
+set @next_portal_preference_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @portal_preference_seq);
+INSERT INTO portal_preference (entity_id, preference_key)
+values (@next_portal_preference_id, 'javaScriptDebugMode');
+INSERT INTO portalpreference_values
+values (@next_portal_preference_id, '1');
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @portal_preference_seq;
 -- end portal preferences
 
 -- category

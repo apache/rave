@@ -23,8 +23,7 @@ import org.apache.rave.portal.model.PortalPreference;
 
 import java.util.Map;
 
-import static org.apache.rave.portal.web.util.PortalPreferenceKeys.PAGE_SIZE;
-import static org.apache.rave.portal.web.util.PortalPreferenceKeys.TITLE_SUFFIX;
+import static org.apache.rave.portal.web.util.PortalPreferenceKeys.*;
 
 /**
  * Form object for portal preferences
@@ -33,6 +32,7 @@ public class PortalPreferenceForm {
 
     public static final String DEFAULT_PAGE_SIZE = "10";
     public static final String DEFAULT_TITLE_SUFFIX = "";
+    public static final String DEFAULT_JAVASCRIPT_DEBUG_MODE = "1";
 
 
     private Map<String, PortalPreference> preferenceMap;
@@ -50,6 +50,9 @@ public class PortalPreferenceForm {
         if (getTitleSuffix() == null) {
             preferenceMap.put(TITLE_SUFFIX, new PortalPreference(TITLE_SUFFIX, DEFAULT_TITLE_SUFFIX));
         }
+        if (getJavaScriptDebugMode() == null) {
+            preferenceMap.put(JAVASCRIPT_DEBUG_MODE, new PortalPreference(JAVASCRIPT_DEBUG_MODE, DEFAULT_JAVASCRIPT_DEBUG_MODE));
+        }
     }
 
     public PortalPreference getPageSize() {
@@ -66,6 +69,14 @@ public class PortalPreferenceForm {
 
     public void setTitleSuffix(PortalPreference titleSuffix) {
         preferenceMap.put(TITLE_SUFFIX, titleSuffix);
+    }
+
+    public PortalPreference getJavaScriptDebugMode() {
+        return preferenceMap.get(JAVASCRIPT_DEBUG_MODE);
+    }
+
+    public void setJavaScriptDebugMode(PortalPreference javaScriptDebugMode) {
+        preferenceMap.put(JAVASCRIPT_DEBUG_MODE, javaScriptDebugMode);
     }
 
     public Map<String, PortalPreference> getPreferenceMap() {

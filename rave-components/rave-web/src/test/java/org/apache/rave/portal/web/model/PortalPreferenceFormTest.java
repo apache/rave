@@ -27,8 +27,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static junit.framework.Assert.assertEquals;
-import static org.apache.rave.portal.web.util.PortalPreferenceKeys.PAGE_SIZE;
-import static org.apache.rave.portal.web.util.PortalPreferenceKeys.TITLE_SUFFIX;
+import static org.apache.rave.portal.web.util.PortalPreferenceKeys.*;
 
 /**
  * Test for {@link PortalPreferenceForm}
@@ -42,6 +41,8 @@ public class PortalPreferenceFormTest {
         preferenceMap.put(TITLE_SUFFIX, titlePref);
         PortalPreference pageSizePref = new PortalPreference(PAGE_SIZE, "20");
         preferenceMap.put(PAGE_SIZE, pageSizePref);
+        PortalPreference javaScriptDebugMode = new PortalPreference(JAVASCRIPT_DEBUG_MODE, "0");
+        preferenceMap.put(JAVASCRIPT_DEBUG_MODE, javaScriptDebugMode);
     }
 
     @Test
@@ -49,6 +50,7 @@ public class PortalPreferenceFormTest {
         PortalPreferenceForm form = new PortalPreferenceForm(preferenceMap);
         assertEquals("Test portal", form.getTitleSuffix().getValue());
         assertEquals("20", form.getPageSize().getValue());
+        assertEquals("0", form.getJavaScriptDebugMode().getValue());
     }
 
     @Test
@@ -56,5 +58,6 @@ public class PortalPreferenceFormTest {
         PortalPreferenceForm form = new PortalPreferenceForm(new HashMap<String, PortalPreference>());
         assertEquals(PortalPreferenceForm.DEFAULT_PAGE_SIZE, form.getPageSize().getValue());
         assertEquals(PortalPreferenceForm.DEFAULT_TITLE_SUFFIX, form.getTitleSuffix().getValue());
+        assertEquals(PortalPreferenceForm.DEFAULT_JAVASCRIPT_DEBUG_MODE, form.getJavaScriptDebugMode().getValue());
     }
 }

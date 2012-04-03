@@ -58,6 +58,19 @@
                         </p>
                     </fieldset>
                     <fieldset>
+                        <p>
+                            <spring:bind path="javaScriptDebugMode.value">
+                                <form:label path="javaScriptDebugMode.value"><fmt:message key="admin.preferencedetail.javaScriptDebugMode"/> *</form:label>
+                                <form:select id="javaScriptDebugMode" path="javaScriptDebugMode.value">
+                                    <form:option value="0"><fmt:message key="admin.preferencedetail.javaScriptDebugMode.false"/></form:option>
+                                    <form:option value="1"><fmt:message key="admin.preferencedetail.javaScriptDebugMode.true"/></form:option>
+                                </form:select>
+                                <form:errors path="javaScriptDebugMode.value" cssClass="error"/>
+                            </spring:bind>
+                        </p>
+                    </fieldset>
+
+                    <fieldset>
                         <fmt:message key="admin.preferencedetail.updateButton" var="updateButtonText"/>
                         <input type="submit" value="${updateButtonText}"/>
                     </fieldset>
