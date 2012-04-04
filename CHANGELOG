@@ -1,27 +1,30 @@
 Apache Rave Change Log
+https://issues.apache.org/jira/secure/ReleaseNote.jspa?projectId=12311290 (select the version of release and output as text to create this file)
 
-See http://issues.apache.org/jira/browse/RAVE-* (where * is the number of the issue below)
+Release Notes - Rave - Version 0.10
+===============================================================================================================
+** Sub-task
+    * [RAVE-446] - Rave needs a sandbox example that shows how to also override rave-shindig.
+    * [RAVE-519] - Centralize JavaScript imports
+    * [RAVE-520] - Concatenate and Minify Rave JavaScript files
+    * [RAVE-522] - Administrative Preference to choose which JavaScript file to serve
 
-
-Release Notes - Rave - Version 0.9-INCUBATING
-================================================================================================================
-** Bug
-    * [RAVE-375] - Create user from Admin interface
-    * [RAVE-478] - Portal does not start without pre-population from initial_data.sql
-    * [RAVE-489] - Groups aren't populated with Person's in the initial_data
-    * [RAVE-490] - PermGen Error when using the distribution package
-    * [RAVE-494] - "Categories" is not highlighted in admin module
-    * [RAVE-497] - Set default hostname and port for OAuth callback url's in rave.shindig.properties
-    * [RAVE-498] - rave-shindig intial_data.sql is never executed
-    * [RAVE-502] - Unable to load an initial_data.sql file in Oracle
-
-** Epic
-    * [RAVE-456] - View Person Profiles
+    * [RAVE-485] - W3C widgets sometimes render on screen outside of the container object
+    * [RAVE-504] - Sub Pages are not in correct render order
+    * [RAVE-512] - OpenSocial gadgets on non-active Person Profile tabs are not autosizing properly
+    * [RAVE-526] - Support height attribute of open social gadget definition
 
 ** Improvement
-    * [RAVE-470] - IDE Settings and debugging
-    * [RAVE-471] - Add ability to read the application properties entries from JSP pages
-    * [RAVE-474] - Extend Vanilla extension to also overlay rave-shindig
-    * [RAVE-476] - Filter Page Layouts available for user selection
-    * [RAVE-480] - Update CSS for Header
-    * [RAVE-487] - Add additional gadgets from Shindig & Ohloh.net to the store
+    * [RAVE-492] - Although wookie is now bundled with rave, a user is still unable to add a w3c widget.
+    * [RAVE-495] - Unable to login to Wookie as admin user when currently deployed with rave.
+    * [RAVE-507] - Update all Spring XSD references to 3.1
+    * [RAVE-509] - Move Person repository from rave-shindig to rave-core 
+    * [RAVE-510] - Use localized datetime in categories admin screen
+    * [RAVE-518] - JavaScript Improvements
+
+** New Feature
+    * [RAVE-506] - Static Content Fetcher
+    * [RAVE-541] - Create the Default User page automatically based on a Page Template
+
+** Task
+    * [RAVE-542] - Create 0.10 release of rave-master pom
