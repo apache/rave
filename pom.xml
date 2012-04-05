@@ -26,7 +26,7 @@
     <parent>
         <groupId>org.apache.rave</groupId>
         <artifactId>rave-master</artifactId>
-        <version>0.9-SNAPSHOT</version>
+        <version>0.10</version>
         <relativePath>../rave-master-pom/pom.xml</relativePath>
     </parent>
 
@@ -35,12 +35,12 @@
     <name>Apache Rave :: rave-project</name>
     <description>Apache Rave Project</description>
     <packaging>pom</packaging>
-    <version>0.10-SNAPSHOT</version>
+    <version>0.10</version>
 
     <scm>
-        <connection>scm:svn:http://svn.apache.org/repos/asf/rave/trunk</connection>
-        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/rave/trunk</developerConnection>
-        <url>http://svn.apache.org/viewvc/rave/trunk/</url>
+        <connection>scm:svn:http://svn.apache.org/repos/asf/rave/tags/0.10</connection>
+        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/rave/tags/0.10</developerConnection>
+        <url>http://svn.apache.org/viewvc/rave/tags/0.10</url>
     </scm>
 
     <properties>
