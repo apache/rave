@@ -2,13 +2,13 @@ Apache Rave Change Log
 https://issues.apache.org/jira/secure/ReleaseNote.jspa?projectId=12311290 (select the version of release and output as text to create this file)
 
 Release Notes - Rave - Version 0.10
-===============================================================================================================
+================================================================================================================
 ** Sub-task
-    * [RAVE-446] - Rave needs a sandbox example that shows how to also override rave-shindig.
     * [RAVE-519] - Centralize JavaScript imports
     * [RAVE-520] - Concatenate and Minify Rave JavaScript files
     * [RAVE-522] - Administrative Preference to choose which JavaScript file to serve
 
+** Bug
     * [RAVE-485] - W3C widgets sometimes render on screen outside of the container object
     * [RAVE-504] - Sub Pages are not in correct render order
     * [RAVE-512] - OpenSocial gadgets on non-active Person Profile tabs are not autosizing properly
@@ -18,7 +18,6 @@ Release Notes - Rave - Version 0.10
     * [RAVE-492] - Although wookie is now bundled with rave, a user is still unable to add a w3c widget.
     * [RAVE-495] - Unable to login to Wookie as admin user when currently deployed with rave.
     * [RAVE-507] - Update all Spring XSD references to 3.1
-    * [RAVE-509] - Move Person repository from rave-shindig to rave-core 
     * [RAVE-510] - Use localized datetime in categories admin screen
     * [RAVE-518] - JavaScript Improvements
 
@@ -26,5 +25,3 @@ Release Notes - Rave - Version 0.10
     * [RAVE-506] - Static Content Fetcher
     * [RAVE-541] - Create the Default User page automatically based on a Page Template
 
-** Task
-    * [RAVE-542] - Create 0.10 release of rave-master pom
