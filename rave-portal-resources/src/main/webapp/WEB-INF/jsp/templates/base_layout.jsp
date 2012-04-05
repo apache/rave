@@ -54,7 +54,7 @@ under the License.
             <c:out value="${portalSettings['titleSuffix'].value}"/>
         </c:if>
     </title>
-    <link rel="stylesheet" href="//ajax.aspnetcdn.com/ajax/jquery.ui/1.8.13/themes/base/jquery-ui.css"/>
+    <link rel="stylesheet" href="//ajax.aspnetcdn.com/ajax/jquery.ui/1.8.17/themes/base/jquery-ui.css"/>
     <link rel="stylesheet" href="<c:url value="/css/default.css" />"/>
     <rave:custom_css/>
 </head>

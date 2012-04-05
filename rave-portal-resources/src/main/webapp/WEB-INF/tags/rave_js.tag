@@ -18,18 +18,8 @@
 
 --%>
 <%@ include file="/WEB-INF/jsp/includes/taglibs.jsp" %>
-
 <portal:render-script location="${'BEFORE_LIB'}" />
-<%-- json script --%>
-<script src="//cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
-<%-- jquery scripts --%>
-<script src="//ajax.aspnetcdn.com/ajax/jQuery/jquery-1.6.4.min.js"></script>
-<script src="//ajax.aspnetcdn.com/ajax/jquery.ui/1.8.16/jquery-ui.min.js"></script>
-<script src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.8.1/jquery.validate.min.js"></script>
-<%-- google css3 mediaqueries script --%>
-<!--[if lt IE 9]><script src=//css3-mediaqueries-js.googlecode.com/svn/trunk/css3-mediaqueries.js></script><![endif]-->
-<%-- google html5 script --%>
-<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+<rave:third_party_js />
 <portal:render-script location="${'AFTER_LIB'}" />
 <%-- local rave scripts --%>
 <portal:render-script location="${'BEFORE_RAVE'}" />
