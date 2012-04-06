@@ -205,7 +205,7 @@ public class DefaultPageServiceTest {
     }
 
 
-    @Test(expected = NoResultException.class)
+    @Test
     public void addNewUserPage_noExistingPages_no_result_exception() {
         final String PAGE_NAME = "my new page";
         final Long EXPECTED_RENDER_SEQUENCE = 1L;
@@ -235,7 +235,7 @@ public class DefaultPageServiceTest {
         verify(userService, pageLayoutRepository, pageRepository, pageTemplateRepository);
     }
 
-    @Test(expected = NonUniqueResultException.class)
+    @Test
     public void addNewUserPage_noExistingPages_Non_Unique_ResultException_exception() {
         final String PAGE_NAME = "my new page";
         final Long EXPECTED_RENDER_SEQUENCE = 1L;
