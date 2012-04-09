@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one
+  ~ or more contributor license agreements.  See the NOTICE file
+  ~ distributed with this work for additional information
+  ~ regarding copyright ownership.  The ASF licenses this file
+  ~ to you under the Apache License, Version 2.0 (the
+  ~ "License"); you may not use this file except in compliance
+  ~ with the License.  You may obtain a copy of the License at
+  ~
+  ~   http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing,
+  ~ software distributed under the License is distributed on an
+  ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~ KIND, either express or implied.  See the License for the
+  ~ specific language governing permissions and limitations
+  ~ under the License.
+  -->
+<persistence xmlns="http://java.sun.com/xml/ns/persistence"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
+            version="2.0">
+        <persistence-unit name="ravePersistenceUnit" transaction-type="RESOURCE_LOCAL">
+            <provider>org.apache.openjpa.persistence.PersistenceProviderImpl</provider>
+            <class>org.apache.rave.portal.model.Page</class>
+            <class>org.apache.rave.portal.model.Region</class>
+            <class>org.apache.rave.portal.model.User</class>
+            <class>org.apache.rave.portal.model.RegionWidget</class>
+            <class>org.apache.rave.portal.model.RegionWidgetPreference</class>
+            <class>org.apache.rave.portal.model.Widget</class>
+            <class>org.apache.rave.portal.model.WidgetComment</class>
+            <class>org.apache.rave.portal.model.WidgetRating</class>
+            <class>org.apache.rave.portal.model.PageLayout</class>
+            <class>org.apache.rave.portal.model.Authority</class>
+            <class>org.apache.rave.portal.model.Tag</class>
+            <class>org.apache.rave.portal.model.WidgetTag</class>
+            <class>org.apache.rave.portal.model.PortalPreference</class>
+            <class>org.apache.rave.portal.model.PageTemplate</class>
+            <class>org.apache.rave.portal.model.PageTemplateRegion</class>
+            <class>org.apache.rave.portal.model.PageTemplateWidget</class>
+        </persistence-unit>
+</persistence>
