@@ -1,6 +1,17 @@
 Apache Rave Change Log
 https://issues.apache.org/jira/secure/ReleaseNote.jspa?projectId=12311290 (select the version of release and output as text to create this file)
 
+Release Notes - Rave - Version 0.10.1
+================================================================================================================
+** Bug
+    * [RAVE-553] - Exception thrown when new user logs in
+
+** New Feature
+    * [RAVE-541] - Create the Default User page automatically based on a Page Template
+
+** Task
+    * [RAVE-542] - Create 0.10 release of rave-master pom
+
 Release Notes - Rave - Version 0.10
 ================================================================================================================
 ** Sub-task
@@ -13,6 +24,7 @@ Release Notes - Rave - Version 0.10
     * [RAVE-504] - Sub Pages are not in correct render order
     * [RAVE-512] - OpenSocial gadgets on non-active Person Profile tabs are not autosizing properly
     * [RAVE-526] - Support height attribute of open social gadget definition
+	
 
 ** Improvement
     * [RAVE-492] - Although wookie is now bundled with rave, a user is still unable to add a w3c widget.
@@ -24,4 +36,6 @@ Release Notes - Rave - Version 0.10
 ** New Feature
     * [RAVE-506] - Static Content Fetcher
     * [RAVE-541] - Create the Default User page automatically based on a Page Template
+
+
 
