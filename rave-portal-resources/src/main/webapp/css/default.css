@@ -17,27 +17,8 @@
  * under the License.
  */
 
-html {
-    background-color: #EBEBEB;
-}
 
-body {
-    color: #000000;
-    font-size: 62.5%;
-    font-family: Arial, Helvetica, sans-serif;
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr = "#D7D7D3", endColorstr = "#EBEBEB");
-    background: -moz-linear-gradient(center top, #D7D7D3 0%, #EBEBEB 50%) repeat scroll 0 0 transparent;
-    background: -webkit-gradient(linear, left top, left bottom, from(#D7D7D3), to(#EBEBEB));
-    margin: 0;
-}
 
-/* general html fields */
-
-header, nav, article, section, footer {
-    display: block;
-    margin: 0;
-    padding: 0;
-}
 
 header {
     line-height: 3em;
@@ -49,50 +30,15 @@ ul, ol, table, p {
 }
 
 h1, h2, h3, h4, h5, h6 {
-    color: #193240;
     text-transform: uppercase;
-    font-weight: normal;
-    margin: 10px 0 15px;
-    padding: 5px 0;
 }
 
-h1 {
-    font-size: 1.4em;
-    padding: 15px;
-}
-
-h2 {
-    font-size: 1.2em;
-    margin-top: 2em;
-    border-bottom: 1px solid #a3afb6;
-}
-
-h3, h4, h5, h6 {
-    border-bottom: none;
-    font-size: 1em;
-    margin-bottom: 0;
-}
 
 dt {
     display: inline;
     float: left;
 }
 
-a, a:visited, a:hover {
-    color: #107EC0;
-}
-
-a:hover {
-    background-color: #e6ebed;
-}
-
-a img {
-    border: none;
-}
-
-.clear-float {
-    clear: both;
-}
 
 .hidden {
     display: none;
@@ -837,45 +783,6 @@ span.error, label.error {
     padding-top: 20px;
 }
 
-/* page menu related styles */
-#pageMenuWrapper {
-    position: relative;
-    display: inline-block;
-    vertical-align: middle;
-    /* IE 7 hacks for inline-block */
-    zoom: 1;
-    *display: inline;
-}
-
-.page-menu {
-    border: 1px solid black;
-    position: absolute;
-    display: none;
-    left: 18px;
-    top: 0;
-    width: 80px;
-    background-color: #FFFFFF;
-    z-index: 1000;
-    cursor: pointer;
-}
-
-.page-menu-item {
-    padding: 3px;
-}
-
-.page-menu-item:hover {
-    background-color: #B4C4CF;
-}
-
-.page-menu-item-disabled {
-    color: #D3D3D3;
-}
-
-#pageMenuButton {
-    cursor: pointer;
-    margin-right: 10px;
-}
-
 /* widget menu related styles */
 .widget-menu-wrapper {
     position: relative;
@@ -936,9 +843,6 @@ span.error, label.error {
     font-size: 150%;
 }
 
-.errorLogo {
-    text-align: center;
-}
 
 /** Admin interface **/
 .admincontent {
@@ -968,96 +872,6 @@ span.error, label.error {
     padding: 0;
 }
 
-.admincontent h2 {
-    margin-top: 0;
-    padding-top: 1em;
-    border: none;
-}
-
-.admincontent table {
-    margin: 1.5em 0;
-    padding: 0;
-    border-collapse: collapse;
-    font-size: 13px;
-    border: 1px solid #ddd;
-    -webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
-    border-radius: 4px;
-}
-
-.admincontent table th, .admincontent table td {
-    padding: 5px 5px 4px;
-    line-height: 1.5em;
-    text-align: left;
-}
-
-.admincontent table th {
-    padding-top: 4px;
-    font-weight: bold;
-    vertical-align: middle;
-    border-bottom: 1px solid #ddd;
-    background-color: #000000;
-    color: #ffffff;
-}
-
-.admincontent table td {
-    vertical-align: top;
-}
-
-.admincontent table th+th, .admincontent table td+td {
-    border-left: 1px solid #ddd;
-}
-
-.admincontent table tr+tr td {
-    border-top: 1px solid #ddd;
-}
-
-.admincontent table tbody tr:first-child td:first-child {
-    -webkit-border-radius: 4px 0 0 0;
-    -moz-border-radius: 4px 0 0 0;
-    border-radius: 4px 0 0 0;
-}
-
-.admincontent table tbody tr:first-child td:last-child {
-    -webkit-border-radius: 0 4px 0 0;
-    -moz-border-radius: 0 4px 0 0;
-    border-radius: 0 4px 0 0;
-}
-
-.admincontent table tbody tr:last-child td:first-child {
-    -webkit-border-radius: 0 0 0 4px;
-    -moz-border-radius: 0 0 0 4px;
-    border-radius: 0 0 0 4px;
-}
-
-.admincontent table tbody tr:last-child td:last-child {
-    -webkit-border-radius: 0 0 4px 0;
-    -moz-border-radius: 0 0 4px 0;
-    border-radius: 0 0 4px 0;
-}
-
-.admincontent tbody tr:nth-child(odd) {
-    background-color: #D3D3D3;
-}
-
-.admincontent tbody tr:hover {
-    background-color: #B4C4CF;
-}
-
-.admincontent th a, .admincontent th a:visited {
-    color: #FFFFFF;
-    text-decoration: none;
-}
-
-.admincontent td a, .admincontent td a:visited {
-    color: #000000;
-    text-decoration: none;
-}
-
-.admincontent tbody tr:hover a, .admincontent table a:hover {
-    background-color: transparent;
-    text-decoration: underline;
-}
 
 .admincontent .leftcolumn {
     float: left;
@@ -1079,22 +893,8 @@ span.error, label.error {
     max-width: 100%;
 }
 
-.admincontent figcaption {
-    display: block;
-    margin: 0 0 1em 0;
-    padding: 0;
-    font-style: italic;
-}
 
-.datatable tbody tr {
-    cursor: pointer;
-}
 
-.formbox {
-    border: 1px solid #B4C4CF;
-    margin: 1em 10px;
-    padding: 0 10px;
-}
 
 .booleancell {
     width: 50px;
@@ -1106,86 +906,6 @@ span.error, label.error {
 
 .largetextcell {
     width: 300px
-}
-
-.alert-message {
-    color: #FFFFFF;
-    position: relative;
-    padding: 7px 15px;
-    margin-top: 1em;
-    margin-bottom: 1em;
-    background-color: #eedc94;
-    background-repeat: repeat-x;
-    background-image: -moz-linear-gradient(top, #fceec1, #eedc94);
-    background-image: -ms-linear-gradient(top, #fceec1, #eedc94);
-    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #fceec1), color-stop(100%, #eedc94));
-    background-image: -webkit-linear-gradient(top, #fceec1, #eedc94);
-    background-image: linear-gradient(top, #fceec1, #eedc94);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr = '#fceec1', endColorstr = '#eedc94', GradientType = 0);
-    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
-    border-color: #eedc94 #eedc94 #e4c652;
-    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
-    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
-    border-width: 1px;
-    border-style: solid;
-    -webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
-    border-radius: 4px;
-    -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
-    -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
-}
-
-.alert-message p, #content .alert-message p {
-    margin: 0;
-}
-
-.alert-message div, #content .alert-message div {
-    margin-top: 5px;
-    margin-bottom: 2px;
-    line-height: 28px;
-}
-
-.alert-message.success {
-    background-color: #57a957;
-    background-repeat: repeat-x;
-    background-image: -moz-linear-gradient(top, #62c462, #57a957);
-    background-image: -ms-linear-gradient(top, #62c462, #57a957);
-    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #62c462), color-stop(100%, #57a957));
-    background-image: -webkit-linear-gradient(top, #62c462, #57a957);
-    background-image: -o-linear-gradient(top, #62c462, #57a957);
-    background-image: linear-gradient(top, #62c462, #57a957);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr = '#62c462', endColorstr = '#57a957', GradientType = 0);
-    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
-    border-color: #57a957 #57a957 #3d773d;
-    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
-}
-
-.alert-message.info {
-    background-color: #767676;
-    background-repeat: repeat-x;
-    background-image: -moz-linear-gradient(top, #999999, #666666);
-    background-image: -ms-linear-gradient(top, #999999, #666666);
-    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #999999), color-stop(100%, #666666));
-    background-image: -webkit-linear-gradient(top, #999999, #666666);
-    background-image: -o-linear-gradient(top, #999999, #666666);
-    background-image: linear-gradient(top, #999999, #666666);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr = '#999999', endColorstr = '#666666', GradientType = 0);
-    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
-    border-color: #767676 #767676 #3d773d;
-    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
-}
-
-.topbar-message {
-    position: relative;
-    top: 0;
-    left: 0;
-    background-color: #57a957;
-    line-height: 28px;
-    width: 100%;
-    padding-top: 8px;
-    text-align: center;
-    font-size: 14px;
 }
 
 /*CSS style for user profile tabs*/
@@ -1225,14 +945,6 @@ span.error, label.error {
 	display: inline;
 }
 
-table.profile-table {
-	width: 100%;
-}
-td.profile-body-column {
-	width: 100%;
-	vertical-align: top;
-}
-
 @media all and (max-width: 900px) {
     .storeSearch {
         width: 100%;
@@ -1246,9 +958,6 @@ td.profile-body-column {
 
 @media all and (max-width: 550px) {
 
-    body {
-        font-size: 0.75em;
-    }
 
     header {
         height: auto;

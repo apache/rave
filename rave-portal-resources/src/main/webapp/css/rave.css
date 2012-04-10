@@ -1,0 +1,23 @@
+.center{
+    text-align: center;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.navbar-spacer{
+    margin-top: 50px;
+}
+
+/* page menu related styles */
+/*
+    NOTE: bootstrap doesn't have a native style for a disabled dropdown item
+          so we created this
+*/
+.menu-item-disabled a,
+.menu-item-disabled a:visited,
+.menu-item-disabled a:active,
+.menu-item-disabled a:hover {
+    color: #CCCCCC !important;
+    background-color: #FFFFFF;
+}

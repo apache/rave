@@ -21,17 +21,18 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ attribute name="pageTitle" required="false" description="The title of the page" %>
 <fmt:setBundle basename="messages"/>
-
 <header>
-    <nav class="topnav">
+    <nav>
         <%--@elvariable id="topnav" type="org.apache.rave.portal.web.model.NavigationMenu"--%>
         <c:if test="${not empty topnav}">
-            <ul class="horizontal-list">
-                <c:forEach items="${topnav.navigationItems}" var="navItem">
-                    <li><a href="<spring:url value="${navItem.url}"/>"><fmt:message key="${navItem.name}"/></a></li>
-                </c:forEach>
-            </ul>
+            <div class="navbar navbar-fixed-top">
+                <a class="brand" href="#"><c:out value="${pageTitle}"/></a>
+                <ul class="nav pull-right">
+                    <c:forEach items="${topnav.navigationItems}" var="navItem">
+                        <li><a href="<spring:url value="${navItem.url}"/>"><fmt:message key="${navItem.name}"/></a></li>
+                    </c:forEach>
+                </ul>
+            </div>
         </c:if>
     </nav>
-    <h1><c:out value="${pageTitle}"/></h1>
 </header>

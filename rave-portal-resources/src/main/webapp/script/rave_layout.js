@@ -20,33 +20,20 @@
 var rave = rave || {};
 rave.layout = rave.layout || (function() {
     var MOVE_PAGE_DEFAULT_POSITION_IDX = -1;
-    var $dialog;
-    var $movePageDialog;
     var $moveWidgetDialog;
-    
+    var $movePageDialog = $("#movePageDialog");
+    var $pageForm = $("#pageForm");
     var $tab_title_input = $("#tab_title"),
         $tab_id = $("#tab_id"),
         $page_layout_input = $("#pageLayout");
-
-    // define the form object    
-    var $form = $("#pageForm", $dialog);  
     
     // page menu related functions
     var pageMenu = (function() {
-        var $button = $("#pageMenuButton");
-        var $menu = $("#pageMenu");
+        var $addPageButton = $("#addPageButton");
         var $menuItemEdit = $("#pageMenuEdit");
         var $menuItemDelete = $("#pageMenuDelete");
         var $menuItemMove = $("#pageMenuMove");
-                        
-        function hideMenu() {
-            $menu.hide();
-        }
-        
-        function showMenu() {
-            $menu.show();
-        }
-        
+
         /**
          * Initializes the private pageMenu closure
          * - binds click event handler to menu button
@@ -54,121 +41,33 @@ rave.layout = rave.layout || (function() {
          * - binds body click event handler to close the menu
          */
         function init() {
-            // modal dialog init: custom buttons and a "close" callback reseting the form inside
-            $dialog = $( "#dialog" ).dialog({
-                autoOpen: false,
-                modal: true,
-                buttons: [
-                    {
-                        text: rave.getClientMessage("common.add"),
-                        id: "AddPageBtn",
-                        click: function() {
-                            addPage();
-                        }
-                    },
-                    {
-                        text: rave.getClientMessage("common.update"),
-                        id: "UpdatePageBtn",
-                        click: function() {
-                            updatePage();
-                        }
-                    },
-                    {
-                        text: rave.getClientMessage("common.cancel"),
-                        id: "CancelPageBtn",
-                        click: function() {
-                            $(this).dialog("close");
-                        }
-                    }
-                ],
-                open: function(event, ui) {
-                    $dialog.unbind("submit");
-                    if ($tab_id.val() == '') {
-                        $("#"+this.id).dialog("option", "title", rave.getClientMessage("page.add"));
-                        $("#UpdatePageBtn").hide();
-                        $("#AddPageBtn").show();
-                        $dialog.submit(function() {
-                            $("#AddPageBtn").click();
-                            return false;
-                        });
-                    }
-                    else {
-                        $("#"+this.id).dialog("option", "title", rave.getClientMessage("page.update"));
-                        $("#UpdatePageBtn").show();
-                        $("#AddPageBtn").hide();
-                        $dialog.submit(function() {
-                            $("#UpdatePageBtn").click();
-                            return false;
-                        });
-
-                    }
+            // initialize the page form validator overriding the
+            // styles to wire in bootstrap styles
+            $pageForm.validate({
+                errorElement: 'span',
+                errorClass: 'help-inline',
+                highlight: function (element, errorClass) {
+                    $(element).parent().parent().addClass('error');
                 },
-                close: function() {
-                    $form[ 0 ].reset();
-                    $tab_id.val('');
-                    $("#pageFormErrors").html("");
+                unhighlight: function (element, errorClass) {
+                    $(element).parent().parent().removeClass('error');
                 }
             });
 
-            // the modal dialog for moving a page
-            $movePageDialog = $("#movePageDialog").dialog({
-                autoOpen: false,
-                modal: true,
-                buttons: [
-                    {
-                        text: rave.getClientMessage("common.move"),
-                        click: function() {
-                            movePage();
-                        }
-                    },
-                    {
-                        text: rave.getClientMessage("common.cancel"),
-                        click: function() {
-                            $( this ).dialog( "close" );
-                        }
-                    }
-                ],
-                open: function() {
-                    $("#moveAfterPageId").focus();
-                },
-                close: function() {
-                    $("#movePageForm")[0].reset();
-                }
-            });
+            // initialize the close button in the page menu dialog
+            $("#pageMenuCloseButton").click(rave.layout.closePageDialog);
 
-            // the modal dialog for moving a widget
-            $moveWidgetDialog = $("#moveWidgetDialog").dialog({
-                autoOpen: false,
-                modal: true,
-                buttons: [
-                    {
-                        text: rave.getClientMessage("common.move"),
-                        click: function() {
-                            moveWidgetToPage($(this).data('regionWidgetId'));
-                        }
-                    },
-                    {
-                        text: rave.getClientMessage("common.cancel"),
-                        click: function() {
-                            $(this).dialog("close");
-                        }
-                    }
-                ],
-                open: function() {
-                    $("#moveToPageId").focus();
-                },
-                close: function() {
-                    $("#moveWidgetForm")[0].reset();
-                }
+            // setup the edit page menu item
+            $addPageButton.bind('click', function(event) {
+                $("#pageMenuDialogHeader").html(rave.getClientMessage("page.add"));
+                var $pageMenuUpdateButton = $("#pageMenuUpdateButton");
+                $pageMenuUpdateButton.html(rave.getClientMessage("common.add"));
+                // unbind the previous click event since we are sharing the
+                // dialog between separate add/edit page actions
+                $pageMenuUpdateButton.unbind('click');
+                $pageMenuUpdateButton.click(rave.layout.addPage);
+                $("#pageMenuDialog").modal('show');
             });
-
-            // initialize the page menu and button
-            $button.bind('click', function(event) {  
-                $menu.toggle();
-                // prevent the menu button click event from bubbling up to parent 
-                // DOM object event handlers such as the page tab click event
-                event.stopPropagation();
-            });         
 
             // setup the edit page menu item
             $menuItemEdit.bind('click', function(event) {
@@ -177,47 +76,36 @@ rave.layout = rave.layout || (function() {
                                             $tab_title_input.val(result.result.name);
                                             $tab_id.val(result.result.entityId);
                                             $page_layout_input.val(result.result.pageLayout.code);
-                                            $dialog.dialog( "open" );
+                                            $("#pageMenuDialogHeader").html(rave.getClientMessage("page.update"));
+                                            var $pageMenuUpdateButton = $("#pageMenuUpdateButton");
+                                            $pageMenuUpdateButton.html(rave.getClientMessage("common.save"));
+                                            // unbind the previous click event since we are sharing the
+                                            // dialog between separate add/edit page actions
+                                            $pageMenuUpdateButton.unbind('click');
+                                            $pageMenuUpdateButton.click(rave.layout.updatePage);
+                                            $("#pageMenuDialog").modal('show');
                                         }
                 });
-
-                pageMenu.hide();
-                // prevent the menu button click event from bubbling up to parent 
-                // DOM object event handlers such as the page tab click event
-                event.stopPropagation();
             });
 
             // setup the delete page menu item if it is not disabled
-            if (!$menuItemDelete.hasClass("page-menu-item-disabled")) {                            
+            if (!$menuItemDelete.hasClass("menu-item-disabled")) {
                 $menuItemDelete.bind('click', function(event) {
                     // send the rpc request to delete the page
                     rave.api.rest.deletePage({pageId: getCurrentPageId(), successCallback: rave.viewPage});
-                    pageMenu.hide();
-                    // prevent the menu button click event from bubbling up to parent 
-                    // DOM object event handlers such as the page tab click event
-                    event.stopPropagation();
                 });
             }
 
-            // setup the edit page menu item if it is not disabled
-            if (!$menuItemDelete.hasClass("page-menu-item-disabled")) {
+            // setup the move page menu item if it is not disabled
+            if (!$menuItemMove.hasClass("menu-item-disabled")) {
                 $menuItemMove.bind('click', function(event) {
-                    pageMenu.hide();                 
-                    $movePageDialog.dialog("open");
-                    // prevent the menu button click event from bubbling up to parent 
-                    // DOM object event handlers such as the page tab click event
-                    event.stopPropagation();
+                    $movePageDialog.modal('show');
                 });      
             }
-
-            // close the page menu if the user clicks outside of it           
-            $("html").click(pageMenu.hide);
         }
         
         return {
-            init: init,
-            hide: hideMenu,
-            show: showMenu
+            init: init
         }
     })();
 
@@ -256,6 +144,32 @@ rave.layout = rave.layout || (function() {
          * - binds body click event handler to close the menu
          */
         function init() {
+            // the modal dialog for moving a widget
+            $moveWidgetDialog = $("#moveWidgetDialog").dialog({
+                autoOpen: false,
+                modal: true,
+                buttons: [
+                    {
+                        text: rave.getClientMessage("common.move"),
+                        click: function() {
+                            moveWidgetToPage($(this).data('regionWidgetId'));
+                        }
+                    },
+                    {
+                        text: rave.getClientMessage("common.cancel"),
+                        click: function() {
+                            $(this).dialog("close");
+                        }
+                    }
+                ],
+                open: function() {
+                    $("#moveToPageId").focus();
+                },
+                close: function() {
+                    $("#moveWidgetForm")[0].reset();
+                }
+            });
+
             // initialize the widget menu and button
             $(".widget-menu-button").each(function(index, element) {
                 if (!$(element).hasClass("widget-menu-item-disabled")) {
@@ -299,7 +213,7 @@ rave.layout = rave.layout || (function() {
                 $menuItemDelete  = $("#widget-" + widgetId + "-menu-delete-item");
                 if (!$menuItemDelete.hasClass("widget-menu-item-disabled")) {
                     $menuItemDelete.bind('click', function(event) {                       
-                        var regionWidgetId = rave.getObjectIdFromDomId(this.id); 
+                        var regionWidgetId = rave.getObjectIdFromDomId(this.id);
                          // hide the widget menu
                         rave.layout.hideWidgetMenu(regionWidgetId);                                         
                         // invoke the rpc call to remove the widget from the page
@@ -401,7 +315,7 @@ rave.layout = rave.layout || (function() {
      */        
     function addPage() {
         // if the form has passed validation submit the request
-        if ($("#pageForm").valid()) {        
+        if ($pageForm.valid()) {
             var newPageTitle = $tab_title_input.val();
             var newPageLayoutCode = $page_layout_input.val();
 
@@ -433,7 +347,7 @@ rave.layout = rave.layout || (function() {
     }
 
     function updatePage() {
-        if ($("#pageForm").valid()) {
+        if ($pageForm.valid()) {
             // send the rpc request to update the page
             rave.api.rpc.updatePagePrefs({pageId: $tab_id.val(),
                                             title: $tab_title_input.val(),
@@ -442,6 +356,12 @@ rave.layout = rave.layout || (function() {
                                                 rave.viewPage(result.result.entityId);
                                             }});
         }
+    }
+
+    function closePageDialog() {
+        $pageForm[0].reset();
+        $tab_id.val('');
+        $("#pageMenuDialog").modal("hide");
     }
     
     /**
@@ -476,19 +396,10 @@ rave.layout = rave.layout || (function() {
     * initializes the rave.layout namespace code
     */
     function init() {
-        // add_page button to open the dialog for creating a new page
-        $( "#add_page" )
-                .button({ 
-                    text: false,
-                    icons: {primary:'ui-icon-plusthick'} 
-                })
-                .click(function() {
-                    $dialog.dialog( "open" );
-                })
-                .show();
-
         pageMenu.init();
         widgetMenu.init();
+        // initialize the bootstrap dropdowns
+        $(".dropdown-toggle").dropdown();
     }
    
     // public rave.layout API
@@ -497,6 +408,10 @@ rave.layout = rave.layout || (function() {
         getCurrentPageId: getCurrentPageId,
         hideWidgetMenu: widgetMenu.hide,
         deleteRegionWidget: deleteRegionWidget,
-        enableEditPrefsMenuItem: widgetMenu.enableEditPrefsMenuItem
+        enableEditPrefsMenuItem: widgetMenu.enableEditPrefsMenuItem,
+        addPage: addPage,
+        updatePage: updatePage,
+        movePage: movePage,
+        closePageDialog: closePageDialog
     };    
 })();

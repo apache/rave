@@ -1,0 +1,7 @@
+########################
+## Intellij files
+########################
+
+*.iml
+.idea/
+rave-shindig/overlays/
