@@ -19,16 +19,18 @@
 
 package org.apache.rave.gadgets.oauth.repository;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 import org.apache.rave.gadgets.oauth.model.OAuthTokenInfo;
+import org.apache.rave.gadgets.oauth.service.OAuthTokenInfoService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -55,6 +57,9 @@ public class JpaOAuthTokenInfoRepositoryTest {
     @Autowired
     OAuthTokenInfoRepository repository;
 
+    @Autowired
+    OAuthTokenInfoService service;
+
     @Test
     public void testFindOAuthTokenInfo() throws Exception {
         OAuthTokenInfo tokenInfo = repository.findOAuthTokenInfo(VALID_USER,
@@ -69,4 +74,29 @@ public class JpaOAuthTokenInfoRepositoryTest {
                 APP_URL, OAuthTokenInfo.MODULE_ID, TOKEN_NAME, SERVICE_NAME);
         assertNull(tokenInfo);
     }
+
+    @Test
+    @Rollback
+    public void testDeleteOAuthTokenInfo() throws Exception {
+        OAuthTokenInfo tokenInfo = repository.findOAuthTokenInfo(VALID_USER,
+                APP_URL, OAuthTokenInfo.MODULE_ID, TOKEN_NAME, SERVICE_NAME);
+        assertNotNull(tokenInfo);
+        repository.delete(tokenInfo);
+        tokenInfo = repository.findOAuthTokenInfo(VALID_USER,
+                APP_URL, OAuthTokenInfo.MODULE_ID, TOKEN_NAME, SERVICE_NAME);
+        assertNull(tokenInfo);
+    }
+
+    @Test
+    @Rollback
+    public void testDeleteOAuthTokenInfo_ThroughService() throws Exception {
+        OAuthTokenInfo tokenInfo = repository.findOAuthTokenInfo(VALID_USER,
+                APP_URL, OAuthTokenInfo.MODULE_ID, TOKEN_NAME, SERVICE_NAME);
+        assertNotNull(tokenInfo);
+        service.deleteOAuthTokenInfo(VALID_USER, APP_URL, OAuthTokenInfo.MODULE_ID, TOKEN_NAME, SERVICE_NAME);
+        tokenInfo = repository.findOAuthTokenInfo(VALID_USER,
+                APP_URL, OAuthTokenInfo.MODULE_ID, TOKEN_NAME, SERVICE_NAME);
+        assertNull(tokenInfo);
+    }
+
 }
