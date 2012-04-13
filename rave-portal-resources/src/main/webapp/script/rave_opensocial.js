@@ -36,6 +36,9 @@ rave.opensocial = rave.opensocial || (function() {
     function initOpenSocial() {
         initContainer();
         registerRpcHooks();
+        gadgets.pubsub2router.init({
+            hub: rave.getManagedHub()
+        })
     }
 
     function initContainer() {
@@ -50,7 +53,7 @@ rave.opensocial = rave.opensocial || (function() {
      * Gets the container singleton or initializes if not instantiated
      */
     function getContainer() {
-        if (!container) {
+        if (typeof container == "undefined" || container == null) {
             initContainer();
         }
         return container;
@@ -71,7 +74,6 @@ rave.opensocial = rave.opensocial || (function() {
         container.rpcRegister('set_title', setTitle);
         container.rpcRegister('requestNavigateTo', requestNavigateTo);
         container.rpcRegister('set_pref', setPref);
-        //container.rpcRegister('pubsub', null);
     }
 
     /**
