@@ -24,6 +24,7 @@ import org.apache.rave.gadgets.oauth.repository.OAuthTokenInfoRepository;
 import org.apache.rave.gadgets.oauth.service.OAuthTokenInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Implementation of {@link OAuthTokenInfoService}
@@ -58,6 +59,7 @@ public class DefaultOAuthTokenInfoService implements OAuthTokenInfoService {
      * {@inheritDoc}
      */
     @Override
+    @Transactional
     public void deleteOAuthTokenInfo(String userId, String appUrl, String moduleId, String tokenName,
                                      String serviceName) {
         final OAuthTokenInfo oAuthTokenInfo =

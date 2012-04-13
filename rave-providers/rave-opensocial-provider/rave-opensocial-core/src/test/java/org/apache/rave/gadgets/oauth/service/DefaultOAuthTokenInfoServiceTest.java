@@ -30,7 +30,9 @@ import org.junit.Test;
 import static junit.framework.Assert.assertEquals;
 import static org.easymock.EasyMock.createNiceMock;
 import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
 import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
@@ -83,6 +85,18 @@ public class DefaultOAuthTokenInfoServiceTest {
 
         assertNull(oAuthTokenInfo);
 
+    }
+
+    @Test
+    public void testDeleteOAuthTokenInfo() {
+        OAuthTokenInfo dbOAuthTokenInfo = getOAuthTokenInfo();
+        expect(repository.findOAuthTokenInfo(VALID_USER, APP_URL, NOT_USED, TOKEN_NAME, SERVICE_NAME))
+                .andReturn(dbOAuthTokenInfo);
+        repository.delete(dbOAuthTokenInfo);
+        expectLastCall();
+        replay(repository);
+        service.deleteOAuthTokenInfo(VALID_USER, APP_URL, NOT_USED, TOKEN_NAME, SERVICE_NAME);
+        verify(repository);
     }
 
     private OAuthTokenInfo getOAuthTokenInfo() {
