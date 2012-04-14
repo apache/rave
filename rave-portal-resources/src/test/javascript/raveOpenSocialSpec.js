@@ -114,7 +114,7 @@ describe("Rave OpenSocial", function() {
                 f : "frameId",
                 a : arrayOut ? ["TITLE"] : "TITLE",
                 gs : {
-                    getActiveGadgetHolder : function() {
+                    getActiveSiteHolder : function() {
                         return {getElement : function() {
                             return { id : id }
                         }}
@@ -141,7 +141,7 @@ describe("Rave OpenSocial", function() {
             return {
                 f : "frameId",               
                 gs : {
-                    getActiveGadgetHolder : function() {
+                    getActiveSiteHolder : function() {
                         return {getElement : function() {
                             return { id : id }
                         }}
