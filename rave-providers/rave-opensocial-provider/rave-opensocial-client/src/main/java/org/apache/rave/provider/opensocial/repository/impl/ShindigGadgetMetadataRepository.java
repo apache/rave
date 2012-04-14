@@ -64,10 +64,8 @@ public class ShindigGadgetMetadataRepository implements GadgetMetadataRepository
                     .put("id", "gadgets.metadata")
                     .put("params", new JSONObject()
                             .put("container", "default")
-
                             .append("ids", gadgetUrl)
-
-                            .append("fields", "iframeUrl")
+                            .append("fields", "iframeUrls")
                             .append("fields", "modulePrefs.*")
                             .append("fields", "needsTokenRefresh")
                             .append("fields", "userPrefs.*")
@@ -75,7 +73,6 @@ public class ShindigGadgetMetadataRepository implements GadgetMetadataRepository
                             .append("fields", "views.preferredWidth")
                             .append("fields", "expireTimeMs")
                             .append("fields", "responseTimeMs")
-
                             .put("userId", "@viewer")
                             .put("groupId", "@self")
                     );

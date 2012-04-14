@@ -51,7 +51,7 @@ public class ShindigGadgetMetadataRepositoryTest {
     private static final String VALID_SHINDIG_METADATA_RPC_REQUEST = "[{\"id\":\"gadgets.metadata\"," +
             "\"method\":\"gadgets.metadata\",\"params\":{\"groupId\":\"@self\"," +
             "\"ids\":[\"http://www.example.com/gadget.xml\"],\"container\":\"default\",\"userId\":\"@viewer\"," +
-            "\"fields\":[\"iframeUrl\",\"modulePrefs.*\",\"needsTokenRefresh\",\"userPrefs.*\",\"views.preferredHeight\"," +
+            "\"fields\":[\"iframeUrls\",\"modulePrefs.*\",\"needsTokenRefresh\",\"userPrefs.*\",\"views.preferredHeight\"," +
             "\"views.preferredWidth\",\"expireTimeMs\",\"responseTimeMs\"]}}]";
     private static final String VALID_METADATA = "[{\"id\":\"gadgets.metadata\",\"result\"" +
             ":{\"http://www.example.com/gadget.xml\":{\"data-snipped\":\"here-for-brevity\",\"userPrefs\":{\"age\":{\"dataType\":\"STRING\",\"default\":\"0\",\"displayName\":\"Age\"}}   }}}]";

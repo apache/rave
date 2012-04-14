@@ -44,7 +44,7 @@
     </scm>
 
     <properties>
-        <apache.shindig.version>3.0.0-beta4</apache.shindig.version>
+        <apache.shindig.version>2.5.0-beta1</apache.shindig.version>
         <apache.wookie.version>0.9.2-incubating</apache.wookie.version>
         <org.springframework.version>3.1.0.RELEASE</org.springframework.version>
         <org.springframework.mobile.version>1.0.0.M3</org.springframework.mobile.version>
