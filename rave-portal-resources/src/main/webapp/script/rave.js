@@ -749,22 +749,30 @@ var rave = rave || (function() {
         }
     }
 
+    function createNewOpenAjaxHub() {
+        if(typeof OpenAjax == "undefined"){
+            throw "No implementation of OpenAjax found.  " +
+                "Please ensure that an implementation has been included in the page.";
+        }
+        return new OpenAjax.hub.ManagedHub({
+            onSubscribe:function (topic, container) {
+                log(container.getClientID() + " subscribes to this topic '" + topic + "'");
+                return true;
+            },
+            onUnsubscribe:function (topic, container) {
+                log(container.getClientID() + " unsubscribes from this topic '" + topic + "'");
+                return true;
+            },
+            onPublish:function (topic, data, pcont, scont) {
+                log(pcont.getClientID() + " publishes '" + data + "' to topic '" + topic + "' subscribed by " + scont.getClientID());
+                return true;
+            }
+        });
+    }
+
     function getOpenAjaxHubInstance() {
         if(typeof openAjaxHub == "undefined" || openAjaxHub == null) {
-            openAjaxHub = new OpenAjax.hub.ManagedHub({
-                onSubscribe: function(topic, container) {
-                    log(container.getClientID() + " subscribes to this topic '" + topic + "'");
-                    return true;
-                },
-                onUnsubscribe: function(topic, container) {
-                    log(container.getClientID() + " unsubscribes from this topic '" + topic + "'");
-                    return true;
-                },
-                onPublish: function(topic, data, pcont, scont) {
-                    log(pcont.getClientID() + " publishes '" + data + "' to topic '" + topic + "' subscribed by " + scont.getClientID());
-                    return true;
-                }
-            });
+            openAjaxHub = createNewOpenAjaxHub();
         }
         return openAjaxHub;
     }
