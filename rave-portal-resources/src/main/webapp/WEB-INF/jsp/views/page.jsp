@@ -101,7 +101,7 @@
                     </c:otherwise>
                 </c:choose>
             </c:forEach>
-            <a id="addPageButton" href="#" class="btn"><i class="icon-plus"></i></a>
+            <li id="addPageButton"><a href="#"><i class="icon-plus"></i></a></li>
         </ul>
     </nav>
 
