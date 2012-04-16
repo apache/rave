@@ -18,87 +18,84 @@
  */
 var rave = rave || {};
 rave.store = rave.store || (function() {
-    
-    function initRatings() {
-        $(".ratingButtons").buttonset();
 
-        $(".widgetLikeButton").button( {
-            icons: {primary: "ui-icon-plus"}
-        }).click(function() {
-        	
-        	//check if like radio button is not checked already
-        	if(this.getAttribute("checked") != "true") {
-        		
-        		//retrieve widget id
-        		var widgetId = this.id.substring("like-".length);
-        		
-        		//update the widget score in database
+    function initRatings() {
+        $('.ratingButtons').button();
+        $('.widgetLikeButton').click(function() {
+            // If not already active
+            if (!$(this).hasClass('active')){
+                //retrieve widget id
+                var widgetId = this.id.substring("like-".length);
+
+                //update the widget score in database
         		rave.api.rest.updateWidgetRating({widgetId: widgetId, score: 10});
-        		
-        		//call update widget rating handler function
-        		var widgetRating = {
-        				widgetId: widgetId, 
-					    widgetLikeButton: this, 
-					    widgetDislikeButton: $("#dislike-"+widgetId),
-						isLike: true
-        		};
-        		
-        		//update the widget ratings on web page
-        		rave.api.handler.widgetRatingHandler(widgetRating);
-            	
-        	}
+
+                //call update widget rating handler function
+                var widgetRating = {
+                    widgetId: widgetId,
+                    widgetLikeButton: this,
+                    widgetDislikeButton: $("#dislike-" + widgetId),
+                    isLike: true
+                };
+
+                //update the widget ratings on web page
+                rave.api.handler.widgetRatingHandler(widgetRating);
+
+                $(this).addClass('btn-success');
+                $(this).siblings('.btn').removeClass('btn-danger');
+            }
         });
 
-        $(".widgetDislikeButton").button( {
-            icons: {primary: "ui-icon-minus"}
-        }).click(function() {
-        	
-        	//check if dislike radio button is not checked already
-        	if(this.getAttribute("checked") != "true") {
-            	
-        		//retrieve widget id
-        		var widgetId = this.id.substring("dislike-".length);
-        		
-        		//update the widget score in database
-        		rave.api.rest.updateWidgetRating({widgetId: widgetId, score: 0});
-        		
-        		//call update widget rating handler function
-        		var widgetRating = {
-        				widgetId: widgetId, 
-					    widgetLikeButton: $("#like-"+widgetId), 
-					    widgetDislikeButton: this,
-						isLike: false
-        		};
-        		
-        		//update the widget ratings on web page
-        		rave.api.handler.widgetRatingHandler(widgetRating);
-        	}
+        $('.widgetDislikeButton').click(function() {
+            // If not already active
+            if (!$(this).hasClass('active')){
+                //retrieve widget id
+                var widgetId = this.id.substring("dislike-".length);
+
+                //update the widget score in database
+                rave.api.rest.updateWidgetRating({widgetId: widgetId, score: 0});
+
+                //call update widget rating handler function
+                var widgetRating = {
+                    widgetId: widgetId,
+                    widgetLikeButton: $("#like-" + widgetId),
+                    widgetDislikeButton: this,
+                    isLike: false
+                };
+
+                //update the widget ratings on web page
+                rave.api.handler.widgetRatingHandler(widgetRating);
+
+                $(this).addClass('btn-danger');
+                $(this).siblings('.btn').removeClass('btn-success');
+
+            }
         });
     }
-    
+
     function initComments() {
-        
+
         $(".commentNewButton").button( {
             icons: {primary: "ui-icon-disk"},
             text: false
         }).click(function() {
             var widgetId = this.id.substring("comment-new-".length);
-            rave.api.rest.createWidgetComment({widgetId: widgetId, 
+            rave.api.rest.createWidgetComment({widgetId: widgetId,
                                                 text: $("#newComment-"+widgetId).get(0).value,
                                                 successCallback: function() { window.location.reload(); }});
         });
-        
+
         $(".commentDeleteButton").button( {
             icons: {primary: "ui-icon-close"},
             text: false
         }).click(function() {
             var commentId = this.id.substring("comment-delete-".length);
             var widgetId = this.getAttribute('data-widgetid');
-            rave.api.rest.deleteWidgetComment({widgetId: widgetId, 
+                rave.api.rest.deleteWidgetComment({widgetId: widgetId,
                                                 commentId: commentId,
                                                 successCallback: function() { window.location.reload(); }});
         });
-        
+
         $(".commentEditButton").button( {
             icons: {primary: "ui-icon-pencil"},
             text: false
@@ -197,5 +194,5 @@ rave.store = rave.store || (function() {
         init: init,
         initTags: initTags
     };
-    
+
 }());

@@ -545,6 +545,14 @@ ul.storeItems li {
     margin: 1em 0;
 }
 
+.widgetDislikeCount {
+    padding: 0 10px;
+}
+
+.widgetUserCount {
+    float: right;
+}
+
 .secondaryPageItemTitle {
     font-size: 1.2em;
 }
