@@ -60,6 +60,22 @@ describe("Rave OpenSocial", function() {
 
                 }
         }})();
+        OpenAjax = (function () {
+            var cArgs;
+            return{
+                hub:{
+                    ManagedHub:function (args) {
+                        cArgs = args;
+                        return {
+
+                        }
+                    },
+                    getArgs:function () {
+                        return cArgs;
+                    }
+                }
+            }
+        })();
 
     });
 

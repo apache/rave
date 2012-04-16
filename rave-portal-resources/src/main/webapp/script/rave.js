@@ -777,6 +777,10 @@ var rave = rave || (function() {
         return openAjaxHub;
     }
 
+    function resetOpenAjaxHubInstance() {
+        openAjaxHub = null;
+    }
+
     function initializeWidgets(widgetsByRegionIdMap) {
         //We get the widget objects in a map keyed by region ID.  The code below converts that map into a flat array
         //of widgets with all the top widgets in each region first, then the seconds widgets in each region, then the
@@ -1126,6 +1130,11 @@ var rave = rave || (function() {
          * Gets the singleton Managed OpenAJAX 2.0 Hub
          */
         getManagedHub: getOpenAjaxHubInstance,
+
+        /**
+         * Resets the managed hub
+         */
+        resetManagedHub: resetOpenAjaxHubInstance,
 
         /**
          * Logs a message to a central logging facility (console by default)

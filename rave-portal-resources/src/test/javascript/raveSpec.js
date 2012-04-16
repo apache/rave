@@ -690,25 +690,27 @@ describe("Rave", function() {
 
     describe("getManagedHub", function(){
        beforeEach(function(){
-           OpenAjax = (function(){
-               var cArgs;
+           rave.resetManagedHub();
+           OpenAjax = (function () {
                return{
-                   hub: {
-                       ManagedHub: function(args){
-                           cArgs=args;
+                   hub:{
+                       ManagedHub:function (args) {
+                           var cArgs = args;
                            return {
-
+                               getArgs:function () {
+                                  return cArgs;
+                               }
                            }
-                       },
-                       getArgs: function() {return cArgs;}
+                       }
                    }
                }
            })();
        });
 
+
        it("throws an error if there is no OpenAjax code on the page", function(){
            delete OpenAjax;
-           expect(rave.getManagedHub()).toThrow(new Error("No implementation of OpenAjax found.  " +
+           expect(rave.getManagedHub).toThrow(new Error("No implementation of OpenAjax found.  " +
                "Please ensure that an implementation has been included in the page."));
        });
 
@@ -720,7 +722,7 @@ describe("Rave", function() {
        });
 
         it("initializes the hub properly", function(){
-            var args = OpenAjax.hub.getArgs();
+            var args = rave.getManagedHub().getArgs();
             expect(args.onSubscribe).toBeDefined();
             expect(args.onUnsubscribe).toBeDefined();
             expect(args.onPublish).toBeDefined();
