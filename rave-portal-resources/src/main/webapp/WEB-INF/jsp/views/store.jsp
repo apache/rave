@@ -59,229 +59,227 @@
 <div class="container-fluid navbar-spacer">
     <div class="row-fluid">
         <section class="span8">
-        <c:choose>
-            <c:when test="${empty searchTerm and (empty widgets or widgets.totalResults eq 0)}">
-                <%-- Empty db --%>
-                <fmt:message key="page.store.list.noresult" var="listheader"/>
-            </c:when>
-            <c:when test="${empty searchTerm}">
-                <fmt:message key="page.store.list.result.x.to.y" var="listheader">
-                    <fmt:param value="${widgets.offset + 1}"/>
-                    <fmt:param value="${widgets.offset + fn:length(widgets.resultSet)}"/>
-                    <fmt:param value="${widgets.totalResults}"/>
-                </fmt:message>
-            </c:when>
-            <c:when test="${not empty searchTerm and widgets.totalResults eq 0}">
-                <fmt:message key="page.store.list.search.noresult" var="listheader">
-                    <fmt:param><c:out value="${searchTerm}"/></fmt:param>
-                </fmt:message>
-            </c:when>
-            <c:otherwise>
-                <fmt:message key="page.store.list.search.result.x.to.y" var="listheader">
-                    <fmt:param value="${widgets.offset + 1}"/>
-                    <fmt:param value="${widgets.offset + fn:length(widgets.resultSet)}"/>
-                    <fmt:param value="${widgets.totalResults}"/>
-                    <fmt:param><c:out value="${searchTerm}"/></fmt:param>
-                </fmt:message>
-            </c:otherwise>
-        </c:choose>
-        <h2>${listheader}</h2>
-        <%--@elvariable id="widgets" type="org.apache.rave.portal.model.util.SearchResult"--%>
-        <c:if test="${widgets.totalResults gt 0}">
-            <c:if test="${widgets.numberOfPages gt 1}">
-                <div>
-                    <ul class="pagination">
-                        <c:forEach var="i" begin="1" end="${widgets.numberOfPages}">
-                            <c:url var="pageUrl" value="">
-                                <c:param name="referringPageId" value="${referringPageId}"/>
-                                <c:param name="searchTerm" value="${searchTerm}"/>
-                                <c:param name="offset" value="${(i - 1) * widgets.pageSize}"/>
-                            </c:url>
-                            <c:choose>
-                                <c:when test="${i eq widgets.currentPage}">
-                                    <li class="active"><a href="#">${i}</a></li>
-                                </c:when>
-                                <c:otherwise>
-                                    <li><a href="<c:out value="${pageUrl}"/>">${i}</a></li>
-                                </c:otherwise>
-                            </c:choose>
+            <c:choose>
+                <c:when test="${empty searchTerm and (empty widgets or widgets.totalResults eq 0)}">
+                    <%-- Empty db --%>
+                    <fmt:message key="page.store.list.noresult" var="listheader"/>
+                </c:when>
+                <c:when test="${empty searchTerm}">
+                    <fmt:message key="page.store.list.result.x.to.y" var="listheader">
+                        <fmt:param value="${widgets.offset + 1}"/>
+                        <fmt:param value="${widgets.offset + fn:length(widgets.resultSet)}"/>
+                        <fmt:param value="${widgets.totalResults}"/>
+                    </fmt:message>
+                </c:when>
+                <c:when test="${not empty searchTerm and widgets.totalResults eq 0}">
+                    <fmt:message key="page.store.list.search.noresult" var="listheader">
+                        <fmt:param><c:out value="${searchTerm}"/></fmt:param>
+                    </fmt:message>
+                </c:when>
+                <c:otherwise>
+                    <fmt:message key="page.store.list.search.result.x.to.y" var="listheader">
+                        <fmt:param value="${widgets.offset + 1}"/>
+                        <fmt:param value="${widgets.offset + fn:length(widgets.resultSet)}"/>
+                        <fmt:param value="${widgets.totalResults}"/>
+                        <fmt:param><c:out value="${searchTerm}"/></fmt:param>
+                    </fmt:message>
+                </c:otherwise>
+            </c:choose>
+            <h2>${listheader}</h2>
+            <%--@elvariable id="widgets" type="org.apache.rave.portal.model.util.SearchResult"--%>
+            <c:if test="${widgets.totalResults gt 0}">
+                <c:if test="${widgets.numberOfPages gt 1}">
+                    <div>
+                        <ul class="pagination">
+                            <c:forEach var="i" begin="1" end="${widgets.numberOfPages}">
+                                <c:url var="pageUrl" value="">
+                                    <c:param name="referringPageId" value="${referringPageId}"/>
+                                    <c:param name="searchTerm" value="${searchTerm}"/>
+                                    <c:param name="offset" value="${(i - 1) * widgets.pageSize}"/>
+                                </c:url>
+                                <c:choose>
+                                    <c:when test="${i eq widgets.currentPage}">
+                                        <li class="active"><a href="#">${i}</a></li>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <li><a href="<c:out value="${pageUrl}"/>">${i}</a></li>
+                                    </c:otherwise>
+                                </c:choose>
 
-                        </c:forEach>
-                    </ul>
-                </div>
-
-            </c:if>
-            <ul class="storeItems">
-                    <%--@elvariable id="widget" type="org.apache.rave.portal.model.Widget"--%>
-                <c:forEach var="widget" items="${widgets.resultSet}">
-                    <%--@elvariable id="widgetsStatistics" type="org.apache.rave.portal.model.util.WidgetStatistics"--%>
-                    <c:set var="widgetStatistics" value="${widgetsStatistics[widget.entityId]}"/>
-                    <c:choose>
-                        <c:when test='${widget.featured == "true"}'>
-                            <li class="storeItem storeItemFeatured">
-                        </c:when>
-                        <c:otherwise>
-                            <li class="storeItem">
-                        </c:otherwise>
-                    </c:choose>
-
-                    <div class="storeItemLeft">
-                        <c:if test="${not empty widget.thumbnailUrl}">
-                            <img class="storeWidgetThumbnail" src="${widget.thumbnailUrl}"
-                                 title="<c:out value="${widget.title}"/>" alt=""
-                                 width="120" height="60"/>
-                        </c:if>
-
-                        <div id="widgetAdded_${widget.entityId}" class="storeButton">
-                            <button class="btn btn-small btn-primary" id="addWidget_${widget.entityId}"
-                                    onclick="rave.api.rpc.addWidgetToPage({widgetId: ${widget.entityId}, pageId: ${referringPageId}, buttonId: this.id});">
-                                <fmt:message key="page.widget.addToPage"/>
-                            </button>
-                        </div>
-
+                            </c:forEach>
+                        </ul>
                     </div>
 
-                    <div class="storeItemCenter">
-                        <a id="widget-${widget.entityId}-title"
-                           class="secondaryPageItemTitle"
-                           href="<spring:url value="/app/store/widget/${widget.entityId}" />?referringPageId=${referringPageId}">
-                            <c:out value="${widget.title}"/>
-                        </a>
-                        <c:if test="${widget.disableRendering}">
-                            <div class="storeWidgetDisabled">
-                                        <span class="widget-disabled-icon-store ui-icon ui-icon-alert"
-                                              title="<fmt:message key="widget.chrome.disabled"/>"></span>
-                                <c:out value="${widget.disableRenderingMessage}" escapeXml="true"/>
-                            </div>
-                        </c:if>
-                        <c:if test="${not empty widget.author}">
-                            <div class="storeWidgetAuthor"><fmt:message key="widget.author"/>: <c:out
-                                    value="${widget.author}"/></div>
-                        </c:if>
-                        <c:if test="${not empty widget.description}">
-                            <div class="storeWidgetDesc"><c:out
-                                    value="${fn:substring(widget.description, 0, 200)}..."/></div>
-                        </c:if>
-                        <div class="widgetRating">
-                            <fmt:message key="page.widget.rate"/>
-                            <form class="hidden">
-                                <input type="hidden" id="rate-${widget.entityId}"
-                                       value="${widgetsStatistics[widget.entityId]!=null?widgetsStatistics[widget.entityId].userRating:"-1"}">
-                            </form>
-                            <div id="rating-${widget.entityId}" class="ratingButtons btn-group" data-toggle="buttons-radio">
-                                <button id="like-${widget.entityId}" class="widgetLikeButton btn btn-small ${widgetsStatistics[widget.entityId].userRating==10? 'active btn-success':''}"
-                                        ${widgetsStatistics[widget.entityId].userRating==10 ? " checked='true'":""}
-                                        name="rating-${widget.entityId}"><i class="icon-plus"></i></button>
-                                <button id="dislike-${widget.entityId}" class="widgetDislikeButton btn btn-small ${widgetsStatistics[widget.entityId].userRating==0? 'active btn-danger':''}"
-                                        ${widgetsStatistics[widget.entityId].userRating==0 ? " checked='true'":""}
-                                        name="rating-${widget.entityId}"><i class="icon-minus"></i></button>
-                                <!-- Displaying the likes and dislikes rating along with total votes -->
-                            </div>
-                        </div>
-                        <c:if test="${not empty widget.tags}">
-                            <table class="widgetTags">
-                                <tr>
-                                    <td>
-                                        <fmt:message key="page.widget.tags.title"/>
-                                    </td>
-                                    <c:forEach var="tag" items="${widget.tags}">
-                                        <td class="storeWidgetDesc"><c:out value="${tag.tag.keyword}"/></td>
-                                    </c:forEach>
-                                </tr>
-                            </table>
-                        </c:if>
-                        <c:if test="${not empty widget.categories}">
-                            <table class="widgetCategories">
-                                <tr>
-                                    <td>
-                                        <fmt:message key="widget.categories"/>
-                                    </td>
-                                    <c:forEach var="category" items="${widget.categories}">
-                                        <td class="storeWidgetDesc"><c:out value="${category.text}"/></td>
-                                    </c:forEach>
-                                </tr>
-                            </table>
-                        </c:if>
-                        <span class="widgetLikeCount">
-                            <c:set var="widgetLikes">
-                                ${widgetsStatistics[widget.entityId]!=null?widgetsStatistics[widget.entityId].totalLike:"0"}
-                            </c:set>
-                            <span><fmt:message key="page.widget.rate.likes"/></span>
-                            <span id="totalLikes-${widget.entityId}" data-rave-widget-likes="${widgetLikes}">
-                                ${widgetLikes}
-                            </span>
-                        </span>
-                        <span class="widgetDislikeCount">
-                            <c:set var="widgetDislikes">
-                                ${widgetsStatistics[widget.entityId]!=null?widgetsStatistics[widget.entityId].totalDislike:"0"}
-                            </c:set>
-                            <span><fmt:message key="page.widget.rate.dislikes"/></span>
-                            <span id="totalDislikes-${widget.entityId}" data-rave-widget-dislikes="${widgetDislikes}">
-                                ${widgetDislikes}
-                            </span>
-                        </span>
+                </c:if>
+                <ul class="storeItems">
+                        <%--@elvariable id="widget" type="org.apache.rave.portal.model.Widget"--%>
+                    <c:forEach var="widget" items="${widgets.resultSet}">
+                        <%--@elvariable id="widgetsStatistics" type="org.apache.rave.portal.model.util.WidgetStatistics"--%>
+                        <c:set var="widgetStatistics" value="${widgetsStatistics[widget.entityId]}"/>
+                        <c:choose>
+                            <c:when test='${widget.featured == "true"}'>
+                                <li class="storeItem storeItemFeatured">
+                            </c:when>
+                            <c:otherwise>
+                                <li class="storeItem">
+                            </c:otherwise>
+                        </c:choose>
 
-                        <span class="widgetUserCount">
-                            <c:set var="widgetUserCountGreaterThanZero"
-                                   value="${widgetStatistics != null && widgetStatistics.totalUserCount > 0}"/>
-                            <c:if test="${widgetUserCountGreaterThanZero}">
-                                <a href="javascript:void(0);" onclick="rave.displayUsersOfWidget(${widget.entityId});">
+                        <div class="storeItemLeft">
+                            <c:if test="${not empty widget.thumbnailUrl}">
+                                <img class="storeWidgetThumbnail" src="${widget.thumbnailUrl}"
+                                     title="<c:out value="${widget.title}"/>" alt=""
+                                     width="120" height="60"/>
                             </c:if>
-                            <fmt:formatNumber groupingUsed="true"
-                                              value="${widgetStatistics!=null?widgetStatistics.totalUserCount:0}"/>&nbsp;<fmt:message key="page.widget.usercount"/>
-                            <c:if test="${widgetUserCountGreaterThanZero}"></a></c:if>
-                        </span>
+
+                            <div id="widgetAdded_${widget.entityId}" class="storeButton">
+                                <button class="btn btn-small btn-primary" id="addWidget_${widget.entityId}"
+                                        onclick="rave.api.rpc.addWidgetToPage({widgetId: ${widget.entityId}, pageId: ${referringPageId}, buttonId: this.id});">
+                                    <fmt:message key="page.widget.addToPage"/>
+                                </button>
+                            </div>
+
+                        </div>
+
+                        <div class="storeItemCenter">
+                            <a id="widget-${widget.entityId}-title"
+                               class="secondaryPageItemTitle"
+                               href="<spring:url value="/app/store/widget/${widget.entityId}" />?referringPageId=${referringPageId}">
+                                <c:out value="${widget.title}"/>
+                            </a>
+                            <c:if test="${widget.disableRendering}">
+                                <div class="storeWidgetDisabled">
+                                            <span class="widget-disabled-icon-store ui-icon ui-icon-alert"
+                                                  title="<fmt:message key="widget.chrome.disabled"/>"></span>
+                                    <c:out value="${widget.disableRenderingMessage}" escapeXml="true"/>
+                                </div>
+                            </c:if>
+                            <c:if test="${not empty widget.author}">
+                                <div class="storeWidgetAuthor"><fmt:message key="widget.author"/>: <c:out
+                                        value="${widget.author}"/></div>
+                            </c:if>
+                            <c:if test="${not empty widget.description}">
+                                <div class="storeWidgetDesc"><c:out
+                                        value="${fn:substring(widget.description, 0, 200)}..."/></div>
+                            </c:if>
+                            <div class="widgetRating">
+                                <fmt:message key="page.widget.rate"/>
+                                <form class="hidden">
+                                    <input type="hidden" id="rate-${widget.entityId}"
+                                           value="${widgetsStatistics[widget.entityId]!=null?widgetsStatistics[widget.entityId].userRating:"-1"}">
+                                </form>
+                                <div id="rating-${widget.entityId}" class="ratingButtons btn-group" data-toggle="buttons-radio">
+                                    <button id="like-${widget.entityId}" class="widgetLikeButton btn btn-small ${widgetsStatistics[widget.entityId].userRating==10? 'active btn-success':''}"
+                                            ${widgetsStatistics[widget.entityId].userRating==10 ? " checked='true'":""}
+                                            name="rating-${widget.entityId}"><i class="icon-plus"></i></button>
+                                    <button id="dislike-${widget.entityId}" class="widgetDislikeButton btn btn-small ${widgetsStatistics[widget.entityId].userRating==0? 'active btn-danger':''}"
+                                            ${widgetsStatistics[widget.entityId].userRating==0 ? " checked='true'":""}
+                                            name="rating-${widget.entityId}"><i class="icon-minus"></i></button>
+                                    <!-- Displaying the likes and dislikes rating along with total votes -->
+                                </div>
+                            </div>
+                            <c:if test="${not empty widget.tags}">
+                                <table class="widgetTags">
+                                    <tr>
+                                        <td>
+                                            <fmt:message key="page.widget.tags.title"/>
+                                        </td>
+                                        <c:forEach var="tag" items="${widget.tags}">
+                                            <td class="storeWidgetDesc"><c:out value="${tag.tag.keyword}"/></td>
+                                        </c:forEach>
+                                    </tr>
+                                </table>
+                            </c:if>
+                            <c:if test="${not empty widget.categories}">
+                                <table class="widgetCategories">
+                                    <tr>
+                                        <td>
+                                            <fmt:message key="widget.categories"/>
+                                        </td>
+                                        <c:forEach var="category" items="${widget.categories}">
+                                            <td class="storeWidgetDesc"><c:out value="${category.text}"/></td>
+                                        </c:forEach>
+                                    </tr>
+                                </table>
+                            </c:if>
+                            <span class="widgetLikeCount">
+                                <c:set var="widgetLikes">
+                                    ${widgetsStatistics[widget.entityId]!=null?widgetsStatistics[widget.entityId].totalLike:"0"}
+                                </c:set>
+                                <span><fmt:message key="page.widget.rate.likes"/></span>
+                                <span id="totalLikes-${widget.entityId}" data-rave-widget-likes="${widgetLikes}">
+                                    ${widgetLikes}
+                                </span>
+                            </span>
+                            <span class="widgetDislikeCount">
+                                <c:set var="widgetDislikes">
+                                    ${widgetsStatistics[widget.entityId]!=null?widgetsStatistics[widget.entityId].totalDislike:"0"}
+                                </c:set>
+                                <span><fmt:message key="page.widget.rate.dislikes"/></span>
+                                <span id="totalDislikes-${widget.entityId}" data-rave-widget-dislikes="${widgetDislikes}">
+                                    ${widgetDislikes}
+                                </span>
+                            </span>
+
+                            <span class="widgetUserCount">
+                                <c:set var="widgetUserCountGreaterThanZero"
+                                       value="${widgetStatistics != null && widgetStatistics.totalUserCount > 0}"/>
+                                <c:if test="${widgetUserCountGreaterThanZero}">
+                                    <a href="javascript:void(0);" onclick="rave.displayUsersOfWidget(${widget.entityId});">
+                                </c:if>
+                                <fmt:formatNumber groupingUsed="true"
+                                                  value="${widgetStatistics!=null?widgetStatistics.totalUserCount:0}"/>&nbsp;<fmt:message key="page.widget.usercount"/>
+                                <c:if test="${widgetUserCountGreaterThanZero}"></a></c:if>
+                            </span>
+                        </div>
+
+                        <div class="clear-float"></div>
+                        </li>
+                    </c:forEach>
+                </ul>
+
+                <c:if test="${widgets.numberOfPages gt 1}">
+                    <div >
+                        <ul class="pagination">
+                            <c:forEach var="i" begin="1" end="${widgets.numberOfPages}">
+                                <c:url var="pageUrl" value="">
+                                    <c:param name="referringPageId" value="${referringPageId}"/>
+                                    <c:param name="searchTerm" value="${searchTerm}"/>
+                                    <c:param name="offset" value="${(i - 1) * widgets.pageSize}"/>
+                                </c:url>
+                                <c:choose>
+                                    <c:when test="${i eq widgets.currentPage}">
+                                        <li class="active"><a href="#">${i}</a></li>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <li> <a href="<c:out value="${pageUrl}"/>">${i}</a></li>
+                                    </c:otherwise>
+                                </c:choose>
+                            </c:forEach>
+                        </ul>
                     </div>
-
-                    <div class="clear-float"></div>
-                    </li>
-                </c:forEach>
-            </ul>
-
-            <c:if test="${widgets.numberOfPages gt 1}">
-                <div >
-                    <ul class="pagination">
-                        <c:forEach var="i" begin="1" end="${widgets.numberOfPages}">
-                            <c:url var="pageUrl" value="">
-                                <c:param name="referringPageId" value="${referringPageId}"/>
-                                <c:param name="searchTerm" value="${searchTerm}"/>
-                                <c:param name="offset" value="${(i - 1) * widgets.pageSize}"/>
-                            </c:url>
-                            <c:choose>
-                                <c:when test="${i eq widgets.currentPage}">
-                                    <li class="active"><a href="#">${i}</a></li>
-                                </c:when>
-                                <c:otherwise>
-                                    <li> <a href="<c:out value="${pageUrl}"/>">${i}</a></li>
-                                </c:otherwise>
-                            </c:choose>
-                        </c:forEach>
-                    </ul>
-                </div>
-
+                </c:if>
             </c:if>
-        </c:if>
         </section>
         <section class="span4">
-            <form class="form-horizontal" action="<c:url value="/app/store/search"/>" method="GET">
+            <form class="form-inline" action="<c:url value="/app/store/search"/>" method="GET">
                 <fieldset>
                     <input type="hidden" name="referringPageId" value="${referringPageId}">
                     <legend><fmt:message key="page.store.search"/></legend>
                     <div class="control-group">
-                        <input class="search-query" type="search" id="searchTerm" name="searchTerm" value="<c:out value="${searchTerm}"/>"/>
-                        <fmt:message key="page.store.search.button" var="searchButtonText"/>
-                        <button class="btn btn-primary" type="submit" value="${searchButtonText}">${searchButtonText}</button>
-                    </div>
-                    <c:if test="${not empty searchTerm}">
-                        <div class="control-group">
-                            <a class="btn btn-warning" href="<spring:url value="/app/store?referringPageId=${referringPageId}"/>"><fmt:message key="admin.clearsearch"/></a>
+                        <div class="input-append">
+                            <fmt:message key="page.store.search.button" var="searchButtonText"/>
+                            <input class="span3" type="search" id="searchTerm" name="searchTerm" value="<c:out value="${searchTerm}"/>"/>
+                            <button class="btn btn-primary" type="submit" value="${searchButtonText}">${searchButtonText}</button>
                         </div>
-                    </c:if>
+                    </div>
+                    <legend></legend>
                     <c:if test="${not empty tags}">
                         <div class="control-group">
-                            <fmt:message key="page.store.list.widgets.tag"/>
-                            <select name="tagList" id="tagList" style="min-width:100px">
-                                <option value="  "></option>
+                            <label class="control-label" for="categoryList"><fmt:message key="page.store.list.widgets.tag"/></label>
+                            <div class="controls">
+                                <select name="tagList" id="tagList" class="span4">
+                                <option value=""></option>
                                 <c:forEach var="tag" items="${tags}">
                                     <c:choose>
                                         <c:when test="${selectedTag==tag.keyword}">
@@ -295,27 +293,30 @@
                                     </option>
                                 </c:forEach>
                             </select>
+                            </div>
                         </div>
                     </c:if>
 
                     <c:if test="${not empty categories}">
                         <div class="control-group">
-                            <label cssClass="control-label" for="categoryList"><fmt:message key="page.store.list.widgets.category"/></label>
-                            <select name="categoryList" id="categoryList" style="min-width:100px">
-                                <option value="0"></option>
-                                <c:forEach var="category" items="${categories}">
-                                    <c:choose>
-                                        <c:when test="${selectedCategory==category.entityId}">
-                                            <option value="${category.entityId}" selected>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <option value="${category.entityId}">
-                                        </c:otherwise>
-                                    </c:choose>
-                                    <c:out value="${category.text}"/>
-                                    </option>
-                                </c:forEach>
-                            </select>
+                            <label class="control-label" for="categoryList"><fmt:message key="page.store.list.widgets.category"/></label>
+                            <div class="controls">
+                                <select name="categoryList" id="categoryList" class="span4">
+                                    <option value="0"></option>
+                                    <c:forEach var="category" items="${categories}">
+                                        <c:choose>
+                                            <c:when test="${selectedCategory==category.entityId}">
+                                                <option value="${category.entityId}" selected>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <option value="${category.entityId}">
+                                            </c:otherwise>
+                                        </c:choose>
+                                        <c:out value="${category.text}"/>
+                                        </option>
+                                    </c:forEach>
+                                </select>
+                            </div>
                         </div>
                     </c:if>
                 </fieldset>
