@@ -38,9 +38,9 @@
     <version>0.11-SNAPSHOT</version>
 
     <scm>
-        <connection>scm:svn:http://svn.apache.org/repos/asf/rave/trunk</connection>
-        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/rave/trunk</developerConnection>
-        <url>http://svn.apache.org/viewvc/rave/trunk/</url>
+        <connection>scm:svn:http://svn.apache.org/repos/asf/rave/branches/bootstrap</connection>
+        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/rave/branches/bootstrap</developerConnection>
+        <url>http://svn.apache.org/viewvc/rave/branches/bootstrap/</url>
     </scm>
 
     <properties>
