@@ -35,7 +35,7 @@
     <name>Apache Rave :: rave-project</name>
     <description>Apache Rave Project</description>
     <packaging>pom</packaging>
-    <version>0.11-SNAPSHOT</version>
+    <version>0.11.bootstrap-SNAPSHOT</version>
 
     <scm>
         <connection>scm:svn:http://svn.apache.org/repos/asf/rave/branches/bootstrap</connection>
