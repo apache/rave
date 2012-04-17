@@ -101,29 +101,29 @@ describe("Rave", function() {
                     },
                     attr: function(a, b) {
 
-                    },                    
+                    },
                     hasClass : function (className) {
                         return classMap.indexOf(className) != -1;
                     },
                     addClass : function (className) {
                         classMap.push(className);
                     },
-                    removeClass: function(className) {                        
-                        var idx = classMap.indexOf(className); 
+                    removeClass: function(className) {
+                        var idx = classMap.indexOf(className);
                         if (idx != -1) {
-                            classMap.splice(idx, 1); 
+                            classMap.splice(idx, 1);
                         }
-                    }   
+                    }
                 }
-            };            
+            };
         }
 
         it("calls the appropriate providers", function() {
-            var HIDDEN_CLASS = "hidden";            
-            createMockJQuery(); 
+            var HIDDEN_CLASS = "hidden";
+            createMockJQuery();
             $().addClass(HIDDEN_CLASS);
             expect($().hasClass(HIDDEN_CLASS)).toEqual(true);
-            
+
             var widgetsByRegionIdMap = {};
             widgetsByRegionIdMap[1] = [
                     {type:"FOO"},
@@ -137,13 +137,13 @@ describe("Rave", function() {
             rave.registerProvider(provider2);
             rave.initWidgets(widgetsByRegionIdMap);
             expect(provider1.initWidgetsWasCalled(2)).toBeTruthy();
-            expect(provider2.initWidgetsWasCalled(2)).toBeTruthy();   
+            expect(provider2.initWidgetsWasCalled(2)).toBeTruthy();
             expect($().hasClass(HIDDEN_CLASS)).toEqual(true);
         });
 
         it("renders widgets in the appropriate order (first 'row', second 'row', third 'row', ...)", function() {
-            createMockJQuery(); 
-            
+            createMockJQuery();
+
             var widgetsByRegionIdMap = {};
             widgetsByRegionIdMap[1] = [
                     {type:"FOO", renderOrder:1},
@@ -180,8 +180,8 @@ describe("Rave", function() {
         });
 
         it("puts widgets in buckets keyed by regionIds", function() {
-            createMockJQuery(); 
-             
+            createMockJQuery();
+
             var widgetsByRegionIdMap = {};
             var regionOneKey = 1;
             var regionTwoKey = 2;
@@ -200,8 +200,8 @@ describe("Rave", function() {
         });
 
         it("Renders an error gadget when invalid widget is provided", function(){
-            createMockJQuery();  
-             
+            createMockJQuery();
+
             var widgetsByRegionIdMap = {};
             widgetsByRegionIdMap[1] = [
                     {type:"FOO",  regionWidgetId:20},
@@ -210,7 +210,7 @@ describe("Rave", function() {
                     {type:"BAR",  regionWidgetId:23},
                     {type:"NONE", regionWidgetId:43}
             ];
-            
+
             var provider1 = getMockProvider("FOO");
             var provider2 = getMockProvider("BAR");
             rave.registerProvider(provider1);
@@ -235,18 +235,18 @@ describe("Rave", function() {
             expect($().expression()).toEqual("#widget-20-body");
             expect($().html()).toEqual("Widget disabled");
         });
-        
+
         it("Renders the empty page message when page has no widgets", function(){
             var HIDDEN_CLASS = "hidden";
-            createMockJQuery();  
+            createMockJQuery();
             $().addClass(HIDDEN_CLASS);
             expect($().hasClass(HIDDEN_CLASS)).toEqual(true);
-            
+
             var widgetsByRegionIdMap = {};
-                                   
+
             rave.initWidgets(widgetsByRegionIdMap);
-            expect($().hasClass(HIDDEN_CLASS)).toEqual(false);           
-        });        
+            expect($().hasClass(HIDDEN_CLASS)).toEqual(false);
+        });
     });
 
     describe("initUI", function() {
@@ -410,7 +410,7 @@ describe("Rave", function() {
         });
 
     });
-    
+
     describe("isFunction", function() {
 
         it("returns true when the object is a function", function() {
@@ -422,35 +422,35 @@ describe("Rave", function() {
             var obj = 1;
             var result = rave.isFunction(obj);
             expect(result).toEqual(false);
-        });        
+        });
         it("returns false when the object is a string", function() {
             var obj = "hello";
             var result = rave.isFunction(obj);
             expect(result).toEqual(false);
-        }); 
+        });
         it("returns false when the object is an object", function() {
             var obj = {"myattr" : "myvalue"};
             var result = rave.isFunction(obj);
             expect(result).toEqual(false);
-        }); 
+        });
         it("returns false when the object is null", function() {
             var obj = null;
             var result = rave.isFunction(obj);
             expect(result).toEqual(false);
-        }); 
+        });
         it("returns false when the object is undefined", function() {
             var obj;
             var result = rave.isFunction(obj);
             expect(result).toEqual(false);
-        }); 
-    });        
-    
+        });
+    });
+
     describe("toggleCollapseWidgetIcon", function() {
         //Creates a simple mock jquery object that mocks the functions used in this suite
         function createMockJQuery() {
             var expression;
-            var classMap = [];
-            
+            var html;
+
             $ = function(expr) {
 
                 if (typeof expr != "undefined") {
@@ -461,60 +461,60 @@ describe("Rave", function() {
                     expression : function () {
                         return expression;
                     },
-                    hasClass : function (className) {
-                        return classMap.indexOf(className) != -1;
-                    },
-                    addClass : function (className) {
-                        classMap.push(className);
-                    },
-                    removeClass: function(className) {                        
-                        var idx = classMap.indexOf(className); 
-                        if (idx != -1) {
-                            classMap.splice(idx, 1); 
+                    html : function (txt) {
+                        if (typeof txt  == "string") {
+                            html = txt;
+                            return $;
+                        } else {
+                            return html;
                         }
                     }
                 }
             };
-            
+
         }
 
-        it("changes icon from normal to collapsed", function() {                                  
+        it("changes icon from normal to collapsed", function() {
             createMockJQuery();
-            // setup the state so the widget display is "normal"           
-            $().addClass("ui-icon-triangle-1-e");
-           
+            // setup the state so the widget display is "normal"
+            $().html('<i class="icon-chevron-up"></i>');
+
             var widgetId = 99;
-           
-            rave.toggleCollapseWidgetIcon(widgetId);
-           
-            expect($().expression()).toEqual("#widget-" + widgetId + "-collapse");            
-            expect($().hasClass("ui-icon-triangle-1-e")).toEqual(false);
-            expect($().hasClass("ui-icon-triangle-1-s")).toEqual(true);                                        
+            // state it is being changed to
+            var collapsed = true;
+
+            rave.toggleCollapseWidgetIcon(widgetId, collapsed);
+
+            expect($().expression()).toEqual("#widget-" + widgetId + "-collapse");
+            expect($().html()).toNotEqual('<i class="icon-chevron-up"></i>');
+            expect($().html()).toEqual('<i class="icon-chevron-down"></i>');
         });
-        
-        it("changes icon from collapsed to normal", function() {                                  
+
+        it("changes icon from collapsed to normal", function() {
             createMockJQuery();
-            // setup the state so the widget display is "normal"           
-            $().addClass("ui-icon-triangle-1-s");
-           
+            // setup the state so the widget display is "normal"
+            $().html('<i class="icon-chevron-down"></i>');
+
             var widgetId = 99;
-           
-            rave.toggleCollapseWidgetIcon(widgetId);
-           
-            expect($().expression()).toEqual("#widget-" + widgetId + "-collapse");            
-            expect($().hasClass("ui-icon-triangle-1-s")).toEqual(false);
-            expect($().hasClass("ui-icon-triangle-1-e")).toEqual(true);                                        
-        });        
-       
-    });    
-    
+            // state it is being changed to
+            var collapsed = false;
+
+            rave.toggleCollapseWidgetIcon(widgetId, collapsed);
+
+            expect($().expression()).toEqual("#widget-" + widgetId + "-collapse");
+            expect($().html()).toNotEqual('<i class="icon-chevron-down"></i>');
+            expect($().html()).toEqual('<i class="icon-chevron-up"></i>');
+        });
+
+    });
+
     describe("change widget view state", function(){
         //Creates a simple mock jquery object that mocks the functions used in this suite
         function createMockJQuery() {
             var expression;
-            var classMap = [];                        
+            var classMap = [];
             var valuesMap = {};
-            
+
             $ = function(expr) {
 
                 if (typeof expr != "undefined") {
@@ -531,10 +531,10 @@ describe("Rave", function() {
                     addClass : function (className) {
                         classMap.push(className);
                     },
-                    removeClass: function(className) {                        
-                        var idx = classMap.indexOf(className); 
+                    removeClass: function(className) {
+                        var idx = classMap.indexOf(className);
                         if (idx != -1) {
-                            classMap.splice(idx, 1); 
+                            classMap.splice(idx, 1);
                         }
                         return this;
                     },
@@ -557,99 +557,99 @@ describe("Rave", function() {
                     },
                     show: function() {
                         valuesMap["showWasCalled-" + expression] = true;
-                    },                    
+                    },
                     height: function() {
-                        
+
                     },
                     width: function() {
-                        
+
                     },
                     css: function() {
-                        
+
                     },
                     prepend: function() {
-                        
+
                     },
                     remove: function() {
                         valuesMap["removeWasCalled"] = true;
                     },
                     getValue: function(varName) {
                         return valuesMap[varName];
-                    }                    
+                    }
                 }
-            };            
+            };
         }
-        
-        it("successfully maximizes the widget", function() {                                  
+
+        it("successfully maximizes the widget", function() {
             createMockJQuery();
-            
-            var mockWidget = {   
-                maximizeWasCalled: false,                
+
+            var mockWidget = {
+                maximizeWasCalled: false,
                 maximize: function() { this.maximizeWasCalled = true; }
             }
-                                      
+
             var args = {};
             args.data = {};
             args.data.id = 99;
             spyOn(rave, "getRegionWidgetById").andReturn(mockWidget);
-            
-            rave.maximizeWidget(args);                      
-           
-            // verify the sortable parameters                        
-            expect($().getValue("sortableOption")).toEqual("option");
-            expect($().getValue("sortableAttrName")).toEqual("disabled");
-            expect($().getValue("sortableAttrValue")).toEqual(true);            
-            // verify the CSS styles
-            expect($().hasClass("widget-wrapper-canvas")).toEqual(true);
-            expect($().hasClass("widget-wrapper")).toEqual(false);           
-            // verify widget menu hide was called
-            expect($().getValue("hideWasCalled-#widget-" + args.data.id + "-widget-menu-wrapper")).toEqual(true);  
-            // verify widget minimize show was called
-            expect($().getValue("showWasCalled-#widget-" + args.data.id + "-min")).toEqual(true);        
-            // verify getRegionWidgetById called
-            expect(rave.getRegionWidgetById).toHaveBeenCalledWith(args.data.id); 
-            // verify collapse/restore icon hide was called
-            expect($().getValue("hideWasCalled-#widget-" + args.data.id + "-collapse")).toEqual(true);                 
-            // verify widget.maximize was called
-            expect(mockWidget.maximizeWasCalled).toEqual(true);
-                   
-        });        
-        
-        it("successfully minimizes the widget", function() {                                  
-            createMockJQuery();
-            
-            var mockWidget = {   
-                minimizeWasCalled: false,                
-                minimize: function() { this.minimizeWasCalled = true; }
-            }
-                                      
-            var args = {};
-            args.data = {};
-            args.data.id = 99;
-            spyOn(rave, "getRegionWidgetById").andReturn(mockWidget);
-            
-            rave.minimizeWidget(args);                      
-            
-            // verify remove was called
-            expect($().getValue("removeWasCalled")).toEqual(true);        
+
+            rave.maximizeWidget(args);
+
             // verify the sortable parameters
             expect($().getValue("sortableOption")).toEqual("option");
             expect($().getValue("sortableAttrName")).toEqual("disabled");
-            expect($().getValue("sortableAttrValue")).toEqual(false);            
+            expect($().getValue("sortableAttrValue")).toEqual(true);
+            // verify the CSS styles
+            expect($().hasClass("widget-wrapper-canvas")).toEqual(true);
+            expect($().hasClass("widget-wrapper")).toEqual(false);
+            // verify widget menu hide was called
+            expect($().getValue("hideWasCalled-#widget-" + args.data.id + "-widget-menu-wrapper")).toEqual(true);
+            // verify widget minimize show was called
+            expect($().getValue("showWasCalled-#widget-" + args.data.id + "-min")).toEqual(true);
+            // verify getRegionWidgetById called
+            expect(rave.getRegionWidgetById).toHaveBeenCalledWith(args.data.id);
+            // verify collapse/restore icon hide was called
+            expect($().getValue("hideWasCalled-#widget-" + args.data.id + "-collapse")).toEqual(true);
+            // verify widget.maximize was called
+            expect(mockWidget.maximizeWasCalled).toEqual(true);
+
+        });
+
+        it("successfully minimizes the widget", function() {
+            createMockJQuery();
+
+            var mockWidget = {
+                minimizeWasCalled: false,
+                minimize: function() { this.minimizeWasCalled = true; }
+            }
+
+            var args = {};
+            args.data = {};
+            args.data.id = 99;
+            spyOn(rave, "getRegionWidgetById").andReturn(mockWidget);
+
+            rave.minimizeWidget(args);
+
+            // verify remove was called
+            expect($().getValue("removeWasCalled")).toEqual(true);
+            // verify the sortable parameters
+            expect($().getValue("sortableOption")).toEqual("option");
+            expect($().getValue("sortableAttrName")).toEqual("disabled");
+            expect($().getValue("sortableAttrValue")).toEqual(false);
             // verify the CSS styles
             expect($().hasClass("widget-wrapper-canvas")).toEqual(false);
             expect($().hasClass("widget-wrapper")).toEqual(true);
             // verify widget minimize hide was called
-            expect($().getValue("hideWasCalled-#widget-" + args.data.id + "-min")).toEqual(true);                            
+            expect($().getValue("hideWasCalled-#widget-" + args.data.id + "-min")).toEqual(true);
             // verify widget menu show was called
-            expect($().getValue("showWasCalled-#widget-" + args.data.id + "-widget-menu-wrapper")).toEqual(true);                                  
+            expect($().getValue("showWasCalled-#widget-" + args.data.id + "-widget-menu-wrapper")).toEqual(true);
             // verify collapse/restore icon show was called
-            expect($().getValue("showWasCalled-#widget-" + args.data.id + "-collapse")).toEqual(true);                 
+            expect($().getValue("showWasCalled-#widget-" + args.data.id + "-collapse")).toEqual(true);
             // verify getRegionWidgetById called
-            expect(rave.getRegionWidgetById).toHaveBeenCalledWith(args.data.id);                   
+            expect(rave.getRegionWidgetById).toHaveBeenCalledWith(args.data.id);
             // verify widget.minimize was called
-            expect(mockWidget.minimizeWasCalled).toEqual(true);             
-        });                    
+            expect(mockWidget.minimizeWasCalled).toEqual(true);
+        });
     });
 
     describe("log", function(){

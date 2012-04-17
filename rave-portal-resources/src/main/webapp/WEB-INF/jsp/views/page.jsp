@@ -1,3 +1,4 @@
+<%@ taglib prefix="portal" uri="http://www.apache.org/rave/tags" %>
 <%--
   Licensed to the Apache Software Foundation (ASF) under one
   or more contributor license agreements.  See the NOTICE file
@@ -194,21 +195,35 @@
     </div>
 
     <fmt:message key="widget.menu.movetopage" var="moveWidgetToPageTitle"/>
-    <div id="moveWidgetDialog" title="${moveWidgetToPageTitle}" class="dialog hidden">
-        <div><fmt:message key="widget.menu.movethiswidget"/></div>
-        <form id="moveWidgetForm">
-            <select id="moveToPageId">
-                <c:forEach var="userPage" items="${pages}">
-                    <c:if test="${userPage.entityId != page.entityId}">
-                        <option value="${userPage.entityId}">
-                            <c:out value="${userPage.name}"/>
-                        </option>
-                    </c:if>
-                </c:forEach>
-            </select>
-        </fieldset>
-    </form>
-</div>
+    <div id="moveWidgetModal" class="modal hide" data-backdrop="static">
+        <div class="modal-header">
+			<a href="#" class="close" data-dismiss="modal">&times;</a>
+			<h3><fmt:message key="widget.menu.movethiswidget"/></h3>
+		</div>
+		<div class="modal-body">
+			<form id="moveWidgetForm" class="form-horizontal">
+			    <fieldset>
+			        <div class="control-group">
+			            <div class="controls">
+                            <select id="moveToPageId">
+                                <c:forEach var="userPage" items="${pages}">
+                                    <c:if test="${userPage.entityId != page.entityId}">
+                                        <option value="${userPage.entityId}">
+                                            <c:out value="${userPage.name}"/>
+                                        </option>
+                                    </c:if>
+                                </c:forEach>
+                            </select>
+                        </div>
+                    </div>
+				</fieldset>
+			</form>
+		</div>
+		<div class="modal-footer">
+            <a href="#" class="btn" onclick="$('#moveWidgetModal').modal('hide');"><fmt:message key="_rave_client.common.cancel"/></a>
+            <a href="#" class="btn btn-primary" onclick="rave.layout.moveWidgetToPage($('#moveWidgetModal').data('regionWidgetId'));"><fmt:message key="_rave_client.common.move"/></a>
+		</div>
+    </div>
 <portal:register-init-script location="${'BEFORE_RAVE'}">
     <script>
         //Define the global widgets map.  This map will be populated by RegionWidgetRender providers.

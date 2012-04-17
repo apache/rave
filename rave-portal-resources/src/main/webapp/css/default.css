@@ -29,11 +29,6 @@ ul, ol, table, p {
     padding: 0;
 }
 
-h1, h2, h3, h4, h5, h6 {
-    text-transform: uppercase;
-}
-
-
 dt {
     display: inline;
     float: left;
@@ -205,14 +200,24 @@ header h1 {
 }
 
 .widget-title-bar {
-    color: #FFFFFF;
-    background: #767676; /* IE 7*/
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr = "#999999", endColorstr = "#666666");
-    background: -moz-linear-gradient(center top, #999 0%, #666 25%) repeat scroll 0 0 transparent;
-    background: -webkit-gradient(linear, left top, left bottom, from(#999), to(#666));
+    color: #333333;
+    text-align: center;
+    vertical-align: middle;
+    background-color: #f5f5f5;
+    background-image: -moz-linear-gradient(top, #ffffff, #e6e6e6);
+    background-image: -ms-linear-gradient(top, #ffffff, #e6e6e6);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffffff), to(#e6e6e6));
+    background-image: -webkit-linear-gradient(top, #ffffff, #e6e6e6);
+    background-image: -o-linear-gradient(top, #ffffff, #e6e6e6);
+    background-image: linear-gradient(top, #ffffff, #e6e6e6);
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#e6e6e6', GradientType=0);
+    border-color: #e6e6e6 #e6e6e6 #bfbfbf;
+    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+    filter: progid:dximagetransform.microsoft.gradient(enabled=false);
+
     border-radius: 5px 5px 0 0;
-    padding: 2px;
-    border-bottom: solid 1px #CCCCCC;
+    padding: 4px 10px 4px;
     box-shadow: 2px 2px 4px #666666;
 }
 
@@ -568,25 +573,18 @@ ul.storeItems li {
     visibility: hidden;
 }
 
-button.widget-toolbar-btn {
-    width: 1em;
+.widget-toolbar {
+    float: right;
+    cursor: pointer;
 }
 
-button.widget-toolbar-btn-prefs {
-    display: none;
-}
-
-button.widget-toolbar-btn-min {
+.widget-toolbar-btn-min {
     display: none;
 }
 
 .widget-toolbar-toggle-collapse {
-    display: inline-block;
-    vertical-align: middle;
+    float: left;
     cursor: pointer;
-    /* IE 7 hacks for inline-block */
-    zoom: 1;
-    *display: inline;
 }
 
 /* Form fields */
@@ -789,49 +787,6 @@ span.error, label.error {
 
 .emptyPageMessageWrapper {
     padding-top: 20px;
-}
-
-/* widget menu related styles */
-.widget-menu-wrapper {
-    position: relative;
-    display: inline-block;
-    vertical-align: middle;
-    /* IE 7 hacks for inline-block */
-    zoom: 1;
-    *display: inline;
-}
-
-.widget-menu {
-    border: 1px solid black;
-    position: absolute;
-    display: none;
-    left: 18px;
-    top: 0;
-    width: 100px;
-    background-color: #FFFFFF;
-    z-index: 1000;
-    cursor: pointer;
-}
-
-.widget-menu-item {
-    padding: 3px;
-    color: #000000;
-}
-
-.widget-menu-item:hover {
-    background-color: #B4C4CF;
-}
-
-.widget-menu-item-disabled {
-    color: #D3D3D3;
-}
-
-.widget-menu-item-divider {
-    border-top: 1px solid #000000;
-}
-
-.widget-menu-button {
-    cursor: pointer;
 }
 
 .widget-tags-select {
