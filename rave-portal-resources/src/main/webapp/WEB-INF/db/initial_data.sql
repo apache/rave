@@ -382,6 +382,18 @@ insert into widget (entity_id, title, url, type, widget_status, description, aut
 values(@ohloh_stats_widget_id, 'Ohloh Apache Rave Stats', 'http://www.ohloh.net/p/521520/widgets/project_basic_stats.xml', 'OpenSocial', 'PUBLISHED', 'Ohloh is an open source network that connects people through the software they create and use. Ohloh gadgets provide detailed statistics about open source software projects and developers.', 'Ohloh', @user_id_1);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @widget_seq;
 
+-- Pub/Sub Publisher
+set @pubsub_publisher_widget_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @widget_seq);
+insert into widget (entity_id, title, url, type, widget_status, description, author, owner_id)
+values(@pubsub_publisher_widget_id, 'OpenAJAX Hub Publisher', 'http://localhost:8080/container/sample-pubsub-2-publisher.xml', 'OpenSocial', 'PUBLISHED', 'OpenAJAX Hub publisher gadget from Shindig', 'Apache Shindig', @user_id_1);
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @widget_seq;
+
+-- Pub/Sub Subscriber
+set @pubsub_subscriber_widget_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @widget_seq);
+insert into widget (entity_id, title, url, type, widget_status, description, author, owner_id)
+values(@pubsub_subscriber_widget_id, 'OpenAJAX Hub Subscriber', 'http://localhost:8080/container/sample-pubsub-2-subscriber.xml', 'OpenSocial', 'PUBLISHED', 'OpenAJAX Hub subscriber gadget from Shindig', 'Apache Shindig', @user_id_1);
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @widget_seq;
+
 -- end gadget data ----
 
 -- W3C Widget data
@@ -570,10 +582,10 @@ UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @p
 --- End user_id_4 layout ---
 
 --- Layout for user_id_5 ---
-set @page_1_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @page_seq);
-INSERT INTO page (entity_id, name, owner_id, parent_page_id, render_sequence, page_layout_id, page_type)
-values (@page_1_id, 'Main', @user_id_5, null, 1, @two_col_id, 'USER');
-UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_seq;
+---set @page_1_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @page_seq);
+---INSERT INTO page (entity_id, name, owner_id, parent_page_id, render_sequence, page_layout_id, page_type)
+---values (@page_1_id, 'Main', @user_id_5, null, 1, @two_col_id, 'USER');
+---UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_seq;
 --- End user_id_5 layout ---
 
 

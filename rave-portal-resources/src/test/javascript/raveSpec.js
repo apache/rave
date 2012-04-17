@@ -651,4 +651,81 @@ describe("Rave", function() {
             expect(mockWidget.minimizeWasCalled).toEqual(true);             
         });                    
     });
+
+    describe("log", function(){
+
+        afterEach(function() {
+           if(typeof console != "undefined") {delete console;}
+        });
+
+        it("successfully logs", function(){
+            console = (function(){
+                var messages =[];
+
+                return {
+                    log: function(message) {
+                        messages.push(message);
+                    },
+
+                    getMessages: function() {return messages;}
+                }
+            })();
+            var mess = "boo";
+            rave.log(mess);
+            expect(console.getMessages().length).toEqual(1);
+            expect(console.getMessages()[0]).toEqual(mess);
+        });
+
+        it("does not error if console doesn't exist", function(){
+            rave.log("boo");
+            expect(true).toBeTruthy();
+        });
+
+        it("does not error if console.log doesn't exist", function(){
+            console = {};
+            rave.log("boo");
+            expect(true).toBeTruthy();
+        });
+    });
+
+    describe("getManagedHub", function(){
+       beforeEach(function(){
+           rave.resetManagedHub();
+           OpenAjax = (function () {
+               return{
+                   hub:{
+                       ManagedHub:function (args) {
+                           var cArgs = args;
+                           return {
+                               getArgs:function () {
+                                  return cArgs;
+                               }
+                           }
+                       }
+                   }
+               }
+           })();
+       });
+
+
+       it("throws an error if there is no OpenAjax code on the page", function(){
+           delete OpenAjax;
+           expect(rave.getManagedHub).toThrow(new Error("No implementation of OpenAjax found.  " +
+               "Please ensure that an implementation has been included in the page."));
+       });
+
+       it("returns a new instance of the managed hub", function(){
+           var hub = rave.getManagedHub();
+           expect(hub).toBeDefined();
+           var hub2 = rave.getManagedHub();
+           expect(hub).toBe(hub2);
+       });
+
+        it("initializes the hub properly", function(){
+            var args = rave.getManagedHub().getArgs();
+            expect(args.onSubscribe).toBeDefined();
+            expect(args.onUnsubscribe).toBeDefined();
+            expect(args.onPublish).toBeDefined();
+        });
+    });
 });

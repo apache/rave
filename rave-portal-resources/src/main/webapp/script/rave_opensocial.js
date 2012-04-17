@@ -36,6 +36,9 @@ rave.opensocial = rave.opensocial || (function() {
     function initOpenSocial() {
         initContainer();
         registerRpcHooks();
+        gadgets.pubsub2router.init({
+            hub: rave.getManagedHub()
+        })
     }
 
     function initContainer() {
@@ -50,7 +53,7 @@ rave.opensocial = rave.opensocial || (function() {
      * Gets the container singleton or initializes if not instantiated
      */
     function getContainer() {
-        if (!container) {
+        if (typeof container == "undefined" || container == null) {
             initContainer();
         }
         return container;
@@ -71,7 +74,6 @@ rave.opensocial = rave.opensocial || (function() {
         container.rpcRegister('set_title', setTitle);
         container.rpcRegister('requestNavigateTo', requestNavigateTo);
         container.rpcRegister('set_pref', setPref);
-        //container.rpcRegister('pubsub', null);
     }
 
     /**
@@ -197,18 +199,18 @@ rave.opensocial = rave.opensocial || (function() {
     }
 
     /**
-     * Returns the Common Container activeGadgetHolder object for the given widgetId
+     * Returns the Common Container activeSiteHolder object for the given widgetId
      * @param widgetId the widgetId
      */ 
-    function getActiveGadgetHolderByWidgetId(widgetId) {
-        return rave.getRegionWidgetById(widgetId).site.getActiveGadgetHolder();     
+    function getActiveSiteHolderByWidgetId(widgetId) {
+        return rave.getRegionWidgetById(widgetId).site.getActiveSiteHolder();
     }
 
     /**
      * Returns the iframe element of the gadget for the given widgetId
      */
     function getGadgetIframeByWidgetId(widgetId) {
-        return getActiveGadgetHolderByWidgetId(widgetId).getIframeElement();     
+        return getActiveSiteHolderByWidgetId(widgetId).getIframeElement();
     }        
 
     /**
@@ -245,7 +247,7 @@ rave.opensocial = rave.opensocial || (function() {
     function getCurrentView(regionWidgetId) {
         // the active gadget holder will be null if the gadget is collapsed
         // as it won't be rendered on the page
-        var activeGadgetHolder = getActiveGadgetHolderByWidgetId(regionWidgetId);
+        var activeGadgetHolder = getActiveSiteHolderByWidgetId(regionWidgetId);
         return (activeGadgetHolder == null) ? null : activeGadgetHolder.getView();
     }
 
@@ -274,7 +276,7 @@ rave.opensocial = rave.opensocial || (function() {
         //to retrieve the module ID
         //A patch should be submitted to Shindig's common container code to properly
         //set the iFrame ID to the module id
-        var bodyId = args.gs.getActiveGadgetHolder().getElement().id;
+        var bodyId = args.gs.getActiveSiteHolder().getElement().id;
         var titleId = "widget-" + rave.getObjectIdFromDomId(bodyId) + "-title";
         var element = document.getElementById(titleId);
         if (element) {
@@ -293,7 +295,7 @@ rave.opensocial = rave.opensocial || (function() {
      * @param prefValue the userpref value
      */ 
     function setPref(args, editToken, prefName, prefValue) {        
-        var widgetId = rave.getObjectIdFromDomId(args.gs.getActiveGadgetHolder().getElement().id);                               
+        var widgetId = rave.getObjectIdFromDomId(args.gs.getActiveSiteHolder().getElement().id);
         var regionWidget = rave.getRegionWidgetById(widgetId);
         // update the memory prefs object
         regionWidget.userPrefs[prefName] = prefValue;
@@ -308,7 +310,7 @@ rave.opensocial = rave.opensocial || (function() {
      * @param viewName the view name to render
      */
     function requestNavigateTo(args, viewName) {       
-        var widgetId = rave.getObjectIdFromDomId(args.gs.getActiveGadgetHolder().getElement().id);
+        var widgetId = rave.getObjectIdFromDomId(args.gs.getActiveSiteHolder().getElement().id);
         var fnArgs = {};
         fnArgs.data = {}
         fnArgs.data.id = widgetId;

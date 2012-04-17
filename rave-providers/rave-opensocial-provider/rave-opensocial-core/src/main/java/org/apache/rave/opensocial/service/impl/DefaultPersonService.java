@@ -71,6 +71,11 @@ public class DefaultPersonService implements PersonService, SimplePersonService 
     }
 
     @Override
+    public Future<Person> updatePerson(UserId id, Person person, SecurityToken token) throws ProtocolException {
+        throw new ProtocolException(HttpServletResponse.SC_NOT_IMPLEMENTED, "Not Implemented");
+    }
+
+    @Override
     public List<org.apache.rave.portal.model.Person> getPeople(Set<UserId> userIds, GroupId groupId,
                                                                    CollectionOptions collectionOptions,
                                                                    SecurityToken token) {

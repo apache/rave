@@ -21,6 +21,7 @@ var rave = rave || (function() {
     var widgetByIdMap = {};
     var context = "";
     var clientMessages = {};
+    var openAjaxHub;
 
     /**
      * Separate sub-namespace for isolating UI functions and state management
@@ -748,6 +749,38 @@ var rave = rave || (function() {
         }
     }
 
+    function createNewOpenAjaxHub() {
+        if(typeof OpenAjax == "undefined"){
+            throw "No implementation of OpenAjax found.  " +
+                "Please ensure that an implementation has been included in the page.";
+        }
+        return new OpenAjax.hub.ManagedHub({
+            onSubscribe:function (topic, container) {
+                log(container.getClientID() + " subscribes to this topic '" + topic + "'");
+                return true;
+            },
+            onUnsubscribe:function (topic, container) {
+                log(container.getClientID() + " unsubscribes from this topic '" + topic + "'");
+                return true;
+            },
+            onPublish:function (topic, data, pcont, scont) {
+                log(pcont.getClientID() + " publishes '" + data + "' to topic '" + topic + "' subscribed by " + scont.getClientID());
+                return true;
+            }
+        });
+    }
+
+    function getOpenAjaxHubInstance() {
+        if(typeof openAjaxHub == "undefined" || openAjaxHub == null) {
+            openAjaxHub = createNewOpenAjaxHub();
+        }
+        return openAjaxHub;
+    }
+
+    function resetOpenAjaxHubInstance() {
+        openAjaxHub = null;
+    }
+
     function initializeWidgets(widgetsByRegionIdMap) {
         //We get the widget objects in a map keyed by region ID.  The code below converts that map into a flat array
         //of widgets with all the top widgets in each region first, then the seconds widgets in each region, then the
@@ -869,6 +902,16 @@ var rave = rave || (function() {
      */
     function removeWidgetFromMap(regionWidgetId) {
         delete widgetByIdMap[regionWidgetId];
+    }
+
+    /**
+     * Logs to a console object if it exists
+     * @param message the message to log
+     */
+    function log(message) {
+        if(typeof console != "undefined" && console.log) {
+            console.log(message);
+        }
     }
 
     /**
@@ -1081,6 +1124,23 @@ var rave = rave || (function() {
          * @param key
          * @param message
          */
-        addClientMessage: addClientMessage
+        addClientMessage: addClientMessage,
+
+        /**
+         * Gets the singleton Managed OpenAJAX 2.0 Hub
+         */
+        getManagedHub: getOpenAjaxHubInstance,
+
+        /**
+         * Resets the managed hub
+         */
+        resetManagedHub: resetOpenAjaxHubInstance,
+
+        /**
+         * Logs a message to a central logging facility (console by default)
+         *
+         * @param message the message to log
+         */
+        log: log
     }
 })();

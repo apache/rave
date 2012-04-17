@@ -44,13 +44,38 @@ describe("Rave OpenSocial", function() {
                 }
             }
         };
-        gadgets = {
-            util : {
-                escapeString : function(string) {
-                    return string;
+        gadgets = (function(){
+            var pubSubArgs;
+            return {
+                util : {
+                    escapeString : function(string) {
+                        return string;
+                    }
+                },
+                pubsub2router: {
+                    init : function(args) {
+                        pubSubArgs = args;
+                    },
+                    getArgs: function() {return pubSubArgs;}
+
+                }
+        }})();
+        OpenAjax = (function () {
+            var cArgs;
+            return{
+                hub:{
+                    ManagedHub:function (args) {
+                        cArgs = args;
+                        return {
+
+                        }
+                    },
+                    getArgs:function () {
+                        return cArgs;
+                    }
                 }
             }
-        };
+        })();
 
     });
 
@@ -67,7 +92,6 @@ describe("Rave OpenSocial", function() {
 
         it("initializes the OpenSocial container machinery", function() {
             rave.opensocial.init();
-
             expect(container.args()[0]).toEqual("/rpc");
             expect(container.args()[1]).toEqual("1");
         });
@@ -106,7 +130,7 @@ describe("Rave OpenSocial", function() {
                 f : "frameId",
                 a : arrayOut ? ["TITLE"] : "TITLE",
                 gs : {
-                    getActiveGadgetHolder : function() {
+                    getActiveSiteHolder : function() {
                         return {getElement : function() {
                             return { id : id }
                         }}
@@ -133,7 +157,7 @@ describe("Rave OpenSocial", function() {
             return {
                 f : "frameId",               
                 gs : {
-                    getActiveGadgetHolder : function() {
+                    getActiveSiteHolder : function() {
                         return {getElement : function() {
                             return { id : id }
                         }}
