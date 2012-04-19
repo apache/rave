@@ -41,8 +41,6 @@
     </c:otherwise>
 </c:choose>
 <script src="<spring:url value="/app/messagebundle/rave_client_messages.js"/>"></script>
-<%-- bootstrap --%>
-<script src="<spring:url value="/css/bootstrap/js/bootstrap.js"/>"></script>
 <portal:render-script location="${'AFTER_RAVE'}" />
 <%-- common javascript to execute on all pages --%>
 <script>
