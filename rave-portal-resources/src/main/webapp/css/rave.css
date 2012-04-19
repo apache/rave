@@ -5,8 +5,10 @@
     margin-right: auto;
 }
 
-.navbar-spacer{
-    margin-top: 50px;
+/* Overwrite setitngs for navbar to remove need for spacer */
+.navbar-fixed-top {
+    position: static;
+    margin-bottom: 18px;
 }
 
 /* page menu related styles */

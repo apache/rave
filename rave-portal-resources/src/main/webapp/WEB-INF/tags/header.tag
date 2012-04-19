@@ -21,18 +21,25 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ attribute name="pageTitle" required="false" description="The title of the page" %>
 <fmt:setBundle basename="messages"/>
-<header>
-    <nav>
-        <%--@elvariable id="topnav" type="org.apache.rave.portal.web.model.NavigationMenu"--%>
-        <c:if test="${not empty topnav}">
-            <div class="navbar navbar-fixed-top">
-                <a class="brand" href="#"><c:out value="${pageTitle}"/></a>
-                <ul class="nav pull-right">
-                    <c:forEach items="${topnav.navigationItems}" var="navItem">
-                        <li><a href="<spring:url value="${navItem.url}"/>"><fmt:message key="${navItem.name}"/></a></li>
-                    </c:forEach>
-                </ul>
+<c:if test="${not empty topnav}">
+    <div class="navbar navbar-fixed-top">
+        <div class="navbar-inner">
+            <div class="container">
+                <%--@elvariable id="topnav" type="org.apache.rave.portal.web.model.NavigationMenu"--%>
+                <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </a>
+                <span class="brand"><c:out value="${pageTitle}"/></span>
+                <div class="nav-collapse">
+                    <ul class="nav pull-right">
+                        <c:forEach items="${topnav.navigationItems}" var="navItem">
+                            <li><a href="<spring:url value="${navItem.url}"/>"><fmt:message key="${navItem.name}"/></a></li>
+                        </c:forEach>
+                    </ul>
+                </div>
             </div>
-        </c:if>
-    </nav>
-</header>
+        </div>
+    </div>
+</c:if>
