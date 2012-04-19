@@ -33,7 +33,7 @@ import javax.annotation.PostConstruct;
 @Component
 public class OpenSocialEnvironment {
 
-    private static final String SCRIPT_TEMPLATE = "<script src=\"%1$s://%2$s%3$s/js/container:pubsub-2.js?c=1&amp;container=default&amp;debug=1\"></script>";
+    private static final String SCRIPT_TEMPLATE = "<script src=\"%1$s://%2$s%3$s/js/container:pubsub-2:open-views.js?c=1&amp;container=default&amp;debug=1\"></script>";
 
     private ScriptManager scriptManager;
 

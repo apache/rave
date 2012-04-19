@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-var rave = rave || (function() {
+var rave = rave || (function () {
     var providerMap = {};
     var widgetByIdMap = {};
     var context = "";
@@ -28,7 +28,7 @@ var rave = rave || (function() {
      *
      * NOTE: The UI implementation has dependencies on jQuery and jQuery UI
      */
-    var ui = (function() {
+    var ui = (function () {
         var TEXT_FIELD_TEMPLATE = "<tr>{prefLabelTemplate}<td><input type='text' id='{name}' name='{name}' value='{value}' class='{class}'></td></tr>";
         var CHECKBOX_TEMPLATE = "<tr>{prefLabelTemplate}<td><input type='checkbox' id='{name}' name='{name}' class='{class}' {checked}></td></tr>";
         var SELECT_FIELD_TEMPLATE = "<tr>{prefLabelTemplate}<td><select id='{name}' name='{name}' class='{class}'>{options}</select></td></tr>";
@@ -60,6 +60,83 @@ var rave = rave || (function() {
         var WIDGET_BTN_MINIMIZE_CLASS = "ui-icon-arrowthick-1-sw";
         var WIDGET_TOGGLE_DISPLAY_COLLAPSED = "ui-icon-triangle-1-e";
         var WIDGET_TOGGLE_DISPLAY_NORMAL = "ui-icon-triangle-1-s";
+        var POPUPS = {
+            sidebar:{
+                name:"sidebar",
+                selector:'.popup.slideout',
+                markup:'<div class="popup slideout"><div id="slideoutContent"></div></div>',
+                initialize:function (element) {
+                    element.data('popupType', this.name);
+                    element.show("slide", { direction:"right" }, 'fast');
+                },
+                cleanup:function (element) {
+                    element.hide("slide", { direction:"right" }, 'fast', function () {
+                        element.detach();
+                    });
+                },
+                singleton:true,
+                styleMap:{
+                    "box-sizing":"border-box",
+                    position:"fixed",
+                    top:"5%",
+                    right:0,
+                    display:"none",
+                    background:"#FFFFFF",
+                    border:"1px solid #111111",
+                    "border-right-width":"0px",
+                    width:"400px",
+                    "height":"90%",
+                    padding:"10px 10px 20px 30px",
+                    "overflow-y":"auto",
+                    "overflow-x":"visible",
+                    "z-index":5000
+                }
+            },
+            dialog:{
+                name:"dialog",
+                selector:'.popup.dialog',
+                markup:'<div class="popup dialog"></div>',
+                initialize:function (element) {
+                    element.data('popupType', this.name);
+                    var cfg = {
+                        stack:true,
+                        dialogClass:'raveDialog'
+                    }
+                    element.dialog(cfg);
+                },
+                cleanup:function (element) {
+                    element.dialog('destroy');
+                    element.detach();
+                },
+                singleton:false,
+                styleMap:{
+
+                }
+            },
+            modal_dialog:{
+                name:"modal_dialog",
+                selector:'.popup.modal_dialog',
+                markup:'<div class="popup modal_dialog"></div>',
+                initialize:function (element) {
+                    element.data('popupType', this.name);
+                    var cfg = {
+                        modal:true,
+                        dialogClass:'raveModal'
+                    }
+                    element.dialog(cfg);
+                },
+                cleanup:function (element) {
+                    element.dialog('destroy');
+                    element.detach();
+                },
+                singleton:true,
+                styleMap:{
+
+                },
+                float:false,
+                tab:false
+            }
+        }
 
         // variable to store whether or not the
         // client is a mobile device
@@ -82,10 +159,10 @@ var rave = rave || (function() {
         }
 
         var uiState = {
-            widget: null,
-            currentRegion: null,
-            targetRegion: null,
-            targetIndex: null
+            widget:null,
+            currentRegion:null,
+            targetRegion:null,
+            targetIndex:null
         };
 
         function setMobileState(mobileState) {
@@ -99,17 +176,17 @@ var rave = rave || (function() {
         function init() {
             // initialize the sortable regions
             getNonLockedRegions().sortable({
-                        connectWith: '.region', // defines which regions are dnd-able
-                        scroll: true, // whether to scroll the window if the user goes outside the areas
-                        opacity: 0.5, // the opacity of the object being dragged
-                        revert: true, // smooth snap animation
-                        cursor: 'move', // the cursor to show while dnd
-                        handle: '.widget-title-bar', // the draggable handle
-                        forcePlaceholderSize: true, // size the placeholder to the size of the widget
-                        tolerance: 'pointer', // change dnd drop zone on mouse-over
-                        start: dragStart, // event listener for drag start
-                        stop : dragStop, // event listener for drag stop
-                        over: dragOver // event listener for drag over
+                connectWith:'.region', // defines which regions are dnd-able
+                scroll:true, // whether to scroll the window if the user goes outside the areas
+                opacity:0.5, // the opacity of the object being dragged
+                revert:true, // smooth snap animation
+                cursor:'move', // the cursor to show while dnd
+                handle:'.widget-title-bar', // the draggable handle
+                forcePlaceholderSize:true, // size the placeholder to the size of the widget
+                tolerance:'pointer', // change dnd drop zone on mouse-over
+                start:dragStart, // event listener for drag start
+                stop:dragStop, // event listener for drag stop
+                over:dragOver // event listener for drag over
             });
             initWidgetUI();
         }
@@ -128,7 +205,7 @@ var rave = rave || (function() {
             //for every drag operation, create an overlay for each iframe
             //to prevent the iframe from intercepting mouse events
             //which kills drag performance
-            $(".widget").each(function(index, element) {
+            $(".widget").each(function (index, element) {
                 addOverlay($(element));
             });
         }
@@ -137,7 +214,7 @@ var rave = rave || (function() {
             var $regions = getNonLockedRegions();
 
             // reset padding to 0 after drag on all rows
-            if ($(".widgetRow").length){
+            if ($(".widgetRow").length) {
                 var rows = $regions.find(".widgetRow");
                 rows.each(resetRowsRegionsHeight);
             }
@@ -156,20 +233,20 @@ var rave = rave || (function() {
             clearState();
         }
 
-        function dragOver(event, ui){
+        function dragOver(event, ui) {
             adjustRowRegionsHeights();
         }
 
         // dynamically adjust heights of all regions
-        function adjustRowRegionsHeights(){
+        function adjustRowRegionsHeights() {
             // handle region areas for upper rows
-            if ($(".upperRow").length){
+            if ($(".upperRow").length) {
                 var rows = $(".regions").find(".upperRow");
                 rows.each(adjustUpperRowRegionsHeight);
             }
 
             // handle region areas for the bottom row
-            if ($(".bottomRow").length){
+            if ($(".bottomRow").length) {
                 var row = $(".regions").find(".bottomRow");
                 adjustBottomRowRegionsHeight(row)
             }
@@ -177,19 +254,19 @@ var rave = rave || (function() {
 
         // adjusts the padding-bottom value of all regions in bottom row to either fill the empty space or
         // act as an upper row
-        function adjustBottomRowRegionsHeight (row){
+        function adjustBottomRowRegionsHeight(row) {
             resetRowsRegionsHeight(row);
             var bodyHeight = $('body').outerHeight();
             var windowHeight = $(window).height();
             // Instances where no scroll bar currently exists
-            if (windowHeight >= bodyHeight){
+            if (windowHeight >= bodyHeight) {
                 var pageHeight = $("#pageContent").outerHeight();
                 var headerHeight = bodyHeight - pageHeight;
                 var upperRegionsMaxHeights = 0;
-                if ($(".upperRow").length){
+                if ($(".upperRow").length) {
                     var rows = $(".regions").find(".upperRow");
-                    for (var x = 0; x < rows.length; x++){
-                        var rowMaxHeight = getRowRegionsMaxHeight(rows.get(x)) ;
+                    for (var x = 0; x < rows.length; x++) {
+                        var rowMaxHeight = getRowRegionsMaxHeight(rows.get(x));
                         upperRegionsMaxHeights = upperRegionsMaxHeights + rowMaxHeight;
                     }
                 }
@@ -210,7 +287,7 @@ var rave = rave || (function() {
 
         // adjusts the padding-bottom value of all regions in upper rows to match the value of the
         // tallest region in the row
-        function adjustUpperRowRegionsHeight (row){
+        function adjustUpperRowRegionsHeight(row) {
             // when called by each, first argument is a number instead of a row value
             var row = (typeof row === 'number') ? $(this) : row;
 
@@ -224,11 +301,11 @@ var rave = rave || (function() {
         }
 
         // Returns the height of the tallest region in row, minimum 100 px
-        function getRowRegionsMaxHeight (row){
+        function getRowRegionsMaxHeight(row) {
             var rowChildren = $(row).children();
             var maxHeight = 100;
-            for (var x = 0; x < rowChildren.length; x++){
-                if ($(rowChildren.get(x)).outerHeight() > maxHeight){
+            for (var x = 0; x < rowChildren.length; x++) {
+                if ($(rowChildren.get(x)).outerHeight() > maxHeight) {
                     maxHeight = $(rowChildren.get(x)).outerHeight();
                 }
             }
@@ -236,22 +313,22 @@ var rave = rave || (function() {
         }
 
         // Restores the padding-bottom value to the original for all regions in given row
-        function resetRowsRegionsHeight (row) {
+        function resetRowsRegionsHeight(row) {
             // when called by each, first argument is a number instead of a row value
             var row = (typeof row === 'number') ? $(this) : row;
 
             var rowChildren = $(row).children();
-            for (var x = 0; x < rowChildren.length; x++){
+            for (var x = 0; x < rowChildren.length; x++) {
                 // reset to 5, the initial value before dragging
                 $(rowChildren.get(x)).css("padding-bottom", 5);
             }
         }
 
         // Sets the padding-bottom value, so that the total height is the given value for all regions in given row
-        function setRowsRegionsHeight (row, maxHeight) {
+        function setRowsRegionsHeight(row, maxHeight) {
             var rowChildren = $(row).children();
-            for (var x = 0; x < rowChildren.length; x++){
-                if ($(rowChildren.get(x)).outerHeight() != maxHeight){
+            for (var x = 0; x < rowChildren.length; x++) {
+                if ($(rowChildren.get(x)).outerHeight() != maxHeight) {
                     var defaultPadding = parseInt($(rowChildren.get(x)).css("padding-bottom").replace("px", ""));
                     $(rowChildren.get(x)).css("padding-bottom", (defaultPadding + maxHeight - $(rowChildren.get(x)).outerHeight()));
                 }
@@ -269,19 +346,19 @@ var rave = rave || (function() {
          * Takes care of the UI part of the widget rendering. Depends heavily on the HTML structure
          */
         function initWidgetUI() {
-            $(".widget-wrapper").each(function(){
+            $(".widget-wrapper").each(function () {
                 var widgetId = extractObjectIdFromElementId($(this).attr("id"));
                 styleWidgetButtons(widgetId);
             });
         }
 
         function initMobileWidgetUI() {
-            $(".widget-wrapper").each(function(){
+            $(".widget-wrapper").each(function () {
                 var widgetId = extractObjectIdFromElementId($(this).attr("id"));
                 var widget = rave.getRegionWidgetById(widgetId);
 
                 // init the collapse/restore toggle for the title bar
-                $(this).find(".widget-title-bar-mobile").click({id: widgetId}, toggleCollapseAction);
+                $(this).find(".widget-title-bar-mobile").click({id:widgetId}, toggleCollapseAction);
             });
         }
 
@@ -297,7 +374,7 @@ var rave = rave || (function() {
             // display the widget in maximized view
             openFullScreenOverlay(regionWidgetId);
             var widget = rave.getRegionWidgetById(regionWidgetId);
-            if(typeof widget != "undefined" && isFunction(widget.maximize)) {
+            if (typeof widget != "undefined" && isFunction(widget.maximize)) {
                 widget.maximize();
             }
         }
@@ -305,7 +382,7 @@ var rave = rave || (function() {
         function minimizeAction(args) {
             var regionWidgetId = args.data.id;
             $(".dnd-overlay").remove();
-            getNonLockedRegions().sortable( "option", "disabled", false );
+            getNonLockedRegions().sortable("option", "disabled", false);
             // display the widget in normal view
             $("#widget-" + regionWidgetId + "-wrapper").removeClass("widget-wrapper-canvas").addClass("widget-wrapper");
             // hide the widget minimize button
@@ -317,7 +394,7 @@ var rave = rave || (function() {
             var widget = rave.getRegionWidgetById(regionWidgetId);
             // if the widget is collapsed execute the collapse function
             // otherwise execute the minimize function
-            if(typeof widget != "undefined"){
+            if (typeof widget != "undefined") {
                 if (widget.collapsed && isFunction(widget.collapse)) {
                     widget.collapse();
                 } else if (isFunction(widget.minimize)) {
@@ -326,13 +403,45 @@ var rave = rave || (function() {
             }
         }
 
+        function createPopup(popupType) {
+            var target = POPUPS[popupType.toLowerCase()];
+
+            if (!target) {
+                return rave.log('The popup view requested is not implemented by rave');
+            }
+
+            if (target.singleton && $(target.selector).length>0) {
+                return $(target.selector).get(0);
+            }
+
+            var popup = $(target.markup);
+            if (target.styleMap) popup.css(target.styleMap);
+            $("#pageContent").prepend(popup);
+
+            if ($.type(target.initialize) == 'function') target.initialize(popup);
+
+            return popup.get(0);
+        }
+
+        function destroyPopup(element) {
+            element = $(element);
+            var target = POPUPS[element.data('popupType')];
+
+            if (!target) {
+                rave.log('Rave has detected a destroy request for a popup whose type cannot be detected.');
+                return element.detach();
+            }
+
+            if ($.type(target.cleanup) == 'function') target.cleanup(element);
+        }
+
         function editCustomPrefsAction(args) {
             var regionWidgetId = args.data.id;
 
             // display the custom edit prefs for the widget in maximized view
             openFullScreenOverlay(regionWidgetId);
             var widget = rave.getRegionWidgetById(regionWidgetId);
-            if(typeof widget != "undefined" ) {
+            if (typeof widget != "undefined") {
                 widget.editCustomPrefs();
             }
         }
@@ -342,11 +451,11 @@ var rave = rave || (function() {
             var widget = getRegionWidgetById(regionWidgetId);
             // toggle the collapse state of the widget
             var newCollapsedValue = !widget.collapsed;
-            var functionArgs = {"regionWidgetId": regionWidgetId, "collapsed": newCollapsedValue};
+            var functionArgs = {"regionWidgetId":regionWidgetId, "collapsed":newCollapsedValue};
 
             // if this type of widget has a collapse or restore callback invoke it upon
             // successful persistence
-            if(typeof widget != "undefined") {
+            if (typeof widget != "undefined") {
                 // if this is a collapse action, and the widget has a collapse implementation function,
                 // attach it as a callback function
                 if (newCollapsedValue && isFunction(widget.collapse)) {
@@ -417,7 +526,7 @@ var rave = rave || (function() {
             return markup.join("");
         }
 
-       /**
+        /**
          * Utility function to validate a userPref input element
          */
         function validatePrefInput(element) {
@@ -451,20 +560,20 @@ var rave = rave || (function() {
                 switch (userPref.dataType) {
                     case "STRING":
                         prefsFormMarkup.push(TEXT_FIELD_TEMPLATE.replace(PREF_LABEL_TEMPLATE_REGEX, prefLabelMarkup)
-                                .replace(CLASS_REGEX, prefInputClassMarkup)
-                                .replace(NAME_REGEX, userPref.name)
-                                .replace(VALUE_REGEX, typeof currentPrefValue != "undefined" ? currentPrefValue :
-                                userPref.defaultValue));
+                            .replace(CLASS_REGEX, prefInputClassMarkup)
+                            .replace(NAME_REGEX, userPref.name)
+                            .replace(VALUE_REGEX, typeof currentPrefValue != "undefined" ? currentPrefValue :
+                            userPref.defaultValue));
                         break;
                     case "BOOL":
                         var checked = typeof currentPrefValue != "undefined" ?
-                                currentPrefValue === 'true' || currentPrefValue === true :
-                                userPref.defaultValue === 'true' || userPref.defaultValue === true;
+                            currentPrefValue === 'true' || currentPrefValue === true :
+                            userPref.defaultValue === 'true' || userPref.defaultValue === true;
 
                         prefsFormMarkup.push(CHECKBOX_TEMPLATE.replace(PREF_LABEL_TEMPLATE_REGEX, prefLabelMarkup)
-                                .replace(CLASS_REGEX, prefInputClassMarkup)
-                                .replace(NAME_REGEX, userPref.name)
-                                .replace(CHECKED_REGEX, checked ? "checked" : ""));
+                            .replace(CLASS_REGEX, prefInputClassMarkup)
+                            .replace(NAME_REGEX, userPref.name)
+                            .replace(CHECKED_REGEX, checked ? "checked" : ""));
                         break;
                     case "ENUM":
                         var options = [];
@@ -472,29 +581,29 @@ var rave = rave || (function() {
                         for (var i = 0; i < userPref.orderedEnumValues.length; i++) {
                             var option = userPref.orderedEnumValues[i];
                             var selected = currentPrefValue == option.value || (typeof currentPrefValue == "undefined" &&
-                                    option.value == userPref.defaultValue);
+                                option.value == userPref.defaultValue);
                             options.push(SELECT_OPTION_TEMPLATE.replace(VALUE_REGEX, option.value)
-                                    .replace(DISPLAY_VALUE_REGEX, option.displayValue)
-                                    .replace(SELECTED_REGEX, selected ? "selected" : ""));
+                                .replace(DISPLAY_VALUE_REGEX, option.displayValue)
+                                .replace(SELECTED_REGEX, selected ? "selected" : ""));
                         }
 
                         prefsFormMarkup.push(SELECT_FIELD_TEMPLATE.replace(PREF_LABEL_TEMPLATE_REGEX, prefLabelMarkup)
-                                .replace(CLASS_REGEX, prefInputClassMarkup)
-                                .replace(NAME_REGEX, userPref.name)
-                                .replace(OPTIONS_REGEX, options.join("")));
+                            .replace(CLASS_REGEX, prefInputClassMarkup)
+                            .replace(NAME_REGEX, userPref.name)
+                            .replace(OPTIONS_REGEX, options.join("")));
                         break;
                     case "LIST":
                         var values = typeof currentPrefValue != "undefined" ? currentPrefValue : userPref.defaultValue;
                         values = values.replace(PIPE_REGEX, "\n");
                         prefsFormMarkup.push(TEXTAREA_TEMPLATE.replace(PREF_LABEL_TEMPLATE_REGEX, prefLabelMarkup)
-                                .replace(CLASS_REGEX, prefInputClassMarkup)
-                                .replace(NAME_REGEX, userPref.name)
-                                .replace(VALUE_REGEX, values));
+                            .replace(CLASS_REGEX, prefInputClassMarkup)
+                            .replace(NAME_REGEX, userPref.name)
+                            .replace(VALUE_REGEX, values));
                         break;
                     default:
                         prefsFormMarkup.push(HIDDEN_FIELD_TEMPLATE.replace(NAME_REGEX, userPref.name)
-                                .replace(VALUE_REGEX, typeof currentPrefValue != "undefined" ? currentPrefValue :
-                                userPref.defaultValue));
+                            .replace(VALUE_REGEX, typeof currentPrefValue != "undefined" ? currentPrefValue :
+                            userPref.defaultValue));
                 }
             }
 
@@ -505,9 +614,9 @@ var rave = rave || (function() {
 
             prefsFormMarkup.push("<tr><td colspan='2'>");
             prefsFormMarkup.push(PREFS_SAVE_BUTTON_TEMPLATE.replace(ELEMENT_ID_REGEX, WIDGET_PREFS_SAVE_BUTTON(regionWidget.regionWidgetId))
-                                                           .replace(BUTTON_TEXT_REGEX, rave.getClientMessage("common.save")));
+                .replace(BUTTON_TEXT_REGEX, rave.getClientMessage("common.save")));
             prefsFormMarkup.push(PREFS_CANCEL_BUTTON_TEMPLATE.replace(ELEMENT_ID_REGEX, WIDGET_PREFS_CANCEL_BUTTON(regionWidget.regionWidgetId))
-                                                             .replace(BUTTON_TEXT_REGEX, rave.getClientMessage("common.cancel")));
+                .replace(BUTTON_TEXT_REGEX, rave.getClientMessage("common.cancel")));
             prefsFormMarkup.push("</td></tr>");
             prefsFormMarkup.push("</table>");
 
@@ -515,9 +624,9 @@ var rave = rave || (function() {
             prefsElement.html(prefsFormMarkup.join(""));
 
             $("#" + WIDGET_PREFS_SAVE_BUTTON(regionWidget.regionWidgetId)).click({id:regionWidget.regionWidgetId},
-                    saveEditPrefsAction);
+                saveEditPrefsAction);
             $("#" + WIDGET_PREFS_CANCEL_BUTTON(regionWidget.regionWidgetId)).click({id:regionWidget.regionWidgetId},
-                    cancelEditPrefsAction);
+                cancelEditPrefsAction);
 
             prefsElement.show();
         }
@@ -531,7 +640,7 @@ var rave = rave || (function() {
             // note that validation of "required" prefs is only done for text and
             // textarea types, since those represent STRING and LIST inputs, and
             // are the only inputs that could potentially contain empty data
-            prefsElement.find("*").filter(":input").each(function(index, element) {
+            prefsElement.find("*").filter(":input").each(function (index, element) {
                 switch (element.type) {
                     case "text":
                         if (!validatePrefInput(element)) {
@@ -574,7 +683,7 @@ var rave = rave || (function() {
                 // focus on the first input that has validation errors
                 prefsElement.find("." + WIDGET_PREFS_INPUT_FAILED_VALIDATION).first().focus();
             } else {
-                if(isFunction(regionWidget.savePreferences)) {
+                if (isFunction(regionWidget.savePreferences)) {
                     regionWidget.savePreferences(updatedPrefs);
                 }
 
@@ -592,12 +701,12 @@ var rave = rave || (function() {
         function addOverlay(jqElm) {
             var overlay = $('<div></div>');
             var styleMap = {
-                position: "absolute",
-                height : jqElm.height(),
-                width : jqElm.width(),
-                'z-index': 10,
-                opacity : 0.7,
-                background : "#FFFFFF"
+                position:"absolute",
+                height:jqElm.height(),
+                width:jqElm.width(),
+                'z-index':10,
+                opacity:0.7,
+                background:"#FFFFFF"
             };
 
             // style it and give it the marker class
@@ -629,11 +738,11 @@ var rave = rave || (function() {
             // init the widget minimize button which is hidden by default
             // and only renders when widget is in maximized view
             $("#widget-" + widgetId + "-min").button({
-                text: false,
-                icons: {
-                    primary: WIDGET_BTN_MINIMIZE_CLASS
+                text:false,
+                icons:{
+                    primary:WIDGET_BTN_MINIMIZE_CLASS
                 }
-            }).click({id: widgetId}, rave.minimizeWidget);
+            }).click({id:widgetId}, rave.minimizeWidget);
 
             // init the collapse/restore toggle
             // conditionally style the icon and setup the event handlers
@@ -642,8 +751,8 @@ var rave = rave || (function() {
             $toggleCollapseIcon.addClass(WIDGET_ICON_BASE_CLASS);
             $toggleCollapseIcon.addClass((widget.collapsed) ? WIDGET_TOGGLE_DISPLAY_COLLAPSED : WIDGET_TOGGLE_DISPLAY_NORMAL);
             $toggleCollapseIcon
-                .click({id: widgetId}, toggleCollapseAction)
-                .mousedown(function(event) {
+                .click({id:widgetId}, toggleCollapseAction)
+                .mousedown(function (event) {
                     // don't allow drag and drop when this item is clicked
                     event.stopPropagation();
                 });
@@ -673,32 +782,36 @@ var rave = rave || (function() {
         }
 
         function displayUsersOfWidget(widgetId) {
-            rave.api.rest.getUsersForWidget({widgetId: widgetId, successCallback: function(data){
+            rave.api.rest.getUsersForWidget({widgetId:widgetId, successCallback:function (data) {
                 var html = "<ul class='widget-users'>";
-                for (var i=0; i < data.length; i++) {
+                for (var i = 0; i < data.length; i++) {
                     var person = data[i];
                     var name = (person.displayName) ? person.displayName :
-                                                      ((person.preferredName) ? person.preferredName : person.givenName) + " " + person.familyName;
+                        ((person.preferredName) ? person.preferredName : person.givenName) + " " + person.familyName;
 
                     html += "<li class='widget-user'>" + name + "</li>";
                 }
-                html+="</ul>";
+                html += "</ul>";
 
                 $("<div class='dialog widget-users-dialog' title='" + $("#widget-" + widgetId + "-title").text().trim() + " " + rave.getClientMessage("widget.users.added_by") + "'>" + html + "</div>").dialog({
-                    modal: true,
-                    buttons: [{text: "Close", click: function(){$(this).dialog("close");}}]
+                    modal:true,
+                    buttons:[
+                        {text:"Close", click:function () {
+                            $(this).dialog("close");
+                        }}
+                    ]
                 });
             }});
         }
 
         function showInfoMessage(message) {
             $("<div />", {'class':'topbar-message', 'text':message})
-                    .hide()
-                    .prependTo("body")
-                    .slideDown('fast').delay(5000)
-                    .slideUp(function () {
-                        $(this).remove();
-                    });
+                .hide()
+                .prependTo("body")
+                .slideDown('fast').delay(5000)
+                .slideUp(function () {
+                    $(this).remove();
+                });
         }
 
         function getNonLockedRegions() {
@@ -706,20 +819,22 @@ var rave = rave || (function() {
         }
 
         return {
-          init : init,
-          initMobile: initMobileWidgetUI,
-          toggleCollapseWidgetIcon: toggleCollapseWidgetIcon,
-          maximizeAction: maximizeAction,
-          minimizeAction: minimizeAction,
-          editPrefsAction: editPrefsAction,
-          editCustomPrefsAction: editCustomPrefsAction,
-          setMobileState: setMobileState,
-          getMobileState: getMobileState,
-          doWidgetUiCollapse: doWidgetUiCollapse,
-          toggleMobileWidget: toggleMobileWidget,
-          displayEmptyPageMessage: displayEmptyPageMessage,
-          displayUsersOfWidget: displayUsersOfWidget,
-          showInfoMessage: showInfoMessage
+            init:init,
+            initMobile:initMobileWidgetUI,
+            toggleCollapseWidgetIcon:toggleCollapseWidgetIcon,
+            maximizeAction:maximizeAction,
+            minimizeAction:minimizeAction,
+            createPopup:createPopup,
+            destroyPopup:destroyPopup,
+            editPrefsAction:editPrefsAction,
+            editCustomPrefsAction:editCustomPrefsAction,
+            setMobileState:setMobileState,
+            getMobileState:getMobileState,
+            doWidgetUiCollapse:doWidgetUiCollapse,
+            toggleMobileWidget:toggleMobileWidget,
+            displayEmptyPageMessage:displayEmptyPageMessage,
+            displayUsersOfWidget:displayUsersOfWidget,
+            showInfoMessage:showInfoMessage
         };
 
     })();
@@ -909,7 +1024,7 @@ var rave = rave || (function() {
      * @param message the message to log
      */
     function log(message) {
-        if(typeof console != "undefined" && console.log) {
+        if (typeof console != "undefined" && console.log) {
             console.log(message);
         }
     }
@@ -924,12 +1039,12 @@ var rave = rave || (function() {
          * @param regionId The regionId.
          * @param widget The widget.
          */
-        registerWidget : registerWidget,
+        registerWidget:registerWidget,
 
         /**
          * Initialize all of the registered providers
          */
-        initProviders : initializeProviders,
+        initProviders:initializeProviders,
 
         /**
          * Initializes the given set of widgets
@@ -939,17 +1054,17 @@ var rave = rave || (function() {
          *      type,
          *      regionWidgetId
          */
-        initWidgets : initializeWidgets,
+        initWidgets:initializeWidgets,
 
         /**
          * Initialize Rave's drag and drop facilities
          */
-        initUI : ui.init,
+        initUI:ui.init,
 
         /**
          * Initialize the mobile UI
          */
-        initMobileUI : ui.initMobile,
+        initMobileUI:ui.initMobile,
 
         /**
          * Parses the given string conforming to a rave object's DOM element ID and return
@@ -962,7 +1077,7 @@ var rave = rave || (function() {
          *
          * @param elementId the ID of the DOM element containing the widget
          */
-        getObjectIdFromDomId : extractObjectIdFromElementId,
+        getObjectIdFromDomId:extractObjectIdFromElementId,
 
         /**
          * Registers a new provider with Rave.  All providers MUST have init and initWidget functions as well as a
@@ -970,7 +1085,7 @@ var rave = rave || (function() {
          *
          * @param provider a valid Rave widget provider
          */
-        registerProvider : addProviderToList,
+        registerProvider:addProviderToList,
 
         /**
          * Renders an error in place of the widget
@@ -978,31 +1093,31 @@ var rave = rave || (function() {
          * @param id the RegionWidgetId of the widget to render in error mode
          * @param message The message to display to the user
          */
-        errorWidget: renderErrorWidget,
+        errorWidget:renderErrorWidget,
 
         /**
          * Sets the context path for the Rave web application
          *
          * @param contextPath the context path of the rave webapp
          */
-        setContext : updateContext,
+        setContext:updateContext,
 
         /**
          * Gets the current context
          */
-        getContext: getContext,
+        getContext:getContext,
 
         /**
          * Gets a regionwidget by region widget id
          */
-        getRegionWidgetById: getRegionWidgetById,
+        getRegionWidgetById:getRegionWidgetById,
 
         /**
          * View a page
          *
          * @param pageId the pageId to view, or if null, the user's default page
          */
-        viewPage: viewPage,
+        viewPage:viewPage,
 
         /**
          * View the widget detail page of a widget
@@ -1010,14 +1125,14 @@ var rave = rave || (function() {
          * @param widgetId to widgetId to view
          * @param referringPageId the entityId of the page the call is coming from
          */
-        viewWidgetDetail: viewWidgetDetail,
+        viewWidgetDetail:viewWidgetDetail,
 
         /**
          * Toggles the collapse/restore icon of the rendered widget
          *
          * @param widgetId the widgetId of the rendered widget to toggle
          */
-        toggleCollapseWidgetIcon: ui.toggleCollapseWidgetIcon,
+        toggleCollapseWidgetIcon:ui.toggleCollapseWidgetIcon,
 
         /***
          * Utility function to determine if a javascript object is a function or not
@@ -1025,21 +1140,36 @@ var rave = rave || (function() {
          * @param obj the object to check
          * @return true if obj is a function, false otherwise
          */
-        isFunction: isFunction,
+        isFunction:isFunction,
 
         /***
          * Maximize the widget view
          *
          * @param args the argument object
          */
-        maximizeWidget: ui.maximizeAction,
+        maximizeWidget:ui.maximizeAction,
 
         /***
          * Minimize the widget view (render in non full-screen mode)
          *
          * @param args the argument object
          */
-        minimizeWidget: ui.minimizeAction,
+        minimizeWidget:ui.minimizeAction,
+
+        /***
+         * Create a new popup in the rave container
+         *
+         * @param popupType the type of popup that will be created
+         * @return the new dom element created
+         */
+        createPopup:ui.createPopup,
+
+        /***
+         * Destroy a popup currently active in the rave container
+         *
+         * @param element the popup dom element
+         */
+        destroyPopup:ui.destroyPopup,
 
         /***
          * Display the inline edit prefs section for widget preferences inside
@@ -1048,20 +1178,20 @@ var rave = rave || (function() {
          * @param regionWidgetId the regionWidgetId of the widget
          *
          */
-        editPrefs: ui.editPrefsAction,
+        editPrefs:ui.editPrefsAction,
 
         /***
          * "Preferences" view
          *
          * @param args the argument object
          */
-        editCustomPrefs: ui.editCustomPrefsAction,
+        editCustomPrefs:ui.editCustomPrefsAction,
 
         /***
          * Get the mobile state - used by the UI to render mobile or normal content
          *
          */
-        isMobile: ui.getMobileState,
+        isMobile:ui.getMobileState,
 
         /***
          * Set the mobile state - used by the UI to render mobile or normal content
@@ -1069,54 +1199,54 @@ var rave = rave || (function() {
          * @param mobileState boolean to represent the mobile state
          *
          */
-        setMobile: ui.setMobileState,
+        setMobile:ui.setMobileState,
 
         /**
          * Performs the client side work of collapsing/restoring a widget
          * @param args
          */
-        doWidgetUiCollapse: ui.doWidgetUiCollapse,
+        doWidgetUiCollapse:ui.doWidgetUiCollapse,
 
         /**
          * Toggles a mobile widget collapse/restore
          * @param args
          */
-        toggleMobileWidget: ui.toggleMobileWidget,
+        toggleMobileWidget:ui.toggleMobileWidget,
 
         /**
          * Determines if a page is empty (has zero widgets)
          * @param widgetByIdMap the map of widgets on the page
          */
-        isPageEmpty: isPageEmpty,
+        isPageEmpty:isPageEmpty,
 
         /**
          * Removes a regionWidgetId from the internal widget map
          * @param regionWidgetId the region widget id to remove
          */
-        removeWidgetFromMap: removeWidgetFromMap,
+        removeWidgetFromMap:removeWidgetFromMap,
 
         /**
          * Displays the "empty page" message on the page
          */
-        displayEmptyPageMessage: ui.displayEmptyPageMessage,
+        displayEmptyPageMessage:ui.displayEmptyPageMessage,
 
         /**
          * Displays the users of a supplied widgetId in a dialog box
          */
-        displayUsersOfWidget: ui.displayUsersOfWidget,
+        displayUsersOfWidget:ui.displayUsersOfWidget,
 
         /**
          * Displays an info message at the top of the page.
          * @param message The message to display.
          */
-        showInfoMessage: ui.showInfoMessage,
+        showInfoMessage:ui.showInfoMessage,
 
         /**
          * Returns a language specific message based on the supplied key
          *
          * @param key the key of the message
          */
-        getClientMessage: getClientMessage,
+        getClientMessage:getClientMessage,
 
         /**
          * Adds a message to the internal client message map
@@ -1124,7 +1254,7 @@ var rave = rave || (function() {
          * @param key
          * @param message
          */
-        addClientMessage: addClientMessage,
+        addClientMessage:addClientMessage,
 
         /**
          * Gets the singleton Managed OpenAJAX 2.0 Hub
@@ -1141,6 +1271,6 @@ var rave = rave || (function() {
          *
          * @param message the message to log
          */
-        log: log
+        log:log
     }
 })();

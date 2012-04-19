@@ -8,7 +8,7 @@
  * with the License.  You may obtain a copy of the License at
  *
  *   http://www.apache.org/licenses/LICENSE-2.0
- 
+
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -17,27 +17,34 @@
  * under the License.
  */
 var rave = rave || {};
-rave.opensocial = rave.opensocial || (function() {
+rave.opensocial = rave.opensocial || (function () {
     var WIDGET_TYPE = "OpenSocial";
     var OFFSET = 10;
     var MIN_HEIGHT = 250;
-    var VIEW_NAMES = { 
-        CANVAS : "canvas",
-        DEFAULT : "default",
-        HOME : "home",
-        PREFERENCES: "preferences"
-    }; 
+    var VIEW_NAMES = {
+        CANVAS:"canvas",
+        DEFAULT:"default",
+        HOME:"home",
+        PREFERENCES:"preferences"
+    };
+    var VIEW_TARGETS = {
+        TAB: 'tab',
+        DIALOG: 'dialog',
+        MODALDIALOG: 'modal_dialog',
+        SIDEBAR: 'sidebar'
+    }
 
     var container;
-    
+
     /**
      * Initialization
      */
     function initOpenSocial() {
         initContainer();
         registerRpcHooks();
+        implementViews();
         gadgets.pubsub2router.init({
-            hub: rave.getManagedHub()
+            hub:rave.getManagedHub()
         })
     }
 
@@ -76,6 +83,36 @@ rave.opensocial = rave.opensocial || (function() {
         container.rpcRegister('set_pref', setPref);
     }
 
+    function implementViews() {
+
+        container.views = {
+            'createElementForGadget':function (metadata, rel, opt_view, opt_viewTarget, opt_coordinates, parentSite) {
+                if (opt_viewTarget) {
+                    return rave.createPopup(opt_viewTarget);
+                }
+            },
+
+
+            'createElementForEmbeddedExperience':function (rel, opt_gadgetInfo, opt_viewTarget, opt_coordinates, parentSite) {
+                if (opt_viewTarget) {
+                    return rave.createPopup(opt_viewTarget);
+                }
+            },
+
+            'createElementForUrl':function (rel, opt_viewTarget, opt_coordinates, parentSite) {
+                if (opt_viewTarget) {
+                    return rave.createPopup(opt_viewTarget);
+                }
+            },
+
+            'destroyElement':function (site) {
+                var element = site.el_;
+                container.closeGadget(site);
+                rave.destroyPopup(element);
+            }
+        };
+    }
+
     /**
      * Validates a gadget's metadata and renders it on the page
      *
@@ -105,7 +142,7 @@ rave.opensocial = rave.opensocial || (function() {
             container.preloadCaches(preloadConfig);
             renderNewGadget(gadget);
         } else {
-            rave.errorWidget(gadget.regionWidgetId, rave.getClientMessage("opensocial.render_error") +  "<br /><br />" + validationResult.error);
+            rave.errorWidget(gadget.regionWidgetId, rave.getClientMessage("opensocial.render_error") + "<br /><br />" + validationResult.error);
         }
     }
 
@@ -116,27 +153,27 @@ rave.opensocial = rave.opensocial || (function() {
     function renderNewGadget(gadget) {
         var widgetBodyElement = document.getElementById(["widget-", gadget.regionWidgetId, "-body"].join(""));
         gadget.site = container.newGadgetSite(widgetBodyElement);
-        gadget.maximize = function() { 
+        gadget.maximize = function () {
             // always display the gadget in canvas view even if it currently collapsed
-            renderGadgetView(rave.opensocial.VIEW_NAMES.CANVAS, this); 
+            renderGadgetView(rave.opensocial.VIEW_NAMES.CANVAS, this);
         };
-        gadget.minimize = function() { 
-            renderGadgetViewIfNotCollapsed(rave.opensocial.VIEW_NAMES.HOME, this);             
+        gadget.minimize = function () {
+            renderGadgetViewIfNotCollapsed(rave.opensocial.VIEW_NAMES.HOME, this);
         };
-        gadget.collapse = function() { 
+        gadget.collapse = function () {
             // hide the iframe of the gadget via css
-            $(getGadgetIframeByWidgetId(this.regionWidgetId)).hide();            
+            $(getGadgetIframeByWidgetId(this.regionWidgetId)).hide();
         };
-        gadget.restore = function() {
-             renderGadgetView(rave.opensocial.VIEW_NAMES.HOME, rave.getRegionWidgetById(this.regionWidgetId));
+        gadget.restore = function () {
+            renderGadgetView(rave.opensocial.VIEW_NAMES.HOME, rave.getRegionWidgetById(this.regionWidgetId));
         };
-        gadget.savePreferences = function(userPrefs) {
+        gadget.savePreferences = function (userPrefs) {
             this.userPrefs = userPrefs;
-            rave.api.rest.saveWidgetPreferences({regionWidgetId: this.regionWidgetId, userPrefs: userPrefs});
+            rave.api.rest.saveWidgetPreferences({regionWidgetId:this.regionWidgetId, userPrefs:userPrefs});
             // re-render the gadget in the same view if the gadget is not collapsed
-            renderGadgetViewIfNotCollapsed(rave.opensocial.getCurrentView(this.regionWidgetId), this);             
+            renderGadgetViewIfNotCollapsed(rave.opensocial.getCurrentView(this.regionWidgetId), this);
         };
-        gadget.editCustomPrefs = function() {
+        gadget.editCustomPrefs = function () {
             // display the gadget in custom edit prefs view
             renderGadgetView(rave.opensocial.VIEW_NAMES.PREFERENCES, this);
         };
@@ -144,24 +181,24 @@ rave.opensocial = rave.opensocial || (function() {
         // if the gadget has prefences to edit, or has the Preferences view
         // enable the edit prefs menu item
         if (gadget.metadata.hasPrefsToEdit || gadget.metadata.views.preferences) {
-            if ( gadget.metadata.views.preferences != undefined ) {
+            if (gadget.metadata.views.preferences != undefined) {
                 rave.layout.enableEditPrefsMenuItem(gadget.regionWidgetId, true);
             }
             else {
                 rave.layout.enableEditPrefsMenuItem(gadget.regionWidgetId, false);
             }
         }
-        
+
         // if the gadget is not collapsed, render it
-        renderGadgetViewIfNotCollapsed(rave.opensocial.VIEW_NAMES.HOME, gadget);        
+        renderGadgetViewIfNotCollapsed(rave.opensocial.VIEW_NAMES.HOME, gadget);
     }
-    
+
     /**
-     * Utility function to render a gadget in the supplied view if the gadget's 
+     * Utility function to render a gadget in the supplied view if the gadget's
      * collapsed attribute is false
      * @param view the OpenSocial view to render
      * @param gadget the OpenSocial gadget to render
-     */ 
+     */
     function renderGadgetViewIfNotCollapsed(view, gadget) {
         if (!gadget.collapsed) {
             renderGadgetView(view, gadget);
@@ -185,23 +222,23 @@ rave.opensocial = rave.opensocial || (function() {
     }
 
     function calculateSize(view, gadget) {
-    	var id = gadget.regionWidgetId;
+        var id = gadget.regionWidgetId;
         var elem = document.getElementById("widget-" + id + "-wrapper");
 
         // determine the height of the gadget's iframe
         var height = MIN_HEIGHT;
         if (view == rave.opensocial.VIEW_NAMES.CANVAS) {
-        	height = elem.clientHeight;
+            height = elem.clientHeight;
         } else if (gadget.metadata.modulePrefs && gadget.metadata.modulePrefs.height) {
-        	height = gadget.metadata.modulePrefs.height;
+            height = gadget.metadata.modulePrefs.height;
         }
-        return {width: "100%", height: height};
+        return {width:"100%", height:height};
     }
 
     /**
      * Returns the Common Container activeSiteHolder object for the given widgetId
      * @param widgetId the widgetId
-     */ 
+     */
     function getActiveSiteHolderByWidgetId(widgetId) {
         return rave.getRegionWidgetById(widgetId).site.getActiveSiteHolder();
     }
@@ -211,14 +248,14 @@ rave.opensocial = rave.opensocial || (function() {
      */
     function getGadgetIframeByWidgetId(widgetId) {
         return getActiveSiteHolderByWidgetId(widgetId).getIframeElement();
-    }        
+    }
 
     /**
      * validates the metadata for the current gadget
      * @param metadata the metadata object to validate
      */
     function validateMetadata(metadata) {
-        if(typeof metadata.error != "undefined") {
+        if (typeof metadata.error != "undefined") {
             return {valid:false, error:metadata.error.message};
         }
 
@@ -239,7 +276,7 @@ rave.opensocial = rave.opensocial || (function() {
         }
         return combined;
     }
-    
+
     /**
      * Gets the current view name of a gadget
      * @param regionWidgetId of the gadget
@@ -285,47 +322,47 @@ rave.opensocial = rave.opensocial || (function() {
         }
 
     }
-     
+
     /**
      * Saves a userPref for the widget
-     * 
+     *
      * @param args RPC event args
      * @param editToken this is an old deprecated parameter but still needs to be in the signature for proper binding
      * @param prefName the userpref name
      * @param prefValue the userpref value
-     */ 
-    function setPref(args, editToken, prefName, prefValue) {        
+     */
+    function setPref(args, editToken, prefName, prefValue) {
         var widgetId = rave.getObjectIdFromDomId(args.gs.getActiveSiteHolder().getElement().id);
         var regionWidget = rave.getRegionWidgetById(widgetId);
         // update the memory prefs object
         regionWidget.userPrefs[prefName] = prefValue;
         // persist it to database
-        rave.api.rest.saveWidgetPreference({regionWidgetId: widgetId, userPref: {prefName: prefName, prefValue: prefValue}});        
+        rave.api.rest.saveWidgetPreference({regionWidgetId:widgetId, userPref:{prefName:prefName, prefValue:prefValue}});
     }
-      
+
     /**
      * Re-renders the gadget in the requested view
      *
      * @param args RPC event args
      * @param viewName the view name to render
      */
-    function requestNavigateTo(args, viewName) {       
+    function requestNavigateTo(args, viewName) {
         var widgetId = rave.getObjectIdFromDomId(args.gs.getActiveSiteHolder().getElement().id);
         var fnArgs = {};
         fnArgs.data = {}
         fnArgs.data.id = widgetId;
-        
-        switch(viewName) {
-            case VIEW_NAMES.CANVAS:  
+
+        switch (viewName) {
+            case VIEW_NAMES.CANVAS:
                 rave.maximizeWidget(fnArgs);
                 break;
-            case VIEW_NAMES.HOME:            
+            case VIEW_NAMES.HOME:
                 rave.minimizeWidget(fnArgs);
                 break;
             case VIEW_NAMES.PREFERENCES:
                 rave.editCustomPrefs(fnArgs);
                 break;
-        }       
+        }
     }
 
     /**
@@ -334,37 +371,40 @@ rave.opensocial = rave.opensocial || (function() {
     function isArray(o) {
         return Object.prototype.toString.call(o) == "[object Array]";
     }
-    
+
+
     /**
      * Exposed public API calls
      */
     return {
-        TYPE : WIDGET_TYPE,
-        
-        VIEW_NAMES : VIEW_NAMES,
+        TYPE:WIDGET_TYPE,
+
+        VIEW_NAMES:VIEW_NAMES,
+
+        VIEW_TARGETS: VIEW_TARGETS,
         /**
          * Initializes the Rave OpenSocial machinery
          */
-        init : initOpenSocial,
+        init:initOpenSocial,
         /**
          * Gets a reference to the container singleton
          */
-        container: getContainer,
+        container:getContainer,
         /**
          * Instantiates and renders the given gadget
          * @param a gadget to render
          */
-        initWidget: validateAndRenderGadget,
+        initWidget:validateAndRenderGadget,
 
         /**
          * Resets the current OpenSocial container
          */
-        reset: resetContainer,
+        reset:resetContainer,
         /**
          * Gets the current view name of the given gadget
          * @param regionWidgetId of the gadget
          */
-        getCurrentView: getCurrentView
+        getCurrentView:getCurrentView
     };
 
 })();

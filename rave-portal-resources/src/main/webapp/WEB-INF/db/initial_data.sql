@@ -292,6 +292,12 @@ insert into widget (entity_id, title, url, type, description, author, widget_sta
 values(@youtube_widget_id, 'Youtube', 'http://localhost:8080/demogadgets/youtubesearch.xml', 'OpenSocial', 'A search module, which searches YouTube by tags like Politics News Life Music Family Photography Art Random Travel Personal Religion Movies Business Thoughts Media Humor Culture Poetry Christmas Writing Books Food Friends.', 'David Olsen', 'PUBLISHED', 'http://www.zytu.com/youtube/youtubesearchthumb.png', 'http://www.zytu.com/youtube/youtubesearchscreen.png', @user_id_1);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @widget_seq;
 
+-- Open Views Gadget
+set @open_views_widget_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @widget_seq);
+insert into widget (entity_id, title, url, type, description, author, widget_status, owner_id)
+values(@open_views_widget_id, 'Open Views Demo', 'http://localhost:8080/demogadgets/open_views_demo.xml', 'OpenSocial', 'A demo gadget to show open views popups in action.', 'Erin Noe-Payne', 'PUBLISHED', @user_id_1);
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @widget_seq;
+
 -- View information
 set @gadgetview_widget_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @widget_seq);
 insert into widget (entity_id, title, url, type, widget_status, owner_id)
