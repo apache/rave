@@ -83,12 +83,27 @@ public class DefaultUserService implements UserService {
     @Value("${portal.mail.service.baseurl}")
     private String baseUrl;
 
+    @Value("${protal.user.account.admin.subject}")
+    private String userAccountApprovalSubject;
+
+    @Value("${protal.user.account.admin.template}")
+    private String userAccountApprovalTemplate;
+
+    @Value("${protal.user.account.needapporval}")
+    private boolean userAccountApproval;
+
+    @Value("${protal.user.account.admin.email}")
+    private String approvalAdminEmail;
+
+    @Value("${portal.mail.service.loginpage}")
+    private String loginUrl;
+
     @Autowired
     public DefaultUserService(PageRepository pageRepository,
                               UserRepository userRepository,
                               WidgetRatingRepository widgetRatingRepository,
                               WidgetCommentRepository widgetCommentRepository,
-                              WidgetRepository widgetRepository, 
+                              WidgetRepository widgetRepository,
                               PageTemplateRepository pageTemplateRepository) {
         this.userRepository = userRepository;
         this.pageRepository = pageRepository;
@@ -160,8 +175,17 @@ public class DefaultUserService implements UserService {
     @Override
     @Transactional
     public void registerNewUser(User user) {
+    	if(userAccountApproval){
+    		user.setEnabled(false);
+    	}
         User managedUser = userRepository.save(user);
         pageRepository.createPageForUser(managedUser, pageTemplateRepository.getDefaultPage(PageType.PERSON_PROFILE));
+        if(userAccountApproval && !approvalAdminEmail.isEmpty()){
+            Map<String, Object> templateData = new HashMap<String, Object>();
+            templateData.put("user", user);
+            templateData.put("portalUrl", loginUrl);
+        	emailService.sendEmail(approvalAdminEmail, userAccountApprovalSubject, userAccountApprovalTemplate, templateData);
+    	}
     }
 
     @Override
