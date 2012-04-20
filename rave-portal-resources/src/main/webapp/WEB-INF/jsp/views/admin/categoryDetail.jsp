@@ -26,58 +26,60 @@
     <div class="span2">
         <rave:admin_tabsheader/>
     </div>
-    <article class="span6">
-        <ul class="horizontal-list goback">
-            <li>
-                <a href="<spring:url value="/app/admin/categories"/>"><fmt:message key="admin.categoryDetail.goback"/></a>
-            </li>
-        </ul>
-        <h2><c:out value="${category.text}"/></h2>
+    <div class="span10">
+        <article>
+            <ul class="horizontal-list goback">
+                <li>
+                    <a href="<spring:url value="/app/admin/categories"/>"><fmt:message key="admin.categoryDetail.goback"/></a>
+                </li>
+            </ul>
+            <h2><c:out value="${category.text}"/></h2>
 
-        <section class="span6">
-            <h3><fmt:message key="admin.delete"/><c:out value=" ${category.text}"/></h3>
-            <form:form id="deleteCategory" action="delete" commandName="category" method="POST">
+            <section class="span6">
+                <h3><fmt:message key="admin.delete"/><c:out value=" ${category.text}"/></h3>
+                <form:form id="deleteCategory" action="delete" commandName="category" method="POST">
+                    <fieldset>
+                        <input type="hidden" name="token" value="<c:out value="${tokencheck}"/>"/>
+
+                        <div>
+                            <ul class="checkboxlist">
+                                <li>
+                                    <input type="checkbox" name="confirmdelete" id="confirmdelete" value="true"/>
+                                    <label for="confirmdelete"><fmt:message key="admin.categoryDetail.action.delete.confirm"/></label>
+                                    <c:if test="${missingConfirm}">
+                                        <p class="error"><fmt:message key="admin.userdetail.action.delete.confirm.required"/></p>
+                                    </c:if>
+                                </li>
+                            </ul>
+                        </div>
+                    </fieldset>
+                    <fieldset>
+                            <fmt:message key="admin.category.delete" var="deleteCategoryMsg"/>
+                            <button class="btn btn-primary" type="submit" value="${deleteCategoryMsg}">${deleteCategoryMsg}</button>
+                    </fieldset>
+                </form:form>
+            </section>
+
+        </article>
+        <section class="span3">
+            <h3><fmt:message key="admin.categoryDetail.editData"/></h3>
+            <form:form id="updateCategory" action="update" commandName="category" method="POST">
+                <form:errors cssClass="error" element="p"/>
                 <fieldset>
                     <input type="hidden" name="token" value="<c:out value="${tokencheck}"/>"/>
+                    <p>
+                        <label for="text"><fmt:message
+                                key="admin.categoryDetail.label.text"/></label>
 
-                    <div>
-                        <ul class="checkboxlist">
-                            <li>
-                                <input type="checkbox" name="confirmdelete" id="confirmdelete" value="true"/>
-                                <label for="confirmdelete"><fmt:message key="admin.categoryDetail.action.delete.confirm"/></label>
-                                <c:if test="${missingConfirm}">
-                                    <p class="error"><fmt:message key="admin.userdetail.action.delete.confirm.required"/></p>
-                                </c:if>
-                            </li>
-                        </ul>
-                    </div>
+                        <form:input id="text" path="text" required="required" value="${category.text}" autofocus="autofocus"/>
+                        <form:errors path="text" cssClass="error"/>
+                    </p>
                 </fieldset>
                 <fieldset>
-                        <fmt:message key="admin.category.delete" var="deleteCategoryMsg"/>
-                        <button class="btn btn-primary" type="submit" value="${deleteCategoryMsg}">${deleteCategoryMsg}</button>
+                    <fmt:message key="admin.category.update" var="updateCategoryMsg"/>
+                    <button class="btn btn-primary" type="submit" value="${updateCategoryMsg}">${updateCategoryMsg}</button>
                 </fieldset>
             </form:form>
         </section>
-
-    </article>
-    <section class="span3">
-        <h3><fmt:message key="admin.categoryDetail.editData"/></h3>
-        <form:form id="updateCategory" action="update" commandName="category" method="POST">
-            <form:errors cssClass="error" element="p"/>
-            <fieldset>
-                <input type="hidden" name="token" value="<c:out value="${tokencheck}"/>"/>
-                <p>
-                    <label for="text"><fmt:message
-                            key="admin.categoryDetail.label.text"/></label>
-
-                    <form:input id="text" path="text" required="required" value="${category.text}" autofocus="autofocus"/>
-                    <form:errors path="text" cssClass="error"/>
-                </p>
-            </fieldset>
-            <fieldset>
-                <fmt:message key="admin.category.update" var="updateCategoryMsg"/>
-                <button class="btn btn-primary" type="submit" value="${updateCategoryMsg}">${updateCategoryMsg}</button>
-            </fieldset>
-        </form:form>
-    </section>
+    </div>
 </div>
