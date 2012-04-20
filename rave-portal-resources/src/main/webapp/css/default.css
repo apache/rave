@@ -489,12 +489,35 @@ header h1{
     margin: 0 0 1em 2%;
     float: right;
 }
+.detail-widget{ padding-top: 20px; }
 
+.detail-widget-preview {
+    text-align: center;
+    float:right;
+}
+.detail-widget-preview img{
+    margin-bottom: 15px;
+}
+.detail-widget-main > .row-fluid{
+    margin-bottom: 20px;
+}
+
+.detail-widget-tags {
+    margin-bottom: 20px;
+}
+.detail-widget-tags .label{
+    width: auto;
+    float: none;
+    display: inline;
+}
 .detailWidgetScreenshot img, .detailWidgetThumbnail img {
     max-width: 100%;
     margin-bottom: 1em;
 }
-
+.widgetTags .form-inline label{
+    display:block;
+    font-weight: bold;
+}
 .detailWidgetThumbnail {
     display: none;
 }
@@ -506,15 +529,30 @@ header h1{
 .new-comment textarea {
     max-width: 95%;
 }
-
+#editComment-dialog textarea{ width: 98%;}
+ul.comments{
+    margin-left: 0;
+}
 .comment {
     margin: 1em 0 2em 0;
 }
 
 ul.comments li {
     list-style: none;
+    border-bottom: 1px solid #ddd;
 }
-
+ul.comments li:last-child{
+    border-bottom: none;
+}
+.comment-heading{
+    font-size: 1.25em;
+}
+.comment-heading span + .btn{
+    margin-left: 20px;
+}
+.commenter {
+    font-weight: bold;
+}
 ul.storeItems {
     padding: 0;
     margin: 1em auto;

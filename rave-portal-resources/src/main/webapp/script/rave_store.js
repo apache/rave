@@ -96,41 +96,42 @@ rave.store = rave.store || (function() {
                                                 successCallback: function() { window.location.reload(); }});
         });
 
-        $(".commentEditButton").button( {
-            icons: {primary: "ui-icon-pencil"},
-            text: false
-        }).click(function() {
+        $(".commentEditButton").click(function() {
             var commentId = this.id.substring("comment-edit-".length);
             var widgetId = this.getAttribute('data-widgetid');
-            var commentText = $(this).parent().find(".commentText").text();
-            $("#editComment").text(commentText);
-            $("#editComment-dialog").dialog({
-               autoOpen: true,
-               height: 150,
-               width: 350,
-               modal: true,
-               buttons : [
-                    {
-                        text : rave.getClientMessage("common.update"),
-                        click : function() {
-                           rave.api.rest.updateWidgetComment({widgetId: widgetId,
-                                                            commentId: commentId,
-                                                            text: $("#editComment").get(0).value,
-                                                            successCallback: function() { window.location.reload(); }
-                                                        })
-                        }
-                    }
-               ]
-            });
+            var commentText = $(this).parents(".comment").find(".commentText").text();
+            $("#editComment").html(commentText);
+            $("#editComment-dialog #updateComment").click( function(){
+                rave.api.rest.updateWidgetComment({widgetId: widgetId,
+                    commentId: commentId,
+                    text: $("#editComment").get(0).value,
+                    successCallback: function() { window.location.reload(); }
+                });
+            }).html(rave.getClientMessage("common.update"));
         });
     }
 
     function initTags(widgetId) {
+        $('*[data-toggle="basic-slide"]').click(function(){
+            var target;
 
-        $(".tagNewButton").button({
-            icons:{primary:"ui-icon-disk"},
-            text:false
-        }).click(function () {
+            if($(this).attr("data-target")){
+                target = $(this).attr("data-target");
+                console.log($(this).attr("data-target"));
+            }
+            else{
+                target = $(this).attr("href");
+                console.log("else");
+            }
+
+            if($(this).attr('data-toggle-text')){
+                var oldcontent = $(this).html();
+                $(this).html($(this).attr('data-toggle-text'));
+                $(this).attr('data-toggle-text',oldcontent);
+            }
+            $(target).slideToggle();
+        });
+        $(".tagNewButton").click(function () {
                 var widgetId = this.id.substring("tag-new-".length);
                 rave.api.rest.createWidgetTag({widgetId:widgetId,
                     text:$("#tags").get(0).value,
@@ -147,8 +148,7 @@ rave.store = rave.store || (function() {
                         value:tag.keyword
                     }
                 }));
-
-                $("#tags").autocomplete({
+                $("#tags").typeahead({
                     source:result
                 })
             }
