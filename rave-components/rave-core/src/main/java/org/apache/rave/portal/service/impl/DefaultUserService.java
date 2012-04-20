@@ -83,16 +83,16 @@ public class DefaultUserService implements UserService {
     @Value("${portal.mail.service.baseurl}")
     private String baseUrl;
 
-    @Value("${protal.user.account.admin.subject}")
+    @Value("${portal.user.account.admin.subject}")
     private String userAccountApprovalSubject;
 
-    @Value("${protal.user.account.admin.template}")
+    @Value("${portal.user.account.admin.template}")
     private String userAccountApprovalTemplate;
 
-    @Value("${protal.user.account.needapproval}")
+    @Value("${portal.user.account.needapproval}")
     private boolean userAccountApproval;
 
-    @Value("${protal.user.account.admin.email}")
+    @Value("${portal.user.account.admin.email}")
     private String approvalAdminEmail;
 
     @Value("${portal.mail.service.loginpage}")

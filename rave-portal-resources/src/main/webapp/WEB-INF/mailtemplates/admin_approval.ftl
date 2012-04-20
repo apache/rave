@@ -17,7 +17,7 @@
 * under the License.
 -->
 <#-- @ftlvariable name="user" type="org.apache.rave.portal.model.User" -->
-<#-- @ftlvariable name="reminderUrl" type="java.lang.String" -->
+<#-- @ftlvariable name="portalUrl" type="java.lang.String" -->
 Dear Admin,
 
 We've received a request to approve Rave account for ${user.getUsername()}.
