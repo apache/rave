@@ -23,3 +23,19 @@
     color: #CCCCCC !important;
     background-color: #FFFFFF;
 }
+/*Dropdowns in widget-bar are inheriting text-align: center. All dropdowns should left align by default.*/
+.dropdown-menu{
+    text-align: left;
+}
+
+/*Creating Outlined Tabs*/
+.nav-tabs.outlined{
+   margin: 0px 4px -1px 0;
+   border-bottom: none;
+}
+.tab-content.outlined{
+     border: 1px solid #ddd;
+     border-radius: 0 5px 5px 5px;
+     padding: 10px 2% 0;
+     width: 96%;
+}

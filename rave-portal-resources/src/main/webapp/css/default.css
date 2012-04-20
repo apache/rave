@@ -20,7 +20,7 @@
 
 
 
-header {
+header, .navbar {
     line-height: 3em;
 }
 
@@ -76,30 +76,31 @@ dt {
 }
 
 /* Header */
-header {
+header{
+    display: block;
     height: 3em;
+    width: 100%;
     color: #F2F2F2;
     background-color: #222222;
 }
 
-header img {
+header img{
     max-width: 150px;
 }
 
-header a, header a:visited {
+header a, header a:visited,
+header a:hover{
     color: #F2F2F2;
     text-decoration: none;
     padding: 2px;
     font-weight: bold;
 }
 
-header a:hover {
-    color: #F2F2F2;
-    background-color: #666666;
-    text-decoration: none;
+header a.brand:hover{
+    cursor: default;
 }
 
-header h1 {
+header h1{
     text-transform: none;
     font-size: 1.5em;
     font-weight: bold;
@@ -159,7 +160,6 @@ header h1 {
 .widget {
     padding: 5px;
     background-color: white;
-    box-shadow: 2px 2px 4px #666666;
     border-radius: 0 0 5px 5px;
     height: 100%;
 }
@@ -192,7 +192,12 @@ header h1 {
     vertical-align: top;
     margin-bottom: 20px;
     /* prevents adjusting of other gadgets when gadget is being dragged */
-    border: 1px solid transparent;
+    border: 1px solid #cfcfcf;
+    border-radius: 5px;
+    /*Can be replaced with bootstrap mixin: .box-shadow(1px 1px 3px rgba(0,0,0,.25))*/
+    box-shadow: 1px 1px 3px rgba(0,0,0,.25);
+    -webkit-box-shadow: 1px 1px 5px rgba(0,0,0,.25);
+    -moz-box-shadow: 2px 2px 2px rgba(0,0,0,.25);
 }
 
 .widget-wrapper-mobile {
@@ -215,10 +220,9 @@ header h1 {
     border-color: #e6e6e6 #e6e6e6 #bfbfbf;
     border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
     filter: progid:dximagetransform.microsoft.gradient(enabled=false);
-
     border-radius: 5px 5px 0 0;
     padding: 4px 10px 4px;
-    box-shadow: 2px 2px 4px #666666;
+
 }
 
 .widget-title-bar:hover {
@@ -442,13 +446,15 @@ header h1 {
 }
 
 .storeItem {
-    border: 1px solid #B3C4CF;
+    border: 1px solid #ddd;
     margin: 1em auto;
     padding: 10px;
-    background-color: #F2F2F2;
+    background-color: #f9f9f9;
     color: black;
     border-radius: 5px;
-    box-shadow: 2px 2px 2px black;
+    box-shadow: 2px 2px 3px rgba(0,0,0,0.4);
+    -moz-box-shadow: 2px 2px 2px rgba(0,0,0,0.4);
+    -webkit-box-shadow: 2px 2px 4px rgba(0,0,0,0.4);
 }
 
 .storeItemFeatured {
@@ -900,7 +906,9 @@ span.error, label.error {
 	display: none;
 }
 
-.profile-info-hidden {
+.profile-info-hidden,
+ .btn.profile-info-hidden,
+ .btn.primary-btn.profile-info-hidden{
     display: none;
 }
 

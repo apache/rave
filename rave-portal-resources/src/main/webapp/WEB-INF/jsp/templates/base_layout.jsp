@@ -22,14 +22,15 @@ under the License.
 <%-- Expose any attributes defined in the tiles-defs.xml to the request scope for use in other tiles --%>
 <tiles:importAttribute scope="request"/>
 <!DOCTYPE html>
-<html>
+<html class="no-js">
 <head>
     <meta charset="ISO-8859-1"/>
     <meta name="viewport" content="width=device-width" />
     <title><rave:title /></title>
     <rave:rave_css/>
     <rave:custom_css/>
-</head>
+    <rave:third_party_head_js/>
+ </head>
 <body>
 <%-- Header Content --%>
 <tiles:insertAttribute name="header"/>
