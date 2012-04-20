@@ -29,4 +29,4 @@
            libraries should be loaded from third_party_js.tag
 --%>
 <!-- Modernizr MUST come first!-->
-<script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.5.3/modernizr.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.5.3/modernizr.min.js"></script>
