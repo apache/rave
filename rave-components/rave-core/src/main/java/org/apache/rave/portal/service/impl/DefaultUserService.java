@@ -89,7 +89,7 @@ public class DefaultUserService implements UserService {
     @Value("${protal.user.account.admin.template}")
     private String userAccountApprovalTemplate;
 
-    @Value("${protal.user.account.needapporval}")
+    @Value("${protal.user.account.needapproval}")
     private boolean userAccountApproval;
 
     @Value("${protal.user.account.admin.email}")
