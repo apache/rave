@@ -24,55 +24,79 @@ rave.wookie = rave.wookie || (function() {
     // keep this value so we can show the widget in the maximize view even when its collapsed
     var userCollapsed;
     var container;
+    
+    
+    function onClientSecurityAlert(source, alertType) {  /* Handle client-side security alerts */  }
+    function onClientConnect(container) {        /* Called when client connects */   }
+    function onClientDisconnect(container) {     /* Called when client disconnects */ }
 
     function validateAndRenderWidget(widget){
     	userCollapsed = widget.collapsed;
         var widgetBodyElement = document.getElementById(["widget-", widget.regionWidgetId, "-body"].join(""));
+        
+        var height = MIN_HEIGHT;
+        if (widget.height) height = widget.height;
+        
+        //
+        // Create a global onload callback handler for making the widget
+        // visible after its container is ready
+        //
+        window["onWidget"+widget.regionWidgetId+"Load"] = function(){
+           window.document.getElementById(widget.regionWidgetId).style.visibility="visible";
+        };
 
-        var widgetIframe = document.createElement("iframe");
-
-        if (widget.height){
-          widgetIframe.setAttribute("height",widget.height);
-          widgetIframe.setAttribute("min-height",MIN_HEIGHT+"px");
-        } else {
-          widgetIframe.setAttribute("height",MIN_HEIGHT+"px");
-          widgetIframe.setAttribute("min-height",MIN_HEIGHT+"px");
+        //
+        // Create OpenAjax IFrame container
+        //
+        var ooacontainer = new OpenAjax.hub.IframeContainer(rave.getManagedHub() , ""+widget.regionWidgetId,
+        {
+          Container: {
+            onSecurityAlert: onClientSecurityAlert,
+            onConnect:       onClientConnect,
+            onDisconnect:    onClientDisconnect
+          },
+          IframeContainer: {
+            parent:      widgetBodyElement, 
+            iframeAttrs: { 
+                style: { width:"100%"},
+                vspace: 0,
+                hspace: 0,
+                marginheight: 0,
+                marginwidth: 0,
+                scroll: "no",
+                frameborder: 0,
+                height: height,
+                "min-height": ""+MIN_HEIGHT+"px"
+            },
+            uri: widget.widgetUrl,
+            onGadgetLoad: "onWidget"+widget.regionWidgetId+"Load"
+          }
         }
-        // Rendering the widgets width causes the w3c widget to appear outside of the
-        // container object in some browsers.  Setting to 100% seems to fix this. 
-        // (there is something similar in the rave_opensocial.js file)
-        widgetIframe.setAttribute("style","width: 100%");
-        widgetIframe.setAttribute("src",widget.widgetUrl);
-        widgetIframe.setAttribute("scroll","no");
-        widgetIframe.setAttribute("frameborder","0");
-        widgetIframe.setAttribute("vspace","0");
-        widgetIframe.setAttribute("hspace","0");
-        widgetIframe.setAttribute("marginheight","0");
-        widgetIframe.setAttribute("marginwidth","0");
-        widgetBodyElement.appendChild(widgetIframe);
+        );
+        
         // collapse/restore functions
         widget.collapse = function() {
-            $(widgetIframe).hide();
+            $(ooacontainer.getIframe).hide();
         };
         widget.restore = function() {
-            $(widgetIframe).show();
+            $(ooacontainer.getIframe).show();
         };
         widget.maximize = function() {
             // always display the widget in canvas view even if it currently collapsed
             if (widget.collapsed){
                 userCollapsed = true;
-                $(widgetIframe).show();
+                $(ooacontainer.getIframe).show();
             }
         };
         widget.minimize = function() {
             if (widget.collapsed){
                 userCollapsed = false;
-                $(widgetIframe).hide();
+                $(ooacontainer.getIframe).hide();
             }
         };
         // if in the collapsed state, hide the layer
         if (widget.collapsed){
-            $(widgetIframe).hide();
+            $(ooacontainer.getIframe).hide();
         }
     }
 
