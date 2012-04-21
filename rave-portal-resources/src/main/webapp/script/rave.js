@@ -104,7 +104,7 @@ var rave = rave || (function () {
                     var cfg = {
                         stack:true,
                         dialogClass:'raveDialog'
-                    }
+                    };
                     element.dialog(cfg);
                 },
                 cleanup:function (element) {
@@ -125,7 +125,7 @@ var rave = rave || (function () {
                     var cfg = {
                         modal:true,
                         dialogClass:'raveModal'
-                    }
+                    };
                     element.dialog(cfg);
                 },
                 cleanup:function (element) {
@@ -136,10 +136,10 @@ var rave = rave || (function () {
                 styleMap:{
 
                 },
-                float:false,
+                'float':false,
                 tab:false
             }
-        }
+        };
 
         // variable to store whether or not the
         // client is a mobile device
