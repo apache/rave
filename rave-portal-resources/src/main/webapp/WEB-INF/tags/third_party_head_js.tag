@@ -18,8 +18,15 @@
 
 --%>
 <%--
-     This file includes references to all external third party CSS files required by rave
-     Overlay this file in custom extensions of Rave if you host these files internally and don't need
+     This file includes references to all external third party javascript libraries required by rave
+     that must be loaded in the <HEAD> tag.
+
+     Overlay this file in custom extensions of Rave if you host these libraries internally and don't need
      to pull them in externally.
+
+     NOTE: use this file sparingly and only for libraries that absolutely have to
+           be loaded in the <HEAD>.  For improved performance all other JavaScript
+           libraries should be loaded from third_party_js.tag
 --%>
-<link rel="stylesheet" href="//ajax.aspnetcdn.com/ajax/jquery.ui/1.8.17/themes/base/jquery-ui.css"/>
+<!-- Modernizr MUST come first!-->
+<script src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.5.3/modernizr.min.js"></script>

@@ -17,20 +17,22 @@
   specific language governing permissions and limitations
   under the License.
   --%>
-<div id="personProfileSubPages">
-    <ul>
+<div class="row-fluid" id="personProfileSubPages">
+    <ul class="nav nav-tabs outlined">
         <!-- first render the tabs -->
         <c:forEach var="subPage" items="${page.subPages}" varStatus="subPageStatus">
-            <li><a href="#subpage-${subPage.entityId}"><c:out value="${subPage.name}"/></a></li>
+            <li><a href="#tab-${subPage.entityId}" data-toggle="tab"><c:out value="${subPage.name}"/></a></li>
         </c:forEach>
     </ul>
     <!-- now render the sub page bodies -->
+    <div class="tab-content outlined">
     <c:forEach var="subPage" items="${page.subPages}" varStatus="subPageStatus">
-        <div id="subpage-${subPage.entityId}">
+        <div class="tab-pane" id="tab-${subPage.entityId}">
             <c:forEach var="subPageRegion" items="${subPage.regions}" varStatus="subPageRegionStatus">
                 <rave:region region="${subPageRegion}" regionIdx="${subPageRegionStatus.count}" />
             </c:forEach>
             <div class="clear-float">&nbsp;</div>
         </div>
     </c:forEach>
+    </div>
 </div>

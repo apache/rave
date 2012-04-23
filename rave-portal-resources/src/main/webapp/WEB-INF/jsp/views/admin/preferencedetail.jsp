@@ -22,18 +22,21 @@
 
 <fmt:message key="${pageTitleKey}" var="pagetitle"/>
 <rave:header pageTitle="${pagetitle}"/>
-<rave:admin_tabsheader/>
-<div class="pageContent">
-    <article class="admincontent">
-        <ul class="horizontal-list goback">
-            <li><a href="<spring:url value="/app/admin/preferences"/>">
-                <fmt:message key="admin.preferencedetail.goback"/></a>
-            </li>
-        </ul>
-        <h2><fmt:message key="admin.preferences.shorttitle"/></h2>
+<div class="container-fluid">
+    <div class="span2">
+        <rave:admin_tabsheader/>
+    </div>
+    <div class="span10">
+        <article>
+            <ul class="pager">
+                <li class="previous">
+                    <a href="<spring:url value="/app/admin/preferences"/>"><fmt:message key="admin.preferencedetail.goback"/></a>
+                </li>
+            </ul>
 
-        <div class="leftcolumn">
-            <section class="formbox">
+            <h2><fmt:message key="admin.preferences.shorttitle"/></h2>
+
+            <section class="span6">
                 <spring:url value="/app/admin/preferencedetail/update" var="formAction"/>
                 <form:form action="${formAction}" method="POST" modelAttribute="preferenceForm">
                     <form:errors cssClass="error" element="p"/>
@@ -51,8 +54,7 @@
                         <p>
                             <spring:bind path="pageSize.value">
                                 <label for="pageSize"><fmt:message key="admin.preferencedetail.pageSize"/> *</label>
-                                <input id="pageSize" name="pageSize.value" type="number" step="1"
-                                       value="<c:out value="${status.value}"/>"/>
+                                <input id="pageSize" name="pageSize.value" type="number" step="1" value="<c:out value="${status.value}"/>"/>
                             </spring:bind>
                             <form:errors path="pageSize.value" cssClass="error"/>
                         </p>
@@ -69,17 +71,13 @@
                             </spring:bind>
                         </p>
                     </fieldset>
-
                     <fieldset>
                         <fmt:message key="admin.preferencedetail.updateButton" var="updateButtonText"/>
-                        <input type="submit" value="${updateButtonText}"/>
+                        <button class="btn btn-primary" type="submit" value="${updateButtonText}">${updateButtonText}</button>
                     </fieldset>
                 </form:form>
             </section>
-            <div class="clear-float">
 
-            </div>
-
-        </div>
-    </article>
+        </article>
+    </div>
 </div>

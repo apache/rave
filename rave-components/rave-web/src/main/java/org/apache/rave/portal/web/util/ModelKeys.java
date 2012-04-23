@@ -23,7 +23,8 @@ package org.apache.rave.portal.web.util;
  * Defines constants representing the available keys used for inserting and retrieving objects from the {@link org.springframework.ui.Model}
  */
 public class ModelKeys {
-    private ModelKeys() {}
+    private ModelKeys() {
+    }
 
     public static final String PAGE = "page"; // the current page object
     public static final String PAGES = "pages"; // a list of pages available for the current user
@@ -37,15 +38,15 @@ public class ModelKeys {
     public static final String REFERRING_PAGE_ID = "referringPageId";
     public static final String OPENSOCIAL_ENVIRONMENT = "openSocialEnv";
     public static final String NEW_USER = "newUser"; //a new user instance created
-    public static final String USER_PROFILE="userProfile";
+    public static final String USER_PROFILE = "userProfile";
     public static final String SEARCH_TERM = "searchTerm";
     public static final String OFFSET = "offset";
     public static final String SEARCHRESULT = "searchResult";
     public static final String TOKENCHECK = "tokencheck";
     public static final String USER_MAP = "userMap";
     public static final String PORTAL_SETTINGS = "portalSettings";
-    public static final String TAGS="tags" ;
-    public static final String SELECTED_TAG="selectedTag" ;
+    public static final String TAGS = "tags";
+    public static final String SELECTED_TAG = "selectedTag";
     public static final String CATEGORIES = "categories";
     public static final String SELECTED_CATEGORY = "selectedCategory";
     public static final String DEFAULT_TAG_PAGE = "defaultTagPage";

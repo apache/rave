@@ -23,114 +23,114 @@
 <fmt:message key="${pageTitleKey}" var="pagetitle"/>
 <c:set var="canChangeUserStatus" value="${user.username ne loggedInUser}"/>
 <rave:header pageTitle="${pagetitle}"/>
-<rave:admin_tabsheader/>
-<div class="pageContent">
-    <article class="admincontent">
-        <ul class="horizontal-list goback">
-            <li><a href="<spring:url value="/app/admin/users"/>"><fmt:message key="admin.userdetail.goback"/></a>
-            </li>
-        </ul>
-        <h2><c:out value="${user.username}"/></h2>
+<div class="container-fluid">
+    <div class="span2">
+        <rave:admin_tabsheader/>
+    </div>
+    <div class="span10">
+        <article>
+            <ul class="pager">
+                <li class="previous"><a href="<spring:url value="/app/admin/users"/>"><fmt:message key="admin.userdetail.goback"/></a></li>
+            </ul>
+            <h2><c:out value="${user.username}"/></h2>
+            <div class="span6">
+                <c:if test="${canChangeUserStatus}">
+                    <section>
+                        <h3><fmt:message key="admin.delete"/> <c:out value=" ${user.username}"/></h3>
+                        <form:form cssClass="form-horizontal" id="deleteUserProfile" action="delete" commandName="user" method="POST">
+                            <fieldset>
+                                <input type="hidden" name="token" value="<c:out value="${tokencheck}"/>"/>
+                                <div>
+                                    <ul class="checkboxlist">
+                                        <li>
+                                            <input type="checkbox" name="confirmdelete" id="confirmdelete" value="true"/>
+                                            <label for="confirmdelete"><fmt:message key="admin.userdetail.action.delete.confirm"/></label>
+                                            <c:if test="${missingConfirm}">
+                                                <p class="error"><fmt:message key="admin.userdetail.action.delete.confirm.required"/></p>
+                                            </c:if>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </fieldset>
+                            <fieldset>
+                                <p>
+                                    <input type="submit" value="Delete the user"/>
+                                </p>
+                            </fieldset>
+                        </form:form>
+                    </section>
+                </c:if>
+            </div>
 
-        <div class="rightcolumn">
-            <c:if test="${canChangeUserStatus}">
-            <section class="formbox">
-                <h3><fmt:message key="admin.delete"/> <c:out value=" ${user.username}"/></h3>
-                <form:form id="deleteUserProfile" action="delete" commandName="user" method="POST">
-                    <fieldset>
-                        <input type="hidden" name="token" value="<c:out value="${tokencheck}"/>"/>
+            <div class="span5">
+                <section>
 
-                        <div>
+                    <form:form cssClass="form-horizontal" id="updateUserProfile" action="update" commandName="user" method="POST">
+                        <form:errors cssClass="error" element="p"/>
+                        <fieldset>
+                            <legend><fmt:message key="admin.userdetail.editdata"/></legend>
+                            <input type="hidden" name="token" value="<c:out value="${tokencheck}"/>"/>
+                            <div class="control-group">
+                                <label class="control-label" for="email"><fmt:message key="page.general.email"/></label>
+                                <div class="controls"><spring:bind path="email">
+                                    <input type="email" name="email" id="email" value="<c:out value="${status.value}"/>"
+                                           class="long"/>
+                                </spring:bind></div>
+                                <form:errors path="email" cssClass="error"/>
+                            </div>
+
+                            <div class="control-group">
+                                <label class="control-label" for="openIdField"><fmt:message key="page.userprofile.openid.url"/></label>
+                                <div class="controls">
+                                    <spring:bind path="openId">
+                                        <input type="url" id="openIdField" name="openId" value="<c:out value="${status.value}"/>" class="long"/>
+                                    </spring:bind>
+                                </div>
+                                <form:errors path="openId" cssClass="error"/>
+                            </div>
+
+                            <div class="control-group">
+                                <span class="label"><fmt:message key="admin.userdata.accountstatus"/></span>
+                                <ul class="checkboxlist">
+                                    <li>
+                                        <fmt:message key="admin.userdata.enabled" var="labelEnabled"/>
+                                        <form:checkbox path="enabled" label="${labelEnabled}"
+                                                       disabled="${canChangeUserStatus ne true}"/>
+                                    </li>
+                                    <li>
+                                        <fmt:message key="admin.userdata.expired" var="labelExpired"/>
+                                        <form:checkbox path="expired" label="${labelExpired}"
+                                                       disabled="${canChangeUserStatus ne true}"/>
+                                    </li>
+                                    <li>
+                                        <fmt:message key="admin.userdata.locked" var="labelLocked"/>
+                                        <form:checkbox path="locked" label="${labelLocked}"
+                                                       disabled="${canChangeUserStatus ne true}"/>
+                                    </li>
+                                </ul>
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <span class="label"><fmt:message key="admin.userdata.authorities"/></span>
+                                <%--@elvariable id="authorities" type="org.apache.rave.portal.model.util.SearchResult<org.apache.rave.portal.model.Authority>"--%>
                             <ul class="checkboxlist">
-                                <li>
-                                    <input type="checkbox" name="confirmdelete" id="confirmdelete" value="true"/>
-                                    <label for="confirmdelete"><fmt:message
-                                            key="admin.userdetail.action.delete.confirm"/></label>
-                                    <c:if test="${missingConfirm}">
-                                        <p class="error"><fmt:message
-                                                key="admin.userdetail.action.delete.confirm.required"/></p>
-                                    </c:if>
-                                </li>
+                                <form:checkboxes path="authorities" items="${authorities.resultSet}" itemLabel="authority" itemValue="authority" element="li"/>
                             </ul>
-                        </div>
-                    </fieldset>
-                    <fieldset>
-                        <p>
-                            <input type="submit" value="Delete the user"/>
-                        </p>
-                    </fieldset>
-                </form:form>
-            </section>
-            </c:if>
-        </div>
+                        </fieldset>
+                        <fieldset>
+                            <fmt:message key="page.userprofile.button" var="updateButtonText"/>
+                            <button class="btn btn-primary" type="submit" value="${updateButtonText}">${updateButtonText}</button>
+                        </fieldset>
+                    </form:form>
+                </section>
 
-        <div class="leftcolumn">
-            <section class="formbox">
-                <h3><fmt:message key="admin.userdetail.editdata"/></h3>
-                <form:form id="updateUserProfile" action="update" commandName="user" method="POST">
-                    <form:errors cssClass="error" element="p"/>
-                    <fieldset>
-                        <input type="hidden" name="token" value="<c:out value="${tokencheck}"/>"/>
-                        <p>
-                            <label for="email"><fmt:message key="page.general.email"/></label>
-                            <spring:bind path="email">
-                                <input type="email" name="email" id="email" value="<c:out value="${status.value}"/>"
-                                       class="long"/>
-                            </spring:bind>
-                            <form:errors path="email" cssClass="error"/>
-                        </p>
+            </div>
 
-                        <p>
-                            <label for="openIdField"><fmt:message key="page.userprofile.openid.url"/></label>
-                            <spring:bind path="openId">
-                                <input type="url" id="openIdField" name="openId"
-                                       value="<c:out value="${status.value}"/>" class="long"/>
-                            </spring:bind>
-                            <form:errors path="openId" cssClass="error"/>
-                        </p>
+            <div class="clear-float">
 
-                        <div>
-                            <span class="label"><fmt:message key="admin.userdata.accountstatus"/></span>
-                            <ul class="checkboxlist">
-                                <li>
-                                    <fmt:message key="admin.userdata.enabled" var="labelEnabled"/>
-                                    <form:checkbox path="enabled" label="${labelEnabled}"
-                                                   disabled="${canChangeUserStatus ne true}"/>
-                                </li>
-                                <li>
-                                    <fmt:message key="admin.userdata.expired" var="labelExpired"/>
-                                    <form:checkbox path="expired" label="${labelExpired}"
-                                                   disabled="${canChangeUserStatus ne true}"/>
-                                </li>
-                                <li>
-                                    <fmt:message key="admin.userdata.locked" var="labelLocked"/>
-                                    <form:checkbox path="locked" label="${labelLocked}"
-                                                   disabled="${canChangeUserStatus ne true}"/>
-                                </li>
-                            </ul>
-                        </div>
-                    </fieldset>
-                    <fieldset>
-                        <span class="label"><fmt:message key="admin.userdata.authorities"/></span>
-                        <%--@elvariable id="authorities" type="org.apache.rave.portal.model.util.SearchResult<org.apache.rave.portal.model.Authority>"--%>
-                        <ul class="checkboxlist">
-                            <form:checkboxes path="authorities" items="${authorities.resultSet}"
-                                             itemLabel="authority" itemValue="authority" element="li" />
-                        </ul>
-                    </fieldset>
-                    <fieldset>
-                        <fmt:message key="page.userprofile.button" var="updateButtonText"/>
-                        <input type="submit" value="${updateButtonText}"/>
-                    </fieldset>
-                </form:form>
-            </section>
-
-        </div>
-
-        <div class="clear-float">
-
-        </div>
+            </div>
 
 
-    </article>
+        </article>
+    </div>
 </div>

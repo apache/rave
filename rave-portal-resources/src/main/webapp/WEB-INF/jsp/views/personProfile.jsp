@@ -41,115 +41,150 @@
 
 <!-- get the title of contact information -->
 <fmt:message key="page.personProfile.contact.info" var="contactInfo"/>
-
-<header>
-   	<nav class="topnav">
-       	<ul class="horizontal-list">
-       		<li>
-                <c:choose>
-                    <c:when test="${empty referringPageId}">
-                        <spring:url value="/index.html" var="gobackurl"/>
-                    </c:when>
-                    <c:otherwise>
-                        <spring:url value="/app/page/view/${referringPageId}" var="gobackurl"/>
-                    </c:otherwise>
-                </c:choose>
-                <a href="<c:out value="${gobackurl}"/>"><fmt:message key="page.general.back"/></a>
-            </li>
-            <sec:authorize url="/app/admin/">
-                <li>
-                    <a href="<spring:url value="/app/admin/"/>">
-                        <fmt:message key="page.general.toadmininterface"/>
-                    </a>
-                </li>
-            </sec:authorize>
-       		<li>
-                <a href="<spring:url value="/j_spring_security_logout" htmlEscape="true" />">
-                  <fmt:message key="page.general.logout"/></a>
-            </li>
-       	</ul>
-   	</nav>
-	<h1>${pageTitle}</h1>
-</header>
-<div id="person-profile-left">
-    <div id="personProfileContent">
-        <form:form id="editAccountForm" commandName="userProfile" action="person?referringPageId=${referringPageId}" method="POST">
-            <!-- Display personal information of user-->
-            <h2><fmt:message key="page.profile.personal.info" /></h2>
-            <fieldset>
-                <p>
-                    <label for="givenNameField"><fmt:message key="page.profile.first.name"/></label>
-                    <label id="givenName" class="profile-info-visible"><c:out value="${userProfile.givenName}"/></label>
-                    <form:input id="givenNameField" path="givenName" class="profile-info-hidden" value="${userProfile.givenName}" />
-                </p>
-                <br>
-                <p>
-                    <label for="familyNameField"><fmt:message key="page.profile.last.name"/></label>
-                    <label id="familyName" class="profile-info-visible"><c:out value="${userProfile.familyName}"/></label>
-                    <form:input id="familyNameField" path="familyName" class="profile-info-hidden" value="${userProfile.familyName}"/>
-                </p>
-                <p>
-                    <label for="displayNameField" class="profile-info-hidden"><fmt:message key="page.profile.display.name"/></label>
-                    <form:input id="displayNameField" path="displayName" class="profile-info-hidden" value="${userProfile.displayName}"/>
-                </p>
-            </fieldset>
-
-            <!-- Display basic information of user -->
-            <h2><fmt:message key="page.profile.basic.info" /></h2>
-            <fieldset>
-                <p>
-                    <label for="aboutMeField"><fmt:message key="page.profile.about.me"/></label>
-                    <label id="aboutMe" class="profile-info-visible"><c:out value=" ${userProfile.aboutMe}"/></label>
-                    <form:textarea id="aboutMeField" path="aboutMe" class="profile-info-hidden" value="${userProfile.aboutMe}" />
-                </p>
-                <br>
-                <p>
-                    <label for="statusField"><fmt:message key="page.profile.status"/></label>
-                    <label id="status" class="profile-info-visible"><c:out value=" ${userProfile.status}"/></label>
-                    <form:input id="statusField" path="status" class="profile-info-hidden" value="${userProfile.status}" />
-                </p>
-            </fieldset>
-
-            <!-- Display contact information of user -->
-            <h2><fmt:message key="page.profile.contact.info" /></h2>
-            <fieldset>
-                <p>
-                    <label for="emailField"><fmt:message key="page.profile.email"/></label>
-                    <label id="email" class="profile-info-visible"><c:out value=" ${userProfile.email}"/></label>
-                    <form:input id="emailField" path="email" class="profile-info-hidden" value="${userProfile.email}" />
-                </p>
-            </fieldset>
-            <%-- only display the edit profile button if the current logged in user matches the profile being viewed --%>
-            <c:set var="currentUsername"><sec:authentication property="principal.username" htmlEscape="false" /></c:set>
-            <c:if test="${currentUsername == userProfile.username}">
-                <fieldset>
-                    <p>
-                        <input type="hidden" id="profileInfo" value="profile-info" />
-                        <button type="button" id="profileEdit" class="profile-info-visible"><fmt:message key="page.profile.edit"/></button>
-                        <fmt:message key="page.profile.save" var="save"/>
-                        <input type="submit" class="profile-info-hidden" value="${save}"/>
-                        <button type="button" class="profile-info-hidden" id="cancelEdit"><fmt:message key="page.profile.cancel"/></button>
-                    </p>
-                </fieldset>
-            </c:if>
-        </form:form>
-    </div>
-
-    <%--render the sub pages --%>
-    <div id="pageContent" class="person-profile-page-content">
-        <div class="regions">
-            <%-- insert the region layout template --%>
-            <tiles:insertTemplate template="${layout}"/>
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </a>
+            <span class="brand">
+                <fmt:message key="page.home.welcome">
+                    <fmt:param>
+                        <c:choose>
+                            <c:when test="${not empty page.owner.displayName}"><c:out value="${page.owner.displayName}"/></c:when>
+                            <c:otherwise><c:out value="${page.owner.username}"/></c:otherwise>
+                        </c:choose>
+                    </fmt:param>
+                </fmt:message>
+            </span>
+            <div class="nav-collapse">
+                <ul class="nav pull-right">
+                    <li>
+                        <c:choose>
+                            <c:when test="${empty referringPageId}">
+                                <spring:url value="/index.html" var="gobackurl"/>
+                            </c:when>
+                            <c:otherwise>
+                                <spring:url value="/app/page/view/${referringPageId}" var="gobackurl"/>
+                            </c:otherwise>
+                        </c:choose>
+                        <a href="<c:out value="${gobackurl}"/>"><fmt:message key="page.general.back"/></a>
+                    </li>
+                    <sec:authorize url="/app/admin/">
+                        <li>
+                            <a href="<spring:url value="/app/admin/"/>">
+                            <fmt:message key="page.general.toadmininterface"/>
+                            </a>
+                        </li>
+                    </sec:authorize>
+                    <li>
+                        <a href="<spring:url value="/j_spring_security_logout" htmlEscape="true" />">
+                        <fmt:message key="page.general.logout"/></a>
+                    </li>
+                </ul>
+            </div>
         </div>
-        <div class="clear-float">&nbsp;</div>
     </div>
 </div>
-<div id="person-profile-right">
-    <div>
-        <%-- render the person profile parent page region/widgets --%>
-        <c:forEach var="region" items="${page.regions}" varStatus="status">
-            <rave:region region="${region}" regionIdx="${status.count}" />
-        </c:forEach>
+
+<div class="container-fluid navbar-spacer">
+    <div class="row-fluid">
+        <div class="span9">
+            <div id="personProfileContent" class="row-fluid">
+                <form:form id="editAccountForm" commandName="userProfile" action="person?referringPageId=${referringPageId}" method="POST">
+                    <!-- Display personal information of user-->
+                    <h2><fmt:message key="page.profile.personal.info" /></h2>
+                    <fieldset>
+                        <div class="span12">
+                            <p>
+                                <label for="givenNameField"><fmt:message key="page.profile.first.name"/></label>
+                                <label id="givenName" class="profile-info-visible"><c:out value="${userProfile.givenName}"/></label>
+                                <form:input id="givenNameField" path="givenName" class="profile-info-hidden" value="${userProfile.givenName}" />
+                            </p>
+                        </div>
+                        <div class="span12">
+                            <p>
+                                <label for="familyNameField"><fmt:message key="page.profile.last.name"/></label>
+                                <label id="familyName" class="profile-info-visible"><c:out value="${userProfile.familyName}"/></label>
+                                <form:input id="familyNameField" path="familyName" class="profile-info-hidden" value="${userProfile.familyName}"/>
+                            </p>
+                        </div>
+                        <div class="span12">
+                            <p>
+                                <label for="displayNameField" class="profile-info-hidden"><fmt:message key="page.profile.display.name"/></label>
+                                <form:input id="displayNameField" path="displayName" class="profile-info-hidden" value="${userProfile.displayName}"/>
+                            </p>
+                        </div>
+                    </fieldset>
+
+                    <!-- Display basic information of user -->
+                    <h2><fmt:message key="page.profile.basic.info" /></h2>
+                    <fieldset>
+                        <div class="span12">
+                            <p>
+                                <label for="aboutMeField"><fmt:message key="page.profile.about.me"/></label>
+                                <label id="aboutMe" class="profile-info-visible"><c:out value=" ${userProfile.aboutMe}"/></label>
+                                <form:textarea id="aboutMeField" path="aboutMe" class="profile-info-hidden" value="${userProfile.aboutMe}" />
+                            </p>
+                        </div>
+                        <div class="span12">
+                            <p>
+                                <label for="statusField"><fmt:message key="page.profile.status"/></label>
+                                <label id="status" class="profile-info-visible"><c:out value=" ${userProfile.status}"/></label>
+                                <form:input id="statusField" path="status" class="profile-info-hidden" value="${userProfile.status}" />
+                            </p>
+                        </div>
+                    </fieldset>
+
+                    <!-- Display contact information of user -->
+                    <h2><fmt:message key="page.profile.contact.info" /></h2>
+                    <fieldset>
+                        <div class="span12">
+                            <p>
+                                <label for="emailField"><fmt:message key="page.profile.email"/></label>
+                                <label id="email" class="profile-info-visible"><c:out value=" ${userProfile.email}"/></label>
+                                <form:input id="emailField" path="email" class="profile-info-hidden" value="${userProfile.email}" />
+                            </p>
+                        </div>
+                    </fieldset>
+                    <%-- only display the edit profile button if the current logged in user matches the profile being viewed --%>
+                    <c:set var="currentUsername"><sec:authentication property="principal.username" htmlEscape="false" /></c:set>
+                    <c:if test="${currentUsername == userProfile.username}">
+                        <fieldset>
+                            <div class="span12">
+                                <p>
+                                    <input type="hidden" id="profileInfo" value="profile-info" />
+                                    <button type="button" id="profileEdit" class="btn btn-primary profile-info-visible"><fmt:message key="page.profile.edit"/></button>
+                                    <fmt:message key="page.profile.save" var="save"/>
+                                    <input type="submit" class="btn btn-primary profile-info-hidden" value="${save}"/>
+                                    <button type="button" class="btn profile-info-hidden" id="cancelEdit"><fmt:message key="page.profile.cancel"/></button>
+                                </p>
+                             </div>
+                        </fieldset>
+                    </c:if>
+                </form:form>
+            </div>
+
+            <%--render the sub pages --%>
+            <div>
+
+                    <%-- insert the region layout template --%>
+                    <tiles:insertTemplate template="${layout}"/>
+
+                <div class="clear-float">&nbsp;</div>
+            </div>
+        </div>
+        <div class="span3">
+            <div>
+                <%-- render the person profile parent page region/widgets --%>
+                <c:forEach var="region" items="${page.regions}" varStatus="status">
+                    <rave:region region="${region}" regionIdx="${status.count}" />
+                </c:forEach>
+            </div>
+        </div>
+    <div class="clear-float">&nbsp;</div>
     </div>
 </div>
 <div class="clear-float">&nbsp;</div>

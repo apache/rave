@@ -22,13 +22,15 @@
 
 <fmt:message key="${pageTitleKey}" var="pagetitle"/>
 <rave:header pageTitle="${pagetitle}"/>
-<rave:admin_tabsheader/>
-<div class="pageContent">
-    <article class="admincontent">
-        <h2><fmt:message key="admin.home.subtitle"/></h2>
-        <fmt:message key="admin.home.intro"/>
-        <div class="clear-float">
 
-        </div>
-    </article>
+<div class="container-fluid">
+    <div class="span2">
+        <rave:admin_tabsheader/>
+    </div>
+    <div class="span10">
+        <article>
+            <h2><fmt:message key="admin.home.subtitle"/></h2>
+            <fmt:message key="admin.home.intro"/>
+        </article>
+    </div>
 </div>

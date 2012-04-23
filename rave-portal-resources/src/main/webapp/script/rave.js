@@ -50,6 +50,9 @@ var rave = rave || (function () {
         var CLASS_REGEX = /{class}/g;
         var BUTTON_TEXT_REGEX = /{buttonText}/g;
 
+        var WIDGET_TOGGLE_DISPLAY_COLLAPSED_HTML = '<i class="icon-chevron-down"></i>';
+        var WIDGET_TOGGLE_DISPLAY_NORMAL_HTML = '<i class="icon-chevron-up"></i>';
+        
         var WIDGET_PREFS_LABEL_CLASS = "widget-prefs-label";
         var WIDGET_PREFS_LABEL_REQUIRED_CLASS = "widget-prefs-label-required";
         var WIDGET_PREFS_INPUT_CLASS = "widget-prefs-input";
@@ -101,7 +104,7 @@ var rave = rave || (function () {
                     var cfg = {
                         stack:true,
                         dialogClass:'raveDialog'
-                    }
+                    };
                     element.dialog(cfg);
                 },
                 cleanup:function (element) {
@@ -122,7 +125,7 @@ var rave = rave || (function () {
                     var cfg = {
                         modal:true,
                         dialogClass:'raveModal'
-                    }
+                    };
                     element.dialog(cfg);
                 },
                 cleanup:function (element) {
@@ -133,10 +136,10 @@ var rave = rave || (function () {
                 styleMap:{
 
                 },
-                float:false,
+                'float':false,
                 tab:false
             }
-        }
+        };
 
         // variable to store whether or not the
         // client is a mobile device
@@ -483,7 +486,7 @@ var rave = rave || (function () {
             rave.getRegionWidgetById(args.regionWidgetId).collapsed = args.collapsed;
 
             // toggle the collapse/restore icon
-            rave.toggleCollapseWidgetIcon(args.regionWidgetId);
+            rave.toggleCollapseWidgetIcon(args.regionWidgetId, args.collapsed);
 
             // if the widget has supplied a collapse or restore
             // function, invoke it so each widget provider
@@ -737,40 +740,36 @@ var rave = rave || (function () {
 
             // init the widget minimize button which is hidden by default
             // and only renders when widget is in maximized view
-            $("#widget-" + widgetId + "-min").button({
-                text:false,
-                icons:{
-                    primary:WIDGET_BTN_MINIMIZE_CLASS
-                }
-            }).click({id:widgetId}, rave.minimizeWidget);
+            $("#widget-" + widgetId + "-min").click({id: widgetId}, rave.minimizeWidget);
 
             // init the collapse/restore toggle
             // conditionally style the icon and setup the event handlers
             var $toggleCollapseIcon = $("#widget-" + widgetId + "-collapse");
-            $toggleCollapseIcon.hide();
-            $toggleCollapseIcon.addClass(WIDGET_ICON_BASE_CLASS);
-            $toggleCollapseIcon.addClass((widget.collapsed) ? WIDGET_TOGGLE_DISPLAY_COLLAPSED : WIDGET_TOGGLE_DISPLAY_NORMAL);
+            $toggleCollapseIcon.html((widget.collapsed) ? WIDGET_TOGGLE_DISPLAY_COLLAPSED_HTML : WIDGET_TOGGLE_DISPLAY_NORMAL_HTML);
             $toggleCollapseIcon
                 .click({id:widgetId}, toggleCollapseAction)
                 .mousedown(function (event) {
                     // don't allow drag and drop when this item is clicked
                     event.stopPropagation();
                 });
-            $toggleCollapseIcon.show();
+
+
+            $('#widget-' + widgetId + '-toolbar').mousedown(function(event) {
+                 // don't allow drag and drop when this item is clicked
+                event.stopPropagation();
+            });
         }
 
         /**
          * Toggles the display of the widget collapse/restore icon.
          * @param widgetId the widgetId of the rendered widget to toggle the icon for
          */
-        function toggleCollapseWidgetIcon(widgetId) {
+        function toggleCollapseWidgetIcon(widgetId, collapsed) {
             var $toggleIcon = $("#widget-" + widgetId + "-collapse");
-            if ($toggleIcon.hasClass(WIDGET_TOGGLE_DISPLAY_COLLAPSED)) {
-                $toggleIcon.removeClass(WIDGET_TOGGLE_DISPLAY_COLLAPSED);
-                $toggleIcon.addClass(WIDGET_TOGGLE_DISPLAY_NORMAL);
+            if (collapsed) {
+                $toggleIcon.html(WIDGET_TOGGLE_DISPLAY_COLLAPSED_HTML);
             } else {
-                $toggleIcon.removeClass(WIDGET_TOGGLE_DISPLAY_NORMAL);
-                $toggleIcon.addClass(WIDGET_TOGGLE_DISPLAY_COLLAPSED);
+                $toggleIcon.html(WIDGET_TOGGLE_DISPLAY_NORMAL_HTML);
             }
         }
 
@@ -805,13 +804,13 @@ var rave = rave || (function () {
         }
 
         function showInfoMessage(message) {
-            $("<div />", {'class':'topbar-message', 'text':message})
-                .hide()
-                .prependTo("body")
-                .slideDown('fast').delay(5000)
-                .slideUp(function () {
-                    $(this).remove();
-                });
+            $("<div />", {'class':'alert alert-success navbar-spacer', 'text':message})
+                    .hide()
+                    .prependTo("body")
+                    .slideDown('fast').delay(5000)
+                    .slideUp(function () {
+                        $(this).remove();
+                    });
         }
 
         function getNonLockedRegions() {

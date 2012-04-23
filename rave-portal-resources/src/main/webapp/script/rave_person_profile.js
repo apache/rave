@@ -21,31 +21,27 @@ var rave = rave || {};
 rave.personprofile = rave.personprofile || (function() {
     // map of [subpage id, boolean] tracking whether or not a sub page has been viewed at least once
     var subPagesViewedStatus = {};
-
-    function initSubPages() {
-        // setup the sub page tabs
-        $("#personProfileSubPages").tabs({
-                select: function(event, ui) {
-                    // refresh the widgets on the sub page when selected to ensure proper sizing
-                    var subPageId = ui.panel.id;
-                    if (subPagesViewedStatus[subPageId] == false) {
-                        $("#" + subPageId + " .widget-wrapper").each(function(){
-                            var regionWidget = rave.getRegionWidgetById(rave.getObjectIdFromDomId(this.id));
-                            regionWidget.restore();
-                        });
-                        // mark that this sub page has been viewed at least once and there is no need to refresh
-                        // the widgets in future views
-                        subPagesViewedStatus[subPageId] = true;
-                    }
-                }
+     function initSubPages() {
+        //Make first tab active (Twitter Bootstrap)
+        $('.nav-tabs a:first').tab('show');
+        $('#personProfileSubPages a[data-toggle="tab"]').on('shown', function(event, ui) {
+            // refresh the widgets on the sub page when selected to ensure proper sizing
+            var subPageId = $( $(this).attr("href") ).attr("id");
+            if (subPagesViewedStatus[subPageId] == false) {
+                $("#" + subPageId + " .widget-wrapper").each(function(){
+                    var regionWidget = rave.getRegionWidgetById(rave.getObjectIdFromDomId(this.id));
+                    regionWidget.restore();
+                });
+                // mark that this sub page has been viewed at least once and there is no need to refresh
+                // the widgets in future views
+                subPagesViewedStatus[subPageId] = true;
             }
-        );
-
+        });
         // build the subPageViewedStatus map to track if a given sub page has been viewed yet to determine if we need
         // to refresh the widgets upon first viewing to ensure they are sized properly.  Set the default active tab to
         // true since it will be rendered and sized properly as part of the initial page load
-        var activeSubPageId = $("#personProfileSubPages .ui-tabs-panel:not(.ui-tabs-hide)")[0].id;
-        $("#personProfileSubPages .ui-tabs-panel").each(function(){
+        var activeSubPageId = $("#personProfileSubPages .tab-pane.active")[0].id;
+        $("#personProfileSubPages .tab-pane").each(function(){
             subPagesViewedStatus[this.id] = (this.id == activeSubPageId);
         });
     }

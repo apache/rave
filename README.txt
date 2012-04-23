@@ -4,7 +4,7 @@ Licensed under Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0
 
 About
 =====
-Apache Rave is A new WEb And SOcial Mashup Engine. It will provide an
+Apache Rave is A new Web And Social Mashup Engine. It will provide an
 out-of-the-box as well as an extendible lightweight Java platform to host, serve
 and aggregate (Open)Social Gadgets and services through a highly customizable
 and Web 2.0 friendly front-end. Rave is targeted as engine for internet and

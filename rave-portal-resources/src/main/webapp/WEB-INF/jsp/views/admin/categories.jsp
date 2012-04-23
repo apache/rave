@@ -21,84 +21,83 @@
 <fmt:setBundle basename="messages"/>
 
 <fmt:message key="${pageTitleKey}" var="pagetitle"/>
+
 <rave:header pageTitle="${pagetitle}"/>
-<rave:admin_tabsheader/>
-<div class="pageContent">
-    <article class="admincontent">
-        <%--@elvariable id="actionresult" type="java.lang.String"--%>
-        <c:if test="${actionresult eq 'delete' or actionresult eq 'update' or actionresult eq 'create'}">
-            <div class="alert-message success">
-                <p>
+<div class="container-fluid">
+    <div class="span2">
+        <rave:admin_tabsheader/>
+    </div>
+    <div class="span10">
+        <article>
+            <h2><fmt:message key="admin.category.shortTitle"/></h2>
+            <%--@elvariable id="actionresult" type="java.lang.String"--%>
+            <c:if test="${actionresult eq 'delete' or actionresult eq 'update' or actionresult eq 'create'}">
+                <div class="alert alert-info">
                     <fmt:message key="admin.categoryDetail.action.${actionresult}.success"/>
-                </p>
-            </div>
-        </c:if>
+                </div>
+            </c:if>
 
-       <h2><fmt:message key="admin.category.shortTitle"/></h2>
-
-        <div class="rightcolumn">
-            <section class="formbox">
-                <h3><fmt:message key="admin.category.create"/></h3>
-                <form:form id="createCategoryForm" commandName="category" action="category/create" method="POST">
-                    <form:errors cssClass="error" element="p"/>
-                    <fieldset>
-                        <input type="hidden" name="token" value="<c:out value="${tokencheck}"/>"/>
-
-                        <p>
-                            <label for="text"><fmt:message
-                                    key="admin.categoryDetail.label.text"/></label>
-                            <form:input id="text" path="text" required="required"  autofocus="autofocus"/>
-                            <form:errors path="text" cssClass="error"/>
-                        </p>
-                    </fieldset>
-                    <fieldset>
-                        <p>
-                            <fmt:message key="admin.category.create" var="createCategoryMsg"/>
-                            <input type="submit" value="${createCategoryMsg}"/>
-                        </p>
-                    </fieldset>
-                </form:form>
-            </section>
-        </div>
-
-        <div class="leftcolumn">
-        <table class="datatable categoryTable">
-            <thead>
-            <tr>
-                <th class="textcell"><fmt:message key="admin.categoryData.text"/></th>
-                <th class="textcell"><fmt:message key="admin.categoryData.createdBy"/></th>
-                <th class="textcell"><fmt:message key="admin.categoryData.createdDate"/></th>
-                <th class="textcell"><fmt:message key="admin.categoryData.modifiedBy"/></th>
-                <th class="textcell"><fmt:message key="admin.categoryData.modifiedDate"/></th>
-            </tr>
-            </thead>
-            <tbody>
-            <c:forEach items="${categories}" var="category">
-                <spring:url value="/app/admin/category/edit?id=${category.entityId}" var="detaillink"/>
-
-                <tr data-detaillink="${detaillink}">
-                    <td class="textcell">
-                        <c:out value="${category.text}"/>
-                    </td>
-                    <td class="textcell">
-                        <c:out value="${category.createdUser.username}"/>
-                    </td>
-                    <td class="textcell">
-                        <fmt:formatDate value="${category.createdDate}" dateStyle="short" type="both" />
-                    </td>
-                    <td class="textcell">
-                        <c:out value="${category.lastModifiedUser.username}"/>
-                    </td>
-                    <td class="textcell">
-                        <fmt:formatDate value="${category.lastModifiedDate}" dateStyle="short" type="both" />
-                    </td>
+            <table class="table table-striped table-bordered table-condensed">
+                <thead>
+                <tr>
+                    <th><fmt:message key="admin.categoryData.text"/></th>
+                    <th><fmt:message key="admin.categoryData.createdBy"/></th>
+                    <th><fmt:message key="admin.categoryData.createdDate"/></th>
+                    <th><fmt:message key="admin.categoryData.modifiedBy"/></th>
+                    <th><fmt:message key="admin.categoryData.modifiedDate"/></th>
                 </tr>
-            </c:forEach>
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                <c:forEach items="${categories}" var="category">
+                    <spring:url value="/app/admin/category/edit?id=${category.entityId}" var="detaillink"/>
 
+                    <tr data-detaillink="${detaillink}">
+                        <td>
+                            <a href="${detaillink}"><c:out value="${category.text}"/></a>
+                        </td>
+                        <td>
+                            <c:out value="${category.createdUser.username}"/>
+                        </td>
+                        <td>
+                            <c:out value="${category.createdDate}"/>
+                        </td>
+                        <td>
+                            <c:out value="${category.lastModifiedUser.username}"/>
+                        </td>
+                        <td>
+                            <c:out value="${category.lastModifiedDate}"/>
+                        </td>
+                    </tr>
+                </c:forEach>
+                </tbody>
+            </table>
+
+
+        </article>
+        <div>
+            <form:form cssClass="form-inline" commandName="category" action="category/create" method="POST">
+                <form:errors cssClass="error" element="p"/>
+                <fieldset>
+                    <legend><fmt:message key="admin.category.create"/></legend>
+                    <input type="hidden" name="token" value="<c:out value="${tokencheck}"/>"/>
+                    <br/>
+                    <div class="control-group">
+                        <label class="control-label" for="text"><fmt:message key="admin.categoryDetail.label.text"/></label>
+                        <div class="controls">
+                            <form:input cssClass="input-medium" id="text" path="text" required="required" autofocus="autofocus"/>
+                            <form:errors path="text" cssClass="error"/></div>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <fmt:message key="admin.category.create" var="createCategoryMsg"/>
+                    <div class="controls">
+                        <button class="btn btn-primary" type="submit" value="${createCategoryMsg}">${createCategoryMsg}</button>
+                    </div>
+
+                </fieldset>
+            </form:form>
         </div>
-    </article>
+    </div>
 </div>
 <portal:register-init-script location="${'AFTER_RAVE'}">
     <script>
