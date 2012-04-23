@@ -82,8 +82,7 @@
     </c:choose>
 </c:set>
 
-
-<div class="container-fluid">
+<div id="pageContent" class="container-fluid">
     <nav>
         <ul class="nav nav-tabs">
             <c:forEach var="userPage" items="${pages}">

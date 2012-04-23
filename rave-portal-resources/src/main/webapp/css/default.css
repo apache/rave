@@ -794,11 +794,8 @@ span.error, label.error {
     *display: inline;
 }
 
-#pageContent, .pageContent {
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr = "#D7D7D3", endColorstr = "#EBEBEB");
-    background: -moz-linear-gradient(center top, #D7D7D3 0%, #EBEBEB 50%) repeat scroll 0 0 transparent;
-    background: -webkit-gradient(linear, left top, left bottom, from(#D7D7D3), to(#EBEBEB));
-    font-size: 1.1em;
+#pageContent {
+
 }
 
 .pageContent-mobile {
