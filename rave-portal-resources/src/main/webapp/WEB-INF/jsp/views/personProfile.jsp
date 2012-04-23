@@ -15,7 +15,7 @@
   KIND, either express or implied.  See the License for the
   specific language governing permissions and limitations
   under the License.
-  
+
   Description:
   User's information display and edit options
   --%>
@@ -89,7 +89,7 @@
     </div>
 </div>
 
-<div class="container-fluid navbar-spacer">
+<div id="pageContent" class="container-fluid navbar-spacer">
     <div class="row-fluid">
         <div class="span9">
             <div id="personProfileContent" class="row-fluid">
@@ -169,10 +169,8 @@
 
             <%--render the sub pages --%>
             <div>
-
-                    <%-- insert the region layout template --%>
-                    <tiles:insertTemplate template="${layout}"/>
-
+                <%-- insert the region layout template --%>
+                <tiles:insertTemplate template="${layout}"/>
                 <div class="clear-float">&nbsp;</div>
             </div>
         </div>
