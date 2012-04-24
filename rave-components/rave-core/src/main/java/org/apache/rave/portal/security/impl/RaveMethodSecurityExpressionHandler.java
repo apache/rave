@@ -42,6 +42,7 @@ public class RaveMethodSecurityExpressionHandler extends DefaultMethodSecurityEx
      * @param ctx the EvaluationContext
      * @return the filtered Collection or array
      */
+    @SuppressWarnings("unchecked")
     @Override
     public Object filter(Object filterTarget, Expression filterExpression, EvaluationContext ctx) {
         // certain implementations of JPA will create unmodifiable List objects, so clone the

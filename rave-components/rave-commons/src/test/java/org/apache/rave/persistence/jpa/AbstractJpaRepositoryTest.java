@@ -51,6 +51,7 @@ public class AbstractJpaRepositoryTest {
         repository = new TestJpaRepository(manager);
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void getType() {
         assertThat((Class<TestEntity>) repository.getType(), is(equalTo(TestEntity.class)));

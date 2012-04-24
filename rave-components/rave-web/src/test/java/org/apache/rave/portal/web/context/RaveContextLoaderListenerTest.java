@@ -45,6 +45,7 @@ public class RaveContextLoaderListenerTest {
     public void contextInitialized() {
         raveContextLoaderListener.contextInitialized(servletContextEvent);
 
+        @SuppressWarnings("unchecked")
         Map<String, String> props = (Map<String, String>) servletContextEvent.getServletContext().getAttribute("applicationProperties");
         assertThat(props.size(), is(2));
         assertThat(props.get("portal.testprop1"), is("hello"));

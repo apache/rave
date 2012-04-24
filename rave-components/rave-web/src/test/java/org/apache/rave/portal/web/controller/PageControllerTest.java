@@ -89,6 +89,7 @@ public class PageControllerTest {
         validUser.setDefaultPageLayout(validPageLayout);
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void view_pageId() {
         MockHttpUtil.setupRequestAsNonMobileUserAgent(request);        
@@ -109,6 +110,7 @@ public class PageControllerTest {
         verify(userService, pageService, pageLayoutService);
     }
     
+    @SuppressWarnings("unchecked")
     @Test
     public void view_pageId_mobileClient() {       
         MockHttpUtil.setupRequestAsMobileUserAgent(request);
@@ -129,6 +131,7 @@ public class PageControllerTest {
         verify(userService, pageService, pageLayoutService);
     }
     
+    @SuppressWarnings("unchecked")
     @Test
     public void view_pageId_zeroExistingPages() {
         MockHttpUtil.setupRequestAsNonMobileUserAgent(request);        
@@ -152,6 +155,7 @@ public class PageControllerTest {
         verify(userService, pageService, pageLayoutService);
     }    
     
+    @SuppressWarnings("unchecked")
     @Test
     public void viewDefault_pageId() {
         MockHttpUtil.setupRequestAsNonMobileUserAgent(request);        
@@ -172,6 +176,7 @@ public class PageControllerTest {
         verify(userService, pageService, pageLayoutService);
     }
     
+    @SuppressWarnings("unchecked")
     @Test
     public void viewDefault_pageId_zeroExistingPages() {
         MockHttpUtil.setupRequestAsNonMobileUserAgent(request);        

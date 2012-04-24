@@ -39,7 +39,7 @@ import java.util.*;
  */
 @Component
 public class RavePermissionEvaluator implements PermissionEvaluator {
-    private Map<String, ModelPermissionEvaluator> modelPermissionEvaluatorMap;
+    private Map<String, ModelPermissionEvaluator<?>> modelPermissionEvaluatorMap;
     
     /**
      * Constructor which will take in a component-scanned list of all ModelPermissionEvaluator 
@@ -53,7 +53,7 @@ public class RavePermissionEvaluator implements PermissionEvaluator {
      *                                     by the component scanner
      */
     @Autowired
-    public RavePermissionEvaluator(List<ModelPermissionEvaluator> modelPermissionEvaluatorList) {
+    public RavePermissionEvaluator(List<ModelPermissionEvaluator<?>> modelPermissionEvaluatorList) {
         // order all of the component scanned ModelPermissionEvaluators by their loadOrder value
         // to allow overrides of the default ModelPermissionEvaluator implementations, since
         // we are storing them all in a map the higher order implementations will replace the
@@ -66,8 +66,8 @@ public class RavePermissionEvaluator implements PermissionEvaluator {
         }); 
         
         // build the map using the model type/class as the key
-        modelPermissionEvaluatorMap = new HashMap<String, ModelPermissionEvaluator>();
-        for (ModelPermissionEvaluator mpe : modelPermissionEvaluatorList) {
+        modelPermissionEvaluatorMap = new HashMap<String, ModelPermissionEvaluator<?>>();
+        for (ModelPermissionEvaluator<?> mpe : modelPermissionEvaluatorList) {
             modelPermissionEvaluatorMap.put(mpe.getType().getName(), mpe);
         }
     }
@@ -81,6 +81,7 @@ public class RavePermissionEvaluator implements PermissionEvaluator {
      * @param permissionString the permission to check
      * @return true if passes the permission check, false otherwise
      */
+    @SuppressWarnings("unchecked")
     @Override
     public boolean hasPermission(Authentication authentication, Object targetDomainObject, Object permissionString) {
         if (targetDomainObject == null) {

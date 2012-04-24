@@ -48,7 +48,7 @@ public class RavePermissionEvaluatorTest {
     
     @Before
     public void setUp() {
-        List<ModelPermissionEvaluator> modelPermissionEvaluatorList = new ArrayList<ModelPermissionEvaluator>();
+        List<ModelPermissionEvaluator<?>> modelPermissionEvaluatorList = new ArrayList<ModelPermissionEvaluator<?>>();
         modelPermissionEvaluatorList.add(new BasicEntityModelPermissionEvaluator());                       
         modelPermissionEvaluatorList.add(new NonBasicEntityModelPermissionEvaluator());                   
         ravePermissionEvaluator = new RavePermissionEvaluator(modelPermissionEvaluatorList);
@@ -60,14 +60,15 @@ public class RavePermissionEvaluatorTest {
     
     @Test
     public void testLoadOrderOverride() {
-        ModelPermissionEvaluator<BasicEntityModel> mockedOverriddenPermissionEvaluator = createMock(ModelPermissionEvaluator.class);                              
+        @SuppressWarnings("unchecked")
+        ModelPermissionEvaluator<BasicEntityModel> mockedOverriddenPermissionEvaluator = createMock(ModelPermissionEvaluator.class);
         expect(mockedOverriddenPermissionEvaluator.getType()).andReturn(BasicEntityModel.class);
         expect(mockedOverriddenPermissionEvaluator.getLoadOrder()).andReturn(2);
         expect(mockedOverriddenPermissionEvaluator.hasPermission(authentication, basicEntityModel, Permission.fromString(READ_PERMISSION))).andReturn(true);        
         replay(mockedOverriddenPermissionEvaluator);
         
-         List<ModelPermissionEvaluator> modelPermissionEvaluatorList = new ArrayList<ModelPermissionEvaluator>();
-        // note we are adding the overide instance first to verify the Collections.sort works as expected
+         List<ModelPermissionEvaluator<?>> modelPermissionEvaluatorList = new ArrayList<ModelPermissionEvaluator<?>>();
+        // note we are adding the override instance first to verify the Collections.sort works as expected
         modelPermissionEvaluatorList.add(mockedOverriddenPermissionEvaluator);
         modelPermissionEvaluatorList.add(new BasicEntityModelPermissionEvaluator());                       
         ravePermissionEvaluator = new RavePermissionEvaluator(modelPermissionEvaluatorList);

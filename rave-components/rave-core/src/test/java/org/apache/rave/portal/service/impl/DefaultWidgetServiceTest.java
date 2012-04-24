@@ -206,7 +206,7 @@ public class DefaultWidgetServiceTest {
         expect(userRepository.get(user.getEntityId())).andReturn(user);
         replay(userRepository);
 
-        final List<Widget> widgets = new ArrayList();
+        final List<Widget> widgets = new ArrayList<Widget>();
         final Widget widget = new Widget(3L, "http://www.widgetsRus.com/");
         widgets.add(widget);
 

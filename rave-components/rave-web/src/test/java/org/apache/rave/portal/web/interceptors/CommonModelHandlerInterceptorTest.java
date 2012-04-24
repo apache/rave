@@ -53,6 +53,7 @@ public class CommonModelHandlerInterceptorTest {
         interceptor = new CommonModelHandlerInterceptor(portalPreferenceService, staticContentFetcherService);
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void testPostHandle() throws Exception {
         MockHttpServletRequest request = new MockHttpServletRequest();

@@ -197,6 +197,7 @@ public class JpaWidgetRepository extends AbstractJpaRepository<Widget> implement
         return map;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public Map<Long, WidgetStatistics> getAllWidgetStatistics(long userId) {
         HashMap<Long, WidgetStatistics> map = new HashMap<Long, WidgetStatistics>();

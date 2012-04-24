@@ -74,6 +74,7 @@ public class RenderServiceIntegrationTest {
     private static final Long VALID_USER_ID = 1234L;
     private static final String VALID_USER_NAME = "jdoe";
 
+    @SuppressWarnings("unchecked")
     @Before
     public void setup() {
         restOperations = EasyMock.createNiceMock(RestOperations.class);

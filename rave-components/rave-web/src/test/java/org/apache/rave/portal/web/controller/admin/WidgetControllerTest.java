@@ -132,6 +132,7 @@ public class WidgetControllerTest {
         assertEquals(status, model.asMap().get("selectedWidgetStatus"));
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void viewAdminWidgetDetail() throws Exception {
         Model model = new ExtendedModelMap();
