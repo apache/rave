@@ -73,7 +73,7 @@
         <div class="span6">
                 <a class="btn btn-success" href="<spring:url value="/app/admin/adduser"/>"><fmt:message key="admin.users.add"/></a>
 
-                    <form class="form-horizontal" action="<spring:url value="/app/admin/users/search"/>" method="get">
+                    <form id="userSearchForm" class="form-horizontal" action="<spring:url value="/app/admin/users/search"/>" method="get">
                         <fieldset>
                             <label for="searchTerm"><fmt:message key="admin.users.search"/></label>
                             <input class="search-query" type="search" id="searchTerm" name="searchTerm" value="<c:out value="${searchTerm}"/>"/>
