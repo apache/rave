@@ -66,7 +66,7 @@ public class NewAccountController {
         model.addAttribute(ModelKeys.NEW_USER, new NewUser());
     }
 
-    @RequestMapping(value = {"/newaccount", "/newacount/*"}, method = RequestMethod.POST)
+    @RequestMapping(value = {"/newaccount", "/newaccount/*"}, method = RequestMethod.POST)
     public String create(@ModelAttribute NewUser newUser, BindingResult results, Model model, HttpServletRequest request,  RedirectAttributes redirectAttributes) {
         logger.debug("Creating a new user account");
         model.addAttribute(ModelKeys.NEW_USER, newUser);
