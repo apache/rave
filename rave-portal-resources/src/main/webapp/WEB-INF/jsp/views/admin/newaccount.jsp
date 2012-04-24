@@ -23,30 +23,23 @@
 <fmt:message key="${pageTitleKey}" var="pagetitle"/>
 <c:set var="canChangeUserStatus" value="${user.username ne loggedInUser}"/>
 <rave:header pageTitle="${pagetitle}"/>
-<rave:admin_tabsheader/>
-<div class="pageContent">
-  <article class="admincontent">
-    <ul class="horizontal-list goback">
-      <li><a href="<spring:url value="/app/admin/users"/>"><fmt:message key="admin.userdetail.goback"/></a>
-      </li>
-    </ul>
-
-    <div class="rightcolumn">
-      <%--RIGHT COLUMN--%>
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="span1">
+      <rave:admin_tabsheader/>
     </div>
-
-    <div class="leftcolumn">
+    <article class="span11">
+      <ul class="pager">
+        <li class="previous">
+          <a href="<spring:url value="/app/admin/users"/>"><fmt:message key="admin.userdetail.goback"/></a>
+        </li>
+      </ul>
       <section class="formbox">
         <h2><fmt:message key="admin.userdetail.editdata"/></h2>
         <%@ include file="/WEB-INF/jsp/views/includes/new_user_form.jsp" %>
       </section>
 
-    </div>
 
-    <div class="clear-float">
-
-    </div>
-
-
-  </article>
+    </article>
+  </div>
 </div>
