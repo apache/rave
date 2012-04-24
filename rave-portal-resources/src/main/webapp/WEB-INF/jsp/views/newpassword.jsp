@@ -26,11 +26,11 @@
     <tiles:importAttribute name="pageTitleKey" scope="request"/>
 
     <tiles:putAttribute name="body">
-        <div id="content">
+        <%@ include file="/WEB-INF/jsp/views/includes/login-navbar.jsp" %>
+        <div class="container navbar-spacer">
             <h1><fmt:message key="page.newpassword.title"/></h1>
             <c:choose>
                 <c:when test="${success}">
-
                     <div class="alert-message success">
                         <fmt:message key="page.newpassword.email.sent">
                             <fmt:param>${email}</fmt:param>
@@ -41,23 +41,28 @@
 
                 <c:otherwise>
 
-                    <h2><fmt:message key="page.newpassword.password.title"/></h2>
-                    <form:form commandName="newUser" action="newpassword" method="post">
+                    <form:form cssClass="form-horizontal well" commandName="newUser" action="newpassword" method="post">
                         <fieldset>
                             <p><fmt:message key="form.all.fields.required"/></p>
 
                             <p><form:errors cssClass="error"/></p>
 
-                            <p>
-                                <label for="emailField"><fmt:message key="page.general.email"/></label>
-                                <form:input id="emailField" path="email" required="required" autofocus="autofocus"/>
-                                <form:errors path="email" cssClass="error"/>
-                            </p>
+                            <div class="control-group">
+                                <label class="control-label" for="emailField"><fmt:message key="page.general.email"/></label>
+                                <div class="controls">
+                                    <form:input id="emailField" path="email" required="required" autofocus="autofocus"/>
+                                    <form:errors path="email" cssClass="error"/>
+                                </div>
+                            </div>
                         </fieldset>
-                        <fieldset>${captchaHtml}</fieldset>
+                        <fieldset>
+                            <div class="control-group">
+                                <div class="controls">${captchaHtml}</div>
+                            </div>
+                        </fieldset>
                         <fieldset>
                             <fmt:message key="page.login.forgot.password.button" var="submitButtonText"/>
-                            <input type="submit" value="${submitButtonText}"/>
+                            <button type="submit" class="btn btn-primary" value="${submitButtonText}">${submitButtonText}</button>
                         </fieldset>
                     </form:form>
                 </c:otherwise>
