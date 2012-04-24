@@ -372,17 +372,17 @@ var rave = rave || (function () {
             toggleCollapseAction(args);
         }
 
-        function maximizeAction(args) {
+        function maximizeAction(args, view_params) {
             var regionWidgetId = args.data.id;
             // display the widget in maximized view
             openFullScreenOverlay(regionWidgetId);
             var widget = rave.getRegionWidgetById(regionWidgetId);
             if (typeof widget != "undefined" && isFunction(widget.maximize)) {
-                widget.maximize();
+                widget.maximize(view_params);
             }
         }
 
-        function minimizeAction(args) {
+        function minimizeAction(args, view_params) {
             var regionWidgetId = args.data.id;
             $(".dnd-overlay").remove();
             getNonLockedRegions().sortable("option", "disabled", false);
@@ -401,7 +401,7 @@ var rave = rave || (function () {
                 if (widget.collapsed && isFunction(widget.collapse)) {
                     widget.collapse();
                 } else if (isFunction(widget.minimize)) {
-                    widget.minimize();
+                    widget.minimize(view_params);
                 }
             }
         }

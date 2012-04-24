@@ -209,18 +209,20 @@ describe("Rave OpenSocial", function() {
         });
         
         it("requestNavigateTo changes the view to CANVAS", function() {
+            var undefined;
             var VIEW_NAME = "canvas";
             var expectedArgs = {};
             expectedArgs.data = {};
-            expectedArgs.data.id = "7";           
+            expectedArgs.data.id = "7";
             spyOn(rave, "maximizeWidget");
 
             rave.opensocial.init();
             container.rpcHooks()["requestNavigateTo"](getMockRequestNavigateToArgs("widget-" + expectedArgs.data.id + "-body"), VIEW_NAME);            
-            expect(rave.maximizeWidget).toHaveBeenCalledWith(expectedArgs);
+            expect(rave.maximizeWidget).toHaveBeenCalledWith(expectedArgs, undefined);
         });
         
         it("requestNavigateTo changes the view to HOME", function() {
+            var undefined;
             var VIEW_NAME = "home";
             var expectedArgs = {};
             expectedArgs.data = {};
@@ -229,7 +231,7 @@ describe("Rave OpenSocial", function() {
 
             rave.opensocial.init();
             container.rpcHooks()["requestNavigateTo"](getMockRequestNavigateToArgs("widget-" + expectedArgs.data.id + "-body"), VIEW_NAME);            
-            expect(rave.minimizeWidget).toHaveBeenCalledWith(expectedArgs);
+            expect(rave.minimizeWidget).toHaveBeenCalledWith(expectedArgs, undefined);
         });
 
         it("requestNavigateTo changes the view to PREFERENCES", function() {

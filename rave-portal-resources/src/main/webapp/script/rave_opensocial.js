@@ -153,12 +153,12 @@ rave.opensocial = rave.opensocial || (function () {
     function renderNewGadget(gadget) {
         var widgetBodyElement = document.getElementById(["widget-", gadget.regionWidgetId, "-body"].join(""));
         gadget.site = container.newGadgetSite(widgetBodyElement);
-        gadget.maximize = function () {
+        gadget.maximize = function (view_params) {
             // always display the gadget in canvas view even if it currently collapsed
-            renderGadgetView(rave.opensocial.VIEW_NAMES.CANVAS, this);
+            renderGadgetView(rave.opensocial.VIEW_NAMES.CANVAS, this, view_params);
         };
-        gadget.minimize = function () {
-            renderGadgetViewIfNotCollapsed(rave.opensocial.VIEW_NAMES.HOME, this);
+        gadget.minimize = function (view_params) {
+            renderGadgetViewIfNotCollapsed(rave.opensocial.VIEW_NAMES.HOME, this, view_params);
         };
         gadget.collapse = function () {
             // hide the iframe of the gadget via css
@@ -199,9 +199,9 @@ rave.opensocial = rave.opensocial || (function () {
      * @param view the OpenSocial view to render
      * @param gadget the OpenSocial gadget to render
      */
-    function renderGadgetViewIfNotCollapsed(view, gadget) {
+    function renderGadgetViewIfNotCollapsed(view, gadget, view_params) {
         if (!gadget.collapsed) {
-            renderGadgetView(view, gadget);
+            renderGadgetView(view, gadget, view_params);
         }
     }
 
@@ -210,7 +210,7 @@ rave.opensocial = rave.opensocial || (function () {
      * @param view the view to render
      * @param gadget the Rave widget object
      */
-    function renderGadgetView(view, gadget) {
+    function renderGadgetView(view, gadget, view_params) {
         var renderParams = {};
         var size = calculateSize(view, gadget);
 
@@ -218,7 +218,7 @@ rave.opensocial = rave.opensocial || (function () {
         renderParams[osapi.container.RenderParam.WIDTH] = size.width;
         renderParams[osapi.container.RenderParam.HEIGHT] = size.height;
         renderParams[osapi.container.RenderParam.USER_PREFS] = getCompleteUserPrefSet(gadget.userPrefs, gadget.metadata.userPrefs);
-        container.navigateGadget(gadget.site, gadget.widgetUrl, {}, renderParams);
+        container.navigateGadget(gadget.site, gadget.widgetUrl, view_params, renderParams);
     }
 
     function calculateSize(view, gadget) {
@@ -346,7 +346,7 @@ rave.opensocial = rave.opensocial || (function () {
      * @param args RPC event args
      * @param viewName the view name to render
      */
-    function requestNavigateTo(args, viewName) {
+    function requestNavigateTo(args, viewName, opt_params, opt_ownerId) {
         var widgetId = rave.getObjectIdFromDomId(args.gs.getActiveSiteHolder().getElement().id);
         var fnArgs = {};
         fnArgs.data = {}
@@ -354,10 +354,10 @@ rave.opensocial = rave.opensocial || (function () {
 
         switch (viewName) {
             case VIEW_NAMES.CANVAS:
-                rave.maximizeWidget(fnArgs);
+                rave.maximizeWidget(fnArgs, opt_params);
                 break;
             case VIEW_NAMES.HOME:
-                rave.minimizeWidget(fnArgs);
+                rave.minimizeWidget(fnArgs, opt_params);
                 break;
             case VIEW_NAMES.PREFERENCES:
                 rave.editCustomPrefs(fnArgs);

@@ -28,14 +28,32 @@
 
     <Content type="html" view="home">
        <![CDATA[
+          <script type="text/javascript" src="http://code.jquery.com/jquery.js"></script>
           <div>Normal view.</div>
-          <button onclick="gadgets.views.requestNavigateTo('canvas');">Go to Canvas</button>   
+          <button onclick="gadgets.views.requestNavigateTo('canvas');">Go to Canvas with No Param</button>
+
+          <p>Hey, this is a view parameter: <input id="view_param" type="text" value="yarrrgh"> </input>
+          <br/>
+          <button onclick="gadgets.views.requestNavigateTo('canvas', $('#view_param').val());">Go to Canvas with Param</button></p>
        ]]>
     </Content>
 
     <Content type="html" view="canvas">
        <![CDATA[
-         <div>Canvas view.</div>
+         <script type="text/javascript" src="http://code.jquery.com/jquery.js"></script>
+         <script type="text/javascript">
+            $(initPage);
+
+            function initPage() {
+                var viewParams = gadgets.views.getParams();
+                if (!jQuery.isEmptyObject(viewParams)) {
+                    $('#viewParam').text(viewParams);
+                } else {
+                    $('#viewParam').text('Not Defined');
+                }
+            }
+         </script>
+         <div>Canvas view. You sent me this view parameter: <b><span id="viewParam"></b></div>
          <button onclick="gadgets.views.requestNavigateTo('home');">Go to Home</button>
        ]]>
     </Content>
