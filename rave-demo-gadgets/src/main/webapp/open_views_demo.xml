@@ -2,6 +2,7 @@
     <ModulePrefs title="Slideout test gadget" description="Test for slideout" author="CIT" author_email="" thumbnail=""
                  screenshot="">
         <Require feature="open-views"/>
+        <Require feature="dynamic-height"/>
     </ModulePrefs>
     <Content type="html" view="default">
         <![CDATA[
@@ -76,6 +77,9 @@ Output from modal: <b><span id="modal_dialog_output"></span></b><br/>
             gadgets.views.setReturnValue($('#retVal').val());
             gadgets.views.close();
         });
+
+                 gadgets.window.adjustHeight()
+
     }
 </script>
 

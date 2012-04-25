@@ -52,7 +52,7 @@ var rave = rave || (function () {
 
         var WIDGET_TOGGLE_DISPLAY_COLLAPSED_HTML = '<i class="icon-chevron-down"></i>';
         var WIDGET_TOGGLE_DISPLAY_NORMAL_HTML = '<i class="icon-chevron-up"></i>';
-        
+
         var WIDGET_PREFS_LABEL_CLASS = "widget-prefs-label";
         var WIDGET_PREFS_LABEL_REQUIRED_CLASS = "widget-prefs-label-required";
         var WIDGET_PREFS_INPUT_CLASS = "widget-prefs-input";
@@ -66,79 +66,74 @@ var rave = rave || (function () {
         var POPUPS = {
             sidebar:{
                 name:"sidebar",
-                selector:'.popup.slideout',
-                markup:'<div class="popup slideout"><div id="slideoutContent"></div></div>',
-                initialize:function (element) {
-                    element.data('popupType', this.name);
-                    element.show("slide", { direction:"right" }, 'fast');
+                containerSelector:'.popup.slideout',
+                contentSelector:'.slideout-content',
+                markup:'<div class="popup slideout"><div class="slideout-content"></div></div>',
+                initialize:function (container) {
+                    container.find(this.contentSelector).data('popupType', this.name);
+                    container.show("slide", { direction:"right" }, 'fast');
+                    $('body').addClass('modal-open');
+                    $('body').append('<div class="modal-backdrop fade in"></div>');
                 },
-                cleanup:function (element) {
-                    element.hide("slide", { direction:"right" }, 'fast', function () {
-                        element.detach();
+                cleanup:function (content) {
+                    var container = content.parents(this.containerSelector);
+                    container.hide("slide", { direction:"right" }, 'fast', function () {
+                        container.detach();
+                        $('body').removeClass('modal-open');
+                        $('.modal-backdrop').remove();
                     });
                 },
-                singleton:true,
-                styleMap:{
-                    "box-sizing":"border-box",
-                    position:"fixed",
-                    top:"5%",
-                    right:0,
-                    display:"none",
-                    background:"#FFFFFF",
-                    border:"1px solid #111111",
-                    "border-right-width":"0px",
-                    width:"400px",
-                    "height":"90%",
-                    padding:"10px 10px 20px 30px",
-                    "overflow-y":"auto",
-                    "overflow-x":"visible",
-                    "z-index":5000
-                }
+                singleton:true
             },
             dialog:{
                 name:"dialog",
-                selector:'.popup.dialog',
-                markup:'<div class="popup dialog"></div>',
-                initialize:function (element) {
-                    element.data('popupType', this.name);
+                containerSelector:'.popup.dialog',
+                contentSelector:'.modal-body',
+                markup:'<div class="popup dialog modal fade"><div class="modal-body"></div></div>',
+                initialize:function (container) {
+                    container.find(this.contentSelector).data('popupType', this.name);
                     var cfg = {
-                        stack:true,
-                        dialogClass:'raveDialog'
                     };
-                    element.dialog(cfg);
-                },
-                cleanup:function (element) {
-                    element.dialog('destroy');
-                    element.detach();
-                },
-                singleton:false,
-                styleMap:{
+                    container.modal(cfg);
 
-                }
+                    container.on('hidden', function () {
+                        container.detach();
+                    })
+                },
+                cleanup:function (content) {
+                    var container = content.parents(this.containerSelector);
+
+                    container.modal('hide');
+                },
+                singleton:false
             },
             modal_dialog:{
                 name:"modal_dialog",
-                selector:'.popup.modal_dialog',
-                markup:'<div class="popup modal_dialog"></div>',
-                initialize:function (element) {
-                    element.data('popupType', this.name);
+                containerSelector:'.popup.modal_dialog',
+                contentSelector:'.modal-body',
+                markup:'<div class="popup modal_dialog modal fade"><div class="modal-body"></div></div>',
+                initialize:function (container) {
+                    container.find(this.contentSelector).data('popupType', this.name);
                     var cfg = {
-                        modal:true,
-                        dialogClass:'raveModal'
+                        keyboard:false,
+                        backdrop:'static',
+                        show:true
                     };
-                    element.dialog(cfg);
-                },
-                cleanup:function (element) {
-                    element.dialog('destroy');
-                    element.detach();
-                },
-                singleton:true,
-                styleMap:{
+                    container.modal(cfg);
 
+                    container.on('hidden', function () {
+                        container.detach();
+                    })
                 },
-                'float':false,
-                tab:false
-            }
+                cleanup:function (content) {
+                    var container = content.parents(this.containerSelector);
+
+                    container.modal('hide');
+                },
+                singleton:true
+            },
+            float:false,
+            tab:false
         };
 
         // variable to store whether or not the
@@ -413,17 +408,16 @@ var rave = rave || (function () {
                 return rave.log('The popup view requested is not implemented by rave');
             }
 
-            if (target.singleton && $(target.selector).length>0) {
-                return $(target.selector).get(0);
+            if (target.singleton && $(target.containerSelector).length > 0) {
+                return $(target.contentSelector).get(0);
             }
 
-            var popup = $(target.markup);
-            if (target.styleMap) popup.css(target.styleMap);
-            $("#pageContent").prepend(popup);
+            var container = $(target.markup);
+            $("#pageContent").prepend(container);
 
-            if ($.type(target.initialize) == 'function') target.initialize(popup);
+            if ($.type(target.initialize) == 'function') target.initialize(container);
 
-            return popup.get(0);
+            return container.find(target.contentSelector).get(0);
         }
 
         function destroyPopup(element) {
@@ -740,7 +734,7 @@ var rave = rave || (function () {
 
             // init the widget minimize button which is hidden by default
             // and only renders when widget is in maximized view
-            $("#widget-" + widgetId + "-min").click({id: widgetId}, rave.minimizeWidget);
+            $("#widget-" + widgetId + "-min").click({id:widgetId}, rave.minimizeWidget);
 
             // init the collapse/restore toggle
             // conditionally style the icon and setup the event handlers
@@ -754,8 +748,8 @@ var rave = rave || (function () {
                 });
 
 
-            $('#widget-' + widgetId + '-toolbar').mousedown(function(event) {
-                 // don't allow drag and drop when this item is clicked
+            $('#widget-' + widgetId + '-toolbar').mousedown(function (event) {
+                // don't allow drag and drop when this item is clicked
                 event.stopPropagation();
             });
         }
@@ -805,12 +799,12 @@ var rave = rave || (function () {
 
         function showInfoMessage(message) {
             $("<div />", {'class':'alert alert-success navbar-spacer', 'text':message})
-                    .hide()
-                    .prependTo("body")
-                    .slideDown('fast').delay(5000)
-                    .slideUp(function () {
-                        $(this).remove();
-                    });
+                .hide()
+                .prependTo("body")
+                .slideDown('fast').delay(5000)
+                .slideUp(function () {
+                    $(this).remove();
+                });
         }
 
         function getNonLockedRegions() {
@@ -864,7 +858,7 @@ var rave = rave || (function () {
     }
 
     function createNewOpenAjaxHub() {
-        if(typeof OpenAjax == "undefined"){
+        if (typeof OpenAjax == "undefined") {
             throw "No implementation of OpenAjax found.  " +
                 "Please ensure that an implementation has been included in the page.";
         }
@@ -885,7 +879,7 @@ var rave = rave || (function () {
     }
 
     function getOpenAjaxHubInstance() {
-        if(typeof openAjaxHub == "undefined" || openAjaxHub == null) {
+        if (typeof openAjaxHub == "undefined" || openAjaxHub == null) {
             openAjaxHub = createNewOpenAjaxHub();
         }
         return openAjaxHub;
@@ -1258,12 +1252,12 @@ var rave = rave || (function () {
         /**
          * Gets the singleton Managed OpenAJAX 2.0 Hub
          */
-        getManagedHub: getOpenAjaxHubInstance,
+        getManagedHub:getOpenAjaxHubInstance,
 
         /**
          * Resets the managed hub
          */
-        resetManagedHub: resetOpenAjaxHubInstance,
+        resetManagedHub:resetOpenAjaxHubInstance,
 
         /**
          * Logs a message to a central logging facility (console by default)

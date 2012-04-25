@@ -1,4 +1,4 @@
-.center{
+.center {
     text-align: center;
     display: block;
     margin-left: auto;
@@ -23,19 +23,53 @@
     color: #CCCCCC !important;
     background-color: #FFFFFF;
 }
+
 /*Dropdowns in widget-bar are inheriting text-align: center. All dropdowns should left align by default.*/
-.dropdown-menu{
+.dropdown-menu {
     text-align: left;
 }
 
 /*Creating Outlined Tabs*/
-.nav-tabs.outlined{
-   margin: 0px 4px -1px 0;
-   border-bottom: none;
+.nav-tabs.outlined {
+    margin: 0px 4px -1px 0;
+    border-bottom: none;
 }
-.tab-content.outlined{
-     border: 1px solid #ddd;
-     border-radius: 0 5px 5px 5px;
-     padding: 10px 2% 0;
-     width: 96%;
+
+.tab-content.outlined {
+    border: 1px solid #ddd;
+    border-radius: 0 5px 5px 5px;
+    padding: 10px 2% 0;
+    width: 96%;
+}
+
+/*Popups styles*/
+.popup.slideout {
+    box-sizing: border-box;
+    position: fixed;
+    top: 5%;
+    right: 0;
+    display: none;
+    background: #ffffff;
+    border: 1px solid #999;
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    *border: 1px solid #999;
+    border-right-width: 0px;
+
+    -webkit-border-radius: 6px 0 0 6px;
+    -moz-border-radius: 6px 0 0 6px;
+    border-radius: 6px 0 0 6px;
+    -webkit-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+    -moz-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+    width: 451px;
+    height: 90%;
+    padding: 15px;
+    overflow-y: auto;
+    overflow-x: visible;
+    z-index: 5000
+}
+
+.slideout-content {
+    box-sizing: border-box;
+    height: 98%;
 }
