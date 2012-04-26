@@ -84,7 +84,7 @@
                             //############################################
                         --%>
 
-                    <form class="form-horizontal" name='oidf' action='j_spring_openid_security_check' method='POST'>
+                    <form class="form-horizontal" id="openIdForm" name='oidf' action='j_spring_openid_security_check' method='POST'>
                         <c:if test="${param['authfail'] eq 'openid'}">
                             <p class="error"><fmt:message key="page.login.openid.fail"/></p>
                         </c:if>
