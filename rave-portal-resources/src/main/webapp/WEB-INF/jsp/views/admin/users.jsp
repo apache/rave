@@ -31,13 +31,11 @@
         <article>
             <c:if test="${actionresult eq 'delete' or actionresult eq 'update'}">
                 <div class="alert alert-info">
-                    <p>
                         <fmt:message key="admin.userdetail.action.${actionresult}.success"/>
-                    </p>
                 </div>
             </c:if>
             <c:if test="${not empty message}">
-                <div class="alert alert-info"><p>${message}</p></div>
+                <div class="alert alert-info">${message}</div>
             </c:if>
 
 
