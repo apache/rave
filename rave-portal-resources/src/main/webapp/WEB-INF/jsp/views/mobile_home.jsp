@@ -70,7 +70,7 @@
                      </c:choose>
                  </c:set>
                  <div id="tab-${userPage.entityId}" class="rave-ui-tab rave-ui-tab-mobile<c:if test="${isCurrentPage}"> rave-ui-tab-selected rave-ui-tab-selected-mobile</c:if>">
-                    <div id="pageTitle-${userPage.entityId}" class="page-title" onclick="rave.viewPage(${userPage.entityId});"><c:out value="${userPage.name}"/></div>                   
+                    <div id="pageTitle-${userPage.entityId}" class="page-title" onclick="rave.viewPage(${userPage.entityId});"><c:out value="${userPage.name}"/></div>
                 </div>
             </c:forEach>
             <%-- display the add page button at the end of the tabs --%>
@@ -79,7 +79,7 @@
         </div>
     </div>
     <%-- the mobile view will only show one column of widgets --%>
-    <div id="pageContent" class="pageContent-mobile">        
+    <div id="pageContent" class="pageContent-mobile">
         <c:forEach var="region" items="${page.regions}">
             <div class="region-mobile" id="region-${region.entityId}-id">
             <c:forEach var="regionWidget" items="${region.regionWidgets}">
@@ -87,8 +87,8 @@
                     <div class="widget-title-bar widget-title-bar-mobile" onclick="rave.toggleMobileWidget(${regionWidget.entityId});">
                         <span id="widget-${regionWidget.entityId}-collapse" class="widget-toolbar-toggle-collapse" title="<fmt:message key="widget.chrome.toggle"/>"></span>
                         <div id="widget-${regionWidget.entityId}-title" class="widget-title">
-                            <c:out value="${regionWidget.widget.title}"/>                        
-                        </div>                        
+                            <c:out value="${regionWidget.widget.title}"/>
+                        </div>
                     </div>
                     <div class="widget-prefs" id="widget-${regionWidget.entityId}-prefs-content"></div>
                     <div class="widget widget-mobile" id="widget-${regionWidget.entityId}-body">
@@ -156,19 +156,12 @@
         </form>
     </div>
 
-<portal:register-init-script location="${'BEFORE_RAVE'}">
-    <script>
-        //Define the global widgets map.  This map will be populated by RegionWidgetRender providers.
-        var widgetsByRegionIdMap = {};
-    </script>
-</portal:register-init-script>
-
 <portal:register-init-script location="${'AFTER_RAVE'}">
     <script>
         $(function() {
             rave.setMobile(true);
             rave.initProviders();
-            rave.initWidgets(widgetsByRegionIdMap);           
+            rave.initWidgets();
         });
     </script>
 </portal:register-init-script>

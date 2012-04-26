@@ -60,12 +60,12 @@ public class W3cWidgetRenderer implements RegionWidgetRenderer {
         this.userService = userService;
         this.scriptManager = scriptManager;
     }
-    
+
     /**
      * The script block template
      */
     private static final String SCRIPT_BLOCK =
-        "<script>rave.registerWidget(widgetsByRegionIdMap, %1$s, {type: '%2$s'," +
+        "<script>rave.registerWidget(%1$s, {type: '%2$s'," +
         " regionWidgetId: %3$s," +
         " widgetUrl: '%4$s', " +
         " height: '%5$s', " +
@@ -93,14 +93,14 @@ public class W3cWidgetRenderer implements RegionWidgetRenderer {
         if(!WIDGET_TYPE.equals(widget.getType())) {
             throw new NotSupportedException("Invalid widget type passed to renderer: " + widget.getType());
         }
-        
+
         String widgetScript = getWidgetScript(item);
         scriptManager.registerScriptBlock(widgetScript, ScriptLocation.AFTER_RAVE, RenderScope.CURRENT_REQUEST, context);
         logger.debug("Gadget Script Data: " + widgetScript);
 
         return String.format(MARKUP, item.getEntityId());
     }
-    
+
     /**
      * Create a widget script block
      * @param item the RegionWidget to create a script block for
@@ -108,17 +108,17 @@ public class W3cWidgetRenderer implements RegionWidgetRenderer {
      */
     private String getWidgetScript(RegionWidget item) {
         User user = userService.getAuthenticatedUser();
-        
+
         //
         // For the shared data key we use the RegionWidget entity ID.
         //
         String sharedDataKey = String.valueOf(item.getEntityId());
-        
+
         //
         // Get the Rave Widget for this regionWidget instance
         //
         W3CWidget contextualizedWidget = (W3CWidget) widgetService.getWidget(user, sharedDataKey, item.getWidget());
-        
+
         //
         // TODO make this do something useful; currently these preferences aren't
         // actually available in the Widget Instance as prefs are managed separately in Wookie
@@ -133,7 +133,7 @@ public class W3cWidgetRenderer implements RegionWidgetRenderer {
                 }
             }
         }
-        
+
         //
         // Use width and height attributes if available, otherwise set to "100%"
         //

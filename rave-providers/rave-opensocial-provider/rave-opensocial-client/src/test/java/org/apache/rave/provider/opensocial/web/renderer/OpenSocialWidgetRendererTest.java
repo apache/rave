@@ -90,7 +90,7 @@ public class OpenSocialWidgetRendererTest {
                                         new RegionWidgetPreference(3L, 1L, null, null)));
 
         final String markup =
-            "<script>rave.registerWidget(widgetsByRegionIdMap, 1, {type: 'OpenSocial'," +
+            "<script>rave.registerWidget(1, {type: 'OpenSocial'," +
             " regionWidgetId: 1," +
             " widgetUrl: '" + VALID_GADGET_URL +"', " +
             " securityToken: '" + VALID_SECURITY_TOKEN + "', " +
@@ -124,7 +124,7 @@ public class OpenSocialWidgetRendererTest {
         rw.setRegion(region);
 
         final String markup =
-            "<script>rave.registerWidget(widgetsByRegionIdMap, 1, {type: 'OpenSocial'," +
+            "<script>rave.registerWidget(1, {type: 'OpenSocial'," +
             " regionWidgetId: null," +
             " widgetUrl: 'null', " +
             " securityToken: 'null', " +

@@ -62,7 +62,7 @@ public class OpenSocialWidgetRenderer implements RegionWidgetRenderer {
     //Note the widgets.push() call.  This defines the widget objects, which are
     //added to the widgets[] array in home.jsp.
     private static final String SCRIPT_BLOCK =
-            "<script>rave.registerWidget(widgetsByRegionIdMap, %1$s, {type: '%2$s'," +
+            "<script>rave.registerWidget(%1$s, {type: '%2$s'," +
             " regionWidgetId: %3$s," +
             " widgetUrl: '%4$s', " +
             " securityToken: '%5$s', " +

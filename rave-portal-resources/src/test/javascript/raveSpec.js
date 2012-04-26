@@ -17,7 +17,16 @@
  * under the License.
  */
 describe("Rave", function() {
-
+    function registerWidgetsFromRegionIdMap(widgetsByRegionIdMap) {
+        for(var regionId in widgetsByRegionIdMap) {
+            if(widgetsByRegionIdMap.hasOwnProperty(regionId)) {
+                var widgetMap = widgetsByRegionIdMap[regionId];
+                for (var i=0; i < widgetMap.length; i++) {
+                    rave.registerWidget(regionId, widgetMap[i]);
+                }
+            }
+        }
+    }
     function getMockProvider(type) {
         return (function() {
             var called = false;
@@ -133,9 +142,11 @@ describe("Rave", function() {
             ];
             var provider1 = getMockProvider("FOO");
             var provider2 = getMockProvider("BAR");
+            rave.clearWidgetsByRegionIdMap();
+            registerWidgetsFromRegionIdMap(widgetsByRegionIdMap);
             rave.registerProvider(provider1);
             rave.registerProvider(provider2);
-            rave.initWidgets(widgetsByRegionIdMap);
+            rave.initWidgets();
             expect(provider1.initWidgetsWasCalled(2)).toBeTruthy();
             expect(provider2.initWidgetsWasCalled(2)).toBeTruthy();
             expect($().hasClass(HIDDEN_CLASS)).toEqual(true);
@@ -170,8 +181,10 @@ describe("Rave", function() {
                 originalInitWidgetFunction(widget);
                 widgets.push(widget);
             };
+            rave.clearWidgetsByRegionIdMap();
+            registerWidgetsFromRegionIdMap(widgetsByRegionIdMap);
             rave.registerProvider(provider1);
-            rave.initWidgets(widgetsByRegionIdMap);
+            rave.initWidgets();
             expect(provider1.initWidgetsWasCalled(12)).toBeTruthy();
 
             for (var i = 0; i < 12; i++) {
@@ -182,21 +195,21 @@ describe("Rave", function() {
         it("puts widgets in buckets keyed by regionIds", function() {
             createMockJQuery();
 
-            var widgetsByRegionIdMap = {};
+            rave.clearWidgetsByRegionIdMap();
             var regionOneKey = 1;
             var regionTwoKey = 2;
-            rave.registerWidget(widgetsByRegionIdMap, regionOneKey, {arbitrary:"value"});
-            rave.registerWidget(widgetsByRegionIdMap, regionOneKey, {arbitrary:"value"});
+            rave.registerWidget(regionOneKey, {arbitrary:"value"});
+            rave.registerWidget(regionOneKey, {arbitrary:"value"});
 
-            rave.registerWidget(widgetsByRegionIdMap, regionTwoKey, {arbitrary:"value"});
+            rave.registerWidget(regionTwoKey, {arbitrary:"value"});
 
-            rave.registerWidget(widgetsByRegionIdMap, regionOneKey, {arbitrary:"value"});
-            rave.registerWidget(widgetsByRegionIdMap, regionOneKey, {arbitrary:"value"});
+            rave.registerWidget(regionOneKey, {arbitrary:"value"});
+            rave.registerWidget(regionOneKey, {arbitrary:"value"});
 
-            rave.registerWidget(widgetsByRegionIdMap, regionTwoKey, {arbitrary:"value"});
+            rave.registerWidget(regionTwoKey, {arbitrary:"value"});
 
-            expect(widgetsByRegionIdMap[regionOneKey].length).toEqual(4);
-            expect(widgetsByRegionIdMap[regionTwoKey].length).toEqual(2);
+            expect(rave.getWidgetsByRegionIdMap()[regionOneKey].length).toEqual(4);
+            expect(rave.getWidgetsByRegionIdMap()[regionTwoKey].length).toEqual(2);
         });
 
         it("Renders an error gadget when invalid widget is provided", function(){
@@ -213,10 +226,13 @@ describe("Rave", function() {
 
             var provider1 = getMockProvider("FOO");
             var provider2 = getMockProvider("BAR");
+            rave.clearWidgetsByRegionIdMap();
+            registerWidgetsFromRegionIdMap(widgetsByRegionIdMap);
+
             rave.registerProvider(provider1);
             rave.registerProvider(provider2);
             rave.addClientMessage("widget.provider.error", "This widget type is currently unsupported.  Check with your administrator and be sure the correct provider is registered.");
-            rave.initWidgets(widgetsByRegionIdMap);
+            rave.initWidgets();
             expect($().expression()).toEqual("#widget-43-body");
             expect($().html()).toEqual("This widget type is currently unsupported.  Check with your administrator and be sure the correct provider is registered.");
             expect(provider1.initWidgetsWasCalled(2)).toBeTruthy();
@@ -230,8 +246,9 @@ describe("Rave", function() {
             widgetsByRegionIdMap[1] = [
                     {type:"DISABLED",  regionWidgetId:20, disabledMessage: "Widget disabled"}
             ];
-
-            rave.initWidgets(widgetsByRegionIdMap);
+            rave.clearWidgetsByRegionIdMap();
+            registerWidgetsFromRegionIdMap(widgetsByRegionIdMap);
+            rave.initWidgets();
             expect($().expression()).toEqual("#widget-20-body");
             expect($().html()).toEqual("Widget disabled");
         });
@@ -243,8 +260,10 @@ describe("Rave", function() {
             expect($().hasClass(HIDDEN_CLASS)).toEqual(true);
 
             var widgetsByRegionIdMap = {};
+            rave.clearWidgetsByRegionIdMap();
+            registerWidgetsFromRegionIdMap(widgetsByRegionIdMap);
 
-            rave.initWidgets(widgetsByRegionIdMap);
+            rave.initWidgets();
             expect($().hasClass(HIDDEN_CLASS)).toEqual(false);
         });
     });

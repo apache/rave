@@ -187,18 +187,11 @@
 </div>
 <div class="clear-float">&nbsp;</div>
 
-<portal:register-init-script location="${'BEFORE_RAVE'}">
-    <script>
-        //Define the global widgets map.  This map will be populated by RegionWidgetRender providers.
-        var widgetsByRegionIdMap = {};
-    </script>
-</portal:register-init-script>
-
 <portal:register-init-script location="${'AFTER_RAVE'}">
     <script>
         $(function () {
             rave.initProviders();
-            rave.initWidgets(widgetsByRegionIdMap);
+            rave.initWidgets();
             rave.initUI();
             rave.layout.init();
             rave.personprofile.init();

@@ -19,6 +19,7 @@
 var rave = rave || (function () {
     var providerMap = {};
     var widgetByIdMap = {};
+    var widgetsByRegionIdMap = {};
     var context = "";
     var clientMessages = {};
     var openAjaxHub;
@@ -840,11 +841,19 @@ var rave = rave || (function () {
         return clientMessages[key] = message;
     }
 
-    function registerWidget(widgetsByRegionIdMap, regionId, widget) {
+    function registerWidget(regionId, widget) {
         if (!widgetsByRegionIdMap.hasOwnProperty(regionId)) {
             widgetsByRegionIdMap[regionId] = [];
         }
         widgetsByRegionIdMap[regionId].push(widget);
+    }
+
+    function getWidgetsByRegionIdMap() {
+        return widgetsByRegionIdMap;
+    }
+
+    function clearWidgetsByRegionIdMap() {
+        widgetsByRegionIdMap = {};
     }
 
     function initializeProviders() {
@@ -889,7 +898,7 @@ var rave = rave || (function () {
         openAjaxHub = null;
     }
 
-    function initializeWidgets(widgetsByRegionIdMap) {
+    function initializeWidgets() {
         //We get the widget objects in a map keyed by region ID.  The code below converts that map into a flat array
         //of widgets with all the top widgets in each region first, then the seconds widgets in each region, then the
         //third, etc until we have all widgets in the array.  This allows us to render widgets from left to right and
@@ -1028,7 +1037,6 @@ var rave = rave || (function () {
     return {
         /**
          * Registers the specified widget into the widgetsByRegionIdMap under the specified regionId.
-         * @param widgetsByRegionIdMap The map.
          * @param regionId The regionId.
          * @param widget The widget.
          */
@@ -1264,6 +1272,16 @@ var rave = rave || (function () {
          *
          * @param message the message to log
          */
-        log:log
+        log:log,
+
+        /**
+         * Returns the widgetsByRegionIdMap
+         */
+        getWidgetsByRegionIdMap:getWidgetsByRegionIdMap,
+
+        /**
+         * Clears the widgetsByRegionIdMap.  Useful for testing.
+         */
+        clearWidgetsByRegionIdMap:clearWidgetsByRegionIdMap
     }
 })();
