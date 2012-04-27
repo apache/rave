@@ -60,7 +60,7 @@
         <div class="control-group">
             <label class="control-label" for="pageLayoutField"><fmt:message key="page.general.addpage.selectlayout"/></label>
             <div class="controls">
-                <form:select path="pageLayout" id="pageLayoutField">
+                <form:select path="defaultPageLayoutCode" id="pageLayoutField">
                     <form:option value="columns_1" id="columns_1_id"><fmt:message
                             key="page.general.addpage.layout.columns_1"/></form:option>
                     <form:option value="columns_2" id="columns_2_id"><fmt:message
@@ -88,14 +88,15 @@
 
     <!-- Personal information optional -->
     <h2><fmt:message key="page.general.personal.information"/></h2>
+
     <fieldset>
         <div class="control-group">
             <label class="control-label" for="firstNameField"><fmt:message key="page.general.first.name"/></label>
-            <div class="controls"><form:input id="firstNameField" path="firstName" autofocus="autofocus"/></div>
+            <div class="controls"><form:input id="firstNameField" path="givenName" autofocus="autofocus"/></div>
         </div>
         <div class="control-group">
             <label class="control-label" for="lastNameField"><fmt:message key="page.general.last.name"/></label>
-            <div class="controls"><form:input id="lastNameField" path="lastName" autofocus="autofocus"/></div>
+            <div class="controls"><form:input id="lastNameField" path="familyName" autofocus="autofocus"/></div>
         </div>
         <div class="control-group">
             <label class="control-label" for="displayNameField"><fmt:message key="page.general.display.name"/></label>

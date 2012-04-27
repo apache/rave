@@ -18,9 +18,11 @@
  */
 package org.apache.rave.portal.web.validator;
 
+import java.util.regex.Pattern;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.validator.routines.EmailValidator;
-import org.apache.rave.portal.model.NewUser;
+import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,8 +31,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.Validator;
-
-import java.util.regex.Pattern;
 
 @Component
 public class NewAccountValidator implements Validator {
@@ -52,12 +52,12 @@ public class NewAccountValidator implements Validator {
     }
 
     public boolean supports(Class<?> aClass) {
-        return NewUser.class.isAssignableFrom(aClass);
+        return User.class.isAssignableFrom(aClass);
     }
 
     public void validate(Object obj, Errors errors) {
         logger.debug("Validator called");
-        NewUser newUser = (NewUser) obj;
+        User newUser = (User) obj;
 
         validateUsername(errors, newUser);
         validatePassword(errors, newUser);
@@ -67,7 +67,7 @@ public class NewAccountValidator implements Validator {
         writeResultToLog(errors);
     }
 
-    private void validateUsername(Errors errors, NewUser newUser) {
+    private void validateUsername(Errors errors, User newUser) {
         final String username = newUser.getUsername();
         if (StringUtils.isBlank(username)) {
             errors.rejectValue(FIELD_USERNAME, "username.required");
@@ -85,7 +85,7 @@ public class NewAccountValidator implements Validator {
         return userService.getUserByUsername(username) != null;
     }
 
-    protected void validatePassword(Errors errors, NewUser newUser) {
+    protected void validatePassword(Errors errors, User newUser) {
         if (StringUtils.isBlank(newUser.getPassword())) {
             errors.rejectValue(FIELD_PASSWORD, "password.required");
             logger.info("Password required");
@@ -95,7 +95,7 @@ public class NewAccountValidator implements Validator {
         }
     }
 
-    protected void validateConfirmPassword(Errors errors, NewUser newUser) {
+    protected void validateConfirmPassword(Errors errors, User newUser) {
         if (StringUtils.isBlank(newUser.getConfirmPassword())) {
             errors.rejectValue(FIELD_CONFIRM_PASSWORD, "confirmPassword.required");
             logger.info("Confirm Password required");
@@ -105,7 +105,7 @@ public class NewAccountValidator implements Validator {
         }
     }
 
-    private boolean isConfirmPasswordDifferentThanPassword(NewUser newUser) {
+    private boolean isConfirmPasswordDifferentThanPassword(User newUser) {
         return !(newUser.getConfirmPassword().equals(newUser.getPassword()));
     }
 

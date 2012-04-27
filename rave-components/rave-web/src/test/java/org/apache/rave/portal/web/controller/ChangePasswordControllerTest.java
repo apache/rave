@@ -19,7 +19,13 @@
 
 package org.apache.rave.portal.web.controller;
 
-import org.apache.rave.portal.model.NewUser;
+import static org.easymock.EasyMock.createNiceMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+
+import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.portal.web.util.ModelKeys;
 import org.apache.rave.portal.web.util.ViewNames;
@@ -31,12 +37,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.DirectFieldBindingResult;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import static org.easymock.EasyMock.createNiceMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
 
 /**
  * @version "$Id$"
@@ -71,30 +71,30 @@ public class ChangePasswordControllerTest {
     public void testUpdate() throws Exception {
         final Model model = createNiceMock(Model.class);
         RedirectAttributes redirectAttributes = createNiceMock(RedirectAttributes.class);
-        NewUser newUser = new NewUser();
+        User newUser = new User();
         replay(redirectAttributes);
         replay(model);
-        BindingResult results = new DirectFieldBindingResult(newUser, ModelKeys.NEW_USER);
+        BindingResult results = new DirectFieldBindingResult(newUser, ModelKeys.USER);
         String viewName = controller.update(newUser, results, model, redirectAttributes);
         assertThat(viewName, CoreMatchers.equalTo(ViewNames.PASSWORD_CHANGE));
         assertThat(results.hasErrors(), CoreMatchers.equalTo(true));
         assertThat(results.getErrorCount(), CoreMatchers.equalTo(2));
         // invalid password, to short:
         newUser.setPassword("123");
-        results = new DirectFieldBindingResult(newUser, ModelKeys.NEW_USER);
+        results = new DirectFieldBindingResult(newUser, ModelKeys.USER);
         controller.update(newUser, results, model, redirectAttributes);
         assertEquals("Expected password errors", 2, results.getErrorCount());
         assertEquals("Expected password errors", "password.invalid.length", results.getFieldError().getCode());
         // missing password confirm:
         newUser.setPassword("1234");
-        results = new DirectFieldBindingResult(newUser, ModelKeys.NEW_USER);
+        results = new DirectFieldBindingResult(newUser, ModelKeys.USER);
         controller.update(newUser, results, model, redirectAttributes);
         assertEquals("Expected password errors", 1, results.getErrorCount());
         assertEquals("Expected password errors", "confirmPassword.required", results.getFieldError().getCode());
         // password confirm not equal:
         newUser.setPassword("1234");
         newUser.setConfirmPassword("12345");
-        results = new DirectFieldBindingResult(newUser, ModelKeys.NEW_USER);
+        results = new DirectFieldBindingResult(newUser, ModelKeys.USER);
         controller.update(newUser, results, model, redirectAttributes);
         assertEquals("Expected password errors", 1, results.getErrorCount());
         assertEquals("Expected password errors", "confirmPassword.mismatch", results.getFieldError().getCode());
@@ -102,7 +102,7 @@ public class ChangePasswordControllerTest {
         // ok request
         newUser.setPassword("1234");
         newUser.setConfirmPassword("1234");
-        results = new DirectFieldBindingResult(newUser, ModelKeys.NEW_USER);
+        results = new DirectFieldBindingResult(newUser, ModelKeys.USER);
         controller.update(newUser, results, model, redirectAttributes);
         assertEquals("Expected password errors", 0, results.getErrorCount());
 

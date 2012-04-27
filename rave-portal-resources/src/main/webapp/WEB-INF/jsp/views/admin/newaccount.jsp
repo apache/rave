@@ -35,7 +35,7 @@
                 </li>
             </ul>
             <section class="formbox">
-                <h2><fmt:message key="admin.userdetail.editdata"/></h2>
+                <h2><fmt:message key="page.login.createaccount"/></h2>
                 <%@ include file="/WEB-INF/jsp/views/includes/new_user_form.jsp" %>
             </section>
         </article>

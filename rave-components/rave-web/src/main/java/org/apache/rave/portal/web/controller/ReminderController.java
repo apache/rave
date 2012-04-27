@@ -19,7 +19,9 @@
 
 package org.apache.rave.portal.web.controller;
 
-import org.apache.rave.portal.model.NewUser;
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.service.CaptchaService;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.portal.web.util.ModelKeys;
@@ -36,8 +38,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * Handles password ans username reminder requests
@@ -65,7 +65,7 @@ public class ReminderController {
     @RequestMapping(value = {"/retrieveusername", "/newpassword"})
     public void initialize(ModelMap model, HttpServletRequest request) {
         model.addAttribute(ModelKeys.CAPTCHA_HTML, captchaService.createHtml(request));
-        model.addAttribute(ModelKeys.NEW_USER, new NewUser());
+        model.addAttribute(ModelKeys.USER, new User());
     }
 
 
@@ -73,15 +73,15 @@ public class ReminderController {
      * Processes username requests
      */
     @RequestMapping(value = {"/retrieveusername"}, method = RequestMethod.POST)
-    public String requestUsername(@ModelAttribute NewUser newUser, BindingResult results, Model model,
+    public String requestUsername(@ModelAttribute User user, BindingResult results, Model model,
                                   HttpServletRequest request, RedirectAttributes redirectAttributes) {
         log.debug("Requesting username reminder");
-        if (!validateEmail(newUser, results, model, request)) {
+        if (!validateEmail(user, results, model, request)) {
             return captchaRequest(model, request, ViewNames.USERNAME_REQUEST);
         }
         try {
-            userService.sendUserNameReminder(newUser);
-            populateRedirect(newUser, redirectAttributes);
+            userService.sendUserNameReminder(user);
+            populateRedirect(user, redirectAttributes);
             return ViewNames.REDIRECT_RETRIEVE_USERNAME;
         } catch (Exception e) {
             if (log.isDebugEnabled()) {
@@ -97,15 +97,15 @@ public class ReminderController {
      * Processes new password requests
      */
     @RequestMapping(value = {"/newpassword"}, method = RequestMethod.POST)
-    public String requestPassword(@ModelAttribute NewUser newUser, BindingResult results, Model model,
+    public String requestPassword(@ModelAttribute User user, BindingResult results, Model model,
                                   HttpServletRequest request, RedirectAttributes redirectAttributes) {
         log.debug("Requesting password reminder");
-        if (!validateEmail(newUser, results, model, request)) {
+        if (!validateEmail(user, results, model, request)) {
             return captchaRequest(model, request, ViewNames.NEW_PASSWORD_REQUEST);
         }
         try {
-            userService.sendPasswordReminder(newUser);
-            populateRedirect(newUser, redirectAttributes);
+            userService.sendPasswordReminder(user);
+            populateRedirect(user, redirectAttributes);
             return ViewNames.REDIRECT_NEW_PASSWORD;
         } catch (Exception e) {
             if (log.isDebugEnabled()) {
@@ -119,15 +119,15 @@ public class ReminderController {
     }
 
 
-    private boolean validateEmail(NewUser newUser, BindingResult results, Model model, HttpServletRequest request) {
-        model.addAttribute(ModelKeys.NEW_USER, newUser);
-        passwordValidator.validate(newUser, results);
+    private boolean validateEmail(User user, BindingResult results, Model model, HttpServletRequest request) {
+        model.addAttribute(ModelKeys.USER, user);
+        passwordValidator.validate(user, results);
         if (results.hasErrors()) {
             log.info("newpassword request contains validation errors");
             return false;
         }
 
-        String email = newUser.getEmail();
+        String email = user.getEmail();
         log.debug("Submitted email {} is valid", email);
         if (!captchaService.isValid(request)) {
             log.debug("Captcha was invalid for user with email {}", email);
@@ -137,7 +137,7 @@ public class ReminderController {
     }
 
 
-    private void populateRedirect(NewUser newUser, RedirectAttributes redirectAttributes) {
+    private void populateRedirect(User newUser, RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("success", true);
         redirectAttributes.addFlashAttribute("email", newUser.getEmail());
     }

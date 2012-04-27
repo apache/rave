@@ -19,15 +19,15 @@
 package org.apache.rave.portal.service;
 
 
-import org.apache.rave.portal.model.NewUser;
+import org.apache.rave.portal.model.User;
 
 public interface NewAccountService {
 
     /**
      * Creates a new account using several other Rave services.
      *
-     * @param newUser the {@link NewUser} from which a new {@link org.apache.rave.portal.model.User} can be created
+     * @param newUser the {@link User} from which a new {@link org.apache.rave.portal.model.User} can be created
      * @throws Exception in case something goes wrong
      */
-    public void createNewAccount(NewUser newUser) throws Exception;
+    public void createNewAccount(User newUser) throws Exception;
 }

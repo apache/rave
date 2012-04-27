@@ -98,10 +98,13 @@ public class User extends Person implements UserDetails, BasicEntity, Serializab
 
     @ManyToOne
     @JoinColumn(name="default_page_layout_id")
-    private PageLayout defaultPageLayout;    
+    private PageLayout defaultPageLayout;
 
     @Transient
     private String confirmPassword;
+
+    @Transient
+    private String defaultPageLayoutCode;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_authorities",
@@ -213,7 +216,7 @@ public class User extends Person implements UserDetails, BasicEntity, Serializab
      *
      * @return <code>true</code> if the user's is not expired valid (ie non-expired), <code>false</code> if no longer valid
      */
-    //REVIEW NOTE: Conflating Account and Credential (non)expiration seems likely to cause confusion at some point. 
+    //REVIEW NOTE: Conflating Account and Credential (non)expiration seems likely to cause confusion at some point.
     @Override
     public boolean isAccountNonExpired() {
         return isCredentialsNonExpired();
@@ -275,22 +278,21 @@ public class User extends Person implements UserDetails, BasicEntity, Serializab
 
     public void setDefaultPageLayout(PageLayout defaultPageLayout) {
         this.defaultPageLayout = defaultPageLayout;
-    }    
-
-    public String getConfirmPassword() {
-        //confirmPassword is not stored persistently, so if the value is not set,
-        //return the password instead. This will need to be as secure as the password
-        //field itself.
-        if (confirmPassword != null && confirmPassword.length() > 0) {
-            return confirmPassword;
-        } else {
-            return password;
-        }
     }
 
-    public void setConfirmPassword(String confirmPassword) {
-        this.confirmPassword = confirmPassword;
-    }
+    /**
+	 * @return the confirmPassword
+	 */
+	public String getConfirmPassword() {
+		return confirmPassword;
+	}
+
+	/**
+	 * @param confirmPassword the confirmPassword to set
+	 */
+	public void setConfirmPassword(String confirmPassword) {
+		this.confirmPassword = confirmPassword;
+	}
 
     @PreRemove
     public void preRemove() {
@@ -350,7 +352,7 @@ public class User extends Person implements UserDetails, BasicEntity, Serializab
     /**
      * Conversion function to create a new Person object based off of this User class.  This is useful for when you
      * have a User object and want to pass on the Person data without the User class data (like password, etc)
-     * 
+     *
      * @return a Person object representing the data contained in this class
      */
     public Person toPerson() {
@@ -373,4 +375,12 @@ public class User extends Person implements UserDetails, BasicEntity, Serializab
         p.setUsername(this.getUsername());
         return p;
     }
+
+	public String getDefaultPageLayoutCode() {
+		return defaultPageLayoutCode;
+	}
+
+	public void setDefaultPageLayoutCode(String defaultPageLayoutCode) {
+		this.defaultPageLayoutCode = defaultPageLayoutCode;
+	}
 }

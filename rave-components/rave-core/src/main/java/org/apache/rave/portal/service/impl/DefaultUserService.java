@@ -20,13 +20,24 @@
 package org.apache.rave.portal.service.impl;
 
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.commons.lang.StringUtils;
-import org.apache.rave.portal.model.NewUser;
 import org.apache.rave.portal.model.PageType;
 import org.apache.rave.portal.model.Person;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.util.SearchResult;
-import org.apache.rave.portal.repository.*;
+import org.apache.rave.portal.repository.PageRepository;
+import org.apache.rave.portal.repository.PageTemplateRepository;
+import org.apache.rave.portal.repository.UserRepository;
+import org.apache.rave.portal.repository.WidgetCommentRepository;
+import org.apache.rave.portal.repository.WidgetRatingRepository;
+import org.apache.rave.portal.repository.WidgetRepository;
 import org.apache.rave.portal.service.EmailService;
 import org.apache.rave.portal.service.UserService;
 import org.slf4j.Logger;
@@ -45,8 +56,6 @@ import org.springframework.security.crypto.codec.Base64;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.*;
 
 /**
  *
@@ -269,7 +278,7 @@ public class DefaultUserService implements UserService {
     }
 
     @Override
-    public void updatePassword(NewUser newUser) {
+    public void updatePassword(User newUser) {
         log.debug("Changing password  for user {}", newUser);
         User user = userRepository.getByForgotPasswordHash(newUser.getForgotPasswordHash());
         if (user == null) {
@@ -286,7 +295,7 @@ public class DefaultUserService implements UserService {
 
 
     @Override
-    public void sendUserNameReminder(NewUser newUser) {
+    public void sendUserNameReminder(User newUser) {
         log.debug("Calling send username  {}", newUser);
         User user = userRepository.getByUserEmail(newUser.getEmail());
         if (user == null) {
@@ -301,7 +310,7 @@ public class DefaultUserService implements UserService {
 
 
     @Override
-    public void sendPasswordReminder(NewUser newUser) {
+    public void sendPasswordReminder(User newUser) {
         log.debug("Calling send password change link for user {}", newUser);
         User user = userRepository.getByUserEmail(newUser.getEmail());
         if (user == null) {

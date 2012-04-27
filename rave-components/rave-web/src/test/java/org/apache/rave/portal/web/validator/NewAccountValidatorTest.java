@@ -19,14 +19,6 @@
 
 package org.apache.rave.portal.web.validator;
 
-import org.apache.rave.portal.model.NewUser;
-import org.apache.rave.portal.model.User;
-import org.apache.rave.portal.service.UserService;
-import org.junit.Before;
-import org.junit.Test;
-import org.springframework.validation.BindException;
-import org.springframework.validation.Errors;
-
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNotNull;
@@ -34,6 +26,13 @@ import static junit.framework.Assert.assertTrue;
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
+
+import org.apache.rave.portal.model.User;
+import org.apache.rave.portal.service.UserService;
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.validation.BindException;
+import org.springframework.validation.Errors;
 
 /**
  * Test class for {@link NewAccountValidator}
@@ -54,37 +53,37 @@ public class NewAccountValidatorTest {
 
     @Test
     public void testSupports() throws Exception {
-        assertTrue("Can validate org.apache.rave.portal.model.NewUser",
-                newAccountValidator.supports(NewUser.class));
+        assertTrue("Can validate org.apache.rave.portal.model.User",
+                newAccountValidator.supports(User.class));
     }
 
     @Test
     public void testValidate() throws Exception {
-        NewUser newUser = new NewUser();
-        newUser.setUsername(VALID_NAME);
-        newUser.setPassword(VALID_PASSWORD);
-        newUser.setConfirmPassword(VALID_PASSWORD);
-        newUser.setPageLayout(VALID_PAGELAYOUT);
-        newUser.setEmail(VALID_EMAIL);
-        Errors errors = new BindException(newUser, NEW_USER);
+        User user = new User();
+        user.setUsername(VALID_NAME);
+        user.setPassword(VALID_PASSWORD);
+        user.setConfirmPassword(VALID_PASSWORD);
+        user.setDefaultPageLayoutCode(VALID_PAGELAYOUT);
+        user.setEmail(VALID_EMAIL);
+        Errors errors = new BindException(user, NEW_USER);
 
         expect(mockUserService.getUserByUsername(VALID_NAME)).andReturn(null);
         expect(mockUserService.getUserByEmail(VALID_EMAIL)).andReturn(null);
         replay(mockUserService);
 
-        newAccountValidator.validate(newUser, errors);
+        newAccountValidator.validate(user, errors);
 
         assertFalse("No validation errors", errors.hasErrors());
     }
 
     @Test
-    public void testValidationFailsOnEmptyNewUser() throws Exception {
-        NewUser newUser = new NewUser();
-        Errors errors = new BindException(newUser, NEW_USER);
+    public void testValidationFailsOnEmptyUser() throws Exception {
+        User user = new User();
+        Errors errors = new BindException(user, NEW_USER);
         expect(mockUserService.getUserByUsername("")).andReturn(null);
         replay(mockUserService);
 
-        newAccountValidator.validate(newUser, errors);
+        newAccountValidator.validate(user, errors);
 
         assertEquals("4 Validation errors", 4, errors.getErrorCount());
         assertNotNull(errors.getFieldError(FIELD_USERNAME));
@@ -97,20 +96,20 @@ public class NewAccountValidatorTest {
 
     @Test
     public void testValidationFailsOnExistingUser() throws Exception {
-        NewUser newUser = new NewUser();
-        newUser.setUsername("ExistingUser");
-        newUser.setPassword(VALID_PASSWORD);
-        newUser.setConfirmPassword(VALID_PASSWORD);
-        newUser.setPageLayout(VALID_PAGELAYOUT);
-        newUser.setEmail(VALID_EMAIL);
-        Errors errors = new BindException(newUser, NEW_USER);
+        User user = new User();
+        user.setUsername("ExistingUser");
+        user.setPassword(VALID_PASSWORD);
+        user.setConfirmPassword(VALID_PASSWORD);
+        user.setDefaultPageLayoutCode(VALID_PAGELAYOUT);
+        user.setEmail(VALID_EMAIL);
+        Errors errors = new BindException(user, NEW_USER);
 
-        User user = createMock(User.class);
-        expect(mockUserService.getUserByUsername("ExistingUser")).andReturn(user);
+        User user1 = createMock(User.class);
+        expect(mockUserService.getUserByUsername("ExistingUser")).andReturn(user1);
         expect(mockUserService.getUserByEmail(VALID_EMAIL)).andReturn(null);
         replay(mockUserService);
 
-        newAccountValidator.validate(newUser, errors);
+        newAccountValidator.validate(user, errors);
 
         assertEquals("1 Validation error", 1, errors.getErrorCount());
         assertNotNull(errors.getFieldError(FIELD_USERNAME));
@@ -118,20 +117,20 @@ public class NewAccountValidatorTest {
 
     @Test
     public void testValidationFailsOnExistingEmail() throws Exception {
-        NewUser newUser = new NewUser();
-        newUser.setUsername(VALID_NAME);
-        newUser.setPassword(VALID_PASSWORD);
-        newUser.setConfirmPassword(VALID_PASSWORD);
-        newUser.setPageLayout(VALID_PAGELAYOUT);
-        newUser.setEmail("existing@localhost");
-        Errors errors = new BindException(newUser, NEW_USER);
+        User user = new User();
+        user.setUsername(VALID_NAME);
+        user.setPassword(VALID_PASSWORD);
+        user.setConfirmPassword(VALID_PASSWORD);
+        user.setDefaultPageLayoutCode(VALID_PAGELAYOUT);
+        user.setEmail("existing@localhost");
+        Errors errors = new BindException(user, NEW_USER);
 
-        User user = createMock(User.class);
+        User user1 = createMock(User.class);
         expect(mockUserService.getUserByUsername(VALID_NAME)).andReturn(null);
-        expect(mockUserService.getUserByEmail("existing@localhost")).andReturn(user);
+        expect(mockUserService.getUserByEmail("existing@localhost")).andReturn(user1);
         replay(mockUserService);
 
-        newAccountValidator.validate(newUser, errors);
+        newAccountValidator.validate(user, errors);
 
         assertEquals("1 Validation error", 1, errors.getErrorCount());
         assertNotNull(errors.getFieldError(FIELD_EMAIL));
@@ -140,18 +139,18 @@ public class NewAccountValidatorTest {
 
     @Test
     public void testValidationFailsOnShortUserName() throws Exception {
-        NewUser newUser = new NewUser();
-        newUser.setUsername("A");
-        newUser.setPassword(VALID_PASSWORD);
-        newUser.setConfirmPassword(VALID_PASSWORD);
-        newUser.setPageLayout(VALID_PAGELAYOUT);
-        newUser.setEmail(VALID_EMAIL);
-        Errors errors = new BindException(newUser, NEW_USER);
+        User user = new User();
+        user.setUsername("A");
+        user.setPassword(VALID_PASSWORD);
+        user.setConfirmPassword(VALID_PASSWORD);
+        user.setDefaultPageLayoutCode(VALID_PAGELAYOUT);
+        user.setEmail(VALID_EMAIL);
+        Errors errors = new BindException(user, NEW_USER);
         expect(mockUserService.getUserByUsername("A")).andReturn(null);
         expect(mockUserService.getUserByEmail(VALID_EMAIL)).andReturn(null);
         replay(mockUserService);
 
-        newAccountValidator.validate(newUser, errors);
+        newAccountValidator.validate(user, errors);
 
         assertEquals("1 Validation error", 1, errors.getErrorCount());
         assertNotNull(errors.getFieldError(FIELD_USERNAME));
@@ -159,19 +158,19 @@ public class NewAccountValidatorTest {
 
     @Test
     public void testValidationFailsOnIllegalUsername() throws Exception {
-        NewUser newUser = new NewUser();
+        User user = new User();
         final String badUsername = "x'; DROP TABLE members; --";
-        newUser.setUsername(badUsername);
-        newUser.setPassword(VALID_PASSWORD);
-        newUser.setConfirmPassword(VALID_PASSWORD);
-        newUser.setPageLayout(VALID_PAGELAYOUT);
-        newUser.setEmail(VALID_EMAIL);
-        Errors errors = new BindException(newUser, NEW_USER);
+        user.setUsername(badUsername);
+        user.setPassword(VALID_PASSWORD);
+        user.setConfirmPassword(VALID_PASSWORD);
+        user.setDefaultPageLayoutCode(VALID_PAGELAYOUT);
+        user.setEmail(VALID_EMAIL);
+        Errors errors = new BindException(user, NEW_USER);
         expect(mockUserService.getUserByUsername(badUsername)).andReturn(null);
         expect(mockUserService.getUserByEmail(VALID_EMAIL)).andReturn(null);
         replay(mockUserService);
 
-        newAccountValidator.validate(newUser, errors);
+        newAccountValidator.validate(user, errors);
 
         assertEquals("1 Validation error", 1, errors.getErrorCount());
         assertNotNull(errors.getFieldError(FIELD_USERNAME));
@@ -179,18 +178,18 @@ public class NewAccountValidatorTest {
 
     @Test
     public void testValidationFailsOnShortPassword() throws Exception {
-        NewUser newUser = new NewUser();
-        newUser.setUsername(VALID_NAME);
-        newUser.setPassword("123");
-        newUser.setConfirmPassword("123");
-        newUser.setPageLayout(VALID_PAGELAYOUT);
-        newUser.setEmail(VALID_EMAIL);
-        Errors errors = new BindException(newUser, NEW_USER);
+        User user = new User();
+        user.setUsername(VALID_NAME);
+        user.setPassword("123");
+        user.setConfirmPassword("123");
+        user.setDefaultPageLayoutCode(VALID_PAGELAYOUT);
+        user.setEmail(VALID_EMAIL);
+        Errors errors = new BindException(user, NEW_USER);
         expect(mockUserService.getUserByUsername(VALID_NAME)).andReturn(null);
         expect(mockUserService.getUserByEmail(VALID_EMAIL)).andReturn(null);
         replay(mockUserService);
 
-        newAccountValidator.validate(newUser, errors);
+        newAccountValidator.validate(user, errors);
 
         assertEquals("1 Validation error", 1, errors.getErrorCount());
         assertNotNull(errors.getFieldError(FIELD_PASSWORD));
@@ -198,18 +197,18 @@ public class NewAccountValidatorTest {
 
     @Test
     public void testValidationFailsOnNonMatchingPassword() throws Exception {
-        NewUser newUser = new NewUser();
-        newUser.setUsername(VALID_NAME);
-        newUser.setPassword(VALID_PASSWORD);
-        newUser.setConfirmPassword("doesnotmatch");
-        newUser.setPageLayout(VALID_PAGELAYOUT);
-        newUser.setEmail(VALID_EMAIL);
-        Errors errors = new BindException(newUser, NEW_USER);
+        User user = new User();
+        user.setUsername(VALID_NAME);
+        user.setPassword(VALID_PASSWORD);
+        user.setConfirmPassword("doesnotmatch");
+        user.setDefaultPageLayoutCode(VALID_PAGELAYOUT);
+        user.setEmail(VALID_EMAIL);
+        Errors errors = new BindException(user, NEW_USER);
         expect(mockUserService.getUserByUsername(VALID_NAME)).andReturn(null);
         expect(mockUserService.getUserByEmail(VALID_EMAIL)).andReturn(null);
         replay(mockUserService);
 
-        newAccountValidator.validate(newUser, errors);
+        newAccountValidator.validate(user, errors);
 
         assertEquals("1 Validation error", 1, errors.getErrorCount());
         assertNotNull(errors.getFieldError(FIELD_CONFIRM_PASSWORD));

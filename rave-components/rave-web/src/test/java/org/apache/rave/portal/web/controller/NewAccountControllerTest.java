@@ -19,7 +19,14 @@
 
 package org.apache.rave.portal.web.controller;
 
-import org.apache.rave.portal.model.NewUser;
+import static org.easymock.EasyMock.createNiceMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.junit.Assert.assertThat;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.service.CaptchaService;
 import org.apache.rave.portal.service.NewAccountService;
@@ -38,14 +45,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.easymock.EasyMock.createNiceMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.junit.Assert.assertThat;
-
 
 /**
  * This is a test class for NewAccountController, which is used to make new user accounts through
@@ -60,7 +59,7 @@ public class NewAccountControllerTest {
     private MockHttpServletRequest request;
     private RedirectAttributes redirectAttributes;
 	private UserService userService;
-	
+
 	@Before
 	public void setup() {
 		newAccountService = createNiceMock(NewAccountService.class);
@@ -71,60 +70,60 @@ public class NewAccountControllerTest {
 		captchaService = new ReCaptchaService(false, null, null, false, "error message");
 		newAccountController = new NewAccountController(newAccountService, newAccountValidator, captchaService);
 	}
-	
+
 	@Test
-	public void setUpForm_ShouldAddAttributeForNewUser() {
+	public void setUpForm_ShouldAddAttributeForUser() {
 		final ModelMap model = new ModelMap();
-		String newUser = new String(ModelKeys.NEW_USER);
+		String User = new String(ModelKeys.NEW_USER);
 		newAccountController.setUpForm(model, request);
-		
+
 		//assert that the model is not null
 		assertThat(model, CoreMatchers.notNullValue());
-		
+
 		//assert that the model size is two
 		assertThat(model.size(), CoreMatchers.equalTo(2));
-		
-		//assert that the model does contain an attribute associated with newUser after setUpForm() is called
-		assertThat(model.containsAttribute(newUser), CoreMatchers.equalTo(true)); 
-		
+
+		//assert that the model does contain an attribute associated with User after setUpForm() is called
+		assertThat(model.containsAttribute(User), CoreMatchers.equalTo(true));
+
 		//assert that the model does not contain new user as null
-		assertThat(model.get(newUser), CoreMatchers.notNullValue());
+		assertThat(model.get(User), CoreMatchers.notNullValue());
 	}
-	
+
 	@Test
 	public void create_UsernameNotSpecified() {
 		final Model model = createNiceMock(Model.class);
-		final NewUser newUser = new NewUser();
+		final User User = new User();
 		final BindingResult errors = createNiceMock(BindingResult.class);
 		final String username = ""; //no username specified
 		final String password = "password";
 		final String confirmPassword = password;
 		List<ObjectError> errorList = new ArrayList<ObjectError>();
 		final ObjectError error = new ObjectError("username.required", "Username required");
-		
-		newUser.setUsername(username);
-		newUser.setPassword(password);
-		newUser.setConfirmPassword(confirmPassword);
-		
+
+		User.setUsername(username);
+		User.setPassword(password);
+		User.setConfirmPassword(confirmPassword);
+
 		errorList.add(error);
-		
-		expect(errors.hasErrors()).andReturn(true).anyTimes();		
+
+		expect(errors.hasErrors()).andReturn(true).anyTimes();
 		expect(errors.getAllErrors()).andReturn(errorList).anyTimes();
 		replay(errors);
 
         replay(model);
-		String result = new String(newAccountController.create(newUser, errors, model, request, redirectAttributes));
+		String result = new String(newAccountController.create(User, errors, model, request, redirectAttributes));
 		errorList = errors.getAllErrors();
 
 		assertThat(errorList.size(), CoreMatchers.equalTo(1));
 		assertThat(errorList.get(0).getDefaultMessage(), CoreMatchers.equalTo("Username required"));
 		assertThat(result, CoreMatchers.equalTo(ViewNames.NEW_ACCOUNT));
 	}
-	
+
 	@Test
 	public void create_UsernameAlreadyExists() {
 		final Model model = createNiceMock(Model.class);
-		final NewUser newUser = new NewUser();
+		final User User = new User();
 		final BindingResult errors = createNiceMock(BindingResult.class);
 		final String username = "canonical"; //specified username already exists in database
 		final String password = "password";
@@ -132,84 +131,84 @@ public class NewAccountControllerTest {
 		final User existingUser = new User();
 		List<ObjectError> errorList = new ArrayList<ObjectError>();
 		final ObjectError error = new ObjectError("username.exists", "Username already exists");
-		
-		newUser.setUsername(username);
-		newUser.setPassword(password);
-		newUser.setConfirmPassword(confirmPassword);
-		
+
+		User.setUsername(username);
+		User.setPassword(password);
+		User.setConfirmPassword(confirmPassword);
+
 		existingUser.setUsername(username);
 		existingUser.setPassword(password);
-		
+
 		errorList.add(error);
 
 
-		expect(errors.hasErrors()).andReturn(true).anyTimes();		
+		expect(errors.hasErrors()).andReturn(true).anyTimes();
 		expect(errors.getAllErrors()).andReturn(errorList).anyTimes();
 		replay(errors);
-		
+
 		expect(userService.getUserByUsername(username)).andReturn(existingUser).anyTimes();
 		replay(userService);
 		replay(model);
-		String result = new String(newAccountController.create(newUser, errors, model, request, redirectAttributes));
+		String result = new String(newAccountController.create(User, errors, model, request, redirectAttributes));
 		errorList = errors.getAllErrors();
 
 		assertThat(errorList.size(), CoreMatchers.equalTo(1));
 		assertThat(errorList.get(0).getDefaultMessage(), CoreMatchers.equalTo("Username already exists"));
 		assertThat(result, CoreMatchers.equalTo(ViewNames.NEW_ACCOUNT));
 	}
-		
+
 	@Test
 	public void create_InvalidUsernameLength() {
 		final Model model = createNiceMock(Model.class);
-		final NewUser newUser = new NewUser();
+		final User User = new User();
 		final BindingResult errors = createNiceMock(BindingResult.class);
 		final String username = "u"; //username length less than 2 characters
 		final String password = "password";
 		final String confirmPassword = password;
 		List<ObjectError> errorList = new ArrayList<ObjectError>();
 		final ObjectError error = new ObjectError("username.invalid.length", "Username must be atleast 2 characters long");
-		
-		newUser.setUsername(username);
-		newUser.setPassword(password);
-		newUser.setConfirmPassword(confirmPassword);
-		
+
+		User.setUsername(username);
+		User.setPassword(password);
+		User.setConfirmPassword(confirmPassword);
+
 		errorList.add(error);
-		
-		expect(errors.hasErrors()).andReturn(true).anyTimes();		
+
+		expect(errors.hasErrors()).andReturn(true).anyTimes();
 		expect(errors.getAllErrors()).andReturn(errorList).anyTimes();
 		replay(errors);
 		replay(model);
 
-		String result = new String(newAccountController.create(newUser, errors, model, request, redirectAttributes));
+		String result = new String(newAccountController.create(User, errors, model, request, redirectAttributes));
 		errorList = errors.getAllErrors();
 
 		assertThat(errorList.size(), CoreMatchers.equalTo(1));
 		assertThat(errorList.get(0).getDefaultMessage(), CoreMatchers.equalTo("Username must be atleast 2 characters long"));
 		assertThat(result, CoreMatchers.equalTo(ViewNames.NEW_ACCOUNT));
 	}
-	
+
 	@Test
 	public void create_PasswordNotSpecified() {
 		final Model model = createNiceMock(Model.class);
-		final NewUser newUser = new NewUser();
+		final User User = new User();
 		final BindingResult errors = createNiceMock(BindingResult.class);
-		final String username = "username"; 
+		final String username = "username";
 		final String password = ""; //password not specified
 		final String confirmPassword = password;
 		List<ObjectError> errorList = new ArrayList<ObjectError>();
-				
-		newUser.setUsername(username);
-		newUser.setPassword(password);
-		newUser.setConfirmPassword(confirmPassword);
-		
+
+		User.setUsername(username);
+		User.setPassword(password);
+		User.setConfirmPassword(confirmPassword);
+
 		errorList.add(new ObjectError("password.required", "Password required"));
 		errorList.add(new ObjectError("confirmPassword.required", "Confirm password required"));
-		
-		expect(errors.hasErrors()).andReturn(true).anyTimes();		
+
+		expect(errors.hasErrors()).andReturn(true).anyTimes();
 		expect(errors.getAllErrors()).andReturn(errorList).anyTimes();
 		replay(errors);
 		replay(model);
-		String result = new String(newAccountController.create(newUser, errors, model, request, redirectAttributes));
+		String result = new String(newAccountController.create(User, errors, model, request, redirectAttributes));
 		errorList = errors.getAllErrors();
 
 		assertThat(errorList.size(), CoreMatchers.equalTo(2));
@@ -217,144 +216,144 @@ public class NewAccountControllerTest {
 		assertThat(errorList.get(1).getDefaultMessage(), CoreMatchers.equalTo("Confirm password required"));
 		assertThat(result, CoreMatchers.equalTo(ViewNames.NEW_ACCOUNT));
 	}
-	
+
 	@Test
 	public void create_ConfirmPasswordNotSpecified() {
 		final Model model = createNiceMock(Model.class);
-		final NewUser newUser = new NewUser();
+		final User User = new User();
 		final BindingResult errors = createNiceMock(BindingResult.class);
-		final String username = "usename"; 
+		final String username = "usename";
 		final String password = "pasword";
 		final String confirmPassword = ""; //confirm password not specified
 		List<ObjectError> errorList = new ArrayList<ObjectError>();
-				
-		newUser.setUsername(username);
-		newUser.setPassword(password);
-		newUser.setConfirmPassword(confirmPassword);
-		
+
+		User.setUsername(username);
+		User.setPassword(password);
+		User.setConfirmPassword(confirmPassword);
+
 		errorList.add(new ObjectError("confirmPassword.required", "Confirm password required"));
-		
-		expect(errors.hasErrors()).andReturn(true).anyTimes();		
+
+		expect(errors.hasErrors()).andReturn(true).anyTimes();
 		expect(errors.getAllErrors()).andReturn(errorList).anyTimes();
 		replay(errors);
 
         replay(model);
-		String result = new String(newAccountController.create(newUser, errors, model, request, redirectAttributes));
+		String result = new String(newAccountController.create(User, errors, model, request, redirectAttributes));
 		errorList = errors.getAllErrors();
 
 		assertThat(errorList.size(), CoreMatchers.equalTo(1));
 		assertThat(errorList.get(0).getDefaultMessage(), CoreMatchers.equalTo("Confirm password required"));
 		assertThat(result, CoreMatchers.equalTo(ViewNames.NEW_ACCOUNT));
 	}
-	
+
 	@Test
 	public void create_InvalidPasswordLength() {
 		final Model model = createNiceMock(Model.class);
-		final NewUser newUser = new NewUser();
+		final User User = new User();
 		final BindingResult errors = createNiceMock(BindingResult.class);
-		final String username = "usename"; 
+		final String username = "usename";
 		final String password = "pas"; //invalid length password
 		final String confirmPassword = password;
 		List<ObjectError> errorList = new ArrayList<ObjectError>();
-				
-		newUser.setUsername(username);
-		newUser.setPassword(password);
-		newUser.setConfirmPassword(confirmPassword);
-		
+
+		User.setUsername(username);
+		User.setPassword(password);
+		User.setConfirmPassword(confirmPassword);
+
 		errorList.add(new ObjectError("password.invalid.length", "Password must be atleast 4 characters long"));
-		
-		expect(errors.hasErrors()).andReturn(true).anyTimes();		
+
+		expect(errors.hasErrors()).andReturn(true).anyTimes();
 		expect(errors.getAllErrors()).andReturn(errorList).anyTimes();
 		replay(errors);
 		replay(model);
-		String result = new String(newAccountController.create(newUser, errors, model, request, redirectAttributes));
+		String result = new String(newAccountController.create(User, errors, model, request, redirectAttributes));
 		errorList = errors.getAllErrors();
 
 		assertThat(errorList.size(), CoreMatchers.equalTo(1));
 		assertThat(errorList.get(0).getDefaultMessage(), CoreMatchers.equalTo("Password must be atleast 4 characters long"));
 		assertThat(result, CoreMatchers.equalTo(ViewNames.NEW_ACCOUNT));
 	}
-	
+
 	@Test
 	public void create_PasswordMismatchCaseOne() {
 		final Model model = createNiceMock(Model.class);
-		final NewUser newUser = new NewUser();
+		final User User = new User();
 		final BindingResult errors = createNiceMock(BindingResult.class);
-		final String username = "username"; 
+		final String username = "username";
 		final String password = "password";
 		final String confirmPassword = "passwor"; //confirm password not of same length as password
 		List<ObjectError> errorList = new ArrayList<ObjectError>();
-				
-		newUser.setUsername(username);
-		newUser.setPassword(password);
-		newUser.setConfirmPassword(confirmPassword);
-		
+
+		User.setUsername(username);
+		User.setPassword(password);
+		User.setConfirmPassword(confirmPassword);
+
 		errorList.add(new ObjectError("confirmPassword.mismatch", "Password mismatch"));
-		
-		expect(errors.hasErrors()).andReturn(true).anyTimes();		
+
+		expect(errors.hasErrors()).andReturn(true).anyTimes();
 		expect(errors.getAllErrors()).andReturn(errorList).anyTimes();
 		replay(errors);
 		replay(model);
-		String result = new String(newAccountController.create(newUser, errors, model, request, redirectAttributes));
+		String result = new String(newAccountController.create(User, errors, model, request, redirectAttributes));
 		errorList = errors.getAllErrors();
 
 		assertThat(errorList.size(), CoreMatchers.equalTo(1));
 		assertThat(errorList.get(0).getDefaultMessage(), CoreMatchers.equalTo("Password mismatch"));
 		assertThat(result, CoreMatchers.equalTo(ViewNames.NEW_ACCOUNT));
 	}
-	
+
 	@Test
 	public void create_PasswordMismatchCaseTwo() {
 		final Model model = createNiceMock(Model.class);
-		final NewUser newUser = new NewUser();
+		final User User = new User();
 		final BindingResult errors = createNiceMock(BindingResult.class);
-		final String username = "username"; 
+		final String username = "username";
 		final String password = "password";
 		final String confirmPassword = "passwodr"; //confirm password mistyped
 		List<ObjectError> errorList = new ArrayList<ObjectError>();
-				
-		newUser.setUsername(username);
-		newUser.setPassword(password);
-		newUser.setConfirmPassword(confirmPassword);
-		
+
+		User.setUsername(username);
+		User.setPassword(password);
+		User.setConfirmPassword(confirmPassword);
+
 		errorList.add(new ObjectError("confirmPassword.mismatch", "Password mismatch"));
-		
-		expect(errors.hasErrors()).andReturn(true).anyTimes();		
+
+		expect(errors.hasErrors()).andReturn(true).anyTimes();
 		expect(errors.getAllErrors()).andReturn(errorList).anyTimes();
 		replay(errors);
         replay(model);
-		String result = new String(newAccountController.create(newUser, errors, model, request, redirectAttributes));
+		String result = new String(newAccountController.create(User, errors, model, request, redirectAttributes));
 		errorList = errors.getAllErrors();
 
 		assertThat(errorList.size(), CoreMatchers.equalTo(1));
 		assertThat(errorList.get(0).getDefaultMessage(), CoreMatchers.equalTo("Password mismatch"));
 		assertThat(result, CoreMatchers.equalTo(ViewNames.NEW_ACCOUNT));
 	}
-	
+
 	@Test
 	public void create_BlankFormSubmitted() {
 		final Model model = createNiceMock(Model.class);
-		final NewUser newUser = new NewUser();
+		final User User = new User();
 		final BindingResult errors = createNiceMock(BindingResult.class);
 		final String username = ""; //Username not specified
 		final String password = ""; //Password not specified
 		final String confirmPassword = ""; //Confirm password not specified
 		List<ObjectError> errorList = new ArrayList<ObjectError>();
-				
-		newUser.setUsername(username);
-		newUser.setPassword(password);
-		newUser.setConfirmPassword(confirmPassword);
-		
+
+		User.setUsername(username);
+		User.setPassword(password);
+		User.setConfirmPassword(confirmPassword);
+
 		errorList.add(new ObjectError("username.required", "Username required"));
 		errorList.add(new ObjectError("password.required", "Password required"));
 		errorList.add(new ObjectError("confirmPassword.required", "Confirm password required"));
-		
-		expect(errors.hasErrors()).andReturn(true).anyTimes();		
+
+		expect(errors.hasErrors()).andReturn(true).anyTimes();
 		expect(errors.getAllErrors()).andReturn(errorList).anyTimes();
 		replay(errors);
 
         replay(model);
-		String result = new String(newAccountController.create(newUser, errors, model, request, redirectAttributes));
+		String result = new String(newAccountController.create(User, errors, model, request, redirectAttributes));
 		errorList = errors.getAllErrors();
 
 		assertThat(errorList.size(), CoreMatchers.equalTo(3));
@@ -363,26 +362,26 @@ public class NewAccountControllerTest {
 		assertThat(errorList.get(2).getDefaultMessage(), CoreMatchers.equalTo("Confirm password required"));
 		assertThat(result, CoreMatchers.equalTo(ViewNames.NEW_ACCOUNT));
 	}
-	
+
 	@Test
 	public void create_ValidFormSubmitted() {
 		final Model model = createNiceMock(Model.class);
-		final NewUser newUser = new NewUser();
+		final User User = new User();
 		final BindingResult errors = createNiceMock(BindingResult.class);
 		final String username = "username"; //Username not specified
 		final String password = "password"; //Password not specified
 		final String confirmPassword = password; //Confirm password not specified
 		List<ObjectError> errorList = new ArrayList<ObjectError>();
-				
-		newUser.setUsername(username);
-		newUser.setPassword(password);
-		newUser.setConfirmPassword(confirmPassword);
-		
-		expect(errors.hasErrors()).andReturn(false).anyTimes();		
+
+		User.setUsername(username);
+		User.setPassword(password);
+		User.setConfirmPassword(confirmPassword);
+
+		expect(errors.hasErrors()).andReturn(false).anyTimes();
 		expect(errors.getAllErrors()).andReturn(errorList).anyTimes();
 		replay(errors);
-		
-		String result = new String(newAccountController.create(newUser, errors, model, request, redirectAttributes));
+
+		String result = new String(newAccountController.create(User, errors, model, request, redirectAttributes));
 		errorList = errors.getAllErrors();
 
 		assertThat(errorList.size(), CoreMatchers.equalTo(0));

@@ -19,8 +19,20 @@
 
 package org.apache.rave.portal.web.controller.admin;
 
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertTrue;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.createNiceMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.rave.portal.model.Authority;
-import org.apache.rave.portal.model.NewUser;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.service.AuthorityService;
@@ -40,19 +52,6 @@ import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.createNiceMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.expectLastCall;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
 
 /**
  * Test for {@link UserController}
@@ -116,7 +115,7 @@ public class UserControllerTest {
 
         String adminUserDetailView = controller.viewUserDetail(userid, model);
         verify(userService);
-        
+
         assertEquals(ViewNames.ADMIN_USERDETAIL, adminUserDetailView);
         assertTrue(model.containsAttribute(TABS));
         assertEquals(user, model.asMap().get("user"));
@@ -130,7 +129,7 @@ public class UserControllerTest {
         final String email = "john.doe.sr@example.net";
         User user = new User(userid, "john.doe.sr");
         user.setPassword("secrect");
-        user.setConfirmPassword(user.getConfirmPassword());
+        user.setConfirmPassword("secrect");
         user.setEmail(email);
         final BindingResult errors = new BeanPropertyBindingResult(user, "user");
 
@@ -246,34 +245,34 @@ public class UserControllerTest {
         final String viewName = controller.setUpForm(modelMap);
         assertEquals(ViewNames.ADMIN_NEW_ACCOUNT, viewName);
         assertTrue(modelMap.containsAttribute(TABS));
-        assertTrue(modelMap.get(ModelKeys.NEW_USER) instanceof NewUser);
+        assertTrue(modelMap.get(ModelKeys.NEW_USER) instanceof User);
     }
 
     @Test
     public void create_ValidFormSubmitted() throws Exception {
         final Model model = createNiceMock(Model.class);
         final RedirectAttributes redirectAttributes = createNiceMock(RedirectAttributes.class);
-        final NewUser newUser = new NewUser();
-        final BindingResult errors = new BeanPropertyBindingResult(newUser, ModelKeys.NEW_USER);
+        final User User = new User();
+        final BindingResult errors = new BeanPropertyBindingResult(User, ModelKeys.NEW_USER);
         final String username = "username";
         final String password = "password";
-        final String email = "newuser@example.com";
+        final String email = "User@example.com";
         final String confirmPassword = password;
 
-        newUser.setUsername(username);
-        newUser.setPassword(password);
-        newUser.setConfirmPassword(confirmPassword);
-        newUser.setEmail(email);
+        User.setUsername(username);
+        User.setPassword(password);
+        User.setConfirmPassword(confirmPassword);
+        User.setEmail(email);
 
         expect(userService.getUserByUsername(username)).andReturn(null);
         expect(userService.getUserByEmail(email)).andReturn(null);
 
-        newAccountService.createNewAccount(newUser);
+        newAccountService.createNewAccount(User);
 
         expectLastCall();
         replay(userService, model, newAccountService, redirectAttributes);
 
-        String result = controller.create(newUser, errors, model, redirectAttributes);
+        String result = controller.create(User, errors, model, redirectAttributes);
         verify(userService, model, newAccountService, redirectAttributes);
 
         assertFalse(errors.hasErrors());
@@ -283,23 +282,23 @@ public class UserControllerTest {
     public void create_EmptyForm() throws Exception {
         final Model model = createNiceMock(Model.class);
         final RedirectAttributes redirectAttributes = createNiceMock(RedirectAttributes.class);
-        final NewUser newUser = new NewUser();
-        final BindingResult errors = new BeanPropertyBindingResult(newUser, ModelKeys.NEW_USER);
+        final User User = new User();
+        final BindingResult errors = new BeanPropertyBindingResult(User, ModelKeys.NEW_USER);
         final String username = "";
         final String password = "";
         final String email = "";
         final String confirmPassword = password;
 
-        newUser.setUsername(username);
-        newUser.setPassword(password);
-        newUser.setConfirmPassword(confirmPassword);
-        newUser.setEmail(email);
+        User.setUsername(username);
+        User.setPassword(password);
+        User.setConfirmPassword(confirmPassword);
+        User.setEmail(email);
 
-        newAccountService.createNewAccount(newUser);
+        newAccountService.createNewAccount(User);
 
         replay(model);
 
-        String result = controller.create(newUser, errors, model, redirectAttributes);
+        String result = controller.create(User, errors, model, redirectAttributes);
         verify(model);
 
         assertTrue(errors.hasErrors());

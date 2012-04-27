@@ -53,7 +53,7 @@
               </exclusion>
             </exclusions>
         </dependency>
-        
+
         <!-- Shindig -->
         <dependency>
             <groupId>org.apache.shindig</groupId>
@@ -72,7 +72,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        
+
         <!-- Spring -->
         <dependency>
             <groupId>org.springframework</groupId>
@@ -183,8 +183,7 @@
                 <version>1.2</version>
                 <configuration>
                     <includes>org/apache/rave/portal/model/*.class</includes>
-                    <excludes>org/apache/rave/portal/model/NewUser.class,
-                        org/apache/rave/portal/model/WidgetStatus.class</excludes>
+                    <excludes>org/apache/rave/portal/model/WidgetStatus.class</excludes>
                     <addDefaultConstructor>true</addDefaultConstructor>
                     <enforcePropertyRestrictions>true</enforcePropertyRestrictions>
                 </configuration>

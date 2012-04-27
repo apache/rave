@@ -19,8 +19,14 @@
 
 package org.apache.rave.portal.web.controller.admin;
 
+import static org.apache.rave.portal.web.controller.admin.AdminControllerUtil.DEFAULT_PAGE_SIZE;
+import static org.apache.rave.portal.web.controller.admin.AdminControllerUtil.addNavigationMenusToModel;
+import static org.apache.rave.portal.web.controller.admin.AdminControllerUtil.checkTokens;
+import static org.apache.rave.portal.web.controller.admin.AdminControllerUtil.isDeleteOrUpdate;
+
+import java.beans.PropertyEditorSupport;
+
 import org.apache.rave.portal.model.Authority;
-import org.apache.rave.portal.model.NewUser;
 import org.apache.rave.portal.model.PortalPreference;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.util.SearchResult;
@@ -52,13 +58,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.beans.PropertyEditorSupport;
-
-import static org.apache.rave.portal.web.controller.admin.AdminControllerUtil.DEFAULT_PAGE_SIZE;
-import static org.apache.rave.portal.web.controller.admin.AdminControllerUtil.addNavigationMenusToModel;
-import static org.apache.rave.portal.web.controller.admin.AdminControllerUtil.checkTokens;
-import static org.apache.rave.portal.web.controller.admin.AdminControllerUtil.isDeleteOrUpdate;
 
 /**
  * Admin controller to manipulate User data
@@ -136,12 +135,13 @@ public class UserController {
     }
 
     @RequestMapping(value = "/admin/userdetail/update", method = RequestMethod.POST)
-    public String updateUserDetail(@ModelAttribute("user") User user, BindingResult result,
+    public String updateUserDetail(@ModelAttribute User user, BindingResult result,
                                    @ModelAttribute(ModelKeys.TOKENCHECK) String sessionToken,
                                    @RequestParam() String token,
                                    ModelMap modelMap,
                                    SessionStatus status) {
         checkTokens(sessionToken, token, status);
+        user.setConfirmPassword(user.getPassword());
         userProfileValidator.validate(user, result);
         if (result.hasErrors()) {
             AdminControllerUtil.addNavigationMenusToModel(SELECTED_ITEM, (Model) modelMap);
@@ -154,7 +154,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/admin/userdetail/delete", method = RequestMethod.POST)
-    public String deleteUserDetail(@ModelAttribute("user") User user,
+    public String deleteUserDetail(@ModelAttribute User user,
                                    @ModelAttribute(ModelKeys.TOKENCHECK) String sessionToken,
                                    @RequestParam String token,
                                    @RequestParam(required = false) String confirmdelete,
@@ -176,13 +176,13 @@ public class UserController {
     public String setUpForm(ModelMap model) {
         logger.debug("Initializing new account form");
         AdminControllerUtil.addNavigationMenusToModel(SELECTED_ITEM, (Model) model);
-        model.addAttribute(ModelKeys.NEW_USER, new NewUser());
+        model.addAttribute(ModelKeys.NEW_USER, new User());
         return ViewNames.ADMIN_NEW_ACCOUNT;
 
     }
 
     @RequestMapping(value = {"/admin/newaccount", "/admin/newaccount/*"}, method = RequestMethod.POST)
-    public String create(@ModelAttribute NewUser newUser, BindingResult results, Model model,
+    public String create(@ModelAttribute(value = "newUser") User newUser, BindingResult results, Model model,
                          RedirectAttributes redirectAttributes) {
         logger.debug("Creating a new user account");
         model.addAttribute(ModelKeys.NEW_USER, newUser);

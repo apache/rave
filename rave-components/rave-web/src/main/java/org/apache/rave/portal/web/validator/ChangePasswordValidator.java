@@ -19,8 +19,7 @@
 
 package org.apache.rave.portal.web.validator;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.rave.portal.model.NewUser;
+import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,7 +49,7 @@ public class ChangePasswordValidator extends NewAccountValidator {
     @Override
     public void validate(Object target, Errors errors) {
         log.debug("ChangePasswordValidator validator called");
-        NewUser newUser = (NewUser) target;
+        User newUser = (User) target;
         boolean validHash = getUserService().isValidReminderRequest(newUser.getForgotPasswordHash(), minutesValid);
         if (!validHash) {
             errors.rejectValue(FIELD_PASSWORD, "page.changepassword.expired");

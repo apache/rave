@@ -19,7 +19,7 @@
 
 package org.apache.rave.portal.web.controller;
 
-import org.apache.rave.portal.model.NewUser;
+import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.service.CaptchaService;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.portal.service.impl.ReCaptchaService;
@@ -71,10 +71,10 @@ public class ReminderControllerTest {
         controller.initialize(model, request);
         assertThat(model, CoreMatchers.notNullValue());
         // captcha & user mode should be
-        assertEquals("Expected Captcha and NewUser model", 2, model.size());
-        assertThat(model.containsAttribute(ModelKeys.NEW_USER), CoreMatchers.equalTo(true));
+        assertEquals("Expected Captcha and User model", 2, model.size());
+        assertThat(model.containsAttribute(ModelKeys.USER), CoreMatchers.equalTo(true));
         assertThat(model.containsAttribute(ModelKeys.CAPTCHA_HTML), CoreMatchers.equalTo(true));
-        assertThat(model.get(ModelKeys.NEW_USER), CoreMatchers.notNullValue());
+        assertThat(model.get(ModelKeys.USER), CoreMatchers.notNullValue());
         assertThat(model.get(ModelKeys.CAPTCHA_HTML), CoreMatchers.notNullValue());
         assertThat(captchaService.isValid(request), CoreMatchers.equalTo(true));
 
@@ -83,51 +83,51 @@ public class ReminderControllerTest {
     @Test
     public void testCreate() throws Exception {
         Model model = createNiceMock(Model.class);
-        NewUser newUser = new NewUser();
-        BindingResult results = new DirectFieldBindingResult(newUser, ModelKeys.NEW_USER);
+        User User = new User();
+        BindingResult results = new DirectFieldBindingResult(User, ModelKeys.USER);
         RedirectAttributes redirectAttributes = createNiceMock(RedirectAttributes.class);
         replay(redirectAttributes);
         replay(model);
 
         // user part
         // required email
-        controller.requestUsername(newUser, results, model, request, redirectAttributes);
+        controller.requestUsername(User, results, model, request, redirectAttributes);
         assertThat(captchaService.isValid(request), CoreMatchers.equalTo(true));
         assertEquals("Expected email errors", 1, results.getErrorCount());
         assertEquals("Expected email errors", "email.required", results.getFieldError().getCode());
         // invalid email
-        results = new DirectFieldBindingResult(newUser, ModelKeys.NEW_USER);
-        newUser.setEmail("test_email");
-        controller.requestUsername(newUser, results, model, request, redirectAttributes);
+        results = new DirectFieldBindingResult(User, ModelKeys.USER);
+        User.setEmail("test_email");
+        controller.requestUsername(User, results, model, request, redirectAttributes);
         assertEquals("Expected email errors", "email.invalid", results.getFieldError().getCode());
         // does not exists
-        results = new DirectFieldBindingResult(newUser, ModelKeys.NEW_USER);
-        newUser.setEmail("test@mail.com");
-        String viewResult = controller.requestUsername(newUser, results, model, request, redirectAttributes);
+        results = new DirectFieldBindingResult(User, ModelKeys.USER);
+        User.setEmail("test@mail.com");
+        String viewResult = controller.requestUsername(User, results, model, request, redirectAttributes);
         assertEquals("Expected email errors", 1, results.getErrorCount());
         assertEquals("Expected email errors", "email.doesnot.exist", results.getFieldError().getCode());
         assertThat(viewResult, CoreMatchers.equalTo(ViewNames.USERNAME_REQUEST));
         // password part:
         model = createNiceMock(Model.class);
-        newUser = new NewUser();
-        results = new DirectFieldBindingResult(newUser, ModelKeys.NEW_USER);
+        User = new User();
+        results = new DirectFieldBindingResult(User, ModelKeys.USER);
         redirectAttributes = createNiceMock(RedirectAttributes.class);
         replay(redirectAttributes);
         replay(model);
         // required email
-        controller.requestPassword(newUser, results, model, request, redirectAttributes);
+        controller.requestPassword(User, results, model, request, redirectAttributes);
         assertThat(captchaService.isValid(request), CoreMatchers.equalTo(true));
         assertEquals("Expected email errors", 1, results.getErrorCount());
         assertEquals("Expected email errors", "email.required", results.getFieldError().getCode());
         // invalid email
-        results = new DirectFieldBindingResult(newUser, ModelKeys.NEW_USER);
-        newUser.setEmail("test_email");
-        controller.requestPassword(newUser, results, model, request, redirectAttributes);
+        results = new DirectFieldBindingResult(User, ModelKeys.USER);
+        User.setEmail("test_email");
+        controller.requestPassword(User, results, model, request, redirectAttributes);
         assertEquals("Expected email errors", "email.invalid", results.getFieldError().getCode());
         // does not exists
-        results = new DirectFieldBindingResult(newUser, ModelKeys.NEW_USER);
-        newUser.setEmail("test@mail.com");
-        viewResult = controller.requestPassword(newUser, results, model, request, redirectAttributes);
+        results = new DirectFieldBindingResult(User, ModelKeys.USER);
+        User.setEmail("test@mail.com");
+        viewResult = controller.requestPassword(User, results, model, request, redirectAttributes);
         assertEquals("Expected email errors", 1, results.getErrorCount());
         assertEquals("Expected email errors", "email.doesnot.exist", results.getFieldError().getCode());
         assertThat(viewResult, CoreMatchers.equalTo(ViewNames.NEW_PASSWORD_REQUEST));

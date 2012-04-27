@@ -21,7 +21,6 @@ package org.apache.rave.portal.service;
 
 import java.util.List;
 
-import org.apache.rave.portal.model.NewUser;
 import org.apache.rave.portal.model.Person;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.util.SearchResult;
@@ -122,25 +121,25 @@ public interface UserService extends UserDetailsService {
     /**
      * Sends an email which contains link for changing user password
      *
-     * @param user the {@link org.apache.rave.portal.model.NewUser} which requested password change
+     * @param user the {@link org.apache.rave.portal.model.User} which requested password change
      */
-    void sendPasswordReminder(NewUser user);
+    void sendPasswordReminder(User user);
 
     /**
      * Sends an email which contains username
      *
-     * @param user the {@link org.apache.rave.portal.model.NewUser} which requested username reminder
+     * @param user the {@link org.apache.rave.portal.model.User} which requested username reminder
      */
-    void sendUserNameReminder(NewUser user);
+    void sendUserNameReminder(User user);
 
 
     /**
      * Changes password for given user
      *
-     * @param user the {@link org.apache.rave.portal.model.NewUser} which requested password change
+     * @param user the {@link org.apache.rave.portal.model.User} which requested password change
      * @throws Exception in case something goes wrong
      */
-    void updatePassword(NewUser user);
+    void updatePassword(User user);
 
     /**
      * Check if username/email reminder request is still valid (not expired)

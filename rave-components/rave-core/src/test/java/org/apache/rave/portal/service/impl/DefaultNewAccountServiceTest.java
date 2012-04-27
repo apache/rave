@@ -19,8 +19,17 @@
 
 package org.apache.rave.portal.service.impl;
 
+import static junit.framework.Assert.fail;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.rave.portal.model.Authority;
-import org.apache.rave.portal.model.NewUser;
 import org.apache.rave.portal.model.PageLayout;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.util.SearchResult;
@@ -35,16 +44,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.util.ReflectionTestUtils;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static junit.framework.Assert.fail;
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.expectLastCall;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
 
 /**
  * Test class for {@link org.apache.rave.portal.service.impl.DefaultNewAccountService}
@@ -65,7 +64,7 @@ public class DefaultNewAccountServiceTest {
     private PageLayout validPageLayout;
     private SearchResult<Authority> validAuthoritySearchResult;
     private List<Authority> validAuthorityList;
-    
+
     private final Logger logger = LoggerFactory.getLogger(DefaultNewAccountServiceTest.class);
 
     @Before
@@ -77,32 +76,32 @@ public class DefaultNewAccountServiceTest {
         authorityService = createMock(AuthorityService.class);
 
         newAccountService = new DefaultNewAccountService(userService, pageLayoutService, authorityService);
-        
+
         validPageLayout = new PageLayout();
         validPageLayout.setEntityId(99L);
         validPageLayout.setNumberOfRegions(4L);
         validPageLayout.setCode(VALID_LAYOUT_CODE);
-        
+
         Authority role1 = new Authority();
         role1.setAuthority("DEFAULT_ROLE1");
         Authority role2 = new Authority();
         role2.setAuthority("DEFAULT_ROLE2");
-        
+
         validAuthorityList = new ArrayList<Authority>();
         validAuthorityList.add(role1);
         validAuthorityList.add(role2);
-        validAuthoritySearchResult = new SearchResult<Authority>(validAuthorityList, validAuthorityList.size());        
-    }    
-    
+        validAuthoritySearchResult = new SearchResult<Authority>(validAuthorityList, validAuthorityList.size());
+    }
+
     @Test
     public void createNewAccountTest() throws Exception {
-        NewUser newUser = new NewUser();
+        User newUser = new User();
         newUser.setUsername(VALID_USER);
         newUser.setPassword(VALID_PASSWORD);
         newUser.setConfirmPassword(VALID_PASSWORD);
         newUser.setEmail(VALID_EMAIL);
-        newUser.setPageLayout(VALID_LAYOUT_CODE);
-        
+        newUser.setDefaultPageLayoutCode(VALID_LAYOUT_CODE);
+
         User expectedUser = new User();
         expectedUser.setUsername(newUser.getUsername());
         expectedUser.setPassword(newUser.getPassword());
@@ -110,32 +109,32 @@ public class DefaultNewAccountServiceTest {
         expectedUser.setDefaultPageLayout(validPageLayout);
         expectedUser.setExpired(false);
         expectedUser.setLocked(false);
-        expectedUser.setEnabled(true);                
+        expectedUser.setEnabled(true);
 
         ReflectionTestUtils.setField(newAccountService, "passwordEncoder", passwordEncoder);
 
         expect(passwordEncoder.encode("valid.password")).andReturn("valid.password");
         expect(userService.getUserByUsername(VALID_USER)).andReturn(null);
-        expect(userService.getUserByEmail(VALID_EMAIL)).andReturn(null);                
-        expect(pageLayoutService.getPageLayoutByCode(VALID_LAYOUT_CODE)).andReturn(validPageLayout);        
+        expect(userService.getUserByEmail(VALID_EMAIL)).andReturn(null);
+        expect(pageLayoutService.getPageLayoutByCode(VALID_LAYOUT_CODE)).andReturn(validPageLayout);
         expect(authorityService.getDefaultAuthorities()).andReturn(validAuthoritySearchResult);
-        userService.registerNewUser(expectedUser);  
-        expectLastCall();                
+        userService.registerNewUser(expectedUser);
+        expectLastCall();
         replay(userDetails, passwordEncoder, userService, pageLayoutService, authorityService);
-               
+
         newAccountService.createNewAccount(newUser);
-        
+
         verify(userDetails, passwordEncoder, userService, pageLayoutService);
     }
 
     @Test
     public void createNewAccountTest_blankEmail() throws Exception {
-        NewUser newUser = new NewUser();
+        User newUser = new User();
         newUser.setUsername(VALID_USER);
         newUser.setPassword(VALID_PASSWORD);
         newUser.setConfirmPassword(VALID_PASSWORD);
         newUser.setEmail("");
-        newUser.setPageLayout(VALID_LAYOUT_CODE);
+        newUser.setDefaultPageLayoutCode(VALID_LAYOUT_CODE);
 
         User expectedUser = new User();
         expectedUser.setUsername(newUser.getUsername());
@@ -165,7 +164,7 @@ public class DefaultNewAccountServiceTest {
     @Test
     public void failedAccountCreationTest_duplicateUsername() throws Exception {
         String duplicateUserName = "duplicateUserName";
-        NewUser newUser = new NewUser();
+        User newUser = new User();
         newUser.setUsername(duplicateUserName);
         User existingUser = new User();
         existingUser.setUsername(duplicateUserName);
@@ -184,7 +183,7 @@ public class DefaultNewAccountServiceTest {
     @Test
     public void failedAccountCreationTest_duplicateEmail() throws Exception {
         String duplicateEmail = "duplicateEmail";
-        NewUser newUser = new NewUser();
+        User newUser = new User();
         newUser.setUsername("newUser");
         newUser.setEmail(duplicateEmail);
         User existingUser = new User();

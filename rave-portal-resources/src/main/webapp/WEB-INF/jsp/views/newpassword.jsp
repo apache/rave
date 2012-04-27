@@ -41,7 +41,7 @@
 
                 <c:otherwise>
 
-                    <form:form cssClass="form-horizontal well" commandName="newUser" action="newpassword" method="post">
+                    <form:form cssClass="form-horizontal well" commandName="user" action="newpassword" method="post">
                         <fieldset>
                             <p><fmt:message key="form.all.fields.required"/></p>
 

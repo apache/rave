@@ -20,7 +20,6 @@
 package org.apache.rave.portal.web.validator;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.rave.portal.model.NewUser;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.service.UserService;
 import org.slf4j.Logger;
@@ -48,7 +47,7 @@ public class NewPasswordValidator extends NewAccountValidator {
     @Override
     public void validate(Object target, Errors errors) {
         log.debug("Password validator called");
-        NewUser newUser = (NewUser) target;
+        User newUser = (User) target;
         // we only check for existing (and valid) email
         String email = newUser.getEmail();
         validateEmail(errors, email);

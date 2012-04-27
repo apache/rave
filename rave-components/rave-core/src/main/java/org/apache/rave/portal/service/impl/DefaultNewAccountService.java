@@ -20,7 +20,6 @@
 package org.apache.rave.portal.service.impl;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.rave.portal.model.NewUser;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.service.AuthorityService;
 import org.apache.rave.portal.service.NewAccountService;
@@ -37,7 +36,7 @@ public class DefaultNewAccountService implements NewAccountService {
     private final PageLayoutService pageLayoutService;
     private final AuthorityService authorityService;
 
-    @Autowired 
+    @Autowired
     private PasswordEncoder  passwordEncoder;
 
     @Autowired
@@ -50,21 +49,21 @@ public class DefaultNewAccountService implements NewAccountService {
     }
 
     @Override
-    public void createNewAccount(NewUser newUser) throws Exception {
+    public void createNewAccount(User newUser) throws Exception {
         final String userName = newUser.getUsername();
         final String password = newUser.getPassword();
-        final String defaultPageLayoutCode = newUser.getPageLayout();
+        final String defaultPageLayoutCode = newUser.getDefaultPageLayoutCode();
         final String email = newUser.getEmail();
-        
+
         //capture optional fields
-        final String givenName = newUser.getFirstName();
-        final String familyName = newUser.getLastName();
+        final String givenName = newUser.getGivenName();
+        final String familyName = newUser.getFamilyName();
         final String displayName = newUser.getDisplayName();
         final String status = newUser.getStatus();
         final String aboutMe = newUser.getAboutMe();
 
         throwExceptionIfUserExists(userName, email);
-                
+
         User user = new User();
         //set the required fields
         user.setUsername(userName);
@@ -75,17 +74,17 @@ public class DefaultNewAccountService implements NewAccountService {
         user.setExpired(false);
         user.setLocked(false);
         user.setEnabled(true);
-        user.setDefaultPageLayout(pageLayoutService.getPageLayoutByCode(defaultPageLayoutCode));        
+        user.setDefaultPageLayout(pageLayoutService.getPageLayoutByCode(defaultPageLayoutCode));
         user.setAuthorities(authorityService.getDefaultAuthorities().getResultSet());
-        
+
         //set the optional fields
         user.setGivenName(givenName);
         user.setFamilyName(familyName);
         user.setDisplayName(displayName);
         user.setStatus(status);
         user.setAboutMe(aboutMe);
-        
-        userService.registerNewUser(user);  
+
+        userService.registerNewUser(user);
     }
 
     private void throwExceptionIfUserExists(String userName, String email) {
