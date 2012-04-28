@@ -87,12 +87,15 @@
                 <label class="control-label" for="type1"><fmt:message key="widget.type"/> *</label>
             </div>
             <div class="control-group">
-                <label class="control-label" for="type1" class="formradio"><fmt:message key="widget.type.OpenSocial"/></label>
+                <label class="control-label" for="type1"><fmt:message key="widget.type.OpenSocial"/></label>
                 <div class="controls"><form:radiobutton path="type" value="OpenSocial"/></div>
             </div>
             <div class="control-group">
-                <label class="control-label" for="type2" class="formradio"><fmt:message key="widget.type.W3C"/></label>
-                <div class="controls"><form:radiobutton path="type" value="W3C"/></div>
+                <label class="control-label" for="type2"><fmt:message key="widget.type.W3C"/></label>
+
+                <div class="controls"><form:radiobutton path="type" value="W3C"/>
+                    <a id="w3cBrowseLink" style="margin-left: 10px;" href="#"><fmt:message key="page.general.browse"/></a>
+                </div>
                 <form:errors path="type" cssClass="error"/>
             </div>
 
@@ -201,10 +204,10 @@
 <portal:register-init-script location="${'AFTER_RAVE'}">
 <script>
     $(function() {
-        $('#addWidgetForm').hide();
-        $('#addWidgetFormSubmit').hide();
+            $('#addWidgetForm').hide();
+            $('#addWidgetFormSubmit').hide();
         $('#w3cBrowseLink').hide();
-        $('input[name=type]:first').attr('checked', true);
+            $('input[name=type]:first').attr('checked', true);
         $('input[name=type]').change(function(){
             if($('input[name=type]:checked').val()=='W3C'){
                 $('#w3cBrowseLink').show();
