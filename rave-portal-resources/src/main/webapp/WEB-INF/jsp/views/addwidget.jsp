@@ -204,10 +204,14 @@
 <portal:register-init-script location="${'AFTER_RAVE'}">
 <script>
     $(function() {
+        if ($('#url').val().length === 0) {
             $('#addWidgetForm').hide();
             $('#addWidgetFormSubmit').hide();
-        $('#w3cBrowseLink').hide();
             $('input[name=type]:first').attr('checked', true);
+        }
+        if ($('input[name=type]:checked').val() != 'W3C') {
+            $('#w3cBrowseLink').hide();
+        }
         $('input[name=type]').change(function(){
             if($('input[name=type]:checked').val()=='W3C'){
                 $('#w3cBrowseLink').show();
