@@ -1,6 +1,54 @@
 Apache Rave Change Log
 https://issues.apache.org/jira/secure/ReleaseNote.jspa?projectId=12311290 (select the version of release and output as text to create this file)
 
+Release Notes - Rave - Version 0.11
+================================================================================================================
+** Sub-task
+    * [RAVE-532] - Bootstrap-enable widget controls
+    * [RAVE-534] - Bootstrap-enable page tabs and tab controls
+    * [RAVE-535] - Make title bar more appealing
+    * [RAVE-537] - Widget store: fix layout
+    * [RAVE-538] - Widget store: fix item list display
+    * [RAVE-540] - Widget store: rework navigational options
+    * [RAVE-545] - Upgrade jQuery to 1.7.2
+    * [RAVE-547] - support openview sidebar view
+    * [RAVE-549] - support openview DIALOG view
+    * [RAVE-550] - support openview MODALDIALOG view
+    * [RAVE-557] - Sync Git Repo to SVN Branch
+    * [RAVE-558] - Merge the bootstrap branch into trunk once all changes are completed
+    * [RAVE-563] - Update the Widget Open View components: modal dialog, dialog, and slideout
+    * [RAVE-564] - Update the Person Profile page
+    * [RAVE-567] - Clean up implementation
+    * [RAVE-575] - Add widget: link to Wookie instance is missing
+    * [RAVE-594] - Verify LICENSE & NOTICE
+    * [RAVE-595] - Update JIRA issues
+    * [RAVE-596] - Execute Functional Tests
+    * [RAVE-597] - Create Release Candidate
+    * [RAVE-598] - Publish Release
+
+** Technical task
+    * [RAVE-102] - Implement Rave inter-gadget messaging with OpenSocial
+
+** Bug
+    * [RAVE-553] - Exception thrown when new user logs in
+    * [RAVE-559] - JPA error on deletion of OAuthTokenInfo
+    * [RAVE-590] - Add widget: when form submission does not validate, additional fields are hidden by the Javascript
+
+** Improvement
+    * [RAVE-511] - Use User model for new user creation
+    * [RAVE-552] - Refactor base_layout.jsp to allow for better customization
+    * [RAVE-562] - Upgrade cargo to version 1.2, use mvn cargo:run instead of mvn cargo:start.
+    * [RAVE-576] - The user search form needs an id attribute.
+    * [RAVE-583] - Refactor global widgetsByRegionIdMap javascript variable
+
+** New Feature
+    * [RAVE-541] - Create the Default User page automatically based on a Page Template
+    * [RAVE-571] - Support passing parameters when changing between views
+
+** Story
+    * [RAVE-95] - Implement Rave inter-widget event wrapper with OpenSocial
+    * [RAVE-560] - Upgrade Rave Shindig to 2.5 beta 1
+
 Release Notes - Rave - Version 0.10.1
 ================================================================================================================
 ** Bug
