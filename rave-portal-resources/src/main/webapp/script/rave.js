@@ -133,7 +133,7 @@ var rave = rave || (function () {
                 },
                 singleton:true
             },
-            float:false,
+            "float":false,
             tab:false
         };
 
