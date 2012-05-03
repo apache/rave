@@ -19,11 +19,11 @@
 
 package org.apache.rave.portal.web.controller;
 
-import org.apache.rave.portal.model.PortalPreference;
-import org.apache.rave.portal.model.User;
-import org.apache.rave.portal.model.Widget;
-import org.apache.rave.portal.model.WidgetStatus;
+import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.service.*;
+import org.apache.rave.portal.web.controller.util.ControllerUtils;
+import org.apache.rave.portal.web.model.NavigationItem;
+import org.apache.rave.portal.web.model.NavigationMenu;
 import org.apache.rave.portal.web.util.ModelKeys;
 import org.apache.rave.portal.web.util.PortalPreferenceKeys;
 import org.apache.rave.portal.web.util.ViewNames;
@@ -77,20 +77,22 @@ public class WidgetStoreController {
     @RequestMapping(method = RequestMethod.GET)
     public String view(Model model, @RequestParam long referringPageId,
             @RequestParam(required = false, defaultValue = "0") int offset) {
+        final String view = ViewNames.STORE;
         User user = userService.getAuthenticatedUser();
-        widgetStoreModelHelper(model, referringPageId, user);
+        widgetStoreModelHelper(model, referringPageId, user, view);
         model.addAttribute(ModelKeys.WIDGETS, widgetService.getPublishedWidgets(offset, getPageSize()));
-        return ViewNames.STORE;
+        return view;
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "mine")
     public String viewMine(Model model, @RequestParam long referringPageId,
             @RequestParam(required = false, defaultValue = "0") int offset) {
+        final String view = ViewNames.STORE;
         User user = userService.getAuthenticatedUser();
-        widgetStoreModelHelper(model, referringPageId, user);
+        widgetStoreModelHelper(model, referringPageId, user, view);
         model.addAttribute(ModelKeys.WIDGETS,
                 widgetService.getWidgetsByOwner(user.getEntityId(), offset, getPageSize()));
-        return ViewNames.STORE;
+        return view;
     }
 
     /**
@@ -106,12 +108,13 @@ public class WidgetStoreController {
      */
     @RequestMapping(method = RequestMethod.GET, value = "widget/{widgetId}")
     public String viewWidget(Model model, @PathVariable long widgetId, @RequestParam long referringPageId) {
+        final String view = ViewNames.WIDGET;
         final User user = userService.getAuthenticatedUser();
-        widgetStoreModelHelper(model, referringPageId, user);
+        widgetStoreModelHelper(model, referringPageId, user, view);
         model.addAttribute(ModelKeys.WIDGET, widgetService.getWidget(widgetId));
         model.addAttribute(ModelKeys.WIDGET_STATISTICS, widgetService.getWidgetStatistics(widgetId, user.getEntityId()));
         model.addAttribute(ModelKeys.USER_PROFILE, user);
-        return ViewNames.WIDGET;
+        return view;
     }
 
     /**
@@ -130,13 +133,14 @@ public class WidgetStoreController {
     @RequestMapping(method = RequestMethod.GET, value = "search")
     public String viewSearchResult(Model model, @RequestParam long referringPageId, @RequestParam String searchTerm,
             @RequestParam(required = false, defaultValue = "0") int offset) {
+        final String view = ViewNames.STORE;
         User user = userService.getAuthenticatedUser();
-        widgetStoreModelHelper(model, referringPageId, user);
+        widgetStoreModelHelper(model, referringPageId, user, view);
         model.addAttribute(ModelKeys.WIDGETS,
                 widgetService.getPublishedWidgetsByFreeTextSearch(searchTerm, offset, getPageSize()));
         model.addAttribute(ModelKeys.SEARCH_TERM, searchTerm);
         model.addAttribute(ModelKeys.OFFSET, offset);
-        return ViewNames.STORE;
+        return view;
     }
 
     /**
@@ -155,20 +159,22 @@ public class WidgetStoreController {
     @RequestMapping(method = RequestMethod.GET, value = "tag")
     public String viewTagResult(Model model, @RequestParam long referringPageId, @RequestParam String keyword,
             @RequestParam(required = false, defaultValue = "0") int offset) {
+        final String view = ViewNames.STORE;
         User user = userService.getAuthenticatedUser();
-        widgetStoreModelHelper(model, referringPageId, user);
+        widgetStoreModelHelper(model, referringPageId, user, view);
         model.addAttribute(ModelKeys.WIDGETS, widgetService.getWidgetsByTag(keyword, offset, getPageSize()));
         model.addAttribute(ModelKeys.OFFSET, offset);
         model.addAttribute(ModelKeys.SELECTED_TAG, keyword);
-        return ViewNames.STORE;
+        return view;
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "category")
     public String viewCategoryResult(@RequestParam(required = true) long referringPageId,
             @RequestParam(required = true) long categoryId,
             @RequestParam(required = false, defaultValue = "0") int offset, Model model) {
+        final String view = ViewNames.STORE;
         User authenticatedUser = userService.getAuthenticatedUser();
-        widgetStoreModelHelper(model, referringPageId, authenticatedUser);
+        widgetStoreModelHelper(model, referringPageId, authenticatedUser, view);
         if (categoryId > 0) {
             model.addAttribute(ModelKeys.WIDGETS, widgetService.getWidgetsByCategory(categoryId, offset, getPageSize()));
         } else {
@@ -176,7 +182,7 @@ public class WidgetStoreController {
         }
         model.addAttribute(ModelKeys.OFFSET, offset);
         model.addAttribute(ModelKeys.SELECTED_CATEGORY, categoryId);
-        return ViewNames.STORE;
+        return view;
     }
 
     /**
@@ -191,9 +197,11 @@ public class WidgetStoreController {
     @RequestMapping(method = RequestMethod.GET, value = "widget/add")
     public String viewAddWidgetForm(Model model, @RequestParam long referringPageId) {
         final Widget widget = new Widget();
-        model.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
+        final String view = ViewNames.ADD_WIDGET_FORM;
         model.addAttribute(ModelKeys.WIDGET, widget);
-        return ViewNames.ADD_WIDGET_FORM;
+        model.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
+        ControllerUtils.addNavItemsToModel(view, model, referringPageId, userService.getAuthenticatedUser());
+        return view;
     }
 
     /**
@@ -215,9 +223,11 @@ public class WidgetStoreController {
         User user = userService.getAuthenticatedUser();
         widgetValidator.validate(widget, results);
         if (results.hasErrors()) {
+            final String view = ViewNames.ADD_WIDGET_FORM;
             model.addAttribute(ModelKeys.WIDGET, widget);
             model.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
-            return ViewNames.ADD_WIDGET_FORM;
+            ControllerUtils.addNavItemsToModel(view, model, referringPageId, user);
+            return view;
         }
         widget.setWidgetStatus(WidgetStatus.PREVIEW);
         widget.setOwner(user);
@@ -236,11 +246,12 @@ public class WidgetStoreController {
      * @param user
      *            Current authenticated User
      */
-    private void widgetStoreModelHelper(Model model, long referringPageId, User user) {
+    private void widgetStoreModelHelper(Model model, long referringPageId, User user, String view) {
         model.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
         model.addAttribute(ModelKeys.WIDGETS_STATISTICS, widgetService.getAllWidgetStatistics(user.getEntityId()));
         model.addAttribute(ModelKeys.TAGS, tagService.getAllTags());
         model.addAttribute(ModelKeys.CATEGORIES, categoryService.getAll());
+        ControllerUtils.addNavItemsToModel(view, model, referringPageId, user);
     }
 
     public int getPageSize() {

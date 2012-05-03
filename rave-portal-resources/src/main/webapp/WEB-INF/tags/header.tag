@@ -19,6 +19,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ attribute name="pageTitle" required="false" description="The title of the page" %>
 <fmt:setBundle basename="messages"/>
 <c:if test="${not empty topnav}">
@@ -33,12 +34,22 @@
                 </a>
                 <span class="brand"><c:out value="${pageTitle}"/></span>
                 <div class="nav-collapse">
-                    <ul class="nav pull-right">
-                        <c:forEach items="${topnav.navigationItems}" var="navItem">
-                            <li><a href="<spring:url value="${navItem.url}"/>"><fmt:message key="${navItem.name}"/></a></li>
-                        </c:forEach>
-                    </ul>
-                </div>
+                     <ul class="nav pull-right">
+                        <%--@elvariable id="navItem" type="org.apache.rave.portal.web.model.NavigationItem"--%>
+                         <c:forEach items="${topnav.navigationItems}" var="navItem">
+                            <sec:authorize url="${navItem.url}">
+                                <c:choose>
+                                    <c:when test="${not empty navItem.nameParam}">
+                                        <li><a href="<spring:url value="${navItem.url}"/>"><fmt:message key="${navItem.name}">
+                                            <fmt:param><c:out value="${navItem.nameParam}"/></fmt:param>
+                                        </fmt:message></a></li>
+                                    </c:when>
+                                    <c:otherwise><li><a href="<spring:url value="${navItem.url}"/>"><fmt:message key="${navItem.name}"/></a></li></c:otherwise>
+                                </c:choose>
+                            </sec:authorize>
+                         </c:forEach>
+                     </ul>
+                 </div>
             </div>
         </div>
     </div>

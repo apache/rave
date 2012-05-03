@@ -25,6 +25,8 @@ import org.apache.rave.portal.service.PageLayoutService;
 import org.apache.rave.portal.service.PageService;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.portal.web.controller.util.ControllerUtils;
+import org.apache.rave.portal.web.model.NavigationItem;
+import org.apache.rave.portal.web.model.NavigationMenu;
 import org.apache.rave.portal.web.util.ModelKeys;
 import org.apache.rave.portal.web.util.ViewNames;
 import org.slf4j.Logger;
@@ -41,13 +43,13 @@ import java.util.List;
 
 /**
  * Page Controller
- * 
+ *
  * @author carlucci
  */
 @Controller
 public class PageController {
     private final Logger logger = LoggerFactory.getLogger(getClass());
-         
+
     private PageService pageService;
     private UserService userService;
     private PageLayoutService pageLayoutService;
@@ -71,21 +73,25 @@ public class PageController {
         Page page = pageService.getDefaultPageFromList(pages);
         List<PageLayout> pageLayouts = pageLayoutService.getAllUserSelectable();
         addAttributesToModel(model, page, pages, pageLayouts);
-        return ControllerUtils.getDeviceAppropriateView(request, ViewNames.getPageView(page.getPageLayout().getCode()), ViewNames.MOBILE_HOME);
-    }          
-    
+        String view = ControllerUtils.getDeviceAppropriateView(request, ViewNames.getPageView(page.getPageLayout().getCode()), ViewNames.MOBILE_HOME);
+        ControllerUtils.addNavItemsToModel(view, model, page.getEntityId(), userService.getAuthenticatedUser());
+        return view;
+    }
+
     @RequestMapping(value = "/page/view/{pageId}", method = RequestMethod.GET)
     public String view(@PathVariable Long pageId, Model model, HttpServletRequest request) {
         User user = userService.getAuthenticatedUser();
         logger.debug("attempting to get pageId {} for {}", pageId, user);
-        
+
         List<Page> pages = getAllPagesForAuthenticatedUser();
         Page page = pageService.getPageFromList(pageId, pages);
         List<PageLayout> pageLayouts = pageLayoutService.getAllUserSelectable();
         addAttributesToModel(model, page, pages, pageLayouts);
-        return ControllerUtils.getDeviceAppropriateView(request, ViewNames.getPageView(page.getPageLayout().getCode()), ViewNames.MOBILE_HOME);
+        String view = ControllerUtils.getDeviceAppropriateView(request, ViewNames.getPageView(page.getPageLayout().getCode()), ViewNames.MOBILE_HOME);
+        ControllerUtils.addNavItemsToModel(view, model, page.getEntityId(), user);
+        return view;
     }
-    
+
     private List<Page> getAllPagesForAuthenticatedUser() {
         User user = userService.getAuthenticatedUser();
         long userId = user.getEntityId();
@@ -99,10 +105,12 @@ public class PageController {
         }
         return pages;
     }
-    
+
     private void addAttributesToModel(Model model, Page page, List<Page> pages, List<PageLayout> pageLayouts) {
         model.addAttribute(ModelKeys.PAGE, page);
         model.addAttribute(ModelKeys.PAGES, pages);
         model.addAttribute(ModelKeys.PAGE_LAYOUTS, pageLayouts);
     }
+
+
 }

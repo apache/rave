@@ -21,17 +21,23 @@ package org.apache.rave.portal.web.controller.util;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.rave.portal.model.Page;
+import org.apache.rave.portal.model.User;
+import org.apache.rave.portal.web.model.NavigationItem;
+import org.apache.rave.portal.web.model.NavigationMenu;
+import org.apache.rave.portal.web.util.ViewNames;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.mobile.device.DeviceUtils;
+import org.springframework.ui.Model;
 
 public class ControllerUtils {
     private static final Logger log = LoggerFactory.getLogger(ControllerUtils.class);
 
     /**
-     * Utility function to determine if this HttpServletRequest 
-     * is coming from a mobile client 
-     * 
+     * Utility function to determine if this HttpServletRequest
+     * is coming from a mobile client
+     *
      * @param request the HttpServletRequest from the client
      * @return true if the client is a mobile device, false if not mobile
      */
@@ -52,5 +58,82 @@ public class ControllerUtils {
         }
         log.debug("viewName: " + viewName);
         return viewName;
+    }
+
+    public static void addNavItemsToModel(String view, Model model, long referringPageId, User user) {
+        final NavigationMenu topMenu = getTopMenu(view, referringPageId, user);
+        model.addAttribute(topMenu.getName(), topMenu);
+    }
+
+    public static NavigationMenu getTopMenu(String view, long referringPageId, User user) {
+        NavigationMenu menu = new NavigationMenu("topnav");
+
+        if(view.startsWith(ViewNames.PAGE)) {
+            NavigationItem profile = new NavigationItem("page.profile.title", user.getDisplayName() != null ? user.getDisplayName() : user.getUsername(), "/app/person/" + user.getUsername() + "?referringPageId=" + referringPageId);
+            menu.addNavigationItem(profile);
+
+            NavigationItem store = new NavigationItem("page.store.title", null, "/app/store?referringPageId=" + referringPageId);
+            menu.addNavigationItem(store);
+
+            NavigationItem admin = getAdminItem();
+            menu.addNavigationItem(admin);
+
+            NavigationItem logout = getLogoutItem();
+            menu.addNavigationItem(logout);
+        } else if (view.startsWith(ViewNames.STORE)) {
+            NavigationItem addWidget = new NavigationItem("page.addwidget.title", null, "/app/store/widget/add?referringPageId=" + referringPageId);
+            menu.addNavigationItem(addWidget);
+
+            NavigationItem back = getBackItem(referringPageId);
+            menu.addNavigationItem(back);
+
+            NavigationItem admin = getAdminItem();
+            menu.addNavigationItem(admin);
+
+            NavigationItem logout = getLogoutItem();
+            menu.addNavigationItem(logout);
+        } else if (view.startsWith(ViewNames.PERSON_PROFILE)) {
+            NavigationItem back = getBackItem(referringPageId);
+            menu.addNavigationItem(back);
+
+            NavigationItem admin = getAdminItem();
+            menu.addNavigationItem(admin);
+
+            NavigationItem logout = getLogoutItem();
+            menu.addNavigationItem(logout);
+        } else if (view.startsWith(ViewNames.ADD_WIDGET_FORM) || view.startsWith(ViewNames.WIDGET)) {
+            NavigationItem addWidget = new NavigationItem("page.widget.backToStore", null, "/app/store?referringPageId=" + referringPageId);
+            menu.addNavigationItem(addWidget);
+
+            NavigationItem back = getBackItem(referringPageId);
+            menu.addNavigationItem(back);
+
+            NavigationItem admin = getAdminItem();
+            menu.addNavigationItem(admin);
+
+            NavigationItem logout = getLogoutItem();
+            menu.addNavigationItem(logout);
+        }
+
+        return menu;
+    }
+
+    private static NavigationItem getBackItem(long referringPageId) {
+        NavigationItem back = new NavigationItem();
+        back.setName("page.general.back");
+        if (referringPageId > 0) {
+            back.setUrl("/app/page/view/" + referringPageId);
+        } else {
+            back.setUrl("/");
+        }
+        return back;
+    }
+
+    private static NavigationItem getAdminItem() {
+        return new NavigationItem("page.general.toadmininterface", null, "/app/admin/");
+    }
+
+    private static NavigationItem getLogoutItem() {
+        return new NavigationItem("page.general.logout", null, "/j_spring_security_logout");
     }
 }

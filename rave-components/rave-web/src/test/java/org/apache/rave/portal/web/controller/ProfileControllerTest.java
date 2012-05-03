@@ -45,7 +45,7 @@ import java.util.List;
 public class ProfileControllerTest {
 
     private ProfileController profileController;
-	
+
 	private UserService userService;
 	private PageService pageService;
 
@@ -81,13 +81,13 @@ public class ProfileControllerTest {
         allPageLayouts = new ArrayList<PageLayout>();
         allPageLayouts.add(validPageLayout);
 	}
-	
+
 	@Test
 	public void viewPerson_ShouldAddAttributeForUser() {
 		//creating a mock user
 		final User user = new User();
 		final ModelMap model = new ModelMap();
-		final int modelSize = 3;
+		final int modelSize = 4;
 		final String username="Canonical";
         user.setUsername(username);
         user.setEntityId(USER_ID);
@@ -96,28 +96,28 @@ public class ProfileControllerTest {
         PageLayout pageLayout = new PageLayout();
         pageLayout.setCode(VALID_PAGE_LAYOUT_CODE);
         personProfile.setPageLayout(pageLayout);
-		
+
 		expect(userService.getUserByUsername(username)).andReturn(user).once();
         expect(pageService.getPersonProfilePage(user.getEntityId())).andReturn(personProfile);
 
 		replay(userService, pageService);
 
 		String view = profileController.viewProfile(username, model, null);
-		
+
 		//assert that the model is not null
 		assertThat(model, CoreMatchers.notNullValue());
-	
-		//assert that the model size is three
+
+		//assert that the model size is four
 		assertThat(model.size(), CoreMatchers.equalTo(modelSize));
-		
+
 		//assert that the model does contain an attribute associated with the authenticated user after setUpForm() is called
-		assertThat(model.containsAttribute(userProfile), CoreMatchers.equalTo(true)); 
-		
+		assertThat(model.containsAttribute(userProfile), CoreMatchers.equalTo(true));
+
 		//assert that the model does not contain authenticated user as null
 		assertThat(model.get(userProfile), CoreMatchers.notNullValue());
 
         assertThat(view, is(ViewNames.PERSON_PROFILE + "." + VALID_PAGE_LAYOUT_CODE));
-		
+
 		verify(userService, pageService);
 	}
 
@@ -150,7 +150,7 @@ public class ProfileControllerTest {
 		final long referringPageId = 1L;
         final String USERNAME = "canonical";
 		String userProfile = new String(ModelKeys.USER_PROFILE);
-		
+
 		//creating a mock authenticated user
 		final User authUser = new User();
         authUser.setUsername(USERNAME);
@@ -161,7 +161,7 @@ public class ProfileControllerTest {
 		authUser.setFamilyName("Rave");
 		authUser.setAboutMe("Test User");
 		authUser.setEmail("testuser@rave.com");
-		
+
 		//creating a mock updated user
 		final User updatedUser = new User();
 		//set the updated status
@@ -170,32 +170,32 @@ public class ProfileControllerTest {
 		updatedUser.setFamilyName("Rave");
 		updatedUser.setAboutMe("Test User");
 		updatedUser.setEmail("testuser@rave.com");
-		
+
 		expect(userService.getAuthenticatedUser()).andReturn(authUser).anyTimes();
 		userService.updateUserProfile(authUser);
 		replay(userService);
-		
+
 		String view = profileController.updateProfile(model, referringPageId, updatedUser);
-		
+
 		//assert that the model is not null
 		assertThat(model, CoreMatchers.notNullValue());
-	
+
 		//assert that the model size is three
 		assertThat(model.size(), CoreMatchers.equalTo(modelSize));
-		
+
 		//assert that the model does contain an attribute associated with the authenticated user
-		assertThat(model.containsAttribute(userProfile), CoreMatchers.equalTo(true)); 
-		
+		assertThat(model.containsAttribute(userProfile), CoreMatchers.equalTo(true));
+
 		//assert that the model does not contain authenticated user as null
 		assertThat(model.get(userProfile), CoreMatchers.notNullValue());
-		
+
 		//assert that the status of user is updated
 		assertEquals(updatedUser.getStatus(), authUser.getStatus());
-        
+
         assertThat(view, is("redirect:/app/person/" + USERNAME));
-		
+
 		verify(userService);
-		
+
 	}
 
 }

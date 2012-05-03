@@ -19,52 +19,8 @@
 <%@ page language="java" trimDirectiveWhitespaces="true" %>
 <%@ include file="/WEB-INF/jsp/includes/taglibs.jsp" %>
 <fmt:setBundle basename="messages"/>
-<div class="navbar navbar-fixed-top">
-    <div class="navbar-inner">
-        <div class="container">
-            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </a>
-            <span class="brand"><fmt:message key="page.addwidget.title"/></span>
-            <div class="nav-collapse">
-                <ul class="nav pull-right">
-                    <c:if test="${not empty referringPageId}">
-                        <li>
-                            <a href="<spring:url value="/app/store?referringPageId=${referringPageId}" />">
-                            <fmt:message key="page.widget.backToStore"/>
-                            </a>
-                        </li>
-                    </c:if>
-
-                    <li>
-                        <c:choose>
-                            <c:when test="${empty referringPageId}">
-                                <spring:url value="/index.html" var="gobackurl"/>
-                            </c:when>
-                            <c:otherwise>
-                                <spring:url value="/app/page/view/${referringPageId}" var="gobackurl"/>
-                            </c:otherwise>
-                        </c:choose>
-                        <a href="<c:out value="${gobackurl}"/>"><fmt:message key="page.general.back"/></a>
-                    </li>
-                    <sec:authorize url="/app/admin/">
-                        <li>
-                            <a href="<spring:url value="/app/admin/"/>">
-                            <fmt:message key="page.general.toadmininterface"/>
-                            </a>
-                        </li>
-                    </sec:authorize>
-                    <li>
-                        <a href="<spring:url value="/j_spring_security_logout" htmlEscape="true" />">
-                        <fmt:message key="page.general.logout"/></a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</div>
+<fmt:message key="page.addwidget.title" var="pagetitle"/>
+<rave:header pageTitle="${pagetitle}"/>
 
 <div class="container">
     <h2><fmt:message key="page.addwidget.form.header"/></h2>

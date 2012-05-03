@@ -23,6 +23,8 @@ import org.apache.rave.portal.model.Page;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.service.PageService;
 import org.apache.rave.portal.service.UserService;
+import org.apache.rave.portal.web.controller.util.ControllerUtils;
+import org.apache.rave.portal.web.model.NavigationMenu;
 import org.apache.rave.portal.web.util.ModelKeys;
 import org.apache.rave.portal.web.util.ViewNames;
 import org.slf4j.Logger;
@@ -39,7 +41,7 @@ import org.springframework.web.bind.annotation.*;
 public class ProfileController {
 
 	private final Logger logger = LoggerFactory.getLogger(getClass());
-	
+
 	private final UserService userService;
 	private final PageService pageService;
 
@@ -64,15 +66,17 @@ public class ProfileController {
         Page personProfilePage = pageService.getPersonProfilePage(user.getEntityId());
         addAttributesToModel(model, user, referringPageId);
         model.addAttribute(ModelKeys.PAGE, personProfilePage);
-		return ViewNames.getPersonPageView(personProfilePage.getPageLayout().getCode());
+		String view =  ViewNames.getPersonPageView(personProfilePage.getPageLayout().getCode());
+        addNavItemsToModel(view, model, referringPageId, user);
+        return view;
 	}
-	
+
 	/**
 	 * Updates the user's personal information
 	 *
 	 * @param model           			{@link Model} map
 	 * @param referringPageId			page reference id
-	 * @param updatedUser				Updated user information 
+	 * @param updatedUser				Updated user information
 	 * @return the view name of the user profile page
 	 */
     @RequestMapping(method = RequestMethod.POST)
@@ -99,12 +103,18 @@ public class ProfileController {
 
         return ViewNames.REDIRECT + "app/person/" + user.getUsername();
     }
-	
+
 	/*
 	 * Function to add attributes to model map
 	 */
 	private void addAttributesToModel(ModelMap model, User user, Long referringPageId) {
     	model.addAttribute(ModelKeys.USER_PROFILE, user);
     	model.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
+    }
+
+    public static void addNavItemsToModel(String view, ModelMap model, Long referringPageId, User user) {
+        long refPageId = referringPageId != null ? referringPageId : 0;
+        final NavigationMenu topMenu = ControllerUtils.getTopMenu(view, refPageId, user);
+        model.addAttribute(topMenu.getName(), topMenu);
     }
 }

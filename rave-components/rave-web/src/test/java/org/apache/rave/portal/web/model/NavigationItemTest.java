@@ -38,6 +38,7 @@ public class NavigationItemTest {
         assertNotNull(navigationItem);
         assertNull(navigationItem.getName());
         assertNull(navigationItem.getUrl());
+        assertNull(navigationItem.getNameParam());
         assertFalse(navigationItem.isExpanded());
         assertFalse(navigationItem.isSelected());
         assertTrue(navigationItem.getChildNavigationItems().isEmpty());
@@ -47,11 +48,13 @@ public class NavigationItemTest {
     @Test
     public void testNameUrlConstructor() throws Exception {
         String name = "Home";
+        String nameParams = "test1";
         String url="/index.html";
-        NavigationItem navigationItem = new NavigationItem(name, url);
+        NavigationItem navigationItem = new NavigationItem(name, nameParams, url);
         assertNotNull(navigationItem);
         assertEquals(name, navigationItem.getName());
         assertEquals(url, navigationItem.getUrl());
+        assertEquals(nameParams, navigationItem.getNameParam());
         assertFalse(navigationItem.isExpanded());
         assertFalse(navigationItem.isSelected());
         assertTrue(navigationItem.getChildNavigationItems().isEmpty());
@@ -61,18 +64,21 @@ public class NavigationItemTest {
     @Test
     public void testSettersGetters() throws Exception {
         String name = "Home";
+        String nameParams = "test1";
         String url="/index.html";
 
         NavigationItem navigationItem = new NavigationItem();
         navigationItem.setName(name);
+        navigationItem.setNameParam(nameParams);
         navigationItem.setUrl(url);
         navigationItem.setExpanded(true);
         navigationItem.setSelected(true);
-        NavigationItem childItem = new NavigationItem("About", "/about/index.html");
+        NavigationItem childItem = new NavigationItem("About", null, "/about/index.html");
         navigationItem.addChildNavigationItem(childItem);
 
         assertEquals(name, navigationItem.getName());
         assertEquals(url, navigationItem.getUrl());
+        assertEquals(nameParams, navigationItem.getNameParam());
         assertTrue(navigationItem.isExpanded());
         assertTrue(navigationItem.isSelected());
         assertEquals(childItem, navigationItem.getChildNavigationItems().get(0));

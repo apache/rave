@@ -41,53 +41,15 @@
 
 <!-- get the title of contact information -->
 <fmt:message key="page.personProfile.contact.info" var="contactInfo"/>
-<div class="navbar navbar-fixed-top">
-    <div class="navbar-inner">
-        <div class="container">
-            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </a>
-            <span class="brand">
-                <fmt:message key="page.home.welcome">
-                    <fmt:param>
-                        <c:choose>
-                            <c:when test="${not empty page.owner.displayName}"><c:out value="${page.owner.displayName}"/></c:when>
-                            <c:otherwise><c:out value="${page.owner.username}"/></c:otherwise>
-                        </c:choose>
-                    </fmt:param>
-                </fmt:message>
-            </span>
-            <div class="nav-collapse">
-                <ul class="nav pull-right">
-                    <li>
-                        <c:choose>
-                            <c:when test="${empty referringPageId}">
-                                <spring:url value="/index.html" var="gobackurl"/>
-                            </c:when>
-                            <c:otherwise>
-                                <spring:url value="/app/page/view/${referringPageId}" var="gobackurl"/>
-                            </c:otherwise>
-                        </c:choose>
-                        <a href="<c:out value="${gobackurl}"/>"><fmt:message key="page.general.back"/></a>
-                    </li>
-                    <sec:authorize url="/app/admin/">
-                        <li>
-                            <a href="<spring:url value="/app/admin/"/>">
-                            <fmt:message key="page.general.toadmininterface"/>
-                            </a>
-                        </li>
-                    </sec:authorize>
-                    <li>
-                        <a href="<spring:url value="/j_spring_security_logout" htmlEscape="true" />">
-                        <fmt:message key="page.general.logout"/></a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</div>
+<fmt:message key="page.home.welcome" var="pagetitle">
+    <fmt:param>
+        <c:choose>
+            <c:when test="${not empty page.owner.displayName}"><c:out value="${page.owner.displayName}"/></c:when>
+            <c:otherwise><c:out value="${page.owner.username}"/></c:otherwise>
+        </c:choose>
+    </fmt:param>
+</fmt:message>
+<rave:header pageTitle="${pagetitle}"/>
 
 <div id="pageContent" class="container-fluid navbar-spacer">
     <div class="row-fluid">

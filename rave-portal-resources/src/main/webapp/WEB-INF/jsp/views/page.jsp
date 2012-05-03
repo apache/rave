@@ -23,56 +23,16 @@
 <jsp:useBean id="pages" type="java.util.List<org.apache.rave.portal.model.Page>" scope="request"/>
 <jsp:useBean id="pageLayouts" type="java.util.List<org.apache.rave.portal.model.PageLayout>" scope="request"/>
 <%--@elvariable id="page" type="org.apache.rave.portal.model.Page"--%>
-<div class="navbar navbar-fixed-top">
-    <div class="navbar-inner">
-        <div class="container">
-            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </a>
-            <span class="brand">
-                <fmt:message key="page.home.welcome">
-                    <fmt:param>
-                        <c:choose>
-                            <c:when test="${not empty page.owner.displayName}"><c:out value="${page.owner.displayName}"/></c:when>
-                            <c:otherwise><c:out value="${page.owner.username}"/></c:otherwise>
-                        </c:choose>
-                    </fmt:param>
-                </fmt:message>
-            </span>
-            <div class="nav-collapse">
-                <ul class="nav pull-right">
-                    <li>
-                        <c:set var="profileUrl">/app/person/<sec:authentication property="principal.username"/>?referringPageId=${page.entityId}
-                        </c:set>
-                        <a href="<spring:url value="${profileUrl}" />">
-                        <fmt:message key="page.profile.title">
-                            <fmt:param><c:out value="${page.owner.displayName}"/></fmt:param>
-                        </fmt:message>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="<spring:url value="/app/store?referringPageId=${page.entityId}" />">
-                        <fmt:message key="page.store.title"/>
-                        </a>
-                    </li>
-                    <sec:authorize url="/app/admin/">
-                        <li>
-                            <a href="<spring:url value="/app/admin/"/>">
-                            <fmt:message key="page.general.toadmininterface"/>
-                            </a>
-                        </li>
-                    </sec:authorize>
-                    <li>
-                        <a href="<spring:url value="/j_spring_security_logout" htmlEscape="true" />">
-                        <fmt:message key="page.general.logout"/></a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</div>
+
+<fmt:message key="page.home.welcome" var="pagetitle">
+    <fmt:param>
+        <c:choose>
+            <c:when test="${not empty page.owner.displayName}"><c:out value="${page.owner.displayName}"/></c:when>
+            <c:otherwise><c:out value="${page.owner.username}"/></c:otherwise>
+        </c:choose>
+    </fmt:param>
+</fmt:message>
+<rave:header pageTitle="${pagetitle}"/>
 
 <input id="currentPageId" type="hidden" value="${page.entityId}"/>
 <c:set var="hasOnlyOnePage" scope="request">

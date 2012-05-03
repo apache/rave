@@ -51,7 +51,7 @@ public final class AdminControllerUtil {
     static boolean isDeleteOrUpdate(String action) {
         return "update".equals(action) || "delete".equals(action);
     }
-    
+
     static boolean isCreateDeleteOrUpdate(String action){
         return "create".equals(action) || isDeleteOrUpdate(action);
     }
@@ -67,10 +67,10 @@ public final class AdminControllerUtil {
     private static NavigationMenu getTopMenu() {
         NavigationMenu menu = new NavigationMenu("topnav");
 
-        NavigationItem raveHome = new NavigationItem("page.general.back", "/");
+        NavigationItem raveHome = new NavigationItem("page.general.back", null, "/");
         menu.addNavigationItem(raveHome);
 
-        NavigationItem logout = new NavigationItem("page.general.logout", "/j_spring_security_logout");
+        NavigationItem logout = new NavigationItem("page.general.logout", null, "/j_spring_security_logout");
         menu.addNavigationItem(logout);
 
         return menu;
@@ -79,23 +79,23 @@ public final class AdminControllerUtil {
     private static NavigationMenu getTabMenu(String selectedItem) {
         NavigationMenu menu = new NavigationMenu("tabs");
 
-        NavigationItem home = new NavigationItem("admin.home.shorttitle", "/app/admin/");
+        NavigationItem home = new NavigationItem("admin.home.shorttitle", null, "/app/admin/");
         home.setSelected("home".equals(selectedItem));
         menu.addNavigationItem(home);
 
-        NavigationItem users = new NavigationItem("admin.users.shorttitle", "/app/admin/users");
+        NavigationItem users = new NavigationItem("admin.users.shorttitle", null, "/app/admin/users");
         users.setSelected("users".equals(selectedItem));
         menu.addNavigationItem(users);
 
-        NavigationItem widgets = new NavigationItem("admin.widgets.shorttitle", "/app/admin/widgets");
+        NavigationItem widgets = new NavigationItem("admin.widgets.shorttitle", null, "/app/admin/widgets");
         widgets.setSelected("widgets".equals(selectedItem));
         menu.addNavigationItem(widgets);
 
-        NavigationItem preferences = new NavigationItem("admin.preferences.shorttitle", "/app/admin/preferences");
+        NavigationItem preferences = new NavigationItem("admin.preferences.shorttitle", null, "/app/admin/preferences");
         preferences.setSelected("preferences".equals(selectedItem));
         menu.addNavigationItem(preferences);
 
-        NavigationItem categories = new NavigationItem("admin.category.shortTitle", "/app/admin/categories");
+        NavigationItem categories = new NavigationItem("admin.category.shortTitle", null, "/app/admin/categories");
         categories.setSelected("categories".equals(selectedItem));
         menu.addNavigationItem(categories);
 

@@ -44,7 +44,7 @@ public class NavigationMenuTest {
         navigationMenu.setName("footermenu");
         assertEquals("footermenu", navigationMenu.getName());
 
-        NavigationItem navigationItem = new NavigationItem("contact us", "/contact.html");
+        NavigationItem navigationItem = new NavigationItem("contact us", null, "/contact.html");
         navigationMenu.addNavigationItem(navigationItem);
         assertEquals(navigationItem, navigationMenu.getNavigationItems().get(0));
     }

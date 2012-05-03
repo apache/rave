@@ -30,6 +30,7 @@ import java.util.Map;
 public class NavigationItem {
 
     private static final String PARAM_NAME = "name";
+    private static final String PARAM_NAME_PARAM = "name_param";
     private static final String PARAM_URL = "url";
 
     private Map<String, String> parameters;
@@ -38,17 +39,18 @@ public class NavigationItem {
     private boolean expanded;
 
     public NavigationItem() {
-        this(null, null);
+        this(null, null, null);
     }
 
-    public NavigationItem(String name, String url) {
+    public NavigationItem(String name, String nameParam, String url) {
         super();
 
         this.parameters = new HashMap<String, String>();
         this.childNavigationItems = new ArrayList<NavigationItem>();
-        
+
         this.setName(name);
         this.setUrl(url);
+        this.setNameParam(nameParam);
     }
 
     /**
@@ -63,6 +65,22 @@ public class NavigationItem {
     }
 
     /**
+     * @return parameter value
+     */
+    public String getNameParam() {
+        return parameters.get(PARAM_NAME_PARAM);
+    }
+
+    /**
+     * Sets the parameter value used to plug into the name field
+     *
+     * @param nameParam
+     */
+    public void setNameParam(String nameParam) {
+        this.parameters.put(PARAM_NAME_PARAM, nameParam);
+    }
+
+    /**
      * @return url the navigation item should link to
      */
     public String getUrl() {
@@ -73,7 +91,7 @@ public class NavigationItem {
         this.parameters.put(PARAM_URL, url);
     }
 
-    
+
     public Map<String, String> getParameters() {
         return parameters;
     }
