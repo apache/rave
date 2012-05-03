@@ -19,6 +19,8 @@
 package org.apache.rave.service.impl;
 
 import org.apache.rave.model.StaticContent;
+import org.apache.rave.service.StaticContentFetcherConsumer;
+import org.apache.rave.service.StaticContentFetcherService;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -30,6 +32,7 @@ import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import static org.easymock.EasyMock.*;
 import static org.hamcrest.CoreMatchers.is;
@@ -37,6 +40,7 @@ import static org.junit.Assert.assertThat;
 
 public class DefaultStaticContentFetcherServiceTest {
     private RestTemplate restTemplate;
+    private StaticContentFetcherConsumer consumer;
 
     private final String VALID_URL1 = "http://www.google.com/";
     private final String VALID_URL1_ID = "google";
@@ -65,24 +69,25 @@ public class DefaultStaticContentFetcherServiceTest {
         VALID_CONTENT_1 = new StaticContent(VALID_URL1_ID, new URI(VALID_URL1), null);
         VALID_CONTENT_2 = new StaticContent(VALID_URL2_ID, new URI(VALID_URL2), null);
         VALID_CONTENT_3 = new StaticContent(VALID_URL3_ID, new URI(VALID_URL3), null);
-        
+
         restTemplate = createNiceMock(RestTemplate.class);
+        consumer = createMock(StaticContentFetcherConsumer.class);
     }
 
     @Test
     public void getContent_validId() throws URISyntaxException {
         DefaultStaticContentFetcherService service = new DefaultStaticContentFetcherService(restTemplate, Arrays.asList(VALID_CONTENT_1, VALID_CONTENT_2, VALID_CONTENT_3));
-        expectAllRestTemplateGetForObject();        
+        expectAllRestTemplateGetForObject();
         replay(restTemplate);
-        
-        //Initially all content will be blank        
+
+        //Initially all content will be blank
         assertBlankInitialContent(service);
-        
+
         service.refreshAll();
 
         //Now that the content has been refreshed we should get a valid value
         assertThat(service.getContent(VALID_URL1_ID), is(VALID_URL1_CONTENT));
-        
+
         verify(restTemplate);
     }
 
@@ -104,7 +109,7 @@ public class DefaultStaticContentFetcherServiceTest {
         assertThat(service.getContent(VALID_URL1_ID), is(VALID_URL1_CONTENT));
         assertThat(service.getContent(VALID_URL2_ID), is(VALID_URL2_CONTENT));
         assertThat(service.getContent(VALID_URL3_ID), is(VALID_URL3_CONTENT_WITH_REPLACEMENTS));
-        
+
         verify(restTemplate);
     }
 
@@ -117,11 +122,18 @@ public class DefaultStaticContentFetcherServiceTest {
     @Test
     public void refreshAll() throws URISyntaxException {
         DefaultStaticContentFetcherService service = new DefaultStaticContentFetcherService(restTemplate, Arrays.asList(VALID_CONTENT_1, VALID_CONTENT_2, VALID_CONTENT_3));
-
+        service.registerConsumer(consumer);
         assertBlankInitialContent(service);
 
         expectAllRestTemplateGetForObject();
-        replay(restTemplate);
+        consumer.notify(VALID_CONTENT_1.getId());
+        expectLastCall();
+        consumer.notify(VALID_CONTENT_2.getId());
+        // simulate an exception in the middle of the notification loop to ensure it continues processing
+        expectLastCall().andThrow(new RuntimeException("boom"));
+        consumer.notify(VALID_CONTENT_3.getId());
+        expectLastCall();
+        replay(restTemplate, consumer);
 
         service.refreshAll();
 
@@ -129,6 +141,7 @@ public class DefaultStaticContentFetcherServiceTest {
         assertThat(service.getContent(VALID_URL1_ID), is(VALID_URL1_CONTENT));
         assertThat(service.getContent(VALID_URL2_ID), is(VALID_URL2_CONTENT));
         assertThat(service.getContent(VALID_URL3_ID), is(VALID_URL3_CONTENT));
+        verify(restTemplate, consumer);
     }
 
     @Test
@@ -172,7 +185,7 @@ public class DefaultStaticContentFetcherServiceTest {
 
         expectAllRestTemplateGetForObject();
         replay(restTemplate);
-        
+
         service.refreshAll();
 
         assertThat(service.getContent(VALID_URL1_ID), is(VALID_URL1_CONTENT));
@@ -196,7 +209,17 @@ public class DefaultStaticContentFetcherServiceTest {
         assertThat(service.getContent(VALID_URL1_ID), is(newContent));
         assertThat(service.getContent(VALID_URL2_ID), is(VALID_URL2_CONTENT));
         assertThat(service.getContent(VALID_URL3_ID), is(newContent));
-    }    
+    }
+
+    @Test
+    public void registerAndUnregisterConsumer() {
+        DefaultStaticContentFetcherService service = new DefaultStaticContentFetcherService(restTemplate, Arrays.asList(VALID_CONTENT_1, VALID_CONTENT_2, VALID_CONTENT_3));
+        assertThat(getInternalConsumersSet(service).contains(consumer), is(false));
+        service.registerConsumer(consumer);
+        assertThat(getInternalConsumersSet(service).contains(consumer), is(true));
+        service.unregisterConsumer(consumer);
+        assertThat(getInternalConsumersSet(service).contains(consumer), is(false));
+    }
 
     private void expectAllRestTemplateGetForObject() throws URISyntaxException {
         expect(restTemplate.getForObject(new URI(VALID_URL1), String.class)).andReturn(VALID_URL1_CONTENT);
@@ -208,5 +231,9 @@ public class DefaultStaticContentFetcherServiceTest {
         assertThat(service.getContent(VALID_URL1_ID), is(""));
         assertThat(service.getContent(VALID_URL2_ID), is(""));
         assertThat(service.getContent(VALID_URL3_ID), is(""));
+    }
+
+    private Set<StaticContentFetcherConsumer> getInternalConsumersSet(StaticContentFetcherService service) {
+        return (Set<StaticContentFetcherConsumer>) ReflectionTestUtils.getField(service, "staticContentFetcherConsumers");
     }
 }

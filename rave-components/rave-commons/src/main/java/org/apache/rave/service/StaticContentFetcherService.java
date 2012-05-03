@@ -41,4 +41,22 @@ public interface StaticContentFetcherService {
      * @param key the cache key of the content artifact to refresh
      */
     void refresh(String key);
+
+    /**
+     * Registers a StaticContentFetcher consumer with this StaticContentFetcherService.
+     * StaticContentFetcherConsumers will have their notify method executed when the content
+     * has been updated.
+     *
+     * @param consumer
+     */
+    void registerConsumer(StaticContentFetcherConsumer consumer);
+
+    /**
+     * Un-registers a StaticContentFetcherConsumer from this StaticContentFetcherService.
+     * StaticContentFetcherConsumers un-registered will no longer have their notify method executed when
+     * the content has been updated
+     *
+     * @param consumer
+     */
+    void unregisterConsumer(StaticContentFetcherConsumer consumer);
 }
