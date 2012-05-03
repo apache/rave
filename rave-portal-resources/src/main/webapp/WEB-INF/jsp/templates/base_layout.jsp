@@ -24,8 +24,7 @@ under the License.
 <!DOCTYPE html>
 <html class="no-js">
 <head>
-    <meta charset="ISO-8859-1"/>
-    <meta name="viewport" content="width=device-width" />
+    <rave:rave_meta_data />
     <title><rave:title /></title>
     <rave:rave_css/>
     <rave:custom_css/>
