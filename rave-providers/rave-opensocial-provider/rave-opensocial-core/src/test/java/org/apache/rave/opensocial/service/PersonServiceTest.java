@@ -201,11 +201,15 @@ public class PersonServiceTest {
     }
 
     @Test
-    @Ignore
     public void getPeople_friends() throws ExecutionException, InterruptedException {
         Set<UserId> ids = getUserIdSet();
         GroupId groupId = new GroupId(GroupId.Type.friends, GROUP_ID);
         replay(token);
+
+        Long id2 = Long.parseLong(ID_2);
+        Long id3 = Long.parseLong(ID_3);
+        expect(repository.get(id2)).andReturn(getDbPerson(id2));
+        expect(repository.get(id3)).andReturn(getDbPerson(id3));
 
         expect(repository.findFriends(ID_2)).andReturn(getDbPersonList());
         expect(repository.findFriends(ID_3)).andReturn(getDbPersonList());
@@ -267,6 +271,11 @@ public class PersonServiceTest {
         options.setFilterOperation(FilterOperation.contains);
         options.setFilterValue(value);
 
+        Long id2 = Long.parseLong(ID_2);
+        Long id3 = Long.parseLong(ID_3);
+        expect(repository.get(id2)).andReturn(getDbPerson(id2));
+        expect(repository.get(id3)).andReturn(getDbPerson(id3));
+
         expect(repository.findAllConnectedPeople(ID_2, field, FilterOperation.contains, value)).andReturn(getDbPersonList());
         expect(repository.findAllConnectedPeople(ID_3, field, FilterOperation.contains, value)).andReturn(getDbPersonList());
         replay(repository);
@@ -288,6 +297,10 @@ public class PersonServiceTest {
         options.setFilter(field);
         options.setFilterOperation(FilterOperation.contains);
         options.setFilterValue(value);
+        Long id2 = Long.parseLong(ID_2);
+        Long id3 = Long.parseLong(ID_3);
+        expect(repository.get(id2)).andReturn(getDbPerson(id2));
+        expect(repository.get(id3)).andReturn(getDbPerson(id3));
 
         expect(repository.findFriends(ID_2, field, FilterOperation.contains, value)).andReturn(getDbPersonList());
         expect(repository.findFriends(ID_3, field, FilterOperation.contains, value)).andReturn(getDbPersonList());
@@ -310,6 +323,10 @@ public class PersonServiceTest {
         options.setFilter(field);
         options.setFilterOperation(FilterOperation.contains);
         options.setFilterValue(value);
+        Long id2 = Long.parseLong(ID_2);
+        Long id3 = Long.parseLong(ID_3);
+        expect(repository.get(id2)).andReturn(getDbPerson(id2));
+        expect(repository.get(id3)).andReturn(getDbPerson(id3));
 
         expect(repository.findFriends(ID_2)).andReturn(getDbPersonList());
         expect(repository.findFriends(ID_3)).andReturn(getDbPersonList());
@@ -332,6 +349,11 @@ public class PersonServiceTest {
         String field = PersonService.HAS_APP_FILTER;
         options.setFilter(field);
 
+        Long id2 = Long.parseLong(ID_2);
+        Long id3 = Long.parseLong(ID_3);
+        expect(repository.get(id2)).andReturn(getDbPerson(id2));
+        expect(repository.get(id3)).andReturn(getDbPerson(id3));
+
         expect(repository.findFriends(ID_2, appId)).andReturn(getDbPersonList());
         expect(repository.findFriends(ID_3, appId)).andReturn(getDbPersonList());
         replay(repository);
@@ -352,6 +374,11 @@ public class PersonServiceTest {
         CollectionOptions options = new CollectionOptions();
         String field = PersonService.HAS_APP_FILTER;
         options.setFilter(field);
+
+        Long id2 = Long.parseLong(ID_2);
+        Long id3 = Long.parseLong(ID_3);
+        expect(repository.get(id2)).andReturn(getDbPerson(id2));
+        expect(repository.get(id3)).andReturn(getDbPerson(id3));
 
         expect(repository.findAllConnectedPeople(ID_2, appId)).andReturn(getDbPersonList());
         expect(repository.findAllConnectedPeople(ID_3, appId)).andReturn(getDbPersonList());
@@ -395,6 +422,11 @@ public class PersonServiceTest {
         options.setFilter(field);
         options.setFilterValue(ID_1);
 
+        Long id2 = Long.parseLong(ID_2);
+        Long id3 = Long.parseLong(ID_3);
+        expect(repository.get(id2)).andReturn(getDbPerson(id2));
+        expect(repository.get(id3)).andReturn(getDbPerson(id3));
+
         expect(repository.findFriendsWithFriend(ID_2, ID_1)).andReturn(getDbPersonList());
         expect(repository.findFriendsWithFriend(ID_3, ID_1)).andReturn(getDbPersonList());
         replay(repository);
@@ -416,6 +448,11 @@ public class PersonServiceTest {
         String field = PersonService.IS_WITH_FRIENDS_FILTER;
         options.setFilter(field);
         options.setFilterValue(ID_1);
+
+        Long id2 = Long.parseLong(ID_2);
+        Long id3 = Long.parseLong(ID_3);
+        expect(repository.get(id2)).andReturn(getDbPerson(id2));
+        expect(repository.get(id3)).andReturn(getDbPerson(id3));
 
         expect(repository.findAllConnectedPeopleWithFriend(ID_2, ID_1)).andReturn(getDbPersonList());
         expect(repository.findAllConnectedPeopleWithFriend(ID_3, ID_1)).andReturn(getDbPersonList());
@@ -473,6 +510,14 @@ public class PersonServiceTest {
         org.apache.rave.portal.model.Person dbPerson = new org.apache.rave.portal.model.Person();
         dbPerson.setEntityId(Long.parseLong(ID_1));
         dbPerson.setUsername(ID_1);
+        dbPerson.setDisplayName(DISPLAY_NAME);
+        return dbPerson;
+    }
+
+    private org.apache.rave.portal.model.Person getDbPerson(Long id) {
+        org.apache.rave.portal.model.Person dbPerson = new org.apache.rave.portal.model.Person();
+        dbPerson.setEntityId(id);
+        dbPerson.setUsername(id.toString());
         dbPerson.setDisplayName(DISPLAY_NAME);
         return dbPerson;
     }

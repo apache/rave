@@ -101,7 +101,8 @@ public class DefaultPersonService implements PersonService, SimplePersonService 
 
         List<org.apache.rave.portal.model.Person> people = new ArrayList<org.apache.rave.portal.model.Person>();
         for (UserId id : userIds) {
-            CollectionUtils.addUniqueValues(getFriendsFromRepository(collectionOptions, token.getAppId(), id.getUserId(token)), people);
+            org.apache.rave.portal.model.Person person = this.getPersonForId(id, token);
+            CollectionUtils.addUniqueValues(getFriendsFromRepository(collectionOptions, token.getAppId(), person.getUsername()), people);
         }
         return people;
     }
@@ -112,7 +113,8 @@ public class DefaultPersonService implements PersonService, SimplePersonService 
 
         List<org.apache.rave.portal.model.Person> people = new ArrayList<org.apache.rave.portal.model.Person>();
         for (UserId id : userIds) {
-            CollectionUtils.addUniqueValues(getConnectedPeopleFromRepository(collectionOptions, token.getAppId(), id.getUserId(token)), people);
+        	 org.apache.rave.portal.model.Person person = this.getPersonForId(id, token);
+            CollectionUtils.addUniqueValues(getConnectedPeopleFromRepository(collectionOptions, token.getAppId(), person.getUsername()), people);
         }
         return people;
     }
