@@ -47,7 +47,7 @@
 
     <dependencies>
 
-    	<dependency>
+        <dependency>
             <groupId>org.apache.wookie</groupId>
             <artifactId>wookie</artifactId>
             <type>war</type>
@@ -70,11 +70,11 @@
             <type>war</type>
             <scope>provided</scope>
         </dependency>
-         <dependency>
+        <dependency>
             <groupId>org.apache.rave</groupId>
             <artifactId>rave-demo-gadgets</artifactId>
             <type>war</type>
-   	    <scope>provided</scope>
+            <scope>provided</scope>
         </dependency>
 
         <!-- Default database -->
@@ -83,7 +83,7 @@
             <artifactId>h2</artifactId>
         </dependency>
 
-        <!-- log4j logging -->        
+        <!-- log4j logging -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
@@ -168,7 +168,7 @@
                                 <groupId>org.apache.rave</groupId>
                                 <artifactId>rave-demo-gadgets</artifactId>
                                 <type>war</type>
-                                <!-- I tried giving this name gagdets and it did not work. -->
+                                <!-- /gadgets is already taken in Shindig which runs on the ROOT context (/) -->
                                 <properties>
                                     <context>/demogadgets</context>
                                 </properties>
