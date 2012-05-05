@@ -217,14 +217,6 @@
                         </goals>
                         <inherited>false</inherited>
                     </execution>
-                    <execution>
-                        <id>stop-container</id>
-                        <phase>post-integration-test</phase>
-                        <goals>
-                            <goal>stop</goal>
-                        </goals>
-                        <inherited>false</inherited>
-                    </execution>
                 </executions>
                 <configuration>
                     <configuration>
