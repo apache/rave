@@ -69,7 +69,7 @@
             <phase>integration-test</phase>
             <configuration>
               <includes>
-                <include>**/*Stories*</include>
+                <include>**/*Stories.java</include>
               </includes>
               <excludes/>
               <generateViewAfterStories>true</generateViewAfterStories>
