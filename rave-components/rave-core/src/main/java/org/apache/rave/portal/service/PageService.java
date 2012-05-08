@@ -20,7 +20,6 @@ package org.apache.rave.portal.service;
 
 import org.apache.rave.portal.model.*;
 import org.springframework.security.access.prepost.PostAuthorize;
-import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
@@ -35,7 +34,7 @@ public interface PageService {
      * @param pageId to lookup
      * @return the Page object 
      */
-    @PostAuthorize("hasPermission(returnObject, 'read')")    
+    @PostAuthorize("hasPermission(returnObject, 'read')")
     Page getPage(long pageId);
     
     /**
@@ -203,4 +202,31 @@ public interface PageService {
      */
     @PreAuthorize("hasPermission(#pageId, 'org.apache.rave.portal.model.Page', 'update')") 
     Page movePageToDefault(long pageId);
+
+    /**
+     * Add another user to share this page with
+     * @param pageId - the id of the page in question
+     * @param userId - the userid to add
+     * @return true or false whether the user was added
+     */
+    @PreAuthorize("hasPermission(#pageId, 'org.apache.rave.portal.model.Page', 'update')")
+    Boolean addMemberToPage(long pageId, long userId);
+    
+    /**
+     * Remove an existing user from the page share
+     * @param pageId - the id of the page in question
+     * @param userId - the userid to add
+     * @return -  whether the user was successfully removed or not
+     */
+    @PreAuthorize("hasPermission(#pageId, 'org.apache.rave.portal.model.Page', 'update')")
+    Boolean removeMemberFromPage(long pageId, long userId);
+
+    /**
+     * Allows a user to accept or decline a page share
+     * @param pageId - the id of the page in question
+     * @param shareStatus - a string value defined in PageStatus
+     * @return
+     */
+    @PreAuthorize("hasPermission(#pageId, 'org.apache.rave.portal.model.Page', 'update')")
+    Boolean updateSharedPageStatus(long pageId, String shareStatus);
 }

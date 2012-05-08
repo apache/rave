@@ -46,15 +46,13 @@ import java.util.List;
 @XmlAccessorType(XmlAccessType.NONE)
 @Table(name="page", uniqueConstraints={@UniqueConstraint(columnNames={"owner_id","name","page_type"})})
 @NamedQueries({
-        @NamedQuery(name = Page.GET_BY_USER_ID_AND_PAGE_TYPE, query="SELECT p FROM Page p WHERE p.owner.entityId = :userId and p.pageType = :pageType ORDER BY p.renderSequence"),
         @NamedQuery(name = Page.DELETE_BY_USER_ID_AND_PAGE_TYPE, query="DELETE FROM Page p WHERE p.owner.entityId = :userId and p.pageType = :pageType"),
         @NamedQuery(name = Page.USER_HAS_PERSON_PAGE, query="SELECT count(p) FROM Page p WHERE p.owner.entityId = :userId and p.pageType = :pageType")
 })
 @Access(AccessType.FIELD)
 public class Page implements BasicEntity, Serializable {
     private static final long serialVersionUID = 1L;
-    
-    public static final String GET_BY_USER_ID_AND_PAGE_TYPE = "Page.getByUserIdAndPageType";
+
     public static final String DELETE_BY_USER_ID_AND_PAGE_TYPE = "Page.deleteByUserIdAndPageType";
     public static final String USER_HAS_PERSON_PAGE = "Page.hasPersonPage";
 
@@ -78,11 +76,7 @@ public class Page implements BasicEntity, Serializable {
     private Page parentPage;
 
     @OneToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL, mappedBy="parentPage")
-    @OrderBy("renderSequence")
     private List<Page> subPages;
-
-    @Basic(optional=false) @Column(name="render_sequence")
-    private Long renderSequence;
 
     @ManyToOne
     @JoinColumn(name="page_layout_id")
@@ -98,6 +92,21 @@ public class Page implements BasicEntity, Serializable {
     @Column(name = "page_type")
     @Enumerated(EnumType.STRING)
     private PageType pageType;
+    
+    @OneToMany(targetEntity=PageUser.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy="page", orphanRemoval=true)
+    private List<PageUser> members;
+
+    @JsonManagedReference
+    public List<PageUser> getMembers() {
+        return members;
+    }
+
+    /**
+     * @param members the members to set
+     */
+    public void setMembers(List<PageUser> members) {
+       this.members = members;
+    }
 
     public Page() {
     }
@@ -150,20 +159,6 @@ public class Page implements BasicEntity, Serializable {
 
     public void setOwner(User owner) {
         this.owner = owner;
-    }
-
-    /**
-     * Gets the order of the page instance relative to all pages for the owner (useful when presenting pages in an
-     * ordered layout like tabs or an accordion container)
-     *
-     * @return Valid, unique render sequence
-     */
-    public Long getRenderSequence() {
-        return renderSequence;
-    }
-
-    public void setRenderSequence(Long renderSequence) {
-        this.renderSequence = renderSequence;
     }
 
     /**
@@ -241,6 +236,6 @@ public class Page implements BasicEntity, Serializable {
 
     @Override
     public String toString() {
-        return "Page{" + "entityId=" + entityId + ", name=" + name + ", owner=" + owner + ", renderSequence=" + renderSequence + ", pageLayout=" + pageLayout + ", pageType=" + pageType + "}";
+        return "Page{" + "entityId=" + entityId + ", name=" + name + ", owner=" + owner + ", pageLayout=" + pageLayout + ", pageType=" + pageType + "}";
     }
 }

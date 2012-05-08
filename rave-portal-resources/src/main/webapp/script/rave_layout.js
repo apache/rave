@@ -33,6 +33,8 @@ rave.layout = rave.layout || (function() {
         var $menuItemEdit = $("#pageMenuEdit");
         var $menuItemDelete = $("#pageMenuDelete");
         var $menuItemMove = $("#pageMenuMove");
+        var $menuItemShare = $("#pageMenuShare");
+        var $menuItemRevokeShare = $("#pageMenuRevokeShare");
 
         /**
          * Initializes the private pageMenu closure
@@ -102,10 +104,311 @@ rave.layout = rave.layout || (function() {
                     $movePageDialog.modal('show');
                 });
             }
+
+            // setup the share page menu item
+            if (!$menuItemShare.hasClass("menu-item-disabled")) {  
+                $menuItemShare.bind('click', function(event) {
+                    rave.api.rpc.getUsers({offset: 0,
+                        successCallback: function(result) {
+                            rave.layout.searchHandler.dealWithUserResults(result);
+                            $("#sharePageDialog").modal('show');
+                        }
+                    });
+                });
+            }
+
+            // setup the revoke share page menu item
+            if (!$menuItemRevokeShare.hasClass("menu-item-disabled")) {  
+                $menuItemRevokeShare.bind('click', function(event) {
+                    rave.layout.searchHandler.removeMemberFromPage(rave.layout.searchHandler.userId, 
+                        rave.layout.searchHandler.username);
+                });
+            }
         }
 
         return {
             init: init
+        }
+    })();
+
+    // functions associated with the user search for sharing pages
+    var searchHandler = (function() {
+        var username;
+        var userId;
+        var pageId;
+        var existingSharers = new Array();
+
+        function setDefaults(username, userId, pageId, pageStatus){
+            this.username = username;
+            this.userId = userId;
+            this.pageId = pageId;
+            if(pageStatus == "PENDING"){
+                confirmPageShare();
+            };
+        }
+
+        function addExistingMember(member){
+            existingSharers.push(member);
+        }
+
+        function removeExistingMember(member){
+            existingSharers.splice( $.inArray(member, existingSharers), 1 );
+        }
+
+        function isUserAlreadyAdded(username){
+            if($.inArray(username, existingSharers) == -1){
+                return false;
+            }
+            else{
+                return true;
+            }
+        }
+
+        function removeMemberFromPage(userId, username){
+            var answer;
+            if(userId == rave.layout.searchHandler.userId){
+                answer = confirm(rave.getClientMessage("revoke.share.current.user.confirm"));
+            }else{
+                answer = confirm(rave.getClientMessage("revoke.share.confirm") + " ("+username+")");
+            }
+            if(answer){
+                $('#shareButtonHolder'+userId).hide();
+                rave.api.rpc.removeMemberFromPage({pageId: this.pageId, userId: userId,
+                    successCallback: function(result) {
+                        rave.layout.searchHandler.removeExistingMember(username);
+                        $('#shareButtonHolder'+userId).empty();
+                        $('#shareButtonHolder'+userId)
+                            .append(
+                                $("<a/>")
+                                    .attr("href", "#")
+                                    .attr("id", userId)
+                                    .attr("onclick", "rave.layout.searchHandler.addMemberToPage("+userId+", '"+username+"');")
+                                    .text(rave.getClientMessage("common.add"))
+                            )
+                            $('#shareButtonHolder'+userId).show();
+                            if(userId == rave.layout.searchHandler.userId){
+                                alert(rave.getClientMessage("revoke.share.current.user"));
+                                // reload as page has been removed
+                                document.location.href='/';
+                            }else{
+                            	alert("(" + username + ") " + rave.getClientMessage("revoke.share"));
+                            }
+                    }
+                });
+            }
+        }
+
+        function addMemberToPage(userId, username){
+            var answer = confirm(rave.getClientMessage("create.share.confirm") + " ("+username+")");
+            if(answer){
+                $('#shareButtonHolder'+userId).hide();
+                rave.api.rpc.addMemberToPage({pageId: this.pageId, userId: userId,
+                    successCallback: function(result) {
+                        rave.layout.searchHandler.addExistingMember(username);
+                        $('#shareButtonHolder'+userId).empty();
+                        $('#shareButtonHolder'+userId)
+                            .append(
+                                    $("<a/>")
+                                    .attr("href", "#")
+                                    .attr("id", userId)
+                                    .attr("onclick", "rave.layout.searchHandler.removeMemberFromPage(" + 
+                                        userId+", '" + username+"');")
+                                    .text(rave.getClientMessage("common.remove"))
+                            )
+                            $('#shareButtonHolder'+userId).show();
+                        alert("(" + username + ") " + rave.getClientMessage("create.share"));
+                    }
+                });
+            }
+        }
+        
+        function acceptShare(){
+        	$('#confirmSharePageDialog').modal('hide');
+            rave.api.rpc.updateSharedPageStatus({pageId: rave.layout.searchHandler.pageId, shareStatus: 'accepted',
+                successCallback: function(result) {
+                    //notification here?
+                }
+            });
+        }
+
+        function declineShare(){
+        	$('#confirmSharePageDialog').modal('hide');
+            rave.api.rpc.updateSharedPageStatus({pageId: rave.layout.searchHandler.pageId, shareStatus: 'refused',
+                successCallback: function(result) {
+                    document.location.href='/';
+                }
+            });
+        }
+
+        function confirmPageShare(){
+        	$("#confirmSharePageDialog").modal('show');
+        }
+
+        function init() {
+            // user clicks "search" in the find users dialog
+            $("#shareSearchButton").click(function() {
+                $('#shareSearchResults').empty();
+                rave.api.rpc.searchUsers({searchTerm: $('#searchTerm').get(0).value, offset: 0,
+                    successCallback: function(result) {
+                        rave.layout.searchHandler.dealWithUserResults(result);
+                    }
+                });
+            }); 
+            
+            // user clicks "clear search" in the find users dialog
+            $("#clearSearchButton").click(function() {
+                $('#searchTerm').get(0).value = "";
+                $('#shareSearchResults').empty();
+                rave.api.rpc.getUsers({offset: 0,
+                    successCallback: function(result) {
+                        rave.layout.searchHandler.dealWithUserResults(result);
+                    }
+                });
+            }); 
+        }//end of init()
+        
+        function updateParamsInString(i18nStr, itemsToReplace){
+            for(var i=0;i<itemsToReplace.length;i++){
+                var token = '{'+i+'}';
+                i18nStr = i18nStr.replace(token, itemsToReplace[i]);
+            }
+            return i18nStr;
+        }
+
+        function paginate(userResults){
+            var $pagingDiv = $('#shareSearchListPaging');
+            $pagingDiv.empty();
+            if(userResults.result.pageSize < userResults.result.totalResults){
+                $pagingDiv.append('<ul id="pagingul" class="paging" style="margin-left: 0;">');
+                if(userResults.result.currentPage > 1){
+                    offset = (userResults.result.currentPage - 2) * userResults.result.pageSize;
+                    $('#pagingul').append('<li><a href="#" onclick="rave.api.rpc.getUsers({offset: ' + 
+                        offset+', successCallback: function(result)' + 
+                            ' {rave.layout.searchHandler.dealWithUserResults(result);}});">&lt;</a></li>');
+                }
+                for(var i=1;i<=userResults.result.numberOfPages;i++){
+                    if(i == userResults.result.currentPage){
+                        $('#pagingul').append('<li><span class="currentPage">'+i+'</span></li>');
+                    }else{
+                        offset = (i - 1) * userResults.result.pageSize;
+                        $('#pagingul').append('<li><a href="#" onclick="rave.api.rpc.getUsers({offset: ' + 
+                            offset + ', successCallback: function(result)' + 
+                                ' {rave.layout.searchHandler.dealWithUserResults(result);}});">' + i + '</a></li>');
+                    }
+                }
+                if (userResults.result.currentPage < userResults.result.numberOfPages){
+                    offset = (userResults.result.currentPage) * userResults.result.pageSize;
+                    $('#pagingul').append('<li><a href="#" onclick="rave.api.rpc.getUsers({offset: ' + 
+                        offset + ', successCallback: function(result)' + 
+                            ' {rave.layout.searchHandler.dealWithUserResults(result);}});">&gt;</a></li>');
+                }
+            }
+        }
+
+        function dealWithUserResults(userResults){
+            var searchTerm = $('#searchTerm').get(0).value;
+            if(searchTerm == undefined || searchTerm == ""){
+                $('#clearSearchButton').hide();
+            }else{
+                $('#clearSearchButton').show();
+            }
+            var legend;
+            if(userResults.result.resultSet.length < 1){
+                legend = rave.getClientMessage("no.results.found");
+            }else{
+                legend = updateParamsInString(rave.getClientMessage("search.list.result.x.to.y"), 
+                    new Array(userResults.result.offset + 1, userResults.result.resultSet.length 
+                        + userResults.result.offset, userResults.result.totalResults));
+            }
+            // show the listheader
+            $('#shareSearchListHeader').text(legend);
+            var $targetDiv = $('#shareSearchResults');
+            $targetDiv.empty();
+            // show the paginator
+            paginate(userResults);
+            //now build the content
+            $targetDiv
+                .append(
+                    $("<table/>")
+                        .addClass("searchdialogcontent")
+                            .append(
+                                $("<tr/>")
+                                    .append(
+                                        $("<td/>")
+                                        .addClass("textcell")
+                                        .append(
+                                            $("<b/>")
+                                            .text(rave.getClientMessage("common.username"))
+                                        )
+                                    )
+                                    .append(
+                                        $("<td/>")
+                                        .addClass("booleancell")
+                                        .append(
+                                            $("<b/>")
+                                            .text(rave.getClientMessage("common.sharing"))
+                                        )
+                                    )
+                                )
+                        .append(
+                            $("<tbody/>")
+                            .attr("id", "searchResultsBody")
+                        )
+                )
+
+                jQuery.each(userResults.result.resultSet, function() {
+                    $('#searchResultsBody')
+                    .append(
+                        $("<tr/>")
+                        .attr("id", "searchResultRecord")
+                        .append(
+                            $("<td/>")
+                            .text(this.username)
+                        )
+                        .append(
+                            $("<td/>")
+                            .attr("id", "shareButtonHolder" + this.entityId)
+                        )
+                    )
+
+                    if(this.username != rave.layout.searchHandler.username){
+                        // check if already added 
+                        if(rave.layout.searchHandler.isUserAlreadyAdded(this.username)){
+                            $('#shareButtonHolder'+this.entityId)
+                            .append(
+                                $("<a/>")
+                                .attr("href", "#")
+                                .attr("id", this.entityId)
+                                .attr("onclick", "rave.layout.searchHandler.removeMemberFromPage("+this.entityId+", '"+this.username+"');")
+                                .text(rave.getClientMessage("common.remove"))
+                            )
+                        }else{
+                            $('#shareButtonHolder'+this.entityId)
+                            .append(
+                                $("<a/>")
+                                .attr("href", "#")
+                                .attr("id", this.entityId)
+                                .attr("onclick", "rave.layout.searchHandler.addMemberToPage("+this.entityId+", '"+this.username+"');")
+                                .text(rave.getClientMessage("common.add"))
+                                )
+                        } 
+                    }
+                 
+        	})//end jqueryeach 
+        }//end dealwithresults
+
+        return {
+            init: init,
+            dealWithUserResults : dealWithUserResults,
+            setDefaults : setDefaults,
+            addExistingMember : addExistingMember,
+            removeExistingMember : removeExistingMember,
+            isUserAlreadyAdded : isUserAlreadyAdded,
+            addMemberToPage : addMemberToPage,
+            removeMemberFromPage : removeMemberFromPage,
+            confirmPageShare : confirmPageShare,
+            acceptShare : acceptShare,
+            declineShare : declineShare
         }
     })();
 
@@ -351,6 +654,7 @@ rave.layout = rave.layout || (function() {
     function init() {
         pageMenu.init();
         widgetMenu.init();
+        searchHandler.init();
         // initialize the bootstrap dropdowns
         $(".dropdown-toggle").dropdown();
     }
@@ -366,6 +670,7 @@ rave.layout = rave.layout || (function() {
         updatePage: updatePage,
         movePage: movePage,
         closePageDialog: closePageDialog,
-        moveWidgetToPage: moveWidgetToPage
+        moveWidgetToPage: moveWidgetToPage,
+        searchHandler : searchHandler
     };
 })();

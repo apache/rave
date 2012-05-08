@@ -21,6 +21,7 @@ package org.apache.rave.portal.repository.impl;
 import org.apache.rave.portal.model.Page;
 import org.apache.rave.portal.model.PageTemplate;
 import org.apache.rave.portal.model.PageType;
+import org.apache.rave.portal.model.PageUser;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.repository.PageRepository;
 import org.apache.rave.portal.repository.PageTemplateRepository;
@@ -62,7 +63,7 @@ public class JpaPageRepositoryTest {
 
     @Autowired
     private PageRepository repository;
-    
+
     @Autowired
     private UserRepository userRepository;
 
@@ -87,9 +88,10 @@ public class JpaPageRepositoryTest {
         assertThat(pages.get(0).getRegions().get(0).getRegionWidgets().size(), equalTo(2));
         assertThat(pages.get(0).getRegions().get(0).getRegionWidgets().get(0).getWidget().getUrl(), equalTo(WIDGET_URL));
         
+        List<PageUser> pageUserPages = repository.getPagesForUser(USER_ID, PageType.USER);
         // test that the query returns the pages in proper render sequence order
         Long lastRenderSequence = -1L;
-        for (Page p : pages) {
+        for (PageUser p : pageUserPages) {
             Long currentRenderSequence = p.getRenderSequence();
             assertThat(currentRenderSequence > lastRenderSequence, is(true));
             lastRenderSequence = currentRenderSequence;
@@ -103,9 +105,10 @@ public class JpaPageRepositoryTest {
         assertThat(pages.size(), is(1));
         assertThat(pages.get(0).getRegions().size(), is(1));
 
+        List<PageUser> pageUserPages = repository.getPagesForUser(USER_ID, PageType.PERSON_PROFILE);
         // test that the query returns the pages in proper render sequence order
         Long lastRenderSequence = -1L;
-        for (Page p : pages) {
+        for (PageUser p : pageUserPages) {
             Long currentRenderSequence = p.getRenderSequence();
             assertThat(currentRenderSequence > lastRenderSequence, is(true));
             lastRenderSequence = currentRenderSequence;
@@ -120,9 +123,10 @@ public class JpaPageRepositoryTest {
         assertThat(pages.get(0).getRegions().size(), is(1));
         assertThat(pages.get(0).getParentPage().getEntityId(), is(3L));
 
+        List<PageUser> pageUserPages = repository.getPagesForUser(USER_ID, PageType.SUB_PAGE);
         // test that the query returns the pages in proper render sequence order
         Long lastRenderSequence = -1L;
-        for (Page p : pages) {
+        for (PageUser p : pageUserPages) {
             Long currentRenderSequence = p.getRenderSequence();
             assertThat(currentRenderSequence > lastRenderSequence, is(true));
             lastRenderSequence = currentRenderSequence;
@@ -167,8 +171,10 @@ public class JpaPageRepositoryTest {
 
         // verify that the sub pages are in proper order
         Long lastRenderSequence = -1L;
+        PageUser pageUser;
         for (Page subPage : p.getSubPages()) {
-            Long currentRenderSequence = subPage.getRenderSequence();
+            pageUser = repository.getSingleRecord(p.getOwner().getEntityId(), subPage.getEntityId());
+            Long currentRenderSequence =  pageUser.getRenderSequence();
             assertThat(currentRenderSequence > lastRenderSequence, is(true));
             lastRenderSequence = currentRenderSequence;
         }
@@ -212,7 +218,6 @@ public class JpaPageRepositoryTest {
         assertEquals(page.getName(), defaultPageTemplate.getName());
         assertNull(page.getParentPage());
         assertEquals(2, page.getSubPages().size());
-        assertNotNull(page.getRenderSequence());
         assertNotNull(page.getPageLayout());
         assertEquals("person_profile", page.getPageLayout().getCode());
         assertEquals(1, page.getRegions().size());
@@ -237,8 +242,6 @@ public class JpaPageRepositoryTest {
         assertEquals(defaultPageTemplate.getSubPageTemplates().get(1).getName(), subPage2.getName());
         assertSame(user, subPage1.getOwner());
         assertSame(user, subPage2.getOwner());
-        assertNotNull(subPage1.getRenderSequence());
-        assertNotNull(subPage2.getRenderSequence());
     }
     
     @Test

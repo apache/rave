@@ -1068,3 +1068,29 @@ span.error, label.error {
         padding: 1em 5px;
     }
 }
+
+.nav > li > a.rave-ui-tab-shared-to-me:hover{
+    background-color: #E8FFE8;
+}
+
+.nav > li > a.rave-ui-tab-shared-by-me:hover{
+    background-color: #E8F8FF;
+}
+
+#pageMenuSharedIcon {
+    position: relative;
+    display: inline-block;
+    vertical-align: top;
+    /* IE 7 hacks for inline-block */
+    zoom: 1;
+    *display: inline;
+    clear:right;
+    margin-right: 2px;
+}
+
+.searchdialogcontent {
+    font-size: 12px !important;
+    margin:0 0 !important; 
+    width: 100% !important;
+    padding:0 0 !important;
+}

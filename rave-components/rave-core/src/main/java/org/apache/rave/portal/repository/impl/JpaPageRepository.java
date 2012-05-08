@@ -37,7 +37,7 @@ public class JpaPageRepository extends AbstractJpaRepository<Page> implements Pa
 
     @Override
     public List<Page> getAllPages(Long userId, PageType pageType) {
-        TypedQuery<Page> query = manager.createNamedQuery(Page.GET_BY_USER_ID_AND_PAGE_TYPE, Page.class);
+        TypedQuery<Page> query = manager.createNamedQuery(PageUser.GET_BY_USER_ID_AND_PAGE_TYPE, Page.class);
         query.setParameter("userId", userId);
         query.setParameter("pageType", pageType);
         return query.getResultList();
@@ -50,7 +50,7 @@ public class JpaPageRepository extends AbstractJpaRepository<Page> implements Pa
         query.setParameter("pageType", pageType);
         return query.executeUpdate();
     }
-    
+
     @Override
     public boolean hasPersonPage(long userId){
         TypedQuery<Long> query = manager.createNamedQuery(Page.USER_HAS_PERSON_PAGE, Long.class);
@@ -60,9 +60,25 @@ public class JpaPageRepository extends AbstractJpaRepository<Page> implements Pa
     }
 
     @Override
+    public List<PageUser> getPagesForUser(Long userId, PageType pageType) {
+        TypedQuery<PageUser> query = manager.createNamedQuery(PageUser.GET_PAGES_FOR_USER, PageUser.class);
+        query.setParameter("userId", userId);
+        query.setParameter("pageType", pageType);
+        return query.getResultList();
+    }
+
+    @Override
+    public PageUser getSingleRecord(Long userId, Long pageId){
+        TypedQuery<PageUser> query = manager.createNamedQuery(PageUser.GET_SINGLE_RECORD, PageUser.class);
+        query.setParameter("userId", userId);
+        query.setParameter("pageId", pageId);
+        return query.getSingleResult();
+    }
+
+    @Override
     public Page createPageForUser(User user, PageTemplate pt) {
         Page personPageFromTemplate = convert(pt, user);
-        return save(personPageFromTemplate);
+        return personPageFromTemplate;
     }
 
     /**
@@ -77,10 +93,16 @@ public class JpaPageRepository extends AbstractJpaRepository<Page> implements Pa
         p.setName(pt.getName());
         p.setPageType(pt.getPageType());
         p.setOwner(user);
-        p.setRenderSequence(pt.getRenderSequence());
+        PageUser pageUser = new PageUser(p.getOwner(), p, pt.getRenderSequence());
+        pageUser.setPageStatus(PageInvitationStatus.OWNER);
+        List<PageUser> members = new ArrayList<PageUser>();
+        members.add(pageUser);
+        p.setMembers(members);
+
         p.setPageLayout(pt.getPageLayout());
         p.setRegions(convertRegions(pt.getPageTemplateRegions(), p));
         p.setSubPages(convertPages(pt.getSubPageTemplates(), p));
+        p = save(p);
         return p;
     }
 
@@ -137,18 +159,26 @@ public class JpaPageRepository extends AbstractJpaRepository<Page> implements Pa
     private List<Page> convertPages(List<PageTemplate> pageTemplates, Page page){
         List<Page> pages = new ArrayList<Page>();
         for(PageTemplate pt : pageTemplates){
-            Page p = new Page();
-            p.setName(pt.getName());
-            p.setPageType(pt.getPageType());
-            p.setOwner(page.getOwner());
-            p.setPageLayout(pt.getPageLayout());
-            p.setParentPage(page);
-            p.setRenderSequence(pt.getRenderSequence());
-            p.setRegions(convertRegions(pt.getPageTemplateRegions(), p));
+            Page lPage = new Page();
+            lPage.setName(pt.getName());
+            lPage.setPageType(pt.getPageType());
+            lPage.setOwner(page.getOwner());
+            lPage.setPageLayout(pt.getPageLayout());
+            lPage.setParentPage(page);
+            lPage.setRegions(convertRegions(pt.getPageTemplateRegions(), lPage));
+            
+            // create new pageUser tuple
+            PageUser pageUser = new PageUser(lPage.getOwner(), lPage, pt.getRenderSequence());
+            pageUser.setPageStatus(PageInvitationStatus.OWNER);
+            List<PageUser> members = new ArrayList<PageUser>();
+            members.add(pageUser);
+            lPage.setMembers(members);
             // recursive call
-            p.setSubPages((pt.getSubPageTemplates() == null || pt.getSubPageTemplates().isEmpty()) ? null : convertPages(pt.getSubPageTemplates(), p));
-            pages.add(p);
+            lPage.setSubPages((pt.getSubPageTemplates() == null || pt.getSubPageTemplates().isEmpty()) ? null : convertPages(pt.getSubPageTemplates(), lPage));
+            lPage = save(lPage);
+            pages.add(lPage);
         }
         return pages;
     }
+
 }

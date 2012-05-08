@@ -216,4 +216,37 @@ public class PageApi {
             }
         }.getResult();
     }
+
+    @ResponseBody
+    @RequestMapping(value = "{pageId}/addmember", method = RequestMethod.POST)
+    public RpcResult<Boolean> addMemberToPage(@PathVariable final long pageId, @RequestParam final long userId) {
+        return new RpcOperation<Boolean>() {
+             @Override
+             public Boolean execute() {
+               return pageService.addMemberToPage(pageId, userId);
+             }
+        }.getResult();
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "{pageId}/removemember", method = RequestMethod.POST)
+    public RpcResult<Boolean> removeMemberFromPage(@PathVariable final long pageId, @RequestParam final long userId) {
+        return new RpcOperation<Boolean>() {
+             @Override
+             public Boolean execute() {
+               return pageService.removeMemberFromPage(pageId, userId);
+             }
+        }.getResult();
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "{pageId}/sharestatus", method = RequestMethod.POST)
+    public RpcResult<Boolean> updateSharedPageStatus(@PathVariable final long pageId, @RequestParam final String shareStatus) {
+        return new RpcOperation<Boolean>() {
+             @Override
+             public Boolean execute() {
+               return pageService.updateSharedPageStatus(pageId, shareStatus);
+             }
+        }.getResult();
+    }
 }

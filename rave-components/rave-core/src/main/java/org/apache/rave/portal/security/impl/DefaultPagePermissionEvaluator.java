@@ -20,6 +20,7 @@ package org.apache.rave.portal.security.impl;
 
 import org.apache.rave.portal.model.Page;
 import org.apache.rave.portal.model.PageType;
+import org.apache.rave.portal.model.PageUser;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.repository.PageRepository;
 import org.slf4j.Logger;
@@ -116,7 +117,8 @@ public class DefaultPagePermissionEvaluator extends AbstractModelPermissionEvalu
             case DELETE:            
             case UPDATE:
                 // anyone can create, delete, or update a page that they own                  
-                hasPermission = isPageOwner(authentication, page, trustedPageContainer, trustedDomainObject);     
+                hasPermission = isPageOwner(authentication, page, trustedPageContainer, trustedDomainObject)
+                || isPageMember(authentication, page, trustedPageContainer, trustedDomainObject);     
                 break;
             case READ:
                 // anyone can read a USER page they own or anyone's PERSON_PROFILE page
@@ -184,7 +186,8 @@ public class DefaultPagePermissionEvaluator extends AbstractModelPermissionEvalu
     // anyone can read a User page they own or anyone's Person Profile page and sub-pages
     private boolean isReadablePage(Authentication authentication, Page page, List<Page> trustedPageContainer, boolean trustedDomainObject) {
         return isPersonProfilePageOrSubPage(page) ||
-               isPageOwner(authentication, page, trustedPageContainer, trustedDomainObject);
+               isPageOwner(authentication, page, trustedPageContainer, trustedDomainObject) ||
+               isPageMember(authentication, page, trustedPageContainer, trustedDomainObject);
     }
     
     private boolean isPersonProfilePageOrSubPage(Page page) {
@@ -192,4 +195,35 @@ public class DefaultPagePermissionEvaluator extends AbstractModelPermissionEvalu
         PageType parentPageType = (page.getParentPage() == null) ? null : page.getParentPage().getPageType();
         return PageType.PERSON_PROFILE.equals(pageType) || PageType.PERSON_PROFILE.equals(parentPageType);
     }  
+    
+    // checks to see if the Authentication object principal is a member of the supplied page object 
+    // if trustedDomainObject is false, pull the entity from the database first to ensure
+    // the model object is trusted and hasn't been modified
+    private boolean isPageMember(Authentication authentication, Page page, List<Page> trustedPageContainer, boolean trustedDomainObject) {
+        Page trustedPage = null;
+        if (trustedDomainObject) {
+            trustedPage = page;
+        } else {
+            trustedPage = getTrustedPage(page.getEntityId(), trustedPageContainer);
+        }
+        //
+        // If the page has no members, there can be no member access
+        //
+        if (trustedPage.getMembers() == null){
+            return false;
+        }
+        //
+        // Check that the viewer is a member
+        //
+        String viewer = ((User)authentication.getPrincipal()).getUsername();
+        for (PageUser pageUser:trustedPage.getMembers()){
+            if (pageUser.getUser().getUsername().equals(viewer)){
+                log.info("User "+viewer+" is a member of page "+trustedPage.getEntityId());
+                return true;
+            }
+        }
+        log.info("User "+viewer+" is NOT a member of page "+trustedPage.getEntityId());
+        return false;
+    }
+
 }

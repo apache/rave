@@ -19,20 +19,34 @@
 
 package org.apache.rave.portal.service.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
+
 import org.apache.rave.persistence.Repository;
-import org.apache.rave.portal.model.*;
-import org.apache.rave.portal.repository.*;
+import org.apache.rave.portal.model.Page;
+import org.apache.rave.portal.model.PageInvitationStatus;
+import org.apache.rave.portal.model.PageLayout;
+import org.apache.rave.portal.model.PageType;
+import org.apache.rave.portal.model.PageUser;
+import org.apache.rave.portal.model.Region;
+import org.apache.rave.portal.model.RegionWidget;
+import org.apache.rave.portal.model.User;
+import org.apache.rave.portal.model.Widget;
+import org.apache.rave.portal.repository.PageLayoutRepository;
+import org.apache.rave.portal.repository.PageRepository;
+import org.apache.rave.portal.repository.PageTemplateRepository;
+import org.apache.rave.portal.repository.RegionRepository;
+import org.apache.rave.portal.repository.RegionWidgetRepository;
+import org.apache.rave.portal.repository.WidgetRepository;
 import org.apache.rave.portal.service.PageService;
 import org.apache.rave.portal.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.persistence.NoResultException;
-import javax.persistence.NonUniqueResultException;
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class DefaultPageService implements PageService {
@@ -139,10 +153,15 @@ public class DefaultPageService implements PageService {
         page.setName(pageName);
         page.setOwner(user);
         page.setPageLayout(pageLayout);
-        page.setRenderSequence(renderSequence);
         page.setRegions(regions);
         // set this as a "sub-page" page type
         page.setPageType(PageType.SUB_PAGE);
+        
+        PageUser pageUser = new PageUser(page.getOwner(), page, renderSequence);
+        pageUser.setPageStatus(PageInvitationStatus.OWNER);
+        List<PageUser> members = new ArrayList<PageUser>();
+        members.add(pageUser);
+        page.setMembers(members);
 
         // Properly sets both sides of the circular parent-child reference
         page.setParentPage(parentPage);
@@ -151,7 +170,6 @@ public class DefaultPageService implements PageService {
         }
         parentsSubPages.add(page);
         parentPage.setSubPages(parentsSubPages);
-
         pageRepository.save(page);
 
         return page;
@@ -172,8 +190,8 @@ public class DefaultPageService implements PageService {
 
         //TODO RAVE-237:  We should be able to delete these lines.  If there are gaps in the sequence numbers, then it will still
         //TODO RAVE-237:  return values in the correct order.  We only need to update sequences when there is a change in order
-        List<Page> pages = pageRepository.getAllPages(user.getEntityId(), PageType.USER);
-        updatePageRenderSequences(pages);
+        List<PageUser> thisUsersPages = new ArrayList<PageUser>(pageRepository.getPagesForUser(user.getEntityId(), PageType.USER));
+        updatePageRenderSequences(thisUsersPages);
     }
 
     @Override
@@ -201,7 +219,7 @@ public class DefaultPageService implements PageService {
     
     @Override
     @Transactional
-    public RegionWidget moveRegionWidgetToPage(long regionWidgetId, long toPageId) {                
+    public RegionWidget moveRegionWidgetToPage(long regionWidgetId, long toPageId) {
         // Get the new page
         Page toPage = getFromRepository(toPageId, pageRepository);
         // Get the region widget
@@ -221,8 +239,8 @@ public class DefaultPageService implements PageService {
         updateRenderSequences(moveToRegion.getRegionWidgets());
         // persist it
         regionRepository.save(moveToRegion);
-        return getFromRepository(regionWidgetId, regionWidgetRepository);        
-    }    
+        return getFromRepository(regionWidgetId, regionWidgetRepository);
+    }
 
     @Override
     @Transactional
@@ -251,8 +269,8 @@ public class DefaultPageService implements PageService {
 
     @Override
     @Transactional
-    public Page movePageToDefault(long pageId) {    
-        return doMovePage(pageId, MOVE_PAGE_DEFAULT_POSITION_INDEX);    
+    public Page movePageToDefault(long pageId) {
+        return doMovePage(pageId, MOVE_PAGE_DEFAULT_POSITION_INDEX);
     }
 
     @Override
@@ -283,6 +301,60 @@ public class DefaultPageService implements PageService {
         pageRepository.save(page);
 
         return page;
+    }
+    
+    @Transactional
+    public Boolean addMemberToPage(long pageId, long userId){
+        Page page = getPage(pageId);
+        PageUser pageUser = new PageUser();
+        pageUser.setUser(userService.getUserById(userId));
+        pageUser.setPage(page);
+        pageUser.setPageStatus(PageInvitationStatus.PENDING);
+        List<PageUser> thisUsersPages = pageRepository.getPagesForUser(userService.getUserById(userId).getEntityId(), PageType.USER);
+        pageUser.setRenderSequence(new Long(thisUsersPages.size() + 1));
+        page.getMembers().add(pageUser);
+        if(pageRepository.save(page) != null){
+            return Boolean.TRUE;
+        }else{
+            return Boolean.FALSE;
+        }
+    }
+
+    @Transactional
+    public Boolean removeMemberFromPage(long pageId, long userId){
+        Page page = this.getPage(pageId);
+        PageUser pageUserToRemove = null;
+        for(PageUser pageUser : page.getMembers()){
+            if(pageUser.getUser().getEntityId().equals(userId)){
+                pageUserToRemove = pageUser;
+                break;
+            }
+        }
+        if(pageUserToRemove != null){
+            page.getMembers().remove(pageUserToRemove);
+            if(pageRepository.save(page) != null){
+                return Boolean.TRUE;
+            }else{
+                return Boolean.FALSE;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    @Transactional
+    public Boolean updateSharedPageStatus(long pageId, String shareStatus) {
+        Page page = this.getPage(pageId);
+        for(PageUser pageUser : page.getMembers()){
+            if(pageUser.getUser().equals(userService.getAuthenticatedUser())){
+                pageUser.setPageStatus(PageInvitationStatus.get(shareStatus));
+            }
+        }
+        if(pageRepository.save(page) != null){
+            return Boolean.TRUE;
+        }else{
+            return Boolean.FALSE;
+        }
     }
 
     /**
@@ -392,7 +464,6 @@ public class DefaultPageService implements PageService {
 
     private Page addNewUserPage(User user, String pageName, String pageLayoutCode) {
         PageLayout pageLayout = pageLayoutRepository.getByPageLayoutCode(pageLayoutCode);
-
         // Create regions
         List<Region> regions = new ArrayList<Region>();
         int regionCount;
@@ -403,7 +474,6 @@ public class DefaultPageService implements PageService {
             region.setLocked(false);
             regions.add(region);
         }
-
         // Get all User Pages
         Page page = null;
         List<Page> defaultUserPage = pageRepository.getAllPages(user.getEntityId(), PageType.USER);
@@ -426,7 +496,13 @@ public class DefaultPageService implements PageService {
         page.setName(pageName);
         page.setOwner(user);
         page.setPageLayout(pageLayout);
-        page.setRenderSequence(renderSequence);
+        PageUser pageUser = new PageUser(page.getOwner(), page, renderSequence);
+        pageUser.setPageStatus(PageInvitationStatus.OWNER);
+
+        List<PageUser> members = new ArrayList<PageUser>();
+        members.add(pageUser);
+        page.setMembers(members);
+
         page.setRegions(regions);
         // set this as a "user" page type
         page.setPageType(PageType.USER);
@@ -434,53 +510,47 @@ public class DefaultPageService implements PageService {
         return page;
     }
 
-    private void updatePageRenderSequences(List<Page> pages) {       
+    private void updatePageRenderSequences(List<PageUser> pages) {
         if (pages != null && !pages.isEmpty()) {
             for (int i = 0; i < pages.size(); i++) {
-                Page p = pages.get(i);                
-                p.setRenderSequence((long)i+1);                               
+                PageUser p = pages.get(i);
+                p.setRenderSequence((long)i+1);
             }
 
-            for (Page page : pages) {
-                pageRepository.save(page);
+            for (PageUser page : pages) {
+                pageRepository.save(page.getPage());
             }
-        }       
+        }
     } 
-    
+
     private Page doMovePage(long pageId, long moveAfterPageId) {
         // get the logged in user
         User user = userService.getAuthenticatedUser();
-
         // get the page to move and the page to move after
-        Page movingPage = pageRepository.get(pageId);
-        Page afterPage = null;
+        PageUser movingPageUser = pageRepository.getSingleRecord(user.getEntityId(), pageId);
+        PageUser afterPageUser = null;
         int newIndex = 0;
-        
         // check to see if we should move the page to beginning
         if (moveAfterPageId != MOVE_PAGE_DEFAULT_POSITION_INDEX) {
-            afterPage = pageRepository.get(moveAfterPageId);
+            afterPageUser = pageRepository.getSingleRecord(user.getEntityId(), moveAfterPageId);
         }
 
         // get all of the user's pages
         // the pageRepository returns an un-modifiable list
         // so we need to create a modifyable arraylist
-        List<Page> pages = new ArrayList<Page>(pageRepository.getAllPages(user.getEntityId(), PageType.USER));
-
-        // first remove it from the list         
-        if (!pages.remove(movingPage)) {
+        List<PageUser> thisUsersPages = new ArrayList<PageUser>(pageRepository.getPagesForUser(user.getEntityId(), PageType.USER));
+        // first remove it from the list   
+        if (!thisUsersPages.remove(movingPageUser)) {
             throw new RuntimeException("unable to find pageId " + pageId + " attempted to be moved for user " + user);
         }
 
-        // ...now re-insert in new location
-        if (afterPage != null) {
-            newIndex = pages.indexOf(afterPage) + 1;
+        if (afterPageUser != null) {
+            newIndex = thisUsersPages.indexOf(afterPageUser) + 1;
         }
-        pages.add(newIndex, movingPage);
-
+        thisUsersPages.add(newIndex, movingPageUser);
         // persist the new page order
-        updatePageRenderSequences(pages);
-        
-        return movingPage;
+        updatePageRenderSequences(thisUsersPages);
+        return movingPageUser.getPage();
     }
 
     private static <T> T getFromRepository(long id, Repository<T> repo) {

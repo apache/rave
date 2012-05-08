@@ -41,6 +41,7 @@ public class PageTest {
 	private PageLayout pageLayout;
 	private long renderSequence;
 	private List<Region> regions;
+	private PageUser pageUser;
 	
 	@Before
 	public void setup(){
@@ -66,8 +67,12 @@ public class PageTest {
 		page.setParentPage(parentPage);
 		page.setSubPages(subPages);
 		page.setPageLayout(pageLayout);
-		page.setRenderSequence(renderSequence);
 		page.setRegions(regions);
+		
+		pageUser = new PageUser();
+		pageUser.setPage(page);
+		pageUser.setUser(testOwner);
+		pageUser.setRenderSequence(renderSequence);
 	}
 	
 	@After
@@ -83,7 +88,7 @@ public class PageTest {
 		assertTrue(page.getParentPage().equals(parentPage));
 		assertTrue(page.getSubPages().equals(subPages));
 		assertTrue(page.getPageLayout().equals(pageLayout));
-		assertTrue(page.getRenderSequence()==renderSequence);
+		assertTrue(pageUser.getRenderSequence()==renderSequence);
 	}
 
 	@Test

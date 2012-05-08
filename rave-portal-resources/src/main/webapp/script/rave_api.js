@@ -307,7 +307,7 @@ rave.api = rave.api || (function() {
             if (args.moveAfterPageId) {
                 data["moveAfterPageId"] = args.moveAfterPageId;
             }
-            
+
             $.post(rave.getContext() + path + "page/" + args.pageId + "/move",
                 data,
                 function(result) {
@@ -422,7 +422,89 @@ rave.api = rave.api || (function() {
                    }
                }).error(handleError);
         }
+        
+        function getUsers(args){
+            var offset = args.offset;
+            $.get(rave.getContext() + path + "users/get",
+                {"offset": offset},
+                function(result) {
+                    if (result.error) {
+                        handleRpcError(result);
+                    }
+                    else {
+                        if (typeof args.successCallback == 'function') {
+                            args.successCallback(result);
+                        }
+                    }
+                }).error(handleError);
+        }
 
+        function searchUsers(args){
+            var searchTerm = args.searchTerm;
+            var offset = args.offset;
+            if (searchTerm == null || searchTerm == "") {
+                alert(rave.getClientMessage("api.rpc.empty.search.term"));
+                return;
+            }
+            $.get(rave.getContext() + path + "users/search",
+                    {"searchTerm": searchTerm, "offset": offset},
+                    function(result) {
+                        if (result.error) {
+                            handleRpcError(result);
+                        }
+                        else {
+                            if (typeof args.successCallback == 'function') {
+                                 args.successCallback(result);
+                            }
+                        }
+                    }).error(handleError);
+        }
+        
+        function addMemberToPage(args) {
+            $.post(rave.getContext() + path + "page/" + args.pageId + "/addmember",
+               {"userId": args.userId},
+               function(result) {
+                   if (result.error) {
+                       handleRpcError(result);
+                   }
+                   else {
+                       if (typeof args.successCallback == 'function') {
+                            args.successCallback(result);
+                       }
+                   }
+               }).error(handleError);
+        }
+        
+        function removeMemberFromPage(args){
+            $.post(rave.getContext() + path + "page/" + args.pageId + "/removemember",
+                {"userId": args.userId},
+                function(result) {
+                    if (result.error) {
+                        handleRpcError(result);
+                    }
+                    else {
+                        if (typeof args.successCallback == 'function') {
+                            args.successCallback(result);
+                        }
+                    }
+                }).error(handleError);
+        }
+        
+        function updateSharedPageStatus(args){
+            $.post(rave.getContext() + path + "page/" + args.pageId + "/sharestatus",
+                {"shareStatus": args.shareStatus},
+                function(result) {
+                    if (result.error) {
+                        handleRpcError(result);
+                    }
+                    else {
+                        if (typeof args.successCallback == 'function') {
+                            args.successCallback(result);
+                        }
+                    }
+            }).error(handleError);
+        }
+        
         return {
             moveWidget : moveWidgetOnPage,
             addWidgetToPage : addWidgetToPage,
@@ -433,7 +515,12 @@ rave.api = rave.api || (function() {
             movePage: movePage,
             moveWidgetToPage: moveWidgetToPage,
             getWidgetMetadata: getWidgetMetadata,
-            getWidgetMetadataGroup: getWidgetMetadataGroup
+            getWidgetMetadataGroup: getWidgetMetadataGroup,
+            getUsers : getUsers,
+            searchUsers : searchUsers,
+            addMemberToPage : addMemberToPage,
+            removeMemberFromPage : removeMemberFromPage,
+            updateSharedPageStatus : updateSharedPageStatus
         };
 
     })();
