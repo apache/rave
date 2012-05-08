@@ -146,11 +146,13 @@
                     <!-- wro.xml defines the resource groups -->
                     <wroFile>${basedir}/src/main/resources/wro.xml</wroFile>
                     <!-- targetGroups is the set of resource groups, defined in wro.xml, that you want to process -->
-                    <targetGroups>rave_all.min</targetGroups>
+                    <targetGroups>rave_all.min,rave_css</targetGroups>
                     <!-- minimize instructs the processors to handle their minimization work -->
                     <minimize>true</minimize>
                     <!-- location of the javascript after processing -->
                     <jsDestinationFolder>${project.build.directory}/${project.build.finalName}/script/</jsDestinationFolder>
+					<!-- location of the CSS after processing -->
+					<cssDestinationFolder>${project.build.directory}/${project.build.finalName}/css/</cssDestinationFolder>
                     <!-- location of webapp directory that wro4j uses for its location context -->
                     <contextFolder>${basedir}/src/main/webapp/</contextFolder>
                     <wroManagerFactory>ro.isdc.wro.maven.plugin.manager.factory.ConfigurableWroManagerFactory</wroManagerFactory>
