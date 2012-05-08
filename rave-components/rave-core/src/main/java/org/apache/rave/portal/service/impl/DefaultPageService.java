@@ -364,6 +364,7 @@ public class DefaultPageService implements PageService {
         regionWidget.setWidget(widget);
         // TODO: this should eventually be defined by the PageTemplateWidget.locked field
         regionWidget.setLocked(false);
+        regionWidget.setRenderTitle(true);
         region.getRegionWidgets().add(position, regionWidget);
         updateRenderSequences(region.getRegionWidgets());
         Region persistedRegion = regionRepository.save(region);
