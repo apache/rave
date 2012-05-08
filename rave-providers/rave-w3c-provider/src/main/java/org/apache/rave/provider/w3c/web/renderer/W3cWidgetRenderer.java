@@ -71,7 +71,9 @@ public class W3cWidgetRenderer implements RegionWidgetRenderer {
         " height: '%5$s', " +
         " width: '%6$s', " +
         " collapsed: %7$s, " +
-        " widgetId: %8$s});</script>";
+        " widgetId: %8$s, " +
+        " locked: %9$s, " +
+        " renderTitle: %10$s});</script>";
     private static final String MARKUP = "<!-- RegionWidget %1$s placeholder -->";
 
 
@@ -155,6 +157,8 @@ public class W3cWidgetRenderer implements RegionWidgetRenderer {
                 height,
                 width,
                 item.isCollapsed(),
-                item.getWidget().getEntityId());
+                item.getWidget().getEntityId(),
+                item.isLocked(),
+                item.isRenderTitle());
     }
 }

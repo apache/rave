@@ -54,6 +54,7 @@ public class OpenSocialWidgetRendererTest {
     private static final String VALID_SECURITY_TOKEN = "securityToken";
     private static final boolean VALID_COLLAPSED = true;
     private static final boolean VALID_LOCKED = false;
+    private static final boolean RENDER_TITLE = false;
     private RenderContext renderContext;
 
     @Before
@@ -98,7 +99,8 @@ public class OpenSocialWidgetRendererTest {
             " userPrefs: {\"speed\":\"fast\",\"color\":\"blue\"}," +
             " collapsed: " + VALID_COLLAPSED + ", " +
             " widgetId: 1," +
-            " locked: " + VALID_LOCKED +
+            " locked: " + VALID_LOCKED + "," +
+            " renderTitle: " + RENDER_TITLE +
             "});</script>";
 
         expect(securityTokenService.getEncryptedSecurityToken(rw)).andReturn(VALID_SECURITY_TOKEN);
@@ -132,7 +134,7 @@ public class OpenSocialWidgetRendererTest {
             " userPrefs: {}," +
             " collapsed: false, " +
             " widgetId: null," +
-            " locked: false});</script>";
+            " locked: false, renderTitle: false});</script>";
 
         scriptManager.registerScriptBlock(markup, ScriptLocation.AFTER_RAVE, RenderScope.CURRENT_REQUEST, null);
         expectLastCall();
