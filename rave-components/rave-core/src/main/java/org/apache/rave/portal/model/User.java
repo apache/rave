@@ -307,9 +307,7 @@ public class User extends Person implements UserDetails, BasicEntity, Serializab
         if (obj == null) {
             return false;
         }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
+
         final User other = (User) obj;
         if (this.entityId != other.entityId && (this.entityId == null || !this.entityId.equals(other.entityId))) {
             return false;
