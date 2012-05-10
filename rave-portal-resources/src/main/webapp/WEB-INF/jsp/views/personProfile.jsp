@@ -49,7 +49,7 @@
         </c:choose>
     </fmt:param>
 </fmt:message>
-<rave:header pageTitle="${pagetitle}"/>
+<rave:navbar pageTitle="${pagetitle}"/>
 
 <div id="pageContent" class="container-fluid navbar-spacer">
     <div class="row-fluid">

@@ -35,7 +35,7 @@
         </c:choose>
     </fmt:param>
 </fmt:message>
-<rave:header pageTitle="${pagetitle}"/>
+<rave:navbar pageTitle="${pagetitle}"/>
 
 <input id="currentPageId" type="hidden" value="${page.entityId}"/>
 <c:set var="hasOnlyOnePage" scope="request">
@@ -113,7 +113,7 @@
                                      <a href="#"><c:out value="${userPage.name}"/></a>
                                 </c:otherwise>
                             </c:choose>
-                           
+
                         </li>
                     </c:otherwise>
                 </c:choose>
@@ -262,7 +262,7 @@
         <div class="modal-footer">
             <a href="#" class="btn" onclick="$('#sharePageDialog').modal('hide');"><fmt:message key="_rave_client.common.cancel"/></a>
         </div>
-    </div> 
+    </div>
 
     <div id="confirmSharePageDialog" class="modal hide" data-backdrop="static">
         <div class="modal-header">

@@ -22,7 +22,7 @@
 <%--@elvariable id="searchResult" type="org.apache.rave.portal.model.util.SearchResult<org.apache.rave.portal.model.User>"--%>
 
 <fmt:message key="${pageTitleKey}" var="pagetitle"/>
-<rave:header pageTitle="${pagetitle}"/>
+<rave:navbar pageTitle="${pagetitle}"/>
 <div class="container-fluid">
     <div class="span2">
         <rave:admin_tabsheader/>

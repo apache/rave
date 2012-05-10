@@ -21,7 +21,7 @@
 <fmt:setBundle basename="messages"/>
 
 <fmt:message key="${pageTitleKey}" var="pagetitle"/>
-<rave:header pageTitle="${pagetitle}"/>
+<rave:navbar pageTitle="${pagetitle}"/>
 <div class="container-fluid">
 <div class="span2">
     <rave:admin_tabsheader/>

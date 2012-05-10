@@ -20,7 +20,7 @@
 <%@ include file="/WEB-INF/jsp/includes/taglibs.jsp" %>
 <fmt:setBundle basename="messages"/>
 <fmt:message key="page.addwidget.title" var="pagetitle"/>
-<rave:header pageTitle="${pagetitle}"/>
+<rave:navbar pageTitle="${pagetitle}"/>
 
 <div class="container">
     <h2><fmt:message key="page.addwidget.form.header"/></h2>

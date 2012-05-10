@@ -22,7 +22,7 @@
 
 <fmt:message key="${pageTitleKey}" var="pagetitle"/>
 <c:set var="canChangeUserStatus" value="${user.username ne loggedInUser}"/>
-<rave:header pageTitle="${pagetitle}"/>
+<rave:navbar pageTitle="${pagetitle}"/>
 <div class="container-fluid">
     <div class="row-fluid">
         <div class="span1">

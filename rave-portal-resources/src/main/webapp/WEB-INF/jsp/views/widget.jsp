@@ -19,7 +19,7 @@
 <%@ page language="java" trimDirectiveWhitespaces="true" %>
 <%@ include file="/WEB-INF/jsp/includes/taglibs.jsp" %>
 <fmt:setBundle basename="messages"/>
-<rave:header pageTitle="${widget.title}"/>
+<rave:navbar pageTitle="${widget.title}"/>
 
 <div id="na_content" class="container-fluid">
     <div class="row-fluid detail-widget">
