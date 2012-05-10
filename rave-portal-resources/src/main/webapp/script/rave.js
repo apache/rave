@@ -812,6 +812,10 @@ var rave = rave || (function () {
             return $(".region:not(.region-locked)");
         }
 
+        function registerPopup(id, obj) {
+            POPUPS[id] = obj;
+        }
+
         return {
             init:init,
             initMobile:initMobileWidgetUI,
@@ -828,7 +832,8 @@ var rave = rave || (function () {
             toggleMobileWidget:toggleMobileWidget,
             displayEmptyPageMessage:displayEmptyPageMessage,
             displayUsersOfWidget:displayUsersOfWidget,
-            showInfoMessage:showInfoMessage
+            showInfoMessage:showInfoMessage,
+            registerPopup:registerPopup
         };
 
     })();
@@ -1282,6 +1287,11 @@ var rave = rave || (function () {
         /**
          * Clears the widgetsByRegionIdMap.  Useful for testing.
          */
-        clearWidgetsByRegionIdMap:clearWidgetsByRegionIdMap
+        clearWidgetsByRegionIdMap:clearWidgetsByRegionIdMap,
+
+        /**
+         * Registers a new popup definition
+         */
+        registerPopup:ui.registerPopup
     }
 })();
