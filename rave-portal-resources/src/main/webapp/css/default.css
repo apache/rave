@@ -489,11 +489,12 @@ header h1{
     margin: 0 0 1em 2%;
     float: right;
 }
-.detail-widget{ padding-top: 20px; }
-
+.detail-widget {
+	padding-top: 20px;
+}
 .detail-widget-preview {
     text-align: center;
-    float:right;
+	padding-top: 5px;
 }
 .detail-widget-preview img{
     margin-bottom: 15px;

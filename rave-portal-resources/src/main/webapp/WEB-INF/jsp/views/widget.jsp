@@ -21,8 +21,8 @@
 <fmt:setBundle basename="messages"/>
 <rave:navbar pageTitle="${widget.title}"/>
 
-<div id="na_content" class="container-fluid">
-    <div class="row-fluid detail-widget">
+<div id="na_content" class="container">
+    <div class="row detail-widget storeItem">
         <div class="span3">
             <div class="detail-widget-preview">
                 <c:if test="${not empty widget.screenshotUrl}">
@@ -57,14 +57,14 @@
             </div>
         </div>
         <div class="span8 detail-widget-main">
-           <h2>
-                <c:set var="widgetHasTitleUrl" value="${not empty widget.titleUrl}"/>
-                <c:if test="${widgetHasTitleUrl}"><a href="<c:out value="${widget.titleUrl}"/>" rel="external">
-                </c:if>
-                <span id="widget-${widget.entityId}-title"><c:out value="${widget.title}"/></span>
-                <c:if test="${widgetHasTitleUrl}"></a></c:if>
-           </h2>
-           <div class="row-fluid">
+           <div class="row">
+			   <h2>
+					<c:set var="widgetHasTitleUrl" value="${not empty widget.titleUrl}"/>
+					<c:if test="${widgetHasTitleUrl}"><a href="<c:out value="${widget.titleUrl}"/>" rel="external">
+					</c:if>
+					<span id="widget-${widget.entityId}-title"><c:out value="${widget.title}"/></span>
+					<c:if test="${widgetHasTitleUrl}"></a></c:if>
+			   </h2>
                 <c:if test="${widget.disableRendering}">
                     <div class="storeWidgetDisabled">
                         <span class="widget-disabled-icon-store ui-icon ui-icon-alert"
@@ -90,7 +90,7 @@
                     <p class="storeWidgetDesc"><c:out value="${widget.description}"/></p>
                 </c:if>
            </div>
-           <div class="row-fluid">
+           <div class="row">
                 <div>
                     <h3><fmt:message key="page.widget.rate"/></h3>
                     <form class="hidden">
@@ -140,7 +140,7 @@
                 </div>
            </div>
 
-            <div class="row-fluid">
+            <div class="row">
                 <%--//Tag section--%>
                 <div class="widgetTags">
                     <c:if test="${not empty widget.tags}">
@@ -174,7 +174,7 @@
                 </c:if>
             </div>
 
-            <div class="row-fluid">
+            <div class="row">
                 <div class="widgetComments">
                     <h3><fmt:message key="page.widget.comments"/></h3>
                     <div class="new-comment form-inline well">
