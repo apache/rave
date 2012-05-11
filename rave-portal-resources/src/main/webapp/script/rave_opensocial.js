@@ -77,7 +77,6 @@ rave.opensocial = rave.opensocial || (function () {
      * Registers the RPC hooks with the container
      */
     function registerRpcHooks() {
-        container.rpcRegister('resize_iframe', resizeIframe);
         container.rpcRegister('set_title', setTitle);
         container.rpcRegister('requestNavigateTo', requestNavigateTo);
         container.rpcRegister('set_pref', setPref);
@@ -291,16 +290,6 @@ rave.opensocial = rave.opensocial || (function () {
     /*
      RPC Callback handlers
      */
-    /**
-     * Resizes the iFrame when gadgets.window.adjustHeight is called
-     *
-     * @param args the RPC event args
-     */
-    function resizeIframe(args) {
-        var max = 0x7FFFFFFF;
-        var height = args.a > max ? max : args.a;
-        args.gs.setHeight(height);
-    }
 
     /**
      * Sets the chrome title when gadgets.window.setTitle is caled

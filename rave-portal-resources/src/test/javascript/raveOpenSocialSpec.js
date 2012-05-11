@@ -99,7 +99,6 @@ describe("Rave OpenSocial", function() {
         it("Initializes the RPC Hooks Correctly", function() {
             rave.opensocial.init();
             hooks = container.rpcHooks();
-            expect(hooks["resize_iframe"]).toBeDefined();
             expect(hooks["set_title"]).toBeDefined();
             expect(hooks["requestNavigateTo"]).toBeDefined();
         });
@@ -138,20 +137,6 @@ describe("Rave OpenSocial", function() {
                 }
             }
         }
-
-        function getMockResizeArgs(size) {
-            var called = false;
-            return {
-                f: "frameId",
-                a: size,
-                gs: {
-                    setHeight : function(value) {
-                        called = size == value;
-                    }
-                },
-                wasCalled : function() {return called; }
-            }
-        } 
         
         function getMockRequestNavigateToArgs(id) {
             return {
@@ -165,20 +150,6 @@ describe("Rave OpenSocial", function() {
                 }
             }
         }
-
-        it("resizes Iframe if argument is less than height", function() {
-            rave.opensocial.init();
-            var args = getMockResizeArgs(25);
-            container.rpcHooks()["resize_iframe"](args);
-            expect(args.wasCalled()).toBeTruthy();
-        });
-
-        it("resizes Iframe to max if height is greater than max", function() {
-            rave.opensocial.init();
-            var args = getMockResizeArgs(2147483648);
-            container.rpcHooks()["resize_iframe"](args);
-            expect(args.wasCalled()).toBeFalsy();
-        });
 
         it("set title changes the title DOM node", function() {
             var mockElement = {innerHTML : "NOTHING"};
