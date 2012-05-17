@@ -71,7 +71,7 @@ public class OpenSocialWidgetRenderer implements RegionWidgetRenderer {
             " collapsed: %8$s, " +
             " widgetId: %9$s," +
             " locked: %10$s," +
-            " renderTitle: %11$s});</script>";
+            " hideChrome: %11$s});</script>";
     private static final String MARKUP = "<!-- RegionWidget %1$s placeholder -->";
 
     @Override
@@ -124,6 +124,6 @@ public class OpenSocialWidgetRenderer implements RegionWidgetRenderer {
                 item.isCollapsed(),
                 item.getWidget().getEntityId(),
                 item.isLocked(),
-                item.isRenderTitle());
+                item.isHideChrome());
     }
 }

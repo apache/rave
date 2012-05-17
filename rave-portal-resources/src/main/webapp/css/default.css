@@ -200,6 +200,14 @@ header h1{
     -moz-box-shadow: 2px 2px 2px rgba(0,0,0,.25);
 }
 
+.widget-wrapper-hidechrome {
+    border: none !important;
+    border-radius: 0px !important;
+    box-shadow: none !important;
+    -webkit-box-shadow: none !important;
+    -moz-box-shadow: none !important;
+}
+
 .widget-wrapper-mobile {
     margin-bottom: 3px;
 }
@@ -1091,7 +1099,7 @@ span.error, label.error {
 
 .searchdialogcontent {
     font-size: 12px !important;
-    margin:0 0 !important; 
+    margin:0 0 !important;
     width: 100% !important;
     padding:0 0 !important;
 }

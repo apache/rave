@@ -73,7 +73,7 @@ public class W3cWidgetRenderer implements RegionWidgetRenderer {
         " collapsed: %7$s, " +
         " widgetId: %8$s, " +
         " locked: %9$s, " +
-        " renderTitle: %10$s});</script>";
+        " hideChrome: %10$s});</script>";
     private static final String MARKUP = "<!-- RegionWidget %1$s placeholder -->";
 
 
@@ -159,6 +159,6 @@ public class W3cWidgetRenderer implements RegionWidgetRenderer {
                 item.isCollapsed(),
                 item.getWidget().getEntityId(),
                 item.isLocked(),
-                item.isRenderTitle());
+                item.isHideChrome());
     }
 }

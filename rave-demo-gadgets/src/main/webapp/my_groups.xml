@@ -26,11 +26,21 @@
 
     <Content type="html" view="home">
        <![CDATA[
+          <div class="header">Groups I Belong To</div>
           <ul>
             <li>Apache Rave PPMC
             <li>Netherlands Football Fanatics
             <li>Java User's Group
           </ul>
+          <style>
+            .header {
+               border-bottom: 1px solid #CCCCCC;
+               color: #228800;
+            }
+            li {
+                font-size: 10pt;
+            }
+          </style>
           <script>
               gadgets.util.registerOnLoadHandler(gadgets.window.adjustHeight);
           </script>

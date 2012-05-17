@@ -54,7 +54,7 @@ public class OpenSocialWidgetRendererTest {
     private static final String VALID_SECURITY_TOKEN = "securityToken";
     private static final boolean VALID_COLLAPSED = true;
     private static final boolean VALID_LOCKED = false;
-    private static final boolean RENDER_TITLE = false;
+    private static final boolean VALID_HIDE_CHROME = true;
     private RenderContext renderContext;
 
     @Before
@@ -86,6 +86,8 @@ public class OpenSocialWidgetRendererTest {
         rw.setCollapsed(VALID_COLLAPSED);
         rw.setWidget(w);
         rw.setRegion(region);
+        rw.setHideChrome(VALID_HIDE_CHROME);
+        rw.setLocked(VALID_LOCKED);
         rw.setPreferences(Arrays.asList(new RegionWidgetPreference(1L, 1L, "color", "blue"),
                                         new RegionWidgetPreference(2L, 1L, "speed", "fast"),
                                         new RegionWidgetPreference(3L, 1L, null, null)));
@@ -100,7 +102,7 @@ public class OpenSocialWidgetRendererTest {
             " collapsed: " + VALID_COLLAPSED + ", " +
             " widgetId: 1," +
             " locked: " + VALID_LOCKED + "," +
-            " renderTitle: " + RENDER_TITLE +
+            " hideChrome: " + VALID_HIDE_CHROME +
             "});</script>";
 
         expect(securityTokenService.getEncryptedSecurityToken(rw)).andReturn(VALID_SECURITY_TOKEN);
@@ -134,7 +136,7 @@ public class OpenSocialWidgetRendererTest {
             " userPrefs: {}," +
             " collapsed: false, " +
             " widgetId: null," +
-            " locked: false, renderTitle: false});</script>";
+            " locked: false, hideChrome: false});</script>";
 
         scriptManager.registerScriptBlock(markup, ScriptLocation.AFTER_RAVE, RenderScope.CURRENT_REQUEST, null);
         expectLastCall();

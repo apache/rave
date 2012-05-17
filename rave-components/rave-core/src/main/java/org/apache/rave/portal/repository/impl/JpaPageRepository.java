@@ -140,7 +140,7 @@ public class JpaPageRepository extends AbstractJpaRepository<Page> implements Pa
             regionWidget.setRegion(region);
             regionWidget.setCollapsed(false);
             regionWidget.setLocked(ptw.isLocked());
-            regionWidget.setRenderTitle(ptw.isRenderTitle());
+            regionWidget.setHideChrome(ptw.isHideChrome());
             regionWidget.setRenderOrder((int) ptw.getRenderSeq());
             regionWidget.setWidget(ptw.getWidget());
             widgets.add(regionWidget);
@@ -166,7 +166,7 @@ public class JpaPageRepository extends AbstractJpaRepository<Page> implements Pa
             lPage.setPageLayout(pt.getPageLayout());
             lPage.setParentPage(page);
             lPage.setRegions(convertRegions(pt.getPageTemplateRegions(), lPage));
-            
+
             // create new pageUser tuple
             PageUser pageUser = new PageUser(lPage.getOwner(), lPage, pt.getRenderSequence());
             pageUser.setPageStatus(PageInvitationStatus.OWNER);

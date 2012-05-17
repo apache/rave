@@ -27,12 +27,12 @@ Template for rendering a RegionWidget including wrapper chrome, toolbars, menus,
 <%@ attribute name="regionWidget" type="org.apache.rave.portal.model.RegionWidget" required="true" description="The regionWidget object" %>
 
 <c:set var="isLocked" value="${regionWidget.locked}" />
-<c:set var="renderTitle" value="${regionWidget.renderTitle}" />
+<c:set var="isHideChrome" value="${regionWidget.hideChrome}" />
 <fmt:setBundle basename="messages"/>
 <%--@elvariable id="regionWidget" type="org.apache.rave.portal.model.RegionWidget"--%>
-<div class="widget-wrapper<c:if test="${isLocked}"> widget-wrapper-locked</c:if>" id="widget-${regionWidget.entityId}-wrapper">
+<div class="widget-wrapper<c:if test="${isLocked}"> widget-wrapper-locked</c:if><c:if test="${isHideChrome}"> widget-wrapper-hidechrome</c:if>" id="widget-${regionWidget.entityId}-wrapper">
 
-    <c:if test="${renderTitle}">
+    <c:if test="${!isHideChrome}">
         <div class="widget-title-bar<c:if test="${isLocked}"> widget-title-bar-locked</c:if>">
             <c:if test="${!isLocked}">
                 <div id="widget-${regionWidget.entityId}-collapse" class="widget-toolbar-toggle-collapse" title="<fmt:message key="widget.chrome.toggle"/>"></div>

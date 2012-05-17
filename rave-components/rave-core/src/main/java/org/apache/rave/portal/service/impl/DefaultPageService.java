@@ -58,7 +58,7 @@ public class DefaultPageService implements PageService {
     private final UserService userService;
     private final PageTemplateRepository pageTemplateRepository;
     private final String defaultPageName;
-    
+
     private final long MOVE_PAGE_DEFAULT_POSITION_INDEX = -1L;
 
     @Autowired
@@ -84,7 +84,7 @@ public class DefaultPageService implements PageService {
     public Page getPage(long pageId) {
         return pageRepository.get(pageId);
     }
-    
+
     @Override
     public List<Page> getAllUserPages(long userId) {
         return pageRepository.getAllPages(userId, PageType.USER);
@@ -115,13 +115,13 @@ public class DefaultPageService implements PageService {
         // the first sequenced ordered page is considered the user's default page
         return (pages == null || pages.isEmpty()) ? null : pages.get(0);
     }
-    
+
     @Override
     @Transactional
     public Page addNewUserPage(String pageName, String pageLayoutCode) {
         return addNewUserPage(userService.getAuthenticatedUser(), pageName, pageLayoutCode);
     }
-    
+
     @Override
     @Transactional
     public Page addNewDefaultUserPage(long userId) {
@@ -156,7 +156,7 @@ public class DefaultPageService implements PageService {
         page.setRegions(regions);
         // set this as a "sub-page" page type
         page.setPageType(PageType.SUB_PAGE);
-        
+
         PageUser pageUser = new PageUser(page.getOwner(), page, renderSequence);
         pageUser.setPageStatus(PageInvitationStatus.OWNER);
         List<PageUser> members = new ArrayList<PageUser>();
@@ -182,9 +182,9 @@ public class DefaultPageService implements PageService {
 
     @Override
     @Transactional
-    public void deletePage(long pageId) {                    
+    public void deletePage(long pageId) {
         User user = userService.getAuthenticatedUser();
-        // first delete the page        
+        // first delete the page
         pageRepository.delete(pageRepository.get(pageId));
         // now re-sequence the page sequence numbers
 
@@ -199,7 +199,7 @@ public class DefaultPageService implements PageService {
     public int deletePages(long userId, PageType pageType) {
         return pageRepository.deletePages(userId, pageType);
     }
-    
+
     @Override
     @Transactional
     public RegionWidget moveRegionWidget(long regionWidgetId, int newPosition, long toRegionId, long fromRegionId) {
@@ -216,7 +216,7 @@ public class DefaultPageService implements PageService {
         target = regionRepository.save(target);
         return findRegionWidgetById(regionWidgetId, target.getRegionWidgets());
     }
-    
+
     @Override
     @Transactional
     public RegionWidget moveRegionWidgetToPage(long regionWidgetId, long toPageId) {
@@ -224,14 +224,14 @@ public class DefaultPageService implements PageService {
         Page toPage = getFromRepository(toPageId, pageRepository);
         // Get the region widget
         RegionWidget regionWidget = getFromRepository(regionWidgetId, regionWidgetRepository);
-        
+
         // Move it to first position of the first region
         Region moveToRegion = toPage.getRegions().get(0);
 
         // verify the region widget, source, and target regions not locked
         verifyRegionWidgetIsNotLocked(regionWidget);
         verifyRegionIsNotLocked(moveToRegion);
-                
+
         regionWidget.setRenderOrder(0);
         regionWidget.setRegion(moveToRegion);
         moveToRegion.getRegionWidgets().add(0, regionWidget);
@@ -260,7 +260,7 @@ public class DefaultPageService implements PageService {
         verifyRegionIsNotLocked(region);
         return createWidgetInstance(widget, region, 0);
     }
-    
+
     @Override
     @Transactional
     public Page movePage(long pageId, long moveAfterPageId) {
@@ -302,7 +302,7 @@ public class DefaultPageService implements PageService {
 
         return page;
     }
-    
+
     @Transactional
     public Boolean addMemberToPage(long pageId, long userId){
         Page page = getPage(pageId);
@@ -360,20 +360,20 @@ public class DefaultPageService implements PageService {
     /**
      * Utility function to determine if a Page layout adjustment is needed
      * which comparing the existing and new PageLayout objects
-     * 
+     *
      * @param newLayout the new PageLayout to be applied to the Page
      * @param curLayout the existing PageLayout of the Page
      * @return true if the Page Regions need to be adjusted up or down
      */
     private boolean isLayoutAdjustmentNeeded(PageLayout newLayout, PageLayout curLayout) {
-        return newLayout != null && 
-               !curLayout.equals(newLayout) && 
+        return newLayout != null &&
+               !curLayout.equals(newLayout) &&
                !curLayout.getNumberOfRegions().equals(newLayout.getNumberOfRegions());
     }
 
     /***
      * Utility function to create additional empty regions for a page.
-     * 
+     *
      * @param page the Page object to add new regions to
      * @param numberOfNewRegionsToAdd the number of new Region objects to add to the Page
      */
@@ -395,14 +395,14 @@ public class DefaultPageService implements PageService {
      * Utility function to reduce the regions for a page and move any RegionWidgets
      * in the Regions getting removed into the region with the largest
      * remaining render sequence value
-     * 
+     *
      * @param page the Page to remove Regions from
      * @param numberOfRegionsInNewLayout the number of regions in the new layout
      */
     private void reduceRegionsForPage(Page page, long numberOfRegionsInNewLayout) {
         List<Region> regions = page.getRegions();
         Region lastValidRegion = regions.get((int) (numberOfRegionsInNewLayout-1));
-        
+
         //remove all of the extra regions for this new layout and append the widgets
         while (regions.size() > numberOfRegionsInNewLayout) {
             Region deletedRegion = regions.remove(regions.size()-1);
@@ -415,28 +415,30 @@ public class DefaultPageService implements PageService {
         }
         regionRepository.save(lastValidRegion);
     }
-    
+
     /**
      * Utility function to move a RegionWidget to a new Region
-     * 
+     *
      * @param regionWidget the RegionWidget to move
      * @param moveToRegion the new Region to move it to
      */
     private void moveRegionWidgetToNewRegion(RegionWidget regionWidget, Region moveToRegion) {
-        List<RegionWidget> regionWidgets = moveToRegion.getRegionWidgets();                
+        List<RegionWidget> regionWidgets = moveToRegion.getRegionWidgets();
         int renderOrder = regionWidgets.isEmpty() ? 1 : regionWidgets.get(regionWidgets.size()-1).getRenderOrder() + 1;
         regionWidget.setRegion(moveToRegion);
         regionWidget.setRenderOrder(renderOrder);
-        moveToRegion.getRegionWidgets().add(regionWidget);        
+        moveToRegion.getRegionWidgets().add(regionWidget);
     }
-    
+
     private RegionWidget createWidgetInstance(Widget widget, Region region, int position) {
         RegionWidget regionWidget = new RegionWidget();
         regionWidget.setRenderOrder(position);
         regionWidget.setWidget(widget);
-        // TODO: this should eventually be defined by the PageTemplateWidget.locked field
+        // TODO: setLocked and setHideChrome are hard-coded to false for new widgets manually added by users
+        //       which makes sense for most default cases.  However should we change them to a customizable property
+        //       to allow for more flexibility?
         regionWidget.setLocked(false);
-        regionWidget.setRenderTitle(true);
+        regionWidget.setHideChrome(false);
         region.getRegionWidgets().add(position, regionWidget);
         updateRenderSequences(region.getRegionWidgets());
         Region persistedRegion = regionRepository.save(region);
@@ -521,7 +523,7 @@ public class DefaultPageService implements PageService {
                 pageRepository.save(page.getPage());
             }
         }
-    } 
+    }
 
     private Page doMovePage(long pageId, long moveAfterPageId) {
         // get the logged in user
@@ -539,7 +541,7 @@ public class DefaultPageService implements PageService {
         // the pageRepository returns an un-modifiable list
         // so we need to create a modifyable arraylist
         List<PageUser> thisUsersPages = new ArrayList<PageUser>(pageRepository.getPagesForUser(user.getEntityId(), PageType.USER));
-        // first remove it from the list   
+        // first remove it from the list
         if (!thisUsersPages.remove(movingPageUser)) {
             throw new RuntimeException("unable to find pageId " + pageId + " attempted to be moved for user " + user);
         }

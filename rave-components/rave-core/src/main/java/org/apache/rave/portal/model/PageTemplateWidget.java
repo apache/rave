@@ -58,8 +58,8 @@ public class PageTemplateWidget implements BasicEntity, Serializable {
     private boolean locked;
 
     @Basic(optional = false)
-    @Column(name = "render_title")
-    private boolean renderTitle;
+    @Column(name = "hide_chrome")
+    private boolean hideChrome;
 
     @Override
     public Long getEntityId() {
@@ -103,11 +103,11 @@ public class PageTemplateWidget implements BasicEntity, Serializable {
         this.locked = locked;
     }
 
-    public boolean isRenderTitle() {
-        return renderTitle;
+    public boolean isHideChrome() {
+        return hideChrome;
     }
 
-    public void setRenderTitle(boolean renderTitle) {
-        this.renderTitle = renderTitle;
+    public void setHideChrome(boolean hideChrome) {
+        this.hideChrome = hideChrome;
     }
 }

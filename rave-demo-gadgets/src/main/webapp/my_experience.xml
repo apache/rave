@@ -20,13 +20,13 @@
   $Id:$
 -->
 <Module>
-    <ModulePrefs title="Work Experience" author="" author_email="" height="" description="Static widget of work experience for demoing on the Person Profile page">
+    <ModulePrefs title="My Experience" author="" author_email="" height="" description="Static widget of experience for demoing on the Person Profile page">
         <Require feature="dynamic-height" />
     </ModulePrefs>
 
     <Content type="html" view="home">
        <![CDATA[
-          <div>Work:</div>
+          <div class="header">Work Experience</div>
           <ul>
             <li>2011-Present: Apache Rave Developer
             <li>2008-2011: Database Administrator
@@ -35,17 +35,26 @@
             <li>2001-2002: ASP Developer
             <li>1997-2001: JavaScript Developer
           </ul>
-          <div>School</div>
+          <div class="header">School Experience</div>
           <ul>
             <li>1993-1997: University of Somewhere
           </ul>
-          <div>Skills:</div>
+          <div class="header">Skill Experience:</div>
           <ul>
                <li>Java
                <li>JavaScript
                <li>HTML
                <li>RDBMS
           </ul>
+          <style>
+            .header {
+               border-bottom: 1px solid #CCCCCC;
+               color: #228800;
+            }
+            li {
+                font-size: 10pt;
+            }
+          </style>
           <script>
               gadgets.util.registerOnLoadHandler(gadgets.window.adjustHeight);
           </script>
