@@ -878,15 +878,15 @@ var rave = rave || (function () {
         }
         return new OpenAjax.hub.ManagedHub({
             onSubscribe:function (topic, container) {
-                log(container.getClientID() + " subscribes to this topic '" + topic + "'");
+                log((container == null ? "Container" : container.getClientID()) + " subscribes to this topic '" + topic + "'");
                 return true;
             },
             onUnsubscribe:function (topic, container) {
-                log(container.getClientID() + " unsubscribes from this topic '" + topic + "'");
+                log((container == null ? "Container" : container.getClientID()) + " unsubscribes from this topic '" + topic + "'");
                 return true;
             },
             onPublish:function (topic, data, pcont, scont) {
-                log(pcont.getClientID() + " publishes '" + data + "' to topic '" + topic + "' subscribed by " + scont.getClientID());
+                log((pcont == null ? "Container" : pcont.getClientID()) + " publishes '" + data + "' to topic '" + topic + "' subscribed by " + (scont == null ? "Container" : scont.getClientID()));
                 return true;
             }
         });
