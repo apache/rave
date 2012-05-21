@@ -25,7 +25,8 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.*;
 
 /**
  * Tests the Page class.
@@ -42,7 +43,10 @@ public class PageTest {
 	private long renderSequence;
 	private List<Region> regions;
 	private PageUser pageUser;
-	
+
+    private final Long SUB_PAGE_1_ID = 666666L;
+    private final Long SUB_PAGE_2_ID = 121212L;
+
 	@Before
 	public void setup(){
 		page=new Page();
@@ -52,11 +56,41 @@ public class PageTest {
 		testOwner=new User(id);
         parentPage = new Page(parentId);
         subPages = new ArrayList<Page>();
-        subPages.add(new Page());
-        subPages.add(new Page());
+
+        Page subPage1 = new Page();
+        subPage1.setEntityId(SUB_PAGE_1_ID);
+        subPage1.setOwner(testOwner);
+        Page subPage2 = new Page();
+        subPage2.setEntityId(SUB_PAGE_2_ID);
+        subPage2.setOwner(testOwner);
+
+        List<PageUser> pageUsers1 = new ArrayList<PageUser>();
+        PageUser pageUser1 = new PageUser();
+        pageUser1.setUser(testOwner);
+        pageUser1.setPage(subPage1);
+        pageUser1.setRenderSequence(2L);
+        pageUsers1.add(pageUser1);
+        subPage1.setMembers(pageUsers1);
+
+        List<PageUser> pageUsers2 = new ArrayList<PageUser>();
+        PageUser pageUser2 = new PageUser();
+        pageUser2.setUser(new User());
+        pageUser2.setPage(subPage2);
+        pageUser2.setRenderSequence(19L);
+        pageUsers2.add(pageUser2);
+
+        PageUser pageUser3 = new PageUser();
+        pageUser3.setUser(testOwner);
+        pageUser3.setPage(subPage2);
+        pageUser3.setRenderSequence(1L);
+        pageUsers2.add(pageUser3);
+        subPage2.setMembers(pageUsers2);
+
+        subPages.add(subPage1);
+        subPages.add(subPage2);
 		pageLayout=new PageLayout();
 		renderSequence=1223L;
-		
+
 		regions=new ArrayList<Region>();
 		regions.add(new Region());
 		regions.add(new Region());
@@ -68,25 +102,25 @@ public class PageTest {
 		page.setSubPages(subPages);
 		page.setPageLayout(pageLayout);
 		page.setRegions(regions);
-		
+
 		pageUser = new PageUser();
 		pageUser.setPage(page);
 		pageUser.setUser(testOwner);
 		pageUser.setRenderSequence(renderSequence);
 	}
-	
+
 	@After
 	public void tearDown(){
 		page=null;
 	}
-	
+
 	@Test
 	public void testAccessorMethods() {
 		assertTrue(page.getEntityId()==id);
 		assertTrue(page.getName().equals(testName));
 		assertTrue(page.getOwner().equals(testOwner));
 		assertTrue(page.getParentPage().equals(parentPage));
-		assertTrue(page.getSubPages().equals(subPages));
+        assertTrue(page.getSubPages().containsAll(subPages));
 		assertTrue(page.getPageLayout().equals(pageLayout));
 		assertTrue(pageUser.getRenderSequence()==renderSequence);
 	}
@@ -100,4 +134,12 @@ public class PageTest {
 	public void testSubPages(){
 		assertTrue(page.getSubPages().containsAll(subPages));
 	}
+
+    @Test
+    public void testSubPageComparator() {
+        Long previousRenderSequence = -999L;
+        List<Page> subPages = page.getSubPages();
+        assertThat(subPages.get(0).getEntityId(), is(SUB_PAGE_2_ID));
+        assertThat(subPages.get(1).getEntityId(), is(SUB_PAGE_1_ID));
+    }
 }

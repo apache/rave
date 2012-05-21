@@ -29,17 +29,20 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
  * A page, which consists of regions, and which may be owned by a {@link User} (note the ownership will likely need to
  * become more flexible to enable things like group ownership in the future).
- * 
+ *
  * TODO RAVE-231: not all database providers will be able to support deferrable constraints
  * so for the time being I'm commenting out the owner/render sequence since it
  * will get updated in batches and blow up
  * @UniqueConstraint(columnNames={"owner_id","render_sequence"}
- * 
+ *
  */
 @Entity
 @XmlRootElement
@@ -92,7 +95,7 @@ public class Page implements BasicEntity, Serializable {
     @Column(name = "page_type")
     @Enumerated(EnumType.STRING)
     private PageType pageType;
-    
+
     @OneToMany(targetEntity=PageUser.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy="page", orphanRemoval=true)
     private List<PageUser> members;
 
@@ -110,7 +113,7 @@ public class Page implements BasicEntity, Serializable {
 
     public Page() {
     }
-    
+
     public Page(Long entityId) {
         this.entityId = entityId;
     }
@@ -205,7 +208,14 @@ public class Page implements BasicEntity, Serializable {
     }
 
     public List<Page> getSubPages() {
-        return subPages;
+        // we need to manually sort the sub pages due to limitations in JPA's OrderBy annotation dealing with
+        // sub-lists
+        List<Page> orderedSubPages = null;
+        if (this.subPages != null) {
+            orderedSubPages = new ArrayList<Page>(this.subPages);
+            Collections.sort(orderedSubPages, new SubPageComparator());
+        }
+        return orderedSubPages;
     }
 
     public void setSubPages(List<Page> subPages) {
@@ -237,5 +247,44 @@ public class Page implements BasicEntity, Serializable {
     @Override
     public String toString() {
         return "Page{" + "entityId=" + entityId + ", name=" + name + ", owner=" + owner + ", pageLayout=" + pageLayout + ", pageType=" + pageType + "}";
+    }
+
+    /**
+     * Comparator used to sort sub pages.  It looks for PageUser objects representing the sub pages that are owned
+     * by the parent page user, and uses the renderSequence as the sorting field
+     */
+    class SubPageComparator implements Comparator<Page> {
+        @Override
+        public int compare(Page o1, Page o2) {
+            if (o1 == null || o1.getMembers() == null || o1.getMembers().isEmpty()) {
+                return 1;
+            }
+
+            if (o2 == null || o2.getMembers() == null || o2.getMembers().isEmpty()) {
+                return -1;
+            }
+
+            Long o1RenderSequence = null;
+            Long o2RenderSequence = null;
+
+            // find the PageUser object representing the sub page owned by the user
+            for (PageUser pageUser : o1.getMembers()) {
+                if (pageUser.getUser().equals(o1.getOwner())) {
+                    o1RenderSequence = pageUser.getRenderSequence();
+                    break;
+                }
+            }
+
+            // find the PageUser object representing the sub page owned by the user
+            for (PageUser pageUser : o2.getMembers()) {
+                if (pageUser.getUser().equals(o2.getOwner())) {
+                    o2RenderSequence = pageUser.getRenderSequence();
+                    break;
+                }
+            }
+
+            // compare the renderSequences of these two PageUser objects to determine the sort order
+            return o1RenderSequence.compareTo(o2RenderSequence);
+        }
     }
 }
