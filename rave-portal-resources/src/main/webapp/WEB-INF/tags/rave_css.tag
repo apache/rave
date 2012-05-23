@@ -19,4 +19,4 @@
 --%>
 <%@ include file="/WEB-INF/jsp/includes/taglibs.jsp" %>
 <rave:third_party_css />
-<link rel="stylesheet" href="<c:url value="/css/rave_css.css" />"/>
+<link rel="stylesheet" href="<c:url value="/css/rave.css" />"/>

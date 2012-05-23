@@ -146,7 +146,7 @@
                     <!-- wro.xml defines the resource groups -->
                     <wroFile>${basedir}/src/main/resources/wro.xml</wroFile>
                     <!-- targetGroups is the set of resource groups, defined in wro.xml, that you want to process -->
-                    <targetGroups>rave_all.min,rave_css</targetGroups>
+                    <targetGroups>rave_all.min,rave</targetGroups>
                     <!-- minimize instructs the processors to handle their minimization work -->
                     <minimize>true</minimize>
                     <!-- location of the javascript after processing -->

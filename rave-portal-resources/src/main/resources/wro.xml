@@ -23,7 +23,7 @@ under the License.
         <js>/script/*.js</js>
     </group>
     <!-- defines a wro4j group called rave_css which represents the rave less file -->
-	<group name="rave_css">
+	<group name="rave">
         <css>/css/rave.less</css>
     </group>
 </groups>

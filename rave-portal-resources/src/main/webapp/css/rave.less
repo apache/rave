@@ -15,21 +15,19 @@
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-//
-// This LESS file is compiles Bootstrap CSS together with Rave customizations to produce rave.css
+
+
+
+// This LESS file compiles Bootstrap CSS together with Rave customizations to produce rave.css
 
 // For more information on LESS, visit http://lesscss.org
 // For more information on Bootstrap, visit http://twitter.github.com/bootstrap
 
 // To customize the look&feel of Rave, feel free to edit rave-customizations.less
 
-// Pull in default.css (will ultimately be refactored)
-@import "default.css";
-
 
 
 // pull in Bootstrap files
-// note: to simplify upgrades, Bootstrap versions are sectioned off in unique directories
 @import "bootstrap/less/bootstrap.less";
 @import "bootstrap/less/responsive.less";
 @iconSpritePath:          "bootstrap/img/glyphicons-halflings.png";
@@ -37,86 +35,10 @@
 
 
 
-// Rave styles (formerly contained in rave.css)
-// START rave.css
-.center {
-    text-align: center;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-/* Overwrite setitngs for navbar to remove need for spacer */
-.navbar-fixed-top {
-    position: static;
-    margin-bottom: 18px;
-}
-
-/* page menu related styles */
-/*
-    NOTE: bootstrap doesn't have a native style for a disabled dropdown item
-          so we created this
-*/
-.menu-item-disabled a,
-.menu-item-disabled a:visited,
-.menu-item-disabled a:active,
-.menu-item-disabled a:hover {
-    color: #CCCCCC !important;
-    background-color: #FFFFFF;
-}
-
-/*Dropdowns in widget-bar are inheriting text-align: center. All dropdowns should left align by default.*/
-.dropdown-menu {
-    text-align: left;
-}
-
-/*Creating Outlined Tabs*/
-.nav-tabs.outlined {
-    margin: 0px 4px -1px 0;
-    border-bottom: none;
-}
-
-.tab-content.outlined {
-    border: 1px solid #ddd;
-    border-radius: 0 5px 5px 5px;
-    padding: 10px 2% 0;
-    width: 96%;
-}
-
-/*Popups styles*/
-.popup.slideout {
-    box-sizing: border-box;
-    position: fixed;
-    top: 5%;
-    right: 0;
-    display: none;
-    background: #ffffff;
-    border: 1px solid #999;
-    border: 1px solid rgba(0, 0, 0, 0.3);
-    *border: 1px solid #999;
-    border-right-width: 0px;
-
-    -webkit-border-radius: 6px 0 0 6px;
-    -moz-border-radius: 6px 0 0 6px;
-    border-radius: 6px 0 0 6px;
-    -webkit-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
-    -moz-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
-    box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
-    width: 451px;
-    height: 90%;
-    padding: 15px;
-    overflow-y: auto;
-    overflow-x: visible;
-    z-index: 5000
-}
-
-.slideout-content {
-    box-sizing: border-box;
-    height: 98%;
-}
-// END rave.css
+// pull in general Rave customizations
+@import "rave-css.less";
 
 
 
-// pull in unique Rave customizations
+// pull in customizations that are specific to your project
 @import "rave-customizations.less";

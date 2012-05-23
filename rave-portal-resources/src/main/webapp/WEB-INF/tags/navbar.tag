@@ -23,7 +23,7 @@
 <%@ attribute name="pageTitle" required="false" description="The title of the page" %>
 <fmt:setBundle basename="messages"/>
 <c:if test="${not empty topnav}">
-    <div class="navbar navbar-fixed-top">
+    <div class="navbar">
         <div class="navbar-inner">
             <div class="container">
                 <%--@elvariable id="topnav" type="org.apache.rave.portal.web.model.NavigationMenu"--%>
