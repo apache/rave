@@ -16,4 +16,15 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 --%>
-<%-- Common footer will go here... --%>
+<%-- Common footer --%>
+<%@ include file="/WEB-INF/jsp/includes/taglibs.jsp" %>
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="span12 version">
+                <span>Apache Rave ${applicationProperties['portal.version']}</span>
+                <a href="http://rave.apache.org"><img class="footer-logo" alt="Apache Rave" title="Apache Rave" src="<c:url value="/images/rave-logo.png" />" /></a>
+            </div>
+        </div>
+    </div>
+</footer>
