@@ -19,13 +19,12 @@
 
 package org.apache.rave.integrationtests.steps;
 
+import org.apache.rave.integrationtests.pages.Portal;
 import org.jbehave.core.annotations.Then;
 import org.jbehave.core.annotations.When;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import org.apache.rave.integrationtests.pages.Portal;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -90,4 +89,60 @@ public class DefaultAccountSteps {
         final WebElement title = portal.findElement(By.tagName("title"));
         assertThat(title.getText().trim(), equalTo("Login - Rave"));
 	 }
+
+    @Then("I see the email address \"$email\" on the profile page")
+    public void getEmailOnProfilePage(String email) {
+        final WebElement emailField = portal.findElement(By.id("email"));
+        assertThat(emailField.getText().trim(), equalTo(email));
+    }
+
+    @Then("I see the about me \"$aboutMe\" on the profile page")
+    public void getAboutMeOnProfilePage(String aboutMe) {
+        final WebElement aboutMeField = portal.findElement(By.id("aboutMe"));
+        assertThat(aboutMeField.getText().trim(), equalTo(aboutMe));
+    }
+
+    @Then("I see the status \"$status\" on the profile page")
+    public void getStatusOnProfilePage(String status) {
+        final WebElement statusField = portal.findElement(By.id("status"));
+        assertThat(statusField.getText().trim(), equalTo(status));
+    }
+
+    @When("I click on the \"$buttonId\" button")
+    public void clickButton(String buttonId) {
+        final WebElement button = portal.findElement(By.id(buttonId));
+        button.click();
+    }
+
+    @Then("I can edit the email address")
+    public void editEmailFieldIsVisible() {
+        final WebElement editEmailField = portal.findElement(By.id("emailField"));
+        editEmailField.isDisplayed();
+    }
+
+    @When("I change the email address to \"$email\"")
+    public void changeEmailAddress(String email) {
+        changeFieldValue("emailField", email);
+    }
+
+    @When("I change the about me to \"$aboutMe\"")
+    public void changeAboutMe(String aboutMe) {
+        changeFieldValue("aboutMeField", aboutMe);
+    }
+
+    @When("I change the status to \"$status\"")
+    public void changeStatus(String status) {
+        changeFieldValue("statusField", status);
+    }
+    private void changeFieldValue(String fieldId, String value) {
+        final WebElement field = portal.findElement(By.id(fieldId));
+        field.clear();
+        field.sendKeys(value);
+    }
+
+    @When("I submit the edit profile form")
+    public void submitProfileForm() {
+        final WebElement editAccountForm = portal.findElement(By.id("editAccountForm"));
+        editAccountForm.submit();
+    }
 }
