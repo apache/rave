@@ -110,12 +110,15 @@ public class CollectionUtils {
      * Converts the wildcard list to a typed list
      * @param initial the wildcard list
      * @param <T> the type constraint for the target list
-     * @return the new, type constrained list
+     * @return if initial is null, null otherwise the new, type constrained list
      */
     public static <T> List<T> toBaseTypedList(List<? extends T> initial) {
-        List<T> list = new ArrayList<T>();
-        for(T f : initial) {
-            list.add(f);
+        List<T> list = null;
+        if (initial != null) {
+            list = new ArrayList<T>();
+            for (T f : initial) {
+                list.add(f);
+            }
         }
         return list;
     }
