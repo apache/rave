@@ -37,6 +37,7 @@
     <modules>
         <module>rave-commons</module>
         <module>rave-core</module>
+        <module>rave-jpa</module>
         <module>rave-web</module>
     </modules>
     
