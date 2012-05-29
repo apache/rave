@@ -20,71 +20,51 @@
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>org.apache.rave.integration-tests</groupId>
-  <artifactId>rave-default-account-tests</artifactId>
-  <name>Apache Rave :: rave-default-account-tests</name>
-  <description>Default account portal stories for canonical, john.doe, johnldap and openid</description>
-
-  <parent>
+    <modelVersion>4.0.0</modelVersion>
     <groupId>org.apache.rave.integration-tests</groupId>
-    <artifactId>rave-integration-tests</artifactId>
-    <version>0.12-SNAPSHOT</version>
-    <relativePath>../pom.xml</relativePath>
-  </parent>
+    <artifactId>rave-default-account-tests</artifactId>
+    <name>Apache Rave :: rave-default-account-tests</name>
+    <description>Default account portal stories for canonical, john.doe, johnldap and openid</description>
 
-  <dependencies>
-    <!-- This is the core tests jar that we just made in a previous module -->
-    <dependency>
-      <groupId>org.apache.rave.integration-tests</groupId>
-      <artifactId>rave-core-tests</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-  </dependencies>
+    <parent>
+        <groupId>org.apache.rave.integration-tests</groupId>
+        <artifactId>rave-integration-tests</artifactId>
+        <version>0.12-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
 
-  <build>
-    <resources>
-      <resource>
-        <directory>${basedir}/src/main/resources</directory>
-      </resource>
-      <resource>
-        <directory>${basedir}/src/main/stories</directory>
-      </resource>
-    </resources>
-    <plugins>
-      <plugin>
-        <groupId>org.jbehave</groupId>
-        <artifactId>jbehave-maven-plugin</artifactId>
-        <version>${jbehave.core.version}</version>
-        <executions>
-          <execution>
-            <id>unpack-view-resources</id>
-            <phase>process-resources</phase>
-            <goals>
-              <goal>unpack-view-resources</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>embeddable-stories</id>
-            <phase>integration-test</phase>
-            <configuration>
-              <includes>
-                <include>**/*Stories.java</include>
-              </includes>
-              <excludes/>
-              <generateViewAfterStories>true</generateViewAfterStories>
-              <ignoreFailureInStories>true</ignoreFailureInStories>
-              <ignoreFailureInView>true</ignoreFailureInView>
-              <metaFilters>
-                <metaFilter>${meta.filter}</metaFilter>
-              </metaFilters>
-            </configuration>
-            <goals>
-              <goal>run-stories-as-embeddables</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
-  </build>
+    <dependencies>
+        <!-- This is the core tests jar that we just made in a previous module -->
+        <dependency>
+            <groupId>org.apache.rave.integration-tests</groupId>
+            <artifactId>rave-core-tests</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>${basedir}/src/main/resources</directory>
+            </resource>
+            <resource>
+                <directory>${basedir}/src/main/stories</directory>
+            </resource>
+        </resources>
+    </build>
+    <profiles>
+        <profile>
+            <id>integration-tests</id>
+            <build>
+                <defaultGoal>integration-test</defaultGoal>
+                <plugins>
+                    <plugin>
+                        <groupId>org.jbehave</groupId>
+                        <artifactId>jbehave-maven-plugin</artifactId>
+                        <version>${jbehave.core.version}</version>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

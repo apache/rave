@@ -34,15 +34,16 @@
 
     <packaging>pom</packaging>
     <name>Apache Rave :: rave-integration-tests</name>
-    <description>JBehave stories verifying functionality of Apache Rave using Java and Spring</description>
+    <description>Test stories verifying functionality of Apache Rave using Java and Spring</description>
 
     <properties>
         <jbehave.core.version>3.6.1</jbehave.core.version>
         <jbehave.web.version>3.5.1</jbehave.web.version>
         <jbehave.site.version>3.1.1</jbehave.site.version>
         <org.hamcrest.version>1.2.1</org.hamcrest.version>
+        <commons-logging.version>1.1.1</commons-logging.version>
         <!-- New Selenium versions are often needed after an upgrade of Mozilla Firefox -->
-        <selenium.version>[2.20.0, 2.99)</selenium.version>
+        <selenium.version>[2.20.0, 2.22)</selenium.version>
         <meta.filter/>
 
         <!-- Cargo configuration properties -->
@@ -73,7 +74,12 @@
                 <artifactId>hamcrest-integration</artifactId>
                 <version>${org.hamcrest.version}</version>
             </dependency>
-
+            <dependency>
+                <groupId>commons-logging</groupId>
+                <artifactId>commons-logging</artifactId>
+                <version>${commons-logging.version}</version>
+                <scope>compile</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -164,7 +170,6 @@
         <dependency>
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
-            <version>1.1.1</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>
@@ -181,125 +186,147 @@
                         <target>1.6</target>
                     </configuration>
                 </plugin>
+                <plugin>
+                    <groupId>org.jbehave</groupId>
+                    <artifactId>jbehave-maven-plugin</artifactId>
+                    <version>${jbehave.core.version}</version>
+                    <executions>
+                        <execution>
+                            <id>unpack-view-resources</id>
+                            <phase>process-resources</phase>
+                            <goals>
+                                <goal>unpack-view-resources</goal>
+                            </goals>
+                        </execution>
+                        <execution>
+                            <id>embeddable-stories</id>
+                            <phase>integration-test</phase>
+                            <configuration>
+                                <includes>
+                                    <include>**/*Stories.java</include>
+                                </includes>
+                                <excludes/>
+                                <generateViewAfterStories>true</generateViewAfterStories>
+                                <ignoreFailureInStories>true</ignoreFailureInStories>
+                                <ignoreFailureInView>true</ignoreFailureInView>
+                                <metaFilters>
+                                    <metaFilter>${meta.filter}</metaFilter>
+                                </metaFilters>
+                            </configuration>
+                            <goals>
+                                <goal>run-stories-as-embeddables</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
             </plugins>
         </pluginManagement>
-        <plugins>
-            <plugin>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <version>1.7</version>
-                <executions>
-                    <execution>
-                        <phase>initialize</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-                            <target>
-                                <delete>
-                                    <fileset dir="/tmp" includes="rave_db*"/>
-                                </delete>
-                            </target>
-                        </configuration>
-                        <inherited>false</inherited>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.cargo</groupId>
-                <artifactId>cargo-maven2-plugin</artifactId>
-                <version>${cargo.version}</version>
-                <executions>
-                    <execution>
-                        <id>start-container</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>start</goal>
-                        </goals>
-                        <inherited>false</inherited>
-                    </execution>
-                </executions>
-                <configuration>
-                    <configuration>
-                        <properties>
-                            <cargo.jvmargs>
-                                <![CDATA[-Dh2.bindAddress="localhost" -Xdebug -XX:MaxPermSize=256m -Xrunjdwp:transport=dt_socket,address=${cargo.debug.address},server=y,suspend=${cargo.debug.suspend} -noverify ${javaagent} ${cargo.args}]]>
-                            </cargo.jvmargs>
-                            <cargo.tomcat.context.reloadable>true</cargo.tomcat.context.reloadable>
-                        </properties>
-                        <home>${project.build.directory}/tomcat6x</home>
-                        <deployables>
-                            <deployable>
-                                <groupId>org.apache.wookie</groupId>
-                                <artifactId>wookie</artifactId>
-                                <type>war</type>
-                                <properties>
-                                    <context>/wookie</context>
-                                </properties>
-                            </deployable>
-                            <deployable>
-                                <groupId>org.apache.rave</groupId>
-                                <artifactId>rave-shindig</artifactId>
-                                <type>war</type>
-                                <properties>
-                                    <context>/ROOT</context>
-                                </properties>
-                            </deployable>
-                            <deployable>
-                                <groupId>org.apache.rave</groupId>
-                                <artifactId>rave-demo-gadgets</artifactId>
-                                <type>war</type>
-                                <properties>
-                                    <context>/demogadgets</context>
-                                </properties>
-                            </deployable>
-                            <deployable>
-                                <groupId>org.apache.rave</groupId>
-                                <artifactId>rave-portal</artifactId>
-                                <type>war</type>
-                                <properties>
-                                    <context>/portal</context>
-                                </properties>
-                            </deployable>
-                        </deployables>
-                        <configfiles>
-                            <configfile>
-                                <file>${project.basedir}/../rave-portal-resources/src/main/dist/conf/tomcat-users.xml
-                                </file>
-                                <todir>conf/</todir>
-                                <tofile>tomcat-users.xml</tofile>
-                            </configfile>
-                        </configfiles>
-                    </configuration>
-                    <container>
-                        <containerId>tomcat6x</containerId>
-                        <timeout>180000</timeout>
-                        <zipUrlInstaller>
-                            <downloadDir>${settings.localRepository}/org/codehaus/cargo/cargo-container-archives
-                            </downloadDir>
-                            <url>
-                                http://archive.apache.org/dist/tomcat/tomcat-6/v6.0.35/bin/apache-tomcat-6.0.35.tar.gz
-                            </url>
-                        </zipUrlInstaller>
-                        <systemProperties>
-                            <net.sf.ehcache.skipUpdateCheck>true</net.sf.ehcache.skipUpdateCheck>
-                        </systemProperties>
-                        <dependencies>
-                            <dependency>
-                                <groupId>javax.mail</groupId>
-                                <artifactId>mail</artifactId>
-                                <classpath>shared</classpath>
-                            </dependency>
-                            <dependency>
-                                <groupId>javax.activation</groupId>
-                                <artifactId>activation</artifactId>
-                                <classpath>shared</classpath>
-                            </dependency>
-                        </dependencies>
-                    </container>
-                </configuration>
-            </plugin>
-        </plugins>
     </build>
+    <profiles>
+        <profile>
+            <id>integration-tests</id>
+            <build>
+                <defaultGoal>integration-test</defaultGoal>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.cargo</groupId>
+                        <artifactId>cargo-maven2-plugin</artifactId>
+                        <version>${cargo.version}</version>
+                        <executions>
+                            <execution>
+                                <id>start-container</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>start</goal>
+                                </goals>
+                                <inherited>false</inherited>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <configuration>
+                                <properties>
+                                    <cargo.jvmargs>
+                                        <![CDATA[-Dh2.bindAddress="localhost" -Xdebug -XX:MaxPermSize=256m -Xrunjdwp:transport=dt_socket,address=${cargo.debug.address},server=y,suspend=${cargo.debug.suspend} -noverify ${javaagent} ${cargo.args}]]>
+                                    </cargo.jvmargs>
+                                    <cargo.tomcat.context.reloadable>true</cargo.tomcat.context.reloadable>
+                                </properties>
+                                <home>${project.build.directory}/tomcat6x</home>
+                                <deployables>
+                                    <deployable>
+                                        <groupId>org.apache.wookie</groupId>
+                                        <artifactId>wookie</artifactId>
+                                        <type>war</type>
+                                        <properties>
+                                            <context>/wookie</context>
+                                        </properties>
+                                    </deployable>
+                                    <deployable>
+                                        <groupId>org.apache.rave</groupId>
+                                        <artifactId>rave-shindig</artifactId>
+                                        <type>war</type>
+                                        <properties>
+                                            <context>/ROOT</context>
+                                        </properties>
+                                    </deployable>
+                                    <deployable>
+                                        <groupId>org.apache.rave</groupId>
+                                        <artifactId>rave-demo-gadgets</artifactId>
+                                        <type>war</type>
+                                        <properties>
+                                            <context>/demogadgets</context>
+                                        </properties>
+                                    </deployable>
+                                    <deployable>
+                                        <groupId>org.apache.rave</groupId>
+                                        <artifactId>rave-portal</artifactId>
+                                        <type>war</type>
+                                        <properties>
+                                            <context>/portal</context>
+                                        </properties>
+                                    </deployable>
+                                </deployables>
+                                <configfiles>
+                                    <configfile>
+                                        <file>
+                                            ${project.basedir}/../rave-portal-resources/src/main/dist/conf/tomcat-users.xml
+                                        </file>
+                                        <todir>conf/</todir>
+                                        <tofile>tomcat-users.xml</tofile>
+                                    </configfile>
+                                </configfiles>
+                            </configuration>
+                            <container>
+                                <containerId>tomcat6x</containerId>
+                                <timeout>180000</timeout>
+                                <zipUrlInstaller>
+                                    <downloadDir>${settings.localRepository}/org/codehaus/cargo/cargo-container-archives
+                                    </downloadDir>
+                                    <url>
+                                        http://archive.apache.org/dist/tomcat/tomcat-6/v6.0.35/bin/apache-tomcat-6.0.35.tar.gz
+                                    </url>
+                                </zipUrlInstaller>
+                                <systemProperties>
+                                    <net.sf.ehcache.skipUpdateCheck>true</net.sf.ehcache.skipUpdateCheck>
+                                </systemProperties>
+                                <dependencies>
+                                    <dependency>
+                                        <groupId>javax.mail</groupId>
+                                        <artifactId>mail</artifactId>
+                                        <classpath>shared</classpath>
+                                    </dependency>
+                                    <dependency>
+                                        <groupId>javax.activation</groupId>
+                                        <artifactId>activation</artifactId>
+                                        <classpath>shared</classpath>
+                                    </dependency>
+                                </dependencies>
+                            </container>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
     <modules>
         <module>rave-core-tests</module>
         <module>rave-newuser-tests</module>
