@@ -21,6 +21,7 @@ package org.apache.rave.opensocial.repository.impl;
 
 import org.apache.rave.exception.NotSupportedException;
 import org.apache.rave.portal.model.Group;
+import org.apache.rave.portal.model.JpaPerson;
 import org.apache.rave.portal.model.Person;
 import org.apache.rave.opensocial.repository.PersonRepository;
 import org.apache.rave.persistence.jpa.AbstractJpaRepository;
@@ -35,24 +36,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.apache.rave.persistence.jpa.util.JpaUtil.getSingleResult;
+import static org.apache.rave.persistence.jpa.util.JpaUtil.saveOrUpdate;
 
 /**
  *
  */
 @Repository
-public class JpaPersonRepository extends AbstractJpaRepository<Person> implements PersonRepository{
+public class JpaPersonRepository implements PersonRepository{
 
     @PersistenceContext
     private EntityManager manager;
 
-    public JpaPersonRepository() {
-        super(Person.class);
-    }
-
     @Override
     public Person findByUsername(String username) {
-        TypedQuery<Person> query = manager.createNamedQuery(Person.FIND_BY_USERNAME, Person.class);
-        query.setParameter(Person.USERNAME_PARAM, username);
+        TypedQuery<JpaPerson> query = manager.createNamedQuery(JpaPerson.FIND_BY_USERNAME, JpaPerson.class);
+        query.setParameter(JpaPerson.USERNAME_PARAM, username);
         return getSingleResult(query.getResultList());
     }
 
@@ -60,9 +58,9 @@ public class JpaPersonRepository extends AbstractJpaRepository<Person> implement
     public List<Person> findAllConnectedPeople(String username) {
         List<Person> connections = new ArrayList<Person>();
         connections.addAll(findFriends(username));
-        TypedQuery<Person> members = manager.createNamedQuery(Person.FIND_BY_GROUP_MEMBERSHIP, Person.class);
-        members.setParameter(Person.USERNAME_PARAM, username);
-        CollectionUtils.addUniqueValues(members.getResultList(), connections);
+        TypedQuery<JpaPerson> members = manager.createNamedQuery(JpaPerson.FIND_BY_GROUP_MEMBERSHIP, JpaPerson.class);
+        members.setParameter(JpaPerson.USERNAME_PARAM, username);
+        CollectionUtils.addUniqueValues(CollectionUtils.<Person>toBaseTypedList(members.getResultList()), connections);
         return connections;
     }
 
@@ -83,9 +81,9 @@ public class JpaPersonRepository extends AbstractJpaRepository<Person> implement
 
     @Override
     public List<Person> findFriends(String username) {
-        TypedQuery<Person> friends = manager.createNamedQuery(Person.FIND_FRIENDS_BY_USERNAME, Person.class);
-        friends.setParameter(Person.USERNAME_PARAM, username);
-        return friends.getResultList();
+        TypedQuery<JpaPerson> friends = manager.createNamedQuery(JpaPerson.FIND_FRIENDS_BY_USERNAME, JpaPerson.class);
+        friends.setParameter(JpaPerson.USERNAME_PARAM, username);
+        return CollectionUtils.<Person>toBaseTypedList(friends.getResultList());
     }
 
     @Override
@@ -108,7 +106,7 @@ public class JpaPersonRepository extends AbstractJpaRepository<Person> implement
         TypedQuery<Group> query = manager.createNamedQuery(Group.FIND_BY_TITLE, Group.class);
         query.setParameter(Group.GROUP_ID_PARAM, groupId);
         Group result = getSingleResult(query.getResultList());
-        return result == null ? new ArrayList<Person>() : result.getMembers();
+        return result == null ? new ArrayList<Person>() : CollectionUtils.<Person>toBaseTypedList(result.getMembers());
     }
 
     @Override
@@ -124,5 +122,41 @@ public class JpaPersonRepository extends AbstractJpaRepository<Person> implement
     @Override
     public List<Person> findByGroupWithFriend(String groupId, String friendUsername) {
         throw new NotSupportedException();
+    }
+
+    @Override
+    public Class<? extends Person> getType() {
+        return JpaPerson.class;
+    }
+
+    @Override
+    public Person get(long id) {
+        return manager.find(JpaPerson.class, id);
+    }
+
+    @Override
+    public Person save(Person item) {
+        JpaPerson person = getJpaPerson(item);
+        return saveOrUpdate(person.getEntityId(), manager, person);
+    }
+
+    @Override
+    public void delete(Person item) {
+        manager.remove(item instanceof JpaPerson ? item : findByUsername(item.getUsername()));
+    }
+
+    private JpaPerson getJpaPerson(Person p) {
+        JpaPerson person;
+        if (p instanceof JpaPerson) {
+            person = (JpaPerson) p;
+        } else {
+            person = (JpaPerson) (findByUsername(p.getUsername()));
+            if (person == null) {
+                new JpaPerson(p);
+            } else {
+                person.update(p);
+            }
+        }
+        return person;
     }
 }

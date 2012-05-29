@@ -21,6 +21,7 @@ package org.apache.rave.opensocial.service.impl;
 
 import org.apache.rave.exception.NotSupportedException;
 import org.apache.rave.portal.model.*;
+import org.apache.rave.portal.model.Person;
 import org.apache.rave.portal.model.util.ModelUtils;
 import org.apache.rave.util.CollectionUtils;
 import org.apache.shindig.protocol.model.Enum;
@@ -38,7 +39,7 @@ import java.util.*;
 import static org.apache.rave.util.CollectionUtils.getSingleValue;
 
 /**
- * Wraps a {@link org.apache.rave.portal.model.Person} model object and returns values only if
+ * Wraps a {@link org.apache.rave.portal.model.JpaPerson} model object and returns values only if
  * the field set contains the requested field
  * <p/>
  * Usage of this wrapper is made possible by Shindig's use of a getter based serialization model
@@ -110,7 +111,7 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
 
     @Override
     public List<Address> getAddresses() {
-        return displayField(Field.ADDRESSES) ? convertAddresses(internal.getAddresses()) : null;        
+        return displayField(Field.ADDRESSES) ? convertAddresses(internal.getAddresses()) : null;
     }
 
     @Override
@@ -340,7 +341,7 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
     //REQUIRED FIELD
     @Override
     public String getId() {
-        return internal.getEntityId().toString();
+        return internal.getUsername();
     }
 
     @Override

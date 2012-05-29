@@ -194,8 +194,8 @@ public class WidgetApiTest {
     @Test
     public void getAllUsers() {
         List<Person> persons = new ArrayList<Person>();
-        persons.add(new Person());
-        persons.add(new Person());
+        persons.add(new JpaPerson());
+        persons.add(new JpaPerson());
 
         expect(userService.getAllByAddedWidget(VALID_WIDGET_ID)).andReturn(persons);
         replay(userService);

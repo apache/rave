@@ -22,6 +22,7 @@ package org.apache.rave.opensocial.service.impl;
 import com.google.common.collect.Lists;
 import org.apache.rave.opensocial.repository.PersonRepository;
 import org.apache.rave.opensocial.service.SimplePersonService;
+import org.apache.rave.portal.model.JpaPerson;
 import org.apache.rave.util.CollectionUtils;
 import org.apache.shindig.auth.SecurityToken;
 import org.apache.shindig.common.util.ImmediateFuture;

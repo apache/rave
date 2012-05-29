@@ -87,7 +87,7 @@ public class FieldRestrictingPersonTest {
     @Test
     public void getId() {
         Person p = new FieldRestrictingPerson(getTestPerson(), null);
-        assertThat(p.getId(), is(equalTo(ID)));
+        assertThat(p.getId(), is(equalTo(USERNAME)));
     }
     @Test
     public void getDisplayName() {
@@ -253,7 +253,7 @@ public class FieldRestrictingPersonTest {
 
     @Test
     public void getGender_null() {
-        org.apache.rave.portal.model.Person testPerson = getTestPerson();
+        JpaPerson testPerson = getTestPerson();
         testPerson.setProperties(new ArrayList<PersonProperty>());
         Person p = new FieldRestrictingPerson(testPerson, getFieldSet(Person.Field.GENDER));
         assertThat(p.getGender(), is(nullValue()));
@@ -621,8 +621,8 @@ public class FieldRestrictingPersonTest {
         new FieldRestrictingPerson(null, null).setHappiestWhen(SUFFIX);
     }
 
-    private org.apache.rave.portal.model.Person getTestPerson() {
-        org.apache.rave.portal.model.Person person = new org.apache.rave.portal.model.Person();
+    private JpaPerson getTestPerson() {
+        JpaPerson person = new JpaPerson();
         person.setEntityId(1L);
         person.setUsername(USERNAME);
         person.setAboutMe(ABOUT_ME);

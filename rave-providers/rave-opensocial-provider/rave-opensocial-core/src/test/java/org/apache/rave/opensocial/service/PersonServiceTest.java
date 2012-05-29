@@ -23,6 +23,7 @@ import com.google.common.collect.Lists;
 import org.apache.rave.opensocial.repository.PersonRepository;
 import org.apache.rave.opensocial.service.impl.DefaultPersonService;
 import org.apache.rave.opensocial.service.impl.FieldRestrictingPerson;
+import org.apache.rave.portal.model.JpaPerson;
 import org.apache.shindig.auth.SecurityToken;
 import org.apache.shindig.protocol.ProtocolException;
 import org.apache.shindig.protocol.RestfulCollection;
@@ -507,7 +508,7 @@ public class PersonServiceTest {
     }
 
     private org.apache.rave.portal.model.Person getDbPerson() {
-        org.apache.rave.portal.model.Person dbPerson = new org.apache.rave.portal.model.Person();
+        JpaPerson dbPerson = new JpaPerson();
         dbPerson.setEntityId(Long.parseLong(ID_1));
         dbPerson.setUsername(ID_1);
         dbPerson.setDisplayName(DISPLAY_NAME);
@@ -515,7 +516,7 @@ public class PersonServiceTest {
     }
 
     private org.apache.rave.portal.model.Person getDbPerson(Long id) {
-        org.apache.rave.portal.model.Person dbPerson = new org.apache.rave.portal.model.Person();
+        JpaPerson dbPerson = new JpaPerson();
         dbPerson.setEntityId(id);
         dbPerson.setUsername(id.toString());
         dbPerson.setDisplayName(DISPLAY_NAME);

@@ -40,11 +40,11 @@ public class PersonAssociation implements BasicEntity {
 
     @OneToOne
     @JoinColumn(name="follower_id", referencedColumnName = "entity_id")
-    Person follower;
+    JpaPerson follower;
 
     @OneToOne
     @JoinColumn(name="followed_id", referencedColumnName = "entity_id")
-    Person followed;
+    JpaPerson followed;
 
     @Override
     public Long getEntityId() {
@@ -60,15 +60,15 @@ public class PersonAssociation implements BasicEntity {
         return follower;
     }
 
-    public void setFollower(Person follower) {
+    public void setFollower(JpaPerson follower) {
         this.follower = follower;
     }
 
-    public Person getFollowed() {
+    public JpaPerson getFollowed() {
         return followed;
     }
 
-    public void setFollowed(Person followed) {
+    public void setFollowed(JpaPerson followed) {
         this.followed = followed;
     }
 

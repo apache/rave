@@ -47,7 +47,7 @@ import java.util.Date;
                 "where lower(u.username) like :"+User.PARAM_SEARCHTERM+" or lower(u.email) like :"+User.PARAM_SEARCHTERM),
         @NamedQuery(name = User.USER_GET_ALL_FOR_ADDED_WIDGET, query = "select distinct(rw.region.page.owner) from RegionWidget rw where rw.widget.entityId = :widgetId order by rw.region.page.owner.familyName, rw.region.page.owner.givenName")
 })
-public class User extends Person implements UserDetails, BasicEntity, Serializable {
+public class User extends JpaPerson implements UserDetails, BasicEntity, Serializable {
     private static final long serialVersionUID = 1L;
 
     public static final String USER_GET_BY_USERNAME = "User.getByUsername";
@@ -354,7 +354,7 @@ public class User extends Person implements UserDetails, BasicEntity, Serializab
      * @return a Person object representing the data contained in this class
      */
     public Person toPerson() {
-        Person p = new Person();
+        JpaPerson p = new JpaPerson();
         p.setAboutMe(this.getAboutMe());
         p.setAdditionalName(this.getAdditionalName());
         p.setAddresses(this.getAddresses());

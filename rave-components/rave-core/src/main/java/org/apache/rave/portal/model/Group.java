@@ -58,7 +58,7 @@ public class Group implements BasicEntity {
 
     @ManyToOne
     @JoinColumn(name = "owner_id", referencedColumnName = "entity_id")
-    private Person owner;
+    private JpaPerson owner;
 
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -67,13 +67,13 @@ public class Group implements BasicEntity {
             @JoinColumn(name = "group_id", referencedColumnName = "entity_id"),
             inverseJoinColumns =
             @JoinColumn(name = "person_id", referencedColumnName = "entity_id"))
-    private List<Person> members;
+    private List<JpaPerson> members;
 
-    public Person getOwner() {
+    public JpaPerson getOwner() {
         return owner;
     }
 
-    public void setOwner(Person owner) {
+    public void setOwner(JpaPerson owner) {
         this.owner = owner;
     }
 
@@ -85,11 +85,11 @@ public class Group implements BasicEntity {
         this.description = description;
     }
 
-    public List<Person> getMembers() {
+    public List<JpaPerson> getMembers() {
         return members;
     }
 
-    public void setMembers(List<Person> members) {
+    public void setMembers(List<JpaPerson> members) {
         this.members = members;
     }
 

@@ -23,7 +23,7 @@ import org.apache.rave.persistence.BasicEntity;
 import javax.persistence.*;
 
 /**
- * A generic extension model for the {@link Person} that allows implementers to
+ * A generic extension model for the {@link JpaPerson} that allows implementers to
  * add fields to the Person not initially envisioned
  */
 @Entity
