@@ -95,6 +95,7 @@ public class JpaPageRepository extends AbstractJpaRepository<Page> implements Pa
         p.setOwner(user);
         PageUser pageUser = new PageUser(p.getOwner(), p, pt.getRenderSequence());
         pageUser.setPageStatus(PageInvitationStatus.OWNER);
+        pageUser.setEditor(true);
         List<PageUser> members = new ArrayList<PageUser>();
         members.add(pageUser);
         p.setMembers(members);
@@ -170,6 +171,7 @@ public class JpaPageRepository extends AbstractJpaRepository<Page> implements Pa
             // create new pageUser tuple
             PageUser pageUser = new PageUser(lPage.getOwner(), lPage, pt.getRenderSequence());
             pageUser.setPageStatus(PageInvitationStatus.OWNER);
+            pageUser.setEditor(true);
             List<PageUser> members = new ArrayList<PageUser>();
             members.add(pageUser);
             lPage.setMembers(members);

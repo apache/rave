@@ -21,36 +21,19 @@
 <fmt:setBundle basename="messages"/>
 <jsp:useBean id="pages" type="java.util.List<org.apache.rave.portal.model.Page>" scope="request"/>
 <%--@elvariable id="page" type="org.apache.rave.portal.model.Page"--%>
-    <header class="header-mobile">
-        <nav class="topnav">
-            <ul class="horizontal-list">
-                <li>
-                    <a href="<spring:url value="/app/store?referringPageId=${page.entityId}" />">
-                      <fmt:message key="page.store.title"/>
-                    </a>
-                </li>
-                <sec:authorize url="/app/admin/">
-                <li>
-                    <a href="<spring:url value="/app/admin/"/>">
-                        <fmt:message key="page.general.toadmininterface"/>
-                    </a>
-                </li>
-                </sec:authorize>
-                <li>
-                    <a href="<spring:url value="/j_spring_security_logout" htmlEscape="true" />">
-                      <fmt:message key="page.general.logout"/></a>
-                </li>
-            </ul>
-        </nav>
-        <h1>
-            <fmt:message key="page.home.welcome"><fmt:param>
-                <c:choose>
-                    <c:when test="${not empty page.owner.displayName}"><c:out value="${page.owner.displayName}"/></c:when>
-                    <c:otherwise><c:out value="${page.owner.username}"/></c:otherwise>
-                </c:choose>
-            </fmt:param></fmt:message>
-        </h1>
-    </header>
+<sec:authentication property="principal.username" var="principleUsername" scope="request"/>
+<sec:authentication property="principal.displayName" var="displayName" scope="request"/>
+
+<fmt:message key="page.home.welcome" var="pagetitle">
+    <fmt:param>
+        <c:choose>
+            <c:when test="${not empty displayName}"><c:out value="${displayName}"/></c:when>
+            <c:otherwise><c:out value="${principleUsername}"/></c:otherwise>
+        </c:choose>
+    </fmt:param>
+</fmt:message>
+<rave:navbar pageTitle="${pagetitle}"/>
+
     <input id="currentPageId" type="hidden" value="${page.entityId}" />
     <c:set var="hasOnlyOnePage" scope="request">
         <c:choose>
@@ -125,7 +108,7 @@
         <div><fmt:message key="page.general.movethispage"/></div>
         <form id="movePageForm">
             <select id="moveAfterPageId">
-                <c:if test="${page.renderSequence != 1}">
+                <c:if test="${pageUser.renderSequence != 1}">
                     <option value="-1"><fmt:message key="page.general.movethispage.tofirst"/></option>
                 </c:if>
                 <c:forEach var="userPage" items="${pages}">
@@ -159,6 +142,7 @@
 <portal:register-init-script location="${'AFTER_RAVE'}">
     <script>
         $(function() {
+            rave.initPageEditorStatus(<c:out value="${pageUser.editor}"/>);
             rave.setMobile(true);
             rave.initProviders();
             rave.initWidgets();

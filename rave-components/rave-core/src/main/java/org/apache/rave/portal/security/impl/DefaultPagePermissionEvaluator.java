@@ -118,11 +118,12 @@ public class DefaultPagePermissionEvaluator extends AbstractModelPermissionEvalu
             case UPDATE:
                 // anyone can create, delete, or update a page that they own                  
                 hasPermission = isPageOwner(authentication, page, trustedPageContainer, trustedDomainObject)
-                || isPageMember(authentication, page, trustedPageContainer, trustedDomainObject);     
+                || isPageMember(authentication, page, trustedPageContainer, trustedDomainObject, true);
                 break;
             case READ:
                 // anyone can read a USER page they own or anyone's PERSON_PROFILE page
-                hasPermission = isReadablePage(authentication, page, trustedPageContainer, trustedDomainObject);
+                hasPermission = isReadablePage(authentication, page, trustedPageContainer, trustedDomainObject)
+                || isPageMember(authentication, page, trustedPageContainer, trustedDomainObject, false);
                 break;
             default:
                 log.warn("unknown permission: " + permission);
@@ -187,7 +188,7 @@ public class DefaultPagePermissionEvaluator extends AbstractModelPermissionEvalu
     private boolean isReadablePage(Authentication authentication, Page page, List<Page> trustedPageContainer, boolean trustedDomainObject) {
         return isPersonProfilePageOrSubPage(page) ||
                isPageOwner(authentication, page, trustedPageContainer, trustedDomainObject) ||
-               isPageMember(authentication, page, trustedPageContainer, trustedDomainObject);
+               isPageMember(authentication, page, trustedPageContainer, trustedDomainObject, false);
     }
     
     private boolean isPersonProfilePageOrSubPage(Page page) {
@@ -199,7 +200,7 @@ public class DefaultPagePermissionEvaluator extends AbstractModelPermissionEvalu
     // checks to see if the Authentication object principal is a member of the supplied page object 
     // if trustedDomainObject is false, pull the entity from the database first to ensure
     // the model object is trusted and hasn't been modified
-    private boolean isPageMember(Authentication authentication, Page page, List<Page> trustedPageContainer, boolean trustedDomainObject) {
+    private boolean isPageMember(Authentication authentication, Page page, List<Page> trustedPageContainer, boolean trustedDomainObject, boolean checkEditorStatus) {
         Page trustedPage = null;
         if (trustedDomainObject) {
             trustedPage = page;
@@ -219,6 +220,10 @@ public class DefaultPagePermissionEvaluator extends AbstractModelPermissionEvalu
         for (PageUser pageUser:trustedPage.getMembers()){
             if (pageUser.getUser().getUsername().equals(viewer)){
                 log.info("User "+viewer+" is a member of page "+trustedPage.getEntityId());
+                if(checkEditorStatus){
+                    log.info("checking editor:"+trustedPage.getEntityId()+"@"+viewer+"@"+pageUser.isEditor());
+                    return pageUser.isEditor();
+                }
                 return true;
             }
         }

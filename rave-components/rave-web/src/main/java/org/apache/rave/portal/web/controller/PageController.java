@@ -84,7 +84,7 @@ public class PageController {
         List<PageLayout> pageLayouts = pageLayoutService.getAllUserSelectable();
         addAttributesToModel(model, page, currentPageUser, pages, pageLayouts);
         String view = ControllerUtils.getDeviceAppropriateView(request, ViewNames.getPageView(page.getPageLayout().getCode()), ViewNames.MOBILE_HOME);
-        ControllerUtils.addNavItemsToModel(view, model, page.getEntityId(), userService.getAuthenticatedUser());
+        ControllerUtils.addNavItemsToModel(view, model, page.getEntityId(), userService.getAuthenticatedUser(), currentPageUser.isEditor());
         return view;
     }
     
@@ -103,7 +103,7 @@ public class PageController {
             List<PageLayout> pageLayouts = pageLayoutService.getAllUserSelectable();
             addAttributesToModel(model, page, currentPageUser, pages, pageLayouts);
             String view = ControllerUtils.getDeviceAppropriateView(request, ViewNames.getPageView(page.getPageLayout().getCode()), ViewNames.MOBILE_HOME);
-            ControllerUtils.addNavItemsToModel(view, model, page.getEntityId(), thisUser);
+            ControllerUtils.addNavItemsToModel(view, model, page.getEntityId(), thisUser, currentPageUser.isEditor());
             return view;
         } catch (Exception e) {
             logger.info("unable to get page - possibly because a shared page was revoked by its owner");

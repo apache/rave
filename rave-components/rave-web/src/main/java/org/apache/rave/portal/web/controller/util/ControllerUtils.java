@@ -61,19 +61,25 @@ public class ControllerUtils {
     }
 
     public static void addNavItemsToModel(String view, Model model, long referringPageId, User user) {
-        final NavigationMenu topMenu = getTopMenu(view, referringPageId, user);
+        final NavigationMenu topMenu = getTopMenu(view, referringPageId, user, true);
         model.addAttribute(topMenu.getName(), topMenu);
     }
 
-    public static NavigationMenu getTopMenu(String view, long referringPageId, User user) {
+    public static void addNavItemsToModel(String view, Model model, long referringPageId, User user, boolean addStore) {
+        final NavigationMenu topMenu = getTopMenu(view, referringPageId, user, addStore);
+        model.addAttribute(topMenu.getName(), topMenu);
+    }
+    
+    public static NavigationMenu getTopMenu(String view, long referringPageId, User user, boolean addStoreLink) {
         NavigationMenu menu = new NavigationMenu("topnav");
-
-        if(view.startsWith(ViewNames.PAGE)) {
+        if(view.startsWith(ViewNames.PAGE) || view.startsWith(ViewNames.MOBILE_HOME)) {
             NavigationItem profile = new NavigationItem("page.profile.title", user.getDisplayName() != null ? user.getDisplayName() : user.getUsername(), "/app/person/" + user.getUsername() + "?referringPageId=" + referringPageId);
             menu.addNavigationItem(profile);
 
-            NavigationItem store = new NavigationItem("page.store.title", null, "/app/store?referringPageId=" + referringPageId);
-            menu.addNavigationItem(store);
+            if(addStoreLink){
+                NavigationItem store = new NavigationItem("page.store.title", null, "/app/store?referringPageId=" + referringPageId);
+                menu.addNavigationItem(store);
+            }
 
             NavigationItem admin = getAdminItem();
             menu.addNavigationItem(admin);

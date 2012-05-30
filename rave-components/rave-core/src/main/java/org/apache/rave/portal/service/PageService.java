@@ -190,8 +190,8 @@ public interface PageService {
      *                        -1 if you want this to be the first page
      * @return the updated Page object containing its new render sequence
      */
-    @PreAuthorize("hasPermission(#pageId, 'org.apache.rave.portal.model.Page', 'update') and " +
-                  "hasPermission(#moveAfterPageId, 'org.apache.rave.portal.model.Page', 'update')")
+    @PreAuthorize("hasPermission(#pageId, 'org.apache.rave.portal.model.Page', 'read') and " +
+                  "hasPermission(#moveAfterPageId, 'org.apache.rave.portal.model.Page', 'read')")
     Page movePage(long pageId, long moveAfterPageId);
     
     /**
@@ -200,7 +200,7 @@ public interface PageService {
      * @param pageId the pageId of the page to move to the default position
      * @return the updated Page object containing its new render sequence
      */
-    @PreAuthorize("hasPermission(#pageId, 'org.apache.rave.portal.model.Page', 'update')") 
+    @PreAuthorize("hasPermission(#pageId, 'org.apache.rave.portal.model.Page', 'read')") 
     Page movePageToDefault(long pageId);
 
     /**
@@ -217,8 +217,10 @@ public interface PageService {
      * @param pageId - the id of the page in question
      * @param userId - the userid to add
      * @return -  whether the user was successfully removed or not
+     * Note: this is read access because a page shared to a non page owner means they have 'read' access
+     * unless they are set as an 'editor' of the page, which means 'update' access. 
      */
-    @PreAuthorize("hasPermission(#pageId, 'org.apache.rave.portal.model.Page', 'update')")
+    @PreAuthorize("hasPermission(#pageId, 'org.apache.rave.portal.model.Page', 'read')")
     Boolean removeMemberFromPage(long pageId, long userId);
 
     /**
@@ -227,6 +229,18 @@ public interface PageService {
      * @param shareStatus - a string value defined in PageStatus
      * @return
      */
-    @PreAuthorize("hasPermission(#pageId, 'org.apache.rave.portal.model.Page', 'update')")
+    @PreAuthorize("hasPermission(#pageId, 'org.apache.rave.portal.model.Page', 'read')")
     Boolean updateSharedPageStatus(long pageId, String shareStatus);
+
+    /**
+     * Update a user who has shared access to a given page, so that they can edit the page (true)
+     * or can only view it (false)
+     * @param pageId - the id of the page in question 
+     * @param userId - the userId of the user to assign the permission to
+     * @param isEditor - value to denote if the user can edit or not
+     * @return
+     */
+    @PreAuthorize("hasPermission(#pageId, 'org.apache.rave.portal.model.Page', 'update')")
+    Boolean updatePageEditingStatus(long pageId, long userId, boolean isEditor);
+
 }
