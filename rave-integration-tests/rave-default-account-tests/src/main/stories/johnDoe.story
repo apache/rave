@@ -29,7 +29,6 @@ Then I see the email address "john.doe@example.net" on the profile page
 And I see the about me "I'm a test user" on the profile page
 And I see the status "It's complicated" on the profile page
 When I log out
-Then I see the Rave login page
 
 Scenario: John Doe reverts his profile after logging out and in
 When I log in with username "john.doe" and password "john.doe"
@@ -46,4 +45,14 @@ And I submit the edit profile form
 Then I see the email address "john.doe@example.com" on the profile page
 And I see the about me "" on the profile page
 And I see the status "" on the profile page
+When I log out
 
+Scenario: John Doe adds a new page
+When I log in with username "john.doe" and password "john.doe"
+And I click the add page button
+And I enter the title "Auto test"
+And I choose the two column layout
+And I add the page
+Then the new page with title "Auto test" is selected
+When I delete the current page
+When I log out

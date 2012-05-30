@@ -32,7 +32,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class Portal extends WebDriverPage {
-    private final static int SLEEP_TIME = 1666; //ms
+    private final static int SLEEP_TIME = 3333; //ms
     private final static int MAX_ATTEMPTS = 3;
 
     @Autowired
