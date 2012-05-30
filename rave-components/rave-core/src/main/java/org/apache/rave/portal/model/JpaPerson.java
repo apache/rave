@@ -18,28 +18,15 @@
  */
 package org.apache.rave.portal.model;
 
-import org.apache.rave.exception.NotSupportedException;
 import org.apache.rave.persistence.BasicEntity;
+import org.apache.rave.portal.model.conversion.ListProxyFactory;
 import org.apache.rave.util.CollectionUtils;
 
-import javax.persistence.Basic;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.TableGenerator;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.apache.rave.persistence.jpa.util.JpaUtil.clearAndAdd;
 
 /**
  * Represents a person in the persistence context
@@ -114,7 +101,7 @@ public class JpaPerson implements BasicEntity, Person {
     @JoinTable(name = "person_address_jn",
             joinColumns = @JoinColumn(name = "address_id", referencedColumnName = "entity_id"),
             inverseJoinColumns = @JoinColumn(name="person_id", referencedColumnName = "entity_id"))
-    protected List<Address> addresses;
+    protected List<JpaAddress> addresses;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name="person_id", referencedColumnName = "entity_id")
@@ -129,6 +116,7 @@ public class JpaPerson implements BasicEntity, Person {
             joinColumns = @JoinColumn(name = "follower_id", referencedColumnName = "entity_id"),
             inverseJoinColumns = @JoinColumn(name = "followed_id", referencedColumnName = "entity_id"))
     protected List<JpaPerson> friends;
+
 
     public Long getEntityId() {
         return entityId;
@@ -249,13 +237,17 @@ public class JpaPerson implements BasicEntity, Person {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<Address> getAddresses() {
-        return addresses;
+        return ListProxyFactory.getInstance().createProxyList(Address.class, addresses);
     }
 
     @Override
     public void setAddresses(List<Address> addresses) {
-        this.addresses = addresses;
+        if(this.addresses == null) {
+            this.addresses = new ArrayList<JpaAddress>();
+        }
+        clearAndAdd(this.addresses, addresses, JpaAddress.class);
     }
 
     @Override
@@ -269,18 +261,17 @@ public class JpaPerson implements BasicEntity, Person {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<Person> getFriends() {
-        return CollectionUtils.<Person>toBaseTypedList(friends);
+        return ListProxyFactory.getInstance().createProxyList(Person.class, friends);
     }
 
     @Override
     public void setFriends(List<Person> friends) {
-        if (friends != null) {
-            if(this.friends == null) {
-                this.friends = new ArrayList<JpaPerson>();
-            }
-            clearAndAddPeople(this.friends, friends);
+        if(this.friends == null) {
+            this.friends = new ArrayList<JpaPerson>();
         }
+        clearAndAdd(this.friends, friends, JpaPerson.class);
     }
 
     @Override
@@ -308,17 +299,6 @@ public class JpaPerson implements BasicEntity, Person {
     @Override
     public int hashCode() {
         return entityId != null ? entityId.hashCode() : 0;
-    }
-
-    private static void clearAndAddPeople(List<JpaPerson> target, List<Person> friends) {
-        target.clear();
-        for (Person p : friends) {
-            if (p instanceof JpaPerson) {
-                target.add((JpaPerson)p);
-            } else {
-                throw new NotSupportedException("Cannot directly set Friends list composed of non JPA Entities");
-            }
-        }
     }
 }
 

@@ -303,7 +303,8 @@ public class DefaultUserServiceTest {
         expect(userRepository.getAllByAddedWidget(VALID_WIDGET_ID)).andReturn(userList);
         replay(userRepository);
 
-        assertThat(service.getAllByAddedWidget(VALID_WIDGET_ID), is(personList));
+        List<Person> allByAddedWidget = service.getAllByAddedWidget(VALID_WIDGET_ID);
+        assertThat(allByAddedWidget, is(equalTo(personList)));
         
         verify(userRepository);
     }

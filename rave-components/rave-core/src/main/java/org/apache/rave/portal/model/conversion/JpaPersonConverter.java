@@ -1,5 +1,6 @@
 package org.apache.rave.portal.model.conversion;
 
+import org.apache.rave.model.ModelConverter;
 import org.apache.rave.portal.model.JpaPerson;
 import org.apache.rave.portal.model.Person;
 import org.springframework.core.convert.converter.Converter;
@@ -17,7 +18,7 @@ import static org.apache.rave.persistence.jpa.util.JpaUtil.getSingleResult;
  * Converts from a {@link org.apache.rave.portal.model.Person} to a {@link org.apache.rave.portal.model.JpaPerson}
  */
 @Component
-public class JpaPersonConverter implements Converter<Person, JpaPerson> {
+public class JpaPersonConverter implements ModelConverter<Person, JpaPerson> {
     @PersistenceContext
     private EntityManager manager;
 
@@ -26,8 +27,14 @@ public class JpaPersonConverter implements Converter<Person, JpaPerson> {
         return source instanceof JpaPerson ? (JpaPerson)source : createEntity(source);
     }
 
+    @Override
+    public Class<Person> getSourceType() {
+        return Person.class;
+    }
+
     private JpaPerson createEntity(Person source) {
-        JpaPerson converted;TypedQuery<JpaPerson> query = manager.createNamedQuery(JpaPerson.FIND_BY_USERNAME, JpaPerson.class);
+        JpaPerson converted;
+        TypedQuery<JpaPerson> query = manager.createNamedQuery(JpaPerson.FIND_BY_USERNAME, JpaPerson.class);
         query.setParameter(JpaPerson.USERNAME_PARAM, source.getUsername());
         converted = getSingleResult(query.getResultList());
 

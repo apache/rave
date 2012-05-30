@@ -352,17 +352,16 @@ public class User extends JpaPerson implements UserDetails, BasicEntity, Seriali
      * have a User object and want to pass on the Person data without the User class data (like password, etc)
      *
      * @return a Person object representing the data contained in this class
-     */
+     */     //TODO:  UNCOMMENT & FIX ONCE USER IS AN INTERFACE RAVE-630
     public Person toPerson() {
-        JpaPerson p = new JpaPerson();
+        PersonImpl p = new PersonImpl();
         p.setAboutMe(this.getAboutMe());
         p.setAdditionalName(this.getAdditionalName());
-        p.setAddresses(this.getAddresses());
+        //p.setAddresses(this.getAddresses());
         p.setDisplayName(this.getDisplayName());
         p.setEmail(this.getEmail());
-        p.setEntityId(this.getEntityId());
         p.setFamilyName(this.getFamilyName());
-        p.setFriends(this.getFriends());
+        //p.setFriends(this.getFriends());
         p.setGivenName(this.getGivenName());
         p.setHonorificPrefix(this.getHonorificPrefix());
         p.setHonorificSuffix(this.getHonorificSuffix());

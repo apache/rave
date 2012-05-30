@@ -253,7 +253,7 @@ public class FieldRestrictingPersonTest {
 
     @Test
     public void getGender_null() {
-        JpaPerson testPerson = getTestPerson();
+        org.apache.rave.portal.model.Person testPerson = getTestPerson();
         testPerson.setProperties(new ArrayList<PersonProperty>());
         Person p = new FieldRestrictingPerson(testPerson, getFieldSet(Person.Field.GENDER));
         assertThat(p.getGender(), is(nullValue()));
@@ -303,19 +303,19 @@ public class FieldRestrictingPersonTest {
         Person p = new FieldRestrictingPerson(getTestPerson(), getFieldSet(Person.Field.LIVING_ARRANGEMENT));
         assertThat(p.getLivingArrangement(), is(nullValue()));
     }
-    
+
     @Test
     public void getLookingFor_set() {
         Person p = new FieldRestrictingPerson(getTestPerson(), getFieldSet(Person.Field.LOOKING_FOR));
         assertThat(p.getLookingFor().size(), is(equalTo(1)));
     }
-    
+
     @Test
     public void getMovies_set() {
         Person p = new FieldRestrictingPerson(getTestPerson(), getFieldSet(Person.Field.MOVIES));
         assertThat(p.getMovies().isEmpty(), is(true));
     }
-    
+
     @Test
     public void getMusic_set() {
         Person p = new FieldRestrictingPerson(getTestPerson(), getFieldSet(Person.Field.MUSIC));
@@ -485,17 +485,17 @@ public class FieldRestrictingPersonTest {
     public void setMovies() {
         new FieldRestrictingPerson(null, null).setMovies(new ArrayList<String>());
     }
-    
+
     @Test(expected = NotSupportedException.class)
     public void setLookingFor() {
         new FieldRestrictingPerson(null, null).setLookingFor(new ArrayList<org.apache.shindig.protocol.model.Enum<LookingFor>>());
     }
-    
+
     @Test(expected = NotSupportedException.class)
     public void setLivingArrangement() {
         new FieldRestrictingPerson(null, null).setLivingArrangement(SUFFIX);
     }
-    
+
     @Test(expected = NotSupportedException.class)
     public void setUpdated() {
         new FieldRestrictingPerson(null, null).setUpdated(new Date());
@@ -621,9 +621,8 @@ public class FieldRestrictingPersonTest {
         new FieldRestrictingPerson(null, null).setHappiestWhen(SUFFIX);
     }
 
-    private JpaPerson getTestPerson() {
-        JpaPerson person = new JpaPerson();
-        person.setEntityId(1L);
+    private org.apache.rave.portal.model.Person getTestPerson() {
+        org.apache.rave.portal.model.Person person = new PersonImpl();
         person.setUsername(USERNAME);
         person.setAboutMe(ABOUT_ME);
         person.setAdditionalName(ADDITIONAL_NAME);
@@ -654,7 +653,7 @@ public class FieldRestrictingPersonTest {
         properties.add(new PersonProperty(1L, "currentLocation", QUALIFIER, null, null, null));
         properties.add(new PersonProperty(1L, "account", IM_1, "1", IM_PROVIDER_1, false));
         person.setProperties(properties);
-        org.apache.rave.portal.model.Address address = new org.apache.rave.portal.model.Address();
+        org.apache.rave.portal.model.Address address = new JpaAddress();
         address.setCountry(COUNTRY);
         address.setLatitude(LATITUDE);
         address.setLongitude(LONGITUDE);
@@ -664,7 +663,7 @@ public class FieldRestrictingPersonTest {
         address.setStreetAddress(STREET);
         address.setQualifier(QUALIFIER);
         List<org.apache.rave.portal.model.Address> addresses = new ArrayList<org.apache.rave.portal.model.Address>();
-        addresses.add(new org.apache.rave.portal.model.Address());
+        addresses.add(new JpaAddress());
         addresses.add(address);
         person.setAddresses(addresses);
 

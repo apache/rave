@@ -27,7 +27,7 @@
       <class>org.apache.rave.portal.model.Group</class>
       <class>org.apache.rave.portal.model.PersonAssociation</class>
       <class>org.apache.rave.portal.model.PersonProperty</class>
-      <class>org.apache.rave.portal.model.Address</class>
+      <class>org.apache.rave.portal.model.JpaAddress</class>
       <class>org.apache.rave.portal.model.Organization</class>
       <class>org.apache.rave.opensocial.model.ApplicationData</class>
       <class>org.apache.rave.opensocial.repository.impl.JpaApplicationDataRepository$JpaSerializableApplicationData</class>
