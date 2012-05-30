@@ -25,8 +25,10 @@ import org.apache.rave.portal.model.JpaPerson;
 import org.apache.rave.portal.model.Person;
 import org.apache.rave.opensocial.repository.PersonRepository;
 import org.apache.rave.persistence.jpa.AbstractJpaRepository;
+import org.apache.rave.portal.model.conversion.JpaPersonConverter;
 import org.apache.rave.util.CollectionUtils;
 import org.apache.shindig.protocol.model.FilterOperation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -46,6 +48,9 @@ public class JpaPersonRepository implements PersonRepository{
 
     @PersistenceContext
     private EntityManager manager;
+
+    @Autowired
+    private JpaPersonConverter personConverter;
 
     @Override
     public Person findByUsername(String username) {
@@ -136,27 +141,12 @@ public class JpaPersonRepository implements PersonRepository{
 
     @Override
     public Person save(Person item) {
-        JpaPerson person = getJpaPerson(item);
+        JpaPerson person = personConverter.convert(item);
         return saveOrUpdate(person.getEntityId(), manager, person);
     }
 
     @Override
     public void delete(Person item) {
         manager.remove(item instanceof JpaPerson ? item : findByUsername(item.getUsername()));
-    }
-
-    private JpaPerson getJpaPerson(Person p) {
-        JpaPerson person;
-        if (p instanceof JpaPerson) {
-            person = (JpaPerson) p;
-        } else {
-            person = (JpaPerson) (findByUsername(p.getUsername()));
-            if (person == null) {
-                new JpaPerson(p);
-            } else {
-                person.update(p);
-            }
-        }
-        return person;
     }
 }

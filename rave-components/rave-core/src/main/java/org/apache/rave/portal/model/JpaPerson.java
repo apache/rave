@@ -18,6 +18,7 @@
  */
 package org.apache.rave.portal.model;
 
+import org.apache.rave.exception.NotSupportedException;
 import org.apache.rave.persistence.BasicEntity;
 import org.apache.rave.util.CollectionUtils;
 
@@ -128,12 +129,6 @@ public class JpaPerson implements BasicEntity, Person {
             joinColumns = @JoinColumn(name = "follower_id", referencedColumnName = "entity_id"),
             inverseJoinColumns = @JoinColumn(name = "followed_id", referencedColumnName = "entity_id"))
     protected List<JpaPerson> friends;
-
-    public JpaPerson() {}
-
-    public JpaPerson(Person base) {
-        update(base);
-    }
 
     public Long getEntityId() {
         return entityId;
@@ -280,8 +275,12 @@ public class JpaPerson implements BasicEntity, Person {
 
     @Override
     public void setFriends(List<Person> friends) {
-
-        this.friends = convert(friends);
+        if (friends != null) {
+            if(this.friends == null) {
+                this.friends = new ArrayList<JpaPerson>();
+            }
+            clearAndAddPeople(this.friends, friends);
+        }
     }
 
     @Override
@@ -292,35 +291,6 @@ public class JpaPerson implements BasicEntity, Person {
     @Override
     public void setOrganizations(List<Organization> organizations) {
         this.organizations = organizations;
-    }
-
-    public void update(Person source) {
-        this.username = source.getUsername();
-        this.email = source.getEmail();
-        this.displayName = source.getDisplayName();
-        this.additionalName = source.getAdditionalName();
-        this.familyName = source.getFamilyName();
-        this.givenName = source.getGivenName();
-        this.honorificPrefix = source.getHonorificPrefix();
-        this.honorificSuffix = source.getHonorificSuffix();
-        this.preferredName = source.getPreferredName();
-        this.aboutMe = source.getAboutMe();
-        this.status = source.getStatus();
-        this.addresses = source.getAddresses();
-        this.organizations = source.getOrganizations();
-        this.properties = source.getProperties();
-        this.friends = convert(source.getFriends());
-    }
-
-    private List<JpaPerson> convert(List<Person> unconverted) {
-        List<JpaPerson> converted = null;
-        if (unconverted != null) {
-            converted = new ArrayList<JpaPerson>();
-            for (Person convert : unconverted) {
-                converted.add(convert instanceof JpaPerson ? (JpaPerson) convert : new JpaPerson(convert));
-            }
-        }
-        return converted;
     }
 
     @Override
@@ -338,6 +308,17 @@ public class JpaPerson implements BasicEntity, Person {
     @Override
     public int hashCode() {
         return entityId != null ? entityId.hashCode() : 0;
+    }
+
+    private static void clearAndAddPeople(List<JpaPerson> target, List<Person> friends) {
+        target.clear();
+        for (Person p : friends) {
+            if (p instanceof JpaPerson) {
+                target.add((JpaPerson)p);
+            } else {
+                throw new NotSupportedException("Cannot directly set Friends list composed of non JPA Entities");
+            }
+        }
     }
 }
 
