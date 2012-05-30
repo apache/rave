@@ -104,7 +104,7 @@ public class JpaPerson implements BasicEntity, Person {
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name="person_id", referencedColumnName = "entity_id")
-    protected List<Organization> organizations;
+    protected List<JpaOrganization> organizations;
 
     @OneToMany(targetEntity = PersonProperty.class)
     @JoinColumn(name = "person_id", referencedColumnName = "entity_id")
@@ -238,7 +238,7 @@ public class JpaPerson implements BasicEntity, Person {
     @Override
     @SuppressWarnings("unchecked")
     public List<Address> getAddresses() {
-        return ConvertingListProxyFactory.getInstance().createProxyList(Address.class, addresses);
+        return ConvertingListProxyFactory.createProxyList(Address.class, addresses);
     }
 
     @Override
@@ -263,7 +263,7 @@ public class JpaPerson implements BasicEntity, Person {
     @Override
     @SuppressWarnings("unchecked")
     public List<Person> getFriends() {
-        return ConvertingListProxyFactory.getInstance().createProxyList(Person.class, friends);
+        return ConvertingListProxyFactory.createProxyList(Person.class, friends);
     }
 
     @Override
@@ -277,20 +277,24 @@ public class JpaPerson implements BasicEntity, Person {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<Organization> getOrganizations() {
-        return organizations;
+        return ConvertingListProxyFactory.createProxyList(Organization.class, organizations);
     }
 
     @Override
     public void setOrganizations(List<Organization> organizations) {
-        this.organizations = organizations;
+        if(this.organizations == null) {
+            this.organizations = new ArrayList<JpaOrganization>();
+        }
+        this.getOrganizations().clear();
+        this.getOrganizations().addAll(organizations);
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         JpaPerson person = (JpaPerson) o;
 
         if (entityId != null ? !entityId.equals(person.entityId) : person.entityId != null) return false;

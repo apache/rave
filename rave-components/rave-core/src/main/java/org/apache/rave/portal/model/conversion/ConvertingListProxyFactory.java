@@ -1,16 +1,11 @@
 package org.apache.rave.portal.model.conversion;
 
-import org.apache.rave.model.ModelConverter;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Creates a {@link java.util.List} proxy that converts the added object to an entity
@@ -18,36 +13,12 @@ import java.util.Map;
 @Component
 public class ConvertingListProxyFactory {
 
-    //Workaround for inability to access spring context without a lot of machinery
-    //Will allow for a getInstance method to be called.  this is needed because the
-    //Converters are all Spring beans with their own dependencies.
-    private static ConvertingListProxyFactory instance;
-
-    Map<Class<?>, Converter> converterMap;
-
-    @Autowired
-    public ConvertingListProxyFactory(List<ModelConverter> converters) {
-        converterMap = new HashMap<Class<?>, Converter>();
-        for(ModelConverter converter : converters) {
-            converterMap.put(converter.getSourceType(), converter);
-        }
-        instance = this;
-    }
-
     @SuppressWarnings("unchecked")
-    public <E, T extends E> List createProxyList(Class<E> targetType, List<T> underlyingList) {
-        return (List) Proxy.newProxyInstance(this.getClass().getClassLoader(),
+    public static <E, T extends E> List createProxyList(Class<E> targetType, List<T> underlyingList) {
+        return (List) Proxy.newProxyInstance(ConvertingListProxyFactory.class.getClassLoader(),
                 new Class<?>[]{List.class},
-                new ConvertingListInvocationHandler<E, T>(converterMap.get(targetType), underlyingList));
+                new ConvertingListInvocationHandler<E, T>(underlyingList, targetType));
     }
-
-    public static ConvertingListProxyFactory getInstance() {
-        if(instance == null) {
-            throw new IllegalStateException("Proxy factory not yet set by the Spring context");
-        }
-        return instance;
-    }
-
 
     public static class ConvertingListInvocationHandler<S,T> implements InvocationHandler {
 
@@ -55,11 +26,12 @@ public class ConvertingListProxyFactory {
         public static final String SET_METHOD = "set";
         public static final String ADD_ALL_METHOD = "addAll";
 
-        private Converter<S, T> converter;
         private List<T> underlying;
-        public ConvertingListInvocationHandler(Converter<S, T> converter, List<T> underlying) {
-            this.converter = converter;
+        private Class<S> targetClass;
+
+        public ConvertingListInvocationHandler(List<T> underlying, Class<S> targetClass) {
             this.underlying = underlying;
+            this.targetClass = targetClass;
         }
 
         @Override
@@ -68,7 +40,7 @@ public class ConvertingListProxyFactory {
             String methodName = method.getName();
             int convertIndex = method.getParameterTypes().length == 1 ? 0 : 1;
             if(ADD_METHOD.equals(methodName) || SET_METHOD.equals(methodName)) {
-                parameters[convertIndex] = converter.convert((S)parameters[convertIndex]);
+                parameters[convertIndex] = JpaConverter.getInstance().convert((S)parameters[convertIndex], targetClass);
             } else if(ADD_ALL_METHOD.equals(methodName)) {
                 convertAll((List)parameters[convertIndex]);
             }
@@ -78,7 +50,7 @@ public class ConvertingListProxyFactory {
         @SuppressWarnings("unchecked")
         private void convertAll(List<S> parameter) {
             for(int i=0; i<parameter.size(); i++) {
-                parameter.set(i, (S)converter.convert(parameter.get(i)));
+                parameter.set(i, (S)JpaConverter.getInstance().convert(parameter.get(i), targetClass));
             }
         }
     }

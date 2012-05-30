@@ -1,11 +1,6 @@
 package org.apache.rave.portal.model;
 
 /**
- * Created with IntelliJ IDEA.
- * User: mfranklin
- * Date: 5/30/12
- * Time: 8:28 AM
- * To change this template use File | Settings | File Templates.
  */
 public interface Address {
     String getCountry();

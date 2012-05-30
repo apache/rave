@@ -27,6 +27,7 @@ import org.apache.rave.util.CollectionUtils;
 import org.apache.shindig.protocol.model.Enum;
 import org.apache.shindig.protocol.model.EnumImpl;
 import org.apache.shindig.social.core.model.*;
+import org.apache.shindig.social.core.model.AddressImpl;
 import org.apache.shindig.social.opensocial.model.*;
 import org.apache.shindig.social.opensocial.model.Address;
 import org.apache.shindig.social.opensocial.model.Organization;

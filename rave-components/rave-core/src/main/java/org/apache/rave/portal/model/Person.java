@@ -3,11 +3,6 @@ package org.apache.rave.portal.model;
 import java.util.List;
 
 /**
- * Created with IntelliJ IDEA.
- * User: mfranklin
- * Date: 5/29/12
- * Time: 1:53 PM
- * To change this template use File | Settings | File Templates.
  */
 public interface Person {
     String getUsername();

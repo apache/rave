@@ -17,10 +17,6 @@ import static org.junit.Assert.assertThat;
  */
 public class ConvertingListProxyFactoryTest {
 
-    @Test(expected = IllegalStateException.class)
-    public void unsetInstance() {
-        ConvertingListProxyFactory.getInstance();
-    }
 
     @Test
     public void createProxy() {
@@ -29,10 +25,10 @@ public class ConvertingListProxyFactoryTest {
         expect(converterMock.getSourceType()).andReturn(Person.class).anyTimes();
         converters.add(converterMock);
         replay(converterMock);
+        new JpaConverter(converters);
         List<PersonImpl> underlying = new ArrayList<PersonImpl>();
-        new ConvertingListProxyFactory(converters);
 
-        List<Person> personProxy = ConvertingListProxyFactory.getInstance().createProxyList(Person.class, underlying);
+        List<Person> personProxy = ConvertingListProxyFactory.createProxyList(Person.class, underlying);
         assertThat(Proxy.isProxyClass(personProxy.getClass()), is(true));
     }
 
@@ -49,10 +45,10 @@ public class ConvertingListProxyFactoryTest {
         List<PersonImpl> underlying = createMock(List.class);
         expect(underlying.add(personImpl2)).andReturn(true);
         replay(underlying);
-        new ConvertingListProxyFactory(converters);
+        new JpaConverter(converters);
 
 
-        List<Person> personProxy = ConvertingListProxyFactory.getInstance().createProxyList(Person.class, underlying);
+        List<Person> personProxy = ConvertingListProxyFactory.createProxyList(Person.class, underlying);
         Boolean good = personProxy.add(personImpl1);
         assertThat(good, is(true));
         verify(converterMock);
@@ -72,9 +68,9 @@ public class ConvertingListProxyFactoryTest {
         List<PersonImpl> underlying = createMock(List.class);
         expect(underlying.set(0, (PersonImpl)personImpl2)).andReturn((PersonImpl) personImpl2);
         replay(underlying);
-        new ConvertingListProxyFactory(converters);
+        new JpaConverter(converters);
 
-        List<Person> personProxy = ConvertingListProxyFactory.getInstance().createProxyList(Person.class, underlying);
+        List<Person> personProxy = ConvertingListProxyFactory.createProxyList(Person.class, underlying);
         Person good = personProxy.set(0, personImpl1);
         assertThat(good, is(sameInstance(personImpl2)));
         verify(converterMock);
@@ -104,9 +100,9 @@ public class ConvertingListProxyFactoryTest {
         List<PersonImpl> underlying = createMock(List.class);
         expect(underlying.addAll(isA(List.class))).andReturn(true);
         replay(underlying);
-        new ConvertingListProxyFactory(converters);
+        new JpaConverter(converters);
 
-        List<Person> personProxy = ConvertingListProxyFactory.getInstance().createProxyList(Person.class, underlying);
+        List<Person> personProxy = ConvertingListProxyFactory.createProxyList(Person.class, underlying);
         Boolean good = personProxy.addAll(toAdd);
         assertThat(good, is(true));
         verify(converterMock);
