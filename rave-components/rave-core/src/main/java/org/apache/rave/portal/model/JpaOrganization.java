@@ -19,6 +19,7 @@
 package org.apache.rave.portal.model;
 
 import org.apache.rave.persistence.BasicEntity;
+import org.apache.rave.portal.model.conversion.JpaConverter;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -109,11 +110,7 @@ public class JpaOrganization implements BasicEntity, Organization {
 
     @Override
     public void setAddress(Address address) {
-        if(address instanceof JpaAddress) {
-            this.address = (JpaAddress)address;
-        } else {
-            throw new IllegalArgumentException("Setting non JPA Entities is currently not supported");
-        }
+        this.address = JpaConverter.getInstance().convert(address, Address.class);
     }
 
     @Override
