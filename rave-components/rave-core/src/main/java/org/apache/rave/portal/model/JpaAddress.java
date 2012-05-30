@@ -30,6 +30,9 @@ import javax.persistence.*;
 public class JpaAddress implements Address {
 
     public static final String FIND_BY_STREET_CITY_COUNTRY = "findByStreetCityCountry";
+    public static final String STREET_PARAM = "street";
+    public static final String CITY_PARAM = "city";
+    public static final String COUNTRY_PARAM = "country";
 
     @Id
     @Column(name = "entity_id")

@@ -3,6 +3,7 @@ package org.apache.rave.portal.model.conversion;
 import org.apache.rave.model.ModelConverter;
 import org.apache.rave.portal.model.JpaPerson;
 import org.apache.rave.portal.model.Person;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
@@ -60,10 +61,6 @@ public class JpaPersonConverter implements ModelConverter<Person, JpaPerson> {
         converted.setAddresses(source.getAddresses());
         converted.setOrganizations(source.getOrganizations());
         converted.setProperties(source.getProperties());
-        List<Person> newFriends = new ArrayList<Person>();
-        for(Person friend : source.getFriends()) {
-            newFriends.add(convert(friend));
-        }
-        converted.setFriends(newFriends);
+        converted.setFriends(source.getFriends());
     }
 }

@@ -19,8 +19,7 @@
 package org.apache.rave.portal.model;
 
 import org.apache.rave.persistence.BasicEntity;
-import org.apache.rave.portal.model.conversion.ListProxyFactory;
-import org.apache.rave.util.CollectionUtils;
+import org.apache.rave.portal.model.conversion.ConvertingListProxyFactory;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -239,7 +238,7 @@ public class JpaPerson implements BasicEntity, Person {
     @Override
     @SuppressWarnings("unchecked")
     public List<Address> getAddresses() {
-        return ListProxyFactory.getInstance().createProxyList(Address.class, addresses);
+        return ConvertingListProxyFactory.getInstance().createProxyList(Address.class, addresses);
     }
 
     @Override
@@ -247,7 +246,8 @@ public class JpaPerson implements BasicEntity, Person {
         if(this.addresses == null) {
             this.addresses = new ArrayList<JpaAddress>();
         }
-        clearAndAdd(this.addresses, addresses, JpaAddress.class);
+        this.getAddresses().clear();
+        this.getAddresses().addAll(addresses);
     }
 
     @Override
@@ -263,7 +263,7 @@ public class JpaPerson implements BasicEntity, Person {
     @Override
     @SuppressWarnings("unchecked")
     public List<Person> getFriends() {
-        return ListProxyFactory.getInstance().createProxyList(Person.class, friends);
+        return ConvertingListProxyFactory.getInstance().createProxyList(Person.class, friends);
     }
 
     @Override
@@ -271,7 +271,9 @@ public class JpaPerson implements BasicEntity, Person {
         if(this.friends == null) {
             this.friends = new ArrayList<JpaPerson>();
         }
-        clearAndAdd(this.friends, friends, JpaPerson.class);
+        //Ensure that all operations go through the conversion proxy
+        this.getFriends().clear();
+        this.getFriends().addAll(friends);
     }
 
     @Override

@@ -16,17 +16,17 @@ import java.util.Map;
  * Creates a {@link java.util.List} proxy that converts the added object to an entity
  */
 @Component
-public class ListProxyFactory {
+public class ConvertingListProxyFactory {
 
     //Workaround for inability to access spring context without a lot of machinery
     //Will allow for a getInstance method to be called.  this is needed because the
     //Converters are all Spring beans with their own dependencies.
-    private static ListProxyFactory instance;
+    private static ConvertingListProxyFactory instance;
 
     Map<Class<?>, Converter> converterMap;
 
     @Autowired
-    public ListProxyFactory(List<ModelConverter> converters) {
+    public ConvertingListProxyFactory(List<ModelConverter> converters) {
         converterMap = new HashMap<Class<?>, Converter>();
         for(ModelConverter converter : converters) {
             converterMap.put(converter.getSourceType(), converter);
@@ -38,10 +38,10 @@ public class ListProxyFactory {
     public <E, T extends E> List createProxyList(Class<E> targetType, List<T> underlyingList) {
         return (List) Proxy.newProxyInstance(this.getClass().getClassLoader(),
                 new Class<?>[]{List.class},
-                new ListInvocationHandler<E, T>(converterMap.get(targetType), underlyingList));
+                new ConvertingListInvocationHandler<E, T>(converterMap.get(targetType), underlyingList));
     }
 
-    public static ListProxyFactory getInstance() {
+    public static ConvertingListProxyFactory getInstance() {
         if(instance == null) {
             throw new IllegalStateException("Proxy factory not yet set by the Spring context");
         }
@@ -49,7 +49,7 @@ public class ListProxyFactory {
     }
 
 
-    public static class ListInvocationHandler<S,T> implements InvocationHandler {
+    public static class ConvertingListInvocationHandler<S,T> implements InvocationHandler {
 
         public static final String ADD_METHOD = "add";
         public static final String SET_METHOD = "set";
@@ -57,7 +57,7 @@ public class ListProxyFactory {
 
         private Converter<S, T> converter;
         private List<T> underlying;
-        public ListInvocationHandler(Converter<S, T> converter, List<T> underlying) {
+        public ConvertingListInvocationHandler(Converter<S, T> converter, List<T> underlying) {
             this.converter = converter;
             this.underlying = underlying;
         }
