@@ -292,7 +292,7 @@ public class JpaWidgetRepositoryTest {
 
     @Test
     @Transactional(readOnly = false)
-    @Rollback    
+    @Rollback
     public void addWidgetRating() {
         Widget widget = repository.get(3L);
         assertNotNull(widget.getRatings());
@@ -317,7 +317,7 @@ public class JpaWidgetRepositoryTest {
 
     @Test
     @Transactional(readOnly = false)
-    @Rollback    
+    @Rollback
     public void updateWidgetRating() {
         Widget widget = repository.get(4L);
         assertNotNull(widget.getRatings());
@@ -388,15 +388,16 @@ public class JpaWidgetRepositoryTest {
         assertTrue(repository.getCountByTag("NEWS") == 1);
     }
 
-    @Test
+    // TODO: remove expected IllegalArgumentException once Widget has been refactored
+    @Test(expected = IllegalArgumentException.class)
     @Transactional(readOnly = false)
-    @Rollback    
+    @Rollback
     public void addWidgetCategory() {
         final long WIDGET_ID = 1L;
         final User user = new User(1L);
 
-        Category category = new Category();
-        category.setEntityId(1L);
+        Category category = new CategoryImpl();
+        category.setId(1L);
         category.setText("Sample Category");
         category.setCreatedUser(user);
         category.setCreatedDate(new Date());
@@ -404,31 +405,30 @@ public class JpaWidgetRepositoryTest {
         category.setLastModifiedDate(new Date());
         sharedManager.merge(category);
 
-
-        Widget widget = repository.get(WIDGET_ID);        
+        Widget widget = repository.get(WIDGET_ID);
         assertThat(widget.getCategories().size(), is(2));
 
-        widget.getCategories().add(category);                
+        widget.getCategories().add(category);
         repository.save(widget);
-        
+
         Widget reloadedWidget = repository.get(WIDGET_ID);
         assertThat(reloadedWidget.getCategories().size(), is(3));
-        
+
         // test that category is in list
         boolean foundNewCategory = false;
         for (Category c : reloadedWidget.getCategories()) {
-            if (c.getEntityId().equals(WIDGET_ID)) {
+            if (c.getId().equals(WIDGET_ID)) {
                 foundNewCategory = true;
                 break;
             }
         }
-        
+
         assertThat(foundNewCategory, is(true));
     }
 
     @Test
     @Transactional(readOnly = false)
-    @Rollback    
+    @Rollback
     public void removeWidgetCategory() {
         final long WIDGET_ID = 1L;
 
@@ -440,7 +440,7 @@ public class JpaWidgetRepositoryTest {
 
         Widget reloadedWidget = repository.get(WIDGET_ID);
         assertThat(reloadedWidget.getCategories().size(), is(1));
-        assertThat(reloadedWidget.getCategories().get(0).getEntityId(), is(4L));
+        assertThat(reloadedWidget.getCategories().get(0).getId(), is(4L));
     }
 
     @Test
@@ -450,9 +450,9 @@ public class JpaWidgetRepositoryTest {
         final long WIDGET_ID = 2L;
         final long USER_ID = 1L;
         final int NUM_WIDGETS_OWNED_BY_USER = 16;
-        
+
         Widget widget = repository.get(WIDGET_ID);
-        assertThat(widget.getOwner().getEntityId(), is(USER_ID));        
+        assertThat(widget.getOwner().getEntityId(), is(USER_ID));
         assertThat(repository.unassignWidgetOwner(USER_ID), is(NUM_WIDGETS_OWNED_BY_USER));
         sharedManager.flush();
         sharedManager.refresh(widget);

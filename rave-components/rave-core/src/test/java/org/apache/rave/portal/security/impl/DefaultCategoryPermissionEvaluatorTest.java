@@ -50,7 +50,7 @@ public class DefaultCategoryPermissionEvaluatorTest {
     private final Long VALID_USER_ID = 99L;
     private final String VALID_USERNAME = "john.doe";
     private final String VALID_USERNAME2 = "jane.doe";
-    
+
     @Before
     public void setUp() {
         mockCategoryRepository = createMock(CategoryRepository.class);
@@ -62,9 +62,9 @@ public class DefaultCategoryPermissionEvaluatorTest {
         user.setEntityId(VALID_USER_ID);
         user2 = new User();
         user2.setUsername(VALID_USERNAME2);
-        
-        category = new Category();
-        category.setEntityId(VALID_WIDGET_CATEGORY_ID);
+
+        category = new CategoryImpl();
+        category.setId(VALID_WIDGET_CATEGORY_ID);
         category.setCreatedUser(user);
 
         grantedAuthorities = new ArrayList<GrantedAuthority>();
@@ -142,7 +142,7 @@ public class DefaultCategoryPermissionEvaluatorTest {
         replay(mockAuthentication, mockCategoryRepository);
         assertThat(defaultCategoryPermissionEvaluator.hasPermission(mockAuthentication, category, ModelPermissionEvaluator.Permission.UPDATE), is(true));
         verify(mockAuthentication, mockCategoryRepository);
-    }     
+    }
 
     @Test
     public void testHasPermission_3args_read() {

@@ -20,18 +20,23 @@
 package org.apache.rave.portal.repository.impl;
 
 import org.apache.openjpa.persistence.PersistenceException;
-import org.apache.rave.portal.model.Category;
-import org.apache.rave.portal.model.User;
+import org.apache.rave.persistence.BasicEntity;
+import org.apache.rave.persistence.Repository;
+import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.repository.CategoryRepository;
+import org.apache.rave.portal.repository.RepositoryTestUtils;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -44,6 +49,14 @@ import static org.hamcrest.CoreMatchers.*;
 
 public class JpaCategoryRepositoryTest {
 
+    private final Long VALID_ENTITY_ID = 1L;
+    private final Long INVALID_ENTITY_ID = -12345L;
+    private final Long VALID_USER_ID = 1L;
+    private final Long VALID_WIDGET_ID = 1L;
+
+    private User validUser;
+    private Widget validWidget;
+
     @PersistenceContext
     private EntityManager manager;
 
@@ -51,6 +64,67 @@ public class JpaCategoryRepositoryTest {
     private CategoryRepository repository;
 
     private static final String DUPLICATE_TEXT_VALUE = "Sample Category";
+
+    @Before
+    public void setup() {
+        validUser = new User(VALID_USER_ID);
+        validWidget = new Widget();
+        validWidget.setEntityId(VALID_WIDGET_ID);
+    }
+
+    @Test
+    public void getById_validId() {
+        JpaCategory category = (JpaCategory) repository.get(VALID_ENTITY_ID);
+        assertThat(category.getEntityId(), is(equalTo(VALID_ENTITY_ID)));
+    }
+
+    @Test
+    public void getById_invalidId() {
+        assertThat(repository.get(INVALID_ENTITY_ID), is(nullValue()));
+    }
+
+    @Test
+    @Rollback(true)
+    public void save_newEntity() throws Exception {
+        final String NEW_TEXT = "My New Category";
+        Date now = new Date();
+        JpaCategory category = new JpaCategory();
+        category.setLastModifiedDate(now);
+        category.setLastModifiedUser(validUser);
+        category.setText(NEW_TEXT);
+        category.setCreatedDate(now);
+        category.setCreatedUser(validUser);
+
+        assertThat(category.getEntityId(), is(nullValue()));
+        repository.save(category);
+
+        Long newEntityId = category.getEntityId();
+        assertThat(newEntityId, is(notNullValue()));
+        // verify that it persisted ok
+        assertThat((JpaCategory)repository.get(newEntityId), is(category));
+    }
+
+    @Test
+    @Rollback(true)
+    public void save_existingEntity() {
+        final String UPDATED_TEXT = "changed the text";
+        Category category = repository.get(VALID_ENTITY_ID);
+        assertThat(category.getText(), is(not(UPDATED_TEXT)));
+        category.setText(UPDATED_TEXT);
+        repository.save(category);
+        // fetch again and verify update
+        Category modCategory = repository.get(VALID_ENTITY_ID);
+        assertThat(modCategory.getText(), is(UPDATED_TEXT));
+    }
+
+    @Test
+    @Rollback(true)
+    public void delete() {
+        Category entity = repository.get(VALID_ENTITY_ID);
+        assertThat(entity, is(notNullValue()));
+        repository.delete(entity);
+        assertThat(repository.get(VALID_ENTITY_ID), is(nullValue()));
+    }
 
     @Test
     public void getAll() {
@@ -72,8 +146,8 @@ public class JpaCategoryRepositoryTest {
     public void save_duplicateText_exception() {
         Date now = new Date();
         User user = new User(1L);
-        
-        Category wc = new Category();
+
+        JpaCategory wc = new JpaCategory();
         wc.setText(DUPLICATE_TEXT_VALUE);
         wc.setCreatedDate(now);
         wc.setCreatedUser(user);

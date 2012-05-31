@@ -16,6 +16,7 @@
 package org.apache.rave.portal.web.controller.admin;
 
 import org.apache.rave.portal.model.Category;
+import org.apache.rave.portal.model.CategoryImpl;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.service.CategoryService;
 import org.apache.rave.portal.service.UserService;
@@ -57,7 +58,7 @@ public class CategoryController {
 
         model.addAttribute("categories", categories);
         // put category object in the model to allow creating categories from view
-        model.addAttribute(ModelKeys.CATEGORY, new Category());
+        model.addAttribute(ModelKeys.CATEGORY, new CategoryImpl());
         // add tokencheck attribute for creating new category
         model.addAttribute(ModelKeys.TOKENCHECK, AdminControllerUtil.generateSessionToken());
 
@@ -97,7 +98,7 @@ public class CategoryController {
         User currentUser = userService.getAuthenticatedUser();
         boolean isValidRequest = validateRequest(category, currentUser);
         if (isValidRequest) {
-            categoryService.update(category.getEntityId(), category.getText(), currentUser);
+            categoryService.update(category.getId(), category.getText(), currentUser);
         } else {
             addNavigationMenusToModel(SELECTED_ITEM, model);
             return ViewNames.ADMIN_CATEGORY_DETAIL;
@@ -147,7 +148,7 @@ public class CategoryController {
     }
 
     private boolean validateRequest(Category category, User modifier){
-        return (validateRequest(category.getText(),modifier) && (categoryService.get(category.getEntityId()) != null));
+        return (validateRequest(category.getText(),modifier) && (categoryService.get(category.getId()) != null));
     }
 
     public void setUserService(UserService userService) {

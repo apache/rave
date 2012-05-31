@@ -16,6 +16,7 @@
 package org.apache.rave.portal.service.impl;
 
 import org.apache.rave.portal.model.Category;
+import org.apache.rave.portal.model.CategoryImpl;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.repository.CategoryRepository;
 import org.apache.rave.portal.service.CategoryService;
@@ -52,7 +53,7 @@ public class DefaultCategoryService implements CategoryService {
     @Override
     @Transactional
     public Category create(String text, User createdUser) {
-        Category category = new Category();
+        Category category = new CategoryImpl();
         Date now = new Date();
         category.setText(text);
         category.setCreatedDate(now);
@@ -77,7 +78,7 @@ public class DefaultCategoryService implements CategoryService {
     @Override
     @Transactional
     public void delete(Category category) {
-        Category categoryToBeDeleted = categoryRepository.get(category.getEntityId());
+        Category categoryToBeDeleted = categoryRepository.get(category.getId());
         categoryRepository.delete(categoryToBeDeleted);
     }
 }

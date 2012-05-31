@@ -17,6 +17,7 @@
 package org.apache.rave.portal.web.controller.admin;
 
 import org.apache.rave.portal.model.Category;
+import org.apache.rave.portal.model.CategoryImpl;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.service.CategoryService;
 import org.apache.rave.portal.service.UserService;
@@ -50,7 +51,7 @@ public class CategoryControllerTest {
     private UserService userService;
     private CategoryService categoryService;
     private String validToken;
-    
+
     private static final String UPDATE = "update";
     private static final String DELETE = "delete";
     private static final String CREATE = "create";
@@ -64,23 +65,23 @@ public class CategoryControllerTest {
         controller.setUserService(userService);
         controller.setCategoryService(categoryService);
     }
-    
+
     @Test
     public void getCategories_valid(){
         List<Category> categories = new ArrayList<Category>();
         expect(categoryService.getAll()).andReturn(categories);
         replay(categoryService);
-        
+
         Model model = new ExtendedModelMap();
-        
+
         String viewName = controller.getCategories("", model);
         verify(categoryService);
-        
+
         assertEquals(ViewNames.ADMIN_CATEGORIES, viewName);
         assertEquals(categories, model.asMap().get("categories"));
         assertFalse(model.containsAttribute("actionresult"));
         assertTrue(model.containsAttribute("category"));
-        assertEquals("Check that the category object available", new Category(), model.asMap().get("category"));
+        assertEquals("Check that the category object available", new CategoryImpl(), model.asMap().get("category"));
         assertTrue(model.containsAttribute("topnav"));
         assertTrue(model.containsAttribute("tabs"));
         assertTrue("verify tokencheck", model.asMap().containsKey(ModelKeys.TOKENCHECK));
@@ -102,7 +103,7 @@ public class CategoryControllerTest {
         assertTrue(model.containsAttribute("actionresult"));
         assertEquals(UPDATE, model.asMap().get("actionresult"));
         assertTrue(model.containsAttribute("category"));
-        assertEquals("Check that the category object available", new Category(), model.asMap().get("category"));
+        assertEquals("Check that the category object available", new CategoryImpl(), model.asMap().get("category"));
         assertTrue(model.containsAttribute("topnav"));
         assertTrue(model.containsAttribute("tabs"));
     }
@@ -123,7 +124,7 @@ public class CategoryControllerTest {
         assertTrue(model.containsAttribute("actionresult"));
         assertEquals(DELETE, model.asMap().get("actionresult"));
         assertTrue(model.containsAttribute("category"));
-        assertEquals("Check that the category object available", new Category(), model.asMap().get("category"));
+        assertEquals("Check that the category object available", new CategoryImpl(), model.asMap().get("category"));
         assertTrue(model.containsAttribute("topnav"));
         assertTrue(model.containsAttribute("tabs"));
     }
@@ -144,21 +145,21 @@ public class CategoryControllerTest {
         assertTrue(model.containsAttribute("actionresult"));
         assertEquals(CREATE, model.asMap().get("actionresult"));
         assertTrue(model.containsAttribute("category"));
-        assertEquals("Check category object available", new Category(), model.asMap().get("category"));
+        assertEquals("Check category object available", new CategoryImpl(), model.asMap().get("category"));
         assertTrue(model.containsAttribute("topnav"));
         assertTrue(model.containsAttribute("tabs"));
     }
-    
+
     @Test
     public void createCategory_valid(){
         Model model = new ExtendedModelMap();
         User user = new User();
         String categoryText = "Social";
-        Category category = new Category();
+        Category category = new CategoryImpl();
         category.setText(categoryText);
         SessionStatus sessionStatus = createMock(SessionStatus.class);
         expect(userService.getAuthenticatedUser()).andReturn(user).once();
-        expect(categoryService.create(categoryText, user)).andReturn(new Category());
+        expect(categoryService.create(categoryText, user)).andReturn(new CategoryImpl());
         sessionStatus.setComplete();
         expectLastCall();
         replay(userService, categoryService,sessionStatus);
@@ -174,11 +175,11 @@ public class CategoryControllerTest {
         String invalidToken =  AdminControllerUtil.generateSessionToken();
         User user = new User();
         String categoryText = "Social";
-        Category category = new Category();
+        Category category = new CategoryImpl();
         category.setText(categoryText);
         SessionStatus sessionStatus = createMock(SessionStatus.class);
         expect(userService.getAuthenticatedUser()).andReturn(user).once();
-        expect(categoryService.create(categoryText, user)).andReturn(new Category());
+        expect(categoryService.create(categoryText, user)).andReturn(new CategoryImpl());
         sessionStatus.setComplete();
         expectLastCall();
         replay(userService, categoryService,sessionStatus);
@@ -191,7 +192,7 @@ public class CategoryControllerTest {
         Model model = new ExtendedModelMap();
         User user = new User();
         String categoryText = "";
-        Category category = new Category();
+        Category category = new CategoryImpl();
         category.setText(categoryText);
         SessionStatus sessionStatus = createMock(SessionStatus.class);
         expect(userService.getAuthenticatedUser()).andReturn(user).once();
@@ -208,10 +209,10 @@ public class CategoryControllerTest {
         User user = new User();
         long id = 1L;
         String categoryText = "Social";
-        Category category = new Category();
+        Category category = new CategoryImpl();
         category.setCreatedUser(user);
         category.setText(categoryText);
-        category.setEntityId(id);
+        category.setId(id);
         SessionStatus sessionStatus = createMock(SessionStatus.class);
         expect(userService.getAuthenticatedUser()).andReturn(user).once();
         expect(categoryService.get(id)).andReturn(category);
@@ -232,10 +233,10 @@ public class CategoryControllerTest {
         long id = 1L;
         String categoryText = "Social";
         String invalidToken = AdminControllerUtil.generateSessionToken();
-        Category category = new Category();
+        Category category = new CategoryImpl();
         category.setCreatedUser(user);
         category.setText(categoryText);
-        category.setEntityId(id);
+        category.setId(id);
         SessionStatus sessionStatus = createMock(SessionStatus.class);
         expect(userService.getAuthenticatedUser()).andReturn(user).once();
         expect(categoryService.get(id)).andReturn(category);
@@ -254,10 +255,10 @@ public class CategoryControllerTest {
 
         long id = 1L;
         String categoryText = "";
-        Category category = new Category();
+        Category category = new CategoryImpl();
         category.setCreatedUser(user);
         category.setText(categoryText);
-        category.setEntityId(id);
+        category.setId(id);
         SessionStatus sessionStatus = createMock(SessionStatus.class);
         expect(userService.getAuthenticatedUser()).andReturn(user).once();
         replay(userService);
@@ -273,10 +274,10 @@ public class CategoryControllerTest {
         long id = 1L;
         User user = new User();
         String categoryText = "Social";
-        Category category = new Category();
+        Category category = new CategoryImpl();
         category.setCreatedUser(user);
         category.setText(categoryText);
-        category.setEntityId(id);
+        category.setId(id);
         SessionStatus sessionStatus = createMock(SessionStatus.class);
         expect(userService.getAuthenticatedUser()).andReturn(user).once();
         replay(userService);
@@ -292,10 +293,10 @@ public class CategoryControllerTest {
         User user = new User();
         long id = 1L;
         String categoryText = "Social";
-        Category category = new Category();
+        Category category = new CategoryImpl();
         category.setCreatedUser(user);
         category.setText(categoryText);
-        category.setEntityId(id);
+        category.setId(id);
         SessionStatus sessionStatus = createMock(SessionStatus.class);
         expect(userService.getAuthenticatedUser()).andReturn(user).once();
         expect(categoryService.get(id)).andReturn(null).once();
@@ -312,10 +313,10 @@ public class CategoryControllerTest {
         User user = new User();
         long id = 1L;
         String categoryText = "Social";
-        Category category = new Category();
+        Category category = new CategoryImpl();
         category.setCreatedUser(user);
         category.setText(categoryText);
-        category.setEntityId(id);
+        category.setId(id);
         SessionStatus sessionStatus = createMock(SessionStatus.class);
         expect(userService.getAuthenticatedUser()).andReturn(user).once();
         expect(categoryService.get(id)).andReturn(category).anyTimes();
@@ -337,10 +338,10 @@ public class CategoryControllerTest {
         long id = 1L;
         String categoryText = "Social";
         String invalidToken = AdminControllerUtil.generateSessionToken();
-        Category category = new Category();
+        Category category = new CategoryImpl();
         category.setCreatedUser(user);
         category.setText(categoryText);
-        category.setEntityId(id);
+        category.setId(id);
         SessionStatus sessionStatus = createMock(SessionStatus.class);
         expect(userService.getAuthenticatedUser()).andReturn(user).once();
         expect(categoryService.get(id)).andReturn(category);
@@ -360,10 +361,10 @@ public class CategoryControllerTest {
 
         long id = 1L;
         String categoryText = "";
-        Category category = new Category();
+        Category category = new CategoryImpl();
         category.setCreatedUser(user);
         category.setText(categoryText);
-        category.setEntityId(id);
+        category.setId(id);
         SessionStatus sessionStatus = createMock(SessionStatus.class);
         expect(userService.getAuthenticatedUser()).andReturn(user).once();
         replay(userService);
@@ -379,10 +380,10 @@ public class CategoryControllerTest {
         long id = 1L;
         User user = new User();
         String categoryText = "Social";
-        Category category = new Category();
+        Category category = new CategoryImpl();
         category.setCreatedUser(user);
         category.setText(categoryText);
-        category.setEntityId(id);
+        category.setId(id);
         SessionStatus sessionStatus = createMock(SessionStatus.class);
         expect(userService.getAuthenticatedUser()).andReturn(user).once();
         replay(userService);
@@ -398,10 +399,10 @@ public class CategoryControllerTest {
         User user = new User();
         long id = 1L;
         String categoryText = "Social";
-        Category category = new Category();
+        Category category = new CategoryImpl();
         category.setCreatedUser(user);
         category.setText(categoryText);
-        category.setEntityId(id);
+        category.setId(id);
         SessionStatus sessionStatus = createMock(SessionStatus.class);
         expect(userService.getAuthenticatedUser()).andReturn(user).once();
         expect(categoryService.get(id)).andReturn(null).once();
@@ -418,10 +419,10 @@ public class CategoryControllerTest {
         User user = new User();
         long id = 1L;
         String categoryText = "Social";
-        Category category = new Category();
+        Category category = new CategoryImpl();
         category.setCreatedUser(user);
         category.setText(categoryText);
-        category.setEntityId(id);
+        category.setId(id);
         SessionStatus sessionStatus = createMock(SessionStatus.class);
         expect(userService.getAuthenticatedUser()).andReturn(user).once();
         replay(userService);
@@ -437,10 +438,10 @@ public class CategoryControllerTest {
         long id = 1L;
         String categoryText = "Social";
         Model model = new ExtendedModelMap();
-        Category category = new Category();
+        Category category = new CategoryImpl();
         category.setCreatedUser(user);
         category.setText(categoryText);
-        category.setEntityId(id);
+        category.setId(id);
         expect(categoryService.get(id)).andReturn(category).once();
         replay(categoryService);
         String view = controller.editCategory(id, model);

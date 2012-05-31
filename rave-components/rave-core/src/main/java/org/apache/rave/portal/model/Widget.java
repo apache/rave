@@ -19,12 +19,14 @@
 package org.apache.rave.portal.model;
 
 import org.apache.rave.persistence.BasicEntity;
+import org.apache.rave.portal.model.conversion.ConvertingListProxyFactory;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -188,7 +190,7 @@ public class Widget implements BasicEntity, Serializable {
             inverseJoinColumns=@JoinColumn(name="category_id", referencedColumnName = "entity_id")
     )
     @OrderBy("text")
-    private List<Category> categories;
+    private List<JpaCategory> categories;
 
     @XmlElement
     @Basic
@@ -362,11 +364,16 @@ public class Widget implements BasicEntity, Serializable {
     }
 
     public List<Category> getCategories() {
-        return categories;
+        return ConvertingListProxyFactory.createProxyList(Category.class, categories);
     }
 
     public void setCategories(List<Category> categories) {
-        this.categories = categories;
+        if(this.categories == null) {
+            this.categories = new ArrayList<JpaCategory>();
+        }
+        //Ensure that all operations go through the conversion proxy
+        this.getCategories().clear();
+        this.getCategories().addAll(categories);
     }
 
     public boolean isFeatured() {

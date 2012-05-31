@@ -20,6 +20,7 @@
 package org.apache.rave.portal.service.impl;
 
 import org.apache.rave.portal.model.Category;
+import org.apache.rave.portal.model.CategoryImpl;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.repository.CategoryRepository;
 import org.apache.rave.portal.service.CategoryService;
@@ -40,7 +41,7 @@ import static org.hamcrest.CoreMatchers.*;
 public class DefaultCategoryServiceTest {
     private CategoryService service;
     private CategoryRepository repository;
-    
+
     private final Long VALID_ID = 4L;
     private final String VALID_TEXT = "category1";
     private final Date VALID_CREATED_DATE = new Date(66666666);
@@ -48,7 +49,7 @@ public class DefaultCategoryServiceTest {
     private final Long VALID_CREATED_USER_ID = 77L;
     private final Long VALID_LAST_MODIFIED_USER_ID = 88L;
     private User validCreatedUser;
-    private User validLastModifiedUser;    
+    private User validLastModifiedUser;
     private Category validCategory;
 
     private final Long INVALID_ID = -999L;
@@ -60,9 +61,9 @@ public class DefaultCategoryServiceTest {
 
         validCreatedUser = new User(VALID_CREATED_USER_ID);
         validLastModifiedUser = new User(VALID_LAST_MODIFIED_USER_ID);
-        
-        validCategory = new Category();
-        validCategory.setEntityId(VALID_ID);
+
+        validCategory = new CategoryImpl();
+        validCategory.setId(VALID_ID);
         validCategory.setText(VALID_TEXT);
         validCategory.setCreatedUser(validCreatedUser);
         validCategory.setCreatedDate(VALID_CREATED_DATE);
@@ -90,19 +91,19 @@ public class DefaultCategoryServiceTest {
     public void getAll() {
         List<Category> list = new ArrayList<Category>();
         list.add(validCategory);
-        list.add(new Category());
-        list.add(new Category());
+        list.add(new CategoryImpl());
+        list.add(new CategoryImpl());
 
         expect(repository.getAll()).andReturn(list);
         replay(repository);
         assertThat(service.getAll(), is(list));
-        verify(repository);        
+        verify(repository);
     }
 
     @Test
     public void create() {
         final String NEW_CATEGORY_TEXT = "new category";
-        Category expectedCategory = new Category();
+        Category expectedCategory = new CategoryImpl();
         expectedCategory.setText(NEW_CATEGORY_TEXT);
 
         expect(repository.save(expectedCategory)).andReturn(expectedCategory);
@@ -114,7 +115,7 @@ public class DefaultCategoryServiceTest {
         assertThat(wc.getCreatedDate(), is(wc.getLastModifiedDate()));
         assertThat(wc.getCreatedUser(), is(validCreatedUser));
         assertThat(wc.getLastModifiedUser(), is(validCreatedUser));
-        
+
         verify(repository);
     }
 
@@ -122,8 +123,8 @@ public class DefaultCategoryServiceTest {
     public void update() {
         final String UPDATED_TEXT = "modified category";
 
-        Category expectedSaveCategory = new Category();
-        expectedSaveCategory.setEntityId(VALID_ID);
+        Category expectedSaveCategory = new CategoryImpl();
+        expectedSaveCategory.setId(VALID_ID);
         expectedSaveCategory.setText(UPDATED_TEXT);
         expectedSaveCategory.setCreatedUser(validCreatedUser);
         expectedSaveCategory.setLastModifiedUser(validLastModifiedUser);
@@ -133,9 +134,9 @@ public class DefaultCategoryServiceTest {
         expect(repository.get(VALID_ID)).andReturn(validCategory);
         expect(repository.save(expectedSaveCategory)).andReturn(expectedSaveCategory);
         replay(repository);
-        
+
         Category updatedCategory = service.update(VALID_ID, UPDATED_TEXT, validLastModifiedUser);
-        assertThat(updatedCategory.getEntityId(), is(VALID_ID));
+        assertThat(updatedCategory.getId(), is(VALID_ID));
         assertThat(updatedCategory.getText(), is(UPDATED_TEXT));
         assertThat(updatedCategory.getCreatedUser(), is(validCreatedUser));
         assertThat(updatedCategory.getLastModifiedUser(), is(validLastModifiedUser));
@@ -146,7 +147,7 @@ public class DefaultCategoryServiceTest {
 
     @Test
     public void delete() {
-        expect(repository.get(validCategory.getEntityId())).andReturn(validCategory);
+        expect(repository.get(validCategory.getId())).andReturn(validCategory);
         repository.delete(validCategory);
         expectLastCall();
         replay(repository);

@@ -40,5 +40,6 @@
             <class>org.apache.rave.portal.model.PageTemplateRegion</class>
             <class>org.apache.rave.portal.model.PageTemplateWidget</class>
             <class>org.apache.rave.portal.model.PageUser</class>
+            <class>org.apache.rave.portal.model.JpaCategory</class>
         </persistence-unit>
 </persistence>

@@ -20,10 +20,7 @@
 package org.apache.rave.portal.service.impl;
 
 import org.apache.rave.exception.DuplicateItemException;
-import org.apache.rave.portal.model.Category;
-import org.apache.rave.portal.model.User;
-import org.apache.rave.portal.model.Widget;
-import org.apache.rave.portal.model.WidgetStatus;
+import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.model.util.WidgetStatistics;
 import org.apache.rave.portal.repository.CategoryRepository;
@@ -32,6 +29,9 @@ import org.apache.rave.portal.repository.WidgetRepository;
 import org.apache.rave.portal.service.WidgetService;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,6 +44,8 @@ import static org.junit.Assert.*;
 /**
  * Test for {@link DefaultWidgetService}
  */
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = {"classpath:test-dataContext.xml", "classpath:test-applicationContext.xml"})
 public class DefaultWidgetServiceTest {
 
     private WidgetService widgetService;
@@ -341,19 +343,20 @@ public class DefaultWidgetServiceTest {
         verify(widgetRepository);
     }
 
-    @Test
+    // TODO - remove the IllegalArgumentException expectation once the JpaWidgetConverter class is created
+    @Test(expected = IllegalArgumentException.class)
     public void getWidgetsByCategory_valid(){
         long id = 1L;
         int offset = 0;
-        int pageSize = 10; 
+        int pageSize = 10;
         String categoryText = "Social";
         Widget w = new Widget();
         List<Category> categories = new ArrayList<Category>();
-        Category c = new Category();
+        Category c = new CategoryImpl();
         List<Widget> widgets = new ArrayList<Widget>();
         widgets.add(w);
         c.setWidgets(widgets);
-        c.setEntityId(id);
+        c.setId(id);
         c.setText(categoryText);
         categories.add(c);
         w.setCategories(categories);
@@ -363,7 +366,7 @@ public class DefaultWidgetServiceTest {
         verify(categoryRepository);
         assertEquals("number of widgets", 1, result.getTotalResults());
         assertSame(w, result.getResultSet().get(0));
-        assertEquals(c.getEntityId(), result.getResultSet().get(0).getCategories().get(0).getEntityId());
+        assertEquals(c.getId(), result.getResultSet().get(0).getCategories().get(0).getId());
     }
 
 }

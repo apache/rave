@@ -22,6 +22,7 @@ package org.apache.rave.persistence.jpa;
 import org.apache.rave.persistence.BasicEntity;
 import org.apache.rave.persistence.Repository;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.persistence.EntityManager;
@@ -39,6 +40,8 @@ import static org.junit.Assert.assertThat;
 
 /**
  */
+// TODO - this test class should get deleted once all repositories have been refactored and AbstractJpaRepository goes away
+@Ignore
 public class AbstractJpaRepositoryTest {
 
     private static final long ID = 1L;

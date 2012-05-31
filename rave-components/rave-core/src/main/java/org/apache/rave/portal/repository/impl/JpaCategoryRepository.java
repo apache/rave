@@ -19,25 +19,61 @@
 
 package org.apache.rave.portal.repository.impl;
 
-import org.apache.rave.persistence.jpa.AbstractJpaRepository;
 import org.apache.rave.portal.model.Category;
+import org.apache.rave.portal.model.JpaCategory;
+import org.apache.rave.portal.model.JpaGroup;
+import org.apache.rave.portal.model.Person;
+import org.apache.rave.portal.model.conversion.JpaCategoryConverter;
 import org.apache.rave.portal.repository.CategoryRepository;
+import org.apache.rave.util.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import java.util.ArrayList;
 import java.util.List;
+
+import static org.apache.rave.persistence.jpa.util.JpaUtil.getSingleResult;
+import static org.apache.rave.persistence.jpa.util.JpaUtil.saveOrUpdate;
 
 /**
  * JPA implementation for {@link org.apache.rave.portal.repository.CategoryRepository}
  */
 @Repository
-public class JpaCategoryRepository extends AbstractJpaRepository<Category> implements CategoryRepository {
+public class JpaCategoryRepository implements CategoryRepository {
 
-    public JpaCategoryRepository() {
-        super(Category.class);
+    @PersistenceContext
+    private EntityManager manager;
+
+    @Autowired
+    private JpaCategoryConverter categoryConverter;
+
+    @Override
+    public Class<? extends Category> getType() {
+        return JpaCategory.class;
+    }
+
+    @Override
+    public Category get(long id) {
+        return manager.find(JpaCategory.class, id);
+    }
+
+    @Override
+    public Category save(Category item) {
+        JpaCategory category = categoryConverter.convert(item);
+        return saveOrUpdate(category.getEntityId(), manager, category);
+    }
+
+    @Override
+    public void delete(Category item) {
+        manager.remove(item instanceof JpaCategory ? item : get(item.getId()));
     }
 
     @Override
     public List<Category> getAll() {
-        return manager.createNamedQuery(Category.GET_ALL, Category.class).getResultList();
+        List<JpaCategory> resultList = manager.createNamedQuery(JpaCategory.GET_ALL, JpaCategory.class).getResultList();
+        return CollectionUtils.<Category>toBaseTypedList(resultList);
     }
 }

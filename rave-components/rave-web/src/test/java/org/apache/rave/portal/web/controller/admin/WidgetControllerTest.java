@@ -20,6 +20,7 @@
 package org.apache.rave.portal.web.controller.admin;
 
 import org.apache.rave.portal.model.Category;
+import org.apache.rave.portal.model.CategoryImpl;
 import org.apache.rave.portal.model.Widget;
 import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.service.CategoryService;
@@ -81,8 +82,8 @@ public class WidgetControllerTest {
         controller.setCategoryService(categoryService);
 
         categories = new ArrayList<Category>();
-        categories.add(new Category());
-        categories.add(new Category());
+        categories.add(new CategoryImpl());
+        categories.add(new CategoryImpl());
 
         webDataBinder = createMock(WebDataBinder.class);
         categoryEditor = new CategoryEditor(categoryService);
