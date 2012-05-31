@@ -49,8 +49,8 @@ public class ConvertingListProxyFactory {
 
         @SuppressWarnings("unchecked")
         private void convertAll(List<S> parameter) {
-            for(int i=0; i<parameter.size(); i++) {
-                parameter.set(i, (S)JpaConverter.getInstance().convert(parameter.get(i), targetClass));
+            for (int i = 0; i < parameter.size(); i++) {
+                parameter.set(i, (S) JpaConverter.getInstance().convert(parameter.get(i), targetClass));
             }
         }
     }

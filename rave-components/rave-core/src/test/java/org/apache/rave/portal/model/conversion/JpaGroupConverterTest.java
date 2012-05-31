@@ -42,7 +42,6 @@ public class JpaGroupConverterTest {
     JpaGroupConverter converter;
 
     private Group group;
-
     private String description = "Test Group";
     private Long entityId = Long.valueOf(400);
     private String title = "GroupTitle";
@@ -83,7 +82,7 @@ public class JpaGroupConverterTest {
         assertEquals(description, jpaGroup.getDescription());
         assertEquals(entityId, jpaGroup.getEntityId());
         assertEquals(title, jpaGroup.getTitle());
-        assertEquals(owner, jpaGroup.getOwner());
+        assertEquals(owner.getDisplayName(), jpaGroup.getOwner().getDisplayName());
         assertEquals(members.size(), jpaGroup.getMembers().size());
     }
 

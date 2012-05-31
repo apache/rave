@@ -80,8 +80,7 @@ public class JpaGroup implements BasicEntity, Group {
     }
 
     public void setOwner(Person owner) {
-        JpaPersonConverter converter = new JpaPersonConverter();
-        this.owner = converter.convert(owner);
+        this.owner = JpaConverter.getInstance().convert(owner, Person.class);
     }
 
     public String getDescription() {
@@ -101,7 +100,9 @@ public class JpaGroup implements BasicEntity, Group {
             this.members = new ArrayList<JpaPerson>();
         }
         this.getMembers().clear();
-        this.getMembers().addAll(members);
+        if(members != null) {
+            this.getMembers().addAll(members);
+        }
     }
 
     public String getTitle() {

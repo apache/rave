@@ -246,7 +246,9 @@ public class JpaPerson implements BasicEntity, Person {
             this.addresses = new ArrayList<JpaAddress>();
         }
         this.getAddresses().clear();
-        this.getAddresses().addAll(addresses);
+        if(addresses != null) {
+            this.getAddresses().addAll(addresses);
+        }
     }
 
     @Override
@@ -261,7 +263,9 @@ public class JpaPerson implements BasicEntity, Person {
             this.properties = new ArrayList<JpaPersonProperty>();
         }
         this.getProperties().clear();
-        this.getProperties().addAll(properties);
+        if(properties != null) {
+            this.getProperties().addAll(properties);
+        }
     }
 
     @Override
@@ -277,7 +281,9 @@ public class JpaPerson implements BasicEntity, Person {
         }
         //Ensure that all operations go through the conversion proxy
         this.getFriends().clear();
-        this.getFriends().addAll(friends);
+        if(friends != null) {
+            this.getFriends().addAll(friends);
+        }
     }
 
     @Override
@@ -292,7 +298,9 @@ public class JpaPerson implements BasicEntity, Person {
             this.organizations = new ArrayList<JpaOrganization>();
         }
         this.getOrganizations().clear();
-        this.getOrganizations().addAll(organizations);
+        if(organizations != null) {
+            this.getOrganizations().addAll(organizations);
+        }
     }
 
     @Override
