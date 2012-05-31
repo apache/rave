@@ -7,6 +7,18 @@ The Apache Software Foundation (http://www.apache.org/).
 This product includes software (Bootstrap) developed at
 Twitter (http://www.twitter.com/).
 
+This product includes software (Direct Web Remoting) which is released under the Apache License 2.0 and is
+Copyright 2005 Joe Walker (http://directwebremoting.org).
+
+This product includes software (Enyo 2.0.0) which is released under the Apache License 2.0 and is
+Copyright 2011-2012 Hewlett-Packard Development Company, L.P. (http://enyojs.com).
+
+This product includes software (OpenAjax Managed Hub) which is released under the Apache License 2.0 and is
+Copyright 2006 OpenAjax Alliance (http://www.openajax.org).
+
+This product includes software (Google Collections) which is released under the Apache License 2.0 and is
+Copyright (C) 2009 Google Inc. (http://code.google.com/p/google-collections/).
+
 Java compilation software for JSP pages is provided by Eclipse, which is open source software.  The original software and
 related information is available at http://www.eclipse.org.
 
