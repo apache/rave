@@ -21,6 +21,7 @@ package org.apache.rave.portal.model.conversion;
 import org.apache.rave.model.ModelConverter;
 import org.apache.rave.portal.model.Group;
 import org.apache.rave.portal.model.JpaGroup;
+import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -29,6 +30,7 @@ import java.util.List;
 
 import static org.apache.rave.persistence.jpa.util.JpaUtil.getSingleResult;
 
+@Component
 public class JpaGroupConverter implements ModelConverter<Group, JpaGroup> {
     @PersistenceContext
     private EntityManager manager;

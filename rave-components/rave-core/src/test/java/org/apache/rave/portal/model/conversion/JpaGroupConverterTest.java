@@ -18,58 +18,73 @@
  */
 package org.apache.rave.portal.model.conversion;
 
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
 import org.apache.rave.portal.model.*;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.List;
 
-//@RunWith(SpringJUnit4ClassRunner.class)
-//@ContextConfiguration(locations={"classpath:test-applicationContext.xml","classpath:test-dataContext.xml"} )
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations={"classpath:test-applicationContext.xml","classpath:test-dataContext.xml"} )
 public class JpaGroupConverterTest {
 
-//    private Group group;
-//
-//    private String description = "Test Group";
-//    private Long entityId = Long.valueOf(400);
-//    private String title = "GroupTitle";
-//    private Person owner = null;
-//    private List<Person> members = null;
-//
-//    private String ownerDisplayName = "Bob";
-//    private String ownerGivenName = "Smith";
-//
-//    public void setup() {
-//        members = new ArrayList<Person>();
-//        owner = new PersonImpl();
-//        owner.setDisplayName(ownerDisplayName);
-//        owner.setGivenName(ownerGivenName);
-//        members.add(owner);
-//
-//        group = new GroupImpl();
-//        group.setDescription(description);
-//        group.setEntityId(entityId);
-//        group.setTitle(title);
-//        group.setOwner(owner);
-//        group.setMembers(members);
-//    }
-//
-//    @Test
-//    public void testConvertGroupToJpaGroup() {
-//        JpaGroupConverter converter = new JpaGroupConverter();
-//
-//        JpaGroup jpaGroup = converter.convert(group);
-//
-//        assertEquals(description, jpaGroup.getDescription());
-//        assertEquals(entityId, jpaGroup.getEntityId());
-//        assertEquals(title, jpaGroup.getTitle());
-//        assertEquals(owner, jpaGroup.getOwner());
-//        assertEquals(members.size(), jpaGroup.getMembers().size());
-//    }
+    @Autowired
+    JpaGroupConverter converter;
+
+    private Group group;
+
+    private String description = "Test Group";
+    private Long entityId = Long.valueOf(400);
+    private String title = "GroupTitle";
+    private Person owner = null;
+    private List<Person> members = null;
+
+    private String ownerDisplayName = "Bob";
+    private String ownerGivenName = "Smith";
+
+    @Before
+    public void setup() {
+        members = new ArrayList<Person>();
+        owner = new PersonImpl();
+        owner.setDisplayName(ownerDisplayName);
+        owner.setGivenName(ownerGivenName);
+        members.add(owner);
+
+        group = new GroupImpl();
+        group.setDescription(description);
+        group.setEntityId(entityId);
+        group.setTitle(title);
+        group.setOwner(owner);
+        group.setMembers(members);
+    }
+
+    @Test
+    public void testNoConversion() {
+        JpaGroup group = new JpaGroup();
+        assertThat(converter.convert(group), is(sameInstance(group)));
+    }
+
+    @Test
+    public void testConvertGroupToJpaGroup() {
+        JpaGroup jpaGroup = converter.convert(group);
+
+        assertThat(jpaGroup, is(not(sameInstance(group))));
+        assertThat(jpaGroup, is(instanceOf(JpaGroup.class)));
+        assertEquals(description, jpaGroup.getDescription());
+        assertEquals(entityId, jpaGroup.getEntityId());
+        assertEquals(title, jpaGroup.getTitle());
+        assertEquals(owner, jpaGroup.getOwner());
+        assertEquals(members.size(), jpaGroup.getMembers().size());
+    }
 
 }
