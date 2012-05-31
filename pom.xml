@@ -33,12 +33,12 @@
     <name>Apache Rave :: rave-project</name>
     <description>Apache Rave Project</description>
     <packaging>pom</packaging>
-    <version>0.12-SNAPSHOT</version>
+    <version>0.12</version>
 
     <scm>
-        <connection>scm:svn:http://svn.apache.org/repos/asf/rave/trunk</connection>
-        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/rave/trunk</developerConnection>
-        <url>http://svn.apache.org/viewvc/rave/trunk/</url>
+        <connection>scm:svn:http://svn.apache.org/repos/asf/rave/tags/0.12</connection>
+        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/rave/tags/0.12</developerConnection>
+        <url>http://svn.apache.org/viewvc/rave/tags/0.12</url>
     </scm>
 
     <properties>
@@ -568,7 +568,7 @@
                                         </goals>
                                     </pluginExecutionFilter>
                                     <action>
-                                        <execute/>
+                                        <execute />
                                     </action>
                                 </pluginExecution>
                                 <pluginExecution>
@@ -581,7 +581,7 @@
                                         </goals>
                                     </pluginExecutionFilter>
                                     <action>
-                                        <execute/>
+                                        <execute />
                                     </action>
                                 </pluginExecution>
                                 <pluginExecution>
@@ -594,7 +594,7 @@
                                         </goals>
                                     </pluginExecutionFilter>
                                     <action>
-                                        <execute/>
+                                        <execute />
                                     </action>
                                 </pluginExecution>
                                 <pluginExecution>
@@ -608,7 +608,7 @@
                                         </goals>
                                     </pluginExecutionFilter>
                                     <action>
-                                        <execute/>
+                                        <execute />
                                     </action>
                                 </pluginExecution>
                             </pluginExecutions>
