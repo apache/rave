@@ -34,10 +34,7 @@ public class JpaPersonPropertyConverter implements ModelConverter<PersonProperty
 
     private JpaPersonProperty createEntity(PersonProperty source) {
         JpaPersonProperty converted;
-        TypedQuery<JpaPersonProperty> query = manager.createNamedQuery(JpaPersonProperty.FIND_BY_TYPE_AND_VALUE, JpaPersonProperty.class);
-        query.setParameter(JpaPersonProperty.TYPE_PARAM, source.getType());
-        query.setParameter(JpaPersonProperty.VALUE_PARAM, source.getValue());
-        converted = getSingleResult(query.getResultList());
+        converted = manager.find(JpaPersonProperty.class, source.getId());
 
         if(converted == null) {
             converted = new JpaPersonProperty();

@@ -4,6 +4,10 @@ package org.apache.rave.portal.model;
  *
  */
 public interface PersonProperty {
+    Long getId();
+
+    void setId(Long id);
+
     String getType();
 
     void setType(String type);

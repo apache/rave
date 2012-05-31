@@ -28,15 +28,8 @@ import javax.persistence.*;
  */
 @Entity
 @Access(AccessType.FIELD)
-@NamedQueries(value = {
-        @NamedQuery(name = JpaPersonProperty.FIND_BY_TYPE_AND_VALUE, query = "select p from JpaPersonProperty p where p.type=:type and p.value=:value")
-})
 @Table(name = "person_property")
 public class JpaPersonProperty implements BasicEntity, PersonProperty {
-
-    public static final String FIND_BY_TYPE_AND_VALUE = "findByTypeAndValue";
-    public static final String TYPE_PARAM = "type";
-    public static final String VALUE_PARAM = "value";
 
     @Id
     @Column(name = "entity_id")
@@ -98,6 +91,16 @@ public class JpaPersonProperty implements BasicEntity, PersonProperty {
 
     public void setEntityId(Long entityId) {
         this.entityId = entityId;
+    }
+
+    @Override
+    public Long getId() {
+        return this.getEntityId();
+    }
+
+    @Override
+    public void setId(Long id) {
+        this.setEntityId(id);
     }
 
     @Override
