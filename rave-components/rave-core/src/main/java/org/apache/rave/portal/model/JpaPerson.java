@@ -25,8 +25,6 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.apache.rave.persistence.jpa.util.JpaUtil.clearAndAdd;
-
 /**
  * Represents a person in the persistence context
  */
@@ -106,9 +104,9 @@ public class JpaPerson implements BasicEntity, Person {
     @JoinColumn(name="person_id", referencedColumnName = "entity_id")
     protected List<JpaOrganization> organizations;
 
-    @OneToMany(targetEntity = PersonProperty.class)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "person_id", referencedColumnName = "entity_id")
-    protected List<PersonProperty> properties;
+    protected List<JpaPersonProperty> properties;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "person_association",
@@ -251,13 +249,18 @@ public class JpaPerson implements BasicEntity, Person {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<PersonProperty> getProperties() {
-        return properties;
+        return ConvertingListProxyFactory.createProxyList(PersonProperty.class, this.properties);
     }
 
     @Override
     public void setProperties(List<PersonProperty> properties) {
-        this.properties = properties;
+        if(this.properties == null) {
+            this.properties = new ArrayList<JpaPersonProperty>();
+        }
+        this.getProperties().clear();
+        this.getProperties().addAll(properties);
     }
 
     @Override

@@ -26,7 +26,7 @@
       <class>org.apache.rave.portal.model.JpaPerson</class>
       <class>org.apache.rave.portal.model.Group</class>
       <class>org.apache.rave.portal.model.PersonAssociation</class>
-      <class>org.apache.rave.portal.model.PersonProperty</class>
+      <class>org.apache.rave.portal.model.JpaPersonProperty</class>
       <class>org.apache.rave.portal.model.JpaAddress</class>
       <class>org.apache.rave.portal.model.JpaOrganization</class>
       <class>org.apache.rave.opensocial.model.ApplicationData</class>

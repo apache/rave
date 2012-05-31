@@ -367,7 +367,7 @@ public class User extends JpaPerson implements UserDetails, BasicEntity, Seriali
         p.setHonorificSuffix(this.getHonorificSuffix());
         //p.setOrganizations(this.getOrganizations());
         p.setPreferredName(this.getPreferredName());
-        p.setProperties(this.getProperties());
+        //p.setProperties(this.getProperties());
         p.setStatus(this.getStatus());
         p.setUsername(this.getUsername());
         return p;

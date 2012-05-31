@@ -21,7 +21,6 @@ package org.apache.rave.opensocial.service.impl;
 
 import org.apache.rave.exception.NotSupportedException;
 import org.apache.rave.portal.model.*;
-import org.apache.rave.portal.model.Person;
 import org.apache.rave.portal.model.util.ModelUtils;
 import org.apache.rave.util.CollectionUtils;
 import org.apache.shindig.protocol.model.Enum;
