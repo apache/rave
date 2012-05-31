@@ -30,7 +30,7 @@ import java.util.List;
 import static org.apache.rave.persistence.jpa.util.JpaUtil.getSingleResult;
 
 public class JpaGroupConverter implements ModelConverter<Group, JpaGroup> {
-    @PersistenceContext(unitName = "ravePersistenceUnit")
+    @PersistenceContext
     private EntityManager manager;
 
     @Override
