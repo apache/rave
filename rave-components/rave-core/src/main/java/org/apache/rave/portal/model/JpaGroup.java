@@ -19,8 +19,13 @@
 package org.apache.rave.portal.model;
 
 import org.apache.rave.persistence.BasicEntity;
+import org.apache.rave.portal.model.conversion.ConvertingListProxyFactory;
+import org.apache.rave.portal.model.conversion.JpaConverter;
+import org.apache.rave.portal.model.conversion.JpaGroupConverter;
+import org.apache.rave.portal.model.conversion.JpaPersonConverter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -30,9 +35,9 @@ import java.util.List;
 @Entity
 @Table(name = "groups")
 @NamedQueries(
-        @NamedQuery(name = Group.FIND_BY_TITLE, query="select g from Group g where g.title = :groupId")
+        @NamedQuery(name = JpaGroup.FIND_BY_TITLE, query="select g from JpaGroup g where g.title = :groupId")
 )
-public class Group implements BasicEntity {
+public class JpaGroup implements BasicEntity, Group {
 
     public static final String FIND_BY_TITLE = "Group.findById";
     public static final String GROUP_ID_PARAM = "groupId";
@@ -73,8 +78,9 @@ public class Group implements BasicEntity {
         return owner;
     }
 
-    public void setOwner(JpaPerson owner) {
-        this.owner = owner;
+    public void setOwner(Person owner) {
+        JpaPersonConverter converter = new JpaPersonConverter();
+        this.owner = converter.convert(owner);
     }
 
     public String getDescription() {
@@ -85,12 +91,16 @@ public class Group implements BasicEntity {
         this.description = description;
     }
 
-    public List<JpaPerson> getMembers() {
-        return members;
+    public List<Person> getMembers() {
+        return ConvertingListProxyFactory.createProxyList(Person.class, members);
     }
 
-    public void setMembers(List<JpaPerson> members) {
-        this.members = members;
+    public void setMembers(List<Person> members) {
+        if(this.members == null) {
+            this.members = new ArrayList<JpaPerson>();
+        }
+        this.getMembers().clear();
+        this.getMembers().addAll(members);
     }
 
     public String getTitle() {

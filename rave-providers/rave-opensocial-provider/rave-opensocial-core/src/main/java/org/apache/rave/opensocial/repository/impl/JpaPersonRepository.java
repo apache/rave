@@ -20,11 +20,10 @@
 package org.apache.rave.opensocial.repository.impl;
 
 import org.apache.rave.exception.NotSupportedException;
-import org.apache.rave.portal.model.Group;
+import org.apache.rave.portal.model.JpaGroup;
 import org.apache.rave.portal.model.JpaPerson;
 import org.apache.rave.portal.model.Person;
 import org.apache.rave.opensocial.repository.PersonRepository;
-import org.apache.rave.persistence.jpa.AbstractJpaRepository;
 import org.apache.rave.portal.model.conversion.JpaPersonConverter;
 import org.apache.rave.util.CollectionUtils;
 import org.apache.shindig.protocol.model.FilterOperation;
@@ -108,9 +107,9 @@ public class JpaPersonRepository implements PersonRepository{
 
     @Override
     public List<Person> findByGroup(String groupId) {
-        TypedQuery<Group> query = manager.createNamedQuery(Group.FIND_BY_TITLE, Group.class);
-        query.setParameter(Group.GROUP_ID_PARAM, groupId);
-        Group result = getSingleResult(query.getResultList());
+        TypedQuery<JpaGroup> query = manager.createNamedQuery(JpaGroup.FIND_BY_TITLE, JpaGroup.class);
+        query.setParameter(JpaGroup.GROUP_ID_PARAM, groupId);
+        JpaGroup result = getSingleResult(query.getResultList());
         return result == null ? new ArrayList<Person>() : CollectionUtils.<Person>toBaseTypedList(result.getMembers());
     }
 

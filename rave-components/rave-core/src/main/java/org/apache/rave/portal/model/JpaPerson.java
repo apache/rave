@@ -33,7 +33,7 @@ import java.util.List;
 @NamedQueries(value = {
     @NamedQuery(name = JpaPerson.FIND_BY_USERNAME, query = "select p from JpaPerson p where p.username like :username"),
     @NamedQuery(name = JpaPerson.FIND_FRIENDS_BY_USERNAME, query = "select a.followed from PersonAssociation a where a.follower.username = :username"),
-    @NamedQuery(name = JpaPerson.FIND_BY_GROUP_MEMBERSHIP, query = "select m from Group g join g.members m where exists " +
+    @NamedQuery(name = JpaPerson.FIND_BY_GROUP_MEMBERSHIP, query = "select m from JpaGroup g join g.members m where exists " +
             "(select 'found' from g.members b where b.username = :username) and m.username <> :username")
 })
 public class JpaPerson implements BasicEntity, Person {
