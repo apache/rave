@@ -26,6 +26,7 @@ import java.util.Date;
  * A tag for a widget.
  */
 @Entity
+@Access(AccessType.FIELD)
 @Table(name = "widget_tag")
 @XmlRootElement
 @NamedQueries({

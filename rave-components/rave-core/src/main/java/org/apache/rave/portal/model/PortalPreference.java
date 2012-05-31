@@ -22,18 +22,7 @@ package org.apache.rave.portal.model;
 import org.apache.rave.exception.NotSupportedException;
 import org.apache.rave.persistence.BasicEntity;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table;
-import javax.persistence.TableGenerator;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -43,6 +32,7 @@ import java.util.List;
  * Bean to manage portal preferences like title suffix, logo, number of items per page etc
  */
 @Entity
+@Access(AccessType.FIELD)
 @Table(name = "portal_preference")
 @NamedQueries({
         @NamedQuery(name = PortalPreference.GET_ALL, query = "SELECT pp FROM PortalPreference pp"),

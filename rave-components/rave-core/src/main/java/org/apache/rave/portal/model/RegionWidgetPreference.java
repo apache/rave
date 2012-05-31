@@ -21,14 +21,7 @@ package org.apache.rave.portal.model;
 
 import org.apache.rave.persistence.BasicEntity;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.TableGenerator;
+import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 
@@ -36,6 +29,7 @@ import java.io.Serializable;
  * A preference for a region widget.
  */
 @Entity
+@Access(AccessType.FIELD)
 @Table(name = "region_widget_preference")
 @XmlRootElement
 public class RegionWidgetPreference implements BasicEntity, Serializable {

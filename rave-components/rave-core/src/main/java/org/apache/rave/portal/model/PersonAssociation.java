@@ -26,6 +26,7 @@ import javax.persistence.*;
  * Represents an association between people
  */
 @Entity
+@Access(AccessType.FIELD)
 @Table(name = "person_association",
         uniqueConstraints = @UniqueConstraint(columnNames = {"follower_id", "followed_id"})
 )

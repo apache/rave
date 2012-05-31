@@ -27,6 +27,7 @@ import javax.persistence.*;
  * add fields to the Person not initially envisioned
  */
 @Entity
+@Access(AccessType.FIELD)
 @NamedQueries(value = {
         @NamedQuery(name = JpaPersonProperty.FIND_BY_TYPE_AND_VALUE, query = "select p from JpaPersonProperty p where p.type=:type and p.value=:value")
 })

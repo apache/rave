@@ -21,22 +21,14 @@ package org.apache.rave.portal.model;
 
 import org.apache.rave.persistence.BasicEntity;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table;
-import javax.persistence.TableGenerator;
+import javax.persistence.*;
 import java.io.Serializable;
 
 /**
  * Represents an organization of regions within a page that is supported by the rendering engine
  */
 @Entity
+@Access(AccessType.FIELD)
 @Table(name="page_layout")
 @NamedQueries({
     @NamedQuery(name=PageLayout.PAGELAYOUT_GET_BY_LAYOUT_CODE, query = "select pl from PageLayout pl where pl.code = :code"),

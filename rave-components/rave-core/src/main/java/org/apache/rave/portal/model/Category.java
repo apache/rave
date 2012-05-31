@@ -28,6 +28,7 @@ import java.util.List;
  * A category for a widget.
  */
 @Entity
+@Access(AccessType.FIELD)
 @Table(name = "category")
 @XmlRootElement
 @NamedQueries({

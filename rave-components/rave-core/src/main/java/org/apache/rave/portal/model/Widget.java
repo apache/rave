@@ -32,6 +32,7 @@ import java.util.List;
  */
 @XmlAccessorType(XmlAccessType.NONE)
 @Entity
+@Access(AccessType.FIELD)
 @Table(name = "widget")
 @NamedQueries({
         @NamedQuery(name = Widget.WIDGET_GET_ALL, query = Widget.SELECT_W_FROM_WIDGET_W + Widget.ORDER_BY_TITLE_ASC),

@@ -30,6 +30,7 @@ import java.util.List;
  * associated with individuals and are used by those individuals to manage people.
  */
 @Entity
+@Access(AccessType.FIELD)
 @Table(name = "tag")
 @NamedQueries({
         @NamedQuery(name = Tag.GET_ALL, query = "select t from Tag t order by t.keyword asc"),

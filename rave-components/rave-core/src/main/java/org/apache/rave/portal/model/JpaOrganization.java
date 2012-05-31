@@ -27,6 +27,7 @@ import java.util.Date;
 /**
  */
 @Entity
+@Access(AccessType.FIELD)
 @NamedQueries(value = {
         @NamedQuery(name = JpaOrganization.FIND_BY_NAME, query = "select o from JpaOrganization o where o.name like :name")
 })

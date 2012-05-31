@@ -22,19 +22,7 @@ package org.apache.rave.portal.model;
 import org.apache.rave.persistence.BasicEntity;
 import org.springframework.security.core.GrantedAuthority;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.PreRemove;
-import javax.persistence.Table;
-import javax.persistence.TableGenerator;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -44,6 +32,7 @@ import java.util.Collection;
  */
 @Entity
 @Table(name = "granted_authority")
+@Access(AccessType.FIELD)
 @NamedQueries({
         @NamedQuery(name = Authority.GET_BY_AUTHORITY_NAME, query = "SELECT a FROM Authority a WHERE a.authority = :authority"),
         @NamedQuery(name = Authority.GET_ALL, query = "SELECT a FROM Authority a"),

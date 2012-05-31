@@ -23,6 +23,7 @@ import javax.persistence.*;
 /**
  */
 @Entity
+@Access(AccessType.FIELD)
 @NamedQueries(value = {
         @NamedQuery(name = JpaAddress.FIND_BY_STREET_CITY_COUNTRY, query = "select a from JpaAddress a where a.streetAddress=:street and a.locality=:city and a.country=:country")
 })

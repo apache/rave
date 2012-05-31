@@ -29,6 +29,7 @@ import java.util.List;
  * A widget within a region
  */
 @Entity
+@Access(AccessType.FIELD)
 @Table(name = "region_widget")
 @NamedQueries({
         @NamedQuery(name = RegionWidget.REGION_WIDGET_GET_DISTINCT_USER_COUNT_ALL_WIDGETS,

@@ -26,6 +26,7 @@ import java.util.Date;
  * A comment for a widget.
  */
 @Entity
+@Access(AccessType.FIELD)
 @Table(name = "widget_comment")
 @NamedQueries({
         @NamedQuery(name = WidgetComment.DELETE_ALL_BY_USER,

@@ -33,6 +33,7 @@ import java.util.List;
  * associated with individuals and are used by those individuals to manage people.
  */
 @Entity
+@Access(AccessType.FIELD)
 @Table(name = "groups")
 @NamedQueries(
         @NamedQuery(name = JpaGroup.FIND_BY_TITLE, query="select g from JpaGroup g where g.title = :groupId")
