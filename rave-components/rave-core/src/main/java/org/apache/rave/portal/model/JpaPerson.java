@@ -30,6 +30,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "person")
+@Access(AccessType.FIELD)
 @NamedQueries(value = {
     @NamedQuery(name = JpaPerson.FIND_BY_USERNAME, query = "select p from JpaPerson p where p.username like :username"),
     @NamedQuery(name = JpaPerson.FIND_FRIENDS_BY_USERNAME, query = "select a.followed from PersonAssociation a where a.follower.username = :username"),
