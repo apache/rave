@@ -1,6 +1,40 @@
 Apache Rave Change Log
 https://issues.apache.org/jira/secure/ReleaseNote.jspa?projectId=12311290 (select the version of release and output as text to create this file)
 
+Release Notes - Rave - Version 0.12
+================================================================================================================
+
+** Sub-task
+    * [RAVE-539] - Widget store: fix widget detail display
+    * [RAVE-543] - Implement LESS compilation for Bootstrap
+    * [RAVE-586] - Break out the navbar
+    * [RAVE-592] - Rename header.tag to navbar.tag
+    * [RAVE-606] - Factor out "old" CSS files
+    * [RAVE-614] - Update Bootstrap JavaScript to 2.0.3
+
+** Bug
+    * [RAVE-599] - OpenSocial query for listing viewer friends returns always zero results
+    * [RAVE-600] - JavaScript Closure Compiler is failing
+    * [RAVE-623] - Logging for OpenAjax.hub methods causes error and silently fails
+
+** Improvement
+    * [RAVE-601] - Upgrade wro4j to 1.4.5 to fix Bootstrap processing errors
+    * [RAVE-602] - Improve overlap between Modernizr, CSS3 Mediaqueries, and HTMLShiv Javascript Libraries
+    * [RAVE-604] - refactor <meta> tags into their own JSP tag for easier overlaying
+    * [RAVE-605] - Add a consumer notification ability to the StaticContentFetcherService
+    * [RAVE-613] - Support registering custom popup types with the container
+
+** New Feature
+    * [RAVE-612] - Add ability to hide/display the widget title and widget border
+    * [RAVE-615] - An easy way to determine the version of RAVE
+
+** Task
+    * [RAVE-633] - Upgrade the version of wookie bundled with rave to 0.10.0
+
+** Test
+    * [RAVE-610] - Add integration tests to the project
+
+
 Release Notes - Rave - Version 0.11
 ================================================================================================================
 ** Sub-task
