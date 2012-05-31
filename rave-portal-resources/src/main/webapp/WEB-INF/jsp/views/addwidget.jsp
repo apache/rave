@@ -152,7 +152,7 @@
         </div>
     </form:form>
 </div>
-<div id="w3cBrowseForm" title="Browse available W3C widgets">
+<div id="w3cBrowseForm" title="<fmt:message key="page.general.browse"/>">
     <ul id="w3cwidgetsList" class="storeItems">
     </ul>
 </div>
@@ -206,48 +206,58 @@
                         .append(
                             $("<li/>")
                             .addClass("storeItem")
-                            .append(
+                            .append( // container
                                 $("<div/>")
-                                .addClass("storeItemLeft")
+                                .css('overflow','hidden')
                                 .append(
                                     $("<div/>")
-                                    .attr("id", "w3cImageHolder"+i)
-                                )
-                                .append(
-                                    $("<div/>")
-                                    .attr("id", "widgetAdded")
-                                    .addClass("storeButton")
+                                    .css('float','left')
+                                    .css('width','50%')
                                     .append(
-                                        $("<button/>")
-                                        .addClass("storeItemButton")
-                                        .attr("id", this.url)
-                                        .attr("onclick", "updateRaveMetadata("+i+");")
-                                        .text("Get Metadata")
+                                        $("<div/>")
+                                        .attr("id", "w3cImageHolder"+i)
+                                    )
+                                    .append(
+                                        $("<div/>")
+                                        .attr("id", "widgetAdded")
+                                        .addClass("storeButton")
+                                        .append(
+                                            $("<button/>")
+                                            .addClass("btn btn-small btn-primary")
+                                            .attr("id", this.url)
+                                            .attr("onclick", "updateRaveMetadata("+i+");")
+                                            .text(rave.getClientMessage("get.metadata"))
+                                        )
                                     )
                                 )
-                            )
-                            .append(
-                                $("<div/>")
-                                .addClass("storeItemCenter")
                                 .append(
                                     $("<div/>")
-                                    .addClass("secondaryPageItemTitle")
-                                    .text(this.title)
+                                    .css('float','left')
+                                    .css('width','50%')
+                                    .css('margin-right','-1px')
+                                    .append(
+                                        $("<div/>")
+                                        .addClass("secondaryPageItemTitle")
+                                        .css('padding', '2px')
+                                        .text(this.title)
+                                    )
+                                    .append(
+                                        $("<div/>")
+                                        .addClass("storeWidgetAuthor")
+                                        .css('padding', '2px')
+                                        .text(this.author)
+                                    )
+                                    .append(
+                                        $("<div/>")
+                                        .addClass("storeWidgetDesc")
+                                        .css('padding', '2px')
+                                        .text(this.description)
+                                    )
                                 )
                                 .append(
                                     $("<div/>")
-                                    .addClass("storeWidgetAuthor")
-                                    .text(this.author)
+                                    .addClass("clear-float")
                                 )
-                                .append(
-                                    $("<div/>")
-                                    .addClass("storeWidgetDesc")
-                                    .text(this.description)
-                                )
-                            )
-                            .append(
-                                $("<div/>")
-                                .addClass("clear-float")
                             )
                         )
                         // add the thumbnail image if found
