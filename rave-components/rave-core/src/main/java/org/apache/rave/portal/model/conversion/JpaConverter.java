@@ -19,11 +19,11 @@ public class JpaConverter {
     //Converters are all Spring beans with their own dependencies.
     private static JpaConverter instance;
 
-    Map<Class<?>, Converter> converterMap;
+    Map<Class<?>, ModelConverter> converterMap;
 
     @Autowired
     public JpaConverter(List<ModelConverter> converters) {
-        converterMap = new HashMap<Class<?>, Converter>();
+        converterMap = new HashMap<Class<?>, ModelConverter>();
         for(ModelConverter converter : converters) {
             converterMap.put(converter.getSourceType(), converter);
         }
@@ -32,11 +32,15 @@ public class JpaConverter {
 
     @SuppressWarnings("unchecked")
     public <S, T> T convert(S source, Class<S> clazz) {
-        return (T)converterMap.get(clazz).convert(source);
+        if(converterMap.containsKey(clazz)) {
+            return (T)converterMap.get(clazz).convert(source);
+        } else {
+            throw new IllegalArgumentException("No ModelConverter found for type " + clazz);
+        }
     }
 
     @SuppressWarnings("unchecked")
-    public <S,T> Converter<S, T> getConverter(Class<S> clazz) {
+    public <S,T> ModelConverter<S, T> getConverter(Class<S> clazz) {
         return converterMap.get(clazz);
     }
 
