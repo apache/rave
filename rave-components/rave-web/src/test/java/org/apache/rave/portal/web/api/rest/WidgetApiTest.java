@@ -31,8 +31,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.easymock.EasyMock.*;
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.sameInstance;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 public class WidgetApiTest {
     private WidgetApi widgetApi;
@@ -93,13 +95,13 @@ public class WidgetApiTest {
 
     @Test
     public void getWidgetComment() {
-        WidgetComment widgetComment = new WidgetComment();
-        widgetComment.setEntityId(2L);
+        WidgetComment widgetComment = new WidgetCommentImpl();
+        widgetComment.setId(2L);
         expect(widgetCommentService.getWidgetComment(2L)).andReturn(widgetComment);
         replay(widgetCommentService);
 
         WidgetComment foundComment = widgetApi.getWidgetComment(1L, 2L);
-        assertEquals(widgetComment.getEntityId(), foundComment.getEntityId());
+        assertEquals(widgetComment.getId(), foundComment.getId());
 
         verify(widgetCommentService);
     }
@@ -107,7 +109,7 @@ public class WidgetApiTest {
     @Test
     public void updateNonExistentWidgetComment() {
         String message = "message";
-        WidgetComment widgetComment = new WidgetComment();
+        WidgetComment widgetComment = new WidgetCommentImpl();
         widgetComment.setWidgetId(2L);
         widgetComment.setText(message);
         widgetComment.setUser(new User(VALID_USER_ID, "John.Doe"));
@@ -129,8 +131,8 @@ public class WidgetApiTest {
     @Test
     public void updateWidgetComment() {
         String message = "updated comment";
-        WidgetComment widgetComment = new WidgetComment();
-        widgetComment.setEntityId(2L);
+        WidgetComment widgetComment = new WidgetCommentImpl();
+        widgetComment.setId(2L);
 
         expect(widgetCommentService.getWidgetComment(2L)).andReturn(widgetComment);
         widgetCommentService.saveWidgetComment(widgetComment);
@@ -203,12 +205,12 @@ public class WidgetApiTest {
 
         verify(userService);
     }
-    
+
     @Test
     public void getTags() {
         expect(tagService.getAvailableTagsByWidgetId(VALID_WIDGET_ID)).andReturn(tagList);
         replay(tagService);
-        
+
         assertThat(widgetApi.getTags(VALID_WIDGET_ID), is(tagList));
         verify(tagService);
     }
@@ -228,7 +230,7 @@ public class WidgetApiTest {
         Tag tag = new Tag(1L, TAG_TEXT);
         WidgetTag widgetTag = new WidgetTag();
         widgetTag.setTag(tag);
-                        
+
         expect(widgetTagService.getWidgetTagByWidgetIdAndKeyword(VALID_WIDGET_ID, TAG_TEXT)).andReturn(null);
         expect(userService.getAuthenticatedUser()).andReturn(user);
         expect(tagService.getTagByKeyword(TAG_TEXT)).andReturn(null);

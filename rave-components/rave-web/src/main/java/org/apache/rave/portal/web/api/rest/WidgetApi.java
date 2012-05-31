@@ -66,7 +66,7 @@ public class WidgetApi extends AbstractRestApi {
     public void createWidgetComment(@PathVariable long widgetId,
                                     @RequestParam String text,
                                     HttpServletResponse response) {
-        WidgetComment widgetComment = new WidgetComment();
+        WidgetComment widgetComment = new WidgetCommentImpl();
         widgetComment.setWidgetId(widgetId);
         widgetComment.setUser(userService.getAuthenticatedUser());
         widgetComment.setText(text);
@@ -92,7 +92,7 @@ public class WidgetApi extends AbstractRestApi {
 
         WidgetComment widgetComment = widgetCommentService.getWidgetComment(widgetCommentId);
         if (widgetComment == null) {
-            widgetComment = new WidgetComment();
+            widgetComment = new WidgetCommentImpl();
             widgetComment.setWidgetId(widgetId);
             widgetComment.setUser(userService.getAuthenticatedUser());
             widgetComment.setCreatedDate(new Date());

@@ -20,14 +20,14 @@ import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface WidgetCommentService {
-    
+
     @PostAuthorize("hasPermission(returnObject, 'read')")
     WidgetComment getWidgetComment(Long id);
-    
+
     @PreAuthorize("hasPermission(#widgetComment, 'create_or_update')")
     void saveWidgetComment(WidgetComment widgetComment);
-    
-    @PreAuthorize("hasPermission(#id, 'org.apache.rave.portal.model.WidgetComment', 'delete')") 
+
+    @PreAuthorize("hasPermission(#id, 'org.apache.rave.portal.model.WidgetComment', 'delete')")
     void removeWidgetComment(Long id);
 
     /**

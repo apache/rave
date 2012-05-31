@@ -15,23 +15,53 @@
  */
 package org.apache.rave.portal.repository.impl;
 
-import org.apache.rave.persistence.jpa.AbstractJpaRepository;
+import org.apache.rave.portal.model.JpaWidgetComment;
 import org.apache.rave.portal.model.WidgetComment;
+import org.apache.rave.portal.model.conversion.JpaWidgetCommentConverter;
 import org.apache.rave.portal.repository.WidgetCommentRepository;
+import org.apache.rave.util.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import java.util.List;
+
+import static org.apache.rave.persistence.jpa.util.JpaUtil.saveOrUpdate;
 
 @Repository
-public class JpaWidgetCommentRepository extends AbstractJpaRepository<WidgetComment> implements WidgetCommentRepository {
-    
-    public JpaWidgetCommentRepository() {
-        super(WidgetComment.class);
+public class JpaWidgetCommentRepository implements WidgetCommentRepository {
+    @PersistenceContext
+    private EntityManager manager;
+
+    @Autowired
+    private JpaWidgetCommentConverter widgetCommentConverter;
+
+    @Override
+    public Class<? extends WidgetComment> getType() {
+        return JpaWidgetComment.class;
+    }
+
+    @Override
+    public WidgetComment get(long id) {
+        return manager.find(JpaWidgetComment.class, id);
+    }
+
+    @Override
+    public WidgetComment save(WidgetComment item) {
+        JpaWidgetComment category = widgetCommentConverter.convert(item);
+        return saveOrUpdate(category.getEntityId(), manager, category);
+    }
+
+    @Override
+    public void delete(WidgetComment item) {
+        manager.remove(item instanceof JpaWidgetComment ? item : get(item.getId()));
     }
 
     @Override
     public int deleteAll(Long userId) {
-        TypedQuery<WidgetComment> query = manager.createNamedQuery(WidgetComment.DELETE_ALL_BY_USER, WidgetComment.class);
+        TypedQuery<JpaWidgetComment> query = manager.createNamedQuery(JpaWidgetComment.DELETE_ALL_BY_USER, JpaWidgetComment.class);
         query.setParameter("userId", userId);
         return query.executeUpdate();
     }

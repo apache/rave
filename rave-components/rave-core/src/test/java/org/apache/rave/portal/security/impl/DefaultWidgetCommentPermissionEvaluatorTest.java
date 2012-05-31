@@ -17,6 +17,7 @@ package org.apache.rave.portal.security.impl;
 
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.WidgetComment;
+import org.apache.rave.portal.model.WidgetCommentImpl;
 import org.apache.rave.portal.repository.WidgetCommentRepository;
 import org.apache.rave.portal.security.ModelPermissionEvaluator.Permission;
 import org.apache.rave.portal.security.util.AuthenticationUtils;
@@ -65,8 +66,8 @@ public class DefaultWidgetCommentPermissionEvaluatorTest {
         user2 = new User();
         user2.setUsername(VALID_USERNAME2);
         user2.setEntityId(INVALID_USER_ID);
-        widgetComment = new WidgetComment();
-        widgetComment.setEntityId(VALID_COMMENT_ID);
+        widgetComment = new WidgetCommentImpl();
+        widgetComment.setId(VALID_COMMENT_ID);
         widgetComment.setUser(user);
         grantedAuthoritiesList = new ArrayList<GrantedAuthority>();
         grantedAuthoritiesList.add(new SimpleGrantedAuthority("ROLE_USER"));
@@ -223,7 +224,7 @@ public class DefaultWidgetCommentPermissionEvaluatorTest {
         expect(mockAuthentication.getPrincipal()).andReturn(user).anyTimes();
         replay(mockAuthentication);
 
-        WidgetComment localWidgetComment = new WidgetComment();
+        WidgetComment localWidgetComment = new WidgetCommentImpl();
         User localUser = new User();
         localUser.setEntityId(VALID_USER_ID);
         localWidgetComment.setUser(localUser);

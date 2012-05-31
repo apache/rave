@@ -160,7 +160,7 @@ public class Widget implements BasicEntity, Serializable {
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "widget_id", referencedColumnName = "entity_id")
-    private List<WidgetComment> comments;
+    private List<JpaWidgetComment> comments;
 
     @ManyToOne
     @JoinColumn(name = "owner_id")
@@ -311,11 +311,18 @@ public class Widget implements BasicEntity, Serializable {
     }
 
     public List<WidgetComment> getComments() {
-        return comments;
+        return ConvertingListProxyFactory.createProxyList(WidgetComment.class, comments);
     }
 
     public void setComments(List<WidgetComment> comments) {
-        this.comments = comments;
+        if(this.comments == null) {
+            this.comments = new ArrayList<JpaWidgetComment>();
+        }
+        //Ensure that all operations go through the conversion proxy
+        this.getComments().clear();
+        if (comments != null) {
+            this.getComments().addAll(comments);
+        }
     }
 
     public User getOwner() {
