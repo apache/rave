@@ -61,7 +61,6 @@ public class JpaGroupConverterTest {
 
         group = new GroupImpl();
         group.setDescription(description);
-        group.setEntityId(entityId);
         group.setTitle(title);
         group.setOwner(owner);
         group.setMembers(members);
@@ -80,7 +79,6 @@ public class JpaGroupConverterTest {
         assertThat(jpaGroup, is(not(sameInstance(group))));
         assertThat(jpaGroup, is(instanceOf(JpaGroup.class)));
         assertEquals(description, jpaGroup.getDescription());
-        assertEquals(entityId, jpaGroup.getEntityId());
         assertEquals(title, jpaGroup.getTitle());
         assertEquals(owner.getDisplayName(), jpaGroup.getOwner().getDisplayName());
         assertEquals(members.size(), jpaGroup.getMembers().size());

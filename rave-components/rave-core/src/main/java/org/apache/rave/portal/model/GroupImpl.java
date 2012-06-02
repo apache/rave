@@ -23,7 +23,6 @@ import java.util.List;
 public class GroupImpl implements Group {
 
     protected String description;
-    protected Long entityId;
     protected Person owner;
     protected String title;
     protected List<Person> members;
@@ -69,19 +68,8 @@ public class GroupImpl implements Group {
     }
 
     @Override
-    public Long getEntityId() {
-        return this.entityId;
-    }
-
-    @Override
-    public void setEntityId(Long entityId) {
-        this.entityId = entityId;
-    }
-
-    @Override
     public int hashCode() {
         int result = description != null ? description.hashCode() : 0;
-        result = 31 * result + (entityId != null ? entityId.hashCode() : 0);
         result = 31 * result + (owner != null ? owner.hashCode() : 0);
         result = 31 * result + (title != null ? title.hashCode() : 0);
         result = 31 * result + (members != null ? members.hashCode() : 0);
@@ -96,7 +84,6 @@ public class GroupImpl implements Group {
         GroupImpl group = (GroupImpl) o;
 
         if (description != null ? !description.equals(group.description) : group.description != null) return false;
-        if (entityId != null ? !entityId.equals(group.entityId) : group.entityId != null) return false;
         if (owner != null ? !owner.equals(group.owner) : group.owner != null) return false;
         if (members != null ? !members.equals(group.members) : group.members != null) return false;
         if (title != null ? !title.equals(group.title) : group.title != null) return false;

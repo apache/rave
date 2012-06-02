@@ -61,7 +61,6 @@ public class JpaGroupConverter implements ModelConverter<Group, JpaGroup> {
     private void updateProperties(Group source, JpaGroup converted) {
         converted.setDescription(source.getDescription());
         converted.setTitle(source.getTitle());
-        converted.setEntityId(source.getEntityId());
         converted.setOwner(source.getOwner());
         converted.setMembers(source.getMembers());
     }

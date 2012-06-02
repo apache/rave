@@ -39,8 +39,4 @@ public interface Group {
     String getTitle();
 
     void setTitle(String title);
-
-    Long getEntityId();
-
-    void setEntityId(Long entityId);
 }
