@@ -1,8 +1,8 @@
 package org.apache.rave.portal.model.conversion;
 
-import org.apache.rave.portal.model.JpaPerson;
-import org.apache.rave.portal.model.Person;
-import org.apache.rave.portal.model.impl.PersonImpl;
+import org.apache.rave.portal.model.JpaPersonProperty;
+import org.apache.rave.portal.model.PersonProperty;
+import org.apache.rave.portal.model.impl.PersonPropertyImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,10 +15,10 @@ import static org.junit.Assert.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:test-applicationContext.xml", "classpath:test-dataContext.xml"})
-public class JpaPersonConverterTest {
+public class JpaPersonPropertyConverterTest {
 
     @Autowired
-    JpaPersonConverter converter;
+    JpaPersonPropertyConverter converter;
 
     @Before
     public void setup() {
@@ -27,18 +27,18 @@ public class JpaPersonConverterTest {
 
     @Test
     public void testNoConversion() {
-        JpaPerson template = new JpaPerson();
+        JpaPersonProperty template = new JpaPersonProperty();
         assertThat(converter.convert(template), is(sameInstance(template)));
     }
 
     @Test
     public void convertValid() {
-        Person template = new PersonImpl();
+        PersonProperty template = new PersonPropertyImpl();
 
-        JpaPerson jpaTemplate = converter.convert(template);
+        JpaPersonProperty jpaTemplate = converter.convert(template);
 
         assertThat(jpaTemplate, is(not(sameInstance(template))));
-        assertThat(jpaTemplate, is(instanceOf(JpaPerson.class)));
+        assertThat(jpaTemplate, is(instanceOf(JpaPersonProperty.class)));
         //TODO: Add coverage for all methods
     }
 
