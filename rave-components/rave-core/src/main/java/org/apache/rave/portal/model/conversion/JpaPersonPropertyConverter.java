@@ -1,17 +1,12 @@
 package org.apache.rave.portal.model.conversion;
 
 import org.apache.rave.model.ModelConverter;
-import org.apache.rave.portal.model.JpaOrganization;
 import org.apache.rave.portal.model.JpaPersonProperty;
-import org.apache.rave.portal.model.Organization;
 import org.apache.rave.portal.model.PersonProperty;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
-
-import static org.apache.rave.persistence.jpa.util.JpaUtil.getSingleResult;
 
 /**
  * Converts an Address to a JpaAddress
@@ -29,17 +24,19 @@ public class JpaPersonPropertyConverter implements ModelConverter<PersonProperty
 
     @Override
     public JpaPersonProperty convert(PersonProperty source) {
-        return source instanceof JpaPersonProperty ? (JpaPersonProperty)source : createEntity(source);
+        return source instanceof JpaPersonProperty ? (JpaPersonProperty) source : createEntity(source);
     }
 
     private JpaPersonProperty createEntity(PersonProperty source) {
-        JpaPersonProperty converted;
-        converted = manager.find(JpaPersonProperty.class, source.getId());
+        JpaPersonProperty converted = null;
+        if (source != null) {
+            converted = manager.find(JpaPersonProperty.class, source.getId());
 
-        if(converted == null) {
-            converted = new JpaPersonProperty();
+            if (converted == null) {
+                converted = new JpaPersonProperty();
+            }
+            updateProperties(source, converted);
         }
-        updateProperties(source, converted);
         return converted;
     }
 
