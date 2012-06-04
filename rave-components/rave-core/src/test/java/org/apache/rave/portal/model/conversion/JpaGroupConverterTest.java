@@ -18,10 +18,9 @@
  */
 package org.apache.rave.portal.model.conversion;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
-
-import org.apache.rave.portal.model.*;
+import org.apache.rave.portal.model.Group;
+import org.apache.rave.portal.model.JpaGroup;
+import org.apache.rave.portal.model.Person;
 import org.apache.rave.portal.model.impl.GroupImpl;
 import org.apache.rave.portal.model.impl.PersonImpl;
 import org.junit.Before;
@@ -31,10 +30,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations={"classpath:test-applicationContext.xml","classpath:test-dataContext.xml"} )
@@ -72,6 +73,12 @@ public class JpaGroupConverterTest {
     public void testNoConversion() {
         JpaGroup group = new JpaGroup();
         assertThat(converter.convert(group), is(sameInstance(group)));
+    }
+
+    @Test
+    public void nullConversion() {
+        Group category = null;
+        assertThat(converter.convert(category), is(nullValue()));
     }
 
     @Test

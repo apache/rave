@@ -26,7 +26,6 @@ import org.springframework.stereotype.Component;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import java.util.List;
 
 import static org.apache.rave.persistence.jpa.util.JpaUtil.getSingleResult;
 
@@ -42,19 +41,21 @@ public class JpaGroupConverter implements ModelConverter<Group, JpaGroup> {
 
     @Override
     public JpaGroup convert(Group source) {
-        return source instanceof JpaGroup ? (JpaGroup)source : createEntity(source);
+        return source instanceof JpaGroup ? (JpaGroup) source : createEntity(source);
     }
 
     private JpaGroup createEntity(Group source) {
-        JpaGroup converted;
-        TypedQuery<JpaGroup> query = manager.createNamedQuery(JpaGroup.FIND_BY_TITLE, JpaGroup.class);
-        query.setParameter(JpaGroup.GROUP_ID_PARAM, source.getTitle());
-        converted = getSingleResult(query.getResultList());
+        JpaGroup converted = null;
+        if (source != null) {
+            TypedQuery<JpaGroup> query = manager.createNamedQuery(JpaGroup.FIND_BY_TITLE, JpaGroup.class);
+            query.setParameter(JpaGroup.GROUP_ID_PARAM, source.getTitle());
+            converted = getSingleResult(query.getResultList());
 
-        if(converted == null) {
-            converted = new JpaGroup();
+            if (converted == null) {
+                converted = new JpaGroup();
+            }
+            updateProperties(source, converted);
         }
-        updateProperties(source, converted);
         return converted;
     }
 
