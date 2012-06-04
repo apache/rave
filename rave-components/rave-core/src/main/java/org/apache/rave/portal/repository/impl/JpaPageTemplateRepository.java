@@ -18,31 +18,33 @@
  */
 package org.apache.rave.portal.repository.impl;
 
-import org.apache.rave.persistence.jpa.AbstractJpaRepository;
+import org.apache.rave.portal.model.JpaPageTemplate;
 import org.apache.rave.portal.model.PageTemplate;
 import org.apache.rave.portal.model.PageType;
 import org.apache.rave.portal.repository.PageTemplateRepository;
+import org.apache.rave.util.CollectionUtils;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
 @Repository
-public class JpaPageTemplateRepository extends AbstractJpaRepository<PageTemplate> implements PageTemplateRepository {
+public class JpaPageTemplateRepository implements PageTemplateRepository {
 
-    public JpaPageTemplateRepository() {
-        super(PageTemplate.class);
-    }
+    @PersistenceContext
+    private EntityManager manager;
 
     @Override
     public List<PageTemplate> getAll() {
-        TypedQuery<PageTemplate> query = manager.createNamedQuery(PageTemplate.PAGE_TEMPLATE_GET_ALL, PageTemplate.class);
-        return query.getResultList();
+        TypedQuery<JpaPageTemplate> query = manager.createNamedQuery(JpaPageTemplate.PAGE_TEMPLATE_GET_ALL, JpaPageTemplate.class);
+        return CollectionUtils.<PageTemplate>toBaseTypedList(query.getResultList());
     }
 
     @Override
-    public PageTemplate getDefaultPage(PageType pageType) {
-        TypedQuery<PageTemplate> query = manager.createNamedQuery(PageTemplate.PAGE_TEMPLATE_GET_DEFAULT_PAGE_BY_TYPE, PageTemplate.class);
+    public JpaPageTemplate getDefaultPage(PageType pageType) {
+        TypedQuery<JpaPageTemplate> query = manager.createNamedQuery(JpaPageTemplate.PAGE_TEMPLATE_GET_DEFAULT_PAGE_BY_TYPE, JpaPageTemplate.class);
         query.setParameter("pageType", pageType);
         return query.getSingleResult();
     }

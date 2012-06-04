@@ -172,7 +172,7 @@ public class DefaultPageServiceTest {
     public void getAllPersonProfilePages_noPersonPage() {
         List<Page> VALID_PAGES = new ArrayList<Page>();
         Page personPage = new Page();
-        PageTemplate pageTemplate = new PageTemplate();
+        PageTemplate pageTemplate = new JpaPageTemplate();
         User user = new User();
 
         expect(pageRepository.getAllPages(VALID_USER_ID, PageType.PERSON_PROFILE)).andReturn(VALID_PAGES);
@@ -190,7 +190,7 @@ public class DefaultPageServiceTest {
     public void addNewUserPage_noExistingPages() {
         final String PAGE_NAME = "my new page";
         final Long EXPECTED_RENDER_SEQUENCE = 1L;
-        PageTemplate pageTemplate = new PageTemplate() ;
+        PageTemplate pageTemplate = new JpaPageTemplate() ;
         Page expectedPage = new Page();
         expectedPage.setName(PAGE_NAME);       
         expectedPage.setOwner(user);
@@ -281,7 +281,7 @@ public class DefaultPageServiceTest {
     public void addNewUserPage_noExistingPages_and_have_template() {
         final String PAGE_NAME = "my new page";
         final Long EXPECTED_RENDER_SEQUENCE = 1L;
-        PageTemplate pageTemplate = new PageTemplate();
+        PageTemplate pageTemplate = new JpaPageTemplate();
         Page userPage = new Page();
         userPage.setName("Page Template");
         userPage.setRegions(createEmptyRegionList(pageLayout.getNumberOfRegions()));
@@ -427,7 +427,7 @@ public class DefaultPageServiceTest {
     public void addNewDefaultUserPage() {
         
         final Long EXPECTED_RENDER_SEQUENCE = 1L;
-        PageTemplate pageTemplate = new PageTemplate();
+        PageTemplate pageTemplate = new JpaPageTemplate();
         Page expectedPage = new Page();
         expectedPage.setName(defaultPageName);
         expectedPage.setOwner(user);

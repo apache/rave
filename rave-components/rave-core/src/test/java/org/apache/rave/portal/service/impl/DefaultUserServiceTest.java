@@ -313,8 +313,8 @@ public class DefaultUserServiceTest {
     public void registerNewUser_valid(){
         User user = new User();
         expect(userRepository.save(user)).andReturn(user).once();
-        expect(pageTemplateRepository.getDefaultPage(PageType.PERSON_PROFILE)).andReturn(new PageTemplate()).once();
-        expect(pageRepository.createPageForUser(isA(User.class), isA(PageTemplate.class))).andReturn(new Page());
+        expect(pageTemplateRepository.getDefaultPage(PageType.PERSON_PROFILE)).andReturn(new JpaPageTemplate()).once();
+        expect(pageRepository.createPageForUser(isA(User.class), isA(JpaPageTemplate.class))).andReturn(new Page());
         replay(userRepository, pageTemplateRepository, pageRepository);
         service.registerNewUser(user);
         verify(userRepository, pageTemplateRepository, pageRepository);

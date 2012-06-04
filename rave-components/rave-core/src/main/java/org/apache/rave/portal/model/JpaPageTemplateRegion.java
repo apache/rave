@@ -21,6 +21,7 @@ package org.apache.rave.portal.model;
 
 import org.apache.rave.persistence.BasicEntity;
 import org.apache.rave.portal.model.conversion.ConvertingListProxyFactory;
+import org.apache.rave.portal.model.conversion.JpaConverter;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -50,7 +51,7 @@ public class JpaPageTemplateRegion implements BasicEntity, Serializable, PageTem
 
     @JoinColumn(name = "page_template_id")
     @ManyToOne(optional = false)
-    private PageTemplate pageTemplate;
+    private JpaPageTemplate pageTemplate;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("renderSequence")
@@ -82,13 +83,13 @@ public class JpaPageTemplateRegion implements BasicEntity, Serializable, PageTem
     }
 
     @Override
-    public PageTemplate getPageTemplate() {
+    public JpaPageTemplate getPageTemplate() {
         return pageTemplate;
     }
 
     @Override
     public void setPageTemplate(PageTemplate pageTemplate) {
-        this.pageTemplate = pageTemplate;
+        this.pageTemplate = JpaConverter.getInstance().convert(pageTemplate, PageTemplate.class);
     }
 
     @Override

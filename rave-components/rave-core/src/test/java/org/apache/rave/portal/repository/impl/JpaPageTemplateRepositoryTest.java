@@ -63,7 +63,7 @@ public class JpaPageTemplateRepositoryTest {
     @Test
     public void getDefaultPersonPage_valid(){
         // get default page template
-        PageTemplate pt = pageTemplateRepository.getDefaultPage(PageType.PERSON_PROFILE);
+        JpaPageTemplate pt = (JpaPageTemplate)pageTemplateRepository.getDefaultPage(PageType.PERSON_PROFILE);
         // default page tests
         assertNotNull(pt);
         assertEquals("Template for person profile pages", pt.getDescription());
@@ -76,8 +76,8 @@ public class JpaPageTemplateRepositoryTest {
         assertEquals("# of widgets on parent page region", 2, pt.getPageTemplateRegions().get(0).getPageTemplateWidgets().size());
         assertEquals("# of sub pages for parent page",2, pt.getSubPageTemplates().size());
         // get default page sub pages
-        PageTemplate subPage1 = pt.getSubPageTemplates().get(0);
-        PageTemplate subPage2 = pt.getSubPageTemplates().get(1);
+        JpaPageTemplate subPage1 = (JpaPageTemplate)pt.getSubPageTemplates().get(0);
+        JpaPageTemplate subPage2 = (JpaPageTemplate)pt.getSubPageTemplates().get(1);
         // sub page 1 tests
         assertNotNull(subPage1);
         assertEquals("Template for the About sub page for the person profile", subPage1.getDescription());
@@ -155,7 +155,7 @@ public class JpaPageTemplateRepositoryTest {
     @Test
     public void getDefaultUserPage_valid(){
         // get default page template
-        PageTemplate pt = pageTemplateRepository.getDefaultPage(PageType.USER);
+        JpaPageTemplate pt = (JpaPageTemplate)pageTemplateRepository.getDefaultPage(PageType.USER);
         // default page tests
         assertNotNull(pt);
         assertEquals("User profile pages", pt.getDescription());

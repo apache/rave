@@ -1,173 +1,41 @@
-/*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- */
-
 package org.apache.rave.portal.model;
 
-import org.apache.rave.persistence.BasicEntity;
-import org.apache.rave.portal.model.conversion.ConvertingListProxyFactory;
-
-import javax.persistence.*;
-import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
-@Entity
-@Table(name="page_template")
-@NamedQueries({
-        @NamedQuery(name = PageTemplate.PAGE_TEMPLATE_GET_ALL, query = "SELECT p FROM PageTemplate p ORDER BY p.renderSequence"),
-        @NamedQuery(name = PageTemplate.PAGE_TEMPLATE_GET_DEFAULT_PAGE_BY_TYPE, query = "SELECT p FROM PageTemplate p WHERE p.defaultTemplate = true and p.pageType = :pageType")
-})
-@Access(AccessType.FIELD)
-public class PageTemplate implements BasicEntity, Serializable {
+public interface PageTemplate {
+    PageType getPageType();
 
-    private static final long serialVersionUID = 1L;
-    public static final String PAGE_TEMPLATE_GET_ALL = "PageTemplate.getAll";
-    public static final String PAGE_TEMPLATE_GET_DEFAULT_PAGE_BY_TYPE = "PageTemplate.getDefaultPage";
+    void setPageType(PageType pageType);
 
-    @Id
-    @Column(name="entity_id")
-    @GeneratedValue(strategy = GenerationType.TABLE, generator = "pageTemplateIdGenerator")
-    @TableGenerator(name = "pageTemplateIdGenerator", table = "RAVE_PORTAL_SEQUENCES", pkColumnName = "SEQ_NAME",
-            valueColumnName = "SEQ_COUNT", pkColumnValue = "page_template", allocationSize = 1, initialValue = 1)
-    private Long entityId;
+    String getName();
 
-    @Basic @Column(name="name", unique = false)
-    private String name;
-    
-    @Basic @Column(name="description", unique = false)
-    private String description;
+    void setName(String name);
 
-    @Basic(optional = false)
-    @Column(name="page_type", unique = false)
-    @Enumerated(EnumType.STRING)
-    private PageType pageType;
+    String getDescription();
 
-    @OneToOne(cascade=CascadeType.ALL)
-    @JoinColumn(name="parent_page_template_id")
-    private PageTemplate parentPageTemplate;
+    void setDescription(String description);
 
-    @OneToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL, mappedBy="parentPageTemplate")
-    @OrderBy("renderSequence")
-    private List<PageTemplate> subPageTemplates;
+    PageTemplate getParentPageTemplate();
 
-    @ManyToOne
-    @JoinColumn(name = "page_layout_id")
-    private PageLayout pageLayout;
+    void setParentPageTemplate(PageTemplate parentPageTemplate);
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    @OrderBy("renderSequence")
-    @JoinColumn(name="page_template_id")
-    private List<JpaPageTemplateRegion> pageTemplateRegions;
+    PageLayout getPageLayout();
 
-    @Basic(optional = false)
-    @Column(name = "render_sequence")
-    private long renderSequence;
+    void setPageLayout(PageLayout pageLayout);
 
-    @Basic(optional = false)
-    @Column(name = "default_template")
-    private boolean defaultTemplate;
+    List<PageTemplateRegion> getPageTemplateRegions();
 
-    @Override
-    public Long getEntityId() {
-        return entityId;
-    }
+    void setPageTemplateRegions(List<PageTemplateRegion> pageTemplateRegions);
 
-    @Override
-    public void setEntityId(Long entityId) {
-        this.entityId = entityId;
-    }
+    long getRenderSequence();
 
-    public PageType getPageType() {
-        return pageType;
-    }
+    void setRenderSequence(long renderSequence);
 
-    public void setPageType(PageType pageType) {
-        this.pageType = pageType;
-    }
+    boolean isDefaultTemplate();
 
-    public String getName() {
-        return name;
-    }
+    void setDefaultTemplate(boolean defaultTemplate);
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    List<PageTemplate> getSubPageTemplates();
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public PageTemplate getParentPageTemplate() {
-        return parentPageTemplate;
-    }
-
-    public void setParentPageTemplate(PageTemplate parentPageTemplate) {
-        this.parentPageTemplate =  parentPageTemplate;
-    }
-
-    public PageLayout getPageLayout() {
-        return pageLayout;
-    }
-
-    public void setPageLayout(PageLayout pageLayout) {
-        this.pageLayout = pageLayout;
-    }
-
-    public List<PageTemplateRegion> getPageTemplateRegions() {
-        return ConvertingListProxyFactory.createProxyList(PageTemplateRegion.class, pageTemplateRegions);
-    }
-
-    public void setPageTemplateRegions(List<PageTemplateRegion> pageTemplateRegions) {
-        if(this.pageTemplateRegions == null) {
-            this.pageTemplateRegions = new ArrayList<JpaPageTemplateRegion>();
-        }
-        this.getPageTemplateRegions().clear();
-        if(pageTemplateRegions != null) {
-            this.getPageTemplateRegions().addAll(pageTemplateRegions);
-        }
-    }
-
-    public long getRenderSequence() {
-        return renderSequence;
-    }
-
-    public void setRenderSequence(long renderSequence) {
-        this.renderSequence = renderSequence;
-    }
-
-    public boolean isDefaultTemplate() {
-        return defaultTemplate;
-    }
-
-    public void setDefaultTemplate(boolean defaultTemplate) {
-        this.defaultTemplate = defaultTemplate;
-    }
-
-    public List<PageTemplate> getSubPageTemplates() {
-        return subPageTemplates;
-    }
-
-    public void setSubPageTemplates(List<PageTemplate> subPageTemplates) {
-        this.subPageTemplates = subPageTemplates;
-    }    
+    void setSubPageTemplates(List<PageTemplate> subPageTemplates);
 }
