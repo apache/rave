@@ -19,7 +19,7 @@
 
 package org.apache.rave.portal.repository.impl;
 
-import org.apache.rave.portal.model.WidgetRating;
+import org.apache.rave.portal.model.JpaWidgetRating;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,7 +62,7 @@ public class JpaWidgetRatingRepositoryTest {
 
     @Test
     public void getByWidgetIdAndUserId_missing() {
-        assertThat(repository.getByWidgetIdAndUserId(INVALID_WIDGET_ID, INVALID_USER_ID), is(nullValue(WidgetRating.class)));       
+        assertThat(repository.getByWidgetIdAndUserId(INVALID_WIDGET_ID, INVALID_USER_ID), is(nullValue()));
     }
 
     @Test

@@ -18,6 +18,7 @@
  */
 package org.apache.rave.portal.security.impl;
 
+import org.apache.rave.portal.model.JpaWidgetRating;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.WidgetRating;
 import org.apache.rave.portal.repository.WidgetRatingRepository;
@@ -44,7 +45,7 @@ public class DefaultWidgetRatingPermissionEvaluatorTest {
     private WidgetRatingRepository mockWidgetRatingRepository;
     private Authentication mockAuthentication;
     private List<GrantedAuthority> grantedAuthoritiesList;
-    private WidgetRating widgetRating;
+    private JpaWidgetRating widgetRating;
     private User user, user2;
 
     private final Long VALID_USER_ID = 99L;
@@ -59,7 +60,7 @@ public class DefaultWidgetRatingPermissionEvaluatorTest {
         mockWidgetRatingRepository = createMock(WidgetRatingRepository.class);
         defaultWidgetRatingPermissionEvaluator = new DefaultWidgetRatingPermissionEvaluator(mockWidgetRatingRepository);
 
-        widgetRating = new WidgetRating();
+        widgetRating = new JpaWidgetRating();
         widgetRating.setUserId(VALID_USER_ID);
         widgetRating.setWidgetId(VALID_WIDGET_ID);
         widgetRating.setEntityId(VALID_WIDGET_ID);
@@ -194,7 +195,7 @@ public class DefaultWidgetRatingPermissionEvaluatorTest {
     public void testHasPermission_4args_administer() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
         replay(mockAuthentication);
-        assertThat(defaultWidgetRatingPermissionEvaluator.hasPermission(mockAuthentication, VALID_WIDGET_RATING_ID, WidgetRating.class.getName(), ModelPermissionEvaluator.Permission.ADMINISTER), is(false));
+        assertThat(defaultWidgetRatingPermissionEvaluator.hasPermission(mockAuthentication, VALID_WIDGET_RATING_ID, JpaWidgetRating.class.getName(), ModelPermissionEvaluator.Permission.ADMINISTER), is(false));
         verify(mockAuthentication);
     }
 
@@ -205,7 +206,7 @@ public class DefaultWidgetRatingPermissionEvaluatorTest {
         expect(mockWidgetRatingRepository.get(VALID_WIDGET_RATING_ID)).andReturn(widgetRating);
         replay(mockAuthentication);
         replay(mockWidgetRatingRepository);
-        assertThat(defaultWidgetRatingPermissionEvaluator.hasPermission(mockAuthentication, VALID_WIDGET_RATING_ID, WidgetRating.class.getName(), ModelPermissionEvaluator.Permission.CREATE), is(true));
+        assertThat(defaultWidgetRatingPermissionEvaluator.hasPermission(mockAuthentication, VALID_WIDGET_RATING_ID, JpaWidgetRating.class.getName(), ModelPermissionEvaluator.Permission.CREATE), is(true));
         verify(mockAuthentication);
         verify(mockWidgetRatingRepository);
     }
@@ -217,7 +218,7 @@ public class DefaultWidgetRatingPermissionEvaluatorTest {
         expect(mockWidgetRatingRepository.get(VALID_WIDGET_RATING_ID)).andReturn(widgetRating);
         replay(mockAuthentication);
         replay(mockWidgetRatingRepository);
-        assertThat(defaultWidgetRatingPermissionEvaluator.hasPermission(mockAuthentication, VALID_WIDGET_RATING_ID, WidgetRating.class.getName(), ModelPermissionEvaluator.Permission.CREATE), is(false));
+        assertThat(defaultWidgetRatingPermissionEvaluator.hasPermission(mockAuthentication, VALID_WIDGET_RATING_ID, JpaWidgetRating.class.getName(), ModelPermissionEvaluator.Permission.CREATE), is(false));
         verify(mockAuthentication);
         verify(mockWidgetRatingRepository);
     }
@@ -229,7 +230,7 @@ public class DefaultWidgetRatingPermissionEvaluatorTest {
         expect(mockWidgetRatingRepository.get(VALID_WIDGET_RATING_ID)).andReturn(widgetRating);
         replay(mockAuthentication);
         replay(mockWidgetRatingRepository);
-        assertThat(defaultWidgetRatingPermissionEvaluator.hasPermission(mockAuthentication, VALID_WIDGET_RATING_ID, WidgetRating.class.getName(), ModelPermissionEvaluator.Permission.DELETE), is(true));
+        assertThat(defaultWidgetRatingPermissionEvaluator.hasPermission(mockAuthentication, VALID_WIDGET_RATING_ID, JpaWidgetRating.class.getName(), ModelPermissionEvaluator.Permission.DELETE), is(true));
         verify(mockAuthentication);
         verify(mockWidgetRatingRepository);
     }
@@ -241,7 +242,7 @@ public class DefaultWidgetRatingPermissionEvaluatorTest {
         expect(mockWidgetRatingRepository.get(VALID_WIDGET_RATING_ID)).andReturn(widgetRating);
         replay(mockAuthentication);
         replay(mockWidgetRatingRepository);
-        assertThat(defaultWidgetRatingPermissionEvaluator.hasPermission(mockAuthentication, VALID_WIDGET_RATING_ID, WidgetRating.class.getName(), ModelPermissionEvaluator.Permission.DELETE), is(false));
+        assertThat(defaultWidgetRatingPermissionEvaluator.hasPermission(mockAuthentication, VALID_WIDGET_RATING_ID, JpaWidgetRating.class.getName(), ModelPermissionEvaluator.Permission.DELETE), is(false));
         verify(mockAuthentication);
         verify(mockWidgetRatingRepository);
     }
@@ -253,7 +254,7 @@ public class DefaultWidgetRatingPermissionEvaluatorTest {
         expect(mockWidgetRatingRepository.get(VALID_WIDGET_RATING_ID)).andReturn(widgetRating);
         replay(mockAuthentication);
         replay(mockWidgetRatingRepository);
-        assertThat(defaultWidgetRatingPermissionEvaluator.hasPermission(mockAuthentication, VALID_WIDGET_RATING_ID, WidgetRating.class.getName(), ModelPermissionEvaluator.Permission.READ), is(true));
+        assertThat(defaultWidgetRatingPermissionEvaluator.hasPermission(mockAuthentication, VALID_WIDGET_RATING_ID, JpaWidgetRating.class.getName(), ModelPermissionEvaluator.Permission.READ), is(true));
         verify(mockAuthentication);
         verify(mockWidgetRatingRepository);
     }
@@ -265,7 +266,7 @@ public class DefaultWidgetRatingPermissionEvaluatorTest {
         expect(mockWidgetRatingRepository.get(VALID_WIDGET_RATING_ID)).andReturn(widgetRating);
         replay(mockAuthentication);
         replay(mockWidgetRatingRepository);
-        assertThat(defaultWidgetRatingPermissionEvaluator.hasPermission(mockAuthentication, VALID_WIDGET_RATING_ID, WidgetRating.class.getName(), ModelPermissionEvaluator.Permission.READ), is(false));
+        assertThat(defaultWidgetRatingPermissionEvaluator.hasPermission(mockAuthentication, VALID_WIDGET_RATING_ID, JpaWidgetRating.class.getName(), ModelPermissionEvaluator.Permission.READ), is(false));
         verify(mockAuthentication);
         verify(mockWidgetRatingRepository);
     }
@@ -277,7 +278,7 @@ public class DefaultWidgetRatingPermissionEvaluatorTest {
         expect(mockWidgetRatingRepository.get(VALID_WIDGET_RATING_ID)).andReturn(widgetRating);
         replay(mockAuthentication);
         replay(mockWidgetRatingRepository);
-        assertThat(defaultWidgetRatingPermissionEvaluator.hasPermission(mockAuthentication, VALID_WIDGET_RATING_ID, WidgetRating.class.getName(), ModelPermissionEvaluator.Permission.UPDATE), is(true));
+        assertThat(defaultWidgetRatingPermissionEvaluator.hasPermission(mockAuthentication, VALID_WIDGET_RATING_ID, JpaWidgetRating.class.getName(), ModelPermissionEvaluator.Permission.UPDATE), is(true));
         verify(mockAuthentication);
         verify(mockWidgetRatingRepository);
     }
@@ -289,7 +290,7 @@ public class DefaultWidgetRatingPermissionEvaluatorTest {
         expect(mockWidgetRatingRepository.get(VALID_WIDGET_RATING_ID)).andReturn(widgetRating);
         replay(mockAuthentication);
         replay(mockWidgetRatingRepository);
-        assertThat(defaultWidgetRatingPermissionEvaluator.hasPermission(mockAuthentication, VALID_WIDGET_RATING_ID, WidgetRating.class.getName(), ModelPermissionEvaluator.Permission.UPDATE), is(false));
+        assertThat(defaultWidgetRatingPermissionEvaluator.hasPermission(mockAuthentication, VALID_WIDGET_RATING_ID, JpaWidgetRating.class.getName(), ModelPermissionEvaluator.Permission.UPDATE), is(false));
         verify(mockAuthentication);
         verify(mockWidgetRatingRepository);
     }
@@ -300,7 +301,7 @@ public class DefaultWidgetRatingPermissionEvaluatorTest {
 
         expect(mockAuthentication.getPrincipal()).andReturn(user);
         replay(mockAuthentication);
-        assertThat(defaultWidgetRatingPermissionEvaluator.hasPermission(mockAuthentication, raveSecurityContext, WidgetRating.class.getName(), ModelPermissionEvaluator.Permission.UPDATE), is(true));
+        assertThat(defaultWidgetRatingPermissionEvaluator.hasPermission(mockAuthentication, raveSecurityContext, JpaWidgetRating.class.getName(), ModelPermissionEvaluator.Permission.UPDATE), is(true));
         verify(mockAuthentication);
     }
 
@@ -310,7 +311,7 @@ public class DefaultWidgetRatingPermissionEvaluatorTest {
 
         expect(mockAuthentication.getPrincipal()).andReturn(user);
         replay(mockAuthentication);
-        defaultWidgetRatingPermissionEvaluator.hasPermission(mockAuthentication, raveSecurityContext, WidgetRating.class.getName(), ModelPermissionEvaluator.Permission.UPDATE);
+        defaultWidgetRatingPermissionEvaluator.hasPermission(mockAuthentication, raveSecurityContext, JpaWidgetRating.class.getName(), ModelPermissionEvaluator.Permission.UPDATE);
         verify(mockAuthentication);
     }
 
@@ -320,7 +321,7 @@ public class DefaultWidgetRatingPermissionEvaluatorTest {
 
         expect(mockAuthentication.getPrincipal()).andReturn(user);
         replay(mockAuthentication);
-        defaultWidgetRatingPermissionEvaluator.hasPermission(mockAuthentication, raveSecurityContext, WidgetRating.class.getName(), ModelPermissionEvaluator.Permission.UPDATE);
+        defaultWidgetRatingPermissionEvaluator.hasPermission(mockAuthentication, raveSecurityContext, JpaWidgetRating.class.getName(), ModelPermissionEvaluator.Permission.UPDATE);
         verify(mockAuthentication);
     }
 

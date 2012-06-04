@@ -30,7 +30,7 @@ import static junit.framework.Assert.assertFalse;
 Test for {@link WidgetRatingTest}
  */
 public class WidgetRatingTest {
-    WidgetRating widgetRating;
+    JpaWidgetRating widgetRating;
     
     Long id;
     Long widgetId;
@@ -44,7 +44,7 @@ public class WidgetRatingTest {
         userId = 1L;
         score = 1;
         
-        widgetRating = new WidgetRating();
+        widgetRating = new JpaWidgetRating();
         widgetRating.setEntityId(id);
         widgetRating.setScore(score);
         widgetRating.setUserId(userId);
@@ -61,14 +61,14 @@ public class WidgetRatingTest {
     
     @Test
     public void equality() {
-        WidgetRating tester = new WidgetRating();
+        JpaWidgetRating tester = new JpaWidgetRating();
         tester.setEntityId(1L);
         
         assertEquals(widgetRating, tester);
         tester.setEntityId(2L);
         assertFalse(widgetRating.equals(tester));
         assertFalse(widgetRating.equals(null));
-        assertFalse(widgetRating.equals(new WidgetRating()));
+        assertFalse(widgetRating.equals(new JpaWidgetRating()));
         assertFalse(widgetRating.equals(new String()));
         
         widgetRating.toString();

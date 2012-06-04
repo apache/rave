@@ -178,7 +178,7 @@ public class Widget implements BasicEntity, Serializable {
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "widget_id", referencedColumnName = "entity_id")
-    private List<WidgetRating> ratings;
+    private List<JpaWidgetRating> ratings;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "widget_id", referencedColumnName = "entity_id")
@@ -339,11 +339,18 @@ public class Widget implements BasicEntity, Serializable {
      * @return The user ratings for this Widget.
      */
     public List<WidgetRating> getRatings() {
-        return ratings;
+        return ConvertingListProxyFactory.createProxyList(WidgetRating.class, this.ratings);
     }
 
     public void setRatings(List<WidgetRating> ratings) {
-        this.ratings = ratings;
+        if (this.ratings == null) {
+            this.ratings = new ArrayList<JpaWidgetRating>();
+        }
+        //Ensure that all operations go through the conversion proxy
+        this.getRatings().clear();
+        if (ratings != null) {
+            this.getRatings().addAll(ratings);
+        }
     }
 
     public boolean isDisableRendering() {
@@ -375,12 +382,14 @@ public class Widget implements BasicEntity, Serializable {
     }
 
     public void setCategories(List<Category> categories) {
-        if(this.categories == null) {
+        if (this.categories == null) {
             this.categories = new ArrayList<JpaCategory>();
         }
         //Ensure that all operations go through the conversion proxy
         this.getCategories().clear();
-        this.getCategories().addAll(categories);
+        if (categories != null) {
+            this.getCategories().addAll(categories);
+        }
     }
 
     public boolean isFeatured() {

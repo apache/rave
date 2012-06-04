@@ -30,7 +30,7 @@
             <class>org.apache.rave.portal.model.RegionWidgetPreference</class>
             <class>org.apache.rave.portal.model.Widget</class>
             <class>org.apache.rave.portal.model.JpaWidgetComment</class>
-            <class>org.apache.rave.portal.model.WidgetRating</class>
+            <class>org.apache.rave.portal.model.JpaWidgetRating</class>
             <class>org.apache.rave.portal.model.PageLayout</class>
             <class>org.apache.rave.portal.model.Authority</class>
             <class>org.apache.rave.portal.model.Tag</class>

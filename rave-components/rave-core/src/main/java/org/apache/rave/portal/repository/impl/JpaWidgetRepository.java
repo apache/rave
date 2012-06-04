@@ -21,7 +21,6 @@ package org.apache.rave.portal.repository.impl;
 
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.openjpa.jdbc.kernel.exps.ToLowerCase;
 import org.apache.rave.persistence.jpa.AbstractJpaRepository;
 import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.model.util.WidgetStatistics;
@@ -159,12 +158,12 @@ public class JpaWidgetRepository extends AbstractJpaRepository<Widget> implement
     public WidgetStatistics getWidgetStatistics(long widget_id, long user_id) {
         WidgetStatistics widgetStatistics = new WidgetStatistics();
 
-        Query query = manager.createNamedQuery(WidgetRating.WIDGET_TOTAL_LIKES);
-        query.setParameter(WidgetRating.PARAM_WIDGET_ID, widget_id);
+        Query query = manager.createNamedQuery(JpaWidgetRating.WIDGET_TOTAL_LIKES);
+        query.setParameter(JpaWidgetRating.PARAM_WIDGET_ID, widget_id);
         widgetStatistics.setTotalLike(((Number) query.getSingleResult()).intValue());
 
-        query = manager.createNamedQuery(WidgetRating.WIDGET_TOTAL_DISLIKES);
-        query.setParameter(WidgetRating.PARAM_WIDGET_ID, widget_id);
+        query = manager.createNamedQuery(JpaWidgetRating.WIDGET_TOTAL_DISLIKES);
+        query.setParameter(JpaWidgetRating.PARAM_WIDGET_ID, widget_id);
         widgetStatistics.setTotalDislike(((Number) query.getSingleResult()).intValue());
 
         query = manager.createNamedQuery(RegionWidget.REGION_WIDGET_GET_DISTINCT_USER_COUNT_SINGLE_WIDGET);
@@ -172,12 +171,12 @@ public class JpaWidgetRepository extends AbstractJpaRepository<Widget> implement
         widgetStatistics.setTotalUserCount(((Number) query.getSingleResult()).intValue());
 
         try {
-            query = manager.createNamedQuery(WidgetRating.WIDGET_USER_RATING);
-            query.setParameter(WidgetRating.PARAM_WIDGET_ID, widget_id);
-            query.setParameter(WidgetRating.PARAM_USER_ID, user_id);
+            query = manager.createNamedQuery(JpaWidgetRating.WIDGET_USER_RATING);
+            query.setParameter(JpaWidgetRating.PARAM_WIDGET_ID, widget_id);
+            query.setParameter(JpaWidgetRating.PARAM_USER_ID, user_id);
             widgetStatistics.setUserRating(((Number) query.getSingleResult()).intValue());
         } catch (NoResultException e) {
-            widgetStatistics.setUserRating(WidgetRating.UNSET);
+            widgetStatistics.setUserRating(JpaWidgetRating.UNSET);
         }
 
         return widgetStatistics;
@@ -185,9 +184,9 @@ public class JpaWidgetRepository extends AbstractJpaRepository<Widget> implement
 
     @Override
     public Map<Long, WidgetRating> getUsersWidgetRatings(long user_id) {
-        TypedQuery<WidgetRating> query =
-                manager.createNamedQuery(WidgetRating.WIDGET_ALL_USER_RATINGS, WidgetRating.class);
-        query.setParameter(WidgetRating.PARAM_USER_ID, user_id);
+        TypedQuery<JpaWidgetRating> query =
+                manager.createNamedQuery(JpaWidgetRating.WIDGET_ALL_USER_RATINGS, JpaWidgetRating.class);
+        query.setParameter(JpaWidgetRating.PARAM_USER_ID, user_id);
 
         Map<Long, WidgetRating> map = new HashMap<Long, WidgetRating>();
         for (WidgetRating widgetRating : query.getResultList()) {
@@ -203,7 +202,7 @@ public class JpaWidgetRepository extends AbstractJpaRepository<Widget> implement
         HashMap<Long, WidgetStatistics> map = new HashMap<Long, WidgetStatistics>();
 
         //Generate the mapping of all likes done for the widgets
-        Query query = manager.createNamedQuery(WidgetRating.WIDGET_ALL_TOTAL_LIKES);
+        Query query = manager.createNamedQuery(JpaWidgetRating.WIDGET_ALL_TOTAL_LIKES);
         for (Object[] result : (List<Object[]>) query.getResultList()) {
             Long totalLikes = (Long) result[0];
             Long widgetId = (Long) result[1];
@@ -213,7 +212,7 @@ public class JpaWidgetRepository extends AbstractJpaRepository<Widget> implement
         }
 
         //Add the mapping of all dislikes done for the widgets
-        query = manager.createNamedQuery(WidgetRating.WIDGET_ALL_TOTAL_DISLIKES);
+        query = manager.createNamedQuery(JpaWidgetRating.WIDGET_ALL_TOTAL_DISLIKES);
         for (Object[] result : (List<Object[]>) query.getResultList()) {
             Long totalDislikes = (Long) result[0];
             Long widgetId = (Long) result[1];
@@ -247,7 +246,7 @@ public class JpaWidgetRepository extends AbstractJpaRepository<Widget> implement
             }
             //otherwise set the rating to UNSET
             else {
-                entry.getValue().setUserRating(WidgetRating.UNSET);
+                entry.getValue().setUserRating(JpaWidgetRating.UNSET);
             }
         }
 

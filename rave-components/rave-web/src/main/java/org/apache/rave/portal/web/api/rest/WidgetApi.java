@@ -132,7 +132,7 @@ public class WidgetApi extends AbstractRestApi {
                                 HttpServletResponse response) {
         logger.debug("POST WidgetRating received for /api/rest/widgets/{} score: {}", widgetId, score);
 
-        WidgetRating widgetRating = new WidgetRating();
+        WidgetRating widgetRating = new JpaWidgetRating();
         widgetRating.setScore(score);
         widgetRating.setUserId(userService.getAuthenticatedUser().getEntityId());
         widgetRating.setWidgetId(widgetId);

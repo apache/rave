@@ -20,39 +20,68 @@
 package org.apache.rave.portal.repository.impl;
 
 import org.apache.rave.persistence.jpa.AbstractJpaRepository;
+import org.apache.rave.portal.model.JpaWidgetRating;
 import org.apache.rave.portal.model.WidgetRating;
+import org.apache.rave.portal.model.conversion.JpaWidgetRatingConverter;
 import org.apache.rave.portal.repository.WidgetRatingRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
 import static org.apache.rave.persistence.jpa.util.JpaUtil.getSingleResult;
+import static org.apache.rave.persistence.jpa.util.JpaUtil.saveOrUpdate;
 
 /**
  * JPA implementation for {@link org.apache.rave.portal.repository.WidgetRatingRepository}
  */
 @Repository
-public class JpaWidgetRatingRepository extends AbstractJpaRepository<WidgetRating> implements WidgetRatingRepository {
+public class JpaWidgetRatingRepository implements WidgetRatingRepository {
 
-    public JpaWidgetRatingRepository() {
-        super(WidgetRating.class);
-    }
+    @PersistenceContext
+    private EntityManager manager;
+
+    @Autowired
+    private JpaWidgetRatingConverter converter;
 
     @Override
     public WidgetRating getByWidgetIdAndUserId(Long widgetId, Long userId) {
-        TypedQuery<WidgetRating> query =
-                manager.createNamedQuery(WidgetRating.WIDGET_RATING_BY_WIDGET_AND_USER, WidgetRating.class);
-        query.setParameter(WidgetRating.PARAM_WIDGET_ID, widgetId);
-        query.setParameter(WidgetRating.PARAM_USER_ID, userId);
-        final List<WidgetRating> resultList = query.getResultList();
+        TypedQuery<JpaWidgetRating> query =
+                manager.createNamedQuery(JpaWidgetRating.WIDGET_RATING_BY_WIDGET_AND_USER, JpaWidgetRating.class);
+        query.setParameter(JpaWidgetRating.PARAM_WIDGET_ID, widgetId);
+        query.setParameter(JpaWidgetRating.PARAM_USER_ID, userId);
+        final List<JpaWidgetRating> resultList = query.getResultList();
         return getSingleResult(resultList);
     }
 
     @Override
     public int deleteAll(Long userId) {
-        TypedQuery<WidgetRating> query = manager.createNamedQuery(WidgetRating.DELETE_ALL_BY_USER, WidgetRating.class);
+        TypedQuery<JpaWidgetRating> query = manager.createNamedQuery(JpaWidgetRating.DELETE_ALL_BY_USER, JpaWidgetRating.class);
         query.setParameter("userId", userId);
         return query.executeUpdate();
+    }
+
+    @Override
+    public Class<? extends WidgetRating> getType() {
+        return JpaWidgetRating.class;
+    }
+
+    @Override
+    public WidgetRating get(long id) {
+        return manager.find(JpaWidgetRating.class, id);
+    }
+
+    @Override
+    public WidgetRating save(WidgetRating item) {
+        JpaWidgetRating jpaItem = converter.convert(item);
+        return saveOrUpdate(jpaItem.getEntityId(), manager, jpaItem);
+    }
+
+    @Override
+    public void delete(WidgetRating item) {
+        manager.remove(converter.convert(item));
     }
 }

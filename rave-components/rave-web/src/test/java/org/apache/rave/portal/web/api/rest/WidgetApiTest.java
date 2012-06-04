@@ -177,7 +177,7 @@ public class WidgetApiTest {
 
     @Test
     public void updateWidgetRating() {
-        WidgetRating widgetRating = new WidgetRating();
+        WidgetRating widgetRating = new JpaWidgetRating();
         widgetRating.setScore(5);
         widgetRating.setUserId(2L);
         widgetRating.setWidgetId(1L);

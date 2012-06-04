@@ -146,7 +146,7 @@ public interface WidgetRepository extends Repository<Widget> {
      * Generates the mapping of widget ratings for the user.
      *
      * @param userId id of the user
-     * @return Mapping of {@link WidgetRating} objects keyed off of the widget's entityId
+     * @return Mapping of {@link org.apache.rave.portal.model.JpaWidgetRating} objects keyed off of the widget's entityId
      */
     Map<Long, WidgetRating> getUsersWidgetRatings(long userId);
 
