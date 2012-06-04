@@ -3,15 +3,11 @@ package org.apache.rave.portal.model.conversion;
 import org.apache.rave.model.ModelConverter;
 import org.apache.rave.portal.model.JpaPerson;
 import org.apache.rave.portal.model.Person;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.apache.rave.persistence.jpa.util.JpaUtil.getSingleResult;
 
@@ -25,7 +21,7 @@ public class JpaPersonConverter implements ModelConverter<Person, JpaPerson> {
 
     @Override
     public JpaPerson convert(Person source) {
-        return source instanceof JpaPerson ? (JpaPerson)source : createEntity(source);
+        return source instanceof JpaPerson ? (JpaPerson) source : createEntity(source);
     }
 
     @Override
@@ -34,15 +30,17 @@ public class JpaPersonConverter implements ModelConverter<Person, JpaPerson> {
     }
 
     private JpaPerson createEntity(Person source) {
-        JpaPerson converted;
-        TypedQuery<JpaPerson> query = manager.createNamedQuery(JpaPerson.FIND_BY_USERNAME, JpaPerson.class);
-        query.setParameter(JpaPerson.USERNAME_PARAM, source.getUsername());
-        converted = getSingleResult(query.getResultList());
+        JpaPerson converted = null;
+        if (source != null) {
+            TypedQuery<JpaPerson> query = manager.createNamedQuery(JpaPerson.FIND_BY_USERNAME, JpaPerson.class);
+            query.setParameter(JpaPerson.USERNAME_PARAM, source.getUsername());
+            converted = getSingleResult(query.getResultList());
 
-        if(converted == null) {
-            converted = new JpaPerson();
+            if (converted == null) {
+                converted = new JpaPerson();
+            }
+            updateProperties(source, converted);
         }
-        updateProperties(source, converted);
         return converted;
     }
 

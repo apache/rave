@@ -32,6 +32,13 @@ public class JpaPersonConverterTest {
     }
 
     @Test
+    public void nullConversion() {
+        Person template = null;
+        assertThat(converter.convert(template), is(nullValue()));
+    }
+
+
+    @Test
     public void convertValid() {
         Person template = new PersonImpl();
 
