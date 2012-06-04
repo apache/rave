@@ -19,6 +19,7 @@
 package org.apache.rave.portal.model;
 
 import org.apache.rave.persistence.BasicEntity;
+import org.apache.rave.portal.model.conversion.JpaConverter;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -26,8 +27,8 @@ import java.io.Serializable;
 @Entity
 @Table(name= "page_template_widget")
 @NamedQueries({
-        @NamedQuery(name = "PageTemplateGadget.findAll", query = "SELECT p FROM PageTemplateWidget p"),
-        @NamedQuery(name = "PageTemplateGadget.findByPageTemplateGadgetId", query = "SELECT p FROM PageTemplateWidget p WHERE p.entityId = :id")
+        @NamedQuery(name = "PageTemplateGadget.findAll", query = "SELECT p FROM JpaPageTemplateWidget p"),
+        @NamedQuery(name = "PageTemplateGadget.findByPageTemplateGadgetId", query = "SELECT p FROM JpaPageTemplateWidget p WHERE p.entityId = :id")
 })
 @Access(AccessType.FIELD)
 public class JpaPageTemplateWidget implements BasicEntity, Serializable, PageTemplateWidget {
@@ -43,7 +44,7 @@ public class JpaPageTemplateWidget implements BasicEntity, Serializable, PageTem
 
     @JoinColumn(name = "page_template_region_id")
     @ManyToOne(optional = false)
-    private PageTemplateRegion pageTemplateRegion;
+    private JpaPageTemplateRegion pageTemplateRegion;
 
     @Basic(optional = false)
     @Column(name = "render_sequence")
@@ -78,7 +79,7 @@ public class JpaPageTemplateWidget implements BasicEntity, Serializable, PageTem
 
     @Override
     public void setPageTemplateRegion(PageTemplateRegion pageTemplateRegion) {
-        this.pageTemplateRegion = pageTemplateRegion;
+        this.pageTemplateRegion = JpaConverter.getInstance().convert(pageTemplateRegion, PageTemplateRegion.class);
     }
 
     @Override

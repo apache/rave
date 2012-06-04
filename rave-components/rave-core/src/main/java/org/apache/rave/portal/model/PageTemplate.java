@@ -20,9 +20,11 @@
 package org.apache.rave.portal.model;
 
 import org.apache.rave.persistence.BasicEntity;
+import org.apache.rave.portal.model.conversion.ConvertingListProxyFactory;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -71,7 +73,7 @@ public class PageTemplate implements BasicEntity, Serializable {
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("renderSequence")
     @JoinColumn(name="page_template_id")
-    private List<PageTemplateRegion> pageTemplateRegions;
+    private List<JpaPageTemplateRegion> pageTemplateRegions;
 
     @Basic(optional = false)
     @Column(name = "render_sequence")
@@ -132,11 +134,17 @@ public class PageTemplate implements BasicEntity, Serializable {
     }
 
     public List<PageTemplateRegion> getPageTemplateRegions() {
-        return pageTemplateRegions;
+        return ConvertingListProxyFactory.createProxyList(PageTemplateRegion.class, pageTemplateRegions);
     }
 
     public void setPageTemplateRegions(List<PageTemplateRegion> pageTemplateRegions) {
-        this.pageTemplateRegions = pageTemplateRegions;
+        if(this.pageTemplateRegions == null) {
+            this.pageTemplateRegions = new ArrayList<JpaPageTemplateRegion>();
+        }
+        this.getPageTemplateRegions().clear();
+        if(pageTemplateRegions != null) {
+            this.getPageTemplateRegions().addAll(pageTemplateRegions);
+        }
     }
 
     public long getRenderSequence() {
