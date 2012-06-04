@@ -1,9 +1,10 @@
 package org.apache.rave.portal.model.impl;
 import org.apache.rave.portal.model.Address;
+import org.apache.rave.portal.model.Organization;
 
 import java.util.Date;
 
-public class OrganizationImpl {
+public class OrganizationImpl implements Organization {
     private Address address;
     private String description;
     private Date endDate;
