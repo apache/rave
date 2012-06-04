@@ -51,6 +51,13 @@ public class JpaPageTemplateConverterTest {
     }
 
     @Test
+    public void nullConversion() {
+        PageTemplate template = null;
+        assertThat(converter.convert(template), is(nullValue()));
+    }
+
+
+    @Test
     public void convertValid() {
         PageTemplate template = new PageTemplateImpl();
         template.setName("name");
