@@ -897,7 +897,7 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
     }
 
     private Organization convertOrganization(org.apache.rave.portal.model.Organization org) {
-        Organization converted = new OrganizationImpl();
+        Organization converted = new org.apache.shindig.social.core.model.OrganizationImpl();
         converted.setAddress(convertAddress(org.getAddress()));
         converted.setDescription(org.getDescription());
         converted.setStartDate(org.getStartDate());

@@ -17,8 +17,8 @@
 package org.apache.rave.portal.web.controller.admin;
 
 import org.apache.rave.portal.model.Category;
-import org.apache.rave.portal.model.CategoryImpl;
 import org.apache.rave.portal.model.User;
+import org.apache.rave.portal.model.impl.CategoryImpl;
 import org.apache.rave.portal.service.CategoryService;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.portal.web.util.ModelKeys;
@@ -32,15 +32,8 @@ import org.springframework.web.bind.support.SessionStatus;
 import java.util.ArrayList;
 import java.util.List;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertSame;
-import static junit.framework.Assert.assertTrue;
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.expectLastCall;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
+import static junit.framework.Assert.*;
+import static org.easymock.EasyMock.*;
 
 /**
  * Test for {@link CategoryController}

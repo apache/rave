@@ -16,8 +16,8 @@
 package org.apache.rave.portal.web.controller.admin;
 
 import org.apache.rave.portal.model.Category;
-import org.apache.rave.portal.model.CategoryImpl;
 import org.apache.rave.portal.model.User;
+import org.apache.rave.portal.model.impl.CategoryImpl;
 import org.apache.rave.portal.service.CategoryService;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.portal.web.util.ModelKeys;
@@ -25,18 +25,12 @@ import org.apache.rave.portal.web.util.ViewNames;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 
 import java.util.List;
 
-import static org.apache.rave.portal.web.controller.admin.AdminControllerUtil.addNavigationMenusToModel;
-import static org.apache.rave.portal.web.controller.admin.AdminControllerUtil.checkTokens;
-import static org.apache.rave.portal.web.controller.admin.AdminControllerUtil.isCreateDeleteOrUpdate;
+import static org.apache.rave.portal.web.controller.admin.AdminControllerUtil.*;
 
 @Controller
 @SessionAttributes({ModelKeys.CATEGORY, ModelKeys.TOKENCHECK})

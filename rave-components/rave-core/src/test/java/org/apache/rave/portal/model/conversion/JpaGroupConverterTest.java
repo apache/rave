@@ -22,6 +22,8 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
 import org.apache.rave.portal.model.*;
+import org.apache.rave.portal.model.impl.GroupImpl;
+import org.apache.rave.portal.model.impl.PersonImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

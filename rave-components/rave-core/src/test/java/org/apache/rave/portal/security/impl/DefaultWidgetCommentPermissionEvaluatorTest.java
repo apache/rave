@@ -17,7 +17,7 @@ package org.apache.rave.portal.security.impl;
 
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.WidgetComment;
-import org.apache.rave.portal.model.WidgetCommentImpl;
+import org.apache.rave.portal.model.impl.WidgetCommentImpl;
 import org.apache.rave.portal.repository.WidgetCommentRepository;
 import org.apache.rave.portal.security.ModelPermissionEvaluator.Permission;
 import org.apache.rave.portal.security.util.AuthenticationUtils;

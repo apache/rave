@@ -2,7 +2,7 @@ package org.apache.rave.portal.model.conversion;
 
 import org.apache.rave.model.ModelConverter;
 import org.apache.rave.portal.model.Person;
-import org.apache.rave.portal.model.PersonImpl;
+import org.apache.rave.portal.model.impl.PersonImpl;
 import org.junit.Test;
 
 import java.lang.reflect.Proxy;

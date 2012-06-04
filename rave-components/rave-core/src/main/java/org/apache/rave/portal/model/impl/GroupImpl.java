@@ -16,7 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.rave.portal.model;
+package org.apache.rave.portal.model.impl;
+
+import org.apache.rave.portal.model.*;
 
 import java.util.List;
 

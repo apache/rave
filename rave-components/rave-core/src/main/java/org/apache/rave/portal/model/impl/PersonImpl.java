@@ -1,8 +1,10 @@
-package org.apache.rave.portal.model;
+package org.apache.rave.portal.model.impl;
+
+import org.apache.rave.portal.model.*;
 
 import java.util.List;
 
-public class PersonImpl implements Person{
+public class PersonImpl implements Person {
 
     protected String username;
     protected String email;

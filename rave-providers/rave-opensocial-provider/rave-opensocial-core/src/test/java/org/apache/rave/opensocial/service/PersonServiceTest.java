@@ -23,7 +23,7 @@ import com.google.common.collect.Lists;
 import org.apache.rave.opensocial.repository.PersonRepository;
 import org.apache.rave.opensocial.service.impl.DefaultPersonService;
 import org.apache.rave.opensocial.service.impl.FieldRestrictingPerson;
-import org.apache.rave.portal.model.PersonImpl;
+import org.apache.rave.portal.model.impl.PersonImpl;
 import org.apache.shindig.auth.SecurityToken;
 import org.apache.shindig.protocol.ProtocolException;
 import org.apache.shindig.protocol.RestfulCollection;
@@ -43,15 +43,9 @@ import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
-import static org.easymock.EasyMock.createNiceMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.CoreMatchers.is;
+import static org.easymock.EasyMock.*;
+import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 public class PersonServiceTest {

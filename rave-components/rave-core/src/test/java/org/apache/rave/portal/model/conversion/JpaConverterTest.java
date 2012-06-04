@@ -2,6 +2,9 @@ package org.apache.rave.portal.model.conversion;
 
 import org.apache.rave.model.ModelConverter;
 import org.apache.rave.portal.model.*;
+import org.apache.rave.portal.model.impl.AddressImpl;
+import org.apache.rave.portal.model.impl.GroupImpl;
+import org.apache.rave.portal.model.impl.PersonImpl;
 import org.junit.Before;
 import org.junit.Test;
 

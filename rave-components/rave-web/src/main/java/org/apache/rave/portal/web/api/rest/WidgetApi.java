@@ -20,6 +20,7 @@
 package org.apache.rave.portal.web.api.rest;
 
 import org.apache.rave.portal.model.*;
+import org.apache.rave.portal.model.impl.WidgetCommentImpl;
 import org.apache.rave.portal.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

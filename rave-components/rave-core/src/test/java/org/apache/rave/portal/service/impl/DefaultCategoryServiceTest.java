@@ -20,8 +20,8 @@
 package org.apache.rave.portal.service.impl;
 
 import org.apache.rave.portal.model.Category;
-import org.apache.rave.portal.model.CategoryImpl;
 import org.apache.rave.portal.model.User;
+import org.apache.rave.portal.model.impl.CategoryImpl;
 import org.apache.rave.portal.repository.CategoryRepository;
 import org.apache.rave.portal.service.CategoryService;
 import org.junit.Before;
@@ -32,8 +32,8 @@ import java.util.Date;
 import java.util.List;
 
 import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.assertThat;
 
 /**
  * Test for {@link org.apache.rave.portal.service.impl.DefaultCategoryService}

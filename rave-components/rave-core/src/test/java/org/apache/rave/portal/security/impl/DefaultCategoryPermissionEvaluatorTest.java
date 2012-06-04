@@ -19,6 +19,7 @@
 package org.apache.rave.portal.security.impl;
 
 import org.apache.rave.portal.model.*;
+import org.apache.rave.portal.model.impl.CategoryImpl;
 import org.apache.rave.portal.repository.CategoryRepository;
 import org.apache.rave.portal.security.ModelPermissionEvaluator;
 import org.apache.rave.portal.security.util.AuthenticationUtils;

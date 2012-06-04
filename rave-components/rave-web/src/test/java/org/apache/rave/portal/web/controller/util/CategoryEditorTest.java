@@ -19,17 +19,15 @@
 package org.apache.rave.portal.web.controller.util;
 
 import org.apache.rave.portal.model.Category;
-import org.apache.rave.portal.model.CategoryImpl;
+import org.apache.rave.portal.model.impl.CategoryImpl;
 import org.apache.rave.portal.service.CategoryService;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.awt.*;
-
+import static org.easymock.EasyMock.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
-import static org.easymock.EasyMock.*;
 
 public class CategoryEditorTest {
     private CategoryEditor categoryEditor;

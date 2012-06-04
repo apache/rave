@@ -20,8 +20,8 @@
 package org.apache.rave.portal.web.controller.admin;
 
 import org.apache.rave.portal.model.Category;
-import org.apache.rave.portal.model.CategoryImpl;
 import org.apache.rave.portal.model.Widget;
+import org.apache.rave.portal.model.impl.CategoryImpl;
 import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.service.CategoryService;
 import org.apache.rave.portal.service.PortalPreferenceService;
@@ -32,7 +32,6 @@ import org.apache.rave.portal.web.util.PortalPreferenceKeys;
 import org.apache.rave.portal.web.util.ViewNames;
 import org.apache.rave.portal.web.validator.UpdateWidgetValidator;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.ui.ExtendedModelMap;
 import org.springframework.ui.Model;
@@ -45,9 +44,9 @@ import org.springframework.web.bind.support.SessionStatus;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
 import static org.easymock.EasyMock.*;
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.*;
 
 /**
  * Test for {@link WidgetController}

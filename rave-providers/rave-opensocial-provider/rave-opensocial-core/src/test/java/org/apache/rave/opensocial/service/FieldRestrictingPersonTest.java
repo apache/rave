@@ -22,24 +22,23 @@ package org.apache.rave.opensocial.service;
 
 import org.apache.rave.exception.NotSupportedException;
 import org.apache.rave.opensocial.service.impl.FieldRestrictingPerson;
-import org.apache.rave.portal.model.*;
+import org.apache.rave.portal.model.JpaAddress;
+import org.apache.rave.portal.model.JpaPersonProperty;
+import org.apache.rave.portal.model.PersonProperty;
+import org.apache.rave.portal.model.impl.PersonImpl;
 import org.apache.rave.portal.model.util.ModelUtils;
 import org.apache.shindig.protocol.model.EnumImpl;
 import org.apache.shindig.social.core.model.AddressImpl;
 import org.apache.shindig.social.core.model.BodyTypeImpl;
 import org.apache.shindig.social.core.model.UrlImpl;
 import org.apache.shindig.social.opensocial.model.*;
-import org.apache.shindig.social.opensocial.model.Address;
-import org.apache.shindig.social.opensocial.model.Person;
 import org.junit.Test;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
