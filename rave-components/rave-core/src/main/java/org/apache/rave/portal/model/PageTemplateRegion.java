@@ -20,9 +20,11 @@
 package org.apache.rave.portal.model;
 
 import org.apache.rave.persistence.BasicEntity;
+import org.apache.rave.portal.model.conversion.ConvertingListProxyFactory;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -53,7 +55,7 @@ public class PageTemplateRegion implements BasicEntity, Serializable {
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("renderSequence")
     @JoinColumn(name = "page_template_region_id")
-    private List<PageTemplateWidget> pageTemplateWidgets;
+    private List<JpaPageTemplateWidget> pageTemplateWidgets;
     
     @Basic(optional = false)
     @Column(name = "locked")
@@ -86,11 +88,17 @@ public class PageTemplateRegion implements BasicEntity, Serializable {
     }
 
     public List<PageTemplateWidget> getPageTemplateWidgets() {
-        return pageTemplateWidgets;
+        return ConvertingListProxyFactory.createProxyList(PageTemplateWidget.class, this.pageTemplateWidgets);
     }
 
     public void setPageTemplateWidgets(List<PageTemplateWidget> pageTemplateWidgets) {
-        this.pageTemplateWidgets = pageTemplateWidgets;
+        if(this.pageTemplateWidgets == null) {
+            this.pageTemplateWidgets = new ArrayList<JpaPageTemplateWidget>();
+        }
+        this.getPageTemplateWidgets().clear();
+        if(pageTemplateWidgets != null) {
+            this.getPageTemplateWidgets().addAll(pageTemplateWidgets);
+        }
     }
 
     public boolean isLocked() {
