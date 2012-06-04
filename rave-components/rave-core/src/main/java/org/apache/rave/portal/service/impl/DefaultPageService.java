@@ -357,6 +357,22 @@ public class DefaultPageService implements PageService {
         }
     }
 
+    @Override
+    @Transactional
+    public Boolean updatePageEditingStatus(long pageId, long userId, boolean isEditor) {
+        Page page = this.getPage(pageId);
+        for(PageUser pageUser : page.getMembers()){
+            if(pageUser.getUser().equals(userService.getUserById(userId))){
+                pageUser.setEditor(isEditor);
+            }
+        }
+        if(pageRepository.save(page) != null){
+            return Boolean.TRUE;
+        }else{
+            return Boolean.FALSE;
+        }
+    }
+
     /**
      * Utility function to determine if a Page layout adjustment is needed
      * which comparing the existing and new PageLayout objects
@@ -500,6 +516,7 @@ public class DefaultPageService implements PageService {
         page.setPageLayout(pageLayout);
         PageUser pageUser = new PageUser(page.getOwner(), page, renderSequence);
         pageUser.setPageStatus(PageInvitationStatus.OWNER);
+        pageUser.setEditor(true);
 
         List<PageUser> members = new ArrayList<PageUser>();
         members.add(pageUser);

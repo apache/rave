@@ -114,7 +114,7 @@ public class ProfileController {
 
     public static void addNavItemsToModel(String view, ModelMap model, Long referringPageId, User user) {
         long refPageId = referringPageId != null ? referringPageId : 0;
-        final NavigationMenu topMenu = ControllerUtils.getTopMenu(view, refPageId, user);
+        final NavigationMenu topMenu = ControllerUtils.getTopMenu(view, refPageId, user, false);
         model.addAttribute(topMenu.getName(), topMenu);
     }
 }

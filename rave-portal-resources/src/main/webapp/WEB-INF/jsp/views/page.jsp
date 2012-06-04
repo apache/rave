@@ -44,6 +44,7 @@
         <c:otherwise>false</c:otherwise>
     </c:choose>
 </c:set>
+<c:set var="canMoveWidgetsToEditablePage" scope="request" value="false"/>
 
 <div id="pageContent" class="container-fluid">
     <nav>
@@ -113,10 +114,14 @@
                                      <a href="#"><c:out value="${userPage.name}"/></a>
                                 </c:otherwise>
                             </c:choose>
-
                         </li>
                     </c:otherwise>
                 </c:choose>
+                <c:forEach var="members" items="${userPage.members}">
+                    <c:if test="${members.user.username == principleUsername and members.editor and userPage.entityId != page.entityId}">
+                        <c:set var="canMoveWidgetsToEditablePage" scope="request" value="true"/>
+                    </c:if>
+               </c:forEach>
             </c:forEach>
             <li id="addPageButton"><a href="#"><i class="icon-plus"></i></a></li>
         </ul>
@@ -126,7 +131,14 @@
     <div class="row-fluid">
         <div id="emptyPageMessageWrapper" class="emptyPageMessageWrapper hidden">
             <div class="emptyPageMessage">
-                <a href="<spring:url value="/app/store?referringPageId=${page.entityId}" />"><fmt:message key="page.general.empty"/></a>
+                <c:choose>
+                    <c:when test="${pageUser.editor == true}">
+                        <a href="<spring:url value="/app/store?referringPageId=${page.entityId}" />"><fmt:message key="page.general.empty"/></a>
+                    </c:when>
+                    <c:otherwise>
+                        <fmt:message key="page.general.non.editing.empty"/>
+                    </c:otherwise>
+                </c:choose>
             </div>
         </div>
         <div class="regions">
@@ -223,11 +235,13 @@
                         <div class="controls">
                             <select id="moveToPageId">
                                 <c:forEach var="userPage" items="${pages}">
-                                    <c:if test="${userPage.entityId != page.entityId}">
-                                        <option value="${userPage.entityId}">
-                                            <c:out value="${userPage.name}"/>
-                                        </option>
-                                    </c:if>
+                                    <c:forEach var="members" items="${userPage.members}">
+                                        <c:if test="${members.user.username == principleUsername and members.editor and userPage.entityId != page.entityId}">
+                                            <option value="${userPage.entityId}">
+                                                <c:out value="${userPage.name}"/>
+                                            </option>
+                                        </c:if>
+                                    </c:forEach>
                                 </c:forEach>
                             </select>
                         </div>
@@ -285,6 +299,7 @@
 <portal:register-init-script location="${'AFTER_RAVE'}">
     <script>
         $(function() {
+            rave.initPageEditorStatus(<c:out value="${pageUser.editor}"/>);
             rave.initProviders();
             rave.initWidgets();
             rave.initUI();
@@ -293,6 +308,6 @@
         });
     </script>
     <c:forEach var="members" items="${page.members}">
-        <script>rave.layout.searchHandler.addExistingMember("${members.user.username}");</script>
+        <script>rave.layout.searchHandler.addExistingMember("${members.user.username}",${members.editor});</script>
     </c:forEach>
 </portal:register-init-script>

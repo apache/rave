@@ -136,9 +136,12 @@ rave.layout = rave.layout || (function() {
         var username;
         var userId;
         var pageId;
-        var existingSharers = new Array();
+        var existingSharers;
 
         function setDefaults(username, userId, pageId, pageStatus){
+            if(this.existingSharers == "undefined" || this.existingSharers == null){
+                this.existingSharers = {};
+            }
             this.username = username;
             this.userId = userId;
             this.pageId = pageId;
@@ -147,21 +150,35 @@ rave.layout = rave.layout || (function() {
             };
         }
 
-        function addExistingMember(member){
-            existingSharers.push(member);
+        function addExistingMember(member, isEditor){
+            if(this.existingSharers == "undefined" || this.existingSharers == null){
+                this.existingSharers = {};
+            }
+            this.existingSharers[member] = isEditor;
         }
 
         function removeExistingMember(member){
-            existingSharers.splice( $.inArray(member, existingSharers), 1 );
+            delete this.existingSharers[member];
         }
 
         function isUserAlreadyAdded(username){
-            if($.inArray(username, existingSharers) == -1){
-                return false;
+            for(member in this.existingSharers){
+                if(username == member){
+                    return true;
+                }
             }
-            else{
-                return true;
+            return false;
+        }
+
+        function isUserEditor(username){
+            for(member in this.existingSharers){
+                if(username == member){
+                    if(this.existingSharers[member] == true){
+                        return true;
+                    }
+                }
             }
+            return false;
         }
 
         function removeMemberFromPage(userId, username){
@@ -176,6 +193,7 @@ rave.layout = rave.layout || (function() {
                 rave.api.rpc.removeMemberFromPage({pageId: this.pageId, userId: userId,
                     successCallback: function(result) {
                         rave.layout.searchHandler.removeExistingMember(username);
+                        $('#pageEditorStatusHolder'+userId).empty();
                         $('#shareButtonHolder'+userId).empty();
                         $('#shareButtonHolder'+userId)
                             .append(
@@ -191,7 +209,7 @@ rave.layout = rave.layout || (function() {
                                 // reload as page has been removed
                                 document.location.href='/';
                             }else{
-                            	alert("(" + username + ") " + rave.getClientMessage("revoke.share"));
+                                alert("(" + username + ") " + rave.getClientMessage("revoke.share"));
                             }
                     }
                 });
@@ -215,15 +233,68 @@ rave.layout = rave.layout || (function() {
                                         userId+", '" + username+"');")
                                     .text(rave.getClientMessage("common.remove"))
                             )
-                            $('#shareButtonHolder'+userId).show();
+                        $('#shareButtonHolder'+userId).show();
+                        $('#pageEditorStatusHolder'+userId).empty();
+                        $('#pageEditorStatusHolder'+userId)
+                                .append(
+                                    $("<a/>")
+                                    .attr("href", "#")
+                                    .attr("id", userId)
+                                    .attr("onclick", "rave.layout.searchHandler.addEditingRightsToMember("+userId+", '"+username+"');")
+                                    .text(rave.getClientMessage("common.add"))
+                                )
                         alert("(" + username + ") " + rave.getClientMessage("create.share"));
                     }
                 });
             }
         }
-        
+
+        function removeEditingRightsFromMember(userId, username){
+            var answer = confirm(rave.getClientMessage("revoke.editing.user.confirm") + " ("+username+")");
+            if(answer){
+                $('#pageEditorStatusHolder'+userId).hide();
+                rave.api.rpc.updatePageEditingStatus({pageId: this.pageId, userId: userId, isEditor: false,
+                    successCallback: function(result) {
+                        rave.layout.searchHandler.existingSharers[username] = false;
+                        $('#pageEditorStatusHolder'+userId).empty();
+                        $('#pageEditorStatusHolder'+userId)
+                                .append(
+                                    $("<a/>")
+                                    .attr("href", "#")
+                                    .attr("id", userId)
+                                    .attr("onclick", "rave.layout.searchHandler.addEditingRightsToMember("+userId+", '"+username+"');")
+                                    .text(rave.getClientMessage("common.add"))
+                                )
+                         $('#pageEditorStatusHolder'+userId).show();
+                    }
+                });
+            }
+        }
+
+        function addEditingRightsToMember(userId, username){
+            var answer = confirm(rave.getClientMessage("grant.editing.user.confirm") + " ("+username+")");
+            if(answer){
+                $('#pageEditorStatusHolder'+userId).hide();
+                rave.api.rpc.updatePageEditingStatus({pageId: this.pageId, userId: userId, isEditor: true,
+                    successCallback: function(result) {
+                        rave.layout.searchHandler.existingSharers[username] = true;
+                        $('#pageEditorStatusHolder'+userId).empty();
+                        $('#pageEditorStatusHolder'+userId)
+                                .append(
+                                    $("<a/>")
+                                    .attr("href", "#")
+                                    .attr("id", userId)
+                                    .attr("onclick", "rave.layout.searchHandler.removeEditingRightsFromMember("+userId+", '"+username+"');")
+                                    .text(rave.getClientMessage("common.remove"))
+                                )
+                            $('#pageEditorStatusHolder'+userId).show();
+                    }
+                });
+            }
+        }
+
         function acceptShare(){
-        	$('#confirmSharePageDialog').modal('hide');
+            $('#confirmSharePageDialog').modal('hide');
             rave.api.rpc.updateSharedPageStatus({pageId: rave.layout.searchHandler.pageId, shareStatus: 'accepted',
                 successCallback: function(result) {
                     //notification here?
@@ -232,7 +303,7 @@ rave.layout = rave.layout || (function() {
         }
 
         function declineShare(){
-        	$('#confirmSharePageDialog').modal('hide');
+            $('#confirmSharePageDialog').modal('hide');
             rave.api.rpc.updateSharedPageStatus({pageId: rave.layout.searchHandler.pageId, shareStatus: 'refused',
                 successCallback: function(result) {
                     document.location.href='/';
@@ -241,7 +312,7 @@ rave.layout = rave.layout || (function() {
         }
 
         function confirmPageShare(){
-        	$("#confirmSharePageDialog").modal('show');
+            $("#confirmSharePageDialog").modal('show');
         }
 
         function init() {
@@ -279,7 +350,7 @@ rave.layout = rave.layout || (function() {
             var $pagingDiv = $('#shareSearchListPaging');
             $pagingDiv.empty();
             if(userResults.result.pageSize < userResults.result.totalResults){
-                $pagingDiv.append('<ul id="pagingul" class="paging" style="margin-left: 0;">');
+                $pagingDiv.append('<div class="pagination"><ul id="pagingul" >');
                 if(userResults.result.currentPage > 1){
                     offset = (userResults.result.currentPage - 2) * userResults.result.pageSize;
                     $('#pagingul').append('<li><a href="#" onclick="rave.api.rpc.getUsers({offset: ' + 
@@ -288,7 +359,7 @@ rave.layout = rave.layout || (function() {
                 }
                 for(var i=1;i<=userResults.result.numberOfPages;i++){
                     if(i == userResults.result.currentPage){
-                        $('#pagingul').append('<li><span class="currentPage">'+i+'</span></li>');
+                        $('#pagingul').append('<li class="active"><a href="#">'+i+'</a></li>');
                     }else{
                         offset = (i - 1) * userResults.result.pageSize;
                         $('#pagingul').append('<li><a href="#" onclick="rave.api.rpc.getUsers({offset: ' + 
@@ -302,6 +373,7 @@ rave.layout = rave.layout || (function() {
                         offset + ', successCallback: function(result)' + 
                             ' {rave.layout.searchHandler.dealWithUserResults(result);}});">&gt;</a></li>');
                 }
+                $pagingDiv.append('</ul></div>')
             }
         }
 
@@ -349,6 +421,14 @@ rave.layout = rave.layout || (function() {
                                             .text(rave.getClientMessage("common.sharing"))
                                         )
                                     )
+                                    .append(
+                                        $("<td/>")
+                                        .addClass("booleancell")
+                                        .append(
+                                            $("<b/>")
+                                            .text(rave.getClientMessage("common.editing.auth"))
+                                        )
+                                    )
                                 )
                         .append(
                             $("<tbody/>")
@@ -369,6 +449,10 @@ rave.layout = rave.layout || (function() {
                             $("<td/>")
                             .attr("id", "shareButtonHolder" + this.entityId)
                         )
+                        .append(
+                            $("<td/>")
+                            .attr("id", "pageEditorStatusHolder" + this.entityId)
+                        )
                     )
 
                     if(this.username != rave.layout.searchHandler.username){
@@ -382,6 +466,26 @@ rave.layout = rave.layout || (function() {
                                 .attr("onclick", "rave.layout.searchHandler.removeMemberFromPage("+this.entityId+", '"+this.username+"');")
                                 .text(rave.getClientMessage("common.remove"))
                             )
+                            if(rave.layout.searchHandler.isUserEditor(this.username)){
+                                $('#pageEditorStatusHolder'+this.entityId)
+                                .append(
+                                    $("<a/>")
+                                    .attr("href", "#")
+                                    .attr("id", this.entityId)
+                                    .attr("onclick", "rave.layout.searchHandler.removeEditingRightsFromMember("+this.entityId+", '"+this.username+"');")
+                                    .text(rave.getClientMessage("common.remove"))
+                                )
+                            }
+                            else{
+                                $('#pageEditorStatusHolder'+this.entityId)
+                                .append(
+                                    $("<a/>")
+                                    .attr("href", "#")
+                                    .attr("id", this.entityId)
+                                    .attr("onclick", "rave.layout.searchHandler.addEditingRightsToMember("+this.entityId+", '"+this.username+"');")
+                                    .text(rave.getClientMessage("common.add"))
+                                )
+                            }
                         }else{
                             $('#shareButtonHolder'+this.entityId)
                             .append(
@@ -390,7 +494,7 @@ rave.layout = rave.layout || (function() {
                                 .attr("id", this.entityId)
                                 .attr("onclick", "rave.layout.searchHandler.addMemberToPage("+this.entityId+", '"+this.username+"');")
                                 .text(rave.getClientMessage("common.add"))
-                                )
+                            )
                         } 
                     }
                  
@@ -404,8 +508,11 @@ rave.layout = rave.layout || (function() {
             addExistingMember : addExistingMember,
             removeExistingMember : removeExistingMember,
             isUserAlreadyAdded : isUserAlreadyAdded,
+            isUserEditor : isUserEditor,
             addMemberToPage : addMemberToPage,
             removeMemberFromPage : removeMemberFromPage,
+            addEditingRightsToMember: addEditingRightsToMember,
+            removeEditingRightsFromMember : removeEditingRightsFromMember,
             confirmPageShare : confirmPageShare,
             acceptShare : acceptShare,
             declineShare : declineShare

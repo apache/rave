@@ -489,10 +489,26 @@ rave.api = rave.api || (function() {
                     }
                 }).error(handleError);
         }
-        
+
         function updateSharedPageStatus(args){
             $.post(rave.getContext() + path + "page/" + args.pageId + "/sharestatus",
                 {"shareStatus": args.shareStatus},
+                function(result) {
+                    if (result.error) {
+                        handleRpcError(result);
+                    }
+                    else {
+                        if (typeof args.successCallback == 'function') {
+                            args.successCallback(result);
+                        }
+                    }
+            }).error(handleError);
+        }
+        
+        function updatePageEditingStatus(args){
+            $.post(rave.getContext() + path + "page/" + args.pageId + "/editstatus",
+                {"userId": args.userId,
+                "isEditor": args.isEditor},
                 function(result) {
                     if (result.error) {
                         handleRpcError(result);
@@ -520,7 +536,8 @@ rave.api = rave.api || (function() {
             searchUsers : searchUsers,
             addMemberToPage : addMemberToPage,
             removeMemberFromPage : removeMemberFromPage,
-            updateSharedPageStatus : updateSharedPageStatus
+            updateSharedPageStatus : updateSharedPageStatus,
+            updatePageEditingStatus: updatePageEditingStatus
         };
 
     })();

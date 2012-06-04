@@ -70,12 +70,12 @@ Template for rendering a RegionWidget including wrapper chrome, toolbars, menus,
                                 <fmt:message key="widget.menu.maximize"/>
                             </a>
                         </li>
-                        <li id="widget-${regionWidget.entityId}-menu-move-item" <c:if test='${hasOnlyOnePage}'>class="menu-item-disabled"</c:if>>
+                        <li id="widget-${regionWidget.entityId}-menu-move-item" <c:if test='${hasOnlyOnePage or pageUser.editor == false or canMoveWidgetsToEditablePage == false}'>class="menu-item-disabled"</c:if>>
                             <a href="#">
                                 <fmt:message key="widget.menu.movetopage"/>
                             </a>
                         </li>
-                        <li id="widget-${regionWidget.entityId}-menu-delete-item">
+                        <li id="widget-${regionWidget.entityId}-menu-delete-item" <c:if test='${pageUser.editor == false}'>class="menu-item-disabled"</c:if>>
                             <a href="#">
                                 <fmt:message key="widget.menu.delete"/>
                             </a>

@@ -18,6 +18,8 @@
  */
 package org.apache.rave.portal.security.impl;
 
+import org.apache.rave.portal.model.Page;
+import org.apache.rave.portal.model.PageUser;
 import org.apache.rave.portal.model.RegionWidget;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.repository.RegionWidgetRepository;
@@ -109,11 +111,14 @@ public class DefaultRegionWidgetPermissionEvaluator extends AbstractModelPermiss
                 break;
             case CREATE:
             case DELETE:
-            case READ:
             case UPDATE:
                 // anyone can create, delete, read, or update a regionWidget that they own
-                hasPermission = isRegionWidgetOwner(authentication, regionWidget, trustedRegionWidgetContainer, trustedDomainObject);
+                hasPermission = isRegionWidgetOwner(authentication, regionWidget, trustedRegionWidgetContainer, trustedDomainObject)
+                || isRegionWidgetMember(authentication, regionWidget, trustedRegionWidgetContainer, trustedDomainObject, true);
                 break;
+            case READ:
+                hasPermission = isRegionWidgetOwner(authentication, regionWidget, trustedRegionWidgetContainer, trustedDomainObject)
+                || isRegionWidgetMember(authentication, regionWidget, trustedRegionWidgetContainer, trustedDomainObject, false);
             default:
                 log.warn("unknown permission: " + permission);
                 break;
@@ -174,5 +179,36 @@ public class DefaultRegionWidgetPermissionEvaluator extends AbstractModelPermiss
     
     private String getUsernameFromRegionWidget(RegionWidget regionWidget) {
         return regionWidget.getRegion().getPage().getOwner().getUsername();
+    }
+    
+    private boolean isRegionWidgetMember(Authentication authentication, 
+            RegionWidget regionWidget, List<RegionWidget> trustedRegionWidgetContainer, boolean trustedDomainObject, boolean checkEditorStatus) {
+        RegionWidget trustedRegionWidget = null;
+        if (trustedDomainObject) {
+            trustedRegionWidget = regionWidget;
+        } else {
+            trustedRegionWidget = getTrustedRegionWidget(regionWidget.getEntityId(), trustedRegionWidgetContainer);
+        }
+        
+        Page containerPage = trustedRegionWidget.getRegion().getPage();
+        
+        
+        if (containerPage.getMembers() == null){
+            return false;
+        }
+        //
+        // Check that the viewer is a member
+        //
+        String viewer = ((User)authentication.getPrincipal()).getUsername();
+        for (PageUser pageUser:containerPage.getMembers()){
+            if (pageUser.getUser().getUsername().equals(viewer)){
+                log.info("User "+viewer+" is a member of page "+containerPage.getEntityId());
+                if(checkEditorStatus){
+                    return pageUser.isEditor();
+                }
+                return true;
+            }
+        }
+        return false;
     }
 }

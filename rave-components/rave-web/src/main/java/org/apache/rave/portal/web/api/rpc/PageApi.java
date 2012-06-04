@@ -249,4 +249,15 @@ public class PageApi {
              }
         }.getResult();
     }
+
+    @ResponseBody
+    @RequestMapping(value = "{pageId}/editstatus", method = RequestMethod.POST)
+    public RpcResult<Boolean> updatePageEditingStatus(@PathVariable final long pageId, @RequestParam final long userId, @RequestParam final boolean isEditor) {
+        return new RpcOperation<Boolean>() {
+             @Override
+             public Boolean execute() {
+               return pageService.updatePageEditingStatus(pageId, userId, isEditor);
+             }
+        }.getResult();
+    }
 }

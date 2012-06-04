@@ -63,26 +63,27 @@ public class WookieWidgetService implements WidgetProviderService {
      */
     public Widget[] getWidgets() throws WookieConnectorException{
         connectorService = getWookieConnectorService(wookieServerUrl, wookieApiKey, null);    
-    	Collection<org.apache.wookie.connector.framework.Widget> widgets = connectorService.getAvailableWidgets().values();
-    	ArrayList<Widget> raveWidgets = new ArrayList<Widget>();
-    	for (org.apache.wookie.connector.framework.Widget wookieWidget: widgets){
-    		Widget widget = new Widget();
-    		widget.setUrl(wookieWidget.getIdentifier());
-    		widget.setDescription(wookieWidget.getDescription());
-    		widget.setTitle(wookieWidget.getTitle());
-    		widget.setThumbnailUrl(wookieWidget.getIcon().toString());
-    		raveWidgets.add(widget);
-    	}
-    	return raveWidgets.toArray(new Widget[raveWidgets.size()]);
+        Collection<org.apache.wookie.connector.framework.Widget> widgets = connectorService.getAvailableWidgets().values();
+        ArrayList<Widget> raveWidgets = new ArrayList<Widget>();
+        for (org.apache.wookie.connector.framework.Widget wookieWidget: widgets){
+            Widget widget = new Widget();
+            widget.setUrl(wookieWidget.getIdentifier());
+            widget.setDescription(wookieWidget.getDescription());
+            widget.setTitle(wookieWidget.getName());
+            widget.setThumbnailUrl(wookieWidget.getIcon().toString());
+            widget.setAuthor(wookieWidget.getAuthor());
+            raveWidgets.add(widget);
+        }
+        return raveWidgets.toArray(new Widget[raveWidgets.size()]);
     }
     
     public Widget getWidget(String url) throws WookieConnectorException{
-    	for (Widget widget: getWidgets()){
-    		if (widget.getUrl().equalsIgnoreCase(url)){
-    			return widget;
-    		}
-    	}
-    	return null;
+        for (Widget widget: getWidgets()){
+            if (widget.getUrl().equalsIgnoreCase(url)){
+                return widget;
+            }
+        }
+        return null;
     }
     
     /**

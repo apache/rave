@@ -23,6 +23,9 @@ var rave = rave || (function () {
     var context = "";
     var clientMessages = {};
     var openAjaxHub;
+    // variable to store whether or not some
+    // UI actions should be propagated back to the server
+    var pageEditor = true;
 
     /**
      * Separate sub-namespace for isolating UI functions and state management
@@ -469,7 +472,7 @@ var rave = rave || (function () {
             // don't persist the collapse / restore state if we are in
             // mobile mode because we defaulted all widgets to collapsed
             // when initially rendering the mobile view
-            if (rave.isMobile()) {
+            if (rave.isMobile() || !rave.isPageEditor()) {
                 rave.doWidgetUiCollapse(functionArgs);
             } else {
                 rave.api.rest.saveWidgetCollapsedState(functionArgs);
@@ -1036,6 +1039,16 @@ var rave = rave || (function () {
         }
     }
 
+    function initPageEditorStatus(status){
+        if(status != "undefined"){
+            this.pageEditor = status;
+        }
+     }
+
+    function isPageEditor(){
+        return this.pageEditor;
+    }
+
     /**
      * Public API
      */
@@ -1292,6 +1305,20 @@ var rave = rave || (function () {
         /**
          * Registers a new popup definition
          */
-        registerPopup:ui.registerPopup
+        registerPopup:ui.registerPopup,
+
+        /**
+         * Set if user of a page has editing permission
+         * Used to stop sending UI events back to the server, rather
+         * than actually implementing any permission rules
+         * (which are set on the server)
+         */
+        initPageEditorStatus:initPageEditorStatus,
+
+        /**
+         * Returns a boolean indicating if the user
+         * should be treated as an page editor or not
+         */
+        isPageEditor:isPageEditor
     }
 })();

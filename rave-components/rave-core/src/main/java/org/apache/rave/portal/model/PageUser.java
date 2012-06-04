@@ -55,6 +55,7 @@ public class PageUser implements BasicEntity, Serializable {
     @JoinColumn(name = "page_id", nullable=false)
     private Page page;
     
+    @Basic(optional=false) @Column(name="editor")
     private boolean editor;
     
     @Basic(optional=false) @Column(name="render_sequence")

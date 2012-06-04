@@ -168,7 +168,9 @@ rave.opensocial = rave.opensocial || (function () {
         };
         gadget.savePreferences = function (userPrefs) {
             this.userPrefs = userPrefs;
-            rave.api.rest.saveWidgetPreferences({regionWidgetId:this.regionWidgetId, userPrefs:userPrefs});
+            if(rave.isPageEditor()){
+                rave.api.rest.saveWidgetPreferences({regionWidgetId:this.regionWidgetId, userPrefs:userPrefs});
+            }
             // re-render the gadget in the same view if the gadget is not collapsed
             renderGadgetViewIfNotCollapsed(rave.opensocial.getCurrentView(this.regionWidgetId), this);
         };
@@ -326,7 +328,9 @@ rave.opensocial = rave.opensocial || (function () {
         // update the memory prefs object
         regionWidget.userPrefs[prefName] = prefValue;
         // persist it to database
-        rave.api.rest.saveWidgetPreference({regionWidgetId:widgetId, userPref:{prefName:prefName, prefValue:prefValue}});
+        if(rave.isPageEditor()){
+            rave.api.rest.saveWidgetPreference({regionWidgetId:widgetId, userPref:{prefName:prefName, prefValue:prefValue}});
+        }
     }
 
     /**
