@@ -47,6 +47,13 @@ public class JpaWidgetCommentConverterTest {
     }
 
     @Test
+    public void nullConversion() {
+        WidgetComment template = null;
+        assertThat(widgetCommentConverter.convert(template), is(nullValue()));
+    }
+
+
+    @Test
     public void newComment() {
         WidgetComment comment = new WidgetCommentImpl();
         comment.setCreatedDate(new Date());

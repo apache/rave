@@ -19,8 +19,6 @@
 package org.apache.rave.portal.model.conversion;
 
 import org.apache.rave.model.ModelConverter;
-import org.apache.rave.portal.model.Category;
-import org.apache.rave.portal.model.JpaCategory;
 import org.apache.rave.portal.model.JpaWidgetComment;
 import org.apache.rave.portal.model.WidgetComment;
 import org.springframework.stereotype.Component;
@@ -44,15 +42,19 @@ public class JpaWidgetCommentConverter implements ModelConverter<WidgetComment, 
 
     @Override
     public JpaWidgetComment convert(WidgetComment source) {
-        return source instanceof JpaWidgetComment ? (JpaWidgetComment)source : createEntity(source);
+        return source instanceof JpaWidgetComment ? (JpaWidgetComment) source : createEntity(source);
     }
 
     private JpaWidgetComment createEntity(WidgetComment source) {
-        JpaWidgetComment converted = manager.find(JpaWidgetComment.class, source.getId());
-        if(converted == null) {
-            converted = new JpaWidgetComment();
+        JpaWidgetComment converted = null;
+        if (source != null) {
+            converted = manager.find(JpaWidgetComment.class, source.getId());
+
+            if (converted == null) {
+                converted = new JpaWidgetComment();
+            }
+            updateProperties(source, converted);
         }
-        updateProperties(source, converted);
         return converted;
     }
 
