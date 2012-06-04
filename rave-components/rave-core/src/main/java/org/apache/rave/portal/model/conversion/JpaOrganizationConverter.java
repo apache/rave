@@ -27,19 +27,21 @@ public class JpaOrganizationConverter implements ModelConverter<Organization, Jp
 
     @Override
     public JpaOrganization convert(Organization source) {
-        return source instanceof JpaOrganization ? (JpaOrganization)source : createEntity(source);
+        return source instanceof JpaOrganization ? (JpaOrganization) source : createEntity(source);
     }
 
     private JpaOrganization createEntity(Organization source) {
-        JpaOrganization converted;
-        TypedQuery<JpaOrganization> query = manager.createNamedQuery(JpaOrganization.FIND_BY_NAME, JpaOrganization.class);
-        query.setParameter(JpaOrganization.NAME_PARAM, source.getName());
-        converted = getSingleResult(query.getResultList());
+        JpaOrganization converted = null;
+        if (source != null) {
+            TypedQuery<JpaOrganization> query = manager.createNamedQuery(JpaOrganization.FIND_BY_NAME, JpaOrganization.class);
+            query.setParameter(JpaOrganization.NAME_PARAM, source.getName());
+            converted = getSingleResult(query.getResultList());
 
-        if(converted == null) {
-            converted = new JpaOrganization();
+            if (converted == null) {
+                converted = new JpaOrganization();
+            }
+            updateProperties(source, converted);
         }
-        updateProperties(source, converted);
         return converted;
     }
 

@@ -32,6 +32,13 @@ public class JpaOrganizationConverterTest {
     }
 
     @Test
+    public void nullConversion() {
+        Organization template = null;
+        assertThat(converter.convert(template), is(nullValue()));
+    }
+
+
+    @Test
     public void convertValid() {
         Organization template = new OrganizationImpl();
 
