@@ -25,7 +25,7 @@
       <provider>org.apache.openjpa.persistence.PersistenceProviderImpl</provider>
       <class>org.apache.rave.portal.model.JpaPerson</class>
       <class>org.apache.rave.portal.model.JpaGroup</class>
-      <class>org.apache.rave.portal.model.PersonAssociation</class>
+      <class>org.apache.rave.portal.model.JpaPersonAssociation</class>
       <class>org.apache.rave.portal.model.JpaPersonProperty</class>
       <class>org.apache.rave.portal.model.JpaAddress</class>
       <class>org.apache.rave.portal.model.JpaOrganization</class>

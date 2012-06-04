@@ -30,7 +30,7 @@ import javax.persistence.*;
 @Table(name = "person_association",
         uniqueConstraints = @UniqueConstraint(columnNames = {"follower_id", "followed_id"})
 )
-public class PersonAssociation implements BasicEntity {
+public class JpaPersonAssociation implements BasicEntity {
 
     @Id
     @Column(name = "entity_id")
@@ -78,7 +78,7 @@ public class PersonAssociation implements BasicEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        PersonAssociation that = (PersonAssociation) o;
+        JpaPersonAssociation that = (JpaPersonAssociation) o;
 
         if (entityId != null ? !entityId.equals(that.entityId) : that.entityId != null) return false;
 
