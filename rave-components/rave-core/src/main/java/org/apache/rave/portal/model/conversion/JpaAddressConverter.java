@@ -27,21 +27,23 @@ public class JpaAddressConverter implements ModelConverter<Address, JpaAddress> 
 
     @Override
     public JpaAddress convert(Address source) {
-        return source instanceof JpaAddress ? (JpaAddress)source : createEntity(source);
+        return source instanceof JpaAddress ? (JpaAddress) source : createEntity(source);
     }
 
     private JpaAddress createEntity(Address source) {
-        JpaAddress converted;
-        TypedQuery<JpaAddress> query = manager.createNamedQuery(JpaAddress.FIND_BY_STREET_CITY_COUNTRY, JpaAddress.class);
-        query.setParameter(JpaAddress.STREET_PARAM, source.getStreetAddress());
-        query.setParameter(JpaAddress.CITY_PARAM, source.getLocality());
-        query.setParameter(JpaAddress.COUNTRY_PARAM, source.getCountry());
-        converted = getSingleResult(query.getResultList());
+        JpaAddress converted = null;
+        if (source != null) {
+            TypedQuery<JpaAddress> query = manager.createNamedQuery(JpaAddress.FIND_BY_STREET_CITY_COUNTRY, JpaAddress.class);
+            query.setParameter(JpaAddress.STREET_PARAM, source.getStreetAddress());
+            query.setParameter(JpaAddress.CITY_PARAM, source.getLocality());
+            query.setParameter(JpaAddress.COUNTRY_PARAM, source.getCountry());
+            converted = getSingleResult(query.getResultList());
 
-        if(converted == null) {
-            converted = new JpaAddress();
+            if (converted == null) {
+                converted = new JpaAddress();
+            }
+            updateProperties(source, converted);
         }
-        updateProperties(source, converted);
         return converted;
     }
 
