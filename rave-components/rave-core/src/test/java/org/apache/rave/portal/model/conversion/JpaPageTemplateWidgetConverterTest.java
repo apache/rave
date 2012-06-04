@@ -53,6 +53,13 @@ public class JpaPageTemplateWidgetConverterTest {
     }
 
     @Test
+    public void nullConversion() {
+        PageTemplateWidget template = null;
+        assertThat(converter.convert(template), is(nullValue()));
+    }
+
+
+    @Test
     public void convertValid() {
         Widget widget = new Widget();
         PageTemplateWidget template = new PageTemplateWidgetImpl();
