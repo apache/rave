@@ -1,7 +1,6 @@
 package org.apache.rave.portal.model.conversion;
 
 import org.apache.rave.portal.model.Address;
-import org.apache.rave.portal.model.impl.AddressImpl;
 import org.apache.rave.portal.model.JpaAddress;
 import org.apache.rave.portal.model.impl.AddressImpl;
 import org.junit.Test;
@@ -26,6 +25,12 @@ public class JpaAddressConverterTest {
     public void noConversion() {
         Address address = new JpaAddress();
         assertThat(addressConverter.convert(address), is(sameInstance(address)));
+    }
+
+    @Test
+    public void nullConversion() {
+        Address address = null;
+        assertThat(addressConverter.convert(address), is(nullValue()));
     }
 
     @Test
