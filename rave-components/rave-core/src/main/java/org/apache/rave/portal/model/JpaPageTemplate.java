@@ -194,5 +194,10 @@ public class JpaPageTemplate implements BasicEntity, Serializable, PageTemplate 
         if(subPageTemplates != null) {
             this.getSubPageTemplates().addAll(subPageTemplates);
         }
-    }    
+    }
+
+    @Override
+    public Long getId() {
+        return this.getEntityId();
+    }
 }

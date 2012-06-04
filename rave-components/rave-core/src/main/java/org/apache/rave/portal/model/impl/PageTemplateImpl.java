@@ -5,6 +5,7 @@ import org.apache.rave.portal.model.*;
 import java.util.List;
 
 public class PageTemplateImpl implements PageTemplate {
+    private Long id;
     private String name;
     private String description;
     private PageType pageType;
@@ -14,6 +15,14 @@ public class PageTemplateImpl implements PageTemplate {
     private List<PageTemplateRegion> pageTemplateRegions;
     private long renderSequence;
     private boolean defaultTemplate;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;

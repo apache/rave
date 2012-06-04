@@ -3,6 +3,9 @@ package org.apache.rave.portal.model;
 import java.util.List;
 
 public interface PageTemplate {
+
+    Long getId();
+
     PageType getPageType();
 
     void setPageType(PageType pageType);
