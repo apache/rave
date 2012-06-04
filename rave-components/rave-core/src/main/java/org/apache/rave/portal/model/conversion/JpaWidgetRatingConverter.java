@@ -24,16 +24,19 @@ public class JpaWidgetRatingConverter implements ModelConverter<WidgetRating, Jp
 
     @Override
     public JpaWidgetRating convert(WidgetRating source) {
-        return source instanceof JpaWidgetRating? (JpaWidgetRating)source : createEntity(source);
+        return source instanceof JpaWidgetRating ? (JpaWidgetRating) source : createEntity(source);
     }
 
     private JpaWidgetRating createEntity(WidgetRating source) {
-        JpaWidgetRating converted = manager.find(JpaWidgetRating.class, source.getId());
+        JpaWidgetRating converted = null;
+        if (source != null) {
+            converted = manager.find(JpaWidgetRating.class, source.getId());
 
-        if(converted == null) {
-            converted = new JpaWidgetRating();
+            if (converted == null) {
+                converted = new JpaWidgetRating();
+            }
+            updateProperties(source, converted);
         }
-        updateProperties(source, converted);
         return converted;
     }
 

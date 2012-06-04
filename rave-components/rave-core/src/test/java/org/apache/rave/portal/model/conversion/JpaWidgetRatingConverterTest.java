@@ -32,6 +32,13 @@ public class JpaWidgetRatingConverterTest {
     }
 
     @Test
+    public void nullConversion() {
+        WidgetRating template = null;
+        assertThat(converter.convert(template), is(nullValue()));
+    }
+
+
+    @Test
     public void convertValid() {
         WidgetRating template = new WidgetRatingImpl();
 
