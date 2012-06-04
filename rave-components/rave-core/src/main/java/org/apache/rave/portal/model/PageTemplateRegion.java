@@ -5,6 +5,9 @@ import java.util.List;
 /**
  */
 public interface PageTemplateRegion {
+
+    Long getId();
+
     long getRenderSequence();
 
     void setRenderSequence(long renderSequence);
@@ -20,4 +23,5 @@ public interface PageTemplateRegion {
     boolean isLocked();
 
     void setLocked(boolean locked);
+
 }

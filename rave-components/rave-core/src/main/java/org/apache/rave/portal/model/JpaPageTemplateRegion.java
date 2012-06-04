@@ -73,6 +73,11 @@ public class JpaPageTemplateRegion implements BasicEntity, Serializable, PageTem
     }
 
     @Override
+    public Long getId() {
+        return this.getEntityId();
+    }
+
+    @Override
     public long getRenderSequence() {
         return renderSequence;
     }

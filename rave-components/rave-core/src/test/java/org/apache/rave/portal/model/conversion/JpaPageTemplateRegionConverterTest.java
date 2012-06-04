@@ -18,8 +18,12 @@
  */
 package org.apache.rave.portal.model.conversion;
 
-import org.apache.rave.portal.model.*;
+import org.apache.rave.portal.model.JpaPageTemplate;
+import org.apache.rave.portal.model.JpaPageTemplateRegion;
+import org.apache.rave.portal.model.PageTemplateRegion;
+import org.apache.rave.portal.model.PageTemplateWidget;
 import org.apache.rave.portal.model.impl.PageTemplateImpl;
+import org.apache.rave.portal.model.impl.PageTemplateRegionImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,10 +38,10 @@ import static org.junit.Assert.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:test-applicationContext.xml", "classpath:test-dataContext.xml"})
-public class JpaPageTemplateConverterTest {
+public class JpaPageTemplateRegionConverterTest {
 
     @Autowired
-    JpaPageTemplateConverter converter;
+    JpaPageTemplateRegionConverter converter;
 
     @Before
     public void setup() {
@@ -46,37 +50,26 @@ public class JpaPageTemplateConverterTest {
 
     @Test
     public void testNoConversion() {
-        JpaPageTemplate template = new JpaPageTemplate();
+        JpaPageTemplateRegion template = new JpaPageTemplateRegion();
         assertThat(converter.convert(template), is(sameInstance(template)));
     }
 
     @Test
     public void convertValid() {
-        PageTemplate template = new PageTemplateImpl();
-        template.setName("name");
-        template.setSubPageTemplates(new ArrayList<PageTemplate>());
-        template.setDefaultTemplate(true);
+        PageTemplateRegion template = new PageTemplateRegionImpl();
         template.setRenderSequence(1);
-        template.setPageTemplateRegions(new ArrayList<PageTemplateRegion>());
-        template.setPageLayout(new PageLayout());
-        template.setParentPageTemplate(new PageTemplateImpl());
-        template.setDescription("Description");
-        template.setPageType(PageType.USER);
+        template.setPageTemplateWidgets(new ArrayList<PageTemplateWidget>());
+        template.setPageTemplate(new PageTemplateImpl());
+        template.setLocked(true);
 
-        JpaPageTemplate jpaTemplate = converter.convert(template);
+        JpaPageTemplateRegion jpaTemplate = converter.convert(template);
 
         assertThat(jpaTemplate, is(not(sameInstance(template))));
-        assertThat(jpaTemplate, is(instanceOf(JpaPageTemplate.class)));
-        assertThat(jpaTemplate.getId(), is(equalTo(template.getId())));
-        assertThat(jpaTemplate.getPageType(), is(equalTo(template.getPageType())));
-        assertThat(jpaTemplate.getName(), is(equalTo(template.getName())));
-        assertThat(jpaTemplate.getDescription(), is(equalTo(template.getDescription())));
-        assertThat(jpaTemplate.getParentPageTemplate(), is(instanceOf(JpaPageTemplate.class)));
-        assertThat(jpaTemplate.getPageLayout(), is(equalTo(template.getPageLayout())));
-        assertThat(jpaTemplate.getPageTemplateRegions(), is(equalTo(template.getPageTemplateRegions())));
+        assertThat(jpaTemplate, is(instanceOf(JpaPageTemplateRegion.class)));
         assertThat(jpaTemplate.getRenderSequence(), is(equalTo(template.getRenderSequence())));
-        assertThat(jpaTemplate.isDefaultTemplate(), is(equalTo(template.isDefaultTemplate())));
-        assertThat(jpaTemplate.getSubPageTemplates(), is(equalTo(template.getSubPageTemplates())));
+        assertThat(jpaTemplate.getPageTemplate(), is(instanceOf(JpaPageTemplate.class)));
+        assertThat(jpaTemplate.getPageTemplateWidgets(), is(equalTo(template.getPageTemplateWidgets())));
+        assertThat(jpaTemplate.isLocked(), is(equalTo(template.isLocked())));
     }
 
 }

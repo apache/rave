@@ -5,10 +5,19 @@ import org.apache.rave.portal.model.*;
 import java.util.List;
 
 public class PageTemplateRegionImpl implements PageTemplateRegion {
+    private Long id;
     private long renderSequence;
     private PageTemplate pageTemplate;
     private List<PageTemplateWidget> pageTemplateWidgets;
     private boolean locked;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public long getRenderSequence() {
         return renderSequence;
