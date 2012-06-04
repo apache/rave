@@ -42,13 +42,16 @@ public class JpaPageTemplateRegionConverter implements ModelConverter<PageTempla
     }
 
     private JpaPageTemplateRegion createEntity(PageTemplateRegion source) {
-        JpaPageTemplateRegion converted = manager.find(JpaPageTemplateRegion.class, source.getId());
+        JpaPageTemplateRegion converted = null;
 
-        if (converted == null) {
-            converted = new JpaPageTemplateRegion();
+        if (source != null) {
+            converted = manager.find(JpaPageTemplateRegion.class, source.getId());
+
+            if (converted == null) {
+                converted = new JpaPageTemplateRegion();
+            }
+            updateProperties(source, converted);
         }
-        updateProperties(source, converted);
-
         return converted;
     }
 

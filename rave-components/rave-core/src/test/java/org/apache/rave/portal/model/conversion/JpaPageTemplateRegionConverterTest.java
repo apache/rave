@@ -55,6 +55,13 @@ public class JpaPageTemplateRegionConverterTest {
     }
 
     @Test
+    public void nullConversion() {
+        PageTemplateRegion template = null;
+        assertThat(converter.convert(template), is(nullValue()));
+    }
+
+
+    @Test
     public void convertValid() {
         PageTemplateRegion template = new PageTemplateRegionImpl();
         template.setRenderSequence(1);
