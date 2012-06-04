@@ -46,6 +46,12 @@ public class JpaCategoryConverterTest {
     }
 
     @Test
+    public void nullConversion() {
+        Category category = null;
+        assertThat(categoryConverter.convert(category), is(nullValue()));
+    }
+
+    @Test
     public void newCategory() {
         Category category = new CategoryImpl();
         category.setCreatedDate(new Date());

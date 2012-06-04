@@ -42,15 +42,18 @@ public class JpaCategoryConverter implements ModelConverter<Category, JpaCategor
 
     @Override
     public JpaCategory convert(Category source) {
-        return source instanceof JpaCategory ? (JpaCategory)source : createEntity(source);
+        return source instanceof JpaCategory ? (JpaCategory) source : createEntity(source);
     }
 
     private JpaCategory createEntity(Category source) {
-        JpaCategory converted = manager.find(JpaCategory.class, source.getId());
-        if(converted == null) {
-            converted = new JpaCategory();
+        JpaCategory converted = null;
+        if (source != null) {
+            converted = manager.find(JpaCategory.class, source.getId());
+            if (converted == null) {
+                converted = new JpaCategory();
+            }
+            updateProperties(source, converted);
         }
-        updateProperties(source, converted);
         return converted;
     }
 
