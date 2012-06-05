@@ -27,8 +27,8 @@ import java.util.List;
 public class RegionImpl implements Region {
     private Long id;
     private Page page;
-    private Boolean locked;
-    private Integer renderOrder;
+    private Boolean locked = false;
+    private Integer renderOrder = 0;
     private List<RegionWidget> regionWidgets;
 
     public RegionImpl() {

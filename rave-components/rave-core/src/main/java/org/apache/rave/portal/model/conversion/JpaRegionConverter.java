@@ -41,19 +41,21 @@ public class JpaRegionConverter implements ModelConverter<Region, JpaRegion> {
 
     @Override
     public JpaRegion convert(Region source) {
-        return source instanceof JpaRegion ? (JpaRegion)source : createEntity(source);
+        return source instanceof JpaRegion ? (JpaRegion) source : createEntity(source);
     }
 
     private JpaRegion createEntity(Region source) {
-        JpaRegion converted;
-        TypedQuery<JpaRegion> query = manager.createNamedQuery(JpaRegion.FIND_BY_ENTITY_ID, JpaRegion.class);
-        query.setParameter(JpaRegion.ENTITY_ID_PARAM, source.getId());
-        converted = getSingleResult(query.getResultList());
+        JpaRegion converted = null;
+        if (source != null) {
+            TypedQuery<JpaRegion> query = manager.createNamedQuery(JpaRegion.FIND_BY_ENTITY_ID, JpaRegion.class);
+            query.setParameter(JpaRegion.ENTITY_ID_PARAM, source.getId());
+            converted = getSingleResult(query.getResultList());
 
-        if(converted == null) {
-            converted = new JpaRegion();
+            if (converted == null) {
+                converted = new JpaRegion();
+            }
+            updateProperties(source, converted);
         }
-        updateProperties(source, converted);
         return converted;
     }
 

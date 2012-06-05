@@ -30,11 +30,11 @@ public class RegionWidgetImpl implements RegionWidget {
     private Widget widget;
     private Region region;
     private String renderPosition;
-    private int renderOrder;
-    private boolean collapsed;
+    private Integer renderOrder = 0;
+    private Boolean collapsed = false;
     private List<RegionWidgetPreference> preferences;
-    private boolean locked;
-    private boolean hideChrome;
+    private Boolean locked = false;
+    private Boolean hideChrome = false;
 
     public RegionWidgetImpl() {
 
@@ -145,5 +145,41 @@ public class RegionWidgetImpl implements RegionWidget {
     @Override
     public void setHideChrome(boolean hideChrome) {
         this.hideChrome = hideChrome;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof RegionWidgetImpl)) return false;
+
+        RegionWidgetImpl rw = (RegionWidgetImpl) o;
+
+        if (id != null ? !id.equals(rw.id) : rw.id != null) return false;
+        if (locked != null ? !locked.equals(rw.locked) : rw.locked != null)
+            return false;
+        if (renderOrder != null ? !renderOrder.equals(rw.renderOrder) : rw.renderOrder != null) return false;
+        if (widget != null ? !widget.equals(rw.widget) : rw.widget != null)
+            return false;
+        if (region != null ? !region.equals(rw.region) : rw.region != null) return false;
+        if (hideChrome != null ? !hideChrome.equals(rw.hideChrome) : rw.hideChrome != null) return false;
+        if (preferences != null ? !preferences.equals(rw.preferences) : rw.preferences != null) return false;
+        if (collapsed != null ? !collapsed.equals(rw.collapsed) : rw.collapsed != null) return false;
+        if (renderPosition != null ? !renderPosition.equals(rw.renderPosition) : rw.renderPosition != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (widget != null ? widget.hashCode() : 0);
+        result = 31 * result + (preferences != null ? preferences.hashCode() : 0);
+        result = 31 * result + (id != null ? id.hashCode() : 0);
+        result = 31 * result + (renderOrder != null ? renderOrder.hashCode() : 0);
+        result = 31 * result + (locked != null ? locked.hashCode() : 0);
+        result = 31 * result + (renderPosition != null ? renderPosition.hashCode() : 0);
+        result = 31 * result + (region != null ? region.hashCode() : 0);
+        result = 31 * result + (hideChrome != null ? hideChrome.hashCode() : 0);
+        result = 31 * result + (collapsed != null ? collapsed.hashCode() : 0);
+        return result;
     }
 }

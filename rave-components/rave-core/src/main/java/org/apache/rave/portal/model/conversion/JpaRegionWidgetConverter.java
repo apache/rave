@@ -23,19 +23,21 @@ public class JpaRegionWidgetConverter implements ModelConverter<RegionWidget, Jp
 
     @Override
     public JpaRegionWidget convert(RegionWidget source) {
-        return source instanceof JpaRegionWidget ? (JpaRegionWidget)source : createEntity(source);
+        return source instanceof JpaRegionWidget ? (JpaRegionWidget) source : createEntity(source);
     }
 
     private JpaRegionWidget createEntity(RegionWidget source) {
-        JpaRegionWidget converted;
-        TypedQuery<JpaRegionWidget> query = manager.createNamedQuery(JpaRegionWidget.FIND_BY_ID, JpaRegionWidget.class);
-        query.setParameter(JpaRegionWidget.PARAM_WIDGET_ID, source.getId());
-        converted = getSingleResult(query.getResultList());
+        JpaRegionWidget converted = null;
+        if (source != null) {
+            TypedQuery<JpaRegionWidget> query = manager.createNamedQuery(JpaRegionWidget.FIND_BY_ID, JpaRegionWidget.class);
+            query.setParameter(JpaRegionWidget.PARAM_WIDGET_ID, source.getId());
+            converted = getSingleResult(query.getResultList());
 
-        if(converted == null) {
-            converted = new JpaRegionWidget();
+            if (converted == null) {
+                converted = new JpaRegionWidget();
+            }
+            updateProperties(source, converted);
         }
-        updateProperties(source, converted);
         return converted;
     }
 
