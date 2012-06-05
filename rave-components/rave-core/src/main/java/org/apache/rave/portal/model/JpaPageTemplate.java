@@ -69,7 +69,7 @@ public class JpaPageTemplate implements BasicEntity, Serializable, PageTemplate 
 
     @ManyToOne
     @JoinColumn(name = "page_layout_id")
-    private PageLayout pageLayout;
+    private JpaPageLayout pageLayout;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("renderSequence")
@@ -141,7 +141,7 @@ public class JpaPageTemplate implements BasicEntity, Serializable, PageTemplate 
 
     @Override
     public void setPageLayout(PageLayout pageLayout) {
-        this.pageLayout = pageLayout;
+        this.pageLayout = JpaConverter.getInstance().convert(pageLayout, PageLayout.class);
     }
 
     @Override

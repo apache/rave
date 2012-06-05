@@ -31,7 +31,7 @@
             <class>org.apache.rave.portal.model.JpaWidget</class>
             <class>org.apache.rave.portal.model.JpaWidgetComment</class>
             <class>org.apache.rave.portal.model.JpaWidgetRating</class>
-            <class>org.apache.rave.portal.model.PageLayout</class>
+            <class>org.apache.rave.portal.model.JpaPageLayout</class>
             <class>org.apache.rave.portal.model.Authority</class>
             <class>org.apache.rave.portal.model.Tag</class>
             <class>org.apache.rave.portal.model.WidgetTag</class>

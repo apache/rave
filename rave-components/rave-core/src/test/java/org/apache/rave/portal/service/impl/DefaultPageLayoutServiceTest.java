@@ -19,6 +19,7 @@
 
 package org.apache.rave.portal.service.impl;
 
+import org.apache.rave.portal.model.JpaPageLayout;
 import org.apache.rave.portal.model.PageLayout;
 import org.apache.rave.portal.repository.PageLayoutRepository;
 import org.apache.rave.portal.service.PageLayoutService;
@@ -47,7 +48,7 @@ public class DefaultPageLayoutServiceTest {
         pageLayoutRepository = createMock(PageLayoutRepository.class);      
         pageLayoutService = new DefaultPageLayoutService(pageLayoutRepository);
         
-        validPageLayout = new PageLayout();
+        validPageLayout = new JpaPageLayout();
         validPageLayout.setCode(VALID_LAYOUT_CODE);
     }
 
@@ -87,7 +88,7 @@ public class DefaultPageLayoutServiceTest {
     public void getPageLayoutByCode_invalidPageLayout() {
         expect(pageLayoutRepository.getByPageLayoutCode(INVALID_LAYOUT_CODE)).andReturn(null);
         replay(pageLayoutRepository);
-        assertThat(pageLayoutService.getPageLayoutByCode(INVALID_LAYOUT_CODE), is(nullValue(PageLayout.class)));
+        assertThat(pageLayoutService.getPageLayoutByCode(INVALID_LAYOUT_CODE), is(nullValue()));
         verify(pageLayoutRepository);
     }    
 }

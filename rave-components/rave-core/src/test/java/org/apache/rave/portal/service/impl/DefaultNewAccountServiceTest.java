@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.rave.portal.model.Authority;
-import org.apache.rave.portal.model.PageLayout;
+import org.apache.rave.portal.model.JpaPageLayout;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.service.AuthorityService;
@@ -61,7 +61,7 @@ public class DefaultNewAccountServiceTest {
     private final String VALID_PASSWORD = "valid.password";
     private final String VALID_LAYOUT_CODE = "valid.layout";
     private final String VALID_EMAIL = "valid.email";
-    private PageLayout validPageLayout;
+    private JpaPageLayout validPageLayout;
     private SearchResult<Authority> validAuthoritySearchResult;
     private List<Authority> validAuthorityList;
 
@@ -77,7 +77,7 @@ public class DefaultNewAccountServiceTest {
 
         newAccountService = new DefaultNewAccountService(userService, pageLayoutService, authorityService);
 
-        validPageLayout = new PageLayout();
+        validPageLayout = new JpaPageLayout();
         validPageLayout.setEntityId(99L);
         validPageLayout.setNumberOfRegions(4L);
         validPageLayout.setCode(VALID_LAYOUT_CODE);

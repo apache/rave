@@ -64,7 +64,7 @@ public class DefaultPageServiceTest {
     private Widget validWidget;
     private RegionWidget validRegionWidget;
     private User user;
-    private PageLayout pageLayout;
+    private JpaPageLayout pageLayout;
     private String defaultPageName = "Main";
     private Page page, page2;
     private PageUser pageUser, pageUser2;
@@ -119,7 +119,7 @@ public class DefaultPageServiceTest {
         lockedRegion.setLocked(true);
         lockedRegion.setPage(page);
         
-        pageLayout = new PageLayout();
+        pageLayout = new JpaPageLayout();
         pageLayout.setEntityId(1L);
         pageLayout.setCode(PAGE_LAYOUT_CODE);
         pageLayout.setNumberOfRegions(3L);
@@ -954,7 +954,7 @@ public class DefaultPageServiceTest {
         String newName = "new page name";
         String layoutName = "layout name";
 
-        PageLayout layout = createStrictMock(PageLayout.class);
+        JpaPageLayout layout = createStrictMock(JpaPageLayout.class);
         expect(layout.getNumberOfRegions()).andReturn(new Long(2)).anyTimes();
         replay(layout);
 
@@ -990,11 +990,11 @@ public class DefaultPageServiceTest {
         regions.add(new Region());
         regions.add(region);
 
-        PageLayout prevLayout = createStrictMock(PageLayout.class);
+        PageLayout prevLayout = createStrictMock(JpaPageLayout.class);
         expect(prevLayout.getNumberOfRegions()).andReturn(new Long(2)).anyTimes();
         replay(prevLayout);
         
-        PageLayout layout = createStrictMock(PageLayout.class);
+        JpaPageLayout layout = createStrictMock(JpaPageLayout.class);
         expect(layout.getNumberOfRegions()).andReturn(new Long(3)).anyTimes();
         //expect(layout.equals(layout)).andReturn((boolean) true);
         replay(layout);
@@ -1040,11 +1040,11 @@ public class DefaultPageServiceTest {
         replay(deletedRegion);
         regions.add(deletedRegion);
         
-        PageLayout prevLayout = createStrictMock(PageLayout.class);
+        PageLayout prevLayout = createStrictMock(JpaPageLayout.class);
         expect(prevLayout.getNumberOfRegions()).andReturn(new Long(2)).anyTimes();
         replay(prevLayout);
         
-        PageLayout layout = createStrictMock(PageLayout.class);
+        JpaPageLayout layout = createStrictMock(JpaPageLayout.class);
         expect(layout.getNumberOfRegions()).andReturn(new Long(1)).anyTimes();
         replay(layout);
         
@@ -1102,11 +1102,11 @@ public class DefaultPageServiceTest {
         replay(deletedRegion);
         regions.add(deletedRegion);
         
-        PageLayout prevLayout = createStrictMock(PageLayout.class);
+        PageLayout prevLayout = createStrictMock(JpaPageLayout.class);
         expect(prevLayout.getNumberOfRegions()).andReturn(new Long(2)).anyTimes();
         replay(prevLayout);
         
-        PageLayout layout = createStrictMock(PageLayout.class);
+        JpaPageLayout layout = createStrictMock(JpaPageLayout.class);
         expect(layout.getNumberOfRegions()).andReturn(new Long(1)).anyTimes();
         replay(layout);
         
@@ -1170,11 +1170,11 @@ public class DefaultPageServiceTest {
         replay(deletedRegion);
         regions.add(deletedRegion);
         
-        PageLayout prevLayout = createStrictMock(PageLayout.class);
+        PageLayout prevLayout = createStrictMock(JpaPageLayout.class);
         expect(prevLayout.getNumberOfRegions()).andReturn(new Long(2)).anyTimes();
         replay(prevLayout);
         
-        PageLayout layout = createStrictMock(PageLayout.class);
+        JpaPageLayout layout = createStrictMock(JpaPageLayout.class);
         expect(layout.getNumberOfRegions()).andReturn(new Long(1)).anyTimes();
         replay(layout);
         

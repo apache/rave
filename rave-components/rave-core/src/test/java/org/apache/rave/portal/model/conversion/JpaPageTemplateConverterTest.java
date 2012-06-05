@@ -19,6 +19,7 @@
 package org.apache.rave.portal.model.conversion;
 
 import org.apache.rave.portal.model.*;
+import org.apache.rave.portal.model.impl.PageLayoutImpl;
 import org.apache.rave.portal.model.impl.PageTemplateImpl;
 import org.junit.Before;
 import org.junit.Test;
@@ -65,7 +66,7 @@ public class JpaPageTemplateConverterTest {
         template.setDefaultTemplate(true);
         template.setRenderSequence(1);
         template.setPageTemplateRegions(new ArrayList<PageTemplateRegion>());
-        template.setPageLayout(new PageLayout());
+        template.setPageLayout(new PageLayoutImpl());
         template.setParentPageTemplate(new PageTemplateImpl());
         template.setDescription("Description");
         template.setPageType(PageType.USER);
@@ -79,7 +80,7 @@ public class JpaPageTemplateConverterTest {
         assertThat(jpaTemplate.getName(), is(equalTo(template.getName())));
         assertThat(jpaTemplate.getDescription(), is(equalTo(template.getDescription())));
         assertThat(jpaTemplate.getParentPageTemplate(), is(instanceOf(JpaPageTemplate.class)));
-        assertThat(jpaTemplate.getPageLayout(), is(equalTo(template.getPageLayout())));
+        assertThat(jpaTemplate.getPageLayout(), is(instanceOf(JpaPageLayout.class)));
         assertThat(jpaTemplate.getPageTemplateRegions(), is(equalTo(template.getPageTemplateRegions())));
         assertThat(jpaTemplate.getRenderSequence(), is(equalTo(template.getRenderSequence())));
         assertThat(jpaTemplate.isDefaultTemplate(), is(equalTo(template.isDefaultTemplate())));

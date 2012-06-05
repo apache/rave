@@ -19,10 +19,7 @@
 
 package org.apache.rave.portal.web.controller;
 
-import static org.easymock.EasyMock.*;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
-
+import org.apache.rave.portal.model.JpaPageLayout;
 import org.apache.rave.portal.model.Page;
 import org.apache.rave.portal.model.PageLayout;
 import org.apache.rave.portal.model.User;
@@ -38,6 +35,11 @@ import org.springframework.ui.ModelMap;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.easymock.EasyMock.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 /**
  * Test class for {@link ProfileController}
@@ -57,7 +59,7 @@ public class ProfileControllerTest {
     private final Long OTHER_PAGE_ID = 22L;
     private final Long USER_ID = 1L;
     private final String VALID_PAGE_LAYOUT_CODE = "layout98";
-    private PageLayout validPageLayout;
+    private JpaPageLayout validPageLayout;
 
 	@Before
 	public void setup() {
@@ -65,7 +67,7 @@ public class ProfileControllerTest {
 		pageService = createMock(PageService.class);
 		profileController = new ProfileController(userService, pageService);
 
-        validPageLayout = new PageLayout();
+        validPageLayout = new JpaPageLayout();
         validPageLayout.setEntityId(33L);
         validPageLayout.setCode(VALID_PAGE_LAYOUT_CODE);
 
@@ -93,7 +95,7 @@ public class ProfileControllerTest {
         user.setEntityId(USER_ID);
 		String userProfile = new String(ModelKeys.USER_PROFILE);
         Page personProfile = new Page();
-        PageLayout pageLayout = new PageLayout();
+        JpaPageLayout pageLayout = new JpaPageLayout();
         pageLayout.setCode(VALID_PAGE_LAYOUT_CODE);
         personProfile.setPageLayout(pageLayout);
 
@@ -129,7 +131,7 @@ public class ProfileControllerTest {
         final int modelSize = 4;
         final String username="Canonical";
         Page personProfile = new Page();
-        PageLayout pageLayout = new PageLayout();
+        JpaPageLayout pageLayout = new JpaPageLayout();
         pageLayout.setCode("person_profile");
         personProfile.setPageLayout(pageLayout);
 

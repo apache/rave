@@ -19,6 +19,7 @@
 package org.apache.rave.portal.model;
 
 import org.apache.rave.persistence.BasicEntity;
+import org.apache.rave.portal.model.conversion.JpaConverter;
 import org.codehaus.jackson.annotate.JsonManagedReference;
 
 import javax.persistence.*;
@@ -83,7 +84,7 @@ public class Page implements BasicEntity, Serializable {
 
     @ManyToOne
     @JoinColumn(name="page_layout_id")
-    private PageLayout pageLayout;
+    private JpaPageLayout pageLayout;
 
     @XmlElement(name="region")
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
@@ -165,16 +166,16 @@ public class Page implements BasicEntity, Serializable {
     }
 
     /**
-     * Gets the {@link PageLayout}
+     * Gets the {@link JpaPageLayout}
      *
-     * @return Valid {@link PageLayout}
+     * @return Valid {@link JpaPageLayout}
      */
     public PageLayout getPageLayout() {
         return pageLayout;
     }
 
     public void setPageLayout(PageLayout pageLayout) {
-        this.pageLayout = pageLayout;
+        this.pageLayout = JpaConverter.getInstance().convert(pageLayout, PageLayout.class);
     }
 
     /**

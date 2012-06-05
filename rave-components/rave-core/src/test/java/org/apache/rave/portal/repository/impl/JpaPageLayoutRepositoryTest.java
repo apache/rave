@@ -18,6 +18,7 @@
  */
 package org.apache.rave.portal.repository.impl;
 
+import org.apache.rave.portal.model.JpaPageLayout;
 import org.apache.rave.portal.model.PageLayout;
 import org.apache.rave.portal.repository.PageLayoutRepository;
 import org.junit.Test;
@@ -78,7 +79,7 @@ public class JpaPageLayoutRepositoryTest {
     
     @Test
     public void getByPageLayoutCode() {
-        PageLayout pageLayout = repository.getByPageLayoutCode(VALID_LAYOUT_CODE);
+        JpaPageLayout pageLayout = (JpaPageLayout)repository.getByPageLayoutCode(VALID_LAYOUT_CODE);
         assertThat(pageLayout.getCode(), is(VALID_LAYOUT_CODE));
         assertThat(pageLayout.getNumberOfRegions(), is(2L));
         assertThat(pageLayout.getEntityId(), is(notNullValue(Long.class)));
@@ -86,6 +87,6 @@ public class JpaPageLayoutRepositoryTest {
 
     @Test
     public void getByPageLayoutCode_invalidCode() {
-        assertThat(repository.getByPageLayoutCode(INVALID_LAYOUT_CODE), is(nullValue(PageLayout.class))); 
+        assertThat((JpaPageLayout)repository.getByPageLayoutCode(INVALID_LAYOUT_CODE), is(nullValue(JpaPageLayout.class)));
     }    
 }

@@ -19,34 +19,20 @@
 
 package org.apache.rave.portal.service.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.NoResultException;
-import javax.persistence.NonUniqueResultException;
-
 import org.apache.rave.persistence.Repository;
-import org.apache.rave.portal.model.Page;
-import org.apache.rave.portal.model.PageInvitationStatus;
-import org.apache.rave.portal.model.PageLayout;
-import org.apache.rave.portal.model.PageType;
-import org.apache.rave.portal.model.PageUser;
-import org.apache.rave.portal.model.Region;
-import org.apache.rave.portal.model.RegionWidget;
-import org.apache.rave.portal.model.User;
-import org.apache.rave.portal.model.Widget;
-import org.apache.rave.portal.repository.PageLayoutRepository;
-import org.apache.rave.portal.repository.PageRepository;
-import org.apache.rave.portal.repository.PageTemplateRepository;
-import org.apache.rave.portal.repository.RegionRepository;
-import org.apache.rave.portal.repository.RegionWidgetRepository;
-import org.apache.rave.portal.repository.WidgetRepository;
+import org.apache.rave.portal.model.*;
+import org.apache.rave.portal.repository.*;
 import org.apache.rave.portal.service.PageService;
 import org.apache.rave.portal.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class DefaultPageService implements PageService {

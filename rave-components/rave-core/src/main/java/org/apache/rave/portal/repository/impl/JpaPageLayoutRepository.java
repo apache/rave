@@ -19,41 +19,69 @@
 
 package org.apache.rave.portal.repository.impl;
 
-import org.apache.rave.persistence.jpa.AbstractJpaRepository;
+import org.apache.rave.portal.model.JpaPageLayout;
 import org.apache.rave.portal.model.PageLayout;
+import org.apache.rave.portal.model.conversion.JpaPageLayoutConverter;
 import org.apache.rave.portal.repository.PageLayoutRepository;
+import org.apache.rave.util.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-
 import java.util.List;
 
 import static org.apache.rave.persistence.jpa.util.JpaUtil.getSingleResult;
+import static org.apache.rave.persistence.jpa.util.JpaUtil.saveOrUpdate;
 
 
 /**
  */
 @Repository
-public class JpaPageLayoutRepository extends AbstractJpaRepository<PageLayout> implements PageLayoutRepository{
+public class JpaPageLayoutRepository implements PageLayoutRepository{
 
-    public JpaPageLayoutRepository() {
-        super(PageLayout.class);
-    }
+    @PersistenceContext
+    private EntityManager manager;
+
+    @Autowired
+    private JpaPageLayoutConverter converter;
 
     @Override
-    public PageLayout getByPageLayoutCode(String codename){
-        TypedQuery<PageLayout>query = manager.createNamedQuery(PageLayout.PAGELAYOUT_GET_BY_LAYOUT_CODE,PageLayout.class);
+    public JpaPageLayout getByPageLayoutCode(String codename){
+        TypedQuery<JpaPageLayout>query = manager.createNamedQuery(JpaPageLayout.PAGELAYOUT_GET_BY_LAYOUT_CODE,JpaPageLayout.class);
         query.setParameter("code",codename);
         return getSingleResult(query.getResultList());
     }
 
     @Override
     public List<PageLayout> getAll() {
-        return manager.createNamedQuery(PageLayout.PAGELAYOUT_GET_ALL, PageLayout.class).getResultList();
+        return CollectionUtils.<PageLayout>toBaseTypedList(manager.createNamedQuery(JpaPageLayout.PAGELAYOUT_GET_ALL, JpaPageLayout.class).getResultList());
     }
 
     @Override
     public List<PageLayout> getAllUserSelectable() {
-        return manager.createNamedQuery(PageLayout.PAGELAYOUT_GET_ALL_USER_SELECTABLE, PageLayout.class).getResultList();
+        return CollectionUtils.<PageLayout>toBaseTypedList(manager.createNamedQuery(JpaPageLayout.PAGELAYOUT_GET_ALL_USER_SELECTABLE, JpaPageLayout.class).getResultList());
+    }
+
+    @Override
+    public Class<? extends PageLayout> getType() {
+        return JpaPageLayout.class;
+    }
+
+    @Override
+    public PageLayout get(long id) {
+        return manager.find(JpaPageLayout.class, id);
+    }
+
+    @Override
+    public PageLayout save(PageLayout item) {
+        JpaPageLayout layout = converter.convert(item);
+        return saveOrUpdate(layout.getEntityId(), manager, layout);
+    }
+
+    @Override
+    public void delete(PageLayout item) {
+        manager.remove(converter.convert(item));
     }
 }

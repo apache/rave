@@ -39,7 +39,7 @@ public class PageTest {
 	private User testOwner;
     private Page parentPage;
     private List<Page> subPages;
-	private PageLayout pageLayout;
+	private JpaPageLayout pageLayout;
 	private long renderSequence;
 	private List<Region> regions;
 	private PageUser pageUser;
@@ -88,7 +88,7 @@ public class PageTest {
 
         subPages.add(subPage1);
         subPages.add(subPage2);
-		pageLayout=new PageLayout();
+		pageLayout=new JpaPageLayout();
 		renderSequence=1223L;
 
 		regions=new ArrayList<Region>();

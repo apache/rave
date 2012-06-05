@@ -19,6 +19,7 @@
 package org.apache.rave.portal.model;
 
 import org.apache.rave.persistence.BasicEntity;
+import org.apache.rave.portal.model.conversion.JpaConverter;
 import org.apache.rave.portal.model.impl.PersonImpl;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -100,7 +101,7 @@ public class User extends JpaPerson implements UserDetails, BasicEntity, Seriali
 
     @ManyToOne
     @JoinColumn(name="default_page_layout_id")
-    private PageLayout defaultPageLayout;
+    private JpaPageLayout defaultPageLayout;
 
     @Transient
     private String confirmPassword;
@@ -279,7 +280,7 @@ public class User extends JpaPerson implements UserDetails, BasicEntity, Seriali
     }
 
     public void setDefaultPageLayout(PageLayout defaultPageLayout) {
-        this.defaultPageLayout = defaultPageLayout;
+        this.defaultPageLayout = JpaConverter.getInstance().convert(defaultPageLayout, PageLayout.class);
     }
 
     /**

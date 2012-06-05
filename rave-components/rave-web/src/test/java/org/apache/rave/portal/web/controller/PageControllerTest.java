@@ -19,28 +19,26 @@
 
 package org.apache.rave.portal.web.controller;
 
+import org.apache.rave.model.ModelConverter;
+import org.apache.rave.portal.model.*;
+import org.apache.rave.portal.model.conversion.JpaConverter;
 import org.apache.rave.portal.service.PageLayoutService;
-import org.apache.rave.portal.web.controller.util.MockHttpUtil;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.apache.rave.portal.model.PageInvitationStatus;
-import org.apache.rave.portal.model.PageLayout;
-import org.apache.rave.portal.model.Page;
-import org.apache.rave.portal.model.PageUser;
-import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.service.PageService;
 import org.apache.rave.portal.service.UserService;
+import org.apache.rave.portal.web.controller.util.MockHttpUtil;
 import org.apache.rave.portal.web.util.ModelKeys;
 import org.apache.rave.portal.web.util.ViewNames;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.ui.ExtendedModelMap;
 import org.springframework.ui.Model;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.hamcrest.CoreMatchers.*;
 import static org.easymock.EasyMock.*;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 
 public class PageControllerTest {
@@ -65,6 +63,7 @@ public class PageControllerTest {
 
     @Before
     public void setup() {
+
         userService = createMock(UserService.class);
         pageService = createMock(PageService.class);
         pageLayoutService = createMock(PageLayoutService.class);
@@ -72,9 +71,19 @@ public class PageControllerTest {
         model = new ExtendedModelMap();
         request = new MockHttpServletRequest();
 
-        validPageLayout = new PageLayout();
-        validPageLayout.setEntityId(33L);
+        validPageLayout = new JpaPageLayout();
         validPageLayout.setCode(VALID_PAGE_LAYOUT_CODE);
+
+        //TODO:REMOVE WHEN REGION_WIDGET REFACTOR IS COMPLETE
+        ModelConverter converter = createMock(ModelConverter.class);
+        expect(converter.getSourceType()).andReturn(PageLayout.class).anyTimes();
+        expect(converter.convert(isA(PageLayout.class))).andReturn(validPageLayout).anyTimes();
+        replay(converter);
+        List<ModelConverter> converters = new ArrayList<ModelConverter>();
+        converters.add(converter);
+        new JpaConverter(converters);
+
+        //END REMOVE
 
         validUser = new User(USER_ID);
 
