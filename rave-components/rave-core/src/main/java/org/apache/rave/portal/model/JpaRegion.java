@@ -19,28 +19,14 @@
 package org.apache.rave.portal.model;
 
 import org.apache.rave.persistence.BasicEntity;
+import org.apache.rave.portal.model.conversion.ConvertingListProxyFactory;
 import org.codehaus.jackson.annotate.JsonBackReference;
 import org.codehaus.jackson.annotate.JsonManagedReference;
 
-import javax.persistence.Access;
-import javax.persistence.AccessType;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
-import javax.persistence.Table;
-import javax.persistence.TableGenerator;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.Basic;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -52,8 +38,14 @@ import javax.xml.bind.annotation.XmlElement;
 @Entity
 @Table(name="region")
 @Access(AccessType.FIELD)
-public class Region implements BasicEntity, Serializable {
+@NamedQueries(
+        @NamedQuery(name = JpaRegion.FIND_BY_ENTITY_ID, query="select r from JpaRegion r where r.entityId = :entity_id")
+)
+public class JpaRegion implements BasicEntity, Serializable, Region {
     private static final long serialVersionUID = 1L;
+
+    public static final String FIND_BY_ENTITY_ID = "Region.findByEntityId";
+    public static final String ENTITY_ID_PARAM = "entity_id";
      
     @Id @Column(name="entity_id")
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "regionIdGenerator")
@@ -72,20 +64,20 @@ public class Region implements BasicEntity, Serializable {
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("renderOrder")
     @JoinColumn(name = "region_id")
-    private List<RegionWidget> regionWidgets;
+    private List<JpaRegionWidget> regionWidgets;
 
     @Basic(optional = false)
     @Column(name = "locked")
     private boolean locked;
 
-    public Region() {
+    public JpaRegion() {
     }
 
-    public Region(Long entityId) {
+    public JpaRegion(Long entityId) {
         this.entityId = entityId;
     }
 
-    public Region(Long entityId, Page page, int renderOrder) {
+    public JpaRegion(Long entityId, Page page, int renderOrder) {
         this.entityId = entityId;
         this.page = page;
         this.renderOrder = renderOrder;
@@ -119,16 +111,28 @@ public class Region implements BasicEntity, Serializable {
         this.entityId = entityId;
     }
 
+    @Override
+    public Long getId() {
+        return getEntityId();
+    }
+
+    @Override
+    public void setId(Long id) {
+        setEntityId(id);
+    }
+
     /**
      * Gets the associated page
      *
      * @return the associated page
      */
+    @Override
     @JsonBackReference
     public Page getPage() {
         return page;
     }
 
+    @Override
     public void setPage(Page page) {
         this.page = page;
     }
@@ -138,10 +142,12 @@ public class Region implements BasicEntity, Serializable {
      * 
      * @return the order of the region
      */
+    @Override
     public int getRenderOrder() {
         return renderOrder;
     }
 
+    @Override
     public void setRenderOrder(int renderOrder) {
         this.renderOrder = renderOrder;
     }
@@ -151,19 +157,29 @@ public class Region implements BasicEntity, Serializable {
      *
      * @return Valid list
      */
+    @Override
     @JsonManagedReference
     public List<RegionWidget> getRegionWidgets() {
-        return regionWidgets;
+        return ConvertingListProxyFactory.createProxyList(RegionWidget.class, regionWidgets);
     }
 
+    @Override
     public void setRegionWidgets(List<RegionWidget> regionWidgets) {
-        this.regionWidgets = regionWidgets;
+        if(this.regionWidgets == null) {
+            this.regionWidgets = new ArrayList<JpaRegionWidget>();
+        }
+        this.getRegionWidgets().clear();
+        if(regionWidgets != null) {
+            this.getRegionWidgets().addAll(regionWidgets);
+        }
     }
 
+    @Override
     public boolean isLocked() {
         return locked;
     }
 
+    @Override
     public void setLocked(boolean locked) {
         this.locked = locked;
     }
@@ -176,7 +192,7 @@ public class Region implements BasicEntity, Serializable {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final Region other = (Region) obj;
+        final JpaRegion other = (JpaRegion) obj;
         if (this.entityId != other.entityId && (this.entityId == null || !this.entityId.equals(other.entityId))) {
             return false;
         }
@@ -192,6 +208,6 @@ public class Region implements BasicEntity, Serializable {
 
     @Override
     public String toString() {
-        return "Region{" + "entityId=" + entityId + ", pageId=" + ((page == null) ? null : page.getEntityId()) + ", regionWidgets=" + regionWidgets + '}';
+        return "JpaRegion{" + "entityId=" + entityId + ", pageId=" + ((page == null) ? null : page.getEntityId()) + ", regionWidgets=" + regionWidgets + '}';
     }
 }

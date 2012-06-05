@@ -21,7 +21,9 @@ package org.apache.rave.portal.repository.impl;
 
 import org.apache.rave.persistence.jpa.AbstractJpaRepository;
 import org.apache.rave.portal.model.*;
+import org.apache.rave.portal.model.conversion.JpaRegionConverter;
 import org.apache.rave.portal.repository.PageRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.TypedQuery;
@@ -109,15 +111,15 @@ public class JpaPageRepository extends AbstractJpaRepository<Page> implements Pa
 
     /**
      * convertRegions: List of PageTemplateRegion, Page -> List of Regions
-     * Converts the Region Templates of the Page Template to Regions for the page
+     * Converts the JpaRegion Templates of the Page Template to Regions for the page
      * @param pageTemplateRegions List of PageTemplateRegion
      * @param page Page
-     * @return list of Region
+     * @return list of JpaRegion
      */
     private List<Region> convertRegions(List<PageTemplateRegion> pageTemplateRegions, Page page){
         List<Region> regions = new ArrayList<Region>();
         for (PageTemplateRegion ptr : pageTemplateRegions){
-            Region region = new Region();
+            JpaRegion region = new JpaRegion();
             region.setRenderOrder((int) ptr.getRenderSequence());
             region.setPage(page);
             region.setLocked(ptr.isLocked());
@@ -128,16 +130,16 @@ public class JpaPageRepository extends AbstractJpaRepository<Page> implements Pa
     }
 
     /**
-     * convertWidgets: List of PageTemplateWidget, Region -> List of RegionWidget
-     * Converts the Page Template Widgets to RegionWidgets for the given Region
+     * convertWidgets: List of PageTemplateWidget, JpaRegion -> List of RegionWidget
+     * Converts the Page Template Widgets to RegionWidgets for the given JpaRegion
      * @param pageTemplateWidgets List of PageTemplateWidget
-     * @param region Region
+     * @param region JpaRegion
      * @return List of RegionWidget
      */
-    private List<RegionWidget> convertWidgets(List<PageTemplateWidget> pageTemplateWidgets, Region region){
+    private List<RegionWidget> convertWidgets(List<PageTemplateWidget> pageTemplateWidgets, JpaRegion region){
         List<RegionWidget> widgets = new ArrayList<RegionWidget>();
         for (PageTemplateWidget ptw : pageTemplateWidgets){
-            RegionWidget regionWidget = new RegionWidget();
+            RegionWidget regionWidget = new JpaRegionWidget();
             regionWidget.setRegion(region);
             regionWidget.setCollapsed(false);
             regionWidget.setLocked(ptw.isLocked());

@@ -20,10 +20,7 @@
 package org.apache.rave.provider.opensocial.service.impl;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.rave.portal.model.Page;
-import org.apache.rave.portal.model.Region;
-import org.apache.rave.portal.model.RegionWidget;
-import org.apache.rave.portal.model.User;
+import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.model.impl.WidgetImpl;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.provider.opensocial.exception.SecurityTokenException;
@@ -141,9 +138,9 @@ public class EncryptedBlobSecurityTokenService implements SecurityTokenService {
         }
 
         //Create a new RegionWidget instance from it so we can use it to generate a new encrypted token
-        RegionWidget regionWidget = new RegionWidget(securityToken.getModuleId(),
-                new WidgetImpl(-1L, securityToken.getAppUrl()),
-                new Region(-1L, new Page(-1L, new User(Long.valueOf(securityToken.getOwnerId()))), -1));
+        RegionWidget regionWidget = new JpaRegionWidget(securityToken.getModuleId(),
+                new JpaWidget(-1L, securityToken.getAppUrl()),
+                new JpaRegion(-1L, new Page(-1L, new User(Long.valueOf(securityToken.getOwnerId()))), -1));
 
         //Create and return the newly encrypted token
         return getEncryptedSecurityToken(regionWidget);
@@ -155,7 +152,7 @@ public class EncryptedBlobSecurityTokenService implements SecurityTokenService {
 
         Map<String, String> values = new HashMap<String, String>();
         values.put(AbstractSecurityToken.Keys.APP_URL.getKey(), regionWidget.getWidget().getUrl());
-        values.put(AbstractSecurityToken.Keys.MODULE_ID.getKey(), String.valueOf(regionWidget.getEntityId()));
+        values.put(AbstractSecurityToken.Keys.MODULE_ID.getKey(), String.valueOf(regionWidget.getId()));
         values.put(AbstractSecurityToken.Keys.OWNER.getKey(),
                 String.valueOf(regionWidget.getRegion().getPage().getOwner().getEntityId()));
         values.put(AbstractSecurityToken.Keys.VIEWER.getKey(), String.valueOf(user.getEntityId()));

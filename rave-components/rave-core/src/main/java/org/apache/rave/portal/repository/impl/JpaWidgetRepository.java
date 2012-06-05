@@ -167,8 +167,8 @@ public class JpaWidgetRepository implements WidgetRepository {
         query.setParameter(JpaWidgetRating.PARAM_WIDGET_ID, widget_id);
         widgetStatistics.setTotalDislike(((Number) query.getSingleResult()).intValue());
 
-        query = manager.createNamedQuery(RegionWidget.REGION_WIDGET_GET_DISTINCT_USER_COUNT_SINGLE_WIDGET);
-        query.setParameter(RegionWidget.PARAM_WIDGET_ID, widget_id);
+        query = manager.createNamedQuery(JpaRegionWidget.REGION_WIDGET_GET_DISTINCT_USER_COUNT_SINGLE_WIDGET);
+        query.setParameter(JpaRegionWidget.PARAM_WIDGET_ID, widget_id);
         widgetStatistics.setTotalUserCount(((Number) query.getSingleResult()).intValue());
 
         try {
@@ -226,7 +226,7 @@ public class JpaWidgetRepository implements WidgetRepository {
         }
 
         //get the total user count for widgets
-        query = manager.createNamedQuery(RegionWidget.REGION_WIDGET_GET_DISTINCT_USER_COUNT_ALL_WIDGETS);
+        query = manager.createNamedQuery(JpaRegionWidget.REGION_WIDGET_GET_DISTINCT_USER_COUNT_ALL_WIDGETS);
         for (Object[] result : (List<Object[]>) query.getResultList()) {
             Long widgetId = (Long) result[0];
             Long totalUserCount = (Long) result[1];

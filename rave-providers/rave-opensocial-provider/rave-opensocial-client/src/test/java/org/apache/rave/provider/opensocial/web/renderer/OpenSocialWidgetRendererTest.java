@@ -77,9 +77,9 @@ public class OpenSocialWidgetRendererTest {
         w.setEntityId(1L);
         w.setType(Constants.WIDGET_TYPE);
         w.setUrl(VALID_GADGET_URL);
-        Region region = new Region(1L);
-        RegionWidget rw = new RegionWidget();
-        rw.setEntityId(1L);
+        Region region = new JpaRegion(1L);
+        RegionWidget rw = new JpaRegionWidget();
+        rw.setId(1L);
         rw.setCollapsed(VALID_COLLAPSED);
         rw.setWidget(w);
         rw.setRegion(region);
@@ -119,8 +119,8 @@ public class OpenSocialWidgetRendererTest {
     public void render_null() {
         JpaWidget w = new JpaWidget();
         w.setType(Constants.WIDGET_TYPE);
-        Region region = new Region(1L);
-        RegionWidget rw = new RegionWidget();
+        Region region = new JpaRegion(1L);
+        RegionWidget rw = new JpaRegionWidget();
         rw.setWidget(w);
         rw.setRegion(region);
 
@@ -147,8 +147,8 @@ public class OpenSocialWidgetRendererTest {
         JpaWidget w = new JpaWidget();
         w.setType("NONE");
         w.setUrl("http://www.example.com/gadget.xml");
-        RegionWidget rw = new RegionWidget();
-        rw.setEntityId(1L);
+        RegionWidget rw = new JpaRegionWidget();
+        rw.setId(1L);
         rw.setWidget(w);
 
         renderer.render(rw, null);

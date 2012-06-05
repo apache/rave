@@ -19,6 +19,7 @@
 
 package org.apache.rave.portal.repository.impl;
 
+import org.apache.rave.portal.model.JpaRegionWidget;
 import org.apache.rave.portal.model.RegionWidget;
 import org.apache.rave.portal.model.RegionWidgetPreference;
 import org.junit.Test;
@@ -61,7 +62,7 @@ public class JpaRegionWidgetRepositoryTest {
     public void getById_validId() {
         RegionWidget regionWidget = repository.get(VALID_REGION_WIDGET_ID);
         assertThat(regionWidget, is(notNullValue()));
-        assertThat(regionWidget.getEntityId(), is(equalTo(VALID_REGION_WIDGET_ID)));
+        assertThat(regionWidget.getId(), is(equalTo(VALID_REGION_WIDGET_ID)));
     }
 
     @Test
@@ -73,32 +74,32 @@ public class JpaRegionWidgetRepositoryTest {
     @Test
     @Rollback(true)
     public void save_newEntity() {
-        RegionWidget regionWidget = new RegionWidget();
+        RegionWidget regionWidget = new JpaRegionWidget();
         regionWidget.setPreferences(new ArrayList<RegionWidgetPreference>());
 
         RegionWidget saved = repository.save(regionWidget);
         manager.flush();
         assertThat(saved, is(sameInstance(regionWidget)));
-        assertThat(saved.getEntityId(), is(notNullValue()));
+        assertThat(saved.getId(), is(notNullValue()));
     }
 
     @Test
     @Rollback(true)
     public void save_existingEntity() {
-        RegionWidget regionWidget = new RegionWidget();
-        regionWidget.setEntityId(VALID_REGION_WIDGET_ID);
+        RegionWidget regionWidget = new JpaRegionWidget();
+        regionWidget.setId(VALID_REGION_WIDGET_ID);
         regionWidget.setPreferences(new ArrayList<RegionWidgetPreference>());
 
         RegionWidget saved = repository.save(regionWidget);
         manager.flush();
         assertThat(saved, is(not(sameInstance(regionWidget))));
-        assertThat(saved.getEntityId(), is(equalTo(regionWidget.getEntityId())));
+        assertThat(saved.getId(), is(equalTo(regionWidget.getId())));
     }
 
     @Test
     @Rollback(true)
     public void save_cascadePersist() {
-        RegionWidget regionWidget = new RegionWidget();
+        RegionWidget regionWidget = new JpaRegionWidget();
         regionWidget.setPreferences(new ArrayList<RegionWidgetPreference>());
         RegionWidgetPreference regionWidgetPreference = new RegionWidgetPreference(null, null, VALID_PREFERENCE_NAME,
                 VALID_PREFERENCE_VALUE);
@@ -119,8 +120,8 @@ public class JpaRegionWidgetRepositoryTest {
     public void save_cascadeMerge() {
         long VALID_PREFERENCE_ID = addPreferenceToRegionWidget(VALID_REGION_WIDGET_ID);
 
-        RegionWidget regionWidget = new RegionWidget();
-        regionWidget.setEntityId(VALID_REGION_WIDGET_ID);
+        RegionWidget regionWidget = new JpaRegionWidget();
+        regionWidget.setId(VALID_REGION_WIDGET_ID);
         regionWidget.setPreferences(new ArrayList<RegionWidgetPreference>());
         RegionWidgetPreference regionWidgetPreference = new RegionWidgetPreference(VALID_PREFERENCE_ID,
                 VALID_REGION_WIDGET_ID, VALID_PREFERENCE_NAME, VALID_PREFERENCE_VALUE);

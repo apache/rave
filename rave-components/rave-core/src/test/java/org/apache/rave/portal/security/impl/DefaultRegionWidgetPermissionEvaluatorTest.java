@@ -18,10 +18,7 @@
  */
 package org.apache.rave.portal.security.impl;
 
-import org.apache.rave.portal.model.Page;
-import org.apache.rave.portal.model.Region;
-import org.apache.rave.portal.model.RegionWidget;
-import org.apache.rave.portal.model.User;
+import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.repository.RegionWidgetRepository;
 import org.apache.rave.portal.security.ModelPermissionEvaluator.Permission;
 import org.apache.rave.portal.security.util.AuthenticationUtils;
@@ -71,11 +68,11 @@ public class DefaultRegionWidgetPermissionEvaluatorTest {
         page = new Page();
         page.setEntityId(VALID_PAGE_ID);
         page.setOwner(user);
-        region = new Region();
-        region.setEntityId(VALID_REGION_ID);
+        region = new JpaRegion();
+        region.setId(VALID_REGION_ID);
         region.setPage(page);
-        regionWidget = new RegionWidget();
-        regionWidget.setEntityId(VALID_REGION_WIDGET_ID);
+        regionWidget = new JpaRegionWidget();
+        regionWidget.setId(VALID_REGION_WIDGET_ID);
         regionWidget.setRegion(region);
         grantedAuthoritiesList = new ArrayList<GrantedAuthority>();
         grantedAuthoritiesList.add(new SimpleGrantedAuthority("ROLE_USER"));

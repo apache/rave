@@ -27,6 +27,8 @@ import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.Widget;
 import org.apache.rave.portal.model.conversion.JpaConverter;
 import org.apache.rave.portal.model.conversion.JpaWidgetConverter;
+import org.apache.rave.portal.model.impl.RegionImpl;
+import org.apache.rave.portal.model.impl.RegionWidgetImpl;
 import org.apache.rave.portal.model.impl.WidgetImpl;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.portal.service.WidgetProviderService;
@@ -88,16 +90,16 @@ public class W3cWidgetRendererTest {
         W3CWidget w = new W3CWidget();
         w.setType(Constants.WIDGET_TYPE);
         w.setUrl("http://example.com/widgets/1");
-        Region region = new Region(1L);
-        RegionWidget rw = new RegionWidget();
-        rw.setEntityId(1L);
+        Region region = new RegionImpl(1L);
+        RegionWidget rw = new RegionWidgetImpl();
+        rw.setId(1L);
         rw.setWidget(w);
         rw.setRegion(region);
 
         W3CWidget wookieWidget = new W3CWidget();
         wookieWidget.setUrl(VALID_WIDGET_INSTANCE_URL);
 
-        expect(wookieService.getWidget(eq(user), eq(rw.getEntityId().toString()), isA(Widget.class))).andReturn(wookieWidget);
+        expect(wookieService.getWidget(eq(user), eq(rw.getId().toString()), isA(Widget.class))).andReturn(wookieWidget);
         replay(wookieService);
 
         String placeholder = renderer.render(rw, renderContext);
@@ -109,8 +111,8 @@ public class W3cWidgetRendererTest {
         Widget w = new WidgetImpl();
         w.setType("NONE");
         w.setUrl(VALID_WIDGET_URL);
-        RegionWidget rw = new RegionWidget();
-        rw.setEntityId(1L);
+        RegionWidget rw = new RegionWidgetImpl();
+        rw.setId(1L);
         rw.setWidget(w);
 
         RenderContext renderContext = createNiceMock(RenderContext.class);

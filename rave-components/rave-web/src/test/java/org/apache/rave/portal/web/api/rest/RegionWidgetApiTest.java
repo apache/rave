@@ -19,6 +19,7 @@
 
 package org.apache.rave.portal.web.api.rest;
 
+import org.apache.rave.portal.model.JpaRegionWidget;
 import org.apache.rave.portal.model.RegionWidget;
 import org.apache.rave.portal.model.RegionWidgetPreference;
 import org.apache.rave.portal.service.RegionWidgetService;
@@ -117,7 +118,7 @@ public class RegionWidgetApiTest {
     public void updateRegionWidgetCollapsedStatus() {
         final boolean COLLAPSED = true;       
         
-        RegionWidget expectedRegionWidget = new RegionWidget(VALID_REGION_WIDGET_ID);
+        RegionWidget expectedRegionWidget = new JpaRegionWidget(VALID_REGION_WIDGET_ID);
         expectedRegionWidget.setCollapsed(COLLAPSED);
 
         expect(regionWidgetService.saveRegionWidgetCollapsedState(VALID_REGION_WIDGET_ID, COLLAPSED)).andReturn(expectedRegionWidget); 

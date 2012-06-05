@@ -19,15 +19,46 @@
 
 package org.apache.rave.portal.repository.impl;
 
-import org.apache.rave.persistence.jpa.AbstractJpaRepository;
+import org.apache.rave.portal.model.JpaRegionWidget;
 import org.apache.rave.portal.model.RegionWidget;
+import org.apache.rave.portal.model.conversion.JpaRegionWidgetConverter;
 import org.apache.rave.portal.repository.RegionWidgetRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
+import static org.apache.rave.persistence.jpa.util.JpaUtil.saveOrUpdate;
 
 
 @Repository
-public class JpaRegionWidgetRepository extends AbstractJpaRepository<RegionWidget> implements RegionWidgetRepository {
-    public JpaRegionWidgetRepository() {
-        super(RegionWidget.class);
+public class JpaRegionWidgetRepository implements RegionWidgetRepository {
+
+    @PersistenceContext
+    private EntityManager manager;
+
+    @Autowired
+    private JpaRegionWidgetConverter regionWidgetConverter;
+
+    @Override
+    public Class<? extends RegionWidget> getType() {
+        return JpaRegionWidget.class;
+    }
+
+    @Override
+    public RegionWidget get(long id) {
+        return manager.find(JpaRegionWidget.class, id);
+    }
+
+    @Override
+    public RegionWidget save(RegionWidget item) {
+        JpaRegionWidget region = regionWidgetConverter.convert(item);
+        return saveOrUpdate(region.getEntityId(), manager, region);
+    }
+
+    @Override
+    public void delete(RegionWidget item) {
+        manager.remove(item instanceof JpaRegionWidget ? item : get(item.getId()));
     }
 }

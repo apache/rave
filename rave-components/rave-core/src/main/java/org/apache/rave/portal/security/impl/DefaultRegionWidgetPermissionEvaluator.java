@@ -148,7 +148,7 @@ public class DefaultRegionWidgetPermissionEvaluator extends AbstractModelPermiss
         if (trustedDomainObject) {
             trustedRegionWidget = regionWidget;
         } else {
-            trustedRegionWidget = getTrustedRegionWidget(regionWidget.getEntityId(), trustedRegionWidgetContainer);
+            trustedRegionWidget = getTrustedRegionWidget(regionWidget.getId(), trustedRegionWidgetContainer);
         }
         return isRegionWidgetOwnerByUsername(authentication, getUsernameFromRegionWidget(trustedRegionWidget));
     }
@@ -187,7 +187,7 @@ public class DefaultRegionWidgetPermissionEvaluator extends AbstractModelPermiss
         if (trustedDomainObject) {
             trustedRegionWidget = regionWidget;
         } else {
-            trustedRegionWidget = getTrustedRegionWidget(regionWidget.getEntityId(), trustedRegionWidgetContainer);
+            trustedRegionWidget = getTrustedRegionWidget(regionWidget.getId(), trustedRegionWidgetContainer);
         }
         
         Page containerPage = trustedRegionWidget.getRegion().getPage();

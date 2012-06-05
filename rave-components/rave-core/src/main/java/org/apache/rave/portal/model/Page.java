@@ -19,6 +19,7 @@
 package org.apache.rave.portal.model;
 
 import org.apache.rave.persistence.BasicEntity;
+import org.apache.rave.portal.model.conversion.ConvertingListProxyFactory;
 import org.apache.rave.portal.model.conversion.JpaConverter;
 import org.codehaus.jackson.annotate.JsonManagedReference;
 
@@ -90,7 +91,7 @@ public class Page implements BasicEntity, Serializable {
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("renderOrder")
     @JoinColumn(name="page_id")
-    private List<Region> regions;
+    private List<JpaRegion> regions;
 
     @Basic
     @Column(name = "page_type")
@@ -185,11 +186,17 @@ public class Page implements BasicEntity, Serializable {
      */
     @JsonManagedReference
     public List<Region> getRegions() {
-        return regions;
+        return ConvertingListProxyFactory.createProxyList(Region.class, regions);
     }
 
     public void setRegions(List<Region> regions) {
-        this.regions = regions;
+        if(this.regions == null) {
+            this.regions = new ArrayList<JpaRegion>();
+        }
+        this.getRegions().clear();
+        if(regions != null) {
+            this.getRegions().addAll(regions);
+        }
     }
 
     public PageType getPageType() {

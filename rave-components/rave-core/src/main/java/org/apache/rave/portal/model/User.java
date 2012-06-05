@@ -48,7 +48,7 @@ import java.util.Date;
                 "where lower(u.username) like :"+User.PARAM_SEARCHTERM+" or lower(u.email) like :"+User.PARAM_SEARCHTERM+" order by u.username asc"),
         @NamedQuery(name = User.USER_COUNT_FIND_BY_USERNAME_OR_EMAIL, query = "select count(u) from User u " +
                 "where lower(u.username) like :"+User.PARAM_SEARCHTERM+" or lower(u.email) like :"+User.PARAM_SEARCHTERM),
-        @NamedQuery(name = User.USER_GET_ALL_FOR_ADDED_WIDGET, query = "select distinct(rw.region.page.owner) from RegionWidget rw where rw.widget.entityId = :widgetId order by rw.region.page.owner.familyName, rw.region.page.owner.givenName")
+        @NamedQuery(name = User.USER_GET_ALL_FOR_ADDED_WIDGET, query = "select distinct(rw.region.page.owner) from JpaRegionWidget rw where rw.widget.entityId = :widgetId order by rw.region.page.owner.familyName, rw.region.page.owner.givenName")
 })
 public class User extends JpaPerson implements UserDetails, BasicEntity, Serializable {
     private static final long serialVersionUID = 1L;

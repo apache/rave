@@ -19,9 +19,7 @@
 
 package org.apache.rave.portal.web.api.rpc;
 
-import org.apache.rave.portal.model.Page;
-import org.apache.rave.portal.model.Region;
-import org.apache.rave.portal.model.RegionWidget;
+import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.service.PageService;
 import org.apache.rave.portal.web.api.rpc.model.RpcResult;
 import org.junit.Before;
@@ -60,7 +58,7 @@ public class PageApiTest {
         final long TO_REGION = 1;
         final long FROM_REGION = 2;
 
-        expect(pageService.moveRegionWidget(REGION_WIDGET_ID, NEW_POSITION, TO_REGION, FROM_REGION)).andReturn(new RegionWidget());
+        expect(pageService.moveRegionWidget(REGION_WIDGET_ID, NEW_POSITION, TO_REGION, FROM_REGION)).andReturn(new JpaRegionWidget());
         replay(pageService);
         RpcResult<RegionWidget> result = pageApi.moveWidgetOnPage(REGION_WIDGET_ID, NEW_POSITION, TO_REGION, FROM_REGION);
         verify(pageService);
@@ -110,7 +108,7 @@ public class PageApiTest {
         final int PAGE_ID = 1;
         final long WIDGET_ID = 2;
 
-        expect(pageService.addWidgetToPage(PAGE_ID, WIDGET_ID)).andReturn(new RegionWidget());
+        expect(pageService.addWidgetToPage(PAGE_ID, WIDGET_ID)).andReturn(new JpaRegionWidget());
         replay(pageService);
         RpcResult result = pageApi.addWidgetToPage(PAGE_ID, WIDGET_ID);
         verify(pageService);
@@ -156,7 +154,7 @@ public class PageApiTest {
     @Test
     public void deleteWidget_validParams() {
         final long WIDGET_ID = 3;
-        expect(pageService.removeWidgetFromPage(WIDGET_ID)).andReturn(new Region());
+        expect(pageService.removeWidgetFromPage(WIDGET_ID)).andReturn(new JpaRegion());
         replay(pageService);
 
         RpcResult<Region> result = pageApi.removeWidgetFromPage(WIDGET_ID);
@@ -308,7 +306,7 @@ public class PageApiTest {
     
     @Test
     public void moveWidgetToPage_validParams() {      
-        expect(pageService.moveRegionWidgetToPage(REGION_WIDGET_ID, PAGE_2_ID)).andReturn(new RegionWidget());
+        expect(pageService.moveRegionWidgetToPage(REGION_WIDGET_ID, PAGE_2_ID)).andReturn(new JpaRegionWidget());
         replay(pageService);
         RpcResult<RegionWidget> result = pageApi.moveWidgetToPage(PAGE_2_ID, REGION_WIDGET_ID);
         verify(pageService);

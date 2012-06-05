@@ -33,16 +33,19 @@ import java.util.List;
 @Access(AccessType.FIELD)
 @Table(name = "region_widget")
 @NamedQueries({
-        @NamedQuery(name = RegionWidget.REGION_WIDGET_GET_DISTINCT_USER_COUNT_ALL_WIDGETS,
-                    query = "select rw.widget.entityId, count(distinct rw.region.page.owner) from RegionWidget rw group by rw.widget.entityId"),
-        @NamedQuery(name = RegionWidget.REGION_WIDGET_GET_DISTINCT_USER_COUNT_SINGLE_WIDGET,
-                    query = "select count(distinct rw.region.page.owner) from RegionWidget rw where rw.widget.entityId = :widgetId")
+        @NamedQuery(name = JpaRegionWidget.REGION_WIDGET_GET_DISTINCT_USER_COUNT_ALL_WIDGETS,
+                    query = "select rw.widget.entityId, count(distinct rw.region.page.owner) from JpaRegionWidget rw group by rw.widget.entityId"),
+        @NamedQuery(name = JpaRegionWidget.REGION_WIDGET_GET_DISTINCT_USER_COUNT_SINGLE_WIDGET,
+                    query = "select count(distinct rw.region.page.owner) from JpaRegionWidget rw where rw.widget.entityId = :widgetId"),
+        @NamedQuery(name = JpaRegionWidget.FIND_BY_ID,
+                    query = "select rw from JpaRegionWidget rw where rw.entityId = :widgetId")
 })
-public class RegionWidget implements BasicEntity, Serializable {
+public class JpaRegionWidget implements BasicEntity, Serializable, RegionWidget {
     private static final long serialVersionUID = 1L;
 
-    public static final String REGION_WIDGET_GET_DISTINCT_USER_COUNT_ALL_WIDGETS = "RegionWidget.getDistinctUserCountForAllWidgets";
-    public static final String REGION_WIDGET_GET_DISTINCT_USER_COUNT_SINGLE_WIDGET = "RegionWidget.getDistinctUserCount";
+    public static final String FIND_BY_ID = "RegionWidget.findById";
+    public static final String REGION_WIDGET_GET_DISTINCT_USER_COUNT_ALL_WIDGETS = "JpaRegionWidget.getDistinctUserCountForAllWidgets";
+    public static final String REGION_WIDGET_GET_DISTINCT_USER_COUNT_SINGLE_WIDGET = "JpaRegionWidget.getDistinctUserCount";
 
     public static final String PARAM_WIDGET_ID = "widgetId";
 
@@ -59,7 +62,7 @@ public class RegionWidget implements BasicEntity, Serializable {
 
     @ManyToOne
     @JoinColumn(name = "region_id")
-    private Region region;
+    private JpaRegion region;
 
     @Basic
     @Column(name = "render_position")
@@ -85,24 +88,24 @@ public class RegionWidget implements BasicEntity, Serializable {
     @Column(name = "hide_chrome")
     private boolean hideChrome;
 
-    public RegionWidget() {
+    public JpaRegionWidget() {
     }
 
-    public RegionWidget(Long entityId) {
+    public JpaRegionWidget(Long entityId) {
         this.entityId = entityId;
     }
 
-    public RegionWidget(Long entityId, Widget widget, Region region, int renderOrder) {
+    public JpaRegionWidget(Long entityId, JpaWidget widget, JpaRegion region, int renderOrder) {
         this.entityId = entityId;
+        this.widget = widget;
         this.region = region;
         this.renderOrder = renderOrder;
-        this.setWidget(widget);
     }
 
-    public RegionWidget(Long entityId, Widget widget, Region region) {
+    public JpaRegionWidget(Long entityId, JpaWidget widget, JpaRegion region) {
         this.entityId = entityId;
+        this.widget = widget;
         this.region = region;
-        this.setWidget(widget);
     }
 
     /**
@@ -120,17 +123,29 @@ public class RegionWidget implements BasicEntity, Serializable {
         this.entityId = entityId;
     }
 
+    @Override
+    public Long getId() {
+        return getEntityId();
+    }
+
+    @Override
+    public void setId(Long id) {
+        setEntityId(id);
+    }
+
     /**
      * Gets the object that represents the metadata about the widget
      *
      * @return valid widget
      */
+    @Override
     public Widget getWidget() {
         return widget;
     }
 
+    @Override
     public void setWidget(Widget widget) {
-        this.widget = JpaConverter.getInstance().convert(widget, Widget.class);
+        this.widget = JpaConverter.getInstance().convert(widget, Widget.class);;
     }
 
     /**
@@ -138,13 +153,15 @@ public class RegionWidget implements BasicEntity, Serializable {
      *
      * @return the region
      */
+    @Override
     @JsonBackReference
     public Region getRegion() {
         return region;
     }
 
+    @Override
     public void setRegion(Region region) {
-        this.region = region;
+        this.region = JpaConverter.getInstance().convert(region, Region.class);
     }
 
     /**
@@ -156,10 +173,12 @@ public class RegionWidget implements BasicEntity, Serializable {
      *
      * @return The RegionWidgets position within the Region
      */
+    @Override
     public String getRenderPosition() {
         return renderPosition;
     }
 
+    @Override
     public void setRenderPosition(String renderPosition) {
         this.renderPosition = renderPosition;
     }
@@ -169,10 +188,12 @@ public class RegionWidget implements BasicEntity, Serializable {
      *
      * @return the order of the gadget
      */
+    @Override
     public int getRenderOrder() {
         return renderOrder;
     }
 
+    @Override
     public void setRenderOrder(int renderOrder) {
         this.renderOrder = renderOrder;
     }
@@ -182,10 +203,12 @@ public class RegionWidget implements BasicEntity, Serializable {
      *
      * @return true if render collapsed; false otherwise
      */
+    @Override
     public boolean isCollapsed() {
         return collapsed;
     }
 
+    @Override
     public void setCollapsed(boolean collapsed) {
         this.collapsed = collapsed;
     }
@@ -195,26 +218,32 @@ public class RegionWidget implements BasicEntity, Serializable {
      *
      * @return The user defined preferences for this RegionWidget.
      */
+    @Override
     public List<RegionWidgetPreference> getPreferences() {
         return preferences;
     }
 
+    @Override
     public void setPreferences(List<RegionWidgetPreference> preferences) {
         this.preferences = preferences;
     }
 
+    @Override
     public boolean isLocked() {
         return locked;
     }
 
+    @Override
     public void setLocked(boolean locked) {
         this.locked = locked;
     }
 
+    @Override
     public boolean isHideChrome() {
         return hideChrome;
     }
 
+    @Override
     public void setHideChrome(boolean hideChrome) {
         this.hideChrome = hideChrome;
     }
@@ -227,7 +256,7 @@ public class RegionWidget implements BasicEntity, Serializable {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final RegionWidget other = (RegionWidget) obj;
+        final JpaRegionWidget other = (JpaRegionWidget) obj;
         if (this.entityId != other.entityId && (this.entityId == null || !this.entityId.equals(other.entityId))) {
             return false;
         }
@@ -244,7 +273,7 @@ public class RegionWidget implements BasicEntity, Serializable {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("RegionWidget{");
+        sb.append("JpaRegionWidget{");
         sb.append("entityId=");
         sb.append(entityId);
         sb.append(",widget=");

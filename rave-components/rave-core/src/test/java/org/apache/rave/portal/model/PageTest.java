@@ -92,8 +92,8 @@ public class PageTest {
 		renderSequence=1223L;
 
 		regions=new ArrayList<Region>();
-		regions.add(new Region());
-		regions.add(new Region());
+		regions.add(new JpaRegion());
+		regions.add(new JpaRegion());
 
 		page.setEntityId(id);
 		page.setName(testName);

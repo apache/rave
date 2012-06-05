@@ -149,7 +149,7 @@ public class DefaultRegionPermissionEvaluator extends AbstractModelPermissionEva
         if (trustedDomainObject) {
             trustedRegion = region;
         } else {
-            trustedRegion = getTrustedRegion(region.getEntityId(), trustedRegionContainer);
+            trustedRegion = getTrustedRegion(region.getId(), trustedRegionContainer);
         }
         return isRegionOwnerByUsername(authentication, trustedRegion.getPage().getOwner().getUsername());
     }
@@ -183,7 +183,7 @@ public class DefaultRegionPermissionEvaluator extends AbstractModelPermissionEva
         if (trustedDomainObject) {
             trustedRegion = region;
         } else {
-            trustedRegion = getTrustedRegion(region.getEntityId(), trustedRegionContainer);
+            trustedRegion = getTrustedRegion(region.getId(), trustedRegionContainer);
         }
         
         Page containerPage = trustedRegion.getPage();

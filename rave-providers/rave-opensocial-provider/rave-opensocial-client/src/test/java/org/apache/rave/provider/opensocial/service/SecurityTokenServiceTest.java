@@ -22,6 +22,8 @@ package org.apache.rave.provider.opensocial.service;
 import org.apache.rave.model.ModelConverter;
 import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.model.conversion.JpaConverter;
+import org.apache.rave.portal.model.conversion.JpaRegionConverter;
+import org.apache.rave.portal.model.conversion.JpaRegionWidgetConverter;
 import org.apache.rave.portal.model.conversion.JpaWidgetConverter;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.provider.opensocial.service.impl.EncryptedBlobSecurityTokenService;
@@ -84,8 +86,12 @@ public class SecurityTokenServiceTest {
 
         //TODO:REMOVE WHEN REGION_WIDGET REFACTOR IS COMPLETE
         JpaWidgetConverter converter = new JpaWidgetConverter();
+        JpaRegionConverter regionConverter = new JpaRegionConverter();
+        JpaRegionWidgetConverter regionWidgetConverter = new JpaRegionWidgetConverter();
         List<ModelConverter> converters = new ArrayList<ModelConverter>();
         converters.add(converter);
+        converters.add(regionConverter);
+        converters.add(regionWidgetConverter);
         new JpaConverter(converters);
 
         userService = createMock(UserService.class);
@@ -95,14 +101,14 @@ public class SecurityTokenServiceTest {
         validPerson = new User(VALID_USER_ID, VALID_USER_NAME);
 
         validPage = new Page(1L, validPerson);
-        validRegion = new Region(1L, validPage, 1);
+        validRegion = new JpaRegion(1L, validPage, 1);
         validPage.setRegions(Arrays.asList(validRegion));
 
         validWidget = new JpaWidget(1L, VALID_URL);
         validWidget.setType("OpenSocial");
         validWidget.setTitle("Widget Title");
 
-        validRegionWidget = new RegionWidget(VALID_REGION_WIDGET_ID, validWidget, validRegion);
+        validRegionWidget = new JpaRegionWidget(VALID_REGION_WIDGET_ID, validWidget, (JpaRegion)validRegion);
         validRegion.setRegionWidgets(Arrays.asList(validRegionWidget));
     }
 

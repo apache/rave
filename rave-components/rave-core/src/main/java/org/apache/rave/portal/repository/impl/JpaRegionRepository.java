@@ -20,14 +20,46 @@
 package org.apache.rave.portal.repository.impl;
 
 import org.apache.rave.persistence.jpa.AbstractJpaRepository;
+import org.apache.rave.portal.model.JpaRegion;
 import org.apache.rave.portal.model.Region;
+import org.apache.rave.portal.model.conversion.JpaCategoryConverter;
+import org.apache.rave.portal.model.conversion.JpaRegionConverter;
 import org.apache.rave.portal.repository.RegionRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
+import static org.apache.rave.persistence.jpa.util.JpaUtil.saveOrUpdate;
 
 
 @Repository
-public class JpaRegionRepository extends AbstractJpaRepository<Region> implements RegionRepository {
-  public JpaRegionRepository() {
-      super(Region.class);
-  }
+public class JpaRegionRepository implements RegionRepository {
+    @PersistenceContext
+    private EntityManager manager;
+
+    @Autowired
+    private JpaRegionConverter regionConverter;
+
+    @Override
+    public Class<? extends Region> getType() {
+        return JpaRegion.class;
+    }
+
+    @Override
+    public Region get(long id) {
+        return manager.find(JpaRegion.class, id);
+    }
+
+    @Override
+    public Region save(Region item) {
+        JpaRegion region = regionConverter.convert(item);
+        return saveOrUpdate(region.getEntityId(), manager, region);
+    }
+
+    @Override
+    public void delete(Region item) {
+        manager.remove(item instanceof JpaRegion ? item : get(item.getId()));
+    }
 }

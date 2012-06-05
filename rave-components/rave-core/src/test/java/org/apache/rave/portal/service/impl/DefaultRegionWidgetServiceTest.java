@@ -20,6 +20,7 @@
 package org.apache.rave.portal.service.impl;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.rave.portal.model.JpaRegionWidget;
 import org.apache.rave.portal.model.RegionWidget;
 import org.apache.rave.portal.model.RegionWidgetPreference;
 import org.apache.rave.portal.repository.RegionWidgetRepository;
@@ -53,7 +54,7 @@ public class DefaultRegionWidgetServiceTest {
 
     @Test
     public void getRegionWidget_validId() {
-        final RegionWidget VALID_REGION_WIDGET = new RegionWidget(VALID_REGION_WIDGET_ID);
+        final RegionWidget VALID_REGION_WIDGET = new JpaRegionWidget(VALID_REGION_WIDGET_ID);
 
         expect(regionWidgetRepository.get(VALID_REGION_WIDGET_ID)).andReturn(VALID_REGION_WIDGET);
         replay(regionWidgetRepository);
@@ -71,7 +72,7 @@ public class DefaultRegionWidgetServiceTest {
 
     @Test
     public void saveRegionWidget() {
-        final RegionWidget VALID_REGION_WIDGET = new RegionWidget(VALID_REGION_WIDGET_ID);
+        final RegionWidget VALID_REGION_WIDGET = new JpaRegionWidget(VALID_REGION_WIDGET_ID);
 
         expect(regionWidgetRepository.save(VALID_REGION_WIDGET)).andReturn(VALID_REGION_WIDGET);
         replay(regionWidgetRepository);
@@ -81,7 +82,7 @@ public class DefaultRegionWidgetServiceTest {
 
     @Test
     public void saveRegionWidgetPreferences() {
-        final RegionWidget VALID_REGION_WIDGET = new RegionWidget(VALID_REGION_WIDGET_ID);
+        final RegionWidget VALID_REGION_WIDGET = new JpaRegionWidget(VALID_REGION_WIDGET_ID);
         VALID_REGION_WIDGET.setPreferences(getTestExistingRegionWidgetPreferences());
 
         expect(regionWidgetRepository.get(VALID_REGION_WIDGET_ID)).andReturn(VALID_REGION_WIDGET);
@@ -97,7 +98,7 @@ public class DefaultRegionWidgetServiceTest {
 
     @Test
     public void saveRegionWidgetPreference() {
-        final RegionWidget VALID_REGION_WIDGET = new RegionWidget(VALID_REGION_WIDGET_ID);
+        final RegionWidget VALID_REGION_WIDGET = new JpaRegionWidget(VALID_REGION_WIDGET_ID);
         VALID_REGION_WIDGET.setPreferences(getTestExistingRegionWidgetPreferences());
 
         expect(regionWidgetRepository.get(VALID_REGION_WIDGET_ID)).andReturn(VALID_REGION_WIDGET).anyTimes();
@@ -121,7 +122,7 @@ public class DefaultRegionWidgetServiceTest {
     @Test
     public void saveRegionWidgetCollapsedState() {
         final boolean COLLAPSED = true;
-        RegionWidget regionWidget = new RegionWidget(VALID_REGION_WIDGET_ID);
+        RegionWidget regionWidget = new JpaRegionWidget(VALID_REGION_WIDGET_ID);
         
         expect(regionWidgetRepository.get(VALID_REGION_WIDGET_ID)).andReturn(regionWidget);                
         regionWidget.setCollapsed(COLLAPSED);

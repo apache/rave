@@ -20,6 +20,8 @@
 package org.apache.rave.portal.web.renderer;
 
 import org.apache.rave.exception.NotSupportedException;
+import org.apache.rave.portal.model.JpaRegion;
+import org.apache.rave.portal.model.JpaRegionWidget;
 import org.apache.rave.portal.model.JpaWidget;
 import org.apache.rave.portal.model.RegionWidget;
 import org.apache.rave.portal.web.renderer.impl.DefaultRenderService;
@@ -86,7 +88,7 @@ public class RenderServiceTest {
         JpaWidget w = new JpaWidget();
         w.setType(SUPPORTED_TYPE_1);
 
-        RegionWidget rw = new RegionWidget();
+        RegionWidget rw = new JpaRegionWidget();
         rw.setWidget(w);
 
         expect(widgetRenderer1.render(rw, context)).andReturn(RENDERED_TYPE_1);
@@ -100,7 +102,7 @@ public class RenderServiceTest {
     public void render_supported_bar() {
         JpaWidget w = new JpaWidget();
         w.setType(SUPPORTED_TYPE_2);
-        RegionWidget rw = new RegionWidget();
+        RegionWidget rw = new JpaRegionWidget();
         rw.setWidget(w);
 
         expect(widgetRenderer2.render(rw, context)).andReturn(RENDERED_TYPE_2);
@@ -115,7 +117,7 @@ public class RenderServiceTest {
         JpaWidget w = new JpaWidget();
         w.setType("NONE");
 
-        RegionWidget rw = new RegionWidget();
+        RegionWidget rw = new JpaRegionWidget();
         rw.setWidget(w);
 
         replayMocks();

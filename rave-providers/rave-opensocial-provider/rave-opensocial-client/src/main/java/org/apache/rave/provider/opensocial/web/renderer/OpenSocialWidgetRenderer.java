@@ -98,7 +98,7 @@ public class OpenSocialWidgetRenderer implements RegionWidgetRenderer {
         scriptManager.registerScriptBlock(widgetScript, ScriptLocation.AFTER_RAVE, RenderScope.CURRENT_REQUEST, context);
         logger.debug("Gadget Script Data: " + widgetScript);
 
-        return String.format(MARKUP, item.getEntityId());
+        return String.format(MARKUP, item.getId());
     }
 
     private String getWidgetScript(RegionWidget item) {
@@ -114,9 +114,9 @@ public class OpenSocialWidgetRenderer implements RegionWidgetRenderer {
         }
 
         return String.format(SCRIPT_BLOCK,
-                item.getRegion().getEntityId(),
+                item.getRegion().getId(),
                 Constants.WIDGET_TYPE,
-                item.getEntityId(),
+                item.getId(),
                 item.getWidget().getUrl(),
                 securityTokenService.getEncryptedSecurityToken(item),
                 openSocialService.getGadgetMetadata(item.getWidget().getUrl()),
