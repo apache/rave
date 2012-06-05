@@ -30,7 +30,7 @@ import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNull;
 
 /**
- * Test for {@link PortalPreference}
+ * Test for {@link JpaPortalPreference}
  */
 public class PortalPreferenceTest {
     private static final String KEY = "foo";
@@ -39,7 +39,7 @@ public class PortalPreferenceTest {
     @Test
     public void testGettersSetters() throws Exception {
         Long entityId = 1L;
-        PortalPreference preference = new PortalPreference();
+        JpaPortalPreference preference = new JpaPortalPreference();
 
         assertNull(preference.getValue());
 
@@ -54,21 +54,21 @@ public class PortalPreferenceTest {
 
     @Test
     public void singleValuePreference() throws Exception {
-        PortalPreference preference = new PortalPreference(KEY, "bar");
+        PortalPreference preference = new JpaPortalPreference(KEY, "bar");
         assertEquals(KEY, preference.getKey());
         assertEquals("bar", preference.getValue());
     }
 
     @Test
     public void testGetValues() throws Exception {
-        PortalPreference preference = new PortalPreference(KEY, VALUES);
+        PortalPreference preference = new JpaPortalPreference(KEY, VALUES);
         assertEquals(KEY, preference.getKey());
         assertEquals(VALUES, preference.getValues());
     }
 
     @Test
     public void testSetValues() throws Exception {
-        PortalPreference preference = new PortalPreference(KEY, VALUES);
+        PortalPreference preference = new JpaPortalPreference(KEY, VALUES);
         assertEquals(KEY, preference.getKey());
         assertEquals(VALUES, preference.getValues());
         preference.setValue("tree");
@@ -79,7 +79,7 @@ public class PortalPreferenceTest {
 
     @Test(expected = NotSupportedException.class)
     public void getValueFailsForMultiValue() {
-        PortalPreference preference = new PortalPreference(KEY, VALUES);
+        PortalPreference preference = new JpaPortalPreference(KEY, VALUES);
         preference.getValue();
         assertFalse("Expected exception", true);
 

@@ -25,7 +25,7 @@ import org.apache.rave.portal.model.PortalPreference;
 import java.util.List;
 
 /**
- * Provides persistence operations for the {@link PortalPreference}
+ * Provides persistence operations for the {@link org.apache.rave.portal.model.JpaPortalPreference}
  */
 public interface PortalPreferenceRepository extends Repository<PortalPreference> {
 

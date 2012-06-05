@@ -19,38 +19,68 @@
 
 package org.apache.rave.portal.repository.impl;
 
-import org.apache.rave.persistence.jpa.AbstractJpaRepository;
+import org.apache.rave.portal.model.JpaPortalPreference;
 import org.apache.rave.portal.model.PortalPreference;
+import org.apache.rave.portal.model.conversion.JpaPortalPreferenceConverter;
 import org.apache.rave.portal.repository.PortalPreferenceRepository;
+import org.apache.rave.util.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
 import static org.apache.rave.persistence.jpa.util.JpaUtil.getSingleResult;
+import static org.apache.rave.persistence.jpa.util.JpaUtil.saveOrUpdate;
 
 /**
  * JPA implementation for {@link PortalPreferenceRepository}
  */
 @Repository
-public class JpaPortalPreferenceRepository extends AbstractJpaRepository<PortalPreference> implements PortalPreferenceRepository {
+public class JpaPortalPreferenceRepository implements PortalPreferenceRepository {
 
-    public JpaPortalPreferenceRepository() {
-        super(PortalPreference.class);
-    }
+    @PersistenceContext
+    private EntityManager manager;
+
+    @Autowired
+    private JpaPortalPreferenceConverter converter;
+
 
     @Override
     public List<PortalPreference> getAll() {
-        final TypedQuery<PortalPreference> query =
-                manager.createNamedQuery(PortalPreference.GET_ALL, PortalPreference.class);
-        return query.getResultList();
+        final TypedQuery<JpaPortalPreference> query =
+                manager.createNamedQuery(JpaPortalPreference.GET_ALL, JpaPortalPreference.class);
+        return CollectionUtils.<PortalPreference>toBaseTypedList(query.getResultList());
     }
 
     @Override
     public PortalPreference getByKey(String key) {
-        final TypedQuery<PortalPreference> query =
-                manager.createNamedQuery(PortalPreference.GET_BY_KEY, PortalPreference.class);
-        query.setParameter(PortalPreference.PARAM_KEY, key);
+        final TypedQuery<JpaPortalPreference> query =
+                manager.createNamedQuery(JpaPortalPreference.GET_BY_KEY, JpaPortalPreference.class);
+        query.setParameter(JpaPortalPreference.PARAM_KEY, key);
         return getSingleResult(query.getResultList());
+    }
+
+    @Override
+    public Class<? extends PortalPreference> getType() {
+        return JpaPortalPreference.class;
+    }
+
+    @Override
+    public PortalPreference get(long id) {
+        return manager.find(JpaPortalPreference.class, id);
+    }
+
+    @Override
+    public PortalPreference save(PortalPreference item) {
+        JpaPortalPreference pref = converter.convert(item);
+        return saveOrUpdate(pref.getEntityId(), manager, pref);
+    }
+
+    @Override
+    public void delete(PortalPreference item) {
+        manager.remove(converter.convert(item));
     }
 }

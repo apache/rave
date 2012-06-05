@@ -19,6 +19,7 @@
 
 package org.apache.rave.portal.web.controller.admin;
 
+import org.apache.rave.portal.model.JpaPortalPreference;
 import org.apache.rave.portal.model.PortalPreference;
 import org.apache.rave.portal.service.PortalPreferenceService;
 import org.apache.rave.portal.web.model.PortalPreferenceForm;
@@ -168,7 +169,7 @@ public class PortalPreferenceControllerTest {
     public void testUpdatePreferences_invalidPageSizeValue() {
         ModelMap model = new ExtendedModelMap();
         HashMap<String, PortalPreference> preferenceMap = new HashMap<String, PortalPreference>();
-        PortalPreference pageSizePref = new PortalPreference(PortalPreferenceKeys.PAGE_SIZE, "invalid");
+        PortalPreference pageSizePref = new JpaPortalPreference(PortalPreferenceKeys.PAGE_SIZE, "invalid");
         preferenceMap.put(PortalPreferenceKeys.PAGE_SIZE, pageSizePref);
         PortalPreferenceForm form = new PortalPreferenceForm(preferenceMap);
         final BindingResult errors = new BeanPropertyBindingResult(form, "form");

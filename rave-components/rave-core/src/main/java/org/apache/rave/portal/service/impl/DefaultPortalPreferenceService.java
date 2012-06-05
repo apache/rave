@@ -19,6 +19,7 @@
 
 package org.apache.rave.portal.service.impl;
 
+import org.apache.rave.portal.model.JpaPortalPreference;
 import org.apache.rave.portal.model.PortalPreference;
 import org.apache.rave.portal.repository.PortalPreferenceRepository;
 import org.apache.rave.portal.service.PortalPreferenceService;
@@ -70,7 +71,7 @@ public class DefaultPortalPreferenceService implements PortalPreferenceService {
     public void savePreference(String key, List<String> values) {
         PortalPreference preference = getPreference(key);
         if (preference == null) {
-            preference = new PortalPreference(key, values);
+            preference = new JpaPortalPreference(key, values);
         } else {
             preference.setValues(values);
         }

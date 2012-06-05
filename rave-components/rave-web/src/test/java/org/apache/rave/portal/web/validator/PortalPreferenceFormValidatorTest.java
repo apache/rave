@@ -19,6 +19,7 @@
 
 package org.apache.rave.portal.web.validator;
 
+import org.apache.rave.portal.model.JpaPortalPreference;
 import org.apache.rave.portal.model.PortalPreference;
 import org.apache.rave.portal.web.model.PortalPreferenceForm;
 import org.junit.Before;
@@ -55,8 +56,8 @@ public class PortalPreferenceFormValidatorTest {
     @Test
     public void testValidate_Valid() throws Exception {
         Map<String, PortalPreference> preferenceMap = new HashMap<String, PortalPreference>();
-        preferenceMap.put(TITLE_SUFFIX, new PortalPreference(TITLE_SUFFIX, "- Rave unit test"));
-        preferenceMap.put(PAGE_SIZE, new PortalPreference(PAGE_SIZE, "10"));
+        preferenceMap.put(TITLE_SUFFIX, new JpaPortalPreference(TITLE_SUFFIX, "- Rave unit test"));
+        preferenceMap.put(PAGE_SIZE, new JpaPortalPreference(PAGE_SIZE, "10"));
         PortalPreferenceForm form = new PortalPreferenceForm(preferenceMap);
         Errors errors = new BindException(form, "form");
         validator.validate(form, errors);
@@ -80,7 +81,7 @@ public class PortalPreferenceFormValidatorTest {
     @Test
     public void testValidate_InvalidPageSize() throws Exception {
         Map<String, PortalPreference> preferenceMap = new HashMap<String, PortalPreference>();
-        preferenceMap.put(PAGE_SIZE, new PortalPreference(PAGE_SIZE, "10.5"));
+        preferenceMap.put(PAGE_SIZE, new JpaPortalPreference(PAGE_SIZE, "10.5"));
         PortalPreferenceForm form = new PortalPreferenceForm(preferenceMap);
         Errors errors = new BindException(form, "form");
         validator.validate(form, errors);

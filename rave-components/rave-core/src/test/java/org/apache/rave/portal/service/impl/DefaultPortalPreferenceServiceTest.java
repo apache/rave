@@ -19,6 +19,7 @@
 
 package org.apache.rave.portal.service.impl;
 
+import org.apache.rave.portal.model.JpaPortalPreference;
 import org.apache.rave.portal.model.PortalPreference;
 import org.apache.rave.portal.repository.PortalPreferenceRepository;
 import org.apache.rave.portal.service.PortalPreferenceService;
@@ -108,8 +109,8 @@ public class DefaultPortalPreferenceServiceTest {
     public void testSaveKeyValue_new() {
         final String key = "foo";
         final String value = "bar";
-        PortalPreference fooBar = new PortalPreference(key, value);
-        PortalPreference fooBarSaved = new PortalPreference(key, value);
+        PortalPreference fooBar = new JpaPortalPreference(key, value);
+        JpaPortalPreference fooBarSaved = new JpaPortalPreference(key, value);
         fooBarSaved.setEntityId(123L);
 
         expect(repository.getByKey(key)).andReturn(null).once();
@@ -124,9 +125,9 @@ public class DefaultPortalPreferenceServiceTest {
         final String key = "foo";
         final String value = "bar";
         final String newValue = "baz";
-        PortalPreference fooBar = new PortalPreference(key, value);
+        JpaPortalPreference fooBar = new JpaPortalPreference(key, value);
         fooBar.setEntityId(123L);
-        PortalPreference fooBarSaved = new PortalPreference(key, newValue);
+        JpaPortalPreference fooBarSaved = new JpaPortalPreference(key, newValue);
         fooBarSaved.setEntityId(123L);
 
         expect(repository.getByKey(key)).andReturn(fooBar).once();
@@ -142,8 +143,8 @@ public class DefaultPortalPreferenceServiceTest {
         List<String> values = new ArrayList<String>();
         values.add("bar");
         values.add("baz");
-        PortalPreference fooBar = new PortalPreference(key, values);
-        PortalPreference fooBarSaved = new PortalPreference(key, values);
+        PortalPreference fooBar = new JpaPortalPreference(key, values);
+        JpaPortalPreference fooBarSaved = new JpaPortalPreference(key, values);
         fooBarSaved.setEntityId(123L);
 
         expect(repository.getByKey(key)).andReturn(null).once();
@@ -162,9 +163,9 @@ public class DefaultPortalPreferenceServiceTest {
         List<String> newValues = new ArrayList<String>();
         values.add("bar2");
         values.add("baz2");
-        PortalPreference fooBar = new PortalPreference(key, values);
+        JpaPortalPreference fooBar = new JpaPortalPreference(key, values);
         fooBar.setEntityId(123L);
-        PortalPreference fooBarSaved = new PortalPreference(key, newValues);
+        JpaPortalPreference fooBarSaved = new JpaPortalPreference(key, newValues);
         fooBarSaved.setEntityId(123L);
 
         expect(repository.getByKey(key)).andReturn(fooBar).once();
@@ -177,7 +178,7 @@ public class DefaultPortalPreferenceServiceTest {
     @Test
     public void testSavePreference() {
         PortalPreference title = titlePreference();
-        PortalPreference savedTitle = new PortalPreference("title", "Rave");
+        JpaPortalPreference savedTitle = new JpaPortalPreference("title", "Rave");
         savedTitle.setEntityId(123L);
 
         expect(repository.save(title)).andReturn(savedTitle).once();
@@ -194,7 +195,7 @@ public class DefaultPortalPreferenceServiceTest {
         colors.add("red");
         colors.add("yellow");
         colors.add("blue");
-        PortalPreference colorPref = new PortalPreference("colors", colors);
+        PortalPreference colorPref = new JpaPortalPreference("colors", colors);
 
         List<PortalPreference> preferences = new ArrayList<PortalPreference>();
         preferences.add(title);
@@ -204,6 +205,6 @@ public class DefaultPortalPreferenceServiceTest {
     }
 
     private static PortalPreference titlePreference() {
-        return new PortalPreference("title", "Rave");
+        return new JpaPortalPreference("title", "Rave");
     }
 }

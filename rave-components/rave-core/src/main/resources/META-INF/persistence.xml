@@ -24,9 +24,9 @@
         <persistence-unit name="ravePersistenceUnit" transaction-type="RESOURCE_LOCAL">
             <provider>org.apache.openjpa.persistence.PersistenceProviderImpl</provider>
             <class>org.apache.rave.portal.model.Page</class>
-            <class>org.apache.rave.portal.model.Region</class>
+            <class>org.apache.rave.portal.model.JpaRegion</class>
             <class>org.apache.rave.portal.model.User</class>
-            <class>org.apache.rave.portal.model.RegionWidget</class>
+            <class>org.apache.rave.portal.model.JpaRegionWidget</class>
             <class>org.apache.rave.portal.model.RegionWidgetPreference</class>
             <class>org.apache.rave.portal.model.JpaWidget</class>
             <class>org.apache.rave.portal.model.JpaWidgetComment</class>
@@ -35,7 +35,7 @@
             <class>org.apache.rave.portal.model.Authority</class>
             <class>org.apache.rave.portal.model.Tag</class>
             <class>org.apache.rave.portal.model.WidgetTag</class>
-            <class>org.apache.rave.portal.model.PortalPreference</class>
+            <class>org.apache.rave.portal.model.JpaPortalPreference</class>
             <class>org.apache.rave.portal.model.JpaPageTemplate</class>
             <class>org.apache.rave.portal.model.JpaPageTemplateRegion</class>
             <class>org.apache.rave.portal.model.JpaPageTemplateWidget</class>

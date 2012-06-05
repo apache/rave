@@ -999,18 +999,18 @@ UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @g
 set @next_portal_preference_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @portal_preference_seq);
 INSERT INTO portal_preference (entity_id, preference_key)
 values (@next_portal_preference_id, 'color');
-INSERT INTO portalpreference_values
+INSERT INTO JPAPORTALPREFERENCE_VALUES
 values (@next_portal_preference_id, 'red');
-INSERT INTO portalpreference_values
+INSERT INTO JPAPORTALPREFERENCE_VALUES
 values (@next_portal_preference_id, 'yellow');
-INSERT INTO portalpreference_values
+INSERT INTO JPAPORTALPREFERENCE_VALUES
 values (@next_portal_preference_id, 'blue');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @portal_preference_seq;
 
 set @next_portal_preference_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @portal_preference_seq);
 INSERT INTO portal_preference (entity_id, preference_key)
 values (@next_portal_preference_id, 'title');
-INSERT INTO portalpreference_values
+INSERT INTO JPAPORTALPREFERENCE_VALUES
 values (@next_portal_preference_id, 'Rave');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @portal_preference_seq;
 -- end portal preferences
