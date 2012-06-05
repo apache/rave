@@ -61,11 +61,13 @@
         <property name="suffix" value=".jsp"/>
     </bean>
 
-    <oxm:jaxb2-marshaller id="marshaller">
+    <!-- TODO: Fix HttpMessage Converter-->
+
+<!--    <oxm:jaxb2-marshaller id="marshaller">
         <oxm:class-to-be-bound name="org.apache.rave.portal.model.Page"/>
         <oxm:class-to-be-bound name="org.apache.rave.portal.model.RegionWidgetPreference"/>
         <oxm:class-to-be-bound name="org.apache.rave.portal.web.model.RegionWidgetPreferenceListWrapper"/>
-    </oxm:jaxb2-marshaller>
+    </oxm:jaxb2-marshaller>-->
 
     <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
         <property name="messageConverters">
@@ -86,8 +88,8 @@
                         </list>
                     </property>
                 </bean>
-                <bean class="org.springframework.http.converter.xml.MarshallingHttpMessageConverter"
-                      p:marshaller-ref="marshaller" p:unmarshaller-ref="marshaller"/>
+               <!-- <bean class="org.springframework.http.converter.xml.MarshallingHttpMessageConverter"
+                      p:marshaller-ref="marshaller" p:unmarshaller-ref="marshaller"/>-->
             </list>
         </property>
     </bean>

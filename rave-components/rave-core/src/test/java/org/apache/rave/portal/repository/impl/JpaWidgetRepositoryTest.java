@@ -63,7 +63,7 @@ public class JpaWidgetRepositoryTest {
 
     @Test
     public void getById_valid() {
-        Widget widget = repository.get(1L);
+        JpaWidget widget = (JpaWidget)repository.get(1L);
         assertThat(widget, is(notNullValue()));
         assertThat(widget.getEntityId(), is(equalTo(1L)));
     }
@@ -197,12 +197,12 @@ public class JpaWidgetRepositoryTest {
         Widget doesnotexist = repository.getByUrl(url);
         assertNull(doesnotexist);
 
-        Widget widget = new Widget();
+        Widget widget = new JpaWidget();
         widget.setTitle("Widget with long description");
         widget.setUrl(url);
         widget.setDescription(longDescription);
         widget = repository.save(widget);
-        assertNotNull(widget.getEntityId());
+        assertNotNull(widget.getId());
         assertEquals(longDescription, widget.getDescription());
     }
 
@@ -253,7 +253,7 @@ public class JpaWidgetRepositoryTest {
         assertNotNull(ratings);
         assertEquals(1, ratings.size());
 
-        WidgetStatistics widgetStatistics = repository.getWidgetStatistics(widget.getEntityId(), 1L);
+        WidgetStatistics widgetStatistics = repository.getWidgetStatistics(widget.getId(), 1L);
         widgetStatistics.toString();
         assertNotNull(widgetStatistics);
         assertEquals(0, widgetStatistics.getTotalLike());
@@ -269,7 +269,7 @@ public class JpaWidgetRepositoryTest {
         assertNotNull(ratings);
         assertEquals(1, ratings.size());
 
-        WidgetStatistics widgetStatistics = repository.getWidgetStatistics(widget.getEntityId(), 1L);
+        WidgetStatistics widgetStatistics = repository.getWidgetStatistics(widget.getId(), 1L);
         assertNotNull(widgetStatistics);
         assertEquals(1, widgetStatistics.getTotalLike());
         assertEquals(0, widgetStatistics.getTotalDislike());
@@ -284,7 +284,7 @@ public class JpaWidgetRepositoryTest {
         assertNotNull(ratings);
         assertEquals(0, ratings.size());
 
-        WidgetStatistics widgetStatistics = repository.getWidgetStatistics(widget.getEntityId(), 1L);
+        WidgetStatistics widgetStatistics = repository.getWidgetStatistics(widget.getId(), 1L);
         assertNotNull(widgetStatistics);
         assertEquals(0, widgetStatistics.getTotalDislike());
         assertEquals(0, widgetStatistics.getTotalLike());
@@ -300,7 +300,7 @@ public class JpaWidgetRepositoryTest {
         WidgetRating widgetRating = new JpaWidgetRating();
         widgetRating.setScore(10);
         widgetRating.setUserId(1L);
-        widgetRating.setWidgetId(widget.getEntityId());
+        widgetRating.setWidgetId(widget.getId());
         widget.getRatings().add(widgetRating);
 
         repository.save(widget);
@@ -313,7 +313,7 @@ public class JpaWidgetRepositoryTest {
         assertNotNull(reloadedWidgetRating);
         assertEquals(widgetRating.getScore(), reloadedWidgetRating.getScore());
         assertEquals(widgetRating.getUserId(), reloadedWidgetRating.getUserId());
-        assertEquals(widget.getEntityId(), reloadedWidgetRating.getWidgetId());
+        assertEquals(widget.getId(), reloadedWidgetRating.getWidgetId());
     }
 
     @Test
@@ -325,7 +325,7 @@ public class JpaWidgetRepositoryTest {
         WidgetRating widgetRating = new JpaWidgetRating();
         widgetRating.setScore(10);
         widgetRating.setUserId(1L);
-        widgetRating.setWidgetId(widget.getEntityId());
+        widgetRating.setWidgetId(widget.getId());
         widget.getRatings().add(widgetRating);
 
         repository.save(widget);
@@ -338,7 +338,7 @@ public class JpaWidgetRepositoryTest {
         assertNotNull(reloadedWidgetRating);
         assertEquals(widgetRating.getScore(), reloadedWidgetRating.getScore());
         assertEquals(widgetRating.getUserId(), reloadedWidgetRating.getUserId());
-        assertEquals(widget.getEntityId(), reloadedWidgetRating.getWidgetId());
+        assertEquals(widget.getId(), reloadedWidgetRating.getWidgetId());
 
         reloadedWidgetRating.setScore(0);
 
@@ -351,7 +351,7 @@ public class JpaWidgetRepositoryTest {
         assertNotNull(reloadedWidgetRating);
         assertEquals(widgetRating.getScore(), reloadedWidgetRating.getScore());
         assertEquals(widgetRating.getUserId(), reloadedWidgetRating.getUserId());
-        assertEquals(widget.getEntityId(), reloadedWidgetRating.getWidgetId());
+        assertEquals(widget.getId(), reloadedWidgetRating.getWidgetId());
     }
 
     @Test
@@ -369,13 +369,13 @@ public class JpaWidgetRepositoryTest {
       String tag = "news";
         List<Widget> widgets = repository.getWidgetsByTag(tag, 0, 10);
         assertTrue(widgets.size() == 1);
-        assertTrue(widgets.iterator().next().getEntityId() == 3);
+        assertTrue(widgets.iterator().next().getId() == 3);
         assertTrue(repository.getCountByTag(tag) == 1);
 
         tag = "wikipedia";
         widgets = repository.getWidgetsByTag(tag, 0, 10);
         assertTrue(widgets.size() == 1);
-        assertTrue(widgets.iterator().next().getEntityId() == 1);
+        assertTrue(widgets.iterator().next().getId() == 1);
         assertTrue(repository.getCountByTag(tag) == 1);
 
         tag = "aaanews";
@@ -385,7 +385,7 @@ public class JpaWidgetRepositoryTest {
 
         widgets = repository.getWidgetsByTag("NEWS", 0, 10);
         assertTrue(widgets.size() == 1);
-        assertTrue(widgets.iterator().next().getEntityId() == 3);
+        assertTrue(widgets.iterator().next().getId() == 3);
         assertTrue(repository.getCountByTag("NEWS") == 1);
     }
 

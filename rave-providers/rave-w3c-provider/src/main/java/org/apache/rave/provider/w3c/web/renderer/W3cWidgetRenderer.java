@@ -157,7 +157,7 @@ public class W3cWidgetRenderer implements RegionWidgetRenderer {
                 height,
                 width,
                 item.isCollapsed(),
-                item.getWidget().getEntityId(),
+                item.getWidget().getId(),
                 item.isLocked(),
                 item.isHideChrome());
     }

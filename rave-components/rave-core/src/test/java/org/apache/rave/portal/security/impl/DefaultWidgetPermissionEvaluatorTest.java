@@ -18,9 +18,7 @@
  */
 package org.apache.rave.portal.security.impl;
 
-import org.apache.rave.portal.model.Page;
-import org.apache.rave.portal.model.Widget;
-import org.apache.rave.portal.model.User;
+import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.repository.WidgetRepository;
 import org.apache.rave.portal.security.ModelPermissionEvaluator;
 import org.apache.rave.portal.security.util.AuthenticationUtils;
@@ -35,7 +33,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.apache.rave.portal.model.WidgetStatus;
 import static org.easymock.EasyMock.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -44,7 +41,7 @@ public class DefaultWidgetPermissionEvaluatorTest {
     private DefaultWidgetPermissionEvaluator defaultWidgetPermissionEvaluator;
     private WidgetRepository mockWidgetRepository;
     private Page page;
-    private Widget widget, widget2;
+    private JpaWidget widget, widget2;
     private User user, user2;
     private Authentication mockAuthentication;
     private List<GrantedAuthority> grantedAuthoritiesList;
@@ -69,7 +66,7 @@ public class DefaultWidgetPermissionEvaluatorTest {
         page = new Page();
         page.setEntityId(VALID_PAGE_ID);
         page.setOwner(user);
-        widget = new Widget();
+        widget = new JpaWidget();
         widget.setEntityId(VALID_REGION_ID);
         widget.setOwner(user);
         widget.setWidgetStatus(WidgetStatus.PUBLISHED);
@@ -213,7 +210,7 @@ public class DefaultWidgetPermissionEvaluatorTest {
     public void testHasPermission_4args_administer() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
         replay(mockAuthentication);
-        assertThat(defaultWidgetPermissionEvaluator.hasPermission(mockAuthentication, VALID_REGION_ID, Widget.class.getName(), ModelPermissionEvaluator.Permission.ADMINISTER), is(false));
+        assertThat(defaultWidgetPermissionEvaluator.hasPermission(mockAuthentication, VALID_REGION_ID, JpaWidget.class.getName(), ModelPermissionEvaluator.Permission.ADMINISTER), is(false));
         verify(mockAuthentication);
     }
 
@@ -224,7 +221,7 @@ public class DefaultWidgetPermissionEvaluatorTest {
         expect(mockWidgetRepository.get(VALID_REGION_ID)).andReturn(widget);
         replay(mockAuthentication);
         replay(mockWidgetRepository);
-        assertThat(defaultWidgetPermissionEvaluator.hasPermission(mockAuthentication, VALID_REGION_ID, Widget.class.getName(), ModelPermissionEvaluator.Permission.CREATE), is(true));
+        assertThat(defaultWidgetPermissionEvaluator.hasPermission(mockAuthentication, VALID_REGION_ID, JpaWidget.class.getName(), ModelPermissionEvaluator.Permission.CREATE), is(true));
         verify(mockAuthentication);
         verify(mockWidgetRepository);
     }
@@ -236,7 +233,7 @@ public class DefaultWidgetPermissionEvaluatorTest {
         expect(mockWidgetRepository.get(VALID_REGION_ID)).andReturn(widget);
         replay(mockAuthentication);
         replay(mockWidgetRepository);
-        assertThat(defaultWidgetPermissionEvaluator.hasPermission(mockAuthentication, VALID_REGION_ID, Widget.class.getName(), ModelPermissionEvaluator.Permission.CREATE), is(false));
+        assertThat(defaultWidgetPermissionEvaluator.hasPermission(mockAuthentication, VALID_REGION_ID, JpaWidget.class.getName(), ModelPermissionEvaluator.Permission.CREATE), is(false));
         verify(mockAuthentication);
         verify(mockWidgetRepository);
     }
@@ -248,7 +245,7 @@ public class DefaultWidgetPermissionEvaluatorTest {
         expect(mockWidgetRepository.get(VALID_REGION_ID)).andReturn(widget);
         replay(mockAuthentication);
         replay(mockWidgetRepository);
-        assertThat(defaultWidgetPermissionEvaluator.hasPermission(mockAuthentication, VALID_REGION_ID, Widget.class.getName(), ModelPermissionEvaluator.Permission.CREATE), is(true));
+        assertThat(defaultWidgetPermissionEvaluator.hasPermission(mockAuthentication, VALID_REGION_ID, JpaWidget.class.getName(), ModelPermissionEvaluator.Permission.CREATE), is(true));
         verify(mockAuthentication);
         verify(mockWidgetRepository);
     }
@@ -260,7 +257,7 @@ public class DefaultWidgetPermissionEvaluatorTest {
         expect(mockWidgetRepository.get(VALID_REGION_ID)).andReturn(widget);
         replay(mockAuthentication);
         replay(mockWidgetRepository);
-        assertThat(defaultWidgetPermissionEvaluator.hasPermission(mockAuthentication, VALID_REGION_ID, Widget.class.getName(), ModelPermissionEvaluator.Permission.CREATE), is(false));
+        assertThat(defaultWidgetPermissionEvaluator.hasPermission(mockAuthentication, VALID_REGION_ID, JpaWidget.class.getName(), ModelPermissionEvaluator.Permission.CREATE), is(false));
         verify(mockAuthentication);
         verify(mockWidgetRepository);
     }
@@ -272,7 +269,7 @@ public class DefaultWidgetPermissionEvaluatorTest {
         expect(mockWidgetRepository.get(VALID_REGION_ID)).andReturn(widget);
         replay(mockAuthentication);
         replay(mockWidgetRepository);
-        assertThat(defaultWidgetPermissionEvaluator.hasPermission(mockAuthentication, VALID_REGION_ID, Widget.class.getName(), ModelPermissionEvaluator.Permission.CREATE), is(true));
+        assertThat(defaultWidgetPermissionEvaluator.hasPermission(mockAuthentication, VALID_REGION_ID, JpaWidget.class.getName(), ModelPermissionEvaluator.Permission.CREATE), is(true));
         verify(mockAuthentication);
         verify(mockWidgetRepository);
     }
@@ -284,7 +281,7 @@ public class DefaultWidgetPermissionEvaluatorTest {
         expect(mockWidgetRepository.get(VALID_REGION_ID)).andReturn(widget);
         replay(mockAuthentication);
         replay(mockWidgetRepository);
-        assertThat(defaultWidgetPermissionEvaluator.hasPermission(mockAuthentication, VALID_REGION_ID, Widget.class.getName(), ModelPermissionEvaluator.Permission.CREATE), is(false));
+        assertThat(defaultWidgetPermissionEvaluator.hasPermission(mockAuthentication, VALID_REGION_ID, JpaWidget.class.getName(), ModelPermissionEvaluator.Permission.CREATE), is(false));
         verify(mockAuthentication);
         verify(mockWidgetRepository);
     }
@@ -296,7 +293,7 @@ public class DefaultWidgetPermissionEvaluatorTest {
         expect(mockWidgetRepository.get(VALID_REGION_ID)).andReturn(widget);
         replay(mockAuthentication);
         replay(mockWidgetRepository);
-        assertThat(defaultWidgetPermissionEvaluator.hasPermission(mockAuthentication, VALID_REGION_ID, Widget.class.getName(), ModelPermissionEvaluator.Permission.CREATE), is(true));
+        assertThat(defaultWidgetPermissionEvaluator.hasPermission(mockAuthentication, VALID_REGION_ID, JpaWidget.class.getName(), ModelPermissionEvaluator.Permission.CREATE), is(true));
         verify(mockAuthentication);
         verify(mockWidgetRepository);
     }
@@ -308,7 +305,7 @@ public class DefaultWidgetPermissionEvaluatorTest {
         expect(mockWidgetRepository.get(VALID_REGION_ID)).andReturn(widget);
         replay(mockAuthentication);
         replay(mockWidgetRepository);
-        assertThat(defaultWidgetPermissionEvaluator.hasPermission(mockAuthentication, VALID_REGION_ID, Widget.class.getName(), ModelPermissionEvaluator.Permission.CREATE), is(false));
+        assertThat(defaultWidgetPermissionEvaluator.hasPermission(mockAuthentication, VALID_REGION_ID, JpaWidget.class.getName(), ModelPermissionEvaluator.Permission.CREATE), is(false));
         verify(mockAuthentication);
         verify(mockWidgetRepository);
     }
@@ -319,7 +316,7 @@ public class DefaultWidgetPermissionEvaluatorTest {
 
         expect(mockAuthentication.getPrincipal()).andReturn(user);
         replay(mockAuthentication);
-        assertThat(defaultWidgetPermissionEvaluator.hasPermission(mockAuthentication, raveSecurityContext, Widget.class.getName(), ModelPermissionEvaluator.Permission.UPDATE), is(true));
+        assertThat(defaultWidgetPermissionEvaluator.hasPermission(mockAuthentication, raveSecurityContext, JpaWidget.class.getName(), ModelPermissionEvaluator.Permission.UPDATE), is(true));
         verify(mockAuthentication);
     }
 
@@ -329,7 +326,7 @@ public class DefaultWidgetPermissionEvaluatorTest {
 
         expect(mockAuthentication.getPrincipal()).andReturn(user);
         replay(mockAuthentication);
-        defaultWidgetPermissionEvaluator.hasPermission(mockAuthentication, raveSecurityContext, Widget.class.getName(), ModelPermissionEvaluator.Permission.UPDATE);
+        defaultWidgetPermissionEvaluator.hasPermission(mockAuthentication, raveSecurityContext, JpaWidget.class.getName(), ModelPermissionEvaluator.Permission.UPDATE);
         verify(mockAuthentication);
     }
 
@@ -339,7 +336,7 @@ public class DefaultWidgetPermissionEvaluatorTest {
 
         expect(mockAuthentication.getPrincipal()).andReturn(user);
         replay(mockAuthentication);
-        defaultWidgetPermissionEvaluator.hasPermission(mockAuthentication, raveSecurityContext, Widget.class.getName(), ModelPermissionEvaluator.Permission.UPDATE);
+        defaultWidgetPermissionEvaluator.hasPermission(mockAuthentication, raveSecurityContext, JpaWidget.class.getName(), ModelPermissionEvaluator.Permission.UPDATE);
         verify(mockAuthentication);
     }
 

@@ -49,7 +49,7 @@ public class PageApi {
      *            the ID of the {@link org.apache.rave.portal.model.Page} to add
      *            the widget to
      * @param widgetId
-     *            the ID of the {@link org.apache.rave.portal.model.Widget} to
+     *            the ID of the {@link org.apache.rave.portal.model.JpaWidget} to
      *            add do the page
      * @return a {@link RpcOperation} containing the new widget instance (
      *         {@link org.apache.rave.portal.model.RegionWidget }) or any errors
@@ -110,7 +110,7 @@ public class PageApi {
      * Deletes a widget
      *
      * @param regionWidgetId
-     *            the ID of the {@link org.apache.rave.portal.model.Widget} to
+     *            the ID of the {@link org.apache.rave.portal.model.JpaWidget} to
      *            delete
      * @return an {@link RpcOperation} containing the updated region or any
      *         errors encountered.

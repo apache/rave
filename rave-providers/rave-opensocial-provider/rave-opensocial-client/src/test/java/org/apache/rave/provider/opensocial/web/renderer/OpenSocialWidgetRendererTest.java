@@ -20,10 +20,7 @@
 package org.apache.rave.provider.opensocial.web.renderer;
 
 import org.apache.rave.exception.NotSupportedException;
-import org.apache.rave.portal.model.Region;
-import org.apache.rave.portal.model.RegionWidget;
-import org.apache.rave.portal.model.RegionWidgetPreference;
-import org.apache.rave.portal.model.Widget;
+import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.web.renderer.RenderScope;
 import org.apache.rave.portal.web.renderer.Renderer;
 import org.apache.rave.portal.web.renderer.ScriptLocation;
@@ -76,7 +73,7 @@ public class OpenSocialWidgetRendererTest {
         expect(openSocialService.getGadgetMetadata(VALID_GADGET_URL)).andReturn(VALID_METADATA);
         replay(openSocialService);
 
-        Widget w = new Widget();
+        JpaWidget w = new JpaWidget();
         w.setEntityId(1L);
         w.setType(Constants.WIDGET_TYPE);
         w.setUrl(VALID_GADGET_URL);
@@ -120,7 +117,7 @@ public class OpenSocialWidgetRendererTest {
 
     @Test
     public void render_null() {
-        Widget w = new Widget();
+        JpaWidget w = new JpaWidget();
         w.setType(Constants.WIDGET_TYPE);
         Region region = new Region(1L);
         RegionWidget rw = new RegionWidget();
@@ -147,7 +144,7 @@ public class OpenSocialWidgetRendererTest {
 
     @Test(expected = NotSupportedException.class)
     public void render_invalid() {
-        Widget w = new Widget();
+        JpaWidget w = new JpaWidget();
         w.setType("NONE");
         w.setUrl("http://www.example.com/gadget.xml");
         RegionWidget rw = new RegionWidget();

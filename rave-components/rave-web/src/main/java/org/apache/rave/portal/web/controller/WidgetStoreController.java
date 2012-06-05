@@ -22,8 +22,6 @@ package org.apache.rave.portal.web.controller;
 import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.service.*;
 import org.apache.rave.portal.web.controller.util.ControllerUtils;
-import org.apache.rave.portal.web.model.NavigationItem;
-import org.apache.rave.portal.web.model.NavigationMenu;
 import org.apache.rave.portal.web.util.ModelKeys;
 import org.apache.rave.portal.web.util.PortalPreferenceKeys;
 import org.apache.rave.portal.web.util.ViewNames;
@@ -101,7 +99,7 @@ public class WidgetStoreController {
      * @param model
      *            model map
      * @param widgetId
-     *            ID of the {@link org.apache.rave.portal.model.Widget } to view
+     *            ID of the {@link org.apache.rave.portal.model.JpaWidget } to view
      * @param referringPageId
      *            the source {@link org.apache.rave.portal.model.Page } ID
      * @return the view name of the widget detail page
@@ -196,7 +194,7 @@ public class WidgetStoreController {
      */
     @RequestMapping(method = RequestMethod.GET, value = "widget/add")
     public String viewAddWidgetForm(Model model, @RequestParam long referringPageId) {
-        final Widget widget = new Widget();
+        final Widget widget = new JpaWidget();
         final String view = ViewNames.ADD_WIDGET_FORM;
         model.addAttribute(ModelKeys.WIDGET, widget);
         model.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
@@ -208,7 +206,7 @@ public class WidgetStoreController {
      * Validates the form input, if valid, tries to store the Widget data
      *
      * @param widget
-     *            {@link Widget} as submitted by the user
+     *            {@link org.apache.rave.portal.model.JpaWidget} as submitted by the user
      * @param results
      *            {@link BindingResult}
      * @param model
@@ -233,7 +231,7 @@ public class WidgetStoreController {
         widget.setOwner(user);
 
         final Widget storedWidget = widgetService.registerNewWidget(widget);
-        return "redirect:/app/store/widget/" + storedWidget.getEntityId() + "?referringPageId=" + referringPageId;
+        return "redirect:/app/store/widget/" + storedWidget.getId() + "?referringPageId=" + referringPageId;
     }
 
     /**

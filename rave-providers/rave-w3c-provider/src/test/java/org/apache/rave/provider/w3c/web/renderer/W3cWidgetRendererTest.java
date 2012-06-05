@@ -19,19 +19,15 @@
 
 package org.apache.rave.provider.w3c.web.renderer;
 
-import static org.easymock.EasyMock.createNiceMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-
 import org.apache.rave.exception.NotSupportedException;
+import org.apache.rave.model.ModelConverter;
 import org.apache.rave.portal.model.Region;
 import org.apache.rave.portal.model.RegionWidget;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.Widget;
+import org.apache.rave.portal.model.conversion.JpaConverter;
+import org.apache.rave.portal.model.conversion.JpaWidgetConverter;
+import org.apache.rave.portal.model.impl.WidgetImpl;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.portal.service.WidgetProviderService;
 import org.apache.rave.portal.web.renderer.Renderer;
@@ -41,6 +37,15 @@ import org.apache.rave.provider.w3c.Constants;
 import org.apache.rave.provider.w3c.service.impl.W3CWidget;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.easymock.EasyMock.*;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 /*
 */
@@ -56,6 +61,12 @@ public class W3cWidgetRendererTest {
 
     @Before
     public void setup() {
+        //TODO:REMOVE WHEN REGION_WIDGET REFACTOR IS COMPLETE
+        JpaWidgetConverter converter = new JpaWidgetConverter();
+        List<ModelConverter> converters = new ArrayList<ModelConverter>();
+        converters.add(converter);
+        new JpaConverter(converters);
+
         renderContext = new RenderContext();
         wookieService = createNiceMock(WidgetProviderService.class);
         userService = createNiceMock(UserService.class);
@@ -86,7 +97,7 @@ public class W3cWidgetRendererTest {
         W3CWidget wookieWidget = new W3CWidget();
         wookieWidget.setUrl(VALID_WIDGET_INSTANCE_URL);
 
-        expect(wookieService.getWidget(user, rw.getEntityId().toString(), w)).andReturn(wookieWidget);
+        expect(wookieService.getWidget(eq(user), eq(rw.getEntityId().toString()), isA(Widget.class))).andReturn(wookieWidget);
         replay(wookieService);
 
         String placeholder = renderer.render(rw, renderContext);
@@ -95,7 +106,7 @@ public class W3cWidgetRendererTest {
 
     @Test(expected = NotSupportedException.class)
     public void render_invalid() {
-        Widget w = new Widget();
+        Widget w = new WidgetImpl();
         w.setType("NONE");
         w.setUrl(VALID_WIDGET_URL);
         RegionWidget rw = new RegionWidget();

@@ -20,8 +20,10 @@
 package org.apache.rave.portal.web.controller.admin;
 
 import org.apache.rave.portal.model.Category;
+import org.apache.rave.portal.model.JpaWidget;
 import org.apache.rave.portal.model.Widget;
 import org.apache.rave.portal.model.impl.CategoryImpl;
+import org.apache.rave.portal.model.impl.WidgetImpl;
 import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.service.CategoryService;
 import org.apache.rave.portal.service.PortalPreferenceService;
@@ -136,9 +138,9 @@ public class WidgetControllerTest {
     @Test
     public void viewAdminWidgetDetail() throws Exception {
         Model model = new ExtendedModelMap();
-        Widget widget = new Widget();
+        WidgetImpl widget = new WidgetImpl();
         final long entityId = 123L;
-        widget.setEntityId(entityId);
+        widget.setId(entityId);
         widget.setTitle("My widget");
 
         expect(service.getWidget(entityId)).andReturn(widget);
@@ -157,7 +159,7 @@ public class WidgetControllerTest {
     @Test
     public void updateWidget_valid() {
         final String widgetUrl = "http://example.com/widget";
-        Widget widget = new Widget(123L, widgetUrl);
+        Widget widget = new JpaWidget(123L, widgetUrl);
         widget.setTitle("Widget title");
         widget.setType("OpenSocial");
         widget.setDescription("Lorem ipsum");
@@ -180,7 +182,7 @@ public class WidgetControllerTest {
 
     @Test(expected = SecurityException.class)
     public void updateWidget_wrongToken() {
-        Widget widget = new Widget();
+        Widget widget = new JpaWidget();
         BindingResult errors = new BeanPropertyBindingResult(widget, "widget");
         SessionStatus sessionStatus = createMock(SessionStatus.class);
         ModelMap modelMap = new ExtendedModelMap();
@@ -199,7 +201,7 @@ public class WidgetControllerTest {
 
     @Test
     public void updateWidget_invalid() {
-        Widget widget = new Widget(123L, "http://broken/url");
+        Widget widget = new JpaWidget(123L, "http://broken/url");
         BindingResult errors = new BeanPropertyBindingResult(widget, "widget");
         SessionStatus sessionStatus = createMock(SessionStatus.class);
         ModelMap modelMap = new ExtendedModelMap();
@@ -226,7 +228,7 @@ public class WidgetControllerTest {
     private static SearchResult<Widget> populateWidgetSearchResult() {
         List<Widget> widgetList = new ArrayList<Widget>();
         for (int i = 0; i < DEFAULT_PAGESIZE; i++) {
-            Widget widget = new Widget();
+            Widget widget = new JpaWidget();
             widget.setTitle("Widget " + i);
             widgetList.add(widget);
         }

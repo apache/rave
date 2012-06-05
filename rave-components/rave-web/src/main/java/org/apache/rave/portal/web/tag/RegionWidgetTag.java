@@ -71,7 +71,7 @@ public class RegionWidgetTag extends AbstractContextAwareSingletonBeanDependentT
                         regionWidget.getEntityId(),
                         StringEscapeUtils.escapeJavaScript(regionWidget.getWidget().getDisableRenderingMessage()),
                         regionWidget.isCollapsed(),
-                        regionWidget.getWidget().getEntityId());
+                        regionWidget.getWidget().getId());
                 scriptManager.registerScriptBlock(widgetScript, ScriptLocation.AFTER_RAVE, RenderScope.CURRENT_REQUEST, getContext());
             } else {
                 writeString(getBean().render(regionWidget, getContext()));

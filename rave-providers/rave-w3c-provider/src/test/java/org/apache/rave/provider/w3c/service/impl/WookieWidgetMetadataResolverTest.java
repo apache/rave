@@ -20,6 +20,7 @@
 package org.apache.rave.provider.w3c.service.impl;
 
 import org.apache.rave.portal.model.Widget;
+import org.apache.rave.portal.model.impl.WidgetImpl;
 import org.apache.rave.portal.service.WidgetMetadataResolver;
 import org.apache.rave.provider.w3c.repository.W3CWidgetMetadataRepository;
 import org.apache.wookie.connector.framework.WookieConnectorException;
@@ -28,12 +29,8 @@ import org.junit.Test;
 
 import java.io.IOException;
 
-import static org.easymock.EasyMock.createNiceMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.*;
 
 public class WookieWidgetMetadataResolverTest {
     private W3CWidgetMetadataRepository wookieWidgetMetadataRepository;
@@ -52,7 +49,7 @@ public class WookieWidgetMetadataResolverTest {
         wookieWidgetMetadataRepository = createNiceMock(W3CWidgetMetadataRepository.class);
         widgetMetadataResolver = new WookieWidgetMetadataResolver(widgetService);
         
-        TEST_WIDGET = new Widget();
+        TEST_WIDGET = new WidgetImpl();
         TEST_WIDGET.setTitle("freeder");
         TEST_WIDGET.setUrl("http://wookie.apache.org/widgets/freeder");
         TEST_WIDGET.setDescription("An RSS reader widget optimised for small screens or desktop widgets.");

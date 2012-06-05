@@ -20,6 +20,7 @@
 package org.apache.rave.portal.service.impl;
 
 import org.apache.rave.portal.model.*;
+import org.apache.rave.portal.model.impl.WidgetImpl;
 import org.apache.rave.portal.repository.*;
 import org.apache.rave.portal.service.PageService;
 import org.apache.rave.portal.service.UserService;
@@ -73,6 +74,7 @@ public class DefaultPageServiceTest {
 
     @Before
     public void setup() {
+
         pageRepository = createMock(PageRepository.class);
         pageTemplateRepository = createMock(PageTemplateRepository.class);
         regionRepository = createMock(RegionRepository.class);
@@ -84,7 +86,7 @@ public class DefaultPageServiceTest {
         pageService = new DefaultPageService(pageRepository, pageTemplateRepository, regionRepository, widgetRepository, regionWidgetRepository,
                                              pageLayoutRepository, userService, defaultPageName);
         
-        validWidget = new Widget(1L, "http://dummy.apache.org/widgets/widget.xml");
+        validWidget = new WidgetImpl(1L, "http://dummy.apache.org/widgets/widget.xml");
 
         page = new Page(PAGE_ID, user);
         pageUser = new PageUser(user, page, 1L);
@@ -665,7 +667,7 @@ public class DefaultPageServiceTest {
         value.setRegions(new ArrayList<Region>());
         value.getRegions().add(originalRegion);
         value.getRegions().add(targetRegion);
-        Widget widget = new Widget();
+        Widget widget = new WidgetImpl();
 
         expect(pageRepository.get(PAGE_ID)).andReturn(value);
         expect(widgetRepository.get(WIDGET_ID)).andReturn(widget);
@@ -682,7 +684,7 @@ public class DefaultPageServiceTest {
 
         verifyPositions(0, instance, true);
         assertThat(originalRegion.getRegionWidgets().get(0), is(sameInstance(instance)));
-        assertThat(instance.getWidget(), is(sameInstance(widget)));
+        assertThat(instance.getWidget().getId(), is(equalTo(widget.getId())));
 
     }
 
@@ -695,7 +697,7 @@ public class DefaultPageServiceTest {
         value.setRegions(new ArrayList<Region>());
         value.getRegions().add(originalRegion);
         value.getRegions().add(targetRegion);
-        Widget widget = new Widget();
+        Widget widget = new WidgetImpl();
 
         expect(pageRepository.get(PAGE_ID)).andReturn(value);
         expect(widgetRepository.get(WIDGET_ID)).andReturn(widget);
@@ -725,7 +727,7 @@ public class DefaultPageServiceTest {
         value.setRegions(new ArrayList<Region>());
         value.getRegions().add(originalRegion);
         value.getRegions().add(targetRegion);
-        Widget widget = new Widget();
+        Widget widget = new WidgetImpl();
 
         expect(pageRepository.get(PAGE_ID)).andReturn(value);
         expect(widgetRepository.get(WIDGET_ID)).andReturn(widget);
@@ -762,7 +764,7 @@ public class DefaultPageServiceTest {
     public void addWidgetToPage_invalidPage() {
         long WIDGET_ID = -1L;
         expect(pageRepository.get(PAGE_ID)).andReturn(null);
-        expect(widgetRepository.get(WIDGET_ID)).andReturn(new Widget());
+        expect(widgetRepository.get(WIDGET_ID)).andReturn(new WidgetImpl());
         replay(pageRepository);
         replay(regionRepository);
         replay(widgetRepository);

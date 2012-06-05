@@ -20,10 +20,7 @@
 package org.apache.rave.portal.web.controller;
 
 
-import org.apache.rave.portal.model.Category;
-import org.apache.rave.portal.model.Tag;
-import org.apache.rave.portal.model.User;
-import org.apache.rave.portal.model.Widget;
+import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.model.util.WidgetStatistics;
 import org.apache.rave.portal.service.PortalPreferenceService;
@@ -153,7 +150,7 @@ public class WidgetStoreControllerTest {
     @Test
     public void viewWidget() {
         Model model = new ExtendedModelMap();
-        Widget w = new Widget(1L, "http://example.com/widget.xml");
+        Widget w = new JpaWidget(1L, "http://example.com/widget.xml");
 
         expect(widgetService.getAllWidgetStatistics(validUser.getEntityId())).andReturn(allWidgetStatisticsMap);
         expect(tagService.getAllTags()).andReturn(new ArrayList<Tag>());
@@ -212,7 +209,7 @@ public class WidgetStoreControllerTest {
         int offset = 0;
         int pagesize = 10;
         int totalResults = 2;
-        Widget widget = new Widget();
+        JpaWidget widget = new JpaWidget();
         widget.setEntityId(1L);
         List<Widget> widgets = new ArrayList<Widget>();
         widgets.add(widget);
@@ -251,7 +248,7 @@ public class WidgetStoreControllerTest {
     public void doAddWidget() {
         final String widgetUrl = "http://example.com/newwidget.xml";
         final Model model = new ExtendedModelMap();
-        final Widget widget = new Widget();
+        final JpaWidget widget = new JpaWidget();
         widget.setEntityId(1L);
         widget.setTitle("Widget title");
         widget.setUrl(widgetUrl);
@@ -274,13 +271,13 @@ public class WidgetStoreControllerTest {
         final String widgetUrl = "http://example.com/existingwidget.xml";
         final Model model = new ExtendedModelMap();
 
-        final Widget existingWidget = new Widget();
+        final JpaWidget existingWidget = new JpaWidget();
         existingWidget.setEntityId(123L);
         existingWidget.setTitle("Widget title");
         existingWidget.setUrl(widgetUrl);
         existingWidget.setType("OpenSocial");
 
-        final Widget widget = new Widget();
+        final Widget widget = new JpaWidget();
         widget.setTitle("Widget title");
         widget.setUrl(widgetUrl);
         widget.setType("OpenSocial");
@@ -298,7 +295,7 @@ public class WidgetStoreControllerTest {
 
     @Test
     public void doAddWidget_invalid() {
-        final Widget widget = new Widget();
+        final Widget widget = new JpaWidget();
         widget.setTitle("Not enough data");
         final Model model = new ExtendedModelMap();
         final BindingResult errors = new BeanPropertyBindingResult(widget, "widget");

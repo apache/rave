@@ -20,7 +20,11 @@
 package org.apache.rave.provider.opensocial.service.impl;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.rave.portal.model.*;
+import org.apache.rave.portal.model.Page;
+import org.apache.rave.portal.model.Region;
+import org.apache.rave.portal.model.RegionWidget;
+import org.apache.rave.portal.model.User;
+import org.apache.rave.portal.model.impl.WidgetImpl;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.provider.opensocial.exception.SecurityTokenException;
 import org.apache.rave.provider.opensocial.service.SecurityTokenService;
@@ -138,7 +142,7 @@ public class EncryptedBlobSecurityTokenService implements SecurityTokenService {
 
         //Create a new RegionWidget instance from it so we can use it to generate a new encrypted token
         RegionWidget regionWidget = new RegionWidget(securityToken.getModuleId(),
-                new Widget(-1L, securityToken.getAppUrl()),
+                new WidgetImpl(-1L, securityToken.getAppUrl()),
                 new Region(-1L, new Page(-1L, new User(Long.valueOf(securityToken.getOwnerId()))), -1));
 
         //Create and return the newly encrypted token

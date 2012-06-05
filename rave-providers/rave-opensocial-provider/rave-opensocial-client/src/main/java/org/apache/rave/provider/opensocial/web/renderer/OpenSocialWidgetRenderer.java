@@ -122,7 +122,7 @@ public class OpenSocialWidgetRenderer implements RegionWidgetRenderer {
                 openSocialService.getGadgetMetadata(item.getWidget().getUrl()),
                 userPrefs.toString(),
                 item.isCollapsed(),
-                item.getWidget().getEntityId(),
+                item.getWidget().getId(),
                 item.isLocked(),
                 item.isHideChrome());
     }

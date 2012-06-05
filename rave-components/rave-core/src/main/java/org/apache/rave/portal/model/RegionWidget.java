@@ -19,6 +19,7 @@
 package org.apache.rave.portal.model;
 
 import org.apache.rave.persistence.BasicEntity;
+import org.apache.rave.portal.model.conversion.JpaConverter;
 import org.codehaus.jackson.annotate.JsonBackReference;
 
 import javax.persistence.*;
@@ -54,7 +55,7 @@ public class RegionWidget implements BasicEntity, Serializable {
 
     @ManyToOne
     @JoinColumn(name = "widget_id")
-    private Widget widget;
+    private JpaWidget widget;
 
     @ManyToOne
     @JoinColumn(name = "region_id")
@@ -93,15 +94,15 @@ public class RegionWidget implements BasicEntity, Serializable {
 
     public RegionWidget(Long entityId, Widget widget, Region region, int renderOrder) {
         this.entityId = entityId;
-        this.widget = widget;
         this.region = region;
         this.renderOrder = renderOrder;
+        this.setWidget(widget);
     }
 
     public RegionWidget(Long entityId, Widget widget, Region region) {
         this.entityId = entityId;
-        this.widget = widget;
         this.region = region;
+        this.setWidget(widget);
     }
 
     /**
@@ -129,7 +130,7 @@ public class RegionWidget implements BasicEntity, Serializable {
     }
 
     public void setWidget(Widget widget) {
-        this.widget = widget;
+        this.widget = JpaConverter.getInstance().convert(widget, Widget.class);
     }
 
     /**

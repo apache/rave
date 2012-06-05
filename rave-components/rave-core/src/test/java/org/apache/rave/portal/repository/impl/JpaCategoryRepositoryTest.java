@@ -20,11 +20,8 @@
 package org.apache.rave.portal.repository.impl;
 
 import org.apache.openjpa.persistence.PersistenceException;
-import org.apache.rave.persistence.BasicEntity;
-import org.apache.rave.persistence.Repository;
 import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.repository.CategoryRepository;
-import org.apache.rave.portal.repository.RepositoryTestUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,7 +33,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -55,7 +51,7 @@ public class JpaCategoryRepositoryTest {
     private final Long VALID_WIDGET_ID = 1L;
 
     private User validUser;
-    private Widget validWidget;
+    private JpaWidget validWidget;
 
     @PersistenceContext
     private EntityManager manager;
@@ -68,7 +64,7 @@ public class JpaCategoryRepositoryTest {
     @Before
     public void setup() {
         validUser = new User(VALID_USER_ID);
-        validWidget = new Widget();
+        validWidget = new JpaWidget();
         validWidget.setEntityId(VALID_WIDGET_ID);
     }
 

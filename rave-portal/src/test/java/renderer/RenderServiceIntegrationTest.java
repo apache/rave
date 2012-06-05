@@ -24,7 +24,7 @@ import org.apache.rave.portal.model.Page;
 import org.apache.rave.portal.model.Region;
 import org.apache.rave.portal.model.RegionWidget;
 import org.apache.rave.portal.model.User;
-import org.apache.rave.portal.model.Widget;
+import org.apache.rave.portal.model.impl.WidgetImpl;
 import org.apache.rave.portal.web.renderer.RenderService;
 import org.apache.rave.portal.web.renderer.ScriptLocation;
 import org.apache.rave.portal.web.renderer.ScriptManager;
@@ -47,9 +47,7 @@ import org.springframework.web.client.RestOperations;
 import java.util.Arrays;
 import java.util.HashMap;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -109,9 +107,9 @@ public class RenderServiceIntegrationTest {
         Region region = new Region(1L, page, 1);
         page.setRegions(Arrays.asList(region));
 
-        Widget w = new Widget();
+        WidgetImpl w = new WidgetImpl();
         w.setType("OpenSocial");
-        w.setEntityId(1L);
+        w.setId(1L);
         w.setTitle("Gadget Title");
         w.setUrl("http://www.example.com/gadget.xml");
 

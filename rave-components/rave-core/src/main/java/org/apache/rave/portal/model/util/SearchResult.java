@@ -19,14 +19,12 @@
 
 package org.apache.rave.portal.model.util;
 
-import org.apache.rave.persistence.BasicEntity;
-
 import java.util.List;
 
 /**
  * Wrapper for search results.
  */
-public class SearchResult<T extends BasicEntity> {
+public class SearchResult<T> {
     private List<T> resultSet;
     private int pageSize;
     private int offset;

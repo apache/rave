@@ -52,7 +52,7 @@ public class JpaPageTemplateWidget implements BasicEntity, Serializable, PageTem
 
     @JoinColumn(name = "widget_id")
     @ManyToOne(optional = false)
-    private Widget widget;
+    private JpaWidget widget;
 
     @Basic(optional = false)
     @Column(name = "locked")
@@ -98,13 +98,13 @@ public class JpaPageTemplateWidget implements BasicEntity, Serializable, PageTem
     }
 
     @Override
-    public Widget getWidget() {
+    public JpaWidget getWidget() {
         return widget;
     }
 
     @Override
     public void setWidget(Widget widget) {
-        this.widget = widget;
+        this.widget = JpaConverter.getInstance().convert(widget, Widget.class);
     }
 
     @Override

@@ -75,7 +75,7 @@ public class JpaCategory implements BasicEntity, Serializable, Category {
                inverseJoinColumns=@JoinColumn(name="widget_id", referencedColumnName = "entity_id")
     )
     @OrderBy("title")
-    private List<Widget> widgets;
+    private List<JpaWidget> widgets;
 
     public JpaCategory() {
 
@@ -164,14 +164,13 @@ public class JpaCategory implements BasicEntity, Serializable, Category {
     @Override
     @SuppressWarnings("unchecked")
     public List<Widget> getWidgets() {
-        return ConvertingListProxyFactory.createProxyList(Widget.class, widgets);
+        return ConvertingListProxyFactory.createProxyList(JpaWidget.class, widgets);
     }
 
     @Override
     public void setWidgets(List<Widget> widgets) {
         if(this.widgets == null) {
-            // TODO: change to JpaWidget once its created
-            this.widgets = new ArrayList<Widget>();
+            this.widgets = new ArrayList<JpaWidget>();
         }
         //Ensure that all operations go through the conversion proxy
         this.getWidgets().clear();

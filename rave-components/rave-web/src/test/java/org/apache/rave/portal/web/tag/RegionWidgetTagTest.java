@@ -19,10 +19,12 @@
 
 package org.apache.rave.portal.web.tag;
 
-import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.rave.model.ModelConverter;
+import org.apache.rave.portal.model.JpaWidget;
 import org.apache.rave.portal.model.Region;
 import org.apache.rave.portal.model.RegionWidget;
-import org.apache.rave.portal.model.Widget;
+import org.apache.rave.portal.model.conversion.JpaConverter;
+import org.apache.rave.portal.model.conversion.JpaWidgetConverter;
 import org.apache.rave.portal.web.renderer.RenderScope;
 import org.apache.rave.portal.web.renderer.RenderService;
 import org.apache.rave.portal.web.renderer.ScriptLocation;
@@ -39,7 +41,9 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import static org.easymock.EasyMock.*;
@@ -61,6 +65,12 @@ public class RegionWidgetTagTest {
 
     @Before
     public void setup() throws JspException {
+        //TODO:REMOVE WHEN REGION_WIDGET REFACTOR IS COMPLETE
+        JpaWidgetConverter converter = new JpaWidgetConverter();
+        List<ModelConverter> converters = new ArrayList<ModelConverter>();
+        converters.add(converter);
+        new JpaConverter(converters);
+
         context = new RenderContext();
         service = createNiceMock(RenderService.class);
         scriptManager = createMock(ScriptManager.class);
@@ -83,7 +93,7 @@ public class RegionWidgetTagTest {
     @Test
     public void doStartTag_valid() throws IOException, JspException {
         RegionWidget regionWidget = new RegionWidget();
-        Widget widget = new Widget();
+        JpaWidget widget = new JpaWidget();
         regionWidget.setWidget(widget);
         widget.setType(WIDGET_TYPE);
 
@@ -119,7 +129,7 @@ public class RegionWidgetTagTest {
     public void doStartTag_IOException() throws JspException, IOException {
 
         RegionWidget regionWidget = new RegionWidget();
-        Widget widget = new Widget();
+        JpaWidget widget = new JpaWidget();
         regionWidget.setWidget(widget);
         widget.setType("INVALID");
 
@@ -146,7 +156,7 @@ public class RegionWidgetTagTest {
 
         RegionWidget regionWidget = new RegionWidget();
         Region region = new Region(25L);
-        Widget widget = new Widget();
+        JpaWidget widget = new JpaWidget();
         regionWidget.setWidget(widget);
         regionWidget.setRegion(region);
         widget.setType("INVALID");
@@ -165,7 +175,7 @@ public class RegionWidgetTagTest {
     public void doStartTag_disabledWidget() throws IOException, JspException {
         final String DISABLED_WIDGET_MESSAGE = "THIS IS DISABLED";
 
-        Widget widget = new Widget();
+        JpaWidget widget = new JpaWidget();
         widget.setEntityId(8L);
         widget.setType(WIDGET_TYPE);
         widget.setDisableRendering(true);

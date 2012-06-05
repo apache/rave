@@ -42,7 +42,7 @@ public class UpdateWidgetValidator extends WidgetValidator {
     @Override
     protected final void validateIfWidgetAlreadyExists(Widget widget, Errors errors) {
         Widget existing = widgetService.getWidgetByUrl(widget.getUrl());
-        if (existing == null || existing.getEntityId().equals(widget.getEntityId())) {
+        if (existing == null || existing.getId().equals(widget.getId())) {
             return;
         }
         errors.rejectValue(FIELD_URL, "widget.url.exists");

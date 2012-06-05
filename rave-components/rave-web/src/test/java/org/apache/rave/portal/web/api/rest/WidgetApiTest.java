@@ -80,7 +80,7 @@ public class WidgetApiTest {
     public void createWidgetComment() {
         String comment = "new comment";
 
-        Widget widget = new Widget();
+        JpaWidget widget = new JpaWidget();
         widget.setEntityId(1L);
         widget.setComments(new ArrayList<WidgetComment>());
 

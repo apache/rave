@@ -151,7 +151,7 @@ public class DefaultWidgetPermissionEvaluator extends AbstractModelPermissionEva
         if (trustedDomainObject) {
             trustedWidget = widget;
         } else {
-            trustedWidget = getTrustedWidget(widget.getEntityId(), trustedWidgetContainer);
+            trustedWidget = getTrustedWidget(widget.getId(), trustedWidgetContainer);
         }
         return isWidgetOwnerByUsername(authentication, trustedWidget.getOwner().getUsername());
     }
@@ -169,7 +169,7 @@ public class DefaultWidgetPermissionEvaluator extends AbstractModelPermissionEva
         if (trustedDomainObject) {
             trustedWidget = widget;
         } else {
-            trustedWidget = getTrustedWidget(widget.getEntityId(), trustedWidgetContainer);
+            trustedWidget = getTrustedWidget(widget.getId(), trustedWidgetContainer);
         }
         return WidgetStatus.PUBLISHED.equals(trustedWidget.getWidgetStatus());
     }    

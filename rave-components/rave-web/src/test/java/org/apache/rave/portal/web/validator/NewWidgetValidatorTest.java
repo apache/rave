@@ -19,6 +19,7 @@
 
 package org.apache.rave.portal.web.validator;
 
+import org.apache.rave.portal.model.JpaWidget;
 import org.apache.rave.portal.model.Widget;
 import org.apache.rave.portal.service.WidgetService;
 import org.junit.Before;
@@ -50,7 +51,7 @@ public class NewWidgetValidatorTest {
 
     @Test
     public void testValidateValidFormData() throws Exception {
-        Widget widget = new Widget();
+        Widget widget = new JpaWidget();
         widget.setTitle(VALID_TITLE);
         widget.setUrl(VALID_URL);
         widget.setType(VALID_TYPE);
@@ -67,7 +68,7 @@ public class NewWidgetValidatorTest {
 
     @Test
     public void testValidationFailsOnEmptyValues() {
-        Widget widget = new Widget();
+        Widget widget = new JpaWidget();
         Errors errors = new BindException(widget, WIDGET);
 
         widgetValidator.validate(widget, errors);
@@ -79,14 +80,14 @@ public class NewWidgetValidatorTest {
     public void testValidationFailsOnDuplicateUrl() {
         final String existingUrl = "http://example.com/existing_widget.xml";
 
-        Widget widget = new Widget();
+        JpaWidget widget = new JpaWidget();
         widget.setEntityId(123L);
         widget.setTitle(VALID_TITLE);
         widget.setType(VALID_TYPE);
         widget.setDescription(VALID_DESCRIPTION);
         widget.setUrl(existingUrl);
 
-        Widget newWidget = new Widget();
+        Widget newWidget = new JpaWidget();
         newWidget.setTitle(VALID_TITLE);
         newWidget.setType(VALID_TYPE);
         newWidget.setDescription(VALID_DESCRIPTION);
@@ -104,7 +105,7 @@ public class NewWidgetValidatorTest {
 
     @Test
     public void testValidationFailsOnInvalidUrl() {
-        Widget widget = new Widget();
+        Widget widget = new JpaWidget();
         widget.setTitle(VALID_TITLE);
         widget.setType(VALID_TYPE);
         widget.setUrl("http:/this.is/invalid?url=true&reject=true");

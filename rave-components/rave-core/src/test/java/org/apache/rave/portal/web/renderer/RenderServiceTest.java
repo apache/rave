@@ -20,8 +20,8 @@
 package org.apache.rave.portal.web.renderer;
 
 import org.apache.rave.exception.NotSupportedException;
+import org.apache.rave.portal.model.JpaWidget;
 import org.apache.rave.portal.model.RegionWidget;
-import org.apache.rave.portal.model.Widget;
 import org.apache.rave.portal.web.renderer.impl.DefaultRenderService;
 import org.apache.rave.portal.web.renderer.model.RenderContext;
 import org.junit.Before;
@@ -83,7 +83,7 @@ public class RenderServiceTest {
 
     @Test
     public void render_supported_foo() {
-        Widget w = new Widget();
+        JpaWidget w = new JpaWidget();
         w.setType(SUPPORTED_TYPE_1);
 
         RegionWidget rw = new RegionWidget();
@@ -98,7 +98,7 @@ public class RenderServiceTest {
 
     @Test
     public void render_supported_bar() {
-        Widget w = new Widget();
+        JpaWidget w = new JpaWidget();
         w.setType(SUPPORTED_TYPE_2);
         RegionWidget rw = new RegionWidget();
         rw.setWidget(w);
@@ -112,7 +112,7 @@ public class RenderServiceTest {
 
     @Test(expected = NotSupportedException.class)
     public void render_invalid() {
-        Widget w = new Widget();
+        JpaWidget w = new JpaWidget();
         w.setType("NONE");
 
         RegionWidget rw = new RegionWidget();

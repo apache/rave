@@ -31,10 +31,10 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 
 /**
- * Test for {@link Widget}
+ * Test for {@link JpaWidget}
  */
 public class WidgetTest {
-    private Widget widget;
+    private JpaWidget widget;
     private Long id;
     private String title;
     private String url;
@@ -50,7 +50,7 @@ public class WidgetTest {
     
     @Before
     public void setUp() throws Exception {
-        widget = new Widget();
+        widget = new JpaWidget();
         id = 3511L;
         title = "Test Widget";
         url = "http://example.com/widget.xml";

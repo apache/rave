@@ -22,6 +22,7 @@ package org.apache.rave.portal.service.impl;
 import org.apache.rave.exception.DuplicateItemException;
 import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.model.impl.CategoryImpl;
+import org.apache.rave.portal.model.impl.WidgetImpl;
 import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.model.util.WidgetStatistics;
 import org.apache.rave.portal.repository.CategoryRepository;
@@ -77,8 +78,8 @@ public class DefaultWidgetServiceTest {
 
     @Test
     public void getLimitedListOfWidgets() {
-        Widget widget1 = new Widget(1L, "http://example.com/widget1.xml");
-        Widget widget2 = new Widget(2L, "http://example.com/widget2.xml");
+        Widget widget1 = new WidgetImpl(1L, "http://example.com/widget1.xml");
+        Widget widget2 = new WidgetImpl(2L, "http://example.com/widget2.xml");
         List<Widget> widgets = new ArrayList<Widget>();
         widgets.add(widget1);
         widgets.add(widget2);
@@ -95,9 +96,9 @@ public class DefaultWidgetServiceTest {
 
     @Test
     public void getPublishedWidgets() {
-        Widget widget1 = new Widget(1L, "http://example.com/widget1.xml");
+        Widget widget1 = new WidgetImpl(1L, "http://example.com/widget1.xml");
         widget1.setWidgetStatus(WidgetStatus.PUBLISHED);
-        Widget widget2 = new Widget(2L, "http://example.com/widget2.xml");
+        Widget widget2 = new WidgetImpl(2L, "http://example.com/widget2.xml");
         widget2.setWidgetStatus(WidgetStatus.PUBLISHED);
         List<Widget> widgets = new ArrayList<Widget>();
         widgets.add(widget1);
@@ -115,7 +116,7 @@ public class DefaultWidgetServiceTest {
 
     @Test
     public void getWidget() {
-        Widget w = new Widget();
+        Widget w = new WidgetImpl();
         expect(widgetRepository.get(1L)).andReturn(w);
         replay(widgetRepository);
 
@@ -130,8 +131,8 @@ public class DefaultWidgetServiceTest {
         int offset = 0;
         int pageSize = 10;
         int totalResults = 2;
-        Widget widget = new Widget();
-        widget.setEntityId(1L);
+        WidgetImpl widget = new WidgetImpl();
+        widget.setId(1L);
         List<Widget> widgets = new ArrayList<Widget>();
         widgets.add(widget);
 
@@ -153,9 +154,9 @@ public class DefaultWidgetServiceTest {
         int offset = 0;
         int pageSize = 10;
         int totalResults = 2;
-        Widget widget = new Widget();
+        WidgetImpl widget = new WidgetImpl();
         widget.setWidgetStatus(WidgetStatus.PUBLISHED);
-        widget.setEntityId(1L);
+        widget.setId(1L);
         List<Widget> widgets = new ArrayList<Widget>();
         widgets.add(widget);
 
@@ -179,11 +180,11 @@ public class DefaultWidgetServiceTest {
         int offset = 0;
         int pageSize = 10;
         int totalResults = 2;
-        Widget widget = new Widget();
+        WidgetImpl widget = new WidgetImpl();
         widget.setWidgetStatus(WidgetStatus.PUBLISHED);
         final String type = "OpenSocial";
         widget.setType(type);
-        widget.setEntityId(1L);
+        widget.setId(1L);
         List<Widget> widgets = new ArrayList<Widget>();
         widgets.add(widget);
 
@@ -210,7 +211,7 @@ public class DefaultWidgetServiceTest {
         replay(userRepository);
 
         final List<Widget> widgets = new ArrayList<Widget>();
-        final Widget widget = new Widget(3L, "http://www.widgetsRus.com/");
+        final Widget widget = new WidgetImpl(3L, "http://www.widgetsRus.com/");
         widgets.add(widget);
 
         expect(widgetRepository.getCountByOwner(user, offset, pageSize)).andReturn(widgets.size());
@@ -241,7 +242,7 @@ public class DefaultWidgetServiceTest {
     public void getWidgetByUrl() {
         final String widgetUrl =
                 "http://hosting.gmodules.com/ig/gadgets/file/112581010116074801021/hamster.xml";
-        Widget widget = new Widget();
+        Widget widget = new WidgetImpl();
         widget.setUrl(widgetUrl);
         expect(widgetRepository.getByUrl(widgetUrl)).andReturn(widget);
         replay(widgetRepository);
@@ -256,7 +257,7 @@ public class DefaultWidgetServiceTest {
     public void isRegisteredWidget() {
         final String widgetUrl =
                 "http://hosting.gmodules.com/ig/gadgets/file/112581010116074801021/hamster.xml";
-        Widget widget = new Widget();
+        Widget widget = new WidgetImpl();
         widget.setUrl(widgetUrl);
         expect(widgetRepository.getByUrl(widgetUrl)).andReturn(widget);
         replay(widgetRepository);
@@ -270,7 +271,7 @@ public class DefaultWidgetServiceTest {
     public void isNotRegisteredWidget_() {
         final String widgetUrl =
                 "http://example.com/doesnotexistinrepository.xml";
-        Widget widget = new Widget();
+        Widget widget = new WidgetImpl();
         widget.setUrl(widgetUrl);
         expect(widgetRepository.getByUrl(widgetUrl)).andReturn(null);
         replay(widgetRepository);
@@ -283,7 +284,7 @@ public class DefaultWidgetServiceTest {
     @Test
     public void registerNewWidget() {
         final String widgetUrl = "http://example.com/newwidget.xml";
-        Widget widget = new Widget();
+        WidgetImpl widget = new WidgetImpl();
         widget.setUrl(widgetUrl);
         expect(widgetRepository.getByUrl(widgetUrl)).andReturn(null);
         expect(widgetRepository.save(widget)).andReturn(widget);
@@ -291,7 +292,7 @@ public class DefaultWidgetServiceTest {
 
         Widget savedWidget = widgetService.registerNewWidget(widget);
         assertNotNull(savedWidget);
-        assertEquals(widget.getEntityId(), savedWidget.getEntityId());
+        assertEquals(widget.getId(), savedWidget.getId());
 
         verify(widgetRepository);
     }
@@ -300,7 +301,7 @@ public class DefaultWidgetServiceTest {
     public void registerExistingWidgetAsNew() {
         final String widgetUrl =
                 "http://hosting.gmodules.com/ig/gadgets/file/112581010116074801021/hamster.xml";
-        Widget widget = new Widget();
+        WidgetImpl widget = new WidgetImpl();
         widget.setUrl(widgetUrl);
         expect(widgetRepository.getByUrl(widgetUrl)).andReturn(widget);
         replay(widgetRepository);
@@ -314,7 +315,7 @@ public class DefaultWidgetServiceTest {
     public void updateWidget() {
         final String widgetUrl =
                 "http://hosting.gmodules.com/ig/gadgets/file/112581010116074801021/hamster.xml";
-        Widget widget = new Widget();
+        Widget widget = new WidgetImpl();
         widget.setUrl(widgetUrl);
         expect(widgetRepository.save(widget)).andReturn(widget).once();
         replay(widgetRepository);
@@ -344,14 +345,13 @@ public class DefaultWidgetServiceTest {
         verify(widgetRepository);
     }
 
-    // TODO - remove the IllegalArgumentException expectation once the JpaWidgetConverter class is created
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void getWidgetsByCategory_valid(){
         long id = 1L;
         int offset = 0;
         int pageSize = 10;
         String categoryText = "Social";
-        Widget w = new Widget();
+        Widget w = new WidgetImpl();
         List<Category> categories = new ArrayList<Category>();
         Category c = new CategoryImpl();
         List<Widget> widgets = new ArrayList<Widget>();

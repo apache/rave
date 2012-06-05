@@ -21,66 +21,67 @@ package org.apache.rave.portal.repository.impl;
 
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.rave.persistence.jpa.AbstractJpaRepository;
 import org.apache.rave.portal.model.*;
+import org.apache.rave.portal.model.conversion.JpaWidgetConverter;
 import org.apache.rave.portal.model.util.WidgetStatistics;
 import org.apache.rave.portal.repository.WidgetRepository;
+import org.apache.rave.util.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.NoResultException;
-import javax.persistence.Query;
-import javax.persistence.TypedQuery;
+import javax.persistence.*;
 import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.apache.rave.persistence.jpa.util.JpaUtil.getPagedResultList;
-import static org.apache.rave.persistence.jpa.util.JpaUtil.getSingleResult;
+import static org.apache.rave.persistence.jpa.util.JpaUtil.*;
 
 @Repository
-public class JpaWidgetRepository extends AbstractJpaRepository<Widget> implements WidgetRepository {
+public class JpaWidgetRepository implements WidgetRepository {
 
     private final Logger log = LoggerFactory.getLogger(JpaWidgetRepository.class);
 
-    public JpaWidgetRepository() {
-        super(Widget.class);
-    }
+    @Autowired
+    private JpaWidgetConverter converter;
+
+    @PersistenceContext
+    private EntityManager manager;
 
     @Override
     public List<Widget> getAll() {
         log.warn("Requesting potentially large resultset of Widget. No pagesize set.");
-        TypedQuery<Widget> query = manager.createNamedQuery(Widget.WIDGET_GET_ALL, Widget.class);
-        return query.getResultList();
+        TypedQuery<JpaWidget> query = manager.createNamedQuery(JpaWidget.WIDGET_GET_ALL, JpaWidget.class);
+        return CollectionUtils.<Widget>toBaseTypedList(query.getResultList());
     }
 
     @Override
     public List<Widget> getLimitedList(int offset, int pageSize) {
-        TypedQuery<Widget> query = manager.createNamedQuery(Widget.WIDGET_GET_ALL, Widget.class);
-        return getPagedResultList(query, offset, pageSize);
+        TypedQuery<JpaWidget> query = manager.createNamedQuery(JpaWidget.WIDGET_GET_ALL, JpaWidget.class);
+        return CollectionUtils.<Widget>toBaseTypedList(getPagedResultList(query, offset, pageSize));
     }
 
     @Override
     public int getCountAll() {
-        Query query = manager.createNamedQuery(Widget.WIDGET_COUNT_ALL);
+        Query query = manager.createNamedQuery(JpaWidget.WIDGET_COUNT_ALL);
         Number countResult = (Number) query.getSingleResult();
         return countResult.intValue();
     }
 
     @Override
     public List<Widget> getByFreeTextSearch(String searchTerm, int offset, int pageSize) {
-        TypedQuery<Widget> query = manager.createNamedQuery(Widget.WIDGET_GET_BY_FREE_TEXT,
-                Widget.class);
+        TypedQuery<JpaWidget> query = manager.createNamedQuery(JpaWidget.WIDGET_GET_BY_FREE_TEXT,
+                JpaWidget.class);
         setFreeTextSearchTerm(query, searchTerm);
-        return getPagedResultList(query, offset, pageSize);
+        return CollectionUtils.<Widget>toBaseTypedList(getPagedResultList(query, offset, pageSize));
     }
 
     @Override
     public int getCountFreeTextSearch(String searchTerm) {
-        Query query = manager.createNamedQuery(Widget.WIDGET_COUNT_BY_FREE_TEXT);
+        Query query = manager.createNamedQuery(JpaWidget.WIDGET_COUNT_BY_FREE_TEXT);
         setFreeTextSearchTerm(query, searchTerm);
         Number countResult = (Number) query.getSingleResult();
         return countResult.intValue();
@@ -88,16 +89,16 @@ public class JpaWidgetRepository extends AbstractJpaRepository<Widget> implement
 
     @Override
     public List<Widget> getByStatus(WidgetStatus widgetStatus, int offset, int pageSize) {
-        TypedQuery<Widget> query = manager.createNamedQuery(Widget.WIDGET_GET_BY_STATUS,
-                Widget.class);
-        query.setParameter(Widget.PARAM_STATUS, widgetStatus);
-        return getPagedResultList(query, offset, pageSize);
+        TypedQuery<JpaWidget> query = manager.createNamedQuery(JpaWidget.WIDGET_GET_BY_STATUS,
+                JpaWidget.class);
+        query.setParameter(JpaWidget.PARAM_STATUS, widgetStatus);
+        return CollectionUtils.<Widget>toBaseTypedList(getPagedResultList(query, offset, pageSize));
     }
 
     @Override
     public int getCountByStatus(WidgetStatus widgetStatus) {
-        Query query = manager.createNamedQuery(Widget.WIDGET_COUNT_BY_STATUS);
-        query.setParameter(Widget.PARAM_STATUS, widgetStatus);
+        Query query = manager.createNamedQuery(JpaWidget.WIDGET_COUNT_BY_STATUS);
+        query.setParameter(JpaWidget.PARAM_STATUS, widgetStatus);
         Number countResult = (Number) query.getSingleResult();
         return countResult.intValue();
     }
@@ -106,19 +107,19 @@ public class JpaWidgetRepository extends AbstractJpaRepository<Widget> implement
     public List<Widget> getByStatusAndTypeAndFreeTextSearch(WidgetStatus widgetStatus, String type, String searchTerm,
                                                             int offset, int pageSize) {
         final CriteriaBuilder cb = manager.getCriteriaBuilder();
-        final CriteriaQuery<Widget> query = cb.createQuery(Widget.class);
-        final Root<Widget> widgetType = query.from(Widget.class);
+        final CriteriaQuery<JpaWidget> query = cb.createQuery(JpaWidget.class);
+        final Root<JpaWidget> widgetType = query.from(JpaWidget.class);
         query.where(getStatusAndTypeAndFreeTextPredicates(cb, widgetType, widgetStatus, type, searchTerm));
         query.orderBy(getOrderByTitleAsc(cb, widgetType));
 
-        return getPagedResultList(manager.createQuery(query), offset, pageSize);
+        return CollectionUtils.<Widget>toBaseTypedList(getPagedResultList(manager.createQuery(query), offset, pageSize));
     }
 
     @Override
     public int getCountByStatusAndTypeAndFreeText(WidgetStatus widgetStatus, String type, String searchTerm) {
         final CriteriaBuilder cb = manager.getCriteriaBuilder();
         final CriteriaQuery<Long> query = cb.createQuery(Long.class);
-        final Root<Widget> widgetType = query.from(Widget.class);
+        final Root<JpaWidget> widgetType = query.from(JpaWidget.class);
         query.select(cb.count(widgetType));
         query.where(getStatusAndTypeAndFreeTextPredicates(cb, widgetType, widgetStatus, type, searchTerm));
 
@@ -128,29 +129,29 @@ public class JpaWidgetRepository extends AbstractJpaRepository<Widget> implement
 
     @Override
     public List<Widget> getByOwner(User owner, int offset, int pageSize) {
-        TypedQuery<Widget> query = manager.createNamedQuery(Widget.WIDGET_GET_BY_OWNER, Widget.class);
-        query.setParameter(Widget.PARAM_OWNER, owner);
-        return getPagedResultList(query, offset, pageSize);
+        TypedQuery<JpaWidget> query = manager.createNamedQuery(JpaWidget.WIDGET_GET_BY_OWNER, JpaWidget.class);
+        query.setParameter(JpaWidget.PARAM_OWNER, owner);
+        return CollectionUtils.<Widget>toBaseTypedList(getPagedResultList(query, offset, pageSize));
     }
 
     @Override
     public int getCountByOwner(User owner, int offset, int pageSize) {
-        Query query = manager.createNamedQuery(Widget.WIDGET_COUNT_BY_OWNER);
-        query.setParameter(Widget.PARAM_OWNER, owner);
+        Query query = manager.createNamedQuery(JpaWidget.WIDGET_COUNT_BY_OWNER);
+        query.setParameter(JpaWidget.PARAM_OWNER, owner);
         Number countResult = (Number) query.getSingleResult();
         return countResult.intValue();
     }
 
     @Override
-    public Widget getByUrl(String widgetUrl) {
+    public JpaWidget getByUrl(String widgetUrl) {
         if (StringUtils.isBlank(widgetUrl)) {
             throw new IllegalArgumentException("Widget URL must not be empty");
         }
 
-        TypedQuery<Widget> query = manager.createNamedQuery(Widget.WIDGET_GET_BY_URL, Widget.class);
+        TypedQuery<JpaWidget> query = manager.createNamedQuery(JpaWidget.WIDGET_GET_BY_URL, JpaWidget.class);
         // url is a unique field, so no paging needed
-        query.setParameter(Widget.PARAM_URL, widgetUrl);
-        final List<Widget> resultList = query.getResultList();
+        query.setParameter(JpaWidget.PARAM_URL, widgetUrl);
+        final List<JpaWidget> resultList = query.getResultList();
         return getSingleResult(resultList);
     }
 
@@ -256,25 +257,45 @@ public class JpaWidgetRepository extends AbstractJpaRepository<Widget> implement
     @Override
     public List<Widget> getWidgetsByTag(String tagKeyword, int offset, int pageSize) {
         if (tagKeyword!=null) tagKeyword =tagKeyword.toLowerCase();
-        TypedQuery<Widget> query = manager.createNamedQuery(Widget.WIDGET_GET_BY_TAG, Widget.class);
-        query.setParameter(Widget.PARAM_TAG, tagKeyword.toLowerCase());
-        return getPagedResultList(query, offset, pageSize);
+        TypedQuery<JpaWidget> query = manager.createNamedQuery(JpaWidget.WIDGET_GET_BY_TAG, JpaWidget.class);
+        query.setParameter(JpaWidget.PARAM_TAG, tagKeyword.toLowerCase());
+        return CollectionUtils.<Widget>toBaseTypedList(getPagedResultList(query, offset, pageSize));
     }
 
     @Override
     public int getCountByTag(String tagKeyword) {
         if (tagKeyword!=null) tagKeyword =tagKeyword.toLowerCase();
-        Query query = manager.createNamedQuery(Widget.WIDGET_COUNT_BY_TAG);
-        query.setParameter(Widget.PARAM_TAG,tagKeyword);
+        Query query = manager.createNamedQuery(JpaWidget.WIDGET_COUNT_BY_TAG);
+        query.setParameter(JpaWidget.PARAM_TAG,tagKeyword);
         Number countResult = (Number) query.getSingleResult();
         return countResult.intValue();
     }
 
     @Override
     public int unassignWidgetOwner(long userId) {
-        Query query = manager.createNamedQuery(Widget.WIDGET_UNASSIGN_OWNER);
-        query.setParameter(Widget.PARAM_OWNER, userId);
+        Query query = manager.createNamedQuery(JpaWidget.WIDGET_UNASSIGN_OWNER);
+        query.setParameter(JpaWidget.PARAM_OWNER, userId);
         return query.executeUpdate();
+    }
+
+    @Override
+    public Class<? extends Widget> getType() {
+        return JpaWidget.class;
+    }
+
+    @Override
+    public Widget get(long id) {
+        return manager.find(JpaWidget.class, id);
+    }
+
+    @Override
+    public Widget save(Widget item) {
+        return saveOrUpdate(item.getId(), manager, converter.convert(item));
+    }
+
+    @Override
+    public void delete(Widget item) {
+        manager.remove(converter.convert(item));
     }
 
     /**
@@ -284,10 +305,10 @@ public class JpaWidgetRepository extends AbstractJpaRepository<Widget> implement
      * @param searchTerm free text
      */
     protected void setFreeTextSearchTerm(Query query, final String searchTerm) {
-        query.setParameter(Widget.PARAM_SEARCH_TERM, getLowercaseWildcardSearchTerm(searchTerm));
+        query.setParameter(JpaWidget.PARAM_SEARCH_TERM, getLowercaseWildcardSearchTerm(searchTerm));
     }
 
-    private Predicate[] getStatusAndTypeAndFreeTextPredicates(CriteriaBuilder cb, Root<Widget> widgetType,
+    private Predicate[] getStatusAndTypeAndFreeTextPredicates(CriteriaBuilder cb, Root<JpaWidget> widgetType,
                                                               WidgetStatus widgetStatus, String type,
                                                               String searchTerm) {
         List<Predicate> predicates = new ArrayList<Predicate>();
@@ -309,23 +330,23 @@ public class JpaWidgetRepository extends AbstractJpaRepository<Widget> implement
         return predicates.toArray(new Predicate[predicates.size()]);
     }
 
-    private Order getOrderByTitleAsc(CriteriaBuilder cb, Root<Widget> widgetType) {
+    private Order getOrderByTitleAsc(CriteriaBuilder cb, Root<JpaWidget> widgetType) {
         return cb.asc(getTitleField(widgetType));
     }
 
-    private Path<String> getTitleField(Root<Widget> widgetType) {
+    private Path<String> getTitleField(Root<JpaWidget> widgetType) {
         return widgetType.get("title");
     }
 
-    private Path<String> getDescriptionField(Root<Widget> widgetType) {
+    private Path<String> getDescriptionField(Root<JpaWidget> widgetType) {
         return widgetType.get("description");
     }
 
-    private Path<String> getTypeField(Root<Widget> widgetType) {
+    private Path<String> getTypeField(Root<JpaWidget> widgetType) {
         return widgetType.get("type");
     }
 
-    private Path<WidgetStatus> getWidgetStatusField(Root<Widget> widgetType) {
+    private Path<WidgetStatus> getWidgetStatusField(Root<JpaWidget> widgetType) {
         return widgetType.get("widgetStatus");
     }
 

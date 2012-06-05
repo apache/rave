@@ -19,7 +19,10 @@
 
 package org.apache.rave.provider.opensocial.service;
 
+import org.apache.rave.model.ModelConverter;
 import org.apache.rave.portal.model.*;
+import org.apache.rave.portal.model.conversion.JpaConverter;
+import org.apache.rave.portal.model.conversion.JpaWidgetConverter;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.provider.opensocial.service.impl.EncryptedBlobSecurityTokenService;
 import org.apache.shindig.auth.SecurityToken;
@@ -32,8 +35,10 @@ import org.springframework.core.io.ClassPathResource;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.assertEquals;
@@ -49,7 +54,7 @@ public class SecurityTokenServiceTest {
     private Page validPage;
     private Region validRegion;
     private RegionWidget validRegionWidget;
-    private Widget validWidget;
+    private JpaWidget validWidget;
 
     private final Long VALID_REGION_WIDGET_ID = 1L;
     private final Long VALID_USER_ID = 1L;
@@ -76,6 +81,13 @@ public class SecurityTokenServiceTest {
 
     @Before
     public void setup() throws MalformedURLException {
+
+        //TODO:REMOVE WHEN REGION_WIDGET REFACTOR IS COMPLETE
+        JpaWidgetConverter converter = new JpaWidgetConverter();
+        List<ModelConverter> converters = new ArrayList<ModelConverter>();
+        converters.add(converter);
+        new JpaConverter(converters);
+
         userService = createMock(UserService.class);
         securityTokenService = new EncryptedBlobSecurityTokenService(userService, "default", "default",
                 encryptionKey);
@@ -86,7 +98,7 @@ public class SecurityTokenServiceTest {
         validRegion = new Region(1L, validPage, 1);
         validPage.setRegions(Arrays.asList(validRegion));
 
-        validWidget = new Widget(1L, VALID_URL);
+        validWidget = new JpaWidget(1L, VALID_URL);
         validWidget.setType("OpenSocial");
         validWidget.setTitle("Widget Title");
 

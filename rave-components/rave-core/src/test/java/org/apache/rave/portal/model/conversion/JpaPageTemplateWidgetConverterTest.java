@@ -18,10 +18,7 @@
  */
 package org.apache.rave.portal.model.conversion;
 
-import org.apache.rave.portal.model.JpaPageTemplateRegion;
-import org.apache.rave.portal.model.JpaPageTemplateWidget;
-import org.apache.rave.portal.model.PageTemplateWidget;
-import org.apache.rave.portal.model.Widget;
+import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.model.impl.PageTemplateRegionImpl;
 import org.apache.rave.portal.model.impl.PageTemplateWidgetImpl;
 import org.junit.Before;
@@ -61,7 +58,7 @@ public class JpaPageTemplateWidgetConverterTest {
 
     @Test
     public void convertValid() {
-        Widget widget = new Widget();
+        JpaWidget widget = new JpaWidget();
         PageTemplateWidget template = new PageTemplateWidgetImpl();
         template.setLocked(true);
         template.setHideChrome(true);
