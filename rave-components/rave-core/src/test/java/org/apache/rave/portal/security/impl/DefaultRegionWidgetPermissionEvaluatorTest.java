@@ -19,11 +19,14 @@
 package org.apache.rave.portal.security.impl;
 
 import org.apache.rave.portal.model.*;
+import org.apache.rave.portal.model.impl.RegionImpl;
+import org.apache.rave.portal.model.impl.RegionWidgetImpl;
 import org.apache.rave.portal.repository.RegionWidgetRepository;
 import org.apache.rave.portal.security.ModelPermissionEvaluator.Permission;
 import org.apache.rave.portal.security.util.AuthenticationUtils;
 import org.easymock.EasyMock;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -68,10 +71,10 @@ public class DefaultRegionWidgetPermissionEvaluatorTest {
         page = new Page();
         page.setEntityId(VALID_PAGE_ID);
         page.setOwner(user);
-        region = new JpaRegion();
+        region = new RegionImpl();
         region.setId(VALID_REGION_ID);
         region.setPage(page);
-        regionWidget = new JpaRegionWidget();
+        regionWidget = new RegionWidgetImpl();
         regionWidget.setId(VALID_REGION_WIDGET_ID);
         regionWidget.setRegion(region);
         grantedAuthoritiesList = new ArrayList<GrantedAuthority>();
@@ -115,7 +118,7 @@ public class DefaultRegionWidgetPermissionEvaluatorTest {
     @Test
     public void testHasPermission_3args_create_isNotRegionWidgetOwner() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
-        expect(mockAuthentication.getPrincipal()).andReturn(user2);
+        expect(mockAuthentication.getPrincipal()).andReturn(user2).anyTimes();
         expect(mockRegionWidgetRepository.get(VALID_REGION_WIDGET_ID)).andReturn(regionWidget);
         replay(mockAuthentication);
         replay(mockRegionWidgetRepository);
@@ -139,7 +142,7 @@ public class DefaultRegionWidgetPermissionEvaluatorTest {
     @Test
     public void testHasPermission_3args_delete_isNotRegionWidgetOwner() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
-        expect(mockAuthentication.getPrincipal()).andReturn(user2);
+        expect(mockAuthentication.getPrincipal()).andReturn(user2).anyTimes();
         expect(mockRegionWidgetRepository.get(VALID_REGION_WIDGET_ID)).andReturn(regionWidget);
         replay(mockAuthentication);
         replay(mockRegionWidgetRepository);
@@ -163,7 +166,7 @@ public class DefaultRegionWidgetPermissionEvaluatorTest {
     @Test
     public void testHasPermission_3args_update_isNotRegionWidgetOwner() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
-        expect(mockAuthentication.getPrincipal()).andReturn(user2);
+        expect(mockAuthentication.getPrincipal()).andReturn(user2).anyTimes();
         expect(mockRegionWidgetRepository.get(VALID_REGION_WIDGET_ID)).andReturn(regionWidget);
         replay(mockAuthentication);
         replay(mockRegionWidgetRepository);
@@ -187,7 +190,7 @@ public class DefaultRegionWidgetPermissionEvaluatorTest {
     @Test
     public void testHasPermission_3args_read_isNotRegionWidgetOwner() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
-        expect(mockAuthentication.getPrincipal()).andReturn(user2);
+        expect(mockAuthentication.getPrincipal()).andReturn(user2).anyTimes();
         expect(mockRegionWidgetRepository.get(VALID_REGION_WIDGET_ID)).andReturn(regionWidget);
         replay(mockAuthentication);
         replay(mockRegionWidgetRepository);
@@ -219,7 +222,7 @@ public class DefaultRegionWidgetPermissionEvaluatorTest {
     @Test
     public void testHasPermission_4args_create_isNotRegionWidgetOwner() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
-        expect(mockAuthentication.getPrincipal()).andReturn(user2);
+        expect(mockAuthentication.getPrincipal()).andReturn(user2).anyTimes();
         expect(mockRegionWidgetRepository.get(VALID_REGION_WIDGET_ID)).andReturn(regionWidget);
         replay(mockAuthentication);
         replay(mockRegionWidgetRepository);
@@ -243,7 +246,7 @@ public class DefaultRegionWidgetPermissionEvaluatorTest {
     @Test
     public void testHasPermission_4args_delete_isNotRegionWidgetOwner() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
-        expect(mockAuthentication.getPrincipal()).andReturn(user2);
+        expect(mockAuthentication.getPrincipal()).andReturn(user2).anyTimes();
         expect(mockRegionWidgetRepository.get(VALID_REGION_WIDGET_ID)).andReturn(regionWidget);
         replay(mockAuthentication);
         replay(mockRegionWidgetRepository);
@@ -267,7 +270,7 @@ public class DefaultRegionWidgetPermissionEvaluatorTest {
     @Test
     public void testHasPermission_4args_read_isNotRegionWidgetOwner() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
-        expect(mockAuthentication.getPrincipal()).andReturn(user2);
+        expect(mockAuthentication.getPrincipal()).andReturn(user2).anyTimes();
         expect(mockRegionWidgetRepository.get(VALID_REGION_WIDGET_ID)).andReturn(regionWidget);
         replay(mockAuthentication);
         replay(mockRegionWidgetRepository);
@@ -291,7 +294,7 @@ public class DefaultRegionWidgetPermissionEvaluatorTest {
     @Test
     public void testHasPermission_4args_update_isNotRegionWidgetOwner() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
-        expect(mockAuthentication.getPrincipal()).andReturn(user2);
+        expect(mockAuthentication.getPrincipal()).andReturn(user2).anyTimes();
         expect(mockRegionWidgetRepository.get(VALID_REGION_WIDGET_ID)).andReturn(regionWidget);
         replay(mockAuthentication);
         replay(mockRegionWidgetRepository);

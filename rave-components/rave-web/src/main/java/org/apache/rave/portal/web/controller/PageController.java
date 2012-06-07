@@ -87,7 +87,7 @@ public class PageController {
         ControllerUtils.addNavItemsToModel(view, model, page.getEntityId(), userService.getAuthenticatedUser(), currentPageUser.isEditor());
         return view;
     }
-    
+
     @RequestMapping(value = "/page/view/{pageId}", method = RequestMethod.GET)
     public String view(@PathVariable Long pageId, Model model, HttpServletRequest request) {
         try {
@@ -111,7 +111,7 @@ public class PageController {
         // Page could not be found or a shared page was removed, in which case return to default view
         return viewDefault(model, request);
     }
-    
+
     private List<Page> getAllPagesForAuthenticatedUser() {
         User user = userService.getAuthenticatedUser();
         long userId = user.getEntityId();
@@ -120,7 +120,7 @@ public class PageController {
         List<Page> viewablePages = new ArrayList<Page>();
         for(Page page : pages){
             for(PageUser pageUser : page.getMembers()){
-                if(pageUser.getUser().equals(user) && !pageUser.getPageStatus().equals(PageInvitationStatus.REFUSED)){
+                if(pageUser != null && pageUser.getUser().equals(user) && !pageUser.getPageStatus().equals(PageInvitationStatus.REFUSED)){
                     viewablePages.add(page);
                 }
             }
@@ -134,7 +134,7 @@ public class PageController {
         }
         return viewablePages;
     }
-    
+
     private void addAttributesToModel(Model model, Page page, PageUser pageUser, List<Page> pages, List<PageLayout> pageLayouts) {
         model.addAttribute(ModelKeys.PAGE, page);
         model.addAttribute(ModelKeys.PAGES, pages);

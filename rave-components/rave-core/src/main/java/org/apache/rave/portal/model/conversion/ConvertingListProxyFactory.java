@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,6 +16,10 @@ public class ConvertingListProxyFactory {
 
     @SuppressWarnings("unchecked")
     public static <E, T extends E> List createProxyList(Class<E> targetType, List<T> underlyingList) {
+        // ensure the list is not null by creating an empty list to prevent unnecessary downstream NullPointerExceptions
+        if (underlyingList == null) {
+            underlyingList = new ArrayList<T>();
+        }
         return (List) Proxy.newProxyInstance(ConvertingListProxyFactory.class.getClassLoader(),
                 new Class<?>[]{List.class},
                 new ConvertingListInvocationHandler<E, T>(underlyingList, targetType));

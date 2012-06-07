@@ -24,12 +24,7 @@ import org.apache.rave.portal.model.conversion.JpaConverter;
 import org.codehaus.jackson.annotate.JsonManagedReference;
 
 import javax.persistence.*;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-
+import javax.xml.bind.annotation.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -98,20 +93,9 @@ public class Page implements BasicEntity, Serializable {
     @Enumerated(EnumType.STRING)
     private PageType pageType;
 
-    @OneToMany(targetEntity=PageUser.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy="page", orphanRemoval=true)
-    private List<PageUser> members;
+    @OneToMany(targetEntity=JpaPageUser.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy="page", orphanRemoval=true)
+    private List<JpaPageUser> members;
 
-    @JsonManagedReference
-    public List<PageUser> getMembers() {
-        return members;
-    }
-
-    /**
-     * @param members the members to set
-     */
-    public void setMembers(List<PageUser> members) {
-       this.members = members;
-    }
 
     public Page() {
     }
@@ -228,6 +212,22 @@ public class Page implements BasicEntity, Serializable {
 
     public void setSubPages(List<Page> subPages) {
         this.subPages = subPages;
+    }
+
+    @JsonManagedReference
+    public List<PageUser> getMembers() {
+        return ConvertingListProxyFactory.createProxyList(PageUser.class, members);
+    }
+
+    public void setMembers(List<PageUser> members) {
+        if (this.members == null) {
+            this.members = new ArrayList<JpaPageUser>();
+        }
+        //Ensure that all operations go through the conversion proxy
+        this.getMembers().clear();
+        if (members != null) {
+            this.getMembers().addAll(members);
+        }
     }
 
     @Override

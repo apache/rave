@@ -20,6 +20,7 @@
 package org.apache.rave.portal.service.impl;
 
 import org.apache.rave.portal.model.*;
+import org.apache.rave.portal.model.impl.PageUserImpl;
 import org.apache.rave.portal.model.impl.WidgetImpl;
 import org.apache.rave.portal.repository.*;
 import org.apache.rave.portal.service.PageService;
@@ -60,7 +61,7 @@ public class DefaultPageServiceTest {
     private final Long INVALID_REGION_WIDGET_ID = 100L;
     private final Long USER_PAGE_TYPE_ID = 1L;
     private final Long VALID_USER_ID = 9876L;
-            
+
     private JpaRegion targetRegion, originalRegion, lockedRegion;
     private JpaWidget validWidget;
     private JpaRegionWidget validRegionWidget;
@@ -71,7 +72,6 @@ public class DefaultPageServiceTest {
     private PageUser pageUser, pageUser2;
     private List<Page> pageList;
     private List<PageUser> pageUserList;
-    
 
     @Before
     public void setup() {
@@ -83,19 +83,19 @@ public class DefaultPageServiceTest {
         regionWidgetRepository = createMock(RegionWidgetRepository.class);
         pageLayoutRepository = createMock(PageLayoutRepository.class);
         userService = createMock(UserService.class);
-       
+
         pageService = new DefaultPageService(pageRepository, pageTemplateRepository, regionRepository, widgetRepository, regionWidgetRepository,
                                              pageLayoutRepository, userService, defaultPageName);
-        
+
         validWidget = new JpaWidget(1L, "http://dummy.apache.org/widgets/widget.xml");
 
         page = new Page(PAGE_ID, user);
-        pageUser = new PageUser(user, page, 1L);
+        pageUser = new PageUserImpl(user, page, 1L);
         page.setMembers(new ArrayList<PageUser>());
         page.getMembers().add(pageUser);
-        
+
         page2 = new Page(99L, user);
-        pageUser2 = new PageUser(user, page2, 2L);
+        pageUser2 = new PageUserImpl(user, page2, 2L);
         page2.setMembers(new ArrayList<PageUser>());
         page2.getMembers().add(pageUser2);
 
@@ -115,21 +115,21 @@ public class DefaultPageServiceTest {
         originalRegion.getRegionWidgets().add(new JpaRegionWidget(4L, validWidget, targetRegion, 0));
         originalRegion.getRegionWidgets().add(new JpaRegionWidget(5L, validWidget, targetRegion, 1));
         originalRegion.getRegionWidgets().add(new JpaRegionWidget(6L, validWidget, targetRegion, 2));
-        
+
         lockedRegion = new JpaRegion();
         lockedRegion.setLocked(true);
         lockedRegion.setPage(page);
-        
+
         pageLayout = new JpaPageLayout();
         pageLayout.setEntityId(1L);
         pageLayout.setCode(PAGE_LAYOUT_CODE);
         pageLayout.setNumberOfRegions(3L);
-        
+
         user = new User();
         user.setEntityId(1L);
-        user.setUsername("acarlucci"); 
+        user.setUsername("acarlucci");
         user.setDefaultPageLayout(pageLayout);
-        
+
         pageList = new ArrayList<Page>();
         pageList.add(page2);
         pageList.add(page);
@@ -152,7 +152,7 @@ public class DefaultPageServiceTest {
         replay(pageRepository);
 
         assertThat(pageService.getAllUserPages(VALID_USER_ID), CoreMatchers.sameInstance(VALID_PAGES));
-        
+
         verify(pageRepository);
     }
 
@@ -195,12 +195,12 @@ public class DefaultPageServiceTest {
         final Long EXPECTED_RENDER_SEQUENCE = 1L;
         PageTemplate pageTemplate = new JpaPageTemplate() ;
         Page expectedPage = new Page();
-        expectedPage.setName(PAGE_NAME);       
+        expectedPage.setName(PAGE_NAME);
         expectedPage.setOwner(user);
         expectedPage.setPageLayout(pageLayout);
-        expectedPage.setRegions(createEmptyRegionList(pageLayout.getNumberOfRegions()));    
+        expectedPage.setRegions(createEmptyRegionList(pageLayout.getNumberOfRegions()));
         expectedPage.setPageType(PageType.USER);
-        PageUser lPageUser = new PageUser(user, expectedPage, EXPECTED_RENDER_SEQUENCE);
+        PageUser lPageUser = new PageUserImpl(user, expectedPage, EXPECTED_RENDER_SEQUENCE);
         List<PageUser> members = new ArrayList<PageUser>();
         members.add(lPageUser);
         expectedPage.setMembers(members);
@@ -295,7 +295,7 @@ public class DefaultPageServiceTest {
         expectedPage.setPageLayout(pageLayout);
         expectedPage.setRegions(createEmptyRegionList(pageLayout.getNumberOfRegions()));
         expectedPage.setPageType(PageType.USER);
-        PageUser lPageUser = new PageUser(user, expectedPage, EXPECTED_RENDER_SEQUENCE);
+        PageUser lPageUser = new PageUserImpl(user, expectedPage, EXPECTED_RENDER_SEQUENCE);
         List<PageUser> members = new ArrayList<PageUser>();
         members.add(lPageUser);
         userPage.setMembers(members);
@@ -323,19 +323,19 @@ public class DefaultPageServiceTest {
         final Long EXPECTED_RENDER_SEQUENCE = 2L;
         List<Page> existingPages = new ArrayList<Page>();
         existingPages.add(new Page());
-                      
+
         Page expectedPage = new Page();
         expectedPage.setName(PAGE_NAME);
         expectedPage.setOwner(user);
         expectedPage.setPageLayout(pageLayout);
         expectedPage.setRegions(createEmptyRegionList(pageLayout.getNumberOfRegions()));
-        PageUser lPageUser = new PageUser(user, expectedPage, EXPECTED_RENDER_SEQUENCE);
+        PageUser lPageUser = new PageUserImpl(user, expectedPage, EXPECTED_RENDER_SEQUENCE);
         List<PageUser> members = new ArrayList<PageUser>();
         members.add(lPageUser);
         expectedPage.setMembers(members);
-                
+
         expect(userService.getAuthenticatedUser()).andReturn(user);
-        expect(pageLayoutRepository.getByPageLayoutCode(PAGE_LAYOUT_CODE)).andReturn(pageLayout);       
+        expect(pageLayoutRepository.getByPageLayoutCode(PAGE_LAYOUT_CODE)).andReturn(pageLayout);
         expect(pageRepository.save(expectedPage)).andReturn(expectedPage);
         expect(pageRepository.getAllPages(user.getEntityId(), PageType.USER)).andReturn(existingPages);
         replay(userService, pageLayoutRepository, pageRepository);
@@ -374,7 +374,7 @@ public class DefaultPageServiceTest {
         parentPage.setRegions(createEmptyRegionList(pageLayout.getNumberOfRegions()));
 
         expect(userService.getAuthenticatedUser()).andReturn(user);
-        expect(pageLayoutRepository.getByPageLayoutCode(PAGE_LAYOUT_CODE)).andReturn(pageLayout);       
+        expect(pageLayoutRepository.getByPageLayoutCode(PAGE_LAYOUT_CODE)).andReturn(pageLayout);
         expect(pageRepository.save(expectedPage)).andReturn(expectedPage);
         replay(userService, pageLayoutRepository,  pageRepository);
 
@@ -411,7 +411,7 @@ public class DefaultPageServiceTest {
         parentPage.setSubPages(existingPages);
 
         expect(userService.getAuthenticatedUser()).andReturn(user);
-        expect(pageLayoutRepository.getByPageLayoutCode(PAGE_LAYOUT_CODE)).andReturn(pageLayout);        
+        expect(pageLayoutRepository.getByPageLayoutCode(PAGE_LAYOUT_CODE)).andReturn(pageLayout);
         expect(pageRepository.save(expectedPage)).andReturn(expectedPage);
         replay(userService, pageLayoutRepository,  pageRepository);
 
@@ -425,10 +425,10 @@ public class DefaultPageServiceTest {
 
         verify(userService, pageLayoutRepository,  pageRepository);
     }
-   
+
     @Test
     public void addNewDefaultUserPage() {
-        
+
         final Long EXPECTED_RENDER_SEQUENCE = 1L;
         PageTemplate pageTemplate = new JpaPageTemplate();
         Page expectedPage = new Page();
@@ -436,11 +436,11 @@ public class DefaultPageServiceTest {
         expectedPage.setOwner(user);
         expectedPage.setPageLayout(pageLayout);
         expectedPage.setRegions(createEmptyRegionList(pageLayout.getNumberOfRegions()));
-        PageUser lPageUser = new PageUser(user, expectedPage, EXPECTED_RENDER_SEQUENCE);
+        PageUser lPageUser = new PageUserImpl(user, expectedPage, EXPECTED_RENDER_SEQUENCE);
         List<PageUser> members = new ArrayList<PageUser>();
         members.add(lPageUser);
         expectedPage.setMembers(members);
-                
+
         expect(userService.getUserById(user.getEntityId())).andReturn(user);
         expect(pageLayoutRepository.getByPageLayoutCode(PAGE_LAYOUT_CODE)).andReturn(pageLayout);
         expect(pageTemplateRepository.getDefaultPage(PageType.USER)).andReturn(pageTemplate);
@@ -452,20 +452,20 @@ public class DefaultPageServiceTest {
         assertThat(newPage.getMembers().get(0).getRenderSequence(), is(EXPECTED_RENDER_SEQUENCE));
         assertThat(newPage.getName(), is(defaultPageName));
         assertThat(newPage.getRegions().size(), is(pageLayout.getNumberOfRegions().intValue()));
-        
+
         verify(userService, pageLayoutRepository, pageRepository, pageTemplateRepository);
     }
-    
+
     @Test
     public void getDefaultPageName() {
         assertThat(pageService.getDefaultPageName(), is(defaultPageName));
     }
-  
+
     @Test
     public void deletePage() {
         List<PageUser> pageUserListAfterDelete = new ArrayList<PageUser>(pageUserList);
         pageUserListAfterDelete.remove(pageUser);
-        
+
         expect(userService.getAuthenticatedUser()).andReturn(user);
         expect(pageRepository.get(PAGE_ID)).andReturn(page);
         expect(pageRepository.getPagesForUser(user.getEntityId(), PageType.USER)).andReturn(pageUserListAfterDelete);
@@ -479,7 +479,7 @@ public class DefaultPageServiceTest {
         verify(userService);
         verify(pageRepository);
     }
-    
+
     @Test
     public void deletePage_invalidId() {
         final long INVALID_PAGE_ID = -999L;
@@ -503,7 +503,7 @@ public class DefaultPageServiceTest {
     @Test
     public void deletePages() {
         final int EXPECTED_DELETED_PAGE_COUNT = 7;
-        expect(pageRepository.deletePages(VALID_USER_ID, PageType.USER)).andReturn(EXPECTED_DELETED_PAGE_COUNT);     
+        expect(pageRepository.deletePages(VALID_USER_ID, PageType.USER)).andReturn(EXPECTED_DELETED_PAGE_COUNT);
         replay(pageRepository);
         assertThat(pageService.deletePages(VALID_USER_ID, PageType.USER), is(EXPECTED_DELETED_PAGE_COUNT));
         verify(pageRepository);
@@ -516,7 +516,7 @@ public class DefaultPageServiceTest {
 
         expect(regionWidgetRepository.get(REGION_WIDGET_ID)).andReturn(validRegionWidget);
         replay(regionWidgetRepository);
-        
+
         RegionWidget widget = pageService.moveRegionWidget(REGION_WIDGET_ID, newPosition, TO_REGION_ID, FROM_REGION_ID);
 
         verify(regionRepository, regionWidgetRepository);
@@ -651,12 +651,12 @@ public class DefaultPageServiceTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void moveRegionWidget_invalidTarget() {       
+    public void moveRegionWidget_invalidTarget() {
         pageService.moveRegionWidget(-1L, 0, 5L, 6L);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void moveRegionWidget_invalidTarget_sameRegion() {       
+    public void moveRegionWidget_invalidTarget_sameRegion() {
         pageService.moveRegionWidget(-1L, 0, 5L, 5L);
     }
 
@@ -748,7 +748,7 @@ public class DefaultPageServiceTest {
         assertThat(originalRegion.getRegionWidgets().get(0), is(sameInstance(instance)));
         assertThat(instance.getWidget(), is(sameInstance(widget)));
 
-    }    
+    }
 
     @Test(expected = IllegalArgumentException.class)
     public void addWidgetToPage_invalidWidget() {
@@ -843,7 +843,7 @@ public class DefaultPageServiceTest {
 
         pageService.removeWidgetFromPage(WIDGET_ID);
     }
-    
+
     @Test
     public void getPage() {
         expect(pageRepository.get(PAGE_ID)).andReturn(page);
@@ -863,22 +863,22 @@ public class DefaultPageServiceTest {
     public void getPageFromList_invalidId() {
         assertThat(pageService.getPageFromList(INVALID_PAGE_ID, pageList), is(nullValue(Page.class)));
     }
-    
+
     @Test
     public void getDefaultPageFromList_validList() {
         assertThat(pageService.getDefaultPageFromList(pageList), is(page2));
-    }   
-    
+    }
+
     @Test
     public void getDefaultPageFromList_emptyList() {
         assertThat(pageService.getDefaultPageFromList(new ArrayList<Page>()), is(nullValue(Page.class)));
-    }   
-    
+    }
+
     @Test
     public void getDefaultPageFromList_nullList() {
         assertThat(pageService.getDefaultPageFromList(null), is(nullValue(Page.class)));
-    }      
-    
+    }
+
     @Test
     public void movePage() {
         expect(userService.getAuthenticatedUser()).andReturn(user);
@@ -901,7 +901,7 @@ public class DefaultPageServiceTest {
     }
 
     @Test(expected=RuntimeException.class)
-    public void movePage_invalidPageId() {               
+    public void movePage_invalidPageId() {
         expect(userService.getAuthenticatedUser()).andReturn(user);
         expect(pageRepository.getSingleRecord(user.getEntityId(), INVALID_PAGE_ID)).andReturn(null);
         expect(pageRepository.getSingleRecord(user.getEntityId(), page2.getEntityId())).andReturn(pageUser2);
@@ -938,7 +938,7 @@ public class DefaultPageServiceTest {
     }
 
     @Test(expected=RuntimeException.class)
-    public void movePageToDefault_invalidPageId() {               
+    public void movePageToDefault_invalidPageId() {
         expect(userService.getAuthenticatedUser()).andReturn(user);
         expect(pageRepository.getSingleRecord(user.getEntityId(), INVALID_PAGE_ID)).andReturn(null);
         expect(pageRepository.getPagesForUser(user.getEntityId(), PageType.USER)).andReturn(pageUserList);
@@ -995,7 +995,7 @@ public class DefaultPageServiceTest {
         PageLayout prevLayout = createStrictMock(JpaPageLayout.class);
         expect(prevLayout.getNumberOfRegions()).andReturn(new Long(2)).anyTimes();
         replay(prevLayout);
-        
+
         JpaPageLayout layout = createStrictMock(JpaPageLayout.class);
         expect(layout.getNumberOfRegions()).andReturn(new Long(3)).anyTimes();
         //expect(layout.equals(layout)).andReturn((boolean) true);
@@ -1023,37 +1023,37 @@ public class DefaultPageServiceTest {
 
         verify(curPage);
     }
-    
-    
+
+
     @Test
     public void updatePage_removeRegion_noWidgets() {
         String newName = "new page name";
         String layoutName = "layout name";
-        
+
         List<Region> regions = new ArrayList<Region>();
         Region region = createStrictMock(Region.class);
         expect(region.getRegionWidgets()).andReturn(new ArrayList<RegionWidget>());
         expect(region.getRenderOrder()).andReturn(1);
         replay(region);
         regions.add(region);
-        
+
         Region deletedRegion = createStrictMock(Region.class);
         expect(deletedRegion.getRegionWidgets()).andReturn(new ArrayList<RegionWidget>());
         replay(deletedRegion);
         regions.add(deletedRegion);
-        
+
         PageLayout prevLayout = createStrictMock(JpaPageLayout.class);
         expect(prevLayout.getNumberOfRegions()).andReturn(new Long(2)).anyTimes();
         replay(prevLayout);
-        
+
         JpaPageLayout layout = createStrictMock(JpaPageLayout.class);
         expect(layout.getNumberOfRegions()).andReturn(new Long(1)).anyTimes();
         replay(layout);
-        
+
         regionRepository.delete(deletedRegion);
         expect(regionRepository.save(region)).andReturn(region);
         replay(regionRepository);
-        
+
         //create a strict mock that ensures that the appropriate setters are
         //called, rather than checking the return value from the function
         Page curPage = createStrictMock(Page.class);
@@ -1062,60 +1062,60 @@ public class DefaultPageServiceTest {
         curPage.setName(newName);
         curPage.setPageLayout(layout);
         replay(curPage);
-        
+
         expect(pageRepository.get(PAGE_ID)).andReturn(curPage);
         expect(pageRepository.save(curPage)).andReturn(curPage);
         replay(pageRepository);
-        
+
         expect(pageLayoutRepository.getByPageLayoutCode(layoutName)).andReturn(layout);
         replay(pageLayoutRepository);
-        
+
         pageService.updatePage(PAGE_ID, newName, layoutName);
-        
+
         verify(curPage);
     }
-    
-    
+
+
     @Test
     public void updatePage_removeRegion_moveWidgetToEmptyColumn() {
         String newName = "new page name";
         String layoutName = "layout name";
-        
-        
+
+
         List<RegionWidget> newLastWidgetColumn = new ArrayList<RegionWidget>();
-        
+
         List<Region> regions = new ArrayList<Region>();
         Region region = createStrictMock(Region.class);
         expect(region.getRegionWidgets()).andReturn(newLastWidgetColumn).times(2);
         expect(region.getRenderOrder()).andReturn(1);
         replay(region);
         regions.add(region);
-        
-        
+
+
         RegionWidget widget = createStrictMock(RegionWidget.class);
         widget.setRegion(region);
         widget.setRenderOrder(1);
         replay(widget);
         List<RegionWidget> movedWidgets = new ArrayList<RegionWidget>();
         movedWidgets.add(widget);
-        
+
         Region deletedRegion = createStrictMock(Region.class);
         expect(deletedRegion.getRegionWidgets()).andReturn(movedWidgets);
         replay(deletedRegion);
         regions.add(deletedRegion);
-        
+
         PageLayout prevLayout = createStrictMock(JpaPageLayout.class);
         expect(prevLayout.getNumberOfRegions()).andReturn(new Long(2)).anyTimes();
         replay(prevLayout);
-        
+
         JpaPageLayout layout = createStrictMock(JpaPageLayout.class);
         expect(layout.getNumberOfRegions()).andReturn(new Long(1)).anyTimes();
         replay(layout);
-        
+
         regionRepository.delete(deletedRegion);
         expect(regionRepository.save(region)).andReturn(region);
         replay(regionRepository);
-        
+
         //create a strict mock that ensures that the appropriate setters are
         //called, rather than checking the return value from the function
         Page curPage = createStrictMock(Page.class);
@@ -1124,41 +1124,41 @@ public class DefaultPageServiceTest {
         curPage.setName(newName);
         curPage.setPageLayout(layout);
         replay(curPage);
-        
+
         expect(pageRepository.get(PAGE_ID)).andReturn(curPage);
         expect(pageRepository.save(curPage)).andReturn(curPage);
         replay(pageRepository);
-        
+
         expect(pageLayoutRepository.getByPageLayoutCode(layoutName)).andReturn(layout);
         replay(pageLayoutRepository);
-        
+
         pageService.updatePage(PAGE_ID, newName, layoutName);
         assertThat(newLastWidgetColumn.size(), is (1));
-        
+
         verify(curPage);
     }
-    
-    
+
+
     @Test
     public void updatePage_removeRegion_moveWidgetToNonEmptyColumn() {
         String newName = "new page name";
         String layoutName = "layout name";
-        
-        
+
+
         RegionWidget widget = createStrictMock(RegionWidget.class);
         expect(widget.getRenderOrder()).andReturn(0).anyTimes();
         replay(widget);
         List<RegionWidget> newLastWidgetColumn = new ArrayList<RegionWidget>();
         newLastWidgetColumn.add(widget);
-        
+
         List<Region> regions = new ArrayList<Region>();
         Region region = createStrictMock(Region.class);
         expect(region.getRegionWidgets()).andReturn(newLastWidgetColumn).times(2);
         expect(region.getRenderOrder()).andReturn(1);
         replay(region);
         regions.add(region);
-        
-        
+
+
         widget = createStrictMock(RegionWidget.class);
         widget.setRegion(region);
         widget.setRenderOrder(1);
@@ -1166,24 +1166,24 @@ public class DefaultPageServiceTest {
         replay(widget);
         List<RegionWidget> movedWidgets = new ArrayList<RegionWidget>();
         movedWidgets.add(widget);
-        
+
         Region deletedRegion = createStrictMock(Region.class);
         expect(deletedRegion.getRegionWidgets()).andReturn(movedWidgets);
         replay(deletedRegion);
         regions.add(deletedRegion);
-        
+
         PageLayout prevLayout = createStrictMock(JpaPageLayout.class);
         expect(prevLayout.getNumberOfRegions()).andReturn(new Long(2)).anyTimes();
         replay(prevLayout);
-        
+
         JpaPageLayout layout = createStrictMock(JpaPageLayout.class);
         expect(layout.getNumberOfRegions()).andReturn(new Long(1)).anyTimes();
         replay(layout);
-        
+
         regionRepository.delete(deletedRegion);
         expect(regionRepository.save(region)).andReturn(region);
         replay(regionRepository);
-        
+
         //create a strict mock that ensures that the appropriate setters are
         //called, rather than checking the return value from the function
         Page curPage = createStrictMock(Page.class);
@@ -1192,24 +1192,24 @@ public class DefaultPageServiceTest {
         curPage.setName(newName);
         curPage.setPageLayout(layout);
         replay(curPage);
-        
+
         expect(pageRepository.get(PAGE_ID)).andReturn(curPage);
         expect(pageRepository.save(curPage)).andReturn(curPage);
         replay(pageRepository);
-        
+
         expect(pageLayoutRepository.getByPageLayoutCode(layoutName)).andReturn(layout);
         replay(pageLayoutRepository);
-        
+
         pageService.updatePage(PAGE_ID, newName, layoutName);
         assertThat(newLastWidgetColumn.size(), is (2));
         assertThat(newLastWidgetColumn.get(0).getRenderOrder(), is (0));
         assertThat(newLastWidgetColumn.get(1).getRenderOrder(), is (1));
-        
+
         verify(curPage);
     }
-    // private methods    
+    // private methods
     private void verifyPositions(int newPosition, RegionWidget widget, boolean sameRegion) {
-        assertThat(widget.getRenderOrder(), is(equalTo(newPosition)));        
+        assertThat(widget.getRenderOrder(), is(equalTo(newPosition)));
         assertOrder(originalRegion);
         assertThat(originalRegion.getRegionWidgets().contains(widget), is(sameRegion));
         if (!sameRegion) {
@@ -1218,7 +1218,7 @@ public class DefaultPageServiceTest {
         }
     }
 
-    private void createMoveBetweenRegionsExpectations() {        
+    private void createMoveBetweenRegionsExpectations() {
         expect(regionRepository.get(TO_REGION_ID)).andReturn(targetRegion);
         expect(regionRepository.get(FROM_REGION_ID)).andReturn(originalRegion);
         expect(regionRepository.save(targetRegion)).andReturn(targetRegion);
@@ -1237,7 +1237,7 @@ public class DefaultPageServiceTest {
             assertThat(region.getRegionWidgets().get(i).getRenderOrder(), is(equalTo(i)));
         }
     }
-    
+
     private List<Region> createEmptyRegionList(long numberOfRegions) {
         List<Region> regions = new ArrayList<Region>();
         int regionCount;
@@ -1266,7 +1266,7 @@ public class DefaultPageServiceTest {
 
         Region region = new JpaRegion();
         region.setLocked(false);
-        
+
         RegionWidget regionWidget = new JpaRegionWidget(VALID_REGION_WIDGET_ID);
         regionWidget.setRegion(region);
 
@@ -1399,5 +1399,5 @@ public class DefaultPageServiceTest {
         replay(pageRepository,regionWidgetRepository);
 
         pageService.moveRegionWidgetToPage(VALID_REGION_WIDGET_ID, TO_PAGE_ID);
-    } 
+    }
 }

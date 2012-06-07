@@ -49,7 +49,7 @@ public class DefaultPagePermissionEvaluatorTest {
     private PageRepository mockPageRepository;
     private Authentication mockAuthentication;
     private Page page, personProfilePage, pageSubPage, personProfileSubPage;
-    private User user, user2;    
+    private User user, user2;
     private List<GrantedAuthority> grantedAuthoritiesList;
 
     private final Long VALID_USER_ID = 99L;
@@ -66,7 +66,7 @@ public class DefaultPagePermissionEvaluatorTest {
         mockAuthentication = createMock(Authentication.class);
 
         defaultPagePermissionEvaluator = new DefaultPagePermissionEvaluator(mockPageRepository);
-        
+
         user = new User();
         user.setUsername(VALID_USERNAME);
         user.setEntityId(VALID_USER_ID);
@@ -97,87 +97,87 @@ public class DefaultPagePermissionEvaluatorTest {
         grantedAuthoritiesList = new ArrayList<GrantedAuthority>();
         grantedAuthoritiesList.add(new SimpleGrantedAuthority("ROLE_USER"));
     }
- 
-   
+
+
     @Test
-    public void testGetType() throws ClassNotFoundException {            
+    public void testGetType() throws ClassNotFoundException {
         assertThat(defaultPagePermissionEvaluator.getType().getName(), is(Page.class.getName()));
     }
-  
+
     @Test
     public void testHasPermission_3args_administer() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
-        replay(mockAuthentication);              
-        assertThat(defaultPagePermissionEvaluator.hasPermission(mockAuthentication, page, Permission.ADMINISTER), is(false));        
+        replay(mockAuthentication);
+        assertThat(defaultPagePermissionEvaluator.hasPermission(mockAuthentication, page, Permission.ADMINISTER), is(false));
         verify(mockAuthentication);
     }
-    
+
     @Test
-    public void testHasPermission_3args_administer_hasAdminRole() {                             
+    public void testHasPermission_3args_administer_hasAdminRole() {
         grantedAuthoritiesList.add(new SimpleGrantedAuthority(AuthenticationUtils.ROLE_ADMIN));
 
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
-        replay(mockAuthentication);              
-        assertThat(defaultPagePermissionEvaluator.hasPermission(mockAuthentication, page, Permission.ADMINISTER), is(true));        
+        replay(mockAuthentication);
+        assertThat(defaultPagePermissionEvaluator.hasPermission(mockAuthentication, page, Permission.ADMINISTER), is(true));
         verify(mockAuthentication);
-    }    
-    
+    }
+
     @Test
     public void testHasPermission_3args_create_isPageOwner() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
         expect(mockAuthentication.getPrincipal()).andReturn(user);
         expect(mockPageRepository.get(VALID_PAGE_ID)).andReturn(page);
-        replay(mockAuthentication); 
+        replay(mockAuthentication);
         replay(mockPageRepository);
-        assertThat(defaultPagePermissionEvaluator.hasPermission(mockAuthentication, page, Permission.CREATE), is(true));        
+        assertThat(defaultPagePermissionEvaluator.hasPermission(mockAuthentication, page, Permission.CREATE), is(true));
         verify(mockAuthentication);
         verify(mockPageRepository);
-    }    
-    
+    }
+
     @Test
     public void testHasPermission_3args_create_isNotPageOwner() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
-        expect(mockAuthentication.getPrincipal()).andReturn(user2);
+        expect(mockAuthentication.getPrincipal()).andReturn(user2).anyTimes();
         expect(mockPageRepository.get(VALID_PAGE_ID)).andReturn(page);
-        replay(mockAuthentication); 
+        replay(mockAuthentication);
         replay(mockPageRepository);
-        assertThat(defaultPagePermissionEvaluator.hasPermission(mockAuthentication, page, Permission.CREATE), is(false));        
+        assertThat(defaultPagePermissionEvaluator.hasPermission(mockAuthentication, page, Permission.CREATE), is(false));
         verify(mockAuthentication);
         verify(mockPageRepository);
-    }       
-    
+    }
+
     @Test
     public void testHasPermission_3args_delete_isPageOwner() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
         expect(mockAuthentication.getPrincipal()).andReturn(user);
         expect(mockPageRepository.get(VALID_PAGE_ID)).andReturn(page);
-        replay(mockAuthentication);      
+        replay(mockAuthentication);
         replay(mockPageRepository);
-        assertThat(defaultPagePermissionEvaluator.hasPermission(mockAuthentication, page, Permission.DELETE), is(true));        
+        assertThat(defaultPagePermissionEvaluator.hasPermission(mockAuthentication, page, Permission.DELETE), is(true));
         verify(mockAuthentication);
         verify(mockPageRepository);
-    }        
-    
+    }
+
     @Test
     public void testHasPermission_3args_delete_notPageOwner() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
-        expect(mockAuthentication.getPrincipal()).andReturn(user2);
+        expect(mockAuthentication.getPrincipal()).andReturn(user2).anyTimes();
         expect(mockPageRepository.get(VALID_PAGE_ID)).andReturn(page);
-        replay(mockAuthentication);      
+        replay(mockAuthentication);
         replay(mockPageRepository);
-        assertThat(defaultPagePermissionEvaluator.hasPermission(mockAuthentication, page, Permission.DELETE), is(false));        
+        assertThat(defaultPagePermissionEvaluator.hasPermission(mockAuthentication, page, Permission.DELETE), is(false));
         verify(mockAuthentication);
         verify(mockPageRepository);
-    }       
-    
+    }
+
     @Test
     public void testHasPermission_3args_read_isPageOwner() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
         expect(mockAuthentication.getPrincipal()).andReturn(user);
         expect(mockPageRepository.get(VALID_PAGE_ID)).andReturn(page);
-        replay(mockAuthentication);      
+        replay(mockAuthentication);
         replay(mockPageRepository);
-        assertThat(defaultPagePermissionEvaluator.hasPermission(mockAuthentication, page, Permission.READ), is(true));        
+        assertThat(defaultPagePermissionEvaluator.hasPermission(mockAuthentication, page, Permission.READ), is(true));
         verify(mockAuthentication);
         verify(mockPageRepository);
     }
@@ -193,15 +193,15 @@ public class DefaultPagePermissionEvaluatorTest {
         verify(mockAuthentication);
         verify(mockPageRepository);
     }
-    
+
     @Test
     public void testHasPermission_3args_read_notPageOwner() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
-        expect(mockAuthentication.getPrincipal()).andReturn(user2);
+        expect(mockAuthentication.getPrincipal()).andReturn(user2).anyTimes();
         expect(mockPageRepository.get(VALID_PAGE_ID)).andReturn(page);
-        replay(mockAuthentication);      
+        replay(mockAuthentication);
         replay(mockPageRepository);
-        assertThat(defaultPagePermissionEvaluator.hasPermission(mockAuthentication, page, Permission.READ), is(false));        
+        assertThat(defaultPagePermissionEvaluator.hasPermission(mockAuthentication, page, Permission.READ), is(false));
         verify(mockAuthentication);
         verify(mockPageRepository);
     }
@@ -209,7 +209,7 @@ public class DefaultPagePermissionEvaluatorTest {
     @Test
     public void testHasPermission_3args_read_notPageOwner_pageSubPage() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
-        expect(mockAuthentication.getPrincipal()).andReturn(user2);
+        expect(mockAuthentication.getPrincipal()).andReturn(user2).anyTimes();
         expect(mockPageRepository.get(VALID_PAGE_ID4)).andReturn(pageSubPage);
         replay(mockAuthentication);
         replay(mockPageRepository);
@@ -253,79 +253,79 @@ public class DefaultPagePermissionEvaluatorTest {
     @Test
     public void testHasPermission_3args_update_notPageOwner() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
-        expect(mockAuthentication.getPrincipal()).andReturn(user2);
+        expect(mockAuthentication.getPrincipal()).andReturn(user2).anyTimes();
         expect(mockPageRepository.get(VALID_PAGE_ID)).andReturn(page);
         replay(mockAuthentication);
         replay(mockPageRepository);
         assertThat(defaultPagePermissionEvaluator.hasPermission(mockAuthentication, page, Permission.UPDATE), is(false));
         verify(mockAuthentication);
         verify(mockPageRepository);
-    }         
-    
+    }
+
     @Test
     public void testHasPermission_4args_administer() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
-        replay(mockAuthentication);              
-        assertThat(defaultPagePermissionEvaluator.hasPermission(mockAuthentication, VALID_PAGE_ID, Page.class.getName(), Permission.ADMINISTER), is(false));        
+        replay(mockAuthentication);
+        assertThat(defaultPagePermissionEvaluator.hasPermission(mockAuthentication, VALID_PAGE_ID, Page.class.getName(), Permission.ADMINISTER), is(false));
         verify(mockAuthentication);
-    }    
-    
+    }
+
     @Test
     public void testHasPermission_4args_create_isPageOwner() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
         expect(mockAuthentication.getPrincipal()).andReturn(user);
         expect(mockPageRepository.get(VALID_PAGE_ID)).andReturn(page);
-        replay(mockAuthentication);      
-        replay(mockPageRepository);     
-        assertThat(defaultPagePermissionEvaluator.hasPermission(mockAuthentication, VALID_PAGE_ID, Page.class.getName(), Permission.CREATE), is(true));        
+        replay(mockAuthentication);
+        replay(mockPageRepository);
+        assertThat(defaultPagePermissionEvaluator.hasPermission(mockAuthentication, VALID_PAGE_ID, Page.class.getName(), Permission.CREATE), is(true));
         verify(mockAuthentication);
         verify(mockPageRepository);
-    }     
-    
+    }
+
     @Test
     public void testHasPermission_4args_create_isNotPageOwner() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
-        expect(mockAuthentication.getPrincipal()).andReturn(user2);
+        expect(mockAuthentication.getPrincipal()).andReturn(user2).anyTimes();
         expect(mockPageRepository.get(VALID_PAGE_ID)).andReturn(page);
-        replay(mockAuthentication);      
-        replay(mockPageRepository);     
-        assertThat(defaultPagePermissionEvaluator.hasPermission(mockAuthentication, VALID_PAGE_ID, Page.class.getName(), Permission.CREATE), is(false));        
+        replay(mockAuthentication);
+        replay(mockPageRepository);
+        assertThat(defaultPagePermissionEvaluator.hasPermission(mockAuthentication, VALID_PAGE_ID, Page.class.getName(), Permission.CREATE), is(false));
         verify(mockAuthentication);
         verify(mockPageRepository);
-    }         
-    
+    }
+
     @Test
     public void testHasPermission_4args_delete_isPageOwner() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
         expect(mockAuthentication.getPrincipal()).andReturn(user);
         expect(mockPageRepository.get(VALID_PAGE_ID)).andReturn(page);
-        replay(mockAuthentication);      
+        replay(mockAuthentication);
         replay(mockPageRepository);
-        assertThat(defaultPagePermissionEvaluator.hasPermission(mockAuthentication, VALID_PAGE_ID, Page.class.getName(), Permission.DELETE), is(true));        
+        assertThat(defaultPagePermissionEvaluator.hasPermission(mockAuthentication, VALID_PAGE_ID, Page.class.getName(), Permission.DELETE), is(true));
         verify(mockAuthentication);
         verify(mockPageRepository);
-    }        
-        
+    }
+
     @Test
     public void testHasPermission_4args_delete_notPageOwner() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
-        expect(mockAuthentication.getPrincipal()).andReturn(user2);
+        expect(mockAuthentication.getPrincipal()).andReturn(user2).anyTimes();
         expect(mockPageRepository.get(VALID_PAGE_ID)).andReturn(page);
-        replay(mockAuthentication);      
+        replay(mockAuthentication);
         replay(mockPageRepository);
-        assertThat(defaultPagePermissionEvaluator.hasPermission(mockAuthentication, VALID_PAGE_ID, Page.class.getName(), Permission.DELETE), is(false));        
+        assertThat(defaultPagePermissionEvaluator.hasPermission(mockAuthentication, VALID_PAGE_ID, Page.class.getName(), Permission.DELETE), is(false));
         verify(mockAuthentication);
         verify(mockPageRepository);
-    }       
-    
+    }
+
     @Test
     public void testHasPermission_4args_read_isPageOwner() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
         expect(mockAuthentication.getPrincipal()).andReturn(user);
         expect(mockPageRepository.get(VALID_PAGE_ID)).andReturn(page);
-        replay(mockAuthentication);      
+        replay(mockAuthentication);
         replay(mockPageRepository);
-        assertThat(defaultPagePermissionEvaluator.hasPermission(mockAuthentication, VALID_PAGE_ID, Page.class.getName(), Permission.READ), is(true));        
+        assertThat(defaultPagePermissionEvaluator.hasPermission(mockAuthentication, VALID_PAGE_ID, Page.class.getName(), Permission.READ), is(true));
         verify(mockAuthentication);
         verify(mockPageRepository);
     }
@@ -341,15 +341,15 @@ public class DefaultPagePermissionEvaluatorTest {
         verify(mockAuthentication);
         verify(mockPageRepository);
     }
-    
+
     @Test
     public void testHasPermission_4args_read_notPageOwner() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
-        expect(mockAuthentication.getPrincipal()).andReturn(user2);
+        expect(mockAuthentication.getPrincipal()).andReturn(user2).anyTimes();
         expect(mockPageRepository.get(VALID_PAGE_ID)).andReturn(page);
-        replay(mockAuthentication);      
+        replay(mockAuthentication);
         replay(mockPageRepository);
-        assertThat(defaultPagePermissionEvaluator.hasPermission(mockAuthentication, VALID_PAGE_ID, Page.class.getName(), Permission.READ), is(false));        
+        assertThat(defaultPagePermissionEvaluator.hasPermission(mockAuthentication, VALID_PAGE_ID, Page.class.getName(), Permission.READ), is(false));
         verify(mockAuthentication);
         verify(mockPageRepository);
     }
@@ -357,7 +357,7 @@ public class DefaultPagePermissionEvaluatorTest {
     @Test
     public void testHasPermission_4args_read_notPageOwner_pageSubPage() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
-        expect(mockAuthentication.getPrincipal()).andReturn(user2);
+        expect(mockAuthentication.getPrincipal()).andReturn(user2).anyTimes();
         expect(mockPageRepository.get(VALID_PAGE_ID4)).andReturn(page);
         replay(mockAuthentication);
         replay(mockPageRepository);
@@ -393,52 +393,52 @@ public class DefaultPagePermissionEvaluatorTest {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
         expect(mockAuthentication.getPrincipal()).andReturn(user);
         expect(mockPageRepository.get(VALID_PAGE_ID)).andReturn(page);
-        replay(mockAuthentication);      
+        replay(mockAuthentication);
         replay(mockPageRepository);
-        assertThat(defaultPagePermissionEvaluator.hasPermission(mockAuthentication, VALID_PAGE_ID, Page.class.getName(), Permission.UPDATE), is(true));        
+        assertThat(defaultPagePermissionEvaluator.hasPermission(mockAuthentication, VALID_PAGE_ID, Page.class.getName(), Permission.UPDATE), is(true));
         verify(mockAuthentication);
         verify(mockPageRepository);
-    }   
-    
+    }
+
     @Test
     public void testHasPermission_4args_update_notPageOwner() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
-        expect(mockAuthentication.getPrincipal()).andReturn(user2);
+        expect(mockAuthentication.getPrincipal()).andReturn(user2).anyTimes();
         expect(mockPageRepository.get(VALID_PAGE_ID)).andReturn(page);
-        replay(mockAuthentication);      
+        replay(mockAuthentication);
         replay(mockPageRepository);
-        assertThat(defaultPagePermissionEvaluator.hasPermission(mockAuthentication, VALID_PAGE_ID, Page.class.getName(), Permission.UPDATE), is(false));        
+        assertThat(defaultPagePermissionEvaluator.hasPermission(mockAuthentication, VALID_PAGE_ID, Page.class.getName(), Permission.UPDATE), is(false));
         verify(mockAuthentication);
         verify(mockPageRepository);
-    }         
-    
+    }
+
     @Test
-    public void testHasPermission_4args_update_isPageOwner_withRaveSecurityContextObject() {                             
+    public void testHasPermission_4args_update_isPageOwner_withRaveSecurityContextObject() {
         RaveSecurityContext raveSecurityContext = new RaveSecurityContext(VALID_USER_ID, "org.apache.rave.portal.model.User");
-                
+
         expect(mockAuthentication.getPrincipal()).andReturn(user);
-        replay(mockAuthentication);      
-        assertThat(defaultPagePermissionEvaluator.hasPermission(mockAuthentication, raveSecurityContext, Page.class.getName(), Permission.UPDATE), is(true));        
+        replay(mockAuthentication);
+        assertThat(defaultPagePermissionEvaluator.hasPermission(mockAuthentication, raveSecurityContext, Page.class.getName(), Permission.UPDATE), is(true));
         verify(mockAuthentication);
-    } 
-    
+    }
+
     @Test(expected=IllegalArgumentException.class)
-    public void testHasPermission_4args_update_isPageOwner_withInvalidRaveSecurityContextType() {                             
+    public void testHasPermission_4args_update_isPageOwner_withInvalidRaveSecurityContextType() {
         RaveSecurityContext raveSecurityContext = new RaveSecurityContext(VALID_USER_ID, "java.lang.String");
-                
+
         expect(mockAuthentication.getPrincipal()).andReturn(user);
-        replay(mockAuthentication);      
-        defaultPagePermissionEvaluator.hasPermission(mockAuthentication, raveSecurityContext, Page.class.getName(), Permission.UPDATE);        
+        replay(mockAuthentication);
+        defaultPagePermissionEvaluator.hasPermission(mockAuthentication, raveSecurityContext, Page.class.getName(), Permission.UPDATE);
         verify(mockAuthentication);
-    }    
-    
+    }
+
     @Test(expected=IllegalArgumentException.class)
-    public void testHasPermission_4args_update_isPageOwner_withUnknownRaveSecurityContextType() {                             
+    public void testHasPermission_4args_update_isPageOwner_withUnknownRaveSecurityContextType() {
         RaveSecurityContext raveSecurityContext = new RaveSecurityContext(VALID_USER_ID, "foo.bar.DummyClass");
-                
+
         expect(mockAuthentication.getPrincipal()).andReturn(user);
-        replay(mockAuthentication);      
-        defaultPagePermissionEvaluator.hasPermission(mockAuthentication, raveSecurityContext, Page.class.getName(), Permission.UPDATE);        
+        replay(mockAuthentication);
+        defaultPagePermissionEvaluator.hasPermission(mockAuthentication, raveSecurityContext, Page.class.getName(), Permission.UPDATE);
         verify(mockAuthentication);
-    }    
+    }
 }

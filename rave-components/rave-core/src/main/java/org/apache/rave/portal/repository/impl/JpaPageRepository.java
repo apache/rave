@@ -21,9 +21,8 @@ package org.apache.rave.portal.repository.impl;
 
 import org.apache.rave.persistence.jpa.AbstractJpaRepository;
 import org.apache.rave.portal.model.*;
-import org.apache.rave.portal.model.conversion.JpaRegionConverter;
 import org.apache.rave.portal.repository.PageRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.rave.util.CollectionUtils;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.TypedQuery;
@@ -39,7 +38,7 @@ public class JpaPageRepository extends AbstractJpaRepository<Page> implements Pa
 
     @Override
     public List<Page> getAllPages(Long userId, PageType pageType) {
-        TypedQuery<Page> query = manager.createNamedQuery(PageUser.GET_BY_USER_ID_AND_PAGE_TYPE, Page.class);
+        TypedQuery<Page> query = manager.createNamedQuery(JpaPageUser.GET_BY_USER_ID_AND_PAGE_TYPE, Page.class);
         query.setParameter("userId", userId);
         query.setParameter("pageType", pageType);
         return query.getResultList();
@@ -63,15 +62,15 @@ public class JpaPageRepository extends AbstractJpaRepository<Page> implements Pa
 
     @Override
     public List<PageUser> getPagesForUser(Long userId, PageType pageType) {
-        TypedQuery<PageUser> query = manager.createNamedQuery(PageUser.GET_PAGES_FOR_USER, PageUser.class);
+        TypedQuery<JpaPageUser> query = manager.createNamedQuery(JpaPageUser.GET_PAGES_FOR_USER, JpaPageUser.class);
         query.setParameter("userId", userId);
         query.setParameter("pageType", pageType);
-        return query.getResultList();
+        return CollectionUtils.<PageUser>toBaseTypedList(query.getResultList());
     }
 
     @Override
     public PageUser getSingleRecord(Long userId, Long pageId){
-        TypedQuery<PageUser> query = manager.createNamedQuery(PageUser.GET_SINGLE_RECORD, PageUser.class);
+        TypedQuery<JpaPageUser> query = manager.createNamedQuery(JpaPageUser.GET_SINGLE_RECORD, JpaPageUser.class);
         query.setParameter("userId", userId);
         query.setParameter("pageId", pageId);
         return query.getSingleResult();
@@ -95,7 +94,7 @@ public class JpaPageRepository extends AbstractJpaRepository<Page> implements Pa
         p.setName(pt.getName());
         p.setPageType(pt.getPageType());
         p.setOwner(user);
-        PageUser pageUser = new PageUser(p.getOwner(), p, pt.getRenderSequence());
+        PageUser pageUser = new JpaPageUser(p.getOwner(), p, pt.getRenderSequence());
         pageUser.setPageStatus(PageInvitationStatus.OWNER);
         pageUser.setEditor(true);
         List<PageUser> members = new ArrayList<PageUser>();
@@ -171,7 +170,7 @@ public class JpaPageRepository extends AbstractJpaRepository<Page> implements Pa
             lPage.setRegions(convertRegions(pt.getPageTemplateRegions(), lPage));
 
             // create new pageUser tuple
-            PageUser pageUser = new PageUser(lPage.getOwner(), lPage, pt.getRenderSequence());
+            PageUser pageUser = new JpaPageUser(lPage.getOwner(), lPage, pt.getRenderSequence());
             pageUser.setPageStatus(PageInvitationStatus.OWNER);
             pageUser.setEditor(true);
             List<PageUser> members = new ArrayList<PageUser>();

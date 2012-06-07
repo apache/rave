@@ -21,7 +21,13 @@ package org.apache.rave.portal.service.impl;
 
 import org.apache.rave.persistence.Repository;
 import org.apache.rave.portal.model.*;
-import org.apache.rave.portal.repository.*;
+import org.apache.rave.portal.model.impl.PageUserImpl;
+import org.apache.rave.portal.repository.PageLayoutRepository;
+import org.apache.rave.portal.repository.PageRepository;
+import org.apache.rave.portal.repository.PageTemplateRepository;
+import org.apache.rave.portal.repository.RegionRepository;
+import org.apache.rave.portal.repository.RegionWidgetRepository;
+import org.apache.rave.portal.repository.WidgetRepository;
 import org.apache.rave.portal.service.PageService;
 import org.apache.rave.portal.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -143,7 +149,7 @@ public class DefaultPageService implements PageService {
         // set this as a "sub-page" page type
         page.setPageType(PageType.SUB_PAGE);
 
-        PageUser pageUser = new PageUser(page.getOwner(), page, renderSequence);
+        PageUser pageUser = new PageUserImpl(page.getOwner(), page, renderSequence);
         pageUser.setPageStatus(PageInvitationStatus.OWNER);
         List<PageUser> members = new ArrayList<PageUser>();
         members.add(pageUser);
@@ -292,7 +298,7 @@ public class DefaultPageService implements PageService {
     @Transactional
     public Boolean addMemberToPage(long pageId, long userId){
         Page page = getPage(pageId);
-        PageUser pageUser = new PageUser();
+        PageUser pageUser = new PageUserImpl();
         pageUser.setUser(userService.getUserById(userId));
         pageUser.setPage(page);
         pageUser.setPageStatus(PageInvitationStatus.PENDING);
@@ -500,7 +506,7 @@ public class DefaultPageService implements PageService {
         page.setName(pageName);
         page.setOwner(user);
         page.setPageLayout(pageLayout);
-        PageUser pageUser = new PageUser(page.getOwner(), page, renderSequence);
+        PageUser pageUser = new PageUserImpl(page.getOwner(), page, renderSequence);
         pageUser.setPageStatus(PageInvitationStatus.OWNER);
         pageUser.setEditor(true);
 
