@@ -19,6 +19,8 @@
 package org.apache.rave.portal.security.impl;
 
 import org.apache.rave.portal.model.*;
+import org.apache.rave.portal.model.impl.PageImpl;
+import org.apache.rave.portal.model.impl.WidgetImpl;
 import org.apache.rave.portal.repository.WidgetRepository;
 import org.apache.rave.portal.security.ModelPermissionEvaluator;
 import org.apache.rave.portal.security.util.AuthenticationUtils;
@@ -41,12 +43,12 @@ public class DefaultWidgetPermissionEvaluatorTest {
     private DefaultWidgetPermissionEvaluator defaultWidgetPermissionEvaluator;
     private WidgetRepository mockWidgetRepository;
     private Page page;
-    private JpaWidget widget, widget2;
+    private Widget widget, widget2;
     private User user, user2;
     private Authentication mockAuthentication;
     private List<GrantedAuthority> grantedAuthoritiesList;
 
-    private final Long VALID_REGION_ID = 1L;
+    private final Long VALID_WIDGET_ID = 1L;
     private final Long VALID_PAGE_ID = 3L;
     private final Long VALID_USER_ID = 99L;
     private final String VALID_USERNAME = "john.doe";
@@ -63,11 +65,10 @@ public class DefaultWidgetPermissionEvaluatorTest {
         user.setEntityId(VALID_USER_ID);
         user2 = new User();
         user2.setUsername(VALID_USERNAME2);
-        page = new Page();
-        page.setEntityId(VALID_PAGE_ID);
+        page = new PageImpl();
+        page.setId(VALID_PAGE_ID);
         page.setOwner(user);
-        widget = new JpaWidget();
-        widget.setEntityId(VALID_REGION_ID);
+        widget = new WidgetImpl(VALID_WIDGET_ID);
         widget.setOwner(user);
         widget.setWidgetStatus(WidgetStatus.PUBLISHED);
         grantedAuthoritiesList = new ArrayList<GrantedAuthority>();
@@ -100,7 +101,7 @@ public class DefaultWidgetPermissionEvaluatorTest {
     public void testHasPermission_3args_create_isWidgetOwner() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
         expect(mockAuthentication.getPrincipal()).andReturn(user);
-        expect(mockWidgetRepository.get(VALID_REGION_ID)).andReturn(widget);
+        expect(mockWidgetRepository.get(VALID_WIDGET_ID)).andReturn(widget);
         replay(mockAuthentication);
         replay(mockWidgetRepository);
         assertThat(defaultWidgetPermissionEvaluator.hasPermission(mockAuthentication, widget, ModelPermissionEvaluator.Permission.CREATE), is(true));
@@ -112,7 +113,7 @@ public class DefaultWidgetPermissionEvaluatorTest {
     public void testHasPermission_3args_create_isNotWidgetOwner() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
         expect(mockAuthentication.getPrincipal()).andReturn(user2);
-        expect(mockWidgetRepository.get(VALID_REGION_ID)).andReturn(widget);
+        expect(mockWidgetRepository.get(VALID_WIDGET_ID)).andReturn(widget);
         replay(mockAuthentication);
         replay(mockWidgetRepository);
         assertThat(defaultWidgetPermissionEvaluator.hasPermission(mockAuthentication, widget, ModelPermissionEvaluator.Permission.CREATE), is(false));
@@ -124,7 +125,7 @@ public class DefaultWidgetPermissionEvaluatorTest {
     public void testHasPermission_3args_delete_isWidgetOwner() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
         expect(mockAuthentication.getPrincipal()).andReturn(user);
-        expect(mockWidgetRepository.get(VALID_REGION_ID)).andReturn(widget);
+        expect(mockWidgetRepository.get(VALID_WIDGET_ID)).andReturn(widget);
         replay(mockAuthentication);
         replay(mockWidgetRepository);
         assertThat(defaultWidgetPermissionEvaluator.hasPermission(mockAuthentication, widget, ModelPermissionEvaluator.Permission.DELETE), is(true));
@@ -136,7 +137,7 @@ public class DefaultWidgetPermissionEvaluatorTest {
     public void testHasPermission_3args_delete_isNotWidgetOwner() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
         expect(mockAuthentication.getPrincipal()).andReturn(user2);
-        expect(mockWidgetRepository.get(VALID_REGION_ID)).andReturn(widget);
+        expect(mockWidgetRepository.get(VALID_WIDGET_ID)).andReturn(widget);
         replay(mockAuthentication);
         replay(mockWidgetRepository);
         assertThat(defaultWidgetPermissionEvaluator.hasPermission(mockAuthentication, widget, ModelPermissionEvaluator.Permission.DELETE), is(false));
@@ -148,7 +149,7 @@ public class DefaultWidgetPermissionEvaluatorTest {
     public void testHasPermission_3args_update_isWidgetOwner() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
         expect(mockAuthentication.getPrincipal()).andReturn(user);
-        expect(mockWidgetRepository.get(VALID_REGION_ID)).andReturn(widget);
+        expect(mockWidgetRepository.get(VALID_WIDGET_ID)).andReturn(widget);
         replay(mockAuthentication);
         replay(mockWidgetRepository);
         assertThat(defaultWidgetPermissionEvaluator.hasPermission(mockAuthentication, widget, ModelPermissionEvaluator.Permission.UPDATE), is(true));
@@ -160,19 +161,19 @@ public class DefaultWidgetPermissionEvaluatorTest {
     public void testHasPermission_3args_update_isNotWidgetOwner() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
         expect(mockAuthentication.getPrincipal()).andReturn(user2);
-        expect(mockWidgetRepository.get(VALID_REGION_ID)).andReturn(widget);
+        expect(mockWidgetRepository.get(VALID_WIDGET_ID)).andReturn(widget);
         replay(mockAuthentication);
         replay(mockWidgetRepository);
         assertThat(defaultWidgetPermissionEvaluator.hasPermission(mockAuthentication, widget, ModelPermissionEvaluator.Permission.UPDATE), is(false));
         verify(mockAuthentication);
         verify(mockWidgetRepository);
-    }     
+    }
 
     @Test
     public void testHasPermission_3args_read_isWidgetOwner() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
         expect(mockAuthentication.getPrincipal()).andReturn(user);
-        expect(mockWidgetRepository.get(VALID_REGION_ID)).andReturn(widget);
+        expect(mockWidgetRepository.get(VALID_WIDGET_ID)).andReturn(widget);
         replay(mockAuthentication);
         replay(mockWidgetRepository);
         assertThat(defaultWidgetPermissionEvaluator.hasPermission(mockAuthentication, widget, ModelPermissionEvaluator.Permission.READ), is(true));
@@ -184,7 +185,7 @@ public class DefaultWidgetPermissionEvaluatorTest {
     public void testHasPermission_3args_read_isNotWidgetOwner_isPublishedGadget() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
         expect(mockAuthentication.getPrincipal()).andReturn(user2);
-        expect(mockWidgetRepository.get(VALID_REGION_ID)).andReturn(widget);
+        expect(mockWidgetRepository.get(VALID_WIDGET_ID)).andReturn(widget);
         replay(mockAuthentication);
         replay(mockWidgetRepository);
         assertThat(defaultWidgetPermissionEvaluator.hasPermission(mockAuthentication, widget, ModelPermissionEvaluator.Permission.READ), is(true));
@@ -198,19 +199,19 @@ public class DefaultWidgetPermissionEvaluatorTest {
 
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
         expect(mockAuthentication.getPrincipal()).andReturn(user2);
-        expect(mockWidgetRepository.get(VALID_REGION_ID)).andReturn(widget);
+        expect(mockWidgetRepository.get(VALID_WIDGET_ID)).andReturn(widget);
         replay(mockAuthentication);
         replay(mockWidgetRepository);
         assertThat(defaultWidgetPermissionEvaluator.hasPermission(mockAuthentication, widget, ModelPermissionEvaluator.Permission.READ), is(false));
         verify(mockAuthentication);
         verify(mockWidgetRepository);
-    }    
-    
+    }
+
     @Test
     public void testHasPermission_4args_administer() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
         replay(mockAuthentication);
-        assertThat(defaultWidgetPermissionEvaluator.hasPermission(mockAuthentication, VALID_REGION_ID, JpaWidget.class.getName(), ModelPermissionEvaluator.Permission.ADMINISTER), is(false));
+        assertThat(defaultWidgetPermissionEvaluator.hasPermission(mockAuthentication, VALID_WIDGET_ID, Widget.class.getName(), ModelPermissionEvaluator.Permission.ADMINISTER), is(false));
         verify(mockAuthentication);
     }
 
@@ -218,10 +219,10 @@ public class DefaultWidgetPermissionEvaluatorTest {
     public void testHasPermission_4args_create_isWidgetOwner() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
         expect(mockAuthentication.getPrincipal()).andReturn(user);
-        expect(mockWidgetRepository.get(VALID_REGION_ID)).andReturn(widget);
+        expect(mockWidgetRepository.get(VALID_WIDGET_ID)).andReturn(widget);
         replay(mockAuthentication);
         replay(mockWidgetRepository);
-        assertThat(defaultWidgetPermissionEvaluator.hasPermission(mockAuthentication, VALID_REGION_ID, JpaWidget.class.getName(), ModelPermissionEvaluator.Permission.CREATE), is(true));
+        assertThat(defaultWidgetPermissionEvaluator.hasPermission(mockAuthentication, VALID_WIDGET_ID, Widget.class.getName(), ModelPermissionEvaluator.Permission.CREATE), is(true));
         verify(mockAuthentication);
         verify(mockWidgetRepository);
     }
@@ -230,10 +231,10 @@ public class DefaultWidgetPermissionEvaluatorTest {
     public void testHasPermission_4args_create_isNotWidgetOwner() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
         expect(mockAuthentication.getPrincipal()).andReturn(user2);
-        expect(mockWidgetRepository.get(VALID_REGION_ID)).andReturn(widget);
+        expect(mockWidgetRepository.get(VALID_WIDGET_ID)).andReturn(widget);
         replay(mockAuthentication);
         replay(mockWidgetRepository);
-        assertThat(defaultWidgetPermissionEvaluator.hasPermission(mockAuthentication, VALID_REGION_ID, JpaWidget.class.getName(), ModelPermissionEvaluator.Permission.CREATE), is(false));
+        assertThat(defaultWidgetPermissionEvaluator.hasPermission(mockAuthentication, VALID_WIDGET_ID, Widget.class.getName(), ModelPermissionEvaluator.Permission.CREATE), is(false));
         verify(mockAuthentication);
         verify(mockWidgetRepository);
     }
@@ -242,10 +243,10 @@ public class DefaultWidgetPermissionEvaluatorTest {
     public void testHasPermission_4args_delete_isWidgetOwner() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
         expect(mockAuthentication.getPrincipal()).andReturn(user);
-        expect(mockWidgetRepository.get(VALID_REGION_ID)).andReturn(widget);
+        expect(mockWidgetRepository.get(VALID_WIDGET_ID)).andReturn(widget);
         replay(mockAuthentication);
         replay(mockWidgetRepository);
-        assertThat(defaultWidgetPermissionEvaluator.hasPermission(mockAuthentication, VALID_REGION_ID, JpaWidget.class.getName(), ModelPermissionEvaluator.Permission.CREATE), is(true));
+        assertThat(defaultWidgetPermissionEvaluator.hasPermission(mockAuthentication, VALID_WIDGET_ID, Widget.class.getName(), ModelPermissionEvaluator.Permission.CREATE), is(true));
         verify(mockAuthentication);
         verify(mockWidgetRepository);
     }
@@ -254,10 +255,10 @@ public class DefaultWidgetPermissionEvaluatorTest {
     public void testHasPermission_4args_delete_isNotWidgetOwner() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
         expect(mockAuthentication.getPrincipal()).andReturn(user2);
-        expect(mockWidgetRepository.get(VALID_REGION_ID)).andReturn(widget);
+        expect(mockWidgetRepository.get(VALID_WIDGET_ID)).andReturn(widget);
         replay(mockAuthentication);
         replay(mockWidgetRepository);
-        assertThat(defaultWidgetPermissionEvaluator.hasPermission(mockAuthentication, VALID_REGION_ID, JpaWidget.class.getName(), ModelPermissionEvaluator.Permission.CREATE), is(false));
+        assertThat(defaultWidgetPermissionEvaluator.hasPermission(mockAuthentication, VALID_WIDGET_ID, Widget.class.getName(), ModelPermissionEvaluator.Permission.CREATE), is(false));
         verify(mockAuthentication);
         verify(mockWidgetRepository);
     }
@@ -266,10 +267,10 @@ public class DefaultWidgetPermissionEvaluatorTest {
     public void testHasPermission_4args_read_isWidgetOwner() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
         expect(mockAuthentication.getPrincipal()).andReturn(user);
-        expect(mockWidgetRepository.get(VALID_REGION_ID)).andReturn(widget);
+        expect(mockWidgetRepository.get(VALID_WIDGET_ID)).andReturn(widget);
         replay(mockAuthentication);
         replay(mockWidgetRepository);
-        assertThat(defaultWidgetPermissionEvaluator.hasPermission(mockAuthentication, VALID_REGION_ID, JpaWidget.class.getName(), ModelPermissionEvaluator.Permission.CREATE), is(true));
+        assertThat(defaultWidgetPermissionEvaluator.hasPermission(mockAuthentication, VALID_WIDGET_ID, Widget.class.getName(), ModelPermissionEvaluator.Permission.CREATE), is(true));
         verify(mockAuthentication);
         verify(mockWidgetRepository);
     }
@@ -278,10 +279,10 @@ public class DefaultWidgetPermissionEvaluatorTest {
     public void testHasPermission_4args_read_isNotWidgetOwner() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
         expect(mockAuthentication.getPrincipal()).andReturn(user2);
-        expect(mockWidgetRepository.get(VALID_REGION_ID)).andReturn(widget);
+        expect(mockWidgetRepository.get(VALID_WIDGET_ID)).andReturn(widget);
         replay(mockAuthentication);
         replay(mockWidgetRepository);
-        assertThat(defaultWidgetPermissionEvaluator.hasPermission(mockAuthentication, VALID_REGION_ID, JpaWidget.class.getName(), ModelPermissionEvaluator.Permission.CREATE), is(false));
+        assertThat(defaultWidgetPermissionEvaluator.hasPermission(mockAuthentication, VALID_WIDGET_ID, Widget.class.getName(), ModelPermissionEvaluator.Permission.CREATE), is(false));
         verify(mockAuthentication);
         verify(mockWidgetRepository);
     }
@@ -290,10 +291,10 @@ public class DefaultWidgetPermissionEvaluatorTest {
     public void testHasPermission_4args_update_isWidgetOwner() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
         expect(mockAuthentication.getPrincipal()).andReturn(user);
-        expect(mockWidgetRepository.get(VALID_REGION_ID)).andReturn(widget);
+        expect(mockWidgetRepository.get(VALID_WIDGET_ID)).andReturn(widget);
         replay(mockAuthentication);
         replay(mockWidgetRepository);
-        assertThat(defaultWidgetPermissionEvaluator.hasPermission(mockAuthentication, VALID_REGION_ID, JpaWidget.class.getName(), ModelPermissionEvaluator.Permission.CREATE), is(true));
+        assertThat(defaultWidgetPermissionEvaluator.hasPermission(mockAuthentication, VALID_WIDGET_ID, Widget.class.getName(), ModelPermissionEvaluator.Permission.CREATE), is(true));
         verify(mockAuthentication);
         verify(mockWidgetRepository);
     }
@@ -302,10 +303,10 @@ public class DefaultWidgetPermissionEvaluatorTest {
     public void testHasPermission_4args_update_isNotWidgetOwner() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
         expect(mockAuthentication.getPrincipal()).andReturn(user2);
-        expect(mockWidgetRepository.get(VALID_REGION_ID)).andReturn(widget);
+        expect(mockWidgetRepository.get(VALID_WIDGET_ID)).andReturn(widget);
         replay(mockAuthentication);
         replay(mockWidgetRepository);
-        assertThat(defaultWidgetPermissionEvaluator.hasPermission(mockAuthentication, VALID_REGION_ID, JpaWidget.class.getName(), ModelPermissionEvaluator.Permission.CREATE), is(false));
+        assertThat(defaultWidgetPermissionEvaluator.hasPermission(mockAuthentication, VALID_WIDGET_ID, Widget.class.getName(), ModelPermissionEvaluator.Permission.CREATE), is(false));
         verify(mockAuthentication);
         verify(mockWidgetRepository);
     }
@@ -316,7 +317,7 @@ public class DefaultWidgetPermissionEvaluatorTest {
 
         expect(mockAuthentication.getPrincipal()).andReturn(user);
         replay(mockAuthentication);
-        assertThat(defaultWidgetPermissionEvaluator.hasPermission(mockAuthentication, raveSecurityContext, JpaWidget.class.getName(), ModelPermissionEvaluator.Permission.UPDATE), is(true));
+        assertThat(defaultWidgetPermissionEvaluator.hasPermission(mockAuthentication, raveSecurityContext, Widget.class.getName(), ModelPermissionEvaluator.Permission.UPDATE), is(true));
         verify(mockAuthentication);
     }
 
@@ -326,7 +327,7 @@ public class DefaultWidgetPermissionEvaluatorTest {
 
         expect(mockAuthentication.getPrincipal()).andReturn(user);
         replay(mockAuthentication);
-        defaultWidgetPermissionEvaluator.hasPermission(mockAuthentication, raveSecurityContext, JpaWidget.class.getName(), ModelPermissionEvaluator.Permission.UPDATE);
+        defaultWidgetPermissionEvaluator.hasPermission(mockAuthentication, raveSecurityContext, Widget.class.getName(), ModelPermissionEvaluator.Permission.UPDATE);
         verify(mockAuthentication);
     }
 
@@ -336,7 +337,7 @@ public class DefaultWidgetPermissionEvaluatorTest {
 
         expect(mockAuthentication.getPrincipal()).andReturn(user);
         replay(mockAuthentication);
-        defaultWidgetPermissionEvaluator.hasPermission(mockAuthentication, raveSecurityContext, JpaWidget.class.getName(), ModelPermissionEvaluator.Permission.UPDATE);
+        defaultWidgetPermissionEvaluator.hasPermission(mockAuthentication, raveSecurityContext, Widget.class.getName(), ModelPermissionEvaluator.Permission.UPDATE);
         verify(mockAuthentication);
     }
 

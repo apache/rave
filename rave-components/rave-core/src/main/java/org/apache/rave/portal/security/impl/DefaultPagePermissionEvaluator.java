@@ -154,7 +154,7 @@ public class DefaultPagePermissionEvaluator extends AbstractModelPermissionEvalu
         if (trustedDomainObject) {
             trustedPage = page;
         } else {
-            trustedPage = getTrustedPage(page.getEntityId(), trustedPageContainer);
+            trustedPage = getTrustedPage(page.getId(), trustedPageContainer);
         }
 
         return isPageOwnerByUsername(authentication, trustedPage.getOwner().getUsername());
@@ -205,7 +205,7 @@ public class DefaultPagePermissionEvaluator extends AbstractModelPermissionEvalu
         if (trustedDomainObject) {
             trustedPage = page;
         } else {
-            trustedPage = getTrustedPage(page.getEntityId(), trustedPageContainer);
+            trustedPage = getTrustedPage(page.getId(), trustedPageContainer);
         }
         //
         // If the page has no members, there can be no member access
@@ -221,16 +221,16 @@ public class DefaultPagePermissionEvaluator extends AbstractModelPermissionEvalu
         if (members != null) {
             for (PageUser pageUser : members){
                 if (pageUser.getUser().getUsername().equals(viewer)){
-                    log.info("User "+viewer+" is a member of page "+trustedPage.getEntityId());
+                    log.info("User "+viewer+" is a member of page "+trustedPage.getId());
                     if(checkEditorStatus){
-                        log.info("checking editor:"+trustedPage.getEntityId()+"@"+viewer+"@"+pageUser.isEditor());
+                        log.info("checking editor:"+trustedPage.getId()+"@"+viewer+"@"+pageUser.isEditor());
                         return pageUser.isEditor();
                     }
                     return true;
                 }
             }
         }
-        log.info("User "+viewer+" is NOT a member of page "+trustedPage.getEntityId());
+        log.info("User "+viewer+" is NOT a member of page "+trustedPage.getId());
         return false;
     }
 

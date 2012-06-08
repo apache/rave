@@ -25,6 +25,7 @@ import org.apache.rave.portal.model.conversion.JpaConverter;
 import org.apache.rave.portal.model.conversion.JpaRegionConverter;
 import org.apache.rave.portal.model.conversion.JpaRegionWidgetConverter;
 import org.apache.rave.portal.model.conversion.JpaWidgetConverter;
+import org.apache.rave.portal.model.impl.*;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.provider.opensocial.service.impl.EncryptedBlobSecurityTokenService;
 import org.apache.shindig.auth.SecurityToken;
@@ -56,7 +57,7 @@ public class SecurityTokenServiceTest {
     private Page validPage;
     private Region validRegion;
     private RegionWidget validRegionWidget;
-    private JpaWidget validWidget;
+    private Widget validWidget;
 
     private final Long VALID_REGION_WIDGET_ID = 1L;
     private final Long VALID_USER_ID = 1L;
@@ -100,15 +101,15 @@ public class SecurityTokenServiceTest {
 
         validPerson = new User(VALID_USER_ID, VALID_USER_NAME);
 
-        validPage = new Page(1L, validPerson);
-        validRegion = new JpaRegion(1L, validPage, 1);
+        validPage = new PageImpl(1L, validPerson);
+        validRegion = new RegionImpl(1L, validPage, 1);
         validPage.setRegions(Arrays.asList(validRegion));
 
         validWidget = new JpaWidget(1L, VALID_URL);
         validWidget.setType("OpenSocial");
         validWidget.setTitle("Widget Title");
 
-        validRegionWidget = new JpaRegionWidget(VALID_REGION_WIDGET_ID, validWidget, (JpaRegion)validRegion);
+        validRegionWidget = new RegionWidgetImpl(VALID_REGION_WIDGET_ID, validWidget, validRegion);
         validRegion.setRegionWidgets(Arrays.asList(validRegionWidget));
     }
 

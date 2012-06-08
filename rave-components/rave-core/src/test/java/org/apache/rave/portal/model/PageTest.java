@@ -18,7 +18,7 @@
  */
 package org.apache.rave.portal.model;
 
-import net.sf.ehcache.pool.sizeof.annotations.IgnoreSizeOf;
+import org.apache.rave.portal.model.impl.PageImpl;
 import org.apache.rave.portal.model.impl.PageLayoutImpl;
 import org.apache.rave.portal.model.impl.PageUserImpl;
 import org.apache.rave.portal.model.impl.RegionImpl;
@@ -57,19 +57,19 @@ public class PageTest {
 
 	@Before
 	public void setup(){
-		page=new Page();
+		page=new PageImpl();
 		id=19191991L;
         parentId = 12345L;
 		testName="testName";
 		testOwner=new User(id);
-        parentPage = new Page(parentId);
+        parentPage = new PageImpl(parentId);
         subPages = new ArrayList<Page>();
 
-        Page subPage1 = new Page();
-        subPage1.setEntityId(SUB_PAGE_1_ID);
+        Page subPage1 = new PageImpl();
+        subPage1.setId(SUB_PAGE_1_ID);
         subPage1.setOwner(testOwner);
-        Page subPage2 = new Page();
-        subPage2.setEntityId(SUB_PAGE_2_ID);
+        Page subPage2 = new PageImpl();
+        subPage2.setId(SUB_PAGE_2_ID);
         subPage2.setOwner(testOwner);
 
         List<PageUser> pageUsers1 = new ArrayList<PageUser>();
@@ -103,7 +103,7 @@ public class PageTest {
 		regions.add(new RegionImpl());
 		regions.add(new RegionImpl());
 
-		page.setEntityId(id);
+		page.setId(id);
 		page.setName(testName);
 		page.setOwner(testOwner);
 		page.setParentPage(parentPage);
@@ -124,7 +124,7 @@ public class PageTest {
 
 	@Test
 	public void testAccessorMethods() {
-		assertTrue(page.getEntityId()==id);
+		assertTrue(page.getId()==id);
 		assertTrue(page.getName().equals(testName));
 		assertTrue(page.getOwner().equals(testOwner));
 		assertTrue(page.getParentPage().equals(parentPage));
@@ -147,7 +147,7 @@ public class PageTest {
     public void testSubPageComparator() {
         Long previousRenderSequence = -999L;
         List<Page> subPages = page.getSubPages();
-        assertThat(subPages.get(0).getEntityId(), is(SUB_PAGE_2_ID));
-        assertThat(subPages.get(1).getEntityId(), is(SUB_PAGE_1_ID));
+        assertThat(subPages.get(0).getId(), is(SUB_PAGE_2_ID));
+        assertThat(subPages.get(1).getId(), is(SUB_PAGE_1_ID));
     }
 }

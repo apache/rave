@@ -21,6 +21,7 @@ package org.apache.rave.portal.service.impl;
 
 import org.apache.rave.persistence.Repository;
 import org.apache.rave.portal.model.*;
+import org.apache.rave.portal.model.impl.PageImpl;
 import org.apache.rave.portal.model.impl.PageUserImpl;
 import org.apache.rave.portal.repository.PageLayoutRepository;
 import org.apache.rave.portal.repository.PageRepository;
@@ -97,7 +98,7 @@ public class DefaultPageService implements PageService {
 
     @Override
     public Page getPageFromList(long pageId, List<Page> pages) {
-        Page pageToFind = new Page(pageId);
+        Page pageToFind = new PageImpl(pageId);
         int index = pages.indexOf(pageToFind);
         return index == -1 ? null : pages.get(index);
     }
@@ -141,7 +142,7 @@ public class DefaultPageService implements PageService {
 
         // Create a Page object and register it.
         long renderSequence = (parentPage.getSubPages() != null) ? parentPage.getSubPages().size() + 1 : 1;
-        Page page = new Page();
+        Page page = new PageImpl();
         page.setName(pageName);
         page.setOwner(user);
         page.setPageLayout(pageLayout);
@@ -502,7 +503,7 @@ public class DefaultPageService implements PageService {
         // If we have a page already or if there was an exception from above then create the page
         // Create the new page for the user
         long renderSequence = defaultUserPage.size() + 1;
-        page = new Page();
+        page = new PageImpl();
         page.setName(pageName);
         page.setOwner(user);
         page.setPageLayout(pageLayout);

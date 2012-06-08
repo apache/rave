@@ -20,6 +20,8 @@
 package org.apache.rave.portal.service.impl;
 
 import org.apache.rave.portal.model.*;
+import org.apache.rave.portal.model.impl.PageImpl;
+import org.apache.rave.portal.model.impl.PageTemplateImpl;
 import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.repository.*;
 import org.apache.rave.portal.service.UserService;
@@ -112,7 +114,7 @@ public class DefaultUserServiceTest {
         service.getAuthenticatedUser();
         verify(auth);
     }
-    
+
 
     @Test
     public void setAuthenticatedUser_valid() {
@@ -261,16 +263,16 @@ public class DefaultUserServiceTest {
         final int NUM_RATINGS = 99;
         final int NUM_WIDGETS_OWNED = 4;
         User user = new User(USER_ID, USER_NAME);
-        Page page = new Page(1L, user);
+        Page page = new PageImpl(1L, user);
         List<Page> pages = new ArrayList<Page>();
         pages.add(page);
-        
+
         expect(userRepository.get(USER_ID)).andReturn(user);
         expect(pageRepository.deletePages(USER_ID, PageType.USER)).andReturn(pages.size());
         expect(pageRepository.deletePages(USER_ID, PageType.PERSON_PROFILE)).andReturn(pages.size());
         expect(widgetCommentRepository.deleteAll(USER_ID)).andReturn(NUM_COMMENTS);
-        expect(widgetRatingRepository.deleteAll(USER_ID)).andReturn(NUM_RATINGS);       
-        expect(widgetRepository.unassignWidgetOwner(USER_ID)).andReturn( NUM_WIDGETS_OWNED);       
+        expect(widgetRatingRepository.deleteAll(USER_ID)).andReturn(NUM_RATINGS);
+        expect(widgetRepository.unassignWidgetOwner(USER_ID)).andReturn( NUM_WIDGETS_OWNED);
         userRepository.delete(user);
         expectLastCall();
         replay(userRepository, pageRepository, widgetCommentRepository, widgetRatingRepository, widgetRepository);
@@ -299,13 +301,13 @@ public class DefaultUserServiceTest {
         List<Person> personList = new ArrayList<Person>();
         personList.add(userList.get(0).toPerson());
         personList.add(userList.get(1).toPerson());
-        
+
         expect(userRepository.getAllByAddedWidget(VALID_WIDGET_ID)).andReturn(userList);
         replay(userRepository);
 
         List<Person> allByAddedWidget = service.getAllByAddedWidget(VALID_WIDGET_ID);
         assertThat(allByAddedWidget, is(equalTo(personList)));
-        
+
         verify(userRepository);
     }
 
@@ -313,8 +315,8 @@ public class DefaultUserServiceTest {
     public void registerNewUser_valid(){
         User user = new User();
         expect(userRepository.save(user)).andReturn(user).once();
-        expect(pageTemplateRepository.getDefaultPage(PageType.PERSON_PROFILE)).andReturn(new JpaPageTemplate()).once();
-        expect(pageRepository.createPageForUser(isA(User.class), isA(JpaPageTemplate.class))).andReturn(new Page());
+        expect(pageTemplateRepository.getDefaultPage(PageType.PERSON_PROFILE)).andReturn(new PageTemplateImpl()).once();
+        expect(pageRepository.createPageForUser(isA(User.class), isA(PageTemplate.class))).andReturn(new PageImpl());
         replay(userRepository, pageTemplateRepository, pageRepository);
         service.registerNewUser(user);
         verify(userRepository, pageTemplateRepository, pageRepository);

@@ -22,6 +22,7 @@ package org.apache.rave.portal.web.controller;
 import org.apache.rave.model.ModelConverter;
 import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.model.conversion.JpaConverter;
+import org.apache.rave.portal.model.impl.PageImpl;
 import org.apache.rave.portal.model.impl.PageUserImpl;
 import org.apache.rave.portal.service.PageLayoutService;
 import org.apache.rave.portal.service.PageService;
@@ -95,14 +96,14 @@ public class PageControllerTest {
         //END REMOVE
         validUser.setDefaultPageLayout(validPageLayout);
 
-        defaultPage = new Page(DEFAULT_PAGE_ID, validUser);
+        defaultPage = new PageImpl(DEFAULT_PAGE_ID, validUser);
         defaultPage.setPageLayout(validPageLayout);
 
         List<PageUser> members = new ArrayList<PageUser>();
         members.add(defaultPageUser);
         defaultPage.setMembers(members);
 
-        otherPage = new Page(OTHER_PAGE_ID, validUser);
+        otherPage = new PageImpl(OTHER_PAGE_ID, validUser);
         otherPage.setPageLayout(validPageLayout);
         otherPageUser = new PageUserImpl(validUser, otherPage, 2L);
         otherPageUser.setPageStatus(PageInvitationStatus.OWNER);

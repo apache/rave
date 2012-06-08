@@ -23,7 +23,7 @@
             version="2.0">
         <persistence-unit name="ravePersistenceUnit" transaction-type="RESOURCE_LOCAL">
             <provider>org.apache.openjpa.persistence.PersistenceProviderImpl</provider>
-            <class>org.apache.rave.portal.model.Page</class>
+            <class>org.apache.rave.portal.model.JpaPage</class>
             <class>org.apache.rave.portal.model.JpaRegion</class>
             <class>org.apache.rave.portal.model.User</class>
             <class>org.apache.rave.portal.model.JpaRegionWidget</class>

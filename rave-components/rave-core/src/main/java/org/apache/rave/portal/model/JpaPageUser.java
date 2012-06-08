@@ -23,13 +23,14 @@ import java.io.Serializable;
 import javax.persistence.*;
 
 import org.apache.rave.persistence.BasicEntity;
+import org.apache.rave.portal.model.conversion.JpaConverter;
 import org.codehaus.jackson.annotate.JsonBackReference;
 @Entity
 @Access(AccessType.FIELD)
 @Table(name = "page_user", uniqueConstraints={@UniqueConstraint(columnNames={"page_id","user_id"})})
 @NamedQueries({
-        @NamedQuery(name = JpaPageUser.GET_BY_USER_ID_AND_PAGE_TYPE, query="SELECT p.page FROM JpaPageUser p, Page q WHERE p.page.entityId = q.entityId and p.user.entityId = :userId and q.pageType = :pageType ORDER BY p.renderSequence"),
-        @NamedQuery(name = JpaPageUser.GET_PAGES_FOR_USER, query="SELECT p FROM JpaPageUser p, Page q WHERE p.page.entityId = q.entityId and p.user.entityId = :userId and q.pageType = :pageType ORDER BY p.renderSequence"),
+        @NamedQuery(name = JpaPageUser.GET_BY_USER_ID_AND_PAGE_TYPE, query="SELECT p.page FROM JpaPageUser p, JpaPage q WHERE p.page.entityId = q.entityId and p.user.entityId = :userId and q.pageType = :pageType ORDER BY p.renderSequence"),
+        @NamedQuery(name = JpaPageUser.GET_PAGES_FOR_USER, query="SELECT p FROM JpaPageUser p, JpaPage q WHERE p.page.entityId = q.entityId and p.user.entityId = :userId and q.pageType = :pageType ORDER BY p.renderSequence"),
         @NamedQuery(name = JpaPageUser.GET_SINGLE_RECORD, query="SELECT p FROM JpaPageUser p WHERE p.user.entityId = :userId and p.page.entityId = :pageId")
 })
 public class JpaPageUser implements BasicEntity, Serializable, PageUser {
@@ -52,7 +53,7 @@ public class JpaPageUser implements BasicEntity, Serializable, PageUser {
 
     @ManyToOne(fetch=FetchType.EAGER)
     @JoinColumn(name = "page_id", nullable=false)
-    private Page page;
+    private JpaPage page;
 
     @Basic(optional=false) @Column(name="editor")
     private boolean editor;
@@ -69,12 +70,12 @@ public class JpaPageUser implements BasicEntity, Serializable, PageUser {
 
     public JpaPageUser(User user, Page page){
         this.user = user;
-        this.page = page;
+        setPage(page);
     }
 
     public JpaPageUser(User user, Page page, long sequence){
         this.user = user;
-        this.page = page;
+        setPage(page);
         this.renderSequence = sequence;
     }
 
@@ -142,7 +143,7 @@ public class JpaPageUser implements BasicEntity, Serializable, PageUser {
     */
     @Override
     public void setPage(Page page) {
-        this.page = page;
+        this.page = JpaConverter.getInstance().convert(page, Page.class);
     }
 
     /**

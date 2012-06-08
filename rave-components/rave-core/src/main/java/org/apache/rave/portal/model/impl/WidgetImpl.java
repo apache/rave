@@ -27,6 +27,10 @@ public class WidgetImpl implements Widget {
 
     public WidgetImpl() {}
 
+    public WidgetImpl(long id) {
+        this.id = id;
+    }
+
     public WidgetImpl(long id, String url) {
         this.id = id;
         this.url = url;

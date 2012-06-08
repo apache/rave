@@ -72,7 +72,7 @@ public class JpaPageRepositoryTest {
 
     private User user;
     private PageTemplate defaultPageTemplate;
-    
+
     @Before
     public void setup(){
         user = userRepository.get(CREATED_USER_ID);
@@ -87,7 +87,7 @@ public class JpaPageRepositoryTest {
         assertThat(pages.get(0).getRegions().size(), equalTo(2));
         assertThat(pages.get(0).getRegions().get(0).getRegionWidgets().size(), equalTo(2));
         assertThat(pages.get(0).getRegions().get(0).getRegionWidgets().get(0).getWidget().getUrl(), equalTo(WIDGET_URL));
-        
+
         List<PageUser> pageUserPages = repository.getPagesForUser(USER_ID, PageType.USER);
         // test that the query returns the pages in proper render sequence order
         Long lastRenderSequence = -1L;
@@ -121,7 +121,7 @@ public class JpaPageRepositoryTest {
         assertThat(pages, is(notNullValue()));
         assertThat(pages.size(), is(2));
         assertThat(pages.get(0).getRegions().size(), is(1));
-        assertThat(pages.get(0).getParentPage().getEntityId(), is(3L));
+        assertThat(pages.get(0).getParentPage().getId(), is(3L));
 
         List<PageUser> pageUserPages = repository.getPagesForUser(USER_ID, PageType.SUB_PAGE);
         // test that the query returns the pages in proper render sequence order
@@ -155,7 +155,7 @@ public class JpaPageRepositoryTest {
     public void getById_valid_userPage() {
         Page p = repository.get(USER_PAGE_ID);
         assertThat(p, is(notNullValue()));
-        assertThat(p.getEntityId(), is(equalTo(USER_PAGE_ID)));
+        assertThat(p.getId(), is(equalTo(USER_PAGE_ID)));
         assertThat(p.getPageType(), is(PageType.USER));
         assertThat(p.getParentPage(), is(nullValue(Page.class)));
         assertThat(p.getSubPages().isEmpty(), is(true));
@@ -164,7 +164,7 @@ public class JpaPageRepositoryTest {
     @Test
     public void getById_valid_personProfilePage() {
         Page p = repository.get(PERSON_PROFILE_PAGE_ID);
-        assertThat(p.getEntityId(), is(equalTo(PERSON_PROFILE_PAGE_ID)));
+        assertThat(p.getId(), is(equalTo(PERSON_PROFILE_PAGE_ID)));
         assertThat(p.getPageType(), is(PageType.PERSON_PROFILE));
         assertThat(p.getParentPage(), is(nullValue(Page.class)));
         assertThat(p.getSubPages().isEmpty(), is(false));
@@ -173,19 +173,19 @@ public class JpaPageRepositoryTest {
         Long lastRenderSequence = -1L;
         PageUser pageUser;
         for (Page subPage : p.getSubPages()) {
-            pageUser = repository.getSingleRecord(p.getOwner().getEntityId(), subPage.getEntityId());
+            pageUser = repository.getSingleRecord(p.getOwner().getEntityId(), subPage.getId());
             Long currentRenderSequence =  pageUser.getRenderSequence();
             assertThat(currentRenderSequence > lastRenderSequence, is(true));
             lastRenderSequence = currentRenderSequence;
         }
-        
+
     }
 
     @Test
     public void getById_valid_subPagePage() {
         Page p = repository.get(SUB_PAGE_ID);
         assertThat(p, is(notNullValue()));
-        assertThat(p.getEntityId(), is(equalTo(SUB_PAGE_ID)));
+        assertThat(p.getId(), is(equalTo(SUB_PAGE_ID)));
         assertThat(p.getPageType(), is(PageType.SUB_PAGE));
         assertThat(p.getParentPage(), is(notNullValue(Page.class)));
         assertThat(p.getSubPages().isEmpty(), is(true));
@@ -208,7 +208,7 @@ public class JpaPageRepositoryTest {
         // ensure pages are deleted
         assertThat(repository.getAllPages(USER_ID, PageType.USER).isEmpty(), is(true));
     }
-    
+
     @Test
     @Transactional(readOnly = false)
     @Rollback(true)
@@ -228,12 +228,12 @@ public class JpaPageRepositoryTest {
         assertEquals("Widgets on sub page 2", 1, subPage2.getRegions().get(0).getRegionWidgets().size());
         assertEquals("Regions on sub page 1", 1, subPage1.getRegions().size());
         assertEquals("Regions on sub page 2", 1, subPage2.getRegions().size());
-        assertNull("no sub pages of sub page 1", subPage1.getSubPages());
-        assertNull("no sub pages of sub page 2", subPage2.getSubPages());
-        assertEquals("sub page 1 refers to parent page", page.getEntityId(), subPage1.getParentPage().getEntityId());
-        assertEquals("sub page 2 refers to parent page", page.getEntityId(), subPage2.getParentPage().getEntityId());
-        assertEquals("sub page 1 regions refers to sub page 1", subPage1.getEntityId(), subPage1.getRegions().get(0).getPage().getEntityId());
-        assertEquals("sub page 2 regions refers to sub page 2", subPage2.getEntityId(), subPage2.getRegions().get(0).getPage().getEntityId());
+        assertThat(subPage1.getSubPages().isEmpty(), is(true));
+        assertThat(subPage2.getSubPages().isEmpty(), is(true));
+        assertEquals("sub page 1 refers to parent page", page.getId(), subPage1.getParentPage().getId());
+        assertEquals("sub page 2 refers to parent page", page.getId(), subPage2.getParentPage().getId());
+        assertEquals("sub page 1 regions refers to sub page 1", subPage1.getId(), subPage1.getRegions().get(0).getPage().getId());
+        assertEquals("sub page 2 regions refers to sub page 2", subPage2.getId(), subPage2.getRegions().get(0).getPage().getId());
         assertEquals("sub page 1 has one column layout", "columns_1", subPage1.getPageLayout().getCode());
         assertEquals("sub page 2 has one column layout", "columns_1", subPage2.getPageLayout().getCode());
         assertEquals(PageType.SUB_PAGE, subPage1.getPageType());
@@ -243,7 +243,7 @@ public class JpaPageRepositoryTest {
         assertSame(user, subPage1.getOwner());
         assertSame(user, subPage2.getOwner());
     }
-    
+
     @Test
     public void hasPersonPage_true(){
         assertTrue(repository.hasPersonPage(USER_ID));

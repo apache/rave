@@ -19,10 +19,9 @@
 
 package org.apache.rave.portal.web.controller;
 
-import org.apache.rave.portal.model.JpaPageLayout;
-import org.apache.rave.portal.model.Page;
-import org.apache.rave.portal.model.PageLayout;
-import org.apache.rave.portal.model.User;
+import org.apache.rave.portal.model.*;
+import org.apache.rave.portal.model.impl.PageImpl;
+import org.apache.rave.portal.model.impl.PageLayoutImpl;
 import org.apache.rave.portal.service.PageService;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.portal.web.util.ModelKeys;
@@ -59,7 +58,7 @@ public class ProfileControllerTest {
     private final Long OTHER_PAGE_ID = 22L;
     private final Long USER_ID = 1L;
     private final String VALID_PAGE_LAYOUT_CODE = "layout98";
-    private JpaPageLayout validPageLayout;
+    private PageLayout validPageLayout;
 
 	@Before
 	public void setup() {
@@ -67,13 +66,12 @@ public class ProfileControllerTest {
 		pageService = createMock(PageService.class);
 		profileController = new ProfileController(userService, pageService);
 
-        validPageLayout = new JpaPageLayout();
-        validPageLayout.setEntityId(33L);
+        validPageLayout = new PageLayoutImpl();
         validPageLayout.setCode(VALID_PAGE_LAYOUT_CODE);
 
-        defaultPage = new Page(DEFAULT_PAGE_ID);
+        defaultPage = new PageImpl(DEFAULT_PAGE_ID);
         defaultPage.setPageLayout(validPageLayout);
-        otherPage = new Page(OTHER_PAGE_ID);
+        otherPage = new PageImpl(OTHER_PAGE_ID);
         otherPage.setPageLayout(validPageLayout);
 
         allProfilePages = new ArrayList<Page>();
@@ -94,8 +92,8 @@ public class ProfileControllerTest {
         user.setUsername(username);
         user.setEntityId(USER_ID);
 		String userProfile = new String(ModelKeys.USER_PROFILE);
-        Page personProfile = new Page();
-        JpaPageLayout pageLayout = new JpaPageLayout();
+        Page personProfile = new PageImpl();
+        PageLayout pageLayout = new PageLayoutImpl();
         pageLayout.setCode(VALID_PAGE_LAYOUT_CODE);
         personProfile.setPageLayout(pageLayout);
 
@@ -130,8 +128,8 @@ public class ProfileControllerTest {
         final ModelMap model = new ModelMap();
         final int modelSize = 4;
         final String username="Canonical";
-        Page personProfile = new Page();
-        JpaPageLayout pageLayout = new JpaPageLayout();
+        Page personProfile = new PageImpl();
+        PageLayout pageLayout = new PageLayoutImpl();
         pageLayout.setCode("person_profile");
         personProfile.setPageLayout(pageLayout);
 

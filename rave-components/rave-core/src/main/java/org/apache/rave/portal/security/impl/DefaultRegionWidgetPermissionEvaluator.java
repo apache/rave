@@ -176,12 +176,12 @@ public class DefaultRegionWidgetPermissionEvaluator extends AbstractModelPermiss
             throw new IllegalArgumentException("unknown RaveSecurityContext type: " + raveSecurityContext.getType());
         }
     }
-    
+
     private String getUsernameFromRegionWidget(RegionWidget regionWidget) {
         return regionWidget.getRegion().getPage().getOwner().getUsername();
     }
-    
-    private boolean isRegionWidgetMember(Authentication authentication, 
+
+    private boolean isRegionWidgetMember(Authentication authentication,
             RegionWidget regionWidget, List<RegionWidget> trustedRegionWidgetContainer, boolean trustedDomainObject, boolean checkEditorStatus) {
         RegionWidget trustedRegionWidget = null;
         if (trustedDomainObject) {
@@ -189,10 +189,10 @@ public class DefaultRegionWidgetPermissionEvaluator extends AbstractModelPermiss
         } else {
             trustedRegionWidget = getTrustedRegionWidget(regionWidget.getId(), trustedRegionWidgetContainer);
         }
-        
+
         Page containerPage = trustedRegionWidget.getRegion().getPage();
-        
-        
+
+
         if (containerPage.getMembers() == null){
             return false;
         }
@@ -202,7 +202,7 @@ public class DefaultRegionWidgetPermissionEvaluator extends AbstractModelPermiss
         String viewer = ((User)authentication.getPrincipal()).getUsername();
         for (PageUser pageUser:containerPage.getMembers()){
             if (pageUser.getUser().getUsername().equals(viewer)){
-                log.info("User "+viewer+" is a member of page "+containerPage.getEntityId());
+                log.info("User "+viewer+" is a member of page "+containerPage.getId());
                 if(checkEditorStatus){
                     return pageUser.isEditor();
                 }

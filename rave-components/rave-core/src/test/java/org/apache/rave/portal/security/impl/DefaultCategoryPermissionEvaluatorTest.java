@@ -157,7 +157,7 @@ public class DefaultCategoryPermissionEvaluatorTest {
     public void testHasPermission_4args_administer() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthorities);
         replay(mockAuthentication);
-        assertThat(defaultCategoryPermissionEvaluator.hasPermission(mockAuthentication, VALID_WIDGET_CATEGORY_ID, JpaWidget.class.getName(), ModelPermissionEvaluator.Permission.ADMINISTER), is(false));
+        assertThat(defaultCategoryPermissionEvaluator.hasPermission(mockAuthentication, VALID_WIDGET_CATEGORY_ID, Widget.class.getName(), ModelPermissionEvaluator.Permission.ADMINISTER), is(false));
         verify(mockAuthentication);
     }
 
@@ -166,7 +166,7 @@ public class DefaultCategoryPermissionEvaluatorTest {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthorities);
         expect(mockCategoryRepository.get(VALID_WIDGET_CATEGORY_ID)).andReturn(category);
         replay(mockAuthentication, mockCategoryRepository);
-        assertThat(defaultCategoryPermissionEvaluator.hasPermission(mockAuthentication, VALID_WIDGET_CATEGORY_ID, JpaWidget.class.getName(), ModelPermissionEvaluator.Permission.CREATE), is(false));
+        assertThat(defaultCategoryPermissionEvaluator.hasPermission(mockAuthentication, VALID_WIDGET_CATEGORY_ID, Widget.class.getName(), ModelPermissionEvaluator.Permission.CREATE), is(false));
         verify(mockAuthentication, mockCategoryRepository);
     }
 
@@ -175,7 +175,7 @@ public class DefaultCategoryPermissionEvaluatorTest {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthorities);
         expect(mockCategoryRepository.get(VALID_WIDGET_CATEGORY_ID)).andReturn(category);
         replay(mockAuthentication, mockCategoryRepository);
-        assertThat(defaultCategoryPermissionEvaluator.hasPermission(mockAuthentication, VALID_WIDGET_CATEGORY_ID, JpaWidget.class.getName(), ModelPermissionEvaluator.Permission.DELETE), is(false));
+        assertThat(defaultCategoryPermissionEvaluator.hasPermission(mockAuthentication, VALID_WIDGET_CATEGORY_ID, Widget.class.getName(), ModelPermissionEvaluator.Permission.DELETE), is(false));
         verify(mockAuthentication, mockCategoryRepository);
     }
 
@@ -184,7 +184,7 @@ public class DefaultCategoryPermissionEvaluatorTest {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthorities);
         expect(mockCategoryRepository.get(VALID_WIDGET_CATEGORY_ID)).andReturn(category);
         replay(mockAuthentication, mockCategoryRepository);
-        assertThat(defaultCategoryPermissionEvaluator.hasPermission(mockAuthentication, VALID_WIDGET_CATEGORY_ID, JpaWidget.class.getName(), ModelPermissionEvaluator.Permission.READ), is(true));
+        assertThat(defaultCategoryPermissionEvaluator.hasPermission(mockAuthentication, VALID_WIDGET_CATEGORY_ID, Widget.class.getName(), ModelPermissionEvaluator.Permission.READ), is(true));
         verify(mockAuthentication, mockCategoryRepository);
     }
 
@@ -193,7 +193,7 @@ public class DefaultCategoryPermissionEvaluatorTest {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthorities);
         expect(mockCategoryRepository.get(VALID_WIDGET_CATEGORY_ID)).andReturn(category);
         replay(mockAuthentication, mockCategoryRepository);
-        assertThat(defaultCategoryPermissionEvaluator.hasPermission(mockAuthentication, VALID_WIDGET_CATEGORY_ID, JpaWidget.class.getName(), ModelPermissionEvaluator.Permission.READ), is(true));
+        assertThat(defaultCategoryPermissionEvaluator.hasPermission(mockAuthentication, VALID_WIDGET_CATEGORY_ID, Widget.class.getName(), ModelPermissionEvaluator.Permission.READ), is(true));
         verify(mockAuthentication, mockCategoryRepository);
     }
 
@@ -202,7 +202,7 @@ public class DefaultCategoryPermissionEvaluatorTest {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthorities);
         expect(mockCategoryRepository.get(VALID_WIDGET_CATEGORY_ID)).andReturn(category);
         replay(mockAuthentication, mockCategoryRepository);
-        assertThat(defaultCategoryPermissionEvaluator.hasPermission(mockAuthentication, VALID_WIDGET_CATEGORY_ID, JpaWidget.class.getName(), ModelPermissionEvaluator.Permission.UPDATE), is(false));
+        assertThat(defaultCategoryPermissionEvaluator.hasPermission(mockAuthentication, VALID_WIDGET_CATEGORY_ID, Widget.class.getName(), ModelPermissionEvaluator.Permission.UPDATE), is(false));
         verify(mockAuthentication, mockCategoryRepository);
     }
 

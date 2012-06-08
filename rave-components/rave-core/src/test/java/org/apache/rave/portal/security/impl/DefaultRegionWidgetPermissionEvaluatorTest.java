@@ -19,6 +19,7 @@
 package org.apache.rave.portal.security.impl;
 
 import org.apache.rave.portal.model.*;
+import org.apache.rave.portal.model.impl.PageImpl;
 import org.apache.rave.portal.model.impl.RegionImpl;
 import org.apache.rave.portal.model.impl.RegionWidgetImpl;
 import org.apache.rave.portal.repository.RegionWidgetRepository;
@@ -26,7 +27,6 @@ import org.apache.rave.portal.security.ModelPermissionEvaluator.Permission;
 import org.apache.rave.portal.security.util.AuthenticationUtils;
 import org.easymock.EasyMock;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -68,8 +68,8 @@ public class DefaultRegionWidgetPermissionEvaluatorTest {
         user.setEntityId(VALID_USER_ID);
         user2 = new User();
         user2.setUsername(VALID_USERNAME2);
-        page = new Page();
-        page.setEntityId(VALID_PAGE_ID);
+        page = new PageImpl();
+        page.setId(VALID_PAGE_ID);
         page.setOwner(user);
         region = new RegionImpl();
         region.setId(VALID_REGION_ID);

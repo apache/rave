@@ -182,4 +182,18 @@ public class RegionWidgetImpl implements RegionWidget {
         result = 31 * result + (collapsed != null ? collapsed.hashCode() : 0);
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "RegionWidgetImpl{" +
+                "id=" + id +
+                ", widget=" + ((widget == null) ? null : widget.getId())  +
+                ", region=" + ((region == null) ? null : region.getId()) +
+                ", renderPosition='" + renderPosition + '\'' +
+                ", renderOrder=" + renderOrder +
+                ", collapsed=" + collapsed +
+                ", locked=" + locked +
+                ", hideChrome=" + hideChrome +
+                '}';
+    }
 }

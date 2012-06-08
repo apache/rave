@@ -122,4 +122,14 @@ public class RegionImpl implements Region {
         result = 31 * result + (locked != null ? locked.hashCode() : 0);
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "RegionImpl{" +
+                "id=" + id +
+                ", page=" + ((page == null) ? null : page.getId()) +
+                ", locked=" + locked +
+                ", renderOrder=" + renderOrder +
+                '}';
+    }
 }

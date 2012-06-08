@@ -22,6 +22,7 @@ package org.apache.rave.portal.security.impl;
 import org.apache.rave.portal.model.Page;
 import org.apache.rave.portal.model.PageType;
 import org.apache.rave.portal.model.User;
+import org.apache.rave.portal.model.impl.PageImpl;
 import org.apache.rave.portal.repository.PageRepository;
 import org.apache.rave.portal.security.ModelPermissionEvaluator.Permission;
 import org.apache.rave.portal.security.util.AuthenticationUtils;
@@ -73,23 +74,23 @@ public class DefaultPagePermissionEvaluatorTest {
         user2 = new User();
         user2.setUsername(VALID_USERNAME2);
 
-        page = new Page();
-        page.setEntityId(VALID_PAGE_ID);
+        page = new PageImpl();
+        page.setId(VALID_PAGE_ID);
         page.setOwner(user);
         page.setPageType(PageType.USER);
 
-        pageSubPage = new Page();
-        pageSubPage.setEntityId(VALID_PAGE_ID4);
+        pageSubPage = new PageImpl();
+        pageSubPage.setId(VALID_PAGE_ID4);
         pageSubPage.setOwner(user);
         pageSubPage.setPageType(PageType.SUB_PAGE);
         pageSubPage.setParentPage(page);
 
-        personProfilePage = new Page();
-        personProfilePage.setEntityId(VALID_PAGE_ID2);
+        personProfilePage = new PageImpl();
+        personProfilePage.setId(VALID_PAGE_ID2);
         personProfilePage.setOwner(user);
         personProfilePage.setPageType(PageType.PERSON_PROFILE);
-        personProfileSubPage = new Page();
-        personProfileSubPage.setEntityId(VALID_PAGE_ID3);
+        personProfileSubPage = new PageImpl();
+        personProfileSubPage.setId(VALID_PAGE_ID3);
         personProfileSubPage.setOwner(user);
         personProfileSubPage.setPageType(PageType.PERSON_PROFILE);
         personProfileSubPage.setParentPage(personProfilePage);

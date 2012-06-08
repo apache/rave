@@ -21,7 +21,6 @@ package org.apache.rave.portal.security.impl;
 import org.apache.rave.portal.model.Page;
 import org.apache.rave.portal.model.PageUser;
 import org.apache.rave.portal.model.Region;
-import org.apache.rave.portal.model.RegionWidget;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.repository.RegionRepository;
 import org.slf4j.Logger;
@@ -177,7 +176,7 @@ public class DefaultRegionPermissionEvaluator extends AbstractModelPermissionEva
             throw new IllegalArgumentException("unknown RaveSecurityContext type: " + raveSecurityContext.getType());
         }
     }
-    
+
     private boolean isRegionMember(Authentication authentication, Region region, List<Region> trustedRegionContainer, boolean trustedDomainObject, boolean checkEditorStatus) {
         Region trustedRegion = null;
         if (trustedDomainObject) {
@@ -185,10 +184,10 @@ public class DefaultRegionPermissionEvaluator extends AbstractModelPermissionEva
         } else {
             trustedRegion = getTrustedRegion(region.getId(), trustedRegionContainer);
         }
-        
+
         Page containerPage = trustedRegion.getPage();
-        
-        
+
+
         if (containerPage.getMembers() == null){
             return false;
         }
@@ -198,7 +197,7 @@ public class DefaultRegionPermissionEvaluator extends AbstractModelPermissionEva
         String viewer = ((User)authentication.getPrincipal()).getUsername();
         for (PageUser pageUser:containerPage.getMembers()){
             if (pageUser.getUser().getUsername().equals(viewer)){
-                log.info("User "+viewer+" is a member of page "+containerPage.getEntityId());
+                log.info("User "+viewer+" is a member of page "+containerPage.getId());
                 if(checkEditorStatus){
                     return pageUser.isEditor();
                 }

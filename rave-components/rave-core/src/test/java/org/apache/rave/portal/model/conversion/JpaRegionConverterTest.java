@@ -19,6 +19,7 @@
 package org.apache.rave.portal.model.conversion;
 
 import org.apache.rave.portal.model.*;
+import org.apache.rave.portal.model.impl.PageImpl;
 import org.apache.rave.portal.model.impl.RegionImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -56,7 +57,7 @@ public class JpaRegionConverterTest {
         Region region = new RegionImpl();
         region.setId(9L);
         region.setLocked(false);
-        region.setPage(new Page());
+        region.setPage(new JpaPage());
         region.setRegionWidgets(new ArrayList<RegionWidget>());
         region.setRenderOrder(9);
 

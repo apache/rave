@@ -42,7 +42,9 @@ public class JpaPageLayoutConverter implements ModelConverter<PageLayout, JpaPag
     }
 
     private void updateProperties(PageLayout source, JpaPageLayout converted) {
-
+        converted.setCode(source.getCode());
+        converted.setNumberOfRegions(source.getNumberOfRegions());
+        converted.setRenderSequence(source.getRenderSequence());
+        converted.setUserSelectable(source.isUserSelectable());
     }
-    
 }

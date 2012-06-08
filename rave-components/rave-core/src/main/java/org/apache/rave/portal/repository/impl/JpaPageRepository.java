@@ -19,34 +19,62 @@
 
 package org.apache.rave.portal.repository.impl;
 
-import org.apache.rave.persistence.jpa.AbstractJpaRepository;
 import org.apache.rave.portal.model.*;
+import org.apache.rave.portal.model.conversion.JpaPageConverter;
 import org.apache.rave.portal.repository.PageRepository;
 import org.apache.rave.util.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.ArrayList;
 import java.util.List;
 
-@Repository
-public class JpaPageRepository extends AbstractJpaRepository<Page> implements PageRepository{
+import static org.apache.rave.persistence.jpa.util.JpaUtil.saveOrUpdate;
 
-    public JpaPageRepository() {
-        super(Page.class);
+@Repository
+public class JpaPageRepository implements PageRepository {
+
+    @PersistenceContext
+    private EntityManager manager;
+
+    @Autowired
+    private JpaPageConverter pageConverter;
+
+    @Override
+    public Class<? extends Page> getType() {
+        return JpaPage.class;
+    }
+
+    @Override
+    public Page get(long id) {
+        return manager.find(JpaPage.class, id);
+    }
+
+    @Override
+    public Page save(Page item) {
+        JpaPage page = pageConverter.convert(item);
+        return saveOrUpdate(page.getEntityId(), manager, page);
+    }
+
+    @Override
+    public void delete(Page item) {
+        manager.remove(item instanceof JpaPage ? item : get(item.getId()));
     }
 
     @Override
     public List<Page> getAllPages(Long userId, PageType pageType) {
-        TypedQuery<Page> query = manager.createNamedQuery(JpaPageUser.GET_BY_USER_ID_AND_PAGE_TYPE, Page.class);
+        TypedQuery<JpaPage> query = manager.createNamedQuery(JpaPageUser.GET_BY_USER_ID_AND_PAGE_TYPE, JpaPage.class);
         query.setParameter("userId", userId);
         query.setParameter("pageType", pageType);
-        return query.getResultList();
+        return CollectionUtils.<Page>toBaseTypedList(query.getResultList());
     }
 
     @Override
     public int deletePages(Long userId, PageType pageType) {
-        TypedQuery<Page> query = manager.createNamedQuery(Page.DELETE_BY_USER_ID_AND_PAGE_TYPE, Page.class);
+        TypedQuery<JpaPage> query = manager.createNamedQuery(JpaPage.DELETE_BY_USER_ID_AND_PAGE_TYPE, JpaPage.class);
         query.setParameter("userId", userId);
         query.setParameter("pageType", pageType);
         return query.executeUpdate();
@@ -54,7 +82,7 @@ public class JpaPageRepository extends AbstractJpaRepository<Page> implements Pa
 
     @Override
     public boolean hasPersonPage(long userId){
-        TypedQuery<Long> query = manager.createNamedQuery(Page.USER_HAS_PERSON_PAGE, Long.class);
+        TypedQuery<Long> query = manager.createNamedQuery(JpaPage.USER_HAS_PERSON_PAGE, Long.class);
         query.setParameter("userId", userId);
         query.setParameter("pageType", PageType.PERSON_PROFILE);
         return query.getSingleResult() > 0;
@@ -90,7 +118,7 @@ public class JpaPageRepository extends AbstractJpaRepository<Page> implements Pa
      * @return Page
      */
     private Page convert(PageTemplate pt, User user) {
-        Page p = new Page();
+        Page p = new JpaPage();
         p.setName(pt.getName());
         p.setPageType(pt.getPageType());
         p.setOwner(user);
@@ -161,7 +189,7 @@ public class JpaPageRepository extends AbstractJpaRepository<Page> implements Pa
     private List<Page> convertPages(List<PageTemplate> pageTemplates, Page page){
         List<Page> pages = new ArrayList<Page>();
         for(PageTemplate pt : pageTemplates){
-            Page lPage = new Page();
+            Page lPage = new JpaPage();
             lPage.setName(pt.getName());
             lPage.setPageType(pt.getPageType());
             lPage.setOwner(page.getOwner());

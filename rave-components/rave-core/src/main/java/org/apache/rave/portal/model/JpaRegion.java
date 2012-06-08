@@ -20,16 +20,17 @@ package org.apache.rave.portal.model;
 
 import org.apache.rave.persistence.BasicEntity;
 import org.apache.rave.portal.model.conversion.ConvertingListProxyFactory;
+import org.apache.rave.portal.model.conversion.JpaConverter;
 import org.codehaus.jackson.annotate.JsonBackReference;
 import org.codehaus.jackson.annotate.JsonManagedReference;
 
 import javax.persistence.*;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A region of a page, which can contain widget instances {@link RegionWidget}
@@ -46,7 +47,7 @@ public class JpaRegion implements BasicEntity, Serializable, Region {
 
     public static final String FIND_BY_ENTITY_ID = "Region.findByEntityId";
     public static final String ENTITY_ID_PARAM = "entity_id";
-     
+
     @Id @Column(name="entity_id")
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "regionIdGenerator")
     @TableGenerator(name = "regionIdGenerator", table = "RAVE_PORTAL_SEQUENCES", pkColumnName = "SEQ_NAME",
@@ -55,12 +56,12 @@ public class JpaRegion implements BasicEntity, Serializable, Region {
 
     @ManyToOne
     @JoinColumn(name = "page_id")
-    private Page page;
+    private JpaPage page;
 
     @Basic
     @Column(name = "render_order")
     private int renderOrder;
-    
+
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("renderOrder")
     @JoinColumn(name = "region_id")
@@ -77,12 +78,12 @@ public class JpaRegion implements BasicEntity, Serializable, Region {
         this.entityId = entityId;
     }
 
-    public JpaRegion(Long entityId, Page page, int renderOrder) {
+    public JpaRegion(Long entityId, JpaPage page, int renderOrder) {
         this.entityId = entityId;
         this.page = page;
         this.renderOrder = renderOrder;
     }
-    
+
     @SuppressWarnings("unused")
     @XmlElement(name="widget")
     /**
@@ -134,12 +135,12 @@ public class JpaRegion implements BasicEntity, Serializable, Region {
 
     @Override
     public void setPage(Page page) {
-        this.page = page;
+        this.page = JpaConverter.getInstance().convert(page, Page.class);
     }
-    
+
     /**
      * Gets the order relative to regions on the page
-     * 
+     *
      * @return the order of the region
      */
     @Override

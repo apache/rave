@@ -27,8 +27,6 @@ import org.apache.rave.portal.service.PageLayoutService;
 import org.apache.rave.portal.service.PageService;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.portal.web.controller.util.ControllerUtils;
-import org.apache.rave.portal.web.model.NavigationItem;
-import org.apache.rave.portal.web.model.NavigationMenu;
 import org.apache.rave.portal.web.util.ModelKeys;
 import org.apache.rave.portal.web.util.ViewNames;
 import org.slf4j.Logger;
@@ -84,7 +82,7 @@ public class PageController {
         List<PageLayout> pageLayouts = pageLayoutService.getAllUserSelectable();
         addAttributesToModel(model, page, currentPageUser, pages, pageLayouts);
         String view = ControllerUtils.getDeviceAppropriateView(request, ViewNames.getPageView(page.getPageLayout().getCode()), ViewNames.MOBILE_HOME);
-        ControllerUtils.addNavItemsToModel(view, model, page.getEntityId(), userService.getAuthenticatedUser(), currentPageUser.isEditor());
+        ControllerUtils.addNavItemsToModel(view, model, page.getId(), userService.getAuthenticatedUser(), currentPageUser.isEditor());
         return view;
     }
 
@@ -103,7 +101,7 @@ public class PageController {
             List<PageLayout> pageLayouts = pageLayoutService.getAllUserSelectable();
             addAttributesToModel(model, page, currentPageUser, pages, pageLayouts);
             String view = ControllerUtils.getDeviceAppropriateView(request, ViewNames.getPageView(page.getPageLayout().getCode()), ViewNames.MOBILE_HOME);
-            ControllerUtils.addNavItemsToModel(view, model, page.getEntityId(), thisUser, currentPageUser.isEditor());
+            ControllerUtils.addNavItemsToModel(view, model, page.getId(), thisUser, currentPageUser.isEditor());
             return view;
         } catch (Exception e) {
             logger.info("unable to get page - possibly because a shared page was revoked by its owner");
