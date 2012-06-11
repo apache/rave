@@ -23,19 +23,19 @@ import org.apache.rave.gadgets.oauth.model.OAuthTokenInfo;
 import org.apache.rave.persistence.Repository;
 
 /**
- * Interface for handling {@link OAuthTokenInfo} queries
+ * Interface for handling {@link org.apache.rave.gadgets.oauth.model.OAuthTokenInfo} queries
  */
 public interface OAuthTokenInfoRepository extends Repository<OAuthTokenInfo> {
 
     /**
-     * Retrieves {@link OAuthTokenInfo}
+     * Retrieves {@link org.apache.rave.gadgets.oauth.model.OAuthTokenInfo}
      *
      * @param userId      unique identifier of gadget viewer
      * @param appUrl      URL of the gadget
      * @param moduleId    the module ID of the application
      * @param tokenName   gadget's nickname for the token to use
      * @param serviceName name of the service provider
-     * @return {@link OAuthTokenInfo} or {@literal null} if none matches the criteria
+     * @return {@link org.apache.rave.gadgets.oauth.model.OAuthTokenInfo} or {@literal null} if none matches the criteria
      */
     OAuthTokenInfo findOAuthTokenInfo(String userId, String appUrl, String moduleId,
                                              String tokenName, String serviceName);

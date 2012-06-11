@@ -19,29 +19,51 @@
 
 package org.apache.rave.gadgets.oauth.repository.impl;
 
+import org.apache.rave.gadgets.oauth.model.JpaOAuthTokenInfo;
+import org.apache.rave.gadgets.oauth.model.OAuthTokenInfo;
+import org.apache.rave.gadgets.oauth.model.conversion.JpaOAuthTokenInfoConverter;
+import org.apache.rave.gadgets.oauth.repository.OAuthTokenInfoRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
-import org.apache.rave.gadgets.oauth.model.OAuthTokenInfo;
-import org.apache.rave.gadgets.oauth.repository.OAuthTokenInfoRepository;
-import org.apache.rave.persistence.jpa.AbstractJpaRepository;
-import org.springframework.stereotype.Repository;
-
 import static org.apache.rave.persistence.jpa.util.JpaUtil.getSingleResult;
+import static org.apache.rave.persistence.jpa.util.JpaUtil.saveOrUpdate;
 
 /**
  * JPA implementation for {@link OAuthTokenInfoRepository}
  */
 @Repository
-public class JpaOAuthTokenInfoRepository extends AbstractJpaRepository<OAuthTokenInfo>
-        implements OAuthTokenInfoRepository {
+public class JpaOAuthTokenInfoRepository implements OAuthTokenInfoRepository {
 
     @PersistenceContext
     private EntityManager manager;
 
-    public JpaOAuthTokenInfoRepository() {
-        super(OAuthTokenInfo.class);
+    @Autowired
+    private JpaOAuthTokenInfoConverter converter;
+
+    @Override
+    public Class<? extends OAuthTokenInfo> getType() {
+        return JpaOAuthTokenInfo.class;
+    }
+
+    @Override
+    public OAuthTokenInfo get(long id) {
+        return manager.find(JpaOAuthTokenInfo.class, id);
+    }
+
+    @Override
+    public OAuthTokenInfo save(OAuthTokenInfo item) {
+        JpaOAuthTokenInfo jpaItem = converter.convert(item);
+        return saveOrUpdate(jpaItem.getEntityId(), manager, jpaItem);
+    }
+
+    @Override
+    public void delete(OAuthTokenInfo item) {
+        manager.remove(converter.convert(item));
     }
 
     /**
@@ -50,14 +72,12 @@ public class JpaOAuthTokenInfoRepository extends AbstractJpaRepository<OAuthToke
     @Override
     public OAuthTokenInfo findOAuthTokenInfo(String userId, String appUrl, String moduleId,
                                              String tokenName, String serviceName) {
-        TypedQuery<OAuthTokenInfo> query = manager.createNamedQuery(OAuthTokenInfo.FIND_OAUTH_TOKEN_INFO,
-                OAuthTokenInfo.class);
-        query.setParameter(OAuthTokenInfo.USER_ID_PARAM, userId);
-        query.setParameter(OAuthTokenInfo.APP_URL_PARAM, appUrl);
-        query.setParameter(OAuthTokenInfo.MODULE_ID_PARAM, moduleId);
-        query.setParameter(OAuthTokenInfo.TOKEN_NAME_PARAM, tokenName);
-        query.setParameter(OAuthTokenInfo.SERVICE_NAME_PARAM, serviceName);
+        TypedQuery<JpaOAuthTokenInfo> query = manager.createNamedQuery(JpaOAuthTokenInfo.FIND_OAUTH_TOKEN_INFO, JpaOAuthTokenInfo.class);
+        query.setParameter(JpaOAuthTokenInfo.USER_ID_PARAM, userId);
+        query.setParameter(JpaOAuthTokenInfo.APP_URL_PARAM, appUrl);
+        query.setParameter(JpaOAuthTokenInfo.MODULE_ID_PARAM, moduleId);
+        query.setParameter(JpaOAuthTokenInfo.TOKEN_NAME_PARAM, tokenName);
+        query.setParameter(JpaOAuthTokenInfo.SERVICE_NAME_PARAM, serviceName);
         return getSingleResult(query.getResultList());
     }
-
 }

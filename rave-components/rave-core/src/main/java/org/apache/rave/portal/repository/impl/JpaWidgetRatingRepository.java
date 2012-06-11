@@ -19,7 +19,6 @@
 
 package org.apache.rave.portal.repository.impl;
 
-import org.apache.rave.persistence.jpa.AbstractJpaRepository;
 import org.apache.rave.portal.model.JpaWidgetRating;
 import org.apache.rave.portal.model.WidgetRating;
 import org.apache.rave.portal.model.conversion.JpaWidgetRatingConverter;

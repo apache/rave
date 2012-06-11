@@ -26,6 +26,7 @@ import net.oauth.OAuth;
 import net.oauth.OAuthServiceProvider;
 import org.apache.rave.gadgets.oauth.model.OAuthConsumerStore;
 import org.apache.rave.gadgets.oauth.model.OAuthTokenInfo;
+import org.apache.rave.gadgets.oauth.model.impl.OAuthTokenInfoImpl;
 import org.apache.rave.gadgets.oauth.service.OAuthConsumerStoreService;
 import org.apache.rave.gadgets.oauth.service.OAuthTokenInfoService;
 import org.apache.shindig.auth.SecurityToken;
@@ -38,7 +39,6 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
-import static org.hamcrest.CoreMatchers.*;
 
 /**
  * Test for {@link DefaultOAuthStore}
@@ -81,13 +81,13 @@ public class DefaultOAuthStoreTest {
     public void testGetTokenInfo() throws Exception {
         final String testTokenName = "testTokenName";
 
-        OAuthTokenInfo oAuthTokenInfo = new OAuthTokenInfo();
+        OAuthTokenInfo oAuthTokenInfo = new OAuthTokenInfoImpl();
         oAuthTokenInfo.setTokenName(testTokenName);
         oAuthTokenInfo.setTokenSecret(CONSUMER_SECRET);
         OAuthStore.ConsumerInfo consumerInfo = createMock(OAuthStore.ConsumerInfo.class);
 
         expect(tokenInfoService.findOAuthTokenInfo(token.getViewerId(), token.getAppUrl(),
-                OAuthTokenInfo.MODULE_ID, testTokenName,
+                OAuthTokenInfoImpl.MODULE_ID, testTokenName,
                 SERVICE_NAME)).andReturn(oAuthTokenInfo);
         replay(tokenInfoService);
 

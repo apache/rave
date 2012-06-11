@@ -29,6 +29,7 @@ import net.oauth.signature.RSA_SHA1;
 import org.apache.commons.io.IOUtils;
 import org.apache.rave.gadgets.oauth.model.OAuthConsumerStore;
 import org.apache.rave.gadgets.oauth.model.OAuthTokenInfo;
+import org.apache.rave.gadgets.oauth.model.impl.OAuthTokenInfoImpl;
 import org.apache.rave.gadgets.oauth.service.OAuthConsumerStoreService;
 import org.apache.rave.gadgets.oauth.service.OAuthTokenInfoService;
 import org.apache.shindig.auth.SecurityToken;
@@ -111,7 +112,7 @@ public class DefaultOAuthStore implements OAuthStore {
     @Override
     public void setTokenInfo(SecurityToken securityToken, ConsumerInfo consumerInfo, String serviceName,
                              String tokenName, TokenInfo tokenInfo) throws GadgetException {
-        OAuthTokenInfo oAuthTokenInfo = new OAuthTokenInfo(securityToken,
+        OAuthTokenInfo oAuthTokenInfo = new OAuthTokenInfoImpl(securityToken,
                 serviceName, tokenName, tokenInfo);
         tokenInfoService.saveOAuthTokenInfo(oAuthTokenInfo);
     }
