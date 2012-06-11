@@ -26,7 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * JPA implementation for {@link OAuthConsumerStoreService}
+ * Implementation for {@link OAuthConsumerStoreService}
  */
 @Service
 public class DefaultOAuthConsumerStoreService implements OAuthConsumerStoreService {

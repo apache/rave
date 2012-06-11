@@ -21,10 +21,10 @@ package org.apache.rave.opensocial.service;
 
 import org.apache.rave.opensocial.model.ApplicationData;
 import org.apache.rave.opensocial.model.impl.ApplicationDataImpl;
-import org.apache.rave.portal.model.JpaPerson;
 import org.apache.rave.portal.model.Person;
 import org.apache.rave.opensocial.repository.ApplicationDataRepository;
 import org.apache.rave.opensocial.service.impl.DefaultAppDataService;
+import org.apache.rave.portal.model.impl.PersonImpl;
 import org.apache.rave.service.LockService;
 import org.apache.shindig.auth.SecurityToken;
 import org.apache.shindig.protocol.DataCollection;
@@ -79,7 +79,7 @@ public class AppDataServiceTest {
         validApplicationData = new ApplicationDataImpl(VALID_APPLICATION_DATA_ID, VALID_VIEWER_ID, VALID_APPLICATION_ID,
                 validApplicationDataMap);
 
-        validPerson = new JpaPerson();
+        validPerson = new PersonImpl();
         validPerson.setUsername(VALID_VIEWER_ID);
     }
 

@@ -58,7 +58,7 @@ public interface WidgetRatingService {
      * Removes the rating of a widget
      *
      * @param widgetId unique identifier of a {@link org.apache.rave.portal.model.Widget}
-     * @param userId   unique identifier of a {@link org.apache.rave.portal.model.JpaUser}
+     * @param userId   unique identifier of a {@link org.apache.rave.portal.model.User}
      */
     @PreAuthorize("hasPermission(new org.apache.rave.portal.security.impl.RaveSecurityContext(#userId, 'org.apache.rave.portal.model.User'), 'org.apache.rave.portal.model.WidgetRating', 'delete')")
     void removeWidgetRating(Long widgetId, Long userId);

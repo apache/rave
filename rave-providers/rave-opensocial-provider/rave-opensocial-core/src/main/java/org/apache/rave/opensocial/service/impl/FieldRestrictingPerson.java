@@ -39,7 +39,7 @@ import java.util.*;
 import static org.apache.rave.util.CollectionUtils.getSingleValue;
 
 /**
- * Wraps a {@link org.apache.rave.portal.model.JpaPerson} model object and returns values only if
+ * Wraps a {@link org.apache.rave.portal.model.Person} model object and returns values only if
  * the field set contains the requested field
  * <p/>
  * Usage of this wrapper is made possible by Shindig's use of a getter based serialization model
@@ -827,7 +827,7 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
     private static Url convertToUrl(PersonProperty property) {
         return new UrlImpl(property.getValue(), property.getExtendedValue(), property.getQualifier());
     }
-    
+
     private List<Address> convertAddresses(List<org.apache.rave.portal.model.Address> addresses) {
         List<Address> converted = new ArrayList<Address>();
         if(addresses != null) {

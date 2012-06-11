@@ -22,13 +22,12 @@ package org.apache.rave.opensocial.service;
 
 import org.apache.rave.exception.NotSupportedException;
 import org.apache.rave.opensocial.service.impl.FieldRestrictingPerson;
-import org.apache.rave.portal.model.JpaAddress;
-import org.apache.rave.portal.model.JpaPersonProperty;
 import org.apache.rave.portal.model.PersonProperty;
+import org.apache.rave.portal.model.impl.AddressImpl;
 import org.apache.rave.portal.model.impl.PersonImpl;
+import org.apache.rave.portal.model.impl.PersonPropertyImpl;
 import org.apache.rave.portal.model.util.ModelUtils;
 import org.apache.shindig.protocol.model.EnumImpl;
-import org.apache.shindig.social.core.model.AddressImpl;
 import org.apache.shindig.social.core.model.BodyTypeImpl;
 import org.apache.shindig.social.core.model.UrlImpl;
 import org.apache.shindig.social.opensocial.model.*;
@@ -582,7 +581,7 @@ public class FieldRestrictingPersonTest {
 
     @Test(expected = NotSupportedException.class)
     public void setCurrentLocation() {
-        new FieldRestrictingPerson(null, null).setCurrentLocation(new AddressImpl());
+        new FieldRestrictingPerson(null, null).setCurrentLocation(new org.apache.shindig.social.core.model.AddressImpl());
     }
 
     @Test(expected = NotSupportedException.class)
@@ -634,25 +633,25 @@ public class FieldRestrictingPersonTest {
         person.setPreferredName(PREFERRED_NAME);
         person.setStatus(STATUS);
         List<PersonProperty> properties = new ArrayList<PersonProperty>();
-        properties.add(new JpaPersonProperty(1L, "gender", Person.Gender.female.toString(), null, "", false));
-        properties.add(new JpaPersonProperty(1L, "drinker", Drinker.HEAVILY.toString(), null, "", false));
-        properties.add(new JpaPersonProperty(1L, "age", AGE.toString(), null, "", false));
-        properties.add(new JpaPersonProperty(1L, "birthday", BIRTHDAY_STRING, null, "", false));
-        properties.add(new JpaPersonProperty(1L, "bodyType", BODY_BUILD, null, "build", false));
-        properties.add(new JpaPersonProperty(1L, "bodyType", BODY_EYE_COLOR, null, "eyeColor", false));
-        properties.add(new JpaPersonProperty(1L, "bodyType", "25.24", null, "height", false));
-        properties.add(new JpaPersonProperty(1L, "ims", IM_1, null, IM_PROVIDER_1, true));
-        properties.add(new JpaPersonProperty(1L, "ims", IM_2, null, IM_PROVIDER_2, false));
-        properties.add(new JpaPersonProperty(1L, "emails", E_MAIL_ADDRESS_2, null, "personal", false));
-        properties.add(new JpaPersonProperty(1L, "emails", E_MAIL_ADDRESS_3, null, "junk", true));
-        properties.add(new JpaPersonProperty(1L, "activities", ACTIVITY_1, null, "", false));
-        properties.add(new JpaPersonProperty(1L, "activities", ACTIVITY_2, null, "", false));
-        properties.add(new JpaPersonProperty(1L, "profileSong", LINK_VALUE, LINK_TEXT, null, false));
-        properties.add(new JpaPersonProperty(1L, "lookingFor", LookingFor.FRIENDS.toString(), null, null, false));
-        properties.add(new JpaPersonProperty(1L, "currentLocation", QUALIFIER, null, null, null));
-        properties.add(new JpaPersonProperty(1L, "account", IM_1, "1", IM_PROVIDER_1, false));
+        properties.add(new PersonPropertyImpl(1L, "gender", Person.Gender.female.toString(), null, "", false));
+        properties.add(new PersonPropertyImpl(1L, "drinker", Drinker.HEAVILY.toString(), null, "", false));
+        properties.add(new PersonPropertyImpl(1L, "age", AGE.toString(), null, "", false));
+        properties.add(new PersonPropertyImpl(1L, "birthday", BIRTHDAY_STRING, null, "", false));
+        properties.add(new PersonPropertyImpl(1L, "bodyType", BODY_BUILD, null, "build", false));
+        properties.add(new PersonPropertyImpl(1L, "bodyType", BODY_EYE_COLOR, null, "eyeColor", false));
+        properties.add(new PersonPropertyImpl(1L, "bodyType", "25.24", null, "height", false));
+        properties.add(new PersonPropertyImpl(1L, "ims", IM_1, null, IM_PROVIDER_1, true));
+        properties.add(new PersonPropertyImpl(1L, "ims", IM_2, null, IM_PROVIDER_2, false));
+        properties.add(new PersonPropertyImpl(1L, "emails", E_MAIL_ADDRESS_2, null, "personal", false));
+        properties.add(new PersonPropertyImpl(1L, "emails", E_MAIL_ADDRESS_3, null, "junk", true));
+        properties.add(new PersonPropertyImpl(1L, "activities", ACTIVITY_1, null, "", false));
+        properties.add(new PersonPropertyImpl(1L, "activities", ACTIVITY_2, null, "", false));
+        properties.add(new PersonPropertyImpl(1L, "profileSong", LINK_VALUE, LINK_TEXT, null, false));
+        properties.add(new PersonPropertyImpl(1L, "lookingFor", LookingFor.FRIENDS.toString(), null, null, false));
+        properties.add(new PersonPropertyImpl(1L, "currentLocation", QUALIFIER, null, null, null));
+        properties.add(new PersonPropertyImpl(1L, "account", IM_1, "1", IM_PROVIDER_1, false));
         person.setProperties(properties);
-        org.apache.rave.portal.model.Address address = new JpaAddress();
+        org.apache.rave.portal.model.Address address = new AddressImpl();
         address.setCountry(COUNTRY);
         address.setLatitude(LATITUDE);
         address.setLongitude(LONGITUDE);
@@ -662,7 +661,7 @@ public class FieldRestrictingPersonTest {
         address.setStreetAddress(STREET);
         address.setQualifier(QUALIFIER);
         List<org.apache.rave.portal.model.Address> addresses = new ArrayList<org.apache.rave.portal.model.Address>();
-        addresses.add(new JpaAddress());
+        addresses.add(new AddressImpl());
         addresses.add(address);
         person.setAddresses(addresses);
 

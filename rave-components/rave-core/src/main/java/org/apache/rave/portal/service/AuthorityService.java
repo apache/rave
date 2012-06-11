@@ -25,7 +25,7 @@ import org.apache.rave.portal.model.util.SearchResult;
 public interface AuthorityService {
 
     /**
-     * @param entityId unique identifier of the {@link org.apache.rave.portal.model.JpaAuthority}
+     * @param entityId unique identifier of the {@link org.apache.rave.portal.model.Authority}
      * @return Authority if it can be found, otherwise {@literal null}
      */
     Authority getAuthorityById(long entityId);
@@ -37,13 +37,13 @@ public interface AuthorityService {
     Authority getAuthorityByName(String authorityName);
 
     /**
-     * @return a {@link SearchResult} with all {@link org.apache.rave.portal.model.JpaAuthority}'s
+     * @return a {@link SearchResult} with all {@link org.apache.rave.portal.model.Authority}'s
      */
     SearchResult<Authority> getAllAuthorities();
-    
+
      /**
-     * @return a {@link SearchResult} with the list of all default 
-     * {@link org.apache.rave.portal.model.JpaAuthority}'s
+     * @return a {@link SearchResult} with the list of all default
+     * {@link org.apache.rave.portal.model.Authority}'s
      */
     SearchResult<Authority> getDefaultAuthorities();
 }

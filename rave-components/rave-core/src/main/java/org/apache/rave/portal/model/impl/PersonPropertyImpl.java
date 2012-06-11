@@ -12,6 +12,17 @@ public class PersonPropertyImpl implements PersonProperty {
     private String extendedValue;
     private Boolean primary;
 
+    public PersonPropertyImpl() {}
+
+    public PersonPropertyImpl(Long id, String type, String value, String extendedValue, String qualifier, Boolean primary) {
+        this.id = id;
+        this.type = type;
+        this.value = value;
+        this.qualifier = qualifier;
+        this.primary = primary;
+        this.extendedValue = extendedValue;
+    }
+
     public Long getId() {
         return id;
     }
