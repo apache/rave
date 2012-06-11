@@ -19,9 +19,8 @@
 
 package org.apache.rave.portal.web.controller;
 
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.rave.portal.model.JpaUser;
+import org.apache.rave.portal.model.User;
+import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.service.CaptchaService;
 import org.apache.rave.portal.service.NewAccountService;
 import org.apache.rave.portal.web.util.ModelKeys;
@@ -39,6 +38,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import javax.servlet.http.HttpServletRequest;
 
 @Controller
 public class NewAccountController {
@@ -63,11 +64,11 @@ public class NewAccountController {
     public void setUpForm(ModelMap model, HttpServletRequest request) {
         logger.debug("Initializing form");
         model.addAttribute(ModelKeys.CAPTCHA_HTML, captchaService.createHtml(request));
-        model.addAttribute(ModelKeys.NEW_USER, new JpaUser());
+        model.addAttribute(ModelKeys.NEW_USER, new UserImpl());
     }
 
     @RequestMapping(value = {"/newaccount", "/newaccount/*"}, method = RequestMethod.POST)
-    public String create(@ModelAttribute(value = "newUser") JpaUser newUser, BindingResult results, Model model, HttpServletRequest request,  RedirectAttributes redirectAttributes) {
+    public String create(@ModelAttribute(value = "newUser") User newUser, BindingResult results, Model model, HttpServletRequest request,  RedirectAttributes redirectAttributes) {
         logger.debug("Creating a new user account");
         model.addAttribute(ModelKeys.NEW_USER, newUser);
 

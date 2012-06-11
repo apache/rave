@@ -21,7 +21,6 @@ package org.apache.rave.portal.service.impl;
 
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.rave.portal.model.JpaUser;
 import org.apache.rave.portal.model.PageType;
 import org.apache.rave.portal.model.Person;
 import org.apache.rave.portal.model.User;
@@ -124,11 +123,11 @@ public class DefaultUserService implements UserService {
     }
 
     @Override
-    public JpaUser getAuthenticatedUser() {
+    public User getAuthenticatedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if (authentication != null && authentication.getPrincipal() instanceof JpaUser) {
-            return (JpaUser) authentication.getPrincipal();
+        if (authentication != null && authentication.getPrincipal() instanceof User) {
+            return (User) authentication.getPrincipal();
         } else {
             throw new SecurityException("Could not get the authenticated user!");
         }

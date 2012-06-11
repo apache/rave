@@ -20,7 +20,6 @@ package org.apache.rave.portal.web.validator;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.validator.routines.EmailValidator;
-import org.apache.rave.portal.model.JpaUser;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.service.UserService;
 import org.slf4j.Logger;
@@ -45,7 +44,7 @@ public class UserProfileValidator implements Validator {
     }
 
     public boolean supports(Class<?> aClass) {
-        return JpaUser.class.isAssignableFrom(aClass);
+        return User.class.isAssignableFrom(aClass);
     }
 
     public void validate(Object obj, Errors errors) {

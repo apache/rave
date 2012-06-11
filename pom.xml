@@ -116,6 +116,11 @@
             </dependency>
             <dependency>
                 <groupId>org.apache.rave</groupId>
+                <artifactId>rave-jpa</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.rave</groupId>
                 <artifactId>rave-web</artifactId>
                 <version>${project.version}</version>
             </dependency>

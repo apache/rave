@@ -20,7 +20,6 @@
 package org.apache.rave.portal.web.controller.admin;
 
 import org.apache.rave.portal.model.Category;
-import org.apache.rave.portal.model.JpaWidget;
 import org.apache.rave.portal.model.Widget;
 import org.apache.rave.portal.model.impl.CategoryImpl;
 import org.apache.rave.portal.model.impl.WidgetImpl;
@@ -159,7 +158,7 @@ public class WidgetControllerTest {
     @Test
     public void updateWidget_valid() {
         final String widgetUrl = "http://example.com/widget";
-        Widget widget = new JpaWidget(123L, widgetUrl);
+        Widget widget = new WidgetImpl(123L, widgetUrl);
         widget.setTitle("Widget title");
         widget.setType("OpenSocial");
         widget.setDescription("Lorem ipsum");
@@ -182,7 +181,7 @@ public class WidgetControllerTest {
 
     @Test(expected = SecurityException.class)
     public void updateWidget_wrongToken() {
-        Widget widget = new JpaWidget();
+        Widget widget = new WidgetImpl();
         BindingResult errors = new BeanPropertyBindingResult(widget, "widget");
         SessionStatus sessionStatus = createMock(SessionStatus.class);
         ModelMap modelMap = new ExtendedModelMap();
@@ -201,7 +200,7 @@ public class WidgetControllerTest {
 
     @Test
     public void updateWidget_invalid() {
-        Widget widget = new JpaWidget(123L, "http://broken/url");
+        Widget widget = new WidgetImpl(123L, "http://broken/url");
         BindingResult errors = new BeanPropertyBindingResult(widget, "widget");
         SessionStatus sessionStatus = createMock(SessionStatus.class);
         ModelMap modelMap = new ExtendedModelMap();
@@ -228,7 +227,7 @@ public class WidgetControllerTest {
     private static SearchResult<Widget> populateWidgetSearchResult() {
         List<Widget> widgetList = new ArrayList<Widget>();
         for (int i = 0; i < DEFAULT_PAGESIZE; i++) {
-            Widget widget = new JpaWidget();
+            Widget widget = new WidgetImpl();
             widget.setTitle("Widget " + i);
             widgetList.add(widget);
         }

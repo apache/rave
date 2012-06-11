@@ -19,8 +19,8 @@
 
 package org.apache.rave.portal.web.model;
 
-import org.apache.rave.portal.model.JpaPortalPreference;
 import org.apache.rave.portal.model.PortalPreference;
+import org.apache.rave.portal.model.impl.PortalPreferenceImpl;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -38,11 +38,11 @@ public class PortalPreferenceFormTest {
 
     @Before
     public void setUp() throws Exception {
-        PortalPreference titlePref = new JpaPortalPreference(TITLE_SUFFIX, "Test portal");
+        PortalPreference titlePref = new PortalPreferenceImpl(TITLE_SUFFIX, "Test portal");
         preferenceMap.put(TITLE_SUFFIX, titlePref);
-        PortalPreference pageSizePref = new JpaPortalPreference(PAGE_SIZE, "20");
+        PortalPreference pageSizePref = new PortalPreferenceImpl(PAGE_SIZE, "20");
         preferenceMap.put(PAGE_SIZE, pageSizePref);
-        PortalPreference javaScriptDebugMode = new JpaPortalPreference(JAVASCRIPT_DEBUG_MODE, "0");
+        PortalPreference javaScriptDebugMode = new PortalPreferenceImpl(JAVASCRIPT_DEBUG_MODE, "0");
         preferenceMap.put(JAVASCRIPT_DEBUG_MODE, javaScriptDebugMode);
     }
 

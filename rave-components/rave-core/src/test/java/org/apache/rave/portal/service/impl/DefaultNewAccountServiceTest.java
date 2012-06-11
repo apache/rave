@@ -19,7 +19,11 @@
 
 package org.apache.rave.portal.service.impl;
 
-import org.apache.rave.portal.model.*;
+import org.apache.rave.portal.model.Authority;
+import org.apache.rave.portal.model.User;
+import org.apache.rave.portal.model.impl.AuthorityImpl;
+import org.apache.rave.portal.model.impl.PageLayoutImpl;
+import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.service.AuthorityService;
 import org.apache.rave.portal.service.NewAccountService;
@@ -55,7 +59,7 @@ public class DefaultNewAccountServiceTest {
     private final String VALID_PASSWORD = "valid.password";
     private final String VALID_LAYOUT_CODE = "valid.layout";
     private final String VALID_EMAIL = "valid.email";
-    private JpaPageLayout validPageLayout;
+    private PageLayoutImpl validPageLayout;
     private SearchResult<Authority> validAuthoritySearchResult;
     private List<Authority> validAuthorityList;
 
@@ -71,14 +75,13 @@ public class DefaultNewAccountServiceTest {
 
         newAccountService = new DefaultNewAccountService(userService, pageLayoutService, authorityService);
 
-        validPageLayout = new JpaPageLayout();
-        validPageLayout.setEntityId(99L);
+        validPageLayout = new PageLayoutImpl();
         validPageLayout.setNumberOfRegions(4L);
         validPageLayout.setCode(VALID_LAYOUT_CODE);
 
-        Authority role1 = new JpaAuthority();
+        Authority role1 = new AuthorityImpl();
         role1.setAuthority("DEFAULT_ROLE1");
-        Authority role2 = new JpaAuthority();
+        Authority role2 = new AuthorityImpl();
         role2.setAuthority("DEFAULT_ROLE2");
 
         validAuthorityList = new ArrayList<Authority>();
@@ -89,14 +92,14 @@ public class DefaultNewAccountServiceTest {
 
     @Test
     public void createNewAccountTest() throws Exception {
-        JpaUser newUser = new JpaUser();
+        UserImpl newUser = new UserImpl();
         newUser.setUsername(VALID_USER);
         newUser.setPassword(VALID_PASSWORD);
         newUser.setConfirmPassword(VALID_PASSWORD);
         newUser.setEmail(VALID_EMAIL);
         newUser.setDefaultPageLayoutCode(VALID_LAYOUT_CODE);
 
-        User expectedUser = new JpaUser();
+        User expectedUser = new UserImpl();
         expectedUser.setUsername(newUser.getUsername());
         expectedUser.setPassword(newUser.getPassword());
         expectedUser.setEmail(newUser.getEmail());
@@ -112,7 +115,7 @@ public class DefaultNewAccountServiceTest {
         expect(userService.getUserByEmail(VALID_EMAIL)).andReturn(null);
         expect(pageLayoutService.getPageLayoutByCode(VALID_LAYOUT_CODE)).andReturn(validPageLayout);
         expect(authorityService.getDefaultAuthorities()).andReturn(validAuthoritySearchResult);
-        userService.registerNewUser(expectedUser);
+        userService.registerNewUser(isA(User.class));
         expectLastCall();
         replay(userDetails, passwordEncoder, userService, pageLayoutService, authorityService);
 
@@ -123,14 +126,14 @@ public class DefaultNewAccountServiceTest {
 
     @Test
     public void createNewAccountTest_blankEmail() throws Exception {
-        JpaUser newUser = new JpaUser();
+        UserImpl newUser = new UserImpl();
         newUser.setUsername(VALID_USER);
         newUser.setPassword(VALID_PASSWORD);
         newUser.setConfirmPassword(VALID_PASSWORD);
         newUser.setEmail("");
         newUser.setDefaultPageLayoutCode(VALID_LAYOUT_CODE);
 
-        User expectedUser = new JpaUser();
+        User expectedUser = new UserImpl();
         expectedUser.setUsername(newUser.getUsername());
         expectedUser.setPassword(newUser.getPassword());
         expectedUser.setEmail(newUser.getEmail());
@@ -146,7 +149,7 @@ public class DefaultNewAccountServiceTest {
         //if the email is blank getUserByEmail should not be called so dont expect it
         expect(pageLayoutService.getPageLayoutByCode(VALID_LAYOUT_CODE)).andReturn(validPageLayout);
         expect(authorityService.getDefaultAuthorities()).andReturn(validAuthoritySearchResult);
-        userService.registerNewUser(expectedUser);
+        userService.registerNewUser(isA(User.class));
         expectLastCall();
         replay(userDetails, passwordEncoder, userService, pageLayoutService, authorityService);
 
@@ -158,9 +161,9 @@ public class DefaultNewAccountServiceTest {
     @Test
     public void failedAccountCreationTest_duplicateUsername() throws Exception {
         String duplicateUserName = "duplicateUserName";
-        JpaUser newUser = new JpaUser();
+        UserImpl newUser = new UserImpl();
         newUser.setUsername(duplicateUserName);
-        User existingUser = new JpaUser();
+        User existingUser = new UserImpl();
         existingUser.setUsername(duplicateUserName);
 
         expect(userService.getUserByUsername(duplicateUserName)).andReturn(existingUser);
@@ -177,10 +180,10 @@ public class DefaultNewAccountServiceTest {
     @Test
     public void failedAccountCreationTest_duplicateEmail() throws Exception {
         String duplicateEmail = "duplicateEmail";
-        JpaUser newUser = new JpaUser();
+        UserImpl newUser = new UserImpl();
         newUser.setUsername("newUser");
         newUser.setEmail(duplicateEmail);
-        User existingUser = new JpaUser();
+        User existingUser = new UserImpl();
         existingUser.setEmail(duplicateEmail);
 
         expect(userService.getUserByUsername("newUser")).andReturn(null);

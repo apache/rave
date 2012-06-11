@@ -15,7 +15,6 @@
  */
 package org.apache.rave.portal.security.impl;
 
-import org.apache.rave.portal.model.JpaUser;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.WidgetTag;
 import org.apache.rave.portal.repository.WidgetTagRepository;
@@ -194,6 +193,6 @@ public class DefaultWidgetTagPermissionEvaluator extends AbstractModelPermission
         return ((User)authentication.getPrincipal()).getUsername().equals(username);
     }
     private boolean isWidgetTagOwnerById(Authentication authentication, Long userId) {
-        return ((JpaUser)authentication.getPrincipal()).getId().equals(userId);
+        return ((User)authentication.getPrincipal()).getId().equals(userId);
     }
 }

@@ -19,7 +19,7 @@
 
 package org.apache.rave.portal.web.controller;
 
-import org.apache.rave.portal.model.JpaUser;
+import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.portal.web.util.ModelKeys;
@@ -43,7 +43,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  * Only requests that have a valid (matched) forgotPasswordHash will be honored
  *
  * @version "$Id$"
- * @see org.apache.rave.portal.model.JpaUser#forgotPasswordHash
+ * @see org.apache.rave.portal.model.User#getForgotPasswordHash()
  */
 @Controller
 public class ChangePasswordController {
@@ -66,7 +66,7 @@ public class ChangePasswordController {
     @RequestMapping(value = {"/changepassword/{passwordHash:.*}"}, method = RequestMethod.GET)
     public String initialize(Model model, @PathVariable("passwordHash") String passwordHash) {
         log.debug("Requesting user for hash: {}", passwordHash);
-        User user = new JpaUser();
+        User user = new UserImpl();
         model.addAttribute(ModelKeys.USER, user);
         user.setForgotPasswordHash(passwordHash);
         return ViewNames.PASSWORD_CHANGE;

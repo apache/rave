@@ -25,7 +25,7 @@ public class UserImpl extends PersonImpl implements User {
     private PageLayout defaultPageLayout;
     private String confirmPassword;
     private String defaultPageLayoutCode;
-    private List<Authority> authorities;
+    private List<Authority> authorities = new ArrayList<Authority>();
 
     public UserImpl() {}
 

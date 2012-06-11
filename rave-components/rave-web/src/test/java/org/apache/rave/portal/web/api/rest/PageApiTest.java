@@ -64,12 +64,12 @@ public class PageApiTest {
     public void getPage_validId_export() {
         Page p = new PageImpl();
         p.setRegions(new ArrayList<Region>());
-        p.setOwner(new JpaUser());
+        p.setOwner(new UserImpl());
         Region region = new RegionImpl();
         region.setRegionWidgets(new ArrayList<RegionWidget>());
         RegionWidget w = new RegionWidgetImpl();
         w.setPreferences(new ArrayList<RegionWidgetPreference>());
-        w.getPreferences().add(new JpaRegionWidgetPreference());
+        w.getPreferences().add(new RegionWidgetPreferenceImpl());
         region.getRegionWidgets().add(w);
         p.getRegions().add(region);
 

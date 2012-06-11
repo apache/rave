@@ -19,14 +19,8 @@
 
 package org.apache.rave.portal.web.controller;
 
-import static org.easymock.EasyMock.createNiceMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-
-import org.apache.rave.portal.model.JpaUser;
 import org.apache.rave.portal.model.User;
+import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.portal.web.util.ModelKeys;
 import org.apache.rave.portal.web.util.ViewNames;
@@ -38,6 +32,10 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.DirectFieldBindingResult;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 /**
  * @version "$Id$"
@@ -72,7 +70,7 @@ public class ChangePasswordControllerTest {
     public void testUpdate() throws Exception {
         final Model model = createNiceMock(Model.class);
         RedirectAttributes redirectAttributes = createNiceMock(RedirectAttributes.class);
-        User newUser = new JpaUser();
+        User newUser = new UserImpl();
         replay(redirectAttributes);
         replay(model);
         BindingResult results = new DirectFieldBindingResult(newUser, ModelKeys.USER);

@@ -101,4 +101,6 @@ public interface User extends Person, UserDetails {
     Long getId();
 
     String getDefaultPageLayoutCode();
+
+    void setDefaultPageLayoutCode(String pageLayoutCode);
 }

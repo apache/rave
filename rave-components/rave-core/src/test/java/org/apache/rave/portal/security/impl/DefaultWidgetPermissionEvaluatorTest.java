@@ -18,8 +18,11 @@
  */
 package org.apache.rave.portal.security.impl;
 
-import org.apache.rave.portal.model.*;
+import org.apache.rave.portal.model.Page;
+import org.apache.rave.portal.model.Widget;
+import org.apache.rave.portal.model.WidgetStatus;
 import org.apache.rave.portal.model.impl.PageImpl;
+import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.model.impl.WidgetImpl;
 import org.apache.rave.portal.repository.WidgetRepository;
 import org.apache.rave.portal.security.ModelPermissionEvaluator;
@@ -44,7 +47,7 @@ public class DefaultWidgetPermissionEvaluatorTest {
     private WidgetRepository mockWidgetRepository;
     private Page page;
     private Widget widget, widget2;
-    private JpaUser user, user2;
+    private UserImpl user, user2;
     private Authentication mockAuthentication;
     private List<GrantedAuthority> grantedAuthoritiesList;
 
@@ -60,10 +63,10 @@ public class DefaultWidgetPermissionEvaluatorTest {
         defaultWidgetPermissionEvaluator = new DefaultWidgetPermissionEvaluator(mockWidgetRepository);
         mockAuthentication = createMock(Authentication.class);
 
-        user = new JpaUser();
+        user = new UserImpl();
         user.setUsername(VALID_USERNAME);
-        user.setEntityId(VALID_USER_ID);
-        user2 = new JpaUser();
+        user.setId(VALID_USER_ID);
+        user2 = new UserImpl();
         user2.setUsername(VALID_USERNAME2);
         page = new PageImpl();
         page.setId(VALID_PAGE_ID);

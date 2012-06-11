@@ -20,8 +20,11 @@
 package org.apache.rave.portal.service.impl;
 
 import org.apache.rave.exception.DuplicateItemException;
-import org.apache.rave.portal.model.*;
+import org.apache.rave.portal.model.Category;
+import org.apache.rave.portal.model.Widget;
+import org.apache.rave.portal.model.WidgetStatus;
 import org.apache.rave.portal.model.impl.CategoryImpl;
+import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.model.impl.WidgetImpl;
 import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.model.util.WidgetStatistics;
@@ -31,9 +34,6 @@ import org.apache.rave.portal.repository.WidgetRepository;
 import org.apache.rave.portal.service.WidgetService;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,8 +46,6 @@ import static org.junit.Assert.*;
 /**
  * Test for {@link DefaultWidgetService}
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:test-dataContext.xml", "classpath:test-applicationContext.xml"})
 public class DefaultWidgetServiceTest {
 
     private WidgetService widgetService;
@@ -206,8 +204,8 @@ public class DefaultWidgetServiceTest {
     public void getWidgetsByOwner() {
         final int offset = 0;
         final int pageSize = 10;
-        final JpaUser user = new JpaUser(5L);
-        expect(userRepository.get(user.getEntityId())).andReturn(user);
+        final UserImpl user = new UserImpl(5L);
+        expect(userRepository.get(user.getId())).andReturn(user);
         replay(userRepository);
 
         final List<Widget> widgets = new ArrayList<Widget>();
@@ -218,7 +216,7 @@ public class DefaultWidgetServiceTest {
         expect(widgetRepository.getByOwner(user, offset, pageSize)).andReturn(widgets);
         replay(widgetRepository);
 
-        SearchResult<Widget> result = widgetService.getWidgetsByOwner(user.getEntityId(), offset, pageSize);
+        SearchResult<Widget> result = widgetService.getWidgetsByOwner(user.getId(), offset, pageSize);
         assertNotNull(result);
         assertEquals(offset, result.getOffset());
         assertEquals(pageSize, result.getPageSize());

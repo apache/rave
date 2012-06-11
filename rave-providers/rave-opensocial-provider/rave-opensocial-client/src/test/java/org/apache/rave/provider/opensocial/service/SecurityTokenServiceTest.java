@@ -19,12 +19,7 @@
 
 package org.apache.rave.provider.opensocial.service;
 
-import org.apache.rave.model.ModelConverter;
 import org.apache.rave.portal.model.*;
-import org.apache.rave.portal.model.conversion.JpaConverter;
-import org.apache.rave.portal.model.conversion.JpaRegionConverter;
-import org.apache.rave.portal.model.conversion.JpaRegionWidgetConverter;
-import org.apache.rave.portal.model.conversion.JpaWidgetConverter;
 import org.apache.rave.portal.model.impl.*;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.provider.opensocial.service.impl.EncryptedBlobSecurityTokenService;
@@ -38,10 +33,8 @@ import org.springframework.core.io.ClassPathResource;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.assertEquals;
@@ -53,7 +46,7 @@ public class SecurityTokenServiceTest {
     private SecurityTokenService securityTokenService;
     private String encryptionKey;
 
-    private JpaUser validPerson;
+    private User validPerson;
     private Page validPage;
     private Region validRegion;
     private RegionWidget validRegionWidget;
@@ -85,27 +78,17 @@ public class SecurityTokenServiceTest {
     @Before
     public void setup() throws MalformedURLException {
 
-        //TODO:REMOVE WHEN REGION_WIDGET REFACTOR IS COMPLETE
-        JpaWidgetConverter converter = new JpaWidgetConverter();
-        JpaRegionConverter regionConverter = new JpaRegionConverter();
-        JpaRegionWidgetConverter regionWidgetConverter = new JpaRegionWidgetConverter();
-        List<ModelConverter> converters = new ArrayList<ModelConverter>();
-        converters.add(converter);
-        converters.add(regionConverter);
-        converters.add(regionWidgetConverter);
-        new JpaConverter(converters);
-
         userService = createMock(UserService.class);
         securityTokenService = new EncryptedBlobSecurityTokenService(userService, "default", "default",
                 encryptionKey);
 
-        validPerson = new JpaUser(VALID_USER_ID, VALID_USER_NAME);
+        validPerson = new UserImpl(VALID_USER_ID, VALID_USER_NAME);
 
         validPage = new PageImpl(1L, validPerson);
         validRegion = new RegionImpl(1L, validPage, 1);
         validPage.setRegions(Arrays.asList(validRegion));
 
-        validWidget = new JpaWidget(1L, VALID_URL);
+        validWidget = new WidgetImpl(1L, VALID_URL);
         validWidget.setType("OpenSocial");
         validWidget.setTitle("Widget Title");
 
@@ -125,7 +108,7 @@ public class SecurityTokenServiceTest {
     @Test
     public void getSecurityToken_validWidget_ownerIsNotViewer() throws SecurityTokenException {
         Long expectedOwnerId = 99999L;
-        validPage.setOwner(new JpaUser(expectedOwnerId));
+        validPage.setOwner(new UserImpl(expectedOwnerId));
 
         expect(userService.getAuthenticatedUser()).andReturn(validPerson).anyTimes();
         replay(userService);

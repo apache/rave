@@ -19,7 +19,6 @@
 
 package org.apache.rave.portal.model.util;
 
-import org.apache.rave.portal.model.JpaRegionWidgetPreference;
 import org.apache.rave.portal.model.RegionWidgetPreference;
 import org.apache.rave.portal.model.impl.RegionWidgetPreferenceImpl;
 import org.junit.Test;
@@ -34,7 +33,7 @@ public class ModelUtilsTest {
 
     @Test
     public void normalizeRegionWidgetPreference() {
-        RegionWidgetPreference testPreference = new JpaRegionWidgetPreference(null, null, "camelCaseName", "FOO");
+        RegionWidgetPreference testPreference = new RegionWidgetPreferenceImpl( null, "camelCaseName", "FOO");
         ModelUtils.normalizeRegionWidgetPreference(VALID_REGION_WIDGET_ID, testPreference);
 
         assertTrue(testPreference.getRegionWidgetId() == VALID_REGION_WIDGET_ID);

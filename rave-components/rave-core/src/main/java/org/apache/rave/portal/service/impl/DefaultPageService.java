@@ -23,6 +23,8 @@ import org.apache.rave.persistence.Repository;
 import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.model.impl.PageImpl;
 import org.apache.rave.portal.model.impl.PageUserImpl;
+import org.apache.rave.portal.model.impl.RegionImpl;
+import org.apache.rave.portal.model.impl.RegionWidgetImpl;
 import org.apache.rave.portal.repository.PageLayoutRepository;
 import org.apache.rave.portal.repository.PageRepository;
 import org.apache.rave.portal.repository.PageTemplateRepository;
@@ -136,7 +138,7 @@ public class DefaultPageService implements PageService {
         List<Page> parentsSubPages = new ArrayList<Page>();
         int regionCount;
         for (regionCount = 0; regionCount < pageLayout.getNumberOfRegions(); regionCount++) {
-            Region region = new JpaRegion();
+            Region region = new RegionImpl();
             region.setRenderOrder(regionCount);
             // TODO: this should eventually be defined by the PageTemplateRegion.locked field
             region.setLocked(false);
@@ -396,7 +398,7 @@ public class DefaultPageService implements PageService {
 
         //add as many missing regions as the new layout requires
         for (int i=0; i < numberOfNewRegionsToAdd; i++) {
-            Region newRegion = new JpaRegion();
+            Region newRegion = new RegionImpl();
             newRegion.setPage(page);
             newRegion.setRenderOrder(lastRegionRenderOrder++);
             newRegion.setLocked(false);
@@ -443,7 +445,7 @@ public class DefaultPageService implements PageService {
     }
 
     private RegionWidget createWidgetInstance(Widget widget, Region region, int position) {
-        RegionWidget regionWidget = new JpaRegionWidget();
+        RegionWidget regionWidget = new RegionWidgetImpl();
         regionWidget.setRenderOrder(position);
         regionWidget.setWidget(widget);
         // TODO: setLocked and setHideChrome are hard-coded to false for new widgets manually added by users
@@ -482,7 +484,7 @@ public class DefaultPageService implements PageService {
         List<Region> regions = new ArrayList<Region>();
         int regionCount;
         for (regionCount = 0; regionCount < pageLayout.getNumberOfRegions(); regionCount++) {
-            Region region = new JpaRegion();
+            Region region = new RegionImpl();
             region.setRenderOrder(regionCount);
             // TODO: this should eventually be defined by the PageTemplateRegion.locked field
             region.setLocked(false);

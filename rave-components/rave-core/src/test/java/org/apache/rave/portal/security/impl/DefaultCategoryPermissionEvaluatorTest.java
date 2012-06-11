@@ -18,8 +18,10 @@
  */
 package org.apache.rave.portal.security.impl;
 
-import org.apache.rave.portal.model.*;
+import org.apache.rave.portal.model.Category;
+import org.apache.rave.portal.model.Widget;
 import org.apache.rave.portal.model.impl.CategoryImpl;
+import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.repository.CategoryRepository;
 import org.apache.rave.portal.security.ModelPermissionEvaluator;
 import org.apache.rave.portal.security.util.AuthenticationUtils;
@@ -43,7 +45,7 @@ public class DefaultCategoryPermissionEvaluatorTest {
     private CategoryRepository mockCategoryRepository;
 
     private Category category;
-    private JpaUser user, user2;
+    private UserImpl user, user2;
     private Authentication mockAuthentication;
     private List<GrantedAuthority> grantedAuthorities;
 
@@ -58,10 +60,10 @@ public class DefaultCategoryPermissionEvaluatorTest {
         defaultCategoryPermissionEvaluator = new DefaultCategoryPermissionEvaluator(mockCategoryRepository);
         mockAuthentication = createMock(Authentication.class);
 
-        user = new JpaUser();
+        user = new UserImpl();
         user.setUsername(VALID_USERNAME);
-        user.setEntityId(VALID_USER_ID);
-        user2 = new JpaUser();
+        user.setId(VALID_USER_ID);
+        user2 = new UserImpl();
         user2.setUsername(VALID_USERNAME2);
 
         category = new CategoryImpl();

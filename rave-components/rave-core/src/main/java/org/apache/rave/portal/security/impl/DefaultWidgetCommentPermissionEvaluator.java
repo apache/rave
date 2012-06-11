@@ -15,7 +15,6 @@
  */
 package org.apache.rave.portal.security.impl;
 
-import org.apache.rave.portal.model.JpaUser;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.WidgetComment;
 import org.apache.rave.portal.repository.WidgetCommentRepository;
@@ -192,6 +191,6 @@ public class DefaultWidgetCommentPermissionEvaluator extends AbstractModelPermis
         return ((User)authentication.getPrincipal()).getUsername().equals(username);
     }
     private boolean isWidgetCommentOwnerById(Authentication authentication, Long userId) {
-        return ((JpaUser)authentication.getPrincipal()).getId().equals(userId);
+        return ((User)authentication.getPrincipal()).getId().equals(userId);
     }
 }

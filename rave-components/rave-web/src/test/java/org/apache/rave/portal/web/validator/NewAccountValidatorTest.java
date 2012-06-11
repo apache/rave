@@ -19,21 +19,16 @@
 
 package org.apache.rave.portal.web.validator;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertTrue;
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-
-import org.apache.rave.portal.model.JpaUser;
 import org.apache.rave.portal.model.User;
+import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.service.UserService;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
+
+import static junit.framework.Assert.*;
+import static org.easymock.EasyMock.*;
 
 /**
  * Test class for {@link NewAccountValidator}
@@ -55,12 +50,12 @@ public class NewAccountValidatorTest {
     @Test
     public void testSupports() throws Exception {
         assertTrue("Can validate org.apache.rave.portal.model.User",
-                newAccountValidator.supports(JpaUser.class));
+                newAccountValidator.supports(UserImpl.class));
     }
 
     @Test
     public void testValidate() throws Exception {
-        JpaUser user = new JpaUser();
+        UserImpl user = new UserImpl();
         user.setUsername(VALID_NAME);
         user.setPassword(VALID_PASSWORD);
         user.setConfirmPassword(VALID_PASSWORD);
@@ -79,7 +74,7 @@ public class NewAccountValidatorTest {
 
     @Test
     public void testValidationFailsOnEmptyUser() throws Exception {
-        User user = new JpaUser();
+        User user = new UserImpl();
         Errors errors = new BindException(user, NEW_USER);
         expect(mockUserService.getUserByUsername("")).andReturn(null);
         replay(mockUserService);
@@ -97,7 +92,7 @@ public class NewAccountValidatorTest {
 
     @Test
     public void testValidationFailsOnExistingUser() throws Exception {
-        JpaUser user = new JpaUser();
+        UserImpl user = new UserImpl();
         user.setUsername("ExistingUser");
         user.setPassword(VALID_PASSWORD);
         user.setConfirmPassword(VALID_PASSWORD);
@@ -105,7 +100,7 @@ public class NewAccountValidatorTest {
         user.setEmail(VALID_EMAIL);
         Errors errors = new BindException(user, NEW_USER);
 
-        User user1 = createMock(JpaUser.class);
+        User user1 = createMock(UserImpl.class);
         expect(mockUserService.getUserByUsername("ExistingUser")).andReturn(user1);
         expect(mockUserService.getUserByEmail(VALID_EMAIL)).andReturn(null);
         replay(mockUserService);
@@ -118,7 +113,7 @@ public class NewAccountValidatorTest {
 
     @Test
     public void testValidationFailsOnExistingEmail() throws Exception {
-        JpaUser user = new JpaUser();
+        UserImpl user = new UserImpl();
         user.setUsername(VALID_NAME);
         user.setPassword(VALID_PASSWORD);
         user.setConfirmPassword(VALID_PASSWORD);
@@ -126,7 +121,7 @@ public class NewAccountValidatorTest {
         user.setEmail("existing@localhost");
         Errors errors = new BindException(user, NEW_USER);
 
-        User user1 = createMock(JpaUser.class);
+        User user1 = createMock(UserImpl.class);
         expect(mockUserService.getUserByUsername(VALID_NAME)).andReturn(null);
         expect(mockUserService.getUserByEmail("existing@localhost")).andReturn(user1);
         replay(mockUserService);
@@ -140,7 +135,7 @@ public class NewAccountValidatorTest {
 
     @Test
     public void testValidationFailsOnShortUserName() throws Exception {
-        JpaUser user = new JpaUser();
+        UserImpl user = new UserImpl();
         user.setUsername("A");
         user.setPassword(VALID_PASSWORD);
         user.setConfirmPassword(VALID_PASSWORD);
@@ -159,7 +154,7 @@ public class NewAccountValidatorTest {
 
     @Test
     public void testValidationFailsOnIllegalUsername() throws Exception {
-        JpaUser user = new JpaUser();
+        UserImpl user = new UserImpl();
         final String badUsername = "x'; DROP TABLE members; --";
         user.setUsername(badUsername);
         user.setPassword(VALID_PASSWORD);
@@ -179,7 +174,7 @@ public class NewAccountValidatorTest {
 
     @Test
     public void testValidationFailsOnShortPassword() throws Exception {
-        JpaUser user = new JpaUser();
+        UserImpl user = new UserImpl();
         user.setUsername(VALID_NAME);
         user.setPassword("123");
         user.setConfirmPassword("123");
@@ -198,7 +193,7 @@ public class NewAccountValidatorTest {
 
     @Test
     public void testValidationFailsOnNonMatchingPassword() throws Exception {
-        JpaUser user = new JpaUser();
+        UserImpl user = new UserImpl();
         user.setUsername(VALID_NAME);
         user.setPassword(VALID_PASSWORD);
         user.setConfirmPassword("doesnotmatch");

@@ -19,16 +19,8 @@
 
 package org.apache.rave.portal.web.controller;
 
-import static org.easymock.EasyMock.createNiceMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.junit.Assert.assertThat;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.rave.portal.model.JpaUser;
 import org.apache.rave.portal.model.User;
+import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.service.CaptchaService;
 import org.apache.rave.portal.service.NewAccountService;
 import org.apache.rave.portal.service.UserService;
@@ -45,6 +37,12 @@ import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.assertThat;
 
 
 /**
@@ -94,7 +92,7 @@ public class NewAccountControllerTest {
 	@Test
 	public void create_UsernameNotSpecified() {
 		final Model model = createNiceMock(Model.class);
-		final JpaUser User = new JpaUser();
+		final UserImpl User = new UserImpl();
 		final BindingResult errors = createNiceMock(BindingResult.class);
 		final String username = ""; //no username specified
 		final String password = "password";
@@ -124,12 +122,12 @@ public class NewAccountControllerTest {
 	@Test
 	public void create_UsernameAlreadyExists() {
 		final Model model = createNiceMock(Model.class);
-		final JpaUser User = new JpaUser();
+		final UserImpl User = new UserImpl();
 		final BindingResult errors = createNiceMock(BindingResult.class);
 		final String username = "canonical"; //specified username already exists in database
 		final String password = "password";
 		final String confirmPassword = password;
-		final User existingUser = new JpaUser();
+		final User existingUser = new UserImpl();
 		List<ObjectError> errorList = new ArrayList<ObjectError>();
 		final ObjectError error = new ObjectError("username.exists", "Username already exists");
 
@@ -161,7 +159,7 @@ public class NewAccountControllerTest {
 	@Test
 	public void create_InvalidUsernameLength() {
 		final Model model = createNiceMock(Model.class);
-		final JpaUser User = new JpaUser();
+		final UserImpl User = new UserImpl();
 		final BindingResult errors = createNiceMock(BindingResult.class);
 		final String username = "u"; //username length less than 2 characters
 		final String password = "password";
@@ -191,7 +189,7 @@ public class NewAccountControllerTest {
 	@Test
 	public void create_PasswordNotSpecified() {
 		final Model model = createNiceMock(Model.class);
-		final JpaUser User = new JpaUser();
+		final UserImpl User = new UserImpl();
 		final BindingResult errors = createNiceMock(BindingResult.class);
 		final String username = "username";
 		final String password = ""; //password not specified
@@ -221,7 +219,7 @@ public class NewAccountControllerTest {
 	@Test
 	public void create_ConfirmPasswordNotSpecified() {
 		final Model model = createNiceMock(Model.class);
-		final JpaUser User = new JpaUser();
+		final UserImpl User = new UserImpl();
 		final BindingResult errors = createNiceMock(BindingResult.class);
 		final String username = "usename";
 		final String password = "pasword";
@@ -250,7 +248,7 @@ public class NewAccountControllerTest {
 	@Test
 	public void create_InvalidPasswordLength() {
 		final Model model = createNiceMock(Model.class);
-		final JpaUser User = new JpaUser();
+		final UserImpl User = new UserImpl();
 		final BindingResult errors = createNiceMock(BindingResult.class);
 		final String username = "usename";
 		final String password = "pas"; //invalid length password
@@ -278,7 +276,7 @@ public class NewAccountControllerTest {
 	@Test
 	public void create_PasswordMismatchCaseOne() {
 		final Model model = createNiceMock(Model.class);
-		final JpaUser User = new JpaUser();
+		final UserImpl User = new UserImpl();
 		final BindingResult errors = createNiceMock(BindingResult.class);
 		final String username = "username";
 		final String password = "password";
@@ -306,7 +304,7 @@ public class NewAccountControllerTest {
 	@Test
 	public void create_PasswordMismatchCaseTwo() {
 		final Model model = createNiceMock(Model.class);
-		final JpaUser User = new JpaUser();
+		final UserImpl User = new UserImpl();
 		final BindingResult errors = createNiceMock(BindingResult.class);
 		final String username = "username";
 		final String password = "password";
@@ -334,7 +332,7 @@ public class NewAccountControllerTest {
 	@Test
 	public void create_BlankFormSubmitted() {
 		final Model model = createNiceMock(Model.class);
-		final JpaUser User = new JpaUser();
+		final UserImpl User = new UserImpl();
 		final BindingResult errors = createNiceMock(BindingResult.class);
 		final String username = ""; //Username not specified
 		final String password = ""; //Password not specified
@@ -367,7 +365,7 @@ public class NewAccountControllerTest {
 	@Test
 	public void create_ValidFormSubmitted() {
 		final Model model = createNiceMock(Model.class);
-		final JpaUser User = new JpaUser();
+		final UserImpl User = new UserImpl();
 		final BindingResult errors = createNiceMock(BindingResult.class);
 		final String username = "username"; //Username not specified
 		final String password = "password"; //Password not specified

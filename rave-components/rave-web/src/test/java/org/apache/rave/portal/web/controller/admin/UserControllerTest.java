@@ -20,9 +20,9 @@
 package org.apache.rave.portal.web.controller.admin;
 
 import org.apache.rave.portal.model.Authority;
-import org.apache.rave.portal.model.JpaAuthority;
-import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.model.User;
+import org.apache.rave.portal.model.impl.AuthorityImpl;
+import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.service.AuthorityService;
 import org.apache.rave.portal.service.NewAccountService;
@@ -347,9 +347,9 @@ public class UserControllerTest {
 
     private static SearchResult<Authority> createSearchResultWithTwoAuthorities() {
         List<Authority> authorities = new ArrayList<Authority>();
-        Authority foo = new JpaAuthority();
+        Authority foo = new AuthorityImpl();
         foo.setAuthority("FOO");
-        Authority bar = new JpaAuthority();
+        Authority bar = new AuthorityImpl();
         bar.setAuthority("BAR");
         authorities.add(foo);
         authorities.add(bar);

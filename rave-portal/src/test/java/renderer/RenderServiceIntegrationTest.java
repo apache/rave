@@ -21,10 +21,7 @@ package renderer;
 
 
 import org.apache.rave.portal.model.*;
-import org.apache.rave.portal.model.impl.PageImpl;
-import org.apache.rave.portal.model.impl.RegionImpl;
-import org.apache.rave.portal.model.impl.RegionWidgetImpl;
-import org.apache.rave.portal.model.impl.WidgetImpl;
+import org.apache.rave.portal.model.impl.*;
 import org.apache.rave.portal.web.renderer.RenderService;
 import org.apache.rave.portal.web.renderer.ScriptLocation;
 import org.apache.rave.portal.web.renderer.ScriptManager;
@@ -85,7 +82,7 @@ public class RenderServiceIntegrationTest {
         ReflectionTestUtils.setField(metadataRepository, "restOperations", restOperations);
 
         //Setup a mock authenticated user
-        final User authUser = new JpaUser(VALID_USER_ID, VALID_USER_NAME);
+        final User authUser = new UserImpl(VALID_USER_ID, VALID_USER_NAME);
         AbstractAuthenticationToken auth = EasyMock.createNiceMock(AbstractAuthenticationToken.class);
         EasyMock.expect(auth.getPrincipal()).andReturn(authUser).anyTimes();
         EasyMock.replay(auth);
@@ -103,7 +100,7 @@ public class RenderServiceIntegrationTest {
 
     @Test
     public void renderOpenSocial() {
-        Page page = new PageImpl(1L, new JpaUser(VALID_USER_ID, VALID_USER_NAME));
+        Page page = new PageImpl(1L, new UserImpl(VALID_USER_ID, VALID_USER_NAME));
         Region region = new RegionImpl(1L, page, 1);
         page.setRegions(Arrays.asList(region));
 

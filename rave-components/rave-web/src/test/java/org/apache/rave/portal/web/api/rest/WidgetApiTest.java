@@ -20,9 +20,7 @@
 package org.apache.rave.portal.web.api.rest;
 
 import org.apache.rave.portal.model.*;
-import org.apache.rave.portal.model.impl.TagImpl;
-import org.apache.rave.portal.model.impl.WidgetCommentImpl;
-import org.apache.rave.portal.model.impl.WidgetTagImpl;
+import org.apache.rave.portal.model.impl.*;
 import org.apache.rave.portal.service.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -34,8 +32,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.easymock.EasyMock.*;
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.sameInstance;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 public class WidgetApiTest {
     private WidgetApi widgetApi;
@@ -49,7 +49,7 @@ public class WidgetApiTest {
     private final Long VALID_USER_ID = 5L;
     private final Long VALID_WIDGET_ID = 10L;
 
-    private JpaUser user;
+    private UserImpl user;
     private List<Tag> tagList;
 
     @Before
@@ -60,8 +60,8 @@ public class WidgetApiTest {
         tagService = createMock(TagService.class);
         widgetTagService = createMock(WidgetTagService.class);
 
-        user = new JpaUser();
-        user.setEntityId(VALID_USER_ID);
+        user = new UserImpl();
+        user.setId(VALID_USER_ID);
 
         tagList = new ArrayList<Tag>();
         tagList.add(new TagImpl("tag1"));
@@ -80,8 +80,8 @@ public class WidgetApiTest {
     public void createWidgetComment() {
         String comment = "new comment";
 
-        JpaWidget widget = new JpaWidget();
-        widget.setEntityId(1L);
+        WidgetImpl widget = new WidgetImpl();
+        widget.setId(1L);
         widget.setComments(new ArrayList<WidgetComment>());
 
         HttpServletResponse httpServletResponse = createMock(HttpServletResponse.class);
@@ -113,7 +113,7 @@ public class WidgetApiTest {
         WidgetComment widgetComment = new WidgetCommentImpl();
         widgetComment.setWidgetId(2L);
         widgetComment.setText(message);
-        widgetComment.setUser(new JpaUser(VALID_USER_ID, "John.Doe"));
+        widgetComment.setUser(new UserImpl(VALID_USER_ID, "John.Doe"));
 
         expect(userService.getAuthenticatedUser()).andReturn(user);
         expect(widgetCommentService.getWidgetComment(3L)).andReturn(null);
@@ -178,17 +178,17 @@ public class WidgetApiTest {
 
     @Test
     public void updateWidgetRating() {
-        WidgetRating widgetRating = new JpaWidgetRating();
+        WidgetRating widgetRating = new WidgetRatingImpl();
         widgetRating.setScore(5);
-        widgetRating.setUserId(2L);
+        widgetRating.setUserId(5L);
         widgetRating.setWidgetId(1L);
         expect(userService.getAuthenticatedUser()).andReturn(user);
-        widgetRatingService.saveWidgetRating(widgetRating);
+        widgetRatingService.saveWidgetRating(eq(widgetRating));
         expectLastCall();
         response.setStatus(HttpStatus.NO_CONTENT.value());
         replay(userService, widgetRatingService, response);
 
-        User user = new JpaUser(2L);
+        User user = new UserImpl(2L);
         widgetApi.setWidgetRating(1L, 5, response);
 
         verify(widgetRatingService, userService, response);
@@ -197,8 +197,8 @@ public class WidgetApiTest {
     @Test
     public void getAllUsers() {
         List<Person> persons = new ArrayList<Person>();
-        persons.add(new JpaPerson());
-        persons.add(new JpaPerson());
+        persons.add(new PersonImpl());
+        persons.add(new PersonImpl());
 
         expect(userService.getAllByAddedWidget(VALID_WIDGET_ID)).andReturn(persons);
         replay(userService);

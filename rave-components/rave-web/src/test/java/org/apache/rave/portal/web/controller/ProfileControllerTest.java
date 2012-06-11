@@ -19,9 +19,12 @@
 
 package org.apache.rave.portal.web.controller;
 
-import org.apache.rave.portal.model.*;
+import org.apache.rave.portal.model.Page;
+import org.apache.rave.portal.model.PageLayout;
+import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.impl.PageImpl;
 import org.apache.rave.portal.model.impl.PageLayoutImpl;
+import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.service.PageService;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.portal.web.util.ModelKeys;
@@ -85,12 +88,12 @@ public class ProfileControllerTest {
 	@Test
 	public void viewPerson_ShouldAddAttributeForUser() {
 		//creating a mock user
-		final JpaUser user = new JpaUser();
+		final UserImpl user = new UserImpl();
 		final ModelMap model = new ModelMap();
 		final int modelSize = 4;
 		final String username="Canonical";
         user.setUsername(username);
-        user.setEntityId(USER_ID);
+        user.setId(USER_ID);
 		String userProfile = new String(ModelKeys.USER_PROFILE);
         Page personProfile = new PageImpl();
         PageLayout pageLayout = new PageLayoutImpl();
@@ -98,7 +101,7 @@ public class ProfileControllerTest {
         personProfile.setPageLayout(pageLayout);
 
 		expect(userService.getUserByUsername(username)).andReturn(user).once();
-        expect(pageService.getPersonProfilePage(user.getEntityId())).andReturn(personProfile);
+        expect(pageService.getPersonProfilePage(user.getId())).andReturn(personProfile);
 
 		replay(userService, pageService);
 
@@ -152,7 +155,7 @@ public class ProfileControllerTest {
 		String userProfile = new String(ModelKeys.USER_PROFILE);
 
 		//creating a mock authenticated user
-		final User authUser = new JpaUser();
+		final User authUser = new UserImpl();
         authUser.setUsername(USERNAME);
 		//set existing status
 		authUser.setStatus("Single");
@@ -163,7 +166,7 @@ public class ProfileControllerTest {
 		authUser.setEmail("testuser@rave.com");
 
 		//creating a mock updated user
-		final User updatedUser = new JpaUser();
+		final User updatedUser = new UserImpl();
 		//set the updated status
 		updatedUser.setStatus("Married");
 		updatedUser.setGivenName("Test");

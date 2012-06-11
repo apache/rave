@@ -20,20 +20,19 @@
 package org.apache.rave.portal.service.impl;
 
 import org.apache.rave.portal.model.Authority;
-import org.apache.rave.portal.model.JpaAuthority;
+import org.apache.rave.portal.model.impl.AuthorityImpl;
 import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.repository.AuthorityRepository;
+import org.apache.rave.portal.service.AuthorityService;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.rave.portal.service.AuthorityService;
 import static org.easymock.EasyMock.*;
-
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
-import static org.hamcrest.CoreMatchers.*;
 
 /**
 Test for {@link org.apache.rave.portal.service.impl.DefaultAuthorityService}
@@ -75,19 +74,17 @@ public class DefaultAuthorityServiceTest {
     }
 
     private static Authority createAuthority() {
-        JpaAuthority authority = new JpaAuthority();
+        AuthorityImpl authority = new AuthorityImpl();
         authority.setAuthority("FOO");
         final long entityId = 123L;
-        authority.setEntityId(entityId);
         return authority;
     }
 
     @Test
     public void getAuthorityById_NotFound() {
-        JpaAuthority authority = new JpaAuthority();
+        AuthorityImpl authority = new AuthorityImpl();
         authority.setAuthority("BAR");
         final long entityId = 456L;
-        authority.setEntityId(entityId);
 
         expect(repository.get(entityId)).andReturn(null);
         replay(repository);
@@ -100,9 +97,9 @@ public class DefaultAuthorityServiceTest {
     @Test
     public void allAuthorities() {
         List<Authority> authorities = new ArrayList<Authority>();
-        Authority foo = new JpaAuthority();
+        Authority foo = new AuthorityImpl();
         foo.setAuthority("FOO");
-        Authority bar = new JpaAuthority();
+        Authority bar = new AuthorityImpl();
         bar.setAuthority("BAR");
         authorities.add(foo);
         authorities.add(bar);
@@ -120,10 +117,10 @@ public class DefaultAuthorityServiceTest {
     @Test
     public void test_getAllDefault() {
         List<Authority> authorities = new ArrayList<Authority>();
-        Authority foo = new JpaAuthority();
+        Authority foo = new AuthorityImpl();
         foo.setAuthority("FOO");
         foo.setDefaultForNewUser(true);
-        Authority bar = new JpaAuthority();
+        Authority bar = new AuthorityImpl();
         bar.setAuthority("BAR");
         bar.setDefaultForNewUser(true);
         

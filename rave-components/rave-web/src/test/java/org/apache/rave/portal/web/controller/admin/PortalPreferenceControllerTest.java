@@ -19,8 +19,8 @@
 
 package org.apache.rave.portal.web.controller.admin;
 
-import org.apache.rave.portal.model.JpaPortalPreference;
 import org.apache.rave.portal.model.PortalPreference;
+import org.apache.rave.portal.model.impl.PortalPreferenceImpl;
 import org.apache.rave.portal.service.PortalPreferenceService;
 import org.apache.rave.portal.web.model.PortalPreferenceForm;
 import org.apache.rave.portal.web.util.ModelKeys;
@@ -40,14 +40,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.expectLastCall;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
+import static junit.framework.Assert.*;
+import static org.easymock.EasyMock.*;
 
 /**
  * Test for {@link PortalPreferenceController}
@@ -169,7 +163,7 @@ public class PortalPreferenceControllerTest {
     public void testUpdatePreferences_invalidPageSizeValue() {
         ModelMap model = new ExtendedModelMap();
         HashMap<String, PortalPreference> preferenceMap = new HashMap<String, PortalPreference>();
-        PortalPreference pageSizePref = new JpaPortalPreference(PortalPreferenceKeys.PAGE_SIZE, "invalid");
+        PortalPreference pageSizePref = new PortalPreferenceImpl(PortalPreferenceKeys.PAGE_SIZE, "invalid");
         preferenceMap.put(PortalPreferenceKeys.PAGE_SIZE, pageSizePref);
         PortalPreferenceForm form = new PortalPreferenceForm(preferenceMap);
         final BindingResult errors = new BeanPropertyBindingResult(form, "form");

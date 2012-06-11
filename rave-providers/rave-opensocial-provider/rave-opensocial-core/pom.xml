@@ -39,6 +39,10 @@
             <groupId>org.apache.rave</groupId>
             <artifactId>rave-core</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.apache.rave</groupId>
+            <artifactId>rave-jpa</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>com.h2database</groupId>

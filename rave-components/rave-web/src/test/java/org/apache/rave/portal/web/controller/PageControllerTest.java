@@ -19,11 +19,14 @@
 
 package org.apache.rave.portal.web.controller;
 
-import org.apache.rave.model.ModelConverter;
-import org.apache.rave.portal.model.*;
-import org.apache.rave.portal.model.conversion.JpaConverter;
+import org.apache.rave.portal.model.Page;
+import org.apache.rave.portal.model.PageInvitationStatus;
+import org.apache.rave.portal.model.PageLayout;
+import org.apache.rave.portal.model.PageUser;
 import org.apache.rave.portal.model.impl.PageImpl;
+import org.apache.rave.portal.model.impl.PageLayoutImpl;
 import org.apache.rave.portal.model.impl.PageUserImpl;
+import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.service.PageLayoutService;
 import org.apache.rave.portal.service.PageService;
 import org.apache.rave.portal.service.UserService;
@@ -60,7 +63,7 @@ public class PageControllerTest {
     private final Long OTHER_PAGE_ID = 22L;
     private final Long USER_ID = 1L;
     private final String VALID_PAGE_LAYOUT_CODE = "layout98";
-    private JpaUser validUser;
+    private UserImpl validUser;
     private PageLayout validPageLayout;
 
     @Before
@@ -73,27 +76,12 @@ public class PageControllerTest {
         model = new ExtendedModelMap();
         request = new MockHttpServletRequest();
 
-        validUser = new JpaUser(USER_ID);
-        validPageLayout = new JpaPageLayout();
+        validUser = new UserImpl(USER_ID);
+        validPageLayout = new PageLayoutImpl();
         validPageLayout.setCode(VALID_PAGE_LAYOUT_CODE);
         defaultPageUser = new PageUserImpl(validUser, defaultPage, 1L);
         defaultPageUser.setPageStatus(PageInvitationStatus.OWNER);
 
-        //TODO:REMOVE WHEN REGION_WIDGET REFACTOR IS COMPLETE
-        ModelConverter converter = createMock(ModelConverter.class);
-        expect(converter.getSourceType()).andReturn(PageLayout.class).anyTimes();
-        expect(converter.convert(isA(PageLayout.class))).andReturn(validPageLayout).anyTimes();
-        //TODO:REMOVE WHEN REGION_WIDGET REFACTOR IS COMPLETE
-        ModelConverter converter2 = createMock(ModelConverter.class);
-        expect(converter2.getSourceType()).andReturn(PageUser.class).anyTimes();
-        expect(converter2.convert(isA(PageUser.class))).andReturn(defaultPageUser).anyTimes();
-        replay(converter, converter2);
-        List<ModelConverter> converters = new ArrayList<ModelConverter>();
-        converters.add(converter);
-        converters.add(converter2);
-        new JpaConverter(converters);
-
-        //END REMOVE
         validUser.setDefaultPageLayout(validPageLayout);
 
         defaultPage = new PageImpl(DEFAULT_PAGE_ID, validUser);
@@ -171,7 +159,7 @@ public class PageControllerTest {
         assertThat(pages.isEmpty(), is(true));
         expect(userService.getAuthenticatedUser()).andReturn(validUser).anyTimes();
         expect(pageService.getAllUserPages(USER_ID)).andReturn(pages).times(2);
-        expect(pageService.addNewDefaultUserPage(validUser.getEntityId())).andReturn(defaultPage);
+        expect(pageService.addNewDefaultUserPage(validUser.getId())).andReturn(defaultPage);
         expect(pageService.getPageFromList(OTHER_PAGE_ID, pages)).andReturn(defaultPage);
         expect(pageLayoutService.getAllUserSelectable()).andReturn(allPageLayouts);
         replay(userService, pageService, pageLayoutService);
@@ -216,7 +204,7 @@ public class PageControllerTest {
         assertThat(pages.isEmpty(), is(true));
         expect(userService.getAuthenticatedUser()).andReturn(validUser).anyTimes();
         expect(pageService.getAllUserPages(USER_ID)).andReturn(pages).times(2);
-        expect(pageService.addNewDefaultUserPage(validUser.getEntityId())).andReturn(defaultPage);
+        expect(pageService.addNewDefaultUserPage(validUser.getId())).andReturn(defaultPage);
         expect(pageService.getDefaultPageFromList(pages)).andReturn(defaultPage);
         expect(pageLayoutService.getAllUserSelectable()).andReturn(allPageLayouts);
         replay(userService, pageService, pageLayoutService);

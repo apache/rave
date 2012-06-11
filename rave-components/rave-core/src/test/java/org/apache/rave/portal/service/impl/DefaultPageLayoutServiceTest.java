@@ -19,8 +19,8 @@
 
 package org.apache.rave.portal.service.impl;
 
-import org.apache.rave.portal.model.JpaPageLayout;
 import org.apache.rave.portal.model.PageLayout;
+import org.apache.rave.portal.model.impl.PageLayoutImpl;
 import org.apache.rave.portal.repository.PageLayoutRepository;
 import org.apache.rave.portal.service.PageLayoutService;
 import org.junit.Before;
@@ -30,9 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.easymock.EasyMock.*;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.hamcrest.CoreMatchers.sameInstance;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 
 public class DefaultPageLayoutServiceTest {
@@ -48,7 +46,7 @@ public class DefaultPageLayoutServiceTest {
         pageLayoutRepository = createMock(PageLayoutRepository.class);      
         pageLayoutService = new DefaultPageLayoutService(pageLayoutRepository);
         
-        validPageLayout = new JpaPageLayout();
+        validPageLayout = new PageLayoutImpl();
         validPageLayout.setCode(VALID_LAYOUT_CODE);
     }
 

@@ -22,6 +22,7 @@ package org.apache.rave.portal.web.api.rest;
 import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.model.impl.TagImpl;
 import org.apache.rave.portal.model.impl.WidgetCommentImpl;
+import org.apache.rave.portal.model.impl.WidgetRatingImpl;
 import org.apache.rave.portal.model.impl.WidgetTagImpl;
 import org.apache.rave.portal.service.*;
 import org.slf4j.Logger;
@@ -135,7 +136,7 @@ public class WidgetApi extends AbstractRestApi {
                                 HttpServletResponse response) {
         logger.debug("POST WidgetRating received for /api/rest/widgets/{} score: {}", widgetId, score);
 
-        WidgetRating widgetRating = new JpaWidgetRating();
+        WidgetRating widgetRating = new WidgetRatingImpl();
         widgetRating.setScore(score);
         widgetRating.setUserId(userService.getAuthenticatedUser().getId());
         widgetRating.setWidgetId(widgetId);

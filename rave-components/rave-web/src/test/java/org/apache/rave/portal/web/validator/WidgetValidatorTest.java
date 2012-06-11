@@ -21,8 +21,8 @@ package org.apache.rave.portal.web.validator;
 
 import org.apache.commons.validator.routines.RegexValidator;
 import org.apache.commons.validator.routines.UrlValidator;
-import org.apache.rave.portal.model.JpaWidget;
 import org.apache.rave.portal.model.Widget;
+import org.apache.rave.portal.model.impl.WidgetImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.validation.Errors;
@@ -44,7 +44,7 @@ public class WidgetValidatorTest {
 
     @Test
     public void testSupports() throws Exception {
-        assertTrue("Supports org.apache.rave.portal.model.Widget", widgetValidator.supports(JpaWidget.class));
+        assertTrue("Supports org.apache.rave.portal.model.Widget", widgetValidator.supports(WidgetImpl.class));
     }
 
   /*

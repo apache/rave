@@ -25,6 +25,7 @@
                            http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd">
 
     <import resource="classpath*:org/apache/rave/core-applicationContext.xml"/>
+    <import resource="classpath*:org/apache/rave/jpa-applicationContext.xml"/>
     <import resource="classpath*:org/apache/rave/web-applicationContext.xml"/>
     <import resource="classpath*:org/apache/rave/opensocial-provider-applicationContext.xml"/>
     <import resource="classpath*:org/apache/rave/w3c-provider-applicationContext.xml"/>

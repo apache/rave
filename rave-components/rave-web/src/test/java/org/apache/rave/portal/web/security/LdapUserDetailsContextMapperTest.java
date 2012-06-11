@@ -19,8 +19,8 @@
 
 package org.apache.rave.portal.web.security;
 
-import org.apache.rave.portal.model.JpaUser;
 import org.apache.rave.portal.model.User;
+import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.service.NewAccountService;
 import org.apache.rave.portal.service.UserService;
 import org.junit.Before;
@@ -32,14 +32,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collections;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.expectLastCall;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
+import static junit.framework.Assert.*;
+import static org.easymock.EasyMock.*;
 
 /**
  * Test class for {@link LdapUserDetailsContextMapper}
@@ -65,7 +59,7 @@ public class LdapUserDetailsContextMapperTest {
         DirContextOperations ctx = createMock(DirContextOperations.class);
 
         final String username = "johnldap";
-        User user = new JpaUser(123L, username);
+        User user = new UserImpl(123L, username);
 
         expect(userService.getUserByUsername(username)).andReturn(null).once();
         expect(ctx.attributeExists(MAIL_ATTRIBUTE_NAME)).andReturn(true);
@@ -89,7 +83,7 @@ public class LdapUserDetailsContextMapperTest {
         DirContextOperations ctx = createMock(DirContextOperations.class);
 
         final String username = "johnldap";
-        User user = new JpaUser(123L, username);
+        User user = new UserImpl(123L, username);
 
         expect(userService.getUserByUsername(username)).andReturn(null).once();
         expect(ctx.attributeExists(MAIL_ATTRIBUTE_NAME)).andReturn(true);
@@ -158,7 +152,7 @@ public class LdapUserDetailsContextMapperTest {
         DirContextOperations ctx = createMock(DirContextOperations.class);
 
         final String username = "johnldap";
-        User user = new JpaUser(123L, username);
+        User user = new UserImpl(123L, username);
 
         expect(userService.getUserByUsername(username)).andReturn(user);
         expectLastCall();
@@ -174,7 +168,7 @@ public class LdapUserDetailsContextMapperTest {
 
     @Test
     public void testMapUserToContext() throws Exception {
-        User user = new JpaUser();
+        User user = new UserImpl();
         DirContextAdapter adapter = new DirContextAdapter();
 
         contextMapper.mapUserToContext(user, adapter);

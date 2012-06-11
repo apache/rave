@@ -19,21 +19,16 @@
 
 package org.apache.rave.portal.web.validator;
 
-import org.apache.rave.portal.model.JpaWidget;
 import org.apache.rave.portal.model.Widget;
+import org.apache.rave.portal.model.impl.WidgetImpl;
 import org.apache.rave.portal.service.WidgetService;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertNotNull;
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
+import static junit.framework.Assert.*;
+import static org.easymock.EasyMock.*;
 
 /**
  * Test class for {@link NewWidgetValidator}
@@ -51,7 +46,7 @@ public class NewWidgetValidatorTest {
 
     @Test
     public void testValidateValidFormData() throws Exception {
-        Widget widget = new JpaWidget();
+        Widget widget = new WidgetImpl();
         widget.setTitle(VALID_TITLE);
         widget.setUrl(VALID_URL);
         widget.setType(VALID_TYPE);
@@ -68,7 +63,7 @@ public class NewWidgetValidatorTest {
 
     @Test
     public void testValidationFailsOnEmptyValues() {
-        Widget widget = new JpaWidget();
+        Widget widget = new WidgetImpl();
         Errors errors = new BindException(widget, WIDGET);
 
         widgetValidator.validate(widget, errors);
@@ -80,14 +75,14 @@ public class NewWidgetValidatorTest {
     public void testValidationFailsOnDuplicateUrl() {
         final String existingUrl = "http://example.com/existing_widget.xml";
 
-        JpaWidget widget = new JpaWidget();
-        widget.setEntityId(123L);
+        WidgetImpl widget = new WidgetImpl();
+        widget.setId(123L);
         widget.setTitle(VALID_TITLE);
         widget.setType(VALID_TYPE);
         widget.setDescription(VALID_DESCRIPTION);
         widget.setUrl(existingUrl);
 
-        Widget newWidget = new JpaWidget();
+        Widget newWidget = new WidgetImpl();
         newWidget.setTitle(VALID_TITLE);
         newWidget.setType(VALID_TYPE);
         newWidget.setDescription(VALID_DESCRIPTION);
@@ -105,7 +100,7 @@ public class NewWidgetValidatorTest {
 
     @Test
     public void testValidationFailsOnInvalidUrl() {
-        Widget widget = new JpaWidget();
+        Widget widget = new WidgetImpl();
         widget.setTitle(VALID_TITLE);
         widget.setType(VALID_TYPE);
         widget.setUrl("http:/this.is/invalid?url=true&reject=true");

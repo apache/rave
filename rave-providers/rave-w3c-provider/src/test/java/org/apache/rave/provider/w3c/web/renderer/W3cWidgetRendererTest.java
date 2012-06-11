@@ -20,12 +20,13 @@
 package org.apache.rave.provider.w3c.web.renderer;
 
 import org.apache.rave.exception.NotSupportedException;
-import org.apache.rave.model.ModelConverter;
-import org.apache.rave.portal.model.*;
-import org.apache.rave.portal.model.conversion.JpaConverter;
-import org.apache.rave.portal.model.conversion.JpaWidgetConverter;
+import org.apache.rave.portal.model.Region;
+import org.apache.rave.portal.model.RegionWidget;
+import org.apache.rave.portal.model.User;
+import org.apache.rave.portal.model.Widget;
 import org.apache.rave.portal.model.impl.RegionImpl;
 import org.apache.rave.portal.model.impl.RegionWidgetImpl;
+import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.model.impl.WidgetImpl;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.portal.service.WidgetProviderService;
@@ -36,9 +37,6 @@ import org.apache.rave.provider.w3c.Constants;
 import org.apache.rave.provider.w3c.service.impl.W3CWidget;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.easymock.EasyMock.*;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -60,11 +58,6 @@ public class W3cWidgetRendererTest {
 
     @Before
     public void setup() {
-        //TODO:REMOVE WHEN REGION_WIDGET REFACTOR IS COMPLETE
-        JpaWidgetConverter converter = new JpaWidgetConverter();
-        List<ModelConverter> converters = new ArrayList<ModelConverter>();
-        converters.add(converter);
-        new JpaConverter(converters);
 
         renderContext = new RenderContext();
         wookieService = createNiceMock(WidgetProviderService.class);
@@ -80,7 +73,7 @@ public class W3cWidgetRendererTest {
 
     @Test
     public void render_valid() {
-        User user = new JpaUser(9999L, "testUser");
+        User user = new UserImpl(9999L, "testUser");
         expect(userService.getAuthenticatedUser()).andReturn(user);
         replay(userService);
         

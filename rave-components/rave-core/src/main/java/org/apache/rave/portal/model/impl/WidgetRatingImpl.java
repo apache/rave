@@ -9,6 +9,16 @@ public class WidgetRatingImpl implements WidgetRating {
     private Long userId;
     private Integer score;
 
+    public WidgetRatingImpl() {
+    }
+
+    public WidgetRatingImpl(long id, long widgetId, long userId, int score) {
+        this.id = id;
+        this.widgetId = widgetId;
+        this.userId = userId;
+        this.score = score;
+    }
+
     public Long getId() {
         return id;
     }

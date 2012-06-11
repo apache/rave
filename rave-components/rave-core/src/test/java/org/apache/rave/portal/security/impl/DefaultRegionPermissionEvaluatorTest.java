@@ -18,11 +18,11 @@
  */
 package org.apache.rave.portal.security.impl;
 
-import org.apache.rave.portal.model.JpaUser;
 import org.apache.rave.portal.model.Page;
 import org.apache.rave.portal.model.Region;
 import org.apache.rave.portal.model.impl.PageImpl;
 import org.apache.rave.portal.model.impl.RegionImpl;
+import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.repository.RegionRepository;
 import org.apache.rave.portal.security.ModelPermissionEvaluator;
 import org.apache.rave.portal.security.util.AuthenticationUtils;
@@ -46,7 +46,7 @@ public class DefaultRegionPermissionEvaluatorTest {
     private RegionRepository mockRegionRepository;
     private Page page;
     private Region region, region2;
-    private JpaUser user, user2;
+    private UserImpl user, user2;
     private Authentication mockAuthentication;
     private List<GrantedAuthority> grantedAuthoritiesList;
 
@@ -62,10 +62,10 @@ public class DefaultRegionPermissionEvaluatorTest {
         defaultRegionPermissionEvaluator = new DefaultRegionPermissionEvaluator(mockRegionRepository);
         mockAuthentication = createMock(Authentication.class);
 
-        user = new JpaUser();
+        user = new UserImpl();
         user.setUsername(VALID_USERNAME);
-        user.setEntityId(VALID_USER_ID);
-        user2 = new JpaUser();
+        user.setId(VALID_USER_ID);
+        user2 = new UserImpl();
         user2.setUsername(VALID_USERNAME2);
         page = new PageImpl();
         page.setId(VALID_PAGE_ID);
