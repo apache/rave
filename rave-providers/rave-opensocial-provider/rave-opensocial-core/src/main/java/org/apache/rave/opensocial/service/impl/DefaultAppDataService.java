@@ -21,7 +21,7 @@ package org.apache.rave.opensocial.service.impl;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.rave.opensocial.model.ApplicationData;
-import org.apache.rave.portal.model.JpaPerson;
+import org.apache.rave.opensocial.model.impl.ApplicationDataImpl;
 import org.apache.rave.portal.model.Person;
 import org.apache.rave.opensocial.repository.ApplicationDataRepository;
 import org.apache.rave.opensocial.service.SimplePersonService;
@@ -163,7 +163,7 @@ public class DefaultAppDataService implements AppDataService {
 
             //if there is no data, create an empty object to store the data in that we'll save when we're done
             if (applicationData == null) {
-                applicationData = new ApplicationData(null, personId, appId, new HashMap<String, String>());
+                applicationData = new ApplicationDataImpl(null, personId, appId, new HashMap<String, String>());
             }
 
             //if the fields parameter is empty, we can just use the values map directly since this is a full update

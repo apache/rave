@@ -29,7 +29,7 @@
       <class>org.apache.rave.portal.model.JpaPersonProperty</class>
       <class>org.apache.rave.portal.model.JpaAddress</class>
       <class>org.apache.rave.portal.model.JpaOrganization</class>
-      <class>org.apache.rave.opensocial.model.ApplicationData</class>
+      <class>org.apache.rave.opensocial.model.JpaApplicationData</class>
       <class>org.apache.rave.opensocial.repository.impl.JpaApplicationDataRepository$JpaSerializableApplicationData</class>
       <class>org.apache.rave.gadgets.oauth.model.JpaOAuthTokenInfo</class>
       <class>org.apache.rave.gadgets.oauth.model.JpaOAuthConsumerStore</class>

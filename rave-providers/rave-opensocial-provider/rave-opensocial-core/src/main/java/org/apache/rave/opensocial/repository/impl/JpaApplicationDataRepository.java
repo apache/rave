@@ -21,27 +21,57 @@ package org.apache.rave.opensocial.repository.impl;
 import org.apache.commons.lang.StringUtils;
 import org.apache.rave.exception.DataSerializationException;
 import org.apache.rave.opensocial.model.ApplicationData;
+import org.apache.rave.opensocial.model.JpaApplicationData;
+import org.apache.rave.opensocial.model.conversion.JpaApplicationDataConverter;
 import org.apache.rave.opensocial.repository.ApplicationDataRepository;
-import org.apache.rave.persistence.jpa.AbstractJpaRepository;
+import org.apache.rave.util.CollectionUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Lob;
-import javax.persistence.TypedQuery;
+import javax.persistence.*;
 import java.util.*;
 
 import static org.apache.rave.persistence.jpa.util.JpaUtil.getSingleResult;
+import static org.apache.rave.persistence.jpa.util.JpaUtil.saveOrUpdate;
 
 @Repository
-public class JpaApplicationDataRepository extends AbstractJpaRepository<ApplicationData>
-        implements ApplicationDataRepository {
+public class JpaApplicationDataRepository implements ApplicationDataRepository {
 
-    public JpaApplicationDataRepository() {
-        super(JpaSerializableApplicationData.class);
+    @PersistenceContext
+    private EntityManager manager;
+
+    @Autowired
+    private JpaApplicationDataConverter converter;
+
+    @Override
+    public Class<? extends ApplicationData> getType() {
+        return JpaApplicationData.class;
+    }
+
+    @Override
+    public ApplicationData get(long id) {
+        JpaSerializableApplicationData applicationData = (JpaSerializableApplicationData) manager.find(JpaApplicationData.class, id);
+        if (applicationData != null) {
+            applicationData.deserializeData();
+        }
+        return applicationData;
+    }
+
+    @Override
+    @Transactional
+    public JpaApplicationData save(ApplicationData item) {
+        JpaApplicationData jpaAppData = converter.convert(item);
+        JpaSerializableApplicationData jpaSerializableApplicationData = getJpaSerializableApplicationData(jpaAppData);
+        jpaSerializableApplicationData.serializeData();
+        return saveOrUpdate(jpaSerializableApplicationData.getEntityId(), manager, jpaSerializableApplicationData);
+    }
+
+    @Override
+    public void delete(ApplicationData item) {
+        manager.remove(item instanceof JpaApplicationData ? item : get(item.getId()));
     }
 
     @Override
@@ -56,23 +86,23 @@ public class JpaApplicationDataRepository extends AbstractJpaRepository<Applicat
             return data;
         }
 
-        TypedQuery<JpaSerializableApplicationData> query = manager.createNamedQuery(ApplicationData.FIND_BY_USER_IDS_AND_APP_ID,
+        TypedQuery<JpaSerializableApplicationData> query = manager.createNamedQuery(JpaApplicationData.FIND_BY_USER_IDS_AND_APP_ID,
                 JpaSerializableApplicationData.class);
-        query.setParameter(ApplicationData.USER_IDS_PARAM, userIds);
-        query.setParameter(ApplicationData.APP_URL_PARAM, appId);
+        query.setParameter(JpaApplicationData.USER_IDS_PARAM, userIds);
+        query.setParameter(JpaApplicationData.APP_URL_PARAM, appId);
         List<JpaSerializableApplicationData> results = query.getResultList();
         for (JpaSerializableApplicationData applicationData : results) {
             applicationData.deserializeData();
         }
-        return new ArrayList<ApplicationData>(results);
+        return CollectionUtils.<ApplicationData>toBaseTypedList(results);
     }
 
     @Override
-    public ApplicationData getApplicationData(String personId, String appId) {
-        TypedQuery<JpaSerializableApplicationData> query = manager.createNamedQuery(ApplicationData.FIND_BY_USER_ID_AND_APP_ID,
+    public JpaApplicationData getApplicationData(String personId, String appId) {
+        TypedQuery<JpaSerializableApplicationData> query = manager.createNamedQuery(JpaApplicationData.FIND_BY_USER_ID_AND_APP_ID,
                 JpaSerializableApplicationData.class);
-        query.setParameter(ApplicationData.USER_ID_PARAM, personId);
-        query.setParameter(ApplicationData.APP_URL_PARAM, appId);
+        query.setParameter(JpaApplicationData.USER_ID_PARAM, personId);
+        query.setParameter(JpaApplicationData.APP_URL_PARAM, appId);
         JpaSerializableApplicationData applicationData = getSingleResult(query.getResultList());
         if (applicationData != null) {
             applicationData.deserializeData();
@@ -80,24 +110,7 @@ public class JpaApplicationDataRepository extends AbstractJpaRepository<Applicat
         return applicationData;
     }
 
-    @Override
-    public ApplicationData get(long id) {
-        JpaSerializableApplicationData applicationData = (JpaSerializableApplicationData) super.get(id);
-        if (applicationData != null) {
-            applicationData.deserializeData();
-        }
-        return applicationData;
-    }
-
-    @Override
-    @Transactional
-    public ApplicationData save(ApplicationData applicationData) {
-        JpaSerializableApplicationData jpaSerializableApplicationData = getJpaSerializableApplicationData(applicationData);
-        jpaSerializableApplicationData.serializeData();
-        return super.save(jpaSerializableApplicationData);
-    }
-
-    private JpaSerializableApplicationData getJpaSerializableApplicationData(ApplicationData applicationData) {
+    private JpaSerializableApplicationData getJpaSerializableApplicationData(JpaApplicationData applicationData) {
         if (applicationData instanceof JpaSerializableApplicationData) {
             return (JpaSerializableApplicationData) applicationData;
         }
@@ -114,7 +127,7 @@ public class JpaApplicationDataRepository extends AbstractJpaRepository<Applicat
      * uses this model for the actual persistence to the database.
      */
     @Entity
-    public static class JpaSerializableApplicationData extends ApplicationData {
+    public static class JpaSerializableApplicationData extends JpaApplicationData {
         @Lob
         @Column(name = "serialized_data")
         private String serializedData;

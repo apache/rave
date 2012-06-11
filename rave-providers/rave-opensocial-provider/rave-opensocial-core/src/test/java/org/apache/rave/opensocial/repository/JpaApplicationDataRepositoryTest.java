@@ -19,6 +19,7 @@
 package org.apache.rave.opensocial.repository;
 
 import org.apache.rave.opensocial.model.ApplicationData;
+import org.apache.rave.opensocial.model.JpaApplicationData;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -66,7 +67,7 @@ public class JpaApplicationDataRepositoryTest {
 
     @Test
     public void get_valid() {
-        ApplicationData applicationData = repository.get(VALID_APPLICATION_DATA_ID);
+        JpaApplicationData applicationData = (JpaApplicationData) repository.get(VALID_APPLICATION_DATA_ID);
         validateApplicationData(applicationData);
     }
 
@@ -78,7 +79,7 @@ public class JpaApplicationDataRepositoryTest {
 
     @Test
     public void getApplicationData_byUserIdAndApplicationId_valid() {
-        ApplicationData applicationData = repository.getApplicationData(VALID_USER_ID, VALID_APPLICATION_ID);
+        JpaApplicationData applicationData = (JpaApplicationData) repository.getApplicationData(VALID_USER_ID, VALID_APPLICATION_ID);
         validateApplicationData(applicationData);
     }
 
@@ -92,7 +93,7 @@ public class JpaApplicationDataRepositoryTest {
     public void getApplicationData_byUserIdsAndApplicationId_valid() {
         List<ApplicationData> applicationData = repository.getApplicationData(Arrays.asList(VALID_USER_ID),
                 VALID_APPLICATION_ID);
-        validateApplicationData(applicationData.get(0));
+        validateApplicationData((JpaApplicationData)applicationData.get(0));
     }
 
     @Test
@@ -109,17 +110,17 @@ public class JpaApplicationDataRepositoryTest {
                 VALID_APPLICATION_ID);
         //Since there is no appdata in the database for "NO-DATA-USER" we should only get back one result
         assertThat(applicationData.size(), is(equalTo(1)));
-        validateApplicationData(applicationData.get(0));
+        validateApplicationData((JpaApplicationData)applicationData.get(0));
     }
 
     @Test
     @Transactional
     @Rollback(true)
     public void save_newEntity() {
-        ApplicationData applicationData = new ApplicationData(null, VALID_USER_ID, SECOND_VALID_APPLICATION_ID,
+        ApplicationData applicationData = new JpaApplicationData(null, VALID_USER_ID, SECOND_VALID_APPLICATION_ID,
                 validApplicationDataMap);
 
-        ApplicationData saved = repository.save(applicationData);
+        JpaApplicationData saved = (JpaApplicationData)repository.save(applicationData);
         manager.flush();
         assertThat(saved.getEntityId(), is(notNullValue()));
     }
@@ -128,16 +129,16 @@ public class JpaApplicationDataRepositoryTest {
     @Transactional
     @Rollback(true)
     public void save_existingEntity() {
-        ApplicationData applicationData = new ApplicationData(VALID_APPLICATION_DATA_ID, VALID_USER_ID,
+        JpaApplicationData applicationData = new JpaApplicationData(VALID_APPLICATION_DATA_ID, VALID_USER_ID,
                 VALID_APPLICATION_ID, new HashMap<String, String>());
 
-        ApplicationData saved = repository.save(applicationData);
+        JpaApplicationData saved = (JpaApplicationData)repository.save(applicationData);
         manager.flush();
         assertThat(saved, is(not(sameInstance(applicationData))));
         assertThat(saved.getEntityId(), is(equalTo(applicationData.getEntityId())));
     }
 
-    private void validateApplicationData(ApplicationData applicationData) {
+    private void validateApplicationData(JpaApplicationData applicationData) {
         assertThat(applicationData, is(not(nullValue())));
         assertThat(applicationData.getEntityId(), is(equalTo(VALID_APPLICATION_DATA_ID)));
         assertThat(applicationData.getUserId(), is(equalTo(VALID_USER_ID)));

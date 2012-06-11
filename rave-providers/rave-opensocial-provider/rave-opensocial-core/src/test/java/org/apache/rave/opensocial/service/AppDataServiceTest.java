@@ -20,6 +20,7 @@
 package org.apache.rave.opensocial.service;
 
 import org.apache.rave.opensocial.model.ApplicationData;
+import org.apache.rave.opensocial.model.impl.ApplicationDataImpl;
 import org.apache.rave.portal.model.JpaPerson;
 import org.apache.rave.portal.model.Person;
 import org.apache.rave.opensocial.repository.ApplicationDataRepository;
@@ -75,7 +76,7 @@ public class AppDataServiceTest {
         validApplicationDataMap.put("color", "blue");
         validApplicationDataMap.put("speed", "fast");
         validApplicationDataMap.put("state", "MA");
-        validApplicationData = new ApplicationData(VALID_APPLICATION_DATA_ID, VALID_VIEWER_ID, VALID_APPLICATION_ID,
+        validApplicationData = new ApplicationDataImpl(VALID_APPLICATION_DATA_ID, VALID_VIEWER_ID, VALID_APPLICATION_ID,
                 validApplicationDataMap);
 
         validPerson = new JpaPerson();
@@ -163,7 +164,7 @@ public class AppDataServiceTest {
 
     @Test
     public void deletePersonData_validRequest_emptyApplicationData() throws Exception {
-        ApplicationData applicationData = new ApplicationData();
+        ApplicationData applicationData = new ApplicationDataImpl();
         testDeletePersonDataNoAppDataExpected(applicationData);
     }
 
@@ -306,11 +307,11 @@ public class AppDataServiceTest {
 
         appDataService.deletePersonData(userId, groupId, VALID_APPLICATION_ID, fieldsToDelete, securityToken);
 
-        ApplicationData expectedApplicationData = new ApplicationData(applicationData.getEntityId(),
+        ApplicationData expectedApplicationData = new ApplicationDataImpl(applicationData.getId(),
                 applicationData.getUserId(), applicationData.getAppUrl(), expectedApplicationDataAfterDelete);
 
         ApplicationData actualApplicationData = capturedApplicationData.getValue();
-        assertEquals(expectedApplicationData.getEntityId(), actualApplicationData.getEntityId());
+        assertEquals(expectedApplicationData.getId(), actualApplicationData.getId());
         assertEquals(expectedApplicationData.getUserId(), actualApplicationData.getUserId());
         assertEquals(expectedApplicationData.getAppUrl(), actualApplicationData.getAppUrl());
         assertEquals(expectedApplicationData.getData(), actualApplicationData.getData());
@@ -366,13 +367,13 @@ public class AppDataServiceTest {
 
         appDataService.updatePersonData(userId, groupId, VALID_APPLICATION_ID, fields, values, securityToken);
 
-        ApplicationData expectedApplicationData = applicationData == null ? new ApplicationData(null, VALID_USER_ID,
+        ApplicationDataImpl expectedApplicationData = applicationData == null ? new ApplicationDataImpl(null, VALID_USER_ID,
                 VALID_APPLICATION_ID, expectedApplicationDataAfterUpdate) :
-                new ApplicationData(applicationData.getEntityId(), applicationData.getUserId(),
+                new ApplicationDataImpl(applicationData.getId(), applicationData.getUserId(),
                         applicationData.getAppUrl(), expectedApplicationDataAfterUpdate);
 
         ApplicationData actualApplicationData = capturedApplicationData.getValue();
-        assertEquals(expectedApplicationData.getEntityId(), actualApplicationData.getEntityId());
+        assertEquals(expectedApplicationData.getId(), actualApplicationData.getId());
         assertEquals(expectedApplicationData.getUserId(), actualApplicationData.getUserId());
         assertEquals(expectedApplicationData.getAppUrl(), actualApplicationData.getAppUrl());
         assertEquals(expectedApplicationData.getData(), actualApplicationData.getData());
