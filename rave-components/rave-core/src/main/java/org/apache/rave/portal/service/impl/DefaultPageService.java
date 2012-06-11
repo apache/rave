@@ -98,9 +98,12 @@ public class DefaultPageService implements PageService {
 
     @Override
     public Page getPageFromList(long pageId, List<Page> pages) {
-        Page pageToFind = new PageImpl(pageId);
-        int index = pages.indexOf(pageToFind);
-        return index == -1 ? null : pages.get(index);
+       for(Page page: pages) {
+           if(page.getId().equals(pageId)){
+               return page;
+           }
+       }
+       return null;
     }
 
     @Override
