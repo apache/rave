@@ -19,51 +19,80 @@
 
 package org.apache.rave.portal.repository.impl;
 
-import org.apache.rave.persistence.jpa.AbstractJpaRepository;
 import org.apache.rave.portal.model.Authority;
+import org.apache.rave.portal.model.JpaAuthority;
+import org.apache.rave.portal.model.conversion.JpaAuthorityConverter;
 import org.apache.rave.portal.repository.AuthorityRepository;
+import org.apache.rave.util.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
 import static org.apache.rave.persistence.jpa.util.JpaUtil.getSingleResult;
+import static org.apache.rave.persistence.jpa.util.JpaUtil.saveOrUpdate;
 
 /**
  * JPA implementation for {@link org.apache.rave.portal.repository.AuthorityRepository}
  */
 @Repository
-public class JpaAuthorityRepository extends AbstractJpaRepository<Authority>
-        implements AuthorityRepository {
+public class JpaAuthorityRepository implements AuthorityRepository {
 
-    public JpaAuthorityRepository() {
-        super(Authority.class);
-    }
+    @PersistenceContext
+    private EntityManager manager;
+
+    @Autowired
+    private JpaAuthorityConverter converter;
+
 
     @Override
     public Authority getByAuthority(String authorityName) {
-        TypedQuery<Authority> query = manager.createNamedQuery(Authority.GET_BY_AUTHORITY_NAME, Authority.class);
-        query.setParameter(Authority.PARAM_AUTHORITY_NAME, authorityName);
+        TypedQuery<JpaAuthority> query = manager.createNamedQuery(JpaAuthority.GET_BY_AUTHORITY_NAME, JpaAuthority.class);
+        query.setParameter(JpaAuthority.PARAM_AUTHORITY_NAME, authorityName);
         return getSingleResult(query.getResultList());
     }
 
     @Override
     public List<Authority> getAll() {
-        TypedQuery<Authority> query = manager.createNamedQuery(Authority.GET_ALL, Authority.class);
-        return query.getResultList();
+        TypedQuery<JpaAuthority> query = manager.createNamedQuery(JpaAuthority.GET_ALL, JpaAuthority.class);
+        return CollectionUtils.<Authority>toBaseTypedList(query.getResultList());
     }
     
     @Override
     public List<Authority> getAllDefault() {
-        TypedQuery<Authority> query = manager.createNamedQuery(Authority.GET_ALL_DEFAULT, Authority.class);
-        return query.getResultList();
+        TypedQuery<JpaAuthority> query = manager.createNamedQuery(JpaAuthority.GET_ALL_DEFAULT, JpaAuthority.class);
+        return CollectionUtils.<Authority>toBaseTypedList(query.getResultList());
     }    
 
     @Override
     public int getCountAll() {
-        Query query = manager.createNamedQuery(Authority.COUNT_ALL);
+        Query query = manager.createNamedQuery(JpaAuthority.COUNT_ALL);
         Number countResult = (Number) query.getSingleResult();
         return countResult.intValue();
+    }
+
+    @Override
+    public Class<? extends Authority> getType() {
+        return JpaAuthority.class;
+    }
+
+    @Override
+    public Authority get(long id) {
+        return manager.find(JpaAuthority.class, id);
+    }
+
+    @Override
+    public Authority save(Authority item) {
+        JpaAuthority authority = converter.convert(item);
+        return saveOrUpdate(authority.getEntityId(), manager, authority);
+    }
+
+    @Override
+    public void delete(Authority item) {
+        manager.remove(converter.convert(item));
     }
 }

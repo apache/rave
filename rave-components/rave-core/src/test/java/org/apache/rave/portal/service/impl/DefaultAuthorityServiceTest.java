@@ -20,9 +20,9 @@
 package org.apache.rave.portal.service.impl;
 
 import org.apache.rave.portal.model.Authority;
+import org.apache.rave.portal.model.JpaAuthority;
 import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.repository.AuthorityRepository;
-import org.apache.rave.portal.service.impl.DefaultAuthorityService;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -75,7 +75,7 @@ public class DefaultAuthorityServiceTest {
     }
 
     private static Authority createAuthority() {
-        Authority authority = new Authority();
+        JpaAuthority authority = new JpaAuthority();
         authority.setAuthority("FOO");
         final long entityId = 123L;
         authority.setEntityId(entityId);
@@ -84,7 +84,7 @@ public class DefaultAuthorityServiceTest {
 
     @Test
     public void getAuthorityById_NotFound() {
-        Authority authority = new Authority();
+        JpaAuthority authority = new JpaAuthority();
         authority.setAuthority("BAR");
         final long entityId = 456L;
         authority.setEntityId(entityId);
@@ -100,9 +100,9 @@ public class DefaultAuthorityServiceTest {
     @Test
     public void allAuthorities() {
         List<Authority> authorities = new ArrayList<Authority>();
-        Authority foo = new Authority();
+        Authority foo = new JpaAuthority();
         foo.setAuthority("FOO");
-        Authority bar = new Authority();
+        Authority bar = new JpaAuthority();
         bar.setAuthority("BAR");
         authorities.add(foo);
         authorities.add(bar);
@@ -120,10 +120,10 @@ public class DefaultAuthorityServiceTest {
     @Test
     public void test_getAllDefault() {
         List<Authority> authorities = new ArrayList<Authority>();
-        Authority foo = new Authority();
+        Authority foo = new JpaAuthority();
         foo.setAuthority("FOO");
         foo.setDefaultForNewUser(true);
-        Authority bar = new Authority();
+        Authority bar = new JpaAuthority();
         bar.setAuthority("BAR");
         bar.setDefaultForNewUser(true);
         

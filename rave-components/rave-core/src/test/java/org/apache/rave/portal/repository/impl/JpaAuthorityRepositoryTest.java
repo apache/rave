@@ -20,7 +20,10 @@
 package org.apache.rave.portal.repository.impl;
 
 import org.apache.rave.portal.model.Authority;
+import org.apache.rave.portal.model.JpaAuthority;
 import org.apache.rave.portal.model.User;
+import org.apache.rave.portal.repository.AuthorityRepository;
+import org.apache.rave.portal.repository.UserRepository;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,10 +36,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 
-import org.apache.rave.portal.repository.AuthorityRepository;
-import org.apache.rave.portal.repository.UserRepository;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
-import static org.hamcrest.CoreMatchers.*;
 
 /**
  *
@@ -59,7 +60,7 @@ public class JpaAuthorityRepositoryTest {
 
     @Test
     public void getById_validId() {
-        final Authority authority = repository.get(VALID_ID);
+        final JpaAuthority authority = (JpaAuthority)repository.get(VALID_ID);
         assertNotNull(authority);
         assertEquals(VALID_ID, authority.getEntityId());
     }
@@ -94,7 +95,7 @@ public class JpaAuthorityRepositoryTest {
     @Test
     public void addOrDeleteAuthorityDoesNotAffectUser() {
         final String authorityName = "guest";
-        Authority authority = new Authority();
+        Authority authority = new JpaAuthority();
         authority.setAuthority(authorityName);
         User user = userRepository.get(1L);
 

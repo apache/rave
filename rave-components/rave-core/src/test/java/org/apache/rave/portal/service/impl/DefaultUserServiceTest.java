@@ -131,7 +131,7 @@ public class DefaultUserServiceTest {
     @Test
     public void setAuthenticatedUser_validRole() {
         final User authUser = new User(USER_ID);
-        final Authority userRole = new Authority();
+        final Authority userRole = new JpaAuthority();
         userRole.setAuthority("admin");
         authUser.addAuthority(userRole);
         expect(userRepository.get(USER_ID)).andReturn(authUser).anyTimes();

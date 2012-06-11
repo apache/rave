@@ -19,20 +19,8 @@
 
 package org.apache.rave.portal.web.controller.admin;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.createNiceMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.expectLastCall;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.rave.portal.model.Authority;
+import org.apache.rave.portal.model.JpaAuthority;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.service.AuthorityService;
@@ -52,6 +40,12 @@ import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static junit.framework.Assert.*;
+import static org.easymock.EasyMock.*;
 
 /**
  * Test for {@link UserController}
@@ -352,9 +346,9 @@ public class UserControllerTest {
 
     private static SearchResult<Authority> createSearchResultWithTwoAuthorities() {
         List<Authority> authorities = new ArrayList<Authority>();
-        Authority foo = new Authority();
+        Authority foo = new JpaAuthority();
         foo.setAuthority("FOO");
-        Authority bar = new Authority();
+        Authority bar = new JpaAuthority();
         bar.setAuthority("BAR");
         authorities.add(foo);
         authorities.add(bar);

@@ -108,7 +108,7 @@ public class UserTest {
         User user = new User(123L, "DummyUser");
 
         Collection<Authority> authorities = new ArrayList<Authority>();
-        Authority authority = new Authority();
+        JpaAuthority authority = new JpaAuthority();
         authority.setEntityId(456L);
         authority.setAuthority("DummyAuthority");
         authority.addUser(user);

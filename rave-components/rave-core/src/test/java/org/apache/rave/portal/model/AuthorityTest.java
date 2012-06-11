@@ -25,13 +25,13 @@ import org.springframework.security.core.GrantedAuthority;
 import static junit.framework.Assert.assertEquals;
 
 /**
- * Test for {@link Authority}
+ * Test for {@link JpaAuthority}
  */
 public class AuthorityTest {
 
     @Test
     public void testAuthority() throws Exception {
-        GrantedAuthority grantedAuthority = new Authority();
+        GrantedAuthority grantedAuthority = new JpaAuthority();
         ((Authority) grantedAuthority).setAuthority("user");
         assertEquals("user", grantedAuthority.getAuthority());
 

@@ -24,7 +24,7 @@ import org.junit.Test;
 import static junit.framework.Assert.assertEquals;
 
 /**
- * Test for {@link org.apache.rave.portal.model.Authority}
+ * Test for {@link JpaAuthority}
  */
 public class TagTest {
 

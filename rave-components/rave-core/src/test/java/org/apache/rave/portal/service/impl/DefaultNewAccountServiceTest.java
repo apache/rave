@@ -19,17 +19,8 @@
 
 package org.apache.rave.portal.service.impl;
 
-import static junit.framework.Assert.fail;
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.expectLastCall;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.rave.portal.model.Authority;
+import org.apache.rave.portal.model.JpaAuthority;
 import org.apache.rave.portal.model.JpaPageLayout;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.util.SearchResult;
@@ -44,6 +35,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.util.ReflectionTestUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static junit.framework.Assert.fail;
+import static org.easymock.EasyMock.*;
 
 /**
  * Test class for {@link org.apache.rave.portal.service.impl.DefaultNewAccountService}
@@ -82,9 +79,9 @@ public class DefaultNewAccountServiceTest {
         validPageLayout.setNumberOfRegions(4L);
         validPageLayout.setCode(VALID_LAYOUT_CODE);
 
-        Authority role1 = new Authority();
+        Authority role1 = new JpaAuthority();
         role1.setAuthority("DEFAULT_ROLE1");
-        Authority role2 = new Authority();
+        Authority role2 = new JpaAuthority();
         role2.setAuthority("DEFAULT_ROLE2");
 
         validAuthorityList = new ArrayList<Authority>();

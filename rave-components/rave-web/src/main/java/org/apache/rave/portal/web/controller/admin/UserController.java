@@ -27,6 +27,7 @@ import static org.apache.rave.portal.web.controller.admin.AdminControllerUtil.is
 import java.beans.PropertyEditorSupport;
 
 import org.apache.rave.portal.model.Authority;
+import org.apache.rave.portal.model.JpaAuthority;
 import org.apache.rave.portal.model.PortalPreference;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.util.SearchResult;
@@ -95,7 +96,7 @@ public class UserController {
     @InitBinder(value = {"user"})
     public void initBinder(WebDataBinder dataBinder) {
         dataBinder.registerCustomEditor(GrantedAuthority.class, new AuthorityEditor());
-        dataBinder.registerCustomEditor(Authority.class, new AuthorityEditor());
+        dataBinder.registerCustomEditor(JpaAuthority.class, new AuthorityEditor());
         dataBinder.setDisallowedFields("entityId", "username", "password", "confirmPassword");
     }
 
@@ -254,7 +255,7 @@ public class UserController {
 
 
     /**
-     * Mapping between the submitted form value and an {@link Authority}
+     * Mapping between the submitted form value and an {@link org.apache.rave.portal.model.JpaAuthority}
      */
     private class AuthorityEditor extends PropertyEditorSupport {
 

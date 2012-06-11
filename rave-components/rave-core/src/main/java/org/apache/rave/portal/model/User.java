@@ -115,7 +115,7 @@ public class User extends JpaPerson implements UserDetails, BasicEntity, Seriali
             @JoinColumn(name = "user_id", referencedColumnName = "entity_id"),
             inverseJoinColumns =
             @JoinColumn(name = "authority_id", referencedColumnName = "entity_id"))
-    private Collection<Authority> authorities;
+    private Collection<JpaAuthority> authorities;
 
     public User() {
         this(null, null);
@@ -129,7 +129,7 @@ public class User extends JpaPerson implements UserDetails, BasicEntity, Seriali
         super();
         this.entityId = entityId;
         this.username = username;
-        this.authorities = new ArrayList<Authority>();
+        this.authorities = new ArrayList<JpaAuthority>();
     }
 
     /**
@@ -155,8 +155,9 @@ public class User extends JpaPerson implements UserDetails, BasicEntity, Seriali
     }
 
     public void addAuthority(Authority authority) {
-        if (!authorities.contains(authority)) {
-            authorities.add(authority);
+        JpaAuthority converted = JpaConverter.getInstance().convert(authority, Authority.class);
+        if (!authorities.contains(converted)) {
+            authorities.add(converted);
         }
         if (!authority.getUsers().contains(this)) {
             authority.addUser(this);
@@ -164,13 +165,17 @@ public class User extends JpaPerson implements UserDetails, BasicEntity, Seriali
     }
 
     public void removeAuthority(Authority authority) {
-        if (authorities.contains(authority)) {
-            authorities.remove(authority);
+        JpaAuthority converted = JpaConverter.getInstance().convert(authority, Authority.class);
+        if (authorities.contains(converted)) {
+            authorities.remove(converted);
         }
     }
 
     public void setAuthorities(Collection<Authority> newAuthorities) {
-        this.authorities = newAuthorities;
+        this.getAuthorities().clear();
+        if(newAuthorities != null) {
+            this.getAuthorities().addAll(newAuthorities);
+        }
     }
 
     /**
@@ -299,7 +304,7 @@ public class User extends JpaPerson implements UserDetails, BasicEntity, Seriali
 
     @PreRemove
     public void preRemove() {
-        for (Authority authority : authorities) {
+        for (JpaAuthority authority : authorities) {
             authority.removeUser(this);
         }
         this.authorities = Collections.emptyList();
@@ -338,7 +343,7 @@ public class User extends JpaPerson implements UserDetails, BasicEntity, Seriali
         sb.append(", openId='").append(openId).append('\'');
         sb.append(", authorities=[");
         boolean first=true;
-        for (Authority a : authorities) {
+        for (JpaAuthority a : authorities) {
             if (!first) {
                 sb.append(',');
             }

@@ -5,8 +5,13 @@ import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.model.impl.AddressImpl;
 import org.apache.rave.portal.model.impl.GroupImpl;
 import org.apache.rave.portal.model.impl.PersonImpl;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -14,11 +19,19 @@ import java.util.List;
 
 import static org.easymock.EasyMock.*;
 import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertThat;
 
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = {"classpath:test-dataContext.xml", "classpath:test-applicationContext.xml"})
 public class JpaConverterTest {
 
     private List<ModelConverter> converters;
+
+    //Inject the list of converters from the context to work around any issues that arise during testing
+    @Autowired
+    private List<ModelConverter> originalConverters;
 
     @Before
     public void setup() throws NoSuchFieldException, IllegalAccessException {
@@ -32,6 +45,11 @@ public class JpaConverterTest {
         expect(addressConverter.convert(isA(AddressImpl.class))).andReturn(new JpaAddress());
         replay(addressConverter);
 
+        ModelConverter pageLayoutConverter = createMock(ModelConverter.class);
+        expect(pageLayoutConverter.getSourceType()).andReturn(Address.class).anyTimes();
+        expect(pageLayoutConverter.convert(isA(PageLayout.class))).andReturn(new JpaPageLayout());
+        replay(pageLayoutConverter);
+
         List<ModelConverter> converters = new ArrayList<ModelConverter>();
         converters.add(personConverter);
         converters.add(addressConverter);
@@ -39,6 +57,12 @@ public class JpaConverterTest {
         Field instance = JpaConverter.class.getDeclaredField("instance");
         instance.setAccessible(true);
         instance.set(null, null);
+    }
+
+    @After
+    public void tearDown() {
+        //Replace the instance of converters with the one from the context
+        new JpaConverter(originalConverters);
     }
 
     @Test(expected=IllegalStateException.class)
