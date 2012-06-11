@@ -23,7 +23,6 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import org.apache.rave.opensocial.service.impl.DefaultPersonService;
 import org.apache.rave.persistence.BasicEntity;
-import org.apache.rave.persistence.jpa.AbstractJpaRepository;
 import org.apache.shindig.social.opensocial.spi.PersonService;
 import org.junit.Before;
 import org.junit.Test;
@@ -34,12 +33,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.hamcrest.CoreMatchers.sameInstance;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -85,10 +79,26 @@ public class SpringBindingModuleTest {
     public static interface TestRepo extends org.apache.rave.persistence.Repository<BasicEntity> {}
 
     @Repository
-    public static class JpaTestRepo extends AbstractJpaRepository<BasicEntity> implements TestRepo {
+    public static class JpaTestRepo implements TestRepo {
 
-        protected JpaTestRepo() {
-            super(BasicEntity.class);
+        @Override
+        public Class<? extends BasicEntity> getType() {
+            return null;  //To change body of implemented methods use File | Settings | File Templates.
+        }
+
+        @Override
+        public BasicEntity get(long id) {
+            return null;  //To change body of implemented methods use File | Settings | File Templates.
+        }
+
+        @Override
+        public BasicEntity save(BasicEntity item) {
+            return null;  //To change body of implemented methods use File | Settings | File Templates.
+        }
+
+        @Override
+        public void delete(BasicEntity item) {
+            //To change body of implemented methods use File | Settings | File Templates.
         }
     }
 }

@@ -19,20 +19,16 @@
 
 package org.apache.rave.gadgets.oauth.repository.impl;
 
+import org.apache.rave.gadgets.oauth.model.JpaOAuthConsumerStore;
+import org.apache.rave.gadgets.oauth.model.OAuthConsumerStore;
+import org.apache.rave.gadgets.oauth.model.conversion.JpaOAuthConsumerStoreConverter;
+import org.apache.rave.gadgets.oauth.repository.OAuthConsumerStoreRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-
-import org.apache.rave.gadgets.oauth.model.JpaOAuthConsumerStore;
-import org.apache.rave.gadgets.oauth.model.JpaOAuthTokenInfo;
-import org.apache.rave.gadgets.oauth.model.OAuthConsumerStore;
-import org.apache.rave.gadgets.oauth.model.OAuthTokenInfo;
-import org.apache.rave.gadgets.oauth.model.conversion.JpaOAuthConsumerStoreConverter;
-import org.apache.rave.gadgets.oauth.model.conversion.JpaOAuthTokenInfoConverter;
-import org.apache.rave.gadgets.oauth.repository.OAuthConsumerStoreRepository;
-import org.apache.rave.persistence.jpa.AbstractJpaRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 
 import static org.apache.rave.persistence.jpa.util.JpaUtil.getSingleResult;
 import static org.apache.rave.persistence.jpa.util.JpaUtil.saveOrUpdate;
