@@ -235,7 +235,6 @@ public class JpaPerson implements BasicEntity, Person {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public List<Address> getAddresses() {
         return ConvertingListProxyFactory.createProxyList(Address.class, addresses);
     }
@@ -252,7 +251,6 @@ public class JpaPerson implements BasicEntity, Person {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public List<PersonProperty> getProperties() {
         return ConvertingListProxyFactory.createProxyList(PersonProperty.class, this.properties);
     }
@@ -269,7 +267,6 @@ public class JpaPerson implements BasicEntity, Person {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public List<Person> getFriends() {
         return ConvertingListProxyFactory.createProxyList(Person.class, friends);
     }
@@ -287,7 +284,6 @@ public class JpaPerson implements BasicEntity, Person {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public List<Organization> getOrganizations() {
         return ConvertingListProxyFactory.createProxyList(Organization.class, organizations);
     }

@@ -19,16 +19,12 @@
 package org.apache.rave.portal.web.api.rest;
 
 import org.apache.rave.portal.model.impl.*;
-import org.junit.Ignore;
 import org.apache.rave.portal.model.*;
-import org.junit.runner.RunWith;
 import org.springframework.http.HttpStatus;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.apache.rave.portal.service.PageService;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.ArrayList;
 
@@ -73,7 +69,7 @@ public class PageApiTest {
         region.setRegionWidgets(new ArrayList<RegionWidget>());
         RegionWidget w = new RegionWidgetImpl();
         w.setPreferences(new ArrayList<RegionWidgetPreference>());
-        w.getPreferences().add(new RegionWidgetPreference());
+        w.getPreferences().add(new JpaRegionWidgetPreference());
         region.getRegionWidgets().add(w);
         p.getRegions().add(region);
 

@@ -19,11 +19,13 @@
 package org.apache.rave.portal.model;
 
 import org.apache.rave.persistence.BasicEntity;
+import org.apache.rave.portal.model.conversion.ConvertingListProxyFactory;
 import org.apache.rave.portal.model.conversion.JpaConverter;
 import org.codehaus.jackson.annotate.JsonBackReference;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -78,7 +80,7 @@ public class JpaRegionWidget implements BasicEntity, Serializable, RegionWidget 
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "region_widget_id", referencedColumnName = "entity_id")
-    private List<RegionWidgetPreference> preferences;
+    private List<JpaRegionWidgetPreference> preferences;
 
     @Basic(optional = false)
     @Column(name = "locked")
@@ -220,12 +222,18 @@ public class JpaRegionWidget implements BasicEntity, Serializable, RegionWidget 
      */
     @Override
     public List<RegionWidgetPreference> getPreferences() {
-        return preferences;
+        return ConvertingListProxyFactory.createProxyList(RegionWidgetPreference.class, preferences);
     }
 
     @Override
     public void setPreferences(List<RegionWidgetPreference> preferences) {
-        this.preferences = preferences;
+        if(this.preferences == null) {
+            this.preferences = new ArrayList<JpaRegionWidgetPreference>();
+        }
+        this.getPreferences().clear();
+        if(preferences != null) {
+            this.getPreferences().addAll(preferences);
+        }
     }
 
     @Override

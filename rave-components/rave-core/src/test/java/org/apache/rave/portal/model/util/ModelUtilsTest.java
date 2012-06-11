@@ -19,7 +19,9 @@
 
 package org.apache.rave.portal.model.util;
 
+import org.apache.rave.portal.model.JpaRegionWidgetPreference;
 import org.apache.rave.portal.model.RegionWidgetPreference;
+import org.apache.rave.portal.model.impl.RegionWidgetPreferenceImpl;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -32,7 +34,7 @@ public class ModelUtilsTest {
 
     @Test
     public void normalizeRegionWidgetPreference() {
-        RegionWidgetPreference testPreference = new RegionWidgetPreference(null, null, "camelCaseName", "FOO");
+        RegionWidgetPreference testPreference = new JpaRegionWidgetPreference(null, null, "camelCaseName", "FOO");
         ModelUtils.normalizeRegionWidgetPreference(VALID_REGION_WIDGET_ID, testPreference);
 
         assertTrue(testPreference.getRegionWidgetId() == VALID_REGION_WIDGET_ID);
@@ -48,8 +50,8 @@ public class ModelUtilsTest {
     }
 
     public List<RegionWidgetPreference> getTestRegionWidgetPreferences() {
-        return Arrays.asList(new RegionWidgetPreference(null, null, "camelCaseName", "FOO"),
-                new RegionWidgetPreference(null, 20L, "lowercasename", "FOO"),
-                new RegionWidgetPreference(null, -100L, "UPPERCASENAME", "FOO"));
+        return Arrays.asList((RegionWidgetPreference)new RegionWidgetPreferenceImpl( null, "camelCaseName", "FOO"),
+                (RegionWidgetPreference)new RegionWidgetPreferenceImpl(20L, "lowercasename", "FOO"),
+                (RegionWidgetPreference)new RegionWidgetPreferenceImpl( -100L, "UPPERCASENAME", "FOO"));
     }
 }

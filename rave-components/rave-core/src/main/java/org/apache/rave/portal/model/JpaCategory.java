@@ -162,9 +162,8 @@ public class JpaCategory implements BasicEntity, Serializable, Category {
 
     @JsonIgnore
     @Override
-    @SuppressWarnings("unchecked")
     public List<Widget> getWidgets() {
-        return ConvertingListProxyFactory.createProxyList(JpaWidget.class, widgets);
+        return ConvertingListProxyFactory.createProxyList(Widget.class, widgets);
     }
 
     @Override

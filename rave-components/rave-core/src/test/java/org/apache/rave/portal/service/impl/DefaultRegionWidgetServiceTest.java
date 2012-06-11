@@ -21,11 +21,11 @@ package org.apache.rave.portal.service.impl;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.rave.portal.model.JpaRegionWidget;
+import org.apache.rave.portal.model.JpaRegionWidgetPreference;
 import org.apache.rave.portal.model.RegionWidget;
 import org.apache.rave.portal.model.RegionWidgetPreference;
 import org.apache.rave.portal.repository.RegionWidgetRepository;
-import org.apache.rave.portal.service.impl.DefaultRegionWidgetService;
-import static org.hamcrest.CoreMatchers.*;
+import org.apache.rave.portal.service.RegionWidgetService;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -34,8 +34,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.rave.portal.service.RegionWidgetService;
 import static org.easymock.EasyMock.*;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
@@ -106,9 +106,9 @@ public class DefaultRegionWidgetServiceTest {
         replay(regionWidgetRepository);
 
         //Add and update a preference.
-        RegionWidgetPreference newPreference = new RegionWidgetPreference(null, null, "age", "30");
+        RegionWidgetPreference newPreference = new JpaRegionWidgetPreference(null, null, "age", "30");
         RegionWidgetPreference savedNewPreference = regionWidgetService.saveRegionWidgetPreference(VALID_REGION_WIDGET_ID, newPreference);
-        RegionWidgetPreference updatedPreference = new RegionWidgetPreference(null, null, "color", "purple");
+        RegionWidgetPreference updatedPreference = new JpaRegionWidgetPreference(null, null, "color", "purple");
         RegionWidgetPreference savedUpdatedPreference = regionWidgetService.saveRegionWidgetPreference(VALID_REGION_WIDGET_ID, updatedPreference);
 
         //Make sure the new and updated preference got mixed in properly with the existing preferences.
@@ -180,8 +180,8 @@ public class DefaultRegionWidgetServiceTest {
 
     private List<RegionWidgetPreference> getTestExistingRegionWidgetPreferences() {
         ArrayList<RegionWidgetPreference> regionWidgetPreferences = new ArrayList<RegionWidgetPreference>();
-        regionWidgetPreferences.add(new RegionWidgetPreference(1L, VALID_REGION_WIDGET_ID, "color", "blue"));
-        regionWidgetPreferences.add(new RegionWidgetPreference(2L, VALID_REGION_WIDGET_ID, "speed", "fast"));
+        regionWidgetPreferences.add(new JpaRegionWidgetPreference(1L, VALID_REGION_WIDGET_ID, "color", "blue"));
+        regionWidgetPreferences.add(new JpaRegionWidgetPreference(2L, VALID_REGION_WIDGET_ID, "speed", "fast"));
         return regionWidgetPreferences;
     }
 
@@ -189,7 +189,7 @@ public class DefaultRegionWidgetServiceTest {
         List<RegionWidgetPreference> regionWidgetPreferences = getTestExistingRegionWidgetPreferences();
         regionWidgetPreferences.remove(0);
         regionWidgetPreferences.get(0).setValue("slow");
-        regionWidgetPreferences.add(new RegionWidgetPreference(null, VALID_REGION_WIDGET_ID, "size", "small"));
+        regionWidgetPreferences.add(new JpaRegionWidgetPreference(null, VALID_REGION_WIDGET_ID, "size", "small"));
         return regionWidgetPreferences;
     }
 }

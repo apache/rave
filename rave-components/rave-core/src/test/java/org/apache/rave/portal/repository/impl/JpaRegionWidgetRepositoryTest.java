@@ -20,8 +20,10 @@
 package org.apache.rave.portal.repository.impl;
 
 import org.apache.rave.portal.model.JpaRegionWidget;
+import org.apache.rave.portal.model.JpaRegionWidgetPreference;
 import org.apache.rave.portal.model.RegionWidget;
 import org.apache.rave.portal.model.RegionWidgetPreference;
+import org.apache.rave.portal.repository.RegionWidgetRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,13 +36,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
 
-import org.apache.rave.portal.repository.RegionWidgetRepository;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.hamcrest.CoreMatchers.sameInstance;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 
 @Transactional
@@ -101,7 +97,7 @@ public class JpaRegionWidgetRepositoryTest {
     public void save_cascadePersist() {
         RegionWidget regionWidget = new JpaRegionWidget();
         regionWidget.setPreferences(new ArrayList<RegionWidgetPreference>());
-        RegionWidgetPreference regionWidgetPreference = new RegionWidgetPreference(null, null, VALID_PREFERENCE_NAME,
+        RegionWidgetPreference regionWidgetPreference = new JpaRegionWidgetPreference(null, null, VALID_PREFERENCE_NAME,
                 VALID_PREFERENCE_VALUE);
         regionWidget.getPreferences().add(regionWidgetPreference);
 
@@ -109,7 +105,7 @@ public class JpaRegionWidgetRepositoryTest {
         manager.flush();
 
         assertThat(saved.getPreferences().size(), is(equalTo(1)));
-        RegionWidgetPreference actual = saved.getPreferences().get(0);
+        JpaRegionWidgetPreference actual = (JpaRegionWidgetPreference)saved.getPreferences().get(0);
 
         assertThat(actual, is(sameInstance(regionWidgetPreference)));
         assertThat(actual.getEntityId(), is(notNullValue()));
@@ -123,7 +119,7 @@ public class JpaRegionWidgetRepositoryTest {
         RegionWidget regionWidget = new JpaRegionWidget();
         regionWidget.setId(VALID_REGION_WIDGET_ID);
         regionWidget.setPreferences(new ArrayList<RegionWidgetPreference>());
-        RegionWidgetPreference regionWidgetPreference = new RegionWidgetPreference(VALID_PREFERENCE_ID,
+        JpaRegionWidgetPreference regionWidgetPreference = new JpaRegionWidgetPreference(VALID_PREFERENCE_ID,
                 VALID_REGION_WIDGET_ID, VALID_PREFERENCE_NAME, VALID_PREFERENCE_VALUE);
         regionWidget.getPreferences().add(regionWidgetPreference);
 
@@ -131,7 +127,7 @@ public class JpaRegionWidgetRepositoryTest {
         manager.flush();
 
         assertThat(saved.getPreferences().size(), is(equalTo(1)));
-        RegionWidgetPreference actual = saved.getPreferences().get(0);
+        JpaRegionWidgetPreference actual = (JpaRegionWidgetPreference)saved.getPreferences().get(0);
 
         assertThat(actual, is(not(sameInstance(regionWidgetPreference))));
         assertThat(actual.getEntityId(), is(equalTo(regionWidgetPreference.getEntityId())));
@@ -147,7 +143,7 @@ public class JpaRegionWidgetRepositoryTest {
 
         RegionWidget saved = repository.save(regionWidget);
         manager.flush();
-        RegionWidgetPreference preference = manager.find(RegionWidgetPreference.class, VALID_PREFERENCE_ID);
+        RegionWidgetPreference preference = manager.find(JpaRegionWidgetPreference.class, VALID_PREFERENCE_ID);
 
         assertThat(saved.getPreferences().size(), is(equalTo(0)));
         assertThat(preference, is(nullValue()));
@@ -155,12 +151,12 @@ public class JpaRegionWidgetRepositoryTest {
 
     private long addPreferenceToRegionWidget(long validRegionWidgetId) {
         RegionWidget regionWidget = repository.get(validRegionWidgetId);
-        RegionWidgetPreference regionWidgetPreference = new RegionWidgetPreference(null, validRegionWidgetId,
+        RegionWidgetPreference regionWidgetPreference = new JpaRegionWidgetPreference(null, validRegionWidgetId,
                 VALID_PREFERENCE_NAME, VALID_PREFERENCE_VALUE);
         regionWidget.getPreferences().add(regionWidgetPreference);
 
         RegionWidget saved = repository.save(regionWidget);
         manager.flush();
-        return saved.getPreferences().get(0).getEntityId();
+        return ((JpaRegionWidgetPreference)saved.getPreferences().get(0)).getEntityId();
     }
 }

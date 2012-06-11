@@ -15,7 +15,7 @@ import java.util.List;
 public class ConvertingListProxyFactory {
 
     @SuppressWarnings("unchecked")
-    public static <E, T extends E> List createProxyList(Class<E> targetType, List<T> underlyingList) {
+    public static <E, T extends E> List<E> createProxyList(Class<E> targetType, List<T> underlyingList) {
         // ensure the list is not null by creating an empty list to prevent unnecessary downstream NullPointerExceptions
         if (underlyingList == null) {
             underlyingList = new ArrayList<T>();
