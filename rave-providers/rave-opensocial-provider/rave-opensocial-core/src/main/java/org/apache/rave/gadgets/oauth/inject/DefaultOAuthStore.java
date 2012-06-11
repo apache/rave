@@ -131,7 +131,7 @@ public class DefaultOAuthStore implements OAuthStore {
      * Creates an {@link OAuthConsumer} based on the OAuth signature method
      *
      * @param provider      {@link net.oauth.OAuthServiceProvider}
-     * @param consumerStore {@link OAuthConsumerStore}
+     * @param consumerStore {@link org.apache.rave.gadgets.oauth.model.OAuthConsumerStore}
      *                      persistent OAuth consumer keys & secrets
      * @return {@link OAuthConsumer} if the signature method is supported
      */

@@ -27,27 +27,27 @@ import org.apache.rave.gadgets.oauth.model.OAuthConsumerStore;
 public interface OAuthConsumerStoreService {
 
     /**
-     * Fetches {@link OAuthConsumerStore} based on the gadget location and the service provider
+     * Fetches {@link org.apache.rave.gadgets.oauth.model.OAuthConsumerStore} based on the gadget location and the service provider
      *
      * @param gadgetUri   location of the gadget definition
      * @param serviceName name of the service provider
-     * @return {@link OAuthConsumerStore} or {@literal null} if none matches the criteria
+     * @return {@link org.apache.rave.gadgets.oauth.model.OAuthConsumerStore} or {@literal null} if none matches the criteria
      */
     OAuthConsumerStore findByUriAndServiceName(String gadgetUri, String serviceName);
 
     /**
-     * Persists {@link OAuthConsumerStore}
+     * Persists {@link org.apache.rave.gadgets.oauth.model.OAuthConsumerStore}
      *
-     * @param oAuthConsumerStore {@link OAuthConsumerStore} to store
-     * @return persisted {@link OAuthConsumerStore}
+     * @param oAuthConsumerStore {@link org.apache.rave.gadgets.oauth.model.OAuthConsumerStore} to store
+     * @return persisted {@link org.apache.rave.gadgets.oauth.model.OAuthConsumerStore}
      */
 
     OAuthConsumerStore save(OAuthConsumerStore oAuthConsumerStore);
 
     /**
-     * Removes the {@link OAuthConsumerStore} from the database
+     * Removes the {@link org.apache.rave.gadgets.oauth.model.OAuthConsumerStore} from the database
      *
-     * @param oAuthConsumerStore {@link OAuthConsumerStore} to delete
+     * @param oAuthConsumerStore {@link org.apache.rave.gadgets.oauth.model.OAuthConsumerStore} to delete
      */
     void delete(OAuthConsumerStore oAuthConsumerStore);
 }

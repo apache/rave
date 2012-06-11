@@ -22,6 +22,7 @@ package org.apache.rave.gadgets.oauth.repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import org.apache.rave.gadgets.oauth.model.JpaOAuthConsumerStore;
 import org.apache.rave.gadgets.oauth.model.OAuthConsumerStore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -58,7 +59,7 @@ public class JpaOAuthConsumerStoreRepositoryTest {
         final OAuthConsumerStore store = repository.findByUriAndServiceName(GADGET_URI, SERVICE_NAME_GOOGLE);
         assertNotNull("OAuthConsumerStore In test db", store);
         assertEquals("gadgetSecret", store.getConsumerSecret());
-        assertEquals(OAuthConsumerStore.KeyType.HMAC_SYMMETRIC, store.getKeyType());
+        assertEquals(JpaOAuthConsumerStore.KeyType.HMAC_SYMMETRIC, store.getKeyType());
     }
 
     @Test
