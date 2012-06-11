@@ -19,6 +19,7 @@
 
 package org.apache.rave.portal.web.controller;
 
+import org.apache.rave.portal.model.JpaUser;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.service.CaptchaService;
 import org.apache.rave.portal.service.UserService;
@@ -83,7 +84,7 @@ public class ReminderControllerTest {
     @Test
     public void testCreate() throws Exception {
         Model model = createNiceMock(Model.class);
-        User User = new User();
+        User User = new JpaUser();
         BindingResult results = new DirectFieldBindingResult(User, ModelKeys.USER);
         RedirectAttributes redirectAttributes = createNiceMock(RedirectAttributes.class);
         replay(redirectAttributes);
@@ -109,7 +110,7 @@ public class ReminderControllerTest {
         assertThat(viewResult, CoreMatchers.equalTo(ViewNames.USERNAME_REQUEST));
         // password part:
         model = createNiceMock(Model.class);
-        User = new User();
+        User = new JpaUser();
         results = new DirectFieldBindingResult(User, ModelKeys.USER);
         redirectAttributes = createNiceMock(RedirectAttributes.class);
         replay(redirectAttributes);

@@ -20,6 +20,7 @@
 package org.apache.rave.portal.web.controller;
 
 import org.apache.rave.portal.model.*;
+import org.apache.rave.portal.model.impl.WidgetImpl;
 import org.apache.rave.portal.service.*;
 import org.apache.rave.portal.web.controller.util.ControllerUtils;
 import org.apache.rave.portal.web.util.ModelKeys;
@@ -89,7 +90,7 @@ public class WidgetStoreController {
         User user = userService.getAuthenticatedUser();
         widgetStoreModelHelper(model, referringPageId, user, view);
         model.addAttribute(ModelKeys.WIDGETS,
-                widgetService.getWidgetsByOwner(user.getEntityId(), offset, getPageSize()));
+                widgetService.getWidgetsByOwner(user.getId(), offset, getPageSize()));
         return view;
     }
 
@@ -99,7 +100,7 @@ public class WidgetStoreController {
      * @param model
      *            model map
      * @param widgetId
-     *            ID of the {@link org.apache.rave.portal.model.JpaWidget } to view
+     *            ID of the {@link org.apache.rave.portal.model.Widget } to view
      * @param referringPageId
      *            the source {@link org.apache.rave.portal.model.Page } ID
      * @return the view name of the widget detail page
@@ -110,7 +111,7 @@ public class WidgetStoreController {
         final User user = userService.getAuthenticatedUser();
         widgetStoreModelHelper(model, referringPageId, user, view);
         model.addAttribute(ModelKeys.WIDGET, widgetService.getWidget(widgetId));
-        model.addAttribute(ModelKeys.WIDGET_STATISTICS, widgetService.getWidgetStatistics(widgetId, user.getEntityId()));
+        model.addAttribute(ModelKeys.WIDGET_STATISTICS, widgetService.getWidgetStatistics(widgetId, user.getId()));
         model.addAttribute(ModelKeys.USER_PROFILE, user);
         return view;
     }
@@ -194,7 +195,7 @@ public class WidgetStoreController {
      */
     @RequestMapping(method = RequestMethod.GET, value = "widget/add")
     public String viewAddWidgetForm(Model model, @RequestParam long referringPageId) {
-        final Widget widget = new JpaWidget();
+        final Widget widget = new WidgetImpl();
         final String view = ViewNames.ADD_WIDGET_FORM;
         model.addAttribute(ModelKeys.WIDGET, widget);
         model.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
@@ -206,7 +207,7 @@ public class WidgetStoreController {
      * Validates the form input, if valid, tries to store the Widget data
      *
      * @param widget
-     *            {@link org.apache.rave.portal.model.JpaWidget} as submitted by the user
+     *            {@link org.apache.rave.portal.model.Widget} as submitted by the user
      * @param results
      *            {@link BindingResult}
      * @param model
@@ -246,7 +247,7 @@ public class WidgetStoreController {
      */
     private void widgetStoreModelHelper(Model model, long referringPageId, User user, String view) {
         model.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
-        model.addAttribute(ModelKeys.WIDGETS_STATISTICS, widgetService.getAllWidgetStatistics(user.getEntityId()));
+        model.addAttribute(ModelKeys.WIDGETS_STATISTICS, widgetService.getAllWidgetStatistics(user.getId()));
         model.addAttribute(ModelKeys.TAGS, tagService.getAllTags());
         model.addAttribute(ModelKeys.CATEGORIES, categoryService.getAll());
         ControllerUtils.addNavItemsToModel(view, model, referringPageId, user);

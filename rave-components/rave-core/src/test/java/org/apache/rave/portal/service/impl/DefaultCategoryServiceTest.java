@@ -20,6 +20,7 @@
 package org.apache.rave.portal.service.impl;
 
 import org.apache.rave.portal.model.Category;
+import org.apache.rave.portal.model.JpaUser;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.impl.CategoryImpl;
 import org.apache.rave.portal.repository.CategoryRepository;
@@ -59,8 +60,8 @@ public class DefaultCategoryServiceTest {
         repository = createMock(CategoryRepository.class);
         service = new DefaultCategoryService(repository);
 
-        validCreatedUser = new User(VALID_CREATED_USER_ID);
-        validLastModifiedUser = new User(VALID_LAST_MODIFIED_USER_ID);
+        validCreatedUser = new JpaUser(VALID_CREATED_USER_ID);
+        validLastModifiedUser = new JpaUser(VALID_LAST_MODIFIED_USER_ID);
 
         validCategory = new CategoryImpl();
         validCategory.setId(VALID_ID);

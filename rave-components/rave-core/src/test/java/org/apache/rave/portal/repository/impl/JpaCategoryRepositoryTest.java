@@ -63,7 +63,7 @@ public class JpaCategoryRepositoryTest {
 
     @Before
     public void setup() {
-        validUser = new User(VALID_USER_ID);
+        validUser = new JpaUser(VALID_USER_ID);
         validWidget = new JpaWidget();
         validWidget.setEntityId(VALID_WIDGET_ID);
     }
@@ -141,7 +141,7 @@ public class JpaCategoryRepositoryTest {
     @Test
     public void save_duplicateText_exception() {
         Date now = new Date();
-        User user = new User(1L);
+        User user = new JpaUser(1L);
 
         JpaCategory wc = new JpaCategory();
         wc.setText(DUPLICATE_TEXT_VALUE);

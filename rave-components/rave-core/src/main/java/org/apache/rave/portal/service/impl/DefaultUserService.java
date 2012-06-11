@@ -20,24 +20,13 @@
 package org.apache.rave.portal.service.impl;
 
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.commons.lang.StringUtils;
+import org.apache.rave.portal.model.JpaUser;
 import org.apache.rave.portal.model.PageType;
 import org.apache.rave.portal.model.Person;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.util.SearchResult;
-import org.apache.rave.portal.repository.PageRepository;
-import org.apache.rave.portal.repository.PageTemplateRepository;
-import org.apache.rave.portal.repository.UserRepository;
-import org.apache.rave.portal.repository.WidgetCommentRepository;
-import org.apache.rave.portal.repository.WidgetRatingRepository;
-import org.apache.rave.portal.repository.WidgetRepository;
+import org.apache.rave.portal.repository.*;
 import org.apache.rave.portal.service.EmailService;
 import org.apache.rave.portal.service.UserService;
 import org.slf4j.Logger;
@@ -56,6 +45,8 @@ import org.springframework.security.crypto.codec.Base64;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.*;
 
 /**
  *
@@ -133,11 +124,11 @@ public class DefaultUserService implements UserService {
     }
 
     @Override
-    public User getAuthenticatedUser() {
+    public JpaUser getAuthenticatedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if (authentication != null && authentication.getPrincipal() instanceof User) {
-            return (User) authentication.getPrincipal();
+        if (authentication != null && authentication.getPrincipal() instanceof JpaUser) {
+            return (JpaUser) authentication.getPrincipal();
         } else {
             throw new SecurityException("Could not get the authenticated user!");
         }
@@ -317,7 +308,7 @@ public class DefaultUserService implements UserService {
             throw new IllegalArgumentException("Could not find user for email " + newUser.getEmail());
         }
         // create user hash:
-        String input = user.getEmail() + user.getUsername() + String.valueOf(user.getEntityId()) + System.nanoTime();
+        String input = user.getEmail() + user.getUsername() + String.valueOf(user.getId()) + System.nanoTime();
         // hash needs to be URL friendly:
         String safeString = new String(Base64.encode(passwordEncoder.encode(input).getBytes()));
         String  hashedInput = safeString.replaceAll("[/=]", "A");

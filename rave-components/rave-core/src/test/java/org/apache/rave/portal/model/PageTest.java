@@ -44,7 +44,7 @@ public class PageTest {
 	private long id;
 	private long parentId;
 	private String testName;
-	private User testOwner;
+	private JpaUser testOwner;
     private Page parentPage;
     private List<Page> subPages;
 	private PageLayout pageLayout;
@@ -61,7 +61,7 @@ public class PageTest {
 		id=19191991L;
         parentId = 12345L;
 		testName="testName";
-		testOwner=new User(id);
+		testOwner=new JpaUser(id);
         parentPage = new PageImpl(parentId);
         subPages = new ArrayList<Page>();
 
@@ -82,7 +82,7 @@ public class PageTest {
 
         List<PageUser> pageUsers2 = new ArrayList<PageUser>();
         PageUser pageUser2 = new PageUserImpl();
-        pageUser2.setUser(new User());
+        pageUser2.setUser(new JpaUser());
         pageUser2.setPage(subPage2);
         pageUser2.setRenderSequence(19L);
         pageUsers2.add(pageUser2);

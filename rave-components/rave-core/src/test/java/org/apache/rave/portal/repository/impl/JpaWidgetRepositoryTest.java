@@ -179,14 +179,14 @@ public class JpaWidgetRepositoryTest {
 
     @Test
     public void getByOwner() {
-        final User user = new User(2L);
+        final User user = new JpaUser(2L);
         List<Widget> widgets = repository.getByOwner(user, 0, 10);
         assertEquals(1, widgets.size());
     }
 
     @Test
     public void getCountByOwner() {
-        final User user = new User(2L);
+        final User user = new JpaUser(2L);
         assertEquals(1, repository.getCountByOwner(user, 0, 10));
     }
 
@@ -398,7 +398,7 @@ public class JpaWidgetRepositoryTest {
     @Rollback
     public void addWidgetCategory() {
         final long WIDGET_ID = 1L;
-        final User user = new User(1L);
+        final User user = new JpaUser(1L);
 
         Category category = new CategoryImpl();
         category.setId(1L);
@@ -456,10 +456,10 @@ public class JpaWidgetRepositoryTest {
         final int NUM_WIDGETS_OWNED_BY_USER = 16;
 
         Widget widget = repository.get(WIDGET_ID);
-        assertThat(widget.getOwner().getEntityId(), is(USER_ID));
+        assertThat(widget.getOwner().getId(), is(USER_ID));
         assertThat(repository.unassignWidgetOwner(USER_ID), is(NUM_WIDGETS_OWNED_BY_USER));
         sharedManager.flush();
         sharedManager.refresh(widget);
-        assertThat(widget.getOwner(), is(nullValue(User.class)));
+        assertThat(widget.getOwner(), is(nullValue()));
     }
 }

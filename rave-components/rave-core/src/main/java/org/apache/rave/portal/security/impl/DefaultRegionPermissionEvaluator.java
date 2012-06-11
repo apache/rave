@@ -18,10 +18,7 @@
  */
 package org.apache.rave.portal.security.impl;
 
-import org.apache.rave.portal.model.Page;
-import org.apache.rave.portal.model.PageUser;
-import org.apache.rave.portal.model.Region;
-import org.apache.rave.portal.model.User;
+import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.repository.RegionRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -158,7 +155,7 @@ public class DefaultRegionPermissionEvaluator extends AbstractModelPermissionEva
     }
 
     private boolean isRegionOwnerById(Authentication authentication, Long userId) {
-        return ((User)authentication.getPrincipal()).getEntityId().equals(userId);
+        return ((User)authentication.getPrincipal()).getId().equals(userId);
     }
 
     private boolean verifyRaveSecurityContext(Authentication authentication, RaveSecurityContext raveSecurityContext) {

@@ -32,7 +32,6 @@ import org.apache.rave.portal.web.renderer.model.RenderContext;
 import org.apache.rave.provider.opensocial.repository.impl.ShindigGadgetMetadataRepository;
 import org.easymock.EasyMock;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,7 +85,7 @@ public class RenderServiceIntegrationTest {
         ReflectionTestUtils.setField(metadataRepository, "restOperations", restOperations);
 
         //Setup a mock authenticated user
-        final User authUser = new User(VALID_USER_ID, VALID_USER_NAME);
+        final User authUser = new JpaUser(VALID_USER_ID, VALID_USER_NAME);
         AbstractAuthenticationToken auth = EasyMock.createNiceMock(AbstractAuthenticationToken.class);
         EasyMock.expect(auth.getPrincipal()).andReturn(authUser).anyTimes();
         EasyMock.replay(auth);
@@ -104,7 +103,7 @@ public class RenderServiceIntegrationTest {
 
     @Test
     public void renderOpenSocial() {
-        Page page = new PageImpl(1L, new User(VALID_USER_ID, VALID_USER_NAME));
+        Page page = new PageImpl(1L, new JpaUser(VALID_USER_ID, VALID_USER_NAME));
         Region region = new RegionImpl(1L, page, 1);
         page.setRegions(Arrays.asList(region));
 

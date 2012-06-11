@@ -18,8 +18,8 @@
  */
 package org.apache.rave.portal.model.conversion;
 
+import org.apache.rave.portal.model.JpaUser;
 import org.apache.rave.portal.model.JpaWidgetComment;
-import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.WidgetComment;
 import org.apache.rave.portal.model.impl.WidgetCommentImpl;
 import org.junit.Test;
@@ -60,7 +60,7 @@ public class JpaWidgetCommentConverterTest {
         comment.setId(9L);
         comment.setLastModifiedDate(new Date());
         comment.setText("hello");
-        comment.setUser(new User(1L));
+        comment.setUser(new JpaUser(1L));
         comment.setWidgetId(9L);
 
         JpaWidgetComment converted = widgetCommentConverter.convert(comment);

@@ -21,6 +21,7 @@ package org.apache.rave.portal.repository.impl;
 
 import org.apache.rave.portal.model.Authority;
 import org.apache.rave.portal.model.JpaAuthority;
+import org.apache.rave.portal.model.JpaUser;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.repository.AuthorityRepository;
 import org.apache.rave.portal.repository.UserRepository;
@@ -82,7 +83,7 @@ public class JpaAuthorityRepositoryTest {
         assertEquals(authorityName, authority.getAuthority());
         assertTrue(authority.getUsers().isEmpty());
 
-        User newUser = new User();
+        User newUser = new JpaUser();
         newUser.setUsername("adminuser");
         newUser.addAuthority(authority);
         newUser = userRepository.save(newUser);
@@ -99,7 +100,7 @@ public class JpaAuthorityRepositoryTest {
         authority.setAuthority(authorityName);
         User user = userRepository.get(1L);
 
-        Assert.assertNotNull("User is not null", user);
+        Assert.assertNotNull("User is null", user);
         Assert.assertTrue("User has no authorities", user.getAuthorities().isEmpty());
         assertNull("No authority guest", repository.getByAuthority(authorityName));
 

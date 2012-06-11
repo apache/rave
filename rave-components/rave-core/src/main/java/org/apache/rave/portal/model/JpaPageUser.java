@@ -49,7 +49,7 @@ public class JpaPageUser implements BasicEntity, Serializable, PageUser {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User user;
+    private JpaUser user;
 
     @ManyToOne(fetch=FetchType.EAGER)
     @JoinColumn(name = "page_id", nullable=false)
@@ -69,11 +69,11 @@ public class JpaPageUser implements BasicEntity, Serializable, PageUser {
     public JpaPageUser(){}
 
     public JpaPageUser(User user, Page page){
-        this.user = user;
+        this.setUser(user);
         setPage(page);
     }
 
-    public JpaPageUser(User user, Page page, long sequence){
+    public JpaPageUser(JpaUser user, Page page, long sequence){
         this.user = user;
         setPage(page);
         this.renderSequence = sequence;
@@ -117,7 +117,7 @@ public class JpaPageUser implements BasicEntity, Serializable, PageUser {
     * @return the user
     */
     @Override
-    public User getUser() {
+    public JpaUser getUser() {
         return user;
     }
 
@@ -126,7 +126,7 @@ public class JpaPageUser implements BasicEntity, Serializable, PageUser {
     */
     @Override
     public void setUser(User user) {
-        this.user = user;
+        this.user = JpaConverter.getInstance().convert(user, User.class);
     }
 
     /**

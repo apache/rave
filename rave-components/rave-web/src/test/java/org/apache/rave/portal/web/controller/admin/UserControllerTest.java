@@ -21,6 +21,7 @@ package org.apache.rave.portal.web.controller.admin;
 
 import org.apache.rave.portal.model.Authority;
 import org.apache.rave.portal.model.JpaAuthority;
+import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.service.AuthorityService;
@@ -102,7 +103,7 @@ public class UserControllerTest {
     public void viewAdminUserDetail() throws Exception {
         Model model = new ExtendedModelMap();
         Long userid = 123L;
-        User user = new User(userid, "john.doe.sr");
+        User user = new UserImpl(userid, "john.doe.sr");
 
         expect(userService.getUserById(userid)).andReturn(user);
         replay(userService);
@@ -121,7 +122,7 @@ public class UserControllerTest {
         ModelMap modelMap = new ExtendedModelMap();
         final Long userid = 123L;
         final String email = "john.doe.sr@example.net";
-        User user = new User(userid, "john.doe.sr");
+        User user = new UserImpl(userid, "john.doe.sr");
         user.setPassword("secrect");
         user.setConfirmPassword("secrect");
         user.setEmail(email);
@@ -146,7 +147,7 @@ public class UserControllerTest {
     public void updateUserDetail_withErrors() {
         ModelMap modelMap = new ExtendedModelMap();
         Long userid = 123L;
-        User user = new User(userid, "john.doe.sr");
+        User user = new UserImpl(userid, "john.doe.sr");
         final BindingResult errors = new BeanPropertyBindingResult(user, "user");
 
         SessionStatus sessionStatus = createMock(SessionStatus.class);
@@ -161,7 +162,7 @@ public class UserControllerTest {
     @Test(expected = SecurityException.class)
     public void updateUserDetail_wrongToken() {
         ModelMap modelMap = new ExtendedModelMap();
-        User user = new User(123L, "john.doe.sr");
+        User user = new UserImpl(123L, "john.doe.sr");
         final BindingResult errors = new BeanPropertyBindingResult(user, "user");
         SessionStatus sessionStatus = createMock(SessionStatus.class);
         sessionStatus.setComplete();
@@ -182,14 +183,14 @@ public class UserControllerTest {
         ModelMap modelMap = new ExtendedModelMap();
         final Long userid = 123L;
         final String email = "john.doe.sr@example.net";
-        User user = new User(userid, "john.doe.sr");
+        UserImpl user = new UserImpl(userid, "john.doe.sr");
         user.setPassword("secrect");
         user.setConfirmPassword(user.getConfirmPassword());
         user.setEmail(email);
 
         SessionStatus sessionStatus = createMock(SessionStatus.class);
 
-        userService.deleteUser(user.getEntityId());
+        userService.deleteUser(user.getId());
         sessionStatus.setComplete();
         expectLastCall();
         replay(userService, sessionStatus);
@@ -204,7 +205,7 @@ public class UserControllerTest {
     public void deleteUserDetail_noConfirmChecked() {
         ModelMap modelMap = new ExtendedModelMap();
         Long userid = 123L;
-        User user = new User(userid, "john.doe.sr");
+        UserImpl user = new UserImpl(userid, "john.doe.sr");
 
         SessionStatus sessionStatus = createMock(SessionStatus.class);
         replay(sessionStatus);
@@ -217,7 +218,7 @@ public class UserControllerTest {
     @Test(expected = SecurityException.class)
     public void deleteUserDetail_wrongToken() {
         ModelMap modelMap = new ExtendedModelMap();
-        User user = new User(123L, "john.doe.sr");
+        UserImpl user = new UserImpl(123L, "john.doe.sr");
         SessionStatus sessionStatus = createMock(SessionStatus.class);
         sessionStatus.setComplete();
 
@@ -239,14 +240,14 @@ public class UserControllerTest {
         final String viewName = controller.setUpForm(modelMap);
         assertEquals(ViewNames.ADMIN_NEW_ACCOUNT, viewName);
         assertTrue(modelMap.containsAttribute(TABS));
-        assertTrue(modelMap.get(ModelKeys.NEW_USER) instanceof User);
+        assertTrue(modelMap.get(ModelKeys.NEW_USER) instanceof UserImpl);
     }
 
     @Test
     public void create_ValidFormSubmitted() throws Exception {
         final Model model = createNiceMock(Model.class);
         final RedirectAttributes redirectAttributes = createNiceMock(RedirectAttributes.class);
-        final User User = new User();
+        final UserImpl User = new UserImpl();
         final BindingResult errors = new BeanPropertyBindingResult(User, ModelKeys.NEW_USER);
         final String username = "username";
         final String password = "password";
@@ -276,7 +277,7 @@ public class UserControllerTest {
     public void create_EmptyForm() throws Exception {
         final Model model = createNiceMock(Model.class);
         final RedirectAttributes redirectAttributes = createNiceMock(RedirectAttributes.class);
-        final User User = new User();
+        final UserImpl User = new UserImpl();
         final BindingResult errors = new BeanPropertyBindingResult(User, ModelKeys.NEW_USER);
         final String username = "";
         final String password = "";
@@ -335,8 +336,8 @@ public class UserControllerTest {
 
 
     private static SearchResult<User> createSearchResultWithTwoUsers() {
-        User user1 = new User(123L, "john.doe.sr");
-        User user2 = new User(456L, "john.doe.jr");
+        User user1 = new UserImpl(123L, "john.doe.sr");
+        User user2 = new UserImpl(456L, "john.doe.jr");
         List<User> users = new ArrayList<User>();
         users.add(user1);
         users.add(user2);

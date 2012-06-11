@@ -53,7 +53,7 @@ public class SecurityTokenServiceTest {
     private SecurityTokenService securityTokenService;
     private String encryptionKey;
 
-    private User validPerson;
+    private JpaUser validPerson;
     private Page validPage;
     private Region validRegion;
     private RegionWidget validRegionWidget;
@@ -99,7 +99,7 @@ public class SecurityTokenServiceTest {
         securityTokenService = new EncryptedBlobSecurityTokenService(userService, "default", "default",
                 encryptionKey);
 
-        validPerson = new User(VALID_USER_ID, VALID_USER_NAME);
+        validPerson = new JpaUser(VALID_USER_ID, VALID_USER_NAME);
 
         validPage = new PageImpl(1L, validPerson);
         validRegion = new RegionImpl(1L, validPage, 1);
@@ -125,7 +125,7 @@ public class SecurityTokenServiceTest {
     @Test
     public void getSecurityToken_validWidget_ownerIsNotViewer() throws SecurityTokenException {
         Long expectedOwnerId = 99999L;
-        validPage.setOwner(new User(expectedOwnerId));
+        validPage.setOwner(new JpaUser(expectedOwnerId));
 
         expect(userService.getAuthenticatedUser()).andReturn(validPerson).anyTimes();
         replay(userService);

@@ -206,7 +206,7 @@ public class DefaultWidgetServiceTest {
     public void getWidgetsByOwner() {
         final int offset = 0;
         final int pageSize = 10;
-        final User user = new User(5L);
+        final JpaUser user = new JpaUser(5L);
         expect(userRepository.get(user.getEntityId())).andReturn(user);
         replay(userRepository);
 

@@ -20,15 +20,17 @@
 package org.apache.rave.portal.model;
 
 import org.apache.rave.persistence.BasicEntity;
+import org.apache.rave.portal.model.conversion.ConvertingListProxyFactory;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
- * The {@link GrantedAuthority} a {@link User} can have
+ * The {@link GrantedAuthority} a {@link JpaUser} can have
  */
 @Entity
 @Table(name = "granted_authority")
@@ -61,7 +63,7 @@ public class JpaAuthority implements BasicEntity, Serializable, Authority {
     private String authority;
 
     @ManyToMany(mappedBy = "authorities", fetch = FetchType.LAZY)
-    private Collection<User> users;
+    private List<JpaUser> users;
     
     @Basic
     @Column(name = "default_for_new_user")
@@ -71,7 +73,7 @@ public class JpaAuthority implements BasicEntity, Serializable, Authority {
      * Default constructor, needed for JPA
      */
     public JpaAuthority() {
-        this.users = new ArrayList<User>();
+        this.users = new ArrayList<JpaUser>();
     }
 
     @Override
@@ -106,13 +108,13 @@ public class JpaAuthority implements BasicEntity, Serializable, Authority {
 
     @Override
     public Collection<User> getUsers() {
-        return users;
+        return ConvertingListProxyFactory.createProxyList(User.class, users);
     }
 
     @Override
     public void addUser(User user) {
-        if (!users.contains(user)) {
-            users.add(user);
+        if (!this.getUsers().contains(user)) {
+            this.getUsers().add(user);
         }
         if (!user.getAuthorities().contains(this)) {
             user.addAuthority(this);
@@ -121,14 +123,14 @@ public class JpaAuthority implements BasicEntity, Serializable, Authority {
 
     @Override
     public void removeUser(User user) {
-        if (users.contains(user)) {
-            users.remove(user);
+        if (this.getUsers().contains(user)) {
+            this.getUsers().remove(user);
         }
     }
 
     @PreRemove
     public void preRemove() {
-        for (User user : users) {
+        for (JpaUser user : users) {
             user.removeAuthority(this);
         }
         this.users = null;

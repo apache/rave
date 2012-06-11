@@ -18,10 +18,7 @@
  */
 package org.apache.rave.portal.security.impl;
 
-import org.apache.rave.portal.model.Page;
-import org.apache.rave.portal.model.PageType;
-import org.apache.rave.portal.model.PageUser;
-import org.apache.rave.portal.model.User;
+import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.repository.PageRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -165,7 +162,7 @@ public class DefaultPagePermissionEvaluator extends AbstractModelPermissionEvalu
     }
 
     private boolean isPageOwnerById(Authentication authentication, Long userId) {
-        return ((User)authentication.getPrincipal()).getEntityId().equals(userId);
+        return ((User)authentication.getPrincipal()).getId().equals(userId);
     }
 
     private boolean verifyRaveSecurityContext(Authentication authentication, RaveSecurityContext raveSecurityContext) {

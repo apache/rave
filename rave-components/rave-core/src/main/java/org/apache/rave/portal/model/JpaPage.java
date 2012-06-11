@@ -32,7 +32,7 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
- * A page, which consists of regions, and which may be owned by a {@link User} (note the ownership will likely need to
+ * A page, which consists of regions, and which may be owned by a {@link JpaUser} (note the ownership will likely need to
  * become more flexible to enable things like group ownership in the future).
  *
  * TODO RAVE-231: not all database providers will be able to support deferrable constraints
@@ -69,7 +69,7 @@ public class JpaPage implements BasicEntity, Serializable, Page {
 
     @ManyToOne
     @JoinColumn(name = "owner_id")
-    private User owner;
+    private JpaUser owner;
 
     @OneToOne(cascade=CascadeType.ALL)
     @JoinColumn(name="parent_page_id")
@@ -104,7 +104,7 @@ public class JpaPage implements BasicEntity, Serializable, Page {
         this.entityId = entityId;
     }
 
-    public JpaPage(Long entityId, User owner) {
+    public JpaPage(Long entityId, JpaUser owner) {
         this.entityId = entityId;
         this.owner = owner;
     }
@@ -161,7 +161,7 @@ public class JpaPage implements BasicEntity, Serializable, Page {
 
     @Override
     public void setOwner(User owner) {
-        this.owner = owner;
+        this.owner = JpaConverter.getInstance().convert(owner, User.class);
     }
 
     /**

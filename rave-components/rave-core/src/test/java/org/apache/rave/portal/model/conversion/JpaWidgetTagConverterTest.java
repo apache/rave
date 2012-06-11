@@ -25,7 +25,7 @@ public class JpaWidgetTagConverterTest {
     public void convert_valid_widgetTaq(){
         WidgetTag widgetTag = new WidgetTagImpl();
         widgetTag.setCreatedDate(new Date());
-        widgetTag.setUser(new User());
+        widgetTag.setUser(new JpaUser());
         widgetTag.setWidgetId(3L);
         widgetTag.setTag(new JpaTag(1L, "news"));
         JpaWidgetTag jpaWidgetTag = jpaWidgetTagConverter.convert(widgetTag);
@@ -40,7 +40,7 @@ public class JpaWidgetTagConverterTest {
     public void convert_valid_jpaWidgetTaq(){
         JpaWidgetTag widgetTag = new JpaWidgetTag();
         widgetTag.setCreatedDate(new Date());
-        widgetTag.setUser(new User());
+        widgetTag.setUser(new JpaUser());
         widgetTag.setWidgetId(3L);
         widgetTag.setTag(new JpaTag(1L, "news"));
         JpaWidgetTag jpaWidgetTag = jpaWidgetTagConverter.convert(widgetTag);

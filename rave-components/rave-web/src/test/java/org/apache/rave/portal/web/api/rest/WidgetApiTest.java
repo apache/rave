@@ -49,7 +49,7 @@ public class WidgetApiTest {
     private final Long VALID_USER_ID = 5L;
     private final Long VALID_WIDGET_ID = 10L;
 
-    private User user;
+    private JpaUser user;
     private List<Tag> tagList;
 
     @Before
@@ -60,7 +60,7 @@ public class WidgetApiTest {
         tagService = createMock(TagService.class);
         widgetTagService = createMock(WidgetTagService.class);
 
-        user = new User();
+        user = new JpaUser();
         user.setEntityId(VALID_USER_ID);
 
         tagList = new ArrayList<Tag>();
@@ -113,7 +113,7 @@ public class WidgetApiTest {
         WidgetComment widgetComment = new WidgetCommentImpl();
         widgetComment.setWidgetId(2L);
         widgetComment.setText(message);
-        widgetComment.setUser(new User(VALID_USER_ID, "John.Doe"));
+        widgetComment.setUser(new JpaUser(VALID_USER_ID, "John.Doe"));
 
         expect(userService.getAuthenticatedUser()).andReturn(user);
         expect(widgetCommentService.getWidgetComment(3L)).andReturn(null);
@@ -188,7 +188,7 @@ public class WidgetApiTest {
         response.setStatus(HttpStatus.NO_CONTENT.value());
         replay(userService, widgetRatingService, response);
 
-        User user = new User(2L);
+        User user = new JpaUser(2L);
         widgetApi.setWidgetRating(1L, 5, response);
 
         verify(widgetRatingService, userService, response);

@@ -37,6 +37,7 @@ import java.util.List;
     @NamedQuery(name = JpaPerson.FIND_BY_GROUP_MEMBERSHIP, query = "select m from JpaGroup g join g.members m where exists " +
             "(select 'found' from g.members b where b.username = :username) and m.username <> :username")
 })
+@DiscriminatorValue("Person")
 public class JpaPerson implements BasicEntity, Person {
 
     public static final String FIND_BY_USERNAME = "Person.findByUsername";

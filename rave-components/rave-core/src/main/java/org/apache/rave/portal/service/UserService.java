@@ -19,12 +19,12 @@
 
 package org.apache.rave.portal.service;
 
-import java.util.List;
-
 import org.apache.rave.portal.model.Person;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.util.SearchResult;
 import org.springframework.security.core.userdetails.UserDetailsService;
+
+import java.util.List;
 
 public interface UserService extends UserDetailsService {
     /**
@@ -57,7 +57,7 @@ public interface UserService extends UserDetailsService {
      * Return the requested user object using the user's name.
      *
      * @param userName (unique) name of the user
-     * @return {@link User} if one exists, otherwise {@literal null}
+     * @return {@link org.apache.rave.portal.model.User} if one exists, otherwise {@literal null}
      */
     User getUserByUsername(String userName);
 
@@ -65,7 +65,7 @@ public interface UserService extends UserDetailsService {
      * Return a user object by the user ID.
      *
      * @param id the user ID
-     * @return {@link User} if one exists, otherwise {@literal null}
+     * @return {@link org.apache.rave.portal.model.User} if one exists, otherwise {@literal null}
      */
     User getUserById(Long id);
 
@@ -73,7 +73,7 @@ public interface UserService extends UserDetailsService {
      * Return a user object by the user email.
      *
      * @param userEmail email address of the user
-     * @return {@link User} if one exists, otherwise {@literal null}
+     * @return {@link org.apache.rave.portal.model.User} if one exists, otherwise {@literal null}
      */
     User getUserByEmail(String userEmail);
 
@@ -85,7 +85,7 @@ public interface UserService extends UserDetailsService {
     void updateUserProfile(User user);
 
     /**
-     * Gets a limited {@link SearchResult} for {@link User}'s
+     * Gets a limited {@link SearchResult} for {@link org.apache.rave.portal.model.User}'s
      *
      * @param offset   start point within the resultset (for paging)
      * @param pageSize maximum number of items to be returned (for paging)
@@ -94,7 +94,7 @@ public interface UserService extends UserDetailsService {
     SearchResult<User> getLimitedListOfUsers(int offset, int pageSize);
 
     /**
-     * Gets a {@link SearchResult} for {@link User}'s that match the search term
+     * Gets a {@link SearchResult} for {@link org.apache.rave.portal.model.User}'s that match the search term
      *
      * @param searchTerm free text input to search on users
      * @param offset     start point within the resultset (for paging)

@@ -64,7 +64,7 @@ public class PageApiTest {
     public void getPage_validId_export() {
         Page p = new PageImpl();
         p.setRegions(new ArrayList<Region>());
-        p.setOwner(new User());
+        p.setOwner(new JpaUser());
         Region region = new RegionImpl();
         region.setRegionWidgets(new ArrayList<RegionWidget>());
         RegionWidget w = new RegionWidgetImpl();

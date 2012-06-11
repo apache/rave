@@ -27,6 +27,7 @@ import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 
+import org.apache.rave.portal.model.JpaUser;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.service.UserService;
 import org.junit.Before;
@@ -54,12 +55,12 @@ public class NewAccountValidatorTest {
     @Test
     public void testSupports() throws Exception {
         assertTrue("Can validate org.apache.rave.portal.model.User",
-                newAccountValidator.supports(User.class));
+                newAccountValidator.supports(JpaUser.class));
     }
 
     @Test
     public void testValidate() throws Exception {
-        User user = new User();
+        JpaUser user = new JpaUser();
         user.setUsername(VALID_NAME);
         user.setPassword(VALID_PASSWORD);
         user.setConfirmPassword(VALID_PASSWORD);
@@ -78,7 +79,7 @@ public class NewAccountValidatorTest {
 
     @Test
     public void testValidationFailsOnEmptyUser() throws Exception {
-        User user = new User();
+        User user = new JpaUser();
         Errors errors = new BindException(user, NEW_USER);
         expect(mockUserService.getUserByUsername("")).andReturn(null);
         replay(mockUserService);
@@ -96,7 +97,7 @@ public class NewAccountValidatorTest {
 
     @Test
     public void testValidationFailsOnExistingUser() throws Exception {
-        User user = new User();
+        JpaUser user = new JpaUser();
         user.setUsername("ExistingUser");
         user.setPassword(VALID_PASSWORD);
         user.setConfirmPassword(VALID_PASSWORD);
@@ -104,7 +105,7 @@ public class NewAccountValidatorTest {
         user.setEmail(VALID_EMAIL);
         Errors errors = new BindException(user, NEW_USER);
 
-        User user1 = createMock(User.class);
+        User user1 = createMock(JpaUser.class);
         expect(mockUserService.getUserByUsername("ExistingUser")).andReturn(user1);
         expect(mockUserService.getUserByEmail(VALID_EMAIL)).andReturn(null);
         replay(mockUserService);
@@ -117,7 +118,7 @@ public class NewAccountValidatorTest {
 
     @Test
     public void testValidationFailsOnExistingEmail() throws Exception {
-        User user = new User();
+        JpaUser user = new JpaUser();
         user.setUsername(VALID_NAME);
         user.setPassword(VALID_PASSWORD);
         user.setConfirmPassword(VALID_PASSWORD);
@@ -125,7 +126,7 @@ public class NewAccountValidatorTest {
         user.setEmail("existing@localhost");
         Errors errors = new BindException(user, NEW_USER);
 
-        User user1 = createMock(User.class);
+        User user1 = createMock(JpaUser.class);
         expect(mockUserService.getUserByUsername(VALID_NAME)).andReturn(null);
         expect(mockUserService.getUserByEmail("existing@localhost")).andReturn(user1);
         replay(mockUserService);
@@ -139,7 +140,7 @@ public class NewAccountValidatorTest {
 
     @Test
     public void testValidationFailsOnShortUserName() throws Exception {
-        User user = new User();
+        JpaUser user = new JpaUser();
         user.setUsername("A");
         user.setPassword(VALID_PASSWORD);
         user.setConfirmPassword(VALID_PASSWORD);
@@ -158,7 +159,7 @@ public class NewAccountValidatorTest {
 
     @Test
     public void testValidationFailsOnIllegalUsername() throws Exception {
-        User user = new User();
+        JpaUser user = new JpaUser();
         final String badUsername = "x'; DROP TABLE members; --";
         user.setUsername(badUsername);
         user.setPassword(VALID_PASSWORD);
@@ -178,7 +179,7 @@ public class NewAccountValidatorTest {
 
     @Test
     public void testValidationFailsOnShortPassword() throws Exception {
-        User user = new User();
+        JpaUser user = new JpaUser();
         user.setUsername(VALID_NAME);
         user.setPassword("123");
         user.setConfirmPassword("123");
@@ -197,7 +198,7 @@ public class NewAccountValidatorTest {
 
     @Test
     public void testValidationFailsOnNonMatchingPassword() throws Exception {
-        User user = new User();
+        JpaUser user = new JpaUser();
         user.setUsername(VALID_NAME);
         user.setPassword(VALID_PASSWORD);
         user.setConfirmPassword("doesnotmatch");

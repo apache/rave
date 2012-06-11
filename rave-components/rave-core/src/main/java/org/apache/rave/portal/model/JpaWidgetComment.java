@@ -16,6 +16,7 @@
 package org.apache.rave.portal.model;
 
 import org.apache.rave.persistence.BasicEntity;
+import org.apache.rave.portal.model.conversion.JpaConverter;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -49,7 +50,7 @@ public class JpaWidgetComment implements BasicEntity, Serializable, WidgetCommen
 
     @OneToOne(fetch=FetchType.EAGER)
     @JoinColumn(name="user_id")
-    private User user;
+    private JpaUser user;
 
     @Basic
     @Column(name = "text") @Lob
@@ -69,7 +70,7 @@ public class JpaWidgetComment implements BasicEntity, Serializable, WidgetCommen
 
     }
 
-    public JpaWidgetComment(Long entityId, Long widgetId, User user, String text, Date lastModified, Date created) {
+    public JpaWidgetComment(Long entityId, Long widgetId, JpaUser user, String text, Date lastModified, Date created) {
         this.entityId = entityId;
         this.widgetId = widgetId;
         this.user = user;
@@ -115,7 +116,7 @@ public class JpaWidgetComment implements BasicEntity, Serializable, WidgetCommen
 
     @Override
     public void setUser(User user) {
-        this.user = user;
+        this.user = JpaConverter.getInstance().convert(user, User.class);
     }
 
     @Override

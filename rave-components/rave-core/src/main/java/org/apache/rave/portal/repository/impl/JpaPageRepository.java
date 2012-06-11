@@ -20,6 +20,7 @@
 package org.apache.rave.portal.repository.impl;
 
 import org.apache.rave.portal.model.*;
+import org.apache.rave.portal.model.conversion.JpaConverter;
 import org.apache.rave.portal.model.conversion.JpaPageConverter;
 import org.apache.rave.portal.repository.PageRepository;
 import org.apache.rave.util.CollectionUtils;
@@ -106,8 +107,7 @@ public class JpaPageRepository implements PageRepository {
 
     @Override
     public Page createPageForUser(User user, PageTemplate pt) {
-        Page personPageFromTemplate = convert(pt, user);
-        return personPageFromTemplate;
+        return convert(pt, user);
     }
 
     /**
@@ -118,11 +118,12 @@ public class JpaPageRepository implements PageRepository {
      * @return Page
      */
     private Page convert(PageTemplate pt, User user) {
+        JpaUser jpaUser = JpaConverter.getInstance().convert(user, User.class);
         Page p = new JpaPage();
         p.setName(pt.getName());
         p.setPageType(pt.getPageType());
-        p.setOwner(user);
-        PageUser pageUser = new JpaPageUser(p.getOwner(), p, pt.getRenderSequence());
+        p.setOwner(jpaUser);
+        PageUser pageUser = new JpaPageUser(jpaUser, p, pt.getRenderSequence());
         pageUser.setPageStatus(PageInvitationStatus.OWNER);
         pageUser.setEditor(true);
         List<PageUser> members = new ArrayList<PageUser>();
@@ -198,7 +199,7 @@ public class JpaPageRepository implements PageRepository {
             lPage.setRegions(convertRegions(pt.getPageTemplateRegions(), lPage));
 
             // create new pageUser tuple
-            PageUser pageUser = new JpaPageUser(lPage.getOwner(), lPage, pt.getRenderSequence());
+            PageUser pageUser = new JpaPageUser((JpaUser)JpaConverter.getInstance().convert(lPage.getOwner(), User.class), lPage, pt.getRenderSequence());
             pageUser.setPageStatus(PageInvitationStatus.OWNER);
             pageUser.setEditor(true);
             List<PageUser> members = new ArrayList<PageUser>();

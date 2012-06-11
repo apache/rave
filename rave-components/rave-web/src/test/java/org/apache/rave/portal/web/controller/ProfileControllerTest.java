@@ -85,7 +85,7 @@ public class ProfileControllerTest {
 	@Test
 	public void viewPerson_ShouldAddAttributeForUser() {
 		//creating a mock user
-		final User user = new User();
+		final JpaUser user = new JpaUser();
 		final ModelMap model = new ModelMap();
 		final int modelSize = 4;
 		final String username="Canonical";
@@ -152,7 +152,7 @@ public class ProfileControllerTest {
 		String userProfile = new String(ModelKeys.USER_PROFILE);
 
 		//creating a mock authenticated user
-		final User authUser = new User();
+		final User authUser = new JpaUser();
         authUser.setUsername(USERNAME);
 		//set existing status
 		authUser.setStatus("Single");
@@ -163,7 +163,7 @@ public class ProfileControllerTest {
 		authUser.setEmail("testuser@rave.com");
 
 		//creating a mock updated user
-		final User updatedUser = new User();
+		final User updatedUser = new JpaUser();
 		//set the updated status
 		updatedUser.setStatus("Married");
 		updatedUser.setGivenName("Test");

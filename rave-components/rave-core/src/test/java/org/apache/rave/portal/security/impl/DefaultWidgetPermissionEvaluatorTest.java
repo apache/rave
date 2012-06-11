@@ -44,7 +44,7 @@ public class DefaultWidgetPermissionEvaluatorTest {
     private WidgetRepository mockWidgetRepository;
     private Page page;
     private Widget widget, widget2;
-    private User user, user2;
+    private JpaUser user, user2;
     private Authentication mockAuthentication;
     private List<GrantedAuthority> grantedAuthoritiesList;
 
@@ -60,10 +60,10 @@ public class DefaultWidgetPermissionEvaluatorTest {
         defaultWidgetPermissionEvaluator = new DefaultWidgetPermissionEvaluator(mockWidgetRepository);
         mockAuthentication = createMock(Authentication.class);
 
-        user = new User();
+        user = new JpaUser();
         user.setUsername(VALID_USERNAME);
         user.setEntityId(VALID_USER_ID);
-        user2 = new User();
+        user2 = new JpaUser();
         user2.setUsername(VALID_USERNAME2);
         page = new PageImpl();
         page.setId(VALID_PAGE_ID);

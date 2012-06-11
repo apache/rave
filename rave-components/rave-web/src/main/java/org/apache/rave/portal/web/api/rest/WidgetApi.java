@@ -123,7 +123,7 @@ public class WidgetApi extends AbstractRestApi {
                                    HttpServletResponse response) {
         logger.debug("DELETE WidgetRating received for /api/rest/widgets/{}", widgetId);
 
-        widgetRatingService.removeWidgetRating(widgetId, userService.getAuthenticatedUser().getEntityId());
+        widgetRatingService.removeWidgetRating(widgetId, userService.getAuthenticatedUser().getId());
 
         // send a 204 back for success since there is no content being returned
         response.setStatus(HttpStatus.NO_CONTENT.value());
@@ -137,7 +137,7 @@ public class WidgetApi extends AbstractRestApi {
 
         WidgetRating widgetRating = new JpaWidgetRating();
         widgetRating.setScore(score);
-        widgetRating.setUserId(userService.getAuthenticatedUser().getEntityId());
+        widgetRating.setUserId(userService.getAuthenticatedUser().getId());
         widgetRating.setWidgetId(widgetId);
         widgetRatingService.saveWidgetRating(widgetRating);
 

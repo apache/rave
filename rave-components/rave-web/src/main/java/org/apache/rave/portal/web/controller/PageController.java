@@ -18,11 +18,7 @@
  */
 package org.apache.rave.portal.web.controller;
 
-import org.apache.rave.portal.model.Page;
-import org.apache.rave.portal.model.PageInvitationStatus;
-import org.apache.rave.portal.model.PageLayout;
-import org.apache.rave.portal.model.PageUser;
-import org.apache.rave.portal.model.User;
+import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.service.PageLayoutService;
 import org.apache.rave.portal.service.PageService;
 import org.apache.rave.portal.service.UserService;
@@ -112,7 +108,7 @@ public class PageController {
 
     private List<Page> getAllPagesForAuthenticatedUser() {
         User user = userService.getAuthenticatedUser();
-        long userId = user.getEntityId();
+        long userId = user.getId();
         List<Page> pages = pageService.getAllUserPages(userId);
         // we add pages to this list which the corresponding pageUser object is not set to "refused"
         List<Page> viewablePages = new ArrayList<Page>();

@@ -15,6 +15,7 @@
  */
 package org.apache.rave.portal.security.impl;
 
+import org.apache.rave.portal.model.JpaUser;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.WidgetTag;
 import org.apache.rave.portal.repository.WidgetTagRepository;
@@ -110,7 +111,7 @@ public class DefaultWidgetTagPermissionEvaluator extends AbstractModelPermission
                 hasPermission =  true;
                 break;
             case CREATE:
-                hasPermission = isWidgetTagOwnerById(authentication, widgetTag.getUser().getEntityId());
+                hasPermission = isWidgetTagOwnerById(authentication, widgetTag.getUser().getId());
                 break;
             case DELETE:
             case UPDATE:
@@ -193,6 +194,6 @@ public class DefaultWidgetTagPermissionEvaluator extends AbstractModelPermission
         return ((User)authentication.getPrincipal()).getUsername().equals(username);
     }
     private boolean isWidgetTagOwnerById(Authentication authentication, Long userId) {
-        return ((User)authentication.getPrincipal()).getEntityId().equals(userId);
+        return ((JpaUser)authentication.getPrincipal()).getId().equals(userId);
     }
 }

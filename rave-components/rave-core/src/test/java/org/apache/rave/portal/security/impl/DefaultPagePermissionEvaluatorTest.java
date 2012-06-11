@@ -19,9 +19,9 @@
 
 package org.apache.rave.portal.security.impl;
 
+import org.apache.rave.portal.model.JpaUser;
 import org.apache.rave.portal.model.Page;
 import org.apache.rave.portal.model.PageType;
-import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.impl.PageImpl;
 import org.apache.rave.portal.repository.PageRepository;
 import org.apache.rave.portal.security.ModelPermissionEvaluator.Permission;
@@ -50,7 +50,7 @@ public class DefaultPagePermissionEvaluatorTest {
     private PageRepository mockPageRepository;
     private Authentication mockAuthentication;
     private Page page, personProfilePage, pageSubPage, personProfileSubPage;
-    private User user, user2;
+    private JpaUser user, user2;
     private List<GrantedAuthority> grantedAuthoritiesList;
 
     private final Long VALID_USER_ID = 99L;
@@ -68,10 +68,10 @@ public class DefaultPagePermissionEvaluatorTest {
 
         defaultPagePermissionEvaluator = new DefaultPagePermissionEvaluator(mockPageRepository);
 
-        user = new User();
+        user = new JpaUser();
         user.setUsername(VALID_USERNAME);
         user.setEntityId(VALID_USER_ID);
-        user2 = new User();
+        user2 = new JpaUser();
         user2.setUsername(VALID_USERNAME2);
 
         page = new PageImpl();

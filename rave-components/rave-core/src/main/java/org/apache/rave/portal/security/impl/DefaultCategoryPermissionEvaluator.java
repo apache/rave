@@ -157,7 +157,7 @@ public class DefaultCategoryPermissionEvaluator extends AbstractModelPermissionE
     }
 
     private boolean isCategoryCreatedUserById(Authentication authentication, Long userId) {
-        return ((User)authentication.getPrincipal()).getEntityId().equals(userId);
+        return ((User)authentication.getPrincipal()).getId().equals(userId);
     }
 
     private boolean verifyRaveSecurityContext(Authentication authentication, RaveSecurityContext raveSecurityContext) {

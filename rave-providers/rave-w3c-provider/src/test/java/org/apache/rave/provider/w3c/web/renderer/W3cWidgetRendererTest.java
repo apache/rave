@@ -21,10 +21,7 @@ package org.apache.rave.provider.w3c.web.renderer;
 
 import org.apache.rave.exception.NotSupportedException;
 import org.apache.rave.model.ModelConverter;
-import org.apache.rave.portal.model.Region;
-import org.apache.rave.portal.model.RegionWidget;
-import org.apache.rave.portal.model.User;
-import org.apache.rave.portal.model.Widget;
+import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.model.conversion.JpaConverter;
 import org.apache.rave.portal.model.conversion.JpaWidgetConverter;
 import org.apache.rave.portal.model.impl.RegionImpl;
@@ -83,7 +80,7 @@ public class W3cWidgetRendererTest {
 
     @Test
     public void render_valid() {
-        User user = new User(9999L, "testUser");
+        User user = new JpaUser(9999L, "testUser");
         expect(userService.getAuthenticatedUser()).andReturn(user);
         replay(userService);
         

@@ -19,7 +19,7 @@
 <%@ page language="java" trimDirectiveWhitespaces="true" %>
 <%@ include file="/WEB-INF/jsp/includes/taglibs.jsp" %>
 <fmt:setBundle basename="messages"/>
-<jsp:useBean id="userProfile" type="org.apache.rave.portal.model.User" scope="request"/>
+<jsp:useBean id="userProfile" type="org.apache.rave.portal.model.JpaUser" scope="request"/>
 <div id="content">
     <h1>${pagetitle}</h1>
     <form:form id="userProfileForm" commandName="userProfile" action="updateUserProfile" method="POST">

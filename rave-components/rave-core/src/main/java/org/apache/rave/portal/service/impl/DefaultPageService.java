@@ -183,7 +183,7 @@ public class DefaultPageService implements PageService {
 
         //TODO RAVE-237:  We should be able to delete these lines.  If there are gaps in the sequence numbers, then it will still
         //TODO RAVE-237:  return values in the correct order.  We only need to update sequences when there is a change in order
-        List<PageUser> thisUsersPages = new ArrayList<PageUser>(pageRepository.getPagesForUser(user.getEntityId(), PageType.USER));
+        List<PageUser> thisUsersPages = new ArrayList<PageUser>(pageRepository.getPagesForUser(user.getId(), PageType.USER));
         updatePageRenderSequences(thisUsersPages);
     }
 
@@ -303,7 +303,7 @@ public class DefaultPageService implements PageService {
         pageUser.setUser(userService.getUserById(userId));
         pageUser.setPage(page);
         pageUser.setPageStatus(PageInvitationStatus.PENDING);
-        List<PageUser> thisUsersPages = pageRepository.getPagesForUser(userService.getUserById(userId).getEntityId(), PageType.USER);
+        List<PageUser> thisUsersPages = pageRepository.getPagesForUser(userService.getUserById(userId).getId(), PageType.USER);
         pageUser.setRenderSequence(new Long(thisUsersPages.size() + 1));
         page.getMembers().add(pageUser);
         if(pageRepository.save(page) != null){
@@ -318,7 +318,7 @@ public class DefaultPageService implements PageService {
         Page page = this.getPage(pageId);
         PageUser pageUserToRemove = null;
         for(PageUser pageUser : page.getMembers()){
-            if(pageUser.getUser().getEntityId().equals(userId)){
+            if(pageUser.getUser().getId().equals(userId)){
                 pageUserToRemove = pageUser;
                 break;
             }
@@ -487,7 +487,7 @@ public class DefaultPageService implements PageService {
         }
         // Get all User Pages
         Page page = null;
-        List<Page> defaultUserPage = pageRepository.getAllPages(user.getEntityId(), PageType.USER);
+        List<Page> defaultUserPage = pageRepository.getAllPages(user.getId(), PageType.USER);
         // Is there a default page for this user
         if (defaultUserPage.isEmpty()) {
             // Do we have a default User template defined, if so create the page based on the template
@@ -539,18 +539,18 @@ public class DefaultPageService implements PageService {
         // get the logged in user
         User user = userService.getAuthenticatedUser();
         // get the page to move and the page to move after
-        PageUser movingPageUser = pageRepository.getSingleRecord(user.getEntityId(), pageId);
+        PageUser movingPageUser = pageRepository.getSingleRecord(user.getId(), pageId);
         PageUser afterPageUser = null;
         int newIndex = 0;
         // check to see if we should move the page to beginning
         if (moveAfterPageId != MOVE_PAGE_DEFAULT_POSITION_INDEX) {
-            afterPageUser = pageRepository.getSingleRecord(user.getEntityId(), moveAfterPageId);
+            afterPageUser = pageRepository.getSingleRecord(user.getId(), moveAfterPageId);
         }
 
         // get all of the user's pages
         // the pageRepository returns an un-modifiable list
         // so we need to create a modifyable arraylist
-        List<PageUser> thisUsersPages = new ArrayList<PageUser>(pageRepository.getPagesForUser(user.getEntityId(), PageType.USER));
+        List<PageUser> thisUsersPages = new ArrayList<PageUser>(pageRepository.getPagesForUser(user.getId(), PageType.USER));
         // first remove it from the list
         if (!thisUsersPages.remove(movingPageUser)) {
             throw new RuntimeException("unable to find pageId " + pageId + " attempted to be moved for user " + user);

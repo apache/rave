@@ -19,10 +19,7 @@
 
 package org.apache.rave.portal.service.impl;
 
-import org.apache.rave.portal.model.Authority;
-import org.apache.rave.portal.model.JpaAuthority;
-import org.apache.rave.portal.model.JpaPageLayout;
-import org.apache.rave.portal.model.User;
+import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.service.AuthorityService;
 import org.apache.rave.portal.service.NewAccountService;
@@ -92,14 +89,14 @@ public class DefaultNewAccountServiceTest {
 
     @Test
     public void createNewAccountTest() throws Exception {
-        User newUser = new User();
+        JpaUser newUser = new JpaUser();
         newUser.setUsername(VALID_USER);
         newUser.setPassword(VALID_PASSWORD);
         newUser.setConfirmPassword(VALID_PASSWORD);
         newUser.setEmail(VALID_EMAIL);
         newUser.setDefaultPageLayoutCode(VALID_LAYOUT_CODE);
 
-        User expectedUser = new User();
+        User expectedUser = new JpaUser();
         expectedUser.setUsername(newUser.getUsername());
         expectedUser.setPassword(newUser.getPassword());
         expectedUser.setEmail(newUser.getEmail());
@@ -126,14 +123,14 @@ public class DefaultNewAccountServiceTest {
 
     @Test
     public void createNewAccountTest_blankEmail() throws Exception {
-        User newUser = new User();
+        JpaUser newUser = new JpaUser();
         newUser.setUsername(VALID_USER);
         newUser.setPassword(VALID_PASSWORD);
         newUser.setConfirmPassword(VALID_PASSWORD);
         newUser.setEmail("");
         newUser.setDefaultPageLayoutCode(VALID_LAYOUT_CODE);
 
-        User expectedUser = new User();
+        User expectedUser = new JpaUser();
         expectedUser.setUsername(newUser.getUsername());
         expectedUser.setPassword(newUser.getPassword());
         expectedUser.setEmail(newUser.getEmail());
@@ -161,9 +158,9 @@ public class DefaultNewAccountServiceTest {
     @Test
     public void failedAccountCreationTest_duplicateUsername() throws Exception {
         String duplicateUserName = "duplicateUserName";
-        User newUser = new User();
+        JpaUser newUser = new JpaUser();
         newUser.setUsername(duplicateUserName);
-        User existingUser = new User();
+        User existingUser = new JpaUser();
         existingUser.setUsername(duplicateUserName);
 
         expect(userService.getUserByUsername(duplicateUserName)).andReturn(existingUser);
@@ -180,10 +177,10 @@ public class DefaultNewAccountServiceTest {
     @Test
     public void failedAccountCreationTest_duplicateEmail() throws Exception {
         String duplicateEmail = "duplicateEmail";
-        User newUser = new User();
+        JpaUser newUser = new JpaUser();
         newUser.setUsername("newUser");
         newUser.setEmail(duplicateEmail);
-        User existingUser = new User();
+        User existingUser = new JpaUser();
         existingUser.setEmail(duplicateEmail);
 
         expect(userService.getUserByUsername("newUser")).andReturn(null);

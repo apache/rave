@@ -15,6 +15,7 @@
  */
 package org.apache.rave.portal.security.impl;
 
+import org.apache.rave.portal.model.JpaUser;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.WidgetComment;
 import org.apache.rave.portal.repository.WidgetCommentRepository;
@@ -110,7 +111,7 @@ public class DefaultWidgetCommentPermissionEvaluator extends AbstractModelPermis
                 hasPermission =  true;
                 break;
             case CREATE:
-                hasPermission = isWidgetCommentOwnerById(authentication, widgetComment.getUser().getEntityId());
+                hasPermission = isWidgetCommentOwnerById(authentication, widgetComment.getUser().getId());
                 break;
             case DELETE:
             case UPDATE:
@@ -191,6 +192,6 @@ public class DefaultWidgetCommentPermissionEvaluator extends AbstractModelPermis
         return ((User)authentication.getPrincipal()).getUsername().equals(username);
     }
     private boolean isWidgetCommentOwnerById(Authentication authentication, Long userId) {
-        return ((User)authentication.getPrincipal()).getEntityId().equals(userId);
+        return ((JpaUser)authentication.getPrincipal()).getId().equals(userId);
     }
 }

@@ -17,6 +17,7 @@
 package org.apache.rave.portal.web.controller.admin;
 
 import org.apache.rave.portal.model.Category;
+import org.apache.rave.portal.model.JpaUser;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.impl.CategoryImpl;
 import org.apache.rave.portal.service.CategoryService;
@@ -146,7 +147,7 @@ public class CategoryControllerTest {
     @Test
     public void createCategory_valid(){
         Model model = new ExtendedModelMap();
-        User user = new User();
+        User user = new JpaUser();
         String categoryText = "Social";
         Category category = new CategoryImpl();
         category.setText(categoryText);
@@ -166,7 +167,7 @@ public class CategoryControllerTest {
     public void createCategory_invalidToken(){
         Model model = new ExtendedModelMap();
         String invalidToken =  AdminControllerUtil.generateSessionToken();
-        User user = new User();
+        User user = new JpaUser();
         String categoryText = "Social";
         Category category = new CategoryImpl();
         category.setText(categoryText);
@@ -183,7 +184,7 @@ public class CategoryControllerTest {
     @Test
     public void createCategory_invalidValidRequest_emptyText(){
         Model model = new ExtendedModelMap();
-        User user = new User();
+        User user = new JpaUser();
         String categoryText = "";
         Category category = new CategoryImpl();
         category.setText(categoryText);
@@ -199,7 +200,7 @@ public class CategoryControllerTest {
     @Test
     public void updateCategory_valid(){
         Model model = new ExtendedModelMap();
-        User user = new User();
+        User user = new JpaUser();
         long id = 1L;
         String categoryText = "Social";
         Category category = new CategoryImpl();
@@ -222,7 +223,7 @@ public class CategoryControllerTest {
     @Test(expected = SecurityException.class)
     public void updateCategory_invalidToken(){
         Model model = new ExtendedModelMap();
-        User user = new User();
+        User user = new JpaUser();
         long id = 1L;
         String categoryText = "Social";
         String invalidToken = AdminControllerUtil.generateSessionToken();
@@ -244,7 +245,7 @@ public class CategoryControllerTest {
     @Test
     public void updateCategory_invalidValidRequest_emptyText(){
         Model model = new ExtendedModelMap();
-        User user = new User();
+        User user = new JpaUser();
 
         long id = 1L;
         String categoryText = "";
@@ -265,7 +266,7 @@ public class CategoryControllerTest {
     public void updateCategory_invalidValidRequest_nullUser(){
         Model model = new ExtendedModelMap();
         long id = 1L;
-        User user = new User();
+        User user = new JpaUser();
         String categoryText = "Social";
         Category category = new CategoryImpl();
         category.setCreatedUser(user);
@@ -283,7 +284,7 @@ public class CategoryControllerTest {
     @Test
     public void updateCategory_invalidValidRequest_nullWidgetToUpdate(){
         Model model = new ExtendedModelMap();
-        User user = new User();
+        User user = new JpaUser();
         long id = 1L;
         String categoryText = "Social";
         Category category = new CategoryImpl();
@@ -303,7 +304,7 @@ public class CategoryControllerTest {
     @Test
     public void deleteCategory_valid(){
         Model model = new ExtendedModelMap();
-        User user = new User();
+        User user = new JpaUser();
         long id = 1L;
         String categoryText = "Social";
         Category category = new CategoryImpl();
@@ -327,7 +328,7 @@ public class CategoryControllerTest {
     @Test(expected = SecurityException.class)
     public void deleteCategory_invalidToken(){
         Model model = new ExtendedModelMap();
-        User user = new User();
+        User user = new JpaUser();
         long id = 1L;
         String categoryText = "Social";
         String invalidToken = AdminControllerUtil.generateSessionToken();
@@ -350,7 +351,7 @@ public class CategoryControllerTest {
     @Test
     public void deleteCategory_invalidValidRequest_emptyText(){
         Model model = new ExtendedModelMap();
-        User user = new User();
+        User user = new JpaUser();
 
         long id = 1L;
         String categoryText = "";
@@ -371,7 +372,7 @@ public class CategoryControllerTest {
     public void deleteCategory_invalidValidRequest_nullUser(){
         Model model = new ExtendedModelMap();
         long id = 1L;
-        User user = new User();
+        User user = new JpaUser();
         String categoryText = "Social";
         Category category = new CategoryImpl();
         category.setCreatedUser(user);
@@ -389,7 +390,7 @@ public class CategoryControllerTest {
     @Test
     public void deleteCategory_invalidValidRequest_nullWidgetToDelete(){
         Model model = new ExtendedModelMap();
-        User user = new User();
+        User user = new JpaUser();
         long id = 1L;
         String categoryText = "Social";
         Category category = new CategoryImpl();
@@ -409,7 +410,7 @@ public class CategoryControllerTest {
     @Test
     public void deleteCategory_invalidValidRequest_falseConfirmation(){
         Model model = new ExtendedModelMap();
-        User user = new User();
+        User user = new JpaUser();
         long id = 1L;
         String categoryText = "Social";
         Category category = new CategoryImpl();
@@ -427,7 +428,7 @@ public class CategoryControllerTest {
 
     @Test
     public void editCategory_valid () {
-        User user = new User();
+        User user = new JpaUser();
         long id = 1L;
         String categoryText = "Social";
         Model model = new ExtendedModelMap();

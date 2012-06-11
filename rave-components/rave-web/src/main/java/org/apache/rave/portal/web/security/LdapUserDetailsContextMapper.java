@@ -23,6 +23,7 @@ import java.util.Collection;
 
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.rave.portal.model.JpaUser;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.service.NewAccountService;
 import org.apache.rave.portal.service.UserService;
@@ -86,7 +87,7 @@ public class LdapUserDetailsContextMapper implements UserDetailsContextMapper {
     }
 
     private void createRaveUserFromLdapInfo(DirContextOperations ctx, String username) {
-        User newUser = new User();
+        JpaUser newUser = new JpaUser();
         newUser.setUsername(username);
 
         if (!ctx.attributeExists(mailAttributeName) || StringUtils.isBlank(ctx.getStringAttribute(mailAttributeName))) {

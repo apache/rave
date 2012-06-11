@@ -58,8 +58,8 @@ public class JpaCategoryConverterTest {
         category.setId(9L);
         category.setLastModifiedDate(new Date());
         category.setText("hello");
-        category.setCreatedUser(new User(1L));
-        category.setLastModifiedUser(new User(1L));
+        category.setCreatedUser(new JpaUser(1L));
+        category.setLastModifiedUser(new JpaUser(1L));
         category.setWidgets(new ArrayList<Widget>());
 
         JpaCategory converted = categoryConverter.convert(category);

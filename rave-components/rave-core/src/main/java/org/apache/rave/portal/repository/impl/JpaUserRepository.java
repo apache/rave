@@ -19,86 +19,107 @@
 
 package org.apache.rave.portal.repository.impl;
 
-import org.apache.rave.persistence.jpa.AbstractJpaRepository;
-import org.apache.rave.portal.model.Page;
+import org.apache.rave.portal.model.JpaUser;
 import org.apache.rave.portal.model.User;
-import org.apache.rave.portal.model.WidgetComment;
-import org.apache.rave.portal.model.WidgetRating;
+import org.apache.rave.portal.model.conversion.JpaUserConverter;
 import org.apache.rave.portal.repository.UserRepository;
+import org.apache.rave.util.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-
-import java.util.Date;
 import java.util.List;
 
-import static org.apache.rave.persistence.jpa.util.JpaUtil.getPagedResultList;
-import static org.apache.rave.persistence.jpa.util.JpaUtil.getSingleResult;
+import static org.apache.rave.persistence.jpa.util.JpaUtil.*;
 
 /**
  */
 @Repository
-public class JpaUserRepository extends AbstractJpaRepository<User> implements UserRepository {
+public class JpaUserRepository implements UserRepository {
 
-    public JpaUserRepository() {
-        super(User.class);
-    }
+    @Autowired
+    private JpaUserConverter converter;
+
+    @PersistenceContext
+    private EntityManager manager;
 
     @Override
     public User getByUsername(String username) {
-        TypedQuery<User> query = manager.createNamedQuery(User.USER_GET_BY_USERNAME, User.class);
-        query.setParameter(User.PARAM_USERNAME, username);
+        TypedQuery<JpaUser> query = manager.createNamedQuery(JpaUser.USER_GET_BY_USERNAME, JpaUser.class);
+        query.setParameter(JpaUser.PARAM_USERNAME, username);
         return getSingleResult(query.getResultList());
     }
 
     @Override
     public User getByUserEmail(String userEmail) {
-        TypedQuery<User> query = manager.createNamedQuery(User.USER_GET_BY_USER_EMAIL, User.class);
-        query.setParameter(User.PARAM_EMAIL, userEmail);
+        TypedQuery<JpaUser> query = manager.createNamedQuery(JpaUser.USER_GET_BY_USER_EMAIL, JpaUser.class);
+        query.setParameter(JpaUser.PARAM_EMAIL, userEmail);
         return getSingleResult(query.getResultList());
     }
 
     @Override
     public List<User> getLimitedList(int offset, int pageSize) {
-        TypedQuery<User> query = manager.createNamedQuery(User.USER_GET_ALL, User.class);
-        return getPagedResultList(query, offset, pageSize);
+        TypedQuery<JpaUser> query = manager.createNamedQuery(JpaUser.USER_GET_ALL, JpaUser.class);
+        return CollectionUtils.<User>toBaseTypedList(getPagedResultList(query, offset, pageSize));
     }
 
     @Override
     public int getCountAll() {
-        Query query = manager.createNamedQuery(User.USER_COUNT_ALL);
+        Query query = manager.createNamedQuery(JpaUser.USER_COUNT_ALL);
         Number countResult = (Number) query.getSingleResult();
         return countResult.intValue();
     }
 
     @Override
     public List<User> findByUsernameOrEmail(String searchTerm, int offset, int pageSize) {
-        TypedQuery<User> query = manager.createNamedQuery(User.USER_FIND_BY_USERNAME_OR_EMAIL, User.class);
-        query.setParameter(User.PARAM_SEARCHTERM, "%" + searchTerm.toLowerCase() + "%");
-        return getPagedResultList(query, offset, pageSize);
+        TypedQuery<JpaUser> query = manager.createNamedQuery(JpaUser.USER_FIND_BY_USERNAME_OR_EMAIL, JpaUser.class);
+        query.setParameter(JpaUser.PARAM_SEARCHTERM, "%" + searchTerm.toLowerCase() + "%");
+        return CollectionUtils.<User>toBaseTypedList(getPagedResultList(query, offset, pageSize));
     }
 
     @Override
     public int getCountByUsernameOrEmail(String searchTerm) {
-        Query query = manager.createNamedQuery(User.USER_COUNT_FIND_BY_USERNAME_OR_EMAIL);
-        query.setParameter(User.PARAM_SEARCHTERM, "%" + searchTerm.toLowerCase() + "%");
+        Query query = manager.createNamedQuery(JpaUser.USER_COUNT_FIND_BY_USERNAME_OR_EMAIL);
+        query.setParameter(JpaUser.PARAM_SEARCHTERM, "%" + searchTerm.toLowerCase() + "%");
         Number countResult = (Number) query.getSingleResult();
         return countResult.intValue();
     }
 
     @Override
     public List<User> getAllByAddedWidget(long widgetId) {
-        TypedQuery<User> query = manager.createNamedQuery(User.USER_GET_ALL_FOR_ADDED_WIDGET, User.class);
-        query.setParameter(User.PARAM_WIDGET_ID, widgetId);
-        return query.getResultList();
+        TypedQuery<JpaUser> query = manager.createNamedQuery(JpaUser.USER_GET_ALL_FOR_ADDED_WIDGET, JpaUser.class);
+        query.setParameter(JpaUser.PARAM_WIDGET_ID, widgetId);
+        return CollectionUtils.<User>toBaseTypedList(query.getResultList());
     }
 
     @Override
     public User getByForgotPasswordHash(String hash) {
-        TypedQuery<User> query = manager.createNamedQuery(User.USER_GET_BY_FORGOT_PASSWORD_HASH, User.class);
-        query.setParameter(User.PARAM_FORGOT_PASSWORD_HASH, hash);
+        TypedQuery<JpaUser> query = manager.createNamedQuery(JpaUser.USER_GET_BY_FORGOT_PASSWORD_HASH, JpaUser.class);
+        query.setParameter(JpaUser.PARAM_FORGOT_PASSWORD_HASH, hash);
         return getSingleResult(query.getResultList());
     }
 
+    @Override
+    public Class<? extends User> getType() {
+        return JpaUser.class;
+    }
+
+    @Override
+    public User get(long id) {
+        return manager.find(JpaUser.class, id);
+    }
+
+    @Override
+    public User save(User item) {
+        JpaUser converted = converter.convert(item);
+        return saveOrUpdate(converted.getEntityId(), manager, converted);
+    }
+
+    @Override
+    public void delete(User item) {
+       manager.remove(converter.convert(item));
+    }
 }

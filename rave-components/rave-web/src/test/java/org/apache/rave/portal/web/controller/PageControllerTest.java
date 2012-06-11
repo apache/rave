@@ -60,7 +60,7 @@ public class PageControllerTest {
     private final Long OTHER_PAGE_ID = 22L;
     private final Long USER_ID = 1L;
     private final String VALID_PAGE_LAYOUT_CODE = "layout98";
-    private User validUser;
+    private JpaUser validUser;
     private PageLayout validPageLayout;
 
     @Before
@@ -73,7 +73,7 @@ public class PageControllerTest {
         model = new ExtendedModelMap();
         request = new MockHttpServletRequest();
 
-        validUser = new User(USER_ID);
+        validUser = new JpaUser(USER_ID);
         validPageLayout = new JpaPageLayout();
         validPageLayout.setCode(VALID_PAGE_LAYOUT_CODE);
         defaultPageUser = new PageUserImpl(validUser, defaultPage, 1L);

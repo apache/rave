@@ -47,7 +47,7 @@ public class DefaultRegionWidgetPermissionEvaluatorTest {
     private Page page;
     private RegionWidget regionWidget;
     private Region region;
-    private User user, user2;
+    private JpaUser user, user2;
     private List<GrantedAuthority> grantedAuthoritiesList;
 
     private final Long VALID_REGION_ID = 1L;
@@ -63,10 +63,10 @@ public class DefaultRegionWidgetPermissionEvaluatorTest {
         defaultRegionWidgetPermissionEvaluator = new DefaultRegionWidgetPermissionEvaluator(mockRegionWidgetRepository);
         mockAuthentication = createMock(Authentication.class);
 
-        user = new User();
+        user = new JpaUser();
         user.setUsername(VALID_USERNAME);
         user.setEntityId(VALID_USER_ID);
-        user2 = new User();
+        user2 = new JpaUser();
         user2.setUsername(VALID_USERNAME2);
         page = new PageImpl();
         page.setId(VALID_PAGE_ID);

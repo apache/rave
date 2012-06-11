@@ -19,6 +19,7 @@
 
 package org.apache.rave.portal.web.security;
 
+import org.apache.rave.portal.model.JpaUser;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.service.NewAccountService;
 import org.apache.rave.portal.service.UserService;
@@ -64,7 +65,7 @@ public class LdapUserDetailsContextMapperTest {
         DirContextOperations ctx = createMock(DirContextOperations.class);
 
         final String username = "johnldap";
-        User user = new User(123L, username);
+        User user = new JpaUser(123L, username);
 
         expect(userService.getUserByUsername(username)).andReturn(null).once();
         expect(ctx.attributeExists(MAIL_ATTRIBUTE_NAME)).andReturn(true);
@@ -88,7 +89,7 @@ public class LdapUserDetailsContextMapperTest {
         DirContextOperations ctx = createMock(DirContextOperations.class);
 
         final String username = "johnldap";
-        User user = new User(123L, username);
+        User user = new JpaUser(123L, username);
 
         expect(userService.getUserByUsername(username)).andReturn(null).once();
         expect(ctx.attributeExists(MAIL_ATTRIBUTE_NAME)).andReturn(true);
@@ -157,7 +158,7 @@ public class LdapUserDetailsContextMapperTest {
         DirContextOperations ctx = createMock(DirContextOperations.class);
 
         final String username = "johnldap";
-        User user = new User(123L, username);
+        User user = new JpaUser(123L, username);
 
         expect(userService.getUserByUsername(username)).andReturn(user);
         expectLastCall();
@@ -173,7 +174,7 @@ public class LdapUserDetailsContextMapperTest {
 
     @Test
     public void testMapUserToContext() throws Exception {
-        User user = new User();
+        User user = new JpaUser();
         DirContextAdapter adapter = new DirContextAdapter();
 
         contextMapper.mapUserToContext(user, adapter);

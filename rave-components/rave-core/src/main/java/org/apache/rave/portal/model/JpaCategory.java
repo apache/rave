@@ -17,6 +17,7 @@ package org.apache.rave.portal.model;
 
 import org.apache.rave.persistence.BasicEntity;
 import org.apache.rave.portal.model.conversion.ConvertingListProxyFactory;
+import org.apache.rave.portal.model.conversion.JpaConverter;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 import javax.persistence.*;
@@ -52,7 +53,7 @@ public class JpaCategory implements BasicEntity, Serializable, Category {
 
     @OneToOne(fetch=FetchType.EAGER)
     @JoinColumn(name="created_user_id")
-    private User createdUser;
+    private JpaUser createdUser;
 
     @Basic
     @Column(name ="created_date")
@@ -62,7 +63,7 @@ public class JpaCategory implements BasicEntity, Serializable, Category {
 
     @OneToOne(fetch=FetchType.EAGER)
     @JoinColumn(name="last_modified_user_id")
-    private User lastModifiedUser;
+    private JpaUser lastModifiedUser;
 
     @Basic
     @Column(name ="last_modified_date")
@@ -84,9 +85,9 @@ public class JpaCategory implements BasicEntity, Serializable, Category {
     public JpaCategory(Long entityId, String text, User createdUser, Date createdDate, User lastModifiedUser, Date lastModifiedDate) {
         this.entityId = entityId;
         this.text = text;
-        this.createdUser = createdUser;
+        this.setCreatedUser(createdUser);
         this.createdDate = createdDate;
-        this.lastModifiedUser = lastModifiedUser;
+        this.setLastModifiedUser(lastModifiedUser);
         this.lastModifiedDate = lastModifiedDate;
     }
 
@@ -127,7 +128,7 @@ public class JpaCategory implements BasicEntity, Serializable, Category {
 
     @Override
     public void setCreatedUser(User createdUser) {
-        this.createdUser = createdUser;
+        this.createdUser = JpaConverter.getInstance().convert(createdUser, User.class);
     }
 
     @Override
@@ -147,7 +148,7 @@ public class JpaCategory implements BasicEntity, Serializable, Category {
 
     @Override
     public void setLastModifiedUser(User lastModifiedUser) {
-        this.lastModifiedUser = lastModifiedUser;
+        this.lastModifiedUser = JpaConverter.getInstance().convert(lastModifiedUser, User.class);
     }
 
     @Override

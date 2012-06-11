@@ -15,6 +15,8 @@
  */
 package org.apache.rave.portal.model;
 
+import org.apache.rave.portal.model.conversion.JpaConverter;
+
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
@@ -48,7 +50,7 @@ public class JpaWidgetTag implements WidgetTag, Serializable {
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
-    private User user;
+    private JpaUser user;
 
     @ManyToOne(fetch=FetchType.EAGER,cascade = CascadeType.ALL)
     @JoinColumn(name = "tag_id")
@@ -61,7 +63,7 @@ public class JpaWidgetTag implements WidgetTag, Serializable {
 
     public JpaWidgetTag() {}
 
-    public JpaWidgetTag(long id, long widgetId, User user, Date date, JpaTag tag) {
+    public JpaWidgetTag(long id, long widgetId, JpaUser user, Date date, JpaTag tag) {
         this.entityId = id;
         this.widgetId = widgetId;
         this.user = user;
@@ -94,7 +96,7 @@ public class JpaWidgetTag implements WidgetTag, Serializable {
 
     @Override
     public void setUser(User user) {
-        this.user = user;
+        this.user = JpaConverter.getInstance().convert(user, User.class);
     }
 
     @Override

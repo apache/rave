@@ -18,11 +18,7 @@
  */
 package org.apache.rave.portal.repository.impl;
 
-import org.apache.rave.portal.model.Page;
-import org.apache.rave.portal.model.PageTemplate;
-import org.apache.rave.portal.model.PageType;
-import org.apache.rave.portal.model.PageUser;
-import org.apache.rave.portal.model.User;
+import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.repository.PageRepository;
 import org.apache.rave.portal.repository.PageTemplateRepository;
 import org.apache.rave.portal.repository.UserRepository;
@@ -70,12 +66,12 @@ public class JpaPageRepositoryTest {
     @Autowired
     private PageTemplateRepository pageTemplateRepository;
 
-    private User user;
+    private JpaUser user;
     private PageTemplate defaultPageTemplate;
 
     @Before
     public void setup(){
-        user = userRepository.get(CREATED_USER_ID);
+        user = (JpaUser)userRepository.get(CREATED_USER_ID);
         defaultPageTemplate = pageTemplateRepository.getDefaultPage(PageType.PERSON_PROFILE);
     }
 
@@ -173,7 +169,7 @@ public class JpaPageRepositoryTest {
         Long lastRenderSequence = -1L;
         PageUser pageUser;
         for (Page subPage : p.getSubPages()) {
-            pageUser = repository.getSingleRecord(p.getOwner().getEntityId(), subPage.getId());
+            pageUser = repository.getSingleRecord(p.getOwner().getId(), subPage.getId());
             Long currentRenderSequence =  pageUser.getRenderSequence();
             assertThat(currentRenderSequence > lastRenderSequence, is(true));
             lastRenderSequence = currentRenderSequence;

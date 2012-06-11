@@ -21,6 +21,7 @@ package org.apache.rave.portal.web.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.rave.portal.model.JpaUser;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.service.CaptchaService;
 import org.apache.rave.portal.service.UserService;
@@ -65,7 +66,7 @@ public class ReminderController {
     @RequestMapping(value = {"/retrieveusername", "/newpassword"})
     public void initialize(ModelMap model, HttpServletRequest request) {
         model.addAttribute(ModelKeys.CAPTCHA_HTML, captchaService.createHtml(request));
-        model.addAttribute(ModelKeys.USER, new User());
+        model.addAttribute(ModelKeys.USER, new JpaUser());
     }
 
 

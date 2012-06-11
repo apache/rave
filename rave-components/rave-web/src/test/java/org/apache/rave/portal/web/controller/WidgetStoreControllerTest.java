@@ -20,7 +20,11 @@
 package org.apache.rave.portal.web.controller;
 
 
-import org.apache.rave.portal.model.*;
+import org.apache.rave.portal.model.Category;
+import org.apache.rave.portal.model.Tag;
+import org.apache.rave.portal.model.Widget;
+import org.apache.rave.portal.model.impl.UserImpl;
+import org.apache.rave.portal.model.impl.WidgetImpl;
 import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.model.util.WidgetStatistics;
 import org.apache.rave.portal.service.*;
@@ -57,14 +61,14 @@ public class WidgetStoreControllerTest {
     private WidgetService widgetService;
     private TagService tagService;
     private CategoryService categoryService;
-    private User validUser;
+    private UserImpl validUser;
     private WidgetStatistics widgetStatistics;
     private Map<Long, WidgetStatistics> allWidgetStatisticsMap;
 
     @Before
     public void setup() {
-        validUser = new User();
-        validUser.setEntityId(1L);
+        validUser = new UserImpl();
+        validUser.setId(1L);
         widgetStatistics = new WidgetStatistics();
 
         allWidgetStatisticsMap = new HashMap<Long, WidgetStatistics>();
@@ -95,7 +99,7 @@ public class WidgetStoreControllerTest {
         SearchResult<Widget> emptyResult = new SearchResult<Widget>(widgets, 0);
 
         expect(widgetService.getPublishedWidgets(0, 10)).andReturn(emptyResult);
-        expect(widgetService.getAllWidgetStatistics(validUser.getEntityId())).andReturn(allWidgetStatisticsMap);
+        expect(widgetService.getAllWidgetStatistics(validUser.getId())).andReturn(allWidgetStatisticsMap);
         replay(widgetService);
 
         String view = controller.view(model, REFERRER_ID, 0);
@@ -117,8 +121,8 @@ public class WidgetStoreControllerTest {
         List<Widget> widgets = new ArrayList<Widget>();
         SearchResult<Widget> emptyResult = new SearchResult<Widget>(widgets, 0);
 
-        expect(widgetService.getWidgetsByOwner(validUser.getEntityId(), 0, 10)).andReturn(emptyResult);
-        expect(widgetService.getAllWidgetStatistics(validUser.getEntityId())).andReturn(allWidgetStatisticsMap);
+        expect(widgetService.getWidgetsByOwner(validUser.getId(), 0, 10)).andReturn(emptyResult);
+        expect(widgetService.getAllWidgetStatistics(validUser.getId())).andReturn(allWidgetStatisticsMap);
         replay(widgetService);
 
         String view = controller.viewMine(model, REFERRER_ID, 0);
@@ -137,13 +141,13 @@ public class WidgetStoreControllerTest {
     @Test
     public void viewWidget() {
         Model model = new ExtendedModelMap();
-        Widget w = new JpaWidget(1L, "http://example.com/widget.xml");
+        Widget w = new WidgetImpl(1L, "http://example.com/widget.xml");
 
-        expect(widgetService.getAllWidgetStatistics(validUser.getEntityId())).andReturn(allWidgetStatisticsMap);
+        expect(widgetService.getAllWidgetStatistics(validUser.getId())).andReturn(allWidgetStatisticsMap);
         expect(tagService.getAllTags()).andReturn(new ArrayList<Tag>());
         expect(categoryService.getAll()).andReturn(new ArrayList<Category>());
         expect(widgetService.getWidget(WIDGET_ID)).andReturn(w);
-        expect(widgetService.getWidgetStatistics(WIDGET_ID, validUser.getEntityId())).andReturn(widgetStatistics);
+        expect(widgetService.getWidgetStatistics(WIDGET_ID, validUser.getId())).andReturn(widgetStatistics);
         replay(widgetService);
 
         String view = controller.viewWidget(model, WIDGET_ID, REFERRER_ID);
@@ -167,7 +171,7 @@ public class WidgetStoreControllerTest {
         int offset = 0;
         int pageSize = 10;
         SearchResult<Widget> searchResults = new SearchResult<Widget>(new ArrayList<Widget>(),0);
-        expect(widgetService.getAllWidgetStatistics(validUser.getEntityId())).andReturn(allWidgetStatisticsMap);
+        expect(widgetService.getAllWidgetStatistics(validUser.getId())).andReturn(allWidgetStatisticsMap);
         expect(tagService.getAllTags()).andReturn(new ArrayList<Tag>());
         expect(categoryService.getAll()).andReturn(new ArrayList<Category>());
         expect(widgetService.getWidgetsByCategory(categoryId, offset, pageSize)).andReturn(searchResults);
@@ -196,15 +200,15 @@ public class WidgetStoreControllerTest {
         int offset = 0;
         int pagesize = 10;
         int totalResults = 2;
-        JpaWidget widget = new JpaWidget();
-        widget.setEntityId(1L);
+        WidgetImpl widget = new WidgetImpl();
+        widget.setId(1L);
         List<Widget> widgets = new ArrayList<Widget>();
         widgets.add(widget);
         SearchResult<Widget> result = new SearchResult<Widget>(widgets, totalResults);
         result.setPageSize(pagesize);
 
         expect(widgetService.getPublishedWidgetsByFreeTextSearch(searchTerm, offset, pagesize)).andReturn(result);
-        expect(widgetService.getAllWidgetStatistics(validUser.getEntityId())).andReturn(allWidgetStatisticsMap);
+        expect(widgetService.getAllWidgetStatistics(validUser.getId())).andReturn(allWidgetStatisticsMap);
         replay(widgetService);
 
         String view = controller.viewSearchResult(model, REFERRER_ID, searchTerm, offset);
@@ -235,8 +239,8 @@ public class WidgetStoreControllerTest {
     public void doAddWidget() {
         final String widgetUrl = "http://example.com/newwidget.xml";
         final Model model = new ExtendedModelMap();
-        final JpaWidget widget = new JpaWidget();
-        widget.setEntityId(1L);
+        final WidgetImpl widget = new WidgetImpl();
+        widget.setId(1L);
         widget.setTitle("Widget title");
         widget.setUrl(widgetUrl);
         widget.setType("OpenSocial");
@@ -249,7 +253,7 @@ public class WidgetStoreControllerTest {
         String view = controller.viewAddWidgetResult(widget, errors, model,REFERRER_ID);
         verify(widgetService);
 
-        assertEquals("redirect:/app/store/widget/" + widget.getEntityId() +     "?referringPageId=" + REFERRER_ID, view);
+        assertEquals("redirect:/app/store/widget/" + widget.getId() +     "?referringPageId=" + REFERRER_ID, view);
         assertFalse("Valid widget data", errors.hasErrors());
     }
 
@@ -258,13 +262,13 @@ public class WidgetStoreControllerTest {
         final String widgetUrl = "http://example.com/existingwidget.xml";
         final Model model = new ExtendedModelMap();
 
-        final JpaWidget existingWidget = new JpaWidget();
-        existingWidget.setEntityId(123L);
+        final WidgetImpl existingWidget = new WidgetImpl();
+        existingWidget.setId(123L);
         existingWidget.setTitle("Widget title");
         existingWidget.setUrl(widgetUrl);
         existingWidget.setType("OpenSocial");
 
-        final Widget widget = new JpaWidget();
+        final Widget widget = new WidgetImpl();
         widget.setTitle("Widget title");
         widget.setUrl(widgetUrl);
         widget.setType("OpenSocial");
@@ -282,7 +286,7 @@ public class WidgetStoreControllerTest {
 
     @Test
     public void doAddWidget_invalid() {
-        final Widget widget = new JpaWidget();
+        final Widget widget = new WidgetImpl();
         widget.setTitle("Not enough data");
         final Model model = new ExtendedModelMap();
         final BindingResult errors = new BeanPropertyBindingResult(widget, "widget");

@@ -161,7 +161,7 @@ public class DefaultWidgetPermissionEvaluator extends AbstractModelPermissionEva
     }
 
     private boolean isWidgetOwnerById(Authentication authentication, Long userId) {
-        return ((User)authentication.getPrincipal()).getEntityId().equals(userId);
+        return ((User)authentication.getPrincipal()).getId().equals(userId);
     }
     
     private boolean isPublishedWidget(Widget widget, List<Widget> trustedWidgetContainer, boolean trustedDomainObject) {

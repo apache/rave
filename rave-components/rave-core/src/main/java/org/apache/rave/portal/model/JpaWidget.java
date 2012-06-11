@@ -20,6 +20,7 @@ package org.apache.rave.portal.model;
 
 import org.apache.rave.persistence.BasicEntity;
 import org.apache.rave.portal.model.conversion.ConvertingListProxyFactory;
+import org.apache.rave.portal.model.conversion.JpaConverter;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -164,7 +165,7 @@ public class JpaWidget implements BasicEntity, Serializable, Widget {
 
     @ManyToOne
     @JoinColumn(name = "owner_id")
-    private User owner;
+    private JpaUser owner;
 
     @XmlElement
     @Basic
@@ -359,7 +360,7 @@ public class JpaWidget implements BasicEntity, Serializable, Widget {
 
     @Override
     public void setOwner(User owner) {
-        this.owner = owner;
+        this.owner = JpaConverter.getInstance().convert(owner, User.class);
     }
 
     @Override

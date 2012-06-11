@@ -19,10 +19,7 @@
 
 package org.apache.rave.portal.repository.impl;
 
-import org.apache.rave.portal.model.JpaTag;
-import org.apache.rave.portal.model.JpaWidgetTag;
-import org.apache.rave.portal.model.User;
-import org.apache.rave.portal.model.WidgetTag;
+import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.repository.WidgetTagRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -105,7 +102,7 @@ public class JpaWidgetTagRepositoryTest {
         widgetTag.setTag(tag);
         widgetTag.setWidgetId(2L);
         widgetTag.setCreatedDate(new Date());
-        widgetTag.setUser(new User());
+        widgetTag.setUser(new JpaUser());
         JpaWidgetTag jpaWidgetTag = (JpaWidgetTag)repository.save(widgetTag);
         assertNotNull(jpaWidgetTag);
         assertEquals(widgetTag.getTag().getKeyword(), jpaWidgetTag.getTag().getKeyword());

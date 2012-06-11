@@ -79,7 +79,7 @@ public class DefaultUserServiceTest {
 
     @Test
     public void getAuthenticatedUser_validUser() {
-        final User authUser = new User(USER_ID);
+        final User authUser = new JpaUser(USER_ID);
         AbstractAuthenticationToken auth = createNiceMock(AbstractAuthenticationToken.class);
         expect(auth.getPrincipal()).andReturn(authUser).anyTimes();
         replay(auth);
@@ -118,7 +118,7 @@ public class DefaultUserServiceTest {
 
     @Test
     public void setAuthenticatedUser_valid() {
-        final User authUser = new User(USER_ID);
+        final User authUser = new JpaUser(USER_ID);
         expect(userRepository.get(USER_ID)).andReturn(authUser).anyTimes();
         replay(userRepository);
 
@@ -130,7 +130,7 @@ public class DefaultUserServiceTest {
 
     @Test
     public void setAuthenticatedUser_validRole() {
-        final User authUser = new User(USER_ID);
+        final User authUser = new JpaUser(USER_ID);
         final Authority userRole = new JpaAuthority();
         userRole.setAuthority("admin");
         authUser.addAuthority(userRole);
@@ -158,7 +158,7 @@ public class DefaultUserServiceTest {
 
     @Test
     public void loadByUsername_valid() {
-        final User authUser = new User(USER_ID, USER_NAME);
+        final User authUser = new JpaUser(USER_ID, USER_NAME);
         expect(userRepository.getByUsername(USER_NAME)).andReturn(authUser).anyTimes();
         replay(userRepository);
 
@@ -186,7 +186,7 @@ public class DefaultUserServiceTest {
 
      @Test
      public void getUserByEmail_valid() {
-          final User authUser=new User(USER_ID,USER_NAME);
+          final User authUser=new JpaUser(USER_ID,USER_NAME);
           authUser.setEmail(USER_EMAIL);
         expect(userRepository.getByUserEmail(USER_EMAIL)).andReturn(authUser).anyTimes();
         replay(userRepository);
@@ -207,8 +207,8 @@ public class DefaultUserServiceTest {
 
     @Test
     public void getLimitedListOfUsers() {
-        User user1 = new User(123L, "john.doe.sr");
-        User user2 = new User(456L, "john.doe.jr");
+        User user1 = new JpaUser(123L, "john.doe.sr");
+        User user2 = new JpaUser(456L, "john.doe.jr");
         List<User> users = new ArrayList<User>();
         users.add(user1);
         users.add(user2);
@@ -228,8 +228,8 @@ public class DefaultUserServiceTest {
     @Test
     public void getUsersByFreeTextSearch() {
         final String searchTerm = "Doe";
-        User user1 = new User(123L, "john.doe.sr");
-        User user2 = new User(456L, "john.doe.jr");
+        User user1 = new JpaUser(123L, "john.doe.sr");
+        User user2 = new JpaUser(456L, "john.doe.jr");
         List<User> users = new ArrayList<User>();
         users.add(user1);
         users.add(user2);
@@ -248,7 +248,7 @@ public class DefaultUserServiceTest {
 
     @Test
     public void updateUserProfile() {
-        User user = new User(USER_ID, USER_NAME);
+        User user = new JpaUser(USER_ID, USER_NAME);
         expect(userRepository.save(user)).andReturn(user).once();
         replay(userRepository);
 
@@ -262,7 +262,7 @@ public class DefaultUserServiceTest {
         final int NUM_COMMENTS = 33;
         final int NUM_RATINGS = 99;
         final int NUM_WIDGETS_OWNED = 4;
-        User user = new User(USER_ID, USER_NAME);
+        JpaUser user = new JpaUser(USER_ID, USER_NAME);
         Page page = new PageImpl(1L, user);
         List<Page> pages = new ArrayList<Page>();
         pages.add(page);
@@ -295,8 +295,8 @@ public class DefaultUserServiceTest {
     @Test
     public void getAllByAddedWidget() {
         List<User> userList = new ArrayList<User>();
-        userList.add(new User());
-        userList.add(new User());
+        userList.add(new JpaUser());
+        userList.add(new JpaUser());
 
         List<Person> personList = new ArrayList<Person>();
         personList.add(userList.get(0).toPerson());
@@ -313,10 +313,10 @@ public class DefaultUserServiceTest {
 
     @Test
     public void registerNewUser_valid(){
-        User user = new User();
+        User user = new JpaUser();
         expect(userRepository.save(user)).andReturn(user).once();
         expect(pageTemplateRepository.getDefaultPage(PageType.PERSON_PROFILE)).andReturn(new PageTemplateImpl()).once();
-        expect(pageRepository.createPageForUser(isA(User.class), isA(PageTemplate.class))).andReturn(new PageImpl());
+        expect(pageRepository.createPageForUser(isA(JpaUser.class), isA(PageTemplate.class))).andReturn(new PageImpl());
         replay(userRepository, pageTemplateRepository, pageRepository);
         service.registerNewUser(user);
         verify(userRepository, pageTemplateRepository, pageRepository);

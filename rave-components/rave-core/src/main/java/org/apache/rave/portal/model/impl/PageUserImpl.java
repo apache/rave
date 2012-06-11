@@ -18,10 +18,7 @@
  */
 package org.apache.rave.portal.model.impl;
 
-import org.apache.rave.portal.model.Page;
-import org.apache.rave.portal.model.PageInvitationStatus;
-import org.apache.rave.portal.model.PageUser;
-import org.apache.rave.portal.model.User;
+import org.apache.rave.portal.model.*;
 
 public class PageUserImpl implements PageUser {
     private Long id;

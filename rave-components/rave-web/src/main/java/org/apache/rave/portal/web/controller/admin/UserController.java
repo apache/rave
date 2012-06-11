@@ -19,17 +19,8 @@
 
 package org.apache.rave.portal.web.controller.admin;
 
-import static org.apache.rave.portal.web.controller.admin.AdminControllerUtil.DEFAULT_PAGE_SIZE;
-import static org.apache.rave.portal.web.controller.admin.AdminControllerUtil.addNavigationMenusToModel;
-import static org.apache.rave.portal.web.controller.admin.AdminControllerUtil.checkTokens;
-import static org.apache.rave.portal.web.controller.admin.AdminControllerUtil.isDeleteOrUpdate;
-
-import java.beans.PropertyEditorSupport;
-
-import org.apache.rave.portal.model.Authority;
-import org.apache.rave.portal.model.JpaAuthority;
-import org.apache.rave.portal.model.PortalPreference;
-import org.apache.rave.portal.model.User;
+import org.apache.rave.portal.model.*;
+import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.service.AuthorityService;
 import org.apache.rave.portal.service.NewAccountService;
@@ -50,15 +41,13 @@ import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.beans.PropertyEditorSupport;
+
+import static org.apache.rave.portal.web.controller.admin.AdminControllerUtil.*;
 
 /**
  * Admin controller to manipulate User data
@@ -96,7 +85,7 @@ public class UserController {
     @InitBinder(value = {"user"})
     public void initBinder(WebDataBinder dataBinder) {
         dataBinder.registerCustomEditor(GrantedAuthority.class, new AuthorityEditor());
-        dataBinder.registerCustomEditor(JpaAuthority.class, new AuthorityEditor());
+        dataBinder.registerCustomEditor(Authority.class, new AuthorityEditor());
         dataBinder.setDisallowedFields("entityId", "username", "password", "confirmPassword");
     }
 
@@ -130,7 +119,7 @@ public class UserController {
     @RequestMapping(value = "/admin/userdetail/{userid}", method = RequestMethod.GET)
     public String viewUserDetail(@PathVariable("userid") Long userid, Model model) {
         addNavigationMenusToModel(SELECTED_ITEM, model);
-        model.addAttribute(userService.getUserById(userid));
+        model.addAttribute(ModelKeys.USER, userService.getUserById(userid));
         model.addAttribute(ModelKeys.TOKENCHECK, AdminControllerUtil.generateSessionToken());
         return ViewNames.ADMIN_USERDETAIL;
     }
@@ -167,7 +156,7 @@ public class UserController {
             modelMap.addAttribute("missingConfirm", true);
             return ViewNames.ADMIN_USERDETAIL;
         }
-        userService.deleteUser(user.getEntityId());
+        userService.deleteUser(user.getId());
         modelMap.clear();
         status.setComplete();
         return "redirect:/app/admin/users?action=delete";
@@ -177,7 +166,7 @@ public class UserController {
     public String setUpForm(ModelMap model) {
         logger.debug("Initializing new account form");
         AdminControllerUtil.addNavigationMenusToModel(SELECTED_ITEM, (Model) model);
-        model.addAttribute(ModelKeys.NEW_USER, new User());
+        model.addAttribute(ModelKeys.NEW_USER, new UserImpl());
         return ViewNames.ADMIN_NEW_ACCOUNT;
 
     }
@@ -255,7 +244,7 @@ public class UserController {
 
 
     /**
-     * Mapping between the submitted form value and an {@link org.apache.rave.portal.model.JpaAuthority}
+     * Mapping between the submitted form value and an {@link org.apache.rave.portal.model.Authority}
      */
     private class AuthorityEditor extends PropertyEditorSupport {
 

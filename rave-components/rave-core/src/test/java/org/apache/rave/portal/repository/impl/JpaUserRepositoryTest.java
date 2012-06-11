@@ -21,15 +21,13 @@ package org.apache.rave.portal.repository.impl;
 
 import junit.framework.Assert;
 import org.apache.rave.portal.model.Authority;
-import org.apache.rave.portal.model.Page;
+import org.apache.rave.portal.model.JpaUser;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.repository.AuthorityRepository;
 import org.apache.rave.portal.repository.UserRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCrypt;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -37,7 +35,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.*;
@@ -86,7 +83,7 @@ public class JpaUserRepositoryTest {
 
     @Test
     public void getByUsername_valid() {
-        User user = repository.getByUsername(USER_NAME);
+        JpaUser user = (JpaUser)repository.getByUsername(USER_NAME);
         assertThat(user, notNullValue());
         assertThat(user.getEntityId(), is(equalTo(USER_ID)));
         assertThat(true, is(passwordEncoder.matches(USER_NAME, user.getPassword())));
@@ -102,7 +99,7 @@ public class JpaUserRepositoryTest {
 
     @Test
     public void getByUserEmail_valid() {
-        User user = repository.getByUserEmail(USER_EMAIL);
+        JpaUser user = (JpaUser)repository.getByUserEmail(USER_EMAIL);
         assertThat(user, notNullValue());
         assertThat(user.getEntityId(), is(equalTo(USER_ID)));
         assertThat(true, is(passwordEncoder.matches(USER_NAME, user.getPassword())));
@@ -116,7 +113,7 @@ public class JpaUserRepositoryTest {
         Assert.assertNotNull("Existing authority", authority);
 
         int usercount = authority.getUsers().size();
-        User user = new User();
+        User user = new JpaUser();
         user.setUsername("dummy");
         authority.addUser(user);
         authorityRepository.save(authority);

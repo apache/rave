@@ -26,7 +26,6 @@ import org.apache.rave.portal.service.PageService;
 import org.apache.rave.portal.service.UserService;
 import org.hamcrest.CoreMatchers;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -70,7 +69,7 @@ public class DefaultPageServiceTest {
     private Region targetRegion, originalRegion, lockedRegion;
     private Widget validWidget;
     private RegionWidget validRegionWidget;
-    private User user;
+    private JpaUser user;
     private PageLayout pageLayout;
     private String defaultPageName = "Main";
     private Page page, page2;
@@ -129,7 +128,7 @@ public class DefaultPageServiceTest {
         pageLayout.setCode(PAGE_LAYOUT_CODE);
         pageLayout.setNumberOfRegions(3L);
 
-        user = new User();
+        user = new JpaUser();
         user.setEntityId(1L);
         user.setUsername("acarlucci");
         user.setDefaultPageLayout(pageLayout);
@@ -180,7 +179,7 @@ public class DefaultPageServiceTest {
         List<Page> VALID_PAGES = new ArrayList<Page>();
         Page personPage = new PageImpl();
         PageTemplate pageTemplate = new PageTemplateImpl();
-        User user = new User();
+        JpaUser user = new JpaUser();
 
         expect(pageRepository.getAllPages(VALID_USER_ID, PageType.PERSON_PROFILE)).andReturn(VALID_PAGES);
         expect(userService.getUserById(isA(Long.class))).andReturn(user).once();
