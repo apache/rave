@@ -15,8 +15,8 @@
  */
 package org.apache.rave.portal.service.impl;
 
-import org.apache.rave.portal.model.TagImpl;
-import org.apache.rave.portal.model.WidgetTagImpl;
+import org.apache.rave.portal.model.impl.TagImpl;
+import org.apache.rave.portal.model.impl.WidgetTagImpl;
 import org.apache.rave.portal.repository.WidgetTagRepository;
 import org.apache.rave.portal.service.WidgetTagService;
 import org.junit.Before;

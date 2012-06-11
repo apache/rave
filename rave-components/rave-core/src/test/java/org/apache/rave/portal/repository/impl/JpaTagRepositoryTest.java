@@ -21,7 +21,7 @@ package org.apache.rave.portal.repository.impl;
 
 import org.apache.rave.portal.model.JpaTag;
 import org.apache.rave.portal.model.Tag;
-import org.apache.rave.portal.model.TagImpl;
+import org.apache.rave.portal.model.impl.TagImpl;
 import org.apache.rave.portal.model.WidgetTag;
 import org.apache.rave.portal.repository.TagRepository;
 import org.junit.Test;

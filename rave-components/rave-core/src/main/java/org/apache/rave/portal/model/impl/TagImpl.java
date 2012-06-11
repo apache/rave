@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 
-package org.apache.rave.portal.model;
+package org.apache.rave.portal.model.impl;
+
+import org.apache.rave.portal.model.Tag;
+import org.apache.rave.portal.model.WidgetTag;
 
 import java.util.List;
 

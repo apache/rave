@@ -1,7 +1,7 @@
 package org.apache.rave.portal.model.conversion;
 
 import org.apache.rave.portal.model.JpaTag;
-import org.apache.rave.portal.model.TagImpl;
+import org.apache.rave.portal.model.impl.TagImpl;
 import org.apache.rave.portal.model.WidgetTag;
 import org.junit.Test;
 import org.junit.runner.RunWith;

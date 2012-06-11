@@ -1,6 +1,7 @@
 package org.apache.rave.portal.model.conversion;
 
 import org.apache.rave.portal.model.*;
+import org.apache.rave.portal.model.impl.WidgetTagImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
