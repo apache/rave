@@ -170,7 +170,7 @@ public class DefaultWidgetTagPermissionEvaluator extends AbstractModelPermission
         if (trustedDomainObject) {
             trustedWidgetTag = widgetTag;
         } else {
-            trustedWidgetTag = getTrustedWidgetTag(widgetTag.getEntityId(), trustedWidgetTagContainer);
+            trustedWidgetTag = getTrustedWidgetTag(widgetTag.getWidgetId(), widgetTag.getTag().getKeyword(), trustedWidgetTagContainer);
         }                  
         
         return isWidgetTagOwnerByUsername(authentication, trustedWidgetTag.getUser().getUsername());
@@ -178,10 +178,10 @@ public class DefaultWidgetTagPermissionEvaluator extends AbstractModelPermission
     
     // returns a trusted WidgetTag object, either from the WidgetTagRepository, or the
     // cached container list
-    private WidgetTag getTrustedWidgetTag(long widgetTagId, List<WidgetTag> trustedWidgetTagContainer) {
+    private WidgetTag getTrustedWidgetTag(long widgetId, String tagKeyword, List<WidgetTag> trustedWidgetTagContainer) {
         WidgetTag p = null;
         if (trustedWidgetTagContainer.isEmpty()) {
-            p = widgetTagRepository.get(widgetTagId);
+            p = widgetTagRepository.getByWidgetIdAndTag(widgetId, tagKeyword);
             trustedWidgetTagContainer.add(p);
         } else {
             p = trustedWidgetTagContainer.get(0);

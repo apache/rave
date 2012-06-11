@@ -20,6 +20,7 @@
 package org.apache.rave.portal.service.impl;
 
 import org.apache.rave.portal.model.Tag;
+import org.apache.rave.portal.model.TagImpl;
 import org.apache.rave.portal.repository.TagRepository;
 import org.apache.rave.portal.service.TagService;
 import org.junit.Before;
@@ -47,7 +48,7 @@ public class DefaultTagServiceTest {
 
     @Test
     public void getTagById() {
-        Tag tag = createTag(1L, "test");
+        Tag tag = createTag("test");
         expect(repository.get(1L)).andReturn(tag);
         replay(repository);
         Tag sTag = service.getTagById(1L);
@@ -56,10 +57,9 @@ public class DefaultTagServiceTest {
     }
 
 
-    private static Tag createTag(long id, String keyword) {
-        Tag tag = new Tag();
+    private static Tag createTag(String keyword) {
+        TagImpl tag = new TagImpl();
         tag.setKeyword(keyword);
-        tag.setEntityId(id);
         return tag;
     }
 
@@ -77,7 +77,7 @@ public class DefaultTagServiceTest {
     @Test
     public void allTags() {
         List<Tag> tags = new ArrayList<Tag>();
-        Tag tag = createTag(1L, "test");
+        Tag tag = createTag("test");
         tags.add(tag);
         expect(repository.getAll()).andReturn(tags);
         replay(repository);
@@ -88,7 +88,7 @@ public class DefaultTagServiceTest {
 
     @Test
     public void getByKeyword() {
-        Tag tag = createTag(1L, "test");
+        Tag tag = createTag("test");
         expect(repository.getByKeyword("test")).andReturn(tag);
         expect(repository.getByKeyword("TEST")).andReturn(tag);
         expect(repository.getByKeyword(" test")).andReturn(tag);

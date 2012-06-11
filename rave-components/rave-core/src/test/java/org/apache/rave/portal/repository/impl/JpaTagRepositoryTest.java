@@ -19,17 +19,22 @@
 
 package org.apache.rave.portal.repository.impl;
 
+import org.apache.rave.portal.model.JpaTag;
 import org.apache.rave.portal.model.Tag;
+import org.apache.rave.portal.model.TagImpl;
+import org.apache.rave.portal.model.WidgetTag;
 import org.apache.rave.portal.repository.TagRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -55,7 +60,7 @@ public class JpaTagRepositoryTest {
     public void getById_validId() {
         final Tag tag = repository.get(VALID_ID);
         assertNotNull(tag);
-        assertEquals(VALID_ID, tag.getEntityId());
+        assertEquals(VALID_ID, ((JpaTag)tag).getEntityId());
         assertEquals(tag.getKeyword(), "news");
     }
 
@@ -77,18 +82,76 @@ public class JpaTagRepositoryTest {
     public void getByKeyword() {
         Tag tag = repository.getByKeyword("news");
         assertNotNull(tag);
-        assertTrue(tag.getEntityId() == 1);
+        assertTrue(((JpaTag)tag).getEntityId() == 1);
         tag = repository.getByKeyword("NEWS");
         assertNotNull(tag);
-        assertTrue(tag.getEntityId() == 1);
+        assertTrue(((JpaTag)tag).getEntityId() == 1);
         tag = repository.getByKeyword("news  ");
         assertNotNull(tag);
-        assertTrue(tag.getEntityId() == 1);
+        assertTrue(((JpaTag)tag).getEntityId() == 1);
         tag = repository.getByKeyword("   news  ");
         assertNotNull(tag);
-        assertTrue(tag.getEntityId() == 1);
-
+        assertTrue(((JpaTag)tag).getEntityId() == 1);
     }
 
+    @Test
+    @Transactional
+    @Rollback(true)
+    public void save_valid(){
+        Tag tag = new JpaTag();
+        String ordnance = "ordnance";
+        tag.setKeyword(ordnance);
+        tag.setWidgets(new ArrayList<WidgetTag>());
+        repository.save(tag);
+        Tag foundTag = repository.getByKeyword(ordnance);
+        assertNotNull(foundTag);
+        assertEquals(tag.getKeyword(), foundTag.getKeyword());
+        assertEquals(tag.getWidgets().size(), foundTag.getWidgets().size());
+    }
+
+    @Test(expected = NullPointerException.class)
+    @Transactional
+    @Rollback(true)
+    public void save_null(){
+        Tag tag = null;
+        tag = repository.save(tag);
+        assertNull(tag);
+    }
+
+    @Test
+    @Transactional
+    @Rollback(true)
+    public void delete_valid_jpaTag(){
+        String keyword = "news";
+        JpaTag jpaTag = (JpaTag)repository.getByKeyword(keyword);
+        assertNotNull(jpaTag);
+        repository.delete(jpaTag);
+        assertNull(repository.getByKeyword(keyword));
+    }
+
+    @Test
+    @Transactional
+    @Rollback(true)
+    public void delete_valid_tagImpl(){
+        String keyword = "news";
+        // make sure we do have a tag with the keyword in the db
+        JpaTag control = (JpaTag)repository.getByKeyword(keyword);
+        assertNotNull(control);
+        // create a tag with the keyword not of JpaTag.class for branch coverage
+        TagImpl tag = new TagImpl(keyword);
+        assertNotNull(tag);
+        repository.delete(tag);
+        assertNull(repository.getByKeyword(keyword));
+    }
+
+    @Test
+    @Transactional
+    @Rollback(true)
+    public void delete_invalid(){
+        String keyword = "abdhjdhlnews";
+        TagImpl tag = new TagImpl(keyword);
+        assertNotNull(tag);
+        repository.delete(tag);
+    }
 
 }

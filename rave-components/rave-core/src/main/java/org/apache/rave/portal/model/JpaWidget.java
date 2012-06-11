@@ -91,7 +91,7 @@ public class JpaWidget implements BasicEntity, Serializable, Widget {
     static final String WHERE_CLAUSE_STATUS = " WHERE w.widgetStatus = :" + PARAM_STATUS;
     static final String WHERE_CLAUSE_URL = " WHERE w.url = :" + PARAM_URL;
     static final String WHERE_CLAUSE_OWNER = " WHERE w.owner = :" + PARAM_OWNER;
-    static final String WIDGET_TAG_BY_KEYWORD=" (select t.widgetId from WidgetTag t where lower(t.tag.keyword)=:"+PARAM_TAG+")";
+    static final String WIDGET_TAG_BY_KEYWORD=" (select t.widgetId from JpaWidgetTag t where lower(t.tag.keyword)=:"+PARAM_TAG+")";
     static final String JOIN_TAGS=" WHERE w.entityId in"+WIDGET_TAG_BY_KEYWORD;
 
     static final String ORDER_BY_TITLE_ASC = " ORDER BY w.featured DESC, w.title ASC ";
@@ -182,7 +182,7 @@ public class JpaWidget implements BasicEntity, Serializable, Widget {
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "widget_id", referencedColumnName = "entity_id")
-    private List<WidgetTag> tags;
+    private List<JpaWidgetTag> tags;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name="widget_category",
@@ -401,12 +401,19 @@ public class JpaWidget implements BasicEntity, Serializable, Widget {
 
     @Override
     public List<WidgetTag> getTags() {
-        return tags;
+        return ConvertingListProxyFactory.createProxyList(WidgetTag.class, tags);
     }
 
     @Override
     public void setTags(List<WidgetTag> tags) {
-        this.tags = tags;
+        if(this.tags == null) {
+            this.tags = new ArrayList<JpaWidgetTag>();
+        }
+        //Ensure that all operations go through the conversion proxy
+        this.getTags().clear();
+        if(tags != null) {
+            this.getTags().addAll(tags);
+        }
     }
 
     @Override

@@ -27,7 +27,7 @@ import static org.junit.Assert.*;
  */
 public class WidgetTagTest {
     
-    private WidgetTag widgetTag;
+    private JpaWidgetTag widgetTag;
     
     private static final Long VALID_ENTITY_ID = 1L;
     private static final Long VALID_USER_ID = 1L;
@@ -36,12 +36,12 @@ public class WidgetTagTest {
     
     @Before
     public void setUp() {
-        widgetTag = new WidgetTag();
+        widgetTag = new JpaWidgetTag();
         widgetTag.setEntityId(VALID_ENTITY_ID);
         widgetTag.setWidgetId(VALID_WIDGET_ID);
         widgetTag.setUser(new User(1L, "John.Doe"));
         widgetTag.setCreatedDate(VALID_CREATED_DATE);
-        widgetTag.setTag(new Tag(1L, "test"));
+        widgetTag.setTag(new JpaTag(1L, "test"));
     }
     
     @Test

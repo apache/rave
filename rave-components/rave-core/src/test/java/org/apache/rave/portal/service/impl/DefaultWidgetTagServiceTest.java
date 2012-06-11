@@ -15,8 +15,8 @@
  */
 package org.apache.rave.portal.service.impl;
 
-import org.apache.rave.portal.model.Tag;
-import org.apache.rave.portal.model.WidgetTag;
+import org.apache.rave.portal.model.TagImpl;
+import org.apache.rave.portal.model.WidgetTagImpl;
 import org.apache.rave.portal.repository.WidgetTagRepository;
 import org.apache.rave.portal.service.WidgetTagService;
 import org.junit.Before;
@@ -39,8 +39,7 @@ public class DefaultWidgetTagServiceTest {
 
     @Test
     public void getWidgetTag() {
-        WidgetTag tag = new WidgetTag();
-        tag.setEntityId(1L);
+        WidgetTagImpl tag = new WidgetTagImpl();
         expect(widgetTagRepository.get(1L)).andReturn(tag);
         replay(widgetTagRepository);
 
@@ -52,9 +51,8 @@ public class DefaultWidgetTagServiceTest {
     public void saveWidgetTag() {
         try {
 
-            WidgetTag wtag = new WidgetTag();
-            wtag.setEntityId(3L);
-            Tag tag = new Tag(4L, "test");
+            WidgetTagImpl wtag = new WidgetTagImpl();
+            TagImpl tag = new TagImpl();
             wtag.setTag(tag);
             expect(widgetTagRepository.save(wtag)).andReturn(wtag);
             replay(widgetTagRepository);

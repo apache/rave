@@ -157,7 +157,7 @@ public class WidgetApi extends AbstractRestApi {
         if (tagText != null && !tagText.trim().isEmpty()) {
             WidgetTag existed = widgetTagService.getWidgetTagByWidgetIdAndKeyword(widgetId, tagText);
             if (existed == null) {
-                WidgetTag widgetTag = new WidgetTag();
+                WidgetTag widgetTag = new WidgetTagImpl();
                 widgetTag.setWidgetId(widgetId);
                 widgetTag.setUser(userService.getAuthenticatedUser());
                 widgetTag.setCreatedDate(new Date());
@@ -187,7 +187,7 @@ public class WidgetApi extends AbstractRestApi {
     private Tag getTag(String keyword) {
         Tag tag = tagService.getTagByKeyword(keyword);
         if (tag == null) {
-            tag = new Tag();
+            tag = new TagImpl();
             tag.setKeyword(keyword);
         }
         return tag;

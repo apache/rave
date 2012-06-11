@@ -19,58 +19,84 @@
 
 package org.apache.rave.portal.repository.impl;
 
-import org.apache.rave.persistence.jpa.AbstractJpaRepository;
+import org.apache.rave.portal.model.JpaTag;
 import org.apache.rave.portal.model.Tag;
+import org.apache.rave.portal.model.conversion.JpaTagConverter;
 import org.apache.rave.portal.repository.TagRepository;
+import org.apache.rave.util.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
 import static org.apache.rave.persistence.jpa.util.JpaUtil.getSingleResult;
+import static org.apache.rave.persistence.jpa.util.JpaUtil.saveOrUpdate;
 
 /**
  * JPA implementation for {@link org.apache.rave.portal.repository.AuthorityRepository}
  */
 @Repository
-public class JpaTagRepository extends AbstractJpaRepository<Tag>
-        implements TagRepository {
+public class JpaTagRepository implements TagRepository {
 
-    public JpaTagRepository() {
-        super(Tag.class);
-    }
+    @PersistenceContext
+    private EntityManager manager;
+    
+    @Autowired
+    private JpaTagConverter converter;
 
 
     @Override
     public List<Tag> getAll() {
-        TypedQuery<Tag> query = manager.createNamedQuery(Tag.GET_ALL, Tag.class);
-        return query.getResultList();
+        TypedQuery<JpaTag> query = manager.createNamedQuery(JpaTag.GET_ALL, JpaTag.class);
+        return CollectionUtils.<Tag>toBaseTypedList(query.getResultList());
     }
 
+    @Override
+    public Class<? extends Tag> getType(){
+        return JpaTag.class;
+    }
 
     @Override
     public int getCountAll() {
-        Query query = manager.createNamedQuery(Tag.COUNT_ALL);
+        Query query = manager.createNamedQuery(JpaTag.COUNT_ALL);
         Number countResult = (Number) query.getSingleResult();
         return countResult.intValue();
     }
 
     @Override
-    public Tag getByKeyword(String keyword) {
+    public JpaTag getByKeyword(String keyword) {
         if (keyword != null) {
             keyword = keyword.trim();
         }
-        TypedQuery<Tag> query = manager.createNamedQuery(Tag.FIND_BY_KEYWORD, Tag.class);
+        TypedQuery<JpaTag> query = manager.createNamedQuery(JpaTag.FIND_BY_KEYWORD, JpaTag.class);
         query.setParameter("keyword", keyword);
         return getSingleResult(query.getResultList());
     }
 
     @Override
     public List<Tag> getAvailableTagsByWidgetId(Long widgetId) {
-        TypedQuery<Tag> query = manager.createNamedQuery(Tag.GET_ALL_NOT_IN_WIDGET, Tag.class);
+        TypedQuery<JpaTag> query = manager.createNamedQuery(JpaTag.GET_ALL_NOT_IN_WIDGET, JpaTag.class);
         query.setParameter("widgetId", widgetId);
-        return query.getResultList();
+        return CollectionUtils.<Tag>toBaseTypedList(query.getResultList());
     }
 
+    @Override
+    public Tag get(long id) {
+        return manager.find(JpaTag.class, id);
+    }
+
+    @Override
+    public Tag save(Tag item) {
+        JpaTag tag = converter.convert(item);
+        return saveOrUpdate(tag.getEntityId(), manager, tag);
+    }
+
+    @Override
+    public void delete(Tag item) {
+        manager.remove(item instanceof JpaTag ? item : getByKeyword(item.getKeyword()));
+    }
 }

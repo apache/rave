@@ -15,32 +15,58 @@
  */
 package org.apache.rave.portal.repository.impl;
 
-import org.apache.rave.persistence.jpa.AbstractJpaRepository;
+import org.apache.rave.portal.model.JpaWidgetTag;
 import org.apache.rave.portal.model.WidgetTag;
+import org.apache.rave.portal.model.conversion.JpaWidgetTagConverter;
 import org.apache.rave.portal.repository.WidgetTagRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 import static org.apache.rave.persistence.jpa.util.JpaUtil.getSingleResult;
+import static org.apache.rave.persistence.jpa.util.JpaUtil.saveOrUpdate;
 
 @Repository
-public class JpaWidgetTagRepository extends AbstractJpaRepository<WidgetTag> implements WidgetTagRepository {
+public class JpaWidgetTagRepository implements WidgetTagRepository {
 
-    JpaWidgetTagRepository() {
-        super(WidgetTag.class);
-    }
+    @PersistenceContext
+    EntityManager manager;
+    
+    @Autowired
+    JpaWidgetTagConverter converter;
 
     @Override
-    public WidgetTag getByWidgetIdAndTag(Long widgetId, String keyword) {
+    public JpaWidgetTag getByWidgetIdAndTag(Long widgetId, String keyword) {
         if (keyword != null) {
             keyword = keyword.trim();
         }
-        TypedQuery<WidgetTag> query = manager.createNamedQuery(WidgetTag.FIND_BY_WIDGET_AND_KEYWORD, WidgetTag.class);
+        TypedQuery<JpaWidgetTag> query = manager.createNamedQuery(JpaWidgetTag.FIND_BY_WIDGET_AND_KEYWORD, JpaWidgetTag.class);
         query.setParameter("keyword", keyword);
         query.setParameter("widgetId", widgetId);
         return getSingleResult(query.getResultList());
     }
 
+    @Override
+    public Class<? extends WidgetTag> getType() {
+        return JpaWidgetTag.class;
+    }
 
+    @Override
+    public WidgetTag get(long id) {
+        return manager.find(JpaWidgetTag.class, id);
+    }
+
+    @Override
+    public WidgetTag save(WidgetTag item) {
+        JpaWidgetTag widgetTag = converter.convert(item);
+        return saveOrUpdate(widgetTag.getEntityId(), manager, widgetTag);
+    }
+
+    @Override
+    public void delete(WidgetTag item) {
+        manager.remove(item instanceof JpaWidgetTag ? item: getByWidgetIdAndTag(item.getWidgetId(), item.getTag().getKeyword()));
+    }
 }

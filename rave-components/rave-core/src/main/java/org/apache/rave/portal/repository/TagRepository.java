@@ -25,11 +25,11 @@ import org.apache.rave.portal.model.Tag;
 import java.util.List;
 
 /**
- * Repository interface for {@link org.apache.rave.portal.model.Tag}
+ * Repository interface for {@link org.apache.rave.portal.model.JpaTag}
  */
 public interface TagRepository extends Repository<Tag> {
     /**
-     * @return a List of all {@link Tag}'s.
+     * @return a List of all {@link org.apache.rave.portal.model.JpaTag}'s.
      */
 
     List<Tag> getAll();
@@ -47,7 +47,7 @@ public interface TagRepository extends Repository<Tag> {
     Tag getByKeyword(String keyword);
 
     /**
-     * @return a List of all tag not link to this widget{@link Tag}'s.
+     * @return a List of all tag not link to this widget{@link org.apache.rave.portal.model.JpaTag}'s.
      */
 
     List<Tag> getAvailableTagsByWidgetId(Long widgetId);

@@ -28,7 +28,6 @@ import java.util.Date;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
 
 /**
  * Test for {@link JpaWidget}
@@ -62,15 +61,15 @@ public class WidgetTest {
         status = WidgetStatus.PREVIEW;
         widgetComments = new ArrayList<WidgetComment>();
 
-        Tag tag=new Tag(1L, "test") ;
-        Tag tag1=new Tag(2L, "test1") ;
+        JpaTag tag=new JpaTag(1L, "test") ;
+        JpaTag tag1=new JpaTag(2L, "test1") ;
         
         ratings = new ArrayList<WidgetRating>();
         ratings.add(new JpaWidgetRating(1L, 1L, 1L, 1));
         
         tags = new ArrayList<WidgetTag>();
-        tags.add(new WidgetTag(1L, 1L, new User(), new Date(), tag)) ;
-        tags.add(new WidgetTag(2L,1L, new User(), new Date(), tag1)) ;
+        tags.add(new JpaWidgetTag(1L, 1L, new User(), new Date(), tag)) ;
+        tags.add(new JpaWidgetTag(2L,1L, new User(), new Date(), tag1)) ;
 
         widget.setEntityId(id);
         widget.setTitle(title);
