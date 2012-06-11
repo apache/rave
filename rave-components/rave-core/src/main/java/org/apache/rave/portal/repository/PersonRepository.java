@@ -17,12 +17,10 @@
  * under the License.
  */
 
-package org.apache.rave.opensocial.repository;
+package org.apache.rave.portal.repository;
 
-import org.apache.rave.portal.model.Person;
 import org.apache.rave.persistence.Repository;
-import org.apache.shindig.protocol.model.FilterOperation;
-import org.apache.shindig.social.opensocial.spi.CollectionOptions;
+import org.apache.rave.portal.model.Person;
 
 import java.util.List;
 
@@ -53,17 +51,6 @@ public interface PersonRepository extends Repository<Person> {
     List<Person> findAllConnectedPeople(String username, String appId);
 
     /**
-     * Gets all people connected to the given user including friends, fellow group members, etc, filtered by the specified field
-     *
-     * @param username the username of the person to query for
-     * @param field the field to filter on
-     * @param operation the type of filter to apply
-     * @param value the value of the specified filter
-     * @return a filtered list of connected individuals
-     */
-    List<Person> findAllConnectedPeople(String username, String field, FilterOperation operation, String value);
-
-    /**
      * Finds a list of all people connected to the given person who are friends with the second user
      * @param username the user to find connected individuals for
      * @param friendUsername the username of the person to filter connections by
@@ -86,17 +73,6 @@ public interface PersonRepository extends Repository<Person> {
      * @return a list of friends with the application
      */
     List<Person> findFriends(String username, String appId);
-
-    /**
-     * Finds the list of friends for the given person, filtered by the specified field
-     *
-     * @param username the username of the user to find friends for
-     * @param field the field to filter on
-     * @param operation the type of filter to apply
-     * @param value the value of the specified filter
-     * @return a filtered list of friends
-     */
-    List<Person> findFriends(String username, String field, FilterOperation operation, String value);
 
     /**
      * Finds the list of friends for the user who are also friends of the given person
@@ -122,17 +98,6 @@ public interface PersonRepository extends Repository<Person> {
      * @return a list of people in the group with the application
      */
     List<Person> findByGroup(String groupId, String appId);
-
-    /**
-     * Finds a subset of people in the specified group filtered by the specified field
-     *
-     * @param groupId the Id of the group to query
-     * @param field the field to filter on
-     * @param operation the type of filter to apply
-     * @param value the value of the specified filter
-     * @return a filtered list of group members
-     */
-    List<Person> findByGroup(String groupId, String field, FilterOperation operation, String value);
 
     /**
      * Finds a subset of people in teh specified group who have the given friend

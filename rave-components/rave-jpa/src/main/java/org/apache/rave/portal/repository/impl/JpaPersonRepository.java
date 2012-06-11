@@ -17,16 +17,15 @@
  * under the License.
  */
 
-package org.apache.rave.opensocial.repository.impl;
+package org.apache.rave.portal.repository.impl;
 
 import org.apache.rave.exception.NotSupportedException;
 import org.apache.rave.portal.model.JpaGroup;
 import org.apache.rave.portal.model.JpaPerson;
 import org.apache.rave.portal.model.Person;
-import org.apache.rave.opensocial.repository.PersonRepository;
 import org.apache.rave.portal.model.conversion.JpaPersonConverter;
+import org.apache.rave.portal.repository.PersonRepository;
 import org.apache.rave.util.CollectionUtils;
-import org.apache.shindig.protocol.model.FilterOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -43,7 +42,7 @@ import static org.apache.rave.persistence.jpa.util.JpaUtil.saveOrUpdate;
  *
  */
 @Repository
-public class JpaPersonRepository implements PersonRepository{
+public class JpaPersonRepository implements PersonRepository {
 
     @PersistenceContext
     private EntityManager manager;
@@ -74,11 +73,6 @@ public class JpaPersonRepository implements PersonRepository{
     }
 
     @Override
-    public List<Person> findAllConnectedPeople(String username, String field, FilterOperation operation, String value) {
-        throw new NotSupportedException();
-    }
-
-    @Override
     public List<Person> findAllConnectedPeopleWithFriend(String username, String friendUsername) {
         throw new NotSupportedException();
     }
@@ -92,11 +86,6 @@ public class JpaPersonRepository implements PersonRepository{
 
     @Override
     public List<Person> findFriends(String username, String appId) {
-        throw new NotSupportedException();
-    }
-
-    @Override
-    public List<Person> findFriends(String username, String field, FilterOperation operation, String value) {
         throw new NotSupportedException();
     }
 
@@ -115,11 +104,6 @@ public class JpaPersonRepository implements PersonRepository{
 
     @Override
     public List<Person> findByGroup(String groupId, String appId) {
-        throw new NotSupportedException();
-    }
-
-    @Override
-    public List<Person> findByGroup(String groupId, String field, FilterOperation operation, String value) {
         throw new NotSupportedException();
     }
 

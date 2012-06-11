@@ -54,7 +54,7 @@ public class JpaPersonRepositoryTest {
     private EntityManager manager;
 
     @Autowired
-    private PersonRepository repository;
+    private OpenSocialPersonRepository repository;
 
     @Test
     public void findByUsername_valid() {

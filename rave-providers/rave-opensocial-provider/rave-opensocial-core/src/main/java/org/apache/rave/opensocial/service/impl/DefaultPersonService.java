@@ -20,7 +20,7 @@
 package org.apache.rave.opensocial.service.impl;
 
 import com.google.common.collect.Lists;
-import org.apache.rave.opensocial.repository.PersonRepository;
+import org.apache.rave.opensocial.repository.OpenSocialPersonRepository;
 import org.apache.rave.opensocial.service.SimplePersonService;
 import org.apache.rave.util.CollectionUtils;
 import org.apache.shindig.auth.SecurityToken;
@@ -47,10 +47,10 @@ import java.util.concurrent.Future;
 @Service
 public class DefaultPersonService implements PersonService, SimplePersonService {
 
-    private final PersonRepository repository;
+    private final OpenSocialPersonRepository repository;
 
     @Autowired
-    public DefaultPersonService(PersonRepository repository) {
+    public DefaultPersonService(OpenSocialPersonRepository repository) {
         this.repository = repository;
     }
 

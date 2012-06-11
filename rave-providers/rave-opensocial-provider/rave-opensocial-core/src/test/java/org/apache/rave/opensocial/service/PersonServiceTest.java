@@ -20,7 +20,7 @@
 package org.apache.rave.opensocial.service;
 
 import com.google.common.collect.Lists;
-import org.apache.rave.opensocial.repository.PersonRepository;
+import org.apache.rave.opensocial.repository.OpenSocialPersonRepository;
 import org.apache.rave.opensocial.service.impl.DefaultPersonService;
 import org.apache.rave.opensocial.service.impl.FieldRestrictingPerson;
 import org.apache.rave.portal.model.impl.PersonImpl;
@@ -57,13 +57,13 @@ public class PersonServiceTest {
     private static final String ID_1 = "1234";
     private static final String GROUP_ID = "BOO";
     private PersonService service;
-    private PersonRepository repository;
+    private OpenSocialPersonRepository repository;
     private SecurityToken token;
 
     @Before
     public void setup() {
         token = createNiceMock(SecurityToken.class);
-        repository = createNiceMock(PersonRepository.class);
+        repository = createNiceMock(OpenSocialPersonRepository.class);
         service = new DefaultPersonService(repository);
     }
 
