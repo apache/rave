@@ -17,14 +17,15 @@
  * under the License.
  */
 
-package org.apache.rave.gadgets.oauth.service;
+package org.apache.rave.portal.repository;
 
 import org.apache.rave.portal.model.OAuthConsumerStore;
+import org.apache.rave.persistence.Repository;
 
 /**
- * Service to handle OAuth Consumer store
+ * Repository interface for {@link org.apache.rave.portal.model.OAuthConsumerStore}
  */
-public interface OAuthConsumerStoreService {
+public interface OAuthConsumerStoreRepository extends Repository<OAuthConsumerStore> {
 
     /**
      * Fetches {@link org.apache.rave.portal.model.OAuthConsumerStore} based on the gadget location and the service provider
@@ -34,20 +35,4 @@ public interface OAuthConsumerStoreService {
      * @return {@link org.apache.rave.portal.model.OAuthConsumerStore} or {@literal null} if none matches the criteria
      */
     OAuthConsumerStore findByUriAndServiceName(String gadgetUri, String serviceName);
-
-    /**
-     * Persists {@link org.apache.rave.portal.model.OAuthConsumerStore}
-     *
-     * @param oAuthConsumerStore {@link org.apache.rave.portal.model.OAuthConsumerStore} to store
-     * @return persisted {@link org.apache.rave.portal.model.OAuthConsumerStore}
-     */
-
-    OAuthConsumerStore save(OAuthConsumerStore oAuthConsumerStore);
-
-    /**
-     * Removes the {@link org.apache.rave.portal.model.OAuthConsumerStore} from the database
-     *
-     * @param oAuthConsumerStore {@link org.apache.rave.portal.model.OAuthConsumerStore} to delete
-     */
-    void delete(OAuthConsumerStore oAuthConsumerStore);
 }

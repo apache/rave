@@ -19,9 +19,9 @@
 
 package org.apache.rave.gadgets.oauth.service;
 
-import org.apache.rave.gadgets.oauth.model.OAuthTokenInfo;
-import org.apache.rave.gadgets.oauth.model.impl.OAuthTokenInfoImpl;
-import org.apache.rave.gadgets.oauth.repository.OAuthTokenInfoRepository;
+import org.apache.rave.portal.model.OAuthTokenInfo;
+import org.apache.rave.portal.model.impl.OAuthTokenInfoImpl;
+import org.apache.rave.portal.repository.OAuthTokenInfoRepository;
 import org.apache.rave.gadgets.oauth.service.impl.DefaultOAuthTokenInfoService;
 import org.apache.shindig.auth.SecurityToken;
 import org.apache.shindig.gadgets.oauth.OAuthStore;
@@ -103,6 +103,8 @@ public class DefaultOAuthTokenInfoServiceTest {
         expect(tokenInfo.getTokenExpireMillis()).andReturn(3600000L);
         expect(tokenInfo.getTokenSecret()).andReturn("tokenSecret");
         replay(securityToken, tokenInfo);
-        return new OAuthTokenInfoImpl(securityToken, SERVICE_NAME, TOKEN_NAME, tokenInfo);
+        return new OAuthTokenInfoImpl(securityToken.getAppUrl(), SERVICE_NAME, TOKEN_NAME, tokenInfo.getAccessToken(),
+                tokenInfo.getSessionHandle(), tokenInfo.getTokenSecret(),
+                securityToken.getViewerId(), tokenInfo.getTokenExpireMillis());
     }
 }

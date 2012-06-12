@@ -19,8 +19,8 @@
 
 package org.apache.rave.gadgets.oauth.service.impl;
 
-import org.apache.rave.gadgets.oauth.model.OAuthConsumerStore;
-import org.apache.rave.gadgets.oauth.repository.OAuthConsumerStoreRepository;
+import org.apache.rave.portal.model.OAuthConsumerStore;
+import org.apache.rave.portal.repository.OAuthConsumerStoreRepository;
 import org.apache.rave.gadgets.oauth.service.OAuthConsumerStoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

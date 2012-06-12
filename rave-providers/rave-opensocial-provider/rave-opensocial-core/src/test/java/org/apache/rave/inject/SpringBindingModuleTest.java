@@ -22,14 +22,11 @@ package org.apache.rave.inject;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import org.apache.rave.opensocial.service.impl.DefaultPersonService;
-import org.apache.rave.persistence.BasicEntity;
 import org.apache.shindig.social.opensocial.spi.PersonService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.jpa.LocalEntityManagerFactoryBean;
-import org.springframework.stereotype.Repository;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -64,41 +61,6 @@ public class SpringBindingModuleTest {
         assertThat(personService1, is(sameInstance(personService2)));
     }
 
-    @Test
-    public void bindsProxiedBean() {
-        LocalEntityManagerFactoryBean factory = injector.getInstance(LocalEntityManagerFactoryBean.class);
-        assertThat(factory, is(not(nullValue())));
-    }
 
-    @Test
-    public void multipleRepositories() {
-        TestRepo repo = injector.getInstance(TestRepo.class);
-        assertThat(repo, is(not(nullValue())));
-    }
 
-    public static interface TestRepo extends org.apache.rave.persistence.Repository<BasicEntity> {}
-
-    @Repository
-    public static class JpaTestRepo implements TestRepo {
-
-        @Override
-        public Class<? extends BasicEntity> getType() {
-            return null;  //To change body of implemented methods use File | Settings | File Templates.
-        }
-
-        @Override
-        public BasicEntity get(long id) {
-            return null;  //To change body of implemented methods use File | Settings | File Templates.
-        }
-
-        @Override
-        public BasicEntity save(BasicEntity item) {
-            return null;  //To change body of implemented methods use File | Settings | File Templates.
-        }
-
-        @Override
-        public void delete(BasicEntity item) {
-            //To change body of implemented methods use File | Settings | File Templates.
-        }
-    }
 }

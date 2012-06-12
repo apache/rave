@@ -19,8 +19,8 @@
 
 package org.apache.rave.gadgets.oauth.service.impl;
 
-import org.apache.rave.gadgets.oauth.model.OAuthTokenInfo;
-import org.apache.rave.gadgets.oauth.repository.OAuthTokenInfoRepository;
+import org.apache.rave.portal.model.OAuthTokenInfo;
+import org.apache.rave.portal.repository.OAuthTokenInfoRepository;
 import org.apache.rave.gadgets.oauth.service.OAuthTokenInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -39,19 +39,10 @@
             <groupId>org.apache.rave</groupId>
             <artifactId>rave-core</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.apache.rave</groupId>
-            <artifactId>rave-jpa</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.openjpa</groupId>
-            <artifactId>openjpa</artifactId>
         </dependency>
 
         <dependency>
@@ -143,48 +134,6 @@
         </dependency>
     </dependencies>
     <build>
-        <defaultGoal>install</defaultGoal>        
-          <plugins>
-             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>openjpa-maven-plugin</artifactId>
-                <version>1.2</version>
-                <configuration>
-                    <includes>
-                        org/apache/rave/gadgets/oauth/model/*.class,
-                        org/apache/rave/opensocial/model/*.class,
-                        org/apache/rave/opensocial/repository/impl/JpaApplicationDataRepository$JpaSerializableApplicationData.class,
-                        org/apache/shindig/social/opensocial/jpa/*.class
-                    </includes>
-                    <excludes>
-                        org/apache/shindig/social/opensocial/jpa/EnumDb.class,
-                        org/apache/rave/gadgets/oauth/model/OAuthConsumerStore$KeyType.class
-                    </excludes>
-                    <addDefaultConstructor>true</addDefaultConstructor>
-                    <enforcePropertyRestrictions>true</enforcePropertyRestrictions>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>enhancer</id>
-                        <phase>process-classes</phase>
-                        <goals>
-                            <goal>enhance</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <dependencies>
-                  <!-- RAVE-245: Enforce xercesImpl:2.9.1 on the classpath for openjpa-maven-plugin
-                                 to resolve a conflicting classloader resolution when *also* running
-                                 a forked test lifecycle by the maven-cobertura-plugin, 
-                                 e.g. through mvn install cobertura:cobertura                                 
-                  -->
-                  <dependency>
-                    <groupId>xerces</groupId>
-                    <artifactId>xercesImpl</artifactId>
-                    <version>2.9.1</version>
-                  </dependency>
-                </dependencies>
-            </plugin>
-       </plugins>
+        <defaultGoal>install</defaultGoal>
    </build>
 </project>

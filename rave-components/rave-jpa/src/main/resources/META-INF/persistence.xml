@@ -41,5 +41,15 @@
             <class>org.apache.rave.portal.model.JpaPageTemplateWidget</class>
             <class>org.apache.rave.portal.model.JpaPageUser</class>
             <class>org.apache.rave.portal.model.JpaCategory</class>
+            <class>org.apache.rave.portal.model.JpaPerson</class>
+            <class>org.apache.rave.portal.model.JpaGroup</class>
+            <class>org.apache.rave.portal.model.JpaPersonAssociation</class>
+            <class>org.apache.rave.portal.model.JpaPersonProperty</class>
+            <class>org.apache.rave.portal.model.JpaAddress</class>
+            <class>org.apache.rave.portal.model.JpaOrganization</class>
+            <class>org.apache.rave.portal.model.JpaApplicationData</class>
+            <class>org.apache.rave.portal.model.JpaOAuthTokenInfo</class>
+            <class>org.apache.rave.portal.model.JpaOAuthConsumerStore</class>
+            <class>org.apache.rave.portal.repository.impl.JpaApplicationDataRepository$JpaSerializableApplicationData</class>
         </persistence-unit>
 </persistence>

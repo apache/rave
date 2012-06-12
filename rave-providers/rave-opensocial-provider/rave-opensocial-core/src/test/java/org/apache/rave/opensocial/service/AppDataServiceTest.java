@@ -19,10 +19,10 @@
 
 package org.apache.rave.opensocial.service;
 
-import org.apache.rave.opensocial.model.ApplicationData;
-import org.apache.rave.opensocial.model.impl.ApplicationDataImpl;
+import org.apache.rave.portal.model.ApplicationData;
+import org.apache.rave.portal.model.impl.ApplicationDataImpl;
 import org.apache.rave.portal.model.Person;
-import org.apache.rave.opensocial.repository.ApplicationDataRepository;
+import org.apache.rave.portal.repository.ApplicationDataRepository;
 import org.apache.rave.opensocial.service.impl.DefaultAppDataService;
 import org.apache.rave.portal.model.impl.PersonImpl;
 import org.apache.rave.service.LockService;
