@@ -58,7 +58,7 @@
 
     <bean id="entityManagerFactory"
           class="org.apache.rave.persistence.jpa.PopulatedLocalContainerEntityManagerFactory">
-        <property name="persistenceUnitName" value="raveShindigPersistenceUnit"/>
+        <property name="persistenceUnitName" value="ravePersistenceUnit"/>
         <property name="dataSource" ref="dataSource"/>
         <property name="populator" ref="dataSourcePopulator"/>
         <property name="jpaVendorAdapter">

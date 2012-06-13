@@ -19,7 +19,6 @@
 
 package org.apache.rave.portal.security.impl;
 
-import org.apache.rave.persistence.BasicEntity;
 import org.apache.rave.portal.security.ModelPermissionEvaluator;
 import org.apache.rave.portal.security.ModelPermissionEvaluator.Permission;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -158,7 +157,7 @@ public class RavePermissionEvaluator implements PermissionEvaluator {
 
     private Permission getPermission(Object targetDomainObject, String permissionString) {
         Permission permission = Permission.fromString((String) permissionString);
-        if (permission.equals(Permission.CREATE_OR_UPDATE)) {
+  /*      if (permission.equals(Permission.CREATE_OR_UPDATE)) {
             if (targetDomainObject instanceof BasicEntity) {
                 Long id = ((BasicEntity) targetDomainObject).getEntityId();
                 if (id == null) {
@@ -169,7 +168,7 @@ public class RavePermissionEvaluator implements PermissionEvaluator {
             } else {
                 throw new IllegalArgumentException("CREATE_OR_UPDATE is currently only supported for BasicEntity types");
             }
-        }
+        }*/
         return permission;
     }
 }

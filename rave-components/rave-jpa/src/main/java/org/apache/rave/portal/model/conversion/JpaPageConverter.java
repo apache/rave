@@ -21,11 +21,11 @@ package org.apache.rave.portal.model.conversion;
 import org.apache.rave.model.ModelConverter;
 import org.apache.rave.portal.model.JpaPage;
 import org.apache.rave.portal.model.Page;
+import org.apache.rave.portal.model.PageUser;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.util.List;
 
 /**
  * Converts a Page to a JpaPage
@@ -59,6 +59,7 @@ public class JpaPageConverter implements ModelConverter<Page, JpaPage> {
     }
 
     private void updateProperties(Page source, JpaPage converted) {
+        replacePageReferences(source, converted);
         converted.setEntityId(source.getId());
         converted.setId(source.getId());
         converted.setMembers(source.getMembers());
@@ -69,5 +70,13 @@ public class JpaPageConverter implements ModelConverter<Page, JpaPage> {
         converted.setParentPage(source.getParentPage());
         converted.setRegions(source.getRegions());
         converted.setSubPages(source.getSubPages());
+    }
+
+    private void replacePageReferences(Page source, JpaPage converted) {
+        if(source.getMembers() != null) {
+            for(PageUser user : source.getMembers()) {
+                user.setPage(converted);
+            }
+        }
     }
 }
