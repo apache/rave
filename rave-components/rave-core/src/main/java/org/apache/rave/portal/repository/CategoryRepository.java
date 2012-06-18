@@ -26,4 +26,13 @@ public interface CategoryRepository extends Repository<Category> {
      * @return a valid List
      */
     List<Category> getAll();
+
+    /**
+     * Removes a user from the createdBy or modifiedBy fields for any Category they are associated with and assigns
+     * the values to null
+     *
+     * @param userId
+     * @return the number of Categories modified
+     */
+    int removeFromCreatedOrModifiedFields(long userId);
 }

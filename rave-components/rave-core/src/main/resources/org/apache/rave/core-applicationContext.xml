@@ -16,7 +16,7 @@
   KIND, either express or implied.  See the License for the
   specific language governing permissions and limitations
   under the License.
-  
+
   $Id$
 -->
 <beans xmlns="http://www.springframework.org/schema/beans"
@@ -83,6 +83,7 @@
                 <entry key="openjpa.Log" value="${portal.openjpa.Log}"/>
                 <entry key="openjpa.RuntimeUnenhancedClasses" value="${portal.openjpa.RuntimeUnenhancedClasses}"/>
                 <entry key="openjpa.jdbc.SynchronizeMappings" value="${portal.openjpa.jdbc.SynchronizeMappings}"/>
+                <entry key="openjpa.jdbc.MappingDefaults" value="${portal.openjpa.jdbc.MappingDefaults}"/>
             </map>
         </property>
     </bean>

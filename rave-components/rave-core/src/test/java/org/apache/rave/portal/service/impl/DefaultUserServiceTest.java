@@ -52,6 +52,7 @@ public class DefaultUserServiceTest {
     private WidgetCommentRepository widgetCommentRepository;
     private WidgetRatingRepository widgetRatingRepository;
     private WidgetRepository widgetRepository;
+    private CategoryRepository categoryRepository;
 
     private static final String USER_NAME = "1234";
     private static final String USER_EMAIL = "test@test.com";
@@ -66,8 +67,10 @@ public class DefaultUserServiceTest {
         widgetCommentRepository = createMock(WidgetCommentRepository.class);
         widgetRatingRepository = createMock(WidgetRatingRepository.class);
         widgetRepository = createMock(WidgetRepository.class);
+        categoryRepository = createMock(CategoryRepository.class);
 
-        service = new DefaultUserService(pageRepository, userRepository, widgetRatingRepository, widgetCommentRepository, widgetRepository, pageTemplateRepository);
+        service = new DefaultUserService(pageRepository, userRepository, widgetRatingRepository, widgetCommentRepository,
+                                         widgetRepository, pageTemplateRepository, categoryRepository);
     }
 
     @After
@@ -112,7 +115,7 @@ public class DefaultUserServiceTest {
         service.getAuthenticatedUser();
         verify(auth);
     }
-    
+
 
     @Test
     public void setAuthenticatedUser_valid() {
@@ -260,24 +263,26 @@ public class DefaultUserServiceTest {
         final int NUM_COMMENTS = 33;
         final int NUM_RATINGS = 99;
         final int NUM_WIDGETS_OWNED = 4;
+        final int NUM_CATEGORIES = 2;
         User user = new User(USER_ID, USER_NAME);
         Page page = new Page(1L, user);
         List<Page> pages = new ArrayList<Page>();
         pages.add(page);
-        
+
         expect(userRepository.get(USER_ID)).andReturn(user);
         expect(pageRepository.deletePages(USER_ID, PageType.USER)).andReturn(pages.size());
         expect(pageRepository.deletePages(USER_ID, PageType.PERSON_PROFILE)).andReturn(pages.size());
         expect(widgetCommentRepository.deleteAll(USER_ID)).andReturn(NUM_COMMENTS);
-        expect(widgetRatingRepository.deleteAll(USER_ID)).andReturn(NUM_RATINGS);       
-        expect(widgetRepository.unassignWidgetOwner(USER_ID)).andReturn( NUM_WIDGETS_OWNED);       
+        expect(widgetRatingRepository.deleteAll(USER_ID)).andReturn(NUM_RATINGS);
+        expect(widgetRepository.unassignWidgetOwner(USER_ID)).andReturn( NUM_WIDGETS_OWNED);
+        expect(categoryRepository.removeFromCreatedOrModifiedFields(USER_ID)).andReturn(NUM_CATEGORIES);
         userRepository.delete(user);
         expectLastCall();
-        replay(userRepository, pageRepository, widgetCommentRepository, widgetRatingRepository, widgetRepository);
+        replay(userRepository, pageRepository, widgetCommentRepository, widgetRatingRepository, widgetRepository, categoryRepository);
 
         service.deleteUser(USER_ID);
 
-        verify(userRepository, pageRepository, widgetCommentRepository, widgetRatingRepository, widgetRepository);
+        verify(userRepository, pageRepository, widgetCommentRepository, widgetRatingRepository, widgetRepository, categoryRepository);
     }
 
     @Test
@@ -299,12 +304,12 @@ public class DefaultUserServiceTest {
         List<Person> personList = new ArrayList<Person>();
         personList.add(userList.get(0).toPerson());
         personList.add(userList.get(1).toPerson());
-        
+
         expect(userRepository.getAllByAddedWidget(VALID_WIDGET_ID)).andReturn(userList);
         replay(userRepository);
 
         assertThat(service.getAllByAddedWidget(VALID_WIDGET_ID), is(personList));
-        
+
         verify(userRepository);
     }
 

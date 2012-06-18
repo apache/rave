@@ -24,10 +24,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
+import java.util.*;
 
 /**
  * {@inheritDoc}
@@ -99,6 +96,12 @@ public class User extends Person implements UserDetails, BasicEntity, Serializab
     @ManyToOne
     @JoinColumn(name="default_page_layout_id")
     private PageLayout defaultPageLayout;
+
+    @OneToMany(targetEntity=PageUser.class, fetch = FetchType.LAZY, mappedBy="user", orphanRemoval=true)
+    private List<PageUser> pageUsers;
+
+    @OneToMany(targetEntity=WidgetTag.class, fetch = FetchType.LAZY, mappedBy="user", orphanRemoval=true)
+    private List<WidgetTag> widgetTags;
 
     @Transient
     private String confirmPassword;
@@ -294,6 +297,30 @@ public class User extends Person implements UserDetails, BasicEntity, Serializab
 		this.confirmPassword = confirmPassword;
 	}
 
+    public String getDefaultPageLayoutCode() {
+        return defaultPageLayoutCode;
+    }
+
+    public void setDefaultPageLayoutCode(String defaultPageLayoutCode) {
+        this.defaultPageLayoutCode = defaultPageLayoutCode;
+    }
+
+    public List<PageUser> getPageUsers() {
+        return pageUsers;
+    }
+
+    public void setPageUsers(List<PageUser> pageUsers) {
+        this.pageUsers = pageUsers;
+    }
+
+    public List<WidgetTag> getWidgetTags() {
+        return widgetTags;
+    }
+
+    public void setWidgetTags(List<WidgetTag> widgetTags) {
+        this.widgetTags = widgetTags;
+    }
+
     @PreRemove
     public void preRemove() {
         for (Authority authority : authorities) {
@@ -374,11 +401,4 @@ public class User extends Person implements UserDetails, BasicEntity, Serializab
         return p;
     }
 
-	public String getDefaultPageLayoutCode() {
-		return defaultPageLayoutCode;
-	}
-
-	public void setDefaultPageLayoutCode(String defaultPageLayoutCode) {
-		this.defaultPageLayoutCode = defaultPageLayoutCode;
-	}
 }

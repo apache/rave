@@ -21,6 +21,7 @@ package org.apache.rave.portal.repository.impl;
 
 import org.apache.rave.persistence.jpa.AbstractJpaRepository;
 import org.apache.rave.portal.model.Category;
+import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.repository.CategoryRepository;
 import org.springframework.stereotype.Repository;
 
@@ -39,5 +40,29 @@ public class JpaCategoryRepository extends AbstractJpaRepository<Category> imple
     @Override
     public List<Category> getAll() {
         return manager.createNamedQuery(Category.GET_ALL, Category.class).getResultList();
+    }
+
+    @Override
+    public int removeFromCreatedOrModifiedFields(long userId) {
+        List<Category> categories = getAll();
+        int numRecordsChanged = 0;
+        for (Category category : categories) {
+            boolean changed = false;
+            User createdUser = category.getCreatedUser();
+            User lastModifiedUser = category.getLastModifiedUser();
+            if (createdUser != null && userId == createdUser.getEntityId()) {
+                category.setCreatedUser(null);
+                changed = true;
+            }
+            if (lastModifiedUser != null && userId == lastModifiedUser.getEntityId()) {
+                category.setLastModifiedUser(null);
+                changed = true;
+            }
+            if (changed) {
+                numRecordsChanged++;
+                save(category);
+            }
+        }
+        return numRecordsChanged;
     }
 }

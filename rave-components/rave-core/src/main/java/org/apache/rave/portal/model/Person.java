@@ -20,27 +20,8 @@ package org.apache.rave.portal.model;
 
 import org.apache.rave.persistence.BasicEntity;
 
-import javax.persistence.Basic;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.TableGenerator;
-import javax.persistence.Transient;
-import java.util.ArrayList;
-import java.util.HashMap;
+import javax.persistence.*;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Represents a person in the persistence context
@@ -130,6 +111,12 @@ public class Person implements BasicEntity {
             joinColumns = @JoinColumn(name = "follower_id", referencedColumnName = "entity_id"),
             inverseJoinColumns = @JoinColumn(name = "followed_id", referencedColumnName = "entity_id"))
     protected List<Person> friends;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "group_members",
+            joinColumns = @JoinColumn(name = "person_id", referencedColumnName = "entity_id"),
+            inverseJoinColumns = @JoinColumn(name = "group_id", referencedColumnName = "entity_id"))
+    private List<Group> groups;
 
     public Long getEntityId() {
         return entityId;
@@ -257,6 +244,14 @@ public class Person implements BasicEntity {
 
     public void setOrganizations(List<Organization> organizations) {
         this.organizations = organizations;
+    }
+
+    public List<Group> getGroups() {
+        return groups;
+    }
+
+    public void setGroups(List<Group> groups) {
+        this.groups = groups;
     }
 
     @Override

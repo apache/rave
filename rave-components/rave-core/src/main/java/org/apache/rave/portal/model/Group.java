@@ -60,13 +60,7 @@ public class Group implements BasicEntity {
     @JoinColumn(name = "owner_id", referencedColumnName = "entity_id")
     private Person owner;
 
-
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "group_members",
-            joinColumns =
-            @JoinColumn(name = "group_id", referencedColumnName = "entity_id"),
-            inverseJoinColumns =
-            @JoinColumn(name = "person_id", referencedColumnName = "entity_id"))
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "groups")
     private List<Person> members;
 
     public Person getOwner() {

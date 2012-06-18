@@ -32,12 +32,7 @@ import org.apache.rave.portal.model.PageType;
 import org.apache.rave.portal.model.Person;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.util.SearchResult;
-import org.apache.rave.portal.repository.PageRepository;
-import org.apache.rave.portal.repository.PageTemplateRepository;
-import org.apache.rave.portal.repository.UserRepository;
-import org.apache.rave.portal.repository.WidgetCommentRepository;
-import org.apache.rave.portal.repository.WidgetRatingRepository;
-import org.apache.rave.portal.repository.WidgetRepository;
+import org.apache.rave.portal.repository.*;
 import org.apache.rave.portal.service.EmailService;
 import org.apache.rave.portal.service.UserService;
 import org.slf4j.Logger;
@@ -70,6 +65,7 @@ public class DefaultUserService implements UserService {
     private final WidgetRatingRepository widgetRatingRepository;
     private final WidgetCommentRepository widgetCommentRepository;
     private final WidgetRepository widgetRepository;
+    private final CategoryRepository categoryRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -113,13 +109,15 @@ public class DefaultUserService implements UserService {
                               WidgetRatingRepository widgetRatingRepository,
                               WidgetCommentRepository widgetCommentRepository,
                               WidgetRepository widgetRepository,
-                              PageTemplateRepository pageTemplateRepository) {
+                              PageTemplateRepository pageTemplateRepository,
+                              CategoryRepository categoryRepository) {
         this.userRepository = userRepository;
         this.pageRepository = pageRepository;
         this.widgetRatingRepository = widgetRatingRepository;
         this.widgetCommentRepository = widgetCommentRepository;
         this.widgetRepository = widgetRepository;
         this.pageTemplateRepository = pageTemplateRepository;
+        this.categoryRepository = categoryRepository;
     }
 
     @Override
@@ -260,11 +258,14 @@ public class DefaultUserService implements UserService {
         int numWidgetRatings = widgetRatingRepository.deleteAll(userId);
         // unassign the user from any widgets where they were the owner
         int numWidgetsOwned = widgetRepository.unassignWidgetOwner(userId);
+        // unassign the user from any category records they created or modified
+        int numCategoriesTouched = categoryRepository.removeFromCreatedOrModifiedFields(userId);
+
         // finally delete the user
         userRepository.delete(user);
         log.info("Deleted user [" + userId + ',' + username + "] - numPages: " + numDeletedPages + ", numPersonPages:" +
                  numDeletedPersonPages + ", numWidgetComments: " + numWidgetComments + ", numWidgetRatings: " +
-                 numWidgetRatings + ", numWidgetsOwned: " + numWidgetsOwned);
+                 numWidgetRatings + ", numWidgetsOwned: " + numWidgetsOwned + ",numCategoriesTouched:" + numCategoriesTouched);
     }
 
     @Override

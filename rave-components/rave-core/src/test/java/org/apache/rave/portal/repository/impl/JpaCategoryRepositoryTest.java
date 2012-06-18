@@ -26,6 +26,7 @@ import org.apache.rave.portal.repository.CategoryRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
@@ -72,7 +73,7 @@ public class JpaCategoryRepositoryTest {
     public void save_duplicateText_exception() {
         Date now = new Date();
         User user = new User(1L);
-        
+
         Category wc = new Category();
         wc.setText(DUPLICATE_TEXT_VALUE);
         wc.setCreatedDate(now);
@@ -92,5 +93,11 @@ public class JpaCategoryRepositoryTest {
                 fail("Expected to get a PersistenceException due to Unique Constraint Violation");
             }
         }
+    }
+
+    @Test
+    @Rollback(value = true)
+    public void removeFromCreatedOrModifiedFields() {
+        assertThat(repository.removeFromCreatedOrModifiedFields(1L), is(3));
     }
 }

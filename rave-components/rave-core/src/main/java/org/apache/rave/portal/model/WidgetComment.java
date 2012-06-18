@@ -46,10 +46,7 @@ public class WidgetComment implements BasicEntity, Serializable {
     @Column(name = "widget_id")
     private Long widgetId;
 
-//    @Basic
-//    @Column(name = "user_id")
-//    private Long userId;
-    @OneToOne(fetch=FetchType.EAGER)
+    @ManyToOne(fetch=FetchType.EAGER)
     @JoinColumn(name="user_id")
     private User user;
 

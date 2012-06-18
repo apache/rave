@@ -80,8 +80,8 @@ public class AbstractJpaRepositoryTest {
     @Rollback(true)
     public void save_newEntity() throws Exception {
         for (Repository repository : repositories) {
-            BasicEntity entity = constructNewEntityForRepository(repository);            
-            RepositoryTestUtils.populateAllRequiredFieldsInEntity(sharedManager, entity);            
+            BasicEntity entity = constructNewEntityForRepository(repository);
+            RepositoryTestUtils.populateAllRequiredFieldsInEntity(sharedManager, entity);
             BasicEntity saved = (BasicEntity)repository.save(entity);
             sharedManager.flush();
             assertThat(saved, is(sameInstance(entity)));
@@ -105,12 +105,18 @@ public class AbstractJpaRepositoryTest {
 
     @Test
     @Rollback(true)
-    public void delete() {
+    public void delete() throws Exception {
         for(Repository repository : repositories) {
-            Object entity = repository.get(VALID_ENTITY_ID);
-            repository.delete(entity);
+            // to prevent possible RI errors lets create fresh objects then delete them
+            BasicEntity entity = constructNewEntityForRepository(repository);
+            RepositoryTestUtils.populateAllRequiredFieldsInEntity(sharedManager, entity);
+            BasicEntity saved = (BasicEntity)repository.save(entity);
+            long entityId = saved.getEntityId();
+            assertThat(entityId > 0, is(true));
+
+            repository.delete(saved);
             sharedManager.flush();
-            assertThat(repository.get(VALID_ENTITY_ID), is(nullValue()));
+            assertThat(repository.get(entityId), is(nullValue()));
         }
     }
 
@@ -121,5 +127,5 @@ public class AbstractJpaRepositoryTest {
             throw new RuntimeException(e);
         }
     }
-    
+
 }
