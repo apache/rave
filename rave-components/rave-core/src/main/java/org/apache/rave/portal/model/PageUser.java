@@ -18,6 +18,9 @@
  */
 package org.apache.rave.portal.model;
 
+import javax.xml.bind.annotation.XmlTransient;
+
+@XmlTransient
 public interface PageUser {
     Long getId();
     void setId(Long id);

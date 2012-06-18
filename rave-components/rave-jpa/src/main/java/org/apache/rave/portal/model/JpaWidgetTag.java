@@ -106,7 +106,7 @@ public class JpaWidgetTag implements WidgetTag, Serializable {
 
     @Override
     public void setTag(Tag tag) {
-        this.tag = (JpaTag)tag;
+        this.tag = JpaConverter.getInstance().convert(tag, Tag.class);
     }
 
     @Override

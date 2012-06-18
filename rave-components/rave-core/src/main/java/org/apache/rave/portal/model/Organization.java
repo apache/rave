@@ -1,9 +1,11 @@
 package org.apache.rave.portal.model;
 
+import javax.xml.bind.annotation.XmlTransient;
 import java.util.Date;
 
 /**
  */
+@XmlTransient
 public interface Organization {
     Address getAddress();
 

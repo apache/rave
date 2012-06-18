@@ -3,9 +3,11 @@ package org.apache.rave.portal.model;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.xml.bind.annotation.XmlTransient;
 import java.util.Collection;
 import java.util.Date;
 
+@XmlTransient
 public interface User extends Person, UserDetails {
     @Override
     Collection<GrantedAuthority> getAuthorities();

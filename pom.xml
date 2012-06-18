@@ -79,6 +79,8 @@
         <!-- Force maven-filesync-plugin rewrite the Eclipse FileSync plugin configuration with
             $mvn filesync:generate -Dmaven.filesync.override=true -->
         <maven.filesync.override>false</maven.filesync.override>
+        <jackson.version>1.8.1</jackson.version>
+
 
         <!-- default empty javaagent
         if needed you can specify it on the command line with -Djavaagent="..." -->
@@ -288,6 +290,11 @@
                     <artifactId>spring-web</artifactId>
                 </exclusion>
             </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.jackson</groupId>
+                <artifactId>jackson-mrbean</artifactId>
+                <version>${jackson.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.google.inject.extensions</groupId>

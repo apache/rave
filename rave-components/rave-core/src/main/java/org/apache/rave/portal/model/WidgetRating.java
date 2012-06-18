@@ -1,7 +1,10 @@
 package org.apache.rave.portal.model;
 
+import javax.xml.bind.annotation.XmlTransient;
+
 /**
  */
+@XmlTransient
 public interface WidgetRating {
     /**
      * Gets the ID of the Widget this rating is for

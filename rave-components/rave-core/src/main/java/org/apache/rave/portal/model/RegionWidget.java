@@ -21,8 +21,10 @@ package org.apache.rave.portal.model;
 
 import org.codehaus.jackson.annotate.JsonBackReference;
 
+import javax.xml.bind.annotation.XmlTransient;
 import java.util.List;
 
+@XmlTransient
 public interface RegionWidget {
     Long getId();
 

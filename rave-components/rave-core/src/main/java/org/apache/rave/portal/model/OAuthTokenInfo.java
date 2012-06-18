@@ -19,6 +19,9 @@
 
 package org.apache.rave.portal.model;
 
+import javax.xml.bind.annotation.XmlTransient;
+
+@XmlTransient
 public interface OAuthTokenInfo {
     /**
      * @see {@link org.apache.shindig.social.core.oauth.OAuthSecurityToken#getModuleId()}

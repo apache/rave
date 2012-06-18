@@ -18,8 +18,10 @@
  */
 package org.apache.rave.portal.model;
 
+import javax.xml.bind.annotation.XmlTransient;
 import java.util.Map;
 
+@XmlTransient
 public interface ApplicationData {
     Long getId();
     void setId(Long id);

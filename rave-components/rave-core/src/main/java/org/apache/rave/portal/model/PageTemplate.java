@@ -1,7 +1,9 @@
 package org.apache.rave.portal.model;
 
+import javax.xml.bind.annotation.XmlTransient;
 import java.util.List;
 
+@XmlTransient
 public interface PageTemplate {
 
     Long getId();

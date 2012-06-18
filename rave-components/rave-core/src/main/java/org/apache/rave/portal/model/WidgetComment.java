@@ -19,11 +19,13 @@
 
 package org.apache.rave.portal.model;
 
+import javax.xml.bind.annotation.XmlTransient;
 import java.util.Date;
 
 /**
  * The a comment by a user for a widget
  */
+@XmlTransient
 public interface WidgetComment {
     Long getId();
     void setId(Long id);

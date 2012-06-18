@@ -37,7 +37,19 @@
     <context:component-scan base-package="org.apache.rave.portal.web.api"/>
 
     <!-- Configures the @Controller programming model -->
-    <mvc:annotation-driven/>
+    <mvc:annotation-driven>
+        <mvc:message-converters>
+            <bean class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter">
+                <property name="objectMapper">
+                    <bean class="org.apache.rave.portal.web.model.MaterializedBeanObjectMapperFactory"/>
+                </property>
+            </bean>
+            <bean primary="true" class="org.springframework.http.converter.xml.MarshallingHttpMessageConverter">
+                <property name="marshaller" ref="xmlMarshaller" />
+                <property name="unmarshaller" ref="xmlMarshaller" />
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
     <mvc:interceptors>
         <bean class="org.apache.rave.portal.web.interceptors.CommonModelHandlerInterceptor"/>
         <!--
@@ -49,7 +61,7 @@
             can be used if you need to get more detailed information about
             the device such as manufacturer, model, screen size, etc.
         -->
-        <bean class="org.springframework.mobile.device.DeviceResolverHandlerInterceptor" />
+        <bean class="org.springframework.mobile.device.DeviceResolverHandlerInterceptor"/>
     </mvc:interceptors>
 
     <!-- Forwards requests to the "/" resource to the "page" view -->
@@ -61,38 +73,17 @@
         <property name="suffix" value=".jsp"/>
     </bean>
 
-    <!-- TODO: Fix HttpMessage Converter-->
-
-<!--    <oxm:jaxb2-marshaller id="marshaller">
-        <oxm:class-to-be-bound name="org.apache.rave.portal.model.Page"/>
-        <oxm:class-to-be-bound name="org.apache.rave.portal.model.RegionWidgetPreference"/>
+    <oxm:jaxb2-marshaller id="xmlMarshaller">
+        <oxm:class-to-be-bound name="org.apache.rave.portal.model.JpaUser"/>
+        <oxm:class-to-be-bound name="org.apache.rave.portal.model.JpaPage"/>
+        <oxm:class-to-be-bound name="org.apache.rave.portal.model.JpaRegion"/>
+        <oxm:class-to-be-bound name="org.apache.rave.portal.model.JpaRegionWidget"/>
+        <oxm:class-to-be-bound name="org.apache.rave.portal.model.JpaRegionWidgetPreference"/>
+        <oxm:class-to-be-bound name="org.apache.rave.portal.model.JpaWidget"/>
         <oxm:class-to-be-bound name="org.apache.rave.portal.web.model.RegionWidgetPreferenceListWrapper"/>
-    </oxm:jaxb2-marshaller>-->
+    </oxm:jaxb2-marshaller>
 
-    <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
-        <property name="messageConverters">
-            <list>
-                <bean id="stringHttpMessageConverter" class="org.springframework.http.converter.StringHttpMessageConverter">
-                    <property name="supportedMediaTypes">
-                        <list>
-                            <bean class="org.springframework.http.MediaType">
-                                <constructor-arg index="0" value="text"/>
-                                <constructor-arg index="1" value="plain"/>
-                                <constructor-arg index="2" value="UTF-8"/>
-                            </bean>
-                            <bean class="org.springframework.http.MediaType">
-                                <constructor-arg index="0" value="text"/>
-                                <constructor-arg index="1" value="javascript"/>
-                                <constructor-arg index="2" value="UTF-8"/>
-                            </bean>
-                        </list>
-                    </property>
-                </bean>
-               <!-- <bean class="org.springframework.http.converter.xml.MarshallingHttpMessageConverter"
-                      p:marshaller-ref="marshaller" p:unmarshaller-ref="marshaller"/>-->
-            </list>
-        </property>
-    </bean>
+
     <bean id="tilesConfigurer" class="org.springframework.web.servlet.view.tiles2.TilesConfigurer">
         <property name="definitions">
             <list>

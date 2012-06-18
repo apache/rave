@@ -1,5 +1,8 @@
 package org.apache.rave.portal.model;
 
+import javax.xml.bind.annotation.XmlTransient;
+
+@XmlTransient
 public interface PageLayout {
     /**
      * Gets the code used by the rendering engine to identify the page layout

@@ -1,5 +1,8 @@
 package org.apache.rave.portal.model;
 
+import javax.xml.bind.annotation.XmlTransient;
+
+@XmlTransient
 public interface RegionWidgetPreference {
     /**
      * Gets the ID of the RegionWidget this preference is for
