@@ -28,6 +28,7 @@ import org.apache.rave.portal.service.AuthorityService;
 import org.apache.rave.portal.service.NewAccountService;
 import org.apache.rave.portal.service.PortalPreferenceService;
 import org.apache.rave.portal.service.UserService;
+import org.apache.rave.portal.web.model.UserForm;
 import org.apache.rave.portal.web.util.ModelKeys;
 import org.apache.rave.portal.web.util.ViewNames;
 import org.apache.rave.portal.web.validator.NewAccountValidator;
@@ -183,7 +184,7 @@ public class UserControllerTest {
         ModelMap modelMap = new ExtendedModelMap();
         final Long userid = 123L;
         final String email = "john.doe.sr@example.net";
-        UserImpl user = new UserImpl(userid, "john.doe.sr");
+        UserForm user = new UserForm(userid, "john.doe.sr");
         user.setPassword("secrect");
         user.setConfirmPassword(user.getConfirmPassword());
         user.setEmail(email);
@@ -205,7 +206,7 @@ public class UserControllerTest {
     public void deleteUserDetail_noConfirmChecked() {
         ModelMap modelMap = new ExtendedModelMap();
         Long userid = 123L;
-        UserImpl user = new UserImpl(userid, "john.doe.sr");
+        UserForm user = new UserForm(userid, "john.doe.sr");
 
         SessionStatus sessionStatus = createMock(SessionStatus.class);
         replay(sessionStatus);
@@ -218,7 +219,7 @@ public class UserControllerTest {
     @Test(expected = SecurityException.class)
     public void deleteUserDetail_wrongToken() {
         ModelMap modelMap = new ExtendedModelMap();
-        UserImpl user = new UserImpl(123L, "john.doe.sr");
+        UserForm user = new UserForm(123L, "john.doe.sr");
         SessionStatus sessionStatus = createMock(SessionStatus.class);
         sessionStatus.setComplete();
 
@@ -247,7 +248,7 @@ public class UserControllerTest {
     public void create_ValidFormSubmitted() throws Exception {
         final Model model = createNiceMock(Model.class);
         final RedirectAttributes redirectAttributes = createNiceMock(RedirectAttributes.class);
-        final UserImpl User = new UserImpl();
+        final UserForm User = new UserForm();
         final BindingResult errors = new BeanPropertyBindingResult(User, ModelKeys.NEW_USER);
         final String username = "username";
         final String password = "password";
@@ -262,7 +263,7 @@ public class UserControllerTest {
         expect(userService.getUserByUsername(username)).andReturn(null);
         expect(userService.getUserByEmail(email)).andReturn(null);
 
-        newAccountService.createNewAccount(User);
+        newAccountService.createNewAccount(isA(User.class));
 
         expectLastCall();
         replay(userService, model, newAccountService, redirectAttributes);
@@ -277,7 +278,7 @@ public class UserControllerTest {
     public void create_EmptyForm() throws Exception {
         final Model model = createNiceMock(Model.class);
         final RedirectAttributes redirectAttributes = createNiceMock(RedirectAttributes.class);
-        final UserImpl User = new UserImpl();
+        final UserForm User = new UserForm();
         final BindingResult errors = new BeanPropertyBindingResult(User, ModelKeys.NEW_USER);
         final String username = "";
         final String password = "";
@@ -289,7 +290,7 @@ public class UserControllerTest {
         User.setConfirmPassword(confirmPassword);
         User.setEmail(email);
 
-        newAccountService.createNewAccount(User);
+        newAccountService.createNewAccount(isA(User.class));
 
         replay(model);
 

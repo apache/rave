@@ -23,6 +23,8 @@ import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.service.CaptchaService;
 import org.apache.rave.portal.service.UserService;
+import org.apache.rave.portal.web.controller.util.ModelUtils;
+import org.apache.rave.portal.web.model.UserForm;
 import org.apache.rave.portal.web.util.ModelKeys;
 import org.apache.rave.portal.web.util.ViewNames;
 import org.apache.rave.portal.web.validator.NewPasswordValidator;
@@ -74,9 +76,10 @@ public class ReminderController {
      * Processes username requests
      */
     @RequestMapping(value = {"/retrieveusername"}, method = RequestMethod.POST)
-    public String requestUsername(@ModelAttribute UserImpl user, BindingResult results, Model model,
+    public String requestUsername(@ModelAttribute UserForm userForm, BindingResult results, Model model,
                                   HttpServletRequest request, RedirectAttributes redirectAttributes) {
         log.debug("Requesting username reminder");
+        User user = ModelUtils.convert(userForm);
         if (!validateEmail(user, results, model, request)) {
             return captchaRequest(model, request, ViewNames.USERNAME_REQUEST);
         }
@@ -98,9 +101,10 @@ public class ReminderController {
      * Processes new password requests
      */
     @RequestMapping(value = {"/newpassword"}, method = RequestMethod.POST)
-    public String requestPassword(@ModelAttribute UserImpl user, BindingResult results, Model model,
+    public String requestPassword(@ModelAttribute UserForm userForm, BindingResult results, Model model,
                                   HttpServletRequest request, RedirectAttributes redirectAttributes) {
         log.debug("Requesting password reminder");
+        User user = ModelUtils.convert(userForm);
         if (!validateEmail(user, results, model, request)) {
             return captchaRequest(model, request, ViewNames.NEW_PASSWORD_REQUEST);
         }

@@ -19,10 +19,10 @@
 
 package org.apache.rave.portal.web.controller;
 
-import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.service.CaptchaService;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.portal.service.impl.ReCaptchaService;
+import org.apache.rave.portal.web.model.UserForm;
 import org.apache.rave.portal.web.util.ModelKeys;
 import org.apache.rave.portal.web.util.ViewNames;
 import org.apache.rave.portal.web.validator.NewPasswordValidator;
@@ -83,7 +83,7 @@ public class ReminderControllerTest {
     @Test
     public void testCreate() throws Exception {
         Model model = createNiceMock(Model.class);
-        UserImpl User = new UserImpl();
+        UserForm User = new UserForm();
         BindingResult results = new DirectFieldBindingResult(User, ModelKeys.USER);
         RedirectAttributes redirectAttributes = createNiceMock(RedirectAttributes.class);
         replay(redirectAttributes);
@@ -109,7 +109,7 @@ public class ReminderControllerTest {
         assertThat(viewResult, CoreMatchers.equalTo(ViewNames.USERNAME_REQUEST));
         // password part:
         model = createNiceMock(Model.class);
-        User = new UserImpl();
+        User = new UserForm();
         results = new DirectFieldBindingResult(User, ModelKeys.USER);
         redirectAttributes = createNiceMock(RedirectAttributes.class);
         replay(redirectAttributes);

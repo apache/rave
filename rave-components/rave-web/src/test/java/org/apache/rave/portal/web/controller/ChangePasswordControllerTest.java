@@ -19,8 +19,8 @@
 
 package org.apache.rave.portal.web.controller;
 
-import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.service.UserService;
+import org.apache.rave.portal.web.model.UserForm;
 import org.apache.rave.portal.web.util.ModelKeys;
 import org.apache.rave.portal.web.util.ViewNames;
 import org.apache.rave.portal.web.validator.ChangePasswordValidator;
@@ -69,7 +69,7 @@ public class ChangePasswordControllerTest {
     public void testUpdate() throws Exception {
         final Model model = createNiceMock(Model.class);
         RedirectAttributes redirectAttributes = createNiceMock(RedirectAttributes.class);
-        UserImpl newUser = new UserImpl();
+        UserForm newUser = new UserForm();
         replay(redirectAttributes);
         replay(model);
         BindingResult results = new DirectFieldBindingResult(newUser, ModelKeys.USER);

@@ -22,6 +22,8 @@ package org.apache.rave.portal.web.controller;
 import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.service.UserService;
+import org.apache.rave.portal.web.controller.util.ModelUtils;
+import org.apache.rave.portal.web.model.UserForm;
 import org.apache.rave.portal.web.util.ModelKeys;
 import org.apache.rave.portal.web.util.ViewNames;
 import org.apache.rave.portal.web.validator.ChangePasswordValidator;
@@ -74,7 +76,7 @@ public class ChangePasswordController {
 
 
     @RequestMapping(value = {"/changepassword", "/changepassword/**"}, method = RequestMethod.POST)
-    public String update(@ModelAttribute UserImpl user, BindingResult results, Model model, RedirectAttributes redirectAttributes) {
+    public String update(@ModelAttribute UserForm user, BindingResult results, Model model, RedirectAttributes redirectAttributes) {
         log.debug("updating user password for hash {}", user.getForgotPasswordHash());
         model.addAttribute(ModelKeys.USER, user);
         passwordValidator.validate(user, results);
@@ -85,7 +87,7 @@ public class ChangePasswordController {
         }
         try {
             log.debug("Submitted passwords were valid");
-            userService.updatePassword(user);
+            userService.updatePassword(ModelUtils.convert(user));
             redirectAttributes.addFlashAttribute(ModelKeys.REDIRECT_MESSAGE, messagePasswordChanged);
             return ViewNames.REDIRECT_LOGIN ;
         } catch (Exception ex) {

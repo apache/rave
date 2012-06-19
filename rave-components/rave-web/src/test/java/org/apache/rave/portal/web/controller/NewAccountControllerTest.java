@@ -25,6 +25,7 @@ import org.apache.rave.portal.service.CaptchaService;
 import org.apache.rave.portal.service.NewAccountService;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.portal.service.impl.ReCaptchaService;
+import org.apache.rave.portal.web.model.UserForm;
 import org.apache.rave.portal.web.util.ModelKeys;
 import org.apache.rave.portal.web.util.ViewNames;
 import org.apache.rave.portal.web.validator.NewAccountValidator;
@@ -92,7 +93,7 @@ public class NewAccountControllerTest {
 	@Test
 	public void create_UsernameNotSpecified() {
 		final Model model = createNiceMock(Model.class);
-		final UserImpl User = new UserImpl();
+		final UserForm User = new UserForm();
 		final BindingResult errors = createNiceMock(BindingResult.class);
 		final String username = ""; //no username specified
 		final String password = "password";
@@ -122,7 +123,7 @@ public class NewAccountControllerTest {
 	@Test
 	public void create_UsernameAlreadyExists() {
 		final Model model = createNiceMock(Model.class);
-		final UserImpl User = new UserImpl();
+		final UserForm User = new UserForm();
 		final BindingResult errors = createNiceMock(BindingResult.class);
 		final String username = "canonical"; //specified username already exists in database
 		final String password = "password";
@@ -159,7 +160,7 @@ public class NewAccountControllerTest {
 	@Test
 	public void create_InvalidUsernameLength() {
 		final Model model = createNiceMock(Model.class);
-		final UserImpl User = new UserImpl();
+		final UserForm User = new UserForm();
 		final BindingResult errors = createNiceMock(BindingResult.class);
 		final String username = "u"; //username length less than 2 characters
 		final String password = "password";
@@ -189,7 +190,7 @@ public class NewAccountControllerTest {
 	@Test
 	public void create_PasswordNotSpecified() {
 		final Model model = createNiceMock(Model.class);
-		final UserImpl User = new UserImpl();
+		final UserForm User = new UserForm();
 		final BindingResult errors = createNiceMock(BindingResult.class);
 		final String username = "username";
 		final String password = ""; //password not specified
@@ -219,7 +220,7 @@ public class NewAccountControllerTest {
 	@Test
 	public void create_ConfirmPasswordNotSpecified() {
 		final Model model = createNiceMock(Model.class);
-		final UserImpl User = new UserImpl();
+		final UserForm User = new UserForm();
 		final BindingResult errors = createNiceMock(BindingResult.class);
 		final String username = "usename";
 		final String password = "pasword";
@@ -248,7 +249,7 @@ public class NewAccountControllerTest {
 	@Test
 	public void create_InvalidPasswordLength() {
 		final Model model = createNiceMock(Model.class);
-		final UserImpl User = new UserImpl();
+		final UserForm User = new UserForm();
 		final BindingResult errors = createNiceMock(BindingResult.class);
 		final String username = "usename";
 		final String password = "pas"; //invalid length password
@@ -276,7 +277,7 @@ public class NewAccountControllerTest {
 	@Test
 	public void create_PasswordMismatchCaseOne() {
 		final Model model = createNiceMock(Model.class);
-		final UserImpl User = new UserImpl();
+		final UserForm User = new UserForm();
 		final BindingResult errors = createNiceMock(BindingResult.class);
 		final String username = "username";
 		final String password = "password";
@@ -304,7 +305,7 @@ public class NewAccountControllerTest {
 	@Test
 	public void create_PasswordMismatchCaseTwo() {
 		final Model model = createNiceMock(Model.class);
-		final UserImpl User = new UserImpl();
+		final UserForm User = new UserForm();
 		final BindingResult errors = createNiceMock(BindingResult.class);
 		final String username = "username";
 		final String password = "password";
@@ -332,7 +333,7 @@ public class NewAccountControllerTest {
 	@Test
 	public void create_BlankFormSubmitted() {
 		final Model model = createNiceMock(Model.class);
-		final UserImpl User = new UserImpl();
+		final UserForm User = new UserForm();
 		final BindingResult errors = createNiceMock(BindingResult.class);
 		final String username = ""; //Username not specified
 		final String password = ""; //Password not specified
@@ -365,7 +366,7 @@ public class NewAccountControllerTest {
 	@Test
 	public void create_ValidFormSubmitted() {
 		final Model model = createNiceMock(Model.class);
-		final UserImpl User = new UserImpl();
+		final UserForm User = new UserForm();
 		final BindingResult errors = createNiceMock(BindingResult.class);
 		final String username = "username"; //Username not specified
 		final String password = "password"; //Password not specified

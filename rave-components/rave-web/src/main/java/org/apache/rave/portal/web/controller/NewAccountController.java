@@ -22,6 +22,8 @@ package org.apache.rave.portal.web.controller;
 import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.service.CaptchaService;
 import org.apache.rave.portal.service.NewAccountService;
+import org.apache.rave.portal.web.controller.util.ModelUtils;
+import org.apache.rave.portal.web.model.UserForm;
 import org.apache.rave.portal.web.util.ModelKeys;
 import org.apache.rave.portal.web.util.ViewNames;
 import org.apache.rave.portal.web.validator.NewAccountValidator;
@@ -67,7 +69,7 @@ public class NewAccountController {
     }
 
     @RequestMapping(value = {"/newaccount", "/newaccount/*"}, method = RequestMethod.POST)
-    public String create(@ModelAttribute(value = "newUser") UserImpl newUser, BindingResult results, Model model, HttpServletRequest request,  RedirectAttributes redirectAttributes) {
+    public String create(@ModelAttribute(value = "newUser") UserForm newUser, BindingResult results, Model model, HttpServletRequest request,  RedirectAttributes redirectAttributes) {
         logger.debug("Creating a new user account");
         model.addAttribute(ModelKeys.NEW_USER, newUser);
 
@@ -83,7 +85,7 @@ public class NewAccountController {
             logger.debug("newaccount.jsp: passed form validation");
 
             if (captchaService.isValid(request)) {
-                newAccountService.createNewAccount(newUser);
+                newAccountService.createNewAccount(ModelUtils.convert(newUser));
                 redirectAttributes.addFlashAttribute(ModelKeys.REDIRECT_MESSAGE, messageSuccess);
                 return ViewNames.REDIRECT_LOGIN;
             } else {

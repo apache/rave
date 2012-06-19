@@ -27,6 +27,7 @@ import org.apache.rave.portal.model.impl.PageLayoutImpl;
 import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.service.PageService;
 import org.apache.rave.portal.service.UserService;
+import org.apache.rave.portal.web.model.UserForm;
 import org.apache.rave.portal.web.util.ModelKeys;
 import org.apache.rave.portal.web.util.ViewNames;
 import org.hamcrest.CoreMatchers;
@@ -155,7 +156,7 @@ public class ProfileControllerTest {
 		String userProfile = new String(ModelKeys.USER_PROFILE);
 
 		//creating a mock authenticated user
-		final UserImpl authUser = new UserImpl();
+		final User authUser = new UserImpl();
         authUser.setUsername(USERNAME);
 		//set existing status
 		authUser.setStatus("Single");
@@ -166,7 +167,7 @@ public class ProfileControllerTest {
 		authUser.setEmail("testuser@rave.com");
 
 		//creating a mock updated user
-		final UserImpl updatedUser = new UserImpl();
+		final UserForm updatedUser = new UserForm();
 		//set the updated status
 		updatedUser.setStatus("Married");
 		updatedUser.setGivenName("Test");

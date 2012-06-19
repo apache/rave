@@ -26,6 +26,8 @@ import org.apache.rave.portal.service.AuthorityService;
 import org.apache.rave.portal.service.NewAccountService;
 import org.apache.rave.portal.service.PortalPreferenceService;
 import org.apache.rave.portal.service.UserService;
+import org.apache.rave.portal.web.controller.util.ModelUtils;
+import org.apache.rave.portal.web.model.UserForm;
 import org.apache.rave.portal.web.util.ModelKeys;
 import org.apache.rave.portal.web.util.PortalPreferenceKeys;
 import org.apache.rave.portal.web.util.ViewNames;
@@ -125,7 +127,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/admin/userdetail/update", method = RequestMethod.POST)
-    public String updateUserDetail(@ModelAttribute UserImpl user, BindingResult result,
+    public String updateUserDetail(@ModelAttribute User user, BindingResult result,
                                    @ModelAttribute(ModelKeys.TOKENCHECK) String sessionToken,
                                    @RequestParam() String token,
                                    ModelMap modelMap,
@@ -144,7 +146,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/admin/userdetail/delete", method = RequestMethod.POST)
-    public String deleteUserDetail(@ModelAttribute UserImpl user,
+    public String deleteUserDetail(@ModelAttribute UserForm user,
                                    @ModelAttribute(ModelKeys.TOKENCHECK) String sessionToken,
                                    @RequestParam String token,
                                    @RequestParam(required = false) String confirmdelete,
@@ -172,7 +174,7 @@ public class UserController {
     }
 
     @RequestMapping(value = {"/admin/newaccount", "/admin/newaccount/*"}, method = RequestMethod.POST)
-    public String create(@ModelAttribute(value = "newUser") UserImpl newUser, BindingResult results, Model model,
+    public String create(@ModelAttribute(value = "newUser") UserForm newUser, BindingResult results, Model model,
                          RedirectAttributes redirectAttributes) {
         logger.debug("Creating a new user account");
         model.addAttribute(ModelKeys.NEW_USER, newUser);
@@ -184,7 +186,7 @@ public class UserController {
         }
         try {
             logger.debug("newaccount.jsp: passed form validation");
-            newAccountService.createNewAccount(newUser);
+            newAccountService.createNewAccount(ModelUtils.convert(newUser));
             redirectAttributes.addFlashAttribute(ModelKeys.REDIRECT_MESSAGE, messageSuccess);
             return "redirect:/app/admin/users";
         } catch (org.springframework.dao.IncorrectResultSizeDataAccessException ex) {

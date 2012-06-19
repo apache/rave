@@ -20,8 +20,9 @@
 package org.apache.rave.portal.web.controller;
 
 import org.apache.rave.portal.model.User;
-import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.service.UserService;
+import org.apache.rave.portal.web.controller.util.ModelUtils;
+import org.apache.rave.portal.web.model.UserForm;
 import org.apache.rave.portal.web.util.ModelKeys;
 import org.apache.rave.portal.web.util.ViewNames;
 import org.apache.rave.portal.web.validator.UserProfileValidator;
@@ -67,7 +68,7 @@ public class UserProfileController {
     }
 
     @RequestMapping(value = {"/updateUserProfile", "/updateUserProfile/*"}, method = RequestMethod.POST)
-    public String create(@ModelAttribute UserImpl user, BindingResult results, Model model, @RequestParam String username, @RequestParam String password, RedirectAttributes redirectAttributes) {
+    public String create(@ModelAttribute UserForm user, BindingResult results, Model model, @RequestParam String username, @RequestParam String password, RedirectAttributes redirectAttributes) {
         logger.debug("Updating user profile.");
         model.addAttribute(ModelKeys.USER_PROFILE, user);
 
@@ -80,7 +81,7 @@ public class UserProfileController {
         //Now attempt to update the account.
         try {
             logger.debug("userprofile: passed form validation");
-            userService.updateUserProfile(user);
+            userService.updateUserProfile(ModelUtils.convert(user));
             redirectAttributes.addFlashAttribute(ModelKeys.REDIRECT_MESSAGE, profileUpdatedMessage);
             return ViewNames.REDIRECT_LOGIN;
         }

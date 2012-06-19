@@ -20,8 +20,8 @@
 package org.apache.rave.portal.web.validator;
 
 import org.apache.rave.portal.model.User;
-import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.service.UserService;
+import org.apache.rave.portal.web.model.UserForm;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.validation.BindException;
@@ -50,12 +50,12 @@ public class NewAccountValidatorTest {
     @Test
     public void testSupports() throws Exception {
         assertTrue("Can validate org.apache.rave.portal.model.User",
-                newAccountValidator.supports(UserImpl.class));
+                newAccountValidator.supports(UserForm.class));
     }
 
     @Test
     public void testValidate() throws Exception {
-        UserImpl user = new UserImpl();
+        UserForm user = new UserForm();
         user.setUsername(VALID_NAME);
         user.setPassword(VALID_PASSWORD);
         user.setConfirmPassword(VALID_PASSWORD);
@@ -74,7 +74,7 @@ public class NewAccountValidatorTest {
 
     @Test
     public void testValidationFailsOnEmptyUser() throws Exception {
-        User user = new UserImpl();
+        UserForm user = new UserForm();
         Errors errors = new BindException(user, NEW_USER);
         expect(mockUserService.getUserByUsername("")).andReturn(null);
         replay(mockUserService);
@@ -92,7 +92,7 @@ public class NewAccountValidatorTest {
 
     @Test
     public void testValidationFailsOnExistingUser() throws Exception {
-        UserImpl user = new UserImpl();
+        UserForm user = new UserForm();
         user.setUsername("ExistingUser");
         user.setPassword(VALID_PASSWORD);
         user.setConfirmPassword(VALID_PASSWORD);
@@ -100,7 +100,7 @@ public class NewAccountValidatorTest {
         user.setEmail(VALID_EMAIL);
         Errors errors = new BindException(user, NEW_USER);
 
-        User user1 = createMock(UserImpl.class);
+        User user1 = createMock(User.class);
         expect(mockUserService.getUserByUsername("ExistingUser")).andReturn(user1);
         expect(mockUserService.getUserByEmail(VALID_EMAIL)).andReturn(null);
         replay(mockUserService);
@@ -113,7 +113,7 @@ public class NewAccountValidatorTest {
 
     @Test
     public void testValidationFailsOnExistingEmail() throws Exception {
-        UserImpl user = new UserImpl();
+        UserForm user = new UserForm();
         user.setUsername(VALID_NAME);
         user.setPassword(VALID_PASSWORD);
         user.setConfirmPassword(VALID_PASSWORD);
@@ -121,7 +121,7 @@ public class NewAccountValidatorTest {
         user.setEmail("existing@localhost");
         Errors errors = new BindException(user, NEW_USER);
 
-        User user1 = createMock(UserImpl.class);
+        User user1 = createMock(User.class);
         expect(mockUserService.getUserByUsername(VALID_NAME)).andReturn(null);
         expect(mockUserService.getUserByEmail("existing@localhost")).andReturn(user1);
         replay(mockUserService);
@@ -135,7 +135,7 @@ public class NewAccountValidatorTest {
 
     @Test
     public void testValidationFailsOnShortUserName() throws Exception {
-        UserImpl user = new UserImpl();
+        UserForm user = new UserForm();
         user.setUsername("A");
         user.setPassword(VALID_PASSWORD);
         user.setConfirmPassword(VALID_PASSWORD);
@@ -154,7 +154,7 @@ public class NewAccountValidatorTest {
 
     @Test
     public void testValidationFailsOnIllegalUsername() throws Exception {
-        UserImpl user = new UserImpl();
+        UserForm user = new UserForm();
         final String badUsername = "x'; DROP TABLE members; --";
         user.setUsername(badUsername);
         user.setPassword(VALID_PASSWORD);
@@ -174,7 +174,7 @@ public class NewAccountValidatorTest {
 
     @Test
     public void testValidationFailsOnShortPassword() throws Exception {
-        UserImpl user = new UserImpl();
+        UserForm user = new UserForm();
         user.setUsername(VALID_NAME);
         user.setPassword("123");
         user.setConfirmPassword("123");
@@ -193,7 +193,7 @@ public class NewAccountValidatorTest {
 
     @Test
     public void testValidationFailsOnNonMatchingPassword() throws Exception {
-        UserImpl user = new UserImpl();
+        UserForm user = new UserForm();
         user.setUsername(VALID_NAME);
         user.setPassword(VALID_PASSWORD);
         user.setConfirmPassword("doesnotmatch");
