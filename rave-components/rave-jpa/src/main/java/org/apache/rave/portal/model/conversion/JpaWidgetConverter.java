@@ -39,6 +39,21 @@ public class JpaWidgetConverter implements ModelConverter<Widget, JpaWidget> {
         converted.setEntityId(source.getId());
         converted.setUrl(source.getUrl());
         converted.setType(source.getType());
-        //TODO: Finish all properties
+        converted.setTitle(source.getTitle());
+        converted.setTitleUrl(source.getTitleUrl());
+        converted.setUrl(source.getUrl());
+        converted.setThumbnailUrl(source.getThumbnailUrl());
+        converted.setScreenshotUrl(source.getScreenshotUrl());
+        converted.setAuthor(source.getAuthor());
+        converted.setAuthorEmail(source.getAuthorEmail());
+        converted.setDescription(source.getDescription());
+        converted.setWidgetStatus(source.getWidgetStatus());
+        converted.setComments(source.getComments());
+        converted.setOwner(source.getOwner());
+        converted.setDisableRendering(source.isDisableRendering());
+        converted.setRatings(source.getRatings());
+        converted.setTags(source.getTags());
+        converted.setCategories(source.getCategories());
+        converted.setFeatured(source.isFeatured());
     }
 }
