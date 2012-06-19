@@ -5,17 +5,11 @@ import org.apache.rave.portal.model.JpaPersonProperty;
 import org.apache.rave.portal.model.PersonProperty;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 /**
  * Converts an Address to a JpaAddress
  */
 @Component
 public class JpaPersonPropertyConverter implements ModelConverter<PersonProperty, JpaPersonProperty> {
-
-    @PersistenceContext
-    private EntityManager manager;
 
     @Override
     public Class<PersonProperty> getSourceType() {
@@ -30,18 +24,18 @@ public class JpaPersonPropertyConverter implements ModelConverter<PersonProperty
     private JpaPersonProperty createEntity(PersonProperty source) {
         JpaPersonProperty converted = null;
         if (source != null) {
-            converted = manager.find(JpaPersonProperty.class, source.getId());
-
-            if (converted == null) {
-                converted = new JpaPersonProperty();
-            }
+            converted  = new JpaPersonProperty();
             updateProperties(source, converted);
         }
         return converted;
     }
 
     private void updateProperties(PersonProperty source, JpaPersonProperty converted) {
+        converted.setId(source.getId());
         converted.setQualifier(source.getQualifier());
         converted.setPrimary(source.getPrimary());
+        converted.setType(source.getType());
+        converted.setValue(source.getValue());
+        converted.setExtendedValue(source.getExtendedValue());
     }
 }

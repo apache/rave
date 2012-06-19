@@ -41,12 +41,24 @@ public class JpaPersonPropertyConverterTest {
     @Test
     public void convertValid() {
         PersonProperty template = new PersonPropertyImpl();
+        template.setId(42L);
+        template.setType("TEST_A");
+        template.setValue("TEST_B");
+        template.setQualifier("TEST_C");
+        template.setExtendedValue("TEST_D");
+        template.setPrimary(true);
 
         JpaPersonProperty jpaTemplate = converter.convert(template);
 
         assertThat(jpaTemplate, is(not(sameInstance(template))));
         assertThat(jpaTemplate, is(instanceOf(JpaPersonProperty.class)));
-        //TODO: Add coverage for all methods
+        assertThat(jpaTemplate.getId(), is(equalTo(template.getId())));
+        assertThat(jpaTemplate.getType(), is(equalTo(template.getType())));
+        assertThat(jpaTemplate.getValue(), is(equalTo(template.getValue())));
+        assertThat(jpaTemplate.getQualifier(), is(equalTo(template.getQualifier())));
+        assertThat(jpaTemplate.getExtendedValue(), is(equalTo(template.getExtendedValue())));
+        assertThat(jpaTemplate.getPrimary(), is(equalTo(template.getPrimary())));
+        
     }
 
 }
