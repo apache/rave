@@ -46,6 +46,7 @@ public class JpaPortalPreferenceConverter implements ModelConverter<PortalPrefer
     }
 
     private void updateProperties(PortalPreference source, JpaPortalPreference converted) {
-
+        converted.setKey(source.getKey());
+        converted.setValues(source.getValues());
     }
 }

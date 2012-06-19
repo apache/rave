@@ -11,6 +11,8 @@ public class PortalPreferenceImpl implements PortalPreference {
     private String key;
     private List<String> values = new LinkedList<String>();
 
+    public PortalPreferenceImpl() {}
+
     public PortalPreferenceImpl(String key, List<String> values) {
         this.key = key;
         this.values = values;
