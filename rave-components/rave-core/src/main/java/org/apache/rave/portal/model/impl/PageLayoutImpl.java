@@ -9,6 +9,12 @@ public class PageLayoutImpl implements PageLayout {
     private Long renderSequence;
     private boolean userSelectable;
 
+    public PageLayoutImpl() {  }
+
+    public PageLayoutImpl(String code) {
+        this.code = code;
+    }
+
     public String getCode() {
         return code;
     }

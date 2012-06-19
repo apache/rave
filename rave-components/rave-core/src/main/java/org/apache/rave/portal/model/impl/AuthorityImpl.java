@@ -2,6 +2,7 @@ package org.apache.rave.portal.model.impl;
 
 import org.apache.rave.portal.model.Authority;
 import org.apache.rave.portal.model.User;
+import org.springframework.security.core.GrantedAuthority;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -14,6 +15,11 @@ public class AuthorityImpl implements Authority {
 
     public AuthorityImpl(){
         this.users = new ArrayList<User>();
+    }
+
+    public AuthorityImpl(GrantedAuthority grantedAuthority) {
+        this();
+        this.authority = grantedAuthority.getAuthority();
     }
 
     @Override
