@@ -83,7 +83,6 @@
         <oxm:class-to-be-bound name="org.apache.rave.portal.web.model.RegionWidgetPreferenceListWrapper"/>
     </oxm:jaxb2-marshaller>
 
-
     <bean id="tilesConfigurer" class="org.springframework.web.servlet.view.tiles2.TilesConfigurer">
         <property name="definitions">
             <list>

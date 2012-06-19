@@ -19,7 +19,6 @@
 
 package org.apache.rave.portal.web.controller;
 
-import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.service.CaptchaService;
 import org.apache.rave.portal.service.UserService;
@@ -84,7 +83,7 @@ public class ReminderControllerTest {
     @Test
     public void testCreate() throws Exception {
         Model model = createNiceMock(Model.class);
-        User User = new UserImpl();
+        UserImpl User = new UserImpl();
         BindingResult results = new DirectFieldBindingResult(User, ModelKeys.USER);
         RedirectAttributes redirectAttributes = createNiceMock(RedirectAttributes.class);
         replay(redirectAttributes);

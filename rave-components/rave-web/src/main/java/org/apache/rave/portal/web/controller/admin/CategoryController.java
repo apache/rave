@@ -64,7 +64,7 @@ public class CategoryController {
     }
 
     @RequestMapping(value = {"/admin/category/create"}, method = RequestMethod.POST)
-    public String createCategory(@ModelAttribute Category category,
+    public String createCategory(@ModelAttribute CategoryImpl category,
                                  @ModelAttribute(ModelKeys.TOKENCHECK) String sessionToken,
                                  @RequestParam String token,
                                  Model model,

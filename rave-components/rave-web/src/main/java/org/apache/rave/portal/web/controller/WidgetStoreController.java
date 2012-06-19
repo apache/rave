@@ -217,7 +217,7 @@ public class WidgetStoreController {
      * @return if successful the view name of the widget, otherwise the form
      */
     @RequestMapping(method = RequestMethod.POST, value = "widget/add")
-    public String viewAddWidgetResult(@ModelAttribute Widget widget, BindingResult results, Model model,
+    public String viewAddWidgetResult(@ModelAttribute WidgetImpl widget, BindingResult results, Model model,
             @RequestParam long referringPageId) {
         User user = userService.getAuthenticatedUser();
         widgetValidator.validate(widget, results);

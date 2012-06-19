@@ -21,6 +21,7 @@ package org.apache.rave.portal.web.controller;
 
 import org.apache.rave.portal.model.Page;
 import org.apache.rave.portal.model.User;
+import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.service.PageService;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.portal.web.controller.util.ControllerUtils;
@@ -81,7 +82,7 @@ public class ProfileController {
     @RequestMapping(method = RequestMethod.POST)
     public String updateProfile(ModelMap model,
                                 @RequestParam(required = false) Long referringPageId,
-                                @ModelAttribute("updatedUser") User updatedUser) {
+                                @ModelAttribute("updatedUser") UserImpl updatedUser) {
         logger.info("Updating " + updatedUser.getUsername() + " profile information");
 
         User user = userService.getAuthenticatedUser();

@@ -19,7 +19,6 @@
 
 package org.apache.rave.portal.web.controller;
 
-import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.service.CaptchaService;
 import org.apache.rave.portal.service.NewAccountService;
@@ -68,7 +67,7 @@ public class NewAccountController {
     }
 
     @RequestMapping(value = {"/newaccount", "/newaccount/*"}, method = RequestMethod.POST)
-    public String create(@ModelAttribute(value = "newUser") User newUser, BindingResult results, Model model, HttpServletRequest request,  RedirectAttributes redirectAttributes) {
+    public String create(@ModelAttribute(value = "newUser") UserImpl newUser, BindingResult results, Model model, HttpServletRequest request,  RedirectAttributes redirectAttributes) {
         logger.debug("Creating a new user account");
         model.addAttribute(ModelKeys.NEW_USER, newUser);
 

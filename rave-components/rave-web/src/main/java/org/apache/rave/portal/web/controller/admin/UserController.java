@@ -125,7 +125,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/admin/userdetail/update", method = RequestMethod.POST)
-    public String updateUserDetail(@ModelAttribute User user, BindingResult result,
+    public String updateUserDetail(@ModelAttribute UserImpl user, BindingResult result,
                                    @ModelAttribute(ModelKeys.TOKENCHECK) String sessionToken,
                                    @RequestParam() String token,
                                    ModelMap modelMap,
@@ -144,7 +144,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/admin/userdetail/delete", method = RequestMethod.POST)
-    public String deleteUserDetail(@ModelAttribute User user,
+    public String deleteUserDetail(@ModelAttribute UserImpl user,
                                    @ModelAttribute(ModelKeys.TOKENCHECK) String sessionToken,
                                    @RequestParam String token,
                                    @RequestParam(required = false) String confirmdelete,
@@ -172,7 +172,7 @@ public class UserController {
     }
 
     @RequestMapping(value = {"/admin/newaccount", "/admin/newaccount/*"}, method = RequestMethod.POST)
-    public String create(@ModelAttribute(value = "newUser") User newUser, BindingResult results, Model model,
+    public String create(@ModelAttribute(value = "newUser") UserImpl newUser, BindingResult results, Model model,
                          RedirectAttributes redirectAttributes) {
         logger.debug("Creating a new user account");
         model.addAttribute(ModelKeys.NEW_USER, newUser);

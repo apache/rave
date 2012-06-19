@@ -268,7 +268,7 @@ public class WidgetStoreControllerTest {
         existingWidget.setUrl(widgetUrl);
         existingWidget.setType("OpenSocial");
 
-        final Widget widget = new WidgetImpl();
+        final WidgetImpl widget = new WidgetImpl();
         widget.setTitle("Widget title");
         widget.setUrl(widgetUrl);
         widget.setType("OpenSocial");
@@ -286,7 +286,7 @@ public class WidgetStoreControllerTest {
 
     @Test
     public void doAddWidget_invalid() {
-        final Widget widget = new WidgetImpl();
+        final WidgetImpl widget = new WidgetImpl();
         widget.setTitle("Not enough data");
         final Model model = new ExtendedModelMap();
         final BindingResult errors = new BeanPropertyBindingResult(widget, "widget");

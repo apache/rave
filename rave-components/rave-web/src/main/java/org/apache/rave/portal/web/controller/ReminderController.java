@@ -74,7 +74,7 @@ public class ReminderController {
      * Processes username requests
      */
     @RequestMapping(value = {"/retrieveusername"}, method = RequestMethod.POST)
-    public String requestUsername(@ModelAttribute User user, BindingResult results, Model model,
+    public String requestUsername(@ModelAttribute UserImpl user, BindingResult results, Model model,
                                   HttpServletRequest request, RedirectAttributes redirectAttributes) {
         log.debug("Requesting username reminder");
         if (!validateEmail(user, results, model, request)) {
@@ -98,7 +98,7 @@ public class ReminderController {
      * Processes new password requests
      */
     @RequestMapping(value = {"/newpassword"}, method = RequestMethod.POST)
-    public String requestPassword(@ModelAttribute User user, BindingResult results, Model model,
+    public String requestPassword(@ModelAttribute UserImpl user, BindingResult results, Model model,
                                   HttpServletRequest request, RedirectAttributes redirectAttributes) {
         log.debug("Requesting password reminder");
         if (!validateEmail(user, results, model, request)) {

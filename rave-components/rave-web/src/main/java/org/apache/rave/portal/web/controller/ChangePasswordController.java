@@ -74,7 +74,7 @@ public class ChangePasswordController {
 
 
     @RequestMapping(value = {"/changepassword", "/changepassword/**"}, method = RequestMethod.POST)
-    public String update(@ModelAttribute User user, BindingResult results, Model model, RedirectAttributes redirectAttributes) {
+    public String update(@ModelAttribute UserImpl user, BindingResult results, Model model, RedirectAttributes redirectAttributes) {
         log.debug("updating user password for hash {}", user.getForgotPasswordHash());
         model.addAttribute(ModelKeys.USER, user);
         passwordValidator.validate(user, results);

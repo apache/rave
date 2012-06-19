@@ -95,7 +95,7 @@ public class UserProfileValidator implements Validator {
 
     private boolean isExistingEmailAddress(User user, String email) {
         final User userByEmail = userService.getUserByEmail(email);
-        return userByEmail != null && !userByEmail.equals(user);
+        return userByEmail != null && !userByEmail.getId().equals(user.getId());
     }
 
         private void writeResultToLog(Errors errors) {

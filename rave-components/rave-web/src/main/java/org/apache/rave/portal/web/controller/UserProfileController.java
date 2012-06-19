@@ -20,6 +20,7 @@
 package org.apache.rave.portal.web.controller;
 
 import org.apache.rave.portal.model.User;
+import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.portal.web.util.ModelKeys;
 import org.apache.rave.portal.web.util.ViewNames;
@@ -66,7 +67,7 @@ public class UserProfileController {
     }
 
     @RequestMapping(value = {"/updateUserProfile", "/updateUserProfile/*"}, method = RequestMethod.POST)
-    public String create(@ModelAttribute User user, BindingResult results, Model model, @RequestParam String username, @RequestParam String password, RedirectAttributes redirectAttributes) {
+    public String create(@ModelAttribute UserImpl user, BindingResult results, Model model, @RequestParam String username, @RequestParam String password, RedirectAttributes redirectAttributes) {
         logger.debug("Updating user profile.");
         model.addAttribute(ModelKeys.USER_PROFILE, user);
 

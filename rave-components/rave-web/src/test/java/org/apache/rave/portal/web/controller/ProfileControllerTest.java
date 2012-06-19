@@ -155,7 +155,7 @@ public class ProfileControllerTest {
 		String userProfile = new String(ModelKeys.USER_PROFILE);
 
 		//creating a mock authenticated user
-		final User authUser = new UserImpl();
+		final UserImpl authUser = new UserImpl();
         authUser.setUsername(USERNAME);
 		//set existing status
 		authUser.setStatus("Single");
@@ -166,7 +166,7 @@ public class ProfileControllerTest {
 		authUser.setEmail("testuser@rave.com");
 
 		//creating a mock updated user
-		final User updatedUser = new UserImpl();
+		final UserImpl updatedUser = new UserImpl();
 		//set the updated status
 		updatedUser.setStatus("Married");
 		updatedUser.setGivenName("Test");

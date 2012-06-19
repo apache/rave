@@ -158,8 +158,8 @@ public class WidgetControllerTest {
     @Test
     public void updateWidget_valid() {
         final String widgetUrl = "http://example.com/widget";
-        Widget widget = new WidgetImpl(123L, widgetUrl);
-        widget.setTitle("Widget title");
+        WidgetImpl widget = new WidgetImpl(123L, widgetUrl);
+        widget.setTitle("WidgetImpl title");
         widget.setType("OpenSocial");
         widget.setDescription("Lorem ipsum");
         BindingResult errors = new BeanPropertyBindingResult(widget, "widget");
@@ -181,7 +181,7 @@ public class WidgetControllerTest {
 
     @Test(expected = SecurityException.class)
     public void updateWidget_wrongToken() {
-        Widget widget = new WidgetImpl();
+        WidgetImpl widget = new WidgetImpl();
         BindingResult errors = new BeanPropertyBindingResult(widget, "widget");
         SessionStatus sessionStatus = createMock(SessionStatus.class);
         ModelMap modelMap = new ExtendedModelMap();
@@ -200,7 +200,7 @@ public class WidgetControllerTest {
 
     @Test
     public void updateWidget_invalid() {
-        Widget widget = new WidgetImpl(123L, "http://broken/url");
+        WidgetImpl widget = new WidgetImpl(123L, "http://broken/url");
         BindingResult errors = new BeanPropertyBindingResult(widget, "widget");
         SessionStatus sessionStatus = createMock(SessionStatus.class);
         ModelMap modelMap = new ExtendedModelMap();
@@ -227,8 +227,8 @@ public class WidgetControllerTest {
     private static SearchResult<Widget> populateWidgetSearchResult() {
         List<Widget> widgetList = new ArrayList<Widget>();
         for (int i = 0; i < DEFAULT_PAGESIZE; i++) {
-            Widget widget = new WidgetImpl();
-            widget.setTitle("Widget " + i);
+            WidgetImpl widget = new WidgetImpl();
+            widget.setTitle("WidgetImpl " + i);
             widgetList.add(widget);
         }
         return new SearchResult<Widget>(widgetList, 25);

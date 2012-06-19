@@ -149,7 +149,7 @@ public class CategoryControllerTest {
         Model model = new ExtendedModelMap();
         User user = new UserImpl();
         String categoryText = "Social";
-        Category category = new CategoryImpl();
+        CategoryImpl category = new CategoryImpl();
         category.setText(categoryText);
         SessionStatus sessionStatus = createMock(SessionStatus.class);
         expect(userService.getAuthenticatedUser()).andReturn(user).once();
@@ -169,7 +169,7 @@ public class CategoryControllerTest {
         String invalidToken =  AdminControllerUtil.generateSessionToken();
         User user = new UserImpl();
         String categoryText = "Social";
-        Category category = new CategoryImpl();
+        CategoryImpl category = new CategoryImpl();
         category.setText(categoryText);
         SessionStatus sessionStatus = createMock(SessionStatus.class);
         expect(userService.getAuthenticatedUser()).andReturn(user).once();
@@ -186,7 +186,7 @@ public class CategoryControllerTest {
         Model model = new ExtendedModelMap();
         User user = new UserImpl();
         String categoryText = "";
-        Category category = new CategoryImpl();
+        CategoryImpl category = new CategoryImpl();
         category.setText(categoryText);
         SessionStatus sessionStatus = createMock(SessionStatus.class);
         expect(userService.getAuthenticatedUser()).andReturn(user).once();
@@ -203,7 +203,7 @@ public class CategoryControllerTest {
         User user = new UserImpl();
         long id = 1L;
         String categoryText = "Social";
-        Category category = new CategoryImpl();
+        CategoryImpl category = new CategoryImpl();
         category.setCreatedUser(user);
         category.setText(categoryText);
         category.setId(id);
@@ -227,7 +227,7 @@ public class CategoryControllerTest {
         long id = 1L;
         String categoryText = "Social";
         String invalidToken = AdminControllerUtil.generateSessionToken();
-        Category category = new CategoryImpl();
+        CategoryImpl category = new CategoryImpl();
         category.setCreatedUser(user);
         category.setText(categoryText);
         category.setId(id);
@@ -249,7 +249,7 @@ public class CategoryControllerTest {
 
         long id = 1L;
         String categoryText = "";
-        Category category = new CategoryImpl();
+        CategoryImpl category = new CategoryImpl();
         category.setCreatedUser(user);
         category.setText(categoryText);
         category.setId(id);
@@ -268,7 +268,7 @@ public class CategoryControllerTest {
         long id = 1L;
         User user = new UserImpl();
         String categoryText = "Social";
-        Category category = new CategoryImpl();
+        CategoryImpl category = new CategoryImpl();
         category.setCreatedUser(user);
         category.setText(categoryText);
         category.setId(id);
@@ -287,7 +287,7 @@ public class CategoryControllerTest {
         User user = new UserImpl();
         long id = 1L;
         String categoryText = "Social";
-        Category category = new CategoryImpl();
+        CategoryImpl category = new CategoryImpl();
         category.setCreatedUser(user);
         category.setText(categoryText);
         category.setId(id);
@@ -307,7 +307,7 @@ public class CategoryControllerTest {
         User user = new UserImpl();
         long id = 1L;
         String categoryText = "Social";
-        Category category = new CategoryImpl();
+        CategoryImpl category = new CategoryImpl();
         category.setCreatedUser(user);
         category.setText(categoryText);
         category.setId(id);
@@ -332,7 +332,7 @@ public class CategoryControllerTest {
         long id = 1L;
         String categoryText = "Social";
         String invalidToken = AdminControllerUtil.generateSessionToken();
-        Category category = new CategoryImpl();
+        CategoryImpl category = new CategoryImpl();
         category.setCreatedUser(user);
         category.setText(categoryText);
         category.setId(id);
@@ -355,7 +355,7 @@ public class CategoryControllerTest {
 
         long id = 1L;
         String categoryText = "";
-        Category category = new CategoryImpl();
+        CategoryImpl category = new CategoryImpl();
         category.setCreatedUser(user);
         category.setText(categoryText);
         category.setId(id);
@@ -374,7 +374,7 @@ public class CategoryControllerTest {
         long id = 1L;
         User user = new UserImpl();
         String categoryText = "Social";
-        Category category = new CategoryImpl();
+        CategoryImpl category = new CategoryImpl();
         category.setCreatedUser(user);
         category.setText(categoryText);
         category.setId(id);
@@ -393,7 +393,7 @@ public class CategoryControllerTest {
         User user = new UserImpl();
         long id = 1L;
         String categoryText = "Social";
-        Category category = new CategoryImpl();
+        CategoryImpl category = new CategoryImpl();
         category.setCreatedUser(user);
         category.setText(categoryText);
         category.setId(id);
@@ -413,7 +413,7 @@ public class CategoryControllerTest {
         User user = new UserImpl();
         long id = 1L;
         String categoryText = "Social";
-        Category category = new CategoryImpl();
+        CategoryImpl category = new CategoryImpl();
         category.setCreatedUser(user);
         category.setText(categoryText);
         category.setId(id);
@@ -432,7 +432,7 @@ public class CategoryControllerTest {
         long id = 1L;
         String categoryText = "Social";
         Model model = new ExtendedModelMap();
-        Category category = new CategoryImpl();
+        CategoryImpl category = new CategoryImpl();
         category.setCreatedUser(user);
         category.setText(categoryText);
         category.setId(id);
