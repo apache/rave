@@ -17,6 +17,12 @@ public class AddressImpl implements Address {
     private String formatted;
     private Boolean primary;
 
+    public AddressImpl() {  }
+
+    public AddressImpl(String street) {
+        this.streetAddress = street;
+    }
+
     public String getCountry() {
         return country;
     }
