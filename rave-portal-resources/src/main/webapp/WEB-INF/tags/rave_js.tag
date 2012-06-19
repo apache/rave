@@ -26,18 +26,18 @@
 <%-- check to see if the javaScriptDebugMode is on, if so render the individual JS files, otherwise render the minified single file --%>
 <c:choose>
     <c:when test="${not empty portalSettings and not empty portalSettings['javaScriptDebugMode'] and portalSettings['javaScriptDebugMode'].value == '0'}">
-        <script src="<spring:url value="/script/rave_all.min.js"/>"></script>
+        <script src="<spring:url value="/static/script/rave_all.min.js"/>"></script>
     </c:when>
     <c:otherwise>
-        <script src="<spring:url value="/script/rave.js"/>"></script>
-        <script src="<spring:url value="/script/rave_api.js"/>"></script>
-        <script src="<spring:url value="/script/rave_opensocial.js"/>"></script>
-        <script src="<spring:url value="/script/rave_wookie.js"/>"></script>
-        <script src="<spring:url value="/script/rave_layout.js"/>"></script>
-        <script src="<spring:url value="/script/rave_forms.js"/>"></script>
-        <script src="<spring:url value="/script/rave_person_profile.js"/>"></script>
-        <script src="<spring:url value="/script/rave_store.js"/>"></script>
-        <script src="<spring:url value="/script/rave_admin.js"/>"></script>
+        <script src="<spring:url value="/static/script/rave.js"/>"></script>
+        <script src="<spring:url value="/static/script/rave_api.js"/>"></script>
+        <script src="<spring:url value="/static/script/rave_opensocial.js"/>"></script>
+        <script src="<spring:url value="/static/script/rave_wookie.js"/>"></script>
+        <script src="<spring:url value="/static/script/rave_layout.js"/>"></script>
+        <script src="<spring:url value="/static/script/rave_forms.js"/>"></script>
+        <script src="<spring:url value="/static/script/rave_person_profile.js"/>"></script>
+        <script src="<spring:url value="/static/script/rave_store.js"/>"></script>
+        <script src="<spring:url value="/static/script/rave_admin.js"/>"></script>
     </c:otherwise>
 </c:choose>
 <script src="<spring:url value="/app/messagebundle/rave_client_messages.js"/>"></script>
