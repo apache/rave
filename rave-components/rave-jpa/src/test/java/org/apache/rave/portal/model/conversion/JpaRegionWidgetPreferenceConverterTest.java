@@ -41,12 +41,17 @@ public class JpaRegionWidgetPreferenceConverterTest {
     @Test
     public void convertValid() {
         RegionWidgetPreference template = new RegionWidgetPreferenceImpl();
+        template.setName("TEST_A");
+        template.setRegionWidgetId(42L);
+        template.setValue("TEST_B");
 
         JpaRegionWidgetPreference jpaTemplate = converter.convert(template);
 
         assertThat(jpaTemplate, is(not(sameInstance(template))));
         assertThat(jpaTemplate, is(instanceOf(JpaRegionWidgetPreference.class)));
-        //TODO: Add coverage for all methods
+        assertThat(jpaTemplate.getName(), is(equalTo(template.getName())));
+        assertThat(jpaTemplate.getRegionWidgetId(), is(equalTo(template.getRegionWidgetId())));
+        assertThat(jpaTemplate.getValue(), is(equalTo(template.getValue())));
     }
 
 }
