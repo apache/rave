@@ -70,6 +70,7 @@
                         <fieldset>
                             <legend><fmt:message key="admin.userdetail.editdata"/></legend>
                             <input type="hidden" name="token" value="<c:out value="${tokencheck}"/>"/>
+                            <form:hidden path="username" />
                             <div class="control-group">
                                 <label class="control-label" for="email"><fmt:message key="page.general.email"/></label>
                                 <div class="controls"><spring:bind path="email">

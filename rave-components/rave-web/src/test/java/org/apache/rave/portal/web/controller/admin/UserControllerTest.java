@@ -123,7 +123,7 @@ public class UserControllerTest {
         ModelMap modelMap = new ExtendedModelMap();
         final Long userid = 123L;
         final String email = "john.doe.sr@example.net";
-        User user = new UserImpl(userid, "john.doe.sr");
+        UserImpl user = new UserImpl(userid, "john.doe.sr");
         user.setPassword("secrect");
         user.setConfirmPassword("secrect");
         user.setEmail(email);
@@ -148,7 +148,7 @@ public class UserControllerTest {
     public void updateUserDetail_withErrors() {
         ModelMap modelMap = new ExtendedModelMap();
         Long userid = 123L;
-        User user = new UserImpl(userid, "john.doe.sr");
+        UserImpl user = new UserImpl(userid, "john.doe.sr");
         final BindingResult errors = new BeanPropertyBindingResult(user, "user");
 
         SessionStatus sessionStatus = createMock(SessionStatus.class);
@@ -163,7 +163,7 @@ public class UserControllerTest {
     @Test(expected = SecurityException.class)
     public void updateUserDetail_wrongToken() {
         ModelMap modelMap = new ExtendedModelMap();
-        User user = new UserImpl(123L, "john.doe.sr");
+        UserImpl user = new UserImpl(123L, "john.doe.sr");
         final BindingResult errors = new BeanPropertyBindingResult(user, "user");
         SessionStatus sessionStatus = createMock(SessionStatus.class);
         sessionStatus.setComplete();

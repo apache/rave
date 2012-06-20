@@ -21,6 +21,7 @@ package org.apache.rave.portal.model;
 import org.apache.rave.persistence.BasicEntity;
 import org.apache.rave.portal.model.conversion.JpaConverter;
 import org.apache.rave.portal.model.impl.PersonImpl;
+import org.apache.rave.util.CollectionUtils;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
@@ -149,9 +150,7 @@ public class JpaUser extends JpaPerson implements BasicEntity, Serializable, Use
 
     @Override
     public Collection<GrantedAuthority> getAuthorities() {
-        Collection<GrantedAuthority> grantedAuthorities = new ArrayList<GrantedAuthority>();
-        grantedAuthorities.addAll(authorities);
-        return grantedAuthorities;
+        return CollectionUtils.<GrantedAuthority>toBaseTypedCollection(authorities);
     }
 
     @Override
