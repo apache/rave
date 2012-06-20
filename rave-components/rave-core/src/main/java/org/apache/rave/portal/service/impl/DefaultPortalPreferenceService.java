@@ -25,6 +25,7 @@ import org.apache.rave.portal.repository.PortalPreferenceRepository;
 import org.apache.rave.portal.service.PortalPreferenceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -61,6 +62,7 @@ public class DefaultPortalPreferenceService implements PortalPreferenceService {
     }
 
     @Override
+    @Transactional
     public void savePreference(String key, String value) {
         List<String> values = new ArrayList<String>();
         values.add(value);
@@ -68,6 +70,7 @@ public class DefaultPortalPreferenceService implements PortalPreferenceService {
     }
 
     @Override
+    @Transactional
     public void savePreference(String key, List<String> values) {
         PortalPreference preference = getPreference(key);
         if (preference == null) {
@@ -79,6 +82,7 @@ public class DefaultPortalPreferenceService implements PortalPreferenceService {
     }
 
     @Override
+    @Transactional
     public void savePreference(PortalPreference preference) {
         repository.save(preference);
     }

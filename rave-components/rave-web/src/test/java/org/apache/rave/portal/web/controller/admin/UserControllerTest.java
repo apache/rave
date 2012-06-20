@@ -123,7 +123,7 @@ public class UserControllerTest {
         ModelMap modelMap = new ExtendedModelMap();
         final Long userid = 123L;
         final String email = "john.doe.sr@example.net";
-        UserImpl user = new UserImpl(userid, "john.doe.sr");
+        User user = new UserImpl(userid, "john.doe.sr");
         user.setPassword("secrect");
         user.setConfirmPassword("secrect");
         user.setEmail(email);
@@ -148,7 +148,7 @@ public class UserControllerTest {
     public void updateUserDetail_withErrors() {
         ModelMap modelMap = new ExtendedModelMap();
         Long userid = 123L;
-        UserImpl user = new UserImpl(userid, "john.doe.sr");
+        User user = new UserImpl(userid, "john.doe.sr");
         final BindingResult errors = new BeanPropertyBindingResult(user, "user");
 
         SessionStatus sessionStatus = createMock(SessionStatus.class);
@@ -163,7 +163,7 @@ public class UserControllerTest {
     @Test(expected = SecurityException.class)
     public void updateUserDetail_wrongToken() {
         ModelMap modelMap = new ExtendedModelMap();
-        UserImpl user = new UserImpl(123L, "john.doe.sr");
+        User user = new UserImpl(123L, "john.doe.sr");
         final BindingResult errors = new BeanPropertyBindingResult(user, "user");
         SessionStatus sessionStatus = createMock(SessionStatus.class);
         sessionStatus.setComplete();
@@ -184,7 +184,7 @@ public class UserControllerTest {
         ModelMap modelMap = new ExtendedModelMap();
         final Long userid = 123L;
         final String email = "john.doe.sr@example.net";
-        UserForm user = new UserForm(userid, "john.doe.sr");
+        User user = new UserImpl(userid, "john.doe.sr");
         user.setPassword("secrect");
         user.setConfirmPassword(user.getConfirmPassword());
         user.setEmail(email);
@@ -206,7 +206,7 @@ public class UserControllerTest {
     public void deleteUserDetail_noConfirmChecked() {
         ModelMap modelMap = new ExtendedModelMap();
         Long userid = 123L;
-        UserForm user = new UserForm(userid, "john.doe.sr");
+        User user = new UserImpl(userid, "john.doe.sr");
 
         SessionStatus sessionStatus = createMock(SessionStatus.class);
         replay(sessionStatus);
@@ -219,7 +219,7 @@ public class UserControllerTest {
     @Test(expected = SecurityException.class)
     public void deleteUserDetail_wrongToken() {
         ModelMap modelMap = new ExtendedModelMap();
-        UserForm user = new UserForm(123L, "john.doe.sr");
+        User user = new UserImpl(123L, "john.doe.sr");
         SessionStatus sessionStatus = createMock(SessionStatus.class);
         sessionStatus.setComplete();
 

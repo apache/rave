@@ -203,6 +203,7 @@ public class DefaultUserService implements UserService {
     }
 
     @Override
+    @Transactional
     public void updateUserProfile(User user) {
         userRepository.save(user);
     }

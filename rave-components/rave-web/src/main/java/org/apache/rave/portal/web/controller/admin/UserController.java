@@ -146,7 +146,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/admin/userdetail/delete", method = RequestMethod.POST)
-    public String deleteUserDetail(@ModelAttribute UserForm user,
+    public String deleteUserDetail(@ModelAttribute User user,
                                    @ModelAttribute(ModelKeys.TOKENCHECK) String sessionToken,
                                    @RequestParam String token,
                                    @RequestParam(required = false) String confirmdelete,
