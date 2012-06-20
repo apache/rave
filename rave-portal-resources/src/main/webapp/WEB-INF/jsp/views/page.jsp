@@ -305,6 +305,7 @@
             rave.initUI();
             rave.layout.init();
             rave.layout.searchHandler.setDefaults("<c:out value="${principleUsername}"/>","<sec:authentication property="principal.entityId" />","<c:out value="${page.entityId}"/>", "${pageUser.pageStatus}");
+            rave.runOnPageInitializedHandlers();
         });
     </script>
     <c:forEach var="members" items="${page.members}">
