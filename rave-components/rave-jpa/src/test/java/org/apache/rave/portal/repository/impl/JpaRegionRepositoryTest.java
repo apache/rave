@@ -23,7 +23,7 @@ import org.apache.rave.portal.model.JpaRegion;
 import org.apache.rave.portal.model.JpaRegionWidget;
 import org.apache.rave.portal.model.Region;
 import org.apache.rave.portal.model.RegionWidget;
-import org.junit.Ignore;
+import org.apache.rave.portal.repository.RegionRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,13 +36,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
 
-import org.apache.rave.portal.repository.RegionRepository;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.hamcrest.CoreMatchers.sameInstance;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 
 @Transactional
@@ -134,7 +128,6 @@ public class JpaRegionRepositoryTest {
     }
 
     @Test
-    @Ignore //TODO Failed test due to interface migration "No metadata was found for type "interface org.apache.rave.portal.model.RegionWidget". The class is not enhanced."
     public void save_cascadeOrphan() {
         JpaRegion region = (JpaRegion)repository.get(1L);
         long id = region.getRegionWidgets().get(0).getId();
@@ -142,7 +135,7 @@ public class JpaRegionRepositoryTest {
 
         Region saved = repository.save(region);
         manager.flush();
-        RegionWidget widget = manager.find(RegionWidget.class, id);
+        RegionWidget widget = manager.find(JpaRegionWidget.class, id);
 
         assertThat(saved.getRegionWidgets().size(), is(equalTo(1)));
         assertThat(widget, is(nullValue()));

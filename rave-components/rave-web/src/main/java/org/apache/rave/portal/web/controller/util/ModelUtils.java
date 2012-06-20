@@ -1,8 +1,10 @@
 package org.apache.rave.portal.web.controller.util;
 
+import org.apache.rave.portal.model.Authority;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.web.model.UserForm;
+import org.apache.rave.util.CollectionUtils;
 
 /**
  */
@@ -13,7 +15,7 @@ public class ModelUtils {
 
     public static User convert(UserForm form) {
         User newUser = new UserImpl(form.getId(),  form.getUsername());
-        newUser.setAuthorities(form.getAuthorities());
+        newUser.setAuthorities(CollectionUtils.<Authority>toBaseTypedCollection(form.getAuthorities()));
         newUser.setPassword(form.getPassword());
         newUser.setConfirmPassword(form.getConfirmPassword());
         newUser.setForgotPasswordHash(form.getForgotPasswordHash());

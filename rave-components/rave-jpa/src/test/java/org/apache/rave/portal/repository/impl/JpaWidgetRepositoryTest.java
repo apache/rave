@@ -20,10 +20,8 @@
 package org.apache.rave.portal.repository.impl;
 
 import org.apache.rave.portal.model.*;
-import org.apache.rave.portal.model.impl.CategoryImpl;
 import org.apache.rave.portal.model.util.WidgetStatistics;
 import org.apache.rave.portal.repository.WidgetRepository;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -155,7 +153,6 @@ public class JpaWidgetRepositoryTest {
     }
 
     @Test
-    @Ignore //TODO Broke during interface migration
     public void getByStatusAndTypeAndFreeText() {
         final String searchTerm = "gAdGet";
         final String type = "OpenSocial";
@@ -169,7 +166,6 @@ public class JpaWidgetRepositoryTest {
     }
 
     @Test
-    @Ignore //TODO Broke during interface migration
     public void countByStatusAndTypeAndFreeText() {
         final String searchTerm = "gAdGet";
         final String type = "OpenSocial";
@@ -392,15 +388,14 @@ public class JpaWidgetRepositoryTest {
         assertTrue(repository.getCountByTag("NEWS") == 1);
     }
 
-    // TODO: remove expected IllegalArgumentException once Widget has been refactored
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     @Transactional(readOnly = false)
     @Rollback
     public void addWidgetCategory() {
         final long WIDGET_ID = 1L;
         final User user = new JpaUser(1L);
 
-        Category category = new CategoryImpl();
+        Category category = new JpaCategory();
         category.setId(1L);
         category.setText("Sample Category");
         category.setCreatedUser(user);

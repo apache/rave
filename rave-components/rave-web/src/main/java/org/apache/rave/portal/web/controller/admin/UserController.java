@@ -19,7 +19,9 @@
 
 package org.apache.rave.portal.web.controller.admin;
 
-import org.apache.rave.portal.model.*;
+import org.apache.rave.portal.model.Authority;
+import org.apache.rave.portal.model.PortalPreference;
+import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.service.AuthorityService;
@@ -126,6 +128,13 @@ public class UserController {
         return ViewNames.ADMIN_USERDETAIL;
     }
 
+    /*  TODO - Fix binding of Authorities
+     *  When the model was converted to interfaces, the authorities no longer bind correctly to the object that is
+     *  stuffed into the session by spring form.  This means the JpaUser that was added to the model in the method above
+     *  cannot get updated  properly when the form is parsed by the sping data binder.  No errors are noted though, so the
+     *  process proceeds.  If we use the UserForm class here, we need to pull the user out of the database and update its values
+     *
+     */
     @RequestMapping(value = "/admin/userdetail/update", method = RequestMethod.POST)
     public String updateUserDetail(@ModelAttribute User user, BindingResult result,
                                    @ModelAttribute(ModelKeys.TOKENCHECK) String sessionToken,

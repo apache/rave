@@ -1,6 +1,6 @@
 package org.apache.rave.portal.web.model;
 
-import org.apache.rave.portal.model.Authority;
+import org.apache.rave.portal.model.impl.AuthorityImpl;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -11,7 +11,7 @@ import java.util.Collection;
 public class UserForm {
 
     private Long id;
-    private Collection<Authority> authorities;
+    private Collection<AuthorityImpl> authorities;
     private String password;
     private String username;
     private String confirmPassword;
@@ -36,7 +36,7 @@ public class UserForm {
     }
 
     public UserForm() {
-        this.authorities = new ArrayList<Authority>();
+        this.authorities = new ArrayList<AuthorityImpl>();
     }
 
 
@@ -48,11 +48,11 @@ public class UserForm {
         this.id = id;
     }
 
-    public Collection<Authority> getAuthorities() {
+    public Collection<AuthorityImpl> getAuthorities() {
         return authorities;
     }
 
-    public void setAuthorities(Collection<Authority> authorities) {
+    public void setAuthorities(Collection<AuthorityImpl> authorities) {
         this.authorities = authorities;
     }
 

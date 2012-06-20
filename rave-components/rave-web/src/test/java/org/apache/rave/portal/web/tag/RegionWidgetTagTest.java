@@ -30,7 +30,6 @@ import org.apache.rave.portal.web.renderer.ScriptLocation;
 import org.apache.rave.portal.web.renderer.ScriptManager;
 import org.apache.rave.portal.web.renderer.model.RenderContext;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.web.context.WebApplicationContext;
@@ -143,7 +142,6 @@ public class RegionWidgetTagTest {
     }
 
     @Test(expected = JspException.class)
-    @Ignore // TODO Broken with interface migration
     public void doStartTag_unsupportedWidget() throws JspException {
         replay(pageContext);
 
@@ -165,7 +163,6 @@ public class RegionWidgetTagTest {
     }
 
     @Test
-    @Ignore // TODO Broken with interface migration
     public void doStartTag_disabledWidget() throws IOException, JspException {
         final String DISABLED_WIDGET_MESSAGE = "THIS IS DISABLED";
 

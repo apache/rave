@@ -17,9 +17,13 @@ public class AuthorityImpl implements Authority {
         this.users = new ArrayList<User>();
     }
 
-    public AuthorityImpl(GrantedAuthority grantedAuthority) {
+    public AuthorityImpl(String grantedAuthority) {
         this();
-        this.authority = grantedAuthority.getAuthority();
+        this.authority = grantedAuthority;
+    }
+
+    public AuthorityImpl(GrantedAuthority grantedAuthority) {
+        this(grantedAuthority.getAuthority());
     }
 
     @Override
