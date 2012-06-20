@@ -72,6 +72,7 @@
                 <entry key="openjpa.Log" value="${rave-shindig.openjpa.Log}"/>
                 <entry key="openjpa.RuntimeUnenhancedClasses" value="${rave-shindig.openjpa.RuntimeUnenhancedClasses}"/>
                 <entry key="openjpa.jdbc.SynchronizeMappings" value="${rave-shindig.openjpa.jdbc.SynchronizeMappings}"/>
+                <entry key="openjpa.jdbc.MappingDefaults" value="${rave-shindig.openjpa.jdbc.MappingDefaults}"/>
             </map>
         </property>
     </bean>

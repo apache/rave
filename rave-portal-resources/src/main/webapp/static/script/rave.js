@@ -27,6 +27,11 @@ var rave = rave || (function () {
     // UI actions should be propagated back to the server
     var pageEditor = true;
 
+    var onWidgetsInitializedHandlers = [];
+    var onProvidersInitializedHandlers = [];
+    var onUIInitializedHandlers = [];
+    var onPageInitializedHandlers = [];
+
     /**
      * Separate sub-namespace for isolating UI functions and state management
      *
@@ -191,6 +196,17 @@ var rave = rave || (function () {
                 over:dragOver // event listener for drag over
             });
             initWidgetUI();
+
+            if(onUIInitializedHandlers.length > 0){
+                for (var i = 0, j = onUIInitializedHandlers.length; i < j; ++i) {
+                    try {
+                        onUIInitializedHandlers[i]();
+                    } catch (ex) {
+                        gadgets.warn("Could not fire onUIInitializedHandler "+ex.message);
+                    }
+                }
+            }
+            onUIInitializedHandlers = [];  // No need to hold these references anymore.
         }
 
         function dragStart(event, ui) {
@@ -872,6 +888,17 @@ var rave = rave || (function () {
         for (var key in providerMap) {
             providerMap[key].init();
         }
+
+        if(onProvidersInitializedHandlers.length > 0){
+            for (var i = 0, j = onProvidersInitializedHandlers.length; i < j; ++i) {
+                try {
+                    onProvidersInitializedHandlers[i]();
+                } catch (ex) {
+                    gadgets.warn("Could not fire onProvidersInitializedHandler "+ex.message);
+                }
+            }
+        }
+        onProvidersInitializedHandlers = [];  // No need to hold these references anymore.
     }
 
     function createNewOpenAjaxHub() {
@@ -948,6 +975,17 @@ var rave = rave || (function () {
                 widgetByIdMap[widget.regionWidgetId] = widget;
             }
         }
+
+        if(onWidgetsInitializedHandlers.length > 0){
+            for (var i = 0, j = onWidgetsInitializedHandlers.length; i < j; ++i) {
+                try {
+                    onWidgetsInitializedHandlers[i]();
+                } catch (ex) {
+                    gadgets.warn("Could not fire onWidgetInitializedHandler "+ex.message);
+                }
+            }
+        }
+        onWidgetsInitializedHandlers = [];  // No need to hold these references anymore.
     }
 
     function initializeWidget(widget) {
@@ -1047,6 +1085,39 @@ var rave = rave || (function () {
 
     function isPageEditor(){
         return this.pageEditor;
+    }
+
+    function registerOnWidgetsInitizalizedHandler(callback) {
+        onWidgetsInitializedHandlers.push(callback);
+    };
+
+    function registerOnProvidersInitizalizedHandler(callback) {
+        onProvidersInitializedHandlers.push(callback);
+    };
+
+    function registerOnUIInitizalizedHandler(callback) {
+        onUIInitializedHandlers.push(callback);
+    };
+
+    function registerOnPageInitizalizedHandler(callback) {
+        onPageInitializedHandlers.push(callback);
+    };
+
+
+    /**
+     * Internal method should only be called from the page.jsp
+     */
+    function runOnPageInitializedHandlers() {
+        if(onPageInitializedHandlers.length > 0){
+            for (var i = 0, j = onPageInitializedHandlers.length; i < j; ++i) {
+                try {
+                    onPageInitializedHandlers[i]();
+                } catch (ex) {
+                    gadgets.warn("Could not fire onPageInitializedHandler "+ex.message);
+                }
+            }
+        }
+        onPageInitializedHandlers = [];  // No need to hold these references anymore.
     }
 
     /**
@@ -1319,6 +1390,15 @@ var rave = rave || (function () {
          * Returns a boolean indicating if the user
          * should be treated as an page editor or not
          */
-        isPageEditor:isPageEditor
+        isPageEditor:isPageEditor,
+
+        /**
+         * Registration methods for initialization events
+         */
+        registerOnWidgetsInitizalizedHandler:registerOnWidgetsInitizalizedHandler,
+        registerOnProvidersInitizalizedHandler:registerOnProvidersInitizalizedHandler,
+        registerOnUIInitizalizedHandler:registerOnUIInitizalizedHandler,
+        registerOnPageInitizalizedHandler:registerOnPageInitizalizedHandler,
+        runOnPageInitializedHandlers:runOnPageInitializedHandlers
     }
 })();

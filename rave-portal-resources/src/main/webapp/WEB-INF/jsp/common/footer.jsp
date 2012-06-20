@@ -23,7 +23,7 @@ under the License.
         <div class="row">
             <div class="span12 version">
                 <span>Apache Rave ${applicationProperties['portal.version']}</span>
-                <a href="http://rave.apache.org"><img class="footer-logo" alt="Apache Rave" title="Apache Rave" src="<c:url value="/images/rave-logo.png" />" /></a>
+                <a href="http://rave.apache.org"><img class="footer-logo" alt="Apache Rave" title="Apache Rave" src="<c:url value="/static/images/rave-logo.png" />" /></a>
             </div>
         </div>
     </div>

@@ -230,11 +230,11 @@
             <form class="form-inline" action="<c:url value="/app/store/search"/>" method="GET">
                 <fieldset>
                     <input type="hidden" name="referringPageId" value="${referringPageId}">
-                    <legend><fmt:message key="page.store.search"/></legend>
-                    <div class="control-group">
+                    <legend style="margin-bottom: 0;"><fmt:message key="page.store.search"/></legend>
+                    <div class="control-group" style="margin-bottom: 18px;">
                         <div class="input-append">
                             <fmt:message key="page.store.search.button" var="searchButtonText"/>
-                            <input class="span3" type="search" id="searchTerm" name="searchTerm" value="<c:out value="${searchTerm}"/>"/>
+                            <input type="search" id="searchTerm" name="searchTerm" value="<c:out value="${searchTerm}"/>"/>
                             <button class="btn btn-primary" type="submit" value="${searchButtonText}">${searchButtonText}</button>
                         </div>
                     </div>

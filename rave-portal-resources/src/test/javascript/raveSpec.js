@@ -62,6 +62,18 @@ describe("Rave", function() {
     });
 
     describe("initProviders", function() {
+        var handler;
+
+        beforeEach(function() {
+            handler = {
+                handleProvidersInitEvent: function() {
+                    // Ignore
+                }
+            };
+            spyOn(handler, 'handleProvidersInitEvent');
+
+            rave.registerOnProvidersInitizalizedHandler(handler.handleProvidersInitEvent);
+        });
 
         it("initializes all providers", function() {
             var provider1 = getMockProvider("FOO");
@@ -71,6 +83,7 @@ describe("Rave", function() {
             rave.initProviders();
             expect(provider1.initWasCalled()).toBeTruthy();
             expect(provider2.initWasCalled()).toBeTruthy();
+            expect(handler.handleProvidersInitEvent).toHaveBeenCalled();
         });
     });
 
@@ -85,6 +98,19 @@ describe("Rave", function() {
     });
 
     describe("initWidgets", function() {
+        var handler;
+
+        beforeEach(function() {
+            handler = {
+                handleWidgetsInitEvent: function() {
+                    // Ignore
+                }
+            };
+            spyOn(handler, 'handleWidgetsInitEvent');
+
+            rave.registerOnWidgetsInitizalizedHandler(handler.handleWidgetsInitEvent);
+        });
+
         //Creates a mock jquery object with the functions we need in this context
         function createMockJQuery() {
             var html;
@@ -150,6 +176,7 @@ describe("Rave", function() {
             expect(provider1.initWidgetsWasCalled(2)).toBeTruthy();
             expect(provider2.initWidgetsWasCalled(2)).toBeTruthy();
             expect($().hasClass(HIDDEN_CLASS)).toEqual(true);
+            expect(handler.handleWidgetsInitEvent).toHaveBeenCalled();
         });
 
         it("renders widgets in the appropriate order (first 'row', second 'row', third 'row', ...)", function() {
@@ -326,6 +353,22 @@ describe("Rave", function() {
                 }
             };
         }
+
+        var handler;
+
+        beforeEach(function() {
+            handler = {
+                handleProvidersInitEvent: function() {
+                    // Ignore
+                },
+                handleWidgetsInitEvent: function() {
+                    // Ignore
+                }
+            };
+
+            rave.registerOnProvidersInitizalizedHandler(handler.handleProvidersInitEvent);
+            rave.registerOnWidgetsInitizalizedHandler(handler.handleWidgetsInitEvent);
+        });
 
         it("Initializes jQuery sortable when init is called", function() {
             createMockJQuery();

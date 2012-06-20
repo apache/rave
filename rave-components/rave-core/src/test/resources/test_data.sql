@@ -41,6 +41,8 @@ set @page_template_seq = 'page_template';
 set @page_template_region_seq = 'page_template_region';
 set @page_template_widget_seq = 'page_template_widget';
 set @page_user_seq = 'page_user';
+set @groups_seq = 'groups';
+set @group_members_seq = 'group_members';
 
 CREATE TABLE IF NOT EXISTS RAVE_PORTAL_SEQUENCES (seq_name VARCHAR(255) PRIMARY KEY NOT NULL, seq_count BIGINT(19));
 INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@page_seq, 1);
@@ -61,6 +63,8 @@ INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@page_template_se
 INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@page_template_region_seq, 1);
 INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@page_template_widget_seq, 1);
 INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@page_user_seq, 1);
+INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@groups_seq, 1);
+INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@group_members_seq, 1);
 
 
   -- ***********************************************************************************
@@ -1044,17 +1048,17 @@ UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @c
 
 set @category_id2 = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @category_seq);
 insert into category (entity_id, text, created_user_id, created_date, last_modified_user_id, last_modified_date)
-values (@category_id2, 'AAA Category', @user_id_1, '2012-01-19', @user_id_2, '2012-01-19');
+values (@category_id2, 'AAA Category', @user_id_1, '2012-01-19', @user_id_1, '2012-01-19');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @category_seq;
 
 set @category_id3 = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @category_seq);
 insert into category (entity_id, text, created_user_id, created_date, last_modified_user_id, last_modified_date)
-values (@category_id3, 'News Category', @user_id_1, '2012-01-19', @user_id_2, '2012-01-19');
+values (@category_id3, 'News Category', @user_id_2, '2012-01-19', @user_id_2, '2012-01-19');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @category_seq;
 
 set @category_id4 = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @category_seq);
 insert into category (entity_id, text, created_user_id, created_date, last_modified_user_id, last_modified_date)
-values (@category_id4, 'Technology Category', @user_id_1, '2012-01-19', @user_id_2, '2012-01-19');
+values (@category_id4, 'Technology Category', @user_id_2, '2012-01-19', @user_id_1, '2012-01-19');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @category_seq;
 
 -- widget category
@@ -1162,3 +1166,26 @@ set @next_user_profile_page_template_widget_id = (SELECT seq_count FROM RAVE_POR
 insert into page_template_widget (entity_id, page_template_region_id, render_sequence, widget_id, locked)
 values (@next_user_profile_page_template_widget_id, @user_profile_page_template_region_id, 1, @work_experience_widget_id, true);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_template_widget_seq;
+
+-- group data --
+set @group_id_1 = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @groups_seq);
+INSERT INTO groups(entity_id, title, description)
+VALUES (@group_id_1, 'Party', 'Party Group');
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @groups_seq;
+
+set @group_id_2 = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @groups_seq);
+INSERT INTO groups(entity_id, title, description)
+VALUES (@group_id_2, 'Portal', 'Portal Group');
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @groups_seq;
+-- end group data --
+
+-- group members data --
+INSERT INTO group_members(group_id, person_id)
+VALUES (@group_id_1, @user_id_1);
+INSERT INTO group_members(group_id, person_id)
+VALUES (@group_id_1, @user_id_5);
+INSERT INTO group_members(group_id, person_id)
+VALUES (@group_id_2, @user_id_1);
+INSERT INTO group_members(group_id, person_id)
+VALUES (@group_id_2, @user_id_2);
+-- end group members data --

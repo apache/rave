@@ -48,7 +48,7 @@ public class JpaWidgetTag implements WidgetTag, Serializable {
     @Column(name = "widget_id")
     private Long widgetId;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private JpaUser user;
 
@@ -141,5 +141,14 @@ public class JpaWidgetTag implements WidgetTag, Serializable {
         result = 31 * result + (tag != null ? tag.hashCode() : 0);
         result = 31 * result + (createdDate != null ? createdDate.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb=new StringBuilder("WidgetTag") ;
+        sb.append("{").append("entityId=").append(entityId).append( ", widgetId=").append(widgetId);
+        if (tag!=null) sb.append("tag keyword=").append(tag.getKeyword());
+        sb.append("}") ;
+        return sb.toString();
     }
 }

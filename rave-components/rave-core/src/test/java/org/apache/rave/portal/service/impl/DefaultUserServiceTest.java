@@ -56,6 +56,7 @@ public class DefaultUserServiceTest {
     private WidgetCommentRepository widgetCommentRepository;
     private WidgetRatingRepository widgetRatingRepository;
     private WidgetRepository widgetRepository;
+    private CategoryRepository categoryRepository;
 
     private static final String USER_NAME = "1234";
     private static final String USER_EMAIL = "test@test.com";
@@ -70,8 +71,10 @@ public class DefaultUserServiceTest {
         widgetCommentRepository = createMock(WidgetCommentRepository.class);
         widgetRatingRepository = createMock(WidgetRatingRepository.class);
         widgetRepository = createMock(WidgetRepository.class);
+        categoryRepository = createMock(CategoryRepository.class);
 
-        service = new DefaultUserService(pageRepository, userRepository, widgetRatingRepository, widgetCommentRepository, widgetRepository, pageTemplateRepository);
+        service = new DefaultUserService(pageRepository, userRepository, widgetRatingRepository, widgetCommentRepository,
+                                         widgetRepository, pageTemplateRepository, categoryRepository);
     }
 
     @After
@@ -275,13 +278,14 @@ public class DefaultUserServiceTest {
         expect(widgetCommentRepository.deleteAll(USER_ID)).andReturn(NUM_COMMENTS);
         expect(widgetRatingRepository.deleteAll(USER_ID)).andReturn(NUM_RATINGS);
         expect(widgetRepository.unassignWidgetOwner(USER_ID)).andReturn( NUM_WIDGETS_OWNED);
+        expect(categoryRepository.removeFromCreatedOrModifiedFields(USER_ID)).andReturn( NUM_WIDGETS_OWNED);
         userRepository.delete(user);
         expectLastCall();
-        replay(userRepository, pageRepository, widgetCommentRepository, widgetRatingRepository, widgetRepository);
+        replay(userRepository, pageRepository, widgetCommentRepository, widgetRatingRepository, widgetRepository, categoryRepository);
 
         service.deleteUser(USER_ID);
 
-        verify(userRepository, pageRepository, widgetCommentRepository, widgetRatingRepository, widgetRepository);
+        verify(userRepository, pageRepository, widgetCommentRepository, widgetRatingRepository, widgetRepository, categoryRepository);
     }
 
     @Test

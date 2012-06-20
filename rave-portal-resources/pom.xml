@@ -113,7 +113,7 @@
                             <goal>test</goal>
                         </goals>
                         <configuration>
-                            <jsSrcDir>${project.basedir}/src/main/webapp/script/</jsSrcDir>
+                            <jsSrcDir>${project.basedir}/src/main/webapp/static/script/</jsSrcDir>
                             <debug>true</debug>
                             <sourceExcludes>
                                 <exclude>rave_layout.js</exclude>
@@ -150,9 +150,9 @@
                     <!-- minimize instructs the processors to handle their minimization work -->
                     <minimize>true</minimize>
                     <!-- location of the javascript after processing -->
-                    <jsDestinationFolder>${project.build.directory}/${project.build.finalName}/script/</jsDestinationFolder>
+                    <jsDestinationFolder>${project.build.directory}/${project.build.finalName}/static/script/</jsDestinationFolder>
 					<!-- location of the CSS after processing -->
-					<cssDestinationFolder>${project.build.directory}/${project.build.finalName}/css/</cssDestinationFolder>
+					<cssDestinationFolder>${project.build.directory}/${project.build.finalName}/static/css/</cssDestinationFolder>
                     <!-- location of webapp directory that wro4j uses for its location context -->
                     <contextFolder>${basedir}/src/main/webapp/</contextFolder>
                     <wroManagerFactory>ro.isdc.wro.maven.plugin.manager.factory.ConfigurableWroManagerFactory</wroManagerFactory>

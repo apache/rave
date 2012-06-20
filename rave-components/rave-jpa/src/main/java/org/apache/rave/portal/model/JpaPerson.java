@@ -106,7 +106,7 @@ public class JpaPerson implements BasicEntity, Person {
     @JoinColumn(name="person_id", referencedColumnName = "entity_id")
     protected List<JpaOrganization> organizations;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(targetEntity = JpaPersonProperty.class)
     @JoinColumn(name = "person_id", referencedColumnName = "entity_id")
     protected List<JpaPersonProperty> properties;
 
@@ -116,6 +116,11 @@ public class JpaPerson implements BasicEntity, Person {
             inverseJoinColumns = @JoinColumn(name = "followed_id", referencedColumnName = "entity_id"))
     protected List<JpaPerson> friends;
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "group_members",
+            joinColumns = @JoinColumn(name = "person_id", referencedColumnName = "entity_id"),
+            inverseJoinColumns = @JoinColumn(name = "group_id", referencedColumnName = "entity_id"))
+    private List<JpaGroup> groups;
 
     public Long getEntityId() {
         return entityId;
@@ -297,6 +302,20 @@ public class JpaPerson implements BasicEntity, Person {
         this.getOrganizations().clear();
         if(organizations != null) {
             this.getOrganizations().addAll(organizations);
+        }
+    }
+
+    public List<Group> getGroups() {
+        return ConvertingListProxyFactory.createProxyList(Group.class, groups);
+    }
+
+    public void setGroups(List<JpaGroup> groups) {
+        if(this.groups == null) {
+            this.groups = new ArrayList<JpaGroup>();
+        }
+        this.getGroups().clear();
+        if(groups != null) {
+            this.getGroups().addAll(groups);
         }
     }
 

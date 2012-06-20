@@ -21,8 +21,7 @@ package org.apache.rave.portal.repository.impl;
 
 import org.apache.rave.portal.model.Category;
 import org.apache.rave.portal.model.JpaCategory;
-import org.apache.rave.portal.model.JpaGroup;
-import org.apache.rave.portal.model.Person;
+import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.conversion.JpaCategoryConverter;
 import org.apache.rave.portal.repository.CategoryRepository;
 import org.apache.rave.util.CollectionUtils;
@@ -31,11 +30,8 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
-import java.util.ArrayList;
 import java.util.List;
 
-import static org.apache.rave.persistence.jpa.util.JpaUtil.getSingleResult;
 import static org.apache.rave.persistence.jpa.util.JpaUtil.saveOrUpdate;
 
 /**
@@ -75,5 +71,30 @@ public class JpaCategoryRepository implements CategoryRepository {
     public List<Category> getAll() {
         List<JpaCategory> resultList = manager.createNamedQuery(JpaCategory.GET_ALL, JpaCategory.class).getResultList();
         return CollectionUtils.<Category>toBaseTypedList(resultList);
+    }
+    
+    @Override
+    public int removeFromCreatedOrModifiedFields(long userId) {
+       List<Category> categories = getAll();
+       int numRecordsChanged = 0;
+       for (Category category : categories) {
+           boolean changed = false;
+           User createdUser = category.getCreatedUser();
+           User lastModifiedUser = category.getLastModifiedUser();
+           if (createdUser != null && userId == createdUser.getId()) {
+               category.setCreatedUser(null);
+               changed = true;
+               }
+           if (lastModifiedUser != null && userId == lastModifiedUser.getId()) {
+               category.setLastModifiedUser(null);
+               changed = true;
+               }
+           if (changed) {
+               numRecordsChanged++;
+               save(category);
+               }
+           }
+       return numRecordsChanged;
+
     }
 }

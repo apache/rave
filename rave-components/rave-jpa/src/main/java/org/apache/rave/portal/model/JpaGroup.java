@@ -67,12 +67,7 @@ public class JpaGroup implements BasicEntity, Group {
     private JpaPerson owner;
 
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "group_members",
-            joinColumns =
-            @JoinColumn(name = "group_id", referencedColumnName = "entity_id"),
-            inverseJoinColumns =
-            @JoinColumn(name = "person_id", referencedColumnName = "entity_id"))
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy="groups")
     private List<JpaPerson> members;
 
     public JpaPerson getOwner() {

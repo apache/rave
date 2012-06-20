@@ -48,7 +48,7 @@ public class JpaWidgetComment implements BasicEntity, Serializable, WidgetCommen
     @Column(name = "widget_id")
     private Long widgetId;
 
-    @OneToOne(fetch=FetchType.EAGER)
+    @ManyToOne(fetch=FetchType.EAGER)
     @JoinColumn(name="user_id")
     private JpaUser user;
 
