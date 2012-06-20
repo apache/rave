@@ -48,7 +48,7 @@ public class JpaTag implements BasicEntity, Tag {
     public static final String FIND_BY_KEYWORD = "findByKeyword";
     public static final String GET_ALL = "getAll";
     public static final String COUNT_ALL = "countAll";
-    public static final String GET_ALL_NOT_IN_WIDGET="getAllNotInWidget" ;
+    public static final String GET_ALL_NOT_IN_WIDGET = "getAllNotInWidget";
     public static final String KEYWORD_PARAM = "keyword";
 
     @Autowired
@@ -69,7 +69,7 @@ public class JpaTag implements BasicEntity, Tag {
     @Column(name = "keyword", unique = true)
     private String keyword;
 
-    @OneToMany(mappedBy="tag")
+    @OneToMany(mappedBy = "tag")
     public List<JpaWidgetTag> widgets;
 
 
@@ -106,11 +106,13 @@ public class JpaTag implements BasicEntity, Tag {
 
     @Override
     public void setWidgets(List<WidgetTag> widgets) {
-        if(this.widgets == null){
+        if (this.widgets == null) {
             this.widgets = new ArrayList<JpaWidgetTag>();
         }
         this.getWidgets().clear();
-        this.getWidgets().addAll(widgets);
+        if (widgets != null) {
+            this.getWidgets().addAll(widgets);
+        }
     }
 
     @Override
