@@ -70,12 +70,12 @@ describe("Rave", function() {
                     // Ignore
                 }
             };
+            spyOn(handler, 'handleProvidersInitEvent');
 
             rave.registerOnProvidersInitizalizedHandler(handler.handleProvidersInitEvent);
         });
 
         it("initializes all providers", function() {
-            spyOn(handler, 'handleProvidersInitEvent');
             var provider1 = getMockProvider("FOO");
             var provider2 = getMockProvider("BAR");
             rave.registerProvider(provider1);
@@ -83,8 +83,7 @@ describe("Rave", function() {
             rave.initProviders();
             expect(provider1.initWasCalled()).toBeTruthy();
             expect(provider2.initWasCalled()).toBeTruthy();
-            // TODO Figure out why this isn't being called in the test when it works in real life
-            //expect(handler.handleProvidersInitEvent).toHaveBeenCalled();
+            expect(handler.handleProvidersInitEvent).toHaveBeenCalled();
         });
     });
 
@@ -107,6 +106,7 @@ describe("Rave", function() {
                     // Ignore
                 }
             };
+            spyOn(handler, 'handleWidgetsInitEvent');
 
             rave.registerOnWidgetsInitizalizedHandler(handler.handleWidgetsInitEvent);
         });
@@ -154,7 +154,6 @@ describe("Rave", function() {
         }
 
         it("calls the appropriate providers", function() {
-            spyOn(handler, 'handleWidgetsInitEvent');
             var HIDDEN_CLASS = "hidden";
             createMockJQuery();
             $().addClass(HIDDEN_CLASS);
@@ -177,8 +176,7 @@ describe("Rave", function() {
             expect(provider1.initWidgetsWasCalled(2)).toBeTruthy();
             expect(provider2.initWidgetsWasCalled(2)).toBeTruthy();
             expect($().hasClass(HIDDEN_CLASS)).toEqual(true);
-            // TODO Figure out why this isn't being called in the test when it works in real life
-            //expect(handler.handleWidgetsInitEvent).toHaveBeenCalled();
+            expect(handler.handleWidgetsInitEvent).toHaveBeenCalled();
         });
 
         it("renders widgets in the appropriate order (first 'row', second 'row', third 'row', ...)", function() {
