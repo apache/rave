@@ -399,7 +399,7 @@ var rave = rave || (function () {
 
         function minimizeAction(args, view_params) {
             var regionWidgetId = args.data.id;
-            $(".dnd-overlay").remove();
+            $(".dnd-overlay, .canvas-overlay").remove();
             getNonLockedRegions().sortable("option", "disabled", false);
             // display the widget in normal view
             $("#widget-" + regionWidgetId + "-wrapper").removeClass("widget-wrapper-canvas").addClass("widget-wrapper");
@@ -733,8 +733,21 @@ var rave = rave || (function () {
             jqElm.prepend(overlay[0]);
         }
 
+        function addCanvasOverlay(jqElm){
+            var overlay = $('<div></div>');
+            var styleMap = {
+                height:$('body').height()-40
+             };
+
+            // style it and give it the marker class
+            $(overlay).css(styleMap);
+            $(overlay).addClass("canvas-overlay");
+            // add it to the dom before the iframe so it covers it
+            jqElm.prepend(overlay[0]);
+        }
+
         function openFullScreenOverlay(regionWidgetId) {
-            addOverlay($("#pageContent"));
+            addCanvasOverlay($("#pageContent"));
             getNonLockedRegions().sortable("option", "disabled", true);
             $("#widget-" + regionWidgetId + "-wrapper").removeClass("widget-wrapper").addClass("widget-wrapper-canvas");
             // hide the widget menu
