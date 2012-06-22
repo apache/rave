@@ -3,11 +3,14 @@ package org.apache.rave.portal.model.conversion;
 import org.apache.rave.model.ModelConverter;
 import org.apache.rave.portal.model.Person;
 import org.apache.rave.portal.model.impl.PersonImpl;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static org.easymock.EasyMock.*;
 import static org.hamcrest.CoreMatchers.*;
@@ -17,6 +20,31 @@ import static org.junit.Assert.assertThat;
  */
 public class ConvertingListProxyFactoryTest {
 
+    // TODO: RAVE-689 temporary fix/workaround 
+    private static class StaticConvertersAccessor extends JpaConverter {
+        private StaticConvertersAccessor(List<ModelConverter> converters) {
+            super(converters);
+        }
+        public static Map<Class<?>, ModelConverter> getConverters() {
+            return JpaConverter.getInstance().converterMap;
+        }
+        public static void setConverters(Map<Class<?>, ModelConverter> converters) {
+           JpaConverter.getInstance().converterMap = converters;
+        }
+    }
+    
+    private Map<Class<?>, ModelConverter> savedConverters;
+    
+    @Before
+    public void setup() {
+        savedConverters = StaticConvertersAccessor.getConverters();
+    }
+    
+    @After
+    public void teardown() {
+        StaticConvertersAccessor.setConverters(savedConverters);
+    }
+    // end TODO: RAVE-689 temporary fix/workaround 
 
     @Test
     public void createProxy() {
