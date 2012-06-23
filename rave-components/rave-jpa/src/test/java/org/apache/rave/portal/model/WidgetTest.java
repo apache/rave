@@ -19,10 +19,6 @@
 
 package org.apache.rave.portal.model;
 
-import org.apache.rave.model.ModelConverter;
-import org.apache.rave.portal.model.conversion.JpaConverter;
-import org.apache.rave.portal.model.impl.AddressImpl;
-import org.apache.rave.portal.model.impl.PersonImpl;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -33,7 +29,6 @@ import java.util.Date;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
-import static org.easymock.EasyMock.*;
 
 /**
  * Test for {@link JpaWidget}
@@ -56,24 +51,6 @@ public class WidgetTest {
     
     @Before
     public void setUp() throws Exception {
-        ModelConverter personConverter = createMock(ModelConverter.class);
-        expect(personConverter.getSourceType()).andReturn(Person.class).anyTimes();
-        expect(personConverter.convert(isA(PersonImpl.class))).andReturn(new JpaPerson());
-        replay(personConverter);
-
-        ModelConverter addressConverter = createMock(ModelConverter.class);
-        expect(addressConverter.getSourceType()).andReturn(Address.class).anyTimes();
-        expect(addressConverter.convert(isA(AddressImpl.class))).andReturn(new JpaAddress());
-        replay(addressConverter);
-
-        ModelConverter pageLayoutConverter = createMock(ModelConverter.class);
-        expect(pageLayoutConverter.getSourceType()).andReturn(Address.class).anyTimes();
-        expect(pageLayoutConverter.convert(isA(PageLayout.class))).andReturn(new JpaPageLayout());
-        replay(pageLayoutConverter);
-        List<ModelConverter> converters = new ArrayList<ModelConverter>();
-        converters.add(personConverter);
-        converters.add(addressConverter);
-        new JpaConverter(converters);
         widget = new JpaWidget();
         id = 3511L;
         title = "Test Widget";

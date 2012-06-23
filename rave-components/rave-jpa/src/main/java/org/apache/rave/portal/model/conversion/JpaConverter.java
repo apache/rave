@@ -2,7 +2,6 @@ package org.apache.rave.portal.model.conversion;
 
 import org.apache.rave.model.ModelConverter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -22,7 +21,7 @@ public class JpaConverter {
     Map<Class<?>, ModelConverter> converterMap;
 
     @Autowired
-    public JpaConverter(List<ModelConverter> converters) {
+    JpaConverter(List<ModelConverter> converters) {
         converterMap = new HashMap<Class<?>, ModelConverter>();
         for(ModelConverter converter : converters) {
             converterMap.put(converter.getSourceType(), converter);
