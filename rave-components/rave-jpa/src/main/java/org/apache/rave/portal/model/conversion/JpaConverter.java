@@ -42,6 +42,10 @@ public class JpaConverter {
     public <S,T> ModelConverter<S, T> getConverter(Class<S> clazz) {
         return converterMap.get(clazz);
     }
+    
+    protected static boolean isInstanceSet() {
+        return instance != null;
+    }
 
     public static JpaConverter getInstance() {
         if(instance == null) {
