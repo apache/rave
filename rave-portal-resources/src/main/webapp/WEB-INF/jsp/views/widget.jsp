@@ -201,7 +201,7 @@
                                         </span>
                                         <c:if test="${userProfile.entityId eq comment.user.entityId}">
                                             <button id="comment-delete-${comment.entityId}" class="btn btn-danger btn-mini commentDeleteButton"
-                                                    value="Delete" title="Delete comment" data-widget id="<c:out value="${comment.widgetId}"/>">
+                                                    value="Delete" title="Delete comment" data-widgetid="<c:out value="${comment.widgetId}"/>">
                                                 <i class="icon-remove icon-white"></i>
                                             </button>
                                             <button id="comment-edit-${comment.entityId}" class="btn btn-mini commentEditButton"
