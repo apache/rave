@@ -98,7 +98,7 @@ public class JpaWidgetTagRepositoryTest {
     @Rollback(true)
     public void save() {
         WidgetTag widgetTag = new JpaWidgetTag();
-        JpaTag tag = new JpaTag(100L, "boing");
+        JpaTag tag = new JpaTag(null, "boing");
         widgetTag.setTag(tag);
         widgetTag.setWidgetId(2L);
         widgetTag.setCreatedDate(new Date());

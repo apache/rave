@@ -15,6 +15,7 @@
  */
 package org.apache.rave.portal.repository.impl;
 
+import org.apache.rave.portal.model.JpaTag;
 import org.apache.rave.portal.model.JpaWidgetTag;
 import org.apache.rave.portal.model.WidgetTag;
 import org.apache.rave.portal.model.conversion.JpaWidgetTagConverter;
@@ -62,6 +63,11 @@ public class JpaWidgetTagRepository implements WidgetTagRepository {
     @Override
     public WidgetTag save(WidgetTag item) {
         JpaWidgetTag widgetTag = converter.convert(item);
+        //We know this cast will succeed since we are dealing with a JpaWidgetTag
+        //since  this is a reciprocal relationship, we need to make sure we save one side of it first
+        JpaTag tag = (JpaTag)widgetTag.getTag();
+        item.setTag(saveOrUpdate(tag.getEntityId(), manager, tag));
+
         return saveOrUpdate(widgetTag.getEntityId(), manager, widgetTag);
     }
 
