@@ -71,7 +71,7 @@ public class JpaPage implements BasicEntity, Serializable, Page {
     @JoinColumn(name = "owner_id")
     private JpaUser owner;
 
-    @OneToOne(cascade=CascadeType.ALL)
+    @ManyToOne(cascade=CascadeType.ALL, optional = true)
     @JoinColumn(name="parent_page_id")
     private JpaPage parentPage;
 

@@ -523,8 +523,7 @@ public class DefaultPageService implements PageService {
         page.setRegions(regions);
         // set this as a "user" page type
         page.setPageType(PageType.USER);
-        pageRepository.save(page);
-        return page;
+        return pageRepository.save(page);
     }
 
     private void updatePageRenderSequences(List<PageUser> pages) {

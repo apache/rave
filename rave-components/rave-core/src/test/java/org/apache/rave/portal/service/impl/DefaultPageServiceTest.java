@@ -24,6 +24,8 @@ import org.apache.rave.portal.model.impl.*;
 import org.apache.rave.portal.repository.*;
 import org.apache.rave.portal.service.PageService;
 import org.apache.rave.portal.service.UserService;
+import org.easymock.EasyMock;
+import org.easymock.IAnswer;
 import org.hamcrest.CoreMatchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -233,7 +235,12 @@ public class DefaultPageServiceTest {
 
         expect(userService.getAuthenticatedUser()).andReturn(user);
         expect(pageLayoutRepository.getByPageLayoutCode(PAGE_LAYOUT_CODE)).andReturn(pageLayout);
-        expect(pageRepository.save(expectedPage)).andReturn(expectedPage);
+        expect(pageRepository.save(expectedPage)).andAnswer(new IAnswer<Page>() {
+            @Override
+            public Page answer() throws Throwable {
+                return (Page)EasyMock.getCurrentArguments()[0];
+            }
+        });
         expect(pageTemplateRepository.getDefaultPage(PageType.USER)).andThrow(new NoResultException("No Result Exception"));
 
         expect(pageRepository.getAllPages(user.getId(), PageType.USER)).andReturn(new ArrayList<Page>());
@@ -262,7 +269,12 @@ public class DefaultPageServiceTest {
 
         expect(userService.getAuthenticatedUser()).andReturn(user);
         expect(pageLayoutRepository.getByPageLayoutCode(PAGE_LAYOUT_CODE)).andReturn(pageLayout);
-        expect(pageRepository.save(expectedPage)).andReturn(expectedPage);
+        expect(pageRepository.save(expectedPage)).andAnswer(new IAnswer<Page>() {
+            @Override
+            public Page answer() throws Throwable {
+                return (Page)EasyMock.getCurrentArguments()[0];
+            }
+        });
         expect(pageTemplateRepository.getDefaultPage(PageType.USER)).andThrow(new NonUniqueResultException("Non-Unique Result Exception"));
 
         expect(pageRepository.getAllPages(user.getId(), PageType.USER)).andReturn(new ArrayList<Page>());
@@ -333,7 +345,12 @@ public class DefaultPageServiceTest {
 
         expect(userService.getAuthenticatedUser()).andReturn(user);
         expect(pageLayoutRepository.getByPageLayoutCode(PAGE_LAYOUT_CODE)).andReturn(pageLayout);
-        expect(pageRepository.save(expectedPage)).andReturn(expectedPage);
+        expect(pageRepository.save(expectedPage)).andAnswer(new IAnswer<Page>() {
+            @Override
+            public Page answer() throws Throwable {
+                return (Page)EasyMock.getCurrentArguments()[0];
+            }
+        });
         expect(pageRepository.getAllPages(user.getId(), PageType.USER)).andReturn(existingPages);
         replay(userService, pageLayoutRepository, pageRepository);
 

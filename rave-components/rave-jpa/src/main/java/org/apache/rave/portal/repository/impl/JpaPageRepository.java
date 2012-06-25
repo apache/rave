@@ -62,6 +62,11 @@ public class JpaPageRepository implements PageRepository {
 
     @Override
     public void delete(Page item) {
+        //Must remove the page users from the page in order for OpenJpa to persist change
+        removePageUsers(item);
+        for(Page p : item.getSubPages()) {
+            delete(p);
+        }
         manager.remove(item instanceof JpaPage ? item : get(item.getId()));
     }
 
@@ -75,10 +80,12 @@ public class JpaPageRepository implements PageRepository {
 
     @Override
     public int deletePages(Long userId, PageType pageType) {
-        TypedQuery<JpaPage> query = manager.createNamedQuery(JpaPage.DELETE_BY_USER_ID_AND_PAGE_TYPE, JpaPage.class);
-        query.setParameter("userId", userId);
-        query.setParameter("pageType", pageType);
-        return query.executeUpdate();
+        List<Page> pages = getAllPages(userId, pageType);
+        int pageCount = pages.size();
+        for(Page page : pages) {
+            delete(page);
+        }
+        return pageCount;
     }
 
     @Override
@@ -108,6 +115,14 @@ public class JpaPageRepository implements PageRepository {
     @Override
     public Page createPageForUser(User user, PageTemplate pt) {
         return convert(pt, user);
+    }
+
+    private void removePageUsers(Page item) {
+        for(PageUser user : item.getMembers()) {
+            user.setPage(null);
+            user.setUser(null);
+            manager.remove(user);
+        }
     }
 
     /**
