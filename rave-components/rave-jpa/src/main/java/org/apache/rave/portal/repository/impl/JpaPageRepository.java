@@ -132,6 +132,9 @@ public class JpaPageRepository implements PageRepository {
 
         p.setPageLayout(pt.getPageLayout());
         p.setRegions(convertRegions(pt.getPageTemplateRegions(), p));
+        //Workaround for an issue with OpenJPA where the transaction is applied in order of save methods and if
+        //the parent page doesn't have an id yet, it will throw a referential integrity error
+        p = save(p);
         p.setSubPages(convertPages(pt.getSubPageTemplates(), p));
         p = save(p);
         return p;
@@ -206,6 +209,9 @@ public class JpaPageRepository implements PageRepository {
             members.add(pageUser);
             lPage.setMembers(members);
             // recursive call
+            //Workaround for an issue with OpenJPA where the transaction is applied in order of save methods and if
+            //the parent page doesn't have an id yet, it will throw a referential integrity error
+            lPage = save(lPage);
             lPage.setSubPages((pt.getSubPageTemplates() == null || pt.getSubPageTemplates().isEmpty()) ? null : convertPages(pt.getSubPageTemplates(), lPage));
             lPage = save(lPage);
             pages.add(lPage);
