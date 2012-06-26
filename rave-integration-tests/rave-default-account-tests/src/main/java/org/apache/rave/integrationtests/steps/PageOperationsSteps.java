@@ -80,7 +80,7 @@ public class PageOperationsSteps {
     @When("I delete the current page")
     public void deleteCurrentPage() {
         final WebElement activePage =
-                portal.findElement(By.xpath("//div[@id='pageContent']/nav//li[contains(@class, 'active')]"));
+                portal.findElement(By.xpath("//div[@id='pageContent']/nav//li[contains(@class, 'active')]/a"));
         activePage.click();
         sleep(2000L);
         final WebElement deletePageLink = portal.findElement(By.xpath("//li[@id='pageMenuDelete']/a"));

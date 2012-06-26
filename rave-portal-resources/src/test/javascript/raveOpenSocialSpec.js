@@ -40,6 +40,7 @@ describe("Rave OpenSocial", function() {
                     this.rpcRegister = function(string, func) {
                         rpcHooks[string] = func;
                     };
+                    this.views = {};
                     container = this;
                 }
             }

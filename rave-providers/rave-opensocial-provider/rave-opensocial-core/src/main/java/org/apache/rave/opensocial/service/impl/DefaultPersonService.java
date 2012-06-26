@@ -84,12 +84,12 @@ public class DefaultPersonService implements PersonService, SimplePersonService 
                 return getUniqueListOfConnectedPeople(userIds, collectionOptions, token);
             case friends:
                 return getUniqueListOfFriends(userIds, collectionOptions, token);
-            case groupId:
-                return getGroupMembersFromRepository(collectionOptions, groupId.getGroupId(), token.getAppId());
+            case objectId:
+                return getGroupMembersFromRepository(collectionOptions, groupId.getObjectId().toString(), token.getAppId());
             case self:
                 return Lists.newArrayList(getPersonForId(new UserId(UserId.Type.me, null), token));
-            case deleted:
-                throw new ProtocolException(HttpServletResponse.SC_NOT_IMPLEMENTED, "Deleted Friends are not tracked by the container");
+            case custom:
+                throw new ProtocolException(HttpServletResponse.SC_NOT_IMPLEMENTED, "Custom GroupIDs are not tracked by the container");
             default:
                 throw new ProtocolException(HttpServletResponse.SC_BAD_REQUEST, "Invalid group id specified by request");
         }

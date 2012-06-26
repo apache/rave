@@ -84,32 +84,31 @@ rave.opensocial = rave.opensocial || (function () {
 
     function implementViews() {
 
-        container.views = {
-            'createElementForGadget':function (metadata, rel, opt_view, opt_viewTarget, opt_coordinates, parentSite) {
+        container.views.createElementForGadget = function (metadata, rel, opt_view, opt_viewTarget, opt_coordinates, parentSite, opt_callback) {
                 if (opt_viewTarget) {
                     return rave.createPopup(opt_viewTarget);
                 }
-            },
+            };
 
 
-            'createElementForEmbeddedExperience':function (rel, opt_gadgetInfo, opt_viewTarget, opt_coordinates, parentSite) {
+        container.views.createElementForEmbeddedExperience = function (rel, opt_gadgetInfo, opt_viewTarget, opt_coordinates, parentSite, opt_callback) {
                 if (opt_viewTarget) {
                     return rave.createPopup(opt_viewTarget);
                 }
-            },
+            };
 
-            'createElementForUrl':function (rel, opt_viewTarget, opt_coordinates, parentSite) {
+        container.views.createElementForUrl = function (rel, opt_viewTarget, opt_coordinates, parentSite, opt_callback) {
                 if (opt_viewTarget) {
                     return rave.createPopup(opt_viewTarget);
                 }
-            },
+            };
 
-            'destroyElement':function (site) {
+        container.views.destroyElement = function (site) {
                 var element = site.el_;
                 container.closeGadget(site);
                 rave.destroyPopup(element);
-            }
-        };
+            };
+
     }
 
     /**

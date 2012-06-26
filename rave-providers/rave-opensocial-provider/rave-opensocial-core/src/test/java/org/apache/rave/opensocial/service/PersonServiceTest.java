@@ -174,7 +174,7 @@ public class PersonServiceTest {
         Future<RestfulCollection<Person>> people = service.getPeople(ids, groupId, null, null, token);
         assertThat(people, is(not(nullValue())));
         assertThat(people.get().getTotalResults(), is(equalTo(1)));
-        assertThat(people.get().getEntry().get(0).getId(), is(equalTo(self)));
+        assertThat(people.get().getList().get(0).getId(), is(equalTo(self)));
     }
 
     @Test
@@ -190,7 +190,7 @@ public class PersonServiceTest {
 
         Future<RestfulCollection<Person>> people = service.getPeople(ids, groupId, null, null, token);
         assertThat(people, is(not(nullValue())));
-        assertThat(people.get().getEntry().get(0), is(instanceOf(FieldRestrictingPerson.class)));
+        assertThat(people.get().getList().get(0), is(instanceOf(FieldRestrictingPerson.class)));
         assertThat(hasUniqueValues(people), is(true));
         verify(repository);
     }
@@ -212,7 +212,7 @@ public class PersonServiceTest {
 
         Future<RestfulCollection<Person>> people = service.getPeople(ids, groupId, null, null, token);
         assertThat(people, is(not(nullValue())));
-        assertThat(people.get().getEntry().get(0), is(instanceOf(FieldRestrictingPerson.class)));
+        assertThat(people.get().getList().get(0), is(instanceOf(FieldRestrictingPerson.class)));
         assertThat(hasUniqueValues(people), is(true));
         verify(repository);
     }
@@ -220,14 +220,14 @@ public class PersonServiceTest {
     @Test
     public void getPeople_groupId() throws ExecutionException, InterruptedException {
         Set<UserId> ids = getUserIdSet();
-        GroupId groupId = new GroupId(GroupId.Type.groupId, GROUP_ID);
+        GroupId groupId = new GroupId(GroupId.Type.objectId, GROUP_ID);
 
         expect(repository.findByGroup(GROUP_ID)).andReturn(getDbPersonList());
         replay(repository);
 
         Future<RestfulCollection<Person>> people = service.getPeople(ids, groupId, null, null, token);
         assertThat(people, is(not(nullValue())));
-        assertThat(people.get().getEntry().get(0), is(instanceOf(FieldRestrictingPerson.class)));
+        assertThat(people.get().getList().get(0), is(instanceOf(FieldRestrictingPerson.class)));
         assertThat(hasUniqueValues(people), is(true));
         verify(repository);
     }
@@ -235,7 +235,7 @@ public class PersonServiceTest {
     @Test
     public void getPeople_GroupFilterField() throws ExecutionException, InterruptedException {
         Set<UserId> ids = getUserIdSet();
-        GroupId groupId = new GroupId(GroupId.Type.groupId, GROUP_ID);
+        GroupId groupId = new GroupId(GroupId.Type.objectId, GROUP_ID);
         replay(token);
 
         CollectionOptions options = new CollectionOptions();
@@ -387,7 +387,7 @@ public class PersonServiceTest {
     @Test
     public void getPeople_groupHasAppFilterField() throws ExecutionException, InterruptedException {
         Set<UserId> ids = getUserIdSet();
-        GroupId groupId = new GroupId(GroupId.Type.groupId, GROUP_ID);
+        GroupId groupId = new GroupId(GroupId.Type.objectId, GROUP_ID);
         String appId = "5";
         expect(token.getAppId()).andReturn(appId).anyTimes();
         replay(token);
@@ -461,7 +461,7 @@ public class PersonServiceTest {
     @Test
     public void getPeople_groupIsFriendsWith() throws ExecutionException, InterruptedException {
         Set<UserId> ids = getUserIdSet();
-        GroupId groupId = new GroupId(GroupId.Type.groupId, GROUP_ID);
+        GroupId groupId = new GroupId(GroupId.Type.objectId, GROUP_ID);
         String appId = "5";
         expect(token.getAppId()).andReturn(appId).anyTimes();
         replay(token);
@@ -479,16 +479,19 @@ public class PersonServiceTest {
         verify(repository);
     }
 
-    @Test(expected = ProtocolException.class)
-    public void getPeople_deleted() throws ExecutionException, InterruptedException {
-        String self = ID_1;
-        expect(token.getViewerId()).andReturn(self);
-        replay(token);
-        Set<UserId> ids = getUserIdSet();
-        GroupId groupId = new GroupId(GroupId.Type.deleted, GROUP_ID);
-
-        Future<RestfulCollection<Person>> people = service.getPeople(ids, groupId, null, null, token);
-    }
+    /*
+    TODO Deleted has been removed so need to handle custom at some point?
+     */
+//    @Test(expected = ProtocolException.class)
+//    public void getPeople_deleted() throws ExecutionException, InterruptedException {
+//        String self = ID_1;
+//        expect(token.getViewerId()).andReturn(self);
+//        replay(token);
+//        Set<UserId> ids = getUserIdSet();
+//        GroupId groupId = new GroupId(GroupId.Type.deleted, GROUP_ID);
+//
+//        Future<RestfulCollection<Person>> people = service.getPeople(ids, groupId, null, null, token);
+//    }
 
     private List<org.apache.rave.portal.model.Person> getDbPersonList() {
         return Lists.asList(getDbPerson(), new org.apache.rave.portal.model.Person[]{});
@@ -516,7 +519,7 @@ public class PersonServiceTest {
     }
 
     private static boolean hasUniqueValues(Future<RestfulCollection<Person>> people) throws ExecutionException, InterruptedException {
-        List<Person> persons = people.get().getEntry();
+        List<Person> persons = people.get().getList();
         Set<String> idSet = new HashSet<String>();
         for(Person p : persons) {
             if(idSet.contains(p.getId())) {
