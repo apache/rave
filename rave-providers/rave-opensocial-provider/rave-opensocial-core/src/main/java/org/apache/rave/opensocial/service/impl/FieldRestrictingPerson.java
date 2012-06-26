@@ -26,6 +26,7 @@ import org.apache.rave.util.CollectionUtils;
 import org.apache.shindig.protocol.model.Enum;
 import org.apache.shindig.protocol.model.EnumImpl;
 import org.apache.shindig.social.core.model.*;
+import org.apache.shindig.social.core.model.AddressImpl;
 import org.apache.shindig.social.opensocial.model.*;
 import org.apache.shindig.social.opensocial.model.Address;
 import org.apache.shindig.social.opensocial.model.Organization;
@@ -110,7 +111,7 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
 
     @Override
     public List<Address> getAddresses() {
-        return displayField(Field.ADDRESSES) ? convertAddresses(internal.getAddresses()) : null;        
+        return displayField(Field.ADDRESSES) ? convertAddresses(internal.getAddresses()) : null;
     }
 
     @Override
@@ -340,7 +341,7 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
     //REQUIRED FIELD
     @Override
     public String getId() {
-        return internal.getEntityId().toString();
+        return internal.getUsername();
     }
 
     @Override
@@ -826,7 +827,7 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
     private static Url convertToUrl(PersonProperty property) {
         return new UrlImpl(property.getValue(), property.getExtendedValue(), property.getQualifier());
     }
-    
+
     private List<Address> convertAddresses(List<org.apache.rave.portal.model.Address> addresses) {
         List<Address> converted = new ArrayList<Address>();
         if(addresses != null) {
@@ -896,7 +897,7 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
     }
 
     private Organization convertOrganization(org.apache.rave.portal.model.Organization org) {
-        Organization converted = new OrganizationImpl();
+        Organization converted = new org.apache.shindig.social.core.model.OrganizationImpl();
         converted.setAddress(convertAddress(org.getAddress()));
         converted.setDescription(org.getDescription());
         converted.setStartDate(org.getStartDate());

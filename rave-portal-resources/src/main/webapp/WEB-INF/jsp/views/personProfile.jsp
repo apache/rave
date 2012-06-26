@@ -24,7 +24,7 @@
 <%@ page errorPage="/WEB-INF/jsp/views/error.jsp" %>
 <%@ include file="/WEB-INF/jsp/includes/taglibs.jsp" %>
 <fmt:setBundle basename="messages"/>
-<jsp:useBean id="userProfile" type="org.apache.rave.portal.model.User" scope="request"/>
+<jsp:useBean id="userProfile" type="org.apache.rave.portal.model.JpaUser" scope="request"/>
 
 <!-- get the display name of user -->
 <fmt:message key="page.personProfile.title" var="pageTitle">

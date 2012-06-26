@@ -20,10 +20,11 @@
 package org.apache.rave.opensocial.service.impl;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.rave.opensocial.model.ApplicationData;
-import org.apache.rave.portal.model.Person;
-import org.apache.rave.opensocial.repository.ApplicationDataRepository;
+import org.apache.rave.portal.model.ApplicationData;
+import org.apache.rave.portal.model.impl.ApplicationDataImpl;
+import org.apache.rave.portal.repository.ApplicationDataRepository;
 import org.apache.rave.opensocial.service.SimplePersonService;
+import org.apache.rave.portal.model.Person;
 import org.apache.rave.service.LockService;
 import org.apache.shindig.auth.SecurityToken;
 import org.apache.shindig.common.util.ImmediateFuture;
@@ -162,7 +163,7 @@ public class DefaultAppDataService implements AppDataService {
 
             //if there is no data, create an empty object to store the data in that we'll save when we're done
             if (applicationData == null) {
-                applicationData = new ApplicationData(null, personId, appId, new HashMap<String, String>());
+                applicationData = new ApplicationDataImpl(null, personId, appId, new HashMap<String, String>());
             }
 
             //if the fields parameter is empty, we can just use the values map directly since this is a full update
@@ -231,8 +232,8 @@ public class DefaultAppDataService implements AppDataService {
 
     private List<String> convertPeopleToUserIds(List<Person> people) {
         List<String> ids = new ArrayList<String>(people.size());
-        for (Person person : people) {
-            ids.add(String.valueOf(person.getEntityId()));
+        for (org.apache.rave.portal.model.Person person : people) {
+            ids.add(String.valueOf(person.getUsername()));
         }
         return ids;
     }

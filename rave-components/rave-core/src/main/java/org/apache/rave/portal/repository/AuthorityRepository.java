@@ -30,7 +30,7 @@ import java.util.List;
 public interface AuthorityRepository extends Repository<Authority> {
 
     /**
-     * Finds the {@link Authority} by its name
+     * Finds the {@link org.apache.rave.portal.model.Authority} by its name
      *
      * @param authorityName (unique) name of the Authority
      * @return Authority if it can be found, otherwise {@literal null}
@@ -38,12 +38,12 @@ public interface AuthorityRepository extends Repository<Authority> {
     Authority getByAuthority(String authorityName);
 
     /**
-     * @return a List of all {@link Authority}'s.
+     * @return a List of all {@link org.apache.rave.portal.model.Authority}'s.
      */
     List<Authority> getAll();
-    
+
     /**
-     * @return a List of all default {@link Authority}'s.
+     * @return a List of all default {@link org.apache.rave.portal.model.Authority}'s.
      */
     List<Authority> getAllDefault();
 

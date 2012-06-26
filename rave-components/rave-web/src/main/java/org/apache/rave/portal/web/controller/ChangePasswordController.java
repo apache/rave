@@ -19,8 +19,11 @@
 
 package org.apache.rave.portal.web.controller;
 
+import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.service.UserService;
+import org.apache.rave.portal.web.controller.util.ModelUtils;
+import org.apache.rave.portal.web.model.UserForm;
 import org.apache.rave.portal.web.util.ModelKeys;
 import org.apache.rave.portal.web.util.ViewNames;
 import org.apache.rave.portal.web.validator.ChangePasswordValidator;
@@ -42,7 +45,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  * Only requests that have a valid (matched) forgotPasswordHash will be honored
  *
  * @version "$Id$"
- * @see org.apache.rave.portal.model.User#forgotPasswordHash
+ * @see org.apache.rave.portal.model.User#getForgotPasswordHash()
  */
 @Controller
 public class ChangePasswordController {
@@ -65,7 +68,7 @@ public class ChangePasswordController {
     @RequestMapping(value = {"/changepassword/{passwordHash:.*}"}, method = RequestMethod.GET)
     public String initialize(Model model, @PathVariable("passwordHash") String passwordHash) {
         log.debug("Requesting user for hash: {}", passwordHash);
-        User user = new User();
+        User user = new UserImpl();
         model.addAttribute(ModelKeys.USER, user);
         user.setForgotPasswordHash(passwordHash);
         return ViewNames.PASSWORD_CHANGE;
@@ -73,7 +76,7 @@ public class ChangePasswordController {
 
 
     @RequestMapping(value = {"/changepassword", "/changepassword/**"}, method = RequestMethod.POST)
-    public String update(@ModelAttribute User user, BindingResult results, Model model, RedirectAttributes redirectAttributes) {
+    public String update(@ModelAttribute UserForm user, BindingResult results, Model model, RedirectAttributes redirectAttributes) {
         log.debug("updating user password for hash {}", user.getForgotPasswordHash());
         model.addAttribute(ModelKeys.USER, user);
         passwordValidator.validate(user, results);
@@ -84,7 +87,7 @@ public class ChangePasswordController {
         }
         try {
             log.debug("Submitted passwords were valid");
-            userService.updatePassword(user);
+            userService.updatePassword(ModelUtils.convert(user));
             redirectAttributes.addFlashAttribute(ModelKeys.REDIRECT_MESSAGE, messagePasswordChanged);
             return ViewNames.REDIRECT_LOGIN ;
         } catch (Exception ex) {

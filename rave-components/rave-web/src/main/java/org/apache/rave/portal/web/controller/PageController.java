@@ -18,17 +18,11 @@
  */
 package org.apache.rave.portal.web.controller;
 
-import org.apache.rave.portal.model.Page;
-import org.apache.rave.portal.model.PageInvitationStatus;
-import org.apache.rave.portal.model.PageLayout;
-import org.apache.rave.portal.model.PageUser;
-import org.apache.rave.portal.model.User;
+import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.service.PageLayoutService;
 import org.apache.rave.portal.service.PageService;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.portal.web.controller.util.ControllerUtils;
-import org.apache.rave.portal.web.model.NavigationItem;
-import org.apache.rave.portal.web.model.NavigationMenu;
 import org.apache.rave.portal.web.util.ModelKeys;
 import org.apache.rave.portal.web.util.ViewNames;
 import org.slf4j.Logger;
@@ -84,10 +78,10 @@ public class PageController {
         List<PageLayout> pageLayouts = pageLayoutService.getAllUserSelectable();
         addAttributesToModel(model, page, currentPageUser, pages, pageLayouts);
         String view = ControllerUtils.getDeviceAppropriateView(request, ViewNames.getPageView(page.getPageLayout().getCode()), ViewNames.MOBILE_HOME);
-        ControllerUtils.addNavItemsToModel(view, model, page.getEntityId(), userService.getAuthenticatedUser(), currentPageUser.isEditor());
+        ControllerUtils.addNavItemsToModel(view, model, page.getId(), userService.getAuthenticatedUser(), currentPageUser.isEditor());
         return view;
     }
-    
+
     @RequestMapping(value = "/page/view/{pageId}", method = RequestMethod.GET)
     public String view(@PathVariable Long pageId, Model model, HttpServletRequest request) {
         try {
@@ -103,7 +97,7 @@ public class PageController {
             List<PageLayout> pageLayouts = pageLayoutService.getAllUserSelectable();
             addAttributesToModel(model, page, currentPageUser, pages, pageLayouts);
             String view = ControllerUtils.getDeviceAppropriateView(request, ViewNames.getPageView(page.getPageLayout().getCode()), ViewNames.MOBILE_HOME);
-            ControllerUtils.addNavItemsToModel(view, model, page.getEntityId(), thisUser, currentPageUser.isEditor());
+            ControllerUtils.addNavItemsToModel(view, model, page.getId(), thisUser, currentPageUser.isEditor());
             return view;
         } catch (Exception e) {
             logger.info("unable to get page - possibly because a shared page was revoked by its owner");
@@ -111,16 +105,16 @@ public class PageController {
         // Page could not be found or a shared page was removed, in which case return to default view
         return viewDefault(model, request);
     }
-    
+
     private List<Page> getAllPagesForAuthenticatedUser() {
         User user = userService.getAuthenticatedUser();
-        long userId = user.getEntityId();
+        long userId = user.getId();
         List<Page> pages = pageService.getAllUserPages(userId);
         // we add pages to this list which the corresponding pageUser object is not set to "refused"
         List<Page> viewablePages = new ArrayList<Page>();
         for(Page page : pages){
             for(PageUser pageUser : page.getMembers()){
-                if(pageUser.getUser().equals(user) && !pageUser.getPageStatus().equals(PageInvitationStatus.REFUSED)){
+                if(pageUser != null && pageUser.getUser().equals(user) && !pageUser.getPageStatus().equals(PageInvitationStatus.REFUSED)){
                     viewablePages.add(page);
                 }
             }
@@ -134,7 +128,7 @@ public class PageController {
         }
         return viewablePages;
     }
-    
+
     private void addAttributesToModel(Model model, Page page, PageUser pageUser, List<Page> pages, List<PageLayout> pageLayouts) {
         model.addAttribute(ModelKeys.PAGE, page);
         model.addAttribute(ModelKeys.PAGES, pages);

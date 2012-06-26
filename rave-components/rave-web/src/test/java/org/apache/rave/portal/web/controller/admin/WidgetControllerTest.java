@@ -21,6 +21,8 @@ package org.apache.rave.portal.web.controller.admin;
 
 import org.apache.rave.portal.model.Category;
 import org.apache.rave.portal.model.Widget;
+import org.apache.rave.portal.model.impl.CategoryImpl;
+import org.apache.rave.portal.model.impl.WidgetImpl;
 import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.service.CategoryService;
 import org.apache.rave.portal.service.PortalPreferenceService;
@@ -31,7 +33,6 @@ import org.apache.rave.portal.web.util.PortalPreferenceKeys;
 import org.apache.rave.portal.web.util.ViewNames;
 import org.apache.rave.portal.web.validator.UpdateWidgetValidator;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.ui.ExtendedModelMap;
 import org.springframework.ui.Model;
@@ -44,9 +45,9 @@ import org.springframework.web.bind.support.SessionStatus;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
 import static org.easymock.EasyMock.*;
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.*;
 
 /**
  * Test for {@link WidgetController}
@@ -81,8 +82,8 @@ public class WidgetControllerTest {
         controller.setCategoryService(categoryService);
 
         categories = new ArrayList<Category>();
-        categories.add(new Category());
-        categories.add(new Category());
+        categories.add(new CategoryImpl());
+        categories.add(new CategoryImpl());
 
         webDataBinder = createMock(WebDataBinder.class);
         categoryEditor = new CategoryEditor(categoryService);
@@ -136,9 +137,9 @@ public class WidgetControllerTest {
     @Test
     public void viewAdminWidgetDetail() throws Exception {
         Model model = new ExtendedModelMap();
-        Widget widget = new Widget();
+        WidgetImpl widget = new WidgetImpl();
         final long entityId = 123L;
-        widget.setEntityId(entityId);
+        widget.setId(entityId);
         widget.setTitle("My widget");
 
         expect(service.getWidget(entityId)).andReturn(widget);
@@ -157,8 +158,8 @@ public class WidgetControllerTest {
     @Test
     public void updateWidget_valid() {
         final String widgetUrl = "http://example.com/widget";
-        Widget widget = new Widget(123L, widgetUrl);
-        widget.setTitle("Widget title");
+        WidgetImpl widget = new WidgetImpl(123L, widgetUrl);
+        widget.setTitle("WidgetImpl title");
         widget.setType("OpenSocial");
         widget.setDescription("Lorem ipsum");
         BindingResult errors = new BeanPropertyBindingResult(widget, "widget");
@@ -180,7 +181,7 @@ public class WidgetControllerTest {
 
     @Test(expected = SecurityException.class)
     public void updateWidget_wrongToken() {
-        Widget widget = new Widget();
+        WidgetImpl widget = new WidgetImpl();
         BindingResult errors = new BeanPropertyBindingResult(widget, "widget");
         SessionStatus sessionStatus = createMock(SessionStatus.class);
         ModelMap modelMap = new ExtendedModelMap();
@@ -199,7 +200,7 @@ public class WidgetControllerTest {
 
     @Test
     public void updateWidget_invalid() {
-        Widget widget = new Widget(123L, "http://broken/url");
+        WidgetImpl widget = new WidgetImpl(123L, "http://broken/url");
         BindingResult errors = new BeanPropertyBindingResult(widget, "widget");
         SessionStatus sessionStatus = createMock(SessionStatus.class);
         ModelMap modelMap = new ExtendedModelMap();
@@ -226,8 +227,8 @@ public class WidgetControllerTest {
     private static SearchResult<Widget> populateWidgetSearchResult() {
         List<Widget> widgetList = new ArrayList<Widget>();
         for (int i = 0; i < DEFAULT_PAGESIZE; i++) {
-            Widget widget = new Widget();
-            widget.setTitle("Widget " + i);
+            WidgetImpl widget = new WidgetImpl();
+            widget.setTitle("WidgetImpl " + i);
             widgetList.add(widget);
         }
         return new SearchResult<Widget>(widgetList, 25);

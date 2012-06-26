@@ -22,6 +22,7 @@ package org.apache.rave.portal.web.api.rpc;
 import org.apache.rave.portal.model.Page;
 import org.apache.rave.portal.model.Region;
 import org.apache.rave.portal.model.RegionWidget;
+import org.apache.rave.portal.model.impl.*;
 import org.apache.rave.portal.service.PageService;
 import org.apache.rave.portal.web.api.rpc.model.RpcResult;
 import org.junit.Before;
@@ -42,7 +43,7 @@ public class PageApiTest {
     private final int NEW_POSITION = 3;
     private final long PAGE_ID = 20L;
     private final long PAGE_2_ID = 38L;
-    
+
     private Page page, page2;
 
 
@@ -50,9 +51,9 @@ public class PageApiTest {
     public void setup() {
         pageService = createMock(PageService.class);
         pageApi = new PageApi(pageService);
-        
-        page = new Page(PAGE_ID);
-        page2 = new Page(PAGE_2_ID);
+
+        page = new PageImpl(PAGE_ID);
+        page2 = new PageImpl(PAGE_2_ID);
     }
 
     @Test
@@ -60,7 +61,7 @@ public class PageApiTest {
         final long TO_REGION = 1;
         final long FROM_REGION = 2;
 
-        expect(pageService.moveRegionWidget(REGION_WIDGET_ID, NEW_POSITION, TO_REGION, FROM_REGION)).andReturn(new RegionWidget());
+        expect(pageService.moveRegionWidget(REGION_WIDGET_ID, NEW_POSITION, TO_REGION, FROM_REGION)).andReturn(new RegionWidgetImpl());
         replay(pageService);
         RpcResult<RegionWidget> result = pageApi.moveWidgetOnPage(REGION_WIDGET_ID, NEW_POSITION, TO_REGION, FROM_REGION);
         verify(pageService);
@@ -103,14 +104,14 @@ public class PageApiTest {
         assertThat(result.isError(), is(true));
         assertThat(result.getErrorCode(), is(RpcResult.ErrorCode.INTERNAL_ERROR));
         assertThat(result.getErrorMessage(), is(equalTo(INTERNAL_ERROR_MESSAGE)));
-    }    
-    
+    }
+
     @Test
     public void addWidget_validParams() {
         final int PAGE_ID = 1;
         final long WIDGET_ID = 2;
 
-        expect(pageService.addWidgetToPage(PAGE_ID, WIDGET_ID)).andReturn(new RegionWidget());
+        expect(pageService.addWidgetToPage(PAGE_ID, WIDGET_ID)).andReturn(new RegionWidgetImpl());
         replay(pageService);
         RpcResult result = pageApi.addWidgetToPage(PAGE_ID, WIDGET_ID);
         verify(pageService);
@@ -156,7 +157,7 @@ public class PageApiTest {
     @Test
     public void deleteWidget_validParams() {
         final long WIDGET_ID = 3;
-        expect(pageService.removeWidgetFromPage(WIDGET_ID)).andReturn(new Region());
+        expect(pageService.removeWidgetFromPage(WIDGET_ID)).andReturn(new RegionImpl());
         replay(pageService);
 
         RpcResult<Region> result = pageApi.removeWidgetFromPage(WIDGET_ID);
@@ -196,13 +197,13 @@ public class PageApiTest {
         assertThat(result.getErrorCode(), is(RpcResult.ErrorCode.INTERNAL_ERROR));
         assertThat(result.getErrorMessage(), is(equalTo(INTERNAL_ERROR_MESSAGE)));
     }
-    
+
     @Test
     public void addPage_validParams() {
         final String PAGE_NAME = "My New Page";
         final String PAGE_LAYOUT_CODE = "layout1";
 
-        expect(pageService.addNewUserPage(PAGE_NAME, PAGE_LAYOUT_CODE)).andReturn(new Page());
+        expect(pageService.addNewUserPage(PAGE_NAME, PAGE_LAYOUT_CODE)).andReturn(new PageImpl());
         replay(pageService);
         RpcResult result = pageApi.addPage(PAGE_NAME, PAGE_LAYOUT_CODE);
         verify(pageService);
@@ -212,7 +213,7 @@ public class PageApiTest {
         assertThat(result.getErrorCode(), is(RpcResult.ErrorCode.NO_ERROR));
         assertThat(result.getErrorMessage(), is(nullValue()));
     }
-    
+
     @Test
     public void addPage_invalidParams() {
         final String PAGE_NAME = "My New Page";
@@ -228,7 +229,7 @@ public class PageApiTest {
         assertThat(result.getErrorCode(), is(RpcResult.ErrorCode.INVALID_PARAMS));
         assertThat(result.getErrorMessage(), is(equalTo(PARAM_ERROR_MESSAGE)));
     }
-    
+
     @Test
     public void addPage_internalError() {
         final String PAGE_NAME = "My New Page";
@@ -244,14 +245,14 @@ public class PageApiTest {
         assertThat(result.getErrorCode(), is(RpcResult.ErrorCode.INTERNAL_ERROR));
         assertThat(result.getErrorMessage(), is(equalTo(INTERNAL_ERROR_MESSAGE)));
     }
-    
+
     @Test
     public void getPage() {
         expect(pageService.getPage(PAGE_ID)).andReturn(page);
         replay(pageService);
-        
+
         RpcResult result = pageApi.getPage(PAGE_ID);
-        
+
         verify(pageService);
         assertThat(result, is(notNullValue()));
         assertThat((Page)result.getResult(), is (page));
@@ -265,9 +266,9 @@ public class PageApiTest {
         String layoutName = "layout";
         expect(pageService.updatePage(PAGE_ID, pageName, layoutName)).andReturn(page);
         replay(pageService);
-        
+
         RpcResult result = pageApi.updatePageProperties(PAGE_ID, pageName, layoutName);
-        
+
         verify(pageService);
         assertThat(result, is(notNullValue()));
         assertThat((Page)result.getResult(), is (page));
@@ -275,40 +276,40 @@ public class PageApiTest {
         assertThat(result.getErrorCode(), is (RpcResult.ErrorCode.NO_ERROR));
         assertThat(result.getErrorMessage(), is(nullValue()));
     }
-    
+
     @Test
     public void movePage_nonNullMoveAfterPageId() {
         expect(pageService.movePage(PAGE_ID, PAGE_2_ID)).andReturn(page);
         replay(pageService);
-                
-        RpcResult result = pageApi.movePage(PAGE_ID, PAGE_2_ID);                
-        
-        verify(pageService);        
+
+        RpcResult result = pageApi.movePage(PAGE_ID, PAGE_2_ID);
+
+        verify(pageService);
         assertThat(result, is(notNullValue()));
         assertThat((Page)result.getResult(), is(page));
         assertThat(result.isError(), is(false));
         assertThat(result.getErrorCode(), is(RpcResult.ErrorCode.NO_ERROR));
         assertThat(result.getErrorMessage(), is(nullValue()));
-    }    
-    
+    }
+
     @Test
     public void movePage_nullMoveAfterPageId() {
         expect(pageService.movePageToDefault(PAGE_2_ID)).andReturn(page2);
         replay(pageService);
-                
-        RpcResult result = pageApi.movePage(PAGE_2_ID, null);                
-        
-        verify(pageService);        
+
+        RpcResult result = pageApi.movePage(PAGE_2_ID, null);
+
+        verify(pageService);
         assertThat(result, is(notNullValue()));
         assertThat((Page)result.getResult(), is(page2));
         assertThat(result.isError(), is(false));
         assertThat(result.getErrorCode(), is(RpcResult.ErrorCode.NO_ERROR));
         assertThat(result.getErrorMessage(), is(nullValue()));
-    }      
-    
+    }
+
     @Test
-    public void moveWidgetToPage_validParams() {      
-        expect(pageService.moveRegionWidgetToPage(REGION_WIDGET_ID, PAGE_2_ID)).andReturn(new RegionWidget());
+    public void moveWidgetToPage_validParams() {
+        expect(pageService.moveRegionWidgetToPage(REGION_WIDGET_ID, PAGE_2_ID)).andReturn(new RegionWidgetImpl());
         replay(pageService);
         RpcResult<RegionWidget> result = pageApi.moveWidgetToPage(PAGE_2_ID, REGION_WIDGET_ID);
         verify(pageService);
@@ -320,7 +321,7 @@ public class PageApiTest {
     }
 
     @Test
-    public void moveWidgetToPage_invalidParams() {    
+    public void moveWidgetToPage_invalidParams() {
         expect(pageService.moveRegionWidgetToPage(REGION_WIDGET_ID, PAGE_2_ID)).andThrow(new IllegalArgumentException(PARAM_ERROR_MESSAGE));
         replay(pageService);
 
@@ -345,5 +346,5 @@ public class PageApiTest {
         assertThat(result.isError(), is(true));
         assertThat(result.getErrorCode(), is(RpcResult.ErrorCode.INTERNAL_ERROR));
         assertThat(result.getErrorMessage(), is(equalTo(INTERNAL_ERROR_MESSAGE)));
-    }  
+    }
 }

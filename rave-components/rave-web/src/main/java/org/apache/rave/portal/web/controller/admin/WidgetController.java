@@ -38,23 +38,11 @@ import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 
-import java.beans.PropertyEditorSupport;
-import java.util.ArrayList;
-
 import static org.apache.rave.portal.model.WidgetStatus.values;
-import static org.apache.rave.portal.web.controller.admin.AdminControllerUtil.DEFAULT_PAGE_SIZE;
-import static org.apache.rave.portal.web.controller.admin.AdminControllerUtil.addNavigationMenusToModel;
-import static org.apache.rave.portal.web.controller.admin.AdminControllerUtil.checkTokens;
-import static org.apache.rave.portal.web.controller.admin.AdminControllerUtil.isDeleteOrUpdate;
+import static org.apache.rave.portal.web.controller.admin.AdminControllerUtil.*;
 
 /**
  * Admin controller to manipulate Widget data
@@ -120,7 +108,7 @@ public class WidgetController {
     @RequestMapping(value = "/admin/widgetdetail/{widgetid}", method = RequestMethod.GET)
     public String viewWidgetDetail(@PathVariable("widgetid") Long widgetid, Model model) {
         addNavigationMenusToModel(SELECTED_ITEM, model);
-        model.addAttribute(widgetService.getWidget(widgetid));
+        model.addAttribute(ModelKeys.WIDGET, widgetService.getWidget(widgetid));
         model.addAttribute(ModelKeys.TOKENCHECK, AdminControllerUtil.generateSessionToken());
         model.addAttribute(ModelKeys.CATEGORIES, categoryService.getAll());
 

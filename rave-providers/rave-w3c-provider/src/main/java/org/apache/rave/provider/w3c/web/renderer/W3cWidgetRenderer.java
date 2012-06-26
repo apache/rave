@@ -100,7 +100,7 @@ public class W3cWidgetRenderer implements RegionWidgetRenderer {
         scriptManager.registerScriptBlock(widgetScript, ScriptLocation.AFTER_RAVE, RenderScope.CURRENT_REQUEST, context);
         logger.debug("Gadget Script Data: " + widgetScript);
 
-        return String.format(MARKUP, item.getEntityId());
+        return String.format(MARKUP, item.getId());
     }
 
     /**
@@ -114,7 +114,7 @@ public class W3cWidgetRenderer implements RegionWidgetRenderer {
         //
         // For the shared data key we use the RegionWidget entity ID.
         //
-        String sharedDataKey = String.valueOf(item.getEntityId());
+        String sharedDataKey = String.valueOf(item.getId());
 
         //
         // Get the Rave Widget for this regionWidget instance
@@ -150,14 +150,14 @@ public class W3cWidgetRenderer implements RegionWidgetRenderer {
         // Construct and return script block
         //
         return String.format(SCRIPT_BLOCK,
-                item.getRegion().getEntityId(),
+                item.getRegion().getId(),
                 WIDGET_TYPE,
-                item.getEntityId(),
+                item.getId(),
                 contextualizedWidget.getUrl(),
                 height,
                 width,
                 item.isCollapsed(),
-                item.getWidget().getEntityId(),
+                item.getWidget().getId(),
                 item.isLocked(),
                 item.isHideChrome());
     }

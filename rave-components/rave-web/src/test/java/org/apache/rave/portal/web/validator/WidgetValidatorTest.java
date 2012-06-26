@@ -19,15 +19,16 @@
 
 package org.apache.rave.portal.web.validator;
 
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
-
 import org.apache.commons.validator.routines.RegexValidator;
 import org.apache.commons.validator.routines.UrlValidator;
 import org.apache.rave.portal.model.Widget;
+import org.apache.rave.portal.model.impl.WidgetImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.validation.Errors;
+
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertTrue;
 
 /**
  * Test for {@link WidgetValidator}
@@ -43,7 +44,7 @@ public class WidgetValidatorTest {
 
     @Test
     public void testSupports() throws Exception {
-        assertTrue("Supports org.apache.rave.portal.model.Widget", widgetValidator.supports(Widget.class));
+        assertTrue("Supports org.apache.rave.portal.model.Widget", widgetValidator.supports(WidgetImpl.class));
     }
 
   /*

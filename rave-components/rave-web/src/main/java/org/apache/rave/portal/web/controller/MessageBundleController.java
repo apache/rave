@@ -26,6 +26,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver;
 
 import javax.servlet.http.HttpServletRequest;
@@ -68,6 +69,7 @@ public class MessageBundleController  {
      * @param request  The incoming HttpServletRequest
      * @return the JavaScript content to load from the client
      */
+    @ResponseBody
     @RequestMapping(value = {"/rave_client_messages.js"}, method = RequestMethod.GET)
     public ResponseEntity<String> getClientMessages(HttpServletRequest request) {
         return new ResponseEntity<String>(getClientMessagesJSForLocale(acceptHeaderLocaleResolver.resolveLocale(request)), clientMessagesResponseHeaders, HttpStatus.OK);

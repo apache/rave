@@ -55,39 +55,6 @@
     <context:component-scan base-package="org.apache.rave.portal.service"/>
     <context:component-scan base-package="org.apache.rave.portal.security"/>
 
-    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
-        <property name="entityManagerFactory" ref="entityManagerFactory"/>
-    </bean>
-
-    <tx:annotation-driven transaction-manager="transactionManager"/>
-
-    <bean id="entityManagerFactory"
-          class="org.apache.rave.persistence.jpa.PopulatedLocalContainerEntityManagerFactory">
-        <property name="populator" ref="dataSourcePopulator"/>
-        <property name="loadTimeWeaver">
-            <bean class="org.springframework.instrument.classloading.InstrumentationLoadTimeWeaver"/>
-        </property>
-        <property name="persistenceUnitName" value="ravePersistenceUnit"/>
-        <property name="dataSource" ref="dataSource"/>
-        <property name="jpaVendorAdapter">
-            <bean class="org.springframework.orm.jpa.vendor.OpenJpaVendorAdapter"
-                  p:databasePlatform="${portal.jpaVendorAdapter.databasePlatform}"
-                  p:database="${portal.jpaVendorAdapter.database}"
-                  p:showSql="${portal.jpaVendorAdapter.showSql}"/>
-        </property>
-        <property name="jpaDialect">
-            <bean class="${portal.jpaDialect}"/>
-        </property>
-        <property name="jpaPropertyMap">
-            <map>
-                <entry key="openjpa.Log" value="${portal.openjpa.Log}"/>
-                <entry key="openjpa.RuntimeUnenhancedClasses" value="${portal.openjpa.RuntimeUnenhancedClasses}"/>
-                <entry key="openjpa.jdbc.SynchronizeMappings" value="${portal.openjpa.jdbc.SynchronizeMappings}"/>
-                <entry key="openjpa.jdbc.MappingDefaults" value="${portal.openjpa.jdbc.MappingDefaults}"/>
-            </map>
-        </property>
-    </bean>
-
     <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="url" value="${portal.dataSource.url}"/>
         <property name="driverClassName" value="${portal.dataSource.driver}"/>

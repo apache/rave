@@ -124,10 +124,10 @@ public interface WidgetRepository extends Repository<Widget> {
      * @return {@link Widget} if it can be found, otherwise {@literal null}
      */
     Widget getByUrl(String widgetUrl);
-    
+
     /**
      * Generates the widget statistics for a gadget including the user's specific information.
-     * 
+     *
      * @param widget_id id of the widget
      * @param user_id id of the user
      * @return {@link WidgetStatistics} with the rating information
@@ -146,7 +146,7 @@ public interface WidgetRepository extends Repository<Widget> {
      * Generates the mapping of widget ratings for the user.
      *
      * @param userId id of the user
-     * @return Mapping of {@link WidgetRating} objects keyed off of the widget's entityId
+     * @return Mapping of {@link org.apache.rave.portal.model.WidgetRating} objects keyed off of the widget's entityId
      */
     Map<Long, WidgetRating> getUsersWidgetRatings(long userId);
 
@@ -159,7 +159,7 @@ public interface WidgetRepository extends Repository<Widget> {
      * @return valid list of widgets, can be empty
      */
      List<Widget> getWidgetsByTag(String tagKeyWord, int offset, int pageSize);
- 
+
     /**
      * Counts the total number of {@link Widget}'s that match tag keyword. Useful for paging.
      *

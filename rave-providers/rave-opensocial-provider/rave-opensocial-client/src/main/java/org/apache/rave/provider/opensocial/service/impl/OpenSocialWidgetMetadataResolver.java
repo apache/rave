@@ -20,6 +20,7 @@
 package org.apache.rave.provider.opensocial.service.impl;
 
 import org.apache.rave.portal.model.Widget;
+import org.apache.rave.portal.model.impl.WidgetImpl;
 import org.apache.rave.portal.service.WidgetMetadataResolver;
 import org.apache.rave.provider.opensocial.Constants;
 import org.apache.rave.provider.opensocial.repository.GadgetMetadataRepository;
@@ -52,7 +53,7 @@ public class OpenSocialWidgetMetadataResolver implements WidgetMetadataResolver 
      * @return
      */
     public Widget getMetadata(String url) {
-        Widget widget = new Widget();
+        Widget widget = new WidgetImpl();
         JSONObject jsonGadget = null;
         try {
             jsonGadget = (JSONObject) new JSONTokener(gadgetMetadataRepository.getGadgetMetadata(url)).nextValue();

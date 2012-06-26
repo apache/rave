@@ -18,7 +18,10 @@
  */
 package org.apache.rave.portal.security.impl;
 
-import org.apache.rave.portal.model.*;
+import org.apache.rave.portal.model.Category;
+import org.apache.rave.portal.model.Widget;
+import org.apache.rave.portal.model.impl.CategoryImpl;
+import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.repository.CategoryRepository;
 import org.apache.rave.portal.security.ModelPermissionEvaluator;
 import org.apache.rave.portal.security.util.AuthenticationUtils;
@@ -42,7 +45,7 @@ public class DefaultCategoryPermissionEvaluatorTest {
     private CategoryRepository mockCategoryRepository;
 
     private Category category;
-    private User user, user2;
+    private UserImpl user, user2;
     private Authentication mockAuthentication;
     private List<GrantedAuthority> grantedAuthorities;
 
@@ -50,21 +53,21 @@ public class DefaultCategoryPermissionEvaluatorTest {
     private final Long VALID_USER_ID = 99L;
     private final String VALID_USERNAME = "john.doe";
     private final String VALID_USERNAME2 = "jane.doe";
-    
+
     @Before
     public void setUp() {
         mockCategoryRepository = createMock(CategoryRepository.class);
         defaultCategoryPermissionEvaluator = new DefaultCategoryPermissionEvaluator(mockCategoryRepository);
         mockAuthentication = createMock(Authentication.class);
 
-        user = new User();
+        user = new UserImpl();
         user.setUsername(VALID_USERNAME);
-        user.setEntityId(VALID_USER_ID);
-        user2 = new User();
+        user.setId(VALID_USER_ID);
+        user2 = new UserImpl();
         user2.setUsername(VALID_USERNAME2);
-        
-        category = new Category();
-        category.setEntityId(VALID_WIDGET_CATEGORY_ID);
+
+        category = new CategoryImpl();
+        category.setId(VALID_WIDGET_CATEGORY_ID);
         category.setCreatedUser(user);
 
         grantedAuthorities = new ArrayList<GrantedAuthority>();
@@ -142,7 +145,7 @@ public class DefaultCategoryPermissionEvaluatorTest {
         replay(mockAuthentication, mockCategoryRepository);
         assertThat(defaultCategoryPermissionEvaluator.hasPermission(mockAuthentication, category, ModelPermissionEvaluator.Permission.UPDATE), is(true));
         verify(mockAuthentication, mockCategoryRepository);
-    }     
+    }
 
     @Test
     public void testHasPermission_3args_read() {

@@ -19,10 +19,11 @@
 
 package org.apache.rave.portal.web.tag;
 
-import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.rave.portal.model.Region;
 import org.apache.rave.portal.model.RegionWidget;
-import org.apache.rave.portal.model.Widget;
+import org.apache.rave.portal.model.impl.RegionImpl;
+import org.apache.rave.portal.model.impl.RegionWidgetImpl;
+import org.apache.rave.portal.model.impl.WidgetImpl;
 import org.apache.rave.portal.web.renderer.RenderScope;
 import org.apache.rave.portal.web.renderer.RenderService;
 import org.apache.rave.portal.web.renderer.ScriptLocation;
@@ -82,8 +83,8 @@ public class RegionWidgetTagTest {
 
     @Test
     public void doStartTag_valid() throws IOException, JspException {
-        RegionWidget regionWidget = new RegionWidget();
-        Widget widget = new Widget();
+        RegionWidget regionWidget = new RegionWidgetImpl();
+        WidgetImpl widget = new WidgetImpl();
         regionWidget.setWidget(widget);
         widget.setType(WIDGET_TYPE);
 
@@ -118,8 +119,8 @@ public class RegionWidgetTagTest {
     @Test(expected = JspException.class)
     public void doStartTag_IOException() throws JspException, IOException {
 
-        RegionWidget regionWidget = new RegionWidget();
-        Widget widget = new Widget();
+        RegionWidget regionWidget = new RegionWidgetImpl();
+        WidgetImpl widget = new WidgetImpl();
         regionWidget.setWidget(widget);
         widget.setType("INVALID");
 
@@ -144,9 +145,9 @@ public class RegionWidgetTagTest {
     public void doStartTag_unsupportedWidget() throws JspException {
         replay(pageContext);
 
-        RegionWidget regionWidget = new RegionWidget();
-        Region region = new Region(25L);
-        Widget widget = new Widget();
+        RegionWidget regionWidget = new RegionWidgetImpl();
+        Region region = new RegionImpl(25L);
+        WidgetImpl widget = new WidgetImpl();
         regionWidget.setWidget(widget);
         regionWidget.setRegion(region);
         widget.setType("INVALID");
@@ -165,16 +166,16 @@ public class RegionWidgetTagTest {
     public void doStartTag_disabledWidget() throws IOException, JspException {
         final String DISABLED_WIDGET_MESSAGE = "THIS IS DISABLED";
 
-        Widget widget = new Widget();
-        widget.setEntityId(8L);
+        WidgetImpl widget = new WidgetImpl();
+        widget.setId(8L);
         widget.setType(WIDGET_TYPE);
         widget.setDisableRendering(true);
         widget.setDisableRenderingMessage(DISABLED_WIDGET_MESSAGE);
 
-        RegionWidget regionWidget = new RegionWidget();
-        regionWidget.setEntityId(99L);
+        RegionWidget regionWidget = new RegionWidgetImpl();
+        regionWidget.setId(99L);
         regionWidget.setWidget(widget);
-        regionWidget.setRegion(new Region(2L));
+        regionWidget.setRegion(new RegionImpl(2L));
 
         Set<String> strings = new HashSet<String>();
         strings.add(WIDGET_TYPE);
@@ -196,7 +197,7 @@ public class RegionWidgetTagTest {
 
     @Test
     public void getRegionWidget() throws IOException, JspException {
-        RegionWidget regionWidget = new RegionWidget();
+        RegionWidget regionWidget = new RegionWidgetImpl();
         tag.setRegionWidget(regionWidget);
         assertThat(tag.getRegionWidget(), sameInstance(regionWidget));
     }

@@ -18,8 +18,9 @@
  */
 package org.apache.rave.portal.security.impl;
 
-import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.WidgetRating;
+import org.apache.rave.portal.model.impl.UserImpl;
+import org.apache.rave.portal.model.impl.WidgetRatingImpl;
 import org.apache.rave.portal.repository.WidgetRatingRepository;
 import org.apache.rave.portal.security.ModelPermissionEvaluator;
 import org.apache.rave.portal.security.util.AuthenticationUtils;
@@ -45,7 +46,7 @@ public class DefaultWidgetRatingPermissionEvaluatorTest {
     private Authentication mockAuthentication;
     private List<GrantedAuthority> grantedAuthoritiesList;
     private WidgetRating widgetRating;
-    private User user, user2;
+    private UserImpl user, user2;
 
     private final Long VALID_USER_ID = 99L;
     private final Long VALID_USER_ID2 = 100L;
@@ -59,16 +60,16 @@ public class DefaultWidgetRatingPermissionEvaluatorTest {
         mockWidgetRatingRepository = createMock(WidgetRatingRepository.class);
         defaultWidgetRatingPermissionEvaluator = new DefaultWidgetRatingPermissionEvaluator(mockWidgetRatingRepository);
 
-        widgetRating = new WidgetRating();
+        widgetRating = new WidgetRatingImpl();
         widgetRating.setUserId(VALID_USER_ID);
         widgetRating.setWidgetId(VALID_WIDGET_ID);
-        widgetRating.setEntityId(VALID_WIDGET_ID);
+        widgetRating.setId(VALID_WIDGET_ID);
 
-        user = new User();
+        user = new UserImpl();
         user.setUsername(VALID_USERNAME);
-        user.setEntityId(VALID_USER_ID);
-        user2 = new User();
-        user2.setEntityId(VALID_USER_ID2);
+        user.setId(VALID_USER_ID);
+        user2 = new UserImpl();
+        user2.setId(VALID_USER_ID2);
         user2.setUsername(VALID_USERNAME2);
 
         mockAuthentication = createMock(Authentication.class);

@@ -20,6 +20,7 @@
 package org.apache.rave.portal.service.impl;
 
 import org.apache.rave.portal.model.PortalPreference;
+import org.apache.rave.portal.model.impl.PortalPreferenceImpl;
 import org.apache.rave.portal.repository.PortalPreferenceRepository;
 import org.apache.rave.portal.service.PortalPreferenceService;
 import org.junit.Before;
@@ -30,13 +31,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNull;
-import static junit.framework.Assert.assertTrue;
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
+import static junit.framework.Assert.*;
+import static org.easymock.EasyMock.*;
 
 /**
  * Test class for {@link DefaultPortalPreferenceService}
@@ -108,9 +104,8 @@ public class DefaultPortalPreferenceServiceTest {
     public void testSaveKeyValue_new() {
         final String key = "foo";
         final String value = "bar";
-        PortalPreference fooBar = new PortalPreference(key, value);
-        PortalPreference fooBarSaved = new PortalPreference(key, value);
-        fooBarSaved.setEntityId(123L);
+        PortalPreference fooBar = new PortalPreferenceImpl(key, value);
+        PortalPreferenceImpl fooBarSaved = new PortalPreferenceImpl(key, value);
 
         expect(repository.getByKey(key)).andReturn(null).once();
         expect(repository.save(fooBar)).andReturn(fooBarSaved).once();
@@ -124,11 +119,8 @@ public class DefaultPortalPreferenceServiceTest {
         final String key = "foo";
         final String value = "bar";
         final String newValue = "baz";
-        PortalPreference fooBar = new PortalPreference(key, value);
-        fooBar.setEntityId(123L);
-        PortalPreference fooBarSaved = new PortalPreference(key, newValue);
-        fooBarSaved.setEntityId(123L);
-
+        PortalPreferenceImpl fooBar = new PortalPreferenceImpl(key, value);
+        PortalPreferenceImpl fooBarSaved = new PortalPreferenceImpl(key, newValue);
         expect(repository.getByKey(key)).andReturn(fooBar).once();
         expect(repository.save(fooBar)).andReturn(fooBarSaved).once();
         replay(repository);
@@ -142,9 +134,8 @@ public class DefaultPortalPreferenceServiceTest {
         List<String> values = new ArrayList<String>();
         values.add("bar");
         values.add("baz");
-        PortalPreference fooBar = new PortalPreference(key, values);
-        PortalPreference fooBarSaved = new PortalPreference(key, values);
-        fooBarSaved.setEntityId(123L);
+        PortalPreference fooBar = new PortalPreferenceImpl(key, values);
+        PortalPreferenceImpl fooBarSaved = new PortalPreferenceImpl(key, values);
 
         expect(repository.getByKey(key)).andReturn(null).once();
         expect(repository.save(fooBar)).andReturn(fooBarSaved).once();
@@ -162,10 +153,8 @@ public class DefaultPortalPreferenceServiceTest {
         List<String> newValues = new ArrayList<String>();
         values.add("bar2");
         values.add("baz2");
-        PortalPreference fooBar = new PortalPreference(key, values);
-        fooBar.setEntityId(123L);
-        PortalPreference fooBarSaved = new PortalPreference(key, newValues);
-        fooBarSaved.setEntityId(123L);
+        PortalPreferenceImpl fooBar = new PortalPreferenceImpl(key, values);
+        PortalPreferenceImpl fooBarSaved = new PortalPreferenceImpl(key, newValues);
 
         expect(repository.getByKey(key)).andReturn(fooBar).once();
         expect(repository.save(fooBar)).andReturn(fooBarSaved).once();
@@ -177,8 +166,7 @@ public class DefaultPortalPreferenceServiceTest {
     @Test
     public void testSavePreference() {
         PortalPreference title = titlePreference();
-        PortalPreference savedTitle = new PortalPreference("title", "Rave");
-        savedTitle.setEntityId(123L);
+        PortalPreferenceImpl savedTitle = new PortalPreferenceImpl("title", "Rave");
 
         expect(repository.save(title)).andReturn(savedTitle).once();
         replay(repository);
@@ -194,7 +182,7 @@ public class DefaultPortalPreferenceServiceTest {
         colors.add("red");
         colors.add("yellow");
         colors.add("blue");
-        PortalPreference colorPref = new PortalPreference("colors", colors);
+        PortalPreference colorPref = new PortalPreferenceImpl("colors", colors);
 
         List<PortalPreference> preferences = new ArrayList<PortalPreference>();
         preferences.add(title);
@@ -204,6 +192,6 @@ public class DefaultPortalPreferenceServiceTest {
     }
 
     private static PortalPreference titlePreference() {
-        return new PortalPreference("title", "Rave");
+        return new PortalPreferenceImpl("title", "Rave");
     }
 }

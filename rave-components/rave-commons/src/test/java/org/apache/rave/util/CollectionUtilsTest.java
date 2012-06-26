@@ -191,6 +191,14 @@ public class CollectionUtilsTest {
     }
 
     @Test
+    public void toBaseTypedList_null() {
+        List<SubTestObject> list = null;
+
+        List<TestObject> down = CollectionUtils.toBaseTypedList((List<? extends TestObject>)list);
+        assertThat(down, is(nullValue()));
+    }
+
+    @Test
     public void addUniqueValues() {
         List<TestObject> source = new ArrayList<TestObject>();
         TestObject testObject1 = new TestObject("a", "b");

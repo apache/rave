@@ -107,17 +107,27 @@ public class CollectionUtils {
     }
 
     /**
-     * Converts the wildcard list to a typed list
+     * Workaround for compile time checking of list types.  Generics are not persisted through runtime.  The compile time
+     * type system will still check that the items are castable to the base type.
      * @param initial the wildcard list
      * @param <T> the type constraint for the target list
-     * @return the new, type constrained list
+     * @return if initial is null, null otherwise the new, type constrained list
      */
+    @SuppressWarnings("unchecked")
     public static <T> List<T> toBaseTypedList(List<? extends T> initial) {
-        List<T> list = new ArrayList<T>();
-        for(T f : initial) {
-            list.add(f);
-        }
-        return list;
+        return (List<T>)initial;
+    }
+
+    /**
+     * Workaround for compile time checking of list types.  Generics are not persisted through runtime.  The compile time
+     * type system will still check that the items are castable to the base type.
+     * @param initial the wildcard collection
+     * @param <T> the type constraint for the target collection
+     * @return if initial is null, null otherwise the new, type constrained collection
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> Collection<T> toBaseTypedCollection(Collection<? extends T> initial) {
+        return (Collection<T>)initial;
     }
 
     /**

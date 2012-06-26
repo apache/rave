@@ -18,10 +18,7 @@
  */
 package org.apache.rave.portal.security.impl;
 
-import org.apache.rave.portal.model.Page;
-import org.apache.rave.portal.model.PageType;
-import org.apache.rave.portal.model.PageUser;
-import org.apache.rave.portal.model.User;
+import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.repository.PageRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,49 +32,49 @@ import java.util.List;
 
 /**
  * The default implementation of the ModelPermissionEvaluator for Page objects
- * 
+ *
  * @author carlucci
  */
 @Component
 public class DefaultPagePermissionEvaluator extends AbstractModelPermissionEvaluator<Page> {
     private Logger log = LoggerFactory.getLogger(getClass());
-    private PageRepository pageRepository;   
-    
+    private PageRepository pageRepository;
+
     @Autowired
-    public DefaultPagePermissionEvaluator(PageRepository pageRepository) {       
-        this.pageRepository = pageRepository;        
+    public DefaultPagePermissionEvaluator(PageRepository pageRepository) {
+        this.pageRepository = pageRepository;
     }
-   
+
     @Override
     public Class<Page> getType() {
         return Page.class;
     }
-    
+
     /**
      * Checks to see if the Authentication object has the supplied Permission
      * on the supplied Page object.  This method invokes the private hasPermission
      * function with the trustedDomainObject parameter set to false since we don't
-     * know if the model being passed in was modified in any way from the 
+     * know if the model being passed in was modified in any way from the
      * actual entity in the database.
-     * 
+     *
      * @param authentication the current Authentication object
      * @param page the Page model object
      * @param permission the Permission to check
      * @return true if the Authentication has the proper permission, false otherwise
      */
     @Override
-    public boolean hasPermission(Authentication authentication, Page page, Permission permission) {      
+    public boolean hasPermission(Authentication authentication, Page page, Permission permission) {
         return hasPermission(authentication, page, permission, false);
-    }    
+    }
 
     /**
-     * Checks to see if the Authentication object has the supplied Permission 
+     * Checks to see if the Authentication object has the supplied Permission
      * for the Entity represented by the targetId(entityId) and targetType(model class name).
-     * This method invokes the private hasPermission function with the 
+     * This method invokes the private hasPermission function with the
      * trustedDomainObject parameter set to true since we must pull the entity
      * from the database and are guaranteed a trusted domain object,
      * before performing our permission checks.
-     * 
+     *
      * @param authentication the current Authentication object
      * @param targetId the entityId of the model to check, or a RaveSecurityContext object
      * @param targetType the class of the model to check
@@ -88,35 +85,35 @@ public class DefaultPagePermissionEvaluator extends AbstractModelPermissionEvalu
     public boolean hasPermission(Authentication authentication, Serializable targetId, String targetType, Permission permission) {
         boolean hasPermission = false;
         if (targetId instanceof RaveSecurityContext) {
-            hasPermission = verifyRaveSecurityContext(authentication, (RaveSecurityContext)targetId);           
+            hasPermission = verifyRaveSecurityContext(authentication, (RaveSecurityContext)targetId);
         } else {
             hasPermission = hasPermission(authentication, pageRepository.get((Long)targetId), permission, true);
         }
         return hasPermission;
-    }  
-        
-    private boolean hasPermission(Authentication authentication, Page page, Permission permission, boolean trustedDomainObject) {       
-        // this is our container of trusted page objects that can be re-used 
+    }
+
+    private boolean hasPermission(Authentication authentication, Page page, Permission permission, boolean trustedDomainObject) {
+        // this is our container of trusted page objects that can be re-used
         // in this method so that the same trusted page object doesn't have to
         // be looked up in the repository multiple times
-        List<Page> trustedPageContainer = new ArrayList<Page>();                           
-        
+        List<Page> trustedPageContainer = new ArrayList<Page>();
+
         // first execute the AbstractModelPermissionEvaluator's hasPermission function
-        // to see if it allows permission via it's "higher authority" logic                
+        // to see if it allows permission via it's "higher authority" logic
         if (super.hasPermission(authentication, page, permission)) {
             return true;
         }
-        
+
         // perform the security logic depending on the Permission type
-        boolean hasPermission = false;                       
-        switch (permission) { 
+        boolean hasPermission = false;
+        switch (permission) {
             case ADMINISTER:
-                // if you are here, you are not an administrator, so you can't administer pages              
+                // if you are here, you are not an administrator, so you can't administer pages
                 break;
-            case CREATE:                                                                          
-            case DELETE:            
+            case CREATE:
+            case DELETE:
             case UPDATE:
-                // anyone can create, delete, or update a page that they own                  
+                // anyone can create, delete, or update a page that they own
                 hasPermission = isPageOwner(authentication, page, trustedPageContainer, trustedDomainObject)
                 || isPageMember(authentication, page, trustedPageContainer, trustedDomainObject, true);
                 break;
@@ -129,45 +126,45 @@ public class DefaultPagePermissionEvaluator extends AbstractModelPermissionEvalu
                 log.warn("unknown permission: " + permission);
                 break;
         }
-        
+
         return hasPermission;
-    }       
-    
+    }
+
     // returns a trusted Page object, either from the PageRepository, or the
     // cached container list
-    private Page getTrustedPage(long pageId, List<Page> trustedPageContainer) {       
+    private Page getTrustedPage(long pageId, List<Page> trustedPageContainer) {
         Page p = null;
-        if (trustedPageContainer.isEmpty()) {           
+        if (trustedPageContainer.isEmpty()) {
             p = pageRepository.get(pageId);
             trustedPageContainer.add(p);
         } else {
             p = trustedPageContainer.get(0);
         }
-        return p;       
-    }     
-   
-    // checks to see if the Authentication object principal is the owner of the supplied page object 
+        return p;
+    }
+
+    // checks to see if the Authentication object principal is the owner of the supplied page object
     // if trustedDomainObject is false, pull the entity from the database first to ensure
     // the model object is trusted and hasn't been modified
-    private boolean isPageOwner(Authentication authentication, Page page, List<Page> trustedPageContainer, boolean trustedDomainObject) {        
+    private boolean isPageOwner(Authentication authentication, Page page, List<Page> trustedPageContainer, boolean trustedDomainObject) {
         Page trustedPage = null;
         if (trustedDomainObject) {
             trustedPage = page;
         } else {
-            trustedPage = getTrustedPage(page.getEntityId(), trustedPageContainer);
-        }                  
-        
+            trustedPage = getTrustedPage(page.getId(), trustedPageContainer);
+        }
+
         return isPageOwnerByUsername(authentication, trustedPage.getOwner().getUsername());
-    }             
+    }
 
     private boolean isPageOwnerByUsername(Authentication authentication, String username) {
         return ((User)authentication.getPrincipal()).getUsername().equals(username);
     }
-    
+
     private boolean isPageOwnerById(Authentication authentication, Long userId) {
-        return ((User)authentication.getPrincipal()).getEntityId().equals(userId);
-    }    
-    
+        return ((User)authentication.getPrincipal()).getId().equals(userId);
+    }
+
     private boolean verifyRaveSecurityContext(Authentication authentication, RaveSecurityContext raveSecurityContext) {
         Class<?> clazz = null;
         try {
@@ -190,14 +187,14 @@ public class DefaultPagePermissionEvaluator extends AbstractModelPermissionEvalu
                isPageOwner(authentication, page, trustedPageContainer, trustedDomainObject) ||
                isPageMember(authentication, page, trustedPageContainer, trustedDomainObject, false);
     }
-    
+
     private boolean isPersonProfilePageOrSubPage(Page page) {
         PageType pageType = page.getPageType();
         PageType parentPageType = (page.getParentPage() == null) ? null : page.getParentPage().getPageType();
         return PageType.PERSON_PROFILE.equals(pageType) || PageType.PERSON_PROFILE.equals(parentPageType);
-    }  
-    
-    // checks to see if the Authentication object principal is a member of the supplied page object 
+    }
+
+    // checks to see if the Authentication object principal is a member of the supplied page object
     // if trustedDomainObject is false, pull the entity from the database first to ensure
     // the model object is trusted and hasn't been modified
     private boolean isPageMember(Authentication authentication, Page page, List<Page> trustedPageContainer, boolean trustedDomainObject, boolean checkEditorStatus) {
@@ -205,7 +202,7 @@ public class DefaultPagePermissionEvaluator extends AbstractModelPermissionEvalu
         if (trustedDomainObject) {
             trustedPage = page;
         } else {
-            trustedPage = getTrustedPage(page.getEntityId(), trustedPageContainer);
+            trustedPage = getTrustedPage(page.getId(), trustedPageContainer);
         }
         //
         // If the page has no members, there can be no member access
@@ -217,17 +214,20 @@ public class DefaultPagePermissionEvaluator extends AbstractModelPermissionEvalu
         // Check that the viewer is a member
         //
         String viewer = ((User)authentication.getPrincipal()).getUsername();
-        for (PageUser pageUser:trustedPage.getMembers()){
-            if (pageUser.getUser().getUsername().equals(viewer)){
-                log.info("User "+viewer+" is a member of page "+trustedPage.getEntityId());
-                if(checkEditorStatus){
-                    log.info("checking editor:"+trustedPage.getEntityId()+"@"+viewer+"@"+pageUser.isEditor());
-                    return pageUser.isEditor();
+        List<PageUser> members = trustedPage.getMembers();
+        if (members != null) {
+            for (PageUser pageUser : members){
+                if (pageUser.getUser().getUsername().equals(viewer)){
+                    log.info("User "+viewer+" is a member of page "+trustedPage.getId());
+                    if(checkEditorStatus){
+                        log.info("checking editor:"+trustedPage.getId()+"@"+viewer+"@"+pageUser.isEditor());
+                        return pageUser.isEditor();
+                    }
+                    return true;
                 }
-                return true;
             }
         }
-        log.info("User "+viewer+" is NOT a member of page "+trustedPage.getEntityId());
+        log.info("User "+viewer+" is NOT a member of page "+trustedPage.getId());
         return false;
     }
 

@@ -20,15 +20,14 @@
 package org.apache.rave.portal.web.validator;
 
 import org.apache.rave.portal.model.User;
+import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.service.UserService;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
 
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.*;
 import static org.easymock.EasyMock.createMock;
 
 /**
@@ -46,12 +45,12 @@ public class UserProfileValidatorTest {
 
     @Test
     public void testSupports() throws Exception {
-        assertTrue("Can validate org.apache.rave.portal.model.User", validator.supports(User.class));
+        assertTrue("Can validate org.apache.rave.portal.model.User", validator.supports(UserImpl.class));
     }
 
     @Test
     public void testValidate() throws Exception {
-        User user = new User();
+        User user = new UserImpl();
         user.setUsername(VALID_NAME);
         user.setPassword(VALID_PASSWORD);
         user.setConfirmPassword(VALID_PASSWORD);
@@ -65,7 +64,7 @@ public class UserProfileValidatorTest {
 
     @Test
     public void testValidateFailsOnEmptyPassword() throws Exception {
-        User user = new User();
+        User user = new UserImpl();
         user.setUsername(VALID_NAME);
         user.setEmail(VALID_EMAIL);
 
@@ -79,7 +78,7 @@ public class UserProfileValidatorTest {
 
     @Test
     public void testValidateFailsOnShortPassword() throws Exception {
-        User user = new User();
+        User user = new UserImpl();
         user.setUsername(VALID_NAME);
         user.setPassword("123");
         user.setPassword("123");
@@ -94,7 +93,7 @@ public class UserProfileValidatorTest {
 
     @Test
     public void testValidateFailsOnPasswordMismatch() throws Exception {
-        User user = new User();
+        User user = new UserImpl();
         user.setUsername(VALID_NAME);
         user.setPassword(VALID_PASSWORD);
         user.setConfirmPassword("DoesNotMatch");

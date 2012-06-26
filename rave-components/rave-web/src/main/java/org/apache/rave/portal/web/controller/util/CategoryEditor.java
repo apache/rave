@@ -35,7 +35,7 @@ public class CategoryEditor extends PropertyEditorSupport {
     public CategoryEditor(CategoryService categoryService) {
         this.categoryService = categoryService;
     }
-    
+
     @Override
     public void setAsText(String text) throws IllegalArgumentException {
         setValue(categoryService.get(Long.parseLong(text)));
@@ -44,6 +44,6 @@ public class CategoryEditor extends PropertyEditorSupport {
     @Override
     public String getAsText() {
         Category category = (Category)getValue();
-        return (category == null) ? null : category.getEntityId().toString();
+        return (category == null) ? null : category.getId().toString();
     }
 }

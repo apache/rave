@@ -22,24 +22,22 @@ package org.apache.rave.opensocial.service;
 
 import org.apache.rave.exception.NotSupportedException;
 import org.apache.rave.opensocial.service.impl.FieldRestrictingPerson;
-import org.apache.rave.portal.model.*;
+import org.apache.rave.portal.model.PersonProperty;
+import org.apache.rave.portal.model.impl.AddressImpl;
+import org.apache.rave.portal.model.impl.PersonImpl;
+import org.apache.rave.portal.model.impl.PersonPropertyImpl;
 import org.apache.rave.portal.model.util.ModelUtils;
 import org.apache.shindig.protocol.model.EnumImpl;
-import org.apache.shindig.social.core.model.AddressImpl;
 import org.apache.shindig.social.core.model.BodyTypeImpl;
 import org.apache.shindig.social.core.model.UrlImpl;
 import org.apache.shindig.social.opensocial.model.*;
-import org.apache.shindig.social.opensocial.model.Address;
-import org.apache.shindig.social.opensocial.model.Person;
 import org.junit.Test;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
@@ -87,7 +85,7 @@ public class FieldRestrictingPersonTest {
     @Test
     public void getId() {
         Person p = new FieldRestrictingPerson(getTestPerson(), null);
-        assertThat(p.getId(), is(equalTo(ID)));
+        assertThat(p.getId(), is(equalTo(USERNAME)));
     }
     @Test
     public void getDisplayName() {
@@ -303,19 +301,19 @@ public class FieldRestrictingPersonTest {
         Person p = new FieldRestrictingPerson(getTestPerson(), getFieldSet(Person.Field.LIVING_ARRANGEMENT));
         assertThat(p.getLivingArrangement(), is(nullValue()));
     }
-    
+
     @Test
     public void getLookingFor_set() {
         Person p = new FieldRestrictingPerson(getTestPerson(), getFieldSet(Person.Field.LOOKING_FOR));
         assertThat(p.getLookingFor().size(), is(equalTo(1)));
     }
-    
+
     @Test
     public void getMovies_set() {
         Person p = new FieldRestrictingPerson(getTestPerson(), getFieldSet(Person.Field.MOVIES));
         assertThat(p.getMovies().isEmpty(), is(true));
     }
-    
+
     @Test
     public void getMusic_set() {
         Person p = new FieldRestrictingPerson(getTestPerson(), getFieldSet(Person.Field.MUSIC));
@@ -485,17 +483,17 @@ public class FieldRestrictingPersonTest {
     public void setMovies() {
         new FieldRestrictingPerson(null, null).setMovies(new ArrayList<String>());
     }
-    
+
     @Test(expected = NotSupportedException.class)
     public void setLookingFor() {
         new FieldRestrictingPerson(null, null).setLookingFor(new ArrayList<org.apache.shindig.protocol.model.Enum<LookingFor>>());
     }
-    
+
     @Test(expected = NotSupportedException.class)
     public void setLivingArrangement() {
         new FieldRestrictingPerson(null, null).setLivingArrangement(SUFFIX);
     }
-    
+
     @Test(expected = NotSupportedException.class)
     public void setUpdated() {
         new FieldRestrictingPerson(null, null).setUpdated(new Date());
@@ -583,7 +581,7 @@ public class FieldRestrictingPersonTest {
 
     @Test(expected = NotSupportedException.class)
     public void setCurrentLocation() {
-        new FieldRestrictingPerson(null, null).setCurrentLocation(new AddressImpl());
+        new FieldRestrictingPerson(null, null).setCurrentLocation(new org.apache.shindig.social.core.model.AddressImpl());
     }
 
     @Test(expected = NotSupportedException.class)
@@ -622,8 +620,7 @@ public class FieldRestrictingPersonTest {
     }
 
     private org.apache.rave.portal.model.Person getTestPerson() {
-        org.apache.rave.portal.model.Person person = new org.apache.rave.portal.model.Person();
-        person.setEntityId(1L);
+        org.apache.rave.portal.model.Person person = new PersonImpl();
         person.setUsername(USERNAME);
         person.setAboutMe(ABOUT_ME);
         person.setAdditionalName(ADDITIONAL_NAME);
@@ -636,25 +633,25 @@ public class FieldRestrictingPersonTest {
         person.setPreferredName(PREFERRED_NAME);
         person.setStatus(STATUS);
         List<PersonProperty> properties = new ArrayList<PersonProperty>();
-        properties.add(new PersonProperty(1L, "gender", Person.Gender.female.toString(), null, "", false));
-        properties.add(new PersonProperty(1L, "drinker", Drinker.HEAVILY.toString(), null, "", false));
-        properties.add(new PersonProperty(1L, "age", AGE.toString(), null, "", false));
-        properties.add(new PersonProperty(1L, "birthday", BIRTHDAY_STRING, null, "", false));
-        properties.add(new PersonProperty(1L, "bodyType", BODY_BUILD, null, "build", false));
-        properties.add(new PersonProperty(1L, "bodyType", BODY_EYE_COLOR, null, "eyeColor", false));
-        properties.add(new PersonProperty(1L, "bodyType", "25.24", null, "height", false));
-        properties.add(new PersonProperty(1L, "ims", IM_1, null, IM_PROVIDER_1, true));
-        properties.add(new PersonProperty(1L, "ims", IM_2, null, IM_PROVIDER_2, false));
-        properties.add(new PersonProperty(1L, "emails", E_MAIL_ADDRESS_2, null, "personal", false));
-        properties.add(new PersonProperty(1L, "emails", E_MAIL_ADDRESS_3, null, "junk", true));
-        properties.add(new PersonProperty(1L, "activities", ACTIVITY_1, null, "", false));
-        properties.add(new PersonProperty(1L, "activities", ACTIVITY_2, null, "", false));
-        properties.add(new PersonProperty(1L, "profileSong", LINK_VALUE, LINK_TEXT, null, false));
-        properties.add(new PersonProperty(1L, "lookingFor", LookingFor.FRIENDS.toString(), null, null, false));
-        properties.add(new PersonProperty(1L, "currentLocation", QUALIFIER, null, null, null));
-        properties.add(new PersonProperty(1L, "account", IM_1, "1", IM_PROVIDER_1, false));
+        properties.add(new PersonPropertyImpl(1L, "gender", Person.Gender.female.toString(), null, "", false));
+        properties.add(new PersonPropertyImpl(1L, "drinker", Drinker.HEAVILY.toString(), null, "", false));
+        properties.add(new PersonPropertyImpl(1L, "age", AGE.toString(), null, "", false));
+        properties.add(new PersonPropertyImpl(1L, "birthday", BIRTHDAY_STRING, null, "", false));
+        properties.add(new PersonPropertyImpl(1L, "bodyType", BODY_BUILD, null, "build", false));
+        properties.add(new PersonPropertyImpl(1L, "bodyType", BODY_EYE_COLOR, null, "eyeColor", false));
+        properties.add(new PersonPropertyImpl(1L, "bodyType", "25.24", null, "height", false));
+        properties.add(new PersonPropertyImpl(1L, "ims", IM_1, null, IM_PROVIDER_1, true));
+        properties.add(new PersonPropertyImpl(1L, "ims", IM_2, null, IM_PROVIDER_2, false));
+        properties.add(new PersonPropertyImpl(1L, "emails", E_MAIL_ADDRESS_2, null, "personal", false));
+        properties.add(new PersonPropertyImpl(1L, "emails", E_MAIL_ADDRESS_3, null, "junk", true));
+        properties.add(new PersonPropertyImpl(1L, "activities", ACTIVITY_1, null, "", false));
+        properties.add(new PersonPropertyImpl(1L, "activities", ACTIVITY_2, null, "", false));
+        properties.add(new PersonPropertyImpl(1L, "profileSong", LINK_VALUE, LINK_TEXT, null, false));
+        properties.add(new PersonPropertyImpl(1L, "lookingFor", LookingFor.FRIENDS.toString(), null, null, false));
+        properties.add(new PersonPropertyImpl(1L, "currentLocation", QUALIFIER, null, null, null));
+        properties.add(new PersonPropertyImpl(1L, "account", IM_1, "1", IM_PROVIDER_1, false));
         person.setProperties(properties);
-        org.apache.rave.portal.model.Address address = new org.apache.rave.portal.model.Address();
+        org.apache.rave.portal.model.Address address = new AddressImpl();
         address.setCountry(COUNTRY);
         address.setLatitude(LATITUDE);
         address.setLongitude(LONGITUDE);
@@ -664,7 +661,7 @@ public class FieldRestrictingPersonTest {
         address.setStreetAddress(STREET);
         address.setQualifier(QUALIFIER);
         List<org.apache.rave.portal.model.Address> addresses = new ArrayList<org.apache.rave.portal.model.Address>();
-        addresses.add(new org.apache.rave.portal.model.Address());
+        addresses.add(new AddressImpl());
         addresses.add(address);
         person.setAddresses(addresses);
 

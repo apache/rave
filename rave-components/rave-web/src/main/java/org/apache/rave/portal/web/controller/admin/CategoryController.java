@@ -17,6 +17,7 @@ package org.apache.rave.portal.web.controller.admin;
 
 import org.apache.rave.portal.model.Category;
 import org.apache.rave.portal.model.User;
+import org.apache.rave.portal.model.impl.CategoryImpl;
 import org.apache.rave.portal.service.CategoryService;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.portal.web.util.ModelKeys;
@@ -24,18 +25,12 @@ import org.apache.rave.portal.web.util.ViewNames;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 
 import java.util.List;
 
-import static org.apache.rave.portal.web.controller.admin.AdminControllerUtil.addNavigationMenusToModel;
-import static org.apache.rave.portal.web.controller.admin.AdminControllerUtil.checkTokens;
-import static org.apache.rave.portal.web.controller.admin.AdminControllerUtil.isCreateDeleteOrUpdate;
+import static org.apache.rave.portal.web.controller.admin.AdminControllerUtil.*;
 
 @Controller
 @SessionAttributes({ModelKeys.CATEGORY, ModelKeys.TOKENCHECK})
@@ -57,7 +52,7 @@ public class CategoryController {
 
         model.addAttribute("categories", categories);
         // put category object in the model to allow creating categories from view
-        model.addAttribute(ModelKeys.CATEGORY, new Category());
+        model.addAttribute(ModelKeys.CATEGORY, new CategoryImpl());
         // add tokencheck attribute for creating new category
         model.addAttribute(ModelKeys.TOKENCHECK, AdminControllerUtil.generateSessionToken());
 
@@ -69,7 +64,7 @@ public class CategoryController {
     }
 
     @RequestMapping(value = {"/admin/category/create"}, method = RequestMethod.POST)
-    public String createCategory(@ModelAttribute Category category,
+    public String createCategory(@ModelAttribute CategoryImpl category,
                                  @ModelAttribute(ModelKeys.TOKENCHECK) String sessionToken,
                                  @RequestParam String token,
                                  Model model,
@@ -97,7 +92,7 @@ public class CategoryController {
         User currentUser = userService.getAuthenticatedUser();
         boolean isValidRequest = validateRequest(category, currentUser);
         if (isValidRequest) {
-            categoryService.update(category.getEntityId(), category.getText(), currentUser);
+            categoryService.update(category.getId(), category.getText(), currentUser);
         } else {
             addNavigationMenusToModel(SELECTED_ITEM, model);
             return ViewNames.ADMIN_CATEGORY_DETAIL;
@@ -147,7 +142,7 @@ public class CategoryController {
     }
 
     private boolean validateRequest(Category category, User modifier){
-        return (validateRequest(category.getText(),modifier) && (categoryService.get(category.getEntityId()) != null));
+        return (validateRequest(category.getText(),modifier) && (categoryService.get(category.getId()) != null));
     }
 
     public void setUserService(UserService userService) {

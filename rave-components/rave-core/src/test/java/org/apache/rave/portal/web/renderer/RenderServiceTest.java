@@ -21,7 +21,8 @@ package org.apache.rave.portal.web.renderer;
 
 import org.apache.rave.exception.NotSupportedException;
 import org.apache.rave.portal.model.RegionWidget;
-import org.apache.rave.portal.model.Widget;
+import org.apache.rave.portal.model.impl.RegionWidgetImpl;
+import org.apache.rave.portal.model.impl.WidgetImpl;
 import org.apache.rave.portal.web.renderer.impl.DefaultRenderService;
 import org.apache.rave.portal.web.renderer.model.RenderContext;
 import org.junit.Before;
@@ -83,10 +84,10 @@ public class RenderServiceTest {
 
     @Test
     public void render_supported_foo() {
-        Widget w = new Widget();
+        WidgetImpl w = new WidgetImpl();
         w.setType(SUPPORTED_TYPE_1);
 
-        RegionWidget rw = new RegionWidget();
+        RegionWidget rw = new RegionWidgetImpl();
         rw.setWidget(w);
 
         expect(widgetRenderer1.render(rw, context)).andReturn(RENDERED_TYPE_1);
@@ -98,9 +99,9 @@ public class RenderServiceTest {
 
     @Test
     public void render_supported_bar() {
-        Widget w = new Widget();
+        WidgetImpl w = new WidgetImpl();
         w.setType(SUPPORTED_TYPE_2);
-        RegionWidget rw = new RegionWidget();
+        RegionWidget rw = new RegionWidgetImpl();
         rw.setWidget(w);
 
         expect(widgetRenderer2.render(rw, context)).andReturn(RENDERED_TYPE_2);
@@ -112,10 +113,10 @@ public class RenderServiceTest {
 
     @Test(expected = NotSupportedException.class)
     public void render_invalid() {
-        Widget w = new Widget();
+        WidgetImpl w = new WidgetImpl();
         w.setType("NONE");
 
-        RegionWidget rw = new RegionWidget();
+        RegionWidget rw = new RegionWidgetImpl();
         rw.setWidget(w);
 
         replayMocks();

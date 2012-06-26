@@ -20,6 +20,7 @@
 package org.apache.rave.provider.opensocial.service;
 
 import org.apache.rave.portal.model.*;
+import org.apache.rave.portal.model.impl.*;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.provider.opensocial.service.impl.EncryptedBlobSecurityTokenService;
 import org.apache.shindig.auth.SecurityToken;
@@ -76,21 +77,22 @@ public class SecurityTokenServiceTest {
 
     @Before
     public void setup() throws MalformedURLException {
+
         userService = createMock(UserService.class);
         securityTokenService = new EncryptedBlobSecurityTokenService(userService, "default", "default",
                 encryptionKey);
 
-        validPerson = new User(VALID_USER_ID, VALID_USER_NAME);
+        validPerson = new UserImpl(VALID_USER_ID, VALID_USER_NAME);
 
-        validPage = new Page(1L, validPerson);
-        validRegion = new Region(1L, validPage, 1);
+        validPage = new PageImpl(1L, validPerson);
+        validRegion = new RegionImpl(1L, validPage, 1);
         validPage.setRegions(Arrays.asList(validRegion));
 
-        validWidget = new Widget(1L, VALID_URL);
+        validWidget = new WidgetImpl(1L, VALID_URL);
         validWidget.setType("OpenSocial");
         validWidget.setTitle("Widget Title");
 
-        validRegionWidget = new RegionWidget(VALID_REGION_WIDGET_ID, validWidget, validRegion);
+        validRegionWidget = new RegionWidgetImpl(VALID_REGION_WIDGET_ID, validWidget, validRegion);
         validRegion.setRegionWidgets(Arrays.asList(validRegionWidget));
     }
 
@@ -106,7 +108,7 @@ public class SecurityTokenServiceTest {
     @Test
     public void getSecurityToken_validWidget_ownerIsNotViewer() throws SecurityTokenException {
         Long expectedOwnerId = 99999L;
-        validPage.setOwner(new User(expectedOwnerId));
+        validPage.setOwner(new UserImpl(expectedOwnerId));
 
         expect(userService.getAuthenticatedUser()).andReturn(validPerson).anyTimes();
         replay(userService);

@@ -146,7 +146,7 @@ public class DefaultWidgetRatingPermissionEvaluator extends AbstractModelPermiss
         if (trustedDomainObject) {
             trustedWidgetRating = widgetRating;
         } else {
-            trustedWidgetRating = getTrustedWidgetRating(widgetRating.getEntityId(), trustedWidgetRatingContainer);
+            trustedWidgetRating = getTrustedWidgetRating(widgetRating.getId(), trustedWidgetRatingContainer);
         }
         return isWidgetRatingOwnerById(authentication, trustedWidgetRating.getUserId());
     }
@@ -156,7 +156,7 @@ public class DefaultWidgetRatingPermissionEvaluator extends AbstractModelPermiss
     }
 
     private boolean isWidgetRatingOwnerById(Authentication authentication, Long userId) {
-        return ((User)authentication.getPrincipal()).getEntityId().equals(userId);
+        return ((User)authentication.getPrincipal()).getId().equals(userId);
     }
 
     private boolean verifyRaveSecurityContext(Authentication authentication, RaveSecurityContext raveSecurityContext) {

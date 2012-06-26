@@ -25,11 +25,11 @@ import org.apache.rave.portal.model.WidgetRating;
 public interface WidgetRatingRepository extends Repository<WidgetRating> {
 
     /**
-     * Tries to find a {@link WidgetRating} by the id's of a Widget and USer
+     * Tries to find a {@link org.apache.rave.portal.model.WidgetRating} by the id's of a Widget and USer
      *
      * @param widgetId unique identifier of a Widget
      * @param userId   unique identifier of a User
-     * @return {@link WidgetRating} if it exists, otherwise {@literal null}
+     * @return {@link org.apache.rave.portal.model.WidgetRating} if it exists, otherwise {@literal null}
      */
     WidgetRating getByWidgetIdAndUserId(Long widgetId, Long userId);
 

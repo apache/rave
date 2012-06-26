@@ -20,7 +20,9 @@
 package org.apache.rave.provider.opensocial.service.impl;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.rave.portal.model.*;
+import org.apache.rave.portal.model.RegionWidget;
+import org.apache.rave.portal.model.User;
+import org.apache.rave.portal.model.impl.*;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.provider.opensocial.exception.SecurityTokenException;
 import org.apache.rave.provider.opensocial.service.SecurityTokenService;
@@ -130,16 +132,16 @@ public class EncryptedBlobSecurityTokenService implements SecurityTokenService {
         SecurityToken securityToken = this.decryptSecurityToken(encryptedSecurityToken);
 
         //Make sure the person is authorized to refresh this token
-        String userId = String.valueOf(userService.getAuthenticatedUser().getEntityId());
+        String userId = String.valueOf(userService.getAuthenticatedUser().getId());
         if (!securityToken.getViewerId().equalsIgnoreCase(userId)) {
             throw new SecurityTokenException("Illegal attempt by user " + userId +
                     " to refresh security token with a viewerId of " + securityToken.getViewerId());
         }
 
         //Create a new RegionWidget instance from it so we can use it to generate a new encrypted token
-        RegionWidget regionWidget = new RegionWidget(securityToken.getModuleId(),
-                new Widget(-1L, securityToken.getAppUrl()),
-                new Region(-1L, new Page(-1L, new User(Long.valueOf(securityToken.getOwnerId()))), -1));
+        RegionWidget regionWidget = new RegionWidgetImpl(securityToken.getModuleId(),
+                new WidgetImpl(-1L, securityToken.getAppUrl()),
+                new RegionImpl(-1L, new PageImpl(-1L, new UserImpl(Long.valueOf(securityToken.getOwnerId()))), -1));
 
         //Create and return the newly encrypted token
         return getEncryptedSecurityToken(regionWidget);
@@ -151,10 +153,10 @@ public class EncryptedBlobSecurityTokenService implements SecurityTokenService {
 
         Map<String, String> values = new HashMap<String, String>();
         values.put(AbstractSecurityToken.Keys.APP_URL.getKey(), regionWidget.getWidget().getUrl());
-        values.put(AbstractSecurityToken.Keys.MODULE_ID.getKey(), String.valueOf(regionWidget.getEntityId()));
+        values.put(AbstractSecurityToken.Keys.MODULE_ID.getKey(), String.valueOf(regionWidget.getId()));
         values.put(AbstractSecurityToken.Keys.OWNER.getKey(),
-                String.valueOf(regionWidget.getRegion().getPage().getOwner().getEntityId()));
-        values.put(AbstractSecurityToken.Keys.VIEWER.getKey(), String.valueOf(user.getEntityId()));
+                String.valueOf(regionWidget.getRegion().getPage().getOwner().getId()));
+        values.put(AbstractSecurityToken.Keys.VIEWER.getKey(), String.valueOf(user.getId()));
         values.put(AbstractSecurityToken.Keys.TRUSTED_JSON.getKey(), "");
 
         BlobCrypterSecurityToken securityToken = new BlobCrypterSecurityToken(container, domain, null, values);

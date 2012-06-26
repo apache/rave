@@ -19,28 +19,31 @@
 
 package org.apache.rave.portal.web.controller;
 
-import org.apache.rave.portal.service.PageLayoutService;
-import org.apache.rave.portal.web.controller.util.MockHttpUtil;
-import org.springframework.mock.web.MockHttpServletRequest;
+import org.apache.rave.portal.model.Page;
 import org.apache.rave.portal.model.PageInvitationStatus;
 import org.apache.rave.portal.model.PageLayout;
-import org.apache.rave.portal.model.Page;
 import org.apache.rave.portal.model.PageUser;
-import org.apache.rave.portal.model.User;
+import org.apache.rave.portal.model.impl.PageImpl;
+import org.apache.rave.portal.model.impl.PageLayoutImpl;
+import org.apache.rave.portal.model.impl.PageUserImpl;
+import org.apache.rave.portal.model.impl.UserImpl;
+import org.apache.rave.portal.service.PageLayoutService;
 import org.apache.rave.portal.service.PageService;
 import org.apache.rave.portal.service.UserService;
+import org.apache.rave.portal.web.controller.util.MockHttpUtil;
 import org.apache.rave.portal.web.util.ModelKeys;
 import org.apache.rave.portal.web.util.ViewNames;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.ui.ExtendedModelMap;
 import org.springframework.ui.Model;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.hamcrest.CoreMatchers.*;
 import static org.easymock.EasyMock.*;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 
 public class PageControllerTest {
@@ -49,22 +52,23 @@ public class PageControllerTest {
     private PageLayoutService pageLayoutService;
     private PageController pageController;
     private MockHttpServletRequest request;
-    
+
     private Model model;
     private Page defaultPage, otherPage;
     private PageUser defaultPageUser, otherPageUser;
     private List<Page> allPages;
     private List<PageLayout> allPageLayouts;
-    
+
     private final Long DEFAULT_PAGE_ID = 99L;
     private final Long OTHER_PAGE_ID = 22L;
     private final Long USER_ID = 1L;
     private final String VALID_PAGE_LAYOUT_CODE = "layout98";
-    private User validUser;
+    private UserImpl validUser;
     private PageLayout validPageLayout;
 
     @Before
     public void setup() {
+
         userService = createMock(UserService.class);
         pageService = createMock(PageService.class);
         pageLayoutService = createMock(PageLayoutService.class);
@@ -72,144 +76,146 @@ public class PageControllerTest {
         model = new ExtendedModelMap();
         request = new MockHttpServletRequest();
 
-        validPageLayout = new PageLayout();
-        validPageLayout.setEntityId(33L);
+        validUser = new UserImpl(USER_ID);
+        validPageLayout = new PageLayoutImpl();
         validPageLayout.setCode(VALID_PAGE_LAYOUT_CODE);
-
-        validUser = new User(USER_ID);
-
-        defaultPage = new Page(DEFAULT_PAGE_ID, validUser);
-        defaultPage.setPageLayout(validPageLayout);
-        defaultPageUser = new PageUser(validUser, defaultPage, 1L);
+        defaultPageUser = new PageUserImpl(validUser, defaultPage, 1L);
         defaultPageUser.setPageStatus(PageInvitationStatus.OWNER);
-        defaultPage.setMembers(new ArrayList<PageUser>());
-        defaultPage.getMembers().add(defaultPageUser);
 
-        otherPage = new Page(OTHER_PAGE_ID, validUser);
+        validUser.setDefaultPageLayout(validPageLayout);
+
+        defaultPage = new PageImpl(DEFAULT_PAGE_ID, validUser);
+        defaultPage.setPageLayout(validPageLayout);
+
+        List<PageUser> members = new ArrayList<PageUser>();
+        members.add(defaultPageUser);
+        defaultPage.setMembers(members);
+
+        otherPage = new PageImpl(OTHER_PAGE_ID, validUser);
         otherPage.setPageLayout(validPageLayout);
-        otherPageUser = new PageUser(validUser, otherPage, 2L);
+        otherPageUser = new PageUserImpl(validUser, otherPage, 2L);
         otherPageUser.setPageStatus(PageInvitationStatus.OWNER);
-        otherPage.setMembers(new ArrayList<PageUser>());
-        otherPage.getMembers().add(otherPageUser);
+
+        List<PageUser> members2 = new ArrayList<PageUser>();
+        members2.add(otherPageUser);
+        otherPage.setMembers(members2);
 
         allPages = new ArrayList<Page>();
-        allPages.add(defaultPage);   
+        allPages.add(defaultPage);
         allPages.add(otherPage);
 
         allPageLayouts = new ArrayList<PageLayout>();
         allPageLayouts.add(validPageLayout);
-
-        validUser.setDefaultPageLayout(validPageLayout);
     }
 
     @SuppressWarnings("unchecked")
     @Test
     public void view_pageId() {
         MockHttpUtil.setupRequestAsNonMobileUserAgent(request);
-        
-        expect(userService.getAuthenticatedUser()).andReturn(validUser).anyTimes(); 
+
+        expect(userService.getAuthenticatedUser()).andReturn(validUser).anyTimes();
         expect(pageService.getAllUserPages(USER_ID)).andReturn(allPages);
         expect(pageService.getPageFromList(OTHER_PAGE_ID, allPages)).andReturn(otherPage);
         expect(pageLayoutService.getAllUserSelectable()).andReturn(allPageLayouts);
         replay(userService, pageService, pageLayoutService);
 
         String results = pageController.view(OTHER_PAGE_ID, model, request);
-        
+
         assertThat(results, equalTo(ViewNames.getPageView(VALID_PAGE_LAYOUT_CODE)));
         assertThat((Page) model.asMap().get(ModelKeys.PAGE), sameInstance(otherPage));
         assertThat((List<Page>) model.asMap().get(ModelKeys.PAGES), equalTo(allPages));
         assertThat((List<PageLayout>) model.asMap().get(ModelKeys.PAGE_LAYOUTS), sameInstance(allPageLayouts));
-        
+
         verify(userService, pageService, pageLayoutService);
     }
-    
+
     @SuppressWarnings("unchecked")
     @Test
-    public void view_pageId_mobileClient() {       
+    public void view_pageId_mobileClient() {
         MockHttpUtil.setupRequestAsMobileUserAgent(request);
-        
-        expect(userService.getAuthenticatedUser()).andReturn(validUser).anyTimes(); 
+
+        expect(userService.getAuthenticatedUser()).andReturn(validUser).anyTimes();
         expect(pageService.getAllUserPages(USER_ID)).andReturn(allPages);
         expect(pageService.getPageFromList(OTHER_PAGE_ID, allPages)).andReturn(otherPage);
         expect(pageLayoutService.getAllUserSelectable()).andReturn(allPageLayouts);
         replay(userService, pageService, pageLayoutService);
 
         String results = pageController.view(OTHER_PAGE_ID, model, request);
-        
+
         assertThat(results, equalTo(ViewNames.MOBILE_HOME));
         assertThat((Page) model.asMap().get(ModelKeys.PAGE), sameInstance(otherPage));
         assertThat((List<Page>) model.asMap().get(ModelKeys.PAGES), equalTo(allPages));
         assertThat((List<PageLayout>) model.asMap().get(ModelKeys.PAGE_LAYOUTS), sameInstance(allPageLayouts));
-        
+
         verify(userService, pageService, pageLayoutService);
     }
-    
+
     @SuppressWarnings("unchecked")
     @Test
     public void view_pageId_zeroExistingPages() {
         MockHttpUtil.setupRequestAsNonMobileUserAgent(request);
         List<Page> pages = new ArrayList<Page>();
-        
+
         assertThat(pages.isEmpty(), is(true));
-        expect(userService.getAuthenticatedUser()).andReturn(validUser).anyTimes(); 
+        expect(userService.getAuthenticatedUser()).andReturn(validUser).anyTimes();
         expect(pageService.getAllUserPages(USER_ID)).andReturn(pages).times(2);
-        expect(pageService.addNewDefaultUserPage(validUser.getEntityId())).andReturn(defaultPage);
+        expect(pageService.addNewDefaultUserPage(validUser.getId())).andReturn(defaultPage);
         expect(pageService.getPageFromList(OTHER_PAGE_ID, pages)).andReturn(defaultPage);
         expect(pageLayoutService.getAllUserSelectable()).andReturn(allPageLayouts);
         replay(userService, pageService, pageLayoutService);
-        
+
         String results = pageController.view(OTHER_PAGE_ID, model, request);
-        
+
         assertThat(results, equalTo(ViewNames.getPageView(VALID_PAGE_LAYOUT_CODE)));
         assertThat((Page) model.asMap().get(ModelKeys.PAGE), sameInstance(defaultPage));
         assertThat((List<Page>) model.asMap().get(ModelKeys.PAGES), sameInstance(pages));
         assertThat((List<PageLayout>) model.asMap().get(ModelKeys.PAGE_LAYOUTS), sameInstance(allPageLayouts));
-        
+
         verify(userService, pageService, pageLayoutService);
-    }    
-    
+    }
+
     @SuppressWarnings("unchecked")
     @Test
     public void viewDefault_pageId() {
         MockHttpUtil.setupRequestAsNonMobileUserAgent(request);
-        
-        expect(userService.getAuthenticatedUser()).andReturn(validUser).anyTimes(); 
+
+        expect(userService.getAuthenticatedUser()).andReturn(validUser).anyTimes();
         expect(pageService.getAllUserPages(USER_ID)).andReturn(allPages);
         expect(pageService.getDefaultPageFromList(allPages)).andReturn(defaultPage);
         expect(pageLayoutService.getAllUserSelectable()).andReturn(allPageLayouts);
         replay(userService, pageService, pageLayoutService);
 
         String results = pageController.viewDefault(model, request);
-        
+
         assertThat(results, equalTo(ViewNames.getPageView(VALID_PAGE_LAYOUT_CODE)));
         assertThat((Page) model.asMap().get(ModelKeys.PAGE), sameInstance(defaultPage));
         assertThat((List<Page>) model.asMap().get(ModelKeys.PAGES), equalTo(allPages));
         assertThat((List<PageLayout>) model.asMap().get(ModelKeys.PAGE_LAYOUTS), sameInstance(allPageLayouts));
-        
+
         verify(userService, pageService, pageLayoutService);
     }
-    
+
     @SuppressWarnings("unchecked")
     @Test
     public void viewDefault_pageId_zeroExistingPages() {
         MockHttpUtil.setupRequestAsNonMobileUserAgent(request);
         List<Page> pages = new ArrayList<Page>();
-        
+
         assertThat(pages.isEmpty(), is(true));
-        expect(userService.getAuthenticatedUser()).andReturn(validUser).anyTimes(); 
+        expect(userService.getAuthenticatedUser()).andReturn(validUser).anyTimes();
         expect(pageService.getAllUserPages(USER_ID)).andReturn(pages).times(2);
-        expect(pageService.addNewDefaultUserPage(validUser.getEntityId())).andReturn(defaultPage);
+        expect(pageService.addNewDefaultUserPage(validUser.getId())).andReturn(defaultPage);
         expect(pageService.getDefaultPageFromList(pages)).andReturn(defaultPage);
         expect(pageLayoutService.getAllUserSelectable()).andReturn(allPageLayouts);
         replay(userService, pageService, pageLayoutService);
 
         String results = pageController.viewDefault(model, request);
-        
+
         assertThat(results, equalTo(ViewNames.getPageView(VALID_PAGE_LAYOUT_CODE)));
         assertThat((Page) model.asMap().get(ModelKeys.PAGE), sameInstance(defaultPage));
         assertThat((List<Page>) model.asMap().get(ModelKeys.PAGES), sameInstance(pages));
         assertThat((List<PageLayout>) model.asMap().get(ModelKeys.PAGE_LAYOUTS), sameInstance(allPageLayouts));
-        
+
         verify(userService, pageService, pageLayoutService);
     }
 }

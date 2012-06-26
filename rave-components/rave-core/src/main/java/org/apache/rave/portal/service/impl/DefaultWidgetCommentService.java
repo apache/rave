@@ -25,14 +25,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class DefaultWidgetCommentService implements WidgetCommentService {
-    
+
     private final WidgetCommentRepository widgetCommentRepository;
-    
+
     @Autowired
     public DefaultWidgetCommentService(WidgetCommentRepository widgetCommentRepository) {
         this.widgetCommentRepository = widgetCommentRepository;
     }
-    
+
     @Override
     public WidgetComment getWidgetComment(Long id) {
         return widgetCommentRepository.get(id);

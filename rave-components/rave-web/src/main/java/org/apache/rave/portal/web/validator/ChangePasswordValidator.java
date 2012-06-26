@@ -19,8 +19,8 @@
 
 package org.apache.rave.portal.web.validator;
 
-import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.service.UserService;
+import org.apache.rave.portal.web.model.UserForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +49,7 @@ public class ChangePasswordValidator extends NewAccountValidator {
     @Override
     public void validate(Object target, Errors errors) {
         log.debug("ChangePasswordValidator validator called");
-        User newUser = (User) target;
+        UserForm newUser = (UserForm) target;
         boolean validHash = getUserService().isValidReminderRequest(newUser.getForgotPasswordHash(), minutesValid);
         if (!validHash) {
             errors.rejectValue(FIELD_PASSWORD, "page.changepassword.expired");

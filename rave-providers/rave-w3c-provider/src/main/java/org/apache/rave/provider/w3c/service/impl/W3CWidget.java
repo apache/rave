@@ -19,7 +19,7 @@
 
 package org.apache.rave.provider.w3c.service.impl;
 
-import org.apache.rave.portal.model.Widget;
+import org.apache.rave.portal.model.impl.WidgetImpl;
 
 /**
  * Extended version of Widget with some additional W3C metadata.
@@ -28,7 +28,7 @@ import org.apache.rave.portal.model.Widget;
  * Rave data model classes.
  * 
  */
-public class W3CWidget extends Widget{
+public class W3CWidget extends WidgetImpl {
 	
 	private static final long serialVersionUID = 6211520730435963518L;
 	

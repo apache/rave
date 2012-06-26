@@ -15,19 +15,17 @@
  */
 package org.apache.rave.portal.service.impl;
 
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-
 import org.apache.rave.portal.model.WidgetComment;
+import org.apache.rave.portal.model.impl.WidgetCommentImpl;
 import org.apache.rave.portal.repository.WidgetCommentRepository;
 import org.apache.rave.portal.service.WidgetCommentService;
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.easymock.EasyMock.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 public class DefaultWidgetCommentServiceTest {
 
@@ -43,8 +41,8 @@ public class DefaultWidgetCommentServiceTest {
 
     @Test
     public void getWidgetComment() {
-        WidgetComment comment = new WidgetComment();
-        comment.setEntityId(1L);
+        WidgetComment comment = new WidgetCommentImpl();
+        comment.setId(1L);
         expect(widgetCommentRepository.get(1L)).andReturn(comment);
         replay(widgetCommentRepository);
 
@@ -54,8 +52,8 @@ public class DefaultWidgetCommentServiceTest {
 
     @Test
     public void saveWidgetComment() {
-        WidgetComment comment = new WidgetComment();
-        comment.setEntityId(1L);
+        WidgetComment comment = new WidgetCommentImpl();
+        comment.setId(1L);
         expect(widgetCommentRepository.save(comment)).andReturn(comment);
         replay(widgetCommentRepository);
 
@@ -65,8 +63,8 @@ public class DefaultWidgetCommentServiceTest {
 
     @Test
     public void deleteWidgetComment() {
-        WidgetComment comment = new WidgetComment();
-        comment.setEntityId(1L);
+        WidgetComment comment = new WidgetCommentImpl();
+        comment.setId(1L);
         expect(widgetCommentRepository.get(1L)).andReturn(comment);
         widgetCommentRepository.delete(comment);
         replay(widgetCommentRepository);

@@ -24,11 +24,11 @@ import org.apache.rave.portal.model.WidgetTag;
 public interface WidgetTagRepository extends Repository<WidgetTag> {
 
     /**
-         * Tries to find a {@link WidgetTag} by the id's of a Widget and Tag keyword
+         * Tries to find a {@link org.apache.rave.portal.model.WidgetTag} by the id's of a Widget and Tag keyword
          *
          * @param widgetId unique identifier of a Widget
          * @param keyword   tag's keyword
-         * @return {@link WidgetTag} if it exists, otherwise {@literal null}
+         * @return {@link org.apache.rave.portal.model.WidgetTag} if it exists, otherwise {@literal null}
          */
         WidgetTag getByWidgetIdAndTag(Long widgetId, String keyword);
 }

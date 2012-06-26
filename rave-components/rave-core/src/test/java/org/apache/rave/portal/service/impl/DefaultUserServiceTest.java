@@ -20,6 +20,10 @@
 package org.apache.rave.portal.service.impl;
 
 import org.apache.rave.portal.model.*;
+import org.apache.rave.portal.model.impl.AuthorityImpl;
+import org.apache.rave.portal.model.impl.PageImpl;
+import org.apache.rave.portal.model.impl.PageTemplateImpl;
+import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.repository.*;
 import org.apache.rave.portal.service.UserService;
@@ -80,7 +84,7 @@ public class DefaultUserServiceTest {
 
     @Test
     public void getAuthenticatedUser_validUser() {
-        final User authUser = new User(USER_ID);
+        final User authUser = new UserImpl(USER_ID);
         AbstractAuthenticationToken auth = createNiceMock(AbstractAuthenticationToken.class);
         expect(auth.getPrincipal()).andReturn(authUser).anyTimes();
         replay(auth);
@@ -119,7 +123,7 @@ public class DefaultUserServiceTest {
 
     @Test
     public void setAuthenticatedUser_valid() {
-        final User authUser = new User(USER_ID);
+        final User authUser = new UserImpl(USER_ID);
         expect(userRepository.get(USER_ID)).andReturn(authUser).anyTimes();
         replay(userRepository);
 
@@ -131,8 +135,8 @@ public class DefaultUserServiceTest {
 
     @Test
     public void setAuthenticatedUser_validRole() {
-        final User authUser = new User(USER_ID);
-        final Authority userRole = new Authority();
+        final User authUser = new UserImpl(USER_ID);
+        final Authority userRole = new AuthorityImpl();
         userRole.setAuthority("admin");
         authUser.addAuthority(userRole);
         expect(userRepository.get(USER_ID)).andReturn(authUser).anyTimes();
@@ -159,7 +163,7 @@ public class DefaultUserServiceTest {
 
     @Test
     public void loadByUsername_valid() {
-        final User authUser = new User(USER_ID, USER_NAME);
+        final User authUser = new UserImpl(USER_ID, USER_NAME);
         expect(userRepository.getByUsername(USER_NAME)).andReturn(authUser).anyTimes();
         replay(userRepository);
 
@@ -187,7 +191,7 @@ public class DefaultUserServiceTest {
 
      @Test
      public void getUserByEmail_valid() {
-          final User authUser=new User(USER_ID,USER_NAME);
+          final User authUser=new UserImpl(USER_ID,USER_NAME);
           authUser.setEmail(USER_EMAIL);
         expect(userRepository.getByUserEmail(USER_EMAIL)).andReturn(authUser).anyTimes();
         replay(userRepository);
@@ -208,8 +212,8 @@ public class DefaultUserServiceTest {
 
     @Test
     public void getLimitedListOfUsers() {
-        User user1 = new User(123L, "john.doe.sr");
-        User user2 = new User(456L, "john.doe.jr");
+        User user1 = new UserImpl(123L, "john.doe.sr");
+        User user2 = new UserImpl(456L, "john.doe.jr");
         List<User> users = new ArrayList<User>();
         users.add(user1);
         users.add(user2);
@@ -229,8 +233,8 @@ public class DefaultUserServiceTest {
     @Test
     public void getUsersByFreeTextSearch() {
         final String searchTerm = "Doe";
-        User user1 = new User(123L, "john.doe.sr");
-        User user2 = new User(456L, "john.doe.jr");
+        User user1 = new UserImpl(123L, "john.doe.sr");
+        User user2 = new UserImpl(456L, "john.doe.jr");
         List<User> users = new ArrayList<User>();
         users.add(user1);
         users.add(user2);
@@ -249,7 +253,7 @@ public class DefaultUserServiceTest {
 
     @Test
     public void updateUserProfile() {
-        User user = new User(USER_ID, USER_NAME);
+        User user = new UserImpl(USER_ID, USER_NAME);
         expect(userRepository.save(user)).andReturn(user).once();
         replay(userRepository);
 
@@ -263,9 +267,8 @@ public class DefaultUserServiceTest {
         final int NUM_COMMENTS = 33;
         final int NUM_RATINGS = 99;
         final int NUM_WIDGETS_OWNED = 4;
-        final int NUM_CATEGORIES = 2;
-        User user = new User(USER_ID, USER_NAME);
-        Page page = new Page(1L, user);
+        UserImpl user = new UserImpl(USER_ID, USER_NAME);
+        Page page = new PageImpl(1L, user);
         List<Page> pages = new ArrayList<Page>();
         pages.add(page);
 
@@ -275,7 +278,7 @@ public class DefaultUserServiceTest {
         expect(widgetCommentRepository.deleteAll(USER_ID)).andReturn(NUM_COMMENTS);
         expect(widgetRatingRepository.deleteAll(USER_ID)).andReturn(NUM_RATINGS);
         expect(widgetRepository.unassignWidgetOwner(USER_ID)).andReturn( NUM_WIDGETS_OWNED);
-        expect(categoryRepository.removeFromCreatedOrModifiedFields(USER_ID)).andReturn(NUM_CATEGORIES);
+        expect(categoryRepository.removeFromCreatedOrModifiedFields(USER_ID)).andReturn( NUM_WIDGETS_OWNED);
         userRepository.delete(user);
         expectLastCall();
         replay(userRepository, pageRepository, widgetCommentRepository, widgetRatingRepository, widgetRepository, categoryRepository);
@@ -298,8 +301,8 @@ public class DefaultUserServiceTest {
     @Test
     public void getAllByAddedWidget() {
         List<User> userList = new ArrayList<User>();
-        userList.add(new User());
-        userList.add(new User());
+        userList.add(new UserImpl());
+        userList.add(new UserImpl());
 
         List<Person> personList = new ArrayList<Person>();
         personList.add(userList.get(0).toPerson());
@@ -308,17 +311,18 @@ public class DefaultUserServiceTest {
         expect(userRepository.getAllByAddedWidget(VALID_WIDGET_ID)).andReturn(userList);
         replay(userRepository);
 
-        assertThat(service.getAllByAddedWidget(VALID_WIDGET_ID), is(personList));
+        List<Person> allByAddedWidget = service.getAllByAddedWidget(VALID_WIDGET_ID);
+        assertThat(allByAddedWidget, is(equalTo(personList)));
 
         verify(userRepository);
     }
 
     @Test
     public void registerNewUser_valid(){
-        User user = new User();
+        User user = new UserImpl();
         expect(userRepository.save(user)).andReturn(user).once();
-        expect(pageTemplateRepository.getDefaultPage(PageType.PERSON_PROFILE)).andReturn(new PageTemplate()).once();
-        expect(pageRepository.createPageForUser(isA(User.class), isA(PageTemplate.class))).andReturn(new Page());
+        expect(pageTemplateRepository.getDefaultPage(PageType.PERSON_PROFILE)).andReturn(new PageTemplateImpl()).once();
+        expect(pageRepository.createPageForUser(isA(UserImpl.class), isA(PageTemplate.class))).andReturn(new PageImpl());
         replay(userRepository, pageTemplateRepository, pageRepository);
         service.registerNewUser(user);
         verify(userRepository, pageTemplateRepository, pageRepository);

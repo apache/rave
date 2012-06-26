@@ -44,7 +44,7 @@ public class PageApi {
 
     /**
      * Adds a widget to the given page
-     * 
+     *
      * @param pageId
      *            the ID of the {@link org.apache.rave.portal.model.Page} to add
      *            the widget to
@@ -72,7 +72,7 @@ public class PageApi {
      * Moves a widget to a new location
      * <p/>
      * Moves can take place within a region, region to region, or between pages
-     * 
+     *
      * @param regionWidgetId
      *            the ID of the
      *            {@link org.apache.rave.portal.model.RegionWidget} to move
@@ -125,11 +125,11 @@ public class PageApi {
             }
         }.getResult();
     }
-    
+
 
     /**
      * Adds a new page
-     * 
+     *
      * @param pageName the new page name
      * @param pageLayoutCode the layout code for this new page
      * @return an {@link RpcOperation} containing the new page or any
@@ -144,7 +144,7 @@ public class PageApi {
              public Page execute() {
                  return pageService.addNewUserPage(pageName, pageLayoutCode);
              }
-        }.getResult();        
+        }.getResult();
     }
 
     @ResponseBody
@@ -170,10 +170,10 @@ public class PageApi {
             }
         }.getResult();
     }
-    
+
     /**
      * Moves a page to a new render position
-     * 
+     *
      * @param pageId the pageId to move
      * @param moveAfterPageId the pageId to move after in render order
      * @return an {@link RpcOperation} containing the updated page or any
@@ -181,7 +181,7 @@ public class PageApi {
      */
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "{pageId}/move")
-    public RpcResult<Page> movePage(@PathVariable final long pageId, 
+    public RpcResult<Page> movePage(@PathVariable final long pageId,
                                     @RequestParam(required=false) final Long moveAfterPageId) {
         return new RpcOperation<Page>() {
             @Override
@@ -194,7 +194,7 @@ public class PageApi {
                 }
                 return page;
             }
-        }.getResult();        
+        }.getResult();
     }
 
     /**

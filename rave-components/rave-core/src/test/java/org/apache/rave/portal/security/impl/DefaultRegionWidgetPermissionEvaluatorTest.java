@@ -21,7 +21,10 @@ package org.apache.rave.portal.security.impl;
 import org.apache.rave.portal.model.Page;
 import org.apache.rave.portal.model.Region;
 import org.apache.rave.portal.model.RegionWidget;
-import org.apache.rave.portal.model.User;
+import org.apache.rave.portal.model.impl.PageImpl;
+import org.apache.rave.portal.model.impl.RegionImpl;
+import org.apache.rave.portal.model.impl.RegionWidgetImpl;
+import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.repository.RegionWidgetRepository;
 import org.apache.rave.portal.security.ModelPermissionEvaluator.Permission;
 import org.apache.rave.portal.security.util.AuthenticationUtils;
@@ -47,7 +50,7 @@ public class DefaultRegionWidgetPermissionEvaluatorTest {
     private Page page;
     private RegionWidget regionWidget;
     private Region region;
-    private User user, user2;
+    private UserImpl user, user2;
     private List<GrantedAuthority> grantedAuthoritiesList;
 
     private final Long VALID_REGION_ID = 1L;
@@ -63,19 +66,19 @@ public class DefaultRegionWidgetPermissionEvaluatorTest {
         defaultRegionWidgetPermissionEvaluator = new DefaultRegionWidgetPermissionEvaluator(mockRegionWidgetRepository);
         mockAuthentication = createMock(Authentication.class);
 
-        user = new User();
+        user = new UserImpl();
         user.setUsername(VALID_USERNAME);
-        user.setEntityId(VALID_USER_ID);
-        user2 = new User();
+        user.setId(VALID_USER_ID);
+        user2 = new UserImpl();
         user2.setUsername(VALID_USERNAME2);
-        page = new Page();
-        page.setEntityId(VALID_PAGE_ID);
+        page = new PageImpl();
+        page.setId(VALID_PAGE_ID);
         page.setOwner(user);
-        region = new Region();
-        region.setEntityId(VALID_REGION_ID);
+        region = new RegionImpl();
+        region.setId(VALID_REGION_ID);
         region.setPage(page);
-        regionWidget = new RegionWidget();
-        regionWidget.setEntityId(VALID_REGION_WIDGET_ID);
+        regionWidget = new RegionWidgetImpl();
+        regionWidget.setId(VALID_REGION_WIDGET_ID);
         regionWidget.setRegion(region);
         grantedAuthoritiesList = new ArrayList<GrantedAuthority>();
         grantedAuthoritiesList.add(new SimpleGrantedAuthority("ROLE_USER"));
@@ -118,7 +121,7 @@ public class DefaultRegionWidgetPermissionEvaluatorTest {
     @Test
     public void testHasPermission_3args_create_isNotRegionWidgetOwner() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
-        expect(mockAuthentication.getPrincipal()).andReturn(user2);
+        expect(mockAuthentication.getPrincipal()).andReturn(user2).anyTimes();
         expect(mockRegionWidgetRepository.get(VALID_REGION_WIDGET_ID)).andReturn(regionWidget);
         replay(mockAuthentication);
         replay(mockRegionWidgetRepository);
@@ -142,7 +145,7 @@ public class DefaultRegionWidgetPermissionEvaluatorTest {
     @Test
     public void testHasPermission_3args_delete_isNotRegionWidgetOwner() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
-        expect(mockAuthentication.getPrincipal()).andReturn(user2);
+        expect(mockAuthentication.getPrincipal()).andReturn(user2).anyTimes();
         expect(mockRegionWidgetRepository.get(VALID_REGION_WIDGET_ID)).andReturn(regionWidget);
         replay(mockAuthentication);
         replay(mockRegionWidgetRepository);
@@ -166,7 +169,7 @@ public class DefaultRegionWidgetPermissionEvaluatorTest {
     @Test
     public void testHasPermission_3args_update_isNotRegionWidgetOwner() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
-        expect(mockAuthentication.getPrincipal()).andReturn(user2);
+        expect(mockAuthentication.getPrincipal()).andReturn(user2).anyTimes();
         expect(mockRegionWidgetRepository.get(VALID_REGION_WIDGET_ID)).andReturn(regionWidget);
         replay(mockAuthentication);
         replay(mockRegionWidgetRepository);
@@ -190,7 +193,7 @@ public class DefaultRegionWidgetPermissionEvaluatorTest {
     @Test
     public void testHasPermission_3args_read_isNotRegionWidgetOwner() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
-        expect(mockAuthentication.getPrincipal()).andReturn(user2);
+        expect(mockAuthentication.getPrincipal()).andReturn(user2).anyTimes();
         expect(mockRegionWidgetRepository.get(VALID_REGION_WIDGET_ID)).andReturn(regionWidget);
         replay(mockAuthentication);
         replay(mockRegionWidgetRepository);
@@ -222,7 +225,7 @@ public class DefaultRegionWidgetPermissionEvaluatorTest {
     @Test
     public void testHasPermission_4args_create_isNotRegionWidgetOwner() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
-        expect(mockAuthentication.getPrincipal()).andReturn(user2);
+        expect(mockAuthentication.getPrincipal()).andReturn(user2).anyTimes();
         expect(mockRegionWidgetRepository.get(VALID_REGION_WIDGET_ID)).andReturn(regionWidget);
         replay(mockAuthentication);
         replay(mockRegionWidgetRepository);
@@ -246,7 +249,7 @@ public class DefaultRegionWidgetPermissionEvaluatorTest {
     @Test
     public void testHasPermission_4args_delete_isNotRegionWidgetOwner() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
-        expect(mockAuthentication.getPrincipal()).andReturn(user2);
+        expect(mockAuthentication.getPrincipal()).andReturn(user2).anyTimes();
         expect(mockRegionWidgetRepository.get(VALID_REGION_WIDGET_ID)).andReturn(regionWidget);
         replay(mockAuthentication);
         replay(mockRegionWidgetRepository);
@@ -270,7 +273,7 @@ public class DefaultRegionWidgetPermissionEvaluatorTest {
     @Test
     public void testHasPermission_4args_read_isNotRegionWidgetOwner() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
-        expect(mockAuthentication.getPrincipal()).andReturn(user2);
+        expect(mockAuthentication.getPrincipal()).andReturn(user2).anyTimes();
         expect(mockRegionWidgetRepository.get(VALID_REGION_WIDGET_ID)).andReturn(regionWidget);
         replay(mockAuthentication);
         replay(mockRegionWidgetRepository);
@@ -294,7 +297,7 @@ public class DefaultRegionWidgetPermissionEvaluatorTest {
     @Test
     public void testHasPermission_4args_update_isNotRegionWidgetOwner() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
-        expect(mockAuthentication.getPrincipal()).andReturn(user2);
+        expect(mockAuthentication.getPrincipal()).andReturn(user2).anyTimes();
         expect(mockRegionWidgetRepository.get(VALID_REGION_WIDGET_ID)).andReturn(regionWidget);
         replay(mockAuthentication);
         replay(mockRegionWidgetRepository);

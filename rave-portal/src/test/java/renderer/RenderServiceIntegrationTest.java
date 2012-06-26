@@ -20,11 +20,8 @@
 package renderer;
 
 
-import org.apache.rave.portal.model.Page;
-import org.apache.rave.portal.model.Region;
-import org.apache.rave.portal.model.RegionWidget;
-import org.apache.rave.portal.model.User;
-import org.apache.rave.portal.model.Widget;
+import org.apache.rave.portal.model.*;
+import org.apache.rave.portal.model.impl.*;
 import org.apache.rave.portal.web.renderer.RenderService;
 import org.apache.rave.portal.web.renderer.ScriptLocation;
 import org.apache.rave.portal.web.renderer.ScriptManager;
@@ -47,9 +44,7 @@ import org.springframework.web.client.RestOperations;
 import java.util.Arrays;
 import java.util.HashMap;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -87,7 +82,7 @@ public class RenderServiceIntegrationTest {
         ReflectionTestUtils.setField(metadataRepository, "restOperations", restOperations);
 
         //Setup a mock authenticated user
-        final User authUser = new User(VALID_USER_ID, VALID_USER_NAME);
+        final User authUser = new UserImpl(VALID_USER_ID, VALID_USER_NAME);
         AbstractAuthenticationToken auth = EasyMock.createNiceMock(AbstractAuthenticationToken.class);
         EasyMock.expect(auth.getPrincipal()).andReturn(authUser).anyTimes();
         EasyMock.replay(auth);
@@ -105,17 +100,17 @@ public class RenderServiceIntegrationTest {
 
     @Test
     public void renderOpenSocial() {
-        Page page = new Page(1L, new User(VALID_USER_ID, VALID_USER_NAME));
-        Region region = new Region(1L, page, 1);
+        Page page = new PageImpl(1L, new UserImpl(VALID_USER_ID, VALID_USER_NAME));
+        Region region = new RegionImpl(1L, page, 1);
         page.setRegions(Arrays.asList(region));
 
-        Widget w = new Widget();
+        WidgetImpl w = new WidgetImpl();
         w.setType("OpenSocial");
-        w.setEntityId(1L);
+        w.setId(1L);
         w.setTitle("Gadget Title");
         w.setUrl("http://www.example.com/gadget.xml");
 
-        RegionWidget rw = new RegionWidget(1L, w, region);
+        RegionWidget rw = new RegionWidgetImpl(1L, w, region);
         region.setRegionWidgets(Arrays.asList(rw));
 
         RenderContext context = new RenderContext();

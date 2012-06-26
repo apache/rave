@@ -18,11 +18,8 @@
  */
 package org.apache.rave.portal.web.api.rest;
 
-import java.security.Principal;
-import org.springframework.security.access.AccessDeniedException;
+import org.apache.rave.portal.model.impl.*;
 import org.apache.rave.portal.model.*;
-import org.springframework.util.ClassUtils;
-import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.apache.rave.portal.service.PageService;
@@ -39,23 +36,23 @@ import static org.hamcrest.CoreMatchers.*;
  *
  * @author CARLUCCI
  */
-public class PageApiTest {    
-    private PageApi pageApi;    
+public class PageApiTest {
+    private PageApi pageApi;
     private PageService pageService;
     private MockHttpServletResponse response;
-    
+
     private final long PAGE_ID = 1L;
-    
+
     @Before
     public void setUp() {
         response = new MockHttpServletResponse();
         pageService = createMock(PageService.class);
-        pageApi = new PageApi(pageService);     
+        pageApi = new PageApi(pageService);
     }
 
     @Test
     public void getPage_validId() {
-        Page p = new Page();
+        Page p = new PageImpl();
         expect(pageService.getPage(PAGE_ID)).andReturn(p).once();
         replay(pageService);
 
@@ -65,14 +62,14 @@ public class PageApiTest {
 
     @Test
     public void getPage_validId_export() {
-        Page p = new Page();
+        Page p = new PageImpl();
         p.setRegions(new ArrayList<Region>());
-        p.setOwner(new User());
-        Region region = new Region();
+        p.setOwner(new UserImpl());
+        Region region = new RegionImpl();
         region.setRegionWidgets(new ArrayList<RegionWidget>());
-        RegionWidget w = new RegionWidget();
+        RegionWidget w = new RegionWidgetImpl();
         w.setPreferences(new ArrayList<RegionWidgetPreference>());
-        w.getPreferences().add(new RegionWidgetPreference());
+        w.getPreferences().add(new RegionWidgetPreferenceImpl());
         region.getRegionWidgets().add(w);
         p.getRegions().add(region);
 
@@ -84,16 +81,16 @@ public class PageApiTest {
         assertThat(returned.getOwner(), is(nullValue()));
         assertThat(returned.getRegions().get(0).getRegionWidgets().get(0).getPreferences(), is(nullValue()));
     }
-    
+
     @Test
     public void testDeletePage() {
         pageService.deletePage(PAGE_ID);
         expectLastCall();
         replay(pageService);
-        
+
         pageApi.deletePage(PAGE_ID, response);
-        
-        assertThat(response.getStatus(), is(HttpStatus.NO_CONTENT.value()));   
+
+        assertThat(response.getStatus(), is(HttpStatus.NO_CONTENT.value()));
         verify(pageService);
-    }  
+    }
 }

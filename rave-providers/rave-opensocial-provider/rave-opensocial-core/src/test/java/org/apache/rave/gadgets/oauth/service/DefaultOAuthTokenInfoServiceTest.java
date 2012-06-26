@@ -19,8 +19,9 @@
 
 package org.apache.rave.gadgets.oauth.service;
 
-import org.apache.rave.gadgets.oauth.model.OAuthTokenInfo;
-import org.apache.rave.gadgets.oauth.repository.OAuthTokenInfoRepository;
+import org.apache.rave.portal.model.OAuthTokenInfo;
+import org.apache.rave.portal.model.impl.OAuthTokenInfoImpl;
+import org.apache.rave.portal.repository.OAuthTokenInfoRepository;
 import org.apache.rave.gadgets.oauth.service.impl.DefaultOAuthTokenInfoService;
 import org.apache.shindig.auth.SecurityToken;
 import org.apache.shindig.gadgets.oauth.OAuthStore;
@@ -28,11 +29,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;
-import static org.easymock.EasyMock.createNiceMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.expectLastCall;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
+import static org.easymock.EasyMock.*;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
@@ -106,6 +103,8 @@ public class DefaultOAuthTokenInfoServiceTest {
         expect(tokenInfo.getTokenExpireMillis()).andReturn(3600000L);
         expect(tokenInfo.getTokenSecret()).andReturn("tokenSecret");
         replay(securityToken, tokenInfo);
-        return new OAuthTokenInfo(securityToken, SERVICE_NAME, TOKEN_NAME, tokenInfo);
+        return new OAuthTokenInfoImpl(securityToken.getAppUrl(), SERVICE_NAME, TOKEN_NAME, tokenInfo.getAccessToken(),
+                tokenInfo.getSessionHandle(), tokenInfo.getTokenSecret(),
+                securityToken.getViewerId(), tokenInfo.getTokenExpireMillis());
     }
 }

@@ -19,15 +19,15 @@
 
 package org.apache.rave.portal.web.controller;
 
-import static org.easymock.EasyMock.*;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
-
 import org.apache.rave.portal.model.Page;
 import org.apache.rave.portal.model.PageLayout;
 import org.apache.rave.portal.model.User;
+import org.apache.rave.portal.model.impl.PageImpl;
+import org.apache.rave.portal.model.impl.PageLayoutImpl;
+import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.service.PageService;
 import org.apache.rave.portal.service.UserService;
+import org.apache.rave.portal.web.model.UserForm;
 import org.apache.rave.portal.web.util.ModelKeys;
 import org.apache.rave.portal.web.util.ViewNames;
 import org.hamcrest.CoreMatchers;
@@ -38,6 +38,11 @@ import org.springframework.ui.ModelMap;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.easymock.EasyMock.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 /**
  * Test class for {@link ProfileController}
@@ -65,13 +70,12 @@ public class ProfileControllerTest {
 		pageService = createMock(PageService.class);
 		profileController = new ProfileController(userService, pageService);
 
-        validPageLayout = new PageLayout();
-        validPageLayout.setEntityId(33L);
+        validPageLayout = new PageLayoutImpl();
         validPageLayout.setCode(VALID_PAGE_LAYOUT_CODE);
 
-        defaultPage = new Page(DEFAULT_PAGE_ID);
+        defaultPage = new PageImpl(DEFAULT_PAGE_ID);
         defaultPage.setPageLayout(validPageLayout);
-        otherPage = new Page(OTHER_PAGE_ID);
+        otherPage = new PageImpl(OTHER_PAGE_ID);
         otherPage.setPageLayout(validPageLayout);
 
         allProfilePages = new ArrayList<Page>();
@@ -85,20 +89,20 @@ public class ProfileControllerTest {
 	@Test
 	public void viewPerson_ShouldAddAttributeForUser() {
 		//creating a mock user
-		final User user = new User();
+		final UserImpl user = new UserImpl();
 		final ModelMap model = new ModelMap();
 		final int modelSize = 4;
 		final String username="Canonical";
         user.setUsername(username);
-        user.setEntityId(USER_ID);
+        user.setId(USER_ID);
 		String userProfile = new String(ModelKeys.USER_PROFILE);
-        Page personProfile = new Page();
-        PageLayout pageLayout = new PageLayout();
+        Page personProfile = new PageImpl();
+        PageLayout pageLayout = new PageLayoutImpl();
         pageLayout.setCode(VALID_PAGE_LAYOUT_CODE);
         personProfile.setPageLayout(pageLayout);
 
 		expect(userService.getUserByUsername(username)).andReturn(user).once();
-        expect(pageService.getPersonProfilePage(user.getEntityId())).andReturn(personProfile);
+        expect(pageService.getPersonProfilePage(user.getId())).andReturn(personProfile);
 
 		replay(userService, pageService);
 
@@ -128,8 +132,8 @@ public class ProfileControllerTest {
         final ModelMap model = new ModelMap();
         final int modelSize = 4;
         final String username="Canonical";
-        Page personProfile = new Page();
-        PageLayout pageLayout = new PageLayout();
+        Page personProfile = new PageImpl();
+        PageLayout pageLayout = new PageLayoutImpl();
         pageLayout.setCode("person_profile");
         personProfile.setPageLayout(pageLayout);
 
@@ -152,7 +156,7 @@ public class ProfileControllerTest {
 		String userProfile = new String(ModelKeys.USER_PROFILE);
 
 		//creating a mock authenticated user
-		final User authUser = new User();
+		final User authUser = new UserImpl();
         authUser.setUsername(USERNAME);
 		//set existing status
 		authUser.setStatus("Single");
@@ -163,7 +167,7 @@ public class ProfileControllerTest {
 		authUser.setEmail("testuser@rave.com");
 
 		//creating a mock updated user
-		final User updatedUser = new User();
+		final UserForm updatedUser = new UserForm();
 		//set the updated status
 		updatedUser.setStatus("Married");
 		updatedUser.setGivenName("Test");

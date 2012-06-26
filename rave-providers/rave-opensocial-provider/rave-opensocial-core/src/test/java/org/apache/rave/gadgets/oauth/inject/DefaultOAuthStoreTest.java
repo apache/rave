@@ -19,13 +19,12 @@
 
 package org.apache.rave.gadgets.oauth.inject;
 
-import java.io.IOException;
-import java.util.Date;
-
 import net.oauth.OAuth;
 import net.oauth.OAuthServiceProvider;
-import org.apache.rave.gadgets.oauth.model.OAuthConsumerStore;
-import org.apache.rave.gadgets.oauth.model.OAuthTokenInfo;
+import org.apache.rave.portal.model.OAuthConsumerStore;
+import org.apache.rave.portal.model.OAuthTokenInfo;
+import org.apache.rave.portal.model.impl.OAuthConsumerStoreImpl;
+import org.apache.rave.portal.model.impl.OAuthTokenInfoImpl;
 import org.apache.rave.gadgets.oauth.service.OAuthConsumerStoreService;
 import org.apache.rave.gadgets.oauth.service.OAuthTokenInfoService;
 import org.apache.shindig.auth.SecurityToken;
@@ -36,9 +35,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import java.io.IOException;
+import java.util.Date;
+
 import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
-import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Test for {@link DefaultOAuthStore}
@@ -56,7 +58,7 @@ public class DefaultOAuthStoreTest {
 
     @Test
     public void testGetConsumerKeyAndSecret() throws Exception {
-        OAuthConsumerStore consumerStore = new OAuthConsumerStore();
+        OAuthConsumerStore consumerStore = new OAuthConsumerStoreImpl();
         consumerStore.setGadgetUri(GADGET_URI);
         consumerStore.setConsumerKey("gadgetConsumer");
         consumerStore.setConsumerSecret(CONSUMER_SECRET);
@@ -81,13 +83,13 @@ public class DefaultOAuthStoreTest {
     public void testGetTokenInfo() throws Exception {
         final String testTokenName = "testTokenName";
 
-        OAuthTokenInfo oAuthTokenInfo = new OAuthTokenInfo();
+        OAuthTokenInfo oAuthTokenInfo = new OAuthTokenInfoImpl();
         oAuthTokenInfo.setTokenName(testTokenName);
         oAuthTokenInfo.setTokenSecret(CONSUMER_SECRET);
         OAuthStore.ConsumerInfo consumerInfo = createMock(OAuthStore.ConsumerInfo.class);
 
         expect(tokenInfoService.findOAuthTokenInfo(token.getViewerId(), token.getAppUrl(),
-                OAuthTokenInfo.MODULE_ID, testTokenName,
+                OAuthTokenInfoImpl.MODULE_ID, testTokenName,
                 SERVICE_NAME)).andReturn(oAuthTokenInfo);
         replay(tokenInfoService);
 

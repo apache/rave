@@ -19,6 +19,7 @@
 
 package org.apache.rave.portal.service.impl;
 
+import org.apache.rave.portal.model.impl.WidgetRatingImpl;
 import org.apache.rave.portal.model.WidgetRating;
 import org.apache.rave.portal.repository.WidgetRatingRepository;
 import org.apache.rave.portal.service.WidgetRatingService;
@@ -45,7 +46,7 @@ public class DefaultWidgetRatingServiceTest {
 
     @Test
     public void testGetByWidgetIdAndUserId() {
-        WidgetRating widgetRating = new WidgetRating(1L, 2L, 3L, 5);
+        WidgetRating widgetRating = new WidgetRatingImpl(1L, 2L, 3L, 5);
         expect(repository.getByWidgetIdAndUserId(2L, 3L)).andReturn(widgetRating);
         replay(repository);
         final WidgetRating rating = service.getByWidgetIdAndUserId(2L, 3L);
@@ -55,7 +56,7 @@ public class DefaultWidgetRatingServiceTest {
 
     @Test
     public void updateScore() {
-        WidgetRating widgetRating = createMock(WidgetRating.class);
+        WidgetRating widgetRating = createMock(WidgetRatingImpl.class);
         widgetRating.setScore(10);
 
         expectLastCall().once();
@@ -68,7 +69,7 @@ public class DefaultWidgetRatingServiceTest {
 
     @Test
     public void saveWidgetRating_new() {
-        WidgetRating newRating = new WidgetRating();
+        WidgetRating newRating = new WidgetRatingImpl();
         newRating.setWidgetId(2L);
         newRating.setUserId(1L);
         newRating.setScore(10);
@@ -83,8 +84,8 @@ public class DefaultWidgetRatingServiceTest {
 
     @Test
     public void saveWidgetRating_existing() {
-        WidgetRating existingRating = new WidgetRating(1L, 1L, 1L, 5);
-        WidgetRating newRating = new WidgetRating();
+        WidgetRating existingRating = new WidgetRatingImpl(1L, 1L, 1L, 5);
+        WidgetRating newRating = new WidgetRatingImpl();
         newRating.setWidgetId(1L);
         newRating.setUserId(1L);
         newRating.setScore(10);
@@ -101,7 +102,7 @@ public class DefaultWidgetRatingServiceTest {
 
     @Test
     public void removeWidgetRating_existingRating() {
-        final WidgetRating widgetRating = new WidgetRating(1L, 1L, 1L, 5);
+        final WidgetRating widgetRating = new WidgetRatingImpl(1L, 1L, 1L, 5);
 
         expect(repository.getByWidgetIdAndUserId(1L, 1L)).andReturn(widgetRating);
         repository.delete(widgetRating);

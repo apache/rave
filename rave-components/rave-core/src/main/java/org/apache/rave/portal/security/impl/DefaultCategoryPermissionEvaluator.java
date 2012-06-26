@@ -43,19 +43,19 @@ public class DefaultCategoryPermissionEvaluator extends AbstractModelPermissionE
     public DefaultCategoryPermissionEvaluator(CategoryRepository categoryRepository) {
         this.categoryRepository = categoryRepository;
     }
-   
+
     @Override
     public Class<Category> getType() {
         return Category.class;
     }
-    
+
     /**
      * Checks to see if the Authentication object has the supplied Permission
      * on the supplied Category object.  This method invokes the private hasPermission
      * function with the trustedDomainObject parameter set to false since we don't
-     * know if the model being passed in was modified in any way from the 
+     * know if the model being passed in was modified in any way from the
      * actual entity in the database.
-     * 
+     *
      * @param authentication the current Authentication object
      * @param category the Category model object
      * @param permission the Permission to check
@@ -64,16 +64,16 @@ public class DefaultCategoryPermissionEvaluator extends AbstractModelPermissionE
     @Override
     public boolean hasPermission(Authentication authentication, Category category, Permission permission) {
         return hasPermission(authentication, category, permission, false);
-    }    
+    }
 
     /**
-     * Checks to see if the Authentication object has the supplied Permission 
+     * Checks to see if the Authentication object has the supplied Permission
      * for the Entity represented by the targetId(entityId) and targetType(model class name).
-     * This method invokes the private hasPermission function with the 
+     * This method invokes the private hasPermission function with the
      * trustedDomainObject parameter set to true since we must pull the entity
      * from the database and are guaranteed a trusted domain object,
      * before performing our permission checks.
-     * 
+     *
      * @param authentication the current Authentication object
      * @param targetId the entityId of the model to check, or a RaveSecurityContext object
      * @param targetType the class of the model to check
@@ -84,27 +84,27 @@ public class DefaultCategoryPermissionEvaluator extends AbstractModelPermissionE
     public boolean hasPermission(Authentication authentication, Serializable targetId, String targetType, Permission permission) {
         boolean hasPermission = false;
         if (targetId instanceof RaveSecurityContext) {
-            hasPermission = verifyRaveSecurityContext(authentication, (RaveSecurityContext)targetId);           
+            hasPermission = verifyRaveSecurityContext(authentication, (RaveSecurityContext)targetId);
         } else {
             hasPermission = hasPermission(authentication, categoryRepository.get((Long)targetId), permission, true);
         }
         return hasPermission;
-    }  
-        
+    }
+
     private boolean hasPermission(Authentication authentication, Category category, Permission permission, boolean trustedDomainObject) {
         // this is our container of trusted category objects that can be re-used
         // in this method so that the same trusted category object doesn't have to
         // be looked up in the repository multiple times
         List<Category> trustedCategoryContainer = new ArrayList<Category>();
-        
+
         // first execute the AbstractModelPermissionEvaluator's hasPermission function
-        // to see if it allows permission via it's "higher authority" logic                
+        // to see if it allows permission via it's "higher authority" logic
         if (super.hasPermission(authentication, category, permission)) {
             return true;
         }
-        
+
         // perform the security logic depending on the Permission type
-        boolean hasPermission = false;                       
+        boolean hasPermission = false;
         switch (permission) {
             case READ:
                 // all users can read any Category
@@ -121,10 +121,10 @@ public class DefaultCategoryPermissionEvaluator extends AbstractModelPermissionE
                 log.warn("unknown permission: " + permission);
                 break;
         }
-        
+
         return hasPermission;
-    }       
-    
+    }
+
     // returns a trusted Category object, either from the CategoryRepository, or the
     // cached container list
     private Category getTrustedCategory(long categoryId, List<Category> trustedCategoryContainer) {
@@ -137,7 +137,7 @@ public class DefaultCategoryPermissionEvaluator extends AbstractModelPermissionE
         }
         return p;
     }
-   
+
     // checks to see if the Authentication object principal is the owner of the supplied category object
     // if trustedDomainObject is false, pull the entity from the database first to ensure
     // the model object is trusted and hasn't been modified
@@ -146,7 +146,7 @@ public class DefaultCategoryPermissionEvaluator extends AbstractModelPermissionE
         if (trustedDomainObject) {
             trustedCategory = category;
         } else {
-            trustedCategory = getTrustedCategory(category.getEntityId(), trustedCategoryContainer);
+            trustedCategory = getTrustedCategory(category.getId(), trustedCategoryContainer);
         }
 
         return isCategoryCreatedUserByUsername(authentication, trustedCategory.getCreatedUser().getUsername());
@@ -157,7 +157,7 @@ public class DefaultCategoryPermissionEvaluator extends AbstractModelPermissionE
     }
 
     private boolean isCategoryCreatedUserById(Authentication authentication, Long userId) {
-        return ((User)authentication.getPrincipal()).getEntityId().equals(userId);
+        return ((User)authentication.getPrincipal()).getId().equals(userId);
     }
 
     private boolean verifyRaveSecurityContext(Authentication authentication, RaveSecurityContext raveSecurityContext) {

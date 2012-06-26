@@ -20,6 +20,7 @@
 package org.apache.rave.portal.web.model;
 
 import org.apache.rave.portal.model.PortalPreference;
+import org.apache.rave.portal.model.impl.PortalPreferenceImpl;
 
 import java.util.Map;
 
@@ -45,13 +46,13 @@ public class PortalPreferenceForm {
 
     private void populateMissingPreferences() {
         if (getPageSize() == null) {
-            preferenceMap.put(PAGE_SIZE, new PortalPreference(PAGE_SIZE, DEFAULT_PAGE_SIZE));
+            preferenceMap.put(PAGE_SIZE, new PortalPreferenceImpl(PAGE_SIZE, DEFAULT_PAGE_SIZE));
         }
         if (getTitleSuffix() == null) {
-            preferenceMap.put(TITLE_SUFFIX, new PortalPreference(TITLE_SUFFIX, DEFAULT_TITLE_SUFFIX));
+            preferenceMap.put(TITLE_SUFFIX, new PortalPreferenceImpl(TITLE_SUFFIX, DEFAULT_TITLE_SUFFIX));
         }
         if (getJavaScriptDebugMode() == null) {
-            preferenceMap.put(JAVASCRIPT_DEBUG_MODE, new PortalPreference(JAVASCRIPT_DEBUG_MODE, DEFAULT_JAVASCRIPT_DEBUG_MODE));
+            preferenceMap.put(JAVASCRIPT_DEBUG_MODE, new PortalPreferenceImpl(JAVASCRIPT_DEBUG_MODE, DEFAULT_JAVASCRIPT_DEBUG_MODE));
         }
     }
 

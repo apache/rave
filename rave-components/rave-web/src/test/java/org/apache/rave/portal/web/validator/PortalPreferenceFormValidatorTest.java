@@ -20,6 +20,7 @@
 package org.apache.rave.portal.web.validator;
 
 import org.apache.rave.portal.model.PortalPreference;
+import org.apache.rave.portal.model.impl.PortalPreferenceImpl;
 import org.apache.rave.portal.web.model.PortalPreferenceForm;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,10 +30,7 @@ import org.springframework.validation.Errors;
 import java.util.HashMap;
 import java.util.Map;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.*;
 import static org.apache.rave.portal.web.util.PortalPreferenceKeys.PAGE_SIZE;
 import static org.apache.rave.portal.web.util.PortalPreferenceKeys.TITLE_SUFFIX;
 
@@ -55,8 +53,8 @@ public class PortalPreferenceFormValidatorTest {
     @Test
     public void testValidate_Valid() throws Exception {
         Map<String, PortalPreference> preferenceMap = new HashMap<String, PortalPreference>();
-        preferenceMap.put(TITLE_SUFFIX, new PortalPreference(TITLE_SUFFIX, "- Rave unit test"));
-        preferenceMap.put(PAGE_SIZE, new PortalPreference(PAGE_SIZE, "10"));
+        preferenceMap.put(TITLE_SUFFIX, new PortalPreferenceImpl(TITLE_SUFFIX, "- Rave unit test"));
+        preferenceMap.put(PAGE_SIZE, new PortalPreferenceImpl(PAGE_SIZE, "10"));
         PortalPreferenceForm form = new PortalPreferenceForm(preferenceMap);
         Errors errors = new BindException(form, "form");
         validator.validate(form, errors);
@@ -80,7 +78,7 @@ public class PortalPreferenceFormValidatorTest {
     @Test
     public void testValidate_InvalidPageSize() throws Exception {
         Map<String, PortalPreference> preferenceMap = new HashMap<String, PortalPreference>();
-        preferenceMap.put(PAGE_SIZE, new PortalPreference(PAGE_SIZE, "10.5"));
+        preferenceMap.put(PAGE_SIZE, new PortalPreferenceImpl(PAGE_SIZE, "10.5"));
         PortalPreferenceForm form = new PortalPreferenceForm(preferenceMap);
         Errors errors = new BindException(form, "form");
         validator.validate(form, errors);

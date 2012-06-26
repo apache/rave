@@ -28,7 +28,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 public interface WidgetRatingService {
 
     /**
-     * Gets a {@link WidgetRating} for the widgetId and userId
+     * Gets a {@link org.apache.rave.portal.model.WidgetRating} for the widgetId and userId
      *
      * @param widgetId unique identifier for a Widget
      * @param userId   unique identifier for a User
@@ -38,7 +38,7 @@ public interface WidgetRatingService {
     WidgetRating getByWidgetIdAndUserId(Long widgetId, Long userId);
 
     /**
-     * Updates the score of a {@link WidgetRating}
+     * Updates the score of a {@link org.apache.rave.portal.model.WidgetRating}
      *
      * @param widgetRating WidgetRating
      * @param score        value of the rating
@@ -47,7 +47,7 @@ public interface WidgetRatingService {
     void updateScore(WidgetRating widgetRating, Integer score);
 
     /**
-     * Saves a {@link WidgetRating} for a widget
+     * Saves a {@link org.apache.rave.portal.model.WidgetRating} for a widget
      *
      * @param rating   WidgetRating
      */

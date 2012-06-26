@@ -66,12 +66,12 @@ public class WookieWidgetService implements WidgetProviderService {
         Collection<org.apache.wookie.connector.framework.Widget> widgets = connectorService.getAvailableWidgets().values();
         ArrayList<Widget> raveWidgets = new ArrayList<Widget>();
         for (org.apache.wookie.connector.framework.Widget wookieWidget: widgets){
-            Widget widget = new Widget();
+            Widget widget = new W3CWidget();
             widget.setUrl(wookieWidget.getIdentifier());
             widget.setDescription(wookieWidget.getDescription());
-            widget.setTitle(wookieWidget.getName());
+            widget.setTitle(wookieWidget.getTitle());
             widget.setThumbnailUrl(wookieWidget.getIcon().toString());
-            widget.setAuthor(wookieWidget.getAuthor());
+            //widget.setAuthor(wookieWidget.getAuthor());
             raveWidgets.add(widget);
         }
         return raveWidgets.toArray(new Widget[raveWidgets.size()]);

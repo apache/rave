@@ -20,6 +20,7 @@
 package org.apache.rave.portal.web.api.rest;
 
 import org.apache.rave.portal.model.*;
+import org.apache.rave.portal.model.impl.*;
 import org.apache.rave.portal.service.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,8 +32,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.easymock.EasyMock.*;
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.sameInstance;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 public class WidgetApiTest {
     private WidgetApi widgetApi;
@@ -46,7 +49,7 @@ public class WidgetApiTest {
     private final Long VALID_USER_ID = 5L;
     private final Long VALID_WIDGET_ID = 10L;
 
-    private User user;
+    private UserImpl user;
     private List<Tag> tagList;
 
     @Before
@@ -57,12 +60,12 @@ public class WidgetApiTest {
         tagService = createMock(TagService.class);
         widgetTagService = createMock(WidgetTagService.class);
 
-        user = new User();
-        user.setEntityId(VALID_USER_ID);
+        user = new UserImpl();
+        user.setId(VALID_USER_ID);
 
         tagList = new ArrayList<Tag>();
-        tagList.add(new Tag(1L, "tag1"));
-        tagList.add(new Tag(2L, "tag2"));
+        tagList.add(new TagImpl("tag1"));
+        tagList.add(new TagImpl("tag2"));
 
         response = createMock(MockHttpServletResponse.class);
         widgetApi = new WidgetApi(widgetRatingService, widgetCommentService, userService, tagService, widgetTagService);
@@ -77,8 +80,8 @@ public class WidgetApiTest {
     public void createWidgetComment() {
         String comment = "new comment";
 
-        Widget widget = new Widget();
-        widget.setEntityId(1L);
+        WidgetImpl widget = new WidgetImpl();
+        widget.setId(1L);
         widget.setComments(new ArrayList<WidgetComment>());
 
         HttpServletResponse httpServletResponse = createMock(HttpServletResponse.class);
@@ -93,13 +96,13 @@ public class WidgetApiTest {
 
     @Test
     public void getWidgetComment() {
-        WidgetComment widgetComment = new WidgetComment();
-        widgetComment.setEntityId(2L);
+        WidgetComment widgetComment = new WidgetCommentImpl();
+        widgetComment.setId(2L);
         expect(widgetCommentService.getWidgetComment(2L)).andReturn(widgetComment);
         replay(widgetCommentService);
 
         WidgetComment foundComment = widgetApi.getWidgetComment(1L, 2L);
-        assertEquals(widgetComment.getEntityId(), foundComment.getEntityId());
+        assertEquals(widgetComment.getId(), foundComment.getId());
 
         verify(widgetCommentService);
     }
@@ -107,10 +110,10 @@ public class WidgetApiTest {
     @Test
     public void updateNonExistentWidgetComment() {
         String message = "message";
-        WidgetComment widgetComment = new WidgetComment();
+        WidgetComment widgetComment = new WidgetCommentImpl();
         widgetComment.setWidgetId(2L);
         widgetComment.setText(message);
-        widgetComment.setUser(new User(VALID_USER_ID, "John.Doe"));
+        widgetComment.setUser(new UserImpl(VALID_USER_ID, "John.Doe"));
 
         expect(userService.getAuthenticatedUser()).andReturn(user);
         expect(widgetCommentService.getWidgetComment(3L)).andReturn(null);
@@ -129,8 +132,8 @@ public class WidgetApiTest {
     @Test
     public void updateWidgetComment() {
         String message = "updated comment";
-        WidgetComment widgetComment = new WidgetComment();
-        widgetComment.setEntityId(2L);
+        WidgetComment widgetComment = new WidgetCommentImpl();
+        widgetComment.setId(2L);
 
         expect(widgetCommentService.getWidgetComment(2L)).andReturn(widgetComment);
         widgetCommentService.saveWidgetComment(widgetComment);
@@ -175,17 +178,17 @@ public class WidgetApiTest {
 
     @Test
     public void updateWidgetRating() {
-        WidgetRating widgetRating = new WidgetRating();
+        WidgetRating widgetRating = new WidgetRatingImpl();
         widgetRating.setScore(5);
-        widgetRating.setUserId(2L);
+        widgetRating.setUserId(5L);
         widgetRating.setWidgetId(1L);
         expect(userService.getAuthenticatedUser()).andReturn(user);
-        widgetRatingService.saveWidgetRating(widgetRating);
+        widgetRatingService.saveWidgetRating(eq(widgetRating));
         expectLastCall();
         response.setStatus(HttpStatus.NO_CONTENT.value());
         replay(userService, widgetRatingService, response);
 
-        User user = new User(2L);
+        User user = new UserImpl(2L);
         widgetApi.setWidgetRating(1L, 5, response);
 
         verify(widgetRatingService, userService, response);
@@ -194,8 +197,8 @@ public class WidgetApiTest {
     @Test
     public void getAllUsers() {
         List<Person> persons = new ArrayList<Person>();
-        persons.add(new Person());
-        persons.add(new Person());
+        persons.add(new PersonImpl());
+        persons.add(new PersonImpl());
 
         expect(userService.getAllByAddedWidget(VALID_WIDGET_ID)).andReturn(persons);
         replay(userService);
@@ -225,14 +228,16 @@ public class WidgetApiTest {
     @Test
     public void createWidgetTag_newTag() {
         final String TAG_TEXT = "mytag";
-        Tag tag = new Tag(1L, TAG_TEXT);
-        WidgetTag widgetTag = new WidgetTag();
+        TagImpl tag = new TagImpl();
+        tag.setKeyword(TAG_TEXT);
+        WidgetTag widgetTag = new WidgetTagImpl();
         widgetTag.setTag(tag);
+        widgetTag.setWidgetId(VALID_WIDGET_ID);
                         
         expect(widgetTagService.getWidgetTagByWidgetIdAndKeyword(VALID_WIDGET_ID, TAG_TEXT)).andReturn(null);
         expect(userService.getAuthenticatedUser()).andReturn(user);
         expect(tagService.getTagByKeyword(TAG_TEXT)).andReturn(null);
-        widgetTagService.saveWidgetTag(widgetTag);
+        widgetTagService.saveWidgetTag(isA(WidgetTag.class));
         expectLastCall();
         replay(widgetTagService, userService, tagService);
         widgetApi.createWidgetTag(VALID_WIDGET_ID, TAG_TEXT, response);
@@ -242,14 +247,15 @@ public class WidgetApiTest {
     @Test
     public void createWidgetTag_newTag_existsForOtherWidget() {
         final String TAG_TEXT = "mytag";
-        Tag tag = new Tag(1L, TAG_TEXT);
-        WidgetTag widgetTag = new WidgetTag();
+        TagImpl tag = new TagImpl();
+        tag.setKeyword(TAG_TEXT);
+        WidgetTagImpl widgetTag = new WidgetTagImpl();
         widgetTag.setTag(tag);
 
         expect(widgetTagService.getWidgetTagByWidgetIdAndKeyword(VALID_WIDGET_ID, TAG_TEXT)).andReturn(null);
         expect(userService.getAuthenticatedUser()).andReturn(user);
         expect(tagService.getTagByKeyword(TAG_TEXT)).andReturn(tag);
-        widgetTagService.saveWidgetTag(widgetTag);
+        widgetTagService.saveWidgetTag(isA(WidgetTag.class));
         expectLastCall();
         replay(widgetTagService, userService, tagService);
         widgetApi.createWidgetTag(VALID_WIDGET_ID, TAG_TEXT, response);
@@ -259,8 +265,9 @@ public class WidgetApiTest {
     @Test
     public void createWidgetTag_nullText() {
         final String TAG_TEXT = null;
-        Tag tag = new Tag(1L, TAG_TEXT);
-        WidgetTag widgetTag = new WidgetTag();
+        TagImpl tag = new TagImpl();
+        tag.setKeyword(TAG_TEXT);
+        WidgetTagImpl widgetTag = new WidgetTagImpl();
         widgetTag.setTag(tag);
 
         widgetApi.createWidgetTag(VALID_WIDGET_ID, TAG_TEXT, response);
@@ -269,8 +276,9 @@ public class WidgetApiTest {
     @Test
     public void createWidgetTag_emptyText() {
         final String TAG_TEXT = "      ";
-        Tag tag = new Tag(1L, TAG_TEXT);
-        WidgetTag widgetTag = new WidgetTag();
+        TagImpl tag = new TagImpl();
+        tag.setKeyword(TAG_TEXT);
+        WidgetTagImpl widgetTag = new WidgetTagImpl();
         widgetTag.setTag(tag);
 
         widgetApi.createWidgetTag(VALID_WIDGET_ID, TAG_TEXT, response);
@@ -279,9 +287,9 @@ public class WidgetApiTest {
     @Test
     public void createWidgetTag_existingTag() {
         final String TAG_TEXT = "mytag";
-        Tag tag = new Tag(1L, TAG_TEXT);
-        WidgetTag widgetTag = new WidgetTag();
-        widgetTag.setEntityId(9L);
+        TagImpl tag = new TagImpl();
+        tag.setKeyword(TAG_TEXT);
+        WidgetTagImpl widgetTag = new WidgetTagImpl();
         widgetTag.setTag(tag);
 
         expect(widgetTagService.getWidgetTagByWidgetIdAndKeyword(VALID_WIDGET_ID, TAG_TEXT)).andReturn(widgetTag);

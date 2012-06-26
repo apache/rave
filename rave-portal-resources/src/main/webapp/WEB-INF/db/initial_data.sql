@@ -190,17 +190,17 @@ UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @u
 -- user association data --
 set @next_person_association = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @person_association_seq);
 INSERT INTO person_association(entity_id, follower_id, followed_id)
-VALUES (@next_person_association, @person_id_1, @person_id_2);
+VALUES (@next_person_association, @user_id_1, @user_id_2);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @person_association_seq;
 
 set @next_person_association = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @person_association_seq);
 INSERT INTO person_association(entity_id, follower_id, followed_id)
-VALUES (@next_person_association, @person_id_1, @person_id_3);
+VALUES (@next_person_association, @user_id_1, @user_id_3);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @person_association_seq;
 
 set @next_person_association = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @person_association_seq);
 INSERT INTO person_association(entity_id, follower_id, followed_id)
-VALUES (@next_person_association, @person_id_2, @person_id_4);
+VALUES (@next_person_association, @user_id_2, @user_id_4);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @person_association_seq;
 
 -- end user association data --
@@ -1054,21 +1054,21 @@ values (@user_id_13, @user_authority_id);
 set @next_portal_preference_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @portal_preference_seq);
 INSERT INTO portal_preference (entity_id, preference_key)
 values (@next_portal_preference_id, 'titleSuffix');
-INSERT INTO portalpreference_values
+INSERT INTO JPAPORTALPREFERENCE_VALUES
 values (@next_portal_preference_id, ' - Rave');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @portal_preference_seq;
 
 set @next_portal_preference_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @portal_preference_seq);
 INSERT INTO portal_preference (entity_id, preference_key)
 values (@next_portal_preference_id, 'pageSize');
-INSERT INTO portalpreference_values
+INSERT INTO JPAPORTALPREFERENCE_VALUES
 values (@next_portal_preference_id, '10');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @portal_preference_seq;
 
 set @next_portal_preference_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @portal_preference_seq);
 INSERT INTO portal_preference (entity_id, preference_key)
 values (@next_portal_preference_id, 'javaScriptDebugMode');
-INSERT INTO portalpreference_values
+INSERT INTO JPAPORTALPREFERENCE_VALUES
 values (@next_portal_preference_id, '1');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @portal_preference_seq;
 -- end portal preferences

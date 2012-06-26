@@ -19,11 +19,12 @@
 
 package org.apache.rave.portal.web.controller;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.rave.portal.model.User;
+import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.service.CaptchaService;
 import org.apache.rave.portal.service.UserService;
+import org.apache.rave.portal.web.controller.util.ModelUtils;
+import org.apache.rave.portal.web.model.UserForm;
 import org.apache.rave.portal.web.util.ModelKeys;
 import org.apache.rave.portal.web.util.ViewNames;
 import org.apache.rave.portal.web.validator.NewPasswordValidator;
@@ -38,6 +39,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * Handles password ans username reminder requests
@@ -65,7 +68,7 @@ public class ReminderController {
     @RequestMapping(value = {"/retrieveusername", "/newpassword"})
     public void initialize(ModelMap model, HttpServletRequest request) {
         model.addAttribute(ModelKeys.CAPTCHA_HTML, captchaService.createHtml(request));
-        model.addAttribute(ModelKeys.USER, new User());
+        model.addAttribute(ModelKeys.USER, new UserImpl());
     }
 
 
@@ -73,9 +76,10 @@ public class ReminderController {
      * Processes username requests
      */
     @RequestMapping(value = {"/retrieveusername"}, method = RequestMethod.POST)
-    public String requestUsername(@ModelAttribute User user, BindingResult results, Model model,
+    public String requestUsername(@ModelAttribute UserForm userForm, BindingResult results, Model model,
                                   HttpServletRequest request, RedirectAttributes redirectAttributes) {
         log.debug("Requesting username reminder");
+        User user = ModelUtils.convert(userForm);
         if (!validateEmail(user, results, model, request)) {
             return captchaRequest(model, request, ViewNames.USERNAME_REQUEST);
         }
@@ -97,9 +101,10 @@ public class ReminderController {
      * Processes new password requests
      */
     @RequestMapping(value = {"/newpassword"}, method = RequestMethod.POST)
-    public String requestPassword(@ModelAttribute User user, BindingResult results, Model model,
+    public String requestPassword(@ModelAttribute UserForm userForm, BindingResult results, Model model,
                                   HttpServletRequest request, RedirectAttributes redirectAttributes) {
         log.debug("Requesting password reminder");
+        User user = ModelUtils.convert(userForm);
         if (!validateEmail(user, results, model, request)) {
             return captchaRequest(model, request, ViewNames.NEW_PASSWORD_REQUEST);
         }

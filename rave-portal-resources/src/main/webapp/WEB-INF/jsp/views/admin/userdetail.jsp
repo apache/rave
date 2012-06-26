@@ -70,6 +70,7 @@
                         <fieldset>
                             <legend><fmt:message key="admin.userdetail.editdata"/></legend>
                             <input type="hidden" name="token" value="<c:out value="${tokencheck}"/>"/>
+                            <form:hidden path="username" />
                             <div class="control-group">
                                 <label class="control-label" for="email"><fmt:message key="page.general.email"/></label>
                                 <div class="controls"><spring:bind path="email">
@@ -112,7 +113,7 @@
                         </fieldset>
                         <fieldset>
                             <span class="label"><fmt:message key="admin.userdata.authorities"/></span>
-                                <%--@elvariable id="authorities" type="org.apache.rave.portal.model.util.SearchResult<org.apache.rave.portal.model.Authority>"--%>
+                                <%--@elvariable id="authorities" type="org.apache.rave.portal.model.util.SearchResult<org.apache.rave.portal.model.JpaAuthority>"--%>
                             <ul class="checkboxlist">
                                 <form:checkboxes path="authorities" items="${authorities.resultSet}" itemLabel="authority" itemValue="authority" element="li"/>
                             </ul>

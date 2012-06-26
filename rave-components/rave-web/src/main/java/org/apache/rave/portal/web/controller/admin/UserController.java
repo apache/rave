@@ -19,21 +19,15 @@
 
 package org.apache.rave.portal.web.controller.admin;
 
-import static org.apache.rave.portal.web.controller.admin.AdminControllerUtil.DEFAULT_PAGE_SIZE;
-import static org.apache.rave.portal.web.controller.admin.AdminControllerUtil.addNavigationMenusToModel;
-import static org.apache.rave.portal.web.controller.admin.AdminControllerUtil.checkTokens;
-import static org.apache.rave.portal.web.controller.admin.AdminControllerUtil.isDeleteOrUpdate;
-
-import java.beans.PropertyEditorSupport;
-
-import org.apache.rave.portal.model.Authority;
-import org.apache.rave.portal.model.PortalPreference;
-import org.apache.rave.portal.model.User;
+import org.apache.rave.portal.model.*;
+import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.service.AuthorityService;
 import org.apache.rave.portal.service.NewAccountService;
 import org.apache.rave.portal.service.PortalPreferenceService;
 import org.apache.rave.portal.service.UserService;
+import org.apache.rave.portal.web.controller.util.ModelUtils;
+import org.apache.rave.portal.web.model.UserForm;
 import org.apache.rave.portal.web.util.ModelKeys;
 import org.apache.rave.portal.web.util.PortalPreferenceKeys;
 import org.apache.rave.portal.web.util.ViewNames;
@@ -49,15 +43,13 @@ import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.beans.PropertyEditorSupport;
+
+import static org.apache.rave.portal.web.controller.admin.AdminControllerUtil.*;
 
 /**
  * Admin controller to manipulate User data
@@ -129,7 +121,7 @@ public class UserController {
     @RequestMapping(value = "/admin/userdetail/{userid}", method = RequestMethod.GET)
     public String viewUserDetail(@PathVariable("userid") Long userid, Model model) {
         addNavigationMenusToModel(SELECTED_ITEM, model);
-        model.addAttribute(userService.getUserById(userid));
+        model.addAttribute(ModelKeys.USER, userService.getUserById(userid));
         model.addAttribute(ModelKeys.TOKENCHECK, AdminControllerUtil.generateSessionToken());
         return ViewNames.ADMIN_USERDETAIL;
     }
@@ -166,7 +158,7 @@ public class UserController {
             modelMap.addAttribute("missingConfirm", true);
             return ViewNames.ADMIN_USERDETAIL;
         }
-        userService.deleteUser(user.getEntityId());
+        userService.deleteUser(user.getId());
         modelMap.clear();
         status.setComplete();
         return "redirect:/app/admin/users?action=delete";
@@ -176,13 +168,13 @@ public class UserController {
     public String setUpForm(ModelMap model) {
         logger.debug("Initializing new account form");
         AdminControllerUtil.addNavigationMenusToModel(SELECTED_ITEM, (Model) model);
-        model.addAttribute(ModelKeys.NEW_USER, new User());
+        model.addAttribute(ModelKeys.NEW_USER, new UserImpl());
         return ViewNames.ADMIN_NEW_ACCOUNT;
 
     }
 
     @RequestMapping(value = {"/admin/newaccount", "/admin/newaccount/*"}, method = RequestMethod.POST)
-    public String create(@ModelAttribute(value = "newUser") User newUser, BindingResult results, Model model,
+    public String create(@ModelAttribute(value = "newUser") UserForm newUser, BindingResult results, Model model,
                          RedirectAttributes redirectAttributes) {
         logger.debug("Creating a new user account");
         model.addAttribute(ModelKeys.NEW_USER, newUser);
@@ -194,7 +186,7 @@ public class UserController {
         }
         try {
             logger.debug("newaccount.jsp: passed form validation");
-            newAccountService.createNewAccount(newUser);
+            newAccountService.createNewAccount(ModelUtils.convert(newUser));
             redirectAttributes.addFlashAttribute(ModelKeys.REDIRECT_MESSAGE, messageSuccess);
             return "redirect:/app/admin/users";
         } catch (org.springframework.dao.IncorrectResultSizeDataAccessException ex) {
@@ -254,7 +246,7 @@ public class UserController {
 
 
     /**
-     * Mapping between the submitted form value and an {@link Authority}
+     * Mapping between the submitted form value and an {@link org.apache.rave.portal.model.Authority}
      */
     private class AuthorityEditor extends PropertyEditorSupport {
 

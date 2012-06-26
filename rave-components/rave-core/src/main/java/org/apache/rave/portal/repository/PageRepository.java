@@ -19,11 +19,7 @@
 package org.apache.rave.portal.repository;
 
 import org.apache.rave.persistence.Repository;
-import org.apache.rave.portal.model.Page;
-import org.apache.rave.portal.model.PageTemplate;
-import org.apache.rave.portal.model.PageType;
-import org.apache.rave.portal.model.PageUser;
-import org.apache.rave.portal.model.User;
+import org.apache.rave.portal.model.*;
 
 import java.util.List;
 
@@ -65,14 +61,14 @@ public interface PageRepository extends Repository<Page> {
     boolean hasPersonPage(long userId);
 
     /**
-     * Returns a list of pageUser records of a certain pageType.  
-     * Used to get a list of a users pages(user) with render sequencing. 
+     * Returns a list of pageUser records of a certain pageType.
+     * Used to get a list of a users pages(user) with render sequencing.
      * @param userId
      * @param pageType
      * @return a list of pageUser
      */
     public List<PageUser> getPagesForUser(Long userId, PageType pageType);
-    
+
 
     /**
      * Returns a single pageUser tuple based on userId and pageId

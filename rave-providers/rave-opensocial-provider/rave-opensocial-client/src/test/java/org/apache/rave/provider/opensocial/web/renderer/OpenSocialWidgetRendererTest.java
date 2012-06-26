@@ -23,7 +23,10 @@ import org.apache.rave.exception.NotSupportedException;
 import org.apache.rave.portal.model.Region;
 import org.apache.rave.portal.model.RegionWidget;
 import org.apache.rave.portal.model.RegionWidgetPreference;
-import org.apache.rave.portal.model.Widget;
+import org.apache.rave.portal.model.impl.RegionImpl;
+import org.apache.rave.portal.model.impl.RegionWidgetImpl;
+import org.apache.rave.portal.model.impl.RegionWidgetPreferenceImpl;
+import org.apache.rave.portal.model.impl.WidgetImpl;
 import org.apache.rave.portal.web.renderer.RenderScope;
 import org.apache.rave.portal.web.renderer.Renderer;
 import org.apache.rave.portal.web.renderer.ScriptLocation;
@@ -76,21 +79,21 @@ public class OpenSocialWidgetRendererTest {
         expect(openSocialService.getGadgetMetadata(VALID_GADGET_URL)).andReturn(VALID_METADATA);
         replay(openSocialService);
 
-        Widget w = new Widget();
-        w.setEntityId(1L);
+        WidgetImpl w = new WidgetImpl();
+        w.setId(1L);
         w.setType(Constants.WIDGET_TYPE);
         w.setUrl(VALID_GADGET_URL);
-        Region region = new Region(1L);
-        RegionWidget rw = new RegionWidget();
-        rw.setEntityId(1L);
+        Region region = new RegionImpl(1L);
+        RegionWidget rw = new RegionWidgetImpl();
+        rw.setId(1L);
         rw.setCollapsed(VALID_COLLAPSED);
         rw.setWidget(w);
         rw.setRegion(region);
         rw.setHideChrome(VALID_HIDE_CHROME);
         rw.setLocked(VALID_LOCKED);
-        rw.setPreferences(Arrays.asList(new RegionWidgetPreference(1L, 1L, "color", "blue"),
-                                        new RegionWidgetPreference(2L, 1L, "speed", "fast"),
-                                        new RegionWidgetPreference(3L, 1L, null, null)));
+        rw.setPreferences(Arrays.asList((RegionWidgetPreference)new RegionWidgetPreferenceImpl( 1L, "color", "blue"),
+                                        new RegionWidgetPreferenceImpl(1L, "speed", "fast"),
+                                        new RegionWidgetPreferenceImpl( 1L, null, null)));
 
         final String markup =
             "<script>rave.registerWidget(1, {type: 'OpenSocial'," +
@@ -120,10 +123,10 @@ public class OpenSocialWidgetRendererTest {
 
     @Test
     public void render_null() {
-        Widget w = new Widget();
+        WidgetImpl w = new WidgetImpl();
         w.setType(Constants.WIDGET_TYPE);
-        Region region = new Region(1L);
-        RegionWidget rw = new RegionWidget();
+        Region region = new RegionImpl(1L);
+        RegionWidget rw = new RegionWidgetImpl();
         rw.setWidget(w);
         rw.setRegion(region);
 
@@ -147,11 +150,11 @@ public class OpenSocialWidgetRendererTest {
 
     @Test(expected = NotSupportedException.class)
     public void render_invalid() {
-        Widget w = new Widget();
+        WidgetImpl w = new WidgetImpl();
         w.setType("NONE");
         w.setUrl("http://www.example.com/gadget.xml");
-        RegionWidget rw = new RegionWidget();
-        rw.setEntityId(1L);
+        RegionWidget rw = new RegionWidgetImpl();
+        rw.setId(1L);
         rw.setWidget(w);
 
         renderer.render(rw, null);

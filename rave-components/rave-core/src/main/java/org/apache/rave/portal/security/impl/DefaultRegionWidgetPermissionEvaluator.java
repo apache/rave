@@ -18,10 +18,7 @@
  */
 package org.apache.rave.portal.security.impl;
 
-import org.apache.rave.portal.model.Page;
-import org.apache.rave.portal.model.PageUser;
-import org.apache.rave.portal.model.RegionWidget;
-import org.apache.rave.portal.model.User;
+import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.repository.RegionWidgetRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -148,7 +145,7 @@ public class DefaultRegionWidgetPermissionEvaluator extends AbstractModelPermiss
         if (trustedDomainObject) {
             trustedRegionWidget = regionWidget;
         } else {
-            trustedRegionWidget = getTrustedRegionWidget(regionWidget.getEntityId(), trustedRegionWidgetContainer);
+            trustedRegionWidget = getTrustedRegionWidget(regionWidget.getId(), trustedRegionWidgetContainer);
         }
         return isRegionWidgetOwnerByUsername(authentication, getUsernameFromRegionWidget(trustedRegionWidget));
     }
@@ -158,7 +155,7 @@ public class DefaultRegionWidgetPermissionEvaluator extends AbstractModelPermiss
     }
 
     private boolean isRegionWidgetOwnerById(Authentication authentication, Long userId) {
-        return ((User)authentication.getPrincipal()).getEntityId().equals(userId);
+        return ((User)authentication.getPrincipal()).getId().equals(userId);
     }
 
     private boolean verifyRaveSecurityContext(Authentication authentication, RaveSecurityContext raveSecurityContext) {
@@ -176,23 +173,23 @@ public class DefaultRegionWidgetPermissionEvaluator extends AbstractModelPermiss
             throw new IllegalArgumentException("unknown RaveSecurityContext type: " + raveSecurityContext.getType());
         }
     }
-    
+
     private String getUsernameFromRegionWidget(RegionWidget regionWidget) {
         return regionWidget.getRegion().getPage().getOwner().getUsername();
     }
-    
-    private boolean isRegionWidgetMember(Authentication authentication, 
+
+    private boolean isRegionWidgetMember(Authentication authentication,
             RegionWidget regionWidget, List<RegionWidget> trustedRegionWidgetContainer, boolean trustedDomainObject, boolean checkEditorStatus) {
         RegionWidget trustedRegionWidget = null;
         if (trustedDomainObject) {
             trustedRegionWidget = regionWidget;
         } else {
-            trustedRegionWidget = getTrustedRegionWidget(regionWidget.getEntityId(), trustedRegionWidgetContainer);
+            trustedRegionWidget = getTrustedRegionWidget(regionWidget.getId(), trustedRegionWidgetContainer);
         }
-        
+
         Page containerPage = trustedRegionWidget.getRegion().getPage();
-        
-        
+
+
         if (containerPage.getMembers() == null){
             return false;
         }
@@ -202,7 +199,7 @@ public class DefaultRegionWidgetPermissionEvaluator extends AbstractModelPermiss
         String viewer = ((User)authentication.getPrincipal()).getUsername();
         for (PageUser pageUser:containerPage.getMembers()){
             if (pageUser.getUser().getUsername().equals(viewer)){
-                log.info("User "+viewer+" is a member of page "+containerPage.getEntityId());
+                log.info("User "+viewer+" is a member of page "+containerPage.getId());
                 if(checkEditorStatus){
                     return pageUser.isEditor();
                 }

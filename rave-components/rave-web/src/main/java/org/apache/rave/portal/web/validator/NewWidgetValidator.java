@@ -26,7 +26,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 
 /**
- * Validator for adding a new {@link Widget}
+ * Validator for adding a new {@link org.apache.rave.portal.model.Widget}
  */
 @Component
 public class NewWidgetValidator extends WidgetValidator {

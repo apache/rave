@@ -19,18 +19,16 @@
 
 package org.apache.rave.gadgets.oauth.inject;
 
-import java.io.IOException;
-import java.io.InputStream;
-
 import net.oauth.OAuth;
 import net.oauth.OAuthConsumer;
 import net.oauth.OAuthServiceProvider;
 import net.oauth.signature.RSA_SHA1;
 import org.apache.commons.io.IOUtils;
-import org.apache.rave.gadgets.oauth.model.OAuthConsumerStore;
-import org.apache.rave.gadgets.oauth.model.OAuthTokenInfo;
 import org.apache.rave.gadgets.oauth.service.OAuthConsumerStoreService;
 import org.apache.rave.gadgets.oauth.service.OAuthTokenInfoService;
+import org.apache.rave.portal.model.OAuthConsumerStore;
+import org.apache.rave.portal.model.OAuthTokenInfo;
+import org.apache.rave.portal.model.impl.OAuthTokenInfoImpl;
 import org.apache.shindig.auth.SecurityToken;
 import org.apache.shindig.gadgets.GadgetException;
 import org.apache.shindig.gadgets.oauth.BasicOAuthStore;
@@ -38,6 +36,9 @@ import org.apache.shindig.gadgets.oauth.BasicOAuthStoreConsumerKeyAndSecret;
 import org.apache.shindig.gadgets.oauth.OAuthStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * {@link OAuthStore} that retrieves the consumer_key, consumer_secret and key_type from the database
@@ -111,8 +112,9 @@ public class DefaultOAuthStore implements OAuthStore {
     @Override
     public void setTokenInfo(SecurityToken securityToken, ConsumerInfo consumerInfo, String serviceName,
                              String tokenName, TokenInfo tokenInfo) throws GadgetException {
-        OAuthTokenInfo oAuthTokenInfo = new OAuthTokenInfo(securityToken,
-                serviceName, tokenName, tokenInfo);
+        OAuthTokenInfo oAuthTokenInfo = new OAuthTokenInfoImpl(securityToken.getAppUrl(),
+                serviceName, tokenName, tokenInfo.getAccessToken(), tokenInfo.getSessionHandle(),
+                tokenInfo.getTokenSecret(), securityToken.getViewerId(), tokenInfo.getTokenExpireMillis());
         tokenInfoService.saveOAuthTokenInfo(oAuthTokenInfo);
     }
 
@@ -130,7 +132,7 @@ public class DefaultOAuthStore implements OAuthStore {
      * Creates an {@link OAuthConsumer} based on the OAuth signature method
      *
      * @param provider      {@link net.oauth.OAuthServiceProvider}
-     * @param consumerStore {@link OAuthConsumerStore}
+     * @param consumerStore {@link org.apache.rave.portal.model.OAuthConsumerStore}
      *                      persistent OAuth consumer keys & secrets
      * @return {@link OAuthConsumer} if the signature method is supported
      */

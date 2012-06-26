@@ -20,6 +20,10 @@
 package org.apache.rave.portal.web.api.rest;
 
 import org.apache.rave.portal.model.*;
+import org.apache.rave.portal.model.impl.TagImpl;
+import org.apache.rave.portal.model.impl.WidgetCommentImpl;
+import org.apache.rave.portal.model.impl.WidgetRatingImpl;
+import org.apache.rave.portal.model.impl.WidgetTagImpl;
 import org.apache.rave.portal.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,7 +70,7 @@ public class WidgetApi extends AbstractRestApi {
     public void createWidgetComment(@PathVariable long widgetId,
                                     @RequestParam String text,
                                     HttpServletResponse response) {
-        WidgetComment widgetComment = new WidgetComment();
+        WidgetComment widgetComment = new WidgetCommentImpl();
         widgetComment.setWidgetId(widgetId);
         widgetComment.setUser(userService.getAuthenticatedUser());
         widgetComment.setText(text);
@@ -92,7 +96,7 @@ public class WidgetApi extends AbstractRestApi {
 
         WidgetComment widgetComment = widgetCommentService.getWidgetComment(widgetCommentId);
         if (widgetComment == null) {
-            widgetComment = new WidgetComment();
+            widgetComment = new WidgetCommentImpl();
             widgetComment.setWidgetId(widgetId);
             widgetComment.setUser(userService.getAuthenticatedUser());
             widgetComment.setCreatedDate(new Date());
@@ -120,7 +124,7 @@ public class WidgetApi extends AbstractRestApi {
                                    HttpServletResponse response) {
         logger.debug("DELETE WidgetRating received for /api/rest/widgets/{}", widgetId);
 
-        widgetRatingService.removeWidgetRating(widgetId, userService.getAuthenticatedUser().getEntityId());
+        widgetRatingService.removeWidgetRating(widgetId, userService.getAuthenticatedUser().getId());
 
         // send a 204 back for success since there is no content being returned
         response.setStatus(HttpStatus.NO_CONTENT.value());
@@ -132,9 +136,9 @@ public class WidgetApi extends AbstractRestApi {
                                 HttpServletResponse response) {
         logger.debug("POST WidgetRating received for /api/rest/widgets/{} score: {}", widgetId, score);
 
-        WidgetRating widgetRating = new WidgetRating();
+        WidgetRating widgetRating = new WidgetRatingImpl();
         widgetRating.setScore(score);
-        widgetRating.setUserId(userService.getAuthenticatedUser().getEntityId());
+        widgetRating.setUserId(userService.getAuthenticatedUser().getId());
         widgetRating.setWidgetId(widgetId);
         widgetRatingService.saveWidgetRating(widgetRating);
 
@@ -156,7 +160,7 @@ public class WidgetApi extends AbstractRestApi {
         if (tagText != null && !tagText.trim().isEmpty()) {
             WidgetTag existed = widgetTagService.getWidgetTagByWidgetIdAndKeyword(widgetId, tagText);
             if (existed == null) {
-                WidgetTag widgetTag = new WidgetTag();
+                WidgetTag widgetTag = new WidgetTagImpl();
                 widgetTag.setWidgetId(widgetId);
                 widgetTag.setUser(userService.getAuthenticatedUser());
                 widgetTag.setCreatedDate(new Date());
@@ -186,7 +190,7 @@ public class WidgetApi extends AbstractRestApi {
     private Tag getTag(String keyword) {
         Tag tag = tagService.getTagByKeyword(keyword);
         if (tag == null) {
-            tag = new Tag();
+            tag = new TagImpl();
             tag.setKeyword(keyword);
         }
         return tag;

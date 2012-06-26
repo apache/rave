@@ -19,8 +19,9 @@
 
 package org.apache.rave.gadgets.oauth.service;
 
-import org.apache.rave.gadgets.oauth.model.OAuthConsumerStore;
-import org.apache.rave.gadgets.oauth.repository.OAuthConsumerStoreRepository;
+import org.apache.rave.portal.model.OAuthConsumerStore;
+import org.apache.rave.portal.model.impl.OAuthConsumerStoreImpl;
+import org.apache.rave.portal.repository.OAuthConsumerStoreRepository;
 import org.apache.rave.gadgets.oauth.service.impl.DefaultOAuthConsumerStoreService;
 import org.junit.Before;
 import org.junit.Test;
@@ -69,7 +70,7 @@ public class DefaultOAuthConsumerStoreServiceTest {
     }
 
     OAuthConsumerStore getOAuthConsumerStore() {
-        OAuthConsumerStore consumerStore = new OAuthConsumerStore();
+        OAuthConsumerStore consumerStore = new OAuthConsumerStoreImpl();
         consumerStore.setCallbackUrl("http://oauth.gmodules.com/gadgets/oauthcallback");
         consumerStore.setConsumerKey("gadgetConsumer");
         consumerStore.setConsumerSecret("gadgetSecret");

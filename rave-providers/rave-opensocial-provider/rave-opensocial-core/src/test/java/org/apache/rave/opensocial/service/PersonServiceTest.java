@@ -20,9 +20,10 @@
 package org.apache.rave.opensocial.service;
 
 import com.google.common.collect.Lists;
-import org.apache.rave.opensocial.repository.PersonRepository;
+import org.apache.rave.opensocial.repository.OpenSocialPersonRepository;
 import org.apache.rave.opensocial.service.impl.DefaultPersonService;
 import org.apache.rave.opensocial.service.impl.FieldRestrictingPerson;
+import org.apache.rave.portal.model.impl.PersonImpl;
 import org.apache.shindig.auth.SecurityToken;
 import org.apache.shindig.protocol.ProtocolException;
 import org.apache.shindig.protocol.RestfulCollection;
@@ -42,15 +43,9 @@ import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
-import static org.easymock.EasyMock.createNiceMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.CoreMatchers.is;
+import static org.easymock.EasyMock.*;
+import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 public class PersonServiceTest {
@@ -62,13 +57,13 @@ public class PersonServiceTest {
     private static final String ID_1 = "1234";
     private static final String GROUP_ID = "BOO";
     private PersonService service;
-    private PersonRepository repository;
+    private OpenSocialPersonRepository repository;
     private SecurityToken token;
 
     @Before
     public void setup() {
         token = createNiceMock(SecurityToken.class);
-        repository = createNiceMock(PersonRepository.class);
+        repository = createNiceMock(OpenSocialPersonRepository.class);
         service = new DefaultPersonService(repository);
     }
 
@@ -507,16 +502,14 @@ public class PersonServiceTest {
     }
 
     private org.apache.rave.portal.model.Person getDbPerson() {
-        org.apache.rave.portal.model.Person dbPerson = new org.apache.rave.portal.model.Person();
-        dbPerson.setEntityId(Long.parseLong(ID_1));
+        PersonImpl dbPerson = new PersonImpl();
         dbPerson.setUsername(ID_1);
         dbPerson.setDisplayName(DISPLAY_NAME);
         return dbPerson;
     }
 
     private org.apache.rave.portal.model.Person getDbPerson(Long id) {
-        org.apache.rave.portal.model.Person dbPerson = new org.apache.rave.portal.model.Person();
-        dbPerson.setEntityId(id);
+        PersonImpl dbPerson = new PersonImpl();
         dbPerson.setUsername(id.toString());
         dbPerson.setDisplayName(DISPLAY_NAME);
         return dbPerson;

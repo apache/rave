@@ -28,7 +28,7 @@ import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
 /**
-Abstract {@link Validator} for {@link Widget}'s
+Abstract {@link Validator} for {@link org.apache.rave.portal.model.Widget}'s
  */
 public abstract class WidgetValidator implements Validator {
     protected static final String FIELD_URL = "url";
@@ -65,7 +65,7 @@ public abstract class WidgetValidator implements Validator {
 
     /**
      * Checks if a Widget already exists for this URL.
-     * @param widget {@link Widget} to validate
+     * @param widget {@link org.apache.rave.portal.model.Widget} to validate
      * @param errors {@link Errors}
      */
     protected abstract void validateIfWidgetAlreadyExists(Widget widget, Errors errors);
@@ -86,7 +86,7 @@ public abstract class WidgetValidator implements Validator {
     /**
      * Validates fields that may contain a URL
      *
-     * @param widget {@link Widget} to validate
+     * @param widget {@link org.apache.rave.portal.model.Widget} to validate
      * @param errors {@link org.springframework.validation.Errors}
      */
     private void validateUrlFields(Widget widget, Errors errors) {

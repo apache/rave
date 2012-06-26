@@ -16,7 +16,7 @@
 * specific language governing permissions and limitations
 * under the License.
 -->
-<#-- @ftlvariable name="user" type="org.apache.rave.portal.model.User" -->
+<#-- @ftlvariable name="user" type="org.apache.rave.portal.model.JpaUser" -->
 <#-- @ftlvariable name="reminderUrl" type="java.lang.String" -->
 Dear ${user.getUsername()},
 

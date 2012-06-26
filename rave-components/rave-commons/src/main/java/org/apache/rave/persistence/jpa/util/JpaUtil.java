@@ -24,6 +24,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
+import org.apache.rave.exception.NotSupportedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
@@ -94,5 +95,26 @@ public class JpaUtil {
         }
         query.setFirstResult(offset).setMaxResults(pageSize);
         return query.getResultList();
+    }
+
+    /**
+     * Clears an original list and adds all items from the passed in base type list
+     * @param target the list to replace
+     * @param newList the list to replace with
+     * @param clazz the target class
+     * @param <E> The base type
+     * @param <T> The target type
+     */
+    public static <E, T extends E> void clearAndAdd(List<T> target, List<E> newList, Class<T> clazz) {
+        target.clear();
+        if (newList != null) {
+            for (E e : newList) {
+                if (e.getClass().equals(clazz)) {
+                    target.add((T)e);
+                } else {
+                    throw new NotSupportedException("Cannot directly set list composed of non JPA Entities");
+                }
+            }
+        }
     }
 }

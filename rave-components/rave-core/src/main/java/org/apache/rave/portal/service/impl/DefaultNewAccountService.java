@@ -21,6 +21,7 @@ package org.apache.rave.portal.service.impl;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.rave.portal.model.User;
+import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.service.AuthorityService;
 import org.apache.rave.portal.service.NewAccountService;
 import org.apache.rave.portal.service.PageLayoutService;
@@ -64,7 +65,7 @@ public class DefaultNewAccountService implements NewAccountService {
 
         throwExceptionIfUserExists(userName, email);
 
-        User user = new User();
+        User user = new UserImpl();
         //set the required fields
         user.setUsername(userName);
         user.setEmail(email);

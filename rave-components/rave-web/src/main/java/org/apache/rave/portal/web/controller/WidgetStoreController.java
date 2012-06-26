@@ -20,10 +20,9 @@
 package org.apache.rave.portal.web.controller;
 
 import org.apache.rave.portal.model.*;
+import org.apache.rave.portal.model.impl.WidgetImpl;
 import org.apache.rave.portal.service.*;
 import org.apache.rave.portal.web.controller.util.ControllerUtils;
-import org.apache.rave.portal.web.model.NavigationItem;
-import org.apache.rave.portal.web.model.NavigationMenu;
 import org.apache.rave.portal.web.util.ModelKeys;
 import org.apache.rave.portal.web.util.PortalPreferenceKeys;
 import org.apache.rave.portal.web.util.ViewNames;
@@ -91,7 +90,7 @@ public class WidgetStoreController {
         User user = userService.getAuthenticatedUser();
         widgetStoreModelHelper(model, referringPageId, user, view);
         model.addAttribute(ModelKeys.WIDGETS,
-                widgetService.getWidgetsByOwner(user.getEntityId(), offset, getPageSize()));
+                widgetService.getWidgetsByOwner(user.getId(), offset, getPageSize()));
         return view;
     }
 
@@ -112,7 +111,7 @@ public class WidgetStoreController {
         final User user = userService.getAuthenticatedUser();
         widgetStoreModelHelper(model, referringPageId, user, view);
         model.addAttribute(ModelKeys.WIDGET, widgetService.getWidget(widgetId));
-        model.addAttribute(ModelKeys.WIDGET_STATISTICS, widgetService.getWidgetStatistics(widgetId, user.getEntityId()));
+        model.addAttribute(ModelKeys.WIDGET_STATISTICS, widgetService.getWidgetStatistics(widgetId, user.getId()));
         model.addAttribute(ModelKeys.USER_PROFILE, user);
         return view;
     }
@@ -196,7 +195,7 @@ public class WidgetStoreController {
      */
     @RequestMapping(method = RequestMethod.GET, value = "widget/add")
     public String viewAddWidgetForm(Model model, @RequestParam long referringPageId) {
-        final Widget widget = new Widget();
+        final Widget widget = new WidgetImpl();
         final String view = ViewNames.ADD_WIDGET_FORM;
         model.addAttribute(ModelKeys.WIDGET, widget);
         model.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
@@ -208,7 +207,7 @@ public class WidgetStoreController {
      * Validates the form input, if valid, tries to store the Widget data
      *
      * @param widget
-     *            {@link Widget} as submitted by the user
+     *            {@link org.apache.rave.portal.model.Widget} as submitted by the user
      * @param results
      *            {@link BindingResult}
      * @param model
@@ -218,7 +217,7 @@ public class WidgetStoreController {
      * @return if successful the view name of the widget, otherwise the form
      */
     @RequestMapping(method = RequestMethod.POST, value = "widget/add")
-    public String viewAddWidgetResult(@ModelAttribute Widget widget, BindingResult results, Model model,
+    public String viewAddWidgetResult(@ModelAttribute WidgetImpl widget, BindingResult results, Model model,
             @RequestParam long referringPageId) {
         User user = userService.getAuthenticatedUser();
         widgetValidator.validate(widget, results);
@@ -233,7 +232,7 @@ public class WidgetStoreController {
         widget.setOwner(user);
 
         final Widget storedWidget = widgetService.registerNewWidget(widget);
-        return "redirect:/app/store/widget/" + storedWidget.getEntityId() + "?referringPageId=" + referringPageId;
+        return "redirect:/app/store/widget/" + storedWidget.getId() + "?referringPageId=" + referringPageId;
     }
 
     /**
@@ -248,7 +247,7 @@ public class WidgetStoreController {
      */
     private void widgetStoreModelHelper(Model model, long referringPageId, User user, String view) {
         model.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
-        model.addAttribute(ModelKeys.WIDGETS_STATISTICS, widgetService.getAllWidgetStatistics(user.getEntityId()));
+        model.addAttribute(ModelKeys.WIDGETS_STATISTICS, widgetService.getAllWidgetStatistics(user.getId()));
         model.addAttribute(ModelKeys.TAGS, tagService.getAllTags());
         model.addAttribute(ModelKeys.CATEGORIES, categoryService.getAll());
         ControllerUtils.addNavItemsToModel(view, model, referringPageId, user);

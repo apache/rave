@@ -21,15 +21,17 @@ package org.apache.rave.portal.web.api.rest;
 
 import org.apache.rave.portal.model.RegionWidget;
 import org.apache.rave.portal.model.RegionWidgetPreference;
+import org.apache.rave.portal.model.impl.RegionWidgetImpl;
+import org.apache.rave.portal.model.impl.RegionWidgetPreferenceImpl;
 import org.apache.rave.portal.service.RegionWidgetService;
 import org.apache.rave.portal.web.model.RegionWidgetPreferenceListWrapper;
-import static org.hamcrest.CoreMatchers.*;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Arrays;
 
 import static org.easymock.EasyMock.*;
+import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.junit.Assert.assertThat;
 
 public class RegionWidgetApiTest {
@@ -50,8 +52,8 @@ public class RegionWidgetApiTest {
 
     @Test
     public void replaceAllRegionWidgetPreferences_validParams() {
-        RegionWidgetPreferenceListWrapper LIST_WRAPPER = new RegionWidgetPreferenceListWrapper(Arrays.asList(
-                new RegionWidgetPreference(), new RegionWidgetPreference()
+        RegionWidgetPreferenceListWrapper LIST_WRAPPER = new RegionWidgetPreferenceListWrapper(Arrays.asList( (RegionWidgetPreference)
+                new RegionWidgetPreferenceImpl(), new RegionWidgetPreferenceImpl()
         ));
 
         expect(regionWidgetService.saveRegionWidgetPreferences(VALID_REGION_WIDGET_ID, LIST_WRAPPER.getPreferences())).
@@ -67,8 +69,8 @@ public class RegionWidgetApiTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void replaceAllRegionWidgetPreferences_invalidParams() {
-        RegionWidgetPreferenceListWrapper LIST_WRAPPER = new RegionWidgetPreferenceListWrapper(Arrays.asList(
-                new RegionWidgetPreference(), new RegionWidgetPreference()
+        RegionWidgetPreferenceListWrapper LIST_WRAPPER = new RegionWidgetPreferenceListWrapper(Arrays.asList( (RegionWidgetPreference)
+                new RegionWidgetPreferenceImpl(), new RegionWidgetPreferenceImpl()
         ));
 
         expect(regionWidgetService.saveRegionWidgetPreferences(INVALID_REGION_WIDGET_ID, LIST_WRAPPER.getPreferences())).
@@ -80,7 +82,7 @@ public class RegionWidgetApiTest {
 
     @Test
     public void createOrReplaceRegionWidgetPreference_validParams() {
-        RegionWidgetPreference PREFERENCE = new RegionWidgetPreference(1L, VALID_REGION_WIDGET_ID, VALID_PREFERENCE_NAME,
+        RegionWidgetPreference PREFERENCE = new RegionWidgetPreferenceImpl(VALID_REGION_WIDGET_ID, VALID_PREFERENCE_NAME,
                 VALID_PREFERENCE_VALUE);
 
         expect(regionWidgetService.saveRegionWidgetPreference(VALID_REGION_WIDGET_ID, PREFERENCE)).andReturn(PREFERENCE);
@@ -95,7 +97,7 @@ public class RegionWidgetApiTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void createOrReplaceRegionWidgetPreference_invalidParams_preferenceName() {
-        RegionWidgetPreference PREFERENCE = new RegionWidgetPreference(1L, VALID_REGION_WIDGET_ID, VALID_PREFERENCE_NAME,
+        RegionWidgetPreference PREFERENCE = new RegionWidgetPreferenceImpl(VALID_REGION_WIDGET_ID, VALID_PREFERENCE_NAME,
                 VALID_PREFERENCE_VALUE);
 
         regionWidgetApi.createOrReplaceRegionWidgetPreference(VALID_REGION_WIDGET_ID, "different", PREFERENCE);
@@ -103,7 +105,7 @@ public class RegionWidgetApiTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void createOrReplaceRegionWidgetPreference_invalidParams_regionWidgetId() {
-        RegionWidgetPreference PREFERENCE = new RegionWidgetPreference(1L, VALID_REGION_WIDGET_ID, VALID_PREFERENCE_NAME,
+        RegionWidgetPreference PREFERENCE = new RegionWidgetPreferenceImpl(VALID_REGION_WIDGET_ID, VALID_PREFERENCE_NAME,
                 VALID_PREFERENCE_VALUE);
 
         expect(regionWidgetService.saveRegionWidgetPreference(INVALID_REGION_WIDGET_ID, PREFERENCE)).andThrow(
@@ -117,7 +119,7 @@ public class RegionWidgetApiTest {
     public void updateRegionWidgetCollapsedStatus() {
         final boolean COLLAPSED = true;       
         
-        RegionWidget expectedRegionWidget = new RegionWidget(VALID_REGION_WIDGET_ID);
+        RegionWidget expectedRegionWidget = new RegionWidgetImpl(VALID_REGION_WIDGET_ID);
         expectedRegionWidget.setCollapsed(COLLAPSED);
 
         expect(regionWidgetService.saveRegionWidgetCollapsedState(VALID_REGION_WIDGET_ID, COLLAPSED)).andReturn(expectedRegionWidget); 

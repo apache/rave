@@ -20,7 +20,9 @@ package org.apache.rave.portal.security.impl;
 
 import org.apache.rave.portal.model.Page;
 import org.apache.rave.portal.model.Region;
-import org.apache.rave.portal.model.User;
+import org.apache.rave.portal.model.impl.PageImpl;
+import org.apache.rave.portal.model.impl.RegionImpl;
+import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.repository.RegionRepository;
 import org.apache.rave.portal.security.ModelPermissionEvaluator;
 import org.apache.rave.portal.security.util.AuthenticationUtils;
@@ -44,7 +46,7 @@ public class DefaultRegionPermissionEvaluatorTest {
     private RegionRepository mockRegionRepository;
     private Page page;
     private Region region, region2;
-    private User user, user2;
+    private UserImpl user, user2;
     private Authentication mockAuthentication;
     private List<GrantedAuthority> grantedAuthoritiesList;
 
@@ -60,16 +62,16 @@ public class DefaultRegionPermissionEvaluatorTest {
         defaultRegionPermissionEvaluator = new DefaultRegionPermissionEvaluator(mockRegionRepository);
         mockAuthentication = createMock(Authentication.class);
 
-        user = new User();
+        user = new UserImpl();
         user.setUsername(VALID_USERNAME);
-        user.setEntityId(VALID_USER_ID);
-        user2 = new User();
+        user.setId(VALID_USER_ID);
+        user2 = new UserImpl();
         user2.setUsername(VALID_USERNAME2);
-        page = new Page();
-        page.setEntityId(VALID_PAGE_ID);
+        page = new PageImpl();
+        page.setId(VALID_PAGE_ID);
         page.setOwner(user);
-        region = new Region();
-        region.setEntityId(VALID_REGION_ID);
+        region = new RegionImpl();
+        region.setId(VALID_REGION_ID);
         region.setPage(page);
         grantedAuthoritiesList = new ArrayList<GrantedAuthority>();
         grantedAuthoritiesList.add(new SimpleGrantedAuthority("ROLE_USER"));
@@ -112,7 +114,7 @@ public class DefaultRegionPermissionEvaluatorTest {
     @Test
     public void testHasPermission_3args_create_isNotRegionOwner() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
-        expect(mockAuthentication.getPrincipal()).andReturn(user2);
+        expect(mockAuthentication.getPrincipal()).andReturn(user2).anyTimes();
         expect(mockRegionRepository.get(VALID_REGION_ID)).andReturn(region);
         replay(mockAuthentication);
         replay(mockRegionRepository);
@@ -136,7 +138,7 @@ public class DefaultRegionPermissionEvaluatorTest {
     @Test
     public void testHasPermission_3args_delete_isNotRegionOwner() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
-        expect(mockAuthentication.getPrincipal()).andReturn(user2);
+        expect(mockAuthentication.getPrincipal()).andReturn(user2).anyTimes();
         expect(mockRegionRepository.get(VALID_REGION_ID)).andReturn(region);
         replay(mockAuthentication);
         replay(mockRegionRepository);
@@ -160,7 +162,7 @@ public class DefaultRegionPermissionEvaluatorTest {
     @Test
     public void testHasPermission_3args_update_isNotRegionOwner() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
-        expect(mockAuthentication.getPrincipal()).andReturn(user2);
+        expect(mockAuthentication.getPrincipal()).andReturn(user2).anyTimes();
         expect(mockRegionRepository.get(VALID_REGION_ID)).andReturn(region);
         replay(mockAuthentication);
         replay(mockRegionRepository);
@@ -184,7 +186,7 @@ public class DefaultRegionPermissionEvaluatorTest {
     @Test
     public void testHasPermission_3args_read_isNotRegionOwner() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
-        expect(mockAuthentication.getPrincipal()).andReturn(user2);
+        expect(mockAuthentication.getPrincipal()).andReturn(user2).anyTimes();
         expect(mockRegionRepository.get(VALID_REGION_ID)).andReturn(region);
         replay(mockAuthentication);
         replay(mockRegionRepository);
@@ -216,7 +218,7 @@ public class DefaultRegionPermissionEvaluatorTest {
     @Test
     public void testHasPermission_4args_create_isNotRegionOwner() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
-        expect(mockAuthentication.getPrincipal()).andReturn(user2);
+        expect(mockAuthentication.getPrincipal()).andReturn(user2).anyTimes();
         expect(mockRegionRepository.get(VALID_REGION_ID)).andReturn(region);
         replay(mockAuthentication);
         replay(mockRegionRepository);
@@ -240,7 +242,7 @@ public class DefaultRegionPermissionEvaluatorTest {
     @Test
     public void testHasPermission_4args_delete_isNotRegionOwner() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
-        expect(mockAuthentication.getPrincipal()).andReturn(user2);
+        expect(mockAuthentication.getPrincipal()).andReturn(user2).anyTimes();
         expect(mockRegionRepository.get(VALID_REGION_ID)).andReturn(region);
         replay(mockAuthentication);
         replay(mockRegionRepository);
@@ -264,7 +266,7 @@ public class DefaultRegionPermissionEvaluatorTest {
     @Test
     public void testHasPermission_4args_read_isNotRegionOwner() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
-        expect(mockAuthentication.getPrincipal()).andReturn(user2);
+        expect(mockAuthentication.getPrincipal()).andReturn(user2).anyTimes();
         expect(mockRegionRepository.get(VALID_REGION_ID)).andReturn(region);
         replay(mockAuthentication);
         replay(mockRegionRepository);
@@ -288,7 +290,7 @@ public class DefaultRegionPermissionEvaluatorTest {
     @Test
     public void testHasPermission_4args_update_isNotRegionOwner() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
-        expect(mockAuthentication.getPrincipal()).andReturn(user2);
+        expect(mockAuthentication.getPrincipal()).andReturn(user2).anyTimes();
         expect(mockRegionRepository.get(VALID_REGION_ID)).andReturn(region);
         replay(mockAuthentication);
         replay(mockRegionRepository);
