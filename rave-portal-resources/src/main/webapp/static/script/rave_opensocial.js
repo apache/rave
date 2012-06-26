@@ -178,6 +178,10 @@ rave.opensocial = rave.opensocial || (function () {
             // display the gadget in custom edit prefs view
             renderGadgetView(rave.opensocial.VIEW_NAMES.PREFERENCES, this);
         };
+        gadget.renderView = function(viewName) {
+            // render the gadget in the view supplied.  This can be used to render a gadget in any custom-defined view
+            renderGadgetView(viewName, this);
+        };
 
         // if the gadget has prefences to edit, or has the Preferences view
         // enable the edit prefs menu item
