@@ -1040,6 +1040,11 @@ insert into tag (entity_id, keyword)
 values (@tag_2_id, 'wikipedia');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @tag_seq;
 
+set @tag_3_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @tag_seq);
+insert into tag (entity_id, keyword)
+values (@tag_3_id, 'misc');
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @tag_seq;
+
 
 set @next_widget_tag_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @widget_tag_seq);
 insert into widget_tag (entity_id, widget_id, tag_id)

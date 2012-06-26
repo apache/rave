@@ -67,15 +67,15 @@ public class JpaTagRepositoryTest {
     @Test
     public void getList() {
         List<Tag> list = repository.getAll();
-        assertTrue(list.size() == 2);
-        assertEquals(list.iterator().next().getKeyword(), "news");
-        assertTrue(list.iterator().next().getWidgets().size() == 1);
+        assertTrue(list.size() == 3);
+        assertEquals(list.iterator().next().getKeyword(), "misc");
+        assertTrue(list.iterator().next().getWidgets().size() == 0);
     }
 
     @Test
     public void countAll() {
         int count = repository.getCountAll();
-        assertTrue("Found at least 1 tag", count == 2);
+        assertTrue("Found at least 1 tag", count == 3);
     }
 
     @Test
@@ -122,7 +122,7 @@ public class JpaTagRepositoryTest {
     @Transactional
     @Rollback(true)
     public void delete_valid_jpaTag(){
-        String keyword = "news";
+        String keyword = "misc";
         JpaTag jpaTag = (JpaTag)repository.getByKeyword(keyword);
         assertNotNull(jpaTag);
         repository.delete(jpaTag);
@@ -133,7 +133,7 @@ public class JpaTagRepositoryTest {
     @Transactional
     @Rollback(true)
     public void delete_valid_tagImpl(){
-        String keyword = "news";
+        String keyword = "misc";
         // make sure we do have a tag with the keyword in the db
         JpaTag control = (JpaTag)repository.getByKeyword(keyword);
         assertNotNull(control);

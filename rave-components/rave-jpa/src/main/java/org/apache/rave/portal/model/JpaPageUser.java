@@ -52,7 +52,7 @@ public class JpaPageUser implements BasicEntity, Serializable, PageUser {
     private JpaUser user;
 
     @ManyToOne(fetch=FetchType.EAGER)
-    @JoinColumn(name = "page_id", nullable=false)
+    @JoinColumn(name = "page_id")
     private JpaPage page;
 
     @Basic(optional=false) @Column(name="editor")
