@@ -77,7 +77,14 @@ public class JpaWidgetTagRepositoryTest {
         JpaWidgetTag jpaWidgetTag = (JpaWidgetTag)repository.getByWidgetIdAndTag(widgetId, keyword);
         assertNull(jpaWidgetTag);
     }
-    
+
+    @Test
+    public void getByWidgetIdAndTag_null(){
+        Long widgetId = 3L;
+        JpaWidgetTag jpaWidgetTag = (JpaWidgetTag)repository.getByWidgetIdAndTag(widgetId, null);
+        assertNull(jpaWidgetTag);
+    }
+
     @Test
     public void get_valid(){
         Long id = 1L;
@@ -85,7 +92,7 @@ public class JpaWidgetTagRepositoryTest {
         assertNotNull(widgetTag);
         assertEquals(id, widgetTag.getEntityId());
     }
-    
+
     @Test
     public void get_invalid(){
         Long id = 1000291L;
@@ -94,7 +101,6 @@ public class JpaWidgetTagRepositoryTest {
     }
 
     @Test
-    @Transactional
     @Rollback(true)
     public void save() {
         WidgetTag widgetTag = new JpaWidgetTag();
@@ -113,16 +119,14 @@ public class JpaWidgetTagRepositoryTest {
     }
 
     @Test(expected = NullPointerException.class)
-    @Transactional
     @Rollback(true)
     public void save_null() {
         WidgetTag widgetTag = null;
         JpaWidgetTag jpaWidgetTag = (JpaWidgetTag)repository.save(widgetTag);
         assertNull(jpaWidgetTag);
     }
-    
+
     @Test
-    @Transactional
     @Rollback(true)
     public void delete_valid(){
         Long id = 1L;
@@ -133,7 +137,6 @@ public class JpaWidgetTagRepositoryTest {
     }
 
     @Test
-    @Transactional
     @Rollback(true)
     public void delete_jpaWidgetTag_valid(){
         Long id = 1L;
@@ -144,7 +147,6 @@ public class JpaWidgetTagRepositoryTest {
     }
 
     @Test(expected = NullPointerException.class)
-    @Transactional
     @Rollback(true)
     public void delete_invalid(){
         Long id = 17827873261L;
@@ -152,5 +154,10 @@ public class JpaWidgetTagRepositoryTest {
         assertNull(widgetTag);
         repository.delete(widgetTag);
         assertNull(repository.get(id));
+    }
+
+    @Test
+    public void getType() {
+        assertEquals(repository.getType(), JpaWidgetTag.class);
     }
 }

@@ -23,7 +23,9 @@ import org.apache.rave.portal.model.JpaRegion;
 import org.apache.rave.portal.model.JpaRegionWidget;
 import org.apache.rave.portal.model.Region;
 import org.apache.rave.portal.model.RegionWidget;
+import org.apache.rave.portal.model.impl.RegionImpl;
 import org.apache.rave.portal.repository.RegionRepository;
+import org.hamcrest.CoreMatchers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +39,7 @@ import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
 
 import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 
 @Transactional
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -91,6 +93,7 @@ public class JpaRegionRepositoryTest {
     }
 
     @Test
+    @Rollback(true)
     public void save_cascadePersist() {
         JpaRegion region = new JpaRegion();
         region.setRegionWidgets(new ArrayList<RegionWidget>());
@@ -108,6 +111,7 @@ public class JpaRegionRepositoryTest {
     }
 
     @Test
+    @Rollback(true)
     public void save_cascadeMerge() {
 
         JpaRegion region = new JpaRegion();
@@ -128,6 +132,7 @@ public class JpaRegionRepositoryTest {
     }
 
     @Test
+    @Rollback(true)
     public void save_cascadeOrphan() {
         JpaRegion region = (JpaRegion)repository.get(1L);
         long id = region.getRegionWidgets().get(0).getId();
@@ -141,4 +146,29 @@ public class JpaRegionRepositoryTest {
         assertThat(widget, is(nullValue()));
     }
 
+    @Test
+    public void getType() {
+        assertEquals(repository.getType(), JpaRegion.class);
+    }
+
+    @Test
+    @Rollback(true)
+    public void delete_jpaObject() {
+        Region r = repository.get(REGION_ID);
+        assertThat(r, is(notNullValue()));
+        repository.delete(r);
+        r = repository.get(REGION_ID);
+        assertThat(r, is(nullValue()));
+    }
+
+    @Test
+    @Rollback(true)
+    public void delete_implObject() {
+        Region r = repository.get(REGION_ID);
+        assertThat(r, is(notNullValue()));
+        RegionImpl impl = new RegionImpl(r.getId());
+        repository.delete(impl);
+        r = repository.get(REGION_ID);
+        assertThat(r, is(nullValue()));
+    }
 }

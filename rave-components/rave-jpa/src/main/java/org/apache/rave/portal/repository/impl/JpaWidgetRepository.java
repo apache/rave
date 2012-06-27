@@ -256,17 +256,21 @@ public class JpaWidgetRepository implements WidgetRepository {
 
     @Override
     public List<Widget> getWidgetsByTag(String tagKeyword, int offset, int pageSize) {
-        if (tagKeyword!=null) tagKeyword =tagKeyword.toLowerCase();
+        if (tagKeyword != null) {
+            tagKeyword = tagKeyword.toLowerCase();
+        }
         TypedQuery<JpaWidget> query = manager.createNamedQuery(JpaWidget.WIDGET_GET_BY_TAG, JpaWidget.class);
-        query.setParameter(JpaWidget.PARAM_TAG, tagKeyword.toLowerCase());
+        query.setParameter(JpaWidget.PARAM_TAG, tagKeyword);
         return CollectionUtils.<Widget>toBaseTypedList(getPagedResultList(query, offset, pageSize));
     }
 
     @Override
     public int getCountByTag(String tagKeyword) {
-        if (tagKeyword!=null) tagKeyword =tagKeyword.toLowerCase();
+        if (tagKeyword != null) {
+            tagKeyword = tagKeyword.toLowerCase();
+        }
         Query query = manager.createNamedQuery(JpaWidget.WIDGET_COUNT_BY_TAG);
-        query.setParameter(JpaWidget.PARAM_TAG,tagKeyword);
+        query.setParameter(JpaWidget.PARAM_TAG, tagKeyword);
         Number countResult = (Number) query.getSingleResult();
         return countResult.intValue();
     }

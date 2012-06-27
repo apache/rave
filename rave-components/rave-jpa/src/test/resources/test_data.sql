@@ -355,6 +355,11 @@ INSERT INTO widget_rating(entity_id, widget_id, user_id, score)
 values (@next_widget_rating, 2, 1, 10);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @widget_rating_seq;
 
+set @next_widget_rating = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @widget_rating_seq);
+INSERT INTO widget_rating(entity_id, widget_id, user_id, score)
+values (@next_widget_rating, 2, 2, 0);
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @widget_rating_seq;
+
 set @page_2_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @page_seq);
 INSERT INTO page (entity_id, name, owner_id, parent_page_id, page_layout_id, page_type)
 values (@page_2_id, 'Social', @user_id_1, null, @two_col_id, 'USER');

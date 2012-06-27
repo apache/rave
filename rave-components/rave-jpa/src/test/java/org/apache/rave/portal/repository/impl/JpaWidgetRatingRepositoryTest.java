@@ -19,7 +19,9 @@
 
 package org.apache.rave.portal.repository.impl;
 
+import org.apache.rave.portal.model.JpaPage;
 import org.apache.rave.portal.model.JpaWidgetRating;
+import org.apache.rave.portal.model.WidgetRating;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +50,7 @@ public class JpaWidgetRatingRepositoryTest {
 
     private Long INVALID_WIDGET_ID = 123L;
     private Long INVALID_USER_ID = 234L;
-    
+
     @PersistenceContext
     private EntityManager sharedManager;
 
@@ -70,5 +72,54 @@ public class JpaWidgetRatingRepositoryTest {
     @Rollback(true)
     public void deleteAll() {
         assertThat(repository.deleteAll(VALID_USER_ID), is(2));
+    }
+
+    @Test
+    public void getType() {
+        assertEquals(repository.getType(), JpaWidgetRating.class);
+    }
+
+    @Test
+    @Transactional(readOnly=false)
+    @Rollback(true)
+    public void delete() {
+        WidgetRating wr = repository.get(VALID_WIDGET_RATING_ID);
+        assertThat(wr, is(notNullValue()));
+        repository.delete(wr);
+        wr = repository.get(VALID_WIDGET_RATING_ID);
+        assertThat(wr, is(nullValue()));
+    }
+
+    @Test
+    @Transactional(readOnly=false)
+    @Rollback(true)
+    public void save_new() {
+        final int EXPECTED_SCORE = 1;
+
+        WidgetRating wr = new JpaWidgetRating();
+        wr.setScore(EXPECTED_SCORE);
+        wr.setUserId(VALID_USER_ID);
+        wr.setWidgetId(VALID_WIDGET_ID);
+        assertThat(wr.getId(), is(nullValue()));
+        repository.save(wr);
+        long newId = wr.getId();
+        assertThat(newId > 0, is(true));
+        WidgetRating newRating = repository.get(newId);
+        assertThat(newRating.getScore(), is(EXPECTED_SCORE));
+        assertThat(newRating.getUserId(), is(VALID_USER_ID));
+        assertThat(newRating.getWidgetId(), is(VALID_WIDGET_ID));
+    }
+
+    @Test
+    @Transactional(readOnly=false)
+    @Rollback(true)
+    public void save_existing() {
+        int EXPECTED_SCORE = 99;
+        WidgetRating wr = repository.get(VALID_WIDGET_RATING_ID);
+        assertThat(wr.getScore(), is(not(EXPECTED_SCORE)));
+        wr.setScore(99);
+        repository.save(wr);
+        WidgetRating updatedRating = repository.get(VALID_WIDGET_RATING_ID);
+        assertThat(updatedRating.getScore(), is(EXPECTED_SCORE));
     }
 }

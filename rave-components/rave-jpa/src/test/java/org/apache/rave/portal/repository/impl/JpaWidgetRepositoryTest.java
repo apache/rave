@@ -39,10 +39,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import static junit.framework.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * Test class for {@link org.apache.rave.portal.repository.impl.JpaWidgetRepository}
@@ -59,6 +57,11 @@ public class JpaWidgetRepositoryTest {
 
     @Autowired
     private WidgetRepository repository;
+
+    @Test
+    public void getType() {
+        assertEquals(repository.getType(), JpaWidget.class);
+    }
 
     @Test
     public void getById_valid() {
@@ -96,6 +99,8 @@ public class JpaWidgetRepositoryTest {
     public void getByFreeTextSearch() {
         List<Widget> widgets = repository.getByFreeTextSearch("gAdGet", 1, 1);
         assertEquals(1, widgets.size());
+
+        assertThat(repository.getByFreeTextSearch("", 1, 1).isEmpty(), is(true));
     }
 
     @Test
@@ -163,6 +168,10 @@ public class JpaWidgetRepositoryTest {
         List<Widget> preview = repository.getByStatusAndTypeAndFreeTextSearch(WidgetStatus.PREVIEW, type,
                 searchTerm, 0, 1);
         assertEquals(0, preview.size());
+
+        assertThat(repository.getByStatusAndTypeAndFreeTextSearch(WidgetStatus.PREVIEW, type, "", 0, 1).size(), is(1));
+        assertThat(repository.getByStatusAndTypeAndFreeTextSearch(WidgetStatus.PUBLISHED, "", searchTerm, 0, 1).size(), is(1));
+        assertThat(repository.getByStatusAndTypeAndFreeTextSearch(null, type, searchTerm, 0, 1).size(), is(1));
     }
 
     @Test
@@ -217,7 +226,7 @@ public class JpaWidgetRepositoryTest {
 
         WidgetStatistics gadgetTwo = widgetStatistics.get(2L);
         assertEquals(1, gadgetTwo.getTotalLike());
-        assertEquals(0, gadgetTwo.getTotalDislike());
+        assertEquals(1, gadgetTwo.getTotalDislike());
         assertEquals(10, gadgetTwo.getUserRating());
         assertEquals(10, gadgetOne.getTotalUserCount());
     }
@@ -266,12 +275,12 @@ public class JpaWidgetRepositoryTest {
         Widget widget = repository.get(2L);
         List<WidgetRating> ratings = widget.getRatings();
         assertNotNull(ratings);
-        assertEquals(1, ratings.size());
+        assertEquals(2, ratings.size());
 
         WidgetStatistics widgetStatistics = repository.getWidgetStatistics(widget.getId(), 1L);
         assertNotNull(widgetStatistics);
         assertEquals(1, widgetStatistics.getTotalLike());
-        assertEquals(0, widgetStatistics.getTotalDislike());
+        assertEquals(1, widgetStatistics.getTotalDislike());
         assertEquals(10, widgetStatistics.getTotalUserCount());
         assertEquals(JpaWidgetRating.LIKE.intValue(), widgetStatistics.getUserRating());
     }
@@ -365,7 +374,7 @@ public class JpaWidgetRepositoryTest {
 
     @Test
     public void getWidgetsByTag() {
-      String tag = "news";
+        String tag = "news";
         List<Widget> widgets = repository.getWidgetsByTag(tag, 0, 10);
         assertTrue(widgets.size() == 1);
         assertTrue(widgets.iterator().next().getId() == 3);
@@ -386,6 +395,12 @@ public class JpaWidgetRepositoryTest {
         assertTrue(widgets.size() == 1);
         assertTrue(widgets.iterator().next().getId() == 3);
         assertTrue(repository.getCountByTag("NEWS") == 1);
+
+        tag = null;
+        widgets = repository.getWidgetsByTag(tag, 0, 10);
+        assertTrue(widgets.isEmpty());
+        assertTrue(repository.getCountByTag(tag) == 0);
+
     }
 
     @Test
@@ -456,5 +471,17 @@ public class JpaWidgetRepositoryTest {
         sharedManager.flush();
         sharedManager.refresh(widget);
         assertThat(widget.getOwner(), is(nullValue()));
+    }
+
+    @Test
+    @Transactional(readOnly = false)
+    @Rollback
+    public void delete() {
+        final long WIDGET_ID = 2L;
+
+        Widget widget = repository.get(WIDGET_ID);
+        assertThat(widget, is(notNullValue()));
+        repository.delete(widget);
+        assertThat(repository.get(WIDGET_ID), is(nullValue()));
     }
 }

@@ -19,6 +19,7 @@
 package org.apache.rave.portal.repository.impl;
 
 import org.apache.rave.portal.model.*;
+import org.apache.rave.portal.model.impl.PageImpl;
 import org.apache.rave.portal.repository.PageRepository;
 import org.apache.rave.portal.repository.PageTemplateRepository;
 import org.apache.rave.portal.repository.UserRepository;
@@ -33,6 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.*;
@@ -206,6 +208,41 @@ public class JpaPageRepositoryTest {
     }
 
     @Test
+    @Transactional(readOnly=false)
+    @Rollback(true)
+    public void deletePage_pageWithSubPage() {
+        Page p = repository.get(PERSON_PROFILE_PAGE_ID);
+        assertThat(p, is(notNullValue()));
+        // grab all the sub page ids
+        List<Long> subPageIds = new ArrayList<Long>();
+        assertThat(p.getSubPages().isEmpty(), is(false));
+        for (Page subPage : p.getSubPages()) {
+            subPageIds.add(subPage.getId());
+        }
+
+        repository.delete(p);
+        p = repository.get(PERSON_PROFILE_PAGE_ID);
+        // verify page is deleted along with all sub pages
+        assertThat(p, is(nullValue()));
+        for (Long i : subPageIds){
+            assertThat(repository.get(i), is(nullValue()));
+        }
+    }
+
+    @Test
+    @Transactional(readOnly=false)
+    @Rollback(true)
+    public void deletePage_implObject() {
+        Page p = repository.get(USER_ID);
+        assertThat(p, is(notNullValue()));
+        PageImpl impl = new PageImpl(p.getId());
+
+        repository.delete(impl);
+        p = repository.get(USER_ID);
+        assertThat(p, is(nullValue()));
+    }
+
+    @Test
     @Transactional(readOnly = false)
     @Rollback(true)
     public void createPageForUser_validUser(){
@@ -248,5 +285,10 @@ public class JpaPageRepositoryTest {
     @Test
     public void hasPersonPage_false(){
         assertFalse(repository.hasPersonPage(CREATED_USER_ID));
+    }
+
+    @Test
+    public void getType() {
+        assertEquals(repository.getType(), JpaPage.class);
     }
 }

@@ -63,7 +63,7 @@ public class JpaPageRepository implements PageRepository {
     @Override
     public void delete(Page item) {
         JpaPage jpaPage = item instanceof JpaPage ? (JpaPage)item : (JpaPage)get(item.getId());
-        for(Page p : item.getSubPages()) {
+        for(Page p : jpaPage.getSubPages()) {
             delete(p);
         }
         //Must remove the page users from the page in order for OpenJpa to persist change

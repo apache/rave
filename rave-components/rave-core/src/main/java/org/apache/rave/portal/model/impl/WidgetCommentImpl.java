@@ -31,6 +31,12 @@ public class WidgetCommentImpl implements WidgetComment {
     private Date lastModifiedDate;
     private Date createdDate;
 
+    public WidgetCommentImpl() {}
+
+    public WidgetCommentImpl(Long id) {
+        this.id = id;
+    }
+
     @Override
     public Long getId() {
         return id;
