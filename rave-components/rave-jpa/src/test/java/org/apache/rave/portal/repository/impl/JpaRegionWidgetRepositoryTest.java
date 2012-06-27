@@ -23,6 +23,7 @@ import org.apache.rave.portal.model.JpaRegionWidget;
 import org.apache.rave.portal.model.JpaRegionWidgetPreference;
 import org.apache.rave.portal.model.RegionWidget;
 import org.apache.rave.portal.model.RegionWidgetPreference;
+import org.apache.rave.portal.model.impl.RegionWidgetImpl;
 import org.apache.rave.portal.repository.RegionWidgetRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,6 +38,7 @@ import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
 
 import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 @Transactional
@@ -53,6 +55,11 @@ public class JpaRegionWidgetRepositoryTest {
 
     @Autowired
     private RegionWidgetRepository repository;
+
+    @Test
+    public void getType() {
+        assertEquals(repository.getType(), JpaRegionWidget.class);
+    }
 
     @Test
     public void getById_validId() {
@@ -147,6 +154,27 @@ public class JpaRegionWidgetRepositoryTest {
 
         assertThat(saved.getPreferences().size(), is(equalTo(0)));
         assertThat(preference, is(nullValue()));
+    }
+
+    @Test
+    @Rollback(true)
+    public void delete_jpaObject() {
+        RegionWidget regionWidget = repository.get(VALID_REGION_WIDGET_ID);
+        assertThat(regionWidget, is(notNullValue()));
+        repository.delete(regionWidget);
+        regionWidget = repository.get(VALID_REGION_WIDGET_ID);
+        assertThat(regionWidget, is(nullValue()));
+    }
+
+    @Test
+    @Rollback(true)
+    public void delete_implObject() {
+        RegionWidget regionWidget = repository.get(VALID_REGION_WIDGET_ID);
+        assertThat(regionWidget, is(notNullValue()));
+        RegionWidgetImpl impl = new RegionWidgetImpl(regionWidget.getId());
+        repository.delete(impl);
+        regionWidget = repository.get(VALID_REGION_WIDGET_ID);
+        assertThat(regionWidget, is(nullValue()));
     }
 
     private long addPreferenceToRegionWidget(long validRegionWidgetId) {

@@ -22,6 +22,7 @@ package org.apache.rave.portal.repository.impl;
 import junit.framework.Assert;
 import org.apache.rave.portal.model.Authority;
 import org.apache.rave.portal.model.JpaUser;
+import org.apache.rave.portal.model.JpaWidget;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.repository.AuthorityRepository;
 import org.apache.rave.portal.repository.UserRepository;
@@ -176,4 +177,16 @@ public class JpaUserRepositoryTest {
             previousFamilyName = familyName;
         }
     }
+
+    @Test
+    public void getType() {
+        assertEquals(repository.getType(), JpaUser.class);
+    }
+
+    @Test
+    public void getByForgotPasswordHash() {
+        User user = repository.getByForgotPasswordHash("ABC123");
+        assertThat(user.getId(), is(4L));
+    }
+
 }

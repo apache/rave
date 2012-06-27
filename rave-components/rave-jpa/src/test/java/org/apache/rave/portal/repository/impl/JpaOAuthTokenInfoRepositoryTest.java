@@ -20,7 +20,9 @@
 package org.apache.rave.portal.repository.impl;
 
 import org.apache.rave.portal.model.JpaOAuthTokenInfo;
+import org.apache.rave.portal.model.JpaPerson;
 import org.apache.rave.portal.model.OAuthTokenInfo;
+import org.apache.rave.portal.model.Person;
 import org.apache.rave.portal.repository.OAuthTokenInfoRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,6 +36,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.*;
 
 /**
  * Test class for {@link org.apache.rave.portal.repository.impl.JpaOAuthTokenInfoRepository}
@@ -44,6 +47,7 @@ import static org.junit.Assert.*;
         "classpath:test-dataContext.xml"})
 public class JpaOAuthTokenInfoRepositoryTest {
 
+    private static final Long VALID_ID = 1L;
     private static final String INVALID_USER = "Invalid user";
     private static final String VALID_USER = "john.doe";
     private static final String APP_URL = "http://localhost:8080/samplecontainer/examples/oauth.xml";
@@ -55,6 +59,20 @@ public class JpaOAuthTokenInfoRepositoryTest {
 
     @Autowired
     OAuthTokenInfoRepository repository;
+
+    @Test
+    public void getType() {
+        assertEquals(repository.getType(), JpaOAuthTokenInfo.class);
+    }
+
+    @Test
+    public void get() {
+        JpaOAuthTokenInfo oAuthTokenInfo = (JpaOAuthTokenInfo) repository.get(VALID_ID);
+        assertThat(oAuthTokenInfo.getEntityId(), is(VALID_ID));
+        assertThat(oAuthTokenInfo.getAppUrl(), is(APP_URL));
+        assertThat(oAuthTokenInfo.getTokenName(), is(TOKEN_NAME));
+        assertThat(oAuthTokenInfo.getServiceName(), is(SERVICE_NAME));
+    }
 
     @Test
     public void testFindOAuthTokenInfo() throws Exception {
@@ -83,4 +101,34 @@ public class JpaOAuthTokenInfoRepositoryTest {
         assertNull(tokenInfo);
     }
 
+    @Test
+    @Transactional(readOnly=false)
+    @Rollback(true)
+    public void save_new() {
+        final String NEW_URL = "testurl";
+        final String NEW_SERVICE_NAME = "testservice";
+        JpaOAuthTokenInfo oAuthTokenInfo = new JpaOAuthTokenInfo();
+        oAuthTokenInfo.setAppUrl(NEW_URL);
+        oAuthTokenInfo.setServiceName(NEW_SERVICE_NAME);
+
+        assertThat(oAuthTokenInfo.getEntityId(), is(nullValue()));
+        repository.save(oAuthTokenInfo);
+        long newId = oAuthTokenInfo.getEntityId();
+        assertThat(newId > 0, is(true));
+        JpaOAuthTokenInfo newOAuthTokenInfo = (JpaOAuthTokenInfo) repository.get(newId);
+        assertThat(newOAuthTokenInfo.getServiceName(), is(NEW_SERVICE_NAME));
+        assertThat(newOAuthTokenInfo.getAppUrl(), is(NEW_URL));
+    }
+
+    @Test
+    @Transactional(readOnly=false)
+    @Rollback(true)
+    public void save_existing() {
+        final String UPDATED_SERVICE_NAME = "updated service name";
+        OAuthTokenInfo oAuthTokenInfo = repository.get(VALID_ID);
+        assertThat(oAuthTokenInfo.getServiceName(), is(not(UPDATED_SERVICE_NAME)));
+        oAuthTokenInfo.setServiceName(UPDATED_SERVICE_NAME);
+        repository.save(oAuthTokenInfo);
+        assertThat(repository.get(VALID_ID).getServiceName(), is(UPDATED_SERVICE_NAME));
+    }
 }

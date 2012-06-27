@@ -20,6 +20,7 @@
 package org.apache.rave.portal.repository.impl;
 
 import org.apache.rave.portal.model.JpaTag;
+import org.apache.rave.portal.model.JpaUser;
 import org.apache.rave.portal.model.Tag;
 import org.apache.rave.portal.model.impl.TagImpl;
 import org.apache.rave.portal.model.WidgetTag;
@@ -57,6 +58,11 @@ public class JpaTagRepositoryTest {
     private static final Long VALID_ID = 1L;
 
     @Test
+    public void getType() {
+        assertEquals(repository.getType(), JpaTag.class);
+    }
+
+    @Test
     public void getById_validId() {
         final Tag tag = repository.get(VALID_ID);
         assertNotNull(tag);
@@ -92,6 +98,8 @@ public class JpaTagRepositoryTest {
         tag = repository.getByKeyword("   news  ");
         assertNotNull(tag);
         assertTrue(((JpaTag)tag).getEntityId() == 1);
+        tag = repository.getByKeyword(null);
+        assertNull(tag);
     }
 
     @Test
@@ -154,4 +162,10 @@ public class JpaTagRepositoryTest {
         repository.delete(tag);
     }
 
+    @Test
+    public void getAvailableTagsByWidgetId() {
+        final Long WIDGET_ID = 3L;
+        List<Tag> list = repository.getAvailableTagsByWidgetId(WIDGET_ID);
+        assertTrue(list.size() == 2);
+    }
 }

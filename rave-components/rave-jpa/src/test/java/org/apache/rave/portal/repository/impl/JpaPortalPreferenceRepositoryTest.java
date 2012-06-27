@@ -19,6 +19,7 @@
 
 package org.apache.rave.portal.repository.impl;
 
+import org.apache.rave.portal.model.JpaPortalPreference;
 import org.apache.rave.portal.model.PortalPreference;
 import org.apache.rave.portal.repository.PortalPreferenceRepository;
 import org.junit.Test;
@@ -34,10 +35,8 @@ import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.List;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertNull;
-import static junit.framework.Assert.assertTrue;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.*;
 
 /**
  * Test class for {@link JpaPortalPreferenceRepository}
@@ -47,11 +46,26 @@ import static junit.framework.Assert.assertTrue;
 @ContextConfiguration(locations = {"classpath:test-dataContext.xml", "classpath:test-applicationContext.xml"})
 public class JpaPortalPreferenceRepositoryTest {
 
+    private final Long VALID_ID = 1L;
+
     @PersistenceContext
     private EntityManager manager;
 
     @Autowired
     private PortalPreferenceRepository repository;
+
+    @Test
+    public void getType() {
+        assertEquals(repository.getType(), JpaPortalPreference.class);
+    }
+
+    @Test
+    public void get() {
+        JpaPortalPreference p = (JpaPortalPreference) repository.get(VALID_ID);
+        assertThat(p.getEntityId(), is(VALID_ID));
+        assertThat(p.getKey(), is("color"));
+        assertThat(p.getValues().size(), is(3));
+    }
 
     @Test
     public void testGetAll() {

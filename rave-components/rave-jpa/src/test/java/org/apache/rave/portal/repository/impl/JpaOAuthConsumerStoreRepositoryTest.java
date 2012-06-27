@@ -25,6 +25,7 @@ import org.apache.rave.portal.repository.OAuthConsumerStoreRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,6 +34,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import static junit.framework.Assert.*;
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 /**
  * Test for {@link org.apache.rave.portal.repository.impl.JpaOAuthConsumerStoreRepository}
@@ -42,6 +46,7 @@ import static junit.framework.Assert.*;
 @ContextConfiguration(locations = {"classpath:test-applicationContext.xml",
         "classpath:test-dataContext.xml"})
 public class JpaOAuthConsumerStoreRepositoryTest {
+    private static final Long VALID_ID = 1L;
     private static final String GADGET_URI = "http://localhost:8080/samplecontainer/examples/oauth.xml";
     private static final String SERVICE_NAME_GOOGLE = "Google";
     private static final String SERVICE_NAME_FOO = "Foo";
@@ -52,6 +57,19 @@ public class JpaOAuthConsumerStoreRepositoryTest {
 
     @Autowired
     OAuthConsumerStoreRepository repository;
+
+    @Test
+    public void getType() {
+        assertEquals(repository.getType(), JpaOAuthConsumerStore.class);
+    }
+
+    @Test
+    public void get() {
+        JpaOAuthConsumerStore oAuthConsumerStore = (JpaOAuthConsumerStore) repository.get(VALID_ID);
+        assertThat(oAuthConsumerStore.getEntityId(), is(VALID_ID));
+        assertThat(oAuthConsumerStore.getGadgetUri(), is(GADGET_URI));
+        assertThat(oAuthConsumerStore.getServiceName(), is(SERVICE_NAME_GOOGLE));
+    }
 
     @Test
     public void testFindByUriAndServiceName() throws Exception {
@@ -65,5 +83,47 @@ public class JpaOAuthConsumerStoreRepositoryTest {
     public void testFindByUriAndServiceName_nullValue() throws Exception {
         final OAuthConsumerStore store = repository.findByUriAndServiceName(GADGET_URI, SERVICE_NAME_FOO);
         assertNull(store);
+    }
+
+    @Test
+    @Transactional(readOnly=false)
+    @Rollback(true)
+    public void save_new() {
+        final String NEW_URL = "testurl";
+        final String NEW_SERVICE_NAME = "testservice";
+        JpaOAuthConsumerStore oAuthConsumerStore = new JpaOAuthConsumerStore();
+        oAuthConsumerStore.setCallbackUrl(NEW_URL);
+        oAuthConsumerStore.setServiceName(NEW_SERVICE_NAME);
+
+        assertThat(oAuthConsumerStore.getEntityId(), is(nullValue()));
+        repository.save(oAuthConsumerStore);
+        long newId = oAuthConsumerStore.getEntityId();
+        assertThat(newId > 0, is(true));
+        JpaOAuthConsumerStore newOAuthConsumerStore = (JpaOAuthConsumerStore) repository.get(newId);
+        assertThat(newOAuthConsumerStore.getServiceName(), is(NEW_SERVICE_NAME));
+        assertThat(newOAuthConsumerStore.getCallbackUrl(), is(NEW_URL));
+    }
+
+    @Test
+    @Transactional(readOnly=false)
+    @Rollback(true)
+    public void save_existing() {
+        final String UPDATED_SERVICE_NAME = "updated service name";
+        JpaOAuthConsumerStore oAuthConsumerStore = (JpaOAuthConsumerStore) repository.get(VALID_ID);
+        assertThat(oAuthConsumerStore.getServiceName(), is(not(UPDATED_SERVICE_NAME)));
+        oAuthConsumerStore.setServiceName(UPDATED_SERVICE_NAME);
+        repository.save(oAuthConsumerStore);
+        assertThat(repository.get(VALID_ID).getServiceName(), is(UPDATED_SERVICE_NAME));
+    }
+
+    @Test
+    @Transactional(readOnly=false)
+    @Rollback(true)
+    public void delete() {
+        OAuthConsumerStore oAuthConsumerStore = repository.get(VALID_ID);
+        assertThat(oAuthConsumerStore, is(notNullValue()));
+        repository.delete(oAuthConsumerStore);
+        oAuthConsumerStore = repository.get(VALID_ID);
+        assertThat(oAuthConsumerStore, is(nullValue()));
     }
 }

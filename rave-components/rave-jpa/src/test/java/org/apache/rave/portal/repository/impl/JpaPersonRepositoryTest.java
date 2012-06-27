@@ -19,19 +19,28 @@
 
 package org.apache.rave.portal.repository.impl;
 
+import org.apache.rave.exception.NotSupportedException;
+import org.apache.rave.portal.model.JpaPerson;
+import org.apache.rave.portal.model.JpaWidgetComment;
 import org.apache.rave.portal.model.Person;
+import org.apache.rave.portal.model.WidgetComment;
+import org.apache.rave.portal.model.impl.PersonImpl;
 import org.apache.rave.portal.repository.PersonRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -39,6 +48,7 @@ import static org.junit.Assert.assertThat;
         "classpath:test-dataContext.xml"})
 public class JpaPersonRepositoryTest {
 
+    private static final Long VALID_ID = 1L;
     private static final String VALID_USER = "canonical";
     private static final String VALID_USER2 = "john.doe";
     private static final String VALID_USER3 = "jane.doe";
@@ -52,6 +62,18 @@ public class JpaPersonRepositoryTest {
 
     @Autowired
     private PersonRepository repository;
+
+    @Test
+    public void getType() {
+        assertEquals(repository.getType(), JpaPerson.class);
+    }
+
+    @Test
+    public void get() {
+        JpaPerson p = (JpaPerson) repository.get(VALID_ID);
+        assertThat(p.getEntityId(), is(VALID_ID));
+        assertThat(p.getUsername(), is(VALID_USER));
+    }
 
     @Test
     public void findByUsername_valid() {
@@ -107,5 +129,89 @@ public class JpaPersonRepositoryTest {
         assertThat(connected.isEmpty(), is(true));
     }
 
+    @Test(expected = NotSupportedException.class)
+    public void findAllConnectedPeople_2param() {
+        repository.findAllConnectedPeople("asdf", "asdf");
+    }
+
+    @Test(expected = NotSupportedException.class)
+    public void findAllConnectedPeopleWithFriend() {
+        repository.findAllConnectedPeopleWithFriend("asdf", "asdf");
+    }
+
+    @Test(expected = NotSupportedException.class)
+    public void findFriends() {
+        repository.findFriends("asdf", "asdf");
+    }
+
+    @Test(expected = NotSupportedException.class)
+    public void findFriendsWithFriend() {
+        repository.findFriendsWithFriend("asdf", "asdf");
+    }
+
+    @Test(expected = NotSupportedException.class)
+    public void findByGroup() {
+        repository.findByGroup("asdf", "asdf");
+    }
+
+    @Test(expected = NotSupportedException.class)
+    public void findByGroupWithFriend() {
+        repository.findByGroupWithFriend("asdf", "asdf");
+    }
+
+    @Test
+    @Transactional(readOnly=false)
+    @Rollback(true)
+    public void save_new() {
+        final String NEW_USERNAME = "test123";
+        final String NEW_ABOUT_ME = "about me blah blah";
+        JpaPerson person = new JpaPerson();
+        person.setUsername(NEW_USERNAME);
+        person.setAboutMe(NEW_ABOUT_ME);
+
+        assertThat(person.getEntityId(), is(nullValue()));
+        repository.save(person);
+        long newId = person.getEntityId();
+        assertThat(newId > 0, is(true));
+        JpaPerson newPerson = (JpaPerson) repository.get(newId);
+        assertThat(newPerson.getAboutMe(), is(NEW_ABOUT_ME));
+        assertThat(newPerson.getUsername(), is(NEW_USERNAME));
+    }
+
+    @Test
+    @Transactional(readOnly=false)
+    @Rollback(true)
+    public void save_existing() {
+        final String UPDATED_ABOUT_ME = "updated about me";
+        Person person = repository.get(VALID_ID);
+        assertThat(person.getAboutMe(), is(not(UPDATED_ABOUT_ME)));
+        person.setAboutMe(UPDATED_ABOUT_ME);
+        repository.save(person);
+        assertThat(repository.get(VALID_ID).getAboutMe(), is(UPDATED_ABOUT_ME));
+    }
+
+    @Test
+    @Transactional(readOnly=false)
+    @Rollback(true)
+    public void delete_jpaObject() {
+        Person person = repository.get(VALID_ID);
+        assertThat(person, is(notNullValue()));
+        repository.delete(person);
+        person = repository.get(VALID_ID);
+        assertThat(person, is(nullValue()));
+    }
+
+    @Test
+    @Transactional(readOnly=false)
+    @Rollback(true)
+    public void delete_implObject() {
+        Person person = repository.get(VALID_ID);
+        assertThat(person, is(notNullValue()));
+        PersonImpl impl = new PersonImpl();
+        impl.setUsername(person.getUsername());
+        repository.delete(impl);
+        person = repository.get(VALID_ID);
+        assertThat(person, is(nullValue()));
+    }
 
 }

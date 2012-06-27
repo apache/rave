@@ -140,8 +140,8 @@ values (@user_id_3, 'jane.doe', '$2a$10$YP9cjZEA.gG/ng2YwTBIyucMpuiQ7Fvz0K8rOt14
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @user_seq;
 
 set @user_id_4 = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @user_seq);
-insert into person (entity_id, username, password, expired, locked, enabled, email, default_page_layout_id, dtype, family_name, given_name)
-values (@user_id_4, 'george.doe', '$2a$10$0bcOUkQgAwE/qmdc1NcUveNzx/IYIcOUu4ydyT8DEicTCxGJF/vcW', FALSE, FALSE, TRUE,'george.doe@example.org', @three_col_id, 'User', 'Doe', 'George');
+insert into person (entity_id, username, password, expired, locked, enabled, email, default_page_layout_id, dtype, family_name, given_name, forgotPasswordHash)
+values (@user_id_4, 'george.doe', '$2a$10$0bcOUkQgAwE/qmdc1NcUveNzx/IYIcOUu4ydyT8DEicTCxGJF/vcW', FALSE, FALSE, TRUE,'george.doe@example.org', @three_col_id, 'User', 'Doe', 'George', 'ABC123');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @user_seq;
 
 set @user_id_5 = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @user_seq);
