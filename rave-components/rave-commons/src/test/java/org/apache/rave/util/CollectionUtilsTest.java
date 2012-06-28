@@ -23,7 +23,9 @@ import org.apache.commons.lang.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
@@ -72,6 +74,13 @@ public class CollectionUtilsTest {
         testObjectsMap.put(testObject3, testObject3);
         testObjectsMap.put(testObject4, testObject4);
         return testObjectsMap;
+    }
+
+    @Test
+    public void privateConstructor() throws Exception {
+        Constructor<?>[] cons = CollectionUtils.class.getDeclaredConstructors();
+        cons[0].setAccessible(true);
+        cons[0].newInstance((Object[])null);
     }
 
     @Test
@@ -196,6 +205,48 @@ public class CollectionUtilsTest {
 
         List<TestObject> down = CollectionUtils.toBaseTypedList((List<? extends TestObject>)list);
         assertThat(down, is(nullValue()));
+    }
+
+    @Test
+    public void toBaseTypedCollection() {
+        Collection<SubTestObject> collection = new ArrayList<SubTestObject>();
+        collection.add(new SubTestObject("a", "b"));
+        collection.add(new SubTestObject("a", "b"));
+        collection.add(new SubTestObject("a", "b"));
+
+        Collection<TestObject> down = CollectionUtils.toBaseTypedCollection((Collection<? extends TestObject>) collection);
+        assertThat(down.contains(collection.toArray()[0]), is(true));
+        assertThat(down.contains(collection.toArray()[1]), is(true));
+        assertThat(down.contains(collection.toArray()[2]), is(true));
+    }
+
+    @Test
+    public void toBaseTypedCollection_null() {
+        Collection<SubTestObject> collection = null;
+
+        Collection<TestObject> down = CollectionUtils.toBaseTypedCollection((Collection<? extends TestObject>) collection);
+        assertThat(down, is(nullValue()));
+    }
+
+    @Test
+    public void getSingleValue_empty() {
+        List<String> list = new ArrayList<String>();
+        assertThat(CollectionUtils.getSingleValue(list), is(nullValue(String.class)));
+    }
+
+    @Test
+    public void getSingleValue_single() {
+        List<String> list = new ArrayList<String>();
+        list.add("hello");
+        assertThat(CollectionUtils.getSingleValue(list), is("hello"));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void getSingleValue_multiple() {
+        List<String> list = new ArrayList<String>();
+        list.add("foo");
+        list.add("bar");
+        CollectionUtils.getSingleValue(list);
     }
 
     @Test
