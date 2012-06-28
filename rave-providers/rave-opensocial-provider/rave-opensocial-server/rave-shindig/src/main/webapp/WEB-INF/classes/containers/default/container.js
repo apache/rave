@@ -125,6 +125,9 @@
 // Default Js Uri config: also must be overridden.
 // gadgets.uri.js.host should be protocol relative.
 "gadgets.uri.js.host" : "//${Cur['default.domain.unlocked.server']}", // Use unlocked host for better caching.
+
+// If you change the js.path you will need to define window.__CONTAINER_SCRIPT_ID prior to loading the <script>
+// tag for container JavaScript into the DOM.
 "gadgets.uri.js.path" : "${CONTEXT_ROOT}/gadgets/js",
 
 // Default concat Uri config; used for testing.
@@ -155,8 +158,10 @@
   "core.io" : {
     // Note: ${Cur['gadgets.uri.proxy.path']} is an open proxy. Be careful how you expose this!
     // Note: These urls should be protocol relative (start with //)
-    "proxyUrl" : "//${Cur['default.domain.unlocked.client']}${Cur['gadgets.uri.proxy.path']}?container=%container%&refresh=%refresh%&url=%url%%rewriteMime%",
-    "jsonProxyUrl" : "//${Cur['default.domain.locked.client']}${CONTEXT_ROOT}/gadgets/makeRequest"
+    "proxyUrl" : "//${Cur['default.domain.unlocked.client']}${Cur['gadgets.uri.proxy.path']}?container=%container%&refresh=%refresh%&url=%url%%authz%%rewriteMime%",
+    "jsonProxyUrl" : "//${Cur['default.domain.locked.client']}${CONTEXT_ROOT}/gadgets/makeRequest",
+    // Note: this setting MUST be supplied in every container config object, as there is no default if it is not supplied.
+    "unparseableCruft" : "throw 1; < don't be evil' >"
   },
   "views" : {
     "profile" : {
@@ -279,11 +284,12 @@
     "enableCaja" : false,
     "supportedFields" : {
        "person" : ["id", {"name" : ["familyName", "givenName", "unstructured"]}, "thumbnailUrl", "profileUrl"],
+       "group" : ["id", "title", "description"],
        "activity" : ["appId", "body", "bodyId", "externalId", "id", "mediaItems", "postedTime", "priority",
                      "streamFaviconUrl", "streamSourceUrl", "streamTitle", "streamUrl", "templateParams", "title",
                      "url", "userId"],
        "activityEntry" : ["actor", "content", "generator", "icon", "id", "object", "published", "provider", "target",
-                          "title", "updated", "url", "verb"],
+                          "title", "updated", "url", "verb", "openSocial", "extensions"],
        "album" : ["id", "thumbnailUrl", "title", "description", "location", "ownerId"],
        "mediaItem" : ["album_id", "created", "description", "duration", "file_size", "id", "language", "last_updated",
                       "location", "mime_type", "num_comments", "num_views", "num_votes", "rating", "start_time",
