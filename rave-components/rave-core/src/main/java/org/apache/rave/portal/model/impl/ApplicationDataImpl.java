@@ -30,6 +30,10 @@ public class ApplicationDataImpl implements ApplicationData {
 
     public ApplicationDataImpl() {}
 
+    public ApplicationDataImpl(Long id) {
+        this.id = id;
+    }
+
     public ApplicationDataImpl(Long id, String userId, String appUrl, Map<String, String> data) {
         this.id = id;
         this.userId = userId;

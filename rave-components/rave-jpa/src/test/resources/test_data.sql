@@ -1082,6 +1082,16 @@ insert into category (entity_id, text, created_user_id, created_date, last_modif
 values (@category_id4, 'Technology Category', @user_id_1, '2012-01-19', @user_id_2, '2012-01-19');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @category_seq;
 
+set @category_id5 = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @category_seq);
+insert into category (entity_id, text, created_user_id, created_date, last_modified_user_id, last_modified_date)
+values (@category_id5, 'no people', null, '2012-01-19', null, '2012-01-19');
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @category_seq;
+
+set @category_id6 = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @category_seq);
+insert into category (entity_id, text, created_user_id, created_date, last_modified_user_id, last_modified_date)
+values (@category_id6, 'Cat99', @user_id_5, '2012-01-19', @user_id_1, '2012-01-19');
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @category_seq;
+
 -- widget category
 insert into widget_category (widget_id, category_id)
 values (@wikipedia_widget_id, @category_id4);

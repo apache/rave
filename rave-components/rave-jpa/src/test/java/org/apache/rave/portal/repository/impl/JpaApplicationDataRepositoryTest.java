@@ -20,6 +20,7 @@ package org.apache.rave.portal.repository.impl;
 
 import org.apache.rave.portal.model.ApplicationData;
 import org.apache.rave.portal.model.JpaApplicationData;
+import org.apache.rave.portal.model.impl.ApplicationDataImpl;
 import org.apache.rave.portal.repository.ApplicationDataRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -64,6 +65,11 @@ public class JpaApplicationDataRepositoryTest {
         validApplicationDataMap.put("color", "blue");
         validApplicationDataMap.put("speed", "fast");
         validApplicationDataMap.put("state", "MA");
+    }
+
+    @Test
+    public void getType() {
+        assertEquals(repository.getType(), JpaApplicationData.class);
     }
 
     @Test
@@ -137,6 +143,29 @@ public class JpaApplicationDataRepositoryTest {
         manager.flush();
         assertThat(saved, is(not(sameInstance(applicationData))));
         assertThat(saved.getEntityId(), is(equalTo(applicationData.getEntityId())));
+    }
+
+    @Test
+    @Transactional(readOnly=false)
+    @Rollback(true)
+    public void delete_jpaObject() {
+        ApplicationData applicationData = repository.get(VALID_APPLICATION_DATA_ID);
+        assertThat(applicationData, is(notNullValue()));
+        repository.delete(applicationData);
+        applicationData = repository.get(VALID_APPLICATION_DATA_ID);
+        assertThat(applicationData, is(nullValue()));
+    }
+
+    @Test
+    @Transactional(readOnly=false)
+    @Rollback(true)
+    public void delete_implObject() {
+        ApplicationData applicationData = repository.get(VALID_APPLICATION_DATA_ID);
+        assertThat(applicationData, is(notNullValue()));
+        ApplicationDataImpl impl = new ApplicationDataImpl(applicationData.getId());
+        repository.delete(impl);
+        applicationData = repository.get(VALID_APPLICATION_DATA_ID);
+        assertThat(applicationData, is(nullValue()));
     }
 
     private void validateApplicationData(JpaApplicationData applicationData) {

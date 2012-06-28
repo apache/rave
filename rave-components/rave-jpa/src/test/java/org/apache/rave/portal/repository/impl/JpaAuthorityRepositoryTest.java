@@ -60,6 +60,11 @@ public class JpaAuthorityRepositoryTest {
     private static final Long VALID_ID = 1L;
 
     @Test
+    public void getType() {
+        assertEquals(repository.getType(), JpaAuthority.class);
+    }
+
+    @Test
     public void getById_validId() {
         final JpaAuthority authority = (JpaAuthority)repository.get(VALID_ID);
         assertNotNull(authority);
@@ -126,15 +131,15 @@ public class JpaAuthorityRepositoryTest {
         List<Authority> allAuthorities = repository.getAll();
         assertFalse("Found authorities", allAuthorities.isEmpty());
     }
-    
+
     @Test
     public void getAllDefault() {
         List<Authority> allAuthorities = repository.getAllDefault();
         assertThat(allAuthorities.isEmpty(), is(false));
         for (Authority authority : allAuthorities) {
             assertThat(authority.isDefaultForNewUser(), is(true));
-        }        
-    }    
+        }
+    }
 
     @Test
     public void countAll() {

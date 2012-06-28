@@ -21,6 +21,7 @@ package org.apache.rave.portal.repository.impl;
 
 import org.apache.openjpa.persistence.PersistenceException;
 import org.apache.rave.portal.model.*;
+import org.apache.rave.portal.model.impl.CategoryImpl;
 import org.apache.rave.portal.repository.CategoryRepository;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -126,7 +127,7 @@ public class JpaCategoryRepositoryTest {
     @Test
     public void getAll() {
         List<Category> list = repository.getAll();
-        assertThat(list.size(), is(4));
+        assertThat(list.size(), is(6));
         // verify proper sorting alphabetical by text attribute
         String lastText = "";
         for (Category wc : list) {
@@ -164,5 +165,40 @@ public class JpaCategoryRepositoryTest {
                 fail("Expected to get a PersistenceException due to Unique Constraint Violation");
             }
         }
+    }
+
+    @Test
+    public void getType() {
+        assertEquals(repository.getType(), JpaCategory.class);
+    }
+
+    @Test
+    @Transactional(readOnly=false)
+    @Rollback(true)
+    public void delete_jpaObject() {
+        Category category = repository.get(VALID_ENTITY_ID);
+        assertThat(category, is(notNullValue()));
+        repository.delete(category);
+        category = repository.get(VALID_ENTITY_ID);
+        assertThat(category, is(nullValue()));
+    }
+
+    @Test
+    @Transactional(readOnly=false)
+    @Rollback(true)
+    public void delete_implObject() {
+        Category category = repository.get(VALID_ENTITY_ID);
+        assertThat(category, is(notNullValue()));
+        CategoryImpl impl = new CategoryImpl(category.getId());
+        repository.delete(impl);
+        category = repository.get(VALID_ENTITY_ID);
+        assertThat(category, is(nullValue()));
+    }
+
+    @Test
+    @Transactional(readOnly=false)
+    @Rollback(true)
+    public void removeFromCreatedOrModifiedFields() {
+        assertThat(repository.removeFromCreatedOrModifiedFields(VALID_USER_ID), is(5));
     }
 }
