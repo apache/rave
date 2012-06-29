@@ -201,7 +201,11 @@
                         </zipUrlInstaller>
                         <systemProperties>
                             <net.sf.ehcache.skipUpdateCheck>true</net.sf.ehcache.skipUpdateCheck>
-                            <!-- Documentation: http://rave.apache.org/documentation/host-configuration.html -->
+                            <!--  un-comment following property for: Loading the SizeOfAgent will probably fail,
+                            as you are running on Apple OS X and have a value set for java.io.tmpdir  -->
+                            <!-- <net.sf.ehcache.pool.sizeof.AgentSizeOf.bypass>true</net.sf.ehcache.pool.sizeof.AgentSizeOf.bypass>  -->
+	                  
+	                   <!-- Documentation: http://rave.apache.org/documentation/host-configuration.html -->
                             <!--
                                 <portal.override.properties>/path/to/custom.portal.properties</portal.override.properties>
                                 <rave-shindig.override.properties>/path/to/custom.shindig.properties</rave-shindig.override.properties>
