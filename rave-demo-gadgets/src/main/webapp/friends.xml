@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License.
+
+  $Id:$
+-->
+<Module>
+  <ModulePrefs title="Friends" author="Viknes Balasubramanee"
+description="This gadget display the list of friends for a particular user">
+    <Require feature="opensocial-0.9"/>
+    <Require feature="dynamic-height" />
+  </ModulePrefs>
+  <Content type="html">
+    <![CDATA[
+      <script type="text/javascript">
+        function loadFriends() {
+          var req = opensocial.newDataRequest();
+					req.add(req.newFetchPersonRequest(opensocial.IdSpec.PersonId.VIEWER), 'viewer');
+					req.add(req.newFetchPersonRequest(opensocial.IdSpec.PersonId.OWNER), 'owner');
+					var viewerFriends = opensocial.newIdSpec({ "userId" : "VIEWER", "groupId" : "FRIENDS" });
+					var ownerFriends = opensocial.newIdSpec({ "userId" : "OWNER", "groupId" : "FRIENDS" });
+					var opt_params = {};
+					opt_params[opensocial.DataRequest.PeopleRequestFields.MAX] = 100;
+          req.add(req.newFetchPeopleRequest(viewerFriends, opt_params), 'viewerFriends');
+          req.add(req.newFetchPeopleRequest(ownerFriends, opt_params), 'ownerFriends');
+
+          req.send(onLoadFriends);
+        }
+
+        function onLoadFriends(data) {
+          var viewer = data.get('viewer').getData();
+          var viewerFriends = data.get('viewerFriends').getData();
+          var owner = data.get('viewer').getData();
+          var ownerFriends = data.get('ownerFriends').getData();
+
+          html = new Array();
+          html.push(owner.getDisplayName() + '\'s Friends('+ownerFriends.size()+') <br>');
+          html.push('<ul>');
+          ownerFriends.each(function(person) {
+            if (person.getId()) {
+              html.push('<li>', person.getDisplayName(), '</li>');
+            }
+          });
+          html.push('</ul>');
+          document.getElementById('friends').innerHTML = html.join('');
+          gadgets.window.adjustHeight();
+        }
+
+        function init() {
+          loadFriends();
+        }
+
+        gadgets.util.registerOnLoadHandler(init);
+      </script>
+      <div id='friends'/>
+    ]]>
+  </Content>
+</Module>

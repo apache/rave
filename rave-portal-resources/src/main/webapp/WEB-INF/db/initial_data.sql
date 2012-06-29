@@ -402,6 +402,13 @@ insert into widget (entity_id, title, url, type, widget_status, description, aut
 values(@pubsub_subscriber_widget_id, 'OpenAJAX Hub Subscriber', 'http://localhost:8080/container/sample-pubsub-2-subscriber.xml', 'OpenSocial', 'PUBLISHED', 'OpenAJAX Hub subscriber gadget from Shindig', 'Apache Shindig', @user_id_1);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @widget_seq;
 
+-- Friends Gadget
+set @friends_widget_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @widget_seq);
+insert into widget (entity_id, title, url, type, widget_status, description, author, owner_id)
+values(@friends_widget_id, 'Friends', 'http://localhost:8080/demogadgets/friends.xml', 'OpenSocial', 'PUBLISHED', 'This gadget display the list of friends for a particular user', 'Viknes Balasubramanee', @user_id_1);
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @widget_seq;
+
+
 -- end gadget data ----
 
 -- W3C Widget data
