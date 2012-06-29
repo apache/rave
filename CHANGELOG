@@ -1,6 +1,66 @@
 Apache Rave Change Log
 https://issues.apache.org/jira/secure/ReleaseNote.jspa?projectId=12311290 (select the version of release and output as text to create this file)
 
+Release Notes - Rave - Version 0.13
+================================================================================================================
+
+** Sub-task
+    * [RAVE-577] - Reformat canvas view
+    * [RAVE-578] - Detect & factor out jQuery UI references
+    * [RAVE-619] - Fix search box in widget store
+    * [RAVE-632] - Refactor Tag and WidgetTag
+    * [RAVE-635] - Refactor Group
+    * [RAVE-644] - Fix ModelPermissionEvaluators
+    * [RAVE-645] - Refactor WidgetComment
+    * [RAVE-647] - Refactor Region and Region Widget
+    * [RAVE-648] - Refactor PageTemplate
+    * [RAVE-653] - Refactor PageUser
+    * [RAVE-662] - Ensure no JPA model references in the Service or Controller layers
+    * [RAVE-663] - Refactor RegionWidgetPreference
+    * [RAVE-664] - Refactor Authority
+    * [RAVE-665] - Move Jpa implementation to rave-jpa module
+    * [RAVE-666] - Jpa Implementation Cleanup
+    * [RAVE-667] - Fix serialization/deserialization
+    * [RAVE-669] - Refactor User
+    * [RAVE-670] - Refactor OAuthTokenInfo
+    * [RAVE-671] - Refactor OauthConsumerStore
+    * [RAVE-672] - Refactor ApplicationData
+
+** Technical task
+    * [RAVE-626] - Modify POM files so that they produce a different version
+    * [RAVE-627] - Revert POM files prior to merging into trunk
+    * [RAVE-628] - reintegrate branch into trunk
+    * [RAVE-629] - Create new rave-jpa module
+    * [RAVE-630] - Refactor Person
+    * [RAVE-631] - Refactor Page
+    * [RAVE-646] - Refactor WidgetRating
+    * [RAVE-650] - Refactor Widget
+    * [RAVE-651] - Refactor Page Layout
+    * [RAVE-652] - Cleanup TODO
+    * [RAVE-659] - PortalPreference
+    * [RAVE-686] - Merge changes from trunk
+
+** Bug
+    * [RAVE-618] - Conflict between two features: open-views and pubsub-2
+    * [RAVE-637] - After moving an accepted, shared page, the user has to approve the sharing again
+    * [RAVE-680] - Rave is not generating Foreign Keys with default JPA implementation
+
+** Improvement
+    * [RAVE-675] - Set default log level for OpenJPA to WARN
+    * [RAVE-684] - Re-structure static content directories
+    * [RAVE-685] - Upgrade to Shindig 2.5.0-beta2
+    * [RAVE-688] - Add function to render OpenSocial gadget in any custom supplied view
+
+** New Feature
+    * [RAVE-687] - Add callbacks to Rave container initialization events
+
+** Story
+    * [RAVE-625] - Models as Interfaces
+
+** Task
+    * [RAVE-668] - Add Spanish translations
+
+
 Release Notes - Rave - Version 0.12
 ================================================================================================================
 
