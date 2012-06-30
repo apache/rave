@@ -194,8 +194,7 @@ public class DefaultPersonService implements PersonService, SimplePersonService 
     }
 
     private org.apache.rave.portal.model.Person getFromRepository(String userId) {
-        long id = Long.parseLong(userId);
-        org.apache.rave.portal.model.Person person = repository.get(id);
+        org.apache.rave.portal.model.Person person = repository.findByUsername(userId);
         if (person == null) {
             throw new ProtocolException(HttpServletResponse.SC_NOT_FOUND, "The person with the id " + userId + " was not found.");
         }
