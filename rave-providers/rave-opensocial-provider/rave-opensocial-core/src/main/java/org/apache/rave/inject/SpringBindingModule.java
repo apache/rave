@@ -20,20 +20,15 @@
 package org.apache.rave.inject;
 
 import com.google.inject.AbstractModule;
-import com.google.inject.Provider;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.lang.reflect.Proxy;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
-import java.util.regex.Pattern;
 
 /**
  * Initializes a Spring application context and binds the beans from the context to Guice
@@ -56,7 +51,9 @@ public class SpringBindingModule extends AbstractModule implements ApplicationCo
     private void bindFromApplicationContext() {
         for (String beanName : applicationContext.getBeanDefinitionNames()) {
             Object bean = applicationContext.getBean(beanName);
-            bindInterfaces(bean);
+            if(bean != null) {
+                bindInterfaces(bean);
+            }
         }
     }
 
