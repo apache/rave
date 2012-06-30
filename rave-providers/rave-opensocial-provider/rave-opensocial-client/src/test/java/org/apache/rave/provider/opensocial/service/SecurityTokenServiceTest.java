@@ -108,13 +108,14 @@ public class SecurityTokenServiceTest {
     @Test
     public void getSecurityToken_validWidget_ownerIsNotViewer() throws SecurityTokenException {
         Long expectedOwnerId = 99999L;
-        validPage.setOwner(new UserImpl(expectedOwnerId));
+        String expected = "Expected";
+        validPage.setOwner(new UserImpl(expectedOwnerId, expected));
 
         expect(userService.getAuthenticatedUser()).andReturn(validPerson).anyTimes();
         replay(userService);
 
         SecurityToken securityToken = securityTokenService.getSecurityToken(validRegionWidget);
-        validateSecurityToken(securityToken, expectedOwnerId);
+        validateSecurityToken(securityToken, expected);
     }
 
     @Test
@@ -141,6 +142,7 @@ public class SecurityTokenServiceTest {
     @Test
     public void refreshEncryptedSecurityToken_validTokenString() throws SecurityTokenException {
         expect(userService.getAuthenticatedUser()).andReturn(validPerson).anyTimes();
+        expect(userService.getUserByUsername(VALID_USER_NAME)).andReturn(validPerson).anyTimes();
         replay(userService);
 
         String encryptedToken = securityTokenService.getEncryptedSecurityToken(validRegionWidget);
@@ -153,14 +155,14 @@ public class SecurityTokenServiceTest {
     }
 
     private void validateSecurityToken(SecurityToken securityToken) {
-        validateSecurityToken(securityToken, VALID_USER_ID);
+        validateSecurityToken(securityToken, VALID_USER_NAME);
     }
 
-    private void validateSecurityToken(SecurityToken securityToken, Long expectedOwnerId) {
+    private void validateSecurityToken(SecurityToken securityToken, String expectedOwnerId) {
         assertNotNull(securityToken);
         assertEquals(VALID_REGION_WIDGET_ID.longValue(), securityToken.getModuleId());
-        assertEquals(expectedOwnerId, Long.valueOf(securityToken.getOwnerId()));
-        assertEquals(VALID_USER_ID, Long.valueOf(securityToken.getViewerId()));
+        assertEquals(expectedOwnerId, securityToken.getOwnerId());
+        assertEquals(VALID_USER_NAME, securityToken.getViewerId());
         assertEquals(VALID_URL, securityToken.getAppUrl());
     }
 }

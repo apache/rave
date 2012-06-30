@@ -132,7 +132,7 @@ public class EncryptedBlobSecurityTokenService implements SecurityTokenService {
         SecurityToken securityToken = this.decryptSecurityToken(encryptedSecurityToken);
 
         //Make sure the person is authorized to refresh this token
-        String userId = String.valueOf(userService.getAuthenticatedUser().getId());
+        String userId = String.valueOf(userService.getAuthenticatedUser().getUsername());
         if (!securityToken.getViewerId().equalsIgnoreCase(userId)) {
             throw new SecurityTokenException("Illegal attempt by user " + userId +
                     " to refresh security token with a viewerId of " + securityToken.getViewerId());
@@ -141,7 +141,7 @@ public class EncryptedBlobSecurityTokenService implements SecurityTokenService {
         //Create a new RegionWidget instance from it so we can use it to generate a new encrypted token
         RegionWidget regionWidget = new RegionWidgetImpl(securityToken.getModuleId(),
                 new WidgetImpl(-1L, securityToken.getAppUrl()),
-                new RegionImpl(-1L, new PageImpl(-1L, new UserImpl(Long.valueOf(securityToken.getOwnerId()))), -1));
+                new RegionImpl(-1L, new PageImpl(-1L, userService.getUserByUsername(securityToken.getOwnerId())), -1));
 
         //Create and return the newly encrypted token
         return getEncryptedSecurityToken(regionWidget);
@@ -155,8 +155,8 @@ public class EncryptedBlobSecurityTokenService implements SecurityTokenService {
         values.put(AbstractSecurityToken.Keys.APP_URL.getKey(), regionWidget.getWidget().getUrl());
         values.put(AbstractSecurityToken.Keys.MODULE_ID.getKey(), String.valueOf(regionWidget.getId()));
         values.put(AbstractSecurityToken.Keys.OWNER.getKey(),
-                String.valueOf(regionWidget.getRegion().getPage().getOwner().getId()));
-        values.put(AbstractSecurityToken.Keys.VIEWER.getKey(), String.valueOf(user.getId()));
+                String.valueOf(regionWidget.getRegion().getPage().getOwner().getUsername()));
+        values.put(AbstractSecurityToken.Keys.VIEWER.getKey(), String.valueOf(user.getUsername()));
         values.put(AbstractSecurityToken.Keys.TRUSTED_JSON.getKey(), "");
 
         BlobCrypterSecurityToken securityToken = new BlobCrypterSecurityToken(container, domain, null, values);
