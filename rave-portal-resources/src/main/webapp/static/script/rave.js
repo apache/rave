@@ -197,7 +197,7 @@ var rave = rave || (function () {
             });
             initWidgetUI();
 
-            if(onUIInitializedHandlers.length > 0){
+            if(onUIInitializedHandlers !== null && onUIInitializedHandlers.length > 0){
                 for (var i = 0, j = onUIInitializedHandlers.length; i < j; ++i) {
                     try {
                         onUIInitializedHandlers[i]();
@@ -206,7 +206,7 @@ var rave = rave || (function () {
                     }
                 }
             }
-            onUIInitializedHandlers = [];  // No need to hold these references anymore.
+            onUIInitializedHandlers = null;  // No need to hold these references anymore.
         }
 
         function dragStart(event, ui) {
@@ -902,7 +902,7 @@ var rave = rave || (function () {
             providerMap[key].init();
         }
 
-        if(onProvidersInitializedHandlers.length > 0){
+        if(onProvidersInitializedHandlers !== null && onProvidersInitializedHandlers.length > 0){
             for (var i = 0, j = onProvidersInitializedHandlers.length; i < j; ++i) {
                 try {
                     onProvidersInitializedHandlers[i]();
@@ -911,7 +911,7 @@ var rave = rave || (function () {
                 }
             }
         }
-        onProvidersInitializedHandlers = [];  // No need to hold these references anymore.
+        onProvidersInitializedHandlers = null;  // No need to hold these references anymore.
     }
 
     function createNewOpenAjaxHub() {
@@ -989,7 +989,7 @@ var rave = rave || (function () {
             }
         }
 
-        if(onWidgetsInitializedHandlers.length > 0){
+        if(onWidgetsInitializedHandlers !== null && onWidgetsInitializedHandlers.length > 0){
             for (var i = 0, j = onWidgetsInitializedHandlers.length; i < j; ++i) {
                 try {
                     onWidgetsInitializedHandlers[i]();
@@ -998,7 +998,7 @@ var rave = rave || (function () {
                 }
             }
         }
-        onWidgetsInitializedHandlers = [];  // No need to hold these references anymore.
+        onWidgetsInitializedHandlers = null;  // No need to hold these references anymore.
     }
 
     function initializeWidget(widget) {
@@ -1101,19 +1101,35 @@ var rave = rave || (function () {
     }
 
     function registerOnWidgetsInitizalizedHandler(callback) {
-        onWidgetsInitializedHandlers.push(callback);
+        if(onWidgetsInitializedHandlers !== null) {
+            onWidgetsInitializedHandlers.push(callback);
+        } else {
+            callback();
+        }
     };
 
     function registerOnProvidersInitizalizedHandler(callback) {
-        onProvidersInitializedHandlers.push(callback);
+        if(onProvidersInitializedHandlers !== null) {
+            onProvidersInitializedHandlers.push(callback);
+        } else {
+            callback();
+        }
     };
 
     function registerOnUIInitizalizedHandler(callback) {
-        onUIInitializedHandlers.push(callback);
+        if(onUIInitializedHandlers !== null) {
+            onUIInitializedHandlers.push(callback);
+        } else {
+            callback();
+        }
     };
 
     function registerOnPageInitizalizedHandler(callback) {
-        onPageInitializedHandlers.push(callback);
+        if(onPageInitializedHandlers !== null) {
+            onPageInitializedHandlers.push(callback);
+        } else {
+            callback();
+        }
     };
 
 
@@ -1121,7 +1137,7 @@ var rave = rave || (function () {
      * Internal method should only be called from the page.jsp
      */
     function runOnPageInitializedHandlers() {
-        if(onPageInitializedHandlers.length > 0){
+        if(onPageInitializedHandlers !== null && onPageInitializedHandlers.length > 0){
             for (var i = 0, j = onPageInitializedHandlers.length; i < j; ++i) {
                 try {
                     onPageInitializedHandlers[i]();
@@ -1130,7 +1146,7 @@ var rave = rave || (function () {
                 }
             }
         }
-        onPageInitializedHandlers = [];  // No need to hold these references anymore.
+        onPageInitializedHandlers = null;  // No need to hold these references anymore.
     }
 
     /**
