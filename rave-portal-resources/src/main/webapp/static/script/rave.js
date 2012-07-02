@@ -1226,7 +1226,7 @@ var rave = rave || (function () {
          * View the widget detail page of a widget
          *
          * @param widgetId to widgetId to view
-         * @param referringPageId the entityId of the page the call is coming from
+         * @param referringPageId the id of the page the call is coming from
          */
         viewWidgetDetail:viewWidgetDetail,
 

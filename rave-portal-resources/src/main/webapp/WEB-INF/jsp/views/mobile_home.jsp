@@ -34,7 +34,7 @@
 </fmt:message>
 <rave:navbar pageTitle="${pagetitle}"/>
 
-    <input id="currentPageId" type="hidden" value="${page.entityId}" />
+    <input id="currentPageId" type="hidden" value="${page.id}" />
     <c:set var="hasOnlyOnePage" scope="request">
         <c:choose>
             <c:when test="${fn:length(pages) == 1}">true</c:when>
@@ -48,12 +48,12 @@
                  <%-- determine if the current page in the list matches the page the user is viewing --%>
                  <c:set var="isCurrentPage">
                      <c:choose>
-                         <c:when test="${page.entityId == userPage.entityId}">true</c:when>
+                         <c:when test="${page.id == userPage.id}">true</c:when>
                          <c:otherwise>false</c:otherwise>
                      </c:choose>
                  </c:set>
-                 <div id="tab-${userPage.entityId}" class="rave-ui-tab rave-ui-tab-mobile<c:if test="${isCurrentPage}"> rave-ui-tab-selected rave-ui-tab-selected-mobile</c:if>">
-                    <div id="pageTitle-${userPage.entityId}" class="page-title" onclick="rave.viewPage(${userPage.entityId});"><c:out value="${userPage.name}"/></div>
+                 <div id="tab-${userPage.id}" class="rave-ui-tab rave-ui-tab-mobile<c:if test="${isCurrentPage}"> rave-ui-tab-selected rave-ui-tab-selected-mobile</c:if>">
+                    <div id="pageTitle-${userPage.id}" class="page-title" onclick="rave.viewPage(${userPage.id});"><c:out value="${userPage.name}"/></div>
                 </div>
             </c:forEach>
             <%-- display the add page button at the end of the tabs --%>
@@ -64,17 +64,17 @@
     <%-- the mobile view will only show one column of widgets --%>
     <div id="pageContent" class="pageContent-mobile">
         <c:forEach var="region" items="${page.regions}">
-            <div class="region-mobile" id="region-${region.entityId}-id">
+            <div class="region-mobile" id="region-${region.id}-id">
             <c:forEach var="regionWidget" items="${region.regionWidgets}">
-               <div class="widget-wrapper widget-wrapper-mobile" id="widget-${regionWidget.entityId}-wrapper">
-                    <div class="widget-title-bar widget-title-bar-mobile" onclick="rave.toggleMobileWidget(${regionWidget.entityId});">
-                        <span id="widget-${regionWidget.entityId}-collapse" class="widget-toolbar-toggle-collapse" title="<fmt:message key="widget.chrome.toggle"/>"></span>
-                        <div id="widget-${regionWidget.entityId}-title" class="widget-title">
+               <div class="widget-wrapper widget-wrapper-mobile" id="widget-${regionWidget.id}-wrapper">
+                    <div class="widget-title-bar widget-title-bar-mobile" onclick="rave.toggleMobileWidget(${regionWidget.id});">
+                        <span id="widget-${regionWidget.id}-collapse" class="widget-toolbar-toggle-collapse" title="<fmt:message key="widget.chrome.toggle"/>"></span>
+                        <div id="widget-${regionWidget.id}-title" class="widget-title">
                             <c:out value="${regionWidget.widget.title}"/>
                         </div>
                     </div>
-                    <div class="widget-prefs" id="widget-${regionWidget.entityId}-prefs-content"></div>
-                    <div class="widget widget-mobile" id="widget-${regionWidget.entityId}-body">
+                    <div class="widget-prefs" id="widget-${regionWidget.id}-prefs-content"></div>
+                    <div class="widget widget-mobile" id="widget-${regionWidget.id}-body">
                             <portal:render-widget regionWidget="${regionWidget}" />
                     </div>
                 </div>
@@ -112,8 +112,8 @@
                     <option value="-1"><fmt:message key="page.general.movethispage.tofirst"/></option>
                 </c:if>
                 <c:forEach var="userPage" items="${pages}">
-                    <c:if test="${userPage.entityId != page.entityId}">
-                        <option value="${userPage.entityId}">
+                    <c:if test="${userPage.id != page.id}">
+                        <option value="${userPage.id}">
                           <fmt:message key="page.general.movethispage.after">
                               <fmt:param><c:out value="${userPage.name}"/></fmt:param>
                           </fmt:message>
@@ -129,8 +129,8 @@
         <form id="moveWidgetForm">
             <select id="moveToPageId">
                 <c:forEach var="userPage" items="${pages}">
-                    <c:if test="${userPage.entityId != page.entityId}">
-                        <option value="${userPage.entityId}">
+                    <c:if test="${userPage.id != page.id}">
+                        <option value="${userPage.id}">
                             <c:out value="${userPage.name}"/>
                         </option>
                     </c:if>

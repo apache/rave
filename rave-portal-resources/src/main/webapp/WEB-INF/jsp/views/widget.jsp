@@ -40,10 +40,10 @@
                 </c:if>
                 <c:choose>
                     <c:when test="${widget.widgetStatus eq 'PUBLISHED'}">
-                        <div id="widgetAdded_${widget.entityId}" class="detailWidgetAdd">
+                        <div id="widgetAdded_${widget.id}" class="detailWidgetAdd">
                             <button class="btn btn-primary btn-large storeItemButton"
-                                    id="addWidget_${widget.entityId}"
-                                    onclick="rave.api.rpc.addWidgetToPage({widgetId: ${widget.entityId}, pageId: ${referringPageId}, redirectAfterAdd:true});">
+                                    id="addWidget_${widget.id}"
+                                    onclick="rave.api.rpc.addWidgetToPage({widgetId: ${widget.id}, pageId: ${referringPageId}, redirectAfterAdd:true});">
                                 <fmt:message key="page.widget.addToPage"/>
                             </button>
                         </div>
@@ -62,7 +62,7 @@
 					<c:set var="widgetHasTitleUrl" value="${not empty widget.titleUrl}"/>
 					<c:if test="${widgetHasTitleUrl}"><a href="<c:out value="${widget.titleUrl}"/>" rel="external">
 					</c:if>
-					<span id="widget-${widget.entityId}-title"><c:out value="${widget.title}"/></span>
+					<span id="widget-${widget.id}-title"><c:out value="${widget.title}"/></span>
 					<c:if test="${widgetHasTitleUrl}"></a></c:if>
 			   </h2>
                 <c:if test="${widget.disableRendering}">
@@ -94,35 +94,35 @@
                 <div>
                     <h3><fmt:message key="page.widget.rate"/></h3>
                     <form class="hidden">
-                        <input type="hidden" id="rate-${widget.entityId}"
-                               value="${widgetsStatistics[widget.entityId]!=null?widgetsStatistics[widget.entityId].userRating:"-1"}">
+                        <input type="hidden" id="rate-${widget.id}"
+                               value="${widgetsStatistics[widget.id]!=null?widgetsStatistics[widget.id].userRating:"-1"}">
                     </form>
-                    <div id="rating-${widget.entityId}" class="ratingButtons btn-group" data-toggle="buttons-radio">
-                        <button id="like-${widget.entityId}" class="widgetLikeButton btn btn-small ${widgetsStatistics[widget.entityId].userRating==10? 'active btn-success':''}"
-                                ${widgetsStatistics[widget.entityId].userRating==10 ? " checked='true'":""}
-                                name="rating-${widget.entityId}"><i class="icon-plus"></i></button>
-                        <button id="dislike-${widget.entityId}" class="widgetDislikeButton btn btn-small ${widgetsStatistics[widget.entityId].userRating==0? 'active btn-danger':''}"
-                                ${widgetsStatistics[widget.entityId].userRating==0 ? " checked='true'":""}
-                                name="rating-${widget.entityId}"><i class="icon-minus"></i></button>
+                    <div id="rating-${widget.id}" class="ratingButtons btn-group" data-toggle="buttons-radio">
+                        <button id="like-${widget.id}" class="widgetLikeButton btn btn-small ${widgetsStatistics[widget.id].userRating==10? 'active btn-success':''}"
+                                ${widgetsStatistics[widget.id].userRating==10 ? " checked='true'":""}
+                                name="rating-${widget.id}"><i class="icon-plus"></i></button>
+                        <button id="dislike-${widget.id}" class="widgetDislikeButton btn btn-small ${widgetsStatistics[widget.id].userRating==0? 'active btn-danger':''}"
+                                ${widgetsStatistics[widget.id].userRating==0 ? " checked='true'":""}
+                                name="rating-${widget.id}"><i class="icon-minus"></i></button>
                         <!-- Displaying the likes and dislikes rating along with total votes -->
                     </div>
                     <br>
                     <div>
                         <span class="widgetLikeCount">
                             <c:set var="widgetLikes">
-                                ${widgetsStatistics[widget.entityId]!=null?widgetsStatistics[widget.entityId].totalLike:"0"}
+                                ${widgetsStatistics[widget.id]!=null?widgetsStatistics[widget.id].totalLike:"0"}
                             </c:set>
                             <span><fmt:message key="page.widget.rate.likes"/></span>
-                            <span id="totalLikes-${widget.entityId}" data-rave-widget-likes="${widgetLikes}">
+                            <span id="totalLikes-${widget.id}" data-rave-widget-likes="${widgetLikes}">
                                 ${widgetLikes}
                             </span>
                         </span>
                         <span class="widgetDislikeCount">
                             <c:set var="widgetDislikes">
-                                ${widgetsStatistics[widget.entityId]!=null?widgetsStatistics[widget.entityId].totalDislike:"0"}
+                                ${widgetsStatistics[widget.id]!=null?widgetsStatistics[widget.id].totalDislike:"0"}
                             </c:set>
                             <span><fmt:message key="page.widget.rate.dislikes"/></span>
-                            <span id="totalDislikes-${widget.entityId}" data-rave-widget-dislikes="${widgetDislikes}">
+                            <span id="totalDislikes-${widget.id}" data-rave-widget-dislikes="${widgetDislikes}">
                                 ${widgetDislikes}
                             </span>
                         </span>
@@ -132,7 +132,7 @@
                     <p><c:set var="widgetUserCountGreaterThanZero"
                            value="${widgetStatistics != null && widgetStatistics.totalUserCount > 0}"/>
                     <c:if test="${widgetUserCountGreaterThanZero}"><a href="javascript:void(0);"
-                                                                      onclick="rave.displayUsersOfWidget(${widget.entityId});"></c:if>
+                                                                      onclick="rave.displayUsersOfWidget(${widget.id});"></c:if>
                     <fmt:formatNumber groupingUsed="true" value="${widgetStatistics.totalUserCount}"/>&nbsp;<fmt:message
                             key="page.widget.usercount"/>
                     <c:if test="${widgetUserCountGreaterThanZero}"></a></c:if>
@@ -154,7 +154,7 @@
                     <div id="tagInput" class="form-inline hide">
                         <label for="tags"><fmt:message key="page.widget.tags.add"/> </label>
                         <input type="text" id="tags" data-provide="typeahead" />
-                        <button id="tag-new-${widget.entityId}" class="btn tagNewButton" title="Add Tag">
+                        <button id="tag-new-${widget.id}" class="btn tagNewButton" title="Add Tag">
                             <i class="icon-tag"></i>
                         </button>
                     </div>
@@ -179,8 +179,8 @@
                     <h3><fmt:message key="page.widget.comments"/></h3>
                     <div class="new-comment form-inline well">
                         <div class="row-fluid">
-                        <textarea id="newComment-${widget.entityId}" class="span11"></textarea>&nbsp;
-                        <button id="comment-new-${widget.entityId}" class="btn commentNewButton" title="Add Comment"><i class="icon-comment"></i></button>
+                        <textarea id="newComment-${widget.id}" class="span11"></textarea>&nbsp;
+                        <button id="comment-new-${widget.id}" class="btn commentNewButton" title="Add Comment"><i class="icon-comment"></i></button>
                     </div>                     </div>
                     <c:if test="${not empty widget.comments}">
                         <ul class="comments">
@@ -199,12 +199,12 @@
                                         <span class="comment-date">
                                             <c:out value=" - ${commentDate} "/>
                                         </span>
-                                        <c:if test="${userProfile.entityId eq comment.user.entityId}">
-                                            <button id="comment-delete-${comment.entityId}" class="btn btn-danger btn-mini commentDeleteButton"
+                                        <c:if test="${userProfile.id eq comment.user.id}">
+                                            <button id="comment-delete-${comment.id}" class="btn btn-danger btn-mini commentDeleteButton"
                                                     value="Delete" title="Delete comment" data-widgetid="<c:out value="${comment.widgetId}"/>">
                                                 <i class="icon-remove icon-white"></i>
                                             </button>
-                                            <button id="comment-edit-${comment.entityId}" class="btn btn-mini commentEditButton"
+                                            <button id="comment-edit-${comment.id}" class="btn btn-mini commentEditButton"
                                                     value="Edit" title="Edit comment"
                                                     data-widgetid="<c:out value="${comment.widgetId}"/>"
                                                     data-toggle="modal" data-target="#editComment-dialog">
@@ -244,7 +244,7 @@
     <script>
         $(function () {
             rave.store.init('<c:out value="${referringPageId}"/>');
-            rave.store.initTags("<c:out value="${widget.entityId}"/>");
+            rave.store.initTags("<c:out value="${widget.id}"/>");
         });
     </script>
 </portal:register-init-script>

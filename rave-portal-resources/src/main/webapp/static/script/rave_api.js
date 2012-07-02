@@ -50,7 +50,7 @@ rave.api = rave.api || (function() {
                 error: handleError
             });
         }
-        
+
         function saveWidgetPreference(args) {
             $.ajax({
                 type: 'PUT',
@@ -66,36 +66,36 @@ rave.api = rave.api || (function() {
                 error: handleError
             });
         }
-        
+
         function saveWidgetCollapsedState(args) {
             $.ajax({
                 type: 'PUT',
                 url: rave.getContext() + path + "regionWidgets/" + args.regionWidgetId + "/collapsed",
-                data: JSON.stringify(args.collapsed),  
+                data: JSON.stringify(args.collapsed),
                 contentType: 'application/json',
                 dataType: 'json',
-                success: function(result) {                    
-                    rave.doWidgetUiCollapse({"regionWidgetId": result.entityId, 
-                                             "collapsed": result.collapsed, 
-                                             "successCallback": args.successCallback});                    
+                success: function(result) {
+                    rave.doWidgetUiCollapse({"regionWidgetId": result.id,
+                                             "collapsed": result.collapsed,
+                                             "successCallback": args.successCallback});
                 },
                 error: handleError
-            });                        
+            });
         }
-        
+
         function deletePage(args) {
             $.ajax({
                 type: 'DELETE',
-                url: rave.getContext() + path + "page/" + args.pageId,                              
+                url: rave.getContext() + path + "page/" + args.pageId,
                 success: function(result) {
                     if (typeof args.successCallback == 'function') {
                         args.successCallback();
                     }
                 },
                 error: handleError
-            });            
+            });
         }
-        
+
         function deleteWidgetRating(args) {
             $.ajax({
                 type: 'DELETE',
@@ -108,7 +108,7 @@ rave.api = rave.api || (function() {
                 error: handleError
             })
         }
-        
+
         function updateWidgetRating(args) {
             $.ajax({
                 type: 'POST',
@@ -121,7 +121,7 @@ rave.api = rave.api || (function() {
                 error: handleError
             })
         }
-        
+
         function createWidgetComment(args) {
             $.ajax({
                 type: 'POST',
@@ -134,7 +134,7 @@ rave.api = rave.api || (function() {
                 error: handleError
             })
         }
-        
+
         function deleteWidgetComment(args) {
             $.ajax({
                 type: 'DELETE',
@@ -147,7 +147,7 @@ rave.api = rave.api || (function() {
                 error: handleError
             })
         }
-        
+
         function updateWidgetComment(args) {
             $.ajax({
                 type: 'POST',
@@ -276,7 +276,7 @@ rave.api = rave.api || (function() {
                     }
                 }).error(handleError);
         }
-        
+
         function addPage(args) {
             $.post(rave.getContext() + path + "page/add",
                 {
@@ -286,9 +286,9 @@ rave.api = rave.api || (function() {
                 function(result) {
                     if (result.error) {
                         // check to see if a duplicate page name error occurred
-                        if (result.errorCode == 'DUPLICATE_ITEM') {                        
+                        if (result.errorCode == 'DUPLICATE_ITEM') {
                             $("#pageFormErrors").html(rave.getClientMessage("page.duplicate_name"));
-                        } else {                        
+                        } else {
                             handleRpcError(result);
                         }
                     } else {
@@ -298,7 +298,7 @@ rave.api = rave.api || (function() {
                     }
                 }).error(handleError);
         }
-        
+
         function movePage(args) {
             // the moveAfterPageId attribute could be undefined if moving
             // to the first position. In that case don't send a moveAfterPageId
@@ -311,8 +311,8 @@ rave.api = rave.api || (function() {
             $.post(rave.getContext() + path + "page/" + args.pageId + "/move",
                 data,
                 function(result) {
-                    if (result.error) {                   
-                        handleRpcError(result);                        
+                    if (result.error) {
+                        handleRpcError(result);
                     } else {
                         if (typeof args.successCallback == 'function') {
                             args.successCallback(result);
@@ -377,7 +377,7 @@ rave.api = rave.api || (function() {
                     break;
                 case "INTERNAL_ERROR":
                     alert(rave.getClientMessage("api.rpc.error.internal"));
-                    break;                
+                    break;
             }
         }
 
@@ -422,7 +422,7 @@ rave.api = rave.api || (function() {
                    }
                }).error(handleError);
         }
-        
+
         function getUsers(args){
             var offset = args.offset;
             $.get(rave.getContext() + path + "users/get",
@@ -459,7 +459,7 @@ rave.api = rave.api || (function() {
                         }
                     }).error(handleError);
         }
-        
+
         function addMemberToPage(args) {
             $.post(rave.getContext() + path + "page/" + args.pageId + "/addmember",
                {"userId": args.userId},
@@ -474,7 +474,7 @@ rave.api = rave.api || (function() {
                    }
                }).error(handleError);
         }
-        
+
         function removeMemberFromPage(args){
             $.post(rave.getContext() + path + "page/" + args.pageId + "/removemember",
                 {"userId": args.userId},
@@ -504,7 +504,7 @@ rave.api = rave.api || (function() {
                     }
             }).error(handleError);
         }
-        
+
         function updatePageEditingStatus(args){
             $.post(rave.getContext() + path + "page/" + args.pageId + "/editstatus",
                 {"userId": args.userId,
@@ -520,7 +520,7 @@ rave.api = rave.api || (function() {
                     }
             }).error(handleError);
         }
-        
+
         return {
             moveWidget : moveWidgetOnPage,
             addWidgetToPage : addWidgetToPage,
@@ -543,78 +543,78 @@ rave.api = rave.api || (function() {
     })();
 
     /*
-     *	Handler functions to handle modifications on user events 
+     *	Handler functions to handle modifications on user events
      */
     var handlerApi = (function() {
-    	
+
     	//function to handle widget rating changes
     	function widgetRatingHandler(widgetRating) {
-    		
+
     		//retrieving the current total likes
     		var likeTotalLabel = document.getElementById("totalLikes-"+ widgetRating.widgetId);
-    		var likeTotal = likeTotalLabel.getAttribute("data-rave-widget-likes"); 
-    		
+    		var likeTotal = likeTotalLabel.getAttribute("data-rave-widget-likes");
+
     		//retrieving the current total dislikes
     		var dislikeTotalLabel = document.getElementById("totalDislikes-"+ widgetRating.widgetId);
-			var dislikeTotal = dislikeTotalLabel.getAttribute("data-rave-widget-dislikes"); 
-    		
+			var dislikeTotal = dislikeTotalLabel.getAttribute("data-rave-widget-dislikes");
+
 			//initializing temporary variables
 			var incrementingTotal = -1;
 			var decrementingTotal = -1;
 			var curButton = "";
 			var prevButton = "";
 			var prevRating = -1;
-			
+
 			//check if like rating needs to be updated
     		if(widgetRating.isLike) {
-    			
+
     			//set incrementing total to like total
     			incrementingTotal = likeTotal;
-    			
+
     			//set the incrementing total label to like total label
     			incrementingTotalLabel = likeTotalLabel;
-    			
+
     			//set decrementing total to dislike total
     			decrementingTotal = dislikeTotal;
-    			
+
     			//set the decrementing total label to dislike total label
     			decrementingTotalLabel = dislikeTotalLabel;
-    			
+
     			//set the current clicked button to like button
     			curButton = widgetRating.widgetLikeButton;
-    			
+
     			//set the previous clicked button to dislike button
     			prevButton = widgetRating.widgetDislikeButton;
-    			
-    			//set the previous rating to 0 to check if dislike was clicked earlier 
+
+    			//set the previous rating to 0 to check if dislike was clicked earlier
     			prevRating = 0;
     		}
-    		
+
     		//check if dislike rating needs to be updated
     		else {
-    			    			
+
     			//set incrementing total to dislike total
     			incrementingTotal = dislikeTotal;
-    			
+
     			//set the incrementing total label to dislike total label
     			incrementingTotalLabel = dislikeTotalLabel;
-    			
+
     			//set decrementing total to like total
     			decrementingTotal = likeTotal;
-    			
+
     			//set the decrementing total label to like total label
     			decrementingTotalLabel = likeTotalLabel;
-    			
+
     			//set the current clicked button to dislike button
     			curButton = widgetRating.widgetDislikeButton;
-    			
+
     			//set the previous clicked button to like button
     			prevButton = widgetRating.widgetLikeButton;
-    			
-    			//set the previous rating to 10 to check if like was clicked earlier 
+
+    			//set the previous rating to 10 to check if like was clicked earlier
     			prevRating = 10;
     		}
-        		        		
+
     		//update incrementing total
         	incrementingTotal = parseInt(incrementingTotal) + 1;
         	if(incrementingTotalLabel == likeTotalLabel) {
@@ -625,8 +625,8 @@ rave.api = rave.api || (function() {
         		incrementingTotalLabel.setAttribute("data-rave-widget-dislikes", incrementingTotal);
         		incrementingTotalLabel.innerHTML = incrementingTotal;
         	}
-        	
-        	//get the value of hidden user rating 
+
+        	//get the value of hidden user rating
         	var hiddenButton = document.getElementById("rate-"+ widgetRating.widgetId);
         	var userPrevRate = hiddenButton.value;
 
@@ -635,10 +635,10 @@ rave.api = rave.api || (function() {
         	//that the user had a contrary selection prior to the change event
         	if (prevButton.get(0).getAttribute("checked") == "true" || curButton.checked == true) {
         		prevButton.get(0).setAttribute("checked", "false");
-			
+
         		//remove the previous rating made by the user if any by checking change in userRating
         		if(parseInt(userPrevRate) == prevRating) {
-        			       				
+
         			//update decrementing total
         			if(parseInt(decrementingTotal) - 1 > -1) {
         				decrementingTotal = parseInt(decrementingTotal) - 1;
@@ -652,9 +652,9 @@ rave.api = rave.api || (function() {
         				}
         			}
         		}
-            		
+
         	}
-            
+
         	//flag this element as the currently checked one
         	curButton.setAttribute("checked", "true");
 
@@ -673,18 +673,18 @@ rave.api = rave.api || (function() {
     			var panelId = "#" + profileTab.id.substring(0, profileTab.id.indexOf("Tab")) + "Panel";
     			$(panelId).slideToggle("slow");
     	}
-    	
+
     	//function to toggle hide and show of tag pages
     	function userProfileTagHandler(profileTag, defaultTagPage) {
-    		
+
     			//first close any tag pages if open
     			$(".profile-tag-page").hide();
-    			
+
     			//show default tag page is set true
     			if(defaultTagPage != null) {
     				$(defaultTagPage).show();
     			}
-    			
+
     			else {
     				//extract the tag page id from profile tag id
     				var tagPageId = "#" + profileTag.id + "Page";
@@ -692,7 +692,7 @@ rave.api = rave.api || (function() {
     				$(tagPageId).show();
     			}
     	}
-    	
+
     	function userProfileEditHandler(isEdit) {
     		//get the edit element
     		var profileInfo = document.getElementById("profileInfo");
@@ -700,14 +700,14 @@ rave.api = rave.api || (function() {
     		var hiddenFields = "." + profileInfo.value + "-hidden";
     		//extract labels through their class
     		var visibleFields = "." + profileInfo.value + "-visible";
-    		    		
+
     		if(isEdit) {
     			//make hidden fields visible
     			$(hiddenFields).show();
     			//make visible fields invisible
     			$(visibleFields).hide();
     		}
-    		
+
     		else {
     			//make hidden fields invisible
     			$(hiddenFields).hide();
@@ -715,14 +715,14 @@ rave.api = rave.api || (function() {
     			$(visibleFields).show();
     		}
     	}
-    	
+
     	return {
     		widgetRatingHandler : widgetRatingHandler,
     		userProfileTabHandler : userProfileTabHandler,
     		userProfileTagHandler : userProfileTagHandler,
     		userProfileEditHandler : userProfileEditHandler
     	};
-    	
+
     })();
 
     return {

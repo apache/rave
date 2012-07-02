@@ -80,7 +80,7 @@
                         <%--@elvariable id="widget" type="org.apache.rave.portal.model.JpaWidget"--%>
                     <c:forEach var="widget" items="${widgets.resultSet}">
                         <%--@elvariable id="widgetsStatistics" type="org.apache.rave.portal.model.util.WidgetStatistics"--%>
-                        <c:set var="widgetStatistics" value="${widgetsStatistics[widget.entityId]}"/>
+                        <c:set var="widgetStatistics" value="${widgetsStatistics[widget.id]}"/>
                         <c:choose>
                             <c:when test='${widget.featured == "true"}'>
                                 <li class="storeItem storeItemFeatured">
@@ -97,9 +97,9 @@
                                      width="120" height="60"/>
                             </c:if>
 
-                            <div id="widgetAdded_${widget.entityId}" class="storeButton">
-                                <button class="btn btn-small btn-primary" id="addWidget_${widget.entityId}"
-                                        onclick="rave.api.rpc.addWidgetToPage({widgetId: ${widget.entityId}, pageId: ${referringPageId}, buttonId: this.id});">
+                            <div id="widgetAdded_${widget.id}" class="storeButton">
+                                <button class="btn btn-small btn-primary" id="addWidget_${widget.id}"
+                                        onclick="rave.api.rpc.addWidgetToPage({widgetId: ${widget.id}, pageId: ${referringPageId}, buttonId: this.id});">
                                     <fmt:message key="page.widget.addToPage"/>
                                 </button>
                             </div>
@@ -107,9 +107,9 @@
                         </div>
 
                         <div class="storeItemCenter">
-                            <a id="widget-${widget.entityId}-title"
+                            <a id="widget-${widget.id}-title"
                                class="secondaryPageItemTitle"
-                               href="<spring:url value="/app/store/widget/${widget.entityId}" />?referringPageId=${referringPageId}">
+                               href="<spring:url value="/app/store/widget/${widget.id}" />?referringPageId=${referringPageId}">
                                 <c:out value="${widget.title}"/>
                             </a>
                             <c:if test="${widget.disableRendering}">
@@ -130,16 +130,16 @@
                             <div class="widgetRating">
                                 <fmt:message key="page.widget.rate"/>
                                 <form class="hidden">
-                                    <input type="hidden" id="rate-${widget.entityId}"
-                                           value="${widgetsStatistics[widget.entityId]!=null?widgetsStatistics[widget.entityId].userRating:"-1"}">
+                                    <input type="hidden" id="rate-${widget.id}"
+                                           value="${widgetsStatistics[widget.id]!=null?widgetsStatistics[widget.id].userRating:"-1"}">
                                 </form>
-                                <div id="rating-${widget.entityId}" class="ratingButtons btn-group" data-toggle="buttons-radio">
-                                    <button id="like-${widget.entityId}" class="widgetLikeButton btn btn-small ${widgetsStatistics[widget.entityId].userRating==10? 'active btn-success':''}"
-                                            ${widgetsStatistics[widget.entityId].userRating==10 ? " checked='true'":""}
-                                            name="rating-${widget.entityId}"><i class="icon-plus"></i></button>
-                                    <button id="dislike-${widget.entityId}" class="widgetDislikeButton btn btn-small ${widgetsStatistics[widget.entityId].userRating==0? 'active btn-danger':''}"
-                                            ${widgetsStatistics[widget.entityId].userRating==0 ? " checked='true'":""}
-                                            name="rating-${widget.entityId}"><i class="icon-minus"></i></button>
+                                <div id="rating-${widget.id}" class="ratingButtons btn-group" data-toggle="buttons-radio">
+                                    <button id="like-${widget.id}" class="widgetLikeButton btn btn-small ${widgetsStatistics[widget.id].userRating==10? 'active btn-success':''}"
+                                            ${widgetsStatistics[widget.id].userRating==10 ? " checked='true'":""}
+                                            name="rating-${widget.id}"><i class="icon-plus"></i></button>
+                                    <button id="dislike-${widget.id}" class="widgetDislikeButton btn btn-small ${widgetsStatistics[widget.id].userRating==0? 'active btn-danger':''}"
+                                            ${widgetsStatistics[widget.id].userRating==0 ? " checked='true'":""}
+                                            name="rating-${widget.id}"><i class="icon-minus"></i></button>
                                     <!-- Displaying the likes and dislikes rating along with total votes -->
                                 </div>
                             </div>
@@ -169,19 +169,19 @@
                             </c:if>
                             <span class="widgetLikeCount">
                                 <c:set var="widgetLikes">
-                                    ${widgetsStatistics[widget.entityId]!=null?widgetsStatistics[widget.entityId].totalLike:"0"}
+                                    ${widgetsStatistics[widget.id]!=null?widgetsStatistics[widget.id].totalLike:"0"}
                                 </c:set>
                                 <span><fmt:message key="page.widget.rate.likes"/></span>
-                                <span id="totalLikes-${widget.entityId}" data-rave-widget-likes="${widgetLikes}">
+                                <span id="totalLikes-${widget.id}" data-rave-widget-likes="${widgetLikes}">
                                     ${widgetLikes}
                                 </span>
                             </span>
                             <span class="widgetDislikeCount">
                                 <c:set var="widgetDislikes">
-                                    ${widgetsStatistics[widget.entityId]!=null?widgetsStatistics[widget.entityId].totalDislike:"0"}
+                                    ${widgetsStatistics[widget.id]!=null?widgetsStatistics[widget.id].totalDislike:"0"}
                                 </c:set>
                                 <span><fmt:message key="page.widget.rate.dislikes"/></span>
-                                <span id="totalDislikes-${widget.entityId}" data-rave-widget-dislikes="${widgetDislikes}">
+                                <span id="totalDislikes-${widget.id}" data-rave-widget-dislikes="${widgetDislikes}">
                                     ${widgetDislikes}
                                 </span>
                             </span>
@@ -190,7 +190,7 @@
                                 <c:set var="widgetUserCountGreaterThanZero"
                                        value="${widgetStatistics != null && widgetStatistics.totalUserCount > 0}"/>
                                 <c:if test="${widgetUserCountGreaterThanZero}">
-                                    <a href="javascript:void(0);" onclick="rave.displayUsersOfWidget(${widget.entityId});">
+                                    <a href="javascript:void(0);" onclick="rave.displayUsersOfWidget(${widget.id});">
                                 </c:if>
                                 <fmt:formatNumber groupingUsed="true"
                                                   value="${widgetStatistics!=null?widgetStatistics.totalUserCount:0}"/>&nbsp;<fmt:message key="page.widget.usercount"/>
@@ -270,11 +270,11 @@
                                     <option value="0"></option>
                                     <c:forEach var="category" items="${categories}">
                                         <c:choose>
-                                            <c:when test="${selectedCategory==category.entityId}">
-                                                <option value="${category.entityId}" selected>
+                                            <c:when test="${selectedCategory==category.id}">
+                                                <option value="${category.id}" selected>
                                             </c:when>
                                             <c:otherwise>
-                                                <option value="${category.entityId}">
+                                                <option value="${category.id}">
                                             </c:otherwise>
                                         </c:choose>
                                         <c:out value="${category.text}"/>

@@ -49,7 +49,7 @@
                 </thead>
                 <tbody>
                 <c:forEach items="${categories}" var="category">
-                    <spring:url value="/app/admin/category/edit?id=${category.entityId}" var="detaillink"/>
+                    <spring:url value="/app/admin/category/edit?id=${category.id}" var="detaillink"/>
 
                     <tr data-detaillink="${detaillink}">
                         <td>

@@ -50,7 +50,7 @@
                     </thead>
                     <tbody>
                     <c:forEach var="widget" items="${searchResult.resultSet}">
-                        <spring:url value="/app/admin/widgetdetail/${widget.entityId}" var="detaillink"/>
+                        <spring:url value="/app/admin/widgetdetail/${widget.id}" var="detaillink"/>
                         <tr data-detaillink="${detaillink}">
                             <td><a href="${detaillink}"><c:out value="${widget.title}"/></a></td>
                             <td><fmt:message key="widget.type.${widget.type}"/></td>

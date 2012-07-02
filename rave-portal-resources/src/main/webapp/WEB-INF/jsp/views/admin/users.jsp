@@ -54,7 +54,7 @@
                     </thead>
                     <tbody>
                     <c:forEach var="user" items="${searchResult.resultSet}">
-                        <spring:url value="/app/admin/userdetail/${user.entityId}" var="detaillink"/>
+                        <spring:url value="/app/admin/userdetail/${user.id}" var="detaillink"/>
                         <tr data-detaillink="${detaillink}">
                             <td><a href="${detaillink}"><c:out value="${user.username}"/></a></td>
                             <td><c:out value="${user.email}"/></td>

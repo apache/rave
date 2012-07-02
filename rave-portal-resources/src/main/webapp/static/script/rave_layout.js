@@ -76,7 +76,7 @@ rave.layout = rave.layout || (function() {
                  rave.api.rpc.getPagePrefs({pageId: getCurrentPageId(),
                                         successCallback: function(result) {
                                             $tab_title_input.val(result.result.name);
-                                            $tab_id.val(result.result.entityId);
+                                            $tab_id.val(result.result.id);
                                             $page_layout_input.val(result.result.pageLayout.code);
                                             $("#pageMenuDialogHeader").html(rave.getClientMessage("page.update"));
                                             var $pageMenuUpdateButton = $("#pageMenuUpdateButton");
@@ -106,7 +106,7 @@ rave.layout = rave.layout || (function() {
             }
 
             // setup the share page menu item
-            if (!$menuItemShare.hasClass("menu-item-disabled")) {  
+            if (!$menuItemShare.hasClass("menu-item-disabled")) {
                 $menuItemShare.bind('click', function(event) {
                     rave.api.rpc.getUsers({offset: 0,
                         successCallback: function(result) {
@@ -118,9 +118,9 @@ rave.layout = rave.layout || (function() {
             }
 
             // setup the revoke share page menu item
-            if (!$menuItemRevokeShare.hasClass("menu-item-disabled")) {  
+            if (!$menuItemRevokeShare.hasClass("menu-item-disabled")) {
                 $menuItemRevokeShare.bind('click', function(event) {
-                    rave.layout.searchHandler.removeMemberFromPage(rave.layout.searchHandler.userId, 
+                    rave.layout.searchHandler.removeMemberFromPage(rave.layout.searchHandler.userId,
                         rave.layout.searchHandler.username);
                 });
             }
@@ -229,7 +229,7 @@ rave.layout = rave.layout || (function() {
                                     $("<a/>")
                                     .attr("href", "#")
                                     .attr("id", userId)
-                                    .attr("onclick", "rave.layout.searchHandler.removeMemberFromPage(" + 
+                                    .attr("onclick", "rave.layout.searchHandler.removeMemberFromPage(" +
                                         userId+", '" + username+"');")
                                     .text(rave.getClientMessage("common.remove"))
                             )
@@ -324,8 +324,8 @@ rave.layout = rave.layout || (function() {
                         rave.layout.searchHandler.dealWithUserResults(result);
                     }
                 });
-            }); 
-            
+            });
+
             // user clicks "clear search" in the find users dialog
             $("#clearSearchButton").click(function() {
                 $('#searchTerm').get(0).value = "";
@@ -335,9 +335,9 @@ rave.layout = rave.layout || (function() {
                         rave.layout.searchHandler.dealWithUserResults(result);
                     }
                 });
-            }); 
+            });
         }//end of init()
-        
+
         function updateParamsInString(i18nStr, itemsToReplace){
             for(var i=0;i<itemsToReplace.length;i++){
                 var token = '{'+i+'}';
@@ -353,8 +353,8 @@ rave.layout = rave.layout || (function() {
                 $pagingDiv.append('<div class="pagination"><ul id="pagingul" >');
                 if(userResults.result.currentPage > 1){
                     offset = (userResults.result.currentPage - 2) * userResults.result.pageSize;
-                    $('#pagingul').append('<li><a href="#" onclick="rave.api.rpc.getUsers({offset: ' + 
-                        offset+', successCallback: function(result)' + 
+                    $('#pagingul').append('<li><a href="#" onclick="rave.api.rpc.getUsers({offset: ' +
+                        offset+', successCallback: function(result)' +
                             ' {rave.layout.searchHandler.dealWithUserResults(result);}});">&lt;</a></li>');
                 }
                 for(var i=1;i<=userResults.result.numberOfPages;i++){
@@ -362,15 +362,15 @@ rave.layout = rave.layout || (function() {
                         $('#pagingul').append('<li class="active"><a href="#">'+i+'</a></li>');
                     }else{
                         offset = (i - 1) * userResults.result.pageSize;
-                        $('#pagingul').append('<li><a href="#" onclick="rave.api.rpc.getUsers({offset: ' + 
-                            offset + ', successCallback: function(result)' + 
+                        $('#pagingul').append('<li><a href="#" onclick="rave.api.rpc.getUsers({offset: ' +
+                            offset + ', successCallback: function(result)' +
                                 ' {rave.layout.searchHandler.dealWithUserResults(result);}});">' + i + '</a></li>');
                     }
                 }
                 if (userResults.result.currentPage < userResults.result.numberOfPages){
                     offset = (userResults.result.currentPage) * userResults.result.pageSize;
-                    $('#pagingul').append('<li><a href="#" onclick="rave.api.rpc.getUsers({offset: ' + 
-                        offset + ', successCallback: function(result)' + 
+                    $('#pagingul').append('<li><a href="#" onclick="rave.api.rpc.getUsers({offset: ' +
+                        offset + ', successCallback: function(result)' +
                             ' {rave.layout.searchHandler.dealWithUserResults(result);}});">&gt;</a></li>');
                 }
                 $pagingDiv.append('</ul></div>')
@@ -388,8 +388,8 @@ rave.layout = rave.layout || (function() {
             if(userResults.result.resultSet.length < 1){
                 legend = rave.getClientMessage("no.results.found");
             }else{
-                legend = updateParamsInString(rave.getClientMessage("search.list.result.x.to.y"), 
-                    new Array(userResults.result.offset + 1, userResults.result.resultSet.length 
+                legend = updateParamsInString(rave.getClientMessage("search.list.result.x.to.y"),
+                    new Array(userResults.result.offset + 1, userResults.result.resultSet.length
                         + userResults.result.offset, userResults.result.totalResults));
             }
             // show the listheader
@@ -447,58 +447,58 @@ rave.layout = rave.layout || (function() {
                         )
                         .append(
                             $("<td/>")
-                            .attr("id", "shareButtonHolder" + this.entityId)
+                            .attr("id", "shareButtonHolder" + this.id)
                         )
                         .append(
                             $("<td/>")
-                            .attr("id", "pageEditorStatusHolder" + this.entityId)
+                            .attr("id", "pageEditorStatusHolder" + this.id)
                         )
                     )
 
                     if(this.username != rave.layout.searchHandler.username){
-                        // check if already added 
+                        // check if already added
                         if(rave.layout.searchHandler.isUserAlreadyAdded(this.username)){
-                            $('#shareButtonHolder'+this.entityId)
+                            $('#shareButtonHolder'+this.id)
                             .append(
                                 $("<a/>")
                                 .attr("href", "#")
-                                .attr("id", this.entityId)
-                                .attr("onclick", "rave.layout.searchHandler.removeMemberFromPage("+this.entityId+", '"+this.username+"');")
+                                .attr("id", this.id)
+                                .attr("onclick", "rave.layout.searchHandler.removeMemberFromPage("+this.id+", '"+this.username+"');")
                                 .text(rave.getClientMessage("common.remove"))
                             )
                             if(rave.layout.searchHandler.isUserEditor(this.username)){
-                                $('#pageEditorStatusHolder'+this.entityId)
+                                $('#pageEditorStatusHolder'+this.id)
                                 .append(
                                     $("<a/>")
                                     .attr("href", "#")
-                                    .attr("id", this.entityId)
-                                    .attr("onclick", "rave.layout.searchHandler.removeEditingRightsFromMember("+this.entityId+", '"+this.username+"');")
+                                    .attr("id", this.id)
+                                    .attr("onclick", "rave.layout.searchHandler.removeEditingRightsFromMember("+this.id+", '"+this.username+"');")
                                     .text(rave.getClientMessage("common.remove"))
                                 )
                             }
                             else{
-                                $('#pageEditorStatusHolder'+this.entityId)
+                                $('#pageEditorStatusHolder'+this.id)
                                 .append(
                                     $("<a/>")
                                     .attr("href", "#")
-                                    .attr("id", this.entityId)
-                                    .attr("onclick", "rave.layout.searchHandler.addEditingRightsToMember("+this.entityId+", '"+this.username+"');")
+                                    .attr("id", this.id)
+                                    .attr("onclick", "rave.layout.searchHandler.addEditingRightsToMember("+this.id+", '"+this.username+"');")
                                     .text(rave.getClientMessage("common.add"))
                                 )
                             }
                         }else{
-                            $('#shareButtonHolder'+this.entityId)
+                            $('#shareButtonHolder'+this.id)
                             .append(
                                 $("<a/>")
                                 .attr("href", "#")
-                                .attr("id", this.entityId)
-                                .attr("onclick", "rave.layout.searchHandler.addMemberToPage("+this.entityId+", '"+this.username+"');")
+                                .attr("id", this.id)
+                                .attr("onclick", "rave.layout.searchHandler.addMemberToPage("+this.id+", '"+this.username+"');")
                                 .text(rave.getClientMessage("common.add"))
                             )
-                        } 
+                        }
                     }
-                 
-        	})//end jqueryeach 
+
+        	})//end jqueryeach
         }//end dealwithresults
 
         return {
@@ -686,7 +686,7 @@ rave.layout = rave.layout || (function() {
             rave.api.rpc.addPage({pageName: newPageTitle,
                                   pageLayoutCode: newPageLayoutCode,
                                   successCallback: function(result) {
-                                      rave.viewPage(result.result.entityId);
+                                      rave.viewPage(result.result.id);
                                   }
             });
         }
@@ -698,7 +698,7 @@ rave.layout = rave.layout || (function() {
     function movePage() {
         var moveAfterPageId = $("#moveAfterPageId").val();
         var args = { pageId: $("#currentPageId").val(),
-                     successCallback: function(result) { rave.viewPage(result.result.entityId); }
+                     successCallback: function(result) { rave.viewPage(result.result.id); }
                    };
 
         if (moveAfterPageId != MOVE_PAGE_DEFAULT_POSITION_IDX) {
@@ -716,7 +716,7 @@ rave.layout = rave.layout || (function() {
                                             title: $tab_title_input.val(),
                                             layout: $page_layout_input.val(),
                                             successCallback: function(result) {
-                                                rave.viewPage(result.result.entityId);
+                                                rave.viewPage(result.result.id);
                                             }});
         }
     }

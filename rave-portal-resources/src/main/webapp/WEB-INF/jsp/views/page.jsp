@@ -37,7 +37,7 @@
 </fmt:message>
 <rave:navbar pageTitle="${pagetitle}"/>
 
-<input id="currentPageId" type="hidden" value="${page.entityId}"/>
+<input id="currentPageId" type="hidden" value="${page.id}"/>
 <c:set var="hasOnlyOnePage" scope="request">
     <c:choose>
         <c:when test="${fn:length(pages) == 1}">true</c:when>
@@ -53,7 +53,7 @@
                 <%-- determine if the current page in the list matches the page the user is viewing --%>
                 <c:set var="isCurrentPage">
                     <c:choose>
-                        <c:when test="${page.entityId == userPage.entityId}">true</c:when>
+                        <c:when test="${page.id == userPage.id}">true</c:when>
                         <c:otherwise>false</c:otherwise>
                     </c:choose>
                 </c:set>
@@ -75,7 +75,7 @@
                 <fmt:message key="sharing.page.tab.icon.tip.to" var="iconShareToolTipTo"/>
                 <c:choose>
                     <c:when test="${isCurrentPage}">
-                        <li id="tab-${userPage.entityId}" class="active dropdown" >
+                        <li id="tab-${userPage.id}" class="active dropdown" >
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                 <c:if test="${isSharedToMe}">
                                     <b id="pageMenuSharedIcon" class="ui-icon ui-icon-person" title="<c:out value="${iconShareToolTipFrom}"/>"></b>
@@ -96,7 +96,7 @@
                         </li>
                     </c:when>
                     <c:otherwise>
-                        <li id="tab-${userPage.entityId}" onclick="rave.viewPage(${userPage.entityId});">
+                        <li id="tab-${userPage.id}" onclick="rave.viewPage(${userPage.id});">
                             <c:choose>
                                 <c:when test="${isSharedToMe}">
                                     <a href="#" class="rave-ui-tab-shared-to-me">
@@ -118,7 +118,7 @@
                     </c:otherwise>
                 </c:choose>
                 <c:forEach var="members" items="${userPage.members}">
-                    <c:if test="${members.user.username == principleUsername and members.editor and userPage.entityId != page.entityId}">
+                    <c:if test="${members.user.username == principleUsername and members.editor and userPage.id != page.id}">
                         <c:set var="canMoveWidgetsToEditablePage" scope="request" value="true"/>
                     </c:if>
                </c:forEach>
@@ -133,7 +133,7 @@
             <div class="emptyPageMessage">
                 <c:choose>
                     <c:when test="${pageUser.editor == true}">
-                        <a href="<spring:url value="/app/store?referringPageId=${page.entityId}" />"><fmt:message key="page.general.empty"/></a>
+                        <a href="<spring:url value="/app/store?referringPageId=${page.id}" />"><fmt:message key="page.general.empty"/></a>
                     </c:when>
                     <c:otherwise>
                         <fmt:message key="page.general.non.editing.empty"/>
@@ -202,8 +202,8 @@
                                     <option value="-1"><fmt:message key="page.general.movethispage.tofirst"/></option>
                                 </c:if>
                                 <c:forEach var="userPage" items="${pages}">
-                                    <c:if test="${userPage.entityId != page.entityId}">
-                                        <option value="${userPage.entityId}">
+                                    <c:if test="${userPage.id != page.id}">
+                                        <option value="${userPage.id}">
                                             <fmt:message key="page.general.movethispage.after">
                                                 <fmt:param><c:out value="${userPage.name}"/></fmt:param>
                                             </fmt:message>
@@ -236,8 +236,8 @@
                             <select id="moveToPageId">
                                 <c:forEach var="userPage" items="${pages}">
                                     <c:forEach var="members" items="${userPage.members}">
-                                        <c:if test="${members.user.username == principleUsername and members.editor and userPage.entityId != page.entityId}">
-                                            <option value="${userPage.entityId}">
+                                        <c:if test="${members.user.username == principleUsername and members.editor and userPage.id != page.id}">
+                                            <option value="${userPage.id}">
                                                 <c:out value="${userPage.name}"/>
                                             </option>
                                         </c:if>
@@ -304,7 +304,7 @@
             rave.initWidgets();
             rave.initUI();
             rave.layout.init();
-            rave.layout.searchHandler.setDefaults("<c:out value="${principleUsername}"/>","<sec:authentication property="principal.entityId" />","<c:out value="${page.entityId}"/>", "${pageUser.pageStatus}");
+            rave.layout.searchHandler.setDefaults("<c:out value="${principleUsername}"/>","<sec:authentication property="principal.id" />","<c:out value="${page.id}"/>", "${pageUser.pageStatus}");
             rave.runOnPageInitializedHandlers();
         });
     </script>
