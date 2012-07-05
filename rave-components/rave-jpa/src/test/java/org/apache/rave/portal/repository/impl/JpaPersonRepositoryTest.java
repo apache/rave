@@ -90,9 +90,10 @@ public class JpaPersonRepositoryTest {
     @Test
     public void findFriends_valid() {
         List<Person> connected = repository.findFriends(VALID_USER);
-        assertThat(connected.size(), is(equalTo(2)));
+        assertThat(connected.size(), is(equalTo(3)));
         assertThat(connected.get(0).getUsername(), is(equalTo(VALID_USER2)));
         assertThat(connected.get(1).getUsername(), is(equalTo(VALID_USER3)));
+        assertThat(connected.get(2).getUsername(), is(equalTo(VALID_USER4)));
     }
     @Test
     public void findFriends_invalid() {
@@ -103,10 +104,11 @@ public class JpaPersonRepositoryTest {
     @Test
     public void findConnected_valid() {
         List<Person> connected = repository.findAllConnectedPeople(VALID_USER);
-        assertThat(connected.size(), is(equalTo(3)));
+        assertThat(connected.size(), is(equalTo(4)));
         assertThat(connected.get(0).getUsername(), is(equalTo(VALID_USER2)));
         assertThat(connected.get(1).getUsername(), is(equalTo(VALID_USER3)));
-        assertThat(connected.get(2).getUsername(), is(equalTo(VALID_USER5)));
+        assertThat(connected.get(2).getUsername(), is(equalTo(VALID_USER4)));
+        assertThat(connected.get(3).getUsername(), is(equalTo(VALID_USER5)));
     }
 
     @Test
@@ -144,9 +146,18 @@ public class JpaPersonRepositoryTest {
         repository.findFriends("asdf", "asdf");
     }
 
-    @Test(expected = NotSupportedException.class)
-    public void findFriendsWithFriend() {
-        repository.findFriendsWithFriend("asdf", "asdf");
+    @Test
+    public void findFriendsWithFriend_valid() {
+        List<Person> friendsWithFriend = repository.findFriendsWithFriend(VALID_USER, VALID_USER2);
+        assertThat(friendsWithFriend.size(), is(equalTo(2)));
+        assertThat(friendsWithFriend.get(0).getUsername(), is(equalTo(VALID_USER3)));
+        assertThat(friendsWithFriend.get(1).getUsername(), is(equalTo(VALID_USER4)));
+    }
+
+    @Test
+    public void findFriendsWithFriend_invalid() {
+        List<Person> friendsWithFriend = repository.findFriends(INVALID_USERNAME);
+        assertThat(friendsWithFriend.isEmpty(), is(true));
     }
 
     @Test(expected = NotSupportedException.class)

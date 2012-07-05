@@ -200,9 +200,23 @@ UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @p
 
 set @next_person_association = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @person_association_seq);
 INSERT INTO person_association(entity_id, follower_id, followed_id)
+VALUES (@next_person_association, @user_id_1, @user_id_4);
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @person_association_seq;
+
+set @next_person_association = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @person_association_seq);
+INSERT INTO person_association(entity_id, follower_id, followed_id)
+VALUES (@next_person_association, @user_id_2, @user_id_3);
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @person_association_seq;
+
+set @next_person_association = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @person_association_seq);
+INSERT INTO person_association(entity_id, follower_id, followed_id)
 VALUES (@next_person_association, @user_id_2, @user_id_4);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @person_association_seq;
 
+set @next_person_association = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @person_association_seq);
+INSERT INTO person_association(entity_id, follower_id, followed_id)
+VALUES (@next_person_association, @user_id_2, @user_id_5);
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @person_association_seq;
 -- end user association data --
 
 -- group data --

@@ -91,7 +91,17 @@ public class JpaPersonRepository implements PersonRepository {
 
     @Override
     public List<Person> findFriendsWithFriend(String username, String friendUsername) {
-        throw new NotSupportedException();
+    	List<Person> friendsWithFriend = new ArrayList<Person>();
+    	List<Person> userFriends = findFriends(username);
+    	List<Person> friendFriends = findFriends(friendUsername);
+    	for(Person userFriend : userFriends) {
+    		for (Person friendFriend : friendFriends) {
+    			if(userFriend.getUsername().equals(friendFriend.getUsername())) {
+    				friendsWithFriend.add(userFriend);
+    			}
+    		}
+    	}
+    	return friendsWithFriend;
     }
 
     @Override

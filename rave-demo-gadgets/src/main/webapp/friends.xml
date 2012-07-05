@@ -22,52 +22,22 @@
 <Module>
   <ModulePrefs title="Friends" author="Viknes Balasubramanee"
 description="This gadget display the list of friends for a particular user">
-    <Require feature="opensocial-0.9"/>
+    <Require feature="opensocial-2.5"/>
     <Require feature="dynamic-height" />
   </ModulePrefs>
   <Content type="html">
     <![CDATA[
-      <script type="text/javascript">
-        function loadFriends() {
-          var req = opensocial.newDataRequest();
-					req.add(req.newFetchPersonRequest(opensocial.IdSpec.PersonId.VIEWER), 'viewer');
-					req.add(req.newFetchPersonRequest(opensocial.IdSpec.PersonId.OWNER), 'owner');
-					var viewerFriends = opensocial.newIdSpec({ "userId" : "VIEWER", "groupId" : "FRIENDS" });
-					var ownerFriends = opensocial.newIdSpec({ "userId" : "OWNER", "groupId" : "FRIENDS" });
-					var opt_params = {};
-					opt_params[opensocial.DataRequest.PeopleRequestFields.MAX] = 100;
-          req.add(req.newFetchPeopleRequest(viewerFriends, opt_params), 'viewerFriends');
-          req.add(req.newFetchPeopleRequest(ownerFriends, opt_params), 'ownerFriends');
+		<script type="text/javascript" src="friendsWrapper.js"></script>
+		<script type="text/javascript">
 
-          req.send(onLoadFriends);
-        }
+	        function init() {
+	          social = new friendsWrapper();
+	          social.loadFriends();
+	        }
+	        gadgets.util.registerOnLoadHandler(init);
 
-        function onLoadFriends(data) {
-          var viewer = data.get('viewer').getData();
-          var viewerFriends = data.get('viewerFriends').getData();
-          var owner = data.get('viewer').getData();
-          var ownerFriends = data.get('ownerFriends').getData();
-
-          html = new Array();
-          html.push(owner.getDisplayName() + '\'s Friends('+ownerFriends.size()+') <br>');
-          html.push('<ul>');
-          ownerFriends.each(function(person) {
-            if (person.getId()) {
-              html.push('<li>', person.getDisplayName(), '</li>');
-            }
-          });
-          html.push('</ul>');
-          document.getElementById('friends').innerHTML = html.join('');
-          gadgets.window.adjustHeight();
-        }
-
-        function init() {
-          loadFriends();
-        }
-
-        gadgets.util.registerOnLoadHandler(init);
-      </script>
-      <div id='friends'/>
+      	</script>
+      	<div id='friends'/>
     ]]>
   </Content>
 </Module>

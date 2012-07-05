@@ -23,6 +23,7 @@ import com.google.common.collect.Lists;
 import org.apache.rave.opensocial.repository.OpenSocialPersonRepository;
 import org.apache.rave.opensocial.service.SimplePersonService;
 import org.apache.rave.util.CollectionUtils;
+import org.apache.shindig.auth.AbstractSecurityToken;
 import org.apache.shindig.auth.SecurityToken;
 import org.apache.shindig.common.util.ImmediateFuture;
 import org.apache.shindig.protocol.ProtocolException;
@@ -61,6 +62,7 @@ public class DefaultPersonService implements PersonService, SimplePersonService 
                                                        Set<String> fields,
                                                        SecurityToken token) throws ProtocolException {
 
+    	collectionOptions = manipulateCollectionOptions(collectionOptions,token);
         List<org.apache.rave.portal.model.Person> people = getPeople(userIds, groupId, collectionOptions, token);
         return ImmediateFuture.newInstance(new RestfulCollection<Person>(convertPeople(people, fields)));
     }
@@ -211,5 +213,15 @@ public class DefaultPersonService implements PersonService, SimplePersonService 
 
     private static Person convertPerson(org.apache.rave.portal.model.Person person, Set<String> fields) {
         return new FieldRestrictingPerson(person, fields);
+    }
+
+    private CollectionOptions manipulateCollectionOptions(CollectionOptions options, SecurityToken token) {
+    	if(options!=null && options.getFilterValue()!=null) {
+            if(options.getFilterValue().equalsIgnoreCase(AbstractSecurityToken.Keys.OWNER.name()))
+            	options.setFilterValue(token.getOwnerId());
+            else if(options.getFilterValue().equalsIgnoreCase(AbstractSecurityToken.Keys.VIEWER.name()))
+            	options.setFilterValue(token.getViewerId());
+    	}
+    	return options;
     }
 }
