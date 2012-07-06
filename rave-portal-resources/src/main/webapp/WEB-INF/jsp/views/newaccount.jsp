@@ -26,7 +26,33 @@ under the License.
     <tiles:importAttribute name="pageTitleKey" scope="request"/>
 
     <tiles:putAttribute name="body">
-        <%@ include file="/WEB-INF/jsp/views/includes/login-navbar.jsp" %>
+		<header>
+		    <nav>
+		        <div class="navbar navbar-fixed-top">
+		            <div class="container">
+		                <a href="/" class="brand">RAVE</a>
+		                <ul class="nav pull-right">
+		                    <li class="divider-vertical"></li>
+		                    <li>
+		                        <form class="form-inline" action="<c:url value="/app/newpassword"/>" method="get">
+		                            <fmt:message key="page.login.forgot.password.button" var="requestNewPasswordButtonText"/>
+		                            <button class="btn btn-info" id="requestNewPasswordButton" type="submit" value="${requestNewPasswordButtonText}">${requestNewPasswordButtonText}</button>
+		                        </form>
+		                    </li>
+		                    <li class="divider-vertical"></li>
+		                    <li>
+		                        <form class="form-inline " action="<c:url value="/app/retrieveusername"/>" method="get">
+		                            <fmt:message key="page.login.forgot.username.button" var="requestNewUsernameButton"/>
+		                            <button class="btn btn-info" id="requestNewUsernameButton" type="submit" value="${requestNewUsernameButton}">${requestNewUsernameButton}</button>
+		                        </form>
+		                    </li>
+		                    <li class="divider-vertical"></li>
+		                </ul>
+		            </div>
+		        </div>
+		    </nav>
+		</header>
+		<br><br>
         <div class="container navbar-spacer">
             <h1>${pagetitle}</h1>
 

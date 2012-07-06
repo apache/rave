@@ -25,7 +25,35 @@
     <tiles:importAttribute name="pageTitleKey" scope="request"/>
 
     <tiles:putAttribute name="body">
-        <%@ include file="/WEB-INF/jsp/views/includes/login-navbar.jsp" %>
+		<header>
+		    <nav>
+		        <div class="navbar navbar-fixed-top">
+		            <div class="container">
+		                <a href="/" class="brand">RAVE</a>
+		                <ul class="nav pull-right">
+		                    <li class="divider-vertical"></li>
+		                    <li>
+		                        <form class="form-inline" action="<c:url value="/app/newpassword"/>" method="get">
+		                            <fmt:message key="page.login.forgot.password.button" var="requestNewPasswordButtonText"/>
+		                            <button class="btn btn-info" id="requestNewPasswordButton" type="submit" value="${requestNewPasswordButtonText}">${requestNewPasswordButtonText}</button>
+		                        </form>
+		                    </li>
+		                    <li class="divider-vertical"></li>
+		                    <li>
+		                        <form class="form-inline" action="<c:url value="/app/newaccount.jsp"/>" method="get">
+		                            <fieldset>
+		                                <fmt:message key="page.login.createaccount.button" var="createAccountButtonText"/>
+		                                <button class="btn btn-info" id="createNewAccountButton" type="submit" value="${createAccountButtonText}">${createAccountButtonText}</button>
+		                            </fieldset>
+		                        </form>
+		                    </li>
+		                    <li class="divider-vertical"></li>
+		                </ul>
+		            </div>
+		        </div>
+		    </nav>
+		</header>
+		<br><br>
         <div class="container navbar-spacer">
             <h1><fmt:message key="page.retrieveusername.title"/></h1>
             <c:choose>
