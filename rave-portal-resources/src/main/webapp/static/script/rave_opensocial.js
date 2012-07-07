@@ -151,12 +151,14 @@ rave.opensocial = rave.opensocial || (function () {
     function renderNewGadget(gadget) {
         var widgetBodyElement = document.getElementById(["widget-", gadget.regionWidgetId, "-body"].join(""));
         gadget.site = container.newGadgetSite(widgetBodyElement);
-        gadget.maximize = function (view_params) {
+        gadget.maximize = function (view_params, view) {
+            var viewName = (typeof(view) === "undefined" || view === null) ? rave.opensocial.VIEW_NAMES.CANVAS : view;
             // always display the gadget in canvas view even if it currently collapsed
-            renderGadgetView(rave.opensocial.VIEW_NAMES.CANVAS, this, view_params);
+            renderGadgetView(viewName, this, view_params);
         };
-        gadget.minimize = function (view_params) {
-            renderGadgetViewIfNotCollapsed(rave.opensocial.VIEW_NAMES.HOME, this, view_params);
+        gadget.minimize = function (view_params, view) {
+            var viewName = (typeof(view) === "undefined" || view === null) ? rave.opensocial.VIEW_NAMES.HOME : view;
+            renderGadgetViewIfNotCollapsed(viewName, this, view_params);
         };
         gadget.collapse = function () {
             // hide the iframe of the gadget via css
@@ -347,8 +349,11 @@ rave.opensocial = rave.opensocial || (function () {
         var fnArgs = {};
         fnArgs.data = {}
         fnArgs.data.id = widgetId;
+        fnArgs.data.view = viewName;
 
-        switch (viewName) {
+        var viewType = viewName.indexOf(".") == -1 ? viewName : viewName.substring(0, viewName.indexOf("."));
+
+        switch (viewType) {
             case VIEW_NAMES.CANVAS:
                 rave.maximizeWidget(fnArgs, opt_params);
                 break;

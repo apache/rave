@@ -186,6 +186,7 @@ describe("Rave OpenSocial", function() {
             var expectedArgs = {};
             expectedArgs.data = {};
             expectedArgs.data.id = "7";
+            expectedArgs.data.view = "canvas";
             spyOn(rave, "maximizeWidget");
 
             rave.opensocial.init();
@@ -198,7 +199,8 @@ describe("Rave OpenSocial", function() {
             var VIEW_NAME = "home";
             var expectedArgs = {};
             expectedArgs.data = {};
-            expectedArgs.data.id = "7";           
+            expectedArgs.data.id = "7";
+            expectedArgs.data.view = "home";
             spyOn(rave, "minimizeWidget");
 
             rave.opensocial.init();
@@ -211,6 +213,7 @@ describe("Rave OpenSocial", function() {
             var expectedArgs = {};
             expectedArgs.data = {};
             expectedArgs.data.id = "7";
+            expectedArgs.data.view = "preferences";
             spyOn(rave, "editCustomPrefs");
 
             rave.opensocial.init();

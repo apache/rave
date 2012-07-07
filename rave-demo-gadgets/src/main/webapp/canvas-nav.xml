@@ -34,7 +34,9 @@
 
           <p>Hey, this is a view parameter: <input id="view_param" type="text" value="yarrrgh"> </input>
           <br/>
-          <button onclick="gadgets.views.requestNavigateTo('canvas', $('#view_param').val());">Go to Canvas with Param</button></p>
+          <button onclick="gadgets.views.requestNavigateTo('canvas', $('#view_param').val());">Go to Canvas with Param</button>
+          <button onclick="gadgets.views.requestNavigateTo('canvas.foo', $('#view_param').val());">Go to Canvas.foo with Param</button>
+          <button onclick="gadgets.views.requestNavigateTo('canvas.bar', $('#view_param').val());">Go to Canvas.bar with Param</button></p>
        ]]>
     </Content>
 
@@ -55,6 +57,52 @@
          </script>
          <div>Canvas view. You sent me this view parameter: <b><span id="viewParam"></b></div>
          <button onclick="gadgets.views.requestNavigateTo('home');">Go to Home</button>
+         <button onclick="gadgets.views.requestNavigateTo('canvas.foo');">Go to Canvas.foo</button>
+         <button onclick="gadgets.views.requestNavigateTo('canvas.bar');">Go to Canvas.bar</button>
+       ]]>
+    </Content>
+
+    <Content type="html" view="canvas.foo">
+        <![CDATA[
+         <script type="text/javascript" src="http://code.jquery.com/jquery.js"></script>
+         <script type="text/javascript">
+            $(initPage);
+
+            function initPage() {
+                var viewParams = gadgets.views.getParams();
+                if (!jQuery.isEmptyObject(viewParams)) {
+                    $('#viewParam').text(viewParams);
+                } else {
+                    $('#viewParam').text('Not Defined');
+                }
+            }
+         </script>
+         <div>Canvas.foo view. You sent me this view parameter: <b><span id="viewParam"></b></div>
+         <button onclick="gadgets.views.requestNavigateTo('home');">Go to Home</button>
+         <button onclick="gadgets.views.requestNavigateTo('canvas');">Go to Canvas</button>
+         <button onclick="gadgets.views.requestNavigateTo('canvas.bar');">Go to Canvas.bar</button>
+       ]]>
+    </Content>
+
+    <Content type="html" view="canvas.bar">
+        <![CDATA[
+         <script type="text/javascript" src="http://code.jquery.com/jquery.js"></script>
+         <script type="text/javascript">
+            $(initPage);
+
+            function initPage() {
+                var viewParams = gadgets.views.getParams();
+                if (!jQuery.isEmptyObject(viewParams)) {
+                    $('#viewParam').text(viewParams);
+                } else {
+                    $('#viewParam').text('Not Defined');
+                }
+            }
+         </script>
+         <div>Canvas.bar view. You sent me this view parameter: <b><span id="viewParam"></b></div>
+         <button onclick="gadgets.views.requestNavigateTo('home');">Go to Home</button>
+         <button onclick="gadgets.views.requestNavigateTo('canvas.foo');">Go to Canvas.foo</button>
+         <button onclick="gadgets.views.requestNavigateTo('canvas');">Go to Canvas</button>
        ]]>
     </Content>
 

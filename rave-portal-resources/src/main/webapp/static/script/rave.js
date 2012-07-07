@@ -393,7 +393,7 @@ var rave = rave || (function () {
             openFullScreenOverlay(regionWidgetId);
             var widget = rave.getRegionWidgetById(regionWidgetId);
             if (typeof widget != "undefined" && isFunction(widget.maximize)) {
-                widget.maximize(view_params);
+                widget.maximize(view_params, args.data.view);
             }
         }
 
@@ -416,7 +416,7 @@ var rave = rave || (function () {
                 if (widget.collapsed && isFunction(widget.collapse)) {
                     widget.collapse();
                 } else if (isFunction(widget.minimize)) {
-                    widget.minimize(view_params);
+                    widget.minimize(view_params, args.data.view);
                 }
             }
         }
