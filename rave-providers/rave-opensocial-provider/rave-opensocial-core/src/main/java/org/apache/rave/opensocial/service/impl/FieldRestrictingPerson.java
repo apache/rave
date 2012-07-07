@@ -20,21 +20,38 @@
 package org.apache.rave.opensocial.service.impl;
 
 import org.apache.rave.exception.NotSupportedException;
-import org.apache.rave.portal.model.*;
+import org.apache.rave.portal.model.PersonProperty;
 import org.apache.rave.portal.model.util.ModelUtils;
 import org.apache.rave.util.CollectionUtils;
 import org.apache.shindig.protocol.model.Enum;
 import org.apache.shindig.protocol.model.EnumImpl;
-import org.apache.shindig.social.core.model.*;
+import org.apache.shindig.social.core.model.AccountImpl;
 import org.apache.shindig.social.core.model.AddressImpl;
-import org.apache.shindig.social.opensocial.model.*;
+import org.apache.shindig.social.core.model.BodyTypeImpl;
+import org.apache.shindig.social.core.model.ListFieldImpl;
+import org.apache.shindig.social.core.model.NameImpl;
+import org.apache.shindig.social.core.model.UrlImpl;
+import org.apache.shindig.social.opensocial.model.Account;
 import org.apache.shindig.social.opensocial.model.Address;
+import org.apache.shindig.social.opensocial.model.BodyType;
+import org.apache.shindig.social.opensocial.model.Drinker;
+import org.apache.shindig.social.opensocial.model.ListField;
+import org.apache.shindig.social.opensocial.model.LookingFor;
+import org.apache.shindig.social.opensocial.model.Name;
+import org.apache.shindig.social.opensocial.model.NetworkPresence;
 import org.apache.shindig.social.opensocial.model.Organization;
+import org.apache.shindig.social.opensocial.model.Smoker;
+import org.apache.shindig.social.opensocial.model.Url;
 
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import static org.apache.rave.util.CollectionUtils.getSingleValue;
 
@@ -43,9 +60,9 @@ import static org.apache.rave.util.CollectionUtils.getSingleValue;
  * the field set contains the requested field
  * <p/>
  * Usage of this wrapper is made possible by Shindig's use of a getter based serialization model
- *
+ * <p/>
  * NOTE: Setters will throw a {@link NotSupportedException} as Shindig's SPI has no method for persisting changes to
- *       a person.
+ * a person.
  */
 public class FieldRestrictingPerson implements org.apache.shindig.social.opensocial.model.Person, Serializable {
 
@@ -87,7 +104,7 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
 
     @Override
     public List<Account> getAccounts() {
-        if(displayField(Field.ACCOUNTS)) {
+        if (displayField(Field.ACCOUNTS)) {
             List<PersonProperty> properties = getFromProperties(Field.ACCOUNTS);
             return convertAccounts(properties);
         }
@@ -154,8 +171,8 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
     @Override
     public BodyType getBodyType() {
         BodyType type = null;
-        if(displayField(Field.BODY_TYPE)) {
-            Map<String,String> map = mapValuesByQualifier(getFromProperties(Field.BODY_TYPE));
+        if (displayField(Field.BODY_TYPE)) {
+            Map<String, String> map = mapValuesByQualifier(getFromProperties(Field.BODY_TYPE));
             type = new BodyTypeImpl();
             type.setBuild(map.get("build"));
             type.setEyeColor(map.get("eyeColor"));
@@ -204,16 +221,17 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
     /**
      * Since addresses are stored as a first class relation to the Rave person, the simplest way to set current location
      * is to store a pointer in the properties to the qualifier for the address in the list.
-     *
+     * <p/>
      * NOTE: This requires that the qualifier be set on all addresses
+     *
      * @return a valid address if the qualifier is found; null otherwise
      */
     @Override
     public Address getCurrentLocation() {
         String qualifier = getSingleValueFromProperties(Field.CURRENT_LOCATION);
-        if(qualifier != null) {
-            for(org.apache.rave.portal.model.Address address : internal.getAddresses()) {
-                if(qualifier.equals(address.getQualifier())) {
+        if (qualifier != null) {
+            for (org.apache.rave.portal.model.Address address : internal.getAddresses()) {
+                if (qualifier.equals(address.getQualifier())) {
                     return convertAddress(address);
                 }
             }
@@ -239,9 +257,12 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
 
     @Override
     public List<ListField> getEmails() {
+        if (!displayField(Field.EMAILS)) {
+            return null;
+        }
         List<ListField> fields = getListFromProperties(Field.EMAILS);
         //Override primary value as we will set a new primary with the registered address
-        for(ListField field : fields) {
+        for (ListField field : fields) {
             field.setPrimary(false);
         }
         //Set the e-mail used to register with Rave as the "primary" address
@@ -412,7 +433,7 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
 
     @Override
     public List<org.apache.shindig.protocol.model.Enum<LookingFor>> getLookingFor() {
-        return getEnumsFromValues(getValuesFromProperties(Field.LOOKING_FOR));
+        return displayField(Field.LOOKING_FOR) ? getEnumsFromValues(getValuesFromProperties(Field.LOOKING_FOR)) : null;
     }
 
     @Override
@@ -704,9 +725,12 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
 
     @Override
     public List<Url> getUrls() {
+        if (!displayField(Field.URLS)) {
+            return null;
+        }
         List<PersonProperty> properties = getFromProperties(Field.URLS);
         List<Url> urls = new ArrayList<Url>();
-        for(PersonProperty property : properties) {
+        for (PersonProperty property : properties) {
             urls.add(convertToUrl(property));
         }
         return urls;
@@ -759,7 +783,7 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
 
     private String getSingleValueFromProperties(Field field) {
         List<String> values = getValuesFromProperties(field);
-        return CollectionUtils.getSingleValue(values);
+        return values == null ? null : CollectionUtils.getSingleValue(values);
     }
 
     private boolean displayField(Field field) {
@@ -773,16 +797,16 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
     }
 
     private List<String> getValuesFromProperties(Field field) {
-        return displayField(field) ? toValueList(getFromProperties(field)) : new ArrayList<String>();
+        return displayField(field) ? toValueList(getFromProperties(field)) : null;
     }
 
     private List<ListField> getListFromProperties(Field field) {
-        return displayField(field) ? convertFromProperties(getFromProperties(field)) : new ArrayList<ListField>();
+        return displayField(field) ? convertFromProperties(getFromProperties(field)) : null;
     }
 
     private static List<ListField> convertFromProperties(List<PersonProperty> properties) {
         List<ListField> fieldList = new ArrayList<ListField>();
-        for(PersonProperty property: properties) {
+        for (PersonProperty property : properties) {
             ListField field = new ListFieldImpl(property.getQualifier(), property.getValue());
             field.setPrimary(property.getPrimary());
             fieldList.add(field);
@@ -818,7 +842,7 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
 
     private static Map<String, String> mapValuesByQualifier(List<PersonProperty> properties) {
         Map<String, String> propertyMap = new HashMap<String, String>();
-        for(PersonProperty property : properties) {
+        for (PersonProperty property : properties) {
             propertyMap.put(property.getQualifier(), property.getValue());
         }
         return propertyMap;
@@ -830,8 +854,8 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
 
     private List<Address> convertAddresses(List<org.apache.rave.portal.model.Address> addresses) {
         List<Address> converted = new ArrayList<Address>();
-        if(addresses != null) {
-            for(org.apache.rave.portal.model.Address address : addresses) {
+        if (addresses != null) {
+            for (org.apache.rave.portal.model.Address address : addresses) {
                 converted.add(convertAddress(address));
             }
         }
@@ -855,10 +879,10 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
 
     private static Map<String, List<PersonProperty>> createPropertyMap(List<PersonProperty> properties) {
         Map<String, List<PersonProperty>> map = new HashMap<String, List<PersonProperty>>();
-        for(PersonProperty property : properties) {
+        for (PersonProperty property : properties) {
             List<PersonProperty> propertyList;
             String fieldType = property.getType();
-            if(map.containsKey(fieldType)) {
+            if (map.containsKey(fieldType)) {
                 propertyList = map.get(fieldType);
             } else {
                 propertyList = new ArrayList<PersonProperty>();
@@ -871,7 +895,7 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
 
     private static List<Account> convertAccounts(List<PersonProperty> properties) {
         List<Account> accounts = new ArrayList<Account>();
-        for(PersonProperty property : properties) {
+        for (PersonProperty property : properties) {
             Account account = convertToAccount(property);
             accounts.add(account);
         }
@@ -888,8 +912,8 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
 
     private List<Organization> convertOrganizations(List<org.apache.rave.portal.model.Organization> organizations) {
         List<Organization> converted = new ArrayList<Organization>();
-        if(organizations != null) {
-            for(org.apache.rave.portal.model.Organization org : organizations) {
+        if (organizations != null) {
+            for (org.apache.rave.portal.model.Organization org : organizations) {
                 converted.add(convertOrganization(org));
             }
         }

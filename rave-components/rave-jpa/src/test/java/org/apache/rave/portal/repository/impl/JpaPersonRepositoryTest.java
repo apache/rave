@@ -21,9 +21,7 @@ package org.apache.rave.portal.repository.impl;
 
 import org.apache.rave.exception.NotSupportedException;
 import org.apache.rave.portal.model.JpaPerson;
-import org.apache.rave.portal.model.JpaWidgetComment;
 import org.apache.rave.portal.model.Person;
-import org.apache.rave.portal.model.WidgetComment;
 import org.apache.rave.portal.model.impl.PersonImpl;
 import org.apache.rave.portal.repository.PersonRepository;
 import org.junit.Test;
@@ -38,8 +36,11 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
@@ -223,6 +224,12 @@ public class JpaPersonRepositoryTest {
         repository.delete(impl);
         person = repository.get(VALID_ID);
         assertThat(person, is(nullValue()));
+    }
+    
+    @Test
+    public void read_properties() {
+        Person person = repository.get(VALID_ID);
+    	assertThat(person.getProperties().size(), is(1)); 
     }
 
 }

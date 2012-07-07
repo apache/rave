@@ -48,6 +48,7 @@ set @person_seq = 'person';
 set @person_association_seq = 'person_association';
 set @groups_seq = 'groups';
 set @group_members_seq = 'group_members';
+set @person_properties_seq = 'person_properties';
 
 CREATE TABLE IF NOT EXISTS RAVE_PORTAL_SEQUENCES (seq_name VARCHAR(255) PRIMARY KEY NOT NULL, seq_count BIGINT(19));
 INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@page_seq, 1);
@@ -71,6 +72,7 @@ INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@page_user_seq, 1
 INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@person_association_seq, 1);
 INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@groups_seq, 1);
 INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@group_members_seq, 1);
+INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@person_properties_seq, 1);
 
 CREATE TABLE IF NOT EXISTS RAVE_SHINDIG_SEQUENCES (seq_name VARCHAR(255) PRIMARY KEY NOT NULL, seq_count BIGINT(19));
 INSERT INTO RAVE_SHINDIG_SEQUENCES(seq_name, seq_count) values (@token_info_seq, 1);
@@ -1259,3 +1261,8 @@ VALUES (@group_id_1, @user_id_1);
 
 INSERT INTO group_members(group_id, person_id)
 VALUES (@group_id_1, @user_id_5);
+
+set @next_person_property = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @person_properties_seq);
+INSERT INTO person_property(entity_id, type, value, person_id)
+VALUES (@next_person_property, 'foo', 'bar', @user_id_1);
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @person_properties_seq;

@@ -16,12 +16,31 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.rave.portal.model;
 
 import org.apache.rave.persistence.BasicEntity;
 import org.apache.rave.portal.model.conversion.ConvertingListProxyFactory;
 
-import javax.persistence.*;
+import javax.persistence.Access;
+import javax.persistence.AccessType;
+import javax.persistence.Basic;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -106,7 +125,7 @@ public class JpaPerson implements BasicEntity, Person {
     @JoinColumn(name="person_id", referencedColumnName = "entity_id")
     protected List<JpaOrganization> organizations;
 
-    @OneToMany(targetEntity = JpaPersonProperty.class)
+    @OneToMany(fetch = FetchType.EAGER, targetEntity = JpaPersonProperty.class)
     @JoinColumn(name = "person_id", referencedColumnName = "entity_id")
     protected List<JpaPersonProperty> properties;
 

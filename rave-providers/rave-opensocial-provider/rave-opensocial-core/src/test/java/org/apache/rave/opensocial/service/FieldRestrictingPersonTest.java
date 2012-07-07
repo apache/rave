@@ -30,14 +30,26 @@ import org.apache.rave.portal.model.util.ModelUtils;
 import org.apache.shindig.protocol.model.EnumImpl;
 import org.apache.shindig.social.core.model.BodyTypeImpl;
 import org.apache.shindig.social.core.model.UrlImpl;
-import org.apache.shindig.social.opensocial.model.*;
+import org.apache.shindig.social.opensocial.model.Account;
+import org.apache.shindig.social.opensocial.model.Address;
+import org.apache.shindig.social.opensocial.model.Drinker;
+import org.apache.shindig.social.opensocial.model.ListField;
+import org.apache.shindig.social.opensocial.model.LookingFor;
+import org.apache.shindig.social.opensocial.model.NetworkPresence;
+import org.apache.shindig.social.opensocial.model.Person;
 import org.junit.Test;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
@@ -156,7 +168,7 @@ public class FieldRestrictingPersonTest {
     @Test
     public void getActivities_notset() {
         Person p = new FieldRestrictingPerson(getTestPerson(), getFieldSet(Person.Field.AGE, Person.Field.BOOKS));
-        assertThat(p.getActivities().isEmpty(), is(true));
+        assertThat(p.getActivities(), is(nullValue()));
     }
     @Test
     public void getBooks_set() {

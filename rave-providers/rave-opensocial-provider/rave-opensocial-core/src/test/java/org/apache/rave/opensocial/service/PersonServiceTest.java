@@ -23,7 +23,9 @@ import com.google.common.collect.Lists;
 import org.apache.rave.opensocial.repository.OpenSocialPersonRepository;
 import org.apache.rave.opensocial.service.impl.DefaultPersonService;
 import org.apache.rave.opensocial.service.impl.FieldRestrictingPerson;
+import org.apache.rave.portal.model.PersonProperty;
 import org.apache.rave.portal.model.impl.PersonImpl;
+import org.apache.rave.portal.model.impl.PersonPropertyImpl;
 import org.apache.shindig.auth.SecurityToken;
 import org.apache.shindig.protocol.ProtocolException;
 import org.apache.shindig.protocol.RestfulCollection;
@@ -34,22 +36,29 @@ import org.apache.shindig.social.opensocial.spi.GroupId;
 import org.apache.shindig.social.opensocial.spi.PersonService;
 import org.apache.shindig.social.opensocial.spi.UserId;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
-import static org.easymock.EasyMock.*;
-import static org.hamcrest.CoreMatchers.*;
-import static org.hamcrest.CoreMatchers.not;
+import static org.easymock.EasyMock.createNiceMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 public class PersonServiceTest {
 
+    private static final String TAG = "foo";
     private static final String DISPLAY_NAME = "ABCDE";
     private static final String HAPPIEST_WHEN = "Sleeping";
     private static final String ID_2 = "1235";
@@ -68,19 +77,19 @@ public class PersonServiceTest {
     }
 
     @Test
-    @Ignore
     public void getPerson_allFields() throws ExecutionException, InterruptedException {
         UserId id = new UserId(UserId.Type.userId, ID_1);
         Set<String> fields = new HashSet<String>();
 
-        org.apache.rave.portal.model.Person dbPerson = getDbPerson();
+        org.apache.rave.portal.model.Person dbPerson = getDbPerson(ID_1);
         expect(repository.findByUsername(ID_1)).andReturn(dbPerson);
         replay(repository);
 
         Future<Person> personFuture = service.getPerson(id, fields, token);
-        assertThat(personFuture, is(not(nullValue())));
+        assertThat(personFuture, is(notNullValue()));
         Person person = personFuture.get();
-        assertThat(person, is(not(nullValue())));
+        assertThat(person, is(notNullValue()));
+        assertThat(person.getTags().size(), is(1));
         assertThat(person, is(instanceOf(FieldRestrictingPerson.class)));
         assertThat(person.getId(), is(equalTo(ID_1)));
         assertThat(person.getHappiestWhen(), is(equalTo(HAPPIEST_WHEN)));
@@ -99,9 +108,9 @@ public class PersonServiceTest {
         replay(repository);
 
         Future<Person> personFuture = service.getPerson(id, fields, token);
-        assertThat(personFuture, is(not(nullValue())));
+        assertThat(personFuture, is(notNullValue()));
         Person person = personFuture.get();
-        assertThat(person, is(not(nullValue())));
+        assertThat(person, is(notNullValue()));
         assertThat(person, is(instanceOf(FieldRestrictingPerson.class)));
         assertThat(person.getId(), is(equalTo(ID_1)));
         assertThat(person.getHappiestWhen(), is(nullValue()));
@@ -109,18 +118,17 @@ public class PersonServiceTest {
     }
 
     @Test
-    @Ignore
     public void getPerson_nullFields() throws ExecutionException, InterruptedException {
         UserId id = new UserId(UserId.Type.userId, ID_1);
 
-        org.apache.rave.portal.model.Person dbPerson = getDbPerson();
+        org.apache.rave.portal.model.Person dbPerson = getDbPerson(ID_1);
         expect(repository.findByUsername(ID_1)).andReturn(dbPerson);
         replay(repository);
 
         Future<Person> personFuture = service.getPerson(id, null, token);
-        assertThat(personFuture, is(not(nullValue())));
+        assertThat(personFuture, is(notNullValue()));
         Person person = personFuture.get();
-        assertThat(person, is(not(nullValue())));
+        assertThat(personFuture, is(notNullValue()));
         assertThat(person, is(instanceOf(FieldRestrictingPerson.class)));
         assertThat(person.getId(), is(equalTo(ID_1)));
         assertThat(person.getHappiestWhen(), is(equalTo(HAPPIEST_WHEN)));
@@ -128,21 +136,20 @@ public class PersonServiceTest {
     }
 
     @Test
-    @Ignore
     public void getPerson_viewer() throws ExecutionException, InterruptedException {
         UserId id = new UserId(UserId.Type.viewer, ID_2);
 
         expect(token.getViewerId()).andReturn(ID_1);
         replay(token);
 
-        org.apache.rave.portal.model.Person dbPerson = getDbPerson();
+        org.apache.rave.portal.model.Person dbPerson = getDbPerson(ID_1);
         expect(repository.findByUsername(ID_1)).andReturn(dbPerson);
         replay(repository);
 
         Future<Person> personFuture = service.getPerson(id, null, token);
-        assertThat(personFuture, is(not(nullValue())));
+        assertThat(personFuture, is(notNullValue()));
         Person person = personFuture.get();
-        assertThat(person, is(not(nullValue())));
+        assertThat(person, is(notNullValue()));
         assertThat(person, is(instanceOf(FieldRestrictingPerson.class)));
         assertThat(person.getId(), is(equalTo(ID_1)));
         assertThat(person.getHappiestWhen(), is(equalTo(HAPPIEST_WHEN)));
@@ -172,13 +179,12 @@ public class PersonServiceTest {
         replay(repository);
 
         Future<RestfulCollection<Person>> people = service.getPeople(ids, groupId, null, null, token);
-        assertThat(people, is(not(nullValue())));
+        assertThat(people, is(notNullValue()));
         assertThat(people.get().getTotalResults(), is(equalTo(1)));
         assertThat(people.get().getList().get(0).getId(), is(equalTo(self)));
     }
 
     @Test
-    @Ignore
     public void getPeople_all() throws ExecutionException, InterruptedException {
         Set<UserId> ids = getUserIdSet();
         GroupId groupId = new GroupId(GroupId.Type.all, GROUP_ID);
@@ -186,10 +192,12 @@ public class PersonServiceTest {
 
         expect(repository.findAllConnectedPeople(ID_2)).andReturn(getDbPersonList());
         expect(repository.findAllConnectedPeople(ID_3)).andReturn(getDbPersonList());
+        expect(repository.findByUsername(ID_2)).andReturn(getDbPerson(ID_2));
+        expect(repository.findByUsername(ID_3)).andReturn(getDbPerson(ID_3));
         replay(repository);
 
         Future<RestfulCollection<Person>> people = service.getPeople(ids, groupId, null, null, token);
-        assertThat(people, is(not(nullValue())));
+        assertThat(people, is(notNullValue()));
         assertThat(people.get().getList().get(0), is(instanceOf(FieldRestrictingPerson.class)));
         assertThat(hasUniqueValues(people), is(true));
         verify(repository);
@@ -209,7 +217,7 @@ public class PersonServiceTest {
         replay(repository);
 
         Future<RestfulCollection<Person>> people = service.getPeople(ids, groupId, null, null, token);
-        assertThat(people, is(not(nullValue())));
+        assertThat(people, is(notNullValue()));
         assertThat(people.get().getList().get(0), is(instanceOf(FieldRestrictingPerson.class)));
         assertThat(hasUniqueValues(people), is(true));
         verify(repository);
@@ -224,7 +232,7 @@ public class PersonServiceTest {
         replay(repository);
 
         Future<RestfulCollection<Person>> people = service.getPeople(ids, groupId, null, null, token);
-        assertThat(people, is(not(nullValue())));
+        assertThat(people, is(notNullValue()));
         assertThat(people.get().getList().get(0), is(instanceOf(FieldRestrictingPerson.class)));
         assertThat(hasUniqueValues(people), is(true));
         verify(repository);
@@ -247,7 +255,7 @@ public class PersonServiceTest {
         replay(repository);
 
         Future<RestfulCollection<Person>> people = service.getPeople(ids, groupId, options, null, token);
-        assertThat(people, is(not(nullValue())));
+        assertThat(people, is(notNullValue()));
         verify(repository);
     }
 
@@ -272,7 +280,7 @@ public class PersonServiceTest {
         replay(repository);
 
         Future<RestfulCollection<Person>> people = service.getPeople(ids, groupId, options, null, token);
-        assertThat(people, is(not(nullValue())));
+        assertThat(people, is(notNullValue()));
         verify(repository);
     }
 
@@ -296,7 +304,7 @@ public class PersonServiceTest {
         replay(repository);
 
         Future<RestfulCollection<Person>> people = service.getPeople(ids, groupId, options, null, token);
-        assertThat(people, is(not(nullValue())));
+        assertThat(people, is(notNullValue()));
         verify(repository);
     }
 
@@ -320,7 +328,7 @@ public class PersonServiceTest {
         replay(repository);
 
         Future<RestfulCollection<Person>> people = service.getPeople(ids, groupId, options, null, token);
-        assertThat(people, is(not(nullValue())));
+        assertThat(people, is(notNullValue()));
         verify(repository);
     }
 
@@ -344,7 +352,7 @@ public class PersonServiceTest {
         replay(repository);
 
         Future<RestfulCollection<Person>> people = service.getPeople(ids, groupId, options, null, token);
-        assertThat(people, is(not(nullValue())));
+        assertThat(people, is(notNullValue()));
         verify(repository);
     }
 
@@ -368,7 +376,7 @@ public class PersonServiceTest {
         replay(repository);
 
         Future<RestfulCollection<Person>> people = service.getPeople(ids, groupId, options, null, token);
-        assertThat(people, is(not(nullValue())));
+        assertThat(people, is(notNullValue()));
         verify(repository);
     }
 
@@ -388,7 +396,7 @@ public class PersonServiceTest {
         replay(repository);
 
         Future<RestfulCollection<Person>> people = service.getPeople(ids, groupId, options, null, token);
-        assertThat(people, is(not(nullValue())));
+        assertThat(people, is(notNullValue()));
         verify(repository);
     }
 
@@ -413,7 +421,7 @@ public class PersonServiceTest {
         replay(repository);
 
         Future<RestfulCollection<Person>> people = service.getPeople(ids, groupId, options, null, token);
-        assertThat(people, is(not(nullValue())));
+        assertThat(people, is(notNullValue()));
         verify(repository);
     }
 
@@ -438,7 +446,7 @@ public class PersonServiceTest {
         replay(repository);
 
         Future<RestfulCollection<Person>> people = service.getPeople(ids, groupId, options, null, token);
-        assertThat(people, is(not(nullValue())));
+        assertThat(people, is(notNullValue()));
         verify(repository);
     }
 
@@ -459,7 +467,7 @@ public class PersonServiceTest {
         replay(repository);
 
         Future<RestfulCollection<Person>> people = service.getPeople(ids, groupId, options, null, token);
-        assertThat(people, is(not(nullValue())));
+        assertThat(people, is(notNullValue()));
         verify(repository);
     }
 
@@ -499,6 +507,10 @@ public class PersonServiceTest {
         PersonImpl dbPerson = new PersonImpl();
         dbPerson.setUsername(id);
         dbPerson.setDisplayName(DISPLAY_NAME);
+        List<PersonProperty> properties = new ArrayList<PersonProperty>();
+        properties.add(new PersonPropertyImpl(1L, Person.Field.TAGS.toString(), TAG, null, null, null));
+        properties.add(new PersonPropertyImpl(2L, Person.Field.HAPPIEST_WHEN.toString(), HAPPIEST_WHEN, null, null, null));
+        dbPerson.setProperties(properties);
         return dbPerson;
     }
 
