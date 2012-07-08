@@ -7,7 +7,7 @@
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
@@ -66,9 +66,11 @@ public class ReminderController {
 
 
     @RequestMapping(value = {"/retrieveusername", "/newpassword"})
-    public void initialize(ModelMap model, HttpServletRequest request) {
+    public String initialize(ModelMap model, HttpServletRequest request) {
         model.addAttribute(ModelKeys.CAPTCHA_HTML, captchaService.createHtml(request));
         model.addAttribute(ModelKeys.USER, new UserImpl());
+        return "/retrieveusername".equals(request.getPathInfo()) ? ViewNames.USERNAME_REQUEST :
+                ViewNames.NEW_PASSWORD_REQUEST;
     }
 
 
