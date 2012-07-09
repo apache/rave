@@ -834,8 +834,9 @@ var rave = rave || (function () {
             $("<div />", {'class':'alert alert-success navbar-spacer', 'text':message})
                 .hide()
                 .prependTo("body")
-                .slideDown('fast').delay(5000)
-                .slideUp(function () {
+                .css({ position: 'fixed', bottom: '0px', margin:'0 0.5%', width: '95%', padding:'8px 2%', 'z-index':9999, 'border-radius': '4px 4px 0 0'})
+                .fadeIn('fast').delay(5000)
+                .fadeOut(function () {
                     $(this).remove();
                 });
         }
