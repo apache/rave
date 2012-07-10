@@ -46,6 +46,26 @@ public class GuiceBindingSpringContextLoaderListener extends ContextLoaderListen
         overrideInjector(Guice.createInjector(modules), servletContext);
     }
 
+    /**
+     * Clean up code that should run when the servlet context is destroyed
+     *
+     * @param event
+     */
+    @Override
+    public void contextDestroyed(ServletContextEvent event) {
+        ServletContext context = event.getServletContext();
+        // grab the Guice Injector object from the Servlet Context
+        Injector injector = (Injector) context.getAttribute(GuiceServletContextListener.INJECTOR_ATTRIBUTE);
+        if (injector != null) {
+            // invoke the cleanup function for all Guice modules that implement the CleanupCapable interface
+            // this will do things like remove MBeans that might be registered to the JVM
+            GuiceServletContextListener.CleanupHandler cleanups = injector.getInstance(GuiceServletContextListener.CleanupHandler.class);
+            cleanups.cleanup();
+        }
+
+        context.removeAttribute(GuiceServletContextListener.INJECTOR_ATTRIBUTE);
+    }
+
     private static void overrideInjector(Injector injector, ServletContext context) {
         context.setAttribute(GuiceServletContextListener.INJECTOR_ATTRIBUTE, injector);
     }
