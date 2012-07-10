@@ -57,7 +57,7 @@
             </div>
         </div>
         <div class="span8 detail-widget-main">
-           <div class="row">
+           <div>
 			   <h2>
 					<c:set var="widgetHasTitleUrl" value="${not empty widget.titleUrl}"/>
 					<c:if test="${widgetHasTitleUrl}"><a href="<c:out value="${widget.titleUrl}"/>" rel="external">
@@ -90,7 +90,7 @@
                     <p class="storeWidgetDesc"><c:out value="${widget.description}"/></p>
                 </c:if>
            </div>
-           <div class="row">
+           <div>
                 <div>
                     <h3><fmt:message key="page.widget.rate"/></h3>
                     <form class="hidden">
@@ -140,7 +140,7 @@
                 </div>
            </div>
 
-            <div class="row">
+            <div>
                 <%--//Tag section--%>
                 <div class="widgetTags">
                     <c:if test="${not empty widget.tags}">
@@ -174,14 +174,17 @@
                 </c:if>
             </div>
 
-            <div class="row">
+            <div>
                 <div class="widgetComments">
                     <h3><fmt:message key="page.widget.comments"/></h3>
                     <div class="new-comment form-inline well">
                         <div class="row-fluid">
-                        <textarea id="newComment-${widget.id}" class="span11"></textarea>&nbsp;
-                        <button id="comment-new-${widget.id}" class="btn commentNewButton" title="Add Comment"><i class="icon-comment"></i></button>
-                    </div>                     </div>
+                        	<div class="span11 pull-left">
+                        		<textarea id="newComment-${widget.id}"></textarea>&nbsp;
+                        	</div>
+                        	<button id="comment-new-${widget.id}" class="btn commentNewButton pull-right" title="Add Comment"><i class="icon-comment"></i></button>
+                        </div>
+                    </div>
                     <c:if test="${not empty widget.comments}">
                         <ul class="comments">
                             <c:forEach var="comment" items="${widget.comments}">
