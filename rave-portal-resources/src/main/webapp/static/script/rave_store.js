@@ -21,6 +21,26 @@ rave.store = rave.store || (function() {
 
     function initRatings() {
         $('.ratingButtons').button();
+        
+        //Adjust width's 
+        $('.widgetRating').each(function(){
+        	var $likeBtn = $(this).find(".widgetLikeButton"),
+        		$likeCount = $(this).find(".widgetLikeCount"),
+        		$dislikeBtn = $(this).find(".widgetDislikeButton"),
+        		$dislikeCount = $(this).find(".widgetDislikeCount");
+        		
+        		if($likeBtn.outerWidth() >= $likeCount.outerWidth()){ 
+        		$likeCount.css( "width", $likeBtn.outerWidth() +"px" ); }
+        		else{ 
+        			$likeBtn.css( "width", $likeCount.outerWidth()  +"px" ); 
+        		}
+        		
+        		if($dislikeBtn.outerWidth() >= $dislikeCount.outerWidth()){ 
+        			$dislikeCount.css( "width", $dislikeBtn.outerWidth()  +"px" ); 
+        		}
+        		else{ $dislikeBtn.css( "width", $dislikeCount.outerWidth()  +"px"); }
+        });
+
         $('.widgetLikeButton').click(function() {
             // If not already active
             if (!$(this).hasClass('active')){

@@ -128,18 +128,43 @@
                                         value="${fn:substring(widget.description, 0, 200)}..."/></div>
                             </c:if>
                             <div class="widgetRating">
-                                <fmt:message key="page.widget.rate"/>
+                                <strong><fmt:message key="page.widget.rate"/></strong>
                                 <form class="hidden">
                                     <input type="hidden" id="rate-${widget.id}"
                                            value="${widgetsStatistics[widget.id]!=null?widgetsStatistics[widget.id].userRating:"-1"}">
                                 </form>
-                                <div id="rating-${widget.id}" class="ratingButtons btn-group" data-toggle="buttons-radio">
-                                    <button id="like-${widget.id}" class="widgetLikeButton btn btn-small ${widgetsStatistics[widget.id].userRating==10? 'active btn-success':''}"
-                                            ${widgetsStatistics[widget.id].userRating==10 ? " checked='true'":""}
-                                            name="rating-${widget.id}"><i class="icon-plus"></i></button>
-                                    <button id="dislike-${widget.id}" class="widgetDislikeButton btn btn-small ${widgetsStatistics[widget.id].userRating==0? 'active btn-danger':''}"
-                                            ${widgetsStatistics[widget.id].userRating==0 ? " checked='true'":""}
-                                            name="rating-${widget.id}"><i class="icon-minus"></i></button>
+
+                                <div class="ratingCounts">
+                            		<span class="widgetLikeCount">
+		                                <c:set var="widgetLikes">
+		                                    ${widgetsStatistics[widget.id]!=null?widgetsStatistics[widget.id].totalLike:"0"}
+		                                </c:set>
+		                                <span id="totalLikes-${widget.id}" data-rave-widget-likes="${widgetLikes}">
+		                                    <span class="like-text">${widgetLikes}</span>
+		                                </span>
+		                                <i class="icon-thumbs-up" title="${widgetLikes}&nbsp;<fmt:message key="page.widget.rate.likes"/>"></i>
+                            		</span> 
+                                	 <span class="widgetDislikeCount">
+		                                <c:set var="widgetDislikes">
+		                                    ${widgetsStatistics[widget.id]!=null?widgetsStatistics[widget.id].totalDislike:"0"}
+		                                </c:set>
+
+		                                <span id="totalDislikes-${widget.id}" data-rave-widget-dislikes="${widgetDislikes}">
+		                                    <span class="dislike-text">${widgetDislikes}</span>
+		                                </span>
+		                                <i class="icon-thumbs-down" title="${widgetDislikes}&nbsp;<fmt:message key="page.widget.rate.dislikes"/>"></i>
+		                            </span>
+                                </div>
+                                <div id="rating-${widget.id}" class="ratingButtons" data-toggle="buttons-radio">
+	                            	<button id="like-${widget.id}" class="widgetLikeButton btn btn-mini ${widgetsStatistics[widget.id].userRating==10? 'active btn-success':''}"
+                                            ${widgetsStatistics[widget.id].userRating==10 ? " checked='true'":""} name="rating-${widget.id}">
+                                        <fmt:message key="page.widget.rate.likebtn"/> 
+                                    </button>
+
+                                    <button id="dislike-${widget.id}" class="widgetDislikeButton btn btn-mini ${widgetsStatistics[widget.id].userRating==0? 'active btn-danger':''}"
+                                        ${widgetsStatistics[widget.id].userRating==0 ? " checked='true'":""} name="rating-${widget.id}">
+                                        <fmt:message key="page.widget.rate.dislikebtn"/>
+                                    </button>
                                     <!-- Displaying the likes and dislikes rating along with total votes -->
                                 </div>
                             </div>
@@ -167,24 +192,6 @@
                                     </tr>
                                 </table>
                             </c:if>
-                            <span class="widgetLikeCount">
-                                <c:set var="widgetLikes">
-                                    ${widgetsStatistics[widget.id]!=null?widgetsStatistics[widget.id].totalLike:"0"}
-                                </c:set>
-                                <span><fmt:message key="page.widget.rate.likes"/></span>
-                                <span id="totalLikes-${widget.id}" data-rave-widget-likes="${widgetLikes}">
-                                    ${widgetLikes}
-                                </span>
-                            </span>
-                            <span class="widgetDislikeCount">
-                                <c:set var="widgetDislikes">
-                                    ${widgetsStatistics[widget.id]!=null?widgetsStatistics[widget.id].totalDislike:"0"}
-                                </c:set>
-                                <span><fmt:message key="page.widget.rate.dislikes"/></span>
-                                <span id="totalDislikes-${widget.id}" data-rave-widget-dislikes="${widgetDislikes}">
-                                    ${widgetDislikes}
-                                </span>
-                            </span>
 
                             <span class="widgetUserCount">
                                 <c:set var="widgetUserCountGreaterThanZero"

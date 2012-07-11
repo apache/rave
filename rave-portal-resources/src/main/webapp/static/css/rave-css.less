@@ -481,6 +481,8 @@ ul.storeItems {
 
 ul.storeItems li {
     list-style: none;
+    .clearfix;
+    position: relative;
 }
 
 .storeItemLeft, .storeItemCenter {
@@ -511,16 +513,44 @@ ul.storeItems li {
     padding: 3px;
 }
 
-.widgetRating {
+.storeItem .widgetRating {
     margin: 1em 0;
+    float: left;
 }
+.widgetRating {
+	.ratingCounts{ .clearfix; }  
 
-.widgetDislikeCount {
-    padding: 0 10px;
+    button{
+	    display: block;
+	    float: left;
+	    margin-right: .75em;
+    }
+    
+    .like-text, .widgetLikeCount, .widgetLikeButton span{
+	    color: @green;
+    }
+    .dislike-text, .widgetDislikeCount, .widgetDislikeButton span{
+	    color: @red;
+    }
+    .widgetLikeCount,
+    .widgetDislikeCount{
+	    display: block;
+	    float: left;
+	    text-align: center;
+	    margin-right: .75em;
+    }
+    .btn-success{
+    	span{ color: inherit; }
+    }
+    .btn-danger{
+    	span{ color: inherit; }
+    }
 }
 
 .widgetUserCount {
-    float: right;
+    position: absolute;
+    bottom: 3px;
+    right: 5px;
 }
 
 .secondaryPageItemTitle {
@@ -910,6 +940,7 @@ span.error, label.error {
     .storeItem {
         box-shadow: none;
         padding: 0 10px;
+        .clearfix;
     }
 
     .storeItemLeft, .storeItemCenter {
