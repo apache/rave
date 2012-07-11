@@ -22,62 +22,69 @@
 
 <fmt:message key="${pageTitleKey}" var="pagetitle"/>
 <rave:navbar pageTitle="${pagetitle}"/>
-<div class="container-fluid">
-    <div class="span2">
-        <rave:admin_tabsheader/>
-    </div>
-    <div class="span10">
-        <article>
-            <ul class="pager">
-                <li class="previous">
-                    <a href="<spring:url value="/app/admin/preferences"/>"><fmt:message key="admin.preferencedetail.goback"/></a>
-                </li>
-            </ul>
-
-            <h2><fmt:message key="admin.preferences.shorttitle"/></h2>
-
-            <section class="span6">
-                <spring:url value="/app/admin/preferencedetail/update" var="formAction"/>
-                <form:form action="${formAction}" method="POST" modelAttribute="preferenceForm">
-                    <form:errors cssClass="error" element="p"/>
-                    <fieldset>
+<div class="container-fluid adminUI" id="preference_detail">
+	<div class="row-fluid">
+	    <div class="span2">
+	    	<div class="tabs-respond">
+		        <rave:admin_tabsheader/>
+	    	</div>
+	    </div>
+	    <div class="span10">
+	        <article>
+	           <a href="<spring:url value="/app/admin/preferences"/>"><fmt:message key="admin.preferencedetail.goback"/></a>
+	
+	            <h2><fmt:message key="admin.preferences.shorttitle"/></h2>
+	
+	            <section class="span10">
+	                <spring:url value="/app/admin/preferencedetail/update" var="formAction"/>
+	                <form:form action="${formAction}" method="POST" modelAttribute="preferenceForm" class="form-horizontal">
+	                    <form:errors cssClass="error" element="p"/>
                         <input type="hidden" name="token" value="<c:out value="${tokencheck}"/>"/>
                         <p><fmt:message key="form.some.fields.required"/></p>
 
-                        <p>
-                            <form:label path="titleSuffix.value"><fmt:message key="admin.preferencedetail.titleSuffix"/></form:label>
-                            <form:input path="titleSuffix.value"/>
-                            <form:errors path="titleSuffix.value" cssClass="error"/>
-                        </p>
-                    </fieldset>
-                    <fieldset>
-                        <p>
-                            <spring:bind path="pageSize.value">
-                                <label for="pageSize"><fmt:message key="admin.preferencedetail.pageSize"/> *</label>
-                                <input id="pageSize" name="pageSize.value" type="number" step="1" value="<c:out value="${status.value}"/>"/>
-                            </spring:bind>
-                            <form:errors path="pageSize.value" cssClass="error"/>
-                        </p>
-                    </fieldset>
-                    <fieldset>
-                        <p>
-                            <spring:bind path="javaScriptDebugMode.value">
-                                <form:label path="javaScriptDebugMode.value"><fmt:message key="admin.preferencedetail.javaScriptDebugMode"/> *</form:label>
-                                <form:select id="javaScriptDebugMode" path="javaScriptDebugMode.value">
-                                    <form:option value="0"><fmt:message key="admin.preferencedetail.javaScriptDebugMode.false"/></form:option>
-                                    <form:option value="1"><fmt:message key="admin.preferencedetail.javaScriptDebugMode.true"/></form:option>
-                                </form:select>
-                                <form:errors path="javaScriptDebugMode.value" cssClass="error"/>
-                            </spring:bind>
-                        </p>
-                    </fieldset>
-                    <fieldset>
-                        <fmt:message key="admin.preferencedetail.updateButton" var="updateButtonText"/>
-                        <button class="btn btn-primary" type="submit" value="${updateButtonText}">${updateButtonText}</button>
-                    </fieldset>
-                </form:form>
-            </section>
+                        <div class="control-group">
+                            <form:label path="titleSuffix.value" class="control-label">
+                            	<fmt:message key="admin.preferencedetail.titleSuffix"/>
+                            </form:label>
+                            <div class="controls">
+	                            <form:input path="titleSuffix.value"/>
+                            </div>
+	                        <form:errors path="titleSuffix.value" cssClass="error"/>
+                        </div>
 
-        </article>
-    </div>
+	                    <div class="control-group">
+	                    	<spring:bind path="pageSize.value">
+	                        	<label for="pageSize" class="control-label">
+	                        		<fmt:message key="admin.preferencedetail.pageSize"/> *
+	                        	</label>
+	                            <div class="controls">
+	                                <input id="pageSize" name="pageSize.value" type="number" step="1" value="<c:out value="${status.value}"/>"/>
+	                            </div>
+	                        </spring:bind>
+	                        <form:errors path="pageSize.value" cssClass="error"/>
+	                    </div>
+	                    <div class="control-group">
+	                        <spring:bind path="javaScriptDebugMode.value">
+	                            <form:label path="javaScriptDebugMode.value" class="control-label">
+	                            	<fmt:message key="admin.preferencedetail.javaScriptDebugMode"/> *
+	                            </form:label>
+	                            <div class="controls">
+	                                <form:select id="javaScriptDebugMode" path="javaScriptDebugMode.value">
+	                                    <form:option value="0"><fmt:message key="admin.preferencedetail.javaScriptDebugMode.false"/></form:option>
+	                                    <form:option value="1"><fmt:message key="admin.preferencedetail.javaScriptDebugMode.true"/></form:option>
+	                                </form:select>
+	                            </div>
+	                            <form:errors path="javaScriptDebugMode.value" cssClass="error"/>
+	                        </spring:bind>
+	                    </div>
+	                    <fieldset>
+	                        <fmt:message key="admin.preferencedetail.updateButton" var="updateButtonText"/>
+	                        <button class="btn btn-primary" type="submit" value="${updateButtonText}">${updateButtonText}</button>
+	                    </fieldset>
+	                </form:form>
+	            </section>
+	
+	        </article>
+	    </div>
+	</div>
 </div>

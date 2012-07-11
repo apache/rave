@@ -23,208 +23,262 @@
 <fmt:message key="${pageTitleKey}" var="pagetitle"/>
 <rave:navbar pageTitle="${pagetitle}"/>
 <div class="container-fluid">
-<div class="span2">
-    <rave:admin_tabsheader/>
-</div>
-<div class="span10">
-    <article>
-        <ul class="pager">
-            <li class="previous">
-                <a href="<spring:url value="/app/admin/widgets"/>"><fmt:message key="admin.widgetdetail.goback"/> </a></li>
-        </ul>
-        <h2>
-            <c:out value="${widget.title}"/>
-        </h2>
+	<div class="row-fluid">
+	    <div class="span2">
+	    	<div class="tabs-respond">
+		        <rave:admin_tabsheader/>
+	    	</div>
+	    </div>
+	    <div class="span10">
+		    <article>
+		        <a href="<spring:url value="/app/admin/widgets"/>"><fmt:message key="admin.widgetdetail.goback"/> </a></li>
+		        <h2>
+		            <c:out value="${widget.title}"/>
+		        </h2>
+		
+		        <section class="formbox">
 
-        <div class="rightcolumn">
-            <c:if
-                    test="${not empty widget.screenshotUrl or not empty widget.thumbnailUrl}">
-                <section class="formbox"><c:if
-                        test="${not empty widget.screenshotUrl}">
-                    <figure class="screenshot"><img
-                            src="<c:out value="${widget.screenshotUrl}"/>" alt="">
-                        <figcaption>
-                            <fmt:message key="widget.screenshotUrl"/></figcaption>
-                    </figure>
-                </c:if> <c:if test="${not empty widget.thumbnailUrl}">
-                    <figure><img src="<c:out value="${widget.thumbnailUrl}"/>"
-                                 alt="">
-                        <figcaption><fmt:message
-                                key="widget.thumbnailUrl"/></figcaption>
-                    </figure>
-                </c:if></section>
-            </c:if>
-        </div>
-
-        <div class="leftcolumn">
-            <section class="formbox">
-                <h3>
-                    <fmt:message key="admin.widgetdetail.editdata"/>
-                </h3>
-                <form:form id="updateWidget" action="update" commandName="widget"
-                           method="POST">
-                    <form:errors cssClass="error" element="p"/>
-                    <fieldset>
-                        <input type="hidden" name="token"
-                               value="<c:out value="${tokencheck}"/>"/>
-                        <p>
-                            <fmt:message key="form.some.fields.required"/>
-                        </p>
-
-                        <p>
-                            <form:label path="title">
-                                <fmt:message key="widget.title"/> *</form:label>
-                            <form:input path="title" cssClass="long" required="required"
-                                        autofocus="autofocus"/>
-                            <form:errors path="title" cssClass="error"/>
-                        </p>
-
-                        <p>
-                            <spring:bind path="url">
-                                <label for="url"><fmt:message key="widget.url"/> *</label>
-                                <input type="url" name="url" id="url"
-                                       placeholder="http://example.com/widget.xml" required="required"
-                                       class="long" value="<c:out value="${widget.url}"/>"/>
-                            </spring:bind>
-                            <form:errors path="url" cssClass="error"/>
-                        </p>
-
-                        <p>
-                            <label for="type1"><fmt:message key="widget.type"/> *</label> <label
-                                for="type1" class="formradio"><form:radiobutton
-                                path="type" value="OpenSocial"/> <fmt:message
-                                key="widget.type.OpenSocial"/> </label> <label for="type2"
-                                                                               class="formradio"><form:radiobutton path="type"
-                                                                                                                   value="W3C"/>
-                            <fmt:message key="widget.type.W3C"/> </label>
-                            <form:errors path="type" cssClass="error"/>
-                        </p>
-                        <p>
-                            <a href="#" class="storeItemButton" id="fetchMetadataButton"
-                               onclick="rave.api.rpc.getWidgetMetadata({
-                                    url: $('#url').get(0).value,
-                                    providerType: $('input:radio[name=type]:checked').val(),
-                                    successCallback: function(result) {
-                                        var widget = result.result;
-                                        $('#title').val(widget.title);
-                                        $('#description').val(widget.description);
-                                        $('#thumbnailUrl').val(widget.thumbnailUrl);
-                                        $('#screenshotUrl').val(widget.screenshotUrl);
-                                        $('#titleUrl').val(widget.titleUrl);
-                                        $('#author').val(widget.author);
-                                        $('#authorEmail').val(widget.authorEmail);
-                                    }
-                                });">
-                                <fmt:message key="page.updateWidgetMetadata.button"/> </a>
-
-                        </p>
-                        <p>
-                            <form:label path="description">
-                                <fmt:message key="widget.description"/> *</form:label>
-                            <form:textarea path="description" required="required"
-                                           cssClass="long"/>
-                            <form:errors path="description" cssClass="error"/>
-                        </p>
-
-                        <p>
-                            <form:label path="featured">
-                                <fmt:message key="page.general.checkBox.featured"/>
-                            </form:label>
-                            <form:checkbox path="featured" id="featured"/>
-                            <form:errors path="featured" cssClass="error"/>
-                        </p>
-
-                        <p>
-                            <form:label path="disableRendering">
-                                <fmt:message key="widget.disableRendering"/>
-                            </form:label>
-                            <form:checkbox path="disableRendering" id="disableRendering"/>
-                            <form:errors path="disableRendering" cssClass="error"/>
-                        </p>
-
-                        <p>
-                            <form:label path="disableRenderingMessage">
-                                <fmt:message key="widget.disableRenderingMessage"/>
-                            </form:label>
-                            <form:input path="disableRenderingMessage" cssClass="long"
-                                        autofocus="autofocus"/>
-                            <form:errors path="disableRenderingMessage" cssClass="error"/>
-                        </p>
-
-                        <p>
-                            <form:label path="widgetStatus">
-                                <fmt:message key="widget.widgetStatus"/>
-                            </form:label>
-                            <form:select path="widgetStatus" items="${widgetStatus}"/>
-                        </p>
-
-                        <p>
-                            <form:label path="categories">
-                                <fmt:message key="widget.categories"/>
-                            </form:label>
-                            <form:select path="categories" items="${categories}" multiple="true" itemLabel="text" size="10"/>
-                        </p>
-
-                        <p>
-                            <spring:bind path="thumbnailUrl">
-                                <label for="thumbnailUrl"><fmt:message
-                                        key="widget.thumbnailUrl"/> </label>
-                                <input type="url" name="thumbnailUrl" id="thumbnailUrl"
-                                       placeholder="http://example.com/thumbnail.png" class="long"
-                                       value="<c:out value="${widget.thumbnailUrl}"/>"/>
-                            </spring:bind>
-                            <form:errors path="thumbnailUrl" cssClass="error"/>
-                        </p>
-
-                        <p>
-                            <spring:bind path="screenshotUrl">
-                                <label for="screenshotUrl"><fmt:message
-                                        key="widget.screenshotUrl"/> </label>
-                                <input type="url" name="screenshotUrl" id="screenshotUrl"
-                                       placeholder="http://example.com/screenshot.png" class="long"
-                                       value="<c:out value="${widget.screenshotUrl}"/>"/>
-                            </spring:bind>
-                            <form:errors path="screenshotUrl" cssClass="error"/>
-                        </p>
-
-                        <p>
-                            <spring:bind path="titleUrl">
-                                <label for="titleUrl"><fmt:message key="widget.titleUrl"/>
-                                </label>
-                                <input type="url" name="titleUrl" id="titleUrl" class="long"
-                                       value="<c:out value="${widget.titleUrl}"/>"/>
-                            </spring:bind>
-                            <form:errors path="titleUrl" cssClass="error"/>
-                        </p>
-
-                        <p>
-                            <form:label path="author">
-                                <fmt:message key="widget.author"/>
-                            </form:label>
-                            <form:input path="author" cssClass="long"/>
-                            <form:errors path="author" cssClass="error"/>
-                        </p>
-                        <p>
-                            <spring:bind path="authorEmail">
-                                <label for="authorEmail"><fmt:message
-                                        key="widget.authorEmail"/> </label>
-                                <input type="email" name="authorEmail" id="authorEmail"
-                                       class="long" value="<c:out value="${widget.authorEmail}"/>"/>
-                            </spring:bind>
-                            <form:errors path="titleUrl" cssClass="error"/>
-                        </p>
-
-                    </fieldset>
-                    <fieldset>
-                        <fmt:message key="admin.widgetdetail.updatebutton"
-                                     var="updateButtonText"/>
-                        <button class="btn btn-primary" type="submit" value="${updateButtonText}">${updateButtonText}</button>
-                    </fieldset>
-                </form:form></section>
-
-            </div>
-
-            <div class="clear-float"></div>
+		            <form:form id="updateWidget" action="update" commandName="widget"
+		                       method="POST" class="form-horizontal">
+		                <fieldset>
+		                	<legend>
+		                		<fmt:message key="admin.widgetdetail.editdata"/>
+		                		<div class="control-group pull-right">
+		                    	<div class="controls">
+		                        <a href="#" class="btn btn-warning storeItemButton" id="fetchMetadataButton"
+		                           onclick="rave.api.rpc.getWidgetMetadata({
+		                                url: $('#url').get(0).value,
+		                                providerType: $('input:radio[name=type]:checked').val(),
+		                                successCallback: function(result) {
+		                                    var widget = result.result;
+		                                    $('#title').val(widget.title);
+		                                    $('#description').val(widget.description);
+		                                    $('#thumbnailUrl').val(widget.thumbnailUrl);
+		                                    $('#screenshotUrl').val(widget.screenshotUrl);
+		                                    $('#titleUrl').val(widget.titleUrl);
+		                                    $('#author').val(widget.author);
+		                                    $('#authorEmail').val(widget.authorEmail);
+		                                }
+		                            });">
+		                            <fmt:message key="page.updateWidgetMetadata.button"/> </a>
+		                        </div>
+		                    </div>
+		                	</legend>
+		                	<form:errors cssClass="error" element="p"/>
+		                    
+		                    <input type="hidden" name="token"
+		                           value="<c:out value="${tokencheck}"/>"/>
+		                    <p>
+		                        <fmt:message key="form.some.fields.required"/>
+		                    </p>
+		
+		                    <div class="control-group">
+		                        <form:label path="title" class="control-label">
+		                            <fmt:message key="widget.title"/> *
+		                        </form:label>
+		                        <div class="controls">
+			                        <form:input path="title" cssClass="long" required="required"
+		                                    autofocus="autofocus"/>
+		                        </div>
+		                        <form:errors path="title" cssClass="error"/>
+		                    </div>
+		
+		                    <div class="control-group">
+		                        <spring:bind path="url">
+		                            <label for="url" class="control-label">
+		                            	<fmt:message key="widget.url"/> *
+		                            </label>
+		                            <div class="controls">
+			                            <input type="url" name="url" id="url" placeholder="http://example.com/widget.xml" required="required" class="long" value="<c:out value="${widget.url}"/>"/>
+		                            </div>
+		                        </spring:bind>
+		                        <form:errors path="url" cssClass="error"/>
+		                    </div>
+		
+		                    <div class="control-group">
+		                        <label for="type1" class="control-label">
+		                        	<fmt:message key="widget.type"/> *
+		                        </label> 
+		                        <div class="controls">
+		                        	<label for="type1" class="radio">
+		                        		<form:radiobutton path="type" value="OpenSocial"/>&nbsp;
+		                        		<fmt:message key="widget.type.OpenSocial"/> 
+		                        	</label> 
+		                        	<label for="type2" class="radio">
+		                        		<form:radiobutton path="type" value="W3C"/>&nbsp;
+		                        		<fmt:message key="widget.type.W3C"/> 
+		                        	</label>
+		                        </div>
+		                        <form:errors path="type" cssClass="error"/>
+		                    </div>
+		                    <div class="control-group">
+		                        <form:label path="description" class="control-label">
+		                            <fmt:message key="widget.description"/> *
+		                        </form:label>
+		                        <div class="controls">
+		                        	<form:textarea path="description" required="required" cssClass="long"/>
+		                        </div>
+		                        <form:errors path="description" cssClass="error"/>
+		                    </div>
+		
+		                    <div class="control-group">
+		                        <form:label path="featured" class="control-label">
+		                            <fmt:message key="page.general.checkBox.featured"/>
+		                        </form:label>
+		                        <div class="controls">
+			                        <form:checkbox path="featured" id="featured"/>
+		                        </div>
+		                        <form:errors path="featured" cssClass="error"/>
+		                    </div>
+		
+		                    <div class="control-group">
+		                        <form:label path="disableRendering" class="control-label">
+		                            <fmt:message key="widget.disableRendering"/>
+		                        </form:label>
+		                        <div class="controls">
+			                        <form:checkbox path="disableRendering" id="disableRendering"/>
+		                        </div>
+		                        <form:errors path="disableRendering" cssClass="error"/>
+		                    </div>
+		
+		                    <div class="control-group">
+		                        <form:label path="disableRenderingMessage" class="control-label">
+		                            <fmt:message key="widget.disableRenderingMessage"/>
+		                        </form:label>
+		                        <div class="controls">
+			                        <form:input path="disableRenderingMessage" cssClass="long" autofocus="autofocus"/>
+		                        </div>
+		                        <form:errors path="disableRenderingMessage" cssClass="error"/>
+		                    </div>
+		
+		                    <div class="control-group">
+		                        <form:label path="widgetStatus" class="control-label">
+		                            <fmt:message key="widget.widgetStatus"/>
+		                        </form:label>
+		                        <div class="controls">
+			                        <form:select path="widgetStatus" items="${widgetStatus}"/>
+		                        </div>
+		                    </div>
+		
+		                    <div class="control-group">
+		                        <form:label path="categories" class="control-label">
+		                            <fmt:message key="widget.categories"/>
+		                        </form:label>
+		                        <div class="controls">
+			                        <form:select path="categories" items="${categories}" multiple="true" itemLabel="text" size="10"/>
+		                        </div>
+		                    </div>
+		
+		                    <div class="control-group">
+		                        <spring:bind path="thumbnailUrl">
+		                            <label for="thumbnailUrl" class="control-label">
+		                            	<fmt:message key="widget.thumbnailUrl"/> 
+		                            </label>
+		                            <div class="controls">
+			                            <input type="url" name="thumbnailUrl" id="thumbnailUrl" placeholder="http://example.com/thumbnail.png" class="long" value="<c:out value="${widget.thumbnailUrl}"/>"/>
+		                        
+				                         <c:if test="${not empty widget.thumbnailUrl}">
+						                 <a data-toggle="modal" href="#thumbnailModal" class="btn btn-small btn-info">
+						                 	<i class="icon-eye-open" title="View Image"></i> 
+						                 </a>
+						                    <div class="modal modal-image hide" id="thumbnailModal">
+						                    	<div class="modal-header">
+							                    	<button type="button" class="close" data-dismiss="modal">�</button>
+							                    	<h4><fmt:message key="widget.thumbnailUrl"/></h4>
+							                    </div>
+							                    <div class="modal-body">
+								                    <img src="<c:out value="${widget.thumbnailUrl}"/>" alt="<fmt:message key="widget.thumbnailUrl"/>" />
+		    									</div>
+		    									<div class="modal-footer">
+		    										<a href="#" class="btn" data-dismiss="modal"><fmt:message key="page.general.close"/></a>
+		    									</div>
+						                    </div>
+						                </c:if>
+		                            </div>
+				                </spring:bind>
+		                        <form:errors path="thumbnailUrl" cssClass="error"/>
+		                   </div>
+		
+		                    <div class="control-group">
+		                        <spring:bind path="screenshotUrl">
+		                            <label for="screenshotUrl" class="control-label">
+		                            	<fmt:message key="widget.screenshotUrl"/> 
+		                            </label>
+		                            <div class="controls">
+			                            <input type="url" name="screenshotUrl" id="screenshotUrl" placeholder="http://example.com/screenshot.png" class="long" value="<c:out value="${widget.screenshotUrl}"/>"/>
+		                    
+						                <c:if test="${not empty widget.screenshotUrl}">
+						                <a data-toggle="modal" href="#screenshotModal" class="btn btn-small btn-info">
+						                 	<i class="icon-eye-open" title="View Image"></i> 
+						                 </a>
+						                    <div class="modal modal-image hide" id="screenshotModal">
+						                    	<div class="modal-header">
+							                    	<button type="button" class="close" data-dismiss="modal">�</button>
+							                    	<h4><fmt:message key="widget.screenshotUrl"/></h4>
+							                    </div>
+							                    <div class="modal-body">
+								                    <img src="<c:out value="${widget.screenshotUrl}"/>" alt="<fmt:message key="widget.screenshotUrl"/>" />
+		    									</div>
+		    									<div class="modal-footer">
+		    										<a href="#" class="btn" data-dismiss="modal"><fmt:message key="page.general.close"/></a>
+		    									</div>
+						                    </div>
+						                </c:if> 
+		                            </div>
+		                        </spring:bind>
+		                        <form:errors path="screenshotUrl" cssClass="error"/>
+		                    </div>
+		
+		                    <div class="control-group">
+		                        <spring:bind path="titleUrl">
+		                            <label for="titleUrl" class="control-label">
+		                            	<fmt:message key="widget.titleUrl"/>
+		                            </label>
+		                            <div class="controls">
+			                            <input type="url" name="titleUrl" id="titleUrl" class="long" value="<c:out value="${widget.titleUrl}"/>"/>
+		                            </div>
+		                        </spring:bind>
+		                        <form:errors path="titleUrl" cssClass="error"/>
+		                    </div>
+		
+		                    <div class="control-group">
+		                        <form:label path="author" class="control-label">
+		                            <fmt:message key="widget.author"/>
+		                        </form:label>
+		                        <div class="controls">
+			                        <form:input path="author" cssClass="long"/>
+		                        </div>
+		                        <form:errors path="author" cssClass="error"/>
+		                    </div>
+		                    
+		                    <div class="control-group">
+		                        <spring:bind path="authorEmail">
+		                            <label for="authorEmail" class="control-label">
+		                            	<fmt:message key="widget.authorEmail"/> 
+		                            </label>
+		                            <div class="controls">
+			                            <input type="email" name="authorEmail" id="authorEmail" class="long" value="<c:out value="${widget.authorEmail}"/>"/>
+		                            </div>
+		                        </spring:bind>
+		                        <form:errors path="titleUrl" cssClass="error"/>
+		                    </div>
+		                </fieldset>
+		                <fieldset>
+		                    <fmt:message key="admin.widgetdetail.updatebutton"
+		                                 var="updateButtonText"/>
+		                    <button class="btn btn-primary" type="submit" value="${updateButtonText}">${updateButtonText}</button>
+		                </fieldset>
+		            </form:form>
+		        </section>	
+		    </div>		
+		    <div class="clear-float"></div>
         </article>
     </div>
 </div>
+<portal:register-init-script location="${'AFTER_RAVE'}">
+    <script>
+        $(function() {
+            rave.admin.initAdminUi();
+        });
+    </script>
+</portal:register-init-script>

@@ -19,21 +19,19 @@
 <%@ page language="java" trimDirectiveWhitespaces="true" %>
 <%@ include file="/WEB-INF/jsp/includes/taglibs.jsp" %>
 <fmt:setBundle basename="messages"/>
-
 <fmt:message key="${pageTitleKey}" var="pagetitle"/>
 <c:set var="canChangeUserStatus" value="${user.username ne loggedInUser}"/>
 <rave:navbar pageTitle="${pagetitle}"/>
 <div class="container-fluid">
-    <div class="row-fluid">
-        <div class="span1">
-            <rave:admin_tabsheader/>
-        </div>
-        <article class="span11">
-            <ul class="pager">
-                <li class="previous">
-                    <a href="<spring:url value="/app/admin/users"/>"><fmt:message key="admin.userdetail.goback"/></a>
-                </li>
-            </ul>
+	<div class="row-fluid">
+	    <div class="span2">
+	    	<div class="tabs-respond">
+		        <rave:admin_tabsheader/>
+	    	</div>
+	    </div>
+	    <div class="span10">
+            <a href="<spring:url value="/app/admin/users"/>"><fmt:message key="admin.userdetail.goback"/></a>
+
             <section class="formbox">
                 <h2><fmt:message key="page.login.createaccount"/></h2>
                 <%@ include file="/WEB-INF/jsp/views/includes/new_user_form.jsp" %>

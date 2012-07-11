@@ -24,13 +24,17 @@
 <rave:navbar pageTitle="${pagetitle}"/>
 
 <div class="container-fluid">
-    <div class="span2">
-        <rave:admin_tabsheader/>
-    </div>
-    <div class="span10">
-        <article>
-            <h2><fmt:message key="admin.home.subtitle"/></h2>
-            <fmt:message key="admin.home.intro"/>
-        </article>
-    </div>
+	<div class="row-fluid">
+	    <div class="span2">
+	    	<div class="tabs-respond">
+		        <rave:admin_tabsheader/>
+	    	</div>
+	    </div>
+	    <div class="span10">
+	        <article>
+	            <h2><fmt:message key="admin.home.subtitle"/></h2>
+	            <fmt:message key="admin.home.intro"/>
+	        </article>
+	    </div>
+	</div>
 </div>

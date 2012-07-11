@@ -24,53 +24,56 @@
 <rave:navbar pageTitle="${pagetitle}"/>
 
 <div class="container-fluid">
-    <div class="span2">
-        <rave:admin_tabsheader/>
-    </div>
-    <div class="span10">
-        <article>
-            <%--@elvariable id="actionresult" type="java.lang.String"--%>
-            <c:if test="${actionresult eq 'delete' or actionresult eq 'update'}">
-                <div class="alert alert-info">
-                    <fmt:message key="admin.preferencedetail.action.${actionresult}.success"/>
-                </div>
-            </c:if>
-
-            <h2><fmt:message key="admin.preferences.shorttitle"/></h2>
-
-            <spring:url value="/app/admin/preferencedetail/edit" var="detaillink"/>
-                <%--@elvariable id="preferenceMap" type="java.util.Map<java.lang.String, org.apache.rave.portal.model.JpaPortalPreference>"--%>
-            <c:choose>
-                <c:when test="${fn:length(preferenceMap) eq 0}">
-                    <a class="btn btn-primary" href="<c:out value="${detaillink}"/>"><fmt:message key="admin.preferences.edit"/></a>
-                </c:when>
-                <c:otherwise>
-                    <table class="table table-striped table-bordered table-condensed">
-                        <tbody>
-                        <c:forEach items="${preferenceMap}" var="entry">
-                            <c:set value="${entry.value}" var="portalPreference"/>
-                            <tr data-detaillink="<c:out value="${detaillink}"/>">
-                                <th scope="row">
-                                    <a href="${detaillink}"><fmt:message key="admin.preferencedetail.${portalPreference.key}"/></a>
-                                </th>
-                                <td>
-                                    <ul>
-                                        <c:forEach items="${portalPreference.values}" var="value">
-                                            <li><c:out value="${value}"/></li>
-                                        </c:forEach>
-                                    </ul>
-                                </td>
-                            </tr>
-                        </c:forEach>
-                        </tbody>
-                    </table>
-                </c:otherwise>
-            </c:choose>
-
-        </article>
-    </div>
-</div>
-
+	<div class="row-fluid">
+	    <div class="span2">
+	    	<div class="tabs-respond">
+		        <rave:admin_tabsheader/>
+	    	</div>
+	    </div>
+	    <div class="span10">
+	        <article>
+	            <%--@elvariable id="actionresult" type="java.lang.String"--%>
+	            <c:if test="${actionresult eq 'delete' or actionresult eq 'update'}">
+	                <div class="alert alert-info">
+	                    <fmt:message key="admin.preferencedetail.action.${actionresult}.success"/>
+	                </div>
+	            </c:if>
+	
+	            <h2><fmt:message key="admin.preferences.shorttitle"/></h2>
+	
+	            <spring:url value="/app/admin/preferencedetail/edit" var="detaillink"/>
+	                <%--@elvariable id="preferenceMap" type="java.util.Map<java.lang.String, org.apache.rave.portal.model.JpaPortalPreference>"--%>
+	            <c:choose>
+	                <c:when test="${fn:length(preferenceMap) eq 0}">
+	                    <a class="btn btn-primary" href="<c:out value="${detaillink}"/>"><fmt:message key="admin.preferences.edit"/></a>
+	                </c:when>
+	                <c:otherwise>
+	                    <table class="table table-striped table-bordered table-condensed">
+	                        <tbody>
+	                        <c:forEach items="${preferenceMap}" var="entry">
+	                            <c:set value="${entry.value}" var="portalPreference"/>
+	                            <tr data-detaillink="<c:out value="${detaillink}"/>">
+	                                <th scope="row">
+	                                    <a href="${detaillink}"><fmt:message key="admin.preferencedetail.${portalPreference.key}"/></a>
+	                                </th>
+	                                <td>
+	                                    <ul>
+	                                        <c:forEach items="${portalPreference.values}" var="value">
+	                                            <li><c:out value="${value}"/></li>
+	                                        </c:forEach>
+	                                    </ul>
+	                                </td>
+	                            </tr>
+	                        </c:forEach>
+	                        </tbody>
+	                    </table>
+	                </c:otherwise>
+	            </c:choose>
+	
+	        </article>
+	    </div>
+	</div>
+</div>	
 <portal:register-init-script location="${'AFTER_RAVE'}">
     <script>
         $(function() {

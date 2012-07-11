@@ -792,6 +792,11 @@ span.error, label.error {
 
 
 /* admin interface */
+.admin-ui{
+	.form-horizontal .control-label{
+		padding-right: 10px;
+	}
+}
 .admincontent {
     margin: 0 auto;
     width: 80%;
@@ -851,6 +856,27 @@ span.error, label.error {
     width: 300px
 }
 
+.searchHeading.paginationHeading{
+	.pagination{
+		float: left;
+	}
+	.search-form{
+		float: right;
+		margin-top: 8px;
+		margin-bottom: 0;
+		text-align: right;
+	}
+	p{
+		margin:9px 0 0;
+	}
+	#searchFilters{
+		
+		select{
+			margin: 3px 0 15px;
+		}
+	}
+}
+
 /* user profile */
 .profile-submenu ul {
 	height: 2.5em;
@@ -889,7 +915,20 @@ span.error, label.error {
 .profile-info-visible {
 	display: inline;
 }
+#deleteUserProfile{
+	margin-bottom: 0;
+}
+/* END profile */
 
+.checkboxlist{
+	label{
+		display: inline-block;
+	}
+	input[type="checkbox"]{
+		display: inline-block;
+		margin:0 5px 0 0;
+	}
+}
 @media all and (max-width: 900px) {
     .storeSearch {
         width: 100%;
@@ -1101,3 +1140,40 @@ footer {
     font-size: 9pt;
     font-style: italic;
 }
+
+
+/* RESPONSIVE */
+@media (max-width: 767px){
+	.tabs-respond{
+		.tabs-left{
+			& > .nav-tabs{
+				float: none;
+				margin-right: 0;
+				border-bottom: 1px solid #ddd;
+				border-right: none;
+				
+				& > li{
+				float: left;
+				
+					& > a{
+						margin-right: 2px;
+						margin-bottom: 0;
+						.border-radius(4px 4px 0 0);
+						line-height: normal;
+						min-width: inherit;
+						
+						&:hover{
+							 border-color: #EEE #EEE #DDD #EEE;
+						}
+					}
+					&.active > a,
+					&.active > a:hover{
+						border-color: #DDD #DDD transparent #DDD;
+					}
+				}
+			}			
+		}	
+	}
+}
+@media (min-width: 768px) and (max-width: 979px) { }
+@media (min-width: 1200px) { }

@@ -24,67 +24,78 @@
 <fmt:message key="${pageTitleKey}" var="pagetitle"/>
 <rave:navbar pageTitle="${pagetitle}"/>
 <div class="container-fluid">
-    <div class="span2">
-        <rave:admin_tabsheader/>
-    </div>
-    <div class="span10">
-        <article>
-            <c:if test="${actionresult eq 'delete' or actionresult eq 'update'}">
-                <div class="alert alert-info">
-                        <fmt:message key="admin.userdetail.action.${actionresult}.success"/>
-                </div>
-            </c:if>
-            <c:if test="${not empty message}">
-                <div class="alert alert-info">${message}</div>
-            </c:if>
-
-
-
-            <rave:admin_listheader/>
-            <rave:admin_paging/>
-
-            <c:if test="${searchResult.totalResults > 0}">
-                <table class="table table-striped table-bordered table-condensed">
-                    <thead>
-                    <tr>
-                        <th><fmt:message key="admin.userdata.username"/></th>
-                        <th><fmt:message key="admin.userdata.email"/></th>
-                        <th><fmt:message key="admin.userdata.enabled"/></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <c:forEach var="user" items="${searchResult.resultSet}">
-                        <spring:url value="/app/admin/userdetail/${user.id}" var="detaillink"/>
-                        <tr data-detaillink="${detaillink}">
-                            <td><a href="${detaillink}"><c:out value="${user.username}"/></a></td>
-                            <td><c:out value="${user.email}"/></td>
-                            <td>${user.enabled}</td>
-                        </tr>
-                    </c:forEach>
-                    </tbody>
-                </table>
-            </c:if>
-
-            <rave:admin_paging/>
-
-        </article>
-        <div class="span6">
-                <a class="btn btn-success" href="<spring:url value="/app/admin/adduser"/>"><fmt:message key="admin.users.add"/></a>
-
-                    <form id="userSearchForm" class="form-horizontal" action="<spring:url value="/app/admin/users/search"/>" method="get">
+	<div class="row-fluid">
+	    <div class="span2">
+	    	<div class="tabs-respond">
+		        <rave:admin_tabsheader/>
+	    	</div>
+	    </div>
+	    <div class="span10">
+	        <article>
+	            <c:if test="${actionresult eq 'delete' or actionresult eq 'update'}">
+	                <div class="alert alert-info">
+	                        <fmt:message key="admin.userdetail.action.${actionresult}.success"/>
+	                </div>
+	            </c:if>
+	            <c:if test="${not empty message}">
+	                <div class="alert alert-info">${message}</div>
+	            </c:if>
+	
+	
+	
+	            <rave:admin_listheader/>
+	            
+	            <div class="searchHeading paginationHeading">
+	            	<rave:admin_paging/>	
+                    <form id="userSearchForm" class="form-horizontal search-form" action="<spring:url value="/app/admin/users/search"/>" method="get">
                         <fieldset>
-                            <label for="searchTerm"><fmt:message key="admin.users.search"/></label>
-                            <input class="search-query" type="search" id="searchTerm" name="searchTerm" value="<c:out value="${searchTerm}"/>"/>
-                            <fmt:message key="page.store.search.button" var="searchButtonText"/>
-                            <button class="btn btn-primary" type="submit" value="${searchButtonText}">${searchButtonText}</button>
+                        	<br/>
+                            <div class="input-append">
+	                            <input type="text" class="input-medium" id="searchTerm" name="searchTerm" value="<c:out value="${searchTerm}"/>" placeholder='<fmt:message key="admin.users.search"/>'
+	                            /><fmt:message key="page.store.search.button" var="searchButtonText"
+	                            /><button class="btn btn-primary" type="submit" value="${searchButtonText}">${searchButtonText}</button>
+                            </div>
                         </fieldset>
                     </form>
-                <c:if test="${not empty searchTerm}">
-                    <a class="btn btn-success" href="<spring:url value="/app/admin/users"/>"><fmt:message key="admin.clearsearch"/></a>
-                </c:if>
+	                <c:if test="${not empty searchTerm}"><a class="btn btn-success" href="<spring:url value="/app/admin/users"/>"><fmt:message key="admin.clearsearch"/></a>
+	                </c:if>
+	            </div>
+	            <c:if test="${searchResult.totalResults > 0}">
+	                <table class="table table-striped table-bordered table-condensed">
+	                    <thead>
+	                    <tr>
+	                        <th><fmt:message key="admin.userdata.username"/></th>
+	                        <th><fmt:message key="admin.userdata.email"/></th>
+	                        <th><fmt:message key="admin.userdata.enabled"/></th>
+	                    </tr>
+	                    </thead>
+	                    <tbody>
+	                    <c:forEach var="user" items="${searchResult.resultSet}">
+	                        <spring:url value="/app/admin/userdetail/${user.id}" var="detaillink"/>
+	                        <tr data-detaillink="${detaillink}">
+	                            <td><a href="${detaillink}"><c:out value="${user.username}"/></a></td>
+	                            <td><c:out value="${user.email}"/></td>
+	                            <td>${user.enabled}</td>
+	                        </tr>
+	                    </c:forEach>
+	                    </tbody>
+	                </table>
+	            </c:if>
+	
+	            <rave:admin_paging/>
+	            <div>
+	            <fieldset>
+	            	<legend>Add New User</legend>
+	            	<br/>
+	            	<a class="btn btn-primary" href="<spring:url value="/app/admin/adduser"/>"><i class="icon-plus icon-white"></i> <fmt:message key="admin.users.add"/></a>
+	            	<br/>
+	            </fieldset>
+	            <div>
+          	    <br/>
 
-        </div>
-    </div>
+	        </article>
+	    </div>
+	</div>
 </div>
 <portal:register-init-script location="${'AFTER_RAVE'}">
     <script>

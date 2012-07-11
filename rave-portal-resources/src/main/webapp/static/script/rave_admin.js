@@ -31,8 +31,28 @@ rave.admin = rave.admin || (function() {
             });
         }
 
+        //Resize bootstrap modal & adjust margins to size of image.
+        function resizeImageModal(){
+            $('#thumbnailModal, #screenshotModal').on('shown', function () {
+                if(!$(this).hasClass("sized")){
+                    var imageWidth = $(this).find("img").width(),
+                        imageHeight = $(this).find("img").height(),
+                        footerHeight = $(this).find(".modal-footer").outerHeight(),
+                        headerHeight = $(this).find(".modal-header").outerHeight(),
+                        totalHeight = imageHeight + footerHeight + headerHeight;
+
+                    $(this).css({
+                        width: imageWidth + "px",
+                        'margin-top': "-" + Math.round(totalHeight/2) + "px",
+                        'margin-left': "-" + Math.round(imageWidth/2) + "px"
+                    }).addClass("sized");
+                }
+            });
+		}
+
         function init() {
             datatableClick();
+            resizeImageModal();
         }
 
         return {
