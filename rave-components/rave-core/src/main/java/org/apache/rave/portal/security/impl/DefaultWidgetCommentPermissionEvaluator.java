@@ -110,6 +110,7 @@ public class DefaultWidgetCommentPermissionEvaluator extends AbstractModelPermis
                 hasPermission =  true;
                 break;
             case CREATE:
+            case CREATE_OR_UPDATE:
                 hasPermission = isWidgetCommentOwnerById(authentication, widgetComment.getUser().getId());
                 break;
             case DELETE:
@@ -147,6 +148,7 @@ public class DefaultWidgetCommentPermissionEvaluator extends AbstractModelPermis
                 case CREATE:
                 case DELETE:
                 case UPDATE:
+                case CREATE_OR_UPDATE:
                     // anyone can create, delete, read, or update a page that they own
                     hasPermission = isWidgetCommentOwnerById(authentication, (Long)raveSecurityContext.getId());
                     break;
