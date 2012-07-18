@@ -19,6 +19,7 @@
 
 package org.apache.rave.portal.service.impl;
 
+import org.apache.rave.portal.events.RaveEventManager;
 import org.apache.rave.portal.model.PortalPreference;
 import org.apache.rave.portal.model.impl.PortalPreferenceImpl;
 import org.apache.rave.portal.repository.PortalPreferenceRepository;
@@ -41,11 +42,13 @@ public class DefaultPortalPreferenceServiceTest {
 
     PortalPreferenceService service;
     PortalPreferenceRepository repository;
+    RaveEventManager manager;
 
     @Before
     public void setUp() throws Exception {
         repository = createMock(PortalPreferenceRepository.class);
-        service = new DefaultPortalPreferenceService(repository);
+        manager = createMock(RaveEventManager.class);
+        service = new DefaultPortalPreferenceService(repository, manager);
     }
 
     @Test
@@ -109,6 +112,7 @@ public class DefaultPortalPreferenceServiceTest {
 
         expect(repository.getByKey(key)).andReturn(null).once();
         expect(repository.save(fooBar)).andReturn(fooBarSaved).once();
+
         replay(repository);
         service.savePreference(key, value);
         verify(repository);

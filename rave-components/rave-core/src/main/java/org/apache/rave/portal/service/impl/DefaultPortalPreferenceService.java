@@ -19,10 +19,13 @@
 
 package org.apache.rave.portal.service.impl;
 
+import org.apache.rave.portal.events.PortalPreferenceJavascriptDebugModeSaveEvent;
+import org.apache.rave.portal.events.RaveEventManager;
 import org.apache.rave.portal.model.PortalPreference;
 import org.apache.rave.portal.model.impl.PortalPreferenceImpl;
 import org.apache.rave.portal.repository.PortalPreferenceRepository;
 import org.apache.rave.portal.service.PortalPreferenceService;
+import org.apache.rave.portal.web.util.PortalPreferenceKeys;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,10 +42,12 @@ import java.util.Map;
 public class DefaultPortalPreferenceService implements PortalPreferenceService {
 
     private final PortalPreferenceRepository repository;
+    private final RaveEventManager eventManager;
 
     @Autowired
-    public DefaultPortalPreferenceService(PortalPreferenceRepository repository) {
+    public DefaultPortalPreferenceService(PortalPreferenceRepository repository, RaveEventManager manager) {
         this.repository = repository;
+        this.eventManager = manager;
     }
 
     @Override
@@ -85,5 +90,8 @@ public class DefaultPortalPreferenceService implements PortalPreferenceService {
     @Transactional
     public void savePreference(PortalPreference preference) {
         repository.save(preference);
+        if (preference.getKey().equals(PortalPreferenceKeys.JAVASCRIPT_DEBUG_MODE))  {
+            eventManager.fireEvent(new PortalPreferenceJavascriptDebugModeSaveEvent(this));
+        }
     }
 }

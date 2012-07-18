@@ -19,6 +19,14 @@
 
 package org.apache.rave.provider.opensocial.config;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.rave.portal.events.PortalPreferenceJavascriptDebugModeEventListener;
+import org.apache.rave.portal.events.PortalPreferenceJavascriptDebugModeSaveEvent;
+import org.apache.rave.portal.events.RaveEvent;
+import org.apache.rave.portal.events.RaveEventManager;
+import org.apache.rave.portal.service.PortalPreferenceService;
+import org.apache.rave.portal.web.util.PortalPreferenceKeys;
 import org.apache.rave.portal.web.renderer.ScriptLocation;
 import org.apache.rave.portal.web.renderer.ScriptManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,10 +39,16 @@ import javax.annotation.PostConstruct;
  * Environment variables for OpenSocial calls from the portal (to Shindig)
  */
 @Component
-public class OpenSocialEnvironment {
+public class OpenSocialEnvironment implements PortalPreferenceJavascriptDebugModeEventListener{
 
-    private static final String SCRIPT_TEMPLATE = "<script src=\"%1$s://%2$s%3$s/js/container:pubsub-2:open-views.js?c=1&amp;container=default&amp;debug=1\"></script>";
+    private static final Log log = LogFactory.getLog(OpenSocialEnvironment.class);
+    
+    private static final String CONTAINER_JS_KEY = "containerJs";
+    private static final String SCRIPT_RENDER_DEBUG_ON = "1";
+    private final static String SCRIPT_TEMPLATE = "<script src=\"%1$s://%2$s%3$s/js/container:pubsub-2:open-views.js?c=1&amp;container=default&amp;debug=%4$s\"></script>";
 
+    private String currentDebugMode;
+    
     private ScriptManager scriptManager;
 
     /**
@@ -50,9 +64,22 @@ public class OpenSocialEnvironment {
      */
     private String engineGadgetPath;
 
+    @Autowired
+    RaveEventManager eventManager;
+
+    @Autowired
+    PortalPreferenceService portalPreferenceService;
+    
     @PostConstruct
     public void init() {
-        scriptManager.registerScriptBlock(String.format(SCRIPT_TEMPLATE, engineProtocol, engineRoot, engineGadgetPath), ScriptLocation.BEFORE_RAVE);
+        eventManager.addListener(PortalPreferenceJavascriptDebugModeSaveEvent.class, this);
+        try{
+            this.setCurrentDebugMode(portalPreferenceService.getPreference(PortalPreferenceKeys.JAVASCRIPT_DEBUG_MODE).getValue());
+        } catch (Exception e){
+            log.warn("Caught exception getting preference for JS debug mode. Setting JS to debug mode to 'debug on'.");
+            this.setCurrentDebugMode(SCRIPT_RENDER_DEBUG_ON);
+        }
+        registerScriptBlock();
     }
 
     public ScriptManager getScriptManager() {
@@ -89,5 +116,28 @@ public class OpenSocialEnvironment {
 
     public String getEngineGadgetPath() {
         return engineGadgetPath;
+    }
+
+    public String getCurrentDebugMode() {
+        return currentDebugMode;
+    }
+
+    public void setCurrentDebugMode(String currentDebugMode) {
+        this.currentDebugMode = currentDebugMode;
+    }
+
+    @Override
+    public void handleEvent(RaveEvent event) {
+        if(event instanceof PortalPreferenceJavascriptDebugModeSaveEvent){
+            this.setCurrentDebugMode(String.valueOf(portalPreferenceService.getPreference(PortalPreferenceKeys.JAVASCRIPT_DEBUG_MODE).getValue()));
+            log.debug("found event to change debug mode of JS new value =" + this.getCurrentDebugMode());
+            registerScriptBlock();
+        } else {
+            log.warn("Unhandled event received. " + event.getClass()); 
+        }
+    }
+
+    private void registerScriptBlock(){
+        scriptManager.registerScriptBlock(CONTAINER_JS_KEY, String.format(SCRIPT_TEMPLATE, engineProtocol, engineRoot, engineGadgetPath, this.getCurrentDebugMode()), ScriptLocation.BEFORE_RAVE);
     }
 }

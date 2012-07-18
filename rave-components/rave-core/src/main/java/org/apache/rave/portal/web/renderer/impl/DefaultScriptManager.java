@@ -37,74 +37,79 @@ import java.util.*;
 @Service
 public class DefaultScriptManager implements ScriptManager{
     private static final String KEY = "KEY";
-    private final Map<ScriptLocation, List<String>> scriptRenderers;
+    private final Map<ScriptLocation, Map<String, String>> scriptRenderers;
 
     public DefaultScriptManager() {
-        this.scriptRenderers = new HashMap<ScriptLocation, List<String>>();
+        this.scriptRenderers = new HashMap<ScriptLocation, Map<String, String>>();
     }
 
     @Override
     public List<String> getScriptBlocks(ScriptLocation location, RenderContext context) {
-        List<String> combined = new LinkedList<String>();
+        Map<String, String> combined = new LinkedHashMap<String, String>();
         getAndAdd(location, combined, scriptRenderers);
         getAndAdd(location, combined, getOrCreateScriptMap(context));
-        return combined;
+        List<String> scriptContent = new ArrayList<String>();
+        for(Map.Entry<String, String> entry: combined.entrySet()){
+            scriptContent.add(entry.getValue());
+        }
+        return scriptContent;
     }
 
     @Override
-    public void registerScriptBlock(String script, ScriptLocation location) {
-        addScriptToMap(script, location, scriptRenderers);
+    public void registerScriptBlock(String key, String script, ScriptLocation location) {
+        addScriptToMap(key, script, location, scriptRenderers);
     }
 
     @Override
-    public void registerScriptBlock(String script, ScriptLocation location, RenderScope scope, RenderContext context) {
+    public void registerScriptBlock(String key, String script, ScriptLocation location, RenderScope scope, RenderContext context) {
         switch(scope) {
             case GLOBAL:
-                registerScriptBlock(script, location);
+                registerScriptBlock(key, script, location);
                 break;
             case CURRENT_REQUEST:
-                addScriptToContext(script, location, context);
+                addScriptToContext(key, script, location, context);
                 break;
             default:
                 throw new NotSupportedException("The scope, " + scope + " , is not supported by the script manager");
         }
     }
 
-    private static void getAndAdd(ScriptLocation location, List<String> output, Map<ScriptLocation, List<String>> map) {
-        List<String> scripts = map.get(location);
+    private static void getAndAdd(ScriptLocation location, Map<String, String> output, Map<ScriptLocation, Map<String, String>> map) {
+        Map<String, String> scripts = map.get(location);
         if(scripts != null) {
-            output.addAll(scripts);
+            output.putAll(scripts);
         }
     }
 
-    private static void addScriptToContext(String script, ScriptLocation location, RenderContext context) {
-        Map<ScriptLocation, List<String>> scriptMap = getOrCreateScriptMap(context);
-        addScriptToMap(script, location, scriptMap);
+    private static void addScriptToContext(String key, String script, ScriptLocation location, RenderContext context) {
+        Map<ScriptLocation, Map<String,String>> scriptMap = getOrCreateScriptMap(context);
+        addScriptToMap(key, script, location, scriptMap);
     }
 
 
-    private static void addScriptToMap(String script, ScriptLocation location, Map<ScriptLocation, List<String>> scripts) {
+    private static void addScriptToMap(String key, String script, ScriptLocation location, Map<ScriptLocation, Map<String, String>> scripts) {
         if (!scripts.containsKey(location)) {
-            addListForLocation(location, scripts);
+            addMapForLocation(location, scripts);
         }
-        scripts.get(location).add(script);
+        scripts.get(location).put(key, script);
     }
 
     //Lock on the instance of hte map to ensure that only one put per location takes place
     @Synchronized(discriminator = "'SM_#map.toString()'", id = "#location")
-    private static void addListForLocation(ScriptLocation location, Map<ScriptLocation, List<String>> map) {
+    private static void addMapForLocation(ScriptLocation location, Map<ScriptLocation, Map<String, String>> map) {
         if (!map.containsKey(location)) {
-            map.put(location, new ArrayList<String>());
+            map.put(location, new HashMap<String, String>());
         }
     }
+    
     @SuppressWarnings("unchecked")
-    private static Map<ScriptLocation, List<String>> getOrCreateScriptMap(RenderContext context) {
+    private static Map<ScriptLocation, Map<String,String>> getOrCreateScriptMap(RenderContext context) {
         if(context == null) {
             throw new IllegalArgumentException("Cannot have a null render context");
         }
-        Map<ScriptLocation, List<String>> scriptMap = (Map<ScriptLocation, List<String>>)context.getProperties().get(KEY);
+        Map<ScriptLocation, Map<String,String>> scriptMap = (Map<ScriptLocation, Map<String, String>>)context.getProperties().get(KEY);
         if(scriptMap == null) {
-            scriptMap = new HashMap<ScriptLocation, List<String>>();
+            scriptMap = new HashMap<ScriptLocation, Map<String,String>>();
             context.getProperties().put(KEY, scriptMap);
         }
         return scriptMap;

@@ -48,6 +48,8 @@ import static org.apache.rave.provider.w3c.Constants.WIDGET_TYPE;
 @Component
 public class W3cWidgetRenderer implements RegionWidgetRenderer {
     private static Logger logger = LoggerFactory.getLogger(W3cWidgetRenderer.class);
+    
+    private static final String REGISTER_WIDGET_KEY = "wookieRegisterWidget";
 
     private final WidgetProviderService widgetService;
     private final UserService userService;
@@ -85,7 +87,7 @@ public class W3cWidgetRenderer implements RegionWidgetRenderer {
     /**
      * Renders a {@link org.apache.rave.portal.model.RegionWidget} as HTML markup
      *
-     * @param item RegionWidget to render
+     * @param item RegionWidgetImpl to render
      * @param context
      * @return valid HTML markup
      */
@@ -97,7 +99,8 @@ public class W3cWidgetRenderer implements RegionWidgetRenderer {
         }
 
         String widgetScript = getWidgetScript(item);
-        scriptManager.registerScriptBlock(widgetScript, ScriptLocation.AFTER_RAVE, RenderScope.CURRENT_REQUEST, context);
+        String key = REGISTER_WIDGET_KEY + "-" + widget.getId();
+        scriptManager.registerScriptBlock(key, widgetScript, ScriptLocation.AFTER_RAVE, RenderScope.CURRENT_REQUEST, context);
         logger.debug("Gadget Script Data: " + widgetScript);
 
         return String.format(MARKUP, item.getId());

@@ -46,6 +46,8 @@ import org.springframework.stereotype.Component;
 public class OpenSocialWidgetRenderer implements RegionWidgetRenderer {
     private static Logger logger = LoggerFactory.getLogger(OpenSocialWidgetRenderer.class);
 
+    public static final String REGISTER_WIDGET_KEY = "openSocialRegisterWidget";
+
     private OpenSocialService openSocialService;
     private SecurityTokenService securityTokenService;
     private ScriptManager scriptManager;
@@ -95,7 +97,8 @@ public class OpenSocialWidgetRenderer implements RegionWidgetRenderer {
         }
 
         String widgetScript = getWidgetScript(item);
-        scriptManager.registerScriptBlock(widgetScript, ScriptLocation.AFTER_RAVE, RenderScope.CURRENT_REQUEST, context);
+        String key = REGISTER_WIDGET_KEY  + (item.getWidget().getId() == null ? "" :  "-" + item.getWidget().getId());
+        scriptManager.registerScriptBlock(key, widgetScript, ScriptLocation.AFTER_RAVE, RenderScope.CURRENT_REQUEST, context);
         logger.debug("Gadget Script Data: " + widgetScript);
 
         return String.format(MARKUP, item.getId());

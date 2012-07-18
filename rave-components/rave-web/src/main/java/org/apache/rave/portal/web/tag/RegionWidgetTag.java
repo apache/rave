@@ -34,6 +34,8 @@ import javax.servlet.jsp.JspException;
 public class RegionWidgetTag extends AbstractContextAwareSingletonBeanDependentTag<RenderService> {
 
     private RegionWidget regionWidget;
+    
+    private static final String REGISTER_DISABLED_WIDGET_KEY = "disabledRegisterWidget";
 
     // Script block for disabled gadget
     private static final String DISABLED_SCRIPT_BLOCK =
@@ -72,7 +74,8 @@ public class RegionWidgetTag extends AbstractContextAwareSingletonBeanDependentT
                         StringEscapeUtils.escapeJavaScript(regionWidget.getWidget().getDisableRenderingMessage()),
                         regionWidget.isCollapsed(),
                         regionWidget.getWidget().getId());
-                scriptManager.registerScriptBlock(widgetScript, ScriptLocation.AFTER_RAVE, RenderScope.CURRENT_REQUEST, getContext());
+                String key = REGISTER_DISABLED_WIDGET_KEY + "-" + regionWidget.getWidget().getId();
+                scriptManager.registerScriptBlock(key, widgetScript, ScriptLocation.AFTER_RAVE, RenderScope.CURRENT_REQUEST, getContext());
             } else {
                 writeString(getBean().render(regionWidget, getContext()));
             }

@@ -181,7 +181,7 @@ public class RegionWidgetTagTest {
         strings.add(WIDGET_TYPE);
 
         expect(service.getSupportedWidgetTypes()).andReturn(strings);
-        scriptManager.registerScriptBlock(anyObject(String.class), anyObject(ScriptLocation.AFTER_RAVE.getClass()), anyObject(RenderScope.CURRENT_REQUEST.getClass()), anyObject(RenderContext.class));
+        scriptManager.registerScriptBlock(anyObject(String.class), anyObject(String.class), anyObject(ScriptLocation.AFTER_RAVE.getClass()), anyObject(RenderScope.CURRENT_REQUEST.getClass()), anyObject(RenderContext.class));
         expectLastCall();
         replay(service, scriptManager);
 

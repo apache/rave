@@ -111,7 +111,8 @@ public class OpenSocialWidgetRendererTest {
         expect(securityTokenService.getEncryptedSecurityToken(rw)).andReturn(VALID_SECURITY_TOKEN);
         replay(securityTokenService);
 
-        scriptManager.registerScriptBlock(markup, ScriptLocation.AFTER_RAVE, RenderScope.CURRENT_REQUEST, renderContext);
+        String key = OpenSocialWidgetRenderer.REGISTER_WIDGET_KEY+"-"+w.getId();
+        scriptManager.registerScriptBlock(key, markup, ScriptLocation.AFTER_RAVE, RenderScope.CURRENT_REQUEST, renderContext);
         expectLastCall();
         replay(scriptManager);
 
@@ -141,7 +142,7 @@ public class OpenSocialWidgetRendererTest {
             " widgetId: null," +
             " locked: false, hideChrome: false});</script>";
 
-        scriptManager.registerScriptBlock(markup, ScriptLocation.AFTER_RAVE, RenderScope.CURRENT_REQUEST, null);
+        scriptManager.registerScriptBlock(OpenSocialWidgetRenderer.REGISTER_WIDGET_KEY, markup, ScriptLocation.AFTER_RAVE, RenderScope.CURRENT_REQUEST, null);
         expectLastCall();
         replay(scriptManager);
         String result = renderer.render(rw, null);

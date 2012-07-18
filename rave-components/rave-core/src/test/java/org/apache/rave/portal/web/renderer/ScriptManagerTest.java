@@ -36,6 +36,8 @@ public class ScriptManagerTest {
     
     public static final String SCRIPT_1 = "FOO";
     public static final String SCRIPT_2 = "BAR";
+    public static final String SCRIPT_1_KEY = "f";
+    public static final String SCRIPT_2_KEY = "b";
     
     private ScriptManager manager;
     private RenderContext context;
@@ -51,7 +53,7 @@ public class ScriptManagerTest {
 
     @Test
     public void registerBlockAndRetrieve_simple() {
-        manager.registerScriptBlock(SCRIPT_1, ScriptLocation.BEFORE_RAVE);
+        manager.registerScriptBlock(SCRIPT_1_KEY, SCRIPT_1, ScriptLocation.BEFORE_RAVE);
         List<String> scriptBlocks = manager.getScriptBlocks(ScriptLocation.BEFORE_RAVE, context);
         assertThat(scriptBlocks.size(), is(equalTo(1)));
         assertThat(scriptBlocks.get(0), is(equalTo(SCRIPT_1)));
@@ -59,7 +61,7 @@ public class ScriptManagerTest {
 
     @Test
     public void registerBlockAndRetrieve_simpleFullSignature() {
-        manager.registerScriptBlock(SCRIPT_1, ScriptLocation.BEFORE_RAVE, RenderScope.GLOBAL, context);
+        manager.registerScriptBlock(SCRIPT_1_KEY, SCRIPT_1, ScriptLocation.BEFORE_RAVE, RenderScope.GLOBAL, context);
         List<String> scriptBlocks = manager.getScriptBlocks(ScriptLocation.BEFORE_RAVE, context);
         assertThat(scriptBlocks.size(), is(equalTo(1)));
         assertThat(scriptBlocks.get(0), is(equalTo(SCRIPT_1)));
@@ -67,8 +69,8 @@ public class ScriptManagerTest {
 
     @Test
     public void registerBlockAndRetrieve_list() {
-        manager.registerScriptBlock(SCRIPT_1, ScriptLocation.BEFORE_RAVE);
-        manager.registerScriptBlock(SCRIPT_2, ScriptLocation.BEFORE_RAVE);
+        manager.registerScriptBlock(SCRIPT_1_KEY, SCRIPT_1, ScriptLocation.BEFORE_RAVE);
+        manager.registerScriptBlock(SCRIPT_2_KEY, SCRIPT_2, ScriptLocation.BEFORE_RAVE);
         List<String> scriptBlocks = manager.getScriptBlocks(ScriptLocation.BEFORE_RAVE, context);
         assertThat(scriptBlocks.size(), is(equalTo(2)));
         assertThat(scriptBlocks.get(0), is(equalTo(SCRIPT_1)));
@@ -77,8 +79,8 @@ public class ScriptManagerTest {
 
     @Test
     public void registerBlockAndRetrieve_multi() {
-        manager.registerScriptBlock(SCRIPT_1, ScriptLocation.BEFORE_RAVE);
-        manager.registerScriptBlock(SCRIPT_2, ScriptLocation.AFTER_RAVE);
+        manager.registerScriptBlock(SCRIPT_1_KEY, SCRIPT_1, ScriptLocation.BEFORE_RAVE);
+        manager.registerScriptBlock(SCRIPT_2_KEY, SCRIPT_2, ScriptLocation.AFTER_RAVE);
         List<String> scriptBlocks = manager.getScriptBlocks(ScriptLocation.BEFORE_RAVE, context);
         assertThat(scriptBlocks.size(), is(equalTo(1)));
         assertThat(scriptBlocks.get(0), is(equalTo(SCRIPT_1)));
@@ -89,7 +91,7 @@ public class ScriptManagerTest {
 
     @Test
     public void registerBlockAndRetrieve_simpleInContext() {
-        manager.registerScriptBlock(SCRIPT_1, ScriptLocation.BEFORE_RAVE, RenderScope.CURRENT_REQUEST, context);
+        manager.registerScriptBlock(SCRIPT_1_KEY, SCRIPT_1, ScriptLocation.BEFORE_RAVE, RenderScope.CURRENT_REQUEST, context);
         List<String> scriptBlocks = manager.getScriptBlocks(ScriptLocation.BEFORE_RAVE, context);
         assertThat(scriptBlocks.size(), is(equalTo(1)));
         assertThat(scriptBlocks.get(0), is(equalTo(SCRIPT_1)));
@@ -97,8 +99,8 @@ public class ScriptManagerTest {
 
     @Test
     public void registerBlockAndRetrieve_listInContext() {
-        manager.registerScriptBlock(SCRIPT_1, ScriptLocation.BEFORE_RAVE, RenderScope.CURRENT_REQUEST, context);
-        manager.registerScriptBlock(SCRIPT_2, ScriptLocation.BEFORE_RAVE, RenderScope.CURRENT_REQUEST, context);
+        manager.registerScriptBlock(SCRIPT_1_KEY, SCRIPT_1, ScriptLocation.BEFORE_RAVE, RenderScope.CURRENT_REQUEST, context);
+        manager.registerScriptBlock(SCRIPT_2_KEY, SCRIPT_2, ScriptLocation.BEFORE_RAVE, RenderScope.CURRENT_REQUEST, context);
         List<String> scriptBlocks = manager.getScriptBlocks(ScriptLocation.BEFORE_RAVE, context);
         assertThat(scriptBlocks.size(), is(equalTo(2)));
         assertThat(scriptBlocks.get(0), is(equalTo(SCRIPT_1)));
@@ -107,8 +109,8 @@ public class ScriptManagerTest {
 
     @Test
     public void registerBlockAndRetrieve_multiInContext() {
-        manager.registerScriptBlock(SCRIPT_1, ScriptLocation.BEFORE_RAVE, RenderScope.CURRENT_REQUEST, context);
-        manager.registerScriptBlock(SCRIPT_2, ScriptLocation.AFTER_RAVE, RenderScope.CURRENT_REQUEST, context);
+        manager.registerScriptBlock(SCRIPT_1_KEY, SCRIPT_1, ScriptLocation.BEFORE_RAVE, RenderScope.CURRENT_REQUEST, context);
+        manager.registerScriptBlock(SCRIPT_2_KEY, SCRIPT_2, ScriptLocation.AFTER_RAVE, RenderScope.CURRENT_REQUEST, context);
         List<String> scriptBlocks = manager.getScriptBlocks(ScriptLocation.BEFORE_RAVE, context);
         assertThat(scriptBlocks.size(), is(equalTo(1)));
         assertThat(scriptBlocks.get(0), is(equalTo(SCRIPT_1)));
@@ -119,8 +121,8 @@ public class ScriptManagerTest {
 
     @Test
     public void registerBlockAndRetrieve_combined() {
-        manager.registerScriptBlock(SCRIPT_1, ScriptLocation.BEFORE_RAVE, RenderScope.GLOBAL, context);
-        manager.registerScriptBlock(SCRIPT_2, ScriptLocation.BEFORE_RAVE, RenderScope.CURRENT_REQUEST, context);
+        manager.registerScriptBlock(SCRIPT_1_KEY, SCRIPT_1, ScriptLocation.BEFORE_RAVE, RenderScope.GLOBAL, context);
+        manager.registerScriptBlock(SCRIPT_2_KEY, SCRIPT_2, ScriptLocation.BEFORE_RAVE, RenderScope.CURRENT_REQUEST, context);
         List<String> scriptBlocks = manager.getScriptBlocks(ScriptLocation.BEFORE_RAVE, context);
         assertThat(scriptBlocks.size(), is(equalTo(2)));
         assertThat(scriptBlocks.get(0), is(equalTo(SCRIPT_1)));

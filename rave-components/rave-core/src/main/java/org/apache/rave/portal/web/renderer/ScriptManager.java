@@ -39,17 +39,19 @@ public interface ScriptManager {
 
     /**
      * Registers a global script block for inclusion in every page
+     * @param key
      * @param script the string representation of the script block
      * @param location the location in the page to render the script
      */
-    void registerScriptBlock(String script, ScriptLocation location);
+    void registerScriptBlock(String key, String script, ScriptLocation location);
 
     /**
      * Registers a script block for inclusion in the page
+     * @param key
      * @param script the string representation of the script block
      * @param location the location in the page to render the script
      * @param scope indicates the scope under which this script should be registered
      * @param context the context under which to register the script
      */
-    void registerScriptBlock(String script, ScriptLocation location, RenderScope scope, RenderContext context);
+    void registerScriptBlock(String key, String script, ScriptLocation location, RenderScope scope, RenderContext context);
 }
