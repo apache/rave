@@ -41,6 +41,11 @@ function friendsWrapper() {
         params[opensocial.DataRequest.PeopleRequestFields.FILTER] = opensocial.DataRequest.FilterType.IS_FRIENDS_WITH;
         params["filterValue"] = opensocial.IdSpec.PersonId.VIEWER;
         req.add(req.newFetchPeopleRequest(ownerFriends, params), 'mutualFriends');
+        var app_params = {};
+        app_params[opensocial.DataRequest.PeopleRequestFields.MAX] = 100;
+        // Usage of hasApp filter to get list of friends who use this app.
+        app_params[opensocial.DataRequest.PeopleRequestFields.FILTER] = opensocial.DataRequest.FilterType.HAS_APP;
+        req.add(req.newFetchPeopleRequest(ownerFriends, app_params), 'friendsUsingApp');
 
         req.send(displayFriends);
 	};
@@ -71,6 +76,15 @@ function friendsWrapper() {
             });
             html.push('</ul>');
         }
+        var friendsUsingApp = data.get('friendsUsingApp').getData();
+    	html.push('Friends using this Widget (',friendsUsingApp.size(),') <br>');
+    	html.push('<ul>');
+    	friendsUsingApp.each(function(person) {
+        	if (person.getId()) {
+        		html.push('<li>', person.getDisplayName(), '</li>');
+        	}
+        });
+        html.push('</ul>');
         document.getElementById('friends').innerHTML = html.join('');
         gadgets.window.adjustHeight();
     }

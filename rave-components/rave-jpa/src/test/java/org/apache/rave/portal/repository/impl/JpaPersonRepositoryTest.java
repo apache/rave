@@ -57,6 +57,7 @@ public class JpaPersonRepositoryTest {
     private static final String VALID_USER5 = "mario.rossi";
     private static final String INVALID_USERNAME = "INVALID_USERNAME";
     private static final String FEMALE = "female";
+    private static final String NYTIMES_GADGET_APPID = "http://widgets.nytimes.com/packages/html/igoogle/topstories.xml";
 
     @PersistenceContext
     private EntityManager manager;
@@ -142,9 +143,17 @@ public class JpaPersonRepositoryTest {
         repository.findAllConnectedPeopleWithFriend("asdf", "asdf");
     }
 
-    @Test(expected = NotSupportedException.class)
-    public void findFriends() {
-        repository.findFriends("asdf", "asdf");
+    @Test
+    public void findFriendsUsingApp_valid() {
+    	List<Person> friendsUsingApp = repository.findFriends(VALID_USER, NYTIMES_GADGET_APPID);
+        assertThat(friendsUsingApp.size(), is(equalTo(1)));
+        assertThat(friendsUsingApp.get(0).getUsername(), is(equalTo(VALID_USER2)));
+    }
+
+    @Test
+    public void findFriendsUsingApp_invalid() {
+    	List<Person> friendsUsingApp = repository.findFriends(INVALID_USERNAME, NYTIMES_GADGET_APPID);
+    	assertThat(friendsUsingApp.isEmpty(), is(true));
     }
 
     @Test
@@ -225,11 +234,11 @@ public class JpaPersonRepositoryTest {
         person = repository.get(VALID_ID);
         assertThat(person, is(nullValue()));
     }
-    
+
     @Test
     public void read_properties() {
         Person person = repository.get(VALID_ID);
-    	assertThat(person.getProperties().size(), is(1)); 
+    	assertThat(person.getProperties().size(), is(1));
     }
 
 }

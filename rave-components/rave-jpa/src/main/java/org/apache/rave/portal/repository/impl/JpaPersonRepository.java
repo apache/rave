@@ -19,24 +19,30 @@
 
 package org.apache.rave.portal.repository.impl;
 
+import static org.apache.rave.persistence.jpa.util.JpaUtil.getSingleResult;
+import static org.apache.rave.persistence.jpa.util.JpaUtil.saveOrUpdate;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+
+import org.apache.commons.lang.StringUtils;
 import org.apache.rave.exception.NotSupportedException;
 import org.apache.rave.portal.model.JpaGroup;
 import org.apache.rave.portal.model.JpaPerson;
+import org.apache.rave.portal.model.JpaUser;
+import org.apache.rave.portal.model.JpaWidget;
 import org.apache.rave.portal.model.Person;
+import org.apache.rave.portal.model.User;
+import org.apache.rave.portal.model.Widget;
 import org.apache.rave.portal.model.conversion.JpaPersonConverter;
 import org.apache.rave.portal.repository.PersonRepository;
 import org.apache.rave.util.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.apache.rave.persistence.jpa.util.JpaUtil.getSingleResult;
-import static org.apache.rave.persistence.jpa.util.JpaUtil.saveOrUpdate;
 
 /**
  *
@@ -84,9 +90,30 @@ public class JpaPersonRepository implements PersonRepository {
         return CollectionUtils.<Person>toBaseTypedList(friends.getResultList());
     }
 
-    @Override
+
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+	@Override
     public List<Person> findFriends(String username, String appId) {
-        throw new NotSupportedException();
+    	List<Person> friendsUsingWidget = new ArrayList<Person>();
+
+    	TypedQuery query = manager.createNamedQuery(JpaWidget.WIDGET_GET_BY_URL, JpaWidget.class);
+    	query.setParameter(JpaWidget.PARAM_URL, appId);
+		final List<JpaWidget> resultList = query.getResultList();
+        Widget widget = getSingleResult(resultList);
+
+        query = manager.createNamedQuery(JpaUser.USER_GET_ALL_FOR_ADDED_WIDGET, JpaUser.class);
+        query.setParameter(JpaUser.PARAM_WIDGET_ID, widget.getId());
+        List<User> widgetUsers = query.getResultList();
+
+        List<Person> userFriends = findFriends(username);
+        for(Person userFriend : userFriends) {
+    		for (User widgetUser : widgetUsers) {
+    			if(userFriend.getUsername().equals(widgetUser.getUsername())) {
+    				friendsUsingWidget.add(userFriend);
+    			}
+    		}
+    	}
+        return friendsUsingWidget;
     }
 
     @Override
