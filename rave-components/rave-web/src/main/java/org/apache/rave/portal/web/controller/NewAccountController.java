@@ -62,10 +62,11 @@ public class NewAccountController {
     }
 
     @RequestMapping(value = "/newaccount.jsp")
-    public void setUpForm(ModelMap model, HttpServletRequest request) {
+    public String setUpForm(ModelMap model, HttpServletRequest request) {
         logger.debug("Initializing form");
         model.addAttribute(ModelKeys.CAPTCHA_HTML, captchaService.createHtml(request));
         model.addAttribute(ModelKeys.NEW_USER, new UserImpl());
+        return ViewNames.NEW_ACCOUNT;
     }
 
     @RequestMapping(value = {"/newaccount", "/newaccount/*"}, method = RequestMethod.POST)
