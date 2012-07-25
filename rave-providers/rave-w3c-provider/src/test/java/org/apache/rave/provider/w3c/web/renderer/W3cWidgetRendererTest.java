@@ -73,6 +73,9 @@ public class W3cWidgetRendererTest {
 
     @Test
     public void render_valid() {
+        final long REGION_ID = 222L;
+        final long REGION_WIDGET_ID = 444L;
+
         User user = new UserImpl(9999L, "testUser");
         expect(userService.getAuthenticatedUser()).andReturn(user);
         replay(userService);
@@ -80,9 +83,9 @@ public class W3cWidgetRendererTest {
         W3CWidget w = new W3CWidget();
         w.setType(Constants.WIDGET_TYPE);
         w.setUrl("http://example.com/widgets/1");
-        Region region = new RegionImpl(1L);
+        Region region = new RegionImpl(REGION_ID);
         RegionWidget rw = new RegionWidgetImpl();
-        rw.setId(1L);
+        rw.setId(REGION_WIDGET_ID);
         rw.setWidget(w);
         rw.setRegion(region);
 
@@ -93,7 +96,7 @@ public class W3cWidgetRendererTest {
         replay(wookieService);
 
         String placeholder = renderer.render(rw, renderContext);
-        assertEquals("Script block for widget is incorrect", "<!-- RegionWidget 1 placeholder -->", placeholder);
+        assertEquals("Script block for widget is incorrect", "<!-- RegionWidget " + REGION_WIDGET_ID + " placeholder -->", placeholder);
     }
 
     @Test(expected = NotSupportedException.class)

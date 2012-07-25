@@ -99,7 +99,8 @@ public class W3cWidgetRenderer implements RegionWidgetRenderer {
         }
 
         String widgetScript = getWidgetScript(item);
-        String key = REGISTER_WIDGET_KEY + "-" + widget.getId();
+        // the key is based off the RegionWidget.id to ensure uniqueness
+        String key = REGISTER_WIDGET_KEY + "-" + item.getId();
         scriptManager.registerScriptBlock(key, widgetScript, ScriptLocation.AFTER_RAVE, RenderScope.CURRENT_REQUEST, context);
         logger.debug("Gadget Script Data: " + widgetScript);
 

@@ -76,16 +76,20 @@ public class OpenSocialWidgetRendererTest {
 
     @Test
     public void render_valid() throws JSONException {
+        final long WIDGET_ID = 999L;
+        final long REGION_WIDGET_ID = 12345L;
+        final long REGION_ID = 8675309L;
+
         expect(openSocialService.getGadgetMetadata(VALID_GADGET_URL)).andReturn(VALID_METADATA);
         replay(openSocialService);
 
         WidgetImpl w = new WidgetImpl();
-        w.setId(1L);
+        w.setId(WIDGET_ID);
         w.setType(Constants.WIDGET_TYPE);
         w.setUrl(VALID_GADGET_URL);
-        Region region = new RegionImpl(1L);
+        Region region = new RegionImpl(REGION_ID);
         RegionWidget rw = new RegionWidgetImpl();
-        rw.setId(1L);
+        rw.setId(REGION_WIDGET_ID);
         rw.setCollapsed(VALID_COLLAPSED);
         rw.setWidget(w);
         rw.setRegion(region);
@@ -96,14 +100,14 @@ public class OpenSocialWidgetRendererTest {
                                         new RegionWidgetPreferenceImpl( 1L, null, null)));
 
         final String markup =
-            "<script>rave.registerWidget(1, {type: 'OpenSocial'," +
-            " regionWidgetId: 1," +
+            "<script>rave.registerWidget(" + REGION_ID + ", {type: 'OpenSocial'," +
+            " regionWidgetId: " + REGION_WIDGET_ID + "," +
             " widgetUrl: '" + VALID_GADGET_URL +"', " +
             " securityToken: '" + VALID_SECURITY_TOKEN + "', " +
             " metadata: " + VALID_METADATA + "," +
             " userPrefs: {\"speed\":\"fast\",\"color\":\"blue\"}," +
             " collapsed: " + VALID_COLLAPSED + ", " +
-            " widgetId: 1," +
+            " widgetId: " + WIDGET_ID + "," +
             " locked: " + VALID_LOCKED + "," +
             " hideChrome: " + VALID_HIDE_CHROME +
             "});</script>";
@@ -111,14 +115,14 @@ public class OpenSocialWidgetRendererTest {
         expect(securityTokenService.getEncryptedSecurityToken(rw)).andReturn(VALID_SECURITY_TOKEN);
         replay(securityTokenService);
 
-        String key = OpenSocialWidgetRenderer.REGISTER_WIDGET_KEY+"-"+w.getId();
+        String key = OpenSocialWidgetRenderer.REGISTER_WIDGET_KEY+"-"+rw.getId();
         scriptManager.registerScriptBlock(key, markup, ScriptLocation.AFTER_RAVE, RenderScope.CURRENT_REQUEST, renderContext);
         expectLastCall();
         replay(scriptManager);
 
         String result = renderer.render(rw, renderContext);
 
-        assertThat(result, is(equalTo("<!-- RegionWidget 1 placeholder -->")));
+        assertThat(result, is(equalTo("<!-- RegionWidget " + rw.getId() + " placeholder -->")));
         verify(scriptManager);
     }
 
