@@ -20,7 +20,14 @@
 .hidden {
     display: none;
 }
-
+.alert-error a{
+	color: @errorText;
+	text-decoration: underline;
+	
+	&:hover{
+		color: #B12926;
+	}
+}
 /* content */
 #content {
     background-color: transparent;
@@ -219,6 +226,14 @@
 /* layout */
 .navbar {
     margin-bottom: 18px;
+    
+    .nav form{
+	    margin: 0;
+	    
+	    button{
+		    margin-top: 7px;
+	    }
+    }
 }
 
 .regions {
@@ -781,8 +796,12 @@ span.error, label.error {
 
 #errorStack {
     display: none;
-    width: 90%;
     margin: auto;
+    text-align: center;
+    
+    pre{
+	    text-align: left;
+    }
 }
 
 .errorMessage {

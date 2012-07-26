@@ -24,74 +24,48 @@
 <tiles:putAttribute name="pageTitleKey" value="page.newpassword.title"/>
 <tiles:importAttribute name="pageTitleKey" scope="request"/>
 
-<header>
-    <nav>
-        <div class="navbar navbar-fixed-top">
-            <div class="container">
-                <a href="<c:url value="/"/>" class="brand">RAVE</a>
-                <ul class="nav pull-right">
-                    <li class="divider-vertical"></li>
-                    <li>
-                        <form class="form-inline " action="<c:url value="/app/retrieveusername"/>" method="get">
-                            <fmt:message key="page.login.forgot.username.button" var="requestNewUsernameButton"/>
-                            <button class="btn btn-info" id="requestNewUsernameButton" type="submit" value="${requestNewUsernameButton}">${requestNewUsernameButton}</button>
-                        </form>
-                    </li>
-                    <li class="divider-vertical"></li>
+    <rave:login_navbar hideButton="requestNewPasswordButton" />
 
-                    <li>
-                        <form class="form-inline" action="<c:url value="/app/newaccount.jsp"/>" method="get">
-                            <fieldset>
-                                <fmt:message key="page.login.createaccount.button" var="createAccountButtonText"/>
-                                <button class="btn btn-info" id="createNewAccountButton" type="submit" value="${createAccountButtonText}">${createAccountButtonText}</button>
-                            </fieldset>
-                        </form>
-                    </li>
-                    <li class="divider-vertical"></li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-</header>
-<br><br>
-<div class="container navbar-spacer">
-    <h1><fmt:message key="page.newpassword.title"/></h1>
-    <c:choose>
-        <c:when test="${success}">
-            <div class="alert-message success">
-                <fmt:message key="page.newpassword.email.sent">
-                    <fmt:param>${email}</fmt:param>
-                </fmt:message>
-            </div>
-            <a href="<c:url value="/"/>"><fmt:message key="page.newpassword.email.sent.login"/></a>
-        </c:when>
-
-        <c:otherwise>
-
-            <form:form cssClass="form-horizontal well" commandName="user" action="newpassword" method="post">
-                <fieldset>
-                    <p><fmt:message key="form.all.fields.required"/></p>
-
-                    <p><form:errors cssClass="error"/></p>
-
-                    <div class="control-group">
-                        <label class="control-label" for="emailField"><fmt:message key="page.general.email"/></label>
-                        <div class="controls">
-                            <form:input id="emailField" path="email" required="required" autofocus="autofocus"/>
-                            <form:errors path="email" cssClass="error"/>
-                        </div>
-                    </div>
-                </fieldset>
-                <fieldset>
-                    <div class="control-group">
-                        <div class="controls">${captchaHtml}</div>
-                    </div>
-                </fieldset>
-                <fieldset>
-                    <fmt:message key="page.login.forgot.password.button" var="submitButtonText"/>
-                    <button type="submit" class="btn btn-primary" value="${submitButtonText}">${submitButtonText}</button>
-                </fieldset>
-            </form:form>
-        </c:otherwise>
-    </c:choose>
+<div class="container-fluid">
+	<div class="row-fluid">
+	    <h1><fmt:message key="page.newpassword.title"/></h1>
+	    <c:choose>
+	        <c:when test="${success}">
+	            <div class="alert-message success">
+	                <fmt:message key="page.newpassword.email.sent">
+	                    <fmt:param>${email}</fmt:param>
+	                </fmt:message>
+	            </div>
+	            <a href="<c:url value="/"/>"><fmt:message key="page.newpassword.email.sent.login"/></a>
+	        </c:when>
+	
+	        <c:otherwise>
+	
+	            <form:form cssClass="form-horizontal well" commandName="user" action="newpassword" method="post">
+	                <fieldset>
+	                    <p><fmt:message key="form.all.fields.required"/></p>
+	
+	                    <p><form:errors cssClass="error"/></p>
+	
+	                    <div class="control-group">
+	                        <label class="control-label" for="emailField"><fmt:message key="page.general.email"/></label>
+	                        <div class="controls">
+	                            <form:input id="emailField" path="email" required="required" autofocus="autofocus"/>
+	                            <form:errors path="email" cssClass="error"/>
+	                        </div>
+	                    </div>
+	                </fieldset>
+	                <fieldset>
+	                    <div class="control-group">
+	                        <div class="controls">${captchaHtml}</div>
+	                    </div>
+	                </fieldset>
+	                <fieldset>
+	                    <fmt:message key="page.login.forgot.password.button" var="submitButtonText"/>
+	                    <button type="submit" class="btn btn-primary" value="${submitButtonText}">${submitButtonText}</button>
+	                </fieldset>
+	            </form:form>
+	        </c:otherwise>
+	    </c:choose>
+	</div>
 </div>
