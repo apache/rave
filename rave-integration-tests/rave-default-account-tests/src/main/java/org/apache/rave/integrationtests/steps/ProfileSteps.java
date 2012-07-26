@@ -24,6 +24,7 @@ import org.jbehave.core.annotations.Then;
 import org.jbehave.core.annotations.When;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.Select;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -78,9 +79,10 @@ public class ProfileSteps {
         changeFieldValue("aboutMeField", aboutMe);
     }
 
-    @When("I change the status to \"$status\"")
+    @When("I choose the status as \"$status\"")
     public void changeStatus(String status) {
-        changeFieldValue("statusField", status);
+        final Select relationshipStatus = new Select(portal.findElement(By.id("statusField")));
+        relationshipStatus.selectByValue(status);
     }
 
     private void changeFieldValue(String fieldId, String value) {
