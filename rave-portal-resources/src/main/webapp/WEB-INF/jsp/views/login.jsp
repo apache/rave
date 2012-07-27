@@ -38,18 +38,17 @@
             <div class="row-fluid" id="loginOptions">
             	<div id="loginBlock" class="clearfix well">
 	                <div class="span6">
-	                        <%--
-	                            //############################################
-	                            // LOGIN FORM
-	                            //############################################
-	                        --%>
+                        <%--
+                            //############################################
+                            // LOGIN FORM
+                            //############################################
+                        --%>
 	                    <form class="form-horizontal" id="loginForm" name="loginForm" action="j_spring_security_check" method="post">
-	
-	                        <c:if test="${param['authfail'] eq 'form'}">
-	                            <p class="error"><fmt:message key="page.login.usernamepassword.fail"/></p>
-	                        </c:if>
 	                        <fieldset>
 	                            <legend><fmt:message key="page.login.usernamepassword"/></legend>
+                                <c:if test="${param['authfail'] eq 'form'}">
+                                    <div class="alert alert-error"><fmt:message key="page.login.usernamepassword.fail"/></div>
+                                </c:if>
 	                            <div class="control-group">
 	                                <label class="control-label" for="usernameField"><fmt:message key="page.general.username"/></label>
 	                                <div class="controls">
@@ -80,18 +79,17 @@
 	                    </form>
 	                </div>
 	                <div class="span4">
-	                        <%--
-	                            //############################################
-	                            // OPENID LOGIN
-	                            //############################################
-	                        --%>
-	
+                        <%--
+                            //############################################
+                            // OPENID LOGIN
+                            //############################################
+                        --%>
 	                    <form class="form-horizontal" id="openIdForm" name='oidf' action='j_spring_openid_security_check' method='POST'>
-	                        <c:if test="${param['authfail'] eq 'openid'}">
-	                            <p class="error"><fmt:message key="page.login.openid.fail"/></p>
-	                        </c:if>
 	                        <fieldset>
 	                            <legend><fmt:message key="page.login.openid"/></legend>
+                                <c:if test="${param['authfail'] eq 'openid'}">
+                                    <div class="alert alert-error"><fmt:message key="page.login.openid.fail"/></div>
+                                </c:if>
 	                            <div class="control-group">
 	                                <label class="control-label" for="openid_identifier"><fmt:message key="page.login.openid.identifier"/></label>
 	                                <div class="controls">
