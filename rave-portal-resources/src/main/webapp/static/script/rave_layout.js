@@ -306,7 +306,11 @@ rave.layout = rave.layout || (function() {
             $('#confirmSharePageDialog').modal('hide');
             rave.api.rpc.updateSharedPageStatus({pageId: rave.layout.searchHandler.pageId, shareStatus: 'refused',
                 successCallback: function(result) {
-                    document.location.href='/';
+                    rave.api.rpc.removeMemberFromPage({pageId:rave.layout.searchHandler.pageId, userId:rave.layout.searchHandler.userId,
+                        successCallback:function (result) {
+                            document.location.href='/';
+                        }});
+
                 }
             });
         }
