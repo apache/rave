@@ -25,6 +25,8 @@
 <%@ include file="/WEB-INF/jsp/includes/taglibs.jsp" %>
 <fmt:setBundle basename="messages"/>
 <jsp:useBean id="userProfile" type="org.apache.rave.portal.model.JpaUser" scope="request"/>
+<sec:authentication property="principal.username" var="principleUsername" scope="request"/>
+<sec:authentication property="principal.displayName" var="displayName" scope="request"/>
 
 <!-- get the display name of user -->
 <fmt:message key="page.personProfile.title" var="pageTitle">
@@ -44,8 +46,8 @@
 <fmt:message key="page.home.welcome" var="pagetitle">
     <fmt:param>
         <c:choose>
-            <c:when test="${not empty page.owner.displayName}"><c:out value="${page.owner.displayName}"/></c:when>
-            <c:otherwise><c:out value="${page.owner.username}"/></c:otherwise>
+            <c:when test="${not empty displayName}"><c:out value="${displayName}"/></c:when>
+            <c:otherwise><c:out value="${principleUsername}"/></c:otherwise>
         </c:choose>
     </fmt:param>
 </fmt:message>
