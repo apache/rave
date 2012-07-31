@@ -1,6 +1,42 @@
 Apache Rave Change Log
 https://issues.apache.org/jira/secure/ReleaseNote.jspa?projectId=12311290 (select the version of release and output as text to create this file)
 
+Release Notes - Rave - Version 0.14
+===========================================================================================================
+
+** Sub-task
+    * [RAVE-452] - Clean up User Profile layout
+    * [RAVE-536] - Admin area: fix layout
+    * [RAVE-579] - Rework the notification mechanism
+    * [RAVE-683] - Revamp like/dislike display
+
+** Bug
+    * [RAVE-624] - Shindig common container is hard coded to debug script
+    * [RAVE-658] - Rave footer is coming twice on submit of newpassword and request user pages
+    * [RAVE-703] - Missing JpaPersonProperties in JpaPerson
+    * [RAVE-712] - Owner does not see that sharing has been declined
+    * [RAVE-713] - Null bean error in SpringBindingModule
+    * [RAVE-714] - Security token Id does not match shindig person id
+    * [RAVE-716] - Late event registrations are never called
+    * [RAVE-722] - Shindig webapp component can't be re-deployed without a container restart
+    * [RAVE-723] - Widget comment button seems to be working for only canonical user
+    * [RAVE-732] - Unable to render two widgets of the same type on the same page
+    * [RAVE-733] - Wrong display name shown in page title on top left for person profile view
+
+** Improvement
+    * [RAVE-556] - User Display name empty
+    * [RAVE-657] - Create new user button on new account page 
+    * [RAVE-673] - Rework login screen
+    * [RAVE-702] - Implementation of FriendsWithFriend
+    * [RAVE-720] - Support navigating to secondary named views (i.e. canvas.foo, canvas.bar)
+    * [RAVE-726] - Update the Rave Extension SSO Provider for Rave 0.14-SNAPSHOT
+    * [RAVE-727] - Providing options for relationship status
+    * [RAVE-735] - Bootstrap the log in error messages
+
+** Story
+    * [RAVE-709] - Remove version numbers in URLs for Spring XSDs
+
+
 Release Notes - Rave - Version 0.13 (Note: only tagged, not released, see RAVE-704)
 ================================================================================================================
 
