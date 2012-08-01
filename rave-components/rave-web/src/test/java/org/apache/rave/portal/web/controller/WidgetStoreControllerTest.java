@@ -83,6 +83,7 @@ public class WidgetStoreControllerTest {
         replay(userService);
 
         PortalPreferenceService preferenceService = createMock(PortalPreferenceService.class);
+        expect(preferenceService.getPreference(PortalPreferenceKeys.INITIAL_WIDGET_STATUS)).andReturn(null);
         expect(preferenceService.getPreference(PortalPreferenceKeys.PAGE_SIZE)).andReturn(null);
         replay(preferenceService);
 

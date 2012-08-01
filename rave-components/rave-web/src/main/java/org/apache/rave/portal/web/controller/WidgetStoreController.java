@@ -228,7 +228,18 @@ public class WidgetStoreController {
             ControllerUtils.addNavItemsToModel(view, model, referringPageId, user);
             return view;
         }
-        widget.setWidgetStatus(WidgetStatus.PREVIEW);
+        
+        /*
+         * By default, a new widget has a status of "PREVIEW", however this can be overridden in portal preferences,
+         * skipping the need for an admin to approve a new widget.
+         */
+        PortalPreference status = preferenceService.getPreference(PortalPreferenceKeys.INITIAL_WIDGET_STATUS);
+        if (status != null && status.getValue().equals("PUBLISHED")){
+			widget.setWidgetStatus(WidgetStatus.PUBLISHED);
+		} else {
+	        widget.setWidgetStatus(WidgetStatus.PREVIEW);
+		}
+        
         widget.setOwner(user);
 
         final Widget storedWidget = widgetService.registerNewWidget(widget);

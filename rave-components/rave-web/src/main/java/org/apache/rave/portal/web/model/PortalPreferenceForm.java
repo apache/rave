@@ -34,6 +34,7 @@ public class PortalPreferenceForm {
     public static final String DEFAULT_PAGE_SIZE = "10";
     public static final String DEFAULT_TITLE_SUFFIX = "";
     public static final String DEFAULT_JAVASCRIPT_DEBUG_MODE = "1";
+    public static final String DEFAULT_INITIAL_WIDGET_STATUS = "PREVIEW";
 
 
     private Map<String, PortalPreference> preferenceMap;
@@ -54,6 +55,13 @@ public class PortalPreferenceForm {
         if (getJavaScriptDebugMode() == null) {
             preferenceMap.put(JAVASCRIPT_DEBUG_MODE, new PortalPreferenceImpl(JAVASCRIPT_DEBUG_MODE, DEFAULT_JAVASCRIPT_DEBUG_MODE));
         }
+        if (getInitialWidgetStatus() == null){
+        	preferenceMap.put(DEFAULT_INITIAL_WIDGET_STATUS, new PortalPreferenceImpl(INITIAL_WIDGET_STATUS, DEFAULT_INITIAL_WIDGET_STATUS));
+        }
+    }
+    
+    public PortalPreference getInitialWidgetStatus(){
+    	return preferenceMap.get(INITIAL_WIDGET_STATUS);
     }
 
     public PortalPreference getPageSize() {
@@ -86,5 +94,9 @@ public class PortalPreferenceForm {
 
     public void setPreferenceMap(Map<String, PortalPreference> preferenceMap) {
         this.preferenceMap = preferenceMap;
+    }
+    
+    public void setInitialWidgetStatus(PortalPreference initialWidgetStatus){
+    	preferenceMap.put(INITIAL_WIDGET_STATUS, initialWidgetStatus);
     }
 }
