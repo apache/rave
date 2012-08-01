@@ -44,8 +44,9 @@
     <properties>
         <apache.shindig.version>2.5.0-beta2</apache.shindig.version>
         <apache.wookie.version>0.10.0-incubating</apache.wookie.version>
-        <org.springframework.version>3.1.0.RELEASE</org.springframework.version>
-        <org.springframework.mobile.version>1.0.0.M3</org.springframework.mobile.version>
+        <org.springframework.version>3.1.2.RELEASE</org.springframework.version>
+        <org.springframework.security.version>3.1.1.RELEASE</org.springframework.security.version>
+        <org.springframework.mobile.version>1.0.0.RELEASE</org.springframework.mobile.version>
         <jstl.version>1.2</jstl.version>
         <javax.servlet.version>2.5</javax.servlet.version>
         <jsp-api.version>2.1</jsp-api.version>
@@ -249,7 +250,7 @@
             <dependency>
                 <groupId>org.springframework.security</groupId>
                 <artifactId>spring-security-web</artifactId>
-                <version>${org.springframework.version}</version>
+                <version>${org.springframework.security.version}</version>
                 <exclusions>
                     <exclusion>
                         <groupId>org.springframework</groupId>
@@ -264,18 +265,30 @@
             <dependency>
                 <groupId>org.springframework.security</groupId>
                 <artifactId>spring-security-config</artifactId>
-                <version>${org.springframework.version}</version>
+                <version>${org.springframework.security.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework.security</groupId>
                 <artifactId>spring-security-taglibs</artifactId>
-                <version>${org.springframework.version}</version>
+                <version>${org.springframework.security.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework.security</groupId>
                 <artifactId>spring-security-ldap</artifactId>
-                <version>${org.springframework.version}</version>
+                <version>${org.springframework.security.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.springframework.security</groupId>
+                <artifactId>spring-security-openid</artifactId>
+                <version>${org.springframework.security.version}</version>
+            </dependency>
+
+            <dependency>
+               <groupId>org.springframework</groupId>
+               <artifactId>spring-oxm</artifactId>
+               <version>${org.springframework.version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-core</artifactId>
@@ -349,6 +362,19 @@
                 <groupId>com.sun.jersey</groupId>
                 <artifactId>jersey-server</artifactId>
                 <version>${jersey-server.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.openid4java</groupId>
+                <artifactId>openid4java-consumer</artifactId>
+                <version>${org.openid4java.version}</version>
+                <type>pom</type>
+                <exclusions>
+                   <exclusion>
+                      <groupId>com.google.code.guice</groupId>
+                      <artifactId>guice</artifactId>
+                   </exclusion>
+                </exclusions>
             </dependency>
 
             <!-- Logging -->
