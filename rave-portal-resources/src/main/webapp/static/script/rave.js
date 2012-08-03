@@ -946,6 +946,24 @@ var rave = rave || (function () {
     function resetOpenAjaxHubInstance() {
         openAjaxHub = null;
     }
+    
+    function renderNewWidget(regionWidgetId){
+        // When run as the callback argument supplied to rave.api.rpc.addWidgetToPage
+        // this method will render the widget in the current page.
+        
+        // load widget into a placeholder element
+        var placeholder = document.createElement("div");
+        $(placeholder).load(rave.getContext()+"/api/rest/regionwidget/"+regionWidgetId, function(){
+          // prepend to first region
+          var region = $("#region-1-id");
+          region.prepend(placeholder);
+          // remove the placeholder around the widget-wrapper
+          region.children(":first").children(":first").unwrap();
+          // initialize
+          initializeWidgets();
+          }        
+        );
+    }
 
     function initializeWidgets() {
         //We get the widget objects in a map keyed by region ID.  The code below converts that map into a flat array
@@ -1003,6 +1021,18 @@ var rave = rave || (function () {
     }
 
     function initializeWidget(widget) {
+    
+        // Widget has been deleted on the page but not removed from list
+        var widgetBody = $(["#widget-", widget.regionWidgetId, "-body"].join(""));
+        if(widgetBody.length === 0){
+          return;
+        } else {
+            // Widget has already been initialized
+            if(typeof widgetBody.children !== "undefined" && widgetBody.children().length !== 0){
+              return;
+            }
+        }
+    
         if (widget.type == "DISABLED") {
             renderDisabledWidget(widget.regionWidgetId, unescape(widget.disabledMessage));
             return;
@@ -1160,6 +1190,12 @@ var rave = rave || (function () {
          * @param widget The widget.
          */
         registerWidget:registerWidget,
+
+        /**
+         * Render a newly-added widget in the page
+         * @param regionWidgetId the regionWidgetId of the widget to render
+         */
+        renderNewWidget:renderNewWidget,
 
         /**
          * Initialize all of the registered providers
