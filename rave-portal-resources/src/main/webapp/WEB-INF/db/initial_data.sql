@@ -283,12 +283,6 @@ insert into widget (entity_id, title, url, type, description, author, widget_sta
 values(@another_hamster_widget_id, 'Herbie Hamster Virtual Pet', 'http://hosting.gmodules.com/ig/gadgets/file/109548057311228444554/hamster.xml', 'OpenSocial', 'A cute little hamster for you to feed and look after. Watch him follow your cursor around. Click on the more tab to treat him to a strawberry. Click him then put him on the wheel and watch him play! ***NEW: make Herbie hamster your very own!', 'Naj', 'PUBLISHED', 'http://sites.google.com/site/najartsist/pets-1/herbiet.png', 'http://sites.google.com/site/najartsist/herbie-hamster/herbie.png', @user_id_1);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @widget_seq;
 
--- slideshare widget
-set @gifts_widget_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @widget_seq);
-insert into widget (entity_id, title, url, type, widget_status, owner_id)
-values(@gifts_widget_id, 'Gifts', 'http://opensocial-resources.googlecode.com/svn/samples/tutorial/tags/api-0.8/gifts_1_friends.xml', 'OpenSocial', 'PUBLISHED', @user_id_1);
-UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @widget_seq;
-
 -- demo widgets from rave-demos
 -- CTSS resource google map
 set @ctss_resources_widget_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @widget_seq);
