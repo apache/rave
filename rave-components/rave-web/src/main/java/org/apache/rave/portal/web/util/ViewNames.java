@@ -26,11 +26,13 @@ public final class ViewNames {
     private ViewNames() {}
     private static final String USER_PREFIX = "templates.user.";
     private static final String ADMIN_PREFIX = "templates.admin.";
-
+    private static final String PARTIAL_PREFIX = "templates.partial.";
+    
     public static final String PAGE = USER_PREFIX + "page";
     public static final String MOBILE_HOME = USER_PREFIX + "mobile_home";
     public static final String STORE = USER_PREFIX + "store";
     public static final String WIDGET = USER_PREFIX + "widget";
+    public static final String REGION_WIDGET = PARTIAL_PREFIX + "regionwidget";
     public static final String ADD_WIDGET_FORM = USER_PREFIX + "addwidget";
     public static final String NEW_ACCOUNT = USER_PREFIX + "newaccount";
     public static final String USER_PROFILE = USER_PREFIX + "userProfile";
