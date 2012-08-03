@@ -22,7 +22,21 @@ package org.apache.rave.portal.model;
 import org.apache.rave.exception.NotSupportedException;
 import org.apache.rave.persistence.BasicEntity;
 
-import javax.persistence.*;
+import javax.persistence.Access;
+import javax.persistence.AccessType;
+import javax.persistence.Basic;
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -59,6 +73,7 @@ public class JpaPortalPreference implements BasicEntity, Serializable, PortalPre
     private String key;
 
     @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "portal_preference_values")
     private List<String> values = new LinkedList<String>();
 
     public JpaPortalPreference() {
