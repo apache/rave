@@ -69,7 +69,7 @@ INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@page_template_wi
 INSERT INTO RAVE_PORTAL_SEQUENCES(seq_name, seq_count) values (@page_user_seq, 1);
 
   -- ***********************************************************************************
-  -- start page layout data, required to make the portal work ---
+  -- start page layout data, required to make the portal work --
 set @one_col_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @page_layout_seq);
 insert into page_layout (entity_id, code,  number_of_regions, render_sequence, user_selectable)
 values (@one_col_id, 'columns_1', 1, 0, true);
@@ -115,10 +115,10 @@ insert into page_layout (entity_id, code,  number_of_regions, render_sequence, u
 values (@person_profile_layout_id, 'person_profile', 1, 8, false);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_layout_seq;
 
---- end page layout data ----
+-- end page layout data ---
 
   -- ***********************************************************************************
-  --- start user data ---
+  -- start user data --
 set @user_id_1 = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @user_seq);
 insert into person (entity_id, username, password, expired, locked, enabled, email, default_page_layout_id, dtype, display_name, family_name, given_name, status)
 values (@user_id_1, 'canonical', '$2a$10$TkEgze5kLy9nRlfd8PT1zunh6P1ND8WPjLojFjAMNgZMu1D9D1n4.', FALSE, FALSE, TRUE,'canonical@example.com', @three_col_id, 'User', 'Canonical User', 'User', 'Canonical', 'Single');
@@ -185,7 +185,7 @@ insert into person (entity_id, username, password, expired, locked, enabled, ema
 values (@user_id_13, 'http://rave2011.myopenid.com/', '$2a$10$dML97.rnOn4.iSlEEdju8OCB2NckuKw0Ki5yMVzzMmWQsWMvym3qC', FALSE, FALSE, TRUE,'rave2011_openid@example.org', @three_col_id, 'User', 'OpenId', 'Rave', 'Single');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @user_seq;
 
---- end user data ---
+-- end user data --
 
 -- user association data --
 set @next_person_association = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @person_association_seq);
@@ -246,7 +246,7 @@ INSERT INTO group_members(group_id, person_id)
 VALUES (@group_id_2, @user_id_2);
 -- end group members data --
 
---- gadget data ---
+-- gadget data --
 -- wikipedia widget
 set @wikipedia_widget_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @widget_seq);
 insert into widget (entity_id, title, url, type, description, author, widget_status, title_url, author_email, owner_id)
@@ -423,7 +423,7 @@ values(@friends_widget_id, 'Friends', 'http://localhost:8080/demogadgets/friends
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @widget_seq;
 
 
--- end gadget data ----
+-- end gadget data ---
 
 -- W3C Widget data
 
@@ -437,18 +437,18 @@ UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @w
 
 -- User layouts
 
---- Layout for user_id_1 ---
+-- Layout for user_id_1 --
 set @page_1_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @page_seq);
 INSERT INTO page (entity_id, name, owner_id, parent_page_id, page_layout_id, page_type)
 values (@page_1_id, 'Main', @user_id_1, null, @newuser_col_id, 'USER');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_seq;
 
---Set up page user data
+-- Set up page user data
 set @page_user_id =(SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @page_user_seq);
 insert into page_user (entity_id, page_id, user_id, editor, render_sequence, page_status)
 values (@page_user_id, @page_1_id, @user_id_1, true, 1, 'OWNER');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_user_seq;
---end page user data
+-- end page user data
 
 set @page_1_region_1 = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @region_seq);
 INSERT INTO region(entity_id, page_id, render_order, locked)
@@ -496,12 +496,12 @@ INSERT INTO page (entity_id, name, owner_id, parent_page_id, page_layout_id, pag
 values (@page_2_id, 'Social', @user_id_1, null, @two_col_id, 'USER');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_seq;
 
---Set up page user data
+-- Set up page user data
 set @page_user_id =(SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @page_user_seq);
 insert into page_user (entity_id, page_id, user_id, editor, render_sequence, page_status)
 values (@page_user_id, @page_2_id, @user_id_1, true, 2, 'OWNER');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_user_seq;
---end page user data
+-- end page user data
 
 set @page_2_region_1 = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @region_seq);
 INSERT INTO region(entity_id, page_id, render_order, locked)
@@ -530,20 +530,20 @@ UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @r
 
 -- person profile page for user 1
 
---- End canonical user_id_1 layout ---
+-- End canonical user_id_1 layout --
 
---- Layout for user_id_2 ---
+-- Layout for user_id_2 --
 set @page_1_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @page_seq);
 INSERT INTO page (entity_id, name, owner_id, parent_page_id, page_layout_id, page_type)
 values (@page_1_id, 'Main', @user_id_2, null, @newuser_col_id, 'USER');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_seq;
 
---Set up page user data--
+-- Set up page user data--
 set @page_user_id =(SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @page_user_seq);
 insert into page_user (entity_id, page_id, user_id, editor, render_sequence, page_status)
 values (@page_user_id, @page_1_id, @user_id_2, true, 1, 'OWNER');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_user_seq;
---end page user data--
+-- End page user data--
 
 set @page_1_region_1 = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @region_seq);
 INSERT INTO region(entity_id, page_id, render_order, locked)
@@ -579,20 +579,20 @@ set @next_region_widget = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq
 INSERT INTO region_widget(entity_id, widget_id, region_id, render_order, collapsed, locked, hide_chrome)
 values (@next_region_widget, @tabnews_widget_id, @page_1_region_3, 1, FALSE, FALSE, FALSE);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @region_widget_seq;
---- End john.doe user_id_2 layout ---
+-- End john.doe user_id_2 layout --
 
---- Layout for user_id_3 ---
+-- Layout for user_id_3 --
 set @page_1_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @page_seq);
 INSERT INTO page (entity_id, name, owner_id, parent_page_id, page_layout_id, page_type)
 values (@page_1_id, 'Main', @user_id_3, null, @newuser_col_id, 'USER');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_seq;
 
---Set up page user data--
+-- Set up page user data--
 set @page_user_id =(SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @page_user_seq);
 insert into page_user (entity_id, page_id, user_id, editor, render_sequence, page_status)
 values (@page_user_id, @page_1_id, @user_id_3, true, 1, 'OWNER');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_user_seq;
---end page user data--
+-- End page user data--
 
 set @page_1_region_1 = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @region_seq);
 INSERT INTO region(entity_id, page_id, render_order, locked)
@@ -628,47 +628,47 @@ set @next_region_widget = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq
 INSERT INTO region_widget(entity_id, widget_id, region_id, render_order, collapsed, locked, hide_chrome)
 values (@next_region_widget, @tabnews_widget_id, @page_1_region_3, 1, FALSE, FALSE, FALSE);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @region_widget_seq;
---- End jane.doe user_id_3 layout ---
+-- End jane.doe user_id_3 layout --
 
---- Layout for user_id_4 ---
+-- Layout for user_id_4 --
 set @page_1_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @page_seq);
 INSERT INTO page (entity_id, name, owner_id, parent_page_id, page_layout_id, page_type)
 values (@page_1_id, 'Main', @user_id_4, null, @two_col_id, 'USER');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_seq;
---Set up page user data--
+-- Set up page user data--
 set @page_user_id =(SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @page_user_seq);
 insert into page_user (entity_id, page_id, user_id, editor, render_sequence, page_status)
 values (@page_user_id, @page_1_id, @user_id_4, true, 1, 'OWNER');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_user_seq;
---end page user data--
---- End user_id_4 layout ---
+-- End page user data--
+-- End user_id_4 layout --
 
---- Layout for user_id_5 ---
----set @page_1_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @page_seq);
----INSERT INTO page (entity_id, name, owner_id, parent_page_id, page_layout_id, page_type)
----values (@page_1_id, 'Main', @user_id_5, null, @two_col_id, 'USER');
----UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_seq;
---Set up page user data--
----set @page_user_id =(SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @page_user_seq);
----insert into page_user (entity_id, page_id, user_id, editor, render_sequence, page_status)
----values (@page_user_id, @page_1_id, @user_id_5, true, 1, 'OWNER');
----UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_user_seq;
---end page user data--
---- End user_id_5 layout ---
+-- Layout for user_id_5 --
+-- Set @page_1_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @page_seq);
+-- INSERT INTO page (entity_id, name, owner_id, parent_page_id, page_layout_id, page_type)
+-- values (@page_1_id, 'Main', @user_id_5, null, @two_col_id, 'USER');
+-- UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_seq;
+-- Set up page user data--
+-- Set @page_user_id =(SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @page_user_seq);
+-- insert into page_user (entity_id, page_id, user_id, editor, render_sequence, page_status)
+-- values (@page_user_id, @page_1_id, @user_id_5, true, 1, 'OWNER');
+-- UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_user_seq;
+-- End page user data--
+-- End user_id_5 layout --
 
 
 
---- Layout for user_id_6 ---
+-- Layout for user_id_6 --
 set @page_1_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @page_seq);
 INSERT INTO page (entity_id, name, owner_id, parent_page_id, page_layout_id, page_type)
 values (@page_1_id, 'Main', @user_id_6, null, @two_col_id, 'USER');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_seq;
---Set up page user data--
+-- Set up page user data--
 set @page_user_id =(SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @page_user_seq);
 insert into page_user (entity_id, page_id, user_id, editor, render_sequence, page_status)
 values (@page_user_id, @page_1_id, @user_id_6, true, 1, 'OWNER');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_user_seq;
---end page user data--
+-- End page user data--
 
 
 set @page_1_region_1 = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @region_seq);
@@ -700,19 +700,19 @@ set @next_region_widget = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq
 INSERT INTO region_widget(entity_id, widget_id, region_id, render_order, collapsed, locked, hide_chrome)
 values (@next_region_widget, @tabnews_widget_id, @page_1_region_2, 1, FALSE, FALSE, FALSE);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @region_widget_seq;
---- End user_id_6 layout ---
+-- End user_id_6 layout --
 
---- Layout for user_id_7 ---
+-- Layout for user_id_7 --
 set @page_7_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @page_seq);
 INSERT INTO page (entity_id, name, owner_id, parent_page_id, page_layout_id, page_type)
 values (@page_7_id, 'Main', @user_id_7, null, @one_col_id, 'USER');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_seq;
---Set up page user data--
+-- Set up page user data--
 set @page_user_id =(SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @page_user_seq);
 insert into page_user (entity_id, page_id, user_id, editor, render_sequence, page_status)
 values (@page_user_id, @page_7_id, @user_id_7, true, 1, 'OWNER');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_user_seq;
---end page user data--
+-- End page user data--
 
 set @page_7_region_1 = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @region_seq);
 INSERT INTO region(entity_id, page_id, render_order, locked)
@@ -729,19 +729,19 @@ set @next_region_widget = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq
 INSERT INTO region_widget(entity_id, widget_id, region_id, render_order, collapsed, locked, hide_chrome)
 values (@next_region_widget, @tabnews_widget_id, @page_7_region_1, 1, FALSE, FALSE, FALSE);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @region_widget_seq;
---- End asgoyal.one user_id_7 layout ---
+-- End asgoyal.one user_id_7 layout --
 
---- Layout for user_id_8 ---
+-- Layout for user_id_8 --
 set @page_8_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @page_seq);
 INSERT INTO page (entity_id, name, owner_id, parent_page_id, page_layout_id, page_type)
 values (@page_8_id, 'Main', @user_id_8, null, @twown_col_id, 'USER');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_seq;
---Set up page user data--
+-- Set up page user data--
 set @page_user_id =(SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @page_user_seq);
 insert into page_user (entity_id, page_id, user_id, editor, render_sequence, page_status)
 values (@page_user_id, @page_8_id, @user_id_8, true, 1, 'OWNER');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_user_seq;
---end page user data--
+-- End page user data--
 
 set @page_8_region_1 = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @region_seq);
 INSERT INTO region(entity_id, page_id, render_order, locked)
@@ -772,19 +772,19 @@ set @next_region_widget = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq
 INSERT INTO region_widget(entity_id, widget_id, region_id, render_order, collapsed, locked, hide_chrome)
 values (@next_region_widget, @translate_widget_id, @page_8_region_2, 1, FALSE, FALSE, FALSE);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @region_widget_seq;
---- End asgoyal.twown user_id_8 layout ---
+-- End asgoyal.twown user_id_8 layout --
 
---- Layout for user_id_9 ---
+-- Layout for user_id_9 --
 set @page_9_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @page_seq);
 INSERT INTO page (entity_id, name, owner_id, parent_page_id, page_layout_id, page_type)
 values (@page_9_id, 'Main', @user_id_9, null, @three_col_id, 'USER');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_seq;
---Set up page user data--
+-- Set up page user data--
 set @page_user_id =(SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @page_user_seq);
 insert into page_user (entity_id, page_id, user_id, editor, render_sequence, page_status)
 values (@page_user_id, @page_9_id, @user_id_9, true, 1, 'OWNER');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_user_seq;
---end page user data--
+-- End page user data--
 
 set @page_9_region_1 = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @region_seq);
 INSERT INTO region(entity_id, page_id, render_order, locked)
@@ -820,19 +820,19 @@ set @next_region_widget = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq
 INSERT INTO region_widget(entity_id, widget_id, region_id, render_order, collapsed, locked, hide_chrome)
 values (@next_region_widget, @translate_widget_id, @page_9_region_1, 1, FALSE, FALSE, FALSE);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @region_widget_seq;
---- End asgoyal.three user_id_9 layout ---
+-- End asgoyal.three user_id_9 layout --
 
---- Layout for user_id_10 ---
+-- Layout for user_id_10 --
 set @page_10_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @page_seq);
 INSERT INTO page (entity_id, name, owner_id, parent_page_id, page_layout_id, page_type)
 values (@page_10_id, 'Main', @user_id_10, null, @threewn_col_id, 'USER');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_seq;
---Set up page user data--
+-- Set up page user data--
 set @page_user_id =(SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @page_user_seq);
 insert into page_user (entity_id, page_id, user_id, editor, render_sequence, page_status)
 values (@page_user_id, @page_10_id, @user_id_10, true, 1, 'OWNER');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_user_seq;
---end page user data--
+-- End page user data--
 
 set @page_10_region_1 = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @region_seq);
 INSERT INTO region(entity_id, page_id, render_order, locked)
@@ -868,19 +868,19 @@ set @next_region_widget = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq
 INSERT INTO region_widget(entity_id, widget_id, region_id, render_order, collapsed, locked, hide_chrome)
 values (@next_region_widget, @translate_widget_id, @page_10_region_1, 1, FALSE, FALSE, FALSE);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @region_widget_seq;
---- End asgoyal.threewn user_id_10 layout ---
+-- End asgoyal.threewn user_id_10 layout --
 
---- Layout for user_id_11 ---
+-- Layout for user_id_11 --
 set @page_11_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @page_seq);
 INSERT INTO page (entity_id, name, owner_id, parent_page_id, page_layout_id, page_type)
 values (@page_11_id, 'Main', @user_id_11, null, @four_col_id, 'USER');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_seq;
---Set up page user data--
+-- Set up page user data--
 set @page_user_id =(SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @page_user_seq);
 insert into page_user (entity_id, page_id, user_id, editor, render_sequence, page_status)
 values (@page_user_id, @page_11_id, @user_id_11, true, 1, 'OWNER');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_user_seq;
---end page user data--
+-- End page user data--
 
 set @page_11_region_1 = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @region_seq);
 INSERT INTO region(entity_id, page_id, render_order, locked)
@@ -922,19 +922,19 @@ INSERT INTO region_widget(entity_id, widget_id, region_id, render_order, collaps
 values (@next_region_widget, @translate_widget_id, @page_11_region_1, 1, FALSE, FALSE, FALSE);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @region_widget_seq;
 
---- End asgoyal.four user_id_11 layout ---
+-- End asgoyal.four user_id_11 layout --
 
---- Layout for user_id_12 ---
+-- Layout for user_id_12 --
 set @page_12_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @page_seq);
 INSERT INTO page (entity_id, name, owner_id, parent_page_id, page_layout_id, page_type)
 values (@page_12_id, 'Main', @user_id_12, null, @fourwn_col_id, 'USER');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_seq;
---Set up page user data--
+-- Set up page user data--
 set @page_user_id =(SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @page_user_seq);
 insert into page_user (entity_id, page_id, user_id, editor, render_sequence, page_status)
 values (@page_user_id, @page_12_id, @user_id_12, true, 1, 'OWNER');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_user_seq;
---end page user data--
+-- End page user data--
 
 set @page_12_region_1 = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @region_seq);
 INSERT INTO region(entity_id, page_id, render_order, locked)
@@ -975,19 +975,19 @@ set @next_region_widget = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq
 INSERT INTO region_widget(entity_id, widget_id, region_id, render_order, collapsed, locked, hide_chrome)
 values (@next_region_widget, @translate_widget_id, @page_12_region_1, 1, FALSE, FALSE, FALSE);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @region_widget_seq;
---- End asgoyal.fourwn user_id_12 layout ---
+-- End asgoyal.fourwn user_id_12 layout --
 
---- Layout for user_id_13 ---
+-- Layout for user_id_13 --
 set @page_13_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @page_seq);
 INSERT INTO page (entity_id, name, owner_id, parent_page_id, page_layout_id, page_type)
 values (@page_13_id, 'Main', @user_id_13, null, @fourwn_col_id, 'USER');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_seq;
---Set up page user data--
+-- Set up page user data--
 set @page_user_id =(SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @page_user_seq);
 insert into page_user (entity_id, page_id, user_id, editor, render_sequence, page_status)
 values (@page_user_id, @page_13_id, @user_id_13, true, 1, 'OWNER');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_user_seq;
---end page user data--
+-- End page user data--
 
 set @page_13_region_1 = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @region_seq);
 INSERT INTO region(entity_id, page_id, render_order, locked)
@@ -1028,7 +1028,7 @@ set @next_region_widget = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq
 INSERT INTO region_widget(entity_id, widget_id, region_id, render_order, collapsed, locked, hide_chrome)
 values (@next_region_widget, @translate_widget_id, @page_13_region_1, 1, FALSE, FALSE, FALSE);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @region_widget_seq;
---- End openid user_id_13 layout ---
+-- End openid user_id_13 layout --
 
 -- authorities
 set @user_authority_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @granted_authority_seq);
@@ -1130,10 +1130,9 @@ values (@wikipedia_widget_id, @category_id2);
 insert into widget_category (widget_id, category_id)
 values (@nyt_widget_id, @category_id2);
 
-----------------------------------------
 -- person profile parent page templates
-----------------------------------------
--- page
+
+--  page
 set @person_profile_page_template_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @page_template_seq);
 insert into page_template (entity_id, page_type, page_layout_id, name, description, parent_page_template_id, render_sequence, default_template)
 values (@person_profile_page_template_id, 'PERSON_PROFILE', @person_profile_layout_id, 'Person Profile', 'Template for person profile pages', null, 0, true);
@@ -1156,10 +1155,10 @@ insert into page_template_widget (entity_id, page_template_region_id, render_seq
 values (@next_person_profile_page_template_widget_id, @person_profile_page_template_region_id, 1, @my_experience_widget_id, true, true);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_template_widget_seq;
 
-------------------------------------------
+
 -- person profile about sub page templates
-------------------------------------------
--- page
+
+--  page
 set @person_profile_subpage1_template_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @page_template_seq);
 insert into page_template (entity_id, page_type, page_layout_id, name, description, parent_page_template_id, render_sequence, default_template)
 values (@person_profile_subpage1_template_id, 'SUB_PAGE', @one_col_id, 'About', 'Template for the About sub page for the person profile', @person_profile_page_template_id, 0, false);
@@ -1182,9 +1181,8 @@ insert into page_template_widget (entity_id, page_template_region_id, render_seq
 values (@next_person_profile_subpage1_template_widget_id, @person_profile_subpage1_template_region_id, 1, @schedule_widget_id, true, false);
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @page_template_widget_seq;
 
---------------------------------------------------
 -- person profile my activities sub page templates
---------------------------------------------------
+
 -- page
 set @person_profile_subpage2_template_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @page_template_seq);
 insert into page_template (entity_id, page_type, page_layout_id, name, description, parent_page_template_id, render_sequence, default_template)
