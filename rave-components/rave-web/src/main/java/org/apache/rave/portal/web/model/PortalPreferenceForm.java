@@ -24,7 +24,10 @@ import org.apache.rave.portal.model.impl.PortalPreferenceImpl;
 
 import java.util.Map;
 
-import static org.apache.rave.portal.web.util.PortalPreferenceKeys.*;
+import static org.apache.rave.portal.web.util.PortalPreferenceKeys.INITIAL_WIDGET_STATUS;
+import static org.apache.rave.portal.web.util.PortalPreferenceKeys.JAVASCRIPT_DEBUG_MODE;
+import static org.apache.rave.portal.web.util.PortalPreferenceKeys.PAGE_SIZE;
+import static org.apache.rave.portal.web.util.PortalPreferenceKeys.TITLE_SUFFIX;
 
 /**
  * Form object for portal preferences
@@ -56,12 +59,12 @@ public class PortalPreferenceForm {
             preferenceMap.put(JAVASCRIPT_DEBUG_MODE, new PortalPreferenceImpl(JAVASCRIPT_DEBUG_MODE, DEFAULT_JAVASCRIPT_DEBUG_MODE));
         }
         if (getInitialWidgetStatus() == null){
-        	preferenceMap.put(DEFAULT_INITIAL_WIDGET_STATUS, new PortalPreferenceImpl(INITIAL_WIDGET_STATUS, DEFAULT_INITIAL_WIDGET_STATUS));
+        	preferenceMap.put(INITIAL_WIDGET_STATUS, new PortalPreferenceImpl(INITIAL_WIDGET_STATUS, DEFAULT_INITIAL_WIDGET_STATUS));
         }
     }
     
     public PortalPreference getInitialWidgetStatus(){
-    	return preferenceMap.get(INITIAL_WIDGET_STATUS);
+        return preferenceMap.get(INITIAL_WIDGET_STATUS);
     }
 
     public PortalPreference getPageSize() {
