@@ -37,6 +37,8 @@ public final class ViewNames {
     public static final String NEW_ACCOUNT = USER_PREFIX + "newaccount";
     public static final String USER_PROFILE = USER_PREFIX + "userProfile";
     public static final String PERSON_PROFILE = USER_PREFIX + "personProfile";
+    public static final String ADD_WIDGET_MARKETPLACE = ADD_WIDGET_FORM + ".marketplace";
+    public static final String ADD_WIDGET_W3C = ADD_WIDGET_FORM + ".w3c";
 
     public static final String ADMIN_HOME = ADMIN_PREFIX + "home";
     public static final String ADMIN_NEW_ACCOUNT = ADMIN_PREFIX + "newaccount";

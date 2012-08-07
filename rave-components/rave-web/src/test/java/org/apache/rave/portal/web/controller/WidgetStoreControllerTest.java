@@ -85,6 +85,7 @@ public class WidgetStoreControllerTest {
         PortalPreferenceService preferenceService = createMock(PortalPreferenceService.class);
         expect(preferenceService.getPreference(PortalPreferenceKeys.INITIAL_WIDGET_STATUS)).andReturn(null);
         expect(preferenceService.getPreference(PortalPreferenceKeys.PAGE_SIZE)).andReturn(null);
+        expect(preferenceService.getPreference(PortalPreferenceKeys.EXTERNAL_MARKETPLACE_URL)).andReturn(null);
         replay(preferenceService);
 
         NewWidgetValidator widgetValidator = new NewWidgetValidator(widgetService);

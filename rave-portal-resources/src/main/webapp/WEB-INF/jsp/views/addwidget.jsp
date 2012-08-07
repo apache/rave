@@ -22,8 +22,17 @@
 <fmt:message key="page.addwidget.title" var="pagetitle"/>
 <rave:navbar pageTitle="${pagetitle}"/>
 
-<div class="container">
-    <h2><fmt:message key="page.addwidget.form.header"/></h2>
+<div class="container-fluid navbar-spacer">
+    <div class="row-fluid">
+    <ul class="nav nav-tabs">
+          <li class="active"><a href="<spring:url value="/app/store/widget/add?referringPageId=${referringPageId}" />">OpenSocial</a></li>
+          <li><a href="<spring:url value="/app/store/widget/add/w3c?referringPageId=${referringPageId}" />">W3C</a></li>
+          
+          <c:if test="${not empty marketplace}">
+          <li><a href="<spring:url value="/app/marketplace?referringPageId=${referringPageId}" />">Marketplace</a></li>
+          </c:if>
+    </ul> 
+    
     <form:errors path="widget" cssClass="error" element="p"/>
     <form:form cssClass="form-horizontal" id="newWidgetForm" action="add?referringPageId=${referringPageId}" commandName="widget" method="POST">
         <fieldset>
@@ -38,28 +47,14 @@
                 </spring:bind>
                 <form:errors path="url" cssClass="error"/>
             </div>
-
-            <div class="control-group">
-                <label class="control-label" for="type1"><fmt:message key="widget.type"/> *</label>
-            </div>
-            <div class="control-group">
-                <label class="control-label" for="type1"><fmt:message key="widget.type.OpenSocial"/></label>
-                <div class="controls"><form:radiobutton path="type" value="OpenSocial"/></div>
-            </div>
-            <div class="control-group">
-                <label class="control-label" for="type2"><fmt:message key="widget.type.W3C"/></label>
-
-                <div class="controls"><form:radiobutton path="type" value="W3C"/>
-                    <a id="w3cBrowseLink" style="margin-left: 10px;" href="#"><fmt:message key="page.general.browse"/></a>
-                </div>
-                <form:errors path="type" cssClass="error"/>
-            </div>
+            
+            <form:hidden path="type" value="OpenSocial"/>
 
             <a href="#" class="btn btn-primary"
                id="fetchMetadataButton"
                onclick="rave.api.rpc.getWidgetMetadata({
                                 url: $('#url').get(0).value,
-                                providerType: $('input:radio[name=type]:checked').val(),
+                                providerType: 'OpenSocial',
                                 successCallback: function(result) {
                                     var widget = result.result;
                                     $('#title').val(widget.title);
@@ -71,19 +66,12 @@
                                     $('#authorEmail').val(widget.authorEmail);
                                     $('#addWidgetForm').show();
                                     $('#addWidgetFormSubmit').show();
-                                    // update this field so we can pass widgets by key
-                                    // (soon to be superseeded in wookie by using the guid instead)
-                                    // remove when using 0.10.0 of wookie
-                                    if($('input[name=type]:checked').val()=='W3C'){
-                                        $('#url').val(widget.url);
-                                    }
                                 }
                             });">
                 <fmt:message key="page.getWidgetMetadata.button"/>
             </a>
 
             <div class="row clearfix" id="addWidgetForm">
-
 
                 <div class="control-group">
                     <form:label cssClass="control-label" path="title"> <fmt:message key="widget.title"/> *</form:label>
@@ -152,10 +140,6 @@
         </div>
     </form:form>
 </div>
-<div id="w3cBrowseForm" title="<fmt:message key="page.general.browse"/>">
-    <ul id="w3cwidgetsList" class="storeItems">
-    </ul>
-</div>
 
 <portal:register-init-script location="${'AFTER_RAVE'}">
 <script>
@@ -163,154 +147,9 @@
         if ($('#url').val().length === 0) {
             $('#addWidgetForm').hide();
             $('#addWidgetFormSubmit').hide();
-            $('input[name=type]:first').attr('checked', true);
         }
-        if ($('input[name=type]:checked').val() != 'W3C') {
-            $('#w3cBrowseLink').hide();
-        }
-        $('input[name=type]').change(function(){
-            if($('input[name=type]:checked').val()=='W3C'){
-                $('#w3cBrowseLink').show();
-            }
-            else{
-                $('#w3cBrowseLink').hide();
-            }
-        });
 
-        $("#w3cBrowseForm").dialog({
-            autoOpen: false,
-            height: 300,
-            width: 350,
-            modal: true,
-            buttons: {
-                Cancel: function(){
-                    $(this).dialog("close");
-                }
-            },
-            close: function(){
-                // clear contents
-                $('#w3cwidgetsList').empty();
-            }
-        });
-
-        $("#w3cBrowseLink").click(function() {
-            rave.api.rpc.getWidgetMetadataGroup({
-                url: "?all=true",
-                providerType: "W3C",
-                successCallback: function(result) {
-                var i=0;
-                var widgets = result.result;
-                PostLoadW3cWidgets.setList(widgets);
-                jQuery.each(widgets, function() {
-                    $('#w3cwidgetsList')
-                        .append(
-                            $("<li/>")
-                            .addClass("storeItem")
-                            .append( // container
-                                $("<div/>")
-                                .css('overflow','hidden')
-                                .append(
-                                    $("<div/>")
-                                    .css('float','left')
-                                    .css('width','50%')
-                                    .append(
-                                        $("<div/>")
-                                        .attr("id", "w3cImageHolder"+i)
-                                    )
-                                    .append(
-                                        $("<div/>")
-                                        .attr("id", "widgetAdded")
-                                        .addClass("storeButton")
-                                        .append(
-                                            $("<button/>")
-                                            .addClass("btn btn-small btn-primary")
-                                            .attr("id", this.url)
-                                            .attr("onclick", "updateRaveMetadata("+i+");")
-                                            .text(rave.getClientMessage("get.metadata"))
-                                        )
-                                    )
-                                )
-                                .append(
-                                    $("<div/>")
-                                    .css('float','left')
-                                    .css('width','50%')
-                                    .css('margin-right','-1px')
-                                    .append(
-                                        $("<div/>")
-                                        .addClass("secondaryPageItemTitle")
-                                        .css('padding', '2px')
-                                        .text(this.title)
-                                    )
-                                    .append(
-                                        $("<div/>")
-                                        .addClass("storeWidgetAuthor")
-                                        .css('padding', '2px')
-                                        .text(this.author)
-                                    )
-                                    .append(
-                                        $("<div/>")
-                                        .addClass("storeWidgetDesc")
-                                        .css('padding', '2px')
-                                        .text(this.description)
-                                    )
-                                )
-                                .append(
-                                    $("<div/>")
-                                    .addClass("clear-float")
-                                )
-                            )
-                        )
-                        // add the thumbnail image if found
-                        if(this.thumbnailUrl!=null){
-                            $('#w3cImageHolder'+i)
-                            .append(
-                                $("<img/>")
-                                .addClass("storeWidgetThumbnail")
-                                .attr("src", this.thumbnailUrl)
-                                .attr("title", this.title)
-                                .attr("alt", "")
-                                .attr("width", "80")
-                                .attr("height", "80")
-                            )
-                        }
-                    i++;
-                    });
-                    $("#w3cBrowseForm").dialog("open");
-                }
-            })
-        });
     });
-
-   // use this object to hold the choices of w3c widgets after the page has loaded.
-    var PostLoadW3cWidgets = new function PostLoadW3cWidgets() {
-        this.list = null;
-        this.setList = function (list) {
-            this.list = list;
-        }
-        this.getList = function () {
-            return this.list;
-        }
-        this.getListItemByIndex = function(idx){
-            return this.list[idx];
-        }
-    }
-
-    function updateRaveMetadata(id){
-        if(id != null){
-            widget = PostLoadW3cWidgets.getListItemByIndex(id);
-            $('#title').val(widget.title);
-            $('#description').val(widget.description);
-            $('#thumbnailUrl').val(widget.thumbnailUrl);
-            $('#screenshotUrl').val(widget.screenshotUrl);
-            $('#titleUrl').val(widget.titleUrl);
-            $('#author').val(widget.author);
-            $('#authorEmail').val(widget.authorEmail);
-            $('#url').val(widget.url);
-            $('#addWidgetForm').show();
-            $('#addWidgetFormSubmit').show();
-        }
-        $("#w3cBrowseForm").dialog("close");
-    }
 </script>
 </portal:register-init-script>
 

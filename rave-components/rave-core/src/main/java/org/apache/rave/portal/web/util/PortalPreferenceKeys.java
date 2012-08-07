@@ -28,4 +28,5 @@ public final class PortalPreferenceKeys {
     public static final String PAGE_SIZE = "pageSize";
     public static final String JAVASCRIPT_DEBUG_MODE = "javaScriptDebugMode";
     public static final String INITIAL_WIDGET_STATUS = "initialWidgetStatus";
+    public static final String EXTERNAL_MARKETPLACE_URL = "externalMarketplaceUrl";
 }
