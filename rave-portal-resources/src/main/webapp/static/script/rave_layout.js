@@ -68,6 +68,9 @@ rave.layout = rave.layout || (function() {
                 // dialog between separate add/edit page actions
                 $pageMenuUpdateButton.unbind('click');
                 $pageMenuUpdateButton.click(rave.layout.addPage);
+                $('#pageMenuDialog').on('shown', function () {
+                    $("#tab_title").first().focus();
+                });
                 $("#pageMenuDialog").modal('show');
             });
 
@@ -85,6 +88,9 @@ rave.layout = rave.layout || (function() {
                                             // dialog between separate add/edit page actions
                                             $pageMenuUpdateButton.unbind('click');
                                             $pageMenuUpdateButton.click(rave.layout.updatePage);
+                                            $('#pageMenuDialog').on('shown', function () {
+                                                $("#tab_title").first().focus();
+                                            });
                                             $("#pageMenuDialog").modal('show');
                                         }
                 });
@@ -111,6 +117,9 @@ rave.layout = rave.layout || (function() {
                     rave.api.rpc.getUsers({offset: 0,
                         successCallback: function(result) {
                             rave.layout.searchHandler.dealWithUserResults(result);
+                            $('#sharePageDialog').on('shown', function () {
+                                $("#searchTerm").first().focus();
+                            });
                             $("#sharePageDialog").modal('show');
                         }
                     });
