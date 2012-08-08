@@ -28,6 +28,7 @@ import static org.apache.rave.portal.web.util.PortalPreferenceKeys.INITIAL_WIDGE
 import static org.apache.rave.portal.web.util.PortalPreferenceKeys.JAVASCRIPT_DEBUG_MODE;
 import static org.apache.rave.portal.web.util.PortalPreferenceKeys.PAGE_SIZE;
 import static org.apache.rave.portal.web.util.PortalPreferenceKeys.TITLE_SUFFIX;
+import static org.apache.rave.portal.web.util.PortalPreferenceKeys.EXTERNAL_MARKETPLACE_URL;
 
 /**
  * Form object for portal preferences
@@ -38,6 +39,7 @@ public class PortalPreferenceForm {
     public static final String DEFAULT_TITLE_SUFFIX = "";
     public static final String DEFAULT_JAVASCRIPT_DEBUG_MODE = "1";
     public static final String DEFAULT_INITIAL_WIDGET_STATUS = "PREVIEW";
+    public static final String DEFAULT_EXTERNAL_MARKETPLACE_URL = "";    
 
 
     private Map<String, PortalPreference> preferenceMap;
@@ -61,9 +63,20 @@ public class PortalPreferenceForm {
         if (getInitialWidgetStatus() == null){
         	preferenceMap.put(INITIAL_WIDGET_STATUS, new PortalPreferenceImpl(INITIAL_WIDGET_STATUS, DEFAULT_INITIAL_WIDGET_STATUS));
         }
+        if (getExternalMarketplaceUrl() == null){
+        	preferenceMap.put(EXTERNAL_MARKETPLACE_URL, new PortalPreferenceImpl(EXTERNAL_MARKETPLACE_URL, DEFAULT_EXTERNAL_MARKETPLACE_URL));
+        }
     }
     
-    public PortalPreference getInitialWidgetStatus(){
+    public PortalPreference getExternalMarketplaceUrl() {
+		return preferenceMap.get(EXTERNAL_MARKETPLACE_URL);
+	}
+    
+    public void setExternalMarketplaceUrl(PortalPreference externalMarketplaceUrl){
+    	preferenceMap.put(EXTERNAL_MARKETPLACE_URL, externalMarketplaceUrl);
+    }
+
+	public PortalPreference getInitialWidgetStatus(){
         return preferenceMap.get(INITIAL_WIDGET_STATUS);
     }
 
