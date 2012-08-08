@@ -26,6 +26,14 @@ var rave = rave || (function () {
     // variable to store whether or not some
     // UI actions should be propagated back to the server
     var pageEditor = true;
+    var pageViewer = {
+        username: "Unknown",
+        id:-1
+    };
+    var pageOwner = {
+        username: "Unknown",
+        id:-1
+    };
 
     var onWidgetsInitializedHandlers = [];
     var onProvidersInitializedHandlers = [];
@@ -1074,6 +1082,22 @@ var rave = rave || (function () {
         return context;
     }
 
+    function setPageViewer(viewer) {
+        pageViewer = viewer;
+    }
+
+    function getPageViewer(){
+        return pageViewer;
+    }
+
+    function setPageOwner(owner){
+        pageOwner = owner;
+    }
+
+    function getPageOwner(){
+        return pageOwner;
+    }
+
     function getRegionWidgetById(regionWidgetId) {
         return widgetByIdMap[regionWidgetId];
     }
@@ -1262,6 +1286,30 @@ var rave = rave || (function () {
          * Gets the current context
          */
         getContext:getContext,
+
+        /**
+         * Sets the authenticated page viewer for the Rave web application
+         *
+         * @param viewer an object representing the authenticated user viewing the page {username:"bob", id:"1"}
+         */
+        setPageViewer:setPageViewer,
+
+        /**
+         * Gets the current viewer
+         */
+        getPageViewer:getPageViewer,
+
+        /**
+         * Sets the owner of the current page
+         *
+         * @param owner an object representing the owner of the page
+         */
+        setPageOwner:setPageOwner,
+
+        /**
+         * Gets the page owner
+         */
+        getPageOwner:getPageOwner,
 
         /**
          * Gets a regionwidget by region widget id

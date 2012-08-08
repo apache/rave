@@ -18,11 +18,11 @@
 
 --%>
 <%@ include file="/WEB-INF/jsp/includes/taglibs.jsp" %>
-<portal:render-script location="${'BEFORE_LIB'}" />
-<rave:third_party_js />
-<portal:render-script location="${'AFTER_LIB'}" />
+<portal:render-script location="${'BEFORE_LIB'}"/>
+<rave:third_party_js/>
+<portal:render-script location="${'AFTER_LIB'}"/>
 <%-- local rave scripts --%>
-<portal:render-script location="${'BEFORE_RAVE'}" />
+<portal:render-script location="${'BEFORE_RAVE'}"/>
 <%-- check to see if the javaScriptDebugMode is on, if so render the individual JS files, otherwise render the minified single file --%>
 <c:choose>
     <c:when test="${not empty portalSettings and not empty portalSettings['javaScriptDebugMode'] and portalSettings['javaScriptDebugMode'].value == '0'}">
@@ -41,8 +41,14 @@
     </c:otherwise>
 </c:choose>
 <script src="<spring:url value="/app/messagebundle/rave_client_messages.js"/>"></script>
-<portal:render-script location="${'AFTER_RAVE'}" />
+<portal:render-script location="${'AFTER_RAVE'}"/>
 <%-- common javascript to execute on all pages --%>
 <script>
     rave.setContext("<spring:url value="/app/" />");
+    <sec:authorize access="isAuthenticated()">
+        <sec:authentication property="principal.username" scope="request" var="username"/>
+        <sec:authentication property="principal.id" scope="request" var="id"/>
+        rave.setPageViewer({username:"${username}",
+            id:"${id}"});
+    </sec:authorize>
 </script>

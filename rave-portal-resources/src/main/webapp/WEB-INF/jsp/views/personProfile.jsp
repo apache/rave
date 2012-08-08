@@ -185,6 +185,10 @@
             rave.initUI();
             rave.layout.init();
             rave.personprofile.init();
+            rave.setPageOwner({
+                username: "${userProfile.username}",
+                id: "${userProfile.id}"
+            });
         });
     </script>
 </portal:register-init-script>
