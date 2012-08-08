@@ -76,27 +76,27 @@ rave.wookie = rave.wookie || (function() {
         
         // collapse/restore functions
         widget.collapse = function() {
-            $(ooacontainer.getIframe).hide();
+            $(ooacontainer.getIframe()).hide();
         };
         widget.restore = function() {
-            $(ooacontainer.getIframe).show();
+            $(ooacontainer.getIframe()).show();
         };
         widget.maximize = function() {
             // always display the widget in canvas view even if it currently collapsed
             if (widget.collapsed){
                 userCollapsed = true;
-                $(ooacontainer.getIframe).show();
+                $(ooacontainer.getIframe()).show();
             }
         };
         widget.minimize = function() {
             if (widget.collapsed){
                 userCollapsed = false;
-                $(ooacontainer.getIframe).hide();
+                $(ooacontainer.getIframe()).hide();
             }
         };
         // if in the collapsed state, hide the layer
         if (widget.collapsed){
-            $(ooacontainer.getIframe).hide();
+            $(ooacontainer.getIframe()).hide();
         }
     }
 
