@@ -21,7 +21,6 @@ package org.apache.rave.portal.web.controller.util;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.rave.portal.model.Page;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.web.model.NavigationItem;
 import org.apache.rave.portal.web.model.NavigationMenu;
@@ -73,7 +72,7 @@ public class ControllerUtils {
     public static NavigationMenu getTopMenu(String view, String referringPageId, User user, boolean addStoreLink) {
         NavigationMenu menu = new NavigationMenu("topnav");
         if(view.startsWith(ViewNames.PAGE) || view.startsWith(ViewNames.MOBILE_HOME)) {
-            NavigationItem profile = new NavigationItem("page.profile.title", user.getDisplayName() != null ? user.getDisplayName() : user.getUsername(), "/app/person/" + user.getUsername() + "?referringPageId=" + referringPageId);
+            NavigationItem profile = new NavigationItem("page.profile.title", getDisplayName(user), "/app/person/" + user.getUsername() + "?referringPageId=" + referringPageId);
             menu.addNavigationItem(profile);
 
             if(addStoreLink){
@@ -122,6 +121,11 @@ public class ControllerUtils {
         }
 
         return menu;
+    }
+
+    public static String getDisplayName(User user) {
+        String displayName = user.getDisplayName();
+        return (displayName == null || "".equals(displayName)) ? user.getUsername() : displayName;
     }
 
     private static NavigationItem getBackItem(String referringPageId) {

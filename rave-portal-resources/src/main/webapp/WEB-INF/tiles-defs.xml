@@ -22,6 +22,14 @@
 
 <tiles-definitions>
 
+	<!-- PARTIALS -->
+	<definition name="templates.partial" template="/WEB-INF/jsp/templates/partial_layout.jsp">
+    </definition>
+    
+    <definition name="templates.partial.regionwidget" extends="templates.partial">
+        <put-attribute name="body" value="/WEB-INF/jsp/views/regionwidget.jsp"/>
+    </definition>
+
     <!-- BASE DEFINITIONS FOR THE ENTIRE APPLICATION -->
     <definition name="templates.base" template="/WEB-INF/jsp/templates/base_layout.jsp">
         <put-attribute name="pageTitleKey" value="page.general.title"/>

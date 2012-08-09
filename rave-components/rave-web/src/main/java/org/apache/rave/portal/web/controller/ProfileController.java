@@ -83,9 +83,9 @@ public class ProfileController {
     public String updateProfile(ModelMap model,
                                 @RequestParam(required = false) String referringPageId,
                                 @ModelAttribute("updatedUser") UserForm updatedUser) {
-        logger.info("Updating " + updatedUser.getUsername() + " profile information");
 
         User user = userService.getAuthenticatedUser();
+        logger.info("Updating " + user.getUsername() + " profile information");
 
         //set the updated fields for optional information
         user.setGivenName(updatedUser.getGivenName());

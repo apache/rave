@@ -33,6 +33,8 @@ public class ModelKeys {
     public static final String ERROR_MESSAGE = "errorMessage"; // an error message to be reported to the user
     public static final String WIDGETS = "widgets"; // a list of widget objects
     public static final String WIDGET = "widget";
+    public static final String REGION_WIDGET = "regionWidget"; 
+    public static final String MARKETPLACE = "marketplace"; // whether there is an external widget marketplace configured
     public static final String WIDGET_STATISTICS = "widgetStatistics"; //statistics for a single widget
     public static final String WIDGETS_STATISTICS = "widgetsStatistics"; //list of statistics for a list of widgets
     public static final String CATEGORY = "category"; //category

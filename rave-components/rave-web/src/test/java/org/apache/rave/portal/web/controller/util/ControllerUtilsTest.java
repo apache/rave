@@ -18,6 +18,8 @@
  */
 package org.apache.rave.portal.web.controller.util;
 
+import org.apache.rave.portal.model.User;
+import org.apache.rave.portal.model.impl.UserImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.mobile.device.DeviceResolver;
@@ -26,16 +28,19 @@ import org.springframework.mobile.device.LiteDeviceResolver;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 
 public class ControllerUtilsTest {
     private MockHttpServletRequest request;
     private DeviceResolver deviceResolver;
+    private User user;
     
     @Before
     public void setUp() {
         request = new MockHttpServletRequest();
         deviceResolver = new LiteDeviceResolver();
+        user = new UserImpl();
+        user.setDisplayName("Test");
     }
     
     @Test
@@ -68,5 +73,24 @@ public class ControllerUtilsTest {
         request.addHeader("User-Agent", "Blackberry");
         request.setAttribute(DeviceUtils.CURRENT_DEVICE_ATTRIBUTE, deviceResolver.resolveDevice(request));
         assertThat(ControllerUtils.getDeviceAppropriateView(request, defaultView, mobileView), is(mobileView));
+    }
+
+    @Test
+    public void getDisplayName_withDisplayName(){
+        assertEquals(user.getDisplayName(), ControllerUtils.getDisplayName(user));
+    }
+
+    @Test
+    public void getDisplayName_withoutDisplayName(){
+        user.setDisplayName("");
+        user.setUsername("username");
+        assertEquals(user.getUsername(), ControllerUtils.getDisplayName(user));
+    }
+
+    @Test
+    public void getDisplayName_withNullDisplayName(){
+        user.setDisplayName(null);
+        user.setUsername("username");
+        assertEquals(user.getUsername(), ControllerUtils.getDisplayName(user));
     }
 }

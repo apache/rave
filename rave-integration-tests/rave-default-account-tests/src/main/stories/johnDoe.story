@@ -37,16 +37,16 @@ When I log in with username "john.doe" and password "john.doe"
 And I go to "http://localhost:8080/portal/app/person/john.doe"
 Then I see the email address "john.doe@example.com" on the profile page
 And I see the about me "" on the profile page
-And I see the status "" on the profile page
+And I see the status "Single" on the profile page
 When I click on the "profileEdit" button
 Then I can edit the email address
 When I change the email address to "john.doe@example.net"
 And I change the about me to "I'm a test user"
-And I change the status to "It's complicated"
+And I choose the status as "Committed"
 And I submit the edit profile form
 Then I see the email address "john.doe@example.net" on the profile page
 And I see the about me "I'm a test user" on the profile page
-And I see the status "It's complicated" on the profile page
+And I see the status "Committed" on the profile page
 When I log out
 
 Scenario: John Doe reverts his profile after logging out and in
@@ -54,16 +54,16 @@ When I log in with username "john.doe" and password "john.doe"
 And I go to "http://localhost:8080/portal/app/person/john.doe"
 Then I see the email address "john.doe@example.net" on the profile page
 And I see the about me "I'm a test user" on the profile page
-And I see the status "It's complicated" on the profile page
+And I see the status "Committed" on the profile page
 When I click on the "profileEdit" button
 Then I can edit the email address
 When I change the email address to "john.doe@example.com"
 And I change the about me to ""
-And I change the status to ""
+And I choose the status as "Single"
 And I submit the edit profile form
 Then I see the email address "john.doe@example.com" on the profile page
 And I see the about me "" on the profile page
-And I see the status "" on the profile page
+And I see the status "Single" on the profile page
 When I log out
 
 Scenario: John Doe adds a new page

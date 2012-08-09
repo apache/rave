@@ -103,8 +103,19 @@
             <div class="controls"><form:input id="displayNameField" path="displayName" autofocus="autofocus"/></div>
         </div>
         <div class="control-group">
-            <label class="control-label" for="statusField"><fmt:message key="page.general.status"/></label>
-            <div class="controls"><form:input id="statusField" path="status" autofocus="autofocus"/></div>
+            <label class="control-label" for="statusField"><fmt:message key="page.general.relation.status"/></label>
+            <div class="controls">
+                <form:select path="status" id="statusField">
+                	<fmt:message key="page.general.relation.single" var="singleText"/>
+                    <form:option value="${singleText}" id="single_id">${singleText}</form:option>
+                    <fmt:message key="page.general.relation.committed" var="committedText"/>
+                    <form:option value="${committedText}" id="committed_id">${committedText}</form:option>
+                    <fmt:message key="page.general.relation.married" var="marriedText"/>
+                    <form:option value="${marriedText}" id="married_id">${marriedText}</form:option>
+                    <fmt:message key="page.general.relation.other" var="otherText"/>
+                    <form:option value="${otherText}" id="other_id">${otherText}</form:option>
+                </form:select>
+            </div>
         </div>
         <div class="control-group">
             <label class="control-label" for="aboutMeField"><fmt:message key="page.general.about.me"/></label>

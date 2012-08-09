@@ -24,7 +24,11 @@ import org.apache.rave.portal.model.impl.PortalPreferenceImpl;
 
 import java.util.Map;
 
-import static org.apache.rave.portal.web.util.PortalPreferenceKeys.*;
+import static org.apache.rave.portal.web.util.PortalPreferenceKeys.INITIAL_WIDGET_STATUS;
+import static org.apache.rave.portal.web.util.PortalPreferenceKeys.JAVASCRIPT_DEBUG_MODE;
+import static org.apache.rave.portal.web.util.PortalPreferenceKeys.PAGE_SIZE;
+import static org.apache.rave.portal.web.util.PortalPreferenceKeys.TITLE_SUFFIX;
+import static org.apache.rave.portal.web.util.PortalPreferenceKeys.EXTERNAL_MARKETPLACE_URL;
 
 /**
  * Form object for portal preferences
@@ -34,6 +38,8 @@ public class PortalPreferenceForm {
     public static final String DEFAULT_PAGE_SIZE = "10";
     public static final String DEFAULT_TITLE_SUFFIX = "";
     public static final String DEFAULT_JAVASCRIPT_DEBUG_MODE = "1";
+    public static final String DEFAULT_INITIAL_WIDGET_STATUS = "PREVIEW";
+    public static final String DEFAULT_EXTERNAL_MARKETPLACE_URL = "";    
 
 
     private Map<String, PortalPreference> preferenceMap;
@@ -54,6 +60,24 @@ public class PortalPreferenceForm {
         if (getJavaScriptDebugMode() == null) {
             preferenceMap.put(JAVASCRIPT_DEBUG_MODE, new PortalPreferenceImpl(JAVASCRIPT_DEBUG_MODE, DEFAULT_JAVASCRIPT_DEBUG_MODE));
         }
+        if (getInitialWidgetStatus() == null){
+        	preferenceMap.put(INITIAL_WIDGET_STATUS, new PortalPreferenceImpl(INITIAL_WIDGET_STATUS, DEFAULT_INITIAL_WIDGET_STATUS));
+        }
+        if (getExternalMarketplaceUrl() == null){
+        	preferenceMap.put(EXTERNAL_MARKETPLACE_URL, new PortalPreferenceImpl(EXTERNAL_MARKETPLACE_URL, DEFAULT_EXTERNAL_MARKETPLACE_URL));
+        }
+    }
+    
+    public PortalPreference getExternalMarketplaceUrl() {
+		return preferenceMap.get(EXTERNAL_MARKETPLACE_URL);
+	}
+    
+    public void setExternalMarketplaceUrl(PortalPreference externalMarketplaceUrl){
+    	preferenceMap.put(EXTERNAL_MARKETPLACE_URL, externalMarketplaceUrl);
+    }
+
+	public PortalPreference getInitialWidgetStatus(){
+        return preferenceMap.get(INITIAL_WIDGET_STATUS);
     }
 
     public PortalPreference getPageSize() {
@@ -86,5 +110,9 @@ public class PortalPreferenceForm {
 
     public void setPreferenceMap(Map<String, PortalPreference> preferenceMap) {
         this.preferenceMap = preferenceMap;
+    }
+    
+    public void setInitialWidgetStatus(PortalPreference initialWidgetStatus){
+    	preferenceMap.put(INITIAL_WIDGET_STATUS, initialWidgetStatus);
     }
 }

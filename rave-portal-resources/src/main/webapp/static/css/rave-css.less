@@ -20,7 +20,14 @@
 .hidden {
     display: none;
 }
-
+.alert-error a{
+	color: @errorText;
+	text-decoration: underline;
+	
+	&:hover{
+		color: #B12926;
+	}
+}
 /* content */
 #content {
     background-color: transparent;
@@ -36,9 +43,31 @@
 
 #personProfileContent {
     background-color: transparent;
-    padding: 0 20px;
-    width: 90%;
-    margin: 1em auto 0;
+    /*padding: 0 20px;
+    width: 90%;*/
+    margin: 1em 0 0;
+
+	.form-horizontal .controls{
+		margin-left: 100px;
+	}
+	
+	.profile-user-thumb img{
+		max-width: 100%;
+	}
+	
+	#userProfilePrimaryData{ margin-bottom: 20px;}
+
+    h3{font-weight: normal; margin-bottom: 9px;}
+
+    #editAccountForm {
+    	input[type="text"]{float: left;}
+    	
+    	label{
+	    	text-align: right;
+	    	width: 95px;
+	    	margin-right: 5px;
+	    }
+	}
 }
 
 .person-profile-page-content {
@@ -219,6 +248,14 @@
 /* layout */
 .navbar {
     margin-bottom: 18px;
+    
+    .nav form{
+	    margin: 0;
+	    
+	    button{
+		    margin-top: 7px;
+	    }
+    }
 }
 
 .regions {
@@ -781,8 +818,12 @@ span.error, label.error {
 
 #errorStack {
     display: none;
-    width: 90%;
     margin: auto;
+    text-align: center;
+    
+    pre{
+	    text-align: left;
+    }
 }
 
 .errorMessage {

@@ -26,6 +26,14 @@ var rave = rave || (function () {
     // variable to store whether or not some
     // UI actions should be propagated back to the server
     var pageEditor = true;
+    var pageViewer = {
+        username: "Unknown",
+        id:-1
+    };
+    var pageOwner = {
+        username: "Unknown",
+        id:-1
+    };
 
     var onWidgetsInitializedHandlers = [];
     var onProvidersInitializedHandlers = [];
@@ -946,6 +954,24 @@ var rave = rave || (function () {
     function resetOpenAjaxHubInstance() {
         openAjaxHub = null;
     }
+    
+    function renderNewWidget(regionWidgetId){
+        // When run as the callback argument supplied to rave.api.rpc.addWidgetToPage
+        // this method will render the widget in the current page.
+        
+        // load widget into a placeholder element
+        var placeholder = document.createElement("div");
+        $(placeholder).load(rave.getContext()+"/api/rest/regionwidget/"+regionWidgetId, function(){
+          // prepend to first region
+          var region = $("#region-1-id");
+          region.prepend(placeholder);
+          // remove the placeholder around the widget-wrapper
+          region.children(":first").children(":first").unwrap();
+          // initialize
+          initializeWidgets();
+          }        
+        );
+    }
 
     function initializeWidgets() {
         //We get the widget objects in a map keyed by region ID.  The code below converts that map into a flat array
@@ -1003,6 +1029,18 @@ var rave = rave || (function () {
     }
 
     function initializeWidget(widget) {
+    
+        // Widget has been deleted on the page but not removed from list
+        var widgetBody = $(["#widget-", widget.regionWidgetId, "-body"].join(""));
+        if(widgetBody.length === 0){
+          return;
+        } else {
+            // Widget has already been initialized
+            if(typeof widgetBody.children !== "undefined" && widgetBody.children().length !== 0){
+              return;
+            }
+        }
+    
         if (widget.type == "DISABLED") {
             renderDisabledWidget(widget.regionWidgetId, unescape(widget.disabledMessage));
             return;
@@ -1042,6 +1080,22 @@ var rave = rave || (function () {
 
     function getContext() {
         return context;
+    }
+
+    function setPageViewer(viewer) {
+        pageViewer = viewer;
+    }
+
+    function getPageViewer(){
+        return pageViewer;
+    }
+
+    function setPageOwner(owner){
+        pageOwner = owner;
+    }
+
+    function getPageOwner(){
+        return pageOwner;
     }
 
     function getRegionWidgetById(regionWidgetId) {
@@ -1162,6 +1216,12 @@ var rave = rave || (function () {
         registerWidget:registerWidget,
 
         /**
+         * Render a newly-added widget in the page
+         * @param regionWidgetId the regionWidgetId of the widget to render
+         */
+        renderNewWidget:renderNewWidget,
+
+        /**
          * Initialize all of the registered providers
          */
         initProviders:initializeProviders,
@@ -1226,6 +1286,30 @@ var rave = rave || (function () {
          * Gets the current context
          */
         getContext:getContext,
+
+        /**
+         * Sets the authenticated page viewer for the Rave web application
+         *
+         * @param viewer an object representing the authenticated user viewing the page {username:"bob", id:"1"}
+         */
+        setPageViewer:setPageViewer,
+
+        /**
+         * Gets the current viewer
+         */
+        getPageViewer:getPageViewer,
+
+        /**
+         * Sets the owner of the current page
+         *
+         * @param owner an object representing the owner of the page
+         */
+        setPageOwner:setPageOwner,
+
+        /**
+         * Gets the page owner
+         */
+        getPageOwner:getPageOwner,
 
         /**
          * Gets a regionwidget by region widget id

@@ -77,6 +77,29 @@
 	                            <form:errors path="javaScriptDebugMode.value" cssClass="error"/>
 	                        </spring:bind>
 	                    </div>
+	                   <div class="control-group">
+	                        <spring:bind path="initialWidgetStatus.value">
+	                            <form:label path="initialWidgetStatus.value" class="control-label">
+	                            	<fmt:message key="admin.preferencedetail.initialWidgetStatus"/> *
+	                            </form:label>
+	                            <div class="controls">
+	                                <form:select id="initialWidgetStatus" path="initialWidgetStatus.value">
+	                                    <form:option value="PREVIEW"><fmt:message key="admin.preferencedetail.initialWidgetStatus.preview"/></form:option>
+	                                    <form:option value="PUBLISHED"><fmt:message key="admin.preferencedetail.initialWidgetStatus.published"/></form:option>
+	                                </form:select>
+	                            </div>
+	                            <form:errors path="initialWidgetStatus.value" cssClass="error"/>
+	                        </spring:bind>
+	                    </div>	                    
+	                   <div class="control-group">
+                            <form:label path="externalMarketplaceUrl.value" class="control-label">
+                            	<fmt:message key="admin.preferencedetail.externalMarketplaceUrl"/>
+                            </form:label>
+                            <div class="controls">
+	                            <form:input path="externalMarketplaceUrl.value"/>
+                            </div>
+	                        <form:errors path="externalMarketplaceUrl.value" cssClass="error"/>
+                        </div>
 	                    <fieldset>
 	                        <fmt:message key="admin.preferencedetail.updateButton" var="updateButtonText"/>
 	                        <button class="btn btn-primary" type="submit" value="${updateButtonText}">${updateButtonText}</button>

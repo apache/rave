@@ -127,69 +127,69 @@ UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @p
   -- ***********************************************************************************
   --- start user data ---
 set @user_id_1 = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @user_seq);
-insert into person (entity_id, username, password, expired, locked, enabled, email, default_page_layout_id, dtype, family_name, given_name)
-values (@user_id_1, 'canonical', '$2a$10$TkEgze5kLy9nRlfd8PT1zunh6P1ND8WPjLojFjAMNgZMu1D9D1n4.', FALSE, FALSE, TRUE,'canonical@example.com', @three_col_id, 'User', 'Canonical', 'Paul');
+insert into person (entity_id, username, password, expired, locked, enabled, email, default_page_layout_id, dtype, family_name, given_name, status)
+values (@user_id_1, 'canonical', '$2a$10$TkEgze5kLy9nRlfd8PT1zunh6P1ND8WPjLojFjAMNgZMu1D9D1n4.', FALSE, FALSE, TRUE,'canonical@example.com', @three_col_id, 'User', 'Canonical', 'Paul', 'Single');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @user_seq;
 
 set @user_id_2 = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @user_seq);
-insert into person (entity_id, username, password, expired, locked, enabled, email, default_page_layout_id, dtype, family_name, given_name)
-values (@user_id_2, 'john.doe', '$2a$10$8Dir7boy3UyVqy6erfj6WuQXUTf.ejTldPSsVIty7.pPT3Krkly26', FALSE, FALSE, TRUE,'john.doe@example.com', @three_col_id, 'User', 'Doe', 'John');
+insert into person (entity_id, username, password, expired, locked, enabled, email, default_page_layout_id, dtype, family_name, given_name, status)
+values (@user_id_2, 'john.doe', '$2a$10$8Dir7boy3UyVqy6erfj6WuQXUTf.ejTldPSsVIty7.pPT3Krkly26', FALSE, FALSE, TRUE,'john.doe@example.com', @three_col_id, 'User', 'Doe', 'John', 'Single');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @user_seq;
 
 set @user_id_3 = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @user_seq);
-insert into person (entity_id, username, password, expired, locked, enabled, email, default_page_layout_id, dtype, family_name, given_name)
-values (@user_id_3, 'jane.doe', '$2a$10$YP9cjZEA.gG/ng2YwTBIyucMpuiQ7Fvz0K8rOt14rIBhVwlOrh1tu', FALSE, FALSE, TRUE,'jane.doe@example.net', @three_col_id, 'User', 'Doe', 'Jane');
+insert into person (entity_id, username, password, expired, locked, enabled, email, default_page_layout_id, dtype, family_name, given_name, status)
+values (@user_id_3, 'jane.doe', '$2a$10$YP9cjZEA.gG/ng2YwTBIyucMpuiQ7Fvz0K8rOt14rIBhVwlOrh1tu', FALSE, FALSE, TRUE,'jane.doe@example.net', @three_col_id, 'User', 'Doe', 'Jane', 'Single');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @user_seq;
 
 set @user_id_4 = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @user_seq);
-insert into person (entity_id, username, password, expired, locked, enabled, email, default_page_layout_id, dtype, family_name, given_name, forgotPasswordHash)
-values (@user_id_4, 'george.doe', '$2a$10$0bcOUkQgAwE/qmdc1NcUveNzx/IYIcOUu4ydyT8DEicTCxGJF/vcW', FALSE, FALSE, TRUE,'george.doe@example.org', @three_col_id, 'User', 'Doe', 'George', 'ABC123');
+insert into person (entity_id, username, password, expired, locked, enabled, email, default_page_layout_id, dtype, family_name, given_name, status, forgotPasswordHash)
+values (@user_id_4, 'george.doe', '$2a$10$0bcOUkQgAwE/qmdc1NcUveNzx/IYIcOUu4ydyT8DEicTCxGJF/vcW', FALSE, FALSE, TRUE,'george.doe@example.org', @three_col_id, 'User', 'Doe', 'George', 'Single', 'ABC123');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @user_seq;
 
 set @user_id_5 = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @user_seq);
-insert into person (entity_id, username, password, expired, locked, enabled, email, default_page_layout_id, dtype, family_name, given_name)
-values (@user_id_5,'mario.rossi', '$2a$10$HZ6WHAKQCs8waLooL98l6.fLzwh3D8u/V0.UebIjojawfXJhX1DQ2', FALSE, FALSE, TRUE,'mario.rossi@example.com', @three_col_id, 'User', 'Rossi', 'Mario');
+insert into person (entity_id, username, password, expired, locked, enabled, email, default_page_layout_id, dtype, family_name, given_name, status)
+values (@user_id_5,'mario.rossi', '$2a$10$HZ6WHAKQCs8waLooL98l6.fLzwh3D8u/V0.UebIjojawfXJhX1DQ2', FALSE, FALSE, TRUE,'mario.rossi@example.com', @three_col_id, 'User', 'Rossi', 'Mario', 'Single');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @user_seq;
 
 set @user_id_6 = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @user_seq);
-insert into person (entity_id, username, password, expired, locked, enabled, email, default_page_layout_id, dtype, family_name, given_name)
-values (@user_id_6, 'maija.m', '$2a$10$3feYdjrW40hkqP4/xupKP.YMgdYmDsZZus./vK4FbBs9QZG2.FuNC', FALSE, FALSE, TRUE,'maijam@example.com', @three_col_id, 'User', 'M', 'Maija');
+insert into person (entity_id, username, password, expired, locked, enabled, email, default_page_layout_id, dtype, family_name, given_name, status)
+values (@user_id_6, 'maija.m', '$2a$10$3feYdjrW40hkqP4/xupKP.YMgdYmDsZZus./vK4FbBs9QZG2.FuNC', FALSE, FALSE, TRUE,'maijam@example.com', @three_col_id, 'User', 'M', 'Maija', 'Single');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @user_seq;
 
 set @user_id_7 = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @user_seq);
-insert into person (entity_id, username, password, expired, locked, enabled, email, default_page_layout_id, dtype, family_name, given_name)
-values (@user_id_7, 'one.col', '$2a$10$5VqE2YEqT75pCVjKqjP2b.gNGly9fsTVUOMQR/JEjkHSbqvA3A6IO', FALSE, FALSE, TRUE,'one.col@example.com', @three_col_id, 'User', 'Column', 'One');
+insert into person (entity_id, username, password, expired, locked, enabled, email, default_page_layout_id, dtype, family_name, given_name, status)
+values (@user_id_7, 'one.col', '$2a$10$5VqE2YEqT75pCVjKqjP2b.gNGly9fsTVUOMQR/JEjkHSbqvA3A6IO', FALSE, FALSE, TRUE,'one.col@example.com', @three_col_id, 'User', 'Column', 'One', 'Single');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @user_seq;
 
 set @user_id_8 = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @user_seq);
-insert into person (entity_id, username, password, expired, locked, enabled, email, default_page_layout_id, dtype, family_name, given_name)
-values (@user_id_8, 'twown.col', '$2a$10$Inpufv82TRUGYoPuXhYXVuMCKHkhLz44W6FijxW2e9n3T1hgyxcVq', FALSE, FALSE, TRUE,'twown.col@example.com', @three_col_id, 'User', 'Column', 'Two');
+insert into person (entity_id, username, password, expired, locked, enabled, email, default_page_layout_id, dtype, family_name, given_name, status)
+values (@user_id_8, 'twown.col', '$2a$10$Inpufv82TRUGYoPuXhYXVuMCKHkhLz44W6FijxW2e9n3T1hgyxcVq', FALSE, FALSE, TRUE,'twown.col@example.com', @three_col_id, 'User', 'Column', 'Two', 'Single');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @user_seq;
 
 set @user_id_9 = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @user_seq);
-insert into person (entity_id, username, password, expired, locked, enabled, email, default_page_layout_id, dtype, family_name, given_name)
-values (@user_id_9, 'three.col', '$2a$10$ImRXq4gFC9teBstOBdQrZeEwBkCAJ0S6.CwI9/9r7fxWKTZ30pgVC', FALSE, FALSE, TRUE,'three.col@example.com', @three_col_id, 'User', 'Column', 'Three');
+insert into person (entity_id, username, password, expired, locked, enabled, email, default_page_layout_id, dtype, family_name, given_name, status)
+values (@user_id_9, 'three.col', '$2a$10$ImRXq4gFC9teBstOBdQrZeEwBkCAJ0S6.CwI9/9r7fxWKTZ30pgVC', FALSE, FALSE, TRUE,'three.col@example.com', @three_col_id, 'User', 'Column', 'Three', 'Single');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @user_seq;
 
 set @user_id_10 = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @user_seq);
-insert into person (entity_id, username, password, expired, locked, enabled, email, default_page_layout_id, dtype, family_name, given_name)
-values (@user_id_10, 'threewn.col', '$2a$10$LLYTJoK6MCBpeDBbmdt7tu1LNt7Eenqe1IpMlfem8xVjzynn.HpxW', FALSE, FALSE, TRUE,'threewn.col@example.com', @three_col_id, 'User', 'Column2', 'Three');
+insert into person (entity_id, username, password, expired, locked, enabled, email, default_page_layout_id, dtype, family_name, given_name, status)
+values (@user_id_10, 'threewn.col', '$2a$10$LLYTJoK6MCBpeDBbmdt7tu1LNt7Eenqe1IpMlfem8xVjzynn.HpxW', FALSE, FALSE, TRUE,'threewn.col@example.com', @three_col_id, 'User', 'Column2', 'Three', 'Single');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @user_seq;
 
 set @user_id_11 = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @user_seq);
-insert into person (entity_id, username, password, expired, locked, enabled, email, default_page_layout_id, dtype, family_name, given_name)
-values (@user_id_11, 'four.col', '$2a$10$tZgWcaG2EJPLtseZ339n7uTu3GZn31h3iTr20orwgbbRAI15uoIFK', FALSE, FALSE, TRUE,'four.col@example.com', @three_col_id, 'User', 'Column', 'Four');
+insert into person (entity_id, username, password, expired, locked, enabled, email, default_page_layout_id, dtype, family_name, given_name, status)
+values (@user_id_11, 'four.col', '$2a$10$tZgWcaG2EJPLtseZ339n7uTu3GZn31h3iTr20orwgbbRAI15uoIFK', FALSE, FALSE, TRUE,'four.col@example.com', @three_col_id, 'User', 'Column', 'Four', 'Single');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @user_seq;
 
 set @user_id_12 = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @user_seq);
-insert into person (entity_id, username, password, expired, locked, enabled, email, default_page_layout_id, dtype, family_name, given_name)
-values (@user_id_12, 'fourwn.col', '$2a$10$4kPYhgowurWqXGVDigxOxOVj/M.rqLRwqbn0kT/OD4pISL6pDG/c2', FALSE, FALSE, TRUE,'fourwn.col@example.com', @three_col_id, 'User', 'Column2', 'Four');
+insert into person (entity_id, username, password, expired, locked, enabled, email, default_page_layout_id, dtype, family_name, given_name, status)
+values (@user_id_12, 'fourwn.col', '$2a$10$4kPYhgowurWqXGVDigxOxOVj/M.rqLRwqbn0kT/OD4pISL6pDG/c2', FALSE, FALSE, TRUE,'fourwn.col@example.com', @three_col_id, 'User', 'Column2', 'Four', 'Single');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @user_seq;
 
 -- duplicate user id!!
 set @user_id_13 = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @user_seq);
-insert into person (entity_id, username, password, expired, locked, enabled, email, default_page_layout_id, dtype, family_name, given_name)
-values (@user_id_13, 'http://rave2011.myopenid.com/', '$2a$10$dML97.rnOn4.iSlEEdju8OCB2NckuKw0Ki5yMVzzMmWQsWMvym3qC', FALSE, FALSE, TRUE,'rave2011_openid@example.org', @three_col_id, 'User', 'Openid', 'Rave');
+insert into person (entity_id, username, password, expired, locked, enabled, email, default_page_layout_id, dtype, family_name, given_name, status)
+values (@user_id_13, 'http://rave2011.myopenid.com/', '$2a$10$dML97.rnOn4.iSlEEdju8OCB2NckuKw0Ki5yMVzzMmWQsWMvym3qC', FALSE, FALSE, TRUE,'rave2011_openid@example.org', @three_col_id, 'User', 'Openid', 'Rave', 'Single');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @user_seq;
 
 --- end user data ---
@@ -1021,18 +1021,18 @@ UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @g
 set @next_portal_preference_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @portal_preference_seq);
 INSERT INTO portal_preference (entity_id, preference_key)
 values (@next_portal_preference_id, 'color');
-INSERT INTO JPAPORTALPREFERENCE_VALUES
+INSERT INTO portal_preference_values
 values (@next_portal_preference_id, 'red');
-INSERT INTO JPAPORTALPREFERENCE_VALUES
+INSERT INTO portal_preference_values
 values (@next_portal_preference_id, 'yellow');
-INSERT INTO JPAPORTALPREFERENCE_VALUES
+INSERT INTO portal_preference_values
 values (@next_portal_preference_id, 'blue');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @portal_preference_seq;
 
 set @next_portal_preference_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @portal_preference_seq);
 INSERT INTO portal_preference (entity_id, preference_key)
 values (@next_portal_preference_id, 'title');
-INSERT INTO JPAPORTALPREFERENCE_VALUES
+INSERT INTO portal_preference_values
 values (@next_portal_preference_id, 'Rave');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @portal_preference_seq;
 -- end portal preferences

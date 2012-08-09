@@ -114,7 +114,7 @@ public class OpenSocialWidgetRendererTest {
         expect(securityTokenService.getEncryptedSecurityToken(rw)).andReturn(VALID_SECURITY_TOKEN);
         replay(securityTokenService);
 
-        String key = OpenSocialWidgetRenderer.REGISTER_WIDGET_KEY+"-"+w.getId();
+        String key = OpenSocialWidgetRenderer.REGISTER_WIDGET_KEY+"-"+rw.getId();
         scriptManager.registerScriptBlock(key, markup, ScriptLocation.AFTER_RAVE, RenderScope.CURRENT_REQUEST, renderContext);
         // TODO Renable this test once it's fixed.
         //expectLastCall();

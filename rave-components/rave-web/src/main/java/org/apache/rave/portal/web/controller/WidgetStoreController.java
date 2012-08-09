@@ -197,11 +197,41 @@ public class WidgetStoreController {
     public String viewAddWidgetForm(Model model, @RequestParam String referringPageId) {
         final Widget widget = new WidgetImpl();
         final String view = ViewNames.ADD_WIDGET_FORM;
+        model.addAttribute(ModelKeys.MARKETPLACE, this.preferenceService.getPreference(PortalPreferenceKeys.EXTERNAL_MARKETPLACE_URL));
         model.addAttribute(ModelKeys.WIDGET, widget);
         model.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
         ControllerUtils.addNavItemsToModel(view, model, referringPageId, userService.getAuthenticatedUser());
         return view;
     }
+    
+    /**
+     * Shows the Add new Widget form
+     *
+     * @param model
+     *            {@link Model}
+     * @param referringPageId
+     *            the source {@link org.apache.rave.portal.model.Page } ID
+     * @param type
+     *            the type of widget add form to display, e.g. W3C or OpenSocial (default)
+     * @return the view name of the Add new Widget form
+     */
+    @RequestMapping(method = RequestMethod.GET, value = "widget/add/{type}")
+    public String viewAddWidgetFormByType(Model model, @RequestParam String referringPageId, @PathVariable String type) {
+        final Widget widget = new WidgetImpl();
+        String view;
+        if (type != null && type.equalsIgnoreCase("w3c")){
+        	view = ViewNames.ADD_WIDGET_W3C;
+        } else {
+        	view = ViewNames.ADD_WIDGET_FORM;
+        }
+        model.addAttribute(ModelKeys.MARKETPLACE, this.preferenceService.getPreference(PortalPreferenceKeys.EXTERNAL_MARKETPLACE_URL));
+        model.addAttribute(ModelKeys.WIDGET, widget);
+        model.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
+        ControllerUtils.addNavItemsToModel(view, model, referringPageId, userService.getAuthenticatedUser());
+        return view;
+    }
+    
+    
 
     /**
      * Validates the form input, if valid, tries to store the Widget data
@@ -222,13 +252,66 @@ public class WidgetStoreController {
         User user = userService.getAuthenticatedUser();
         widgetValidator.validate(widget, results);
         if (results.hasErrors()) {
-            final String view = ViewNames.ADD_WIDGET_FORM;
+        	final String view = ViewNames.ADD_WIDGET_FORM;
             model.addAttribute(ModelKeys.WIDGET, widget);
             model.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
             ControllerUtils.addNavItemsToModel(view, model, referringPageId, user);
             return view;
         }
-        widget.setWidgetStatus(WidgetStatus.PREVIEW);
+        return finalizeNewWidget(widget,user, referringPageId);
+    }
+    
+    /**
+     * Validates the form input, if valid, tries to store the Widget data
+     *
+     * @param widget
+     *            {@link org.apache.rave.portal.model.Widget} as submitted by the user
+     * @param results
+     *            {@link BindingResult}
+     * @param model
+     *            {@link Model}
+     * @param referringPageId
+     *            the source {@link org.apache.rave.portal.model.Page } ID
+     * @return if successful the view name of the widget, otherwise the form
+     */
+    @RequestMapping(method = RequestMethod.POST, value = "widget/add/w3c")
+    public String viewAddWidgetResultW3c(@ModelAttribute WidgetImpl widget, BindingResult results, Model model,
+            @RequestParam String referringPageId) {
+        User user = userService.getAuthenticatedUser();
+        widgetValidator.validate(widget, results);
+        if (results.hasErrors()) {
+        	final String view = ViewNames.ADD_WIDGET_W3C;
+            model.addAttribute(ModelKeys.WIDGET, widget);
+            model.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
+            ControllerUtils.addNavItemsToModel(view, model, referringPageId, user);
+            return view;
+        }
+        
+        return finalizeNewWidget(widget,user, referringPageId);
+    }
+    
+    /**
+     * Finalize adding a new widget created from validated form data, and redirect to its store detail page
+     * @param widget
+     *            {@link org.apache.rave.portal.model.Widget} as created from form input
+     * @param user
+     *            the user submitting the new widget
+     * @param referringPageId
+     *            the source page ID
+     * @return a redirection string for the store detail page.
+     */
+    private String finalizeNewWidget(WidgetImpl widget, User user, String referringPageId){
+        /*
+         * By default, a new widget has a status of "PREVIEW", however this can be overridden in portal preferences,
+         * skipping the need for an admin to approve a new widget.
+         */
+        PortalPreference status = preferenceService.getPreference(PortalPreferenceKeys.INITIAL_WIDGET_STATUS);
+        if (status != null && status.getValue().equals("PUBLISHED")){
+			widget.setWidgetStatus(WidgetStatus.PUBLISHED);
+		} else {
+	        widget.setWidgetStatus(WidgetStatus.PREVIEW);
+		}
+        
         widget.setOwner(user);
 
         final Widget storedWidget = widgetService.registerNewWidget(widget);
