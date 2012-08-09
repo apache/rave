@@ -66,7 +66,7 @@ public class RenderServiceIntegrationTest {
     private static final String VALID_METADATA = "[{\"id\":\"gadgets.metadata\",\"result\"" +
             ":{\"http://www.example.com/gadget.xml\":{\"data-snipped\":\"here-for-brevity\"}}}]";
 
-    private static final Long VALID_USER_ID = 1234L;
+    private static final String VALID_USER_ID = "1234";
     private static final String VALID_USER_NAME = "jdoe";
 
     @SuppressWarnings("unchecked")
@@ -100,17 +100,17 @@ public class RenderServiceIntegrationTest {
 
     @Test
     public void renderOpenSocial() {
-        Page page = new PageImpl(1L, new UserImpl(VALID_USER_ID, VALID_USER_NAME));
-        Region region = new RegionImpl(1L, page, 1);
+        Page page = new PageImpl("1", new UserImpl(VALID_USER_ID, VALID_USER_NAME));
+        Region region = new RegionImpl("1", page, 1);
         page.setRegions(Arrays.asList(region));
 
         WidgetImpl w = new WidgetImpl();
         w.setType("OpenSocial");
-        w.setId(1L);
+        w.setId("1");
         w.setTitle("Gadget Title");
         w.setUrl("http://www.example.com/gadget.xml");
 
-        RegionWidget rw = new RegionWidgetImpl(1L, w, region);
+        RegionWidget rw = new RegionWidgetImpl("1", w, region);
         region.setRegionWidgets(Arrays.asList(rw));
 
         RenderContext context = new RenderContext();

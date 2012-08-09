@@ -63,7 +63,7 @@ public class JpaUserConverterTest {
 
     @Test
     public void convertValid() {
-        User template = new UserImpl();
+        User template = new UserImpl("1");
         template.setUsername("TEST_A");
         template.setEmail("TEST_B");
         template.setDisplayName("TEST_C");

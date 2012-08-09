@@ -73,16 +73,15 @@ public class W3cWidgetRendererTest {
 
     @Test
     public void render_valid() {
-        User user = new UserImpl(9999L, "testUser");
+        User user = new UserImpl("9999", "testUser");
         expect(userService.getAuthenticatedUser()).andReturn(user);
         replay(userService);
         
         W3CWidget w = new W3CWidget();
         w.setType(Constants.WIDGET_TYPE);
         w.setUrl("http://example.com/widgets/1");
-        Region region = new RegionImpl(1L);
-        RegionWidget rw = new RegionWidgetImpl();
-        rw.setId(1L);
+        Region region = new RegionImpl("1");
+        RegionWidget rw = new RegionWidgetImpl("1");
         rw.setWidget(w);
         rw.setRegion(region);
 
@@ -101,8 +100,7 @@ public class W3cWidgetRendererTest {
         Widget w = new WidgetImpl();
         w.setType("NONE");
         w.setUrl(VALID_WIDGET_URL);
-        RegionWidget rw = new RegionWidgetImpl();
-        rw.setId(1L);
+        RegionWidget rw = new RegionWidgetImpl("1");
         rw.setWidget(w);
 
         RenderContext renderContext = createNiceMock(RenderContext.class);

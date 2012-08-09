@@ -23,7 +23,7 @@ import org.apache.rave.portal.model.*;
 import java.util.List;
 
 public class WidgetImpl implements Widget {
-    private Long id;
+    private String id;
     private String title;
     private String titleUrl;
     private String url;
@@ -45,20 +45,20 @@ public class WidgetImpl implements Widget {
 
     public WidgetImpl() {}
 
-    public WidgetImpl(long id) {
+    public WidgetImpl(String id) {
         this.id = id;
     }
 
-    public WidgetImpl(long id, String url) {
+    public WidgetImpl(String id, String url) {
         this.id = id;
         this.url = url;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

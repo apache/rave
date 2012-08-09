@@ -132,7 +132,7 @@ public interface WidgetRepository extends Repository<Widget> {
      * @param user_id id of the user
      * @return {@link WidgetStatistics} with the rating information
      */
-    WidgetStatistics getWidgetStatistics(long widget_id, long user_id);
+    WidgetStatistics getWidgetStatistics(String widget_id, String user_id);
 
     /**
      * Generates the mapping of widget statistics for the user.
@@ -140,7 +140,7 @@ public interface WidgetRepository extends Repository<Widget> {
      * @param userId id of the user
      * @return Mapping of {@link WidgetStatistics} objects keyed off of the widget's entityId
      */
-    Map<Long, WidgetStatistics> getAllWidgetStatistics(long userId);
+    Map<String, WidgetStatistics> getAllWidgetStatistics(String userId);
 
     /**
      * Generates the mapping of widget ratings for the user.
@@ -148,7 +148,7 @@ public interface WidgetRepository extends Repository<Widget> {
      * @param userId id of the user
      * @return Mapping of {@link org.apache.rave.portal.model.WidgetRating} objects keyed off of the widget's entityId
      */
-    Map<Long, WidgetRating> getUsersWidgetRatings(long userId);
+    Map<String, WidgetRating> getUsersWidgetRatings(String userId);
 
     /**
 	  * Gets a List of {@link Widget}'s by performing a tag search
@@ -174,5 +174,5 @@ public interface WidgetRepository extends Repository<Widget> {
      * @param userId the widget owner to unassign
      * @return the number of widgets updated
      */
-     int unassignWidgetOwner(long userId);
+     int unassignWidgetOwner(String userId);
 }

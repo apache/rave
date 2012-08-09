@@ -52,8 +52,8 @@ public class SecurityTokenServiceTest {
     private RegionWidget validRegionWidget;
     private Widget validWidget;
 
-    private final Long VALID_REGION_WIDGET_ID = 1L;
-    private final Long VALID_USER_ID = 1L;
+    private final String VALID_REGION_WIDGET_ID = "1";
+    private final String VALID_USER_ID = "1";
     private final String VALID_USER_NAME = "jdoe";
     private final String VALID_URL = "http://example.com/test.xml";
 
@@ -84,11 +84,11 @@ public class SecurityTokenServiceTest {
 
         validPerson = new UserImpl(VALID_USER_ID, VALID_USER_NAME);
 
-        validPage = new PageImpl(1L, validPerson);
-        validRegion = new RegionImpl(1L, validPage, 1);
+        validPage = new PageImpl("1", validPerson);
+        validRegion = new RegionImpl("1", validPage, 1);
         validPage.setRegions(Arrays.asList(validRegion));
 
-        validWidget = new WidgetImpl(1L, VALID_URL);
+        validWidget = new WidgetImpl("1", VALID_URL);
         validWidget.setType("OpenSocial");
         validWidget.setTitle("Widget Title");
 
@@ -107,7 +107,7 @@ public class SecurityTokenServiceTest {
 
     @Test
     public void getSecurityToken_validWidget_ownerIsNotViewer() throws SecurityTokenException {
-        Long expectedOwnerId = 99999L;
+        String expectedOwnerId = "99999";
         String expected = "Expected";
         validPage.setOwner(new UserImpl(expectedOwnerId, expected));
 
@@ -160,7 +160,7 @@ public class SecurityTokenServiceTest {
 
     private void validateSecurityToken(SecurityToken securityToken, String expectedOwnerId) {
         assertNotNull(securityToken);
-        assertEquals(VALID_REGION_WIDGET_ID.longValue(), securityToken.getModuleId());
+        assertEquals(Long.parseLong(VALID_REGION_WIDGET_ID), securityToken.getModuleId());
         assertEquals(expectedOwnerId, securityToken.getOwnerId());
         assertEquals(VALID_USER_NAME, securityToken.getViewerId());
         assertEquals(VALID_URL, securityToken.getAppUrl());

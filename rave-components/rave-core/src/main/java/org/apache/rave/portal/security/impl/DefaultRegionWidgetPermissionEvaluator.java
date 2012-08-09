@@ -82,7 +82,7 @@ public class DefaultRegionWidgetPermissionEvaluator extends AbstractModelPermiss
         if (targetId instanceof RaveSecurityContext) {
             hasPermission = verifyRaveSecurityContext(authentication, (RaveSecurityContext) targetId);
         } else {
-            hasPermission = hasPermission(authentication, regionWidgetRepository.get((Long) targetId), permission, true);
+            hasPermission = hasPermission(authentication, regionWidgetRepository.get((String) targetId), permission, true);
         }
         return hasPermission;
     }
@@ -126,7 +126,7 @@ public class DefaultRegionWidgetPermissionEvaluator extends AbstractModelPermiss
 
     // returns a trusted RegionWidget object, either from the RegionWidgetRepository, or the
     // cached container list
-    private RegionWidget getTrustedRegionWidget(long regionWidgetId, List<RegionWidget> trustedRegionWidgetContainer) {
+    private RegionWidget getTrustedRegionWidget(String regionWidgetId, List<RegionWidget> trustedRegionWidgetContainer) {
         RegionWidget regionWidget = null;
         if (trustedRegionWidgetContainer.isEmpty()) {
             regionWidget = regionWidgetRepository.get(regionWidgetId);
@@ -154,7 +154,7 @@ public class DefaultRegionWidgetPermissionEvaluator extends AbstractModelPermiss
         return ((User)authentication.getPrincipal()).getUsername().equals(username);
     }
 
-    private boolean isRegionWidgetOwnerById(Authentication authentication, Long userId) {
+    private boolean isRegionWidgetOwnerById(Authentication authentication, String userId) {
         return ((User)authentication.getPrincipal()).getId().equals(userId);
     }
 
@@ -168,7 +168,7 @@ public class DefaultRegionWidgetPermissionEvaluator extends AbstractModelPermiss
 
         // perform the permissions check based on the class supplied to the RaveSecurityContext object
         if (User.class == clazz) {
-            return isRegionWidgetOwnerById(authentication, (Long) raveSecurityContext.getId());
+            return isRegionWidgetOwnerById(authentication, (String) raveSecurityContext.getId());
         } else {
             throw new IllegalArgumentException("unknown RaveSecurityContext type: " + raveSecurityContext.getType());
         }

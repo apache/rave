@@ -39,8 +39,8 @@ public class DefaultCategoryService implements CategoryService {
     }
 
     @Override
-    public Category get(long entityId) {
-        return categoryRepository.get(entityId);
+    public Category get(String id) {
+        return categoryRepository.get(id);
     }
 
 
@@ -66,7 +66,7 @@ public class DefaultCategoryService implements CategoryService {
 
     @Override
     @Transactional
-    public Category update(long categoryId, String text, User lastModifiedUser) {
+    public Category update(String categoryId, String text, User lastModifiedUser) {
         Category category = categoryRepository.get(categoryId);
         category.setText(text);
         category.setLastModifiedDate(new Date());

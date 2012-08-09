@@ -44,12 +44,12 @@ import static org.hamcrest.CoreMatchers.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:test-dataContext.xml", "classpath:test-applicationContext.xml"})
 public class JpaWidgetRatingRepositoryTest {
-    private Long VALID_WIDGET_ID = 1L;
-    private Long VALID_USER_ID = 1L;
-    private Long VALID_WIDGET_RATING_ID = 1L;
+    private String VALID_WIDGET_ID = "1";
+    private String VALID_USER_ID = "1";
+    private String VALID_WIDGET_RATING_ID = "1";
 
-    private Long INVALID_WIDGET_ID = 123L;
-    private Long INVALID_USER_ID = 234L;
+    private String INVALID_WIDGET_ID = "123";
+    private String INVALID_USER_ID = "234";
 
     @PersistenceContext
     private EntityManager sharedManager;
@@ -102,8 +102,8 @@ public class JpaWidgetRatingRepositoryTest {
         wr.setWidgetId(VALID_WIDGET_ID);
         assertThat(wr.getId(), is(nullValue()));
         repository.save(wr);
-        long newId = wr.getId();
-        assertThat(newId > 0, is(true));
+        String newId = wr.getId();
+        assertThat(Long.parseLong(newId) > 0, is(true));
         WidgetRating newRating = repository.get(newId);
         assertThat(newRating.getScore(), is(EXPECTED_SCORE));
         assertThat(newRating.getUserId(), is(VALID_USER_ID));

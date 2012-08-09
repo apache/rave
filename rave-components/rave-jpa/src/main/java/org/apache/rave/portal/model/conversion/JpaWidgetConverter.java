@@ -54,7 +54,7 @@ public class JpaWidgetConverter implements ModelConverter<Widget, JpaWidget> {
     }
 
     private void updateProperties(Widget source, JpaWidget converted) {
-        converted.setEntityId(source.getId());
+        converted.setEntityId(source.getId() == null ? null : Long.parseLong(source.getId()));
         converted.setUrl(source.getUrl());
         converted.setType(source.getType());
         converted.setTitle(source.getTitle());

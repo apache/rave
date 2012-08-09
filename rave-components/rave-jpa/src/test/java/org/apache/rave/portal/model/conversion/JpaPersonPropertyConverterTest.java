@@ -58,8 +58,7 @@ public class JpaPersonPropertyConverterTest {
 
     @Test
     public void convertValid() {
-        PersonProperty template = new PersonPropertyImpl();
-        template.setId(42L);
+        PersonProperty template = new PersonPropertyImpl("42");
         template.setType("TEST_A");
         template.setValue("TEST_B");
         template.setQualifier("TEST_C");

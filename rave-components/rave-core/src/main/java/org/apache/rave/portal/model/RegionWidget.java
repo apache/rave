@@ -26,9 +26,7 @@ import java.util.List;
 
 @XmlTransient
 public interface RegionWidget {
-    Long getId();
-
-    void setId(Long id);
+    String getId();
 
     Widget getWidget();
 

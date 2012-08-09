@@ -51,16 +51,17 @@ public class DefaultPageServiceTest {
     private PageLayoutRepository pageLayoutRepository;
     private UserService userService;
 
-    private final long REGION_WIDGET_ID = 5L;
-    private final long TO_REGION_ID = 1L;
-    private final long FROM_REGION_ID = 2L;
+    private final String REGION_WIDGET_ID = "5";
+    private final String TO_REGION_ID = "1";
+    private final String FROM_REGION_ID = "2";
     private final String PAGE_LAYOUT_CODE = "layout1";
-    private final long PAGE_ID = 1L;
-    private final long INVALID_PAGE_ID = -1L;
-    private final Long VALID_REGION_WIDGET_ID = 1L;
-    private final Long INVALID_REGION_WIDGET_ID = 100L;
-    private final Long USER_PAGE_TYPE_ID = 1L;
-    private final Long VALID_USER_ID = 9876L;
+    private final String PAGE_ID = "1";
+    private final String PAGE_ID2 = "99";
+    private final String INVALID_PAGE_ID = "-1";
+    private final String VALID_REGION_WIDGET_ID = "1";
+    private final String INVALID_REGION_WIDGET_ID = "100";
+    private final String USER_PAGE_TYPE_ID = "1";
+    private final String VALID_USER_ID = "9876";
 
     private Region targetRegion, originalRegion, lockedRegion;
     private Widget validWidget;
@@ -87,34 +88,32 @@ public class DefaultPageServiceTest {
         pageService = new DefaultPageService(pageRepository, pageTemplateRepository, regionRepository, widgetRepository, regionWidgetRepository,
                                              pageLayoutRepository, userService, defaultPageName);
 
-        validWidget = new WidgetImpl(1L, "http://dummy.apache.org/widgets/widget.xml");
+        validWidget = new WidgetImpl("1", "http://dummy.apache.org/widgets/widget.xml");
 
         page = new PageImpl(PAGE_ID, user);
         pageUser = new PageUserImpl(user, page, 1L);
         page.setMembers(new ArrayList<PageUser>());
         page.getMembers().add(pageUser);
 
-        page2 = new PageImpl(99L, user);
+        page2 = new PageImpl(PAGE_ID2, user);
         pageUser2 = new PageUserImpl(user, page2, 2L);
         page2.setMembers(new ArrayList<PageUser>());
         page2.getMembers().add(pageUser2);
 
-        targetRegion = new RegionImpl();
-        targetRegion.setId(2L);
+        targetRegion = new RegionImpl("2");
         targetRegion.setLocked(false);
         targetRegion.setRegionWidgets(new ArrayList<RegionWidget>());
-        targetRegion.getRegionWidgets().add(new RegionWidgetImpl(1L, validWidget, targetRegion, 0));
-        targetRegion.getRegionWidgets().add(new RegionWidgetImpl(2L, validWidget, targetRegion, 1));
-        targetRegion.getRegionWidgets().add(new RegionWidgetImpl(3L, validWidget, targetRegion, 2));
+        targetRegion.getRegionWidgets().add(new RegionWidgetImpl("1", validWidget, targetRegion, 0));
+        targetRegion.getRegionWidgets().add(new RegionWidgetImpl("2", validWidget, targetRegion, 1));
+        targetRegion.getRegionWidgets().add(new RegionWidgetImpl("3", validWidget, targetRegion, 2));
         targetRegion.setPage(page);
 
-        originalRegion = new RegionImpl();
-        originalRegion.setId(1L);
+        originalRegion = new RegionImpl("2");
         originalRegion.setLocked(false);
         originalRegion.setRegionWidgets(new ArrayList<RegionWidget>());
-        originalRegion.getRegionWidgets().add(new RegionWidgetImpl(4L, validWidget, targetRegion, 0));
-        originalRegion.getRegionWidgets().add(new RegionWidgetImpl(5L, validWidget, targetRegion, 1));
-        originalRegion.getRegionWidgets().add(new RegionWidgetImpl(6L, validWidget, targetRegion, 2));
+        originalRegion.getRegionWidgets().add(new RegionWidgetImpl("4", validWidget, targetRegion, 0));
+        originalRegion.getRegionWidgets().add(new RegionWidgetImpl("5", validWidget, targetRegion, 1));
+        originalRegion.getRegionWidgets().add(new RegionWidgetImpl("6", validWidget, targetRegion, 2));
 
         lockedRegion = new RegionImpl();
         lockedRegion.setLocked(true);
@@ -126,7 +125,7 @@ public class DefaultPageServiceTest {
 
         user = new UserImpl();
         user.setUsername("acarlucci");
-        user.setId(1L);
+        user.setId("1");
         user.setDefaultPageLayout(pageLayout);
 
         pageList = new ArrayList<Page>();
@@ -137,8 +136,7 @@ public class DefaultPageServiceTest {
         pageUserList.add(pageUser);
         pageUserList.add(pageUser2);
 
-        validRegionWidget = new RegionWidgetImpl();
-        validRegionWidget.setId(VALID_REGION_WIDGET_ID);
+        validRegionWidget = new RegionWidgetImpl(VALID_REGION_WIDGET_ID);
         validRegionWidget.setWidget(validWidget);
         validRegionWidget.setRegion(originalRegion);
     }
@@ -178,7 +176,7 @@ public class DefaultPageServiceTest {
         UserImpl user = new UserImpl();
 
         expect(pageRepository.getAllPages(VALID_USER_ID, PageType.PERSON_PROFILE)).andReturn(VALID_PAGES);
-        expect(userService.getUserById(isA(Long.class))).andReturn(user).once();
+        expect(userService.getUserById(isA(String.class))).andReturn(user).once();
         expect(pageTemplateRepository.getDefaultPage(PageType.PERSON_PROFILE)).andReturn(pageTemplate).once();
         expect(pageRepository.createPageForUser(user, pageTemplate)).andReturn(personPage);
         replay(pageRepository, userService, pageTemplateRepository);
@@ -496,7 +494,7 @@ public class DefaultPageServiceTest {
 
     @Test
     public void deletePage_invalidId() {
-        final long INVALID_PAGE_ID = -999L;
+        final String INVALID_PAGE_ID = "-999";
         List<PageUser> pageUserListAfterDelete = new ArrayList<PageUser>(pageUserList);
 
         expect(userService.getAuthenticatedUser()).andReturn(user);
@@ -649,34 +647,34 @@ public class DefaultPageServiceTest {
     @Test(expected = IllegalArgumentException.class)
     public void moveRegionWidget_invalidWidget() {
         createMoveBetweenRegionsExpectations();
-        expect(regionWidgetRepository.get(-1L)).andReturn(null);
+        expect(regionWidgetRepository.get("-1")).andReturn(null);
         replay(regionWidgetRepository);
-        pageService.moveRegionWidget(-1L, 0, 1L, 2L);
+        pageService.moveRegionWidget("-1", 0, "1", "2");
         verify(regionWidgetRepository);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void moveRegionWidget_invalidWidget_sameRegion() {
         createMoveBetweenRegionsExpectations();
-        expect(regionWidgetRepository.get(-1L)).andReturn(null);
+        expect(regionWidgetRepository.get("-1")).andReturn(null);
         replay(regionWidgetRepository);
-        pageService.moveRegionWidget(-1L, 0, 1L, 1L);
+        pageService.moveRegionWidget("-1", 0, "1", "2");
         verify(regionWidgetRepository);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void moveRegionWidget_invalidTarget() {
-        pageService.moveRegionWidget(-1L, 0, 5L, 6L);
+        pageService.moveRegionWidget("-1", 0, "5", "6");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void moveRegionWidget_invalidTarget_sameRegion() {
-        pageService.moveRegionWidget(-1L, 0, 5L, 5L);
+        pageService.moveRegionWidget("-1", 0, "5", "5");
     }
 
     @Test
     public void addWigetToPage_valid() {
-        final long WIDGET_ID = 1L;
+        final String WIDGET_ID = "1";
 
         Page value = new PageImpl();
         value.setRegions(new ArrayList<Region>());
@@ -706,7 +704,7 @@ public class DefaultPageServiceTest {
     @Test(expected = UnsupportedOperationException.class)
     public void addWigetToPage_lockedRegion() {
         originalRegion.setLocked(true);
-        final long WIDGET_ID = 1L;
+        final String WIDGET_ID = "1";
 
         Page value = new PageImpl();
         value.setRegions(new ArrayList<Region>());
@@ -736,7 +734,7 @@ public class DefaultPageServiceTest {
     @Test(expected = IllegalArgumentException.class)
     public void addWigetToPage_nullRegion() {
         originalRegion = null;
-        final long WIDGET_ID = 1L;
+        final String WIDGET_ID = "1";
 
         Page value = new PageImpl();
         value.setRegions(new ArrayList<Region>());
@@ -760,7 +758,7 @@ public class DefaultPageServiceTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void addWidgetToPage_invalidWidget() {
-        long WIDGET_ID = -1L;
+        final String WIDGET_ID = "1";
         expect(pageRepository.get(PAGE_ID)).andReturn(new PageImpl());
         expect(widgetRepository.get(WIDGET_ID)).andReturn(null);
         replay(pageRepository);
@@ -772,7 +770,7 @@ public class DefaultPageServiceTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void addWidgetToPage_invalidPage() {
-        long WIDGET_ID = -1L;
+        String WIDGET_ID = "-1";
         expect(pageRepository.get(PAGE_ID)).andReturn(null);
         expect(widgetRepository.get(WIDGET_ID)).andReturn(new WidgetImpl());
         replay(pageRepository);
@@ -784,8 +782,8 @@ public class DefaultPageServiceTest {
 
     @Test
     public void removeWidgetFromPage_validWidget() {
-        long WIDGET_ID = 1L;
-        long REGION_ID = 2L;
+        String WIDGET_ID = "1";
+        String REGION_ID = "2";
         RegionWidget regionWidget = new RegionWidgetImpl(WIDGET_ID);
         regionWidget.setRegion(new RegionImpl(REGION_ID));
         Region region = new RegionImpl();
@@ -805,8 +803,8 @@ public class DefaultPageServiceTest {
 
     @Test(expected = UnsupportedOperationException.class)
     public void removeWidgetFromPage_lockedRegion() {
-        long WIDGET_ID = 1L;
-        long REGION_ID = 2L;
+        String WIDGET_ID = "1";
+        String REGION_ID = "2";
         Region region = new RegionImpl(REGION_ID);
         region.setLocked(true);
         RegionWidget regionWidget = new RegionWidgetImpl(WIDGET_ID);
@@ -824,8 +822,8 @@ public class DefaultPageServiceTest {
 
     @Test(expected = UnsupportedOperationException.class)
     public void removeWidgetFromPage_lockedRegionWidget() {
-        long WIDGET_ID = 1L;
-        long REGION_ID = 2L;
+        String WIDGET_ID = "1";
+        String REGION_ID = "2";
         Region region = new RegionImpl(REGION_ID);
         region.setLocked(true);
         RegionWidget regionWidget = new RegionWidgetImpl(WIDGET_ID);
@@ -844,7 +842,7 @@ public class DefaultPageServiceTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void removeWidgetFromPage_invalidWidget() {
-        long WIDGET_ID = -1L;
+        String WIDGET_ID = "-1";
         expect(regionWidgetRepository.get(WIDGET_ID)).andReturn(null);
         replay(regionWidgetRepository);
         replay(regionRepository);
@@ -995,8 +993,7 @@ public class DefaultPageServiceTest {
         String layoutCode = "CODE";
 
         List<Region> regions = new ArrayList<Region>();
-        Region region = new RegionImpl();
-        region.setId(99L);
+        Region region = new RegionImpl("99");
         region.setRenderOrder(1);
         regions.add(new RegionImpl());
         regions.add(region);
@@ -1269,9 +1266,9 @@ public class DefaultPageServiceTest {
 
     @Test
     public void moveRegionWidgetToPage_valid() {
-        final long WIDGET_ID = 1L;
-        final long CURRENT_PAGE_ID = 1L;
-        final long TO_PAGE_ID = 2L;
+        final String WIDGET_ID = "1";
+        final String CURRENT_PAGE_ID = "1";
+        final String TO_PAGE_ID = "2";
 
         Page currentPageValue = new PageImpl();
         currentPageValue.setRegions(new ArrayList<Region>());
@@ -1305,9 +1302,9 @@ public class DefaultPageServiceTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void moveRegionWidgetToPage_invalidWidget() {
-        long WIDGET_ID = -1L;
-        final long CURRENT_PAGE_ID = 1L;
-        final long TO_PAGE_ID = 2L;
+        String WIDGET_ID = "-1";
+        final String CURRENT_PAGE_ID = "1";
+        final String TO_PAGE_ID = "2";
 
         Page currentPageValue = new PageImpl();
         currentPageValue.setRegions(new ArrayList<Region>());
@@ -1328,9 +1325,9 @@ public class DefaultPageServiceTest {
 
     @Test(expected = UnsupportedOperationException.class)
     public void moveRegionWidgetToPage_lockedRegionWidget() {
-        final long WIDGET_ID = 1L;
-        final long CURRENT_PAGE_ID = 1L;
-        final long TO_PAGE_ID = 2L;
+        final String WIDGET_ID = "1";
+        final String CURRENT_PAGE_ID = "1";
+        final String TO_PAGE_ID = "2";
 
         Page currentPageValue = new PageImpl();
         currentPageValue.setRegions(new ArrayList<Region>());
@@ -1360,9 +1357,9 @@ public class DefaultPageServiceTest {
     public void moveRegionWidgetToPage_lockedTargetRegion() {
         targetRegion.setLocked(true);
 
-        final long WIDGET_ID = 1L;
-        final long CURRENT_PAGE_ID = 1L;
-        final long TO_PAGE_ID = 2L;
+        final String WIDGET_ID = "1";
+        final String CURRENT_PAGE_ID = "1";
+        final String TO_PAGE_ID = "2";
 
         Page currentPageValue = new PageImpl();
         currentPageValue.setRegions(new ArrayList<Region>());
@@ -1392,9 +1389,9 @@ public class DefaultPageServiceTest {
     public void moveRegionWidgetToPage_lockedSourceRegion() {
         originalRegion.setLocked(true);
 
-        final long WIDGET_ID = 1L;
-        final long CURRENT_PAGE_ID = 1L;
-        final long TO_PAGE_ID = 2L;
+        final String WIDGET_ID = "1";
+        final String CURRENT_PAGE_ID = "1";
+        final String TO_PAGE_ID = "2";
 
         Page currentPageValue = new PageImpl();
         currentPageValue.setRegions(new ArrayList<Region>());

@@ -31,8 +31,8 @@ public interface OAuthConsumerStore {
         HMAC_SYMMETRIC, RSA_PRIVATE, PLAINTEXT
     }
 
-    Long getId();
-    void setId(Long id);
+    String getId();
+    void setId(String id);
 
     String getGadgetUri();
     void setGadgetUri(String gadgetUri);

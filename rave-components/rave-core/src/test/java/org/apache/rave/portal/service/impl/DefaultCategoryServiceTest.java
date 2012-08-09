@@ -43,17 +43,17 @@ public class DefaultCategoryServiceTest {
     private CategoryService service;
     private CategoryRepository repository;
 
-    private final Long VALID_ID = 4L;
+    private final String VALID_ID = "4";
     private final String VALID_TEXT = "category1";
     private final Date VALID_CREATED_DATE = new Date(66666666);
     private final Date VALID_LAST_MODIFIED_DATE = new Date(77777777);
-    private final Long VALID_CREATED_USER_ID = 77L;
-    private final Long VALID_LAST_MODIFIED_USER_ID = 88L;
+    private final String VALID_CREATED_USER_ID = "77";
+    private final String VALID_LAST_MODIFIED_USER_ID = "88";
     private User validCreatedUser;
     private User validLastModifiedUser;
     private Category validCategory;
 
-    private final Long INVALID_ID = -999L;
+    private final String INVALID_ID = "-999";
 
     @Before
     public void setup() {

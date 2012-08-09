@@ -87,7 +87,7 @@ public class DefaultWidgetService implements WidgetService {
     }
 
     @Override
-    public Widget getWidget(long id) {
+    public Widget getWidget(String id) {
         return widgetRepository.get(id);
     }
 
@@ -123,7 +123,7 @@ public class DefaultWidgetService implements WidgetService {
     }
 
     @Override
-    public SearchResult<Widget> getWidgetsByOwner(Long ownerId, int offset, int pageSize) {
+    public SearchResult<Widget> getWidgetsByOwner(String ownerId, int offset, int pageSize) {
         final User user = userRepository.get(ownerId);
         final int count = widgetRepository.getCountByOwner(user, offset, pageSize);
         final List<Widget> widgets = widgetRepository.getByOwner(user, offset, pageSize);
@@ -153,12 +153,12 @@ public class DefaultWidgetService implements WidgetService {
     }
 
     @Override
-    public WidgetStatistics getWidgetStatistics(long widgetId, long userId) {
+    public WidgetStatistics getWidgetStatistics(String widgetId, String userId) {
         return widgetRepository.getWidgetStatistics(widgetId, userId);
     }
 
     @Override
-    public Map<Long, WidgetStatistics> getAllWidgetStatistics(long userId) {
+    public Map<String, WidgetStatistics> getAllWidgetStatistics(String userId) {
         return widgetRepository.getAllWidgetStatistics(userId);
     }
 
@@ -180,7 +180,7 @@ public class DefaultWidgetService implements WidgetService {
     }
 
     @Override
-    public SearchResult<Widget> getWidgetsByCategory(long categoryId, int offset, int pageSize) {
+    public SearchResult<Widget> getWidgetsByCategory(String categoryId, int offset, int pageSize) {
         List<Widget> widgets = categoryRepository.get(categoryId).getWidgets();
         SearchResult<Widget> searchResult = new SearchResult<Widget>(widgets, widgets.size());
         searchResult.setOffset(offset);

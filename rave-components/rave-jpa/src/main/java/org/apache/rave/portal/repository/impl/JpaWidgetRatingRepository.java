@@ -47,19 +47,19 @@ public class JpaWidgetRatingRepository implements WidgetRatingRepository {
     private JpaWidgetRatingConverter converter;
 
     @Override
-    public WidgetRating getByWidgetIdAndUserId(Long widgetId, Long userId) {
+    public WidgetRating getByWidgetIdAndUserId(String widgetId, String userId) {
         TypedQuery<JpaWidgetRating> query =
                 manager.createNamedQuery(JpaWidgetRating.WIDGET_RATING_BY_WIDGET_AND_USER, JpaWidgetRating.class);
-        query.setParameter(JpaWidgetRating.PARAM_WIDGET_ID, widgetId);
-        query.setParameter(JpaWidgetRating.PARAM_USER_ID, userId);
+        query.setParameter(JpaWidgetRating.PARAM_WIDGET_ID, Long.parseLong(widgetId));
+        query.setParameter(JpaWidgetRating.PARAM_USER_ID, Long.parseLong(userId));
         final List<JpaWidgetRating> resultList = query.getResultList();
         return getSingleResult(resultList);
     }
 
     @Override
-    public int deleteAll(Long userId) {
+    public int deleteAll(String userId) {
         TypedQuery<JpaWidgetRating> query = manager.createNamedQuery(JpaWidgetRating.DELETE_ALL_BY_USER, JpaWidgetRating.class);
-        query.setParameter("userId", userId);
+        query.setParameter("userId", userId == null ? null : Long.parseLong(userId));
         return query.executeUpdate();
     }
 
@@ -69,7 +69,7 @@ public class JpaWidgetRatingRepository implements WidgetRatingRepository {
     }
 
     @Override
-    public WidgetRating get(long id) {
+    public WidgetRating get(String id) {
         return manager.find(JpaWidgetRating.class, id);
     }
 

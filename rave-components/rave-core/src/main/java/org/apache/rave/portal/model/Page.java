@@ -23,8 +23,8 @@ import java.util.List;
 
 @XmlTransient
 public interface Page {
-    Long getId();
-    void setId(Long id);
+    String getId();
+    void setId(String id);
 
     String getName();
     void setName(String name);

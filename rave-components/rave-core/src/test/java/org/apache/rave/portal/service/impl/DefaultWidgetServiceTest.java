@@ -76,8 +76,8 @@ public class DefaultWidgetServiceTest {
 
     @Test
     public void getLimitedListOfWidgets() {
-        Widget widget1 = new WidgetImpl(1L, "http://example.com/widget1.xml");
-        Widget widget2 = new WidgetImpl(2L, "http://example.com/widget2.xml");
+        Widget widget1 = new WidgetImpl("2", "http://example.com/widget1.xml");
+        Widget widget2 = new WidgetImpl("3", "http://example.com/widget2.xml");
         List<Widget> widgets = new ArrayList<Widget>();
         widgets.add(widget1);
         widgets.add(widget2);
@@ -94,9 +94,9 @@ public class DefaultWidgetServiceTest {
 
     @Test
     public void getPublishedWidgets() {
-        Widget widget1 = new WidgetImpl(1L, "http://example.com/widget1.xml");
+        Widget widget1 = new WidgetImpl("1", "http://example.com/widget1.xml");
         widget1.setWidgetStatus(WidgetStatus.PUBLISHED);
-        Widget widget2 = new WidgetImpl(2L, "http://example.com/widget2.xml");
+        Widget widget2 = new WidgetImpl("2", "http://example.com/widget2.xml");
         widget2.setWidgetStatus(WidgetStatus.PUBLISHED);
         List<Widget> widgets = new ArrayList<Widget>();
         widgets.add(widget1);
@@ -115,10 +115,10 @@ public class DefaultWidgetServiceTest {
     @Test
     public void getWidget() {
         Widget w = new WidgetImpl();
-        expect(widgetRepository.get(1L)).andReturn(w);
+        expect(widgetRepository.get("1")).andReturn(w);
         replay(widgetRepository);
 
-        Widget result = widgetService.getWidget(1L);
+        Widget result = widgetService.getWidget("1");
         assertThat(result, is(sameInstance(w)));
         verify(widgetRepository);
     }
@@ -129,8 +129,7 @@ public class DefaultWidgetServiceTest {
         int offset = 0;
         int pageSize = 10;
         int totalResults = 2;
-        WidgetImpl widget = new WidgetImpl();
-        widget.setId(1L);
+        WidgetImpl widget = new WidgetImpl("1");
         List<Widget> widgets = new ArrayList<Widget>();
         widgets.add(widget);
 
@@ -152,9 +151,8 @@ public class DefaultWidgetServiceTest {
         int offset = 0;
         int pageSize = 10;
         int totalResults = 2;
-        WidgetImpl widget = new WidgetImpl();
+        WidgetImpl widget = new WidgetImpl("1");
         widget.setWidgetStatus(WidgetStatus.PUBLISHED);
-        widget.setId(1L);
         List<Widget> widgets = new ArrayList<Widget>();
         widgets.add(widget);
 
@@ -178,11 +176,10 @@ public class DefaultWidgetServiceTest {
         int offset = 0;
         int pageSize = 10;
         int totalResults = 2;
-        WidgetImpl widget = new WidgetImpl();
+        WidgetImpl widget = new WidgetImpl("1");
         widget.setWidgetStatus(WidgetStatus.PUBLISHED);
         final String type = "OpenSocial";
         widget.setType(type);
-        widget.setId(1L);
         List<Widget> widgets = new ArrayList<Widget>();
         widgets.add(widget);
 
@@ -204,12 +201,12 @@ public class DefaultWidgetServiceTest {
     public void getWidgetsByOwner() {
         final int offset = 0;
         final int pageSize = 10;
-        final UserImpl user = new UserImpl(5L);
+        final UserImpl user = new UserImpl("5");
         expect(userRepository.get(user.getId())).andReturn(user);
         replay(userRepository);
 
         final List<Widget> widgets = new ArrayList<Widget>();
-        final Widget widget = new WidgetImpl(3L, "http://www.widgetsRus.com/");
+        final Widget widget = new WidgetImpl("3", "http://www.widgetsRus.com/");
         widgets.add(widget);
 
         expect(widgetRepository.getCountByOwner(user, offset, pageSize)).andReturn(widgets.size());
@@ -228,10 +225,10 @@ public class DefaultWidgetServiceTest {
 
     @Test
     public void getWidget_null() {
-        expect(widgetRepository.get(1L)).andReturn(null);
+        expect(widgetRepository.get("1")).andReturn(null);
         replay(widgetRepository);
 
-        Widget result = widgetService.getWidget(1L);
+        Widget result = widgetService.getWidget("1");
         assertThat(result, is(nullValue()));
         verify(widgetRepository);
     }
@@ -326,26 +323,26 @@ public class DefaultWidgetServiceTest {
 
     @Test
     public void widgetStatistics() {
-        expect(widgetRepository.getWidgetStatistics(1L, 1L)).andReturn(new WidgetStatistics());
+        expect(widgetRepository.getWidgetStatistics("1", "1")).andReturn(new WidgetStatistics());
         replay(widgetRepository);
 
-        widgetService.getWidgetStatistics(1L, 1L);
+        widgetService.getWidgetStatistics("1", "1");
         verify(widgetRepository);
     }
 
 
     @Test
     public void allWidgetStatistics() {
-        expect(widgetRepository.getAllWidgetStatistics(1L)).andReturn(new HashMap<Long, WidgetStatistics>());
+        expect(widgetRepository.getAllWidgetStatistics("1")).andReturn(new HashMap<String, WidgetStatistics>());
         replay(widgetRepository);
 
-        widgetService.getAllWidgetStatistics(1L);
+        widgetService.getAllWidgetStatistics("1");
         verify(widgetRepository);
     }
 
     @Test
     public void getWidgetsByCategory_valid(){
-        long id = 1L;
+        String id = "1";
         int offset = 0;
         int pageSize = 10;
         String categoryText = "Social";

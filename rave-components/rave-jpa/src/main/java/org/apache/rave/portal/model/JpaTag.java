@@ -82,10 +82,12 @@ public class JpaTag implements BasicEntity, Tag {
         this.keyword = keyword;
     }
 
+    @Override
     public String getKeyword() {
         return keyword;
     }
 
+    @Override
     public void setKeyword(String keyword) {
         this.keyword = keyword;
     }
@@ -99,20 +101,8 @@ public class JpaTag implements BasicEntity, Tag {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public List<WidgetTag> getWidgets() {
-        return ConvertingListProxyFactory.createProxyList(WidgetTag.class, widgets);
-    }
-
-    @Override
-    public void setWidgets(List<WidgetTag> widgets) {
-        if (this.widgets == null) {
-            this.widgets = new ArrayList<JpaWidgetTag>();
-        }
-        this.getWidgets().clear();
-        if (widgets != null) {
-            this.getWidgets().addAll(widgets);
-        }
+    public String getId() {
+        return entityId.toString();
     }
 
     @Override

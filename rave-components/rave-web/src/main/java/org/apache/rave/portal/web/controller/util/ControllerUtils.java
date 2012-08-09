@@ -60,17 +60,17 @@ public class ControllerUtils {
         return viewName;
     }
 
-    public static void addNavItemsToModel(String view, Model model, long referringPageId, User user) {
+    public static void addNavItemsToModel(String view, Model model, String referringPageId, User user) {
         final NavigationMenu topMenu = getTopMenu(view, referringPageId, user, true);
         model.addAttribute(topMenu.getName(), topMenu);
     }
 
-    public static void addNavItemsToModel(String view, Model model, long referringPageId, User user, boolean addStore) {
+    public static void addNavItemsToModel(String view, Model model, String referringPageId, User user, boolean addStore) {
         final NavigationMenu topMenu = getTopMenu(view, referringPageId, user, addStore);
         model.addAttribute(topMenu.getName(), topMenu);
     }
     
-    public static NavigationMenu getTopMenu(String view, long referringPageId, User user, boolean addStoreLink) {
+    public static NavigationMenu getTopMenu(String view, String referringPageId, User user, boolean addStoreLink) {
         NavigationMenu menu = new NavigationMenu("topnav");
         if(view.startsWith(ViewNames.PAGE) || view.startsWith(ViewNames.MOBILE_HOME)) {
             NavigationItem profile = new NavigationItem("page.profile.title", user.getDisplayName() != null ? user.getDisplayName() : user.getUsername(), "/app/person/" + user.getUsername() + "?referringPageId=" + referringPageId);
@@ -124,10 +124,10 @@ public class ControllerUtils {
         return menu;
     }
 
-    private static NavigationItem getBackItem(long referringPageId) {
+    private static NavigationItem getBackItem(String referringPageId) {
         NavigationItem back = new NavigationItem();
         back.setName("page.general.back");
-        if (referringPageId > 0) {
+        if (referringPageId != null && !referringPageId.isEmpty()) {
             back.setUrl("/app/page/view/" + referringPageId);
         } else {
             back.setUrl("/");

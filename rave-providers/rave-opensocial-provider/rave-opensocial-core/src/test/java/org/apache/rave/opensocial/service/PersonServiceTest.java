@@ -508,8 +508,8 @@ public class PersonServiceTest {
         dbPerson.setUsername(id);
         dbPerson.setDisplayName(DISPLAY_NAME);
         List<PersonProperty> properties = new ArrayList<PersonProperty>();
-        properties.add(new PersonPropertyImpl(1L, Person.Field.TAGS.toString(), TAG, null, null, null));
-        properties.add(new PersonPropertyImpl(2L, Person.Field.HAPPIEST_WHEN.toString(), HAPPIEST_WHEN, null, null, null));
+        properties.add(new PersonPropertyImpl("1", Person.Field.TAGS.toString(), TAG, null, null, null));
+        properties.add(new PersonPropertyImpl("2", Person.Field.HAPPIEST_WHEN.toString(), HAPPIEST_WHEN, null, null, null));
         dbPerson.setProperties(properties);
         return dbPerson;
     }

@@ -51,9 +51,9 @@ public class DefaultWidgetPermissionEvaluatorTest {
     private Authentication mockAuthentication;
     private List<GrantedAuthority> grantedAuthoritiesList;
 
-    private final Long VALID_WIDGET_ID = 1L;
-    private final Long VALID_PAGE_ID = 3L;
-    private final Long VALID_USER_ID = 99L;
+    private final String VALID_WIDGET_ID = "1";
+    private final String VALID_PAGE_ID = "3";
+    private final String VALID_USER_ID = "99";
     private final String VALID_USERNAME = "john.doe";
     private final String VALID_USERNAME2 = "jane.doe";
 

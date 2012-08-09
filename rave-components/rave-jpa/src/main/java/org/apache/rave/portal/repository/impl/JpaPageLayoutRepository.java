@@ -70,7 +70,7 @@ public class JpaPageLayoutRepository implements PageLayoutRepository{
     }
 
     @Override
-    public PageLayout get(long id) {
+    public PageLayout get(String id) {
         return manager.find(JpaPageLayout.class, id);
     }
 

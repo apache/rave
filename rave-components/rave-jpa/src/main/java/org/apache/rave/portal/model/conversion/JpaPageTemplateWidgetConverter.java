@@ -44,7 +44,7 @@ public class JpaPageTemplateWidgetConverter implements ModelConverter<PageTempla
     private JpaPageTemplateWidget createEntity(PageTemplateWidget source) {
         JpaPageTemplateWidget converted = null;
         if (source != null) {
-            converted = manager.find(JpaPageTemplateWidget.class, source.getId());
+            converted = manager.find(JpaPageTemplateWidget.class, source.getId() == null ? null : Long.parseLong(source.getId()));
 
             if (converted == null) {
                 converted = new JpaPageTemplateWidget();
@@ -55,7 +55,7 @@ public class JpaPageTemplateWidgetConverter implements ModelConverter<PageTempla
     }
 
     private void updateProperties(PageTemplateWidget source, JpaPageTemplateWidget converted) {
-        converted.setEntityId(source.getId());
+        converted.setEntityId(source.getId() == null ? null : Long.parseLong(source.getId()));
         converted.setHideChrome(source.isHideChrome());
         converted.setPageTemplateRegion(source.getPageTemplateRegion());
         converted.setRenderSeq(source.getRenderSeq());

@@ -59,10 +59,10 @@ public class JpaPageTemplateWidgetConverterTest {
     @Test
     public void convertValid() {
         JpaWidget widget = new JpaWidget();
-        PageTemplateWidget template = new PageTemplateWidgetImpl();
+        PageTemplateWidget template = new PageTemplateWidgetImpl("1");
         template.setLocked(true);
         template.setHideChrome(true);
-        template.setPageTemplateRegion(new PageTemplateRegionImpl());
+        template.setPageTemplateRegion(new PageTemplateRegionImpl("1"));
         template.setRenderSeq(1);
         template.setWidget(widget);
 

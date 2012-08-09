@@ -28,8 +28,8 @@ public interface OAuthTokenInfo {
      */
     public static final String MODULE_ID = "NOT_USED";
 
-    Long getId();
-    void setId(Long id);
+    String getId();
+    void setId(String id);
 
     String getAccessToken();
     void setAccessToken(String accessToken);

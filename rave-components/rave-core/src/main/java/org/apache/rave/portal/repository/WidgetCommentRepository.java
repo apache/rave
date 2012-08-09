@@ -25,5 +25,5 @@ public interface WidgetCommentRepository extends Repository<WidgetComment> {
      * @param userId
      * @return count of comments deleted
      */
-    int deleteAll(Long userId);
+    int deleteAll(String userId);
 }

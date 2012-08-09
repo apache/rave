@@ -126,13 +126,8 @@ public class JpaRegionWidget implements BasicEntity, Serializable, RegionWidget 
     }
 
     @Override
-    public Long getId() {
-        return getEntityId();
-    }
-
-    @Override
-    public void setId(Long id) {
-        setEntityId(id);
+    public String getId() {
+        return this.getEntityId() == null ? null : this.getEntityId().toString();
     }
 
     /**
@@ -284,10 +279,18 @@ public class JpaRegionWidget implements BasicEntity, Serializable, RegionWidget 
         sb.append("JpaRegionWidget{");
         sb.append("entityId=");
         sb.append(entityId);
-        sb.append(",widget=");
-        sb.append(widget);
-        sb.append(",regionId=");
-        sb.append(region.getEntityId());
+        if (widget != null) {
+            sb.append(",widget=");
+            sb.append(widget);
+        } else {
+            sb.append(", Widget Null");
+        }
+        if (region != null) {
+            sb.append(",regionId=");
+            sb.append(region.getEntityId());
+        } else {
+            sb.append(", Region Null");
+        }
         sb.append("}");
         return sb.toString();
     }

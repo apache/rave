@@ -58,9 +58,9 @@ public class ProfileControllerTest {
     private List<Page> allProfilePages;
     private List<PageLayout> allPageLayouts;
 
-    private final Long DEFAULT_PAGE_ID = 99L;
-    private final Long OTHER_PAGE_ID = 22L;
-    private final Long USER_ID = 1L;
+    private final String DEFAULT_PAGE_ID = "99";
+    private final String OTHER_PAGE_ID = "22";
+    private final String USER_ID = "1";
     private final String VALID_PAGE_LAYOUT_CODE = "layout98";
     private PageLayout validPageLayout;
 
@@ -151,7 +151,7 @@ public class ProfileControllerTest {
 		//This test will just show the successful updation of user status
 		final ModelMap model = new ModelMap();
 		final int modelSize = 2;
-		final long referringPageId = 1L;
+		final String referringPageId = "1";
         final String USERNAME = "canonical";
 		String userProfile = new String(ModelKeys.USER_PROFILE);
 

@@ -83,7 +83,7 @@ public class DefaultWidgetTagPermissionEvaluator extends AbstractModelPermission
         if (targetId instanceof RaveSecurityContext) {
             hasPermission = verifyRaveSecurityContext(authentication, (RaveSecurityContext)targetId, permission);           
         } else {
-            hasPermission = hasPermission(authentication, widgetTagRepository.get((Long)targetId), permission, true);
+            hasPermission = hasPermission(authentication, widgetTagRepository.get((String)targetId), permission, true);
         }
         return hasPermission;
     }  
@@ -110,7 +110,7 @@ public class DefaultWidgetTagPermissionEvaluator extends AbstractModelPermission
                 hasPermission =  true;
                 break;
             case CREATE:
-                hasPermission = isWidgetTagOwnerById(authentication, widgetTag.getUser().getId());
+                hasPermission = isWidgetTagOwnerById(authentication, widgetTag.getUserId());
                 break;
             case DELETE:
             case UPDATE:
@@ -148,7 +148,7 @@ public class DefaultWidgetTagPermissionEvaluator extends AbstractModelPermission
                 case DELETE:
                 case UPDATE:
                     // anyone can create, delete, read, or update a WidgetTag that they own
-                    hasPermission = isWidgetTagOwnerById(authentication, (Long)raveSecurityContext.getId());
+                    hasPermission = isWidgetTagOwnerById(authentication, (String)raveSecurityContext.getId());
                     break;
                 default:
                     log.warn("unknown permission: " + permission);
@@ -173,12 +173,12 @@ public class DefaultWidgetTagPermissionEvaluator extends AbstractModelPermission
             trustedWidgetTag = getTrustedWidgetTag(widgetTag.getWidgetId(), widgetTag.getTag().getKeyword(), trustedWidgetTagContainer);
         }                  
         
-        return isWidgetTagOwnerByUsername(authentication, trustedWidgetTag.getUser().getUsername());
+        return isWidgetTagOwnerById(authentication, trustedWidgetTag.getUserId());
     }            
     
     // returns a trusted WidgetTag object, either from the WidgetTagRepository, or the
     // cached container list
-    private WidgetTag getTrustedWidgetTag(long widgetId, String tagKeyword, List<WidgetTag> trustedWidgetTagContainer) {
+    private WidgetTag getTrustedWidgetTag(String widgetId, String tagKeyword, List<WidgetTag> trustedWidgetTagContainer) {
         WidgetTag p = null;
         if (trustedWidgetTagContainer.isEmpty()) {
             p = widgetTagRepository.getByWidgetIdAndTag(widgetId, tagKeyword);
@@ -189,10 +189,10 @@ public class DefaultWidgetTagPermissionEvaluator extends AbstractModelPermission
         return p;       
     }     
 
-    private boolean isWidgetTagOwnerByUsername(Authentication authentication, String username) {
-        return ((User)authentication.getPrincipal()).getUsername().equals(username);
-    }
-    private boolean isWidgetTagOwnerById(Authentication authentication, Long userId) {
+//    private boolean isWidgetTagOwnerByUsername(Authentication authentication, String username) {
+//        return ((User)authentication.getPrincipal()).getUsername().equals(username);
+//    }
+    private boolean isWidgetTagOwnerById(Authentication authentication, String userId) {
         return ((User)authentication.getPrincipal()).getId().equals(userId);
     }
 }

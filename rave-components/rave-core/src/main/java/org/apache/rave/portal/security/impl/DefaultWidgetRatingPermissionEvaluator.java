@@ -83,7 +83,7 @@ public class DefaultWidgetRatingPermissionEvaluator extends AbstractModelPermiss
         if (targetId instanceof RaveSecurityContext) {
             hasPermission = verifyRaveSecurityContext(authentication, (RaveSecurityContext) targetId);
         } else {
-            hasPermission = hasPermission(authentication, widgetRatingRepository.get((Long) targetId), permission, true);
+            hasPermission = hasPermission(authentication, widgetRatingRepository.get((String) targetId), permission, true);
         }
         return hasPermission;
     }
@@ -127,7 +127,7 @@ public class DefaultWidgetRatingPermissionEvaluator extends AbstractModelPermiss
 
     // returns a trusted WidgetRating object, either from the WidgetRatingRepository, or the
     // cached container list
-    private WidgetRating getTrustedWidgetRating(long widgetRatingId, List<WidgetRating> trustedWidgetRatingContainer) {
+    private WidgetRating getTrustedWidgetRating(String widgetRatingId, List<WidgetRating> trustedWidgetRatingContainer) {
         WidgetRating widgetRating = null;
         if (trustedWidgetRatingContainer.isEmpty()) {
             widgetRating = widgetRatingRepository.get(widgetRatingId);
@@ -155,7 +155,7 @@ public class DefaultWidgetRatingPermissionEvaluator extends AbstractModelPermiss
         return ((User)authentication.getPrincipal()).getUsername().equals(username);
     }
 
-    private boolean isWidgetRatingOwnerById(Authentication authentication, Long userId) {
+    private boolean isWidgetRatingOwnerById(Authentication authentication, String userId) {
         return ((User)authentication.getPrincipal()).getId().equals(userId);
     }
 
@@ -169,7 +169,7 @@ public class DefaultWidgetRatingPermissionEvaluator extends AbstractModelPermiss
 
         // perform the permissions check based on the class supplied to the RaveSecurityContext object
         if (User.class == clazz) {
-            return isWidgetRatingOwnerById(authentication, (Long) raveSecurityContext.getId());
+            return isWidgetRatingOwnerById(authentication, (String) raveSecurityContext.getId());
         } else {
             throw new IllegalArgumentException("unknown RaveSecurityContext type: " + raveSecurityContext.getType());
         }

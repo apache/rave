@@ -67,7 +67,7 @@ public class JpaOAuthTokenInfoRepositoryTest {
 
     @Test
     public void get() {
-        JpaOAuthTokenInfo oAuthTokenInfo = (JpaOAuthTokenInfo) repository.get(VALID_ID);
+        JpaOAuthTokenInfo oAuthTokenInfo = (JpaOAuthTokenInfo) repository.get(VALID_ID.toString());
         assertThat(oAuthTokenInfo.getEntityId(), is(VALID_ID));
         assertThat(oAuthTokenInfo.getAppUrl(), is(APP_URL));
         assertThat(oAuthTokenInfo.getTokenName(), is(TOKEN_NAME));
@@ -113,9 +113,9 @@ public class JpaOAuthTokenInfoRepositoryTest {
 
         assertThat(oAuthTokenInfo.getEntityId(), is(nullValue()));
         repository.save(oAuthTokenInfo);
-        long newId = oAuthTokenInfo.getEntityId();
+        Long newId = oAuthTokenInfo.getEntityId();
         assertThat(newId > 0, is(true));
-        JpaOAuthTokenInfo newOAuthTokenInfo = (JpaOAuthTokenInfo) repository.get(newId);
+        JpaOAuthTokenInfo newOAuthTokenInfo = (JpaOAuthTokenInfo) repository.get(newId.toString());
         assertThat(newOAuthTokenInfo.getServiceName(), is(NEW_SERVICE_NAME));
         assertThat(newOAuthTokenInfo.getAppUrl(), is(NEW_URL));
     }
@@ -125,10 +125,10 @@ public class JpaOAuthTokenInfoRepositoryTest {
     @Rollback(true)
     public void save_existing() {
         final String UPDATED_SERVICE_NAME = "updated service name";
-        OAuthTokenInfo oAuthTokenInfo = repository.get(VALID_ID);
+        OAuthTokenInfo oAuthTokenInfo = repository.get(VALID_ID.toString());
         assertThat(oAuthTokenInfo.getServiceName(), is(not(UPDATED_SERVICE_NAME)));
         oAuthTokenInfo.setServiceName(UPDATED_SERVICE_NAME);
         repository.save(oAuthTokenInfo);
-        assertThat(repository.get(VALID_ID).getServiceName(), is(UPDATED_SERVICE_NAME));
+        assertThat(repository.get(VALID_ID.toString()).getServiceName(), is(UPDATED_SERVICE_NAME));
     }
 }

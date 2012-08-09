@@ -69,7 +69,7 @@ public interface WidgetService {
      * @return a valid widget if one exists for the given id; null otherwise
      */
     @PostAuthorize("returnObject == null or hasPermission(returnObject, 'read')")
-    Widget getWidget(long id);
+    Widget getWidget(String id);
 
     /**
      * Gets a {@link SearchResult} for {@link Widget}'s that are published
@@ -104,7 +104,7 @@ public interface WidgetService {
     SearchResult<Widget> getWidgetsBySearchCriteria(String searchTerm, String widgetType, String widgetStatus,
                                                     int offset, int pageSize);
 
-    SearchResult<Widget> getWidgetsByOwner(Long ownerId, int offset, int pageSize);
+    SearchResult<Widget> getWidgetsByOwner(String ownerId, int offset, int pageSize);
 
     /**
      * Gets a Widget by its (unique) url
@@ -139,7 +139,7 @@ public interface WidgetService {
      * @param userId id of the user
      * @return {@link WidgetStatistics} with the rating information
      */
-    WidgetStatistics getWidgetStatistics(long widgetId, long userId);
+    WidgetStatistics getWidgetStatistics(String widgetId, String userId);
 
     /**
      * Generates the mapping of widget statistics for the user.
@@ -147,7 +147,7 @@ public interface WidgetService {
      * @param userId id of the user
      * @return Mapping of {@link WidgetStatistics} objects keyed off of the widget's entityId
      */
-    Map<Long, WidgetStatistics> getAllWidgetStatistics(long userId);
+    Map<String, WidgetStatistics> getAllWidgetStatistics(String userId);
 
     /**
      * Updates {@link Widget}
@@ -175,6 +175,6 @@ public interface WidgetService {
      * @param pageSize   maximum number of items to be returned (for paging)
      * @return           SearchResult
      */
-    SearchResult<Widget> getWidgetsByCategory(long categoryId, int offset, int pageSize);
+    SearchResult<Widget> getWidgetsByCategory(String categoryId, int offset, int pageSize);
 
 }

@@ -32,7 +32,7 @@ import static org.junit.Assert.assertThat;
 public class CategoryEditorTest {
     private CategoryEditor categoryEditor;
     private CategoryService categoryService;
-    private final Long CATEGORY_ID = 333L;
+    private final String CATEGORY_ID = "333";
     private final String CATEGORY_TEXT = "category1";
     private Category validCategory;
 

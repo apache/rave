@@ -50,7 +50,7 @@ public class JpaWidgetTagConverter implements ModelConverter<WidgetTag, JpaWidge
     private JpaWidgetTag createEntity(WidgetTag source) {
         JpaWidgetTag convertedWidgetTag;
         TypedQuery<JpaWidgetTag> query = manager.createNamedQuery(JpaWidgetTag.FIND_BY_WIDGET_AND_KEYWORD, JpaWidgetTag.class);
-        query.setParameter(JpaWidgetTag.WIDGET_ID_PARAM, source.getWidgetId());
+        query.setParameter(JpaWidgetTag.WIDGET_ID_PARAM, Long.parseLong(source.getWidgetId()));
         query.setParameter(JpaWidgetTag.TAG_KEYWORD_PARAM, source.getTag().getKeyword());
         convertedWidgetTag = JpaUtil.getSingleResult(query.getResultList());
 
@@ -64,7 +64,6 @@ public class JpaWidgetTagConverter implements ModelConverter<WidgetTag, JpaWidge
     private void updateProperties(WidgetTag source, JpaWidgetTag convertedWidgetTag) {
         convertedWidgetTag.setCreatedDate(source.getCreatedDate());
         convertedWidgetTag.setTag(source.getTag());
-        convertedWidgetTag.setUser(source.getUser());
-        convertedWidgetTag.setWidgetId(source.getWidgetId());
+        convertedWidgetTag.setUserId(source.getUserId());
     }
 }

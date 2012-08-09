@@ -48,7 +48,7 @@ public class JpaRegionConverter implements ModelConverter<Region, JpaRegion> {
         JpaRegion converted = null;
         if (source != null) {
             TypedQuery<JpaRegion> query = manager.createNamedQuery(JpaRegion.FIND_BY_ENTITY_ID, JpaRegion.class);
-            query.setParameter(JpaRegion.ENTITY_ID_PARAM, source.getId());
+            query.setParameter(JpaRegion.ENTITY_ID_PARAM, source.getId() == null ? null : Long.parseLong(source.getId()));
             converted = getSingleResult(query.getResultList());
 
             if (converted == null) {
@@ -60,7 +60,7 @@ public class JpaRegionConverter implements ModelConverter<Region, JpaRegion> {
     }
 
     private void updateProperties(Region source, JpaRegion converted) {
-        converted.setId(source.getId());
+        converted.setEntityId(source.getId() == null ? null : Long.parseLong(source.getId()));
         converted.setLocked(source.isLocked());
         converted.setPage(source.getPage());
         converted.setRegionWidgets(source.getRegionWidgets());

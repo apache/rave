@@ -35,7 +35,7 @@ public interface WidgetRatingService {
      * @return WidgetRating or {@link null} if there is no such combination
      */
     @PreAuthorize("hasPermission(new org.apache.rave.portal.security.impl.RaveSecurityContext(#userId, 'org.apache.rave.portal.model.User'), 'org.apache.rave.portal.model.WidgetRating', 'read')")
-    WidgetRating getByWidgetIdAndUserId(Long widgetId, Long userId);
+    WidgetRating getByWidgetIdAndUserId(String widgetId, String userId);
 
     /**
      * Updates the score of a {@link org.apache.rave.portal.model.WidgetRating}
@@ -61,7 +61,7 @@ public interface WidgetRatingService {
      * @param userId   unique identifier of a {@link org.apache.rave.portal.model.User}
      */
     @PreAuthorize("hasPermission(new org.apache.rave.portal.security.impl.RaveSecurityContext(#userId, 'org.apache.rave.portal.model.User'), 'org.apache.rave.portal.model.WidgetRating', 'delete')")
-    void removeWidgetRating(Long widgetId, Long userId);
+    void removeWidgetRating(String widgetId, String userId);
 
     /**
      * Removes all widget ratings for a userId, for all widgets
@@ -70,5 +70,5 @@ public interface WidgetRatingService {
      * @return the number of widget ratings deleted
      */
     @PreAuthorize("hasPermission(new org.apache.rave.portal.security.impl.RaveSecurityContext(#userId, 'org.apache.rave.portal.model.User'), 'org.apache.rave.portal.model.WidgetRating', 'delete')")
-    int removeAllWidgetRatings(Long userId);
+    int removeAllWidgetRatings(String userId);
 }

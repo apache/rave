@@ -40,7 +40,7 @@ public class DefaultAuthorityService implements AuthorityService {
     }
 
     @Override
-    public Authority getAuthorityById(long entityId) {
+    public Authority getAuthorityById(String entityId) {
         return repository.get(entityId);
     }
 

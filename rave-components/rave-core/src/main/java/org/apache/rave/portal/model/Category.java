@@ -27,8 +27,8 @@ import java.util.List;
  */
 @XmlTransient
 public interface Category {
-    public Long getId();
-    public void setId(Long id);
+    public String getId();
+    public void setId(String id);
 
     public String getText();
     public void setText(String text);

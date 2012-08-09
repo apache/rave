@@ -79,7 +79,7 @@ public interface UserRepository extends Repository<User> {
      * @param widgetId the entityId of the Widget to search
      * @return List of User objects in alphabetical order sorted by familyname, givenname
      */
-    List<User> getAllByAddedWidget(long widgetId);
+    List<User> getAllByAddedWidget(String widgetId);
 
     /**
      * Gets a {@link org.apache.rave.portal.model.User} by generated forgot email hash

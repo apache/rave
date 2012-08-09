@@ -103,7 +103,7 @@ public class UserControllerTest {
     @Test
     public void viewAdminUserDetail() throws Exception {
         Model model = new ExtendedModelMap();
-        Long userid = 123L;
+        String userid = "123";
         User user = new UserImpl(userid, "john.doe.sr");
 
         expect(userService.getUserById(userid)).andReturn(user);
@@ -121,7 +121,7 @@ public class UserControllerTest {
     @Test
     public void updateUserDetail_success() {
         ModelMap modelMap = new ExtendedModelMap();
-        final Long userid = 123L;
+        String userid = "123";
         final String email = "john.doe.sr@example.net";
         UserImpl user = new UserImpl(userid, "john.doe.sr");
         user.setPassword("secrect");
@@ -147,7 +147,7 @@ public class UserControllerTest {
     @Test
     public void updateUserDetail_withErrors() {
         ModelMap modelMap = new ExtendedModelMap();
-        Long userid = 123L;
+        String userid = "123";
         UserImpl user = new UserImpl(userid, "john.doe.sr");
         final BindingResult errors = new BeanPropertyBindingResult(user, "user");
 
@@ -163,7 +163,7 @@ public class UserControllerTest {
     @Test(expected = SecurityException.class)
     public void updateUserDetail_wrongToken() {
         ModelMap modelMap = new ExtendedModelMap();
-        UserImpl user = new UserImpl(123L, "john.doe.sr");
+        UserImpl user = new UserImpl("123", "john.doe.sr");
         final BindingResult errors = new BeanPropertyBindingResult(user, "user");
         SessionStatus sessionStatus = createMock(SessionStatus.class);
         sessionStatus.setComplete();
@@ -182,7 +182,7 @@ public class UserControllerTest {
     @Test
     public void deleteUserDetail_success() {
         ModelMap modelMap = new ExtendedModelMap();
-        final Long userid = 123L;
+        String userid = "123";
         final String email = "john.doe.sr@example.net";
         User user = new UserImpl(userid, "john.doe.sr");
         user.setPassword("secrect");
@@ -205,7 +205,7 @@ public class UserControllerTest {
     @Test
     public void deleteUserDetail_noConfirmChecked() {
         ModelMap modelMap = new ExtendedModelMap();
-        Long userid = 123L;
+        String userid = "123";
         User user = new UserImpl(userid, "john.doe.sr");
 
         SessionStatus sessionStatus = createMock(SessionStatus.class);
@@ -219,7 +219,7 @@ public class UserControllerTest {
     @Test(expected = SecurityException.class)
     public void deleteUserDetail_wrongToken() {
         ModelMap modelMap = new ExtendedModelMap();
-        User user = new UserImpl(123L, "john.doe.sr");
+        User user = new UserImpl("123", "john.doe.sr");
         SessionStatus sessionStatus = createMock(SessionStatus.class);
         sessionStatus.setComplete();
 
@@ -337,8 +337,8 @@ public class UserControllerTest {
 
 
     private static SearchResult<User> createSearchResultWithTwoUsers() {
-        UserImpl user1 = new UserImpl(123L, "john.doe.sr");
-        UserImpl user2 = new UserImpl(456L, "john.doe.jr");
+        UserImpl user1 = new UserImpl("123", "john.doe.sr");
+        UserImpl user2 = new UserImpl("456", "john.doe.jr");
         List<User> users = new ArrayList<User>();
         users.add(user1);
         users.add(user2);

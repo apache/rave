@@ -49,8 +49,8 @@ public class DefaultCategoryPermissionEvaluatorTest {
     private Authentication mockAuthentication;
     private List<GrantedAuthority> grantedAuthorities;
 
-    private final Long VALID_WIDGET_CATEGORY_ID = 22L;
-    private final Long VALID_USER_ID = 99L;
+    private final String VALID_WIDGET_CATEGORY_ID = "22";
+    private final String VALID_USER_ID = "99";
     private final String VALID_USERNAME = "john.doe";
     private final String VALID_USERNAME2 = "jane.doe";
 

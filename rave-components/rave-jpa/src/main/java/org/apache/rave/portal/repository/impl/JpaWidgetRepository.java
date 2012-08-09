@@ -156,25 +156,25 @@ public class JpaWidgetRepository implements WidgetRepository {
     }
 
     @Override
-    public WidgetStatistics getWidgetStatistics(long widget_id, long user_id) {
+    public WidgetStatistics getWidgetStatistics(String widget_id, String user_id) {
         WidgetStatistics widgetStatistics = new WidgetStatistics();
 
         Query query = manager.createNamedQuery(JpaWidgetRating.WIDGET_TOTAL_LIKES);
-        query.setParameter(JpaWidgetRating.PARAM_WIDGET_ID, widget_id);
+        query.setParameter(JpaWidgetRating.PARAM_WIDGET_ID, Long.parseLong(widget_id));
         widgetStatistics.setTotalLike(((Number) query.getSingleResult()).intValue());
 
         query = manager.createNamedQuery(JpaWidgetRating.WIDGET_TOTAL_DISLIKES);
-        query.setParameter(JpaWidgetRating.PARAM_WIDGET_ID, widget_id);
+        query.setParameter(JpaWidgetRating.PARAM_WIDGET_ID, Long.parseLong(widget_id));
         widgetStatistics.setTotalDislike(((Number) query.getSingleResult()).intValue());
 
         query = manager.createNamedQuery(JpaRegionWidget.REGION_WIDGET_GET_DISTINCT_USER_COUNT_SINGLE_WIDGET);
-        query.setParameter(JpaRegionWidget.PARAM_WIDGET_ID, widget_id);
+        query.setParameter(JpaRegionWidget.PARAM_WIDGET_ID, Long.parseLong(widget_id));
         widgetStatistics.setTotalUserCount(((Number) query.getSingleResult()).intValue());
 
         try {
             query = manager.createNamedQuery(JpaWidgetRating.WIDGET_USER_RATING);
-            query.setParameter(JpaWidgetRating.PARAM_WIDGET_ID, widget_id);
-            query.setParameter(JpaWidgetRating.PARAM_USER_ID, user_id);
+            query.setParameter(JpaWidgetRating.PARAM_WIDGET_ID, Long.parseLong(widget_id));
+            query.setParameter(JpaWidgetRating.PARAM_USER_ID, Long.parseLong(user_id));
             widgetStatistics.setUserRating(((Number) query.getSingleResult()).intValue());
         } catch (NoResultException e) {
             widgetStatistics.setUserRating(JpaWidgetRating.UNSET);
@@ -184,12 +184,12 @@ public class JpaWidgetRepository implements WidgetRepository {
     }
 
     @Override
-    public Map<Long, WidgetRating> getUsersWidgetRatings(long user_id) {
+    public Map<String, WidgetRating> getUsersWidgetRatings(String user_id) {
         TypedQuery<JpaWidgetRating> query =
                 manager.createNamedQuery(JpaWidgetRating.WIDGET_ALL_USER_RATINGS, JpaWidgetRating.class);
-        query.setParameter(JpaWidgetRating.PARAM_USER_ID, user_id);
+        query.setParameter(JpaWidgetRating.PARAM_USER_ID, user_id == null ? null : Long.parseLong(user_id));
 
-        Map<Long, WidgetRating> map = new HashMap<Long, WidgetRating>();
+        Map<String, WidgetRating> map = new HashMap<String, WidgetRating>();
         for (WidgetRating widgetRating : query.getResultList()) {
             map.put(widgetRating.getWidgetId(), widgetRating);
         }
@@ -199,8 +199,8 @@ public class JpaWidgetRepository implements WidgetRepository {
 
     @SuppressWarnings("unchecked")
     @Override
-    public Map<Long, WidgetStatistics> getAllWidgetStatistics(long userId) {
-        HashMap<Long, WidgetStatistics> map = new HashMap<Long, WidgetStatistics>();
+    public Map<String, WidgetStatistics> getAllWidgetStatistics(String userId) {
+        HashMap<String, WidgetStatistics> map = new HashMap<String, WidgetStatistics>();
 
         //Generate the mapping of all likes done for the widgets
         Query query = manager.createNamedQuery(JpaWidgetRating.WIDGET_ALL_TOTAL_LIKES);
@@ -209,7 +209,7 @@ public class JpaWidgetRepository implements WidgetRepository {
             Long widgetId = (Long) result[1];
             WidgetStatistics widgetStatistics = new WidgetStatistics();
             widgetStatistics.setTotalLike(totalLikes.intValue());
-            map.put(widgetId, widgetStatistics);
+            map.put(widgetId.toString(), widgetStatistics);
         }
 
         //Add the mapping of all dislikes done for the widgets
@@ -217,10 +217,10 @@ public class JpaWidgetRepository implements WidgetRepository {
         for (Object[] result : (List<Object[]>) query.getResultList()) {
             Long totalDislikes = (Long) result[0];
             Long widgetId = (Long) result[1];
-            WidgetStatistics widgetStatistics = map.get(widgetId);
+            WidgetStatistics widgetStatistics = map.get(widgetId.toString());
             if (widgetStatistics == null) {
                 widgetStatistics = new WidgetStatistics();
-                map.put(widgetId, widgetStatistics);
+                map.put(widgetId.toString(), widgetStatistics);
             }
             widgetStatistics.setTotalDislike(totalDislikes.intValue());
         }
@@ -230,17 +230,17 @@ public class JpaWidgetRepository implements WidgetRepository {
         for (Object[] result : (List<Object[]>) query.getResultList()) {
             Long widgetId = (Long) result[0];
             Long totalUserCount = (Long) result[1];
-            WidgetStatistics widgetStatistics = map.get(widgetId);
+            WidgetStatistics widgetStatistics = map.get(widgetId.toString());
             if (widgetStatistics == null) {
                 widgetStatistics = new WidgetStatistics();
-                map.put(widgetId, widgetStatistics);
+                map.put(widgetId.toString(), widgetStatistics);
             }
             widgetStatistics.setTotalUserCount(totalUserCount.intValue());
         }
 
         //Add the current user's current rating of the widget
-        Map<Long, WidgetRating> userRatings = getUsersWidgetRatings(userId);
-        for (Map.Entry<Long, WidgetStatistics> entry : map.entrySet()) {
+        Map<String, WidgetRating> userRatings = getUsersWidgetRatings(userId);
+        for (Map.Entry<String, WidgetStatistics> entry : map.entrySet()) {
             //If the user has a widget rating then record it
             if (userRatings.containsKey(entry.getKey())) {
                 entry.getValue().setUserRating(userRatings.get(entry.getKey()).getScore());
@@ -276,9 +276,9 @@ public class JpaWidgetRepository implements WidgetRepository {
     }
 
     @Override
-    public int unassignWidgetOwner(long userId) {
+    public int unassignWidgetOwner(String userId) {
         Query query = manager.createNamedQuery(JpaWidget.WIDGET_UNASSIGN_OWNER);
-        query.setParameter(JpaWidget.PARAM_OWNER, userId);
+        query.setParameter(JpaWidget.PARAM_OWNER, userId == null ? null : Long.parseLong(userId));
         return query.executeUpdate();
     }
 
@@ -288,7 +288,7 @@ public class JpaWidgetRepository implements WidgetRepository {
     }
 
     @Override
-    public Widget get(long id) {
+    public Widget get(String id) {
         return manager.find(JpaWidget.class, id);
     }
 

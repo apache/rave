@@ -83,7 +83,7 @@ public class PageController {
     }
 
     @RequestMapping(value = "/page/view/{pageId}", method = RequestMethod.GET)
-    public String view(@PathVariable Long pageId, Model model, HttpServletRequest request) {
+    public String view(@PathVariable String pageId, Model model, HttpServletRequest request) {
         try {
             List<Page> pages = getAllPagesForAuthenticatedUser();
             Page page = pageService.getPageFromList(pageId, pages);
@@ -108,7 +108,7 @@ public class PageController {
 
     private List<Page> getAllPagesForAuthenticatedUser() {
         User user = userService.getAuthenticatedUser();
-        long userId = user.getId();
+        String userId = user.getId();
         List<Page> pages = pageService.getAllUserPages(userId);
         // we add pages to this list which the corresponding pageUser object is not set to "refused"
         List<Page> viewablePages = new ArrayList<Page>();

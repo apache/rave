@@ -116,11 +116,6 @@ public class JpaUser extends JpaPerson implements BasicEntity, Serializable, Use
             @JoinColumn(name = "authority_id", referencedColumnName = "entity_id"))
     private Collection<JpaAuthority> authorities;
 
-    @OneToMany(targetEntity=JpaPageUser.class, fetch = FetchType.LAZY, mappedBy="user", orphanRemoval=true)
-    private List<JpaPageUser> pageUsers;
-    
-    @OneToMany(targetEntity=JpaWidgetTag.class, fetch = FetchType.LAZY, mappedBy="user", orphanRemoval=true)
-    private List<JpaWidgetTag> widgetTags;
 
     public JpaUser() {
         this(null, null);
@@ -311,34 +306,6 @@ public class JpaUser extends JpaPerson implements BasicEntity, Serializable, Use
 		this.confirmPassword = confirmPassword;
 	}
 
-    public List<PageUser> getPageUsers() {
-        return ConvertingListProxyFactory.createProxyList(PageUser.class, pageUsers);
-    }
-
-    public void setPageUsers(List<PageUser> pageUsers) {
-        if(this.pageUsers == null) {
-            this.pageUsers = new ArrayList<JpaPageUser>();
-        }
-        this.getPageUsers().clear();
-        if(pageUsers != null) {
-            this.getPageUsers().addAll(pageUsers);
-        }
-    }
-
-    public List<WidgetTag> getWidgetTags() {
-        return ConvertingListProxyFactory.createProxyList(WidgetTag.class, widgetTags);
-    }
-
-    public void setWidgetTags(List<WidgetTag> widgetTags) {
-        if(this.widgetTags == null) {
-            this.widgetTags = new ArrayList<JpaWidgetTag>();
-        }
-        this.getWidgetTags().clear();
-        if(widgetTags != null) {
-            this.getWidgetTags().addAll(widgetTags);
-        }
-    }
-
     @PreRemove
     public void preRemove() {
         for (JpaAuthority authority : authorities) {
@@ -414,8 +381,8 @@ public class JpaUser extends JpaPerson implements BasicEntity, Serializable, Use
     }
 
     @Override
-    public Long getId() {
-        return this.getEntityId();
+    public String getId() {
+        return this.getEntityId() == null ? null : this.getEntityId().toString();
     }
 
     public String getDefaultPageLayoutCode() {

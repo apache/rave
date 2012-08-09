@@ -23,7 +23,7 @@ import org.apache.rave.portal.model.*;
 import java.util.List;
 
 public class PageImpl implements Page {
-    private Long id;
+    private String id;
     private String name;
     private User owner;
     private Page parentPage;
@@ -35,22 +35,22 @@ public class PageImpl implements Page {
 
     public PageImpl() {}
 
-    public PageImpl(Long id) {
+    public PageImpl(String id) {
         this.id = id;
     }
 
-    public PageImpl(Long id, User owner) {
+    public PageImpl(String id, User owner) {
         this.id = id;
         this.owner = owner;
     }
 
     @Override
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
     @Override
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

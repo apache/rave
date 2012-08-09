@@ -48,7 +48,7 @@ public class JpaApplicationDataConverter implements ModelConverter<ApplicationDa
     private JpaApplicationData createEntity(ApplicationData source) {
         JpaApplicationData converted = null;
         if (source != null) {
-            converted = manager.find(JpaApplicationData.class, source.getId());
+            converted = manager.find(JpaApplicationData.class, source.getId() == null ? null : Long.parseLong(source.getId()));
             if (converted == null) {
                 converted = new JpaApplicationData();
             }
@@ -58,7 +58,6 @@ public class JpaApplicationDataConverter implements ModelConverter<ApplicationDa
     }
 
     private void updateProperties(ApplicationData source, JpaApplicationData converted) {
-        converted.setEntityId(source.getId());
         converted.setId(source.getId());
         converted.setAppUrl(source.getAppUrl());
         converted.setUserId(source.getUserId());

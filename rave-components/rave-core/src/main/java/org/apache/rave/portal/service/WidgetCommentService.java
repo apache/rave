@@ -22,13 +22,13 @@ import org.springframework.security.access.prepost.PreAuthorize;
 public interface WidgetCommentService {
 
     @PostAuthorize("hasPermission(returnObject, 'read')")
-    WidgetComment getWidgetComment(Long id);
+    WidgetComment getWidgetComment(String id);
 
     @PreAuthorize("hasPermission(#widgetComment, 'create_or_update')")
     void saveWidgetComment(WidgetComment widgetComment);
 
     @PreAuthorize("hasPermission(#id, 'org.apache.rave.portal.model.WidgetComment', 'delete')")
-    void removeWidgetComment(Long id);
+    void removeWidgetComment(String id);
 
     /**
      * Deletes all Widget Comments for a userId
@@ -37,5 +37,5 @@ public interface WidgetCommentService {
      * @return number of comments deleted
      */
     @PreAuthorize("hasPermission(new org.apache.rave.portal.security.impl.RaveSecurityContext(#userId, 'org.apache.rave.portal.model.User'), 'org.apache.rave.portal.model.WidgetComment', 'delete')")
-    int deleteAll(Long userId);
+    int deleteAll(String userId);
 }

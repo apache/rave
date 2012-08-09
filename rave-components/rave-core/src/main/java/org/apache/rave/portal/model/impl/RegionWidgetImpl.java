@@ -26,7 +26,7 @@ import org.apache.rave.portal.model.Widget;
 import java.util.List;
 
 public class RegionWidgetImpl implements RegionWidget {
-    private Long id;
+    private String id;
     private Widget widget;
     private Region region;
     private String renderPosition;
@@ -40,17 +40,17 @@ public class RegionWidgetImpl implements RegionWidget {
 
     }
 
-    public RegionWidgetImpl(Long id) {
+    public RegionWidgetImpl(String id) {
         this.id = id;
     }
 
-    public RegionWidgetImpl(Long id, Widget widget, Region region) {
+    public RegionWidgetImpl(String id, Widget widget, Region region) {
         this.id = id;
         this.widget = widget;
         this.region = region;
     }
 
-    public RegionWidgetImpl(Long id, Widget widget, Region region, int renderOrder) {
+    public RegionWidgetImpl(String id, Widget widget, Region region, int renderOrder) {
         this.id = id;
         this.widget = widget;
         this.region = region;
@@ -58,12 +58,11 @@ public class RegionWidgetImpl implements RegionWidget {
     }
 
     @Override
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    @Override
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

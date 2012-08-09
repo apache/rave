@@ -24,9 +24,8 @@ import java.util.List;
 @XmlTransient
 public interface Tag {
 
+    String getId();
     String getKeyword();
     void setKeyword(String keyword);
-    List<WidgetTag> getWidgets();
-    void setWidgets(List<WidgetTag> widgets);
 
 }

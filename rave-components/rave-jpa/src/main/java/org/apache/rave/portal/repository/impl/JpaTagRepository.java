@@ -78,14 +78,14 @@ public class JpaTagRepository implements TagRepository {
     }
 
     @Override
-    public List<Tag> getAvailableTagsByWidgetId(Long widgetId) {
+    public List<Tag> getAvailableTagsByWidgetId(String widgetId) {
         TypedQuery<JpaTag> query = manager.createNamedQuery(JpaTag.GET_ALL_NOT_IN_WIDGET, JpaTag.class);
-        query.setParameter("widgetId", widgetId);
+        query.setParameter("widgetId", Long.parseLong(widgetId));
         return CollectionUtils.<Tag>toBaseTypedList(query.getResultList());
     }
 
     @Override
-    public Tag get(long id) {
+    public Tag get(String id) {
         return manager.find(JpaTag.class, id);
     }
 

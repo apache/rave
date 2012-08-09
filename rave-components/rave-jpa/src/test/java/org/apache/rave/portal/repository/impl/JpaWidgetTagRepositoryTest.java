@@ -52,7 +52,7 @@ public class JpaWidgetTagRepositoryTest {
 
     @Test
     public void getByWidgetIdAndTag_valid(){
-        Long widgetId = 3L;
+        String widgetId = "3";
         String keyword = "news";
         JpaWidgetTag jpaWidgetTag = (JpaWidgetTag)repository.getByWidgetIdAndTag(widgetId, keyword);
         assertNotNull(jpaWidgetTag);
@@ -62,7 +62,7 @@ public class JpaWidgetTagRepositoryTest {
 
     @Test
     public void getByWidgetIdAndTag_keyword_trim_valid(){
-        Long widgetId = 3L;
+        String widgetId = "3";
         String keyword = "  news    ";
         JpaWidgetTag jpaWidgetTag = (JpaWidgetTag)repository.getByWidgetIdAndTag(widgetId, keyword);
         assertNotNull(jpaWidgetTag);
@@ -72,7 +72,7 @@ public class JpaWidgetTagRepositoryTest {
 
     @Test
     public void getByWidgetIdAndTag_invalid(){
-        Long widgetId = 3L;
+        String widgetId = "3";
         String keyword = "saturday";
         JpaWidgetTag jpaWidgetTag = (JpaWidgetTag)repository.getByWidgetIdAndTag(widgetId, keyword);
         assertNull(jpaWidgetTag);
@@ -80,22 +80,22 @@ public class JpaWidgetTagRepositoryTest {
 
     @Test
     public void getByWidgetIdAndTag_null(){
-        Long widgetId = 3L;
+        String widgetId = "3";
         JpaWidgetTag jpaWidgetTag = (JpaWidgetTag)repository.getByWidgetIdAndTag(widgetId, null);
         assertNull(jpaWidgetTag);
     }
 
     @Test
     public void get_valid(){
-        Long id = 1L;
+        String id = "1";
         JpaWidgetTag widgetTag = (JpaWidgetTag)repository.get(id);
         assertNotNull(widgetTag);
-        assertEquals(id, widgetTag.getEntityId());
+        assertEquals(id, widgetTag.getEntityId().toString());
     }
 
     @Test
     public void get_invalid(){
-        Long id = 1000291L;
+        String id = "1000291";
         JpaWidgetTag jpaWidgetTag = (JpaWidgetTag)repository.get(id);
         assertNull(jpaWidgetTag);
     }
@@ -104,16 +104,15 @@ public class JpaWidgetTagRepositoryTest {
     @Rollback(true)
     public void save() {
         WidgetTag widgetTag = new JpaWidgetTag();
-        JpaTag tag = new JpaTag(null, "boing");
+        JpaTag tag = new JpaTag(2L, "boing");
         widgetTag.setTag(tag);
-        widgetTag.setWidgetId(2L);
         widgetTag.setCreatedDate(new Date());
-        widgetTag.setUser(new JpaUser());
+        widgetTag.setUserId("1");
         JpaWidgetTag jpaWidgetTag = (JpaWidgetTag)repository.save(widgetTag);
         assertNotNull(jpaWidgetTag);
         assertEquals(widgetTag.getTag().getKeyword(), jpaWidgetTag.getTag().getKeyword());
         assertEquals(widgetTag.getWidgetId(), jpaWidgetTag.getWidgetId());
-        assertEquals(widgetTag.getUser(), jpaWidgetTag.getUser());
+        assertEquals(widgetTag.getUserId(), jpaWidgetTag.getUserId());
         assertEquals(widgetTag.getCreatedDate(), jpaWidgetTag.getCreatedDate());
         assertEquals(JpaWidgetTag.class, jpaWidgetTag.getClass());
     }
@@ -129,7 +128,7 @@ public class JpaWidgetTagRepositoryTest {
     @Test
     @Rollback(true)
     public void delete_valid(){
-        Long id = 1L;
+        String id = "1";
         WidgetTag widgetTag = repository.get(id);
         assertNotNull(widgetTag);
         repository.delete(widgetTag);
@@ -139,7 +138,7 @@ public class JpaWidgetTagRepositoryTest {
     @Test
     @Rollback(true)
     public void delete_jpaWidgetTag_valid(){
-        Long id = 1L;
+        String id = "1";
         JpaWidgetTag jpaWidgetTag = (JpaWidgetTag)repository.get(id);
         assertNotNull(jpaWidgetTag);
         repository.delete(jpaWidgetTag);
@@ -149,7 +148,7 @@ public class JpaWidgetTagRepositoryTest {
     @Test(expected = NullPointerException.class)
     @Rollback(true)
     public void delete_invalid(){
-        Long id = 17827873261L;
+        String id = "17827873261";
         WidgetTag widgetTag = repository.get(id);
         assertNull(widgetTag);
         repository.delete(widgetTag);

@@ -113,13 +113,8 @@ public class JpaRegion implements BasicEntity, Serializable, Region {
     }
 
     @Override
-    public Long getId() {
-        return getEntityId();
-    }
-
-    @Override
-    public void setId(Long id) {
-        setEntityId(id);
+    public String getId() {
+        return this.getEntityId() == null ? null : this.getEntityId().toString();
     }
 
     /**

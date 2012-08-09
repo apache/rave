@@ -50,7 +50,7 @@ public class JpaPageRepository implements PageRepository {
     }
 
     @Override
-    public Page get(long id) {
+    public Page get(String id) {
         return manager.find(JpaPage.class, id);
     }
 
@@ -74,15 +74,15 @@ public class JpaPageRepository implements PageRepository {
     }
 
     @Override
-    public List<Page> getAllPages(Long userId, PageType pageType) {
+    public List<Page> getAllPages(String userId, PageType pageType) {
         TypedQuery<JpaPage> query = manager.createNamedQuery(JpaPageUser.GET_BY_USER_ID_AND_PAGE_TYPE, JpaPage.class);
-        query.setParameter("userId", userId);
+        query.setParameter("userId", userId == null ? null : Long.parseLong(userId));
         query.setParameter("pageType", pageType);
         return CollectionUtils.<Page>toBaseTypedList(query.getResultList());
     }
 
     @Override
-    public int deletePages(Long userId, PageType pageType) {
+    public int deletePages(String userId, PageType pageType) {
         List<Page> pages = getAllPages(userId, pageType);
         int pageCount = pages.size();
         for(Page page : pages) {
@@ -92,26 +92,26 @@ public class JpaPageRepository implements PageRepository {
     }
 
     @Override
-    public boolean hasPersonPage(long userId){
+    public boolean hasPersonPage(String userId){
         TypedQuery<Long> query = manager.createNamedQuery(JpaPage.USER_HAS_PERSON_PAGE, Long.class);
-        query.setParameter("userId", userId);
+        query.setParameter("userId", userId == null ? null : Long.parseLong(userId));
         query.setParameter("pageType", PageType.PERSON_PROFILE);
         return query.getSingleResult() > 0;
     }
 
     @Override
-    public List<PageUser> getPagesForUser(Long userId, PageType pageType) {
+    public List<PageUser> getPagesForUser(String userId, PageType pageType) {
         TypedQuery<JpaPageUser> query = manager.createNamedQuery(JpaPageUser.GET_PAGES_FOR_USER, JpaPageUser.class);
-        query.setParameter("userId", userId);
+        query.setParameter("userId", userId == null ? null : Long.parseLong(userId));
         query.setParameter("pageType", pageType);
         return CollectionUtils.<PageUser>toBaseTypedList(query.getResultList());
     }
 
     @Override
-    public PageUser getSingleRecord(Long userId, Long pageId){
+    public PageUser getSingleRecord(String userId, String pageId){
         TypedQuery<JpaPageUser> query = manager.createNamedQuery(JpaPageUser.GET_SINGLE_RECORD, JpaPageUser.class);
-        query.setParameter("userId", userId);
-        query.setParameter("pageId", pageId);
+        query.setParameter("userId", userId == null ? null : Long.parseLong(userId));
+        query.setParameter("pageId", pageId == null ? null : Long.parseLong(pageId));
         return query.getSingleResult();
     }
 

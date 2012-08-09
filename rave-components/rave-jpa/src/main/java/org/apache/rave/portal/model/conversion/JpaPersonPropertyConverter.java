@@ -49,7 +49,7 @@ public class JpaPersonPropertyConverter implements ModelConverter<PersonProperty
     }
 
     private void updateProperties(PersonProperty source, JpaPersonProperty converted) {
-        converted.setId(source.getId());
+        converted.setEntityId(source.getId() == null ? null : Long.parseLong(source.getId()));
         converted.setQualifier(source.getQualifier());
         converted.setPrimary(source.getPrimary());
         converted.setType(source.getType());

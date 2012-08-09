@@ -39,7 +39,7 @@ public class DefaultTagService implements TagService {
     }
 
     @Override
-    public Tag getTagById(long entityId) {
+    public Tag getTagById(String entityId) {
         return repository.get(entityId);
     }
 
@@ -56,7 +56,7 @@ public class DefaultTagService implements TagService {
     }
 
     @Override
-    public List<Tag> getAvailableTagsByWidgetId(Long widgetId) {
+    public List<Tag> getAvailableTagsByWidgetId(String widgetId) {
 
         return repository.getAvailableTagsByWidgetId(widgetId);
 

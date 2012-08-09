@@ -28,7 +28,7 @@ import java.util.Collection;
  */
 public class UserForm {
 
-    private Long id;
+    private String id;
     private Collection<AuthorityImpl> authorities;
     private String password;
     private String username;
@@ -47,7 +47,7 @@ public class UserForm {
     private boolean expired;
     private boolean enabled;
 
-    public UserForm(Long userid, String username) {
+    public UserForm(String userid, String username) {
         this();
         this.id = userid;
         this.username = username;
@@ -58,11 +58,11 @@ public class UserForm {
     }
 
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

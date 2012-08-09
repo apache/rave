@@ -54,7 +54,7 @@ public class JpaApplicationDataConverterTest {
     @Test
     public void newApplicationData() {
         ApplicationData applicationData = new ApplicationDataImpl();
-        applicationData.setId(1L);
+        applicationData.setId("1");
         applicationData.setAppUrl("url");
         applicationData.setData(new HashMap<String, String>());
         applicationData.setUserId("userid");
@@ -63,7 +63,7 @@ public class JpaApplicationDataConverterTest {
         assertThat(converted, is(not(sameInstance(applicationData))));
         assertThat(converted, is(instanceOf(JpaApplicationData.class)));
         assertThat(converted.getId(), is(equalTo(applicationData.getId())));
-        assertThat(converted.getEntityId(), is(equalTo(applicationData.getId())));
+        assertThat(converted.getEntityId().toString(), is(equalTo(applicationData.getId())));
         assertThat(converted.getAppUrl(), is(equalTo(applicationData.getAppUrl())));
         assertThat(converted.getData(), is(equalTo(applicationData.getData())));
         assertThat(converted.getUserId(), is(equalTo(applicationData.getUserId())));

@@ -21,18 +21,26 @@ package org.apache.rave.portal.model.impl;
 import org.apache.rave.portal.model.*;
 
 public class PageTemplateWidgetImpl implements PageTemplateWidget {
-    private Long id;
+    private String id;
     private PageTemplateRegion pageTemplateRegion;
     private long renderSequence;
     private Widget widget;
     private boolean locked;
     private boolean hideChrome;
 
-    public Long getId() {
+    public PageTemplateWidgetImpl() {
+
+    }
+
+    public PageTemplateWidgetImpl(String id) {
+        this.id = id;
+    }
+
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

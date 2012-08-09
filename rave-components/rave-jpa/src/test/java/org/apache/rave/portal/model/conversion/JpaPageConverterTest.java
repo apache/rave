@@ -54,13 +54,13 @@ public class JpaPageConverterTest {
     @Test
     public void newPage() {
         Page page = new PageImpl();
-        page.setId(1L);
+        page.setId("1");
         page.setMembers(new ArrayList<PageUser>());
         page.setName("name");
         page.setOwner(new JpaUser());
         page.setPageLayout(new PageLayoutImpl());
         page.setPageType(PageType.USER);
-        page.setParentPage(new PageImpl(1L));
+        page.setParentPage(new PageImpl("1"));
         page.setRegions(new ArrayList<Region>());
         page.setSubPages(new ArrayList<Page>());
 

@@ -53,7 +53,7 @@ public class JpaOAuthTokenInfoConverterTest {
     @Test
     public void newOAuthTokenInfo() {
         OAuthTokenInfo oAuthTokenInfo = new OAuthTokenInfoImpl();
-        oAuthTokenInfo.setId(1L);
+        oAuthTokenInfo.setId("1");
         oAuthTokenInfo.setAccessToken("accesstoken");
         oAuthTokenInfo.setAppUrl("appurl");
         oAuthTokenInfo.setModuleId("moduleid");

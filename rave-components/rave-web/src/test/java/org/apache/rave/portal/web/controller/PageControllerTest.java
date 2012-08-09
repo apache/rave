@@ -59,9 +59,9 @@ public class PageControllerTest {
     private List<Page> allPages;
     private List<PageLayout> allPageLayouts;
 
-    private final Long DEFAULT_PAGE_ID = 99L;
-    private final Long OTHER_PAGE_ID = 22L;
-    private final Long USER_ID = 1L;
+    private final String DEFAULT_PAGE_ID = "99";
+    private final String OTHER_PAGE_ID = "22";
+    private final String USER_ID = "1";
     private final String VALID_PAGE_LAYOUT_CODE = "layout98";
     private UserImpl validUser;
     private PageLayout validPageLayout;

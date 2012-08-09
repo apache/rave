@@ -106,7 +106,7 @@ public class WidgetController {
     }
 
     @RequestMapping(value = "/admin/widgetdetail/{widgetid}", method = RequestMethod.GET)
-    public String viewWidgetDetail(@PathVariable("widgetid") Long widgetid, Model model) {
+    public String viewWidgetDetail(@PathVariable("widgetid") String widgetid, Model model) {
         addNavigationMenusToModel(SELECTED_ITEM, model);
         model.addAttribute(ModelKeys.WIDGET, widgetService.getWidget(widgetid));
         model.addAttribute(ModelKeys.TOKENCHECK, AdminControllerUtil.generateSessionToken());

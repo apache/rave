@@ -65,14 +65,14 @@ public class JpaWidgetRepositoryTest {
 
     @Test
     public void getById_valid() {
-        JpaWidget widget = (JpaWidget)repository.get(1L);
+        JpaWidget widget = (JpaWidget)repository.get("1");
         assertThat(widget, is(notNullValue()));
         assertThat(widget.getEntityId(), is(equalTo(1L)));
     }
 
     @Test
     public void getById_invValid() {
-        Widget widget = repository.get(-1L);
+        Widget widget = repository.get("-1");
         assertThat(widget, is(nullValue()));
     }
 
@@ -216,15 +216,17 @@ public class JpaWidgetRepositoryTest {
 
     @Test
     public void getAllWidgetStatistics() {
-        Map<Long, WidgetStatistics> widgetStatistics = repository.getAllWidgetStatistics(1L);
+        Map<String, WidgetStatistics> widgetStatistics = repository.getAllWidgetStatistics("1");
 
-        WidgetStatistics gadgetOne = widgetStatistics.get(1L);
+        WidgetStatistics gadgetOne = widgetStatistics.get("1");
+        assertNotNull(gadgetOne);
         assertEquals(0, gadgetOne.getTotalLike());
         assertEquals(1, gadgetOne.getTotalDislike());
         assertEquals(0, gadgetOne.getUserRating());
         assertEquals(10, gadgetOne.getTotalUserCount());
 
-        WidgetStatistics gadgetTwo = widgetStatistics.get(2L);
+        WidgetStatistics gadgetTwo = widgetStatistics.get("2");
+        assertNotNull(gadgetTwo);
         assertEquals(1, gadgetTwo.getTotalLike());
         assertEquals(1, gadgetTwo.getTotalDislike());
         assertEquals(10, gadgetTwo.getUserRating());
@@ -233,35 +235,37 @@ public class JpaWidgetRepositoryTest {
 
     @Test
     public void getUserWidgetRatings() {
-        Map<Long, WidgetRating> widgetRatings = repository.getUsersWidgetRatings(1L);
+        Map<String, WidgetRating> widgetRatings = repository.getUsersWidgetRatings("1");
 
-        WidgetRating gadgetOne = widgetRatings.get(1L);
+        WidgetRating gadgetOne = widgetRatings.get("1");
+        assertNotNull(gadgetOne);
         assertEquals(JpaWidgetRating.DISLIKE, gadgetOne.getScore());
-        assertEquals(new Long(1), gadgetOne.getUserId());
-        assertEquals(new Long(1), gadgetOne.getId());
+        assertEquals("1", gadgetOne.getUserId());
+        assertEquals("1", gadgetOne.getId());
 
-        WidgetRating gadgetTwo = widgetRatings.get(2L);
+        WidgetRating gadgetTwo = widgetRatings.get("2");
+        assertNotNull(gadgetTwo);
         assertEquals(JpaWidgetRating.LIKE, gadgetTwo.getScore());
-        assertEquals(new Long(1), gadgetTwo.getUserId());
-        assertEquals(new Long(2), gadgetTwo.getId());
+        assertEquals("1", gadgetTwo.getUserId());
+        assertEquals("2", gadgetTwo.getId());
     }
 
     @Test
     public void getEmptyUserWidgetStatistics() {
         //ensure that a bogus user has only UNSET widget ratings
-        for (Map.Entry<Long, WidgetStatistics> entry : repository.getAllWidgetStatistics(Long.MAX_VALUE).entrySet()) {
+        for (Map.Entry<String, WidgetStatistics> entry : repository.getAllWidgetStatistics("99999").entrySet()) {
             assertEquals(JpaWidgetRating.UNSET.intValue(), entry.getValue().getUserRating());
         }
     }
 
     @Test
     public void getWidgetStatistics() {
-        Widget widget = repository.get(1L);
+        Widget widget = repository.get("1");
         List<WidgetRating> ratings = widget.getRatings();
         assertNotNull(ratings);
         assertEquals(1, ratings.size());
 
-        WidgetStatistics widgetStatistics = repository.getWidgetStatistics(widget.getId(), 1L);
+        WidgetStatistics widgetStatistics = repository.getWidgetStatistics(widget.getId(), "1");
         widgetStatistics.toString();
         assertNotNull(widgetStatistics);
         assertEquals(0, widgetStatistics.getTotalLike());
@@ -272,12 +276,12 @@ public class JpaWidgetRepositoryTest {
 
     @Test
     public void getPositiveWidgetStatistics() {
-        Widget widget = repository.get(2L);
+        Widget widget = repository.get("2");
         List<WidgetRating> ratings = widget.getRatings();
         assertNotNull(ratings);
         assertEquals(2, ratings.size());
 
-        WidgetStatistics widgetStatistics = repository.getWidgetStatistics(widget.getId(), 1L);
+        WidgetStatistics widgetStatistics = repository.getWidgetStatistics(widget.getId(), "1");
         assertNotNull(widgetStatistics);
         assertEquals(1, widgetStatistics.getTotalLike());
         assertEquals(1, widgetStatistics.getTotalDislike());
@@ -287,12 +291,12 @@ public class JpaWidgetRepositoryTest {
 
     @Test
     public void getMissingWidgetStatistics() {
-        Widget widget = repository.get(3L);
+        Widget widget = repository.get("3");
         List<WidgetRating> ratings = widget.getRatings();
         assertNotNull(ratings);
         assertEquals(0, ratings.size());
 
-        WidgetStatistics widgetStatistics = repository.getWidgetStatistics(widget.getId(), 1L);
+        WidgetStatistics widgetStatistics = repository.getWidgetStatistics(widget.getId(), "1");
         assertNotNull(widgetStatistics);
         assertEquals(0, widgetStatistics.getTotalDislike());
         assertEquals(0, widgetStatistics.getTotalLike());
@@ -303,17 +307,17 @@ public class JpaWidgetRepositoryTest {
     @Transactional(readOnly = false)
     @Rollback
     public void addWidgetRating() {
-        Widget widget = repository.get(3L);
+        Widget widget = repository.get("3");
         assertNotNull(widget.getRatings());
         WidgetRating widgetRating = new JpaWidgetRating();
         widgetRating.setScore(10);
-        widgetRating.setUserId(1L);
+        widgetRating.setUserId("1");
         widgetRating.setWidgetId(widget.getId());
         widget.getRatings().add(widgetRating);
 
         repository.save(widget);
 
-        Widget reloadedWidget = repository.get(3L);
+        Widget reloadedWidget = repository.get("3");
         List<WidgetRating> widgetRatings = reloadedWidget.getRatings();
         assertNotNull(widgetRatings);
         assertEquals(1, widgetRatings.size());
@@ -328,17 +332,17 @@ public class JpaWidgetRepositoryTest {
     @Transactional(readOnly = false)
     @Rollback
     public void updateWidgetRating() {
-        Widget widget = repository.get(4L);
+        Widget widget = repository.get("4");
         assertNotNull(widget.getRatings());
         WidgetRating widgetRating = new JpaWidgetRating();
         widgetRating.setScore(10);
-        widgetRating.setUserId(1L);
+        widgetRating.setUserId("1");
         widgetRating.setWidgetId(widget.getId());
         widget.getRatings().add(widgetRating);
 
         repository.save(widget);
 
-        Widget reloadedWidget = repository.get(4L);
+        Widget reloadedWidget = repository.get("4");
         List<WidgetRating> widgetRatings = reloadedWidget.getRatings();
         assertNotNull(widgetRatings);
         assertEquals(1, widgetRatings.size());
@@ -351,7 +355,7 @@ public class JpaWidgetRepositoryTest {
         reloadedWidgetRating.setScore(0);
 
         repository.save(reloadedWidget);
-        reloadedWidget = repository.get(4L);
+        reloadedWidget = repository.get("4");
         widgetRatings = reloadedWidget.getRatings();
         assertNotNull(widgetRatings);
         assertEquals(1, widgetRatings.size());
@@ -364,10 +368,10 @@ public class JpaWidgetRepositoryTest {
 
     @Test
     public void getWidgetTag() {
-        Widget widget = repository.get(3L);
+        Widget widget = repository.get("3");
         assertNotNull(widget);
         assertEquals(widget.getTags().iterator().next().getTag().getKeyword(), "news");
-        widget = repository.get(1L);
+        widget = repository.get("1");
         assertNotNull(widget);
         assertEquals(widget.getTags().iterator().next().getTag().getKeyword(), "wikipedia");
     }
@@ -377,13 +381,13 @@ public class JpaWidgetRepositoryTest {
         String tag = "news";
         List<Widget> widgets = repository.getWidgetsByTag(tag, 0, 10);
         assertTrue(widgets.size() == 1);
-        assertTrue(widgets.iterator().next().getId() == 3);
+        assertTrue(widgets.iterator().next().getId().equals("3"));
         assertTrue(repository.getCountByTag(tag) == 1);
 
         tag = "wikipedia";
         widgets = repository.getWidgetsByTag(tag, 0, 10);
         assertTrue(widgets.size() == 1);
-        assertTrue(widgets.iterator().next().getId() == 1);
+        assertTrue(widgets.iterator().next().getId().equals("1"));
         assertTrue(repository.getCountByTag(tag) == 1);
 
         tag = "aaanews";
@@ -393,7 +397,7 @@ public class JpaWidgetRepositoryTest {
 
         widgets = repository.getWidgetsByTag("NEWS", 0, 10);
         assertTrue(widgets.size() == 1);
-        assertTrue(widgets.iterator().next().getId() == 3);
+        assertTrue(widgets.iterator().next().getId().equals("3"));
         assertTrue(repository.getCountByTag("NEWS") == 1);
 
         tag = null;
@@ -407,11 +411,11 @@ public class JpaWidgetRepositoryTest {
     @Transactional(readOnly = false)
     @Rollback
     public void addWidgetCategory() {
-        final long WIDGET_ID = 1L;
+        final String WIDGET_ID = "1";
         final User user = new JpaUser(1L);
 
         Category category = new JpaCategory();
-        category.setId(1L);
+        category.setId("1");
         category.setText("Sample Category");
         category.setCreatedUser(user);
         category.setCreatedDate(new Date());
@@ -444,7 +448,7 @@ public class JpaWidgetRepositoryTest {
     @Transactional(readOnly = false)
     @Rollback
     public void removeWidgetCategory() {
-        final long WIDGET_ID = 1L;
+        final String WIDGET_ID = "1";
 
         Widget widget = repository.get(WIDGET_ID);
         assertThat(widget.getCategories().size(), is(2));
@@ -454,15 +458,15 @@ public class JpaWidgetRepositoryTest {
 
         Widget reloadedWidget = repository.get(WIDGET_ID);
         assertThat(reloadedWidget.getCategories().size(), is(1));
-        assertThat(reloadedWidget.getCategories().get(0).getId(), is(4L));
+        assertThat(reloadedWidget.getCategories().get(0).getId(), is("4"));
     }
 
     @Test
     @Transactional(readOnly = false)
     @Rollback
     public void unassignWidgetOwner() {
-        final long WIDGET_ID = 2L;
-        final long USER_ID = 1L;
+        final String WIDGET_ID = "2";
+        final String USER_ID = "1";
         final int NUM_WIDGETS_OWNED_BY_USER = 16;
 
         Widget widget = repository.get(WIDGET_ID);
@@ -477,7 +481,7 @@ public class JpaWidgetRepositoryTest {
     @Transactional(readOnly = false)
     @Rollback
     public void delete() {
-        final long WIDGET_ID = 2L;
+        final String WIDGET_ID = "2";
 
         Widget widget = repository.get(WIDGET_ID);
         assertThat(widget, is(notNullValue()));

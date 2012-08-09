@@ -49,7 +49,7 @@ public class JpaWidgetRatingConverter implements ModelConverter<WidgetRating, Jp
     }
 
     private void updateProperties(WidgetRating source, JpaWidgetRating converted) {
-        converted.setId(source.getId());
+        converted.setEntityId(source.getId() == null ? null : Long.parseLong(source.getId()));
         converted.setScore(source.getScore());
         converted.setUserId(source.getUserId());
         converted.setWidgetId(source.getWidgetId());

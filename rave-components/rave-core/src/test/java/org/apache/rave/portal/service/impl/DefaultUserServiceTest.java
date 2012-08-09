@@ -48,7 +48,7 @@ import static org.junit.Assert.*;
 
 public class DefaultUserServiceTest {
 
-    private static final Long USER_ID = 1234L;
+    private static final String USER_ID = "1234";
     private UserService service;
     private UserRepository userRepository;
     private PageRepository pageRepository;
@@ -60,8 +60,8 @@ public class DefaultUserServiceTest {
 
     private static final String USER_NAME = "1234";
     private static final String USER_EMAIL = "test@test.com";
-    private static final Long VALID_WIDGET_ID = 1L;
-    private static final Long INVALID_USER_ID = -9999L;
+    private static final String VALID_WIDGET_ID = "1";
+    private static final String INVALID_USER_ID = "-9999";
 
     @Before
     public void setup() {
@@ -212,8 +212,8 @@ public class DefaultUserServiceTest {
 
     @Test
     public void getLimitedListOfUsers() {
-        User user1 = new UserImpl(123L, "john.doe.sr");
-        User user2 = new UserImpl(456L, "john.doe.jr");
+        User user1 = new UserImpl("123", "john.doe.sr");
+        User user2 = new UserImpl("456", "john.doe.jr");
         List<User> users = new ArrayList<User>();
         users.add(user1);
         users.add(user2);
@@ -233,8 +233,8 @@ public class DefaultUserServiceTest {
     @Test
     public void getUsersByFreeTextSearch() {
         final String searchTerm = "Doe";
-        User user1 = new UserImpl(123L, "john.doe.sr");
-        User user2 = new UserImpl(456L, "john.doe.jr");
+        User user1 = new UserImpl("123", "john.doe.sr");
+        User user2 = new UserImpl("456", "john.doe.jr");
         List<User> users = new ArrayList<User>();
         users.add(user1);
         users.add(user2);
@@ -268,7 +268,7 @@ public class DefaultUserServiceTest {
         final int NUM_RATINGS = 99;
         final int NUM_WIDGETS_OWNED = 4;
         UserImpl user = new UserImpl(USER_ID, USER_NAME);
-        Page page = new PageImpl(1L, user);
+        Page page = new PageImpl("1", user);
         List<Page> pages = new ArrayList<Page>();
         pages.add(page);
 

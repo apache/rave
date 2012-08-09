@@ -50,9 +50,9 @@ public class DefaultRegionPermissionEvaluatorTest {
     private Authentication mockAuthentication;
     private List<GrantedAuthority> grantedAuthoritiesList;
 
-    private final Long VALID_REGION_ID = 1L;
-    private final Long VALID_PAGE_ID = 3L;
-    private final Long VALID_USER_ID = 99L;
+    private final String VALID_REGION_ID = "1";
+    private final String VALID_PAGE_ID = "3";
+    private final String VALID_USER_ID = "99";
     private final String VALID_USERNAME = "john.doe";
     private final String VALID_USERNAME2 = "jane.doe";
 
@@ -70,8 +70,7 @@ public class DefaultRegionPermissionEvaluatorTest {
         page = new PageImpl();
         page.setId(VALID_PAGE_ID);
         page.setOwner(user);
-        region = new RegionImpl();
-        region.setId(VALID_REGION_ID);
+        region = new RegionImpl(VALID_REGION_ID);
         region.setPage(page);
         grantedAuthoritiesList = new ArrayList<GrantedAuthority>();
         grantedAuthoritiesList.add(new SimpleGrantedAuthority("ROLE_USER"));

@@ -53,13 +53,13 @@ public class DefaultPagePermissionEvaluatorTest {
     private UserImpl user, user2;
     private List<GrantedAuthority> grantedAuthoritiesList;
 
-    private final Long VALID_USER_ID = 99L;
+    private final String VALID_USER_ID = "99";
     private final String VALID_USERNAME = "john.doe";
     private final String VALID_USERNAME2 = "jane.doe";
-    private final Long VALID_PAGE_ID = 3L;
-    private final Long VALID_PAGE_ID2 = 77L;
-    private final Long VALID_PAGE_ID3 = 177L;
-    private final Long VALID_PAGE_ID4 = 665L;
+    private final String VALID_PAGE_ID = "3";
+    private final String VALID_PAGE_ID2 = "77";
+    private final String VALID_PAGE_ID3 = "177";
+    private final String VALID_PAGE_ID4 = "665";
 
     @Before
     public void setUp() {

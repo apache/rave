@@ -128,7 +128,7 @@ public class CategoryController {
     }
 
     @RequestMapping(value = "/admin/category/edit", method = RequestMethod.GET)
-    public String editCategory(@RequestParam(required = true) long id, Model model) {
+    public String editCategory(@RequestParam(required = true) String id, Model model) {
         addNavigationMenusToModel(SELECTED_ITEM, model);
 
         model.addAttribute(ModelKeys.TOKENCHECK, AdminControllerUtil.generateSessionToken());

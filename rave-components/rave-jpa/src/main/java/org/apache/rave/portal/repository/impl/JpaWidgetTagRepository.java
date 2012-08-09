@@ -40,13 +40,13 @@ public class JpaWidgetTagRepository implements WidgetTagRepository {
     JpaWidgetTagConverter converter;
 
     @Override
-    public JpaWidgetTag getByWidgetIdAndTag(Long widgetId, String keyword) {
+    public JpaWidgetTag getByWidgetIdAndTag(String widgetId, String keyword) {
         if (keyword != null) {
             keyword = keyword.trim();
         }
         TypedQuery<JpaWidgetTag> query = manager.createNamedQuery(JpaWidgetTag.FIND_BY_WIDGET_AND_KEYWORD, JpaWidgetTag.class);
         query.setParameter("keyword", keyword);
-        query.setParameter("widgetId", widgetId);
+        query.setParameter("widgetId", widgetId == null ? null : Long.parseLong(widgetId));
         return getSingleResult(query.getResultList());
     }
 
@@ -56,7 +56,7 @@ public class JpaWidgetTagRepository implements WidgetTagRepository {
     }
 
     @Override
-    public WidgetTag get(long id) {
+    public WidgetTag get(String id) {
         return manager.find(JpaWidgetTag.class, id);
     }
 

@@ -64,7 +64,7 @@ public class JpaTagRepositoryTest {
 
     @Test
     public void getById_validId() {
-        final Tag tag = repository.get(VALID_ID);
+        final Tag tag = repository.get(VALID_ID.toString());
         assertNotNull(tag);
         assertEquals(VALID_ID, ((JpaTag)tag).getEntityId());
         assertEquals(tag.getKeyword(), "news");
@@ -75,7 +75,6 @@ public class JpaTagRepositoryTest {
         List<Tag> list = repository.getAll();
         assertTrue(list.size() == 3);
         assertEquals(list.iterator().next().getKeyword(), "misc");
-        assertTrue(list.iterator().next().getWidgets().size() == 0);
     }
 
     @Test
@@ -109,12 +108,10 @@ public class JpaTagRepositoryTest {
         Tag tag = new JpaTag();
         String ordnance = "ordnance";
         tag.setKeyword(ordnance);
-        tag.setWidgets(new ArrayList<WidgetTag>());
         repository.save(tag);
         Tag foundTag = repository.getByKeyword(ordnance);
         assertNotNull(foundTag);
         assertEquals(tag.getKeyword(), foundTag.getKeyword());
-        assertEquals(tag.getWidgets().size(), foundTag.getWidgets().size());
     }
 
     @Test(expected = NullPointerException.class)
@@ -165,7 +162,7 @@ public class JpaTagRepositoryTest {
     @Test
     public void getAvailableTagsByWidgetId() {
         final Long WIDGET_ID = 3L;
-        List<Tag> list = repository.getAvailableTagsByWidgetId(WIDGET_ID);
+        List<Tag> list = repository.getAvailableTagsByWidgetId(WIDGET_ID.toString());
         assertTrue(list.size() == 2);
     }
 }

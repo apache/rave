@@ -87,7 +87,7 @@ public class DefaultPagePermissionEvaluator extends AbstractModelPermissionEvalu
         if (targetId instanceof RaveSecurityContext) {
             hasPermission = verifyRaveSecurityContext(authentication, (RaveSecurityContext)targetId);
         } else {
-            hasPermission = hasPermission(authentication, pageRepository.get((Long)targetId), permission, true);
+            hasPermission = hasPermission(authentication, pageRepository.get((String)targetId), permission, true);
         }
         return hasPermission;
     }
@@ -132,7 +132,7 @@ public class DefaultPagePermissionEvaluator extends AbstractModelPermissionEvalu
 
     // returns a trusted Page object, either from the PageRepository, or the
     // cached container list
-    private Page getTrustedPage(long pageId, List<Page> trustedPageContainer) {
+    private Page getTrustedPage(String pageId, List<Page> trustedPageContainer) {
         Page p = null;
         if (trustedPageContainer.isEmpty()) {
             p = pageRepository.get(pageId);
@@ -161,7 +161,7 @@ public class DefaultPagePermissionEvaluator extends AbstractModelPermissionEvalu
         return ((User)authentication.getPrincipal()).getUsername().equals(username);
     }
 
-    private boolean isPageOwnerById(Authentication authentication, Long userId) {
+    private boolean isPageOwnerById(Authentication authentication, String userId) {
         return ((User)authentication.getPrincipal()).getId().equals(userId);
     }
 
@@ -175,7 +175,7 @@ public class DefaultPagePermissionEvaluator extends AbstractModelPermissionEvalu
 
         // perform the permissions check based on the class supplied to the RaveSecurityContext object
         if (User.class == clazz) {
-            return isPageOwnerById(authentication, (Long)raveSecurityContext.getId());
+            return isPageOwnerById(authentication, (String)raveSecurityContext.getId());
         } else {
             throw new IllegalArgumentException("unknown RaveSecurityContext type: " + raveSecurityContext.getType());
         }

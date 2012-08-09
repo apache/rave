@@ -44,7 +44,7 @@ public class JpaWidgetCommentRepository implements WidgetCommentRepository {
     }
 
     @Override
-    public WidgetComment get(long id) {
+    public WidgetComment get(String id) {
         return manager.find(JpaWidgetComment.class, id);
     }
 
@@ -60,9 +60,9 @@ public class JpaWidgetCommentRepository implements WidgetCommentRepository {
     }
 
     @Override
-    public int deleteAll(Long userId) {
+    public int deleteAll(String userId) {
         TypedQuery<JpaWidgetComment> query = manager.createNamedQuery(JpaWidgetComment.DELETE_ALL_BY_USER, JpaWidgetComment.class);
-        query.setParameter("userId", userId);
+        query.setParameter("userId", userId == null ? null : Long.parseLong(userId));
         return query.executeUpdate();
     }
 }

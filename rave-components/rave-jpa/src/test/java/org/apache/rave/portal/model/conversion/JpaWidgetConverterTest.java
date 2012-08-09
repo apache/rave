@@ -60,8 +60,7 @@ public class JpaWidgetConverterTest {
 
     @Test
     public void convertValid() {
-        WidgetImpl template = new WidgetImpl();
-        template.setId(42L);
+        WidgetImpl template = new WidgetImpl("42");
         template.setUrl("TEST_A");
         template.setType("TEST_B");
         template.setTitle("TEST_C");
@@ -74,7 +73,7 @@ public class JpaWidgetConverterTest {
         template.setDescription("TEST_J");
         template.setWidgetStatus(WidgetStatus.PUBLISHED);
         template.setComments(new ArrayList<WidgetComment>());
-        template.setOwner(new UserImpl(24L));
+        template.setOwner(new UserImpl("24"));
         template.setDisableRendering(true);
         template.setRatings(new ArrayList<WidgetRating>());
         template.setTags(new ArrayList<WidgetTag>());

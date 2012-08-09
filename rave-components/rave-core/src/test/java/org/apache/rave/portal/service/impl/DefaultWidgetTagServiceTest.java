@@ -39,11 +39,11 @@ public class DefaultWidgetTagServiceTest {
 
     @Test
     public void getWidgetTag() {
-        WidgetTagImpl tag = new WidgetTagImpl();
-        expect(widgetTagRepository.get(1L)).andReturn(tag);
+        WidgetTagImpl tag = new WidgetTagImpl("1");
+        expect(widgetTagRepository.get("1")).andReturn(tag);
         replay(widgetTagRepository);
 
-        assertEquals(tag, widgetTagService.getWidgetTag(1L));
+        assertEquals(tag, widgetTagService.getWidgetTag("1"));
         verify(widgetTagRepository);
     }
 
@@ -51,7 +51,7 @@ public class DefaultWidgetTagServiceTest {
     public void saveWidgetTag() {
         try {
 
-            WidgetTagImpl wtag = new WidgetTagImpl();
+            WidgetTagImpl wtag = new WidgetTagImpl("1");
             TagImpl tag = new TagImpl();
             wtag.setTag(tag);
             expect(widgetTagRepository.save(wtag)).andReturn(wtag);

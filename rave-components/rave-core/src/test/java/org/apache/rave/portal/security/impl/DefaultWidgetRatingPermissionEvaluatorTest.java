@@ -48,22 +48,21 @@ public class DefaultWidgetRatingPermissionEvaluatorTest {
     private WidgetRating widgetRating;
     private UserImpl user, user2;
 
-    private final Long VALID_USER_ID = 99L;
-    private final Long VALID_USER_ID2 = 100L;
+    private final String VALID_USER_ID = "99";
+    private final String VALID_USER_ID2 = "100";
     private final String VALID_USERNAME = "john.doe";
     private final String VALID_USERNAME2 = "jane.doe";
-    private final Long VALID_WIDGET_ID = 1L;
-    private final Long  VALID_WIDGET_RATING_ID = 1L;
+    private final String VALID_WIDGET_ID = "1";
+    private final String  VALID_WIDGET_RATING_ID = "1";
 
     @Before
     public void setUp() {
         mockWidgetRatingRepository = createMock(WidgetRatingRepository.class);
         defaultWidgetRatingPermissionEvaluator = new DefaultWidgetRatingPermissionEvaluator(mockWidgetRatingRepository);
 
-        widgetRating = new WidgetRatingImpl();
+        widgetRating = new WidgetRatingImpl(VALID_WIDGET_ID);
         widgetRating.setUserId(VALID_USER_ID);
         widgetRating.setWidgetId(VALID_WIDGET_ID);
-        widgetRating.setId(VALID_WIDGET_ID);
 
         user = new UserImpl();
         user.setUsername(VALID_USERNAME);

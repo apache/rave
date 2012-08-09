@@ -109,7 +109,7 @@ public class DecoratingOpenSocialPersonRepository implements OpenSocialPersonRep
     }
 
     @Override
-    public Person get(long id) {
+    public Person get(String id) {
         return underlying.get(id);
     }
 

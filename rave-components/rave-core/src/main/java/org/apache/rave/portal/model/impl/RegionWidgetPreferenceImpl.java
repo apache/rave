@@ -22,23 +22,23 @@ import org.apache.rave.portal.model.RegionWidgetPreference;
 
 public class RegionWidgetPreferenceImpl implements RegionWidgetPreference {
 
-    private Long regionWidgetId;
+    private String regionWidgetId;
     private String name;
     private String value;
 
     public RegionWidgetPreferenceImpl() { }
 
-    public RegionWidgetPreferenceImpl(Long regionWidgetId, String name, String value) {
+    public RegionWidgetPreferenceImpl(String regionWidgetId, String name, String value) {
         this.regionWidgetId = regionWidgetId;
         this.name = name;
         this.value = value;
     }
 
-    public Long getRegionWidgetId() {
+    public String getRegionWidgetId() {
         return regionWidgetId;
     }
 
-    public void setRegionWidgetId(Long regionWidgetId) {
+    public void setRegionWidgetId(String regionWidgetId) {
         this.regionWidgetId = regionWidgetId;
     }
 

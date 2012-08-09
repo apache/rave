@@ -46,10 +46,10 @@ public class DefaultWidgetRatingServiceTest {
 
     @Test
     public void testGetByWidgetIdAndUserId() {
-        WidgetRating widgetRating = new WidgetRatingImpl(1L, 2L, 3L, 5);
-        expect(repository.getByWidgetIdAndUserId(2L, 3L)).andReturn(widgetRating);
+        WidgetRating widgetRating = new WidgetRatingImpl("1", "2", "3", 5);
+        expect(repository.getByWidgetIdAndUserId("2", "3")).andReturn(widgetRating);
         replay(repository);
-        final WidgetRating rating = service.getByWidgetIdAndUserId(2L, 3L);
+        final WidgetRating rating = service.getByWidgetIdAndUserId("2", "3");
         assertEquals("Score is 5", Integer.valueOf(5), rating.getScore());
         verify(repository);
     }
@@ -70,11 +70,11 @@ public class DefaultWidgetRatingServiceTest {
     @Test
     public void saveWidgetRating_new() {
         WidgetRating newRating = new WidgetRatingImpl();
-        newRating.setWidgetId(2L);
-        newRating.setUserId(1L);
+        newRating.setWidgetId("2");
+        newRating.setUserId("1");
         newRating.setScore(10);
 
-        expect(repository.getByWidgetIdAndUserId(2L, 1L)).andReturn(null);
+        expect(repository.getByWidgetIdAndUserId("2", "1")).andReturn(null);
         expect(repository.save(newRating)).andReturn(newRating);
         replay(repository);
 
@@ -84,13 +84,13 @@ public class DefaultWidgetRatingServiceTest {
 
     @Test
     public void saveWidgetRating_existing() {
-        WidgetRating existingRating = new WidgetRatingImpl(1L, 1L, 1L, 5);
+        WidgetRating existingRating = new WidgetRatingImpl("1", "1", "1", 5);
         WidgetRating newRating = new WidgetRatingImpl();
-        newRating.setWidgetId(1L);
-        newRating.setUserId(1L);
+        newRating.setWidgetId("1");
+        newRating.setUserId("1");
         newRating.setScore(10);
 
-        expect(repository.getByWidgetIdAndUserId(1L, 1L)).andReturn(existingRating);
+        expect(repository.getByWidgetIdAndUserId("1", "1")).andReturn(existingRating);
         expect(repository.save(existingRating)).andReturn(existingRating);
         replay(repository);
 
@@ -102,29 +102,29 @@ public class DefaultWidgetRatingServiceTest {
 
     @Test
     public void removeWidgetRating_existingRating() {
-        final WidgetRating widgetRating = new WidgetRatingImpl(1L, 1L, 1L, 5);
+        final WidgetRating widgetRating = new WidgetRatingImpl("1", "1", "1", 5);
 
-        expect(repository.getByWidgetIdAndUserId(1L, 1L)).andReturn(widgetRating);
+        expect(repository.getByWidgetIdAndUserId("1", "1")).andReturn(widgetRating);
         repository.delete(widgetRating);
         expectLastCall();
         replay(repository);
 
-        service.removeWidgetRating(1L, 1L);
+        service.removeWidgetRating("1", "1");
         verify(repository);
     }
 
     @Test
     public void removeWidgetRating_notExisting() {
-        expect(repository.getByWidgetIdAndUserId(1L, 2L)).andReturn(null);
+        expect(repository.getByWidgetIdAndUserId("1", "2")).andReturn(null);
         expectLastCall();
         replay(repository);
-        service.removeWidgetRating(1L, 2L);
+        service.removeWidgetRating("1", "2");
         verify(repository);
     }
     
     @Test
     public void deleteAll() {
-        final Long USER_ID = 33L;
+        final String USER_ID = "33";
         final int EXPECTED_COUNT = 43;
         
         expect(repository.deleteAll(USER_ID)).andReturn(EXPECTED_COUNT);

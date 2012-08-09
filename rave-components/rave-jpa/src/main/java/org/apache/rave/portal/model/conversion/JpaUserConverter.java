@@ -57,7 +57,7 @@ public class JpaUserConverter implements ModelConverter<User, JpaUser> {
     }
 
     private void updateProperties(User source, JpaUser converted) {
-        converted.setEntityId(source.getId());
+        converted.setEntityId(source.getId() == null ? null : Long.parseLong(source.getId()));
         converted.setUsername(source.getUsername());
         converted.setEmail(source.getEmail());
         converted.setDisplayName(source.getDisplayName());

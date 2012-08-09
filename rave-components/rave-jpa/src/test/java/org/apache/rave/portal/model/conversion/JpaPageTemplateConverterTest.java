@@ -60,14 +60,14 @@ public class JpaPageTemplateConverterTest {
 
     @Test
     public void convertValid() {
-        PageTemplate template = new PageTemplateImpl();
+        PageTemplate template = new PageTemplateImpl("1");
         template.setName("name");
         template.setSubPageTemplates(new ArrayList<PageTemplate>());
         template.setDefaultTemplate(true);
         template.setRenderSequence(1);
         template.setPageTemplateRegions(new ArrayList<PageTemplateRegion>());
         template.setPageLayout(new PageLayoutImpl());
-        template.setParentPageTemplate(new PageTemplateImpl());
+        template.setParentPageTemplate(new PageTemplateImpl("1"));
         template.setDescription("Description");
         template.setPageType(PageType.USER);
 
@@ -75,7 +75,7 @@ public class JpaPageTemplateConverterTest {
 
         assertThat(jpaTemplate, is(not(sameInstance(template))));
         assertThat(jpaTemplate, is(instanceOf(JpaPageTemplate.class)));
-        assertThat(jpaTemplate.getId(), is(equalTo(template.getId())));
+        assertThat(jpaTemplate.getId().toString(), is(equalTo(template.getId())));
         assertThat(jpaTemplate.getPageType(), is(equalTo(template.getPageType())));
         assertThat(jpaTemplate.getName(), is(equalTo(template.getName())));
         assertThat(jpaTemplate.getDescription(), is(equalTo(template.getDescription())));

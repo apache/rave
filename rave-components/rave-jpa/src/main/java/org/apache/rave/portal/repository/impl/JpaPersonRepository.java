@@ -102,7 +102,7 @@ public class JpaPersonRepository implements PersonRepository {
         Widget widget = getSingleResult(resultList);
 
         query = manager.createNamedQuery(JpaUser.USER_GET_ALL_FOR_ADDED_WIDGET, JpaUser.class);
-        query.setParameter(JpaUser.PARAM_WIDGET_ID, widget.getId());
+        query.setParameter(JpaUser.PARAM_WIDGET_ID, Long.parseLong(widget.getId()));
         List<User> widgetUsers = query.getResultList();
 
         List<Person> userFriends = findFriends(username);
@@ -155,7 +155,7 @@ public class JpaPersonRepository implements PersonRepository {
     }
 
     @Override
-    public Person get(long id) {
+    public Person get(String id) {
         return manager.find(JpaPerson.class, id);
     }
 

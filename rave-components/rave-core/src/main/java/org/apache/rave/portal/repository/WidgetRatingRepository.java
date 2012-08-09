@@ -31,7 +31,7 @@ public interface WidgetRatingRepository extends Repository<WidgetRating> {
      * @param userId   unique identifier of a User
      * @return {@link org.apache.rave.portal.model.WidgetRating} if it exists, otherwise {@literal null}
      */
-    WidgetRating getByWidgetIdAndUserId(Long widgetId, Long userId);
+    WidgetRating getByWidgetIdAndUserId(String widgetId, String userId);
 
     /**
      * Delete all Widget Ratings for a userId
@@ -39,5 +39,5 @@ public interface WidgetRatingRepository extends Repository<WidgetRating> {
      * @param userId
      * @return count of ratings deleted
      */
-    int deleteAll(Long userId);
+    int deleteAll(String userId);
 }

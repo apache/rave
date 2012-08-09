@@ -118,7 +118,7 @@ public interface User extends Person, UserDetails {
      */
     Person toPerson();
 
-    Long getId();
+    String getId();
 
     String getDefaultPageLayoutCode();
 

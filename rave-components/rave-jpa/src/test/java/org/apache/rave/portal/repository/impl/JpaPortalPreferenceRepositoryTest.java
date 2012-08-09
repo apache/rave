@@ -61,7 +61,7 @@ public class JpaPortalPreferenceRepositoryTest {
 
     @Test
     public void get() {
-        JpaPortalPreference p = (JpaPortalPreference) repository.get(VALID_ID);
+        JpaPortalPreference p = (JpaPortalPreference) repository.get(VALID_ID.toString());
         assertThat(p.getEntityId(), is(VALID_ID));
         assertThat(p.getKey(), is("color"));
         assertThat(p.getValues().size(), is(3));

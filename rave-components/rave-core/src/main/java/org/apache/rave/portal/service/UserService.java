@@ -39,7 +39,7 @@ public interface UserService extends UserDetailsService {
      *
      * @param userId the unique id of the use
      */
-    void setAuthenticatedUser(long userId);
+    void setAuthenticatedUser(String userId);
 
     /**
      * Un-sets the currently authenticated user
@@ -67,7 +67,7 @@ public interface UserService extends UserDetailsService {
      * @param id the user ID
      * @return {@link org.apache.rave.portal.model.User} if one exists, otherwise {@literal null}
      */
-    User getUserById(Long id);
+    User getUserById(String id);
 
     /**
      * Return a user object by the user email.
@@ -108,7 +108,7 @@ public interface UserService extends UserDetailsService {
      *
      * @param userId {@link Long} id if the user
      */
-    void deleteUser(Long userId);
+    void deleteUser(String userId);
 
     /**
      * List of persons whom have added the supplied widget to one or more pages
@@ -116,7 +116,7 @@ public interface UserService extends UserDetailsService {
      * @param widgetId the entityId of the Widget to search
      * @return List of Person objects in alphabetical order sorted by familyname, givenname
      */
-    List<Person> getAllByAddedWidget(long widgetId);
+    List<Person> getAllByAddedWidget(String widgetId);
 
     /**
      * Sends an email which contains link for changing user password

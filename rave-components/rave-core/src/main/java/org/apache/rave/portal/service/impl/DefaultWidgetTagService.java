@@ -35,7 +35,7 @@ public class DefaultWidgetTagService implements WidgetTagService {
     }
 
     @Override
-    public WidgetTag getWidgetTag(Long id) {
+    public WidgetTag getWidgetTag(String id) {
         return widgetTagRepository.get(id);
     }
 
@@ -47,7 +47,7 @@ public class DefaultWidgetTagService implements WidgetTagService {
     }
 
     @Override
-    public WidgetTag getWidgetTagByWidgetIdAndKeyword(Long widgetId, String keyword) {
+    public WidgetTag getWidgetTagByWidgetIdAndKeyword(String widgetId, String keyword) {
         return widgetTagRepository.getByWidgetIdAndTag(widgetId, keyword);
     }
 

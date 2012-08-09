@@ -26,7 +26,7 @@ import java.util.List;
 @XmlTransient
 public interface PageTemplateRegion {
 
-    Long getId();
+    String getId();
 
     long getRenderSequence();
 

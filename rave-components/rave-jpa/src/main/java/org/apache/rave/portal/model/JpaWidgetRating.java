@@ -113,23 +113,23 @@ public class JpaWidgetRating implements BasicEntity, Serializable, WidgetRating 
     }
     
     @Override
-    public Long getWidgetId() {
-        return widgetId;
+    public String getWidgetId() {
+        return widgetId.toString();
     }
 
     @Override
-    public void setWidgetId(Long widgetId) {
-        this.widgetId = widgetId;
+    public void setWidgetId(String widgetId) {
+        this.widgetId = Long.parseLong(widgetId);
     }
     
     @Override
-    public Long getUserId() {
-        return userId;
+    public String getUserId() {
+        return userId.toString();
     }
 
     @Override
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setUserId(String userId) {
+        this.userId = Long.parseLong(userId);
     }
     
     @Override
@@ -143,13 +143,8 @@ public class JpaWidgetRating implements BasicEntity, Serializable, WidgetRating 
     }
 
     @Override
-    public Long getId() {
-        return this.getEntityId();
-    }
-
-    @Override
-    public void setId(Long id) {
-        this.setEntityId(id);
+    public String getId() {
+        return this.getEntityId() == null ? null : this.getEntityId().toString();
     }
 
     @Override

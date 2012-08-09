@@ -102,13 +102,13 @@ public class JpaCategory implements BasicEntity, Serializable, Category {
     }
 
     @Override
-    public Long getId() {
-        return getEntityId();
+    public String getId() {
+        return getEntityId().toString();
     }
 
     @Override
-    public void setId(Long id) {
-        setEntityId(id);
+    public void setId(String id) {
+        setEntityId(Long.parseLong(id));
     }
 
     @Override

@@ -52,7 +52,7 @@ public class JpaCategoryRepository implements CategoryRepository {
     }
 
     @Override
-    public Category get(long id) {
+    public Category get(String id) {
         return manager.find(JpaCategory.class, id);
     }
 
@@ -74,18 +74,18 @@ public class JpaCategoryRepository implements CategoryRepository {
     }
     
     @Override
-    public int removeFromCreatedOrModifiedFields(long userId) {
+    public int removeFromCreatedOrModifiedFields(String userId) {
        List<Category> categories = getAll();
        int numRecordsChanged = 0;
        for (Category category : categories) {
            boolean changed = false;
            User createdUser = category.getCreatedUser();
            User lastModifiedUser = category.getLastModifiedUser();
-           if (createdUser != null && userId == createdUser.getId()) {
+           if (createdUser != null && userId.equals(createdUser.getId())) {
                category.setCreatedUser(null);
                changed = true;
                }
-           if (lastModifiedUser != null && userId == lastModifiedUser.getId()) {
+           if (lastModifiedUser != null && userId.equals(lastModifiedUser.getId())) {
                category.setLastModifiedUser(null);
                changed = true;
                }

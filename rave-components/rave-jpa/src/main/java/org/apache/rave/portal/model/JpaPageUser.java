@@ -88,13 +88,8 @@ public class JpaPageUser implements BasicEntity, Serializable, PageUser {
     }
 
     @Override
-    public Long getId() {
-        return getEntityId();
-    }
-
-    @Override
-    public void setId(Long id) {
-        setEntityId(id);
+    public String getId() {
+        return this.getEntityId() == null ? null : this.getEntityId().toString();
     }
 
     /**

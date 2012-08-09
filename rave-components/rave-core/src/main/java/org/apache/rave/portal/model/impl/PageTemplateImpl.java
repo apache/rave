@@ -23,7 +23,7 @@ import org.apache.rave.portal.model.*;
 import java.util.List;
 
 public class PageTemplateImpl implements PageTemplate {
-    private Long id;
+    private String id;
     private String name;
     private String description;
     private PageType pageType;
@@ -34,11 +34,19 @@ public class PageTemplateImpl implements PageTemplate {
     private long renderSequence;
     private boolean defaultTemplate;
 
-    public Long getId() {
+    public PageTemplateImpl() {
+
+    }
+
+    public PageTemplateImpl(String id) {
+        this.id = id;
+    }
+
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

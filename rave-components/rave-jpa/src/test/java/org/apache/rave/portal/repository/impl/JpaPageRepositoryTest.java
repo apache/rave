@@ -45,13 +45,13 @@ import static org.junit.Assert.*;
 @ContextConfiguration(locations = {"classpath:test-dataContext.xml", "classpath:test-applicationContext.xml"})
 public class JpaPageRepositoryTest {
 
-    private static final Long USER_ID = 1L;
-    private static final Long CREATED_USER_ID = 6L;
-    private static final Long INVALID_USER = -1L;
+    private static final String USER_ID = "1";
+    private static final String CREATED_USER_ID = "6";
+    private static final String INVALID_USER = "-1";
     private static final String WIDGET_URL = "http://www.widget-dico.com/wikipedia/google/wikipedia.xml";
-    private static final Long USER_PAGE_ID = 1L;
-    private static final Long PERSON_PROFILE_PAGE_ID = 3L;
-    private static final Long SUB_PAGE_ID = 4L;
+    private static final String USER_PAGE_ID = "1";
+    private static final String PERSON_PROFILE_PAGE_ID = "3";
+    private static final String SUB_PAGE_ID = "4";
 
     private static final Long VALID_PARENT_PAGE_ID = 3L;
     private static final Long INVALID_PARENT_PAGE_ID = -1L;
@@ -119,7 +119,7 @@ public class JpaPageRepositoryTest {
         assertThat(pages, is(notNullValue()));
         assertThat(pages.size(), is(2));
         assertThat(pages.get(0).getRegions().size(), is(1));
-        assertThat(pages.get(0).getParentPage().getId(), is(3L));
+        assertThat(pages.get(0).getParentPage().getId(), is("3"));
 
         List<PageUser> pageUserPages = repository.getPagesForUser(USER_ID, PageType.SUB_PAGE);
         // test that the query returns the pages in proper render sequence order
@@ -191,7 +191,7 @@ public class JpaPageRepositoryTest {
 
     @Test
     public void getById_invalid() {
-        Page p = repository.get(-1L);
+        Page p = repository.get("-1");
         assertThat(p, is(nullValue()));
     }
 
@@ -214,7 +214,7 @@ public class JpaPageRepositoryTest {
         Page p = repository.get(PERSON_PROFILE_PAGE_ID);
         assertThat(p, is(notNullValue()));
         // grab all the sub page ids
-        List<Long> subPageIds = new ArrayList<Long>();
+        List<String> subPageIds = new ArrayList<String>();
         assertThat(p.getSubPages().isEmpty(), is(false));
         for (Page subPage : p.getSubPages()) {
             subPageIds.add(subPage.getId());
@@ -224,7 +224,7 @@ public class JpaPageRepositoryTest {
         p = repository.get(PERSON_PROFILE_PAGE_ID);
         // verify page is deleted along with all sub pages
         assertThat(p, is(nullValue()));
-        for (Long i : subPageIds){
+        for (String i : subPageIds){
             assertThat(repository.get(i), is(nullValue()));
         }
     }

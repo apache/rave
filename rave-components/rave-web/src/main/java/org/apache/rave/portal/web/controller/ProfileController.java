@@ -60,7 +60,7 @@ public class ProfileController {
 	 * @return the view name of the user profile page
 	 */
 	@RequestMapping(value = {"/{username:.*}"}, method = RequestMethod.GET)
-	public String viewProfile(@PathVariable String username, ModelMap model, @RequestParam(required = false) Long referringPageId) {
+	public String viewProfile(@PathVariable String username, ModelMap model, @RequestParam(required = false) String referringPageId) {
 		logger.debug("Viewing person profile for: " + username);
 		User user = userService.getUserByUsername(username);
         Page personProfilePage = pageService.getPersonProfilePage(user.getId());
@@ -81,7 +81,7 @@ public class ProfileController {
 	 */
     @RequestMapping(method = RequestMethod.POST)
     public String updateProfile(ModelMap model,
-                                @RequestParam(required = false) Long referringPageId,
+                                @RequestParam(required = false) String referringPageId,
                                 @ModelAttribute("updatedUser") UserForm updatedUser) {
         logger.info("Updating " + updatedUser.getUsername() + " profile information");
 
@@ -107,14 +107,13 @@ public class ProfileController {
 	/*
 	 * Function to add attributes to model map
 	 */
-	private void addAttributesToModel(ModelMap model, User user, Long referringPageId) {
+	private void addAttributesToModel(ModelMap model, User user, String referringPageId) {
     	model.addAttribute(ModelKeys.USER_PROFILE, user);
     	model.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
     }
 
-    public static void addNavItemsToModel(String view, ModelMap model, Long referringPageId, User user) {
-        long refPageId = referringPageId != null ? referringPageId : 0;
-        final NavigationMenu topMenu = ControllerUtils.getTopMenu(view, refPageId, user, false);
+    public static void addNavItemsToModel(String view, ModelMap model, String referringPageId, User user) {
+        final NavigationMenu topMenu = ControllerUtils.getTopMenu(view, referringPageId, user, false);
         model.addAttribute(topMenu.getName(), topMenu);
     }
 }

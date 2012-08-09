@@ -146,7 +146,7 @@ public class RegionWidgetTagTest {
         replay(pageContext);
 
         RegionWidget regionWidget = new RegionWidgetImpl();
-        Region region = new RegionImpl(25L);
+        Region region = new RegionImpl("25");
         WidgetImpl widget = new WidgetImpl();
         regionWidget.setWidget(widget);
         regionWidget.setRegion(region);
@@ -166,16 +166,14 @@ public class RegionWidgetTagTest {
     public void doStartTag_disabledWidget() throws IOException, JspException {
         final String DISABLED_WIDGET_MESSAGE = "THIS IS DISABLED";
 
-        WidgetImpl widget = new WidgetImpl();
-        widget.setId(8L);
+        WidgetImpl widget = new WidgetImpl("8");
         widget.setType(WIDGET_TYPE);
         widget.setDisableRendering(true);
         widget.setDisableRenderingMessage(DISABLED_WIDGET_MESSAGE);
 
-        RegionWidget regionWidget = new RegionWidgetImpl();
-        regionWidget.setId(99L);
+        RegionWidget regionWidget = new RegionWidgetImpl("99");
         regionWidget.setWidget(widget);
-        regionWidget.setRegion(new RegionImpl(2L));
+        regionWidget.setRegion(new RegionImpl("2"));
 
         Set<String> strings = new HashSet<String>();
         strings.add(WIDGET_TYPE);

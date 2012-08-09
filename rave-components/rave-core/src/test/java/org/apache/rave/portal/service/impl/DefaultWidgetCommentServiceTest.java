@@ -41,19 +41,17 @@ public class DefaultWidgetCommentServiceTest {
 
     @Test
     public void getWidgetComment() {
-        WidgetComment comment = new WidgetCommentImpl();
-        comment.setId(1L);
-        expect(widgetCommentRepository.get(1L)).andReturn(comment);
+        WidgetComment comment = new WidgetCommentImpl("1");
+        expect(widgetCommentRepository.get("1")).andReturn(comment);
         replay(widgetCommentRepository);
 
-        assertEquals(comment, widgetCommentService.getWidgetComment(1L));
+        assertEquals(comment, widgetCommentService.getWidgetComment("1"));
         verify(widgetCommentRepository);
     }
 
     @Test
     public void saveWidgetComment() {
-        WidgetComment comment = new WidgetCommentImpl();
-        comment.setId(1L);
+        WidgetComment comment = new WidgetCommentImpl("1");
         expect(widgetCommentRepository.save(comment)).andReturn(comment);
         replay(widgetCommentRepository);
 
@@ -63,19 +61,18 @@ public class DefaultWidgetCommentServiceTest {
 
     @Test
     public void deleteWidgetComment() {
-        WidgetComment comment = new WidgetCommentImpl();
-        comment.setId(1L);
-        expect(widgetCommentRepository.get(1L)).andReturn(comment);
+        WidgetComment comment = new WidgetCommentImpl("1");
+        expect(widgetCommentRepository.get("1")).andReturn(comment);
         widgetCommentRepository.delete(comment);
         replay(widgetCommentRepository);
 
-        widgetCommentService.removeWidgetComment(1L);
+        widgetCommentService.removeWidgetComment("1");
         verify(widgetCommentRepository);
     }
 
     @Test
     public void deleteAll() {
-        final Long USER_ID = 33L;
+        final String USER_ID = "33";
         final int EXPECTED_COUNT = 43;
 
         expect(widgetCommentRepository.deleteAll(USER_ID)).andReturn(EXPECTED_COUNT);

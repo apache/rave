@@ -137,7 +137,7 @@ public class DefaultUserService implements UserService {
     }
 
     @Override
-    public void setAuthenticatedUser(long userId) {
+    public void setAuthenticatedUser(String userId) {
         final User user = userRepository.get(userId);
         if (user == null) {
             throw new UsernameNotFoundException("User with id '" + userId + "' was not found!");
@@ -191,7 +191,7 @@ public class DefaultUserService implements UserService {
     }
 
     @Override
-    public User getUserById(Long id) {
+    public User getUserById(String id) {
         return userRepository.get(id);
     }
 
@@ -234,7 +234,7 @@ public class DefaultUserService implements UserService {
     @Override
     @Transactional
     // TODO RAVE-300: add security check that is is called by admin or the user itself
-    public void deleteUser(Long userId) {
+    public void deleteUser(String userId) {
         log.info("about to delete userId: " + userId);
         User user = userRepository.get(userId);
         if (user == null) {
@@ -265,7 +265,7 @@ public class DefaultUserService implements UserService {
     }
 
     @Override
-    public List<Person> getAllByAddedWidget(long widgetId) {
+    public List<Person> getAllByAddedWidget(String widgetId) {
         List<Person> persons = new ArrayList<Person>();
         List<User> users = userRepository.getAllByAddedWidget(widgetId);
         for (User u : users) {

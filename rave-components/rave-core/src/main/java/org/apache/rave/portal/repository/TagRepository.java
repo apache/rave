@@ -50,5 +50,5 @@ public interface TagRepository extends Repository<Tag> {
      * @return a List of all tag not link to this widget{@link org.apache.rave.portal.model.Tag}'s.
      */
 
-    List<Tag> getAvailableTagsByWidgetId(Long widgetId);
+    List<Tag> getAvailableTagsByWidgetId(String widgetId);
 }

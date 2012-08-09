@@ -21,9 +21,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 public interface WidgetTagService {
 
 
-    WidgetTag getWidgetTag(Long id);
+    WidgetTag getWidgetTag(String id);
 
-    WidgetTag getWidgetTagByWidgetIdAndKeyword(Long widgetId, String keyword);
+    WidgetTag getWidgetTagByWidgetIdAndKeyword(String widgetId, String keyword);
 
     @PreAuthorize("hasPermission(#widgetTag, 'create_or_update')")
     void saveWidgetTag(WidgetTag widgetTag);

@@ -60,7 +60,7 @@ public class JpaRegionWidgetPreferenceConverterTest {
     public void convertValid() {
         RegionWidgetPreference template = new RegionWidgetPreferenceImpl();
         template.setName("TEST_A");
-        template.setRegionWidgetId(42L);
+        template.setRegionWidgetId("42");
         template.setValue("TEST_B");
 
         JpaRegionWidgetPreference jpaTemplate = converter.convert(template);

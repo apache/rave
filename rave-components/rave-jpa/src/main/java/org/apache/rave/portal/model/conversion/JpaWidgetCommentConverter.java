@@ -48,7 +48,7 @@ public class JpaWidgetCommentConverter implements ModelConverter<WidgetComment, 
     private JpaWidgetComment createEntity(WidgetComment source) {
         JpaWidgetComment converted = null;
         if (source != null) {
-            converted = manager.find(JpaWidgetComment.class, source.getId());
+            converted = manager.find(JpaWidgetComment.class, source.getId() == null ? null : Long.parseLong(source.getId()));
 
             if (converted == null) {
                 converted = new JpaWidgetComment();
@@ -59,8 +59,7 @@ public class JpaWidgetCommentConverter implements ModelConverter<WidgetComment, 
     }
 
     private void updateProperties(WidgetComment source, JpaWidgetComment converted) {
-        converted.setEntityId(source.getId());
-        converted.setId(source.getId());
+        converted.setEntityId(source.getId() == null ? null : Long.parseLong(source.getId()));
         converted.setCreatedDate(source.getCreatedDate());
         converted.setLastModifiedDate(source.getLastModifiedDate());
         converted.setText(source.getText());

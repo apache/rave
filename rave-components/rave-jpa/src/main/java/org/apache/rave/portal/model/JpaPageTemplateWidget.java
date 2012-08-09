@@ -73,8 +73,8 @@ public class JpaPageTemplateWidget implements BasicEntity, Serializable, PageTem
     }
 
     @Override
-    public Long getId() {
-        return this.getEntityId();
+    public String getId() {
+        return this.getEntityId() == null ? null : this.getEntityId().toString();
     }
 
     @Override

@@ -22,42 +22,46 @@ import org.apache.rave.portal.model.WidgetRating;
 
 public class WidgetRatingImpl implements WidgetRating {
 
-    private Long id;
-    private Long widgetId;
-    private Long userId;
+    private String id;
+    private String widgetId;
+    private String userId;
     private Integer score;
 
     public WidgetRatingImpl() {
     }
 
-    public WidgetRatingImpl(long id, long widgetId, long userId, int score) {
+    public WidgetRatingImpl(String id) {
+        this.id = id;
+    }
+
+    public WidgetRatingImpl(String id, String widgetId, String userId, int score) {
         this.id = id;
         this.widgetId = widgetId;
         this.userId = userId;
         this.score = score;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public Long getWidgetId() {
+    public String getWidgetId() {
         return widgetId;
     }
 
-    public void setWidgetId(Long widgetId) {
+    public void setWidgetId(String widgetId) {
         this.widgetId = widgetId;
     }
 
-    public Long getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 

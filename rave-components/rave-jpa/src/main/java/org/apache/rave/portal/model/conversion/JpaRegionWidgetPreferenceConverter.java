@@ -49,7 +49,7 @@ public class JpaRegionWidgetPreferenceConverter implements ModelConverter<Region
         if (source != null) {
             TypedQuery<JpaRegionWidgetPreference> query = manager.createNamedQuery(JpaRegionWidgetPreference.FIND_BY_REGION_WIDGET_AND_NAME, JpaRegionWidgetPreference.class);
             query.setParameter(JpaRegionWidgetPreference.NAME_PARAM, source.getName());
-            query.setParameter(JpaRegionWidgetPreference.REGION_WIDGET_ID, source.getRegionWidgetId());
+            query.setParameter(JpaRegionWidgetPreference.REGION_WIDGET_ID, Long.parseLong(source.getRegionWidgetId()));
             converted = getSingleResult(query.getResultList());
 
             if (converted == null) {

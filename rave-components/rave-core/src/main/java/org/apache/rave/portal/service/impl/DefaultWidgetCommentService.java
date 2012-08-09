@@ -34,7 +34,7 @@ public class DefaultWidgetCommentService implements WidgetCommentService {
     }
 
     @Override
-    public WidgetComment getWidgetComment(Long id) {
+    public WidgetComment getWidgetComment(String id) {
         return widgetCommentRepository.get(id);
     }
 
@@ -46,13 +46,13 @@ public class DefaultWidgetCommentService implements WidgetCommentService {
 
     @Override
     @Transactional
-    public void removeWidgetComment(Long id) {
+    public void removeWidgetComment(String id) {
         widgetCommentRepository.delete(getWidgetComment(id));
     }
 
     @Override
     @Transactional
-    public int deleteAll(Long userId) {
+    public int deleteAll(String userId) {
         return widgetCommentRepository.deleteAll(userId);
     }
 }

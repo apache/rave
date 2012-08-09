@@ -41,7 +41,7 @@ public class PageApiTest {
     private PageService pageService;
     private MockHttpServletResponse response;
 
-    private final long PAGE_ID = 1L;
+    private final String PAGE_ID = "1";
 
     @Before
     public void setUp() {

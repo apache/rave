@@ -24,7 +24,7 @@ import java.util.List;
 
 @XmlTransient
 public interface Widget {
-    Long getId();
+    String getId();
 
     String getScreenshotUrl();
 

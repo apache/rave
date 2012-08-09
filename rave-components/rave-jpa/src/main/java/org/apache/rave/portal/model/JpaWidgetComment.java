@@ -80,13 +80,8 @@ public class JpaWidgetComment implements BasicEntity, Serializable, WidgetCommen
     }
 
     @Override
-    public Long getId() {
-        return getEntityId();
-    }
-
-    @Override
-    public void setId(Long entityId) {
-        setEntityId(entityId);
+    public String getId() {
+        return this.getEntityId() == null ? null : this.getEntityId().toString();
     }
 
     @Override
@@ -100,13 +95,13 @@ public class JpaWidgetComment implements BasicEntity, Serializable, WidgetCommen
     }
 
     @Override
-    public Long getWidgetId() {
-        return widgetId;
+    public String getWidgetId() {
+        return widgetId.toString();
     }
 
     @Override
-    public void setWidgetId(Long widgetId) {
-        this.widgetId = widgetId;
+    public void setWidgetId(String widgetId) {
+        this.widgetId = Long.parseLong(widgetId);
     }
 
     @Override

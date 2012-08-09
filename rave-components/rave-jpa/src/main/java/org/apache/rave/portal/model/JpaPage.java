@@ -110,13 +110,13 @@ public class JpaPage implements BasicEntity, Serializable, Page {
     }
 
     @Override
-    public Long getId() {
-        return getEntityId();
+    public String getId() {
+        return getEntityId().toString();
     }
 
     @Override
-    public void setId(Long id) {
-        setEntityId(id);
+    public void setId(String id) {
+        setEntityId(id == null ? null : Long.parseLong(id));
     }
 
     /**

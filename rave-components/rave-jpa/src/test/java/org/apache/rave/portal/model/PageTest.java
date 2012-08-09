@@ -42,7 +42,7 @@ import static org.junit.Assert.assertTrue;
 public class PageTest {
 	private Page page;
 	private long id;
-	private long parentId;
+	private String parentId;
 	private String testName;
 	private JpaUser testOwner;
     private Page parentPage;
@@ -52,14 +52,14 @@ public class PageTest {
 	private List<Region> regions;
 	private PageUser pageUser;
 
-    private final Long SUB_PAGE_1_ID = 666666L;
-    private final Long SUB_PAGE_2_ID = 121212L;
+    private final String SUB_PAGE_1_ID = "666666";
+    private final String SUB_PAGE_2_ID = "121212";
 
 	@Before
 	public void setup(){
-		page=new PageImpl();
 		id=19191991L;
-        parentId = 12345L;
+        page=new PageImpl(Long.toBinaryString(id));
+        parentId = "12345";
 		testName="testName";
 		testOwner=new JpaUser(id);
         parentPage = new PageImpl(parentId);
@@ -103,7 +103,6 @@ public class PageTest {
 		regions.add(new RegionImpl());
 		regions.add(new RegionImpl());
 
-		page.setId(id);
 		page.setName(testName);
 		page.setOwner(testOwner);
 		page.setParentPage(parentPage);
@@ -124,7 +123,7 @@ public class PageTest {
 
 	@Test
 	public void testAccessorMethods() {
-		assertTrue(page.getId()==id);
+		assertTrue(page.getId()==Long.toString(id));
 		assertTrue(page.getName().equals(testName));
 		assertTrue(page.getOwner().equals(testOwner));
 		assertTrue(page.getParentPage().equals(parentPage));

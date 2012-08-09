@@ -48,9 +48,9 @@ public class DefaultWidgetCommentPermissionEvaluatorTest {
     private UserImpl user, user2;
     private List<GrantedAuthority> grantedAuthoritiesList;
 
-    private final Long VALID_COMMENT_ID = 3L;
-    private final Long VALID_USER_ID = 99L;
-    private final Long INVALID_USER_ID = VALID_USER_ID + 1;
+    private final String VALID_COMMENT_ID = "3";
+    private final String VALID_USER_ID = "99";
+    private final String INVALID_USER_ID = VALID_USER_ID + 1;
     private final String VALID_USERNAME = "john.doe";
     private final String VALID_USERNAME2 = "jane.doe";
 
@@ -66,8 +66,7 @@ public class DefaultWidgetCommentPermissionEvaluatorTest {
         user2 = new UserImpl();
         user2.setUsername(VALID_USERNAME2);
         user2.setId(INVALID_USER_ID);
-        widgetComment = new WidgetCommentImpl();
-        widgetComment.setId(VALID_COMMENT_ID);
+        widgetComment = new WidgetCommentImpl(VALID_COMMENT_ID);
         widgetComment.setUser(user);
         grantedAuthoritiesList = new ArrayList<GrantedAuthority>();
         grantedAuthoritiesList.add(new SimpleGrantedAuthority("ROLE_USER"));

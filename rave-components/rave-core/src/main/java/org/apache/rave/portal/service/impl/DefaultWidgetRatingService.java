@@ -40,7 +40,7 @@ public class DefaultWidgetRatingService implements WidgetRatingService {
     }
 
     @Override
-    public WidgetRating getByWidgetIdAndUserId(Long widgetId, Long userId) {
+    public WidgetRating getByWidgetIdAndUserId(String widgetId, String userId) {
         return repository.getByWidgetIdAndUserId(widgetId, userId);
     }
 
@@ -64,7 +64,7 @@ public class DefaultWidgetRatingService implements WidgetRatingService {
 
     @Override
     @Transactional
-    public void removeWidgetRating(Long widgetId, Long userId) {
+    public void removeWidgetRating(String widgetId, String userId) {
         WidgetRating widgetRating = repository.getByWidgetIdAndUserId(widgetId, userId);
         if (widgetRating == null) {
             return;
@@ -74,7 +74,7 @@ public class DefaultWidgetRatingService implements WidgetRatingService {
 
     @Override
     @Transactional
-    public int removeAllWidgetRatings(Long userId) {
+    public int removeAllWidgetRatings(String userId) {
         return repository.deleteAll(userId);
     }
 }

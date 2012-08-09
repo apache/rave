@@ -30,5 +30,5 @@ public interface WidgetTagRepository extends Repository<WidgetTag> {
          * @param keyword   tag's keyword
          * @return {@link org.apache.rave.portal.model.WidgetTag} if it exists, otherwise {@literal null}
          */
-        WidgetTag getByWidgetIdAndTag(Long widgetId, String keyword);
+        WidgetTag getByWidgetIdAndTag(String widgetId, String keyword);
 }

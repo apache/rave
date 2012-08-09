@@ -58,10 +58,10 @@ public class JpaWidgetRatingConverterTest {
 
     @Test
     public void convertValid() {
-        WidgetRating template = new WidgetRatingImpl();
+        WidgetRating template = new WidgetRatingImpl("1");
         template.setScore(1);
-        template.setUserId(42L);
-        template.setWidgetId(24L);
+        template.setUserId("42");
+        template.setWidgetId("24");
         
         JpaWidgetRating jpaTemplate = converter.convert(template);
 

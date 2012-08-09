@@ -24,7 +24,7 @@ import java.util.Date;
 import java.util.List;
 
 public class CategoryImpl implements Category {
-    private Long id;
+    private String id;
     private String text;
     private User createdUser;
     private Date createdDate;
@@ -36,17 +36,17 @@ public class CategoryImpl implements Category {
 
     }
 
-    public CategoryImpl(Long id) {
+    public CategoryImpl(String id) {
         this.id = id;
     }
 
     @Override
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
     @Override
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

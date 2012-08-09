@@ -58,7 +58,7 @@ public class PageApi {
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "{pageId}/widget/add")
     public RpcResult<RegionWidget> addWidgetToPage(
-            @PathVariable final long pageId, @RequestParam final long widgetId) {
+            @PathVariable final String pageId, @RequestParam final String widgetId) {
 
         return new RpcOperation<RegionWidget>() {
             @Override
@@ -92,10 +92,10 @@ public class PageApi {
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "regionWidget/{regionWidgetId}/move")
     public RpcResult<RegionWidget> moveWidgetOnPage(
-            @PathVariable final long regionWidgetId,
+            @PathVariable final String regionWidgetId,
             @RequestParam final int newPosition,
-            @RequestParam final long toRegion,
-            @RequestParam final long fromRegion) {
+            @RequestParam final String toRegion,
+            @RequestParam final String fromRegion) {
 
         return new RpcOperation<RegionWidget>() {
             @Override
@@ -117,7 +117,7 @@ public class PageApi {
      */
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "regionWidget/{regionWidgetId}/delete")
-    public RpcResult<Region> removeWidgetFromPage(@PathVariable final long regionWidgetId) {
+    public RpcResult<Region> removeWidgetFromPage(@PathVariable final String regionWidgetId) {
         return new RpcOperation<Region>() {
             @Override
             public Region execute() {
@@ -149,7 +149,7 @@ public class PageApi {
 
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value="get")
-    public RpcResult<Page> getPage(@RequestParam final long pageId) {
+    public RpcResult<Page> getPage(@RequestParam final String pageId) {
         return new RpcOperation<Page>() {
             @Override
             public Page execute() {
@@ -160,7 +160,7 @@ public class PageApi {
 
     @ResponseBody
     @RequestMapping(value = "{pageId}/update", method = RequestMethod.POST)
-    public RpcResult<Page> updatePageProperties(@PathVariable final long pageId,
+    public RpcResult<Page> updatePageProperties(@PathVariable final String pageId,
                                         @RequestParam final String name,
                                         @RequestParam final String layout) {
         return new RpcOperation<Page>() {
@@ -181,8 +181,8 @@ public class PageApi {
      */
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "{pageId}/move")
-    public RpcResult<Page> movePage(@PathVariable final long pageId,
-                                    @RequestParam(required=false) final Long moveAfterPageId) {
+    public RpcResult<Page> movePage(@PathVariable final String pageId,
+                                    @RequestParam(required=false) final String moveAfterPageId) {
         return new RpcOperation<Page>() {
             @Override
             public Page execute() {
@@ -207,8 +207,8 @@ public class PageApi {
      */
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "{toPageId}/moveWidget")
-    public RpcResult<RegionWidget> moveWidgetToPage(@PathVariable final long toPageId,
-                                                    @RequestParam(required=false) final long regionWidgetId) {
+    public RpcResult<RegionWidget> moveWidgetToPage(@PathVariable final String toPageId,
+                                                    @RequestParam(required=false) final String regionWidgetId) {
         return new RpcOperation<RegionWidget>() {
             @Override
             public RegionWidget execute() {
@@ -219,7 +219,7 @@ public class PageApi {
 
     @ResponseBody
     @RequestMapping(value = "{pageId}/addmember", method = RequestMethod.POST)
-    public RpcResult<Boolean> addMemberToPage(@PathVariable final long pageId, @RequestParam final long userId) {
+    public RpcResult<Boolean> addMemberToPage(@PathVariable final String pageId, @RequestParam final String userId) {
         return new RpcOperation<Boolean>() {
              @Override
              public Boolean execute() {
@@ -230,7 +230,7 @@ public class PageApi {
 
     @ResponseBody
     @RequestMapping(value = "{pageId}/removemember", method = RequestMethod.POST)
-    public RpcResult<Boolean> removeMemberFromPage(@PathVariable final long pageId, @RequestParam final long userId) {
+    public RpcResult<Boolean> removeMemberFromPage(@PathVariable final String pageId, @RequestParam final String userId) {
         return new RpcOperation<Boolean>() {
              @Override
              public Boolean execute() {
@@ -241,7 +241,7 @@ public class PageApi {
 
     @ResponseBody
     @RequestMapping(value = "{pageId}/sharestatus", method = RequestMethod.POST)
-    public RpcResult<Boolean> updateSharedPageStatus(@PathVariable final long pageId, @RequestParam final String shareStatus) {
+    public RpcResult<Boolean> updateSharedPageStatus(@PathVariable final String pageId, @RequestParam final String shareStatus) {
         return new RpcOperation<Boolean>() {
              @Override
              public Boolean execute() {
@@ -252,7 +252,7 @@ public class PageApi {
 
     @ResponseBody
     @RequestMapping(value = "{pageId}/editstatus", method = RequestMethod.POST)
-    public RpcResult<Boolean> updatePageEditingStatus(@PathVariable final long pageId, @RequestParam final long userId, @RequestParam final boolean isEditor) {
+    public RpcResult<Boolean> updatePageEditingStatus(@PathVariable final String pageId, @RequestParam final String userId, @RequestParam final boolean isEditor) {
         return new RpcOperation<Boolean>() {
              @Override
              public Boolean execute() {

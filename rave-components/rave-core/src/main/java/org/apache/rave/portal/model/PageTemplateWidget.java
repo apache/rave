@@ -25,7 +25,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlTransient
 public interface PageTemplateWidget {
 
-    Long getId();
+    String getId();
 
     PageTemplateRegion getPageTemplateRegion();
 

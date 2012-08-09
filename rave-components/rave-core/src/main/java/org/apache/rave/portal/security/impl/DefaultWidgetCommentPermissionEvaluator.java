@@ -83,7 +83,7 @@ public class DefaultWidgetCommentPermissionEvaluator extends AbstractModelPermis
         if (targetId instanceof RaveSecurityContext) {
             hasPermission = verifyRaveSecurityContext(authentication, (RaveSecurityContext)targetId, permission);
         } else {
-            hasPermission = hasPermission(authentication, widgetCommentRepository.get((Long)targetId), permission, true);
+            hasPermission = hasPermission(authentication, widgetCommentRepository.get((String)targetId), permission, true);
         }
         return hasPermission;
     }
@@ -150,7 +150,7 @@ public class DefaultWidgetCommentPermissionEvaluator extends AbstractModelPermis
                 case UPDATE:
                 case CREATE_OR_UPDATE:
                     // anyone can create, delete, read, or update a page that they own
-                    hasPermission = isWidgetCommentOwnerById(authentication, (Long)raveSecurityContext.getId());
+                    hasPermission = isWidgetCommentOwnerById(authentication, (String)raveSecurityContext.getId());
                     break;
                 default:
                     log.warn("unknown permission: " + permission);
@@ -178,7 +178,7 @@ public class DefaultWidgetCommentPermissionEvaluator extends AbstractModelPermis
 
     // returns a trusted Page object, either from the PageRepository, or the
     // cached container list
-    private WidgetComment getTrustedWidgetComment(long widgetCommentId, List<WidgetComment> trustedWidgetCommentContainer) {
+    private WidgetComment getTrustedWidgetComment(String widgetCommentId, List<WidgetComment> trustedWidgetCommentContainer) {
         WidgetComment p = null;
         if (trustedWidgetCommentContainer.isEmpty()) {
             p = widgetCommentRepository.get(widgetCommentId);
@@ -192,7 +192,7 @@ public class DefaultWidgetCommentPermissionEvaluator extends AbstractModelPermis
     private boolean isWidgetCommentOwnerByUsername(Authentication authentication, String username) {
         return ((User)authentication.getPrincipal()).getUsername().equals(username);
     }
-    private boolean isWidgetCommentOwnerById(Authentication authentication, Long userId) {
+    private boolean isWidgetCommentOwnerById(Authentication authentication, String userId) {
         return ((User)authentication.getPrincipal()).getId().equals(userId);
     }
 }

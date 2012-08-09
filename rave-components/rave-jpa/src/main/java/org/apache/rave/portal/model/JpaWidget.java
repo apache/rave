@@ -232,8 +232,8 @@ public class JpaWidget implements BasicEntity, Serializable, Widget {
 // }
 
     @Override
-    public Long getId() {
-        return this.getEntityId();
+    public String getId() {
+        return this.getEntityId() == null ? null : this.getEntityId().toString();
     }
 
     @Override

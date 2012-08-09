@@ -55,7 +55,7 @@ public class JpaCategoryConverterTest {
     public void newCategory() {
         Category category = new CategoryImpl();
         category.setCreatedDate(new Date());
-        category.setId(9L);
+        category.setId("9");
         category.setLastModifiedDate(new Date());
         category.setText("hello");
         category.setCreatedUser(new JpaUser(1L));
@@ -67,7 +67,7 @@ public class JpaCategoryConverterTest {
         assertThat(converted, is(instanceOf(JpaCategory.class)));
         assertThat(converted.getCreatedDate(), is(equalTo(category.getCreatedDate())));
         assertThat(converted.getCreatedUser(), is(equalTo(category.getCreatedUser())));
-        assertThat(converted.getEntityId(), is(equalTo(category.getId())));
+        assertThat(converted.getEntityId().toString(), is(equalTo(category.getId())));
         assertThat(converted.getId(), is(equalTo(category.getId())));
         assertThat(converted.getLastModifiedDate(), is(equalTo(category.getLastModifiedDate())));
         assertThat(converted.getLastModifiedUser(), is(equalTo(category.getLastModifiedUser())));

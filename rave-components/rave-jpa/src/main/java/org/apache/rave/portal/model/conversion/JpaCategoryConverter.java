@@ -48,7 +48,7 @@ public class JpaCategoryConverter implements ModelConverter<Category, JpaCategor
     private JpaCategory createEntity(Category source) {
         JpaCategory converted = null;
         if (source != null) {
-            converted = manager.find(JpaCategory.class, source.getId());
+            converted = manager.find(JpaCategory.class, source.getId() == null ? null : Long.parseLong(source.getId()));
             if (converted == null) {
                 converted = new JpaCategory();
             }
@@ -58,7 +58,6 @@ public class JpaCategoryConverter implements ModelConverter<Category, JpaCategor
     }
 
     private void updateProperties(Category source, JpaCategory converted) {
-        converted.setEntityId(source.getId());
         converted.setId(source.getId());
         converted.setCreatedDate(source.getCreatedDate());
         converted.setCreatedUser(source.getCreatedUser());

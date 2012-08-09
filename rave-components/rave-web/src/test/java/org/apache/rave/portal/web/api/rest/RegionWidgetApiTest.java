@@ -38,8 +38,8 @@ public class RegionWidgetApiTest {
     private RegionWidgetService regionWidgetService;
     private RegionWidgetApi regionWidgetApi;
 
-    private long VALID_REGION_WIDGET_ID = 1l;
-    private long INVALID_REGION_WIDGET_ID = 100l;
+    private String VALID_REGION_WIDGET_ID = "1";
+    private String INVALID_REGION_WIDGET_ID = "100";
 
     private String VALID_PREFERENCE_NAME = "color";
     private String VALID_PREFERENCE_VALUE = "blue";

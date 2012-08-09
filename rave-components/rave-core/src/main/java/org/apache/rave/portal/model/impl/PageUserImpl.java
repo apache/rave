@@ -21,7 +21,7 @@ package org.apache.rave.portal.model.impl;
 import org.apache.rave.portal.model.*;
 
 public class PageUserImpl implements PageUser {
-    private Long id;
+    private String id;
     private User user;
     private Page page;
     private boolean editor;
@@ -30,7 +30,7 @@ public class PageUserImpl implements PageUser {
 
     public PageUserImpl(){}
 
-    public PageUserImpl(Long id){
+    public PageUserImpl(String id){
         this.id = id;
     }
 
@@ -47,12 +47,11 @@ public class PageUserImpl implements PageUser {
 
 
     @Override
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    @Override
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

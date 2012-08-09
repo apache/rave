@@ -23,9 +23,7 @@ import java.util.List;
 
 @XmlTransient
 public interface Region {
-    Long getId();
-
-    void setId(Long id);
+    String getId();
 
     Page getPage();
 

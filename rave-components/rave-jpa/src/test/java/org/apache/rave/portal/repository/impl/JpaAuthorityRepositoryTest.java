@@ -66,7 +66,7 @@ public class JpaAuthorityRepositoryTest {
 
     @Test
     public void getById_validId() {
-        final JpaAuthority authority = (JpaAuthority)repository.get(VALID_ID);
+        final JpaAuthority authority = (JpaAuthority)repository.get(VALID_ID.toString());
         assertNotNull(authority);
         assertEquals(VALID_ID, authority.getEntityId());
     }
@@ -103,7 +103,7 @@ public class JpaAuthorityRepositoryTest {
         final String authorityName = "guest";
         Authority authority = new JpaAuthority();
         authority.setAuthority(authorityName);
-        User user = userRepository.get(1L);
+        User user = userRepository.get("1");
 
         Assert.assertNotNull("User is null", user);
         Assert.assertTrue("User has no authorities", user.getAuthorities().isEmpty());
@@ -121,7 +121,7 @@ public class JpaAuthorityRepositoryTest {
         repository.delete(authority);
         assertNull("No authority guest", repository.getByAuthority(authorityName));
 
-        user = userRepository.get(1L);
+        user = userRepository.get("1");
         Assert.assertNotNull("User should not be deleted after removing an authority", user);
         Assert.assertTrue("User should have no authorities", user.getAuthorities().isEmpty());
     }
