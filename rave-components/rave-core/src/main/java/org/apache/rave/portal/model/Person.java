@@ -77,10 +77,6 @@ public interface Person {
 
     void setProperties(List<PersonProperty> properties);
 
-    List<Person> getFriends();
-
-    void setFriends(List<Person> friends);
-
     List<Organization> getOrganizations();
 
     void setOrganizations(List<Organization> organizations);

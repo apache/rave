@@ -1217,33 +1217,63 @@ VALUES (@application_data_id_1, '12345', 'http://example.com/gadget.xml', '{"col
 UPDATE RAVE_SHINDIG_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @application_data_seq;
 
 set @next_person_association = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @person_association_seq);
-INSERT INTO person_association(entity_id, follower_id, followed_id)
-VALUES (@next_person_association, @user_id_1, @user_id_2);
+INSERT INTO person_association(entity_id, follower_id, followedby_id, status)
+VALUES (@next_person_association, @user_id_1, @user_id_2, 'ACCEPTED');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @person_association_seq;
 
 set @next_person_association = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @person_association_seq);
-INSERT INTO person_association(entity_id, follower_id, followed_id)
-VALUES (@next_person_association, @user_id_1, @user_id_3);
+INSERT INTO person_association(entity_id, follower_id, followedby_id, status)
+VALUES (@next_person_association, @user_id_1, @user_id_3, 'ACCEPTED');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @person_association_seq;
 
 set @next_person_association = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @person_association_seq);
-INSERT INTO person_association(entity_id, follower_id, followed_id)
-VALUES (@next_person_association, @user_id_1, @user_id_4);
+INSERT INTO person_association(entity_id, follower_id, followedby_id, status)
+VALUES (@next_person_association, @user_id_1, @user_id_4, 'ACCEPTED');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @person_association_seq;
 
 set @next_person_association = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @person_association_seq);
-INSERT INTO person_association(entity_id, follower_id, followed_id)
-VALUES (@next_person_association, @user_id_2, @user_id_3);
+INSERT INTO person_association(entity_id, follower_id, followedby_id, status)
+VALUES (@next_person_association, @user_id_2, @user_id_1, 'ACCEPTED');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @person_association_seq;
 
 set @next_person_association = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @person_association_seq);
-INSERT INTO person_association(entity_id, follower_id, followed_id)
-VALUES (@next_person_association, @user_id_2, @user_id_4);
+INSERT INTO person_association(entity_id, follower_id, followedby_id, status)
+VALUES (@next_person_association, @user_id_2, @user_id_3, 'ACCEPTED');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @person_association_seq;
 
 set @next_person_association = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @person_association_seq);
-INSERT INTO person_association(entity_id, follower_id, followed_id)
-VALUES (@next_person_association, @user_id_2, @user_id_5);
+INSERT INTO person_association(entity_id, follower_id, followedby_id, status)
+VALUES (@next_person_association, @user_id_2, @user_id_4, 'ACCEPTED');
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @person_association_seq;
+
+set @next_person_association = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @person_association_seq);
+INSERT INTO person_association(entity_id, follower_id, followedby_id, status)
+VALUES (@next_person_association, @user_id_2, @user_id_5, 'ACCEPTED');
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @person_association_seq;
+
+set @next_person_association = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @person_association_seq);
+INSERT INTO person_association(entity_id, follower_id, followedby_id, status)
+VALUES (@next_person_association, @user_id_3, @user_id_1, 'ACCEPTED');
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @person_association_seq;
+
+set @next_person_association = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @person_association_seq);
+INSERT INTO person_association(entity_id, follower_id, followedby_id, status)
+VALUES (@next_person_association, @user_id_3, @user_id_2, 'ACCEPTED');
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @person_association_seq;
+
+set @next_person_association = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @person_association_seq);
+INSERT INTO person_association(entity_id, follower_id, followedby_id, status)
+VALUES (@next_person_association, @user_id_4, @user_id_1, 'ACCEPTED');
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @person_association_seq;
+
+set @next_person_association = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @person_association_seq);
+INSERT INTO person_association(entity_id, follower_id, followedby_id, status)
+VALUES (@next_person_association, @user_id_4, @user_id_2, 'ACCEPTED');
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @person_association_seq;
+
+set @next_person_association = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @person_association_seq);
+INSERT INTO person_association(entity_id, follower_id, followedby_id, status)
+VALUES (@next_person_association, @user_id_5, @user_id_2, 'ACCEPTED');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @person_association_seq;
 
 set @group_id_1 = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @groups_seq);

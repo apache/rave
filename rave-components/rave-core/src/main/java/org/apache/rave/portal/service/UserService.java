@@ -24,6 +24,7 @@ import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.util.SearchResult;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
+import java.util.HashMap;
 import java.util.List;
 
 public interface UserService extends UserDetailsService {
@@ -150,5 +151,31 @@ public interface UserService extends UserDetailsService {
      */
     boolean isValidReminderRequest(String forgotPasswordHash, int nrOfMinutesValid);
 
+    /**
+     * Registers a relationship between two user objects.
+     *
+     * @param user is the user who sends to friend request
+     * @param friend is the user who receives the friend request
+     * @return true is the relationship request was successful
+     */
+    boolean addFriend(String user, String friend);
+
+    /**
+     * Removes the relationship between two user objects.
+     *
+     * @param user is the user who wants to remove a friend
+     * @param friend is the user who is removed from the friends list of user
+     */
+    void removeFriend(String user, String friend);
+
+    /**
+     * Get the friends and friends requests of a particular user.
+     *
+     * @param user is the user whose friends and requests are to be found
+     * @return A hashmap which contains 2 lists of peeple
+     * 			1 containing friends
+     * 			2 containing friend requests
+     */
+	HashMap<String, List<Person>> getFriends(String username);
 
 }

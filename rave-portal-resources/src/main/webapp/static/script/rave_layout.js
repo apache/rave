@@ -528,7 +528,8 @@ rave.layout = rave.layout || (function() {
             removeEditingRightsFromMember : removeEditingRightsFromMember,
             confirmPageShare : confirmPageShare,
             acceptShare : acceptShare,
-            declineShare : declineShare
+            declineShare : declineShare,
+            updateParamsInString : updateParamsInString
         }
     })();
 

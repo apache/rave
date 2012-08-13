@@ -20,12 +20,26 @@
 package org.apache.rave.portal.service.impl;
 
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.rave.portal.model.PageType;
 import org.apache.rave.portal.model.Person;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.util.SearchResult;
-import org.apache.rave.portal.repository.*;
+import org.apache.rave.portal.repository.CategoryRepository;
+import org.apache.rave.portal.repository.PageRepository;
+import org.apache.rave.portal.repository.PageTemplateRepository;
+import org.apache.rave.portal.repository.PersonRepository;
+import org.apache.rave.portal.repository.UserRepository;
+import org.apache.rave.portal.repository.WidgetCommentRepository;
+import org.apache.rave.portal.repository.WidgetRatingRepository;
+import org.apache.rave.portal.repository.WidgetRepository;
 import org.apache.rave.portal.service.EmailService;
 import org.apache.rave.portal.service.UserService;
 import org.slf4j.Logger;
@@ -45,8 +59,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
-
 /**
  *
  */
@@ -61,6 +73,7 @@ public class DefaultUserService implements UserService {
     private final WidgetCommentRepository widgetCommentRepository;
     private final WidgetRepository widgetRepository;
     private final CategoryRepository categoryRepository;
+    private final PersonRepository personRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -105,7 +118,8 @@ public class DefaultUserService implements UserService {
                               WidgetCommentRepository widgetCommentRepository,
                               WidgetRepository widgetRepository,
                               PageTemplateRepository pageTemplateRepository,
-                              CategoryRepository categoryRepository) {
+                              CategoryRepository categoryRepository,
+                              PersonRepository personRepository) {
         this.userRepository = userRepository;
         this.pageRepository = pageRepository;
         this.widgetRatingRepository = widgetRatingRepository;
@@ -113,6 +127,7 @@ public class DefaultUserService implements UserService {
         this.widgetRepository = widgetRepository;
         this.pageTemplateRepository = pageTemplateRepository;
         this.categoryRepository = categoryRepository;
+        this.personRepository = personRepository;
     }
 
     @Override
@@ -351,5 +366,26 @@ public class DefaultUserService implements UserService {
             return false;
         }
         return true;
+    }
+
+    @Override
+    @Transactional
+    public boolean addFriend(String friendId, String userId) {
+    	User user = getUserById((long) Integer.parseInt(userId));
+    	User friend = getUserById((long) Integer.parseInt(friendId));
+    	return personRepository.addFriend(friend.toPerson(),user.toPerson());
+    }
+
+    @Override
+    @Transactional
+    public void removeFriend(String friendId, String userId) {
+    	User user = getUserById((long) Integer.parseInt(userId));
+    	User friend = getUserById((long) Integer.parseInt(friendId));
+    	personRepository.removeFriend(friend.toPerson(),user.toPerson());
+    }
+
+    @Override
+    public HashMap<String, List<Person>> getFriends(String username) {
+    	return personRepository.findFriendsAndRequests(username);
     }
 }

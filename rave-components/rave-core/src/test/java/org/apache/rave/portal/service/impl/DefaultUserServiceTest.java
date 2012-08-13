@@ -19,13 +19,43 @@
 
 package org.apache.rave.portal.service.impl;
 
-import org.apache.rave.portal.model.*;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.createNiceMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.easymock.EasyMock.isA;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.sameInstance;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.rave.portal.model.Authority;
+import org.apache.rave.portal.model.Page;
+import org.apache.rave.portal.model.PageTemplate;
+import org.apache.rave.portal.model.PageType;
+import org.apache.rave.portal.model.Person;
+import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.impl.AuthorityImpl;
 import org.apache.rave.portal.model.impl.PageImpl;
 import org.apache.rave.portal.model.impl.PageTemplateImpl;
 import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.model.util.SearchResult;
-import org.apache.rave.portal.repository.*;
+import org.apache.rave.portal.repository.CategoryRepository;
+import org.apache.rave.portal.repository.PageRepository;
+import org.apache.rave.portal.repository.PageTemplateRepository;
+import org.apache.rave.portal.repository.PersonRepository;
+import org.apache.rave.portal.repository.UserRepository;
+import org.apache.rave.portal.repository.WidgetCommentRepository;
+import org.apache.rave.portal.repository.WidgetRatingRepository;
+import org.apache.rave.portal.repository.WidgetRepository;
 import org.apache.rave.portal.service.UserService;
 import org.junit.After;
 import org.junit.Before;
@@ -38,14 +68,6 @@ import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.easymock.EasyMock.*;
-import static org.hamcrest.CoreMatchers.*;
-import static org.hamcrest.CoreMatchers.not;
-import static org.junit.Assert.*;
-
 public class DefaultUserServiceTest {
 
     private static final Long USER_ID = 1234L;
@@ -57,6 +79,7 @@ public class DefaultUserServiceTest {
     private WidgetRatingRepository widgetRatingRepository;
     private WidgetRepository widgetRepository;
     private CategoryRepository categoryRepository;
+    private PersonRepository personRepository;
 
     private static final String USER_NAME = "1234";
     private static final String USER_EMAIL = "test@test.com";
@@ -72,9 +95,10 @@ public class DefaultUserServiceTest {
         widgetRatingRepository = createMock(WidgetRatingRepository.class);
         widgetRepository = createMock(WidgetRepository.class);
         categoryRepository = createMock(CategoryRepository.class);
+        personRepository = createMock(PersonRepository.class);
 
         service = new DefaultUserService(pageRepository, userRepository, widgetRatingRepository, widgetCommentRepository,
-                                         widgetRepository, pageTemplateRepository, categoryRepository);
+                                         widgetRepository, pageTemplateRepository, categoryRepository, personRepository);
     }
 
     @After

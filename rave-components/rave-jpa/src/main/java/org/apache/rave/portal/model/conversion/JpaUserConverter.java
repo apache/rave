@@ -72,7 +72,6 @@ public class JpaUserConverter implements ModelConverter<User, JpaUser> {
         converted.setAddresses(source.getAddresses());
         converted.setOrganizations(source.getOrganizations());
         converted.setProperties(source.getProperties());
-        converted.setFriends(source.getFriends());
         converted.setPassword(source.getPassword());
         converted.setConfirmPassword(source.getConfirmPassword());
         converted.setDefaultPageLayout(source.getDefaultPageLayout());

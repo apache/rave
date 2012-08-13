@@ -78,7 +78,6 @@ public class JpaUserConverterTest {
         template.setAddresses(new ArrayList<Address>());
         template.setOrganizations(new ArrayList<Organization>());
         template.setProperties(new ArrayList<PersonProperty>());
-        template.setFriends(new ArrayList<Person>());
         template.setPassword("TEST_L");
         template.setConfirmPassword("TEST_M");
         template.setDefaultPageLayout(new PageLayoutImpl("CODE"));
@@ -111,7 +110,6 @@ public class JpaUserConverterTest {
         assertThat(jpaTemplate.getAddresses(), is(equalTo(template.getAddresses())));
         assertThat(jpaTemplate.getOrganizations(), is(equalTo(template.getOrganizations())));
         assertThat(jpaTemplate.getProperties(), is(equalTo(template.getProperties())));
-        assertThat(jpaTemplate.getFriends(), is(equalTo(template.getFriends())));
         assertThat(jpaTemplate.getPassword(), is(equalTo(template.getPassword())));
         assertThat(jpaTemplate.getConfirmPassword(), is(equalTo(template.getConfirmPassword())));
         assertThat(jpaTemplate.getDefaultPageLayout().getCode(), is(equalTo(template.getDefaultPageLayout().getCode())));
