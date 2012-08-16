@@ -18,9 +18,25 @@
  */
 package org.apache.rave.portal.model;
 
-import org.apache.rave.persistence.BasicEntity;
+import javax.persistence.Access;
+import javax.persistence.AccessType;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
+import javax.persistence.UniqueConstraint;
 
-import javax.persistence.*;
+import org.apache.rave.persistence.BasicEntity;
 
 /**
  * Represents an association between people
@@ -28,9 +44,17 @@ import javax.persistence.*;
 @Entity
 @Access(AccessType.FIELD)
 @Table(name = "person_association",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"follower_id", "followed_id"})
-)
+        uniqueConstraints = @UniqueConstraint(columnNames = {"follower_id", "followedby_id"}))
+@NamedQueries(value = {
+		@NamedQuery(name = JpaPersonAssociation.REMOVE_FRIEND_BY_USERNAME, query = "select a from JpaPersonAssociation a where a.follower.username = :follower_username and a.followedby.username = :followedby_username"),
+		@NamedQuery(name = JpaPersonAssociation.FIND_FRIENDS_AND_REQUESTS_BY_USERNAME, query = "select a from JpaPersonAssociation a where a.follower.username = :follower_username")
+})
 public class JpaPersonAssociation implements BasicEntity {
+
+    public static final String REMOVE_FRIEND_BY_USERNAME = "PersonAssociation.removeFriendByUsername";
+    public static final String FOLLOWER_USERNAME = "follower_username";
+    public static final String FOLLOWEDBY_USERNAME = "followedby_username";
+    public static final String FIND_FRIENDS_AND_REQUESTS_BY_USERNAME = "PersonAssociation.findFriendsAndRequestsByUsername";
 
     @Id
     @Column(name = "entity_id")
@@ -39,13 +63,18 @@ public class JpaPersonAssociation implements BasicEntity {
             valueColumnName = "SEQ_COUNT", pkColumnValue = "person_association", allocationSize = 1, initialValue = 1)
     private Long entityId;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name="follower_id", referencedColumnName = "entity_id")
     JpaPerson follower;
 
-    @OneToOne
-    @JoinColumn(name="followed_id", referencedColumnName = "entity_id")
-    JpaPerson followed;
+    @ManyToOne
+    @JoinColumn(name="followedby_id", referencedColumnName = "entity_id")
+    JpaPerson followedby;
+
+    @Basic
+    @Column(name="status")
+    @Enumerated(EnumType.STRING)
+    private FriendRequestStatus status;
 
     @Override
     public Long getEntityId() {
@@ -57,7 +86,7 @@ public class JpaPersonAssociation implements BasicEntity {
         this.entityId = entityId;
     }
 
-    public Person getFollower() {
+    public JpaPerson getFollower() {
         return follower;
     }
 
@@ -65,15 +94,23 @@ public class JpaPersonAssociation implements BasicEntity {
         this.follower = follower;
     }
 
-    public JpaPerson getFollowed() {
-        return followed;
+    public JpaPerson getFollowedby() {
+        return followedby;
     }
 
-    public void setFollowed(JpaPerson followed) {
-        this.followed = followed;
+    public void setFollowedby(JpaPerson followedby) {
+        this.followedby = followedby;
     }
 
-    @Override
+    public FriendRequestStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(FriendRequestStatus status) {
+		this.status = status;
+	}
+
+	@Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;

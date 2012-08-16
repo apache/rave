@@ -74,7 +74,6 @@ public class JpaPersonConverterTest {
         template.setAddresses(new ArrayList<Address>());
         template.setOrganizations(new ArrayList<Organization>());
         template.setProperties(new ArrayList<PersonProperty>());
-        template.setFriends(new ArrayList<Person>());
 
         JpaPerson jpaTemplate = converter.convert(template);
 
@@ -94,7 +93,6 @@ public class JpaPersonConverterTest {
         assertThat(jpaTemplate.getAddresses(), is(equalTo(template.getAddresses())));
         assertThat(jpaTemplate.getOrganizations(), is(equalTo(template.getOrganizations())));
         assertThat(jpaTemplate.getProperties(), is(equalTo(template.getProperties())));
-        assertThat(jpaTemplate.getFriends(), is(equalTo(template.getFriends())));
     }
 
 }

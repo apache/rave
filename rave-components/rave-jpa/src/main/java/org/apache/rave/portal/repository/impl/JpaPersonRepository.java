@@ -23,16 +23,18 @@ import static org.apache.rave.persistence.jpa.util.JpaUtil.getSingleResult;
 import static org.apache.rave.persistence.jpa.util.JpaUtil.saveOrUpdate;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.rave.exception.NotSupportedException;
+import org.apache.rave.portal.model.FriendRequestStatus;
 import org.apache.rave.portal.model.JpaGroup;
 import org.apache.rave.portal.model.JpaPerson;
+import org.apache.rave.portal.model.JpaPersonAssociation;
 import org.apache.rave.portal.model.JpaUser;
 import org.apache.rave.portal.model.JpaWidget;
 import org.apache.rave.portal.model.Person;
@@ -87,6 +89,7 @@ public class JpaPersonRepository implements PersonRepository {
     public List<Person> findFriends(String username) {
         TypedQuery<JpaPerson> friends = manager.createNamedQuery(JpaPerson.FIND_FRIENDS_BY_USERNAME, JpaPerson.class);
         friends.setParameter(JpaPerson.USERNAME_PARAM, username);
+        friends.setParameter(JpaPerson.STATUS_PARAM, FriendRequestStatus.ACCEPTED);
         return CollectionUtils.<Person>toBaseTypedList(friends.getResultList());
     }
 
@@ -169,4 +172,54 @@ public class JpaPersonRepository implements PersonRepository {
     public void delete(Person item) {
         manager.remove(item instanceof JpaPerson ? item : findByUsername(item.getUsername()));
     }
+
+	@Override
+	public boolean addFriend(Person friend, Person user) {
+		JpaPersonAssociation item = new JpaPersonAssociation();
+		JpaPersonAssociation inverseItem = new JpaPersonAssociation();
+		item.setFollowedby(personConverter.convert(friend));
+		item.setFollower(personConverter.convert(user));
+		item.setStatus(FriendRequestStatus.PENDING);
+		item = saveOrUpdate(item.getEntityId(), manager, item);
+		inverseItem.setFollowedby(personConverter.convert(user));
+		inverseItem.setFollower(personConverter.convert(friend));
+		inverseItem.setStatus(FriendRequestStatus.PENDING);
+		inverseItem = saveOrUpdate(inverseItem.getEntityId(), manager, inverseItem);
+		if(item.getEntityId()!=null && inverseItem.getEntityId()!=null)
+			return true;
+		else
+			return false;
+	}
+
+	@Override
+	public void removeFriend(Person friend, Person user) {
+		TypedQuery<JpaPersonAssociation> query = manager.createNamedQuery(JpaPersonAssociation.REMOVE_FRIEND_BY_USERNAME, JpaPersonAssociation.class);
+        query.setParameter(JpaPersonAssociation.FOLLOWER_USERNAME, user.getUsername());
+        query.setParameter(JpaPersonAssociation.FOLLOWEDBY_USERNAME, friend.getUsername());
+        JpaPersonAssociation item = getSingleResult(query.getResultList());
+        manager.remove(item);
+		query = manager.createNamedQuery(JpaPersonAssociation.REMOVE_FRIEND_BY_USERNAME, JpaPersonAssociation.class);
+        query.setParameter(JpaPersonAssociation.FOLLOWER_USERNAME, friend.getUsername());
+        query.setParameter(JpaPersonAssociation.FOLLOWEDBY_USERNAME, user.getUsername());
+        JpaPersonAssociation inverseItem = getSingleResult(query.getResultList());
+        manager.remove(inverseItem);
+	}
+
+	@Override
+	public HashMap<String, List<Person>> findFriendsAndRequests(String username) {
+		List<Person> friends = new ArrayList<Person>();
+		List<Person> friendRequests = new ArrayList<Person>();
+		HashMap<String, List<Person>> friendsAndRequests = new HashMap<String, List<Person>>();
+		TypedQuery<JpaPersonAssociation> associationItems = manager.createNamedQuery(JpaPersonAssociation.FIND_FRIENDS_AND_REQUESTS_BY_USERNAME, JpaPersonAssociation.class);
+		associationItems.setParameter(JpaPersonAssociation.FOLLOWER_USERNAME, username);
+		for(JpaPersonAssociation item : associationItems.getResultList()) {
+			if(item.getStatus().equals(FriendRequestStatus.ACCEPTED))
+				friends.add(item.getFollowedby());
+			else if(item.getStatus().equals(FriendRequestStatus.PENDING))
+				friendRequests.add(item.getFollowedby());
+		}
+		friendsAndRequests.put(FriendRequestStatus.ACCEPTED.toString(), friends);
+		friendsAndRequests.put(FriendRequestStatus.PENDING.toString(), friendRequests);
+        return friendsAndRequests;
+	}
 }

@@ -19,10 +19,11 @@
 
 package org.apache.rave.portal.repository;
 
+import java.util.HashMap;
+import java.util.List;
+
 import org.apache.rave.persistence.Repository;
 import org.apache.rave.portal.model.Person;
-
-import java.util.List;
 
 
 public interface PersonRepository extends Repository<Person> {
@@ -107,5 +108,32 @@ public interface PersonRepository extends Repository<Person> {
      * @return a list of people in the group who have the specified friend
      */
     List<Person> findByGroupWithFriend(String groupId, String friendUsername);
+
+    /**
+     * Registers a relationship between two user objects.
+     *
+     * @param user is the user who sends to friend request
+     * @param friend is the user who receives the friend request
+     * @return true is the relationship request was successful
+     */
+	boolean addFriend(Person friend, Person user);
+
+    /**
+     * Removes the relationship between two user objects.
+     *
+     * @param user is the user who wants to remove a friend
+     * @param friend is the user who is removed from the friends list of user
+     */
+	void removeFriend(Person friend, Person user);
+
+    /**
+     * Get the friends and friends requests of a particular user.
+     *
+     * @param user is the user whose friends and requests are to be found
+     * @return A hashmap which contains 2 lists of peeple
+     * 			1 containing friends
+     * 			2 containing friend requests
+     */
+	HashMap<String, List<Person>> findFriendsAndRequests(String username);
 }
 

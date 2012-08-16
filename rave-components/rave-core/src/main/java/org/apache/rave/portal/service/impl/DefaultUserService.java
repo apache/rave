@@ -61,6 +61,7 @@ public class DefaultUserService implements UserService {
     private final WidgetCommentRepository widgetCommentRepository;
     private final WidgetRepository widgetRepository;
     private final CategoryRepository categoryRepository;
+    private final PersonRepository personRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -105,7 +106,8 @@ public class DefaultUserService implements UserService {
                               WidgetCommentRepository widgetCommentRepository,
                               WidgetRepository widgetRepository,
                               PageTemplateRepository pageTemplateRepository,
-                              CategoryRepository categoryRepository) {
+                              CategoryRepository categoryRepository,
+                              PersonRepository personRepository) {
         this.userRepository = userRepository;
         this.pageRepository = pageRepository;
         this.widgetRatingRepository = widgetRatingRepository;
@@ -113,6 +115,7 @@ public class DefaultUserService implements UserService {
         this.widgetRepository = widgetRepository;
         this.pageTemplateRepository = pageTemplateRepository;
         this.categoryRepository = categoryRepository;
+        this.personRepository = personRepository;
     }
 
     @Override
@@ -351,5 +354,26 @@ public class DefaultUserService implements UserService {
             return false;
         }
         return true;
+    }
+
+    @Override
+    @Transactional
+    public boolean addFriend(String friendId, String userId) {
+    	User user = getUserById(userId);
+    	User friend = getUserById(friendId);
+    	return personRepository.addFriend(friend.toPerson(),user.toPerson());
+    }
+
+    @Override
+    @Transactional
+    public void removeFriend(String friendId, String userId) {
+    	User user = getUserById(userId);
+    	User friend = getUserById(friendId);
+    	personRepository.removeFriend(friend.toPerson(),user.toPerson());
+    }
+
+    @Override
+    public HashMap<String, List<Person>> getFriends(String username) {
+    	return personRepository.findFriendsAndRequests(username);
     }
 }

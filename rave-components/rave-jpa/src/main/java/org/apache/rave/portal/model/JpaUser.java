@@ -368,7 +368,6 @@ public class JpaUser extends JpaPerson implements BasicEntity, Serializable, Use
         p.setDisplayName(this.getDisplayName());
         p.setEmail(this.getEmail());
         p.setFamilyName(this.getFamilyName());
-        p.setFriends(this.getFriends());
         p.setGivenName(this.getGivenName());
         p.setHonorificPrefix(this.getHonorificPrefix());
         p.setHonorificSuffix(this.getHonorificSuffix());

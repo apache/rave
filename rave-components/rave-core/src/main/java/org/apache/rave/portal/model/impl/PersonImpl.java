@@ -38,7 +38,6 @@ public class PersonImpl implements Person {
     protected List<Address> addresses;
     protected List<Organization> organizations;
     protected List<PersonProperty> properties;
-    protected List<Person> friends;
 
     public String getUsername() {
         return username;
@@ -152,13 +151,6 @@ public class PersonImpl implements Person {
         this.properties = properties;
     }
 
-    public List<Person> getFriends() {
-        return friends;
-    }
-
-    public void setFriends(List<Person> friends) {
-        this.friends = friends;
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -174,7 +166,6 @@ public class PersonImpl implements Person {
         if (displayName != null ? !displayName.equals(person.displayName) : person.displayName != null) return false;
         if (email != null ? !email.equals(person.email) : person.email != null) return false;
         if (familyName != null ? !familyName.equals(person.familyName) : person.familyName != null) return false;
-        if (friends != null ? !friends.equals(person.friends) : person.friends != null) return false;
         if (givenName != null ? !givenName.equals(person.givenName) : person.givenName != null) return false;
         if (honorificPrefix != null ? !honorificPrefix.equals(person.honorificPrefix) : person.honorificPrefix != null)
             return false;
@@ -207,7 +198,6 @@ public class PersonImpl implements Person {
         result = 31 * result + (addresses != null ? addresses.hashCode() : 0);
         result = 31 * result + (organizations != null ? organizations.hashCode() : 0);
         result = 31 * result + (properties != null ? properties.hashCode() : 0);
-        result = 31 * result + (friends != null ? friends.hashCode() : 0);
         return result;
     }
 }

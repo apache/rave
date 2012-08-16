@@ -52,7 +52,7 @@ import java.util.List;
 @Access(AccessType.FIELD)
 @NamedQueries(value = {
     @NamedQuery(name = JpaPerson.FIND_BY_USERNAME, query = "select p from JpaPerson p where p.username like :username"),
-    @NamedQuery(name = JpaPerson.FIND_FRIENDS_BY_USERNAME, query = "select a.followed from JpaPersonAssociation a where a.follower.username = :username"),
+    @NamedQuery(name = JpaPerson.FIND_FRIENDS_BY_USERNAME, query = "select a.followedby from JpaPersonAssociation a where a.follower.username = :username and a.status = :status"),
     @NamedQuery(name = JpaPerson.FIND_BY_GROUP_MEMBERSHIP, query = "select m from JpaGroup g join g.members m where exists " +
             "(select 'found' from g.members b where b.username = :username) and m.username <> :username")
 })
@@ -63,6 +63,7 @@ public class JpaPerson implements BasicEntity, Person {
     public static final String FIND_FRIENDS_BY_USERNAME = "Person.findFriendsByUsername";
     public static final String FIND_BY_GROUP_MEMBERSHIP = "Person.findByGroupMembership";
     public static final String USERNAME_PARAM = "username";
+    public static final String STATUS_PARAM = "status";
 
     @Id
     @Column(name = "entity_id")
@@ -128,12 +129,6 @@ public class JpaPerson implements BasicEntity, Person {
     @OneToMany(fetch = FetchType.EAGER, targetEntity = JpaPersonProperty.class)
     @JoinColumn(name = "person_id", referencedColumnName = "entity_id")
     protected List<JpaPersonProperty> properties;
-
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "person_association",
-            joinColumns = @JoinColumn(name = "follower_id", referencedColumnName = "entity_id"),
-            inverseJoinColumns = @JoinColumn(name = "followed_id", referencedColumnName = "entity_id"))
-    protected List<JpaPerson> friends;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "group_members",
@@ -288,23 +283,6 @@ public class JpaPerson implements BasicEntity, Person {
         this.getProperties().clear();
         if(properties != null) {
             this.getProperties().addAll(properties);
-        }
-    }
-
-    @Override
-    public List<Person> getFriends() {
-        return ConvertingListProxyFactory.createProxyList(Person.class, friends);
-    }
-
-    @Override
-    public void setFriends(List<Person> friends) {
-        if(this.friends == null) {
-            this.friends = new ArrayList<JpaPerson>();
-        }
-        //Ensure that all operations go through the conversion proxy
-        this.getFriends().clear();
-        if(friends != null) {
-            this.getFriends().addAll(friends);
         }
     }
 

@@ -77,6 +77,5 @@ public class JpaPersonConverter implements ModelConverter<Person, JpaPerson> {
         converted.setAddresses(source.getAddresses());
         converted.setOrganizations(source.getOrganizations());
         converted.setProperties(source.getProperties());
-        converted.setFriends(source.getFriends());
     }
 }

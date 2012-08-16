@@ -525,6 +525,46 @@ rave.api = rave.api || (function() {
             }).error(handleError);
         }
 
+        function addFriend(args) {
+        	$.post(rave.getContext() + path + "person/" + args.friendId + "/addfriend",
+                function(result) {
+                    if (result.error) {
+                        handleRpcError(result);
+                    }
+                    else {
+                        if (typeof args.successCallback == 'function') {
+                             args.successCallback(result);
+                        }
+                    }
+               }).error(handleError);
+        }
+        function removeFriend(args) {
+        	$.post(rave.getContext() + path + "person/" + args.friendId + "/removefriend",
+                function(result) {
+                    if (result.error) {
+                        handleRpcError(result);
+                    }
+                    else {
+                        if (typeof args.successCallback == 'function') {
+                             args.successCallback(result);
+                        }
+                    }
+               }).error(handleError);
+        }
+        function getFriends(args){
+            $.post(rave.getContext() + path + "person/getFriends",
+                function(result) {
+                    if (result.error) {
+                        handleRpcError(result);
+                    }
+                    else {
+                        if (typeof args.successCallback == 'function') {
+                            args.successCallback(result);
+                        }
+                    }
+                }).error(handleError);
+        }
+
         return {
             moveWidget : moveWidgetOnPage,
             addWidgetToPage : addWidgetToPage,
@@ -541,7 +581,10 @@ rave.api = rave.api || (function() {
             addMemberToPage : addMemberToPage,
             removeMemberFromPage : removeMemberFromPage,
             updateSharedPageStatus : updateSharedPageStatus,
-            updatePageEditingStatus: updatePageEditingStatus
+            updatePageEditingStatus: updatePageEditingStatus,
+            addFriend : addFriend,
+            removeFriend : removeFriend,
+            getFriends :getFriends
         };
 
     })();

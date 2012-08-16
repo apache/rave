@@ -165,6 +165,9 @@
             </div>
         </div>
         <div class="span3">
+        	<button type="button" id="addRemoveFriend" value="${page.owner.username}" class="btn btn-primary profile-info-visible">Add/Remove Friends</button>
+        </div>
+        <div class="span3">
             <div>
                 <%-- render the person profile parent page region/widgets --%>
                 <c:forEach var="region" items="${page.regions}" varStatus="status">
@@ -175,6 +178,28 @@
     <div class="clear-float">&nbsp;</div>
     </div>
 </div>
+    <div id="userDialog" class="modal hide" data-backdrop="static">
+        <div class="modal-header">
+            <a href="#" class="close" data-dismiss="modal">&times;</a>
+            <h3><fmt:message key="page.general.search.title"/></h3>
+        </div>
+        <div class="modal-body">
+            <div id="userDialogContent" >
+                <div id="userContent">
+                    <div id="searchControls"><input id="searchTerm" name="searchTerm" type="text"/>
+                        <input id="userSearchButton" value="<fmt:message key="page.store.search.button"/>" type="submit"/>
+                        <input id="clearSearchButton" value="<fmt:message key="admin.clearsearch"/>" type="submit" class="hide"/>
+                    </div>
+                    <div id="userSearchListHeader"></div>
+                    <div id="userSearchListPaging"></div>
+                    <div id="userSearchResults"></div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn" onclick="$('#userDialog').modal('hide');">Close</a>
+        </div>
+    </div>
 <div class="clear-float">&nbsp;</div>
 
 <portal:register-init-script location="${'AFTER_RAVE'}">

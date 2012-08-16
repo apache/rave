@@ -27,6 +27,7 @@ import org.apache.shindig.protocol.model.FilterOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -45,8 +46,7 @@ public class DecoratingOpenSocialPersonRepository implements OpenSocialPersonRep
 
     @Override
     public List<Person> findFriends(String username, String field, FilterOperation operation, String value) {
-        throw new NotSupportedException();
-    }
+        throw new NotSupportedException();    }
 
     @Override
     public List<Person> findByGroup(String groupId, String field, FilterOperation operation, String value) {
@@ -122,4 +122,19 @@ public class DecoratingOpenSocialPersonRepository implements OpenSocialPersonRep
     public void delete(Person item) {
         underlying.delete(item);
     }
+
+	@Override
+	public boolean addFriend(Person friend, Person user) {
+		return underlying.addFriend(friend, user);
+	}
+
+	@Override
+	public void removeFriend(Person friend, Person user) {
+		underlying.removeFriend(friend, user);
+	}
+
+	@Override
+	public HashMap<String, List<Person>> findFriendsAndRequests(String username) {
+		return underlying.findFriendsAndRequests(username);
+	}
 }
