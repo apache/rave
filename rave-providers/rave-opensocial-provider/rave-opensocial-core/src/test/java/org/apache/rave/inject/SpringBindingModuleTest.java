@@ -21,8 +21,12 @@ package org.apache.rave.inject;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.ProvisionException;
 import org.apache.log4j.spi.LoggerRepository;
 import org.apache.rave.opensocial.service.impl.DefaultPersonService;
+import org.apache.rave.service.LockService;
+import org.apache.rave.service.impl.DefaultLockService;
+import org.apache.shindig.social.opensocial.spi.GroupService;
 import org.apache.shindig.social.opensocial.spi.PersonService;
 import org.junit.Before;
 import org.junit.Test;
@@ -67,6 +71,17 @@ public class SpringBindingModuleTest {
     public void bindsAlternatePackage() {
         LoggerRepository string = injector.getInstance(LoggerRepository.class);
         assertThat(string, is(notNullValue()));
+    }
+
+    @Test
+    public void bindsPrimaryBean() {
+        LockService lockService = injector.getInstance(LockService.class);
+        assertThat(lockService, is(not(instanceOf(DefaultLockService.class))));
+    }
+
+    @Test(expected = ProvisionException.class)
+    public void exceptionIfNoPrimary() {
+        injector.getInstance(GroupService.class);
     }
 
     @Test(expected = com.google.inject.ConfigurationException.class)

@@ -20,7 +20,12 @@
 package org.apache.rave.inject;
 
 import com.google.inject.Provider;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.ApplicationContext;
+
+import java.util.Map;
 
 /**
  * Provides beans for injection by Guice that are managed by Spring
@@ -38,6 +43,22 @@ public class SpringContextProvider<T> implements Provider<T> {
 
     @Override
     public T get() {
-        return context.getBean(clazz);
+        Map<String, T> beans = context.getBeansOfType(clazz);
+        return beans.size() == 1 ? getSingleBean(beans) : getPrimaryBean(beans);
+    }
+
+    private T getPrimaryBean(Map<String, T> beans) {
+        AutowireCapableBeanFactory factory = context.getAutowireCapableBeanFactory();
+        for(Map.Entry<String, T> bean : beans.entrySet()) {
+            if(factory instanceof ConfigurableListableBeanFactory &&
+                    ((ConfigurableListableBeanFactory) factory).getBeanDefinition(bean.getKey()).isPrimary()) {
+                return bean.getValue();
+            }
+        }
+        throw new NoSuchBeanDefinitionException(clazz, "Matching bean count for class: " + beans.size());
+    }
+
+    private T getSingleBean(Map<String, T> beans) {
+        return beans.entrySet().iterator().next().getValue();
     }
 }

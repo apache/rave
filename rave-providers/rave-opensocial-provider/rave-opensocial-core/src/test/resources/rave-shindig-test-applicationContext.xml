@@ -67,11 +67,23 @@
         <constructor-arg value="org.apache.rave.opensocial.repository.OpenSocialPersonRepository"/>
     </bean>
 
+    <bean id="mockLockService" class="org.easymock.EasyMock" factory-method="createNiceMock"  primary="true">
+        <constructor-arg value="org.apache.rave.service.LockService"/>
+    </bean>
+
+    <bean id="lockService" class="org.apache.rave.service.impl.DefaultLockService" />
+
+    <bean id="mockGroupService" class="org.easymock.EasyMock" factory-method="createNiceMock">
+        <constructor-arg value="org.apache.shindig.social.opensocial.spi.GroupService"/>
+    </bean>
+
     <bean id="nonRaveBean" class="org.apache.log4j.spi.NOPLoggerRepository" />
 
     <bean id="mockSpringBean" class="org.easymock.EasyMock" factory-method="createNiceMock">
         <constructor-arg value="org.springframework.jdbc.core.ResultSetExtractor"/>
     </bean>
+
+    <bean id="groupService" class="org.apache.rave.opensocial.service.impl.DefaultGroupService" />
 
     <bean id="personService" class="org.apache.rave.opensocial.service.impl.DefaultPersonService">
         <constructor-arg name="repository" ref="mockPersonRepo" />
