@@ -21,12 +21,14 @@ package org.apache.rave.inject;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import org.apache.log4j.spi.LoggerRepository;
 import org.apache.rave.opensocial.service.impl.DefaultPersonService;
 import org.apache.shindig.social.opensocial.spi.PersonService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -59,6 +61,17 @@ public class SpringBindingModuleTest {
         PersonService personService1 = injector.getInstance(PersonService.class);
         PersonService personService2 = injector.getInstance(PersonService.class);
         assertThat(personService1, is(sameInstance(personService2)));
+    }
+
+    @Test
+    public void bindsAlternatePackage() {
+        LoggerRepository string = injector.getInstance(LoggerRepository.class);
+        assertThat(string, is(notNullValue()));
+    }
+
+    @Test(expected = com.google.inject.ConfigurationException.class)
+    public void doesNotBindOthers() {
+        ResultSetExtractor personService1 = injector.getInstance(ResultSetExtractor.class);
     }
 
 

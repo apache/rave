@@ -19,11 +19,11 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
-       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:aop="http://www.springframework.org/schema/aop" xmlns:util="http://www.springframework.org/schema/util"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
                            http://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
-        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
 
     <!-- make the the rave.shindig.properties props available to autowire injectors, location of the properties can
      be overridden by setting a system property "rave-shindig.override.properties" -->
@@ -31,6 +31,23 @@
         <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE"/>
         <property name="systemPropertyName" value="rave-shindig.override.properties"/>
         <property name="location" value="classpath:rave.shindig.properties"/>
+    </bean>
+
+    <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean" name="propertyInjector" autowire-candidate="false" id="propertyInjector">
+        <property name="targetObject">
+            <!-- System.getProperties() -->
+            <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+                <property name="targetClass" value="java.lang.System" />
+                <property name="targetMethod" value="getProperties" />
+            </bean>
+        </property>
+        <property name="targetMethod" value="putAll" />
+        <property name="arguments">
+            <!-- The new Properties -->
+            <util:properties>
+                <prop key="shindig.spring.base-package">org.apache.rave:org.apache.log4j</prop>
+            </util:properties>
+        </property>
     </bean>
 
     <!-- bean post-processor for JPA annotations -->
@@ -48,6 +65,12 @@
     <context:component-scan base-package="org.apache.rave.service" annotation-config="true"/>-->
     <bean id="mockPersonRepo" class="org.easymock.EasyMock" factory-method="createNiceMock">
         <constructor-arg value="org.apache.rave.opensocial.repository.OpenSocialPersonRepository"/>
+    </bean>
+
+    <bean id="nonRaveBean" class="org.apache.log4j.spi.NOPLoggerRepository" />
+
+    <bean id="mockSpringBean" class="org.easymock.EasyMock" factory-method="createNiceMock">
+        <constructor-arg value="org.springframework.jdbc.core.ResultSetExtractor"/>
     </bean>
 
     <bean id="personService" class="org.apache.rave.opensocial.service.impl.DefaultPersonService">
