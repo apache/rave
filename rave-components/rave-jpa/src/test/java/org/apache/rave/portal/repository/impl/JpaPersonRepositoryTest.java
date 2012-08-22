@@ -236,6 +236,89 @@ public class JpaPersonRepositoryTest {
     }
 
     @Test
+    @Transactional(readOnly=false)
+    @Rollback(true)
+    public void addFriend() {
+    	repository.addFriend(VALID_USER5, VALID_USER);
+    	List<Person> friendRequestsSent = repository.findFriendRequestsSent(VALID_USER);
+    	assertThat(friendRequestsSent.size(), is(equalTo(1)));
+    	assertThat(friendRequestsSent.get(0).getUsername(), is(equalTo(VALID_USER5)));
+    	List<Person> friendRequestsReceived = repository.findFriendRequestsReceived(VALID_USER5);
+    	assertThat(friendRequestsReceived.size(), is(equalTo(1)));
+    	assertThat(friendRequestsReceived.get(0).getUsername(), is(equalTo(VALID_USER)));
+    	// Checking user5 has only received the friend request from user(canonical) and user(canonical) is not added to his friend list
+        List<Person> friends = repository.findFriends(VALID_USER5);
+        assertThat(friends.size(), is(equalTo(1)));
+        assertThat(friends.get(0).getUsername(), is(equalTo(VALID_USER2)));
+    }
+
+    @Test
+    @Transactional(readOnly=false)
+    @Rollback(true)
+    public void removeFriend() {
+        List<Person> friends = repository.findFriends(VALID_USER);
+        assertThat(friends.size(), is(equalTo(3)));
+        assertThat(friends.get(0).getUsername(), is(equalTo(VALID_USER2)));
+        assertThat(friends.get(1).getUsername(), is(equalTo(VALID_USER3)));
+        assertThat(friends.get(2).getUsername(), is(equalTo(VALID_USER4)));
+        repository.removeFriend(VALID_USER4, VALID_USER);
+        friends = repository.findFriends(VALID_USER);
+        assertThat(friends.size(), is(equalTo(2)));
+        assertThat(friends.get(0).getUsername(), is(equalTo(VALID_USER2)));
+        assertThat(friends.get(1).getUsername(), is(equalTo(VALID_USER3)));
+    }
+
+    @Test
+    @Transactional(readOnly=false)
+    @Rollback(true)
+    public void findFriendRequestsSent() {
+    	List<Person> friendRequestsSent = repository.findFriendRequestsSent(VALID_USER);
+    	assertThat(friendRequestsSent.size(), is(equalTo(0)));
+    	repository.addFriend(VALID_USER5, VALID_USER);
+    	friendRequestsSent = repository.findFriendRequestsSent(VALID_USER);
+    	assertThat(friendRequestsSent.size(), is(equalTo(1)));
+    	assertThat(friendRequestsSent.get(0).getUsername(), is(equalTo(VALID_USER5)));
+    }
+
+    @Test
+    @Transactional(readOnly=false)
+    @Rollback(true)
+    public void findFriendRequestsReceived() {
+    	List<Person> friendRequestsReceived = repository.findFriendRequestsReceived(VALID_USER5);
+    	assertThat(friendRequestsReceived.size(), is(equalTo(0)));
+    	repository.addFriend(VALID_USER5, VALID_USER);
+    	friendRequestsReceived = repository.findFriendRequestsReceived(VALID_USER5);
+    	assertThat(friendRequestsReceived.size(), is(equalTo(1)));
+    	assertThat(friendRequestsReceived.get(0).getUsername(), is(equalTo(VALID_USER)));
+    }
+
+    @Test
+    @Transactional(readOnly=false)
+    @Rollback(true)
+    public void acceptFriendRequest() {
+        List<Person> friends = repository.findFriends(VALID_USER);
+        assertThat(friends.size(), is(equalTo(3)));
+        assertThat(friends.get(0).getUsername(), is(equalTo(VALID_USER2)));
+        assertThat(friends.get(1).getUsername(), is(equalTo(VALID_USER3)));
+        assertThat(friends.get(2).getUsername(), is(equalTo(VALID_USER4)));
+        friends = repository.findFriends(VALID_USER5);
+        assertThat(friends.size(), is(equalTo(1)));
+        assertThat(friends.get(0).getUsername(), is(equalTo(VALID_USER2)));
+        repository.addFriend(VALID_USER5, VALID_USER);
+        repository.acceptFriendRequest(VALID_USER, VALID_USER5);
+        friends = repository.findFriends(VALID_USER);
+        assertThat(friends.size(), is(equalTo(4)));
+        assertThat(friends.get(0).getUsername(), is(equalTo(VALID_USER2)));
+        assertThat(friends.get(1).getUsername(), is(equalTo(VALID_USER3)));
+        assertThat(friends.get(2).getUsername(), is(equalTo(VALID_USER4)));
+        assertThat(friends.get(3).getUsername(), is(equalTo(VALID_USER5)));
+        friends = repository.findFriends(VALID_USER5);
+        assertThat(friends.size(), is(equalTo(2)));
+        assertThat(friends.get(0).getUsername(), is(equalTo(VALID_USER2)));
+        assertThat(friends.get(1).getUsername(), is(equalTo(VALID_USER)));
+    }
+
+    @Test
     public void read_properties() {
         Person person = repository.get(VALID_ID);
     	assertThat(person.getProperties().size(), is(1));

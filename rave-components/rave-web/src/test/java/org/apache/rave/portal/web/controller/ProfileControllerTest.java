@@ -19,8 +19,20 @@
 
 package org.apache.rave.portal.web.controller;
 
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.rave.portal.model.Page;
 import org.apache.rave.portal.model.PageLayout;
+import org.apache.rave.portal.model.Person;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.impl.PageImpl;
 import org.apache.rave.portal.model.impl.PageLayoutImpl;
@@ -35,14 +47,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.ui.ModelMap;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.easymock.EasyMock.*;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
 
 /**
  * Test class for {@link ProfileController}
@@ -92,7 +96,7 @@ public class ProfileControllerTest {
 		final UserImpl user = new UserImpl();
 		final ModelMap model = new ModelMap();
 		final int modelSize = 4;
-		final String username="Canonical";
+		final String username="canonical";
         user.setUsername(username);
         user.setId(USER_ID);
 		String userProfile = new String(ModelKeys.USER_PROFILE);
@@ -100,9 +104,11 @@ public class ProfileControllerTest {
         PageLayout pageLayout = new PageLayoutImpl();
         pageLayout.setCode(VALID_PAGE_LAYOUT_CODE);
         personProfile.setPageLayout(pageLayout);
+        List<Person> personObjects = new ArrayList<Person>();
 
 		expect(userService.getUserByUsername(username)).andReturn(user).once();
         expect(pageService.getPersonProfilePage(user.getId())).andReturn(personProfile);
+		expect(userService.getFriendRequestsReceived(username)).andReturn(personObjects);
 
 		replay(userService, pageService);
 

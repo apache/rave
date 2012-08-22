@@ -19,11 +19,15 @@
 
 package org.apache.rave.portal.web.controller;
 
+import java.util.List;
+
 import org.apache.rave.portal.model.Page;
+import org.apache.rave.portal.model.Person;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.service.PageService;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.portal.web.controller.util.ControllerUtils;
+import org.apache.rave.portal.web.model.NavigationItem;
 import org.apache.rave.portal.web.model.NavigationMenu;
 import org.apache.rave.portal.web.model.UserForm;
 import org.apache.rave.portal.web.util.ModelKeys;
@@ -34,7 +38,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping(value = {"/person/*", "/person"})
@@ -67,7 +75,8 @@ public class ProfileController {
         addAttributesToModel(model, user, referringPageId);
         model.addAttribute(ModelKeys.PAGE, personProfilePage);
 		String view =  ViewNames.getPersonPageView(personProfilePage.getPageLayout().getCode());
-        addNavItemsToModel(view, model, referringPageId, user);
+        List<Person> friendRequests = userService.getFriendRequestsReceived(username);
+        addNavItemsToModel(view, model, referringPageId, user, friendRequests);
         return view;
 	}
 
@@ -112,9 +121,18 @@ public class ProfileController {
     	model.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
     }
 
-    public static void addNavItemsToModel(String view, ModelMap model, Long referringPageId, User user) {
+    public static void addNavItemsToModel(String view, ModelMap model, Long referringPageId, User user, List<Person> friendRequests) {
         long refPageId = referringPageId != null ? referringPageId : 0;
-        final NavigationMenu topMenu = ControllerUtils.getTopMenu(view, refPageId, user, false);
-        model.addAttribute(topMenu.getName(), topMenu);
+        final NavigationMenu topMenu = new NavigationMenu("topnav");
+
+        NavigationItem friendRequestItems = new NavigationItem("page.profile.friend.requests", String.valueOf(friendRequests.size()) , "#");
+        for(Person request : friendRequests) {
+        	NavigationItem childItem = new NavigationItem((request.getDisplayName()!=null && !request.getDisplayName().isEmpty())? request.getDisplayName() : request.getUsername(), request.getUsername(), "#");
+        	friendRequestItems.addChildNavigationItem(childItem);
+        }
+    	topMenu.addNavigationItem(friendRequestItems);
+    	topMenu.getNavigationItems().addAll((ControllerUtils.getTopMenu(view, refPageId, user, false).getNavigationItems()));
+
+    	model.addAttribute(topMenu.getName(), topMenu);
     }
 }

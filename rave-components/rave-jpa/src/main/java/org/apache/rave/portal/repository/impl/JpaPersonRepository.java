@@ -174,52 +174,84 @@ public class JpaPersonRepository implements PersonRepository {
     }
 
 	@Override
-	public boolean addFriend(Person friend, Person user) {
-		JpaPersonAssociation item = new JpaPersonAssociation();
-		JpaPersonAssociation inverseItem = new JpaPersonAssociation();
-		item.setFollowedby(personConverter.convert(friend));
-		item.setFollower(personConverter.convert(user));
-		item.setStatus(FriendRequestStatus.PENDING);
-		item = saveOrUpdate(item.getEntityId(), manager, item);
-		inverseItem.setFollowedby(personConverter.convert(user));
-		inverseItem.setFollower(personConverter.convert(friend));
-		inverseItem.setStatus(FriendRequestStatus.PENDING);
-		inverseItem = saveOrUpdate(inverseItem.getEntityId(), manager, inverseItem);
-		if(item.getEntityId()!=null && inverseItem.getEntityId()!=null)
+	public boolean addFriend(String friendUsername, String username) {
+		JpaPersonAssociation senderItem = new JpaPersonAssociation();
+		senderItem.setFollower(personConverter.convert(findByUsername(username)));
+		senderItem.setFollowedby(personConverter.convert(findByUsername(friendUsername)));
+		senderItem.setStatus(FriendRequestStatus.SENT);
+		senderItem = saveOrUpdate(senderItem.getEntityId(), manager, senderItem);
+
+		JpaPersonAssociation receiverItem = new JpaPersonAssociation();
+		receiverItem.setFollower(personConverter.convert(findByUsername(friendUsername)));
+		receiverItem.setFollowedby(personConverter.convert(findByUsername(username)));
+		receiverItem.setStatus(FriendRequestStatus.RECEIVED);
+		receiverItem = saveOrUpdate(receiverItem.getEntityId(), manager, receiverItem);
+
+		if(senderItem.getEntityId()!=null && receiverItem.getEntityId()!=null)
 			return true;
 		else
 			return false;
 	}
 
 	@Override
-	public void removeFriend(Person friend, Person user) {
-		TypedQuery<JpaPersonAssociation> query = manager.createNamedQuery(JpaPersonAssociation.REMOVE_FRIEND_BY_USERNAME, JpaPersonAssociation.class);
-        query.setParameter(JpaPersonAssociation.FOLLOWER_USERNAME, user.getUsername());
-        query.setParameter(JpaPersonAssociation.FOLLOWEDBY_USERNAME, friend.getUsername());
+	public void removeFriend(String friendUsername, String username) {
+		TypedQuery<JpaPersonAssociation> query = manager.createNamedQuery(JpaPersonAssociation.FIND_ASSOCIATION_ITEM_BY_USERNAMES, JpaPersonAssociation.class);
+        query.setParameter(JpaPersonAssociation.FOLLOWER_USERNAME, username);
+        query.setParameter(JpaPersonAssociation.FOLLOWEDBY_USERNAME, friendUsername);
         JpaPersonAssociation item = getSingleResult(query.getResultList());
         manager.remove(item);
-		query = manager.createNamedQuery(JpaPersonAssociation.REMOVE_FRIEND_BY_USERNAME, JpaPersonAssociation.class);
-        query.setParameter(JpaPersonAssociation.FOLLOWER_USERNAME, friend.getUsername());
-        query.setParameter(JpaPersonAssociation.FOLLOWEDBY_USERNAME, user.getUsername());
+
+		query = manager.createNamedQuery(JpaPersonAssociation.FIND_ASSOCIATION_ITEM_BY_USERNAMES, JpaPersonAssociation.class);
+        query.setParameter(JpaPersonAssociation.FOLLOWER_USERNAME, friendUsername);
+        query.setParameter(JpaPersonAssociation.FOLLOWEDBY_USERNAME, username);
         JpaPersonAssociation inverseItem = getSingleResult(query.getResultList());
         manager.remove(inverseItem);
 	}
 
 	@Override
 	public HashMap<String, List<Person>> findFriendsAndRequests(String username) {
-		List<Person> friends = new ArrayList<Person>();
-		List<Person> friendRequests = new ArrayList<Person>();
 		HashMap<String, List<Person>> friendsAndRequests = new HashMap<String, List<Person>>();
-		TypedQuery<JpaPersonAssociation> associationItems = manager.createNamedQuery(JpaPersonAssociation.FIND_FRIENDS_AND_REQUESTS_BY_USERNAME, JpaPersonAssociation.class);
-		associationItems.setParameter(JpaPersonAssociation.FOLLOWER_USERNAME, username);
-		for(JpaPersonAssociation item : associationItems.getResultList()) {
-			if(item.getStatus().equals(FriendRequestStatus.ACCEPTED))
-				friends.add(item.getFollowedby());
-			else if(item.getStatus().equals(FriendRequestStatus.PENDING))
-				friendRequests.add(item.getFollowedby());
-		}
-		friendsAndRequests.put(FriendRequestStatus.ACCEPTED.toString(), friends);
-		friendsAndRequests.put(FriendRequestStatus.PENDING.toString(), friendRequests);
+		friendsAndRequests.put(FriendRequestStatus.ACCEPTED.toString(), findFriends(username));
+		friendsAndRequests.put(FriendRequestStatus.SENT.toString(), findFriendRequestsSent(username));
+		friendsAndRequests.put(FriendRequestStatus.RECEIVED.toString(), findFriendRequestsReceived(username));
         return friendsAndRequests;
+	}
+
+    @Override
+    public List<Person> findFriendRequestsSent(String username) {
+        TypedQuery<JpaPerson> friends = manager.createNamedQuery(JpaPerson.FIND_FRIENDS_BY_USERNAME, JpaPerson.class);
+        friends.setParameter(JpaPerson.USERNAME_PARAM, username);
+        friends.setParameter(JpaPerson.STATUS_PARAM, FriendRequestStatus.SENT);
+        return CollectionUtils.<Person>toBaseTypedList(friends.getResultList());
+    }
+
+    @Override
+    public List<Person> findFriendRequestsReceived(String username) {
+        TypedQuery<JpaPerson> friends = manager.createNamedQuery(JpaPerson.FIND_FRIENDS_BY_USERNAME, JpaPerson.class);
+        friends.setParameter(JpaPerson.USERNAME_PARAM, username);
+        friends.setParameter(JpaPerson.STATUS_PARAM, FriendRequestStatus.RECEIVED);
+        return CollectionUtils.<Person>toBaseTypedList(friends.getResultList());
+    }
+
+	@Override
+	public boolean acceptFriendRequest(String friendUsername, String username) {
+		TypedQuery<JpaPersonAssociation> query = manager.createNamedQuery(JpaPersonAssociation.FIND_ASSOCIATION_ITEM_BY_USERNAMES, JpaPersonAssociation.class);
+        query.setParameter(JpaPersonAssociation.FOLLOWER_USERNAME, username);
+        query.setParameter(JpaPersonAssociation.FOLLOWEDBY_USERNAME, friendUsername);
+        JpaPersonAssociation receiverItem = getSingleResult(query.getResultList());
+        receiverItem.setStatus(FriendRequestStatus.ACCEPTED);
+        receiverItem = saveOrUpdate(receiverItem.getEntityId(), manager, receiverItem);
+
+		query = manager.createNamedQuery(JpaPersonAssociation.FIND_ASSOCIATION_ITEM_BY_USERNAMES, JpaPersonAssociation.class);
+        query.setParameter(JpaPersonAssociation.FOLLOWER_USERNAME, friendUsername);
+        query.setParameter(JpaPersonAssociation.FOLLOWEDBY_USERNAME, username);
+        JpaPersonAssociation senderItem = getSingleResult(query.getResultList());
+        senderItem.setStatus(FriendRequestStatus.ACCEPTED);
+        senderItem = saveOrUpdate(senderItem.getEntityId(), manager, senderItem);
+
+		if(receiverItem.getEntityId()!=null && senderItem.getEntityId()!=null)
+			return true;
+		else
+			return false;
 	}
 }
