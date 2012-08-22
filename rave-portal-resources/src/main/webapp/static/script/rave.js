@@ -34,7 +34,8 @@ var rave = rave || (function () {
         username: "Unknown",
         id:-1
     };
-
+    // JS debug mode is off by default
+    var javaScriptDebugMode = 0;
     var onWidgetsInitializedHandlers = [];
     var onProvidersInitializedHandlers = [];
     var onUIInitializedHandlers = [];
@@ -1082,6 +1083,14 @@ var rave = rave || (function () {
         return context;
     }
 
+    function setJavaScriptDebugMode(debugMode) {
+        javaScriptDebugMode = debugMode;
+    }
+
+    function getJavaScriptDebugMode(){
+        return javaScriptDebugMode;
+    }
+
     function setPageViewer(viewer) {
         pageViewer = viewer;
     }
@@ -1286,6 +1295,20 @@ var rave = rave || (function () {
          * Gets the current context
          */
         getContext:getContext,
+
+        /**
+         * Gets the value of the JavaScriptDebugMode flag
+         * 0 = off
+         * 1 = on
+         */
+        getJavaScriptDebugMode: getJavaScriptDebugMode,
+
+        /**
+         * Sets the value of the JavaScriptDebugMode flag
+         * 0 = off
+         * 1 = on
+         */
+        setJavaScriptDebugMode: setJavaScriptDebugMode,
 
         /**
          * Sets the authenticated page viewer for the Rave web application

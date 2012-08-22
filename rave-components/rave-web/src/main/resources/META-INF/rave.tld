@@ -89,4 +89,10 @@
             <type>org.apache.rave.portal.web.renderer.ScriptLocation</type>
         </attribute>
     </tag>
+    <tag>
+        <description>Renders the value of the JavaScriptDebugMode portal preference</description>
+        <name>render-js-debug-mode</name>
+        <tag-class>org.apache.rave.portal.web.tag.JavaScriptDebugModeTag</tag-class>
+        <body-content>JSP</body-content>
+    </tag>
 </taglib>

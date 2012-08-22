@@ -94,7 +94,7 @@ describe("Rave OpenSocial", function() {
         it("initializes the OpenSocial container machinery", function() {
             rave.opensocial.init();
             expect(container.args()[0]).toEqual("/rpc");
-            expect(container.args()[1]).toEqual("1");
+            expect(container.args()[1]).toEqual(0);
         });
 
         it("Initializes the RPC Hooks Correctly", function() {

@@ -23,12 +23,11 @@
 <portal:render-script location="${'AFTER_LIB'}"/>
 <%-- local rave scripts --%>
 <portal:render-script location="${'BEFORE_RAVE'}"/>
+<%-- get the javaScriptDebugMode portal preference value --%>
+<c:set var="jsDebugMode"><portal:render-js-debug-mode /></c:set>
 <%-- check to see if the javaScriptDebugMode is on, if so render the individual JS files, otherwise render the minified single file --%>
 <c:choose>
-    <c:when test="${not empty portalSettings and not empty portalSettings['javaScriptDebugMode'] and portalSettings['javaScriptDebugMode'].value == '0'}">
-        <script src="<spring:url value="/static/script/rave_all.min.js"/>"></script>
-    </c:when>
-    <c:otherwise>
+    <c:when test="${jsDebugMode == '1'}">
         <script src="<spring:url value="/static/script/rave.js"/>"></script>
         <script src="<spring:url value="/static/script/rave_api.js"/>"></script>
         <script src="<spring:url value="/static/script/rave_opensocial.js"/>"></script>
@@ -38,17 +37,23 @@
         <script src="<spring:url value="/static/script/rave_person_profile.js"/>"></script>
         <script src="<spring:url value="/static/script/rave_store.js"/>"></script>
         <script src="<spring:url value="/static/script/rave_admin.js"/>"></script>
+    </c:when>
+    <c:otherwise>
+        <script src="<spring:url value="/static/script/rave_all.min.js"/>"></script>
     </c:otherwise>
 </c:choose>
 <script src="<spring:url value="/app/messagebundle/rave_client_messages.js"/>"></script>
 <portal:render-script location="${'AFTER_RAVE'}"/>
 <%-- common javascript to execute on all pages --%>
 <script>
+    <%-- set the web application context --%>
     rave.setContext("<spring:url value="/app/" />");
+    <%-- set the javascript debug mode so js code has access to it --%>
+    rave.setJavaScriptDebugMode(<c:out value="${jsDebugMode}"/>);
+    <%-- set the current page viewer --%>
     <sec:authorize access="isAuthenticated()">
         <sec:authentication property="principal.username" scope="request" var="username"/>
         <sec:authentication property="principal.id" scope="request" var="id"/>
-        rave.setPageViewer({username:"${username}",
-            id:"${id}"});
+        rave.setPageViewer({username:"${username}", id:"${id}"});
     </sec:authorize>
 </script>
