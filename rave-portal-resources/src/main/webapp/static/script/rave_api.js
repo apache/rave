@@ -527,8 +527,6 @@ rave.api = rave.api || (function() {
 
         function addFriend(args) {
         	var user =  encodeURIComponent(encodeURIComponent(args.friendUsername));
-        	alert('ADD3333' + user);
-        	
         	$.post(rave.getContext() + path + "person/" + user + "/addfriend",
                 function(result) {
                     if (result.error) {
@@ -543,8 +541,6 @@ rave.api = rave.api || (function() {
         }
         function removeFriend(args) {
         	var user =  encodeURIComponent(encodeURIComponent(args.friendUsername));
-        	alert('Remove11' + user);
-        	
         	$.post(rave.getContext() + path + "person/" + user + "/removefriend",
                 function(result) {
                     if (result.error) {
@@ -572,7 +568,6 @@ rave.api = rave.api || (function() {
         }
         function acceptFriendRequest(args) {
         	var user =  encodeURIComponent(encodeURIComponent(args.friendUsername));
-        	alert('Alert' + user)
         	$.post(rave.getContext() + path + "person/" + user + "/acceptfriendrequest",
                     function(result) {
                         if (result.error) {
