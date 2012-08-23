@@ -106,13 +106,13 @@ public class ProfileControllerTest {
         personProfile.setPageLayout(pageLayout);
         List<Person> personObjects = new ArrayList<Person>();
 
-		expect(userService.getUserByUsername(username)).andReturn(user).once();
+		expect(userService.getUserById(USER_ID)).andReturn(user).once();
         expect(pageService.getPersonProfilePage(user.getId())).andReturn(personProfile);
 		expect(userService.getFriendRequestsReceived(username)).andReturn(personObjects);
 
 		replay(userService, pageService);
 
-		String view = profileController.viewProfile(username, model, null);
+		String view = profileController.viewProfile(USER_ID, model, null);
 
 		//assert that the model is not null
 		assertThat(model, CoreMatchers.notNullValue());
@@ -137,17 +137,17 @@ public class ProfileControllerTest {
         final User user = null;
         final ModelMap model = new ModelMap();
         final int modelSize = 4;
-        final String username="Canonical";
+        final String username="canonical";
         Page personProfile = new PageImpl();
         PageLayout pageLayout = new PageLayoutImpl();
         pageLayout.setCode("person_profile");
         personProfile.setPageLayout(pageLayout);
 
-        expect(userService.getUserByUsername(username)).andThrow(new UsernameNotFoundException("Username does not exist"));
+        expect(userService.getUserById(USER_ID)).andThrow(new UsernameNotFoundException("Username does not exist"));
 
         replay(userService, pageService);
 
-        profileController.viewProfile(username, model, null);
+        profileController.viewProfile(USER_ID, model, null);
 
         verify(userService, pageService);
     }

@@ -62,24 +62,25 @@ public class ProfileController {
     /**
 	 * Views the main page of another user's profile
 	 *
-     * @param username			    username (allows for a period in the username)
+     * @param userid			    userid 
      * @param model                 {@link Model} map
      * @param referringPageId		page reference id (optional)
 	 * @return the view name of the user profile page
 	 */
-	@RequestMapping(value = {"/{username:.*}"}, method = RequestMethod.GET)
-	public String viewProfile(@PathVariable String username, ModelMap model, @RequestParam(required = false) Long referringPageId) {
-		logger.debug("Viewing person profile for: " + username);
-		User user = userService.getUserByUsername(username);
-        Page personProfilePage = pageService.getPersonProfilePage(user.getId());
+	
+	@RequestMapping(value = {"/{userid:.*}"}, method = RequestMethod.GET)
+	public String viewProfile(@PathVariable Long userid, ModelMap model, @RequestParam(required = false) Long referringPageId) {
+		User user = userService.getUserById(userid);
+		logger.debug("Viewing person profile for: " + user.getUsername());
+		
+		Page personProfilePage = pageService.getPersonProfilePage(user.getId());
         addAttributesToModel(model, user, referringPageId);
         model.addAttribute(ModelKeys.PAGE, personProfilePage);
 		String view =  ViewNames.getPersonPageView(personProfilePage.getPageLayout().getCode());
-        List<Person> friendRequests = userService.getFriendRequestsReceived(username);
+        List<Person> friendRequests = userService.getFriendRequestsReceived(user.getUsername());
         addNavItemsToModel(view, model, referringPageId, user, friendRequests);
         return view;
 	}
-
 	/**
 	 * Updates the user's personal information
 	 *
