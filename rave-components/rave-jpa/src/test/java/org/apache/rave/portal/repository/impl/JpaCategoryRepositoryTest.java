@@ -88,10 +88,10 @@ public class JpaCategoryRepositoryTest {
         Date now = new Date();
         JpaCategory category = new JpaCategory();
         category.setLastModifiedDate(now);
-        category.setLastModifiedUser(validUser);
+        category.setLastModifiedUserId(VALID_USER_ID.toString());
         category.setText(NEW_TEXT);
         category.setCreatedDate(now);
-        category.setCreatedUser(validUser);
+        category.setCreatedUserId(VALID_USER_ID.toString());
 
         assertThat(category.getEntityId(), is(nullValue()));
         repository.save(category);
@@ -149,9 +149,9 @@ public class JpaCategoryRepositoryTest {
         JpaCategory wc = new JpaCategory();
         wc.setText(DUPLICATE_TEXT_VALUE);
         wc.setCreatedDate(now);
-        wc.setCreatedUser(user);
+        wc.setCreatedUserId(user.getId());
         wc.setLastModifiedDate(now);
-        wc.setLastModifiedUser(user);
+        wc.setLastModifiedUserId(user.getId());
 
         boolean gotExpectedException = false;
         try {

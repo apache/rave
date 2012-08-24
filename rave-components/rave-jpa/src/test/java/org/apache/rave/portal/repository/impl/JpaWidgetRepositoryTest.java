@@ -417,9 +417,9 @@ public class JpaWidgetRepositoryTest {
         Category category = new JpaCategory();
         category.setId("1");
         category.setText("Sample Category");
-        category.setCreatedUser(user);
+        category.setCreatedUserId(user.getId());
         category.setCreatedDate(new Date());
-        category.setLastModifiedUser(user);
+        category.setLastModifiedUserId(user.getId());
         category.setLastModifiedDate(new Date());
         sharedManager.merge(category);
 

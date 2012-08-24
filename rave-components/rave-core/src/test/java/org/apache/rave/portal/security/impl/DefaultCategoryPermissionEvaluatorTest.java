@@ -68,7 +68,7 @@ public class DefaultCategoryPermissionEvaluatorTest {
 
         category = new CategoryImpl();
         category.setId(VALID_WIDGET_CATEGORY_ID);
-        category.setCreatedUser(user);
+        category.setCreatedUserId(VALID_USER_ID);
 
         grantedAuthorities = new ArrayList<GrantedAuthority>();
         grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_USER"));

@@ -84,7 +84,7 @@ public class DefaultWidgetPermissionEvaluator extends AbstractModelPermissionEva
         if (targetId instanceof RaveSecurityContext) {
             hasPermission = verifyRaveSecurityContext(authentication, (RaveSecurityContext) targetId);
         } else {
-            hasPermission = hasPermission(authentication, widgetRepository.get((String) targetId), permission, true);
+            hasPermission = hasPermission(authentication, widgetRepository.get(targetId.toString()), permission, true);
         }
         return hasPermission;
     }

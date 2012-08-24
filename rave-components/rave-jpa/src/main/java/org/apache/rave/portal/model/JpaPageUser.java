@@ -47,7 +47,7 @@ public class JpaPageUser implements BasicEntity, Serializable, PageUser {
     private Long entityId;
 
     @Basic
-    @JoinColumn(name = "user_id")
+    @Column(name = "user_id")
     private String userId;
 
     @ManyToOne(fetch=FetchType.EAGER)

@@ -51,9 +51,9 @@ public class JpaCategory implements BasicEntity, Serializable, Category {
     @Column(name = "text", unique = true)
     private String text;
 
-    @OneToOne(fetch=FetchType.EAGER)
-    @JoinColumn(name="created_user_id")
-    private JpaUser createdUser;
+    @Basic
+    @Column(name="created_user_id")
+    private String createdUserId;
 
     @Basic
     @Column(name ="created_date")
@@ -61,9 +61,9 @@ public class JpaCategory implements BasicEntity, Serializable, Category {
     private Date createdDate;
 
 
-    @OneToOne(fetch=FetchType.EAGER)
-    @JoinColumn(name="last_modified_user_id")
-    private JpaUser lastModifiedUser;
+    @Basic
+    @Column(name="last_modified_user_id")
+    private String lastModifiedUserId;
 
     @Basic
     @Column(name ="last_modified_date")
@@ -82,12 +82,12 @@ public class JpaCategory implements BasicEntity, Serializable, Category {
 
     }
 
-    public JpaCategory(Long entityId, String text, User createdUser, Date createdDate, User lastModifiedUser, Date lastModifiedDate) {
+    public JpaCategory(Long entityId, String text, User createdUserId, Date createdDate, User lastModifiedUserId, Date lastModifiedDate) {
         this.entityId = entityId;
         this.text = text;
-        this.setCreatedUser(createdUser);
+        this.setCreatedUserId(createdUserId.getId());
         this.createdDate = createdDate;
-        this.setLastModifiedUser(lastModifiedUser);
+        this.setLastModifiedUserId(lastModifiedUserId.getId());
         this.lastModifiedDate = lastModifiedDate;
     }
 
@@ -108,7 +108,7 @@ public class JpaCategory implements BasicEntity, Serializable, Category {
 
     @Override
     public void setId(String id) {
-        setEntityId(Long.parseLong(id));
+        setEntityId(id == null ? null : Long.parseLong(id));
     }
 
     @Override
@@ -122,13 +122,13 @@ public class JpaCategory implements BasicEntity, Serializable, Category {
     }
 
     @Override
-    public User getCreatedUser() {
-        return createdUser;
+    public String getCreatedUserId() {
+        return createdUserId;
     }
 
     @Override
-    public void setCreatedUser(User createdUser) {
-        this.createdUser = JpaConverter.getInstance().convert(createdUser, User.class);
+    public void setCreatedUserId(String createdUserId) {
+        this.createdUserId = createdUserId;
     }
 
     @Override
@@ -142,13 +142,13 @@ public class JpaCategory implements BasicEntity, Serializable, Category {
     }
 
     @Override
-    public User getLastModifiedUser() {
-        return lastModifiedUser;
+    public String getLastModifiedUserId() {
+        return lastModifiedUserId;
     }
 
     @Override
-    public void setLastModifiedUser(User lastModifiedUser) {
-        this.lastModifiedUser = JpaConverter.getInstance().convert(lastModifiedUser, User.class);
+    public void setLastModifiedUserId(String lastModifiedUserId) {
+        this.lastModifiedUserId = lastModifiedUserId;
     }
 
     @Override

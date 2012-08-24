@@ -26,9 +26,9 @@ import java.util.List;
 public class CategoryImpl implements Category {
     private String id;
     private String text;
-    private User createdUser;
+    private String createdUserId;
     private Date createdDate;
-    private User lastModifiedUser;
+    private String lastModifiedUserId;
     private Date lastModifiedDate;
     private List<Widget> widgets;
 
@@ -61,13 +61,13 @@ public class CategoryImpl implements Category {
     }
 
     @Override
-    public User getCreatedUser() {
-        return createdUser;
+    public String getCreatedUserId() {
+        return createdUserId;
     }
 
     @Override
-    public void setCreatedUser(User createdUser) {
-        this.createdUser = createdUser;
+    public void setCreatedUserId(String createdUserId) {
+        this.createdUserId = createdUserId;
     }
 
     @Override
@@ -81,13 +81,13 @@ public class CategoryImpl implements Category {
     }
 
     @Override
-    public User getLastModifiedUser() {
-        return lastModifiedUser;
+    public String getLastModifiedUserId() {
+        return lastModifiedUserId;
     }
 
     @Override
-    public void setLastModifiedUser(User lastModifiedUser) {
-        this.lastModifiedUser = lastModifiedUser;
+    public void setLastModifiedUserId(String lastModifiedUserId) {
+        this.lastModifiedUserId = lastModifiedUserId;
     }
 
     @Override

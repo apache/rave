@@ -57,9 +57,9 @@ public class DefaultCategoryService implements CategoryService {
         Date now = new Date();
         category.setText(text);
         category.setCreatedDate(now);
-        category.setCreatedUser(createdUser);
+        category.setCreatedUserId(createdUser.getId());
         category.setLastModifiedDate(now);
-        category.setLastModifiedUser(createdUser);
+        category.setLastModifiedUserId(createdUser.getId());
         categoryRepository.save(category);
         return category;
     }
@@ -70,7 +70,7 @@ public class DefaultCategoryService implements CategoryService {
         Category category = categoryRepository.get(categoryId);
         category.setText(text);
         category.setLastModifiedDate(new Date());
-        category.setLastModifiedUser(lastModifiedUser);
+        category.setLastModifiedUserId(lastModifiedUser.getId());
         categoryRepository.save(category);
         return category;
     }

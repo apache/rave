@@ -60,9 +60,9 @@ public class JpaCategoryConverter implements ModelConverter<Category, JpaCategor
     private void updateProperties(Category source, JpaCategory converted) {
         converted.setId(source.getId());
         converted.setCreatedDate(source.getCreatedDate());
-        converted.setCreatedUser(source.getCreatedUser());
+        converted.setCreatedUserId(source.getCreatedUserId());
         converted.setLastModifiedDate(source.getLastModifiedDate());
-        converted.setLastModifiedUser(source.getLastModifiedUser());
+        converted.setLastModifiedUserId(source.getLastModifiedUserId());
         converted.setText(source.getText());
         converted.setWidgets(source.getWidgets());
     }

@@ -21,7 +21,6 @@ package org.apache.rave.portal.repository.impl;
 
 import org.apache.rave.portal.model.Category;
 import org.apache.rave.portal.model.JpaCategory;
-import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.conversion.JpaCategoryConverter;
 import org.apache.rave.portal.repository.CategoryRepository;
 import org.apache.rave.util.CollectionUtils;
@@ -79,14 +78,14 @@ public class JpaCategoryRepository implements CategoryRepository {
        int numRecordsChanged = 0;
        for (Category category : categories) {
            boolean changed = false;
-           User createdUser = category.getCreatedUser();
-           User lastModifiedUser = category.getLastModifiedUser();
-           if (createdUser != null && userId.equals(createdUser.getId())) {
-               category.setCreatedUser(null);
+           String createdUser = category.getCreatedUserId();
+           String lastModifiedUser = category.getLastModifiedUserId();
+           if (createdUser != null && userId.equals(createdUser)) {
+               category.setCreatedUserId(null);
                changed = true;
                }
-           if (lastModifiedUser != null && userId.equals(lastModifiedUser.getId())) {
-               category.setLastModifiedUser(null);
+           if (lastModifiedUser != null && userId.equals(lastModifiedUser)) {
+               category.setLastModifiedUserId(null);
                changed = true;
                }
            if (changed) {

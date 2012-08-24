@@ -149,11 +149,11 @@ public class DefaultCategoryPermissionEvaluator extends AbstractModelPermissionE
             trustedCategory = getTrustedCategory(category.getId(), trustedCategoryContainer);
         }
 
-        return isCategoryCreatedUserByUsername(authentication, trustedCategory.getCreatedUser().getUsername());
+        return isCategoryCreatedUserByUsername(authentication, trustedCategory.getCreatedUserId());
     }
 
-    private boolean isCategoryCreatedUserByUsername(Authentication authentication, String username) {
-        return ((User)authentication.getPrincipal()).getUsername().equals(username);
+    private boolean isCategoryCreatedUserByUsername(Authentication authentication, String id) {
+        return ((User)authentication.getPrincipal()).getId().equals(id);
     }
 
     private boolean isCategoryCreatedUserById(Authentication authentication, String userId) {

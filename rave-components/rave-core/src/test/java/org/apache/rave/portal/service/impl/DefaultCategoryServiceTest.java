@@ -66,9 +66,9 @@ public class DefaultCategoryServiceTest {
         validCategory = new CategoryImpl();
         validCategory.setId(VALID_ID);
         validCategory.setText(VALID_TEXT);
-        validCategory.setCreatedUser(validCreatedUser);
+        validCategory.setCreatedUserId(VALID_CREATED_USER_ID);
         validCategory.setCreatedDate(VALID_CREATED_DATE);
-        validCategory.setLastModifiedUser(validLastModifiedUser);
+        validCategory.setLastModifiedUserId(VALID_LAST_MODIFIED_USER_ID);
         validCategory.setLastModifiedDate(VALID_LAST_MODIFIED_DATE);
     }
 
@@ -114,8 +114,8 @@ public class DefaultCategoryServiceTest {
         assertThat(wc.getText(), is(NEW_CATEGORY_TEXT));
         assertThat(wc.getCreatedDate(), is(notNullValue(Date.class)));
         assertThat(wc.getCreatedDate(), is(wc.getLastModifiedDate()));
-        assertThat(wc.getCreatedUser(), is(validCreatedUser));
-        assertThat(wc.getLastModifiedUser(), is(validCreatedUser));
+        assertThat(wc.getCreatedUserId(), is(VALID_CREATED_USER_ID));
+        assertThat(wc.getLastModifiedUserId(), is(VALID_CREATED_USER_ID));
 
         verify(repository);
     }
@@ -127,8 +127,8 @@ public class DefaultCategoryServiceTest {
         Category expectedSaveCategory = new CategoryImpl();
         expectedSaveCategory.setId(VALID_ID);
         expectedSaveCategory.setText(UPDATED_TEXT);
-        expectedSaveCategory.setCreatedUser(validCreatedUser);
-        expectedSaveCategory.setLastModifiedUser(validLastModifiedUser);
+        expectedSaveCategory.setCreatedUserId(VALID_CREATED_USER_ID);
+        expectedSaveCategory.setLastModifiedUserId(VALID_LAST_MODIFIED_USER_ID);
         expectedSaveCategory.setCreatedDate(VALID_CREATED_DATE);
         expectedSaveCategory.setLastModifiedDate(VALID_LAST_MODIFIED_DATE);
 
@@ -139,8 +139,8 @@ public class DefaultCategoryServiceTest {
         Category updatedCategory = service.update(VALID_ID, UPDATED_TEXT, validLastModifiedUser);
         assertThat(updatedCategory.getId(), is(VALID_ID));
         assertThat(updatedCategory.getText(), is(UPDATED_TEXT));
-        assertThat(updatedCategory.getCreatedUser(), is(validCreatedUser));
-        assertThat(updatedCategory.getLastModifiedUser(), is(validLastModifiedUser));
+        assertThat(updatedCategory.getCreatedUserId(), is(VALID_CREATED_USER_ID));
+        assertThat(updatedCategory.getLastModifiedUserId(), is(VALID_LAST_MODIFIED_USER_ID));
         assertThat(updatedCategory.getLastModifiedDate().after(updatedCategory.getCreatedDate()), is(true));
 
         verify(repository);

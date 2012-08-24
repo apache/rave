@@ -204,7 +204,7 @@ public class CategoryControllerTest {
         String id = "1";
         String categoryText = "Social";
         CategoryImpl category = new CategoryImpl(id);
-        category.setCreatedUser(user);
+        category.setCreatedUserId(user.getId());
         category.setText(categoryText);
         SessionStatus sessionStatus = createMock(SessionStatus.class);
         expect(userService.getAuthenticatedUser()).andReturn(user).once();
@@ -227,7 +227,7 @@ public class CategoryControllerTest {
         String categoryText = "Social";
         String invalidToken = AdminControllerUtil.generateSessionToken();
         CategoryImpl category = new CategoryImpl();
-        category.setCreatedUser(user);
+        category.setCreatedUserId(user.getId());
         category.setText(categoryText);
         category.setId(id);
         SessionStatus sessionStatus = createMock(SessionStatus.class);
@@ -249,7 +249,7 @@ public class CategoryControllerTest {
         String id = "1";
         String categoryText = "";
         CategoryImpl category = new CategoryImpl();
-        category.setCreatedUser(user);
+        category.setCreatedUserId(user.getId());
         category.setText(categoryText);
         category.setId(id);
         SessionStatus sessionStatus = createMock(SessionStatus.class);
@@ -268,7 +268,7 @@ public class CategoryControllerTest {
         User user = new UserImpl();
         String categoryText = "Social";
         CategoryImpl category = new CategoryImpl();
-        category.setCreatedUser(user);
+        category.setCreatedUserId(user.getId());
         category.setText(categoryText);
         category.setId(id);
         SessionStatus sessionStatus = createMock(SessionStatus.class);
@@ -287,7 +287,7 @@ public class CategoryControllerTest {
         String id = "1";
         String categoryText = "Social";
         CategoryImpl category = new CategoryImpl();
-        category.setCreatedUser(user);
+        category.setCreatedUserId(user.getId());
         category.setText(categoryText);
         category.setId(id);
         SessionStatus sessionStatus = createMock(SessionStatus.class);
@@ -307,7 +307,7 @@ public class CategoryControllerTest {
         String id = "1";
         String categoryText = "Social";
         CategoryImpl category = new CategoryImpl();
-        category.setCreatedUser(user);
+        category.setCreatedUserId(user.getId());
         category.setText(categoryText);
         category.setId(id);
         SessionStatus sessionStatus = createMock(SessionStatus.class);
@@ -332,7 +332,7 @@ public class CategoryControllerTest {
         String categoryText = "Social";
         String invalidToken = AdminControllerUtil.generateSessionToken();
         CategoryImpl category = new CategoryImpl();
-        category.setCreatedUser(user);
+        category.setCreatedUserId(user.getId());
         category.setText(categoryText);
         category.setId(id);
         SessionStatus sessionStatus = createMock(SessionStatus.class);
@@ -355,7 +355,7 @@ public class CategoryControllerTest {
         String id = "1";
         String categoryText = "";
         CategoryImpl category = new CategoryImpl();
-        category.setCreatedUser(user);
+        category.setCreatedUserId(user.getId());
         category.setText(categoryText);
         category.setId(id);
         SessionStatus sessionStatus = createMock(SessionStatus.class);
@@ -374,7 +374,7 @@ public class CategoryControllerTest {
         User user = new UserImpl();
         String categoryText = "Social";
         CategoryImpl category = new CategoryImpl();
-        category.setCreatedUser(user);
+        category.setCreatedUserId(user.getId());
         category.setText(categoryText);
         category.setId(id);
         SessionStatus sessionStatus = createMock(SessionStatus.class);
@@ -393,7 +393,7 @@ public class CategoryControllerTest {
         String id = "1";
         String categoryText = "Social";
         CategoryImpl category = new CategoryImpl();
-        category.setCreatedUser(user);
+        category.setCreatedUserId(user.getId());
         category.setText(categoryText);
         category.setId(id);
         SessionStatus sessionStatus = createMock(SessionStatus.class);
@@ -413,7 +413,7 @@ public class CategoryControllerTest {
         String id = "1";
         String categoryText = "Social";
         CategoryImpl category = new CategoryImpl();
-        category.setCreatedUser(user);
+        category.setCreatedUserId(user.getId());
         category.setText(categoryText);
         category.setId(id);
         SessionStatus sessionStatus = createMock(SessionStatus.class);
@@ -432,7 +432,7 @@ public class CategoryControllerTest {
         String categoryText = "Social";
         Model model = new ExtendedModelMap();
         CategoryImpl category = new CategoryImpl();
-        category.setCreatedUser(user);
+        category.setCreatedUserId(user.getId());
         category.setText(categoryText);
         category.setId(id);
         expect(categoryService.get(id)).andReturn(category).once();

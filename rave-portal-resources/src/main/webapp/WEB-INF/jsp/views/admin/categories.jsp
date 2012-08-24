@@ -59,13 +59,15 @@
 	                            <a href="${detaillink}"><c:out value="${category.text}"/></a>
 	                        </td>
 	                        <td>
-	                            <c:out value="${category.createdUser.username}"/>
+                                <!--TODO: GET USER NAME-->
+	                            <c:out value="${category.createdUserId}"/>
 	                        </td>
 	                        <td>
 	                            <c:out value="${category.createdDate}"/>
 	                        </td>
 	                        <td>
-	                            <c:out value="${category.lastModifiedUser.username}"/>
+                                <!--TODO: GET USER NAME-->
+	                            <c:out value="${category.lastModifiedUserId}"/>
 	                        </td>
 	                        <td>
 	                            <c:out value="${category.lastModifiedDate}"/>
