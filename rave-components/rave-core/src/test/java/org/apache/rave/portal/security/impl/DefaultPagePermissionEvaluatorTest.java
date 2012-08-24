@@ -66,7 +66,7 @@ public class DefaultPagePermissionEvaluatorTest {
         mockPageRepository = createMock(PageRepository.class);
         mockAuthentication = createMock(Authentication.class);
 
-        defaultPagePermissionEvaluator = new DefaultPagePermissionEvaluator(mockPageRepository);
+        defaultPagePermissionEvaluator = new DefaultPagePermissionEvaluator(mockPageRepository, null);
 
         user = new UserImpl();
         user.setUsername(VALID_USERNAME);

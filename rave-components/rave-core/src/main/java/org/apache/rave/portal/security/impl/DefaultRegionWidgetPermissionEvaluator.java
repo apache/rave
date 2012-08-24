@@ -20,6 +20,7 @@ package org.apache.rave.portal.security.impl;
 
 import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.repository.RegionWidgetRepository;
+import org.apache.rave.portal.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,10 +35,12 @@ import java.util.List;
 public class DefaultRegionWidgetPermissionEvaluator extends AbstractModelPermissionEvaluator<RegionWidget> {
     private Logger log = LoggerFactory.getLogger(getClass());
     private RegionWidgetRepository regionWidgetRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    public DefaultRegionWidgetPermissionEvaluator(RegionWidgetRepository regionWidgetRepository) {
+    public DefaultRegionWidgetPermissionEvaluator(RegionWidgetRepository regionWidgetRepository, UserRepository userRepository) {
         this.regionWidgetRepository = regionWidgetRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -198,7 +201,7 @@ public class DefaultRegionWidgetPermissionEvaluator extends AbstractModelPermiss
         //
         String viewer = ((User)authentication.getPrincipal()).getUsername();
         for (PageUser pageUser:containerPage.getMembers()){
-            if (pageUser.getUser().getUsername().equals(viewer)){
+            if (userRepository.get(pageUser.getUserId()).getUsername().equals(viewer)){
                 log.info("User "+viewer+" is a member of page "+containerPage.getId());
                 if(checkEditorStatus){
                     return pageUser.isEditor();

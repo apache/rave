@@ -76,7 +76,7 @@ public class JpaPageRepository implements PageRepository {
     @Override
     public List<Page> getAllPages(String userId, PageType pageType) {
         TypedQuery<JpaPage> query = manager.createNamedQuery(JpaPageUser.GET_BY_USER_ID_AND_PAGE_TYPE, JpaPage.class);
-        query.setParameter("userId", userId == null ? null : Long.parseLong(userId));
+        query.setParameter("userId", userId);
         query.setParameter("pageType", pageType);
         return CollectionUtils.<Page>toBaseTypedList(query.getResultList());
     }
@@ -102,7 +102,7 @@ public class JpaPageRepository implements PageRepository {
     @Override
     public List<PageUser> getPagesForUser(String userId, PageType pageType) {
         TypedQuery<JpaPageUser> query = manager.createNamedQuery(JpaPageUser.GET_PAGES_FOR_USER, JpaPageUser.class);
-        query.setParameter("userId", userId == null ? null : Long.parseLong(userId));
+        query.setParameter("userId", userId);
         query.setParameter("pageType", pageType);
         return CollectionUtils.<PageUser>toBaseTypedList(query.getResultList());
     }
@@ -110,7 +110,7 @@ public class JpaPageRepository implements PageRepository {
     @Override
     public PageUser getSingleRecord(String userId, String pageId){
         TypedQuery<JpaPageUser> query = manager.createNamedQuery(JpaPageUser.GET_SINGLE_RECORD, JpaPageUser.class);
-        query.setParameter("userId", userId == null ? null : Long.parseLong(userId));
+        query.setParameter("userId", userId);
         query.setParameter("pageId", pageId == null ? null : Long.parseLong(pageId));
         return query.getSingleResult();
     }
@@ -123,7 +123,7 @@ public class JpaPageRepository implements PageRepository {
     private void removePageUsers(JpaPage item) {
         for(PageUser user : item.getMembers()) {
             user.setPage(null);
-            user.setUser(null);
+            user.setUserId(null);
             manager.flush();
             manager.remove(user);
         }

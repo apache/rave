@@ -309,7 +309,7 @@ public class JpaPage implements BasicEntity, Serializable, Page {
 
             // find the PageUser object representing the sub page owned by the user
             for (PageUser pageUser : o1.getMembers()) {
-                if (pageUser.getUser().equals(o1.getOwner())) {
+                if (pageUser.getUserId().equals(o1.getOwner().getId())) {
                     o1RenderSequence = pageUser.getRenderSequence();
                     break;
                 }
@@ -317,7 +317,7 @@ public class JpaPage implements BasicEntity, Serializable, Page {
 
             // find the PageUser object representing the sub page owned by the user
             for (PageUser pageUser : o2.getMembers()) {
-                if (pageUser.getUser().equals(o2.getOwner())) {
+                if (pageUser.getUserId().equals(o2.getOwner().getId())) {
                     o2RenderSequence = pageUser.getRenderSequence();
                     break;
                 }

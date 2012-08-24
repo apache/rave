@@ -41,7 +41,7 @@ import static org.junit.Assert.assertTrue;
 @Ignore
 public class PageTest {
 	private Page page;
-	private long id;
+	private String id;
 	private String parentId;
 	private String testName;
 	private JpaUser testOwner;
@@ -57,11 +57,12 @@ public class PageTest {
 
 	@Before
 	public void setup(){
-		id=19191991L;
-        page=new PageImpl(Long.toBinaryString(id));
+        long longId = 19191991L;
+        id=Long.toBinaryString(longId);
+        page=new PageImpl(id);
         parentId = "12345";
 		testName="testName";
-		testOwner=new JpaUser(id);
+		testOwner=new JpaUser(longId);
         parentPage = new PageImpl(parentId);
         subPages = new ArrayList<Page>();
 
@@ -74,7 +75,7 @@ public class PageTest {
 
         List<PageUser> pageUsers1 = new ArrayList<PageUser>();
         PageUser pageUser1 = new PageUserImpl();
-        pageUser1.setUser(testOwner);
+        pageUser1.setUserId(id);
         pageUser1.setPage(subPage1);
         pageUser1.setRenderSequence(2L);
         pageUsers1.add(pageUser1);
@@ -82,13 +83,13 @@ public class PageTest {
 
         List<PageUser> pageUsers2 = new ArrayList<PageUser>();
         PageUser pageUser2 = new PageUserImpl();
-        pageUser2.setUser(new JpaUser());
+        pageUser2.setUserId("");
         pageUser2.setPage(subPage2);
         pageUser2.setRenderSequence(19L);
         pageUsers2.add(pageUser2);
 
         PageUser pageUser3 = new PageUserImpl();
-        pageUser3.setUser(testOwner);
+        pageUser3.setUserId(testOwner.getId());
         pageUser3.setPage(subPage2);
         pageUser3.setRenderSequence(1L);
         pageUsers2.add(pageUser3);
@@ -112,7 +113,7 @@ public class PageTest {
 
 		pageUser = new PageUserImpl();
 		pageUser.setPage(page);
-		pageUser.setUser(testOwner);
+		pageUser.setUserId(id);
 		pageUser.setRenderSequence(renderSequence);
 	}
 
@@ -123,7 +124,7 @@ public class PageTest {
 
 	@Test
 	public void testAccessorMethods() {
-		assertTrue(page.getId()==Long.toString(id));
+		assertTrue(page.getId().equals(id));
 		assertTrue(page.getName().equals(testName));
 		assertTrue(page.getOwner().equals(testOwner));
 		assertTrue(page.getParentPage().equals(parentPage));

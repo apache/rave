@@ -155,7 +155,7 @@ public class DefaultPageService implements PageService {
         // set this as a "sub-page" page type
         page.setPageType(PageType.SUB_PAGE);
 
-        PageUser pageUser = new PageUserImpl(page.getOwner(), page, renderSequence);
+        PageUser pageUser = new PageUserImpl(page.getOwner().getId(), page, renderSequence);
         pageUser.setPageStatus(PageInvitationStatus.OWNER);
         List<PageUser> members = new ArrayList<PageUser>();
         members.add(pageUser);
@@ -305,7 +305,7 @@ public class DefaultPageService implements PageService {
     public Boolean addMemberToPage(String pageId, String userId){
         Page page = getPage(pageId);
         PageUser pageUser = new PageUserImpl();
-        pageUser.setUser(userService.getUserById(userId));
+        pageUser.setUserId(userService.getUserById(userId).getId());
         pageUser.setPage(page);
         pageUser.setPageStatus(PageInvitationStatus.PENDING);
         List<PageUser> thisUsersPages = pageRepository.getPagesForUser(userService.getUserById(userId).getId(), PageType.USER);
@@ -323,7 +323,7 @@ public class DefaultPageService implements PageService {
         Page page = this.getPage(pageId);
         PageUser pageUserToRemove = null;
         for(PageUser pageUser : page.getMembers()){
-            if(pageUser.getUser().getId().equals(userId)){
+            if(pageUser.getUserId().equals(userId)){
                 pageUserToRemove = pageUser;
                 break;
             }
@@ -344,7 +344,7 @@ public class DefaultPageService implements PageService {
     public Boolean updateSharedPageStatus(String pageId, String shareStatus) {
         Page page = this.getPage(pageId);
         for(PageUser pageUser : page.getMembers()){
-            if(pageUser.getUser().equals(userService.getAuthenticatedUser())){
+            if(pageUser.getUserId().equals(userService.getAuthenticatedUser())){
                 pageUser.setPageStatus(PageInvitationStatus.get(shareStatus));
             }
         }
@@ -360,7 +360,7 @@ public class DefaultPageService implements PageService {
     public Boolean updatePageEditingStatus(String pageId, String userId, boolean isEditor) {
         Page page = this.getPage(pageId);
         for(PageUser pageUser : page.getMembers()){
-            if(pageUser.getUser().equals(userService.getUserById(userId))){
+            if(pageUser.getUserId().equals(userService.getUserById(userId))){
                 pageUser.setEditor(isEditor);
             }
         }
@@ -512,7 +512,7 @@ public class DefaultPageService implements PageService {
         page.setName(pageName);
         page.setOwner(user);
         page.setPageLayout(pageLayout);
-        PageUser pageUser = new PageUserImpl(page.getOwner(), page, renderSequence);
+        PageUser pageUser = new PageUserImpl(page.getOwner().getId(), page, renderSequence);
         pageUser.setPageStatus(PageInvitationStatus.OWNER);
         pageUser.setEditor(true);
 

@@ -59,7 +59,7 @@ public class DefaultRegionPermissionEvaluatorTest {
     @Before
     public void setUp() {
         mockRegionRepository = createMock(RegionRepository.class);
-        defaultRegionPermissionEvaluator = new DefaultRegionPermissionEvaluator(mockRegionRepository);
+        defaultRegionPermissionEvaluator = new DefaultRegionPermissionEvaluator(mockRegionRepository, null);
         mockAuthentication = createMock(Authentication.class);
 
         user = new UserImpl();

@@ -24,6 +24,7 @@
 <jsp:useBean id="pageUser" type="org.apache.rave.portal.model.PageUser" scope="request"/>
 <jsp:useBean id="pageLayouts" type="java.util.List<org.apache.rave.portal.model.JpaPageLayout>" scope="request"/>
 <%--@elvariable id="page" type="org.apache.rave.portal.model.Page"--%>
+<sec:authentication property="principal.id" var="principalId" scope="request"/>
 <sec:authentication property="principal.username" var="principleUsername" scope="request"/>
 <sec:authentication property="principal.displayName" var="displayName" scope="request"/>
 
@@ -118,7 +119,7 @@
                     </c:otherwise>
                 </c:choose>
                 <c:forEach var="members" items="${userPage.members}">
-                    <c:if test="${members.user.username == principleUsername and members.editor and userPage.id != page.id}">
+                    <c:if test="${members.userId == principalId and members.editor and userPage.id != page.id}">
                         <c:set var="canMoveWidgetsToEditablePage" scope="request" value="true"/>
                     </c:if>
                </c:forEach>
@@ -236,7 +237,7 @@
                             <select id="moveToPageId">
                                 <c:forEach var="userPage" items="${pages}">
                                     <c:forEach var="members" items="${userPage.members}">
-                                        <c:if test="${members.user.username == principleUsername and members.editor and userPage.id != page.id}">
+                                        <c:if test="${members.userId == principalId and members.editor and userPage.id != page.id}">
                                             <option value="${userPage.id}">
                                                 <c:out value="${userPage.name}"/>
                                             </option>
@@ -309,6 +310,7 @@
         });
     </script>
     <c:forEach var="members" items="${page.members}">
-        <script>rave.layout.searchHandler.addExistingMember("${members.user.username}",${members.editor});</script>
+        <%--TODO: This MUST change before RAVE-729 is complete --%>
+        <script>rave.layout.searchHandler.addExistingMember("${members.userId}",${members.editor});</script>
     </c:forEach>
 </portal:register-init-script>

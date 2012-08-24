@@ -22,7 +22,7 @@ import org.apache.rave.portal.model.*;
 
 public class PageUserImpl implements PageUser {
     private String id;
-    private User user;
+    private String userId;
     private Page page;
     private boolean editor;
     private Long renderSequence;
@@ -34,13 +34,13 @@ public class PageUserImpl implements PageUser {
         this.id = id;
     }
 
-    public PageUserImpl(User user, Page page){
-        this.user = user;
+    public PageUserImpl(String userId, Page page){
+        this.userId = userId;
         this.page = page;
     }
 
-    public PageUserImpl(User user, Page page, long sequence){
-        this.user = user;
+    public PageUserImpl(String userId, Page page, long sequence){
+        this.userId = userId;
         this.page = page;
         this.renderSequence = sequence;
     }
@@ -56,13 +56,13 @@ public class PageUserImpl implements PageUser {
     }
 
     @Override
-    public User getUser() {
-        return user;
+    public String getUserId() {
+        return userId;
     }
 
     @Override
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserId(String user) {
+        this.userId = user;
     }
 
     @Override

@@ -20,6 +20,7 @@ package org.apache.rave.portal.security.impl;
 
 import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.repository.PageRepository;
+import org.apache.rave.portal.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,10 +40,12 @@ import java.util.List;
 public class DefaultPagePermissionEvaluator extends AbstractModelPermissionEvaluator<Page> {
     private Logger log = LoggerFactory.getLogger(getClass());
     private PageRepository pageRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    public DefaultPagePermissionEvaluator(PageRepository pageRepository) {
+    public DefaultPagePermissionEvaluator(PageRepository pageRepository, UserRepository userRepository) {
         this.pageRepository = pageRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -217,7 +220,7 @@ public class DefaultPagePermissionEvaluator extends AbstractModelPermissionEvalu
         List<PageUser> members = trustedPage.getMembers();
         if (members != null) {
             for (PageUser pageUser : members){
-                if (pageUser.getUser().getUsername().equals(viewer)){
+                if (userRepository.get(pageUser.getUserId()).getUsername().equals(viewer)){
                     log.info("User "+viewer+" is a member of page "+trustedPage.getId());
                     if(checkEditorStatus){
                         log.info("checking editor:"+trustedPage.getId()+"@"+viewer+"@"+pageUser.isEditor());

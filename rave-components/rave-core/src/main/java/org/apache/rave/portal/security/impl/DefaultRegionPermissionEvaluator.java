@@ -20,6 +20,7 @@ package org.apache.rave.portal.security.impl;
 
 import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.repository.RegionRepository;
+import org.apache.rave.portal.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,10 +35,12 @@ import java.util.List;
 public class DefaultRegionPermissionEvaluator extends AbstractModelPermissionEvaluator<Region>{
     private Logger log = LoggerFactory.getLogger(getClass());
     private RegionRepository regionRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    public DefaultRegionPermissionEvaluator(RegionRepository regionRepository) {
+    public DefaultRegionPermissionEvaluator(RegionRepository regionRepository, UserRepository userRepository) {
         this.regionRepository = regionRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -193,7 +196,7 @@ public class DefaultRegionPermissionEvaluator extends AbstractModelPermissionEva
         //
         String viewer = ((User)authentication.getPrincipal()).getUsername();
         for (PageUser pageUser:containerPage.getMembers()){
-            if (pageUser.getUser().getUsername().equals(viewer)){
+            if (userRepository.get(pageUser.getUserId()).getUsername().equals(viewer)){
                 log.info("User "+viewer+" is a member of page "+containerPage.getId());
                 if(checkEditorStatus){
                     return pageUser.isEditor();

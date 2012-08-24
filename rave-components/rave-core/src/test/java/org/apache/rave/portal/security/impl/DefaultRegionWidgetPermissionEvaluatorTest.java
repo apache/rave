@@ -63,7 +63,7 @@ public class DefaultRegionWidgetPermissionEvaluatorTest {
     @Before
     public void setUp() {
         mockRegionWidgetRepository = createMock(RegionWidgetRepository.class);
-        defaultRegionWidgetPermissionEvaluator = new DefaultRegionWidgetPermissionEvaluator(mockRegionWidgetRepository);
+        defaultRegionWidgetPermissionEvaluator = new DefaultRegionWidgetPermissionEvaluator(mockRegionWidgetRepository, null);
         mockAuthentication = createMock(Authentication.class);
 
         user = new UserImpl();

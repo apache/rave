@@ -71,7 +71,7 @@ public class PageController {
         PageUser currentPageUser = null;
         User thisUser = userService.getAuthenticatedUser();
         for(PageUser pageUser : page.getMembers()){
-            if(pageUser.getUser().equals(thisUser)){
+            if(pageUser.getUserId().equals(thisUser.getId())){
                 currentPageUser = pageUser;
             }
         }
@@ -90,7 +90,7 @@ public class PageController {
             PageUser currentPageUser = null;
             User thisUser = userService.getAuthenticatedUser();
             for(PageUser pageUser : page.getMembers()){
-                if(pageUser.getUser().equals(thisUser)){
+                if(pageUser.getUserId().equals(thisUser.getId())){
                     currentPageUser = pageUser;
                 }
             }
@@ -114,7 +114,7 @@ public class PageController {
         List<Page> viewablePages = new ArrayList<Page>();
         for(Page page : pages){
             for(PageUser pageUser : page.getMembers()){
-                if(pageUser != null && pageUser.getUser().equals(user) && !pageUser.getPageStatus().equals(PageInvitationStatus.REFUSED)){
+                if(pageUser != null && pageUser.getUserId().equals(user.getId()) && !pageUser.getPageStatus().equals(PageInvitationStatus.REFUSED)){
                     viewablePages.add(page);
                 }
             }

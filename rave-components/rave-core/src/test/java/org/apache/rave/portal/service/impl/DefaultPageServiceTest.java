@@ -77,6 +77,15 @@ public class DefaultPageServiceTest {
     @Before
     public void setup() {
 
+        pageLayout = new PageLayoutImpl();
+        pageLayout.setCode(PAGE_LAYOUT_CODE);
+        pageLayout.setNumberOfRegions(3L);
+
+        user = new UserImpl();
+        user.setUsername("acarlucci");
+        user.setId("1");
+        user.setDefaultPageLayout(pageLayout);
+
         pageRepository = createMock(PageRepository.class);
         pageTemplateRepository = createMock(PageTemplateRepository.class);
         regionRepository = createMock(RegionRepository.class);
@@ -91,12 +100,12 @@ public class DefaultPageServiceTest {
         validWidget = new WidgetImpl("1", "http://dummy.apache.org/widgets/widget.xml");
 
         page = new PageImpl(PAGE_ID, user);
-        pageUser = new PageUserImpl(user, page, 1L);
+        pageUser = new PageUserImpl(user.getId(), page, 1L);
         page.setMembers(new ArrayList<PageUser>());
         page.getMembers().add(pageUser);
 
         page2 = new PageImpl(PAGE_ID2, user);
-        pageUser2 = new PageUserImpl(user, page2, 2L);
+        pageUser2 = new PageUserImpl(user.getId(), page2, 2L);
         page2.setMembers(new ArrayList<PageUser>());
         page2.getMembers().add(pageUser2);
 
@@ -118,15 +127,6 @@ public class DefaultPageServiceTest {
         lockedRegion = new RegionImpl();
         lockedRegion.setLocked(true);
         lockedRegion.setPage(page);
-
-        pageLayout = new PageLayoutImpl();
-        pageLayout.setCode(PAGE_LAYOUT_CODE);
-        pageLayout.setNumberOfRegions(3L);
-
-        user = new UserImpl();
-        user.setUsername("acarlucci");
-        user.setId("1");
-        user.setDefaultPageLayout(pageLayout);
 
         pageList = new ArrayList<Page>();
         pageList.add(page2);
@@ -197,7 +197,7 @@ public class DefaultPageServiceTest {
         expectedPage.setPageLayout(pageLayout);
         expectedPage.setRegions(createEmptyRegionList(pageLayout.getNumberOfRegions()));
         expectedPage.setPageType(PageType.USER);
-        PageUser lPageUser = new PageUserImpl(user, expectedPage, EXPECTED_RENDER_SEQUENCE);
+        PageUser lPageUser = new PageUserImpl(user.getId(), expectedPage, EXPECTED_RENDER_SEQUENCE);
         List<PageUser> members = new ArrayList<PageUser>();
         members.add(lPageUser);
         expectedPage.setMembers(members);
@@ -302,7 +302,7 @@ public class DefaultPageServiceTest {
         expectedPage.setPageLayout(pageLayout);
         expectedPage.setRegions(createEmptyRegionList(pageLayout.getNumberOfRegions()));
         expectedPage.setPageType(PageType.USER);
-        PageUser lPageUser = new PageUserImpl(user, expectedPage, EXPECTED_RENDER_SEQUENCE);
+        PageUser lPageUser = new PageUserImpl(user.getId(), expectedPage, EXPECTED_RENDER_SEQUENCE);
         List<PageUser> members = new ArrayList<PageUser>();
         members.add(lPageUser);
         userPage.setMembers(members);
@@ -336,7 +336,7 @@ public class DefaultPageServiceTest {
         expectedPage.setOwner(user);
         expectedPage.setPageLayout(pageLayout);
         expectedPage.setRegions(createEmptyRegionList(pageLayout.getNumberOfRegions()));
-        PageUser lPageUser = new PageUserImpl(user, expectedPage, EXPECTED_RENDER_SEQUENCE);
+        PageUser lPageUser = new PageUserImpl(user.getId(), expectedPage, EXPECTED_RENDER_SEQUENCE);
         List<PageUser> members = new ArrayList<PageUser>();
         members.add(lPageUser);
         expectedPage.setMembers(members);
@@ -448,7 +448,7 @@ public class DefaultPageServiceTest {
         expectedPage.setOwner(user);
         expectedPage.setPageLayout(pageLayout);
         expectedPage.setRegions(createEmptyRegionList(pageLayout.getNumberOfRegions()));
-        PageUser lPageUser = new PageUserImpl(user, expectedPage, EXPECTED_RENDER_SEQUENCE);
+        PageUser lPageUser = new PageUserImpl(user.getId(), expectedPage, EXPECTED_RENDER_SEQUENCE);
         List<PageUser> members = new ArrayList<PageUser>();
         members.add(lPageUser);
         expectedPage.setMembers(members);

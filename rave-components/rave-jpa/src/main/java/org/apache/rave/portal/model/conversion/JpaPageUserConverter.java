@@ -62,7 +62,7 @@ public class JpaPageUserConverter implements ModelConverter<PageUser, JpaPageUse
         converted.setPage(source.getPage());
         converted.setPageStatus(source.getPageStatus());
         converted.setRenderSequence(source.getRenderSequence());
-        converted.setUser(source.getUser());
+        converted.setUserId(source.getUserId());
         converted.setEditor(source.isEditor());
     }
 }
