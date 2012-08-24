@@ -106,6 +106,47 @@ public class ProfileControllerTest {
         personProfile.setPageLayout(pageLayout);
         List<Person> personObjects = new ArrayList<Person>();
 
+		expect(userService.getUserByUsername(username)).andReturn(user).once();
+        expect(pageService.getPersonProfilePage(user.getId())).andReturn(personProfile);
+		expect(userService.getFriendRequestsReceived(username)).andReturn(personObjects);
+
+		replay(userService, pageService);
+
+		String view = profileController.viewProfile(username, model, null);
+
+		//assert that the model is not null
+		assertThat(model, CoreMatchers.notNullValue());
+
+		//assert that the model size is four
+		assertThat(model.size(), CoreMatchers.equalTo(modelSize));
+
+		//assert that the model does contain an attribute associated with the authenticated user after setUpForm() is called
+		assertThat(model.containsAttribute(userProfile), CoreMatchers.equalTo(true));
+
+		//assert that the model does not contain authenticated user as null
+		assertThat(model.get(userProfile), CoreMatchers.notNullValue());
+
+        assertThat(view, is(ViewNames.PERSON_PROFILE + "." + VALID_PAGE_LAYOUT_CODE));
+
+		verify(userService, pageService);
+	}
+	
+	@Test
+	public void viewPerson_userid() {
+		//creating a mock user
+		final UserImpl user = new UserImpl();
+		final ModelMap model = new ModelMap();
+		final int modelSize = 4;
+		final String username="canonical";
+        user.setUsername(username);
+        user.setId(USER_ID);
+		String userProfile = new String(ModelKeys.USER_PROFILE);
+        Page personProfile = new PageImpl();
+        PageLayout pageLayout = new PageLayoutImpl();
+        pageLayout.setCode(VALID_PAGE_LAYOUT_CODE);
+        personProfile.setPageLayout(pageLayout);
+        List<Person> personObjects = new ArrayList<Person>();
+
 		expect(userService.getUserById(USER_ID)).andReturn(user).once();
         expect(pageService.getPersonProfilePage(user.getId())).andReturn(personProfile);
 		expect(userService.getFriendRequestsReceived(username)).andReturn(personObjects);
@@ -137,17 +178,17 @@ public class ProfileControllerTest {
         final User user = null;
         final ModelMap model = new ModelMap();
         final int modelSize = 4;
-        final String username="canonical";
+        final String username="Canonical";
         Page personProfile = new PageImpl();
         PageLayout pageLayout = new PageLayoutImpl();
         pageLayout.setCode("person_profile");
         personProfile.setPageLayout(pageLayout);
 
-        expect(userService.getUserById(USER_ID)).andThrow(new UsernameNotFoundException("Username does not exist"));
+        expect(userService.getUserByUsername(username)).andThrow(new UsernameNotFoundException("Username does not exist"));
 
         replay(userService, pageService);
 
-        profileController.viewProfile(USER_ID, model, null);
+        profileController.viewProfile(username, model, null);
 
         verify(userService, pageService);
     }

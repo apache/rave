@@ -72,7 +72,7 @@ public class ControllerUtils {
     public static NavigationMenu getTopMenu(String view, long referringPageId, User user, boolean addStoreLink) {
         NavigationMenu menu = new NavigationMenu("topnav");
         if(view.startsWith(ViewNames.PAGE) || view.startsWith(ViewNames.MOBILE_HOME)) {
-            NavigationItem profile = new NavigationItem("page.profile.title", getDisplayName(user), "/app/person/" + user.getId() + "?referringPageId=" + referringPageId);
+            NavigationItem profile = new NavigationItem("page.profile.title", getDisplayName(user), "/app/person/id/" + user.getId() + "?referringPageId=" + referringPageId);
             menu.addNavigationItem(profile);
 
             if(addStoreLink){
