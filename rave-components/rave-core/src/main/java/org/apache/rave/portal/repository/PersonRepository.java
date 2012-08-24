@@ -110,30 +110,54 @@ public interface PersonRepository extends Repository<Person> {
     List<Person> findByGroupWithFriend(String groupId, String friendUsername);
 
     /**
-     * Registers a relationship between two user objects.
+     * Registers a relationship between two users.
      *
-     * @param user is the user who sends to friend request
-     * @param friend is the user who receives the friend request
+     * @param friendUsername is the username of the user who receives the friend request
+     * @param username is the user who sends the friend request
      * @return true is the relationship request was successful
      */
-	boolean addFriend(Person friend, Person user);
+	boolean addFriend(String friendUsername, String username);
 
     /**
-     * Removes the relationship between two user objects.
+     * Removes the relationship between two users.
      *
-     * @param user is the user who wants to remove a friend
-     * @param friend is the user who is removed from the friends list of user
+     * @param friendUsername is the user who is removed from the friends list of user
+     * @param username is the user who wants to remove a friend.
      */
-	void removeFriend(Person friend, Person user);
+	void removeFriend(String friendUsername, String username);
 
     /**
      * Get the friends and friends requests of a particular user.
      *
      * @param user is the user whose friends and requests are to be found
-     * @return A hashmap which contains 2 lists of peeple
+     * @return A hashmap which contains 3 lists of Person objects
      * 			1 containing friends
-     * 			2 containing friend requests
+     * 			2 containing friend requests sent by the current user
+     * 			3 containing friend requests received by the current user
      */
 	HashMap<String, List<Person>> findFriendsAndRequests(String username);
+
+    /**
+     * Incoming friend request is accepted by the user
+     *
+     * @param friendUsername is the username of the user who sent the friend request
+     * @param username is the username of the user who receives the friend request(current user)
+     * @return true is the request was successful accepted
+     */
+	boolean acceptFriendRequest(String friendUsername, String username);
+
+    /**
+     * Finds the list of friend requests received by the user
+     * @param username the username of the user who receives the friend request
+     * @return a valid List of people who sent friend request to the current user
+     */
+	List<Person> findFriendRequestsReceived(String username);
+
+    /**
+     * Finds the list of friend requests sent by the user
+     * @param username the username of the user who sent the friend request
+     * @return a valid List of people to whom friend requests were sent
+     */
+	List<Person> findFriendRequestsSent(String username);
 }
 

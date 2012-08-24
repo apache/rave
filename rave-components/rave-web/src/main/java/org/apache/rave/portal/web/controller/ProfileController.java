@@ -20,10 +20,12 @@
 package org.apache.rave.portal.web.controller;
 
 import org.apache.rave.portal.model.Page;
+import org.apache.rave.portal.model.Person;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.service.PageService;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.portal.web.controller.util.ControllerUtils;
+import org.apache.rave.portal.web.model.NavigationItem;
 import org.apache.rave.portal.web.model.NavigationMenu;
 import org.apache.rave.portal.web.model.UserForm;
 import org.apache.rave.portal.web.util.ModelKeys;
@@ -35,6 +37,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
 @RequestMapping(value = {"/person/*", "/person"})
@@ -54,23 +58,25 @@ public class ProfileController {
     /**
 	 * Views the main page of another user's profile
 	 *
-     * @param username			    username (allows for a period in the username)
+     * @param userid			    userid 
      * @param model                 {@link Model} map
      * @param referringPageId		page reference id (optional)
 	 * @return the view name of the user profile page
 	 */
-	@RequestMapping(value = {"/{username:.*}"}, method = RequestMethod.GET)
-	public String viewProfile(@PathVariable String username, ModelMap model, @RequestParam(required = false) String referringPageId) {
-		logger.debug("Viewing person profile for: " + username);
-		User user = userService.getUserByUsername(username);
-        Page personProfilePage = pageService.getPersonProfilePage(user.getId());
+	
+	@RequestMapping(value = {"/{userid:.*}"}, method = RequestMethod.GET)
+	public String viewProfile(@PathVariable String userid, ModelMap model, @RequestParam(required = false) String referringPageId) {
+		User user = userService.getUserById(userid);
+		logger.debug("Viewing person profile for: " + user.getUsername());
+		
+		Page personProfilePage = pageService.getPersonProfilePage(user.getId());
         addAttributesToModel(model, user, referringPageId);
         model.addAttribute(ModelKeys.PAGE, personProfilePage);
 		String view =  ViewNames.getPersonPageView(personProfilePage.getPageLayout().getCode());
-        addNavItemsToModel(view, model, referringPageId, user);
+        List<Person> friendRequests = userService.getFriendRequestsReceived(user.getUsername());
+        addNavItemsToModel(view, model, referringPageId, user, friendRequests);
         return view;
 	}
-
 	/**
 	 * Updates the user's personal information
 	 *
@@ -112,8 +118,18 @@ public class ProfileController {
     	model.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
     }
 
-    public static void addNavItemsToModel(String view, ModelMap model, String referringPageId, User user) {
-        final NavigationMenu topMenu = ControllerUtils.getTopMenu(view, referringPageId, user, false);
-        model.addAttribute(topMenu.getName(), topMenu);
+    public static void addNavItemsToModel(String view, ModelMap model, String referringPageId, User user, List<Person> friendRequests) {
+        String refPageId = referringPageId != null ? referringPageId : "";
+        final NavigationMenu topMenu = new NavigationMenu("topnav");
+
+        NavigationItem friendRequestItems = new NavigationItem("page.profile.friend.requests", String.valueOf(friendRequests.size()) , "#");
+        for(Person request : friendRequests) {
+        	NavigationItem childItem = new NavigationItem((request.getDisplayName()!=null && !request.getDisplayName().isEmpty())? request.getDisplayName() : request.getUsername(), request.getUsername(), "#");
+        	friendRequestItems.addChildNavigationItem(childItem);
+        }
+    	topMenu.addNavigationItem(friendRequestItems);
+    	topMenu.getNavigationItems().addAll((ControllerUtils.getTopMenu(view, refPageId, user, false).getNavigationItems()));
+
+    	model.addAttribute(topMenu.getName(), topMenu);
     }
 }

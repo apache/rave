@@ -21,12 +21,18 @@ package org.apache.rave.inject;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.ProvisionException;
+import org.apache.log4j.spi.LoggerRepository;
 import org.apache.rave.opensocial.service.impl.DefaultPersonService;
+import org.apache.rave.service.LockService;
+import org.apache.rave.service.impl.DefaultLockService;
+import org.apache.shindig.social.opensocial.spi.GroupService;
 import org.apache.shindig.social.opensocial.spi.PersonService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -59,6 +65,28 @@ public class SpringBindingModuleTest {
         PersonService personService1 = injector.getInstance(PersonService.class);
         PersonService personService2 = injector.getInstance(PersonService.class);
         assertThat(personService1, is(sameInstance(personService2)));
+    }
+
+    @Test
+    public void bindsAlternatePackage() {
+        LoggerRepository string = injector.getInstance(LoggerRepository.class);
+        assertThat(string, is(notNullValue()));
+    }
+
+    @Test
+    public void bindsPrimaryBean() {
+        LockService lockService = injector.getInstance(LockService.class);
+        assertThat(lockService, is(not(instanceOf(DefaultLockService.class))));
+    }
+
+    @Test(expected = ProvisionException.class)
+    public void exceptionIfNoPrimary() {
+        injector.getInstance(GroupService.class);
+    }
+
+    @Test(expected = com.google.inject.ConfigurationException.class)
+    public void doesNotBindOthers() {
+        ResultSetExtractor personService1 = injector.getInstance(ResultSetExtractor.class);
     }
 
 

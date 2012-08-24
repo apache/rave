@@ -27,7 +27,9 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Proxy;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -37,15 +39,31 @@ import java.util.Set;
 public class SpringBindingModule extends AbstractModule implements ApplicationContextAware {
 
     public static final String BASE_PACKAGE = "${shindig.spring.base-package}";
+    public static final String DELEMITER = ":";
 
     private ApplicationContext applicationContext;
-    private String basePackage;
+    private List<String> basePackages;
     private Set<Class<?>> mappedClasses;
 
     @Override
     protected void configure() {
         mappedClasses = new HashSet<Class<?>>();
         bindFromApplicationContext();
+    }
+
+    /**
+     * Sets the package name to restrict bean binding to Guice
+     * @param value the base package to bind all beans in sub-packages to Guice
+     */
+    @Value(BASE_PACKAGE)
+    public void setBasePackage(String value) {
+        String replace = value.replace(".", "\\.");
+        this.basePackages = Arrays.asList(replace.split(DELEMITER));
+    }
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
     }
 
     private void bindFromApplicationContext() {
@@ -60,7 +78,7 @@ public class SpringBindingModule extends AbstractModule implements ApplicationCo
     @SuppressWarnings("unchecked")
     private void bindInterfaces(Object bean) {
         String fullClassName = Proxy.isProxyClass(bean.getClass()) ? bean.toString() : bean.getClass().getName();
-        if (fullClassName.matches(basePackage + ".*")) {
+        if (isAddable(fullClassName)) {
             for (final Class clazz : bean.getClass().getInterfaces()) {
                 //Check to see if we have already bound a provider for this interface.  If we have,
                 //then don't attempt to bind it again as the provider will pull from the application context by type
@@ -73,18 +91,13 @@ public class SpringBindingModule extends AbstractModule implements ApplicationCo
         }
     }
 
-    /**
-     * Sets the package name to restrict bean binding to Guice
-     * @param value the base package to bind all beans in sub-packages to Guice
-     */
-    @Value(BASE_PACKAGE)
-    public void setBasePackage(String value) {
-        this.basePackage = value.replace(".", "\\.");
-    }
-
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this.applicationContext = applicationContext;
+    private boolean isAddable(String fullClassName) {
+        for(String basePackage : basePackages) {
+            if(fullClassName.matches(basePackage + ".*")) {
+                return true;
+            }
+        }
+        return false;
     }
 
 

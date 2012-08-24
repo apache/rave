@@ -526,7 +526,8 @@ rave.api = rave.api || (function() {
         }
 
         function addFriend(args) {
-        	$.post(rave.getContext() + path + "person/" + args.friendId + "/addfriend",
+        	var user =  encodeURIComponent(encodeURIComponent(args.friendUsername));
+        	$.post(rave.getContext() + path + "person/" + user + "/addfriend",
                 function(result) {
                     if (result.error) {
                         handleRpcError(result);
@@ -539,7 +540,8 @@ rave.api = rave.api || (function() {
                }).error(handleError);
         }
         function removeFriend(args) {
-        	$.post(rave.getContext() + path + "person/" + args.friendId + "/removefriend",
+        	var user =  encodeURIComponent(encodeURIComponent(args.friendUsername));
+        	$.post(rave.getContext() + path + "person/" + user + "/removefriend",
                 function(result) {
                     if (result.error) {
                         handleRpcError(result);
@@ -564,6 +566,20 @@ rave.api = rave.api || (function() {
                     }
                 }).error(handleError);
         }
+        function acceptFriendRequest(args) {
+        	var user =  encodeURIComponent(encodeURIComponent(args.friendUsername));
+        	$.post(rave.getContext() + path + "person/" + user + "/acceptfriendrequest",
+                    function(result) {
+                        if (result.error) {
+                            handleRpcError(result);
+                        }
+                        else {
+                            if (typeof args.successCallback == 'function') {
+                                 args.successCallback(result);
+                            }
+                        }
+                   }).error(handleError);
+        }
 
         return {
             moveWidget : moveWidgetOnPage,
@@ -584,7 +600,8 @@ rave.api = rave.api || (function() {
             updatePageEditingStatus: updatePageEditingStatus,
             addFriend : addFriend,
             removeFriend : removeFriend,
-            getFriends :getFriends
+            getFriends : getFriends,
+            acceptFriendRequest : acceptFriendRequest
         };
 
     })();

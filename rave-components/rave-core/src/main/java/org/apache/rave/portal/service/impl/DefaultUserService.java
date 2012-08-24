@@ -358,22 +358,30 @@ public class DefaultUserService implements UserService {
 
     @Override
     @Transactional
-    public boolean addFriend(String friendId, String userId) {
-    	User user = getUserById(userId);
-    	User friend = getUserById(friendId);
-    	return personRepository.addFriend(friend.toPerson(),user.toPerson());
+    public boolean addFriend(String friendUsername, String username) {
+    	return personRepository.addFriend(friendUsername,username);
     }
 
     @Override
     @Transactional
-    public void removeFriend(String friendId, String userId) {
-    	User user = getUserById(userId);
-    	User friend = getUserById(friendId);
-    	personRepository.removeFriend(friend.toPerson(),user.toPerson());
+    public void removeFriend(String friendUsername, String username) {
+    	personRepository.removeFriend(friendUsername,username);
     }
 
     @Override
-    public HashMap<String, List<Person>> getFriends(String username) {
+    public HashMap<String, List<Person>> getFriendsAndRequests(String username) {
     	return personRepository.findFriendsAndRequests(username);
     }
+
+	@Override
+	public List<Person> getFriendRequestsReceived(String username) {
+		return personRepository.findFriendRequestsReceived(username);
+	}
+
+    @Override
+    @Transactional
+    public boolean acceptFriendRequest(String friendUsername, String username) {
+    	return personRepository.acceptFriendRequest(friendUsername,username);
+    }
+
 }

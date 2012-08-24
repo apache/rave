@@ -24,7 +24,8 @@ import java.util.Map;
  * The friend request status of a user - which is pending (not yet accepted) or accepted by the friend
  */
 public enum FriendRequestStatus {
-    PENDING("pending"),
+    SENT("sent"),
+    RECEIVED("received"),
     ACCEPTED("accepted");
 
     private String requestStatus;

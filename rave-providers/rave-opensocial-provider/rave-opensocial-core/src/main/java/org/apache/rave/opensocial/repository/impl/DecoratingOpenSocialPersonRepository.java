@@ -124,17 +124,32 @@ public class DecoratingOpenSocialPersonRepository implements OpenSocialPersonRep
     }
 
 	@Override
-	public boolean addFriend(Person friend, Person user) {
-		return underlying.addFriend(friend, user);
+	public boolean addFriend(String friendUsername, String username) {
+		return underlying.addFriend(friendUsername, username);
 	}
 
 	@Override
-	public void removeFriend(Person friend, Person user) {
-		underlying.removeFriend(friend, user);
+	public void removeFriend(String friendUsername, String username) {
+		underlying.removeFriend(friendUsername, username);
 	}
 
 	@Override
 	public HashMap<String, List<Person>> findFriendsAndRequests(String username) {
 		return underlying.findFriendsAndRequests(username);
+	}
+
+	@Override
+	public boolean acceptFriendRequest(String friendUsername, String username) {
+		return underlying.acceptFriendRequest(friendUsername, username);
+	}
+
+	@Override
+	public List<Person> findFriendRequestsReceived(String username) {
+		return underlying.findFriendRequestsReceived(username);
+	}
+
+	@Override
+	public List<Person> findFriendRequestsSent(String username) {
+		return underlying.findFriendRequestsSent(username);
 	}
 }

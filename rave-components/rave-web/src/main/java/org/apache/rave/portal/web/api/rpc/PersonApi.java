@@ -18,6 +18,8 @@
  */
 package org.apache.rave.portal.web.api.rpc;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.List;
 
@@ -52,7 +54,7 @@ public class PersonApi {
         return new RpcOperation<HashMap<String, List<Person>>>() {
             @Override
             public HashMap<String, List<Person>> execute() {
-                return userService.getFriends(userService.getAuthenticatedUser().getUsername());
+                return userService.getFriendsAndRequests(userService.getAuthenticatedUser().getUsername());
             }
         }.getResult();
     }
@@ -66,13 +68,17 @@ public class PersonApi {
      *         encountered while performing the RPC operation
      */
     @ResponseBody
-    @RequestMapping(value = "{friendId}/addfriend", method = RequestMethod.POST)
-    public RpcResult<Boolean> addFriend(@PathVariable final String friendId) {
+    @RequestMapping(value = "{friendUsername}/addfriend", method = RequestMethod.POST)
+    public RpcResult<Boolean> addFriend(@PathVariable final String friendUsername) {
     	return new RpcOperation<Boolean>() {
     		@Override
     		public Boolean execute() {
-    			boolean result = userService.addFriend(friendId, userService.getAuthenticatedUser().getId().toString());
-    			return result;
+    			try{
+    				boolean result = userService.addFriend(URLDecoder.decode(friendUsername, "UTF-8"), userService.getAuthenticatedUser().getUsername());
+    				return result;
+    			}catch (UnsupportedEncodingException e) {
+    				 return false;
+    			}
     		}
     	}.getResult();
     }
@@ -86,13 +92,41 @@ public class PersonApi {
      *         encountered while performing the RPC operation
      */
     @ResponseBody
-    @RequestMapping(value = "{friendId}/removefriend", method = RequestMethod.POST)
-    public RpcResult<Boolean> removeFriend(@PathVariable final String friendId) {
+    @RequestMapping(value = "{friendUsername}/removefriend", method = RequestMethod.POST)
+    public RpcResult<Boolean> removeFriend(@PathVariable final String friendUsername) {
     	return new RpcOperation<Boolean>() {
     		@Override
     		public Boolean execute() {
-    			userService.removeFriend(friendId, userService.getAuthenticatedUser().getId().toString());
-    			return true;
+    			try{
+    				userService.removeFriend(URLDecoder.decode(friendUsername, "UTF-8"), userService.getAuthenticatedUser().getUsername());
+    				return true;
+    			}catch (UnsupportedEncodingException e) {
+    				return false;
+   			 	}
+    		}
+    	}.getResult();
+    }
+
+    /**
+     * Accept a friend request
+     *
+     * @param friendusername
+     *            the username of the user to accept as a friend of the current user
+     * @return true if adding friend was successful or any errors
+     *         encountered while performing the RPC operation
+     */
+    @ResponseBody
+    @RequestMapping(value = "{friendUsername}/acceptfriendrequest", method = RequestMethod.POST)
+    public RpcResult<Boolean> acceptFriendRequest(@PathVariable final String friendUsername) {
+    	return new RpcOperation<Boolean>() {
+    		@Override
+    		public Boolean execute() {
+    			try{
+    				boolean result = userService.acceptFriendRequest(URLDecoder.decode(friendUsername, "UTF-8"), userService.getAuthenticatedUser().getUsername());
+    				return result;
+    			}catch (UnsupportedEncodingException e) {
+    				return false;
+			    }
     		}
     	}.getResult();
     }

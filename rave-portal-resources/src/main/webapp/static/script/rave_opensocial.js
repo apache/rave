@@ -52,7 +52,7 @@ rave.opensocial = rave.opensocial || (function () {
         //Create the common container instance.
         var containerConfig = {};
         containerConfig[osapi.container.ServiceConfig.API_PATH] = "/rpc";
-        containerConfig[osapi.container.ContainerConfig.RENDER_DEBUG] = "1";
+        containerConfig[osapi.container.ContainerConfig.RENDER_DEBUG] = rave.getJavaScriptDebugMode();
         container = new osapi.container.Container(containerConfig);
     }
 
