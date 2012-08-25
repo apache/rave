@@ -46,8 +46,8 @@ import java.util.List;
 @XmlAccessorType(XmlAccessType.NONE)
 @Table(name="page", uniqueConstraints={@UniqueConstraint(columnNames={"owner_id","name","page_type"})})
 @NamedQueries({
-        @NamedQuery(name = JpaPage.DELETE_BY_USER_ID_AND_PAGE_TYPE, query="DELETE FROM JpaPage p WHERE p.owner.entityId = :userId and p.pageType = :pageType"),
-        @NamedQuery(name = JpaPage.USER_HAS_PERSON_PAGE, query="SELECT count(p) FROM JpaPage p WHERE p.owner.entityId = :userId and p.pageType = :pageType")
+        @NamedQuery(name = JpaPage.DELETE_BY_USER_ID_AND_PAGE_TYPE, query="DELETE FROM JpaPage p WHERE p.ownerId = :userId and p.pageType = :pageType"),
+        @NamedQuery(name = JpaPage.USER_HAS_PERSON_PAGE, query="SELECT count(p) FROM JpaPage p WHERE p.ownerId = :userId and p.pageType = :pageType")
 })
 @Access(AccessType.FIELD)
 public class JpaPage implements BasicEntity, Serializable, Page {
@@ -67,9 +67,9 @@ public class JpaPage implements BasicEntity, Serializable, Page {
     @Basic(optional=false) @Column(name="name")
     private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "owner_id")
-    private JpaUser owner;
+    @Basic
+    @Column(name = "owner_id")
+    private String ownerId;
 
     @ManyToOne(cascade=CascadeType.ALL, optional = true)
     @JoinColumn(name="parent_page_id")
@@ -104,9 +104,9 @@ public class JpaPage implements BasicEntity, Serializable, Page {
         this.entityId = entityId;
     }
 
-    public JpaPage(Long entityId, JpaUser owner) {
+    public JpaPage(Long entityId, String ownerId) {
         this.entityId = entityId;
-        this.owner = owner;
+        this.ownerId = ownerId;
     }
 
     @Override
@@ -155,13 +155,13 @@ public class JpaPage implements BasicEntity, Serializable, Page {
      * @return Valid {@link User}
      */
     @Override
-    public User getOwner() {
-        return owner;
+    public String getOwnerId() {
+        return ownerId;
     }
 
     @Override
-    public void setOwner(User owner) {
-        this.owner = JpaConverter.getInstance().convert(owner, User.class);
+    public void setOwnerId(String ownerId) {
+        this.ownerId = ownerId;
     }
 
     /**
@@ -286,7 +286,7 @@ public class JpaPage implements BasicEntity, Serializable, Page {
 
     @Override
     public String toString() {
-        return "Page{" + "entityId=" + entityId + ", name=" + name + ", owner=" + owner + ", pageLayout=" + pageLayout + ", pageType=" + pageType + "}";
+        return "Page{" + "entityId=" + entityId + ", name=" + name + ", ownerId=" + ownerId + ", pageLayout=" + pageLayout + ", pageType=" + pageType + "}";
     }
 
     /**
@@ -309,7 +309,7 @@ public class JpaPage implements BasicEntity, Serializable, Page {
 
             // find the PageUser object representing the sub page owned by the user
             for (PageUser pageUser : o1.getMembers()) {
-                if (pageUser.getUserId().equals(o1.getOwner().getId())) {
+                if (pageUser.getUserId().equals(o1.getOwnerId())) {
                     o1RenderSequence = pageUser.getRenderSequence();
                     break;
                 }
@@ -317,7 +317,7 @@ public class JpaPage implements BasicEntity, Serializable, Page {
 
             // find the PageUser object representing the sub page owned by the user
             for (PageUser pageUser : o2.getMembers()) {
-                if (pageUser.getUserId().equals(o2.getOwner().getId())) {
+                if (pageUser.getUserId().equals(o2.getOwnerId())) {
                     o2RenderSequence = pageUser.getRenderSequence();
                     break;
                 }

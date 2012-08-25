@@ -150,11 +150,11 @@ public class DefaultRegionWidgetPermissionEvaluator extends AbstractModelPermiss
         } else {
             trustedRegionWidget = getTrustedRegionWidget(regionWidget.getId(), trustedRegionWidgetContainer);
         }
-        return isRegionWidgetOwnerByUsername(authentication, getUsernameFromRegionWidget(trustedRegionWidget));
+        return isRegionWidgetOwnerByUsername(authentication, getUserIdFromRegionWidget(trustedRegionWidget));
     }
 
-    private boolean isRegionWidgetOwnerByUsername(Authentication authentication, String username) {
-        return ((User)authentication.getPrincipal()).getUsername().equals(username);
+    private boolean isRegionWidgetOwnerByUsername(Authentication authentication, String userId) {
+        return ((User)authentication.getPrincipal()).getId().equals(userId);
     }
 
     private boolean isRegionWidgetOwnerById(Authentication authentication, String userId) {
@@ -177,8 +177,8 @@ public class DefaultRegionWidgetPermissionEvaluator extends AbstractModelPermiss
         }
     }
 
-    private String getUsernameFromRegionWidget(RegionWidget regionWidget) {
-        return regionWidget.getRegion().getPage().getOwner().getUsername();
+    private String getUserIdFromRegionWidget(RegionWidget regionWidget) {
+        return regionWidget.getRegion().getPage().getOwnerId();
     }
 
     private boolean isRegionWidgetMember(Authentication authentication,

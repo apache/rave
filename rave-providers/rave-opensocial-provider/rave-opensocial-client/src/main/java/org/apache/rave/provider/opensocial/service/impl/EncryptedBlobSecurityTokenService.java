@@ -141,7 +141,7 @@ public class EncryptedBlobSecurityTokenService implements SecurityTokenService {
         //Create a new RegionWidget instance from it so we can use it to generate a new encrypted token
         RegionWidget regionWidget = new RegionWidgetImpl(Long.toString(securityToken.getModuleId()),
                 new WidgetImpl("-1", securityToken.getAppUrl()),
-                new RegionImpl("-1", new PageImpl("-1", userService.getUserByUsername(securityToken.getOwnerId())), -1));
+                new RegionImpl("-1", new PageImpl("-1", userService.getUserByUsername(securityToken.getOwnerId()).getId()), -1));
 
         //Create and return the newly encrypted token
         return getEncryptedSecurityToken(regionWidget);
@@ -155,7 +155,7 @@ public class EncryptedBlobSecurityTokenService implements SecurityTokenService {
         values.put(AbstractSecurityToken.Keys.APP_URL.getKey(), regionWidget.getWidget().getUrl());
         values.put(AbstractSecurityToken.Keys.MODULE_ID.getKey(), String.valueOf(regionWidget.getId()));
         values.put(AbstractSecurityToken.Keys.OWNER.getKey(),
-                String.valueOf(regionWidget.getRegion().getPage().getOwner().getUsername()));
+                String.valueOf(userService.getUserById(regionWidget.getRegion().getPage().getOwnerId()).getUsername()));
         values.put(AbstractSecurityToken.Keys.VIEWER.getKey(), String.valueOf(user.getUsername()));
         values.put(AbstractSecurityToken.Keys.TRUSTED_JSON.getKey(), "");
 

@@ -64,7 +64,7 @@ public class PageApiTest {
     public void getPage_validId_export() {
         Page p = new PageImpl();
         p.setRegions(new ArrayList<Region>());
-        p.setOwner(new UserImpl());
+        p.setOwnerId("");
         Region region = new RegionImpl();
         region.setRegionWidgets(new ArrayList<RegionWidget>());
         RegionWidget w = new RegionWidgetImpl();
@@ -78,7 +78,7 @@ public class PageApiTest {
 
         Page returned = pageApi.getPage(PAGE_ID, true);
         assertThat(returned, is(sameInstance(p)));
-        assertThat(returned.getOwner(), is(nullValue()));
+        assertThat(returned.getOwnerId(), is(nullValue()));
         assertThat(returned.getRegions().get(0).getRegionWidgets().get(0).getPreferences(), is(nullValue()));
     }
 

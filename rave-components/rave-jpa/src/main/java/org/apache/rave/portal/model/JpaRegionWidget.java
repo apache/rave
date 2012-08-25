@@ -36,9 +36,9 @@ import java.util.List;
 @Table(name = "region_widget")
 @NamedQueries({
         @NamedQuery(name = JpaRegionWidget.REGION_WIDGET_GET_DISTINCT_USER_COUNT_ALL_WIDGETS,
-                    query = "select rw.widget.entityId, count(distinct rw.region.page.owner) from JpaRegionWidget rw group by rw.widget.entityId"),
+                    query = "select rw.widget.entityId, count(distinct rw.region.page.ownerId) from JpaRegionWidget rw group by rw.widget.entityId"),
         @NamedQuery(name = JpaRegionWidget.REGION_WIDGET_GET_DISTINCT_USER_COUNT_SINGLE_WIDGET,
-                    query = "select count(distinct rw.region.page.owner) from JpaRegionWidget rw where rw.widget.entityId = :widgetId"),
+                    query = "select count(distinct rw.region.page.ownerId) from JpaRegionWidget rw where rw.widget.entityId = :widgetId"),
         @NamedQuery(name = JpaRegionWidget.FIND_BY_ID,
                     query = "select rw from JpaRegionWidget rw where rw.entityId = :widgetId")
 })

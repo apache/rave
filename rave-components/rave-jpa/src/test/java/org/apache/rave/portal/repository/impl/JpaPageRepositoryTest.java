@@ -171,7 +171,7 @@ public class JpaPageRepositoryTest {
         Long lastRenderSequence = -1L;
         PageUser pageUser;
         for (Page subPage : p.getSubPages()) {
-            pageUser = repository.getSingleRecord(p.getOwner().getId(), subPage.getId());
+            pageUser = repository.getSingleRecord(p.getOwnerId(), subPage.getId());
             Long currentRenderSequence =  pageUser.getRenderSequence();
             assertThat(currentRenderSequence > lastRenderSequence, is(true));
             lastRenderSequence = currentRenderSequence;
@@ -247,7 +247,7 @@ public class JpaPageRepositoryTest {
     @Rollback(true)
     public void createPageForUser_validUser(){
         Page page = repository.createPageForUser(user, defaultPageTemplate);
-        assertSame(user, page.getOwner());
+        assertEquals(user.getId(), page.getOwnerId());
         assertEquals(page.getName(), defaultPageTemplate.getName());
         assertNull(page.getParentPage());
         assertEquals(2, page.getSubPages().size());
@@ -273,8 +273,8 @@ public class JpaPageRepositoryTest {
         assertEquals(defaultPageTemplate.getSubPageTemplates().get(0).getName(), subPage1.getName());
         assertEquals(PageType.SUB_PAGE, subPage2.getPageType());
         assertEquals(defaultPageTemplate.getSubPageTemplates().get(1).getName(), subPage2.getName());
-        assertSame(user, subPage1.getOwner());
-        assertSame(user, subPage2.getOwner());
+        assertEquals(user.getId(), subPage1.getOwnerId());
+        assertEquals(user.getId(), subPage2.getOwnerId());
     }
 
     @Test

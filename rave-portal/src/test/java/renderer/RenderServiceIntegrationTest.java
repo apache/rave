@@ -20,7 +20,10 @@
 package renderer;
 
 
-import org.apache.rave.portal.model.*;
+import org.apache.rave.portal.model.Page;
+import org.apache.rave.portal.model.Region;
+import org.apache.rave.portal.model.RegionWidget;
+import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.impl.*;
 import org.apache.rave.portal.web.renderer.RenderService;
 import org.apache.rave.portal.web.renderer.ScriptLocation;
@@ -36,11 +39,13 @@ import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.RestOperations;
 
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.HashMap;
 
@@ -48,6 +53,7 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 @ContextConfiguration(locations = {"classpath:test-dataContext.xml", "classpath:test-applicationContext.xml"})
 //@ContextConfiguration(locations = {"file:src/main/webapp/WEB-INF/dataContext.xml", "file:src/main/webapp/WEB-INF/applicationContext.xml"})
 public class RenderServiceIntegrationTest {
@@ -66,12 +72,12 @@ public class RenderServiceIntegrationTest {
     private static final String VALID_METADATA = "[{\"id\":\"gadgets.metadata\",\"result\"" +
             ":{\"http://www.example.com/gadget.xml\":{\"data-snipped\":\"here-for-brevity\"}}}]";
 
-    private static final String VALID_USER_ID = "1234";
-    private static final String VALID_USER_NAME = "jdoe";
+    private static final String VALID_USER_ID = "2";
+    private static final String VALID_USER_NAME = "john.doe";
 
     @SuppressWarnings("unchecked")
     @Before
-    public void setup() {
+    public void setup() throws SQLException {
         restOperations = EasyMock.createNiceMock(RestOperations.class);
         EasyMock.expect(restOperations.postForObject(EasyMock.anyObject(String.class), EasyMock.anyObject(String.class), EasyMock.anyObject(Class.class)))
                 .andReturn(VALID_METADATA);
@@ -100,7 +106,7 @@ public class RenderServiceIntegrationTest {
 
     @Test
     public void renderOpenSocial() {
-        Page page = new PageImpl("1", new UserImpl(VALID_USER_ID, VALID_USER_NAME));
+        Page page = new PageImpl("1", VALID_USER_ID);
         Region region = new RegionImpl("1", page, 1);
         page.setRegions(Arrays.asList(region));
 

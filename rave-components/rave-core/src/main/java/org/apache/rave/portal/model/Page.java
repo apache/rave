@@ -29,8 +29,8 @@ public interface Page {
     String getName();
     void setName(String name);
 
-    User getOwner();
-    void setOwner(User owner);
+    String getOwnerId();
+    void setOwnerId(String owner);
 
     PageLayout getPageLayout();
     void setPageLayout(PageLayout pageLayout);

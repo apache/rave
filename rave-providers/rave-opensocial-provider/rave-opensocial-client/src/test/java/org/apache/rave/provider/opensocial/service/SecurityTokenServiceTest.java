@@ -84,7 +84,7 @@ public class SecurityTokenServiceTest {
 
         validPerson = new UserImpl(VALID_USER_ID, VALID_USER_NAME);
 
-        validPage = new PageImpl("1", validPerson);
+        validPage = new PageImpl("1", validPerson.getId());
         validRegion = new RegionImpl("1", validPage, 1);
         validPage.setRegions(Arrays.asList(validRegion));
 
@@ -99,6 +99,7 @@ public class SecurityTokenServiceTest {
     @Test
     public void getSecurityToken_validWidget() throws SecurityTokenException {
         expect(userService.getAuthenticatedUser()).andReturn(validPerson).anyTimes();
+        expect(userService.getUserById(VALID_USER_ID)).andReturn(validPerson);
         replay(userService);
 
         SecurityToken securityToken = securityTokenService.getSecurityToken(validRegionWidget);
@@ -109,9 +110,10 @@ public class SecurityTokenServiceTest {
     public void getSecurityToken_validWidget_ownerIsNotViewer() throws SecurityTokenException {
         String expectedOwnerId = "99999";
         String expected = "Expected";
-        validPage.setOwner(new UserImpl(expectedOwnerId, expected));
+        validPage.setOwnerId(expectedOwnerId);
 
         expect(userService.getAuthenticatedUser()).andReturn(validPerson).anyTimes();
+        expect(userService.getUserById(expectedOwnerId)).andReturn(new UserImpl(expectedOwnerId, expected));
         replay(userService);
 
         SecurityToken securityToken = securityTokenService.getSecurityToken(validRegionWidget);
@@ -121,6 +123,7 @@ public class SecurityTokenServiceTest {
     @Test
     public void getEncryptedSecurityToken_validWidget_validToken() throws SecurityTokenException {
         expect(userService.getAuthenticatedUser()).andReturn(validPerson).anyTimes();
+        expect(userService.getUserById(VALID_USER_ID)).andReturn(validPerson);
         replay(userService);
 
         String token = securityTokenService.getEncryptedSecurityToken(validRegionWidget);
@@ -130,6 +133,7 @@ public class SecurityTokenServiceTest {
     @Test
     public void decryptSecurityToken_validTokenString() throws SecurityTokenException {
         expect(userService.getAuthenticatedUser()).andReturn(validPerson).anyTimes();
+        expect(userService.getUserById(VALID_USER_ID)).andReturn(validPerson);
         replay(userService);
 
         String encryptedToken = securityTokenService.getEncryptedSecurityToken(validRegionWidget);
@@ -143,6 +147,7 @@ public class SecurityTokenServiceTest {
     public void refreshEncryptedSecurityToken_validTokenString() throws SecurityTokenException {
         expect(userService.getAuthenticatedUser()).andReturn(validPerson).anyTimes();
         expect(userService.getUserByUsername(VALID_USER_NAME)).andReturn(validPerson).anyTimes();
+        expect(userService.getUserById(VALID_USER_ID)).andReturn(validPerson).anyTimes();
         replay(userService);
 
         String encryptedToken = securityTokenService.getEncryptedSecurityToken(validRegionWidget);

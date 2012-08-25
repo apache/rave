@@ -150,11 +150,11 @@ public class DefaultRegionPermissionEvaluator extends AbstractModelPermissionEva
         } else {
             trustedRegion = getTrustedRegion(region.getId(), trustedRegionContainer);
         }
-        return isRegionOwnerByUsername(authentication, trustedRegion.getPage().getOwner().getUsername());
+        return isRegionOwnerByUserId(authentication, trustedRegion.getPage().getOwnerId());
     }
 
-    private boolean isRegionOwnerByUsername(Authentication authentication, String username) {
-        return ((User)authentication.getPrincipal()).getUsername().equals(username);
+    private boolean isRegionOwnerByUserId(Authentication authentication, String userId) {
+        return ((User)authentication.getPrincipal()).getId().equals(userId);
     }
 
     private boolean isRegionOwnerById(Authentication authentication, String userId) {

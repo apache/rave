@@ -94,7 +94,7 @@ public class JpaPageRepository implements PageRepository {
     @Override
     public boolean hasPersonPage(String userId){
         TypedQuery<Long> query = manager.createNamedQuery(JpaPage.USER_HAS_PERSON_PAGE, Long.class);
-        query.setParameter("userId", userId == null ? null : Long.parseLong(userId));
+        query.setParameter("userId", userId);
         query.setParameter("pageType", PageType.PERSON_PROFILE);
         return query.getSingleResult() > 0;
     }
@@ -141,7 +141,7 @@ public class JpaPageRepository implements PageRepository {
         Page p = new JpaPage();
         p.setName(pt.getName());
         p.setPageType(pt.getPageType());
-        p.setOwner(jpaUser);
+        p.setOwnerId(jpaUser.getId());
         PageUser pageUser = new JpaPageUser(jpaUser, p, pt.getRenderSequence());
         pageUser.setPageStatus(PageInvitationStatus.OWNER);
         pageUser.setEditor(true);
@@ -215,13 +215,13 @@ public class JpaPageRepository implements PageRepository {
             Page lPage = new JpaPage();
             lPage.setName(pt.getName());
             lPage.setPageType(pt.getPageType());
-            lPage.setOwner(page.getOwner());
+            lPage.setOwnerId(page.getOwnerId());
             lPage.setPageLayout(pt.getPageLayout());
             lPage.setParentPage(page);
             lPage.setRegions(convertRegions(pt.getPageTemplateRegions(), lPage));
 
             // create new pageUser tuple
-            PageUser pageUser = new JpaPageUser((JpaUser)JpaConverter.getInstance().convert(lPage.getOwner(), User.class), lPage, pt.getRenderSequence());
+            PageUser pageUser = new JpaPageUser(lPage.getOwnerId(), lPage, pt.getRenderSequence());
             pageUser.setPageStatus(PageInvitationStatus.OWNER);
             pageUser.setEditor(true);
             List<PageUser> members = new ArrayList<PageUser>();

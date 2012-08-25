@@ -78,6 +78,13 @@ public class JpaPageUser implements BasicEntity, Serializable, PageUser {
         this.renderSequence = sequence;
     }
 
+
+    public JpaPageUser(String userId, Page page, long sequence){
+        this.userId = userId;
+        setPage(page);
+        this.renderSequence = sequence;
+    }
+
     public Long getEntityId() {
         return entityId;
     }

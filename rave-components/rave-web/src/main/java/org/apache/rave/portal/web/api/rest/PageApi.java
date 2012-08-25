@@ -68,7 +68,7 @@ public class PageApi extends AbstractRestApi {
     }
 
     private static void modifyForExport(Page page) {
-        page.setOwner(null);
+        page.setOwnerId(null);
         for(Region r : page.getRegions()){
             modifyForExport(r);
         }

@@ -84,14 +84,14 @@ public class PageControllerTest {
 
         validUser.setDefaultPageLayout(validPageLayout);
 
-        defaultPage = new PageImpl(DEFAULT_PAGE_ID, validUser);
+        defaultPage = new PageImpl(DEFAULT_PAGE_ID, USER_ID);
         defaultPage.setPageLayout(validPageLayout);
 
         List<PageUser> members = new ArrayList<PageUser>();
         members.add(defaultPageUser);
         defaultPage.setMembers(members);
 
-        otherPage = new PageImpl(OTHER_PAGE_ID, validUser);
+        otherPage = new PageImpl(OTHER_PAGE_ID, USER_ID);
         otherPage.setPageLayout(validPageLayout);
         otherPageUser = new PageUserImpl(USER_ID, otherPage, 2L);
         otherPageUser.setPageStatus(PageInvitationStatus.OWNER);

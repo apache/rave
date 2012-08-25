@@ -68,10 +68,10 @@ public class PageTest {
 
         Page subPage1 = new PageImpl();
         subPage1.setId(SUB_PAGE_1_ID);
-        subPage1.setOwner(testOwner);
+        subPage1.setOwnerId(testOwner.getId());
         Page subPage2 = new PageImpl();
         subPage2.setId(SUB_PAGE_2_ID);
-        subPage2.setOwner(testOwner);
+        subPage2.setOwnerId(testOwner.getId());
 
         List<PageUser> pageUsers1 = new ArrayList<PageUser>();
         PageUser pageUser1 = new PageUserImpl();
@@ -105,7 +105,7 @@ public class PageTest {
 		regions.add(new RegionImpl());
 
 		page.setName(testName);
-		page.setOwner(testOwner);
+		page.setOwnerId(testOwner.getId());
 		page.setParentPage(parentPage);
 		page.setSubPages(subPages);
 		page.setPageLayout(pageLayout);
@@ -126,7 +126,7 @@ public class PageTest {
 	public void testAccessorMethods() {
 		assertTrue(page.getId().equals(id));
 		assertTrue(page.getName().equals(testName));
-		assertTrue(page.getOwner().equals(testOwner));
+		assertTrue(page.getOwnerId().equals(testOwner));
 		assertTrue(page.getParentPage().equals(parentPage));
         assertTrue(page.getSubPages().containsAll(subPages));
 		assertTrue(page.getPageLayout().equals(pageLayout));

@@ -70,7 +70,7 @@ public class DefaultWidgetPermissionEvaluatorTest {
         user2.setUsername(VALID_USERNAME2);
         page = new PageImpl();
         page.setId(VALID_PAGE_ID);
-        page.setOwner(user);
+        page.setOwnerId(user.getId());
         widget = new WidgetImpl(VALID_WIDGET_ID);
         widget.setOwner(user);
         widget.setWidgetStatus(WidgetStatus.PUBLISHED);

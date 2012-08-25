@@ -157,11 +157,11 @@ public class DefaultPagePermissionEvaluator extends AbstractModelPermissionEvalu
             trustedPage = getTrustedPage(page.getId(), trustedPageContainer);
         }
 
-        return isPageOwnerByUsername(authentication, trustedPage.getOwner().getUsername());
+        return isPageOwnerByUserId(authentication, trustedPage.getOwnerId());
     }
 
-    private boolean isPageOwnerByUsername(Authentication authentication, String username) {
-        return ((User)authentication.getPrincipal()).getUsername().equals(username);
+    private boolean isPageOwnerByUserId(Authentication authentication, String userId) {
+        return ((User)authentication.getPrincipal()).getId().equals(userId);
     }
 
     private boolean isPageOwnerById(Authentication authentication, String userId) {

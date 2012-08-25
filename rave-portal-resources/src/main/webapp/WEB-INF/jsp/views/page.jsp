@@ -60,7 +60,7 @@
                 </c:set>
                 <c:set var="isSharedToMe">
                     <c:choose>
-                        <c:when test="${userPage.owner.username == principleUsername}">false</c:when>
+                        <c:when test="${userPage.ownerId == principalId}">false</c:when>
                         <c:otherwise>true</c:otherwise>
                     </c:choose>
                 </c:set>
@@ -71,7 +71,8 @@
                     </c:choose>
                 </c:set>
                 <fmt:message key="sharing.page.tab.icon.tip.from" var="iconShareToolTipFrom">
-                    <fmt:param value="${userPage.owner.username}"/>
+                    <%--TODO:FIX BEFORE RAVE-729 is COMPLETE --%>
+                    <fmt:param value="${userPage.ownerId}"/>
                 </fmt:message>
                 <fmt:message key="sharing.page.tab.icon.tip.to" var="iconShareToolTipTo"/>
                 <c:choose>
@@ -287,7 +288,8 @@
         <div class="modal-body">
             <div id="confirmSharePageDialogLegend">
                 <fmt:message key="sharing.dialog.confirm.message">
-                    <fmt:param value="${page.owner.username}"/>
+                    <%--TODO: This MUST change before RAVE-729 is complete --%>
+                    <fmt:param value="${page.ownerId}"/>
                 </fmt:message>
             </div>
         </div>

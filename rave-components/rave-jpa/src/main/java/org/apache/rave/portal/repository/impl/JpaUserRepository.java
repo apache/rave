@@ -109,7 +109,8 @@ public class JpaUserRepository implements UserRepository {
 
     @Override
     public User get(String id) {
-        return manager.find(JpaUser.class, id);
+        long primaryKey = Long.parseLong(id);
+        return manager.find(JpaUser.class, primaryKey);
     }
 
     @Override

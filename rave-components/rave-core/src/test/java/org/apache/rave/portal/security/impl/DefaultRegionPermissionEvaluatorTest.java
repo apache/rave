@@ -53,6 +53,7 @@ public class DefaultRegionPermissionEvaluatorTest {
     private final String VALID_REGION_ID = "1";
     private final String VALID_PAGE_ID = "3";
     private final String VALID_USER_ID = "99";
+    private final String VALID_USER_ID2 = "66";
     private final String VALID_USERNAME = "john.doe";
     private final String VALID_USERNAME2 = "jane.doe";
 
@@ -67,9 +68,10 @@ public class DefaultRegionPermissionEvaluatorTest {
         user.setId(VALID_USER_ID);
         user2 = new UserImpl();
         user2.setUsername(VALID_USERNAME2);
+        user2.setId(VALID_USER_ID2);
         page = new PageImpl();
         page.setId(VALID_PAGE_ID);
-        page.setOwner(user);
+        page.setOwnerId(user.getId());
         region = new RegionImpl(VALID_REGION_ID);
         region.setPage(page);
         grantedAuthoritiesList = new ArrayList<GrantedAuthority>();

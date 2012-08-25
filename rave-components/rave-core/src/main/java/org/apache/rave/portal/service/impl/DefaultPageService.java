@@ -149,13 +149,13 @@ public class DefaultPageService implements PageService {
         long renderSequence = (parentPage.getSubPages() != null) ? parentPage.getSubPages().size() + 1 : 1;
         Page page = new PageImpl();
         page.setName(pageName);
-        page.setOwner(user);
+        page.setOwnerId(user.getId());
         page.setPageLayout(pageLayout);
         page.setRegions(regions);
         // set this as a "sub-page" page type
         page.setPageType(PageType.SUB_PAGE);
 
-        PageUser pageUser = new PageUserImpl(page.getOwner().getId(), page, renderSequence);
+        PageUser pageUser = new PageUserImpl(page.getOwnerId(), page, renderSequence);
         pageUser.setPageStatus(PageInvitationStatus.OWNER);
         List<PageUser> members = new ArrayList<PageUser>();
         members.add(pageUser);
@@ -510,9 +510,9 @@ public class DefaultPageService implements PageService {
         long renderSequence = defaultUserPage.size() + 1;
         page = new PageImpl();
         page.setName(pageName);
-        page.setOwner(user);
+        page.setOwnerId(user.getId());
         page.setPageLayout(pageLayout);
-        PageUser pageUser = new PageUserImpl(page.getOwner().getId(), page, renderSequence);
+        PageUser pageUser = new PageUserImpl(page.getOwnerId(), page, renderSequence);
         pageUser.setPageStatus(PageInvitationStatus.OWNER);
         pageUser.setEditor(true);
 

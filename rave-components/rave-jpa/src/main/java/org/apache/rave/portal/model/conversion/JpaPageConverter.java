@@ -63,7 +63,7 @@ public class JpaPageConverter implements ModelConverter<Page, JpaPage> {
         converted.setId(source.getId());
         converted.setMembers(source.getMembers());
         converted.setName(source.getName());
-        converted.setOwner(source.getOwner());
+        converted.setOwnerId(source.getOwnerId());
         converted.setPageLayout(source.getPageLayout());
         converted.setPageType(source.getPageType());
         converted.setParentPage(source.getParentPage());

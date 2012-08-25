@@ -25,7 +25,7 @@ import java.util.List;
 public class PageImpl implements Page {
     private String id;
     private String name;
-    private User owner;
+    private String ownerId;
     private Page parentPage;
     private List<Page> subPages;
     private PageLayout pageLayout;
@@ -39,9 +39,9 @@ public class PageImpl implements Page {
         this.id = id;
     }
 
-    public PageImpl(String id, User owner) {
+    public PageImpl(String id, String ownerId) {
         this.id = id;
-        this.owner = owner;
+        this.ownerId = ownerId;
     }
 
     @Override
@@ -65,13 +65,13 @@ public class PageImpl implements Page {
     }
 
     @Override
-    public User getOwner() {
-        return owner;
+    public String getOwnerId() {
+        return ownerId;
     }
 
     @Override
-    public void setOwner(User owner) {
-        this.owner = owner;
+    public void setOwnerId(String owner) {
+        this.ownerId = owner;
     }
 
     @Override

@@ -19,7 +19,6 @@
 package org.apache.rave.portal.model;
 
 import org.apache.rave.persistence.BasicEntity;
-import org.apache.rave.portal.model.conversion.ConvertingListProxyFactory;
 import org.apache.rave.portal.model.conversion.JpaConverter;
 import org.apache.rave.portal.model.impl.PersonImpl;
 import org.apache.rave.util.CollectionUtils;
@@ -27,7 +26,10 @@ import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
 
 /**
  * {@inheritDoc}
@@ -46,7 +48,7 @@ import java.util.*;
                 "where lower(u.username) like :"+ JpaUser.PARAM_SEARCHTERM+" or lower(u.email) like :"+ JpaUser.PARAM_SEARCHTERM+" order by u.username asc"),
         @NamedQuery(name = JpaUser.USER_COUNT_FIND_BY_USERNAME_OR_EMAIL, query = "select count(u) from JpaUser u " +
                 "where lower(u.username) like :"+ JpaUser.PARAM_SEARCHTERM+" or lower(u.email) like :"+ JpaUser.PARAM_SEARCHTERM),
-        @NamedQuery(name = JpaUser.USER_GET_ALL_FOR_ADDED_WIDGET, query = "select distinct(rw.region.page.owner) from JpaRegionWidget rw where rw.widget.entityId = :widgetId order by rw.region.page.owner.familyName, rw.region.page.owner.givenName")
+        @NamedQuery(name = JpaUser.USER_GET_ALL_FOR_ADDED_WIDGET, query = "select distinct(u) from JpaUser u, JpaRegionWidget rw where rw.region.page.ownerId = CONCAT(u.entityId,'') and rw.widget.entityId = :widgetId")
 })
 @DiscriminatorValue("User")
 public class JpaUser extends JpaPerson implements BasicEntity, Serializable, User {
