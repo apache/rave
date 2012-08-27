@@ -35,7 +35,7 @@ public class WidgetImpl implements Widget {
     private String description;
     private WidgetStatus widgetStatus;
     private List<WidgetComment> comments;
-    private User owner;
+    private String ownerId;
     private boolean disableRendering;
     private String disableRenderingMessage;
     private List<WidgetRating> ratings;
@@ -150,12 +150,12 @@ public class WidgetImpl implements Widget {
         this.comments = comments;
     }
 
-    public User getOwner() {
-        return owner;
+    public String getOwnerId() {
+        return ownerId;
     }
 
-    public void setOwner(User owner) {
-        this.owner = owner;
+    public void setOwnerId(String owner) {
+        this.ownerId = owner;
     }
 
     public boolean isDisableRendering() {
@@ -223,7 +223,7 @@ public class WidgetImpl implements Widget {
         if (disableRenderingMessage != null ? !disableRenderingMessage.equals(widget.disableRenderingMessage) : widget.disableRenderingMessage != null)
             return false;
         if (id != null ? !id.equals(widget.id) : widget.id != null) return false;
-        if (owner != null ? !owner.equals(widget.owner) : widget.owner != null) return false;
+        if (ownerId != null ? !ownerId.equals(widget.ownerId) : widget.ownerId != null) return false;
         if (ratings != null ? !ratings.equals(widget.ratings) : widget.ratings != null) return false;
         if (screenshotUrl != null ? !screenshotUrl.equals(widget.screenshotUrl) : widget.screenshotUrl != null)
             return false;
@@ -253,7 +253,7 @@ public class WidgetImpl implements Widget {
         result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + (widgetStatus != null ? widgetStatus.hashCode() : 0);
         result = 31 * result + (comments != null ? comments.hashCode() : 0);
-        result = 31 * result + (owner != null ? owner.hashCode() : 0);
+        result = 31 * result + (ownerId != null ? ownerId.hashCode() : 0);
         result = 31 * result + (disableRendering ? 1 : 0);
         result = 31 * result + (disableRenderingMessage != null ? disableRenderingMessage.hashCode() : 0);
         result = 31 * result + (ratings != null ? ratings.hashCode() : 0);

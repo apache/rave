@@ -130,14 +130,14 @@ public class JpaWidgetRepository implements WidgetRepository {
     @Override
     public List<Widget> getByOwner(User owner, int offset, int pageSize) {
         TypedQuery<JpaWidget> query = manager.createNamedQuery(JpaWidget.WIDGET_GET_BY_OWNER, JpaWidget.class);
-        query.setParameter(JpaWidget.PARAM_OWNER, owner);
+        query.setParameter(JpaWidget.PARAM_OWNER, owner.getId());
         return CollectionUtils.<Widget>toBaseTypedList(getPagedResultList(query, offset, pageSize));
     }
 
     @Override
     public int getCountByOwner(User owner, int offset, int pageSize) {
         Query query = manager.createNamedQuery(JpaWidget.WIDGET_COUNT_BY_OWNER);
-        query.setParameter(JpaWidget.PARAM_OWNER, owner);
+        query.setParameter(JpaWidget.PARAM_OWNER, owner.getId());
         Number countResult = (Number) query.getSingleResult();
         return countResult.intValue();
     }
@@ -278,7 +278,7 @@ public class JpaWidgetRepository implements WidgetRepository {
     @Override
     public int unassignWidgetOwner(String userId) {
         Query query = manager.createNamedQuery(JpaWidget.WIDGET_UNASSIGN_OWNER);
-        query.setParameter(JpaWidget.PARAM_OWNER, userId == null ? null : Long.parseLong(userId));
+        query.setParameter(JpaWidget.PARAM_OWNER, userId);
         return query.executeUpdate();
     }
 

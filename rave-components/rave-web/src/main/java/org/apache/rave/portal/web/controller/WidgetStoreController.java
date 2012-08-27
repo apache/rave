@@ -312,7 +312,7 @@ public class WidgetStoreController {
 	        widget.setWidgetStatus(WidgetStatus.PREVIEW);
 		}
         
-        widget.setOwner(user);
+        widget.setOwnerId(user.getId());
 
         final Widget storedWidget = widgetService.registerNewWidget(widget);
         return "redirect:/app/store/widget/" + storedWidget.getId() + "?referringPageId=" + referringPageId;

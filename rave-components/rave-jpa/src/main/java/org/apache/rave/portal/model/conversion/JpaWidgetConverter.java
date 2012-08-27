@@ -67,7 +67,7 @@ public class JpaWidgetConverter implements ModelConverter<Widget, JpaWidget> {
         converted.setDescription(source.getDescription());
         converted.setWidgetStatus(source.getWidgetStatus());
         converted.setComments(source.getComments());
-        converted.setOwner(source.getOwner());
+        converted.setOwnerId(source.getOwnerId());
         converted.setDisableRendering(source.isDisableRendering());
         converted.setRatings(source.getRatings());
         converted.setTags(source.getTags());

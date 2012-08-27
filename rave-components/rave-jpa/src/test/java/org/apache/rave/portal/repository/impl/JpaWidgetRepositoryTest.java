@@ -470,11 +470,11 @@ public class JpaWidgetRepositoryTest {
         final int NUM_WIDGETS_OWNED_BY_USER = 16;
 
         Widget widget = repository.get(WIDGET_ID);
-        assertThat(widget.getOwner().getId(), is(USER_ID));
+        assertThat(widget.getOwnerId(), is(USER_ID));
         assertThat(repository.unassignWidgetOwner(USER_ID), is(NUM_WIDGETS_OWNED_BY_USER));
         sharedManager.flush();
         sharedManager.refresh(widget);
-        assertThat(widget.getOwner(), is(nullValue()));
+        assertThat(widget.getOwnerId(), is(nullValue()));
     }
 
     @Test

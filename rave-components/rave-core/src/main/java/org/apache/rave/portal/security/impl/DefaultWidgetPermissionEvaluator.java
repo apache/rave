@@ -144,7 +144,7 @@ public class DefaultWidgetPermissionEvaluator extends AbstractModelPermissionEva
     // if trustedDomainObject is false, pull the entity from the database first to ensure
     // the model object is trusted and hasn't been modified
     private boolean isWidgetOwner(Authentication authentication, Widget widget, List<Widget> trustedWidgetContainer, boolean trustedDomainObject) {
-        if (widget.getOwner() == null) {
+        if (widget.getOwnerId() == null) {
             return false;
         }
         Widget trustedWidget;
@@ -153,7 +153,7 @@ public class DefaultWidgetPermissionEvaluator extends AbstractModelPermissionEva
         } else {
             trustedWidget = getTrustedWidget(widget.getId(), trustedWidgetContainer);
         }
-        return isWidgetOwnerByUsername(authentication, trustedWidget.getOwner().getUsername());
+        return isWidgetOwnerById(authentication, trustedWidget.getOwnerId());
     }
 
     private boolean isWidgetOwnerByUsername(Authentication authentication, String username) {

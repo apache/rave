@@ -54,6 +54,7 @@ public class DefaultWidgetPermissionEvaluatorTest {
     private final String VALID_WIDGET_ID = "1";
     private final String VALID_PAGE_ID = "3";
     private final String VALID_USER_ID = "99";
+    private final String VALID_USER_ID2 = "66";
     private final String VALID_USERNAME = "john.doe";
     private final String VALID_USERNAME2 = "jane.doe";
 
@@ -68,11 +69,12 @@ public class DefaultWidgetPermissionEvaluatorTest {
         user.setId(VALID_USER_ID);
         user2 = new UserImpl();
         user2.setUsername(VALID_USERNAME2);
+        user2.setId(VALID_USER_ID2);
         page = new PageImpl();
         page.setId(VALID_PAGE_ID);
         page.setOwnerId(user.getId());
         widget = new WidgetImpl(VALID_WIDGET_ID);
-        widget.setOwner(user);
+        widget.setOwnerId(VALID_USER_ID);
         widget.setWidgetStatus(WidgetStatus.PUBLISHED);
         grantedAuthoritiesList = new ArrayList<GrantedAuthority>();
         grantedAuthoritiesList.add(new SimpleGrantedAuthority("ROLE_USER"));

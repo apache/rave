@@ -19,7 +19,6 @@
 package org.apache.rave.portal.model.conversion;
 
 import org.apache.rave.portal.model.*;
-import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.model.impl.WidgetImpl;
 import org.junit.Before;
 import org.junit.Test;
@@ -73,7 +72,7 @@ public class JpaWidgetConverterTest {
         template.setDescription("TEST_J");
         template.setWidgetStatus(WidgetStatus.PUBLISHED);
         template.setComments(new ArrayList<WidgetComment>());
-        template.setOwner(new UserImpl("24"));
+        template.setOwnerId("24");
         template.setDisableRendering(true);
         template.setRatings(new ArrayList<WidgetRating>());
         template.setTags(new ArrayList<WidgetTag>());
@@ -97,7 +96,7 @@ public class JpaWidgetConverterTest {
         assertThat(jpaTemplate.getDescription(), is(equalTo(template.getDescription())));
         assertThat(jpaTemplate.getWidgetStatus(), is(equalTo(template.getWidgetStatus())));
         assertThat(jpaTemplate.getComments(), is(equalTo(template.getComments())));
-        assertThat(jpaTemplate.getOwner().getId(), is(equalTo(template.getOwner().getId())));
+        assertThat(jpaTemplate.getOwnerId(), is(equalTo(template.getOwnerId())));
         assertThat(jpaTemplate.isDisableRendering(), is(equalTo(template.isDisableRendering())));
         assertThat(jpaTemplate.getRatings(), is(equalTo(template.getRatings())));
         assertThat(jpaTemplate.getTags(), is(equalTo(template.getTags())));
