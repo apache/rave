@@ -430,7 +430,10 @@ var rave = rave || (function () {
             }
         }
 
-        function createPopup(popupType) {
+        function createPopup(popupType, prefs) {
+            var height = (prefs && prefs.preferredHeight);
+            var width = (prefs && prefs.preferredWidth);
+
             var target = POPUPS[popupType.toLowerCase()];
 
             if (!target) {
@@ -442,6 +445,12 @@ var rave = rave || (function () {
             }
 
             var container = $(target.markup);
+            if(height) {
+                container.height(height);
+            }
+            if(width) {
+                container.width(width);
+            }
             $("#pageContent").prepend(container);
 
             if ($.type(target.initialize) == 'function') target.initialize(container);
@@ -955,11 +964,11 @@ var rave = rave || (function () {
     function resetOpenAjaxHubInstance() {
         openAjaxHub = null;
     }
-    
+
     function renderNewWidget(regionWidgetId){
         // When run as the callback argument supplied to rave.api.rpc.addWidgetToPage
         // this method will render the widget in the current page.
-        
+
         // load widget into a placeholder element
         var placeholder = document.createElement("div");
         $(placeholder).load(rave.getContext()+"/api/rest/regionwidget/"+regionWidgetId, function(){
@@ -970,8 +979,7 @@ var rave = rave || (function () {
           region.children(":first").children(":first").unwrap();
           // initialize
           initializeWidgets();
-          }        
-        );
+        });
     }
 
     function initializeWidgets() {
@@ -1030,7 +1038,6 @@ var rave = rave || (function () {
     }
 
     function initializeWidget(widget) {
-    
         // Widget has been deleted on the page but not removed from list
         var widgetBody = $(["#widget-", widget.regionWidgetId, "-body"].join(""));
         if(widgetBody.length === 0){
@@ -1041,7 +1048,7 @@ var rave = rave || (function () {
               return;
             }
         }
-    
+
         if (widget.type == "DISABLED") {
             renderDisabledWidget(widget.regionWidgetId, unescape(widget.disabledMessage));
             return;

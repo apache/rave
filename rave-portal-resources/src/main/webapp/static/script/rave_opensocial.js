@@ -86,7 +86,8 @@ rave.opensocial = rave.opensocial || (function () {
 
         container.views.createElementForGadget = function (metadata, rel, opt_view, opt_viewTarget, opt_coordinates, parentSite, opt_callback) {
                 if (opt_viewTarget) {
-                    return rave.createPopup(opt_viewTarget);
+                    var prefs = (metadata && metadata.views && metadata.views[opt_view])
+                    return rave.createPopup(opt_viewTarget, prefs);
                 }
             };
 
