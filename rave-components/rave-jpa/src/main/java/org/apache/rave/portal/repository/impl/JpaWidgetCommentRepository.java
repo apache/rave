@@ -19,14 +19,12 @@ import org.apache.rave.portal.model.JpaWidgetComment;
 import org.apache.rave.portal.model.WidgetComment;
 import org.apache.rave.portal.model.conversion.JpaWidgetCommentConverter;
 import org.apache.rave.portal.repository.WidgetCommentRepository;
-import org.apache.rave.util.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import java.util.List;
 
 import static org.apache.rave.persistence.jpa.util.JpaUtil.saveOrUpdate;
 
@@ -62,7 +60,7 @@ public class JpaWidgetCommentRepository implements WidgetCommentRepository {
     @Override
     public int deleteAll(String userId) {
         TypedQuery<JpaWidgetComment> query = manager.createNamedQuery(JpaWidgetComment.DELETE_ALL_BY_USER, JpaWidgetComment.class);
-        query.setParameter("userId", userId == null ? null : Long.parseLong(userId));
+        query.setParameter("userId", userId);
         return query.executeUpdate();
     }
 }

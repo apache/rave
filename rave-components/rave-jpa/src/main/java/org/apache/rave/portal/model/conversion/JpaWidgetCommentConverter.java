@@ -63,7 +63,7 @@ public class JpaWidgetCommentConverter implements ModelConverter<WidgetComment, 
         converted.setCreatedDate(source.getCreatedDate());
         converted.setLastModifiedDate(source.getLastModifiedDate());
         converted.setText(source.getText());
-        converted.setUser(source.getUser());
+        converted.setUserId(source.getUserId());
         converted.setWidgetId(source.getWidgetId());
     }
 }

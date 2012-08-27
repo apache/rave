@@ -67,7 +67,7 @@ public class DefaultWidgetCommentPermissionEvaluatorTest {
         user2.setUsername(VALID_USERNAME2);
         user2.setId(INVALID_USER_ID);
         widgetComment = new WidgetCommentImpl(VALID_COMMENT_ID);
-        widgetComment.setUser(user);
+        widgetComment.setUserId(VALID_USER_ID);
         grantedAuthoritiesList = new ArrayList<GrantedAuthority>();
         grantedAuthoritiesList.add(new SimpleGrantedAuthority("ROLE_USER"));
     }
@@ -220,7 +220,7 @@ public class DefaultWidgetCommentPermissionEvaluatorTest {
         WidgetComment localWidgetComment = new WidgetCommentImpl();
         UserImpl localUser = new UserImpl();
         localUser.setId(VALID_USER_ID);
-        localWidgetComment.setUser(localUser);
+        localWidgetComment.setUserId(VALID_USER_ID);
         expect(mockWidgetCommentRepository.get(VALID_COMMENT_ID)).andReturn(localWidgetComment).anyTimes();
         replay(mockWidgetCommentRepository);
 

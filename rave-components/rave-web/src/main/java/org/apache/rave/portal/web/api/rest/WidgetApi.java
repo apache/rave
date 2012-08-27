@@ -72,7 +72,7 @@ public class WidgetApi extends AbstractRestApi {
                                     HttpServletResponse response) {
         WidgetComment widgetComment = new WidgetCommentImpl();
         widgetComment.setWidgetId(widgetId);
-        widgetComment.setUser(userService.getAuthenticatedUser());
+        widgetComment.setUserId(userService.getAuthenticatedUser().getId());
         widgetComment.setText(text);
         widgetComment.setCreatedDate(new Date());
         widgetComment.setLastModifiedDate(new Date());
@@ -98,7 +98,7 @@ public class WidgetApi extends AbstractRestApi {
         if (widgetComment == null) {
             widgetComment = new WidgetCommentImpl();
             widgetComment.setWidgetId(widgetId);
-            widgetComment.setUser(userService.getAuthenticatedUser());
+            widgetComment.setUserId(userService.getAuthenticatedUser().getId());
             widgetComment.setCreatedDate(new Date());
             widgetComment.setLastModifiedDate(new Date());
         }

@@ -31,7 +31,7 @@ import java.util.Date;
 @Table(name = "widget_comment")
 @NamedQueries({
         @NamedQuery(name = JpaWidgetComment.DELETE_ALL_BY_USER,
-                query="DELETE FROM JpaWidgetComment wc WHERE wc.user.entityId = :userId")
+                query="DELETE FROM JpaWidgetComment wc WHERE wc.userId = :userId")
 })
 @XmlRootElement
 public class JpaWidgetComment implements BasicEntity, Serializable, WidgetComment {
@@ -48,12 +48,12 @@ public class JpaWidgetComment implements BasicEntity, Serializable, WidgetCommen
     @Column(name = "widget_id")
     private Long widgetId;
 
-    @ManyToOne(fetch=FetchType.EAGER)
-    @JoinColumn(name="user_id")
-    private JpaUser user;
-
     @Basic
-    @Column(name = "text") @Lob
+    @Column(name="user_id")
+    private String userId;
+
+    @Basic @Lob
+    @Column(name = "text")
     private String text;
 
     @Basic
@@ -73,7 +73,7 @@ public class JpaWidgetComment implements BasicEntity, Serializable, WidgetCommen
     public JpaWidgetComment(Long entityId, Long widgetId, JpaUser user, String text, Date lastModified, Date created) {
         this.entityId = entityId;
         this.widgetId = widgetId;
-        this.user = user;
+        this.userId = user.getId();
         this.text = text;
         this.lastModifiedDate = lastModified;
         this.createdDate = created;
@@ -105,13 +105,13 @@ public class JpaWidgetComment implements BasicEntity, Serializable, WidgetCommen
     }
 
     @Override
-    public User getUser() {
-        return user;
+    public String getUserId() {
+        return userId;
     }
 
     @Override
-    public void setUser(User user) {
-        this.user = JpaConverter.getInstance().convert(user, User.class);
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     @Override

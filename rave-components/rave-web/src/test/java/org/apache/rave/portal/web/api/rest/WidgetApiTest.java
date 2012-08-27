@@ -112,7 +112,7 @@ public class WidgetApiTest {
         WidgetComment widgetComment = new WidgetCommentImpl();
         widgetComment.setWidgetId("2");
         widgetComment.setText(message);
-        widgetComment.setUser(new UserImpl(VALID_USER_ID, "John.Doe"));
+        widgetComment.setUserId(VALID_USER_ID);
 
         expect(userService.getAuthenticatedUser()).andReturn(user);
         expect(widgetCommentService.getWidgetComment("3")).andReturn(null);

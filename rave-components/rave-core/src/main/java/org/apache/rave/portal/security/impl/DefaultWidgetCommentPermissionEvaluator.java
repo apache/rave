@@ -111,7 +111,7 @@ public class DefaultWidgetCommentPermissionEvaluator extends AbstractModelPermis
                 break;
             case CREATE:
             case CREATE_OR_UPDATE:
-                hasPermission = isWidgetCommentOwnerById(authentication, widgetComment.getUser().getId());
+                hasPermission = isWidgetCommentOwnerById(authentication, widgetComment.getUserId());
                 break;
             case DELETE:
             case UPDATE:
@@ -173,7 +173,7 @@ public class DefaultWidgetCommentPermissionEvaluator extends AbstractModelPermis
             trustedWidgetComment = getTrustedWidgetComment(widgetComment.getId(), trustedPageContainer);
         }
 
-        return isWidgetCommentOwnerByUsername(authentication, trustedWidgetComment.getUser().getUsername());
+        return isWidgetCommentOwnerById(authentication, trustedWidgetComment.getUserId());
     }
 
     // returns a trusted Page object, either from the PageRepository, or the

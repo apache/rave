@@ -29,8 +29,8 @@ import java.util.Date;
 public interface WidgetComment {
     String getId();
 
-    User getUser();
-    void setUser(User user);
+    String getUserId();
+    void setUserId(String userId);
 
     String getWidgetId();
     void setWidgetId(String widgetId);

@@ -85,14 +85,14 @@ public class JpaWidgetCommentRepositoryTest {
         wc.setWidgetId(VALID_WIDGET_ID.toString());
         wc.setLastModifiedDate(lastModDate);
         wc.setText(text);
-        wc.setUser(user);
+        wc.setUserId(VALID_USER_ID.toString());
         assertThat(wc.getId(), is(nullValue()));
         repository.save(wc);
         String newId = wc.getId();
         assertThat(Long.parseLong(newId) > 0, is(true));
         WidgetComment newComment = repository.get(newId);
         assertThat(newComment.getWidgetId(), is(VALID_WIDGET_ID.toString()));
-        assertThat(newComment.getUser().getId(), is(VALID_USER_ID.toString()));
+        assertThat(newComment.getUserId(), is(VALID_USER_ID.toString()));
         assertThat(newComment.getText(), is(text));
         assertThat(newComment.getCreatedDate(), is(createdDate));
         assertThat(newComment.getLastModifiedDate(), is(lastModDate));

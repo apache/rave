@@ -18,7 +18,6 @@
  */
 package org.apache.rave.portal.model.conversion;
 
-import org.apache.rave.portal.model.JpaUser;
 import org.apache.rave.portal.model.JpaWidgetComment;
 import org.apache.rave.portal.model.WidgetComment;
 import org.apache.rave.portal.model.impl.WidgetCommentImpl;
@@ -59,7 +58,7 @@ public class JpaWidgetCommentConverterTest {
         comment.setCreatedDate(new Date());
         comment.setLastModifiedDate(new Date());
         comment.setText("hello");
-        comment.setUser(new JpaUser(1L));
+        comment.setUserId("1");
         comment.setWidgetId("9");
 
         JpaWidgetComment converted = widgetCommentConverter.convert(comment);
@@ -70,7 +69,7 @@ public class JpaWidgetCommentConverterTest {
         assertThat(converted.getId(), is(equalTo(comment.getId())));
         assertThat(converted.getLastModifiedDate(), is(equalTo(comment.getLastModifiedDate())));
         assertThat(converted.getText(), is(equalTo(comment.getText())));
-        assertThat(converted.getUser(), is(equalTo(comment.getUser())));
+        assertThat(converted.getUserId(), is(equalTo(comment.getUserId())));
         assertThat(converted.getWidgetId(), is(equalTo(comment.getWidgetId())));
     }
 }

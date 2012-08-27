@@ -197,17 +197,18 @@
                                     <fmt:formatDate value="${comment.createdDate}" type="both" var="commentDate"/>
                                     <p class="comment-heading">
                                         <span class="commenter">
+                                            <%-- TODO:Find way to get person before completion of RAVE-729--%>
                                             <c:choose>
-                                                <c:when test="${not empty comment.user.displayName}">
-                                                    <c:out value="${comment.user.displayName}"/>
+                                                <c:when test="${not empty comment.userId}">
+                                                    <c:out value="${comment.userId}"/>
                                                 </c:when>
-                                                <c:otherwise><c:out value="${comment.user.username}"/></c:otherwise>
+                                                <c:otherwise><c:out value="${comment.userId}"/></c:otherwise>
                                             </c:choose>
                                         </span>
                                         <span class="comment-date">
                                             <c:out value=" - ${commentDate} "/>
                                         </span>
-                                        <c:if test="${userProfile.id eq comment.user.id}">
+                                        <c:if test="${userProfile.id eq comment.userId}">
                                             <button id="comment-delete-${comment.id}" class="btn btn-danger btn-mini commentDeleteButton"
                                                     value="Delete" title="Delete comment" data-widgetid="<c:out value="${comment.widgetId}"/>">
                                                 <i class="icon-remove icon-white"></i>
