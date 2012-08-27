@@ -769,6 +769,27 @@ rave.layout = rave.layout || (function() {
         return $("#currentPageId").val();
     }
 
+    /**
+     * Determines if the widget should be rendered as part of the initial page view.  This can be used to help optimize
+     * page loads as widgets located on non-active sub pages will not be rendered initially.  The function will return
+     * false if one of the following criteria is met, and true otherwise:
+     *
+     * 1) the widget is on a top level page (not a sub page)
+     * 2) the widget is on a sub page that is currently requested in the URL via the hash tag
+     *    ie /app//person/canoniocal#My%20Activity
+     * 3) the widget is on the default sub page and the page request URL doesn't contain a sub-page hash tag
+     *    ie /app/person/canonical
+     *
+     * @return boolean
+     */
+    function isWidgetOnHiddenTab(widget) {
+        var hash = decodeURIComponent(location.hash);
+        var subPage = widget.subPage;
+        return !(subPage.id === null ||
+            ("#" + subPage.name) === hash ||
+            (hash === "" && subPage.isDefault));
+    }
+
    /***
     * initializes the rave.layout namespace code
     */
@@ -792,6 +813,7 @@ rave.layout = rave.layout || (function() {
         movePage: movePage,
         closePageDialog: closePageDialog,
         moveWidgetToPage: moveWidgetToPage,
-        searchHandler : searchHandler
+        searchHandler : searchHandler,
+        isWidgetOnHiddenTab: isWidgetOnHiddenTab
     };
 })();

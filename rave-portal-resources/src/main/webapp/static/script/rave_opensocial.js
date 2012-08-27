@@ -195,8 +195,11 @@ rave.opensocial = rave.opensocial || (function () {
             }
         }
 
-        // if the gadget is not collapsed, render it
-        renderGadgetViewIfNotCollapsed(rave.opensocial.VIEW_NAMES.HOME, gadget);
+        // if the gadget is on a top level page, or an active sub page tab, render it
+        if (!rave.layout.isWidgetOnHiddenTab(gadget)) {
+            // if the gadget is not collapsed, render it
+            renderGadgetViewIfNotCollapsed(rave.opensocial.VIEW_NAMES.HOME, gadget);
+        }
     }
 
     /**

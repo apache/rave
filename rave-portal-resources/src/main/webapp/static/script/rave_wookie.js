@@ -94,9 +94,13 @@ rave.wookie = rave.wookie || (function() {
                 $(ooacontainer.getIframe()).hide();
             }
         };
-        // if in the collapsed state, hide the layer
-        if (widget.collapsed){
-            $(ooacontainer.getIframe()).hide();
+
+        // if the widget is on a top level page, or an active sub page tab, render it
+        if (!rave.layout.isWidgetOnHiddenTab(widget)) {
+            // if in the collapsed state, hide the layer
+            if (widget.collapsed){
+                $(ooacontainer.getIframe()).hide();
+            }
         }
     }
 

@@ -20,13 +20,8 @@
 package org.apache.rave.provider.opensocial.web.renderer;
 
 import org.apache.rave.exception.NotSupportedException;
-import org.apache.rave.portal.model.Region;
-import org.apache.rave.portal.model.RegionWidget;
-import org.apache.rave.portal.model.RegionWidgetPreference;
-import org.apache.rave.portal.model.impl.RegionImpl;
-import org.apache.rave.portal.model.impl.RegionWidgetImpl;
-import org.apache.rave.portal.model.impl.RegionWidgetPreferenceImpl;
-import org.apache.rave.portal.model.impl.WidgetImpl;
+import org.apache.rave.portal.model.*;
+import org.apache.rave.portal.model.impl.*;
 import org.apache.rave.portal.web.renderer.RenderScope;
 import org.apache.rave.portal.web.renderer.Renderer;
 import org.apache.rave.portal.web.renderer.ScriptLocation;
@@ -39,6 +34,7 @@ import org.json.JSONException;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import static org.easymock.EasyMock.*;
@@ -79,15 +75,28 @@ public class OpenSocialWidgetRendererTest {
         final long WIDGET_ID = 999L;
         final long REGION_WIDGET_ID = 12345L;
         final long REGION_ID = 8675309L;
+        final long VALID_SUBPAGE_ID = 778899L;
+        final String VALID_SUBPAGE_NAME = "My Activity";
+        final boolean VALID_IS_DEFAULT_SUBPAGE = true;
 
         expect(openSocialService.getGadgetMetadata(VALID_GADGET_URL)).andReturn(VALID_METADATA);
         replay(openSocialService);
+
+        Page page = new PageImpl();
+        page.setSubPages(new ArrayList<Page>());
+        Page subPage = new PageImpl();
+        subPage.setId(VALID_SUBPAGE_ID);
+        subPage.setName(VALID_SUBPAGE_NAME);
+        subPage.setParentPage(page);
+        subPage.setPageType(PageType.SUB_PAGE);
+        page.getSubPages().add(subPage);
 
         WidgetImpl w = new WidgetImpl();
         w.setId(WIDGET_ID);
         w.setType(Constants.WIDGET_TYPE);
         w.setUrl(VALID_GADGET_URL);
         Region region = new RegionImpl(REGION_ID);
+        region.setPage(subPage);
         RegionWidget rw = new RegionWidgetImpl();
         rw.setId(REGION_WIDGET_ID);
         rw.setCollapsed(VALID_COLLAPSED);
@@ -109,7 +118,8 @@ public class OpenSocialWidgetRendererTest {
             " collapsed: " + VALID_COLLAPSED + ", " +
             " widgetId: " + WIDGET_ID + "," +
             " locked: " + VALID_LOCKED + "," +
-            " hideChrome: " + VALID_HIDE_CHROME +
+            " hideChrome: " + VALID_HIDE_CHROME + "," +
+            " subPage: {id: " + VALID_SUBPAGE_ID + ", name: '" + VALID_SUBPAGE_NAME + "', isDefault: " + VALID_IS_DEFAULT_SUBPAGE + "}" +
             "});</script>";
 
         expect(securityTokenService.getEncryptedSecurityToken(rw)).andReturn(VALID_SECURITY_TOKEN);
@@ -128,9 +138,13 @@ public class OpenSocialWidgetRendererTest {
 
     @Test
     public void render_null() {
+        Page page = new PageImpl();
+        page.setPageType(PageType.USER);
+
         WidgetImpl w = new WidgetImpl();
         w.setType(Constants.WIDGET_TYPE);
         Region region = new RegionImpl(1L);
+        region.setPage(page);
         RegionWidget rw = new RegionWidgetImpl();
         rw.setWidget(w);
         rw.setRegion(region);
@@ -144,7 +158,10 @@ public class OpenSocialWidgetRendererTest {
             " userPrefs: {}," +
             " collapsed: false, " +
             " widgetId: null," +
-            " locked: false, hideChrome: false});</script>";
+            " locked: false," +
+            " hideChrome: false," +
+            " subPage: {id: null, name: '', isDefault: false}" +
+            "});</script>";
 
         scriptManager.registerScriptBlock(OpenSocialWidgetRenderer.REGISTER_WIDGET_KEY, markup, ScriptLocation.AFTER_RAVE, RenderScope.CURRENT_REQUEST, null);
         expectLastCall();

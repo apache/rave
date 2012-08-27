@@ -20,14 +20,8 @@
 package org.apache.rave.provider.w3c.web.renderer;
 
 import org.apache.rave.exception.NotSupportedException;
-import org.apache.rave.portal.model.Region;
-import org.apache.rave.portal.model.RegionWidget;
-import org.apache.rave.portal.model.User;
-import org.apache.rave.portal.model.Widget;
-import org.apache.rave.portal.model.impl.RegionImpl;
-import org.apache.rave.portal.model.impl.RegionWidgetImpl;
-import org.apache.rave.portal.model.impl.UserImpl;
-import org.apache.rave.portal.model.impl.WidgetImpl;
+import org.apache.rave.portal.model.*;
+import org.apache.rave.portal.model.impl.*;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.portal.service.WidgetProviderService;
 import org.apache.rave.portal.web.renderer.Renderer;
@@ -37,6 +31,8 @@ import org.apache.rave.provider.w3c.Constants;
 import org.apache.rave.provider.w3c.service.impl.W3CWidget;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.ArrayList;
 
 import static org.easymock.EasyMock.*;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -75,15 +71,28 @@ public class W3cWidgetRendererTest {
     public void render_valid() {
         final long REGION_ID = 222L;
         final long REGION_WIDGET_ID = 444L;
+        final long VALID_SUBPAGE_ID = 778899L;
+        final String VALID_SUBPAGE_NAME = "My Activity";
+        final boolean VALID_IS_DEFAULT_SUBPAGE = true;
 
         User user = new UserImpl(9999L, "testUser");
         expect(userService.getAuthenticatedUser()).andReturn(user);
         replay(userService);
-        
+
+        Page page = new PageImpl();
+        page.setSubPages(new ArrayList<Page>());
+        Page subPage = new PageImpl();
+        subPage.setId(VALID_SUBPAGE_ID);
+        subPage.setName(VALID_SUBPAGE_NAME);
+        subPage.setParentPage(page);
+        subPage.setPageType(PageType.SUB_PAGE);
+        page.getSubPages().add(subPage);
+
         W3CWidget w = new W3CWidget();
         w.setType(Constants.WIDGET_TYPE);
         w.setUrl("http://example.com/widgets/1");
         Region region = new RegionImpl(REGION_ID);
+        region.setPage(subPage);
         RegionWidget rw = new RegionWidgetImpl();
         rw.setId(REGION_WIDGET_ID);
         rw.setWidget(w);
