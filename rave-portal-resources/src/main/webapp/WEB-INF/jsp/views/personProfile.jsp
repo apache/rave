@@ -165,8 +165,8 @@
             </div>
         </div>
         <div class="span3">
-            <%--TODO: This MUST change before RAVE-729 is complete --%>
-        	<button type="button" id="addRemoveFriend" value="${page.ownerId}" class="btn btn-primary profile-info-visible">Add/Remove Friends</button>
+            <portal:person id="${page.ownerId}" var="${owner}" />
+        	<button type="button" id="addRemoveFriend" value="${owner.username}" class="btn btn-primary profile-info-visible">Add/Remove Friends</button>
         </div>
         <div class="span3">
             <div>

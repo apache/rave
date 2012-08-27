@@ -53,21 +53,21 @@
 	                <tbody>
 	                <c:forEach items="${categories}" var="category">
 	                    <spring:url value="/app/admin/category/edit?id=${category.id}" var="detaillink"/>
-	
+                        <portal:person id="${category.createdUserId}" var="createdUser" />
+                        <portal:person id="${category.lastModifiedUserId}" var="modifiedUser" />
+
 	                    <tr data-detaillink="${detaillink}">
 	                        <td>
 	                            <a href="${detaillink}"><c:out value="${category.text}"/></a>
 	                        </td>
 	                        <td>
-                                <!--TODO: GET USER NAME-->
-	                            <c:out value="${category.createdUserId}"/>
+	                            <c:out value="${createdUser.username}"/>
 	                        </td>
 	                        <td>
 	                            <c:out value="${category.createdDate}"/>
 	                        </td>
 	                        <td>
-                                <!--TODO: GET USER NAME-->
-	                            <c:out value="${category.lastModifiedUserId}"/>
+	                            <c:out value="${modifiedUser.username}"/>
 	                        </td>
 	                        <td>
 	                            <c:out value="${category.lastModifiedDate}"/>

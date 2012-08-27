@@ -26,6 +26,30 @@
     <uri>http://www.apache.org/rave/tags</uri>
 
     <tag>
+        <description>Allows access to a org.apache.rave.model.Person object via the configured variable</description>
+        <name>person</name>
+        <tag-class>org.apache.rave.portal.web.tag.PersonTag</tag-class>
+        <body-content>JSP</body-content>
+        <attribute>
+            <description>The ID of the person to load</description>
+            <name>id</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <description>The variable to assign the resulting person to</description>
+            <name>var</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <description>The scope under which the assignment is valid</description>
+            <name>scope</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+    <tag>
         <description>Renders a given RegionWidget in the page</description>
         <name>render-widget</name>
         <tag-class>org.apache.rave.portal.web.tag.RegionWidgetTag</tag-class>

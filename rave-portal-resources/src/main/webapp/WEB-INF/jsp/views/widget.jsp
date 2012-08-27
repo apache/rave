@@ -193,14 +193,14 @@
                     <c:if test="${not empty widget.comments}">
                         <ul class="comments">
                             <c:forEach var="comment" items="${widget.comments}">
+                                <portal:person id="${comment.userId}" var="commenter" />
                                 <li class="comment">
                                     <fmt:formatDate value="${comment.createdDate}" type="both" var="commentDate"/>
                                     <p class="comment-heading">
                                         <span class="commenter">
-                                            <%-- TODO:Find way to get person before completion of RAVE-729--%>
                                             <c:choose>
-                                                <c:when test="${not empty comment.userId}">
-                                                    <c:out value="${comment.userId}"/>
+                                                <c:when test="${not empty commenter.username}">
+                                                    <c:out value="${commenter.username}"/>
                                                 </c:when>
                                                 <c:otherwise><c:out value="${comment.userId}"/></c:otherwise>
                                             </c:choose>

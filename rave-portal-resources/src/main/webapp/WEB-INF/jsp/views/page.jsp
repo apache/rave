@@ -70,9 +70,9 @@
                         <c:otherwise>false</c:otherwise>
                     </c:choose>
                 </c:set>
+                <portal:person id="${userPage.ownerId}" var="userPageOwner" />
                 <fmt:message key="sharing.page.tab.icon.tip.from" var="iconShareToolTipFrom">
-                    <%--TODO:FIX BEFORE RAVE-729 is COMPLETE --%>
-                    <fmt:param value="${userPage.ownerId}"/>
+                    <fmt:param value="${userPageOwner.username}"/>
                 </fmt:message>
                 <fmt:message key="sharing.page.tab.icon.tip.to" var="iconShareToolTipTo"/>
                 <c:choose>
@@ -287,9 +287,9 @@
         </div>
         <div class="modal-body">
             <div id="confirmSharePageDialogLegend">
+                <portal:person id="${page.ownerId}" var="owner" />
                 <fmt:message key="sharing.dialog.confirm.message">
-                    <%--TODO: This MUST change before RAVE-729 is complete --%>
-                    <fmt:param value="${page.ownerId}"/>
+                    <fmt:param value="${owner.username}"/>
                 </fmt:message>
             </div>
         </div>
@@ -312,7 +312,7 @@
         });
     </script>
     <c:forEach var="members" items="${page.members}">
-        <%--TODO: This MUST change before RAVE-729 is complete --%>
-        <script>rave.layout.searchHandler.addExistingMember("${members.userId}",${members.editor});</script>
+        <portal:person id="${members.userId}" var="member" />
+        <script>rave.layout.searchHandler.addExistingMember("${member.username}",${members.editor});</script>
     </c:forEach>
 </portal:register-init-script>
