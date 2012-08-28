@@ -19,32 +19,24 @@
 
 package org.apache.rave.portal.repository.impl;
 
-import static org.apache.rave.persistence.jpa.util.JpaUtil.getSingleResult;
-import static org.apache.rave.persistence.jpa.util.JpaUtil.saveOrUpdate;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
-
+import com.google.common.collect.Lists;
 import org.apache.rave.exception.NotSupportedException;
-import org.apache.rave.portal.model.FriendRequestStatus;
-import org.apache.rave.portal.model.JpaGroup;
-import org.apache.rave.portal.model.JpaPerson;
-import org.apache.rave.portal.model.JpaPersonAssociation;
-import org.apache.rave.portal.model.JpaUser;
-import org.apache.rave.portal.model.JpaWidget;
-import org.apache.rave.portal.model.Person;
-import org.apache.rave.portal.model.User;
-import org.apache.rave.portal.model.Widget;
+import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.model.conversion.JpaPersonConverter;
 import org.apache.rave.portal.repository.PersonRepository;
 import org.apache.rave.util.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import static org.apache.rave.persistence.jpa.util.JpaUtil.getSingleResult;
+import static org.apache.rave.persistence.jpa.util.JpaUtil.saveOrUpdate;
 
 /**
  *
@@ -67,11 +59,18 @@ public class JpaPersonRepository implements PersonRepository {
 
     @Override
     public List<Person> findAllConnectedPeople(String username) {
-        List<Person> connections = new ArrayList<Person>();
-        connections.addAll(findFriends(username));
-        TypedQuery<JpaPerson> members = manager.createNamedQuery(JpaPerson.FIND_BY_GROUP_MEMBERSHIP, JpaPerson.class);
-        members.setParameter(JpaPerson.USERNAME_PARAM, username);
-        CollectionUtils.addUniqueValues(CollectionUtils.<Person>toBaseTypedList(members.getResultList()), connections);
+        Person person = findByUsername(username);
+        List<Person> connections = Lists.newLinkedList();
+        if (person != null) {
+            String personId = person.getId();
+            connections.addAll(findFriends(username));
+            TypedQuery<JpaGroup> members = manager.createQuery("SELECT g from JpaGroup g where :userId member of g.members", JpaGroup.class);
+            members.setParameter("userId", personId);
+            for(JpaGroup groups : members.getResultList()) {
+                addPeopleByIds(groups, connections);
+            }
+        }
+        connections.remove(person);
         return connections;
     }
 
@@ -94,14 +93,14 @@ public class JpaPersonRepository implements PersonRepository {
     }
 
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
-	@Override
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    @Override
     public List<Person> findFriends(String username, String appId) {
-    	List<Person> friendsUsingWidget = new ArrayList<Person>();
+        List<Person> friendsUsingWidget = new ArrayList<Person>();
 
-    	TypedQuery query = manager.createNamedQuery(JpaWidget.WIDGET_GET_BY_URL, JpaWidget.class);
-    	query.setParameter(JpaWidget.PARAM_URL, appId);
-		final List<JpaWidget> resultList = query.getResultList();
+        TypedQuery query = manager.createNamedQuery(JpaWidget.WIDGET_GET_BY_URL, JpaWidget.class);
+        query.setParameter(JpaWidget.PARAM_URL, appId);
+        final List<JpaWidget> resultList = query.getResultList();
         Widget widget = getSingleResult(resultList);
 
         query = manager.createNamedQuery(JpaUser.USER_GET_ALL_FOR_ADDED_WIDGET, JpaUser.class);
@@ -109,37 +108,36 @@ public class JpaPersonRepository implements PersonRepository {
         List<User> widgetUsers = query.getResultList();
 
         List<Person> userFriends = findFriends(username);
-        for(Person userFriend : userFriends) {
-    		for (User widgetUser : widgetUsers) {
-    			if(userFriend.getUsername().equals(widgetUser.getUsername())) {
-    				friendsUsingWidget.add(userFriend);
-    			}
-    		}
-    	}
+        for (Person userFriend : userFriends) {
+            for (User widgetUser : widgetUsers) {
+                if (userFriend.getUsername().equals(widgetUser.getUsername())) {
+                    friendsUsingWidget.add(userFriend);
+                }
+            }
+        }
         return friendsUsingWidget;
     }
 
     @Override
     public List<Person> findFriendsWithFriend(String username, String friendUsername) {
-    	List<Person> friendsWithFriend = new ArrayList<Person>();
-    	List<Person> userFriends = findFriends(username);
-    	List<Person> friendFriends = findFriends(friendUsername);
-    	for(Person userFriend : userFriends) {
-    		for (Person friendFriend : friendFriends) {
-    			if(userFriend.getUsername().equals(friendFriend.getUsername())) {
-    				friendsWithFriend.add(userFriend);
-    			}
-    		}
-    	}
-    	return friendsWithFriend;
+        List<Person> friendsWithFriend = new ArrayList<Person>();
+        List<Person> userFriends = findFriends(username);
+        List<Person> friendFriends = findFriends(friendUsername);
+        for (Person userFriend : userFriends) {
+            for (Person friendFriend : friendFriends) {
+                if (userFriend.getUsername().equals(friendFriend.getUsername())) {
+                    friendsWithFriend.add(userFriend);
+                }
+            }
+        }
+        return friendsWithFriend;
     }
 
     @Override
     public List<Person> findByGroup(String groupId) {
         TypedQuery<JpaGroup> query = manager.createNamedQuery(JpaGroup.FIND_BY_TITLE, JpaGroup.class);
         query.setParameter(JpaGroup.GROUP_ID_PARAM, groupId);
-        JpaGroup result = getSingleResult(query.getResultList());
-        return result == null ? new ArrayList<Person>() : CollectionUtils.<Person>toBaseTypedList(result.getMembers());
+        return getPeopleByIds(getSingleResult(query.getResultList()));
     }
 
     @Override
@@ -173,49 +171,46 @@ public class JpaPersonRepository implements PersonRepository {
         manager.remove(item instanceof JpaPerson ? item : findByUsername(item.getUsername()));
     }
 
-	@Override
-	public boolean addFriend(String friendUsername, String username) {
-		JpaPersonAssociation senderItem = new JpaPersonAssociation();
-		senderItem.setFollower(personConverter.convert(findByUsername(username)));
-		senderItem.setFollowedby(personConverter.convert(findByUsername(friendUsername)));
-		senderItem.setStatus(FriendRequestStatus.SENT);
-		senderItem = saveOrUpdate(senderItem.getEntityId(), manager, senderItem);
+    @Override
+    public boolean addFriend(String friendUsername, String username) {
+        JpaPersonAssociation senderItem = new JpaPersonAssociation();
+        senderItem.setFollower(personConverter.convert(findByUsername(username)));
+        senderItem.setFollowedby(personConverter.convert(findByUsername(friendUsername)));
+        senderItem.setStatus(FriendRequestStatus.SENT);
+        senderItem = saveOrUpdate(senderItem.getEntityId(), manager, senderItem);
 
-		JpaPersonAssociation receiverItem = new JpaPersonAssociation();
-		receiverItem.setFollower(personConverter.convert(findByUsername(friendUsername)));
-		receiverItem.setFollowedby(personConverter.convert(findByUsername(username)));
-		receiverItem.setStatus(FriendRequestStatus.RECEIVED);
-		receiverItem = saveOrUpdate(receiverItem.getEntityId(), manager, receiverItem);
+        JpaPersonAssociation receiverItem = new JpaPersonAssociation();
+        receiverItem.setFollower(personConverter.convert(findByUsername(friendUsername)));
+        receiverItem.setFollowedby(personConverter.convert(findByUsername(username)));
+        receiverItem.setStatus(FriendRequestStatus.RECEIVED);
+        receiverItem = saveOrUpdate(receiverItem.getEntityId(), manager, receiverItem);
 
-		if(senderItem.getEntityId()!=null && receiverItem.getEntityId()!=null)
-			return true;
-		else
-			return false;
-	}
+        return senderItem.getEntityId() != null && receiverItem.getEntityId() != null;
+    }
 
-	@Override
-	public void removeFriend(String friendUsername, String username) {
-		TypedQuery<JpaPersonAssociation> query = manager.createNamedQuery(JpaPersonAssociation.FIND_ASSOCIATION_ITEM_BY_USERNAMES, JpaPersonAssociation.class);
+    @Override
+    public void removeFriend(String friendUsername, String username) {
+        TypedQuery<JpaPersonAssociation> query = manager.createNamedQuery(JpaPersonAssociation.FIND_ASSOCIATION_ITEM_BY_USERNAMES, JpaPersonAssociation.class);
         query.setParameter(JpaPersonAssociation.FOLLOWER_USERNAME, username);
         query.setParameter(JpaPersonAssociation.FOLLOWEDBY_USERNAME, friendUsername);
         JpaPersonAssociation item = getSingleResult(query.getResultList());
         manager.remove(item);
 
-		query = manager.createNamedQuery(JpaPersonAssociation.FIND_ASSOCIATION_ITEM_BY_USERNAMES, JpaPersonAssociation.class);
+        query = manager.createNamedQuery(JpaPersonAssociation.FIND_ASSOCIATION_ITEM_BY_USERNAMES, JpaPersonAssociation.class);
         query.setParameter(JpaPersonAssociation.FOLLOWER_USERNAME, friendUsername);
         query.setParameter(JpaPersonAssociation.FOLLOWEDBY_USERNAME, username);
         JpaPersonAssociation inverseItem = getSingleResult(query.getResultList());
         manager.remove(inverseItem);
-	}
+    }
 
-	@Override
-	public HashMap<String, List<Person>> findFriendsAndRequests(String username) {
-		HashMap<String, List<Person>> friendsAndRequests = new HashMap<String, List<Person>>();
-		friendsAndRequests.put(FriendRequestStatus.ACCEPTED.toString(), findFriends(username));
-		friendsAndRequests.put(FriendRequestStatus.SENT.toString(), findFriendRequestsSent(username));
-		friendsAndRequests.put(FriendRequestStatus.RECEIVED.toString(), findFriendRequestsReceived(username));
+    @Override
+    public HashMap<String, List<Person>> findFriendsAndRequests(String username) {
+        HashMap<String, List<Person>> friendsAndRequests = new HashMap<String, List<Person>>();
+        friendsAndRequests.put(FriendRequestStatus.ACCEPTED.toString(), findFriends(username));
+        friendsAndRequests.put(FriendRequestStatus.SENT.toString(), findFriendRequestsSent(username));
+        friendsAndRequests.put(FriendRequestStatus.RECEIVED.toString(), findFriendRequestsReceived(username));
         return friendsAndRequests;
-	}
+    }
 
     @Override
     public List<Person> findFriendRequestsSent(String username) {
@@ -233,25 +228,39 @@ public class JpaPersonRepository implements PersonRepository {
         return CollectionUtils.<Person>toBaseTypedList(friends.getResultList());
     }
 
-	@Override
-	public boolean acceptFriendRequest(String friendUsername, String username) {
-		TypedQuery<JpaPersonAssociation> query = manager.createNamedQuery(JpaPersonAssociation.FIND_ASSOCIATION_ITEM_BY_USERNAMES, JpaPersonAssociation.class);
+    @Override
+    public boolean acceptFriendRequest(String friendUsername, String username) {
+        TypedQuery<JpaPersonAssociation> query = manager.createNamedQuery(JpaPersonAssociation.FIND_ASSOCIATION_ITEM_BY_USERNAMES, JpaPersonAssociation.class);
         query.setParameter(JpaPersonAssociation.FOLLOWER_USERNAME, username);
         query.setParameter(JpaPersonAssociation.FOLLOWEDBY_USERNAME, friendUsername);
         JpaPersonAssociation receiverItem = getSingleResult(query.getResultList());
         receiverItem.setStatus(FriendRequestStatus.ACCEPTED);
         receiverItem = saveOrUpdate(receiverItem.getEntityId(), manager, receiverItem);
 
-		query = manager.createNamedQuery(JpaPersonAssociation.FIND_ASSOCIATION_ITEM_BY_USERNAMES, JpaPersonAssociation.class);
+        query = manager.createNamedQuery(JpaPersonAssociation.FIND_ASSOCIATION_ITEM_BY_USERNAMES, JpaPersonAssociation.class);
         query.setParameter(JpaPersonAssociation.FOLLOWER_USERNAME, friendUsername);
         query.setParameter(JpaPersonAssociation.FOLLOWEDBY_USERNAME, username);
         JpaPersonAssociation senderItem = getSingleResult(query.getResultList());
         senderItem.setStatus(FriendRequestStatus.ACCEPTED);
         senderItem = saveOrUpdate(senderItem.getEntityId(), manager, senderItem);
 
-		if(receiverItem.getEntityId()!=null && senderItem.getEntityId()!=null)
-			return true;
-		else
-			return false;
-	}
+        return receiverItem.getEntityId() != null && senderItem.getEntityId() != null;
+    }
+
+    private List<Person> getPeopleByIds(JpaGroup result) {
+        List<Person> members = Lists.newLinkedList();
+        addPeopleByIds(result, members);
+        return members;
+    }
+
+    private void addPeopleByIds(JpaGroup result, List<Person> members) {
+        if (result != null) {
+            for (String personId : result.getMemberIds()) {
+                Person person = get(personId);
+                if (!members.contains(person)) {
+                    members.add(person);
+                }
+            }
+        }
+    }
 }

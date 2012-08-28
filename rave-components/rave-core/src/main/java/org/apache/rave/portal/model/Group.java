@@ -26,17 +26,17 @@ import java.util.List;
  */
 @XmlTransient
 public interface Group {
-    Person getOwner();
+    String getOwnerId();
 
-    void setOwner(Person owner);
+    void setOwnerId(String ownerId);
 
     String getDescription();
 
     void setDescription(String description);
 
-    List<Person> getMembers();
+    List<String> getMemberIds();
 
-    void setMembers(List<Person> members);
+    void setMemberIds(List<String> members);
 
     String getTitle();
 
