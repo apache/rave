@@ -92,6 +92,9 @@ var rave = rave || (function () {
                     container.show("slide", { direction:"right" }, 'fast');
                     $('body').addClass('modal-open');
                     $('body').append('<div class="modal-backdrop fade in"></div>');
+                    // hide the main browser window's scrollbar to prevent possible "double scrollbar" rendering
+                    // between it and an iframe vertical scrollbar
+                    $('body').addClass('no-scroll');
                 },
                 cleanup:function (content) {
                     var container = content.parents(this.containerSelector);
@@ -99,6 +102,8 @@ var rave = rave || (function () {
                         container.detach();
                         $('body').removeClass('modal-open');
                         $('.modal-backdrop').remove();
+                        // restore the main browser window's scrollbar
+                        $('body').removeClass('no-scroll');
                     });
                 },
                 singleton:true
