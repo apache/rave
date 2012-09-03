@@ -57,7 +57,10 @@
     <div class="row-fluid">
         <div class="span9">
             <div id="personProfileContent">
-                <form:form id="editAccountForm" commandName="userProfile" action="person?referringPageId=${referringPageId}" method="POST" class="form-horizontal">
+                <c:url var="profileUrl" value="/app/person">
+                    <c:param name="referringPageId" value="${referringPageId}" />
+                </c:url>
+                <form:form id="editAccountForm" commandName="userProfile" action="${profileUrl}" method="POST" class="form-horizontal">
 
                     <fieldset class="row-fluid" id="userProfilePrimaryData">
                     	<div class="span2 profile-user-thumb">
