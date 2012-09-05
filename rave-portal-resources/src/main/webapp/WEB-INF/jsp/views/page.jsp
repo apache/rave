@@ -130,22 +130,47 @@
 
     <div class="row-fluid">
         <div id="emptyPageMessageWrapper" class="emptyPageMessageWrapper hidden">
-            <div class="emptyPageMessage">
-                <c:choose>
-                    <c:when test="${pageUser.editor == true}">
-                        <a href="<spring:url value="/app/store?referringPageId=${page.id}" />"><fmt:message key="page.general.empty"/></a>
-                    </c:when>
-                    <c:otherwise>
-                        <fmt:message key="page.general.non.editing.empty"/>
-                    </c:otherwise>
-                </c:choose>
-            </div>
+            <c:if test="${pageUser.pageStatus != 'PENDING'}">
+                <div class="emptyPageMessage">
+                    <c:choose>
+                        <c:when test="${pageUser.editor == true}">
+                            <a href="<spring:url value="/app/store?referringPageId=${page.id}" />"><fmt:message key="page.general.empty"/></a>
+                        </c:when>
+                        <c:otherwise>
+                            <fmt:message key="page.general.non.editing.empty"/>
+                        </c:otherwise>
+                    </c:choose>
+                </div>
+            </c:if>
         </div>
-        <div class="regions">
-            <%-- insert the region layout template --%>
-            <tiles:insertTemplate template="${layout}"/>
-        </div>
-        <div class="clear-float">&nbsp;</div>
+        <c:choose>
+            <c:when test="${pageUser.pageStatus != 'PENDING'}">
+                <div class="regions">
+                    <%-- insert the region layout template --%>
+                    <tiles:insertTemplate template="${layout}"/>
+                </div>
+                <div class="clear-float">&nbsp;</div>
+            </c:when>
+            <c:otherwise>
+                <div class="emptyPageMessage">
+                    <div>
+                        <div id="confirmSharePageLegend">
+                            <fmt:message key="sharing.page.confirm.message">
+                                <fmt:param value="${page.owner.username}"/>
+                            </fmt:message>
+                        </div>
+                    </div>
+                    <div>&nbsp;</div>
+                    <div>
+                        <a href="#" onclick="rave.layout.searchHandler.acceptShare()"><fmt:message key="_rave_client.common.accept"/></a>
+                    </div>
+                    <div>
+                        <a href="#" onclick="rave.layout.searchHandler.declineShare();"><fmt:message key="_rave_client.common.decline"/></a>
+                    </div>
+                    <div class="clear-float">&nbsp;</div>
+                </div>
+            </c:otherwise>
+        </c:choose>
     </div>
 
 
@@ -278,33 +303,15 @@
         </div>
     </div>
 
-    <div id="confirmSharePageDialog" class="modal hide" data-backdrop="static">
-        <div class="modal-header">
-            <a href="#" class="close" data-dismiss="modal">&times;</a>
-            <h3><fmt:message key="sharing.dialog.confirm.title"/></h3>
-        </div>
-        <div class="modal-body">
-            <div id="confirmSharePageDialogLegend">
-                <fmt:message key="sharing.dialog.confirm.message">
-                    <fmt:param value="${page.owner.username}"/>
-                </fmt:message>
-            </div>
-        </div>
-        <div class="modal-footer">
-            <a href="#" class="btn btn-primary" onclick="rave.layout.searchHandler.acceptShare()"><fmt:message key="_rave_client.common.accept"/></a>
-            <a href="#" class="btn" onclick="rave.layout.searchHandler.declineShare();"><fmt:message key="_rave_client.common.decline"/></a>
-            <a href="#" class="btn" onclick="$('#confirmSharePageDialog').modal('hide');"><fmt:message key="_rave_client.common.cancel"/></a>
-        </div>
-    </div>
 <portal:register-init-script location="${'AFTER_RAVE'}">
     <script>
         $(function() {
             rave.initPageEditorStatus(<c:out value="${pageUser.editor}"/>);
             rave.initProviders();
+            rave.layout.searchHandler.setDefaults("<c:out value="${principleUsername}"/>","<sec:authentication property="principal.id" />","<c:out value="${page.id}"/>", "${pageUser.pageStatus}");
             rave.initWidgets();
             rave.initUI();
             rave.layout.init();
-            rave.layout.searchHandler.setDefaults("<c:out value="${principleUsername}"/>","<sec:authentication property="principal.id" />","<c:out value="${page.id}"/>", "${pageUser.pageStatus}");
             rave.runOnPageInitializedHandlers();
         });
     </script>

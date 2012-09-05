@@ -154,9 +154,6 @@ rave.layout = rave.layout || (function() {
             this.username = username;
             this.userId = userId;
             this.pageId = pageId;
-            if(pageStatus == "PENDING"){
-                confirmPageShare();
-            };
         }
 
         function addExistingMember(member, isEditor){
@@ -303,29 +300,30 @@ rave.layout = rave.layout || (function() {
         }
 
         function acceptShare(){
-            $('#confirmSharePageDialog').modal('hide');
-            rave.api.rpc.updateSharedPageStatus({pageId: rave.layout.searchHandler.pageId, shareStatus: 'accepted',
-                successCallback: function(result) {
-                    //notification here?
-                }
-            });
+            var answer;
+            answer = confirm(rave.getClientMessage("accept.share.confirm"));
+            if(answer){
+                rave.api.rpc.updateSharedPageStatus({pageId: rave.layout.searchHandler.pageId, shareStatus: 'accepted',
+                    successCallback: function(result) {
+                        rave.viewPage(rave.layout.searchHandler.pageId);
+                    }
+                });
+            }
         }
 
         function declineShare(){
-            $('#confirmSharePageDialog').modal('hide');
-            rave.api.rpc.updateSharedPageStatus({pageId: rave.layout.searchHandler.pageId, shareStatus: 'refused',
-                successCallback: function(result) {
-                    rave.api.rpc.removeMemberFromPage({pageId:rave.layout.searchHandler.pageId, userId:rave.layout.searchHandler.userId,
-                        successCallback:function (result) {
-                            document.location.href='/';
-                        }});
-
-                }
-            });
-        }
-
-        function confirmPageShare(){
-            $("#confirmSharePageDialog").modal('show');
+            var answer;
+            answer = confirm(rave.getClientMessage("decline.share.confirm"));
+            if(answer){
+                rave.api.rpc.updateSharedPageStatus({pageId: rave.layout.searchHandler.pageId, shareStatus: 'refused',
+                    successCallback: function(result) {
+                        rave.api.rpc.removeMemberFromPage({pageId:rave.layout.searchHandler.pageId, userId:rave.layout.searchHandler.userId,
+                            successCallback:function (result) {
+                                document.location.href='/';
+                            }});
+                    }
+                })
+            }
         }
 
         function init() {
@@ -526,7 +524,6 @@ rave.layout = rave.layout || (function() {
             removeMemberFromPage : removeMemberFromPage,
             addEditingRightsToMember: addEditingRightsToMember,
             removeEditingRightsFromMember : removeEditingRightsFromMember,
-            confirmPageShare : confirmPageShare,
             acceptShare : acceptShare,
             declineShare : declineShare,
             updateParamsInString : updateParamsInString
