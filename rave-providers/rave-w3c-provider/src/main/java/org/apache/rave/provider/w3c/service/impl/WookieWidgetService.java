@@ -98,7 +98,9 @@ public class WookieWidgetService implements WidgetProviderService {
                 throw new WookieConnectorException("Either the wookie username or password is not defined in portal.properties", null);
             }
             connectorService = getWookieConnectorService(wookieServerUrl, wookieApiKey, "");
-            org.apache.wookie.connector.framework.Widget wookieWidget = connectorService.postWidget(widgetUrl, adminUsername, adminPassword);
+            // TODO - replace dummy line below with the commented out version, when bundled with wookie 0.13.0
+            //org.apache.wookie.connector.framework.Widget wookieWidget = connectorService.postWidget(widgetUrl, adminUsername, adminPassword);
+            org.apache.wookie.connector.framework.Widget wookieWidget = new org.apache.wookie.connector.framework.Widget(widgetUrl, widgetUrl, widgetUrl, null, widgetUrl, widgetUrl, widgetUrl, widgetUrl, widgetUrl);
             widget = new W3CWidget();
             widget.setUrl(wookieWidget.getIdentifier());
             widget.setDescription(wookieWidget.getDescription());
