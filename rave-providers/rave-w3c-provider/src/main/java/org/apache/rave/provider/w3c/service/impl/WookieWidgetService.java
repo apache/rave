@@ -100,7 +100,9 @@ public class WookieWidgetService implements WidgetProviderService {
             connectorService = getWookieConnectorService(wookieServerUrl, wookieApiKey, "");
             // TODO - replace dummy line below with the commented out version, when bundled with wookie 0.13.0
             //org.apache.wookie.connector.framework.Widget wookieWidget = connectorService.postWidget(widgetUrl, adminUsername, adminPassword);
-            org.apache.wookie.connector.framework.Widget wookieWidget = new org.apache.wookie.connector.framework.Widget(widgetUrl, widgetUrl, widgetUrl, null, widgetUrl, widgetUrl, widgetUrl, widgetUrl, widgetUrl);
+            org.apache.wookie.connector.framework.Widget wookieWidget = 
+                new org.apache.wookie.connector.framework.Widget("http://wookietempurl.com", "name", "description", null, 
+                        "200", "400", "0.1", "author", "license");
             widget = new W3CWidget();
             widget.setUrl(wookieWidget.getIdentifier());
             widget.setDescription(wookieWidget.getDescription());
