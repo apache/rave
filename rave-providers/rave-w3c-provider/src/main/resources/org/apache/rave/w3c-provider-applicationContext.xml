@@ -47,6 +47,8 @@
     <bean id="wookieWidgetService" class="org.apache.rave.provider.w3c.service.impl.WookieWidgetService">
         <constructor-arg name="wookieServerUrl" value="${provider.wookie.wookieServerUrl}"/>
         <constructor-arg name="wookieApiKey" value="${provider.wookie.wookieApiKey}"/>
+        <constructor-arg name="adminUsername" value="${provider.wookie.adminUsername}"/>
+        <constructor-arg name="adminPassword" value="${provider.wookie.adminPassword}"/>
     </bean>
 
 </beans>

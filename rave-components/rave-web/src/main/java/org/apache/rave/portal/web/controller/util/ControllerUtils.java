@@ -106,6 +106,10 @@ public class ControllerUtils {
             NavigationItem logout = getLogoutItem();
             menu.addNavigationItem(logout);
         } else if (view.startsWith(ViewNames.ADD_WIDGET_FORM) || view.startsWith(ViewNames.WIDGET)) {
+            if(view.equals(ViewNames.WIDGET_MARKETPLACE)){
+                NavigationItem addWidget = new NavigationItem("page.widget.backToMarketplace", null, "/app/marketplace?referringPageId=" + referringPageId);
+                menu.addNavigationItem(addWidget);
+            }
             NavigationItem addWidget = new NavigationItem("page.widget.backToStore", null, "/app/store?referringPageId=" + referringPageId);
             menu.addNavigationItem(addWidget);
 

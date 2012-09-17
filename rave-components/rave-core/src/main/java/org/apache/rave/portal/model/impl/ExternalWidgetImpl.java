@@ -16,14 +16,26 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.rave.portal.model.impl;
 
-package org.apache.rave.portal.service;
+public class ExternalWidgetImpl extends WidgetImpl {
+    
+    // External Identifiers for widgets found in other systems
+    // such as in the marketplace, may not be implemented as long,
+    // and may be a String or URL instead.
+    // This wraps the external identifier as a String
+    String externalId;
 
-import org.apache.rave.portal.model.Widget;
+    public ExternalWidgetImpl(long id) {
+        super(id);
+    }
 
-public interface WidgetMetadataResolver {
-    String getSupportedContext();
-    Widget getMetadata(String url);
-    Widget[] getMetadataGroup(String url);
-    Widget publishRemote(String url);
+    public String getExternalId() {
+        return externalId;
+    }
+
+    public void setExternalId(String externalId) {
+        this.externalId = externalId;
+    }
+
 }

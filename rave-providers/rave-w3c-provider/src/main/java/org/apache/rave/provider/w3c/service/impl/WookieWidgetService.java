@@ -18,6 +18,9 @@
  */
 
 package org.apache.rave.provider.w3c.service.impl;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.Widget;
@@ -28,20 +31,20 @@ import org.apache.wookie.connector.framework.WookieConnectorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-
 public class WookieWidgetService implements WidgetProviderService {
   private static Logger logger = LoggerFactory.getLogger(WookieWidgetService.class);
 
     private final String wookieServerUrl; // = "http://localhost:8080/wookie";
     private final String wookieApiKey; // = "TEST";
-    private static WookieConnectorService  connectorService;
+    private final String adminUsername;
+    private final String adminPassword;
+    private static WookieConnectorService connectorService;
 
-    public WookieWidgetService(String wookieServerUrl, String wookieApiKey){
+    public WookieWidgetService(String wookieServerUrl, String wookieApiKey, String adminUsername, String adminPassword){
         this.wookieServerUrl = wookieServerUrl;
         this.wookieApiKey = wookieApiKey;
+        this.adminUsername = adminUsername;
+        this.adminPassword = adminPassword;
     }
 
     /* (non-Javadoc)
@@ -61,6 +64,7 @@ public class WookieWidgetService implements WidgetProviderService {
      * @return an array of available widgets
      * @throws WookieConnectorException
      */
+    @SuppressWarnings("deprecation")
     public Widget[] getWidgets() throws WookieConnectorException{
         connectorService = getWookieConnectorService(wookieServerUrl, wookieApiKey, null);    
         Collection<org.apache.wookie.connector.framework.Widget> widgets = connectorService.getAvailableWidgets().values();
@@ -86,6 +90,27 @@ public class WookieWidgetService implements WidgetProviderService {
         return null;
     }
     
+    @SuppressWarnings("deprecation")
+    public Widget publishWidgetUrlToWookie(String widgetUrl){
+        Widget widget = null;
+        try {
+            if(adminUsername.equals(null) || adminUsername.equals("") || adminPassword.equals(null) || adminPassword.equals("")){
+                throw new WookieConnectorException("Either the wookie username or password is not defined in portal.properties", null);
+            }
+            connectorService = getWookieConnectorService(wookieServerUrl, wookieApiKey, "");
+            org.apache.wookie.connector.framework.Widget wookieWidget = connectorService.postWidget(widgetUrl, adminUsername, adminPassword);
+            widget = new W3CWidget();
+            widget.setUrl(wookieWidget.getIdentifier());
+            widget.setDescription(wookieWidget.getDescription());
+            widget.setTitle(wookieWidget.getTitle());
+            widget.setType("W3C");
+            widget.setThumbnailUrl(wookieWidget.getIcon().toString());
+        } catch (WookieConnectorException e) {
+            logger.error(e.getMessage());
+        }
+        return widget;
+    }
+
     /**
      * Gets the Widget Instance corresponding to the RegionWidget and the Viewer
      * @param widget the type of Widget to obtain
@@ -93,13 +118,13 @@ public class WookieWidgetService implements WidgetProviderService {
      * @param viewer the current viewer
      * @return a Widget
      */
+    @SuppressWarnings("deprecation")
     private W3CWidget getWidgetForViewer(Widget widget, String sharedDataKey, User viewer){
        try {
             // TODO: parameters for WookieConnectorService should not be fixed in code.
             connectorService = getWookieConnectorService(wookieServerUrl, wookieApiKey, sharedDataKey);
             org.apache.wookie.connector.framework.User user = new org.apache.wookie.connector.framework.User(String.valueOf(viewer.getUsername()), viewer.getUsername());
             connectorService.setCurrentUser(user);
-            
             logger.debug("Getting widget:"+widget.getUrl()+" from:" +connectorService.getConnection().getURL());
             WidgetInstance instance = connectorService.getOrCreateInstance(widget.getUrl());
             return createWidget(instance);
@@ -128,8 +153,7 @@ public class WookieWidgetService implements WidgetProviderService {
         widget.setWidth(Integer.parseInt(instance.getWidth()));
         return widget;
     }
-    
-    
+
     // Get the wookie service connector
     private WookieConnectorService getWookieConnectorService(String serverURL, String apiKey, String sharedDataKey ) throws WookieConnectorException {
       connectorService = new WookieConnectorService(serverURL, apiKey, sharedDataKey);

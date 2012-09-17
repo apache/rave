@@ -37,4 +37,11 @@ public interface W3CWidgetMetadataRepository {
      * @return an array of Widget objects representing available W3C widgets
      */
     public Widget[] getWidgetMetadata();
+    
+    /**
+     * Publishes a remote widget to the target environment
+     * @param url - url of remote widget
+     * @return
+     */
+    Widget publishRemote(String url);
 }

@@ -32,6 +32,7 @@ public final class ViewNames {
     public static final String MOBILE_HOME = USER_PREFIX + "mobile_home";
     public static final String STORE = USER_PREFIX + "store";
     public static final String WIDGET = USER_PREFIX + "widget";
+    public static final String WIDGET_MARKETPLACE = WIDGET + ".marketplace";
     public static final String REGION_WIDGET = PARTIAL_PREFIX + "regionwidget";
     public static final String ADD_WIDGET_FORM = USER_PREFIX + "addwidget";
     public static final String NEW_ACCOUNT = USER_PREFIX + "newaccount";

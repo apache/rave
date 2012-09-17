@@ -526,8 +526,8 @@ rave.api = rave.api || (function() {
         }
 
         function addFriend(args) {
-        	var user =  encodeURIComponent(encodeURIComponent(args.friendUsername));
-        	$.post(rave.getContext() + path + "person/" + user + "/addfriend",
+            var user =  encodeURIComponent(encodeURIComponent(args.friendUsername));
+            $.post(rave.getContext() + path + "person/" + user + "/addfriend",
                 function(result) {
                     if (result.error) {
                         handleRpcError(result);
@@ -540,8 +540,8 @@ rave.api = rave.api || (function() {
                }).error(handleError);
         }
         function removeFriend(args) {
-        	var user =  encodeURIComponent(encodeURIComponent(args.friendUsername));
-        	$.post(rave.getContext() + path + "person/" + user + "/removefriend",
+            var user =  encodeURIComponent(encodeURIComponent(args.friendUsername));
+            $.post(rave.getContext() + path + "person/" + user + "/removefriend",
                 function(result) {
                     if (result.error) {
                         handleRpcError(result);
@@ -567,8 +567,8 @@ rave.api = rave.api || (function() {
                 }).error(handleError);
         }
         function acceptFriendRequest(args) {
-        	var user =  encodeURIComponent(encodeURIComponent(args.friendUsername));
-        	$.post(rave.getContext() + path + "person/" + user + "/acceptfriendrequest",
+            var user =  encodeURIComponent(encodeURIComponent(args.friendUsername));
+            $.post(rave.getContext() + path + "person/" + user + "/acceptfriendrequest",
                     function(result) {
                         if (result.error) {
                             handleRpcError(result);
@@ -579,6 +579,22 @@ rave.api = rave.api || (function() {
                             }
                         }
                    }).error(handleError);
+        }
+
+        function addWidgetFromMarketplace(args){
+            $.post(rave.getContext() + path + "marketplace/add",
+                    {"url": args.url,
+                     providerType: args.providerType},
+                    function(result) {
+                        if (result.error) {
+                            handleRpcError(result);
+                        }
+                        else {
+                            if (typeof args.successCallback == 'function') {
+                                args.successCallback(result);
+                            }
+                        }
+                }).error(handleError);
         }
 
         return {
@@ -601,7 +617,8 @@ rave.api = rave.api || (function() {
             addFriend : addFriend,
             removeFriend : removeFriend,
             getFriends : getFriends,
-            acceptFriendRequest : acceptFriendRequest
+            acceptFriendRequest : acceptFriendRequest,
+            addWidgetFromMarketplace : addWidgetFromMarketplace
         };
 
     })();
