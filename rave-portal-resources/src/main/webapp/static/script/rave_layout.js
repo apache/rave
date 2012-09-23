@@ -559,10 +559,75 @@ rave.layout = rave.layout || (function() {
         }
 
         /**
-         * Initializes the private widgetMenu closure
+         * Initializes a single widgets private widgetMenu closure
          * - binds click event handler to menu button
          * - binds menu item click event handlers
          * - binds body click event handler to close the menu
+         */
+        function bindWidgetMenu(widgetId){
+            // setup the move to page menu item
+            $menuItemMove = $("#widget-" + widgetId + "-menu-move-item");
+            if (!$menuItemMove.hasClass("menu-item-disabled")) {
+                $menuItemMove.bind('click', function(event) {
+                    var regionWidgetId = rave.getObjectIdFromDomId(this.id);
+                    // Clear the dropdown box; needing to do this may be a bug?
+                    $('.dropdown').removeClass('open');
+                    // Open the modal
+                    $("#moveWidgetModal").data('regionWidgetId', regionWidgetId);
+                    $("#moveWidgetModal").modal('show');
+
+                    // prevent the menu button click event from bubbling up to parent
+                    // DOM object event handlers such as the page tab click event
+                    event.stopPropagation();
+                });
+            }
+
+            // setup the delete widget menu item
+            $menuItemDelete  = $("#widget-" + widgetId + "-menu-delete-item");
+            if (!$menuItemDelete.hasClass("menu-item-disabled")) {
+                $menuItemDelete.bind('click', function(event) {
+                    var regionWidgetId = rave.getObjectIdFromDomId(this.id);
+
+                    // invoke the rpc call to remove the widget from the page
+                    rave.layout.deleteRegionWidget(regionWidgetId);
+
+                    // prevent the menu button click event from bubbling up to parent
+                    // DOM object event handlers such as the page tab click event
+                    event.stopPropagation();
+                });
+            }
+
+            // setup the maximize widget menu item
+            $menuItemMaximize  = $("#widget-" + widgetId + "-menu-maximize-item");
+            if (!$menuItemMaximize.hasClass("menu-item-disabled")) {
+                $menuItemMaximize.bind('click', function(event) {
+                    var regionWidgetId = rave.getObjectIdFromDomId(this.id);
+
+                    // maximize the widget
+                    rave.maximizeWidget({data: {id: regionWidgetId}});
+                    // prevent the menu button click event from bubbling up to parent
+                    // DOM object event handlers such as the page tab click event
+                    event.stopPropagation();
+                });
+            }
+
+            // setup the about this widget menu item
+            $menuItemAbout  = $("#widget-" + widgetId + "-menu-about-item");
+            if (!$menuItemAbout.hasClass("menu-item-disabled")) {
+                $menuItemAbout.bind('click', function(event) {
+                    var regionWidget = rave.getRegionWidgetById(rave.getObjectIdFromDomId(this.id));
+
+                    // go to the widget detail page
+                    rave.viewWidgetDetail(regionWidget.widgetId, getCurrentPageId());
+                    // prevent the menu button click event from bubbling up to parent
+                    // DOM object event handlers such as the page tab click event
+                    event.stopPropagation();
+                });
+            }
+        }
+        
+        /**
+         * Initializes ALL widgets private widgetMenu closure
          */
         function init() {
             // loop over each widget-menu and initialize the menu items
@@ -572,66 +637,7 @@ rave.layout = rave.layout || (function() {
             //       the menu item
             $(".widget-menu").each(function(index, element){
                 var widgetId = rave.getObjectIdFromDomId(element.id);
-
-                // setup the move to page menu item
-                $menuItemMove = $("#widget-" + widgetId + "-menu-move-item");
-                if (!$menuItemMove.hasClass("menu-item-disabled")) {
-                    $menuItemMove.bind('click', function(event) {
-                        var regionWidgetId = rave.getObjectIdFromDomId(this.id);
-                        // Clear the dropdown box; needing to do this may be a bug?
-                        $('.dropdown').removeClass('open');
-                        // Open the modal
-                        $("#moveWidgetModal").data('regionWidgetId', regionWidgetId);
-                        $("#moveWidgetModal").modal('show');
-
-                        // prevent the menu button click event from bubbling up to parent
-                        // DOM object event handlers such as the page tab click event
-                        event.stopPropagation();
-                    });
-                }
-
-                // setup the delete widget menu item
-                $menuItemDelete  = $("#widget-" + widgetId + "-menu-delete-item");
-                if (!$menuItemDelete.hasClass("menu-item-disabled")) {
-                    $menuItemDelete.bind('click', function(event) {
-                        var regionWidgetId = rave.getObjectIdFromDomId(this.id);
-
-                        // invoke the rpc call to remove the widget from the page
-                        rave.layout.deleteRegionWidget(regionWidgetId);
-
-                        // prevent the menu button click event from bubbling up to parent
-                        // DOM object event handlers such as the page tab click event
-                        event.stopPropagation();
-                    });
-                }
-
-                // setup the maximize widget menu item
-                $menuItemMaximize  = $("#widget-" + widgetId + "-menu-maximize-item");
-                if (!$menuItemMaximize.hasClass("menu-item-disabled")) {
-                    $menuItemMaximize.bind('click', function(event) {
-                        var regionWidgetId = rave.getObjectIdFromDomId(this.id);
-
-                        // maximize the widget
-                        rave.maximizeWidget({data: {id: regionWidgetId}});
-                        // prevent the menu button click event from bubbling up to parent
-                        // DOM object event handlers such as the page tab click event
-                        event.stopPropagation();
-                    });
-                }
-
-                // setup the about this widget menu item
-                $menuItemAbout  = $("#widget-" + widgetId + "-menu-about-item");
-                if (!$menuItemAbout.hasClass("menu-item-disabled")) {
-                    $menuItemAbout.bind('click', function(event) {
-                        var regionWidget = rave.getRegionWidgetById(rave.getObjectIdFromDomId(this.id));
-
-                        // go to the widget detail page
-                        rave.viewWidgetDetail(regionWidget.widgetId, getCurrentPageId());
-                        // prevent the menu button click event from bubbling up to parent
-                        // DOM object event handlers such as the page tab click event
-                        event.stopPropagation();
-                    });
-                }
+                bindWidgetMenu(widgetId);
             });
         }
 
@@ -664,6 +670,7 @@ rave.layout = rave.layout || (function() {
 
         return {
             init: init,
+            bindWidgetMenu : bindWidgetMenu,
             hideAll: hideAllMenus,
             hide: hideMenu,
             show: showMenu,
@@ -805,6 +812,7 @@ rave.layout = rave.layout || (function() {
         hideWidgetMenu: widgetMenu.hide,
         deleteRegionWidget: deleteRegionWidget,
         enableEditPrefsMenuItem: widgetMenu.enableEditPrefsMenuItem,
+        bindWidgetMenu: widgetMenu.bindWidgetMenu,
         addPage: addPage,
         updatePage: updatePage,
         movePage: movePage,

@@ -889,7 +889,8 @@ var rave = rave || (function () {
             displayEmptyPageMessage:displayEmptyPageMessage,
             displayUsersOfWidget:displayUsersOfWidget,
             showInfoMessage:showInfoMessage,
-            registerPopup:registerPopup
+            registerPopup:registerPopup,
+            styleWidgetButtons: styleWidgetButtons
         };
 
     })();
@@ -970,20 +971,24 @@ var rave = rave || (function () {
         openAjaxHub = null;
     }
 
-    function renderNewWidget(regionWidgetId){
+    function renderNewWidget(regionWidgetId, init){
         // When run as the callback argument supplied to rave.api.rpc.addWidgetToPage
         // this method will render the widget in the current page.
-
         // load widget into a placeholder element
         var placeholder = document.createElement("div");
-        $(placeholder).load(rave.getContext()+"/api/rest/regionwidget/"+regionWidgetId, function(){
-          // prepend to first region
-          var region = $("#region-1-id");
-          region.prepend(placeholder);
-          // remove the placeholder around the widget-wrapper
-          region.children(":first").children(":first").unwrap();
-          // initialize
-          initializeWidgets();
+        $(placeholder).load(rave.getContext()+"api/rest/regionwidget/"+regionWidgetId, function(){
+            var $firstRegion = $(".region:not(.region-locked):first")
+            var firstRegionId = ($firstRegion).attr('id');
+            // prepend to first region
+            var region = $("#"+firstRegionId);
+            region.prepend(placeholder);
+            // remove the placeholder around the widget-wrapper
+            region.children(":first").children(":first").unwrap();
+            if(init){
+                initializeWidgets();
+                rave.styleWidgetButtons(regionWidgetId);
+                rave.layout.bindWidgetMenu(regionWidgetId);
+            }
         });
     }
 
@@ -1479,6 +1484,8 @@ var rave = rave || (function () {
          * @param message The message to display.
          */
         showInfoMessage:ui.showInfoMessage,
+        
+        styleWidgetButtons : ui.styleWidgetButtons,
 
         /**
          * Returns a language specific message based on the supplied key
