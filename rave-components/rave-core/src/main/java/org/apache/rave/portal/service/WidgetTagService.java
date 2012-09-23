@@ -25,8 +25,6 @@ public interface WidgetTagService {
 
     WidgetTag getWidgetTagByWidgetIdAndKeyword(Long widgetId, String keyword);
 
-    @PreAuthorize("hasPermission(#widgetTag, 'create_or_update')")
-    void saveWidgetTag(WidgetTag widgetTag);
-
-
+    @PreAuthorize("hasPermission(#widgetTag, 'create')")
+    void createWidgetTag(WidgetTag widgetTag);
 }

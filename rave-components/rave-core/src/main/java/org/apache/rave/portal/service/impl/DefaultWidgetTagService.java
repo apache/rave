@@ -42,7 +42,7 @@ public class DefaultWidgetTagService implements WidgetTagService {
 
     @Override
     @Transactional
-    public void saveWidgetTag(WidgetTag widgetTag) {
+    public void createWidgetTag(WidgetTag widgetTag) {
         widgetTagRepository.save(widgetTag);
     }
 

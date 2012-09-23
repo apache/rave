@@ -145,6 +145,8 @@ public class DefaultWidgetTagPermissionEvaluator extends AbstractModelPermission
                     hasPermission = true;
                     break;
                 case CREATE:
+                    hasPermission = true;
+                    break;
                 case DELETE:
                 case UPDATE:
                     // anyone can create, delete, read, or update a WidgetTag that they own

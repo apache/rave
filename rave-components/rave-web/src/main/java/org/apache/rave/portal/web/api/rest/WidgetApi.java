@@ -165,7 +165,7 @@ public class WidgetApi extends AbstractRestApi {
                 widgetTag.setUser(userService.getAuthenticatedUser());
                 widgetTag.setCreatedDate(new Date());
                 widgetTag.setTag(getTag(tagText));
-                widgetTagService.saveWidgetTag(widgetTag);
+                widgetTagService.createWidgetTag(widgetTag);
                 logger.debug("widget tag is saved.");
 
             }

@@ -237,7 +237,7 @@ public class WidgetApiTest {
         expect(widgetTagService.getWidgetTagByWidgetIdAndKeyword(VALID_WIDGET_ID, TAG_TEXT)).andReturn(null);
         expect(userService.getAuthenticatedUser()).andReturn(user);
         expect(tagService.getTagByKeyword(TAG_TEXT)).andReturn(null);
-        widgetTagService.saveWidgetTag(isA(WidgetTag.class));
+        widgetTagService.createWidgetTag(isA(WidgetTag.class));
         expectLastCall();
         replay(widgetTagService, userService, tagService);
         widgetApi.createWidgetTag(VALID_WIDGET_ID, TAG_TEXT, response);
@@ -255,7 +255,7 @@ public class WidgetApiTest {
         expect(widgetTagService.getWidgetTagByWidgetIdAndKeyword(VALID_WIDGET_ID, TAG_TEXT)).andReturn(null);
         expect(userService.getAuthenticatedUser()).andReturn(user);
         expect(tagService.getTagByKeyword(TAG_TEXT)).andReturn(tag);
-        widgetTagService.saveWidgetTag(isA(WidgetTag.class));
+        widgetTagService.createWidgetTag(isA(WidgetTag.class));
         expectLastCall();
         replay(widgetTagService, userService, tagService);
         widgetApi.createWidgetTag(VALID_WIDGET_ID, TAG_TEXT, response);

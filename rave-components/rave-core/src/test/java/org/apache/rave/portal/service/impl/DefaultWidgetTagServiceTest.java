@@ -57,7 +57,7 @@ public class DefaultWidgetTagServiceTest {
             expect(widgetTagRepository.save(wtag)).andReturn(wtag);
             replay(widgetTagRepository);
 
-            widgetTagService.saveWidgetTag(wtag);
+            widgetTagService.createWidgetTag(wtag);
             verify(widgetTagRepository);
 
 
