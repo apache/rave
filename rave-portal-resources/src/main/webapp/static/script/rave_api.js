@@ -427,6 +427,20 @@ rave.api = rave.api || (function() {
                }).error(handleError);
         }
 
+        function getAllWidgets(args){
+            $.get(rave.getContext() + path + "widget/getall",
+                function(result) {
+                    if (result.error) {
+                        handleRpcError(result);
+                    }
+                    else {
+                        if (typeof args.successCallback == 'function') {
+                            args.successCallback(result);
+                        }
+                    }
+                }).error(handleError);
+        }
+
         function getUsers(args){
             var offset = args.offset;
             $.get(rave.getContext() + path + "users/get",
@@ -618,7 +632,8 @@ rave.api = rave.api || (function() {
             removeFriend : removeFriend,
             getFriends : getFriends,
             acceptFriendRequest : acceptFriendRequest,
-            addWidgetFromMarketplace : addWidgetFromMarketplace
+            addWidgetFromMarketplace : addWidgetFromMarketplace,
+            getAllWidgets : getAllWidgets
         };
 
     })();
