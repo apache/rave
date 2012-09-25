@@ -26,6 +26,7 @@ import org.apache.rave.portal.model.WidgetStatus;
 import org.apache.rave.portal.model.impl.CategoryImpl;
 import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.model.impl.WidgetImpl;
+import org.apache.rave.portal.model.impl.WidgetTagImpl;
 import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.model.util.WidgetStatistics;
 import org.apache.rave.portal.repository.CategoryRepository;
@@ -36,6 +37,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -363,6 +365,35 @@ public class DefaultWidgetServiceTest {
         assertEquals("number of widgets", 1, result.getTotalResults());
         assertSame(w, result.getResultSet().get(0));
         assertEquals(c.getId(), result.getResultSet().get(0).getCategories().get(0).getId());
+    }
+
+    @Test
+    public void getWidgetTag() {
+        WidgetTagImpl tag = new WidgetTagImpl("1", new Date(), "1");
+        expect(widgetRepository.getTagById("1")).andReturn(tag);
+        replay(widgetRepository);
+
+        assertEquals(tag, widgetService.getWidgetTag("1"));
+        verify(widgetRepository);
+    }
+
+    @Test
+    public void saveWidgetTag() {
+        try {
+
+            WidgetTagImpl wtag = new WidgetTagImpl("1", new Date(), "1");
+            expect(widgetRepository.saveWidgetTag("1", wtag)).andReturn(wtag);
+            replay(widgetRepository);
+
+            widgetService.createWidgetTag("1", wtag);
+            verify(widgetRepository);
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
     }
 
 }

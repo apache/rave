@@ -33,6 +33,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -47,17 +48,17 @@ public class WidgetApi extends AbstractRestApi {
     private final WidgetRatingService widgetRatingService;
     private final UserService userService;
     private final TagService tagService;
-    private final WidgetTagService widgetTagService;
+    private final WidgetService widgetService;
 
 
     @Autowired
     public WidgetApi(WidgetRatingService widgetRatingService, WidgetCommentService widgetCommentService, UserService userService,
-                     TagService tagService, WidgetTagService widgetTagService) {
+                     TagService tagService, WidgetService widgetService) {
         this.widgetCommentService = widgetCommentService;
         this.widgetRatingService = widgetRatingService;
         this.userService = userService;
         this.tagService = tagService;
-        this.widgetTagService = widgetTagService;
+        this.widgetService = widgetService;
     }
 
     @RequestMapping(method = RequestMethod.GET)
@@ -158,13 +159,10 @@ public class WidgetApi extends AbstractRestApi {
                                 HttpServletResponse response) {
         logger.debug("add tags " + tagText + " to widget " + widgetId);
         if (tagText != null && !tagText.trim().isEmpty()) {
-            WidgetTag existed = widgetTagService.getWidgetTagByWidgetIdAndKeyword(widgetId, tagText);
+            WidgetTag existed = widgetService.getWidgetTagByWidgetIdAndKeyword(widgetId, tagText);
             if (existed == null) {
-                WidgetTag widgetTag = new WidgetTagImpl(widgetId);
-                widgetTag.setUserId(userService.getAuthenticatedUser().getId());
-                widgetTag.setCreatedDate(new Date());
-                widgetTag.setTag(getTag(tagText));
-                widgetTagService.saveWidgetTag(widgetTag);
+                WidgetTag widgetTag = new WidgetTagImpl(userService.getAuthenticatedUser(), new Date(), getTag(tagText));
+                widgetService.createWidgetTag(widgetId, widgetTag);
                 logger.debug("widget tag is saved.");
 
             }
@@ -176,8 +174,21 @@ public class WidgetApi extends AbstractRestApi {
 
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/{widgetId}/tags")
-    public List<Tag> getTags(@PathVariable String widgetId) {
-        return tagService.getAvailableTagsByWidgetId(widgetId);
+    public List<Tag> getTags(@PathVariable String widgetId, HttpServletResponse response) {
+        ArrayList<Tag> tags = new ArrayList<Tag>();
+
+        Widget widget = widgetService.getWidget(widgetId);
+
+        if (widget == null) {
+            response.setStatus(404);
+            return null;
+        }
+
+        for (WidgetTag wt : widget.getTags()) {
+            tags.add(tagService.getTagById(wt.getTagId()));
+        }
+
+        return tags;
     }
 
     @ResponseBody
@@ -189,8 +200,8 @@ public class WidgetApi extends AbstractRestApi {
     private Tag getTag(String keyword) {
         Tag tag = tagService.getTagByKeyword(keyword);
         if (tag == null) {
-            tag = new TagImpl();
-            tag.setKeyword(keyword);
+            tag = new TagImpl(keyword);
+            tag = tagService.save(tag);
         }
         return tag;
     }

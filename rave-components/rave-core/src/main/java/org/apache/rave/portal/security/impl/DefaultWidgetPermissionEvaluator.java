@@ -18,10 +18,10 @@
  */
 package org.apache.rave.portal.security.impl;
 
-import org.apache.rave.portal.model.User;
-import org.apache.rave.portal.model.Widget;
-import org.apache.rave.portal.model.WidgetStatus;
+import org.apache.rave.portal.model.*;
+import org.apache.rave.portal.repository.TagRepository;
 import org.apache.rave.portal.repository.WidgetRepository;
+import org.apache.rave.portal.security.util.AuthenticationUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,10 +36,12 @@ import java.util.List;
 public class DefaultWidgetPermissionEvaluator extends AbstractModelPermissionEvaluator<Widget>{
     private Logger log = LoggerFactory.getLogger(getClass());
     private WidgetRepository widgetRepository;
+    private TagRepository tagRepository;
 
     @Autowired
-    public DefaultWidgetPermissionEvaluator(WidgetRepository widgetRepository) {
+    public DefaultWidgetPermissionEvaluator(WidgetRepository widgetRepository, TagRepository tagRepository) {
         this.widgetRepository = widgetRepository;
+        this.tagRepository = tagRepository;
     }
 
     @Override
@@ -189,4 +191,5 @@ public class DefaultWidgetPermissionEvaluator extends AbstractModelPermissionEva
             throw new IllegalArgumentException("unknown RaveSecurityContext type: " + raveSecurityContext.getType());
         }
     }
+
 }

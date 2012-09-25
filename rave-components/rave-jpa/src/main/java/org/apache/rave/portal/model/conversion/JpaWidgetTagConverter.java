@@ -32,38 +32,38 @@ import javax.persistence.TypedQuery;
  * Converts from a {@link org.apache.rave.portal.model.WidgetTag} to a {@link org.apache.rave.portal.model.JpaWidgetTag}
  */
 @Component
-public class JpaWidgetTagConverter implements ModelConverter<WidgetTag, JpaWidgetTag> {
+public class JpaWidgetTagConverter {
 
     @PersistenceContext
     private EntityManager manager;
 
-    @Override
     public Class<WidgetTag> getSourceType() {
         return WidgetTag.class;
     }
 
-    @Override
-    public JpaWidgetTag convert(WidgetTag source) {
-        return source instanceof JpaWidgetTag ? (JpaWidgetTag)source : createEntity(source);
+    public JpaWidgetTag convert(WidgetTag source, String widgetId) {
+        return source instanceof JpaWidgetTag ? (JpaWidgetTag)source : createEntity(source, widgetId);
     }
 
-    private JpaWidgetTag createEntity(WidgetTag source) {
+    private JpaWidgetTag createEntity(WidgetTag source, String widgetId) {
+        Long widgetEntityId = Long.parseLong(widgetId);
         JpaWidgetTag convertedWidgetTag;
-        TypedQuery<JpaWidgetTag> query = manager.createNamedQuery(JpaWidgetTag.FIND_BY_WIDGET_AND_KEYWORD, JpaWidgetTag.class);
-        query.setParameter(JpaWidgetTag.WIDGET_ID_PARAM, Long.parseLong(source.getWidgetId()));
-        query.setParameter(JpaWidgetTag.TAG_KEYWORD_PARAM, source.getTag().getKeyword());
+        TypedQuery<JpaWidgetTag> query = manager.createNamedQuery(JpaWidgetTag.FIND_BY_WIDGETID_AND_TAGID, JpaWidgetTag.class);
+        query.setParameter(JpaWidgetTag.WIDGET_ID_PARAM, widgetEntityId);
+        query.setParameter(JpaWidgetTag.TAG_ID_PARAM, Long.parseLong(source.getTagId()));
         convertedWidgetTag = JpaUtil.getSingleResult(query.getResultList());
 
         if (convertedWidgetTag == null){
             convertedWidgetTag = new JpaWidgetTag();
         }
-        updateProperties(source, convertedWidgetTag);
+        updateProperties(source, convertedWidgetTag, widgetEntityId);
         return convertedWidgetTag;
     }
 
-    private void updateProperties(WidgetTag source, JpaWidgetTag convertedWidgetTag) {
+    private void updateProperties(WidgetTag source, JpaWidgetTag convertedWidgetTag, Long widgetId) {
         convertedWidgetTag.setCreatedDate(source.getCreatedDate());
-        convertedWidgetTag.setTag(source.getTag());
-        convertedWidgetTag.setUserId(source.getUserId());
+        convertedWidgetTag.setTagEntityId(Long.parseLong(source.getTagId()));
+        convertedWidgetTag.setUserEntityId(Long.parseLong(source.getUserId()));
+        convertedWidgetTag.setWidgetEntityId(widgetId);
     }
 }

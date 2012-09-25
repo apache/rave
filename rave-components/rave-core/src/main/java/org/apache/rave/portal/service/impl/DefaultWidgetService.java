@@ -21,10 +21,7 @@ package org.apache.rave.portal.service.impl;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.rave.exception.DuplicateItemException;
-import org.apache.rave.portal.model.Category;
-import org.apache.rave.portal.model.User;
-import org.apache.rave.portal.model.Widget;
-import org.apache.rave.portal.model.WidgetStatus;
+import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.model.util.WidgetStatistics;
 import org.apache.rave.portal.repository.CategoryRepository;
@@ -186,5 +183,22 @@ public class DefaultWidgetService implements WidgetService {
         searchResult.setOffset(offset);
         searchResult.setPageSize(pageSize);
         return searchResult;
+    }
+
+    @Override
+    public WidgetTag getWidgetTag(String id) {
+        return widgetRepository.getTagById(id);
+    }
+
+
+    @Override
+    @Transactional
+    public WidgetTag createWidgetTag(String widgetId, WidgetTag widgetTag) {
+        return widgetRepository.saveWidgetTag(widgetId, widgetTag);
+    }
+
+    @Override
+    public WidgetTag getWidgetTagByWidgetIdAndKeyword(String widgetId, String keyword) {
+        return widgetRepository.getTagByWidgetIdAndKeyword(widgetId, keyword);
     }
 }

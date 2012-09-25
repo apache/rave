@@ -70,8 +70,8 @@ public class WidgetTest {
         ratings.add(new JpaWidgetRating(1L, 1L, 1L, 1));
         
         tags = new ArrayList<WidgetTag>();
-        tags.add(new JpaWidgetTag(1L, 1L, 1, new Date(), tag)) ;
-        tags.add(new JpaWidgetTag(2L,1L, 2, new Date(), tag1)) ;
+        tags.add(new JpaWidgetTag(1L, 1L, 1, new Date(), tag.getEntityId())) ;
+        tags.add(new JpaWidgetTag(2L,1L, 2, new Date(), tag1.getEntityId())) ;
 
         widget.setEntityId(id);
         widget.setTitle(title);

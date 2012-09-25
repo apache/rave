@@ -26,39 +26,20 @@ import java.util.Date;
 
 public class WidgetTagImpl implements WidgetTag {
 
-    private String id;
     private String userId;
-    private String widgetId;
-    private Tag tag;
+    private String tagId;
     private Date createdDate;
 
-    public WidgetTagImpl(String widgetId) {
-        this.widgetId = widgetId;
-    }
-
-    public WidgetTagImpl(String widgetId, String userId, Date createdDate, Tag tag) {
-        this.widgetId = widgetId;
-        this.userId = userId;
-        this.tag = tag;
+    public WidgetTagImpl(User user, Date createdDate, Tag tag) {
+        this.userId = user.getId();
+        this.tagId = tag.getId();
         this.createdDate = createdDate;
     }
 
-    public WidgetTagImpl(String id, String widgetId, String userId, Date createdDate, Tag tag) {
-        this.id = id;
-        this.widgetId = widgetId;
+    public WidgetTagImpl(String userId, Date createdDate, String tagId) {
         this.userId = userId;
-        this.tag = tag;
+        this.tagId = tagId;
         this.createdDate = createdDate;
-    }
-
-    @Override
-    public String getId() {
-        return this.id;
-    }
-
-    @Override
-    public String getWidgetId() {
-        return widgetId;
     }
 
     @Override
@@ -67,27 +48,12 @@ public class WidgetTagImpl implements WidgetTag {
     }
 
     @Override
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    @Override
-    public Tag getTag() {
-        return this.tag;
-    }
-
-    @Override
-    public void setTag(Tag tag) {
-        this.tag = tag;
+    public String getTagId() {
+        return this.tagId;
     }
 
     @Override
     public Date getCreatedDate() {
        return this.createdDate;
-    }
-
-    @Override
-    public void setCreatedDate(Date date) {
-        this.createdDate = date;
     }
 }

@@ -58,8 +58,7 @@ public class DefaultTagServiceTest {
 
 
     private static Tag createTag(String keyword) {
-        TagImpl tag = new TagImpl();
-        tag.setKeyword(keyword);
+        TagImpl tag = new TagImpl(keyword);
         return tag;
     }
 

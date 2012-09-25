@@ -151,9 +151,16 @@
                     <c:if test="${not empty widget.tags}">
                         <h3><fmt:message key="page.widget.tags.title"/></h3>
                         <div class="detail-widget-tags">
-                                <c:forEach var="tag" items="${widget.tags}">
-                               <span class="label"><c:out value="${tag.tag.keyword}"/></span>
+                            <c:forEach var="widgettag" items="${widget.tags}">
+                                <c:forEach var="tag" items="${tags}">
+                                    <c:set var="tagMatched">
+                                        ${tag.id==widgettag.tagId?true:false}
+                                    </c:set>
+                                    <c:if test="${tagMatched}">
+                                        <span class="label"><c:out value="${tag.keyword}"/></span>
+                                    </c:if>
                                 </c:forEach>
+                            </c:forEach>
                         </div>
                     </c:if>
                     <div id="tagInput" class="form-inline hide">

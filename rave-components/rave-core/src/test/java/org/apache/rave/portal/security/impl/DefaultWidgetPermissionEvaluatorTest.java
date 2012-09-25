@@ -24,6 +24,7 @@ import org.apache.rave.portal.model.WidgetStatus;
 import org.apache.rave.portal.model.impl.PageImpl;
 import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.model.impl.WidgetImpl;
+import org.apache.rave.portal.repository.TagRepository;
 import org.apache.rave.portal.repository.WidgetRepository;
 import org.apache.rave.portal.security.ModelPermissionEvaluator;
 import org.apache.rave.portal.security.util.AuthenticationUtils;
@@ -45,6 +46,7 @@ import static org.junit.Assert.assertThat;
 public class DefaultWidgetPermissionEvaluatorTest {
     private DefaultWidgetPermissionEvaluator defaultWidgetPermissionEvaluator;
     private WidgetRepository mockWidgetRepository;
+    private TagRepository mockTagRepository;
     private Page page;
     private Widget widget, widget2;
     private UserImpl user, user2;
@@ -61,7 +63,8 @@ public class DefaultWidgetPermissionEvaluatorTest {
     @Before
     public void setUp() {
         mockWidgetRepository = createMock(WidgetRepository.class);
-        defaultWidgetPermissionEvaluator = new DefaultWidgetPermissionEvaluator(mockWidgetRepository);
+        mockTagRepository = createMock(TagRepository.class);
+        defaultWidgetPermissionEvaluator = new DefaultWidgetPermissionEvaluator(mockWidgetRepository, mockTagRepository);
         mockAuthentication = createMock(Authentication.class);
 
         user = new UserImpl();

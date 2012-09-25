@@ -37,9 +37,6 @@ import java.util.List;
 @NamedQueries({
         @NamedQuery(name = JpaTag.GET_ALL, query = "select t from JpaTag t order by t.keyword asc"),
         @NamedQuery(name = JpaTag.COUNT_ALL, query = "select count(t) from JpaTag t "),
-        @NamedQuery(name = JpaTag.GET_ALL_NOT_IN_WIDGET, query = "select tag from JpaTag tag where tag.keyword not in " +
-                "(select t.keyword from JpaTag t join t.widgets w where w.widgetId =:widgetId)"),
-
         @NamedQuery(name = JpaTag.FIND_BY_KEYWORD, query = "select t from JpaTag t where UPPER(t.keyword) = UPPER(:keyword)")
 })
 
@@ -48,7 +45,6 @@ public class JpaTag implements BasicEntity, Tag {
     public static final String FIND_BY_KEYWORD = "findByKeyword";
     public static final String GET_ALL = "getAll";
     public static final String COUNT_ALL = "countAll";
-    public static final String GET_ALL_NOT_IN_WIDGET = "getAllNotInWidget";
     public static final String KEYWORD_PARAM = "keyword";
 
     @Autowired
@@ -69,12 +65,12 @@ public class JpaTag implements BasicEntity, Tag {
     @Column(name = "keyword", unique = true)
     private String keyword;
 
-    @OneToMany(mappedBy = "tag")
-    public List<JpaWidgetTag> widgets;
-
-
     public JpaTag() {
 
+    }
+
+    public JpaTag(String keyword) {
+        this.keyword = keyword;
     }
 
     public JpaTag(Long entityId, String keyword) {
@@ -87,7 +83,6 @@ public class JpaTag implements BasicEntity, Tag {
         return keyword;
     }
 
-    @Override
     public void setKeyword(String keyword) {
         this.keyword = keyword;
     }
@@ -102,7 +97,7 @@ public class JpaTag implements BasicEntity, Tag {
 
     @Override
     public String getId() {
-        return entityId.toString();
+        return entityId == null ? null : entityId.toString();
     }
 
     @Override

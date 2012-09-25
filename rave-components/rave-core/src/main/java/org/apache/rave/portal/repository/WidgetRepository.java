@@ -19,10 +19,7 @@
 package org.apache.rave.portal.repository;
 
 import org.apache.rave.persistence.Repository;
-import org.apache.rave.portal.model.User;
-import org.apache.rave.portal.model.Widget;
-import org.apache.rave.portal.model.WidgetRating;
-import org.apache.rave.portal.model.WidgetStatus;
+import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.model.util.WidgetStatistics;
 
 import java.util.List;
@@ -175,4 +172,29 @@ public interface WidgetRepository extends Repository<Widget> {
      * @return the number of widgets updated
      */
      int unassignWidgetOwner(String userId);
+
+    // ***************************************************************************************************************
+    // Widget Tag Methods
+    // ***************************************************************************************************************
+
+    /**
+     * Tries to find a {@link org.apache.rave.portal.model.WidgetTag} by the id's of a Widget and Tag keyword
+     *
+     * @param widgetId unique identifier of a Widget
+     * @param keyword   tag's keyword
+     * @return {@link org.apache.rave.portal.model.WidgetTag} if it exists, otherwise {@literal null}
+     */
+     WidgetTag getTagByWidgetIdAndKeyword(String widgetId, String keyword);
+
+    /**
+     * Tries to find a {@link org.apache.rave.portal.model.WidgetTag} by the id of the Tag
+     *
+     * @param widgetTagId   tag's id
+     * @return {@link org.apache.rave.portal.model.WidgetTag} if it exists, otherwise {@literal null}
+     */
+    WidgetTag getTagById(String widgetTagId);
+
+    WidgetTag saveWidgetTag(String widgetId, WidgetTag tag);
+
+    void deleteWidgetTag(WidgetTag tag);
 }

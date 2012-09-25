@@ -26,6 +26,5 @@ public interface Tag {
 
     String getId();
     String getKeyword();
-    void setKeyword(String keyword);
 
 }

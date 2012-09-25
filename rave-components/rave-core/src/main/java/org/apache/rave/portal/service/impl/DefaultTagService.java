@@ -56,11 +56,16 @@ public class DefaultTagService implements TagService {
     }
 
     @Override
-    public List<Tag> getAvailableTagsByWidgetId(String widgetId) {
-
-        return repository.getAvailableTagsByWidgetId(widgetId);
-
+    public Tag save(Tag tag) {
+        return repository.save(tag);
     }
+
+//    @Override
+//    public List<Tag> getAvailableTagsByWidgetId(String widgetId) {
+//
+//        return repository.getAvailableTagsByWidgetId(widgetId);
+//
+//    }
 
 
 }

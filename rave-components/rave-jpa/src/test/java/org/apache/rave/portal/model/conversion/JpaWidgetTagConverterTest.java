@@ -41,25 +41,23 @@ public class JpaWidgetTagConverterTest {
     
     @Test
     public void convert_valid_widgetTaq(){
-        WidgetTag widgetTag = new WidgetTagImpl("3");
-        widgetTag.setCreatedDate(new Date());
-        widgetTag.setUserId(new JpaUser(1L).getId());
-        widgetTag.setTag(new JpaTag(1L, "news"));
-        JpaWidgetTag jpaWidgetTag = jpaWidgetTagConverter.convert(widgetTag);
+        JpaWidget widget = new JpaWidget(1L, "");
+        WidgetTag widgetTag = new WidgetTagImpl(new JpaUser(1L).getId(), new Date(), new JpaTag(1L, "news").getId());
+        JpaWidgetTag jpaWidgetTag = jpaWidgetTagConverter.convert(widgetTag, widget.getId());
         assertNotNull(jpaWidgetTag);
         assertEquals(widgetTag.getCreatedDate(), jpaWidgetTag.getCreatedDate());
-        assertSame(widgetTag.getTag(), jpaWidgetTag.getTag());
+        assertEquals(widgetTag.getTagId(), jpaWidgetTag.getTagId());
         assertEquals(widgetTag.getUserId(), jpaWidgetTag.getUserId());
-        assertEquals(widgetTag.getWidgetId(), jpaWidgetTag.getWidgetId());
+        assertEquals(widget.getId(), jpaWidgetTag.getWidgetId());
     }
 
     @Test
     public void convert_valid_jpaWidgetTaq(){
         JpaWidgetTag widgetTag = new JpaWidgetTag(3);
         widgetTag.setCreatedDate(new Date());
-        widgetTag.setUserId(new JpaUser(1L).getId());
-        widgetTag.setTag(new JpaTag(1L, "news"));
-        JpaWidgetTag jpaWidgetTag = jpaWidgetTagConverter.convert(widgetTag);
+        widgetTag.setUserEntityId(new JpaUser(1L).getEntityId());
+        widgetTag.setTagEntityId(new JpaTag(1L, "news").getEntityId());
+        JpaWidgetTag jpaWidgetTag = jpaWidgetTagConverter.convert(widgetTag, "3");
         assertNotNull(jpaWidgetTag);
         assertSame(widgetTag, jpaWidgetTag);
     }

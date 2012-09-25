@@ -79,8 +79,8 @@ import java.util.List;
 
         @NamedQuery(name = JpaWidget.WIDGET_GET_BY_URL, query = JpaWidget.SELECT_W_FROM_WIDGET_W + JpaWidget.WHERE_CLAUSE_URL) ,
 
-        @NamedQuery(name = JpaWidget.WIDGET_GET_BY_TAG, query = JpaWidget.SELECT_W_FROM_WIDGET_W + JpaWidget.JOIN_TAGS+ JpaWidget.ORDER_BY_TITLE_ASC),
-        @NamedQuery(name = JpaWidget.WIDGET_COUNT_BY_TAG, query = JpaWidget.SELECT_COUNT_W_FROM_WIDGET_W + JpaWidget.JOIN_TAGS),
+        @NamedQuery(name = JpaWidget.WIDGET_GET_BY_TAG, query = JpaWidget.SELECT_W_FROM_WIDGET_W + JpaWidget.JOIN_TAGS + JpaWidget.WHERE_CLAUSE_TAG_ID + JpaWidget.ORDER_BY_TITLE_ASC),
+        @NamedQuery(name = JpaWidget.WIDGET_COUNT_BY_TAG, query = JpaWidget.SELECT_COUNT_W_FROM_WIDGET_W + JpaWidget.JOIN_TAGS + JpaWidget.WHERE_CLAUSE_TAG_ID),
         @NamedQuery(name = JpaWidget.WIDGET_UNASSIGN_OWNER, query = "UPDATE JpaWidget w SET w.ownerId = null " + JpaWidget.WHERE_CLAUSE_OWNER )
 })
 public class JpaWidget implements BasicEntity, Serializable, Widget {
@@ -90,7 +90,7 @@ public class JpaWidget implements BasicEntity, Serializable, Widget {
     public static final String PARAM_STATUS = "widgetStatus";
     public static final String PARAM_URL = "url";
     public static final String PARAM_OWNER = "owner";
-    public static final String PARAM_TAG = "keyword";
+    public static final String PARAM_TAG_ID = "tagId";
 
     public static final String WIDGET_GET_ALL = "Widget.getAll";
     public static final String WIDGET_COUNT_ALL = "Widget.countAll";
@@ -113,8 +113,8 @@ public class JpaWidget implements BasicEntity, Serializable, Widget {
     static final String WHERE_CLAUSE_STATUS = " WHERE w.widgetStatus = :" + PARAM_STATUS;
     static final String WHERE_CLAUSE_URL = " WHERE w.url = :" + PARAM_URL;
     static final String WHERE_CLAUSE_OWNER = " WHERE w.ownerId = :" + PARAM_OWNER;
-    static final String WIDGET_TAG_BY_KEYWORD=" (select t.widgetId from JpaWidgetTag t where lower(t.tag.keyword)=:"+PARAM_TAG+")";
-    static final String JOIN_TAGS=" WHERE w.entityId in"+WIDGET_TAG_BY_KEYWORD;
+    static final String WHERE_CLAUSE_TAG_ID = " WHERE wt.tagId = :" + PARAM_TAG_ID;
+    static final String JOIN_TAGS=" join w.tags wt";
 
     static final String ORDER_BY_TITLE_ASC = " ORDER BY w.featured DESC, w.title ASC ";
 

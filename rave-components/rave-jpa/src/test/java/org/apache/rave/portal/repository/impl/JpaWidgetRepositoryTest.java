@@ -21,6 +21,7 @@ package org.apache.rave.portal.repository.impl;
 
 import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.model.util.WidgetStatistics;
+import org.apache.rave.portal.repository.TagRepository;
 import org.apache.rave.portal.repository.WidgetRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -57,6 +58,9 @@ public class JpaWidgetRepositoryTest {
 
     @Autowired
     private WidgetRepository repository;
+
+    @Autowired
+    private TagRepository tagRepository;
 
     @Test
     public void getType() {
@@ -369,11 +373,13 @@ public class JpaWidgetRepositoryTest {
     @Test
     public void getWidgetTag() {
         Widget widget = repository.get("3");
+        Tag news = tagRepository.getByKeyword("news");
         assertNotNull(widget);
-        assertEquals(widget.getTags().iterator().next().getTag().getKeyword(), "news");
+        assertEquals(widget.getTags().iterator().next().getTagId(), news.getId());
         widget = repository.get("1");
+        Tag wikipedia = tagRepository.getByKeyword("wikipedia");
         assertNotNull(widget);
-        assertEquals(widget.getTags().iterator().next().getTag().getKeyword(), "wikipedia");
+        assertEquals(widget.getTags().iterator().next().getTagId(), wikipedia.getId());
     }
 
     @Test

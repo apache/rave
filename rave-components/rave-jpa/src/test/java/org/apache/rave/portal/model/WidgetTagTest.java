@@ -32,7 +32,7 @@ public class WidgetTagTest {
     private JpaWidgetTag widgetTag;
     
     private static final Long VALID_ENTITY_ID = 1L;
-    private static final String VALID_USER_ID = "1";
+    private static final Long VALID_USER_ID = 1L;
     private static final Long VALID_WIDGET_ID = 3L;
     private static final Date VALID_CREATED_DATE = new Date();
     
@@ -40,9 +40,9 @@ public class WidgetTagTest {
     public void setUp() {
         widgetTag = new JpaWidgetTag(VALID_WIDGET_ID);
         widgetTag.setEntityId(VALID_ENTITY_ID);
-        widgetTag.setUserId("1");
+        widgetTag.setUserEntityId(1L);
         widgetTag.setCreatedDate(VALID_CREATED_DATE);
-        widgetTag.setTag(new JpaTag(1L, "test"));
+        widgetTag.setTagEntityId(1L);
     }
     
     @Test

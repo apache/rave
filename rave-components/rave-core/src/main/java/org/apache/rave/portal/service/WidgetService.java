@@ -20,6 +20,7 @@
 package org.apache.rave.portal.service;
 
 import org.apache.rave.portal.model.Widget;
+import org.apache.rave.portal.model.WidgetTag;
 import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.model.util.WidgetStatistics;
 import org.springframework.security.access.prepost.PostAuthorize;
@@ -176,5 +177,16 @@ public interface WidgetService {
      * @return           SearchResult
      */
     SearchResult<Widget> getWidgetsByCategory(String categoryId, int offset, int pageSize);
+
+    // ***************************************************************************************************************
+    // Widget Tag Methods
+    // ***************************************************************************************************************
+
+    WidgetTag getWidgetTag(String id);
+
+    WidgetTag getWidgetTagByWidgetIdAndKeyword(String widgetId, String keyword);
+
+    // No security check required as everyone is allowed to create a tag
+    WidgetTag createWidgetTag(String widgetId, WidgetTag widgetTag);
 
 }

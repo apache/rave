@@ -20,6 +20,7 @@ package org.apache.rave.portal.model.impl;
 
 import org.apache.rave.portal.model.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class WidgetImpl implements Widget {
@@ -34,13 +35,13 @@ public class WidgetImpl implements Widget {
     private String authorEmail;
     private String description;
     private WidgetStatus widgetStatus;
-    private List<WidgetComment> comments;
+    private List<WidgetComment> comments = new ArrayList<WidgetComment>();
     private String ownerId;
     private boolean disableRendering;
     private String disableRenderingMessage;
-    private List<WidgetRating> ratings;
-    private List<WidgetTag> tags;
-    private List<Category> categories;
+    private List<WidgetRating> ratings = new ArrayList<WidgetRating>();
+    private List<WidgetTag> tags = new ArrayList<WidgetTag>();
+    private List<Category> categories = new ArrayList<Category>();
     private boolean featured;
 
     public WidgetImpl() {}

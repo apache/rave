@@ -49,9 +49,4 @@ public class TagImpl implements Tag {
     public String getKeyword() {
         return this.keyword;
     }
-
-    @Override
-    public void setKeyword(String keyword) {
-        this.keyword = keyword;
-    }
 }

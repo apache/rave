@@ -25,16 +25,19 @@ import java.util.Date;
  * A tag for a widget.
  */
 @Entity
-@Table(name = "widget_tag")
+@Table(name = "widget_tag", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"widget_id", "user_id", "tag_id"})
+})
 @Access(AccessType.FIELD)
 @XmlRootElement
 @NamedQueries({
-        @NamedQuery(name = JpaWidgetTag.FIND_BY_WIDGET_AND_KEYWORD, query = "select t from JpaWidgetTag t where t.widgetId=:widgetId and UPPER(t.tag.keyword) = UPPER(:keyword)")
+        @NamedQuery(name = JpaWidgetTag.FIND_BY_WIDGETID_AND_TAGID, query = "select t from JpaWidgetTag t where t.widgetId=:widgetId and t.tagId=:tagId")
 })
 public class JpaWidgetTag implements WidgetTag, Serializable {
 
-    public static final String FIND_BY_WIDGET_AND_KEYWORD = "findByWidgetAndKeyword";
+    public static final String FIND_BY_WIDGETID_AND_TAGID = "findByWidgetIDAndTagID";
     public static final String WIDGET_ID_PARAM = "widgetId";
+    public static final String TAG_ID_PARAM = "tagId";
     public static final String TAG_KEYWORD_PARAM = "keyword";
 
     @Id
@@ -51,9 +54,8 @@ public class JpaWidgetTag implements WidgetTag, Serializable {
     @Column(name = "user_id")
     private Long userId;
 
-    @ManyToOne(fetch=FetchType.EAGER,cascade = CascadeType.ALL)
-    @JoinColumn(name = "tag_id")
-    private JpaTag tag;
+    @Column(name = "tag_id")
+    private Long tagId;
 
     @Basic
     @Column(name = "created_date")
@@ -66,12 +68,12 @@ public class JpaWidgetTag implements WidgetTag, Serializable {
         this.widgetId = widgetId;
     }
 
-    public JpaWidgetTag(long id, long widgetId, long userId, Date date, JpaTag tag) {
+    public JpaWidgetTag(long id, long widgetId, long userId, Date date, long tagId) {
         this.entityId = id;
         this.widgetId = widgetId;
         this.userId = userId;
         this.createdDate = date;
-        this.tag = tag;
+        this.tagId = tagId;
     }
 
     public Long getEntityId(){
@@ -82,12 +84,14 @@ public class JpaWidgetTag implements WidgetTag, Serializable {
         this.entityId = id;
     }
 
-    @Override
     public String getId() {
-        return entityId.toString();
+        return entityId == null ? null : entityId.toString();
     }
 
-    @Override
+    public void setWidgetEntityId(Long id) {
+        this.widgetId = id;
+    }
+
     public String getWidgetId() {
         return this.widgetId == null ? null : this.widgetId.toString();
     }
@@ -97,19 +101,25 @@ public class JpaWidgetTag implements WidgetTag, Serializable {
         return this.userId.toString();
     }
 
-    @Override
-    public void setUserId(String userId) {
-        this.userId = Long.parseLong(userId);
+    public void setUserEntityId(Long id) {
+        this.userId = id;
+    }
+
+    public Long getUserEntityId() {
+        return userId;
     }
 
     @Override
-    public Tag getTag() {
-        return this.tag;
+    public String getTagId() {
+        return this.tagId.toString();
     }
 
-    @Override
-    public void setTag(Tag tag) {
-        this.tag = JpaConverter.getInstance().convert(tag, Tag.class);
+    public void setTagEntityId(Long id) {
+        this.tagId = id;
+    }
+
+    public Long getTagEntityId() {
+        return tagId;
     }
 
     @Override
@@ -117,7 +127,6 @@ public class JpaWidgetTag implements WidgetTag, Serializable {
         return this.createdDate;
     }
 
-    @Override
     public void setCreatedDate(Date date) {
         this.createdDate = date;
     }
@@ -130,7 +139,7 @@ public class JpaWidgetTag implements WidgetTag, Serializable {
         JpaWidgetTag that = (JpaWidgetTag) o;
 
         if (createdDate != null ? !createdDate.equals(that.createdDate) : that.createdDate != null) return false;
-        if (tag != null ? !tag.equals(that.tag) : that.tag != null) return false;
+        if (tagId != null ? !tagId.equals(that.tagId) : that.tagId != null) return false;
         if (userId != null ? !userId.equals(that.userId) : that.userId != null) return false;
         if (widgetId != null ? !widgetId.equals(that.widgetId) : that.widgetId != null) return false;
 
@@ -141,7 +150,7 @@ public class JpaWidgetTag implements WidgetTag, Serializable {
     public int hashCode() {
         int result = widgetId != null ? widgetId.hashCode() : 0;
         result = 31 * result + (userId != null ? userId.hashCode() : 0);
-        result = 31 * result + (tag != null ? tag.hashCode() : 0);
+        result = 31 * result + (tagId != null ? tagId.hashCode() : 0);
         result = 31 * result + (createdDate != null ? createdDate.hashCode() : 0);
         return result;
     }
@@ -150,7 +159,7 @@ public class JpaWidgetTag implements WidgetTag, Serializable {
     public String toString() {
         StringBuilder sb=new StringBuilder("WidgetTag") ;
         sb.append("{").append("entityId=").append(entityId).append( ", widgetId=").append(widgetId);
-        if (tag!=null) sb.append("tag keyword=").append(tag.getKeyword());
+        if (tagId!=null) sb.append("tagId=").append(tagId);
         sb.append("}") ;
         return sb.toString();
     }

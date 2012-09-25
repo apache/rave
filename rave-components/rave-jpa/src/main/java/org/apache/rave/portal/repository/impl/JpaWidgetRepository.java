@@ -23,7 +23,9 @@ package org.apache.rave.portal.repository.impl;
 import org.apache.commons.lang.StringUtils;
 import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.model.conversion.JpaWidgetConverter;
+import org.apache.rave.portal.model.conversion.JpaWidgetTagConverter;
 import org.apache.rave.portal.model.util.WidgetStatistics;
+import org.apache.rave.portal.repository.TagRepository;
 import org.apache.rave.portal.repository.WidgetRepository;
 import org.apache.rave.util.CollectionUtils;
 import org.slf4j.Logger;
@@ -47,6 +49,12 @@ public class JpaWidgetRepository implements WidgetRepository {
 
     @Autowired
     private JpaWidgetConverter converter;
+
+    @Autowired
+    private JpaWidgetTagConverter tagConverter;
+
+    @Autowired
+    private TagRepository tagRepository;
 
     @PersistenceContext
     private EntityManager manager;
@@ -259,8 +267,9 @@ public class JpaWidgetRepository implements WidgetRepository {
         if (tagKeyword != null) {
             tagKeyword = tagKeyword.toLowerCase();
         }
+        Tag tag = tagRepository.getByKeyword(tagKeyword);
         TypedQuery<JpaWidget> query = manager.createNamedQuery(JpaWidget.WIDGET_GET_BY_TAG, JpaWidget.class);
-        query.setParameter(JpaWidget.PARAM_TAG, tagKeyword);
+        query.setParameter(JpaWidget.PARAM_TAG_ID, tag == null ? null : Long.parseLong(tag.getId()));
         return CollectionUtils.<Widget>toBaseTypedList(getPagedResultList(query, offset, pageSize));
     }
 
@@ -269,8 +278,9 @@ public class JpaWidgetRepository implements WidgetRepository {
         if (tagKeyword != null) {
             tagKeyword = tagKeyword.toLowerCase();
         }
+        Tag tag = tagRepository.getByKeyword(tagKeyword);
         Query query = manager.createNamedQuery(JpaWidget.WIDGET_COUNT_BY_TAG);
-        query.setParameter(JpaWidget.PARAM_TAG, tagKeyword);
+        query.setParameter(JpaWidget.PARAM_TAG_ID, tag == null ? null : Long.parseLong(tag.getId()));
         Number countResult = (Number) query.getSingleResult();
         return countResult.intValue();
     }
@@ -359,5 +369,39 @@ public class JpaWidgetRepository implements WidgetRepository {
             return searchTerm;
         }
         return "%" + searchTerm.toLowerCase() + "%";
+    }
+
+    // ***************************************************************************************************************
+    // Widget Tag Methods
+    // ***************************************************************************************************************
+
+
+    @Override
+    public WidgetTag getTagByWidgetIdAndKeyword(String widgetId, String keyword) {
+        if (keyword != null) {
+            keyword = keyword.trim();
+        }
+        Tag tag = tagRepository.getByKeyword(keyword);
+        TypedQuery<JpaWidgetTag> query = manager.createNamedQuery(JpaWidgetTag.FIND_BY_WIDGETID_AND_TAGID, JpaWidgetTag.class);
+        query.setParameter(JpaWidgetTag.TAG_ID_PARAM, tag == null ? null : Long.parseLong(tag.getId()));
+        query.setParameter(JpaWidgetTag.WIDGET_ID_PARAM, widgetId == null ? null : Long.parseLong(widgetId));
+        return getSingleResult(query.getResultList());
+    }
+
+    @Override
+    public WidgetTag getTagById(String widgetTagId) {
+        return manager.find(JpaWidgetTag.class, widgetTagId);
+    }
+
+    @Override
+    public WidgetTag saveWidgetTag(String widgetId, WidgetTag tag) {
+        JpaWidgetTag jpaWidgetTag = tagConverter.convert(tag, widgetId);
+
+        return saveOrUpdate(jpaWidgetTag.getId(), manager, jpaWidgetTag);
+    }
+
+    @Override
+    public void deleteWidgetTag(WidgetTag tag) {
+        manager.remove(tag instanceof JpaWidgetTag ? tag: manager.find(Tag.class, tag.getTagId()));
     }
 }

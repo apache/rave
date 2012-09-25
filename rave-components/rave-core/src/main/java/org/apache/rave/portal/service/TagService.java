@@ -21,6 +21,7 @@ package org.apache.rave.portal.service;
 
 import org.apache.rave.portal.model.Tag;
 
+import javax.swing.text.html.parser.TagElement;
 import java.util.List;
 
 public interface TagService {
@@ -48,6 +49,8 @@ public interface TagService {
      * @return a {@link org.apache.rave.portal.model.util.SearchResult} with all {@link org.apache.rave.portal.model.Tag}'s
      *         Not link to a widget
      */
-    List<Tag> getAvailableTagsByWidgetId(String widgetId);
+    //List<Tag> getAvailableTagsByWidgetId(String widgetId);
+
+    Tag save(Tag tag);
 
 }

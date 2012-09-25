@@ -20,7 +20,8 @@
 package org.apache.rave.portal.repository.impl;
 
 import org.apache.rave.portal.model.*;
-import org.apache.rave.portal.repository.WidgetTagRepository;
+import org.apache.rave.portal.repository.TagRepository;
+import org.apache.rave.portal.repository.WidgetRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,47 +49,50 @@ public class JpaWidgetTagRepositoryTest {
     private EntityManager manager;
 
     @Autowired
-    private WidgetTagRepository repository;
+    private WidgetRepository repository;
+
+    @Autowired
+    private TagRepository tagRepository;
 
     @Test
     public void getByWidgetIdAndTag_valid(){
         String widgetId = "3";
         String keyword = "news";
-        JpaWidgetTag jpaWidgetTag = (JpaWidgetTag)repository.getByWidgetIdAndTag(widgetId, keyword);
+        JpaWidgetTag jpaWidgetTag = (JpaWidgetTag)repository.getTagByWidgetIdAndKeyword(widgetId, keyword);
         assertNotNull(jpaWidgetTag);
         assertEquals(widgetId, jpaWidgetTag.getWidgetId());
-        assertEquals(keyword, jpaWidgetTag.getTag().getKeyword());
+        assertEquals(keyword, tagRepository.get(jpaWidgetTag.getTagId()).getKeyword());
     }
 
     @Test
     public void getByWidgetIdAndTag_keyword_trim_valid(){
         String widgetId = "3";
         String keyword = "  news    ";
-        JpaWidgetTag jpaWidgetTag = (JpaWidgetTag)repository.getByWidgetIdAndTag(widgetId, keyword);
+        JpaWidgetTag jpaWidgetTag = (JpaWidgetTag)repository.getTagByWidgetIdAndKeyword(widgetId, keyword);
         assertNotNull(jpaWidgetTag);
         assertEquals(widgetId, jpaWidgetTag.getWidgetId());
-        assertEquals(keyword.trim(), jpaWidgetTag.getTag().getKeyword());
+        assertEquals(keyword.trim(), tagRepository.get(jpaWidgetTag.getTagId()).getKeyword());
     }
 
     @Test
     public void getByWidgetIdAndTag_invalid(){
         String widgetId = "3";
         String keyword = "saturday";
-        JpaWidgetTag jpaWidgetTag = (JpaWidgetTag)repository.getByWidgetIdAndTag(widgetId, keyword);
+        JpaWidgetTag jpaWidgetTag = (JpaWidgetTag)repository.getTagByWidgetIdAndKeyword(widgetId, keyword);
         assertNull(jpaWidgetTag);
     }
 
     @Test
     public void getByWidgetIdAndTag_null(){
         String widgetId = "3";
-        JpaWidgetTag jpaWidgetTag = (JpaWidgetTag)repository.getByWidgetIdAndTag(widgetId, null);
+        JpaWidgetTag jpaWidgetTag = (JpaWidgetTag)repository.getTagByWidgetIdAndKeyword(widgetId, null);
         assertNull(jpaWidgetTag);
     }
 
     @Test
     public void get_valid(){
         String id = "1";
-        JpaWidgetTag widgetTag = (JpaWidgetTag)repository.get(id);
+        JpaWidgetTag widgetTag = (JpaWidgetTag)repository.getTagById(id);
         assertNotNull(widgetTag);
         assertEquals(id, widgetTag.getEntityId().toString());
     }
@@ -96,21 +100,21 @@ public class JpaWidgetTagRepositoryTest {
     @Test
     public void get_invalid(){
         String id = "1000291";
-        JpaWidgetTag jpaWidgetTag = (JpaWidgetTag)repository.get(id);
+        JpaWidgetTag jpaWidgetTag = (JpaWidgetTag)repository.getTagById(id);
         assertNull(jpaWidgetTag);
     }
 
     @Test
     @Rollback(true)
     public void save() {
-        WidgetTag widgetTag = new JpaWidgetTag();
+        JpaWidgetTag widgetTag = new JpaWidgetTag();
         JpaTag tag = new JpaTag(2L, "boing");
-        widgetTag.setTag(tag);
+        widgetTag.setTagEntityId(tag.getEntityId());
         widgetTag.setCreatedDate(new Date());
-        widgetTag.setUserId("1");
-        JpaWidgetTag jpaWidgetTag = (JpaWidgetTag)repository.save(widgetTag);
+        widgetTag.setUserEntityId(1L);
+        JpaWidgetTag jpaWidgetTag = (JpaWidgetTag)repository.saveWidgetTag("1", widgetTag);
         assertNotNull(jpaWidgetTag);
-        assertEquals(widgetTag.getTag().getKeyword(), jpaWidgetTag.getTag().getKeyword());
+        assertEquals(widgetTag.getTagId(), jpaWidgetTag.getTagId());
         assertEquals(widgetTag.getWidgetId(), jpaWidgetTag.getWidgetId());
         assertEquals(widgetTag.getUserId(), jpaWidgetTag.getUserId());
         assertEquals(widgetTag.getCreatedDate(), jpaWidgetTag.getCreatedDate());
@@ -121,7 +125,7 @@ public class JpaWidgetTagRepositoryTest {
     @Rollback(true)
     public void save_null() {
         WidgetTag widgetTag = null;
-        JpaWidgetTag jpaWidgetTag = (JpaWidgetTag)repository.save(widgetTag);
+        JpaWidgetTag jpaWidgetTag = (JpaWidgetTag)repository.saveWidgetTag("1", widgetTag);
         assertNull(jpaWidgetTag);
     }
 
@@ -129,34 +133,29 @@ public class JpaWidgetTagRepositoryTest {
     @Rollback(true)
     public void delete_valid(){
         String id = "1";
-        WidgetTag widgetTag = repository.get(id);
+        WidgetTag widgetTag = repository.getTagById(id);
         assertNotNull(widgetTag);
-        repository.delete(widgetTag);
-        assertNull(repository.get(id));
+        repository.deleteWidgetTag(widgetTag);
+        assertNull(repository.getTagById(id));
     }
 
     @Test
     @Rollback(true)
     public void delete_jpaWidgetTag_valid(){
         String id = "1";
-        JpaWidgetTag jpaWidgetTag = (JpaWidgetTag)repository.get(id);
+        JpaWidgetTag jpaWidgetTag = (JpaWidgetTag)repository.getTagById(id);
         assertNotNull(jpaWidgetTag);
-        repository.delete(jpaWidgetTag);
-        assertNull(repository.get(id));
+        repository.deleteWidgetTag(jpaWidgetTag);
+        assertNull(repository.getTagById(id));
     }
 
     @Test(expected = NullPointerException.class)
     @Rollback(true)
     public void delete_invalid(){
         String id = "17827873261";
-        WidgetTag widgetTag = repository.get(id);
+        WidgetTag widgetTag = repository.getTagById(id);
         assertNull(widgetTag);
-        repository.delete(widgetTag);
+        repository.deleteWidgetTag(widgetTag);
         assertNull(repository.get(id));
-    }
-
-    @Test
-    public void getType() {
-        assertEquals(repository.getType(), JpaWidgetTag.class);
     }
 }
