@@ -18,10 +18,14 @@
  */
 
 package org.apache.rave.provider.w3c.service.impl;
+import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.Widget;
 import org.apache.rave.portal.service.WidgetProviderService;
@@ -91,18 +95,24 @@ public class WookieWidgetService implements WidgetProviderService {
     }
     
     @SuppressWarnings("deprecation")
-    public Widget publishWidgetUrlToWookie(String widgetUrl){
+    public Widget publishWidgetUrlToWookie(String widgetStrUrl){
         Widget widget = null;
+        File tempWgtFile = null;
         try {
             if(adminUsername.equals(null) || adminUsername.equals("") || adminPassword.equals(null) || adminPassword.equals("")){
                 throw new WookieConnectorException("Either the wookie username or password is not defined in portal.properties", null);
             }
             connectorService = getWookieConnectorService(wookieServerUrl, wookieApiKey, "");
-            // TODO - replace dummy line below with the commented out version, when bundled with wookie 0.13.0
+            // TODO - replace code with line below when bundled with wookie 0.13.0
+            // wookie-0.13.0 can accept postWidget with a url parameter as well as file parameter
             //org.apache.wookie.connector.framework.Widget wookieWidget = connectorService.postWidget(widgetUrl, adminUsername, adminPassword);
-            org.apache.wookie.connector.framework.Widget wookieWidget = 
-                new org.apache.wookie.connector.framework.Widget("http://wookietempurl.com", "name", "description", null, 
-                        "200", "400", "0.1", "author", "license");
+            
+            URL widgetUrl = new URL(widgetStrUrl);
+            String tempUploadFolder = System.getProperty("java.io.tmpdir");
+            String filename = normalizeFileName(widgetUrl);
+            tempWgtFile = new File(tempUploadFolder, filename);
+            FileUtils.copyURLToFile(widgetUrl, tempWgtFile, 10000, 10000);
+            org.apache.wookie.connector.framework.Widget wookieWidget = connectorService.postWidget(tempWgtFile,  adminUsername, adminPassword);
             widget = new W3CWidget();
             widget.setUrl(wookieWidget.getIdentifier());
             widget.setDescription(wookieWidget.getDescription());
@@ -111,8 +121,37 @@ public class WookieWidgetService implements WidgetProviderService {
             widget.setThumbnailUrl(wookieWidget.getIcon().toString());
         } catch (WookieConnectorException e) {
             logger.error(e.getMessage());
+        } catch (MalformedURLException e) {
+            logger.error("Malformed url error. " + e.getMessage());
+        } catch (IOException e) {
+            logger.error("I/O error. Problem downloading widget from given URL" + e.getMessage());
+        }
+        finally{
+            if(tempWgtFile.exists()){
+                tempWgtFile.delete();
+            }
         }
         return widget;
+    }
+
+    private String normalizeFileName(URL urlPath){
+        String filename;
+        String[] parts = urlPath.getFile().split("/");
+        if(parts[parts.length-1].length() < 1){
+           filename = "unknown.wgt";
+        }else{
+            filename = parts[parts.length-1];
+        }
+        if(filename.indexOf('.') == -1){
+           filename = filename + ".wgt"; 
+        }
+        else{
+            if(!filename.endsWith(".wgt")){
+                String[] split = filename.split("\\.");
+                filename = split[0] + ".wgt";
+            }
+        }
+        return filename;
     }
 
     /**

@@ -63,8 +63,8 @@ public class DefaultWidgetMarketplaceService implements WidgetMarketplaceService
     private Map<String, WidgetMetadataResolver> widgetMetadataResolverMap;
     private static final String DEFAULT_URL = null;
     private static final Logger logger = LoggerFactory.getLogger(DefaultWidgetMarketplaceService.class);
-    private static final String SEARCH = "search?q=${SEARCHTERM}&start=${OFFSET}&resultsize=${LIMIT}";
-    private static final String CATEGORY = "tag/${CATEGORY}/widgets?start=${OFFSET}&resultsize=${LIMIT}";	
+    private static final String SEARCH = "search?q=${SEARCHTERM}&start=${OFFSET}&rows=${LIMIT}";
+    private static final String CATEGORY = "tag/${CATEGORY}/widgets?start=${OFFSET}&rows=${LIMIT}";	
     private static final String DETAIL = "widget/${ID}";
     private static final String CATEGORY_LIST = "tag/all";
     
@@ -87,8 +87,12 @@ public class DefaultWidgetMarketplaceService implements WidgetMarketplaceService
     public SearchResult<Widget> getWidgetsByFreeTextSearch(String searchTerm,
             int offset, int pageSize) throws Exception{
         if (getStoreUrl() == null) throw new Exception("External marketplace URL not configured");
+        // commented out because encoding the searchTerm here ends up with
+        // it being encoded twice 
+        // String encodedSearchTerm = URLEncoder.encode(searchTerm, "UTF-8");
+        String encodedSearchTerm = searchTerm;
         String url = getStoreUrl() + SEARCH;
-        url = url.replace("${SEARCHTERM}", searchTerm);
+        url = url.replace("${SEARCHTERM}", encodedSearchTerm);
         url = url.replace("${OFFSET}", String.valueOf(offset));
         url = url.replace("${LIMIT}", String.valueOf(pageSize));
         SearchResult<Widget> result = executeQuery(url);
