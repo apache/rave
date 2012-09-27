@@ -224,7 +224,7 @@ rave.store = rave.store || (function() {
                     if(widget.result == null){
                         alert(rave.getClientMessage("failed.add.from.marketplace"));
                     }else{
-                        alert((widget.result.title) + rave.getClientMessage("success.add.from.marketplace"));
+                        alert("(" + widget.result.title + ") " + rave.getClientMessage("success.add.from.marketplace"));
                     }
                 }
             });
