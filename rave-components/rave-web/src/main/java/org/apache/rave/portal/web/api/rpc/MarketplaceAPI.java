@@ -20,6 +20,7 @@ package org.apache.rave.portal.web.api.rpc;
 
 import org.apache.rave.portal.model.Widget;
 import org.apache.rave.portal.service.WidgetMarketplaceService;
+import org.apache.rave.portal.service.WidgetService;
 import org.apache.rave.portal.web.api.rpc.model.RpcOperation;
 import org.apache.rave.portal.web.api.rpc.model.RpcResult;
 import org.apache.rave.portal.web.validator.NewWidgetValidator;
@@ -43,11 +44,13 @@ public class MarketplaceAPI {
     private static final Logger logger = LoggerFactory.getLogger(MarketplaceAPI.class);
     private final WidgetMarketplaceService marketplaceService;
     private final NewWidgetValidator widgetValidator;
+    private final WidgetService widgetService;
 
     @Autowired
-    public MarketplaceAPI(WidgetMarketplaceService marketplaceService, NewWidgetValidator validator) {
+    public MarketplaceAPI(WidgetMarketplaceService marketplaceService, NewWidgetValidator validator, WidgetService widgetService) {
         this.marketplaceService = marketplaceService;
         this.widgetValidator = validator;
+        this.widgetService = widgetService;
     }
 
     @ResponseBody
@@ -57,16 +60,19 @@ public class MarketplaceAPI {
         return new RpcOperation<Widget>() {
              @Override
              public Widget execute() {
+                 Widget widget = null;
                  // TODO - improve info sent back to marketplace, rather then just writing to the console
                  try {
-                    Widget widget =  marketplaceService.getWidgetMetadata(url, providerType);
+                    widget =  marketplaceService.getWidgetMetadata(url, providerType);
                     if(widget == null){
                         return null;
                     }
                     BeanPropertyBindingResult results = new BeanPropertyBindingResult(widget, "widget");
                     widgetValidator.validate(widget, results);
                     if (results.hasErrors()) {
-                        logger.error(results.toString());
+                        if(results.hasFieldErrors("url") && results.getFieldError("url").toString().contains("widget.url.exists")){
+                            return widgetService.getWidgetByUrl(widget.getUrl());
+                        }
                         return null;
                     }
                     return marketplaceService.addWidget(widget);
