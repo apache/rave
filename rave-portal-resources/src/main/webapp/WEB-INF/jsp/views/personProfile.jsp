@@ -61,7 +61,7 @@
 
                     <fieldset class="row-fluid" id="userProfilePrimaryData">
                         <div class="span2 profile-user-thumb">
-                            <img src="http://placehold.it/125x165&text=photo" alt=""/>
+                            <img src="<spring:url value="/static/images/profile_picture_placeholder.png"/>" alt=""/>
                         </div>
 
                         <div class="span10">
