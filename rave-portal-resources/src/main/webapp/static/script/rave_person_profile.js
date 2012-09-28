@@ -68,7 +68,7 @@ rave.personprofile = rave.personprofile || (function() {
      }
 
      function dealWithUserResults(userResults){
-    	 var currentUser = $("#addRemoveFriend").get(0).value;
+         var currentUser = $("#addRemoveFriend").get(0).value;
          var searchTerm = $('#searchTerm').get(0).value;
          if(searchTerm == undefined || searchTerm == ""){
              $('#clearSearchButton').hide();
@@ -182,7 +182,7 @@ rave.personprofile = rave.personprofile || (function() {
                      }
                  }
 
-     	});
+         });
      }
 
      function paginate(userResults){
@@ -239,51 +239,51 @@ rave.personprofile = rave.personprofile || (function() {
 
      // Remove a friend of the current user
      function removeFriend(userId, username){
-    	 var message = rave.layout.searchHandler.updateParamsInString(rave.getClientMessage("remove.friend.confirm"),
+         var message = rave.layout.searchHandler.updateParamsInString(rave.getClientMessage("remove.friend.confirm"),
                  new Array(username));
          if(confirm(message)){
-	         $('#friendStatusButtonHolder'+userId).hide();
-	         rave.api.rpc.removeFriend({friendUsername : username,
-	             successCallback: function(result) {
-	                 rave.personprofile.removeFriendUI(username);
-	                 $('#friendStatusButtonHolder'+userId).empty();
-	                 $('#friendStatusButtonHolder'+userId)
-	                     .append(
-	                             $("<a/>")
-	                             .attr("href", "#")
-	                             .attr("id", userId)
-	                             .attr("onclick", "rave.personprofile.addFriend(" +
-	                                 userId+", '" + username+"');")
-	                             .text(rave.getClientMessage("common.add"))
-	                     );
-	                 $('#friendStatusButtonHolder'+userId).show();
-	             }
-	         });
+             $('#friendStatusButtonHolder'+userId).hide();
+             rave.api.rpc.removeFriend({friendUsername : username,
+                 successCallback: function(result) {
+                     rave.personprofile.removeFriendUI(username);
+                     $('#friendStatusButtonHolder'+userId).empty();
+                     $('#friendStatusButtonHolder'+userId)
+                         .append(
+                                 $("<a/>")
+                                 .attr("href", "#")
+                                 .attr("id", userId)
+                                 .attr("onclick", "rave.personprofile.addFriend(" +
+                                     userId+", '" + username+"');")
+                                 .text(rave.getClientMessage("common.add"))
+                         );
+                     $('#friendStatusButtonHolder'+userId).show();
+                 }
+             });
          }
      }
 
      // Cancel the friend request already sent to a user
      function removeFriendRequestSent(userId, username){
-    	 var message = rave.layout.searchHandler.updateParamsInString(rave.getClientMessage("remove.friend.request.confirm"),
+         var message = rave.layout.searchHandler.updateParamsInString(rave.getClientMessage("remove.friend.request.confirm"),
                  new Array(username));
          if(confirm(message)){
-	         $('#friendStatusButtonHolder'+userId).hide();
-	         rave.api.rpc.removeFriend({friendUsername : username,
-	             successCallback: function(result) {
-	                 rave.personprofile.removeFriendRequestSentUI(username);
-	                 $('#friendStatusButtonHolder'+userId).empty();
-	                 $('#friendStatusButtonHolder'+userId)
-	                     .append(
-	                             $("<a/>")
-	                             .attr("href", "#")
-	                             .attr("id", userId)
-	                             .attr("onclick", "rave.personprofile.addFriend(" +
-	                                 userId+", '" + username+"');")
-	                             .text(rave.getClientMessage("common.add"))
-	                     );
-	                 $('#friendStatusButtonHolder'+userId).show();
-	             }
-	         });
+             $('#friendStatusButtonHolder'+userId).hide();
+             rave.api.rpc.removeFriend({friendUsername : username,
+                 successCallback: function(result) {
+                     rave.personprofile.removeFriendRequestSentUI(username);
+                     $('#friendStatusButtonHolder'+userId).empty();
+                     $('#friendStatusButtonHolder'+userId)
+                         .append(
+                                 $("<a/>")
+                                 .attr("href", "#")
+                                 .attr("id", userId)
+                                 .attr("onclick", "rave.personprofile.addFriend(" +
+                                     userId+", '" + username+"');")
+                                 .text(rave.getClientMessage("common.add"))
+                         );
+                     $('#friendStatusButtonHolder'+userId).show();
+                 }
+             });
          }
      }
 
@@ -330,7 +330,7 @@ rave.personprofile = rave.personprofile || (function() {
      }
      // Add an item to the List of friend requests sent(maintained for the UI)
      function addFriendRequestUI(username){
-    	 rave.personprofile.requestsSent.push(username);
+         rave.personprofile.requestsSent.push(username);
      }
 
      // Remove a friend from the list of friends(maintained for the UI)
@@ -353,25 +353,25 @@ rave.personprofile = rave.personprofile || (function() {
          if(rave.personprofile.friends.indexOf(username)>=0){
              return true;
          } else {
-        	 return false;
+             return false;
          }
      }
 
      // Check if a friend request is already sent to a particular user
      function isFriendRequestSent(username){
-    	 if(rave.personprofile.requestsSent.indexOf(username)>=0){
+         if(rave.personprofile.requestsSent.indexOf(username)>=0){
              return true;
          } else {
-        	 return false;
+             return false;
          }
      }
 
      // Check if a friend request is received from a particular user
      function isFriendRequestReceived(username){
-    	 if(rave.personprofile.friendRequestsReceived.indexOf(username)>=0){
+         if(rave.personprofile.friendRequestsReceived.indexOf(username)>=0){
              return true;
          } else {
-        	 return false;
+             return false;
          }
      }
 
@@ -386,15 +386,15 @@ rave.personprofile = rave.personprofile || (function() {
         //user clicks add/remove friend button in the profile page
         var $friendButton = $("#addRemoveFriend");
         if ($friendButton) {
-        	$friendButton.click(function() {
-        		rave.personprofile.getFriends({successCallback : function() {
+            $friendButton.click(function() {
+                rave.personprofile.getFriends({successCallback : function() {
                     rave.api.rpc.getUsers({offset: 0,
                         successCallback: function(result) {
                             dealWithUserResults(result);
                             $("#userDialog").modal('show');
                         }
                     });
-        		}});
+                }});
             });
         }
 
@@ -429,77 +429,77 @@ rave.personprofile = rave.personprofile || (function() {
 
         // When the user accepts a friend request
         var $acceptFriend = $(".acceptFriendRequest");
-    	if($acceptFriend) {
-    	  	$acceptFriend.click(function(e) {
-    	  		rave.api.rpc.acceptFriendRequest({friendUsername : this.id});
-            	var listRequestItem = $(this).parents('.requestItem');
-            	var friendRequestMenu = $(listRequestItem).parent();
-            	$(listRequestItem).remove();
-            	$('.friendRequestDropdown').append('<li class="message">Accepted</li>');
-            	$('.message').fadeOut(2000, function() {
-                    $('.message').remove();
-                	var childItems = $(friendRequestMenu).children('li');
-                	$('.friendRequestDropdownLink').html('Friend Requests('+childItems.size()+')');
-                	if(childItems.size()==0)
-                		$('.friendRequestDropdown').append('<li>No Friend Requests</li>');
-                });
-            	e.stopPropagation();
-    	    });
-    	}
-
-    	// When the user declines a friend request
-        var $declineFriend = $(".declineFriendRequest");
-    	if($declineFriend) {
-    		$declineFriend.click(function(e) {
-    	  		rave.api.rpc.removeFriend({friendUsername : this.id});
+        if($acceptFriend) {
+              $acceptFriend.click(function(e) {
+                  rave.api.rpc.acceptFriendRequest({friendUsername : this.id});
                 var listRequestItem = $(this).parents('.requestItem');
-            	var friendRequestMenu = $(listRequestItem).parent();
-            	$(listRequestItem).remove();
-            	$('.friendRequestDropdown').append('<li class="message">Declined</li>');
-            	$('.message').fadeOut(2000, function() {
+                var friendRequestMenu = $(listRequestItem).parent();
+                $(listRequestItem).remove();
+                $('.friendRequestDropdown').append('<li class="message">'+rave.getClientMessage("common.accepted")+'</li>');
+                $('.message').fadeOut(2000, function() {
                     $('.message').remove();
                     var childItems = $(friendRequestMenu).children('li');
-                    $('.friendRequestDropdownLink').html('Friend Requests('+childItems.size()+')');
-                	if(childItems.size()==0)
-                		$('.friendRequestDropdown').append('<li>No Friend Requests</li>');
+                    $('.friendRequestDropdownLink').html(''+rave.getClientMessage("person.profile.friend.requests")+' ('+childItems.size()+')');
+                    if(childItems.size()==0)
+                        $('.friendRequestDropdown').append('<li>'+rave.getClientMessage("person.profile.friend.requests.none")+'</li>');
                 });
-            	e.stopPropagation();
-    	    });
-    	}
+                e.stopPropagation();
+            });
+        }
+
+        // When the user declines a friend request
+        var $declineFriend = $(".declineFriendRequest");
+        if($declineFriend) {
+            $declineFriend.click(function(e) {
+                  rave.api.rpc.removeFriend({friendUsername : this.id});
+                var listRequestItem = $(this).parents('.requestItem');
+                var friendRequestMenu = $(listRequestItem).parent();
+                $(listRequestItem).remove();
+                $('.friendRequestDropdown').append('<li class="message">'+rave.getClientMessage("common.declined")+'</li>');
+                $('.message').fadeOut(2000, function() {
+                    $('.message').remove();
+                    var childItems = $(friendRequestMenu).children('li');
+                    $('.friendRequestDropdownLink').html(''+rave.getClientMessage("person.profile.friend.requests")+' ('+childItems.size()+')');
+                    if(childItems.size()==0)
+                        $('.friendRequestDropdown').append('<li>'+rave.getClientMessage("person.profile.friend.requests.none")+'</li>');
+                });
+                e.stopPropagation();
+            });
+        }
     }
 
     // Gets the list of friends from the DB
     function getFriends(args) {
-   		rave.personprofile.friends = new Array();
-    	rave.personprofile.requestsSent = new Array();
-    	rave.personprofile.friendRequestsReceived = new Array();
-    	rave.api.rpc.getFriends({
+           rave.personprofile.friends = new Array();
+        rave.personprofile.requestsSent = new Array();
+        rave.personprofile.friendRequestsReceived = new Array();
+        rave.api.rpc.getFriends({
             successCallback: function(result) {
-            	jQuery.each(result.result.accepted, function() {
-            		if(!rave.personprofile.isUserAlreadyFriend(this.username))
-            			rave.personprofile.friends.push(this.username);
-            	});
-            	jQuery.each(result.result.sent, function() {
-            		if(!rave.personprofile.isFriendRequestSent(this.username))
-            			rave.personprofile.requestsSent.push(this.username);
-            	});
-            	jQuery.each(result.result.received, function() {
-            		if(!rave.personprofile.isFriendRequestReceived(this.username))
-            			rave.personprofile.friendRequestsReceived.push(this.username);
-            	});
-            	if(result !=null && typeof args.successCallback == 'function') {
+                jQuery.each(result.result.accepted, function() {
+                    if(!rave.personprofile.isUserAlreadyFriend(this.username))
+                        rave.personprofile.friends.push(this.username);
+                });
+                jQuery.each(result.result.sent, function() {
+                    if(!rave.personprofile.isFriendRequestSent(this.username))
+                        rave.personprofile.requestsSent.push(this.username);
+                });
+                jQuery.each(result.result.received, function() {
+                    if(!rave.personprofile.isFriendRequestReceived(this.username))
+                        rave.personprofile.friendRequestsReceived.push(this.username);
+                });
+                if(result !=null && typeof args.successCallback == 'function') {
                     args.successCallback();
                 }
             }
         });
     }
 
-	function init() {
+    function init() {
         initSubPages();
         initButtons();
     }
 
-	return {
+    return {
         init : init,
         dealWithUserResults : dealWithUserResults,
         addFriend : addFriend,
