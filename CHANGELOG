@@ -1,6 +1,73 @@
 Apache Rave Change Log
 https://issues.apache.org/jira/secure/ReleaseNote.jspa?projectId=12311290 (select the version of release and output as text to create this file)
 
+
+Release Notes - Rave - Version 0.16
+===========================================================================================================
+
+** Bug
+    * [RAVE-781] - WidgetTags are failing
+    * [RAVE-795] - Widgets ignore iframe size on iPad
+    * [RAVE-796] - Widget menu not closed on iPad
+    * [RAVE-801] - Profile picture placeholder is retrieved from external source
+
+** Improvement
+    * [RAVE-792] - Make login name case-insensitive
+    * [RAVE-797] - Make widgets draggable on mobile devices
+
+** Task
+    * [RAVE-800] - Add missing translations
+    * [RAVE-803] - Release version 0.16
+
+
+Release Notes - Rave - Version 0.15
+===========================================================================================================
+
+** Sub-task
+    * [RAVE-783] - Verify LICENSE & NOTICE
+    * [RAVE-784] - CLONE - Update JIRA issues
+    * [RAVE-785] - Execute functional tests
+    * [RAVE-786] - Create release candidate
+    * [RAVE-787] - CLONE - Publish release
+
+** Bug
+    * [RAVE-528] - Demo portal: unchecking featured widget still makes it sort in top of the store
+    * [RAVE-674] - Modal dialog boxes should have a focus in input field once invoked
+    * [RAVE-705] - Shindig 2.5.0-beta2 no longer supports OpenSocial < 1.0: gifts gadget no longer works, possibly other features too
+    * [RAVE-746] - Cannot change preferences through admin interface
+    * [RAVE-747] - initial_data.sql is not working in MySQL
+    * [RAVE-757] - Update the documentation instructions on the article "Extend Apache Rave to build your own portal"
+    * [RAVE-762] - Guice binding module does not support primary beans
+    * [RAVE-763] - Cannot add multiple base package names to Spring Guice binding
+    * [RAVE-771] - Profile page for OpenID user does not work because of URL encoding
+    * [RAVE-788] - Profile link by ID posts data to incorrect URL
+
+** Improvement
+    * [RAVE-468] - Update instructions to use a different database
+    * [RAVE-691] - Table name for PortalPreference#values is generated, should get proper name
+    * [RAVE-744] - Update and align to latest Springframework project releases
+    * [RAVE-751] - Add client side concept of page owner and viewer
+    * [RAVE-752] - Update to Shindig 2.5-beta3
+    * [RAVE-756] - Support window hashchange event
+    * [RAVE-768] - OpenSocial Container Config has a hard-coded debug flag set to on
+    * [RAVE-770] - Update slideout popup to respect preferredWidth & preferredHeight module prefs.
+    * [RAVE-776] - Don't render Widgets on hidden sub-pages / tabs upon initial page load
+    * [RAVE-778] - Hide main browser scrollbar when widget slideout renders
+    * [RAVE-780] - Allow direct linking to subpages on person profile page
+
+** New Feature
+    * [RAVE-396] - Concatenate and Compress Javascript and CSS files
+    * [RAVE-690] - Manage Friend Data in Rave
+    * [RAVE-761] - Friend Requests in Rave
+
+** Story
+    * [RAVE-742] - Option to choose initial status of user-added widgets
+    * [RAVE-743] - Add a widget to a page without requiring a page refresh
+
+** Umbrella
+    * [RAVE-782] - Release 0.15
+
+
 Release Notes - Rave - Version 0.14
 ===========================================================================================================
 
