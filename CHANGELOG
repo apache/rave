@@ -10,6 +10,7 @@ Release Notes - Rave - Version 0.16
     * [RAVE-795] - Widgets ignore iframe size on iPad
     * [RAVE-796] - Widget menu not closed on iPad
     * [RAVE-801] - Profile picture placeholder is retrieved from external source
+    * [RAVE-804] - Empty marketplace URL enables the marketplace link in Add new widget
 
 ** Improvement
     * [RAVE-792] - Make login name case-insensitive
