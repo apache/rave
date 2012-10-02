@@ -63,6 +63,17 @@
 	                        </spring:bind>
 	                        <form:errors path="pageSize.value" cssClass="error"/>
 	                    </div>
+                        <div class="control-group">
+                            <spring:bind path="defaultWidgetHeight.value">
+                                <label for="defaultWidgetHeight" class="control-label">
+                                    <fmt:message key="admin.preferencedetail.defaultWidgetHeight"/> *
+                                </label>
+                                <div class="controls">
+                                    <input id="defaultWidgetHeight" name="defaultWidgetHeight.value" type="number" step="1" value="<c:out value="${status.value}"/>"/>
+                                </div>
+                            </spring:bind>
+                            <form:errors path="defaultWidgetHeight.value" cssClass="error"/>
+                        </div>
 	                    <div class="control-group">
 	                        <spring:bind path="javaScriptDebugMode.value">
 	                            <form:label path="javaScriptDebugMode.value" class="control-label">

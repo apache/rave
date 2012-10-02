@@ -20,7 +20,6 @@ var rave = rave || {};
 rave.wookie = rave.wookie || (function() {
     var WIDGET_TYPE = "W3C";
     var OFFSET = 10;
-    var MIN_HEIGHT = 250;
     // keep this value so we can show the widget in the maximize view even when its collapsed
     var userCollapsed;
     var container;
@@ -34,7 +33,7 @@ rave.wookie = rave.wookie || (function() {
     	userCollapsed = widget.collapsed;
         var widgetBodyElement = document.getElementById(["widget-", widget.regionWidgetId, "-body"].join(""));
         
-        var height = MIN_HEIGHT;
+        var height = rave.getDefaultWidgetHeight();
         if (widget.height) height = widget.height;
         
         //
@@ -66,7 +65,7 @@ rave.wookie = rave.wookie || (function() {
                 scroll: "no",
                 frameborder: 0,
                 height: height,
-                "min-height": ""+MIN_HEIGHT+"px"
+                "min-height": ""+rave.getDefaultWidgetHeight()+"px"
             },
             uri: widget.widgetUrl,
             onGadgetLoad: "onWidget"+widget.regionWidgetId+"Load"

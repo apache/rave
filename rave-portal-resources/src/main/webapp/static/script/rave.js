@@ -36,6 +36,8 @@ var rave = rave || (function () {
     };
     // JS debug mode is off by default
     var javaScriptDebugMode = 0;
+    //Assigning a default value of 250 if unable to get value from the DB
+    var defaultWidgetHeight = 250;
     var onWidgetsInitializedHandlers = [];
     var onProvidersInitializedHandlers = [];
     var onUIInitializedHandlers = [];
@@ -1108,6 +1110,14 @@ var rave = rave || (function () {
         return javaScriptDebugMode;
     }
 
+    function setDefaultWidgetHeight(widgetHeight) {
+        defaultWidgetHeight = widgetHeight;
+    }
+
+    function getDefaultWidgetHeight(){
+        return defaultWidgetHeight;
+    }
+
     function setPageViewer(viewer) {
         pageViewer = viewer;
     }
@@ -1326,6 +1336,12 @@ var rave = rave || (function () {
          * 1 = on
          */
         setJavaScriptDebugMode: setJavaScriptDebugMode,
+
+        /*Gets the value of the Default Widget Height*/
+        getDefaultWidgetHeight: getDefaultWidgetHeight,
+
+        /*Sets the value of the Default Widget Height*/
+        setDefaultWidgetHeight: setDefaultWidgetHeight,
 
         /**
          * Sets the authenticated page viewer for the Rave web application
