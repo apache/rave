@@ -56,6 +56,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.codec.Base64;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.openid.OpenIDAuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -218,6 +219,11 @@ public class DefaultUserService implements UserService {
     @Override
     public User getUserByEmail(String userEmail) {
         return userRepository.getByUserEmail(userEmail);
+    }
+    
+    @Override
+    public User getUserByOpenId(String openId) {
+        return userRepository.getByOpenId(openId);
     }
 
     @Override
@@ -396,4 +402,14 @@ public class DefaultUserService implements UserService {
     	return personRepository.acceptFriendRequest(friendUsername,username);
     }
 
+	@Override
+	public UserDetails loadUserDetails(OpenIDAuthenticationToken token) throws UsernameNotFoundException {
+		final String openId = token.getIdentityUrl();
+		User user = this.getUserByOpenId(openId);
+		if (user == null) {
+			log.info("Open ID User with URL "+openId+" was not found!");
+			throw new UsernameNotFoundException("Open ID User with URL "+openId+" was not found!");
+		}
+		return user;
+	}
 }

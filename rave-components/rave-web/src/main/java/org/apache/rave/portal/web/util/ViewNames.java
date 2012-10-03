@@ -62,6 +62,7 @@ public final class ViewNames {
     public static final String REDIRECT = "redirect:/";
 
     public static final String LOGIN_PAGE = "login";
+    public static final String CREATE_ACCOUNT_PAGE = "app/openidregister";
     public static final String REDIRECT_LOGIN = REDIRECT +LOGIN_PAGE;
 
     public static final String POSTS_TAG_PAGE = "postsTagPage";

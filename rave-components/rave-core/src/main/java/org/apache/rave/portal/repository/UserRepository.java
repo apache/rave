@@ -40,6 +40,14 @@ public interface UserRepository extends Repository<User> {
      * @return {@link org.apache.rave.portal.model.User} if one exists, otherwise {@literal null}
      */
     User getByUserEmail(String userEmail);
+    
+    /**
+     * Gets a {@link org.apache.rave.portal.model.User} by openId
+     *
+     * @param openId the (unique) openIdURL of the user
+     * @return {@link org.apache.rave.portal.model.User} if one exists, otherwise {@literal null}
+     */
+	User getByOpenId(String openId);
 
     /**
      * List of {@link org.apache.rave.portal.model.User}'s with a limited resultset

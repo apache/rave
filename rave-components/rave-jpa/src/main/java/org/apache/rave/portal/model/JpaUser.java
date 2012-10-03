@@ -39,6 +39,7 @@ import java.util.*;
 @NamedQueries({
         @NamedQuery(name = JpaUser.USER_GET_BY_USERNAME, query = "select u from JpaUser u where u.username = :"+ JpaUser.PARAM_USERNAME),
         @NamedQuery(name = JpaUser.USER_GET_BY_USER_EMAIL, query = "select u from JpaUser u where u.email = :"+ JpaUser.PARAM_EMAIL),
+        @NamedQuery(name = JpaUser.USER_GET_BY_OPENID, query = "select u from JpaUser u where u.openId = :"+ JpaUser.PARAM_OPENID),
         @NamedQuery(name = JpaUser.USER_GET_ALL, query = "select u from JpaUser u order by u.username asc"),
         @NamedQuery(name = JpaUser.USER_GET_BY_FORGOT_PASSWORD_HASH, query = "select u from JpaUser u where u.forgotPasswordHash = :" + JpaUser.PARAM_FORGOT_PASSWORD_HASH),
         @NamedQuery(name = JpaUser.USER_COUNT_ALL, query = "select count(u) from JpaUser u"),
@@ -54,6 +55,7 @@ public class JpaUser extends JpaPerson implements BasicEntity, Serializable, Use
 
     public static final String USER_GET_BY_USERNAME = "User.getByUsername";
     public static final String USER_GET_BY_USER_EMAIL = "User.getByUserEmail";
+    public static final String USER_GET_BY_OPENID = "User.getByOpenId";
     public static final String USER_GET_ALL = "User.getAll";
     public static final String USER_COUNT_ALL = "User.countAll";
     public static final String USER_FIND_BY_USERNAME_OR_EMAIL = "User.findByUsernameOrEmail";
@@ -65,6 +67,7 @@ public class JpaUser extends JpaPerson implements BasicEntity, Serializable, Use
     public static final String PARAM_USERNAME = "username";
     public static final String PARAM_FORGOT_PASSWORD_HASH = "forgotPasswordHash";
     public static final String PARAM_EMAIL = "email";
+    public static final String PARAM_OPENID = "openId";
     public static final String PARAM_SEARCHTERM = "searchTerm";
     public static final String PARAM_WIDGET_ID = "widgetId";
 
@@ -85,7 +88,7 @@ public class JpaUser extends JpaPerson implements BasicEntity, Serializable, Use
     @Column(name = "enabled")
     private boolean enabled;
 
-    @Basic
+	@Basic
     @Column(name = "openid")
     private String openId;
 

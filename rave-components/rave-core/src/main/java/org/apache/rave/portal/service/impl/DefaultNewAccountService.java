@@ -62,6 +62,7 @@ public class DefaultNewAccountService implements NewAccountService {
         final String displayName = newUser.getDisplayName();
         final String status = newUser.getStatus();
         final String aboutMe = newUser.getAboutMe();
+        final String openId = newUser.getOpenId();
 
         throwExceptionIfUserExists(userName, email);
 
@@ -84,6 +85,7 @@ public class DefaultNewAccountService implements NewAccountService {
         user.setDisplayName(displayName);
         user.setStatus(status);
         user.setAboutMe(aboutMe);
+        user.setOpenId(openId);
 
         userService.registerNewUser(user);
     }

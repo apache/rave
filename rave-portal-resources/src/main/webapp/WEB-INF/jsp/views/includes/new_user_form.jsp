@@ -58,6 +58,14 @@
                 <form:errors path="email" cssClass="error"/>
             </div>
         </div>
+        
+        <div class="control-group">
+            <label class="control-label" for="openIdField"><fmt:message key="page.general.openid"/></label>
+            <div class="controls">
+                <form:input id="openIdField" path="openId"/>
+                <form:errors path="openId" cssClass="error"/>
+            </div>
+        </div>
 
         <div class="control-group">
             <label class="control-label" for="pageLayoutField"><fmt:message key="page.general.addpage.selectlayout"/></label>

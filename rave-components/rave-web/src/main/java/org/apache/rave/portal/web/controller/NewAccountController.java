@@ -19,6 +19,9 @@
 
 package org.apache.rave.portal.web.controller;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.service.CaptchaService;
 import org.apache.rave.portal.service.NewAccountService;
@@ -40,8 +43,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.http.HttpServletRequest;
-
 @Controller
 public class NewAccountController {
     private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -52,7 +53,6 @@ public class NewAccountController {
 
     @Value("#{messages['page.newaccount.message.created']}")
     private String messageSuccess;
-
 
     @Autowired
     public NewAccountController(NewAccountService newAccountService, NewAccountValidator newAccountValidator, CaptchaService captchaService) {
@@ -68,7 +68,7 @@ public class NewAccountController {
         model.addAttribute(ModelKeys.NEW_USER, new UserImpl());
         return ViewNames.NEW_ACCOUNT;
     }
-
+    
     @RequestMapping(value = {"/newaccount", "/newaccount/*"}, method = RequestMethod.POST)
     public String create(@ModelAttribute(value = "newUser") UserForm newUser, BindingResult results, Model model, HttpServletRequest request,  RedirectAttributes redirectAttributes) {
         logger.debug("Creating a new user account");
@@ -114,6 +114,15 @@ public class NewAccountController {
             return ViewNames.NEW_ACCOUNT;
         }
 
+    }
+
+    @RequestMapping(value = "/openidregister", method = RequestMethod.GET)
+    public String setUpOpenIdForm(ModelMap model, HttpServletRequest request) {
+        logger.debug("Initializing account creation form");
+        User user = (User) request.getSession(false).getAttribute(ModelKeys.NEW_USER);
+        model.addAttribute(ModelKeys.CAPTCHA_HTML, captchaService.createHtml(request));
+        model.addAttribute(ModelKeys.NEW_USER, user);
+        return ViewNames.NEW_ACCOUNT;
     }
 
     private void initializeCaptcha(Model model, HttpServletRequest request) {
