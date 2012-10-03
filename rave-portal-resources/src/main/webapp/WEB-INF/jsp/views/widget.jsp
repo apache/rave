@@ -23,7 +23,7 @@
 
 <div id="na_content" class="container">
     <div class="row detail-widget storeItem">
-        <div class="span3">
+        <div class="span4">
             <div class="detail-widget-preview">
                 <c:if test="${not empty widget.screenshotUrl}">
                     <div class="detailWidgetScreenshot">
@@ -56,7 +56,7 @@
                 </c:choose>
             </div>
         </div>
-        <div class="span8 detail-widget-main">
+        <div class="span7 detail-widget-main">
            <div>
 			   <h2>
 					<c:set var="widgetHasTitleUrl" value="${not empty widget.titleUrl}"/>
