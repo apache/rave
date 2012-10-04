@@ -172,7 +172,7 @@ public class ProfileControllerTest {
 		verify(userService, pageService);
 	}
 
-    @Test(expected = UsernameNotFoundException.class)
+    @Test
     public void viewPersonProfile_invalidUser() {
         //creating a mock user
         final User user = null;
@@ -188,7 +188,8 @@ public class ProfileControllerTest {
 
         replay(userService, pageService);
 
-        profileController.viewProfile(username, model, null);
+        String view = profileController.viewProfile(username, model, null);
+        assertThat(view, is(ViewNames.USER_NOT_FOUND));
 
         verify(userService, pageService);
     }
