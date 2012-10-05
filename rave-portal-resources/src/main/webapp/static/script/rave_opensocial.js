@@ -79,6 +79,8 @@ rave.opensocial = rave.opensocial || (function () {
         container.rpcRegister('set_title', setTitle);
         container.rpcRegister('requestNavigateTo', requestNavigateTo);
         container.rpcRegister('set_pref', setPref);
+        container.rpcRegister('hideWidget', hideWidget);
+        container.rpcRegister('showWidget', showWidget);
     }
 
     function implementViews() {
@@ -166,6 +168,12 @@ rave.opensocial = rave.opensocial || (function () {
         };
         gadget.restore = function () {
             renderGadgetView(rave.opensocial.VIEW_NAMES.HOME, rave.getRegionWidgetById(this.regionWidgetId));
+        };
+        gadget.hide = function(){
+            $(getGadgetIframeByWidgetId(this.regionWidgetId)).closest('.widget-wrapper').hide();
+        };
+        gadget.show = function() {
+            $(getGadgetIframeByWidgetId(this.regionWidgetId)).closest('.widget-wrapper').show();
         };
         gadget.savePreferences = function (userPrefs) {
             this.userPrefs = userPrefs;
@@ -339,6 +347,25 @@ rave.opensocial = rave.opensocial || (function () {
         if(rave.isPageEditor()){
             rave.api.rest.saveWidgetPreference({regionWidgetId:widgetId, userPref:{prefName:prefName, prefValue:prefValue}});
         }
+    }
+
+
+    function hideWidget(args){
+        var widgetId = rave.getObjectIdFromDomId(args.gs.getActiveSiteHolder().getElement().id);
+        var fnArgs = {};
+        fnArgs.data = {}
+        fnArgs.data.id = widgetId;
+
+        rave.hideWidget(fnArgs);
+    }
+
+    function showWidget(args){
+        var widgetId = rave.getObjectIdFromDomId(args.gs.getActiveSiteHolder().getElement().id);
+        var fnArgs = {};
+        fnArgs.data = {}
+        fnArgs.data.id = widgetId;
+
+        rave.showWidget(fnArgs);
     }
 
     /**

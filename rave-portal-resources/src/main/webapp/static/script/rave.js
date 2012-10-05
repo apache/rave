@@ -437,6 +437,20 @@ var rave = rave || (function () {
             }
         }
 
+        function hideAction(args) {
+            var regionWidgetId = args.data.id;
+            var widget = rave.getRegionWidgetById(regionWidgetId);
+
+            widget.hide();
+        }
+
+        function showAction(args) {
+            var regionWidgetId = args.data.id;
+            var widget = rave.getRegionWidgetById(regionWidgetId);
+
+            widget.show();
+        }
+
         function createPopup(popupType, prefs) {
             var height = (prefs && prefs.preferredHeight);
             var width = (prefs && prefs.preferredWidth);
@@ -880,6 +894,8 @@ var rave = rave || (function () {
             toggleCollapseWidgetIcon:toggleCollapseWidgetIcon,
             maximizeAction:maximizeAction,
             minimizeAction:minimizeAction,
+            hideAction: hideAction,
+            showAction: showAction,
             createPopup:createPopup,
             destroyPopup:destroyPopup,
             editPrefsAction:editPrefsAction,
@@ -1415,6 +1431,20 @@ var rave = rave || (function () {
          * @param args the argument object
          */
         minimizeWidget:ui.minimizeAction,
+
+        /**
+         * Hide the widget and its chrome
+         *
+         * @param args the argument object
+         */
+        hideWidget: ui.hideAction,
+
+        /**
+         * Show the widget and its chrome
+         *
+         * @param args the argument object
+         */
+        showWidget: ui.showAction,
 
         /***
          * Create a new popup in the rave container
