@@ -181,8 +181,8 @@ UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @u
 
 -- duplicate user id!!
 set @user_id_13 = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @user_seq);
-insert into person (entity_id, username, password, expired, locked, enabled, email, default_page_layout_id, dtype, family_name, given_name, status)
-values (@user_id_13, 'http://rave2011.myopenid.com/', '$2a$10$dML97.rnOn4.iSlEEdju8OCB2NckuKw0Ki5yMVzzMmWQsWMvym3qC', FALSE, FALSE, TRUE,'rave2011_openid@example.org', @three_col_id, 'User', 'OpenId', 'Rave', 'Single');
+insert into person (entity_id, username, password, expired, locked, enabled, email, default_page_layout_id, dtype, family_name, given_name, status, openid)
+values (@user_id_13, 'rave2011.myopenid.com', '$2a$10$dML97.rnOn4.iSlEEdju8OCB2NckuKw0Ki5yMVzzMmWQsWMvym3qC', FALSE, FALSE, TRUE,'rave2011_openid@example.org', @three_col_id, 'User', 'OpenId', 'Rave', 'Single', 'http://rave2011.myopenid.com/');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @user_seq;
 
 -- end user data --
@@ -1115,6 +1115,13 @@ INSERT INTO portal_preference (entity_id, preference_key)
 values (@next_portal_preference_id, 'javaScriptDebugMode');
 INSERT INTO portal_preference_values
 values (@next_portal_preference_id, '1');
+UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @portal_preference_seq;
+
+set @next_portal_preference_id = (SELECT seq_count FROM RAVE_PORTAL_SEQUENCES WHERE seq_name = @portal_preference_seq);
+INSERT INTO portal_preference (entity_id, preference_key)
+values (@next_portal_preference_id, 'defaultWidgetHeight');
+INSERT INTO portal_preference_values
+values (@next_portal_preference_id, '250');
 UPDATE RAVE_PORTAL_SEQUENCES SET seq_count = (seq_count + 1) WHERE seq_name = @portal_preference_seq;
 -- end portal preferences
 

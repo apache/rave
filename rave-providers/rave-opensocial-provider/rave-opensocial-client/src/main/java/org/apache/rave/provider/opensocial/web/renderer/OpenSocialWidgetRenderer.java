@@ -20,6 +20,8 @@
 package org.apache.rave.provider.opensocial.web.renderer;
 
 import org.apache.rave.exception.NotSupportedException;
+import org.apache.rave.portal.model.Page;
+import org.apache.rave.portal.model.PageType;
 import org.apache.rave.portal.model.RegionWidget;
 import org.apache.rave.portal.model.RegionWidgetPreference;
 import org.apache.rave.portal.web.renderer.RegionWidgetRenderer;
@@ -73,7 +75,9 @@ public class OpenSocialWidgetRenderer implements RegionWidgetRenderer {
             " collapsed: %8$s, " +
             " widgetId: %9$s," +
             " locked: %10$s," +
-            " hideChrome: %11$s});</script>";
+            " hideChrome: %11$s," +
+            " subPage: {id: %12$s, name: '%13$s', isDefault: %14$s}" +
+            "});</script>";
     private static final String MARKUP = "<!-- RegionWidget %1$s placeholder -->";
 
     @Override
@@ -117,6 +121,20 @@ public class OpenSocialWidgetRenderer implements RegionWidgetRenderer {
             }
         }
 
+        // get attributes about the sub page this regionWidget is on.  This is needed to assist the client in
+        // determining which gadgets are on visible tabs/sub pages initially to make widget rendering more efficient
+        String pageId = null;
+        String pageName = "";
+        boolean isDefault = false;
+        Page page =  item.getRegion().getPage();
+        if (PageType.SUB_PAGE.equals(page.getPageType())) {
+            pageId = page.getId();
+            pageName = page.getName();
+            // check to see if this regionWidget is on the first sub page, which will be the default
+            // subpage rendered if the user doesn't specify which subpage via the URL hash
+            isDefault = isDefaultSubPage(page);
+        }
+
         return String.format(SCRIPT_BLOCK,
                 item.getRegion().getId(),
                 Constants.WIDGET_TYPE,
@@ -128,6 +146,14 @@ public class OpenSocialWidgetRenderer implements RegionWidgetRenderer {
                 item.isCollapsed(),
                 item.getWidget().getId(),
                 item.isLocked(),
-                item.isHideChrome());
+                item.isHideChrome(),
+                pageId,
+                pageName,
+                isDefault
+                );
+    }
+
+    private boolean isDefaultSubPage(Page subPage) {
+        return subPage.getParentPage().getSubPages().get(0).getId().equals(subPage.getId());
     }
 }

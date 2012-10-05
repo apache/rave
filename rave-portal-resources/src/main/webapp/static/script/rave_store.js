@@ -203,16 +203,46 @@ rave.store = rave.store || (function() {
         }
     }
 
+    function initMarketplaceCategory(referringPageId) {
+        if (referringPageId != null){
+            // category list box
+            $("#marketplaceCategoryList").change(function() {
+                var selectedCategory = $("#marketplaceCategoryList option:selected").val();
+                document.location.href = rave.getContext() + "marketplace/category/"+selectedCategory
+                           +"?referringPageId="+referringPageId;
+            });
+        }
+    }
+
+    function confirmAddFromMarketplace(uri, pType){
+        var answer = confirm(rave.getClientMessage("confirm.add.from.marketplace"));
+        if(answer){
+            rave.api.rpc.addWidgetFromMarketplace({
+                url: uri,
+                providerType: pType,
+                successCallback: function(widget){
+                    if(widget.result == null){
+                        alert(rave.getClientMessage("failed.add.from.marketplace"));
+                    }else{
+                        alert("(" + widget.result.title + ") " + rave.getClientMessage("success.add.from.marketplace"));
+                    }
+                }
+            });
+        }
+    }
+
     function init(referringPageId){
         initRatings();
         initComments();
         initWidgetsTag(referringPageId);
         initWidgetsCategory(referringPageId);
+        initMarketplaceCategory(referringPageId);
     }
 
     return {
         init: init,
-        initTags: initTags
+        initTags: initTags,
+        confirmAddFromMarketplace : confirmAddFromMarketplace
     };
 
 }());

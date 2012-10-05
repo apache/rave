@@ -20,14 +20,8 @@
 package org.apache.rave.provider.w3c.web.renderer;
 
 import org.apache.rave.exception.NotSupportedException;
-import org.apache.rave.portal.model.Region;
-import org.apache.rave.portal.model.RegionWidget;
-import org.apache.rave.portal.model.User;
-import org.apache.rave.portal.model.Widget;
-import org.apache.rave.portal.model.impl.RegionImpl;
-import org.apache.rave.portal.model.impl.RegionWidgetImpl;
-import org.apache.rave.portal.model.impl.UserImpl;
-import org.apache.rave.portal.model.impl.WidgetImpl;
+import org.apache.rave.portal.model.*;
+import org.apache.rave.portal.model.impl.*;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.portal.service.WidgetProviderService;
 import org.apache.rave.portal.web.renderer.Renderer;
@@ -37,6 +31,8 @@ import org.apache.rave.provider.w3c.Constants;
 import org.apache.rave.provider.w3c.service.impl.W3CWidget;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.ArrayList;
 
 import static org.easymock.EasyMock.*;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -50,7 +46,6 @@ public class W3cWidgetRendererTest {
 
     private static final String VALID_WIDGET_URL = "http://example.com/widgets/1";
     private static final String VALID_WIDGET_INSTANCE_URL = "http://example.com/widgetinstances/1";
-    private static final String REGION_WIDGET_ID = "1";
     private Renderer<RegionWidget> renderer;
     private WidgetProviderService wookieService;
     private UserService userService;
@@ -74,14 +69,30 @@ public class W3cWidgetRendererTest {
 
     @Test
     public void render_valid() {
+        final String REGION_ID = "222";
+        final String REGION_WIDGET_ID = "444";
+        final String VALID_SUBPAGE_ID = "778899";
+        final String VALID_SUBPAGE_NAME = "My Activity";
+        final boolean VALID_IS_DEFAULT_SUBPAGE = true;
+
         User user = new UserImpl("9999", "testUser");
         expect(userService.getAuthenticatedUser()).andReturn(user);
         replay(userService);
-        
+
+        Page page = new PageImpl();
+        page.setSubPages(new ArrayList<Page>());
+        Page subPage = new PageImpl();
+        subPage.setId(VALID_SUBPAGE_ID);
+        subPage.setName(VALID_SUBPAGE_NAME);
+        subPage.setParentPage(page);
+        subPage.setPageType(PageType.SUB_PAGE);
+        page.getSubPages().add(subPage);
+
         W3CWidget w = new W3CWidget();
         w.setType(Constants.WIDGET_TYPE);
         w.setUrl("http://example.com/widgets/1");
-        Region region = new RegionImpl("1");
+        Region region = new RegionImpl(REGION_ID);
+        region.setPage(subPage);
         RegionWidget rw = new RegionWidgetImpl(REGION_WIDGET_ID);
         rw.setWidget(w);
         rw.setRegion(region);

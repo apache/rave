@@ -25,4 +25,5 @@ public interface WidgetMetadataResolver {
     String getSupportedContext();
     Widget getMetadata(String url);
     Widget[] getMetadataGroup(String url);
+    Widget publishRemote(String url);
 }

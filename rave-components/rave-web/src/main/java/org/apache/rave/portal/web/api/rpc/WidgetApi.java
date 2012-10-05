@@ -20,7 +20,9 @@
 package org.apache.rave.portal.web.api.rpc;
 
 import org.apache.rave.portal.model.Widget;
+import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.service.WidgetMetadataResolver;
+import org.apache.rave.portal.service.WidgetService;
 import org.apache.rave.portal.web.api.rpc.model.RpcOperation;
 import org.apache.rave.portal.web.api.rpc.model.RpcResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,9 +44,12 @@ import java.util.Map;
 public class WidgetApi {
 
     private Map<String, WidgetMetadataResolver> widgetMetadataResolverMap;
+    
+    private WidgetService widgetService;
 
     @Autowired
-    public WidgetApi(List<WidgetMetadataResolver> widgetMetadataResolvers) {
+    public WidgetApi(List<WidgetMetadataResolver> widgetMetadataResolvers, WidgetService widgetService) {
+        this.widgetService = widgetService;
         widgetMetadataResolverMap = new HashMap<String, WidgetMetadataResolver>();
         for (WidgetMetadataResolver widgetMetadataResolver : widgetMetadataResolvers) {
             widgetMetadataResolverMap.put(widgetMetadataResolver.getSupportedContext(), widgetMetadataResolver);
@@ -77,6 +82,23 @@ public class WidgetApi {
                     throw new IllegalArgumentException("Get Metadata group for provider " + type + " is not implemented");
                 }
                 return widgetMetadataResolverMap.get(type).getMetadataGroup(url);
+            }
+        }.getResult();
+    }
+    
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.GET, value = "getall")
+    public RpcResult<SearchResult<Widget>> getAllWidgets(){
+        return new RpcOperation<SearchResult<Widget>>() {
+            @Override
+            public SearchResult<Widget> execute() {
+               SearchResult<Widget> results = widgetService.getAllWidgets();
+               // strip out the owner and tag info 
+               for(Widget widget : results.getResultSet()){
+                   widget.setOwnerId(null);
+                   widget.setTags(null);
+               }
+               return results;
             }
         }.getResult();
     }

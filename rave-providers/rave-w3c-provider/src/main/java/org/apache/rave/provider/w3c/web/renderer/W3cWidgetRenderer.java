@@ -20,10 +20,7 @@
 package org.apache.rave.provider.w3c.web.renderer;
 
 import org.apache.rave.exception.NotSupportedException;
-import org.apache.rave.portal.model.RegionWidget;
-import org.apache.rave.portal.model.RegionWidgetPreference;
-import org.apache.rave.portal.model.User;
-import org.apache.rave.portal.model.Widget;
+import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.portal.service.WidgetProviderService;
 import org.apache.rave.portal.web.renderer.RegionWidgetRenderer;
@@ -75,7 +72,9 @@ public class W3cWidgetRenderer implements RegionWidgetRenderer {
         " collapsed: %7$s, " +
         " widgetId: %8$s, " +
         " locked: %9$s, " +
-        " hideChrome: %10$s});</script>";
+        " hideChrome: %10$s, " +
+        " subPage: {id: %11$s, name: '%12$s', isDefault: %13$s}" +
+        "});</script>";
     private static final String MARKUP = "<!-- RegionWidget %1$s placeholder -->";
 
 
@@ -150,6 +149,20 @@ public class W3cWidgetRenderer implements RegionWidgetRenderer {
         if (contextualizedWidget.getHeight() > 0)
         	height = String.valueOf(contextualizedWidget.getHeight()) + "px";
 
+        // get attributes about the sub page this regionWidget is on.  This is needed to assist the client in
+        // determining which gadgets are on visible tabs/sub pages initially to make widget rendering more efficient
+        String pageId = null;
+        String pageName = "";
+        boolean isDefault = false;
+        Page page =  item.getRegion().getPage();
+        if (PageType.SUB_PAGE.equals(page.getPageType())) {
+            pageId = page.getId();
+            pageName = page.getName();
+            // check to see if this regionWidget is on the first sub page, which will be the default
+            // subpage rendered if the user doesn't specify which subpage via the URL hash
+            isDefault = isDefaultSubPage(page);
+        }
+
         //
         // Construct and return script block
         //
@@ -163,6 +176,13 @@ public class W3cWidgetRenderer implements RegionWidgetRenderer {
                 item.isCollapsed(),
                 item.getWidget().getId(),
                 item.isLocked(),
-                item.isHideChrome());
+                item.isHideChrome(),
+                pageId,
+                pageName,
+                isDefault);
+    }
+
+    private boolean isDefaultSubPage(Page subPage) {
+        return subPage.getParentPage().getSubPages().get(0).getId().equals(subPage.getId());
     }
 }

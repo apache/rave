@@ -24,11 +24,7 @@ import org.apache.rave.portal.model.impl.PortalPreferenceImpl;
 
 import java.util.Map;
 
-import static org.apache.rave.portal.web.util.PortalPreferenceKeys.INITIAL_WIDGET_STATUS;
-import static org.apache.rave.portal.web.util.PortalPreferenceKeys.JAVASCRIPT_DEBUG_MODE;
-import static org.apache.rave.portal.web.util.PortalPreferenceKeys.PAGE_SIZE;
-import static org.apache.rave.portal.web.util.PortalPreferenceKeys.TITLE_SUFFIX;
-import static org.apache.rave.portal.web.util.PortalPreferenceKeys.EXTERNAL_MARKETPLACE_URL;
+import static org.apache.rave.portal.web.util.PortalPreferenceKeys.*;
 
 /**
  * Form object for portal preferences
@@ -38,6 +34,7 @@ public class PortalPreferenceForm {
     public static final String DEFAULT_PAGE_SIZE = "10";
     public static final String DEFAULT_TITLE_SUFFIX = "";
     public static final String DEFAULT_JAVASCRIPT_DEBUG_MODE = "1";
+    public static final String DEFAULT_WIDGET_HEIGHT = "250";
     public static final String DEFAULT_INITIAL_WIDGET_STATUS = "PREVIEW";
     public static final String DEFAULT_EXTERNAL_MARKETPLACE_URL = "";    
 
@@ -66,6 +63,9 @@ public class PortalPreferenceForm {
         if (getExternalMarketplaceUrl() == null){
         	preferenceMap.put(EXTERNAL_MARKETPLACE_URL, new PortalPreferenceImpl(EXTERNAL_MARKETPLACE_URL, DEFAULT_EXTERNAL_MARKETPLACE_URL));
         }
+        if(getDefaultWidgetHeight() == null){
+            preferenceMap.put(WIDGET_HEIGHT, new PortalPreferenceImpl(WIDGET_HEIGHT, DEFAULT_WIDGET_HEIGHT));
+        }
     }
     
     public PortalPreference getExternalMarketplaceUrl() {
@@ -86,6 +86,14 @@ public class PortalPreferenceForm {
 
     public void setPageSize(PortalPreference pageSize) {
         preferenceMap.put(PAGE_SIZE, pageSize);
+    }
+
+    public PortalPreference getDefaultWidgetHeight(){
+        return preferenceMap.get(WIDGET_HEIGHT);
+    }
+
+    public void setDefaultWidgetHeight(PortalPreference widgetHeight){
+        preferenceMap.put(WIDGET_HEIGHT, widgetHeight);
     }
 
     public PortalPreference getTitleSuffix() {

@@ -25,9 +25,11 @@ import java.util.List;
 import org.apache.rave.portal.model.Person;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.util.SearchResult;
+import org.springframework.security.core.userdetails.AuthenticationUserDetailsService;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.openid.OpenIDAuthenticationToken;
 
-public interface UserService extends UserDetailsService {
+public interface UserService extends UserDetailsService, AuthenticationUserDetailsService<OpenIDAuthenticationToken> {
     /**
      * Get the currently authenticated user.
      *
@@ -194,5 +196,14 @@ public interface UserService extends UserDetailsService {
      * @return true is the request was successful accepted
      */
 	boolean acceptFriendRequest(String friendUsername, String username);
+
+
+    /**
+     * Return a user object by the openId.
+     *
+     * @param openId OpenId url of the user
+     * @return {@link org.apache.rave.portal.model.User} if one exists, otherwise {@literal null}
+     */
+	User getUserByOpenId(String openId);
 
 }

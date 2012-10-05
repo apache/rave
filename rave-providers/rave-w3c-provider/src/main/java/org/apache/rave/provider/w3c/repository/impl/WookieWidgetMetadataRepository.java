@@ -19,6 +19,8 @@
 
 package org.apache.rave.provider.w3c.repository.impl;
 
+import java.io.IOException;
+
 import org.apache.rave.portal.model.Widget;
 import org.apache.rave.portal.service.WidgetProviderService;
 import org.apache.rave.provider.w3c.repository.W3CWidgetMetadataRepository;
@@ -68,6 +70,11 @@ public class WookieWidgetMetadataRepository implements W3CWidgetMetadataReposito
             throw new IllegalArgumentException("Error occurred while processing response from wookie metadata call", e);
 		}
 	}
+
+    @Override
+    public Widget publishRemote(String url) {
+        return this.widgetService.publishWidgetUrlToWookie(url);
+    }
     
     
 

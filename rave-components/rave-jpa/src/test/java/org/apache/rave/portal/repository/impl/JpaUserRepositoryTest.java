@@ -50,10 +50,12 @@ public class JpaUserRepositoryTest {
     private EntityManager manager;
 
     private static final Long USER_ID = 1L;
+    private static final Long USER_ID_OPENID_USER = 13L;
     private static final String USER_NAME = "canonical";
 
     private static final Long INVALID_USER = -2L;
     private static final String USER_EMAIL = "canonical@example.com";
+    private static final String OPENID = "http://rave2011.myopenid.com/";
     private static final Long VALID_WIDGET_ID = 1L;
 
     @Autowired
@@ -106,6 +108,15 @@ public class JpaUserRepositoryTest {
         assertThat(true, is(passwordEncoder.matches(USER_NAME, user.getPassword())));
         assertThat(user.isAccountNonExpired(), is(true));
         assertThat(user.getEmail(), is(equalTo(USER_EMAIL)));
+    }
+    
+    @Test
+    public void getByOpenId_valid() {
+        JpaUser user = (JpaUser)repository.getByOpenId(OPENID);
+        assertThat(user, notNullValue());
+        assertThat(user.getEntityId(), is(equalTo(USER_ID_OPENID_USER)));
+        assertThat(user.isAccountNonExpired(), is(true));
+        assertThat(user.getOpenId(), is(equalTo(OPENID)));
     }
 
     @Test

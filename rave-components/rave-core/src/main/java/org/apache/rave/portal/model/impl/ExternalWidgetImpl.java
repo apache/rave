@@ -16,18 +16,26 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.rave.portal.web.util;
+package org.apache.rave.portal.model.impl;
 
-/**
- * Utility class for {@link org.apache.rave.portal.model.PortalPreference} keys
- */
-public final class PortalPreferenceKeys {
-    private PortalPreferenceKeys() { }
+public class ExternalWidgetImpl extends WidgetImpl {
+    
+    // External Identifiers for widgets found in other systems
+    // such as in the marketplace, may not be implemented as long,
+    // and may be a String or URL instead.
+    // This wraps the external identifier as a String
+    String externalId;
 
-    public static final String TITLE_SUFFIX = "titleSuffix";
-    public static final String PAGE_SIZE = "pageSize";
-    public static final String JAVASCRIPT_DEBUG_MODE = "javaScriptDebugMode";
-    public static final String INITIAL_WIDGET_STATUS = "initialWidgetStatus";
-    public static final String EXTERNAL_MARKETPLACE_URL = "externalMarketplaceUrl";
-    public static final String WIDGET_HEIGHT = "defaultWidgetHeight";
+    public ExternalWidgetImpl(String id) {
+        super(id);
+    }
+
+    public String getExternalId() {
+        return externalId;
+    }
+
+    public void setExternalId(String externalId) {
+        this.externalId = externalId;
+    }
+
 }

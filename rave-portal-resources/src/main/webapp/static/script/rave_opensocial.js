@@ -20,7 +20,6 @@ var rave = rave || {};
 rave.opensocial = rave.opensocial || (function () {
     var WIDGET_TYPE = "OpenSocial";
     var OFFSET = 10;
-    var MIN_HEIGHT = 250;
     var VIEW_NAMES = {
         CANVAS:"canvas",
         DEFAULT:"default",
@@ -86,7 +85,8 @@ rave.opensocial = rave.opensocial || (function () {
 
         container.views.createElementForGadget = function (metadata, rel, opt_view, opt_viewTarget, opt_coordinates, parentSite, opt_callback) {
                 if (opt_viewTarget) {
-                    return rave.createPopup(opt_viewTarget);
+                    var prefs = (metadata && metadata.views && metadata.views[opt_view])
+                    return rave.createPopup(opt_viewTarget, prefs);
                 }
             };
 
@@ -195,8 +195,11 @@ rave.opensocial = rave.opensocial || (function () {
             }
         }
 
-        // if the gadget is not collapsed, render it
-        renderGadgetViewIfNotCollapsed(rave.opensocial.VIEW_NAMES.HOME, gadget);
+        // if the gadget is on a top level page, or an active sub page tab, render it
+        if (!rave.layout.isWidgetOnHiddenTab(gadget)) {
+            // if the gadget is not collapsed, render it
+            renderGadgetViewIfNotCollapsed(rave.opensocial.VIEW_NAMES.HOME, gadget);
+        }
     }
 
     /**
@@ -232,7 +235,7 @@ rave.opensocial = rave.opensocial || (function () {
         var elem = document.getElementById("widget-" + id + "-wrapper");
 
         // determine the height of the gadget's iframe
-        var height = MIN_HEIGHT;
+        var height = rave.getDefaultWidgetHeight();
         if (view == rave.opensocial.VIEW_NAMES.CANVAS) {
             height = elem.clientHeight;
         } else if (gadget.metadata.modulePrefs && gadget.metadata.modulePrefs.height) {

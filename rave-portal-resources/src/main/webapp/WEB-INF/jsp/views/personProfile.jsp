@@ -7,7 +7,7 @@
   "License"); you may not use this file except in compliance
   with the License.  You may obtain a copy of the License at
 
-      http://www.apache.org/licenses/LICENSE-2.0
+    http://www.apache.org/licenses/LICENSE-2.0
 
   Unless required by applicable law or agreed to in writing,
   software distributed under the License is distributed on an
@@ -15,9 +15,6 @@
   KIND, either express or implied.  See the License for the
   specific language governing permissions and limitations
   under the License.
-
-  Description:
-  User's information display and edit options
   --%>
 
 <%@ page language="java" trimDirectiveWhitespaces="true" %>
@@ -30,7 +27,7 @@
 
 <!-- get the display name of user -->
 <fmt:message key="page.personProfile.title" var="pageTitle">
-   	<fmt:param><c:out value="${userProfile.displayName}" /></fmt:param>
+       <fmt:param><c:out value="${userProfile.displayName}" /></fmt:param>
 </fmt:message>
 <tiles:putAttribute name="pageTitleKey" value="${pageTitle}"/>
 <tiles:importAttribute name="pageTitleKey" scope="request"/>
@@ -57,91 +54,94 @@
     <div class="row-fluid">
         <div class="span9">
             <div id="personProfileContent">
-                <form:form id="editAccountForm" commandName="userProfile" action="person?referringPageId=${referringPageId}" method="POST" class="form-horizontal">
+                <c:url var="profileUrl" value="/app/person">
+                    <c:param name="referringPageId" value="${referringPageId}" />
+                </c:url>
+                <form:form id="editAccountForm" commandName="userProfile" action="${profileUrl}" method="POST" class="form-horizontal">
 
                     <fieldset class="row-fluid" id="userProfilePrimaryData">
-                    	<div class="span2 profile-user-thumb">
-                    		<img src="http://placehold.it/125x165&text=photo"/>
-                    	</div>
+                        <div class="span2 profile-user-thumb">
+                            <img src="<spring:url value="/static/images/profile_picture_placeholder.png"/>" alt=""/>
+                        </div>
 
                         <div class="span10">
-                        	<!-- Display user info-->
-                        	<div class="profile-info-visible">
-                        		<h2><c:out value="${userProfile.displayName}"/></h2>
-                        		<h3><span id="givenName"><c:out value="${userProfile.givenName}"/></span>&nbsp;<span id="familyName"><c:out value="${userProfile.familyName}"/></span></h3>
+                            <!-- Display user info-->
+                            <div class="profile-info-visible">
+                                <h2><c:out value="${userProfile.displayName}"/></h2>
+                                <h3><span id="givenName"><c:out value="${userProfile.givenName}"/></span>&nbsp;<span id="familyName"><c:out value="${userProfile.familyName}"/></span></h3>
                                 <p class="profile-user-status">
-                                	<fmt:message key="page.profile.status"/>
-                                	&nbsp;<span id="status"><c:out value="${userProfile.status}"/></span>
+                                    <fmt:message key="page.profile.status"/>
+                                    &nbsp;<span id="status"><c:out value="${userProfile.status}"/></span>
                                 </p>
                                 <p class="profile-info-visible">
-                                	<fmt:message key="page.profile.about.me"/>
-                                	&nbsp;<span id="aboutMe"><c:out value=" ${userProfile.aboutMe}"/></span>
+                                    <fmt:message key="page.profile.about.me"/>
+                                    &nbsp;<span id="aboutMe"><c:out value=" ${userProfile.aboutMe}"/></span>
                                 </p>
-                        	</div>
-                        	<!-- Display edit view of user info-->
-                        	<div class="profile-info-hidden">
-                        		<div class="control-group">
-                            		<label for="displayNameField" class="control-label"><fmt:message key="page.profile.display.name"/></label>
-                            		<div class="controls">
-	                            		<form:input id="displayNameField" path="displayName" value="${userProfile.displayName}" class="span6"/>
-                            		</div>
-                        		</div>
-                        		<div class="control-group">
-                        			<label class="control-label pull-left"><fmt:message key="page.profile.first.name"/></label>
-	                        			<form:input id="givenNameField" path="givenName" class="span3 pull-left" value="${userProfile.givenName}" />&nbsp;
+                            </div>
+                            <!-- Display edit view of user info-->
+                            <div class="profile-info-hidden">
+                                <div class="control-group">
+                                    <label for="displayNameField" class="control-label"><fmt:message key="page.profile.display.name"/></label>
+                                    <div class="controls">
+                                        <form:input id="displayNameField" path="displayName" value="${userProfile.displayName}" class="span6"/>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label pull-left"><fmt:message key="page.profile.first.name"/></label>
+                                        <form:input id="givenNameField" path="givenName" class="span3 pull-left" value="${userProfile.givenName}" />&nbsp;
 
-	                                <label class="control-label pull-left"><fmt:message key="page.profile.last.name"/></label>
-	                                	<form:input id="familyNameField" path="familyName" class="span3 pull-left" value="${userProfile.familyName}"/>
-                        		</div>
-                        		<div class="control-group">
-                        			<label for="statusField" class="control-label"><fmt:message key="page.profile.status"/></label>
-                        			<div class="controls">
-                        				<form:select path="status" class="span3" id="statusField">
-						                	<fmt:message key="page.general.relation.single" var="singleText"/>
-						                    <form:option value="${singleText}" id="single_id">${singleText}</form:option>
-						                    <fmt:message key="page.general.relation.committed" var="committedText"/>
-						                    <form:option value="${committedText}" id="committed_id">${committedText}</form:option>
-						                    <fmt:message key="page.general.relation.married" var="marriedText"/>
-						                    <form:option value="${marriedText}" id="married_id">${marriedText}</form:option>
-						                    <fmt:message key="page.general.relation.other" var="otherText"/>
-						                    <form:option value="${otherText}" id="other_id">${otherText}</form:option>
-						                </form:select>
-                        			</div>
-                        		</div>
-                        		<div class="control-group">
-                        			<label for="aboutMeField" class="control-label"><fmt:message key="page.profile.about.me"/></label>
-                        			<div class="controls">
-	                        			<form:textarea id="aboutMeField" path="aboutMe" value="${userProfile.aboutMe}" class="span11" />
-                        			</div>
-                        		</div>
-                        	</div>
+                                    <label class="control-label pull-left"><fmt:message key="page.profile.last.name"/></label>
+                                        <form:input id="familyNameField" path="familyName" class="span3 pull-left" value="${userProfile.familyName}"/>
+                                </div>
+                                <div class="control-group">
+                                    <label for="statusField" class="control-label"><fmt:message key="page.profile.status"/></label>
+                                    <div class="controls">
+                                        <form:select path="status" class="span3" id="statusField">
+                                            <fmt:message key="page.general.relation.single" var="singleText"/>
+                                            <form:option value="${singleText}" id="single_id">${singleText}</form:option>
+                                            <fmt:message key="page.general.relation.committed" var="committedText"/>
+                                            <form:option value="${committedText}" id="committed_id">${committedText}</form:option>
+                                            <fmt:message key="page.general.relation.married" var="marriedText"/>
+                                            <form:option value="${marriedText}" id="married_id">${marriedText}</form:option>
+                                            <fmt:message key="page.general.relation.other" var="otherText"/>
+                                            <form:option value="${otherText}" id="other_id">${otherText}</form:option>
+                                        </form:select>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label for="aboutMeField" class="control-label"><fmt:message key="page.profile.about.me"/></label>
+                                    <div class="controls">
+                                        <form:textarea id="aboutMeField" path="aboutMe" value="${userProfile.aboutMe}" class="span11" />
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </fieldset>
 
                     <!-- Display contact information of user -->
-		            <fieldset class="row-fluid">
-	                    <div class=" span12">
-	                    	<div class="well">
-		                    	<h4><fmt:message key="page.profile.contact.info" /></h4>
-	                            <div class="profile-info-visible">
-	                                <p id='email'><c:out value=" ${userProfile.email}"/></p>
-	                            </div>
-	                            <div class="profile-info-hidden">
-	                            	<div class="control-group">
-		                            	<label for="emailField" class="control-label"><fmt:message key="page.profile.email"/></label>
-		                            	<div class="controls">
-		                            		<form:input id="emailField" path="email" class="span5" value="${userProfile.email}" />
-		                            	</div>
-	                            	</div>
-	                            </div>
-	                        </div>
-	                    </div>
+                    <fieldset class="row-fluid">
+                        <div class=" span12">
+                            <div class="well">
+                                <h4><fmt:message key="page.profile.contact.info" /></h4>
+                                <div class="profile-info-visible">
+                                    <p id='email'><c:out value=" ${userProfile.email}"/></p>
+                                </div>
+                                <div class="profile-info-hidden">
+                                    <div class="control-group">
+                                        <label for="emailField" class="control-label"><fmt:message key="page.profile.email"/></label>
+                                        <div class="controls">
+                                            <form:input id="emailField" path="email" class="span5" value="${userProfile.email}" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </fieldset>
 
                     <%-- only display the edit profile button if the current logged in user matches the profile being viewed --%>
                     <c:set var="currentUsername"><sec:authentication property="principal.username" htmlEscape="false" /></c:set>
                     <c:if test="${currentUsername == userProfile.username}">
-                    	<fieldset class="row-fluid">
+                        <fieldset class="row-fluid">
                             <div class="span12">
                                 <p>
                                     <input type="hidden" id="profileInfo" value="profile-info" />
@@ -166,7 +166,7 @@
         </div>
         <div class="span3">
             <portal:person id="${page.ownerId}" var="${owner}" />
-        	<button type="button" id="addRemoveFriend" value="${owner.username}" class="btn btn-primary profile-info-visible">Add/Remove Friends</button>
+        	<button type="button" id="addRemoveFriend" value="${owner.username}" class="btn btn-primary profile-info-visible"><fmt:message key="page.personProfile.addremove.friends"/></button>
         </div>
         <div class="span3">
             <div>
@@ -212,8 +212,8 @@
             rave.layout.init();
             rave.personprofile.init();
             rave.setPageOwner({
-                username: "${userProfile.username}",
-                id: "${userProfile.id}"
+                username: "<c:out value="${userProfile.username}"/>",
+                id: "<c:out value="${userProfile.id}"/>"
             });
         });
     </script>

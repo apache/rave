@@ -61,6 +61,13 @@ public class JpaUserRepository implements UserRepository {
     }
 
     @Override
+    public User getByOpenId(String openId) {
+    	TypedQuery<JpaUser> query = manager.createNamedQuery(JpaUser.USER_GET_BY_OPENID, JpaUser.class);
+        query.setParameter(JpaUser.PARAM_OPENID, openId);
+        return getSingleResult(query.getResultList());
+    }
+
+    @Override
     public List<User> getLimitedList(int offset, int pageSize) {
         TypedQuery<JpaUser> query = manager.createNamedQuery(JpaUser.USER_GET_ALL, JpaUser.class);
         return CollectionUtils.<User>toBaseTypedList(getPagedResultList(query, offset, pageSize));

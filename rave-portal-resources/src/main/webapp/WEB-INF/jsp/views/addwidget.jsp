@@ -28,7 +28,7 @@
           <li class="active"><a href="<spring:url value="/app/store/widget/add?referringPageId=${referringPageId}" />">OpenSocial</a></li>
           <li><a href="<spring:url value="/app/store/widget/add/w3c?referringPageId=${referringPageId}" />">W3C</a></li>
           
-          <c:if test="${not empty marketplace}">
+          <c:if test="${not empty marketplace and not empty marketplace.value}">
           <li><a href="<spring:url value="/app/marketplace?referringPageId=${referringPageId}" />">Marketplace</a></li>
           </c:if>
     </ul> 

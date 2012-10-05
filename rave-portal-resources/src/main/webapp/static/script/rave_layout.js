@@ -154,9 +154,6 @@ rave.layout = rave.layout || (function() {
             this.username = username;
             this.userId = userId;
             this.pageId = pageId;
-            if(pageStatus == "PENDING"){
-                confirmPageShare();
-            };
         }
 
         function addExistingMember(member, isEditor){
@@ -303,29 +300,30 @@ rave.layout = rave.layout || (function() {
         }
 
         function acceptShare(){
-            $('#confirmSharePageDialog').modal('hide');
-            rave.api.rpc.updateSharedPageStatus({pageId: rave.layout.searchHandler.pageId, shareStatus: 'accepted',
-                successCallback: function(result) {
-                    //notification here?
-                }
-            });
+            var answer;
+            answer = confirm(rave.getClientMessage("accept.share.confirm"));
+            if(answer){
+                rave.api.rpc.updateSharedPageStatus({pageId: rave.layout.searchHandler.pageId, shareStatus: 'accepted',
+                    successCallback: function(result) {
+                        rave.viewPage(rave.layout.searchHandler.pageId);
+                    }
+                });
+            }
         }
 
         function declineShare(){
-            $('#confirmSharePageDialog').modal('hide');
-            rave.api.rpc.updateSharedPageStatus({pageId: rave.layout.searchHandler.pageId, shareStatus: 'refused',
-                successCallback: function(result) {
-                    rave.api.rpc.removeMemberFromPage({pageId:rave.layout.searchHandler.pageId, userId:rave.layout.searchHandler.userId,
-                        successCallback:function (result) {
-                            document.location.href='/';
-                        }});
-
-                }
-            });
-        }
-
-        function confirmPageShare(){
-            $("#confirmSharePageDialog").modal('show');
+            var answer;
+            answer = confirm(rave.getClientMessage("decline.share.confirm"));
+            if(answer){
+                rave.api.rpc.updateSharedPageStatus({pageId: rave.layout.searchHandler.pageId, shareStatus: 'refused',
+                    successCallback: function(result) {
+                        rave.api.rpc.removeMemberFromPage({pageId:rave.layout.searchHandler.pageId, userId:rave.layout.searchHandler.userId,
+                            successCallback:function (result) {
+                                document.location.href='/';
+                            }});
+                    }
+                })
+            }
         }
 
         function init() {
@@ -526,7 +524,6 @@ rave.layout = rave.layout || (function() {
             removeMemberFromPage : removeMemberFromPage,
             addEditingRightsToMember: addEditingRightsToMember,
             removeEditingRightsFromMember : removeEditingRightsFromMember,
-            confirmPageShare : confirmPageShare,
             acceptShare : acceptShare,
             declineShare : declineShare,
             updateParamsInString : updateParamsInString
@@ -562,10 +559,75 @@ rave.layout = rave.layout || (function() {
         }
 
         /**
-         * Initializes the private widgetMenu closure
+         * Initializes a single widgets private widgetMenu closure
          * - binds click event handler to menu button
          * - binds menu item click event handlers
          * - binds body click event handler to close the menu
+         */
+        function bindWidgetMenu(widgetId){
+            // setup the move to page menu item
+            $menuItemMove = $("#widget-" + widgetId + "-menu-move-item");
+            if (!$menuItemMove.hasClass("menu-item-disabled")) {
+                $menuItemMove.bind('click', function(event) {
+                    var regionWidgetId = rave.getObjectIdFromDomId(this.id);
+                    // Clear the dropdown box; needing to do this may be a bug?
+                    $('.dropdown').removeClass('open');
+                    // Open the modal
+                    $("#moveWidgetModal").data('regionWidgetId', regionWidgetId);
+                    $("#moveWidgetModal").modal('show');
+
+                    // prevent the menu button click event from bubbling up to parent
+                    // DOM object event handlers such as the page tab click event
+                    event.stopPropagation();
+                });
+            }
+
+            // setup the delete widget menu item
+            $menuItemDelete  = $("#widget-" + widgetId + "-menu-delete-item");
+            if (!$menuItemDelete.hasClass("menu-item-disabled")) {
+                $menuItemDelete.bind('click', function(event) {
+                    var regionWidgetId = rave.getObjectIdFromDomId(this.id);
+
+                    // invoke the rpc call to remove the widget from the page
+                    rave.layout.deleteRegionWidget(regionWidgetId);
+
+                    // prevent the menu button click event from bubbling up to parent
+                    // DOM object event handlers such as the page tab click event
+                    event.stopPropagation();
+                });
+            }
+
+            // setup the maximize widget menu item
+            $menuItemMaximize  = $("#widget-" + widgetId + "-menu-maximize-item");
+            if (!$menuItemMaximize.hasClass("menu-item-disabled")) {
+                $menuItemMaximize.bind('click', function(event) {
+                    var regionWidgetId = rave.getObjectIdFromDomId(this.id);
+
+                    // maximize the widget
+                    rave.maximizeWidget({data: {id: regionWidgetId}});
+                    // prevent the menu button click event from bubbling up to parent
+                    // DOM object event handlers such as the page tab click event
+                    event.stopPropagation();
+                });
+            }
+
+            // setup the about this widget menu item
+            $menuItemAbout  = $("#widget-" + widgetId + "-menu-about-item");
+            if (!$menuItemAbout.hasClass("menu-item-disabled")) {
+                $menuItemAbout.bind('click', function(event) {
+                    var regionWidget = rave.getRegionWidgetById(rave.getObjectIdFromDomId(this.id));
+
+                    // go to the widget detail page
+                    rave.viewWidgetDetail(regionWidget.widgetId, getCurrentPageId());
+                    // prevent the menu button click event from bubbling up to parent
+                    // DOM object event handlers such as the page tab click event
+                    event.stopPropagation();
+                });
+            }
+        }
+        
+        /**
+         * Initializes ALL widgets private widgetMenu closure
          */
         function init() {
             // loop over each widget-menu and initialize the menu items
@@ -575,66 +637,7 @@ rave.layout = rave.layout || (function() {
             //       the menu item
             $(".widget-menu").each(function(index, element){
                 var widgetId = rave.getObjectIdFromDomId(element.id);
-
-                // setup the move to page menu item
-                $menuItemMove = $("#widget-" + widgetId + "-menu-move-item");
-                if (!$menuItemMove.hasClass("menu-item-disabled")) {
-                    $menuItemMove.bind('click', function(event) {
-                        var regionWidgetId = rave.getObjectIdFromDomId(this.id);
-                        // Clear the dropdown box; needing to do this may be a bug?
-                        $('.dropdown').removeClass('open');
-                        // Open the modal
-                        $("#moveWidgetModal").data('regionWidgetId', regionWidgetId);
-                        $("#moveWidgetModal").modal('show');
-
-                        // prevent the menu button click event from bubbling up to parent
-                        // DOM object event handlers such as the page tab click event
-                        event.stopPropagation();
-                    });
-                }
-
-                // setup the delete widget menu item
-                $menuItemDelete  = $("#widget-" + widgetId + "-menu-delete-item");
-                if (!$menuItemDelete.hasClass("menu-item-disabled")) {
-                    $menuItemDelete.bind('click', function(event) {
-                        var regionWidgetId = rave.getObjectIdFromDomId(this.id);
-
-                        // invoke the rpc call to remove the widget from the page
-                        rave.layout.deleteRegionWidget(regionWidgetId);
-
-                        // prevent the menu button click event from bubbling up to parent
-                        // DOM object event handlers such as the page tab click event
-                        event.stopPropagation();
-                    });
-                }
-
-                // setup the maximize widget menu item
-                $menuItemMaximize  = $("#widget-" + widgetId + "-menu-maximize-item");
-                if (!$menuItemMaximize.hasClass("menu-item-disabled")) {
-                    $menuItemMaximize.bind('click', function(event) {
-                        var regionWidgetId = rave.getObjectIdFromDomId(this.id);
-
-                        // maximize the widget
-                        rave.maximizeWidget({data: {id: regionWidgetId}});
-                        // prevent the menu button click event from bubbling up to parent
-                        // DOM object event handlers such as the page tab click event
-                        event.stopPropagation();
-                    });
-                }
-
-                // setup the about this widget menu item
-                $menuItemAbout  = $("#widget-" + widgetId + "-menu-about-item");
-                if (!$menuItemAbout.hasClass("menu-item-disabled")) {
-                    $menuItemAbout.bind('click', function(event) {
-                        var regionWidget = rave.getRegionWidgetById(rave.getObjectIdFromDomId(this.id));
-
-                        // go to the widget detail page
-                        rave.viewWidgetDetail(regionWidget.widgetId, getCurrentPageId());
-                        // prevent the menu button click event from bubbling up to parent
-                        // DOM object event handlers such as the page tab click event
-                        event.stopPropagation();
-                    });
-                }
+                bindWidgetMenu(widgetId);
             });
         }
 
@@ -667,6 +670,7 @@ rave.layout = rave.layout || (function() {
 
         return {
             init: init,
+            bindWidgetMenu : bindWidgetMenu,
             hideAll: hideAllMenus,
             hide: hideMenu,
             show: showMenu,
@@ -769,6 +773,27 @@ rave.layout = rave.layout || (function() {
         return $("#currentPageId").val();
     }
 
+    /**
+     * Determines if the widget should be rendered as part of the initial page view.  This can be used to help optimize
+     * page loads as widgets located on non-active sub pages will not be rendered initially.  The function will return
+     * false if one of the following criteria is met, and true otherwise:
+     *
+     * 1) the widget is on a top level page (not a sub page)
+     * 2) the widget is on a sub page that is currently requested in the URL via the hash tag
+     *    ie /app//person/canoniocal#My%20Activity
+     * 3) the widget is on the default sub page and the page request URL doesn't contain a sub-page hash tag
+     *    ie /app/person/canonical
+     *
+     * @return boolean
+     */
+    function isWidgetOnHiddenTab(widget) {
+        var hash = decodeURIComponent(location.hash);
+        var subPage = widget.subPage;
+        return !(subPage.id === null ||
+            ("#" + subPage.name) === hash ||
+            (hash === "" && subPage.isDefault));
+    }
+
    /***
     * initializes the rave.layout namespace code
     */
@@ -787,11 +812,13 @@ rave.layout = rave.layout || (function() {
         hideWidgetMenu: widgetMenu.hide,
         deleteRegionWidget: deleteRegionWidget,
         enableEditPrefsMenuItem: widgetMenu.enableEditPrefsMenuItem,
+        bindWidgetMenu: widgetMenu.bindWidgetMenu,
         addPage: addPage,
         updatePage: updatePage,
         movePage: movePage,
         closePageDialog: closePageDialog,
         moveWidgetToPage: moveWidgetToPage,
-        searchHandler : searchHandler
+        searchHandler : searchHandler,
+        isWidgetOnHiddenTab: isWidgetOnHiddenTab
     };
 })();

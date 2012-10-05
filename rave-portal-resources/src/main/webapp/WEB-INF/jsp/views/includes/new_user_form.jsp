@@ -28,7 +28,7 @@
         <div class="control-group">
             <label class="control-label" for="userNameField"><fmt:message key="page.general.username"/></label>
             <div class="controls">
-                <form:input id="userNameField" path="username" required="required" autofocus="autofocus"/>
+                <form:input id="userNameField" path="username" required="required" autofocus="autofocus" autocapitalize="off" autocorrect="off"/>
                 <form:errors path="username" cssClass="error"/>
             </div>
         </div>
@@ -52,8 +52,18 @@
         <div class="control-group">
             <label class="control-label" for="emailField"><fmt:message key="page.general.email"/></label>
             <div class="controls">
-                <form:input id="emailField" path="email" required="required"/>
+                <spring:bind path="email">
+                    <input type="email" id="emailField" name="email" required="required" value="<c:out value="${status.value}"/>"/>
+                </spring:bind>
                 <form:errors path="email" cssClass="error"/>
+            </div>
+        </div>
+        
+        <div class="control-group">
+            <label class="control-label" for="openIdField"><fmt:message key="page.general.openid"/></label>
+            <div class="controls">
+                <form:input id="openIdField" path="openId"/>
+                <form:errors path="openId" cssClass="error"/>
             </div>
         </div>
 
@@ -92,15 +102,15 @@
     <fieldset>
         <div class="control-group">
             <label class="control-label" for="firstNameField"><fmt:message key="page.general.first.name"/></label>
-            <div class="controls"><form:input id="firstNameField" path="givenName" autofocus="autofocus"/></div>
+            <div class="controls"><form:input id="firstNameField" path="givenName"/></div>
         </div>
         <div class="control-group">
             <label class="control-label" for="lastNameField"><fmt:message key="page.general.last.name"/></label>
-            <div class="controls"><form:input id="lastNameField" path="familyName" autofocus="autofocus"/></div>
+            <div class="controls"><form:input id="lastNameField" path="familyName"/></div>
         </div>
         <div class="control-group">
             <label class="control-label" for="displayNameField"><fmt:message key="page.general.display.name"/></label>
-            <div class="controls"><form:input id="displayNameField" path="displayName" autofocus="autofocus"/></div>
+            <div class="controls"><form:input id="displayNameField" path="displayName"/></div>
         </div>
         <div class="control-group">
             <label class="control-label" for="statusField"><fmt:message key="page.general.relation.status"/></label>
@@ -119,7 +129,7 @@
         </div>
         <div class="control-group">
             <label class="control-label" for="aboutMeField"><fmt:message key="page.general.about.me"/></label>
-            <div class="controls"><form:textarea id="aboutMeField" path="aboutMe" autofocus="autofocus"/></div>
+            <div class="controls"><form:textarea id="aboutMeField" path="aboutMe"/></div>
         </div>
     </fieldset>
 

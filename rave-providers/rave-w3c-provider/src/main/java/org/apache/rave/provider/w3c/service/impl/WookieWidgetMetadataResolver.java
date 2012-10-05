@@ -74,4 +74,9 @@ public class WookieWidgetMetadataResolver implements WidgetMetadataResolver {
         }
     }
 
+    @Override
+    public Widget publishRemote(String url) {
+        return widgetMetadataRepository.publishRemote(url);
+    }
+
 }

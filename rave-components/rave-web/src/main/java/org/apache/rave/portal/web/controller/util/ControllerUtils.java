@@ -72,7 +72,7 @@ public class ControllerUtils {
     public static NavigationMenu getTopMenu(String view, String referringPageId, User user, boolean addStoreLink) {
         NavigationMenu menu = new NavigationMenu("topnav");
         if(view.startsWith(ViewNames.PAGE) || view.startsWith(ViewNames.MOBILE_HOME)) {
-            NavigationItem profile = new NavigationItem("page.profile.title", getDisplayName(user), "/app/person/" + user.getId() + "?referringPageId=" + referringPageId);
+            NavigationItem profile = new NavigationItem("page.profile.title", getDisplayName(user), "/app/person/id/" + user.getId() + "?referringPageId=" + referringPageId);
             menu.addNavigationItem(profile);
 
             if(addStoreLink){
@@ -106,6 +106,10 @@ public class ControllerUtils {
             NavigationItem logout = getLogoutItem();
             menu.addNavigationItem(logout);
         } else if (view.startsWith(ViewNames.ADD_WIDGET_FORM) || view.startsWith(ViewNames.WIDGET)) {
+            if(view.equals(ViewNames.WIDGET_MARKETPLACE)){
+                NavigationItem addWidget = new NavigationItem("page.widget.backToMarketplace", null, "/app/marketplace?referringPageId=" + referringPageId);
+                menu.addNavigationItem(addWidget);
+            }
             NavigationItem addWidget = new NavigationItem("page.widget.backToStore", null, "/app/store?referringPageId=" + referringPageId);
             menu.addNavigationItem(addWidget);
 

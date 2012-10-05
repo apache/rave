@@ -32,7 +32,8 @@
         <security:intercept-url pattern="/static/**" access="permitAll"/>
         <security:intercept-url pattern="/login" access="permitAll"/>
         <security:intercept-url pattern="/newaccount.jsp*" access="permitAll"/>
-        <security:intercept-url pattern="/app/newaccount*" access="permitAll"/>
+		<security:intercept-url pattern="/app/newaccount*" access="permitAll"/>
+		<security:intercept-url pattern="/app/openidregister*" access="permitAll"/>
         <security:intercept-url pattern="/app/newpassword/**" access="permitAll"/>
         <security:intercept-url pattern="/app/retrieveusername/**" access="permitAll"/>
         <security:intercept-url pattern="/app/changepassword/**" access="permitAll"/>
@@ -40,13 +41,25 @@
         <security:intercept-url pattern="/app/admin/**" access="hasRole('ROLE_ADMIN')"/>
         <!-- all urls must be authenticated -->
         <security:intercept-url pattern="/**" access="hasAnyRole('ROLE_USER','ROLE_ADMIN')"/>
-        <security:openid-login user-service-ref="userService" authentication-failure-url="/login?authfail=openid">
-            <security:attribute-exchange>
-                <!-- Supported by MyOpenID.com -->
-                <security:openid-attribute name="firstName" type="http://schema.openid.net/namePerson/first"/>
-                <security:openid-attribute name="lastName" type="http://schema.openid.net/namePerson/last"/>
-                <security:openid-attribute name="email" type="http://schema.openid.net/contact/email" required="true"/>
+        <security:openid-login user-service-ref="userService" authentication-failure-handler-ref="openIdAuthFailureHandler">
+            <security:attribute-exchange identifier-match="https://www.google.com.*">
+                <security:openid-attribute name="email" type="http://axschema.org/contact/email" required="true" count="1"/>
+                <security:openid-attribute name="firstname" type="http://axschema.org/namePerson/first" required="true"/>
+                <security:openid-attribute name="lastname" type="http://axschema.org/namePerson/last" required="true"/>
             </security:attribute-exchange>
+            <security:attribute-exchange identifier-match=".*openid-provider.appspot.com.*">
+                <security:openid-attribute name="email" type="http://axschema.org/contact/email" required="true" count="1"/>
+                <security:openid-attribute name="firstname" type="http://axschema.org/namePerson/first" required="true"/>
+                <security:openid-attribute name="lastname" type="http://axschema.org/namePerson/last" required="true"/>
+            </security:attribute-exchange>
+            <security:attribute-exchange identifier-match=".*yahoo.com.*">
+                <security:openid-attribute name="email" type="http://axschema.org/contact/email" required="true"/>
+                <security:openid-attribute name="fullname" type="http://axschema.org/namePerson" required="true"/>
+            </security:attribute-exchange>
+            <security:attribute-exchange identifier-match=".*myopenid.com.*">
+                <security:openid-attribute name="email" type="http://schema.openid.net/contact/email" required="true" count="1"/>
+                <security:openid-attribute name="fullname" type="http://schema.openid.net/namePerson" required="true"/>
+             </security:attribute-exchange>
         </security:openid-login>
         <security:form-login login-page="/login" default-target-url="/" authentication-failure-url="/login?authfail=form" />
         <security:logout/>
@@ -78,6 +91,11 @@
         <constructor-arg name="displayNameAttributeName" value="displayName"/>
         <constructor-arg name="pageLayoutCode" value="columns_3"/>
     </bean>
+    
+    <bean id="openIdAuthFailureHandler" class="org.apache.rave.portal.web.controller.handler.OpenIDAuthenticationFailureHandler">
+    	<property name="defaultFailureUrl" value="/login?authfail=openid"/>
+    </bean>
+    
 
     <!-- enable the spring security annotations -->
     <security:global-method-security secured-annotations="enabled" pre-post-annotations="enabled">

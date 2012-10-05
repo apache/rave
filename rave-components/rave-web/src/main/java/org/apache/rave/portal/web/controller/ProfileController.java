@@ -58,13 +58,32 @@ public class ProfileController {
     /**
 	 * Views the main page of another user's profile
 	 *
-     * @param userid			    userid 
+     * @param username			    username (allows for a period in the username)
      * @param model                 {@link Model} map
      * @param referringPageId		page reference id (optional)
 	 * @return the view name of the user profile page
 	 */
-	
-	@RequestMapping(value = {"/{userid:.*}"}, method = RequestMethod.GET)
+	@RequestMapping(value = {"/{username:.*}"}, method = RequestMethod.GET)
+	public String viewProfileByUsername(@PathVariable String username, ModelMap model, @RequestParam(required = false) String referringPageId) {
+		logger.debug("Viewing person profile for: " + username);
+		User user = userService.getUserByUsername(username);
+        Page personProfilePage = pageService.getPersonProfilePage(user.getId());
+        addAttributesToModel(model, user, referringPageId);
+        model.addAttribute(ModelKeys.PAGE, personProfilePage);
+		String view =  ViewNames.getPersonPageView(personProfilePage.getPageLayout().getCode());
+        List<Person> friendRequests = userService.getFriendRequestsReceived(username);
+        addNavItemsToModel(view, model, referringPageId, user, friendRequests);
+        return view;
+	}
+	  /**
+		 * Views the main page of another user's profile
+		 *
+	     * @param userid			    user entity id
+	     * @param model                 {@link Model} map
+	     * @param referringPageId		page reference id (optional)
+		 * @return the view name of the user profile page
+		 */
+	@RequestMapping(value = {"/id/{userid:.*}"}, method = RequestMethod.GET)
 	public String viewProfile(@PathVariable String userid, ModelMap model, @RequestParam(required = false) String referringPageId) {
 		User user = userService.getUserById(userid);
 		logger.debug("Viewing person profile for: " + user.getUsername());
@@ -77,6 +96,7 @@ public class ProfileController {
         addNavItemsToModel(view, model, referringPageId, user, friendRequests);
         return view;
 	}
+
 	/**
 	 * Updates the user's personal information
 	 *

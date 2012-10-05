@@ -37,6 +37,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.openid.OpenIDAttribute;
+import org.springframework.security.openid.OpenIDAuthenticationStatus;
+import org.springframework.security.openid.OpenIDAuthenticationToken;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,6 +64,8 @@ public class DefaultUserServiceTest {
 
     private static final String USER_NAME = "1234";
     private static final String USER_EMAIL = "test@test.com";
+    private static final String OPENID_INVALID = "http://user.myopenid.com/";
+    private static final String OPENID_VALID = "http://rave2011.myopenid.com/";
     private static final String VALID_WIDGET_ID = "1";
     private static final String INVALID_USER_ID = "-9999";
 
@@ -193,14 +198,49 @@ public class DefaultUserServiceTest {
 
      @Test
      public void getUserByEmail_valid() {
-          final User authUser=new UserImpl(USER_ID,USER_NAME);
-          authUser.setEmail(USER_EMAIL);
+        final User authUser=new UserImpl(USER_ID,USER_NAME);
+        authUser.setEmail(USER_EMAIL);
         expect(userRepository.getByUserEmail(USER_EMAIL)).andReturn(authUser).anyTimes();
         replay(userRepository);
 
         UserDetails result = service.getUserByEmail(USER_EMAIL);
         assertThat((User)result, is(sameInstance(authUser)));
         verify(userRepository);
+     }
+     
+     @Test
+     public void getUserByOpenId_valid() {
+    	final User authUser=new UserImpl(USER_ID,USER_NAME);
+        authUser.setOpenId(OPENID_VALID);
+        expect(userRepository.getByOpenId(OPENID_VALID)).andReturn(authUser).anyTimes();
+        replay(userRepository);
+
+        UserDetails result = service.getUserByOpenId(OPENID_VALID);
+        assertThat((User)result, is(sameInstance(authUser)));
+        verify(userRepository);
+     }
+     
+     @Test
+     public void loadUserDetails_valid() {
+     	final User authUser=new UserImpl(USER_ID,USER_NAME);
+        authUser.setOpenId(OPENID_VALID);
+        expect(userRepository.getByOpenId(OPENID_VALID)).andReturn(authUser).anyTimes();
+        replay(userRepository);
+         OpenIDAuthenticationToken postAuthToken = new OpenIDAuthenticationToken(OpenIDAuthenticationStatus.SUCCESS,OPENID_VALID, 
+         		"Some message", new ArrayList<OpenIDAttribute>());
+         UserDetails result = service.loadUserDetails(postAuthToken);
+         assertThat((User)result, is(sameInstance(authUser)));
+         verify(userRepository);
+     }
+     
+     @Test(expected = UsernameNotFoundException.class)
+     public void loadUserDetails_invalid_exception() {
+         expect(userRepository.getByOpenId(OPENID_INVALID)).andReturn(null);
+         replay(userRepository);
+         OpenIDAuthenticationToken postAuthToken = new OpenIDAuthenticationToken(OpenIDAuthenticationStatus.SUCCESS,OPENID_INVALID, 
+         		"Some message", new ArrayList<OpenIDAttribute>());
+         service.loadUserDetails(postAuthToken);
+         verify(userRepository);
      }
 
 

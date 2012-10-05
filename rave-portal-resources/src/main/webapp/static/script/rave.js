@@ -36,6 +36,8 @@ var rave = rave || (function () {
     };
     // JS debug mode is off by default
     var javaScriptDebugMode = 0;
+    //Assigning a default value of 250 if unable to get value from the DB
+    var defaultWidgetHeight = 250;
     var onWidgetsInitializedHandlers = [];
     var onProvidersInitializedHandlers = [];
     var onUIInitializedHandlers = [];
@@ -92,6 +94,9 @@ var rave = rave || (function () {
                     container.show("slide", { direction:"right" }, 'fast');
                     $('body').addClass('modal-open');
                     $('body').append('<div class="modal-backdrop fade in"></div>');
+                    // hide the main browser window's scrollbar to prevent possible "double scrollbar" rendering
+                    // between it and an iframe vertical scrollbar
+                    $('body').addClass('no-scroll');
                 },
                 cleanup:function (content) {
                     var container = content.parents(this.containerSelector);
@@ -99,6 +104,8 @@ var rave = rave || (function () {
                         container.detach();
                         $('body').removeClass('modal-open');
                         $('.modal-backdrop').remove();
+                        // restore the main browser window's scrollbar
+                        $('body').removeClass('no-scroll');
                     });
                 },
                 singleton:true
@@ -430,7 +437,10 @@ var rave = rave || (function () {
             }
         }
 
-        function createPopup(popupType) {
+        function createPopup(popupType, prefs) {
+            var height = (prefs && prefs.preferredHeight);
+            var width = (prefs && prefs.preferredWidth);
+
             var target = POPUPS[popupType.toLowerCase()];
 
             if (!target) {
@@ -442,6 +452,12 @@ var rave = rave || (function () {
             }
 
             var container = $(target.markup);
+            if(height) {
+                container.height(height);
+            }
+            if(width) {
+                container.width(width);
+            }
             $("#pageContent").prepend(container);
 
             if ($.type(target.initialize) == 'function') target.initialize(container);
@@ -875,7 +891,8 @@ var rave = rave || (function () {
             displayEmptyPageMessage:displayEmptyPageMessage,
             displayUsersOfWidget:displayUsersOfWidget,
             showInfoMessage:showInfoMessage,
-            registerPopup:registerPopup
+            registerPopup:registerPopup,
+            styleWidgetButtons: styleWidgetButtons
         };
 
     })();
@@ -955,23 +972,26 @@ var rave = rave || (function () {
     function resetOpenAjaxHubInstance() {
         openAjaxHub = null;
     }
-    
-    function renderNewWidget(regionWidgetId){
+
+    function renderNewWidget(regionWidgetId, init){
         // When run as the callback argument supplied to rave.api.rpc.addWidgetToPage
         // this method will render the widget in the current page.
-        
         // load widget into a placeholder element
         var placeholder = document.createElement("div");
-        $(placeholder).load(rave.getContext()+"/api/rest/regionwidget/"+regionWidgetId, function(){
-          // prepend to first region
-          var region = $("#region-1-id");
-          region.prepend(placeholder);
-          // remove the placeholder around the widget-wrapper
-          region.children(":first").children(":first").unwrap();
-          // initialize
-          initializeWidgets();
-          }        
-        );
+        $(placeholder).load(rave.getContext()+"api/rest/regionwidget/"+regionWidgetId, function(){
+            var $firstRegion = $(".region:not(.region-locked):first")
+            var firstRegionId = ($firstRegion).attr('id');
+            // prepend to first region
+            var region = $("#"+firstRegionId);
+            region.prepend(placeholder);
+            // remove the placeholder around the widget-wrapper
+            region.children(":first").children(":first").unwrap();
+            if(init){
+                initializeWidgets();
+                rave.styleWidgetButtons(regionWidgetId);
+                rave.layout.bindWidgetMenu(regionWidgetId);
+            }
+        });
     }
 
     function initializeWidgets() {
@@ -1030,7 +1050,6 @@ var rave = rave || (function () {
     }
 
     function initializeWidget(widget) {
-    
         // Widget has been deleted on the page but not removed from list
         var widgetBody = $(["#widget-", widget.regionWidgetId, "-body"].join(""));
         if(widgetBody.length === 0){
@@ -1041,7 +1060,7 @@ var rave = rave || (function () {
               return;
             }
         }
-    
+
         if (widget.type == "DISABLED") {
             renderDisabledWidget(widget.regionWidgetId, unescape(widget.disabledMessage));
             return;
@@ -1089,6 +1108,14 @@ var rave = rave || (function () {
 
     function getJavaScriptDebugMode(){
         return javaScriptDebugMode;
+    }
+
+    function setDefaultWidgetHeight(widgetHeight) {
+        defaultWidgetHeight = widgetHeight;
+    }
+
+    function getDefaultWidgetHeight(){
+        return defaultWidgetHeight;
     }
 
     function setPageViewer(viewer) {
@@ -1310,6 +1337,12 @@ var rave = rave || (function () {
          */
         setJavaScriptDebugMode: setJavaScriptDebugMode,
 
+        /*Gets the value of the Default Widget Height*/
+        getDefaultWidgetHeight: getDefaultWidgetHeight,
+
+        /*Sets the value of the Default Widget Height*/
+        setDefaultWidgetHeight: setDefaultWidgetHeight,
+
         /**
          * Sets the authenticated page viewer for the Rave web application
          *
@@ -1467,6 +1500,8 @@ var rave = rave || (function () {
          * @param message The message to display.
          */
         showInfoMessage:ui.showInfoMessage,
+        
+        styleWidgetButtons : ui.styleWidgetButtons,
 
         /**
          * Returns a language specific message based on the supplied key

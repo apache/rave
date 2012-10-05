@@ -115,4 +115,10 @@ public class OpenSocialWidgetMetadataResolver implements WidgetMetadataResolver 
       // not implemented
       return null;
     }
+
+    @Override
+    public Widget publishRemote(String url) {
+        // not implemented
+        return null;
+    }
 }

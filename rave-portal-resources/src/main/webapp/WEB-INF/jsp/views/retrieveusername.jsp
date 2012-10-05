@@ -26,47 +26,50 @@
 <rave:login_navbar hideButton="requestNewUsernameButton" />
 
 <div class="container-fluid">
-	<div class="row-fluid">
-	    <h1><fmt:message key="page.retrieveusername.title"/></h1>
-	    <c:choose>
-	        <c:when test="${success}">
-	
-	            <div class="alert-message success">
-	                <fmt:message key="page.newpassword.email.sent">
-	                    <fmt:param>${email}</fmt:param>
-	                </fmt:message>
-	            </div>
-	            <a href="<c:url value="/"/>"><fmt:message key="page.newpassword.email.sent.login"/></a>
-	        </c:when>
-	
-	        <c:otherwise>
-	            <form:form cssClass="form-horizontal well" commandName="user" action="retrieveusername" method="post">
-	                <fieldset>
-	                    <p><fmt:message key="form.all.fields.required"/></p>
-	
-	                    <p><form:errors cssClass="error"/></p>
-	
-	                    <div class="control-group">
-	
-	                        <label class="control-label" for="emailField"><fmt:message key="page.general.email"/></label>
-	                        <div class="controls">
-	                            <form:input id="emailField" path="email" required="required" autofocus="autofocus"/>
-	                            <form:errors path="email" cssClass="error"/>
-	                        </div>
-	                    </div>
-	                </fieldset>
-	                <fieldset>
-	                    <div class="control-group">
-	                        <div class="controls">${captchaHtml}</div>
-	                    </div>
-	                </fieldset>
-	
-	                <fieldset>
-	                    <fmt:message key="page.login.forgot.username.button" var="submitButtonText"/>
-	                    <button class="btn btn-primary" type="submit" value="${submitButtonText}">${submitButtonText}</button>
-	                </fieldset>
-	            </form:form>
-	        </c:otherwise>
-	    </c:choose>
-	</div>
+    <div class="row-fluid">
+        <h1><fmt:message key="page.retrieveusername.title"/></h1>
+        <c:choose>
+            <c:when test="${success}">
+    
+                <div class="alert-message success">
+                    <fmt:message key="page.newpassword.email.sent">
+                        <fmt:param>${email}</fmt:param>
+                    </fmt:message>
+                </div>
+                <a href="<c:url value="/"/>"><fmt:message key="page.newpassword.email.sent.login"/></a>
+            </c:when>
+    
+            <c:otherwise>
+                <form:form cssClass="form-horizontal well" commandName="user" action="retrieveusername" method="post">
+                    <fieldset>
+                        <p><fmt:message key="form.all.fields.required"/></p>
+    
+                        <p><form:errors cssClass="error"/></p>
+    
+                        <div class="control-group">
+    
+                            <label class="control-label" for="emailField"><fmt:message key="page.general.email"/></label>
+                            <div class="controls">
+                                <spring:bind path="email">
+                                    <input type="email" name="email" id="emailField" required="required" autofocus="autofocus"
+                                            value="<c:out value="${status.value}"/>"/>
+                                </spring:bind>
+                                <form:errors path="email" cssClass="error"/>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <fieldset>
+                        <div class="control-group">
+                            <div class="controls">${captchaHtml}</div>
+                        </div>
+                    </fieldset>
+    
+                    <fieldset>
+                        <fmt:message key="page.login.forgot.username.button" var="submitButtonText"/>
+                        <button class="btn btn-primary" type="submit" value="${submitButtonText}">${submitButtonText}</button>
+                    </fieldset>
+                </form:form>
+            </c:otherwise>
+        </c:choose>
+    </div>
 </div>

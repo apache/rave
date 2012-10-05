@@ -91,6 +91,7 @@
     background-color: white;
     border-radius: 0 0 5px 5px;
     height: 100%;
+    overflow-x: hidden;
 }
 
 .widget-mobile {
@@ -148,6 +149,10 @@
     box-shadow: none !important;
     -webkit-box-shadow: none !important;
     -moz-box-shadow: none !important;
+}
+
+.widget-wrapper-canvas .widget {
+    overflow-x: auto;
 }
 
 .widget-wrapper-mobile {
@@ -1158,8 +1163,7 @@ span.error, label.error {
     width: 451px;
     height: 90%;
     padding: 15px;
-    overflow-y: auto;
-    overflow-x: visible;
+    overflow: hidden;
     z-index: 5000
 }
 
@@ -1182,6 +1186,9 @@ footer {
     font-style: italic;
 }
 
+.no-scroll {
+    overflow: hidden;
+}
 
 /* RESPONSIVE */
 @media (max-width: 767px){
