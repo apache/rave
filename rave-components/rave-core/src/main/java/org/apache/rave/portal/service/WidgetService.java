@@ -20,6 +20,7 @@
 package org.apache.rave.portal.service;
 
 import org.apache.rave.portal.model.Widget;
+import org.apache.rave.portal.model.WidgetComment;
 import org.apache.rave.portal.model.WidgetTag;
 import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.model.util.WidgetStatistics;
@@ -189,4 +190,28 @@ public interface WidgetService {
     // No security check required as everyone is allowed to create a tag
     WidgetTag createWidgetTag(String widgetId, WidgetTag widgetTag);
 
+    // ***************************************************************************************************************
+    // Widget Comment Methods
+    // ***************************************************************************************************************
+
+    @PostAuthorize("hasPermission(returnObject, 'read')")
+    WidgetComment getWidgetComment(String widgetId, String id);
+
+    // No security check required as everyone is allowed to create a comment
+    void createWidgetComment(String widgetId, WidgetComment widgetComment);
+
+    @PreAuthorize("hasPermission(#widgetComment, 'update')")
+    void updateWidgetComment(String widgetId, WidgetComment widgetComment);
+
+    @PreAuthorize("hasPermission(#commentId, 'org.apache.rave.portal.model.WidgetComment', 'delete')")
+    void removeWidgetComment(String widgetId, String commentId);
+
+    /**
+     * Deletes all Widget Comments for a userId
+     *
+     * @param userId
+     * @return number of comments deleted
+     */
+    @PreAuthorize("hasPermission(new org.apache.rave.portal.security.impl.RaveSecurityContext(#userId, 'org.apache.rave.portal.model.User'), 'org.apache.rave.portal.model.WidgetComment', 'delete')")
+    int deleteAllWidgetComments(String userId);
 }

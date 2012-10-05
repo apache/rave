@@ -197,4 +197,24 @@ public interface WidgetRepository extends Repository<Widget> {
     WidgetTag saveWidgetTag(String widgetId, WidgetTag tag);
 
     void deleteWidgetTag(WidgetTag tag);
+
+    // ***************************************************************************************************************
+    // Widget Comment Methods
+    // ***************************************************************************************************************
+
+    WidgetComment getCommentById(String widgetId, String widgetCommentId);
+
+    WidgetComment createWidgetComment(String widgetId, WidgetComment comment);
+
+    WidgetComment updateWidgetComment(String widgetId, WidgetComment comment);
+
+    void deleteWidgetComment(String widgetId, WidgetComment comment);
+
+    /**
+     * Delete all Widget Comments for a userId
+     *
+     * @param userId
+     * @return count of comments deleted
+     */
+    int deleteAllWidgetComments(String userId);
 }

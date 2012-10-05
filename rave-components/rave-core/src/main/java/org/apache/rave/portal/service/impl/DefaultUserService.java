@@ -59,7 +59,6 @@ public class DefaultUserService implements UserService {
     private final PageRepository pageRepository;
     private final PageTemplateRepository pageTemplateRepository;
     private final WidgetRatingRepository widgetRatingRepository;
-    private final WidgetCommentRepository widgetCommentRepository;
     private final WidgetRepository widgetRepository;
     private final CategoryRepository categoryRepository;
     private final PersonRepository personRepository;
@@ -104,7 +103,6 @@ public class DefaultUserService implements UserService {
     public DefaultUserService(PageRepository pageRepository,
                               UserRepository userRepository,
                               WidgetRatingRepository widgetRatingRepository,
-                              WidgetCommentRepository widgetCommentRepository,
                               WidgetRepository widgetRepository,
                               PageTemplateRepository pageTemplateRepository,
                               CategoryRepository categoryRepository,
@@ -112,7 +110,6 @@ public class DefaultUserService implements UserService {
         this.userRepository = userRepository;
         this.pageRepository = pageRepository;
         this.widgetRatingRepository = widgetRatingRepository;
-        this.widgetCommentRepository = widgetCommentRepository;
         this.widgetRepository = widgetRepository;
         this.pageTemplateRepository = pageTemplateRepository;
         this.categoryRepository = categoryRepository;
@@ -258,7 +255,7 @@ public class DefaultUserService implements UserService {
         // delete all person pages
         int numDeletedPersonPages = pageRepository.deletePages(userId, PageType.PERSON_PROFILE);
         // delete all the widget comments
-        int numWidgetComments = widgetCommentRepository.deleteAll(userId);
+        int numWidgetComments = widgetRepository.deleteAllWidgetComments(userId);
         // delete all the widget ratings
         int numWidgetRatings = widgetRatingRepository.deleteAll(userId);
         // unassign the user from any widgets where they were the owner

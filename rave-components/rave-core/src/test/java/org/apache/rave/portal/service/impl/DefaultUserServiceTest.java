@@ -56,7 +56,6 @@ public class DefaultUserServiceTest {
     private UserRepository userRepository;
     private PageRepository pageRepository;
     private PageTemplateRepository pageTemplateRepository;
-    private WidgetCommentRepository widgetCommentRepository;
     private WidgetRatingRepository widgetRatingRepository;
     private WidgetRepository widgetRepository;
     private CategoryRepository categoryRepository;
@@ -74,13 +73,12 @@ public class DefaultUserServiceTest {
         userRepository = createMock(UserRepository.class);
         pageRepository = createMock(PageRepository.class);
         pageTemplateRepository = createMock(PageTemplateRepository.class);
-        widgetCommentRepository = createMock(WidgetCommentRepository.class);
         widgetRatingRepository = createMock(WidgetRatingRepository.class);
         widgetRepository = createMock(WidgetRepository.class);
         categoryRepository = createMock(CategoryRepository.class);
         personRepository = createMock(PersonRepository.class);
 
-        service = new DefaultUserService(pageRepository, userRepository, widgetRatingRepository, widgetCommentRepository,
+        service = new DefaultUserService(pageRepository, userRepository, widgetRatingRepository,
                                          widgetRepository, pageTemplateRepository, categoryRepository, personRepository);
     }
 
@@ -317,27 +315,27 @@ public class DefaultUserServiceTest {
         expect(userRepository.get(USER_ID)).andReturn(user);
         expect(pageRepository.deletePages(USER_ID, PageType.USER)).andReturn(pages.size());
         expect(pageRepository.deletePages(USER_ID, PageType.PERSON_PROFILE)).andReturn(pages.size());
-        expect(widgetCommentRepository.deleteAll(USER_ID)).andReturn(NUM_COMMENTS);
+        expect(widgetRepository.deleteAllWidgetComments(USER_ID)).andReturn(NUM_COMMENTS);
         expect(widgetRatingRepository.deleteAll(USER_ID)).andReturn(NUM_RATINGS);
         expect(widgetRepository.unassignWidgetOwner(USER_ID)).andReturn( NUM_WIDGETS_OWNED);
         expect(categoryRepository.removeFromCreatedOrModifiedFields(USER_ID)).andReturn( NUM_WIDGETS_OWNED);
         userRepository.delete(user);
         expectLastCall();
-        replay(userRepository, pageRepository, widgetCommentRepository, widgetRatingRepository, widgetRepository, categoryRepository);
+        replay(userRepository, pageRepository, widgetRatingRepository, widgetRepository, categoryRepository);
 
         service.deleteUser(USER_ID);
 
-        verify(userRepository, pageRepository, widgetCommentRepository, widgetRatingRepository, widgetRepository, categoryRepository);
+        verify(userRepository, pageRepository, widgetRatingRepository, widgetRepository, categoryRepository);
     }
 
     @Test
     public void deleteUser_invalidUserId() {
         expect(userRepository.get(INVALID_USER_ID)).andReturn(null);
-        replay(userRepository, pageRepository, widgetCommentRepository, widgetRatingRepository, widgetRepository);
+        replay(userRepository, pageRepository, widgetRatingRepository, widgetRepository);
 
         service.deleteUser(INVALID_USER_ID);
 
-        verify(userRepository, pageRepository, widgetCommentRepository, widgetRatingRepository, widgetRepository);
+        verify(userRepository, pageRepository, widgetRatingRepository, widgetRepository);
     }
 
     @Test

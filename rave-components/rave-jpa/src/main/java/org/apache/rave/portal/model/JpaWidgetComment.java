@@ -94,12 +94,10 @@ public class JpaWidgetComment implements BasicEntity, Serializable, WidgetCommen
         this.entityId = entityId;
     }
 
-    @Override
     public String getWidgetId() {
         return widgetId.toString();
     }
 
-    @Override
     public void setWidgetId(String widgetId) {
         this.widgetId = Long.parseLong(widgetId);
     }

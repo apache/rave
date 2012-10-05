@@ -25,7 +25,6 @@ import java.util.Date;
 
 public class WidgetCommentImpl implements WidgetComment {
     private String id;
-    private String widgetId;
     private String userId;
     private String text;
     private Date lastModifiedDate;
@@ -44,16 +43,6 @@ public class WidgetCommentImpl implements WidgetComment {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    @Override
-    public String getWidgetId() {
-        return widgetId;
-    }
-
-    @Override
-    public void setWidgetId(String widgetId) {
-        this.widgetId = widgetId;
     }
 
     @Override

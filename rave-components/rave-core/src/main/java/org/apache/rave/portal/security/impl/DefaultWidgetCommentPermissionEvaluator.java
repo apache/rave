@@ -17,7 +17,7 @@ package org.apache.rave.portal.security.impl;
 
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.WidgetComment;
-import org.apache.rave.portal.repository.WidgetCommentRepository;
+import org.apache.rave.portal.repository.WidgetRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,11 +34,11 @@ import java.util.List;
 public class DefaultWidgetCommentPermissionEvaluator extends AbstractModelPermissionEvaluator<WidgetComment> {
 
     private Logger log = LoggerFactory.getLogger(getClass());
-    private WidgetCommentRepository widgetCommentRepository;
+    private WidgetRepository widgetRepository;
 
     @Autowired
-    public DefaultWidgetCommentPermissionEvaluator(WidgetCommentRepository widgetCommentRepository) {
-        this.widgetCommentRepository = widgetCommentRepository;
+    public DefaultWidgetCommentPermissionEvaluator(WidgetRepository widgetRepository) {
+        this.widgetRepository = widgetRepository;
     }
 
     @Override
@@ -83,7 +83,7 @@ public class DefaultWidgetCommentPermissionEvaluator extends AbstractModelPermis
         if (targetId instanceof RaveSecurityContext) {
             hasPermission = verifyRaveSecurityContext(authentication, (RaveSecurityContext)targetId, permission);
         } else {
-            hasPermission = hasPermission(authentication, widgetCommentRepository.get((String)targetId), permission, true);
+            hasPermission = hasPermission(authentication, widgetRepository.getCommentById(null, (String)targetId), permission, true);
         }
         return hasPermission;
     }
@@ -110,9 +110,9 @@ public class DefaultWidgetCommentPermissionEvaluator extends AbstractModelPermis
                 hasPermission =  true;
                 break;
             case CREATE:
-            case CREATE_OR_UPDATE:
-                hasPermission = isWidgetCommentOwnerById(authentication, widgetComment.getUserId());
+                hasPermission = true;
                 break;
+            case CREATE_OR_UPDATE:
             case DELETE:
             case UPDATE:
                 // anyone can create, delete, read, or update a page that they own
@@ -181,7 +181,7 @@ public class DefaultWidgetCommentPermissionEvaluator extends AbstractModelPermis
     private WidgetComment getTrustedWidgetComment(String widgetCommentId, List<WidgetComment> trustedWidgetCommentContainer) {
         WidgetComment p = null;
         if (trustedWidgetCommentContainer.isEmpty()) {
-            p = widgetCommentRepository.get(widgetCommentId);
+            p = widgetRepository.getCommentById(null, widgetCommentId);
             trustedWidgetCommentContainer.add(p);
         } else {
             p = trustedWidgetCommentContainer.get(0);

@@ -22,6 +22,7 @@ package org.apache.rave.portal.repository.impl;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.rave.portal.model.*;
+import org.apache.rave.portal.model.conversion.JpaWidgetCommentConverter;
 import org.apache.rave.portal.model.conversion.JpaWidgetConverter;
 import org.apache.rave.portal.model.conversion.JpaWidgetTagConverter;
 import org.apache.rave.portal.model.util.WidgetStatistics;
@@ -52,6 +53,9 @@ public class JpaWidgetRepository implements WidgetRepository {
 
     @Autowired
     private JpaWidgetTagConverter tagConverter;
+
+    @Autowired
+    private JpaWidgetCommentConverter commentConverter;
 
     @Autowired
     private TagRepository tagRepository;
@@ -403,5 +407,46 @@ public class JpaWidgetRepository implements WidgetRepository {
     @Override
     public void deleteWidgetTag(WidgetTag tag) {
         manager.remove(tag instanceof JpaWidgetTag ? tag: manager.find(Tag.class, tag.getTagId()));
+    }
+
+    // ***************************************************************************************************************
+    // Widget Comment Methods
+    // ***************************************************************************************************************
+
+    @Override
+    public WidgetComment getCommentById(String widgetId, String widgetCommentId) {
+        // widgetId ignored in JPA
+        return manager.find(JpaWidgetComment.class, Long.parseLong(widgetCommentId));
+    }
+
+    @Override
+    public WidgetComment createWidgetComment(String widgetId, WidgetComment comment) {
+        JpaWidgetComment category = commentConverter.convert(comment, widgetId);
+        return saveOrUpdate(category.getEntityId(), manager, category);
+    }
+
+    @Override
+    public WidgetComment updateWidgetComment(String widgetId, WidgetComment comment) {
+        JpaWidgetComment category = commentConverter.convert(comment, widgetId);
+        return saveOrUpdate(category.getEntityId(), manager, category);
+    }
+
+    @Override
+    public void deleteWidgetComment(String widgetId, WidgetComment comment) {
+        // widgetId ignored in JPA
+        manager.remove(comment instanceof JpaWidgetComment ? comment : getCommentById(widgetId, comment.getId()));
+    }
+
+    /**
+     * Delete all Widget Comments for a userId
+     *
+     * @param userId
+     * @return count of comments deleted
+     */
+    @Override
+    public int deleteAllWidgetComments(String userId) {
+        TypedQuery<JpaWidgetComment> query = manager.createNamedQuery(JpaWidgetComment.DELETE_ALL_BY_USER, JpaWidgetComment.class);
+        query.setParameter("userId", userId);
+        return query.executeUpdate();
     }
 }

@@ -22,11 +22,9 @@ package org.apache.rave.portal.service.impl;
 import org.apache.rave.exception.DuplicateItemException;
 import org.apache.rave.portal.model.Category;
 import org.apache.rave.portal.model.Widget;
+import org.apache.rave.portal.model.WidgetComment;
 import org.apache.rave.portal.model.WidgetStatus;
-import org.apache.rave.portal.model.impl.CategoryImpl;
-import org.apache.rave.portal.model.impl.UserImpl;
-import org.apache.rave.portal.model.impl.WidgetImpl;
-import org.apache.rave.portal.model.impl.WidgetTagImpl;
+import org.apache.rave.portal.model.impl.*;
 import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.model.util.WidgetStatistics;
 import org.apache.rave.portal.repository.CategoryRepository;
@@ -44,6 +42,7 @@ import java.util.List;
 import static org.easymock.EasyMock.*;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Test for {@link DefaultWidgetService}
@@ -394,6 +393,48 @@ public class DefaultWidgetServiceTest {
         }
 
 
+    }
+
+    @Test
+    public void getWidgetComment() {
+        WidgetComment comment = new WidgetCommentImpl("1");
+        expect(widgetRepository.getCommentById("1", "1")).andReturn(comment);
+        replay(widgetRepository);
+
+        assertEquals(comment, widgetService.getWidgetComment("1", "1"));
+        verify(widgetRepository);
+    }
+
+    @Test
+    public void createWidgetComment() {
+        WidgetComment comment = new WidgetCommentImpl("1");
+        expect(widgetRepository.createWidgetComment("1", comment)).andReturn(comment);
+        replay(widgetRepository);
+
+        widgetService.createWidgetComment("1", comment);
+        verify(widgetRepository);
+    }
+
+    @Test
+    public void deleteWidgetComment() {
+        WidgetComment comment = new WidgetCommentImpl("1");
+        expect(widgetRepository.getCommentById("1","1")).andReturn(comment);
+        widgetRepository.deleteWidgetComment("1", comment);
+        replay(widgetRepository);
+
+        widgetService.removeWidgetComment("1", "1");
+        verify(widgetRepository);
+    }
+
+    @Test
+    public void deleteAllComments() {
+        final String USER_ID = "33";
+        final int EXPECTED_COUNT = 43;
+
+        expect(widgetRepository.deleteAllWidgetComments(USER_ID)).andReturn(EXPECTED_COUNT);
+        replay(widgetRepository);
+        assertThat(widgetService.deleteAllWidgetComments(USER_ID), is(EXPECTED_COUNT));
+        verify(widgetRepository);
     }
 
 }

@@ -44,7 +44,6 @@ import java.util.List;
 @RequestMapping("/api/rest/widgets")
 public class WidgetApi extends AbstractRestApi {
     private static Logger logger = LoggerFactory.getLogger(WidgetApi.class);
-    private final WidgetCommentService widgetCommentService;
     private final WidgetRatingService widgetRatingService;
     private final UserService userService;
     private final TagService tagService;
@@ -52,9 +51,8 @@ public class WidgetApi extends AbstractRestApi {
 
 
     @Autowired
-    public WidgetApi(WidgetRatingService widgetRatingService, WidgetCommentService widgetCommentService, UserService userService,
+    public WidgetApi(WidgetRatingService widgetRatingService, UserService userService,
                      TagService tagService, WidgetService widgetService) {
-        this.widgetCommentService = widgetCommentService;
         this.widgetRatingService = widgetRatingService;
         this.userService = userService;
         this.tagService = tagService;
@@ -72,21 +70,21 @@ public class WidgetApi extends AbstractRestApi {
                                     @RequestParam String text,
                                     HttpServletResponse response) {
         WidgetComment widgetComment = new WidgetCommentImpl();
-        widgetComment.setWidgetId(widgetId);
         widgetComment.setUserId(userService.getAuthenticatedUser().getId());
         widgetComment.setText(text);
         widgetComment.setCreatedDate(new Date());
         widgetComment.setLastModifiedDate(new Date());
 
-        widgetCommentService.saveWidgetComment(widgetComment);
+        widgetService.createWidgetComment(widgetId, widgetComment);
 
         response.setStatus(HttpStatus.NO_CONTENT.value());
     }
 
+    @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/{widgetId}/comments/{widgetCommentId}")
     public WidgetComment getWidgetComment(@PathVariable String widgetId,
                                           @PathVariable String widgetCommentId) {
-        return widgetCommentService.getWidgetComment(widgetCommentId);
+        return widgetService.getWidgetComment(widgetId, widgetCommentId);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/{widgetId}/comments/{widgetCommentId}")
@@ -95,17 +93,18 @@ public class WidgetApi extends AbstractRestApi {
                                     @RequestParam String text,
                                     HttpServletResponse response) {
 
-        WidgetComment widgetComment = widgetCommentService.getWidgetComment(widgetCommentId);
+        WidgetComment widgetComment = widgetService.getWidgetComment(widgetId, widgetCommentId);
         if (widgetComment == null) {
             widgetComment = new WidgetCommentImpl();
-            widgetComment.setWidgetId(widgetId);
             widgetComment.setUserId(userService.getAuthenticatedUser().getId());
             widgetComment.setCreatedDate(new Date());
             widgetComment.setLastModifiedDate(new Date());
+            widgetComment.setText(text);
+            widgetService.createWidgetComment(widgetId, widgetComment);
+        } else {
+            widgetComment.setText(text);
+            widgetService.updateWidgetComment(widgetId, widgetComment);
         }
-        widgetComment.setText(text);
-
-        widgetCommentService.saveWidgetComment(widgetComment);
 
         response.setStatus(HttpStatus.NO_CONTENT.value());
     }
@@ -114,7 +113,7 @@ public class WidgetApi extends AbstractRestApi {
     public void deleteWidgetComment(@PathVariable String widgetId,
                                     @PathVariable String widgetCommentId,
                                     HttpServletResponse response) {
-        widgetCommentService.removeWidgetComment(widgetCommentId);
+        widgetService.removeWidgetComment(widgetId, widgetCommentId);
 
         response.setStatus(HttpStatus.NO_CONTENT.value());
     }

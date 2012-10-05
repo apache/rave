@@ -201,4 +201,37 @@ public class DefaultWidgetService implements WidgetService {
     public WidgetTag getWidgetTagByWidgetIdAndKeyword(String widgetId, String keyword) {
         return widgetRepository.getTagByWidgetIdAndKeyword(widgetId, keyword);
     }
+
+    // ***************************************************************************************************************
+    // Widget Comment Methods
+    // ***************************************************************************************************************
+
+    @Override
+    public WidgetComment getWidgetComment(String widgetId, String commentId) {
+        return widgetRepository.getCommentById(widgetId, commentId);
+    }
+
+    @Override
+    @Transactional
+    public void createWidgetComment(String widgetId, WidgetComment widgetComment) {
+        widgetRepository.createWidgetComment(widgetId, widgetComment);
+    }
+
+    @Override
+    @Transactional
+    public void updateWidgetComment(String widgetId, WidgetComment widgetComment) {
+        widgetRepository.updateWidgetComment(widgetId, widgetComment);
+    }
+
+    @Override
+    @Transactional
+    public void removeWidgetComment(String widgetId, String commentId) {
+        widgetRepository.deleteWidgetComment(widgetId, getWidgetComment(widgetId, commentId));
+    }
+
+    @Override
+    @Transactional
+    public int deleteAllWidgetComments(String userId) {
+        return widgetRepository.deleteAllWidgetComments(userId);
+    }
 }

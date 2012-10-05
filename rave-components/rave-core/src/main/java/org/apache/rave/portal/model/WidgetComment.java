@@ -32,9 +32,6 @@ public interface WidgetComment {
     String getUserId();
     void setUserId(String userId);
 
-    String getWidgetId();
-    void setWidgetId(String widgetId);
-
     String getText();
     void setText(String text);
 

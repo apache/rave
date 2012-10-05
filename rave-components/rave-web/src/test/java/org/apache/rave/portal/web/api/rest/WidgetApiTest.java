@@ -40,7 +40,6 @@ import static org.junit.Assert.assertThat;
 
 public class WidgetApiTest {
     private WidgetApi widgetApi;
-    private WidgetCommentService widgetCommentService;
     private WidgetRatingService widgetRatingService;
     private UserService userService;
     private WidgetService widgetService;
@@ -55,7 +54,6 @@ public class WidgetApiTest {
 
     @Before
     public void setup() {
-        widgetCommentService = createMock(WidgetCommentService.class);
         widgetRatingService = createMock(WidgetRatingService.class);
         userService = createMock(UserService.class);
         tagService = createMock(TagService.class);
@@ -69,7 +67,7 @@ public class WidgetApiTest {
         tagList.add(new TagImpl("2", "tag2"));
 
         response = createMock(MockHttpServletResponse.class);
-        widgetApi = new WidgetApi(widgetRatingService, widgetCommentService, userService, tagService, widgetService);
+        widgetApi = new WidgetApi(widgetRatingService, userService, tagService, widgetService);
     }
 
     @Test(expected = UnsupportedOperationException.class)
@@ -98,27 +96,26 @@ public class WidgetApiTest {
     @Test
     public void getWidgetComment() {
         WidgetComment widgetComment = new WidgetCommentImpl("2");
-        expect(widgetCommentService.getWidgetComment("2")).andReturn(widgetComment);
-        replay(widgetCommentService);
+        expect(widgetService.getWidgetComment("1", "2")).andReturn(widgetComment);
+        replay(widgetService);
 
         WidgetComment foundComment = widgetApi.getWidgetComment("1", "2");
         assertEquals(widgetComment.getId(), foundComment.getId());
 
-        verify(widgetCommentService);
+        verify(widgetService);
     }
 
     @Test
     public void updateNonExistentWidgetComment() {
         String message = "message";
         WidgetComment widgetComment = new WidgetCommentImpl();
-        widgetComment.setWidgetId("2");
         widgetComment.setText(message);
         widgetComment.setUserId(VALID_USER_ID);
 
         expect(userService.getAuthenticatedUser()).andReturn(user);
-        expect(widgetCommentService.getWidgetComment("3")).andReturn(null);
-        widgetCommentService.saveWidgetComment(widgetComment);
-        replay(userService, widgetCommentService);
+        expect(widgetService.getWidgetComment("2", "3")).andReturn(null);
+        widgetService.createWidgetComment("2", widgetComment);
+        replay(userService, widgetService);
 
         HttpServletResponse httpServletResponse = createMock(HttpServletResponse.class);
         httpServletResponse.setStatus(HttpStatus.NO_CONTENT.value());
@@ -126,7 +123,7 @@ public class WidgetApiTest {
 
         widgetApi.updateWidgetComment("2", "3", message, httpServletResponse);
 
-        verify(userService, widgetCommentService, httpServletResponse);
+        verify(userService, widgetService, httpServletResponse);
     }
 
     @Test
@@ -134,25 +131,25 @@ public class WidgetApiTest {
         String message = "updated comment";
         WidgetComment widgetComment = new WidgetCommentImpl("2");
 
-        expect(widgetCommentService.getWidgetComment("2")).andReturn(widgetComment);
-        widgetCommentService.saveWidgetComment(widgetComment);
-        replay(widgetCommentService);
+        expect(widgetService.getWidgetComment("2", "2")).andReturn(widgetComment);
+        widgetService.updateWidgetComment("2", widgetComment);
+        replay(widgetService);
 
         HttpServletResponse httpServletResponse = createMock(HttpServletResponse.class);
         httpServletResponse.setStatus(HttpStatus.NO_CONTENT.value());
         replay(httpServletResponse);
 
-        widgetApi.updateWidgetComment("1", "2", message, httpServletResponse);
+        widgetApi.updateWidgetComment("2", "2", message, httpServletResponse);
 
         assertEquals(message, widgetComment.getText());
 
-        verify(widgetCommentService, httpServletResponse);
+        verify(widgetService, httpServletResponse);
     }
 
     @Test
     public void deleteWidgetComment() {
-        widgetCommentService.removeWidgetComment("1");
-        replay(widgetCommentService);
+        widgetService.removeWidgetComment("2", "1");
+        replay(widgetService);
 
         HttpServletResponse httpServletResponse = createMock(HttpServletResponse.class);
         httpServletResponse.setStatus(HttpStatus.NO_CONTENT.value());
@@ -160,7 +157,7 @@ public class WidgetApiTest {
 
         widgetApi.deleteWidgetComment("2", "1", httpServletResponse);
 
-        verify(widgetCommentService);
+        verify(widgetService);
         verify(httpServletResponse);
     }
 

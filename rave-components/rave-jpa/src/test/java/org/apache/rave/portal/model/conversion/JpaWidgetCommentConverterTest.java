@@ -42,13 +42,13 @@ public class JpaWidgetCommentConverterTest {
     @Test
     public void noConversion() {
         WidgetComment comment = new JpaWidgetComment();
-        assertThat(widgetCommentConverter.convert(comment), is(sameInstance(comment)));
+        assertThat(widgetCommentConverter.convert(comment, null), is(sameInstance(comment)));
     }
 
     @Test
     public void nullConversion() {
         WidgetComment template = null;
-        assertThat(widgetCommentConverter.convert(template), is(nullValue()));
+        assertThat(widgetCommentConverter.convert(template, null), is(nullValue()));
     }
 
 
@@ -59,9 +59,8 @@ public class JpaWidgetCommentConverterTest {
         comment.setLastModifiedDate(new Date());
         comment.setText("hello");
         comment.setUserId("1");
-        comment.setWidgetId("9");
 
-        JpaWidgetComment converted = widgetCommentConverter.convert(comment);
+        JpaWidgetComment converted = widgetCommentConverter.convert(comment, "9");
         assertThat(converted, is(not(sameInstance(comment))));
         assertThat(converted, is(instanceOf(JpaWidgetComment.class)));
         assertThat(converted.getCreatedDate(), is(equalTo(comment.getCreatedDate())));
@@ -70,6 +69,5 @@ public class JpaWidgetCommentConverterTest {
         assertThat(converted.getLastModifiedDate(), is(equalTo(comment.getLastModifiedDate())));
         assertThat(converted.getText(), is(equalTo(comment.getText())));
         assertThat(converted.getUserId(), is(equalTo(comment.getUserId())));
-        assertThat(converted.getWidgetId(), is(equalTo(comment.getWidgetId())));
     }
 }
