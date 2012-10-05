@@ -24,6 +24,7 @@ import org.apache.rave.portal.repository.TagRepository;
 import org.apache.rave.portal.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -56,6 +57,7 @@ public class DefaultTagService implements TagService {
     }
 
     @Override
+    @Transactional
     public Tag save(Tag tag) {
         return repository.save(tag);
     }
