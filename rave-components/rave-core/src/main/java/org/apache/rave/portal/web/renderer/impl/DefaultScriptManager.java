@@ -98,7 +98,8 @@ public class DefaultScriptManager implements ScriptManager{
     @Synchronized(discriminator = "'SM_#map.toString()'", id = "#location")
     private static void addMapForLocation(ScriptLocation location, Map<ScriptLocation, Map<String, String>> map) {
         if (!map.containsKey(location)) {
-            map.put(location, new HashMap<String, String>());
+            // use a LinkedHashMap to preserve the order of the script registrations
+            map.put(location, new LinkedHashMap<String, String>());
         }
     }
     
