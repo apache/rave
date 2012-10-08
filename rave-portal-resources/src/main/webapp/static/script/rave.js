@@ -19,7 +19,8 @@
 var rave = rave || (function () {
     var providerMap = {};
     var widgetByIdMap = {};
-    var widgetsByRegionIdMap = {};
+    var widgetsByRegionIdArray = [];
+
     var context = "";
     var clientMessages = {};
     var openAjaxHub;
@@ -922,18 +923,30 @@ var rave = rave || (function () {
     }
 
     function registerWidget(regionId, widget) {
-        if (!widgetsByRegionIdMap.hasOwnProperty(regionId)) {
-            widgetsByRegionIdMap[regionId] = [];
+        // first find the region in the array, if it exists
+        var regionExists = false;
+        for (var i = 0; i < widgetsByRegionIdArray.length; i++) {
+            var tempRegion = widgetsByRegionIdArray[i];
+            if (tempRegion.regionId === regionId) {
+                // add the widget to the existing region object
+                regionExists = true;
+                tempRegion.widgets.push(widget);
+                break;
+            }
         }
-        widgetsByRegionIdMap[regionId].push(widget);
+
+        // if this region doesn't exist yet add it to the widgetsByRegionIdArray
+        if (!regionExists) {
+            widgetsByRegionIdArray.push({regionId: regionId, widgets: [widget]});
+        }
     }
 
-    function getWidgetsByRegionIdMap() {
-        return widgetsByRegionIdMap;
+    function getWidgetsByRegionIdArray() {
+        return widgetsByRegionIdArray;
     }
 
-    function clearWidgetsByRegionIdMap() {
-        widgetsByRegionIdMap = {};
+    function clearWidgetsByRegionIdArray() {
+        widgetsByRegionIdArray = [];
     }
 
     function initializeProviders() {
@@ -1011,23 +1024,20 @@ var rave = rave || (function () {
     }
 
     function initializeWidgets() {
-        //We get the widget objects in a map keyed by region ID.  The code below converts that map into a flat array
+        //The code below converts the widgetsByRegionIdArray into a flat array
         //of widgets with all the top widgets in each region first, then the seconds widgets in each region, then the
         //third, etc until we have all widgets in the array.  This allows us to render widgets from left to right and
         //top to bottom to give the best user experience possible (rendering the top widgets first).
-        //Note that this strategy relies on the javascript implementation to enumerate object properties in order:
-        //http://stackoverflow.com/questions/280713/elements-order-in-a-for-in-loop
         //However this should at least get us to render the top "row" first, then the second "row", ... in any browser.
-        //If this turns out to be a major concern we can change the widgetsByRegionIdMap to a 2D array instead of a map.
         var widgets = [];
         var regionWidget;
         for (var i = 0; ; i++) {
-            var foundGadgets = false;
-            for (var regionWidgets in widgetsByRegionIdMap) {
-                regionWidgets = widgetsByRegionIdMap[regionWidgets];
-                if (regionWidgets.length > i) {
-                    foundGadgets = true;
-                    regionWidget = regionWidgets[i];
+            var foundWidgets = false;
+            for (var x = 0; x < widgetsByRegionIdArray.length; x++) {
+                region = widgetsByRegionIdArray[x];
+                if (region.widgets.length > i) {
+                    foundWidgets = true;
+                    regionWidget = region.widgets[i];
                     // if client is viewing in mobile mode
                     // default to collapsed state
                     if (rave.isMobile()) {
@@ -1037,7 +1047,7 @@ var rave = rave || (function () {
                 }
             }
 
-            if (!foundGadgets) {
+            if (!foundWidgets) {
                 break;
             }
         }
@@ -1261,7 +1271,7 @@ var rave = rave || (function () {
      */
     return {
         /**
-         * Registers the specified widget into the widgetsByRegionIdMap under the specified regionId.
+         * Registers the specified widget into the widgetsByRegionIdArray under the specified regionId.
          * @param regionId The regionId.
          * @param widget The widget.
          */
@@ -1566,14 +1576,14 @@ var rave = rave || (function () {
         log:log,
 
         /**
-         * Returns the widgetsByRegionIdMap
+         * Returns the widgetsByRegionIdArray
          */
-        getWidgetsByRegionIdMap:getWidgetsByRegionIdMap,
+        getWidgetsByRegionIdArray:getWidgetsByRegionIdArray,
 
         /**
-         * Clears the widgetsByRegionIdMap.  Useful for testing.
+         * Clears the widgetsByRegionIdArray.  Useful for testing.
          */
-        clearWidgetsByRegionIdMap:clearWidgetsByRegionIdMap,
+        clearWidgetsByRegionIdArray:clearWidgetsByRegionIdArray,
 
         /**
          * Registers a new popup definition
