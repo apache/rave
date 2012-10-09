@@ -19,23 +19,24 @@
 <%@ page isErrorPage="true" language="java" trimDirectiveWhitespaces="true" %>
 <%@ include file="/WEB-INF/jsp/includes/taglibs.jsp" %>
 <fmt:setBundle basename="messages"/>
+<c:set var="showStackTrace"><portal:render-show-stack-trace /></c:set>
 <%-- Note: This page has the body definition embedded so we can reference it from the web.xml file
 and use it as the default error page for the entire application. --%>
 <tiles:insertDefinition name="templates.base">
     <tiles:putAttribute name="pageTitleKey" value="page.error.title"/>
     <tiles:putAttribute name="body">
-        <header>
-          <h1>
-              <fmt:message key="page.error.title" />
-          </h1>
-        </header>
-        <div id="content" >
-            <div id="errorMessage">
-                <div class="errorMessage">
-                    <fmt:message key="page.error.message" />
-                    &nbsp;<a href="javascript: window.location.reload();"><fmt:message key="page.error.reload" /></a>.<br/>
-                    <a onclick="document.getElementById('errorStack').style.display = 'block';"><fmt:message key="page.error.details" /></a>
-                </div>
+        <c:if test="${showStackTrace == 1}">
+        <rave:navbar/>
+            <header>
+                <h1>
+                    <fmt:message key="page.error.title" />
+                </h1>
+            </header>
+        <div id="content" class="container-fluid navbar-spacer">
+            <div id="errorMessage" class="errorMessage">
+                <h2><fmt:message key="page.error.message" />
+                    &nbsp;<a href="javascript: window.location.reload();"><fmt:message key="page.error.reload" /></a>.</h2><br/>
+                <a onclick="document.getElementById('errorStack').style.display = 'block';"><fmt:message key="page.error.details" /></a>
             </div>
             <div id="errorStack" title="Error Details" >
                 <pre class="errorTrace">
@@ -50,5 +51,20 @@ and use it as the default error page for the entire application. --%>
                 </button>
             </div>
         </div>
+        </c:if>
+        <c:if test="${showStackTrace == 0}">
+            <rave:navbar/>
+            <header>
+                <h1>
+                    <fmt:message key="page.error.title" />
+                </h1>
+            </header>
+            <div id="content" class="container-fluid navbar-spacer">
+                <div id="errorMessage" class="errorMessage">
+                    <h2><fmt:message key="page.error.message" />
+                        &nbsp;<a href="javascript: window.location.reload();"><fmt:message key="page.error.reload" /></a>.</h2><br/>
+                </div>
+            </div>
+        </c:if>
     </tiles:putAttribute>
 </tiles:insertDefinition>

@@ -36,7 +36,8 @@ public class PortalPreferenceForm {
     public static final String DEFAULT_JAVASCRIPT_DEBUG_MODE = "1";
     public static final String DEFAULT_WIDGET_HEIGHT = "250";
     public static final String DEFAULT_INITIAL_WIDGET_STATUS = "PREVIEW";
-    public static final String DEFAULT_EXTERNAL_MARKETPLACE_URL = "";    
+    public static final String DEFAULT_EXTERNAL_MARKETPLACE_URL = "";
+    public static final String DEFAULT_SHOW_STACK_TRACE ="0";
 
 
     private Map<String, PortalPreference> preferenceMap;
@@ -66,6 +67,9 @@ public class PortalPreferenceForm {
         if(getDefaultWidgetHeight() == null){
             preferenceMap.put(WIDGET_HEIGHT, new PortalPreferenceImpl(WIDGET_HEIGHT, DEFAULT_WIDGET_HEIGHT));
         }
+        if(getShowStackTrace() == null){
+            preferenceMap.put(SHOW_STACK_TRACE, new PortalPreferenceImpl(SHOW_STACK_TRACE, DEFAULT_SHOW_STACK_TRACE));
+        }
     }
     
     public PortalPreference getExternalMarketplaceUrl() {
@@ -94,6 +98,14 @@ public class PortalPreferenceForm {
 
     public void setDefaultWidgetHeight(PortalPreference widgetHeight){
         preferenceMap.put(WIDGET_HEIGHT, widgetHeight);
+    }
+
+    public PortalPreference getShowStackTrace(){
+        return preferenceMap.get(SHOW_STACK_TRACE);
+    }
+
+    public void setShowStackTrace(PortalPreference showStackTrace){
+        preferenceMap.put(SHOW_STACK_TRACE, showStackTrace);
     }
 
     public PortalPreference getTitleSuffix() {
