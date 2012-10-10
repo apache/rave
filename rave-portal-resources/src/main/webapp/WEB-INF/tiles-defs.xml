@@ -49,6 +49,7 @@
     </definition>
 
     <definition name="templates.user.usernotfound" extends="templates.base">
+        <put-attribute name="pageTitleKey" value="page.personProfile.userNotFound.title"/>
         <put-attribute name="body" value="/WEB-INF/jsp/views/usernotfound.jsp"/>
     </definition>
 
