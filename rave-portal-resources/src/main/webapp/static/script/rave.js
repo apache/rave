@@ -115,7 +115,7 @@ var rave = rave || (function () {
                 name:"dialog",
                 containerSelector:'.popup.dialog',
                 contentSelector:'.modal-body',
-                markup:'<div class="popup dialog modal fade"><div class="modal-body"></div></div>',
+                markup:'<div class="popup dialog modal fade"><a href="#" class="close" data-dismiss="modal">&times;</a><div class="modal-body"></div></div>',
                 initialize:function (container) {
                     container.find(this.contentSelector).data('popupType', this.name);
                     var cfg = {
@@ -137,7 +137,7 @@ var rave = rave || (function () {
                 name:"modal_dialog",
                 containerSelector:'.popup.modal_dialog',
                 contentSelector:'.modal-body',
-                markup:'<div class="popup modal_dialog modal fade"><div class="modal-body"></div></div>',
+                markup:'<div class="popup modal_dialog modal fade"><a href="#" class="close" data-dismiss="modal">&times;</a><div class="modal-body"></div></div>',
                 initialize:function (container) {
                     container.find(this.contentSelector).data('popupType', this.name);
                     var cfg = {
