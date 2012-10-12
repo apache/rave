@@ -17,27 +17,21 @@
   specific language governing permissions and limitations
   under the License.
 
-  $Id$
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
-    <modelVersion>4.0.0</modelVersion>
-
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>rave-providers</artifactId>
+        <artifactId>rave-components</artifactId>
         <groupId>org.apache.rave</groupId>
         <version>0.17-MONGO-SNAPSHOT</version>
     </parent>
+    <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>rave-opensocial-provider</artifactId>
-    <name>Apache Rave :: rave-opensocial-provider</name>
-    <description>Apache Rave OpenSocial Provider</description>
-    <packaging>pom</packaging>
+    <artifactId>rave-mongodb</artifactId>
+    <name>Apache Rave :: rave-mongodb</name>
+    <description>Apache Rave MongoDB Persistence Provider</description>
+    <packaging>jar</packaging>
 
-    <modules>
-        <module>rave-opensocial-client</module>
-        <module>rave-opensocial-core</module>
-        <module>rave-opensocial-server</module>
-    </modules>
 
 </project>

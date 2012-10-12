@@ -26,7 +26,7 @@
     <parent>
         <groupId>org.apache.rave</groupId>
         <artifactId>rave-project</artifactId>
-        <version>0.17-SNAPSHOT</version>
+        <version>0.17-MONGO-SNAPSHOT</version>
     </parent>
 
     <artifactId>rave-components</artifactId>
@@ -38,6 +38,7 @@
         <module>rave-commons</module>
         <module>rave-core</module>
         <module>rave-jpa</module>
+        <module>rave-mongodb</module>
         <module>rave-web</module>
     </modules>
     
