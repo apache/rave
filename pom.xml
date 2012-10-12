@@ -81,6 +81,7 @@
             $mvn filesync:generate -Dmaven.filesync.override=true -->
         <maven.filesync.override>false</maven.filesync.override>
         <jackson.version>1.8.1</jackson.version>
+        <mongo-driver.version>2.9.1</mongo-driver.version>
 
 
         <!-- default empty javaagent
@@ -120,6 +121,11 @@
             <dependency>
                 <groupId>org.apache.rave</groupId>
                 <artifactId>rave-jpa</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.rave</groupId>
+                <artifactId>rave-mongodb</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -328,6 +334,11 @@
                 <groupId>com.h2database</groupId>
                 <artifactId>h2</artifactId>
                 <version>${com.h2database.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mongodb</groupId>
+                <artifactId>mongo-java-driver</artifactId>
+                <version>${mongo-driver.version}</version>
             </dependency>
 
             <dependency>

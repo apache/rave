@@ -33,5 +33,11 @@
     <description>Apache Rave MongoDB Persistence Provider</description>
     <packaging>jar</packaging>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongodb-java-driver</artifactId>
+        </dependency>
+    </dependencies>
 
 </project>

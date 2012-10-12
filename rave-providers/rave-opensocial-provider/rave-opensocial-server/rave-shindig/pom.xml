@@ -59,10 +59,6 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>org.apache.rave</groupId>
-            <artifactId>rave-jpa</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.apache.shindig</groupId>
             <artifactId>shindig-server</artifactId>
             <type>war</type>
@@ -133,5 +129,30 @@
         </plugins>
 
     </build>
+
+    <profiles>
+        <profile>
+            <id>jpa</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>org.apache.rave</groupId>
+                    <artifactId>rave-jpa</artifactId>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>mongodb</id>
+            <dependencies>
+                <dependency>
+                    <groupId>org.apache.rave</groupId>
+                    <artifactId>rave-mongodb</artifactId>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
+
 
 </project>
