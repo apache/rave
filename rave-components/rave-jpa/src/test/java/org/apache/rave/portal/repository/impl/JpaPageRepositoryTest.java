@@ -23,6 +23,7 @@ import org.apache.rave.portal.model.impl.PageImpl;
 import org.apache.rave.portal.repository.PageRepository;
 import org.apache.rave.portal.repository.PageTemplateRepository;
 import org.apache.rave.portal.repository.UserRepository;
+import org.apache.rave.portal.repository.WidgetRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -68,6 +69,9 @@ public class JpaPageRepositoryTest {
     @Autowired
     private PageTemplateRepository pageTemplateRepository;
 
+    @Autowired
+    private WidgetRepository widgetRepository;
+
     private JpaUser user;
     private PageTemplate defaultPageTemplate;
 
@@ -84,7 +88,9 @@ public class JpaPageRepositoryTest {
         assertThat(pages.size(), equalTo(2));
         assertThat(pages.get(0).getRegions().size(), equalTo(2));
         assertThat(pages.get(0).getRegions().get(0).getRegionWidgets().size(), equalTo(2));
-        assertThat(pages.get(0).getRegions().get(0).getRegionWidgets().get(0).getWidget().getUrl(), equalTo(WIDGET_URL));
+        Widget widget = widgetRepository.get(pages.get(0).getRegions().get(0).getRegionWidgets().get(0).getWidgetId());
+        assertThat(widget, is(notNullValue()));
+        assertThat(widget.getUrl(), equalTo(WIDGET_URL));
 
         List<PageUser> pageUserPages = repository.getPagesForUser(USER_ID, PageType.USER);
         // test that the query returns the pages in proper render sequence order

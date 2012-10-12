@@ -23,6 +23,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.rave.portal.model.RegionWidget;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.impl.*;
+import org.apache.rave.portal.repository.WidgetRepository;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.provider.opensocial.exception.SecurityTokenException;
 import org.apache.rave.provider.opensocial.service.SecurityTokenService;
@@ -51,6 +52,7 @@ public class EncryptedBlobSecurityTokenService implements SecurityTokenService {
     public static final String CLASSPATH_KEY_PREFIX = "classpath:";
 
     private UserService userService;
+    private WidgetRepository widgetRepository;
     private String container;
     private String domain;
 
@@ -58,12 +60,14 @@ public class EncryptedBlobSecurityTokenService implements SecurityTokenService {
 
     @Autowired
     public EncryptedBlobSecurityTokenService(UserService userService,
+                                             WidgetRepository widgetRepository,
                                              @Value("${portal.opensocial_security.container}") String container,
                                              @Value("${portal.opensocial_security.domain}") String domain,
                                              @Value("${portal.opensocial_security.encryptionkey}") String encryptionKey) {
         this.userService = userService;
         this.container = container;
         this.domain = domain;
+        this.widgetRepository = widgetRepository;
 
         if (encryptionKey.startsWith(EMBEDDED_KEY_PREFIX)) {
             this.blobCrypter = new BasicBlobCrypter(encryptionKey.substring(EMBEDDED_KEY_PREFIX.length()));
@@ -140,7 +144,7 @@ public class EncryptedBlobSecurityTokenService implements SecurityTokenService {
 
         //Create a new RegionWidget instance from it so we can use it to generate a new encrypted token
         RegionWidget regionWidget = new RegionWidgetImpl(Long.toString(securityToken.getModuleId()),
-                new WidgetImpl("-1", securityToken.getAppUrl()),
+                "-1",
                 new RegionImpl("-1", new PageImpl("-1", userService.getUserByUsername(securityToken.getOwnerId()).getId()), -1));
 
         //Create and return the newly encrypted token
@@ -152,7 +156,7 @@ public class EncryptedBlobSecurityTokenService implements SecurityTokenService {
         User user = userService.getAuthenticatedUser();
 
         Map<String, String> values = new HashMap<String, String>();
-        values.put(AbstractSecurityToken.Keys.APP_URL.getKey(), regionWidget.getWidget().getUrl());
+        values.put(AbstractSecurityToken.Keys.APP_URL.getKey(), widgetRepository.get(regionWidget.getWidgetId()).getUrl());
         values.put(AbstractSecurityToken.Keys.MODULE_ID.getKey(), String.valueOf(regionWidget.getId()));
         values.put(AbstractSecurityToken.Keys.OWNER.getKey(),
                 String.valueOf(userService.getUserById(regionWidget.getRegion().getPage().getOwnerId()).getUsername()));

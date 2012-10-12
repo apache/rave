@@ -67,7 +67,7 @@ public class JpaRegionWidgetConverter implements ModelConverter<RegionWidget, Jp
         converted.setPreferences(source.getPreferences());
         converted.setRegion(source.getRegion());
         converted.setRenderPosition(source.getRenderPosition());
-        converted.setWidget(source.getWidget());
+        converted.setWidgetId(source.getWidgetId());
         converted.setRenderOrder(source.getRenderOrder());
     }
 }

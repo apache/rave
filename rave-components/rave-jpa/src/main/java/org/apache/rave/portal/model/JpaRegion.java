@@ -89,13 +89,13 @@ public class JpaRegion implements BasicEntity, Serializable, Region {
     /**
      * Only used for XML serialization, omitting regionwidget
      */
-    private List<Widget> getWidgets(){
-        ArrayList<Widget> widgets = new ArrayList<Widget>();
-        for (RegionWidget rw: regionWidgets){
-            widgets.add(rw.getWidget());
-        }
-        return widgets;
-    }
+//    private List<Widget> getWidgets(){
+//        ArrayList<Widget> widgets = new ArrayList<Widget>();
+//        for (RegionWidget rw: regionWidgets){
+//            widgets.add(rw.getWidget());
+//        }
+//        return widgets;
+//    }
 
     /**
      * Gets the persistence unique identifier

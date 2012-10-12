@@ -25,6 +25,7 @@ Template for rendering a Region on a page
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ include file="/WEB-INF/jsp/includes/taglibs.jsp" %>
 <%@ attribute name="region" type="org.apache.rave.portal.model.Region" required="true" description="The region object" %>
+<%@ attribute name="widgets" type="java.util.List" required="true" description="The Widget object" %>
 <%@ attribute name="regionIdx" required="true" description="The regionIdx" %>
 
 <fmt:setBundle basename="messages"/>
@@ -32,6 +33,10 @@ Template for rendering a Region on a page
 <%--@elvariable id="region" type="org.apache.rave.portal.model.Region"--%>
 <div class="region<c:if test="${region.locked || pageUser.editor == false}"> region-locked</c:if> <c:out value="${region.page.pageLayout.code}"/>_${regionIdx} regionNonDragging" id="region-${region.id}-id">
     <c:forEach var="regionWidget" items="${region.regionWidgets}">
-        <rave:region_widget regionWidget="${regionWidget}"/>
+        <c:forEach var="widget" items="${widgets}">
+            <c:if test="${regionWidget.widgetId == widget.id}">
+                <rave:region_widget regionWidget="${regionWidget}" widget="${widget}"/>
+            </c:if>
+        </c:forEach>
     </c:forEach>
 </div>

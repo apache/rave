@@ -30,6 +30,7 @@ import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.service.PageLayoutService;
 import org.apache.rave.portal.service.PageService;
 import org.apache.rave.portal.service.UserService;
+import org.apache.rave.portal.service.WidgetService;
 import org.apache.rave.portal.web.controller.util.MockHttpUtil;
 import org.apache.rave.portal.web.util.ModelKeys;
 import org.apache.rave.portal.web.util.ViewNames;
@@ -52,6 +53,7 @@ public class PageControllerTest {
     private PageLayoutService pageLayoutService;
     private PageController pageController;
     private MockHttpServletRequest request;
+    private WidgetService widgetService;
 
     private Model model;
     private Page defaultPage, otherPage;
@@ -72,7 +74,8 @@ public class PageControllerTest {
         userService = createMock(UserService.class);
         pageService = createMock(PageService.class);
         pageLayoutService = createMock(PageLayoutService.class);
-        pageController = new PageController(pageService, userService, pageLayoutService);
+        widgetService = createMock(WidgetService.class);
+        pageController = new PageController(pageService, userService, pageLayoutService, widgetService);
         model = new ExtendedModelMap();
         request = new MockHttpServletRequest();
 

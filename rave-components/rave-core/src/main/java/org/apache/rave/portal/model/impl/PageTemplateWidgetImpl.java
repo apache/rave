@@ -24,7 +24,7 @@ public class PageTemplateWidgetImpl implements PageTemplateWidget {
     private String id;
     private PageTemplateRegion pageTemplateRegion;
     private long renderSequence;
-    private Widget widget;
+    private String widgetId;
     private boolean locked;
     private boolean hideChrome;
 
@@ -60,12 +60,12 @@ public class PageTemplateWidgetImpl implements PageTemplateWidget {
         this.renderSequence = renderSequence;
     }
 
-    public Widget getWidget() {
-        return widget;
+    public String getWidgetId() {
+        return widgetId;
     }
 
-    public void setWidget(Widget widget) {
-        this.widget = widget;
+    public void setWidgetId(String widgetId) {
+        this.widgetId = widgetId;
     }
 
     public boolean isLocked() {
@@ -96,7 +96,7 @@ public class PageTemplateWidgetImpl implements PageTemplateWidget {
         if (renderSequence != that.renderSequence) return false;
         if (pageTemplateRegion != null ? !pageTemplateRegion.equals(that.pageTemplateRegion) : that.pageTemplateRegion != null)
             return false;
-        if (widget != null ? !widget.equals(that.widget) : that.widget != null) return false;
+        if (widgetId != null ? !widgetId.equals(that.widgetId) : that.widgetId != null) return false;
 
         return true;
     }
@@ -105,7 +105,7 @@ public class PageTemplateWidgetImpl implements PageTemplateWidget {
     public int hashCode() {
         int result = pageTemplateRegion != null ? pageTemplateRegion.hashCode() : 0;
         result = 31 * result + (int) (renderSequence ^ (renderSequence >>> 32));
-        result = 31 * result + (widget != null ? widget.hashCode() : 0);
+        result = 31 * result + (widgetId != null ? widgetId.hashCode() : 0);
         result = 31 * result + (locked ? 1 : 0);
         result = 31 * result + (hideChrome ? 1 : 0);
         return result;

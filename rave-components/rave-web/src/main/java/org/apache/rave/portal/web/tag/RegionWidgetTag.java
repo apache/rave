@@ -21,10 +21,13 @@ package org.apache.rave.portal.web.tag;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.rave.portal.model.RegionWidget;
+import org.apache.rave.portal.model.Widget;
+import org.apache.rave.portal.repository.WidgetRepository;
 import org.apache.rave.portal.web.renderer.RenderScope;
 import org.apache.rave.portal.web.renderer.RenderService;
 import org.apache.rave.portal.web.renderer.ScriptLocation;
 import org.apache.rave.portal.web.renderer.ScriptManager;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.jsp.JspException;
 
@@ -34,6 +37,7 @@ import javax.servlet.jsp.JspException;
 public class RegionWidgetTag extends AbstractContextAwareSingletonBeanDependentTag<RenderService> {
 
     private RegionWidget regionWidget;
+    private Widget widget;
     
     private static final String REGISTER_DISABLED_WIDGET_KEY = "disabledRegisterWidget";
 
@@ -45,6 +49,7 @@ public class RegionWidgetTag extends AbstractContextAwareSingletonBeanDependentT
             " collapsed: %4$s," +
             " widgetId: %5$s});</script>";
 
+    @Autowired
     public RegionWidgetTag() {
         super(RenderService.class);
     }
@@ -57,6 +62,14 @@ public class RegionWidgetTag extends AbstractContextAwareSingletonBeanDependentT
         this.regionWidget = regionWidget;
     }
 
+    public Widget getWidget() {
+        return widget;
+    }
+
+    public void setWidget(Widget widget) {
+        this.widget = widget;
+    }
+
     /**
      * Delegates rendering of the RegionWidget to the RenderService
      *
@@ -66,22 +79,26 @@ public class RegionWidgetTag extends AbstractContextAwareSingletonBeanDependentT
     @Override
     public int doStartTag() throws JspException {
 
-        if (regionWidget != null && getBean().getSupportedWidgetTypes().contains(regionWidget.getWidget().getType()) ) {
-            if ( regionWidget.getWidget().isDisableRendering() ) {
+        if (regionWidget == null) {
+            throw new JspException("RegionWidget not set: " + regionWidget);
+        }
+
+        if (widget != null && getBean().getSupportedWidgetTypes().contains(widget.getType()) ) {
+            if ( widget.isDisableRendering() ) {
                 ScriptManager scriptManager = getBeanFromContext(ScriptManager.class);
                 String widgetScript = String.format(DISABLED_SCRIPT_BLOCK, regionWidget.getRegion().getId(),
                         regionWidget.getId(),
-                        StringEscapeUtils.escapeJavaScript(regionWidget.getWidget().getDisableRenderingMessage()),
+                        StringEscapeUtils.escapeJavaScript(widget.getDisableRenderingMessage()),
                         regionWidget.isCollapsed(),
-                        regionWidget.getWidget().getId());
-                String key = REGISTER_DISABLED_WIDGET_KEY + "-" + regionWidget.getWidget().getId();
+                        widget.getId());
+                String key = REGISTER_DISABLED_WIDGET_KEY + "-" + widget.getId();
                 scriptManager.registerScriptBlock(key, widgetScript, ScriptLocation.AFTER_RAVE, RenderScope.CURRENT_REQUEST, getContext());
             } else {
                 writeString(getBean().render(regionWidget, getContext()));
             }
         }
         else {
-                throw new JspException("Unsupported regionWidget type or regionWidget not set: " + regionWidget);
+                throw new JspException("Unsupported regionWidget type: " + regionWidget);
         }
         //Certain JSP implementations use tag pools.  Setting the regionWidget to null ensures that there is no chance a given tag
         //will accidentally re-use a region widget if the attribute in the JSP is empty

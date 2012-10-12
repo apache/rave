@@ -70,7 +70,7 @@ public class RenderServiceIntegrationTest {
     private RestOperations restOperations;
 
     private static final String VALID_METADATA = "[{\"id\":\"gadgets.metadata\",\"result\"" +
-            ":{\"http://www.example.com/gadget.xml\":{\"data-snipped\":\"here-for-brevity\"}}}]";
+            ":{\"http://www.widget-dico.com/wikipedia/google/wikipedia.xml\":{\"data-snipped\":\"here-for-brevity\"}}}]";
 
     private static final String VALID_USER_ID = "2";
     private static final String VALID_USER_NAME = "john.doe";
@@ -113,10 +113,10 @@ public class RenderServiceIntegrationTest {
         WidgetImpl w = new WidgetImpl();
         w.setType("OpenSocial");
         w.setId("1");
-        w.setTitle("Gadget Title");
-        w.setUrl("http://www.example.com/gadget.xml");
+        w.setTitle("Wikipedia");
+        w.setUrl("http://www.widget-dico.com/wikipedia/google/wikipedia.xml");
 
-        RegionWidget rw = new RegionWidgetImpl("1", w, region);
+        RegionWidget rw = new RegionWidgetImpl("1", w.getId(), region);
         region.setRegionWidgets(Arrays.asList(rw));
 
         RenderContext context = new RenderContext();

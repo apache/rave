@@ -63,7 +63,7 @@ public class JpaRegionWidgetConverterTest {
         rw.setPreferences(new ArrayList<RegionWidgetPreference>());
         rw.setRegion(new RegionImpl("1"));
         rw.setRenderPosition("last");
-        rw.setWidget(new WidgetImpl("1"));
+        rw.setWidgetId("1");
 
         JpaRegionWidget converted = regionWidgetConverter.convert(rw);
         assertThat(converted, is(not(sameInstance(rw))));
@@ -77,6 +77,6 @@ public class JpaRegionWidgetConverterTest {
         assertThat(converted.isHideChrome(), is(equalTo(rw.isHideChrome())));
         assertThat(converted.getRegion(), is(instanceOf(JpaRegion.class)));
         assertThat(converted.getRenderPosition(), is(equalTo(rw.getRenderPosition())));
-        assertThat(converted.getWidget(), is(instanceOf(JpaWidget.class)));
+        assertThat(converted.getWidgetId(), is(instanceOf(String.class)));
     }
 }

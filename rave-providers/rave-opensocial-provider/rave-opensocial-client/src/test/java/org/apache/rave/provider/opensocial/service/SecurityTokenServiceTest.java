@@ -21,6 +21,7 @@ package org.apache.rave.provider.opensocial.service;
 
 import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.model.impl.*;
+import org.apache.rave.portal.repository.WidgetRepository;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.provider.opensocial.service.impl.EncryptedBlobSecurityTokenService;
 import org.apache.shindig.auth.SecurityToken;
@@ -43,6 +44,7 @@ import static org.junit.Assert.assertNotNull;
 @RunWith(Parameterized.class)
 public class SecurityTokenServiceTest {
     private UserService userService;
+    private WidgetRepository widgetRepository;
     private SecurityTokenService securityTokenService;
     private String encryptionKey;
 
@@ -51,6 +53,7 @@ public class SecurityTokenServiceTest {
     private Region validRegion;
     private RegionWidget validRegionWidget;
     private Widget validWidget;
+    private Widget bogusWidget;
 
     private final String VALID_REGION_WIDGET_ID = "1";
     private final String VALID_USER_ID = "1";
@@ -79,7 +82,8 @@ public class SecurityTokenServiceTest {
     public void setup() throws MalformedURLException {
 
         userService = createMock(UserService.class);
-        securityTokenService = new EncryptedBlobSecurityTokenService(userService, "default", "default",
+        widgetRepository = createMock(WidgetRepository.class);
+        securityTokenService = new EncryptedBlobSecurityTokenService(userService, widgetRepository, "default", "default",
                 encryptionKey);
 
         validPerson = new UserImpl(VALID_USER_ID, VALID_USER_NAME);
@@ -92,7 +96,9 @@ public class SecurityTokenServiceTest {
         validWidget.setType("OpenSocial");
         validWidget.setTitle("Widget Title");
 
-        validRegionWidget = new RegionWidgetImpl(VALID_REGION_WIDGET_ID, validWidget, validRegion);
+        bogusWidget = new WidgetImpl("-1", VALID_URL);
+
+        validRegionWidget = new RegionWidgetImpl(VALID_REGION_WIDGET_ID, validWidget.getId(), validRegion);
         validRegion.setRegionWidgets(Arrays.asList(validRegionWidget));
     }
 
@@ -101,6 +107,9 @@ public class SecurityTokenServiceTest {
         expect(userService.getAuthenticatedUser()).andReturn(validPerson).anyTimes();
         expect(userService.getUserById(VALID_USER_ID)).andReturn(validPerson);
         replay(userService);
+
+        expect(widgetRepository.get(validWidget.getId())).andReturn(validWidget);
+        replay(widgetRepository);
 
         SecurityToken securityToken = securityTokenService.getSecurityToken(validRegionWidget);
         validateSecurityToken(securityToken);
@@ -116,6 +125,9 @@ public class SecurityTokenServiceTest {
         expect(userService.getUserById(expectedOwnerId)).andReturn(new UserImpl(expectedOwnerId, expected));
         replay(userService);
 
+        expect(widgetRepository.get(validWidget.getId())).andReturn(validWidget);
+        replay(widgetRepository);
+
         SecurityToken securityToken = securityTokenService.getSecurityToken(validRegionWidget);
         validateSecurityToken(securityToken, expected);
     }
@@ -126,6 +138,9 @@ public class SecurityTokenServiceTest {
         expect(userService.getUserById(VALID_USER_ID)).andReturn(validPerson);
         replay(userService);
 
+        expect(widgetRepository.get(validWidget.getId())).andReturn(validWidget);
+        replay(widgetRepository);
+
         String token = securityTokenService.getEncryptedSecurityToken(validRegionWidget);
         assertNotNull(token);
     }
@@ -135,6 +150,9 @@ public class SecurityTokenServiceTest {
         expect(userService.getAuthenticatedUser()).andReturn(validPerson).anyTimes();
         expect(userService.getUserById(VALID_USER_ID)).andReturn(validPerson);
         replay(userService);
+
+        expect(widgetRepository.get(validWidget.getId())).andReturn(validWidget);
+        replay(widgetRepository);
 
         String encryptedToken = securityTokenService.getEncryptedSecurityToken(validRegionWidget);
         assertNotNull(encryptedToken);
@@ -149,6 +167,10 @@ public class SecurityTokenServiceTest {
         expect(userService.getUserByUsername(VALID_USER_NAME)).andReturn(validPerson).anyTimes();
         expect(userService.getUserById(VALID_USER_ID)).andReturn(validPerson).anyTimes();
         replay(userService);
+
+        expect(widgetRepository.get(validWidget.getId())).andReturn(validWidget);
+        expect(widgetRepository.get(bogusWidget.getId())).andReturn(bogusWidget);
+        replay(widgetRepository);
 
         String encryptedToken = securityTokenService.getEncryptedSecurityToken(validRegionWidget);
         assertNotNull(encryptedToken);

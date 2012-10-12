@@ -172,7 +172,7 @@
             <div>
                 <%-- render the person profile parent page region/widgets --%>
                 <c:forEach var="region" items="${page.regions}" varStatus="status">
-                    <rave:region region="${region}" regionIdx="${status.count}" />
+                    <rave:region region="${region}" regionIdx="${status.count}" widgets="${widgets}"/>
                 </c:forEach>
             </div>
         </div>

@@ -447,7 +447,7 @@ public class DefaultPageService implements PageService {
     private RegionWidget createWidgetInstance(Widget widget, Region region, int position) {
         RegionWidget regionWidget = new RegionWidgetImpl();
         regionWidget.setRenderOrder(position);
-        regionWidget.setWidget(widget);
+        regionWidget.setWidgetId(widget.getId());
         // TODO: setLocked and setHideChrome are hard-coded to false for new widgets manually added by users
         //       which makes sense for most default cases.  However should we change them to a customizable property
         //       to allow for more flexibility?

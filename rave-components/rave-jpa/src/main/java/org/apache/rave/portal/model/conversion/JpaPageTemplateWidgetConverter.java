@@ -59,7 +59,7 @@ public class JpaPageTemplateWidgetConverter implements ModelConverter<PageTempla
         converted.setHideChrome(source.isHideChrome());
         converted.setPageTemplateRegion(source.getPageTemplateRegion());
         converted.setRenderSeq(source.getRenderSeq());
-        converted.setWidget(source.getWidget());
+        converted.setWidgetId(source.getWidgetId());
         converted.setLocked(source.isLocked());
     }
 }

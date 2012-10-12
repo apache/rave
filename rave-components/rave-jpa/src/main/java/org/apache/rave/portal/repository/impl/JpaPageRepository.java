@@ -195,7 +195,7 @@ public class JpaPageRepository implements PageRepository {
             regionWidget.setLocked(ptw.isLocked());
             regionWidget.setHideChrome(ptw.isHideChrome());
             regionWidget.setRenderOrder((int) ptw.getRenderSeq());
-            regionWidget.setWidget(ptw.getWidget());
+            regionWidget.setWidgetId(ptw.getWidgetId());
             widgets.add(regionWidget);
         }
         return widgets;

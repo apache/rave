@@ -20,10 +20,8 @@
 package org.apache.rave.provider.opensocial.web.renderer;
 
 import org.apache.rave.exception.NotSupportedException;
-import org.apache.rave.portal.model.Page;
-import org.apache.rave.portal.model.PageType;
-import org.apache.rave.portal.model.RegionWidget;
-import org.apache.rave.portal.model.RegionWidgetPreference;
+import org.apache.rave.portal.model.*;
+import org.apache.rave.portal.repository.WidgetRepository;
 import org.apache.rave.portal.web.renderer.RegionWidgetRenderer;
 import org.apache.rave.portal.web.renderer.RenderScope;
 import org.apache.rave.portal.web.renderer.ScriptLocation;
@@ -53,14 +51,17 @@ public class OpenSocialWidgetRenderer implements RegionWidgetRenderer {
     private OpenSocialService openSocialService;
     private SecurityTokenService securityTokenService;
     private ScriptManager scriptManager;
+    private WidgetRepository widgetRepository;
 
     @Autowired
     public OpenSocialWidgetRenderer(OpenSocialService openSocialService,
                                     SecurityTokenService securityTokenService,
-                                    ScriptManager scriptManager) {
+                                    ScriptManager scriptManager,
+                                    WidgetRepository widgetRepository) {
         this.openSocialService = openSocialService;
         this.securityTokenService = securityTokenService;
         this.scriptManager = scriptManager;
+        this.widgetRepository = widgetRepository;
     }
 
     //Note the widgets.push() call.  This defines the widget objects, which are
@@ -95,7 +96,7 @@ public class OpenSocialWidgetRenderer implements RegionWidgetRenderer {
      */
     @Override
     public String render(RegionWidget item, RenderContext context) {
-        String type = item.getWidget().getType();
+        String type = widgetRepository.get(item.getWidgetId()).getType();
         if (!Constants.WIDGET_TYPE.equals(type)) {
             throw new NotSupportedException("Invalid widget type passed to renderer: " + type);
         }
@@ -135,16 +136,18 @@ public class OpenSocialWidgetRenderer implements RegionWidgetRenderer {
             isDefault = isDefaultSubPage(page);
         }
 
+        Widget widget = widgetRepository.get(item.getWidgetId());
+
         return String.format(SCRIPT_BLOCK,
                 item.getRegion().getId(),
                 Constants.WIDGET_TYPE,
                 item.getId(),
-                item.getWidget().getUrl(),
+                widget.getUrl(),
                 securityTokenService.getEncryptedSecurityToken(item),
-                openSocialService.getGadgetMetadata(item.getWidget().getUrl()),
+                openSocialService.getGadgetMetadata(widget.getUrl()),
                 userPrefs.toString(),
                 item.isCollapsed(),
-                item.getWidget().getId(),
+                widget.getId(),
                 item.isLocked(),
                 item.isHideChrome(),
                 pageId,

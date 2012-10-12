@@ -39,6 +39,7 @@ import org.apache.rave.portal.model.impl.PageLayoutImpl;
 import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.service.PageService;
 import org.apache.rave.portal.service.UserService;
+import org.apache.rave.portal.service.WidgetService;
 import org.apache.rave.portal.web.model.UserForm;
 import org.apache.rave.portal.web.util.ModelKeys;
 import org.apache.rave.portal.web.util.ViewNames;
@@ -57,6 +58,7 @@ public class ProfileControllerTest {
 
 	private UserService userService;
 	private PageService pageService;
+    private WidgetService widgetService;
 
     private Page defaultPage, otherPage;
     private List<Page> allProfilePages;
@@ -72,7 +74,8 @@ public class ProfileControllerTest {
 	public void setup() {
 		userService = createMock(UserService.class);
 		pageService = createMock(PageService.class);
-		profileController = new ProfileController(userService, pageService);
+        widgetService = createMock(WidgetService.class);
+		profileController = new ProfileController(userService, pageService, widgetService);
 
         validPageLayout = new PageLayoutImpl();
         validPageLayout.setCode(VALID_PAGE_LAYOUT_CODE);
@@ -95,7 +98,7 @@ public class ProfileControllerTest {
 		//creating a mock user
 		final UserImpl user = new UserImpl();
 		final ModelMap model = new ModelMap();
-		final int modelSize = 4;
+		final int modelSize = 5;
 		final String username="canonical";
         user.setUsername(username);
         user.setId(USER_ID);
@@ -136,7 +139,7 @@ public class ProfileControllerTest {
 		//creating a mock user
 		final UserImpl user = new UserImpl();
 		final ModelMap model = new ModelMap();
-		final int modelSize = 4;
+		final int modelSize = 5;
 		final String username="canonical";
         user.setUsername(username);
         user.setId(USER_ID);

@@ -50,9 +50,9 @@ public class JpaPageTemplateWidget implements BasicEntity, Serializable, PageTem
     @Column(name = "render_sequence")
     private long renderSequence;
 
-    @JoinColumn(name = "widget_id")
-    @ManyToOne(optional = false)
-    private JpaWidget widget;
+    @Column(name = "widget_id")
+    @Basic(optional = false)
+    private Long widgetId;
 
     @Basic(optional = false)
     @Column(name = "locked")
@@ -98,13 +98,13 @@ public class JpaPageTemplateWidget implements BasicEntity, Serializable, PageTem
     }
 
     @Override
-    public JpaWidget getWidget() {
-        return widget;
+    public String getWidgetId() {
+        return widgetId.toString();
     }
 
     @Override
-    public void setWidget(Widget widget) {
-        this.widget = JpaConverter.getInstance().convert(widget, Widget.class);
+    public void setWidgetId(String widgetId) {
+        this.widgetId = Long.parseLong(widgetId);
     }
 
     @Override

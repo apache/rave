@@ -28,9 +28,9 @@ import java.util.List;
 public interface RegionWidget {
     String getId();
 
-    Widget getWidget();
+    String getWidgetId();
 
-    void setWidget(Widget widget);
+    void setWidgetId(String widgetId);
 
     @JsonBackReference
     Region getRegion();

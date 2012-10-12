@@ -112,17 +112,17 @@ public class DefaultPageServiceTest {
         targetRegion = new RegionImpl("2");
         targetRegion.setLocked(false);
         targetRegion.setRegionWidgets(new ArrayList<RegionWidget>());
-        targetRegion.getRegionWidgets().add(new RegionWidgetImpl("1", validWidget, targetRegion, 0));
-        targetRegion.getRegionWidgets().add(new RegionWidgetImpl("2", validWidget, targetRegion, 1));
-        targetRegion.getRegionWidgets().add(new RegionWidgetImpl("3", validWidget, targetRegion, 2));
+        targetRegion.getRegionWidgets().add(new RegionWidgetImpl("1", validWidget.getId(), targetRegion, 0));
+        targetRegion.getRegionWidgets().add(new RegionWidgetImpl("2", validWidget.getId(), targetRegion, 1));
+        targetRegion.getRegionWidgets().add(new RegionWidgetImpl("3", validWidget.getId(), targetRegion, 2));
         targetRegion.setPage(page);
 
         originalRegion = new RegionImpl("2");
         originalRegion.setLocked(false);
         originalRegion.setRegionWidgets(new ArrayList<RegionWidget>());
-        originalRegion.getRegionWidgets().add(new RegionWidgetImpl("4", validWidget, targetRegion, 0));
-        originalRegion.getRegionWidgets().add(new RegionWidgetImpl("5", validWidget, targetRegion, 1));
-        originalRegion.getRegionWidgets().add(new RegionWidgetImpl("6", validWidget, targetRegion, 2));
+        originalRegion.getRegionWidgets().add(new RegionWidgetImpl("4", validWidget.getId(), targetRegion, 0));
+        originalRegion.getRegionWidgets().add(new RegionWidgetImpl("5", validWidget.getId(), targetRegion, 1));
+        originalRegion.getRegionWidgets().add(new RegionWidgetImpl("6", validWidget.getId(), targetRegion, 2));
 
         lockedRegion = new RegionImpl();
         lockedRegion.setLocked(true);
@@ -137,7 +137,7 @@ public class DefaultPageServiceTest {
         pageUserList.add(pageUser2);
 
         validRegionWidget = new RegionWidgetImpl(VALID_REGION_WIDGET_ID);
-        validRegionWidget.setWidget(validWidget);
+        validRegionWidget.setWidgetId(validWidget.getId());
         validRegionWidget.setRegion(originalRegion);
     }
 
@@ -697,7 +697,7 @@ public class DefaultPageServiceTest {
 
         verifyPositions(0, instance, true);
         assertThat(originalRegion.getRegionWidgets().get(0), is(sameInstance(instance)));
-        assertThat(instance.getWidget().getId(), is(equalTo(widget.getId())));
+        assertThat(instance.getWidgetId(), is(equalTo(widget.getId())));
 
     }
 
@@ -727,7 +727,6 @@ public class DefaultPageServiceTest {
 
         verifyPositions(0, instance, true);
         assertThat(originalRegion.getRegionWidgets().get(0), is(sameInstance(instance)));
-        assertThat(instance.getWidget(), is(sameInstance(widget)));
 
     }
 
@@ -753,7 +752,6 @@ public class DefaultPageServiceTest {
 
         verifyPositions(0, instance, true);
         assertThat(originalRegion.getRegionWidgets().get(0), is(sameInstance(instance)));
-        assertThat(instance.getWidget(), is(sameInstance(widget)))         ;
     }
 
     @Test(expected = IllegalArgumentException.class)

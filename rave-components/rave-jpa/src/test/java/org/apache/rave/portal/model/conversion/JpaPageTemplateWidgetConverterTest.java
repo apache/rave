@@ -59,12 +59,13 @@ public class JpaPageTemplateWidgetConverterTest {
     @Test
     public void convertValid() {
         JpaWidget widget = new JpaWidget();
+        widget.setEntityId(1L);
         PageTemplateWidget template = new PageTemplateWidgetImpl("1");
         template.setLocked(true);
         template.setHideChrome(true);
         template.setPageTemplateRegion(new PageTemplateRegionImpl("1"));
         template.setRenderSeq(1);
-        template.setWidget(widget);
+        template.setWidgetId(widget.getId());
 
         JpaPageTemplateWidget jpaTemplate = converter.convert(template);
 
@@ -73,7 +74,7 @@ public class JpaPageTemplateWidgetConverterTest {
         assertThat(jpaTemplate.isLocked(), is(equalTo(template.isLocked())));
         assertThat(jpaTemplate.getPageTemplateRegion(), is(instanceOf(JpaPageTemplateRegion.class)));
         assertThat(jpaTemplate.getRenderSeq(), is(equalTo(template.getRenderSeq())));
-        assertThat(jpaTemplate.getWidget(), is(equalTo(template.getWidget())));
+        assertThat(jpaTemplate.getWidgetId(), is(equalTo(template.getWidgetId())));
         assertThat(jpaTemplate.isLocked(), is(equalTo(template.isLocked())));
         assertThat(jpaTemplate.isHideChrome(), is(equalTo(template.isHideChrome())));
     }

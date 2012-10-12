@@ -21,6 +21,7 @@ package org.apache.rave.provider.w3c.web.renderer;
 
 import org.apache.rave.exception.NotSupportedException;
 import org.apache.rave.portal.model.*;
+import org.apache.rave.portal.repository.WidgetRepository;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.portal.service.WidgetProviderService;
 import org.apache.rave.portal.web.renderer.RegionWidgetRenderer;
@@ -51,13 +52,15 @@ public class W3cWidgetRenderer implements RegionWidgetRenderer {
     private final WidgetProviderService widgetService;
     private final UserService userService;
     private ScriptManager scriptManager;
+    private WidgetRepository widgetRepository;
 
     @Autowired
     public W3cWidgetRenderer(@Qualifier("wookieWidgetService") WidgetProviderService widgetService,
-                             UserService userService, ScriptManager scriptManager) {
+                             UserService userService, ScriptManager scriptManager, WidgetRepository widgetRepository) {
         this.widgetService = widgetService;
         this.userService = userService;
         this.scriptManager = scriptManager;
+        this.widgetRepository = widgetRepository;
     }
 
     /**
@@ -92,7 +95,7 @@ public class W3cWidgetRenderer implements RegionWidgetRenderer {
      */
     @Override
     public String render(RegionWidget item, RenderContext context) {
-        Widget widget = item.getWidget();
+        Widget widget = widgetRepository.get(item.getWidgetId());
         if(!WIDGET_TYPE.equals(widget.getType())) {
             throw new NotSupportedException("Invalid widget type passed to renderer: " + widget.getType());
         }
@@ -122,7 +125,8 @@ public class W3cWidgetRenderer implements RegionWidgetRenderer {
         //
         // Get the Rave Widget for this regionWidget instance
         //
-        W3CWidget contextualizedWidget = (W3CWidget) widgetService.getWidget(user, sharedDataKey, item.getWidget());
+        Widget widget = widgetRepository.get(item.getWidgetId());
+        W3CWidget contextualizedWidget = (W3CWidget) widgetService.getWidget(user, sharedDataKey, widget);
 
         //
         // TODO make this do something useful; currently these preferences aren't
@@ -174,7 +178,7 @@ public class W3cWidgetRenderer implements RegionWidgetRenderer {
                 height,
                 width,
                 item.isCollapsed(),
-                item.getWidget().getId(),
+                item.getWidgetId(),
                 item.isLocked(),
                 item.isHideChrome(),
                 pageId,

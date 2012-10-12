@@ -19,11 +19,10 @@
 
 package org.apache.rave.portal.web.controller;
 
-import org.apache.rave.portal.model.Page;
-import org.apache.rave.portal.model.Person;
-import org.apache.rave.portal.model.User;
+import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.service.PageService;
 import org.apache.rave.portal.service.UserService;
+import org.apache.rave.portal.service.WidgetService;
 import org.apache.rave.portal.web.controller.util.ControllerUtils;
 import org.apache.rave.portal.web.model.NavigationItem;
 import org.apache.rave.portal.web.model.NavigationMenu;
@@ -38,6 +37,7 @@ import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -48,11 +48,13 @@ public class ProfileController {
 
 	private final UserService userService;
 	private final PageService pageService;
+    private final WidgetService widgetService;
 
 	@Autowired
-	public ProfileController(UserService userService, PageService pageService) {
+	public ProfileController(UserService userService, PageService pageService, WidgetService widgetService) {
 		this.userService = userService;
         this.pageService = pageService;
+        this.widgetService = widgetService;
 	}
 
     /**
@@ -70,6 +72,15 @@ public class ProfileController {
         Page personProfilePage = pageService.getPersonProfilePage(user.getId());
         addAttributesToModel(model, user, referringPageId);
         model.addAttribute(ModelKeys.PAGE, personProfilePage);
+        List<Widget> widgets = new ArrayList<Widget>();
+        if (personProfilePage.getRegions() != null) {
+            for(Region region : personProfilePage.getRegions()) {
+                for (RegionWidget regionWidget : region.getRegionWidgets()) {
+                    widgets.add(widgetService.getWidget(regionWidget.getWidgetId()));
+                }
+            }
+        }
+        model.addAttribute(ModelKeys.WIDGETS, widgets);
 		String view =  ViewNames.getPersonPageView(personProfilePage.getPageLayout().getCode());
         List<Person> friendRequests = userService.getFriendRequestsReceived(username);
         addNavItemsToModel(view, model, referringPageId, user, friendRequests);
@@ -91,6 +102,15 @@ public class ProfileController {
 		Page personProfilePage = pageService.getPersonProfilePage(user.getId());
         addAttributesToModel(model, user, referringPageId);
         model.addAttribute(ModelKeys.PAGE, personProfilePage);
+        List<Widget> widgets = new ArrayList<Widget>();
+        if (personProfilePage.getRegions() != null) {
+            for(Region region : personProfilePage.getRegions()) {
+                for (RegionWidget regionWidget : region.getRegionWidgets()) {
+                    widgets.add(widgetService.getWidget(regionWidget.getWidgetId()));
+                }
+            }
+        }
+        model.addAttribute(ModelKeys.WIDGETS, widgets);
 		String view =  ViewNames.getPersonPageView(personProfilePage.getPageLayout().getCode());
         List<Person> friendRequests = userService.getFriendRequestsReceived(user.getUsername());
         addNavItemsToModel(view, model, referringPageId, user, friendRequests);
