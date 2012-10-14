@@ -23,6 +23,7 @@ import org.apache.rave.portal.model.Page;
 import org.apache.rave.portal.model.Region;
 import org.apache.rave.portal.model.RegionWidget;
 import org.apache.rave.portal.model.impl.*;
+import org.apache.rave.portal.service.OmdlService;
 import org.apache.rave.portal.service.PageService;
 import org.apache.rave.portal.web.api.rpc.model.RpcResult;
 import org.junit.Before;
@@ -39,6 +40,7 @@ public class PageApiTest {
     private final String INTERNAL_ERROR_MESSAGE = "Internal Error";
     private PageApi pageApi;
     private PageService pageService;
+    private OmdlService omdlService;
     private final long REGION_WIDGET_ID = 35;
     private final int NEW_POSITION = 3;
     private final long PAGE_ID = 20L;
@@ -50,7 +52,8 @@ public class PageApiTest {
     @Before
     public void setup() {
         pageService = createMock(PageService.class);
-        pageApi = new PageApi(pageService);
+        omdlService = createMock(OmdlService.class);
+        pageApi = new PageApi(pageService, omdlService);
 
         page = new PageImpl(PAGE_ID);
         page2 = new PageImpl(PAGE_2_ID);

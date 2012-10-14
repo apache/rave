@@ -162,6 +162,16 @@ public interface PageService {
     @PreAuthorize("hasPermission(#pageId, 'org.apache.rave.portal.model.Page', 'update') and " +
                   "hasPermission(#widgetId, 'org.apache.rave.portal.model.Widget', 'read')") 
     RegionWidget addWidgetToPage(long pageId, long widgetId);
+    
+    /**
+     * Creates a new instance of a widget and adds it to the first position of the identified region on the page
+     * @param pageId the id of the page to add the widget to
+     * @param widgetId the {@link org.apache.rave.portal.model.Widget} id to add
+     * @return a valid widget instance
+     */
+    @PreAuthorize("hasPermission(#pageId, 'org.apache.rave.portal.model.Page', 'update') and " +
+                  "hasPermission(#widgetId, 'org.apache.rave.portal.model.Widget', 'read')") 
+    RegionWidget addWidgetToPageRegion(long pageId, long widgetId, long regionId);
 
     /**
      * Deletes the specified widget from the page.

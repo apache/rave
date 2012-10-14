@@ -22,6 +22,7 @@ import org.apache.rave.portal.model.impl.*;
 import org.apache.rave.portal.model.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.apache.rave.portal.service.OmdlService;
 import org.apache.rave.portal.service.PageService;
 import org.junit.Before;
 import org.junit.Test;
@@ -39,6 +40,7 @@ import static org.hamcrest.CoreMatchers.*;
 public class PageApiTest {
     private PageApi pageApi;
     private PageService pageService;
+    private OmdlService omdlService;
     private MockHttpServletResponse response;
 
     private final long PAGE_ID = 1L;
@@ -47,7 +49,8 @@ public class PageApiTest {
     public void setUp() {
         response = new MockHttpServletResponse();
         pageService = createMock(PageService.class);
-        pageApi = new PageApi(pageService);
+        omdlService = createMock(OmdlService.class);
+        pageApi = new PageApi(pageService, omdlService);
     }
 
     @Test

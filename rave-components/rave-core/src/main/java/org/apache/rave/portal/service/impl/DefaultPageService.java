@@ -258,6 +258,21 @@ public class DefaultPageService implements PageService {
         verifyRegionIsNotLocked(region);
         return createWidgetInstance(widget, region, 0);
     }
+    
+    @Override
+    @Transactional
+    public RegionWidget addWidgetToPageRegion(long pageId, long widgetId, long regionId) {
+        Page page = getFromRepository(pageId, pageRepository);
+        Widget widget = getFromRepository(widgetId, widgetRepository);
+        for(Region region : page.getRegions()){
+            if(region.getId().equals(regionId)){
+                verifyRegionIsNotLocked(region);
+                return createWidgetInstance(widget, region, 0);
+            }
+        }
+        // region not found
+        return null;
+    }
 
     @Override
     @Transactional

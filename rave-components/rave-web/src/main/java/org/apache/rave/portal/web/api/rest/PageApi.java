@@ -21,6 +21,8 @@ package org.apache.rave.portal.web.api.rest;
 import org.apache.rave.portal.model.Page;
 import org.apache.rave.portal.model.Region;
 import org.apache.rave.portal.model.RegionWidget;
+import org.apache.rave.portal.model.util.omdl.OmdlOutputAdapter;
+import org.apache.rave.portal.service.OmdlService;
 import org.apache.rave.portal.service.PageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +31,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -41,19 +44,29 @@ import javax.servlet.http.HttpServletResponse;
 public class PageApi extends AbstractRestApi {
     private Logger logger = LoggerFactory.getLogger(getClass());
     private PageService pageService;
+    private OmdlService omdlService;
     
     @Autowired
-    public PageApi(PageService pageService) {
+    public PageApi(PageService pageService, OmdlService omdlService) {
         this.pageService = pageService;
+        this.omdlService = omdlService;
     }       
           
-    @RequestMapping(value = "{pageId}", method = RequestMethod.DELETE)    
+    @RequestMapping(value = "{pageId}", method = RequestMethod.DELETE)
     public void deletePage(@PathVariable long pageId, HttpServletResponse response) {
-        logger.debug("DELETE received for /api/rest/page/" + pageId);                              
-        pageService.deletePage(pageId);                               
+        logger.debug("DELETE received for /api/rest/page/" + pageId);
+        pageService.deletePage(pageId);
         
         // send a 204 back for success since there is no content being returned
         response.setStatus(HttpStatus.NO_CONTENT.value());
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "{pageId}/omdl", method = RequestMethod.GET)
+    public OmdlOutputAdapter getOmdl(@PathVariable long pageId, HttpServletRequest request, HttpServletResponse response) {
+        logger.debug("GET received for /api/rest/page/" + pageId + "/omdl");
+        response.setHeader("Content-Disposition", "attachment; filename=\"rave-omdl-page-" + pageId + ".xml\"");
+        return omdlService.exportOmdl(pageId, request.getRequestURL().toString());
     }
 
     @ResponseBody

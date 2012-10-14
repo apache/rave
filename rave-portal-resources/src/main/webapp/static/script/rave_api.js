@@ -198,10 +198,7 @@ rave.api = rave.api || (function() {
                     }
                 }
             });
-
-
         }
-
 
         return {
             updateWidgetRating: updateWidgetRating,
@@ -291,7 +288,7 @@ rave.api = rave.api || (function() {
                     if (result.error) {
                         // check to see if a duplicate page name error occurred
                         if (result.errorCode == 'DUPLICATE_ITEM') {
-                            $("#pageFormErrors").html(rave.getClientMessage("page.duplicate_name"));
+                            $("#"+args.errorLabel).html(rave.getClientMessage("page.duplicate_name"));
                         } else {
                             handleRpcError(result);
                         }
@@ -350,7 +347,11 @@ rave.api = rave.api || (function() {
                {"name": args.title, "layout": args.layout},
                function(result) {
                    if (result.error) {
-                       handleRpcError(result);
+                       if (result.errorCode == 'DUPLICATE_ITEM') {
+                           $("#"+args.errorLabel).html(rave.getClientMessage("page.duplicate_name"));
+                       } else {
+                           handleRpcError(result);
+                       }
                    }
                    else {
                        if (typeof args.successCallback == 'function') {

@@ -21,7 +21,11 @@ var rave = rave || {};
 rave.layout = rave.layout || (function() {
     var MOVE_PAGE_DEFAULT_POSITION_IDX = -1;
     var $moveWidgetDialog;
+    var showImportExportUI = false;
     var $movePageDialog = $("#movePageDialog");
+    var $pageFormTabbed = $("#pageFormTabbed");
+    var $pageFormImport = $("#pageFormImport");
+    var $omdlFile = $("#omdlFile");
     var $pageForm = $("#pageForm");
     var $tab_title_input = $("#tab_title"),
         $tab_id = $("#tab_id"),
@@ -35,6 +39,7 @@ rave.layout = rave.layout || (function() {
         var $menuItemMove = $("#pageMenuMove");
         var $menuItemShare = $("#pageMenuShare");
         var $menuItemRevokeShare = $("#pageMenuRevokeShare");
+        var $MenuItemExport = $("#pageMenuExport");
 
         /**
          * Initializes the private pageMenu closure
@@ -42,7 +47,8 @@ rave.layout = rave.layout || (function() {
          * - binds menu item click event handlers
          * - binds body click event handler to close the menu
          */
-        function init() {
+        function init(showImportExport) {
+            showImportExportUI = showImportExport;
             // initialize the page form validator overriding the
             // styles to wire in bootstrap styles
             $pageForm.validate({
@@ -55,23 +61,59 @@ rave.layout = rave.layout || (function() {
                     $(element).parent().parent().removeClass('error');
                 }
             });
+            $pageFormTabbed.validate({
+                errorElement: 'span',
+                errorClass: 'help-inline',
+                highlight: function (element, errorClass) {
+                    $(element).parent().parent().addClass('error');
+                },
+                unhighlight: function (element, errorClass) {
+                    $(element).parent().parent().removeClass('error');
+                }
+            });
+            $pageFormImport.validate({
+                errorElement: 'span',
+                errorClass: 'help-inline',
+                highlight: function (element, errorClass) {
+                    $(element).parent().parent().addClass('error');
+                },
+                unhighlight: function (element, errorClass) {
+                    $(element).parent().parent().removeClass('error');
+                }
+            });
+
 
             // initialize the close button in the page menu dialog
             $("#pageMenuCloseButton").click(rave.layout.closePageDialog);
+            $("#pageMenuCloseButtonTab").click(rave.layout.closePageDialogTabbed);
+            if(showImportExport){
+                $("#pageMenuExport").removeClass('hidden');
+            }
 
             // setup the edit page menu item
             $addPageButton.bind('click', function(event) {
-                $("#pageMenuDialogHeader").html(rave.getClientMessage("page.add"));
-                var $pageMenuUpdateButton = $("#pageMenuUpdateButton");
-                $pageMenuUpdateButton.html(rave.getClientMessage("common.add"));
-                // unbind the previous click event since we are sharing the
-                // dialog between separate add/edit page actions
-                $pageMenuUpdateButton.unbind('click');
-                $pageMenuUpdateButton.click(rave.layout.addPage);
-                $('#pageMenuDialog').on('shown', function () {
-                    $("#tab_title").first().focus();
-                });
-                $("#pageMenuDialog").modal('show');
+                if(showImportExport){
+                    var $pageMenuUpdateButtonTabbed = $("#pageMenuUpdateButtonTab");
+                    $pageMenuUpdateButtonTabbed.html(rave.getClientMessage("common.add"));
+                    $("#page-tabs").tabs();
+                    $pageMenuUpdateButtonTabbed.click(rave.layout.addOrImportPage);
+                    $('#pageMenuDialogTabbed').on('shown', function () {
+                        $("#tab_title").first().focus();
+                    });
+                    $("#pageMenuDialogTabbed").modal('show');
+                }else{
+                    $("#pageMenuDialogHeader").html(rave.getClientMessage("page.add"));
+                    var $pageMenuUpdateButton = $("#pageMenuUpdateButton");
+                    $pageMenuUpdateButton.html(rave.getClientMessage("common.add"));
+                    // unbind the previous click event since we are sharing the
+                    // dialog between separate add/edit page actions
+                    $pageMenuUpdateButton.unbind('click');
+                    $pageMenuUpdateButton.click(rave.layout.addPage);
+                    $('#pageMenuDialog').on('shown', function () {
+                        $("#tab_title").first().focus();
+                    });
+                    $("#pageMenuDialog").modal('show');
+                }
             });
 
             // setup the edit page menu item
@@ -110,7 +152,13 @@ rave.layout = rave.layout || (function() {
                     $movePageDialog.modal('show');
                 });
             }
-
+            
+            // setup the export page menu item if it is not disabled
+            if (!$MenuItemExport.hasClass("hidden")) {
+                $MenuItemExport.bind('click', function(event) {
+                    window.open(rave.getContext() + "api/rest/" + "page/" + getCurrentPageId() + "/omdl");
+                });
+            }
             // setup the share page menu item
             if (!$menuItemShare.hasClass("menu-item-disabled")) {
                 $menuItemShare.bind('click', function(event) {
@@ -694,19 +742,79 @@ rave.layout = rave.layout || (function() {
     /**
      * Submits the RPC call to add a new page if form validation passes
      */
-    function addPage() {
-        // if the form has passed validation submit the request
-        if ($pageForm.valid()) {
-            var newPageTitle = $tab_title_input.val();
-            var newPageLayoutCode = $page_layout_input.val();
-
-            // send the rpc request to create the new page
-            rave.api.rpc.addPage({pageName: newPageTitle,
-                                  pageLayoutCode: newPageLayoutCode,
-                                  successCallback: function(result) {
-                                      rave.viewPage(result.result.id);
-                                  }
-            });
+    function addPage() { 
+        if(showImportExportUI){
+            if ($pageFormTabbed.valid()) {
+                var newPageTitle = $("#tab_titleTabbed1").val();
+                var newPageLayoutCode = $("#pageLayoutTabbed").val();
+                // send the rpc request to create the new page
+                rave.api.rpc.addPage({pageName: newPageTitle,
+                                      pageLayoutCode: newPageLayoutCode,
+                                      errorLabel: 'pageFormErrorsTabbed1',
+                                      successCallback: function(result) {
+                                          rave.viewPage(result.result.id);
+                                      }
+                });
+            }
+        }else{
+            if ($pageForm.valid()) {
+                var newPageTitle = $tab_title_input.val();
+                var newPageLayoutCode = $page_layout_input.val();
+                // send the rpc request to create the new page
+                rave.api.rpc.addPage({pageName: newPageTitle,
+                                      pageLayoutCode: newPageLayoutCode,
+                                      errorLabel: 'pageFormErrors',
+                                      successCallback: function(result) {
+                                          rave.viewPage(result.result.id);
+                                      }
+                });
+            }
+        }
+    }
+    
+    function importPage() {
+        if($.browser.msie == true) {
+            alert(rave.getClientMessage("import.page.not.supported"));
+        }
+        else{
+            if ($pageFormImport.valid()) {
+                $pageFormImport.get(0).setAttribute('action', rave.getContext() + "api/rpc/page/import/omdl");
+                document.getElementById('pageFormImport').onsubmit=function() {
+                    document.getElementById('pageFormImport').target = 'file_upload_frame';
+                    document.getElementById("file_upload_frame").onload = processFileUploadResult;
+                }
+                $pageFormImport.submit();
+            }
+        }
+    }
+    
+    function processFileUploadResult() {
+        // chrome & firefox a <pre> has been added to the begining of the json
+        var ret = frames['file_upload_frame'].document.getElementsByTagName("body")[0].firstChild.innerHTML;
+        var data = eval("("+ret+")");
+        if(data.error) {
+            if(data.errorCode == 'DUPLICATE_ITEM') {
+                $("#pageFormErrorsTabbed2").html(rave.getClientMessage("page.duplicate_name"));
+            }
+            else if(data.errorCode == 'INTERNAL_ERROR' && data.errorMessage.indexOf("BadOmdlXmlFormatException") != -1){
+                var msg = data.errorMessage.substr(data.errorMessage.indexOf("BadOmdlXmlFormatException"),data.errorMessage.length)
+                $("#pageFormErrorsTabbed2").html(msg);
+            }
+            else{
+                alert(rave.getClientMessage("api.rpc.error.internal"));
+            }
+        }
+        else{
+            rave.viewPage(data.result.id);
+        }
+    }
+    
+    function addOrImportPage(){
+        var selectedTab = $("#page-tabs").tabs('option', 'selected');
+        if(selectedTab == 0){
+            addPage();
+        }else{
+            importPage();
         }
     }
 
@@ -733,6 +841,7 @@ rave.layout = rave.layout || (function() {
             rave.api.rpc.updatePagePrefs({pageId: $tab_id.val(),
                                             title: $tab_title_input.val(),
                                             layout: $page_layout_input.val(),
+                                            errorLabel: 'pageFormErrors',
                                             successCallback: function(result) {
                                                 rave.viewPage(result.result.id);
                                             }});
@@ -742,9 +851,19 @@ rave.layout = rave.layout || (function() {
     function closePageDialog() {
         $pageForm[0].reset();
         $tab_id.val('');
+        $("#pageFormErrors").text('');
         $("#pageMenuDialog").modal("hide");
     }
-
+    
+    function closePageDialogTabbed() {
+        $pageForm[0].reset();
+        $("#pageFormErrors").text('');
+        $("#pageFormErrorsTabbed1").text('');
+        $("#pageFormErrorsTabbed2").text('');
+        $pageFormTabbed[0].reset();
+        $pageFormImport[0].reset();
+        $("#pageMenuDialogTabbed").modal("hide");
+    }
     /**
      * Invokes the RPC call to delete a regionWidget from a page
      *
@@ -797,8 +916,8 @@ rave.layout = rave.layout || (function() {
    /***
     * initializes the rave.layout namespace code
     */
-    function init() {
-        pageMenu.init();
+    function init(showImportExport) {
+        pageMenu.init(showImportExport);
         widgetMenu.init();
         searchHandler.init();
         // initialize the bootstrap dropdowns
@@ -814,9 +933,12 @@ rave.layout = rave.layout || (function() {
         enableEditPrefsMenuItem: widgetMenu.enableEditPrefsMenuItem,
         bindWidgetMenu: widgetMenu.bindWidgetMenu,
         addPage: addPage,
+        addOrImportPage : addOrImportPage,
         updatePage: updatePage,
         movePage: movePage,
+        importPage: importPage,
         closePageDialog: closePageDialog,
+        closePageDialogTabbed: closePageDialogTabbed,
         moveWidgetToPage: moveWidgetToPage,
         searchHandler : searchHandler,
         isWidgetOnHiddenTab: isWidgetOnHiddenTab
