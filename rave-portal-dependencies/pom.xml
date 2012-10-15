@@ -46,6 +46,10 @@
         </dependency>
         <dependency>
             <groupId>org.apache.rave</groupId>
+            <artifactId>rave-jpa</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.rave</groupId>
             <artifactId>rave-web</artifactId>
         </dependency>
         <dependency>
@@ -61,6 +65,16 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-orm</artifactId>
         </dependency>
 
         <dependency>
@@ -129,38 +143,5 @@
         </dependency>
 
     </dependencies>
-
-    <profiles>
-        <profile>
-            <id>jpa</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <dependencies>
-                <dependency>
-                    <groupId>org.apache.rave</groupId>
-                    <artifactId>rave-jpa</artifactId>
-                </dependency>
-                <dependency>
-                    <groupId>org.springframework</groupId>
-                    <artifactId>spring-jdbc</artifactId>
-                </dependency>
-                <dependency>
-                    <groupId>org.springframework</groupId>
-                    <artifactId>spring-orm</artifactId>
-                </dependency>
-
-            </dependencies>
-        </profile>
-        <profile>
-            <id>mongodb</id>
-            <dependencies>
-                <dependency>
-                    <groupId>org.apache.rave</groupId>
-                    <artifactId>rave-mongodb</artifactId>
-                </dependency>
-            </dependencies>
-        </profile>
-    </profiles>
 
 </project>

@@ -59,6 +59,7 @@
             <artifactId>rave-portal-dependencies</artifactId>
             <type>pom</type>
         </dependency>
+
         <dependency>
             <groupId>org.apache.rave</groupId>
             <artifactId>rave-portal-resources</artifactId>
@@ -204,7 +205,7 @@
                             <!--  un-comment following property for: Loading the SizeOfAgent will probably fail,
                             as you are running on Apple OS X and have a value set for java.io.tmpdir  -->
                             <!-- <net.sf.ehcache.pool.sizeof.AgentSizeOf.bypass>true</net.sf.ehcache.pool.sizeof.AgentSizeOf.bypass>  -->
-	                  
+
 	                   <!-- Documentation: http://rave.apache.org/documentation/host-configuration.html -->
                             <!--
                                 <portal.override.properties>/path/to/custom.portal.properties</portal.override.properties>
@@ -287,6 +288,25 @@
                 </plugins>
             </build>
         </profile>
+            <profile>
+                <id>mongodb</id>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.rave</groupId>
+                        <artifactId>rave-portal-dependencies</artifactId>
+                        <type>pom</type>
+                        <exclusions>
+                            <exclusion>
+                                <groupId>org.apache.rave</groupId>
+                                <artifactId>rave-jpa</artifactId>
+                            </exclusion>
+                        </exclusions>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.apache.rave</groupId>
+                        <artifactId>rave-mongodb</artifactId>
+                    </dependency>
+                </dependencies>
+            </profile>
     </profiles>
-
 </project>
