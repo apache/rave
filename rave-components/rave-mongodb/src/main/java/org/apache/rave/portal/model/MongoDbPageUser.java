@@ -15,6 +15,10 @@ public class MongoDbPageUser extends PageUserImpl {
         this.userRepository = userRepository;
     }
 
+    public MongoDbPageUser(User owner, Page lPage, long renderSequence) {
+        super(owner, lPage, renderSequence);
+    }
+
     public Long getUserId() {
         return userId;
     }
