@@ -4,16 +4,13 @@ import com.google.common.collect.Lists;
 import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.model.impl.*;
 import org.apache.rave.portal.repository.PageRepository;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 
 /**
@@ -30,23 +27,22 @@ public class MongoDbPageRepositoryTest {
     PageRepository repository;
 
     @Test
-    @Ignore
     public void MongoTest() {
         Page page = new PageImpl();
-        //PageUser p = new PageUserImpl(new UserImpl(12345L), page);
+        PageUser p = new PageUserImpl(new UserImpl(12345L), page);
         page.setName("PAGE NAME");
         page.setMembers(Lists.<PageUser>newLinkedList());
-        //page.getMembers().add(p);
+        page.getMembers().add(p);
         page.setOwner(new UserImpl(123456L));
         page.setRegions(Lists.<Region>newLinkedList());
 
         Region region = new RegionImpl();
-        //region.setPage(page);
+        region.setPage(page);
         region.setRegionWidgets(Lists.<RegionWidget>newLinkedList());
         page.getRegions().add(region);
 
         RegionWidget regionWidget = new RegionWidgetImpl();
-        //regionWidget.setRegion(region);
+        regionWidget.setRegion(region);
         regionWidget.setPreferences(Lists.<RegionWidgetPreference>newLinkedList());
         region.getRegionWidgets().add(regionWidget);
 
@@ -65,7 +61,7 @@ public class MongoDbPageRepositoryTest {
         assertThat(saved, instanceOf(MongoDbPage.class));
 
         Page fromDb = repository.get(saved.getId());
-        //assertThat(fromDb.getMembers().get(0), is(equalTo(saved.getMembers().get(0))));
+        assertThat(fromDb.getMembers().get(0), is(equalTo(saved.getMembers().get(0))));
         assertThat(fromDb.getRegions().get(0), is(equalTo(saved.getRegions().get(0))));
         assertThat(fromDb.getRegions().get(0).getRegionWidgets().get(0), is(equalTo(saved.getRegions().get(0).getRegionWidgets().get(0))));
         assertThat(fromDb.getRegions().get(0).getRegionWidgets().get(0).getPreferences().get(0), is(equalTo(saved.getRegions().get(0).getRegionWidgets().get(0).getPreferences().get(0))));
