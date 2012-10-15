@@ -9,15 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Random;
 
-/**
- * Converts reference properties to hydrated objects
- * <p/>
- * TODO: REMOVE REPOSITORY INJECTION WHEN MODEL-SPLIT BRANCH IS MERGED
- */
+import static org.apache.rave.portal.model.util.MongoDbModelUtil.generateId;
+
 @Component
-public class MongoDbReferenceConverter {
+public class MongoDbPageConverter implements HydratingModelConverter<Page, MongoDbPage> {
 
     @Autowired
     private UserRepository userRepository;
@@ -28,31 +24,12 @@ public class MongoDbReferenceConverter {
     @Autowired
     private PageLayoutRepository pageLayoutRepository;
 
-
-    public void hydrate(MongoDbPage page) {
-        page.setPageLayoutRepository(pageLayoutRepository);
-        page.setUserRepository(userRepository);
-
-        for (PageUser user : page.getMembers()) {
-            user.setPage(page);
-            if (user instanceof MongoDbPageUser) {
-                hydrate((MongoDbPageUser) user);
-            }
-        }
-        for (Region region : page.getRegions()) {
-            region.setPage(page);
-            manipulateRegion(region, true);
-        }
-        if (page.getSubPages() != null) {
-            for (Page subPage : page.getSubPages()) {
-                subPage.setParentPage(page);
-                if (subPage instanceof MongoDbPage) {
-                    hydrate((MongoDbPage) subPage);
-                }
-            }
-        }
+    @Override
+    public Class<Page> getSourceType() {
+        return Page.class;
     }
 
+    @Override
     public MongoDbPage convert(Page sourcePage) {
         MongoDbPage page = sourcePage instanceof MongoDbPage ? (MongoDbPage) sourcePage : new MongoDbPage();
         page.setId(page.getId() == null ? generateId() : sourcePage.getId());
@@ -90,10 +67,6 @@ public class MongoDbReferenceConverter {
         return page;
     }
 
-    public void hydrate(MongoDbPageUser user) {
-        user.setUserRepository(userRepository);
-    }
-
     public MongoDbPageUser convert(PageUser sourceUser) {
         MongoDbPageUser user = sourceUser instanceof MongoDbPageUser ? (MongoDbPageUser) sourceUser : new MongoDbPageUser();
         user.setId(sourceUser.getId() == null ? generateId() : sourceUser.getId());
@@ -102,6 +75,36 @@ public class MongoDbReferenceConverter {
         user.setUser(null);
         user.setUserRepository(null);
         return user;
+    }
+
+    @Override
+    public void hydrate(MongoDbPage page) {
+        page.setPageLayoutRepository(pageLayoutRepository);
+        page.setUserRepository(userRepository);
+
+        for (PageUser user : page.getMembers()) {
+            user.setPage(page);
+            if (user instanceof MongoDbPageUser) {
+                hydrate((MongoDbPageUser) user);
+            }
+        }
+        for (Region region : page.getRegions()) {
+            region.setPage(page);
+            manipulateRegion(region, true);
+        }
+        if (page.getSubPages() != null) {
+            for (Page subPage : page.getSubPages()) {
+                subPage.setParentPage(page);
+                if (subPage instanceof MongoDbPage) {
+                    hydrate((MongoDbPage) subPage);
+                }
+            }
+        }
+    }
+
+
+    public void hydrate(MongoDbPageUser user) {
+        user.setUserRepository(userRepository);
     }
 
     public void hydrate(MongoDbRegionWidget widget, Region region) {
@@ -133,7 +136,5 @@ public class MongoDbReferenceConverter {
         }
     }
 
-    private long generateId() {
-        return new Random().nextLong();
-    }
+
 }

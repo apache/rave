@@ -1,7 +1,7 @@
 package org.apache.rave.portal.repository.impl;
 
 import org.apache.rave.portal.model.*;
-import org.apache.rave.portal.model.conversion.MongoDbReferenceConverter;
+import org.apache.rave.portal.model.conversion.MongoDbConverter;
 import org.apache.rave.portal.repository.PageRepository;
 import org.apache.rave.util.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,13 +22,13 @@ public class MongoDbPageRepository implements PageRepository {
     private MongoOperations mongoTemplate;
 
     @Autowired
-    private MongoDbReferenceConverter converter;
+    private MongoDbConverter converter;
 
     @Override
     public List<Page> getAllPages(Long userId, PageType pageType) {
         List<MongoDbPage> pages = mongoTemplate.find(new Query(where("pageType").is(pageType).andOperator(where("ownerId").is(userId))), MongoDbPage.class);
         for(MongoDbPage page : pages) {
-            converter.hydrate(page);
+            converter.hydrate(page, Page.class);
         }
         return CollectionUtils.<Page>toBaseTypedList(pages);
     }
@@ -78,15 +78,15 @@ public class MongoDbPageRepository implements PageRepository {
         if(fromDb == null) {
             throw new IllegalStateException("Could not find requested page: " + id);
         }
-        converter.hydrate(fromDb);
+        converter.hydrate(fromDb, Page.class);
         return fromDb;
     }
 
     @Override
     public Page save(Page item) {
-        MongoDbPage converted = converter.convert(item);
+        MongoDbPage converted = converter.convert(item, Page.class);
         mongoTemplate.save(converted);
-        converter.hydrate(converted);
+        converter.hydrate(converted, Page.class);
         return converted;
     }
 
