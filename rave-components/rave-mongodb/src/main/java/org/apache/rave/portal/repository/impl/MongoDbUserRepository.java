@@ -1,7 +1,10 @@
 package org.apache.rave.portal.repository.impl;
 
+import org.apache.rave.portal.model.MongoDbUser;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -10,6 +13,10 @@ import java.util.List;
  */
 @Repository
 public class MongoDbUserRepository implements UserRepository {
+
+    @Autowired
+    private MongoOperations template;
+
     @Override
     public User getByUsername(String username) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
@@ -62,12 +69,13 @@ public class MongoDbUserRepository implements UserRepository {
 
     @Override
     public User get(long id) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return template.findById(id, MongoDbUser.class);
     }
 
     @Override
     public User save(User item) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        template.save(item);
+        return item;
     }
 
     @Override

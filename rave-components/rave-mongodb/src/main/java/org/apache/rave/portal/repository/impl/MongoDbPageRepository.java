@@ -74,7 +74,7 @@ public class MongoDbPageRepository implements PageRepository {
 
     @Override
     public Page get(long id) {
-        MongoDbPage fromDb = mongoTemplate.findOne(new Query(where("_id").is(id)), MongoDbPage.class);
+        MongoDbPage fromDb = mongoTemplate.findById(id, MongoDbPage.class);
         if(fromDb == null) {
             throw new IllegalStateException("Could not find requested page: " + id);
         }

@@ -1,11 +1,10 @@
 package org.apache.rave.portal.repository.impl;
 
-import org.apache.rave.portal.model.User;
-import org.apache.rave.portal.model.Widget;
-import org.apache.rave.portal.model.WidgetRating;
-import org.apache.rave.portal.model.WidgetStatus;
+import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.model.util.WidgetStatistics;
 import org.apache.rave.portal.repository.WidgetRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -15,34 +14,39 @@ import java.util.Map;
  */
 @Repository
 public class MongoDbWidgetRepository implements WidgetRepository {
+
+    @Autowired
+    private MongoOperations template;
+
     @Override
     public List<Widget> getAll() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null;
     }
 
     @Override
     public List<Widget> getLimitedList(int offset, int pageSize) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null;
     }
 
     @Override
     public int getCountAll() {
-        return 0;  //To change body of implemented methods use File | Settings | File Templates.
+        //TODO replace with native query
+        return template.findAll(MongoDbWidget.class).size();
     }
 
     @Override
     public List<Widget> getByFreeTextSearch(String searchTerm, int offset, int pageSize) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null;
     }
 
     @Override
     public int getCountFreeTextSearch(String searchTerm) {
-        return 0;  //To change body of implemented methods use File | Settings | File Templates.
+        return 0;
     }
 
     @Override
     public List<Widget> getByStatus(WidgetStatus widgetStatus, int offset, int pageSize) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null;
     }
 
     @Override
@@ -107,17 +111,18 @@ public class MongoDbWidgetRepository implements WidgetRepository {
 
     @Override
     public Class<? extends Widget> getType() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return Widget.class;
     }
 
     @Override
     public Widget get(long id) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return template.findById(id, MongoDbWidget.class);
     }
 
     @Override
     public Widget save(Widget item) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        template.save(item);
+        return item;
     }
 
     @Override
