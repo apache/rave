@@ -20,7 +20,6 @@
 package org.apache.rave.portal.model;
 
 import org.apache.rave.portal.model.impl.WidgetTagImpl;
-import org.apache.rave.portal.repository.TagRepository;
 import org.apache.rave.portal.repository.UserRepository;
 
 /**
@@ -28,10 +27,8 @@ import org.apache.rave.portal.repository.UserRepository;
 public class MongoDbWidgetTag extends WidgetTagImpl {
 
     private UserRepository userRepository;
-    private TagRepository tagRepository;
 
     private Long userId;
-    private String tagKeyword;
 
     public Long getUserId() {
         return userId;
@@ -47,32 +44,6 @@ public class MongoDbWidgetTag extends WidgetTagImpl {
 
     public void setUserRepository(UserRepository repository) {
         this.userRepository = repository;
-    }
-
-    public TagRepository getTagRepository() {
-        return tagRepository;
-    }
-
-    public void setTagRepository(TagRepository tagRepository) {
-        this.tagRepository = tagRepository;
-    }
-
-    public String getTagKeyword() {
-        return tagKeyword;
-    }
-
-    public void setTagKeyword(String keyword) {
-        this.tagKeyword = keyword;
-    }
-
-    @Override
-    public Tag getTag() {
-        Tag tag = super.getTag();
-        if(tag == null) {
-            tag = tagRepository.getByKeyword(tagKeyword);
-            super.setTag(tag);
-        }
-        return tag;
     }
 
     @Override

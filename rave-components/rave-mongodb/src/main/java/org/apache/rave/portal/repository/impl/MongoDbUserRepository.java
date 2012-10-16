@@ -97,7 +97,7 @@ public class MongoDbUserRepository implements UserRepository {
 
     @Override
     public User save(User item) {
-        template.save(item);
+        template.save(item, "mongoDbUser");
         return item;
     }
 

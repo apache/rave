@@ -152,7 +152,7 @@ public class MongoDbWidgetRepository implements WidgetRepository {
 
     @Override
     public Widget get(long id) {
-        return template.findById(id, MongoDbWidget.class);
+        return hydrateWidget(template.findById(id, MongoDbWidget.class));
     }
 
     @Override

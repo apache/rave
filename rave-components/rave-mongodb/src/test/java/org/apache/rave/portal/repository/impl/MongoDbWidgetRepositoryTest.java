@@ -70,7 +70,7 @@ public class MongoDbWidgetRepositoryTest {
     }
 
     @Test
-    public void MongoTest() {
+    public void save_basic() {
         List<Category> categoryList = Arrays.asList((Category)new CategoryImpl("GOO"), new CategoryImpl("FOO"));
         categoryRepository.save(categoryList.get(0));
         categoryRepository.save(categoryList.get(1));
@@ -111,6 +111,7 @@ public class MongoDbWidgetRepositoryTest {
         tag.setCreatedDate(new Date());
         tag.setUser(user2);
         tag.setTag(new TagImpl("TEST"));
+        widget.setTags(Arrays.asList(tag));
 
         Widget saved = widgetRepository.save(widget);
 

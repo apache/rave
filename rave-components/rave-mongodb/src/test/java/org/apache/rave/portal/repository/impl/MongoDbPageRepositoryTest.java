@@ -73,11 +73,11 @@ public class MongoDbPageRepositoryTest {
     public void save_basic() {
         Page page = new PageImpl();
 
-        User user1 = new MongoDbUser(12345L);
+        User user1 = new UserImpl(12345L);
         user1.setDisplayName("GEORGE DOE");
         userRepository.save(user1);
 
-        User user2 = new MongoDbUser(12345L);
+        User user2 = new UserImpl(12345L);
         user2.setDisplayName("JANE DOE");
         userRepository.save(user2);
 
@@ -103,7 +103,7 @@ public class MongoDbPageRepositoryTest {
         preference.setValue("PREF_VALUE");
         regionWidget.getPreferences().add(preference);
 
-        Widget widget = new MongoDbWidget(13223L);
+        Widget widget = new WidgetImpl(13223L);
         widget.setAuthor("FOO");
         widget.setDescription("BAR");
         widgetRepository.save(widget);
@@ -111,7 +111,7 @@ public class MongoDbPageRepositoryTest {
         regionWidget.setWidget(widget);
 
         page.setPageType(PageType.USER);
-        PageLayout layout = new MongoDbPageLayout("LAYOUT");
+        PageLayout layout = new PageLayoutImpl("LAYOUT");
         page.setPageLayout(layout);
         layout.setNumberOfRegions(24L);
         pageLayoutRepository.save(layout);

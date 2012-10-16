@@ -22,7 +22,6 @@ package org.apache.rave.portal.model.conversion;
 import com.google.common.collect.Lists;
 import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.repository.CategoryRepository;
-import org.apache.rave.portal.repository.TagRepository;
 import org.apache.rave.portal.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -40,77 +39,115 @@ public class MongoDbWidgetConverter implements HydratingModelConverter<Widget, M
 
     @Autowired
     private CategoryRepository categoryRepository;
-    
-    @Autowired
-    private TagRepository tagRepository;
+
+    @Override
+    public Class<Widget> getSourceType() {
+        return Widget.class;
+    }
 
     @Override
     public void hydrate(MongoDbWidget dehydrated) {
         dehydrated.setCategoryRepository(categoryRepository);
         dehydrated.setUserRepository(userRepository);
-        
-        for(WidgetComment comment: dehydrated.getComments()) {
-            if(comment instanceof MongoDbWidgetComment) {
-                ((MongoDbWidgetComment)comment).setUserRepository(userRepository);
+        if(dehydrated.getComments() != null) {
+            hydrateComments(dehydrated);
+        }
+
+        if(dehydrated.getTags() != null) {
+            hydrateTags(dehydrated);
+        }
+    }
+
+    private void hydrateTags(MongoDbWidget dehydrated) {
+        for (WidgetTag tag : dehydrated.getTags()) {
+            if (tag instanceof MongoDbWidgetTag) {
+                ((MongoDbWidgetTag) tag).setUserRepository(userRepository);
             }
-        }        
-        
-        for(WidgetTag tag: dehydrated.getTags()) {
-            if(tag instanceof MongoDbWidgetTag) {
-                ((MongoDbWidgetTag)tag).setUserRepository(userRepository);
-                ((MongoDbWidgetTag)tag).setTagRepository(tagRepository);
+        }
+    }
+
+    private void hydrateComments(MongoDbWidget dehydrated) {
+        for (WidgetComment comment : dehydrated.getComments()) {
+            if (comment instanceof MongoDbWidgetComment) {
+                ((MongoDbWidgetComment) comment).setUserRepository(userRepository);
             }
         }
     }
 
     @Override
     public MongoDbWidget convert(Widget source) {
-        MongoDbWidget widget = source instanceof MongoDbWidget ? (MongoDbWidget)source : new MongoDbWidget();
+        MongoDbWidget widget = source instanceof MongoDbWidget ? (MongoDbWidget) source : new MongoDbWidget();
         updateProperties(source, widget);
-        widget.setOwnerId(source.getOwner().getId());
+        widget.setOwnerId(source.getOwner() != null ? source.getOwner().getId() : null);
         widget.setOwner(null);
         widget.setUserRepository(null);
 
-        List<Long> categoryIds = Lists.<Long>newArrayList();
-        for(Category category : source.getCategories()) {
-            widget.getCategoryIds().add(category.getId());
+        if (source.getCategories() != null) {
+            convertCategories(source, widget);
         }
-        widget.setCategoryIds(categoryIds);
-        widget.setCategories(null);
-        widget.setCategoryRepository(null);
-
-        List<WidgetComment> convertedComments = Lists.newArrayList();
-        for(WidgetComment comment : source.getComments()) {
-            convertedComments.add(convert(comment, widget));
+        if (source.getComments() != null) {
+            convertComments(source, widget);
         }
-        widget.setComments(convertedComments);
-
-        List<WidgetTag> convertedTags = Lists.newArrayList();
-        for(WidgetTag tag : source.getTags()) {
-            convertedTags.add(convert(tag, widget));
+        if(source.getTags() != null) {
+            convertTags(source, widget);
         }
-        widget.setTags(convertedTags);
-
+        if(source.getRatings() != null) {
+            convertRatings(source, widget);
+        }
         return widget;
     }
 
+    private void convertRatings(Widget source, MongoDbWidget widget) {
+        List<WidgetRating> ratings = source.getRatings();
+        for(WidgetRating rating : ratings) {
+            rating.setWidgetId(widget.getId());
+            if(rating.getId() == null) {
+                rating.setId(generateId());
+            }
+        }
+        widget.setRatings(ratings);
+    }
+
+    private void convertTags(Widget source, MongoDbWidget widget) {
+        List<WidgetTag> convertedTags = Lists.newArrayList();
+        for (WidgetTag tag : source.getTags()) {
+            convertedTags.add(convert(tag, widget));
+        }
+        widget.setTags(convertedTags);
+    }
+
+    private void convertComments(Widget source, MongoDbWidget widget) {
+        List<WidgetComment> convertedComments = Lists.newArrayList();
+        for (WidgetComment comment : source.getComments()) {
+            convertedComments.add(convert(comment, widget));
+        }
+        widget.setComments(convertedComments);
+    }
+
+    private void convertCategories(Widget source, MongoDbWidget converted) {
+        List<Long> categoryIds = Lists.<Long>newArrayList();
+        for (Category category : source.getCategories()) {
+            categoryIds.add(category.getId());
+        }
+        converted.setCategoryIds(categoryIds);
+        converted.setCategories(null);
+        converted.setCategoryRepository(null);
+    }
+
     private MongoDbWidgetTag convert(WidgetTag tag, Widget widget) {
-        MongoDbWidgetTag converted = tag instanceof MongoDbWidgetTag ? ((MongoDbWidgetTag)tag) : new MongoDbWidgetTag();
+        MongoDbWidgetTag converted = tag instanceof MongoDbWidgetTag ? ((MongoDbWidgetTag) tag) : new MongoDbWidgetTag();
 
         converted.setUserId(tag.getUser().getId());
         converted.setUser(null);
-        converted.setTagKeyword(tag.getTag().getKeyword());
-        converted.setTag(null);
         converted.setUserRepository(null);
-        converted.setTagRepository(null);
-
+        converted.setTag(tag.getTag());
         converted.setCreatedDate(tag.getCreatedDate());
         converted.setWidgetId(widget.getId());
         return converted;
     }
 
     private MongoDbWidgetComment convert(WidgetComment comment, Widget widget) {
-        MongoDbWidgetComment converted = comment instanceof MongoDbWidgetComment ? ((MongoDbWidgetComment)comment) : new MongoDbWidgetComment();
+        MongoDbWidgetComment converted = comment instanceof MongoDbWidgetComment ? ((MongoDbWidgetComment) comment) : new MongoDbWidgetComment();
         converted.setUserId(comment.getUser().getId());
         converted.setUser(null);
         converted.setId(comment.getId() == null ? generateId() : comment.getId());
@@ -121,11 +158,6 @@ public class MongoDbWidgetConverter implements HydratingModelConverter<Widget, M
         converted.setText(comment.getText());
         converted.setWidgetId(widget.getId());
         return converted;
-    }
-
-    @Override
-    public Class<Widget> getSourceType() {
-        return Widget.class;
     }
 
     private void updateProperties(Widget source, MongoDbWidget converted) {
@@ -143,7 +175,6 @@ public class MongoDbWidgetConverter implements HydratingModelConverter<Widget, M
         converted.setWidgetStatus(source.getWidgetStatus());
         converted.setComments(source.getComments());
         converted.setDisableRendering(source.isDisableRendering());
-        converted.setRatings(source.getRatings());
         converted.setFeatured(source.isFeatured());
     }
 }
