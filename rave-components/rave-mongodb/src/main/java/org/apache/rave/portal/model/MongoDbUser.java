@@ -19,12 +19,43 @@
 
 package org.apache.rave.portal.model;
 
+import com.google.common.collect.Lists;
 import org.apache.rave.portal.model.impl.UserImpl;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
+import java.util.Collection;
+import java.util.List;
 
 /**
  */
 public class MongoDbUser extends UserImpl {
+
+    private List<String> authorityCodes;
+
     public MongoDbUser(long id) {
         super(id);
+    }
+
+    public MongoDbUser() {
+    }
+
+    public List<String> getAuthorityCodes() {
+        return authorityCodes;
+    }
+
+    public void setAuthorityCodes(List<String> authorityCodes) {
+        this.authorityCodes = authorityCodes;
+    }
+
+    @Override
+    public Collection<GrantedAuthority> getAuthorities() {
+        Collection<GrantedAuthority> grantedAuthorities = Lists.newArrayList();
+        if (authorityCodes != null) {
+            for (String code : authorityCodes) {
+                grantedAuthorities.add(new SimpleGrantedAuthority(code));
+            }
+        }
+        return grantedAuthorities;
     }
 }

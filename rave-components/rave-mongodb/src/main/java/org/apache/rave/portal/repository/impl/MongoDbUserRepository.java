@@ -23,16 +23,25 @@ import org.apache.rave.portal.model.MongoDbUser;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.conversion.MongoDbConverter;
 import org.apache.rave.portal.repository.UserRepository;
+import org.apache.rave.util.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+
+import static org.springframework.data.mongodb.core.query.Criteria.where;
+
 
 /**
  */
 @Repository
 public class MongoDbUserRepository implements UserRepository {
+
+    public static final String COLLECTION = "person";
+    public static final Class<MongoDbUser> CLAZZ = MongoDbUser.class;
 
     @Autowired
     private MongoOperations template;
@@ -42,67 +51,89 @@ public class MongoDbUserRepository implements UserRepository {
 
     @Override
     public User getByUsername(String username) {
-        return null;
+        return hydrate(template.findOne(query(where("username").is(username)), CLAZZ, COLLECTION));
     }
 
     @Override
     public User getByUserEmail(String userEmail) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return hydrate(template.findOne(query(where("email").is(userEmail)), CLAZZ, COLLECTION));
     }
 
     @Override
     public User getByOpenId(String openId) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return hydrate(template.findOne(query(where("openId").is(openId)), CLAZZ, COLLECTION));
     }
 
     @Override
     public List<User> getLimitedList(int offset, int pageSize) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        Query query = new Query().skip(offset).limit(pageSize);
+        return hydrate(template.find(query, CLAZZ, COLLECTION));
     }
 
     @Override
     public int getCountAll() {
-        return 0;  //To change body of implemented methods use File | Settings | File Templates.
+        return (int)template.count(new Query(), COLLECTION);
     }
 
     @Override
     public List<User> findByUsernameOrEmail(String searchTerm, int offset, int pageSize) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return hydrate(template.find(getSearchQuery(searchTerm).skip(offset).limit(pageSize), CLAZZ, COLLECTION));
     }
 
     @Override
     public int getCountByUsernameOrEmail(String searchTerm) {
-        return 0;  //To change body of implemented methods use File | Settings | File Templates.
+        return (int)template.count(getSearchQuery(searchTerm), COLLECTION);
     }
 
     @Override
     public List<User> getAllByAddedWidget(long widgetId) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null;
     }
 
     @Override
     public User getByForgotPasswordHash(String hash) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return hydrate(template.findOne(query(where("forgotPasswordHash").is(hash)), CLAZZ, COLLECTION));
     }
 
     @Override
     public Class<? extends User> getType() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return MongoDbUser.class;
     }
 
     @Override
     public User get(long id) {
-        return template.findById(id, MongoDbUser.class);
+        return hydrate(template.findById(id, CLAZZ, COLLECTION));
     }
 
     @Override
     public User save(User item) {
-        template.save(item, "mongoDbUser");
-        return item;
+        MongoDbUser converted = converter.convert(item, User.class);
+        template.save(converted, COLLECTION);
+        return hydrate(converted);
     }
 
     @Override
     public void delete(User item) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        template.remove(get(item.getId()), COLLECTION);
+    }
+
+    private User hydrate(MongoDbUser user) {
+        converter.hydrate(user, User.class);
+        return user;
+    }
+
+    private List<User> hydrate(List<MongoDbUser> userList) {
+        for(MongoDbUser user : userList) {
+            converter.hydrate(user, User.class);
+        }
+        return CollectionUtils.<User>toBaseTypedList(userList);
+    }
+
+    private Query query(Criteria criteria) {
+        return new Query(criteria);
+    }
+
+    private Query getSearchQuery(String searchTerm) {
+        return query(where("username").is(searchTerm).orOperator(where("email").is(searchTerm)));
     }
 }
