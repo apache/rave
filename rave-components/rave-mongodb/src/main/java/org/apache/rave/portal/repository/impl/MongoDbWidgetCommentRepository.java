@@ -105,7 +105,6 @@ public class MongoDbWidgetCommentRepository implements WidgetCommentRepository {
 
     private int updateWidget(Long userId, Widget widget) {
         int count = 0;
-        boolean updated =false;
 
         Iterator<WidgetComment> iterator = widget.getComments().iterator();
         while(iterator.hasNext()) {
@@ -113,10 +112,9 @@ public class MongoDbWidgetCommentRepository implements WidgetCommentRepository {
             if(comment.getUser().getId().equals(userId)) {
                 iterator.remove();
                 count++;
-                updated = true;
             }
         }
-        if(updated) {
+        if(count > 0) {
             template.save(widget);
         }
         return count;
