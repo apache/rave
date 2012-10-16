@@ -34,6 +34,7 @@ import static org.apache.rave.portal.model.util.MongoDbModelUtil.generateId;
  */
 @Component
 public class MongoDbWidgetConverter implements HydratingModelConverter<Widget, MongoDbWidget> {
+
     @Autowired
     private UserRepository userRepository;
 

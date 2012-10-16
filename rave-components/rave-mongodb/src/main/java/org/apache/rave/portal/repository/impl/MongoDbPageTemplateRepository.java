@@ -17,14 +17,34 @@
  *  under the License.
  */
 
-package org.apache.rave.portal.model;
+package org.apache.rave.portal.repository.impl;
 
-import org.apache.rave.portal.model.impl.PageLayoutImpl;
+import org.apache.rave.portal.model.PageTemplate;
+import org.apache.rave.portal.model.PageType;
+import org.apache.rave.portal.model.conversion.MongoDbConverter;
+import org.apache.rave.portal.repository.PageTemplateRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoOperations;
 
-public class MongoDbPageLayout extends PageLayoutImpl {
-    public MongoDbPageLayout() {    }
+import java.util.List;
 
-    public MongoDbPageLayout(String layout) {
-        super(layout);
+/**
+ */
+public class MongoDbPageTemplateRepository implements PageTemplateRepository {
+
+    @Autowired
+    private MongoDbConverter converter;
+
+    @Autowired
+    private MongoOperations template;
+
+    @Override
+    public List<PageTemplate> getAll() {
+        return null;
+    }
+
+    @Override
+    public PageTemplate getDefaultPage(PageType pageType) {
+        return null;
     }
 }
