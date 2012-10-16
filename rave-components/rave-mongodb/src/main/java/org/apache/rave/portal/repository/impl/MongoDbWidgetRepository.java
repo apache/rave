@@ -33,6 +33,8 @@ import java.util.List;
 import java.util.Map;
 
 import static org.springframework.data.mongodb.core.query.Criteria.where;
+import static org.springframework.data.mongodb.core.query.Query.query;
+import static org.springframework.data.mongodb.core.query.Update.update;
 
 
 /**
@@ -125,17 +127,18 @@ public class MongoDbWidgetRepository implements WidgetRepository {
 
     @Override
     public List<Widget> getWidgetsByTag(String tagKeyWord, int offset, int pageSize) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return template.find(getTagQuery(tagKeyWord).limit(pageSize).skip(offset));
     }
 
     @Override
     public int getCountByTag(String tagKeyword) {
-        return 0;  //To change body of implemented methods use File | Settings | File Templates.
+        return (int)template.count(getTagQuery(tagKeyword));
     }
 
     @Override
     public int unassignWidgetOwner(long userId) {
-        return 0;  //To change body of implemented methods use File | Settings | File Templates.
+        Query query = query(where("ownerId").is(userId));
+        return template.update(query, update("ownerId", null));
     }
 
     @Override
@@ -171,6 +174,10 @@ public class MongoDbWidgetRepository implements WidgetRepository {
     }
 
     private Query getQueryByOwner(User owner) {
-        return new Query(where("ownerId").is(owner.getId()));
+        return query(where("ownerId").is(owner.getId()));
+    }
+
+    private Query getTagQuery(String tagKeyWord) {
+        return query(where("tags").elemMatch(where("tag.keyword").is(tagKeyWord)));
     }
 }

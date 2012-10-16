@@ -19,12 +19,14 @@
 
 package org.apache.rave.portal.repository.impl;
 
+import com.mongodb.WriteResult;
 import org.apache.rave.portal.model.conversion.HydratingConverterFactory;
 import org.apache.rave.portal.repository.MongoModelOperations;
 import org.apache.rave.util.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 
 import java.util.List;
 
@@ -83,6 +85,12 @@ public class MongoModelTemplate<T, E extends T> implements MongoModelOperations<
     @Override
     public List<T> find(Query query) {
         return hydrate(mongoTemplate.find(query, dbType, collection));
+    }
+
+    @Override
+    public int update(Query query, Update update) {
+        WriteResult result = mongoTemplate.updateMulti(query, update, collection);
+        return result.getN();
     }
 
     private List<T> hydrate(List<E> mongoDbTs) {

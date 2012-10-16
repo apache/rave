@@ -26,7 +26,6 @@ import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.repository.MongoModelOperations;
 import org.apache.rave.portal.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
 
@@ -35,6 +34,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import static org.springframework.data.mongodb.core.query.Criteria.where;
+import static org.springframework.data.mongodb.core.query.Query.query;
 
 /**
  */
@@ -198,11 +198,6 @@ public class MongoDbPersonRepository implements PersonRepository {
 
     private Query getUsernameQuery(String username) {
         return query(where("username").is(username));
-    }
-
-
-    private Query query(Criteria criteria) {
-        return new Query(criteria);
     }
 
     private void removeAssociation(MongoDbUser friend, MongoDbUser person) {

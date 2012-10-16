@@ -23,6 +23,7 @@ import org.apache.rave.portal.model.Page;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.Widget;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 
 import java.util.List;
 
@@ -30,11 +31,12 @@ import java.util.List;
  */
 public interface MongoModelOperations<T> {
     long count(Query query);
-    void remove(Query query);
     T findOne(Query query);
     List<T> find(Query query);
     T get(long id);
     T save(T item);
+    void remove(Query query);
+    int update(Query query, Update update);
 
     public static interface MongoPageOperations extends MongoModelOperations<Page> {}
     public static interface MongoUserOperations extends MongoModelOperations<User> {}

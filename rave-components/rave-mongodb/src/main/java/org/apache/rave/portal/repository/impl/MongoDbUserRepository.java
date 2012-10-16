@@ -24,13 +24,13 @@ import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.repository.MongoModelOperations;
 import org.apache.rave.portal.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 import static org.springframework.data.mongodb.core.query.Criteria.where;
+import static org.springframework.data.mongodb.core.query.Query.query;
 
 
 /**
@@ -105,10 +105,6 @@ public class MongoDbUserRepository implements UserRepository {
     @Override
     public void delete(User item) {
         template.remove(query(where("_id").is(item.getId())));
-    }
-
-    private Query query(Criteria criteria) {
-        return new Query(criteria);
     }
 
     private Query getSearchQuery(String searchTerm) {
