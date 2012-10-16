@@ -24,6 +24,7 @@ import org.apache.rave.portal.model.WidgetRating;
 import org.apache.rave.portal.repository.MongoModelOperations;
 import org.apache.rave.portal.repository.WidgetRatingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import java.util.Iterator;
 import java.util.List;
@@ -32,6 +33,7 @@ import static org.apache.rave.portal.model.util.MongoDbModelUtil.generateId;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static org.springframework.data.mongodb.core.query.Query.query;
 
+@Repository
 public class MongoDbWidgetRatingRepository implements WidgetRatingRepository {
 
     @Autowired

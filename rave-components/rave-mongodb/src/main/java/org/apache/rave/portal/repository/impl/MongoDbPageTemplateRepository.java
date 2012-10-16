@@ -28,6 +28,7 @@ import org.apache.rave.util.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
@@ -35,6 +36,7 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
 
 /**
  */
+@Repository
 public class MongoDbPageTemplateRepository implements PageTemplateRepository {
     public static final String COLLECTION = "pageTemplate";
 

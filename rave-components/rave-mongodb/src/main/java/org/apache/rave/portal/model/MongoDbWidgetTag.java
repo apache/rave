@@ -29,6 +29,7 @@ public class MongoDbWidgetTag extends WidgetTagImpl {
     private UserRepository userRepository;
 
     private Long userId;
+    private Long id;
 
     public Long getUserId() {
         return userId;
