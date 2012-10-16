@@ -31,6 +31,7 @@ import java.util.List;
 /**
  */
 public class MongoDbPageTemplateRepository implements PageTemplateRepository {
+    public static final String COLLECTION = "pageTemplate";
 
     @Autowired
     private MongoDbConverter converter;

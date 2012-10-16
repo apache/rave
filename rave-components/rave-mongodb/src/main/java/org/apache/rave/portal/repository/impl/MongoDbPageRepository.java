@@ -43,6 +43,8 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
 @Repository
 public class MongoDbPageRepository implements PageRepository {
 
+    public static final String COLLECTION = "page";
+
     @Autowired
     private MongoOperations mongoTemplate;
 
@@ -51,7 +53,7 @@ public class MongoDbPageRepository implements PageRepository {
 
     @Override
     public List<Page> getAllPages(Long userId, PageType pageType) {
-        List<MongoDbPage> pages = mongoTemplate.find(new Query(where("pageType").is(pageType).andOperator(where("ownerId").is(userId))), MongoDbPage.class);
+        List<MongoDbPage> pages = mongoTemplate.find(new Query(where("pageType").is(pageType).andOperator(where("ownerId").is(userId))), MongoDbPage.class, COLLECTION);
         hydratePages(pages);
         return CollectionUtils.<Page>toBaseTypedList(pages);
     }
@@ -59,8 +61,8 @@ public class MongoDbPageRepository implements PageRepository {
     @Override
     public int deletePages(Long userId, PageType pageType) {
         Query query = new Query(where("pageType").is(pageType).andOperator(where("ownerId").is(userId)));
-        int count = (int)mongoTemplate.count(query, MongoDbPage.class);
-        mongoTemplate.remove(query, MongoDbPage.class);
+        int count = (int)mongoTemplate.count(query, COLLECTION);
+        mongoTemplate.remove(query, COLLECTION);
         return count;
     }
 
@@ -71,12 +73,12 @@ public class MongoDbPageRepository implements PageRepository {
 
     @Override
     public boolean hasPersonPage(long userId) {
-        return mongoTemplate.count(new Query(where("pageType").is(PageType.PERSON_PROFILE).andOperator(where("ownerId").is(userId))), MongoDbPage.class) > 0;
+        return mongoTemplate.count(new Query(where("pageType").is(PageType.PERSON_PROFILE).andOperator(where("ownerId").is(userId))), COLLECTION) > 0;
     }
 
     @Override
     public List<PageUser> getPagesForUser(Long userId, PageType pageType) {
-        List<MongoDbPage> pages = mongoTemplate.find(new Query(where("members").elemMatch(where("userId").is(userId)).andOperator(where("pageType").is(pageType))), MongoDbPage.class);
+        List<MongoDbPage> pages = mongoTemplate.find(new Query(where("members").elemMatch(where("userId").is(userId)).andOperator(where("pageType").is(pageType))), MongoDbPage.class, COLLECTION);
         List<PageUser> userList = Lists.newArrayList();
         for(MongoDbPage page : pages) {
             converter.hydrate(page, Page.class);
@@ -102,7 +104,7 @@ public class MongoDbPageRepository implements PageRepository {
 
     @Override
     public Page get(long id) {
-        MongoDbPage fromDb = mongoTemplate.findById(id, MongoDbPage.class);
+        MongoDbPage fromDb = mongoTemplate.findById(id, MongoDbPage.class, COLLECTION);
         if(fromDb == null) {
             throw new IllegalStateException("Could not find requested page: " + id);
         }
@@ -113,14 +115,14 @@ public class MongoDbPageRepository implements PageRepository {
     @Override
     public Page save(Page item) {
         MongoDbPage converted = converter.convert(item, Page.class);
-        mongoTemplate.save(converted);
+        mongoTemplate.save(converted, COLLECTION);
         converter.hydrate(converted, Page.class);
         return converted;
     }
 
     @Override
     public void delete(Page item) {
-        mongoTemplate.remove(new Query(where("id").is(item.getId())), MongoDbPage.class);
+        mongoTemplate.remove(new Query(where("id").is(item.getId())), COLLECTION);
     }
 
     private void hydratePages(List<MongoDbPage> pages) {

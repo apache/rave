@@ -36,7 +36,7 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
 @Repository
 public class MongoDbPageLayoutRepository implements PageLayoutRepository {
 
-    public static final String COLLECTION = "mongoDbPageLayout";
+    public static final String COLLECTION = "pageLayout";
 
     @Autowired
     private MongoOperations template;

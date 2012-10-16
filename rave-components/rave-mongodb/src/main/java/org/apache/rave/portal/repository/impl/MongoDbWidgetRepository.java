@@ -41,6 +41,7 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
  */
 @Repository
 public class MongoDbWidgetRepository implements WidgetRepository {
+    public static final String COLLECTION = "widget";
 
     @Autowired
     private MongoOperations template;
@@ -55,18 +56,18 @@ public class MongoDbWidgetRepository implements WidgetRepository {
 
     @Override
     public List<Widget> getLimitedList(int offset, int pageSize) {
-        return hydrateWidgets(template.find(new Query().skip(offset).limit(pageSize), MongoDbWidget.class));
+        return hydrateWidgets(template.find(new Query().skip(offset).limit(pageSize), MongoDbWidget.class, COLLECTION));
     }
 
     @Override
     public int getCountAll() {
-        return (int)template.count(new Query(), MongoDbWidget.class);
+        return (int)template.count(new Query(), COLLECTION);
     }
 
     @Override
     public List<Widget> getByFreeTextSearch(String searchTerm, int offset, int pageSize) {
         Query query = new Query(getFreeTextClause(searchTerm)).skip(offset).limit(pageSize);
-        return hydrateWidgets(template.find(query, MongoDbWidget.class));
+        return hydrateWidgets(template.find(query, MongoDbWidget.class, COLLECTION));
     }
 
     @Override
@@ -78,26 +79,26 @@ public class MongoDbWidgetRepository implements WidgetRepository {
     public List<Widget> getByStatus(WidgetStatus widgetStatus, int offset, int pageSize) {
         Query query = new Query(where("widgetStatus").is(widgetStatus)).skip(offset).limit(pageSize);
         query.sort().on("title", Order.ASCENDING);
-        List<MongoDbWidget> widgets = template.find(query, MongoDbWidget.class);
+        List<MongoDbWidget> widgets = template.find(query, MongoDbWidget.class, COLLECTION);
         return hydrateWidgets(widgets);
     }
 
     @Override
     public int getCountByStatus(WidgetStatus widgetStatus) {
-        return (int)template.count(new Query(where("widgetStatus").is(widgetStatus)), MongoDbWidget.class);
+        return (int)template.count(new Query(where("widgetStatus").is(widgetStatus)), COLLECTION);
     }
 
     @Override
     public List<Widget> getByStatusAndTypeAndFreeTextSearch(WidgetStatus widgetStatus, String type, String searchTerm, int offset, int pageSize) {
         Query query = getWidgetStatusFreeTextQuery(widgetStatus, type, searchTerm).limit(pageSize).skip(offset);
         query.sort().on("title", Order.ASCENDING);
-        List<MongoDbWidget> widgets = template.find(query, MongoDbWidget.class);
+        List<MongoDbWidget> widgets = template.find(query, MongoDbWidget.class, COLLECTION);
         return hydrateWidgets(widgets);
     }
 
     @Override
     public int getCountByStatusAndTypeAndFreeText(WidgetStatus widgetStatus, String type, String searchTerm) {
-        return (int)template.count(getWidgetStatusFreeTextQuery(widgetStatus, type, searchTerm), MongoDbWidget.class);
+        return (int)template.count(getWidgetStatusFreeTextQuery(widgetStatus, type, searchTerm), COLLECTION);
     }
 
     @Override
@@ -112,7 +113,7 @@ public class MongoDbWidgetRepository implements WidgetRepository {
 
     @Override
     public Widget getByUrl(String widgetUrl) {
-        return hydrateWidget(template.findOne(new Query(where("url").is(widgetUrl)), MongoDbWidget.class));
+        return hydrateWidget(template.findOne(new Query(where("url").is(widgetUrl)), MongoDbWidget.class, COLLECTION));
     }
 
     @Override
@@ -152,20 +153,20 @@ public class MongoDbWidgetRepository implements WidgetRepository {
 
     @Override
     public Widget get(long id) {
-        return hydrateWidget(template.findById(id, MongoDbWidget.class));
+        return hydrateWidget(template.findById(id, MongoDbWidget.class, COLLECTION));
     }
 
     @Override
     public Widget save(Widget item) {
         MongoDbWidget converted = converter.convert(item, Widget.class);
-        template.save(converted);
+        template.save(converted, COLLECTION);
         converter.hydrate(converted, Widget.class);
         return converted;
     }
 
     @Override
     public void delete(Widget item) {
-        template.remove(template.findById(item.getId(), MongoDbWidget.class));
+        template.remove(template.findById(item.getId(), MongoDbWidget.class, COLLECTION));
     }
 
     private List<Widget> hydrateWidgets(List<MongoDbWidget> widgets) {
