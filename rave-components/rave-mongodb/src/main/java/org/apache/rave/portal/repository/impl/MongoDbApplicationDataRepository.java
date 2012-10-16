@@ -21,40 +21,58 @@ package org.apache.rave.portal.repository.impl;
 
 
 import org.apache.rave.portal.model.ApplicationData;
+import org.apache.rave.portal.model.impl.ApplicationDataImpl;
 import org.apache.rave.portal.repository.ApplicationDataRepository;
+import org.apache.rave.util.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+import static org.apache.rave.portal.model.util.MongoDbModelUtil.generateId;
+import static org.springframework.data.mongodb.core.query.Criteria.where;
+import static org.springframework.data.mongodb.core.query.Query.query;
+
 @Repository
 public class MongoDbApplicationDataRepository implements ApplicationDataRepository {
+    public static final String COLLECTION = "appData";
+    public static final Class<ApplicationDataImpl> CLASS = ApplicationDataImpl.class;
+
+    @Autowired
+    private MongoOperations template;
+
     @Override
     public List<ApplicationData> getApplicationData(List<String> userIds, String appId) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return CollectionUtils.<ApplicationData>toBaseTypedList(template.find(query(where("appUrl").is(appId).andOperator(where("userId").in(userIds))), CLASS, COLLECTION));
     }
 
     @Override
     public ApplicationData getApplicationData(String personId, String appId) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return template.findOne(query(where("appUrl").is(appId).andOperator(where("userId").is(personId))), CLASS, COLLECTION);
     }
 
     @Override
     public Class<? extends ApplicationData> getType() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return CLASS;
     }
 
     @Override
     public ApplicationData get(long id) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return template.findById(id, CLASS, COLLECTION);
     }
 
     @Override
     public ApplicationData save(ApplicationData item) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        if(item.getId() == null) {
+            item.setId(generateId());
+        }
+        template.save(item, COLLECTION);
+        return item;
     }
 
     @Override
     public void delete(ApplicationData item) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        template.remove(item, COLLECTION);
     }
 }

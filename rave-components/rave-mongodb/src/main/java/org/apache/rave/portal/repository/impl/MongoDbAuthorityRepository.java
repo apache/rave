@@ -19,51 +19,76 @@
 
 package org.apache.rave.portal.repository.impl;
 
+import org.apache.rave.exception.NotSupportedException;
 import org.apache.rave.portal.model.Authority;
+import org.apache.rave.portal.model.impl.AuthorityImpl;
 import org.apache.rave.portal.repository.AuthorityRepository;
+import org.apache.rave.util.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+import static org.springframework.data.mongodb.core.query.Criteria.where;
+import static org.springframework.data.mongodb.core.query.Query.query;
+
 @Repository
 public class MongoDbAuthorityRepository implements AuthorityRepository {
+
+    public static final String COLLECTION = "authority";
+    public static final Class<AuthorityImpl> CLASS = AuthorityImpl.class;
+
+    @Autowired
+    private MongoOperations template;
+
     @Override
     public Authority getByAuthority(String authorityName) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return template.findOne(query(where("authority").is(authorityName)), CLASS, COLLECTION);
     }
 
     @Override
     public List<Authority> getAll() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return CollectionUtils.<Authority>toBaseTypedList(template.findAll(CLASS, COLLECTION));
     }
 
     @Override
     public List<Authority> getAllDefault() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return CollectionUtils.<Authority>toBaseTypedList(template.find(query(where("defaultForNewUser").is(true)), CLASS, COLLECTION));
     }
 
     @Override
     public int getCountAll() {
-        return 0;  //To change body of implemented methods use File | Settings | File Templates.
+        return (int)template.count(new Query(), COLLECTION);
     }
 
     @Override
     public Class<? extends Authority> getType() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return AuthorityImpl.class;
     }
 
     @Override
     public Authority get(long id) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        throw new NotSupportedException();
     }
 
     @Override
     public Authority save(Authority item) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        Authority fromDb = getByAuthority(item.getAuthority());
+        Authority save;
+        if(fromDb == null) {
+            save = item;
+        } else {
+            fromDb.setDefaultForNewUser(item.isDefaultForNewUser());
+            save=fromDb;
+        }
+        template.save(save, COLLECTION);
+        return save;
     }
 
     @Override
     public void delete(Authority item) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        template.remove(getByAuthority(item.getAuthority()), COLLECTION);
     }
 }

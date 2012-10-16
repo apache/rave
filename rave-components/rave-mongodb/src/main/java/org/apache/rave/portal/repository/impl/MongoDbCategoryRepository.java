@@ -21,6 +21,7 @@ package org.apache.rave.portal.repository.impl;
 
 import org.apache.rave.portal.model.Category;
 import org.apache.rave.portal.model.conversion.HydratingConverterFactory;
+import org.apache.rave.portal.model.impl.CategoryImpl;
 import org.apache.rave.portal.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
@@ -30,6 +31,9 @@ import java.util.List;
 
 @Repository
 public class MongoDbCategoryRepository implements CategoryRepository {
+
+    public static final String COLLECTION = "category";
+    public static final Class<CategoryImpl> CLASS = CategoryImpl.class;
 
     @Autowired
     private MongoOperations template;

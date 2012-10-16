@@ -27,6 +27,8 @@
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
         http://www.springframework.org/schema/oxm http://www.springframework.org/schema/oxm/spring-oxm.xsd">
 
+    <import resource="classpath*:/org/apache/rave/marshaller-applicationContext.xml" />
+
     <!--
     Scans the classpath of this application for @Components to deploy as beans
     NOTE: only the controllers (api and controller packages) are scanned here in dispatcher-servlet.xml. All other
@@ -88,16 +90,6 @@
         <property name="prefix" value="/WEB-INF/jsp/views/"/>
         <property name="suffix" value=".jsp"/>
     </bean>
-
-    <oxm:jaxb2-marshaller id="xmlMarshaller">
-        <oxm:class-to-be-bound name="org.apache.rave.portal.model.JpaUser"/>
-        <oxm:class-to-be-bound name="org.apache.rave.portal.model.JpaPage"/>
-        <oxm:class-to-be-bound name="org.apache.rave.portal.model.JpaRegion"/>
-        <oxm:class-to-be-bound name="org.apache.rave.portal.model.JpaRegionWidget"/>
-        <oxm:class-to-be-bound name="org.apache.rave.portal.model.JpaRegionWidgetPreference"/>
-        <oxm:class-to-be-bound name="org.apache.rave.portal.model.JpaWidget"/>
-        <oxm:class-to-be-bound name="org.apache.rave.portal.web.model.RegionWidgetPreferenceListWrapper"/>
-    </oxm:jaxb2-marshaller>
 
     <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
         <property name="messageConverters">

@@ -19,41 +19,67 @@
 
 package org.apache.rave.portal.repository.impl;
 
+import org.apache.rave.portal.model.MongoDbPortalPreference;
 import org.apache.rave.portal.model.PortalPreference;
+import org.apache.rave.portal.model.conversion.HydratingConverterFactory;
+import org.apache.rave.portal.model.impl.PortalPreferenceImpl;
 import org.apache.rave.portal.repository.PortalPreferenceRepository;
+import org.apache.rave.util.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+import static org.springframework.data.mongodb.core.query.Criteria.where;
+import static org.springframework.data.mongodb.core.query.Query.query;
+
 @Repository
 public class MongoDbPortalPreferenceRepository implements PortalPreferenceRepository {
+
+    public static final String COLLECTION = "portalPreference";
+    public static final Class<PortalPreferenceImpl> CLASS = PortalPreferenceImpl.class;
+
+    @Autowired
+    private MongoOperations template;
+
+    @Autowired
+    private HydratingConverterFactory converter;
+
     @Override
     public List<PortalPreference> getAll() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return CollectionUtils.<PortalPreference>toBaseTypedList(template.findAll(CLASS, COLLECTION));
     }
 
     @Override
     public PortalPreference getByKey(String key) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return template.findOne(query(where("key").is(key)), CLASS, COLLECTION);
     }
 
     @Override
     public Class<? extends PortalPreference> getType() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return CLASS;
     }
 
     @Override
     public PortalPreference get(long id) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return template.findById(id, CLASS, COLLECTION);
     }
 
     @Override
     public PortalPreference save(PortalPreference item) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        PortalPreference fromDb = getByKey(item.getKey());
+        MongoDbPortalPreference converted = converter.convert(item, PortalPreference.class);
+        if(fromDb != null) {
+            converted.setId(((MongoDbPortalPreference)fromDb).getId());
+        }
+        template.save(converted, COLLECTION);
+        converter.hydrate(converted, PortalPreference.class);
+        return converted;
     }
 
     @Override
     public void delete(PortalPreference item) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        template.remove(getByKey(item.getKey()), COLLECTION);
     }
 }
