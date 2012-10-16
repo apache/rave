@@ -21,7 +21,7 @@ package org.apache.rave.portal.repository.impl;
 
 import org.apache.rave.portal.model.MongoDbUser;
 import org.apache.rave.portal.model.User;
-import org.apache.rave.portal.model.conversion.MongoDbConverter;
+import org.apache.rave.portal.model.conversion.HydratingConverterFactory;
 import org.apache.rave.portal.repository.UserRepository;
 import org.apache.rave.util.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +47,7 @@ public class MongoDbUserRepository implements UserRepository {
     private MongoOperations template;
 
     @Autowired
-    private MongoDbConverter converter;
+    private HydratingConverterFactory converter;
 
     @Override
     public User getByUsername(String username) {

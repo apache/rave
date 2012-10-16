@@ -20,7 +20,7 @@
 package org.apache.rave.portal.repository.impl;
 
 import org.apache.rave.portal.model.*;
-import org.apache.rave.portal.model.conversion.MongoDbConverter;
+import org.apache.rave.portal.model.conversion.HydratingConverterFactory;
 import org.apache.rave.portal.model.util.WidgetStatistics;
 import org.apache.rave.portal.repository.WidgetRepository;
 import org.apache.rave.util.CollectionUtils;
@@ -47,7 +47,7 @@ public class MongoDbWidgetRepository implements WidgetRepository {
     private MongoOperations template;
 
     @Autowired
-    private MongoDbConverter converter;
+    private HydratingConverterFactory converter;
 
     @Override
     public List<Widget> getAll() {

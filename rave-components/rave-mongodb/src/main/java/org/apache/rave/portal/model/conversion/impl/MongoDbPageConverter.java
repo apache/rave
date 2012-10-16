@@ -17,10 +17,11 @@
  *  under the License.
  */
 
-package org.apache.rave.portal.model.conversion;
+package org.apache.rave.portal.model.conversion.impl;
 
 import com.google.common.collect.Lists;
 import org.apache.rave.portal.model.*;
+import org.apache.rave.portal.model.conversion.HydratingModelConverter;
 import org.apache.rave.portal.repository.PageLayoutRepository;
 import org.apache.rave.portal.repository.UserRepository;
 import org.apache.rave.portal.repository.WidgetRepository;

@@ -17,9 +17,11 @@
  *  under the License.
  */
 
-package org.apache.rave.portal.model.conversion;
+package org.apache.rave.portal.model.conversion.impl;
 
 import org.apache.rave.model.ModelConverter;
+import org.apache.rave.portal.model.conversion.HydratingConverterFactory;
+import org.apache.rave.portal.model.conversion.HydratingModelConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -33,7 +35,7 @@ import java.util.Map;
  * TODO: REMOVE REPOSITORY INJECTION WHEN MODEL-SPLIT BRANCH IS MERGED
  */
 @Component
-public class MongoDbConverter {
+public class MongoDbConverter implements HydratingConverterFactory {
 
     private Map<Class<?>, HydratingModelConverter> converterMap;
 
@@ -45,6 +47,7 @@ public class MongoDbConverter {
         }
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public <S, T> T convert(S source, Class<S> clazz) {
         if(converterMap.containsKey(clazz)) {
@@ -54,6 +57,7 @@ public class MongoDbConverter {
         }
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public <S> void hydrate(S source, Class<S> clazz) {
         if(converterMap.containsKey(clazz)) {
@@ -63,6 +67,7 @@ public class MongoDbConverter {
         }
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public <S,T> ModelConverter<S, T> getConverter(Class<S> clazz) {
         return converterMap.get(clazz);

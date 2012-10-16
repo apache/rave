@@ -17,11 +17,12 @@
  *  under the License.
  */
 
-package org.apache.rave.portal.model.conversion;
+package org.apache.rave.portal.model.conversion.impl;
 
 import com.google.common.collect.Lists;
 import org.apache.rave.portal.model.MongoDbUser;
 import org.apache.rave.portal.model.User;
+import org.apache.rave.portal.model.conversion.HydratingModelConverter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 

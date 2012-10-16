@@ -21,7 +21,7 @@ package org.apache.rave.portal.repository.impl;
 
 import org.apache.rave.portal.model.PageTemplate;
 import org.apache.rave.portal.model.PageType;
-import org.apache.rave.portal.model.conversion.MongoDbConverter;
+import org.apache.rave.portal.model.conversion.HydratingConverterFactory;
 import org.apache.rave.portal.model.impl.PageTemplateImpl;
 import org.apache.rave.portal.repository.PageTemplateRepository;
 import org.apache.rave.util.CollectionUtils;
@@ -39,7 +39,7 @@ public class MongoDbPageTemplateRepository implements PageTemplateRepository {
     public static final String COLLECTION = "pageTemplate";
 
     @Autowired
-    private MongoDbConverter converter;
+    private HydratingConverterFactory converter;
 
     @Autowired
     private MongoOperations template;
