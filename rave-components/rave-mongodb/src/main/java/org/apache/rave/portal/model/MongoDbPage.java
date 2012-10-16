@@ -22,10 +22,19 @@ package org.apache.rave.portal.model;
 import org.apache.rave.portal.model.impl.PageImpl;
 import org.apache.rave.portal.repository.PageLayoutRepository;
 import org.apache.rave.portal.repository.UserRepository;
+import org.codehaus.jackson.annotate.JsonIgnore;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlTransient;
+
+@XmlAccessorType(value = XmlAccessType.FIELD)
 public class MongoDbPage extends PageImpl {
 
+    @XmlTransient @JsonIgnore
     private UserRepository userRepository;
+
+    @XmlTransient @JsonIgnore
     private PageLayoutRepository pageLayoutRepository;
 
     private Long ownerId;

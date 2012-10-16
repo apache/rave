@@ -21,11 +21,18 @@ package org.apache.rave.portal.model;
 
 import org.apache.rave.portal.model.impl.WidgetTagImpl;
 import org.apache.rave.portal.repository.UserRepository;
+import org.codehaus.jackson.annotate.JsonIgnore;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  */
-public class MongoDbWidgetTag extends WidgetTagImpl {
 
+@XmlAccessorType(value = XmlAccessType.FIELD)
+public class MongoDbWidgetTag extends WidgetTagImpl {
+    @XmlTransient @JsonIgnore
     private UserRepository userRepository;
 
     private Long userId;

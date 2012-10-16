@@ -23,14 +23,22 @@ import com.google.common.collect.Lists;
 import org.apache.rave.portal.model.impl.WidgetImpl;
 import org.apache.rave.portal.repository.CategoryRepository;
 import org.apache.rave.portal.repository.UserRepository;
+import org.codehaus.jackson.annotate.JsonIgnore;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlTransient;
 import java.util.List;
 
 /**
  */
-public class MongoDbWidget extends WidgetImpl {
 
+@XmlAccessorType(value = XmlAccessType.FIELD)
+public class MongoDbWidget extends WidgetImpl {
+    @XmlTransient @JsonIgnore
     private CategoryRepository categoryRepository;
+
+    @XmlTransient @JsonIgnore
     private UserRepository userRepository;
 
     private Long ownerId;

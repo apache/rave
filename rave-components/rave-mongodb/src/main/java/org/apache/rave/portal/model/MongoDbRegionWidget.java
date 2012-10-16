@@ -22,9 +22,18 @@ package org.apache.rave.portal.model;
 
 import org.apache.rave.portal.model.impl.RegionWidgetImpl;
 import org.apache.rave.portal.repository.WidgetRepository;
+import org.codehaus.jackson.annotate.JsonIgnore;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlTransient;
+
+
+@XmlAccessorType(value = XmlAccessType.FIELD)
 public class MongoDbRegionWidget extends RegionWidgetImpl {
     private long widgetId;
+
+    @XmlTransient @JsonIgnore
     private WidgetRepository widgetRepository;
 
     public long getWidgetId() {
