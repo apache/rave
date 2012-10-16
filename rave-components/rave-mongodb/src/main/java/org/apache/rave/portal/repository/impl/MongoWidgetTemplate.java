@@ -17,26 +17,22 @@
  *  under the License.
  */
 
-package org.apache.rave.portal.repository;
+package org.apache.rave.portal.repository.impl;
 
-import org.apache.rave.portal.model.Page;
-import org.apache.rave.portal.model.User;
+import org.apache.rave.portal.model.MongoDbWidget;
 import org.apache.rave.portal.model.Widget;
-import org.springframework.data.mongodb.core.query.Query;
-
-import java.util.List;
+import org.apache.rave.portal.repository.MongoModelOperations;
+import org.springframework.stereotype.Component;
 
 /**
  */
-public interface MongoModelOperations<T> {
-    long count(Query query);
-    void remove(Query query);
-    T findOne(Query query);
-    List<T> find(Query query);
-    T get(long id);
-    T save(T item);
+@Component
+public class MongoWidgetTemplate extends MongoModelTemplate<Widget, MongoDbWidget> implements MongoModelOperations.MongoWidgetOperations {
+    
+    public static final String COLLECTION = "widget";
 
-    public static interface MongoPageOperations extends MongoModelOperations<Page> {}
-    public static interface MongoUserOperations extends MongoModelOperations<User> {}
-    public static interface MongoWidgetOperations extends MongoModelOperations<Widget> {}
+    public MongoWidgetTemplate() {
+        super(Widget.class, MongoDbWidget.class, COLLECTION);
+    }
+
 }

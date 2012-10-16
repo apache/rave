@@ -21,75 +21,16 @@ package org.apache.rave.portal.repository.impl;
 
 import org.apache.rave.portal.model.MongoDbPage;
 import org.apache.rave.portal.model.Page;
-import org.apache.rave.portal.model.conversion.HydratingConverterFactory;
 import org.apache.rave.portal.repository.MongoModelOperations;
-import org.apache.rave.util.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoOperations;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 /**
  */
 @Component
-public class MongoPageTemplate implements MongoModelOperations.MongoPageOperations {
+public class MongoPageTemplate extends MongoModelTemplate<Page, MongoDbPage> implements MongoModelOperations.MongoPageOperations {
     public static final String COLLECTION = "page";
-    public static final Class<MongoDbPage> CLASS = MongoDbPage.class;
 
-    @Autowired
-    private MongoOperations mongoTemplate;
-
-    @Autowired
-    private HydratingConverterFactory converter;
-
-    @Override
-    public long count(Query query) {
-        return mongoTemplate.count(query, COLLECTION);
-    }
-
-    @Override
-    public void remove(Query query) {
-        mongoTemplate.remove(query, COLLECTION);
-    }
-
-    @Override
-    public Page get(long id) {
-        MongoDbPage fromDb = mongoTemplate.findById(id, CLASS, COLLECTION);
-        if(fromDb == null) {
-            throw new IllegalStateException("Could not find requested page: " + id);
-        }
-        return hydrate(fromDb);
-    }
-
-    @Override
-    public Page save(Page item) {
-        MongoDbPage converted = converter.convert(item, Page.class);
-        mongoTemplate.save(converted, COLLECTION);
-        converter.hydrate(converted, Page.class);
-        return converted;
-    }
-
-    @Override
-    public Page findOne(Query query) {
-        return hydrate(mongoTemplate.findOne(query, CLASS, COLLECTION));
-    }
-
-    @Override
-    public List<Page> find(Query query) {
-        return hydrate(mongoTemplate.find(query, CLASS, COLLECTION));
-    }
-
-    private List<Page> hydrate(List<MongoDbPage> mongoDbPages) {
-        for(MongoDbPage p : mongoDbPages) {
-            hydrate(p);
-        }
-        return CollectionUtils.<Page>toBaseTypedList(mongoDbPages);
-    }
-
-    private Page hydrate(MongoDbPage page) {
-        converter.hydrate(page, Page.class);
-        return page;
+    public MongoPageTemplate() {
+        super(Page.class, MongoDbPage.class, COLLECTION);
     }
 }
