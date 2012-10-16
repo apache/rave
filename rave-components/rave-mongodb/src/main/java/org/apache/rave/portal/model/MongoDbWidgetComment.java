@@ -19,12 +19,40 @@
 
 package org.apache.rave.portal.model;
 
-import org.apache.rave.portal.model.impl.PageLayoutImpl;
+import org.apache.rave.portal.model.impl.WidgetCommentImpl;
+import org.apache.rave.portal.repository.UserRepository;
 
-public class MongoDbPageLayout extends PageLayoutImpl {
-    public MongoDbPageLayout() {    }
+/**
+ */
+public class MongoDbWidgetComment extends WidgetCommentImpl {
 
-    public MongoDbPageLayout(String layout) {
-        super(layout);
+    private UserRepository userRepository;
+
+    private Long userId;
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public UserRepository getUserRepository() {
+        return userRepository;
+    }
+
+    public void setUserRepository(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    @Override
+    public User getUser() {
+        User user = super.getUser();
+        if(user == null) {
+            user = userRepository.get(userId);
+            super.setUser(user);
+        }
+        return user;
     }
 }

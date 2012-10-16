@@ -1,3 +1,22 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ *  or more contributor license agreements.  See the NOTICE file
+ *  distributed with this work for additional information
+ *  regarding copyright ownership.  The ASF licenses this file
+ *  to you under the Apache License, Version 2.0 (the
+ *  "License"); you may not use this file except in compliance
+ *  with the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ */
+
 package org.apache.rave.portal.repository.impl;
 
 import com.google.common.collect.Lists;
@@ -39,8 +58,9 @@ public class MongoDbPageRepository implements PageRepository {
 
     @Override
     public int deletePages(Long userId, PageType pageType) {
-        int count = getAllPages(userId, pageType).size();
-        mongoTemplate.remove(new Query(where("pageType").is(pageType).andOperator(where("ownerId").is(userId))), MongoDbPage.class);
+        Query query = new Query(where("pageType").is(pageType).andOperator(where("ownerId").is(userId)));
+        int count = (int)mongoTemplate.count(query, MongoDbPage.class);
+        mongoTemplate.remove(query, MongoDbPage.class);
         return count;
     }
 
@@ -51,7 +71,7 @@ public class MongoDbPageRepository implements PageRepository {
 
     @Override
     public boolean hasPersonPage(long userId) {
-        return getAllPages(userId, PageType.PERSON_PROFILE).size() > 0;
+        return mongoTemplate.count(new Query(where("pageType").is(PageType.PERSON_PROFILE).andOperator(where("ownerId").is(userId))), MongoDbPage.class) > 0;
     }
 
     @Override

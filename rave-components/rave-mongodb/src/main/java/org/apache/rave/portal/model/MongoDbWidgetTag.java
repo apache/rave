@@ -19,24 +19,19 @@
 
 package org.apache.rave.portal.model;
 
-import org.apache.rave.portal.model.impl.PageUserImpl;
+import org.apache.rave.portal.model.impl.WidgetTagImpl;
+import org.apache.rave.portal.repository.TagRepository;
 import org.apache.rave.portal.repository.UserRepository;
 
-public class MongoDbPageUser extends PageUserImpl {
+/**
+ */
+public class MongoDbWidgetTag extends WidgetTagImpl {
 
     private UserRepository userRepository;
+    private TagRepository tagRepository;
 
     private Long userId;
-
-    public MongoDbPageUser() {}
-
-    public MongoDbPageUser(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
-    public MongoDbPageUser(User owner, Page lPage, long renderSequence) {
-        super(owner, lPage, renderSequence);
-    }
+    private String tagKeyword;
 
     public Long getUserId() {
         return userId;
@@ -50,8 +45,34 @@ public class MongoDbPageUser extends PageUserImpl {
         return userRepository;
     }
 
-    public void setUserRepository(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public void setUserRepository(UserRepository repository) {
+        this.userRepository = repository;
+    }
+
+    public TagRepository getTagRepository() {
+        return tagRepository;
+    }
+
+    public void setTagRepository(TagRepository tagRepository) {
+        this.tagRepository = tagRepository;
+    }
+
+    public String getTagKeyword() {
+        return tagKeyword;
+    }
+
+    public void setTagKeyword(String keyword) {
+        this.tagKeyword = keyword;
+    }
+
+    @Override
+    public Tag getTag() {
+        Tag tag = super.getTag();
+        if(tag == null) {
+            tag = tagRepository.getByKeyword(tagKeyword);
+            super.setTag(tag);
+        }
+        return tag;
     }
 
     @Override
@@ -62,19 +83,5 @@ public class MongoDbPageUser extends PageUserImpl {
             super.setUser(user);
         }
         return user;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof PageUser)) return false;
-        PageUser that = (PageUser) o;
-        return !(this.getId() != null ? !this.getId().equals(that.getId()) : that.getId() != null);
-
-    }
-
-    @Override
-    public int hashCode() {
-        return this.getId() != null ? this.getId().hashCode() : 0;
     }
 }

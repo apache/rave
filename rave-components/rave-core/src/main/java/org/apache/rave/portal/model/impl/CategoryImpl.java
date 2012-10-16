@@ -40,6 +40,10 @@ public class CategoryImpl implements Category {
         this.id = id;
     }
 
+    public CategoryImpl(String text) {
+        this.text = text;
+    }
+
     @Override
     public Long getId() {
         return id;
