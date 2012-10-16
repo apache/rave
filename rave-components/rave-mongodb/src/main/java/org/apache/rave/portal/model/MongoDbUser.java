@@ -32,6 +32,7 @@ import java.util.List;
 public class MongoDbUser extends UserImpl {
 
     private List<String> authorityCodes;
+    private List<MongoDbPersonAssociation> friends;
 
     public MongoDbUser(long id) {
         super(id);
@@ -46,6 +47,14 @@ public class MongoDbUser extends UserImpl {
 
     public void setAuthorityCodes(List<String> authorityCodes) {
         this.authorityCodes = authorityCodes;
+    }
+
+    public List<MongoDbPersonAssociation> getFriends() {
+        return friends;
+    }
+
+    public void setFriends(List<MongoDbPersonAssociation> friends) {
+        this.friends = friends;
     }
 
     @Override

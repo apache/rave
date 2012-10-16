@@ -22,7 +22,9 @@ package org.apache.rave.portal.repository.impl;
 import org.apache.rave.portal.model.MongoDbUser;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.repository.MongoModelOperations;
+import org.springframework.stereotype.Component;
 
+@Component
 public class MongoUserTemplate extends MongoModelTemplate<User, MongoDbUser> implements MongoModelOperations.MongoUserOperations {
     public static final String COLLECTION = "person";
 
