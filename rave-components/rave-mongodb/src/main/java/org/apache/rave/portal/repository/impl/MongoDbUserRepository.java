@@ -87,7 +87,7 @@ public class MongoDbUserRepository implements UserRepository {
 
     @Override
     public List<User> getAllByAddedWidget(long widgetId) {
-        return null;
+        return null;  //TODO COMPLETE
     }
 
     @Override

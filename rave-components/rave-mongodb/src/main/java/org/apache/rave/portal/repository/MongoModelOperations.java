@@ -26,12 +26,15 @@ import java.util.List;
 
 /**
  */
-public interface MongoPageOperations {
-
+public interface MongoModelOperations<T> {
     long count(Query query);
     void remove(Query query);
-    Page findOne(Query query);
-    List<Page> find(Query query);
-    Page get(long id);
-    Page save(Page item);
+    T findOne(Query query);
+    List<T> find(Query query);
+    T get(long id);
+    T save(T item);
+
+    public static interface MongoPageOperations extends MongoModelOperations<Page> {}
+    public static interface MongoUserOperations extends MongoModelOperations<Page> {}
+    public static interface MongoWidgetOperations extends MongoModelOperations<Page> {}
 }

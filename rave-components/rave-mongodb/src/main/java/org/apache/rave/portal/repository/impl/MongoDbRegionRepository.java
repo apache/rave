@@ -22,7 +22,7 @@ package org.apache.rave.portal.repository.impl;
 import org.apache.rave.portal.model.Page;
 import org.apache.rave.portal.model.Region;
 import org.apache.rave.portal.model.impl.RegionImpl;
-import org.apache.rave.portal.repository.MongoPageOperations;
+import org.apache.rave.portal.repository.MongoModelOperations;
 import org.apache.rave.portal.repository.RegionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -38,7 +38,7 @@ import java.util.List;
 public class MongoDbRegionRepository implements RegionRepository {
 
     @Autowired
-    private MongoPageOperations template;
+    private MongoModelOperations.MongoPageOperations template;
 
 
     @Override

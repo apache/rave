@@ -23,6 +23,7 @@ import org.apache.rave.portal.model.MongoDbRegionWidget;
 import org.apache.rave.portal.model.Page;
 import org.apache.rave.portal.model.Region;
 import org.apache.rave.portal.model.RegionWidget;
+import org.apache.rave.portal.repository.MongoModelOperations;
 import org.apache.rave.portal.repository.RegionWidgetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.query.Query;
@@ -37,7 +38,7 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
 public class MongoDbRegionWidgetRepository implements RegionWidgetRepository {
 
     @Autowired
-    private MongoPageTemplate template;
+    private MongoModelOperations.MongoPageOperations template;
 
     @Override
     public Class<? extends RegionWidget> getType() {

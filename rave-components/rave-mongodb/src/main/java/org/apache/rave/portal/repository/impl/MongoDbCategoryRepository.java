@@ -20,16 +20,26 @@
 package org.apache.rave.portal.repository.impl;
 
 import org.apache.rave.portal.model.Category;
+import org.apache.rave.portal.model.conversion.HydratingConverterFactory;
 import org.apache.rave.portal.repository.CategoryRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
 public class MongoDbCategoryRepository implements CategoryRepository {
+
+    @Autowired
+    private MongoOperations template;
+
+    @Autowired
+    private HydratingConverterFactory converter;
+
     @Override
     public List<Category> getAll() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null;
     }
 
     @Override
