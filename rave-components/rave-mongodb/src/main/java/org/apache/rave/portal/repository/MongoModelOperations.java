@@ -19,9 +19,6 @@
 
 package org.apache.rave.portal.repository;
 
-import org.apache.rave.portal.model.Page;
-import org.apache.rave.portal.model.User;
-import org.apache.rave.portal.model.Widget;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 
@@ -37,8 +34,4 @@ public interface MongoModelOperations<T> {
     T save(T item);
     void remove(Query query);
     int update(Query query, Update update);
-
-    public static interface MongoPageOperations extends MongoModelOperations<Page> {}
-    public static interface MongoUserOperations extends MongoModelOperations<User> {}
-    public static interface MongoWidgetOperations extends MongoModelOperations<Widget> {}
 }

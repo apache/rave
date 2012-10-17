@@ -17,18 +17,11 @@
  *  under the License.
  */
 
-package org.apache.rave.portal.repository.impl;
+package org.apache.rave.portal.repository;
 
-import org.apache.rave.portal.model.MongoDbUser;
-import org.apache.rave.portal.model.User;
-import org.apache.rave.portal.repository.MongoUserOperations;
-import org.springframework.stereotype.Component;
+import org.apache.rave.portal.model.Widget;
+import org.springframework.data.mongodb.core.mapreduce.MapReduceResults;
 
-@Component
-public class MongoUserTemplate extends MongoModelTemplate<User, MongoDbUser> implements MongoUserOperations {
-    public static final String COLLECTION = "person";
-
-    public MongoUserTemplate() {
-        super(User.class, MongoDbUser.class, COLLECTION);
-    }
+public interface MongoWidgetOperations extends MongoModelOperations<Widget> {
+    <T> MapReduceResults<T> mapReduce(String mapFunction, String reduceFunction, Class<T> entityClass);
 }

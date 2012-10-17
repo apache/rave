@@ -22,7 +22,7 @@ package org.apache.rave.portal.repository.impl;
 import org.apache.rave.exception.NotSupportedException;
 import org.apache.rave.portal.model.Widget;
 import org.apache.rave.portal.model.WidgetTag;
-import org.apache.rave.portal.repository.MongoModelOperations;
+import org.apache.rave.portal.repository.MongoWidgetOperations;
 import org.apache.rave.portal.repository.WidgetTagRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -34,7 +34,7 @@ import java.util.Iterator;
 @Repository
 public class MongoDbWidgetTagRepository implements WidgetTagRepository {
     @Autowired
-    private MongoModelOperations.MongoWidgetOperations template;
+    private MongoWidgetOperations template;
 
     @Override
     public WidgetTag getByWidgetIdAndTag(Long widgetId, String keyword) {

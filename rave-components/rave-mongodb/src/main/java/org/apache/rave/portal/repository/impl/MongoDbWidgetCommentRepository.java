@@ -22,7 +22,7 @@ package org.apache.rave.portal.repository.impl;
 
 import org.apache.rave.portal.model.Widget;
 import org.apache.rave.portal.model.WidgetComment;
-import org.apache.rave.portal.repository.MongoModelOperations;
+import org.apache.rave.portal.repository.MongoWidgetOperations;
 import org.apache.rave.portal.repository.WidgetCommentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -39,7 +39,7 @@ import static org.springframework.data.mongodb.core.query.Query.query;
 public class MongoDbWidgetCommentRepository implements WidgetCommentRepository {
 
     @Autowired
-    private MongoModelOperations.MongoWidgetOperations template;
+    private MongoWidgetOperations template;
 
     @Override
     public int deleteAll(Long userId) {

@@ -21,7 +21,7 @@ package org.apache.rave.portal.repository.impl;
 
 import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.model.util.WidgetStatistics;
-import org.apache.rave.portal.repository.MongoModelOperations;
+import org.apache.rave.portal.repository.MongoWidgetOperations;
 import org.apache.rave.portal.repository.WidgetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -43,7 +43,7 @@ import static org.springframework.data.mongodb.core.query.Update.update;
 public class MongoDbWidgetRepository implements WidgetRepository {
 
     @Autowired
-    private MongoModelOperations.MongoWidgetOperations template;
+    private MongoWidgetOperations template;
 
     @Override
     public List<Widget> getAll() {

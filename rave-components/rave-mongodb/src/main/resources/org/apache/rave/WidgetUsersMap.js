@@ -16,19 +16,15 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-
-package org.apache.rave.portal.repository.impl;
-
-import org.apache.rave.portal.model.MongoDbUser;
-import org.apache.rave.portal.model.User;
-import org.apache.rave.portal.repository.MongoUserOperations;
-import org.springframework.stereotype.Component;
-
-@Component
-public class MongoUserTemplate extends MongoModelTemplate<User, MongoDbUser> implements MongoUserOperations {
-    public static final String COLLECTION = "person";
-
-    public MongoUserTemplate() {
-        super(User.class, MongoDbUser.class, COLLECTION);
+function () {
+    var widgetMap = {};
+    for(var i=0; i<this.regions.length; i++) {
+        for(var j=0; j<this.regions[i].regionWidgets.length; j++) {
+            var regionWidget = this.regions[i].regionWidgets[j];
+            if(!widgetMap[regionWidget.widgetId]) {
+                widgetMap[regionWidget.widgetId] = true;
+                emit(regionWidget.widgetId, 1)
+            }
+        }
     }
 }

@@ -21,7 +21,7 @@ package org.apache.rave.portal.repository.impl;
 
 import org.apache.rave.portal.model.MongoDbUser;
 import org.apache.rave.portal.model.User;
-import org.apache.rave.portal.repository.MongoModelOperations;
+import org.apache.rave.portal.repository.MongoUserOperations;
 import org.apache.rave.portal.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.query.Query;
@@ -39,7 +39,7 @@ import static org.springframework.data.mongodb.core.query.Query.query;
 public class MongoDbUserRepository implements UserRepository {
 
     @Autowired
-    private MongoModelOperations.MongoUserOperations template;
+    private MongoUserOperations template;
 
     @Override
     public User getByUsername(String username) {

@@ -25,7 +25,7 @@ import org.apache.rave.portal.model.impl.PageImpl;
 import org.apache.rave.portal.model.impl.PageUserImpl;
 import org.apache.rave.portal.model.impl.RegionImpl;
 import org.apache.rave.portal.model.impl.RegionWidgetImpl;
-import org.apache.rave.portal.repository.MongoModelOperations;
+import org.apache.rave.portal.repository.MongoPageOperations;
 import org.apache.rave.portal.repository.PageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.query.Query;
@@ -42,7 +42,7 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
 public class MongoDbPageRepository implements PageRepository {
 
     @Autowired
-    private MongoModelOperations.MongoPageOperations template;
+    private MongoPageOperations template;
 
     @Override
     public List<Page> getAllPages(Long userId, PageType pageType) {

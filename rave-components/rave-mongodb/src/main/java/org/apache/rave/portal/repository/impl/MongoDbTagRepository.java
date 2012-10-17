@@ -20,11 +20,17 @@
 package org.apache.rave.portal.repository.impl;
 
 
+import com.google.common.collect.Lists;
+import org.apache.commons.collections.ListUtils;
 import org.apache.rave.exception.NotSupportedException;
 import org.apache.rave.portal.model.Tag;
+import org.apache.rave.portal.model.Widget;
+import org.apache.rave.portal.model.WidgetTag;
+import org.apache.rave.portal.model.impl.TagImpl;
+import org.apache.rave.portal.repository.MongoWidgetOperations;
 import org.apache.rave.portal.repository.TagRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -33,28 +39,35 @@ import java.util.List;
 public class MongoDbTagRepository implements TagRepository{
 
     @Autowired
-    private MongoOperations template;
+    private MongoWidgetOperations widgetTemplate;
 
     @Override
     public List<Tag> getAll() {
-        return null;
+        List<Widget> widgets = widgetTemplate.find(new Query());
+        List<Tag> tags = Lists.newArrayList();
+        for(Widget widget : widgets) {
+            addUniqueTags(tags, widget);
+        }
+        return tags;
     }
 
     @Override
     public int getCountAll() {
-        return 0;
+        return getAll().size();
     }
 
     @Override
     public Tag getByKeyword(String keyword) {
-        return null;
+        return new TagImpl(keyword);
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<Tag> getAvailableTagsByWidgetId(Long widgetId) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        List<Tag> all = getAll();
+        List<Tag> widgetTags= getTagsFromWidget(widgetTemplate.get(widgetId).getTags());
+        return ListUtils.subtract(all, widgetTags);
     }
-
     @Override
     public Class<? extends Tag> getType() {
         return Tag.class;
@@ -73,5 +86,23 @@ public class MongoDbTagRepository implements TagRepository{
     @Override
     public void delete(Tag item) {
         throw new NotSupportedException("Cannot delete tags directly");
+    }
+
+    private List<Tag> getTagsFromWidget(List<WidgetTag> widgetTags) {
+        List<Tag> tags = Lists.newArrayList();
+        for(WidgetTag widgetTag : widgetTags) {
+            tags.add(widgetTag.getTag());
+        }
+        return tags;
+    }
+
+
+    private void addUniqueTags(List<Tag> tags, Widget widget) {
+        for(WidgetTag widgetTag : widget.getTags()) {
+            Tag tag = widgetTag.getTag();
+            if(!tags.contains(tag)) {
+                tags.add(tag);
+            }
+        }
     }
 }

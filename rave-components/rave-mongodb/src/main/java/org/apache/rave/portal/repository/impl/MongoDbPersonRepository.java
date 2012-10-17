@@ -23,7 +23,7 @@ import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.rave.portal.model.*;
-import org.apache.rave.portal.repository.MongoModelOperations;
+import org.apache.rave.portal.repository.MongoUserOperations;
 import org.apache.rave.portal.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.query.Query;
@@ -42,7 +42,7 @@ import static org.springframework.data.mongodb.core.query.Query.query;
 public class MongoDbPersonRepository implements PersonRepository {
 
     @Autowired
-    private MongoModelOperations.MongoUserOperations template;
+    private MongoUserOperations template;
 
     @Override
     public Person findByUsername(String username) {

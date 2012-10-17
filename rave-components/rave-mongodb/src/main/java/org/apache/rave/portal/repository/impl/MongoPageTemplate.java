@@ -21,13 +21,13 @@ package org.apache.rave.portal.repository.impl;
 
 import org.apache.rave.portal.model.MongoDbPage;
 import org.apache.rave.portal.model.Page;
-import org.apache.rave.portal.repository.MongoModelOperations;
+import org.apache.rave.portal.repository.MongoPageOperations;
 import org.springframework.stereotype.Component;
 
 /**
  */
 @Component
-public class MongoPageTemplate extends MongoModelTemplate<Page, MongoDbPage> implements MongoModelOperations.MongoPageOperations {
+public class MongoPageTemplate extends MongoModelTemplate<Page, MongoDbPage> implements MongoPageOperations {
     public static final String COLLECTION = "page";
 
     public MongoPageTemplate() {

@@ -21,7 +21,7 @@ package org.apache.rave.portal.repository.impl;
 
 import org.apache.rave.portal.model.Widget;
 import org.apache.rave.portal.model.WidgetRating;
-import org.apache.rave.portal.repository.MongoModelOperations;
+import org.apache.rave.portal.repository.MongoWidgetOperations;
 import org.apache.rave.portal.repository.WidgetRatingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -37,7 +37,7 @@ import static org.springframework.data.mongodb.core.query.Query.query;
 public class MongoDbWidgetRatingRepository implements WidgetRatingRepository {
 
     @Autowired
-    private MongoModelOperations.MongoWidgetOperations template;
+    private MongoWidgetOperations template;
 
     @Override
     public WidgetRating getByWidgetIdAndUserId(Long widgetId, Long userId) {
