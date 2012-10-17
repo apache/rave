@@ -23,7 +23,7 @@ function () {
             var regionWidget = this.regions[i].regionWidgets[j];
             if(!widgetMap[regionWidget.widgetId]) {
                 widgetMap[regionWidget.widgetId] = true;
-                emit(regionWidget.widgetId, 1)
+                emit(regionWidget.widgetId, { widgetId: regionWidget.widgetId,  users: 1 })
             }
         }
     }

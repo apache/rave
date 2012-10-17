@@ -18,14 +18,18 @@
  */
 function(key, values) {
     var result = {
-        totalLike : 0,
-        totalDislike : 0,
-        userRating : 0
-    };
+        widgetId: key,
+        statistics: {
+            like : 0,
+            dislike : 0,
+            userRatings : {}
+    }};
     for(var i=0; i< values.length; i++) {
-        result.totalLike += values[i].totalLike;
-        result.totalDislike += values[i].totalDislike;
-        result.userRating += values[i].userRating;
+        result.statistics.totalLike += values[i].totalLike;
+        result.statistics.totalDislike += values[i].totalDislike;
+        for(var userRating in values[i].userRatings) {
+            result.statistics.userRatings[userRating.userId] += userRating.value;
+        }
     }
     return result;
 

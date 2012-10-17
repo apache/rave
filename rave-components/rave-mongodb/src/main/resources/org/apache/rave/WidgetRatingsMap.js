@@ -20,9 +20,11 @@ function() {
     for(var i=0; i<this.ratings.length; i++) {
         var rating = this.ratings[i];
         emit(this._id, {
-            totalLike : rating.score == 10 ? 1 : 0,
-            totalDislike : rating.score == 0 ? 1: 0,
-            userRating : rating.score
-        });
+             widgetId : this._id,
+             statistics: {
+                like : rating.score == 10 ? 1 : 0,
+                dislike : rating.score == 0 ? 1: 0,
+                userRating : { userId: this.userId, value: rating.score }
+        }});
     }
 }

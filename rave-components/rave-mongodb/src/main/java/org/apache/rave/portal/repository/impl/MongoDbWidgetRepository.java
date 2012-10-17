@@ -19,11 +19,13 @@
 
 package org.apache.rave.portal.repository.impl;
 
+import com.google.common.collect.Maps;
 import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.model.util.WidgetStatistics;
 import org.apache.rave.portal.repository.MongoWidgetOperations;
 import org.apache.rave.portal.repository.WidgetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.mapreduce.MapReduceResults;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Order;
 import org.springframework.data.mongodb.core.query.Query;
@@ -42,6 +44,10 @@ import static org.springframework.data.mongodb.core.query.Update.update;
 @Repository
 public class MongoDbWidgetRepository implements WidgetRepository {
 
+    public static final String RATINGS_MAP = "classpath:WidgetRatingsMap.js";
+    public static final String RATINGS_REDUCE = "classpath:WidgetRatingsReduce.js";
+    public static final String USERS_MAP = "WidgetUsersMap.js";
+    public static final String USERS_REDUCE = "WidgetUsersReduce.js";
     @Autowired
     private MongoWidgetOperations template;
 
@@ -112,12 +118,35 @@ public class MongoDbWidgetRepository implements WidgetRepository {
 
     @Override
     public WidgetStatistics getWidgetStatistics(long widget_id, long user_id) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        Query query = query(where("widgetId").is(widget_id));
+        MapReduceResults<WidgetRatingsMapReduceResult> widgetStats = template.mapReduce(query, RATINGS_MAP, RATINGS_REDUCE, WidgetRatingsMapReduceResult.class);
+        MapReduceResults<WidgetUsersMapReduceResult> widgetUsers = template.mapReduce(query, USERS_MAP, USERS_REDUCE, WidgetUsersMapReduceResult.class);
+        if(widgetStats.getCounts().getOutputCount() != 1 || widgetUsers.getCounts().getOutputCount() != 1) {
+            throw new IllegalStateException("Invalid results returned from Map/Reduce");
+        }
+        WidgetRatingsMapReduceResult statsResult = widgetStats.iterator().next();
+        WidgetUsersMapReduceResult userResult = widgetUsers.iterator().next();
+
+        return createWidgetStatisticsFromResults(user_id, statsResult, userResult.getUsers());
     }
 
     @Override
     public Map<Long, WidgetStatistics> getAllWidgetStatistics(long userId) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        MapReduceResults<WidgetRatingsMapReduceResult> widgetStats = template.mapReduce(RATINGS_MAP, RATINGS_REDUCE, WidgetRatingsMapReduceResult.class);
+        Map<Long, Long> usersMap = mapUsersResults(template.mapReduce(USERS_MAP, USERS_REDUCE, WidgetUsersMapReduceResult.class));
+        Map<Long, WidgetStatistics> stats = Maps.newHashMap();
+        for(WidgetRatingsMapReduceResult result : widgetStats) {
+            stats.put(result.getWidgetId(), createWidgetStatisticsFromResults(userId, result, usersMap.get(userId)));
+        }
+        return stats;
+    }
+
+    private Map<Long, Long> mapUsersResults(MapReduceResults<WidgetUsersMapReduceResult> widgetUsersMapReduceResults) {
+        Map<Long, Long> map = Maps.newHashMap();
+        for(WidgetUsersMapReduceResult result : widgetUsersMapReduceResults) {
+            map.put(result.getWidgetId(), result.getUsers());
+        }
+        return map;
     }
 
     @Override
@@ -179,5 +208,87 @@ public class MongoDbWidgetRepository implements WidgetRepository {
 
     private Query getTagQuery(String tagKeyWord) {
         return query(where("tags").elemMatch(where("tag.keyword").is(tagKeyWord)));
+    }
+
+    private WidgetStatistics createWidgetStatisticsFromResults(long user_id, WidgetRatingsMapReduceResult statsResult, Long userResult) {
+        WidgetStatistics statistics = new WidgetStatistics();
+        statistics.setTotalDislike(statsResult.getStatistics().getDislike().intValue());
+        statistics.setTotalLike(statsResult.getStatistics().getLike().intValue());
+        statistics.setUserRating(statsResult.getStatistics().getUserRatings().containsKey(user_id) ? statsResult.getStatistics().getUserRatings().get(user_id).intValue() : -1);
+        statistics.setTotalUserCount(userResult == null ? 0 : userResult.intValue());
+        return statistics;
+    }
+
+    public static class WidgetUsersMapReduceResult {
+        private Long widgetId;
+        private Long users;
+
+        public Long getWidgetId() {
+            return widgetId;
+        }
+
+        public void setWidgetId(Long widgetId) {
+            this.widgetId = widgetId;
+        }
+
+        public Long getUsers() {
+            return users;
+        }
+
+        public void setUsers(Long users) {
+            this.users = users;
+        }
+    }
+
+    public static class WidgetRatingsMapReduceResult {
+        private Long widgetId;
+        private WidgetStatisticsMapReduceResult statistics;
+
+        public Long getWidgetId() {
+            return widgetId;
+        }
+
+        public void setWidgetId(Long widgetId) {
+            this.widgetId = widgetId;
+        }
+
+        public WidgetStatisticsMapReduceResult getStatistics() {
+            return statistics;
+        }
+
+        public void setStatistics(WidgetStatisticsMapReduceResult statistics) {
+            this.statistics = statistics;
+        }
+
+        public static class WidgetStatisticsMapReduceResult {
+            private Map<Long, Long> userRatings;
+            private Long like;
+            private Long dislike;
+
+            public Map<Long, Long> getUserRatings() {
+                return userRatings;
+            }
+
+            public void setUserRatings(Map<Long, Long> userRatings) {
+                this.userRatings = userRatings;
+            }
+
+            public Long getLike() {
+                return like;
+            }
+
+            public void setLike(Long like) {
+                this.like = like;
+            }
+
+            public Long getDislike() {
+                return dislike;
+            }
+
+            public void setDislike(Long dislike) {
+                this.dislike = dislike;
+            }
+        }
+
     }
 }

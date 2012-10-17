@@ -17,9 +17,9 @@
  *  under the License.
  */
 function (key, values) {
-    var result=0;
+    var result={widgetId: key, users: 0};
     for(var i=0; i<values.length; i++) {
-        result += values[i];
+        result.users += values.users[i];
     }
     return result;
 }
