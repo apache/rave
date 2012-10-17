@@ -21,18 +21,27 @@ package org.apache.rave.portal.model;
 
 import com.google.common.collect.Lists;
 import org.apache.rave.portal.model.impl.UserImpl;
+import org.apache.rave.portal.repository.PageLayoutRepository;
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlTransient;
 import java.util.Collection;
 import java.util.List;
 
 /**
  */
+@XmlAccessorType(value = XmlAccessType.FIELD)
 public class MongoDbUser extends UserImpl {
 
     private List<String> authorityCodes;
     private List<MongoDbPersonAssociation> friends;
+
+    @XmlTransient @JsonIgnore
+    private PageLayoutRepository pageLayoutRepository;
 
     public MongoDbUser(long id) {
         super(id);
@@ -66,5 +75,19 @@ public class MongoDbUser extends UserImpl {
             }
         }
         return grantedAuthorities;
+    }
+
+    @Override
+    public PageLayout getDefaultPageLayout() {
+        PageLayout layout = super.getDefaultPageLayout();
+        if(layout == null) {
+            layout = pageLayoutRepository.getByPageLayoutCode(super.getDefaultPageLayoutCode());
+            super.setDefaultPageLayout(layout);
+        }
+        return layout;
+    }
+
+    public void setPageLayoutRepository(PageLayoutRepository pageLayoutRepository) {
+        this.pageLayoutRepository = pageLayoutRepository;
     }
 }

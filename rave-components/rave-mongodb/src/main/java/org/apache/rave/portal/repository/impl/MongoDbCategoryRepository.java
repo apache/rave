@@ -20,20 +20,24 @@
 package org.apache.rave.portal.repository.impl;
 
 import org.apache.rave.portal.model.Category;
+import org.apache.rave.portal.model.MongoDbCategory;
 import org.apache.rave.portal.model.conversion.HydratingConverterFactory;
-import org.apache.rave.portal.model.impl.CategoryImpl;
 import org.apache.rave.portal.repository.CategoryRepository;
+import org.apache.rave.util.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+import static org.springframework.data.mongodb.core.query.Criteria.where;
+import static org.springframework.data.mongodb.core.query.Query.query;
+
 @Repository
 public class MongoDbCategoryRepository implements CategoryRepository {
 
     public static final String COLLECTION = "category";
-    public static final Class<CategoryImpl> CLASS = CategoryImpl.class;
+    public static final Class<MongoDbCategory> CLASS = MongoDbCategory.class;
 
     @Autowired
     private MongoOperations template;
@@ -43,31 +47,60 @@ public class MongoDbCategoryRepository implements CategoryRepository {
 
     @Override
     public List<Category> getAll() {
-        return null;
+        return CollectionUtils.<Category>toBaseTypedList(template.findAll(CLASS, COLLECTION));
     }
 
     @Override
     public int removeFromCreatedOrModifiedFields(long userId) {
-        return 0;  //To change body of implemented methods use File | Settings | File Templates.
+        List<MongoDbCategory> categories = template.find(query(where("lastModifiedUserId").is(userId).orOperator(where("createdUserId").is(userId))), CLASS, COLLECTION);
+        int count = 0;
+        for(MongoDbCategory category : categories) {
+            boolean updated = updateCategory(userId, category);
+            if(updated) {
+                save(category);
+                count++;
+            }
+        }
+        return count;
     }
 
     @Override
     public Class<? extends Category> getType() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return CLASS;
     }
 
     @Override
     public Category get(long id) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return hydrate(template.findById(id, CLASS, COLLECTION));
     }
 
     @Override
     public Category save(Category item) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        MongoDbCategory converted = converter.convert(item, Category.class);
+        template.save(converted, COLLECTION);
+        return hydrate(converted);
     }
 
     @Override
     public void delete(Category item) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        template.remove(get(item.getId()));
+    }
+
+    private Category hydrate(MongoDbCategory category) {
+        converter.hydrate(category, CLASS);
+        return category;
+    }
+
+    private boolean updateCategory(long userId, MongoDbCategory category) {
+        boolean updated = false;
+        if(category.getCreatedUserId().equals(userId)) {
+            category.setCreatedUserId(null);
+            updated = true;
+        }
+        if(category.getLastModifiedUserId().equals(userId)) {
+            category.setLastModifiedUserId(null);
+            updated = true;
+        }
+        return updated;
     }
 }

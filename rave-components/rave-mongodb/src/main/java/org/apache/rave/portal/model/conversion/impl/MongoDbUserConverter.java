@@ -23,6 +23,8 @@ import com.google.common.collect.Lists;
 import org.apache.rave.portal.model.MongoDbUser;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.conversion.HydratingModelConverter;
+import org.apache.rave.portal.repository.PageLayoutRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
@@ -32,9 +34,12 @@ import static org.apache.rave.portal.model.util.MongoDbModelUtil.generateId;
 
 @Component
 public class MongoDbUserConverter implements HydratingModelConverter<User, MongoDbUser> {
+    @Autowired
+    private PageLayoutRepository pageLayoutRepository;
+
     @Override
     public void hydrate(MongoDbUser dehydrated) {
-        //NOOP
+        dehydrated.setPageLayoutRepository(pageLayoutRepository);
     }
 
     @Override
@@ -71,7 +76,6 @@ public class MongoDbUserConverter implements HydratingModelConverter<User, Mongo
         converted.setProperties(source.getProperties());
         converted.setPassword(source.getPassword());
         converted.setConfirmPassword(source.getConfirmPassword());
-        converted.setDefaultPageLayout(source.getDefaultPageLayout());
         converted.setDefaultPageLayoutCode(source.getDefaultPageLayoutCode());
         converted.setEnabled(source.isEnabled());
         converted.setExpired(source.isExpired());
