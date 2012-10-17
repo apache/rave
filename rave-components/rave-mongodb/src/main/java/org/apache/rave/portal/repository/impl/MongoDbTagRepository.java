@@ -23,8 +23,8 @@ package org.apache.rave.portal.repository.impl;
 import org.apache.rave.exception.NotSupportedException;
 import org.apache.rave.portal.model.Tag;
 import org.apache.rave.portal.repository.TagRepository;
-import org.apache.rave.portal.repository.WidgetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -33,7 +33,7 @@ import java.util.List;
 public class MongoDbTagRepository implements TagRepository{
 
     @Autowired
-    private WidgetRepository widgetRepository;
+    private MongoOperations template;
 
     @Override
     public List<Tag> getAll() {
@@ -42,12 +42,12 @@ public class MongoDbTagRepository implements TagRepository{
 
     @Override
     public int getCountAll() {
-        return 0;  //To change body of implemented methods use File | Settings | File Templates.
+        return 0;
     }
 
     @Override
     public Tag getByKeyword(String keyword) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null;
     }
 
     @Override

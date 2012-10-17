@@ -34,5 +34,4 @@ public class MongoWidgetTemplate extends MongoModelTemplate<Widget, MongoDbWidge
     public MongoWidgetTemplate() {
         super(Widget.class, MongoDbWidget.class, COLLECTION);
     }
-
 }

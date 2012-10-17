@@ -20,33 +20,51 @@
 package org.apache.rave.portal.repository.impl;
 
 import org.apache.rave.portal.model.OAuthConsumerStore;
+import org.apache.rave.portal.model.impl.OAuthConsumerStoreImpl;
 import org.apache.rave.portal.repository.OAuthConsumerStoreRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.stereotype.Repository;
+
+import static org.apache.rave.portal.model.util.MongoDbModelUtil.generateId;
+import static org.springframework.data.mongodb.core.query.Criteria.where;
+import static org.springframework.data.mongodb.core.query.Query.query;
 
 @Repository
 public class MongoDbOauthConsumerStoreRepository implements OAuthConsumerStoreRepository {
+
+    public static final String COLLECTION = "oauthConsumerStore";
+    public static final Class<OAuthConsumerStoreImpl> CLASS = OAuthConsumerStoreImpl.class;
+
+    @Autowired
+    private MongoOperations template;
+
     @Override
     public OAuthConsumerStore findByUriAndServiceName(String gadgetUri, String serviceName) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return template.findOne(query(where("gadgetUri").is(gadgetUri).andOperator(where("serviceName").is(serviceName))), CLASS, COLLECTION);
     }
 
     @Override
     public Class<? extends OAuthConsumerStore> getType() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return CLASS;
     }
 
     @Override
     public OAuthConsumerStore get(long id) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return template.findById(id, CLASS, COLLECTION);
     }
 
     @Override
     public OAuthConsumerStore save(OAuthConsumerStore item) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        if(item.getId() == null) {
+            item.setId(generateId());
+        }
+        template.save(item, COLLECTION);
+        return item;
     }
 
     @Override
     public void delete(OAuthConsumerStore item) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        template.remove(get(item.getId()));
     }
 }

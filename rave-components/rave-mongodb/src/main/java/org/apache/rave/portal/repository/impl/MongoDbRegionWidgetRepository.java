@@ -33,9 +33,6 @@ import java.util.List;
 
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 
-/**
-
- */
 @Repository
 public class MongoDbRegionWidgetRepository implements RegionWidgetRepository {
 

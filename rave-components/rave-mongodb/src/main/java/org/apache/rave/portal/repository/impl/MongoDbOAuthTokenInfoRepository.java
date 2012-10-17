@@ -20,33 +20,57 @@
 package org.apache.rave.portal.repository.impl;
 
 import org.apache.rave.portal.model.OAuthTokenInfo;
+import org.apache.rave.portal.model.impl.OAuthTokenInfoImpl;
 import org.apache.rave.portal.repository.OAuthTokenInfoRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.stereotype.Repository;
+
+import static org.apache.rave.portal.model.util.MongoDbModelUtil.generateId;
+import static org.springframework.data.mongodb.core.query.Criteria.where;
+import static org.springframework.data.mongodb.core.query.Query.query;
 
 @Repository
 public class MongoDbOAuthTokenInfoRepository implements OAuthTokenInfoRepository {
+
+    public static final String COLLECTION = "oauthTokenInfo";
+    public static final Class<OAuthTokenInfoImpl> CLASS = OAuthTokenInfoImpl.class;
+
+    @Autowired
+    private MongoOperations template;
+
     @Override
     public OAuthTokenInfo findOAuthTokenInfo(String userId, String appUrl, String moduleId, String tokenName, String serviceName) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return template.findOne(
+                query(where("userId").is(userId)
+                .andOperator(where("appUrl").is(appUrl))
+                .andOperator(where("moduleId").is(moduleId))
+                .andOperator(where("tokenName").is(tokenName))
+                .andOperator(where("serviceName").is(serviceName))
+        ), CLASS, COLLECTION);
     }
 
     @Override
     public Class<? extends OAuthTokenInfo> getType() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return CLASS;
     }
 
     @Override
     public OAuthTokenInfo get(long id) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return template.findById(id, CLASS, COLLECTION);
     }
 
     @Override
     public OAuthTokenInfo save(OAuthTokenInfo item) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        if(item.getId() == null) {
+            item.setId(generateId());
+        }
+        template.save(item, COLLECTION);
+        return item;
     }
 
     @Override
     public void delete(OAuthTokenInfo item) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        template.remove(get(item.getId()));
     }
 }
