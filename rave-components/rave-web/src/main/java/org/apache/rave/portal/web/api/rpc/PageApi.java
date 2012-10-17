@@ -233,6 +233,17 @@ public class PageApi {
     }
 
     @ResponseBody
+    @RequestMapping(value = "{pageId}/clone", method = RequestMethod.POST)
+    public RpcResult<Boolean> clonePageForUser(@PathVariable final long pageId, @RequestParam final long userId, @RequestParam final String pageName) {
+        return new RpcOperation<Boolean>() {
+             @Override
+             public Boolean execute() {
+               return pageService.clonePageForUser(pageId, userId, pageName);
+             }
+        }.getResult();
+    }
+
+    @ResponseBody
     @RequestMapping(value = "{pageId}/addmember", method = RequestMethod.POST)
     public RpcResult<Boolean> addMemberToPage(@PathVariable final long pageId, @RequestParam final long userId) {
         return new RpcOperation<Boolean>() {

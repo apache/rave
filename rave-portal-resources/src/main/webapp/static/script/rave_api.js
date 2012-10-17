@@ -479,6 +479,17 @@ rave.api = rave.api || (function() {
                     }).error(handleError);
         }
 
+        function clonePageForUser(args) {
+            $.post(rave.getContext() + path + "page/" + args.pageId + "/clone",
+               {"userId": args.userId,
+                "pageName" : args.pageName},
+               function(result) {
+                   if (typeof args.successCallback == 'function') {
+                        args.successCallback(result);
+                   }
+               }).error(handleError);
+        }
+
         function addMemberToPage(args) {
             $.post(rave.getContext() + path + "page/" + args.pageId + "/addmember",
                {"userId": args.userId},
@@ -625,6 +636,7 @@ rave.api = rave.api || (function() {
             getWidgetMetadataGroup: getWidgetMetadataGroup,
             getUsers : getUsers,
             searchUsers : searchUsers,
+            clonePageForUser : clonePageForUser,
             addMemberToPage : addMemberToPage,
             removeMemberFromPage : removeMemberFromPage,
             updateSharedPageStatus : updateSharedPageStatus,

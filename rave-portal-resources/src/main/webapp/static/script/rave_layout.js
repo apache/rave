@@ -104,6 +104,7 @@ rave.layout = rave.layout || (function() {
                 }else{
                     $("#pageMenuDialogHeader").html(rave.getClientMessage("page.add"));
                     var $pageMenuUpdateButton = $("#pageMenuUpdateButton");
+                    $("#pageLayoutGroup").show();
                     $pageMenuUpdateButton.html(rave.getClientMessage("common.add"));
                     // unbind the previous click event since we are sharing the
                     // dialog between separate add/edit page actions
@@ -125,6 +126,7 @@ rave.layout = rave.layout || (function() {
                                             $page_layout_input.val(result.result.pageLayout.code);
                                             $("#pageMenuDialogHeader").html(rave.getClientMessage("page.update"));
                                             var $pageMenuUpdateButton = $("#pageMenuUpdateButton");
+                                            $("#pageLayoutGroup").show();
                                             $pageMenuUpdateButton.html(rave.getClientMessage("common.save"));
                                             // unbind the previous click event since we are sharing the
                                             // dialog between separate add/edit page actions
@@ -267,6 +269,13 @@ rave.layout = rave.layout || (function() {
                             }
                     }
                 });
+            }
+        }
+
+        function clonePageForUser(userId, username){
+            var answer = confirm(rave.getClientMessage("confirm.clone.page") + " ("+username+")");
+            if(answer){
+                rave.layout.clonePage(this.pageId, userId, null);
             }
         }
 
@@ -488,6 +497,14 @@ rave.layout = rave.layout || (function() {
                                             .text(rave.getClientMessage("common.editing.auth"))
                                         )
                                     )
+                                    .append(
+                                        $("<td/>")
+                                        .addClass("booleancell")
+                                        .append(
+                                            $("<b/>")
+                                            .text(rave.getClientMessage("page.clone.dialog.title"))
+                                        )
+                                    )
                                 )
                         .append(
                             $("<tbody/>")
@@ -512,9 +529,25 @@ rave.layout = rave.layout || (function() {
                             $("<td/>")
                             .attr("id", "pageEditorStatusHolder" + this.id)
                         )
+                        .append(
+                            $("<td/>")
+                            .attr("id", "cloneButtonHolder" + this.id)
+                        )
                     )
 
+
                     if(this.username != rave.layout.searchHandler.username){
+                        //
+                        $('#cloneButtonHolder'+this.id)
+                                .append(
+                                    $("<a/>")
+                                    .attr("href", "#")
+                                    .attr("id", this.id)
+                                    .attr("onclick", "rave.layout.searchHandler.clonePageForUser("+this.id+", '"+this.username+"');")
+                                    .text(rave.getClientMessage("page.clone.dialog.detail"))
+                                )
+                        //
+                        
                         // check if already added
                         if(rave.layout.searchHandler.isUserAlreadyAdded(this.username)){
                             $('#shareButtonHolder'+this.id)
@@ -569,6 +602,7 @@ rave.layout = rave.layout || (function() {
             isUserAlreadyAdded : isUserAlreadyAdded,
             isUserEditor : isUserEditor,
             addMemberToPage : addMemberToPage,
+            clonePageForUser : clonePageForUser,
             removeMemberFromPage : removeMemberFromPage,
             addEditingRightsToMember: addEditingRightsToMember,
             removeEditingRightsFromMember : removeEditingRightsFromMember,
@@ -847,6 +881,44 @@ rave.layout = rave.layout || (function() {
                                             }});
         }
     }
+    
+    function clonePage(pageId, userId, pageName) {
+        rave.api.rpc.clonePageForUser({pageId: pageId, userId: userId, pageName: pageName,
+            successCallback: function(result) {
+                if (result.error) {
+                    if (result.errorCode == 'DUPLICATE_ITEM') {
+                        $("#sharePageDialog").modal('hide');
+                        //
+                        $("#pageMenuDialogHeader").html(rave.getClientMessage("page.update"));
+                        $("#pageFormErrors").html(rave.getClientMessage("page.duplicate_name"));
+                        $("#pageLayoutGroup").hide();
+                        var $pageMenuUpdateButton = $("#pageMenuUpdateButton");
+                        $pageMenuUpdateButton.html(rave.getClientMessage("common.save"));
+                        // unbind the previous click event since we are sharing the
+                        // dialog between separate add/edit page actions
+                        $pageMenuUpdateButton.unbind('click');
+                        $pageMenuUpdateButton.click(function(){
+                            if ($pageForm.valid()) {
+                                rave.layout.clonePage(pageId, userId, $tab_title_input.val());
+                            }
+                        });
+                        $('#pageMenuDialog').on('shown', function () {
+                            $("#tab_title").first().focus();
+                        });
+                        //
+                        $("#pageMenuDialog").modal('show');
+                    } else {
+                        $("#pageMenuDialog").modal('hide');
+                        alert(rave.getClientMessage("api.rpc.error.internal"));
+                    }
+                }
+                else {
+                    $("#pageMenuDialog").modal('hide');
+                    alert(rave.getClientMessage("success.clone.page"));
+                }
+            }
+        });
+    }
 
     function closePageDialog() {
         $pageForm[0].reset();
@@ -935,6 +1007,7 @@ rave.layout = rave.layout || (function() {
         addPage: addPage,
         addOrImportPage : addOrImportPage,
         updatePage: updatePage,
+        clonePage: clonePage,
         movePage: movePage,
         importPage: importPage,
         closePageDialog: closePageDialog,

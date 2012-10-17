@@ -156,9 +156,16 @@
                 <div class="emptyPageMessage">
                     <div>
                         <div id="confirmSharePageLegend">
-                            <fmt:message key="sharing.page.confirm.message">
-                                <fmt:param value="${page.owner.username}"/>
-                            </fmt:message>
+                            <c:choose>
+                                <c:when test="${page.owner.username == principleUsername}">
+                                    <fmt:message key="cloned.page.confirm.message"/>
+                                </c:when>
+                                <c:otherwise>
+                                    <fmt:message key="sharing.page.confirm.message">
+                                        <fmt:param value="${page.owner.username}"/>
+                                    </fmt:message>
+                                </c:otherwise>
+                            </c:choose>
                         </div>
                     </div>
                     <div>&nbsp;</div>
@@ -264,7 +271,7 @@
                             <input id="tab_title" name="tab_title" class="input-xlarge focused required" type="text" value="" />
                         </div>
                     </div>
-                    <div class="control-group">
+                    <div class="control-group" id="pageLayoutGroup">
                         <label class="control-label" for="pageLayout"><fmt:message key="page.general.addpage.selectlayout"/></label>
                         <div class="controls">
                             <select name="pageLayout" id="pageLayout">

@@ -214,6 +214,16 @@ public interface PageService {
     Page movePageToDefault(long pageId);
 
     /**
+     * Clone the page and then share it with another user (Page is detached from original)
+     * @param pageId - the id of the page in question
+     * @param userId - the userid to add
+     * @param pageName = name of the page
+     * @return true or false whether the user was added
+     */
+    @PreAuthorize("hasPermission(#pageId, 'org.apache.rave.portal.model.Page', 'update')")
+    Boolean clonePageForUser(long pageId, long userId, String pageName);
+
+    /**
      * Add another user to share this page with
      * @param pageId - the id of the page in question
      * @param userId - the userid to add
@@ -221,7 +231,7 @@ public interface PageService {
      */
     @PreAuthorize("hasPermission(#pageId, 'org.apache.rave.portal.model.Page', 'update')")
     Boolean addMemberToPage(long pageId, long userId);
-    
+
     /**
      * Remove an existing user from the page share
      * @param pageId - the id of the page in question
