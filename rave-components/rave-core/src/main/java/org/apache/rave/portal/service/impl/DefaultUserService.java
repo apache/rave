@@ -58,7 +58,6 @@ public class DefaultUserService implements UserService {
     private final UserRepository userRepository;
     private final PageRepository pageRepository;
     private final PageTemplateRepository pageTemplateRepository;
-    private final WidgetRatingRepository widgetRatingRepository;
     private final WidgetRepository widgetRepository;
     private final CategoryRepository categoryRepository;
     private final PersonRepository personRepository;
@@ -102,14 +101,12 @@ public class DefaultUserService implements UserService {
     @Autowired
     public DefaultUserService(PageRepository pageRepository,
                               UserRepository userRepository,
-                              WidgetRatingRepository widgetRatingRepository,
                               WidgetRepository widgetRepository,
                               PageTemplateRepository pageTemplateRepository,
                               CategoryRepository categoryRepository,
                               PersonRepository personRepository) {
         this.userRepository = userRepository;
         this.pageRepository = pageRepository;
-        this.widgetRatingRepository = widgetRatingRepository;
         this.widgetRepository = widgetRepository;
         this.pageTemplateRepository = pageTemplateRepository;
         this.categoryRepository = categoryRepository;
@@ -257,7 +254,7 @@ public class DefaultUserService implements UserService {
         // delete all the widget comments
         int numWidgetComments = widgetRepository.deleteAllWidgetComments(userId);
         // delete all the widget ratings
-        int numWidgetRatings = widgetRatingRepository.deleteAll(userId);
+        int numWidgetRatings = widgetRepository.deleteAllWidgetRatings(userId);
         // unassign the user from any widgets where they were the owner
         int numWidgetsOwned = widgetRepository.unassignWidgetOwner(userId);
         // unassign the user from any category records they created or modified

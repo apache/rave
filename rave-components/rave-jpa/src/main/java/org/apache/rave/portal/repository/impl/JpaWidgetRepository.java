@@ -24,6 +24,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.model.conversion.JpaWidgetCommentConverter;
 import org.apache.rave.portal.model.conversion.JpaWidgetConverter;
+import org.apache.rave.portal.model.conversion.JpaWidgetRatingConverter;
 import org.apache.rave.portal.model.conversion.JpaWidgetTagConverter;
 import org.apache.rave.portal.model.util.WidgetStatistics;
 import org.apache.rave.portal.repository.TagRepository;
@@ -56,6 +57,9 @@ public class JpaWidgetRepository implements WidgetRepository {
 
     @Autowired
     private JpaWidgetCommentConverter commentConverter;
+
+    @Autowired
+    JpaWidgetRatingConverter ratingConverter;
 
     @Autowired
     private TagRepository tagRepository;
@@ -202,7 +206,7 @@ public class JpaWidgetRepository implements WidgetRepository {
         query.setParameter(JpaWidgetRating.PARAM_USER_ID, user_id == null ? null : Long.parseLong(user_id));
 
         Map<String, WidgetRating> map = new HashMap<String, WidgetRating>();
-        for (WidgetRating widgetRating : query.getResultList()) {
+        for (JpaWidgetRating widgetRating : query.getResultList()) {
             map.put(widgetRating.getWidgetId(), widgetRating);
         }
 
@@ -447,6 +451,45 @@ public class JpaWidgetRepository implements WidgetRepository {
     public int deleteAllWidgetComments(String userId) {
         TypedQuery<JpaWidgetComment> query = manager.createNamedQuery(JpaWidgetComment.DELETE_ALL_BY_USER, JpaWidgetComment.class);
         query.setParameter("userId", userId);
+        return query.executeUpdate();
+    }
+
+    @Override
+    public WidgetRating getRatingById(String widgetId, String widgetRatingId) {
+        return manager.find(JpaWidgetRating.class, widgetRatingId);
+    }
+
+    @Override
+    public WidgetRating createWidgetRating(String widgetId, WidgetRating rating) {
+        JpaWidgetRating jpaItem = ratingConverter.convert(rating, widgetId);
+        return saveOrUpdate(jpaItem.getEntityId(), manager, jpaItem);
+    }
+
+    @Override
+    public WidgetRating updateWidgetRating(String widgetId, WidgetRating rating) {
+        JpaWidgetRating jpaItem = ratingConverter.convert(rating, widgetId);
+        return saveOrUpdate(jpaItem.getEntityId(), manager, jpaItem);
+    }
+
+    @Override
+    public void deleteWidgetRating(String widgetId, WidgetRating rating) {
+        manager.remove(ratingConverter.convert(rating, widgetId));
+    }
+
+    @Override
+    public WidgetRating getWidgetRatingsByWidgetIdAndUserId(String widgetId, String userId) {
+        TypedQuery<JpaWidgetRating> query =
+                manager.createNamedQuery(JpaWidgetRating.WIDGET_RATING_BY_WIDGET_AND_USER, JpaWidgetRating.class);
+        query.setParameter(JpaWidgetRating.PARAM_WIDGET_ID, Long.parseLong(widgetId));
+        query.setParameter(JpaWidgetRating.PARAM_USER_ID, Long.parseLong(userId));
+        final List<JpaWidgetRating> resultList = query.getResultList();
+        return getSingleResult(resultList);
+    }
+
+    @Override
+    public int deleteAllWidgetRatings(String userId) {
+        TypedQuery<JpaWidgetRating> query = manager.createNamedQuery(JpaWidgetRating.DELETE_ALL_BY_USER, JpaWidgetRating.class);
+        query.setParameter("userId", userId == null ? null : Long.parseLong(userId));
         return query.executeUpdate();
     }
 }

@@ -34,9 +34,8 @@ public class WidgetRatingImpl implements WidgetRating {
         this.id = id;
     }
 
-    public WidgetRatingImpl(String id, String widgetId, String userId, int score) {
+    public WidgetRatingImpl(String id, String userId, int score) {
         this.id = id;
-        this.widgetId = widgetId;
         this.userId = userId;
         this.score = score;
     }
@@ -47,14 +46,6 @@ public class WidgetRatingImpl implements WidgetRating {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public String getWidgetId() {
-        return widgetId;
-    }
-
-    public void setWidgetId(String widgetId) {
-        this.widgetId = widgetId;
     }
 
     public String getUserId() {

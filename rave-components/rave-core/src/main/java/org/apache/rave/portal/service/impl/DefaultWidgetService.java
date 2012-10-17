@@ -234,4 +234,43 @@ public class DefaultWidgetService implements WidgetService {
     public int deleteAllWidgetComments(String userId) {
         return widgetRepository.deleteAllWidgetComments(userId);
     }
+
+    @Override
+    public WidgetRating getWidgetRatingByWidgetIdAndUserId(String widgetId, String userId) {
+        return widgetRepository.getWidgetRatingsByWidgetIdAndUserId(widgetId, userId);
+    }
+
+    @Override
+    @Transactional
+    public void updateWidgetRatingScore(String widgetId, WidgetRating widgetRating, Integer score) {
+        widgetRating.setScore(score);
+        widgetRepository.updateWidgetRating(widgetId, widgetRating);
+    }
+
+    @Override
+    @Transactional
+    public void saveWidgetRating(String widgetId, WidgetRating rating) {
+        WidgetRating existingRating = getWidgetRatingByWidgetIdAndUserId(widgetId, rating.getUserId());
+        if (existingRating == null) {
+            widgetRepository.createWidgetRating(widgetId, rating);
+        } else {
+            updateWidgetRatingScore(widgetId, existingRating, rating.getScore());
+        }
+    }
+
+    @Override
+    @Transactional
+    public void removeWidgetRating(String widgetId, String userId) {
+        WidgetRating widgetRating = widgetRepository.getWidgetRatingsByWidgetIdAndUserId(widgetId, userId);
+        if (widgetRating == null) {
+            return;
+        }
+        widgetRepository.deleteWidgetRating(widgetId, widgetRating);
+    }
+
+    @Override
+    @Transactional
+    public int removeAllWidgetRatings(String userId) {
+        return widgetRepository.deleteAllWidgetRatings(userId);
+    }
 }

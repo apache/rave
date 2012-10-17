@@ -40,7 +40,6 @@ import static org.junit.Assert.assertThat;
 
 public class WidgetApiTest {
     private WidgetApi widgetApi;
-    private WidgetRatingService widgetRatingService;
     private UserService userService;
     private WidgetService widgetService;
     private TagService tagService;
@@ -54,7 +53,6 @@ public class WidgetApiTest {
 
     @Before
     public void setup() {
-        widgetRatingService = createMock(WidgetRatingService.class);
         userService = createMock(UserService.class);
         tagService = createMock(TagService.class);
         widgetService = createMock(WidgetService.class);
@@ -67,7 +65,7 @@ public class WidgetApiTest {
         tagList.add(new TagImpl("2", "tag2"));
 
         response = createMock(MockHttpServletResponse.class);
-        widgetApi = new WidgetApi(widgetRatingService, userService, tagService, widgetService);
+        widgetApi = new WidgetApi(userService, tagService, widgetService);
     }
 
     @Test(expected = UnsupportedOperationException.class)
@@ -164,12 +162,12 @@ public class WidgetApiTest {
     @Test
     public void deleteWidgetRating() {
         expect(userService.getAuthenticatedUser()).andReturn(user);
-        widgetRatingService.removeWidgetRating("1", VALID_USER_ID);
+        widgetService.removeWidgetRating("1", VALID_USER_ID);
         expectLastCall();
         response.setStatus(HttpStatus.NO_CONTENT.value());
-        replay(userService, widgetRatingService, response);
+        replay(userService, widgetService, response);
         widgetApi.deleteWidgetRating("1", response);
-        verify(widgetRatingService, userService, response);
+        verify(widgetService, userService, response);
     }
 
     @Test
@@ -177,17 +175,16 @@ public class WidgetApiTest {
         WidgetRating widgetRating = new WidgetRatingImpl();
         widgetRating.setScore(5);
         widgetRating.setUserId("5");
-        widgetRating.setWidgetId("1");
         expect(userService.getAuthenticatedUser()).andReturn(user);
-        widgetRatingService.saveWidgetRating(eq(widgetRating));
+        widgetService.saveWidgetRating(eq("1"), eq(widgetRating));
         expectLastCall();
         response.setStatus(HttpStatus.NO_CONTENT.value());
-        replay(userService, widgetRatingService, response);
+        replay(userService, widgetService, response);
 
         User user = new UserImpl("2");
         widgetApi.setWidgetRating("1", 5, response);
 
-        verify(widgetRatingService, userService, response);
+        verify(widgetService, userService, response);
     }
 
     @Test

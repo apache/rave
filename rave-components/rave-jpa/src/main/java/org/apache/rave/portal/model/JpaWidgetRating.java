@@ -111,13 +111,11 @@ public class JpaWidgetRating implements BasicEntity, Serializable, WidgetRating 
     public void setEntityId(Long entityId) {
         this.entityId = entityId;
     }
-    
-    @Override
+
     public String getWidgetId() {
         return widgetId.toString();
     }
 
-    @Override
     public void setWidgetId(String widgetId) {
         this.widgetId = Long.parseLong(widgetId);
     }

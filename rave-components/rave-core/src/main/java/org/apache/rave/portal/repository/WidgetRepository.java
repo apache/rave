@@ -217,4 +217,33 @@ public interface WidgetRepository extends Repository<Widget> {
      * @return count of comments deleted
      */
     int deleteAllWidgetComments(String userId);
+
+    // ***************************************************************************************************************
+    // Widget Ratings Methods
+    // ***************************************************************************************************************
+
+    WidgetRating getRatingById(String widgetId, String widgetRatingId);
+
+    WidgetRating createWidgetRating(String widgetId, WidgetRating rating);
+
+    WidgetRating updateWidgetRating(String widgetId, WidgetRating rating);
+
+    void deleteWidgetRating(String widgetId, WidgetRating rating);
+
+    /**
+     * Tries to find a {@link org.apache.rave.portal.model.WidgetRating} by the id's of a Widget and USer
+     *
+     * @param widgetId unique identifier of a Widget
+     * @param userId   unique identifier of a User
+     * @return {@link org.apache.rave.portal.model.WidgetRating} if it exists, otherwise {@literal null}
+     */
+    WidgetRating getWidgetRatingsByWidgetIdAndUserId(String widgetId, String userId);
+
+    /**
+     * Delete all Widget Ratings for a userId
+     *
+     * @param userId
+     * @return count of ratings deleted
+     */
+    int deleteAllWidgetRatings(String userId);
 }

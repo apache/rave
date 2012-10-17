@@ -20,7 +20,7 @@ package org.apache.rave.portal.security.impl;
 
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.WidgetRating;
-import org.apache.rave.portal.repository.WidgetRatingRepository;
+import org.apache.rave.portal.repository.WidgetRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,11 +34,11 @@ import java.util.List;
 @Component
 public class DefaultWidgetRatingPermissionEvaluator extends AbstractModelPermissionEvaluator<WidgetRating> {
     private Logger log = LoggerFactory.getLogger(getClass());
-    private WidgetRatingRepository widgetRatingRepository;
+    private WidgetRepository widgetRepository;
 
     @Autowired
-    public DefaultWidgetRatingPermissionEvaluator(WidgetRatingRepository widgetRatingRepository) {
-        this.widgetRatingRepository = widgetRatingRepository;
+    public DefaultWidgetRatingPermissionEvaluator(WidgetRepository widgetRepository) {
+        this.widgetRepository = widgetRepository;
     }
 
     @Override
@@ -83,7 +83,7 @@ public class DefaultWidgetRatingPermissionEvaluator extends AbstractModelPermiss
         if (targetId instanceof RaveSecurityContext) {
             hasPermission = verifyRaveSecurityContext(authentication, (RaveSecurityContext) targetId);
         } else {
-            hasPermission = hasPermission(authentication, widgetRatingRepository.get((String) targetId), permission, true);
+            hasPermission = hasPermission(authentication, widgetRepository.getRatingById(null, (String) targetId), permission, true);
         }
         return hasPermission;
     }
@@ -130,7 +130,7 @@ public class DefaultWidgetRatingPermissionEvaluator extends AbstractModelPermiss
     private WidgetRating getTrustedWidgetRating(String widgetRatingId, List<WidgetRating> trustedWidgetRatingContainer) {
         WidgetRating widgetRating = null;
         if (trustedWidgetRatingContainer.isEmpty()) {
-            widgetRating = widgetRatingRepository.get(widgetRatingId);
+            widgetRating = widgetRepository.getRatingById(null, widgetRatingId);
             trustedWidgetRatingContainer.add(widgetRating);
         } else {
             widgetRating = trustedWidgetRatingContainer.get(0);

@@ -27,31 +27,29 @@ import org.springframework.stereotype.Component;
  * Converts a WidgetRating to a JpaWidgetRating
  */
 @Component
-public class JpaWidgetRatingConverter implements ModelConverter<WidgetRating, JpaWidgetRating> {
+public class JpaWidgetRatingConverter {
 
-    @Override
     public Class<WidgetRating> getSourceType() {
         return WidgetRating.class;
     }
 
-    @Override
-    public JpaWidgetRating convert(WidgetRating source) {
-        return source instanceof JpaWidgetRating ? (JpaWidgetRating) source : createEntity(source);
+    public JpaWidgetRating convert(WidgetRating source, String widgetId) {
+        return source instanceof JpaWidgetRating ? (JpaWidgetRating) source : createEntity(source, widgetId);
     }
 
-    private JpaWidgetRating createEntity(WidgetRating source) {
+    private JpaWidgetRating createEntity(WidgetRating source, String widgetId) {
         JpaWidgetRating converted = null;
         if(source != null) {
             converted = new JpaWidgetRating();
-            updateProperties(source, converted);
+            updateProperties(source, converted, widgetId);
         }
         return converted;
     }
 
-    private void updateProperties(WidgetRating source, JpaWidgetRating converted) {
+    private void updateProperties(WidgetRating source, JpaWidgetRating converted, String widgetId) {
         converted.setEntityId(source.getId() == null ? null : Long.parseLong(source.getId()));
         converted.setScore(source.getScore());
         converted.setUserId(source.getUserId());
-        converted.setWidgetId(source.getWidgetId());
+        converted.setWidgetId(widgetId);
     }
 }

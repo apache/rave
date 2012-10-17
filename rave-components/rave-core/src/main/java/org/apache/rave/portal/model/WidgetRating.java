@@ -25,14 +25,6 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlTransient
 public interface WidgetRating {
     /**
-     * Gets the ID of the Widget this rating is for
-     * @return The ID of the Widget this rating is for
-     */
-    String getWidgetId();
-
-    void setWidgetId(String widgetId);
-
-    /**
      * Gets the ID of the User this rating is for
      * @return The ID of the User this rating is for
      */

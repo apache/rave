@@ -46,13 +46,13 @@ public class JpaWidgetRatingConverterTest {
     @Test
     public void testNoConversion() {
         JpaWidgetRating template = new JpaWidgetRating();
-        assertThat(converter.convert(template), is(sameInstance(template)));
+        assertThat(converter.convert(template, "1"), is(sameInstance(template)));
     }
 
     @Test
     public void nullConversion() {
         WidgetRating template = null;
-        assertThat(converter.convert(template), is(nullValue()));
+        assertThat(converter.convert(template, "1"), is(nullValue()));
     }
 
 
@@ -61,15 +61,13 @@ public class JpaWidgetRatingConverterTest {
         WidgetRating template = new WidgetRatingImpl("1");
         template.setScore(1);
         template.setUserId("42");
-        template.setWidgetId("24");
         
-        JpaWidgetRating jpaTemplate = converter.convert(template);
+        JpaWidgetRating jpaTemplate = converter.convert(template, "24");
 
         assertThat(jpaTemplate, is(not(sameInstance(template))));
         assertThat(jpaTemplate, is(instanceOf(JpaWidgetRating.class)));
         assertThat(jpaTemplate.getScore(), is(equalTo(template.getScore())));
         assertThat(jpaTemplate.getUserId(), is(equalTo(template.getUserId())));
-        assertThat(jpaTemplate.getWidgetId(), is(equalTo(template.getWidgetId())));
     }
 
 }

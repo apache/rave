@@ -44,16 +44,14 @@ import java.util.List;
 @RequestMapping("/api/rest/widgets")
 public class WidgetApi extends AbstractRestApi {
     private static Logger logger = LoggerFactory.getLogger(WidgetApi.class);
-    private final WidgetRatingService widgetRatingService;
     private final UserService userService;
     private final TagService tagService;
     private final WidgetService widgetService;
 
 
     @Autowired
-    public WidgetApi(WidgetRatingService widgetRatingService, UserService userService,
+    public WidgetApi(UserService userService,
                      TagService tagService, WidgetService widgetService) {
-        this.widgetRatingService = widgetRatingService;
         this.userService = userService;
         this.tagService = tagService;
         this.widgetService = widgetService;
@@ -124,7 +122,7 @@ public class WidgetApi extends AbstractRestApi {
                                    HttpServletResponse response) {
         logger.debug("DELETE WidgetRating received for /api/rest/widgets/{}", widgetId);
 
-        widgetRatingService.removeWidgetRating(widgetId, userService.getAuthenticatedUser().getId());
+        widgetService.removeWidgetRating(widgetId, userService.getAuthenticatedUser().getId());
 
         // send a 204 back for success since there is no content being returned
         response.setStatus(HttpStatus.NO_CONTENT.value());
@@ -139,8 +137,7 @@ public class WidgetApi extends AbstractRestApi {
         WidgetRating widgetRating = new WidgetRatingImpl();
         widgetRating.setScore(score);
         widgetRating.setUserId(userService.getAuthenticatedUser().getId());
-        widgetRating.setWidgetId(widgetId);
-        widgetRatingService.saveWidgetRating(widgetRating);
+        widgetService.saveWidgetRating(widgetId, widgetRating);
 
         // send a 204 back for success since there is no content being returned
         response.setStatus(HttpStatus.NO_CONTENT.value());

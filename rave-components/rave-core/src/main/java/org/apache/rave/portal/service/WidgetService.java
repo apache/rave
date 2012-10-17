@@ -21,6 +21,7 @@ package org.apache.rave.portal.service;
 
 import org.apache.rave.portal.model.Widget;
 import org.apache.rave.portal.model.WidgetComment;
+import org.apache.rave.portal.model.WidgetRating;
 import org.apache.rave.portal.model.WidgetTag;
 import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.model.util.WidgetStatistics;
@@ -214,4 +215,52 @@ public interface WidgetService {
      */
     @PreAuthorize("hasPermission(new org.apache.rave.portal.security.impl.RaveSecurityContext(#userId, 'org.apache.rave.portal.model.User'), 'org.apache.rave.portal.model.WidgetComment', 'delete')")
     int deleteAllWidgetComments(String userId);
+
+    // ***************************************************************************************************************
+    // Widget Ratings Methods
+    // ***************************************************************************************************************
+
+    /**
+     * Gets a {@link org.apache.rave.portal.model.WidgetRating} for the widgetId and userId
+     *
+     * @param widgetId unique identifier for a Widget
+     * @param userId   unique identifier for a User
+     * @return WidgetRating or {@link null} if there is no such combination
+     */
+    WidgetRating getWidgetRatingByWidgetIdAndUserId(String widgetId, String userId);
+
+    /**
+     * Updates the score of a {@link org.apache.rave.portal.model.WidgetRating}
+     *
+     * @param widgetId Widget ID
+     * @param widgetRating WidgetRating
+     * @param score        value of the rating
+     */
+    @PreAuthorize("hasPermission(#widgetRating.entityId, 'org.apache.rave.portal.model.WidgetRating', 'update')")
+    void updateWidgetRatingScore(String widgetId, WidgetRating widgetRating, Integer score);
+
+    /**
+     * Saves a {@link org.apache.rave.portal.model.WidgetRating} for a widget
+     *
+     * @param rating   WidgetRating
+     */
+    void saveWidgetRating(String widgetId, WidgetRating rating);
+
+    /**
+     * Removes the rating of a widget
+     *
+     * @param widgetId unique identifier of a {@link org.apache.rave.portal.model.Widget}
+     * @param userId   unique identifier of a {@link org.apache.rave.portal.model.User}
+     */
+    @PreAuthorize("hasPermission(new org.apache.rave.portal.security.impl.RaveSecurityContext(#userId, 'org.apache.rave.portal.model.User'), 'org.apache.rave.portal.model.WidgetRating', 'delete')")
+    void removeWidgetRating(String widgetId, String userId);
+
+    /**
+     * Removes all widget ratings for a userId, for all widgets
+     *
+     * @param userId
+     * @return the number of widget ratings deleted
+     */
+    @PreAuthorize("hasPermission(new org.apache.rave.portal.security.impl.RaveSecurityContext(#userId, 'org.apache.rave.portal.model.User'), 'org.apache.rave.portal.model.WidgetRating', 'delete')")
+    int removeAllWidgetRatings(String userId);
 }

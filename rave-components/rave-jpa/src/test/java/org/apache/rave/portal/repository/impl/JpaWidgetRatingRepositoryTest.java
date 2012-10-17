@@ -19,9 +19,9 @@
 
 package org.apache.rave.portal.repository.impl;
 
-import org.apache.rave.portal.model.JpaPage;
 import org.apache.rave.portal.model.JpaWidgetRating;
 import org.apache.rave.portal.model.WidgetRating;
+import org.apache.rave.portal.repository.WidgetRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,13 +33,9 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import org.apache.rave.portal.repository.WidgetRatingRepository;
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
 
-/**
- * Test for {@link org.apache.rave.portal.repository.impl.JpaWidgetRatingRepository}
- */
 @Transactional(readOnly=true)
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:test-dataContext.xml", "classpath:test-applicationContext.xml"})
@@ -55,38 +51,33 @@ public class JpaWidgetRatingRepositoryTest {
     private EntityManager sharedManager;
 
     @Autowired
-    private WidgetRatingRepository repository;
+    private WidgetRepository repository;
 
     @Test
     public void getByWidgetIdAndUserId_found() {
-        assertThat(repository.get(VALID_WIDGET_RATING_ID), is(repository.getByWidgetIdAndUserId(VALID_WIDGET_ID, VALID_USER_ID)));
+        assertThat(repository.getRatingById(VALID_WIDGET_ID, VALID_WIDGET_RATING_ID), is(repository.getWidgetRatingsByWidgetIdAndUserId(VALID_WIDGET_ID, VALID_USER_ID)));
     }
 
     @Test
     public void getByWidgetIdAndUserId_missing() {
-        assertThat(repository.getByWidgetIdAndUserId(INVALID_WIDGET_ID, INVALID_USER_ID), is(nullValue()));
+        assertThat(repository.getWidgetRatingsByWidgetIdAndUserId(INVALID_WIDGET_ID, INVALID_USER_ID), is(nullValue()));
     }
 
     @Test
     @Transactional(readOnly=false)
     @Rollback(true)
     public void deleteAll() {
-        assertThat(repository.deleteAll(VALID_USER_ID), is(2));
-    }
-
-    @Test
-    public void getType() {
-        assertEquals(repository.getType(), JpaWidgetRating.class);
+        assertThat(repository.deleteAllWidgetRatings(VALID_USER_ID), is(2));
     }
 
     @Test
     @Transactional(readOnly=false)
     @Rollback(true)
     public void delete() {
-        WidgetRating wr = repository.get(VALID_WIDGET_RATING_ID);
+        WidgetRating wr = repository.getRatingById(VALID_WIDGET_ID, VALID_WIDGET_RATING_ID);
         assertThat(wr, is(notNullValue()));
-        repository.delete(wr);
-        wr = repository.get(VALID_WIDGET_RATING_ID);
+        repository.deleteWidgetRating(VALID_WIDGET_ID, wr);
+        wr = repository.getRatingById(VALID_WIDGET_ID, VALID_WIDGET_RATING_ID);
         assertThat(wr, is(nullValue()));
     }
 
@@ -99,15 +90,13 @@ public class JpaWidgetRatingRepositoryTest {
         WidgetRating wr = new JpaWidgetRating();
         wr.setScore(EXPECTED_SCORE);
         wr.setUserId(VALID_USER_ID);
-        wr.setWidgetId(VALID_WIDGET_ID);
         assertThat(wr.getId(), is(nullValue()));
-        repository.save(wr);
+        repository.createWidgetRating(VALID_WIDGET_ID, wr);
         String newId = wr.getId();
         assertThat(Long.parseLong(newId) > 0, is(true));
-        WidgetRating newRating = repository.get(newId);
+        WidgetRating newRating = repository.getRatingById(VALID_WIDGET_ID, newId);
         assertThat(newRating.getScore(), is(EXPECTED_SCORE));
         assertThat(newRating.getUserId(), is(VALID_USER_ID));
-        assertThat(newRating.getWidgetId(), is(VALID_WIDGET_ID));
     }
 
     @Test
@@ -115,11 +104,11 @@ public class JpaWidgetRatingRepositoryTest {
     @Rollback(true)
     public void save_existing() {
         int EXPECTED_SCORE = 99;
-        WidgetRating wr = repository.get(VALID_WIDGET_RATING_ID);
+        WidgetRating wr = repository.getRatingById(VALID_WIDGET_ID, VALID_WIDGET_RATING_ID);
         assertThat(wr.getScore(), is(not(EXPECTED_SCORE)));
         wr.setScore(99);
-        repository.save(wr);
-        WidgetRating updatedRating = repository.get(VALID_WIDGET_RATING_ID);
+        repository.updateWidgetRating(VALID_WIDGET_ID, wr);
+        WidgetRating updatedRating = repository.getRatingById(VALID_WIDGET_ID, VALID_WIDGET_RATING_ID);
         assertThat(updatedRating.getScore(), is(EXPECTED_SCORE));
     }
 }

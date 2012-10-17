@@ -21,7 +21,7 @@ package org.apache.rave.portal.security.impl;
 import org.apache.rave.portal.model.WidgetRating;
 import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.model.impl.WidgetRatingImpl;
-import org.apache.rave.portal.repository.WidgetRatingRepository;
+import org.apache.rave.portal.repository.WidgetRepository;
 import org.apache.rave.portal.security.ModelPermissionEvaluator;
 import org.apache.rave.portal.security.util.AuthenticationUtils;
 import org.easymock.EasyMock;
@@ -42,7 +42,7 @@ import static org.junit.Assert.assertThat;
 
 public class DefaultWidgetRatingPermissionEvaluatorTest {
     private DefaultWidgetRatingPermissionEvaluator defaultWidgetRatingPermissionEvaluator;
-    private WidgetRatingRepository mockWidgetRatingRepository;
+    private WidgetRepository mockWidgetRatingRepository;
     private Authentication mockAuthentication;
     private List<GrantedAuthority> grantedAuthoritiesList;
     private WidgetRating widgetRating;
@@ -57,12 +57,11 @@ public class DefaultWidgetRatingPermissionEvaluatorTest {
 
     @Before
     public void setUp() {
-        mockWidgetRatingRepository = createMock(WidgetRatingRepository.class);
+        mockWidgetRatingRepository = createMock(WidgetRepository.class);
         defaultWidgetRatingPermissionEvaluator = new DefaultWidgetRatingPermissionEvaluator(mockWidgetRatingRepository);
 
         widgetRating = new WidgetRatingImpl(VALID_WIDGET_ID);
         widgetRating.setUserId(VALID_USER_ID);
-        widgetRating.setWidgetId(VALID_WIDGET_ID);
 
         user = new UserImpl();
         user.setUsername(VALID_USERNAME);
@@ -122,7 +121,7 @@ public class DefaultWidgetRatingPermissionEvaluatorTest {
     public void testHasPermission_3args_delete_isWidgetRatingOwner() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
         expect(mockAuthentication.getPrincipal()).andReturn(user);
-        expect(mockWidgetRatingRepository.get(VALID_WIDGET_ID)).andReturn(widgetRating);
+        expect(mockWidgetRatingRepository.getRatingById(null, VALID_WIDGET_RATING_ID)).andReturn(widgetRating);
         replay(mockAuthentication);
         replay(mockWidgetRatingRepository);
         assertThat(defaultWidgetRatingPermissionEvaluator.hasPermission(mockAuthentication, widgetRating, ModelPermissionEvaluator.Permission.DELETE), is(true));
@@ -134,7 +133,7 @@ public class DefaultWidgetRatingPermissionEvaluatorTest {
     public void testHasPermission_3args_delete_isNotWidgetRatingOwner() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
         expect(mockAuthentication.getPrincipal()).andReturn(user2);
-        expect(mockWidgetRatingRepository.get(VALID_WIDGET_ID)).andReturn(widgetRating);
+        expect(mockWidgetRatingRepository.getRatingById(null, VALID_WIDGET_RATING_ID)).andReturn(widgetRating);
         replay(mockAuthentication);
         replay(mockWidgetRatingRepository);
         assertThat(defaultWidgetRatingPermissionEvaluator.hasPermission(mockAuthentication, widgetRating, ModelPermissionEvaluator.Permission.DELETE), is(false));
@@ -146,7 +145,7 @@ public class DefaultWidgetRatingPermissionEvaluatorTest {
     public void testHasPermission_3args_update_isWidgetRatingOwner() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
         expect(mockAuthentication.getPrincipal()).andReturn(user);
-        expect(mockWidgetRatingRepository.get(VALID_WIDGET_ID)).andReturn(widgetRating);
+        expect(mockWidgetRatingRepository.getRatingById(null, VALID_WIDGET_RATING_ID)).andReturn(widgetRating);
         replay(mockAuthentication);
         replay(mockWidgetRatingRepository);
         assertThat(defaultWidgetRatingPermissionEvaluator.hasPermission(mockAuthentication, widgetRating, ModelPermissionEvaluator.Permission.UPDATE), is(true));
@@ -158,7 +157,7 @@ public class DefaultWidgetRatingPermissionEvaluatorTest {
     public void testHasPermission_3args_update_isNotWidgetRatingOwner() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
         expect(mockAuthentication.getPrincipal()).andReturn(user2);
-        expect(mockWidgetRatingRepository.get(VALID_WIDGET_ID)).andReturn(widgetRating);
+        expect(mockWidgetRatingRepository.getRatingById(null, VALID_WIDGET_RATING_ID)).andReturn(widgetRating);
         replay(mockAuthentication);
         replay(mockWidgetRatingRepository);
         assertThat(defaultWidgetRatingPermissionEvaluator.hasPermission(mockAuthentication, widgetRating, ModelPermissionEvaluator.Permission.UPDATE), is(false));
@@ -170,7 +169,7 @@ public class DefaultWidgetRatingPermissionEvaluatorTest {
     public void testHasPermission_3args_read_isWidgetRatingOwner() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
         expect(mockAuthentication.getPrincipal()).andReturn(user);
-        expect(mockWidgetRatingRepository.get(VALID_WIDGET_ID)).andReturn(widgetRating);
+        expect(mockWidgetRatingRepository.getRatingById(null, VALID_WIDGET_RATING_ID)).andReturn(widgetRating);
         replay(mockAuthentication);
         replay(mockWidgetRatingRepository);
         assertThat(defaultWidgetRatingPermissionEvaluator.hasPermission(mockAuthentication, widgetRating, ModelPermissionEvaluator.Permission.READ), is(true));
@@ -182,7 +181,7 @@ public class DefaultWidgetRatingPermissionEvaluatorTest {
     public void testHasPermission_3args_read_isNotWidgetRatingOwner() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
         expect(mockAuthentication.getPrincipal()).andReturn(user2);
-        expect(mockWidgetRatingRepository.get(VALID_WIDGET_ID)).andReturn(widgetRating);
+        expect(mockWidgetRatingRepository.getRatingById(null, VALID_WIDGET_RATING_ID)).andReturn(widgetRating);
         replay(mockAuthentication);
         replay(mockWidgetRatingRepository);
         assertThat(defaultWidgetRatingPermissionEvaluator.hasPermission(mockAuthentication, widgetRating, ModelPermissionEvaluator.Permission.READ), is(false));
@@ -202,7 +201,7 @@ public class DefaultWidgetRatingPermissionEvaluatorTest {
     public void testHasPermission_4args_create_isWidgetRatingOwner() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
         expect(mockAuthentication.getPrincipal()).andReturn(user);
-        expect(mockWidgetRatingRepository.get(VALID_WIDGET_RATING_ID)).andReturn(widgetRating);
+        expect(mockWidgetRatingRepository.getRatingById(null, VALID_WIDGET_RATING_ID)).andReturn(widgetRating);
         replay(mockAuthentication);
         replay(mockWidgetRatingRepository);
         assertThat(defaultWidgetRatingPermissionEvaluator.hasPermission(mockAuthentication, VALID_WIDGET_RATING_ID, WidgetRating.class.getName(), ModelPermissionEvaluator.Permission.CREATE), is(true));
@@ -214,7 +213,7 @@ public class DefaultWidgetRatingPermissionEvaluatorTest {
     public void testHasPermission_4args_create_isNotWidgetRatingOwner() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
         expect(mockAuthentication.getPrincipal()).andReturn(user2);
-        expect(mockWidgetRatingRepository.get(VALID_WIDGET_RATING_ID)).andReturn(widgetRating);
+        expect(mockWidgetRatingRepository.getRatingById(null, VALID_WIDGET_RATING_ID)).andReturn(widgetRating);
         replay(mockAuthentication);
         replay(mockWidgetRatingRepository);
         assertThat(defaultWidgetRatingPermissionEvaluator.hasPermission(mockAuthentication, VALID_WIDGET_RATING_ID, WidgetRating.class.getName(), ModelPermissionEvaluator.Permission.CREATE), is(false));
@@ -226,7 +225,7 @@ public class DefaultWidgetRatingPermissionEvaluatorTest {
     public void testHasPermission_4args_delete_isWidgetRatingOwner() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
         expect(mockAuthentication.getPrincipal()).andReturn(user);
-        expect(mockWidgetRatingRepository.get(VALID_WIDGET_RATING_ID)).andReturn(widgetRating);
+        expect(mockWidgetRatingRepository.getRatingById(null, VALID_WIDGET_RATING_ID)).andReturn(widgetRating);
         replay(mockAuthentication);
         replay(mockWidgetRatingRepository);
         assertThat(defaultWidgetRatingPermissionEvaluator.hasPermission(mockAuthentication, VALID_WIDGET_RATING_ID, WidgetRating.class.getName(), ModelPermissionEvaluator.Permission.DELETE), is(true));
@@ -238,7 +237,7 @@ public class DefaultWidgetRatingPermissionEvaluatorTest {
     public void testHasPermission_4args_delete_isNotWidgetRatingOwner() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
         expect(mockAuthentication.getPrincipal()).andReturn(user2);
-        expect(mockWidgetRatingRepository.get(VALID_WIDGET_RATING_ID)).andReturn(widgetRating);
+        expect(mockWidgetRatingRepository.getRatingById(null, VALID_WIDGET_RATING_ID)).andReturn(widgetRating);
         replay(mockAuthentication);
         replay(mockWidgetRatingRepository);
         assertThat(defaultWidgetRatingPermissionEvaluator.hasPermission(mockAuthentication, VALID_WIDGET_RATING_ID, WidgetRating.class.getName(), ModelPermissionEvaluator.Permission.DELETE), is(false));
@@ -250,7 +249,7 @@ public class DefaultWidgetRatingPermissionEvaluatorTest {
     public void testHasPermission_4args_read_isWidgetRatingOwner() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
         expect(mockAuthentication.getPrincipal()).andReturn(user);
-        expect(mockWidgetRatingRepository.get(VALID_WIDGET_RATING_ID)).andReturn(widgetRating);
+        expect(mockWidgetRatingRepository.getRatingById(null, VALID_WIDGET_RATING_ID)).andReturn(widgetRating);
         replay(mockAuthentication);
         replay(mockWidgetRatingRepository);
         assertThat(defaultWidgetRatingPermissionEvaluator.hasPermission(mockAuthentication, VALID_WIDGET_RATING_ID, WidgetRating.class.getName(), ModelPermissionEvaluator.Permission.READ), is(true));
@@ -262,7 +261,7 @@ public class DefaultWidgetRatingPermissionEvaluatorTest {
     public void testHasPermission_4args_read_isNotWidgetRatingOwner() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
         expect(mockAuthentication.getPrincipal()).andReturn(user2);
-        expect(mockWidgetRatingRepository.get(VALID_WIDGET_RATING_ID)).andReturn(widgetRating);
+        expect(mockWidgetRatingRepository.getRatingById(null, VALID_WIDGET_RATING_ID)).andReturn(widgetRating);
         replay(mockAuthentication);
         replay(mockWidgetRatingRepository);
         assertThat(defaultWidgetRatingPermissionEvaluator.hasPermission(mockAuthentication, VALID_WIDGET_RATING_ID, WidgetRating.class.getName(), ModelPermissionEvaluator.Permission.READ), is(false));
@@ -274,7 +273,7 @@ public class DefaultWidgetRatingPermissionEvaluatorTest {
     public void testHasPermission_4args_update_isWidgetRatingOwner() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
         expect(mockAuthentication.getPrincipal()).andReturn(user);
-        expect(mockWidgetRatingRepository.get(VALID_WIDGET_RATING_ID)).andReturn(widgetRating);
+        expect(mockWidgetRatingRepository.getRatingById(null, VALID_WIDGET_RATING_ID)).andReturn(widgetRating);
         replay(mockAuthentication);
         replay(mockWidgetRatingRepository);
         assertThat(defaultWidgetRatingPermissionEvaluator.hasPermission(mockAuthentication, VALID_WIDGET_RATING_ID, WidgetRating.class.getName(), ModelPermissionEvaluator.Permission.UPDATE), is(true));
@@ -286,7 +285,7 @@ public class DefaultWidgetRatingPermissionEvaluatorTest {
     public void testHasPermission_4args_update_isNotWidgetRatingOwner() {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList);
         expect(mockAuthentication.getPrincipal()).andReturn(user2);
-        expect(mockWidgetRatingRepository.get(VALID_WIDGET_RATING_ID)).andReturn(widgetRating);
+        expect(mockWidgetRatingRepository.getRatingById(null, VALID_WIDGET_RATING_ID)).andReturn(widgetRating);
         replay(mockAuthentication);
         replay(mockWidgetRatingRepository);
         assertThat(defaultWidgetRatingPermissionEvaluator.hasPermission(mockAuthentication, VALID_WIDGET_RATING_ID, WidgetRating.class.getName(), ModelPermissionEvaluator.Permission.UPDATE), is(false));

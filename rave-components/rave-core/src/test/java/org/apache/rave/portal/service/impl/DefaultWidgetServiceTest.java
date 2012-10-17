@@ -20,10 +20,7 @@
 package org.apache.rave.portal.service.impl;
 
 import org.apache.rave.exception.DuplicateItemException;
-import org.apache.rave.portal.model.Category;
-import org.apache.rave.portal.model.Widget;
-import org.apache.rave.portal.model.WidgetComment;
-import org.apache.rave.portal.model.WidgetStatus;
+import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.model.impl.*;
 import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.model.util.WidgetStatistics;
@@ -437,4 +434,90 @@ public class DefaultWidgetServiceTest {
         verify(widgetRepository);
     }
 
+    @Test
+    public void testGetByWidgetIdAndUserId() {
+        WidgetRating widgetRating = new WidgetRatingImpl("1", "3", 5);
+        expect(widgetRepository.getWidgetRatingsByWidgetIdAndUserId("2", "3")).andReturn(widgetRating);
+        replay(widgetRepository);
+        final WidgetRating rating = widgetService.getWidgetRatingByWidgetIdAndUserId("2", "3");
+        assertEquals("Score is 5", Integer.valueOf(5), rating.getScore());
+        verify(widgetRepository);
+    }
+
+    @Test
+    public void updateScore() {
+        WidgetRating widgetRating = createMock(WidgetRatingImpl.class);
+        widgetRating.setScore(10);
+
+        expectLastCall().once();
+        expect(widgetRepository.updateWidgetRating("2", widgetRating)).andReturn(widgetRating);
+        replay(widgetRepository, widgetRating);
+        widgetService.updateWidgetRatingScore("2", widgetRating, 10);
+
+        verify(widgetRepository, widgetRating);
+    }
+
+    @Test
+    public void saveWidgetRating_new() {
+        WidgetRating newRating = new WidgetRatingImpl();
+        newRating.setUserId("1");
+        newRating.setScore(10);
+
+        expect(widgetRepository.getWidgetRatingsByWidgetIdAndUserId("2", "1")).andReturn(null);
+        expect(widgetRepository.createWidgetRating("2", newRating)).andReturn(newRating);
+        replay(widgetRepository);
+
+        widgetService.saveWidgetRating("2", newRating);
+        verify(widgetRepository);
+    }
+
+    @Test
+    public void saveWidgetRating_existing() {
+        WidgetRating existingRating = new WidgetRatingImpl("1", "1", 5);
+        WidgetRating newRating = new WidgetRatingImpl();
+        newRating.setUserId("1");
+        newRating.setScore(10);
+
+        expect(widgetRepository.getWidgetRatingsByWidgetIdAndUserId("1", "1")).andReturn(existingRating);
+        expect(widgetRepository.updateWidgetRating("1", existingRating)).andReturn(existingRating);
+        replay(widgetRepository);
+
+        widgetService.saveWidgetRating("1", newRating);
+        verify(widgetRepository);
+
+        assertEquals("Updated score", Integer.valueOf(10), existingRating.getScore());
+    }
+
+    @Test
+    public void removeWidgetRating_existingRating() {
+        final WidgetRating widgetRating = new WidgetRatingImpl("1", "1", 5);
+
+        expect(widgetRepository.getWidgetRatingsByWidgetIdAndUserId("1", "1")).andReturn(widgetRating);
+        widgetRepository.deleteWidgetRating("1", widgetRating);
+        expectLastCall();
+        replay(widgetRepository);
+
+        widgetService.removeWidgetRating("1", "1");
+        verify(widgetRepository);
+    }
+
+    @Test
+    public void removeWidgetRating_notExisting() {
+        expect(widgetRepository.getWidgetRatingsByWidgetIdAndUserId("1", "2")).andReturn(null);
+        expectLastCall();
+        replay(widgetRepository);
+        widgetService.removeWidgetRating("1", "2");
+        verify(widgetRepository);
+    }
+
+    @Test
+    public void deleteAll() {
+        final String USER_ID = "33";
+        final int EXPECTED_COUNT = 43;
+
+        expect(widgetRepository.deleteAllWidgetRatings(USER_ID)).andReturn(EXPECTED_COUNT);
+        replay(widgetRepository);
+        assertThat(widgetService.removeAllWidgetRatings(USER_ID), is(EXPECTED_COUNT));
+        verify(widgetRepository);
+    }
 }
