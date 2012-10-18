@@ -49,6 +49,9 @@ public class MongoDbWidgetConverter implements HydratingModelConverter<Widget, M
 
     @Override
     public void hydrate(MongoDbWidget dehydrated) {
+        if(dehydrated == null) {
+            return;
+        }
         dehydrated.setCategoryRepository(categoryRepository);
         dehydrated.setUserRepository(userRepository);
         if(dehydrated.getComments() != null) {

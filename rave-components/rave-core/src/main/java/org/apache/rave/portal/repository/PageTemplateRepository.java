@@ -27,4 +27,5 @@ public interface PageTemplateRepository {
 
     List<PageTemplate> getAll();
     PageTemplate getDefaultPage(PageType pageType);
+    PageTemplate save(PageTemplate template);
 }

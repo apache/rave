@@ -1130,7 +1130,7 @@
     },
     {
         "id" : 22,
-        "title": "Ohloh Apache Rave Fanguages",
+        "title": "Ohloh Apache Rave Languages",
         "url": "http://www.ohloh.net/p/521520/widgets/project_languages.xml",
         "type": "OpenSocial",
         "author": "Ohloh",
@@ -1965,118 +1965,87 @@
     },
     {
         "id": 2,
-        "name": "About",
-        "description": "Template for the About sub page for the person profile",
-        "pageType": "SUB_PAGE",
+        "name": "Default Home",
+        "description": "Default User Template",
+        "pageType": "USER",
         "parentPageTemplate": null,
         "subPageTemplates": [],
         "pageLayout": {
             "id": 1,
-            "code": "columns_1",
+            "code": "columns_3_newuser",
             "numberOfRegions": 1,
             "renderSequence": 0,
             "userSelectable": true
         },
         "pageTemplateRegions": [
             {
-                "id": 2,
                 "renderSequence": 0,
                 "pageTemplate": null,
                 "pageTemplateWidgets": [
                     {
-                        "id": 3,
                         "pageTemplateRegion": null,
-                        "widget": {
-                            "id" : 15,
-                            "title": "Favorite Websites",
-                            "url": "http://localhost:8080/demogadgets/favorite_websites.xml",
-                            "type": "OpenSocial",
-                            "author": "Anthony Carlucci",
-                            "description": "Static widget of favorite websites for demoing on the Person Profile page",
-                            "disableRendering": false,
-                            "featured": false,
-                            "status": "PUBLISHED"
-                        },
+                        "widget": {"id": 2},
                         "locked": true,
                         "hideChrome": false,
                         "id": 3,
                         "renderSeq": 0
                     },
                     {
-                        "id": 4,
                         "pageTemplateRegion": null,
-                        "widget": {
-                            "id" :14,
-                            "title": "Current Schedule",
-                            "url": "http://localhost:8080/demogadgets/schedule.xml",
-                            "type": "OpenSocial",
-                            "author": "Anthony Carlucci",
-                            "description": "Static widget of a schedule for demoing on the Person Profile page",
-                            "disableRendering": false,
-                            "featured": false,
-                            "status": "PUBLISHED"
-                        },
+                        "widget": {"id": 7},
                         "locked": true,
                         "hideChrome": false,
                         "id": 4,
                         "renderSeq": 1
                     }
                 ],
-                "locked": true,
+                "locked": false,
+                "id": 2
+            },
+            {
+                "renderSequence": 1,
+                "pageTemplate": null,
+                "pageTemplateWidgets": [
+                    {
+                        "pageTemplateRegion": null,
+                        "widget": {"id": 10},
+                        "locked": true,
+                        "hideChrome": false,
+                        "id": 3,
+                        "renderSeq": 0
+                    },
+                    {
+                        "pageTemplateRegion": null,
+                        "widget": {"id": 23},
+                        "locked": true,
+                        "hideChrome": false,
+                        "id": 4,
+                        "renderSeq": 1
+                    }
+                ],
+                "locked": false,
+                "id": 2
+            },
+            {
+                "renderSequence": 2,
+                "pageTemplate": null,
+                "pageTemplateWidgets": [
+                    {
+                        "pageTemplateRegion": null,
+                        "widget": {"id": 11},
+                        "locked": true,
+                        "hideChrome": false,
+                        "id": 3,
+                        "renderSeq": 0
+                    }
+                ],
+                "locked": false,
                 "id": 2
             }
         ],
         "renderSequence": 0,
-        "defaultTemplate": false,
+        "defaultTemplate": true,
         "id": 2
-    },
-    {
-        "id": 3,
-        "name": "My Activity",
-        "description": "Template for the My Activity sub page for the person profile",
-        "pageType": "SUB_PAGE",
-        "parentPageTemplate": null,
-        "subPageTemplates": [],
-        "pageLayout": {
-            "id": 1,
-            "code": "columns_1",
-            "numberOfRegions": 1,
-            "renderSequence": 0,
-            "userSelectable": true
-        },
-        "pageTemplateRegions": [
-            {
-                "id": 3,
-                "renderSequence": 0,
-                "pageTemplate": null,
-                "pageTemplateWidgets": [
-                    {
-                        "id": 5,
-                        "pageTemplateRegion": null,
-                        "widget": {
-                            "id": 3,
-                            "title": "My Activity",
-                            "url": "http://localhost:8080/demogadgets/my_activity.xml",
-                            "type": "OpenSocial",
-                            "author": "Anthony Carlucci",
-                            "description": "Static widget of activities for demoing on the Person Profile page",
-                            "disableRendering": false,
-                            "featured": false,
-                            "status": "PUBLISHED"
-                        },
-                        "locked": true,
-                        "hideChrome": false,
-                        "id": 5,
-                        "renderSeq": 0
-                    }
-                ],
-                "locked": true,
-                "id": 3
-            }
-        ],
-        "renderSequence": 1,
-        "defaultTemplate": false,
-        "id": 3
     }
 ]
 }

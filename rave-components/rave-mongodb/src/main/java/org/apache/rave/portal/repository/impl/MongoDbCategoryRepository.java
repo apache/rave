@@ -47,7 +47,7 @@ public class MongoDbCategoryRepository implements CategoryRepository {
 
     @Override
     public List<Category> getAll() {
-        return CollectionUtils.<Category>toBaseTypedList(template.findAll(CLASS, COLLECTION));
+        return CollectionUtils.<Category>toBaseTypedList(hydrate(template.findAll(CLASS, COLLECTION)));
     }
 
     @Override
@@ -89,6 +89,13 @@ public class MongoDbCategoryRepository implements CategoryRepository {
     private Category hydrate(MongoDbCategory category) {
         converter.hydrate(category, Category.class);
         return category;
+    }
+
+    private List<MongoDbCategory> hydrate(List<MongoDbCategory> all) {
+        for(MongoDbCategory category : all) {
+            hydrate(category);
+        }
+        return all;
     }
 
     private boolean updateCategory(long userId, MongoDbCategory category) {

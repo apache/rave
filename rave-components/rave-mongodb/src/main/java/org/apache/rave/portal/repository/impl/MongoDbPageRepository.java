@@ -46,7 +46,7 @@ public class MongoDbPageRepository implements PageRepository {
 
     @Override
     public List<Page> getAllPages(Long userId, PageType pageType) {
-        return template.find(new Query(where("pageType").is(pageType).andOperator(where("ownerId").is(userId))));
+        return template.find(new Query(where("pageType").is(pageType.getPageType().toUpperCase()).andOperator(where("ownerId").is(userId))));
     }
 
     @Override

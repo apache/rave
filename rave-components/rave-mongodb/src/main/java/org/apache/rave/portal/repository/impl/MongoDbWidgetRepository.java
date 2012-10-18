@@ -44,10 +44,10 @@ import static org.springframework.data.mongodb.core.query.Update.update;
 @Repository
 public class MongoDbWidgetRepository implements WidgetRepository {
 
-    public static final String RATINGS_MAP = "classpath:WidgetRatingsMap.js";
-    public static final String RATINGS_REDUCE = "classpath:WidgetRatingsReduce.js";
-    public static final String USERS_MAP = "WidgetUsersMap.js";
-    public static final String USERS_REDUCE = "WidgetUsersReduce.js";
+    public static final String RATINGS_MAP = "classpath*:WidgetRatingsMap.js";
+    public static final String RATINGS_REDUCE = "classpath*:WidgetRatingsReduce.js";
+    public static final String USERS_MAP = "classpath*:WidgetUsersMap.js";
+    public static final String USERS_REDUCE = "classpath*:WidgetUsersReduce.js";
     @Autowired
     private MongoWidgetOperations template;
 

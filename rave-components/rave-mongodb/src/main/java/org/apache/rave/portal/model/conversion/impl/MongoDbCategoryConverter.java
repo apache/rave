@@ -44,6 +44,9 @@ public class MongoDbCategoryConverter implements HydratingModelConverter<Categor
 
     @Override
     public void hydrate(MongoDbCategory dehydrated) {
+        if(dehydrated == null) {
+            return;
+        }
         dehydrated.setUserRepository(userRepository);
         dehydrated.setWidgetTagRepository(widgetRepository);
     }

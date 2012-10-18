@@ -57,6 +57,7 @@ public class MongoDbPageConverter implements HydratingModelConverter<Page, Mongo
         page.setPageLayoutCode(sourcePage.getPageLayout().getCode());
         page.setName(sourcePage.getName());
         page.setRegions(sourcePage.getRegions());
+        page.setPageType(sourcePage.getPageType());
 
         page.setOwner(null);
         page.setPageLayout(null);
@@ -76,7 +77,7 @@ public class MongoDbPageConverter implements HydratingModelConverter<Page, Mongo
                 region.setId(generateId());
             }
             region.setPage(null);
-            manipulateRegion(region, false);
+            convert(region);
         }
         if (page.getSubPages() != null) {
             List<Page> convertedPages = Lists.newArrayList();
@@ -92,6 +93,9 @@ public class MongoDbPageConverter implements HydratingModelConverter<Page, Mongo
         MongoDbPageUser user = sourceUser instanceof MongoDbPageUser ? (MongoDbPageUser) sourceUser : new MongoDbPageUser();
         user.setId(sourceUser.getId() == null ? generateId() : sourceUser.getId());
         user.setUserId(sourceUser.getUser().getId());
+        user.setEditor(sourceUser.isEditor());
+        user.setPageStatus(sourceUser.getPageStatus());
+        user.setRenderSequence(sourceUser.getRenderSequence());
         user.setPage(null);
         user.setUser(null);
         user.setUserRepository(null);
@@ -100,6 +104,9 @@ public class MongoDbPageConverter implements HydratingModelConverter<Page, Mongo
 
     @Override
     public void hydrate(MongoDbPage page) {
+        if (page == null) {
+            return;
+        }
         page.setPageLayoutRepository(pageLayoutRepository);
         page.setUserRepository(userRepository);
 
@@ -111,7 +118,7 @@ public class MongoDbPageConverter implements HydratingModelConverter<Page, Mongo
         }
         for (Region region : page.getRegions()) {
             region.setPage(page);
-            manipulateRegion(region, true);
+            hydrate(region);
         }
         if (page.getSubPages() != null) {
             for (Page subPage : page.getSubPages()) {
@@ -140,22 +147,34 @@ public class MongoDbPageConverter implements HydratingModelConverter<Page, Mongo
         regionWidget.setWidget(null);
         regionWidget.setWidgetRepository(null);
         regionWidget.setPreferences(sourceRegionWidget.getPreferences());
-        for (RegionWidgetPreference preference : regionWidget.getPreferences()) {
-            preference.setRegionWidgetId(regionWidget.getId());
-        }
+        updatePreferences(regionWidget);
         return regionWidget;
     }
 
-    private void manipulateRegion(Region region, Boolean hydrate) {
-        for (RegionWidget regionWidget : region.getRegionWidgets()) {
-            if (hydrate) {
-                hydrate((MongoDbRegionWidget) regionWidget, region);
-            } else {
-                region.getRegionWidgets().remove(regionWidget);
-                region.getRegionWidgets().add(convert(regionWidget));
+    private void updatePreferences(MongoDbRegionWidget regionWidget) {
+        if (regionWidget.getPreferences() != null) {
+            for (RegionWidgetPreference preference : regionWidget.getPreferences()) {
+                preference.setRegionWidgetId(regionWidget.getId());
             }
         }
     }
 
+    private void hydrate(Region region) {
+        if (region.getRegionWidgets() != null) {
+            for (RegionWidget regionWidget : region.getRegionWidgets()) {
+                hydrate((MongoDbRegionWidget) regionWidget, region);
+            }
+        }
+    }
+
+    private void convert(Region region) {
+        if (region.getRegionWidgets() != null) {
+            List<RegionWidget> convertedWidgets = Lists.newArrayList();
+            for (RegionWidget widget : region.getRegionWidgets()) {
+                convertedWidgets.add(convert(widget));
+            }
+            region.setRegionWidgets(convertedWidgets);
+        }
+    }
 
 }

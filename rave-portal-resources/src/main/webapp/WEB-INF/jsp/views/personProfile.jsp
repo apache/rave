@@ -21,7 +21,7 @@
 <%@ page errorPage="/WEB-INF/jsp/views/error.jsp" %>
 <%@ include file="/WEB-INF/jsp/includes/taglibs.jsp" %>
 <fmt:setBundle basename="messages"/>
-<jsp:useBean id="userProfile" type="org.apache.rave.portal.model.JpaUser" scope="request"/>
+<jsp:useBean id="userProfile" type="org.apache.rave.portal.model.User" scope="request"/>
 <sec:authentication property="principal.username" var="principleUsername" scope="request"/>
 <sec:authentication property="principal.displayName" var="displayName" scope="request"/>
 

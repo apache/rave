@@ -116,10 +116,9 @@ public class DataImporter {
                         categoryRepository.save(category);
                     }
                 }
-/*              TODO Update PageTemplateRepository
-                for(PortalPreference preference : wrapper.getPortalPreferences()) {
-                    pageTemplateRepository.save(preference);
-                }*/
+                for(PageTemplate template : wrapper.getPageTemplates()) {
+                    pageTemplateRepository.save(template);
+                }
             }
         }
 

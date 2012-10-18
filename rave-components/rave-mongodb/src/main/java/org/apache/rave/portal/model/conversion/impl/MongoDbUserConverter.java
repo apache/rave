@@ -39,6 +39,9 @@ public class MongoDbUserConverter implements HydratingModelConverter<User, Mongo
 
     @Override
     public void hydrate(MongoDbUser dehydrated) {
+        if(dehydrated == null) {
+            return;
+        }
         dehydrated.setPageLayoutRepository(pageLayoutRepository);
     }
 
@@ -95,6 +98,7 @@ public class MongoDbUserConverter implements HydratingModelConverter<User, Mongo
             }
         } else {
             code = source.getDefaultPageLayout().getCode();
+            source.setDefaultPageLayout(null);
         }
         return code;
     }

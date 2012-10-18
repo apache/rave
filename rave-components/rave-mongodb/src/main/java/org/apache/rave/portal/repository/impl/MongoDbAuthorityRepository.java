@@ -21,6 +21,8 @@ package org.apache.rave.portal.repository.impl;
 
 import org.apache.rave.exception.NotSupportedException;
 import org.apache.rave.portal.model.Authority;
+import org.apache.rave.portal.model.MongoDbAuthority;
+import org.apache.rave.portal.model.conversion.HydratingConverterFactory;
 import org.apache.rave.portal.model.impl.AuthorityImpl;
 import org.apache.rave.portal.repository.AuthorityRepository;
 import org.apache.rave.util.CollectionUtils;
@@ -38,10 +40,13 @@ import static org.springframework.data.mongodb.core.query.Query.query;
 public class MongoDbAuthorityRepository implements AuthorityRepository {
 
     public static final String COLLECTION = "authority";
-    public static final Class<AuthorityImpl> CLASS = AuthorityImpl.class;
+    public static final Class<MongoDbAuthority> CLASS = MongoDbAuthority.class;
 
     @Autowired
     private MongoOperations template;
+
+    @Autowired
+    private HydratingConverterFactory converter;
 
     @Override
     public Authority getByAuthority(String authorityName) {
@@ -78,7 +83,7 @@ public class MongoDbAuthorityRepository implements AuthorityRepository {
         Authority fromDb = getByAuthority(item.getAuthority());
         Authority save;
         if(fromDb == null) {
-            save = item;
+            save = converter.convert(item, Authority.class);
         } else {
             fromDb.setDefaultForNewUser(item.isDefaultForNewUser());
             save=fromDb;
