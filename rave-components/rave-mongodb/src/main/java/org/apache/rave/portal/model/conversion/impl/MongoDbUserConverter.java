@@ -54,6 +54,7 @@ public class MongoDbUserConverter implements HydratingModelConverter<User, Mongo
         for(GrantedAuthority authority : source.getAuthorities()) {
             authorityCodes.add(authority.getAuthority());
         }
+        user.setAuthorityCodes(authorityCodes);
         updateProperties(source, user);
         return user;
     }
@@ -76,12 +77,25 @@ public class MongoDbUserConverter implements HydratingModelConverter<User, Mongo
         converted.setProperties(source.getProperties());
         converted.setPassword(source.getPassword());
         converted.setConfirmPassword(source.getConfirmPassword());
-        converted.setDefaultPageLayoutCode(source.getDefaultPageLayoutCode());
+        converted.setDefaultPageLayoutCode(getPageLayoutCode(source));
         converted.setEnabled(source.isEnabled());
         converted.setExpired(source.isExpired());
         converted.setLocked(source.isLocked());
         converted.setOpenId(source.getOpenId());
         converted.setForgotPasswordHash(source.getForgotPasswordHash());
         converted.setForgotPasswordTime(source.getForgotPasswordTime());
+
+    }
+
+    private String getPageLayoutCode(User source) {
+        String code = null;
+        if (source.getDefaultPageLayout() == null) {
+            if(source.getDefaultPageLayoutCode() != null) {
+                code = source.getDefaultPageLayoutCode();
+            }
+        } else {
+            code = source.getDefaultPageLayout().getCode();
+        }
+        return code;
     }
 }

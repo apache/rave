@@ -50,39 +50,8 @@
     <context:component-scan base-package="org.apache.rave.opensocial" annotation-config="true"/>
     <context:component-scan base-package="org.apache.rave.service" annotation-config="true"/>
 
-    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
-        <property name="entityManagerFactory" ref="entityManagerFactory"/>
-    </bean>
+    <import resource="classpath*:org/apache/rave/persistence-applicationContext.xml" />
 
-    <tx:annotation-driven transaction-manager="transactionManager"/>
-
-    <bean id="entityManagerFactory"
-          class="org.apache.rave.persistence.jpa.PopulatedLocalContainerEntityManagerFactory">
-        <property name="persistenceUnitName" value="ravePersistenceUnit"/>
-        <property name="dataSource" ref="dataSource"/>
-        <property name="populator" ref="dataSourcePopulator"/>
-        <property name="jpaVendorAdapter">
-            <bean class="org.springframework.orm.jpa.vendor.OpenJpaVendorAdapter"
-                  p:databasePlatform="${rave-shindig.jpaVendorAdapter.databasePlatform}"
-                  p:database="${rave-shindig.jpaVendorAdapter.database}"
-                  p:showSql="${rave-shindig.jpaVendorAdapter.showSql}"/>
-        </property>
-        <property name="jpaPropertyMap">
-            <map>
-                <entry key="openjpa.Log" value="${rave-shindig.openjpa.Log}"/>
-                <entry key="openjpa.RuntimeUnenhancedClasses" value="${rave-shindig.openjpa.RuntimeUnenhancedClasses}"/>
-                <entry key="openjpa.jdbc.SynchronizeMappings" value="${rave-shindig.openjpa.jdbc.SynchronizeMappings}"/>
-                <entry key="openjpa.jdbc.MappingDefaults" value="${rave-shindig.openjpa.jdbc.MappingDefaults}"/>
-            </map>
-        </property>
-    </bean>
-
-    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-        <property name="url" value="${rave-shindig.dataSource.url}"/>
-        <property name="driverClassName" value="${rave-shindig.dataSource.driver}"/>
-        <property name="username" value="${rave-shindig.dataSource.username}"/>
-        <property name="password" value="${rave-shindig.dataSource.password}"/>
-    </bean>
 
     <bean id="oAuthStore" class="org.apache.rave.gadgets.oauth.inject.DefaultOAuthStore">
         <constructor-arg name="defaultCallbackUrl" value="${shindig.signing.global-callback-url}"/>

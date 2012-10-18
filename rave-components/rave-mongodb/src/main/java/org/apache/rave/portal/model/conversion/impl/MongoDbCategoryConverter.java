@@ -55,7 +55,7 @@ public class MongoDbCategoryConverter implements HydratingModelConverter<Categor
 
     @Override
     public MongoDbCategory convert(Category source) {
-        MongoDbCategory category = source instanceof MongoDbCategory ? ((MongoDbCategory)source) : new MongoDbCategory();
+        MongoDbCategory category = source instanceof MongoDbCategory ? ((MongoDbCategory) source) : new MongoDbCategory();
         category.setCreatedUserId(source.getCreatedUser().getId());
         category.setCreatedUser(null);
         category.setLastModifiedUserId(source.getLastModifiedUser().getId());
@@ -65,8 +65,10 @@ public class MongoDbCategoryConverter implements HydratingModelConverter<Categor
         category.setText(source.getText());
         ArrayList<Long> widgetIds = Lists.<Long>newArrayList();
         category.setWidgetIds(widgetIds);
-        for(Widget widget : source.getWidgets()) {
-            widgetIds.add(widget.getId());
+        if (source.getWidgets() != null) {
+            for (Widget widget : source.getWidgets()) {
+                widgetIds.add(widget.getId());
+            }
         }
         category.setWidgets(null);
         return category;

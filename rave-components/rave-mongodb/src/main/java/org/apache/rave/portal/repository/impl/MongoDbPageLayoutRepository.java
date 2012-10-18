@@ -21,6 +21,7 @@ package org.apache.rave.portal.repository.impl;
 
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.rave.portal.model.PageLayout;
+import org.apache.rave.portal.model.conversion.HydratingConverterFactory;
 import org.apache.rave.portal.model.impl.PageLayoutImpl;
 import org.apache.rave.portal.repository.PageLayoutRepository;
 import org.apache.rave.util.CollectionUtils;
@@ -40,6 +41,9 @@ public class MongoDbPageLayoutRepository implements PageLayoutRepository {
 
     @Autowired
     private MongoOperations template;
+
+    @Autowired
+    private HydratingConverterFactory converter;
 
     @Override
     public PageLayout getByPageLayoutCode(String codename) {
@@ -69,7 +73,7 @@ public class MongoDbPageLayoutRepository implements PageLayoutRepository {
 
     @Override
     public PageLayout save(PageLayout item) {
-        template.save(item, COLLECTION);
+        template.save(converter.convert(item, PageLayout.class), COLLECTION);
         return item;
     }
 

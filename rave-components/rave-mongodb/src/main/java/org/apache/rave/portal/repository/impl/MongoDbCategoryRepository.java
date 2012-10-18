@@ -87,7 +87,7 @@ public class MongoDbCategoryRepository implements CategoryRepository {
     }
 
     private Category hydrate(MongoDbCategory category) {
-        converter.hydrate(category, CLASS);
+        converter.hydrate(category, Category.class);
         return category;
     }
 

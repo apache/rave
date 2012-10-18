@@ -27,19 +27,27 @@
         To remove runtime initialization of initial data, remove this bean and change the entity manager factory to the default
         Spring implementation
     -->
-    <bean id="dataSourcePopulator" class="org.apache.rave.jdbc.util.DataSourcePopulator">
+    <!--<bean id="dataSourcePopulator" class="org.apache.rave.jdbc.util.DataSourcePopulator">
         <property name="executeScriptQuery" value="SELECT * FROM WIDGET"/>
         <property name="scriptLocations">
             <list>
                 <value>/WEB-INF/db/initial_data.sql</value>
             </list>
         </property>
+    </bean>-->
+
+    <bean id="dataImporter" class="org.apache.rave.portal.util.data.DataImporter">
+        <property name="scriptLocations">
+            <list>
+                <value>classpath:initial-data.js</value>
+            </list>
+        </property>
     </bean>
 
     <!-- provides a H2 console to look into the db if necessary -->
-    <bean id="org.h2.tools.Server-WebServer" class="org.h2.tools.Server"
+<!--    <bean id="org.h2.tools.Server-WebServer" class="org.h2.tools.Server"
           factory-method="createWebServer" depends-on="dataSource"
           init-method="start" lazy-init="false" destroy-method="stop">
         <constructor-arg value="-web,-webPort,11111"/>
-    </bean>
+    </bean>-->
 </beans>

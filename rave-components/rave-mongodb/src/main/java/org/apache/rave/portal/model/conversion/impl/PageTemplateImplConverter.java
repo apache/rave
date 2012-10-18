@@ -31,7 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class MongDbPageTemplateConverter implements HydratingModelConverter<PageTemplate, PageTemplateImpl> {
+public class PageTemplateImplConverter implements HydratingModelConverter<PageTemplate, PageTemplateImpl> {
     @Autowired
     private WidgetRepository widgetRepository;
 
