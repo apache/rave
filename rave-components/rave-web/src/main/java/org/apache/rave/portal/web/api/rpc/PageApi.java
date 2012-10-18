@@ -84,6 +84,36 @@ public class PageApi {
     }
 
     /**
+     * Adds a widget to the given page region
+     *
+     * @param pageId
+     *            the ID of the {@link org.apache.rave.portal.model.Page} to add
+     *            the widget to
+     * @param widgetId
+     *            the ID of the {@link org.apache.rave.portal.model.Widget} to
+     *            add do the page
+     * @param regionId
+     *            the ID of the {@link org.apache.rave.portal.model.Region} to
+     *            add the the widget to
+     * @return a {@link RpcOperation} containing the new widget instance (
+     *         {@link org.apache.rave.portal.model.RegionWidget }) or any errors
+     *         encountered while performing the RPC operation
+     */
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.POST, value = "{pageId}/widget/add/region/{regionId}")
+    public RpcResult<RegionWidget> addWidgetToPageRegion(
+            @PathVariable final long pageId, @RequestParam final long widgetId, @PathVariable final long regionId) {
+
+        return new RpcOperation<RegionWidget>() {
+            @Override
+            public RegionWidget execute() {
+                return pageService.addWidgetToPageRegion(pageId, widgetId, regionId);
+            }
+        }.getResult();
+    }
+    
+
+    /**
      * Moves a widget to a new location
      * <p/>
      * Moves can take place within a region, region to region, or between pages

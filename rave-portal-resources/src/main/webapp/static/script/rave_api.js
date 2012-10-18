@@ -264,6 +264,30 @@ rave.api = rave.api || (function() {
                 }).error(handleError);
         }
 
+        function addWidgetToPageRegion(args) {
+            $.post(rave.getContext() + path + "page/" + args.pageId + "/widget/add/region/"+ args.regionId,
+                {
+                    widgetId: args.widgetId
+                },
+                function(result) {
+                    if (result.error) {
+                        handleRpcError(result);
+                    } else {
+                        var widgetTitle = rave.getClientMessage("widget.add_prefix");
+                        var addedWidget = result.result != undefined ? result.result.widget : undefined;
+
+                        if (addedWidget != undefined && addedWidget.title != undefined && addedWidget.title.length > 0) {
+                            widgetTitle = addedWidget.title;
+                        }
+                        // if a callback is supplied, invoke it with the regionwidget id
+                        if (args.successCallback && addedWidget != undefined){
+                            args.successCallback(result.result.id);
+                        }
+                        rave.showInfoMessage(widgetTitle + ' ' + rave.getClientMessage("widget.add_suffix"));
+                    }
+                }).error(handleError);
+        }
+
         function deleteWidgetOnPage(args) {
             $.post(rave.getContext() + path + "page/regionWidget/" + args.regionWidgetId + "/delete",
                 null,
@@ -298,6 +322,22 @@ rave.api = rave.api || (function() {
                         }
                     }
                 }).error(handleError);
+        }
+
+        function getPage(args){
+            $.get(rave.getContext() + path + "page/get",
+                    {
+                        pageId: args.pageId
+                    },
+                    function(result) {
+                        if (result.error) {
+                            handleRpcError(result);
+                        } else {
+                            if (typeof args.successCallback == 'function') {
+                                args.successCallback(result);
+                            }
+                        }
+                    }).error(handleError);
         }
 
         function movePage(args) {
@@ -626,8 +666,10 @@ rave.api = rave.api || (function() {
         return {
             moveWidget : moveWidgetOnPage,
             addWidgetToPage : addWidgetToPage,
+            addWidgetToPageRegion: addWidgetToPageRegion,
             removeWidget : deleteWidgetOnPage,
             addPage: addPage,
+            getPage: getPage,
             updatePagePrefs: updatePagePrefs,
             getPagePrefs: getPagePrefs,
             movePage: movePage,
