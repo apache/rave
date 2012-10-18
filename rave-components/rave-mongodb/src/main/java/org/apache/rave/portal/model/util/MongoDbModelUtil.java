@@ -29,6 +29,6 @@ public class MongoDbModelUtil {
     private MongoDbModelUtil(){}
 
     public static long generateId() {
-        return new Random().nextLong();
+        return Math.abs(new Random().nextLong());
     }
 }

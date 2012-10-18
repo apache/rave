@@ -78,6 +78,20 @@ public class MongoDbUser extends UserImpl {
     }
 
     @Override
+    public void addAuthority(Authority authority) {
+        if(!authorityCodes.contains(authority.getAuthority())) {
+            authorityCodes.add(authority.getAuthority());
+        }
+    }
+
+    @Override
+    public void removeAuthority(Authority authority) {
+        if(authorityCodes.contains(authority.getAuthority())) {
+            authorityCodes.remove(authority.getAuthority());
+        }
+    }
+
+    @Override
     public PageLayout getDefaultPageLayout() {
         PageLayout layout = super.getDefaultPageLayout();
         if(layout == null) {
