@@ -155,8 +155,8 @@ public class MongoDbPersonRepository implements PersonRepository {
 
     @Override
     public List<Person> findFriendRequestsReceived(String username) {
-        MongoDbUser followed = (MongoDbUser)template.find(getUsernameQuery(username));
-        return Lists.transform(followed.getFriends(), new Function<MongoDbPersonAssociation, Person>() {
+        MongoDbUser followed = (MongoDbUser)template.findOne(getUsernameQuery(username));
+        return followed.getFriends() == null ? null : Lists.transform(followed.getFriends(), new Function<MongoDbPersonAssociation, Person>() {
             @Override
             public Person apply(@Nullable MongoDbPersonAssociation input) {
                 return input == null || input.getRequestStatus() != FriendRequestStatus.RECEIVED ? null : template.get(input.getPersonId()).toPerson();
