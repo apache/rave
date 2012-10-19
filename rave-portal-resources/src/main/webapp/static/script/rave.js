@@ -1010,7 +1010,7 @@ var rave = rave || (function () {
         var placeholder = document.createElement("div");
         $(placeholder).load(rave.getContext()+"api/rest/regionwidget/"+regionWidgetId, function(){
             var region = null;
-            if(regionId != "undefined"){
+            if(regionId != undefined){
                 // get specified region
                 region = $("#region-"+regionId+"-id");
             }
