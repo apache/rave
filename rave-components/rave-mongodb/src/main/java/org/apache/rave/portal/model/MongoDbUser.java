@@ -40,7 +40,8 @@ public class MongoDbUser extends UserImpl {
     private List<String> authorityCodes;
     private List<MongoDbPersonAssociation> friends;
 
-    @XmlTransient @JsonIgnore
+    @XmlTransient
+    @JsonIgnore
     private PageLayoutRepository pageLayoutRepository;
 
     public MongoDbUser(long id) {
@@ -67,26 +68,35 @@ public class MongoDbUser extends UserImpl {
     }
 
     @Override
-    public Collection<GrantedAuthority> getAuthorities() {
-        Collection<GrantedAuthority> grantedAuthorities = Lists.newArrayList();
-        if (authorityCodes != null) {
-            for (String code : authorityCodes) {
-                grantedAuthorities.add(new SimpleGrantedAuthority(code));
+    public void setAuthorities(Collection<Authority> authorities) {
+        if (authorities != null) {
+            for (GrantedAuthority authority : authorities) {
+                addAuthorityCode(authority);
             }
+        } else {
+            authorityCodes.clear();
+        }
+    }
+
+    @Override
+    public Collection<GrantedAuthority> getAuthorities() {
+        verifyAuthorityCodes();
+        Collection<GrantedAuthority> grantedAuthorities = Lists.newArrayList();
+        for (String code : authorityCodes) {
+            grantedAuthorities.add(new SimpleGrantedAuthority(code));
         }
         return grantedAuthorities;
     }
 
     @Override
     public void addAuthority(Authority authority) {
-        if(!authorityCodes.contains(authority.getAuthority())) {
-            authorityCodes.add(authority.getAuthority());
-        }
+        addAuthorityCode(authority);
     }
 
     @Override
     public void removeAuthority(Authority authority) {
-        if(authorityCodes.contains(authority.getAuthority())) {
+        verifyAuthorityCodes();
+        if (authorityCodes.contains(authority.getAuthority())) {
             authorityCodes.remove(authority.getAuthority());
         }
     }
@@ -94,7 +104,7 @@ public class MongoDbUser extends UserImpl {
     @Override
     public PageLayout getDefaultPageLayout() {
         PageLayout layout = super.getDefaultPageLayout();
-        if(layout == null) {
+        if (layout == null) {
             layout = pageLayoutRepository.getByPageLayoutCode(super.getDefaultPageLayoutCode());
             super.setDefaultPageLayout(layout);
         }
@@ -103,5 +113,18 @@ public class MongoDbUser extends UserImpl {
 
     public void setPageLayoutRepository(PageLayoutRepository pageLayoutRepository) {
         this.pageLayoutRepository = pageLayoutRepository;
+    }
+
+    private void verifyAuthorityCodes() {
+        if (authorityCodes == null) {
+            authorityCodes = Lists.newArrayList();
+        }
+    }
+
+    private void addAuthorityCode(GrantedAuthority authority) {
+        verifyAuthorityCodes();
+        if (!authorityCodes.contains(authority.getAuthority())) {
+            authorityCodes.add(authority.getAuthority());
+        }
     }
 }

@@ -69,7 +69,7 @@ public class MongoDbWidgetRepository implements WidgetRepository {
     @Override
     public List<Widget> getByFreeTextSearch(String searchTerm, int offset, int pageSize) {
         Query query = new Query(getFreeTextClause(searchTerm)).skip(offset).limit(pageSize);
-        return template.find(query);
+        return template.find(addSort(query));
     }
 
     @Override
@@ -80,7 +80,7 @@ public class MongoDbWidgetRepository implements WidgetRepository {
     @Override
     public List<Widget> getByStatus(WidgetStatus widgetStatus, int offset, int pageSize) {
         Query query = new Query(where("widgetStatus").is(widgetStatus)).skip(offset).limit(pageSize);
-        return template.find(query);
+        return template.find(addSort(query));
     }
 
     @Override
@@ -91,8 +91,7 @@ public class MongoDbWidgetRepository implements WidgetRepository {
     @Override
     public List<Widget> getByStatusAndTypeAndFreeTextSearch(WidgetStatus widgetStatus, String type, String searchTerm, int offset, int pageSize) {
         Query query = getWidgetStatusFreeTextQuery(widgetStatus, type, searchTerm).limit(pageSize).skip(offset);
-        query.sort().on("title", Order.ASCENDING);
-        return template.find(query);
+        return template.find(addSort(query));
     }
 
     @Override
@@ -103,7 +102,7 @@ public class MongoDbWidgetRepository implements WidgetRepository {
     @Override
     public List<Widget> getByOwner(User owner, int offset, int pageSize) {
         Query query = getQueryByOwner(owner).skip(offset).limit(pageSize);
-        return template.find(query);
+        return template.find(addSort(query));
     }
 
     @Override
@@ -156,7 +155,7 @@ public class MongoDbWidgetRepository implements WidgetRepository {
 
     @Override
     public List<Widget> getWidgetsByTag(String tagKeyWord, int offset, int pageSize) {
-        return template.find(getTagQuery(tagKeyWord).limit(pageSize).skip(offset));
+        return template.find(addSort(getTagQuery(tagKeyWord).limit(pageSize).skip(offset)));
     }
 
     @Override
@@ -217,6 +216,11 @@ public class MongoDbWidgetRepository implements WidgetRepository {
         statistics.setUserRating(statsResult.getStatistics().getUserRatings().containsKey(user_id) ? statsResult.getStatistics().getUserRatings().get(user_id).intValue() : -1);
         statistics.setTotalUserCount(userResult == null ? 0 : userResult.intValue());
         return statistics;
+    }
+
+    private Query addSort(Query query) {
+        query.sort().on("title", Order.ASCENDING);
+        return query;
     }
 
     public static class WidgetUsersMapReduceResult {

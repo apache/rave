@@ -24,6 +24,7 @@ import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.repository.MongoUserOperations;
 import org.apache.rave.portal.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.query.Order;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
@@ -59,7 +60,7 @@ public class MongoDbUserRepository implements UserRepository {
     @Override
     public List<User> getLimitedList(int offset, int pageSize) {
         Query query = new Query().skip(offset).limit(pageSize);
-        return template.find(query);
+        return template.find(addSort(query));
     }
 
     @Override
@@ -69,7 +70,7 @@ public class MongoDbUserRepository implements UserRepository {
 
     @Override
     public List<User> findByUsernameOrEmail(String searchTerm, int offset, int pageSize) {
-        return template.find(getSearchQuery(searchTerm).skip(offset).limit(pageSize));
+        return template.find(addSort(getSearchQuery(searchTerm).skip(offset).limit(pageSize)));
     }
 
     @Override
@@ -109,5 +110,10 @@ public class MongoDbUserRepository implements UserRepository {
 
     private Query getSearchQuery(String searchTerm) {
         return query(where("username").is(searchTerm).orOperator(where("email").is(searchTerm)));
+    }
+
+    private Query addSort(Query query) {
+        query.sort().on("username", Order.ASCENDING);
+        return query;
     }
 }

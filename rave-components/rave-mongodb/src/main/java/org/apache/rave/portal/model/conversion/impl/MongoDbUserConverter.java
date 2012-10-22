@@ -20,6 +20,7 @@
 package org.apache.rave.portal.model.conversion.impl;
 
 import com.google.common.collect.Lists;
+import org.apache.rave.portal.model.MongoDbPersonAssociation;
 import org.apache.rave.portal.model.MongoDbUser;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.conversion.HydratingModelConverter;
@@ -41,6 +42,12 @@ public class MongoDbUserConverter implements HydratingModelConverter<User, Mongo
     public void hydrate(MongoDbUser dehydrated) {
         if(dehydrated == null) {
             return;
+        }
+        if(dehydrated.getFriends() == null) {
+            dehydrated.setFriends(Lists.<MongoDbPersonAssociation>newArrayList());
+        }
+        if(dehydrated.getAuthorityCodes() == null) {
+            dehydrated.setAuthorityCodes(Lists.<String>newArrayList());
         }
         dehydrated.setPageLayoutRepository(pageLayoutRepository);
     }

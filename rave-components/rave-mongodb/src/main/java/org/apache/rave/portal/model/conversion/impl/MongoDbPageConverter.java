@@ -79,7 +79,7 @@ public class MongoDbPageConverter implements HydratingModelConverter<Page, Mongo
             region.setPage(null);
             convert(region);
         }
-        if (page.getSubPages() != null) {
+        if (sourcePage.getSubPages() != null) {
             List<Page> convertedPages = Lists.newArrayList();
             for (Page subPage : sourcePage.getSubPages()) {
                 convertedPages.add(convert(subPage));
