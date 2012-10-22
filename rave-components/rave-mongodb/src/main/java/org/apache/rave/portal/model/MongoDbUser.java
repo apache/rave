@@ -111,6 +111,22 @@ public class MongoDbUser extends UserImpl {
         return layout;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null || !(obj instanceof User)) {
+            return false;
+        }
+        final User other = (User) obj;
+        return !(this.getId().equals(other.getId()) && (this.getId() == null || !this.getId().equals(other.getId())));
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 67 * hash + (this.getId() != null ? this.getId().hashCode() : 0);
+        return hash;
+    }
+
     public void setPageLayoutRepository(PageLayoutRepository pageLayoutRepository) {
         this.pageLayoutRepository = pageLayoutRepository;
     }

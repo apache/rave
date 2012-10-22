@@ -109,17 +109,17 @@ public class OpenSocialWidgetRendererTest {
                                         new RegionWidgetPreferenceImpl( 1L, null, null)));
 
         final String markup =
-            "<script>rave.registerWidget(" + REGION_ID + ", {type: 'OpenSocial'," +
-            " regionWidgetId: " + REGION_WIDGET_ID + "," +
+            "<script>rave.registerWidget('" + REGION_ID + "', {type: 'OpenSocial'," +
+            " regionWidgetId: '" + REGION_WIDGET_ID + "'," +
             " widgetUrl: '" + VALID_GADGET_URL +"', " +
             " securityToken: '" + VALID_SECURITY_TOKEN + "', " +
             " metadata: " + VALID_METADATA + "," +
             " userPrefs: {\"speed\":\"fast\",\"color\":\"blue\"}," +
             " collapsed: " + VALID_COLLAPSED + ", " +
-            " widgetId: " + WIDGET_ID + "," +
+            " widgetId: '" + WIDGET_ID + "'," +
             " locked: " + VALID_LOCKED + "," +
             " hideChrome: " + VALID_HIDE_CHROME + "," +
-            " subPage: {id: " + VALID_SUBPAGE_ID + ", name: '" + VALID_SUBPAGE_NAME + "', isDefault: " + VALID_IS_DEFAULT_SUBPAGE + "}" +
+            " subPage: {id: '" + VALID_SUBPAGE_ID + "', name: '" + VALID_SUBPAGE_NAME + "', isDefault: " + VALID_IS_DEFAULT_SUBPAGE + "}" +
             "});</script>";
 
         expect(securityTokenService.getEncryptedSecurityToken(rw)).andReturn(VALID_SECURITY_TOKEN);
@@ -132,7 +132,7 @@ public class OpenSocialWidgetRendererTest {
 
         String result = renderer.render(rw, renderContext);
 
-        assertThat(result, is(equalTo("<!-- RegionWidget " + rw.getId() + " placeholder -->")));
+        assertThat(result, is(equalTo("<!-- RegionWidget '" + rw.getId() + "' placeholder -->")));
         verify(scriptManager);
     }
 
@@ -150,14 +150,14 @@ public class OpenSocialWidgetRendererTest {
         rw.setRegion(region);
 
         final String markup =
-            "<script>rave.registerWidget(1, {type: 'OpenSocial'," +
-            " regionWidgetId: null," +
+            "<script>rave.registerWidget('1', {type: 'OpenSocial'," +
+            " regionWidgetId: 'null'," +
             " widgetUrl: 'null', " +
             " securityToken: 'null', " +
             " metadata: null," +
             " userPrefs: {}," +
             " collapsed: false, " +
-            " widgetId: null," +
+            " widgetId: 'null'," +
             " locked: false," +
             " hideChrome: false," +
             " subPage: {id: null, name: '', isDefault: false}" +

@@ -66,19 +66,19 @@ public class OpenSocialWidgetRenderer implements RegionWidgetRenderer {
     //Note the widgets.push() call.  This defines the widget objects, which are
     //added to the widgets[] array in home.jsp.
     private static final String SCRIPT_BLOCK =
-            "<script>rave.registerWidget(%1$s, {type: '%2$s'," +
-            " regionWidgetId: %3$s," +
+            "<script>rave.registerWidget('%1$s', {type: '%2$s'," +
+            " regionWidgetId: '%3$s'," +
             " widgetUrl: '%4$s', " +
             " securityToken: '%5$s', " +
             " metadata: %6$s," +
             " userPrefs: %7$s," +
             " collapsed: %8$s, " +
-            " widgetId: %9$s," +
+            " widgetId: '%9$s'," +
             " locked: %10$s," +
             " hideChrome: %11$s," +
             " subPage: {id: %12$s, name: '%13$s', isDefault: %14$s}" +
             "});</script>";
-    private static final String MARKUP = "<!-- RegionWidget %1$s placeholder -->";
+    private static final String MARKUP = "<!-- RegionWidget '%1$s' placeholder -->";
 
     @Override
     public String getSupportedContext() {
@@ -123,12 +123,12 @@ public class OpenSocialWidgetRenderer implements RegionWidgetRenderer {
 
         // get attributes about the sub page this regionWidget is on.  This is needed to assist the client in
         // determining which gadgets are on visible tabs/sub pages initially to make widget rendering more efficient
-        Long pageId = null;
+        String pageId = null;
         String pageName = "";
         boolean isDefault = false;
         Page page =  item.getRegion().getPage();
         if (PageType.SUB_PAGE.equals(page.getPageType())) {
-            pageId = page.getId();
+            pageId = "'" + page.getId() + "'";
             pageName = page.getName();
             // check to see if this regionWidget is on the first sub page, which will be the default
             // subpage rendered if the user doesn't specify which subpage via the URL hash
