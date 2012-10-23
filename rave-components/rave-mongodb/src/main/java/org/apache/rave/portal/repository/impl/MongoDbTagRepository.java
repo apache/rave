@@ -98,6 +98,9 @@ public class MongoDbTagRepository implements TagRepository{
 
 
     private void addUniqueTags(List<Tag> tags, Widget widget) {
+        //returns if there are no tags for this widget to prevent null pointer exception
+        if(widget.getTags() == null) return;
+
         for(WidgetTag widgetTag : widget.getTags()) {
             Tag tag = widgetTag.getTag();
             if(!tags.contains(tag)) {

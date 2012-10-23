@@ -19,30 +19,37 @@
 
 package org.apache.rave.portal.model.conversion.impl;
 
-import org.apache.rave.portal.model.PageLayout;
-import org.apache.rave.portal.model.conversion.HydratingModelConverter;
+
 import org.apache.rave.portal.model.impl.PageLayoutImpl;
-import org.springframework.stereotype.Component;
 
-@Component
-public class PageLayoutImplConverter implements HydratingModelConverter<PageLayout, PageLayoutImpl> {
-    @Override
-    public void hydrate(PageLayoutImpl dehydrated) {
-        //NOOP
+public class MongoDbPageLayout extends PageLayoutImpl{
+    private Long id;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     @Override
-    public Class<PageLayout> getSourceType() {
-        return PageLayout.class;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof MongoDbPageLayout)) return false;
+        if (!super.equals(o)) return false;
+
+        MongoDbPageLayout that = (MongoDbPageLayout) o;
+
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
+
+        return true;
     }
 
     @Override
-    public PageLayoutImpl convert(PageLayout source) {
-        PageLayoutImpl converted = source instanceof PageLayoutImpl ? ((PageLayoutImpl)source) : new PageLayoutImpl();
-        converted.setCode(source.getCode());
-        converted.setNumberOfRegions(source.getNumberOfRegions());
-        converted.setRenderSequence(source.getRenderSequence());
-        converted.setUserSelectable(source.isUserSelectable());
-        return converted;
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + (id != null ? id.hashCode() : 0);
+        return result;
     }
 }

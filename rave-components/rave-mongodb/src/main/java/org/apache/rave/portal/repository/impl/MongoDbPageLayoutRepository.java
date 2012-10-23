@@ -21,8 +21,7 @@ package org.apache.rave.portal.repository.impl;
 
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.rave.portal.model.PageLayout;
-import org.apache.rave.portal.model.conversion.HydratingConverterFactory;
-import org.apache.rave.portal.model.impl.PageLayoutImpl;
+import org.apache.rave.portal.model.conversion.impl.MongoDbPageLayout;
 import org.apache.rave.portal.repository.PageLayoutRepository;
 import org.apache.rave.util.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,38 +31,37 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+import static org.apache.rave.portal.model.util.MongoDbModelUtil.generateId;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 
 @Repository
 public class MongoDbPageLayoutRepository implements PageLayoutRepository {
 
     public static final String COLLECTION = "pageLayout";
+    public static final Class<MongoDbPageLayout> CLASS = MongoDbPageLayout.class;
 
     @Autowired
     private MongoOperations template;
 
-    @Autowired
-    private HydratingConverterFactory converter;
-
     @Override
     public PageLayout getByPageLayoutCode(String codename) {
-        return template.findOne(new Query(where("code").is(codename)), PageLayoutImpl.class, COLLECTION);
+        return template.findOne(new Query(where("code").is(codename)), CLASS, COLLECTION);
     }
 
     @Override
     public List<PageLayout> getAll() {
-        return CollectionUtils.<PageLayout>toBaseTypedList(template.findAll(PageLayoutImpl.class, COLLECTION));
+        return CollectionUtils.<PageLayout>toBaseTypedList(template.findAll(CLASS, COLLECTION));
     }
 
     @Override
     public List<PageLayout> getAllUserSelectable() {
-        List<PageLayoutImpl> userSelectable = template.find(new Query(where("userSelectable").is(true)), PageLayoutImpl.class, COLLECTION);
+        List<MongoDbPageLayout> userSelectable = template.find(new Query(where("userSelectable").is(true)), CLASS, COLLECTION);
         return CollectionUtils.<PageLayout>toBaseTypedList(userSelectable);
     }
 
     @Override
     public Class<? extends PageLayout> getType() {
-        return PageLayoutImpl.class;
+        return CLASS;
     }
 
     @Override
@@ -73,12 +71,25 @@ public class MongoDbPageLayoutRepository implements PageLayoutRepository {
 
     @Override
     public PageLayout save(PageLayout item) {
-        template.save(converter.convert(item, PageLayout.class), COLLECTION);
-        return item;
+        MongoDbPageLayout toSave = (MongoDbPageLayout)getByPageLayoutCode(item.getCode());
+        if(toSave == null) {
+            toSave = new MongoDbPageLayout();
+            toSave.setId(generateId());
+        }
+        update(item, toSave);
+        template.save(toSave, COLLECTION);
+        return toSave;
     }
 
     @Override
     public void delete(PageLayout item) {
         template.remove(getByPageLayoutCode(item.getCode()));
+    }
+
+    private void update(PageLayout source, PageLayout converted) {
+        converted.setCode(source.getCode());
+        converted.setNumberOfRegions(source.getNumberOfRegions());
+        converted.setRenderSequence(source.getRenderSequence());
+        converted.setUserSelectable(source.isUserSelectable());
     }
 }

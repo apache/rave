@@ -19,6 +19,7 @@
 
 package org.apache.rave.portal.repository;
 
+import org.springframework.data.mongodb.core.mapreduce.MapReduceResults;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 
@@ -34,4 +35,8 @@ public interface MongoModelOperations<T> {
     T save(T item);
     void remove(Query query);
     int update(Query query, Update update);
+    <E> MapReduceResults<E> mapReduce(String mapFunction, String reduceFunction, Class<E> entityClass);
+    <E> MapReduceResults<E> mapReduce(String collection, String mapFunction, String reduceFunction, Class<E> entityClass);
+    <E> MapReduceResults<E> mapReduce(Query query, String mapFunction, String reduceFunction, Class<E> entityClass);
+    <E> MapReduceResults<E> mapReduce(String collection, Query query, String mapFunction, String reduceFunction, Class<E> entityClass);
 }

@@ -83,7 +83,7 @@ public class MongoDbCategoryRepository implements CategoryRepository {
 
     @Override
     public void delete(Category item) {
-        template.remove(get(item.getId()));
+        template.remove(get(item.getId()), COLLECTION);
     }
 
     private Category hydrate(MongoDbCategory category) {

@@ -43,11 +43,12 @@ import static org.springframework.data.mongodb.core.query.Update.update;
  */
 @Repository
 public class MongoDbWidgetRepository implements WidgetRepository {
-
-    public static final String RATINGS_MAP = "classpath*:WidgetRatingsMap.js";
-    public static final String RATINGS_REDUCE = "classpath*:WidgetRatingsReduce.js";
-    public static final String USERS_MAP = "classpath*:WidgetUsersMap.js";
-    public static final String USERS_REDUCE = "classpath*:WidgetUsersReduce.js";
+    ///org/apache/rave/WidgetRatingsMap.js
+    public static final String RATINGS_MAP = "classpath:/org/apache/rave/WidgetRatingsMap.js";
+    public static final String RATINGS_REDUCE = "classpath:/org/apache/rave/WidgetRatingsReduce.js";
+    public static final String USERS_MAP = "classpath:/org/apache/rave/WidgetUsersMap.js";
+    public static final String USERS_REDUCE = "classpath:/org/apache/rave/WidgetUsersReduce.js";
+    public static final String PAGE_COLLECTION = "page";
     @Autowired
     private MongoWidgetOperations template;
 
@@ -63,7 +64,7 @@ public class MongoDbWidgetRepository implements WidgetRepository {
 
     @Override
     public int getCountAll() {
-        return (int)template.count(new Query());
+        return (int) template.count(new Query());
     }
 
     @Override
@@ -74,18 +75,18 @@ public class MongoDbWidgetRepository implements WidgetRepository {
 
     @Override
     public int getCountFreeTextSearch(String searchTerm) {
-        return (int)template.count(new Query(getFreeTextClause(searchTerm)));
+        return (int) template.count(new Query(getFreeTextClause(searchTerm)));
     }
 
     @Override
     public List<Widget> getByStatus(WidgetStatus widgetStatus, int offset, int pageSize) {
-        Query query = new Query(where("widgetStatus").is(widgetStatus)).skip(offset).limit(pageSize);
+        Query query = new Query(where("widgetStatus").is(getWidgetStatusString(widgetStatus))).skip(offset).limit(pageSize);
         return template.find(addSort(query));
     }
 
     @Override
     public int getCountByStatus(WidgetStatus widgetStatus) {
-        return (int)template.count(new Query(where("widgetStatus").is(widgetStatus)));
+        return (int) template.count(new Query(where("widgetStatus").is(getWidgetStatusString(widgetStatus))));
     }
 
     @Override
@@ -96,7 +97,7 @@ public class MongoDbWidgetRepository implements WidgetRepository {
 
     @Override
     public int getCountByStatusAndTypeAndFreeText(WidgetStatus widgetStatus, String type, String searchTerm) {
-        return (int)template.count(getWidgetStatusFreeTextQuery(widgetStatus, type, searchTerm));
+        return (int) template.count(getWidgetStatusFreeTextQuery(widgetStatus, type, searchTerm));
     }
 
     @Override
@@ -107,7 +108,7 @@ public class MongoDbWidgetRepository implements WidgetRepository {
 
     @Override
     public int getCountByOwner(User owner, int offset, int pageSize) {
-        return (int)template.count(getQueryByOwner(owner));
+        return (int) template.count(getQueryByOwner(owner));
     }
 
     @Override
@@ -117,10 +118,11 @@ public class MongoDbWidgetRepository implements WidgetRepository {
 
     @Override
     public WidgetStatistics getWidgetStatistics(long widget_id, long user_id) {
-        Query query = query(where("widgetId").is(widget_id));
+        Query query = query(where("widgetId").is(widget_id).andOperator());
         MapReduceResults<WidgetRatingsMapReduceResult> widgetStats = template.mapReduce(query, RATINGS_MAP, RATINGS_REDUCE, WidgetRatingsMapReduceResult.class);
-        MapReduceResults<WidgetUsersMapReduceResult> widgetUsers = template.mapReduce(query, USERS_MAP, USERS_REDUCE, WidgetUsersMapReduceResult.class);
-        if(widgetStats.getCounts().getOutputCount() != 1 || widgetUsers.getCounts().getOutputCount() != 1) {
+        MapReduceResults<WidgetUsersMapReduceResult> widgetUsers = template.mapReduce(PAGE_COLLECTION, query, USERS_MAP, USERS_REDUCE, WidgetUsersMapReduceResult.class);
+
+        if (widgetStats.getCounts().getOutputCount() > 1 || widgetUsers.getCounts().getOutputCount() > 1) {
             throw new IllegalStateException("Invalid results returned from Map/Reduce");
         }
         WidgetRatingsMapReduceResult statsResult = widgetStats.iterator().next();
@@ -131,21 +133,14 @@ public class MongoDbWidgetRepository implements WidgetRepository {
 
     @Override
     public Map<Long, WidgetStatistics> getAllWidgetStatistics(long userId) {
+        //query argument ignores widgets
         MapReduceResults<WidgetRatingsMapReduceResult> widgetStats = template.mapReduce(RATINGS_MAP, RATINGS_REDUCE, WidgetRatingsMapReduceResult.class);
-        Map<Long, Long> usersMap = mapUsersResults(template.mapReduce(USERS_MAP, USERS_REDUCE, WidgetUsersMapReduceResult.class));
+        Map<Long, Long> usersMap = mapUsersResults(template.mapReduce("page", USERS_MAP, USERS_REDUCE, WidgetUsersMapReduceResult.class));
         Map<Long, WidgetStatistics> stats = Maps.newHashMap();
-        for(WidgetRatingsMapReduceResult result : widgetStats) {
+        for (WidgetRatingsMapReduceResult result : widgetStats) {
             stats.put(result.getWidgetId(), createWidgetStatisticsFromResults(userId, result, usersMap.get(userId)));
         }
         return stats;
-    }
-
-    private Map<Long, Long> mapUsersResults(MapReduceResults<WidgetUsersMapReduceResult> widgetUsersMapReduceResults) {
-        Map<Long, Long> map = Maps.newHashMap();
-        for(WidgetUsersMapReduceResult result : widgetUsersMapReduceResults) {
-            map.put(result.getWidgetId(), result.getUsers());
-        }
-        return map;
     }
 
     @Override
@@ -160,7 +155,7 @@ public class MongoDbWidgetRepository implements WidgetRepository {
 
     @Override
     public int getCountByTag(String tagKeyword) {
-        return (int)template.count(getTagQuery(tagKeyword));
+        return (int) template.count(getTagQuery(tagKeyword));
     }
 
     @Override
@@ -190,7 +185,7 @@ public class MongoDbWidgetRepository implements WidgetRepository {
     }
 
     private Query getWidgetStatusFreeTextQuery(WidgetStatus widgetStatus, String type, String searchTerm) {
-        return new Query(where("widgetStatus").is(widgetStatus)
+        return new Query(where("widgetStatus").is(getWidgetStatusString(widgetStatus))
                 .andOperator(where("type").is(type))
                 .andOperator(getFreeTextClause(searchTerm))
         );
@@ -209,13 +204,30 @@ public class MongoDbWidgetRepository implements WidgetRepository {
         return query(where("tags").elemMatch(where("tag.keyword").is(tagKeyWord)));
     }
 
+    private Map<Long, Long> mapUsersResults(MapReduceResults<WidgetUsersMapReduceResult> widgetUsersMapReduceResults) {
+        Map<Long, Long> map = Maps.newHashMap();
+        if (widgetUsersMapReduceResults != null) {
+            for (WidgetUsersMapReduceResult result : widgetUsersMapReduceResults) {
+                map.put(result.getWidgetId(), result.getUsers());
+            }
+        }
+        return map;
+    }
+
     private WidgetStatistics createWidgetStatisticsFromResults(long user_id, WidgetRatingsMapReduceResult statsResult, Long userResult) {
         WidgetStatistics statistics = new WidgetStatistics();
-        statistics.setTotalDislike(statsResult.getStatistics().getDislike().intValue());
-        statistics.setTotalLike(statsResult.getStatistics().getLike().intValue());
-        statistics.setUserRating(statsResult.getStatistics().getUserRatings().containsKey(user_id) ? statsResult.getStatistics().getUserRatings().get(user_id).intValue() : -1);
+        WidgetRatingsMapReduceResult.WidgetStatisticsMapReduceResult result = statsResult.getStatistics();
+        if (result != null) {
+            statistics.setTotalDislike(result.getDislike().intValue());
+            statistics.setTotalLike(result.getLike().intValue());
+            statistics.setUserRating(result.getUserRatings().containsKey(user_id) ? result.getUserRatings().get(user_id).intValue() : -1);
+        }
         statistics.setTotalUserCount(userResult == null ? 0 : userResult.intValue());
         return statistics;
+    }
+
+    private String getWidgetStatusString(WidgetStatus widgetStatus) {
+        return widgetStatus.getWidgetStatus().toUpperCase();
     }
 
     private Query addSort(Query query) {

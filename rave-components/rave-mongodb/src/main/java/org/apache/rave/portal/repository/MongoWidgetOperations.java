@@ -20,10 +20,6 @@
 package org.apache.rave.portal.repository;
 
 import org.apache.rave.portal.model.Widget;
-import org.springframework.data.mongodb.core.mapreduce.MapReduceResults;
-import org.springframework.data.mongodb.core.query.Query;
 
 public interface MongoWidgetOperations extends MongoModelOperations<Widget> {
-    <T> MapReduceResults<T> mapReduce(String mapFunction, String reduceFunction, Class<T> entityClass);
-    <T> MapReduceResults<T> mapReduce(Query query, String mapFunction, String reduceFunction, Class<T> entityClass);
 }

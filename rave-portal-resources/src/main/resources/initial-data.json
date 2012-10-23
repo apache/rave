@@ -912,7 +912,7 @@
         "description": "A Wikipedia Search and Go widget. Language choice.",
         "disableRendering": false,
         "featured": false,
-        "status": "PUBLISHED"
+        "widgetStatus": "PUBLISHED"
     },
     {
         "id" : 2,
@@ -925,7 +925,7 @@
         "description": "Google Translation gadget.",
         "disableRendering": false,
         "featured": false,
-        "status": "PUBLISHED"
+        "widgetStatus": "PUBLISHED"
     },
     {
         "id" : 3,
@@ -934,7 +934,7 @@
         "type": "OpenSocial",
         "disableRendering": false,
         "featured": false,
-        "status": "PUBLISHED"
+        "widgetStatus": "PUBLISHED"
     },
     {
         "id" : 4,
@@ -943,7 +943,7 @@
         "type": "OpenSocial",
         "disableRendering": false,
         "featured": false,
-        "status": "PUBLISHED"
+        "widgetStatus": "PUBLISHED"
     },
     {
         "id" : 5,
@@ -952,7 +952,7 @@
         "type": "OpenSocial",
         "disableRendering": false,
         "featured": false,
-        "status": "PUBLISHED"
+        "widgetStatus": "PUBLISHED"
     },
     {
         "id" : 6,
@@ -963,7 +963,7 @@
         "description": "A cute little hamster for you to feed and look after. Watch him follow your cursor around. Click on the more tab to treat him to a strawberry. Click him then put him on the wheel and watch him play! ***NEW: make Herbie hamster your very own!",
         "disableRendering": false,
         "featured": false,
-        "status": "PUBLISHED"
+        "widgetStatus": "PUBLISHED"
     },
     {
         "id" : 7,
@@ -974,7 +974,7 @@
         "description": "This is a gadget developed for Teragrid - OGCE project. Used Google gadgets API to retrieve the information from the Information Services REST Web Service and display the information using Google Maps API. This is a list of available CTSS resources and its details",
         "disableRendering": false,
         "featured": false,
-        "status": "PUBLISHED"
+        "widgetStatus": "PUBLISHED"
     },
     {
         "id" : 8,
@@ -985,7 +985,7 @@
         "description": "Fully functional, lightweight, AJAX-based twitter user interface with many configuration options including user specified auto-refresh rate, full timeline, pagination, and more.  Control display elements such as user thumbnails, date stamps, and post source.  Specify gadget size based on availble screen footprint, even incorporate into your Gmail account.  Insert symbols, dingbats and emoticons into your tweets using the TwitterGadget Symbols pulldown menu.",
         "disableRendering": false,
         "featured": false,
-        "status": "PUBLISHED"
+        "widgetStatus": "PUBLISHED"
     },
     {
         "id" : 9,
@@ -996,7 +996,7 @@
         "description": "A search module, which searches YouTube by tags like Politics News Life Music Family Photography Art Random Travel Personal Religion Movies Business Thoughts Media Humor Culture Poetry Christmas Writing Books Food Friends.",
         "disableRendering": false,
         "featured": false,
-        "status": "PUBLISHED"
+        "widgetStatus": "PUBLISHED"
     },
     {
         "id" : 10,
@@ -1007,7 +1007,7 @@
         "description": "A demo gadget to show open views popups in action.",
         "disableRendering": false,
         "featured": false,
-        "status": "PUBLISHED"
+        "widgetStatus": "PUBLISHED"
     },
     {
         "id" : 11,
@@ -1016,7 +1016,7 @@
         "type": "OpenSocial",
         "disableRendering": false,
         "featured": false,
-        "status": "PUBLISHED"
+        "widgetStatus": "PUBLISHED"
     },
     {
         "id" : 12,
@@ -1027,7 +1027,7 @@
         "description": "An example gadget which demos some of the different capabilities of user preferences.",
         "disableRendering": false,
         "featured": false,
-        "status": "PUBLISHED"
+        "widgetStatus": "PUBLISHED"
     },
     {
         "id" : 13,
@@ -1038,7 +1038,7 @@
         "description": "Static widget of activities for demoing on the Person Profile page",
         "disableRendering": false,
         "featured": false,
-        "status": "PUBLISHED"
+        "widgetStatus": "PUBLISHED"
     },
     {
         "id" : 14,
@@ -1049,7 +1049,7 @@
         "description": "Static widget of a schedule for demoing on the Person Profile page",
         "disableRendering": false,
         "featured": false,
-        "status": "PUBLISHED"
+        "widgetStatus": "PUBLISHED"
     },
     {
         "id" : 15,
@@ -1060,7 +1060,7 @@
         "description": "Static widget of favorite websites for demoing on the Person Profile page",
         "disableRendering": false,
         "featured": false,
-        "status": "PUBLISHED"
+        "widgetStatus": "PUBLISHED"
     },
     {
         "id" : 16,
@@ -1071,7 +1071,7 @@
         "description": "Static widget of groups for demoing on the Person Profile page",
         "disableRendering": false,
         "featured": false,
-        "status": "PUBLISHED"
+        "widgetStatus": "PUBLISHED"
     },
     {
         "id" : 17,
@@ -1082,7 +1082,7 @@
         "description": "Static widget of experience for demoing on the Person Profile page",
         "disableRendering": false,
         "featured": false,
-        "status": "PUBLISHED"
+        "widgetStatus": "PUBLISHED"
     },
     {
         "id" : 18,
@@ -1093,7 +1093,7 @@
         "description": "Sample Activity Streams gadget from Shindig",
         "disableRendering": false,
         "featured": false,
-        "status": "PUBLISHED"
+        "widgetStatus": "PUBLISHED"
     },
     {
         "id" : 19,
@@ -1104,7 +1104,7 @@
         "description": "Sample Embedded Experience gadget from Shindig",
         "disableRendering": false,
         "featured": false,
-        "status": "PUBLISHED"
+        "widgetStatus": "PUBLISHED"
     },
     {
         "id" : 20,
@@ -1115,7 +1115,7 @@
         "description": "Sample Embedded Experience gadget from Shindig",
         "disableRendering": false,
         "featured": false,
-        "status": "PUBLISHED"
+        "widgetStatus": "PUBLISHED"
     },
     {
         "id" : 21,
@@ -1126,7 +1126,7 @@
         "description": "Sample Facebook gadget from Shindig",
         "disableRendering": false,
         "featured": false,
-        "status": "PUBLISHED"
+        "widgetStatus": "PUBLISHED"
     },
     {
         "id" : 22,
@@ -1137,7 +1137,7 @@
         "description": "Ohloh is an open source network that connects people through the software they create and use. Ohloh gadgets provide detailed statistics about open source software projects and developers.",
         "disableRendering": false,
         "featured": false,
-        "status": "PUBLISHED"
+        "widgetStatus": "PUBLISHED"
     },
     {
         "id" : 23,
@@ -1148,7 +1148,7 @@
         "description": "Ohloh is an open source network that connects people through the software they create and use. Ohloh gadgets provide detailed statistics about open source software projects and developers.",
         "disableRendering": false,
         "featured": false,
-        "status": "PUBLISHED"
+        "widgetStatus": "PUBLISHED"
     },
     {
         "id" : 24,
@@ -1159,7 +1159,7 @@
         "description": "Ohloh is an open source network that connects people through the software they create and use. Ohloh gadgets provide detailed statistics about open source software projects and developers.",
         "disableRendering": false,
         "featured": false,
-        "status": "PUBLISHED"
+        "widgetStatus": "PUBLISHED"
     },
     {
         "id" : 25,
@@ -1170,7 +1170,7 @@
         "description": "Ohloh is an open source network that connects people through the software they create and use. Ohloh gadgets provide detailed statistics about open source software projects and developers.",
         "disableRendering": false,
         "featured": false,
-        "status": "PUBLISHED"
+        "widgetStatus": "PUBLISHED"
     },
     {
         "id" : 26,
@@ -1181,7 +1181,7 @@
         "description": "OpenAJAX Hub publisher gadget from Shindig",
         "disableRendering": false,
         "featured": false,
-        "status": "PUBLISHED"
+        "widgetStatus": "PUBLISHED"
     },
     {
         "id" : 27,
@@ -1192,7 +1192,7 @@
         "description": "OpenAJAX Hub subscriber gadget from Shindig",
         "disableRendering": false,
         "featured": false,
-        "status": "PUBLISHED"
+        "widgetStatus": "PUBLISHED"
     },
     {
         "id" : 28,
@@ -1203,7 +1203,7 @@
         "description": "This gadget display the list of friends for a particular user",
         "disableRendering": false,
         "featured": false,
-        "status": "PUBLISHED"
+        "widgetStatus": "PUBLISHED"
     }
 ],
     "authorities": [

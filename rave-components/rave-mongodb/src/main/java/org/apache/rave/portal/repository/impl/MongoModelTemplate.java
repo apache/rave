@@ -25,6 +25,7 @@ import org.apache.rave.portal.repository.MongoModelOperations;
 import org.apache.rave.util.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.mapreduce.MapReduceResults;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 
@@ -91,6 +92,26 @@ public class MongoModelTemplate<T, E extends T> implements MongoModelOperations<
     public int update(Query query, Update update) {
         WriteResult result = mongoTemplate.updateMulti(query, update, collection);
         return result.getN();
+    }
+
+    @Override
+    public <E> MapReduceResults<E> mapReduce(String mapFunction, String reduceFunction, Class<E> entityClass) {
+        return mapReduce(collection, mapFunction, reduceFunction, entityClass);
+    }
+
+    @Override
+    public <E> MapReduceResults<E> mapReduce(String collection, String mapFunction, String reduceFunction, Class<E> entityClass) {
+       return mongoTemplate.mapReduce(collection, mapFunction, reduceFunction, entityClass);
+    }
+
+    @Override
+    public <E> MapReduceResults<E> mapReduce(Query query, String mapFunction, String reduceFunction, Class<E> entityClass) {
+        return mapReduce(collection, query, mapFunction, reduceFunction, entityClass);
+    }
+
+    @Override
+    public <E> MapReduceResults<E> mapReduce(String collection, Query query, String mapFunction, String reduceFunction, Class<E> entityClass) {
+        return mongoTemplate.mapReduce(query, collection, mapFunction, reduceFunction, entityClass);
     }
 
     private List<T> hydrate(List<E> mongoDbTs) {

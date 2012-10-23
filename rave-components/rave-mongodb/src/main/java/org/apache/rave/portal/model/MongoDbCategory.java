@@ -90,7 +90,7 @@ public class MongoDbCategory extends CategoryImpl {
     @Override
     public User getCreatedUser() {
         User creator = super.getCreatedUser();
-        if(creator == null && createdUserId != null) {
+        if(creator == null && createdUserId != null && userRepository != null) {
             creator = userRepository.get(createdUserId);
             super.setCreatedUser(creator);
         }
@@ -100,7 +100,7 @@ public class MongoDbCategory extends CategoryImpl {
     @Override
     public User getLastModifiedUser() {
         User lastModifier = super.getLastModifiedUser();
-        if(lastModifier == null && lastModifiedUserId != null) {
+        if(lastModifier == null && lastModifiedUserId != null && userRepository != null) {
             lastModifier = userRepository.get(lastModifiedUserId);
             super.setLastModifiedUser(lastModifier);
         }
