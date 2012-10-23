@@ -43,7 +43,7 @@ public interface WidgetRatingService {
      * @param widgetRating WidgetRating
      * @param score        value of the rating
      */
-    @PreAuthorize("hasPermission(#widgetRating.entityId, 'org.apache.rave.portal.model.WidgetRating', 'update')")
+    @PreAuthorize("hasPermission(#widgetRating.id, 'org.apache.rave.portal.model.WidgetRating', 'update')")
     void updateScore(WidgetRating widgetRating, Integer score);
 
     /**

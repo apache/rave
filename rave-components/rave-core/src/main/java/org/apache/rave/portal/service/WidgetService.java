@@ -154,7 +154,7 @@ public interface WidgetService {
      *
      * @param widget to save
      */
-    @PreAuthorize("hasPermission(#widget.entityId, 'org.apache.rave.portal.model.Widget', 'update')")
+    @PreAuthorize("hasPermission(#widget.id, 'org.apache.rave.portal.model.Widget', 'update')")
     void updateWidget(Widget widget);
 
 /**

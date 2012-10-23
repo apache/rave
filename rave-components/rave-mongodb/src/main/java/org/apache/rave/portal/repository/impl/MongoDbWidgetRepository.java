@@ -53,12 +53,12 @@ public class MongoDbWidgetRepository implements WidgetRepository {
 
     @Override
     public List<Widget> getAll() {
-        return template.find(new Query());
+        return template.find(addSort(new Query()));
     }
 
     @Override
     public List<Widget> getLimitedList(int offset, int pageSize) {
-        return template.find(new Query().skip(offset).limit(pageSize));
+        return template.find(addSort(new Query().skip(offset).limit(pageSize)));
     }
 
     @Override

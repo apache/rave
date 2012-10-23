@@ -23,7 +23,9 @@ import com.google.common.collect.Lists;
 import org.apache.rave.portal.model.impl.CategoryImpl;
 import org.apache.rave.portal.repository.UserRepository;
 import org.apache.rave.portal.repository.WidgetRepository;
+import org.codehaus.jackson.annotate.JsonAutoDetect;
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonMethod;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -31,13 +33,14 @@ import javax.xml.bind.annotation.XmlTransient;
 import java.util.List;
 
 @XmlAccessorType(value = XmlAccessType.FIELD)
+@JsonAutoDetect(value = JsonMethod.FIELD)
 public class MongoDbCategory extends CategoryImpl {
 
     @XmlTransient @JsonIgnore
     private UserRepository userRepository;
 
     @XmlTransient @JsonIgnore
-    private WidgetRepository widgetTagRepository;
+    private WidgetRepository widgetRepository;
 
     private Long lastModifiedUserId;
     private Long createdUserId;
@@ -52,12 +55,12 @@ public class MongoDbCategory extends CategoryImpl {
         this.userRepository = userRepository;
     }
 
-    public WidgetRepository getWidgetTagRepository() {
-        return widgetTagRepository;
+    public WidgetRepository getWidgetRepository() {
+        return widgetRepository;
     }
 
-    public void setWidgetTagRepository(WidgetRepository widgetTagRepository) {
-        this.widgetTagRepository = widgetTagRepository;
+    public void setWidgetRepository(WidgetRepository widgetRepository) {
+        this.widgetRepository = widgetRepository;
     }
 
     public List<Long> getWidgetIds() {
@@ -87,7 +90,7 @@ public class MongoDbCategory extends CategoryImpl {
     @Override
     public User getCreatedUser() {
         User creator = super.getCreatedUser();
-        if(creator == null) {
+        if(creator == null && createdUserId != null) {
             creator = userRepository.get(createdUserId);
             super.setCreatedUser(creator);
         }
@@ -97,7 +100,7 @@ public class MongoDbCategory extends CategoryImpl {
     @Override
     public User getLastModifiedUser() {
         User lastModifier = super.getLastModifiedUser();
-        if(lastModifier == null) {
+        if(lastModifier == null && lastModifiedUserId != null) {
             lastModifier = userRepository.get(lastModifiedUserId);
             super.setLastModifiedUser(lastModifier);
         }
@@ -110,7 +113,7 @@ public class MongoDbCategory extends CategoryImpl {
         if(widgets == null) {
             widgets = Lists.newArrayList();
             for(Long widgetId : widgetIds) {
-                widgets.add(widgetTagRepository.get(widgetId));
+                widgets.add(widgetRepository.get(widgetId));
             }
         }
         return widgets;

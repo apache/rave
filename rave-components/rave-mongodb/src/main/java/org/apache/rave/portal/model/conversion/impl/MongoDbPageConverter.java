@@ -146,6 +146,7 @@ public class MongoDbPageConverter implements HydratingModelConverter<Page, Mongo
         regionWidget.setWidgetId(sourceRegionWidget.getWidget().getId());
         regionWidget.setWidget(null);
         regionWidget.setWidgetRepository(null);
+        regionWidget.setRegion(null);
         regionWidget.setPreferences(sourceRegionWidget.getPreferences());
         updatePreferences(regionWidget);
         return regionWidget;

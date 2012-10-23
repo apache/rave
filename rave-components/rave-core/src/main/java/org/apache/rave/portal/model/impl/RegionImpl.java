@@ -21,6 +21,7 @@ package org.apache.rave.portal.model.impl;
 import org.apache.rave.portal.model.Page;
 import org.apache.rave.portal.model.Region;
 import org.apache.rave.portal.model.RegionWidget;
+import org.codehaus.jackson.annotate.JsonBackReference;
 
 import java.util.List;
 
@@ -56,6 +57,7 @@ public class RegionImpl implements Region {
     }
 
     @Override
+    @JsonBackReference
     public Page getPage() {
         return page;
     }

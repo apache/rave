@@ -39,7 +39,7 @@
     <bean id="dataImporter" class="org.apache.rave.portal.util.data.DataImporter">
         <property name="scriptLocations">
             <list>
-                <value>classpath:initial-data.js</value>
+                <value>classpath:initial-data.json</value>
             </list>
         </property>
     </bean>

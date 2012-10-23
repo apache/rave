@@ -48,7 +48,7 @@ public class MongoDbCategoryConverter implements HydratingModelConverter<Categor
             return;
         }
         dehydrated.setUserRepository(userRepository);
-        dehydrated.setWidgetTagRepository(widgetRepository);
+        dehydrated.setWidgetRepository(widgetRepository);
     }
 
     @Override
@@ -59,6 +59,8 @@ public class MongoDbCategoryConverter implements HydratingModelConverter<Categor
     @Override
     public MongoDbCategory convert(Category source) {
         MongoDbCategory category = source instanceof MongoDbCategory ? ((MongoDbCategory) source) : new MongoDbCategory();
+        category.setWidgetRepository(null);
+        category.setUserRepository(null);
         category.setCreatedUserId(source.getCreatedUser().getId());
         category.setCreatedUser(null);
         category.setLastModifiedUserId(source.getLastModifiedUser().getId());

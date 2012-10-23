@@ -22,7 +22,9 @@ package org.apache.rave.portal.model;
 import com.google.common.collect.Lists;
 import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.repository.PageLayoutRepository;
+import org.codehaus.jackson.annotate.JsonAutoDetect;
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonMethod;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
@@ -35,6 +37,7 @@ import java.util.List;
 /**
  */
 @XmlAccessorType(value = XmlAccessType.FIELD)
+@JsonAutoDetect(value = JsonMethod.FIELD)
 public class MongoDbUser extends UserImpl {
 
     private List<String> authorityCodes;
@@ -80,7 +83,7 @@ public class MongoDbUser extends UserImpl {
 
     @Override
     public Collection<GrantedAuthority> getAuthorities() {
-        verifyAuthorityCodes();
+        ensureAuthorityCodes();
         Collection<GrantedAuthority> grantedAuthorities = Lists.newArrayList();
         for (String code : authorityCodes) {
             grantedAuthorities.add(new SimpleGrantedAuthority(code));
@@ -95,7 +98,7 @@ public class MongoDbUser extends UserImpl {
 
     @Override
     public void removeAuthority(Authority authority) {
-        verifyAuthorityCodes();
+        ensureAuthorityCodes();
         if (authorityCodes.contains(authority.getAuthority())) {
             authorityCodes.remove(authority.getAuthority());
         }
@@ -131,14 +134,14 @@ public class MongoDbUser extends UserImpl {
         this.pageLayoutRepository = pageLayoutRepository;
     }
 
-    private void verifyAuthorityCodes() {
+    private void ensureAuthorityCodes() {
         if (authorityCodes == null) {
             authorityCodes = Lists.newArrayList();
         }
     }
 
     private void addAuthorityCode(GrantedAuthority authority) {
-        verifyAuthorityCodes();
+        ensureAuthorityCodes();
         if (!authorityCodes.contains(authority.getAuthority())) {
             authorityCodes.add(authority.getAuthority());
         }

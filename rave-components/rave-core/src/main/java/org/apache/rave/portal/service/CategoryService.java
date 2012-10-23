@@ -67,6 +67,6 @@ public interface CategoryService {
      *
      * @param category
      */
-    @PreAuthorize("hasPermission(#category.entityId, 'org.apache.rave.portal.model.Category', 'delete')")
+    @PreAuthorize("hasPermission(#category.id, 'org.apache.rave.portal.model.Category', 'delete')")
     void delete(Category category);
 }

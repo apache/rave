@@ -23,7 +23,9 @@ import com.google.common.collect.Lists;
 import org.apache.rave.portal.model.impl.WidgetImpl;
 import org.apache.rave.portal.repository.CategoryRepository;
 import org.apache.rave.portal.repository.UserRepository;
+import org.codehaus.jackson.annotate.JsonAutoDetect;
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonMethod;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -34,7 +36,9 @@ import java.util.List;
  */
 
 @XmlAccessorType(value = XmlAccessType.FIELD)
+@JsonAutoDetect(value = JsonMethod.FIELD)
 public class MongoDbWidget extends WidgetImpl {
+
     @XmlTransient @JsonIgnore
     private CategoryRepository categoryRepository;
 
@@ -85,7 +89,7 @@ public class MongoDbWidget extends WidgetImpl {
     @Override
     public User getOwner() {
         User user = super.getOwner();
-        if(user == null) {
+        if(user == null && ownerId != null) {
             user = userRepository.get(ownerId);
             super.setOwner(user);
         }
@@ -94,13 +98,10 @@ public class MongoDbWidget extends WidgetImpl {
 
     @Override
     public List<Category> getCategories() {
+        ensureCategoryIds();
         List<Category> categories = super.getCategories();
         if(categories == null || categories.isEmpty()) {
-            categories = Lists.newArrayList();
-            for(Long id : categoryIds) {
-                categories.add(categoryRepository.get(id));
-            }
-            super.setCategories(categories);
+            categories = createCategoriesFromIds();
         }
         return categories;
     }
@@ -122,5 +123,28 @@ public class MongoDbWidget extends WidgetImpl {
         int result = super.hashCode();
         result = 31 * result + (getId() != null ? getId().hashCode() : 0);
         return result;
+    }
+
+    private void ensureCategoryIds() {
+        if(categoryIds == null) {
+            categoryIds = Lists.newArrayList();
+        }
+    }
+
+    private void addCategory(List<Category> categories, Long id) {
+        Category category = categoryRepository.get(id);
+        if(category != null) {
+            categories.add(category);
+        }
+    }
+
+    private List<Category> createCategoriesFromIds() {
+        List<Category> categories;
+        categories = Lists.newArrayList();
+        for(Long id : categoryIds) {
+            addCategory(categories, id);
+        }
+        super.setCategories(categories);
+        return categories;
     }
 }

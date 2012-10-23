@@ -21,13 +21,16 @@ package org.apache.rave.portal.model;
 
 import org.apache.rave.portal.model.impl.PageTemplateWidgetImpl;
 import org.apache.rave.portal.repository.WidgetRepository;
+import org.codehaus.jackson.annotate.JsonAutoDetect;
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonMethod;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlTransient;
 
 @XmlAccessorType(value = XmlAccessType.FIELD)
+@JsonAutoDetect(value = JsonMethod.FIELD)
 public class MongoDbPageTemplateWidget extends PageTemplateWidgetImpl{
     @XmlTransient @JsonIgnore
     private WidgetRepository widgetRepository;
