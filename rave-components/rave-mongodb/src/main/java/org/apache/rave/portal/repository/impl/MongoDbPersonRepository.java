@@ -66,7 +66,7 @@ public class MongoDbPersonRepository implements PersonRepository {
 
     @Override
     public List<Person> findFriends(String username) {
-        MongoDbUser user = (MongoDbUser)template.find(getUsernameQuery(username));
+        MongoDbUser user = (MongoDbUser)template.findOne(getUsernameQuery(username));
         return Lists.transform(user.getFriends(), new Function<MongoDbPersonAssociation, Person>() {
             @Override
             public Person apply(@Nullable MongoDbPersonAssociation input) {
@@ -81,8 +81,8 @@ public class MongoDbPersonRepository implements PersonRepository {
 
     @Override
     public List<Person> findFriendsWithFriend(String username, String friendUsername) {
-        MongoDbUser follower = (MongoDbUser)template.find(getUsernameQuery(username));
-        MongoDbUser followed = (MongoDbUser)template.find(getUsernameQuery(friendUsername));
+        MongoDbUser follower = (MongoDbUser)template.findOne(getUsernameQuery(username));
+        MongoDbUser followed = (MongoDbUser)template.findOne(getUsernameQuery(friendUsername));
         List<Long> commonFriends = getCommonFriends(follower, followed);
         return Lists.transform(commonFriends, new Function<Long, Person>() {
             @Override
@@ -109,8 +109,8 @@ public class MongoDbPersonRepository implements PersonRepository {
 
     @Override
     public boolean addFriend(String friendUsername, String username) {
-        MongoDbUser follower = (MongoDbUser)template.find(getUsernameQuery(username));
-        MongoDbUser followed = (MongoDbUser)template.find(getUsernameQuery(friendUsername));
+        MongoDbUser follower = (MongoDbUser)template.findOne(getUsernameQuery(username));
+        MongoDbUser followed = (MongoDbUser)template.findOne(getUsernameQuery(friendUsername));
 
         MongoDbPersonAssociation outgoing = new MongoDbPersonAssociation(followed.getId(), FriendRequestStatus.SENT, MongoDbPersonAssociation.Direction.OUTGOING);
         MongoDbPersonAssociation incoming = new MongoDbPersonAssociation(follower.getId(), FriendRequestStatus.RECEIVED, MongoDbPersonAssociation.Direction.INCOMING);
@@ -125,8 +125,8 @@ public class MongoDbPersonRepository implements PersonRepository {
 
     @Override
     public void removeFriend(String friendUsername, String username) {
-        MongoDbUser follower = (MongoDbUser)template.find(getUsernameQuery(username));
-        MongoDbUser followed = (MongoDbUser)template.find(getUsernameQuery(friendUsername));
+        MongoDbUser follower = (MongoDbUser)template.findOne(getUsernameQuery(username));
+        MongoDbUser followed = (MongoDbUser)template.findOne(getUsernameQuery(friendUsername));
         removeAssociation(follower, followed);
         removeAssociation(followed, follower);
         template.save(follower);
@@ -144,8 +144,8 @@ public class MongoDbPersonRepository implements PersonRepository {
 
     @Override
     public boolean acceptFriendRequest(String friendUsername, String username) {
-        MongoDbUser follower = (MongoDbUser)template.find(getUsernameQuery(username));
-        MongoDbUser followed = (MongoDbUser)template.find(getUsernameQuery(friendUsername));
+        MongoDbUser follower = (MongoDbUser)template.findOne(getUsernameQuery(username));
+        MongoDbUser followed = (MongoDbUser)template.findOne(getUsernameQuery(friendUsername));
         setAccepted(follower, followed);
         setAccepted(followed, follower);
         template.save(follower);
@@ -166,7 +166,7 @@ public class MongoDbPersonRepository implements PersonRepository {
 
     @Override
     public List<Person> findFriendRequestsSent(String username) {
-        MongoDbUser follower = (MongoDbUser)template.find(getUsernameQuery(username));
+        MongoDbUser follower = (MongoDbUser)template.findOne(getUsernameQuery(username));
         return Lists.transform(follower.getFriends(), new Function<MongoDbPersonAssociation, Person>() {
             @Override
             public Person apply(@Nullable MongoDbPersonAssociation input) {

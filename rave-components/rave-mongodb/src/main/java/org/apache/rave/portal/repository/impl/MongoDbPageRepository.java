@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.springframework.data.mongodb.core.query.Criteria.where;
+import static org.springframework.data.mongodb.core.query.Query.query;
 
 /**
  */
@@ -46,12 +47,12 @@ public class MongoDbPageRepository implements PageRepository {
 
     @Override
     public List<Page> getAllPages(Long userId, PageType pageType) {
-        return template.find(new Query(where("pageType").is(pageType.getPageType().toUpperCase()).andOperator(where("ownerId").is(userId))));
+        return template.find(query(where("pageType").is(pageType.getPageType().toUpperCase()).andOperator(where("ownerId").is(userId))));
     }
 
     @Override
     public int deletePages(Long userId, PageType pageType) {
-        Query query = new Query(where("pageType").is(pageType).andOperator(where("ownerId").is(userId)));
+        Query query = query(where("pageType").is(pageType).andOperator(where("ownerId").is(userId)));
         int count = (int)template.count(query);
         template.remove(query);
         return count;
@@ -64,12 +65,12 @@ public class MongoDbPageRepository implements PageRepository {
 
     @Override
     public boolean hasPersonPage(long userId) {
-        return template.count(new Query(where("pageType").is(PageType.PERSON_PROFILE).andOperator(where("ownerId").is(userId)))) > 0;
+        return template.count(query(where("pageType").is(PageType.PERSON_PROFILE).andOperator(where("ownerId").is(userId)))) > 0;
     }
 
     @Override
     public List<PageUser> getPagesForUser(Long userId, PageType pageType) {
-        List<Page> pages = template.find(new Query(where("members").elemMatch(where("userId").is(userId)).andOperator(where("pageType").is(pageType))));
+        List<Page> pages = template.find(query(where("members").elemMatch(where("userId").is(userId)).andOperator(where("pageType").is(pageType))));
         List<PageUser> userList = Lists.newArrayList();
         for(Page page : pages) {
             userList.add(findPageUser(userId, page));
@@ -104,7 +105,10 @@ public class MongoDbPageRepository implements PageRepository {
 
     @Override
     public void delete(Page item) {
-        template.remove(new Query(where("id").is(item.getId())));
+        template.remove(query(where("id").is(item.getId())));
+    }
+
+    private Query addSort(Query q) {
     }
 
     /**

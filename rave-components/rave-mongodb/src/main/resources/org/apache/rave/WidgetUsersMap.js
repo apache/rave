@@ -21,23 +21,27 @@ function () {
     var widgetMap = {};
     var self = this;
 
-    var mapPage = function(page) {
+    var mapPage = function (page) {
         if (page.regions) {
-            page.regions.forEach(function(region) {
-                region.regionWidgets.forEach(function(regionWidget) {
-                    if (!widgetMap[regionWidget.widgetId]) {
-                        widgetMap[regionWidget.widgetId] = true;
-                        var userMap = {};
-                        userMap[self.ownerId.floatApprox] = 1;
-                        emit(regionWidget.widgetId, userMap);
-                    }
-                })
+            page.regions.forEach(function (region) {
+                if (region.regionWidgets) {
+                    region.regionWidgets.forEach(function (regionWidget) {
+                        if (!widgetMap[regionWidget.widgetId]) {
+                            widgetMap[regionWidget.widgetId] = true;
+                            var userMap = {};
+                            userMap[self.ownerId.floatApprox] = 1;
+                            emit(regionWidget.widgetId, userMap);
+                        }
+                    })
+                }
             })
         }
     };
 
     mapPage(this);
-    if(this.subPages) {
-        this.subPages.forEach(function(p){mapPage(p)})
+    if (this.subPages) {
+        this.subPages.forEach(function (p) {
+            mapPage(p)
+        })
     }
 }

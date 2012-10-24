@@ -29,6 +29,7 @@ public class MongoDbModelUtil {
     private MongoDbModelUtil(){}
 
     public static long generateId() {
-        return Math.abs(new Random().nextLong());
+        //Use INT as javascript has issues with truncating longs and we are moving model Ids to String
+        return Math.abs(new Random().nextInt());
     }
 }

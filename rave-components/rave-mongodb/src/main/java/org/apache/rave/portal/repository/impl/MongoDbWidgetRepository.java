@@ -36,6 +36,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static org.springframework.data.mongodb.core.query.Query.query;
@@ -76,13 +77,13 @@ public class MongoDbWidgetRepository implements WidgetRepository {
 
     @Override
     public List<Widget> getByFreeTextSearch(String searchTerm, int offset, int pageSize) {
-        Query query = new Query(getFreeTextClause(searchTerm)).skip(offset).limit(pageSize);
+        Query query = new Query(addFreeTextClause(searchTerm, new Criteria())).skip(offset).limit(pageSize);
         return template.find(addSort(query));
     }
 
     @Override
     public int getCountFreeTextSearch(String searchTerm) {
-        return (int) template.count(new Query(getFreeTextClause(searchTerm)));
+        return (int) template.count(new Query(addFreeTextClause(searchTerm, new Criteria())));
     }
 
     @Override
@@ -220,19 +221,20 @@ public class MongoDbWidgetRepository implements WidgetRepository {
     }
 
     private Query getWidgetStatusFreeTextQuery(WidgetStatus widgetStatus, String type, String searchTerm) {
-        Criteria criteria = getFreeTextClause(searchTerm);
+        Criteria criteria = new Criteria();
         if(type != null) {
-            criteria.andOperator(where("type").is(type));
+            criteria.and("type").is(type);
         }
         if(widgetStatus != null) {
-            criteria.andOperator(where("widgetStatus").is(getWidgetStatusString(widgetStatus)));
+            criteria.and("widgetStatus").is(getWidgetStatusString(widgetStatus));
         }
-        return query(criteria);
+        return query(addFreeTextClause(searchTerm, criteria));
     }
 
-    private Criteria getFreeTextClause(String searchTerm) {
-        String regex = ".*" + searchTerm + ".*";
-        return where("title").regex(regex).orOperator(where("title").is(regex));
+    private Criteria addFreeTextClause(String searchTerm, Criteria criteria) {
+        Pattern p = Pattern.compile(".*" + searchTerm + ".*", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
+        criteria.orOperator(where ("title") .regex(p), (where("description").regex(p)));
+        return criteria;
     }
 
     private Query getQueryByOwner(User owner) {
