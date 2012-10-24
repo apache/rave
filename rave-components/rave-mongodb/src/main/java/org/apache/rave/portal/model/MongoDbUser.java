@@ -115,12 +115,16 @@ public class MongoDbUser extends UserImpl {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj == null || !(obj instanceof User)) {
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof MongoDbUser)) return false;
+
+        MongoDbUser that = (MongoDbUser) o;
+
+        if (this.getId() != null ? !this.getId().equals(that.getId()) : that.getId() != null)
             return false;
-        }
-        final User other = (User) obj;
-        return !(this.getId().equals(other.getId()) && (this.getId() == null || !this.getId().equals(other.getId())));
+
+        return true;
     }
 
     @Override

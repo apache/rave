@@ -96,21 +96,11 @@ public class MongoModelTemplate<T, E extends T> implements MongoModelOperations<
 
     @Override
     public <E> MapReduceResults<E> mapReduce(String mapFunction, String reduceFunction, Class<E> entityClass) {
-        return mapReduce(collection, mapFunction, reduceFunction, entityClass);
-    }
-
-    @Override
-    public <E> MapReduceResults<E> mapReduce(String collection, String mapFunction, String reduceFunction, Class<E> entityClass) {
-       return mongoTemplate.mapReduce(collection, mapFunction, reduceFunction, entityClass);
+        return mongoTemplate.mapReduce(collection, mapFunction, reduceFunction, entityClass);
     }
 
     @Override
     public <E> MapReduceResults<E> mapReduce(Query query, String mapFunction, String reduceFunction, Class<E> entityClass) {
-        return mapReduce(collection, query, mapFunction, reduceFunction, entityClass);
-    }
-
-    @Override
-    public <E> MapReduceResults<E> mapReduce(String collection, Query query, String mapFunction, String reduceFunction, Class<E> entityClass) {
         return mongoTemplate.mapReduce(query, collection, mapFunction, reduceFunction, entityClass);
     }
 

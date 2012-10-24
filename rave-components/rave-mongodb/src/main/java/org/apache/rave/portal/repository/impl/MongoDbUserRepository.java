@@ -19,7 +19,9 @@
 
 package org.apache.rave.portal.repository.impl;
 
+import com.google.common.collect.Lists;
 import org.apache.rave.portal.model.MongoDbUser;
+import org.apache.rave.portal.model.Page;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.repository.MongoUserOperations;
 import org.apache.rave.portal.repository.UserRepository;
@@ -41,6 +43,9 @@ public class MongoDbUserRepository implements UserRepository {
 
     @Autowired
     private MongoUserOperations template;
+
+    @Autowired
+    private MongoPageTemplate pageTemplate;
 
     @Override
     public User getByUsername(String username) {
@@ -80,7 +85,15 @@ public class MongoDbUserRepository implements UserRepository {
 
     @Override
     public List<User> getAllByAddedWidget(long widgetId) {
-        return null;  //TODO COMPLETE
+        Query q = query(where("regions").elemMatch(where("regionWidgets").elemMatch(where("widgetId").is(widgetId))));
+        List<Page> pages = pageTemplate.find(q);
+        List<User> users = Lists.newArrayList();
+        for(Page p : pages) {
+            if(!users.contains(p.getOwner())){
+                users.add(p.getOwner());
+            }
+        }
+        return users;
     }
 
     @Override

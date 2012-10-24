@@ -16,10 +16,13 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
+
 function (key, values) {
-    var result={widgetId: key, users: 0};
-    for(var i=0; i<values.length; i++) {
-        result.users += values.users[i];
-    }
+    var result={};
+    values.forEach(function(item){
+        for(var i in item) {
+            result[i] = item[i];
+        }
+    });
     return result;
 }

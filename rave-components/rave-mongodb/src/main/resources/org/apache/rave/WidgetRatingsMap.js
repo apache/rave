@@ -20,13 +20,13 @@ function () {
     if (this.ratings) {
         for (var i = 0; i < this.ratings.length; i++) {
             var rating = this.ratings[i];
+            var userMap = {};
+            userMap[this.userId.floatApprox] = rating.score;
             emit(this._id, {
-                widgetId:this._id,
-                statistics:{
                     like:rating.score == 10 ? 1 : 0,
                     dislike:rating.score == 0 ? 1 : 0,
-                    userRating:{ userId:this.userId, value:rating.score }
-                }});
+                    userRatings:userMap
+                });
         }
     }
 }

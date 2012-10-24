@@ -36,7 +36,5 @@ public interface MongoModelOperations<T> {
     void remove(Query query);
     int update(Query query, Update update);
     <E> MapReduceResults<E> mapReduce(String mapFunction, String reduceFunction, Class<E> entityClass);
-    <E> MapReduceResults<E> mapReduce(String collection, String mapFunction, String reduceFunction, Class<E> entityClass);
     <E> MapReduceResults<E> mapReduce(Query query, String mapFunction, String reduceFunction, Class<E> entityClass);
-    <E> MapReduceResults<E> mapReduce(String collection, Query query, String mapFunction, String reduceFunction, Class<E> entityClass);
 }

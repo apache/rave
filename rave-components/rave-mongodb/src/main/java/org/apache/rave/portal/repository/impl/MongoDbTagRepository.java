@@ -36,7 +36,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public class MongoDbTagRepository implements TagRepository{
+public class MongoDbTagRepository implements TagRepository {
 
     @Autowired
     private MongoWidgetOperations widgetTemplate;
@@ -45,7 +45,7 @@ public class MongoDbTagRepository implements TagRepository{
     public List<Tag> getAll() {
         List<Widget> widgets = widgetTemplate.find(new Query());
         List<Tag> tags = Lists.newArrayList();
-        for(Widget widget : widgets) {
+        for (Widget widget : widgets) {
             addUniqueTags(tags, widget);
         }
         return tags;
@@ -65,9 +65,10 @@ public class MongoDbTagRepository implements TagRepository{
     @SuppressWarnings("unchecked")
     public List<Tag> getAvailableTagsByWidgetId(Long widgetId) {
         List<Tag> all = getAll();
-        List<Tag> widgetTags= getTagsFromWidget(widgetTemplate.get(widgetId).getTags());
+        List<Tag> widgetTags = getTagsFromWidget(widgetTemplate.get(widgetId).getTags());
         return ListUtils.subtract(all, widgetTags);
     }
+
     @Override
     public Class<? extends Tag> getType() {
         return Tag.class;
@@ -90,8 +91,10 @@ public class MongoDbTagRepository implements TagRepository{
 
     private List<Tag> getTagsFromWidget(List<WidgetTag> widgetTags) {
         List<Tag> tags = Lists.newArrayList();
-        for(WidgetTag widgetTag : widgetTags) {
-            tags.add(widgetTag.getTag());
+        if (widgetTags != null) {
+            for (WidgetTag widgetTag : widgetTags) {
+                tags.add(widgetTag.getTag());
+            }
         }
         return tags;
     }
@@ -99,11 +102,11 @@ public class MongoDbTagRepository implements TagRepository{
 
     private void addUniqueTags(List<Tag> tags, Widget widget) {
         //returns if there are no tags for this widget to prevent null pointer exception
-        if(widget.getTags() == null) return;
+        if (widget.getTags() == null) return;
 
-        for(WidgetTag widgetTag : widget.getTags()) {
+        for (WidgetTag widgetTag : widget.getTags()) {
             Tag tag = widgetTag.getTag();
-            if(!tags.contains(tag)) {
+            if (!tags.contains(tag)) {
                 tags.add(tag);
             }
         }

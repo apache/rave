@@ -16,15 +16,28 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
+
 function () {
     var widgetMap = {};
-    for(var i=0; i<this.regions.length; i++) {
-        for(var j=0; j<this.regions[i].regionWidgets.length; j++) {
-            var regionWidget = this.regions[i].regionWidgets[j];
-            if(!widgetMap[regionWidget.widgetId]) {
-                widgetMap[regionWidget.widgetId] = true;
-                emit(regionWidget.widgetId, { widgetId: regionWidget.widgetId,  users: 1 })
-            }
+    var self = this;
+
+    var mapPage = function(page) {
+        if (page.regions) {
+            page.regions.forEach(function(region) {
+                region.regionWidgets.forEach(function(regionWidget) {
+                    if (!widgetMap[regionWidget.widgetId]) {
+                        widgetMap[regionWidget.widgetId] = true;
+                        var userMap = {};
+                        userMap[self.ownerId.floatApprox] = 1;
+                        emit(regionWidget.widgetId, userMap);
+                    }
+                })
+            })
         }
+    };
+
+    mapPage(this);
+    if(this.subPages) {
+        this.subPages.forEach(function(p){mapPage(p)})
     }
 }
