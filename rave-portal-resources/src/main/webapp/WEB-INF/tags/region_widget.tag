@@ -86,6 +86,16 @@ Template for rendering a RegionWidget including wrapper chrome, toolbars, menus,
                                 <fmt:message key="widget.menu.about"/>
                             </a>
                         </li>
+                        <li id="widget-${regionWidget.id}-menu-comment-item">
+                            <a href="#">
+                                <fmt:message key="widget.menu.comment"/>
+                            </a>
+                        </li>
+                        <li id="widget-${regionWidget.id}-menu-rate-item">
+                            <a href="#">
+                                <fmt:message key="widget.menu.rate"/>
+                            </a>
+                        </li>
                     </ul>
                 </div>
 

@@ -618,6 +618,9 @@ rave.layout = rave.layout || (function() {
         var $menuItemMove;
         var $menuItemDelete;
         var $menuItemMaximize;
+        var $menuItemAbout;
+        var $menuItemComment;
+        var $menuItemRate;
 
         /**
          * Hides the widget menu for a specific widget
@@ -701,6 +704,34 @@ rave.layout = rave.layout || (function() {
 
                     // go to the widget detail page
                     rave.viewWidgetDetail(regionWidget.widgetId, getCurrentPageId());
+                    // prevent the menu button click event from bubbling up to parent
+                    // DOM object event handlers such as the page tab click event
+                    event.stopPropagation();
+                });
+            }
+            
+            // setup the comment on this widget menu item
+            $menuItemComment  = $("#widget-" + widgetId + "-menu-comment-item");
+            if (!$menuItemComment.hasClass("menu-item-disabled")) {
+                $menuItemComment.bind('click', function(event) {
+                    var regionWidget = rave.getRegionWidgetById(rave.getObjectIdFromDomId(this.id));
+
+                    // go to the widget detail page
+                    rave.viewWidgetDetail(regionWidget.widgetId, getCurrentPageId(), 'widgetComments');
+                    // prevent the menu button click event from bubbling up to parent
+                    // DOM object event handlers such as the page tab click event
+                    event.stopPropagation();
+                });
+            }
+            
+            // setup the Rate this widget menu item
+            $menuItemRate  = $("#widget-" + widgetId + "-menu-rate-item");
+            if (!$menuItemRate.hasClass("menu-item-disabled")) {
+                $menuItemRate.bind('click', function(event) {
+                    var regionWidget = rave.getRegionWidgetById(rave.getObjectIdFromDomId(this.id));
+
+                    // go to the widget detail page
+                    rave.viewWidgetDetail(regionWidget.widgetId, getCurrentPageId(), 'widgetRatings');
                     // prevent the menu button click event from bubbling up to parent
                     // DOM object event handlers such as the page tab click event
                     event.stopPropagation();

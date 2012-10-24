@@ -91,7 +91,7 @@
                 </c:if>
            </div>
            <div class="clearfix">
-                <div class="widgetRating">
+                <div class="widgetRating" id="widgetRatings">
                     <h3><fmt:message key="page.widget.rate"/></h3>
                     <form class="hidden">
                         <input type="hidden" id="rate-${widget.id}"
@@ -180,7 +180,7 @@
             </div>
 
             <div>
-                <div class="widgetComments">
+                <div class="widgetComments" id="widgetComments">
                     <h3><fmt:message key="page.widget.comments"/></h3>
                     <div class="new-comment form-inline well">
                         <div class="row-fluid">

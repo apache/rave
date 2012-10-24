@@ -1178,8 +1178,14 @@ var rave = rave || (function () {
         window.location.href = rave.getContext() + "page/view" + fragment;
     }
 
-    function viewWidgetDetail(widgetId, referringPageId) {
-        window.location.href = rave.getContext() + "store/widget/" + widgetId + "?referringPageId=" + referringPageId;
+    function viewWidgetDetail(widgetId, referringPageId, jumpToId) {
+    	if(jumpToId){
+	    	jumpToId = '#' + jumpToId;
+    	}
+    	else{
+	    	jumpToId = '';
+    	}
+    	window.location.href = rave.getContext() + "store/widget/" + widgetId + "?referringPageId=" + referringPageId  + jumpToId;
     }
 
     /**
