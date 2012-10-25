@@ -49,29 +49,29 @@
             </div>
             
             <form:hidden path="type" value="OpenSocial"/>
-
-            <a href="#" class="btn btn-primary"
-               id="fetchMetadataButton"
-               onclick="rave.api.rpc.getWidgetMetadata({
-                                url: $('#url').get(0).value,
-                                providerType: 'OpenSocial',
-                                successCallback: function(result) {
-                                    var widget = result.result;
-                                    $('#title').val(widget.title);
-                                    $('#description').val(widget.description);
-                                    $('#thumbnailUrl').val(widget.thumbnailUrl);
-                                    $('#screenshotUrl').val(widget.screenshotUrl);
-                                    $('#titleUrl').val(widget.titleUrl);
-                                    $('#author').val(widget.author);
-                                    $('#authorEmail').val(widget.authorEmail);
-                                    $('#addWidgetForm').show();
-                                    $('#addWidgetFormSubmit').show();
-                                }
-                            });">
-                <fmt:message key="page.getWidgetMetadata.button"/>
-            </a>
-
-            <div class="row clearfix" id="addWidgetForm">
+			<div class="control-group">
+	            <a href="#" class="btn btn-primary"
+	               id="fetchMetadataButton"
+	               onclick="rave.api.rpc.getWidgetMetadata({
+	                                url: $('#url').get(0).value,
+	                                providerType: 'OpenSocial',
+	                                successCallback: function(result) {
+	                                    var widget = result.result;
+	                                    $('#title').val(widget.title);
+	                                    $('#description').val(widget.description);
+	                                    $('#thumbnailUrl').val(widget.thumbnailUrl);
+	                                    $('#screenshotUrl').val(widget.screenshotUrl);
+	                                    $('#titleUrl').val(widget.titleUrl);
+	                                    $('#author').val(widget.author);
+	                                    $('#authorEmail').val(widget.authorEmail);
+	                                    $('#addWidgetForm').show();
+	                                    $('#addWidgetFormSubmit').show();
+	                                }
+	                            });">
+	                <fmt:message key="page.getWidgetMetadata.button"/>
+	            </a>
+			</div>
+            <div class="clearfix" id="addWidgetForm">
 
                 <div class="control-group">
                     <form:label cssClass="control-label" path="title"> <fmt:message key="widget.title"/> *</form:label>
