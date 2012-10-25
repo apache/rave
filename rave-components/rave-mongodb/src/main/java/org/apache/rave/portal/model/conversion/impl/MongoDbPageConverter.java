@@ -63,7 +63,6 @@ public class MongoDbPageConverter implements HydratingModelConverter<Page, Mongo
         page.setOwner(null);
         page.setPageLayout(null);
         page.setParentPage(null);
-        page.setPageLayoutRepository(null);
         page.setUserRepository(null);
 
         List<PageUser> convertedMembers = Lists.newArrayList();
@@ -108,7 +107,7 @@ public class MongoDbPageConverter implements HydratingModelConverter<Page, Mongo
         if (page == null) {
             return;
         }
-        page.setPageLayoutRepository(pageLayoutRepository);
+        page.setPageLayout(pageLayoutRepository.getByPageLayoutCode(page.getPageLayoutCode()));
         page.setUserRepository(userRepository);
 
         for (PageUser user : page.getMembers()) {

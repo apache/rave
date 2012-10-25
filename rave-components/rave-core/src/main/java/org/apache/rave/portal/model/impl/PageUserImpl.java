@@ -19,14 +19,17 @@
 package org.apache.rave.portal.model.impl;
 
 import org.apache.rave.portal.model.*;
+import org.codehaus.jackson.annotate.JsonBackReference;
 
 public class PageUserImpl implements PageUser {
     private Long id;
     private User user;
-    private Page page;
     private boolean editor;
     private Long renderSequence;
     private PageInvitationStatus pageStatus;
+
+    @JsonBackReference
+    private Page page;
 
     public PageUserImpl(){}
 

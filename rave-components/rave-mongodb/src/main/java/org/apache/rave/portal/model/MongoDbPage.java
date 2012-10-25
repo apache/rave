@@ -20,7 +20,6 @@
 package org.apache.rave.portal.model;
 
 import org.apache.rave.portal.model.impl.PageImpl;
-import org.apache.rave.portal.repository.PageLayoutRepository;
 import org.apache.rave.portal.repository.UserRepository;
 import org.codehaus.jackson.annotate.JsonAutoDetect;
 import org.codehaus.jackson.annotate.JsonIgnore;
@@ -31,22 +30,18 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlTransient;
 
 @XmlAccessorType(value = XmlAccessType.FIELD)
-@JsonAutoDetect(value = JsonMethod.FIELD)
+@JsonAutoDetect(value = JsonMethod.FIELD, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class MongoDbPage extends PageImpl {
 
     @XmlTransient @JsonIgnore
     private UserRepository userRepository;
-
-    @XmlTransient @JsonIgnore
-    private PageLayoutRepository pageLayoutRepository;
 
     private Long ownerId;
     private String pageLayoutCode;
 
     public MongoDbPage() {}
 
-    public MongoDbPage(PageLayoutRepository pageLayoutRepository, UserRepository userRepository) {
-        this.pageLayoutRepository = pageLayoutRepository;
+    public MongoDbPage(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
@@ -74,14 +69,6 @@ public class MongoDbPage extends PageImpl {
         this.userRepository = userRepository;
     }
 
-    public PageLayoutRepository getPageLayoutRepository() {
-        return pageLayoutRepository;
-    }
-
-    public void setPageLayoutRepository(PageLayoutRepository pageLayoutRepository) {
-        this.pageLayoutRepository = pageLayoutRepository;
-    }
-
     @Override
     public User getOwner() {
         User owner = super.getOwner();
@@ -92,15 +79,6 @@ public class MongoDbPage extends PageImpl {
         return owner;
     }
 
-    @Override
-    public PageLayout getPageLayout() {
-        PageLayout layout = super.getPageLayout();
-        if(layout == null) {
-            layout = pageLayoutRepository.getByPageLayoutCode(pageLayoutCode);
-            super.setPageLayout(layout);
-        }
-        return layout;
-    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -36,7 +36,7 @@ import java.util.List;
  */
 
 @XmlAccessorType(value = XmlAccessType.FIELD)
-@JsonAutoDetect(value = JsonMethod.FIELD)
+@JsonAutoDetect(value = JsonMethod.FIELD, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class MongoDbWidget extends WidgetImpl {
 
     @XmlTransient @JsonIgnore

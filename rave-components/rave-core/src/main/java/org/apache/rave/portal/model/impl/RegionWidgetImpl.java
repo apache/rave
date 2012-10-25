@@ -22,19 +22,22 @@ import org.apache.rave.portal.model.Region;
 import org.apache.rave.portal.model.RegionWidget;
 import org.apache.rave.portal.model.RegionWidgetPreference;
 import org.apache.rave.portal.model.Widget;
+import org.codehaus.jackson.annotate.JsonBackReference;
 
 import java.util.List;
 
 public class RegionWidgetImpl implements RegionWidget {
     private Long id;
     private Widget widget;
-    private Region region;
     private String renderPosition;
     private Integer renderOrder = 0;
     private Boolean collapsed = false;
     private List<RegionWidgetPreference> preferences;
     private Boolean locked = false;
     private Boolean hideChrome = false;
+
+    @JsonBackReference
+    private Region region;
 
     public RegionWidgetImpl() {
 

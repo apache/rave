@@ -33,7 +33,7 @@ import javax.xml.bind.annotation.XmlTransient;
  */
 
 @XmlAccessorType(value = XmlAccessType.FIELD)
-@JsonAutoDetect(value = JsonMethod.FIELD)
+@JsonAutoDetect(value = JsonMethod.FIELD, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class MongoDbWidgetTag extends WidgetTagImpl {
     @XmlTransient @JsonIgnore
     private UserRepository userRepository;

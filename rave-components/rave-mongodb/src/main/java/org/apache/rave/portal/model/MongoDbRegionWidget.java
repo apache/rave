@@ -32,7 +32,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 
 @XmlAccessorType(value = XmlAccessType.FIELD)
-@JsonAutoDetect(value = JsonMethod.FIELD)
+@JsonAutoDetect(value = JsonMethod.FIELD, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class MongoDbRegionWidget extends RegionWidgetImpl {
     private long widgetId;
 
