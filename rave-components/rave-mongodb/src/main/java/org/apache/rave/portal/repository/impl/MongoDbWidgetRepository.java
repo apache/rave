@@ -221,14 +221,14 @@ public class MongoDbWidgetRepository implements WidgetRepository {
     }
 
     private Query getWidgetStatusFreeTextQuery(WidgetStatus widgetStatus, String type, String searchTerm) {
-        Criteria criteria = new Criteria();
-        if(type != null) {
+        Criteria criteria = addFreeTextClause(searchTerm, new Criteria());
+        if(type != null && !type.isEmpty()) {
             criteria.and("type").is(type);
         }
         if(widgetStatus != null) {
             criteria.and("widgetStatus").is(getWidgetStatusString(widgetStatus));
         }
-        return query(addFreeTextClause(searchTerm, criteria));
+        return query(criteria);
     }
 
     private Criteria addFreeTextClause(String searchTerm, Criteria criteria) {

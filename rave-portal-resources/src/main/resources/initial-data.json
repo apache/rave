@@ -1985,7 +1985,7 @@
                     {
                         "pageTemplateRegion": null,
                         "widget": {"id": 2},
-                        "locked": true,
+                        "locked": false,
                         "hideChrome": false,
                         "id": 3,
                         "renderSeq": 0
@@ -1993,7 +1993,7 @@
                     {
                         "pageTemplateRegion": null,
                         "widget": {"id": 7},
-                        "locked": true,
+                        "locked": false,
                         "hideChrome": false,
                         "id": 4,
                         "renderSeq": 1
@@ -2009,7 +2009,7 @@
                     {
                         "pageTemplateRegion": null,
                         "widget": {"id": 10},
-                        "locked": true,
+                        "locked": false,
                         "hideChrome": false,
                         "id": 3,
                         "renderSeq": 0
@@ -2017,7 +2017,7 @@
                     {
                         "pageTemplateRegion": null,
                         "widget": {"id": 23},
-                        "locked": true,
+                        "locked": false,
                         "hideChrome": false,
                         "id": 4,
                         "renderSeq": 1
@@ -2033,7 +2033,7 @@
                     {
                         "pageTemplateRegion": null,
                         "widget": {"id": 11},
-                        "locked": true,
+                        "locked": false,
                         "hideChrome": false,
                         "id": 3,
                         "renderSeq": 0

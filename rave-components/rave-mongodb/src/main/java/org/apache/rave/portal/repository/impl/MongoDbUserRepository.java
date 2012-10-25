@@ -26,11 +26,13 @@ import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.repository.MongoUserOperations;
 import org.apache.rave.portal.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Order;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static org.springframework.data.mongodb.core.query.Query.query;
@@ -122,7 +124,8 @@ public class MongoDbUserRepository implements UserRepository {
     }
 
     private Query getSearchQuery(String searchTerm) {
-        return query(where("username").is(searchTerm).orOperator(where("email").is(searchTerm)));
+        Pattern p = Pattern.compile(".*" + searchTerm  +".*", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
+        return query(new Criteria().orOperator(where("username").regex(p), where("email").regex(p)));
     }
 
     private Query addSort(Query query) {

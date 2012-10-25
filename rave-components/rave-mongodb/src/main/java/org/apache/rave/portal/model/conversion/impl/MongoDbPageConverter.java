@@ -22,6 +22,7 @@ package org.apache.rave.portal.model.conversion.impl;
 import com.google.common.collect.Lists;
 import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.model.conversion.HydratingModelConverter;
+import org.apache.rave.portal.model.impl.RegionWidgetPreferenceImpl;
 import org.apache.rave.portal.repository.PageLayoutRepository;
 import org.apache.rave.portal.repository.UserRepository;
 import org.apache.rave.portal.repository.WidgetRepository;
@@ -149,35 +150,49 @@ public class MongoDbPageConverter implements HydratingModelConverter<Page, Mongo
         regionWidget.setRegion(null);
         regionWidget.setPreferences(sourceRegionWidget.getPreferences());
         updatePreferences(regionWidget);
+        updateProperties(sourceRegionWidget, regionWidget);
         return regionWidget;
     }
 
     private void updatePreferences(MongoDbRegionWidget regionWidget) {
-        if (regionWidget.getPreferences() != null) {
-            for (RegionWidgetPreference preference : regionWidget.getPreferences()) {
-                preference.setRegionWidgetId(regionWidget.getId());
+        List<RegionWidgetPreference> converted = Lists.newArrayList();
+        if(regionWidget.getPreferences() != null) {
+            for(RegionWidgetPreference preference : regionWidget.getPreferences()) {
+                converted.add(convert(preference));
             }
         }
+        regionWidget.setPreferences(converted);
+    }
+
+    private RegionWidgetPreference convert(RegionWidgetPreference preference) {
+        RegionWidgetPreference converted = new RegionWidgetPreferenceImpl();
+        converted.setName(preference.getName());
+        converted.setValue(preference.getValue());
+        return converted;
     }
 
     private void hydrate(Region region) {
-        if (region.getRegionWidgets() == null) {
-            region.setRegionWidgets(Lists.<RegionWidget>newArrayList());
-        } else {
-            for (RegionWidget regionWidget : region.getRegionWidgets()) {
-                hydrate((MongoDbRegionWidget) regionWidget, region);
-            }
+        for (RegionWidget regionWidget : region.getRegionWidgets()) {
+            hydrate((MongoDbRegionWidget) regionWidget, region);
         }
     }
 
     private void convert(Region region) {
+        List<RegionWidget> convertedWidgets = Lists.newArrayList();
         if (region.getRegionWidgets() != null) {
-            List<RegionWidget> convertedWidgets = Lists.newArrayList();
             for (RegionWidget widget : region.getRegionWidgets()) {
                 convertedWidgets.add(convert(widget));
             }
-            region.setRegionWidgets(convertedWidgets);
         }
+        region.setRegionWidgets(convertedWidgets);
+    }
+
+    private void updateProperties(RegionWidget source, RegionWidget converted) {
+        converted.setLocked(source.isLocked());
+        converted.setCollapsed(source.isCollapsed());
+        converted.setHideChrome(source.isHideChrome());
+        converted.setRenderPosition(source.getRenderPosition());
+        converted.setRenderOrder(source.getRenderOrder());
     }
 
 }
