@@ -90,13 +90,22 @@ public class MongoDbWidgetConverter implements HydratingModelConverter<Widget, M
         if (source.getCategories() != null) {
             convertCategories(source, widget);
         }
-        if (source.getComments() != null) {
+
+        if (source.getComments() == null) {
+            widget.setComments(Lists.<WidgetComment>newArrayList());
+        } else {
             convertComments(source, widget);
         }
-        if(source.getTags() != null) {
+
+        if (source.getTags() == null) {
+            widget.setTags(Lists.<WidgetTag>newArrayList());
+        } else {
             convertTags(source, widget);
         }
-        if(source.getRatings() != null) {
+
+        if (source.getRatings() == null) {
+            widget.setRatings(Lists.<WidgetRating>newArrayList());
+        } else {
             convertRatings(source, widget);
         }
         return widget;

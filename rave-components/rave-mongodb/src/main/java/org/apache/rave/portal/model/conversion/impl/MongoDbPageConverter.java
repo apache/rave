@@ -161,7 +161,9 @@ public class MongoDbPageConverter implements HydratingModelConverter<Page, Mongo
     }
 
     private void hydrate(Region region) {
-        if (region.getRegionWidgets() != null) {
+        if (region.getRegionWidgets() == null) {
+            region.setRegionWidgets(Lists.<RegionWidget>newArrayList());
+        } else {
             for (RegionWidget regionWidget : region.getRegionWidgets()) {
                 hydrate((MongoDbRegionWidget) regionWidget, region);
             }

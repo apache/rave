@@ -73,7 +73,7 @@ public class DataImporter {
 
     @PostConstruct
     public void importData() {
-        if (scriptLocations != null) {
+        if (scriptLocations != null && widgetRepository.getCountAll() == 0) {
             for (Resource resource : scriptLocations) {
                 ModelWrapper wrapper = mapObject(resource);
                 if (wrapper.getPageLayouts() != null) {

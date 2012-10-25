@@ -19,17 +19,13 @@
 
 package org.apache.rave.portal.model.conversion.impl;
 
-import com.google.common.collect.Lists;
 import org.apache.rave.portal.model.Category;
 import org.apache.rave.portal.model.MongoDbCategory;
-import org.apache.rave.portal.model.Widget;
 import org.apache.rave.portal.model.conversion.HydratingModelConverter;
+import org.apache.rave.portal.repository.MongoWidgetOperations;
 import org.apache.rave.portal.repository.UserRepository;
-import org.apache.rave.portal.repository.WidgetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.ArrayList;
 
 import static org.apache.rave.portal.model.util.MongoDbModelUtil.generateId;
 
@@ -40,7 +36,7 @@ public class MongoDbCategoryConverter implements HydratingModelConverter<Categor
     private UserRepository userRepository;
 
     @Autowired
-    private WidgetRepository widgetRepository;
+    private MongoWidgetOperations widgetOperations;
 
     @Override
     public void hydrate(MongoDbCategory dehydrated) {
@@ -48,7 +44,7 @@ public class MongoDbCategoryConverter implements HydratingModelConverter<Categor
             return;
         }
         dehydrated.setUserRepository(userRepository);
-        dehydrated.setWidgetRepository(widgetRepository);
+        dehydrated.setWidgetRepository(widgetOperations);
     }
 
     @Override
@@ -68,13 +64,6 @@ public class MongoDbCategoryConverter implements HydratingModelConverter<Categor
         category.setCreatedUser(null);
         category.setLastModifiedUser(null);
         category.setText(source.getText());
-        ArrayList<Long> widgetIds = Lists.<Long>newArrayList();
-        category.setWidgetIds(widgetIds);
-        if (source.getWidgets() != null) {
-            for (Widget widget : source.getWidgets()) {
-                widgetIds.add(widget.getId());
-            }
-        }
         category.setWidgets(null);
         return category;
     }

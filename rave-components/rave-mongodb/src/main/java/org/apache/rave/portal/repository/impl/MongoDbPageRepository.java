@@ -32,6 +32,8 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import static org.springframework.data.mongodb.core.query.Criteria.where;
@@ -47,7 +49,7 @@ public class MongoDbPageRepository implements PageRepository {
 
     @Override
     public List<Page> getAllPages(Long userId, PageType pageType) {
-        return template.find(query(where("pageType").is(pageType.getPageType().toUpperCase()).andOperator(where("ownerId").is(userId))));
+        return sort(template.find(query(where("pageType").is(getString(pageType)).andOperator(where("ownerId").is(userId)))), userId);
     }
 
     @Override
@@ -70,12 +72,12 @@ public class MongoDbPageRepository implements PageRepository {
 
     @Override
     public List<PageUser> getPagesForUser(Long userId, PageType pageType) {
-        List<Page> pages = template.find(query(where("members").elemMatch(where("userId").is(userId)).andOperator(where("pageType").is(pageType))));
+        List<Page> pages = template.find(query(where("members").elemMatch(where("userId").is(userId)).andOperator(where("pageType").is(getString(pageType)))));
         List<PageUser> userList = Lists.newArrayList();
         for(Page page : pages) {
             userList.add(findPageUser(userId, page));
         }
-        return userList;
+        return sortUsers(userList, userId);
     }
 
     @Override
@@ -105,10 +107,41 @@ public class MongoDbPageRepository implements PageRepository {
 
     @Override
     public void delete(Page item) {
-        template.remove(query(where("id").is(item.getId())));
+        template.remove(query(where("_id").is(item.getId())));
     }
 
-    private Query addSort(Query q) {
+    private List<Page> sort(List<Page> pages, final Long userId) {
+        Collections.sort(pages, new Comparator<Page>() {
+            @Override
+            public int compare(Page page, Page page1) {
+                return getRenderOrder(page, userId) - getRenderOrder(page1, userId);
+            }
+        });
+        return pages;
+    }
+
+    private List<PageUser> sortUsers(List<PageUser> userList, Long userId) {
+        Collections.sort(userList, new Comparator<PageUser>() {
+            @Override
+            public int compare(PageUser pageUser, PageUser pageUser1) {
+                return getRenderOrder(pageUser) - getRenderOrder(pageUser1);
+            }
+        });
+        return userList;
+    }
+
+    private int getRenderOrder(PageUser pageUser) {
+        return pageUser == null || pageUser.getRenderSequence() == null ? Integer.MAX_VALUE : pageUser.getRenderSequence().intValue();
+    }
+
+    private int getRenderOrder(Page page, Long userId) {
+        for(PageUser user : page.getMembers()) {
+            MongoDbPageUser mUser = (MongoDbPageUser)user;
+            if(mUser.getUser().getId().equals(userId)) {
+                return getRenderOrder(mUser);
+            }
+        }
+        return -1;
     }
 
     /**
@@ -213,11 +246,15 @@ public class MongoDbPageRepository implements PageRepository {
 
     private PageUser findPageUser(Long userId, Page page) {
         for(PageUser user : page.getMembers()) {
-            if(user.getId().equals(userId)) {
+            if(user.getUser().getId().equals(userId)) {
                 return user;
             }
         }
         return null;
+    }
+
+    private String getString(PageType pageType) {
+        return pageType.getPageType().toUpperCase();
     }
 
 }

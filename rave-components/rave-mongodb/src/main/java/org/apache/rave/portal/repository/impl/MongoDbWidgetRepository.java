@@ -260,7 +260,7 @@ public class MongoDbWidgetRepository implements WidgetRepository {
         }
     }
 
-    private WidgetStatistics createWidgetStatisticsFromResults(long user_id, WidgetRatingsMapReduceResult statsResult, int userResult) {
+    private WidgetStatistics createWidgetStatisticsFromResults(long user_id, WidgetRatingsMapReduceResult statsResult, Integer userResult) {
         WidgetStatistics statistics = new WidgetStatistics();
         WidgetRatingsMapReduceResult.WidgetStatisticsMapReduceResult result = statsResult.getValue();
         if (result != null) {
@@ -268,7 +268,7 @@ public class MongoDbWidgetRepository implements WidgetRepository {
             statistics.setTotalLike(result.getLike().intValue());
             statistics.setUserRating(result.getUserRatings().containsKey(user_id) ? result.getUserRatings().get(user_id).intValue() : -1);
         }
-        statistics.setTotalUserCount(userResult);
+        statistics.setTotalUserCount(userResult == null ? 0 : userResult);
         return statistics;
     }
 

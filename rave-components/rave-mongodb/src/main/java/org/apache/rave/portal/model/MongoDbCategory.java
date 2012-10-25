@@ -19,10 +19,9 @@
 
 package org.apache.rave.portal.model;
 
-import com.google.common.collect.Lists;
 import org.apache.rave.portal.model.impl.CategoryImpl;
+import org.apache.rave.portal.repository.MongoWidgetOperations;
 import org.apache.rave.portal.repository.UserRepository;
-import org.apache.rave.portal.repository.WidgetRepository;
 import org.codehaus.jackson.annotate.JsonAutoDetect;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonMethod;
@@ -32,6 +31,9 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlTransient;
 import java.util.List;
 
+import static org.springframework.data.mongodb.core.query.Criteria.where;
+import static org.springframework.data.mongodb.core.query.Query.query;
+
 @XmlAccessorType(value = XmlAccessType.FIELD)
 @JsonAutoDetect(value = JsonMethod.FIELD)
 public class MongoDbCategory extends CategoryImpl {
@@ -40,12 +42,10 @@ public class MongoDbCategory extends CategoryImpl {
     private UserRepository userRepository;
 
     @XmlTransient @JsonIgnore
-    private WidgetRepository widgetRepository;
+    private MongoWidgetOperations widgetTemplate;
 
     private Long lastModifiedUserId;
     private Long createdUserId;
-
-    private List<Long> widgetIds;
 
     public UserRepository getUserRepository() {
         return userRepository;
@@ -55,20 +55,12 @@ public class MongoDbCategory extends CategoryImpl {
         this.userRepository = userRepository;
     }
 
-    public WidgetRepository getWidgetRepository() {
-        return widgetRepository;
+    public MongoWidgetOperations getWidgetRepository() {
+        return widgetTemplate;
     }
 
-    public void setWidgetRepository(WidgetRepository widgetRepository) {
-        this.widgetRepository = widgetRepository;
-    }
-
-    public List<Long> getWidgetIds() {
-        return widgetIds;
-    }
-
-    public void setWidgetIds(List<Long> widgetIds) {
-        this.widgetIds = widgetIds;
+    public void setWidgetRepository(MongoWidgetOperations widgetRepository) {
+        this.widgetTemplate = widgetRepository;
     }
 
     public Long getLastModifiedUserId() {
@@ -111,10 +103,8 @@ public class MongoDbCategory extends CategoryImpl {
     public List<Widget> getWidgets() {
         List<Widget> widgets =  super.getWidgets();
         if(widgets == null) {
-            widgets = Lists.newArrayList();
-            for(Long widgetId : widgetIds) {
-                widgets.add(widgetRepository.get(widgetId));
-            }
+            widgets = widgetTemplate.find(query(where("categoryIds").is(this.getId())));
+            super.setWidgets(widgets);
         }
         return widgets;
     }

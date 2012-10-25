@@ -18,15 +18,15 @@
  */
 function () {
     if (this.ratings) {
-        for (var i = 0; i < this.ratings.length; i++) {
-            var rating = this.ratings[i];
+        var self = this;
+        this.ratings.forEach(function(rating){
             var userMap = {};
-            userMap[this.userId.floatApprox] = rating.score;
-            emit(this._id, {
-                    like:rating.score == 10 ? 1 : 0,
-                    dislike:rating.score == 0 ? 1 : 0,
-                    userRatings:userMap
-                });
-        }
+            userMap[rating.userId.floatApprox] = rating.score;
+            emit(self._id, {
+                like:rating.score == 10 ? 1 : 0,
+                dislike:rating.score == 0 ? 1 : 0,
+                userRatings:userMap
+            });
+        });
     }
 }
