@@ -28,6 +28,7 @@ import org.codehaus.jackson.map.introspect.JacksonAnnotationIntrospector;
 import org.codehaus.jackson.mrbean.MrBeanModule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
@@ -35,32 +36,7 @@ import java.util.List;
 
 public class DataImporter {
 
-    //TODO GROUP REPOSITORY
-
-    @Autowired
-    private PageLayoutRepository pageLayoutRepository;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private WidgetRepository widgetRepository;
-
-    @Autowired
-    private PageRepository pageRepository;
-
-    @Autowired
-    private AuthorityRepository authorityRepository;
-
-    @Autowired
-    private PortalPreferenceRepository portalPreferenceRepository;
-
-    @Autowired
-    private CategoryRepository categoryRepository;
-
-    @Autowired
-    private PageTemplateRepository pageTemplateRepository;
-
+    private DataImporter.Executor dataExecutor;
     private List<Resource> scriptLocations;
 
     public List<Resource> getScriptLocations() {
@@ -73,55 +49,16 @@ public class DataImporter {
 
     @PostConstruct
     public void importData() {
-        if (scriptLocations != null && widgetRepository.getCountAll() == 0) {
+        if (scriptLocations != null && dataExecutor.needsLoading()) {
             for (Resource resource : scriptLocations) {
                 ModelWrapper wrapper = mapObject(resource);
-                if (wrapper.getPageLayouts() != null) {
-                    for (PageLayout layout : wrapper.getPageLayouts()) {
-                        pageLayoutRepository.save(layout);
-                    }
-                }
-                if (wrapper.getUsers() != null) {
-                    for (User user : wrapper.getUsers()) {
-                        userRepository.save(user);
-                    }
-                }
-                if (wrapper.getPageLayouts() != null) {
-                    for (PageLayout layout : wrapper.getPageLayouts()) {
-                        pageLayoutRepository.save(layout);
-                    }
-                }
-                if (wrapper.getWidgets() != null) {
-                    for (Widget widget : wrapper.getWidgets()) {
-                        widgetRepository.save(widget);
-                    }
-                }
-                if (wrapper.getPages() != null) {
-                    for (Page page : wrapper.getPages()) {
-                        pageRepository.save(page);
-                    }
-                }
-                if (wrapper.getAuthorities() != null) {
-                    for (Authority authority : wrapper.getAuthorities()) {
-                        authorityRepository.save(authority);
-                    }
-                }
-                if (wrapper.getPortalPreferences() != null) {
-                    for (PortalPreference preference : wrapper.getPortalPreferences()) {
-                        portalPreferenceRepository.save(preference);
-                    }
-                }
-                if (wrapper.getCategories() != null) {
-                    for (Category category : wrapper.getCategories()) {
-                        categoryRepository.save(category);
-                    }
-                }
-                for(PageTemplate template : wrapper.getPageTemplates()) {
-                    pageTemplateRepository.save(template);
-                }
+                dataExecutor.loadData(wrapper);
             }
         }
+    }
 
+    public void setDataExecutor(Executor dataExecutor) {
+        this.dataExecutor = dataExecutor;
     }
 
     private ModelWrapper mapObject(Resource resource) {
@@ -141,5 +78,88 @@ public class DataImporter {
         return jacksonMapper;
     }
 
+    public static interface Executor {
+        boolean needsLoading();
+        void loadData(ModelWrapper models);
+    }
 
+    @Transactional
+    public static class ExecutorImpl implements Executor {
+
+        //TODO GROUP REPOSITORY
+        @Autowired
+        private PageLayoutRepository pageLayoutRepository;
+
+        @Autowired
+        private UserRepository userRepository;
+
+        @Autowired
+        private WidgetRepository widgetRepository;
+
+        @Autowired
+        private PageRepository pageRepository;
+
+        @Autowired
+        private AuthorityRepository authorityRepository;
+
+        @Autowired
+        private PortalPreferenceRepository portalPreferenceRepository;
+
+        @Autowired
+        private CategoryRepository categoryRepository;
+
+        @Autowired
+        private PageTemplateRepository pageTemplateRepository;
+
+        public boolean needsLoading() {
+            return widgetRepository.getCountAll() == 0;
+        }
+
+        @Transactional
+        public void loadData(ModelWrapper wrapper) {
+            if (wrapper.getPageLayouts() != null) {
+                for (PageLayout layout : wrapper.getPageLayouts()) {
+                    pageLayoutRepository.save(layout);
+                }
+            }
+            if (wrapper.getUsers() != null) {
+                for (User user : wrapper.getUsers()) {
+                    userRepository.save(user);
+                }
+            }
+            if (wrapper.getPageLayouts() != null) {
+                for (PageLayout layout : wrapper.getPageLayouts()) {
+                    pageLayoutRepository.save(layout);
+                }
+            }
+            if (wrapper.getWidgets() != null) {
+                for (Widget widget : wrapper.getWidgets()) {
+                    widgetRepository.save(widget);
+                }
+            }
+            if (wrapper.getPages() != null) {
+                for (Page page : wrapper.getPages()) {
+                    pageRepository.save(page);
+                }
+            }
+            if (wrapper.getAuthorities() != null) {
+                for (Authority authority : wrapper.getAuthorities()) {
+                    authorityRepository.save(authority);
+                }
+            }
+            if (wrapper.getPortalPreferences() != null) {
+                for (PortalPreference preference : wrapper.getPortalPreferences()) {
+                    portalPreferenceRepository.save(preference);
+                }
+            }
+            if (wrapper.getCategories() != null) {
+                for (Category category : wrapper.getCategories()) {
+                    categoryRepository.save(category);
+                }
+            }
+            for(PageTemplate template : wrapper.getPageTemplates()) {
+                pageTemplateRepository.save(template);
+            }
+        }
+    }
 }
