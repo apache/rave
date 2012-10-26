@@ -52,8 +52,6 @@ public class MongoDbWidgetRepository implements WidgetRepository {
     public static final String RATINGS_REDUCE = "classpath:/org/apache/rave/WidgetRatingsReduce.js";
     public static final String USERS_MAP = "classpath:/org/apache/rave/WidgetUsersMap.js";
     public static final String USERS_REDUCE = "classpath:/org/apache/rave/WidgetUsersReduce.js";
-    public static final String PAGE_COLLECTION = "page";
-
     @Autowired
     private MongoWidgetOperations template;
 
@@ -277,7 +275,7 @@ public class MongoDbWidgetRepository implements WidgetRepository {
     }
 
     private Query addSort(Query query) {
-        query.sort().on("title", Order.ASCENDING);
+        query.sort().on("featured", Order.DESCENDING).on("title", Order.ASCENDING);
         return query;
     }
 

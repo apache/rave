@@ -23,7 +23,9 @@ import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.rave.portal.model.*;
+import org.apache.rave.portal.repository.MongoPageOperations;
 import org.apache.rave.portal.repository.MongoUserOperations;
+import org.apache.rave.portal.repository.MongoWidgetOperations;
 import org.apache.rave.portal.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.query.Query;
@@ -44,6 +46,12 @@ public class MongoDbPersonRepository implements PersonRepository {
     @Autowired
     private MongoUserOperations template;
 
+    @Autowired
+    private MongoPageOperations pageTemplate;
+
+    @Autowired
+    private MongoWidgetOperations widgetOperations;
+
     @Override
     public Person findByUsername(String username) {
         return template.findOne(getUsernameQuery(username)).toPerson();
@@ -56,7 +64,7 @@ public class MongoDbPersonRepository implements PersonRepository {
 
     @Override
     public List<Person> findAllConnectedPeople(String username, String appId) {
-        throw new NotImplementedException();  //TODO build query
+        return findFriends(username, appId);  //TODO update when groups is implemented
     }
 
     @Override
@@ -66,7 +74,7 @@ public class MongoDbPersonRepository implements PersonRepository {
 
     @Override
     public List<Person> findFriends(String username) {
-        MongoDbUser user = (MongoDbUser)template.findOne(getUsernameQuery(username));
+        MongoDbUser user = (MongoDbUser) template.findOne(getUsernameQuery(username));
         return Lists.transform(filterByRequestType(user.getFriends(), FriendRequestStatus.ACCEPTED), new Function<MongoDbPersonAssociation, Person>() {
             @Override
             public Person apply(@Nullable MongoDbPersonAssociation input) {
@@ -74,20 +82,25 @@ public class MongoDbPersonRepository implements PersonRepository {
             }
         });
     }
+
     @Override
     public List<Person> findFriends(String username, String appId) {
-        throw new NotImplementedException();  //TODO build query
+        MongoDbUser user = (MongoDbUser) template.findOne(getUsernameQuery(username));
+        Widget w = widgetOperations.findOne(query(where("url").is(appId)));
+        Query q = query(where("ownerId").in(getFriendIds(user.getFriends())).and("regions").elemMatch(where("regionWidgets").elemMatch(where("widgetId").is(w.getId()))));
+        List<Page> pages = pageTemplate.find(q);
+        return getPersonListFromPages(pages);
     }
 
     @Override
     public List<Person> findFriendsWithFriend(String username, String friendUsername) {
-        MongoDbUser follower = (MongoDbUser)template.findOne(getUsernameQuery(username));
-        MongoDbUser followed = (MongoDbUser)template.findOne(getUsernameQuery(friendUsername));
+        MongoDbUser follower = (MongoDbUser) template.findOne(getUsernameQuery(username));
+        MongoDbUser followed = (MongoDbUser) template.findOne(getUsernameQuery(friendUsername));
         List<Long> commonFriends = getCommonFriends(follower, followed);
         return Lists.transform(commonFriends, new Function<Long, Person>() {
             @Override
             public Person apply(@Nullable Long id) {
-                return id == null? null : template.get(id).toPerson();
+                return id == null ? null : template.get(id).toPerson();
             }
         });
     }
@@ -109,8 +122,8 @@ public class MongoDbPersonRepository implements PersonRepository {
 
     @Override
     public boolean addFriend(String friendUsername, String username) {
-        MongoDbUser follower = (MongoDbUser)template.findOne(getUsernameQuery(username));
-        MongoDbUser followed = (MongoDbUser)template.findOne(getUsernameQuery(friendUsername));
+        MongoDbUser follower = (MongoDbUser) template.findOne(getUsernameQuery(username));
+        MongoDbUser followed = (MongoDbUser) template.findOne(getUsernameQuery(friendUsername));
 
         MongoDbPersonAssociation outgoing = new MongoDbPersonAssociation(followed.getId(), FriendRequestStatus.SENT, MongoDbPersonAssociation.Direction.OUTGOING);
         MongoDbPersonAssociation incoming = new MongoDbPersonAssociation(follower.getId(), FriendRequestStatus.RECEIVED, MongoDbPersonAssociation.Direction.INCOMING);
@@ -125,8 +138,8 @@ public class MongoDbPersonRepository implements PersonRepository {
 
     @Override
     public void removeFriend(String friendUsername, String username) {
-        MongoDbUser follower = (MongoDbUser)template.findOne(getUsernameQuery(username));
-        MongoDbUser followed = (MongoDbUser)template.findOne(getUsernameQuery(friendUsername));
+        MongoDbUser follower = (MongoDbUser) template.findOne(getUsernameQuery(username));
+        MongoDbUser followed = (MongoDbUser) template.findOne(getUsernameQuery(friendUsername));
         removeAssociation(follower, followed);
         removeAssociation(followed, follower);
         template.save(follower);
@@ -144,8 +157,8 @@ public class MongoDbPersonRepository implements PersonRepository {
 
     @Override
     public boolean acceptFriendRequest(String friendUsername, String username) {
-        MongoDbUser follower = (MongoDbUser)template.findOne(getUsernameQuery(username));
-        MongoDbUser followed = (MongoDbUser)template.findOne(getUsernameQuery(friendUsername));
+        MongoDbUser follower = (MongoDbUser) template.findOne(getUsernameQuery(username));
+        MongoDbUser followed = (MongoDbUser) template.findOne(getUsernameQuery(friendUsername));
         setAccepted(follower, followed);
         setAccepted(followed, follower);
         template.save(follower);
@@ -155,24 +168,14 @@ public class MongoDbPersonRepository implements PersonRepository {
 
     @Override
     public List<Person> findFriendRequestsReceived(String username) {
-        MongoDbUser followed = (MongoDbUser)template.findOne(getUsernameQuery(username));
-        return Lists.transform(filterByRequestType(followed.getFriends(), FriendRequestStatus.RECEIVED), new Function<MongoDbPersonAssociation, Person>() {
-            @Override
-            public Person apply(@Nullable MongoDbPersonAssociation input) {
-                return input == null ? null : template.get(input.getPersonId()).toPerson();
-            }
-        });
+        MongoDbUser followed = (MongoDbUser) template.findOne(getUsernameQuery(username));
+        return getPersonListFromAssociations(followed, FriendRequestStatus.RECEIVED);
     }
 
     @Override
     public List<Person> findFriendRequestsSent(String username) {
-        MongoDbUser follower = (MongoDbUser)template.findOne(getUsernameQuery(username));
-        return Lists.transform(filterByRequestType(follower.getFriends(), FriendRequestStatus.SENT), new Function<MongoDbPersonAssociation, Person>() {
-            @Override
-            public Person apply(@Nullable MongoDbPersonAssociation input) {
-                return input == null ? null : template.get(input.getPersonId()).toPerson();
-            }
-        });
+        MongoDbUser follower = (MongoDbUser) template.findOne(getUsernameQuery(username));
+        return getPersonListFromAssociations(follower, FriendRequestStatus.SENT);
     }
 
     @Override
@@ -188,12 +191,40 @@ public class MongoDbPersonRepository implements PersonRepository {
     @Override
     public Person save(Person item) {
         //TODO Support saving people other than users
-        return item instanceof User ? template.save((User)item) : null;
+        return item instanceof User ? template.save((User) item) : null;
     }
 
     @Override
     public void delete(Person item) {
         template.remove(getUsernameQuery(item.getUsername()));
+    }
+
+    private List<Person> getPersonListFromAssociations(MongoDbUser follower, FriendRequestStatus status) {
+        return Lists.transform(filterByRequestType(follower.getFriends(), status), new Function<MongoDbPersonAssociation, Person>() {
+            @Override
+            public Person apply(@Nullable MongoDbPersonAssociation input) {
+                return input == null ? null : template.get(input.getPersonId()).toPerson();
+            }
+        });
+    }
+
+    private List<Person> getPersonListFromPages(List<Page> pages) {
+        return Lists.transform(pages, new Function<Page, Person>() {
+            @Override
+            public Person apply(@Nullable Page input) {
+                return input == null ? null : input.getOwner().toPerson();
+            }
+        });
+    }
+
+    private List<Long> getFriendIds(List<MongoDbPersonAssociation> friends) {
+        List<Long> ids = Lists.newArrayList();
+        for (MongoDbPersonAssociation friend : friends) {
+            if (friend.getRequestStatus().equals(FriendRequestStatus.ACCEPTED)) {
+                ids.add(friend.getPersonId());
+            }
+        }
+        return ids;
     }
 
     private Query getUsernameQuery(String username) {
@@ -202,8 +233,8 @@ public class MongoDbPersonRepository implements PersonRepository {
 
     private List<MongoDbPersonAssociation> filterByRequestType(List<MongoDbPersonAssociation> friends, FriendRequestStatus received) {
         List<MongoDbPersonAssociation> filtered = Lists.newArrayList();
-        for(MongoDbPersonAssociation association : friends) {
-            if(association.getRequestStatus().equals(received)) {
+        for (MongoDbPersonAssociation association : friends) {
+            if (association.getRequestStatus().equals(received)) {
                 filtered.add(association);
             }
         }
@@ -211,8 +242,8 @@ public class MongoDbPersonRepository implements PersonRepository {
     }
 
     private void removeAssociation(MongoDbUser friend, MongoDbUser person) {
-        for(MongoDbPersonAssociation association : person.getFriends()) {
-            if(association.getPersonId().equals(friend.getId())) {
+        for (MongoDbPersonAssociation association : person.getFriends()) {
+            if (association.getPersonId().equals(friend.getId())) {
                 person.getFriends().remove(association);
                 break;
             }
@@ -220,18 +251,18 @@ public class MongoDbPersonRepository implements PersonRepository {
     }
 
     private void setAccepted(MongoDbUser friend, MongoDbUser person) {
-        for(MongoDbPersonAssociation association : person.getFriends()) {
-            if(association.getPersonId().equals(friend.getId())) {
+        for (MongoDbPersonAssociation association : person.getFriends()) {
+            if (association.getPersonId().equals(friend.getId())) {
                 association.setRequestStatus(FriendRequestStatus.ACCEPTED);
             }
         }
     }
 
     private List<Long> getCommonFriends(MongoDbUser follower, MongoDbUser followed) {
-        List<Long> ids= Lists.newArrayList();
-        for(MongoDbPersonAssociation association : follower.getFriends()) {
-            for(MongoDbPersonAssociation friendAssociation : followed.getFriends()) {
-                if(association.getPersonId().equals(friendAssociation.getPersonId()) &&
+        List<Long> ids = Lists.newArrayList();
+        for (MongoDbPersonAssociation association : follower.getFriends()) {
+            for (MongoDbPersonAssociation friendAssociation : followed.getFriends()) {
+                if (association.getPersonId().equals(friendAssociation.getPersonId()) &&
                         association.getRequestStatus().equals(FriendRequestStatus.ACCEPTED) &&
                         friendAssociation.getRequestStatus().equals(FriendRequestStatus.ACCEPTED)) {
                     ids.add(friendAssociation.getPersonId());

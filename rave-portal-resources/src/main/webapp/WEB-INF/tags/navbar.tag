@@ -44,7 +44,7 @@
                          			<c:when test="${navItem.hasChildren}">
 		                         		<ul class="dropdown-menu friendRequestDropdown">
 											<c:forEach items="${navItem.childNavigationItems}" var="childItem">
-												<li class="requestItem">${childItem.name}
+												<li class="requestItem"><c:out value="${childItem.name}" />
 												<a class="acceptFriendRequest" id="${childItem.nameParam}" href="#"><i class="icon-ok"></i></a>
 												<a class="declineFriendRequest" id="${childItem.nameParam}" href="#"><i class="icon-remove"></i></a>
 												</li>
