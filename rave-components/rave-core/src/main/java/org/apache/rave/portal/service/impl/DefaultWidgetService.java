@@ -32,6 +32,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -178,7 +179,12 @@ public class DefaultWidgetService implements WidgetService {
 
     @Override
     public SearchResult<Widget> getWidgetsByCategory(String categoryId, int offset, int pageSize) {
-        List<Widget> widgets = categoryRepository.get(categoryId).getWidgets();
+        Category category = categoryRepository.get(categoryId);
+        if (category == null) {
+            return new SearchResult<Widget>(new ArrayList<Widget>(), 0);
+        }
+
+        List<Widget> widgets = category.getWidgets();
         SearchResult<Widget> searchResult = new SearchResult<Widget>(widgets, widgets.size());
         searchResult.setOffset(offset);
         searchResult.setPageSize(pageSize);

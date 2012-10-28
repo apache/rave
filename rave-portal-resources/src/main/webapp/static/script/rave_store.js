@@ -195,9 +195,11 @@ rave.store = rave.store || (function() {
             $("#categoryList").change(function() {
                 var selected = $("#categoryList option:selected").val();
                 selected = parseInt(selected);
-                if (!isNaN(selected)) {
+                if (!isNaN(selected) && selected != "0") {
                    document.location.href = rave.getContext() + "store/category?categoryId=" + selected
                            +"&referringPageId="+referringPageId;
+                } else {
+                    document.location.href = rave.getContext() + "store?referringPageId="+referringPageId;
                 }
             });
         }
