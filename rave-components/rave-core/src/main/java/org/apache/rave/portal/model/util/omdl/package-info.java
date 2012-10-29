@@ -16,19 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.rave.portal.web.util;
-
-/**
- * Utility class for {@link org.apache.rave.portal.model.PortalPreference} keys
- */
-public final class PortalPreferenceKeys {
-    private PortalPreferenceKeys() { }
-
-    public static final String TITLE_SUFFIX = "titleSuffix";
-    public static final String PAGE_SIZE = "pageSize";
-    public static final String JAVASCRIPT_DEBUG_MODE = "javaScriptDebugMode";
-    public static final String INITIAL_WIDGET_STATUS = "initialWidgetStatus";
-    public static final String EXTERNAL_MARKETPLACE_URL = "externalMarketplaceUrl";
-    public static final String WIDGET_HEIGHT = "defaultWidgetHeight";
-    public static final String SHOW_STACK_TRACE = "showStackTrace";
-}
+@javax.xml.bind.annotation.XmlSchema(
+        namespace = "http://omdl.org/", 
+        elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED
+        ,
+                xmlns={
+                @javax.xml.bind.annotation.XmlNs(prefix="",
+                namespaceURI="http://omdl.org/")}
+    )
+package org.apache.rave.portal.model.util.omdl;

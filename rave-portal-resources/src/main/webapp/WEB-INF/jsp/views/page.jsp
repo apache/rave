@@ -93,6 +93,7 @@
                                 <li id="pageMenuEdit" class="<c:if test="${isSharedToMe}">menu-item-disabled</c:if>"><a href="#"><fmt:message key="page.general.editpage"/></a></li>
                                 <li id="pageMenuDelete" class="<c:if test='${hasOnlyOnePage or isSharedToMe}'>menu-item-disabled</c:if>"><a href="#"><fmt:message key="page.general.deletepage"/></a></li>
                                 <li id="pageMenuMove" class="<c:if test='${hasOnlyOnePage}'>menu-item-disabled</c:if>"><a href="#"><fmt:message key="page.general.movepage"/></a></li>
+                                <li id="pageMenuExport" class="hidden"><a href="#"><fmt:message key="page.general.exportpage"/></a></li>
                                 <li id="pageMenuShare" class="<c:if test="${isSharedToMe}">menu-item-disabled</c:if>"><a href="#"><fmt:message key="page.general.sharepage"/></a></li>
                                 <li id="pageMenuRevokeShare" class="<c:if test="${isSharedToMe == false}">menu-item-disabled</c:if>"><a href="#"><fmt:message key="page.general.removeshare"/></a></li>
                             </ul>
@@ -158,9 +159,16 @@
                 <div class="emptyPageMessage">
                     <div>
                         <div id="confirmSharePageLegend">
-                            <fmt:message key="sharing.page.confirm.message">
-                                <fmt:param value="${page.owner.username}"/>
-                            </fmt:message>
+                            <c:choose>
+                                <c:when test="${page.owner.username == principleUsername}">
+                                    <fmt:message key="cloned.page.confirm.message"/>
+                                </c:when>
+                                <c:otherwise>
+                                    <fmt:message key="sharing.page.confirm.message">
+                                        <fmt:param value="${page.owner.username}"/>
+                                    </fmt:message>
+                                </c:otherwise>
+                            </c:choose>
                         </div>
                     </div>
                     <div>&nbsp;</div>
@@ -175,12 +183,83 @@
             </c:otherwise>
         </c:choose>
     </div>
-
-
+    
+    <div id="pageMenuDialogTabbed" class="modal hide" data-backdrop="static">
+        <div id="page-tabs">
+            <div>
+            <a href="#" class="close" data-dismiss="modal">&times;</a>
+            <ul>
+                <li><a href="#tabs-1"><fmt:message key="page.general.addnewpage"/></a></li>
+                <li><a href="#tabs-2"><fmt:message key="page.general.importnewpage"/></a></li>
+            </ul>
+            </div>
+            <div id="tabs-1">
+                <div class="modal-body">
+                    <form id="pageFormTabbed" class="form-horizontal">
+                        <input type="hidden" name="tab_idTabbed" id="tab_idTabbed" value=""/>
+                        <fieldset>
+                        <div class="control-group error">
+                            <label id="pageFormErrorsTabbed1" class="control-label"></label>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label" for="tab_titleTabbed1"><fmt:message key="page.general.addpage.title"/></label>
+                            <div class="controls">
+                                <input id="tab_titleTabbed1" name="tab_titleTabbed1" class="input-xlarge focused required" type="text" value="" />
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label" for="pageLayoutTabbed"><fmt:message key="page.general.addpage.selectlayout"/></label>
+                            <div class="controls">
+                                <select name="pageLayoutTabbed" id="pageLayoutTabbed">
+                                    <c:forEach var="pageLayoutTabbed" items="${pageLayouts}">
+                                        <option value="${pageLayoutTabbed.code}" id="${pageLayoutTabbed.code}_id">
+                                        <fmt:message key="page.general.addpage.layout.${pageLayoutTabbed.code}"/></option>
+                                    </c:forEach>
+                                </select>
+                            </div>
+                        </div>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+            
+            <div id="tabs-2">
+                <div  class="modal-body">
+                    <form method="post" id="pageFormImport" class="form-horizontal" enctype="multipart/form-data">
+                        <fieldset>
+                            <div class="control-group error">
+                                 <label id="pageFormErrorsTabbed2" class="control-label"></label>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label" for="tab_titleTabbed2"><fmt:message key="page.general.addpage.title"/></label>
+                                <div class="controls">
+                                    <input id="tab_titleTabbed2" name="pageName" class="input-xlarge focused required" type="text" value="" />
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label" for="omdlFile">Browse for File</label>
+                                <div class="controls">
+                                    <input id="omdlFile" name="omdlFile" class="input-xlarge focused required" type="file" value="" />
+                                </div>
+                            </div>
+                             <div class="control-group">
+                                 <div class="controls"><iframe id="file_upload_frame" name="file_upload_frame" src="" style="width:0;height:0;border:0px solid black;"></iframe></div>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a id="pageMenuCloseButtonTab" href="#" class="btn"><fmt:message key="_rave_client.common.cancel"/></a>
+                <a id="pageMenuUpdateButtonTab" href="#" class="btn btn-primary"></a>
+            </div>
+        </div>
+    </div>
+     
     <div id="pageMenuDialog" class="modal hide" data-backdrop="static">
         <div class="modal-header">
             <a href="#" class="close" data-dismiss="modal">&times;</a>
-            <h3 id="pageMenuDialogHeader"></h3>
+            <h3 id="pageMenuDialogHeader"><fmt:message key="page.general.addnewpage"/></h3>
         </div>
         <div class="modal-body">
             <form id="pageForm" class="form-horizontal">
@@ -195,7 +274,7 @@
                             <input id="tab_title" name="tab_title" class="input-xlarge focused required" type="text" value="" />
                         </div>
                     </div>
-                    <div class="control-group">
+                    <div class="control-group" id="pageLayoutGroup">
                         <label class="control-label" for="pageLayout"><fmt:message key="page.general.addpage.selectlayout"/></label>
                         <div class="controls">
                             <select name="pageLayout" id="pageLayout">
@@ -314,7 +393,7 @@
             rave.layout.searchHandler.setDefaults("<c:out value="${principleUsername}"/>","<sec:authentication property="principal.id" />","<c:out value="${page.id}"/>", "${pageUser.pageStatus}");
             rave.initWidgets();
             rave.initUI();
-            rave.layout.init();
+            rave.layout.init(${applicationProperties['portal.export.ui.enable']});
             rave.runOnPageInitializedHandlers();
         });
     </script>

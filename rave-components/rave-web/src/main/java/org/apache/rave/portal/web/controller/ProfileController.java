@@ -32,6 +32,7 @@ import org.apache.rave.portal.web.util.ViewNames;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -67,24 +68,17 @@ public class ProfileController {
 	 */
 	@RequestMapping(value = {"/{username:.*}"}, method = RequestMethod.GET)
 	public String viewProfileByUsername(@PathVariable String username, ModelMap model, @RequestParam(required = false) String referringPageId) {
-		logger.debug("Viewing person profile for: " + username);
-		User user = userService.getUserByUsername(username);
-        Page personProfilePage = pageService.getPersonProfilePage(user.getId());
-        addAttributesToModel(model, user, referringPageId);
-        model.addAttribute(ModelKeys.PAGE, personProfilePage);
-        List<Widget> widgets = new ArrayList<Widget>();
-        if (personProfilePage.getRegions() != null) {
-            for(Region region : personProfilePage.getRegions()) {
-                for (RegionWidget regionWidget : region.getRegionWidgets()) {
-                    widgets.add(widgetService.getWidget(regionWidget.getWidgetId()));
-                }
-            }
+        User user = null;
+        try{
+            user = userService.getUserByUsername(username);
+            logger.debug("Viewing person profile for: " + user.getUsername());
+            return viewProfileCommon(user, model, referringPageId);
+        }catch(Exception e){
+            addAttributesToModel(model, user, referringPageId);
+            String view = ViewNames.USER_NOT_FOUND;
+            addNavItemsToModel(view, model, referringPageId, user, null);
+            return view;
         }
-        model.addAttribute(ModelKeys.WIDGETS, widgets);
-		String view =  ViewNames.getPersonPageView(personProfilePage.getPageLayout().getCode());
-        List<Person> friendRequests = userService.getFriendRequestsReceived(username);
-        addNavItemsToModel(view, model, referringPageId, user, friendRequests);
-        return view;
 	}
 	  /**
 		 * Views the main page of another user's profile
@@ -96,26 +90,28 @@ public class ProfileController {
 		 */
 	@RequestMapping(value = {"/id/{userid:.*}"}, method = RequestMethod.GET)
 	public String viewProfile(@PathVariable String userid, ModelMap model, @RequestParam(required = false) String referringPageId) {
-		User user = userService.getUserById(userid);
-		logger.debug("Viewing person profile for: " + user.getUsername());
-		
-		Page personProfilePage = pageService.getPersonProfilePage(user.getId());
+        User user = null;
+        try{
+            user = userService.getUserById(userid);
+            logger.debug("Viewing person profile for: " + user.getUsername());
+            return viewProfileCommon(user, model, referringPageId);
+        }catch (Exception e){
+            addAttributesToModel(model, user, referringPageId);
+            String view = ViewNames.USER_NOT_FOUND;
+            addNavItemsToModel(view, model, referringPageId, user, null);
+            return view;
+        }
+	}
+
+    private String viewProfileCommon(User user, ModelMap model, String referringPageId){
+        Page personProfilePage = pageService.getPersonProfilePage(user.getId());
         addAttributesToModel(model, user, referringPageId);
         model.addAttribute(ModelKeys.PAGE, personProfilePage);
-        List<Widget> widgets = new ArrayList<Widget>();
-        if (personProfilePage.getRegions() != null) {
-            for(Region region : personProfilePage.getRegions()) {
-                for (RegionWidget regionWidget : region.getRegionWidgets()) {
-                    widgets.add(widgetService.getWidget(regionWidget.getWidgetId()));
-                }
-            }
-        }
-        model.addAttribute(ModelKeys.WIDGETS, widgets);
-		String view =  ViewNames.getPersonPageView(personProfilePage.getPageLayout().getCode());
+        String view =  ViewNames.getPersonPageView(personProfilePage.getPageLayout().getCode());
         List<Person> friendRequests = userService.getFriendRequestsReceived(user.getUsername());
         addNavItemsToModel(view, model, referringPageId, user, friendRequests);
         return view;
-	}
+    }
 
 	/**
 	 * Updates the user's personal information
@@ -162,12 +158,15 @@ public class ProfileController {
         String refPageId = referringPageId != null ? referringPageId : "";
         final NavigationMenu topMenu = new NavigationMenu("topnav");
 
-        NavigationItem friendRequestItems = new NavigationItem("page.profile.friend.requests", String.valueOf(friendRequests.size()) , "#");
-        for(Person request : friendRequests) {
-        	NavigationItem childItem = new NavigationItem((request.getDisplayName()!=null && !request.getDisplayName().isEmpty())? request.getDisplayName() : request.getUsername(), request.getUsername(), "#");
-        	friendRequestItems.addChildNavigationItem(childItem);
+        if(friendRequests != null){
+            NavigationItem friendRequestItems = new NavigationItem("page.profile.friend.requests", String.valueOf(friendRequests.size()) , "#");
+            for(Person request : friendRequests) {
+                NavigationItem childItem = new NavigationItem((request.getDisplayName()!=null && !request.getDisplayName().isEmpty())? request.getDisplayName() : request.getUsername(), request.getUsername(), "#");
+                friendRequestItems.addChildNavigationItem(childItem);
+            }
+
+            topMenu.addNavigationItem(friendRequestItems);
         }
-    	topMenu.addNavigationItem(friendRequestItems);
     	topMenu.getNavigationItems().addAll((ControllerUtils.getTopMenu(view, refPageId, user, false).getNavigationItems()));
 
     	model.addAttribute(topMenu.getName(), topMenu);

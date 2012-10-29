@@ -96,7 +96,7 @@ public class ControllerUtils {
 
             NavigationItem logout = getLogoutItem();
             menu.addNavigationItem(logout);
-        } else if (view.startsWith(ViewNames.PERSON_PROFILE)) {
+        } else if (view.startsWith(ViewNames.PERSON_PROFILE) || view.startsWith(ViewNames.USER_NOT_FOUND)) {
             NavigationItem back = getBackItem(referringPageId);
             menu.addNavigationItem(back);
 
@@ -105,7 +105,8 @@ public class ControllerUtils {
 
             NavigationItem logout = getLogoutItem();
             menu.addNavigationItem(logout);
-        } else if (view.startsWith(ViewNames.ADD_WIDGET_FORM) || view.startsWith(ViewNames.WIDGET)) {
+        }
+        else if (view.startsWith(ViewNames.ADD_WIDGET_FORM) || view.startsWith(ViewNames.WIDGET)) {
             if(view.equals(ViewNames.WIDGET_MARKETPLACE)){
                 NavigationItem addWidget = new NavigationItem("page.widget.backToMarketplace", null, "/app/marketplace?referringPageId=" + referringPageId);
                 menu.addNavigationItem(addWidget);

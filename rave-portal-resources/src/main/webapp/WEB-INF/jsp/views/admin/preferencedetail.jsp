@@ -88,6 +88,20 @@
 	                            <form:errors path="javaScriptDebugMode.value" cssClass="error"/>
 	                        </spring:bind>
 	                    </div>
+                        <div class="control-group">
+                            <spring:bind path="showStackTrace.value">
+                                <form:label path="showStackTrace.value" class="control-label">
+                                    <fmt:message key="admin.preferencedetail.showStackTrace"/> *
+                                </form:label>
+                                <div class="controls">
+                                    <form:select id="showStackTrace" path="showStackTrace.value">
+                                        <form:option value="0"><fmt:message key="admin.preferencedetail.showStackTrace.false"/></form:option>
+                                        <form:option value="1"><fmt:message key="admin.preferencedetail.showStackTrace.true"/></form:option>
+                                    </form:select>
+                                </div>
+                                <form:errors path="showStackTrace.value" cssClass="error"/>
+                            </spring:bind>
+                        </div>
 	                   <div class="control-group">
 	                        <spring:bind path="initialWidgetStatus.value">
 	                            <form:label path="initialWidgetStatus.value" class="control-label">

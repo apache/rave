@@ -16,19 +16,26 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.rave.portal.web.util;
+package org.apache.rave.portal.model.util.omdl;
 
-/**
- * Utility class for {@link org.apache.rave.portal.model.PortalPreference} keys
- */
-public final class PortalPreferenceKeys {
-    private PortalPreferenceKeys() { }
+public class BadOmdlXmlFormatException extends Exception {
 
-    public static final String TITLE_SUFFIX = "titleSuffix";
-    public static final String PAGE_SIZE = "pageSize";
-    public static final String JAVASCRIPT_DEBUG_MODE = "javaScriptDebugMode";
-    public static final String INITIAL_WIDGET_STATUS = "initialWidgetStatus";
-    public static final String EXTERNAL_MARKETPLACE_URL = "externalMarketplaceUrl";
-    public static final String WIDGET_HEIGHT = "defaultWidgetHeight";
-    public static final String SHOW_STACK_TRACE = "showStackTrace";
+    private static final long serialVersionUID = 1L;
+
+    public BadOmdlXmlFormatException() {
+        super();
+    }
+
+    public BadOmdlXmlFormatException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public BadOmdlXmlFormatException(String message) {
+        super(message);
+    }
+
+    public BadOmdlXmlFormatException(Throwable cause) {
+        super(cause);
+    }
+
 }

@@ -258,6 +258,21 @@ public class DefaultPageService implements PageService {
         verifyRegionIsNotLocked(region);
         return createWidgetInstance(widget, region, 0);
     }
+    
+    @Override
+    @Transactional
+    public RegionWidget addWidgetToPageRegion(String pageId, String widgetId, String regionId) {
+        Page page = getFromRepository(pageId, pageRepository);
+        Widget widget = getFromRepository(widgetId, widgetRepository);
+        for(Region region : page.getRegions()){
+            if(region.getId().equals(regionId)){
+                verifyRegionIsNotLocked(region);
+                return createWidgetInstance(widget, region, 0);
+            }
+        }
+        // region not found
+        return null;
+    }
 
     @Override
     @Transactional
@@ -302,6 +317,34 @@ public class DefaultPageService implements PageService {
     }
 
     @Transactional
+    public Boolean clonePageForUser(String pageId, String userId, String pageName) {
+        Widget widget = null;
+        Page page = getPage(pageId);
+        if(pageName == null || pageName.equals("null")){
+            // try to use the original page name if none supplied
+            pageName = page.getName();
+        }
+        Page clonedPage = addNewUserPage(userService.getUserById(userId), pageName, page.getPageLayout().getCode());
+        // populate all the widgets in cloned page from original
+        for(int i=0; i<page.getRegions().size(); i++){
+            for(int j=0; j<page.getRegions().get(i).getRegionWidgets().size(); j++){
+                String widgetId = page.getRegions().get(i).getRegionWidgets().get(j).getWidgetId();
+                widget = widgetRepository.get(widgetId);
+                addWidgetToPageRegion(clonedPage.getId(), widget.getId(), clonedPage.getRegions().get(i).getId());
+            }
+        }
+        // newly created page - so only one pageUser
+        PageUser pageUser = clonedPage.getMembers().get(0);
+        // update status to pending
+        pageUser.setPageStatus(PageInvitationStatus.PENDING);
+        if(pageRepository.save(clonedPage) != null){
+            return Boolean.TRUE;
+        }else{
+            return Boolean.FALSE;
+        }
+    }
+
+    @Transactional
     public Boolean addMemberToPage(String pageId, String userId){
         Page page = getPage(pageId);
         PageUser pageUser = new PageUserImpl();
@@ -320,7 +363,16 @@ public class DefaultPageService implements PageService {
 
     @Transactional
     public Boolean removeMemberFromPage(String pageId, String userId){
+        User user = userService.getAuthenticatedUser();
         Page page = this.getPage(pageId);
+        if(page.getOwnerId().equals(user.getId())){
+            // If I am the owner, this page has been cloned
+            // Declining a cloned page means there is no need to strip
+            // out this users pageUser object, instead remove the page itself
+            // which also removes the pageUser object further down the stack
+            pageRepository.delete(page);
+            return true;
+        }
         PageUser pageUserToRemove = null;
         for(PageUser pageUser : page.getMembers()){
             if(pageUser.getUserId().equals(userId)){

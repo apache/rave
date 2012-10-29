@@ -162,6 +162,16 @@ public interface PageService {
     @PreAuthorize("hasPermission(#pageId, 'org.apache.rave.portal.model.Page', 'update') and " +
                   "hasPermission(#widgetId, 'org.apache.rave.portal.model.Widget', 'read')") 
     RegionWidget addWidgetToPage(String pageId, String widgetId);
+    
+    /**
+     * Creates a new instance of a widget and adds it to the first position of the identified region on the page
+     * @param pageId the id of the page to add the widget to
+     * @param widgetId the {@link org.apache.rave.portal.model.Widget} id to add
+     * @return a valid widget instance
+     */
+    @PreAuthorize("hasPermission(#pageId, 'org.apache.rave.portal.model.Page', 'update') and " +
+                  "hasPermission(#widgetId, 'org.apache.rave.portal.model.Widget', 'read')") 
+    RegionWidget addWidgetToPageRegion(String pageId, String widgetId, String regionId);
 
     /**
      * Deletes the specified widget from the page.
@@ -204,6 +214,16 @@ public interface PageService {
     Page movePageToDefault(String pageId);
 
     /**
+     * Clone the page and then share it with another user (Page is detached from original)
+     * @param pageId - the id of the page in question
+     * @param userId - the userid to add
+     * @param pageName = name of the page
+     * @return true or false whether the user was added
+     */
+    @PreAuthorize("hasPermission(#pageId, 'org.apache.rave.portal.model.Page', 'update')")
+    Boolean clonePageForUser(String pageId, String userId, String pageName);
+
+    /**
      * Add another user to share this page with
      * @param pageId - the id of the page in question
      * @param userId - the userid to add
@@ -211,7 +231,7 @@ public interface PageService {
      */
     @PreAuthorize("hasPermission(#pageId, 'org.apache.rave.portal.model.Page', 'update')")
     Boolean addMemberToPage(String pageId, String userId);
-    
+
     /**
      * Remove an existing user from the page share
      * @param pageId - the id of the page in question

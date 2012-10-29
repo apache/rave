@@ -34,8 +34,11 @@
     </div>
     
     <div class="row-fluid">
-    <a class="btn btn-primary" id="w3cBrowseLink" href="#"><fmt:message key="page.general.browse"/></a>
-    
+    <div class="control-group">
+    	<fieldset>
+    		<a class="btn btn-primary" id="w3cBrowseLink" href="#"><fmt:message key="page.general.browse"/></a>
+    	</fieldset>
+    </div>
     <form:errors path="widget" cssClass="error" element="p"/>
     <form:form cssClass="form-horizontal" id="newWidgetForm" action="w3c?referringPageId=${referringPageId}" commandName="widget" method="POST">
         <fieldset>

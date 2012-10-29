@@ -98,7 +98,7 @@ public class ProfileControllerTest {
 		//creating a mock user
 		final UserImpl user = new UserImpl();
 		final ModelMap model = new ModelMap();
-		final int modelSize = 5;
+		final int modelSize = 4;
 		final String username="canonical";
         user.setUsername(username);
         user.setId(USER_ID);
@@ -139,7 +139,7 @@ public class ProfileControllerTest {
 		//creating a mock user
 		final UserImpl user = new UserImpl();
 		final ModelMap model = new ModelMap();
-		final int modelSize = 5;
+		final int modelSize = 4;
 		final String username="canonical";
         user.setUsername(username);
         user.setId(USER_ID);
@@ -175,7 +175,7 @@ public class ProfileControllerTest {
 		verify(userService, pageService);
 	}
 
-    @Test(expected = UsernameNotFoundException.class)
+    @Test
     public void viewPersonProfile_invalidUser() {
         //creating a mock user
         final User user = null;
@@ -191,7 +191,8 @@ public class ProfileControllerTest {
 
         replay(userService, pageService);
 
-        profileController.viewProfileByUsername(username, model, null);
+        String view = profileController.viewProfileByUsername(username, model, null);
+        assertThat(view, is(ViewNames.USER_NOT_FOUND));
 
         verify(userService, pageService);
     }
