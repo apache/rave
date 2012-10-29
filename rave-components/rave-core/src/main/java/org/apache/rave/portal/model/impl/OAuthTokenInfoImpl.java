@@ -22,7 +22,7 @@ package org.apache.rave.portal.model.impl;
 import org.apache.rave.portal.model.OAuthTokenInfo;
 
 public class OAuthTokenInfoImpl implements OAuthTokenInfo {
-    private Long id;
+    private String id;
     private String accessToken;
     private String tokenSecret;
     private String sessionHandle;
@@ -51,12 +51,12 @@ public class OAuthTokenInfoImpl implements OAuthTokenInfo {
     }
 
     @Override
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
     @Override
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

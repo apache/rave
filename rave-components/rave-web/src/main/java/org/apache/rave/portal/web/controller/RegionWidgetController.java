@@ -20,6 +20,7 @@ package org.apache.rave.portal.web.controller;
 
 import org.apache.rave.portal.model.RegionWidget;
 import org.apache.rave.portal.service.RegionWidgetService;
+import org.apache.rave.portal.service.WidgetService;
 import org.apache.rave.portal.web.util.ModelKeys;
 import org.apache.rave.portal.web.util.ViewNames;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,15 +34,18 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class RegionWidgetController {
 	
 	private RegionWidgetService regionWidgetService;
+    private WidgetService widgetService;
 	
 	@Autowired
-	public RegionWidgetController(RegionWidgetService regionWidgetService){
+	public RegionWidgetController(RegionWidgetService regionWidgetService, WidgetService widgetService){
 		this.regionWidgetService = regionWidgetService;
+        this.widgetService = widgetService;
 	}
 
     @RequestMapping(value = {"/api/rest/regionwidget/{regionWidgetId}"}, method = RequestMethod.GET)
-    public String  viewRegionWidget(Model model, @PathVariable Long regionWidgetId){
+    public String  viewRegionWidget(Model model, @PathVariable String regionWidgetId){
     	RegionWidget rw = regionWidgetService.getRegionWidget(regionWidgetId);
+        model.addAttribute(ModelKeys.WIDGET, widgetService.getWidget(rw.getWidgetId()));
         model.addAttribute(ModelKeys.REGION_WIDGET, rw);
     	return ViewNames.REGION_WIDGET;
     }

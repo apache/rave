@@ -23,14 +23,14 @@ import java.util.List;
 
 @XmlTransient
 public interface Page {
-    Long getId();
-    void setId(Long id);
+    String getId();
+    void setId(String id);
 
     String getName();
     void setName(String name);
 
-    User getOwner();
-    void setOwner(User owner);
+    String getOwnerId();
+    void setOwnerId(String owner);
 
     PageLayout getPageLayout();
     void setPageLayout(PageLayout pageLayout);

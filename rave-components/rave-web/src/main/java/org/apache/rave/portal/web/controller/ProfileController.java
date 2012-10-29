@@ -19,13 +19,10 @@
 
 package org.apache.rave.portal.web.controller;
 
-import java.util.List;
-
-import org.apache.rave.portal.model.Page;
-import org.apache.rave.portal.model.Person;
-import org.apache.rave.portal.model.User;
+import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.service.PageService;
 import org.apache.rave.portal.service.UserService;
+import org.apache.rave.portal.service.WidgetService;
 import org.apache.rave.portal.web.controller.util.ControllerUtils;
 import org.apache.rave.portal.web.model.NavigationItem;
 import org.apache.rave.portal.web.model.NavigationMenu;
@@ -39,11 +36,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @RequestMapping(value = {"/person/*", "/person"})
@@ -53,11 +49,13 @@ public class ProfileController {
 
 	private final UserService userService;
 	private final PageService pageService;
+    private final WidgetService widgetService;
 
 	@Autowired
-	public ProfileController(UserService userService, PageService pageService) {
+	public ProfileController(UserService userService, PageService pageService, WidgetService widgetService) {
 		this.userService = userService;
         this.pageService = pageService;
+        this.widgetService = widgetService;
 	}
 
     /**
@@ -69,7 +67,7 @@ public class ProfileController {
 	 * @return the view name of the user profile page
 	 */
 	@RequestMapping(value = {"/{username:.*}"}, method = RequestMethod.GET)
-	public String viewProfile(@PathVariable String username, ModelMap model, @RequestParam(required = false) Long referringPageId) {
+	public String viewProfileByUsername(@PathVariable String username, ModelMap model, @RequestParam(required = false) String referringPageId) {
         User user = null;
         try{
             user = userService.getUserByUsername(username);
@@ -91,7 +89,7 @@ public class ProfileController {
 		 * @return the view name of the user profile page
 		 */
 	@RequestMapping(value = {"/id/{userid:.*}"}, method = RequestMethod.GET)
-	public String viewProfile(@PathVariable Long userid, ModelMap model, @RequestParam(required = false) Long referringPageId) {
+	public String viewProfile(@PathVariable String userid, ModelMap model, @RequestParam(required = false) String referringPageId) {
         User user = null;
         try{
             user = userService.getUserById(userid);
@@ -105,7 +103,7 @@ public class ProfileController {
         }
 	}
 
-    private String viewProfileCommon(User user, ModelMap model, Long referringPageId){
+    private String viewProfileCommon(User user, ModelMap model, String referringPageId){
         Page personProfilePage = pageService.getPersonProfilePage(user.getId());
         addAttributesToModel(model, user, referringPageId);
         model.addAttribute(ModelKeys.PAGE, personProfilePage);
@@ -125,7 +123,7 @@ public class ProfileController {
 	 */
     @RequestMapping(method = RequestMethod.POST)
     public String updateProfile(ModelMap model,
-                                @RequestParam(required = false) Long referringPageId,
+                                @RequestParam(required = false) String referringPageId,
                                 @ModelAttribute("updatedUser") UserForm updatedUser) {
 
         User user = userService.getAuthenticatedUser();
@@ -151,13 +149,13 @@ public class ProfileController {
 	/*
 	 * Function to add attributes to model map
 	 */
-	private void addAttributesToModel(ModelMap model, User user, Long referringPageId) {
+	private void addAttributesToModel(ModelMap model, User user, String referringPageId) {
     	model.addAttribute(ModelKeys.USER_PROFILE, user);
     	model.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
     }
 
-    public static void addNavItemsToModel(String view, ModelMap model, Long referringPageId, User user, List<Person> friendRequests) {
-        long refPageId = referringPageId != null ? referringPageId : 0;
+    public static void addNavItemsToModel(String view, ModelMap model, String referringPageId, User user, List<Person> friendRequests) {
+        String refPageId = referringPageId != null ? referringPageId : "";
         final NavigationMenu topMenu = new NavigationMenu("topnav");
 
         if(friendRequests != null){

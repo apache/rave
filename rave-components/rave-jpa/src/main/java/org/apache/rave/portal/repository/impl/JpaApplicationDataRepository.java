@@ -52,7 +52,7 @@ public class JpaApplicationDataRepository implements ApplicationDataRepository {
     }
 
     @Override
-    public ApplicationData get(long id) {
+    public ApplicationData get(String id) {
         JpaSerializableApplicationData applicationData = (JpaSerializableApplicationData) manager.find(JpaApplicationData.class, id);
         if (applicationData != null) {
             applicationData.deserializeData();

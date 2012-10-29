@@ -20,10 +20,11 @@ package org.apache.rave.portal.model.impl;
 
 import org.apache.rave.portal.model.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class WidgetImpl implements Widget {
-    private Long id;
+    private String id;
     private String title;
     private String titleUrl;
     private String url;
@@ -34,31 +35,31 @@ public class WidgetImpl implements Widget {
     private String authorEmail;
     private String description;
     private WidgetStatus widgetStatus;
-    private List<WidgetComment> comments;
-    private User owner;
+    private List<WidgetComment> comments = new ArrayList<WidgetComment>();
+    private String ownerId;
     private boolean disableRendering;
     private String disableRenderingMessage;
-    private List<WidgetRating> ratings;
-    private List<WidgetTag> tags;
-    private List<Category> categories;
+    private List<WidgetRating> ratings = new ArrayList<WidgetRating>();
+    private List<WidgetTag> tags = new ArrayList<WidgetTag>();
+    private List<Category> categories = new ArrayList<Category>();
     private boolean featured;
 
     public WidgetImpl() {}
 
-    public WidgetImpl(long id) {
+    public WidgetImpl(String id) {
         this.id = id;
     }
 
-    public WidgetImpl(long id, String url) {
+    public WidgetImpl(String id, String url) {
         this.id = id;
         this.url = url;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -150,12 +151,12 @@ public class WidgetImpl implements Widget {
         this.comments = comments;
     }
 
-    public User getOwner() {
-        return owner;
+    public String getOwnerId() {
+        return ownerId;
     }
 
-    public void setOwner(User owner) {
-        this.owner = owner;
+    public void setOwnerId(String owner) {
+        this.ownerId = owner;
     }
 
     public boolean isDisableRendering() {
@@ -223,7 +224,7 @@ public class WidgetImpl implements Widget {
         if (disableRenderingMessage != null ? !disableRenderingMessage.equals(widget.disableRenderingMessage) : widget.disableRenderingMessage != null)
             return false;
         if (id != null ? !id.equals(widget.id) : widget.id != null) return false;
-        if (owner != null ? !owner.equals(widget.owner) : widget.owner != null) return false;
+        if (ownerId != null ? !ownerId.equals(widget.ownerId) : widget.ownerId != null) return false;
         if (ratings != null ? !ratings.equals(widget.ratings) : widget.ratings != null) return false;
         if (screenshotUrl != null ? !screenshotUrl.equals(widget.screenshotUrl) : widget.screenshotUrl != null)
             return false;
@@ -253,7 +254,7 @@ public class WidgetImpl implements Widget {
         result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + (widgetStatus != null ? widgetStatus.hashCode() : 0);
         result = 31 * result + (comments != null ? comments.hashCode() : 0);
-        result = 31 * result + (owner != null ? owner.hashCode() : 0);
+        result = 31 * result + (ownerId != null ? ownerId.hashCode() : 0);
         result = 31 * result + (disableRendering ? 1 : 0);
         result = 31 * result + (disableRenderingMessage != null ? disableRenderingMessage.hashCode() : 0);
         result = 31 * result + (ratings != null ? ratings.hashCode() : 0);

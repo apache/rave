@@ -174,8 +174,15 @@
                                         <td>
                                             <fmt:message key="page.widget.tags.title"/>
                                         </td>
-                                        <c:forEach var="tag" items="${widget.tags}">
-                                            <td class="storeWidgetDesc"><c:out value="${tag.tag.keyword}"/></td>
+                                        <c:forEach var="widgettag" items="${widget.tags}">
+                                            <c:forEach var="tag" items="${tags}">
+                                                <c:set var="tagMatched">
+                                                    ${tag.id==widgettag.tagId?true:false}
+                                                </c:set>
+                                                <c:if test="${tagMatched}">
+                                                    <td class="storeWidgetDesc"><c:out value="${tag.keyword}"/></td>
+                                                </c:if>
+                                            </c:forEach>
                                         </c:forEach>
                                     </tr>
                                 </table>

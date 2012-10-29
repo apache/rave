@@ -24,6 +24,7 @@ import java.util.List;
 
 public class PersonImpl implements Person {
 
+    protected String id;
     protected String username;
     protected String email;
     protected String displayName;
@@ -38,6 +39,14 @@ public class PersonImpl implements Person {
     protected List<Address> addresses;
     protected List<Organization> organizations;
     protected List<PersonProperty> properties;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getUsername() {
         return username;

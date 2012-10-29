@@ -46,8 +46,8 @@ public class JpaRegionRepository implements RegionRepository {
     }
 
     @Override
-    public Region get(long id) {
-        return manager.find(JpaRegion.class, id);
+    public Region get(String id) {
+        return manager.find(JpaRegion.class, Long.parseLong(id));
     }
 
     @Override

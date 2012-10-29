@@ -26,8 +26,8 @@ import org.apache.rave.portal.model.Widget;
 import java.util.List;
 
 public class RegionWidgetImpl implements RegionWidget {
-    private Long id;
-    private Widget widget;
+    private String id;
+    private String widgetId;
     private Region region;
     private String renderPosition;
     private Integer renderOrder = 0;
@@ -40,41 +40,40 @@ public class RegionWidgetImpl implements RegionWidget {
 
     }
 
-    public RegionWidgetImpl(Long id) {
+    public RegionWidgetImpl(String id) {
         this.id = id;
     }
 
-    public RegionWidgetImpl(Long id, Widget widget, Region region) {
+    public RegionWidgetImpl(String id, String widgetId, Region region) {
         this.id = id;
-        this.widget = widget;
+        this.widgetId = widgetId;
         this.region = region;
     }
 
-    public RegionWidgetImpl(Long id, Widget widget, Region region, int renderOrder) {
+    public RegionWidgetImpl(String id, String widgetId, Region region, int renderOrder) {
         this.id = id;
-        this.widget = widget;
+        this.widgetId = widgetId;
         this.region = region;
         this.renderOrder = renderOrder;
     }
 
     @Override
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    @Override
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
     @Override
-    public Widget getWidget() {
-        return widget;
+    public String getWidgetId() {
+        return widgetId;
     }
 
     @Override
-    public void setWidget(Widget widget) {
-        this.widget = widget;
+    public void setWidgetId(String widgetId) {
+        this.widgetId = widgetId;
     }
 
     @Override
@@ -158,7 +157,7 @@ public class RegionWidgetImpl implements RegionWidget {
         if (locked != null ? !locked.equals(rw.locked) : rw.locked != null)
             return false;
         if (renderOrder != null ? !renderOrder.equals(rw.renderOrder) : rw.renderOrder != null) return false;
-        if (widget != null ? !widget.equals(rw.widget) : rw.widget != null)
+        if (widgetId != null ? !widgetId.equals(rw.widgetId) : rw.widgetId != null)
             return false;
         if (region != null ? !region.equals(rw.region) : rw.region != null) return false;
         if (hideChrome != null ? !hideChrome.equals(rw.hideChrome) : rw.hideChrome != null) return false;
@@ -171,7 +170,7 @@ public class RegionWidgetImpl implements RegionWidget {
 
     @Override
     public int hashCode() {
-        int result = (widget != null ? widget.hashCode() : 0);
+        int result = (widgetId != null ? widgetId.hashCode() : 0);
         result = 31 * result + (preferences != null ? preferences.hashCode() : 0);
         result = 31 * result + (id != null ? id.hashCode() : 0);
         result = 31 * result + (renderOrder != null ? renderOrder.hashCode() : 0);
@@ -187,7 +186,7 @@ public class RegionWidgetImpl implements RegionWidget {
     public String toString() {
         return "RegionWidgetImpl{" +
                 "id=" + id +
-                ", widget=" + ((widget == null) ? null : widget.getId())  +
+                ", widget=" + ((widgetId == null) ? null : widgetId)  +
                 ", region=" + ((region == null) ? null : region.getId()) +
                 ", renderPosition='" + renderPosition + '\'' +
                 ", renderOrder=" + renderOrder +

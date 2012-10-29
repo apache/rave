@@ -20,6 +20,7 @@ package org.apache.rave.portal.security.impl;
 
 import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.repository.RegionRepository;
+import org.apache.rave.portal.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,10 +35,12 @@ import java.util.List;
 public class DefaultRegionPermissionEvaluator extends AbstractModelPermissionEvaluator<Region>{
     private Logger log = LoggerFactory.getLogger(getClass());
     private RegionRepository regionRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    public DefaultRegionPermissionEvaluator(RegionRepository regionRepository) {
+    public DefaultRegionPermissionEvaluator(RegionRepository regionRepository, UserRepository userRepository) {
         this.regionRepository = regionRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -82,7 +85,7 @@ public class DefaultRegionPermissionEvaluator extends AbstractModelPermissionEva
         if (targetId instanceof RaveSecurityContext) {
             hasPermission = verifyRaveSecurityContext(authentication, (RaveSecurityContext) targetId);
         } else {
-            hasPermission = hasPermission(authentication, regionRepository.get((Long) targetId), permission, true);
+            hasPermission = hasPermission(authentication, regionRepository.get((String) targetId), permission, true);
         }
         return hasPermission;
     }
@@ -126,7 +129,7 @@ public class DefaultRegionPermissionEvaluator extends AbstractModelPermissionEva
 
     // returns a trusted Region object, either from the RegionRepository, or the
     // cached container list
-    private Region getTrustedRegion(long regionId, List<Region> trustedRegionContainer) {
+    private Region getTrustedRegion(String regionId, List<Region> trustedRegionContainer) {
         Region region = null;
         if (trustedRegionContainer.isEmpty()) {
             region = regionRepository.get(regionId);
@@ -147,14 +150,14 @@ public class DefaultRegionPermissionEvaluator extends AbstractModelPermissionEva
         } else {
             trustedRegion = getTrustedRegion(region.getId(), trustedRegionContainer);
         }
-        return isRegionOwnerByUsername(authentication, trustedRegion.getPage().getOwner().getUsername());
+        return isRegionOwnerByUserId(authentication, trustedRegion.getPage().getOwnerId());
     }
 
-    private boolean isRegionOwnerByUsername(Authentication authentication, String username) {
-        return ((User)authentication.getPrincipal()).getUsername().equals(username);
+    private boolean isRegionOwnerByUserId(Authentication authentication, String userId) {
+        return ((User)authentication.getPrincipal()).getId().equals(userId);
     }
 
-    private boolean isRegionOwnerById(Authentication authentication, Long userId) {
+    private boolean isRegionOwnerById(Authentication authentication, String userId) {
         return ((User)authentication.getPrincipal()).getId().equals(userId);
     }
 
@@ -168,7 +171,7 @@ public class DefaultRegionPermissionEvaluator extends AbstractModelPermissionEva
 
         // perform the permissions check based on the class supplied to the RaveSecurityContext object
         if (User.class == clazz) {
-            return isRegionOwnerById(authentication, (Long) raveSecurityContext.getId());
+            return isRegionOwnerById(authentication, (String) raveSecurityContext.getId());
         } else {
             throw new IllegalArgumentException("unknown RaveSecurityContext type: " + raveSecurityContext.getType());
         }
@@ -193,7 +196,7 @@ public class DefaultRegionPermissionEvaluator extends AbstractModelPermissionEva
         //
         String viewer = ((User)authentication.getPrincipal()).getUsername();
         for (PageUser pageUser:containerPage.getMembers()){
-            if (pageUser.getUser().getUsername().equals(viewer)){
+            if (userRepository.get(pageUser.getUserId()).getUsername().equals(viewer)){
                 log.info("User "+viewer+" is a member of page "+containerPage.getId());
                 if(checkEditorStatus){
                     return pageUser.isEditor();

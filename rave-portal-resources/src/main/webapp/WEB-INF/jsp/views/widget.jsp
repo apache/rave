@@ -151,9 +151,16 @@
                     <c:if test="${not empty widget.tags}">
                         <h3><fmt:message key="page.widget.tags.title"/></h3>
                         <div class="detail-widget-tags">
-                                <c:forEach var="tag" items="${widget.tags}">
-                               <span class="label"><c:out value="${tag.tag.keyword}"/></span>
+                            <c:forEach var="widgettag" items="${widget.tags}">
+                                <c:forEach var="tag" items="${tags}">
+                                    <c:set var="tagMatched">
+                                        ${tag.id==widgettag.tagId?true:false}
+                                    </c:set>
+                                    <c:if test="${tagMatched}">
+                                        <span class="label"><c:out value="${tag.keyword}"/></span>
+                                    </c:if>
                                 </c:forEach>
+                            </c:forEach>
                         </div>
                     </c:if>
                     <div id="tagInput" class="form-inline hide">
@@ -193,21 +200,22 @@
                     <c:if test="${not empty widget.comments}">
                         <ul class="comments">
                             <c:forEach var="comment" items="${widget.comments}">
+                                <portal:person id="${comment.userId}" var="commenter" />
                                 <li class="comment">
                                     <fmt:formatDate value="${comment.createdDate}" type="both" var="commentDate"/>
                                     <p class="comment-heading">
                                         <span class="commenter">
                                             <c:choose>
-                                                <c:when test="${not empty comment.user.displayName}">
-                                                    <c:out value="${comment.user.displayName}"/>
+                                                <c:when test="${not empty commenter.username}">
+                                                    <c:out value="${commenter.username}"/>
                                                 </c:when>
-                                                <c:otherwise><c:out value="${comment.user.username}"/></c:otherwise>
+                                                <c:otherwise><c:out value="${comment.userId}"/></c:otherwise>
                                             </c:choose>
                                         </span>
                                         <span class="comment-date">
                                             <c:out value=" - ${commentDate} "/>
                                         </span>
-                                        <c:if test="${userProfile.id eq comment.user.id}">
+                                        <c:if test="${userProfile.id eq comment.userId}">
                                             <button id="comment-delete-${comment.id}" class="btn btn-danger btn-mini commentDeleteButton"
                                                     value="Delete" title="Delete comment" data-widgetid="<c:out value="${comment.widgetId}"/>">
                                                 <i class="icon-remove icon-white"></i>

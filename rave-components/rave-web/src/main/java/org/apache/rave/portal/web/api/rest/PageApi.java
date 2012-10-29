@@ -53,7 +53,7 @@ public class PageApi extends AbstractRestApi {
     }       
           
     @RequestMapping(value = "{pageId}", method = RequestMethod.DELETE)
-    public void deletePage(@PathVariable long pageId, HttpServletResponse response) {
+    public void deletePage(@PathVariable String pageId, HttpServletResponse response) {
         logger.debug("DELETE received for /api/rest/page/" + pageId);
         pageService.deletePage(pageId);
         
@@ -63,7 +63,7 @@ public class PageApi extends AbstractRestApi {
 
     @ResponseBody
     @RequestMapping(value = "{pageId}/omdl", method = RequestMethod.GET)
-    public OmdlOutputAdapter getOmdl(@PathVariable long pageId, HttpServletRequest request, HttpServletResponse response) {
+    public OmdlOutputAdapter getOmdl(@PathVariable String pageId, HttpServletRequest request, HttpServletResponse response) {
         logger.debug("GET received for /api/rest/page/" + pageId + "/omdl");
         response.setHeader("Content-Disposition", "attachment; filename=\"rave-omdl-page-" + pageId + ".xml\"");
         return omdlService.exportOmdl(pageId, request.getRequestURL().toString());
@@ -71,7 +71,7 @@ public class PageApi extends AbstractRestApi {
 
     @ResponseBody
     @RequestMapping(value = "{pageId}", method = RequestMethod.GET)
-    public Page getPage(@PathVariable long pageId, @RequestParam(required=false) boolean export) {
+    public Page getPage(@PathVariable String pageId, @RequestParam(required=false) boolean export) {
         logger.debug("GET received for /api/rest/page/" + pageId);        
         Page page = pageService.getPage(pageId);
         if(export) {
@@ -81,7 +81,7 @@ public class PageApi extends AbstractRestApi {
     }
 
     private static void modifyForExport(Page page) {
-        page.setOwner(null);
+        page.setOwnerId(null);
         for(Region r : page.getRegions()){
             modifyForExport(r);
         }

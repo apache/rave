@@ -31,7 +31,7 @@ import java.util.Date;
 import java.util.List;
 
 public class UserImpl extends PersonImpl implements User {
-    private Long id;
+    private String id;
     private String password;
     private boolean expired;
     private boolean credsExpired;
@@ -47,11 +47,11 @@ public class UserImpl extends PersonImpl implements User {
 
     public UserImpl() {}
 
-    public UserImpl(Long id) {
+    public UserImpl(String id) {
         this.id = id;
     }
 
-    public UserImpl(Long userid, String username) {
+    public UserImpl(String userid, String username) {
         this.id = userid;
         this.username = username;
     }
@@ -162,11 +162,11 @@ public class UserImpl extends PersonImpl implements User {
         return p;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

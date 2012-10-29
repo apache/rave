@@ -34,7 +34,7 @@ public interface PageRepository extends Repository<Page> {
      * @param pageType the pageType to search by
      * @return a list of all the Page objects owned by userId of type pageType
      */
-    List<Page> getAllPages(Long userId, PageType pageType);
+    List<Page> getAllPages(String userId, PageType pageType);
 
     /**
      * Delete all pages for a userId of the supplied pageType
@@ -42,7 +42,7 @@ public interface PageRepository extends Repository<Page> {
      * @param pageType
      * @return the number of pages deleted
      */
-    int deletePages(Long userId, PageType pageType);
+    int deletePages(String userId, PageType pageType);
 
     /**
      * Create either a Person or User Page from PageTemplate for the given user
@@ -58,7 +58,7 @@ public interface PageRepository extends Repository<Page> {
      * @param userId
      * @return boolean
      */
-    boolean hasPersonPage(long userId);
+    boolean hasPersonPage(String userId);
 
     /**
      * Returns a list of pageUser records of a certain pageType.
@@ -67,7 +67,7 @@ public interface PageRepository extends Repository<Page> {
      * @param pageType
      * @return a list of pageUser
      */
-    public List<PageUser> getPagesForUser(Long userId, PageType pageType);
+    public List<PageUser> getPagesForUser(String userId, PageType pageType);
 
 
     /**
@@ -76,5 +76,5 @@ public interface PageRepository extends Repository<Page> {
      * @param pageId
      * @return a single pageUser
      */
-    public PageUser getSingleRecord(Long userId, Long pageId);
+    public PageUser getSingleRecord(String userId, String pageId);
 }

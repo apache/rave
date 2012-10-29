@@ -51,7 +51,7 @@ public class JpaOAuthConsumerStoreRepository implements OAuthConsumerStoreReposi
     }
 
     @Override
-    public OAuthConsumerStore get(long id) {
+    public OAuthConsumerStore get(String id) {
         return manager.find(JpaOAuthConsumerStore.class, id);
     }
 

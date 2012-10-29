@@ -76,7 +76,7 @@ public class NewWidgetValidatorTest {
         final String existingUrl = "http://example.com/existing_widget.xml";
 
         WidgetImpl widget = new WidgetImpl();
-        widget.setId(123L);
+        widget.setId("123");
         widget.setTitle(VALID_TITLE);
         widget.setType(VALID_TYPE);
         widget.setDescription(VALID_DESCRIPTION);

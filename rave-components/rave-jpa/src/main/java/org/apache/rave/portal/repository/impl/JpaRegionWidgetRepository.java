@@ -47,8 +47,8 @@ public class JpaRegionWidgetRepository implements RegionWidgetRepository {
     }
 
     @Override
-    public RegionWidget get(long id) {
-        return manager.find(JpaRegionWidget.class, id);
+    public RegionWidget get(String id) {
+        return manager.find(JpaRegionWidget.class, Long.parseLong(id));
     }
 
     @Override

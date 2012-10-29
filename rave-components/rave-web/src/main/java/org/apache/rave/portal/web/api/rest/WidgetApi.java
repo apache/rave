@@ -33,6 +33,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -43,21 +44,17 @@ import java.util.List;
 @RequestMapping("/api/rest/widgets")
 public class WidgetApi extends AbstractRestApi {
     private static Logger logger = LoggerFactory.getLogger(WidgetApi.class);
-    private final WidgetCommentService widgetCommentService;
-    private final WidgetRatingService widgetRatingService;
     private final UserService userService;
     private final TagService tagService;
-    private final WidgetTagService widgetTagService;
+    private final WidgetService widgetService;
 
 
     @Autowired
-    public WidgetApi(WidgetRatingService widgetRatingService, WidgetCommentService widgetCommentService, UserService userService,
-                     TagService tagService, WidgetTagService widgetTagService) {
-        this.widgetCommentService = widgetCommentService;
-        this.widgetRatingService = widgetRatingService;
+    public WidgetApi(UserService userService,
+                     TagService tagService, WidgetService widgetService) {
         this.userService = userService;
         this.tagService = tagService;
-        this.widgetTagService = widgetTagService;
+        this.widgetService = widgetService;
     }
 
     @RequestMapping(method = RequestMethod.GET)
@@ -67,71 +64,72 @@ public class WidgetApi extends AbstractRestApi {
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/{widgetId}/comments")
-    public void createWidgetComment(@PathVariable long widgetId,
+    public void createWidgetComment(@PathVariable String widgetId,
                                     @RequestParam String text,
                                     HttpServletResponse response) {
         WidgetComment widgetComment = new WidgetCommentImpl();
-        widgetComment.setWidgetId(widgetId);
-        widgetComment.setUser(userService.getAuthenticatedUser());
+        widgetComment.setUserId(userService.getAuthenticatedUser().getId());
         widgetComment.setText(text);
         widgetComment.setCreatedDate(new Date());
         widgetComment.setLastModifiedDate(new Date());
 
-        widgetCommentService.saveWidgetComment(widgetComment);
+        widgetService.createWidgetComment(widgetId, widgetComment);
 
         response.setStatus(HttpStatus.NO_CONTENT.value());
     }
 
+    @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/{widgetId}/comments/{widgetCommentId}")
-    public WidgetComment getWidgetComment(@PathVariable long widgetId,
-                                          @PathVariable long widgetCommentId) {
-        return widgetCommentService.getWidgetComment(widgetCommentId);
+    public WidgetComment getWidgetComment(@PathVariable String widgetId,
+                                          @PathVariable String widgetCommentId) {
+        return widgetService.getWidgetComment(widgetId, widgetCommentId);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/{widgetId}/comments/{widgetCommentId}")
-    public void updateWidgetComment(@PathVariable long widgetId,
-                                    @PathVariable long widgetCommentId,
+    public void updateWidgetComment(@PathVariable String widgetId,
+                                    @PathVariable String widgetCommentId,
                                     @RequestParam String text,
                                     HttpServletResponse response) {
 
-        WidgetComment widgetComment = widgetCommentService.getWidgetComment(widgetCommentId);
+        WidgetComment widgetComment = widgetService.getWidgetComment(widgetId, widgetCommentId);
         if (widgetComment == null) {
             widgetComment = new WidgetCommentImpl();
-            widgetComment.setWidgetId(widgetId);
-            widgetComment.setUser(userService.getAuthenticatedUser());
+            widgetComment.setUserId(userService.getAuthenticatedUser().getId());
             widgetComment.setCreatedDate(new Date());
             widgetComment.setLastModifiedDate(new Date());
+            widgetComment.setText(text);
+            widgetService.createWidgetComment(widgetId, widgetComment);
+        } else {
+            widgetComment.setText(text);
+            widgetService.updateWidgetComment(widgetId, widgetComment);
         }
-        widgetComment.setText(text);
-
-        widgetCommentService.saveWidgetComment(widgetComment);
 
         response.setStatus(HttpStatus.NO_CONTENT.value());
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/{widgetId}/comments/{widgetCommentId}")
-    public void deleteWidgetComment(@PathVariable long widgetId,
-                                    @PathVariable long widgetCommentId,
+    public void deleteWidgetComment(@PathVariable String widgetId,
+                                    @PathVariable String widgetCommentId,
                                     HttpServletResponse response) {
-        widgetCommentService.removeWidgetComment(widgetCommentId);
+        widgetService.removeWidgetComment(widgetId, widgetCommentId);
 
         response.setStatus(HttpStatus.NO_CONTENT.value());
     }
 
 
     @RequestMapping(value = "/{widgetId}/rating", method = RequestMethod.DELETE)
-    public void deleteWidgetRating(@PathVariable long widgetId,
+    public void deleteWidgetRating(@PathVariable String widgetId,
                                    HttpServletResponse response) {
         logger.debug("DELETE WidgetRating received for /api/rest/widgets/{}", widgetId);
 
-        widgetRatingService.removeWidgetRating(widgetId, userService.getAuthenticatedUser().getId());
+        widgetService.removeWidgetRating(widgetId, userService.getAuthenticatedUser().getId());
 
         // send a 204 back for success since there is no content being returned
         response.setStatus(HttpStatus.NO_CONTENT.value());
     }
 
     @RequestMapping(value = "/{widgetId}/rating", method = RequestMethod.POST)
-    public void setWidgetRating(@PathVariable long widgetId,
+    public void setWidgetRating(@PathVariable String widgetId,
                                 @RequestParam(value = "score") Integer score,
                                 HttpServletResponse response) {
         logger.debug("POST WidgetRating received for /api/rest/widgets/{} score: {}", widgetId, score);
@@ -139,8 +137,7 @@ public class WidgetApi extends AbstractRestApi {
         WidgetRating widgetRating = new WidgetRatingImpl();
         widgetRating.setScore(score);
         widgetRating.setUserId(userService.getAuthenticatedUser().getId());
-        widgetRating.setWidgetId(widgetId);
-        widgetRatingService.saveWidgetRating(widgetRating);
+        widgetService.saveWidgetRating(widgetId, widgetRating);
 
         // send a 204 back for success since there is no content being returned
         response.setStatus(HttpStatus.NO_CONTENT.value());
@@ -148,24 +145,20 @@ public class WidgetApi extends AbstractRestApi {
 
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/{widgetId}/users")
-    public List<Person> getAllUsers(@PathVariable long widgetId) {
+    public List<Person> getAllUsers(@PathVariable String widgetId) {
         return userService.getAllByAddedWidget(widgetId);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/{widgetId}/tags")
-    public void createWidgetTag(@PathVariable long widgetId,
+    public void createWidgetTag(@PathVariable String widgetId,
                                 @RequestParam String tagText,
                                 HttpServletResponse response) {
         logger.debug("add tags " + tagText + " to widget " + widgetId);
         if (tagText != null && !tagText.trim().isEmpty()) {
-            WidgetTag existed = widgetTagService.getWidgetTagByWidgetIdAndKeyword(widgetId, tagText);
+            WidgetTag existed = widgetService.getWidgetTagByWidgetIdAndKeyword(widgetId, tagText);
             if (existed == null) {
-                WidgetTag widgetTag = new WidgetTagImpl();
-                widgetTag.setWidgetId(widgetId);
-                widgetTag.setUser(userService.getAuthenticatedUser());
-                widgetTag.setCreatedDate(new Date());
-                widgetTag.setTag(getTag(tagText));
-                widgetTagService.createWidgetTag(widgetTag);
+                WidgetTag widgetTag = new WidgetTagImpl(userService.getAuthenticatedUser(), new Date(), getTag(tagText));
+                widgetService.createWidgetTag(widgetId, widgetTag);
                 logger.debug("widget tag is saved.");
 
             }
@@ -177,8 +170,21 @@ public class WidgetApi extends AbstractRestApi {
 
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/{widgetId}/tags")
-    public List<Tag> getTags(@PathVariable long widgetId) {
-        return tagService.getAvailableTagsByWidgetId(widgetId);
+    public List<Tag> getTags(@PathVariable String widgetId, HttpServletResponse response) {
+        ArrayList<Tag> tags = new ArrayList<Tag>();
+
+        Widget widget = widgetService.getWidget(widgetId);
+
+        if (widget == null) {
+            response.setStatus(404);
+            return null;
+        }
+
+        for (WidgetTag wt : widget.getTags()) {
+            tags.add(tagService.getTagById(wt.getTagId()));
+        }
+
+        return tags;
     }
 
     @ResponseBody
@@ -190,8 +196,8 @@ public class WidgetApi extends AbstractRestApi {
     private Tag getTag(String keyword) {
         Tag tag = tagService.getTagByKeyword(keyword);
         if (tag == null) {
-            tag = new TagImpl();
-            tag.setKeyword(keyword);
+            tag = new TagImpl(keyword);
+            tag = tagService.save(tag);
         }
         return tag;
     }

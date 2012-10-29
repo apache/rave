@@ -42,11 +42,10 @@ public class JpaTagConverterTest {
 
     @Test
     public void convert_valid_tagImpl(){
-        TagImpl tag = new TagImpl("blazer", new ArrayList<WidgetTag>());
+        TagImpl tag = new TagImpl("blazer");
         JpaTag jpaTag = jpaTagConverter.convert(tag);
         assertNotNull(jpaTag);
-        assertEquals(tag.getKeyword(), jpaTag.getKeyword()); 
-        assertEquals(tag.getWidgets().size(), jpaTag.getWidgets().size());
+        assertEquals(tag.getKeyword(), jpaTag.getKeyword());
     }
 
 
@@ -54,7 +53,6 @@ public class JpaTagConverterTest {
     public void convert_valid_jpaTag(){
         JpaTag tag = new JpaTag();
         tag.setKeyword("blazer");
-        tag.setWidgets(new ArrayList<WidgetTag>());
         tag.setEntityId(387L);
         JpaTag jpaTag = jpaTagConverter.convert(tag);
         assertNotNull(jpaTag);

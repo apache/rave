@@ -24,6 +24,7 @@ import org.apache.rave.portal.repository.TagRepository;
 import org.apache.rave.portal.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -39,7 +40,7 @@ public class DefaultTagService implements TagService {
     }
 
     @Override
-    public Tag getTagById(long entityId) {
+    public Tag getTagById(String entityId) {
         return repository.get(entityId);
     }
 
@@ -56,11 +57,17 @@ public class DefaultTagService implements TagService {
     }
 
     @Override
-    public List<Tag> getAvailableTagsByWidgetId(Long widgetId) {
-
-        return repository.getAvailableTagsByWidgetId(widgetId);
-
+    @Transactional
+    public Tag save(Tag tag) {
+        return repository.save(tag);
     }
+
+//    @Override
+//    public List<Tag> getAvailableTagsByWidgetId(String widgetId) {
+//
+//        return repository.getAvailableTagsByWidgetId(widgetId);
+//
+//    }
 
 
 }

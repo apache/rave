@@ -1,4 +1,5 @@
 /*
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -217,7 +218,7 @@ public class DefaultWidgetMarketplaceService implements WidgetMarketplaceService
     public Widget addWidget(Widget widget) throws Exception{
         PortalPreference status = portalPreferenceService.getPreference(PortalPreferenceKeys.INITIAL_WIDGET_STATUS);
         User user = userService.getAuthenticatedUser();
-        widget.setOwner(user);
+        widget.setOwnerId(user.getId());
         if (status != null && status.getValue().equals("PUBLISHED")){
             widget.setWidgetStatus(WidgetStatus.PUBLISHED);
         } else {

@@ -63,10 +63,10 @@ public class JpaPageTemplateRegionConverterTest {
 
     @Test
     public void convertValid() {
-        PageTemplateRegion template = new PageTemplateRegionImpl();
+        PageTemplateRegion template = new PageTemplateRegionImpl("1");
         template.setRenderSequence(1);
         template.setPageTemplateWidgets(new ArrayList<PageTemplateWidget>());
-        template.setPageTemplate(new PageTemplateImpl());
+        template.setPageTemplate(new PageTemplateImpl("1"));
         template.setLocked(true);
 
         JpaPageTemplateRegion jpaTemplate = converter.convert(template);

@@ -69,13 +69,13 @@ public class JpaApplicationData implements BasicEntity, ApplicationData {
     }
 
     @Override
-    public Long getId() {
-        return getEntityId();
+    public String getId() {
+        return getEntityId().toString();
     }
 
     @Override
-    public void setId(Long id) {
-        setEntityId(id);
+    public void setId(String id) {
+        entityId = Long.parseLong(id);
     }
 
     @Override

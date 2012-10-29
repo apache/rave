@@ -62,7 +62,6 @@ public class JpaTagConverter implements ModelConverter<Tag, JpaTag> {
 
     private void updateProperties(Tag source, JpaTag jpaTag) {
         jpaTag.setKeyword(source.getKeyword());
-        jpaTag.setWidgets(source.getWidgets());
     }
 
 

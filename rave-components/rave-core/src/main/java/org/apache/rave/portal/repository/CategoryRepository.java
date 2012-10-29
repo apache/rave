@@ -34,5 +34,5 @@ public interface CategoryRepository extends Repository<Category> {
      * @param userId
      * @return the number of Categories modified
      */
-    int removeFromCreatedOrModifiedFields(long userId);
+    int removeFromCreatedOrModifiedFields(String userId);
 }

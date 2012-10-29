@@ -25,12 +25,12 @@ import java.util.List;
 
 public class TagImpl implements Tag {
 
+    private String id;
     private String keyword;
-    private List<WidgetTag> widgets;
 
-    public TagImpl(String keyword, List<WidgetTag> widgets) {
+    public TagImpl(String id, String keyword) {
+        this.id = id;
         this.keyword = keyword;
-        this.widgets = widgets;
     }
 
     public TagImpl(String keyword) {
@@ -41,22 +41,12 @@ public class TagImpl implements Tag {
     }
 
     @Override
+    public String getId() {
+        return id;
+    }
+
+    @Override
     public String getKeyword() {
         return this.keyword;
-    }
-
-    @Override
-    public void setKeyword(String keyword) {
-        this.keyword = keyword;
-    }
-
-    @Override
-    public List<WidgetTag> getWidgets() {
-        return this.widgets;
-    }
-
-    @Override
-    public void setWidgets(List<WidgetTag> widgets) {
-        this.widgets = widgets;
     }
 }

@@ -30,41 +30,38 @@ import javax.persistence.PersistenceContext;
  * Converts a WidgetComment to a JpaWidgetComment
  */
 @Component
-public class JpaWidgetCommentConverter implements ModelConverter<WidgetComment, JpaWidgetComment> {
+public class JpaWidgetCommentConverter {
 
     @PersistenceContext
     private EntityManager manager;
 
-    @Override
     public Class<WidgetComment> getSourceType() {
         return WidgetComment.class;
     }
 
-    @Override
-    public JpaWidgetComment convert(WidgetComment source) {
-        return source instanceof JpaWidgetComment ? (JpaWidgetComment) source : createEntity(source);
+    public JpaWidgetComment convert(WidgetComment source, String widgetId) {
+        return source instanceof JpaWidgetComment ? (JpaWidgetComment) source : createEntity(source, widgetId);
     }
 
-    private JpaWidgetComment createEntity(WidgetComment source) {
+    private JpaWidgetComment createEntity(WidgetComment source, String widgetId) {
         JpaWidgetComment converted = null;
         if (source != null) {
-            converted = manager.find(JpaWidgetComment.class, source.getId());
+            converted = manager.find(JpaWidgetComment.class, source.getId() == null ? null : Long.parseLong(source.getId()));
 
             if (converted == null) {
                 converted = new JpaWidgetComment();
             }
-            updateProperties(source, converted);
+            updateProperties(source, converted, widgetId);
         }
         return converted;
     }
 
-    private void updateProperties(WidgetComment source, JpaWidgetComment converted) {
-        converted.setEntityId(source.getId());
-        converted.setId(source.getId());
+    private void updateProperties(WidgetComment source, JpaWidgetComment converted, String widgetId) {
+        converted.setEntityId(source.getId() == null ? null : Long.parseLong(source.getId()));
         converted.setCreatedDate(source.getCreatedDate());
         converted.setLastModifiedDate(source.getLastModifiedDate());
         converted.setText(source.getText());
-        converted.setUser(source.getUser());
-        converted.setWidgetId(source.getWidgetId());
+        converted.setUserId(source.getUserId());
+        converted.setWidgetId(widgetId);
     }
 }

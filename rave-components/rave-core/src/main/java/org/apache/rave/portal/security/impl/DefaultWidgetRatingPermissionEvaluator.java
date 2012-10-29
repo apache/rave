@@ -20,7 +20,7 @@ package org.apache.rave.portal.security.impl;
 
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.WidgetRating;
-import org.apache.rave.portal.repository.WidgetRatingRepository;
+import org.apache.rave.portal.repository.WidgetRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,11 +34,11 @@ import java.util.List;
 @Component
 public class DefaultWidgetRatingPermissionEvaluator extends AbstractModelPermissionEvaluator<WidgetRating> {
     private Logger log = LoggerFactory.getLogger(getClass());
-    private WidgetRatingRepository widgetRatingRepository;
+    private WidgetRepository widgetRepository;
 
     @Autowired
-    public DefaultWidgetRatingPermissionEvaluator(WidgetRatingRepository widgetRatingRepository) {
-        this.widgetRatingRepository = widgetRatingRepository;
+    public DefaultWidgetRatingPermissionEvaluator(WidgetRepository widgetRepository) {
+        this.widgetRepository = widgetRepository;
     }
 
     @Override
@@ -83,7 +83,7 @@ public class DefaultWidgetRatingPermissionEvaluator extends AbstractModelPermiss
         if (targetId instanceof RaveSecurityContext) {
             hasPermission = verifyRaveSecurityContext(authentication, (RaveSecurityContext) targetId);
         } else {
-            hasPermission = hasPermission(authentication, widgetRatingRepository.get((Long) targetId), permission, true);
+            hasPermission = hasPermission(authentication, widgetRepository.getRatingById(null, (String) targetId), permission, true);
         }
         return hasPermission;
     }
@@ -127,10 +127,10 @@ public class DefaultWidgetRatingPermissionEvaluator extends AbstractModelPermiss
 
     // returns a trusted WidgetRating object, either from the WidgetRatingRepository, or the
     // cached container list
-    private WidgetRating getTrustedWidgetRating(long widgetRatingId, List<WidgetRating> trustedWidgetRatingContainer) {
+    private WidgetRating getTrustedWidgetRating(String widgetRatingId, List<WidgetRating> trustedWidgetRatingContainer) {
         WidgetRating widgetRating = null;
         if (trustedWidgetRatingContainer.isEmpty()) {
-            widgetRating = widgetRatingRepository.get(widgetRatingId);
+            widgetRating = widgetRepository.getRatingById(null, widgetRatingId);
             trustedWidgetRatingContainer.add(widgetRating);
         } else {
             widgetRating = trustedWidgetRatingContainer.get(0);
@@ -155,7 +155,7 @@ public class DefaultWidgetRatingPermissionEvaluator extends AbstractModelPermiss
         return ((User)authentication.getPrincipal()).getUsername().equals(username);
     }
 
-    private boolean isWidgetRatingOwnerById(Authentication authentication, Long userId) {
+    private boolean isWidgetRatingOwnerById(Authentication authentication, String userId) {
         return ((User)authentication.getPrincipal()).getId().equals(userId);
     }
 
@@ -169,7 +169,7 @@ public class DefaultWidgetRatingPermissionEvaluator extends AbstractModelPermiss
 
         // perform the permissions check based on the class supplied to the RaveSecurityContext object
         if (User.class == clazz) {
-            return isWidgetRatingOwnerById(authentication, (Long) raveSecurityContext.getId());
+            return isWidgetRatingOwnerById(authentication, (String) raveSecurityContext.getId());
         } else {
             throw new IllegalArgumentException("unknown RaveSecurityContext type: " + raveSecurityContext.getType());
         }

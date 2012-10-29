@@ -18,7 +18,6 @@
  */
 package org.apache.rave.portal.model.conversion;
 
-import org.apache.rave.portal.model.JpaUser;
 import org.apache.rave.portal.model.JpaWidgetComment;
 import org.apache.rave.portal.model.WidgetComment;
 import org.apache.rave.portal.model.impl.WidgetCommentImpl;
@@ -43,35 +42,32 @@ public class JpaWidgetCommentConverterTest {
     @Test
     public void noConversion() {
         WidgetComment comment = new JpaWidgetComment();
-        assertThat(widgetCommentConverter.convert(comment), is(sameInstance(comment)));
+        assertThat(widgetCommentConverter.convert(comment, null), is(sameInstance(comment)));
     }
 
     @Test
     public void nullConversion() {
         WidgetComment template = null;
-        assertThat(widgetCommentConverter.convert(template), is(nullValue()));
+        assertThat(widgetCommentConverter.convert(template, null), is(nullValue()));
     }
 
 
     @Test
     public void newComment() {
-        WidgetComment comment = new WidgetCommentImpl();
+        WidgetComment comment = new WidgetCommentImpl("9");
         comment.setCreatedDate(new Date());
-        comment.setId(9L);
         comment.setLastModifiedDate(new Date());
         comment.setText("hello");
-        comment.setUser(new JpaUser(1L));
-        comment.setWidgetId(9L);
+        comment.setUserId("1");
 
-        JpaWidgetComment converted = widgetCommentConverter.convert(comment);
+        JpaWidgetComment converted = widgetCommentConverter.convert(comment, "9");
         assertThat(converted, is(not(sameInstance(comment))));
         assertThat(converted, is(instanceOf(JpaWidgetComment.class)));
         assertThat(converted.getCreatedDate(), is(equalTo(comment.getCreatedDate())));
-        assertThat(converted.getEntityId(), is(equalTo(comment.getId())));
+        assertThat(converted.getEntityId().toString(), is(equalTo(comment.getId())));
         assertThat(converted.getId(), is(equalTo(comment.getId())));
         assertThat(converted.getLastModifiedDate(), is(equalTo(comment.getLastModifiedDate())));
         assertThat(converted.getText(), is(equalTo(comment.getText())));
-        assertThat(converted.getUser(), is(equalTo(comment.getUser())));
-        assertThat(converted.getWidgetId(), is(equalTo(comment.getWidgetId())));
+        assertThat(converted.getUserId(), is(equalTo(comment.getUserId())));
     }
 }

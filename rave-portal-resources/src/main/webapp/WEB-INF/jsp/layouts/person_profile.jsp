@@ -30,7 +30,7 @@
     <c:forEach var="subPage" items="${subPages}" varStatus="subPageStatus">
         <div class="tab-pane" id="tab-${subPage.id}">
             <c:forEach var="subPageRegion" items="${subPage.regions}" varStatus="subPageRegionStatus">
-                <rave:region region="${subPageRegion}" regionIdx="${subPageRegionStatus.count}" />
+                <rave:region region="${subPageRegion}" regionIdx="${subPageRegionStatus.count}" widgets="${widgets}" />
             </c:forEach>
             <div class="clear-float">&nbsp;</div>
         </div>

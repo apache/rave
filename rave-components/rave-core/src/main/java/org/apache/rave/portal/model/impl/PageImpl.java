@@ -23,9 +23,9 @@ import org.apache.rave.portal.model.*;
 import java.util.List;
 
 public class PageImpl implements Page {
-    private Long id;
+    private String id;
     private String name;
-    private User owner;
+    private String ownerId;
     private Page parentPage;
     private List<Page> subPages;
     private PageLayout pageLayout;
@@ -35,22 +35,22 @@ public class PageImpl implements Page {
 
     public PageImpl() {}
 
-    public PageImpl(Long id) {
+    public PageImpl(String id) {
         this.id = id;
     }
 
-    public PageImpl(Long id, User owner) {
+    public PageImpl(String id, String ownerId) {
         this.id = id;
-        this.owner = owner;
+        this.ownerId = ownerId;
     }
 
     @Override
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
     @Override
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -65,13 +65,13 @@ public class PageImpl implements Page {
     }
 
     @Override
-    public User getOwner() {
-        return owner;
+    public String getOwnerId() {
+        return ownerId;
     }
 
     @Override
-    public void setOwner(User owner) {
-        this.owner = owner;
+    public void setOwnerId(String owner) {
+        this.ownerId = owner;
     }
 
     @Override

@@ -38,6 +38,7 @@ import org.apache.rave.portal.model.util.omdl.OmdlModelUtils;
 import org.apache.rave.portal.model.util.omdl.OmdlOutputAdapter;
 import org.apache.rave.portal.service.OmdlService;
 import org.apache.rave.portal.service.PageService;
+import org.apache.rave.portal.service.UserService;
 import org.apache.rave.portal.service.WidgetService;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,19 +68,21 @@ public class DefaultOmdlService implements OmdlService, OmdlConstants {
 
     private PageService pageService;
     private WidgetService widgetService;
+    private UserService userService;
     
     public DefaultOmdlService(){}
 
     @Autowired
-    public DefaultOmdlService(PageService pageService, WidgetService widgetService){
+    public DefaultOmdlService(PageService pageService, WidgetService widgetService, UserService userService){
         this.pageService = pageService;
         this.widgetService = widgetService;
+        this.userService = userService;
     }
     
     @Override
-    public OmdlOutputAdapter exportOmdl(long pageId, String omdlUrl) {
+    public OmdlOutputAdapter exportOmdl(String pageId, String omdlUrl) {
         Page page = pageService.getPage(pageId);
-        OmdlOutputAdapter omdl = new OmdlOutputAdapter();
+        OmdlOutputAdapter omdl = new OmdlOutputAdapter(widgetService, userService);
         omdl.buildModel(page, omdlUrl, wookieUrl);
         return omdl;
     }
@@ -142,7 +145,7 @@ public class DefaultOmdlService implements OmdlService, OmdlConstants {
         return page;
     }
 
-    private void populateRegionWidgets(Page page, List<String> urlList, Long regionId ){
+    private void populateRegionWidgets(Page page, List<String> urlList, String regionId ){
         Widget widget = null;
         for (String widgetUrl : urlList){
             widget = widgetService.getWidgetByUrl(widgetUrl);

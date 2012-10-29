@@ -23,18 +23,18 @@ import org.apache.rave.portal.model.ApplicationData;
 import java.util.Map;
 
 public class ApplicationDataImpl implements ApplicationData {
-    private Long id;
+    private String id;
     private String userId;
     private String appUrl;
     private Map<String, String> data;
 
     public ApplicationDataImpl() {}
 
-    public ApplicationDataImpl(Long id) {
+    public ApplicationDataImpl(String id) {
         this.id = id;
     }
 
-    public ApplicationDataImpl(Long id, String userId, String appUrl, Map<String, String> data) {
+    public ApplicationDataImpl(String id, String userId, String appUrl, Map<String, String> data) {
         this.id = id;
         this.userId = userId;
         this.appUrl = appUrl;
@@ -42,12 +42,12 @@ public class ApplicationDataImpl implements ApplicationData {
     }
 
     @Override
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
     @Override
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

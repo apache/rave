@@ -88,13 +88,13 @@ public class JpaRegionWidgetPreference implements BasicEntity, Serializable, Reg
     }
 
     @Override
-    public Long getRegionWidgetId() {
-        return regionWidgetId;
+    public String getRegionWidgetId() {
+        return regionWidgetId.toString();
     }
 
     @Override
-    public void setRegionWidgetId(Long regionWidgetId) {
-        this.regionWidgetId = regionWidgetId;
+    public void setRegionWidgetId(String regionWidgetId) {
+        this.regionWidgetId = Long.parseLong(regionWidgetId);
     }
 
     @Override

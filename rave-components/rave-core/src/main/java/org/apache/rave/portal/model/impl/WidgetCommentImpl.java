@@ -24,47 +24,35 @@ import org.apache.rave.portal.model.*;
 import java.util.Date;
 
 public class WidgetCommentImpl implements WidgetComment {
-    private Long id;
-    private Long widgetId;
-    private User user;
+    private String id;
+    private String userId;
     private String text;
     private Date lastModifiedDate;
     private Date createdDate;
 
     public WidgetCommentImpl() {}
 
-    public WidgetCommentImpl(Long id) {
+    public WidgetCommentImpl(String id) {
         this.id = id;
     }
 
     @Override
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    @Override
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
     @Override
-    public Long getWidgetId() {
-        return widgetId;
+    public String getUserId() {
+        return userId;
     }
 
     @Override
-    public void setWidgetId(Long widgetId) {
-        this.widgetId = widgetId;
-    }
-
-    @Override
-    public User getUser() {
-        return user;
-    }
-
-    @Override
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     @Override

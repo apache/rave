@@ -55,22 +55,21 @@ public class JpaRegionWidgetConverterTest {
 
     @Test
     public void newRegion() {
-        RegionWidget rw = new RegionWidgetImpl();
-        rw.setId(9L);
+        RegionWidget rw = new RegionWidgetImpl("9");
         rw.setLocked(false);
         rw.setCollapsed(false);
         rw.setHideChrome(true);
         rw.setRenderOrder(9);
         rw.setPreferences(new ArrayList<RegionWidgetPreference>());
-        rw.setRegion(new RegionImpl());
+        rw.setRegion(new RegionImpl("1"));
         rw.setRenderPosition("last");
-        rw.setWidget(new WidgetImpl());
+        rw.setWidgetId("1");
 
         JpaRegionWidget converted = regionWidgetConverter.convert(rw);
         assertThat(converted, is(not(sameInstance(rw))));
         assertThat(converted, is(instanceOf(JpaRegionWidget.class)));
         assertThat(converted.getPreferences(), is(equalTo(rw.getPreferences())));
-        assertThat(converted.getEntityId(), is(equalTo(rw.getId())));
+        assertThat(converted.getEntityId().toString(), is(equalTo(rw.getId())));
         assertThat(converted.getId(), is(equalTo(rw.getId())));
         assertThat(converted.isCollapsed(), is(equalTo(rw.isCollapsed())));
         assertThat(converted.getRenderOrder(), is(equalTo(rw.getRenderOrder())));
@@ -78,6 +77,6 @@ public class JpaRegionWidgetConverterTest {
         assertThat(converted.isHideChrome(), is(equalTo(rw.isHideChrome())));
         assertThat(converted.getRegion(), is(instanceOf(JpaRegion.class)));
         assertThat(converted.getRenderPosition(), is(equalTo(rw.getRenderPosition())));
-        assertThat(converted.getWidget(), is(instanceOf(JpaWidget.class)));
+        assertThat(converted.getWidgetId(), is(instanceOf(String.class)));
     }
 }

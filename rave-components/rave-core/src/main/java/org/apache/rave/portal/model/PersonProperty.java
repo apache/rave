@@ -25,9 +25,7 @@ import javax.xml.bind.annotation.XmlTransient;
  */
 @XmlTransient
 public interface PersonProperty {
-    Long getId();
-
-    void setId(Long id);
+    String getId();
 
     String getType();
 

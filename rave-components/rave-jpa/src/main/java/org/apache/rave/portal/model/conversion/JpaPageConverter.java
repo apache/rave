@@ -49,7 +49,7 @@ public class JpaPageConverter implements ModelConverter<Page, JpaPage> {
     private JpaPage createEntity(Page source) {
         JpaPage converted = null;
         if (source != null) {
-            converted = manager.find(JpaPage.class, source.getId());
+            converted = manager.find(JpaPage.class, source.getId() == null ? null : Long.parseLong(source.getId()));
             if (converted == null) {
                 converted = new JpaPage();
             }
@@ -60,11 +60,10 @@ public class JpaPageConverter implements ModelConverter<Page, JpaPage> {
 
     private void updateProperties(Page source, JpaPage converted) {
         replacePageReferences(source, converted);
-        converted.setEntityId(source.getId());
         converted.setId(source.getId());
         converted.setMembers(source.getMembers());
         converted.setName(source.getName());
-        converted.setOwner(source.getOwner());
+        converted.setOwnerId(source.getOwnerId());
         converted.setPageLayout(source.getPageLayout());
         converted.setPageType(source.getPageType());
         converted.setParentPage(source.getParentPage());

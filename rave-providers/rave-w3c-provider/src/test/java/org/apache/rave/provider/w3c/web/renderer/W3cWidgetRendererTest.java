@@ -22,6 +22,7 @@ package org.apache.rave.provider.w3c.web.renderer;
 import org.apache.rave.exception.NotSupportedException;
 import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.model.impl.*;
+import org.apache.rave.portal.repository.WidgetRepository;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.portal.service.WidgetProviderService;
 import org.apache.rave.portal.web.renderer.Renderer;
@@ -51,6 +52,7 @@ public class W3cWidgetRendererTest {
     private UserService userService;
     private RenderContext renderContext;
     private ScriptManager scriptManager;
+    private WidgetRepository widgetRepository;
 
     @Before
     public void setup() {
@@ -59,7 +61,8 @@ public class W3cWidgetRendererTest {
         wookieService = createNiceMock(WidgetProviderService.class);
         userService = createNiceMock(UserService.class);
         scriptManager = createNiceMock(ScriptManager.class);
-        renderer = new W3cWidgetRenderer(wookieService, userService, scriptManager);  
+        widgetRepository = createMock(WidgetRepository.class);
+        renderer = new W3cWidgetRenderer(wookieService, userService, scriptManager, widgetRepository);
     }
 
     @Test
@@ -69,13 +72,13 @@ public class W3cWidgetRendererTest {
 
     @Test
     public void render_valid() {
-        final long REGION_ID = 222L;
-        final long REGION_WIDGET_ID = 444L;
-        final long VALID_SUBPAGE_ID = 778899L;
+        final String REGION_ID = "222";
+        final String REGION_WIDGET_ID = "444";
+        final String VALID_SUBPAGE_ID = "778899";
         final String VALID_SUBPAGE_NAME = "My Activity";
         final boolean VALID_IS_DEFAULT_SUBPAGE = true;
 
-        User user = new UserImpl(9999L, "testUser");
+        User user = new UserImpl("9999", "testUser");
         expect(userService.getAuthenticatedUser()).andReturn(user);
         replay(userService);
 
@@ -88,18 +91,21 @@ public class W3cWidgetRendererTest {
         subPage.setPageType(PageType.SUB_PAGE);
         page.getSubPages().add(subPage);
 
-        W3CWidget w = new W3CWidget();
+        W3CWidget w = new W3CWidget("1");
         w.setType(Constants.WIDGET_TYPE);
         w.setUrl("http://example.com/widgets/1");
         Region region = new RegionImpl(REGION_ID);
         region.setPage(subPage);
-        RegionWidget rw = new RegionWidgetImpl();
-        rw.setId(REGION_WIDGET_ID);
-        rw.setWidget(w);
+        RegionWidget rw = new RegionWidgetImpl(REGION_WIDGET_ID);
+        rw.setWidgetId(w.getId());
         rw.setRegion(region);
 
         W3CWidget wookieWidget = new W3CWidget();
         wookieWidget.setUrl(VALID_WIDGET_INSTANCE_URL);
+
+        expect(widgetRepository.get("1")).andReturn(w);
+        expect(widgetRepository.get("1")).andReturn(w);
+        replay(widgetRepository);
 
         expect(wookieService.getWidget(eq(user), eq(rw.getId().toString()), isA(Widget.class))).andReturn(wookieWidget);
         replay(wookieService);
@@ -110,12 +116,14 @@ public class W3cWidgetRendererTest {
 
     @Test(expected = NotSupportedException.class)
     public void render_invalid() {
-        Widget w = new WidgetImpl();
+        Widget w = new WidgetImpl("1");
         w.setType("NONE");
         w.setUrl(VALID_WIDGET_URL);
-        RegionWidget rw = new RegionWidgetImpl();
-        rw.setId(1L);
-        rw.setWidget(w);
+        RegionWidget rw = new RegionWidgetImpl("1");
+        rw.setWidgetId(w.getId());
+
+        expect(widgetRepository.get("1")).andReturn(w);
+        replay(widgetRepository);
 
         RenderContext renderContext = createNiceMock(RenderContext.class);
         renderer.render(rw, renderContext);

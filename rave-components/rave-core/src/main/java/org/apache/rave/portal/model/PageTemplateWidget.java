@@ -25,7 +25,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlTransient
 public interface PageTemplateWidget {
 
-    Long getId();
+    String getId();
 
     PageTemplateRegion getPageTemplateRegion();
 
@@ -35,9 +35,9 @@ public interface PageTemplateWidget {
 
     void setRenderSeq(long renderSeq);
 
-    Widget getWidget();
+    String getWidgetId();
 
-    void setWidget(Widget widget);
+    void setWidgetId(String widgetId);
 
     boolean isLocked();
 

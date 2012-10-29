@@ -21,7 +21,6 @@ package org.apache.rave.portal.model;
 
 import org.apache.rave.persistence.BasicEntity;
 import org.apache.rave.portal.model.conversion.ConvertingListProxyFactory;
-import org.apache.rave.portal.model.conversion.JpaConverter;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
@@ -39,7 +38,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -81,9 +79,9 @@ import java.util.List;
 
         @NamedQuery(name = JpaWidget.WIDGET_GET_BY_URL, query = JpaWidget.SELECT_W_FROM_WIDGET_W + JpaWidget.WHERE_CLAUSE_URL) ,
 
-        @NamedQuery(name = JpaWidget.WIDGET_GET_BY_TAG, query = JpaWidget.SELECT_W_FROM_WIDGET_W + JpaWidget.JOIN_TAGS+ JpaWidget.ORDER_BY_TITLE_ASC),
-        @NamedQuery(name = JpaWidget.WIDGET_COUNT_BY_TAG, query = JpaWidget.SELECT_COUNT_W_FROM_WIDGET_W + JpaWidget.JOIN_TAGS),
-        @NamedQuery(name = JpaWidget.WIDGET_UNASSIGN_OWNER, query = "UPDATE JpaWidget w SET w.owner = null WHERE w.owner.entityId = :owner")
+        @NamedQuery(name = JpaWidget.WIDGET_GET_BY_TAG, query = JpaWidget.SELECT_W_FROM_WIDGET_W + JpaWidget.JOIN_TAGS + JpaWidget.WHERE_CLAUSE_TAG_ID + JpaWidget.ORDER_BY_TITLE_ASC),
+        @NamedQuery(name = JpaWidget.WIDGET_COUNT_BY_TAG, query = JpaWidget.SELECT_COUNT_W_FROM_WIDGET_W + JpaWidget.JOIN_TAGS + JpaWidget.WHERE_CLAUSE_TAG_ID),
+        @NamedQuery(name = JpaWidget.WIDGET_UNASSIGN_OWNER, query = "UPDATE JpaWidget w SET w.ownerId = null " + JpaWidget.WHERE_CLAUSE_OWNER )
 })
 public class JpaWidget implements BasicEntity, Serializable, Widget {
     private static final long serialVersionUID = 1L;
@@ -92,7 +90,7 @@ public class JpaWidget implements BasicEntity, Serializable, Widget {
     public static final String PARAM_STATUS = "widgetStatus";
     public static final String PARAM_URL = "url";
     public static final String PARAM_OWNER = "owner";
-    public static final String PARAM_TAG = "keyword";
+    public static final String PARAM_TAG_ID = "tagId";
 
     public static final String WIDGET_GET_ALL = "Widget.getAll";
     public static final String WIDGET_COUNT_ALL = "Widget.countAll";
@@ -114,9 +112,9 @@ public class JpaWidget implements BasicEntity, Serializable, Widget {
             " WHERE lower(w.title) LIKE :" + PARAM_SEARCH_TERM + " OR w.description LIKE :description";
     static final String WHERE_CLAUSE_STATUS = " WHERE w.widgetStatus = :" + PARAM_STATUS;
     static final String WHERE_CLAUSE_URL = " WHERE w.url = :" + PARAM_URL;
-    static final String WHERE_CLAUSE_OWNER = " WHERE w.owner = :" + PARAM_OWNER;
-    static final String WIDGET_TAG_BY_KEYWORD=" (select t.widgetId from JpaWidgetTag t where lower(t.tag.keyword)=:"+PARAM_TAG+")";
-    static final String JOIN_TAGS=" WHERE w.entityId in"+WIDGET_TAG_BY_KEYWORD;
+    static final String WHERE_CLAUSE_OWNER = " WHERE w.ownerId = :" + PARAM_OWNER;
+    static final String WHERE_CLAUSE_TAG_ID = " WHERE wt.tagId = :" + PARAM_TAG_ID;
+    static final String JOIN_TAGS=" join w.tags wt";
 
     static final String ORDER_BY_TITLE_ASC = " ORDER BY w.featured DESC, w.title ASC ";
 
@@ -130,8 +128,7 @@ public class JpaWidget implements BasicEntity, Serializable, Widget {
 
     /*
         TODO RAVE-234: Figure out what the OpenJPA strategy is for functionality provided by Eclisplink's @Convert
-     */
-    @XmlElement
+     */                                                                                                                                          @XmlElement
     @Basic
     @Column(name = "title")
     private String title;
@@ -186,9 +183,9 @@ public class JpaWidget implements BasicEntity, Serializable, Widget {
     @JoinColumn(name = "widget_id", referencedColumnName = "entity_id")
     private List<JpaWidgetComment> comments;
 
-    @ManyToOne
-    @JoinColumn(name = "owner_id")
-    private JpaUser owner;
+    @Basic
+    @Column(name = "owner_id")
+    private String ownerId;
 
     @XmlElement
     @Basic
@@ -255,8 +252,8 @@ public class JpaWidget implements BasicEntity, Serializable, Widget {
 // }
 
     @Override
-    public Long getId() {
-        return this.getEntityId();
+    public String getId() {
+        return this.getEntityId() == null ? null : this.getEntityId().toString();
     }
 
     @Override
@@ -377,13 +374,13 @@ public class JpaWidget implements BasicEntity, Serializable, Widget {
     }
 
     @Override
-    public User getOwner() {
-        return owner;
+    public String getOwnerId() {
+        return ownerId;
     }
 
     @Override
-    public void setOwner(User owner) {
-        this.owner = JpaConverter.getInstance().convert(owner, User.class);
+    public void setOwnerId(String owner) {
+        this.ownerId = owner;
     }
 
     @Override
@@ -501,7 +498,7 @@ public class JpaWidget implements BasicEntity, Serializable, Widget {
                 ", author='" + author + '\'' +
                 ", description='" + description + '\'' +
                 ", widgetStatus=" + widgetStatus + '\'' +
-                ", owner=" + owner + '\'' +
+                ", ownerId=" + ownerId + '\'' +
                 ", featured=" + featured + '\'' +
                 ", disable_rendering=" + disableRendering + '\'' +
                 ", disable_rendering_message=" + disableRenderingMessage +

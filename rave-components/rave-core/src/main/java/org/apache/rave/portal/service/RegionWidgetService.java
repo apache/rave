@@ -34,7 +34,7 @@ public interface RegionWidgetService {
      * @return The RegionWidget or null if not found.
      */
     @PostAuthorize("hasPermission(returnObject, 'read')")
-    RegionWidget getRegionWidget(long regionWidgetId);
+    RegionWidget getRegionWidget(String regionWidgetId);
 
     /**
      * Saves the given RegionWidget and returns the updated instance.
@@ -53,7 +53,7 @@ public interface RegionWidgetService {
      * @return The updated RegionWidgetPreferences with all ID numbers populated.
      */
     @PreAuthorize("hasPermission(#regionWidgetId, 'org.apache.rave.portal.model.RegionWidget', 'update')")
-    List<RegionWidgetPreference> saveRegionWidgetPreferences(long regionWidgetId,
+    List<RegionWidgetPreference> saveRegionWidgetPreferences(String regionWidgetId,
                                                              List<RegionWidgetPreference> preferences);
 
     /**
@@ -65,7 +65,7 @@ public interface RegionWidgetService {
      * @return The updated RegionWidgetPreference with all ID numbers populated.
      */
     @PreAuthorize("hasPermission(#regionWidgetId, 'org.apache.rave.portal.model.RegionWidget', 'update')")
-    RegionWidgetPreference saveRegionWidgetPreference(long regionWidgetId, RegionWidgetPreference preference);
+    RegionWidgetPreference saveRegionWidgetPreference(String regionWidgetId, RegionWidgetPreference preference);
     
     /**
      * Saves the collapsed state of the given regionWidgetId
@@ -75,5 +75,5 @@ public interface RegionWidgetService {
      * @return The updated RegionWidget with the new collapsed value
      */
     @PreAuthorize("hasPermission(#regionWidgetId, 'org.apache.rave.portal.model.RegionWidget', 'update')")
-    RegionWidget saveRegionWidgetCollapsedState(long regionWidgetId, boolean collapsed);
+    RegionWidget saveRegionWidgetCollapsedState(String regionWidgetId, boolean collapsed);
 }

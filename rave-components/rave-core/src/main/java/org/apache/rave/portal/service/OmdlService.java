@@ -29,7 +29,7 @@ public interface OmdlService {
      * @param omdlUrl - page url - used in construction of OMDL file
      * @return an OmdlOutputAdapter - a JaxB xml OMDL format
      */
-    OmdlOutputAdapter exportOmdl(long pageId, String omdlUrl);
+    OmdlOutputAdapter exportOmdl(String pageId, String omdlUrl);
     
     /**
      * Import an OMDL xml format file to generate into a page object (with all of its reqionwidgets)

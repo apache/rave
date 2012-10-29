@@ -165,13 +165,14 @@
             </div>
         </div>
         <div class="span3">
-            <button type="button" id="addRemoveFriend" value="${page.owner.username}" class="btn btn-primary profile-info-visible"><fmt:message key="page.personProfile.addremove.friends"/></button>
+            <portal:person id="${page.ownerId}" var="${owner}" />
+        	<button type="button" id="addRemoveFriend" value="${owner.username}" class="btn btn-primary profile-info-visible"><fmt:message key="page.personProfile.addremove.friends"/></button>
         </div>
         <div class="span3">
             <div>
                 <%-- render the person profile parent page region/widgets --%>
                 <c:forEach var="region" items="${page.regions}" varStatus="status">
-                    <rave:region region="${region}" regionIdx="${status.count}" />
+                    <rave:region region="${region}" regionIdx="${status.count}" widgets="${widgets}"/>
                 </c:forEach>
             </div>
         </div>

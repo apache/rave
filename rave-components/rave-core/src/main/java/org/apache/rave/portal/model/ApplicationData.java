@@ -23,8 +23,8 @@ import java.util.Map;
 
 @XmlTransient
 public interface ApplicationData {
-    Long getId();
-    void setId(Long id);
+    String getId();
+    void setId(String id);
 
     String getUserId();
     void setUserId(String userId);

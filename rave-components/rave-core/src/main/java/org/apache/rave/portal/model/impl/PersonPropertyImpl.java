@@ -23,7 +23,7 @@ import org.apache.rave.portal.model.PersonProperty;
 /** **/
 public class PersonPropertyImpl implements PersonProperty {
 
-    private Long id;
+    private String id;
     private String type;
     private String value;
     private String qualifier;
@@ -32,7 +32,11 @@ public class PersonPropertyImpl implements PersonProperty {
 
     public PersonPropertyImpl() {}
 
-    public PersonPropertyImpl(Long id, String type, String value, String extendedValue, String qualifier, Boolean primary) {
+    public PersonPropertyImpl(String id) {
+        this.id = id;
+    }
+
+    public PersonPropertyImpl(String id, String type, String value, String extendedValue, String qualifier, Boolean primary) {
         this.id = id;
         this.type = type;
         this.value = value;
@@ -41,11 +45,11 @@ public class PersonPropertyImpl implements PersonProperty {
         this.extendedValue = extendedValue;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

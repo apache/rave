@@ -94,13 +94,8 @@ public class JpaPersonProperty implements BasicEntity, PersonProperty {
     }
 
     @Override
-    public Long getId() {
-        return this.getEntityId();
-    }
-
-    @Override
-    public void setId(Long id) {
-        this.setEntityId(id);
+    public String getId() {
+        return this.getEntityId() == null ? null : this.getEntityId().toString();
     }
 
     @Override

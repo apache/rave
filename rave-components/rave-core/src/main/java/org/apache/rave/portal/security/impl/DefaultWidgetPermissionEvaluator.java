@@ -18,10 +18,10 @@
  */
 package org.apache.rave.portal.security.impl;
 
-import org.apache.rave.portal.model.User;
-import org.apache.rave.portal.model.Widget;
-import org.apache.rave.portal.model.WidgetStatus;
+import org.apache.rave.portal.model.*;
+import org.apache.rave.portal.repository.TagRepository;
 import org.apache.rave.portal.repository.WidgetRepository;
+import org.apache.rave.portal.security.util.AuthenticationUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,10 +36,12 @@ import java.util.List;
 public class DefaultWidgetPermissionEvaluator extends AbstractModelPermissionEvaluator<Widget>{
     private Logger log = LoggerFactory.getLogger(getClass());
     private WidgetRepository widgetRepository;
+    private TagRepository tagRepository;
 
     @Autowired
-    public DefaultWidgetPermissionEvaluator(WidgetRepository widgetRepository) {
+    public DefaultWidgetPermissionEvaluator(WidgetRepository widgetRepository, TagRepository tagRepository) {
         this.widgetRepository = widgetRepository;
+        this.tagRepository = tagRepository;
     }
 
     @Override
@@ -84,7 +86,7 @@ public class DefaultWidgetPermissionEvaluator extends AbstractModelPermissionEva
         if (targetId instanceof RaveSecurityContext) {
             hasPermission = verifyRaveSecurityContext(authentication, (RaveSecurityContext) targetId);
         } else {
-            hasPermission = hasPermission(authentication, widgetRepository.get((Long) targetId), permission, true);
+            hasPermission = hasPermission(authentication, widgetRepository.get(targetId.toString()), permission, true);
         }
         return hasPermission;
     }
@@ -107,11 +109,11 @@ public class DefaultWidgetPermissionEvaluator extends AbstractModelPermissionEva
         switch (permission) {
             case ADMINISTER:
                 // if you are here, you are not an administrator, so you can't administer Widget
-                break;          
+                break;
             case READ:
                 // users can read any widget which they are the owner of, or any widget that is published
                 hasPermission = isWidgetOwner(authentication, widget, trustedWidgetContainer, trustedDomainObject) ||
-                                isPublishedWidget(widget, trustedWidgetContainer, trustedDomainObject);                
+                                isPublishedWidget(widget, trustedWidgetContainer, trustedDomainObject);
                 break;
             case CREATE:
             case UPDATE:
@@ -129,7 +131,7 @@ public class DefaultWidgetPermissionEvaluator extends AbstractModelPermissionEva
 
     // returns a trusted Widget object, either from the WidgetRepository, or the
     // cached container list
-    private Widget getTrustedWidget(long widgetId, List<Widget> trustedWidgetContainer) {
+    private Widget getTrustedWidget(String widgetId, List<Widget> trustedWidgetContainer) {
         Widget widget;
         if (trustedWidgetContainer.isEmpty()) {
             widget = widgetRepository.get(widgetId);
@@ -144,7 +146,7 @@ public class DefaultWidgetPermissionEvaluator extends AbstractModelPermissionEva
     // if trustedDomainObject is false, pull the entity from the database first to ensure
     // the model object is trusted and hasn't been modified
     private boolean isWidgetOwner(Authentication authentication, Widget widget, List<Widget> trustedWidgetContainer, boolean trustedDomainObject) {
-        if (widget.getOwner() == null) {
+        if (widget.getOwnerId() == null) {
             return false;
         }
         Widget trustedWidget;
@@ -153,17 +155,17 @@ public class DefaultWidgetPermissionEvaluator extends AbstractModelPermissionEva
         } else {
             trustedWidget = getTrustedWidget(widget.getId(), trustedWidgetContainer);
         }
-        return isWidgetOwnerByUsername(authentication, trustedWidget.getOwner().getUsername());
+        return isWidgetOwnerById(authentication, trustedWidget.getOwnerId());
     }
 
     private boolean isWidgetOwnerByUsername(Authentication authentication, String username) {
         return ((User)authentication.getPrincipal()).getUsername().equals(username);
     }
 
-    private boolean isWidgetOwnerById(Authentication authentication, Long userId) {
+    private boolean isWidgetOwnerById(Authentication authentication, String userId) {
         return ((User)authentication.getPrincipal()).getId().equals(userId);
     }
-    
+
     private boolean isPublishedWidget(Widget widget, List<Widget> trustedWidgetContainer, boolean trustedDomainObject) {
         Widget trustedWidget;
         if (trustedDomainObject) {
@@ -172,7 +174,7 @@ public class DefaultWidgetPermissionEvaluator extends AbstractModelPermissionEva
             trustedWidget = getTrustedWidget(widget.getId(), trustedWidgetContainer);
         }
         return WidgetStatus.PUBLISHED.equals(trustedWidget.getWidgetStatus());
-    }    
+    }
 
     private boolean verifyRaveSecurityContext(Authentication authentication, RaveSecurityContext raveSecurityContext) {
         Class<?> clazz;
@@ -184,9 +186,10 @@ public class DefaultWidgetPermissionEvaluator extends AbstractModelPermissionEva
 
         // perform the permissions check based on the class supplied to the RaveSecurityContext object
         if (User.class == clazz) {
-            return isWidgetOwnerById(authentication, (Long) raveSecurityContext.getId());
+            return isWidgetOwnerById(authentication, (String) raveSecurityContext.getId());
         } else {
             throw new IllegalArgumentException("unknown RaveSecurityContext type: " + raveSecurityContext.getType());
         }
     }
+
 }

@@ -36,9 +36,9 @@ import java.util.List;
 @Table(name = "region_widget")
 @NamedQueries({
         @NamedQuery(name = JpaRegionWidget.REGION_WIDGET_GET_DISTINCT_USER_COUNT_ALL_WIDGETS,
-                    query = "select rw.widget.entityId, count(distinct rw.region.page.owner) from JpaRegionWidget rw group by rw.widget.entityId"),
+                    query = "select rw.widgetId, count(distinct rw.region.page.ownerId) from JpaRegionWidget rw group by rw.widgetId"),
         @NamedQuery(name = JpaRegionWidget.REGION_WIDGET_GET_DISTINCT_USER_COUNT_SINGLE_WIDGET,
-                    query = "select count(distinct rw.region.page.owner) from JpaRegionWidget rw where rw.widget.entityId = :widgetId"),
+                    query = "select count(distinct rw.region.page.ownerId) from JpaRegionWidget rw where rw.widgetId = :widgetId"),
         @NamedQuery(name = JpaRegionWidget.FIND_BY_ID,
                     query = "select rw from JpaRegionWidget rw where rw.entityId = :widgetId")
 })
@@ -58,9 +58,9 @@ public class JpaRegionWidget implements BasicEntity, Serializable, RegionWidget 
             valueColumnName = "SEQ_COUNT", pkColumnValue = "region_widget", allocationSize = 1, initialValue = 1)
     private Long entityId;
 
-    @ManyToOne
-    @JoinColumn(name = "widget_id")
-    private JpaWidget widget;
+    @Basic
+    @Column(name = "widget_id")
+    private Long widgetId;
 
     @ManyToOne
     @JoinColumn(name = "region_id")
@@ -97,16 +97,16 @@ public class JpaRegionWidget implements BasicEntity, Serializable, RegionWidget 
         this.entityId = entityId;
     }
 
-    public JpaRegionWidget(Long entityId, JpaWidget widget, JpaRegion region, int renderOrder) {
+    public JpaRegionWidget(Long entityId, Long widgetId, JpaRegion region, int renderOrder) {
         this.entityId = entityId;
-        this.widget = widget;
+        this.widgetId = widgetId;
         this.region = region;
         this.renderOrder = renderOrder;
     }
 
-    public JpaRegionWidget(Long entityId, JpaWidget widget, JpaRegion region) {
+    public JpaRegionWidget(Long entityId, Long widgetId, JpaRegion region) {
         this.entityId = entityId;
-        this.widget = widget;
+        this.widgetId = widgetId;
         this.region = region;
     }
 
@@ -126,13 +126,8 @@ public class JpaRegionWidget implements BasicEntity, Serializable, RegionWidget 
     }
 
     @Override
-    public Long getId() {
-        return getEntityId();
-    }
-
-    @Override
-    public void setId(Long id) {
-        setEntityId(id);
+    public String getId() {
+        return this.getEntityId() == null ? null : this.getEntityId().toString();
     }
 
     /**
@@ -141,13 +136,13 @@ public class JpaRegionWidget implements BasicEntity, Serializable, RegionWidget 
      * @return valid widget
      */
     @Override
-    public Widget getWidget() {
-        return widget;
+    public String getWidgetId() {
+        return widgetId.toString();
     }
 
     @Override
-    public void setWidget(Widget widget) {
-        this.widget = JpaConverter.getInstance().convert(widget, Widget.class);;
+    public void setWidgetId(String widgetId) {
+        this.widgetId = Long.parseLong(widgetId);
     }
 
     /**
@@ -284,10 +279,18 @@ public class JpaRegionWidget implements BasicEntity, Serializable, RegionWidget 
         sb.append("JpaRegionWidget{");
         sb.append("entityId=");
         sb.append(entityId);
-        sb.append(",widget=");
-        sb.append(widget);
-        sb.append(",regionId=");
-        sb.append(region.getEntityId());
+        if (widgetId != null) {
+            sb.append(",widget=");
+            sb.append(widgetId);
+        } else {
+            sb.append(", Widget Null");
+        }
+        if (region != null) {
+            sb.append(",regionId=");
+            sb.append(region.getEntityId());
+        } else {
+            sb.append(", Region Null");
+        }
         sb.append("}");
         return sb.toString();
     }

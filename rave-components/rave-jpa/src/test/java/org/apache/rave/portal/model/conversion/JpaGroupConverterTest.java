@@ -49,24 +49,25 @@ public class JpaGroupConverterTest {
     private Long entityId = Long.valueOf(400);
     private String title = "GroupTitle";
     private Person owner = null;
-    private List<Person> members = null;
+    private List<String> members = null;
 
-    private String ownerDisplayName = "Bob";
-    private String ownerGivenName = "Smith";
+    private static final String ownerDisplayName = "Bob";
+    private static final String ownerGivenName = "Smith";
+    private static final String ownerId = "12345";
 
     @Before
     public void setup() {
-        members = new ArrayList<Person>();
+        members = new ArrayList<String>();
         owner = new PersonImpl();
         owner.setDisplayName(ownerDisplayName);
         owner.setGivenName(ownerGivenName);
-        members.add(owner);
+        members.add(ownerId);
 
         group = new GroupImpl();
         group.setDescription(description);
         group.setTitle(title);
-        group.setOwner(owner);
-        group.setMembers(members);
+        group.setOwnerId(ownerId);
+        group.setMemberIds(members);
     }
 
     @Test
@@ -89,8 +90,8 @@ public class JpaGroupConverterTest {
         assertThat(jpaGroup, is(instanceOf(JpaGroup.class)));
         assertEquals(description, jpaGroup.getDescription());
         assertEquals(title, jpaGroup.getTitle());
-        assertEquals(owner.getDisplayName(), jpaGroup.getOwner().getDisplayName());
-        assertEquals(members.size(), jpaGroup.getMembers().size());
+        assertEquals(ownerId, jpaGroup.getOwnerId());
+        assertEquals(members.size(), jpaGroup.getMemberIds().size());
     }
 
 }

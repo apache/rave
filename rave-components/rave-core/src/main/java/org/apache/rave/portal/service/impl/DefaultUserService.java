@@ -20,26 +20,12 @@
 package org.apache.rave.portal.service.impl;
 
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.rave.portal.model.PageType;
 import org.apache.rave.portal.model.Person;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.util.SearchResult;
-import org.apache.rave.portal.repository.CategoryRepository;
-import org.apache.rave.portal.repository.PageRepository;
-import org.apache.rave.portal.repository.PageTemplateRepository;
-import org.apache.rave.portal.repository.PersonRepository;
-import org.apache.rave.portal.repository.UserRepository;
-import org.apache.rave.portal.repository.WidgetCommentRepository;
-import org.apache.rave.portal.repository.WidgetRatingRepository;
-import org.apache.rave.portal.repository.WidgetRepository;
+import org.apache.rave.portal.repository.*;
 import org.apache.rave.portal.service.EmailService;
 import org.apache.rave.portal.service.UserService;
 import org.slf4j.Logger;
@@ -60,6 +46,8 @@ import org.springframework.security.openid.OpenIDAuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.*;
+
 /**
  *
  */
@@ -70,8 +58,6 @@ public class DefaultUserService implements UserService {
     private final UserRepository userRepository;
     private final PageRepository pageRepository;
     private final PageTemplateRepository pageTemplateRepository;
-    private final WidgetRatingRepository widgetRatingRepository;
-    private final WidgetCommentRepository widgetCommentRepository;
     private final WidgetRepository widgetRepository;
     private final CategoryRepository categoryRepository;
     private final PersonRepository personRepository;
@@ -115,16 +101,12 @@ public class DefaultUserService implements UserService {
     @Autowired
     public DefaultUserService(PageRepository pageRepository,
                               UserRepository userRepository,
-                              WidgetRatingRepository widgetRatingRepository,
-                              WidgetCommentRepository widgetCommentRepository,
                               WidgetRepository widgetRepository,
                               PageTemplateRepository pageTemplateRepository,
                               CategoryRepository categoryRepository,
                               PersonRepository personRepository) {
         this.userRepository = userRepository;
         this.pageRepository = pageRepository;
-        this.widgetRatingRepository = widgetRatingRepository;
-        this.widgetCommentRepository = widgetCommentRepository;
         this.widgetRepository = widgetRepository;
         this.pageTemplateRepository = pageTemplateRepository;
         this.categoryRepository = categoryRepository;
@@ -153,7 +135,7 @@ public class DefaultUserService implements UserService {
     }
 
     @Override
-    public void setAuthenticatedUser(long userId) {
+    public void setAuthenticatedUser(String userId) {
         final User user = userRepository.get(userId);
         if (user == null) {
             throw new UsernameNotFoundException("User with id '" + userId + "' was not found!");
@@ -207,7 +189,7 @@ public class DefaultUserService implements UserService {
     }
 
     @Override
-    public User getUserById(Long id) {
+    public User getUserById(String id) {
         return userRepository.get(id);
     }
 
@@ -255,7 +237,7 @@ public class DefaultUserService implements UserService {
     @Override
     @Transactional
     // TODO RAVE-300: add security check that is is called by admin or the user itself
-    public void deleteUser(Long userId) {
+    public void deleteUser(String userId) {
         log.info("about to delete userId: " + userId);
         User user = userRepository.get(userId);
         if (user == null) {
@@ -270,9 +252,9 @@ public class DefaultUserService implements UserService {
         // delete all person pages
         int numDeletedPersonPages = pageRepository.deletePages(userId, PageType.PERSON_PROFILE);
         // delete all the widget comments
-        int numWidgetComments = widgetCommentRepository.deleteAll(userId);
+        int numWidgetComments = widgetRepository.deleteAllWidgetComments(userId);
         // delete all the widget ratings
-        int numWidgetRatings = widgetRatingRepository.deleteAll(userId);
+        int numWidgetRatings = widgetRepository.deleteAllWidgetRatings(userId);
         // unassign the user from any widgets where they were the owner
         int numWidgetsOwned = widgetRepository.unassignWidgetOwner(userId);
         // unassign the user from any category records they created or modified
@@ -286,7 +268,7 @@ public class DefaultUserService implements UserService {
     }
 
     @Override
-    public List<Person> getAllByAddedWidget(long widgetId) {
+    public List<Person> getAllByAddedWidget(String widgetId) {
         List<Person> persons = new ArrayList<Person>();
         List<User> users = userRepository.getAllByAddedWidget(widgetId);
         for (User u : users) {

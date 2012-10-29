@@ -44,7 +44,7 @@ public class DefaultRegionWidgetService implements RegionWidgetService {
     }
 
     @Override
-    public RegionWidget getRegionWidget(long regionWidgetId) {
+    public RegionWidget getRegionWidget(String regionWidgetId) {
         return regionWidgetRepository.get(regionWidgetId);
     }
 
@@ -57,7 +57,7 @@ public class DefaultRegionWidgetService implements RegionWidgetService {
     @Override
     @Synchronized(discriminator = "'RegionWidget'", id = "#regionWidgetId")
     @Transactional
-    public List<RegionWidgetPreference> saveRegionWidgetPreferences(long regionWidgetId,
+    public List<RegionWidgetPreference> saveRegionWidgetPreferences(String regionWidgetId,
                                                                     List<RegionWidgetPreference> preferences) {
         RegionWidget regionWidget = this.getValidRegionWidget(regionWidgetId);
         ModelUtils.normalizeRegionWidgetPreferences(regionWidgetId, preferences);
@@ -68,7 +68,7 @@ public class DefaultRegionWidgetService implements RegionWidgetService {
     @Override
     @Synchronized(discriminator = "'RegionWidget'", id = "#regionWidgetId")
     @Transactional
-    public RegionWidgetPreference saveRegionWidgetPreference(long regionWidgetId, RegionWidgetPreference preference) {
+    public RegionWidgetPreference saveRegionWidgetPreference(String regionWidgetId, RegionWidgetPreference preference) {
         RegionWidget regionWidget = this.getValidRegionWidget(regionWidgetId);
         ModelUtils.normalizeRegionWidgetPreference(regionWidgetId, preference);
         reconcileRegionWidgetPreferences(regionWidget.getPreferences(), Arrays.asList(preference), false);
@@ -86,13 +86,13 @@ public class DefaultRegionWidgetService implements RegionWidgetService {
 
     @Override
     @Transactional
-    public RegionWidget saveRegionWidgetCollapsedState(long regionWidgetId, boolean collapsed) {
+    public RegionWidget saveRegionWidgetCollapsedState(String regionWidgetId, boolean collapsed) {
         RegionWidget regionWidget = getValidRegionWidget(regionWidgetId);
         regionWidget.setCollapsed(collapsed);
         return saveRegionWidget(regionWidget);
     }
     
-    private RegionWidget getValidRegionWidget(long regionWidgetId) {
+    private RegionWidget getValidRegionWidget(String regionWidgetId) {
         RegionWidget regionWidget = this.getRegionWidget(regionWidgetId);
         if (regionWidget == null) {
             throw new IllegalArgumentException("Invalid RegionWidget ID");

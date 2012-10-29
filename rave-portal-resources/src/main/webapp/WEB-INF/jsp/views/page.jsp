@@ -23,7 +23,9 @@
 <jsp:useBean id="pages" type="java.util.List<org.apache.rave.portal.model.Page>" scope="request"/>
 <jsp:useBean id="pageUser" type="org.apache.rave.portal.model.PageUser" scope="request"/>
 <jsp:useBean id="pageLayouts" type="java.util.List<org.apache.rave.portal.model.JpaPageLayout>" scope="request"/>
+
 <%--@elvariable id="page" type="org.apache.rave.portal.model.Page"--%>
+<sec:authentication property="principal.id" var="principalId" scope="request"/>
 <sec:authentication property="principal.username" var="principleUsername" scope="request"/>
 <sec:authentication property="principal.displayName" var="displayName" scope="request"/>
 
@@ -59,7 +61,7 @@
                 </c:set>
                 <c:set var="isSharedToMe">
                     <c:choose>
-                        <c:when test="${userPage.owner.username == principleUsername}">false</c:when>
+                        <c:when test="${userPage.ownerId == principalId}">false</c:when>
                         <c:otherwise>true</c:otherwise>
                     </c:choose>
                 </c:set>
@@ -69,8 +71,9 @@
                         <c:otherwise>false</c:otherwise>
                     </c:choose>
                 </c:set>
+                <portal:person id="${userPage.ownerId}" var="userPageOwner" />
                 <fmt:message key="sharing.page.tab.icon.tip.from" var="iconShareToolTipFrom">
-                    <fmt:param value="${userPage.owner.username}"/>
+                    <fmt:param value="${userPageOwner.username}"/>
                 </fmt:message>
                 <fmt:message key="sharing.page.tab.icon.tip.to" var="iconShareToolTipTo"/>
                 <c:choose>
@@ -119,7 +122,7 @@
                     </c:otherwise>
                 </c:choose>
                 <c:forEach var="members" items="${userPage.members}">
-                    <c:if test="${members.user.username == principleUsername and members.editor and userPage.id != page.id}">
+                    <c:if test="${members.userId == principalId and members.editor and userPage.id != page.id}">
                         <c:set var="canMoveWidgetsToEditablePage" scope="request" value="true"/>
                     </c:if>
                </c:forEach>
@@ -340,7 +343,7 @@
                             <select id="moveToPageId">
                                 <c:forEach var="userPage" items="${pages}">
                                     <c:forEach var="members" items="${userPage.members}">
-                                        <c:if test="${members.user.username == principleUsername and members.editor and userPage.id != page.id}">
+                                        <c:if test="${members.userId == principalId and members.editor and userPage.id != page.id}">
                                             <option value="${userPage.id}">
                                                 <c:out value="${userPage.name}"/>
                                             </option>
@@ -395,6 +398,7 @@
         });
     </script>
     <c:forEach var="members" items="${page.members}">
-        <script>rave.layout.searchHandler.addExistingMember("${members.user.username}",${members.editor});</script>
+        <portal:person id="${members.userId}" var="member" />
+        <script>rave.layout.searchHandler.addExistingMember("${member.username}",${members.editor});</script>
     </c:forEach>
 </portal:register-init-script>

@@ -54,8 +54,7 @@ public class JpaRegionConverterTest {
 
     @Test
     public void newRegion() {
-        Region region = new RegionImpl();
-        region.setId(9L);
+        Region region = new RegionImpl("9");
         region.setLocked(false);
         region.setPage(new JpaPage());
         region.setRegionWidgets(new ArrayList<RegionWidget>());
@@ -65,7 +64,7 @@ public class JpaRegionConverterTest {
         assertThat(converted, is(not(sameInstance(region))));
         assertThat(converted, is(instanceOf(JpaRegion.class)));
         assertThat(converted.getRegionWidgets(), is(equalTo(region.getRegionWidgets())));
-        assertThat(converted.getEntityId(), is(equalTo(region.getId())));
+        assertThat(converted.getEntityId().toString(), is(equalTo(region.getId())));
         assertThat(converted.getId(), is(equalTo(region.getId())));
         assertThat(converted.getPage(), is(instanceOf(Page.class)));
         assertThat(converted.getRenderOrder(), is(equalTo(region.getRenderOrder())));

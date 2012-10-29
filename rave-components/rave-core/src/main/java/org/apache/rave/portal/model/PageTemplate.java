@@ -24,7 +24,7 @@ import java.util.List;
 @XmlTransient
 public interface PageTemplate {
 
-    Long getId();
+    String getId();
 
     PageType getPageType();
 

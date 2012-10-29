@@ -74,7 +74,7 @@ public class WidgetStoreController {
      * @return the view name of the main store page
      */
     @RequestMapping(method = RequestMethod.GET)
-    public String view(Model model, @RequestParam long referringPageId,
+    public String view(Model model, @RequestParam String referringPageId,
             @RequestParam(required = false, defaultValue = "0") int offset) {
         final String view = ViewNames.STORE;
         User user = userService.getAuthenticatedUser();
@@ -84,7 +84,7 @@ public class WidgetStoreController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "mine")
-    public String viewMine(Model model, @RequestParam long referringPageId,
+    public String viewMine(Model model, @RequestParam String referringPageId,
             @RequestParam(required = false, defaultValue = "0") int offset) {
         final String view = ViewNames.STORE;
         User user = userService.getAuthenticatedUser();
@@ -106,7 +106,7 @@ public class WidgetStoreController {
      * @return the view name of the widget detail page
      */
     @RequestMapping(method = RequestMethod.GET, value = "widget/{widgetId}")
-    public String viewWidget(Model model, @PathVariable long widgetId, @RequestParam long referringPageId) {
+    public String viewWidget(Model model, @PathVariable String widgetId, @RequestParam String referringPageId) {
         final String view = ViewNames.WIDGET;
         final User user = userService.getAuthenticatedUser();
         widgetStoreModelHelper(model, referringPageId, user, view);
@@ -130,7 +130,7 @@ public class WidgetStoreController {
      * @return the view name of the main store page
      */
     @RequestMapping(method = RequestMethod.GET, value = "search")
-    public String viewSearchResult(Model model, @RequestParam long referringPageId, @RequestParam String searchTerm,
+    public String viewSearchResult(Model model, @RequestParam String referringPageId, @RequestParam String searchTerm,
             @RequestParam(required = false, defaultValue = "0") int offset) {
         final String view = ViewNames.STORE;
         User user = userService.getAuthenticatedUser();
@@ -156,7 +156,7 @@ public class WidgetStoreController {
      * @return the view name of the main store page
      */
     @RequestMapping(method = RequestMethod.GET, value = "tag")
-    public String viewTagResult(Model model, @RequestParam long referringPageId, @RequestParam String keyword,
+    public String viewTagResult(Model model, @RequestParam String referringPageId, @RequestParam String keyword,
             @RequestParam(required = false, defaultValue = "0") int offset) {
         final String view = ViewNames.STORE;
         User user = userService.getAuthenticatedUser();
@@ -168,13 +168,13 @@ public class WidgetStoreController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "category")
-    public String viewCategoryResult(@RequestParam(required = true) long referringPageId,
-            @RequestParam(required = true) long categoryId,
+    public String viewCategoryResult(@RequestParam(required = true) String referringPageId,
+            @RequestParam(required = true) String categoryId,
             @RequestParam(required = false, defaultValue = "0") int offset, Model model) {
         final String view = ViewNames.STORE;
         User authenticatedUser = userService.getAuthenticatedUser();
         widgetStoreModelHelper(model, referringPageId, authenticatedUser, view);
-        if (categoryId > 0) {
+        if (categoryId != null && !categoryId.isEmpty()) {
             model.addAttribute(ModelKeys.WIDGETS, widgetService.getWidgetsByCategory(categoryId, offset, getPageSize()));
         } else {
             model.addAttribute(ModelKeys.WIDGETS, widgetService.getPublishedWidgets(offset, getPageSize()));
@@ -194,7 +194,7 @@ public class WidgetStoreController {
      * @return the view name of the Add new Widget form
      */
     @RequestMapping(method = RequestMethod.GET, value = "widget/add")
-    public String viewAddWidgetForm(Model model, @RequestParam long referringPageId) {
+    public String viewAddWidgetForm(Model model, @RequestParam String referringPageId) {
         final Widget widget = new WidgetImpl();
         final String view = ViewNames.ADD_WIDGET_FORM;
         model.addAttribute(ModelKeys.MARKETPLACE, this.preferenceService.getPreference(PortalPreferenceKeys.EXTERNAL_MARKETPLACE_URL));
@@ -216,7 +216,7 @@ public class WidgetStoreController {
      * @return the view name of the Add new Widget form
      */
     @RequestMapping(method = RequestMethod.GET, value = "widget/add/{type}")
-    public String viewAddWidgetFormByType(Model model, @RequestParam long referringPageId, @PathVariable String type) {
+    public String viewAddWidgetFormByType(Model model, @RequestParam String referringPageId, @PathVariable String type) {
         final Widget widget = new WidgetImpl();
         String view;
         if (type != null && type.equalsIgnoreCase("w3c")){
@@ -248,7 +248,7 @@ public class WidgetStoreController {
      */
     @RequestMapping(method = RequestMethod.POST, value = "widget/add")
     public String viewAddWidgetResult(@ModelAttribute WidgetImpl widget, BindingResult results, Model model,
-            @RequestParam long referringPageId) {
+            @RequestParam String referringPageId) {
         User user = userService.getAuthenticatedUser();
         widgetValidator.validate(widget, results);
         if (results.hasErrors()) {
@@ -276,7 +276,7 @@ public class WidgetStoreController {
      */
     @RequestMapping(method = RequestMethod.POST, value = "widget/add/w3c")
     public String viewAddWidgetResultW3c(@ModelAttribute WidgetImpl widget, BindingResult results, Model model,
-            @RequestParam long referringPageId) {
+            @RequestParam String referringPageId) {
         User user = userService.getAuthenticatedUser();
         widgetValidator.validate(widget, results);
         if (results.hasErrors()) {
@@ -300,7 +300,7 @@ public class WidgetStoreController {
      *            the source page ID
      * @return a redirection string for the store detail page.
      */
-    private String finalizeNewWidget(WidgetImpl widget, User user, long referringPageId){
+    private String finalizeNewWidget(WidgetImpl widget, User user, String referringPageId){
         /*
          * By default, a new widget has a status of "PREVIEW", however this can be overridden in portal preferences,
          * skipping the need for an admin to approve a new widget.
@@ -312,7 +312,7 @@ public class WidgetStoreController {
 	        widget.setWidgetStatus(WidgetStatus.PREVIEW);
 		}
         
-        widget.setOwner(user);
+        widget.setOwnerId(user.getId());
 
         final Widget storedWidget = widgetService.registerNewWidget(widget);
         return "redirect:/app/store/widget/" + storedWidget.getId() + "?referringPageId=" + referringPageId;
@@ -328,7 +328,7 @@ public class WidgetStoreController {
      * @param user
      *            Current authenticated User
      */
-    private void widgetStoreModelHelper(Model model, long referringPageId, User user, String view) {
+    private void widgetStoreModelHelper(Model model, String referringPageId, User user, String view) {
         model.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
         model.addAttribute(ModelKeys.WIDGETS_STATISTICS, widgetService.getAllWidgetStatistics(user.getId()));
         model.addAttribute(ModelKeys.TAGS, tagService.getAllTags());

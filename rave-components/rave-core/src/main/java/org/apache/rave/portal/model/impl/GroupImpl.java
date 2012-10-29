@@ -25,18 +25,18 @@ import java.util.List;
 public class GroupImpl implements Group {
 
     protected String description;
-    protected Person owner;
+    protected String owner;
     protected String title;
-    protected List<Person> members;
+    protected List<String> members;
 
     @Override
-    public Person getOwner() {
+    public String getOwnerId() {
         return owner;
     }
 
     @Override
-    public void setOwner(Person owner) {
-        this.owner = owner;
+    public void setOwnerId(String ownerId) {
+        this.owner = ownerId;
     }
 
     @Override
@@ -50,12 +50,12 @@ public class GroupImpl implements Group {
     }
 
     @Override
-    public List<Person> getMembers() {
+    public List<String> getMemberIds() {
         return members;
     }
 
     @Override
-    public void setMembers(List<Person> members) {
+    public void setMemberIds(List<String> members) {
         this.members = members;
     }
 

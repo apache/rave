@@ -66,7 +66,7 @@ public class WidgetMarketplaceController {
 	 */
 	@RequestMapping(value = { "marketplace" }, method = RequestMethod.GET)
 	public String viewSearchResult(Model model,
-			@RequestParam long referringPageId,
+			@RequestParam String referringPageId,
             @RequestParam(required = false, defaultValue = "0") int offset) {
 
 		final String view = ViewNames.ADD_WIDGET_MARKETPLACE;
@@ -96,7 +96,7 @@ public class WidgetMarketplaceController {
 	 */
 	@RequestMapping(value = { "marketplace/search" }, method = RequestMethod.GET)
 	public String viewSearchResult(Model model,
-			@RequestParam long referringPageId,
+			@RequestParam String referringPageId,
 			@RequestParam String searchTerm,
 			@RequestParam(required = false, defaultValue = "0") int offset) {
 
@@ -127,7 +127,7 @@ public class WidgetMarketplaceController {
 	 */
 	@RequestMapping(value = { "category/{category}" }, method = RequestMethod.GET)
 	public String viewCategory(Model model,
-			@RequestParam long referringPageId,
+			@RequestParam String referringPageId,
 			@PathVariable String category,
 			@RequestParam(required = false, defaultValue = "0") int offset) {
 
@@ -160,7 +160,7 @@ public class WidgetMarketplaceController {
 	 */
 	@RequestMapping(value = {"widget/{widget}"}, method=RequestMethod.GET)
 	public String viewWidgetDetail(Model model,
-			@RequestParam long referringPageId,
+			@RequestParam String referringPageId,
 			@RequestParam String externalId,
 			@PathVariable String widget){
 		
@@ -198,7 +198,7 @@ public class WidgetMarketplaceController {
 	 * @param user
 	 *            Current authenticated User
 	 */
-	private void widgetStoreModelHelper(Model model, long referringPageId,
+	private void widgetStoreModelHelper(Model model, String referringPageId,
 			User user, String view) {
 		model.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
 		ControllerUtils.addNavItemsToModel(view, model, referringPageId, user);

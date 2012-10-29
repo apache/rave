@@ -49,8 +49,8 @@ public class JpaRegionRepositoryTest {
     @PersistenceContext
     private EntityManager manager;
 
-    private static final Long REGION_ID = 1L;
-    private static final Long INVALID_REGION_ID = -1L;
+    private static final String REGION_ID = "1";
+    private static final String INVALID_REGION_ID = "-1";
 
     @Autowired
     private RegionRepository repository;
@@ -114,28 +114,31 @@ public class JpaRegionRepositoryTest {
     @Rollback(true)
     public void save_cascadeMerge() {
 
-        JpaRegion region = new JpaRegion();
+        JpaRegion region = new JpaRegion(1L);
         region.setEntityId(1L);
         region.setRegionWidgets(new ArrayList<RegionWidget>());
-        RegionWidget regionWidget = new JpaRegionWidget();
-        regionWidget.setId(1L);
+        RegionWidget regionWidget = new JpaRegionWidget(1L);
         region.getRegionWidgets().add(regionWidget);
+
+        System.out.println(region.toString());
 
         Region saved = repository.save(region);
         manager.flush();
+
+        System.out.println(saved.toString());
 
         assertThat(saved.getRegionWidgets().size(), is(equalTo(1)));
         RegionWidget actual = saved.getRegionWidgets().get(0);
 
         assertThat(actual, is(not(sameInstance(regionWidget))));
-        assertThat(actual.getId(), is(equalTo(1L)));
+        assertThat(actual.getId(), is(equalTo("1")));
     }
 
     @Test
     @Rollback(true)
     public void save_cascadeOrphan() {
-        JpaRegion region = (JpaRegion)repository.get(1L);
-        long id = region.getRegionWidgets().get(0).getId();
+        JpaRegion region = (JpaRegion)repository.get("1");
+        String id = region.getRegionWidgets().get(0).getId();
         region.getRegionWidgets().remove(0);
 
         Region saved = repository.save(region);

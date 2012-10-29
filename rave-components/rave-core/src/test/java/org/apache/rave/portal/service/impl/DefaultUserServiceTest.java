@@ -19,43 +19,13 @@
 
 package org.apache.rave.portal.service.impl;
 
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.createNiceMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.expectLastCall;
-import static org.easymock.EasyMock.isA;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.sameInstance;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.rave.portal.model.Authority;
-import org.apache.rave.portal.model.Page;
-import org.apache.rave.portal.model.PageTemplate;
-import org.apache.rave.portal.model.PageType;
-import org.apache.rave.portal.model.Person;
-import org.apache.rave.portal.model.User;
+import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.model.impl.AuthorityImpl;
 import org.apache.rave.portal.model.impl.PageImpl;
 import org.apache.rave.portal.model.impl.PageTemplateImpl;
 import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.model.util.SearchResult;
-import org.apache.rave.portal.repository.CategoryRepository;
-import org.apache.rave.portal.repository.PageRepository;
-import org.apache.rave.portal.repository.PageTemplateRepository;
-import org.apache.rave.portal.repository.PersonRepository;
-import org.apache.rave.portal.repository.UserRepository;
-import org.apache.rave.portal.repository.WidgetCommentRepository;
-import org.apache.rave.portal.repository.WidgetRatingRepository;
-import org.apache.rave.portal.repository.WidgetRepository;
+import org.apache.rave.portal.repository.*;
 import org.apache.rave.portal.service.UserService;
 import org.junit.After;
 import org.junit.Before;
@@ -71,15 +41,21 @@ import org.springframework.security.openid.OpenIDAttribute;
 import org.springframework.security.openid.OpenIDAuthenticationStatus;
 import org.springframework.security.openid.OpenIDAuthenticationToken;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.easymock.EasyMock.*;
+import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.not;
+import static org.junit.Assert.*;
+
 public class DefaultUserServiceTest {
 
-    private static final Long USER_ID = 1234L;
+    private static final String USER_ID = "1234";
     private UserService service;
     private UserRepository userRepository;
     private PageRepository pageRepository;
     private PageTemplateRepository pageTemplateRepository;
-    private WidgetCommentRepository widgetCommentRepository;
-    private WidgetRatingRepository widgetRatingRepository;
     private WidgetRepository widgetRepository;
     private CategoryRepository categoryRepository;
     private PersonRepository personRepository;
@@ -88,21 +64,19 @@ public class DefaultUserServiceTest {
     private static final String USER_EMAIL = "test@test.com";
     private static final String OPENID_INVALID = "http://user.myopenid.com/";
     private static final String OPENID_VALID = "http://rave2011.myopenid.com/";
-    private static final Long VALID_WIDGET_ID = 1L;
-    private static final Long INVALID_USER_ID = -9999L;
+    private static final String VALID_WIDGET_ID = "1";
+    private static final String INVALID_USER_ID = "-9999";
 
     @Before
     public void setup() {
         userRepository = createMock(UserRepository.class);
         pageRepository = createMock(PageRepository.class);
         pageTemplateRepository = createMock(PageTemplateRepository.class);
-        widgetCommentRepository = createMock(WidgetCommentRepository.class);
-        widgetRatingRepository = createMock(WidgetRatingRepository.class);
         widgetRepository = createMock(WidgetRepository.class);
         categoryRepository = createMock(CategoryRepository.class);
         personRepository = createMock(PersonRepository.class);
 
-        service = new DefaultUserService(pageRepository, userRepository, widgetRatingRepository, widgetCommentRepository,
+        service = new DefaultUserService(pageRepository, userRepository,
                                          widgetRepository, pageTemplateRepository, categoryRepository, personRepository);
     }
 
@@ -276,8 +250,8 @@ public class DefaultUserServiceTest {
 
     @Test
     public void getLimitedListOfUsers() {
-        User user1 = new UserImpl(123L, "john.doe.sr");
-        User user2 = new UserImpl(456L, "john.doe.jr");
+        User user1 = new UserImpl("123", "john.doe.sr");
+        User user2 = new UserImpl("456", "john.doe.jr");
         List<User> users = new ArrayList<User>();
         users.add(user1);
         users.add(user2);
@@ -297,8 +271,8 @@ public class DefaultUserServiceTest {
     @Test
     public void getUsersByFreeTextSearch() {
         final String searchTerm = "Doe";
-        User user1 = new UserImpl(123L, "john.doe.sr");
-        User user2 = new UserImpl(456L, "john.doe.jr");
+        User user1 = new UserImpl("123", "john.doe.sr");
+        User user2 = new UserImpl("456", "john.doe.jr");
         List<User> users = new ArrayList<User>();
         users.add(user1);
         users.add(user2);
@@ -332,34 +306,34 @@ public class DefaultUserServiceTest {
         final int NUM_RATINGS = 99;
         final int NUM_WIDGETS_OWNED = 4;
         UserImpl user = new UserImpl(USER_ID, USER_NAME);
-        Page page = new PageImpl(1L, user);
+        Page page = new PageImpl("1", user.getId());
         List<Page> pages = new ArrayList<Page>();
         pages.add(page);
 
         expect(userRepository.get(USER_ID)).andReturn(user);
         expect(pageRepository.deletePages(USER_ID, PageType.USER)).andReturn(pages.size());
         expect(pageRepository.deletePages(USER_ID, PageType.PERSON_PROFILE)).andReturn(pages.size());
-        expect(widgetCommentRepository.deleteAll(USER_ID)).andReturn(NUM_COMMENTS);
-        expect(widgetRatingRepository.deleteAll(USER_ID)).andReturn(NUM_RATINGS);
+        expect(widgetRepository.deleteAllWidgetComments(USER_ID)).andReturn(NUM_COMMENTS);
+        expect(widgetRepository.deleteAllWidgetRatings(USER_ID)).andReturn(NUM_RATINGS);
         expect(widgetRepository.unassignWidgetOwner(USER_ID)).andReturn( NUM_WIDGETS_OWNED);
         expect(categoryRepository.removeFromCreatedOrModifiedFields(USER_ID)).andReturn( NUM_WIDGETS_OWNED);
         userRepository.delete(user);
         expectLastCall();
-        replay(userRepository, pageRepository, widgetCommentRepository, widgetRatingRepository, widgetRepository, categoryRepository);
+        replay(userRepository, pageRepository, widgetRepository, categoryRepository);
 
         service.deleteUser(USER_ID);
 
-        verify(userRepository, pageRepository, widgetCommentRepository, widgetRatingRepository, widgetRepository, categoryRepository);
+        verify(userRepository, pageRepository, widgetRepository, categoryRepository);
     }
 
     @Test
     public void deleteUser_invalidUserId() {
         expect(userRepository.get(INVALID_USER_ID)).andReturn(null);
-        replay(userRepository, pageRepository, widgetCommentRepository, widgetRatingRepository, widgetRepository);
+        replay(userRepository, pageRepository, widgetRepository);
 
         service.deleteUser(INVALID_USER_ID);
 
-        verify(userRepository, pageRepository, widgetCommentRepository, widgetRatingRepository, widgetRepository);
+        verify(userRepository, pageRepository, widgetRepository);
     }
 
     @Test

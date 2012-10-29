@@ -29,7 +29,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlValue;
 
 import org.apache.rave.portal.model.Page;
+import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.Widget;
+import org.apache.rave.portal.service.UserService;
+import org.apache.rave.portal.service.WidgetService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -40,7 +44,7 @@ import org.springframework.stereotype.Component;
  * for more information on the specification.
  * 
  */
-@Component
+//@Component
 @XmlRootElement(name = "workspace")
 @XmlAccessorType(XmlAccessType.NONE)
 public class OmdlOutputAdapter implements OmdlConstants {
@@ -79,7 +83,14 @@ public class OmdlOutputAdapter implements OmdlConstants {
 
     private List<OmdlWidget> widgetsList;
 
-    public OmdlOutputAdapter(){}
+    private WidgetService widgetService;
+    private UserService userService;
+
+    //@Autowired
+    public OmdlOutputAdapter(WidgetService widgetService, UserService userService){
+        this.widgetService = widgetService;
+        this.userService = userService;
+    }
 
     public void buildModel(Page page, String omdlUrl, String wookieUrl) {
         this.wookieUrl = wookieUrl;
@@ -95,7 +106,7 @@ public class OmdlOutputAdapter implements OmdlConstants {
         widgetsList = new ArrayList<OmdlWidget>();
         for(int i=0;i<page.getRegions().size(); i++){
             for(int j=0;j<page.getRegions().get(i).getRegionWidgets().size();j++){
-                 Widget widget = page.getRegions().get(i).getRegionWidgets().get(j).getWidget();
+                 Widget widget = widgetService.getWidget(page.getRegions().get(i).getRegionWidgets().get(j).getWidgetId());
                  omdlWidget = new OmdlWidget();
                  omdlWidget.setUrl(widget.getUrl());
                  omdlWidget.setLink(createLinkElement(widget.getType(), widget.getUrl()));
@@ -133,11 +144,12 @@ public class OmdlOutputAdapter implements OmdlConstants {
 
     private String getCreator(Page page){
         String result="";
-        result = page.getOwner().getDisplayName();
+        User user = userService.getUserById(page.getOwnerId());
+        result = user.getDisplayName();
         if(result == null || result.equals("")){
-            result = page.getOwner().getPreferredName();
+            result = user.getPreferredName();
             if(result == null || result.equals("")){
-                result = page.getOwner().getUsername();
+                result = user.getUsername();
             }
         }
         return result;

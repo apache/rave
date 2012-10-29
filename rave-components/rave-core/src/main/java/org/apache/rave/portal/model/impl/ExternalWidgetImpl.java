@@ -26,7 +26,7 @@ public class ExternalWidgetImpl extends WidgetImpl {
     // This wraps the external identifier as a String
     String externalId;
 
-    public ExternalWidgetImpl(long id) {
+    public ExternalWidgetImpl(String id) {
         super(id);
     }
 

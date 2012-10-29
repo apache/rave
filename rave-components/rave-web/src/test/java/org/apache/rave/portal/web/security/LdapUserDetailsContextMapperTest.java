@@ -59,7 +59,7 @@ public class LdapUserDetailsContextMapperTest {
         DirContextOperations ctx = createMock(DirContextOperations.class);
 
         final String username = "johnldap";
-        User user = new UserImpl(123L, username);
+        User user = new UserImpl("123", username);
 
         expect(userService.getUserByUsername(username)).andReturn(null).once();
         expect(ctx.attributeExists(MAIL_ATTRIBUTE_NAME)).andReturn(true);
@@ -83,7 +83,7 @@ public class LdapUserDetailsContextMapperTest {
         DirContextOperations ctx = createMock(DirContextOperations.class);
 
         final String username = "johnldap";
-        User user = new UserImpl(123L, username);
+        User user = new UserImpl("123", username);
 
         expect(userService.getUserByUsername(username)).andReturn(null).once();
         expect(ctx.attributeExists(MAIL_ATTRIBUTE_NAME)).andReturn(true);
@@ -152,7 +152,7 @@ public class LdapUserDetailsContextMapperTest {
         DirContextOperations ctx = createMock(DirContextOperations.class);
 
         final String username = "johnldap";
-        User user = new UserImpl(123L, username);
+        User user = new UserImpl("123", username);
 
         expect(userService.getUserByUsername(username)).andReturn(user);
         expectLastCall();

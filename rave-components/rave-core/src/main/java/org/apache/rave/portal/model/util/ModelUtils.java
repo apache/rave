@@ -37,13 +37,13 @@ public class ModelUtils {
 
     public static final String STANDARD_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ";
 
-    public static void normalizeRegionWidgetPreferences(long regionWidgetId, List<RegionWidgetPreference> preferences) {
+    public static void normalizeRegionWidgetPreferences(String regionWidgetId, List<RegionWidgetPreference> preferences) {
         for (RegionWidgetPreference preference : preferences) {
             normalizeRegionWidgetPreference(regionWidgetId, preference);
         }
     }
 
-    public static void normalizeRegionWidgetPreference(long regionWidgetId, RegionWidgetPreference regionWidgetPreference) {
+    public static void normalizeRegionWidgetPreference(String regionWidgetId, RegionWidgetPreference regionWidgetPreference) {
         regionWidgetPreference.setRegionWidgetId(regionWidgetId);
     }
 }

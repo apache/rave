@@ -35,7 +35,7 @@ public interface Repository<T> {
      * @param id the id of the object of type T to retrieve
      * @return a valid instance if id exists; null otherwise
      */
-    T get(long id);
+    T get(String id);
 
     /**
      * Save the given item in the repository

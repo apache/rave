@@ -74,13 +74,13 @@ public class JpaApplicationDataRepositoryTest {
 
     @Test
     public void get_valid() {
-        JpaApplicationData applicationData = (JpaApplicationData) repository.get(VALID_APPLICATION_DATA_ID);
+        JpaApplicationData applicationData = (JpaApplicationData) repository.get(VALID_APPLICATION_DATA_ID.toString());
         validateApplicationData(applicationData);
     }
 
     @Test
     public void get_invalid() {
-        ApplicationData applicationData = repository.get(-1L);
+        ApplicationData applicationData = repository.get("-1");
         assertThat(applicationData, is(nullValue()));
     }
 
@@ -149,10 +149,10 @@ public class JpaApplicationDataRepositoryTest {
     @Transactional(readOnly=false)
     @Rollback(true)
     public void delete_jpaObject() {
-        ApplicationData applicationData = repository.get(VALID_APPLICATION_DATA_ID);
+        ApplicationData applicationData = repository.get(VALID_APPLICATION_DATA_ID.toString());
         assertThat(applicationData, is(notNullValue()));
         repository.delete(applicationData);
-        applicationData = repository.get(VALID_APPLICATION_DATA_ID);
+        applicationData = repository.get(VALID_APPLICATION_DATA_ID.toString());
         assertThat(applicationData, is(nullValue()));
     }
 
@@ -160,11 +160,11 @@ public class JpaApplicationDataRepositoryTest {
     @Transactional(readOnly=false)
     @Rollback(true)
     public void delete_implObject() {
-        ApplicationData applicationData = repository.get(VALID_APPLICATION_DATA_ID);
+        ApplicationData applicationData = repository.get(VALID_APPLICATION_DATA_ID.toString());
         assertThat(applicationData, is(notNullValue()));
         ApplicationDataImpl impl = new ApplicationDataImpl(applicationData.getId());
         repository.delete(impl);
-        applicationData = repository.get(VALID_APPLICATION_DATA_ID);
+        applicationData = repository.get(VALID_APPLICATION_DATA_ID.toString());
         assertThat(applicationData, is(nullValue()));
     }
 

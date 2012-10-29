@@ -25,10 +25,10 @@ import org.apache.rave.portal.model.util.SearchResult;
 public interface AuthorityService {
 
     /**
-     * @param entityId unique identifier of the {@link org.apache.rave.portal.model.Authority}
+     * @param id unique identifier of the {@link org.apache.rave.portal.model.Authority}
      * @return Authority if it can be found, otherwise {@literal null}
      */
-    Authority getAuthorityById(long entityId);
+    Authority getAuthorityById(String id);
 
     /**
      * @param authorityName name of the authority, can be a role (ROLE_USER)

@@ -21,6 +21,7 @@ package org.apache.rave.provider.opensocial.service;
 
 import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.model.impl.*;
+import org.apache.rave.portal.repository.WidgetRepository;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.provider.opensocial.service.impl.EncryptedBlobSecurityTokenService;
 import org.apache.shindig.auth.SecurityToken;
@@ -43,6 +44,7 @@ import static org.junit.Assert.assertNotNull;
 @RunWith(Parameterized.class)
 public class SecurityTokenServiceTest {
     private UserService userService;
+    private WidgetRepository widgetRepository;
     private SecurityTokenService securityTokenService;
     private String encryptionKey;
 
@@ -51,9 +53,10 @@ public class SecurityTokenServiceTest {
     private Region validRegion;
     private RegionWidget validRegionWidget;
     private Widget validWidget;
+    private Widget bogusWidget;
 
-    private final Long VALID_REGION_WIDGET_ID = 1L;
-    private final Long VALID_USER_ID = 1L;
+    private final String VALID_REGION_WIDGET_ID = "1";
+    private final String VALID_USER_ID = "1";
     private final String VALID_USER_NAME = "jdoe";
     private final String VALID_URL = "http://example.com/test.xml";
 
@@ -79,27 +82,34 @@ public class SecurityTokenServiceTest {
     public void setup() throws MalformedURLException {
 
         userService = createMock(UserService.class);
-        securityTokenService = new EncryptedBlobSecurityTokenService(userService, "default", "default",
+        widgetRepository = createMock(WidgetRepository.class);
+        securityTokenService = new EncryptedBlobSecurityTokenService(userService, widgetRepository, "default", "default",
                 encryptionKey);
 
         validPerson = new UserImpl(VALID_USER_ID, VALID_USER_NAME);
 
-        validPage = new PageImpl(1L, validPerson);
-        validRegion = new RegionImpl(1L, validPage, 1);
+        validPage = new PageImpl("1", validPerson.getId());
+        validRegion = new RegionImpl("1", validPage, 1);
         validPage.setRegions(Arrays.asList(validRegion));
 
-        validWidget = new WidgetImpl(1L, VALID_URL);
+        validWidget = new WidgetImpl("1", VALID_URL);
         validWidget.setType("OpenSocial");
         validWidget.setTitle("Widget Title");
 
-        validRegionWidget = new RegionWidgetImpl(VALID_REGION_WIDGET_ID, validWidget, validRegion);
+        bogusWidget = new WidgetImpl("-1", VALID_URL);
+
+        validRegionWidget = new RegionWidgetImpl(VALID_REGION_WIDGET_ID, validWidget.getId(), validRegion);
         validRegion.setRegionWidgets(Arrays.asList(validRegionWidget));
     }
 
     @Test
     public void getSecurityToken_validWidget() throws SecurityTokenException {
         expect(userService.getAuthenticatedUser()).andReturn(validPerson).anyTimes();
+        expect(userService.getUserById(VALID_USER_ID)).andReturn(validPerson);
         replay(userService);
+
+        expect(widgetRepository.get(validWidget.getId())).andReturn(validWidget);
+        replay(widgetRepository);
 
         SecurityToken securityToken = securityTokenService.getSecurityToken(validRegionWidget);
         validateSecurityToken(securityToken);
@@ -107,12 +117,16 @@ public class SecurityTokenServiceTest {
 
     @Test
     public void getSecurityToken_validWidget_ownerIsNotViewer() throws SecurityTokenException {
-        Long expectedOwnerId = 99999L;
+        String expectedOwnerId = "99999";
         String expected = "Expected";
-        validPage.setOwner(new UserImpl(expectedOwnerId, expected));
+        validPage.setOwnerId(expectedOwnerId);
 
         expect(userService.getAuthenticatedUser()).andReturn(validPerson).anyTimes();
+        expect(userService.getUserById(expectedOwnerId)).andReturn(new UserImpl(expectedOwnerId, expected));
         replay(userService);
+
+        expect(widgetRepository.get(validWidget.getId())).andReturn(validWidget);
+        replay(widgetRepository);
 
         SecurityToken securityToken = securityTokenService.getSecurityToken(validRegionWidget);
         validateSecurityToken(securityToken, expected);
@@ -121,7 +135,11 @@ public class SecurityTokenServiceTest {
     @Test
     public void getEncryptedSecurityToken_validWidget_validToken() throws SecurityTokenException {
         expect(userService.getAuthenticatedUser()).andReturn(validPerson).anyTimes();
+        expect(userService.getUserById(VALID_USER_ID)).andReturn(validPerson);
         replay(userService);
+
+        expect(widgetRepository.get(validWidget.getId())).andReturn(validWidget);
+        replay(widgetRepository);
 
         String token = securityTokenService.getEncryptedSecurityToken(validRegionWidget);
         assertNotNull(token);
@@ -130,7 +148,11 @@ public class SecurityTokenServiceTest {
     @Test
     public void decryptSecurityToken_validTokenString() throws SecurityTokenException {
         expect(userService.getAuthenticatedUser()).andReturn(validPerson).anyTimes();
+        expect(userService.getUserById(VALID_USER_ID)).andReturn(validPerson);
         replay(userService);
+
+        expect(widgetRepository.get(validWidget.getId())).andReturn(validWidget);
+        replay(widgetRepository);
 
         String encryptedToken = securityTokenService.getEncryptedSecurityToken(validRegionWidget);
         assertNotNull(encryptedToken);
@@ -143,7 +165,12 @@ public class SecurityTokenServiceTest {
     public void refreshEncryptedSecurityToken_validTokenString() throws SecurityTokenException {
         expect(userService.getAuthenticatedUser()).andReturn(validPerson).anyTimes();
         expect(userService.getUserByUsername(VALID_USER_NAME)).andReturn(validPerson).anyTimes();
+        expect(userService.getUserById(VALID_USER_ID)).andReturn(validPerson).anyTimes();
         replay(userService);
+
+        expect(widgetRepository.get(validWidget.getId())).andReturn(validWidget);
+        expect(widgetRepository.get(bogusWidget.getId())).andReturn(bogusWidget);
+        replay(widgetRepository);
 
         String encryptedToken = securityTokenService.getEncryptedSecurityToken(validRegionWidget);
         assertNotNull(encryptedToken);
@@ -160,7 +187,7 @@ public class SecurityTokenServiceTest {
 
     private void validateSecurityToken(SecurityToken securityToken, String expectedOwnerId) {
         assertNotNull(securityToken);
-        assertEquals(VALID_REGION_WIDGET_ID.longValue(), securityToken.getModuleId());
+        assertEquals(Long.parseLong(VALID_REGION_WIDGET_ID), securityToken.getModuleId());
         assertEquals(expectedOwnerId, securityToken.getOwnerId());
         assertEquals(VALID_USER_NAME, securityToken.getViewerId());
         assertEquals(VALID_URL, securityToken.getAppUrl());

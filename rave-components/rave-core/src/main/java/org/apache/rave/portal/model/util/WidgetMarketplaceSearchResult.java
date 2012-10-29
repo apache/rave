@@ -50,7 +50,7 @@ public class WidgetMarketplaceSearchResult {
 	    Long widgetIndex = 1L;
 		List<Widget> widgets = new ArrayList<Widget>();
 		for (MarketplaceWidgetResult widget:getWidgets()){
-			widgets.add(widget.toWidget(widgetIndex));
+			widgets.add(widget.toWidget(widgetIndex.toString()));
 			widgetIndex++;
 		}
 		
@@ -102,7 +102,7 @@ public class WidgetMarketplaceSearchResult {
 		public String id;
 		public String downloadUrl;
 				
-		public Widget toWidget(Long widgetIndex){
+		public Widget toWidget(String widgetIndex){
 			ExternalWidgetImpl widget = new ExternalWidgetImpl(widgetIndex);
 			widget.setTitle(name);
 			widget.setDescription(description);
