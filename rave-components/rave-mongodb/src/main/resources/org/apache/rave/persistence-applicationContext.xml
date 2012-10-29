@@ -31,11 +31,15 @@
         http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
         http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/data/mongo http://www.springframework.org/schema/data/mongo/spring-mongo.xsd">
 
+    <mongo:db-factory id="mongoFactory"
+                      host="${mongo.host}"
+                      port="${mongo.port}"
+                      dbname="${mongo.database}"
+                      username="${mongo.username}"
+                      password="${mongo.password}"/>
 
-    <mongo:mongo id="mongo" host="${mongo.host}" port="${mongo.port}"/>
     <bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
-        <constructor-arg ref="mongo"/>
-        <constructor-arg name="databaseName" value="rave"/>
+        <constructor-arg name="mongoDbFactory" ref="mongoFactory"/>
     </bean>
 
 </beans>
