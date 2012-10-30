@@ -106,6 +106,17 @@ public class ProfileController {
     private String viewProfileCommon(User user, ModelMap model, String referringPageId){
         Page personProfilePage = pageService.getPersonProfilePage(user.getId());
         addAttributesToModel(model, user, referringPageId);
+
+        List<Widget> widgets = new ArrayList<Widget>();
+        if (personProfilePage.getRegions() != null) {
+            for(Region region : personProfilePage.getRegions()) {
+                for (RegionWidget regionWidget : region.getRegionWidgets()) {
+                    widgets.add(widgetService.getWidget(regionWidget.getWidgetId()));
+                }
+            }
+        }
+        model.addAttribute(ModelKeys.WIDGETS, widgets);
+
         model.addAttribute(ModelKeys.PAGE, personProfilePage);
         String view =  ViewNames.getPersonPageView(personProfilePage.getPageLayout().getCode());
         List<Person> friendRequests = userService.getFriendRequestsReceived(user.getUsername());
