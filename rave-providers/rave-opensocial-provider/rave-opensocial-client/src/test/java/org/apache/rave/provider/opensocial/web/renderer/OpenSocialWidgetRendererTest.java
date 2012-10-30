@@ -23,6 +23,7 @@ import org.apache.rave.exception.NotSupportedException;
 import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.model.impl.*;
 import org.apache.rave.portal.repository.WidgetRepository;
+import org.apache.rave.portal.service.WidgetService;
 import org.apache.rave.portal.web.renderer.RenderScope;
 import org.apache.rave.portal.web.renderer.Renderer;
 import org.apache.rave.portal.web.renderer.ScriptLocation;
@@ -48,7 +49,7 @@ public class OpenSocialWidgetRendererTest {
     private SecurityTokenService securityTokenService;
     private ScriptManager scriptManager;
     private Renderer<RegionWidget> renderer;
-    private WidgetRepository widgetRepository;
+    private WidgetService widgetService;
 
     private static final String VALID_GADGET_URL = "http://www.example.com/gadget.xml";
     private static final String VALID_METADATA = "metadata";
@@ -61,11 +62,11 @@ public class OpenSocialWidgetRendererTest {
     @Before
     public void setup() {
         renderContext = new RenderContext();
-        widgetRepository = createMock(WidgetRepository.class);
+        widgetService = createMock(WidgetService.class);
         scriptManager = createStrictMock(ScriptManager.class);
         openSocialService = createNiceMock(OpenSocialService.class);
         securityTokenService = createNiceMock(SecurityTokenService.class);
-        renderer = new OpenSocialWidgetRenderer(openSocialService, securityTokenService, scriptManager, widgetRepository);
+        renderer = new OpenSocialWidgetRenderer(openSocialService, securityTokenService, scriptManager, widgetService);
     }
 
     @Test
@@ -99,9 +100,9 @@ public class OpenSocialWidgetRendererTest {
         w.setType(Constants.WIDGET_TYPE);
         w.setUrl(VALID_GADGET_URL);
 
-        expect(widgetRepository.get(w.getId())).andReturn(w);
-        expect(widgetRepository.get(w.getId())).andReturn(w);
-        replay(widgetRepository);
+        expect(widgetService.getWidget(w.getId())).andReturn(w);
+        expect(widgetService.getWidget(w.getId())).andReturn(w);
+        replay(widgetService);
 
         Region region = new RegionImpl(REGION_ID);
         region.setPage(subPage);
@@ -156,9 +157,9 @@ public class OpenSocialWidgetRendererTest {
         WidgetImpl w = new WidgetImpl(WIDGET_ID);
         w.setType(Constants.WIDGET_TYPE);
 
-        expect(widgetRepository.get(w.getId())).andReturn(w);
-        expect(widgetRepository.get(w.getId())).andReturn(w);
-        replay(widgetRepository);
+        expect(widgetService.getWidget(w.getId())).andReturn(w);
+        expect(widgetService.getWidget(w.getId())).andReturn(w);
+        replay(widgetService);
 
         Region region = new RegionImpl(REGION_ID);
         region.setPage(page);
@@ -193,8 +194,8 @@ public class OpenSocialWidgetRendererTest {
         w.setType("NONE");
         w.setUrl("http://www.example.com/gadget.xml");
 
-        expect(widgetRepository.get(w.getId())).andReturn(w);
-        replay(widgetRepository);
+        expect(widgetService.getWidget(w.getId())).andReturn(w);
+        replay(widgetService);
 
         RegionWidget rw = new RegionWidgetImpl("1");
         rw.setWidgetId(w.getId());

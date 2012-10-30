@@ -25,6 +25,7 @@ import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.impl.*;
 import org.apache.rave.portal.repository.WidgetRepository;
 import org.apache.rave.portal.service.UserService;
+import org.apache.rave.portal.service.WidgetService;
 import org.apache.rave.provider.opensocial.exception.SecurityTokenException;
 import org.apache.rave.provider.opensocial.service.SecurityTokenService;
 import org.apache.shindig.auth.AbstractSecurityToken;
@@ -52,7 +53,7 @@ public class EncryptedBlobSecurityTokenService implements SecurityTokenService {
     public static final String CLASSPATH_KEY_PREFIX = "classpath:";
 
     private UserService userService;
-    private WidgetRepository widgetRepository;
+    private WidgetService widgetService;
     private String container;
     private String domain;
 
@@ -60,14 +61,14 @@ public class EncryptedBlobSecurityTokenService implements SecurityTokenService {
 
     @Autowired
     public EncryptedBlobSecurityTokenService(UserService userService,
-                                             WidgetRepository widgetRepository,
+                                             WidgetService widgetService,
                                              @Value("${portal.opensocial_security.container}") String container,
                                              @Value("${portal.opensocial_security.domain}") String domain,
                                              @Value("${portal.opensocial_security.encryptionkey}") String encryptionKey) {
         this.userService = userService;
         this.container = container;
         this.domain = domain;
-        this.widgetRepository = widgetRepository;
+        this.widgetService = widgetService;
 
         if (encryptionKey.startsWith(EMBEDDED_KEY_PREFIX)) {
             this.blobCrypter = new BasicBlobCrypter(encryptionKey.substring(EMBEDDED_KEY_PREFIX.length()));
@@ -156,7 +157,7 @@ public class EncryptedBlobSecurityTokenService implements SecurityTokenService {
         User user = userService.getAuthenticatedUser();
 
         Map<String, String> values = new HashMap<String, String>();
-        values.put(AbstractSecurityToken.Keys.APP_URL.getKey(), widgetRepository.get(regionWidget.getWidgetId()).getUrl());
+        values.put(AbstractSecurityToken.Keys.APP_URL.getKey(), widgetService.getWidget(regionWidget.getWidgetId()).getUrl());
         values.put(AbstractSecurityToken.Keys.MODULE_ID.getKey(), String.valueOf(regionWidget.getId()));
         values.put(AbstractSecurityToken.Keys.OWNER.getKey(),
                 String.valueOf(userService.getUserById(regionWidget.getRegion().getPage().getOwnerId()).getUsername()));
