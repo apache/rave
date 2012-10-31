@@ -22,7 +22,6 @@ import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.service.PageLayoutService;
 import org.apache.rave.portal.service.PageService;
 import org.apache.rave.portal.service.UserService;
-import org.apache.rave.portal.service.WidgetService;
 import org.apache.rave.portal.web.controller.util.ControllerUtils;
 import org.apache.rave.portal.web.util.ModelKeys;
 import org.apache.rave.portal.web.util.ViewNames;
@@ -50,16 +49,13 @@ public class PageController {
 
     private PageService pageService;
     private UserService userService;
-    private WidgetService widgetService;
     private PageLayoutService pageLayoutService;
 
     @Autowired
-    public PageController(PageService pageService, UserService userService, PageLayoutService pageLayoutService,
-                          WidgetService widgetService) {
+    public PageController(PageService pageService, UserService userService, PageLayoutService pageLayoutService) {
         this.pageService = pageService;
         this.userService = userService;
         this.pageLayoutService = pageLayoutService;
-        this.widgetService = widgetService;
     }
 
     @RequestMapping(value = {"/login"}, method = RequestMethod.GET)
@@ -79,16 +75,8 @@ public class PageController {
                 currentPageUser = pageUser;
             }
         }
-        List<Widget> widgets = new ArrayList<Widget>();
-        if (page.getRegions() != null) {
-            for(Region region : page.getRegions()) {
-                for (RegionWidget regionWidget : region.getRegionWidgets()) {
-                    widgets.add(widgetService.getWidget(regionWidget.getWidgetId()));
-                }
-            }
-        }
         List<PageLayout> pageLayouts = pageLayoutService.getAllUserSelectable();
-        addAttributesToModel(model, page, currentPageUser, pages, pageLayouts, widgets);
+        addAttributesToModel(model, page, currentPageUser, pages, pageLayouts);
         String view = ControllerUtils.getDeviceAppropriateView(request, ViewNames.getPageView(page.getPageLayout().getCode()), ViewNames.MOBILE_HOME);
         ControllerUtils.addNavItemsToModel(view, model, page.getId(), userService.getAuthenticatedUser(), currentPageUser.isEditor());
         return view;
@@ -106,16 +94,8 @@ public class PageController {
                     currentPageUser = pageUser;
                 }
             }
-            List<Widget> widgets = new ArrayList<Widget>();
-            if (page.getRegions() != null) {
-                for(Region region : page.getRegions()) {
-                    for (RegionWidget regionWidget : region.getRegionWidgets()) {
-                        widgets.add(widgetService.getWidget(regionWidget.getWidgetId()));
-                    }
-                }
-            }
             List<PageLayout> pageLayouts = pageLayoutService.getAllUserSelectable();
-            addAttributesToModel(model, page, currentPageUser, pages, pageLayouts, widgets);
+            addAttributesToModel(model, page, currentPageUser, pages, pageLayouts);
             String view = ControllerUtils.getDeviceAppropriateView(request, ViewNames.getPageView(page.getPageLayout().getCode()), ViewNames.MOBILE_HOME);
             ControllerUtils.addNavItemsToModel(view, model, page.getId(), thisUser, currentPageUser.isEditor());
             return view;
@@ -149,11 +129,10 @@ public class PageController {
         return viewablePages;
     }
 
-    private void addAttributesToModel(Model model, Page page, PageUser pageUser, List<Page> pages, List<PageLayout> pageLayouts, List<Widget> widgets) {
+    private void addAttributesToModel(Model model, Page page, PageUser pageUser, List<Page> pages, List<PageLayout> pageLayouts) {
         model.addAttribute(ModelKeys.PAGE, page);
         model.addAttribute(ModelKeys.PAGES, pages);
         model.addAttribute(ModelKeys.PAGE_LAYOUTS, pageLayouts);
         model.addAttribute(ModelKeys.PAGE_USER, pageUser);
-        model.addAttribute(ModelKeys.WIDGETS, widgets);
     }
 }

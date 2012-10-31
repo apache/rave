@@ -22,11 +22,11 @@ package org.apache.rave.provider.w3c.web.renderer;
 import org.apache.rave.exception.NotSupportedException;
 import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.model.impl.*;
-import org.apache.rave.portal.repository.WidgetRepository;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.portal.service.WidgetProviderService;
 import org.apache.rave.portal.web.renderer.Renderer;
 import org.apache.rave.portal.web.renderer.ScriptManager;
+import org.apache.rave.portal.web.renderer.model.RegionWidgetWrapper;
 import org.apache.rave.portal.web.renderer.model.RenderContext;
 import org.apache.rave.provider.w3c.Constants;
 import org.apache.rave.provider.w3c.service.impl.W3CWidget;
@@ -47,12 +47,11 @@ public class W3cWidgetRendererTest {
 
     private static final String VALID_WIDGET_URL = "http://example.com/widgets/1";
     private static final String VALID_WIDGET_INSTANCE_URL = "http://example.com/widgetinstances/1";
-    private Renderer<RegionWidget> renderer;
+    private Renderer<RegionWidgetWrapper> renderer;
     private WidgetProviderService wookieService;
     private UserService userService;
     private RenderContext renderContext;
     private ScriptManager scriptManager;
-    private WidgetRepository widgetRepository;
 
     @Before
     public void setup() {
@@ -61,8 +60,7 @@ public class W3cWidgetRendererTest {
         wookieService = createNiceMock(WidgetProviderService.class);
         userService = createNiceMock(UserService.class);
         scriptManager = createNiceMock(ScriptManager.class);
-        widgetRepository = createMock(WidgetRepository.class);
-        renderer = new W3cWidgetRenderer(wookieService, userService, scriptManager, widgetRepository);
+        renderer = new W3cWidgetRenderer(wookieService, userService, scriptManager);
     }
 
     @Test
@@ -103,14 +101,12 @@ public class W3cWidgetRendererTest {
         W3CWidget wookieWidget = new W3CWidget();
         wookieWidget.setUrl(VALID_WIDGET_INSTANCE_URL);
 
-        expect(widgetRepository.get("1")).andReturn(w);
-        expect(widgetRepository.get("1")).andReturn(w);
-        replay(widgetRepository);
+        RegionWidgetWrapper wrapper = new RegionWidgetWrapper(w, rw);
 
-        expect(wookieService.getWidget(eq(user), eq(rw.getId().toString()), isA(Widget.class))).andReturn(wookieWidget);
+        expect(wookieService.getWidget(eq(user), eq(rw.getId()), isA(Widget.class))).andReturn(wookieWidget);
         replay(wookieService);
 
-        String placeholder = renderer.render(rw, renderContext);
+        String placeholder = renderer.render(wrapper, renderContext);
         assertEquals("Script block for widget is incorrect", "<!-- RegionWidget " + REGION_WIDGET_ID + " placeholder -->", placeholder);
     }
 
@@ -122,10 +118,9 @@ public class W3cWidgetRendererTest {
         RegionWidget rw = new RegionWidgetImpl("1");
         rw.setWidgetId(w.getId());
 
-        expect(widgetRepository.get("1")).andReturn(w);
-        replay(widgetRepository);
+        RegionWidgetWrapper wrapper = new RegionWidgetWrapper(w, rw);
 
         RenderContext renderContext = createNiceMock(RenderContext.class);
-        renderer.render(rw, renderContext);
+        renderer.render(wrapper, renderContext);
     }
 }

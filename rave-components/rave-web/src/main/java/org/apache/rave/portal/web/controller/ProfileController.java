@@ -19,10 +19,11 @@
 
 package org.apache.rave.portal.web.controller;
 
-import org.apache.rave.portal.model.*;
+import org.apache.rave.portal.model.Page;
+import org.apache.rave.portal.model.Person;
+import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.service.PageService;
 import org.apache.rave.portal.service.UserService;
-import org.apache.rave.portal.service.WidgetService;
 import org.apache.rave.portal.web.controller.util.ControllerUtils;
 import org.apache.rave.portal.web.model.NavigationItem;
 import org.apache.rave.portal.web.model.NavigationMenu;
@@ -32,13 +33,11 @@ import org.apache.rave.portal.web.util.ViewNames;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -49,13 +48,11 @@ public class ProfileController {
 
 	private final UserService userService;
 	private final PageService pageService;
-    private final WidgetService widgetService;
 
 	@Autowired
-	public ProfileController(UserService userService, PageService pageService, WidgetService widgetService) {
+	public ProfileController(UserService userService, PageService pageService) {
 		this.userService = userService;
         this.pageService = pageService;
-        this.widgetService = widgetService;
 	}
 
     /**
@@ -106,16 +103,6 @@ public class ProfileController {
     private String viewProfileCommon(User user, ModelMap model, String referringPageId){
         Page personProfilePage = pageService.getPersonProfilePage(user.getId());
         addAttributesToModel(model, user, referringPageId);
-
-        List<Widget> widgets = new ArrayList<Widget>();
-        if (personProfilePage.getRegions() != null) {
-            for(Region region : personProfilePage.getRegions()) {
-                for (RegionWidget regionWidget : region.getRegionWidgets()) {
-                    widgets.add(widgetService.getWidget(regionWidget.getWidgetId()));
-                }
-            }
-        }
-        model.addAttribute(ModelKeys.WIDGETS, widgets);
 
         model.addAttribute(ModelKeys.PAGE, personProfilePage);
         String view =  ViewNames.getPersonPageView(personProfilePage.getPageLayout().getCode());

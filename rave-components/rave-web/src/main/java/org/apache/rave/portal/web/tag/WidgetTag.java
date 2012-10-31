@@ -17,11 +17,18 @@
  * under the License.
  */
 
-package org.apache.rave.portal.web.renderer;
+package org.apache.rave.portal.web.tag;
 
-import org.apache.rave.portal.web.renderer.model.RegionWidgetWrapper;
+import org.apache.rave.portal.model.Widget;
+import org.apache.rave.portal.repository.WidgetRepository;
 
 /**
- * Scoped renderer that provides additional RegionWidget related rendering operations
+ * Adds the requested person to the requested scope for access via JSPs
  */
-public interface RegionWidgetRenderer extends Renderer<RegionWidgetWrapper> {}
+public class WidgetTag extends ModelContextTag<Widget, WidgetRepository> {
+    public WidgetTag() {
+        super(WidgetRepository.class);
+    }
+
+
+}

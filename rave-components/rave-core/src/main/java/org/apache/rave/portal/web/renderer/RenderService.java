@@ -19,7 +19,7 @@
 
 package org.apache.rave.portal.web.renderer;
 
-import org.apache.rave.portal.model.RegionWidget;
+import org.apache.rave.portal.web.renderer.model.RegionWidgetWrapper;
 import org.apache.rave.portal.web.renderer.model.RenderContext;
 
 import java.util.Collection;
@@ -35,13 +35,12 @@ public interface RenderService {
     Collection<String> getSupportedWidgetTypes();
 
     /**
-     * Renders the {@link org.apache.rave.portal.model.RegionWidget} as a String
+     * Renders the {@link org.apache.rave.portal.model.RegionWidget} as a String\
      *
-     *
-     * @param widget widget to renderer
+     * @param regionWidgetWrapper widget to renderer
      * @param context the cotnext under which to render the widget
      * @return a String representing the rendered widget
      */
-    String render(RegionWidget widget, RenderContext context);
+    String render(RegionWidgetWrapper regionWidgetWrapper, RenderContext context);
 
 }

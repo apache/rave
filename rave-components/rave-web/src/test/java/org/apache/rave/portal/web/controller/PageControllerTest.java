@@ -74,8 +74,7 @@ public class PageControllerTest {
         userService = createMock(UserService.class);
         pageService = createMock(PageService.class);
         pageLayoutService = createMock(PageLayoutService.class);
-        widgetService = createMock(WidgetService.class);
-        pageController = new PageController(pageService, userService, pageLayoutService, widgetService);
+        pageController = new PageController(pageService, userService, pageLayoutService);
         model = new ExtendedModelMap();
         request = new MockHttpServletRequest();
 

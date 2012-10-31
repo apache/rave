@@ -20,9 +20,8 @@
 package org.apache.rave.portal.web.renderer.impl;
 
 import org.apache.rave.exception.NotSupportedException;
-import org.apache.rave.portal.model.RegionWidget;
-import org.apache.rave.portal.model.Widget;
 import org.apache.rave.portal.repository.WidgetRepository;
+import org.apache.rave.portal.web.renderer.model.RegionWidgetWrapper;
 import org.apache.rave.portal.web.renderer.model.RenderContext;
 import org.apache.rave.portal.web.renderer.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,15 +38,14 @@ import java.util.*;
 @Service
 public class DefaultRenderService implements RenderService {
 
-    private final Map<String, RegionWidgetRenderer> supportedWidgets;
+    public static final String WIDGET_CONTEXT_KEY = "widget";
 
-    private final WidgetRepository widgetRepository;
+    private final Map<String, RegionWidgetRenderer> supportedWidgets;
 
     @Autowired
     public DefaultRenderService(List<RegionWidgetRenderer> widgetRenderers, WidgetRepository widgetRepository) {
         this.supportedWidgets = new HashMap<String, RegionWidgetRenderer>();
         mapRenderersByType(this.supportedWidgets, widgetRenderers);
-        this.widgetRepository = widgetRepository;
     }
 
     @Override
@@ -65,11 +63,10 @@ public class DefaultRenderService implements RenderService {
      * @throws {@link org.apache.rave.exception.NotSupportedException}
      */
     @Override
-    public String render(RegionWidget rw, RenderContext context) {
-        Widget widget = widgetRepository.get(rw.getWidgetId());
-        RegionWidgetRenderer renderer = supportedWidgets.get(widget.getType());
+    public String render(RegionWidgetWrapper rw, RenderContext context) {
+        RegionWidgetRenderer renderer = supportedWidgets.get(rw.getWidget().getType());
         if(renderer == null) {
-            throw new NotSupportedException(widget.getType() + " is not supported");
+            throw new NotSupportedException(rw.getWidget().getType() + " is not supported");
         }
         return renderer.render(rw, context);
     }

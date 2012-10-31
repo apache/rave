@@ -28,6 +28,7 @@ import org.apache.rave.portal.model.impl.*;
 import org.apache.rave.portal.web.renderer.RenderService;
 import org.apache.rave.portal.web.renderer.ScriptLocation;
 import org.apache.rave.portal.web.renderer.ScriptManager;
+import org.apache.rave.portal.web.renderer.model.RegionWidgetWrapper;
 import org.apache.rave.portal.web.renderer.model.RenderContext;
 import org.apache.rave.provider.opensocial.repository.impl.ShindigGadgetMetadataRepository;
 import org.easymock.EasyMock;
@@ -119,9 +120,11 @@ public class RenderServiceIntegrationTest {
         RegionWidget rw = new RegionWidgetImpl("1", w.getId(), region);
         region.setRegionWidgets(Arrays.asList(rw));
 
+        RegionWidgetWrapper wrapper = new RegionWidgetWrapper(w, rw);
+
         RenderContext context = new RenderContext();
         context.setProperties(new HashMap());
-        String rendered = service.render(rw, context);
+        String rendered = service.render(wrapper, context);
         assertThat(rendered, is(notNullValue()));
         assertThat(rendered.contains("<!--"), is(true));
         assertThat(scriptManager.getScriptBlocks(ScriptLocation.AFTER_RAVE, context).size(), is(equalTo(1)));

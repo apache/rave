@@ -22,12 +22,12 @@ package org.apache.rave.provider.opensocial.web.renderer;
 import org.apache.rave.exception.NotSupportedException;
 import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.model.impl.*;
-import org.apache.rave.portal.repository.WidgetRepository;
 import org.apache.rave.portal.service.WidgetService;
 import org.apache.rave.portal.web.renderer.RenderScope;
 import org.apache.rave.portal.web.renderer.Renderer;
 import org.apache.rave.portal.web.renderer.ScriptLocation;
 import org.apache.rave.portal.web.renderer.ScriptManager;
+import org.apache.rave.portal.web.renderer.model.RegionWidgetWrapper;
 import org.apache.rave.portal.web.renderer.model.RenderContext;
 import org.apache.rave.provider.opensocial.Constants;
 import org.apache.rave.provider.opensocial.service.OpenSocialService;
@@ -48,7 +48,7 @@ public class OpenSocialWidgetRendererTest {
     private OpenSocialService openSocialService;
     private SecurityTokenService securityTokenService;
     private ScriptManager scriptManager;
-    private Renderer<RegionWidget> renderer;
+    private Renderer<RegionWidgetWrapper> renderer;
     private WidgetService widgetService;
 
     private static final String VALID_GADGET_URL = "http://www.example.com/gadget.xml";
@@ -66,7 +66,7 @@ public class OpenSocialWidgetRendererTest {
         scriptManager = createStrictMock(ScriptManager.class);
         openSocialService = createNiceMock(OpenSocialService.class);
         securityTokenService = createNiceMock(SecurityTokenService.class);
-        renderer = new OpenSocialWidgetRenderer(openSocialService, securityTokenService, scriptManager, widgetService);
+        renderer = new OpenSocialWidgetRenderer(openSocialService, securityTokenService, scriptManager);
     }
 
     @Test
@@ -139,7 +139,9 @@ public class OpenSocialWidgetRendererTest {
         //expectLastCall();
         //replay(scriptManager);
 
-        String result = renderer.render(rw, renderContext);
+        RegionWidgetWrapper wrapper = new RegionWidgetWrapper(w, rw);
+
+        String result = renderer.render(wrapper, renderContext);
 
         assertThat(result, is(equalTo("<!-- RegionWidget " + REGION_WIDGET_ID + " placeholder -->")));
         //verify(scriptManager);
@@ -184,7 +186,10 @@ public class OpenSocialWidgetRendererTest {
         scriptManager.registerScriptBlock(OpenSocialWidgetRenderer.REGISTER_WIDGET_KEY, markup, ScriptLocation.AFTER_RAVE, RenderScope.CURRENT_REQUEST, null);
         expectLastCall();
         replay(scriptManager);
-        String result = renderer.render(rw, null);
+
+        RegionWidgetWrapper wrapper = new RegionWidgetWrapper(w, rw);
+
+        String result = renderer.render(wrapper, null);
         verify(scriptManager);
     }
 
@@ -200,6 +205,8 @@ public class OpenSocialWidgetRendererTest {
         RegionWidget rw = new RegionWidgetImpl("1");
         rw.setWidgetId(w.getId());
 
-        renderer.render(rw, null);
+        RegionWidgetWrapper wrapper = new RegionWidgetWrapper(w, rw);
+
+        renderer.render(wrapper, null);
     }
 }

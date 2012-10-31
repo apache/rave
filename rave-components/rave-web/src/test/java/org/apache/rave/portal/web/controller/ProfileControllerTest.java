@@ -19,17 +19,6 @@
 
 package org.apache.rave.portal.web.controller;
 
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.rave.portal.model.Page;
 import org.apache.rave.portal.model.PageLayout;
 import org.apache.rave.portal.model.Person;
@@ -48,6 +37,14 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.ui.ModelMap;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.easymock.EasyMock.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 /**
  * Test class for {@link ProfileController}
@@ -74,8 +71,7 @@ public class ProfileControllerTest {
 	public void setup() {
 		userService = createMock(UserService.class);
 		pageService = createMock(PageService.class);
-        widgetService = createMock(WidgetService.class);
-		profileController = new ProfileController(userService, pageService, widgetService);
+		profileController = new ProfileController(userService, pageService);
 
         validPageLayout = new PageLayoutImpl();
         validPageLayout.setCode(VALID_PAGE_LAYOUT_CODE);

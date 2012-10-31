@@ -25,6 +25,7 @@ import org.apache.rave.portal.model.impl.RegionWidgetImpl;
 import org.apache.rave.portal.model.impl.WidgetImpl;
 import org.apache.rave.portal.repository.WidgetRepository;
 import org.apache.rave.portal.web.renderer.impl.DefaultRenderService;
+import org.apache.rave.portal.web.renderer.model.RegionWidgetWrapper;
 import org.apache.rave.portal.web.renderer.model.RenderContext;
 import org.junit.Before;
 import org.junit.Test;
@@ -94,12 +95,14 @@ public class RenderServiceTest {
         RegionWidget rw = new RegionWidgetImpl();
         rw.setWidgetId(w.getId());
 
-        expect(widgetRenderer1.render(rw, context)).andReturn(RENDERED_TYPE_1);
+        RegionWidgetWrapper wrapper = new RegionWidgetWrapper(w, rw);
+
+        expect(widgetRenderer1.render(wrapper, context)).andReturn(RENDERED_TYPE_1);
         expect(widgetRepository.get("1")).andReturn(w);
         replayMocks();
 
         constructFooBarRenderService();
-        assertThat(service.render(rw, context), is(equalTo(RENDERED_TYPE_1)));
+        assertThat(service.render(wrapper, context), is(equalTo(RENDERED_TYPE_1)));
     }
 
     @Test
@@ -110,12 +113,14 @@ public class RenderServiceTest {
         RegionWidget rw = new RegionWidgetImpl();
         rw.setWidgetId(w.getId());
 
-        expect(widgetRenderer2.render(rw, context)).andReturn(RENDERED_TYPE_2);
+        RegionWidgetWrapper wrapper = new RegionWidgetWrapper(w, rw);
+
+        expect(widgetRenderer2.render(wrapper, context)).andReturn(RENDERED_TYPE_2);
         expect(widgetRepository.get("1")).andReturn(w);
         replayMocks();
 
         constructFooBarRenderService();
-        assertThat(service.render(rw, context), is(equalTo(RENDERED_TYPE_2)));
+        assertThat(service.render(wrapper, context), is(equalTo(RENDERED_TYPE_2)));
     }
 
     @Test(expected = NotSupportedException.class)
@@ -127,12 +132,14 @@ public class RenderServiceTest {
         RegionWidget rw = new RegionWidgetImpl();
         rw.setWidgetId(w.getId());
 
+        RegionWidgetWrapper wrapper = new RegionWidgetWrapper(w, rw);
+
         expect(widgetRepository.get("1")).andReturn(w);
 
         replayMocks();
 
         constructFooBarRenderService();
-        service.render(rw, context);
+        service.render(wrapper, context);
     }
 
 

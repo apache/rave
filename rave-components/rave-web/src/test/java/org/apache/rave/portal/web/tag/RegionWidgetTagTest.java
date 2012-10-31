@@ -24,11 +24,11 @@ import org.apache.rave.portal.model.RegionWidget;
 import org.apache.rave.portal.model.impl.RegionImpl;
 import org.apache.rave.portal.model.impl.RegionWidgetImpl;
 import org.apache.rave.portal.model.impl.WidgetImpl;
-import org.apache.rave.portal.repository.WidgetRepository;
 import org.apache.rave.portal.web.renderer.RenderScope;
 import org.apache.rave.portal.web.renderer.RenderService;
 import org.apache.rave.portal.web.renderer.ScriptLocation;
 import org.apache.rave.portal.web.renderer.ScriptManager;
+import org.apache.rave.portal.web.renderer.model.RegionWidgetWrapper;
 import org.apache.rave.portal.web.renderer.model.RenderContext;
 import org.junit.Before;
 import org.junit.Test;
@@ -92,8 +92,10 @@ public class RegionWidgetTagTest {
         Set<String> strings = new HashSet<String>();
         strings.add(WIDGET_TYPE);
 
+        RegionWidgetWrapper wrapper = new RegionWidgetWrapper(widget, regionWidget);
+
         expect(service.getSupportedWidgetTypes()).andReturn(strings);
-        expect(service.render(regionWidget, context)).andReturn(RENDERED);
+        expect(service.render(wrapper, context)).andReturn(RENDERED);
         replay(service);
 
         JspWriter writer = createNiceMock(JspWriter.class);

@@ -21,13 +21,13 @@ package org.apache.rave.provider.w3c.web.renderer;
 
 import org.apache.rave.exception.NotSupportedException;
 import org.apache.rave.portal.model.*;
-import org.apache.rave.portal.repository.WidgetRepository;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.portal.service.WidgetProviderService;
 import org.apache.rave.portal.web.renderer.RegionWidgetRenderer;
 import org.apache.rave.portal.web.renderer.RenderScope;
 import org.apache.rave.portal.web.renderer.ScriptLocation;
 import org.apache.rave.portal.web.renderer.ScriptManager;
+import org.apache.rave.portal.web.renderer.model.RegionWidgetWrapper;
 import org.apache.rave.portal.web.renderer.model.RenderContext;
 import org.apache.rave.provider.w3c.service.impl.W3CWidget;
 import org.json.JSONException;
@@ -52,15 +52,13 @@ public class W3cWidgetRenderer implements RegionWidgetRenderer {
     private final WidgetProviderService widgetService;
     private final UserService userService;
     private ScriptManager scriptManager;
-    private WidgetRepository widgetRepository;
 
     @Autowired
     public W3cWidgetRenderer(@Qualifier("wookieWidgetService") WidgetProviderService widgetService,
-                             UserService userService, ScriptManager scriptManager, WidgetRepository widgetRepository) {
+                             UserService userService, ScriptManager scriptManager) {
         this.widgetService = widgetService;
         this.userService = userService;
         this.scriptManager = scriptManager;
-        this.widgetRepository = widgetRepository;
     }
 
     /**
@@ -89,18 +87,19 @@ public class W3cWidgetRenderer implements RegionWidgetRenderer {
     /**
      * Renders a {@link org.apache.rave.portal.model.RegionWidget} as HTML markup
      *
-     * @param item RegionWidgetImpl to render
+     * @param wrapper RegionWidgetImpl to render
      * @param context
      * @return valid HTML markup
      */
     @Override
-    public String render(RegionWidget item, RenderContext context) {
-        Widget widget = widgetRepository.get(item.getWidgetId());
+    public String render(RegionWidgetWrapper wrapper, RenderContext context) {
+        Widget widget = wrapper.getWidget();
+        RegionWidget item = wrapper.getRegionWidget();
         if(!WIDGET_TYPE.equals(widget.getType())) {
             throw new NotSupportedException("Invalid widget type passed to renderer: " + widget.getType());
         }
 
-        String widgetScript = getWidgetScript(item);
+        String widgetScript = getWidgetScript(item, widget);
         // the key is based off the RegionWidget.id to ensure uniqueness
         String key = REGISTER_WIDGET_KEY + "-" + item.getId();
         scriptManager.registerScriptBlock(key, widgetScript, ScriptLocation.AFTER_RAVE, RenderScope.CURRENT_REQUEST, context);
@@ -111,10 +110,12 @@ public class W3cWidgetRenderer implements RegionWidgetRenderer {
 
     /**
      * Create a widget script block
+     *
      * @param item the RegionWidget to create a script block for
+     * @param widget
      * @return the script block
      */
-    private String getWidgetScript(RegionWidget item) {
+    private String getWidgetScript(RegionWidget item, Widget widget) {
         User user = userService.getAuthenticatedUser();
 
         //
@@ -125,7 +126,6 @@ public class W3cWidgetRenderer implements RegionWidgetRenderer {
         //
         // Get the Rave Widget for this regionWidget instance
         //
-        Widget widget = widgetRepository.get(item.getWidgetId());
         W3CWidget contextualizedWidget = (W3CWidget) widgetService.getWidget(user, sharedDataKey, widget);
 
         //

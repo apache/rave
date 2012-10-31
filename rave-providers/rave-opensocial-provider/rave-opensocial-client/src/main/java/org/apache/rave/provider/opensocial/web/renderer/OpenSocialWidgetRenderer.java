@@ -21,12 +21,11 @@ package org.apache.rave.provider.opensocial.web.renderer;
 
 import org.apache.rave.exception.NotSupportedException;
 import org.apache.rave.portal.model.*;
-import org.apache.rave.portal.repository.WidgetRepository;
-import org.apache.rave.portal.service.WidgetService;
 import org.apache.rave.portal.web.renderer.RegionWidgetRenderer;
 import org.apache.rave.portal.web.renderer.RenderScope;
 import org.apache.rave.portal.web.renderer.ScriptLocation;
 import org.apache.rave.portal.web.renderer.ScriptManager;
+import org.apache.rave.portal.web.renderer.model.RegionWidgetWrapper;
 import org.apache.rave.portal.web.renderer.model.RenderContext;
 import org.apache.rave.provider.opensocial.Constants;
 import org.apache.rave.provider.opensocial.service.OpenSocialService;
@@ -52,17 +51,14 @@ public class OpenSocialWidgetRenderer implements RegionWidgetRenderer {
     private OpenSocialService openSocialService;
     private SecurityTokenService securityTokenService;
     private ScriptManager scriptManager;
-    private WidgetService widgetService;
 
     @Autowired
     public OpenSocialWidgetRenderer(OpenSocialService openSocialService,
                                     SecurityTokenService securityTokenService,
-                                    ScriptManager scriptManager,
-                                    WidgetService widgetService) {
+                                    ScriptManager scriptManager) {
         this.openSocialService = openSocialService;
         this.securityTokenService = securityTokenService;
         this.scriptManager = scriptManager;
-        this.widgetService = widgetService;
     }
 
     //Note the widgets.push() call.  This defines the widget objects, which are
@@ -96,20 +92,21 @@ public class OpenSocialWidgetRenderer implements RegionWidgetRenderer {
      * @return valid HTML markup
      */
     @Override
-    public String render(RegionWidget item, RenderContext context) {
-        Widget widget = widgetService.getWidget(item.getWidgetId());
+    public String render(RegionWidgetWrapper item, RenderContext context) {
+        Widget widget = item.getWidget();
         String type = widget.getType();
         if (!Constants.WIDGET_TYPE.equals(type)) {
             throw new NotSupportedException("Invalid widget type passed to renderer: " + type);
         }
 
-        String widgetScript = getWidgetScript(item, widget);
+        RegionWidget regionWidget = item.getRegionWidget();
+        String widgetScript = getWidgetScript(regionWidget, widget);
         // the key is based off the RegionWidget.id to ensure uniqueness
-        String key = REGISTER_WIDGET_KEY  + (item.getId() == null ? "" :  "-" + item.getId());
+        String key = REGISTER_WIDGET_KEY  + (regionWidget.getId() == null ? "" :  "-" + regionWidget.getId());
         scriptManager.registerScriptBlock(key, widgetScript, ScriptLocation.AFTER_RAVE, RenderScope.CURRENT_REQUEST, context);
         logger.debug("Gadget Script Data from OpenSocialWidgetRenderer: " + widgetScript);
 
-        return String.format(MARKUP, item.getId());
+        return String.format(MARKUP, regionWidget.getId());
     }
 
     private String getWidgetScript(RegionWidget item, Widget widget) {

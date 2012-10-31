@@ -17,11 +17,36 @@
  * under the License.
  */
 
-package org.apache.rave.portal.web.renderer;
+package org.apache.rave.portal.web.renderer.model;
 
-import org.apache.rave.portal.web.renderer.model.RegionWidgetWrapper;
 
-/**
- * Scoped renderer that provides additional RegionWidget related rendering operations
- */
-public interface RegionWidgetRenderer extends Renderer<RegionWidgetWrapper> {}
+import org.apache.rave.portal.model.RegionWidget;
+import org.apache.rave.portal.model.Widget;
+
+public class RegionWidgetWrapper {
+    private Widget widget;
+    private RegionWidget regionWidget;
+
+    public RegionWidgetWrapper() { }
+
+    public RegionWidgetWrapper(Widget widget, RegionWidget regionWidget) {
+        this.widget = widget;
+        this.regionWidget = regionWidget;
+    }
+
+    public Widget getWidget() {
+        return widget;
+    }
+
+    public void setWidget(Widget widget) {
+        this.widget = widget;
+    }
+
+    public RegionWidget getRegionWidget() {
+        return regionWidget;
+    }
+
+    public void setRegionWidget(RegionWidget regionWidget) {
+        this.regionWidget = regionWidget;
+    }
+}
