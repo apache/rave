@@ -95,7 +95,7 @@ public class RegionWidgetTagTest {
         RegionWidgetWrapper wrapper = new RegionWidgetWrapper(widget, regionWidget);
 
         expect(service.getSupportedWidgetTypes()).andReturn(strings);
-        expect(service.render(wrapper, context)).andReturn(RENDERED);
+        expect(service.render(isA(RegionWidgetWrapper.class), same(context))).andReturn(RENDERED);
         replay(service);
 
         JspWriter writer = createNiceMock(JspWriter.class);

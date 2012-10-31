@@ -66,22 +66,19 @@
         <c:forEach var="region" items="${page.regions}">
             <div class="region-mobile" id="region-${region.id}-id">
             <c:forEach var="regionWidget" items="${region.regionWidgets}">
-                <c:forEach var="widget" items="${widgets}">
-                    <c:if test="${regionWidget.widgetId == widget.id}">
-                       <div class="widget-wrapper widget-wrapper-mobile" id="widget-${regionWidget.id}-wrapper">
-                            <div class="widget-title-bar widget-title-bar-mobile" onclick="rave.toggleMobileWidget(${regionWidget.id});">
-                                <span id="widget-${regionWidget.id}-collapse" class="widget-toolbar-toggle-collapse" title="<fmt:message key="widget.chrome.toggle"/>"><i class="icon-chevron-down"></i></span>
-                                <div id="widget-${regionWidget.id}-title" class="widget-title">
-                                    <c:out value="${widget.title}"/>
-                                </div>
-                            </div>
-                            <div class="widget-prefs" id="widget-${regionWidget.id}-prefs-content"></div>
-                            <div class="widget widget-mobile" id="widget-${regionWidget.id}-body">
-                                <portal:render-widget regionWidget="${regionWidget}" widget="${widget}"/>
-                            </div>
+               <portal:widget var="widget" id="${regionWidget.widgetId}" />
+               <div class="widget-wrapper widget-wrapper-mobile" id="widget-${regionWidget.id}-wrapper">
+                    <div class="widget-title-bar widget-title-bar-mobile" onclick="rave.toggleMobileWidget(${regionWidget.id});">
+                        <span id="widget-${regionWidget.id}-collapse" class="widget-toolbar-toggle-collapse" title="<fmt:message key="widget.chrome.toggle"/>"><i class="icon-chevron-down"></i></span>
+                        <div id="widget-${regionWidget.id}-title" class="widget-title">
+                            <c:out value="${widget.title}"/>
                         </div>
-                    </c:if>
-                </c:forEach>
+                    </div>
+                    <div class="widget-prefs" id="widget-${regionWidget.id}-prefs-content"></div>
+                    <div class="widget widget-mobile" id="widget-${regionWidget.id}-body">
+                        <portal:render-widget regionWidget="${regionWidget}" widget="${widget}"/>
+                    </div>
+                </div>
             </c:forEach>
             </div>
         </c:forEach>

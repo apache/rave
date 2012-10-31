@@ -27,10 +27,10 @@
 <div class="columns_3_newuser_widgets">
     <div class="columns_3_newuser_subtitle"><fmt:message key="page.layout.newuser.subtitle"/></div>
     <div class="widgetRow upperRow">
-        <rave:region region="${page.regions[0]}" regionIdx="1" widgets="${widgets}" />
-        <rave:region region="${page.regions[1]}" regionIdx="2" widgets="${widgets}" />
+        <rave:region region="${page.regions[0]}" regionIdx="1" />
+        <rave:region region="${page.regions[1]}" regionIdx="2" />
     </div>
     <div class="widgetRow bottomRow">
-        <rave:region region="${page.regions[2]}" regionIdx="3" widgets="${widgets}" />
+        <rave:region region="${page.regions[2]}" regionIdx="3" />
     </div>
 </div>

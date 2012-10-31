@@ -94,7 +94,7 @@ public class ProfileControllerTest {
 		//creating a mock user
 		final UserImpl user = new UserImpl();
 		final ModelMap model = new ModelMap();
-		final int modelSize = 5;
+		final int modelSize = 4;
 		final String username="canonical";
         user.setUsername(username);
         user.setId(USER_ID);
@@ -135,7 +135,7 @@ public class ProfileControllerTest {
 		//creating a mock user
 		final UserImpl user = new UserImpl();
 		final ModelMap model = new ModelMap();
-		final int modelSize = 5;
+		final int modelSize = 4;
 		final String username="canonical";
         user.setUsername(username);
         user.setId(USER_ID);
