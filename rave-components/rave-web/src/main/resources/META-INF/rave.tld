@@ -52,7 +52,7 @@
     <tag>
         <description>Allows access to a org.apache.rave.model.Widget object via the configured variable</description>
         <name>widget</name>
-        <tag-class>org.apache.rave.portal.web.tag.PersonTag</tag-class>
+        <tag-class>org.apache.rave.portal.web.tag.WidgetTag</tag-class>
         <body-content>JSP</body-content>
         <attribute>
             <description>The ID of the widget to load</description>

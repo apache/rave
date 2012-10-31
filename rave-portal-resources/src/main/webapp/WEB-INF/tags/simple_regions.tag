@@ -24,7 +24,6 @@ simply render each region one after another and rely on CSS to style and positio
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ include file="/WEB-INF/jsp/includes/taglibs.jsp" %>
 <%@ attribute name="page" type="org.apache.rave.portal.model.Page" required="true" description="The Page object" %>
-<%@ attribute name="widgets" type="java.util.List" required="true" description="The Widgets" %>
 
 <%--@elvariable id="region" type="org.apache.rave.portal.model.Region"--%>
 <div class="widgetRow bottomRow">
