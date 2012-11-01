@@ -86,6 +86,9 @@ public class OmdlOutputAdapter implements OmdlConstants {
     private WidgetService widgetService;
     private UserService userService;
 
+    // needed for the JAXBContext when serializing to xml
+    public OmdlOutputAdapter(){}
+
     //@Autowired
     public OmdlOutputAdapter(WidgetService widgetService, UserService userService){
         this.widgetService = widgetService;
