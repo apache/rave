@@ -412,7 +412,7 @@ public class DefaultPageService implements PageService {
     public Boolean updatePageEditingStatus(String pageId, String userId, boolean isEditor) {
         Page page = this.getPage(pageId);
         for(PageUser pageUser : page.getMembers()){
-            if(pageUser.getUserId().equals(userService.getUserById(userId))){
+            if(pageUser.getUserId().equals(userService.getUserById(userId).getId())){
                 pageUser.setEditor(isEditor);
             }
         }
