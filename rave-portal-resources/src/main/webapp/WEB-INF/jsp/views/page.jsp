@@ -160,7 +160,7 @@
                     <div>
                         <div id="confirmSharePageLegend">
                             <c:choose>
-                              <c:when test="${page.ownerId == principleId}">
+                              <c:when test="${page.ownerId == principalId}">
                                 <fmt:message key="cloned.page.confirm.message"/>
                               </c:when>
                               <c:otherwise>
