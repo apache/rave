@@ -160,14 +160,15 @@
                     <div>
                         <div id="confirmSharePageLegend">
                             <c:choose>
-                                <c:when test="${page.owner.username == principleUsername}">
-                                    <fmt:message key="cloned.page.confirm.message"/>
-                                </c:when>
-                                <c:otherwise>
-                                    <fmt:message key="sharing.page.confirm.message">
-                                        <fmt:param value="${page.owner.username}"/>
-                                    </fmt:message>
-                                </c:otherwise>
+                              <c:when test="${page.ownerId == principleId}">
+                                <fmt:message key="cloned.page.confirm.message"/>
+                              </c:when>
+                              <c:otherwise>
+                                <portal:person id="${page.ownerId}" var="owner" />
+                                <fmt:message key="sharing.page.confirm.message">
+                                  <fmt:param value="${owner.username}"/>
+                                </fmt:message>
+                              </c:otherwise>
                             </c:choose>
                         </div>
                     </div>
