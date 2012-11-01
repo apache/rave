@@ -19,8 +19,29 @@
 <%@ page language="java" trimDirectiveWhitespaces="true" %>
 <%@ include file="/WEB-INF/jsp/includes/taglibs.jsp" %>
 <fmt:setBundle basename="messages"/>
+<c:choose>
+    <c:when test="${not empty errorMessage}">
+        <rave:navbar/>
+        <div id="na_content" class="container">
+            <div class="row detail-widget storeItem">
+                <div class="span3">
+                    <div class="detail-widget-preview">
+                        <div class="span8 detail-widget-main">
+                            <div>
+                                <h2>
+                                    <fmt:message key="page.widget.title"/>
+                                </h2>
+                                <br/>
+                                <span id="widget-0-title"><fmt:message key="page.widget.marketplace.showdetail.notavailable"/></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </c:when>
+<c:otherwise>
 <rave:navbar pageTitle="${widget.title}"/>
-
 <div id="na_content" class="container">
     <div class="row detail-widget storeItem">
         <div class="span3">
@@ -93,3 +114,5 @@
         });
     </script>
 </portal:register-init-script>
+</c:otherwise>
+</c:choose>
