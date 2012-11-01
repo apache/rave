@@ -22,10 +22,9 @@ package org.apache.rave.provider.opensocial.service.impl;
 import org.apache.commons.io.FileUtils;
 import org.apache.rave.portal.model.RegionWidget;
 import org.apache.rave.portal.model.User;
+import org.apache.rave.portal.model.Widget;
 import org.apache.rave.portal.model.impl.*;
-import org.apache.rave.portal.repository.WidgetRepository;
 import org.apache.rave.portal.service.UserService;
-import org.apache.rave.portal.service.WidgetService;
 import org.apache.rave.provider.opensocial.exception.SecurityTokenException;
 import org.apache.rave.provider.opensocial.service.SecurityTokenService;
 import org.apache.shindig.auth.AbstractSecurityToken;
@@ -53,7 +52,6 @@ public class EncryptedBlobSecurityTokenService implements SecurityTokenService {
     public static final String CLASSPATH_KEY_PREFIX = "classpath:";
 
     private UserService userService;
-    private WidgetService widgetService;
     private String container;
     private String domain;
 
@@ -61,14 +59,12 @@ public class EncryptedBlobSecurityTokenService implements SecurityTokenService {
 
     @Autowired
     public EncryptedBlobSecurityTokenService(UserService userService,
-                                             WidgetService widgetService,
                                              @Value("${portal.opensocial_security.container}") String container,
                                              @Value("${portal.opensocial_security.domain}") String domain,
                                              @Value("${portal.opensocial_security.encryptionkey}") String encryptionKey) {
         this.userService = userService;
         this.container = container;
         this.domain = domain;
-        this.widgetService = widgetService;
 
         if (encryptionKey.startsWith(EMBEDDED_KEY_PREFIX)) {
             this.blobCrypter = new BasicBlobCrypter(encryptionKey.substring(EMBEDDED_KEY_PREFIX.length()));
@@ -90,16 +86,16 @@ public class EncryptedBlobSecurityTokenService implements SecurityTokenService {
     }
 
     @Override
-    public SecurityToken getSecurityToken(RegionWidget regionWidget) throws SecurityTokenException {
-        return this.getBlobCrypterSecurityToken(regionWidget);
+    public SecurityToken getSecurityToken(RegionWidget regionWidget, Widget widget) throws SecurityTokenException {
+        return this.getBlobCrypterSecurityToken(regionWidget, widget);
     }
 
     @Override
-    public String getEncryptedSecurityToken(RegionWidget regionWidget) throws SecurityTokenException {
+    public String getEncryptedSecurityToken(RegionWidget regionWidget, Widget widget) throws SecurityTokenException {
         String encryptedToken = null;
 
         try {
-            BlobCrypterSecurityToken securityToken = this.getBlobCrypterSecurityToken(regionWidget);
+            BlobCrypterSecurityToken securityToken = this.getBlobCrypterSecurityToken(regionWidget, widget);
             encryptedToken = this.encryptSecurityToken(securityToken);
         } catch (Exception e) {
             throw new SecurityTokenException("Error creating security token from regionWidget", e);
@@ -149,15 +145,15 @@ public class EncryptedBlobSecurityTokenService implements SecurityTokenService {
                 new RegionImpl("-1", new PageImpl("-1", userService.getUserByUsername(securityToken.getOwnerId()).getId()), -1));
 
         //Create and return the newly encrypted token
-        return getEncryptedSecurityToken(regionWidget);
+        return getEncryptedSecurityToken(regionWidget, new WidgetImpl("-1", securityToken.getAppUrl()));
     }
 
-    private BlobCrypterSecurityToken getBlobCrypterSecurityToken(RegionWidget regionWidget)
+    private BlobCrypterSecurityToken getBlobCrypterSecurityToken(RegionWidget regionWidget, Widget widget)
             throws SecurityTokenException {
         User user = userService.getAuthenticatedUser();
 
         Map<String, String> values = new HashMap<String, String>();
-        values.put(AbstractSecurityToken.Keys.APP_URL.getKey(), widgetService.getWidget(regionWidget.getWidgetId()).getUrl());
+        values.put(AbstractSecurityToken.Keys.APP_URL.getKey(), widget != null ? widget.getUrl() : "");
         values.put(AbstractSecurityToken.Keys.MODULE_ID.getKey(), String.valueOf(regionWidget.getId()));
         values.put(AbstractSecurityToken.Keys.OWNER.getKey(),
                 String.valueOf(userService.getUserById(regionWidget.getRegion().getPage().getOwnerId()).getUsername()));

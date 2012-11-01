@@ -45,7 +45,6 @@ import static org.junit.Assert.assertNotNull;
 @RunWith(Parameterized.class)
 public class SecurityTokenServiceTest {
     private UserService userService;
-    private WidgetService widgetService;
     private SecurityTokenService securityTokenService;
     private String encryptionKey;
 
@@ -83,8 +82,7 @@ public class SecurityTokenServiceTest {
     public void setup() throws MalformedURLException {
 
         userService = createMock(UserService.class);
-        widgetService = createMock(WidgetService.class);
-        securityTokenService = new EncryptedBlobSecurityTokenService(userService, widgetService, "default", "default",
+        securityTokenService = new EncryptedBlobSecurityTokenService(userService, "default", "default",
                 encryptionKey);
 
         validPerson = new UserImpl(VALID_USER_ID, VALID_USER_NAME);
@@ -109,10 +107,7 @@ public class SecurityTokenServiceTest {
         expect(userService.getUserById(VALID_USER_ID)).andReturn(validPerson);
         replay(userService);
 
-        expect(widgetService.getWidget(validWidget.getId())).andReturn(validWidget);
-        replay(widgetService);
-
-        SecurityToken securityToken = securityTokenService.getSecurityToken(validRegionWidget);
+        SecurityToken securityToken = securityTokenService.getSecurityToken(validRegionWidget, validWidget);
         validateSecurityToken(securityToken);
     }
 
@@ -126,10 +121,7 @@ public class SecurityTokenServiceTest {
         expect(userService.getUserById(expectedOwnerId)).andReturn(new UserImpl(expectedOwnerId, expected));
         replay(userService);
 
-        expect(widgetService.getWidget(validWidget.getId())).andReturn(validWidget);
-        replay(widgetService);
-
-        SecurityToken securityToken = securityTokenService.getSecurityToken(validRegionWidget);
+        SecurityToken securityToken = securityTokenService.getSecurityToken(validRegionWidget, validWidget);
         validateSecurityToken(securityToken, expected);
     }
 
@@ -139,10 +131,7 @@ public class SecurityTokenServiceTest {
         expect(userService.getUserById(VALID_USER_ID)).andReturn(validPerson);
         replay(userService);
 
-        expect(widgetService.getWidget(validWidget.getId())).andReturn(validWidget);
-        replay(widgetService);
-
-        String token = securityTokenService.getEncryptedSecurityToken(validRegionWidget);
+        String token = securityTokenService.getEncryptedSecurityToken(validRegionWidget, validWidget);
         assertNotNull(token);
     }
 
@@ -152,10 +141,7 @@ public class SecurityTokenServiceTest {
         expect(userService.getUserById(VALID_USER_ID)).andReturn(validPerson);
         replay(userService);
 
-        expect(widgetService.getWidget(validWidget.getId())).andReturn(validWidget);
-        replay(widgetService);
-
-        String encryptedToken = securityTokenService.getEncryptedSecurityToken(validRegionWidget);
+        String encryptedToken = securityTokenService.getEncryptedSecurityToken(validRegionWidget, validWidget);
         assertNotNull(encryptedToken);
 
         SecurityToken securityToken = securityTokenService.decryptSecurityToken(encryptedToken);
@@ -169,11 +155,7 @@ public class SecurityTokenServiceTest {
         expect(userService.getUserById(VALID_USER_ID)).andReturn(validPerson).anyTimes();
         replay(userService);
 
-        expect(widgetService.getWidget(validWidget.getId())).andReturn(validWidget);
-        expect(widgetService.getWidget(bogusWidget.getId())).andReturn(bogusWidget);
-        replay(widgetService);
-
-        String encryptedToken = securityTokenService.getEncryptedSecurityToken(validRegionWidget);
+        String encryptedToken = securityTokenService.getEncryptedSecurityToken(validRegionWidget, validWidget);
         assertNotNull(encryptedToken);
 
         encryptedToken = securityTokenService.refreshEncryptedSecurityToken(encryptedToken);

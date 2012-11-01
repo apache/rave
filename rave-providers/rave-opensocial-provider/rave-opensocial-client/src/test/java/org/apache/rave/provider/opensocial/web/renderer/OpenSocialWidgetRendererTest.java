@@ -130,7 +130,7 @@ public class OpenSocialWidgetRendererTest {
             " subPage: {id: " + VALID_SUBPAGE_ID + ", name: '" + VALID_SUBPAGE_NAME + "', isDefault: " + VALID_IS_DEFAULT_SUBPAGE + "}" +
             "});</script>";
 
-        expect(securityTokenService.getEncryptedSecurityToken(rw)).andReturn(VALID_SECURITY_TOKEN);
+        expect(securityTokenService.getEncryptedSecurityToken(rw, w)).andReturn(VALID_SECURITY_TOKEN);
         replay(securityTokenService);
 
         String key = OpenSocialWidgetRenderer.REGISTER_WIDGET_KEY+"-"+rw.getId();

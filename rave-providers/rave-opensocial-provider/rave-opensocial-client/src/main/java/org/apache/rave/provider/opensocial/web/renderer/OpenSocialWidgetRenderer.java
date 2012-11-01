@@ -140,7 +140,7 @@ public class OpenSocialWidgetRenderer implements RegionWidgetRenderer {
                 Constants.WIDGET_TYPE,
                 item.getId(),
                 widget.getUrl(),
-                securityTokenService.getEncryptedSecurityToken(item),
+                securityTokenService.getEncryptedSecurityToken(item, widget),
                 openSocialService.getGadgetMetadata(widget.getUrl()),
                 userPrefs.toString(),
                 item.isCollapsed(),
