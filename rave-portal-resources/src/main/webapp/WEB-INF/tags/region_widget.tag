@@ -25,8 +25,8 @@ Template for rendering a RegionWidget including wrapper chrome, toolbars, menus,
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="portal" uri="http://www.apache.org/rave/tags" %>
 <%@ attribute name="regionWidget" type="org.apache.rave.portal.model.RegionWidget" required="true" description="The regionWidget object" %>
-<%@ attribute name="widget" type="org.apache.rave.portal.model.Widget" required="true" description="The Widget object" %>
 
+<portal:widget var="widget" id="${regionWidget.widgetId}" />
 <c:set var="isLocked" value="${regionWidget.locked}" />
 <c:set var="isHideChrome" value="${regionWidget.hideChrome}" />
 <fmt:setBundle basename="messages"/>
