@@ -1,6 +1,44 @@
 Apache Rave Change Log
 https://issues.apache.org/jira/secure/ReleaseNote.jspa?projectId=12311290 (select the version of release and output as text to create this file)
 
+Release Notes - Rave - Version 0.17
+===========================================================================================================
+
+** Sub-task
+    * [RAVE-731] - Refactor Widget model to replace object graphs with IDs along the edges of the groups
+    * [RAVE-753] - Convert interfaces to use Strings as the IDs
+    * [RAVE-774] - Refactor People according to strategy on wiki
+    * [RAVE-834] - Perform final reverse merge from trunk into branch
+    * [RAVE-835] - Merge branch into trunk
+    * [RAVE-836] - Revert version in pom files
+
+** Bug
+    * [RAVE-775] - username for OpenID users
+    * [RAVE-805] - Catch error when trying to visit a user's page who does not exist
+    * [RAVE-812] - OpenID Integration Test is failing
+    * [RAVE-813] - Script Registration order is getting lost in DefaultScriptManager
+    * [RAVE-816] - Incorrect widget initialization order
+    * [RAVE-817] - dependencies missing in maven central repository
+    * [RAVE-837] - Error while deleting Category
+    * [RAVE-839] - Mobile broken after model-split merge
+    * [RAVE-840] - Profile page widgets no longer render after model-split merge
+    * [RAVE-841] - Accepting a shared page no longer is working
+
+** Improvement
+    * [RAVE-454] - Reformate Widget Store with better UX
+    * [RAVE-717] - Screenshot alignment on the widget detail page
+    * [RAVE-802] - Make it easier to set default height of widgets through database preference
+    * [RAVE-806] - Show stack trace error or fiendly error message page depending on jsDebugMode
+
+** New Feature
+    * [RAVE-808] - Add ability to hide / show a widget
+
+** Story
+    * [RAVE-729] - Split model into multiple interface groups
+
+** Task
+    * [RAVE-842] - Tag and release 0.17
+
 
 Release Notes - Rave - Version 0.16
 ===========================================================================================================
