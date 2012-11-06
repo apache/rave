@@ -54,3 +54,8 @@ When I select the delete checkbox
 And I click the "Delete Category" button
 Then I see the categories list table
 And I do not see a category called "My Category" in the categories list table
+
+Scenario: Admin logs out
+Given I see the categories list table
+When I log out
+Then I see the Rave login page
