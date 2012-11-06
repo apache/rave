@@ -250,7 +250,7 @@ rave.api = rave.api || (function() {
                         handleRpcError(result);
                     } else {
                         var widgetTitle = rave.getClientMessage("widget.add_prefix");
-                        var addedWidget = result.result != undefined ? result.result.widget : undefined;
+                        var addedWidget = result.result != undefined ? result.result.widgetId : undefined;
 
                         if (addedWidget != undefined && addedWidget.title != undefined && addedWidget.title.length > 0) {
                             widgetTitle = addedWidget.title;
@@ -274,7 +274,7 @@ rave.api = rave.api || (function() {
                         handleRpcError(result);
                     } else {
                         var widgetTitle = rave.getClientMessage("widget.add_prefix");
-                        var addedWidget = result.result != undefined ? result.result.widget : undefined;
+                        var addedWidget = result.result != undefined ? result.result.widgetId : undefined;
 
                         if (addedWidget != undefined && addedWidget.title != undefined && addedWidget.title.length > 0) {
                             widgetTitle = addedWidget.title;
