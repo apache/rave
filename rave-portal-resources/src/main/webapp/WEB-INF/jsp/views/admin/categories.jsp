@@ -40,7 +40,7 @@
 	                </div>
 	            </c:if>
 	
-	            <table class="table table-striped table-bordered table-condensed">
+	            <table id="categoryList" class="table table-striped table-bordered table-condensed">
 	                <thead>
 	                <tr>
 	                    <th><fmt:message key="admin.categoryData.text"/></th>
@@ -80,7 +80,7 @@
 	
 	        </article>
 	        <div>
-	            <form:form cssClass="form-inline" commandName="category" action="category/create" method="POST">
+	            <form:form id="createCategory" cssClass="form-inline" commandName="category" action="category/create" method="POST">
 	                <form:errors cssClass="error" element="p"/>
 	                <fieldset>
 	                    <legend><fmt:message key="admin.category.create"/></legend>

@@ -31,8 +31,14 @@ import static org.jbehave.core.io.CodeLocations.codeLocationFromClass;
  */
 public class AdminStories extends PortalStories {
 
-  @Override
-  protected List<String> storyPaths() {
-    return new StoryFinder().findPaths(codeLocationFromClass(this.getClass()).getFile(), asList("**/deleteNewUser.story"), null);
-  }
+    @Override
+    protected List<String> storyPaths() {
+        String story = System.getProperty("story");
+        if (story != null && !story.isEmpty()) {
+            return new StoryFinder().findPaths(codeLocationFromClass(this.getClass()), "**/" + story + ".story", "**/excluded*.story");
+        } else {
+            return new StoryFinder().findPaths(codeLocationFromClass(this.getClass()), "**/*.story", "**/excluded*.story");
+        }
+
+    }
 }
