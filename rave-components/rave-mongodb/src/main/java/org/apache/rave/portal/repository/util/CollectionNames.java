@@ -34,4 +34,5 @@ public class CollectionNames {
     public static final String OAUTH_CONSUMER_COLLECTION = "oauthConsumerStore";
     public static final String OAUTH_TOKEN_COLLECTION = "oauthTokenInfo";
     public static final String PAGE_LAYOUT_COLLECTION = "pageLayout";
+    public static final String STATS_COLLECTION = "statistics";
 }

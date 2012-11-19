@@ -17,16 +17,34 @@
  *  under the License.
  */
 
-package org.apache.rave.portal.repository;
-
-import org.apache.rave.portal.model.util.WidgetStatistics;
+package org.apache.rave.portal.model;
 
 import java.util.Map;
 
-/**
- * Manages statistics for various attributes of the Rave
- */
-public interface StatisticsAggregator {
-    Map<Long,WidgetStatistics> getAllWidgetStatistics(long userId);
-    WidgetStatistics getWidgetStatistics(long widget_id, long user_id);
+public class WidgetUsersMapReduceResult {
+    private Long id;
+    private Map<Long, Long> value;
+
+    public WidgetUsersMapReduceResult() { }
+
+    public WidgetUsersMapReduceResult(Long id, Map<Long, Long> value) {
+        this.id = id;
+        this.value = value;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Map<Long, Long> getValue() {
+        return value;
+    }
+
+    public void setValue(Map<Long, Long> value) {
+        this.value = value;
+    }
 }

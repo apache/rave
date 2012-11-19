@@ -20,25 +20,19 @@
 package org.apache.rave.portal.repository.impl;
 
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.model.util.WidgetStatistics;
-import org.apache.rave.portal.repository.MongoPageOperations;
 import org.apache.rave.portal.repository.MongoWidgetOperations;
+import org.apache.rave.portal.repository.StatisticsAggregator;
 import org.apache.rave.portal.repository.WidgetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.mapreduce.MapReduceResults;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Order;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
-import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
 import static org.springframework.data.mongodb.core.query.Criteria.where;
@@ -50,21 +44,12 @@ import static org.springframework.data.mongodb.core.query.Update.update;
  */
 @Repository
 public class MongoDbWidgetRepository implements WidgetRepository {
-    ///org/apache/rave/WidgetRatingsMap.js
-    public static final String RATINGS_MAP = "classpath:/org/apache/rave/WidgetRatingsMap.js";
-    public static final String RATINGS_REDUCE = "classpath:/org/apache/rave/WidgetRatingsReduce.js";
-    public static final String USERS_MAP = "classpath:/org/apache/rave/WidgetUsersMap.js";
-    public static final String USERS_REDUCE = "classpath:/org/apache/rave/WidgetUsersReduce.js";
-    public static final int DEFAULT_RESULT_VALIDITY = 60000;
-
-    private Map<Long, Integer> widgetUsers = Maps.newHashMap();
-    private long usersTimestamp = System.currentTimeMillis();
 
     @Autowired
     private MongoWidgetOperations template;
 
     @Autowired
-    private MongoPageOperations pageTemplate;
+    private StatisticsAggregator statsAggregator;
 
     @Override
     public List<Widget> getAll() {
@@ -132,34 +117,12 @@ public class MongoDbWidgetRepository implements WidgetRepository {
 
     @Override
     public WidgetStatistics getWidgetStatistics(long widget_id, long user_id) {
-        Query statsQuery = query(where("widgetId").is(widget_id));
-        MapReduceResults<WidgetRatingsMapReduceResult> widgetStats = template.mapReduce(statsQuery, RATINGS_MAP, RATINGS_REDUCE, WidgetRatingsMapReduceResult.class);
-        List<Page> pages = pageTemplate.find(query(where("regions").elemMatch(where("regionWidgets").elemMatch(where("widgetId").is(widget_id)))));
-
-        int userCount = getUserCount(pages).size();
-        switch (widgetStats.getCounts().getOutputCount()) {
-            case 0:
-                WidgetStatistics stats = new WidgetStatistics();
-                stats.setTotalUserCount(userCount);
-                return stats;
-            case 1:
-                WidgetRatingsMapReduceResult statsResult = widgetStats.iterator().next();
-                return createWidgetStatisticsFromResults(user_id, statsResult, userCount);
-            default:
-                throw new IllegalStateException("Invalid results returned from Map/Reduce");
-        }
+        return statsAggregator.getWidgetStatistics(widget_id, user_id);
     }
 
     @Override
     public Map<Long, WidgetStatistics> getAllWidgetStatistics(long userId) {
-        MapReduceResults<WidgetRatingsMapReduceResult> widgetStats = template.mapReduce(RATINGS_MAP, RATINGS_REDUCE, WidgetRatingsMapReduceResult.class);
-        Map<Long, WidgetStatistics> stats = Maps.newHashMap();
-        if (widgetStats.getCounts().getOutputCount() > 0) {
-            addCombinedStats(userId, widgetStats, widgetUsers, stats);
-        } else {
-            addUserCount(widgetUsers, stats);
-        }
-        return stats;
+        return statsAggregator.getAllWidgetStatistics(userId);
     }
 
     @Override
@@ -214,39 +177,6 @@ public class MongoDbWidgetRepository implements WidgetRepository {
         template.remove(new Query(where("_id").is(item.getId())));
     }
 
-    @PostConstruct
-    private void init() {
-        Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(new Runnable() {
-            @Override
-            public void run() {
-                if(System.currentTimeMillis() - usersTimestamp > DEFAULT_RESULT_VALIDITY) {
-                    queryForUserStats();
-                }
-            }
-        }, 0, DEFAULT_RESULT_VALIDITY, TimeUnit.MILLISECONDS);
-    }
-
-    private Map<Long, Integer> queryForUserStats() {
-        synchronized (this) {
-            if(System.currentTimeMillis() - usersTimestamp > DEFAULT_RESULT_VALIDITY) {
-                MapReduceResults<WidgetUsersMapReduceResult> users = pageTemplate.mapReduce(USERS_MAP, USERS_REDUCE, WidgetUsersMapReduceResult.class);
-                widgetUsers = mapUsersResults(users);
-                usersTimestamp = System.currentTimeMillis();
-            }
-        }
-        return widgetUsers;
-    }
-
-    private Map<Long, Integer> mapUsersResults(MapReduceResults<WidgetUsersMapReduceResult> widgetUsersMapReduceResults) {
-        Map<Long, Integer> map = Maps.newHashMap();
-        for (WidgetUsersMapReduceResult result : widgetUsersMapReduceResults) {
-            if (result.getId() != null) {
-                map.put(result.getId(), result.getValue().size());
-            }
-        }
-        return map;
-    }
-
     private Query getWidgetStatusFreeTextQuery(WidgetStatus widgetStatus, String type, String searchTerm) {
         Criteria criteria = addFreeTextClause(searchTerm, new Criteria());
         if (type != null && !type.isEmpty()) {
@@ -272,33 +202,6 @@ public class MongoDbWidgetRepository implements WidgetRepository {
         return query(where("tags").elemMatch(where("tag.keyword").is(tagKeyWord)));
     }
 
-    private void addUserCount(Map<Long, Integer> users, Map<Long, WidgetStatistics> stats) {
-        for (Map.Entry<Long, Integer> result : users.entrySet()) {
-            WidgetStatistics widgetStatistics = new WidgetStatistics();
-            widgetStatistics.setTotalUserCount(result.getValue());
-            widgetStatistics.setUserRating(-1);
-            stats.put(result.getKey(), widgetStatistics);
-        }
-    }
-
-    private void addCombinedStats(long userId, MapReduceResults<WidgetRatingsMapReduceResult> widgetStats, Map<Long, Integer> usersMap, Map<Long, WidgetStatistics> stats) {
-        for (WidgetRatingsMapReduceResult result : widgetStats) {
-            stats.put(result.getId(), createWidgetStatisticsFromResults(userId, result, usersMap.get(result.getId())));
-        }
-    }
-
-    private WidgetStatistics createWidgetStatisticsFromResults(long user_id, WidgetRatingsMapReduceResult statsResult, Integer userResult) {
-        WidgetStatistics statistics = new WidgetStatistics();
-        WidgetRatingsMapReduceResult.WidgetStatisticsMapReduceResult result = statsResult.getValue();
-        if (result != null) {
-            statistics.setTotalDislike(result.getDislike().intValue());
-            statistics.setTotalLike(result.getLike().intValue());
-            statistics.setUserRating(result.getUserRatings().containsKey(user_id) ? result.getUserRatings().get(user_id).intValue() : -1);
-        }
-        statistics.setTotalUserCount(userResult == null ? 0 : userResult);
-        return statistics;
-    }
-
     private String getWidgetStatusString(WidgetStatus widgetStatus) {
         return widgetStatus.getWidgetStatus().toUpperCase();
     }
@@ -308,87 +211,4 @@ public class MongoDbWidgetRepository implements WidgetRepository {
         return query;
     }
 
-    private Set<Long> getUserCount(List<Page> pages) {
-        Set<Long> set = Sets.newHashSet();
-        for (Page page : pages) {
-            Long id = page.getOwner().getId();
-            if (!set.contains(id)) {
-                set.add(id);
-            }
-        }
-        return set;
-    }
-
-    public static class WidgetUsersMapReduceResult {
-        private Long id;
-        private Map<Long, Long> value;
-
-        public Long getId() {
-            return id;
-        }
-
-        public void setId(Long id) {
-            this.id = id;
-        }
-
-        public Map<Long, Long> getValue() {
-            return value;
-        }
-
-        public void setValue(Map<Long, Long> value) {
-            this.value = value;
-        }
-    }
-
-    public static class WidgetRatingsMapReduceResult {
-        private Long id;
-        private WidgetStatisticsMapReduceResult value;
-
-        public Long getId() {
-            return id;
-        }
-
-        public void setId(Long id) {
-            this.id = id;
-        }
-
-        public WidgetStatisticsMapReduceResult getValue() {
-            return value;
-        }
-
-        public void setValue(WidgetStatisticsMapReduceResult value) {
-            this.value = value;
-        }
-
-        public static class WidgetStatisticsMapReduceResult {
-            private Map<Long, Long> userRatings;
-            private Long like;
-            private Long dislike;
-
-            public Map<Long, Long> getUserRatings() {
-                return userRatings;
-            }
-
-            public void setUserRatings(Map<Long, Long> userRatings) {
-                this.userRatings = userRatings;
-            }
-
-            public Long getLike() {
-                return like;
-            }
-
-            public void setLike(Long like) {
-                this.like = like;
-            }
-
-            public Long getDislike() {
-                return dislike;
-            }
-
-            public void setDislike(Long dislike) {
-                this.dislike = dislike;
-            }
-        }
-
-    }
 }
