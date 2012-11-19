@@ -29,6 +29,7 @@ import org.apache.rave.portal.model.util.WidgetStatistics;
 import org.apache.rave.portal.repository.StatisticsAggregator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.mapreduce.MapReduceOptions;
 import org.springframework.data.mongodb.core.mapreduce.MapReduceResults;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
@@ -67,7 +68,7 @@ public class MongoDbMapReduceStatisticsAggregator implements StatisticsAggregato
     public WidgetStatistics getWidgetStatistics(long widget_id, long user_id) {
         Query statsQuery = query(where("widgetId").is(widget_id));
         MapReduceResults<WidgetRatingsMapReduceResult> widgetStats = mongoOperations.mapReduce(statsQuery, WIDGET_COLLECTION, RATINGS_MAP, RATINGS_REDUCE, WidgetRatingsMapReduceResult.class);
-        List<MongoDbPage> pages = mongoOperations.find(query(where("regions").elemMatch(where("regionWidgets").elemMatch(where("widgetId").is(widget_id)))), MongoDbPage.class ,PAGE_COLLECTION);
+        List<MongoDbPage> pages = mongoOperations.find(query(where("regions").elemMatch(where("regionWidgets").elemMatch(where("widgetId").is(widget_id)))), MongoDbPage.class, PAGE_COLLECTION);
 
         int userCount = getUserCount(pages).size();
         switch (widgetStats.getCounts().getOutputCount()) {
@@ -100,26 +101,27 @@ public class MongoDbMapReduceStatisticsAggregator implements StatisticsAggregato
     }
 
     @PostConstruct
-    private void init() {
+    public void init() {
         Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {
-                RunStatistics runStats = mongoOperations.findById(ID, RunStatistics.class, STATS_COLLECTION);
-                if(System.currentTimeMillis() - runStats.getRefreshedTimeStamp() > DEFAULT_RESULT_VALIDITY) {
-                    queryForUserStats(runStats);
-                }
+                buildStats();
             }
         }, 0, DEFAULT_RESULT_VALIDITY, TimeUnit.MILLISECONDS);
     }
 
-    private void queryForUserStats(RunStatistics runStats) {
+    public void buildStats() {
+        RunStatistics runStats = mongoOperations.findById(ID, RunStatistics.class, STATS_COLLECTION);
+        if(runStats == null || (System.currentTimeMillis() - runStats.getRefreshedTimeStamp() > DEFAULT_RESULT_VALIDITY)) {
+            queryForUserStats();
+        }
+    }
+
+    private void queryForUserStats() {
         synchronized (this) {
-            if(System.currentTimeMillis() - runStats.getRefreshedTimeStamp() > DEFAULT_RESULT_VALIDITY) {
-                executeUsersMapReduce();
-                executeRatingsMapReduce();
-                runStats.setRefreshedTimeStamp(System.currentTimeMillis());
-                mongoOperations.save(runStats, STATS_COLLECTION);
-            }
+            executeUsersMapReduce();
+            executeRatingsMapReduce();
+            mongoOperations.save(new RunStatistics(ID, System.currentTimeMillis()), STATS_COLLECTION);
         }
     }
 
@@ -133,12 +135,16 @@ public class MongoDbMapReduceStatisticsAggregator implements StatisticsAggregato
         return map;
     }
 
+    private MapReduceOptions getOptions() {
+        return MapReduceOptions.options().javaScriptMode(true).outputCollection(STATS_COLLECTION).outputTypeReplace();
+    }
+
     private MapReduceResults<WidgetUsersMapReduceResult> executeUsersMapReduce() {
-        return mongoOperations.mapReduce(PAGE_COLLECTION, USERS_MAP, USERS_REDUCE, WidgetUsersMapReduceResult.class);
+        return mongoOperations.mapReduce(PAGE_COLLECTION, USERS_MAP, USERS_REDUCE, getOptions(), WidgetUsersMapReduceResult.class);
     }
 
     private MapReduceResults<WidgetRatingsMapReduceResult> executeRatingsMapReduce() {
-        return mongoOperations.mapReduce(PAGE_COLLECTION, RATINGS_MAP, RATINGS_REDUCE, WidgetRatingsMapReduceResult.class);
+        return mongoOperations.mapReduce(WIDGET_COLLECTION, RATINGS_MAP, RATINGS_REDUCE, getOptions(), WidgetRatingsMapReduceResult.class);
     }
 
     private void addUserCount(Map<Long, Integer> users, Map<Long, WidgetStatistics> stats) {
@@ -163,6 +169,8 @@ public class MongoDbMapReduceStatisticsAggregator implements StatisticsAggregato
             statistics.setTotalDislike(result.getDislike().intValue());
             statistics.setTotalLike(result.getLike().intValue());
             statistics.setUserRating(result.getUserRatings().containsKey(user_id) ? result.getUserRatings().get(user_id).intValue() : -1);
+        } else {
+            statistics.setUserRating(-1);
         }
         statistics.setTotalUserCount(userResult == null ? 0 : userResult);
         return statistics;
@@ -182,6 +190,14 @@ public class MongoDbMapReduceStatisticsAggregator implements StatisticsAggregato
     public static class RunStatistics {
         private String id;
         private Long refreshedTimeStamp;
+
+        public RunStatistics() {
+        }
+
+        public RunStatistics(String id, long timestamp) {
+            this.id = id;
+            this.refreshedTimeStamp = timestamp;
+        }
 
         public String getId() {
             return id;
