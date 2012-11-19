@@ -40,8 +40,14 @@ public class MongoDbPortalPreferenceConverter implements HydratingModelConverter
 
     @Override
     public MongoDbPortalPreference convert(PortalPreference source) {
-        MongoDbPortalPreference converted = source instanceof MongoDbPortalPreference ? ((MongoDbPortalPreference)source) : new MongoDbPortalPreference();
-        converted.setId(generateId());
+        MongoDbPortalPreference converted;
+        if (source instanceof MongoDbPortalPreference) {
+            converted = ((MongoDbPortalPreference) source);
+        }
+        else {
+            converted = new MongoDbPortalPreference();
+            converted.setId(generateId());
+        }
         converted.setKey(source.getKey());
         converted.setValues(source.getValues());
         return converted;

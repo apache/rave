@@ -52,7 +52,7 @@ public class MongoDbPageConverter implements HydratingModelConverter<Page, Mongo
 
     @Override
     public MongoDbPage convert(Page sourcePage) {
-        MongoDbPage page = sourcePage instanceof MongoDbPage ? (MongoDbPage) sourcePage : new MongoDbPage();
+        MongoDbPage page = new MongoDbPage();
         page.setId(page.getId() == null ? generateId() : sourcePage.getId());
         page.setOwnerId(sourcePage.getOwner().getId());
         page.setPageLayoutCode(sourcePage.getPageLayout().getCode());

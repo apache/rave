@@ -59,7 +59,7 @@ public class MongoDbUserConverter implements HydratingModelConverter<User, Mongo
 
     @Override
     public MongoDbUser convert(User source) {
-        MongoDbUser user = source instanceof MongoDbUser ? ((MongoDbUser)source) : new MongoDbUser();
+        MongoDbUser user = new MongoDbUser();
         List<String> authorityCodes = Lists.newArrayList();
         for(GrantedAuthority authority : source.getAuthorities()) {
             authorityCodes.add(authority.getAuthority());

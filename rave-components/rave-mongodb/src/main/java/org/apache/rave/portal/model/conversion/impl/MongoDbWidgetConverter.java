@@ -81,7 +81,7 @@ public class MongoDbWidgetConverter implements HydratingModelConverter<Widget, M
 
     @Override
     public MongoDbWidget convert(Widget source) {
-        MongoDbWidget widget = source instanceof MongoDbWidget ? (MongoDbWidget) source : new MongoDbWidget();
+        MongoDbWidget widget = new MongoDbWidget();
         updateProperties(source, widget);
         widget.setOwnerId(source.getOwner() != null ? source.getOwner().getId() : null);
         widget.setOwner(null);

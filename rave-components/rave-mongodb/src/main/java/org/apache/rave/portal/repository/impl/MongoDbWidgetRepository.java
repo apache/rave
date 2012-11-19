@@ -33,9 +33,12 @@ import org.springframework.data.mongodb.core.query.Order;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
 import static org.springframework.data.mongodb.core.query.Criteria.where;
@@ -52,6 +55,11 @@ public class MongoDbWidgetRepository implements WidgetRepository {
     public static final String RATINGS_REDUCE = "classpath:/org/apache/rave/WidgetRatingsReduce.js";
     public static final String USERS_MAP = "classpath:/org/apache/rave/WidgetUsersMap.js";
     public static final String USERS_REDUCE = "classpath:/org/apache/rave/WidgetUsersReduce.js";
+    public static final int DEFAULT_RESULT_VALIDITY = 60000;
+
+    private Map<Long, Integer> widgetUsers = Maps.newHashMap();
+    private long usersTimestamp = System.currentTimeMillis();
+
     @Autowired
     private MongoWidgetOperations template;
 
@@ -145,13 +153,11 @@ public class MongoDbWidgetRepository implements WidgetRepository {
     @Override
     public Map<Long, WidgetStatistics> getAllWidgetStatistics(long userId) {
         MapReduceResults<WidgetRatingsMapReduceResult> widgetStats = template.mapReduce(RATINGS_MAP, RATINGS_REDUCE, WidgetRatingsMapReduceResult.class);
-        MapReduceResults<WidgetUsersMapReduceResult> users = pageTemplate.mapReduce(USERS_MAP, USERS_REDUCE, WidgetUsersMapReduceResult.class);
         Map<Long, WidgetStatistics> stats = Maps.newHashMap();
-        if (widgetStats.getCounts().getOutputCount() >0) {
-            Map<Long, Integer> usersMap = mapUsersResults(users);
-            addCombinedStats(userId, widgetStats, usersMap, stats);
+        if (widgetStats.getCounts().getOutputCount() > 0) {
+            addCombinedStats(userId, widgetStats, widgetUsers, stats);
         } else {
-            addUserCount(users, stats);
+            addUserCount(widgetUsers, stats);
         }
         return stats;
     }
@@ -161,9 +167,9 @@ public class MongoDbWidgetRepository implements WidgetRepository {
         Query q = query(where("ratings").elemMatch(where("userId").is(userId)));
         List<Widget> widgets = template.find(q);
         Map<Long, WidgetRating> ratings = Maps.newHashMap();
-        for(Widget widget : widgets) {
-            for(WidgetRating rating : widget.getRatings()) {
-                if(rating.getUserId().equals(userId)) {
+        for (Widget widget : widgets) {
+            for (WidgetRating rating : widget.getRatings()) {
+                if (rating.getUserId().equals(userId)) {
                     ratings.put(widget.getId(), rating);
                     break;
                 }
@@ -208,10 +214,33 @@ public class MongoDbWidgetRepository implements WidgetRepository {
         template.remove(new Query(where("_id").is(item.getId())));
     }
 
+    @PostConstruct
+    private void init() {
+        Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(new Runnable() {
+            @Override
+            public void run() {
+                if(System.currentTimeMillis() - usersTimestamp > DEFAULT_RESULT_VALIDITY) {
+                    queryForUserStats();
+                }
+            }
+        }, 0, DEFAULT_RESULT_VALIDITY, TimeUnit.MILLISECONDS);
+    }
+
+    private Map<Long, Integer> queryForUserStats() {
+        synchronized (this) {
+            if(System.currentTimeMillis() - usersTimestamp > DEFAULT_RESULT_VALIDITY) {
+                MapReduceResults<WidgetUsersMapReduceResult> users = pageTemplate.mapReduce(USERS_MAP, USERS_REDUCE, WidgetUsersMapReduceResult.class);
+                widgetUsers = mapUsersResults(users);
+                usersTimestamp = System.currentTimeMillis();
+            }
+        }
+        return widgetUsers;
+    }
+
     private Map<Long, Integer> mapUsersResults(MapReduceResults<WidgetUsersMapReduceResult> widgetUsersMapReduceResults) {
         Map<Long, Integer> map = Maps.newHashMap();
-        for(WidgetUsersMapReduceResult result : widgetUsersMapReduceResults) {
-            if(result.getId() != null) {
+        for (WidgetUsersMapReduceResult result : widgetUsersMapReduceResults) {
+            if (result.getId() != null) {
                 map.put(result.getId(), result.getValue().size());
             }
         }
@@ -220,10 +249,10 @@ public class MongoDbWidgetRepository implements WidgetRepository {
 
     private Query getWidgetStatusFreeTextQuery(WidgetStatus widgetStatus, String type, String searchTerm) {
         Criteria criteria = addFreeTextClause(searchTerm, new Criteria());
-        if(type != null && !type.isEmpty()) {
+        if (type != null && !type.isEmpty()) {
             criteria.and("type").is(type);
         }
-        if(widgetStatus != null) {
+        if (widgetStatus != null) {
             criteria.and("widgetStatus").is(getWidgetStatusString(widgetStatus));
         }
         return query(criteria);
@@ -231,7 +260,7 @@ public class MongoDbWidgetRepository implements WidgetRepository {
 
     private Criteria addFreeTextClause(String searchTerm, Criteria criteria) {
         Pattern p = Pattern.compile(".*" + searchTerm + ".*", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
-        criteria.orOperator(where ("title") .regex(p), (where("description").regex(p)));
+        criteria.orOperator(where("title").regex(p), (where("description").regex(p)));
         return criteria;
     }
 
@@ -243,12 +272,12 @@ public class MongoDbWidgetRepository implements WidgetRepository {
         return query(where("tags").elemMatch(where("tag.keyword").is(tagKeyWord)));
     }
 
-    private void addUserCount(MapReduceResults<WidgetUsersMapReduceResult> users, Map<Long, WidgetStatistics> stats) {
-        for(WidgetUsersMapReduceResult result : users) {
+    private void addUserCount(Map<Long, Integer> users, Map<Long, WidgetStatistics> stats) {
+        for (Map.Entry<Long, Integer> result : users.entrySet()) {
             WidgetStatistics widgetStatistics = new WidgetStatistics();
-            widgetStatistics.setTotalUserCount(result.getValue().size());
+            widgetStatistics.setTotalUserCount(result.getValue());
             widgetStatistics.setUserRating(-1);
-            stats.put(result.getId(), widgetStatistics);
+            stats.put(result.getKey(), widgetStatistics);
         }
     }
 
@@ -281,9 +310,9 @@ public class MongoDbWidgetRepository implements WidgetRepository {
 
     private Set<Long> getUserCount(List<Page> pages) {
         Set<Long> set = Sets.newHashSet();
-        for(Page page : pages) {
+        for (Page page : pages) {
             Long id = page.getOwner().getId();
-            if(!set.contains(id)) {
+            if (!set.contains(id)) {
                 set.add(id);
             }
         }
