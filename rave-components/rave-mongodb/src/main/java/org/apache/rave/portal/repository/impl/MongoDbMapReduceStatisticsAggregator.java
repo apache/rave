@@ -19,16 +19,10 @@
 
 package org.apache.rave.portal.repository.impl;
 
-import org.apache.rave.portal.model.MongoDbUser;
-import org.apache.rave.portal.model.User;
-import org.apache.rave.portal.repository.MongoUserOperations;
-import org.springframework.stereotype.Component;
-import static org.apache.rave.portal.repository.util.CollectionNames.USER_COLLECTION;
+import org.apache.rave.portal.repository.StatisticsAggregator;
 
-@Component
-public class MongoUserTemplate extends MongoModelTemplate<User, MongoDbUser> implements MongoUserOperations {
-
-    public MongoUserTemplate() {
-        super(User.class, MongoDbUser.class, USER_COLLECTION);
-    }
+/**
+ * Provides Statistics via MapReduce jobs
+ */
+public class MongoDbMapReduceStatisticsAggregator implements StatisticsAggregator {
 }

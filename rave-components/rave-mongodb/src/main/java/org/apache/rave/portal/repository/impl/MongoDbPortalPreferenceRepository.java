@@ -33,11 +33,12 @@ import java.util.List;
 
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static org.springframework.data.mongodb.core.query.Query.query;
+import static org.apache.rave.portal.repository.util.CollectionNames.PREFERENCE_COLLECTION;
 
 @Repository
 public class MongoDbPortalPreferenceRepository implements PortalPreferenceRepository {
 
-    public static final String COLLECTION = "portalPreference";
+
     public static final Class<PortalPreferenceImpl> CLASS = PortalPreferenceImpl.class;
 
     @Autowired
@@ -48,12 +49,12 @@ public class MongoDbPortalPreferenceRepository implements PortalPreferenceReposi
 
     @Override
     public List<PortalPreference> getAll() {
-        return CollectionUtils.<PortalPreference>toBaseTypedList(template.findAll(CLASS, COLLECTION));
+        return CollectionUtils.<PortalPreference>toBaseTypedList(template.findAll(CLASS, PREFERENCE_COLLECTION));
     }
 
     @Override
     public PortalPreference getByKey(String key) {
-        return template.findOne(query(where("key").is(key)), CLASS, COLLECTION);
+        return template.findOne(query(where("key").is(key)), CLASS, PREFERENCE_COLLECTION);
     }
 
     @Override
@@ -63,7 +64,7 @@ public class MongoDbPortalPreferenceRepository implements PortalPreferenceReposi
 
     @Override
     public PortalPreference get(long id) {
-        return template.findById(id, CLASS, COLLECTION);
+        return template.findById(id, CLASS, PREFERENCE_COLLECTION);
     }
 
     @Override
@@ -73,13 +74,13 @@ public class MongoDbPortalPreferenceRepository implements PortalPreferenceReposi
         if(fromDb != null) {
             converted.setId(((MongoDbPortalPreference)fromDb).getId());
         }
-        template.save(converted, COLLECTION);
+        template.save(converted, PREFERENCE_COLLECTION);
         converter.hydrate(converted, PortalPreference.class);
         return converted;
     }
 
     @Override
     public void delete(PortalPreference item) {
-        template.remove(getByKey(item.getKey()), COLLECTION);
+        template.remove(getByKey(item.getKey()), PREFERENCE_COLLECTION);
     }
 }

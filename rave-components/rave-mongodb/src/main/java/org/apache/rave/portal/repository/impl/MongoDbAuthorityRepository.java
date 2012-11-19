@@ -35,11 +35,11 @@ import java.util.List;
 
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static org.springframework.data.mongodb.core.query.Query.query;
+import static org.apache.rave.portal.repository.util.CollectionNames.AUTHORITY_COLLECTION;
 
 @Repository
 public class MongoDbAuthorityRepository implements AuthorityRepository {
 
-    public static final String COLLECTION = "authority";
     public static final Class<MongoDbAuthority> CLASS = MongoDbAuthority.class;
 
     @Autowired
@@ -50,22 +50,22 @@ public class MongoDbAuthorityRepository implements AuthorityRepository {
 
     @Override
     public Authority getByAuthority(String authorityName) {
-        return template.findOne(query(where("authority").is(authorityName)), CLASS, COLLECTION);
+        return template.findOne(query(where("authority").is(authorityName)), CLASS, AUTHORITY_COLLECTION);
     }
 
     @Override
     public List<Authority> getAll() {
-        return CollectionUtils.<Authority>toBaseTypedList(template.findAll(CLASS, COLLECTION));
+        return CollectionUtils.<Authority>toBaseTypedList(template.findAll(CLASS, AUTHORITY_COLLECTION));
     }
 
     @Override
     public List<Authority> getAllDefault() {
-        return CollectionUtils.<Authority>toBaseTypedList(template.find(query(where("defaultForNewUser").is(true)), CLASS, COLLECTION));
+        return CollectionUtils.<Authority>toBaseTypedList(template.find(query(where("defaultForNewUser").is(true)), CLASS, AUTHORITY_COLLECTION));
     }
 
     @Override
     public int getCountAll() {
-        return (int)template.count(new Query(), COLLECTION);
+        return (int)template.count(new Query(), AUTHORITY_COLLECTION);
     }
 
     @Override
@@ -88,12 +88,12 @@ public class MongoDbAuthorityRepository implements AuthorityRepository {
             fromDb.setDefaultForNewUser(item.isDefaultForNewUser());
             save=fromDb;
         }
-        template.save(save, COLLECTION);
+        template.save(save, AUTHORITY_COLLECTION);
         return save;
     }
 
     @Override
     public void delete(Authority item) {
-        template.remove(getByAuthority(item.getAuthority()), COLLECTION);
+        template.remove(getByAuthority(item.getAuthority()), AUTHORITY_COLLECTION);
     }
 }

@@ -33,10 +33,10 @@ import java.util.List;
 import static org.apache.rave.portal.model.util.MongoDbModelUtil.generateId;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static org.springframework.data.mongodb.core.query.Query.query;
+import static org.apache.rave.portal.repository.util.CollectionNames.APP_DATA_COLLECTION;
 
 @Repository
 public class MongoDbApplicationDataRepository implements ApplicationDataRepository {
-    public static final String COLLECTION = "appData";
     public static final Class<ApplicationDataImpl> CLASS = ApplicationDataImpl.class;
 
     @Autowired
@@ -44,12 +44,12 @@ public class MongoDbApplicationDataRepository implements ApplicationDataReposito
 
     @Override
     public List<ApplicationData> getApplicationData(List<String> userIds, String appId) {
-        return CollectionUtils.<ApplicationData>toBaseTypedList(template.find(query(where("appUrl").is(appId).andOperator(where("userId").in(userIds))), CLASS, COLLECTION));
+        return CollectionUtils.<ApplicationData>toBaseTypedList(template.find(query(where("appUrl").is(appId).andOperator(where("userId").in(userIds))), CLASS, APP_DATA_COLLECTION));
     }
 
     @Override
     public ApplicationData getApplicationData(String personId, String appId) {
-        return template.findOne(query(where("appUrl").is(appId).andOperator(where("userId").is(personId))), CLASS, COLLECTION);
+        return template.findOne(query(where("appUrl").is(appId).andOperator(where("userId").is(personId))), CLASS, APP_DATA_COLLECTION);
     }
 
     @Override
@@ -59,7 +59,7 @@ public class MongoDbApplicationDataRepository implements ApplicationDataReposito
 
     @Override
     public ApplicationData get(long id) {
-        return template.findById(id, CLASS, COLLECTION);
+        return template.findById(id, CLASS, APP_DATA_COLLECTION);
     }
 
     @Override
@@ -67,12 +67,12 @@ public class MongoDbApplicationDataRepository implements ApplicationDataReposito
         if(item.getId() == null) {
             item.setId(generateId());
         }
-        template.save(item, COLLECTION);
+        template.save(item, APP_DATA_COLLECTION);
         return item;
     }
 
     @Override
     public void delete(ApplicationData item) {
-        template.remove(item, COLLECTION);
+        template.remove(item, APP_DATA_COLLECTION);
     }
 }

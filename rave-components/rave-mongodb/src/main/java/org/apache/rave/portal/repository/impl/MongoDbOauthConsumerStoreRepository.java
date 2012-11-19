@@ -29,11 +29,10 @@ import org.springframework.stereotype.Repository;
 import static org.apache.rave.portal.model.util.MongoDbModelUtil.generateId;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static org.springframework.data.mongodb.core.query.Query.query;
+import static org.apache.rave.portal.repository.util.CollectionNames.OAUTH_CONSUMER_COLLECTION;
 
 @Repository
 public class MongoDbOauthConsumerStoreRepository implements OAuthConsumerStoreRepository {
-
-    public static final String COLLECTION = "oauthConsumerStore";
     public static final Class<OAuthConsumerStoreImpl> CLASS = OAuthConsumerStoreImpl.class;
 
     @Autowired
@@ -41,7 +40,7 @@ public class MongoDbOauthConsumerStoreRepository implements OAuthConsumerStoreRe
 
     @Override
     public OAuthConsumerStore findByUriAndServiceName(String gadgetUri, String serviceName) {
-        return template.findOne(query(where("gadgetUri").is(gadgetUri).andOperator(where("serviceName").is(serviceName))), CLASS, COLLECTION);
+        return template.findOne(query(where("gadgetUri").is(gadgetUri).andOperator(where("serviceName").is(serviceName))), CLASS, OAUTH_CONSUMER_COLLECTION);
     }
 
     @Override
@@ -51,7 +50,7 @@ public class MongoDbOauthConsumerStoreRepository implements OAuthConsumerStoreRe
 
     @Override
     public OAuthConsumerStore get(long id) {
-        return template.findById(id, CLASS, COLLECTION);
+        return template.findById(id, CLASS, OAUTH_CONSUMER_COLLECTION);
     }
 
     @Override
@@ -59,7 +58,7 @@ public class MongoDbOauthConsumerStoreRepository implements OAuthConsumerStoreRe
         if(item.getId() == null) {
             item.setId(generateId());
         }
-        template.save(item, COLLECTION);
+        template.save(item, OAUTH_CONSUMER_COLLECTION);
         return item;
     }
 

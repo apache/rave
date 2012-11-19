@@ -24,13 +24,14 @@ import org.apache.rave.portal.model.Page;
 import org.apache.rave.portal.repository.MongoPageOperations;
 import org.springframework.stereotype.Component;
 
+import static org.apache.rave.portal.repository.util.CollectionNames.PAGE_COLLECTION;
+
 /**
  */
 @Component
 public class MongoPageTemplate extends MongoModelTemplate<Page, MongoDbPage> implements MongoPageOperations {
-    public static final String COLLECTION = "page";
 
     public MongoPageTemplate() {
-        super(Page.class, MongoDbPage.class, COLLECTION);
+        super(Page.class, MongoDbPage.class, PAGE_COLLECTION);
     }
 }

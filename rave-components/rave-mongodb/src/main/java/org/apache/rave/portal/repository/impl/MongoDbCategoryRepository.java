@@ -30,13 +30,12 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+import static org.apache.rave.portal.repository.util.CollectionNames.CATEGORY_COLLECTION;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static org.springframework.data.mongodb.core.query.Query.query;
 
 @Repository
 public class MongoDbCategoryRepository implements CategoryRepository {
-
-    public static final String COLLECTION = "category";
     public static final Class<MongoDbCategory> CLASS = MongoDbCategory.class;
 
     @Autowired
@@ -47,12 +46,12 @@ public class MongoDbCategoryRepository implements CategoryRepository {
 
     @Override
     public List<Category> getAll() {
-        return CollectionUtils.<Category>toBaseTypedList(hydrate(template.findAll(CLASS, COLLECTION)));
+        return CollectionUtils.<Category>toBaseTypedList(hydrate(template.findAll(CLASS, CATEGORY_COLLECTION)));
     }
 
     @Override
     public int removeFromCreatedOrModifiedFields(long userId) {
-        List<MongoDbCategory> categories = template.find(query(where("lastModifiedUserId").is(userId).orOperator(where("createdUserId").is(userId))), CLASS, COLLECTION);
+        List<MongoDbCategory> categories = template.find(query(where("lastModifiedUserId").is(userId).orOperator(where("createdUserId").is(userId))), CLASS, CATEGORY_COLLECTION);
         int count = 0;
         for(MongoDbCategory category : categories) {
             boolean updated = updateCategory(userId, category);
@@ -71,19 +70,19 @@ public class MongoDbCategoryRepository implements CategoryRepository {
 
     @Override
     public Category get(long id) {
-        return hydrate(template.findById(id, CLASS, COLLECTION));
+        return hydrate(template.findById(id, CLASS, CATEGORY_COLLECTION));
     }
 
     @Override
     public Category save(Category item) {
         MongoDbCategory converted = converter.convert(item, Category.class);
-        template.save(converted, COLLECTION);
+        template.save(converted, CATEGORY_COLLECTION);
         return hydrate(converted);
     }
 
     @Override
     public void delete(Category item) {
-        template.remove(get(item.getId()), COLLECTION);
+        template.remove(get(item.getId()), CATEGORY_COLLECTION);
     }
 
     private Category hydrate(MongoDbCategory category) {

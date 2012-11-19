@@ -34,12 +34,12 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 import static org.springframework.data.mongodb.core.query.Criteria.where;
+import static org.apache.rave.portal.repository.util.CollectionNames.PAGE_TEMPLATE_COLLECTION;
 
 /**
  */
 @Repository
 public class MongoDbPageTemplateRepository implements PageTemplateRepository {
-    public static final String COLLECTION = "pageTemplate";
 
     @Autowired
     private HydratingConverterFactory converter;
@@ -49,7 +49,7 @@ public class MongoDbPageTemplateRepository implements PageTemplateRepository {
 
     @Override
     public List<PageTemplate> getAll() {
-        List<MongoDbPageTemplate> templates = template.findAll(MongoDbPageTemplate.class, COLLECTION);
+        List<MongoDbPageTemplate> templates = template.findAll(MongoDbPageTemplate.class, PAGE_TEMPLATE_COLLECTION);
         for(PageTemplateImpl temp : templates) {
             converter.hydrate(temp, PageTemplate.class);
         }
@@ -58,7 +58,7 @@ public class MongoDbPageTemplateRepository implements PageTemplateRepository {
 
     @Override
     public PageTemplate getDefaultPage(PageType pageType) {
-        PageTemplate temp = template.findOne(new Query(where("pageType").is(pageType.getPageType().toUpperCase()).andOperator(where("defaultTemplate").is(true))), MongoDbPageTemplate.class, COLLECTION);
+        PageTemplate temp = template.findOne(new Query(where("pageType").is(pageType.getPageType().toUpperCase()).andOperator(where("defaultTemplate").is(true))), MongoDbPageTemplate.class, PAGE_TEMPLATE_COLLECTION);
         converter.hydrate(temp, PageTemplate.class);
         return temp;
     }
@@ -66,7 +66,7 @@ public class MongoDbPageTemplateRepository implements PageTemplateRepository {
     @Override
     public PageTemplate save(PageTemplate pageTemplate) {
         MongoDbPageTemplate converted = converter.convert(pageTemplate, PageTemplate.class);
-        template.save(converted, COLLECTION);
+        template.save(converted, PAGE_TEMPLATE_COLLECTION);
         converter.hydrate(converted, PageTemplate.class);
         return converted;
     }

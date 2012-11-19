@@ -22,28 +22,16 @@ package org.apache.rave.portal.repository.impl;
 import org.apache.rave.portal.model.MongoDbWidget;
 import org.apache.rave.portal.model.Widget;
 import org.apache.rave.portal.repository.MongoWidgetOperations;
-import org.springframework.data.mongodb.core.mapreduce.MapReduceResults;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
+
+import static org.apache.rave.portal.repository.util.CollectionNames.WIDGET_COLLECTION;
 
 /**
  */
 @Component
 public class MongoWidgetTemplate extends MongoModelTemplate<Widget, MongoDbWidget> implements MongoWidgetOperations {
     
-    public static final String COLLECTION = "widget";
-
     public MongoWidgetTemplate() {
-        super(Widget.class, MongoDbWidget.class, COLLECTION);
-    }
-
-    @Override
-    public <T> MapReduceResults<T> mapReduce(String mapFunction, String reduceFunction, Class<T> entityClass) {
-        return mongoTemplate.mapReduce(COLLECTION, mapFunction, reduceFunction, entityClass);
-    }
-
-    @Override
-    public <T> MapReduceResults<T> mapReduce(Query query, String mapFunction, String reduceFunction, Class<T> entityClass) {
-        return mongoTemplate.mapReduce(query, COLLECTION, mapFunction, reduceFunction, entityClass);
+        super(Widget.class, MongoDbWidget.class, WIDGET_COLLECTION);
     }
 }

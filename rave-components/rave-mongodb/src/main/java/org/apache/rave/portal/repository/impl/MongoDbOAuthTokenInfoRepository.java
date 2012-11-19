@@ -29,11 +29,11 @@ import org.springframework.stereotype.Repository;
 import static org.apache.rave.portal.model.util.MongoDbModelUtil.generateId;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static org.springframework.data.mongodb.core.query.Query.query;
+import static org.apache.rave.portal.repository.util.CollectionNames.OAUTH_TOKEN_COLLECTION;
 
 @Repository
 public class MongoDbOAuthTokenInfoRepository implements OAuthTokenInfoRepository {
 
-    public static final String COLLECTION = "oauthTokenInfo";
     public static final Class<OAuthTokenInfoImpl> CLASS = OAuthTokenInfoImpl.class;
 
     @Autowired
@@ -47,7 +47,7 @@ public class MongoDbOAuthTokenInfoRepository implements OAuthTokenInfoRepository
                 .andOperator(where("moduleId").is(moduleId))
                 .andOperator(where("tokenName").is(tokenName))
                 .andOperator(where("serviceName").is(serviceName))
-        ), CLASS, COLLECTION);
+        ), CLASS, OAUTH_TOKEN_COLLECTION);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class MongoDbOAuthTokenInfoRepository implements OAuthTokenInfoRepository
 
     @Override
     public OAuthTokenInfo get(long id) {
-        return template.findById(id, CLASS, COLLECTION);
+        return template.findById(id, CLASS, OAUTH_TOKEN_COLLECTION);
     }
 
     @Override
@@ -65,7 +65,7 @@ public class MongoDbOAuthTokenInfoRepository implements OAuthTokenInfoRepository
         if(item.getId() == null) {
             item.setId(generateId());
         }
-        template.save(item, COLLECTION);
+        template.save(item, OAUTH_TOKEN_COLLECTION);
         return item;
     }
 

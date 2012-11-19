@@ -33,11 +33,10 @@ import java.util.List;
 
 import static org.apache.rave.portal.model.util.MongoDbModelUtil.generateId;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
+import static org.apache.rave.portal.repository.util.CollectionNames.PAGE_LAYOUT_COLLECTION;
 
 @Repository
 public class MongoDbPageLayoutRepository implements PageLayoutRepository {
-
-    public static final String COLLECTION = "pageLayout";
     public static final Class<MongoDbPageLayout> CLASS = MongoDbPageLayout.class;
 
     @Autowired
@@ -45,17 +44,17 @@ public class MongoDbPageLayoutRepository implements PageLayoutRepository {
 
     @Override
     public PageLayout getByPageLayoutCode(String codename) {
-        return template.findOne(new Query(where("code").is(codename)), CLASS, COLLECTION);
+        return template.findOne(new Query(where("code").is(codename)), CLASS, PAGE_LAYOUT_COLLECTION);
     }
 
     @Override
     public List<PageLayout> getAll() {
-        return CollectionUtils.<PageLayout>toBaseTypedList(template.findAll(CLASS, COLLECTION));
+        return CollectionUtils.<PageLayout>toBaseTypedList(template.findAll(CLASS, PAGE_LAYOUT_COLLECTION));
     }
 
     @Override
     public List<PageLayout> getAllUserSelectable() {
-        List<MongoDbPageLayout> userSelectable = template.find(new Query(where("userSelectable").is(true)), CLASS, COLLECTION);
+        List<MongoDbPageLayout> userSelectable = template.find(new Query(where("userSelectable").is(true)), CLASS, PAGE_LAYOUT_COLLECTION);
         return CollectionUtils.<PageLayout>toBaseTypedList(userSelectable);
     }
 
@@ -77,7 +76,7 @@ public class MongoDbPageLayoutRepository implements PageLayoutRepository {
             toSave.setId(generateId());
         }
         update(item, toSave);
-        template.save(toSave, COLLECTION);
+        template.save(toSave, PAGE_LAYOUT_COLLECTION);
         return toSave;
     }
 
