@@ -259,12 +259,15 @@ public class DefaultUserService implements UserService {
         int numWidgetsOwned = widgetRepository.unassignWidgetOwner(userId);
         // unassign the user from any category records they created or modified
         int numCategoriesTouched = categoryRepository.removeFromCreatedOrModifiedFields(userId);
+        // remove any person associations created with other users
+        int numAssociationsRemoved = personRepository.removeAllFriendsAndRequests(userId);
 
         // finally delete the user
         userRepository.delete(user);
         log.info("Deleted user [" + userId + ',' + username + "] - numPages: " + numDeletedPages + ", numPersonPages:" +
                  numDeletedPersonPages + ", numWidgetComments: " + numWidgetComments + ", numWidgetRatings: " +
-                 numWidgetRatings + ", numWidgetsOwned: " + numWidgetsOwned + ",numCategoriesTouched:" + numCategoriesTouched);
+                 numWidgetRatings + ", numWidgetsOwned: " + numWidgetsOwned + ", numCategoriesTouched:" + numCategoriesTouched +
+                 ", numAssociationRemoved:" + numAssociationsRemoved);
     }
 
     @Override

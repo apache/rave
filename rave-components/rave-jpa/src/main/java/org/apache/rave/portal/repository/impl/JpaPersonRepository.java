@@ -92,20 +92,18 @@ public class JpaPersonRepository implements PersonRepository {
         return CollectionUtils.<Person>toBaseTypedList(friends.getResultList());
     }
 
-
-    @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
     public List<Person> findFriends(String username, String appId) {
         List<Person> friendsUsingWidget = new ArrayList<Person>();
 
-        TypedQuery query = manager.createNamedQuery(JpaWidget.WIDGET_GET_BY_URL, JpaWidget.class);
-        query.setParameter(JpaWidget.PARAM_URL, appId);
-        final List<JpaWidget> resultList = query.getResultList();
+        TypedQuery<JpaWidget> widgetQuery = manager.createNamedQuery(JpaWidget.WIDGET_GET_BY_URL, JpaWidget.class);
+        widgetQuery.setParameter(JpaWidget.PARAM_URL, appId);
+        final List<JpaWidget> resultList = widgetQuery.getResultList();
         Widget widget = getSingleResult(resultList);
 
-        query = manager.createNamedQuery(JpaUser.USER_GET_ALL_FOR_ADDED_WIDGET, JpaUser.class);
-        query.setParameter(JpaUser.PARAM_WIDGET_ID, Long.parseLong(widget.getId()));
-        List<User> widgetUsers = query.getResultList();
+        TypedQuery<JpaUser> usersQuery = manager.createNamedQuery(JpaUser.USER_GET_ALL_FOR_ADDED_WIDGET, JpaUser.class);
+        usersQuery.setParameter(JpaUser.PARAM_WIDGET_ID, Long.parseLong(widget.getId()));
+        List<User> widgetUsers = CollectionUtils.<User>toBaseTypedList(usersQuery.getResultList());
 
         List<Person> userFriends = findFriends(username);
         for (Person userFriend : userFriends) {
@@ -245,6 +243,13 @@ public class JpaPersonRepository implements PersonRepository {
         senderItem = saveOrUpdate(senderItem.getEntityId(), manager, senderItem);
 
         return receiverItem.getEntityId() != null && senderItem.getEntityId() != null;
+    }
+    
+    @Override
+    public int removeAllFriendsAndRequests(String userid) {
+        TypedQuery<JpaPersonAssociation> query = manager.createNamedQuery(JpaPersonAssociation.DELETE_ASSOCIATION_ITEMS_BY_USERID, JpaPersonAssociation.class);
+        query.setParameter(JpaPersonAssociation.USERID, Long.parseLong(userid));
+        return query.executeUpdate();
     }
 
     private List<Person> getPeopleByIds(JpaGroup result) {

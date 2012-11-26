@@ -152,4 +152,9 @@ public class DecoratingOpenSocialPersonRepository implements OpenSocialPersonRep
 	public List<Person> findFriendRequestsSent(String username) {
 		return underlying.findFriendRequestsSent(username);
 	}
+
+	@Override
+	public int removeAllFriendsAndRequests(String userid) {
+		return underlying.removeAllFriendsAndRequests(userid);
+	}
 }
