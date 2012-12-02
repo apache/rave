@@ -37,7 +37,8 @@ rave.forms = rave.forms || (function() {
                     equalTo: "#passwordField"
                 },
                 email : {
-                    required: true
+                    required: true,
+                    email: true
                 }
             },
             messages: {
@@ -69,6 +70,17 @@ rave.forms = rave.forms || (function() {
         });
     }
     
+    function validateEditAccountForm() {
+        $("#editAccountForm").validate({
+            rules: {
+            	 email : {
+                     required: true,
+                     email: true
+                 }
+            }            
+        });
+    }
+    
     function validatePageForm() {
         $("#pageForm").validate({
             rules: {
@@ -82,6 +94,7 @@ rave.forms = rave.forms || (function() {
     return {
         validateNewAccountForm : validateNewAccountForm,
 	    validateUserProfileForm: validateUserProfileForm,
+	    validateEditAccountForm: validateEditAccountForm,
         validatePageForm: validatePageForm
     };
 })();

@@ -130,7 +130,7 @@
                                     <div class="control-group">
                                         <label for="emailField" class="control-label"><fmt:message key="page.profile.email"/></label>
                                         <div class="controls">
-                                            <form:input id="emailField" path="email" class="span5" value="${userProfile.email}" />
+                                            <form:input id="emailField" name="email" required="required" path="email" class="span5" value="${userProfile.email}" />
                                         </div>
                                     </div>
                                 </div>
@@ -215,6 +215,7 @@
                 username: "<c:out value="${userProfile.username}"/>",
                 id: "<c:out value="${userProfile.id}"/>"
             });
+            rave.forms.validateEditAccountForm();
         });
     </script>
 </portal:register-init-script>
