@@ -86,7 +86,23 @@ public class JpaPageRepository implements PageRepository {
         List<Page> pages = getAllPages(userId, pageType);
         int pageCount = pages.size();
         for(Page page : pages) {
-            delete(page);
+            if(page.getOwnerId().equals(userId)){
+                delete(page);
+            }else{
+                // remove any pageUser entries for this user on 
+                // this page as it is a shared page
+                PageUser pageUserToRemove = null;
+                for(PageUser pageUser : page.getMembers()){
+                    if(pageUser.getUserId().equals(userId)){
+                        pageUserToRemove = pageUser;
+                        break;
+                    }
+                }
+                if(pageUserToRemove != null){
+                    page.getMembers().remove(pageUserToRemove);
+                    save(page);
+                }
+            }
         }
         return pageCount;
     }
