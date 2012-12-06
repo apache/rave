@@ -20,9 +20,10 @@ package org.apache.rave.portal.model.impl;
 
 import org.apache.rave.portal.model.*;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class PersonImpl implements Person {
+public class PersonImpl implements Person, Serializable {
 
     protected String id;
     protected String username;

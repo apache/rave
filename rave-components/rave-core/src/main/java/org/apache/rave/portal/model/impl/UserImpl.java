@@ -25,12 +25,13 @@ import org.apache.rave.portal.model.User;
 import org.apache.rave.util.CollectionUtils;
 import org.springframework.security.core.GrantedAuthority;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-public class UserImpl extends PersonImpl implements User {
+public class UserImpl extends PersonImpl implements User, Serializable {
     private String id;
     private String password;
     private boolean expired;

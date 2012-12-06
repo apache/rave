@@ -22,25 +22,8 @@ package org.apache.rave.portal.model;
 import org.apache.rave.persistence.BasicEntity;
 import org.apache.rave.portal.model.conversion.ConvertingListProxyFactory;
 
-import javax.persistence.Access;
-import javax.persistence.AccessType;
-import javax.persistence.Basic;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.TableGenerator;
+import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,7 +38,7 @@ import java.util.List;
     @NamedQuery(name = JpaPerson.FIND_FRIENDS_BY_USERNAME, query = "select a.followedby from JpaPersonAssociation a where a.follower.username = :username and a.status = :status")
 })
 @DiscriminatorValue("Person")
-public class JpaPerson implements BasicEntity, Person {
+public class JpaPerson implements BasicEntity, Person, Serializable {
 
     public static final String FIND_BY_USERNAME = "Person.findByUsername";
     public static final String FIND_FRIENDS_BY_USERNAME = "Person.findFriendsByUsername";
