@@ -53,10 +53,11 @@ public class MongoDbPageTemplateConverter implements HydratingModelConverter<Pag
                 widget.setPageTemplateRegion(region);
             }
         }
-
-        for(PageTemplate sub : dehydrated.getSubPageTemplates()) {
-            sub.setParentPageTemplate(dehydrated);
-            hydrate((MongoDbPageTemplate)sub);
+        if (dehydrated.getSubPageTemplates() != null) {
+            for (PageTemplate sub : dehydrated.getSubPageTemplates()) {
+                sub.setParentPageTemplate(dehydrated);
+                hydrate((MongoDbPageTemplate) sub);
+            }
         }
     }
 
@@ -73,14 +74,14 @@ public class MongoDbPageTemplateConverter implements HydratingModelConverter<Pag
         if (source.getSubPageTemplates() != null) {
             List<PageTemplate> subPages = Lists.newArrayList();
             for (PageTemplate sub : source.getSubPageTemplates()) {
-               subPages.add(convert(sub));
+                subPages.add(convert(sub));
             }
             converted.setSubPageTemplates(subPages);
         }
 
-        if(source.getPageTemplateRegions() != null) {
-            List<PageTemplateRegion>  convertedRegions = Lists.newArrayList();
-            for(PageTemplateRegion region : source.getPageTemplateRegions()) {
+        if (source.getPageTemplateRegions() != null) {
+            List<PageTemplateRegion> convertedRegions = Lists.newArrayList();
+            for (PageTemplateRegion region : source.getPageTemplateRegions()) {
                 convertedRegions.add(convert(region));
             }
             converted.setPageTemplateRegions(convertedRegions);
@@ -88,13 +89,29 @@ public class MongoDbPageTemplateConverter implements HydratingModelConverter<Pag
         return converted;
     }
 
+    public void setWidgetRepository(WidgetRepository widgetRepository) {
+        this.widgetRepository = widgetRepository;
+    }
+
+    public void setPageLayoutRepository(PageLayoutRepository pageLayoutRepository) {
+        this.pageLayoutRepository = pageLayoutRepository;
+    }
+
+    public WidgetRepository getWidgetRepository() {
+        return widgetRepository;
+    }
+
+    public PageLayoutRepository getPageLayoutRepository() {
+        return pageLayoutRepository;
+    }
+
     private PageTemplateRegion convert(PageTemplateRegion region) {
-        PageTemplateRegionImpl converted = region instanceof PageTemplateRegionImpl ? ((PageTemplateRegionImpl)region) : new PageTemplateRegionImpl();
+        PageTemplateRegionImpl converted = region instanceof PageTemplateRegionImpl ? ((PageTemplateRegionImpl) region) : new PageTemplateRegionImpl();
         updateProperties(region, converted);
 
-        if(region.getPageTemplateWidgets() != null) {
+        if (region.getPageTemplateWidgets() != null) {
             List<PageTemplateWidget> convertedWidgets = Lists.newArrayList();
-            for(PageTemplateWidget widget : region.getPageTemplateWidgets()) {
+            for (PageTemplateWidget widget : region.getPageTemplateWidgets()) {
                 convertedWidgets.add(convert(widget));
             }
             converted.setPageTemplateWidgets(convertedWidgets);
@@ -103,7 +120,7 @@ public class MongoDbPageTemplateConverter implements HydratingModelConverter<Pag
     }
 
     private PageTemplateWidget convert(PageTemplateWidget widget) {
-        MongoDbPageTemplateWidget converted = widget instanceof MongoDbPageTemplateWidget ? ((MongoDbPageTemplateWidget)widget) : new MongoDbPageTemplateWidget();
+        MongoDbPageTemplateWidget converted = widget instanceof MongoDbPageTemplateWidget ? ((MongoDbPageTemplateWidget) widget) : new MongoDbPageTemplateWidget();
         updateProperties(widget, converted);
         return converted;
     }

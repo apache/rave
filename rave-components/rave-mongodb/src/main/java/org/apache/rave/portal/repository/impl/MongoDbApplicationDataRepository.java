@@ -75,4 +75,8 @@ public class MongoDbApplicationDataRepository implements ApplicationDataReposito
     public void delete(ApplicationData item) {
         template.remove(item, APP_DATA_COLLECTION);
     }
+
+    public void setTemplate(MongoOperations template) {
+        this.template = template;
+    }
 }

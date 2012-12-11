@@ -83,4 +83,12 @@ public class MongoDbPortalPreferenceRepository implements PortalPreferenceReposi
     public void delete(PortalPreference item) {
         template.remove(getByKey(item.getKey()), PREFERENCE_COLLECTION);
     }
+
+    public void setTemplate(MongoOperations template) {
+        this.template = template;
+    }
+
+    public void setConverter(HydratingConverterFactory converter) {
+        this.converter = converter;
+    }
 }

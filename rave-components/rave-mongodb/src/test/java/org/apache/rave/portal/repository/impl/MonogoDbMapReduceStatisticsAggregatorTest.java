@@ -27,6 +27,7 @@ import org.apache.rave.portal.model.util.WidgetStatistics;
 import org.apache.rave.portal.repository.StatisticsAggregator;
 import org.apache.rave.portal.repository.util.CollectionNames;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.mapreduce.MapReduceOptions;
@@ -185,6 +186,7 @@ public class MonogoDbMapReduceStatisticsAggregatorTest {
     }
 
     @Test
+    @Ignore
     public void init_existing() {
         expect(mongoOperations.findById(ID, RunStatistics.class, STATS_COLLECTION)).andReturn(new RunStatistics(ID, System.currentTimeMillis() - DEFAULT_RESULT_VALIDITY));
         setMapReduceExpectations();

@@ -57,6 +57,14 @@ public class MongoDbUserConverter implements HydratingModelConverter<User, Mongo
         return User.class;
     }
 
+    public void setPageLayoutRepository(PageLayoutRepository pageLayoutRepository) {
+        this.pageLayoutRepository = pageLayoutRepository;
+    }
+
+    public PageLayoutRepository getPageLayoutRepository() {
+        return pageLayoutRepository;
+    }
+
     @Override
     public MongoDbUser convert(User source) {
         MongoDbUser user = new MongoDbUser();
@@ -74,7 +82,7 @@ public class MongoDbUserConverter implements HydratingModelConverter<User, Mongo
         converted.setUsername(source.getUsername());
         converted.setEmail(source.getEmail());
         converted.setDisplayName(source.getDisplayName());
-        converted.setAdditionalName(source.getUsername());
+        converted.setAdditionalName(source.getAdditionalName());
         converted.setFamilyName(source.getFamilyName());
         converted.setGivenName(source.getGivenName());
         converted.setHonorificPrefix(source.getHonorificPrefix());

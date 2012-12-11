@@ -94,4 +94,8 @@ public class MongoDbWidgetTagRepository implements WidgetTagRepository {
         }
         return null;
     }
+
+    public void setTemplate(MongoWidgetOperations template) {
+        this.template = template;
+    }
 }

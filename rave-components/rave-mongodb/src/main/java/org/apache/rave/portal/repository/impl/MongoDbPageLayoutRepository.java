@@ -91,4 +91,8 @@ public class MongoDbPageLayoutRepository implements PageLayoutRepository {
         converted.setRenderSequence(source.getRenderSequence());
         converted.setUserSelectable(source.isUserSelectable());
     }
+
+    public void setTemplate(MongoOperations template) {
+        this.template = template;
+    }
 }

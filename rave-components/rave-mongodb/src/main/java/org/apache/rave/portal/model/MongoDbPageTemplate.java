@@ -51,6 +51,10 @@ public class MongoDbPageTemplate extends PageTemplateImpl {
 
     }
 
+    public PageLayoutRepository getPageLayoutRepository() {
+        return pageLayoutRepository;
+    }
+
     @Override
     public PageLayout getPageLayout() {
         PageLayout layout = super.getPageLayout();

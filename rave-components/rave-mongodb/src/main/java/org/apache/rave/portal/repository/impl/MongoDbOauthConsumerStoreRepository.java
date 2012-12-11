@@ -66,4 +66,8 @@ public class MongoDbOauthConsumerStoreRepository implements OAuthConsumerStoreRe
     public void delete(OAuthConsumerStore item) {
         template.remove(get(item.getId()));
     }
+
+    public void setTemplate(MongoOperations template) {
+        this.template = template;
+    }
 }

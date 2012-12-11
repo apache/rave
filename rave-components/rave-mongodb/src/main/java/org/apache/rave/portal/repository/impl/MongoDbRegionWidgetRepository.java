@@ -58,13 +58,18 @@ public class MongoDbRegionWidgetRepository implements RegionWidgetRepository {
     @Override
     public void delete(RegionWidget item) {
         Page page = getPageByRegionWidgetId(item.getId());
-        replaceOrRemoveWidget(page, item, false);
+        if(replaceOrRemoveWidget(page, item, false) == -1){
+            throw new IllegalStateException("Widget does not exist in parent page regions");
+        }
         template.save(page);
     }
 
     private RegionWidget updateRegionWidget(RegionWidget item) {
-        RegionWidget savedWidget;Page page = getPageByRegionWidgetId(item.getId());
-        replaceOrRemoveWidget(page, item, true);
+        RegionWidget savedWidget;
+        Page page = getPageByRegionWidgetId(item.getId());
+        if(replaceOrRemoveWidget(page, item, true) == -1){
+            throw new IllegalStateException("Widget does not exist in parent page regions");
+        }
         Page saved = template.save(page);
         savedWidget = getRegionWidgetById(saved, item.getId());
         return savedWidget;
@@ -73,6 +78,7 @@ public class MongoDbRegionWidgetRepository implements RegionWidgetRepository {
     private RegionWidget addNewRegionWidget(RegionWidget item) {
         Page page = getPageFromRepository(item);
         Region parent = getRegionById(item.getRegion().getId(), page.getRegions());
+        if(parent == null) throw new IllegalStateException("Unable to find parent for page");
         parent.getRegionWidgets().add(item);
         Page saved = template.save(page);
         return getRegionById(parent.getId(), saved.getRegions()).getRegionWidgets().get(parent.getRegionWidgets().size() -1);
@@ -125,5 +131,9 @@ public class MongoDbRegionWidgetRepository implements RegionWidgetRepository {
 
     private Page getPageByRegionWidgetId(long id) {
         return template.findOne(new Query(where("regions").elemMatch(where("regionWidgets").elemMatch(where("_id").is(id)))));
+    }
+
+    public void setTemplate(MongoPageOperations template) {
+        this.template = template;
     }
 }

@@ -132,4 +132,12 @@ public class MongoDbUserRepository implements UserRepository {
         query.sort().on("username", Order.ASCENDING);
         return query;
     }
+
+    public void setTemplate(MongoUserOperations template) {
+        this.template = template;
+    }
+
+    public void setPageTemplate(MongoPageTemplate pageTemplate) {
+        this.pageTemplate = pageTemplate;
+    }
 }

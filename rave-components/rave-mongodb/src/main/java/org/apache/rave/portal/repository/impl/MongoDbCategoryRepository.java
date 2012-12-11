@@ -109,4 +109,12 @@ public class MongoDbCategoryRepository implements CategoryRepository {
         }
         return updated;
     }
+
+    public void setTemplate(MongoOperations template) {
+        this.template = template;
+    }
+
+    public void setConverter(HydratingConverterFactory converter) {
+        this.converter = converter;
+    }
 }

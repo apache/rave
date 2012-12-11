@@ -58,6 +58,10 @@ public class MongoDbUser extends UserImpl {
         return authorityCodes;
     }
 
+    public PageLayoutRepository getPageLayoutRepository() {
+        return pageLayoutRepository;
+    }
+
     public void setAuthorityCodes(List<String> authorityCodes) {
         this.authorityCodes = authorityCodes;
     }

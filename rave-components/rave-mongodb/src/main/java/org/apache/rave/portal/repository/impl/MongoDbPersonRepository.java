@@ -271,4 +271,12 @@ public class MongoDbPersonRepository implements PersonRepository {
         }
         return ids;
     }
+
+    public void setTemplate(MongoUserOperations template) {
+        this.template = template;
+    }
+
+    public void setPageTemplate(MongoPageOperations pageTemplate) {
+        this.pageTemplate = pageTemplate;
+    }
 }
