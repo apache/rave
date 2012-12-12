@@ -96,4 +96,20 @@ public class MongoDbAuthorityRepository implements AuthorityRepository {
     public void delete(Authority item) {
         template.remove(getByAuthority(item.getAuthority()), AUTHORITY_COLLECTION);
     }
+
+    public void setTemplate(MongoOperations template) {
+        this.template = template;
+    }
+
+    public void setConverter(HydratingConverterFactory converter) {
+        this.converter = converter;
+    }
+
+    public MongoOperations getTemplate() {
+        return template;
+    }
+
+    public HydratingConverterFactory getConverter() {
+        return converter;
+    }
 }

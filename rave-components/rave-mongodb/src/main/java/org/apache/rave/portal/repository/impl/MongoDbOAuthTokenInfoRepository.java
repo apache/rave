@@ -73,4 +73,8 @@ public class MongoDbOAuthTokenInfoRepository implements OAuthTokenInfoRepository
     public void delete(OAuthTokenInfo item) {
         template.remove(get(item.getId()));
     }
+
+    public void setTemplate(MongoOperations template) {
+        this.template = template;
+    }
 }

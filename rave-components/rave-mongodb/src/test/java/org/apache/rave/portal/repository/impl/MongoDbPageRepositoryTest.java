@@ -20,114 +20,117 @@
 package org.apache.rave.portal.repository.impl;
 
 import com.google.common.collect.Lists;
-import com.mongodb.Mongo;
 import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.model.impl.*;
-import org.apache.rave.portal.repository.PageLayoutRepository;
-import org.apache.rave.portal.repository.PageRepository;
-import org.apache.rave.portal.repository.UserRepository;
-import org.apache.rave.portal.repository.WidgetRepository;
-import org.junit.After;
-import org.junit.Ignore;
+import org.apache.rave.portal.repository.*;
+import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.data.mongodb.core.query.Query;
 
+import java.util.List;
+
+import static org.easymock.EasyMock.*;
 import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
+import static org.springframework.data.mongodb.core.query.Criteria.where;
+import static org.springframework.data.mongodb.core.query.Query.query;
 
-/**
- * Created with IntelliJ IDEA.
- * User: mfranklin
- * Date: 10/14/12
- * Time: 8:14 PM
- */
-@Ignore
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:test-applicationContext.xml"})
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 public class MongoDbPageRepositoryTest {
 
-    @Autowired
-    PageRepository repository;
+    private MongoPageOperations template;
+    private MongoDbPageRepository repo;
 
-    @Autowired
-    WidgetRepository widgetRepository;
 
-    @Autowired
-    PageLayoutRepository pageLayoutRepository;
-
-    @Autowired
-    UserRepository userRepository;
-    
-    @Autowired
-    Mongo mongo;
-    
-    @After
-    public void tearDown() {
-        mongo.dropDatabase("rave");    
+    @Before
+    public void setUp(){
+        template = createMock(MongoPageOperations.class);
+        repo = new MongoDbPageRepository();
+        repo.setTemplate(template);
     }
 
     @Test
-    public void save_basic() {
-        Page page = new PageImpl();
+    public void deletePages(){
+        int resultCount;
+        long userID = 1111L;
 
-        User user1 = new UserImpl(12345L);
-        user1.setDisplayName("GEORGE DOE");
-        userRepository.save(user1);
+        expect((int)template.count(isA(Query.class))).andReturn(1);
+        template.remove(isA(Query.class));
+        expectLastCall();
+        replay(template);
 
-        User user2 = new UserImpl(12345L);
-        user2.setDisplayName("JANE DOE");
-        userRepository.save(user2);
-
-        PageUser p = new PageUserImpl(user1, page);
-        page.setName("PAGE NAME");
-        page.setMembers(Lists.<PageUser>newLinkedList());
-        page.getMembers().add(p);
-        page.setOwner(user2);
-        page.setRegions(Lists.<Region>newLinkedList());
-
-        Region region = new RegionImpl();
-        region.setPage(page);
-        region.setRegionWidgets(Lists.<RegionWidget>newLinkedList());
-        page.getRegions().add(region);
-
-        RegionWidget regionWidget = new RegionWidgetImpl();
-        regionWidget.setRegion(region);
-        regionWidget.setPreferences(Lists.<RegionWidgetPreference>newLinkedList());
-        region.getRegionWidgets().add(regionWidget);
-
-        RegionWidgetPreference preference = new RegionWidgetPreferenceImpl();
-        preference.setName("PREF NAME");
-        preference.setValue("PREF_VALUE");
-        regionWidget.getPreferences().add(preference);
-
-        Widget widget = new WidgetImpl(13223L);
-        widget.setAuthor("FOO");
-        widget.setDescription("BAR");
-        widgetRepository.save(widget);
-
-        regionWidget.setWidget(widget);
-
-        page.setPageType(PageType.USER);
-        PageLayout layout = new PageLayoutImpl("LAYOUT");
-        page.setPageLayout(layout);
-        layout.setNumberOfRegions(24L);
-        pageLayoutRepository.save(layout);
-
-        Page saved = repository.save(page);
-        assertThat(saved, instanceOf(MongoDbPage.class));
-
-        Page fromDb = repository.get(saved.getId());
-        assertThat(fromDb.getMembers().get(0).getUser(), is(equalTo(saved.getMembers().get(0).getUser())));
-        assertThat(fromDb, is(sameInstance(fromDb.getMembers().get(0).getPage())));
-        assertThat(fromDb.getPageLayout(), is(equalTo(saved.getPageLayout())));
-        assertThat(fromDb.getRegions().get(0), is(equalTo(saved.getRegions().get(0))));
-        assertThat(fromDb.getRegions().get(0).getRegionWidgets().get(0), is(equalTo(saved.getRegions().get(0).getRegionWidgets().get(0))));
-        assertThat(fromDb.getRegions().get(0).getRegionWidgets().get(0).getWidget(), is(equalTo(saved.getRegions().get(0).getRegionWidgets().get(0).getWidget())));
-        assertThat(fromDb.getRegions().get(0).getRegionWidgets().get(0).getPreferences().get(0), is(equalTo(saved.getRegions().get(0).getRegionWidgets().get(0).getPreferences().get(0))));
+        resultCount = repo.deletePages(userID, PageType.USER);
+        assertThat(resultCount, is(equalTo(1)));
+        verify(template);
     }
+
+    @Test
+    public void getPagesForUser(){
+        Page p = new PageImpl();
+        PageUser user1 = new PageUserImpl(1111L);
+        User user2 = new UserImpl(2222L);
+        user1.setUser(user2);
+        List<PageUser> pageUser = Lists.newArrayList();
+        pageUser.add(user1);
+        p.setMembers(pageUser);
+        List<Page> pages = Lists.newArrayList(p);
+
+        List<PageUser> result;
+        Long userId = 2222L;
+
+        expect(template.find(query(where("members").elemMatch(where("userId").is(userId)).andOperator(where("pageType").is("USER"))))).andReturn(pages);
+        replay(template);
+        result = repo.getPagesForUser(userId, PageType.USER);
+
+        assertThat(result.get(0).getUser(), is(equalTo(user2)));
+        assertThat(result.size(), is(equalTo(1)));
+        assertThat(result.get(0).getUser().getId(), is(equalTo(2222L)));
+
+    }
+
+    @Test
+    public void getSingleRecord_valid(){
+        Long userId = 1111L;
+        Long pageId = 2222L;
+
+        Page testPage = new PageImpl(2222L);
+        PageUser pu = new PageUserImpl(3333L);
+        User u = new UserImpl(1111L);
+        pu.setUser(u);
+        List<PageUser> users = Lists.newArrayList();
+        users.add(pu);
+        testPage.setMembers(users);
+        PageUser result;
+
+        expect(template.get(pageId)).andReturn(testPage);
+        replay(template);
+
+        result = repo.getSingleRecord(userId, pageId);
+        assertThat(result, is(sameInstance(pu)));
+        assertThat(result.getId(), is(equalTo(3333L)));
+        assertThat(result.getUser().getId(), is(equalTo(1111L)));
+
+    }
+
+    @Test
+    public void getSingleRecord_null(){
+        Long userId = 1111L;
+        Long pageId = 2222L;
+
+        Page testPage = new PageImpl(2222L);
+        PageUser pu = new PageUserImpl(3333L);
+        User u = new UserImpl(1234L);
+        pu.setUser(u);
+        List<PageUser> users = Lists.newArrayList();
+        users.add(pu);
+        testPage.setMembers(users);
+        PageUser result;
+
+        expect(template.get(pageId)).andReturn(testPage);
+        replay(template);
+
+        result = repo.getSingleRecord(userId, pageId);
+        assertNull(result);
+    }
+
 }

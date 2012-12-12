@@ -44,4 +44,6 @@ public interface WidgetComment {
 
     Date getCreatedDate();
     void setCreatedDate(Date created);
+
+
 }

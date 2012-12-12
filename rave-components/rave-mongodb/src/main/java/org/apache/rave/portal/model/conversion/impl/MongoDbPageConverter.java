@@ -194,4 +194,15 @@ public class MongoDbPageConverter implements HydratingModelConverter<Page, Mongo
         converted.setRenderOrder(source.getRenderOrder());
     }
 
+    public void setWidgetRepository(WidgetRepository widgetRepository) {
+        this.widgetRepository = widgetRepository;
+    }
+
+    public void setUserRepository(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    public void setPageLayoutRepository(PageLayoutRepository pageLayoutRepository) {
+        this.pageLayoutRepository = pageLayoutRepository;
+    }
 }

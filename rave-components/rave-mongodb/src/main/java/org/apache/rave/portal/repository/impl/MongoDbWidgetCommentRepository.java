@@ -97,9 +97,11 @@ public class MongoDbWidgetCommentRepository implements WidgetCommentRepository {
     }
 
     private WidgetComment getCommentById(Widget widget, long id) {
-        for(WidgetComment comment : widget.getComments()) {
-            if(comment.getId().equals(id)) {
-                return comment;
+        if(widget != null){
+            for(WidgetComment comment : widget.getComments()) {
+                if(comment.getId().equals(id)) {
+                    return comment;
+                }
             }
         }
         return null;
@@ -132,4 +134,9 @@ public class MongoDbWidgetCommentRepository implements WidgetCommentRepository {
             }
         }
     }
+
+    public void setTemplate(MongoWidgetOperations template) {
+        this.template = template;
+    }
+
 }

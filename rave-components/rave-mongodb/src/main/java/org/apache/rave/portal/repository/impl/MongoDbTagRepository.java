@@ -111,4 +111,8 @@ public class MongoDbTagRepository implements TagRepository {
             }
         }
     }
+
+    public void setWidgetTemplate(MongoWidgetOperations widgetTemplate) {
+        this.widgetTemplate = widgetTemplate;
+    }
 }

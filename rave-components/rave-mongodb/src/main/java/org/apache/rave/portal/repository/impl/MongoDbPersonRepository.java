@@ -279,4 +279,8 @@ public class MongoDbPersonRepository implements PersonRepository {
     public void setPageTemplate(MongoPageOperations pageTemplate) {
         this.pageTemplate = pageTemplate;
     }
+
+    public void setWidgetOperations(MongoWidgetOperations widgetOperations) {
+        this.widgetOperations = widgetOperations;
+    }
 }

@@ -257,4 +257,13 @@ public class MongoDbPageRepository implements PageRepository {
         return pageType.getPageType().toUpperCase();
     }
 
+    public MongoPageOperations getTemplate() {
+        return template;
+    }
+
+    public void setTemplate(MongoPageOperations template) {
+        this.template = template;
+    }
+
+
 }

@@ -38,6 +38,7 @@ public class MongoDbCategoryConverter implements HydratingModelConverter<Categor
     @Autowired
     private MongoWidgetOperations widgetOperations;
 
+
     @Override
     public void hydrate(MongoDbCategory dehydrated) {
         if(dehydrated == null) {
@@ -66,5 +67,13 @@ public class MongoDbCategoryConverter implements HydratingModelConverter<Categor
         category.setText(source.getText());
         category.setWidgets(null);
         return category;
+    }
+
+    public void setUserRepository(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    public void setMongoWidgetOperations(MongoWidgetOperations mongoWidgetOperations) {
+        this.widgetOperations = mongoWidgetOperations;
     }
 }
