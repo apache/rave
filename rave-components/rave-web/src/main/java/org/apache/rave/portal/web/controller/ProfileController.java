@@ -33,11 +33,13 @@ import org.apache.rave.portal.web.util.ViewNames;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @Controller
@@ -64,17 +66,14 @@ public class ProfileController {
 	 * @return the view name of the user profile page
 	 */
 	@RequestMapping(value = {"/{username:.*}"}, method = RequestMethod.GET)
-	public String viewProfileByUsername(@PathVariable String username, ModelMap model, @RequestParam(required = false) String referringPageId) {
+	public String viewProfileByUsername(@PathVariable String username, ModelMap model, @RequestParam(required = false) String referringPageId, HttpServletResponse response) {
         User user = null;
         try{
             user = userService.getUserByUsername(username);
             logger.debug("Viewing person profile for: " + user.getUsername());
             return viewProfileCommon(user, model, referringPageId);
         }catch(Exception e){
-            addAttributesToModel(model, user, referringPageId);
-            String view = ViewNames.USER_NOT_FOUND;
-            addNavItemsToModel(view, model, referringPageId, user, null);
-            return view;
+            return profileNotFoundErrorHelper(model, referringPageId, response, user, e);
         }
 	}
 	  /**
@@ -86,19 +85,34 @@ public class ProfileController {
 		 * @return the view name of the user profile page
 		 */
 	@RequestMapping(value = {"/id/{userid:.*}"}, method = RequestMethod.GET)
-	public String viewProfile(@PathVariable String userid, ModelMap model, @RequestParam(required = false) String referringPageId) {
+	public String viewProfile(@PathVariable String userid, ModelMap model, @RequestParam(required = false) String referringPageId, HttpServletResponse response) {
         User user = null;
         try{
             user = userService.getUserById(userid);
             logger.debug("Viewing person profile for: " + user.getUsername());
             return viewProfileCommon(user, model, referringPageId);
         }catch (Exception e){
-            addAttributesToModel(model, user, referringPageId);
-            String view = ViewNames.USER_NOT_FOUND;
-            addNavItemsToModel(view, model, referringPageId, user, null);
-            return view;
+            return profileNotFoundErrorHelper(model, referringPageId, response, user, e);
         }
 	}
+
+    /**
+     * Helper method to handle error when a person's profile is not found
+     * @param model Model map of values for view
+     * @param referringPageId String
+     * @param response HttpServletResponse object
+     * @param user User of page
+     * @param e Exception that was caught
+     * @return String of the viewname to render
+     */
+    private String profileNotFoundErrorHelper(ModelMap model, String referringPageId, HttpServletResponse response, User user, Exception e) {
+        logger.error("Caught an exception: " + e.getMessage());
+        addAttributesToModel(model, user, referringPageId);
+        response.setStatus(HttpStatus.NOT_FOUND.value());
+        String view = ViewNames.USER_NOT_FOUND;
+        addNavItemsToModel(view, model, referringPageId, user, null);
+        return view;
+    }
 
     private String viewProfileCommon(User user, ModelMap model, String referringPageId){
         Page personProfilePage = pageService.getPersonProfilePage(user.getId());

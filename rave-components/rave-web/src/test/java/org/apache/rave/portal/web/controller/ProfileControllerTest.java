@@ -35,6 +35,8 @@ import org.apache.rave.portal.web.util.ViewNames;
 import org.hamcrest.CoreMatchers;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.http.HttpStatus;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.ui.ModelMap;
 
@@ -55,7 +57,7 @@ public class ProfileControllerTest {
 
 	private UserService userService;
 	private PageService pageService;
-    private WidgetService widgetService;
+    private MockHttpServletResponse response;
 
     private Page defaultPage, otherPage;
     private List<Page> allProfilePages;
@@ -71,6 +73,7 @@ public class ProfileControllerTest {
 	public void setup() {
 		userService = createMock(UserService.class);
 		pageService = createMock(PageService.class);
+        response = new MockHttpServletResponse();
 		profileController = new ProfileController(userService, pageService);
 
         validPageLayout = new PageLayoutImpl();
@@ -111,7 +114,7 @@ public class ProfileControllerTest {
 
 		replay(userService, pageService);
 
-		String view = profileController.viewProfileByUsername(username, model, null);
+		String view = profileController.viewProfileByUsername(username, model, null, response);
 
 		//assert that the model is not null
 		assertThat(model, CoreMatchers.notNullValue());
@@ -152,7 +155,7 @@ public class ProfileControllerTest {
 
 		replay(userService, pageService);
 
-		String view = profileController.viewProfile(USER_ID, model, null);
+		String view = profileController.viewProfile(USER_ID, model, null, response);
 
 		//assert that the model is not null
 		assertThat(model, CoreMatchers.notNullValue());
@@ -187,8 +190,32 @@ public class ProfileControllerTest {
 
         replay(userService, pageService);
 
-        String view = profileController.viewProfileByUsername(username, model, null);
+        String view = profileController.viewProfileByUsername(username, model, null, response);
         assertThat(view, is(ViewNames.USER_NOT_FOUND));
+        assertThat(response.getStatus(), is(HttpStatus.NOT_FOUND.value()));
+
+        verify(userService, pageService);
+    }
+
+    @Test
+    public void viewProfile_invalidUser() {
+        //creating a mock user
+        final User user = null;
+        final ModelMap model = new ModelMap();
+        final int modelSize = 4;
+        final String username="Canonical";
+        Page personProfile = new PageImpl();
+        PageLayout pageLayout = new PageLayoutImpl();
+        pageLayout.setCode("person_profile");
+        personProfile.setPageLayout(pageLayout);
+
+        expect(userService.getUserById(username)).andThrow(new UsernameNotFoundException("Username does not exist"));
+
+        replay(userService, pageService);
+
+        String view = profileController.viewProfile(username, model, null, response);
+        assertThat(view, is(ViewNames.USER_NOT_FOUND));
+        assertThat(response.getStatus(), is(HttpStatus.NOT_FOUND.value()));
 
         verify(userService, pageService);
     }
