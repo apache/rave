@@ -91,6 +91,19 @@ public class MongoDbApplicationDataRepositoryTest {
     }
 
     @Test
+    public void save_Id_Set(){
+         ApplicationData item = new ApplicationDataImpl();
+        item.setId((long)123);
+
+        template.save(item, CollectionNames.APP_DATA_COLLECTION);
+        expectLastCall();
+        replay(template);
+
+        ApplicationData saved = applicationDataRepository.save(item);
+        assertThat(saved, is(sameInstance(item)));
+    }
+
+    @Test
     public void delete_Valid(){
         ApplicationData item = new ApplicationDataImpl();
 

@@ -54,16 +54,24 @@ public class MongDbConverterTest {
         expectLastCall();
         replay(mock1);
         converter.setConverters(converterList);
-        long exceptionSource = 432;
-        Class<Long> exceptionClass = Long.class;
 
         converter.hydrate(source, clazz);
         verify(mock1);
+
+
+    }
+
+    @Test
+    public void hydrate_Null(){
+        converter.setConverters(converterList);
+        long exceptionSource = 432;
+        Class<Long> exceptionClass = Long.class;
 
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("No ModelConverter found for type "+exceptionClass);
 
         converter.hydrate(exceptionSource, exceptionClass);
+
     }
 
     @Test
@@ -71,18 +79,25 @@ public class MongDbConverterTest {
         String source = "blah";
         Class<String> clazz = String.class;
         long returned = 123;
-        long exceptionSource = 432;
-        Class<Long> exceptionClass = Long.class;
+
         expect(mock1.convert(source)).andReturn(returned);
         replay(mock1);
         converter.setConverters(converterList);
 
         assertThat(converter.<String, Long>convert(source, clazz),is(sameInstance(returned)));
+    }
+
+    @Test
+    public void convert_Exception(){
+        long exceptionSource = 432;
+        Class<Long> exceptionClass = Long.class;
+
+        converter.setConverters(converterList);
 
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("No ModelConverter found for type "+exceptionClass);
 
-        converter.hydrate(exceptionSource, exceptionClass);
+        converter.convert(exceptionSource, exceptionClass);
     }
 
     @Test

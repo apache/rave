@@ -72,6 +72,22 @@ public class MongoDbWidgetTagRepositoryTest {
     }
 
     @Test
+    public void getByWidgetIdAndTag_Diff_Keyword(){
+        long widgetId = 3874;
+        String keyword = "booger";
+        Widget widget = new WidgetImpl();
+        WidgetTag widgetTag = new WidgetTagImpl();
+        Tag tag = new TagImpl();
+        tag.setKeyword("blah");
+        widgetTag.setTag(tag);
+        widget.setTags(Arrays.asList(widgetTag));
+        expect(template.get(widgetId)).andReturn(widget);
+        replay(template);
+
+        assertNull(tagRepository.getByWidgetIdAndTag(widgetId, keyword));
+    }
+
+    @Test
     public void getType_Valid() {
         assertThat((Class<WidgetTag>) tagRepository.getType(), is(equalTo(WidgetTag.class)));
     }

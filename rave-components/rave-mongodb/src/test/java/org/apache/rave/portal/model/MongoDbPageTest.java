@@ -37,6 +37,14 @@ public class MongoDbPageTest {
     }
 
     @Test
+    public void getOwner_Owner_Set(){
+        User user = new UserImpl();
+        page.setOwner(user);
+
+        assertThat(page.getOwner(), is(sameInstance(user)));
+    }
+
+    @Test
     public void equals_Same(){
         assertTrue(page.equals(page));
     }
@@ -62,6 +70,14 @@ public class MongoDbPageTest {
         page.setId((long)123);
         MongoDbPage r = new MongoDbPage();
         r.setId((long) 123);
+        assertTrue(page.equals(r));
+    }
+
+    @Test
+    public void equals_Valid_Null_Id(){
+        page.setId(null);
+        MongoDbPage r = new MongoDbPage();
+        r.setId(null);
         assertTrue(page.equals(r));
     }
 

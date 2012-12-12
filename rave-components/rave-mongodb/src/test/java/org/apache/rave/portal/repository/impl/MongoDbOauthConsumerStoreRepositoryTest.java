@@ -74,6 +74,19 @@ public class MongoDbOauthConsumerStoreRepositoryTest {
     }
 
     @Test
+    public void save_Null_Id(){
+        OAuthConsumerStore item = new OAuthConsumerStoreImpl();
+        item.setId((long)1232);
+        template.save(item, CollectionNames.OAUTH_CONSUMER_COLLECTION);
+        expectLastCall();
+        replay(template);
+
+        OAuthConsumerStore returned = oauthConsumerStoreRepository.save(item);
+
+        assertThat(item, is(sameInstance(returned)));
+    }
+
+    @Test
     public void delete_Valid() {
         OAuthConsumerStore item = new OAuthConsumerStoreImpl();
         item.setId((long)123);

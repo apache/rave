@@ -1,5 +1,6 @@
 package org.apache.rave.portal.model.conversion.impl;
 
+import com.google.common.collect.Lists;
 import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.model.impl.*;
 import org.apache.rave.portal.repository.PageLayoutRepository;
@@ -37,6 +38,11 @@ public class MongoDbUserConverterTest {
     }
 
     @Test
+    public void getType_Valid(){
+        assertThat(userConverter.getSourceType(), is(equalTo(User.class)));
+    }
+
+    @Test
     public void hydrate_Valid() {
         MongoDbUser user = new MongoDbUser();
         userConverter.hydrate(user);
@@ -47,6 +53,18 @@ public class MongoDbUserConverterTest {
 
         userConverter.hydrate(null);
         assertThat(true, is(true));
+    }
+
+    @Test
+    public void hydrate_Null(){
+        MongoDbUser user = new MongoDbUser();
+        user.setFriends(Lists.<MongoDbPersonAssociation>newArrayList());
+        user.setAuthorityCodes(Lists.<String>newArrayList());
+        userConverter.hydrate(user);
+
+        assertNotNull(user.getFriends());
+        assertNotNull(user.getAuthorityCodes());
+        assertThat(user.getPageLayoutRepository(), is(sameInstance(userConverter.getPageLayoutRepository())));
     }
 
     @Test
@@ -152,5 +170,14 @@ public class MongoDbUserConverterTest {
         assertThat(converted.getDefaultPageLayoutCode(), is(pageLayout.getCode()));
         assertNull(source.getDefaultPageLayout());
 
+    }
+
+    @Test
+    public void convert_Null_DefaultPageLayoutCode(){
+        User source = new UserImpl();
+
+        User converted = userConverter.convert(source);
+
+        assertNull(converted.getDefaultPageLayoutCode());
     }
 }

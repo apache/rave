@@ -13,6 +13,7 @@ import org.springframework.data.mongodb.core.MongoOperations;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.apache.rave.portal.repository.util.CollectionNames.PREFERENCE_COLLECTION;
 import static org.easymock.EasyMock.*;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertNotNull;
@@ -90,6 +91,23 @@ public class MongoDbPortalPreferenceRepositoryTest {
 
         PortalPreference result = preferenceRepository.save(item);
         assertNotNull(((MongoDbPortalPreference) converted).getId());
+        assertThat(result, is(sameInstance(converted)));
+    }
+
+    @Test
+    public void save_Null(){
+        PortalPreference item = new PortalPreferenceImpl();
+        item.setKey("123");
+        PortalPreference converted = new MongoDbPortalPreference();
+        expect(template.findOne(query(where("key").is("123")), preferenceRepository.CLASS, CollectionNames.PREFERENCE_COLLECTION)).andReturn(null);
+        expect(converter.convert(item, PortalPreference.class)).andReturn(converted);
+        template.save(converted, PREFERENCE_COLLECTION);
+        expectLastCall();
+        converter.hydrate(converted, PortalPreference.class);
+        expectLastCall();
+        replay(template, converter);
+
+        PortalPreference result = preferenceRepository.save(item);
         assertThat(result, is(sameInstance(converted)));
     }
 

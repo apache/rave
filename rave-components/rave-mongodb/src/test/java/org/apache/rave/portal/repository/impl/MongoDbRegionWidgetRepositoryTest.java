@@ -4,6 +4,7 @@ import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.model.impl.PageImpl;
 import org.apache.rave.portal.model.impl.RegionImpl;
 import org.apache.rave.portal.model.impl.RegionWidgetImpl;
+import org.apache.rave.portal.model.impl.WidgetImpl;
 import org.apache.rave.portal.repository.MongoPageOperations;
 import org.junit.Before;
 import org.junit.Rule;
@@ -42,6 +43,25 @@ public class MongoDbRegionWidgetRepositoryTest {
     @Test
     public void getType_Valid() {
         assertThat((Class<MongoDbRegionWidget>) widgetRepository.getType(), is(equalTo(MongoDbRegionWidget.class)));
+    }
+
+    @Test
+    public void get_DifferentId() {
+        long id = 234;
+        Page page = new PageImpl();
+        Region region = new RegionImpl();
+        RegionWidget widget = new RegionWidgetImpl();
+        widget.setId((long) 123);
+        page.setRegions(Arrays.asList(region));
+        region.setPage(page);
+        region.setRegionWidgets(Arrays.asList(widget));
+        widget.setRegion(region);
+
+        expect(template.findOne(new Query(where("regions").elemMatch(where("regionWidgets").elemMatch(where("_id").is(id)))))).andReturn(page);
+        replay(template);
+        RegionWidget result = widgetRepository.get(id);
+        assertNull(result);
+
     }
 
     @Test
@@ -99,7 +119,7 @@ public class MongoDbRegionWidgetRepositoryTest {
     }
 
     @Test
-    public void save_Id_Valid_Page_Null(){
+    public void save_Id_Valid_Page_Null() {
         RegionWidget item = new RegionWidgetImpl();
         long id = 123;
         item.setId(id);
@@ -142,8 +162,57 @@ public class MongoDbRegionWidgetRepositoryTest {
     }
 
     @Test
+    public void save_Id_Null_Page_Valid_Regions_Valid_Diff_Id() {
+        RegionWidget item = new RegionWidgetImpl();
+        Region region = new RegionImpl();
+        item.setRegion(region);
+        Page item_Page = new PageImpl();
+        region.setPage(item_Page);
+        item_Page.setId((long) 3333);
+        region.setId((long)2222);
+
+        Page page = new PageImpl();
+        ArrayList<Region> regions = new ArrayList<Region>();
+        regions.add(new RegionImpl());
+        page.setRegions(regions);
+        expect(template.get(item.getRegion().getPage().getId())).andReturn(page);
+        replay(template);
+
+        thrown.expect(IllegalStateException.class);
+        thrown.expectMessage("Unable to find parent for page");
+
+        widgetRepository.save(item);
+    }
+
+    @Test
     public void save_Id_Null_Page_Null_Region_Null() {
         RegionWidget widget = new RegionWidgetImpl();
+
+        thrown.expect(IllegalStateException.class);
+        thrown.expectMessage("Unable to find page for region");
+
+        widgetRepository.save(widget);
+    }
+
+    @Test
+    public void save_Id_Null_Page_Null_Region_Valid_Page_Null() {
+        RegionWidget widget = new RegionWidgetImpl();
+        Region region = new RegionImpl();
+        widget.setRegion(region);
+
+        thrown.expect(IllegalStateException.class);
+        thrown.expectMessage("Unable to find page for region");
+
+        widgetRepository.save(widget);
+    }
+
+    @Test
+    public void save_Id_Null_Page_Null_Region_Valid_Page_Valid_Id_Null() {
+        RegionWidget widget = new RegionWidgetImpl();
+        Region region = new RegionImpl();
+        widget.setRegion(region);
+        Page page = new PageImpl();
+        region.setPage(page);
 
         thrown.expect(IllegalStateException.class);
         thrown.expectMessage("Unable to find page for region");
@@ -195,7 +264,7 @@ public class MongoDbRegionWidgetRepositoryTest {
     }
 
     @Test
-    public void delete_Null(){
+    public void delete_Null() {
         RegionWidget item = new RegionWidgetImpl();
         long id = 123;
         item.setId(id);
@@ -209,6 +278,29 @@ public class MongoDbRegionWidgetRepositoryTest {
         thrown.expectMessage("Widget does not exist in parent page regions");
 
         widgetRepository.delete(item);
+    }
+
+    @Test
+    public void delete_DifferentId() {
+        RegionWidget widget = new RegionWidgetImpl();
+        Region region = new RegionImpl();
+        Page page = new PageImpl();
+        page.setRegions(Arrays.asList(region));
+        region.setRegionWidgets(Arrays.asList(widget));
+        widget.setId((long) 345345);
+
+        RegionWidget item = new RegionWidgetImpl();
+        long id = 4344;
+        item.setId(id);
+
+        expect(template.findOne(new Query(where("regions").elemMatch(where("regionWidgets").elemMatch(where("_id").is(id)))))).andReturn(page);
+        replay(template);
+
+        thrown.expect(IllegalStateException.class);
+        thrown.expectMessage("Widget does not exist in parent page regions");
+
+        widgetRepository.delete(item);
+
     }
 
 }

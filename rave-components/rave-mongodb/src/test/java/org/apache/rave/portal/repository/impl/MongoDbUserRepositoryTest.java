@@ -124,6 +124,27 @@ public class MongoDbUserRepositoryTest {
     }
 
     @Test
+    public void getAllByAddedWidget_ContainsOwner(){
+        long widgetId = 123;
+        List<Page> pages = new ArrayList<Page>();
+        Page page = new PageImpl();
+        Page page_2 = new PageImpl();
+        User owner = new UserImpl();
+        page.setOwner(owner);
+        page_2.setOwner(owner);
+        pages.add(page);
+        pages.add(page_2);
+        expect(pageTemplate.find(query(where("regions").elemMatch(where("regionWidgets").elemMatch(where("widgetId").is(widgetId)))))).andReturn(pages);
+        replay(pageTemplate);
+
+        List<User> users = userRepository.getAllByAddedWidget(widgetId);
+
+        assertTrue(users.size() == 1);
+        assertTrue(users.contains(owner));
+
+    }
+
+    @Test
     public void getByForgotPasswordHash_Valid(){
         String hash = "hashbrown";
         User found = new UserImpl();

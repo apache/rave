@@ -3,6 +3,7 @@ package org.apache.rave.portal.repository.impl;
 import org.apache.rave.portal.model.Category;
 import org.apache.rave.portal.model.MongoDbCategory;
 import org.apache.rave.portal.model.conversion.HydratingConverterFactory;
+import org.apache.rave.portal.model.impl.CategoryImpl;
 import org.apache.rave.portal.repository.util.CollectionNames;
 import org.apache.rave.util.CollectionUtils;
 import org.junit.Before;
@@ -11,6 +12,7 @@ import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.easymock.EasyMock.*;
@@ -76,6 +78,20 @@ public class MongoDbCategoryRepositoryTest {
         assertNull(category.getLastModifiedUserId());
         assertThat(count, is(equalTo(1)));
 
+    }
+
+    @Test
+    public void removeFromCreatedOrModifiedFields_NotUpdated(){
+        long userId = 54321;
+        MongoDbCategory category = new MongoDbCategory();
+        List<MongoDbCategory> categories = Arrays.asList(category);
+        category.setCreatedUserId((long)234);
+        category.setLastModifiedUserId((long)234);
+        expect(template.find(query(Criteria.where("lastModifiedUserId").is(userId).orOperator(Criteria.where("createdUserId").is(userId))), categoryRepository.CLASS, CollectionNames.CATEGORY_COLLECTION)).andReturn(categories);
+        replay(template);
+
+        int count = categoryRepository.removeFromCreatedOrModifiedFields(userId);
+        assertThat(count, is(equalTo(0)));
     }
 
     @Test

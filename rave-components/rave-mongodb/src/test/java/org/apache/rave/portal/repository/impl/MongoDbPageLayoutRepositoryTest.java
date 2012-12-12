@@ -103,6 +103,27 @@ public class MongoDbPageLayoutRepositoryTest {
     }
 
     @Test
+    public void save_Null(){
+        PageLayout item1 = new MongoDbPageLayout();
+        item1.setCode("blah1");
+        item1.setNumberOfRegions((long)123);
+        item1.setRenderSequence((long)432);
+        item1.setUserSelectable(true);
+        MongoDbPageLayout toSave = new MongoDbPageLayout();
+        expect(template.findOne(new Query(where("code").is(item1.getCode())), pageLayoutRepository.CLASS, CollectionNames.PAGE_LAYOUT_COLLECTION)).andReturn(toSave);
+        template.save(isA(MongoDbPageLayout.class), eq(CollectionNames.PAGE_LAYOUT_COLLECTION));
+        expectLastCall();
+        replay(template);
+
+        PageLayout saved = pageLayoutRepository.save(item1);
+
+        assertThat(saved.getCode(), is(sameInstance(item1.getCode())));
+        assertThat(saved.getNumberOfRegions(), is(sameInstance(item1.getNumberOfRegions())));
+        assertThat(saved.getRenderSequence(), is(sameInstance(item1.getRenderSequence())));
+        assertThat(saved.isUserSelectable(), is(sameInstance(item1.isUserSelectable())));
+    }
+
+    @Test
     public void delete_Valid(){
         PageLayout item = new MongoDbPageLayout();
         item.setCode("123");

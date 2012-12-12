@@ -62,6 +62,19 @@ public class MongoDbWidgetRatingRepositoryTest {
     }
 
     @Test
+    public void getByWidgetIdAndUserId_Diff_Id(){
+        long widgetId = 222;
+        long userId = 334;
+        Widget widget = new WidgetImpl();
+        WidgetRating widgetRating = new WidgetRatingImpl();
+        widgetRating.setUserId((long)444);
+        widget.setRatings(Arrays.asList(widgetRating));
+        expect(template.get(widgetId)).andReturn(widget);
+        replay(template);
+        assertNull(ratingRepository.getByWidgetIdAndUserId(widgetId,userId));
+    }
+
+    @Test
     public void deleteAll_Valid(){
         long userId = 233;
         List<Widget> widgets = new ArrayList<Widget>();
@@ -79,6 +92,21 @@ public class MongoDbWidgetRatingRepositoryTest {
         int count = ratingRepository.deleteAll(userId);
         assertFalse(ratings.contains(rating));
         assertThat(count, is(1));
+    }
+
+    @Test
+    public void deleteAll_Diff_Id(){
+        long userId = 111;
+        Widget widget = new WidgetImpl();
+        List<Widget> widgets = Arrays.asList(widget);
+        WidgetRating rating = new WidgetRatingImpl();
+        rating.setUserId((long)222);
+        widget.setRatings(Arrays.asList(rating));
+        expect(template.find(query(where("ratings").elemMatch(where("userId").is(userId))))).andReturn(widgets);
+        replay(template);
+
+        int count = ratingRepository.deleteAll(userId);
+        assertThat(count, is(0));
     }
 
     @Test
@@ -106,6 +134,19 @@ public class MongoDbWidgetRatingRepositoryTest {
         expect(template.findOne(query(where("ratings").elemMatch(where("_id").is(id))))).andReturn(widget);
         replay(template);
         widget.setRatings(new ArrayList<WidgetRating>());
+
+        assertNull(ratingRepository.get(id));
+    }
+
+    @Test
+    public void get_Diff_Id(){
+          Widget widget = new WidgetImpl();
+        long id = 555;
+        WidgetRating rating = new WidgetRatingImpl();
+        rating.setId((long)444);
+        widget.setRatings(Arrays.asList(rating));
+        expect(template.findOne(query(where("ratings").elemMatch(where("_id").is(id))))).andReturn(widget);
+        replay(template);
 
         assertNull(ratingRepository.get(id));
     }
@@ -174,6 +215,23 @@ public class MongoDbWidgetRatingRepositoryTest {
     }
 
     @Test
+    public void save_Diff_Id(){
+          WidgetRating item = new WidgetRatingImpl();
+        item.setWidgetId((long)3333);
+        item.setId((long)123);
+        Widget widget = new WidgetImpl();
+        WidgetRating exist = new WidgetRatingImpl();
+        exist.setId((long)4444);
+        widget.setRatings(Arrays.asList(exist));
+
+        expect(template.get(item.getWidgetId())).andReturn(widget);
+        expect(template.save(widget)).andReturn(widget);
+        replay(template);
+
+        assertNull(ratingRepository.save(item));
+    }
+
+    @Test
     public void delete_Valid(){
         WidgetRating item = new WidgetRatingImpl();
         long widgetId = 387383;
@@ -190,6 +248,23 @@ public class MongoDbWidgetRatingRepositoryTest {
 
         ratingRepository.delete(item);
         assertFalse(ratings.contains(item));
+        verify(template);
+    }
+
+    @Test
+    public void delete_Id_Not_Equals(){
+         WidgetRating item = new WidgetRatingImpl();
+        item.setWidgetId((long)32323);
+        item.setId((long)333333);
+        Widget widget = new WidgetImpl();
+        WidgetRating exist = new WidgetRatingImpl();
+        exist.setId((long) 323);
+        widget.setRatings(Arrays.asList(exist));
+        expect(template.get(item.getWidgetId())).andReturn(widget);
+        expect(template.save(widget)).andReturn(null);
+        replay(template);
+
+        ratingRepository.delete(item);
         verify(template);
     }
 }

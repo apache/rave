@@ -58,18 +58,14 @@ public class MongoDbRegionWidgetRepository implements RegionWidgetRepository {
     @Override
     public void delete(RegionWidget item) {
         Page page = getPageByRegionWidgetId(item.getId());
-        if(replaceOrRemoveWidget(page, item, false) == -1){
-            throw new IllegalStateException("Widget does not exist in parent page regions");
-        }
+        replaceOrRemoveWidget(page, item, false);
         template.save(page);
     }
 
     private RegionWidget updateRegionWidget(RegionWidget item) {
         RegionWidget savedWidget;
         Page page = getPageByRegionWidgetId(item.getId());
-        if(replaceOrRemoveWidget(page, item, true) == -1){
-            throw new IllegalStateException("Widget does not exist in parent page regions");
-        }
+        replaceOrRemoveWidget(page, item, true);
         Page saved = template.save(page);
         savedWidget = getRegionWidgetById(saved, item.getId());
         return savedWidget;
@@ -108,7 +104,7 @@ public class MongoDbRegionWidgetRepository implements RegionWidgetRepository {
                 }
             }
         }
-        return -1;
+        throw new IllegalStateException("Widget does not exist in parent page regions");
     }
 
     private Region getRegionById(Long id, List<Region> regions) {

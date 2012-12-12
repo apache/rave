@@ -1,21 +1,19 @@
 package org.apache.rave.portal.model.conversion.impl;
 
 import org.apache.rave.portal.model.*;
-import org.apache.rave.portal.model.impl.PageTemplateRegionImpl;
-import org.apache.rave.portal.model.impl.WidgetImpl;
+import org.apache.rave.portal.model.impl.*;
 import org.apache.rave.portal.repository.PageLayoutRepository;
 import org.apache.rave.portal.repository.WidgetRepository;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.easymock.EasyMock.*;
 import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -122,19 +120,89 @@ public class MongoDbPageTemplateConverterTest {
     }
 
     @Test
-    public void convert_Valid(){ /*
+    public void convert_Not_InstanceOf(){
         PageTemplate pageTemplate = new PageTemplateImpl();
-        MongoDbPageTemplate mongoDbPageTemplate1 = pageTemplateConverter.convert(pageTemplate);
+        pageTemplate.setPageLayout(new PageLayoutImpl());
+        MongoDbPageTemplate subPage = new MongoDbPageTemplate();
+        subPage.setPageLayout(new PageLayoutImpl());
+        ArrayList<PageTemplate> subPages = new ArrayList<PageTemplate>();
+        subPages.add(subPage);
+        pageTemplate.setSubPageTemplates(subPages);
+        PageTemplateRegion region = createNewPageTemplateRegion();
+        ArrayList<PageTemplateRegion> regions = new ArrayList<PageTemplateRegion>();
+        regions.add(region);
+        pageTemplate.setPageTemplateRegions(regions);
 
-        assertNotNull(mongoDbPageTemplate1.getId());
-        assertThat(mongoDbPageTemplate1.getName(), is(pageTemplate.getName()));
-        assertThat(mongoDbPageTemplate1.getDescription(), is(pageTemplate.getDescription()));
-        assertThat(mongoDbPageTemplate1.getPageType(), is(pageTemplate.getPageType()));
-        assertNull(mongoDbPageTemplate1.getParentPageTemplate());
-        assertThat(mongoDbPageTemplate1.getPageLayoutCode(), is(pageTemplate.getPageLayout().getCode()));
-        assertNull(mongoDbPageTemplate1.getPageLayout());
-        assertThat(mongoDbPageTemplate1.getRenderSequence(), is(pageTemplate.getRenderSequence()));
-        assertThat(mongoDbPageTemplate1.isDefaultTemplate(), is(pageTemplate.isDefaultTemplate()));*/
+        MongoDbPageTemplate converted = pageTemplateConverter.convert(pageTemplate);
+
+        assertNotNull(converted.getId());
+        assertNotNull(converted.getPageTemplateRegions());
+        assertNotNull(converted.getSubPageTemplates());
+    }
+
+    private PageTemplateRegion createNewPageTemplateRegion() {
+        return new PageTemplateRegion() {
+                @Override
+                public Long getId() {
+                    return null;  //To change body of implemented methods use File | Settings | File Templates.
+                }
+
+                @Override
+                public long getRenderSequence() {
+                    return 0;  //To change body of implemented methods use File | Settings | File Templates.
+                }
+
+                @Override
+                public void setRenderSequence(long renderSequence) {
+                    //To change body of implemented methods use File | Settings | File Templates.
+                }
+
+                @Override
+                public PageTemplate getPageTemplate() {
+                    return null;  //To change body of implemented methods use File | Settings | File Templates.
+                }
+
+                @Override
+                public void setPageTemplate(PageTemplate pageTemplate) {
+                    //To change body of implemented methods use File | Settings | File Templates.
+                }
+
+                @Override
+                public List<PageTemplateWidget> getPageTemplateWidgets() {
+                    return null;  //To change body of implemented methods use File | Settings | File Templates.
+                }
+
+                @Override
+                public void setPageTemplateWidgets(List<PageTemplateWidget> pageTemplateWidgets) {
+                    //To change body of implemented methods use File | Settings | File Templates.
+                }
+
+                @Override
+                public boolean isLocked() {
+                    return false;  //To change body of implemented methods use File | Settings | File Templates.
+                }
+
+                @Override
+                public void setLocked(boolean locked) {
+                    //To change body of implemented methods use File | Settings | File Templates.
+                }
+            };
+    }
+
+    @Test
+    public void convert_PageTemplateWidgets_Null(){
+        PageTemplate pageTemplate = new PageTemplateImpl();
+        pageTemplate.setPageLayout(new PageLayoutImpl());
+        PageTemplateRegion pageTemplateRegion = new PageTemplateRegionImpl();
+        pageTemplate.setPageTemplateRegions(Arrays.asList(pageTemplateRegion));
+
+        MongoDbPageTemplate converted = pageTemplateConverter.convert(pageTemplate);
+
+        assertNotNull(converted.getId());
+    }
+
+    @Test
+    public void convert_Valid(){
 
         PageTemplate mongoPageTemplate1 = new MongoDbPageTemplate();
         PageTemplate mongoPageTemplate2 = new MongoDbPageTemplate();
@@ -259,10 +327,20 @@ public class MongoDbPageTemplateConverterTest {
                 assertThat(widgetConverted.isLocked(), is(widgetSource.isLocked()));
             }
         }
+    }
 
+    @Test
+    public void convert_Valid_Null_WidgetID(){
+        PageTemplate source = new PageTemplateImpl();
+        PageTemplateRegion pageTemplateRegion = new PageTemplateRegionImpl();
+        source.setPageTemplateRegions(Arrays.asList(pageTemplateRegion));
+        PageTemplateWidget pageTemplateWidget = new PageTemplateWidgetImpl();
+        pageTemplateRegion.setPageTemplateWidgets(Arrays.asList(pageTemplateWidget));
+        source.setPageLayout(new PageLayoutImpl());
+        pageTemplateWidget.setWidget(new WidgetImpl());
 
-
-
+        MongoDbPageTemplate converted = pageTemplateConverter.convert(source);
+        assertTrue(converted instanceof MongoDbPageTemplate);
     }
 
 }
