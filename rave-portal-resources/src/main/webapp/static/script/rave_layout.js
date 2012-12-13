@@ -628,12 +628,14 @@ rave.layout = rave.layout || (function() {
          */
         function hideMenu(widgetId) {
             $("#widget-" + widgetId + "-menu").hide();
+            $(".iframe-overlay").remove();
         }
         /**
          * Hides all widget menus
          */
         function hideAllMenus() {
             $(".widget-menu").hide();
+            $(".iframe-overlay").remove();
         }
         /**
          * Shows the widget menu for a specific widget
@@ -790,6 +792,31 @@ rave.layout = rave.layout || (function() {
             enableEditPrefsMenuItem: enableEditPrefsMenuItem
         }
     })();
+	
+    function addIframeOverlays(event){
+    	//e.preventDefault();
+    	
+    	var i = 0;
+		$(".widget").each(function(){
+			var W = $(this).outerWidth(),
+				H = $(this).outerHeight(),
+				X = $(this).position().left,
+				Y = $(this).position().top;
+				
+			$(this).after('<div class="iframe-overlay" onclick="rave.layout.hideWidgetMenu()" />');
+			$(this).next('.iframe-overlay').css({
+		    	width: W,
+		    	height: H,
+		    	position: "absolute",
+		    	top: Y,
+		    	left: X      
+		    });
+
+		});
+		
+		 // Remove any overlays onclick of all the things!!!        
+        $("*:not(.dropdown-toggle)").on("click", function(){ $(".iframe-overlay").remove(); });
+	}
 
     /**
      * Submits the RPC call to move the widget to a new page
@@ -1045,6 +1072,7 @@ rave.layout = rave.layout || (function() {
         closePageDialogTabbed: closePageDialogTabbed,
         moveWidgetToPage: moveWidgetToPage,
         searchHandler : searchHandler,
-        isWidgetOnHiddenTab: isWidgetOnHiddenTab
+        isWidgetOnHiddenTab: isWidgetOnHiddenTab,
+        addIframeOverlays: addIframeOverlays
     };
 })();
