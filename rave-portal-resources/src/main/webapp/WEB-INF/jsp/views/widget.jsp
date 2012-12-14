@@ -57,7 +57,7 @@
             </div>
         </div>
         <div class="span7 detail-widget-main">
-           <div>
+           <div class="row-fluid">
 			   <h2>
 					<c:set var="widgetHasTitleUrl" value="${not empty widget.titleUrl}"/>
 					<c:if test="${widgetHasTitleUrl}"><a href="<c:out value="${widget.titleUrl}"/>" rel="external">
@@ -90,7 +90,7 @@
                     <p class="storeWidgetDesc"><c:out value="${widget.description}"/></p>
                 </c:if>
            </div>
-           <div class="clearfix">
+           <div class="row-fluid">
                 <div class="widgetRating" id="widgetRatings">
                     <h3><fmt:message key="page.widget.rate"/></h3>
                     <form class="hidden">
@@ -132,20 +132,19 @@
                     </div>
                 </div>
            </div>
-           <div>
+           <div class="row-fluid">
                 <div class="detail-widget-users">
-                    <p><c:set var="widgetUserCountGreaterThanZero"
+                    <c:set var="widgetUserCountGreaterThanZero"
                            value="${widgetStatistics != null && widgetStatistics.totalUserCount > 0}"/>
                     <c:if test="${widgetUserCountGreaterThanZero}"><a href="javascript:void(0);"
                                                                       onclick="rave.displayUsersOfWidget(${widget.id});"></c:if>
                     <fmt:formatNumber groupingUsed="true" value="${widgetStatistics.totalUserCount}"/>&nbsp;<fmt:message
                             key="page.widget.usercount"/>
                     <c:if test="${widgetUserCountGreaterThanZero}"></a></c:if>
-                    </p>
                 </div>
            </div>
 
-            <div>
+           <div class="row-fluid">
                 <%--//Tag section--%>
                 <div class="widgetTags">
                     <c:if test="${not empty widget.tags}">
@@ -172,21 +171,22 @@
                     </div>
                     <a href="#tagInput" data-toggle="basic-slide" data-toggle-text="Hide tag form">Add tags <i class="icon-arrow-right"></i></a>
                 </div>
-                <c:if test="${not empty widget.categories}">
+           </div>
+           <c:if test="${not empty widget.categories}">
+	           <div class="row-fluid">
                     <div class="widgetCategories">
-                        <fmt:message key="widget.categories"/>
-                        <table id="categoriesRow">
-                            <tr>
+                        <h3><fmt:message key="widget.categories"/></h3>
+                        <div id="categoriesRow">
+                            <div>
                                 <c:forEach var="category" items="${widget.categories}">
-                                    <td class="storeWidgetDesc"><c:out value="${category.text}"/></td>
+                                    <span class="storeWidgetDesc"><c:out value="${category.text}"/></span>
                                 </c:forEach>
-                            </tr>
-                        </table>
+                            </div>
+                        </div>
                     </div>
-                </c:if>
-            </div>
-
-            <div>
+                </div>
+            </c:if>
+           <div class="row-fluid">
                 <div class="widgetComments" id="widgetComments">
                     <h3><fmt:message key="page.widget.comments"/></h3>
                     <div class="new-comment form-inline well">

@@ -74,7 +74,6 @@
                             </c:forEach>
                         </ul>
                     </div>
-
                 </c:if>
                 <ul class="storeItems">
                         <%--@elvariable id="widget" type="org.apache.rave.portal.model.JpaWidget"--%>
@@ -127,13 +126,14 @@
                                 <div class="storeWidgetDesc"><c:out
                                         value="${fn:substring(widget.description, 0, 200)}..."/></div>
                             </c:if>
+                            
+                            <div class="clearfix">
                             <div class="widgetRating">
                                 <strong><fmt:message key="page.widget.rate"/></strong>
                                 <form class="hidden">
                                     <input type="hidden" id="rate-${widget.id}"
                                            value="${widgetsStatistics[widget.id]!=null?widgetsStatistics[widget.id].userRating:"-1"}">
                                 </form>
-
                                 <div class="ratingCounts">
                             		<span class="widgetLikeCount">
 		                                <c:set var="widgetLikes">
@@ -168,38 +168,34 @@
                                     <!-- Displaying the likes and dislikes rating along with total votes -->
                                 </div>
                             </div>
+                            </div>
+                            <div class="clearfix">
                             <c:if test="${not empty widget.tags}">
-                                <table class="widgetTags">
-                                    <tr>
-                                        <td>
-                                            <fmt:message key="page.widget.tags.title"/>
-                                        </td>
-                                        <c:forEach var="widgettag" items="${widget.tags}">
-                                            <c:forEach var="tag" items="${tags}">
-                                                <c:set var="tagMatched">
-                                                    ${tag.id==widgettag.tagId?true:false}
-                                                </c:set>
-                                                <c:if test="${tagMatched}">
-                                                    <td class="storeWidgetDesc"><c:out value="${tag.keyword}"/></td>
-                                                </c:if>
-                                            </c:forEach>
+                                <div class="widgetTags">
+                                    <strong><fmt:message key="page.widget.tags.title"/></strong><br/>
+                                    <c:forEach var="widgettag" items="${widget.tags}">
+                                        <c:forEach var="tag" items="${tags}">
+                                            <c:set var="tagMatched">
+                                                ${tag.id==widgettag.tagId?true:false}
+                                            </c:set>
+                                            <c:if test="${tagMatched}">
+                                                <span class="label"><c:out value="${tag.keyword}"/></span>
+                                            </c:if>
                                         </c:forEach>
-                                    </tr>
-                                </table>
+                                    </c:forEach>
+                                </div>
                             </c:if>
+                            </div>
                             <c:if test="${not empty widget.categories}">
-                                <table class="widgetCategories">
-                                    <tr>
-                                        <td>
-                                            <fmt:message key="widget.categories"/>
-                                        </td>
-                                        <c:forEach var="category" items="${widget.categories}">
-                                            <td class="storeWidgetDesc"><c:out value="${category.text}"/></td>
-                                        </c:forEach>
-                                    </tr>
-                                </table>
+                            <div class="clearfix">
+                                <div class="widgetCategories">
+                                    <strong><fmt:message key="widget.categories"/></strong><br/>
+                                    <c:forEach var="category" items="${widget.categories}">
+                                        <span class="storeWidgetDesc"><c:out value="${category.text}"/></span>
+                                    </c:forEach>
+                                </div>
+                            </div>
                             </c:if>
-
                             <span class="widgetUserCount">
                                 <c:set var="widgetUserCountGreaterThanZero"
                                        value="${widgetStatistics != null && widgetStatistics.totalUserCount > 0}"/>
