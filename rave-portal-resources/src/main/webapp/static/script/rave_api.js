@@ -260,6 +260,12 @@ rave.api = rave.api || (function() {
                             args.successCallback(result.result.id);
                         }
                         rave.showInfoMessage(widgetTitle + ' ' + rave.getClientMessage("widget.add_suffix"));
+                        
+                        // Update Add Widget button to reflect status
+                        var addWidgetButton = "#addWidget_" + args.widgetId;
+                        var addedText = '<i class="icon icon-ok icon-white"></i> ' + $(addWidgetButton).data('success');
+                        
+                        $(addWidgetButton).removeClass("btn-primary").addClass("btn-success").html(addedText);
                     }
                 }).error(handleError);
         }

@@ -43,7 +43,8 @@
                         <div id="widgetAdded_${widget.id}" class="detailWidgetAdd">
                             <button class="btn btn-primary btn-large storeItemButton"
                                     id="addWidget_${widget.id}"
-                                    onclick="rave.api.rpc.addWidgetToPage({widgetId: ${widget.id}, pageId: ${referringPageId}, redirectAfterAdd:true});">
+                                    onclick="rave.api.rpc.addWidgetToPage({widgetId: ${widget.id}, pageId: ${referringPageId}, redirectAfterAdd:true});"
+                                    data-success="<fmt:message key="page.widget.addedToPage"/>">
                                 <fmt:message key="page.widget.addToPage"/>
                             </button>
                         </div>
