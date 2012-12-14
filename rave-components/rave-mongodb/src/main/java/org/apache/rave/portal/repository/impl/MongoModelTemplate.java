@@ -115,4 +115,12 @@ public class MongoModelTemplate<T, E extends T> implements MongoModelOperations<
         converter.hydrate(page, type);
         return page;
     }
+
+    public void setMongoTemplate(MongoOperations mongoTemplate) {
+        this.mongoTemplate = mongoTemplate;
+    }
+
+    public void setConverter(HydratingConverterFactory converter) {
+        this.converter = converter;
+    }
 }

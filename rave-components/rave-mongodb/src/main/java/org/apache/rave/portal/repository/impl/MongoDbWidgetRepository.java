@@ -211,4 +211,12 @@ public class MongoDbWidgetRepository implements WidgetRepository {
         return query;
     }
 
+    public void setTemplate(MongoWidgetOperations template) {
+        this.template = template;
+    }
+
+    public void setStatsAggregator(StatisticsAggregator statsAggregator) {
+        this.statsAggregator = statsAggregator;
+    }
+
 }

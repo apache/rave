@@ -32,8 +32,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nullable;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static org.springframework.data.mongodb.core.query.Query.query;
@@ -260,13 +259,15 @@ public class MongoDbPersonRepository implements PersonRepository {
 
     private List<Long> getCommonFriends(MongoDbUser follower, MongoDbUser followed) {
         List<Long> ids = Lists.newArrayList();
+        Map<Long, MongoDbPersonAssociation> friendHash = new HashMap<Long, MongoDbPersonAssociation>();
         for (MongoDbPersonAssociation association : follower.getFriends()) {
-            for (MongoDbPersonAssociation friendAssociation : followed.getFriends()) {
-                if (association.getPersonId().equals(friendAssociation.getPersonId()) &&
-                        association.getRequestStatus().equals(FriendRequestStatus.ACCEPTED) &&
-                        friendAssociation.getRequestStatus().equals(FriendRequestStatus.ACCEPTED)) {
-                    ids.add(friendAssociation.getPersonId());
-                }
+            friendHash.put(association.getPersonId(), association);
+        }
+        for (MongoDbPersonAssociation friendAssociation : followed.getFriends()) {
+            if (friendHash.containsKey(friendAssociation.getPersonId()) &&
+                    friendHash.get(friendAssociation.getPersonId()).getRequestStatus().equals(FriendRequestStatus.ACCEPTED) &&
+                    friendAssociation.getRequestStatus().equals(FriendRequestStatus.ACCEPTED)) {
+                ids.add(friendAssociation.getPersonId());
             }
         }
         return ids;

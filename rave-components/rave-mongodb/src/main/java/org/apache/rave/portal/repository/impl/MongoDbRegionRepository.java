@@ -122,4 +122,14 @@ public class MongoDbRegionRepository implements RegionRepository {
     private Page getPageByRegionId(long id) {
         return template.findOne(new Query(Criteria.where("regions").elemMatch(Criteria.where("_id").is(id))));
     }
+
+
+    public MongoPageOperations getTemplate() {
+        return template;
+    }
+
+    public void setTemplate(MongoPageOperations template) {
+        this.template = template;
+    }
+
 }

@@ -191,4 +191,12 @@ public class MongoDbWidgetConverter implements HydratingModelConverter<Widget, M
         converted.setDisableRendering(source.isDisableRendering());
         converted.setFeatured(source.isFeatured());
     }
+
+    public void setUserRepository(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    public void setCategoryRepository(CategoryRepository categoryRepository) {
+        this.categoryRepository = categoryRepository;
+    }
 }

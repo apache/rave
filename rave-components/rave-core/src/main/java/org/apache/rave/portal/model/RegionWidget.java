@@ -62,4 +62,6 @@ public interface RegionWidget {
     boolean isHideChrome();
 
     void setHideChrome(boolean hideChrome);
+
+
 }

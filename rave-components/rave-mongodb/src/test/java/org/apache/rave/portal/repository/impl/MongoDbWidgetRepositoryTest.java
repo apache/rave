@@ -19,94 +19,400 @@
 
 package org.apache.rave.portal.repository.impl;
 
-import org.junit.Ignore;
-import org.junit.runner.RunWith;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import org.apache.rave.portal.model.*;
+import org.apache.rave.portal.model.impl.TagImpl;
+import org.apache.rave.portal.model.impl.UserImpl;
+import org.apache.rave.portal.model.impl.WidgetImpl;
+import org.apache.rave.portal.model.impl.WidgetRatingImpl;
+import org.apache.rave.portal.model.util.WidgetStatistics;
+import org.apache.rave.portal.repository.MongoWidgetOperations;
+import org.apache.rave.portal.repository.StatisticsAggregator;
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static org.easymock.EasyMock.*;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+import static org.springframework.data.mongodb.core.query.Criteria.where;
+import static org.springframework.data.mongodb.core.query.Query.query;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static org.easymock.EasyMock.*;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+import static org.springframework.data.mongodb.core.query.Criteria.where;
+import static org.springframework.data.mongodb.core.query.Query.query;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static org.easymock.EasyMock.*;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+import static org.springframework.data.mongodb.core.query.Criteria.where;
+import static org.springframework.data.mongodb.core.query.Query.query;
 
 /**
-* Created with IntelliJ IDEA.
-* User: mfranklin
-* Date: 10/14/12
-* Time: 8:14 PM
+* Test for MongoDb Widget Repository class
 */
-@Ignore
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:test-applicationContext.xml"})
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
+
 public class MongoDbWidgetRepositoryTest {
 
-//    @Autowired
-//    WidgetRepository widgetRepository;
-//
-//    @Autowired
-//    UserRepository userRepository;
-//
-//    @Autowired
-//    CategoryRepository categoryRepository;
-//
-//    @Autowired
-//    Mongo mongo;
-//
-//    @After
-//    public void tearDown() {
-//        mongo.dropDatabase("rave");
-//    }
-//
-//    @Test
-//    public void save_basic() {
-//        List<Category> categoryList = Arrays.asList((Category)new CategoryImpl("GOO"), new CategoryImpl("FOO"));
-//        categoryRepository.save(categoryList.get(0));
-//        categoryRepository.save(categoryList.get(1));
-//
-//        User user1 = new MongoDbUser(12345L);
-//        user1.setDisplayName("GEORGE DOE");
-//        userRepository.save(user1);
-//
-//        User user2 = new MongoDbUser(12345L);
-//        user2.setDisplayName("JANE DOE");
-//        userRepository.save(user2);
-//
-//        Widget widget = new WidgetImpl();
-//        widget.setUrl("http://localhost:8080/demogadgets/test.xml");
-//        widget.setAuthor("mfranklin");
-//        widget.setAuthorEmail("developer@apache.org");
-//        widget.setDescription("DESCRIPTION");
-//        widget.setCategories(categoryList);
-//        widget.setOwner(user2);
-//        widget.setTitle("TITLE");
-//        widget.setTitleUrl("http://title.com");
-//        widget.setType("OpenSocial");
-//        widget.setWidgetStatus(WidgetStatus.PUBLISHED);
-//
-//        WidgetComment widgetComment = new WidgetCommentImpl();
-//        widgetComment.setText("BOO HOO");
-//        widgetComment.setCreatedDate(new Date());
-//        widgetComment.setLastModifiedDate(new Date());
-//        widgetComment.setUser(user1);
-//        widget.setComments(Arrays.asList(widgetComment));
-//
-//        WidgetRating rating = new WidgetRatingImpl();
-//        rating.setScore(10);
-//        rating.setUserId(user2.getId());
-//        widget.setRatings(Arrays.asList(rating));
-//
-//        WidgetTag tag = new WidgetTagImpl();
-//        tag.setCreatedDate(new Date());
-//        tag.setUser(user2);
-//        tag.setTag(new TagImpl("TEST"));
-//        widget.setTags(Arrays.asList(tag));
-//
-//        Widget saved = widgetRepository.save(widget);
-//
-//        Widget fromDb = widgetRepository.get(saved.getId());
-//        assertThat(fromDb.getOwner().getId(), is(equalTo(widget.getOwner().getId())));
-//        assertThat(fromDb.getRatings().get(0).getScore(), is(equalTo(widget.getRatings().get(0).getScore())));
-//        assertThat(fromDb.getComments().get(0).getUser().getId(), is(equalTo(widget.getComments().get(0).getUser().getId())));
-//        assertThat(fromDb.getComments().get(0).getText(), is(equalTo(widget.getComments().get(0).getText())));
-//        assertThat(fromDb.getTags().get(0).getUser().getId(), is(equalTo(widget.getTags().get(0).getUser().getId())));
-//        assertThat(fromDb.getTags().get(0).getTag().getKeyword(), is(equalTo(widget.getTags().get(0).getTag().getKeyword())));
-//
-//    }
+    private MongoWidgetOperations template;
+    private StatisticsAggregator statsAggregator;
+    private MongoDbWidgetRepository repo;
+
+
+
+    @Before
+    public void setUp(){
+        template = createMock(MongoWidgetOperations.class);
+        statsAggregator = createMock(StatisticsAggregator.class);
+        repo = new MongoDbWidgetRepository();
+        repo.setTemplate(template);
+        repo.setStatsAggregator(statsAggregator);
+
+    }
+
+    @Test
+    public void getAll(){
+        List<Widget> widgets = Lists.newArrayList();
+        Widget w = new WidgetImpl();
+        w.setTitle("B");
+        Widget w2 = new WidgetImpl();
+        w.setTitle("A");
+        widgets.add(w);
+        widgets.add(w2);
+
+        expect(template.find(isA(Query.class))).andReturn(widgets);
+        replay(template);
+
+        List<Widget> result = repo.getAll();
+        assertThat(result.size(), is(equalTo(2)));
+        assertThat(result.get(0), is(equalTo(w)));
+
+    }
+
+    @Test
+    public void getLimitedList(){
+        int offset = 2;
+        int pageSize = 10;
+        List<Widget> widgets = Lists.newArrayList();
+        Widget w = new WidgetImpl();
+        w.setTitle("B");
+        Widget w2 = new WidgetImpl();
+        w.setTitle("A");
+        widgets.add(w);
+        widgets.add(w2);
+
+        expect(template.find(isA(Query.class))).andReturn(widgets);
+        replay(template);
+
+        List<Widget> result = repo.getLimitedList(offset, pageSize);
+        assertThat(result.size(), is(equalTo(2)));
+
+    }
+
+    @Test
+    public void getCountAll(){
+        long count = 0;
+
+        expect(template.count(isA(Query.class))).andReturn(count);
+        replay(template);
+
+        count = repo.getCountAll();
+        assertNotNull(count);
+    }
+
+    @Test
+    public void getByFreeTextSearch(){
+        int offset = 2;
+        int pageSize = 10;
+        String searchTerm = "test";
+        List<Widget> widgets = Lists.newArrayList();
+        Widget w = new WidgetImpl();
+        w.setTitle("A");
+        w.setDescription("test");
+        widgets.add(w);
+
+        expect(template.find(isA(Query.class))).andReturn(widgets);
+        replay(template);
+
+        List<Widget> result = repo.getByFreeTextSearch(searchTerm, offset, pageSize);
+        assertNotNull(result);
+        assertThat(result.size(), is(equalTo(1)));
+    }
+
+    @Test
+    public void getCountFreeTextSearch(){
+        long count = 0;
+        String searchTerm = "test";
+        List<Widget> widgets = Lists.newArrayList();
+        Widget w = new WidgetImpl();
+        Widget w2 = new WidgetImpl();
+        w.setTitle("A");
+        w.setDescription("test");
+        widgets.add(w);
+        widgets.add(w2);
+
+        expect(template.count(isA(Query.class))).andReturn(count);
+        replay(template);
+
+        count = repo.getCountFreeTextSearch(searchTerm);
+        assertNotNull(count);
+
+    }
+
+    @Test
+    public void getByStatus(){
+        int offset = 2;
+        int pageSize = 10;
+        List<Widget> widgets = Lists.newArrayList();
+        Widget w = new WidgetImpl();
+        w.setWidgetStatus(WidgetStatus.PUBLISHED);
+        Widget w2 = new WidgetImpl();
+        w2.setWidgetStatus(WidgetStatus.PREVIEW);
+        w.setTitle("A");
+        w.setDescription("test");
+        widgets.add(w);
+        widgets.add(w2);
+
+        expect(template.find(isA(Query.class))).andReturn(widgets);
+        replay(template);
+
+        List<Widget> result = repo.getByStatus(WidgetStatus.PUBLISHED, offset, pageSize);
+        assertNotNull(result);
+
+    }
+
+    @Test
+    public void getCountByStatus(){
+        long count = 0;
+        List<Widget> widgets = Lists.newArrayList();
+        Widget w = new WidgetImpl();
+        w.setWidgetStatus(WidgetStatus.PUBLISHED);
+        Widget w2 = new WidgetImpl();
+        w2.setWidgetStatus(WidgetStatus.PREVIEW);
+        w.setTitle("A");
+        w.setDescription("test");
+        widgets.add(w);
+        widgets.add(w2);
+
+        expect(template.count(isA(Query.class))).andReturn(count);
+        replay(template);
+
+        count = repo.getCountByStatus(WidgetStatus.PUBLISHED);
+        assertNotNull(count);
+
+    }
+
+    @Test
+    public void getByStatusAndTypeAndFreeTextSearch(){
+        int offset = 2;
+        int pageSize = 10;
+        String type = "type";
+        String searchTerm = "test" ;
+        List<Widget> widgets = Lists.newArrayList();
+        Widget w = new WidgetImpl();
+        w.setWidgetStatus(WidgetStatus.PUBLISHED);
+        Widget w2 = new WidgetImpl();
+        w2.setWidgetStatus(WidgetStatus.PREVIEW);
+        w.setTitle("A");
+        w.setDescription("test");
+        w.setType(type);
+        widgets.add(w);
+        widgets.add(w2);
+
+        expect(template.find(isA(Query.class))).andReturn(widgets);
+        replay(template);
+
+        List<Widget> result = repo.getByStatusAndTypeAndFreeTextSearch(WidgetStatus.PUBLISHED, type, searchTerm, offset, pageSize);
+        assertNotNull(result);
+
+    }
+
+    @Test
+    public void getByStatusAndTypeAndFreeTextSearch_null(){
+        int offset = 2;
+        int pageSize = 10;
+        String type = "type";
+        String searchTerm = "test" ;
+        List<Widget> widgets = Lists.newArrayList();
+        Widget w = new WidgetImpl();
+        Widget w2 = new WidgetImpl();
+        widgets.add(w);
+        widgets.add(w2);
+
+        expect(template.find(isA(Query.class))).andReturn(widgets);
+        replay(template);
+
+        List<Widget> result = repo.getByStatusAndTypeAndFreeTextSearch(WidgetStatus.PUBLISHED, type, searchTerm, offset, pageSize);
+        assertNotNull(result);
+
+    }
+
+    @Test
+    public void getCountByStatusAndTypeAndFreeText(){
+        long count = 0;
+        String type = "type";
+        String searchTerm = "test" ;
+        List<Widget> widgets = Lists.newArrayList();
+        Widget w = new WidgetImpl();
+        w.setWidgetStatus(WidgetStatus.PUBLISHED);
+        Widget w2 = new WidgetImpl();
+        w2.setWidgetStatus(WidgetStatus.PREVIEW);
+        w.setTitle("A");
+        w.setDescription("test");
+        widgets.add(w);
+        widgets.add(w2);
+
+        expect(template.count(isA(Query.class))).andReturn(count);
+        replay(template);
+
+        count = repo.getCountByStatusAndTypeAndFreeText(WidgetStatus.PUBLISHED, type, searchTerm);
+        assertNotNull(count);
+
+    }
+
+    @Test
+    public void getByOwmer(){
+        int offset = 2;
+        int pageSize = 10;
+        User owner = new UserImpl(1234L);
+        List<Widget> widgets = Lists.newArrayList();
+        Widget w = new WidgetImpl();
+        w.setOwner(owner);
+        widgets.add(w);
+
+        expect(template.find(isA(Query.class))).andReturn(widgets);
+        replay(template);
+
+        List<Widget> result = repo.getByOwner(owner, offset, pageSize);
+        assertNotNull(result);
+    }
+
+    @Test
+    public void getcountByOwner(){
+        long count = 0;
+        int offset = 2;
+        int pageSize = 10;
+        User owner = new UserImpl(1234L);
+        List<Widget> widgets = Lists.newArrayList();
+        Widget w = new WidgetImpl();
+        w.setOwner(owner);
+        widgets.add(w);
+
+        expect(template.count(isA(Query.class))).andReturn(count);
+        replay(template);
+
+        count = repo.getCountByOwner(owner, offset, pageSize);
+        assertNotNull(count);
+    }
+
+    @Test
+    public void getByUrl(){
+        String widgetUrl = "www.test.com";
+        Widget widget = new WidgetImpl();
+        widget.setUrl(widgetUrl);
+
+        expect(template.findOne(new Query(where("url").is(widgetUrl)))).andReturn(widget);
+        replay(template);
+
+        Widget result = repo.getByUrl(widgetUrl);
+        assertThat(result, is(equalTo(widget)));
+        assertThat(result.getUrl(), is(equalTo(widgetUrl)));
+
+    }
+
+    @Test
+    public void getWidgetStatistics(){
+        long widget_id = 1111L;
+        long user_id = 2222L;
+
+        WidgetStatistics ws = new WidgetStatistics();
+
+        expect(statsAggregator.getWidgetStatistics(widget_id, user_id)).andReturn(ws);
+        replay(statsAggregator);
+
+        ws = repo.getWidgetStatistics(widget_id, user_id);
+        assertNotNull(ws);
+
+    }
+
+    @Test
+    public void getAllWidgetStatistics(){
+        long user_id = 2222L;
+        Map<Long, WidgetStatistics> ws = Maps.newHashMap();
+
+        expect(statsAggregator.getAllWidgetStatistics(user_id)).andReturn(ws);
+        replay(statsAggregator);
+
+        ws = repo.getAllWidgetStatistics(user_id);
+        assertNotNull(ws);
+
+    }
+
+    @Test
+    public void getUserWidgetRatings(){
+        long userId = 1234L;
+        Map<Long, WidgetRating> wr = Maps.newHashMap();
+        List<Widget> widgets = Lists.newArrayList();
+        List<WidgetRating> widget_ratings = Lists.newArrayList();
+        Widget widget = new WidgetImpl(1111L);
+        WidgetRating rating1 = new WidgetRatingImpl();
+        WidgetRating rating2 = new WidgetRatingImpl();
+        rating1.setUserId(userId);
+        rating2.setUserId(5555L);
+        widget_ratings.add(rating1);
+        widget_ratings.add(rating2);
+        widget.setRatings(widget_ratings);
+        widgets.add(widget);
+        Query q = query(where("ratings").elemMatch(where("userId").is(userId)));
+
+        expect(template.find(q)).andReturn(widgets);
+        replay(template);
+
+        wr = repo.getUsersWidgetRatings(userId);
+        assertNotNull(wr);
+    }
+
+    @Test
+    public void getWidgetByTag(){
+        int offset = 2;
+        int pagesize = 10;
+        String tagKeyword = "test";
+        List<Widget> widgets = Lists.newArrayList();
+        Widget widget = new WidgetImpl();
+        Tag tag = new TagImpl();
+        tag.setKeyword(tagKeyword);
+        expect(template.find(isA(Query.class))).andReturn(widgets);
+        replay(template);
+    }
+
+    public void setTemplate(MongoWidgetOperations template) {
+        this.template = template;
+    }
+
+    public void setStatsAggregator(StatisticsAggregator statsAggregator) {
+        this.statsAggregator = statsAggregator;
+    }
+
 }

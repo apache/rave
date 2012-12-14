@@ -21,8 +21,8 @@ package org.apache.rave.portal.repository.impl;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import org.apache.rave.portal.model.WidgetRatingsMapReduceResult;
-import org.apache.rave.portal.model.WidgetUsersMapReduceResult;
+import org.apache.rave.portal.model.*;
+import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.model.util.WidgetStatistics;
 import org.apache.rave.portal.repository.StatisticsAggregator;
 import org.apache.rave.portal.repository.util.CollectionNames;
@@ -30,11 +30,12 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.mapreduce.MapReduceCounts;
 import org.springframework.data.mongodb.core.mapreduce.MapReduceOptions;
+import org.springframework.data.mongodb.core.mapreduce.MapReduceResults;
+import org.springframework.data.mongodb.core.query.Query;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.apache.rave.portal.repository.impl.MongoDbMapReduceStatisticsAggregator.*;
 import static org.apache.rave.portal.repository.util.CollectionNames.*;
@@ -42,6 +43,9 @@ import static org.easymock.EasyMock.*;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+import static org.springframework.data.mongodb.core.query.Criteria.where;
+import static org.springframework.data.mongodb.core.query.Query.query;
 
 public class MonogoDbMapReduceStatisticsAggregatorTest {
 
@@ -52,6 +56,66 @@ public class MonogoDbMapReduceStatisticsAggregatorTest {
     public void setup() {
         mongoOperations = createMock(MongoOperations.class);
         aggregator = new MongoDbMapReduceStatisticsAggregator(mongoOperations);
+    }
+
+    @Test
+    public void getStatistics_Case0(){
+        long widget_id = 123;
+        long user_id = 321;
+        Query statsQuery = query(where("widgetId").is(widget_id));
+        Query pageQuery = query(where("regions").elemMatch(where("regionWidgets").elemMatch(where("widgetId").is(widget_id))));
+        MapReduceResults<WidgetRatingsMapReduceResult> widgetStats = createMock(MapReduceResults.class);
+        MapReduceCounts mapReduceCounts = createMock(MapReduceCounts.class);
+        List<MongoDbPage> pages = new ArrayList<MongoDbPage>();
+
+        expect(mongoOperations.mapReduce(statsQuery, WIDGET_COLLECTION, RATINGS_MAP, RATINGS_REDUCE, WidgetRatingsMapReduceResult.class)).andReturn(widgetStats);
+        expect(mongoOperations.find(pageQuery, MongoDbPage.class, PAGE_COLLECTION)).andReturn(pages);
+        expect(widgetStats.getCounts()).andReturn(mapReduceCounts);
+        expect(mapReduceCounts.getOutputCount()).andReturn(0);
+        replay(mongoOperations, widgetStats, mapReduceCounts);
+
+        WidgetStatistics result = aggregator.getWidgetStatistics(widget_id, user_id);
+
+        assertTrue(result.getTotalUserCount() == 0);
+    }
+
+    @Test
+    public void getStatistics_Case1(){
+        long widget_id = 123;
+        long user_id = 321;
+        Query statsQuery = query(where("widgetId").is(widget_id));
+        Query pageQuery = query(where("regions").elemMatch(where("regionWidgets").elemMatch(where("widgetId").is(widget_id))));
+        MapReduceResults<WidgetRatingsMapReduceResult> widgetStats = createMock(MapReduceResults.class);
+        MapReduceCounts mapReduceCounts = createMock(MapReduceCounts.class);
+        WidgetRatingsMapReduceResult statsResult = new WidgetRatingsMapReduceResult();
+        List<MongoDbPage> pages = new ArrayList<MongoDbPage>();
+        Iterator iter = createMock(Iterator.class);
+
+        //add page to pages
+        Page page = new MongoDbPage();
+        User owner = new UserImpl();
+        ((UserImpl)owner).setId(234L);
+        page.setOwner(owner);
+        pages.add((MongoDbPage)page);
+
+        //add same id to cover branches
+        Page page_2 = new MongoDbPage();
+        User owner_2 = new UserImpl();
+        ((UserImpl)owner_2).setId(234L);
+        page_2.setOwner(owner_2);
+        pages.add((MongoDbPage)page_2);
+
+        expect(mongoOperations.mapReduce(statsQuery, WIDGET_COLLECTION, RATINGS_MAP, RATINGS_REDUCE, WidgetRatingsMapReduceResult.class)).andReturn(widgetStats);
+        expect(mongoOperations.find(pageQuery, MongoDbPage.class, PAGE_COLLECTION)).andReturn(pages);
+        expect(widgetStats.getCounts()).andReturn(mapReduceCounts);
+        expect(mapReduceCounts.getOutputCount()).andReturn(1);
+        expect(widgetStats.iterator()).andReturn(iter);
+        expect(iter.next()).andReturn(statsResult);
+        replay(mongoOperations, widgetStats, mapReduceCounts, iter);
+
+        WidgetStatistics result = aggregator.getWidgetStatistics(widget_id, user_id);
+
+        assertThat(result.getTotalUserCount(), is(equalTo(1)));
     }
 
     @Test
