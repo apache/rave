@@ -24,14 +24,18 @@
 
 <div class="container-fluid navbar-spacer">
     <div class="row-fluid">
-    <ul class="nav nav-tabs">
-          <li class="active"><a href="<spring:url value="/app/store/widget/add?referringPageId=${referringPageId}" />">OpenSocial</a></li>
-          <li><a href="<spring:url value="/app/store/widget/add/w3c?referringPageId=${referringPageId}" />">W3C</a></li>
-          
-          <c:if test="${not empty marketplace and not empty marketplace.value}">
-          <li><a href="<spring:url value="/app/marketplace?referringPageId=${referringPageId}" />">Marketplace</a></li>
-          </c:if>
-    </ul> 
+	    <ul class="nav nav-tabs">
+	          <li class="active"><a href="<spring:url value="/app/store/widget/add?referringPageId=${referringPageId}" />">OpenSocial</a></li>
+	          <li><a href="<spring:url value="/app/store/widget/add/w3c?referringPageId=${referringPageId}" />">W3C</a></li>
+	          
+	          <c:if test="${not empty marketplace and not empty marketplace.value}">
+	          <li><a href="<spring:url value="/app/marketplace?referringPageId=${referringPageId}" />">Marketplace</a></li>
+	          </c:if>
+	    </ul> 
+    </div>
+</div>
+<div class="row-fluid tab-content">
+    <div class="tab-padding">
     
     <form:errors path="widget" cssClass="error" element="p"/>
     <form:form cssClass="form-horizontal" id="newWidgetForm" action="add?referringPageId=${referringPageId}" commandName="widget" method="POST">

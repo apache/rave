@@ -22,7 +22,7 @@
 <rave:navbar pageTitle="${widget.title}"/>
 
 <div id="na_content" class="container">
-    <div class="row detail-widget storeItem">
+    <div class="row detail-widget">
         <div class="span4">
             <div class="detail-widget-preview">
                 <c:if test="${not empty widget.screenshotUrl}">
@@ -190,12 +190,12 @@
            <div class="row-fluid">
                 <div class="widgetComments" id="widgetComments">
                     <h3><fmt:message key="page.widget.comments"/></h3>
-                    <div class="new-comment form-inline well">
+                    <div class="new-comment form-inline">
                         <div class="row-fluid">
-                        	<div class="span11 pull-left">
+                        	<div class="span12">
                         		<textarea id="newComment-${widget.id}"></textarea>&nbsp;
+                        		<button id="comment-new-${widget.id}" class="btn commentNewButton" title="Add Comment"><i class="icon-comment"></i></button>
                         	</div>
-                        	<button id="comment-new-${widget.id}" class="btn commentNewButton pull-right" title="Add Comment"><i class="icon-comment"></i></button>
                         </div>
                     </div>
                     <c:if test="${not empty widget.comments}">

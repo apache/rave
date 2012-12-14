@@ -16,6 +16,29 @@
 // specific language governing permissions and limitations
 // under the License.
 
+/* Sticky footer */
+* {
+	margin: 0;
+}
+html, body {
+	height: 100%;
+}
+.wrapper {
+	min-height: 100%;
+	height: auto !important;
+	height: 100%;
+	margin: 0 auto -55px !important;
+}
+
+footer {
+	margin-top: 20px;
+	height: 35px;
+}
+.push{
+	height: 55px;
+	margin-bottom: -55px;
+}
+
 ///* general-use styles */
 .hidden {
     display: none;
@@ -177,10 +200,10 @@
     border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
     filter: progid:dximagetransform.microsoft.gradient(enabled=false);
     border-radius: 5px 5px 0 0;
+    margin-bottom: 1em;
     padding: 4px 10px 4px;
 
 }
-
 .widget-title-bar:hover {
     cursor: move;
 }
@@ -409,15 +432,14 @@
 .storeItem {
     border: 1px solid #ddd;
     margin: 1em auto;
-    padding: 10px;
+    padding: 0 0 10px 0;
     background-color: #f9f9f9;
     color: black;
     border-radius: 5px;
     box-shadow: 2px 2px 3px rgba(0,0,0,0.4);
     -moz-box-shadow: 2px 2px 2px rgba(0,0,0,0.4);
-    -webkit-box-shadow: 2px 2px 4px rgba(0,0,0,0.4);
+    -webkit-box-shadow: 2px 2px 4px rgba(0,0,0,0.4);   
 }
-
 .storeItemFeatured {
     background-color: #D5EAF9;
 }
@@ -534,17 +556,21 @@ ul.storeItems li span.label{
     display: inline-block;
     margin-right: .5em;
 }
-.storeItemLeft, .storeItemCenter {
+	
+.storeItemLeft, 
+.storeItemCenter {
     vertical-align: top;
 }
 
 .storeItemLeft {
     float: left;
-    width: 120px;
+    width: 130px;
+	margin-left: 10px;
 }
 
 .storeItemCenter {
-    margin-left: 140px;
+	margin-right: 10px;
+	margin-left: 150px;
 }
 
 .storeWidgetThumbnail {
@@ -1197,7 +1223,8 @@ footer {
 }
 
 .footer-logo {
-    height: 35px;
+    height: 22px;
+    margin: 6px 0;
 }
 
 .version {

@@ -21,9 +21,9 @@
 <fmt:setBundle basename="messages"/>
 <rave:navbar pageTitle="${pagetitle}"/>
 
-<div class="container-fluid navbar-spacer">
+<div class="container-fluid navbar-spacer" id="widgetStore">
     <div class="row-fluid">
-        <section class="span8">
+        <section class="span8 pagination-header">
             <c:choose>
                 <c:when test="${empty searchTerm and (empty widgets or widgets.totalResults eq 0)}">
                     <%-- Empty db --%>
@@ -88,7 +88,9 @@
                                 <li class="storeItem">
                             </c:otherwise>
                         </c:choose>
-
+						<div class="widget-title-bar">
+							<c:out value="${widget.title}"/>
+						</div>
                         <div class="storeItemLeft">
                             <c:if test="${not empty widget.thumbnailUrl}">
                                 <img class="storeWidgetThumbnail" src="${widget.thumbnailUrl}"
@@ -107,11 +109,11 @@
                         </div>
 
                         <div class="storeItemCenter">
-                            <a id="widget-${widget.id}-title"
+                            <h4><a id="widget-${widget.id}-title"
                                class="secondaryPageItemTitle"
                                href="<spring:url value="/app/store/widget/${widget.id}" />?referringPageId=${referringPageId}">
                                 <c:out value="${widget.title}"/>
-                            </a>
+                            </a></h4>
                             <c:if test="${widget.disableRendering}">
                                 <div class="storeWidgetDisabled">
                                             <span class="widget-disabled-icon-store ui-icon ui-icon-alert"
@@ -245,16 +247,15 @@
                     <div class="control-group" style="margin-bottom: 18px;">
                         <div class="input-append">
                             <fmt:message key="page.store.search.button" var="searchButtonText"/>
-                            <input type="search" id="searchTerm" name="searchTerm" value="<c:out value="${searchTerm}"/>"/>
-                            <button class="btn btn-primary" type="submit" value="${searchButtonText}">${searchButtonText}</button>
+                            <input type="search" id="searchTerm" name="searchTerm" value="<c:out value="${searchTerm}"/>"/><button class="btn btn-primary" type="submit" value="${searchButtonText}">${searchButtonText}</button>
                         </div>
                     </div>
-                    <legend></legend>
+                    <legend>Filter Widget Store</legend>
                     <c:if test="${not empty tags}">
                         <div class="control-group">
                             <label class="control-label" for="categoryList"><fmt:message key="page.store.list.widgets.tag"/></label>
                             <div class="controls">
-                                <select name="tagList" id="tagList" class="span4">
+                                <select name="tagList" id="tagList" class="x-large">
                                 <option value=""></option>
                                 <c:forEach var="tag" items="${tags}">
                                     <c:choose>
@@ -277,7 +278,7 @@
                         <div class="control-group">
                             <label class="control-label" for="categoryList"><fmt:message key="page.store.list.widgets.category"/></label>
                             <div class="controls">
-                                <select name="categoryList" id="categoryList" class="span4">
+                                <select name="categoryList" id="categoryList" class="x-large">
                                     <option value="0"></option>
                                     <c:forEach var="category" items="${categories}">
                                         <c:choose>
@@ -297,8 +298,8 @@
                     </c:if>
                 </fieldset>
             </form>
-            <a class="btn btn-info" href="<spring:url value="/app/store/mine?referringPageId=${referringPageId}"/>"><fmt:message key="page.store.list.widgets.mine"/></a>
-            <a class="btn btn-info" href="<spring:url value="/app/store?referringPageId=${referringPageId}"/>"><fmt:message key="page.store.list.widgets.all"/></a>
+            <a href="<spring:url value="/app/store/mine?referringPageId=${referringPageId}"/>"><fmt:message key="page.store.list.widgets.mine"/></a><br/>
+            <a href="<spring:url value="/app/store?referringPageId=${referringPageId}"/>"><fmt:message key="page.store.list.widgets.all"/></a>
         </section>
     </div>
 </div>

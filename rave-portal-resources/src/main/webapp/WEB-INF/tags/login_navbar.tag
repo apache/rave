@@ -44,7 +44,7 @@
 		                        <li>
 		                        	<form action="<c:url value="/app/newpassword"/>" method="get">
 				                    	<fmt:message key="page.login.forgot.password.button" var="requestNewPasswordButtonText"/>
-				                    	<button class="btn btn-info" id="requestNewPasswordButton" type="submit" value="${requestNewPasswordButtonText}">${requestNewPasswordButtonText}</button>
+				                    	<button class="btn btn-link" id="requestNewPasswordButton" type="submit" value="${requestNewPasswordButtonText}">${requestNewPasswordButtonText}</button>
 				                    </form>
 		                        </li>
 		                    </c:if>
@@ -52,7 +52,7 @@
 		                        <li>
 		                        	<form action="<c:url value="/app/retrieveusername"/>" method="get">
 				                        <fmt:message key="page.login.forgot.username.button" var="requestNewUsernameButton"/>
-			                            <button class="btn btn-info" id="requestNewUsernameButton" type="submit" value="${requestNewUsernameButton}">${requestNewUsernameButton}</button>
+			                            <button class="btn btn-link" id="requestNewUsernameButton" type="submit" value="${requestNewUsernameButton}">${requestNewUsernameButton}</button>
 			                    	</form>
 		                        </li>
 		                    </c:if>
@@ -60,7 +60,7 @@
 		                        <li>
 			                        <form action="<c:url value="/app/newaccount.jsp"/>" method="get">
 					                    <fmt:message key="page.login.createaccount.button" var="createAccountButtonText"/>
-					                    <button class="btn btn-info" id="createNewAccountButton" type="submit" value="${createAccountButtonText}">${createAccountButtonText}</button>
+					                    <button class="btn btn-link" id="createNewAccountButton" type="submit" value="${createAccountButtonText}">${createAccountButtonText}</button>
 					                </form>
 		                        </li>
 		                    </c:if>

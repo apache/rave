@@ -49,7 +49,6 @@
 	            	<rave:admin_paging/>	
                     <form id="userSearchForm" class="form-horizontal search-form" action="<spring:url value="/app/admin/users/search"/>" method="get">
                         <fieldset>
-                        	<br/>
                             <div class="input-append">
 	                            <input type="text" class="input-medium" id="searchTerm" name="searchTerm" value="<c:out value="${searchTerm}"/>" placeholder='<fmt:message key="admin.users.search"/>'
 	                            /><fmt:message key="page.store.search.button" var="searchButtonText"

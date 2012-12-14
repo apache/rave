@@ -31,10 +31,13 @@ under the License.
     <rave:third_party_head_js/>
  </head>
 <body>
+<div class="wrapper">
 <%-- Header Content --%>
-<tiles:insertAttribute name="header"/>
-<%-- Main Body Content --%>
-<tiles:insertAttribute name="body"/>
+	<tiles:insertAttribute name="header"/>
+	<%-- Main Body Content --%>
+	<tiles:insertAttribute name="body"/>
+	<div class="push"></div>
+</div>
 <%-- Footer Content --%>
 <tiles:insertAttribute name="footer"/>
 <%-- render any script that needs to execute pre-src includes --%>
