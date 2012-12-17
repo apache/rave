@@ -31,8 +31,7 @@ import java.util.List;
 
 import static org.easymock.EasyMock.*;
 import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static org.springframework.data.mongodb.core.query.Query.query;
 
@@ -47,6 +46,110 @@ public class MongoDbPageRepositoryTest {
         template = createMock(MongoPageOperations.class);
         repo = new MongoDbPageRepository();
         repo.setTemplate(template);
+    }
+
+    @Test
+    public void getAllPages(){
+        Long userId = 1234L;
+        PageType pageType = PageType.USER;
+        User u = new UserImpl(9999L);
+        User u2 = new UserImpl(1234L);
+        PageUser user = new MongoDbPageUser();
+        user.setId(3333L);
+        user.setUser(u);
+        PageUser user2 = new MongoDbPageUser();
+        user2.setId(1234L);
+        user2.setUser(u2);
+        List<Page> pages = Lists.newArrayList();
+        List<PageUser> page_users = Lists.newArrayList();
+        List<PageUser> page2_users = Lists.newArrayList();
+        page_users.add(user);
+        page2_users.add(user2);
+        Page page = new PageImpl();
+        page.setMembers(page_users);
+        Page page2 = new PageImpl();
+        page2.setMembers(page2_users);
+        pages.add(page);
+        pages.add(page2);
+
+        expect(template.find(isA(Query.class))).andReturn(pages);
+        replay(template);
+
+        List<Page> result = repo.getAllPages(userId, pageType);
+        assertNotNull(result);
+
+    }
+
+    @Test
+    public void getType(){
+        Class<? extends Page> result = repo.getType();
+        assertNotNull(result);
+    }
+
+    @Test
+    public void createPageForUser(){
+        Page result = new PageImpl();
+        User user = new UserImpl(2424L);
+        PageTemplate pt = new PageTemplateImpl();
+        PageLayout layout = new PageLayoutImpl();
+        List<PageTemplateRegion> regions = Lists.newArrayList();
+        List<PageTemplateRegion> subRegions = Lists.newArrayList();
+        List<PageTemplateWidget> widgets = Lists.newArrayList();
+        List<PageTemplate> subPageTemplates = Lists.newArrayList();
+
+        PageTemplate sub = new PageTemplateImpl();
+        sub.setName("sub");
+        PageTemplateRegion subRegion = new PageTemplateRegionImpl();
+        subRegion.setRenderSequence(5555L);
+        subRegion.setLocked(true);
+        subRegion.setPageTemplateWidgets(widgets);
+        subRegions.add(subRegion);
+        sub.setPageTemplateRegions(subRegions);
+        sub.setName("sub");
+        sub.setPageType(PageType.SUB_PAGE);
+        sub.setPageLayout(layout);
+        sub.setPageTemplateRegions(subRegions);
+        sub.setRenderSequence(2000L);
+
+        PageTemplateWidget widget = new PageTemplateWidgetImpl();
+        Widget w = new WidgetImpl();
+        widget.setLocked(true);
+        widget.setHideChrome(true);
+        widget.setRenderSeq(2000L);
+        widget.setWidget(w);
+        widgets.add(widget);
+
+        PageTemplateRegion region = new PageTemplateRegionImpl();
+        region.setRenderSequence(1111L);
+        region.setPageTemplateWidgets(widgets);
+        region.setLocked(true);
+        regions.add(region);
+
+        pt.setName("carol");
+        pt.setPageType(PageType.USER);
+        pt.setPageLayout(layout);
+        subPageTemplates.add(sub);
+        pt.setSubPageTemplates(subPageTemplates);
+        pt.setPageTemplateRegions(regions);
+        pt.setRenderSequence(2000L);
+
+        expect(template.save(isA(Page.class))).andReturn(result);
+        replay(template);
+
+        result = repo.createPageForUser(user, pt);
+        assertNotNull(result);
+
+    }
+
+    @Test
+    public void delete(){
+        Page page = new PageImpl(1234L);
+
+        template.remove(query(where("_id").is(1234L)));
+        expectLastCall();
+
+        repo.delete(page);
+
     }
 
     @Test
@@ -65,7 +168,113 @@ public class MongoDbPageRepositoryTest {
     }
 
     @Test
+    public void hasPersonPage_true(){
+        Long userId = 1234L;
+        User user = new UserImpl(userId);
+        Page page = new PageImpl();
+        page.setPageType(PageType.PERSON_PROFILE);
+        page.setOwner(user);
+
+        expect(template.count(query(where("pageType").is(PageType.PERSON_PROFILE).andOperator(where("ownerId").is(userId))))).andReturn(1L);
+        replay(template);
+
+        boolean result = repo.hasPersonPage(userId);
+        assertTrue(result);
+
+    }
+
+    @Test
+    public void hasPersonPage_false(){
+        Long userId = 1234L;
+
+        expect(template.count(query(where("pageType").is(PageType.PERSON_PROFILE).andOperator(where("ownerId").is(userId))))).andReturn(0L);
+        replay(template);
+
+        boolean result = repo.hasPersonPage(userId);
+        assertFalse(result);
+
+    }
+
+    @Test
     public void getPagesForUser(){
+        Page p = new PageImpl();
+        PageUser user1 = new PageUserImpl(2222L);
+        PageUser user3 = new PageUserImpl(2222L);
+        User user2 = new UserImpl(2222L);
+        user1.setUser(user2);
+        List<PageUser> pageUser = Lists.newArrayList();
+        pageUser.add(user1);
+        pageUser.add(user3);
+        p.setMembers(pageUser);
+
+        Page p2 = new PageImpl();
+        PageUser user4 = new PageUserImpl(2222L);
+        PageUser user5 = new PageUserImpl(2222L);
+        User user6 = new UserImpl(2222L);
+        user4.setUser(user6);
+        List<PageUser> pageUser2 = Lists.newArrayList();
+        pageUser.add(user4);
+        pageUser.add(user5);
+        p2.setMembers(pageUser2);
+        List<Page> pages = Lists.newArrayList(p);
+        pages.add(p2);
+
+        List<PageUser> result;
+        Long userId = 2222L;
+
+        expect(template.find(query(where("members").elemMatch(where("userId").is(userId)).andOperator(where("pageType").is("USER"))))).andReturn(pages);
+        replay(template);
+        result = repo.getPagesForUser(userId, PageType.USER);
+
+        assertThat(result.get(0).getUser(), is(equalTo(user2)));
+        assertThat(result.size(), is(equalTo(2)));
+        assertThat(result.get(0).getUser().getId(), is(equalTo(2222L)));
+
+    }
+
+    @Test
+    public void getPagesForUser_false(){
+        Page p = new PageImpl();
+        PageUser user1 = new PageUserImpl(2222L);
+        PageUser user3 = new PageUserImpl(2222L);
+        user1.setRenderSequence(1L);
+        user3.setRenderSequence(1L);
+        User user2 = new UserImpl(2222L);
+        user1.setUser(user2);
+        List<PageUser> pageUser = Lists.newArrayList();
+        pageUser.add(user1);
+        pageUser.add(user3);
+        p.setMembers(pageUser);
+
+        Page p2 = new PageImpl();
+        PageUser user4 = new PageUserImpl(2222L);
+        PageUser user5 = new PageUserImpl(2222L);
+        user4.setRenderSequence(1L);
+        user5.setRenderSequence(1L);
+        User user6 = new UserImpl(2222L);
+        user4.setUser(user6);
+        List<PageUser> pageUser2 = Lists.newArrayList();
+        pageUser.add(user4);
+        pageUser.add(user5);
+        p2.setMembers(pageUser2);
+        List<Page> pages = Lists.newArrayList(p);
+        pages.add(p2);
+
+        List<PageUser> result;
+        Long userId = 2222L;
+
+        expect(template.find(query(where("members").elemMatch(where("userId").is(userId)).andOperator(where("pageType").is("USER"))))).andReturn(pages);
+        replay(template);
+        result = repo.getPagesForUser(userId, PageType.USER);
+
+        assertThat(result.get(0).getUser(), is(equalTo(user2)));
+        assertThat(result.size(), is(equalTo(2)));
+        assertThat(result.get(0).getUser().getId(), is(equalTo(2222L)));
+
+    }
+
+    @Test
+    public void getPagesForUser_null(){
         Page p = new PageImpl();
         PageUser user1 = new PageUserImpl(1111L);
         User user2 = new UserImpl(2222L);
@@ -76,15 +285,13 @@ public class MongoDbPageRepositoryTest {
         List<Page> pages = Lists.newArrayList(p);
 
         List<PageUser> result;
-        Long userId = 2222L;
+        Long userId = 3333L;
 
         expect(template.find(query(where("members").elemMatch(where("userId").is(userId)).andOperator(where("pageType").is("USER"))))).andReturn(pages);
         replay(template);
-        result = repo.getPagesForUser(userId, PageType.USER);
 
-        assertThat(result.get(0).getUser(), is(equalTo(user2)));
+        result = repo.getPagesForUser(userId, PageType.USER);
         assertThat(result.size(), is(equalTo(1)));
-        assertThat(result.get(0).getUser().getId(), is(equalTo(2222L)));
 
     }
 
