@@ -31,14 +31,17 @@ import org.apache.commons.io.FileUtils;
 import org.apache.rave.exception.DuplicateItemException;
 import org.apache.rave.portal.model.Page;
 import org.apache.rave.portal.model.Widget;
+import org.apache.rave.portal.model.impl.WidgetImpl;
 import org.apache.rave.portal.model.util.omdl.BadOmdlXmlFormatException;
 import org.apache.rave.portal.model.util.omdl.OmdlConstants;
 import org.apache.rave.portal.model.util.omdl.OmdlInputAdapter;
 import org.apache.rave.portal.model.util.omdl.OmdlModelUtils;
 import org.apache.rave.portal.model.util.omdl.OmdlOutputAdapter;
+import org.apache.rave.portal.model.util.omdl.OmdlWidgetReference;
 import org.apache.rave.portal.service.OmdlService;
 import org.apache.rave.portal.service.PageService;
 import org.apache.rave.portal.service.UserService;
+import org.apache.rave.portal.service.RemoteWidgetResolverService;
 import org.apache.rave.portal.service.WidgetService;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,14 +72,17 @@ public class DefaultOmdlService implements OmdlService, OmdlConstants {
     private PageService pageService;
     private WidgetService widgetService;
     private UserService userService;
+    private RemoteWidgetResolverService widgetResolverService;
     
     public DefaultOmdlService(){}
 
     @Autowired
-    public DefaultOmdlService(PageService pageService, WidgetService widgetService, UserService userService){
+    public DefaultOmdlService(PageService pageService, WidgetService widgetService, 
+            UserService userService, RemoteWidgetResolverService widgetResolverService){
         this.pageService = pageService;
         this.widgetService = widgetService;
         this.userService = userService;
+        this.widgetResolverService = widgetResolverService;
     }
     
     @Override
@@ -145,12 +151,44 @@ public class DefaultOmdlService implements OmdlService, OmdlConstants {
         return page;
     }
 
-    private void populateRegionWidgets(Page page, List<String> urlList, String regionId ){
-        Widget widget = null;
-        for (String widgetUrl : urlList){
-            widget = widgetService.getWidgetByUrl(widgetUrl);
-            if(widget != null){
-                pageService.addWidgetToPageRegion(page.getId(), widget.getId(), regionId);
+    private void populateRegionWidgets(Page page, List<OmdlWidgetReference> widgetReferences, String regionId ){
+        Widget raveWidget = null;
+        for (OmdlWidgetReference widgetReference : widgetReferences){
+            // try to find if the widget is already installed in rave by its identifier (should be the rave widget url)
+            logger.info("Found OMDL widget reference ("+widgetReference.getWidgetIdentifier()+")");
+            raveWidget = widgetService.getWidgetByUrl(widgetReference.getWidgetIdentifier());
+            
+            // If not found download and install to widget container, then to rave.
+            if(raveWidget==null){
+                String providerType = widgetReference.getRaveWidgetTypeFromFormatType();
+                if(!providerType.equals(null)){
+                    try {
+                        Widget resolvedWidget = widgetResolverService.resolveAndDownloadWidgetMetadata(widgetReference.getWidgetLink(), providerType);
+                        // Check again in case the OMDL id attribute is not the same as the one found in the href attribute
+                        if(widgetService.getWidgetByUrl(resolvedWidget.getUrl())==null){
+                            raveWidget = widgetResolverService.addWidget(resolvedWidget);
+                            logger.info("Widget added to rave. ("+raveWidget.getUrl()+")");
+                        }else{
+                            logger.info("Widget was already added to rave. ("+resolvedWidget.getUrl()+")");
+                        }
+                    } catch (Exception e) {
+                        logger.error("Problem installing widget: "+ e.getMessage());
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+            
+            if(raveWidget != null){
+                if(widgetResolverService.isPublished()){
+                    pageService.addWidgetToPageRegion(page.getId(), raveWidget.getId(), regionId);
+                }
+                else{
+                    logger.error("Unable to add widget to page as the default status is set to PREVIEW. (" + raveWidget.getUrl() + ")");
+                }
+            }
+            else{
+                logger.error("Unable to resolve widget entry found in OMDL file. " + widgetReference.getWidgetIdentifier() 
+                        + " : " + widgetReference.getWidgetLink());
             }
         }
     }
@@ -198,15 +236,24 @@ public class DefaultOmdlService implements OmdlService, OmdlConstants {
         nodeList = rootEl.getElementsByTagNameNS(namespace, APP);
         if(nodeList != null && nodeList.getLength() > 0) {
             for(int i = 0 ; i < nodeList.getLength();i++) {
-                Element el = (Element)nodeList.item(i);
-                String id = el.getAttribute("id");
+                Element appElement = (Element)nodeList.item(i);
+                String id = appElement.getAttribute(ID_ATTRIBUTE);
                 if(id != null){
-                    Node positionNode = el.getElementsByTagName(POSITION).item(0);
+                    String position = null;
+                    String hrefLink = null;
+                    String hrefType = null;
+                    Node positionNode = appElement.getElementsByTagNameNS(namespace, POSITION).item(0);
                     if(positionNode != null){
-                        el = (Element)positionNode;
-                        String position = el.getTextContent();
-                        omdlInputAdapter.addToAppMap(id, position);
+                        Element positionElement = (Element)positionNode;
+                        position = positionElement.getTextContent();
                     }
+                    Node linkNode = appElement.getElementsByTagNameNS(namespace, LINK).item(0);
+                    if(linkNode != null){
+                        Element linkElement = (Element)linkNode;
+                        hrefLink = linkElement.getAttribute(HREF);
+                        hrefType = linkElement.getAttribute(TYPE_ATTRIBUTE);
+                    }
+                    omdlInputAdapter.addToAppMap(new OmdlWidgetReference(id, hrefLink, hrefType), position);
                 }
             }
         }

@@ -42,35 +42,35 @@ public class OmdlInputAdapter implements OmdlConstants {
     private String layoutCode;
 
     // region 1
-    private List<String> topLeft;
-    private List<String> middleLeft;
-    private List<String> bottomLeft;
+    private List<OmdlWidgetReference> topLeft;
+    private List<OmdlWidgetReference> middleLeft;
+    private List<OmdlWidgetReference> bottomLeft;
     // region 2
-    private List<String> topCenter;
-    private List<String> middleCenter;
-    private List<String> bottomCenter;
+    private List<OmdlWidgetReference> topCenter;
+    private List<OmdlWidgetReference> middleCenter;
+    private List<OmdlWidgetReference> bottomCenter;
     // region 3
-    private List<String> topRight;
-    private List<String> middleRight;
-    private List<String> bottomRight;
+    private List<OmdlWidgetReference> topRight;
+    private List<OmdlWidgetReference> middleRight;
+    private List<OmdlWidgetReference> bottomRight;
     // unknown region (possibly a 4th region)
-    private List<String> unknown;
+    private List<OmdlWidgetReference> unknown;
 
     public OmdlInputAdapter() {
-        topLeft = new ArrayList<String>();
-        middleLeft = new ArrayList<String>();
-        bottomLeft = new ArrayList<String>();
-        topCenter = new ArrayList<String>();
-        middleCenter = new ArrayList<String>();
-        bottomCenter = new ArrayList<String>();
-        topRight = new ArrayList<String>();
-        middleRight = new ArrayList<String>();
-        bottomRight = new ArrayList<String>();
-        unknown = new ArrayList<String>();
+        topLeft = new ArrayList<OmdlWidgetReference>();
+        middleLeft = new ArrayList<OmdlWidgetReference>();
+        bottomLeft = new ArrayList<OmdlWidgetReference>();
+        topCenter = new ArrayList<OmdlWidgetReference>();
+        middleCenter = new ArrayList<OmdlWidgetReference>();
+        bottomCenter = new ArrayList<OmdlWidgetReference>();
+        topRight = new ArrayList<OmdlWidgetReference>();
+        middleRight = new ArrayList<OmdlWidgetReference>();
+        bottomRight = new ArrayList<OmdlWidgetReference>();
+        unknown = new ArrayList<OmdlWidgetReference>();
     }
 
-    public List<String> getAllUrls(){
-        List<String> newList = new ArrayList<String>();
+    public List<OmdlWidgetReference> getAllUrls(){
+        List<OmdlWidgetReference> newList = new ArrayList<OmdlWidgetReference>();
         newList.addAll(getAllLeftUrls());
         newList.addAll(getAllCenterUrls());
         newList.addAll(getAllRightUrls());
@@ -78,16 +78,16 @@ public class OmdlInputAdapter implements OmdlConstants {
         return newList;
     }
 
-    public List<String> getAllUnknownUrls(){
+    public List<OmdlWidgetReference> getAllUnknownUrls(){
         Collections.reverse(unknown);
         return unknown;
     }
 
-    public List<String> getAllRightUrls(){
+    public List<OmdlWidgetReference> getAllRightUrls(){
         Collections.reverse(topRight);
         Collections.reverse(middleRight);
         Collections.reverse(bottomRight);
-        List<String> newList = new ArrayList<String>();
+        List<OmdlWidgetReference> newList = new ArrayList<OmdlWidgetReference>();
         newList.addAll(topRight);
         newList.addAll(middleRight);
         newList.addAll(bottomRight);
@@ -95,11 +95,11 @@ public class OmdlInputAdapter implements OmdlConstants {
         return newList;
     }
 
-    public List<String> getAllCenterUrls(){
+    public List<OmdlWidgetReference> getAllCenterUrls(){
         Collections.reverse(topCenter);
         Collections.reverse(middleCenter);
         Collections.reverse(bottomCenter);
-        List<String> newList = new ArrayList<String>();
+        List<OmdlWidgetReference> newList = new ArrayList<OmdlWidgetReference>();
         newList.addAll(topCenter);
         newList.addAll(middleCenter);
         newList.addAll(bottomCenter);
@@ -107,11 +107,11 @@ public class OmdlInputAdapter implements OmdlConstants {
         return newList;
     }
 
-    public List<String> getAllLeftUrls(){
+    public List<OmdlWidgetReference> getAllLeftUrls(){
         Collections.reverse(topLeft);
         Collections.reverse(middleLeft);
         Collections.reverse(bottomLeft);
-        List<String> newList = new ArrayList<String>();
+        List<OmdlWidgetReference> newList = new ArrayList<OmdlWidgetReference>();
         newList.addAll(topLeft);
         newList.addAll(middleLeft);
         newList.addAll(bottomLeft);
@@ -119,39 +119,39 @@ public class OmdlInputAdapter implements OmdlConstants {
         return newList;
     }
 
-    public void addToAppMap(String url, String position){
+    public void addToAppMap(OmdlWidgetReference widgetReference, String position){
         if(position.contains(POSITION_LEFT)){
             LEFT_FOUND = true;
             if(position.contains(POSITION_TOP)){
-                topLeft.add(url);
+                topLeft.add(widgetReference);
             }else if (position.contains(POSITION_MIDDLE)) {
-                middleLeft.add(url);
+                middleLeft.add(widgetReference);
             }else{// otherwise go to bottom
-                bottomLeft.add(url);
+                bottomLeft.add(widgetReference);
             }
         }
         else if(position.contains(POSITION_CENTER)){
             CENTER_FOUND = true;
             if(position.contains(POSITION_TOP)){
-                topCenter.add(url);
+                topCenter.add(widgetReference);
             }else if (position.contains(POSITION_MIDDLE)) {
-                middleCenter.add(url);
+                middleCenter.add(widgetReference);
             }else{// otherwise go to bottom
-                bottomCenter.add(url);
+                bottomCenter.add(widgetReference);
             }
         }
         else if(position.contains(POSITION_RIGHT)){
             RIGHT_FOUND = true;
             if(position.contains(POSITION_TOP)){
-                topRight.add(url);
+                topRight.add(widgetReference);
             }else if (position.contains(POSITION_MIDDLE)) {
-                middleRight.add(url);
+                middleRight.add(widgetReference);
             }else{// otherwise go to bottom
-                bottomRight.add(url);
+                bottomRight.add(widgetReference);
             }
         }
         else{
-            unknown.add(url);
+            unknown.add(widgetReference);
         }
     }
 

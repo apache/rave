@@ -135,7 +135,7 @@ public class OmdlOutputAdapter implements OmdlConstants {
             appType = APP_TYPE_OPENSOCIAL;
         }else if(appType.equals("W3C")){
             appType = APP_TYPE_W3C;
-            url = wookieUrl + "/widgets/" + url + "?format=application/widget";
+            url = wookieUrl + "/widgets/" + url;
         }else{
             appType = APP_TYPE_UNKNOWN;
         }

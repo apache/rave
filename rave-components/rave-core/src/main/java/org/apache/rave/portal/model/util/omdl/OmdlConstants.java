@@ -55,8 +55,9 @@ public interface OmdlConstants {
     public final String APP_TYPE_W3C = "application/widget";
     public final String APP_TYPE_OPENSOCIAL = "application/vnd-opensocial+xml";
     public final String APP_TYPE_UNKNOWN = "application/unknown";
-
     public final String REL_TYPE = "source";
+    public final String RAVE_APP_TYPE_OPENSOCIAL = "OpenSocial";
+    public final String RAVE_APP_TYPE_W3C = "W3C";
 
     // XML Element and attributes
     public final String NAMESPACE = "http://omdl.org";
@@ -64,7 +65,11 @@ public interface OmdlConstants {
     public final String TITLE = "title";
     public final String LAYOUT = "layout";
     public final String APP = "app";
+    public final String LINK = "link";
     public final String POSITION = "position";
+    public final String ID_ATTRIBUTE = "id";
+    public final String TYPE_ATTRIBUTE = "type";
+    public final String HREF = "href";
 
     public final String DEFAULT_LAYOUT = FLOW_LAYOUT;
 

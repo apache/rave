@@ -77,7 +77,7 @@ public interface WidgetMarketplaceService {
      * @return
      * @throws Exception
      */
-    Widget getWidgetMetadata(String url, String type) throws Exception;
+    Widget resolveWidgetMetadata(String url, String type) throws Exception;
     
     /**
      * Gets the specified Widget

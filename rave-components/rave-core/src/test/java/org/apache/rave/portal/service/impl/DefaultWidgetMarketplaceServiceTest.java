@@ -25,10 +25,9 @@ import java.util.Map;
 import org.apache.rave.portal.model.Widget;
 import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.service.PortalPreferenceService;
-import org.apache.rave.portal.service.UserService;
+import org.apache.rave.portal.service.RemoteWidgetResolverService;
 import org.apache.rave.portal.service.WidgetMarketplaceService;
 import org.apache.rave.portal.service.WidgetMetadataResolver;
-import org.apache.rave.portal.service.WidgetService;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -36,9 +35,7 @@ import static org.easymock.EasyMock.*;
 
 public class DefaultWidgetMarketplaceServiceTest {
 
-    static WidgetService widgetService;
-    static UserService userService;
-    static PortalPreferenceService portalPreferenceService;
+    static RemoteWidgetResolverService widgetResolverService;
     static PortalPreferenceService prefs;
     static WidgetMarketplaceService service;
     static Map<String, WidgetMetadataResolver> widgetMetadataResolverMap;
@@ -46,11 +43,9 @@ public class DefaultWidgetMarketplaceServiceTest {
 
     @BeforeClass
     public static void setup(){
-        widgetService = createMock(WidgetService.class);
-        userService = createMock(UserService.class);
         prefs = createMock(PortalPreferenceService.class);
         metadataResolver = new ArrayList<WidgetMetadataResolver>();
-        service = new DefaultWidgetMarketplaceService(widgetService, userService, prefs, metadataResolver);
+        service = new DefaultWidgetMarketplaceService(widgetResolverService, prefs);
     }
 
     @Ignore
@@ -67,7 +62,7 @@ public class DefaultWidgetMarketplaceServiceTest {
     @Test
     public void getCategoryResults() throws Exception{
         prefs = createMock(PortalPreferenceService.class);
-        service = new DefaultWidgetMarketplaceService(widgetService, userService, prefs, metadataResolver);
+        service = new DefaultWidgetMarketplaceService(widgetResolverService, prefs);
         SearchResult<Widget> results = service.getWidgetsByCategory("a", 0, 10);
         for (Widget widget: results.getResultSet()){
             System.out.println(widget.getTitle());
@@ -79,7 +74,7 @@ public class DefaultWidgetMarketplaceServiceTest {
     @Test
     public void getCategories() throws Exception{
         prefs = createMock(PortalPreferenceService.class);
-        service = new DefaultWidgetMarketplaceService(widgetService, userService, prefs, metadataResolver);
+        service = new DefaultWidgetMarketplaceService(widgetResolverService, prefs);
         List<String> results = service.getCategories();
         for (String category: results){
             System.out.println(category);

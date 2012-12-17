@@ -63,7 +63,7 @@ public class MarketplaceAPI {
                  Widget widget = null;
                  // TODO - improve info sent back to marketplace, rather then just writing to the console
                  try {
-                    widget =  marketplaceService.getWidgetMetadata(url, providerType);
+                    widget =  marketplaceService.resolveWidgetMetadata(url, providerType);
                     if(widget == null){
                         return null;
                     }
