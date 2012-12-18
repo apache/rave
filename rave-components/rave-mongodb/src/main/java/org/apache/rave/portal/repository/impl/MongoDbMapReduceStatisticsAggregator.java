@@ -20,9 +20,6 @@
 package org.apache.rave.portal.repository.impl;
 
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
-import org.apache.rave.portal.model.MongoDbPage;
-import org.apache.rave.portal.model.Page;
 import org.apache.rave.portal.model.WidgetRatingsMapReduceResult;
 import org.apache.rave.portal.model.WidgetUsersMapReduceResult;
 import org.apache.rave.portal.model.util.WidgetStatistics;
@@ -31,21 +28,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.mapreduce.MapReduceOptions;
 import org.springframework.data.mongodb.core.mapreduce.MapReduceResults;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import static org.apache.rave.portal.repository.util.CollectionNames.PAGE_COLLECTION;
-import static org.apache.rave.portal.repository.util.CollectionNames.STATS_COLLECTION;
-import static org.apache.rave.portal.repository.util.CollectionNames.WIDGET_COLLECTION;
-import static org.springframework.data.mongodb.core.query.Criteria.where;
-import static org.springframework.data.mongodb.core.query.Query.query;
+import static org.apache.rave.portal.repository.util.CollectionNames.*;
 
 /**
  * Provides Statistics via MapReduce jobs
@@ -66,28 +57,25 @@ public class MongoDbMapReduceStatisticsAggregator implements StatisticsAggregato
         this.mongoOperations = mongoOperations;
     }
     public WidgetStatistics getWidgetStatistics(long widget_id, long user_id) {
-        Query statsQuery = query(where("widgetId").is(widget_id));
-        MapReduceResults<WidgetRatingsMapReduceResult> widgetStats = mongoOperations.mapReduce(statsQuery, WIDGET_COLLECTION, RATINGS_MAP, RATINGS_REDUCE, WidgetRatingsMapReduceResult.class);
-        List<MongoDbPage> pages = mongoOperations.find(query(where("regions").elemMatch(where("regionWidgets").elemMatch(where("widgetId").is(widget_id)))), MongoDbPage.class, PAGE_COLLECTION);
+        WidgetUsersMapReduceResult userResult = mongoOperations.findById(widget_id, WidgetUsersMapReduceResult.class, WIDGET_USERS);
+        WidgetRatingsMapReduceResult ratingResult = mongoOperations.findById(widget_id, WidgetRatingsMapReduceResult.class, WIDGET_RATINGS);
 
-        int userCount = getUserCount(pages).size();
-        switch (widgetStats.getCounts().getOutputCount()) {
-            case 0:
-                WidgetStatistics stats = new WidgetStatistics();
-                stats.setTotalUserCount(userCount);
-                return stats;
-            case 1:
-                WidgetRatingsMapReduceResult statsResult = widgetStats.iterator().next();
-                return createWidgetStatisticsFromResults(user_id, statsResult, userCount);
-            default:
-                throw new IllegalStateException("Invalid results returned from Map/Reduce");
+        int userCount = userResult == null ? 0 : userResult.getValue().size();
+        WidgetStatistics stats;
+        if(ratingResult == null) {
+            stats = new WidgetStatistics();
+            stats.setUserRating(-1);
+        } else {
+            stats = createWidgetStatisticsFromResults(user_id, ratingResult);
         }
+        stats.setTotalUserCount(userCount);
+        return stats;
     }
 
     @Override
     public Map<Long, WidgetStatistics> getAllWidgetStatistics(long userId) {
-        List<WidgetRatingsMapReduceResult> widgetStats = mongoOperations.findAll(WidgetRatingsMapReduceResult.class, STATS_COLLECTION);
-        List<WidgetUsersMapReduceResult> widgetUsers = mongoOperations.findAll(WidgetUsersMapReduceResult.class, STATS_COLLECTION);
+        List<WidgetRatingsMapReduceResult> widgetStats = mongoOperations.findAll(WidgetRatingsMapReduceResult.class, WIDGET_RATINGS);
+        List<WidgetUsersMapReduceResult> widgetUsers = mongoOperations.findAll(WidgetUsersMapReduceResult.class, WIDGET_USERS);
 
         Map<Long, WidgetStatistics> stats = Maps.newHashMap();
         Map<Long, Integer> userStats = mapUsersResults(widgetUsers);
@@ -111,7 +99,7 @@ public class MongoDbMapReduceStatisticsAggregator implements StatisticsAggregato
     }
 
     public void buildStats() {
-        RunStatistics runStats = mongoOperations.findById(ID, RunStatistics.class, STATS_COLLECTION);
+        RunStatistics runStats = mongoOperations.findById(ID, RunStatistics.class, OPERATIONS);
         if(runStats == null || (System.currentTimeMillis() - runStats.getRefreshedTimeStamp() > DEFAULT_RESULT_VALIDITY)) {
             queryForUserStats();
         }
@@ -121,7 +109,7 @@ public class MongoDbMapReduceStatisticsAggregator implements StatisticsAggregato
         synchronized (this) {
             executeUsersMapReduce();
             executeRatingsMapReduce();
-            mongoOperations.save(new RunStatistics(ID, System.currentTimeMillis()), STATS_COLLECTION);
+            mongoOperations.save(new RunStatistics(ID, System.currentTimeMillis()), OPERATIONS);
         }
     }
 
@@ -135,34 +123,48 @@ public class MongoDbMapReduceStatisticsAggregator implements StatisticsAggregato
         return map;
     }
 
-    private MapReduceOptions getOptions() {
-        return MapReduceOptions.options().javaScriptMode(true).outputCollection(STATS_COLLECTION).outputTypeReplace();
+    private MapReduceOptions getOptions(String collection) {
+        return MapReduceOptions.options().javaScriptMode(true).outputCollection(collection).outputTypeReplace();
     }
 
     private MapReduceResults<WidgetUsersMapReduceResult> executeUsersMapReduce() {
-        return mongoOperations.mapReduce(PAGE_COLLECTION, USERS_MAP, USERS_REDUCE, getOptions(), WidgetUsersMapReduceResult.class);
+        return mongoOperations.mapReduce(PAGE_COLLECTION, USERS_MAP, USERS_REDUCE, getOptions(WIDGET_USERS), WidgetUsersMapReduceResult.class);
     }
 
     private MapReduceResults<WidgetRatingsMapReduceResult> executeRatingsMapReduce() {
-        return mongoOperations.mapReduce(WIDGET_COLLECTION, RATINGS_MAP, RATINGS_REDUCE, getOptions(), WidgetRatingsMapReduceResult.class);
+        return mongoOperations.mapReduce(WIDGET_COLLECTION, RATINGS_MAP, RATINGS_REDUCE, getOptions(WIDGET_RATINGS), WidgetRatingsMapReduceResult.class);
     }
 
     private void addUserCount(Map<Long, Integer> users, Map<Long, WidgetStatistics> stats) {
         for (Map.Entry<Long, Integer> result : users.entrySet()) {
-            WidgetStatistics widgetStatistics = new WidgetStatistics();
-            widgetStatistics.setTotalUserCount(result.getValue());
-            widgetStatistics.setUserRating(-1);
+            WidgetStatistics widgetStatistics = getTotalUserOnlyWidgetStatistics(result.getValue());
             stats.put(result.getKey(), widgetStatistics);
         }
     }
 
     private void addCombinedStats(long userId, List<WidgetRatingsMapReduceResult> widgetStats, Map<Long, Integer> usersMap, Map<Long, WidgetStatistics> stats) {
         for (WidgetRatingsMapReduceResult result : widgetStats) {
-            stats.put(result.getId(), createWidgetStatisticsFromResults(userId, result, usersMap.get(result.getId())));
+            stats.put(result.getId(), createWidgetStatisticsFromResults(userId, result));
+        }
+        for(Map.Entry<Long, Integer> id : usersMap.entrySet()) {
+            Integer value = id.getValue();
+            if(stats.containsKey(id.getKey())) {
+                stats.get(id.getKey()).setTotalUserCount(value);
+            } else {
+                WidgetStatistics stat = getTotalUserOnlyWidgetStatistics(value);
+                stats.put(id.getKey(), stat);
+            }
         }
     }
 
-    private WidgetStatistics createWidgetStatisticsFromResults(long user_id, WidgetRatingsMapReduceResult statsResult, Integer userResult) {
+    private WidgetStatistics getTotalUserOnlyWidgetStatistics(Integer value) {
+        WidgetStatistics stat = new WidgetStatistics();
+        stat.setTotalUserCount(value);
+        stat.setUserRating(-1);
+        return stat;
+    }
+
+    private WidgetStatistics createWidgetStatisticsFromResults(long user_id, WidgetRatingsMapReduceResult statsResult) {
         WidgetStatistics statistics = new WidgetStatistics();
         WidgetRatingsMapReduceResult.WidgetStatisticsMapReduceResult result = statsResult.getValue();
         if (result != null) {
@@ -172,19 +174,7 @@ public class MongoDbMapReduceStatisticsAggregator implements StatisticsAggregato
         } else {
             statistics.setUserRating(-1);
         }
-        statistics.setTotalUserCount(userResult == null ? 0 : userResult);
         return statistics;
-    }
-
-    private Set<Long> getUserCount(List<MongoDbPage> pages) {
-        Set<Long> set = Sets.newHashSet();
-        for (Page page : pages) {
-            Long id = page.getOwner().getId();
-            if (!set.contains(id)) {
-                set.add(id);
-            }
-        }
-        return set;
     }
 
     public static class RunStatistics {

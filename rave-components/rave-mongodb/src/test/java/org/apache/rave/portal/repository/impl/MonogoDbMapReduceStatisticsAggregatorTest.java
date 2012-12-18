@@ -21,21 +21,19 @@ package org.apache.rave.portal.repository.impl;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import org.apache.rave.portal.model.*;
-import org.apache.rave.portal.model.impl.UserImpl;
+import org.apache.rave.portal.model.WidgetRatingsMapReduceResult;
+import org.apache.rave.portal.model.WidgetUsersMapReduceResult;
 import org.apache.rave.portal.model.util.WidgetStatistics;
 import org.apache.rave.portal.repository.StatisticsAggregator;
 import org.apache.rave.portal.repository.util.CollectionNames;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.data.mongodb.core.MongoOperations;
-import org.springframework.data.mongodb.core.mapreduce.MapReduceCounts;
 import org.springframework.data.mongodb.core.mapreduce.MapReduceOptions;
-import org.springframework.data.mongodb.core.mapreduce.MapReduceResults;
-import org.springframework.data.mongodb.core.query.Query;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 import static org.apache.rave.portal.repository.impl.MongoDbMapReduceStatisticsAggregator.*;
 import static org.apache.rave.portal.repository.util.CollectionNames.*;
@@ -43,9 +41,6 @@ import static org.easymock.EasyMock.*;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-import static org.springframework.data.mongodb.core.query.Criteria.where;
-import static org.springframework.data.mongodb.core.query.Query.query;
 
 public class MonogoDbMapReduceStatisticsAggregatorTest {
 
@@ -56,66 +51,6 @@ public class MonogoDbMapReduceStatisticsAggregatorTest {
     public void setup() {
         mongoOperations = createMock(MongoOperations.class);
         aggregator = new MongoDbMapReduceStatisticsAggregator(mongoOperations);
-    }
-
-    @Test
-    public void getStatistics_Case0(){
-        long widget_id = 123;
-        long user_id = 321;
-        Query statsQuery = query(where("widgetId").is(widget_id));
-        Query pageQuery = query(where("regions").elemMatch(where("regionWidgets").elemMatch(where("widgetId").is(widget_id))));
-        MapReduceResults<WidgetRatingsMapReduceResult> widgetStats = createMock(MapReduceResults.class);
-        MapReduceCounts mapReduceCounts = createMock(MapReduceCounts.class);
-        List<MongoDbPage> pages = new ArrayList<MongoDbPage>();
-
-        expect(mongoOperations.mapReduce(statsQuery, WIDGET_COLLECTION, RATINGS_MAP, RATINGS_REDUCE, WidgetRatingsMapReduceResult.class)).andReturn(widgetStats);
-        expect(mongoOperations.find(pageQuery, MongoDbPage.class, PAGE_COLLECTION)).andReturn(pages);
-        expect(widgetStats.getCounts()).andReturn(mapReduceCounts);
-        expect(mapReduceCounts.getOutputCount()).andReturn(0);
-        replay(mongoOperations, widgetStats, mapReduceCounts);
-
-        WidgetStatistics result = aggregator.getWidgetStatistics(widget_id, user_id);
-
-        assertTrue(result.getTotalUserCount() == 0);
-    }
-
-    @Test
-    public void getStatistics_Case1(){
-        long widget_id = 123;
-        long user_id = 321;
-        Query statsQuery = query(where("widgetId").is(widget_id));
-        Query pageQuery = query(where("regions").elemMatch(where("regionWidgets").elemMatch(where("widgetId").is(widget_id))));
-        MapReduceResults<WidgetRatingsMapReduceResult> widgetStats = createMock(MapReduceResults.class);
-        MapReduceCounts mapReduceCounts = createMock(MapReduceCounts.class);
-        WidgetRatingsMapReduceResult statsResult = new WidgetRatingsMapReduceResult();
-        List<MongoDbPage> pages = new ArrayList<MongoDbPage>();
-        Iterator iter = createMock(Iterator.class);
-
-        //add page to pages
-        Page page = new MongoDbPage();
-        User owner = new UserImpl();
-        ((UserImpl)owner).setId(234L);
-        page.setOwner(owner);
-        pages.add((MongoDbPage)page);
-
-        //add same id to cover branches
-        Page page_2 = new MongoDbPage();
-        User owner_2 = new UserImpl();
-        ((UserImpl)owner_2).setId(234L);
-        page_2.setOwner(owner_2);
-        pages.add((MongoDbPage)page_2);
-
-        expect(mongoOperations.mapReduce(statsQuery, WIDGET_COLLECTION, RATINGS_MAP, RATINGS_REDUCE, WidgetRatingsMapReduceResult.class)).andReturn(widgetStats);
-        expect(mongoOperations.find(pageQuery, MongoDbPage.class, PAGE_COLLECTION)).andReturn(pages);
-        expect(widgetStats.getCounts()).andReturn(mapReduceCounts);
-        expect(mapReduceCounts.getOutputCount()).andReturn(1);
-        expect(widgetStats.iterator()).andReturn(iter);
-        expect(iter.next()).andReturn(statsResult);
-        replay(mongoOperations, widgetStats, mapReduceCounts, iter);
-
-        WidgetStatistics result = aggregator.getWidgetStatistics(widget_id, user_id);
-
-        assertThat(result.getTotalUserCount(), is(equalTo(1)));
     }
 
     @Test
@@ -136,8 +71,8 @@ public class MonogoDbMapReduceStatisticsAggregatorTest {
                 new WidgetUsersMapReduceResult(26L, users)
         );
 
-        expect(mongoOperations.findAll(WidgetRatingsMapReduceResult.class, CollectionNames.STATS_COLLECTION)).andReturn(ratings);
-        expect(mongoOperations.findAll(WidgetUsersMapReduceResult.class, CollectionNames.STATS_COLLECTION)).andReturn(usersMapReduceResults);
+        expect(mongoOperations.findAll(WidgetRatingsMapReduceResult.class, CollectionNames.WIDGET_RATINGS)).andReturn(ratings);
+        expect(mongoOperations.findAll(WidgetUsersMapReduceResult.class, CollectionNames.WIDGET_USERS)).andReturn(usersMapReduceResults);
         replay(mongoOperations);
 
         Map<Long, WidgetStatistics> stats = aggregator.getAllWidgetStatistics(1L);
@@ -170,8 +105,8 @@ public class MonogoDbMapReduceStatisticsAggregatorTest {
                 new WidgetUsersMapReduceResult(26L, users)
         );
 
-        expect(mongoOperations.findAll(WidgetRatingsMapReduceResult.class, CollectionNames.STATS_COLLECTION)).andReturn(ratings);
-        expect(mongoOperations.findAll(WidgetUsersMapReduceResult.class, CollectionNames.STATS_COLLECTION)).andReturn(usersMapReduceResults);
+        expect(mongoOperations.findAll(WidgetRatingsMapReduceResult.class, CollectionNames.WIDGET_RATINGS)).andReturn(ratings);
+        expect(mongoOperations.findAll(WidgetUsersMapReduceResult.class, CollectionNames.WIDGET_USERS)).andReturn(usersMapReduceResults);
         replay(mongoOperations);
 
         Map<Long, WidgetStatistics> stats = aggregator.getAllWidgetStatistics(5L);
@@ -204,8 +139,8 @@ public class MonogoDbMapReduceStatisticsAggregatorTest {
                 new WidgetUsersMapReduceResult(26L, users)
         );
 
-        expect(mongoOperations.findAll(WidgetRatingsMapReduceResult.class, CollectionNames.STATS_COLLECTION)).andReturn(ratings);
-        expect(mongoOperations.findAll(WidgetUsersMapReduceResult.class, CollectionNames.STATS_COLLECTION)).andReturn(usersMapReduceResults);
+        expect(mongoOperations.findAll(WidgetRatingsMapReduceResult.class, CollectionNames.WIDGET_RATINGS)).andReturn(ratings);
+        expect(mongoOperations.findAll(WidgetUsersMapReduceResult.class, CollectionNames.WIDGET_USERS)).andReturn(usersMapReduceResults);
         replay(mongoOperations);
 
         Map<Long, WidgetStatistics> stats = aggregator.getAllWidgetStatistics(5L);
@@ -233,8 +168,8 @@ public class MonogoDbMapReduceStatisticsAggregatorTest {
                 new WidgetUsersMapReduceResult(26L, users)
         );
 
-        expect(mongoOperations.findAll(WidgetRatingsMapReduceResult.class, CollectionNames.STATS_COLLECTION)).andReturn(ratings);
-        expect(mongoOperations.findAll(WidgetUsersMapReduceResult.class, CollectionNames.STATS_COLLECTION)).andReturn(usersMapReduceResults);
+        expect(mongoOperations.findAll(WidgetRatingsMapReduceResult.class, CollectionNames.WIDGET_RATINGS)).andReturn(ratings);
+        expect(mongoOperations.findAll(WidgetUsersMapReduceResult.class, CollectionNames.WIDGET_USERS)).andReturn(usersMapReduceResults);
         replay(mongoOperations);
 
         Map<Long, WidgetStatistics> stats = aggregator.getAllWidgetStatistics(5L);
@@ -250,11 +185,95 @@ public class MonogoDbMapReduceStatisticsAggregatorTest {
     }
 
     @Test
-    @Ignore
+    public void getWidgetStatistics_valid() {
+        long widget_id = 1L;
+        Map<Long, Long> userMap = Maps.newHashMap();
+        userMap.put(20L, 10L);
+        userMap.put(21L, 10L);
+        WidgetRatingsMapReduceResult.WidgetStatisticsMapReduceResult stats = new WidgetRatingsMapReduceResult.WidgetStatisticsMapReduceResult(userMap, 20L, 0L);
+        WidgetUsersMapReduceResult usersResult = new WidgetUsersMapReduceResult(widget_id, userMap);
+        WidgetRatingsMapReduceResult ratingsResult = new WidgetRatingsMapReduceResult(widget_id, stats);
+
+        expect(mongoOperations.findById(widget_id, WidgetRatingsMapReduceResult.class, WIDGET_RATINGS)).andReturn(ratingsResult);
+        expect(mongoOperations.findById(widget_id, WidgetUsersMapReduceResult.class, WIDGET_USERS)).andReturn(usersResult);
+        replay(mongoOperations);
+
+        WidgetStatistics result = aggregator.getWidgetStatistics(widget_id, 21L);
+
+        assertThat(result.getTotalDislike(), is(equalTo(0)));
+        assertThat(result.getTotalLike(), is(equalTo(20)));
+        assertThat(result.getUserRating(), is(equalTo(10)));
+        assertThat(result.getTotalUserCount(), is(equalTo(2)));
+    }
+
+    @Test
+    public void getWidgetStatistics_noUser() {
+        long widget_id = 1L;
+        Map<Long, Long> userMap = Maps.newHashMap();
+        userMap.put(20L, 10L);
+        userMap.put(21L, 10L);
+        WidgetRatingsMapReduceResult.WidgetStatisticsMapReduceResult stats = new WidgetRatingsMapReduceResult.WidgetStatisticsMapReduceResult(userMap, 20L, 0L);
+        WidgetUsersMapReduceResult usersResult = new WidgetUsersMapReduceResult(widget_id, userMap);
+        WidgetRatingsMapReduceResult ratingsResult = new WidgetRatingsMapReduceResult(widget_id, stats);
+
+        expect(mongoOperations.findById(widget_id, WidgetRatingsMapReduceResult.class, WIDGET_RATINGS)).andReturn(ratingsResult);
+        expect(mongoOperations.findById(widget_id, WidgetUsersMapReduceResult.class, WIDGET_USERS)).andReturn(usersResult);
+        replay(mongoOperations);
+
+        WidgetStatistics result = aggregator.getWidgetStatistics(widget_id, 23L);
+
+        assertThat(result.getTotalDislike(), is(equalTo(0)));
+        assertThat(result.getTotalLike(), is(equalTo(20)));
+        assertThat(result.getUserRating(), is(equalTo(-1)));
+        assertThat(result.getTotalUserCount(), is(equalTo(2)));
+    }
+
+    @Test
+    public void getWidgetStatistics_nullRatings() {
+        long widget_id = 1L;
+        Map<Long, Long> userMap = Maps.newHashMap();
+        userMap.put(20L, 10L);
+        userMap.put(21L, 10L);
+        WidgetUsersMapReduceResult usersResult = new WidgetUsersMapReduceResult(widget_id, userMap);
+
+        expect(mongoOperations.findById(widget_id, WidgetRatingsMapReduceResult.class, WIDGET_RATINGS)).andReturn(null);
+        expect(mongoOperations.findById(widget_id, WidgetUsersMapReduceResult.class, WIDGET_USERS)).andReturn(usersResult);
+        replay(mongoOperations);
+
+        WidgetStatistics result = aggregator.getWidgetStatistics(widget_id, 21L);
+
+        assertThat(result.getTotalDislike(), is(equalTo(0)));
+        assertThat(result.getTotalLike(), is(equalTo(0)));
+        assertThat(result.getUserRating(), is(equalTo(-1)));
+        assertThat(result.getTotalUserCount(), is(equalTo(2)));
+    }
+
+    @Test
+    public void getWidgetStatistics_nullUsers() {
+        long widget_id = 1L;
+        Map<Long, Long> userMap = Maps.newHashMap();
+        userMap.put(20L, 10L);
+        userMap.put(21L, 10L);
+        WidgetRatingsMapReduceResult.WidgetStatisticsMapReduceResult stats = new WidgetRatingsMapReduceResult.WidgetStatisticsMapReduceResult(userMap, 20L, 0L);
+        WidgetRatingsMapReduceResult ratingsResult = new WidgetRatingsMapReduceResult(widget_id, stats);
+
+        expect(mongoOperations.findById(widget_id, WidgetRatingsMapReduceResult.class, WIDGET_RATINGS)).andReturn(ratingsResult);
+        expect(mongoOperations.findById(widget_id, WidgetUsersMapReduceResult.class, WIDGET_USERS)).andReturn(null);
+        replay(mongoOperations);
+
+        WidgetStatistics result = aggregator.getWidgetStatistics(widget_id, 21L);
+
+        assertThat(result.getTotalDislike(), is(equalTo(0)));
+        assertThat(result.getTotalLike(), is(equalTo(20)));
+        assertThat(result.getUserRating(), is(equalTo(10)));
+        assertThat(result.getTotalUserCount(), is(equalTo(0)));
+    }
+
+    @Test
     public void init_existing() {
-        expect(mongoOperations.findById(ID, RunStatistics.class, STATS_COLLECTION)).andReturn(new RunStatistics(ID, System.currentTimeMillis() - DEFAULT_RESULT_VALIDITY));
+        expect(mongoOperations.findById(eq(ID), eq(RunStatistics.class), eq(OPERATIONS))).andReturn(new RunStatistics(ID, System.currentTimeMillis() - DEFAULT_RESULT_VALIDITY));
         setMapReduceExpectations();
-        mongoOperations.save(isA(RunStatistics.class), eq(STATS_COLLECTION));
+        mongoOperations.save(isA(RunStatistics.class), eq(OPERATIONS));
         expectLastCall();
         replay(mongoOperations);
 
@@ -264,9 +283,9 @@ public class MonogoDbMapReduceStatisticsAggregatorTest {
 
     @Test
     public void init_empty() {
-        expect(mongoOperations.findById(ID, RunStatistics.class, STATS_COLLECTION)).andReturn(null);
+        expect(mongoOperations.findById(ID, RunStatistics.class, OPERATIONS)).andReturn(null);
         setMapReduceExpectations();
-        mongoOperations.save(isA(RunStatistics.class), eq(STATS_COLLECTION));
+        mongoOperations.save(isA(RunStatistics.class), eq(OPERATIONS));
         expectLastCall();
         replay(mongoOperations);
 
@@ -276,16 +295,28 @@ public class MonogoDbMapReduceStatisticsAggregatorTest {
 
     @Test
     public void init_tooEarly() {
-        expect(mongoOperations.findById(ID, RunStatistics.class, STATS_COLLECTION)).andReturn(new RunStatistics(ID, System.currentTimeMillis() - 1000L));
+        expect(mongoOperations.findById(ID, RunStatistics.class, OPERATIONS)).andReturn(new RunStatistics(ID, System.currentTimeMillis() - 1000L));
         replay(mongoOperations);
 
         ((MongoDbMapReduceStatisticsAggregator)aggregator).buildStats();
         verify(mongoOperations);
     }
 
+    @Test
+    public void runStats() {
+        String id = "BOO";
+        long timestamp = 1234L;
+        RunStatistics stats = new RunStatistics();
+        stats.setId(id);
+        stats.setRefreshedTimeStamp(timestamp);
+
+        assertThat(stats.getId(), is(equalTo(id)));
+        assertThat(stats.getRefreshedTimeStamp(), is(equalTo(timestamp)));
+    }
+
     private void setMapReduceExpectations() {
         expect(mongoOperations.mapReduce(eq(WIDGET_COLLECTION), eq(RATINGS_MAP), eq(RATINGS_REDUCE), isA(MapReduceOptions.class), eq(WidgetRatingsMapReduceResult.class))).andReturn(null);
-        expect(mongoOperations.mapReduce(eq(PAGE_COLLECTION), eq(USERS_MAP), eq(USERS_REDUCE), isA(MapReduceOptions.class), eq(WidgetUsersMapReduceResult.class))).andReturn(null);
+        expect(mongoOperations.mapReduce(eq(PAGE_COLLECTION), eq(USERS_MAP), eq(USERS_REDUCE),  isA(MapReduceOptions.class), eq(WidgetUsersMapReduceResult.class))).andReturn(null);
     }
 
     private Map<Long, Long> getRatingsMap() {

@@ -20,6 +20,7 @@
 package org.apache.rave.portal.repository.util;
 
 public class CollectionNames {
+
     private CollectionNames() {}
 
     public static final String WIDGET_COLLECTION = "widget";
@@ -34,5 +35,7 @@ public class CollectionNames {
     public static final String OAUTH_CONSUMER_COLLECTION = "oauthConsumerStore";
     public static final String OAUTH_TOKEN_COLLECTION = "oauthTokenInfo";
     public static final String PAGE_LAYOUT_COLLECTION = "pageLayout";
-    public static final String STATS_COLLECTION = "statistics";
+    public static final String WIDGET_RATINGS = "rating_statistics";
+    public static final String WIDGET_USERS = "user_statistics";
+    public static final String OPERATIONS = "ops";
 }
