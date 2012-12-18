@@ -26,7 +26,7 @@ function(key, values) {
         result.like += value.like;
         result.dislike += value.dislike;
         for(var userRating in value.userRatings) {
-            result.userRatings[userRating] += value.userRatings[userRating];
+            result.userRatings[userRating] = value.userRatings[userRating];
         }
     });
     return result;
