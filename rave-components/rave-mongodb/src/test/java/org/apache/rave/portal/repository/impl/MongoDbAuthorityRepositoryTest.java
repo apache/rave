@@ -32,6 +32,7 @@ import java.util.List;
 
 import static org.apache.rave.portal.repository.util.CollectionNames.AUTHORITY_COLLECTION;
 import static org.easymock.EasyMock.*;
+import static org.easymock.EasyMock.isA;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 import static org.springframework.data.mongodb.core.query.Criteria.where;

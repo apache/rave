@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.rave.portal.model.conversion;
 
 import org.apache.rave.model.ModelConverter;
@@ -30,8 +31,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static org.easymock.EasyMock.*;
-import static org.hamcrest.CoreMatchers.*;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.isA;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.junit.Assert.assertThat;
 
 /**

@@ -19,13 +19,23 @@
 
 package org.apache.rave.portal.service.impl;
 
-import org.apache.rave.portal.model.*;
+import org.apache.rave.portal.model.Authority;
+import org.apache.rave.portal.model.Page;
+import org.apache.rave.portal.model.PageTemplate;
+import org.apache.rave.portal.model.PageType;
+import org.apache.rave.portal.model.Person;
+import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.impl.AuthorityImpl;
 import org.apache.rave.portal.model.impl.PageImpl;
 import org.apache.rave.portal.model.impl.PageTemplateImpl;
 import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.model.util.SearchResult;
-import org.apache.rave.portal.repository.*;
+import org.apache.rave.portal.repository.CategoryRepository;
+import org.apache.rave.portal.repository.PageRepository;
+import org.apache.rave.portal.repository.PageTemplateRepository;
+import org.apache.rave.portal.repository.PersonRepository;
+import org.apache.rave.portal.repository.UserRepository;
+import org.apache.rave.portal.repository.WidgetRepository;
 import org.apache.rave.portal.service.UserService;
 import org.junit.After;
 import org.junit.Before;
@@ -44,10 +54,20 @@ import org.springframework.security.openid.OpenIDAuthenticationToken;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.easymock.EasyMock.*;
-import static org.hamcrest.CoreMatchers.*;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.createNiceMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.easymock.EasyMock.isA;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
-import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.sameInstance;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class DefaultUserServiceTest {
 

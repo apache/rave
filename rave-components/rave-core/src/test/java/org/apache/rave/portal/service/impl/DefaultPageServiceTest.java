@@ -19,14 +19,32 @@
 
 package org.apache.rave.portal.service.impl;
 
-import org.apache.rave.portal.model.*;
-import org.apache.rave.portal.model.impl.*;
-import org.apache.rave.portal.repository.*;
+import org.apache.rave.portal.model.Page;
+import org.apache.rave.portal.model.PageLayout;
+import org.apache.rave.portal.model.PageTemplate;
+import org.apache.rave.portal.model.PageType;
+import org.apache.rave.portal.model.PageUser;
+import org.apache.rave.portal.model.Region;
+import org.apache.rave.portal.model.RegionWidget;
+import org.apache.rave.portal.model.Widget;
+import org.apache.rave.portal.model.impl.PageImpl;
+import org.apache.rave.portal.model.impl.PageLayoutImpl;
+import org.apache.rave.portal.model.impl.PageTemplateImpl;
+import org.apache.rave.portal.model.impl.PageUserImpl;
+import org.apache.rave.portal.model.impl.RegionImpl;
+import org.apache.rave.portal.model.impl.RegionWidgetImpl;
+import org.apache.rave.portal.model.impl.UserImpl;
+import org.apache.rave.portal.model.impl.WidgetImpl;
+import org.apache.rave.portal.repository.PageLayoutRepository;
+import org.apache.rave.portal.repository.PageRepository;
+import org.apache.rave.portal.repository.PageTemplateRepository;
+import org.apache.rave.portal.repository.RegionRepository;
+import org.apache.rave.portal.repository.RegionWidgetRepository;
+import org.apache.rave.portal.repository.WidgetRepository;
 import org.apache.rave.portal.service.PageService;
 import org.apache.rave.portal.service.UserService;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
-import org.hamcrest.CoreMatchers;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -35,8 +53,17 @@ import javax.persistence.NonUniqueResultException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.easymock.EasyMock.*;
-import static org.hamcrest.CoreMatchers.*;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.createStrictMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.easymock.EasyMock.isA;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
@@ -148,7 +175,7 @@ public class DefaultPageServiceTest {
         expect(pageRepository.getAllPages(VALID_USER_ID, PageType.USER)).andReturn(VALID_PAGES);
         replay(pageRepository);
 
-        assertThat(pageService.getAllUserPages(VALID_USER_ID), CoreMatchers.sameInstance(VALID_PAGES));
+        assertThat(pageService.getAllUserPages(VALID_USER_ID), sameInstance(VALID_PAGES));
 
         verify(pageRepository);
     }
@@ -163,7 +190,7 @@ public class DefaultPageServiceTest {
         expect(pageRepository.getAllPages(VALID_USER_ID, PageType.PERSON_PROFILE)).andReturn(VALID_PAGES);
         replay(pageRepository,userService,pageTemplateRepository);
 
-        assertThat(pageService.getPersonProfilePage(VALID_USER_ID), CoreMatchers.sameInstance(personPage));
+        assertThat(pageService.getPersonProfilePage(VALID_USER_ID), sameInstance(personPage));
 
         verify(pageRepository,userService,pageTemplateRepository);
     }
@@ -181,7 +208,7 @@ public class DefaultPageServiceTest {
         expect(pageRepository.createPageForUser(user, pageTemplate)).andReturn(personPage);
         replay(pageRepository, userService, pageTemplateRepository);
 
-        assertThat(pageService.getPersonProfilePage(VALID_USER_ID), CoreMatchers.sameInstance(personPage));
+        assertThat(pageService.getPersonProfilePage(VALID_USER_ID), sameInstance(personPage));
 
         verify(pageRepository, userService, pageTemplateRepository);
     }
@@ -961,7 +988,7 @@ public class DefaultPageServiceTest {
         String layoutName = "layout name";
 
         PageLayoutImpl layout = createStrictMock(PageLayoutImpl.class);
-        expect(layout.getNumberOfRegions()).andReturn(new Long(2)).anyTimes();
+        expect(layout.getNumberOfRegions()).andReturn(Long.valueOf(2L)).anyTimes();
         replay(layout);
 
         //create a strict mock that ensures that the appropriate setters are

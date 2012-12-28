@@ -16,10 +16,17 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.rave.portal.model.conversion;
 
 import org.apache.rave.model.ModelConverter;
-import org.apache.rave.portal.model.*;
+import org.apache.rave.portal.model.Address;
+import org.apache.rave.portal.model.Group;
+import org.apache.rave.portal.model.JpaAddress;
+import org.apache.rave.portal.model.JpaPageLayout;
+import org.apache.rave.portal.model.JpaPerson;
+import org.apache.rave.portal.model.PageLayout;
+import org.apache.rave.portal.model.Person;
 import org.apache.rave.portal.model.impl.AddressImpl;
 import org.apache.rave.portal.model.impl.GroupImpl;
 import org.apache.rave.portal.model.impl.PersonImpl;
@@ -35,9 +42,15 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.easymock.EasyMock.*;
-import static org.hamcrest.CoreMatchers.*;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.isA;
+import static org.easymock.EasyMock.replay;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 

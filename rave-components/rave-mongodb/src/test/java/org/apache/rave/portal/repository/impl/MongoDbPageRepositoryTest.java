@@ -30,6 +30,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import java.util.List;
 
 import static org.easymock.EasyMock.*;
+import static org.easymock.EasyMock.isA;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 import static org.springframework.data.mongodb.core.query.Criteria.where;

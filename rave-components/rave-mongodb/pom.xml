@@ -74,6 +74,18 @@
             <artifactId>freemarker</artifactId>
         </dependency>
 
+        <!-- Jackson JSON Mapper -->
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-mapper-asl</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-mrbean</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
         <!-- Logging -->
         <dependency>
             <groupId>org.slf4j</groupId>
