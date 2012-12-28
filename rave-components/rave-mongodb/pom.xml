@@ -85,6 +85,11 @@
             <artifactId>jackson-mrbean</artifactId>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>de.flapdoodle.embed</groupId>
+            <artifactId>de.flapdoodle.embed.mongo</artifactId>
+            <scope>provided</scope>
+        </dependency>
 
         <!-- Logging -->
         <dependency>

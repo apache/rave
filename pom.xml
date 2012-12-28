@@ -79,6 +79,7 @@
         <javax.activation.version>1.1.1</javax.activation.version>
         <freemarker.version>2.3.19</freemarker.version>
         <org.mongodb.driver.version>2.9.1</org.mongodb.driver.version>
+        <de.flapdoodle.embed.mongo.version>1.28</de.flapdoodle.embed.mongo.version>
         <!-- The location of Rave's H2 file DB. No trailing / -->
         <rave.database.location>/tmp/rave_db</rave.database.location>
 
@@ -357,6 +358,11 @@
                 <groupId>org.mongodb</groupId>
                 <artifactId>mongo-java-driver</artifactId>
                 <version>${org.mongodb.driver.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.flapdoodle.embed</groupId>
+                <artifactId>de.flapdoodle.embed.mongo</artifactId>
+                <version>${de.flapdoodle.embed.mongo.version}</version>
             </dependency>
 
             <dependency>
