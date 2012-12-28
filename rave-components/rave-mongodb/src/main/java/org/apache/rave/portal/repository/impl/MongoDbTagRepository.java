@@ -20,14 +20,9 @@
 package org.apache.rave.portal.repository.impl;
 
 
-import com.google.common.collect.Lists;
-import org.apache.commons.collections.ListUtils;
-import org.apache.rave.exception.NotSupportedException;
 import org.apache.rave.portal.model.Tag;
-import org.apache.rave.portal.model.Widget;
-import org.apache.rave.portal.model.WidgetTag;
 import org.apache.rave.portal.model.impl.TagImpl;
-import org.apache.rave.portal.repository.MongoWidgetOperations;
+import org.apache.rave.portal.repository.MongoTagOperations;
 import org.apache.rave.portal.repository.TagRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.query.Query;
@@ -35,84 +30,51 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+import static org.springframework.data.mongodb.core.query.Criteria.where;
+import static org.springframework.data.mongodb.core.query.Query.query;
+
 @Repository
 public class MongoDbTagRepository implements TagRepository {
 
     @Autowired
-    private MongoWidgetOperations widgetTemplate;
+    private MongoTagOperations template;
 
     @Override
     public List<Tag> getAll() {
-        List<Widget> widgets = widgetTemplate.find(new Query());
-        List<Tag> tags = Lists.newArrayList();
-        for (Widget widget : widgets) {
-            addUniqueTags(tags, widget);
-        }
-        return tags;
+        return template.find(new Query());
     }
 
     @Override
     public int getCountAll() {
-        return getAll().size();
+        return (int)template.count(new Query());
     }
 
     @Override
     public Tag getByKeyword(String keyword) {
-        return new TagImpl(keyword);
-    }
-
-    //@Override
-    @SuppressWarnings("unchecked")
-    public List<Tag> getAvailableTagsByWidgetId(String widgetId) {
-        List<Tag> all = getAll();
-        List<Tag> widgetTags = getTagsFromWidget(widgetTemplate.get(widgetId).getTags());
-        return ListUtils.subtract(all, widgetTags);
+        return template.findOne(query(where("keyword").is(keyword)));
     }
 
     @Override
     public Class<? extends Tag> getType() {
-        return Tag.class;
+        return TagImpl.class;
     }
 
     @Override
     public Tag get(String id) {
-        throw new NotSupportedException("Cannot access tags by Id");
+        return template.get(id);
     }
 
     @Override
     public Tag save(Tag item) {
-        throw new NotSupportedException("Cannot save tags directly");
+        return template.count(query(where("keyword").is(item.getKeyword()))) == 0 ? template.save(item) : item;
     }
 
     @Override
     public void delete(Tag item) {
-        throw new NotSupportedException("Cannot delete tags directly");
+        template.remove(query(where("_id").is(item.getId())));
     }
 
-    private List<Tag> getTagsFromWidget(List<WidgetTag> widgetTags) {
-        List<Tag> tags = Lists.newArrayList();
-        if (widgetTags != null) {
-            for (WidgetTag widgetTag : widgetTags) {
-                tags.add(get(widgetTag.getTagId()));
-            }
-        }
-        return tags;
-    }
-
-
-    private void addUniqueTags(List<Tag> tags, Widget widget) {
-        //returns if there are no tags for this widget to prevent null pointer exception
-        if (widget.getTags() == null) return;
-
-        for (WidgetTag widgetTag : widget.getTags()) {
-            Tag tag = get(widgetTag.getTagId());
-            if (!tags.contains(tag)) {
-                tags.add(tag);
-            }
-        }
-    }
-
-    public void setWidgetTemplate(MongoWidgetOperations widgetTemplate) {
-        this.widgetTemplate = widgetTemplate;
+    public void setWidgetTemplate(MongoTagOperations tagTemplate) {
+        this.template = tagTemplate;
     }
 }

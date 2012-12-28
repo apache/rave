@@ -20,19 +20,15 @@
 package org.apache.rave.portal.repository.impl;
 
 import com.google.common.collect.Lists;
-import org.apache.rave.exception.NotSupportedException;
 import org.apache.rave.portal.model.Tag;
-import org.apache.rave.portal.model.Widget;
-import org.apache.rave.portal.model.WidgetTag;
 import org.apache.rave.portal.model.impl.TagImpl;
-import org.apache.rave.portal.model.impl.WidgetImpl;
-import org.apache.rave.portal.model.impl.WidgetTagImpl;
-import org.apache.rave.portal.repository.MongoWidgetOperations;
+import org.apache.rave.portal.repository.MongoTagOperations;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static org.easymock.EasyMock.*;
@@ -45,92 +41,109 @@ import static org.junit.Assert.assertThat;
  */
 public class MongoDbTagRepositoryTest {
 
-    private MongoWidgetOperations widgetTemplate;
+    private MongoTagOperations tagTemplate;
     private MongoDbTagRepository repo;
 
     @Before
     public void setUp(){
-        widgetTemplate = createMock(MongoWidgetOperations.class);
+        tagTemplate = createMock(MongoTagOperations.class);
         repo = new MongoDbTagRepository();
-        repo.setWidgetTemplate(widgetTemplate);
+        repo.setWidgetTemplate(tagTemplate);
 
     }
 
-    @Test @Ignore("Fix before merge")
+    @Test
     public void getAll(){
-        List<Widget> widgets = Lists.newArrayList();
-        List<WidgetTag> widget_tags = Lists.newArrayList();
-        WidgetTag wt = new WidgetTagImpl();
-        Tag tag = new TagImpl();
-        widget_tags.add(wt);
-        Widget w = new WidgetImpl();
-        w.setTags(widget_tags);
-        widgets.add(w);
+        List<Tag> tags = Arrays.<Tag>asList(new TagImpl(), new TagImpl());
 
-        expect(widgetTemplate.find(new Query())).andReturn(widgets);
-        expect(widgetTemplate.find(new Query())).andReturn(widgets);
-        replay(widgetTemplate);
+        expect(tagTemplate.find(new Query())).andReturn(tags);
+        replay(tagTemplate);
 
         List<Tag> result = repo.getAll();
         assertNotNull(result);
-        assertThat(result.get(0), is(sameInstance(tag)));
+        assertThat(result.size(), is(equalTo(tags.size())));
 
-        int count = repo.getCountAll();
-        assertThat(count, is(equalTo(1)));
+    }
+
+    @Test
+    public void countAll(){
+
+        expect(tagTemplate.count(new Query())).andReturn(2L);
+        replay(tagTemplate);
+
+        int result = repo.getCountAll();
+        assertThat(result, is(equalTo(2)));
 
     }
 
     @Test
     public void getAll_null(){
-        List<Widget> widgets = Lists.newArrayList();
-        Widget w = new WidgetImpl();
-        widgets.add(w);
 
-        expect(widgetTemplate.find(new Query())).andReturn(widgets);
-        replay(widgetTemplate);
+        expect(tagTemplate.find(new Query())).andReturn(Lists.<Tag>newArrayList());
+        replay(tagTemplate);
 
         List<Tag> result = repo.getAll();
         assertThat(result.size(), is(equalTo(0)));
 
     }
 
-    @Test (expected = NotSupportedException.class)
+    @Test
+    public void getByKeyword() {
+        String keyword = "key";
+        Tag t = new TagImpl("1", keyword);
+        expect(tagTemplate.findOne(Query.query(Criteria.where("keyword").is(keyword)))).andReturn(t);
+        replay(tagTemplate);
+
+        Tag fromRepo = repo.getByKeyword(keyword);
+        assertThat(fromRepo.getKeyword(), is(equalTo(keyword)));
+    }
+
+    @Test
+    public void get() {
+        String keyword = "key";
+        String id = "1";
+        Tag t = new TagImpl(id, keyword);
+        expect(tagTemplate.get(id)).andReturn(t);
+        replay(tagTemplate);
+
+        Tag fromRepo = repo.get(id);
+        assertThat(fromRepo.getId(), is(equalTo(id)));
+        assertThat(fromRepo.getKeyword(), is(equalTo(keyword)));
+    }
+
+    @Test
     public void save(){
-        Tag tag = new TagImpl();
-        repo.save(tag);
-
+        String keyword = "KEYWORD";
+        Tag tag = new TagImpl("ID", keyword);
+        expect(tagTemplate.count(Query.query(Criteria.where("keyword").is(keyword)))).andReturn(0L);
+        expect(tagTemplate.save(tag)).andReturn(tag);
+        replay(tagTemplate);
+        Tag returned = repo.save(tag);
+        verify(tagTemplate);
+        assertThat(returned, is(sameInstance(tag)));
     }
 
-    @Test (expected = NotSupportedException.class)
+    @Test
+    public void save_more(){
+        String keyword = "KEYWORD";
+        Tag tag = new TagImpl("ID", keyword);
+        expect(tagTemplate.count(Query.query(Criteria.where("keyword").is(keyword)))).andReturn(1L);
+        replay(tagTemplate);
+        Tag returned = repo.save(tag);
+        verify(tagTemplate);
+        assertThat(returned, is(sameInstance(tag)));
+    }
+
+    @Test
     public void delete(){
-        Tag tag = new TagImpl();
+        String id ="id";
+        Tag tag = new TagImpl(id, "keyword");
+        tagTemplate.remove(Query.query(Criteria.where("_id").is(id)));
+        expectLastCall();
+        replay(tagTemplate);
+
         repo.delete(tag);
+        verify(tagTemplate);
 
     }
-
-//    @Test
-//    public void getAvailableTagsByWidgetId(){
-//        List<Widget> widgets = Lists.newArrayList();
-//        List<WidgetTag> widget_tags = Lists.newArrayList();
-//        WidgetTag wt = new WidgetTagImpl();
-//        wt.setWidgetId(1111L);
-//        Tag tag = new TagImpl();
-//        wt.setTag(tag);
-//        widget_tags.add(wt);
-//        Widget w = new WidgetImpl(1234L);
-//        w.setTags(widget_tags);
-//        widgets.add(w);
-//
-//        expect(widgetTemplate.find(new Query())).andReturn(widgets);
-//        // The following expect is getting this error...
-//        // Method threw 'java.lang.NullPointerException' exception.
-//        // Cannot evaluate org.easymock.internal.Invocation.toString()
-//        expect(widgetTemplate.get(1234L).getTags()).andReturn(widget_tags);
-//        replay(widgetTemplate);
-//
-//        List<Tag> result = repo.getAvailableTagsByWidgetId(1234L);
-//        assertThat(result.size(), is(equalTo(1)));
-//    }
-
-
 }

@@ -23,6 +23,7 @@ import com.google.common.collect.Maps;
 import org.apache.rave.exception.NotSupportedException;
 import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.model.util.WidgetStatistics;
+import org.apache.rave.portal.repository.MongoTagOperations;
 import org.apache.rave.portal.repository.MongoWidgetOperations;
 import org.apache.rave.portal.repository.StatisticsAggregator;
 import org.apache.rave.portal.repository.WidgetRepository;
@@ -50,6 +51,9 @@ public class MongoDbWidgetRepository implements WidgetRepository {
 
     @Autowired
     private MongoWidgetOperations template;
+
+    @Autowired
+    private MongoTagOperations tagTemplate;
 
     @Autowired
     private StatisticsAggregator statsAggregator;
@@ -119,7 +123,7 @@ public class MongoDbWidgetRepository implements WidgetRepository {
     }
 
     @Override
-    public WidgetStatistics getWidgetStatistics(String  widget_id, String  user_id) {
+    public WidgetStatistics getWidgetStatistics(String widget_id, String user_id) {
         return statsAggregator.getWidgetStatistics(widget_id, user_id);
     }
 
@@ -129,10 +133,10 @@ public class MongoDbWidgetRepository implements WidgetRepository {
     }
 
     @Override
-    public Map<String , WidgetRating> getUsersWidgetRatings(String userId) {
+    public Map<String, WidgetRating> getUsersWidgetRatings(String userId) {
         Query q = query(where("ratings").elemMatch(where("userId").is(userId)));
         List<Widget> widgets = template.find(q);
-        Map<String , WidgetRating> ratings = Maps.newHashMap();
+        Map<String, WidgetRating> ratings = Maps.newHashMap();
         for (Widget widget : widgets) {
             for (WidgetRating rating : widget.getRatings()) {
                 if (rating.getUserId().equals(userId)) {
@@ -228,9 +232,9 @@ public class MongoDbWidgetRepository implements WidgetRepository {
 
     private void removeRating(String ratingId, Widget widget) {
         Iterator<WidgetRating> iterator = widget.getRatings().iterator();
-        while(iterator.hasNext()) {
+        while (iterator.hasNext()) {
             WidgetRating comment = iterator.next();
-            if(comment.getId().equals(ratingId)) {
+            if (comment.getId().equals(ratingId)) {
                 iterator.remove();
                 return;
             }
@@ -286,7 +290,7 @@ public class MongoDbWidgetRepository implements WidgetRepository {
 
     @Override
     public WidgetTag getTagById(String id) {
-        throw new NotSupportedException();
+        throw new NotSupportedException("Widget tags are not stored by ID");
     }
 
     @Override
@@ -294,46 +298,51 @@ public class MongoDbWidgetRepository implements WidgetRepository {
         Widget widget = template.get(widgetId);
         updateOrAddTag(widget, item);
         Widget saved = template.save(widget);
-        //return getTagByKeyword(item.getTag().getKeyword(), saved);
-        //TODO: FIX
-        return null;
+        return getWidgetTagByTagId(saved, item.getTagId());
     }
 
     @Override
-    public void deleteWidgetTag(WidgetTag item) {/*
-        Widget widget = template.get(item.getWidgetId());
-        removeTag(item.getTag().getKeyword(), widget);*/
+    public void deleteWidgetTag(WidgetTag item) {
+        List<Widget> widgets = template.find(query(where("tags").elemMatch(where("tagId").is(item.getTagId()).and("userId").is(item.getUserId()).and("createdDate").is(item.getCreatedDate()))));
+        if(widgets.size() > 1 || widgets.size() == 0) {
+            throw new IllegalArgumentException("Unable to delete tag.  Indistinguishable from a tag on another widget or the tag doesn't exist");
+        } else {
+            Widget widget = widgets.get(0);
+            removeTag(item.getTagId(), widget);
+            save(widget);
+        }
     }
 
     private void updateOrAddTag(Widget widget, WidgetTag item) {
-        //The current programming model expects there to be only one instance of a tag
-        //consider an update a NOOP unless it is a new tag.
-        /*WidgetTag tag = getTagByKeyword(item.getTag().getKeyword(), widget);
-        if(tag == null) {
+        //Tags can only be created once.  No reason to update the tag if it has already been made.
+        WidgetTag tag = getWidgetTagByTagId(widget, item.getTagId());
+        if (tag == null) {
             widget.getTags().add(item);
-        }*/
+        }
     }
 
-    private void removeTag(String keyword, Widget widget) {
-       /* Iterator<WidgetTag> iterator = widget.getTags().iterator();
+    private void removeTag(String id, Widget widget) {
+        Iterator<WidgetTag> iterator = widget.getTags().iterator();
         while (iterator.hasNext()) {
-            WidgetTag comment = iterator.next();
-            if (comment.getTag().getKeyword().equals(keyword)) {
+            WidgetTag widgetTag = iterator.next();
+            if (widgetTag.getTagId().equals(id)) {
                 iterator.remove();
                 return;
             }
-        }*/
+        }
     }
 
     private WidgetTag getTagByKeyword(String keyword, Widget widget) {
-        /*for(WidgetTag tag : widget.getTags()) {
-            if(tag.getTag().getKeyword().equals(keyword)) {
-                return tag;
+        Tag tag = tagTemplate.findOne(query(where("keyword").is(keyword)));
+        return tag == null ? null : getWidgetTagByTagId(widget, tag.getId());
+    }
+
+    private WidgetTag getWidgetTagByTagId(Widget widget, String tagId) {
+        for (WidgetTag widgetTag : widget.getTags()) {
+            if (widgetTag.getTagId().equals(tagId)) {
+                return widgetTag;
             }
         }
-        return null;*/
-
-        //TODO: FIX
         return null;
     }
 
@@ -372,9 +381,9 @@ public class MongoDbWidgetRepository implements WidgetRepository {
 
     @Override
     public int deleteAllWidgetComments(String userId) {
-        int count=0;
+        int count = 0;
         List<Widget> widgets = template.find(query(where("comments").elemMatch(where("userId").is(userId))));
-        for(Widget widget : widgets) {
+        for (Widget widget : widgets) {
             count += updateWidget(userId, widget);
         }
         return count;
@@ -382,9 +391,9 @@ public class MongoDbWidgetRepository implements WidgetRepository {
 
     private void removeComment(String commentId, Widget widget) {
         Iterator<WidgetComment> iterator = widget.getComments().iterator();
-        while(iterator.hasNext()) {
+        while (iterator.hasNext()) {
             WidgetComment comment = iterator.next();
-            if(comment.getId().equals(commentId)) {
+            if (comment.getId().equals(commentId)) {
                 iterator.remove();
                 return;
             }
@@ -395,23 +404,23 @@ public class MongoDbWidgetRepository implements WidgetRepository {
         int count = 0;
 
         Iterator<WidgetComment> iterator = widget.getComments().iterator();
-        while(iterator.hasNext()) {
+        while (iterator.hasNext()) {
             WidgetComment comment = iterator.next();
-            if(comment.getUserId().equals(userId)) {
+            if (comment.getUserId().equals(userId)) {
                 iterator.remove();
                 count++;
             }
         }
-        if(count > 0) {
+        if (count > 0) {
             template.save(widget);
         }
         return count;
     }
 
     private WidgetComment getCommentById(Widget widget, String id) {
-        if(widget != null){
-            for(WidgetComment comment : widget.getComments()) {
-                if(comment.getId().equals(id)) {
+        if (widget != null) {
+            for (WidgetComment comment : widget.getComments()) {
+                if (comment.getId().equals(id)) {
                     return comment;
                 }
             }
@@ -420,8 +429,8 @@ public class MongoDbWidgetRepository implements WidgetRepository {
     }
 
     private WidgetComment updateComment(Widget widget, WidgetComment item) {
-        for(WidgetComment comment : widget.getComments()) {
-            if(comment.getId().equals(item.getId())) {
+        for (WidgetComment comment : widget.getComments()) {
+            if (comment.getId().equals(item.getId())) {
                 comment.setLastModifiedDate(new Date());
                 comment.setText(item.getText());
                 comment.setUserId(item.getUserId());
@@ -477,4 +486,7 @@ public class MongoDbWidgetRepository implements WidgetRepository {
         this.statsAggregator = statsAggregator;
     }
 
+    public void setTagTemplate(MongoTagOperations tagTemplate) {
+        this.tagTemplate = tagTemplate;
+    }
 }

@@ -24,6 +24,7 @@ public class CollectionNames {
     private CollectionNames() {}
 
     public static final String WIDGET_COLLECTION = "widget";
+    public static final String TAG_COLLECTION = "tag";
     public static final String USER_COLLECTION = "person";
     public static final String PERSON_COLLECTION = USER_COLLECTION;
     public static final String PAGE_COLLECTION = "page";
