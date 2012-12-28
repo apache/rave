@@ -90,6 +90,7 @@
         <!-- default empty javaagent
         if needed you can specify it on the command line with -Djavaagent="..." -->
         <javaagent/>
+        <maven-war-plugin.version>2.3</maven-war-plugin.version>
     </properties>
 
     <repositories>
@@ -602,7 +603,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-war-plugin</artifactId>
-                    <version>2.3</version>
+                    <version>${maven-war-plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>com.googlecode.mavenfilesync</groupId>
