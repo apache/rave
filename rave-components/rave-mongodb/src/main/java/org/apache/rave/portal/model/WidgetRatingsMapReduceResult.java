@@ -24,21 +24,21 @@ import java.util.Map;
 /**
 */
 public class WidgetRatingsMapReduceResult {
-    private Long id;
+    private String id;
     private WidgetStatisticsMapReduceResult value;
 
     public WidgetRatingsMapReduceResult() {  }
 
-    public WidgetRatingsMapReduceResult(Long id, WidgetStatisticsMapReduceResult value) {
+    public WidgetRatingsMapReduceResult(String id, WidgetStatisticsMapReduceResult value) {
         this.id = id;
         this.value = value;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -51,23 +51,23 @@ public class WidgetRatingsMapReduceResult {
     }
 
     public static class WidgetStatisticsMapReduceResult {
-        private Map<Long, Long> userRatings;
+        private Map<String, Long> userRatings;
         private Long like;
         private Long dislike;
 
         public WidgetStatisticsMapReduceResult() { }
 
-        public WidgetStatisticsMapReduceResult(Map<Long, Long> userRatings, Long like, Long dislike) {
+        public WidgetStatisticsMapReduceResult(Map<String, Long> userRatings, Long like, Long dislike) {
             this.userRatings = userRatings;
             this.like = like;
             this.dislike = dislike;
         }
 
-        public Map<Long, Long> getUserRatings() {
+        public Map<String, Long> getUserRatings() {
             return userRatings;
         }
 
-        public void setUserRatings(Map<Long, Long> userRatings) {
+        public void setUserRatings(Map<String, Long> userRatings) {
             this.userRatings = userRatings;
         }
 

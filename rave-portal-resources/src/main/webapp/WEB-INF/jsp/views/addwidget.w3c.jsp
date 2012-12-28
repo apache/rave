@@ -24,105 +24,110 @@
 
 <div class="container-fluid navbar-spacer">
     <div class="row-fluid">
-    <ul class="nav nav-tabs">
-          <li><a href="<spring:url value="/app/store/widget/add?referringPageId=${referringPageId}" />">OpenSocial</a></li>
-          <li class="active"><a href="#w3c">W3C</a></li>
-          <c:if test="${not empty marketplace and not empty marketplace.value}">
-          <li><a href="<spring:url value="/app/marketplace?referringPageId=${referringPageId}" />">Marketplace</a></li>
-          </c:if>
-    </ul> 
+	    <ul class="nav nav-tabs">
+	          <li><a href="<spring:url value="/app/store/widget/add?referringPageId=${referringPageId}" />">OpenSocial</a></li>
+	          <li class="active"><a href="#w3c">W3C</a></li>
+	          <c:if test="${not empty marketplace and not empty marketplace.value}">
+	          <li><a href="<spring:url value="/app/marketplace?referringPageId=${referringPageId}" />">Marketplace</a></li>
+	          </c:if>
+	    </ul> 
     </div>
-    
-    <div class="row-fluid">
-    <a class="btn btn-primary" id="w3cBrowseLink" href="#"><fmt:message key="page.general.browse"/></a>
-    
-    <form:errors path="widget" cssClass="error" element="p"/>
-    <form:form cssClass="form-horizontal" id="newWidgetForm" action="w3c?referringPageId=${referringPageId}" commandName="widget" method="POST">
-        <fieldset>
-
-            <form:hidden path="type" value="W3C"/>
-
-            <div id="addWidgetForm">
-                <div class="control-group label label-important"><fmt:message key="form.some.fields.required"/></div>
-
-            
-                <div class="control-group">
-                    <spring:bind path="url">
-                    <label class="control-label" for="url"><fmt:message key="widget.url"/> *</label>
-                    <div class="controls"><input class="input-xlarge" type="url" name="url" id="url"
-                                                 placeholder="http://example.com/widget.xml" required="required"
-                                                 value="<c:out value="${widget.url}"/>"/></div>
-                    </spring:bind>
-                    <form:errors path="url" cssClass="error"/>
-                </div>
-
-                <div class="control-group">
-                    <form:label cssClass="control-label" path="title"> <fmt:message key="widget.title"/> *</form:label>
-                    <div class="controls">
-                        <form:input path="title" cssClass="input-xlarge" required="required" autofocus="autofocus"/></div>
-                    <form:errors path="title" cssClass="error"/>
-                </div>
-
-                <div class="control-group">
-                    <form:label cssClass="control-label" path="description"><fmt:message key="widget.description"/> *</form:label>
-                    <div class="controls"><form:textarea path="description" required="required" cssClass="input-xlarge"/></div>
-                    <form:errors path="description" cssClass="error"/>
-                </div>
-
-                <div class="control-group">
-                    <spring:bind path="thumbnailUrl">
-                        <label class="control-label" for="thumbnailUrl"><fmt:message key="widget.thumbnailUrl"/></label>
-                        <div class="controls"><input type="url" name="thumbnailUrl" id="thumbnailUrl"
-                                                     placeholder="http://example.com/thumbnail.png" class="input-xlarge"
-                                                     value="<c:out value="${widget.thumbnailUrl}"/>"/></div>
-                    </spring:bind>
-                    <form:errors path="thumbnailUrl" cssClass="error"/>
-                </div>
-
-                <div class="control-group">
-                    <spring:bind path="screenshotUrl">
-                        <label class="control-label" for="screenshotUrl"><fmt:message key="widget.screenshotUrl"/></label>
-                        <div class="controls">
-                            <input type="url" name="screenshotUrl" id="screenshotUrl" placeholder="http://example.com/screenshot.png" class="input-xlarge"
-                                   value="<c:out value="${widget.screenshotUrl}"/>"/></div>
-                    </spring:bind>
-                    <form:errors path="screenshotUrl" cssClass="error"/>
-                </div>
-
-                <div class="control-group">
-                    <spring:bind path="titleUrl">
-                        <label class="control-label" for="titleUrl"><fmt:message key="widget.titleUrl"/></label>
-                        <div class="controls"><input type="url" name="titleUrl" id="titleUrl"
-                                                     class="input-xlarge" value="<c:out value="${widget.titleUrl}"/>"/></div>
-                    </spring:bind>
-                    <form:errors path="titleUrl" cssClass="error"/>
-                </div>
-
-                <div class="control-group">
-                    <form:label cssClass="control-label" path="author"><fmt:message key="widget.author"/></form:label>
-                    <div class="controls"><form:input path="author" cssClass="input-xlarge"/>
-                        <form:errors path="author" cssClass="error"/>
-                    </div>
-
-                </div>
-                <div class="control-group">
-                    <spring:bind path="authorEmail">
-                        <label class="control-label" for="authorEmail"><fmt:message key="widget.authorEmail"/></label>
-                        <div class="controls"><input type="email" name="authorEmail" id="authorEmail" class="input-xlarge"
-                                                     value="<c:out value="${widget.authorEmail}"/>"/></div>
-                    </spring:bind>
-                    <form:errors path="titleUrl" cssClass="error"/>
-                </div>
-            </div>
-        </fieldset>
-        <div id="addWidgetFormSubmit">
-            <fieldset>
-                <fmt:message key="page.addwidget.form.submit" var="submit"/>
-                <button class="btn btn-primary" type="submit" value="${submit}">${submit}</button>
-            </fieldset>
-        </div>
-    </form:form>
-    </div>
+</div> 
+<div class="row-fluid tab-content">
+	<div class="tab-padding">
+	    <div class="control-group">
+	    	<fieldset>
+	    		<a class="btn btn-primary" id="w3cBrowseLink" href="#"><fmt:message key="page.general.browse"/></a>
+	    	</fieldset>
+	    </div>
+	    <form:errors path="widget" cssClass="error" element="p"/>
+	    <form:form cssClass="form-horizontal" id="newWidgetForm" action="w3c?referringPageId=${referringPageId}" commandName="widget" method="POST">
+	        <fieldset>
+	
+	            <form:hidden path="type" value="W3C"/>
+	
+	            <div id="addWidgetForm">
+	                <div class="control-group label label-important"><fmt:message key="form.some.fields.required"/></div>
+	
+	            
+	                <div class="control-group">
+	                    <spring:bind path="url">
+	                    <label class="control-label" for="url"><fmt:message key="widget.url"/> *</label>
+	                    <div class="controls"><input class="input-xlarge" type="url" name="url" id="url"
+	                                                 placeholder="http://example.com/widget.xml" required="required"
+	                                                 value="<c:out value="${widget.url}"/>"/></div>
+	                    </spring:bind>
+	                    <form:errors path="url" cssClass="error"/>
+	                </div>
+	
+	                <div class="control-group">
+	                    <form:label cssClass="control-label" path="title"> <fmt:message key="widget.title"/> *</form:label>
+	                    <div class="controls">
+	                        <form:input path="title" cssClass="input-xlarge" required="required" autofocus="autofocus"/></div>
+	                    <form:errors path="title" cssClass="error"/>
+	                </div>
+	
+	                <div class="control-group">
+	                    <form:label cssClass="control-label" path="description"><fmt:message key="widget.description"/> *</form:label>
+	                    <div class="controls"><form:textarea path="description" required="required" cssClass="input-xlarge"/></div>
+	                    <form:errors path="description" cssClass="error"/>
+	                </div>
+	
+	                <div class="control-group">
+	                    <spring:bind path="thumbnailUrl">
+	                        <label class="control-label" for="thumbnailUrl"><fmt:message key="widget.thumbnailUrl"/></label>
+	                        <div class="controls"><input type="url" name="thumbnailUrl" id="thumbnailUrl"
+	                                                     placeholder="http://example.com/thumbnail.png" class="input-xlarge"
+	                                                     value="<c:out value="${widget.thumbnailUrl}"/>"/></div>
+	                    </spring:bind>
+	                    <form:errors path="thumbnailUrl" cssClass="error"/>
+	                </div>
+	
+	                <div class="control-group">
+	                    <spring:bind path="screenshotUrl">
+	                        <label class="control-label" for="screenshotUrl"><fmt:message key="widget.screenshotUrl"/></label>
+	                        <div class="controls">
+	                            <input type="url" name="screenshotUrl" id="screenshotUrl" placeholder="http://example.com/screenshot.png" class="input-xlarge"
+	                                   value="<c:out value="${widget.screenshotUrl}"/>"/></div>
+	                    </spring:bind>
+	                    <form:errors path="screenshotUrl" cssClass="error"/>
+	                </div>
+	
+	                <div class="control-group">
+	                    <spring:bind path="titleUrl">
+	                        <label class="control-label" for="titleUrl"><fmt:message key="widget.titleUrl"/></label>
+	                        <div class="controls"><input type="url" name="titleUrl" id="titleUrl"
+	                                                     class="input-xlarge" value="<c:out value="${widget.titleUrl}"/>"/></div>
+	                    </spring:bind>
+	                    <form:errors path="titleUrl" cssClass="error"/>
+	                </div>
+	
+	                <div class="control-group">
+	                    <form:label cssClass="control-label" path="author"><fmt:message key="widget.author"/></form:label>
+	                    <div class="controls"><form:input path="author" cssClass="input-xlarge"/>
+	                        <form:errors path="author" cssClass="error"/>
+	                    </div>
+	
+	                </div>
+	                <div class="control-group">
+	                    <spring:bind path="authorEmail">
+	                        <label class="control-label" for="authorEmail"><fmt:message key="widget.authorEmail"/></label>
+	                        <div class="controls"><input type="email" name="authorEmail" id="authorEmail" class="input-xlarge"
+	                                                     value="<c:out value="${widget.authorEmail}"/>"/></div>
+	                    </spring:bind>
+	                    <form:errors path="titleUrl" cssClass="error"/>
+	                </div>
+	            </div>
+	        </fieldset>
+	        <div id="addWidgetFormSubmit">
+	            <fieldset>
+	                <fmt:message key="page.addwidget.form.submit" var="submit"/>
+	                <button class="btn btn-primary" type="submit" value="${submit}">${submit}</button>
+	            </fieldset>
+	        </div>
+	    </form:form>
+	    </div>
+	</div>
 </div>
 
 <div id="w3cBrowseForm" title="<fmt:message key="page.general.browse"/>">

@@ -20,38 +20,19 @@
 package org.apache.rave.portal.model;
 
 import org.apache.rave.portal.model.impl.PageImpl;
-import org.apache.rave.portal.repository.UserRepository;
 import org.codehaus.jackson.annotate.JsonAutoDetect;
-import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonMethod;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlTransient;
 
 @XmlAccessorType(value = XmlAccessType.FIELD)
 @JsonAutoDetect(value = JsonMethod.FIELD, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class MongoDbPage extends PageImpl {
 
-    @XmlTransient @JsonIgnore
-    private UserRepository userRepository;
-
-    private Long ownerId;
     private String pageLayoutCode;
 
     public MongoDbPage() {}
-
-    public MongoDbPage(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
-    public Long getOwnerId() {
-        return ownerId;
-    }
-
-    public void setOwnerId(Long ownerId) {
-        this.ownerId = ownerId;
-    }
 
     public String getPageLayoutCode() {
         return pageLayoutCode;
@@ -59,24 +40,6 @@ public class MongoDbPage extends PageImpl {
 
     public void setPageLayoutCode(String pageLayoutCode) {
         this.pageLayoutCode = pageLayoutCode;
-    }
-
-    public UserRepository getUserRepository() {
-        return userRepository;
-    }
-
-    public void setUserRepository(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
-    @Override
-    public User getOwner() {
-        User owner = super.getOwner();
-        if(owner == null) {
-            owner = userRepository.get(ownerId);
-            super.setOwner(owner);
-        }
-        return owner;
     }
 
     @Override

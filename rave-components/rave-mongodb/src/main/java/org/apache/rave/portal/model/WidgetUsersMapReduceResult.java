@@ -22,29 +22,29 @@ package org.apache.rave.portal.model;
 import java.util.Map;
 
 public class WidgetUsersMapReduceResult {
-    private Long id;
-    private Map<Long, Long> value;
+    private String id;
+    private Map<String, Long> value;
 
     public WidgetUsersMapReduceResult() { }
 
-    public WidgetUsersMapReduceResult(Long id, Map<Long, Long> value) {
+    public WidgetUsersMapReduceResult(String id, Map<String, Long> value) {
         this.id = id;
         this.value = value;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public Map<Long, Long> getValue() {
+    public Map<String, Long> getValue() {
         return value;
     }
 
-    public void setValue(Map<Long, Long> value) {
+    public void setValue(Map<String, Long> value) {
         this.value = value;
     }
 }

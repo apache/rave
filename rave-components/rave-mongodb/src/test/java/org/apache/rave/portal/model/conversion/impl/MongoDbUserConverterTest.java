@@ -88,7 +88,7 @@ public class MongoDbUserConverterTest {
 
     @Test
     public void convert_Valid() {
-        User source = new MongoDbUser((long) 1234);
+        User source = new MongoDbUser("1234");
         PageLayoutRepository pageLayoutRepository = createMock(PageLayoutRepository.class);
         ((MongoDbUser)source).setPageLayoutRepository(pageLayoutRepository);
         expect(pageLayoutRepository.getByPageLayoutCode("User")).andReturn(new PageLayoutImpl());

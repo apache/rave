@@ -72,13 +72,13 @@ public class JpaCategoryRepositoryTest {
 
     @Test
     public void getById_validId() {
-        JpaCategory category = (JpaCategory) repository.get(VALID_ENTITY_ID);
+        JpaCategory category = (JpaCategory) repository.get(VALID_ENTITY_ID.toString());
         assertThat(category.getEntityId(), is(equalTo(VALID_ENTITY_ID)));
     }
 
     @Test
     public void getById_invalidId() {
-        assertThat(repository.get(INVALID_ENTITY_ID), is(nullValue()));
+        assertThat(repository.get(INVALID_ENTITY_ID.toString()), is(nullValue()));
     }
 
     @Test
@@ -88,10 +88,10 @@ public class JpaCategoryRepositoryTest {
         Date now = new Date();
         JpaCategory category = new JpaCategory();
         category.setLastModifiedDate(now);
-        category.setLastModifiedUser(validUser);
+        category.setLastModifiedUserId(VALID_USER_ID.toString());
         category.setText(NEW_TEXT);
         category.setCreatedDate(now);
-        category.setCreatedUser(validUser);
+        category.setCreatedUserId(VALID_USER_ID.toString());
 
         assertThat(category.getEntityId(), is(nullValue()));
         repository.save(category);
@@ -99,29 +99,29 @@ public class JpaCategoryRepositoryTest {
         Long newEntityId = category.getEntityId();
         assertThat(newEntityId, is(notNullValue()));
         // verify that it persisted ok
-        assertThat((JpaCategory)repository.get(newEntityId), is(category));
+        assertThat((JpaCategory)repository.get(newEntityId.toString()), is(category));
     }
 
     @Test
     @Rollback(true)
     public void save_existingEntity() {
         final String UPDATED_TEXT = "changed the text";
-        Category category = repository.get(VALID_ENTITY_ID);
+        Category category = repository.get(VALID_ENTITY_ID.toString());
         assertThat(category.getText(), is(not(UPDATED_TEXT)));
         category.setText(UPDATED_TEXT);
         repository.save(category);
         // fetch again and verify update
-        Category modCategory = repository.get(VALID_ENTITY_ID);
+        Category modCategory = repository.get(VALID_ENTITY_ID.toString());
         assertThat(modCategory.getText(), is(UPDATED_TEXT));
     }
 
     @Test
     @Rollback(true)
     public void delete() {
-        Category entity = repository.get(VALID_ENTITY_ID);
+        Category entity = repository.get(VALID_ENTITY_ID.toString());
         assertThat(entity, is(notNullValue()));
         repository.delete(entity);
-        assertThat(repository.get(VALID_ENTITY_ID), is(nullValue()));
+        assertThat(repository.get(VALID_ENTITY_ID.toString()), is(nullValue()));
     }
 
     @Test
@@ -149,9 +149,9 @@ public class JpaCategoryRepositoryTest {
         JpaCategory wc = new JpaCategory();
         wc.setText(DUPLICATE_TEXT_VALUE);
         wc.setCreatedDate(now);
-        wc.setCreatedUser(user);
+        wc.setCreatedUserId(user.getId());
         wc.setLastModifiedDate(now);
-        wc.setLastModifiedUser(user);
+        wc.setLastModifiedUserId(user.getId());
 
         boolean gotExpectedException = false;
         try {
@@ -176,10 +176,10 @@ public class JpaCategoryRepositoryTest {
     @Transactional(readOnly=false)
     @Rollback(true)
     public void delete_jpaObject() {
-        Category category = repository.get(VALID_ENTITY_ID);
+        Category category = repository.get(VALID_ENTITY_ID.toString());
         assertThat(category, is(notNullValue()));
         repository.delete(category);
-        category = repository.get(VALID_ENTITY_ID);
+        category = repository.get(VALID_ENTITY_ID.toString());
         assertThat(category, is(nullValue()));
     }
 
@@ -187,11 +187,11 @@ public class JpaCategoryRepositoryTest {
     @Transactional(readOnly=false)
     @Rollback(true)
     public void delete_implObject() {
-        Category category = repository.get(VALID_ENTITY_ID);
+        Category category = repository.get(VALID_ENTITY_ID.toString());
         assertThat(category, is(notNullValue()));
         CategoryImpl impl = new CategoryImpl(category.getId());
         repository.delete(impl);
-        category = repository.get(VALID_ENTITY_ID);
+        category = repository.get(VALID_ENTITY_ID.toString());
         assertThat(category, is(nullValue()));
     }
 
@@ -199,6 +199,6 @@ public class JpaCategoryRepositoryTest {
     @Transactional(readOnly=false)
     @Rollback(true)
     public void removeFromCreatedOrModifiedFields() {
-        assertThat(repository.removeFromCreatedOrModifiedFields(VALID_USER_ID), is(5));
+        assertThat(repository.removeFromCreatedOrModifiedFields(VALID_USER_ID.toString()), is(5));
     }
 }

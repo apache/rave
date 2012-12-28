@@ -22,7 +22,6 @@ package org.apache.rave.portal.model;
 import com.google.common.collect.Lists;
 import org.apache.rave.portal.model.impl.WidgetImpl;
 import org.apache.rave.portal.repository.CategoryRepository;
-import org.apache.rave.portal.repository.UserRepository;
 import org.codehaus.jackson.annotate.JsonAutoDetect;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonMethod;
@@ -42,31 +41,19 @@ public class MongoDbWidget extends WidgetImpl {
     @XmlTransient @JsonIgnore
     private CategoryRepository categoryRepository;
 
-    @XmlTransient @JsonIgnore
-    private UserRepository userRepository;
-
-    private Long ownerId;
-    private List<Long> categoryIds;
+    private List<String> categoryIds;
 
     public MongoDbWidget() { }
 
-    public MongoDbWidget(long id) {
+    public MongoDbWidget(String id) {
         super(id);
     }
 
-    public Long getOwnerId() {
-        return ownerId;
-    }
-
-    public void setOwnerId(Long ownerId) {
-        this.ownerId = ownerId;
-    }
-
-    public List<Long> getCategoryIds() {
+    public List<String> getCategoryIds() {
         return categoryIds;
     }
 
-    public void setCategoryIds(List<Long> categoryIds) {
+    public void setCategoryIds(List<String> categoryIds) {
         this.categoryIds = categoryIds;
     }
 
@@ -76,24 +63,6 @@ public class MongoDbWidget extends WidgetImpl {
 
     public void setCategoryRepository(CategoryRepository categoryRepository) {
         this.categoryRepository = categoryRepository;
-    }
-
-    public UserRepository getUserRepository() {
-        return userRepository;
-    }
-
-    public void setUserRepository(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
-    @Override
-    public User getOwner() {
-        User user = super.getOwner();
-        if(user == null && ownerId != null) {
-            user = userRepository.get(ownerId);
-            super.setOwner(user);
-        }
-        return user;
     }
 
     @Override
@@ -131,7 +100,7 @@ public class MongoDbWidget extends WidgetImpl {
         }
     }
 
-    private void addCategory(List<Category> categories, Long id) {
+    private void addCategory(List<Category> categories, String id) {
         Category category = categoryRepository.get(id);
         if(category != null) {
             categories.add(category);
@@ -141,7 +110,7 @@ public class MongoDbWidget extends WidgetImpl {
     private List<Category> createCategoriesFromIds() {
         List<Category> categories;
         categories = Lists.newArrayList();
-        for(Long id : categoryIds) {
+        for(String id : categoryIds) {
             addCategory(categories, id);
         }
         super.setCategories(categories);

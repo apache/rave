@@ -19,10 +19,10 @@
 
 package org.apache.rave.portal.repository.impl;
 
-import org.apache.rave.portal.model.MongoDbRegionWidget;
 import org.apache.rave.portal.model.Page;
 import org.apache.rave.portal.model.Region;
 import org.apache.rave.portal.model.RegionWidget;
+import org.apache.rave.portal.model.impl.RegionWidgetImpl;
 import org.apache.rave.portal.repository.MongoPageOperations;
 import org.apache.rave.portal.repository.RegionWidgetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,11 +41,11 @@ public class MongoDbRegionWidgetRepository implements RegionWidgetRepository {
 
     @Override
     public Class<? extends RegionWidget> getType() {
-        return MongoDbRegionWidget.class;
+        return RegionWidgetImpl.class;
     }
 
     @Override
-    public RegionWidget get(long id) {
+    public RegionWidget get(String id) {
         Page page = getPageByRegionWidgetId(id);
         return getRegionWidgetById(page, id);
     }
@@ -80,7 +80,7 @@ public class MongoDbRegionWidgetRepository implements RegionWidgetRepository {
         return getRegionById(parent.getId(), saved.getRegions()).getRegionWidgets().get(parent.getRegionWidgets().size() -1);
     }
 
-    private RegionWidget getRegionWidgetById(Page page, Long id) {
+    private RegionWidget getRegionWidgetById(Page page, String id) {
         for(Region region : page.getRegions()) {
             for(RegionWidget widget : region.getRegionWidgets()) {
                 if(widget.getId().equals(id)) {
@@ -107,7 +107,7 @@ public class MongoDbRegionWidgetRepository implements RegionWidgetRepository {
         throw new IllegalStateException("Widget does not exist in parent page regions");
     }
 
-    private Region getRegionById(Long id, List<Region> regions) {
+    private Region getRegionById(String id, List<Region> regions) {
         for(Region region: regions) {
             if(id.equals(region.getId())) {
                 return region;
@@ -125,7 +125,7 @@ public class MongoDbRegionWidgetRepository implements RegionWidgetRepository {
         }
     }
 
-    private Page getPageByRegionWidgetId(long id) {
+    private Page getPageByRegionWidgetId(String id) {
         return template.findOne(new Query(where("regions").elemMatch(where("regionWidgets").elemMatch(where("_id").is(id)))));
     }
 

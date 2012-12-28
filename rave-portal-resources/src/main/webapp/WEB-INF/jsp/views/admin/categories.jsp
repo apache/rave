@@ -40,7 +40,7 @@
 	                </div>
 	            </c:if>
 	
-	            <table class="table table-striped table-bordered table-condensed">
+	            <table id="categoryList" class="table table-striped table-bordered table-condensed">
 	                <thead>
 	                <tr>
 	                    <th><fmt:message key="admin.categoryData.text"/></th>
@@ -53,19 +53,21 @@
 	                <tbody>
 	                <c:forEach items="${categories}" var="category">
 	                    <spring:url value="/app/admin/category/edit?id=${category.id}" var="detaillink"/>
-	
+                        <portal:person id="${category.createdUserId}" var="createdUser" />
+                        <portal:person id="${category.lastModifiedUserId}" var="modifiedUser" />
+
 	                    <tr data-detaillink="${detaillink}">
 	                        <td>
 	                            <a href="${detaillink}"><c:out value="${category.text}"/></a>
 	                        </td>
 	                        <td>
-	                            <c:out value="${category.createdUser.username}"/>
+	                            <c:out value="${createdUser.username}"/>
 	                        </td>
 	                        <td>
 	                            <c:out value="${category.createdDate}"/>
 	                        </td>
 	                        <td>
-	                            <c:out value="${category.lastModifiedUser.username}"/>
+	                            <c:out value="${modifiedUser.username}"/>
 	                        </td>
 	                        <td>
 	                            <c:out value="${category.lastModifiedDate}"/>
@@ -78,7 +80,7 @@
 	
 	        </article>
 	        <div>
-	            <form:form cssClass="form-inline" commandName="category" action="category/create" method="POST">
+	            <form:form id="createCategory" cssClass="form-inline" commandName="category" action="category/create" method="POST">
 	                <form:errors cssClass="error" element="p"/>
 	                <fieldset>
 	                    <legend><fmt:message key="admin.category.create"/></legend>

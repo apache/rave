@@ -27,20 +27,20 @@ import java.util.List;
  */
 @XmlTransient
 public interface Category {
-    public Long getId();
-    public void setId(Long id);
+    public String getId();
+    public void setId(String id);
 
     public String getText();
     public void setText(String text);
 
-    public User getCreatedUser();
-    public void setCreatedUser(User createdUser);
+    public String getCreatedUserId();
+    public void setCreatedUserId(String createdUserId);
 
     public Date getCreatedDate();
     public void setCreatedDate(Date createdDate);
 
-    public User getLastModifiedUser();
-    public void setLastModifiedUser(User lastModifiedUser);
+    public String getLastModifiedUserId();
+    public void setLastModifiedUserId(String lastModifiedUserId);
 
     public Date getLastModifiedDate();
     public void setLastModifiedDate(Date lastModifiedDate);

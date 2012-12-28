@@ -34,6 +34,10 @@ public class W3CWidget extends WidgetImpl {
 	
 	public W3CWidget() {
 	}
+
+    public W3CWidget(String id) {
+        super(id);
+    }
 	
 	/**
 	 * @return the width

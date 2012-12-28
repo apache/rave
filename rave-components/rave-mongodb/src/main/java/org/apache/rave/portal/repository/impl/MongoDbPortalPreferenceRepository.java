@@ -63,7 +63,7 @@ public class MongoDbPortalPreferenceRepository implements PortalPreferenceReposi
     }
 
     @Override
-    public PortalPreference get(long id) {
+    public PortalPreference get(String id) {
         return template.findById(id, CLASS, PREFERENCE_COLLECTION);
     }
 

@@ -61,9 +61,9 @@ public class MongoDbTagRepository implements TagRepository {
         return new TagImpl(keyword);
     }
 
-    @Override
+    //@Override
     @SuppressWarnings("unchecked")
-    public List<Tag> getAvailableTagsByWidgetId(Long widgetId) {
+    public List<Tag> getAvailableTagsByWidgetId(String widgetId) {
         List<Tag> all = getAll();
         List<Tag> widgetTags = getTagsFromWidget(widgetTemplate.get(widgetId).getTags());
         return ListUtils.subtract(all, widgetTags);
@@ -75,7 +75,7 @@ public class MongoDbTagRepository implements TagRepository {
     }
 
     @Override
-    public Tag get(long id) {
+    public Tag get(String id) {
         throw new NotSupportedException("Cannot access tags by Id");
     }
 
@@ -93,7 +93,7 @@ public class MongoDbTagRepository implements TagRepository {
         List<Tag> tags = Lists.newArrayList();
         if (widgetTags != null) {
             for (WidgetTag widgetTag : widgetTags) {
-                tags.add(widgetTag.getTag());
+                tags.add(get(widgetTag.getTagId()));
             }
         }
         return tags;
@@ -105,7 +105,7 @@ public class MongoDbTagRepository implements TagRepository {
         if (widget.getTags() == null) return;
 
         for (WidgetTag widgetTag : widget.getTags()) {
-            Tag tag = widgetTag.getTag();
+            Tag tag = get(widgetTag.getTagId());
             if (!tags.contains(tag)) {
                 tags.add(tag);
             }

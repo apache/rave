@@ -65,7 +65,7 @@ public class JpaOAuthConsumerStoreRepositoryTest {
 
     @Test
     public void get() {
-        JpaOAuthConsumerStore oAuthConsumerStore = (JpaOAuthConsumerStore) repository.get(VALID_ID);
+        JpaOAuthConsumerStore oAuthConsumerStore = (JpaOAuthConsumerStore) repository.get(VALID_ID.toString());
         assertThat(oAuthConsumerStore.getEntityId(), is(VALID_ID));
         assertThat(oAuthConsumerStore.getGadgetUri(), is(GADGET_URI));
         assertThat(oAuthConsumerStore.getServiceName(), is(SERVICE_NAME_GOOGLE));
@@ -97,9 +97,9 @@ public class JpaOAuthConsumerStoreRepositoryTest {
 
         assertThat(oAuthConsumerStore.getEntityId(), is(nullValue()));
         repository.save(oAuthConsumerStore);
-        long newId = oAuthConsumerStore.getEntityId();
+        Long newId = oAuthConsumerStore.getEntityId();
         assertThat(newId > 0, is(true));
-        JpaOAuthConsumerStore newOAuthConsumerStore = (JpaOAuthConsumerStore) repository.get(newId);
+        JpaOAuthConsumerStore newOAuthConsumerStore = (JpaOAuthConsumerStore) repository.get(newId.toString());
         assertThat(newOAuthConsumerStore.getServiceName(), is(NEW_SERVICE_NAME));
         assertThat(newOAuthConsumerStore.getCallbackUrl(), is(NEW_URL));
     }
@@ -109,21 +109,21 @@ public class JpaOAuthConsumerStoreRepositoryTest {
     @Rollback(true)
     public void save_existing() {
         final String UPDATED_SERVICE_NAME = "updated service name";
-        JpaOAuthConsumerStore oAuthConsumerStore = (JpaOAuthConsumerStore) repository.get(VALID_ID);
+        JpaOAuthConsumerStore oAuthConsumerStore = (JpaOAuthConsumerStore) repository.get(VALID_ID.toString());
         assertThat(oAuthConsumerStore.getServiceName(), is(not(UPDATED_SERVICE_NAME)));
         oAuthConsumerStore.setServiceName(UPDATED_SERVICE_NAME);
         repository.save(oAuthConsumerStore);
-        assertThat(repository.get(VALID_ID).getServiceName(), is(UPDATED_SERVICE_NAME));
+        assertThat(repository.get(VALID_ID.toString()).getServiceName(), is(UPDATED_SERVICE_NAME));
     }
 
     @Test
     @Transactional(readOnly=false)
     @Rollback(true)
     public void delete() {
-        OAuthConsumerStore oAuthConsumerStore = repository.get(VALID_ID);
+        OAuthConsumerStore oAuthConsumerStore = repository.get(VALID_ID.toString());
         assertThat(oAuthConsumerStore, is(notNullValue()));
         repository.delete(oAuthConsumerStore);
-        oAuthConsumerStore = repository.get(VALID_ID);
+        oAuthConsumerStore = repository.get(VALID_ID.toString());
         assertThat(oAuthConsumerStore, is(nullValue()));
     }
 }

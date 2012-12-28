@@ -55,23 +55,23 @@ import static org.junit.Assert.*;
  */
 public class WidgetStoreControllerTest {
 
-    private static final long WIDGET_ID = 1L;
-    private static final long REFERRER_ID = 35L;
+    private static final String WIDGET_ID = "1";
+    private static final String REFERRER_ID = "35";
     private WidgetStoreController controller;
     private WidgetService widgetService;
     private TagService tagService;
     private CategoryService categoryService;
     private UserImpl validUser;
     private WidgetStatistics widgetStatistics;
-    private Map<Long, WidgetStatistics> allWidgetStatisticsMap;
+    private Map<String, WidgetStatistics> allWidgetStatisticsMap;
 
     @Before
     public void setup() {
         validUser = new UserImpl();
-        validUser.setId(1L);
+        validUser.setId("1");
         widgetStatistics = new WidgetStatistics();
 
-        allWidgetStatisticsMap = new HashMap<Long, WidgetStatistics>();
+        allWidgetStatisticsMap = new HashMap<String, WidgetStatistics>();
         allWidgetStatisticsMap.put(WIDGET_ID, widgetStatistics);
 
         widgetService = createMock(WidgetService.class);
@@ -110,7 +110,7 @@ public class WidgetStoreControllerTest {
         assertThat(view, is(equalTo(ViewNames.STORE)));
         assertThat(model.containsAttribute(ModelKeys.WIDGETS), is(true));
         assertThat(model.containsAttribute(ModelKeys.WIDGETS_STATISTICS), is(true));
-        assertThat((Long) model.asMap().get(ModelKeys.REFERRING_PAGE_ID), is(equalTo(REFERRER_ID)));
+        assertThat((String) model.asMap().get(ModelKeys.REFERRING_PAGE_ID), is(equalTo(REFERRER_ID)));
         assertThat(widgets, is(sameInstance(emptyResult.getResultSet())));
         assertThat(model.containsAttribute(ModelKeys.TAGS), is(true));
         assertThat(model.containsAttribute(ModelKeys.CATEGORIES), is(true));
@@ -133,7 +133,7 @@ public class WidgetStoreControllerTest {
         assertThat(view, is(equalTo(ViewNames.STORE)));
         assertThat(model.containsAttribute(ModelKeys.WIDGETS), is(true));
         assertThat(model.containsAttribute(ModelKeys.WIDGETS_STATISTICS), is(true));
-        assertThat((Long) model.asMap().get(ModelKeys.REFERRING_PAGE_ID), is(equalTo(REFERRER_ID)));
+        assertThat((String) model.asMap().get(ModelKeys.REFERRING_PAGE_ID), is(equalTo(REFERRER_ID)));
         assertThat(widgets, is(sameInstance(emptyResult.getResultSet())));
         assertThat(model.containsAttribute(ModelKeys.TAGS), is(true));
         assertThat(model.containsAttribute(ModelKeys.CATEGORIES), is(true));
@@ -143,7 +143,7 @@ public class WidgetStoreControllerTest {
     @Test
     public void viewWidget() {
         Model model = new ExtendedModelMap();
-        Widget w = new WidgetImpl(1L, "http://example.com/widget.xml");
+        Widget w = new WidgetImpl("1", "http://example.com/widget.xml");
 
         expect(widgetService.getAllWidgetStatistics(validUser.getId())).andReturn(allWidgetStatisticsMap);
         expect(tagService.getAllTags()).andReturn(new ArrayList<Tag>());
@@ -169,7 +169,7 @@ public class WidgetStoreControllerTest {
     @Test
     public void viewCategoryResult_valid() {
         Model model = new ExtendedModelMap();
-        long categoryId = 1L;
+        String categoryId = "1";
         int offset = 0;
         int pageSize = 10;
         SearchResult<Widget> searchResults = new SearchResult<Widget>(new ArrayList<Widget>(),0);
@@ -203,7 +203,7 @@ public class WidgetStoreControllerTest {
         int pagesize = 10;
         int totalResults = 2;
         WidgetImpl widget = new WidgetImpl();
-        widget.setId(1L);
+        widget.setId("1");
         List<Widget> widgets = new ArrayList<Widget>();
         widgets.add(widget);
         SearchResult<Widget> result = new SearchResult<Widget>(widgets, totalResults);
@@ -242,7 +242,7 @@ public class WidgetStoreControllerTest {
         final String widgetUrl = "http://example.com/newwidget.xml";
         final Model model = new ExtendedModelMap();
         final WidgetImpl widget = new WidgetImpl();
-        widget.setId(1L);
+        widget.setId("1");
         widget.setTitle("Widget title");
         widget.setUrl(widgetUrl);
         widget.setType("OpenSocial");
@@ -265,7 +265,7 @@ public class WidgetStoreControllerTest {
         final Model model = new ExtendedModelMap();
 
         final WidgetImpl existingWidget = new WidgetImpl();
-        existingWidget.setId(123L);
+        existingWidget.setId("123");
         existingWidget.setTitle("Widget title");
         existingWidget.setUrl(widgetUrl);
         existingWidget.setType("OpenSocial");

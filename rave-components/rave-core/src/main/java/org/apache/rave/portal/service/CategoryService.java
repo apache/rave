@@ -30,11 +30,11 @@ import java.util.List;
 public interface CategoryService {
 
     /**
-     * @param entityId unique identifier of the {@link org.apache.rave.portal.model.Category}
+     * @param id unique identifier of the {@link org.apache.rave.portal.model.Category}
      * @return Category if it can be found, otherwise {@literal null}
      */
     @PostAuthorize("returnObject == null or hasPermission(returnObject, 'read')")
-    Category get(long entityId);
+    Category get(String id);
 
     /**
      * @return a {@link java.util.List} with all {@link org.apache.rave.portal.model.Category}'s
@@ -60,7 +60,7 @@ public interface CategoryService {
      * @return the updated Category object
      */
     @PreAuthorize("hasPermission(#categoryId, 'org.apache.rave.portal.model.Category', 'update')")
-    Category update(long categoryId, String text, User lastModifiedUser);
+    Category update(String categoryId, String text, User lastModifiedUser);
 
     /**
      * Deletes a Category

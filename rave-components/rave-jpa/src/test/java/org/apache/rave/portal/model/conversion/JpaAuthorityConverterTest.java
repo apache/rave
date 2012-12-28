@@ -62,7 +62,7 @@ public class JpaAuthorityConverterTest {
         Authority template = new AuthorityImpl();
         template.setAuthority("FOO");
         template.setDefaultForNewUser(true);
-        template.addUser(new UserImpl(42L));
+        template.addUser(new UserImpl("42"));
 
         JpaAuthority jpaTemplate = converter.convert(template);
 

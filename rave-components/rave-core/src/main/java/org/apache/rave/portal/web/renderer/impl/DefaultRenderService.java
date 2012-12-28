@@ -20,7 +20,8 @@
 package org.apache.rave.portal.web.renderer.impl;
 
 import org.apache.rave.exception.NotSupportedException;
-import org.apache.rave.portal.model.RegionWidget;
+import org.apache.rave.portal.repository.WidgetRepository;
+import org.apache.rave.portal.web.renderer.model.RegionWidgetWrapper;
 import org.apache.rave.portal.web.renderer.model.RenderContext;
 import org.apache.rave.portal.web.renderer.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,10 +38,12 @@ import java.util.*;
 @Service
 public class DefaultRenderService implements RenderService {
 
+    public static final String WIDGET_CONTEXT_KEY = "widget";
+
     private final Map<String, RegionWidgetRenderer> supportedWidgets;
 
     @Autowired
-    public DefaultRenderService(List<RegionWidgetRenderer> widgetRenderers) {
+    public DefaultRenderService(List<RegionWidgetRenderer> widgetRenderers, WidgetRepository widgetRepository) {
         this.supportedWidgets = new HashMap<String, RegionWidgetRenderer>();
         mapRenderersByType(this.supportedWidgets, widgetRenderers);
     }
@@ -51,21 +54,21 @@ public class DefaultRenderService implements RenderService {
     }
 
     /**
-     * Renders the given widget iff there is a {@link org.apache.rave.portal.web.renderer.RegionWidgetRenderer } for the
-     * widget type
+     * Renders the given rw iff there is a {@link org.apache.rave.portal.web.renderer.RegionWidgetRenderer } for the
+     * rw type
      *
-     * @param widget widget to renderer
+     * @param rw RegionWidget to renderer
      * @param context
      * @return the String representation of the rendered RegionWidget
      * @throws {@link org.apache.rave.exception.NotSupportedException}
      */
     @Override
-    public String render(RegionWidget widget, RenderContext context) {
-        RegionWidgetRenderer renderer = supportedWidgets.get(widget.getWidget().getType());
+    public String render(RegionWidgetWrapper rw, RenderContext context) {
+        RegionWidgetRenderer renderer = supportedWidgets.get(rw.getWidget().getType());
         if(renderer == null) {
-            throw new NotSupportedException(widget.getWidget().getType() + " is not supported");
+            throw new NotSupportedException(rw.getWidget().getType() + " is not supported");
         }
-        return renderer.render(widget, context);
+        return renderer.render(rw, context);
     }
 
     private static <T extends Renderer> void mapRenderersByType(Map<String, T> map, List<T> renderers) {

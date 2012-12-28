@@ -20,25 +20,17 @@
 package org.apache.rave.portal.model.conversion.impl;
 
 import com.google.common.collect.Lists;
-import org.apache.openjpa.persistence.meta.Members;
 import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.model.impl.*;
 import org.apache.rave.portal.repository.PageLayoutRepository;
-import org.apache.rave.portal.repository.UserRepository;
-import org.apache.rave.portal.repository.WidgetRepository;
-import org.apache.rave.portal.service.RegionService;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.easymock.EasyMock.*;
-
-import static org.easymock.EasyMock.createNiceMock;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
@@ -47,23 +39,17 @@ import static org.junit.Assert.*;
  */
 public class MongoDbPageConverterTest {
 
-    private UserRepository userRepository;
-    private WidgetRepository widgetRepository;
     private PageLayoutRepository pageLayoutRepository;
 
     private MongoDbPageConverter converter;
-    public static final long USER1ID = 1234L;
-    public static final long USER2ID = 1222L;
-    public static final long PAGEID = 1234L;
+    public static final String USER1ID = "1234";
+    public static final String USER2ID = "1222";
+    public static final String PAGEID = "1234";
 
     @Before
     public void setup() {
         converter = new MongoDbPageConverter();
-        userRepository = createNiceMock(UserRepository.class);
-        widgetRepository = createNiceMock(WidgetRepository.class);
         pageLayoutRepository = createNiceMock(PageLayoutRepository.class);
-        converter.setWidgetRepository(widgetRepository);
-        converter.setUserRepository(userRepository);
         converter.setPageLayoutRepository(pageLayoutRepository);
 
     }
@@ -73,9 +59,8 @@ public class MongoDbPageConverterTest {
 
         MongoDbPage results;
         PageUser pageUser = new PageUserImpl(USER1ID);
-        User user = new UserImpl(USER2ID);
         Page sourcePage = new PageImpl();
-        pageUser.setUser(user);
+        pageUser.setUserId(USER2ID);
 
         List<PageUser> pageMembers = Lists.newArrayList();
         pageMembers.add(pageUser);
@@ -83,10 +68,9 @@ public class MongoDbPageConverterTest {
 
         Region region = new RegionImpl();
         region.setRegionWidgets(Lists.<RegionWidget>newLinkedList());
-        RegionWidget rw = new RegionWidgetImpl();
-        rw.setId(2222L);
-        Widget widget = new WidgetImpl(3333L);
-        rw.setWidget(widget);
+        RegionWidgetImpl rw = new RegionWidgetImpl();
+        rw.setId("2222");
+        rw.setWidgetId("3333");
         rw.setPreferences(Lists.<RegionWidgetPreference>newLinkedList());
 
         region.getRegionWidgets().add(rw);
@@ -98,7 +82,7 @@ public class MongoDbPageConverterTest {
         pagelayout.setCode("asdf");
 
         sourcePage.setId(PAGEID);
-        sourcePage.setOwner(user);
+        sourcePage.setOwnerId(USER2ID);
         sourcePage.setPageLayout(pagelayout);
         sourcePage.setName("Carol");
         sourcePage.setParentPage(parentPage);
@@ -113,9 +97,8 @@ public class MongoDbPageConverterTest {
         assertNull(results.getRegions().get(0).getPage());
         assertThat(results.getPageLayout(), is(nullValue(PageLayout.class)));
         assertThat(results.getParentPage(), is(nullValue()));
-        assertThat(results.getUserRepository(), is(nullValue()));
         assertThat(results.getMembers().size(), is(1));
-        assertThat(results.getRegions().get(0).getRegionWidgets().get(0), is(instanceOf(MongoDbRegionWidget.class)));
+        assertThat(results.getRegions().get(0).getRegionWidgets().get(0), is(instanceOf(RegionWidgetImpl.class)));
         assertNotNull(results.getRegions().get(0).getRegionWidgets().get(0).getId());
         assertNull(results.getRegions().get(0).getRegionWidgets().get(0).getRegion());
         assertThat(results.getRegions().get(0).getRegionWidgets().get(0).getPreferences(), is(equalTo(sourcePage.getRegions().get(0).getRegionWidgets().get(0).getPreferences())));
@@ -125,19 +108,19 @@ public class MongoDbPageConverterTest {
     @Test
     public void convertPage_Id_Null(){
         Page sourcePage = new MongoDbPage();
-        Region region = new RegionImpl();
-        region.setId((long)123);
-        sourcePage.setRegions(Arrays.asList(region));
+        RegionImpl region = new RegionImpl();
+        region.setId("123");
+        sourcePage.setRegions(Arrays.<Region>asList(region));
         sourcePage.setPageLayout(new PageLayoutImpl());
-        sourcePage.setOwner(new UserImpl());
+        sourcePage.setOwnerId(USER1ID);
         sourcePage.setMembers(new ArrayList<PageUser>());
 
 
         Page subPage = new MongoDbPage();
         List<Page> subPages = Arrays.asList(subPage);
         subPage.setPageLayout(new PageLayoutImpl());
-        subPage.setOwner(new UserImpl());
-        subPage.setId((long)321);
+        subPage.setOwnerId(USER1ID);
+        subPage.setId("321");
         subPage.setMembers(new ArrayList<PageUser>());
         subPage.setRegions(new ArrayList<Region>());
         sourcePage.setSubPages(subPages);
@@ -155,10 +138,9 @@ public class MongoDbPageConverterTest {
     @Test
     public void convertUser_valid() {
 
-        MongoDbPageUser mongoUser;
+        PageUserImpl mongoUser;
         PageUser sourceUser = new PageUserImpl(USER1ID);
-        User user = new UserImpl(USER2ID);
-        sourceUser.setUser(user);
+        sourceUser.setUserId(USER2ID);
         sourceUser.setEditor(true);
         sourceUser.setPageStatus(PageInvitationStatus.OWNER);
         sourceUser.setRenderSequence(1234L);
@@ -170,36 +152,30 @@ public class MongoDbPageConverterTest {
         assertThat(mongoUser.getPageStatus(), is(PageInvitationStatus.OWNER));
         assertThat(mongoUser.getRenderSequence(), is(equalTo(1234L)));
         assertThat(mongoUser.getPage(), is(nullValue()));
-        assertNull(mongoUser.getUserRepository());
 
     }//end convertUser_valid
 
     @Test
     public void convertUser_MongoInstance(){
-        PageUser sourceUser = new MongoDbPageUser();
-        sourceUser.setUser(new UserImpl());
+        PageUser sourceUser = new PageUserImpl();
+        sourceUser.setUserId("1234");
 
-        MongoDbPageUser converted = converter.convert(sourceUser);
-
+        PageUserImpl converted = converter.convert(sourceUser);
         assertNotNull(converted.getId());
-        assertTrue(converted instanceof MongoDbPageUser);
     }
 
     //Convert Widget test
     @Test
     public void convertWidget_valid() {
 
-        MongoDbRegionWidget rw = new MongoDbRegionWidget();
-        MongoDbRegionWidget rwResults;
+        RegionWidgetImpl rw = new RegionWidgetImpl();
+        RegionWidgetImpl rwResults;
 
         rw.setPreferences(Lists.<RegionWidgetPreference>newLinkedList());
         RegionWidgetPreference preference = new RegionWidgetPreferenceImpl();
         preference.setName("name");
         preference.setValue("value");
-        rw.setWidgetId(1234L);
-        Widget widget = new WidgetImpl(3333L);
-
-        rw.setWidget(widget);
+        rw.setWidgetId("1234L");
         rw.getPreferences().add(preference);
         rw.setLocked(false);
         rw.setCollapsed(false);
@@ -209,7 +185,7 @@ public class MongoDbPageConverterTest {
 
         rwResults = converter.convert(rw);
 
-        assertThat(rwResults.getWidgetId(), is(equalTo(3333L)));
+        assertThat(rwResults.getWidgetId(), is(equalTo("1234L")));
         assertNotNull(rwResults.getId());
         assertThat(rwResults.getPreferences().get(0), is(equalTo(preference)));
         assertThat(rwResults.isCollapsed(), is(false));
@@ -217,20 +193,16 @@ public class MongoDbPageConverterTest {
         assertThat(rwResults.isLocked(), is(false));
         assertThat(rwResults.getRenderPosition(), is(equalTo("test")));
         assertThat(rwResults.getRenderOrder(), is(1));
-        assertThat(rwResults.getWidgetRepository(), is(nullValue()));
         assertThat(rwResults.getRegion(), is(nullValue()));
 
     }//end convertRegion_valid
 
     @Test
     public void convertWidget_NullPreferences(){
-        MongoDbRegionWidget rw = new MongoDbRegionWidget();
-        MongoDbRegionWidget rwResults;
+        RegionWidgetImpl rw = new RegionWidgetImpl();
+        RegionWidgetImpl rwResults;
 
-        rw.setWidgetId(1234L);
-        Widget widget = new WidgetImpl(3333L);
-
-        rw.setWidget(widget);
+        rw.setWidgetId("1234L");
         rw.setLocked(false);
         rw.setCollapsed(false);
         rw.setHideChrome(false);
@@ -239,7 +211,7 @@ public class MongoDbPageConverterTest {
 
         rwResults = converter.convert(rw);
 
-        assertThat(rwResults.getWidgetId(), is(equalTo(3333L)));
+        assertThat(rwResults.getWidgetId(), is(equalTo("1234L")));
         assertNotNull(rwResults.getId());
         assertNotNull(rwResults.getPreferences());
         assertThat(rwResults.isCollapsed(), is(false));
@@ -247,7 +219,6 @@ public class MongoDbPageConverterTest {
         assertThat(rwResults.isLocked(), is(false));
         assertThat(rwResults.getRenderPosition(), is(equalTo("test")));
         assertThat(rwResults.getRenderOrder(), is(1));
-        assertThat(rwResults.getWidgetRepository(), is(nullValue()));
         assertThat(rwResults.getRegion(), is(nullValue()));
     }
 
@@ -261,29 +232,29 @@ public class MongoDbPageConverterTest {
 
         region1.setRegionWidgets(Lists.<RegionWidget>newLinkedList());
         region2.setRegionWidgets(Lists.<RegionWidget>newLinkedList());
-        RegionWidget rw1 = new MongoDbRegionWidget();
+        RegionWidget rw1 = new RegionWidgetImpl();
         region1.getRegionWidgets().add(rw1);
 
-        RegionWidget rw2 = new MongoDbRegionWidget();
+        RegionWidget rw2 = new RegionWidgetImpl();
         region2.getRegionWidgets().add(rw2);
 
         page.getRegions().add(region1);
         page.getRegions().add(region2);
 
         page.setMembers(Lists.<PageUser>newLinkedList());
-        MongoDbPageUser member1 = new MongoDbPageUser();
+        PageUserImpl member1 = new PageUserImpl();
         PageUser member2 = new PageUserImpl();
         page.getMembers().add(member1);
         page.getMembers().add(member2);
 
         Region subRegion = new RegionImpl();
         subRegion.setRegionWidgets(Lists.<RegionWidget>newLinkedList());
-        RegionWidget subRegionWidget = new MongoDbRegionWidget();
+        RegionWidget subRegionWidget = new RegionWidgetImpl();
         subRegion.getRegionWidgets().add(subRegionWidget);
 
         page.setSubPages(Lists.<Page>newLinkedList());
         MongoDbPage subPage1 = new MongoDbPage();
-        MongoDbPageUser subMember = new MongoDbPageUser();
+        PageUserImpl subMember = new PageUserImpl();
         subPage1.setMembers(Lists.<PageUser>newLinkedList());
         subPage1.setRegions(Lists.<Region>newLinkedList());
         subPage1.getMembers().add(subMember);
@@ -301,9 +272,8 @@ public class MongoDbPageConverterTest {
         replay(pageLayoutRepository);
 
         converter.hydrate(page);
-        assertThat(page.getUserRepository(), is(sameInstance(userRepository)));
         assertThat(page.getPageLayout(), is(sameInstance(pageLayout)));
-        assertThat(page.getMembers().get(0), is(instanceOf(MongoDbPageUser.class)));
+        assertThat(page.getMembers().get(0), is(instanceOf(PageUserImpl.class)));
         assertThat((MongoDbPage)region1.getPage(), is(sameInstance(page)));
         assertThat((MongoDbPage)subPage1.getParentPage(), is(sameInstance(page)));
         assertThat((MongoDbPage)subPage2.getParentPage(), is(sameInstance(page)));
@@ -314,13 +284,10 @@ public class MongoDbPageConverterTest {
     @Test
     public void hydrateWidgetRegion_valid() {
 
-        MongoDbRegionWidget rw = new MongoDbRegionWidget();
-        rw.setWidgetRepository(widgetRepository);
+        RegionWidgetImpl rw = new RegionWidgetImpl();
         Region region = new RegionImpl();
 
         converter.hydrate(rw, region);
-
-        assertThat(rw.getWidgetRepository(), is(sameInstance(widgetRepository)));
         assertThat(rw.getRegion(), is(sameInstance(region)));
 
     }
@@ -331,13 +298,6 @@ public class MongoDbPageConverterTest {
         converter.hydrate(page);
 
         assertThat(true, is(true));
-    }
-
-    @Test
-    public void hydrateUser_valid() {
-        MongoDbPageUser user = new MongoDbPageUser();
-        converter.hydrate(user);
-        assertThat(user.getUserRepository(), is(sameInstance(userRepository)));
     }
 
 }

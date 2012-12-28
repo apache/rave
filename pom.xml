@@ -34,7 +34,7 @@
     <name>Apache Rave :: rave-project</name>
     <description>Apache Rave Project</description>
     <packaging>pom</packaging>
-    <version>0.17-MONGO-SNAPSHOT</version>
+    <version>0.19-SNAPSHOT</version>
 
     <scm>
         <connection>scm:svn:http://svn.apache.org/repos/asf/rave/trunk</connection>
@@ -43,7 +43,7 @@
     </scm>
 
     <properties>
-        <apache.shindig.version>2.5.0-beta3</apache.shindig.version>
+        <apache.shindig.version>2.5.0-beta5</apache.shindig.version>
         <apache.wookie.version>0.10.0-incubating</apache.wookie.version>
         <org.springframework.version>3.1.2.RELEASE</org.springframework.version>
         <org.springframework.security.version>3.1.1.RELEASE</org.springframework.security.version>

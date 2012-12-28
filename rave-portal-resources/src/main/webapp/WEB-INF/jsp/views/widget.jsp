@@ -22,7 +22,7 @@
 <rave:navbar pageTitle="${widget.title}"/>
 
 <div id="na_content" class="container">
-    <div class="row detail-widget storeItem">
+    <div class="row detail-widget">
         <div class="span4">
             <div class="detail-widget-preview">
                 <c:if test="${not empty widget.screenshotUrl}">
@@ -43,7 +43,8 @@
                         <div id="widgetAdded_${widget.id}" class="detailWidgetAdd">
                             <button class="btn btn-primary btn-large storeItemButton"
                                     id="addWidget_${widget.id}"
-                                    onclick="rave.api.rpc.addWidgetToPage({widgetId: ${widget.id}, pageId: ${referringPageId}, redirectAfterAdd:true});">
+                                    onclick="rave.api.rpc.addWidgetToPage({widgetId: ${widget.id}, pageId: ${referringPageId}, redirectAfterAdd:true});"
+                                    data-success="<fmt:message key="page.widget.addedToPage"/>">
                                 <fmt:message key="page.widget.addToPage"/>
                             </button>
                         </div>
@@ -57,7 +58,7 @@
             </div>
         </div>
         <div class="span7 detail-widget-main">
-           <div>
+           <div class="row-fluid">
 			   <h2>
 					<c:set var="widgetHasTitleUrl" value="${not empty widget.titleUrl}"/>
 					<c:if test="${widgetHasTitleUrl}"><a href="<c:out value="${widget.titleUrl}"/>" rel="external">
@@ -90,8 +91,8 @@
                     <p class="storeWidgetDesc"><c:out value="${widget.description}"/></p>
                 </c:if>
            </div>
-           <div class="clearfix">
-                <div class="widgetRating">
+           <div class="row-fluid">
+                <div class="widgetRating" id="widgetRatings">
                     <h3><fmt:message key="page.widget.rate"/></h3>
                     <form class="hidden">
                         <input type="hidden" id="rate-${widget.id}"
@@ -132,28 +133,34 @@
                     </div>
                 </div>
            </div>
-           <div>
+           <div class="row-fluid">
                 <div class="detail-widget-users">
-                    <p><c:set var="widgetUserCountGreaterThanZero"
+                    <c:set var="widgetUserCountGreaterThanZero"
                            value="${widgetStatistics != null && widgetStatistics.totalUserCount > 0}"/>
                     <c:if test="${widgetUserCountGreaterThanZero}"><a href="javascript:void(0);"
                                                                       onclick="rave.displayUsersOfWidget(${widget.id});"></c:if>
                     <fmt:formatNumber groupingUsed="true" value="${widgetStatistics.totalUserCount}"/>&nbsp;<fmt:message
                             key="page.widget.usercount"/>
                     <c:if test="${widgetUserCountGreaterThanZero}"></a></c:if>
-                    </p>
                 </div>
            </div>
 
-            <div>
+           <div class="row-fluid">
                 <%--//Tag section--%>
                 <div class="widgetTags">
                     <c:if test="${not empty widget.tags}">
                         <h3><fmt:message key="page.widget.tags.title"/></h3>
                         <div class="detail-widget-tags">
-                                <c:forEach var="tag" items="${widget.tags}">
-                               <span class="label"><c:out value="${tag.tag.keyword}"/></span>
+                            <c:forEach var="widgettag" items="${widget.tags}">
+                                <c:forEach var="tag" items="${tags}">
+                                    <c:set var="tagMatched">
+                                        ${tag.id==widgettag.tagId?true:false}
+                                    </c:set>
+                                    <c:if test="${tagMatched}">
+                                        <span class="label"><c:out value="${tag.keyword}"/></span>
+                                    </c:if>
                                 </c:forEach>
+                            </c:forEach>
                         </div>
                     </c:if>
                     <div id="tagInput" class="form-inline hide">
@@ -165,49 +172,51 @@
                     </div>
                     <a href="#tagInput" data-toggle="basic-slide" data-toggle-text="Hide tag form">Add tags <i class="icon-arrow-right"></i></a>
                 </div>
-                <c:if test="${not empty widget.categories}">
+           </div>
+           <c:if test="${not empty widget.categories}">
+	           <div class="row-fluid">
                     <div class="widgetCategories">
-                        <fmt:message key="widget.categories"/>
-                        <table id="categoriesRow">
-                            <tr>
+                        <h3><fmt:message key="widget.categories"/></h3>
+                        <div id="categoriesRow">
+                            <div>
                                 <c:forEach var="category" items="${widget.categories}">
-                                    <td class="storeWidgetDesc"><c:out value="${category.text}"/></td>
+                                    <span class="storeWidgetDesc"><c:out value="${category.text}"/></span>
                                 </c:forEach>
-                            </tr>
-                        </table>
+                            </div>
+                        </div>
                     </div>
-                </c:if>
-            </div>
-
-            <div>
-                <div class="widgetComments">
+                </div>
+            </c:if>
+           <div class="row-fluid">
+                <div class="widgetComments" id="widgetComments">
                     <h3><fmt:message key="page.widget.comments"/></h3>
-                    <div class="new-comment form-inline well">
+                    <div class="new-comment form-inline">
                         <div class="row-fluid">
-                        	<div class="span11 pull-left">
+                        	<div class="span12">
                         		<textarea id="newComment-${widget.id}"></textarea>&nbsp;
+                        		<button id="comment-new-${widget.id}" class="btn commentNewButton" title="Add Comment"><i class="icon-comment"></i></button>
                         	</div>
-                        	<button id="comment-new-${widget.id}" class="btn commentNewButton pull-right" title="Add Comment"><i class="icon-comment"></i></button>
                         </div>
                     </div>
                     <c:if test="${not empty widget.comments}">
                         <ul class="comments">
                             <c:forEach var="comment" items="${widget.comments}">
+                                <portal:person id="${comment.userId}" var="commenter" />
                                 <li class="comment">
                                     <fmt:formatDate value="${comment.createdDate}" type="both" var="commentDate"/>
                                     <p class="comment-heading">
                                         <span class="commenter">
                                             <c:choose>
-                                                <c:when test="${not empty comment.user.displayName}">
-                                                    <c:out value="${comment.user.displayName}"/>
+                                                <c:when test="${not empty commenter.username}">
+                                                    <c:out value="${commenter.username}"/>
                                                 </c:when>
-                                                <c:otherwise><c:out value="${comment.user.username}"/></c:otherwise>
+                                                <c:otherwise><c:out value="${comment.userId}"/></c:otherwise>
                                             </c:choose>
                                         </span>
                                         <span class="comment-date">
                                             <c:out value=" - ${commentDate} "/>
                                         </span>
-                                        <c:if test="${userProfile.id eq comment.user.id}">
+                                        <c:if test="${userProfile.id eq comment.userId}">
                                             <button id="comment-delete-${comment.id}" class="btn btn-danger btn-mini commentDeleteButton"
                                                     value="Delete" title="Delete comment" data-widgetid="<c:out value="${comment.widgetId}"/>">
                                                 <i class="icon-remove icon-white"></i>

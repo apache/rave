@@ -86,7 +86,7 @@ public class MongoDbUserTest {
 
     @Test
     public void equals_Null_Id(){
-        user.setId((long)123);
+        user.setId("123");
         MongoDbUser r = new MongoDbUser();
         assertFalse(user.equals(r));
         assertFalse(r.equals(user));
@@ -95,9 +95,9 @@ public class MongoDbUserTest {
 
     @Test
     public void equals_Valid(){
-        user.setId((long)123);
+        user.setId("123");
         MongoDbUser r = new MongoDbUser();
-        r.setId((long) 123);
+        r.setId("123");
         assertTrue(user.equals(r));
     }
 
@@ -110,7 +110,7 @@ public class MongoDbUserTest {
 
     @Test
     public void hashCode_Valid(){
-        user.setId((long)123);
+        user.setId("123");
         assertNotNull(user.hashCode());
     }
 

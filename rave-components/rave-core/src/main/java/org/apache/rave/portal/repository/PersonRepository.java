@@ -148,6 +148,7 @@ public interface PersonRepository extends Repository<Person> {
 
     /**
      * Finds the list of friend requests received by the user
+     * 
      * @param username the username of the user who receives the friend request
      * @return a valid List of people who sent friend request to the current user
      */
@@ -155,9 +156,18 @@ public interface PersonRepository extends Repository<Person> {
 
     /**
      * Finds the list of friend requests sent by the user
+     * 
      * @param username the username of the user who sent the friend request
      * @return a valid List of people to whom friend requests were sent
      */
 	List<Person> findFriendRequestsSent(String username);
+
+    /**
+     * Deletes all the associations of a particular user with other users
+     * 
+     * @param userid is the userid of the user whose associations are to be deleted
+     * @return count of the association items deleted
+     */
+	int removeAllFriendsAndRequests(String userid);
 }
 

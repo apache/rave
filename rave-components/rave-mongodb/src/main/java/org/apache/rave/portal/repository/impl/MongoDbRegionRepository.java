@@ -47,7 +47,7 @@ public class MongoDbRegionRepository implements RegionRepository {
     }
 
     @Override
-    public Region get(long id) {
+    public Region get(String  id) {
         Page page = getPageByRegionId(id);
         for(Region region : page.getRegions()) {
             if(region.getId().equals(id)) {
@@ -119,7 +119,7 @@ public class MongoDbRegionRepository implements RegionRepository {
         }
     }
 
-    private Page getPageByRegionId(long id) {
+    private Page getPageByRegionId(String  id) {
         return template.findOne(new Query(Criteria.where("regions").elemMatch(Criteria.where("_id").is(id))));
     }
 

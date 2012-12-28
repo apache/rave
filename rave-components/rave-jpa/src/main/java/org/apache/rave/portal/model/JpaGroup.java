@@ -18,11 +18,10 @@
  */
 package org.apache.rave.portal.model;
 
+import com.google.common.collect.Lists;
 import org.apache.rave.persistence.BasicEntity;
 import org.apache.rave.portal.model.conversion.ConvertingListProxyFactory;
 import org.apache.rave.portal.model.conversion.JpaConverter;
-import org.apache.rave.portal.model.conversion.JpaGroupConverter;
-import org.apache.rave.portal.model.conversion.JpaPersonConverter;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -62,20 +61,21 @@ public class JpaGroup implements BasicEntity, Group {
     @Column(name = "description")
     private String description;
 
-    @ManyToOne
-    @JoinColumn(name = "owner_id", referencedColumnName = "entity_id")
-    private JpaPerson owner;
+    @Basic
+    @Column(name = "owner_id")
+    private String owner;
 
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "group_members", joinColumns = @JoinColumn(name="group_id"))
+    @Column(name= "person_Id")
+    private List<String> members;
 
-    @ManyToMany(fetch = FetchType.EAGER, mappedBy="groups")
-    private List<JpaPerson> members;
-
-    public JpaPerson getOwner() {
+    public String getOwnerId() {
         return owner;
     }
 
-    public void setOwner(Person owner) {
-        this.owner = JpaConverter.getInstance().convert(owner, Person.class);
+    public void setOwnerId(String ownerId) {
+        this.owner = ownerId;
     }
 
     public String getDescription() {
@@ -86,17 +86,17 @@ public class JpaGroup implements BasicEntity, Group {
         this.description = description;
     }
 
-    public List<Person> getMembers() {
-        return ConvertingListProxyFactory.createProxyList(Person.class, members);
+    public List<String> getMemberIds() {
+        return members;
     }
 
-    public void setMembers(List<Person> members) {
+    public void setMemberIds(List<String> members) {
         if(this.members == null) {
-            this.members = new ArrayList<JpaPerson>();
+            this.members = Lists.<String>newLinkedList();
         }
-        this.getMembers().clear();
+        this.getMemberIds().clear();
         if(members != null) {
-            this.getMembers().addAll(members);
+            this.getMemberIds().addAll(members);
         }
     }
 

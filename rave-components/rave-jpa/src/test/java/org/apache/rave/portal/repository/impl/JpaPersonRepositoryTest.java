@@ -49,7 +49,8 @@ import static org.junit.Assert.assertThat;
         "classpath:test-dataContext.xml"})
 public class JpaPersonRepositoryTest {
 
-    private static final Long VALID_ID = 1L;
+    private static final String VALID_ID = "1";
+    private static final String VALID_ID2 = "2";
     private static final String VALID_USER = "canonical";
     private static final String VALID_USER2 = "john.doe";
     private static final String VALID_USER3 = "jane.doe";
@@ -73,7 +74,7 @@ public class JpaPersonRepositoryTest {
     @Test
     public void get() {
         JpaPerson p = (JpaPerson) repository.get(VALID_ID);
-        assertThat(p.getEntityId(), is(VALID_ID));
+        assertThat(p.getEntityId().toString(), is(VALID_ID));
         assertThat(p.getUsername(), is(VALID_USER));
     }
 
@@ -192,9 +193,9 @@ public class JpaPersonRepositoryTest {
 
         assertThat(person.getEntityId(), is(nullValue()));
         repository.save(person);
-        long newId = person.getEntityId();
+        Long newId = person.getEntityId();
         assertThat(newId > 0, is(true));
-        JpaPerson newPerson = (JpaPerson) repository.get(newId);
+        JpaPerson newPerson = (JpaPerson) repository.get(newId.toString());
         assertThat(newPerson.getAboutMe(), is(NEW_ABOUT_ME));
         assertThat(newPerson.getUsername(), is(NEW_USERNAME));
     }
@@ -316,6 +317,24 @@ public class JpaPersonRepositoryTest {
         assertThat(friends.size(), is(equalTo(2)));
         assertThat(friends.get(0).getUsername(), is(equalTo(VALID_USER2)));
         assertThat(friends.get(1).getUsername(), is(equalTo(VALID_USER)));
+    }
+    
+    @Test
+    @Transactional(readOnly=false)
+    @Rollback(true)
+    public void removeFriendsAndRequests() {
+        List<Person> friends = repository.findFriends(VALID_USER);
+        assertThat(friends.size(), is(equalTo(3)));
+        assertThat(friends.get(0).getUsername(), is(equalTo(VALID_USER2)));
+        assertThat(friends.get(1).getUsername(), is(equalTo(VALID_USER3)));
+        assertThat(friends.get(2).getUsername(), is(equalTo(VALID_USER4)));
+        repository.removeAllFriendsAndRequests(VALID_ID2);
+        friends = repository.findFriends(VALID_USER);
+        assertThat(friends.size(), is(equalTo(2)));
+        assertThat(friends.get(0).getUsername(), is(equalTo(VALID_USER3)));
+        assertThat(friends.get(1).getUsername(), is(equalTo(VALID_USER4)));
+        List<Person> friendsUser2 = repository.findFriends(VALID_USER2);
+        assertThat(friendsUser2.size(), is(equalTo(0)));
     }
 
     @Test

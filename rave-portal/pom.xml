@@ -26,7 +26,7 @@
     <parent>
         <groupId>org.apache.rave</groupId>
         <artifactId>rave-project</artifactId>
-        <version>0.17-MONGO-SNAPSHOT</version>
+        <version>0.19-SNAPSHOT</version>
     </parent>
 
     <artifactId>rave-portal</artifactId>
@@ -59,7 +59,6 @@
             <artifactId>rave-portal-dependencies</artifactId>
             <type>pom</type>
         </dependency>
-
         <dependency>
             <groupId>org.apache.rave</groupId>
             <artifactId>rave-portal-resources</artifactId>
@@ -309,4 +308,5 @@
                 </dependencies>
             </profile>
     </profiles>
+
 </project>

@@ -48,7 +48,7 @@ public class JpaRegionWidgetConverter implements ModelConverter<RegionWidget, Jp
         JpaRegionWidget converted = null;
         if (source != null) {
             TypedQuery<JpaRegionWidget> query = manager.createNamedQuery(JpaRegionWidget.FIND_BY_ID, JpaRegionWidget.class);
-            query.setParameter(JpaRegionWidget.PARAM_WIDGET_ID, source.getId());
+            query.setParameter(JpaRegionWidget.PARAM_WIDGET_ID, source.getId() == null ? null : Long.parseLong(source.getId()));
             converted = getSingleResult(query.getResultList());
 
             if (converted == null) {
@@ -60,14 +60,14 @@ public class JpaRegionWidgetConverter implements ModelConverter<RegionWidget, Jp
     }
 
     private void updateProperties(RegionWidget source, JpaRegionWidget converted) {
-        converted.setId(source.getId());
+        converted.setEntityId(source.getId() == null ? null : Long.parseLong(source.getId()));
         converted.setLocked(source.isLocked());
         converted.setCollapsed(source.isCollapsed());
         converted.setHideChrome(source.isHideChrome());
         converted.setPreferences(source.getPreferences());
         converted.setRegion(source.getRegion());
         converted.setRenderPosition(source.getRenderPosition());
-        converted.setWidget(source.getWidget());
+        converted.setWidgetId(source.getWidgetId());
         converted.setRenderOrder(source.getRenderOrder());
     }
 }

@@ -34,7 +34,7 @@ Then I see the admin interface
 When I click the "Users" link
 Then I get the user search form
 When I search for username "newuser"
-Then I see the matches for "newuser"
+Then I see the user matches for "newuser"
 When I click the link for information on "newuser"
 Then I see the information for user "newuser"
 When I delete the the user "newuser"

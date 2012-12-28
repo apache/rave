@@ -27,6 +27,7 @@ import org.apache.rave.portal.web.renderer.RegionWidgetRenderer;
 import org.apache.rave.portal.web.renderer.RenderScope;
 import org.apache.rave.portal.web.renderer.ScriptLocation;
 import org.apache.rave.portal.web.renderer.ScriptManager;
+import org.apache.rave.portal.web.renderer.model.RegionWidgetWrapper;
 import org.apache.rave.portal.web.renderer.model.RenderContext;
 import org.apache.rave.provider.w3c.service.impl.W3CWidget;
 import org.json.JSONException;
@@ -86,18 +87,19 @@ public class W3cWidgetRenderer implements RegionWidgetRenderer {
     /**
      * Renders a {@link org.apache.rave.portal.model.RegionWidget} as HTML markup
      *
-     * @param item RegionWidgetImpl to render
+     * @param wrapper RegionWidgetImpl to render
      * @param context
      * @return valid HTML markup
      */
     @Override
-    public String render(RegionWidget item, RenderContext context) {
-        Widget widget = item.getWidget();
+    public String render(RegionWidgetWrapper wrapper, RenderContext context) {
+        Widget widget = wrapper.getWidget();
+        RegionWidget item = wrapper.getRegionWidget();
         if(!WIDGET_TYPE.equals(widget.getType())) {
             throw new NotSupportedException("Invalid widget type passed to renderer: " + widget.getType());
         }
 
-        String widgetScript = getWidgetScript(item);
+        String widgetScript = getWidgetScript(item, widget);
         // the key is based off the RegionWidget.id to ensure uniqueness
         String key = REGISTER_WIDGET_KEY + "-" + item.getId();
         scriptManager.registerScriptBlock(key, widgetScript, ScriptLocation.AFTER_RAVE, RenderScope.CURRENT_REQUEST, context);
@@ -108,10 +110,12 @@ public class W3cWidgetRenderer implements RegionWidgetRenderer {
 
     /**
      * Create a widget script block
+     *
      * @param item the RegionWidget to create a script block for
+     * @param widget
      * @return the script block
      */
-    private String getWidgetScript(RegionWidget item) {
+    private String getWidgetScript(RegionWidget item, Widget widget) {
         User user = userService.getAuthenticatedUser();
 
         //
@@ -122,7 +126,7 @@ public class W3cWidgetRenderer implements RegionWidgetRenderer {
         //
         // Get the Rave Widget for this regionWidget instance
         //
-        W3CWidget contextualizedWidget = (W3CWidget) widgetService.getWidget(user, sharedDataKey, item.getWidget());
+        W3CWidget contextualizedWidget = (W3CWidget) widgetService.getWidget(user, sharedDataKey, widget);
 
         //
         // TODO make this do something useful; currently these preferences aren't
@@ -151,7 +155,7 @@ public class W3cWidgetRenderer implements RegionWidgetRenderer {
 
         // get attributes about the sub page this regionWidget is on.  This is needed to assist the client in
         // determining which gadgets are on visible tabs/sub pages initially to make widget rendering more efficient
-        Long pageId = null;
+        String pageId = null;
         String pageName = "";
         boolean isDefault = false;
         Page page =  item.getRegion().getPage();
@@ -174,7 +178,7 @@ public class W3cWidgetRenderer implements RegionWidgetRenderer {
                 height,
                 width,
                 item.isCollapsed(),
-                item.getWidget().getId(),
+                item.getWidgetId(),
                 item.isLocked(),
                 item.isHideChrome(),
                 pageId,

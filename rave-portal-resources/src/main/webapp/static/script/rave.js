@@ -874,8 +874,8 @@ var rave = rave || (function () {
             $("<div />", {'class':'alert alert-success navbar-spacer', 'text':message})
                 .hide()
                 .prependTo("body")
-                .css({ position: 'fixed', bottom: '0px', margin:'0 0.5%', width: '95%', padding:'8px 2%', 'z-index':9999, 'border-radius': '4px 4px 0 0'})
-                .fadeIn('fast').delay(5000)
+                .css({ position: 'fixed', top: 0, left: 0, width: 'auto', 'max-width': '60%', 'font-size': '1.25em',  padding:'.6em 1em', 'z-index':9999, 'border-radius': '0 0 4px 0'})
+                .fadeIn('fast').delay(8000)
                 .fadeOut(function () {
                     $(this).remove();
                 });
@@ -1002,19 +1002,28 @@ var rave = rave || (function () {
         openAjaxHub = null;
     }
 
-    function renderNewWidget(regionWidgetId, init){
+    function renderNewWidget(regionWidgetId, init, regionId){
         // When run as the callback argument supplied to rave.api.rpc.addWidgetToPage
+        // or rave.api.rpc.addWidgetToPageRegion
         // this method will render the widget in the current page.
         // load widget into a placeholder element
         var placeholder = document.createElement("div");
         $(placeholder).load(rave.getContext()+"api/rest/regionwidget/"+regionWidgetId, function(){
-            var $firstRegion = $(".region:not(.region-locked):first")
-            var firstRegionId = ($firstRegion).attr('id');
-            // prepend to first region
-            var region = $("#"+firstRegionId);
+            var region = null;
+            if(regionId != undefined){
+                // get specified region
+                region = $("#region-"+regionId+"-id");
+            }
+            else{
+                var $firstRegion = $(".region:not(.region-locked):first")
+                var firstRegionId = ($firstRegion).attr('id');
+                // prepend to first region
+                region = $("#"+firstRegionId);
+            }
             region.prepend(placeholder);
             // remove the placeholder around the widget-wrapper
             region.children(":first").children(":first").unwrap();
+            
             if(init){
                 initializeWidgets();
                 rave.styleWidgetButtons(regionWidgetId);
@@ -1169,8 +1178,14 @@ var rave = rave || (function () {
         window.location.href = rave.getContext() + "page/view" + fragment;
     }
 
-    function viewWidgetDetail(widgetId, referringPageId) {
-        window.location.href = rave.getContext() + "store/widget/" + widgetId + "?referringPageId=" + referringPageId;
+    function viewWidgetDetail(widgetId, referringPageId, jumpToId) {
+    	if(jumpToId){
+	    	jumpToId = '#' + jumpToId;
+    	}
+    	else{
+	    	jumpToId = '';
+    	}
+    	window.location.href = rave.getContext() + "store/widget/" + widgetId + "?referringPageId=" + referringPageId  + jumpToId;
     }
 
     /**

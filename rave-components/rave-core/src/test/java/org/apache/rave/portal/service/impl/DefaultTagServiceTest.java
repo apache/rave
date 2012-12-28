@@ -49,23 +49,22 @@ public class DefaultTagServiceTest {
     @Test
     public void getTagById() {
         Tag tag = createTag("test");
-        expect(repository.get(1L)).andReturn(tag);
+        expect(repository.get("1")).andReturn(tag);
         replay(repository);
-        Tag sTag = service.getTagById(1L);
+        Tag sTag = service.getTagById("1");
         assertEquals(sTag, tag);
         verify(repository);
     }
 
 
     private static Tag createTag(String keyword) {
-        TagImpl tag = new TagImpl();
-        tag.setKeyword(keyword);
+        TagImpl tag = new TagImpl(keyword);
         return tag;
     }
 
     @Test
     public void getTagById_NotFound() {
-        final long entityId = 456L;
+        final String entityId = "456";
         expect(repository.get(entityId)).andReturn(null);
         replay(repository);
         Tag sTag = service.getTagById(entityId);

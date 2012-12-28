@@ -32,6 +32,6 @@ Template for rendering a Region on a page
 <%--@elvariable id="region" type="org.apache.rave.portal.model.Region"--%>
 <div class="region<c:if test="${region.locked || pageUser.editor == false}"> region-locked</c:if> <c:out value="${region.page.pageLayout.code}"/>_${regionIdx} regionNonDragging" id="region-${region.id}-id">
     <c:forEach var="regionWidget" items="${region.regionWidgets}">
-        <rave:region_widget regionWidget="${regionWidget}"/>
+        <rave:region_widget regionWidget="${regionWidget}" />
     </c:forEach>
 </div>

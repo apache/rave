@@ -16,28 +16,24 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.rave.portal.web.tag;
 
-package org.apache.rave.portal.repository;
+import org.apache.rave.portal.model.Person;
+import org.apache.rave.portal.repository.PersonRepository;
 
-import org.apache.rave.persistence.Repository;
-import org.apache.rave.portal.model.WidgetRating;
+import javax.servlet.jsp.JspException;
 
-public interface WidgetRatingRepository extends Repository<WidgetRating> {
+/**
+ * Adds the requested person to the requested scope for access via JSPs
+ */
+public class PersonTag extends ModelContextTag<Person, PersonRepository> {
 
-    /**
-     * Tries to find a {@link org.apache.rave.portal.model.WidgetRating} by the id's of a Widget and USer
-     *
-     * @param widgetId unique identifier of a Widget
-     * @param userId   unique identifier of a User
-     * @return {@link org.apache.rave.portal.model.WidgetRating} if it exists, otherwise {@literal null}
-     */
-    WidgetRating getByWidgetIdAndUserId(Long widgetId, Long userId);
+    public PersonTag() {
+        super(PersonRepository.class);
+    }
 
-    /**
-     * Delete all Widget Ratings for a userId
-     *
-     * @param userId
-     * @return count of ratings deleted
-     */
-    int deleteAll(Long userId);
+    @Override
+    protected void handleNoVar(Person result) throws JspException {
+        writeString(result.getUsername());
+    }
 }

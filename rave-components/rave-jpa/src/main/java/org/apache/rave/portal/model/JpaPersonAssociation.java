@@ -46,13 +46,16 @@ import org.apache.rave.persistence.BasicEntity;
 @Table(name = "person_association",
         uniqueConstraints = @UniqueConstraint(columnNames = {"follower_id", "followedby_id"}))
 @NamedQueries(value = {
-		@NamedQuery(name = JpaPersonAssociation.FIND_ASSOCIATION_ITEM_BY_USERNAMES, query = "select a from JpaPersonAssociation a where a.follower.username = :follower_username and a.followedby.username = :followedby_username")
+		@NamedQuery(name = JpaPersonAssociation.FIND_ASSOCIATION_ITEM_BY_USERNAMES, query = "select a from JpaPersonAssociation a where a.follower.username = :follower_username and a.followedby.username = :followedby_username"),
+		@NamedQuery(name = JpaPersonAssociation.DELETE_ASSOCIATION_ITEMS_BY_USERID, query = "delete from JpaPersonAssociation a where a.follower.entityId = :userid or a.followedby.entityId = :userid")
 })
 public class JpaPersonAssociation implements BasicEntity {
 
     public static final String FOLLOWER_USERNAME = "follower_username";
     public static final String FOLLOWEDBY_USERNAME = "followedby_username";
+    public static final String USERID = "userid";
     public static final String FIND_ASSOCIATION_ITEM_BY_USERNAMES = "PersonAssociation.findAssociationItemByUsernames";
+    public static final String DELETE_ASSOCIATION_ITEMS_BY_USERID = "PersonAssociation.deleteAssociationItemsByUserid";
 
     @Id
     @Column(name = "entity_id")

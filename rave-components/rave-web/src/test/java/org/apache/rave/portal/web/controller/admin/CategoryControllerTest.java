@@ -201,12 +201,11 @@ public class CategoryControllerTest {
     public void updateCategory_valid(){
         Model model = new ExtendedModelMap();
         User user = new UserImpl();
-        long id = 1L;
+        String id = "1";
         String categoryText = "Social";
-        CategoryImpl category = new CategoryImpl();
-        category.setCreatedUser(user);
+        CategoryImpl category = new CategoryImpl(id);
+        category.setCreatedUserId(user.getId());
         category.setText(categoryText);
-        category.setId(id);
         SessionStatus sessionStatus = createMock(SessionStatus.class);
         expect(userService.getAuthenticatedUser()).andReturn(user).once();
         expect(categoryService.get(id)).andReturn(category);
@@ -224,11 +223,11 @@ public class CategoryControllerTest {
     public void updateCategory_invalidToken(){
         Model model = new ExtendedModelMap();
         User user = new UserImpl();
-        long id = 1L;
+        String id = "1";
         String categoryText = "Social";
         String invalidToken = AdminControllerUtil.generateSessionToken();
         CategoryImpl category = new CategoryImpl();
-        category.setCreatedUser(user);
+        category.setCreatedUserId(user.getId());
         category.setText(categoryText);
         category.setId(id);
         SessionStatus sessionStatus = createMock(SessionStatus.class);
@@ -247,10 +246,10 @@ public class CategoryControllerTest {
         Model model = new ExtendedModelMap();
         User user = new UserImpl();
 
-        long id = 1L;
+        String id = "1";
         String categoryText = "";
         CategoryImpl category = new CategoryImpl();
-        category.setCreatedUser(user);
+        category.setCreatedUserId(user.getId());
         category.setText(categoryText);
         category.setId(id);
         SessionStatus sessionStatus = createMock(SessionStatus.class);
@@ -265,11 +264,11 @@ public class CategoryControllerTest {
     @Test
     public void updateCategory_invalidValidRequest_nullUser(){
         Model model = new ExtendedModelMap();
-        long id = 1L;
+        String id = "1";
         User user = new UserImpl();
         String categoryText = "Social";
         CategoryImpl category = new CategoryImpl();
-        category.setCreatedUser(user);
+        category.setCreatedUserId(user.getId());
         category.setText(categoryText);
         category.setId(id);
         SessionStatus sessionStatus = createMock(SessionStatus.class);
@@ -285,10 +284,10 @@ public class CategoryControllerTest {
     public void updateCategory_invalidValidRequest_nullWidgetToUpdate(){
         Model model = new ExtendedModelMap();
         User user = new UserImpl();
-        long id = 1L;
+        String id = "1";
         String categoryText = "Social";
         CategoryImpl category = new CategoryImpl();
-        category.setCreatedUser(user);
+        category.setCreatedUserId(user.getId());
         category.setText(categoryText);
         category.setId(id);
         SessionStatus sessionStatus = createMock(SessionStatus.class);
@@ -305,10 +304,10 @@ public class CategoryControllerTest {
     public void deleteCategory_valid(){
         Model model = new ExtendedModelMap();
         User user = new UserImpl();
-        long id = 1L;
+        String id = "1";
         String categoryText = "Social";
         CategoryImpl category = new CategoryImpl();
-        category.setCreatedUser(user);
+        category.setCreatedUserId(user.getId());
         category.setText(categoryText);
         category.setId(id);
         SessionStatus sessionStatus = createMock(SessionStatus.class);
@@ -329,11 +328,11 @@ public class CategoryControllerTest {
     public void deleteCategory_invalidToken(){
         Model model = new ExtendedModelMap();
         User user = new UserImpl();
-        long id = 1L;
+        String id = "1";
         String categoryText = "Social";
         String invalidToken = AdminControllerUtil.generateSessionToken();
         CategoryImpl category = new CategoryImpl();
-        category.setCreatedUser(user);
+        category.setCreatedUserId(user.getId());
         category.setText(categoryText);
         category.setId(id);
         SessionStatus sessionStatus = createMock(SessionStatus.class);
@@ -353,10 +352,10 @@ public class CategoryControllerTest {
         Model model = new ExtendedModelMap();
         User user = new UserImpl();
 
-        long id = 1L;
+        String id = "1";
         String categoryText = "";
         CategoryImpl category = new CategoryImpl();
-        category.setCreatedUser(user);
+        category.setCreatedUserId(user.getId());
         category.setText(categoryText);
         category.setId(id);
         SessionStatus sessionStatus = createMock(SessionStatus.class);
@@ -371,11 +370,11 @@ public class CategoryControllerTest {
     @Test
     public void deleteCategory_invalidValidRequest_nullUser(){
         Model model = new ExtendedModelMap();
-        long id = 1L;
+        String id = "1";
         User user = new UserImpl();
         String categoryText = "Social";
         CategoryImpl category = new CategoryImpl();
-        category.setCreatedUser(user);
+        category.setCreatedUserId(user.getId());
         category.setText(categoryText);
         category.setId(id);
         SessionStatus sessionStatus = createMock(SessionStatus.class);
@@ -391,10 +390,10 @@ public class CategoryControllerTest {
     public void deleteCategory_invalidValidRequest_nullWidgetToDelete(){
         Model model = new ExtendedModelMap();
         User user = new UserImpl();
-        long id = 1L;
+        String id = "1";
         String categoryText = "Social";
         CategoryImpl category = new CategoryImpl();
-        category.setCreatedUser(user);
+        category.setCreatedUserId(user.getId());
         category.setText(categoryText);
         category.setId(id);
         SessionStatus sessionStatus = createMock(SessionStatus.class);
@@ -411,10 +410,10 @@ public class CategoryControllerTest {
     public void deleteCategory_invalidValidRequest_falseConfirmation(){
         Model model = new ExtendedModelMap();
         User user = new UserImpl();
-        long id = 1L;
+        String id = "1";
         String categoryText = "Social";
         CategoryImpl category = new CategoryImpl();
-        category.setCreatedUser(user);
+        category.setCreatedUserId(user.getId());
         category.setText(categoryText);
         category.setId(id);
         SessionStatus sessionStatus = createMock(SessionStatus.class);
@@ -429,11 +428,11 @@ public class CategoryControllerTest {
     @Test
     public void editCategory_valid () {
         User user = new UserImpl();
-        long id = 1L;
+        String id = "1";
         String categoryText = "Social";
         Model model = new ExtendedModelMap();
         CategoryImpl category = new CategoryImpl();
-        category.setCreatedUser(user);
+        category.setCreatedUserId(user.getId());
         category.setText(categoryText);
         category.setId(id);
         expect(categoryService.get(id)).andReturn(category).once();

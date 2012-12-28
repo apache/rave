@@ -48,7 +48,7 @@ public class JpaOAuthTokenInfoConverter implements ModelConverter<OAuthTokenInfo
     private JpaOAuthTokenInfo createEntity(OAuthTokenInfo source) {
         JpaOAuthTokenInfo converted = null;
         if (source != null) {
-            converted = manager.find(JpaOAuthTokenInfo.class, source.getId());
+            converted = manager.find(JpaOAuthTokenInfo.class, source.getId() == null ? null : Long.parseLong(source.getId()));
             if (converted == null) {
                 converted = new JpaOAuthTokenInfo();
             }
@@ -58,7 +58,6 @@ public class JpaOAuthTokenInfoConverter implements ModelConverter<OAuthTokenInfo
     }
 
     private void updateProperties(OAuthTokenInfo source, JpaOAuthTokenInfo converted) {
-        converted.setEntityId(source.getId());
         converted.setId(source.getId());
         converted.setAccessToken(source.getAccessToken());
         converted.setAppUrl(source.getAppUrl());

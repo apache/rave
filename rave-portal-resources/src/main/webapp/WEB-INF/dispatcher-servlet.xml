@@ -37,6 +37,7 @@
     -->
     <context:component-scan base-package="org.apache.rave.portal.web.controller"/>
     <context:component-scan base-package="org.apache.rave.portal.web.api"/>
+    <context:component-scan base-package="org.apache.rave.provider.opensocial.controller;"/>
 
     <!-- Configures the @Controller programming model -->
     <mvc:annotation-driven>

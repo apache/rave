@@ -19,10 +19,7 @@
 package org.apache.rave.portal.repository;
 
 import org.apache.rave.persistence.Repository;
-import org.apache.rave.portal.model.User;
-import org.apache.rave.portal.model.Widget;
-import org.apache.rave.portal.model.WidgetRating;
-import org.apache.rave.portal.model.WidgetStatus;
+import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.model.util.WidgetStatistics;
 
 import java.util.List;
@@ -132,7 +129,7 @@ public interface WidgetRepository extends Repository<Widget> {
      * @param user_id id of the user
      * @return {@link WidgetStatistics} with the rating information
      */
-    WidgetStatistics getWidgetStatistics(long widget_id, long user_id);
+    WidgetStatistics getWidgetStatistics(String widget_id, String user_id);
 
     /**
      * Generates the mapping of widget statistics for the user.
@@ -140,7 +137,7 @@ public interface WidgetRepository extends Repository<Widget> {
      * @param userId id of the user
      * @return Mapping of {@link WidgetStatistics} objects keyed off of the widget's entityId
      */
-    Map<Long, WidgetStatistics> getAllWidgetStatistics(long userId);
+    Map<String, WidgetStatistics> getAllWidgetStatistics(String userId);
 
     /**
      * Generates the mapping of widget ratings for the user.
@@ -148,7 +145,7 @@ public interface WidgetRepository extends Repository<Widget> {
      * @param userId id of the user
      * @return Mapping of {@link org.apache.rave.portal.model.WidgetRating} objects keyed off of the widget's entityId
      */
-    Map<Long, WidgetRating> getUsersWidgetRatings(long userId);
+    Map<String, WidgetRating> getUsersWidgetRatings(String userId);
 
     /**
 	  * Gets a List of {@link Widget}'s by performing a tag search
@@ -174,5 +171,79 @@ public interface WidgetRepository extends Repository<Widget> {
      * @param userId the widget owner to unassign
      * @return the number of widgets updated
      */
-     int unassignWidgetOwner(long userId);
+     int unassignWidgetOwner(String userId);
+
+    // ***************************************************************************************************************
+    // Widget Tag Methods
+    // ***************************************************************************************************************
+
+    /**
+     * Tries to find a {@link org.apache.rave.portal.model.WidgetTag} by the id's of a Widget and Tag keyword
+     *
+     * @param widgetId unique identifier of a Widget
+     * @param keyword   tag's keyword
+     * @return {@link org.apache.rave.portal.model.WidgetTag} if it exists, otherwise {@literal null}
+     */
+     WidgetTag getTagByWidgetIdAndKeyword(String widgetId, String keyword);
+
+    /**
+     * Tries to find a {@link org.apache.rave.portal.model.WidgetTag} by the id of the Tag
+     *
+     * @param widgetTagId   tag's id
+     * @return {@link org.apache.rave.portal.model.WidgetTag} if it exists, otherwise {@literal null}
+     */
+    WidgetTag getTagById(String widgetTagId);
+
+    WidgetTag saveWidgetTag(String widgetId, WidgetTag tag);
+
+    void deleteWidgetTag(WidgetTag tag);
+
+    // ***************************************************************************************************************
+    // Widget Comment Methods
+    // ***************************************************************************************************************
+
+    WidgetComment getCommentById(String widgetId, String widgetCommentId);
+
+    WidgetComment createWidgetComment(String widgetId, WidgetComment comment);
+
+    WidgetComment updateWidgetComment(String widgetId, WidgetComment comment);
+
+    void deleteWidgetComment(String widgetId, WidgetComment comment);
+
+    /**
+     * Delete all Widget Comments for a userId
+     *
+     * @param userId
+     * @return count of comments deleted
+     */
+    int deleteAllWidgetComments(String userId);
+
+    // ***************************************************************************************************************
+    // Widget Ratings Methods
+    // ***************************************************************************************************************
+
+    WidgetRating getRatingById(String widgetId, String widgetRatingId);
+
+    WidgetRating createWidgetRating(String widgetId, WidgetRating rating);
+
+    WidgetRating updateWidgetRating(String widgetId, WidgetRating rating);
+
+    void deleteWidgetRating(String widgetId, WidgetRating rating);
+
+    /**
+     * Tries to find a {@link org.apache.rave.portal.model.WidgetRating} by the id's of a Widget and USer
+     *
+     * @param widgetId unique identifier of a Widget
+     * @param userId   unique identifier of a User
+     * @return {@link org.apache.rave.portal.model.WidgetRating} if it exists, otherwise {@literal null}
+     */
+    WidgetRating getWidgetRatingsByWidgetIdAndUserId(String widgetId, String userId);
+
+    /**
+     * Delete all Widget Ratings for a userId
+     *
+     * @param userId
+     * @return count of ratings deleted
+     */
+    int deleteAllWidgetRatings(String userId);
 }

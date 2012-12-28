@@ -57,7 +57,7 @@ public class AppDataServiceTest {
     private static final String VALID_VIEWER_ID = "12345";
     private static final String VALID_USER_ID = "12345";
     private static final String VALID_APPLICATION_ID = "http://example.com/gadget.xml";
-    private static final Long VALID_APPLICATION_DATA_ID = 1L;
+    private static final String VALID_APPLICATION_DATA_ID = "1";
     private static final Long VALID_MODULE_ID = 1l;
 
     private Map<String, String> validApplicationDataMap;

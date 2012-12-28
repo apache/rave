@@ -22,25 +22,8 @@ package org.apache.rave.portal.model;
 import org.apache.rave.persistence.BasicEntity;
 import org.apache.rave.portal.model.conversion.ConvertingListProxyFactory;
 
-import javax.persistence.Access;
-import javax.persistence.AccessType;
-import javax.persistence.Basic;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.TableGenerator;
+import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,16 +35,13 @@ import java.util.List;
 @Access(AccessType.FIELD)
 @NamedQueries(value = {
     @NamedQuery(name = JpaPerson.FIND_BY_USERNAME, query = "select p from JpaPerson p where p.username like :username"),
-    @NamedQuery(name = JpaPerson.FIND_FRIENDS_BY_USERNAME, query = "select a.followedby from JpaPersonAssociation a where a.follower.username = :username and a.status = :status"),
-    @NamedQuery(name = JpaPerson.FIND_BY_GROUP_MEMBERSHIP, query = "select m from JpaGroup g join g.members m where exists " +
-            "(select 'found' from g.members b where b.username = :username) and m.username <> :username")
+    @NamedQuery(name = JpaPerson.FIND_FRIENDS_BY_USERNAME, query = "select a.followedby from JpaPersonAssociation a where a.follower.username = :username and a.status = :status")
 })
 @DiscriminatorValue("Person")
-public class JpaPerson implements BasicEntity, Person {
+public class JpaPerson implements BasicEntity, Person, Serializable {
 
     public static final String FIND_BY_USERNAME = "Person.findByUsername";
     public static final String FIND_FRIENDS_BY_USERNAME = "Person.findFriendsByUsername";
-    public static final String FIND_BY_GROUP_MEMBERSHIP = "Person.findByGroupMembership";
     public static final String USERNAME_PARAM = "username";
     public static final String STATUS_PARAM = "status";
 
@@ -130,18 +110,22 @@ public class JpaPerson implements BasicEntity, Person {
     @JoinColumn(name = "person_id", referencedColumnName = "entity_id")
     protected List<JpaPersonProperty> properties;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "group_members",
-            joinColumns = @JoinColumn(name = "person_id", referencedColumnName = "entity_id"),
-            inverseJoinColumns = @JoinColumn(name = "group_id", referencedColumnName = "entity_id"))
-    private List<JpaGroup> groups;
-
     public Long getEntityId() {
         return entityId;
     }
 
     public void setEntityId(Long entityId) {
         this.entityId = entityId;
+    }
+
+    @Override
+    public String getId() {
+        return this.getEntityId() == null ? null : this.getEntityId().toString();
+    }
+
+    @Override
+    public void setId(String userId) {
+        this.setEntityId(userId == null ? null : Long.parseLong(userId));
     }
 
     @Override
@@ -299,20 +283,6 @@ public class JpaPerson implements BasicEntity, Person {
         this.getOrganizations().clear();
         if(organizations != null) {
             this.getOrganizations().addAll(organizations);
-        }
-    }
-
-    public List<Group> getGroups() {
-        return ConvertingListProxyFactory.createProxyList(Group.class, groups);
-    }
-
-    public void setGroups(List<JpaGroup> groups) {
-        if(this.groups == null) {
-            this.groups = new ArrayList<JpaGroup>();
-        }
-        this.getGroups().clear();
-        if(groups != null) {
-            this.getGroups().addAll(groups);
         }
     }
 

@@ -197,7 +197,7 @@ public class JpaPageTemplate implements BasicEntity, Serializable, PageTemplate 
     }
 
     @Override
-    public Long getId() {
-        return this.getEntityId();
+    public String getId() {
+        return this.getEntityId() == null ? null : this.getEntityId().toString();
     }
 }

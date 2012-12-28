@@ -21,9 +21,9 @@
 <fmt:setBundle basename="messages"/>
 <rave:navbar pageTitle="${pagetitle}"/>
 
-<div class="container-fluid navbar-spacer">
+<div class="container-fluid navbar-spacer" id="widgetStore">
     <div class="row-fluid">
-        <section class="span8">
+        <section class="span8 pagination-header">
             <c:choose>
                 <c:when test="${empty searchTerm and (empty widgets or widgets.totalResults eq 0)}">
                     <%-- Empty db --%>
@@ -74,7 +74,6 @@
                             </c:forEach>
                         </ul>
                     </div>
-
                 </c:if>
                 <ul class="storeItems">
                         <%--@elvariable id="widget" type="org.apache.rave.portal.model.Widget"--%>
@@ -89,7 +88,9 @@
                                 <li class="storeItem">
                             </c:otherwise>
                         </c:choose>
-
+						<div class="widget-title-bar">
+							<c:out value="${widget.title}"/>
+						</div>
                         <div class="storeItemLeft">
                             <c:if test="${not empty widget.thumbnailUrl}">
                                 <img class="storeWidgetThumbnail" src="${widget.thumbnailUrl}"
@@ -99,7 +100,8 @@
 
                             <div id="widgetAdded_${widget.id}" class="storeButton">
                                 <button class="btn btn-small btn-primary" id="addWidget_${widget.id}"
-                                        onclick="rave.api.rpc.addWidgetToPage({widgetId: ${widget.id}, pageId: ${referringPageId}, buttonId: this.id});">
+                                        onclick="rave.api.rpc.addWidgetToPage({widgetId: ${widget.id}, pageId: ${referringPageId}, buttonId: this.id});" 
+                                        data-success="<fmt:message key="page.widget.addedToPage"/>">
                                     <fmt:message key="page.widget.addToPage"/>
                                 </button>
                             </div>
@@ -107,11 +109,11 @@
                         </div>
 
                         <div class="storeItemCenter">
-                            <a id="widget-${widget.id}-title"
+                            <h4><a id="widget-${widget.id}-title"
                                class="secondaryPageItemTitle"
                                href="<spring:url value="/app/store/widget/${widget.id}" />?referringPageId=${referringPageId}">
                                 <c:out value="${widget.title}"/>
-                            </a>
+                            </a></h4>
                             <c:if test="${widget.disableRendering}">
                                 <div class="storeWidgetDisabled">
                                             <span class="widget-disabled-icon-store ui-icon ui-icon-alert"
@@ -127,13 +129,14 @@
                                 <div class="storeWidgetDesc"><c:out
                                         value="${fn:substring(widget.description, 0, 200)}..."/></div>
                             </c:if>
+                            
+                            <div class="clearfix">
                             <div class="widgetRating">
                                 <strong><fmt:message key="page.widget.rate"/></strong>
                                 <form class="hidden">
                                     <input type="hidden" id="rate-${widget.id}"
                                            value="${widgetsStatistics[widget.id]!=null?widgetsStatistics[widget.id].userRating:"-1"}">
                                 </form>
-
                                 <div class="ratingCounts">
                             		<span class="widgetLikeCount">
 		                                <c:set var="widgetLikes">
@@ -168,31 +171,34 @@
                                     <!-- Displaying the likes and dislikes rating along with total votes -->
                                 </div>
                             </div>
+                            </div>
+                            <div class="clearfix">
                             <c:if test="${not empty widget.tags}">
-                                <table class="widgetTags">
-                                    <tr>
-                                        <td>
-                                            <fmt:message key="page.widget.tags.title"/>
-                                        </td>
-                                        <c:forEach var="tag" items="${widget.tags}">
-                                            <td class="storeWidgetDesc"><c:out value="${tag.tag.keyword}"/></td>
+                                <div class="widgetTags">
+                                    <strong><fmt:message key="page.widget.tags.title"/></strong><br/>
+                                    <c:forEach var="widgettag" items="${widget.tags}">
+                                        <c:forEach var="tag" items="${tags}">
+                                            <c:set var="tagMatched">
+                                                ${tag.id==widgettag.tagId?true:false}
+                                            </c:set>
+                                            <c:if test="${tagMatched}">
+                                                <span class="label"><c:out value="${tag.keyword}"/></span>
+                                            </c:if>
                                         </c:forEach>
-                                    </tr>
-                                </table>
+                                    </c:forEach>
+                                </div>
                             </c:if>
+                            </div>
                             <c:if test="${not empty widget.categories}">
-                                <table class="widgetCategories">
-                                    <tr>
-                                        <td>
-                                            <fmt:message key="widget.categories"/>
-                                        </td>
-                                        <c:forEach var="category" items="${widget.categories}">
-                                            <td class="storeWidgetDesc"><c:out value="${category.text}"/></td>
-                                        </c:forEach>
-                                    </tr>
-                                </table>
+                            <div class="clearfix">
+                                <div class="widgetCategories">
+                                    <strong><fmt:message key="widget.categories"/></strong><br/>
+                                    <c:forEach var="category" items="${widget.categories}">
+                                        <span class="storeWidgetDesc"><c:out value="${category.text}"/></span>
+                                    </c:forEach>
+                                </div>
+                            </div>
                             </c:if>
-
                             <span class="widgetUserCount">
                                 <c:set var="widgetUserCountGreaterThanZero"
                                        value="${widgetStatistics != null && widgetStatistics.totalUserCount > 0}"/>
@@ -241,16 +247,15 @@
                     <div class="control-group" style="margin-bottom: 18px;">
                         <div class="input-append">
                             <fmt:message key="page.store.search.button" var="searchButtonText"/>
-                            <input type="search" id="searchTerm" name="searchTerm" value="<c:out value="${searchTerm}"/>"/>
-                            <button class="btn btn-primary" type="submit" value="${searchButtonText}">${searchButtonText}</button>
+                            <input type="search" id="searchTerm" name="searchTerm" value="<c:out value="${searchTerm}"/>"/><button class="btn btn-primary" type="submit" value="${searchButtonText}">${searchButtonText}</button>
                         </div>
                     </div>
-                    <legend></legend>
+                    <legend>Filter Widget Store</legend>
                     <c:if test="${not empty tags}">
                         <div class="control-group">
                             <label class="control-label" for="categoryList"><fmt:message key="page.store.list.widgets.tag"/></label>
                             <div class="controls">
-                                <select name="tagList" id="tagList" class="span4">
+                                <select name="tagList" id="tagList" class="x-large">
                                 <option value=""></option>
                                 <c:forEach var="tag" items="${tags}">
                                     <c:choose>
@@ -273,7 +278,7 @@
                         <div class="control-group">
                             <label class="control-label" for="categoryList"><fmt:message key="page.store.list.widgets.category"/></label>
                             <div class="controls">
-                                <select name="categoryList" id="categoryList" class="span4">
+                                <select name="categoryList" id="categoryList" class="x-large">
                                     <option value="0"></option>
                                     <c:forEach var="category" items="${categories}">
                                         <c:choose>
@@ -293,8 +298,8 @@
                     </c:if>
                 </fieldset>
             </form>
-            <a class="btn btn-info" href="<spring:url value="/app/store/mine?referringPageId=${referringPageId}"/>"><fmt:message key="page.store.list.widgets.mine"/></a>
-            <a class="btn btn-info" href="<spring:url value="/app/store?referringPageId=${referringPageId}"/>"><fmt:message key="page.store.list.widgets.all"/></a>
+            <a href="<spring:url value="/app/store/mine?referringPageId=${referringPageId}"/>"><fmt:message key="page.store.list.widgets.mine"/></a><br/>
+            <a href="<spring:url value="/app/store?referringPageId=${referringPageId}"/>"><fmt:message key="page.store.list.widgets.all"/></a>
         </section>
     </div>
 </div>

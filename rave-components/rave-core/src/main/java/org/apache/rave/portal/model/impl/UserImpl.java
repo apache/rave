@@ -25,13 +25,14 @@ import org.apache.rave.portal.model.User;
 import org.apache.rave.util.CollectionUtils;
 import org.springframework.security.core.GrantedAuthority;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-public class UserImpl extends PersonImpl implements User {
-    private Long id;
+public class UserImpl extends PersonImpl implements User, Serializable {
+    private String id;
     private String password;
     private boolean expired;
     private boolean credsExpired;
@@ -47,11 +48,11 @@ public class UserImpl extends PersonImpl implements User {
 
     public UserImpl() {}
 
-    public UserImpl(Long id) {
+    public UserImpl(String id) {
         this.id = id;
     }
 
-    public UserImpl(Long userid, String username) {
+    public UserImpl(String userid, String username) {
         this.id = userid;
         this.username = username;
     }
@@ -145,6 +146,7 @@ public class UserImpl extends PersonImpl implements User {
 
     public Person toPerson() {
         PersonImpl p = new PersonImpl();
+        p.setId(this.getId());
         p.setAboutMe(this.getAboutMe());
         p.setAdditionalName(this.getAdditionalName());
         p.setAddresses(this.getAddresses());
@@ -162,11 +164,11 @@ public class UserImpl extends PersonImpl implements User {
         return p;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

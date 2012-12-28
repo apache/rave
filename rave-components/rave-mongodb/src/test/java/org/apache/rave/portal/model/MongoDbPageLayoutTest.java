@@ -30,13 +30,13 @@ import static org.junit.Assert.*;
  * Time: 12:39 PM
  */
 public class MongoDbPageLayoutTest {
-    private  MongoDbPageLayout pageLayout;
-    private Long id;
+    private MongoDbPageLayout pageLayout;
+    private String id;
 
     @Before
     public void setup(){
         pageLayout = new MongoDbPageLayout();
-        id = (long)123;
+        id = "123";
         pageLayout.setId(id);
     }
 
@@ -62,7 +62,7 @@ public class MongoDbPageLayoutTest {
     public void equals_Null_Id(){
         MongoDbPageLayout p_1 = new MongoDbPageLayout();
         MongoDbPageLayout p_2 = new MongoDbPageLayout();
-        p_1.setId((long)321);
+        p_1.setId("321");
         assertFalse(p_1.equals(p_2));
         assertFalse(p_2.equals(p_1));
     }
@@ -78,8 +78,8 @@ public class MongoDbPageLayoutTest {
     public void equals_Same_Id(){
         MongoDbPageLayout p_1 = new MongoDbPageLayout();
         MongoDbPageLayout p_2 = new MongoDbPageLayout();
-        p_1.setId((long)321);
-        p_2.setId((long)321);
+        p_1.setId("321");
+        p_2.setId("321");
         assertTrue(p_1.equals(p_2));
     }
 

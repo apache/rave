@@ -94,9 +94,29 @@ rave.opensocial = rave.opensocial || (function () {
 
 
         container.views.createElementForEmbeddedExperience = function (rel, opt_gadgetInfo, opt_viewTarget, opt_coordinates, parentSite, opt_callback) {
-                if (opt_viewTarget) {
-                    return rave.createPopup(opt_viewTarget);
-                }
+        	var widgetUrl = opt_gadgetInfo.url;
+        	
+        	getSecurityToken({
+            		"url": widgetUrl,
+            		"pageid": rave.layout.getCurrentPageId(),
+            		"successCallback": function(data) {
+            			if (!data.error) {
+            				var gadget = {
+            			  	  "widgetUrl": widgetUrl,
+            			  	  "securityToken": data.securityToken,
+            			  	  "metadata": opt_gadgetInfo
+            				}
+            		
+            				preloadMetadata(gadget);
+                        
+            				if (opt_viewTarget) {
+            					opt_callback(rave.createPopup(opt_viewTarget));
+            				}
+            			} else {
+            				console.log(data.error.message);
+            			}
+            		}
+            	})
             };
 
         container.views.createElementForUrl = function (rel, opt_viewTarget, opt_coordinates, parentSite, opt_callback) {
@@ -112,6 +132,19 @@ rave.opensocial = rave.opensocial || (function () {
             };
 
     }
+    
+    function getSecurityToken(args) {
+        $.ajax({
+            type: 'GET',
+            url: rave.getContext() + "api/rest/" + "st?url=" + args.url + "&pageid=" + args.pageid,
+            dataType: "json",
+            success: function (data) {
+                if (typeof args.successCallback == 'function') {
+                    args.successCallback(data);
+                }
+        	}
+        });
+    }
 
     /**
      * Validates a gadget's metadata and renders it on the page
@@ -121,29 +154,33 @@ rave.opensocial = rave.opensocial || (function () {
     function validateAndRenderGadget(gadget) {
         var validationResult = validateMetadata(gadget.metadata);
         if (validationResult.valid) {
-            //Put our gadget metadata into the form that the common container is expecting
-            var commonContainerMetadataWrapper = {};
-            commonContainerMetadataWrapper[gadget.widgetUrl] = gadget.metadata;
-
-            //Put our gadget security token data into the form that the common container is expecting
-            var commonContainerTokenData = {};
-            commonContainerTokenData[osapi.container.TokenResponse.TOKEN] = gadget.securityToken;
-            commonContainerTokenData[osapi.container.MetadataResponse.RESPONSE_TIME_MS] = new Date().getTime();
-            var commonContainerTokenWrapper = {};
-            commonContainerTokenWrapper[gadget.widgetUrl] = commonContainerTokenData;
-
-            //Setup the preloadConfig data with all our preload data
-            var preloadConfig = {};
-            preloadConfig[osapi.container.ContainerConfig.PRELOAD_METADATAS] = commonContainerMetadataWrapper;
-            preloadConfig[osapi.container.ContainerConfig.PRELOAD_TOKENS] = commonContainerTokenWrapper;
-            preloadConfig[osapi.container.ContainerConfig.PRELOAD_REF_TIME] = null;
-
-            //Preload our data into the common container
-            container.preloadCaches(preloadConfig);
+            preloadMetadata(gadget);
             renderNewGadget(gadget);
         } else {
             rave.errorWidget(gadget.regionWidgetId, rave.getClientMessage("opensocial.render_error") + "<br /><br />" + validationResult.error);
         }
+    }
+    
+    function preloadMetadata(gadget) {
+        //Put our gadget metadata into the form that the common container is expecting
+        var commonContainerMetadataWrapper = {};
+       	commonContainerMetadataWrapper[gadget.widgetUrl] = gadget.metadata;
+
+        //Put our gadget security token data into the form that the common container is expecting
+        var commonContainerTokenData = {};
+        commonContainerTokenData[osapi.container.TokenResponse.TOKEN] = gadget.securityToken;
+        commonContainerTokenData[osapi.container.MetadataResponse.RESPONSE_TIME_MS] = new Date().getTime();
+        var commonContainerTokenWrapper = {};
+        commonContainerTokenWrapper[gadget.widgetUrl] = commonContainerTokenData;
+
+        //Setup the preloadConfig data with all our preload data
+        var preloadConfig = {};
+        preloadConfig[osapi.container.ContainerConfig.PRELOAD_METADATAS] = commonContainerMetadataWrapper;
+        preloadConfig[osapi.container.ContainerConfig.PRELOAD_TOKENS] = commonContainerTokenWrapper;
+        preloadConfig[osapi.container.ContainerConfig.PRELOAD_REF_TIME] = null;
+
+        //Preload our data into the common container
+        container.preloadCaches(preloadConfig);
     }
 
     /**

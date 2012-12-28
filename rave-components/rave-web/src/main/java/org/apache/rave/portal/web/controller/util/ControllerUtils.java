@@ -19,8 +19,6 @@
 
 package org.apache.rave.portal.web.controller.util;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.web.model.NavigationItem;
 import org.apache.rave.portal.web.model.NavigationMenu;
@@ -29,6 +27,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.mobile.device.DeviceUtils;
 import org.springframework.ui.Model;
+
+import javax.servlet.http.HttpServletRequest;
 
 public class ControllerUtils {
     private static final Logger log = LoggerFactory.getLogger(ControllerUtils.class);
@@ -59,17 +59,17 @@ public class ControllerUtils {
         return viewName;
     }
 
-    public static void addNavItemsToModel(String view, Model model, long referringPageId, User user) {
+    public static void addNavItemsToModel(String view, Model model, String referringPageId, User user) {
         final NavigationMenu topMenu = getTopMenu(view, referringPageId, user, true);
         model.addAttribute(topMenu.getName(), topMenu);
     }
 
-    public static void addNavItemsToModel(String view, Model model, long referringPageId, User user, boolean addStore) {
+    public static void addNavItemsToModel(String view, Model model, String referringPageId, User user, boolean addStore) {
         final NavigationMenu topMenu = getTopMenu(view, referringPageId, user, addStore);
         model.addAttribute(topMenu.getName(), topMenu);
     }
     
-    public static NavigationMenu getTopMenu(String view, long referringPageId, User user, boolean addStoreLink) {
+    public static NavigationMenu getTopMenu(String view, String referringPageId, User user, boolean addStoreLink) {
         NavigationMenu menu = new NavigationMenu("topnav");
         if(view.startsWith(ViewNames.PAGE) || view.startsWith(ViewNames.MOBILE_HOME)) {
             NavigationItem profile = new NavigationItem("page.profile.title", getDisplayName(user), "/app/person/id/" + user.getId() + "?referringPageId=" + referringPageId);
@@ -132,10 +132,10 @@ public class ControllerUtils {
         return (displayName == null || "".equals(displayName)) ? user.getUsername() : displayName;
     }
 
-    private static NavigationItem getBackItem(long referringPageId) {
+    private static NavigationItem getBackItem(String referringPageId) {
         NavigationItem back = new NavigationItem();
         back.setName("page.general.back");
-        if (referringPageId > 0) {
+        if (referringPageId != null && !referringPageId.isEmpty()) {
             back.setUrl("/app/page/view/" + referringPageId);
         } else {
             back.setUrl("/");

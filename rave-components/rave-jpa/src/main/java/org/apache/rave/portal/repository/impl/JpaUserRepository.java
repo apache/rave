@@ -96,9 +96,9 @@ public class JpaUserRepository implements UserRepository {
     }
 
     @Override
-    public List<User> getAllByAddedWidget(long widgetId) {
+    public List<User> getAllByAddedWidget(String widgetId) {
         TypedQuery<JpaUser> query = manager.createNamedQuery(JpaUser.USER_GET_ALL_FOR_ADDED_WIDGET, JpaUser.class);
-        query.setParameter(JpaUser.PARAM_WIDGET_ID, widgetId);
+        query.setParameter(JpaUser.PARAM_WIDGET_ID, Long.parseLong(widgetId));
         return CollectionUtils.<User>toBaseTypedList(query.getResultList());
     }
 
@@ -115,8 +115,9 @@ public class JpaUserRepository implements UserRepository {
     }
 
     @Override
-    public User get(long id) {
-        return manager.find(JpaUser.class, id);
+    public User get(String id) {
+        long primaryKey = Long.parseLong(id);
+        return manager.find(JpaUser.class, primaryKey);
     }
 
     @Override

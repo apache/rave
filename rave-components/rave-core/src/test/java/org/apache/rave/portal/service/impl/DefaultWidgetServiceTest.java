@@ -20,12 +20,8 @@
 package org.apache.rave.portal.service.impl;
 
 import org.apache.rave.exception.DuplicateItemException;
-import org.apache.rave.portal.model.Category;
-import org.apache.rave.portal.model.Widget;
-import org.apache.rave.portal.model.WidgetStatus;
-import org.apache.rave.portal.model.impl.CategoryImpl;
-import org.apache.rave.portal.model.impl.UserImpl;
-import org.apache.rave.portal.model.impl.WidgetImpl;
+import org.apache.rave.portal.model.*;
+import org.apache.rave.portal.model.impl.*;
 import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.model.util.WidgetStatistics;
 import org.apache.rave.portal.repository.CategoryRepository;
@@ -36,12 +32,14 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
 import static org.easymock.EasyMock.*;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Test for {@link DefaultWidgetService}
@@ -76,8 +74,8 @@ public class DefaultWidgetServiceTest {
 
     @Test
     public void getLimitedListOfWidgets() {
-        Widget widget1 = new WidgetImpl(1L, "http://example.com/widget1.xml");
-        Widget widget2 = new WidgetImpl(2L, "http://example.com/widget2.xml");
+        Widget widget1 = new WidgetImpl("2", "http://example.com/widget1.xml");
+        Widget widget2 = new WidgetImpl("3", "http://example.com/widget2.xml");
         List<Widget> widgets = new ArrayList<Widget>();
         widgets.add(widget1);
         widgets.add(widget2);
@@ -94,9 +92,9 @@ public class DefaultWidgetServiceTest {
 
     @Test
     public void getPublishedWidgets() {
-        Widget widget1 = new WidgetImpl(1L, "http://example.com/widget1.xml");
+        Widget widget1 = new WidgetImpl("1", "http://example.com/widget1.xml");
         widget1.setWidgetStatus(WidgetStatus.PUBLISHED);
-        Widget widget2 = new WidgetImpl(2L, "http://example.com/widget2.xml");
+        Widget widget2 = new WidgetImpl("2", "http://example.com/widget2.xml");
         widget2.setWidgetStatus(WidgetStatus.PUBLISHED);
         List<Widget> widgets = new ArrayList<Widget>();
         widgets.add(widget1);
@@ -115,10 +113,10 @@ public class DefaultWidgetServiceTest {
     @Test
     public void getWidget() {
         Widget w = new WidgetImpl();
-        expect(widgetRepository.get(1L)).andReturn(w);
+        expect(widgetRepository.get("1")).andReturn(w);
         replay(widgetRepository);
 
-        Widget result = widgetService.getWidget(1L);
+        Widget result = widgetService.getWidget("1");
         assertThat(result, is(sameInstance(w)));
         verify(widgetRepository);
     }
@@ -129,8 +127,7 @@ public class DefaultWidgetServiceTest {
         int offset = 0;
         int pageSize = 10;
         int totalResults = 2;
-        WidgetImpl widget = new WidgetImpl();
-        widget.setId(1L);
+        WidgetImpl widget = new WidgetImpl("1");
         List<Widget> widgets = new ArrayList<Widget>();
         widgets.add(widget);
 
@@ -152,9 +149,8 @@ public class DefaultWidgetServiceTest {
         int offset = 0;
         int pageSize = 10;
         int totalResults = 2;
-        WidgetImpl widget = new WidgetImpl();
+        WidgetImpl widget = new WidgetImpl("1");
         widget.setWidgetStatus(WidgetStatus.PUBLISHED);
-        widget.setId(1L);
         List<Widget> widgets = new ArrayList<Widget>();
         widgets.add(widget);
 
@@ -178,11 +174,10 @@ public class DefaultWidgetServiceTest {
         int offset = 0;
         int pageSize = 10;
         int totalResults = 2;
-        WidgetImpl widget = new WidgetImpl();
+        WidgetImpl widget = new WidgetImpl("1");
         widget.setWidgetStatus(WidgetStatus.PUBLISHED);
         final String type = "OpenSocial";
         widget.setType(type);
-        widget.setId(1L);
         List<Widget> widgets = new ArrayList<Widget>();
         widgets.add(widget);
 
@@ -204,12 +199,12 @@ public class DefaultWidgetServiceTest {
     public void getWidgetsByOwner() {
         final int offset = 0;
         final int pageSize = 10;
-        final UserImpl user = new UserImpl(5L);
+        final UserImpl user = new UserImpl("5");
         expect(userRepository.get(user.getId())).andReturn(user);
         replay(userRepository);
 
         final List<Widget> widgets = new ArrayList<Widget>();
-        final Widget widget = new WidgetImpl(3L, "http://www.widgetsRus.com/");
+        final Widget widget = new WidgetImpl("3", "http://www.widgetsRus.com/");
         widgets.add(widget);
 
         expect(widgetRepository.getCountByOwner(user, offset, pageSize)).andReturn(widgets.size());
@@ -228,10 +223,10 @@ public class DefaultWidgetServiceTest {
 
     @Test
     public void getWidget_null() {
-        expect(widgetRepository.get(1L)).andReturn(null);
+        expect(widgetRepository.get("1")).andReturn(null);
         replay(widgetRepository);
 
-        Widget result = widgetService.getWidget(1L);
+        Widget result = widgetService.getWidget("1");
         assertThat(result, is(nullValue()));
         verify(widgetRepository);
     }
@@ -326,26 +321,26 @@ public class DefaultWidgetServiceTest {
 
     @Test
     public void widgetStatistics() {
-        expect(widgetRepository.getWidgetStatistics(1L, 1L)).andReturn(new WidgetStatistics());
+        expect(widgetRepository.getWidgetStatistics("1", "1")).andReturn(new WidgetStatistics());
         replay(widgetRepository);
 
-        widgetService.getWidgetStatistics(1L, 1L);
+        widgetService.getWidgetStatistics("1", "1");
         verify(widgetRepository);
     }
 
 
     @Test
     public void allWidgetStatistics() {
-        expect(widgetRepository.getAllWidgetStatistics(1L)).andReturn(new HashMap<Long, WidgetStatistics>());
+        expect(widgetRepository.getAllWidgetStatistics("1")).andReturn(new HashMap<String, WidgetStatistics>());
         replay(widgetRepository);
 
-        widgetService.getAllWidgetStatistics(1L);
+        widgetService.getAllWidgetStatistics("1");
         verify(widgetRepository);
     }
 
     @Test
     public void getWidgetsByCategory_valid(){
-        long id = 1L;
+        String id = "1";
         int offset = 0;
         int pageSize = 10;
         String categoryText = "Social";
@@ -368,4 +363,161 @@ public class DefaultWidgetServiceTest {
         assertEquals(c.getId(), result.getResultSet().get(0).getCategories().get(0).getId());
     }
 
+    @Test
+    public void getWidgetTag() {
+        WidgetTagImpl tag = new WidgetTagImpl("1", new Date(), "1");
+        expect(widgetRepository.getTagById("1")).andReturn(tag);
+        replay(widgetRepository);
+
+        assertEquals(tag, widgetService.getWidgetTag("1"));
+        verify(widgetRepository);
+    }
+
+    @Test
+    public void saveWidgetTag() {
+        try {
+
+            WidgetTagImpl wtag = new WidgetTagImpl("1", new Date(), "1");
+            expect(widgetRepository.saveWidgetTag("1", wtag)).andReturn(wtag);
+            replay(widgetRepository);
+
+            widgetService.createWidgetTag("1", wtag);
+            verify(widgetRepository);
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+    @Test
+    public void getWidgetComment() {
+        WidgetComment comment = new WidgetCommentImpl("1");
+        expect(widgetRepository.getCommentById("1", "1")).andReturn(comment);
+        replay(widgetRepository);
+
+        assertEquals(comment, widgetService.getWidgetComment("1", "1"));
+        verify(widgetRepository);
+    }
+
+    @Test
+    public void createWidgetComment() {
+        WidgetComment comment = new WidgetCommentImpl("1");
+        expect(widgetRepository.createWidgetComment("1", comment)).andReturn(comment);
+        replay(widgetRepository);
+
+        widgetService.createWidgetComment("1", comment);
+        verify(widgetRepository);
+    }
+
+    @Test
+    public void deleteWidgetComment() {
+        WidgetComment comment = new WidgetCommentImpl("1");
+        expect(widgetRepository.getCommentById("1","1")).andReturn(comment);
+        widgetRepository.deleteWidgetComment("1", comment);
+        replay(widgetRepository);
+
+        widgetService.removeWidgetComment("1", "1");
+        verify(widgetRepository);
+    }
+
+    @Test
+    public void deleteAllComments() {
+        final String USER_ID = "33";
+        final int EXPECTED_COUNT = 43;
+
+        expect(widgetRepository.deleteAllWidgetComments(USER_ID)).andReturn(EXPECTED_COUNT);
+        replay(widgetRepository);
+        assertThat(widgetService.deleteAllWidgetComments(USER_ID), is(EXPECTED_COUNT));
+        verify(widgetRepository);
+    }
+
+    @Test
+    public void testGetByWidgetIdAndUserId() {
+        WidgetRating widgetRating = new WidgetRatingImpl("1", "3", 5);
+        expect(widgetRepository.getWidgetRatingsByWidgetIdAndUserId("2", "3")).andReturn(widgetRating);
+        replay(widgetRepository);
+        final WidgetRating rating = widgetService.getWidgetRatingByWidgetIdAndUserId("2", "3");
+        assertEquals("Score is 5", Integer.valueOf(5), rating.getScore());
+        verify(widgetRepository);
+    }
+
+    @Test
+    public void updateScore() {
+        WidgetRating widgetRating = createMock(WidgetRatingImpl.class);
+        widgetRating.setScore(10);
+
+        expectLastCall().once();
+        expect(widgetRepository.updateWidgetRating("2", widgetRating)).andReturn(widgetRating);
+        replay(widgetRepository, widgetRating);
+        widgetService.updateWidgetRatingScore("2", widgetRating, 10);
+
+        verify(widgetRepository, widgetRating);
+    }
+
+    @Test
+    public void saveWidgetRating_new() {
+        WidgetRating newRating = new WidgetRatingImpl();
+        newRating.setUserId("1");
+        newRating.setScore(10);
+
+        expect(widgetRepository.getWidgetRatingsByWidgetIdAndUserId("2", "1")).andReturn(null);
+        expect(widgetRepository.createWidgetRating("2", newRating)).andReturn(newRating);
+        replay(widgetRepository);
+
+        widgetService.saveWidgetRating("2", newRating);
+        verify(widgetRepository);
+    }
+
+    @Test
+    public void saveWidgetRating_existing() {
+        WidgetRating existingRating = new WidgetRatingImpl("1", "1", 5);
+        WidgetRating newRating = new WidgetRatingImpl();
+        newRating.setUserId("1");
+        newRating.setScore(10);
+
+        expect(widgetRepository.getWidgetRatingsByWidgetIdAndUserId("1", "1")).andReturn(existingRating);
+        expect(widgetRepository.updateWidgetRating("1", existingRating)).andReturn(existingRating);
+        replay(widgetRepository);
+
+        widgetService.saveWidgetRating("1", newRating);
+        verify(widgetRepository);
+
+        assertEquals("Updated score", Integer.valueOf(10), existingRating.getScore());
+    }
+
+    @Test
+    public void removeWidgetRating_existingRating() {
+        final WidgetRating widgetRating = new WidgetRatingImpl("1", "1", 5);
+
+        expect(widgetRepository.getWidgetRatingsByWidgetIdAndUserId("1", "1")).andReturn(widgetRating);
+        widgetRepository.deleteWidgetRating("1", widgetRating);
+        expectLastCall();
+        replay(widgetRepository);
+
+        widgetService.removeWidgetRating("1", "1");
+        verify(widgetRepository);
+    }
+
+    @Test
+    public void removeWidgetRating_notExisting() {
+        expect(widgetRepository.getWidgetRatingsByWidgetIdAndUserId("1", "2")).andReturn(null);
+        expectLastCall();
+        replay(widgetRepository);
+        widgetService.removeWidgetRating("1", "2");
+        verify(widgetRepository);
+    }
+
+    @Test
+    public void deleteAll() {
+        final String USER_ID = "33";
+        final int EXPECTED_COUNT = 43;
+
+        expect(widgetRepository.deleteAllWidgetRatings(USER_ID)).andReturn(EXPECTED_COUNT);
+        replay(widgetRepository);
+        assertThat(widgetService.removeAllWidgetRatings(USER_ID), is(EXPECTED_COUNT));
+        verify(widgetRepository);
+    }
 }

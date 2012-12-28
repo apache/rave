@@ -36,7 +36,6 @@ import java.util.List;
 
 import static org.easymock.EasyMock.*;
 import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 
@@ -95,7 +94,7 @@ public class MongoDbPageLayoutRepositoryTest {
 
     @Test
     public void get_Valid() {
-        long id = 123;
+        String id = "123";
 
         thrown.expect(NotImplementedException.class);
         thrown.expectMessage("No use for an id");
@@ -114,7 +113,6 @@ public class MongoDbPageLayoutRepositoryTest {
         PageLayout saved = pageLayoutRepository.save(item1);
 
         assertThat(saved, is(instanceOf(MongoDbPageLayout.class)));
-        assertNotNull(((MongoDbPageLayout)saved).getId());
         assertThat(saved.getCode(), is(sameInstance(item1.getCode())));
         assertThat(saved.getNumberOfRegions(), is(sameInstance(item1.getNumberOfRegions())));
         assertThat(saved.getRenderSequence(), is(sameInstance(item1.getRenderSequence())));

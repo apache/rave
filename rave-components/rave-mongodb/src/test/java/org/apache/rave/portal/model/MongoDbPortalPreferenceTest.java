@@ -34,8 +34,9 @@ public class MongoDbPortalPreferenceTest {
     @Test
     public void testPortalPreference(){
         MongoDbPortalPreference pp = new MongoDbPortalPreference();
-        pp.setId((long)123);
+        String id = "123";
+        pp.setId(id);
 
-        assertThat(pp.getId(), is(equalTo((long)123)));
+        assertThat(pp.getId(), is(equalTo(id)));
     }
 }

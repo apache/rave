@@ -53,17 +53,18 @@ public class DefaultRegionWidgetPermissionEvaluatorTest {
     private UserImpl user, user2;
     private List<GrantedAuthority> grantedAuthoritiesList;
 
-    private final Long VALID_REGION_ID = 1L;
-    private final Long VALID_REGION_WIDGET_ID = 1L;
-    private final Long VALID_PAGE_ID = 3L;
-    private final Long VALID_USER_ID = 99L;
+    private final String VALID_REGION_ID = "1";
+    private final String VALID_REGION_WIDGET_ID = "1";
+    private final String VALID_PAGE_ID = "3";
+    private final String VALID_USER_ID = "99";
+    private final String VALID_USER_ID2 = "66";
     private final String VALID_USERNAME = "john.doe";
     private final String VALID_USERNAME2 = "jane.doe";
 
     @Before
     public void setUp() {
         mockRegionWidgetRepository = createMock(RegionWidgetRepository.class);
-        defaultRegionWidgetPermissionEvaluator = new DefaultRegionWidgetPermissionEvaluator(mockRegionWidgetRepository);
+        defaultRegionWidgetPermissionEvaluator = new DefaultRegionWidgetPermissionEvaluator(mockRegionWidgetRepository, null);
         mockAuthentication = createMock(Authentication.class);
 
         user = new UserImpl();
@@ -71,14 +72,13 @@ public class DefaultRegionWidgetPermissionEvaluatorTest {
         user.setId(VALID_USER_ID);
         user2 = new UserImpl();
         user2.setUsername(VALID_USERNAME2);
+        user2.setId(VALID_USER_ID2);
         page = new PageImpl();
         page.setId(VALID_PAGE_ID);
-        page.setOwner(user);
-        region = new RegionImpl();
-        region.setId(VALID_REGION_ID);
+        page.setOwnerId(user.getId());
+        region = new RegionImpl(VALID_REGION_ID);
         region.setPage(page);
-        regionWidget = new RegionWidgetImpl();
-        regionWidget.setId(VALID_REGION_WIDGET_ID);
+        regionWidget = new RegionWidgetImpl(VALID_REGION_WIDGET_ID);
         regionWidget.setRegion(region);
         grantedAuthoritiesList = new ArrayList<GrantedAuthority>();
         grantedAuthoritiesList.add(new SimpleGrantedAuthority("ROLE_USER"));

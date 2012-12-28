@@ -30,6 +30,7 @@ import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.service.PageLayoutService;
 import org.apache.rave.portal.service.PageService;
 import org.apache.rave.portal.service.UserService;
+import org.apache.rave.portal.service.WidgetService;
 import org.apache.rave.portal.web.controller.util.MockHttpUtil;
 import org.apache.rave.portal.web.util.ModelKeys;
 import org.apache.rave.portal.web.util.ViewNames;
@@ -52,6 +53,7 @@ public class PageControllerTest {
     private PageLayoutService pageLayoutService;
     private PageController pageController;
     private MockHttpServletRequest request;
+    private WidgetService widgetService;
 
     private Model model;
     private Page defaultPage, otherPage;
@@ -59,9 +61,9 @@ public class PageControllerTest {
     private List<Page> allPages;
     private List<PageLayout> allPageLayouts;
 
-    private final Long DEFAULT_PAGE_ID = 99L;
-    private final Long OTHER_PAGE_ID = 22L;
-    private final Long USER_ID = 1L;
+    private final String DEFAULT_PAGE_ID = "99";
+    private final String OTHER_PAGE_ID = "22";
+    private final String USER_ID = "1";
     private final String VALID_PAGE_LAYOUT_CODE = "layout98";
     private UserImpl validUser;
     private PageLayout validPageLayout;
@@ -79,21 +81,21 @@ public class PageControllerTest {
         validUser = new UserImpl(USER_ID);
         validPageLayout = new PageLayoutImpl();
         validPageLayout.setCode(VALID_PAGE_LAYOUT_CODE);
-        defaultPageUser = new PageUserImpl(validUser, defaultPage, 1L);
+        defaultPageUser = new PageUserImpl(USER_ID, defaultPage, 1L);
         defaultPageUser.setPageStatus(PageInvitationStatus.OWNER);
 
         validUser.setDefaultPageLayout(validPageLayout);
 
-        defaultPage = new PageImpl(DEFAULT_PAGE_ID, validUser);
+        defaultPage = new PageImpl(DEFAULT_PAGE_ID, USER_ID);
         defaultPage.setPageLayout(validPageLayout);
 
         List<PageUser> members = new ArrayList<PageUser>();
         members.add(defaultPageUser);
         defaultPage.setMembers(members);
 
-        otherPage = new PageImpl(OTHER_PAGE_ID, validUser);
+        otherPage = new PageImpl(OTHER_PAGE_ID, USER_ID);
         otherPage.setPageLayout(validPageLayout);
-        otherPageUser = new PageUserImpl(validUser, otherPage, 2L);
+        otherPageUser = new PageUserImpl(USER_ID, otherPage, 2L);
         otherPageUser.setPageStatus(PageInvitationStatus.OWNER);
 
         List<PageUser> members2 = new ArrayList<PageUser>();

@@ -26,13 +26,11 @@ import java.util.List;
 
 @XmlTransient
 public interface RegionWidget {
-    Long getId();
+    String getId();
 
-    void setId(Long id);
+    String getWidgetId();
 
-    Widget getWidget();
-
-    void setWidget(Widget widget);
+    void setWidgetId(String widgetId);
 
     @JsonBackReference
     Region getRegion();

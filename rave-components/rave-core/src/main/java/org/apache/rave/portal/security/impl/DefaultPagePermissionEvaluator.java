@@ -20,6 +20,7 @@ package org.apache.rave.portal.security.impl;
 
 import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.repository.PageRepository;
+import org.apache.rave.portal.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,10 +40,12 @@ import java.util.List;
 public class DefaultPagePermissionEvaluator extends AbstractModelPermissionEvaluator<Page> {
     private Logger log = LoggerFactory.getLogger(getClass());
     private PageRepository pageRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    public DefaultPagePermissionEvaluator(PageRepository pageRepository) {
+    public DefaultPagePermissionEvaluator(PageRepository pageRepository, UserRepository userRepository) {
         this.pageRepository = pageRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -87,7 +90,7 @@ public class DefaultPagePermissionEvaluator extends AbstractModelPermissionEvalu
         if (targetId instanceof RaveSecurityContext) {
             hasPermission = verifyRaveSecurityContext(authentication, (RaveSecurityContext)targetId);
         } else {
-            hasPermission = hasPermission(authentication, pageRepository.get((Long)targetId), permission, true);
+            hasPermission = hasPermission(authentication, pageRepository.get((String)targetId), permission, true);
         }
         return hasPermission;
     }
@@ -132,7 +135,7 @@ public class DefaultPagePermissionEvaluator extends AbstractModelPermissionEvalu
 
     // returns a trusted Page object, either from the PageRepository, or the
     // cached container list
-    private Page getTrustedPage(long pageId, List<Page> trustedPageContainer) {
+    private Page getTrustedPage(String pageId, List<Page> trustedPageContainer) {
         Page p = null;
         if (trustedPageContainer.isEmpty()) {
             p = pageRepository.get(pageId);
@@ -154,14 +157,14 @@ public class DefaultPagePermissionEvaluator extends AbstractModelPermissionEvalu
             trustedPage = getTrustedPage(page.getId(), trustedPageContainer);
         }
 
-        return isPageOwnerByUsername(authentication, trustedPage.getOwner().getUsername());
+        return isPageOwnerByUserId(authentication, trustedPage.getOwnerId());
     }
 
-    private boolean isPageOwnerByUsername(Authentication authentication, String username) {
-        return ((User)authentication.getPrincipal()).getUsername().equals(username);
+    private boolean isPageOwnerByUserId(Authentication authentication, String userId) {
+        return ((User)authentication.getPrincipal()).getId().equals(userId);
     }
 
-    private boolean isPageOwnerById(Authentication authentication, Long userId) {
+    private boolean isPageOwnerById(Authentication authentication, String userId) {
         return ((User)authentication.getPrincipal()).getId().equals(userId);
     }
 
@@ -175,7 +178,7 @@ public class DefaultPagePermissionEvaluator extends AbstractModelPermissionEvalu
 
         // perform the permissions check based on the class supplied to the RaveSecurityContext object
         if (User.class == clazz) {
-            return isPageOwnerById(authentication, (Long)raveSecurityContext.getId());
+            return isPageOwnerById(authentication, (String)raveSecurityContext.getId());
         } else {
             throw new IllegalArgumentException("unknown RaveSecurityContext type: " + raveSecurityContext.getType());
         }
@@ -217,7 +220,7 @@ public class DefaultPagePermissionEvaluator extends AbstractModelPermissionEvalu
         List<PageUser> members = trustedPage.getMembers();
         if (members != null) {
             for (PageUser pageUser : members){
-                if (pageUser.getUser().getUsername().equals(viewer)){
+                if (userRepository.get(pageUser.getUserId()).getUsername().equals(viewer)){
                     log.info("User "+viewer+" is a member of page "+trustedPage.getId());
                     if(checkEditorStatus){
                         log.info("checking editor:"+trustedPage.getId()+"@"+viewer+"@"+pageUser.isEditor());

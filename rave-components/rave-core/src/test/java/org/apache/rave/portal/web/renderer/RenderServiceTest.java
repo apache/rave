@@ -23,7 +23,9 @@ import org.apache.rave.exception.NotSupportedException;
 import org.apache.rave.portal.model.RegionWidget;
 import org.apache.rave.portal.model.impl.RegionWidgetImpl;
 import org.apache.rave.portal.model.impl.WidgetImpl;
+import org.apache.rave.portal.repository.WidgetRepository;
 import org.apache.rave.portal.web.renderer.impl.DefaultRenderService;
+import org.apache.rave.portal.web.renderer.model.RegionWidgetWrapper;
 import org.apache.rave.portal.web.renderer.model.RenderContext;
 import org.junit.Before;
 import org.junit.Test;
@@ -48,12 +50,14 @@ public class RenderServiceTest {
     private RegionWidgetRenderer widgetRenderer2;
     private RegionWidgetRenderer widgetRenderer1;
     private RenderContext context;
+    private WidgetRepository widgetRepository;
 
     @Before
     public void setup() {
         widgetRenderers = new ArrayList<RegionWidgetRenderer>();
         widgetRenderer2 = createStrictMock(RegionWidgetRenderer.class);
         widgetRenderer1 = createStrictMock(RegionWidgetRenderer.class);
+        widgetRepository = createMock(WidgetRepository.class);
 
         expect(widgetRenderer1.getSupportedContext()).andReturn(SUPPORTED_TYPE_1);
         expect(widgetRenderer2.getSupportedContext()).andReturn(SUPPORTED_TYPE_2);
@@ -85,60 +89,74 @@ public class RenderServiceTest {
     @Test
     public void render_supported_foo() {
         WidgetImpl w = new WidgetImpl();
+        w.setId("1");
         w.setType(SUPPORTED_TYPE_1);
 
         RegionWidget rw = new RegionWidgetImpl();
-        rw.setWidget(w);
+        rw.setWidgetId(w.getId());
 
-        expect(widgetRenderer1.render(rw, context)).andReturn(RENDERED_TYPE_1);
+        RegionWidgetWrapper wrapper = new RegionWidgetWrapper(w, rw);
+
+        expect(widgetRenderer1.render(wrapper, context)).andReturn(RENDERED_TYPE_1);
+        expect(widgetRepository.get("1")).andReturn(w);
         replayMocks();
 
         constructFooBarRenderService();
-        assertThat(service.render(rw, context), is(equalTo(RENDERED_TYPE_1)));
+        assertThat(service.render(wrapper, context), is(equalTo(RENDERED_TYPE_1)));
     }
 
     @Test
     public void render_supported_bar() {
         WidgetImpl w = new WidgetImpl();
+        w.setId("1");
         w.setType(SUPPORTED_TYPE_2);
         RegionWidget rw = new RegionWidgetImpl();
-        rw.setWidget(w);
+        rw.setWidgetId(w.getId());
 
-        expect(widgetRenderer2.render(rw, context)).andReturn(RENDERED_TYPE_2);
+        RegionWidgetWrapper wrapper = new RegionWidgetWrapper(w, rw);
+
+        expect(widgetRenderer2.render(wrapper, context)).andReturn(RENDERED_TYPE_2);
+        expect(widgetRepository.get("1")).andReturn(w);
         replayMocks();
 
         constructFooBarRenderService();
-        assertThat(service.render(rw, context), is(equalTo(RENDERED_TYPE_2)));
+        assertThat(service.render(wrapper, context), is(equalTo(RENDERED_TYPE_2)));
     }
 
     @Test(expected = NotSupportedException.class)
     public void render_invalid() {
         WidgetImpl w = new WidgetImpl();
+        w.setId("1");
         w.setType("NONE");
 
         RegionWidget rw = new RegionWidgetImpl();
-        rw.setWidget(w);
+        rw.setWidgetId(w.getId());
+
+        RegionWidgetWrapper wrapper = new RegionWidgetWrapper(w, rw);
+
+        expect(widgetRepository.get("1")).andReturn(w);
 
         replayMocks();
 
         constructFooBarRenderService();
-        service.render(rw, context);
+        service.render(wrapper, context);
     }
 
 
     private void constructFooBarRenderService() {
         widgetRenderers.add(widgetRenderer1);
         widgetRenderers.add(widgetRenderer2);
-        service = new DefaultRenderService(widgetRenderers);
+        service = new DefaultRenderService(widgetRenderers, widgetRepository);
     }
 
     private void constructFooRenderService() {
         widgetRenderers.add(widgetRenderer1);
-        service = new DefaultRenderService(widgetRenderers);
+        service = new DefaultRenderService(widgetRenderers, widgetRepository);
     }
 
     private void replayMocks() {
         replay(widgetRenderer1);
         replay(widgetRenderer2);
+        replay(widgetRepository);
     }
 }

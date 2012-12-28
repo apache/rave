@@ -19,17 +19,6 @@
 
 package org.apache.rave.portal.web.controller;
 
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.rave.portal.model.Page;
 import org.apache.rave.portal.model.PageLayout;
 import org.apache.rave.portal.model.Person;
@@ -39,14 +28,25 @@ import org.apache.rave.portal.model.impl.PageLayoutImpl;
 import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.service.PageService;
 import org.apache.rave.portal.service.UserService;
+import org.apache.rave.portal.service.WidgetService;
 import org.apache.rave.portal.web.model.UserForm;
 import org.apache.rave.portal.web.util.ModelKeys;
 import org.apache.rave.portal.web.util.ViewNames;
 import org.hamcrest.CoreMatchers;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.http.HttpStatus;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.ui.ModelMap;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.easymock.EasyMock.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 /**
  * Test class for {@link ProfileController}
@@ -57,14 +57,15 @@ public class ProfileControllerTest {
 
 	private UserService userService;
 	private PageService pageService;
+    private MockHttpServletResponse response;
 
     private Page defaultPage, otherPage;
     private List<Page> allProfilePages;
     private List<PageLayout> allPageLayouts;
 
-    private final Long DEFAULT_PAGE_ID = 99L;
-    private final Long OTHER_PAGE_ID = 22L;
-    private final Long USER_ID = 1L;
+    private final String DEFAULT_PAGE_ID = "99";
+    private final String OTHER_PAGE_ID = "22";
+    private final String USER_ID = "1";
     private final String VALID_PAGE_LAYOUT_CODE = "layout98";
     private PageLayout validPageLayout;
 
@@ -72,6 +73,7 @@ public class ProfileControllerTest {
 	public void setup() {
 		userService = createMock(UserService.class);
 		pageService = createMock(PageService.class);
+        response = new MockHttpServletResponse();
 		profileController = new ProfileController(userService, pageService);
 
         validPageLayout = new PageLayoutImpl();
@@ -112,7 +114,7 @@ public class ProfileControllerTest {
 
 		replay(userService, pageService);
 
-		String view = profileController.viewProfile(username, model, null);
+		String view = profileController.viewProfileByUsername(username, model, null, response);
 
 		//assert that the model is not null
 		assertThat(model, CoreMatchers.notNullValue());
@@ -153,7 +155,7 @@ public class ProfileControllerTest {
 
 		replay(userService, pageService);
 
-		String view = profileController.viewProfile(USER_ID, model, null);
+		String view = profileController.viewProfile(USER_ID, model, null, response);
 
 		//assert that the model is not null
 		assertThat(model, CoreMatchers.notNullValue());
@@ -188,8 +190,32 @@ public class ProfileControllerTest {
 
         replay(userService, pageService);
 
-        String view = profileController.viewProfile(username, model, null);
+        String view = profileController.viewProfileByUsername(username, model, null, response);
         assertThat(view, is(ViewNames.USER_NOT_FOUND));
+        assertThat(response.getStatus(), is(HttpStatus.NOT_FOUND.value()));
+
+        verify(userService, pageService);
+    }
+
+    @Test
+    public void viewProfile_invalidUser() {
+        //creating a mock user
+        final User user = null;
+        final ModelMap model = new ModelMap();
+        final int modelSize = 4;
+        final String username="Canonical";
+        Page personProfile = new PageImpl();
+        PageLayout pageLayout = new PageLayoutImpl();
+        pageLayout.setCode("person_profile");
+        personProfile.setPageLayout(pageLayout);
+
+        expect(userService.getUserById(username)).andThrow(new UsernameNotFoundException("Username does not exist"));
+
+        replay(userService, pageService);
+
+        String view = profileController.viewProfile(username, model, null, response);
+        assertThat(view, is(ViewNames.USER_NOT_FOUND));
+        assertThat(response.getStatus(), is(HttpStatus.NOT_FOUND.value()));
 
         verify(userService, pageService);
     }
@@ -199,7 +225,7 @@ public class ProfileControllerTest {
 		//This test will just show the successful updation of user status
 		final ModelMap model = new ModelMap();
 		final int modelSize = 2;
-		final long referringPageId = 1L;
+		final String referringPageId = "1";
         final String USERNAME = "canonical";
 		String userProfile = new String(ModelKeys.USER_PROFILE);
 

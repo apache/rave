@@ -21,10 +21,7 @@ package org.apache.rave.portal.service.impl;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.rave.exception.DuplicateItemException;
-import org.apache.rave.portal.model.Category;
-import org.apache.rave.portal.model.User;
-import org.apache.rave.portal.model.Widget;
-import org.apache.rave.portal.model.WidgetStatus;
+import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.model.util.WidgetStatistics;
 import org.apache.rave.portal.repository.CategoryRepository;
@@ -35,6 +32,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -87,7 +85,7 @@ public class DefaultWidgetService implements WidgetService {
     }
 
     @Override
-    public Widget getWidget(long id) {
+    public Widget getWidget(String id) {
         return widgetRepository.get(id);
     }
 
@@ -123,7 +121,7 @@ public class DefaultWidgetService implements WidgetService {
     }
 
     @Override
-    public SearchResult<Widget> getWidgetsByOwner(Long ownerId, int offset, int pageSize) {
+    public SearchResult<Widget> getWidgetsByOwner(String ownerId, int offset, int pageSize) {
         final User user = userRepository.get(ownerId);
         final int count = widgetRepository.getCountByOwner(user, offset, pageSize);
         final List<Widget> widgets = widgetRepository.getByOwner(user, offset, pageSize);
@@ -153,12 +151,12 @@ public class DefaultWidgetService implements WidgetService {
     }
 
     @Override
-    public WidgetStatistics getWidgetStatistics(long widgetId, long userId) {
+    public WidgetStatistics getWidgetStatistics(String widgetId, String userId) {
         return widgetRepository.getWidgetStatistics(widgetId, userId);
     }
 
     @Override
-    public Map<Long, WidgetStatistics> getAllWidgetStatistics(long userId) {
+    public Map<String, WidgetStatistics> getAllWidgetStatistics(String userId) {
         return widgetRepository.getAllWidgetStatistics(userId);
     }
 
@@ -180,11 +178,105 @@ public class DefaultWidgetService implements WidgetService {
     }
 
     @Override
-    public SearchResult<Widget> getWidgetsByCategory(long categoryId, int offset, int pageSize) {
-        List<Widget> widgets = categoryRepository.get(categoryId).getWidgets();
+    public SearchResult<Widget> getWidgetsByCategory(String categoryId, int offset, int pageSize) {
+        Category category = categoryRepository.get(categoryId);
+        if (category == null) {
+            return new SearchResult<Widget>(new ArrayList<Widget>(), 0);
+        }
+
+        List<Widget> widgets = category.getWidgets();
         SearchResult<Widget> searchResult = new SearchResult<Widget>(widgets, widgets.size());
         searchResult.setOffset(offset);
         searchResult.setPageSize(pageSize);
         return searchResult;
+    }
+
+    @Override
+    public WidgetTag getWidgetTag(String id) {
+        return widgetRepository.getTagById(id);
+    }
+
+
+    @Override
+    @Transactional
+    public WidgetTag createWidgetTag(String widgetId, WidgetTag widgetTag) {
+        return widgetRepository.saveWidgetTag(widgetId, widgetTag);
+    }
+
+    @Override
+    public WidgetTag getWidgetTagByWidgetIdAndKeyword(String widgetId, String keyword) {
+        return widgetRepository.getTagByWidgetIdAndKeyword(widgetId, keyword);
+    }
+
+    // ***************************************************************************************************************
+    // Widget Comment Methods
+    // ***************************************************************************************************************
+
+    @Override
+    public WidgetComment getWidgetComment(String widgetId, String commentId) {
+        return widgetRepository.getCommentById(widgetId, commentId);
+    }
+
+    @Override
+    @Transactional
+    public void createWidgetComment(String widgetId, WidgetComment widgetComment) {
+        widgetRepository.createWidgetComment(widgetId, widgetComment);
+    }
+
+    @Override
+    @Transactional
+    public void updateWidgetComment(String widgetId, WidgetComment widgetComment) {
+        widgetRepository.updateWidgetComment(widgetId, widgetComment);
+    }
+
+    @Override
+    @Transactional
+    public void removeWidgetComment(String widgetId, String commentId) {
+        widgetRepository.deleteWidgetComment(widgetId, getWidgetComment(widgetId, commentId));
+    }
+
+    @Override
+    @Transactional
+    public int deleteAllWidgetComments(String userId) {
+        return widgetRepository.deleteAllWidgetComments(userId);
+    }
+
+    @Override
+    public WidgetRating getWidgetRatingByWidgetIdAndUserId(String widgetId, String userId) {
+        return widgetRepository.getWidgetRatingsByWidgetIdAndUserId(widgetId, userId);
+    }
+
+    @Override
+    @Transactional
+    public void updateWidgetRatingScore(String widgetId, WidgetRating widgetRating, Integer score) {
+        widgetRating.setScore(score);
+        widgetRepository.updateWidgetRating(widgetId, widgetRating);
+    }
+
+    @Override
+    @Transactional
+    public void saveWidgetRating(String widgetId, WidgetRating rating) {
+        WidgetRating existingRating = getWidgetRatingByWidgetIdAndUserId(widgetId, rating.getUserId());
+        if (existingRating == null) {
+            widgetRepository.createWidgetRating(widgetId, rating);
+        } else {
+            updateWidgetRatingScore(widgetId, existingRating, rating.getScore());
+        }
+    }
+
+    @Override
+    @Transactional
+    public void removeWidgetRating(String widgetId, String userId) {
+        WidgetRating widgetRating = widgetRepository.getWidgetRatingsByWidgetIdAndUserId(widgetId, userId);
+        if (widgetRating == null) {
+            return;
+        }
+        widgetRepository.deleteWidgetRating(widgetId, widgetRating);
+    }
+
+    @Override
+    @Transactional
+    public int removeAllWidgetRatings(String userId) {
+        return widgetRepository.deleteAllWidgetRatings(userId);
     }
 }

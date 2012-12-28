@@ -24,14 +24,18 @@
 
 <div class="container-fluid navbar-spacer">
     <div class="row-fluid">
-    <ul class="nav nav-tabs">
-          <li class="active"><a href="<spring:url value="/app/store/widget/add?referringPageId=${referringPageId}" />">OpenSocial</a></li>
-          <li><a href="<spring:url value="/app/store/widget/add/w3c?referringPageId=${referringPageId}" />">W3C</a></li>
-          
-          <c:if test="${not empty marketplace and not empty marketplace.value}">
-          <li><a href="<spring:url value="/app/marketplace?referringPageId=${referringPageId}" />">Marketplace</a></li>
-          </c:if>
-    </ul> 
+	    <ul class="nav nav-tabs">
+	          <li class="active"><a href="<spring:url value="/app/store/widget/add?referringPageId=${referringPageId}" />">OpenSocial</a></li>
+	          <li><a href="<spring:url value="/app/store/widget/add/w3c?referringPageId=${referringPageId}" />">W3C</a></li>
+	          
+	          <c:if test="${not empty marketplace and not empty marketplace.value}">
+	          <li><a href="<spring:url value="/app/marketplace?referringPageId=${referringPageId}" />">Marketplace</a></li>
+	          </c:if>
+	    </ul> 
+    </div>
+</div>
+<div class="row-fluid tab-content">
+    <div class="tab-padding">
     
     <form:errors path="widget" cssClass="error" element="p"/>
     <form:form cssClass="form-horizontal" id="newWidgetForm" action="add?referringPageId=${referringPageId}" commandName="widget" method="POST">
@@ -49,29 +53,29 @@
             </div>
             
             <form:hidden path="type" value="OpenSocial"/>
-
-            <a href="#" class="btn btn-primary"
-               id="fetchMetadataButton"
-               onclick="rave.api.rpc.getWidgetMetadata({
-                                url: $('#url').get(0).value,
-                                providerType: 'OpenSocial',
-                                successCallback: function(result) {
-                                    var widget = result.result;
-                                    $('#title').val(widget.title);
-                                    $('#description').val(widget.description);
-                                    $('#thumbnailUrl').val(widget.thumbnailUrl);
-                                    $('#screenshotUrl').val(widget.screenshotUrl);
-                                    $('#titleUrl').val(widget.titleUrl);
-                                    $('#author').val(widget.author);
-                                    $('#authorEmail').val(widget.authorEmail);
-                                    $('#addWidgetForm').show();
-                                    $('#addWidgetFormSubmit').show();
-                                }
-                            });">
-                <fmt:message key="page.getWidgetMetadata.button"/>
-            </a>
-
-            <div class="row clearfix" id="addWidgetForm">
+			<div class="control-group">
+	            <a href="#" class="btn btn-primary"
+	               id="fetchMetadataButton"
+	               onclick="rave.api.rpc.getWidgetMetadata({
+	                                url: $('#url').get(0).value,
+	                                providerType: 'OpenSocial',
+	                                successCallback: function(result) {
+	                                    var widget = result.result;
+	                                    $('#title').val(widget.title);
+	                                    $('#description').val(widget.description);
+	                                    $('#thumbnailUrl').val(widget.thumbnailUrl);
+	                                    $('#screenshotUrl').val(widget.screenshotUrl);
+	                                    $('#titleUrl').val(widget.titleUrl);
+	                                    $('#author').val(widget.author);
+	                                    $('#authorEmail').val(widget.authorEmail);
+	                                    $('#addWidgetForm').show();
+	                                    $('#addWidgetFormSubmit').show();
+	                                }
+	                            });">
+	                <fmt:message key="page.getWidgetMetadata.button"/>
+	            </a>
+			</div>
+            <div class="clearfix" id="addWidgetForm">
 
                 <div class="control-group">
                     <form:label cssClass="control-label" path="title"> <fmt:message key="widget.title"/> *</form:label>

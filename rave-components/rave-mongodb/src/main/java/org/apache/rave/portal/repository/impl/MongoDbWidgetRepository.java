@@ -20,6 +20,7 @@
 package org.apache.rave.portal.repository.impl;
 
 import com.google.common.collect.Maps;
+import org.apache.rave.exception.NotSupportedException;
 import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.model.util.WidgetStatistics;
 import org.apache.rave.portal.repository.MongoWidgetOperations;
@@ -31,6 +32,8 @@ import org.springframework.data.mongodb.core.query.Order;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -116,20 +119,20 @@ public class MongoDbWidgetRepository implements WidgetRepository {
     }
 
     @Override
-    public WidgetStatistics getWidgetStatistics(long widget_id, long user_id) {
+    public WidgetStatistics getWidgetStatistics(String  widget_id, String  user_id) {
         return statsAggregator.getWidgetStatistics(widget_id, user_id);
     }
 
     @Override
-    public Map<Long, WidgetStatistics> getAllWidgetStatistics(long userId) {
+    public Map<String, WidgetStatistics> getAllWidgetStatistics(String userId) {
         return statsAggregator.getAllWidgetStatistics(userId);
     }
 
     @Override
-    public Map<Long, WidgetRating> getUsersWidgetRatings(long userId) {
+    public Map<String , WidgetRating> getUsersWidgetRatings(String userId) {
         Query q = query(where("ratings").elemMatch(where("userId").is(userId)));
         List<Widget> widgets = template.find(q);
-        Map<Long, WidgetRating> ratings = Maps.newHashMap();
+        Map<String , WidgetRating> ratings = Maps.newHashMap();
         for (Widget widget : widgets) {
             for (WidgetRating rating : widget.getRatings()) {
                 if (rating.getUserId().equals(userId)) {
@@ -152,7 +155,7 @@ public class MongoDbWidgetRepository implements WidgetRepository {
     }
 
     @Override
-    public int unassignWidgetOwner(long userId) {
+    public int unassignWidgetOwner(String userId) {
         Query query = query(where("ownerId").is(userId));
         return template.update(query, update("ownerId", null));
     }
@@ -163,7 +166,7 @@ public class MongoDbWidgetRepository implements WidgetRepository {
     }
 
     @Override
-    public Widget get(long id) {
+    public Widget get(String id) {
         return template.get(id);
     }
 
@@ -176,6 +179,261 @@ public class MongoDbWidgetRepository implements WidgetRepository {
     public void delete(Widget item) {
         template.remove(new Query(where("_id").is(item.getId())));
     }
+
+    /*
+     * Begin WidgetRatingRepository Methods
+     *
+     */
+    @Override
+    public WidgetRating getWidgetRatingsByWidgetIdAndUserId(String widgetId, String userId) {
+        Widget widget = template.get(widgetId);
+        return getRatingByUserId(widget, userId);
+    }
+
+    @Override
+    public int deleteAllWidgetRatings(String userId) {
+        int count = 0;
+        List<Widget> widgets = template.find(query(where("ratings").elemMatch(where("userId").is(userId))));
+        for (Widget widget : widgets) {
+            count += removeUserRatings(userId, widget);
+        }
+        return count;
+    }
+
+    @Override
+    public WidgetRating getRatingById(String widgetId, String id) {
+        Widget widget = template.get(widgetId);
+        return getWidgetRatingById(widget, id);
+    }
+
+    @Override
+    public WidgetRating createWidgetRating(String widgetId, WidgetRating rating) {
+        Widget widget = template.get(widgetId);
+        widget.getRatings().add(rating);
+        save(widget);
+        return rating;
+    }
+
+    @Override
+    public WidgetRating updateWidgetRating(String widgetId, WidgetRating rating) {
+        return null;
+    }
+
+    @Override
+    public void deleteWidgetRating(String widgetId, WidgetRating item) {
+        Widget widget = template.get(widgetId);
+        removeRating(item.getId(), widget);
+        template.save(widget);
+    }
+
+    private void removeRating(String ratingId, Widget widget) {
+        Iterator<WidgetRating> iterator = widget.getRatings().iterator();
+        while(iterator.hasNext()) {
+            WidgetRating comment = iterator.next();
+            if(comment.getId().equals(ratingId)) {
+                iterator.remove();
+                return;
+            }
+        }
+    }
+
+    private WidgetRating getWidgetRatingById(Widget widget, String id) {
+        for (WidgetRating rating : widget.getRatings()) {
+            if (rating.getId().equals(id)) {
+                return rating;
+            }
+        }
+        return null;
+    }
+
+    private int removeUserRatings(String userId, Widget widget) {
+        int count = 0;
+        Iterator<WidgetRating> iterator = widget.getRatings().iterator();
+        while (iterator.hasNext()) {
+            WidgetRating rating = iterator.next();
+            if (rating.getUserId().equals(userId)) {
+                iterator.remove();
+                count++;
+            }
+        }
+        if (count > 0) {
+            template.save(widget);
+        }
+        return count;
+    }
+
+    private WidgetRating getRatingByUserId(Widget widget, String userId) {
+        for (WidgetRating rating : widget.getRatings()) {
+            if (rating.getUserId().equals(userId)) {
+                return rating;
+            }
+        }
+        return null;
+    }
+
+    /*
+     * End WidgetRating Repository Methods
+     */
+
+    /*
+     * Begin WidgetTagRepository Methods
+     */
+    @Override
+    public WidgetTag getTagByWidgetIdAndKeyword(String widgetId, String keyword) {
+        Widget widget = template.get(widgetId);
+        return getTagByKeyword(keyword, widget);
+    }
+
+    @Override
+    public WidgetTag getTagById(String id) {
+        throw new NotSupportedException();
+    }
+
+    @Override
+    public WidgetTag saveWidgetTag(String widgetId, WidgetTag item) {
+        Widget widget = template.get(widgetId);
+        updateOrAddTag(widget, item);
+        Widget saved = template.save(widget);
+        //return getTagByKeyword(item.getTag().getKeyword(), saved);
+        //TODO: FIX
+        return null;
+    }
+
+    @Override
+    public void deleteWidgetTag(WidgetTag item) {/*
+        Widget widget = template.get(item.getWidgetId());
+        removeTag(item.getTag().getKeyword(), widget);*/
+    }
+
+    private void updateOrAddTag(Widget widget, WidgetTag item) {
+        //The current programming model expects there to be only one instance of a tag
+        //consider an update a NOOP unless it is a new tag.
+        /*WidgetTag tag = getTagByKeyword(item.getTag().getKeyword(), widget);
+        if(tag == null) {
+            widget.getTags().add(item);
+        }*/
+    }
+
+    private void removeTag(String keyword, Widget widget) {
+       /* Iterator<WidgetTag> iterator = widget.getTags().iterator();
+        while (iterator.hasNext()) {
+            WidgetTag comment = iterator.next();
+            if (comment.getTag().getKeyword().equals(keyword)) {
+                iterator.remove();
+                return;
+            }
+        }*/
+    }
+
+    private WidgetTag getTagByKeyword(String keyword, Widget widget) {
+        /*for(WidgetTag tag : widget.getTags()) {
+            if(tag.getTag().getKeyword().equals(keyword)) {
+                return tag;
+            }
+        }
+        return null;*/
+
+        //TODO: FIX
+        return null;
+    }
+
+    /*
+     * End WidgetTag Repository Methods
+     */
+
+    /*
+     * WidgetComment Repository
+     */
+    @Override
+    public WidgetComment getCommentById(String widgetId, String id) {
+        return getCommentById(template.get(widgetId), id);
+    }
+
+    @Override
+    public WidgetComment createWidgetComment(String widgetId, WidgetComment comment) {
+        Widget widget = template.get(widgetId);
+        widget.getComments().add(comment);
+        save(widget);
+        return comment;
+    }
+
+    @Override
+    public WidgetComment updateWidgetComment(String widgetId, WidgetComment comment) {
+        Widget widget = template.get(widgetId);
+        return updateComment(widget, comment);
+    }
+
+    @Override
+    public void deleteWidgetComment(String widgetId, WidgetComment comment) {
+        Widget widget = template.get(widgetId);
+        removeComment(comment.getId(), widget);
+        template.save(widget);
+    }
+
+    @Override
+    public int deleteAllWidgetComments(String userId) {
+        int count=0;
+        List<Widget> widgets = template.find(query(where("comments").elemMatch(where("userId").is(userId))));
+        for(Widget widget : widgets) {
+            count += updateWidget(userId, widget);
+        }
+        return count;
+    }
+
+    private void removeComment(String commentId, Widget widget) {
+        Iterator<WidgetComment> iterator = widget.getComments().iterator();
+        while(iterator.hasNext()) {
+            WidgetComment comment = iterator.next();
+            if(comment.getId().equals(commentId)) {
+                iterator.remove();
+                return;
+            }
+        }
+    }
+
+    private int updateWidget(String userId, Widget widget) {
+        int count = 0;
+
+        Iterator<WidgetComment> iterator = widget.getComments().iterator();
+        while(iterator.hasNext()) {
+            WidgetComment comment = iterator.next();
+            if(comment.getUserId().equals(userId)) {
+                iterator.remove();
+                count++;
+            }
+        }
+        if(count > 0) {
+            template.save(widget);
+        }
+        return count;
+    }
+
+    private WidgetComment getCommentById(Widget widget, String id) {
+        if(widget != null){
+            for(WidgetComment comment : widget.getComments()) {
+                if(comment.getId().equals(id)) {
+                    return comment;
+                }
+            }
+        }
+        return null;
+    }
+
+    private WidgetComment updateComment(Widget widget, WidgetComment item) {
+        for(WidgetComment comment : widget.getComments()) {
+            if(comment.getId().equals(item.getId())) {
+                comment.setLastModifiedDate(new Date());
+                comment.setText(item.getText());
+                comment.setUserId(item.getUserId());
+                return comment;
+            }
+        }
+        return null;
+    }
+
+    /*
+     * End WidgetComment Repository
+     */
 
     private Query getWidgetStatusFreeTextQuery(WidgetStatus widgetStatus, String type, String searchTerm) {
         Criteria criteria = addFreeTextClause(searchTerm, new Criteria());

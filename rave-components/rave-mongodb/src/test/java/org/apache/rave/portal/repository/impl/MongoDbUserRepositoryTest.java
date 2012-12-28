@@ -127,14 +127,17 @@ public class MongoDbUserRepositoryTest {
 
     @Test
     public void getAllByAddedWidget_Valid(){
-          long widgetId = 123;
+          String widgetId = "123";
+        String ownerId = "ABC";
         List<Page> pages = new ArrayList<Page>();
         Page page = new PageImpl();
-        User owner = new UserImpl();
-        page.setOwner(owner);
+        page.setOwnerId(ownerId);
         pages.add(page);
         expect(pageTemplate.find(query(where("regions").elemMatch(where("regionWidgets").elemMatch(where("widgetId").is(widgetId)))))).andReturn(pages);
         replay(pageTemplate);
+        UserImpl owner = new UserImpl(ownerId);
+        expect(template.get(ownerId)).andReturn(owner);
+        replay(template);
 
         List<User> users = userRepository.getAllByAddedWidget(widgetId);
 
@@ -144,22 +147,26 @@ public class MongoDbUserRepositoryTest {
 
     @Test
     public void getAllByAddedWidget_ContainsOwner(){
-        long widgetId = 123;
+        String widgetId = "123";
+        String ownerId = "1234";
+
         List<Page> pages = new ArrayList<Page>();
         Page page = new PageImpl();
         Page page_2 = new PageImpl();
-        User owner = new UserImpl();
-        page.setOwner(owner);
-        page_2.setOwner(owner);
+        page.setOwnerId(ownerId);
+        page_2.setOwnerId(ownerId);
         pages.add(page);
         pages.add(page_2);
         expect(pageTemplate.find(query(where("regions").elemMatch(where("regionWidgets").elemMatch(where("widgetId").is(widgetId)))))).andReturn(pages);
         replay(pageTemplate);
+        UserImpl user = new UserImpl(ownerId);
+        expect(template.get(ownerId)).andReturn(user);
+        replay(template);
 
         List<User> users = userRepository.getAllByAddedWidget(widgetId);
 
         assertTrue(users.size() == 1);
-        assertTrue(users.contains(owner));
+        assertTrue(users.contains(user));
 
     }
 
@@ -175,12 +182,12 @@ public class MongoDbUserRepositoryTest {
 
     @Test
     public void getType_Valid(){
-        assertThat((Class<MongoDbUser>)userRepository.getType(), is(equalTo(MongoDbUser.class)));
+        assertThat((Class)userRepository.getType(), is(equalTo((Class)MongoDbUser.class)));
     }
 
     @Test
     public void get_Valid(){
-        long id = 123;
+        String id = "123";
         User user = new UserImpl();
         expect(template.get(id)).andReturn(user);
         replay(template);
@@ -199,7 +206,7 @@ public class MongoDbUserRepositoryTest {
     @Test
     public void delete_Valid(){
         User item = new UserImpl();
-        ((UserImpl)item).setId((long)777);
+        ((UserImpl)item).setId("777");
         template.remove(query(where("_id").is(item.getId())));
         expectLastCall();
         replay(template);

@@ -26,9 +26,9 @@ public interface RegionWidgetPreference {
      * Gets the ID of the RegionWidget this preference is for
      * @return The ID of the RegionWidget this preference is for
      */
-    Long getRegionWidgetId();
+    String getRegionWidgetId();
 
-    void setRegionWidgetId(Long regionWidgetId);
+    void setRegionWidgetId(String regionWidgetId);
 
     /**
      * Gets the name of the preference

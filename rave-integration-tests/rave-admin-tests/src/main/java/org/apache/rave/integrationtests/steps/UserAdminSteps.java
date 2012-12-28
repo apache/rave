@@ -35,51 +35,10 @@ import static org.hamcrest.Matchers.startsWith;
  * Steps for the new user stories
  */
 @Step
-public class DeleteNewUserSteps {
+public class UserAdminSteps {
 
     @Autowired
     private Portal portal;
-
-    @When("I go to \"$url\"")
-    public void goTo(String url) {
-        portal.go(url);
-    }
-
-    @Then("I see the login page")
-    public void isLoginPage() {
-        final WebElement title = portal.findElement(By.tagName("title"));
-        assertThat(title.getText().trim(), equalTo("Login - Rave"));
-    }
-
-    @When("I log in as an administrator with username \"$username\" and password \"$password\"")
-    public void loginAsAdmin(String username, String password) {
-        portal.login(username,password);
-    }
-
-    @Then("I see the admin interface link")
-    public void getAdminInterfaceLink() {
-		  //TODO: make sure the admin interface actually is loaded
-		  final WebElement adminInterfaceLink=portal.findElement(By.linkText("Admin interface"));
-    }
-	 
-	 @When("I click the admin interface link")
-	 public void clickAdminInterfaceLink() {
-		  //TODO: there should be consequences if this fails.
-		  final WebElement adminInterfaceLink=portal.findElement(By.linkText("Admin interface"));
-		  portal.clickLink(adminInterfaceLink);
-	 }
-
-	 @Then("I see the admin interface")
-	 public void getAdminInterface() {
-		  final WebElement adminInterface=portal.findElement(By.tagName("title"));
-		  assertThat(adminInterface.getText().trim(),startsWith("Rave admin interface"));
-	 }
-	 
-	 @When("I click the \"$usersLinkName\" link")
-	 public void clickUsersLink(String usersLinkName) {
-		  final WebElement usersLink=portal.findElement(By.linkText(usersLinkName));
-		  usersLink.click();
-	 }
 
 	 @Then("I get the user search form")
 	 public void getUserList(){
@@ -94,7 +53,7 @@ public class DeleteNewUserSteps {
 		  searchForm.submit();
 	 }
 
-	 @Then("I see the matches for \"$newuser\"")
+	 @Then("I see the user matches for \"$newuser\"")
 	 public void getUserSearchMatches() {
 		  WebElement searchResultsHeading=portal.findElement(By.tagName("h2"));
 		  assertThat(searchResultsHeading.getText().trim(),equalTo("Showing 1 - 1 of 1 results that match 'newuser'"));
@@ -128,14 +87,4 @@ public class DeleteNewUserSteps {
 		  assertThat(confirmationText.getText().trim(),startsWith(deletionConfirmationStatement));
 	 }
 
-	 @When("I log out")
-	 public void iLogOut() {
-		  portal.logout();
-	 }
-
-	 @Then("I see the Rave login page")
-	 public void backToLoginPage() {
-        final WebElement title = portal.findElement(By.tagName("title"));
-        assertThat(title.getText().trim(), equalTo("Login - Rave"));
-	 }
 }

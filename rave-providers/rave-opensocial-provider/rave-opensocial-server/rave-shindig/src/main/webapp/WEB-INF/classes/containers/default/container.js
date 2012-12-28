@@ -75,7 +75,7 @@
 // Config param to load Opensocial data for social
 // preloads in data pipelining.  %host% will be
 // substituted with the current host.
-"gadgets.osDataUri" : "http://%host%${CONTEXT_ROOT}/rpc",
+"gadgets.osDataUri" : "//%host%${CONTEXT_ROOT}/rpc",
 
 // Use an insecure security token by default
 //"gadgets.securityTokenType" : "insecure",
@@ -158,10 +158,16 @@
   "core.io" : {
     // Note: ${Cur['gadgets.uri.proxy.path']} is an open proxy. Be careful how you expose this!
     // Note: These urls should be protocol relative (start with //)
-    "proxyUrl" : "//${Cur['default.domain.unlocked.client']}${Cur['gadgets.uri.proxy.path']}?container=%container%&refresh=%refresh%&url=%url%%authz%%rewriteMime%",
+    "proxyUrl" : "//${Cur['default.domain.unlocked.client']}${Cur['gadgets.uri.proxy.path']}%filename%?container=%container%&refresh=%refresh%&url=%url%%authz%%rewriteMime%",
     "jsonProxyUrl" : "//${Cur['default.domain.locked.client']}${CONTEXT_ROOT}/gadgets/makeRequest",
     // Note: this setting MUST be supplied in every container config object, as there is no default if it is not supplied.
-    "unparseableCruft" : "throw 1; < don't be evil' >"
+    "unparseableCruft" : "throw 1; < don't be evil' >",
+
+    // This variable is needed during the config init to parse config augmentation
+    "jsPath" : "${Cur['gadgets.uri.js.path']}",
+
+    // interval in milliseconds used to poll xhr request for the readyState
+    "xhrPollIntervalMs" : 50
   },
   "views" : {
     "profile" : {
@@ -231,14 +237,14 @@
     ]
   },
   "minimessage": {
-      "css": [
-        ".mmlib_table {",
-        "width: 100%;",
-        "font: bold 9px arial,sans-serif;",
-        "background-color: #fff4c2;",
-        "border-collapse: separate;",
-        "border-spacing: 0px;",
-        "padding: 1px 0px;",
+    "css": [
+      ".mmlib_table {",
+      "width: 100%;",
+      "font: bold 9px arial,sans-serif;",
+      "background-color: #fff4c2;",
+      "border-collapse: separate;",
+      "border-spacing: 0px;",
+      "padding: 1px 0px;",
       "}",
       ".mmlib_xlink {",
         "font: normal 1.1em arial,sans-serif;",
@@ -246,7 +252,7 @@
         "color: #0000cc;",
         "cursor: pointer;",
       "}"
-     ]
+    ]
   },
   "rpc" : {
     // Path to the relay file. Automatically appended to the parent
@@ -322,6 +328,9 @@
     "relayPath": "${CONTEXT_ROOT}/gadgets/files/container/rpc_relay.html",
 
     //Enables/Disables the RPC arbitrator functionality in the common container
-    "enableRpcArbitration": false
+    "enableRpcArbitration": false,
+
+    // This variable is needed during the container feature init.
+    "jsPath" : "${Cur['gadgets.uri.js.path']}"
   }
 }}

@@ -30,8 +30,7 @@ public class TagTest {
 
     @Test
     public void testAuthority() throws Exception {
-        Tag tag = new JpaTag();
-        tag.setKeyword("test");
+        Tag tag = new JpaTag("test");
         assertEquals("test", tag.getKeyword());
 
     }

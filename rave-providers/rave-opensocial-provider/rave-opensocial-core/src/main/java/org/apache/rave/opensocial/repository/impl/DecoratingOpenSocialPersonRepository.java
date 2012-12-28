@@ -109,7 +109,7 @@ public class DecoratingOpenSocialPersonRepository implements OpenSocialPersonRep
     }
 
     @Override
-    public Person get(long id) {
+    public Person get(String id) {
         return underlying.get(id);
     }
 
@@ -151,5 +151,10 @@ public class DecoratingOpenSocialPersonRepository implements OpenSocialPersonRep
 	@Override
 	public List<Person> findFriendRequestsSent(String username) {
 		return underlying.findFriendRequestsSent(username);
+	}
+
+	@Override
+	public int removeAllFriendsAndRequests(String userid) {
+		return underlying.removeAllFriendsAndRequests(userid);
 	}
 }

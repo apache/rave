@@ -22,10 +22,11 @@ package org.apache.rave.portal.model.conversion.impl;
 import com.google.common.collect.Lists;
 import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.model.conversion.HydratingModelConverter;
+import org.apache.rave.portal.model.impl.PageUserImpl;
+import org.apache.rave.portal.model.impl.RegionImpl;
+import org.apache.rave.portal.model.impl.RegionWidgetImpl;
 import org.apache.rave.portal.model.impl.RegionWidgetPreferenceImpl;
 import org.apache.rave.portal.repository.PageLayoutRepository;
-import org.apache.rave.portal.repository.UserRepository;
-import org.apache.rave.portal.repository.WidgetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -35,12 +36,6 @@ import static org.apache.rave.portal.model.util.MongoDbModelUtil.generateId;
 
 @Component
 public class MongoDbPageConverter implements HydratingModelConverter<Page, MongoDbPage> {
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private WidgetRepository widgetRepository;
 
     @Autowired
     private PageLayoutRepository pageLayoutRepository;
@@ -53,17 +48,15 @@ public class MongoDbPageConverter implements HydratingModelConverter<Page, Mongo
     @Override
     public MongoDbPage convert(Page sourcePage) {
         MongoDbPage page = new MongoDbPage();
-        page.setId(sourcePage.getId() == null ? generateId() : sourcePage.getId());
-        page.setOwnerId(sourcePage.getOwner().getId());
+        page.setId(sourcePage.getId());
+        page.setOwnerId(sourcePage.getOwnerId());
         page.setPageLayoutCode(sourcePage.getPageLayout().getCode());
         page.setName(sourcePage.getName());
         page.setRegions(sourcePage.getRegions());
         page.setPageType(sourcePage.getPageType());
 
-        page.setOwner(null);
         page.setPageLayout(null);
         page.setParentPage(null);
-        page.setUserRepository(null);
 
         List<PageUser> convertedMembers = Lists.newArrayList();
         for (PageUser user : sourcePage.getMembers()) {
@@ -71,14 +64,11 @@ public class MongoDbPageConverter implements HydratingModelConverter<Page, Mongo
         }
         page.setMembers(convertedMembers);
 
-        //No need to convert regions to anything special at this time
+        List<Region> convertedRegions = Lists.newArrayList();
         for (Region region : page.getRegions()) {
-            if (region.getId() == null) {
-                region.setId(generateId());
-            }
-            region.setPage(null);
-            convert(region);
+            convertedRegions.add(convert(region));
         }
+        page.setRegions(convertedRegions);
         if (sourcePage.getSubPages() != null) {
             List<Page> convertedPages = Lists.newArrayList();
             for (Page subPage : sourcePage.getSubPages()) {
@@ -89,16 +79,14 @@ public class MongoDbPageConverter implements HydratingModelConverter<Page, Mongo
         return page;
     }
 
-    public MongoDbPageUser convert(PageUser sourceUser) {
-        MongoDbPageUser user = sourceUser instanceof MongoDbPageUser ? (MongoDbPageUser) sourceUser : new MongoDbPageUser();
+    public PageUserImpl convert(PageUser sourceUser) {
+        PageUserImpl user = sourceUser instanceof PageUserImpl ? (PageUserImpl) sourceUser : new PageUserImpl();
         user.setId(sourceUser.getId() == null ? generateId() : sourceUser.getId());
-        user.setUserId(sourceUser.getUser().getId());
+        user.setUserId(sourceUser.getUserId());
         user.setEditor(sourceUser.isEditor());
         user.setPageStatus(sourceUser.getPageStatus());
         user.setRenderSequence(sourceUser.getRenderSequence());
         user.setPage(null);
-        user.setUser(null);
-        user.setUserRepository(null);
         return user;
     }
 
@@ -108,13 +96,9 @@ public class MongoDbPageConverter implements HydratingModelConverter<Page, Mongo
             return;
         }
         page.setPageLayout(pageLayoutRepository.getByPageLayoutCode(page.getPageLayoutCode()));
-        page.setUserRepository(userRepository);
 
         for (PageUser user : page.getMembers()) {
             user.setPage(page);
-            if (user instanceof MongoDbPageUser) {
-                hydrate((MongoDbPageUser) user);
-            }
         }
         for (Region region : page.getRegions()) {
             region.setPage(page);
@@ -130,22 +114,14 @@ public class MongoDbPageConverter implements HydratingModelConverter<Page, Mongo
         }
     }
 
-
-    public void hydrate(MongoDbPageUser user) {
-        user.setUserRepository(userRepository);
-    }
-
-    public void hydrate(MongoDbRegionWidget widget, Region region) {
+    public void hydrate(RegionWidgetImpl widget, Region region) {
         widget.setRegion(region);
-        widget.setWidgetRepository(widgetRepository);
     }
 
-    public MongoDbRegionWidget convert(RegionWidget sourceRegionWidget) {
-        MongoDbRegionWidget regionWidget = sourceRegionWidget instanceof MongoDbRegionWidget ? (MongoDbRegionWidget) sourceRegionWidget : new MongoDbRegionWidget();
+    public RegionWidgetImpl convert(RegionWidget sourceRegionWidget) {
+        RegionWidgetImpl regionWidget = sourceRegionWidget instanceof RegionWidgetImpl ? (RegionWidgetImpl) sourceRegionWidget : new RegionWidgetImpl();
         regionWidget.setId(sourceRegionWidget.getId() == null ? generateId() : sourceRegionWidget.getId());
-        regionWidget.setWidgetId(sourceRegionWidget.getWidget().getId());
-        regionWidget.setWidget(null);
-        regionWidget.setWidgetRepository(null);
+        regionWidget.setWidgetId(sourceRegionWidget.getWidgetId());
         regionWidget.setRegion(null);
         regionWidget.setPreferences(sourceRegionWidget.getPreferences());
         updatePreferences(regionWidget);
@@ -153,7 +129,7 @@ public class MongoDbPageConverter implements HydratingModelConverter<Page, Mongo
         return regionWidget;
     }
 
-    private void updatePreferences(MongoDbRegionWidget regionWidget) {
+    private void updatePreferences(RegionWidgetImpl regionWidget) {
         List<RegionWidgetPreference> converted = Lists.newArrayList();
         if(regionWidget.getPreferences() != null) {
             for(RegionWidgetPreference preference : regionWidget.getPreferences()) {
@@ -172,18 +148,22 @@ public class MongoDbPageConverter implements HydratingModelConverter<Page, Mongo
 
     private void hydrate(Region region) {
         for (RegionWidget regionWidget : region.getRegionWidgets()) {
-            hydrate((MongoDbRegionWidget) regionWidget, region);
+            hydrate((RegionWidgetImpl) regionWidget, region);
         }
     }
 
-    private void convert(Region region) {
-        List<RegionWidget> convertedWidgets = Lists.newArrayList();
+    private Region convert(Region region) {
+        String regionId = region.getId() == null ? generateId() : region.getId();
+        Region converted = new RegionImpl(regionId, null, region.getRenderOrder());
+        converted.setLocked(region.isLocked());
         if (region.getRegionWidgets() != null) {
+            List<RegionWidget> convertedWidgets = Lists.newArrayList();
             for (RegionWidget widget : region.getRegionWidgets()) {
                 convertedWidgets.add(convert(widget));
             }
+            converted.setRegionWidgets(convertedWidgets);
         }
-        region.setRegionWidgets(convertedWidgets);
+        return converted;
     }
 
     private void updateProperties(RegionWidget source, RegionWidget converted) {
@@ -192,14 +172,6 @@ public class MongoDbPageConverter implements HydratingModelConverter<Page, Mongo
         converted.setHideChrome(source.isHideChrome());
         converted.setRenderPosition(source.getRenderPosition());
         converted.setRenderOrder(source.getRenderOrder());
-    }
-
-    public void setWidgetRepository(WidgetRepository widgetRepository) {
-        this.widgetRepository = widgetRepository;
-    }
-
-    public void setUserRepository(UserRepository userRepository) {
-        this.userRepository = userRepository;
     }
 
     public void setPageLayoutRepository(PageLayoutRepository pageLayoutRepository) {

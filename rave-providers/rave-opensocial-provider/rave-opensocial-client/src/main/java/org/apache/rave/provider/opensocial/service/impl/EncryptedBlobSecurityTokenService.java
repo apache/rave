@@ -22,6 +22,7 @@ package org.apache.rave.provider.opensocial.service.impl;
 import org.apache.commons.io.FileUtils;
 import org.apache.rave.portal.model.RegionWidget;
 import org.apache.rave.portal.model.User;
+import org.apache.rave.portal.model.Widget;
 import org.apache.rave.portal.model.impl.*;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.provider.opensocial.exception.SecurityTokenException;
@@ -85,16 +86,16 @@ public class EncryptedBlobSecurityTokenService implements SecurityTokenService {
     }
 
     @Override
-    public SecurityToken getSecurityToken(RegionWidget regionWidget) throws SecurityTokenException {
-        return this.getBlobCrypterSecurityToken(regionWidget);
+    public SecurityToken getSecurityToken(RegionWidget regionWidget, Widget widget) throws SecurityTokenException {
+        return this.getBlobCrypterSecurityToken(regionWidget, widget);
     }
 
     @Override
-    public String getEncryptedSecurityToken(RegionWidget regionWidget) throws SecurityTokenException {
+    public String getEncryptedSecurityToken(RegionWidget regionWidget, Widget widget) throws SecurityTokenException {
         String encryptedToken = null;
 
         try {
-            BlobCrypterSecurityToken securityToken = this.getBlobCrypterSecurityToken(regionWidget);
+            BlobCrypterSecurityToken securityToken = this.getBlobCrypterSecurityToken(regionWidget, widget);
             encryptedToken = this.encryptSecurityToken(securityToken);
         } catch (Exception e) {
             throw new SecurityTokenException("Error creating security token from regionWidget", e);
@@ -139,23 +140,23 @@ public class EncryptedBlobSecurityTokenService implements SecurityTokenService {
         }
 
         //Create a new RegionWidget instance from it so we can use it to generate a new encrypted token
-        RegionWidget regionWidget = new RegionWidgetImpl(securityToken.getModuleId(),
-                new WidgetImpl(-1L, securityToken.getAppUrl()),
-                new RegionImpl(-1L, new PageImpl(-1L, userService.getUserByUsername(securityToken.getOwnerId())), -1));
+        RegionWidget regionWidget = new RegionWidgetImpl(Long.toString(securityToken.getModuleId()),
+                "-1",
+                new RegionImpl("-1", new PageImpl("-1", userService.getUserByUsername(securityToken.getOwnerId()).getId()), -1));
 
         //Create and return the newly encrypted token
-        return getEncryptedSecurityToken(regionWidget);
+        return getEncryptedSecurityToken(regionWidget, new WidgetImpl("-1", securityToken.getAppUrl()));
     }
 
-    private BlobCrypterSecurityToken getBlobCrypterSecurityToken(RegionWidget regionWidget)
+    private BlobCrypterSecurityToken getBlobCrypterSecurityToken(RegionWidget regionWidget, Widget widget)
             throws SecurityTokenException {
         User user = userService.getAuthenticatedUser();
 
         Map<String, String> values = new HashMap<String, String>();
-        values.put(AbstractSecurityToken.Keys.APP_URL.getKey(), regionWidget.getWidget().getUrl());
+        values.put(AbstractSecurityToken.Keys.APP_URL.getKey(), widget != null ? widget.getUrl() : "");
         values.put(AbstractSecurityToken.Keys.MODULE_ID.getKey(), String.valueOf(regionWidget.getId()));
         values.put(AbstractSecurityToken.Keys.OWNER.getKey(),
-                String.valueOf(regionWidget.getRegion().getPage().getOwner().getUsername()));
+                String.valueOf(userService.getUserById(regionWidget.getRegion().getPage().getOwnerId()).getUsername()));
         values.put(AbstractSecurityToken.Keys.VIEWER.getKey(), String.valueOf(user.getUsername()));
         values.put(AbstractSecurityToken.Keys.TRUSTED_JSON.getKey(), "");
 

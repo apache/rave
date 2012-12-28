@@ -31,34 +31,8 @@ import org.apache.rave.portal.repository.MongoWidgetOperations;
 import org.apache.rave.portal.repository.StatisticsAggregator;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static org.easymock.EasyMock.*;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static org.springframework.data.mongodb.core.query.Criteria.where;
-import static org.springframework.data.mongodb.core.query.Query.query;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static org.easymock.EasyMock.*;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static org.springframework.data.mongodb.core.query.Criteria.where;
-import static org.springframework.data.mongodb.core.query.Query.query;
-
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -296,10 +270,10 @@ public class MongoDbWidgetRepositoryTest {
     public void getByOwmer(){
         int offset = 2;
         int pageSize = 10;
-        User owner = new UserImpl(1234L);
+        User owner = new UserImpl("1234L");
         List<Widget> widgets = Lists.newArrayList();
         Widget w = new WidgetImpl();
-        w.setOwner(owner);
+        w.setOwnerId(owner.getId());
         widgets.add(w);
 
         expect(template.find(isA(Query.class))).andReturn(widgets);
@@ -314,10 +288,11 @@ public class MongoDbWidgetRepositoryTest {
         long count = 0;
         int offset = 2;
         int pageSize = 10;
-        User owner = new UserImpl(1234L);
+        String id = "1234L";
+        User owner = new UserImpl(id);
         List<Widget> widgets = Lists.newArrayList();
         Widget w = new WidgetImpl();
-        w.setOwner(owner);
+        w.setOwnerId(id);
         widgets.add(w);
 
         expect(template.count(isA(Query.class))).andReturn(count);
@@ -344,8 +319,8 @@ public class MongoDbWidgetRepositoryTest {
 
     @Test
     public void getWidgetStatistics(){
-        long widget_id = 1111L;
-        long user_id = 2222L;
+        String widget_id = "1111L";
+        String user_id = "2222L";
 
         WidgetStatistics ws = new WidgetStatistics();
 
@@ -359,8 +334,8 @@ public class MongoDbWidgetRepositoryTest {
 
     @Test
     public void getAllWidgetStatistics(){
-        long user_id = 2222L;
-        Map<Long, WidgetStatistics> ws = Maps.newHashMap();
+        String user_id = "2222L";
+        Map<String, WidgetStatistics> ws = Maps.newHashMap();
 
         expect(statsAggregator.getAllWidgetStatistics(user_id)).andReturn(ws);
         replay(statsAggregator);
@@ -372,15 +347,15 @@ public class MongoDbWidgetRepositoryTest {
 
     @Test
     public void getUserWidgetRatings(){
-        long userId = 1234L;
-        Map<Long, WidgetRating> wr = Maps.newHashMap();
+        String userId = "1234L";
+        Map<String, WidgetRating> wr = Maps.newHashMap();
         List<Widget> widgets = Lists.newArrayList();
         List<WidgetRating> widget_ratings = Lists.newArrayList();
-        Widget widget = new WidgetImpl(1111L);
+        Widget widget = new WidgetImpl("1111L");
         WidgetRating rating1 = new WidgetRatingImpl();
         WidgetRating rating2 = new WidgetRatingImpl();
         rating1.setUserId(userId);
-        rating2.setUserId(5555L);
+        rating2.setUserId("5555L");
         widget_ratings.add(rating1);
         widget_ratings.add(rating2);
         widget.setRatings(widget_ratings);
@@ -402,7 +377,6 @@ public class MongoDbWidgetRepositoryTest {
         List<Widget> widgets = Lists.newArrayList();
         Widget widget = new WidgetImpl();
         Tag tag = new TagImpl();
-        tag.setKeyword(tagKeyword);
         expect(template.find(isA(Query.class))).andReturn(widgets);
         replay(template);
     }

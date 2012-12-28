@@ -20,6 +20,7 @@ package org.apache.rave.portal.security.impl;
 
 import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.repository.RegionWidgetRepository;
+import org.apache.rave.portal.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,10 +35,12 @@ import java.util.List;
 public class DefaultRegionWidgetPermissionEvaluator extends AbstractModelPermissionEvaluator<RegionWidget> {
     private Logger log = LoggerFactory.getLogger(getClass());
     private RegionWidgetRepository regionWidgetRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    public DefaultRegionWidgetPermissionEvaluator(RegionWidgetRepository regionWidgetRepository) {
+    public DefaultRegionWidgetPermissionEvaluator(RegionWidgetRepository regionWidgetRepository, UserRepository userRepository) {
         this.regionWidgetRepository = regionWidgetRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -82,7 +85,7 @@ public class DefaultRegionWidgetPermissionEvaluator extends AbstractModelPermiss
         if (targetId instanceof RaveSecurityContext) {
             hasPermission = verifyRaveSecurityContext(authentication, (RaveSecurityContext) targetId);
         } else {
-            hasPermission = hasPermission(authentication, regionWidgetRepository.get((Long) targetId), permission, true);
+            hasPermission = hasPermission(authentication, regionWidgetRepository.get((String) targetId), permission, true);
         }
         return hasPermission;
     }
@@ -126,7 +129,7 @@ public class DefaultRegionWidgetPermissionEvaluator extends AbstractModelPermiss
 
     // returns a trusted RegionWidget object, either from the RegionWidgetRepository, or the
     // cached container list
-    private RegionWidget getTrustedRegionWidget(long regionWidgetId, List<RegionWidget> trustedRegionWidgetContainer) {
+    private RegionWidget getTrustedRegionWidget(String regionWidgetId, List<RegionWidget> trustedRegionWidgetContainer) {
         RegionWidget regionWidget = null;
         if (trustedRegionWidgetContainer.isEmpty()) {
             regionWidget = regionWidgetRepository.get(regionWidgetId);
@@ -147,14 +150,14 @@ public class DefaultRegionWidgetPermissionEvaluator extends AbstractModelPermiss
         } else {
             trustedRegionWidget = getTrustedRegionWidget(regionWidget.getId(), trustedRegionWidgetContainer);
         }
-        return isRegionWidgetOwnerByUsername(authentication, getUsernameFromRegionWidget(trustedRegionWidget));
+        return isRegionWidgetOwnerByUsername(authentication, getUserIdFromRegionWidget(trustedRegionWidget));
     }
 
-    private boolean isRegionWidgetOwnerByUsername(Authentication authentication, String username) {
-        return ((User)authentication.getPrincipal()).getUsername().equals(username);
+    private boolean isRegionWidgetOwnerByUsername(Authentication authentication, String userId) {
+        return ((User)authentication.getPrincipal()).getId().equals(userId);
     }
 
-    private boolean isRegionWidgetOwnerById(Authentication authentication, Long userId) {
+    private boolean isRegionWidgetOwnerById(Authentication authentication, String userId) {
         return ((User)authentication.getPrincipal()).getId().equals(userId);
     }
 
@@ -168,14 +171,14 @@ public class DefaultRegionWidgetPermissionEvaluator extends AbstractModelPermiss
 
         // perform the permissions check based on the class supplied to the RaveSecurityContext object
         if (User.class == clazz) {
-            return isRegionWidgetOwnerById(authentication, (Long) raveSecurityContext.getId());
+            return isRegionWidgetOwnerById(authentication, (String) raveSecurityContext.getId());
         } else {
             throw new IllegalArgumentException("unknown RaveSecurityContext type: " + raveSecurityContext.getType());
         }
     }
 
-    private String getUsernameFromRegionWidget(RegionWidget regionWidget) {
-        return regionWidget.getRegion().getPage().getOwner().getUsername();
+    private String getUserIdFromRegionWidget(RegionWidget regionWidget) {
+        return regionWidget.getRegion().getPage().getOwnerId();
     }
 
     private boolean isRegionWidgetMember(Authentication authentication,
@@ -198,7 +201,7 @@ public class DefaultRegionWidgetPermissionEvaluator extends AbstractModelPermiss
         //
         String viewer = ((User)authentication.getPrincipal()).getUsername();
         for (PageUser pageUser:containerPage.getMembers()){
-            if (pageUser.getUser().getUsername().equals(viewer)){
+            if (userRepository.get(pageUser.getUserId()).getUsername().equals(viewer)){
                 log.info("User "+viewer+" is a member of page "+containerPage.getId());
                 if(checkEditorStatus){
                     return pageUser.isEditor();

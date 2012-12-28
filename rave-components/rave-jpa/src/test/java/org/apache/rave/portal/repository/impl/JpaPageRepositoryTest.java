@@ -23,6 +23,7 @@ import org.apache.rave.portal.model.impl.PageImpl;
 import org.apache.rave.portal.repository.PageRepository;
 import org.apache.rave.portal.repository.PageTemplateRepository;
 import org.apache.rave.portal.repository.UserRepository;
+import org.apache.rave.portal.repository.WidgetRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -45,13 +46,13 @@ import static org.junit.Assert.*;
 @ContextConfiguration(locations = {"classpath:test-dataContext.xml", "classpath:test-applicationContext.xml"})
 public class JpaPageRepositoryTest {
 
-    private static final Long USER_ID = 1L;
-    private static final Long CREATED_USER_ID = 6L;
-    private static final Long INVALID_USER = -1L;
+    private static final String USER_ID = "1";
+    private static final String CREATED_USER_ID = "6";
+    private static final String INVALID_USER = "-1";
     private static final String WIDGET_URL = "http://www.widget-dico.com/wikipedia/google/wikipedia.xml";
-    private static final Long USER_PAGE_ID = 1L;
-    private static final Long PERSON_PROFILE_PAGE_ID = 3L;
-    private static final Long SUB_PAGE_ID = 4L;
+    private static final String USER_PAGE_ID = "1";
+    private static final String PERSON_PROFILE_PAGE_ID = "3";
+    private static final String SUB_PAGE_ID = "4";
 
     private static final Long VALID_PARENT_PAGE_ID = 3L;
     private static final Long INVALID_PARENT_PAGE_ID = -1L;
@@ -67,6 +68,9 @@ public class JpaPageRepositoryTest {
 
     @Autowired
     private PageTemplateRepository pageTemplateRepository;
+
+    @Autowired
+    private WidgetRepository widgetRepository;
 
     private JpaUser user;
     private PageTemplate defaultPageTemplate;
@@ -84,7 +88,9 @@ public class JpaPageRepositoryTest {
         assertThat(pages.size(), equalTo(2));
         assertThat(pages.get(0).getRegions().size(), equalTo(2));
         assertThat(pages.get(0).getRegions().get(0).getRegionWidgets().size(), equalTo(2));
-        assertThat(pages.get(0).getRegions().get(0).getRegionWidgets().get(0).getWidget().getUrl(), equalTo(WIDGET_URL));
+        Widget widget = widgetRepository.get(pages.get(0).getRegions().get(0).getRegionWidgets().get(0).getWidgetId());
+        assertThat(widget, is(notNullValue()));
+        assertThat(widget.getUrl(), equalTo(WIDGET_URL));
 
         List<PageUser> pageUserPages = repository.getPagesForUser(USER_ID, PageType.USER);
         // test that the query returns the pages in proper render sequence order
@@ -119,7 +125,7 @@ public class JpaPageRepositoryTest {
         assertThat(pages, is(notNullValue()));
         assertThat(pages.size(), is(2));
         assertThat(pages.get(0).getRegions().size(), is(1));
-        assertThat(pages.get(0).getParentPage().getId(), is(3L));
+        assertThat(pages.get(0).getParentPage().getId(), is("3"));
 
         List<PageUser> pageUserPages = repository.getPagesForUser(USER_ID, PageType.SUB_PAGE);
         // test that the query returns the pages in proper render sequence order
@@ -171,7 +177,7 @@ public class JpaPageRepositoryTest {
         Long lastRenderSequence = -1L;
         PageUser pageUser;
         for (Page subPage : p.getSubPages()) {
-            pageUser = repository.getSingleRecord(p.getOwner().getId(), subPage.getId());
+            pageUser = repository.getSingleRecord(p.getOwnerId(), subPage.getId());
             Long currentRenderSequence =  pageUser.getRenderSequence();
             assertThat(currentRenderSequence > lastRenderSequence, is(true));
             lastRenderSequence = currentRenderSequence;
@@ -191,7 +197,7 @@ public class JpaPageRepositoryTest {
 
     @Test
     public void getById_invalid() {
-        Page p = repository.get(-1L);
+        Page p = repository.get("-1");
         assertThat(p, is(nullValue()));
     }
 
@@ -214,7 +220,7 @@ public class JpaPageRepositoryTest {
         Page p = repository.get(PERSON_PROFILE_PAGE_ID);
         assertThat(p, is(notNullValue()));
         // grab all the sub page ids
-        List<Long> subPageIds = new ArrayList<Long>();
+        List<String> subPageIds = new ArrayList<String>();
         assertThat(p.getSubPages().isEmpty(), is(false));
         for (Page subPage : p.getSubPages()) {
             subPageIds.add(subPage.getId());
@@ -224,7 +230,7 @@ public class JpaPageRepositoryTest {
         p = repository.get(PERSON_PROFILE_PAGE_ID);
         // verify page is deleted along with all sub pages
         assertThat(p, is(nullValue()));
-        for (Long i : subPageIds){
+        for (String i : subPageIds){
             assertThat(repository.get(i), is(nullValue()));
         }
     }
@@ -247,7 +253,7 @@ public class JpaPageRepositoryTest {
     @Rollback(true)
     public void createPageForUser_validUser(){
         Page page = repository.createPageForUser(user, defaultPageTemplate);
-        assertSame(user, page.getOwner());
+        assertEquals(user.getId(), page.getOwnerId());
         assertEquals(page.getName(), defaultPageTemplate.getName());
         assertNull(page.getParentPage());
         assertEquals(2, page.getSubPages().size());
@@ -273,8 +279,8 @@ public class JpaPageRepositoryTest {
         assertEquals(defaultPageTemplate.getSubPageTemplates().get(0).getName(), subPage1.getName());
         assertEquals(PageType.SUB_PAGE, subPage2.getPageType());
         assertEquals(defaultPageTemplate.getSubPageTemplates().get(1).getName(), subPage2.getName());
-        assertSame(user, subPage1.getOwner());
-        assertSame(user, subPage2.getOwner());
+        assertEquals(user.getId(), subPage1.getOwnerId());
+        assertEquals(user.getId(), subPage2.getOwnerId());
     }
 
     @Test

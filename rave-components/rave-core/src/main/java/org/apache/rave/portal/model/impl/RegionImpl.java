@@ -26,7 +26,7 @@ import org.codehaus.jackson.annotate.JsonBackReference;
 import java.util.List;
 
 public class RegionImpl implements Region {
-    private Long id;
+    private String id;
     private Page page;
     private Boolean locked = false;
     private Integer renderOrder = 0;
@@ -36,23 +36,22 @@ public class RegionImpl implements Region {
 
     }
 
-    public RegionImpl(Long id, Page page, int renderOrder) {
+    public RegionImpl(String id, Page page, int renderOrder) {
         this.id = id;
         this.page = page;
         this.renderOrder = renderOrder;
     }
 
-    public RegionImpl(Long id) {
+    public RegionImpl(String id) {
         this.id = id;
     }
 
     @Override
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    @Override
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

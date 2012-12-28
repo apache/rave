@@ -18,4 +18,4 @@
   ~ under the License.
   --%>
 
-<rave:simple_regions page="${page}" />
+<rave:simple_regions page="${page}"  />

@@ -21,7 +21,6 @@ package org.apache.rave.portal.model;
 
 import org.apache.rave.portal.model.impl.CategoryImpl;
 import org.apache.rave.portal.repository.MongoWidgetOperations;
-import org.apache.rave.portal.repository.UserRepository;
 import org.codehaus.jackson.annotate.JsonAutoDetect;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonMethod;
@@ -39,21 +38,7 @@ import static org.springframework.data.mongodb.core.query.Query.query;
 public class MongoDbCategory extends CategoryImpl {
 
     @XmlTransient @JsonIgnore
-    private UserRepository userRepository;
-
-    @XmlTransient @JsonIgnore
     private MongoWidgetOperations widgetTemplate;
-
-    private Long lastModifiedUserId;
-    private Long createdUserId;
-
-    public UserRepository getUserRepository() {
-        return userRepository;
-    }
-
-    public void setUserRepository(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
 
     public MongoWidgetOperations getWidgetRepository() {
         return widgetTemplate;
@@ -61,42 +46,6 @@ public class MongoDbCategory extends CategoryImpl {
 
     public void setWidgetRepository(MongoWidgetOperations widgetRepository) {
         this.widgetTemplate = widgetRepository;
-    }
-
-    public Long getLastModifiedUserId() {
-        return lastModifiedUserId;
-    }
-
-    public void setLastModifiedUserId(Long lastModifiedUserId) {
-        this.lastModifiedUserId = lastModifiedUserId;
-    }
-
-    public Long getCreatedUserId() {
-        return createdUserId;
-    }
-
-    public void setCreatedUserId(Long createdUserId) {
-        this.createdUserId = createdUserId;
-    }
-
-    @Override
-    public User getCreatedUser() {
-        User creator = super.getCreatedUser();
-        if(creator == null && createdUserId != null && userRepository != null) {
-            creator = userRepository.get(createdUserId);
-            super.setCreatedUser(creator);
-        }
-        return creator;
-    }
-
-    @Override
-    public User getLastModifiedUser() {
-        User lastModifier = super.getLastModifiedUser();
-        if(lastModifier == null && lastModifiedUserId != null && userRepository != null) {
-            lastModifier = userRepository.get(lastModifiedUserId);
-            super.setLastModifiedUser(lastModifier);
-        }
-        return lastModifier;
     }
 
     @Override

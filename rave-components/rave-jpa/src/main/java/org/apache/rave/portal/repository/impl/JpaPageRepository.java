@@ -50,7 +50,7 @@ public class JpaPageRepository implements PageRepository {
     }
 
     @Override
-    public Page get(long id) {
+    public Page get(String id) {
         return manager.find(JpaPage.class, id);
     }
 
@@ -74,7 +74,7 @@ public class JpaPageRepository implements PageRepository {
     }
 
     @Override
-    public List<Page> getAllPages(Long userId, PageType pageType) {
+    public List<Page> getAllPages(String userId, PageType pageType) {
         TypedQuery<JpaPage> query = manager.createNamedQuery(JpaPageUser.GET_BY_USER_ID_AND_PAGE_TYPE, JpaPage.class);
         query.setParameter("userId", userId);
         query.setParameter("pageType", pageType);
@@ -82,17 +82,33 @@ public class JpaPageRepository implements PageRepository {
     }
 
     @Override
-    public int deletePages(Long userId, PageType pageType) {
+    public int deletePages(String userId, PageType pageType) {
         List<Page> pages = getAllPages(userId, pageType);
         int pageCount = pages.size();
         for(Page page : pages) {
-            delete(page);
+            if(page.getOwnerId().equals(userId)){
+                delete(page);
+            }else{
+                // remove any pageUser entries for this user on 
+                // this page as it is a shared page
+                PageUser pageUserToRemove = null;
+                for(PageUser pageUser : page.getMembers()){
+                    if(pageUser.getUserId().equals(userId)){
+                        pageUserToRemove = pageUser;
+                        break;
+                    }
+                }
+                if(pageUserToRemove != null){
+                    page.getMembers().remove(pageUserToRemove);
+                    save(page);
+                }
+            }
         }
         return pageCount;
     }
 
     @Override
-    public boolean hasPersonPage(long userId){
+    public boolean hasPersonPage(String userId){
         TypedQuery<Long> query = manager.createNamedQuery(JpaPage.USER_HAS_PERSON_PAGE, Long.class);
         query.setParameter("userId", userId);
         query.setParameter("pageType", PageType.PERSON_PROFILE);
@@ -100,7 +116,7 @@ public class JpaPageRepository implements PageRepository {
     }
 
     @Override
-    public List<PageUser> getPagesForUser(Long userId, PageType pageType) {
+    public List<PageUser> getPagesForUser(String userId, PageType pageType) {
         TypedQuery<JpaPageUser> query = manager.createNamedQuery(JpaPageUser.GET_PAGES_FOR_USER, JpaPageUser.class);
         query.setParameter("userId", userId);
         query.setParameter("pageType", pageType);
@@ -108,10 +124,10 @@ public class JpaPageRepository implements PageRepository {
     }
 
     @Override
-    public PageUser getSingleRecord(Long userId, Long pageId){
+    public PageUser getSingleRecord(String userId, String pageId){
         TypedQuery<JpaPageUser> query = manager.createNamedQuery(JpaPageUser.GET_SINGLE_RECORD, JpaPageUser.class);
         query.setParameter("userId", userId);
-        query.setParameter("pageId", pageId);
+        query.setParameter("pageId", pageId == null ? null : Long.parseLong(pageId));
         return query.getSingleResult();
     }
 
@@ -123,7 +139,7 @@ public class JpaPageRepository implements PageRepository {
     private void removePageUsers(JpaPage item) {
         for(PageUser user : item.getMembers()) {
             user.setPage(null);
-            user.setUser(null);
+            user.setUserId(null);
             manager.flush();
             manager.remove(user);
         }
@@ -141,7 +157,7 @@ public class JpaPageRepository implements PageRepository {
         Page p = new JpaPage();
         p.setName(pt.getName());
         p.setPageType(pt.getPageType());
-        p.setOwner(jpaUser);
+        p.setOwnerId(jpaUser.getId());
         PageUser pageUser = new JpaPageUser(jpaUser, p, pt.getRenderSequence());
         pageUser.setPageStatus(PageInvitationStatus.OWNER);
         pageUser.setEditor(true);
@@ -195,7 +211,7 @@ public class JpaPageRepository implements PageRepository {
             regionWidget.setLocked(ptw.isLocked());
             regionWidget.setHideChrome(ptw.isHideChrome());
             regionWidget.setRenderOrder((int) ptw.getRenderSeq());
-            regionWidget.setWidget(ptw.getWidget());
+            regionWidget.setWidgetId(ptw.getWidgetId());
             widgets.add(regionWidget);
         }
         return widgets;
@@ -215,13 +231,13 @@ public class JpaPageRepository implements PageRepository {
             Page lPage = new JpaPage();
             lPage.setName(pt.getName());
             lPage.setPageType(pt.getPageType());
-            lPage.setOwner(page.getOwner());
+            lPage.setOwnerId(page.getOwnerId());
             lPage.setPageLayout(pt.getPageLayout());
             lPage.setParentPage(page);
             lPage.setRegions(convertRegions(pt.getPageTemplateRegions(), lPage));
 
             // create new pageUser tuple
-            PageUser pageUser = new JpaPageUser((JpaUser)JpaConverter.getInstance().convert(lPage.getOwner(), User.class), lPage, pt.getRenderSequence());
+            PageUser pageUser = new JpaPageUser(lPage.getOwnerId(), lPage, pt.getRenderSequence());
             pageUser.setPageStatus(PageInvitationStatus.OWNER);
             pageUser.setEditor(true);
             List<PageUser> members = new ArrayList<PageUser>();

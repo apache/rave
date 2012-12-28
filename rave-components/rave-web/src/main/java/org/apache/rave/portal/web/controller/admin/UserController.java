@@ -119,7 +119,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/admin/userdetail/{userid}", method = RequestMethod.GET)
-    public String viewUserDetail(@PathVariable("userid") Long userid, Model model) {
+    public String viewUserDetail(@PathVariable("userid") String userid, Model model) {
         addNavigationMenusToModel(SELECTED_ITEM, model);
         model.addAttribute(ModelKeys.USER, userService.getUserById(userid));
         model.addAttribute(ModelKeys.TOKENCHECK, AdminControllerUtil.generateSessionToken());

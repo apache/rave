@@ -20,14 +20,10 @@
 package org.apache.rave.portal.model;
 
 import org.apache.rave.portal.model.impl.CategoryImpl;
-import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.repository.CategoryRepository;
-import org.apache.rave.portal.repository.UserRepository;
 import org.junit.Before;
 import org.junit.Test;
-import sun.security.acl.OwnerImpl;
 
-import java.security.acl.Owner;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -44,47 +40,24 @@ import static org.junit.Assert.*;
  */
 public class MongoDbWidgetTest {
 
+    public static final String ID_1 = "123";
+    public static final String ID_2 = "321";
     private MongoDbWidget widget;
     private CategoryRepository categoryRepository;
-    private UserRepository userRepository;
 
     @Before
     public void setup(){
         widget = new MongoDbWidget();
         categoryRepository = createMock(CategoryRepository.class);
-        userRepository = createMock(UserRepository.class);
         widget.setCategoryRepository(categoryRepository);
-        widget.setUserRepository(userRepository);
-    }
-
-    @Test
-    public void getOwner_Null(){
-        widget.setOwnerId((long)123);
-        User user = new UserImpl();
-        expect(userRepository.get((long)123)).andReturn(user);
-        replay(userRepository);
-        assertThat(widget.getOwner(), is(sameInstance(user)));
-    }
-
-    @Test
-    public void getOwner_Set(){
-        User owner = new UserImpl();
-        widget.setOwner(owner);
-        assertThat(widget.getOwner(), is(sameInstance(owner)));
-
-    }
-
-    @Test
-    public void getOwner_Both_Null(){
-        assertNull(widget.getOwner());
     }
 
     @Test
     public void getCategories_Valid(){
-        List<Long> categoryIds = Arrays.asList((long)123, (long)321);
-        expect(categoryRepository.get((long)123)).andReturn(null);
+        List<String> categoryIds = Arrays.asList(ID_1, ID_2);
+        expect(categoryRepository.get(ID_1)).andReturn(null);
         Category category = new CategoryImpl();
-        expect(categoryRepository.get((long)321)).andReturn(category);
+        expect(categoryRepository.get(ID_2)).andReturn(category);
         replay(categoryRepository);
         widget.setCategoryIds(categoryIds);
         List<Category> result = widget.getCategories();
@@ -121,7 +94,7 @@ public class MongoDbWidgetTest {
 
     @Test
     public void equals_Null_Id(){
-        widget.setId((long)123);
+        widget.setId(ID_1);
         Widget r = new MongoDbWidget();
         assertFalse(widget.equals(r));
         assertFalse(r.equals(widget));
@@ -130,9 +103,9 @@ public class MongoDbWidgetTest {
 
     @Test
     public void equals_Valid(){
-        widget.setId((long)123);
+        widget.setId(ID_1);
         Widget r = new MongoDbWidget();
-        ((MongoDbWidget)r).setId((long) 123);
+        ((MongoDbWidget)r).setId(ID_1);
         assertTrue(widget.equals(r));
     }
 
@@ -151,7 +124,7 @@ public class MongoDbWidgetTest {
 
     @Test
     public void hashCode_Null(){
-        widget.setId((long)123);
+        widget.setId(ID_1);
         assertNotNull(widget.hashCode());
     }
 

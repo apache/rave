@@ -22,14 +22,13 @@ import javax.xml.bind.annotation.XmlTransient;
 
 @XmlTransient
 public interface PageUser {
-    Long getId();
-    void setId(Long id);
+    String getId();
 
     boolean isEditor();
     void setEditor(boolean editor);
 
-    User getUser();
-    void setUser(User user);
+    String getUserId();
+    void setUserId(String user);
 
     Page getPage();
     void setPage(Page page);

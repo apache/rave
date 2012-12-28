@@ -27,6 +27,6 @@ import java.util.Map;
  * Manages statistics for various attributes of the Rave
  */
 public interface StatisticsAggregator {
-    Map<Long,WidgetStatistics> getAllWidgetStatistics(long userId);
-    WidgetStatistics getWidgetStatistics(long widget_id, long user_id);
+    Map<String, WidgetStatistics> getAllWidgetStatistics(String  userId);
+    WidgetStatistics getWidgetStatistics(String widget_id, String user_id);
 }

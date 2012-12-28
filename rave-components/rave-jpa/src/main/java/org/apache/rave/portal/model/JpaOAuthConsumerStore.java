@@ -132,16 +132,16 @@ public class JpaOAuthConsumerStore implements BasicEntity, OAuthConsumerStore {
     * {@inheritDoc}
     */
     @Override
-    public Long getId() {
-        return getEntityId();
+    public String getId() {
+        return getEntityId().toString();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void setId(Long id) {
-        setEntityId(id);
+    public void setId(String id) {
+        setEntityId(Long.parseLong(id));
     }
 
     /**

@@ -69,7 +69,7 @@ public class JpaPortalPreferenceRepository implements PortalPreferenceRepository
     }
 
     @Override
-    public PortalPreference get(long id) {
+    public PortalPreference get(String id) {
         return manager.find(JpaPortalPreference.class, id);
     }
 

@@ -50,7 +50,7 @@ public class MongoDbCategoryRepository implements CategoryRepository {
     }
 
     @Override
-    public int removeFromCreatedOrModifiedFields(long userId) {
+    public int removeFromCreatedOrModifiedFields(String userId) {
         List<MongoDbCategory> categories = template.find(query(where("lastModifiedUserId").is(userId).orOperator(where("createdUserId").is(userId))), CLASS, CATEGORY_COLLECTION);
         int count = 0;
         for(MongoDbCategory category : categories) {
@@ -69,7 +69,7 @@ public class MongoDbCategoryRepository implements CategoryRepository {
     }
 
     @Override
-    public Category get(long id) {
+    public Category get(String id) {
         return hydrate(template.findById(id, CLASS, CATEGORY_COLLECTION));
     }
 
@@ -97,7 +97,7 @@ public class MongoDbCategoryRepository implements CategoryRepository {
         return all;
     }
 
-    private boolean updateCategory(long userId, MongoDbCategory category) {
+    private boolean updateCategory(String userId, MongoDbCategory category) {
         boolean updated = false;
         if(category.getCreatedUserId().equals(userId)) {
             category.setCreatedUserId(null);

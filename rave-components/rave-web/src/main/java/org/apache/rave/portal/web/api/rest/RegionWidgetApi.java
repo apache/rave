@@ -50,7 +50,7 @@ public class RegionWidgetApi extends AbstractRestApi {
 
     @ResponseBody
     @RequestMapping(value = "/{regionWidgetId}/preferences", method = RequestMethod.PUT)
-    public RegionWidgetPreferenceListWrapper replaceAllRegionWidgetPreferences(@PathVariable long regionWidgetId,
+    public RegionWidgetPreferenceListWrapper replaceAllRegionWidgetPreferences(@PathVariable String regionWidgetId,
                                                                                @RequestBody RegionWidgetPreferenceListWrapper
                                                                                        regionWidgetPreferenceListWrapper) {
         if (logger.isDebugEnabled()) {
@@ -65,7 +65,7 @@ public class RegionWidgetApi extends AbstractRestApi {
 
     @ResponseBody
     @RequestMapping(value = "/{regionWidgetId}/preferences/{regionWidgetPreferenceName}", method = RequestMethod.PUT)
-    public RegionWidgetPreference createOrReplaceRegionWidgetPreference(@PathVariable long regionWidgetId,
+    public RegionWidgetPreference createOrReplaceRegionWidgetPreference(@PathVariable String regionWidgetId,
                                                                         @PathVariable String regionWidgetPreferenceName,
                                                                         @RequestBody RegionWidgetPreference regionWidgetPreference) {
         if (logger.isDebugEnabled()) {
@@ -88,7 +88,7 @@ public class RegionWidgetApi extends AbstractRestApi {
      */
     @ResponseBody
     @RequestMapping(value = "/{regionWidgetId}/collapsed", method = RequestMethod.PUT)
-    public RegionWidget updateRegionWidgetCollapsedStatus(@PathVariable long regionWidgetId,
+    public RegionWidget updateRegionWidgetCollapsedStatus(@PathVariable String regionWidgetId,
                                                           @RequestBody Boolean collapsed) {
         if (logger.isDebugEnabled()) {
             logger.debug("POST received to update regionWidget " +

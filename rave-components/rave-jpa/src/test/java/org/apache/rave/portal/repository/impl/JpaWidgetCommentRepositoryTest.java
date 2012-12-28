@@ -24,7 +24,7 @@ import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.WidgetComment;
 import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.model.impl.WidgetCommentImpl;
-import org.apache.rave.portal.repository.WidgetCommentRepository;
+import org.apache.rave.portal.repository.WidgetRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +43,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
 /**
- * Test for {@link JpaWidgetCommentRepository}
+ * Test for {@link JpaWidgetRepository}
  */
 @Transactional(readOnly=true)
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -57,18 +57,13 @@ public class JpaWidgetCommentRepositoryTest {
     private EntityManager sharedManager;
 
     @Autowired
-    private WidgetCommentRepository repository;
+    private WidgetRepository repository;
 
     @Test
     @Transactional(readOnly=false)
     @Rollback(true)
     public void deleteAll() {
-        assertThat(repository.deleteAll(VALID_USER_ID), is(2));
-    }
-
-    @Test
-    public void getType() {
-        assertEquals(repository.getType(), JpaWidgetComment.class);
+        assertThat(repository.deleteAllWidgetComments(VALID_USER_ID.toString()), is(2));
     }
 
     @Test
@@ -78,21 +73,20 @@ public class JpaWidgetCommentRepositoryTest {
         Date createdDate = new Date();
         Date lastModDate = new Date();
         String text = "my comment";
-        User user = new UserImpl(VALID_USER_ID);
+        User user = new UserImpl(VALID_USER_ID.toString());
 
-        WidgetComment wc = new JpaWidgetComment();
+        JpaWidgetComment wc = new JpaWidgetComment();
         wc.setCreatedDate(createdDate);
-        wc.setWidgetId(VALID_WIDGET_ID);
+        wc.setWidgetId(VALID_WIDGET_ID.toString());
         wc.setLastModifiedDate(lastModDate);
         wc.setText(text);
-        wc.setUser(user);
+        wc.setUserId(VALID_USER_ID.toString());
         assertThat(wc.getId(), is(nullValue()));
-        repository.save(wc);
-        long newId = wc.getId();
-        assertThat(newId > 0, is(true));
-        WidgetComment newComment = repository.get(newId);
-        assertThat(newComment.getWidgetId(), is(VALID_WIDGET_ID));
-        assertThat(newComment.getUser().getId(), is(VALID_USER_ID));
+        repository.createWidgetComment(VALID_WIDGET_ID.toString(), wc);
+        String newId = wc.getId();
+        assertThat(Long.parseLong(newId) > 0, is(true));
+        WidgetComment newComment = repository.getCommentById(VALID_WIDGET_ID.toString(), newId);
+        assertThat(newComment.getUserId(), is(VALID_USER_ID.toString()));
         assertThat(newComment.getText(), is(text));
         assertThat(newComment.getCreatedDate(), is(createdDate));
         assertThat(newComment.getLastModifiedDate(), is(lastModDate));
@@ -104,11 +98,11 @@ public class JpaWidgetCommentRepositoryTest {
     @Rollback(true)
     public void save_existing() {
         final String UPDATED_TEXT = "updated comment";
-        WidgetComment widgetComment = repository.get(VALID_WIDGET_COMMENT_ID);
+        WidgetComment widgetComment = repository.getCommentById(VALID_WIDGET_ID.toString(), VALID_WIDGET_COMMENT_ID.toString());
         assertThat(widgetComment.getText(), is(not(UPDATED_TEXT)));
         widgetComment.setText(UPDATED_TEXT);
-        repository.save(widgetComment);
-        WidgetComment updatedComment = repository.get(VALID_WIDGET_COMMENT_ID);
+        repository.createWidgetComment(VALID_WIDGET_ID.toString(), widgetComment);
+        WidgetComment updatedComment = repository.getCommentById(VALID_WIDGET_ID.toString(), VALID_WIDGET_COMMENT_ID.toString());
         assertThat(updatedComment.getText(), is(UPDATED_TEXT));
     }
 
@@ -116,10 +110,10 @@ public class JpaWidgetCommentRepositoryTest {
     @Transactional(readOnly=false)
     @Rollback(true)
     public void delete_jpaObject() {
-        WidgetComment wc = repository.get(VALID_WIDGET_COMMENT_ID);
+        WidgetComment wc = repository.getCommentById(VALID_WIDGET_ID.toString(), VALID_WIDGET_COMMENT_ID.toString());
         assertThat(wc, is(notNullValue()));
-        repository.delete(wc);
-        wc = repository.get(VALID_WIDGET_COMMENT_ID);
+        repository.deleteWidgetComment(VALID_WIDGET_ID.toString(), wc);
+        wc = repository.getCommentById(VALID_WIDGET_ID.toString(), VALID_WIDGET_COMMENT_ID.toString());
         assertThat(wc, is(nullValue()));
     }
 
@@ -127,11 +121,11 @@ public class JpaWidgetCommentRepositoryTest {
     @Transactional(readOnly=false)
     @Rollback(true)
     public void delete_implObject() {
-        WidgetComment wc = repository.get(VALID_WIDGET_COMMENT_ID);
+        WidgetComment wc = repository.getCommentById(VALID_WIDGET_ID.toString(), VALID_WIDGET_COMMENT_ID.toString());
         assertThat(wc, is(notNullValue()));
         WidgetComment impl = new WidgetCommentImpl(wc.getId());
-        repository.delete(impl);
-        wc = repository.get(VALID_WIDGET_COMMENT_ID);
+        repository.deleteWidgetComment(VALID_WIDGET_ID.toString(), impl);
+        wc = repository.getCommentById(VALID_WIDGET_ID.toString(), VALID_WIDGET_COMMENT_ID.toString());
         assertThat(wc, is(nullValue()));
     }
 }

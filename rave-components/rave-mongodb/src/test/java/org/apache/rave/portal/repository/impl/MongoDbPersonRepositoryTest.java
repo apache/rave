@@ -21,21 +21,16 @@ package org.apache.rave.portal.repository.impl;
 
 import com.google.common.collect.Lists;
 import org.apache.rave.portal.model.*;
-import org.apache.rave.portal.model.conversion.HydratingConverterFactory;
 import org.apache.rave.portal.model.impl.*;
 import org.apache.rave.portal.repository.MongoPageOperations;
 import org.apache.rave.portal.repository.MongoUserOperations;
 import org.apache.rave.portal.repository.MongoWidgetOperations;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
-import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Query;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 
 import static org.easymock.EasyMock.*;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -68,16 +63,16 @@ public class MongoDbPersonRepositoryTest {
     @Test
     public void findFriends_username() {
         String username = "username";
-        MongoDbUser user = new MongoDbUser(1234L);
+        MongoDbUser user = new MongoDbUser("1234L");
         user.setUsername(username);
         List<MongoDbPersonAssociation> friends = Lists.newLinkedList();
-        MongoDbPersonAssociation friend1 = new MongoDbPersonAssociation(1111L, FriendRequestStatus.ACCEPTED, MongoDbPersonAssociation.Direction.INCOMING);
+        MongoDbPersonAssociation friend1 = new MongoDbPersonAssociation("1111L", FriendRequestStatus.ACCEPTED, MongoDbPersonAssociation.Direction.INCOMING);
         friends.add(friend1);
-        MongoDbUser friend_1 = new MongoDbUser(1111L);
+        MongoDbUser friend_1 = new MongoDbUser("1111L");
         user.setFriends(friends);
 
         expect(template.findOne(isA(Query.class))).andReturn(user);
-        expect(template.get(1111L)).andReturn(friend_1);
+        expect(template.get("1111L")).andReturn(friend_1);
         replay(template);
         List<Person> results = repo.findFriends(username);
         assertNotNull(results.get(0));
@@ -90,17 +85,19 @@ public class MongoDbPersonRepositoryTest {
     public void findFriends_appId() {
         String username = "username";
         String appId = "www.test.com";
-        MongoDbUser user = new MongoDbUser(1111L);
+        String id = "2222L";
+        String userId = "1111L";
+        MongoDbUser user = new MongoDbUser(userId);
         user.setUsername(username);
         List<MongoDbPersonAssociation> friends = Lists.newLinkedList();
-        MongoDbPersonAssociation friend = new MongoDbPersonAssociation(2222L, FriendRequestStatus.ACCEPTED, MongoDbPersonAssociation.Direction.INCOMING);
+        MongoDbPersonAssociation friend = new MongoDbPersonAssociation(id, FriendRequestStatus.ACCEPTED, MongoDbPersonAssociation.Direction.INCOMING);
         friends.add(friend);
         user.setFriends(friends);
 
         Widget w = new WidgetImpl();
         w.setUrl(appId);
         Page page = new PageImpl();
-        page.setOwner(user);
+        page.setOwnerId(id);
 
         List<Region> regions = Lists.newLinkedList();
         Region r = new RegionImpl();
@@ -113,30 +110,31 @@ public class MongoDbPersonRepositoryTest {
 
         List<Page> pages = Lists.newLinkedList();
         pages.add(page);
-        List<Long> ids = Lists.newArrayList();
-        ids.add(2222L);
+        List<String> ids = Lists.newArrayList();
+        ids.add(id);
 
-        expect(template.findOne(isA(Query.class))).andReturn(user);
+        expect(template.findOne(query(where("username").is(username)))).andReturn(user);
+        expect(template.get(id)).andReturn(new UserImpl(id));
         replay(template);
         expect(widgetOperations.findOne(isA(Query.class))).andReturn(w);
         replay(widgetOperations);
         expect(pageTemplate.find(query(where("ownerId").in(ids).and("regions").elemMatch(where("regionWidgets").elemMatch(where("widgetId").is(w.getId())))))).andReturn(pages);
         replay(pageTemplate);
 
-        List<Person> results = repo.findFriends(username, appId);
-        assertThat(results.get(0).getUsername(), is(equalTo(username)));
-        assertThat(results.size(), is(equalTo(1)));
 
+        List<Person> results = repo.findFriends(username, appId);
+        assertThat(results.get(0).getId(), is(equalTo(id)));
+        assertThat(results.size(), is(equalTo(1)));
     }
 
     @Test
     public void findFriendsWithFriend() {
         String username = "follower";
         String friendUsername = "followed";
-        MongoDbUser follower = new MongoDbUser(1111L);
-        MongoDbUser followed = new MongoDbUser(2222L);
-        MongoDbPersonAssociation friend = new MongoDbPersonAssociation(3333L, FriendRequestStatus.ACCEPTED, MongoDbPersonAssociation.Direction.INCOMING);
-        MongoDbPersonAssociation friend2 = new MongoDbPersonAssociation(4444L, FriendRequestStatus.ACCEPTED, MongoDbPersonAssociation.Direction.INCOMING);
+        MongoDbUser follower = new MongoDbUser("1111L");
+        MongoDbUser followed = new MongoDbUser("2222L");
+        MongoDbPersonAssociation friend = new MongoDbPersonAssociation("3333L", FriendRequestStatus.ACCEPTED, MongoDbPersonAssociation.Direction.INCOMING);
+        MongoDbPersonAssociation friend2 = new MongoDbPersonAssociation("4444L", FriendRequestStatus.ACCEPTED, MongoDbPersonAssociation.Direction.INCOMING);
         List<MongoDbPersonAssociation> friends_follower = Lists.newLinkedList();
         List<MongoDbPersonAssociation> friends_followed = Lists.newLinkedList();
 
@@ -148,7 +146,7 @@ public class MongoDbPersonRepositoryTest {
 
         expect(template.findOne(isA(Query.class))).andReturn(follower);
         expect(template.findOne(isA(Query.class))).andReturn(followed);
-        expect(template.get(3333L)).andReturn(follower);
+        expect(template.get("3333L")).andReturn(follower);
         replay(template);
 
         List<Person> results = repo.findFriendsWithFriend(username, friendUsername);
@@ -160,8 +158,8 @@ public class MongoDbPersonRepositoryTest {
     public void addFriend() {
         String username = "Carol";
         String friendUsername = "Amy";
-        MongoDbUser carol = new MongoDbUser(1111L);
-        MongoDbUser amy = new MongoDbUser(2222L);
+        MongoDbUser carol = new MongoDbUser("1111L");
+        MongoDbUser amy = new MongoDbUser("2222L");
 
         List<MongoDbPersonAssociation> carols_friends = Lists.newArrayList();
         MongoDbPersonAssociation friendC = new MongoDbPersonAssociation();
@@ -189,14 +187,14 @@ public class MongoDbPersonRepositoryTest {
         MongoDbUser user = new MongoDbUser();
 
         List<MongoDbPersonAssociation> friends = Lists.newArrayList();
-        MongoDbPersonAssociation friend_accepted = new MongoDbPersonAssociation(1111L, FriendRequestStatus.ACCEPTED, MongoDbPersonAssociation.Direction.INCOMING);
-        MongoDbPersonAssociation friend_sent = new MongoDbPersonAssociation(2222L, FriendRequestStatus.SENT, MongoDbPersonAssociation.Direction.INCOMING);
-        MongoDbPersonAssociation friend_received = new MongoDbPersonAssociation(3333L, FriendRequestStatus.RECEIVED, MongoDbPersonAssociation.Direction.INCOMING);
-        MongoDbPersonAssociation friend_received2 = new MongoDbPersonAssociation(4444L, FriendRequestStatus.RECEIVED, MongoDbPersonAssociation.Direction.INCOMING);
-        MongoDbUser friend_a = new MongoDbUser(1111L);
-        MongoDbUser friend_s = new MongoDbUser(2222L);
-        MongoDbUser friend_r = new MongoDbUser(3333L);
-        MongoDbUser friend_r2 = new MongoDbUser(4444L);
+        MongoDbPersonAssociation friend_accepted = new MongoDbPersonAssociation("1111L", FriendRequestStatus.ACCEPTED, MongoDbPersonAssociation.Direction.INCOMING);
+        MongoDbPersonAssociation friend_sent = new MongoDbPersonAssociation("2222L", FriendRequestStatus.SENT, MongoDbPersonAssociation.Direction.INCOMING);
+        MongoDbPersonAssociation friend_received = new MongoDbPersonAssociation("3333L", FriendRequestStatus.RECEIVED, MongoDbPersonAssociation.Direction.INCOMING);
+        MongoDbPersonAssociation friend_received2 = new MongoDbPersonAssociation("4444L", FriendRequestStatus.RECEIVED, MongoDbPersonAssociation.Direction.INCOMING);
+        MongoDbUser friend_a = new MongoDbUser("1111L");
+        MongoDbUser friend_s = new MongoDbUser("2222L");
+        MongoDbUser friend_r = new MongoDbUser("3333L");
+        MongoDbUser friend_r2 = new MongoDbUser("4444L");
 
         friends.add(friend_sent);
         friends.add(friend_accepted);
@@ -205,12 +203,12 @@ public class MongoDbPersonRepositoryTest {
         user.setFriends(friends);
 
         expect(template.findOne(isA(Query.class))).andReturn(user);
-        expect(template.get(1111L)).andReturn(friend_a);
+        expect(template.get("1111L")).andReturn(friend_a);
         expect(template.findOne(isA(Query.class))).andReturn(user);
-        expect(template.get(2222L)).andReturn(friend_s);
+        expect(template.get("2222L")).andReturn(friend_s);
         expect(template.findOne(isA(Query.class))).andReturn(user);
-        expect(template.get(3333L)).andReturn(friend_r);
-        expect(template.get(4444L)).andReturn(friend_r2);
+        expect(template.get("3333L")).andReturn(friend_r);
+        expect(template.get("4444L")).andReturn(friend_r2);
         replay(template);
 
         results = repo.findFriendsAndRequests(username);
@@ -223,14 +221,14 @@ public class MongoDbPersonRepositoryTest {
     public void acceptFriendRequest() {
         String username = "username";
         String friendUsername = "friendUsername";
-        MongoDbUser carol = new MongoDbUser(1111L);
-        MongoDbUser amy = new MongoDbUser(2222L);
+        MongoDbUser carol = new MongoDbUser("1111L");
+        MongoDbUser amy = new MongoDbUser("2222L");
 
         List<MongoDbPersonAssociation> carols_friends = Lists.newArrayList();
-        MongoDbPersonAssociation friendA = new MongoDbPersonAssociation(1111L, FriendRequestStatus.SENT, MongoDbPersonAssociation.Direction.OUTGOING);
+        MongoDbPersonAssociation friendA = new MongoDbPersonAssociation("1111L", FriendRequestStatus.SENT, MongoDbPersonAssociation.Direction.OUTGOING);
         carols_friends.add(friendA);
         List<MongoDbPersonAssociation> amys_friends = Lists.newArrayList();
-        MongoDbPersonAssociation friendC = new MongoDbPersonAssociation(2222L, FriendRequestStatus.RECEIVED, MongoDbPersonAssociation.Direction.INCOMING);
+        MongoDbPersonAssociation friendC = new MongoDbPersonAssociation("2222L", FriendRequestStatus.RECEIVED, MongoDbPersonAssociation.Direction.INCOMING);
 
         amys_friends.add(friendC);
         carol.setFriends(carols_friends);

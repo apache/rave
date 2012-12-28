@@ -57,140 +57,140 @@ public class MonogoDbMapReduceStatisticsAggregatorTest {
     @Test
     public void getAllStatistics_valid() {
 
-        Map<Long, Long> userRatings = getRatingsMap();
-        Map<Long, Long> users = getUsersMap();
+        Map<String, Long> userRatings = getRatingsMap();
+        Map<String, Long> users = getUsersMap();
 
         List<WidgetRatingsMapReduceResult> ratings = Arrays.asList(
-                new WidgetRatingsMapReduceResult(24L, new WidgetRatingsMapReduceResult.WidgetStatisticsMapReduceResult(userRatings, 2L, 0L)),
-                new WidgetRatingsMapReduceResult(25L, new WidgetRatingsMapReduceResult.WidgetStatisticsMapReduceResult(userRatings, 2L, 0L)),
-                new WidgetRatingsMapReduceResult(26L, new WidgetRatingsMapReduceResult.WidgetStatisticsMapReduceResult(userRatings, 2L, 0L))
+                new WidgetRatingsMapReduceResult("24L", new WidgetRatingsMapReduceResult.WidgetStatisticsMapReduceResult(userRatings, 2L, 0L)),
+                new WidgetRatingsMapReduceResult("25L", new WidgetRatingsMapReduceResult.WidgetStatisticsMapReduceResult(userRatings, 2L, 0L)),
+                new WidgetRatingsMapReduceResult("26L", new WidgetRatingsMapReduceResult.WidgetStatisticsMapReduceResult(userRatings, 2L, 0L))
         );
 
         List<WidgetUsersMapReduceResult> usersMapReduceResults = Arrays.asList(
-                new WidgetUsersMapReduceResult(24L, users),
-                new WidgetUsersMapReduceResult(25L, users),
-                new WidgetUsersMapReduceResult(26L, users)
+                new WidgetUsersMapReduceResult("24L", users),
+                new WidgetUsersMapReduceResult("25L", users),
+                new WidgetUsersMapReduceResult("26L", users)
         );
 
         expect(mongoOperations.findAll(WidgetRatingsMapReduceResult.class, CollectionNames.WIDGET_RATINGS)).andReturn(ratings);
         expect(mongoOperations.findAll(WidgetUsersMapReduceResult.class, CollectionNames.WIDGET_USERS)).andReturn(usersMapReduceResults);
         replay(mongoOperations);
 
-        Map<Long, WidgetStatistics> stats = aggregator.getAllWidgetStatistics(1L);
+        Map<String, WidgetStatistics> stats = aggregator.getAllWidgetStatistics("1L");
         assertThat(stats.size(), is(equalTo(3)));
-        assertThat(stats.get(24L).getTotalLike(), is(equalTo(2)));
-        assertThat(stats.get(24L).getTotalDislike(), is(equalTo(0)));
-        assertThat(stats.get(24L).getUserRating(), is(equalTo(10)));
-        assertThat(stats.get(24L).getTotalUserCount(), is(equalTo(users.size())));
-        assertThat(stats.get(26L).getTotalLike(), is(equalTo(2)));
-        assertThat(stats.get(26L).getTotalDislike(), is(equalTo(0)));
-        assertThat(stats.get(26L).getUserRating(), is(equalTo(10)));
-        assertThat(stats.get(26L).getTotalUserCount(), is(equalTo(users.size())));
+        assertThat(stats.get("24L").getTotalLike(), is(equalTo(2)));
+        assertThat(stats.get("24L").getTotalDislike(), is(equalTo(0)));
+        assertThat(stats.get("24L").getUserRating(), is(equalTo(10)));
+        assertThat(stats.get("24L").getTotalUserCount(), is(equalTo(users.size())));
+        assertThat(stats.get("26L").getTotalLike(), is(equalTo(2)));
+        assertThat(stats.get("26L").getTotalDislike(), is(equalTo(0)));
+        assertThat(stats.get("26L").getUserRating(), is(equalTo(10)));
+        assertThat(stats.get("26L").getTotalUserCount(), is(equalTo(users.size())));
     }
 
     @Test
     public void getAllStatistics_noUserRating() {
 
-        Map<Long, Long> userRatings = getRatingsMap();
-        Map<Long, Long> users = getUsersMap();
+        Map<String, Long> userRatings = getRatingsMap();
+        Map<String, Long> users = getUsersMap();
 
         List<WidgetRatingsMapReduceResult> ratings = Arrays.asList(
-                new WidgetRatingsMapReduceResult(24L, new WidgetRatingsMapReduceResult.WidgetStatisticsMapReduceResult(userRatings, 2L, 0L)),
-                new WidgetRatingsMapReduceResult(25L, new WidgetRatingsMapReduceResult.WidgetStatisticsMapReduceResult(userRatings, 2L, 0L)),
-                new WidgetRatingsMapReduceResult(26L, new WidgetRatingsMapReduceResult.WidgetStatisticsMapReduceResult(userRatings, 2L, 0L))
+                new WidgetRatingsMapReduceResult("24L", new WidgetRatingsMapReduceResult.WidgetStatisticsMapReduceResult(userRatings, 2L, 0L)),
+                new WidgetRatingsMapReduceResult("25L", new WidgetRatingsMapReduceResult.WidgetStatisticsMapReduceResult(userRatings, 2L, 0L)),
+                new WidgetRatingsMapReduceResult("26L", new WidgetRatingsMapReduceResult.WidgetStatisticsMapReduceResult(userRatings, 2L, 0L))
         );
 
         List<WidgetUsersMapReduceResult> usersMapReduceResults = Arrays.asList(
-                new WidgetUsersMapReduceResult(24L, users),
-                new WidgetUsersMapReduceResult(25L, users),
-                new WidgetUsersMapReduceResult(26L, users)
+                new WidgetUsersMapReduceResult("24L", users),
+                new WidgetUsersMapReduceResult("25L", users),
+                new WidgetUsersMapReduceResult("26L", users)
         );
 
         expect(mongoOperations.findAll(WidgetRatingsMapReduceResult.class, CollectionNames.WIDGET_RATINGS)).andReturn(ratings);
         expect(mongoOperations.findAll(WidgetUsersMapReduceResult.class, CollectionNames.WIDGET_USERS)).andReturn(usersMapReduceResults);
         replay(mongoOperations);
 
-        Map<Long, WidgetStatistics> stats = aggregator.getAllWidgetStatistics(5L);
+        Map<String, WidgetStatistics> stats = aggregator.getAllWidgetStatistics("5L");
         assertThat(stats.size(), is(equalTo(3)));
-        assertThat(stats.get(24L).getTotalLike(), is(equalTo(2)));
-        assertThat(stats.get(24L).getTotalDislike(), is(equalTo(0)));
-        assertThat(stats.get(24L).getUserRating(), is(equalTo(-1)));
-        assertThat(stats.get(24L).getTotalUserCount(), is(equalTo(users.size())));
-        assertThat(stats.get(26L).getTotalLike(), is(equalTo(2)));
-        assertThat(stats.get(26L).getTotalDislike(), is(equalTo(0)));
-        assertThat(stats.get(26L).getUserRating(), is(equalTo(-1)));
-        assertThat(stats.get(26L).getTotalUserCount(), is(equalTo(users.size())));
+        assertThat(stats.get("24L").getTotalLike(), is(equalTo(2)));
+        assertThat(stats.get("24L").getTotalDislike(), is(equalTo(0)));
+        assertThat(stats.get("24L").getUserRating(), is(equalTo(-1)));
+        assertThat(stats.get("24L").getTotalUserCount(), is(equalTo(users.size())));
+        assertThat(stats.get("26L").getTotalLike(), is(equalTo(2)));
+        assertThat(stats.get("26L").getTotalDislike(), is(equalTo(0)));
+        assertThat(stats.get("26L").getUserRating(), is(equalTo(-1)));
+        assertThat(stats.get("26L").getTotalUserCount(), is(equalTo(users.size())));
     }
 
     @Test
     public void getAllStatistics_nullStats() {
 
-        Map<Long, Long> userRatings = getRatingsMap();
-        Map<Long, Long> users = getUsersMap();
+        Map<String, Long> userRatings = getRatingsMap();
+        Map<String, Long> users = getUsersMap();
 
         List<WidgetRatingsMapReduceResult> ratings = Arrays.asList(
-                new WidgetRatingsMapReduceResult(24L, null),
-                new WidgetRatingsMapReduceResult(25L, null),
-                new WidgetRatingsMapReduceResult(26L, null)
+                new WidgetRatingsMapReduceResult("24L", null),
+                new WidgetRatingsMapReduceResult("25L", null),
+                new WidgetRatingsMapReduceResult("26L", null)
         );
 
         List<WidgetUsersMapReduceResult> usersMapReduceResults = Arrays.asList(
-                new WidgetUsersMapReduceResult(24L, users),
-                new WidgetUsersMapReduceResult(25L, users),
-                new WidgetUsersMapReduceResult(26L, users)
+                new WidgetUsersMapReduceResult("24L", users),
+                new WidgetUsersMapReduceResult("25L", users),
+                new WidgetUsersMapReduceResult("26L", users)
         );
 
         expect(mongoOperations.findAll(WidgetRatingsMapReduceResult.class, CollectionNames.WIDGET_RATINGS)).andReturn(ratings);
         expect(mongoOperations.findAll(WidgetUsersMapReduceResult.class, CollectionNames.WIDGET_USERS)).andReturn(usersMapReduceResults);
         replay(mongoOperations);
 
-        Map<Long, WidgetStatistics> stats = aggregator.getAllWidgetStatistics(5L);
+        Map<String, WidgetStatistics> stats = aggregator.getAllWidgetStatistics("5L");
         assertThat(stats.size(), is(equalTo(3)));
-        assertThat(stats.get(24L).getTotalLike(), is(equalTo(0)));
-        assertThat(stats.get(24L).getTotalDislike(), is(equalTo(0)));
-        assertThat(stats.get(24L).getUserRating(), is(equalTo(-1)));
-        assertThat(stats.get(24L).getTotalUserCount(), is(equalTo(users.size())));
-        assertThat(stats.get(26L).getTotalLike(), is(equalTo(0)));
-        assertThat(stats.get(26L).getTotalDislike(), is(equalTo(0)));
-        assertThat(stats.get(26L).getUserRating(), is(equalTo(-1)));
-        assertThat(stats.get(26L).getTotalUserCount(), is(equalTo(users.size())));
+        assertThat(stats.get("24L").getTotalLike(), is(equalTo(0)));
+        assertThat(stats.get("24L").getTotalDislike(), is(equalTo(0)));
+        assertThat(stats.get("24L").getUserRating(), is(equalTo(-1)));
+        assertThat(stats.get("24L").getTotalUserCount(), is(equalTo(users.size())));
+        assertThat(stats.get("26L").getTotalLike(), is(equalTo(0)));
+        assertThat(stats.get("26L").getTotalDislike(), is(equalTo(0)));
+        assertThat(stats.get("26L").getUserRating(), is(equalTo(-1)));
+        assertThat(stats.get("26L").getTotalUserCount(), is(equalTo(users.size())));
     }
 
     @Test
     public void getAllStatistics_noRatings() {
 
-        Map<Long, Long> users = getUsersMap();
+        Map<String, Long> users = getUsersMap();
 
         List<WidgetRatingsMapReduceResult> ratings = Lists.newArrayList();
 
         List<WidgetUsersMapReduceResult> usersMapReduceResults = Arrays.asList(
-                new WidgetUsersMapReduceResult(24L, users),
-                new WidgetUsersMapReduceResult(25L, users),
-                new WidgetUsersMapReduceResult(26L, users)
+                new WidgetUsersMapReduceResult("24L", users),
+                new WidgetUsersMapReduceResult("25L", users),
+                new WidgetUsersMapReduceResult("26L", users)
         );
 
         expect(mongoOperations.findAll(WidgetRatingsMapReduceResult.class, CollectionNames.WIDGET_RATINGS)).andReturn(ratings);
         expect(mongoOperations.findAll(WidgetUsersMapReduceResult.class, CollectionNames.WIDGET_USERS)).andReturn(usersMapReduceResults);
         replay(mongoOperations);
 
-        Map<Long, WidgetStatistics> stats = aggregator.getAllWidgetStatistics(5L);
+        Map<String, WidgetStatistics> stats = aggregator.getAllWidgetStatistics("5L");
         assertThat(stats.size(), is(equalTo(3)));
-        assertThat(stats.get(24L).getTotalLike(), is(equalTo(0)));
-        assertThat(stats.get(24L).getTotalDislike(), is(equalTo(0)));
-        assertThat(stats.get(24L).getUserRating(), is(equalTo(-1)));
-        assertThat(stats.get(24L).getTotalUserCount(), is(equalTo(users.size())));
-        assertThat(stats.get(26L).getTotalLike(), is(equalTo(0)));
-        assertThat(stats.get(26L).getTotalDislike(), is(equalTo(0)));
-        assertThat(stats.get(26L).getUserRating(), is(equalTo(-1)));
-        assertThat(stats.get(26L).getTotalUserCount(), is(equalTo(users.size())));
+        assertThat(stats.get("24L").getTotalLike(), is(equalTo(0)));
+        assertThat(stats.get("24L").getTotalDislike(), is(equalTo(0)));
+        assertThat(stats.get("24L").getUserRating(), is(equalTo(-1)));
+        assertThat(stats.get("24L").getTotalUserCount(), is(equalTo(users.size())));
+        assertThat(stats.get("26L").getTotalLike(), is(equalTo(0)));
+        assertThat(stats.get("26L").getTotalDislike(), is(equalTo(0)));
+        assertThat(stats.get("26L").getUserRating(), is(equalTo(-1)));
+        assertThat(stats.get("26L").getTotalUserCount(), is(equalTo(users.size())));
     }
 
     @Test
     public void getWidgetStatistics_valid() {
-        long widget_id = 1L;
-        Map<Long, Long> userMap = Maps.newHashMap();
-        userMap.put(20L, 10L);
-        userMap.put(21L, 10L);
+        String widget_id = "1L";
+        Map<String, Long> userMap = Maps.newHashMap();
+        userMap.put("20L", 10L);
+        userMap.put("21L", 10L);
         WidgetRatingsMapReduceResult.WidgetStatisticsMapReduceResult stats = new WidgetRatingsMapReduceResult.WidgetStatisticsMapReduceResult(userMap, 20L, 0L);
         WidgetUsersMapReduceResult usersResult = new WidgetUsersMapReduceResult(widget_id, userMap);
         WidgetRatingsMapReduceResult ratingsResult = new WidgetRatingsMapReduceResult(widget_id, stats);
@@ -199,7 +199,7 @@ public class MonogoDbMapReduceStatisticsAggregatorTest {
         expect(mongoOperations.findById(widget_id, WidgetUsersMapReduceResult.class, WIDGET_USERS)).andReturn(usersResult);
         replay(mongoOperations);
 
-        WidgetStatistics result = aggregator.getWidgetStatistics(widget_id, 21L);
+        WidgetStatistics result = aggregator.getWidgetStatistics(widget_id, "21L");
 
         assertThat(result.getTotalDislike(), is(equalTo(0)));
         assertThat(result.getTotalLike(), is(equalTo(20)));
@@ -209,10 +209,10 @@ public class MonogoDbMapReduceStatisticsAggregatorTest {
 
     @Test
     public void getWidgetStatistics_noUser() {
-        long widget_id = 1L;
-        Map<Long, Long> userMap = Maps.newHashMap();
-        userMap.put(20L, 10L);
-        userMap.put(21L, 10L);
+        String widget_id = "1L";
+        Map<String, Long> userMap = Maps.newHashMap();
+        userMap.put("20L", 10L);
+        userMap.put("21L", 10L);
         WidgetRatingsMapReduceResult.WidgetStatisticsMapReduceResult stats = new WidgetRatingsMapReduceResult.WidgetStatisticsMapReduceResult(userMap, 20L, 0L);
         WidgetUsersMapReduceResult usersResult = new WidgetUsersMapReduceResult(widget_id, userMap);
         WidgetRatingsMapReduceResult ratingsResult = new WidgetRatingsMapReduceResult(widget_id, stats);
@@ -221,7 +221,7 @@ public class MonogoDbMapReduceStatisticsAggregatorTest {
         expect(mongoOperations.findById(widget_id, WidgetUsersMapReduceResult.class, WIDGET_USERS)).andReturn(usersResult);
         replay(mongoOperations);
 
-        WidgetStatistics result = aggregator.getWidgetStatistics(widget_id, 23L);
+        WidgetStatistics result = aggregator.getWidgetStatistics(widget_id, "23L");
 
         assertThat(result.getTotalDislike(), is(equalTo(0)));
         assertThat(result.getTotalLike(), is(equalTo(20)));
@@ -231,17 +231,17 @@ public class MonogoDbMapReduceStatisticsAggregatorTest {
 
     @Test
     public void getWidgetStatistics_nullRatings() {
-        long widget_id = 1L;
-        Map<Long, Long> userMap = Maps.newHashMap();
-        userMap.put(20L, 10L);
-        userMap.put(21L, 10L);
+        String widget_id = "1L";
+        Map<String, Long> userMap = Maps.newHashMap();
+        userMap.put("20L", 10L);
+        userMap.put("21L", 10L);
         WidgetUsersMapReduceResult usersResult = new WidgetUsersMapReduceResult(widget_id, userMap);
 
         expect(mongoOperations.findById(widget_id, WidgetRatingsMapReduceResult.class, WIDGET_RATINGS)).andReturn(null);
         expect(mongoOperations.findById(widget_id, WidgetUsersMapReduceResult.class, WIDGET_USERS)).andReturn(usersResult);
         replay(mongoOperations);
 
-        WidgetStatistics result = aggregator.getWidgetStatistics(widget_id, 21L);
+        WidgetStatistics result = aggregator.getWidgetStatistics(widget_id, "21L");
 
         assertThat(result.getTotalDislike(), is(equalTo(0)));
         assertThat(result.getTotalLike(), is(equalTo(0)));
@@ -251,10 +251,10 @@ public class MonogoDbMapReduceStatisticsAggregatorTest {
 
     @Test
     public void getWidgetStatistics_nullUsers() {
-        long widget_id = 1L;
-        Map<Long, Long> userMap = Maps.newHashMap();
-        userMap.put(20L, 10L);
-        userMap.put(21L, 10L);
+        String widget_id = "1L";
+        Map<String, Long> userMap = Maps.newHashMap();
+        userMap.put("20L", 10L);
+        userMap.put("21L", 10L);
         WidgetRatingsMapReduceResult.WidgetStatisticsMapReduceResult stats = new WidgetRatingsMapReduceResult.WidgetStatisticsMapReduceResult(userMap, 20L, 0L);
         WidgetRatingsMapReduceResult ratingsResult = new WidgetRatingsMapReduceResult(widget_id, stats);
 
@@ -262,7 +262,7 @@ public class MonogoDbMapReduceStatisticsAggregatorTest {
         expect(mongoOperations.findById(widget_id, WidgetUsersMapReduceResult.class, WIDGET_USERS)).andReturn(null);
         replay(mongoOperations);
 
-        WidgetStatistics result = aggregator.getWidgetStatistics(widget_id, 21L);
+        WidgetStatistics result = aggregator.getWidgetStatistics(widget_id, "21L");
 
         assertThat(result.getTotalDislike(), is(equalTo(0)));
         assertThat(result.getTotalLike(), is(equalTo(20)));
@@ -321,21 +321,21 @@ public class MonogoDbMapReduceStatisticsAggregatorTest {
         expect(mongoOperations.mapReduce(eq(PAGE_COLLECTION), eq(USERS_MAP), eq(USERS_REDUCE),  anyObject(MapReduceOptions.class), eq(WidgetUsersMapReduceResult.class))).andReturn(null);
     }
 
-    private Map<Long, Long> getRatingsMap() {
-        Map<Long, Long> userRatings = Maps.newHashMap();
-        userRatings.put(1L, 10L);
-        userRatings.put(2L, 10L);
+    private Map<String, Long> getRatingsMap() {
+        Map<String, Long> userRatings = Maps.newHashMap();
+        userRatings.put("1L", 10L);
+        userRatings.put("2L", 10L);
         return userRatings;
     }
 
-    private Map<Long, Long> getUsersMap() {
-        Map<Long, Long> users = Maps.newHashMap();
-        users.put(1L, 1L);
-        users.put(2L, 1L);
-        users.put(3L, 1L);
-        users.put(4L, 1L);
-        users.put(5L, 1L);
-        users.put(6L, 1L);
+    private Map<String, Long> getUsersMap() {
+        Map<String, Long> users = Maps.newHashMap();
+        users.put("1L", 1L);
+        users.put("2L", 1L);
+        users.put("3L", 1L);
+        users.put("4L", 1L);
+        users.put("5L", 1L);
+        users.put("6L", 1L);
         return users;
     }
 }

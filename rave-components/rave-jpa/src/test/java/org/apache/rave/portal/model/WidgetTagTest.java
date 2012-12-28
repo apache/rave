@@ -38,19 +38,18 @@ public class WidgetTagTest {
     
     @Before
     public void setUp() {
-        widgetTag = new JpaWidgetTag();
+        widgetTag = new JpaWidgetTag(VALID_WIDGET_ID);
         widgetTag.setEntityId(VALID_ENTITY_ID);
-        widgetTag.setWidgetId(VALID_WIDGET_ID);
-        widgetTag.setUser(new JpaUser(1L, "John.Doe"));
+        widgetTag.setUserEntityId(1L);
         widgetTag.setCreatedDate(VALID_CREATED_DATE);
-        widgetTag.setTag(new JpaTag(1L, "test"));
+        widgetTag.setTagEntityId(1L);
     }
     
     @Test
     public void getters() {
         assertEquals(VALID_ENTITY_ID, widgetTag.getEntityId());
         assertEquals(VALID_WIDGET_ID, widgetTag.getWidgetId());
-        assertEquals(VALID_USER_ID, widgetTag.getUser().getId());
+        assertEquals(VALID_USER_ID, widgetTag.getUserId());
         assertEquals(VALID_CREATED_DATE, widgetTag.getCreatedDate());
     }
     

@@ -33,15 +33,15 @@ public class WidgetRatingTest {
     JpaWidgetRating widgetRating;
     
     Long id;
-    Long widgetId;
-    Long userId;
+    String widgetId;
+    String userId;
     Integer score;
     
     @Before
     public void setUp() throws Exception {
         id = 1L;
-        widgetId = 1L;
-        userId = 1L;
+        widgetId = "1";
+        userId = "1";
         score = 1;
         
         widgetRating = new JpaWidgetRating();

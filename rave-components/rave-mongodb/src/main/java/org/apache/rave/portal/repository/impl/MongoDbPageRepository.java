@@ -28,7 +28,6 @@ import org.apache.rave.portal.model.impl.RegionWidgetImpl;
 import org.apache.rave.portal.repository.MongoPageOperations;
 import org.apache.rave.portal.repository.PageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
@@ -49,12 +48,12 @@ public class MongoDbPageRepository implements PageRepository {
     private MongoPageOperations template;
 
     @Override
-    public List<Page> getAllPages(Long userId, PageType pageType) {
+    public List<Page> getAllPages(String  userId, PageType pageType) {
         return sort(template.find(query(where("pageType").is(getString(pageType)).andOperator(where("ownerId").is(userId)))), userId);
     }
 
     @Override
-    public int deletePages(Long userId, PageType pageType) {
+    public int deletePages(String userId, PageType pageType) {
         Query query = query(where("pageType").is(pageType).andOperator(where("ownerId").is(userId)));
         int count = (int)template.count(query);
         template.remove(query);
@@ -67,12 +66,12 @@ public class MongoDbPageRepository implements PageRepository {
     }
 
     @Override
-    public boolean hasPersonPage(long userId) {
+    public boolean hasPersonPage(String userId) {
         return template.count(query(where("pageType").is(PageType.PERSON_PROFILE).andOperator(where("ownerId").is(userId)))) > 0;
     }
 
     @Override
-    public List<PageUser> getPagesForUser(Long userId, PageType pageType) {
+    public List<PageUser> getPagesForUser(String userId, PageType pageType) {
         List<Page> pages = template.find(query(where("members").elemMatch(where("userId").is(userId)).andOperator(where("pageType").is(getString(pageType)))));
         List<PageUser> userList = Lists.newArrayList();
         for(Page page : pages) {
@@ -82,10 +81,10 @@ public class MongoDbPageRepository implements PageRepository {
     }
 
     @Override
-    public PageUser getSingleRecord(Long userId, Long pageId) {
+    public PageUser getSingleRecord(String userId, String pageId) {
         Page page = get(pageId);
         for(PageUser user : page.getMembers()) {
-            if(user.getUser().getId().equals(userId))
+            if(user.getUserId().equals(userId))
                 return user;
         }
         return null;
@@ -97,7 +96,7 @@ public class MongoDbPageRepository implements PageRepository {
     }
 
     @Override
-    public Page get(long id) {
+    public Page get(String  id) {
         return template.get(id);
     }
 
@@ -111,7 +110,7 @@ public class MongoDbPageRepository implements PageRepository {
         template.remove(query(where("_id").is(item.getId())));
     }
 
-    private List<Page> sort(List<Page> pages, final Long userId) {
+    private List<Page> sort(List<Page> pages, final String  userId) {
         Collections.sort(pages, new Comparator<Page>() {
             @Override
             public int compare(Page page, Page page1) {
@@ -121,7 +120,7 @@ public class MongoDbPageRepository implements PageRepository {
         return pages;
     }
 
-    private List<PageUser> sortUsers(List<PageUser> userList, Long userId) {
+    private List<PageUser> sortUsers(List<PageUser> userList, String userId) {
         Collections.sort(userList, new Comparator<PageUser>() {
             @Override
             public int compare(PageUser pageUser, PageUser pageUser1) {
@@ -135,11 +134,10 @@ public class MongoDbPageRepository implements PageRepository {
         return pageUser == null || pageUser.getRenderSequence() == null ? Integer.MAX_VALUE : pageUser.getRenderSequence().intValue();
     }
 
-    private int getRenderOrder(Page page, Long userId) {
+    private int getRenderOrder(Page page, String  userId) {
         for(PageUser user : page.getMembers()) {
-            MongoDbPageUser mUser = (MongoDbPageUser)user;
-            if(mUser.getUser().getId().equals(userId)) {
-                return getRenderOrder(mUser);
+            if(user.getUserId().equals(userId)) {
+                return getRenderOrder(user);
             }
         }
         return -1;
@@ -156,8 +154,8 @@ public class MongoDbPageRepository implements PageRepository {
         Page p = new PageImpl();
         p.setName(pt.getName());
         p.setPageType(pt.getPageType());
-        p.setOwner(user);
-        PageUser pageUser = new PageUserImpl(user, p, pt.getRenderSequence());
+        p.setOwnerId(user.getId());
+        PageUser pageUser = new PageUserImpl(user.getId(), p, pt.getRenderSequence());
         pageUser.setPageStatus(PageInvitationStatus.OWNER);
         pageUser.setEditor(true);
         List<PageUser> members = new ArrayList<PageUser>();
@@ -206,7 +204,7 @@ public class MongoDbPageRepository implements PageRepository {
             regionWidget.setLocked(ptw.isLocked());
             regionWidget.setHideChrome(ptw.isHideChrome());
             regionWidget.setRenderOrder((int) ptw.getRenderSeq());
-            regionWidget.setWidget(ptw.getWidget());
+            regionWidget.setWidgetId(ptw.getWidgetId());
             widgets.add(regionWidget);
         }
         return widgets;
@@ -226,13 +224,13 @@ public class MongoDbPageRepository implements PageRepository {
             Page lPage = new PageImpl();
             lPage.setName(pt.getName());
             lPage.setPageType(pt.getPageType());
-            lPage.setOwner(page.getOwner());
+            lPage.setOwnerId(page.getOwnerId());
             lPage.setPageLayout(pt.getPageLayout());
             lPage.setParentPage(page);
             lPage.setRegions(convertRegions(pt.getPageTemplateRegions(), lPage));
 
             // create new pageUser tuple
-            PageUser pageUser = new PageUserImpl(lPage.getOwner(), lPage, pt.getRenderSequence());
+            PageUser pageUser = new PageUserImpl(lPage.getOwnerId(), lPage, pt.getRenderSequence());
             pageUser.setPageStatus(PageInvitationStatus.OWNER);
             pageUser.setEditor(true);
             List<PageUser> members = new ArrayList<PageUser>();
@@ -245,9 +243,9 @@ public class MongoDbPageRepository implements PageRepository {
         return pages;
     }
 
-    private PageUser findPageUser(Long userId, Page page) {
+    private PageUser findPageUser(String userId, Page page) {
         for(PageUser user : page.getMembers()) {
-            if(user.getUser().getId().equals(userId)) {
+            if(user.getUserId().equals(userId)) {
                 return user;
             }
         }

@@ -20,10 +20,8 @@
 package org.apache.rave.portal.repository.impl;
 
 import com.google.common.collect.Lists;
-import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.Widget;
 import org.apache.rave.portal.model.WidgetComment;
-import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.model.impl.WidgetCommentImpl;
 import org.apache.rave.portal.model.impl.WidgetImpl;
 import org.apache.rave.portal.repository.MongoWidgetOperations;
@@ -46,27 +44,26 @@ import static org.springframework.data.mongodb.core.query.Query.query;
 public class MongoDbWidgetCommentRepositoryTest {
 
     private MongoWidgetOperations template;
-    private MongoDbWidgetCommentRepository repo;
+    private MongoDbWidgetRepository repo;
 
     @Before
     public void setUp(){
         template = createMock(MongoWidgetOperations.class);
-        repo = new MongoDbWidgetCommentRepository();
+        repo = new MongoDbWidgetRepository();
         repo.setTemplate(template);
 
     }
 
     @Test
     public void deleteAll(){
-        Long userId = 1234L;
+        String userId = "1234L";
         List<Widget> widgets = Lists.newArrayList();
         Widget w = new WidgetImpl();
         List<WidgetComment> comments = Lists.newArrayList();
         WidgetComment wc1 = new WidgetCommentImpl();
         WidgetComment wc2 = new WidgetCommentImpl();
-        User user = new UserImpl(1234L);
-        wc1.setUser(user);
-        wc2.setUser(user);
+        wc1.setUserId(userId);
+        wc2.setUserId(userId);
         comments.add(wc1);
         comments.add(wc2);
         w.setComments(comments);
@@ -78,21 +75,21 @@ public class MongoDbWidgetCommentRepositoryTest {
         expect(template.save(isA(Widget.class))).andReturn(w);
         replay(template);
 
-        int count = repo.deleteAll(userId);
+        int count = repo.deleteAllWidgetComments(userId);
         assertThat(count, is(equalTo(2)));
     }
 
     @Test
     public void deleteAll_zero(){
-        Long userId = 1234L;
+        String userId = "1234L";
+        String userId_2 = "1111L";
         List<Widget> widgets = Lists.newArrayList();
         Widget w = new WidgetImpl();
         List<WidgetComment> comments = Lists.newArrayList();
         WidgetComment wc1 = new WidgetCommentImpl();
         WidgetComment wc2 = new WidgetCommentImpl();
-        User user = new UserImpl(1111L);
-        wc1.setUser(user);
-        wc2.setUser(user);
+        wc1.setUserId(userId_2);
+        wc2.setUserId(userId_2);
         comments.add(wc1);
         comments.add(wc2);
         w.setComments(comments);
@@ -101,40 +98,42 @@ public class MongoDbWidgetCommentRepositoryTest {
         expect(template.find(query(where("comments").elemMatch(where("userId").is(userId))))).andReturn(widgets);
         replay(template);
 
-        int count = repo.deleteAll(userId);
+        int count = repo.deleteAllWidgetComments(userId);
         assertThat(count, is(equalTo(0)));
 
     }
 
     @Test
     public void get(){
-        Long id = 1234L;
+        String id = "1234L";
+        String widgetId = "321L";
         List<WidgetComment> comments = Lists.newArrayList();
-        Widget widget = new WidgetImpl();
+        Widget widget = new WidgetImpl(widgetId);
         WidgetComment wc = new WidgetCommentImpl(id);
         comments.add(wc);
         widget.setComments(comments);
 
-        expect(template.findOne(query(where("comments").elemMatch(where("_id").is(id))))).andReturn(widget);
+        expect(template.get(widgetId)).andReturn(widget);
         replay(template);
 
-        WidgetComment result = repo.get(id);
+        WidgetComment result = repo.getCommentById(widgetId, id);
         assertThat(result.getId(), is(equalTo(id)));
     }
 
     @Test
     public void get_null(){
-        Long id = 1234L;
+        String id = "1234L";
+        String widgetId = "321L";
         List<WidgetComment> comments = Lists.newArrayList();
-        Widget widget = new WidgetImpl();
-        WidgetComment wc = new WidgetCommentImpl(1111L);
+        Widget widget = new WidgetImpl(widgetId);
+        WidgetComment wc = new WidgetCommentImpl("1111L");
         comments.add(wc);
         widget.setComments(comments);
 
-        expect(template.findOne(query(where("comments").elemMatch(where("_id").is(id))))).andReturn(null);
+        expect(template.get(widgetId)).andReturn(widget);
         replay(template);
 
-        WidgetComment result = repo.get(id);
+        WidgetComment result = repo.getCommentById(widgetId, id);
         assertNull(result);
 
     }

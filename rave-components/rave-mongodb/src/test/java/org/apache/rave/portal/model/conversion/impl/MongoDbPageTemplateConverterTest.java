@@ -52,7 +52,6 @@ public class MongoDbPageTemplateConverterTest {
         widgetRepository = createMock(WidgetRepository.class);
         pageTemplateConverter = new MongoDbPageTemplateConverter();
         pageTemplateConverter.setPageLayoutRepository(pageLayoutRepository);
-        pageTemplateConverter.setWidgetRepository(widgetRepository);
     }
 
     @Test
@@ -78,11 +77,11 @@ public class MongoDbPageTemplateConverterTest {
                 ptRegion4
         );
         mongoDbPageTemplate.setPageTemplateRegions(pageTemplateRegions1);
-        PageTemplateWidget widget1 = new MongoDbPageTemplateWidget();
-        PageTemplateWidget widget2 = new MongoDbPageTemplateWidget();
-        PageTemplateWidget widget3 = new MongoDbPageTemplateWidget();
-        PageTemplateWidget widget4 = new MongoDbPageTemplateWidget();
-        PageTemplateWidget widget5 = new MongoDbPageTemplateWidget();
+        PageTemplateWidget widget1 = new PageTemplateWidgetImpl();
+        PageTemplateWidget widget2 = new PageTemplateWidgetImpl();
+        PageTemplateWidget widget3 = new PageTemplateWidgetImpl();
+        PageTemplateWidget widget4 = new PageTemplateWidgetImpl();
+        PageTemplateWidget widget5 = new PageTemplateWidgetImpl();
 
         PageTemplate template1 = new MongoDbPageTemplate();
         PageTemplate template2 = new MongoDbPageTemplate();
@@ -117,11 +116,6 @@ public class MongoDbPageTemplateConverterTest {
         assertThat(mongoDbPageTemplate.getPageLayoutRepository(), is(sameInstance(pageLayoutRepository)));
         assertThat((MongoDbPageTemplate) ptRegion1.getPageTemplate(), is(sameInstance(mongoDbPageTemplate)));
         assertThat((MongoDbPageTemplate) ptRegion2.getPageTemplate(), is(sameInstance(mongoDbPageTemplate)));
-        assertThat(((MongoDbPageTemplateWidget)widget1).getWidgetRepository(),is(sameInstance(widgetRepository)));
-        assertThat(((MongoDbPageTemplateWidget)widget2).getWidgetRepository(),is(sameInstance(widgetRepository)));
-        assertThat(((MongoDbPageTemplateWidget)widget3).getWidgetRepository(),is(sameInstance(widgetRepository)));
-        assertThat(((MongoDbPageTemplateWidget)widget4).getWidgetRepository(),is(sameInstance(widgetRepository)));
-        assertThat(((MongoDbPageTemplateWidget)widget5).getWidgetRepository(),is(sameInstance(widgetRepository)));
         assertThat(widget1.getPageTemplateRegion(), is(sameInstance(ptRegion1)));
         assertThat(widget2.getPageTemplateRegion(), is(sameInstance(ptRegion1)));
         assertThat(widget3.getPageTemplateRegion(), is(sameInstance(ptRegion2)));
@@ -154,7 +148,7 @@ public class MongoDbPageTemplateConverterTest {
 
         MongoDbPageTemplate converted = pageTemplateConverter.convert(pageTemplate);
 
-        assertNotNull(converted.getId());
+        assertNull(converted.getId());
         assertNotNull(converted.getPageTemplateRegions());
         assertNotNull(converted.getSubPageTemplates());
     }
@@ -162,7 +156,7 @@ public class MongoDbPageTemplateConverterTest {
     private PageTemplateRegion createNewPageTemplateRegion() {
         return new PageTemplateRegion() {
                 @Override
-                public Long getId() {
+                public String getId() {
                     return null;  //To change body of implemented methods use File | Settings | File Templates.
                 }
 
@@ -217,7 +211,7 @@ public class MongoDbPageTemplateConverterTest {
 
         MongoDbPageTemplate converted = pageTemplateConverter.convert(pageTemplate);
 
-        assertNotNull(converted.getId());
+        assertNull(converted.getId());
     }
 
     @Test
@@ -230,45 +224,44 @@ public class MongoDbPageTemplateConverterTest {
         ((MongoDbPageTemplate)mongoPageTemplate1).setPageLayoutRepository(tempPageLayoutRepository);
         ((MongoDbPageTemplate)mongoPageTemplate2).setPageLayoutRepository(tempPageLayoutRepository);
         PageTemplateRegion pageTemplateRegion = new PageTemplateRegionImpl();
-        PageTemplateWidget pageTemplateWidget = new MongoDbPageTemplateWidget();
-        ((MongoDbPageTemplateWidget)pageTemplateWidget).setWidgetRepository(tempWidgetRepository);
+        PageTemplateWidget pageTemplateWidget = new PageTemplateWidgetImpl();
 
         //the source PageTemplate tested in the first recursion
-        ((MongoDbPageTemplate)mongoPageTemplate1).setId((long)1234);
+        ((MongoDbPageTemplate)mongoPageTemplate1).setId("1234");
         mongoPageTemplate1.setName("Blah");
         mongoPageTemplate1.setDescription("Blahty Blahty Blah");
         mongoPageTemplate1.setPageType(PageType.get("user"));
         MongoDbPageLayout mongoDbPageLayout1 = new MongoDbPageLayout();
-        mongoDbPageLayout1.setId((long)7777);
+        mongoDbPageLayout1.setId("7777");
         mongoDbPageLayout1.setCode("4321");
         mongoPageTemplate1.setPageLayout(mongoDbPageLayout1);
-        mongoPageTemplate1.setRenderSequence((long)9999);
+        mongoPageTemplate1.setRenderSequence(9999);
         mongoPageTemplate1.setDefaultTemplate(true);
 
         //the PageTemplate to be inserted into the subPageTemplates array, tested in the second recursion loop
-        ((MongoDbPageTemplate)mongoPageTemplate2).setId((long)3232);
+        ((MongoDbPageTemplate)mongoPageTemplate2).setId("3232");
         mongoPageTemplate2.setName("Yeah");
         mongoPageTemplate2.setDescription("Yeah Yeah Ya");
         mongoPageTemplate2.setPageType(PageType.get("user"));
         MongoDbPageLayout mongoDbPageLayout2 = new MongoDbPageLayout();
-        mongoDbPageLayout2.setId((long)8888);
+        mongoDbPageLayout2.setId("8888");
         mongoDbPageLayout2.setCode("2345");
         mongoPageTemplate2.setPageLayout(mongoDbPageLayout2);
-        mongoPageTemplate2.setRenderSequence((long)8787);
+        mongoPageTemplate2.setRenderSequence(8787);
         mongoPageTemplate2.setDefaultTemplate(true);
 
         //the PageTemplateWidget to be add as a field to the pageTemplateWidgets array of the PageTemplateRegion
-        ((MongoDbPageTemplateWidget)pageTemplateWidget).setId((long)3333);
+        ((PageTemplateWidgetImpl)pageTemplateWidget).setId("3333");
         pageTemplateWidget.setHideChrome(true);
-        pageTemplateWidget.setRenderSeq((long)3456);
+        pageTemplateWidget.setRenderSeq(3456);
         Widget widget = new WidgetImpl();
-        ((WidgetImpl)widget).setId((long)87623876);
-        ((MongoDbPageTemplateWidget)pageTemplateWidget).setWidgetId((long)4444);
+        ((WidgetImpl)widget).setId("87623876");
+        ((PageTemplateWidgetImpl)pageTemplateWidget).setWidgetId("4444");
         pageTemplateWidget.setLocked(true);
 
         //the PageTemplateRegion to be converted
-        ((PageTemplateRegionImpl)pageTemplateRegion).setId((long) 2929);
-        pageTemplateRegion.setRenderSequence((long)56376);
+        ((PageTemplateRegionImpl)pageTemplateRegion).setId("2929");
+        pageTemplateRegion.setRenderSequence(56376);
         pageTemplateRegion.setLocked(true);
 
         //create and add subPageTemplate array to the first PageTemplate
@@ -291,7 +284,7 @@ public class MongoDbPageTemplateConverterTest {
 
         expect(tempPageLayoutRepository.getByPageLayoutCode("4321")).andReturn(mongoDbPageLayout1);
         expect(tempPageLayoutRepository.getByPageLayoutCode("2345")).andReturn(mongoDbPageLayout2);
-        expect(tempWidgetRepository.get(4444)).andReturn(widget);
+        expect(tempWidgetRepository.get("4444")).andReturn(widget);
         replay(tempPageLayoutRepository, tempWidgetRepository);
 
         MongoDbPageTemplate convertedTemplate = pageTemplateConverter.convert(mongoPageTemplate1);
@@ -341,7 +334,7 @@ public class MongoDbPageTemplateConverterTest {
                 assertThat(widgetConverted.getId(), is(widgetSource.getId()));
                 assertThat(widgetConverted.isHideChrome(), is(widgetSource.isHideChrome()));
                 assertThat(widgetConverted.getRenderSeq(), is(widgetSource.getRenderSeq()));
-                assertThat(((MongoDbPageTemplateWidget)widgetConverted).getWidgetId(), is(((MongoDbPageTemplateWidget)widgetSource).getWidgetId()));
+                assertThat(((PageTemplateWidgetImpl)widgetConverted).getWidgetId(), is(((PageTemplateWidgetImpl)widgetSource).getWidgetId()));
                 //assertNotNull(widgetConverted.getWidget());//This should test to make sure the WidgetId is set
                 assertThat(widgetConverted.isLocked(), is(widgetSource.isLocked()));
             }
@@ -356,7 +349,6 @@ public class MongoDbPageTemplateConverterTest {
         PageTemplateWidget pageTemplateWidget = new PageTemplateWidgetImpl();
         pageTemplateRegion.setPageTemplateWidgets(Arrays.asList(pageTemplateWidget));
         source.setPageLayout(new PageLayoutImpl());
-        pageTemplateWidget.setWidget(new WidgetImpl());
 
         MongoDbPageTemplate converted = pageTemplateConverter.convert(source);
         assertTrue(converted instanceof MongoDbPageTemplate);

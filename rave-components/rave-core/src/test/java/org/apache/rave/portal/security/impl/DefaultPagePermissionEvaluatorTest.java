@@ -53,45 +53,47 @@ public class DefaultPagePermissionEvaluatorTest {
     private UserImpl user, user2;
     private List<GrantedAuthority> grantedAuthoritiesList;
 
-    private final Long VALID_USER_ID = 99L;
+    private final String VALID_USER_ID = "99";
+    private final String VALID_USER_ID2 = "66";
     private final String VALID_USERNAME = "john.doe";
     private final String VALID_USERNAME2 = "jane.doe";
-    private final Long VALID_PAGE_ID = 3L;
-    private final Long VALID_PAGE_ID2 = 77L;
-    private final Long VALID_PAGE_ID3 = 177L;
-    private final Long VALID_PAGE_ID4 = 665L;
+    private final String VALID_PAGE_ID = "3";
+    private final String VALID_PAGE_ID2 = "77";
+    private final String VALID_PAGE_ID3 = "177";
+    private final String VALID_PAGE_ID4 = "665";
 
     @Before
     public void setUp() {
         mockPageRepository = createMock(PageRepository.class);
         mockAuthentication = createMock(Authentication.class);
 
-        defaultPagePermissionEvaluator = new DefaultPagePermissionEvaluator(mockPageRepository);
+        defaultPagePermissionEvaluator = new DefaultPagePermissionEvaluator(mockPageRepository, null);
 
         user = new UserImpl();
         user.setUsername(VALID_USERNAME);
         user.setId(VALID_USER_ID);
         user2 = new UserImpl();
         user2.setUsername(VALID_USERNAME2);
+        user2.setId(VALID_USER_ID2);
 
         page = new PageImpl();
         page.setId(VALID_PAGE_ID);
-        page.setOwner(user);
+        page.setOwnerId(user.getId());
         page.setPageType(PageType.USER);
 
         pageSubPage = new PageImpl();
         pageSubPage.setId(VALID_PAGE_ID4);
-        pageSubPage.setOwner(user);
+        pageSubPage.setOwnerId(user.getId());
         pageSubPage.setPageType(PageType.SUB_PAGE);
         pageSubPage.setParentPage(page);
 
         personProfilePage = new PageImpl();
         personProfilePage.setId(VALID_PAGE_ID2);
-        personProfilePage.setOwner(user);
+        personProfilePage.setOwnerId(user.getId());
         personProfilePage.setPageType(PageType.PERSON_PROFILE);
         personProfileSubPage = new PageImpl();
         personProfileSubPage.setId(VALID_PAGE_ID3);
-        personProfileSubPage.setOwner(user);
+        personProfileSubPage.setOwnerId(user.getId());
         personProfileSubPage.setPageType(PageType.PERSON_PROFILE);
         personProfileSubPage.setParentPage(personProfilePage);
 

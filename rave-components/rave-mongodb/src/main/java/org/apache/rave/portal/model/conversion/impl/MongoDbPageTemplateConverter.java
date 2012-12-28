@@ -20,22 +20,20 @@
 package org.apache.rave.portal.model.conversion.impl;
 
 import com.google.common.collect.Lists;
-import org.apache.rave.portal.model.*;
+import org.apache.rave.portal.model.MongoDbPageTemplate;
+import org.apache.rave.portal.model.PageTemplate;
+import org.apache.rave.portal.model.PageTemplateRegion;
+import org.apache.rave.portal.model.PageTemplateWidget;
 import org.apache.rave.portal.model.conversion.HydratingModelConverter;
 import org.apache.rave.portal.model.impl.PageTemplateRegionImpl;
 import org.apache.rave.portal.repository.PageLayoutRepository;
-import org.apache.rave.portal.repository.WidgetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-import static org.apache.rave.portal.model.util.MongoDbModelUtil.generateId;
-
 @Component
 public class MongoDbPageTemplateConverter implements HydratingModelConverter<PageTemplate, MongoDbPageTemplate> {
-    @Autowired
-    private WidgetRepository widgetRepository;
 
     @Autowired
     private PageLayoutRepository pageLayoutRepository;
@@ -49,7 +47,6 @@ public class MongoDbPageTemplateConverter implements HydratingModelConverter<Pag
         for (PageTemplateRegion region : dehydrated.getPageTemplateRegions()) {
             region.setPageTemplate(dehydrated);
             for (PageTemplateWidget widget : region.getPageTemplateWidgets()) {
-                ((MongoDbPageTemplateWidget) widget).setWidgetRepository(widgetRepository);
                 widget.setPageTemplateRegion(region);
             }
         }
@@ -89,16 +86,8 @@ public class MongoDbPageTemplateConverter implements HydratingModelConverter<Pag
         return converted;
     }
 
-    public void setWidgetRepository(WidgetRepository widgetRepository) {
-        this.widgetRepository = widgetRepository;
-    }
-
     public void setPageLayoutRepository(PageLayoutRepository pageLayoutRepository) {
         this.pageLayoutRepository = pageLayoutRepository;
-    }
-
-    public WidgetRepository getWidgetRepository() {
-        return widgetRepository;
     }
 
     public PageLayoutRepository getPageLayoutRepository() {
@@ -108,43 +97,19 @@ public class MongoDbPageTemplateConverter implements HydratingModelConverter<Pag
     private PageTemplateRegion convert(PageTemplateRegion region) {
         PageTemplateRegionImpl converted = region instanceof PageTemplateRegionImpl ? ((PageTemplateRegionImpl) region) : new PageTemplateRegionImpl();
         updateProperties(region, converted);
-
-        if (region.getPageTemplateWidgets() != null) {
-            List<PageTemplateWidget> convertedWidgets = Lists.newArrayList();
-            for (PageTemplateWidget widget : region.getPageTemplateWidgets()) {
-                convertedWidgets.add(convert(widget));
-            }
-            converted.setPageTemplateWidgets(convertedWidgets);
-        }
+        converted.setPageTemplateWidgets(region.getPageTemplateWidgets());
         return converted;
-    }
-
-    private PageTemplateWidget convert(PageTemplateWidget widget) {
-        MongoDbPageTemplateWidget converted = widget instanceof MongoDbPageTemplateWidget ? ((MongoDbPageTemplateWidget) widget) : new MongoDbPageTemplateWidget();
-        updateProperties(widget, converted);
-        return converted;
-    }
-
-
-    private void updateProperties(PageTemplateWidget source, MongoDbPageTemplateWidget converted) {
-        converted.setId(source.getId() == null ? generateId() : source.getId());
-        converted.setHideChrome(source.isHideChrome());
-        converted.setPageTemplateRegion(null);
-        converted.setRenderSeq(source.getRenderSeq());
-        converted.setWidgetId(source.getWidget().getId());
-        converted.setWidget(null);
-        converted.setLocked(source.isLocked());
     }
 
     private void updateProperties(PageTemplateRegion source, PageTemplateRegionImpl converted) {
-        converted.setId(source.getId() == null ? generateId() : source.getId());
+        converted.setId(source.getId());
         converted.setRenderSequence(source.getRenderSequence());
         converted.setPageTemplate(null);
         converted.setLocked(source.isLocked());
     }
 
     private void updateProperties(PageTemplate source, MongoDbPageTemplate converted) {
-        converted.setId(source.getId() == null ? generateId() : source.getId());
+        converted.setId(source.getId());
         converted.setName(source.getName());
         converted.setDescription(source.getDescription());
         converted.setPageType(source.getPageType());

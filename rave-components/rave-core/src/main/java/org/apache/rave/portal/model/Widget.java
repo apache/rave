@@ -24,7 +24,7 @@ import java.util.List;
 
 @XmlTransient
 public interface Widget {
-    Long getId();
+    String getId();
 
     String getScreenshotUrl();
 
@@ -71,9 +71,9 @@ public interface Widget {
 
     void setComments(List<WidgetComment> comments);
 
-    User getOwner();
+    String getOwnerId();
 
-    void setOwner(User owner);
+    void setOwnerId(String owner);
 
     /**
      * Gets the collection of user ratings for this Widget.

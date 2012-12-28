@@ -62,7 +62,7 @@ public class MongoModelTemplate<T, E extends T> implements MongoModelOperations<
     }
 
     @Override
-    public T get(long id) {
+    public T get(String id) {
         E fromDb = mongoTemplate.findById(id, dbType, collection);
         if(fromDb == null) {
             throw new IllegalStateException("Could not find requested page: " + id);

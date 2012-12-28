@@ -20,13 +20,14 @@
 package org.apache.rave.provider.opensocial.service;
 
 import org.apache.rave.portal.model.RegionWidget;
+import org.apache.rave.portal.model.Widget;
 import org.apache.rave.provider.opensocial.exception.SecurityTokenException;
 import org.apache.shindig.auth.SecurityToken;
 
 public interface SecurityTokenService {
-    SecurityToken getSecurityToken(RegionWidget regionWidget) throws SecurityTokenException;
+    SecurityToken getSecurityToken(RegionWidget regionWidget, Widget widget) throws SecurityTokenException;
 
-    String getEncryptedSecurityToken(RegionWidget regionWidget) throws SecurityTokenException;
+    String getEncryptedSecurityToken(RegionWidget regionWidget, Widget widget) throws SecurityTokenException;
 
     SecurityToken decryptSecurityToken(String encryptedSecurityToken) throws SecurityTokenException;
 

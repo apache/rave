@@ -26,6 +26,7 @@ Template for rendering a RegionWidget including wrapper chrome, toolbars, menus,
 <%@ taglib prefix="portal" uri="http://www.apache.org/rave/tags" %>
 <%@ attribute name="regionWidget" type="org.apache.rave.portal.model.RegionWidget" required="true" description="The regionWidget object" %>
 
+<portal:widget var="widget" id="${regionWidget.widgetId}" />
 <c:set var="isLocked" value="${regionWidget.locked}" />
 <c:set var="isHideChrome" value="${regionWidget.hideChrome}" />
 <fmt:setBundle basename="messages"/>
@@ -39,11 +40,11 @@ Template for rendering a RegionWidget including wrapper chrome, toolbars, menus,
             </c:if>
             <div id="widget-${regionWidget.id}-title" class="widget-title">
                 <c:choose>
-                    <c:when test="${not empty regionWidget.widget.titleUrl}">
-                        <a href="<c:out value="${regionWidget.widget.titleUrl}"/>" rel="external"><c:out value="${regionWidget.widget.title}"/></a>
+                    <c:when test="${not empty widget.titleUrl}">
+                        <a href="<c:out value="${widget.titleUrl}"/>" rel="external"><c:out value="${widget.title}"/></a>
                     </c:when>
                     <c:otherwise>
-                        <c:out value="${regionWidget.widget.title}"/>
+                        <c:out value="${widget.title}"/>
                     </c:otherwise>
                 </c:choose>
             </div>
@@ -51,7 +52,7 @@ Template for rendering a RegionWidget including wrapper chrome, toolbars, menus,
             <%-- These are toolbar buttons --%>
             <div id="widget-${regionWidget.id}-toolbar" class="widget-toolbar <c:if test="${isLocked}">hidden</c:if>">
                 <div id="widget-${regionWidget.id}-widget-menu-wrapper" class="dropdown widget-menu-wrapper">
-                    <a id="widget-${regionWidget.id}-menu-button" class="dropdown-toggle" data-toggle="dropdown">
+                    <a id="widget-${regionWidget.id}-menu-button" class="dropdown-toggle"  onclick="rave.layout.addIframeOverlays(event)">
                         <i class="icon-cog"></i>
                     </a>
                     <ul id="widget-${regionWidget.id}-menu" class="dropdown-menu widget-menu">
@@ -86,6 +87,16 @@ Template for rendering a RegionWidget including wrapper chrome, toolbars, menus,
                                 <fmt:message key="widget.menu.about"/>
                             </a>
                         </li>
+                        <li id="widget-${regionWidget.id}-menu-comment-item">
+                            <a href="#">
+                                <fmt:message key="widget.menu.comment"/>
+                            </a>
+                        </li>
+                        <li id="widget-${regionWidget.id}-menu-rate-item">
+                            <a href="#">
+                                <fmt:message key="widget.menu.rate"/>
+                            </a>
+                        </li>
                     </ul>
                 </div>
 
@@ -96,7 +107,7 @@ Template for rendering a RegionWidget including wrapper chrome, toolbars, menus,
             </div>
 
             <%-- if widget is disabled then display notification in titlebar --%>
-            <c:if test="${regionWidget.widget.disableRendering}">
+            <c:if test="${widget.disableRendering}">
                 <div id="widget-${regionWidget.id}-disabled" class="widget-disabled-icon ui-icon ui-icon-alert" title="<fmt:message key="widget.chrome.disabled"/>"></div>
             </c:if>
         </div>
@@ -104,6 +115,6 @@ Template for rendering a RegionWidget including wrapper chrome, toolbars, menus,
 
     <div class="widget-prefs" id="widget-${regionWidget.id}-prefs-content"></div>
     <div class="widget" id="widget-${regionWidget.id}-body">
-        <portal:render-widget regionWidget="${regionWidget}" />
+        <portal:render-widget regionWidget="${regionWidget}" widget="${widget}" />
     </div>
 </div>

@@ -26,6 +26,7 @@ import org.apache.rave.portal.web.renderer.RenderScope;
 import org.apache.rave.portal.web.renderer.Renderer;
 import org.apache.rave.portal.web.renderer.ScriptLocation;
 import org.apache.rave.portal.web.renderer.ScriptManager;
+import org.apache.rave.portal.web.renderer.model.RegionWidgetWrapper;
 import org.apache.rave.portal.web.renderer.model.RenderContext;
 import org.apache.rave.provider.opensocial.Constants;
 import org.apache.rave.provider.opensocial.service.OpenSocialService;
@@ -46,7 +47,7 @@ public class OpenSocialWidgetRendererTest {
     private OpenSocialService openSocialService;
     private SecurityTokenService securityTokenService;
     private ScriptManager scriptManager;
-    private Renderer<RegionWidget> renderer;
+    private Renderer<RegionWidgetWrapper> renderer;
 
     private static final String VALID_GADGET_URL = "http://www.example.com/gadget.xml";
     private static final String VALID_METADATA = "metadata";
@@ -72,10 +73,10 @@ public class OpenSocialWidgetRendererTest {
 
     @Test
     public void render_valid() throws JSONException {
-        final long WIDGET_ID = 999L;
-        final long REGION_WIDGET_ID = 12345L;
-        final long REGION_ID = 8675309L;
-        final long VALID_SUBPAGE_ID = 778899L;
+        final String WIDGET_ID = "999";
+        final String REGION_WIDGET_ID = "12345";
+        final String REGION_ID = "8675309";
+        final String VALID_SUBPAGE_ID = "778899";
         final String VALID_SUBPAGE_NAME = "My Activity";
         final boolean VALID_IS_DEFAULT_SUBPAGE = true;
 
@@ -95,18 +96,18 @@ public class OpenSocialWidgetRendererTest {
         w.setId(WIDGET_ID);
         w.setType(Constants.WIDGET_TYPE);
         w.setUrl(VALID_GADGET_URL);
+
         Region region = new RegionImpl(REGION_ID);
         region.setPage(subPage);
-        RegionWidget rw = new RegionWidgetImpl();
-        rw.setId(REGION_WIDGET_ID);
+        RegionWidget rw = new RegionWidgetImpl(REGION_WIDGET_ID);
         rw.setCollapsed(VALID_COLLAPSED);
-        rw.setWidget(w);
+        rw.setWidgetId(w.getId());
         rw.setRegion(region);
         rw.setHideChrome(VALID_HIDE_CHROME);
         rw.setLocked(VALID_LOCKED);
-        rw.setPreferences(Arrays.asList((RegionWidgetPreference)new RegionWidgetPreferenceImpl( 1L, "color", "blue"),
-                                        new RegionWidgetPreferenceImpl(1L, "speed", "fast"),
-                                        new RegionWidgetPreferenceImpl( 1L, null, null)));
+        rw.setPreferences(Arrays.asList((RegionWidgetPreference)new RegionWidgetPreferenceImpl( "1", "color", "blue"),
+                                        new RegionWidgetPreferenceImpl("1", "speed", "fast"),
+                                        new RegionWidgetPreferenceImpl( "1", null, null)));
 
         final String markup =
             "<script>rave.registerWidget('" + REGION_ID + "', {type: 'OpenSocial'," +
@@ -122,7 +123,7 @@ public class OpenSocialWidgetRendererTest {
             " subPage: {id: '" + VALID_SUBPAGE_ID + "', name: '" + VALID_SUBPAGE_NAME + "', isDefault: " + VALID_IS_DEFAULT_SUBPAGE + "}" +
             "});</script>";
 
-        expect(securityTokenService.getEncryptedSecurityToken(rw)).andReturn(VALID_SECURITY_TOKEN);
+        expect(securityTokenService.getEncryptedSecurityToken(rw, w)).andReturn(VALID_SECURITY_TOKEN);
         replay(securityTokenService);
 
         String key = OpenSocialWidgetRenderer.REGISTER_WIDGET_KEY+"-"+rw.getId();
@@ -130,7 +131,9 @@ public class OpenSocialWidgetRendererTest {
         expectLastCall();
         replay(scriptManager);
 
-        String result = renderer.render(rw, renderContext);
+        RegionWidgetWrapper wrapper = new RegionWidgetWrapper(w, rw);
+
+        String result = renderer.render(wrapper, renderContext);
 
         assertThat(result, is(equalTo("<!-- RegionWidget '" + rw.getId() + "' placeholder -->")));
         verify(scriptManager);
@@ -138,19 +141,24 @@ public class OpenSocialWidgetRendererTest {
 
     @Test
     public void render_null() {
+        final String WIDGET_ID = "999";
+        final String REGION_WIDGET_ID = "12345";
+        final String REGION_ID = "8675309";
+
         Page page = new PageImpl();
         page.setPageType(PageType.USER);
-
+        
         WidgetImpl w = new WidgetImpl();
         w.setType(Constants.WIDGET_TYPE);
-        Region region = new RegionImpl(1L);
+
+        Region region = new RegionImpl(REGION_ID);
         region.setPage(page);
         RegionWidget rw = new RegionWidgetImpl();
-        rw.setWidget(w);
+        rw.setWidgetId(w.getId());
         rw.setRegion(region);
 
         final String markup =
-            "<script>rave.registerWidget('1', {type: 'OpenSocial'," +
+            "<script>rave.registerWidget('8675309', {type: 'OpenSocial'," +
             " regionWidgetId: 'null'," +
             " widgetUrl: 'null', " +
             " securityToken: 'null', " +
@@ -166,19 +174,24 @@ public class OpenSocialWidgetRendererTest {
         scriptManager.registerScriptBlock(OpenSocialWidgetRenderer.REGISTER_WIDGET_KEY, markup, ScriptLocation.AFTER_RAVE, RenderScope.CURRENT_REQUEST, null);
         expectLastCall();
         replay(scriptManager);
-        String result = renderer.render(rw, null);
+
+        RegionWidgetWrapper wrapper = new RegionWidgetWrapper(w, rw);
+
+        String result = renderer.render(wrapper, null);
         verify(scriptManager);
     }
 
     @Test(expected = NotSupportedException.class)
     public void render_invalid() {
-        WidgetImpl w = new WidgetImpl();
+        WidgetImpl w = new WidgetImpl("1");
         w.setType("NONE");
         w.setUrl("http://www.example.com/gadget.xml");
-        RegionWidget rw = new RegionWidgetImpl();
-        rw.setId(1L);
-        rw.setWidget(w);
 
-        renderer.render(rw, null);
+        RegionWidget rw = new RegionWidgetImpl("1");
+        rw.setWidgetId(w.getId());
+
+        RegionWidgetWrapper wrapper = new RegionWidgetWrapper(w, rw);
+
+        renderer.render(wrapper, null);
     }
 }

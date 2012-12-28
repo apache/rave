@@ -23,8 +23,8 @@
 <%--@elvariable id="tabs" type="org.apache.rave.portal.web.model.NavigationMenu"--%>
 <c:if test="${not empty tabs}">
     <nav>
-        <div class="tabbable tabs-left">
-            <ul class="nav nav-tabs">
+        <div class="tabbable">
+            <ul class="nav nav-tabs nav-stacked">
                 <c:forEach items="${tabs.navigationItems}" var="navItem">
                     <c:choose>
                         <c:when test="${navItem.selected}">

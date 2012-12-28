@@ -27,14 +27,10 @@ import java.util.Date;
  */
 @XmlTransient
 public interface WidgetComment {
-    Long getId();
-    void setId(Long id);
+    String getId();
 
-    User getUser();
-    void setUser(User user);
-
-    Long getWidgetId();
-    void setWidgetId(Long widgetId);
+    String getUserId();
+    void setUserId(String userId);
 
     String getText();
     void setText(String text);

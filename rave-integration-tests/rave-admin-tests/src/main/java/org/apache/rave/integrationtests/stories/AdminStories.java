@@ -19,11 +19,10 @@
 
 package org.apache.rave.integrationtests.stories;
 
-import java.util.List;
-
 import org.jbehave.core.io.StoryFinder;
 
-import static java.util.Arrays.asList;
+import java.util.List;
+
 import static org.jbehave.core.io.CodeLocations.codeLocationFromClass;
 
 /**
@@ -31,8 +30,14 @@ import static org.jbehave.core.io.CodeLocations.codeLocationFromClass;
  */
 public class AdminStories extends PortalStories {
 
-  @Override
-  protected List<String> storyPaths() {
-    return new StoryFinder().findPaths(codeLocationFromClass(this.getClass()).getFile(), asList("**/deleteNewUser.story"), null);
-  }
+    @Override
+    protected List<String> storyPaths() {
+        String story = System.getProperty("story");
+        if (story != null && !story.isEmpty()) {
+            return new StoryFinder().findPaths(codeLocationFromClass(this.getClass()), "**/" + story + ".story", "**/excluded*.story");
+        } else {
+            return new StoryFinder().findPaths(codeLocationFromClass(this.getClass()), "**/*.story", "**/excluded*.story");
+        }
+
+    }
 }

@@ -33,7 +33,7 @@ public class WidgetMarketplaceWidgetResult {
 
     public Widget getWidget(){
         MarketplaceWidgetDetailResult result = getWidgetProfile();
-        return result.toWidget(1L);
+        return result.toWidget("1");
     }
     
     /**
@@ -42,10 +42,7 @@ public class WidgetMarketplaceWidgetResult {
     public MarketplaceWidgetDetailResult getWidgetProfile() {
         return widgetProfile;
     }
-    
-    /**
-     * @param widgets the widgets to set
-     */
+
     public void setWidgetProfile(MarketplaceWidgetDetailResult profile) {
         this.widgetProfile = profile;
     }
@@ -66,7 +63,7 @@ public class WidgetMarketplaceWidgetResult {
         public String downloadUrl;
         
                 
-        public Widget toWidget(Long widgetIndex){
+        public Widget toWidget(String widgetIndex){
             ExternalWidgetImpl widget = new ExternalWidgetImpl(widgetIndex);
             widget.setTitle(name);
             widget.setDescription(description);

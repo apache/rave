@@ -31,19 +31,22 @@ under the License.
     <rave:third_party_head_js/>
  </head>
 <body>
+<div class="wrapper">
 <%-- Header Content --%>
-<tiles:insertAttribute name="header"/>
-<%-- Main Body Content --%>
-<tiles:insertAttribute name="body"/>
+	<tiles:insertAttribute name="header"/>
+	<%-- Main Body Content --%>
+	<tiles:insertAttribute name="body"/>
+	<div class="push"></div>
+</div>
 <%-- Footer Content --%>
 <tiles:insertAttribute name="footer"/>
 <%-- render any script that needs to execute pre-src includes --%>
 <portal:render-init-script location="${'BEFORE_RAVE'}" />
 <%-- render the javascript src includes at the bottom of the page for performance --%>
 <rave:rave_js/>
-<%-- render custom javascript from extension projects if the tag is overlayed --%>
-<rave:custom_js/>
 <%-- render any script that needs to execute post-src includes --%>
 <portal:render-init-script location="${'AFTER_RAVE'}" />
+<%-- render custom javascript from extension projects if the tag is overlayed --%>
+<rave:custom_js/>
 </body>
 </html>

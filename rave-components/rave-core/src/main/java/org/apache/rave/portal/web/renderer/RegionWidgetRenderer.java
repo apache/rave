@@ -19,9 +19,9 @@
 
 package org.apache.rave.portal.web.renderer;
 
-import org.apache.rave.portal.model.RegionWidget;
+import org.apache.rave.portal.web.renderer.model.RegionWidgetWrapper;
 
 /**
  * Scoped renderer that provides additional RegionWidget related rendering operations
  */
-public interface RegionWidgetRenderer extends Renderer<RegionWidget> {}
+public interface RegionWidgetRenderer extends Renderer<RegionWidgetWrapper> {}

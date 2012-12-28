@@ -23,6 +23,7 @@ import org.apache.rave.portal.model.Page;
 import org.apache.rave.portal.model.Region;
 import org.apache.rave.portal.model.RegionWidget;
 import org.apache.rave.portal.model.impl.*;
+import org.apache.rave.portal.service.OmdlService;
 import org.apache.rave.portal.service.PageService;
 import org.apache.rave.portal.web.api.rpc.model.RpcResult;
 import org.junit.Before;
@@ -39,10 +40,11 @@ public class PageApiTest {
     private final String INTERNAL_ERROR_MESSAGE = "Internal Error";
     private PageApi pageApi;
     private PageService pageService;
-    private final long REGION_WIDGET_ID = 35;
+    private OmdlService omdlService;
+    private final String REGION_WIDGET_ID = "35";
     private final int NEW_POSITION = 3;
-    private final long PAGE_ID = 20L;
-    private final long PAGE_2_ID = 38L;
+    private final String PAGE_ID = "20";
+    private final String PAGE_2_ID = "30";
 
     private Page page, page2;
 
@@ -50,7 +52,8 @@ public class PageApiTest {
     @Before
     public void setup() {
         pageService = createMock(PageService.class);
-        pageApi = new PageApi(pageService);
+        omdlService = createMock(OmdlService.class);
+        pageApi = new PageApi(pageService, omdlService);
 
         page = new PageImpl(PAGE_ID);
         page2 = new PageImpl(PAGE_2_ID);
@@ -58,8 +61,8 @@ public class PageApiTest {
 
     @Test
     public void moveWidgetOnPage_validParams() {
-        final long TO_REGION = 1;
-        final long FROM_REGION = 2;
+        final String TO_REGION = "1";
+        final String FROM_REGION = "2";
 
         expect(pageService.moveRegionWidget(REGION_WIDGET_ID, NEW_POSITION, TO_REGION, FROM_REGION)).andReturn(new RegionWidgetImpl());
         replay(pageService);
@@ -74,8 +77,8 @@ public class PageApiTest {
 
     @Test
     public void moveWidgetOnPage_invalidParams() {
-        final long TO_REGION = -1;
-        final long FROM_REGION = 2;
+        final String TO_REGION = "-1";
+        final String FROM_REGION = "2";
 
         expect(pageService.moveRegionWidget(REGION_WIDGET_ID, NEW_POSITION, TO_REGION, FROM_REGION)).andThrow(new IllegalArgumentException(PARAM_ERROR_MESSAGE));
         replay(pageService);
@@ -91,8 +94,8 @@ public class PageApiTest {
 
     @Test
     public void moveWidgetOnPage_internalError() {
-        final long TO_REGION = 1;
-        final long FROM_REGION = 2;
+        final String TO_REGION = "1";
+        final String FROM_REGION = "2";
 
         expect(pageService.moveRegionWidget(REGION_WIDGET_ID, NEW_POSITION, TO_REGION, FROM_REGION)).andThrow(new RuntimeException(INTERNAL_ERROR_MESSAGE));
         replay(pageService);
@@ -108,8 +111,8 @@ public class PageApiTest {
 
     @Test
     public void addWidget_validParams() {
-        final int PAGE_ID = 1;
-        final long WIDGET_ID = 2;
+        final String PAGE_ID = "1";
+        final String WIDGET_ID = "2";
 
         expect(pageService.addWidgetToPage(PAGE_ID, WIDGET_ID)).andReturn(new RegionWidgetImpl());
         replay(pageService);
@@ -124,8 +127,8 @@ public class PageApiTest {
 
     @Test
     public void addWidget_invalidParams() {
-        final int PAGE_ID = 1;
-        final long WIDGET_ID = 2;
+        final String PAGE_ID = "1";
+        final String WIDGET_ID = "2";
 
         expect(pageService.addWidgetToPage(PAGE_ID, WIDGET_ID)).andThrow(new IllegalArgumentException(PARAM_ERROR_MESSAGE));
         replay(pageService);
@@ -140,8 +143,8 @@ public class PageApiTest {
 
     @Test
     public void addWidget_internalError() {
-        final int PAGE_ID = 1;
-        final long WIDGET_ID = 2;
+        final String PAGE_ID = "1";
+        final String WIDGET_ID = "2";
 
         expect(pageService.addWidgetToPage(PAGE_ID, WIDGET_ID)).andThrow(new RuntimeException(INTERNAL_ERROR_MESSAGE));
         replay(pageService);
@@ -156,7 +159,7 @@ public class PageApiTest {
 
     @Test
     public void deleteWidget_validParams() {
-        final long WIDGET_ID = 3;
+        final String WIDGET_ID = "3";
         expect(pageService.removeWidgetFromPage(WIDGET_ID)).andReturn(new RegionImpl());
         replay(pageService);
 
@@ -170,7 +173,7 @@ public class PageApiTest {
 
    @Test
     public void deleteWidget_invalidParams() {
-        final long WIDGET_ID = 2;
+        final String WIDGET_ID = "2";
 
         expect(pageService.removeWidgetFromPage(WIDGET_ID)).andThrow(new IllegalArgumentException(PARAM_ERROR_MESSAGE));
         replay(pageService);
@@ -185,7 +188,7 @@ public class PageApiTest {
 
     @Test
     public void deleteWidget_internalError() {
-        final long WIDGET_ID = 2;
+        final String WIDGET_ID = "2";
 
         expect(pageService.removeWidgetFromPage(WIDGET_ID)).andThrow(new RuntimeException(INTERNAL_ERROR_MESSAGE));
         replay(pageService);

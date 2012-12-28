@@ -54,7 +54,7 @@ public class DefaultPageService implements PageService {
     private final PageTemplateRepository pageTemplateRepository;
     private final String defaultPageName;
 
-    private final long MOVE_PAGE_DEFAULT_POSITION_INDEX = -1L;
+    private final String MOVE_PAGE_DEFAULT_POSITION_INDEX = "-1";
 
     @Autowired
     public DefaultPageService(PageRepository pageRepository,
@@ -76,18 +76,18 @@ public class DefaultPageService implements PageService {
     }
 
     @Override
-    public Page getPage(long pageId) {
+    public Page getPage(String pageId) {
         return pageRepository.get(pageId);
     }
 
     @Override
-    public List<Page> getAllUserPages(long userId) {
+    public List<Page> getAllUserPages(String userId) {
         return pageRepository.getAllPages(userId, PageType.USER);
     }
 
     @Override
     @Transactional
-    public Page getPersonProfilePage(long userId) {
+    public Page getPersonProfilePage(String userId) {
         List<Page> profilePages = pageRepository.getAllPages(userId, PageType.PERSON_PROFILE);
         Page personPage = null;
         if (profilePages.isEmpty()){
@@ -99,7 +99,7 @@ public class DefaultPageService implements PageService {
     }
 
     @Override
-    public Page getPageFromList(long pageId, List<Page> pages) {
+    public Page getPageFromList(String pageId, List<Page> pages) {
        for(Page page: pages) {
            if(page.getId().equals(pageId)){
                return page;
@@ -122,7 +122,7 @@ public class DefaultPageService implements PageService {
 
     @Override
     @Transactional
-    public Page addNewDefaultUserPage(long userId) {
+    public Page addNewDefaultUserPage(String userId) {
         User user = userService.getUserById(userId);
         return addNewUserPage(user, defaultPageName, user.getDefaultPageLayout().getCode());
     }
@@ -149,13 +149,13 @@ public class DefaultPageService implements PageService {
         long renderSequence = (parentPage.getSubPages() != null) ? parentPage.getSubPages().size() + 1 : 1;
         Page page = new PageImpl();
         page.setName(pageName);
-        page.setOwner(user);
+        page.setOwnerId(user.getId());
         page.setPageLayout(pageLayout);
         page.setRegions(regions);
         // set this as a "sub-page" page type
         page.setPageType(PageType.SUB_PAGE);
 
-        PageUser pageUser = new PageUserImpl(page.getOwner(), page, renderSequence);
+        PageUser pageUser = new PageUserImpl(page.getOwnerId(), page, renderSequence);
         pageUser.setPageStatus(PageInvitationStatus.OWNER);
         List<PageUser> members = new ArrayList<PageUser>();
         members.add(pageUser);
@@ -180,7 +180,7 @@ public class DefaultPageService implements PageService {
 
     @Override
     @Transactional
-    public void deletePage(long pageId) {
+    public void deletePage(String pageId) {
         User user = userService.getAuthenticatedUser();
         // first delete the page
         pageRepository.delete(pageRepository.get(pageId));
@@ -194,13 +194,13 @@ public class DefaultPageService implements PageService {
 
     @Override
     @Transactional
-    public int deletePages(long userId, PageType pageType) {
+    public int deletePages(String userId, PageType pageType) {
         return pageRepository.deletePages(userId, pageType);
     }
 
     @Override
     @Transactional
-    public RegionWidget moveRegionWidget(long regionWidgetId, int newPosition, long toRegionId, long fromRegionId) {
+    public RegionWidget moveRegionWidget(String regionWidgetId, int newPosition, String toRegionId, String fromRegionId) {
         Region target = getFromRepository(toRegionId, regionRepository);
         // verify that the target Region and the RegionWidget are not locked and can be modified
         RegionWidget regionWidget = regionWidgetRepository.get(regionWidgetId);
@@ -217,7 +217,7 @@ public class DefaultPageService implements PageService {
 
     @Override
     @Transactional
-    public RegionWidget moveRegionWidgetToPage(long regionWidgetId, long toPageId) {
+    public RegionWidget moveRegionWidgetToPage(String regionWidgetId, String toPageId) {
         // Get the new page
         Page toPage = getFromRepository(toPageId, pageRepository);
         // Get the region widget
@@ -242,7 +242,7 @@ public class DefaultPageService implements PageService {
 
     @Override
     @Transactional
-    public Region removeWidgetFromPage(long regionWidgetId) {
+    public Region removeWidgetFromPage(String regionWidgetId) {
         RegionWidget regionWidget = getFromRepository(regionWidgetId, regionWidgetRepository);
         verifyRegionWidgetIsNotLocked(regionWidget);
         regionWidgetRepository.delete(regionWidget);
@@ -251,29 +251,44 @@ public class DefaultPageService implements PageService {
 
     @Override
     @Transactional
-    public RegionWidget addWidgetToPage(long pageId, long widgetId) {
+    public RegionWidget addWidgetToPage(String pageId, String widgetId) {
         Page page = getFromRepository(pageId, pageRepository);
         Widget widget = getFromRepository(widgetId, widgetRepository);
         Region region = page.getRegions().get(0);
         verifyRegionIsNotLocked(region);
         return createWidgetInstance(widget, region, 0);
     }
+    
+    @Override
+    @Transactional
+    public RegionWidget addWidgetToPageRegion(String pageId, String widgetId, String regionId) {
+        Page page = getFromRepository(pageId, pageRepository);
+        Widget widget = getFromRepository(widgetId, widgetRepository);
+        for(Region region : page.getRegions()){
+            if(region.getId().equals(regionId)){
+                verifyRegionIsNotLocked(region);
+                return createWidgetInstance(widget, region, 0);
+            }
+        }
+        // region not found
+        return null;
+    }
 
     @Override
     @Transactional
-    public Page movePage(long pageId, long moveAfterPageId) {
+    public Page movePage(String pageId, String moveAfterPageId) {
         return doMovePage(pageId, moveAfterPageId);
     }
 
     @Override
     @Transactional
-    public Page movePageToDefault(long pageId) {
+    public Page movePageToDefault(String pageId) {
         return doMovePage(pageId, MOVE_PAGE_DEFAULT_POSITION_INDEX);
     }
 
     @Override
     @Transactional
-    public Page updatePage(long pageId, String name, String pageLayoutCode) {
+    public Page updatePage(String pageId, String name, String pageLayoutCode) {
         Page page = pageRepository.get(pageId);
         PageLayout newLayout = pageLayoutRepository.getByPageLayoutCode(pageLayoutCode);
         PageLayout curLayout = page.getPageLayout();
@@ -302,10 +317,38 @@ public class DefaultPageService implements PageService {
     }
 
     @Transactional
-    public Boolean addMemberToPage(long pageId, long userId){
+    public Boolean clonePageForUser(String pageId, String userId, String pageName) {
+        Widget widget = null;
+        Page page = getPage(pageId);
+        if(pageName == null || pageName.equals("null")){
+            // try to use the original page name if none supplied
+            pageName = page.getName();
+        }
+        Page clonedPage = addNewUserPage(userService.getUserById(userId), pageName, page.getPageLayout().getCode());
+        // populate all the widgets in cloned page from original
+        for(int i=0; i<page.getRegions().size(); i++){
+            for(int j=0; j<page.getRegions().get(i).getRegionWidgets().size(); j++){
+                String widgetId = page.getRegions().get(i).getRegionWidgets().get(j).getWidgetId();
+                widget = widgetRepository.get(widgetId);
+                addWidgetToPageRegion(clonedPage.getId(), widget.getId(), clonedPage.getRegions().get(i).getId());
+            }
+        }
+        // newly created page - so only one pageUser
+        PageUser pageUser = clonedPage.getMembers().get(0);
+        // update status to pending
+        pageUser.setPageStatus(PageInvitationStatus.PENDING);
+        if(pageRepository.save(clonedPage) != null){
+            return Boolean.TRUE;
+        }else{
+            return Boolean.FALSE;
+        }
+    }
+
+    @Transactional
+    public Boolean addMemberToPage(String pageId, String userId){
         Page page = getPage(pageId);
         PageUser pageUser = new PageUserImpl();
-        pageUser.setUser(userService.getUserById(userId));
+        pageUser.setUserId(userService.getUserById(userId).getId());
         pageUser.setPage(page);
         pageUser.setPageStatus(PageInvitationStatus.PENDING);
         List<PageUser> thisUsersPages = pageRepository.getPagesForUser(userService.getUserById(userId).getId(), PageType.USER);
@@ -319,11 +362,20 @@ public class DefaultPageService implements PageService {
     }
 
     @Transactional
-    public Boolean removeMemberFromPage(long pageId, long userId){
+    public Boolean removeMemberFromPage(String pageId, String userId){
+        User user = userService.getAuthenticatedUser();
         Page page = this.getPage(pageId);
+        if(page.getOwnerId().equals(user.getId())){
+            // If I am the owner, this page has been cloned
+            // Declining a cloned page means there is no need to strip
+            // out this users pageUser object, instead remove the page itself
+            // which also removes the pageUser object further down the stack
+            pageRepository.delete(page);
+            return true;
+        }
         PageUser pageUserToRemove = null;
         for(PageUser pageUser : page.getMembers()){
-            if(pageUser.getUser().getId().equals(userId)){
+            if(pageUser.getUserId().equals(userId)){
                 pageUserToRemove = pageUser;
                 break;
             }
@@ -341,10 +393,10 @@ public class DefaultPageService implements PageService {
 
     @Override
     @Transactional
-    public Boolean updateSharedPageStatus(long pageId, String shareStatus) {
+    public Boolean updateSharedPageStatus(String pageId, String shareStatus) {
         Page page = this.getPage(pageId);
         for(PageUser pageUser : page.getMembers()){
-            if(pageUser.getUser().equals(userService.getAuthenticatedUser())){
+            if(pageUser.getUserId().equals(userService.getAuthenticatedUser().getId())){
                 pageUser.setPageStatus(PageInvitationStatus.get(shareStatus));
             }
         }
@@ -357,10 +409,10 @@ public class DefaultPageService implements PageService {
 
     @Override
     @Transactional
-    public Boolean updatePageEditingStatus(long pageId, long userId, boolean isEditor) {
+    public Boolean updatePageEditingStatus(String pageId, String userId, boolean isEditor) {
         Page page = this.getPage(pageId);
         for(PageUser pageUser : page.getMembers()){
-            if(pageUser.getUser().equals(userService.getUserById(userId))){
+            if(pageUser.getUserId().equals(userService.getUserById(userId).getId())){
                 pageUser.setEditor(isEditor);
             }
         }
@@ -447,7 +499,7 @@ public class DefaultPageService implements PageService {
     private RegionWidget createWidgetInstance(Widget widget, Region region, int position) {
         RegionWidget regionWidget = new RegionWidgetImpl();
         regionWidget.setRenderOrder(position);
-        regionWidget.setWidget(widget);
+        regionWidget.setWidgetId(widget.getId());
         // TODO: setLocked and setHideChrome are hard-coded to false for new widgets manually added by users
         //       which makes sense for most default cases.  However should we change them to a customizable property
         //       to allow for more flexibility?
@@ -459,12 +511,12 @@ public class DefaultPageService implements PageService {
         return persistedRegion.getRegionWidgets().get(position);
     }
 
-    private void moveWithinRegion(long regionWidgetId, int newPosition, Region target) {
+    private void moveWithinRegion(String regionWidgetId, int newPosition, Region target) {
         replaceRegionWidget(regionWidgetId, newPosition, target, target);
         updateRenderSequences(target.getRegionWidgets());
     }
 
-    private void moveBetweenRegions(long regionWidgetId, int newPosition, long fromRegion, Region target) {
+    private void moveBetweenRegions(String regionWidgetId, int newPosition, String fromRegion, Region target) {
         Region source = getFromRepository(fromRegion, regionRepository);
         replaceRegionWidget(regionWidgetId, newPosition, target, source);
         updateRenderSequences(source.getRegionWidgets());
@@ -472,7 +524,7 @@ public class DefaultPageService implements PageService {
         regionRepository.save(source);
     }
 
-    private void replaceRegionWidget(long regionWidgetId, int newPosition, Region target, Region source) {
+    private void replaceRegionWidget(String regionWidgetId, int newPosition, Region target, Region source) {
         RegionWidget widget = findRegionWidgetById(regionWidgetId, source.getRegionWidgets());
         source.getRegionWidgets().remove(widget);
         target.getRegionWidgets().add(newPosition, widget);
@@ -510,9 +562,9 @@ public class DefaultPageService implements PageService {
         long renderSequence = defaultUserPage.size() + 1;
         page = new PageImpl();
         page.setName(pageName);
-        page.setOwner(user);
+        page.setOwnerId(user.getId());
         page.setPageLayout(pageLayout);
-        PageUser pageUser = new PageUserImpl(page.getOwner(), page, renderSequence);
+        PageUser pageUser = new PageUserImpl(page.getOwnerId(), page, renderSequence);
         pageUser.setPageStatus(PageInvitationStatus.OWNER);
         pageUser.setEditor(true);
 
@@ -539,7 +591,7 @@ public class DefaultPageService implements PageService {
         }
     }
 
-    private Page doMovePage(long pageId, long moveAfterPageId) {
+    private Page doMovePage(String pageId, String moveAfterPageId) {
         // get the logged in user
         User user = userService.getAuthenticatedUser();
         // get the page to move and the page to move after
@@ -569,7 +621,7 @@ public class DefaultPageService implements PageService {
         return movingPageUser.getPage();
     }
 
-    private static <T> T getFromRepository(long id, Repository<T> repo) {
+    private static <T> T getFromRepository(String id, Repository<T> repo) {
         T object = repo.get(id);
         if (object == null) {
             throw new IllegalArgumentException("Could not find object of given id in " + repo.getClass().getSimpleName());
@@ -585,7 +637,7 @@ public class DefaultPageService implements PageService {
         }
     }
 
-    private static RegionWidget findRegionWidgetById(Long id, List<RegionWidget> regionWidgets) {
+    private static RegionWidget findRegionWidgetById(String id, List<RegionWidget> regionWidgets) {
         for (RegionWidget widget : regionWidgets) {
             if (widget.getId().equals(id)) {
                 return widget;

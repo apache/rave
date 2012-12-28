@@ -47,7 +47,7 @@ public class MongoDbUser extends UserImpl {
     @JsonIgnore
     private PageLayoutRepository pageLayoutRepository;
 
-    public MongoDbUser(long id) {
+    public MongoDbUser(String id) {
         super(id);
     }
 

@@ -23,17 +23,11 @@ import org.apache.rave.portal.model.Category;
 import org.apache.rave.portal.model.MongoDbCategory;
 import org.apache.rave.portal.model.conversion.HydratingModelConverter;
 import org.apache.rave.portal.repository.MongoWidgetOperations;
-import org.apache.rave.portal.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import static org.apache.rave.portal.model.util.MongoDbModelUtil.generateId;
-
 @Component
 public class MongoDbCategoryConverter implements HydratingModelConverter<Category, MongoDbCategory> {
-
-    @Autowired
-    private UserRepository userRepository;
 
     @Autowired
     private MongoWidgetOperations widgetOperations;
@@ -44,7 +38,6 @@ public class MongoDbCategoryConverter implements HydratingModelConverter<Categor
         if(dehydrated == null) {
             return;
         }
-        dehydrated.setUserRepository(userRepository);
         dehydrated.setWidgetRepository(widgetOperations);
     }
 
@@ -56,21 +49,14 @@ public class MongoDbCategoryConverter implements HydratingModelConverter<Categor
     @Override
     public MongoDbCategory convert(Category source) {
         MongoDbCategory category = new MongoDbCategory();
+        category.setId(source.getId());
         category.setCreatedDate(source.getCreatedDate());
-        category.setCreatedUserId(source.getCreatedUser() ==null ? null : source.getCreatedUser().getId());
-        category.setLastModifiedUserId(source.getLastModifiedUser() == null ? null : source.getLastModifiedUser().getId());
-        category.setId(source.getId() == null ? generateId() : source.getId());
+        category.setCreatedUserId(source.getCreatedUserId());
+        category.setLastModifiedUserId(source.getLastModifiedUserId());
         category.setWidgetRepository(null);
-        category.setUserRepository(null);
-        category.setCreatedUser(null);
-        category.setLastModifiedUser(null);
         category.setText(source.getText());
         category.setWidgets(null);
         return category;
-    }
-
-    public void setUserRepository(UserRepository userRepository) {
-        this.userRepository = userRepository;
     }
 
     public void setMongoWidgetOperations(MongoWidgetOperations mongoWidgetOperations) {

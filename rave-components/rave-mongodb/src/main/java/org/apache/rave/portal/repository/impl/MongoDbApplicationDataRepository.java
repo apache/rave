@@ -30,10 +30,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-import static org.apache.rave.portal.model.util.MongoDbModelUtil.generateId;
+import static org.apache.rave.portal.repository.util.CollectionNames.APP_DATA_COLLECTION;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static org.springframework.data.mongodb.core.query.Query.query;
-import static org.apache.rave.portal.repository.util.CollectionNames.APP_DATA_COLLECTION;
 
 @Repository
 public class MongoDbApplicationDataRepository implements ApplicationDataRepository {
@@ -58,15 +57,12 @@ public class MongoDbApplicationDataRepository implements ApplicationDataReposito
     }
 
     @Override
-    public ApplicationData get(long id) {
+    public ApplicationData get(String id) {
         return template.findById(id, CLASS, APP_DATA_COLLECTION);
     }
 
     @Override
     public ApplicationData save(ApplicationData item) {
-        if(item.getId() == null) {
-            item.setId(generateId());
-        }
         template.save(item, APP_DATA_COLLECTION);
         return item;
     }

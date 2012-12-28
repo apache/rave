@@ -95,7 +95,7 @@ public class WidgetApi {
                SearchResult<Widget> results = widgetService.getAllWidgets();
                // strip out the owner and tag info 
                for(Widget widget : results.getResultSet()){
-                   widget.setOwner(null);
+                   widget.setOwnerId(null);
                    widget.setTags(null);
                }
                return results;

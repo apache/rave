@@ -41,8 +41,8 @@ import static org.junit.Assert.assertTrue;
 @Ignore
 public class PageTest {
 	private Page page;
-	private long id;
-	private long parentId;
+	private String id;
+	private String parentId;
 	private String testName;
 	private JpaUser testOwner;
     private Page parentPage;
@@ -52,29 +52,30 @@ public class PageTest {
 	private List<Region> regions;
 	private PageUser pageUser;
 
-    private final Long SUB_PAGE_1_ID = 666666L;
-    private final Long SUB_PAGE_2_ID = 121212L;
+    private final String SUB_PAGE_1_ID = "666666";
+    private final String SUB_PAGE_2_ID = "121212";
 
 	@Before
 	public void setup(){
-		page=new PageImpl();
-		id=19191991L;
-        parentId = 12345L;
+        long longId = 19191991L;
+        id=Long.toBinaryString(longId);
+        page=new PageImpl(id);
+        parentId = "12345";
 		testName="testName";
-		testOwner=new JpaUser(id);
+		testOwner=new JpaUser(longId);
         parentPage = new PageImpl(parentId);
         subPages = new ArrayList<Page>();
 
         Page subPage1 = new PageImpl();
         subPage1.setId(SUB_PAGE_1_ID);
-        subPage1.setOwner(testOwner);
+        subPage1.setOwnerId(testOwner.getId());
         Page subPage2 = new PageImpl();
         subPage2.setId(SUB_PAGE_2_ID);
-        subPage2.setOwner(testOwner);
+        subPage2.setOwnerId(testOwner.getId());
 
         List<PageUser> pageUsers1 = new ArrayList<PageUser>();
         PageUser pageUser1 = new PageUserImpl();
-        pageUser1.setUser(testOwner);
+        pageUser1.setUserId(id);
         pageUser1.setPage(subPage1);
         pageUser1.setRenderSequence(2L);
         pageUsers1.add(pageUser1);
@@ -82,13 +83,13 @@ public class PageTest {
 
         List<PageUser> pageUsers2 = new ArrayList<PageUser>();
         PageUser pageUser2 = new PageUserImpl();
-        pageUser2.setUser(new JpaUser());
+        pageUser2.setUserId("");
         pageUser2.setPage(subPage2);
         pageUser2.setRenderSequence(19L);
         pageUsers2.add(pageUser2);
 
         PageUser pageUser3 = new PageUserImpl();
-        pageUser3.setUser(testOwner);
+        pageUser3.setUserId(testOwner.getId());
         pageUser3.setPage(subPage2);
         pageUser3.setRenderSequence(1L);
         pageUsers2.add(pageUser3);
@@ -103,9 +104,8 @@ public class PageTest {
 		regions.add(new RegionImpl());
 		regions.add(new RegionImpl());
 
-		page.setId(id);
 		page.setName(testName);
-		page.setOwner(testOwner);
+		page.setOwnerId(testOwner.getId());
 		page.setParentPage(parentPage);
 		page.setSubPages(subPages);
 		page.setPageLayout(pageLayout);
@@ -113,7 +113,7 @@ public class PageTest {
 
 		pageUser = new PageUserImpl();
 		pageUser.setPage(page);
-		pageUser.setUser(testOwner);
+		pageUser.setUserId(id);
 		pageUser.setRenderSequence(renderSequence);
 	}
 
@@ -124,9 +124,9 @@ public class PageTest {
 
 	@Test
 	public void testAccessorMethods() {
-		assertTrue(page.getId()==id);
+		assertTrue(page.getId().equals(id));
 		assertTrue(page.getName().equals(testName));
-		assertTrue(page.getOwner().equals(testOwner));
+		assertTrue(page.getOwnerId().equals(testOwner));
 		assertTrue(page.getParentPage().equals(parentPage));
         assertTrue(page.getSubPages().containsAll(subPages));
 		assertTrue(page.getPageLayout().equals(pageLayout));

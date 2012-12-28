@@ -22,7 +22,7 @@ package org.apache.rave.portal.model.impl;
 import org.apache.rave.portal.model.OAuthConsumerStore;
 
 public class OAuthConsumerStoreImpl implements OAuthConsumerStore {
-    private Long id;
+    private String id;
     private String gadgetUri;
     private String serviceName;
     private String consumerKey;
@@ -32,12 +32,12 @@ public class OAuthConsumerStoreImpl implements OAuthConsumerStore {
     private String callbackUrl;
 
     @Override
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
     @Override
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

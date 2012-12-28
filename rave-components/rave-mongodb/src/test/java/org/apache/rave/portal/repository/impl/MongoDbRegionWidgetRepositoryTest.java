@@ -19,11 +19,13 @@
 
 package org.apache.rave.portal.repository.impl;
 
-import org.apache.rave.portal.model.*;
+import org.apache.rave.portal.model.MongoDbPage;
+import org.apache.rave.portal.model.Page;
+import org.apache.rave.portal.model.Region;
+import org.apache.rave.portal.model.RegionWidget;
 import org.apache.rave.portal.model.impl.PageImpl;
 import org.apache.rave.portal.model.impl.RegionImpl;
 import org.apache.rave.portal.model.impl.RegionWidgetImpl;
-import org.apache.rave.portal.model.impl.WidgetImpl;
 import org.apache.rave.portal.repository.MongoPageOperations;
 import org.junit.Before;
 import org.junit.Rule;
@@ -36,7 +38,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.easymock.EasyMock.*;
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.junit.Assert.*;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 
@@ -61,19 +65,19 @@ public class MongoDbRegionWidgetRepositoryTest {
 
     @Test
     public void getType_Valid() {
-        assertThat((Class<MongoDbRegionWidget>) widgetRepository.getType(), is(equalTo(MongoDbRegionWidget.class)));
+        assertThat((Class)widgetRepository.getType(), is(equalTo((Class)RegionWidgetImpl.class)));
     }
 
     @Test
     public void get_DifferentId() {
-        long id = 234;
+        String id = "234";
         Page page = new PageImpl();
         Region region = new RegionImpl();
-        RegionWidget widget = new RegionWidgetImpl();
-        widget.setId((long) 123);
+        RegionWidgetImpl widget = new RegionWidgetImpl();
+        widget.setId("123");
         page.setRegions(Arrays.asList(region));
         region.setPage(page);
-        region.setRegionWidgets(Arrays.asList(widget));
+        region.setRegionWidgets(Arrays.<RegionWidget>asList(widget));
         widget.setRegion(region);
 
         expect(template.findOne(new Query(where("regions").elemMatch(where("regionWidgets").elemMatch(where("_id").is(id)))))).andReturn(page);
@@ -85,13 +89,13 @@ public class MongoDbRegionWidgetRepositoryTest {
 
     @Test
     public void get_Valid() {
-        long id = 123;
+        String id = "123";
         Page found = new MongoDbPage();
         Region region = new RegionImpl();
         found.setRegions(Arrays.asList(region));
-        RegionWidget widget = new RegionWidgetImpl();
-        region.setRegionWidgets(Arrays.asList(widget));
-        widget.setId((long) 123);
+        RegionWidgetImpl widget = new RegionWidgetImpl();
+        region.setRegionWidgets(Arrays.<RegionWidget>asList(widget));
+        widget.setId("123");
         expect(template.findOne(new Query(where("regions").elemMatch(where("regionWidgets").elemMatch(where("_id").is(id)))))).andReturn(found);
         replay(template);
 
@@ -100,7 +104,7 @@ public class MongoDbRegionWidgetRepositoryTest {
 
     @Test
     public void get_Null() {
-        long id = 321;
+        String id = "321";
         Page found = new MongoDbPage();
         found.setRegions(new ArrayList<Region>());
         expect(template.findOne(new Query(where("regions").elemMatch(where("regionWidgets").elemMatch(where("_id").is(id)))))).andReturn(found);
@@ -110,10 +114,10 @@ public class MongoDbRegionWidgetRepositoryTest {
 
     @Test
     public void save_Id_Valid() {
-        RegionWidget widget = new RegionWidgetImpl();
-        RegionWidget replaced = new RegionWidgetImpl();
+        RegionWidgetImpl widget = new RegionWidgetImpl();
+        RegionWidgetImpl replaced = new RegionWidgetImpl();
 
-        long id = 123;
+        String id = "123";
         widget.setId(id);
         replaced.setId(id);
         replaced.setCollapsed(true);
@@ -134,13 +138,13 @@ public class MongoDbRegionWidgetRepositoryTest {
 
         assertTrue(region.getRegionWidgets().contains(widget));
         assertFalse(region.getRegionWidgets().contains(replaced));
-        assertThat(savedWidget, is(sameInstance(widget)));
+        assertThat(savedWidget, is(sameInstance((RegionWidget)widget)));
     }
 
     @Test
     public void save_Id_Valid_Page_Null() {
-        RegionWidget item = new RegionWidgetImpl();
-        long id = 123;
+        RegionWidgetImpl item = new RegionWidgetImpl();
+        String id = "123";
         item.setId(id);
         Page page = new PageImpl();
         page.setRegions(new ArrayList<Region>());
@@ -156,11 +160,11 @@ public class MongoDbRegionWidgetRepositoryTest {
 
     @Test
     public void save_Id_Null_Page_Valid_Regions_Valid() {
-        RegionWidget widget = new RegionWidgetImpl();
+        RegionWidgetImpl widget = new RegionWidgetImpl();
 
-        Region region = new RegionImpl();
+        RegionImpl region = new RegionImpl();
         Page page = new PageImpl();
-        long id = 321;
+        String id = "321";
         page.setId(id);
         List<Region> regions = new ArrayList<Region>();
         regions.add(region);
@@ -177,18 +181,18 @@ public class MongoDbRegionWidgetRepositoryTest {
         replay(template);
 
         RegionWidget returned = widgetRepository.save(widget);
-        assertThat(returned, is(sameInstance(widget)));
+        assertThat(returned, is(sameInstance((RegionWidget)widget)));
     }
 
     @Test
     public void save_Id_Null_Page_Valid_Regions_Valid_Diff_Id() {
         RegionWidget item = new RegionWidgetImpl();
-        Region region = new RegionImpl();
+        RegionImpl region = new RegionImpl();
         item.setRegion(region);
         Page item_Page = new PageImpl();
         region.setPage(item_Page);
-        item_Page.setId((long) 3333);
-        region.setId((long)2222);
+        item_Page.setId("3333");
+        region.setId("2222");
 
         Page page = new PageImpl();
         ArrayList<Region> regions = new ArrayList<Region>();
@@ -244,7 +248,7 @@ public class MongoDbRegionWidgetRepositoryTest {
         RegionWidget item = new RegionWidgetImpl();
         Region region = new RegionImpl();
         item.setRegion(region);
-        long id = 123;
+        String id = "123";
         Page page = new PageImpl();
         region.setPage(page);
         page.setId(id);
@@ -261,8 +265,9 @@ public class MongoDbRegionWidgetRepositoryTest {
 
     @Test
     public void delete_Valid() {
-        RegionWidget widget = new RegionWidgetImpl();
-        widget.setId((long) 123);
+        RegionWidgetImpl widget = new RegionWidgetImpl();
+        String id = "123";
+        widget.setId(id);
         Page found = new PageImpl();
         Region region = new RegionImpl();
         List<RegionWidget> regionWidgets = new ArrayList<RegionWidget>();
@@ -272,7 +277,7 @@ public class MongoDbRegionWidgetRepositoryTest {
         found.setRegions(regions);
         region.setRegionWidgets(regionWidgets);
 
-        expect(template.findOne(new Query(where("regions").elemMatch(where("regionWidgets").elemMatch(where("_id").is(123)))))).andReturn(found);
+        expect(template.findOne(new Query(where("regions").elemMatch(where("regionWidgets").elemMatch(where("_id").is(id)))))).andReturn(found);
         expect(template.save(found)).andReturn(null);
         replay(template);
 
@@ -284,8 +289,8 @@ public class MongoDbRegionWidgetRepositoryTest {
 
     @Test
     public void delete_Null() {
-        RegionWidget item = new RegionWidgetImpl();
-        long id = 123;
+        RegionWidgetImpl item = new RegionWidgetImpl();
+        String id = "123";
         item.setId(id);
         Page page = new PageImpl();
         page.setRegions(new ArrayList<Region>());
@@ -301,15 +306,15 @@ public class MongoDbRegionWidgetRepositoryTest {
 
     @Test
     public void delete_DifferentId() {
-        RegionWidget widget = new RegionWidgetImpl();
+        RegionWidgetImpl widget = new RegionWidgetImpl();
         Region region = new RegionImpl();
         Page page = new PageImpl();
         page.setRegions(Arrays.asList(region));
-        region.setRegionWidgets(Arrays.asList(widget));
-        widget.setId((long) 345345);
+        region.setRegionWidgets(Arrays.<RegionWidget>asList(widget));
+        widget.setId("345345");
 
-        RegionWidget item = new RegionWidgetImpl();
-        long id = 4344;
+        RegionWidgetImpl item = new RegionWidgetImpl();
+        String id = "4344";
         item.setId(id);
 
         expect(template.findOne(new Query(where("regions").elemMatch(where("regionWidgets").elemMatch(where("_id").is(id)))))).andReturn(page);

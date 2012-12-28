@@ -25,18 +25,13 @@ import org.apache.rave.portal.repository.util.CollectionNames;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.data.mongodb.core.MongoOperations;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.easymock.EasyMock.*;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.sameInstance;
-import static org.junit.Assert.assertNotNull;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static org.springframework.data.mongodb.core.query.Query.query;
@@ -88,7 +83,7 @@ public class MongoDbApplicationDataRepositoryTest {
 
     @Test
     public void get_Valid(){
-        long id = 123;
+        String id = "123";
         ApplicationDataImpl found = new ApplicationDataImpl();
         expect(template.findById(id, applicationDataRepository.CLASS, CollectionNames.APP_DATA_COLLECTION)).andReturn(found);
         replay(template);
@@ -105,14 +100,13 @@ public class MongoDbApplicationDataRepositoryTest {
         replay(template);
 
         ApplicationData saved = applicationDataRepository.save(item);
-        assertNotNull(item.getId());
-        assertThat(saved, is(sameInstance(item)));
+        verify(template);
     }
 
     @Test
     public void save_Id_Set(){
          ApplicationData item = new ApplicationDataImpl();
-        item.setId((long)123);
+        item.setId("123");
 
         template.save(item, CollectionNames.APP_DATA_COLLECTION);
         expectLastCall();

@@ -81,9 +81,10 @@ public class MongoDbOAuthTokenInfoRepositoryTest {
 
         template.save(isA(OAuthTokenInfo.class), eq(OAUTH_TOKEN_COLLECTION));
         expectLastCall();
+        replay(template);
 
         result = repo.save(info);
-        assertNotNull(result.getId());
+        verify(template);
 
     }
 
@@ -93,14 +94,14 @@ public class MongoDbOAuthTokenInfoRepositoryTest {
                 "tokenName", "accessToken", "sessionHandle",
                 "tokenSecret", "userId", 1111L);
         OAuthTokenInfo result;
-        item.setId(1234L);
+        item.setId("1234L");
 
         template.save(isA(OAuthTokenInfo.class), eq(OAUTH_TOKEN_COLLECTION));
         expectLastCall();
 
         result = repo.save(item);
         assertNotNull(result.getId());
-        assertThat(result.getId(), is(equalTo(1234L)));
+        assertThat(result.getId(), is(equalTo("1234L")));
 
     }
 
@@ -110,13 +111,13 @@ public class MongoDbOAuthTokenInfoRepositoryTest {
         OAuthTokenInfo item = new OAuthTokenInfoImpl("appUrl", "serviceName",
                 "tokenName", "accessToken", "sessionHandle",
                 "tokenSecret", "userId", 1111L);
-        item.setId(1234L);
+        item.setId("1234L");
 
-        expect(template.findById(1234L, CLASS2, OAUTH_TOKEN_COLLECTION)).andReturn((OAuthTokenInfoImpl)item);
+        expect(template.findById("1234L", CLASS2, OAUTH_TOKEN_COLLECTION)).andReturn((OAuthTokenInfoImpl)item);
         replay(template);
 
-        result = repo.get(1234L);
-        assertThat(result.getId(), is(equalTo(1234L)));
+        result = repo.get("1234L");
+        assertThat(result.getId(), is(equalTo("1234L")));
 
     }
 
@@ -125,11 +126,11 @@ public class MongoDbOAuthTokenInfoRepositoryTest {
         OAuthTokenInfo item = new OAuthTokenInfoImpl("appUrl", "serviceName",
                 "tokenName", "accessToken", "sessionHandle",
                 "tokenSecret", "userId", 1111L);
-        item.setId(1234L);
+        item.setId("1234L");
 
         template.remove(item);
         expectLastCall();
-        expect(template.findById(1234L, CLASS2, OAUTH_TOKEN_COLLECTION)).andReturn((OAuthTokenInfoImpl)item);
+        expect(template.findById("1234L", CLASS2, OAUTH_TOKEN_COLLECTION)).andReturn((OAuthTokenInfoImpl)item);
         replay(template);
 
         repo.delete(item);

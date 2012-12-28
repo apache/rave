@@ -110,13 +110,13 @@ public class JpaPageTemplateRepositoryTest {
         PageTemplateWidget ptw1 = ptRegion1.getPageTemplateWidgets().get(0);
         assertEquals(((JpaPageTemplateRegion)ptw1.getPageTemplateRegion()).getEntityId(), ptRegion1.getEntityId());
         assertEquals(0, ptw1.getRenderSeq());
-        assertNotNull(ptw1.getWidget());
+        assertNotNull(ptw1.getWidgetId());
         assertTrue(ptw1.isLocked());
         // parent page region widget 2 tests
         PageTemplateWidget ptw2 = ptRegion1.getPageTemplateWidgets().get(1);
         assertEquals(((JpaPageTemplateRegion)ptw2.getPageTemplateRegion()).getEntityId(), ptRegion1.getEntityId());
         assertEquals(1, ptw2.getRenderSeq());
-        assertNotNull(ptw2.getWidget());
+        assertNotNull(ptw2.getWidgetId());
         assertTrue(ptw2.isLocked());
         // sub page 1 region 1 tests
         JpaPageTemplateRegion sp1Region1 = (JpaPageTemplateRegion)subPage1.getPageTemplateRegions().get(0);
@@ -128,13 +128,13 @@ public class JpaPageTemplateRepositoryTest {
         PageTemplateWidget spw1 = sp1Region1.getPageTemplateWidgets().get(0);
         assertEquals(((JpaPageTemplateRegion)spw1.getPageTemplateRegion()).getEntityId(), sp1Region1.getEntityId());
         assertEquals(0, spw1.getRenderSeq());
-        assertNotNull(spw1.getWidget());
+        assertNotNull(spw1.getWidgetId());
         assertTrue(spw1.isLocked());
         // sub page 1 region 1 widget 2 tests
         PageTemplateWidget spw2 = sp1Region1.getPageTemplateWidgets().get(1);
         assertEquals(((JpaPageTemplateRegion)spw2.getPageTemplateRegion()).getEntityId(), sp1Region1.getEntityId());
         assertEquals(1, spw2.getRenderSeq());
-        assertNotNull(spw2.getWidget());
+        assertNotNull(spw2.getWidgetId());
         assertTrue(spw2.isLocked());
         // sub page 2 region tests
         JpaPageTemplateRegion sp2Region1 = (JpaPageTemplateRegion)subPage2.getPageTemplateRegions().get(0);
@@ -146,7 +146,7 @@ public class JpaPageTemplateRepositoryTest {
         PageTemplateWidget sp2w1 = sp2Region1.getPageTemplateWidgets().get(0);
         assertEquals(((JpaPageTemplateRegion)sp2w1.getPageTemplateRegion()).getEntityId(), sp2Region1.getEntityId());
         assertEquals(0, sp2w1.getRenderSeq());
-        assertNotNull(sp2w1.getWidget());
+        assertNotNull(sp2w1.getWidgetId());
         assertTrue(sp2w1.isLocked());
 
     }
@@ -177,13 +177,13 @@ public class JpaPageTemplateRepositoryTest {
         PageTemplateWidget ptw1 = ptRegion1.getPageTemplateWidgets().get(0);
         assertEquals(((JpaPageTemplateRegion)ptw1.getPageTemplateRegion()).getEntityId(), ptRegion1.getEntityId());
         assertEquals(0, ptw1.getRenderSeq());
-        assertNotNull(ptw1.getWidget());
+        assertNotNull(ptw1.getWidgetId());
         assertTrue(ptw1.isLocked());
         // parent page region widget 2 tests
         PageTemplateWidget ptw2 = ptRegion1.getPageTemplateWidgets().get(1);
         assertEquals(((JpaPageTemplateRegion)ptw2.getPageTemplateRegion()).getEntityId(), ptRegion1.getEntityId());
         assertEquals(1, ptw2.getRenderSeq());
-        assertNotNull(ptw2.getWidget());
+        assertNotNull(ptw2.getWidgetId());
         assertTrue(ptw2.isLocked());
     }
 }

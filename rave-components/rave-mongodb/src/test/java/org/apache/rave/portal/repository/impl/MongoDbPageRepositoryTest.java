@@ -50,16 +50,15 @@ public class MongoDbPageRepositoryTest {
 
     @Test
     public void getAllPages(){
-        Long userId = 1234L;
+        String userId = "1234L";
+        String userId1 = "9999L";
         PageType pageType = PageType.USER;
-        User u = new UserImpl(9999L);
-        User u2 = new UserImpl(1234L);
-        PageUser user = new MongoDbPageUser();
-        user.setId(3333L);
-        user.setUser(u);
-        PageUser user2 = new MongoDbPageUser();
-        user2.setId(1234L);
-        user2.setUser(u2);
+        PageUserImpl user = new PageUserImpl();
+        user.setId("3333L");
+        user.setUserId(userId1);
+        PageUserImpl user2 = new PageUserImpl();
+        user2.setId(userId);
+        user2.setUserId(userId);
         List<Page> pages = Lists.newArrayList();
         List<PageUser> page_users = Lists.newArrayList();
         List<PageUser> page2_users = Lists.newArrayList();
@@ -89,7 +88,8 @@ public class MongoDbPageRepositoryTest {
     @Test
     public void createPageForUser(){
         Page result = new PageImpl();
-        User user = new UserImpl(2424L);
+        String userId = "2424L";
+        User user = new UserImpl(userId);
         PageTemplate pt = new PageTemplateImpl();
         PageLayout layout = new PageLayoutImpl();
         List<PageTemplateRegion> regions = Lists.newArrayList();
@@ -112,11 +112,11 @@ public class MongoDbPageRepositoryTest {
         sub.setRenderSequence(2000L);
 
         PageTemplateWidget widget = new PageTemplateWidgetImpl();
-        Widget w = new WidgetImpl();
+        Widget w = new WidgetImpl("1234");
         widget.setLocked(true);
         widget.setHideChrome(true);
         widget.setRenderSeq(2000L);
-        widget.setWidget(w);
+        widget.setWidgetId(w.getId());
         widgets.add(widget);
 
         PageTemplateRegion region = new PageTemplateRegionImpl();
@@ -143,19 +143,20 @@ public class MongoDbPageRepositoryTest {
 
     @Test
     public void delete(){
-        Page page = new PageImpl(1234L);
+        Page page = new PageImpl("1234L");
 
-        template.remove(query(where("_id").is(1234L)));
+        template.remove(query(where("_id").is("1234L")));
         expectLastCall();
+        replay(template);
 
         repo.delete(page);
-
+        verify(template);
     }
 
     @Test
     public void deletePages(){
         int resultCount;
-        long userID = 1111L;
+        String userID = "1111L";
 
         expect((int)template.count(isA(Query.class))).andReturn(1);
         template.remove(isA(Query.class));
@@ -169,11 +170,11 @@ public class MongoDbPageRepositoryTest {
 
     @Test
     public void hasPersonPage_true(){
-        Long userId = 1234L;
+        String userId = "1234L";
         User user = new UserImpl(userId);
         Page page = new PageImpl();
         page.setPageType(PageType.PERSON_PROFILE);
-        page.setOwner(user);
+        page.setOwnerId(userId);
 
         expect(template.count(query(where("pageType").is(PageType.PERSON_PROFILE).andOperator(where("ownerId").is(userId))))).andReturn(1L);
         replay(template);
@@ -185,7 +186,7 @@ public class MongoDbPageRepositoryTest {
 
     @Test
     public void hasPersonPage_false(){
-        Long userId = 1234L;
+        String userId = "1234L";
 
         expect(template.count(query(where("pageType").is(PageType.PERSON_PROFILE).andOperator(where("ownerId").is(userId))))).andReturn(0L);
         replay(template);
@@ -198,20 +199,20 @@ public class MongoDbPageRepositoryTest {
     @Test
     public void getPagesForUser(){
         Page p = new PageImpl();
-        PageUser user1 = new PageUserImpl(2222L);
-        PageUser user3 = new PageUserImpl(2222L);
-        User user2 = new UserImpl(2222L);
-        user1.setUser(user2);
+        PageUser user1 = new PageUserImpl("2222L");
+        PageUser user3 = new PageUserImpl("2222L");
+        User user2 = new UserImpl("2222L");
+        user1.setUserId(user2.getId());
         List<PageUser> pageUser = Lists.newArrayList();
         pageUser.add(user1);
         pageUser.add(user3);
         p.setMembers(pageUser);
 
         Page p2 = new PageImpl();
-        PageUser user4 = new PageUserImpl(2222L);
-        PageUser user5 = new PageUserImpl(2222L);
-        User user6 = new UserImpl(2222L);
-        user4.setUser(user6);
+        PageUser user4 = new PageUserImpl("2222L");
+        PageUser user5 = new PageUserImpl("2222L");
+        User user6 = new UserImpl("2222L");
+        user4.setUserId(user6.getId());
         List<PageUser> pageUser2 = Lists.newArrayList();
         pageUser.add(user4);
         pageUser.add(user5);
@@ -220,39 +221,38 @@ public class MongoDbPageRepositoryTest {
         pages.add(p2);
 
         List<PageUser> result;
-        Long userId = 2222L;
+        String userId = "2222L";
 
         expect(template.find(query(where("members").elemMatch(where("userId").is(userId)).andOperator(where("pageType").is("USER"))))).andReturn(pages);
         replay(template);
         result = repo.getPagesForUser(userId, PageType.USER);
 
-        assertThat(result.get(0).getUser(), is(equalTo(user2)));
+        assertThat(result.get(0).getUserId(), is(equalTo(user2.getId())));
         assertThat(result.size(), is(equalTo(2)));
-        assertThat(result.get(0).getUser().getId(), is(equalTo(2222L)));
+        assertThat(result.get(0).getUserId(), is(equalTo("2222L")));
 
     }
 
     @Test
     public void getPagesForUser_false(){
         Page p = new PageImpl();
-        PageUser user1 = new PageUserImpl(2222L);
-        PageUser user3 = new PageUserImpl(2222L);
+        PageUser user1 = new PageUserImpl("2222L");
+        PageUser user3 = new PageUserImpl("2222L");
         user1.setRenderSequence(1L);
         user3.setRenderSequence(1L);
-        User user2 = new UserImpl(2222L);
-        user1.setUser(user2);
+        User user2 = new UserImpl("2222L");
+        user1.setUserId("2222L");
         List<PageUser> pageUser = Lists.newArrayList();
         pageUser.add(user1);
         pageUser.add(user3);
         p.setMembers(pageUser);
 
         Page p2 = new PageImpl();
-        PageUser user4 = new PageUserImpl(2222L);
-        PageUser user5 = new PageUserImpl(2222L);
+        PageUser user4 = new PageUserImpl("2222L");
+        PageUser user5 = new PageUserImpl("2222L");
         user4.setRenderSequence(1L);
         user5.setRenderSequence(1L);
-        User user6 = new UserImpl(2222L);
-        user4.setUser(user6);
+        user4.setUserId("2222L");
         List<PageUser> pageUser2 = Lists.newArrayList();
         pageUser.add(user4);
         pageUser.add(user5);
@@ -261,31 +261,30 @@ public class MongoDbPageRepositoryTest {
         pages.add(p2);
 
         List<PageUser> result;
-        Long userId = 2222L;
+        String userId = "2222L";
 
         expect(template.find(query(where("members").elemMatch(where("userId").is(userId)).andOperator(where("pageType").is("USER"))))).andReturn(pages);
         replay(template);
         result = repo.getPagesForUser(userId, PageType.USER);
 
-        assertThat(result.get(0).getUser(), is(equalTo(user2)));
+        assertThat(result.get(0).getUserId(), is(equalTo("2222L")));
         assertThat(result.size(), is(equalTo(2)));
-        assertThat(result.get(0).getUser().getId(), is(equalTo(2222L)));
+        assertThat(result.get(0).getUserId(), is(equalTo("2222L")));
 
     }
 
     @Test
     public void getPagesForUser_null(){
         Page p = new PageImpl();
-        PageUser user1 = new PageUserImpl(1111L);
-        User user2 = new UserImpl(2222L);
-        user1.setUser(user2);
+        PageUser user1 = new PageUserImpl("1111L");
+        user1.setUserId("2222L");
         List<PageUser> pageUser = Lists.newArrayList();
         pageUser.add(user1);
         p.setMembers(pageUser);
         List<Page> pages = Lists.newArrayList(p);
 
         List<PageUser> result;
-        Long userId = 3333L;
+        String userId = "3333L";
 
         expect(template.find(query(where("members").elemMatch(where("userId").is(userId)).andOperator(where("pageType").is("USER"))))).andReturn(pages);
         replay(template);
@@ -297,13 +296,12 @@ public class MongoDbPageRepositoryTest {
 
     @Test
     public void getSingleRecord_valid(){
-        Long userId = 1111L;
-        Long pageId = 2222L;
+        String userId = "1111L";
+        String pageId = "2222L";
 
-        Page testPage = new PageImpl(2222L);
-        PageUser pu = new PageUserImpl(3333L);
-        User u = new UserImpl(1111L);
-        pu.setUser(u);
+        Page testPage = new PageImpl("2222L");
+        PageUser pu = new PageUserImpl("3333L");
+        pu.setUserId("1111L");
         List<PageUser> users = Lists.newArrayList();
         users.add(pu);
         testPage.setMembers(users);
@@ -314,20 +312,19 @@ public class MongoDbPageRepositoryTest {
 
         result = repo.getSingleRecord(userId, pageId);
         assertThat(result, is(sameInstance(pu)));
-        assertThat(result.getId(), is(equalTo(3333L)));
-        assertThat(result.getUser().getId(), is(equalTo(1111L)));
+        assertThat(result.getId(), is(equalTo("3333L")));
+        assertThat(result.getUserId(), is(equalTo("1111L")));
 
     }
 
     @Test
     public void getSingleRecord_null(){
-        Long userId = 1111L;
-        Long pageId = 2222L;
+        String userId = "1111L";
+        String pageId = "2222L";
 
-        Page testPage = new PageImpl(2222L);
-        PageUser pu = new PageUserImpl(3333L);
-        User u = new UserImpl(1234L);
-        pu.setUser(u);
+        Page testPage = new PageImpl(pageId);
+        PageUser pu = new PageUserImpl("3333L");
+        pu.setUserId("1234L");
         List<PageUser> users = Lists.newArrayList();
         users.add(pu);
         testPage.setMembers(users);

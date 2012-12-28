@@ -71,7 +71,7 @@ public class PageController {
         PageUser currentPageUser = null;
         User thisUser = userService.getAuthenticatedUser();
         for(PageUser pageUser : page.getMembers()){
-            if(pageUser.getUser().equals(thisUser)){
+            if(pageUser.getUserId().equals(thisUser.getId())){
                 currentPageUser = pageUser;
             }
         }
@@ -83,14 +83,14 @@ public class PageController {
     }
 
     @RequestMapping(value = "/page/view/{pageId}", method = RequestMethod.GET)
-    public String view(@PathVariable Long pageId, Model model, HttpServletRequest request) {
+    public String view(@PathVariable String pageId, Model model, HttpServletRequest request) {
         try {
             List<Page> pages = getAllPagesForAuthenticatedUser();
             Page page = pageService.getPageFromList(pageId, pages);
             PageUser currentPageUser = null;
             User thisUser = userService.getAuthenticatedUser();
             for(PageUser pageUser : page.getMembers()){
-                if(pageUser.getUser().equals(thisUser)){
+                if(pageUser.getUserId().equals(thisUser.getId())){
                     currentPageUser = pageUser;
                 }
             }
@@ -108,13 +108,13 @@ public class PageController {
 
     private List<Page> getAllPagesForAuthenticatedUser() {
         User user = userService.getAuthenticatedUser();
-        long userId = user.getId();
+        String userId = user.getId();
         List<Page> pages = pageService.getAllUserPages(userId);
         // we add pages to this list which the corresponding pageUser object is not set to "refused"
         List<Page> viewablePages = new ArrayList<Page>();
         for(Page page : pages){
             for(PageUser pageUser : page.getMembers()){
-                if(pageUser != null && pageUser.getUser().equals(user) && !pageUser.getPageStatus().equals(PageInvitationStatus.REFUSED)){
+                if(pageUser != null && pageUser.getUserId().equals(user.getId()) && !pageUser.getPageStatus().equals(PageInvitationStatus.REFUSED)){
                     viewablePages.add(page);
                 }
             }

@@ -28,12 +28,12 @@ public class MongoDbPersonAssociation {
     }
 
     private FriendRequestStatus requestStatus;
-    private Long personId;
+    private String personId;
     private Direction requestDirection;
 
     public MongoDbPersonAssociation() { }
 
-    public MongoDbPersonAssociation(Long personId, FriendRequestStatus status, Direction direction) {
+    public MongoDbPersonAssociation(String personId, FriendRequestStatus status, Direction direction) {
         this.requestDirection = direction;
         this.requestStatus = status;
         this.personId = personId;
@@ -47,11 +47,11 @@ public class MongoDbPersonAssociation {
         this.requestStatus = requestStatus;
     }
 
-    public Long getPersonId() {
+    public String getPersonId() {
         return personId;
     }
 
-    public void setPersonId(Long personId) {
+    public void setPersonId(String personId) {
         this.personId = personId;
     }
 }

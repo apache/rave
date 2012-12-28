@@ -86,7 +86,7 @@ public class DefaultCategoryPermissionEvaluator extends AbstractModelPermissionE
         if (targetId instanceof RaveSecurityContext) {
             hasPermission = verifyRaveSecurityContext(authentication, (RaveSecurityContext)targetId);
         } else {
-            hasPermission = hasPermission(authentication, categoryRepository.get((Long)targetId), permission, true);
+            hasPermission = hasPermission(authentication, categoryRepository.get((String)targetId), permission, true);
         }
         return hasPermission;
     }
@@ -127,7 +127,7 @@ public class DefaultCategoryPermissionEvaluator extends AbstractModelPermissionE
 
     // returns a trusted Category object, either from the CategoryRepository, or the
     // cached container list
-    private Category getTrustedCategory(long categoryId, List<Category> trustedCategoryContainer) {
+    private Category getTrustedCategory(String categoryId, List<Category> trustedCategoryContainer) {
         Category p = null;
         if (trustedCategoryContainer.isEmpty()) {
             p = categoryRepository.get(categoryId);
@@ -149,14 +149,14 @@ public class DefaultCategoryPermissionEvaluator extends AbstractModelPermissionE
             trustedCategory = getTrustedCategory(category.getId(), trustedCategoryContainer);
         }
 
-        return isCategoryCreatedUserByUsername(authentication, trustedCategory.getCreatedUser().getUsername());
+        return isCategoryCreatedUserByUsername(authentication, trustedCategory.getCreatedUserId());
     }
 
-    private boolean isCategoryCreatedUserByUsername(Authentication authentication, String username) {
-        return ((User)authentication.getPrincipal()).getUsername().equals(username);
+    private boolean isCategoryCreatedUserByUsername(Authentication authentication, String id) {
+        return ((User)authentication.getPrincipal()).getId().equals(id);
     }
 
-    private boolean isCategoryCreatedUserById(Authentication authentication, Long userId) {
+    private boolean isCategoryCreatedUserById(Authentication authentication, String userId) {
         return ((User)authentication.getPrincipal()).getId().equals(userId);
     }
 
@@ -170,7 +170,7 @@ public class DefaultCategoryPermissionEvaluator extends AbstractModelPermissionE
 
         // perform the permissions check based on the class supplied to the RaveSecurityContext object
         if (User.class == clazz) {
-            return isCategoryCreatedUserById(authentication, (Long) raveSecurityContext.getId());
+            return isCategoryCreatedUserById(authentication, (String) raveSecurityContext.getId());
         } else {
             throw new IllegalArgumentException("unknown RaveSecurityContext type: " + raveSecurityContext.getType());
         }

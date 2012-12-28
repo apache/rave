@@ -22,8 +22,8 @@ package org.apache.rave.portal.model.conversion.impl;
 import com.google.common.collect.Lists;
 import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.model.conversion.HydratingModelConverter;
+import org.apache.rave.portal.model.impl.WidgetRatingImpl;
 import org.apache.rave.portal.repository.CategoryRepository;
-import org.apache.rave.portal.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -35,9 +35,6 @@ import static org.apache.rave.portal.model.util.MongoDbModelUtil.generateId;
  */
 @Component
 public class MongoDbWidgetConverter implements HydratingModelConverter<Widget, MongoDbWidget> {
-
-    @Autowired
-    private UserRepository userRepository;
 
     @Autowired
     private CategoryRepository categoryRepository;
@@ -53,55 +50,23 @@ public class MongoDbWidgetConverter implements HydratingModelConverter<Widget, M
             return;
         }
         dehydrated.setCategoryRepository(categoryRepository);
-        dehydrated.setUserRepository(userRepository);
-        if(dehydrated.getComments() != null) {
-            hydrateComments(dehydrated);
-        }
-
-        if(dehydrated.getTags() != null) {
-            hydrateTags(dehydrated);
-        }
-    }
-
-    private void hydrateTags(MongoDbWidget dehydrated) {
-        for (WidgetTag tag : dehydrated.getTags()) {
-            if (tag instanceof MongoDbWidgetTag) {
-                ((MongoDbWidgetTag) tag).setUserRepository(userRepository);
-            }
-        }
-    }
-
-    private void hydrateComments(MongoDbWidget dehydrated) {
-        for (WidgetComment comment : dehydrated.getComments()) {
-            if (comment instanceof MongoDbWidgetComment) {
-                ((MongoDbWidgetComment) comment).setUserRepository(userRepository);
-            }
-        }
     }
 
     @Override
     public MongoDbWidget convert(Widget source) {
         MongoDbWidget widget = new MongoDbWidget();
         updateProperties(source, widget);
-        widget.setOwnerId(source.getOwner() != null ? source.getOwner().getId() : null);
-        widget.setOwner(null);
-        widget.setUserRepository(null);
+        widget.setOwnerId(source.getOwnerId());
 
         if (source.getCategories() != null) {
             convertCategories(source, widget);
         }
 
-        if (source.getComments() == null) {
-            widget.setComments(Lists.<WidgetComment>newArrayList());
-        } else {
-            convertComments(source, widget);
-        }
+        List<WidgetComment> comments = source.getComments() == null ? Lists.<WidgetComment>newArrayList() : source.getComments();
+        widget.setComments(comments);
 
-        if (source.getTags() == null) {
-            widget.setTags(Lists.<WidgetTag>newArrayList());
-        } else {
-            convertTags(source, widget);
-        }
+        List<WidgetTag> tags = source.getTags() == null ? Lists.<WidgetTag>newArrayList() : source.getTags();
+        widget.setTags(tags);
 
         if (source.getRatings() == null) {
             widget.setRatings(Lists.<WidgetRating>newArrayList());
@@ -113,33 +78,16 @@ public class MongoDbWidgetConverter implements HydratingModelConverter<Widget, M
 
     private void convertRatings(Widget source, MongoDbWidget widget) {
         List<WidgetRating> ratings = source.getRatings();
+        List<WidgetRating> converted = Lists.newArrayList();
         for(WidgetRating rating : ratings) {
-            rating.setWidgetId(widget.getId());
-            if(rating.getId() == null) {
-                rating.setId(generateId());
-            }
+            String id = rating.getId() == null ? generateId() : rating.getId();
+            converted.add(new WidgetRatingImpl(id, rating.getUserId(), rating.getScore()));
         }
-        widget.setRatings(ratings);
-    }
-
-    private void convertTags(Widget source, MongoDbWidget widget) {
-        List<WidgetTag> convertedTags = Lists.newArrayList();
-        for (WidgetTag tag : source.getTags()) {
-            convertedTags.add(convert(tag, widget));
-        }
-        widget.setTags(convertedTags);
-    }
-
-    private void convertComments(Widget source, MongoDbWidget widget) {
-        List<WidgetComment> convertedComments = Lists.newArrayList();
-        for (WidgetComment comment : source.getComments()) {
-            convertedComments.add(convert(comment, widget));
-        }
-        widget.setComments(convertedComments);
+        widget.setRatings(converted);
     }
 
     private void convertCategories(Widget source, MongoDbWidget converted) {
-        List<Long> categoryIds = Lists.<Long>newArrayList();
+        List<String> categoryIds = Lists.<String>newArrayList();
         for (Category category : source.getCategories()) {
             categoryIds.add(category.getId());
         }
@@ -148,34 +96,8 @@ public class MongoDbWidgetConverter implements HydratingModelConverter<Widget, M
         converted.setCategoryRepository(null);
     }
 
-    private MongoDbWidgetTag convert(WidgetTag tag, Widget widget) {
-        MongoDbWidgetTag converted = tag instanceof MongoDbWidgetTag ? ((MongoDbWidgetTag) tag) : new MongoDbWidgetTag();
-
-        converted.setUserId(tag.getUser().getId());
-        converted.setUser(null);
-        converted.setUserRepository(null);
-        converted.setTag(tag.getTag());
-        converted.setCreatedDate(tag.getCreatedDate());
-        converted.setWidgetId(widget.getId());
-        return converted;
-    }
-
-    private MongoDbWidgetComment convert(WidgetComment comment, Widget widget) {
-        MongoDbWidgetComment converted = comment instanceof MongoDbWidgetComment ? ((MongoDbWidgetComment) comment) : new MongoDbWidgetComment();
-        converted.setUserId(comment.getUser().getId());
-        converted.setUser(null);
-        converted.setId(comment.getId() == null ? generateId() : comment.getId());
-        converted.setUserRepository(null);
-
-        converted.setCreatedDate(comment.getCreatedDate());
-        converted.setLastModifiedDate(comment.getLastModifiedDate());
-        converted.setText(comment.getText());
-        converted.setWidgetId(widget.getId());
-        return converted;
-    }
-
     private void updateProperties(Widget source, MongoDbWidget converted) {
-        converted.setId(source.getId() == null ? generateId() : source.getId());
+        converted.setId(source.getId());
         converted.setUrl(source.getUrl());
         converted.setType(source.getType());
         converted.setTitle(source.getTitle());
@@ -190,10 +112,6 @@ public class MongoDbWidgetConverter implements HydratingModelConverter<Widget, M
         converted.setComments(source.getComments());
         converted.setDisableRendering(source.isDisableRendering());
         converted.setFeatured(source.isFeatured());
-    }
-
-    public void setUserRepository(UserRepository userRepository) {
-        this.userRepository = userRepository;
     }
 
     public void setCategoryRepository(CategoryRepository categoryRepository) {

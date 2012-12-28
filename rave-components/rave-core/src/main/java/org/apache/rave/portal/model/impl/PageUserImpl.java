@@ -22,8 +22,8 @@ import org.apache.rave.portal.model.*;
 import org.codehaus.jackson.annotate.JsonBackReference;
 
 public class PageUserImpl implements PageUser {
-    private Long id;
-    private User user;
+    private String id;
+    private String userId;
     private boolean editor;
     private Long renderSequence;
     private PageInvitationStatus pageStatus;
@@ -33,40 +33,39 @@ public class PageUserImpl implements PageUser {
 
     public PageUserImpl(){}
 
-    public PageUserImpl(Long id){
+    public PageUserImpl(String id){
         this.id = id;
     }
 
-    public PageUserImpl(User user, Page page){
-        this.user = user;
+    public PageUserImpl(String userId, Page page){
+        this.userId = userId;
         this.page = page;
     }
 
-    public PageUserImpl(User user, Page page, long sequence){
-        this.user = user;
+    public PageUserImpl(String userId, Page page, long sequence){
+        this.userId = userId;
         this.page = page;
         this.renderSequence = sequence;
     }
 
 
     @Override
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    @Override
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
     @Override
-    public User getUser() {
-        return user;
+    public String getUserId() {
+        return userId;
     }
 
     @Override
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserId(String user) {
+        this.userId = user;
     }
 
     @Override

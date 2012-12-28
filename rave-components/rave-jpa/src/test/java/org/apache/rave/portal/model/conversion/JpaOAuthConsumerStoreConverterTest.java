@@ -52,7 +52,7 @@ public class JpaOAuthConsumerStoreConverterTest {
     @Test
     public void newOAuthConsumerStore() {
         OAuthConsumerStore oAuthConsumerStore = new OAuthConsumerStoreImpl();
-        oAuthConsumerStore.setId(1L);
+        oAuthConsumerStore.setId("1");
         oAuthConsumerStore.setServiceName("servicename");
         oAuthConsumerStore.setCallbackUrl("callbackurl");
         oAuthConsumerStore.setConsumerKey("key");
@@ -69,7 +69,7 @@ public class JpaOAuthConsumerStoreConverterTest {
         assertThat(converted.getCallbackUrl(), is(equalTo(oAuthConsumerStore.getCallbackUrl())));
         assertThat(converted.getConsumerKey(), is(equalTo(oAuthConsumerStore.getConsumerKey())));
         assertThat(converted.getConsumerSecret(), is(equalTo(oAuthConsumerStore.getConsumerSecret())));
-        assertThat(converted.getEntityId(), is(equalTo(oAuthConsumerStore.getId())));
+        assertThat(converted.getEntityId().toString(), is(equalTo(oAuthConsumerStore.getId())));
         assertThat(converted.getGadgetUri(), is(equalTo(oAuthConsumerStore.getGadgetUri())));
         assertThat(converted.getKeyName(), is(equalTo(oAuthConsumerStore.getKeyName())));
         assertThat(converted.getKeyType(), is(equalTo(oAuthConsumerStore.getKeyType())));

@@ -21,6 +21,7 @@ package org.apache.rave.portal.repository.impl;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.repository.MongoPageOperations;
@@ -95,10 +96,10 @@ public class MongoDbPersonRepository implements PersonRepository {
     public List<Person> findFriendsWithFriend(String username, String friendUsername) {
         MongoDbUser follower = (MongoDbUser) template.findOne(getUsernameQuery(username));
         MongoDbUser followed = (MongoDbUser) template.findOne(getUsernameQuery(friendUsername));
-        List<Long> commonFriends = getCommonFriends(follower, followed);
-        return Lists.transform(commonFriends, new Function<Long, Person>() {
+        List<String> commonFriends = getCommonFriends(follower, followed);
+        return Lists.transform(commonFriends, new Function<String, Person>() {
             @Override
-            public Person apply(@Nullable Long id) {
+            public Person apply(@Nullable String id) {
                 return id == null ? null : template.get(id).toPerson();
             }
         });
@@ -178,12 +179,21 @@ public class MongoDbPersonRepository implements PersonRepository {
     }
 
     @Override
+    public int removeAllFriendsAndRequests(String userid) {
+        MongoDbUser person = (MongoDbUser)template.get(userid);
+        int count = person.getFriends().size();
+        person.setFriends(Lists.<MongoDbPersonAssociation>newArrayList());
+        save(person);
+        return count;
+    }
+
+    @Override
     public Class<? extends Person> getType() {
         return Person.class;
     }
 
     @Override
-    public Person get(long id) {
+    public Person get(String id) {
         return template.get(id);
     }
 
@@ -211,13 +221,13 @@ public class MongoDbPersonRepository implements PersonRepository {
         return Lists.transform(pages, new Function<Page, Person>() {
             @Override
             public Person apply(@Nullable Page input) {
-                return input == null ? null : input.getOwner().toPerson();
+                return input == null ? null : template.get(input.getOwnerId()).toPerson();
             }
         });
     }
 
-    private List<Long> getFriendIds(List<MongoDbPersonAssociation> friends) {
-        List<Long> ids = Lists.newArrayList();
+    private List<String> getFriendIds(List<MongoDbPersonAssociation> friends) {
+        List<String> ids = Lists.newArrayList();
         for (MongoDbPersonAssociation friend : friends) {
             if (friend.getRequestStatus().equals(FriendRequestStatus.ACCEPTED)) {
                 ids.add(friend.getPersonId());
@@ -257,9 +267,9 @@ public class MongoDbPersonRepository implements PersonRepository {
         }
     }
 
-    private List<Long> getCommonFriends(MongoDbUser follower, MongoDbUser followed) {
-        List<Long> ids = Lists.newArrayList();
-        Map<Long, MongoDbPersonAssociation> friendHash = new HashMap<Long, MongoDbPersonAssociation>();
+    private List<String> getCommonFriends(MongoDbUser follower, MongoDbUser followed) {
+        List<String> ids = Lists.newArrayList();
+        Map<String, MongoDbPersonAssociation> friendHash = Maps.newHashMap();
         for (MongoDbPersonAssociation association : follower.getFriends()) {
             friendHash.put(association.getPersonId(), association);
         }

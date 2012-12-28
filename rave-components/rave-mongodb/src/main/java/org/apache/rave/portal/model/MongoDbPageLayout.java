@@ -23,13 +23,13 @@ package org.apache.rave.portal.model;
 import org.apache.rave.portal.model.impl.PageLayoutImpl;
 
 public class MongoDbPageLayout extends PageLayoutImpl{
-    private Long id;
+    private String id;
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

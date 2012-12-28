@@ -29,9 +29,9 @@ import org.codehaus.jackson.annotate.JsonBackReference;
 @Access(AccessType.FIELD)
 @Table(name = "page_user", uniqueConstraints={@UniqueConstraint(columnNames={"page_id","user_id"})})
 @NamedQueries({
-        @NamedQuery(name = JpaPageUser.GET_BY_USER_ID_AND_PAGE_TYPE, query="SELECT p.page FROM JpaPageUser p, JpaPage q WHERE p.page.entityId = q.entityId and p.user.entityId = :userId and q.pageType = :pageType ORDER BY p.renderSequence"),
-        @NamedQuery(name = JpaPageUser.GET_PAGES_FOR_USER, query="SELECT p FROM JpaPageUser p, JpaPage q WHERE p.page.entityId = q.entityId and p.user.entityId = :userId and q.pageType = :pageType ORDER BY p.renderSequence"),
-        @NamedQuery(name = JpaPageUser.GET_SINGLE_RECORD, query="SELECT p FROM JpaPageUser p WHERE p.user.entityId = :userId and p.page.entityId = :pageId")
+        @NamedQuery(name = JpaPageUser.GET_BY_USER_ID_AND_PAGE_TYPE, query="SELECT p.page FROM JpaPageUser p, JpaPage q WHERE p.page.entityId = q.entityId and p.userId = :userId and q.pageType = :pageType ORDER BY p.renderSequence"),
+        @NamedQuery(name = JpaPageUser.GET_PAGES_FOR_USER, query="SELECT p FROM JpaPageUser p, JpaPage q WHERE p.page.entityId = q.entityId and p.userId = :userId and q.pageType = :pageType ORDER BY p.renderSequence"),
+        @NamedQuery(name = JpaPageUser.GET_SINGLE_RECORD, query="SELECT p FROM JpaPageUser p WHERE p.userId = :userId and p.page.entityId = :pageId")
 })
 public class JpaPageUser implements BasicEntity, Serializable, PageUser {
     private static final long serialVersionUID = 1L;
@@ -44,12 +44,11 @@ public class JpaPageUser implements BasicEntity, Serializable, PageUser {
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "pageUserIdGenerator")
     @TableGenerator(name = "pageUserIdGenerator", table = "RAVE_PORTAL_SEQUENCES", pkColumnName = "SEQ_NAME",
             valueColumnName = "SEQ_COUNT", pkColumnValue = "page_user", allocationSize = 1, initialValue = 1)
-
     private Long entityId;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private JpaUser user;
+    @Basic
+    @Column(name = "user_id")
+    private String userId;
 
     @ManyToOne(fetch=FetchType.EAGER)
     @JoinColumn(name = "page_id")
@@ -69,12 +68,19 @@ public class JpaPageUser implements BasicEntity, Serializable, PageUser {
     public JpaPageUser(){}
 
     public JpaPageUser(User user, Page page){
-        this.setUser(user);
+        this.setUserId(user.getId());
         setPage(page);
     }
 
     public JpaPageUser(JpaUser user, Page page, long sequence){
-        this.user = user;
+        this.userId = user.getId();
+        setPage(page);
+        this.renderSequence = sequence;
+    }
+
+
+    public JpaPageUser(String userId, Page page, long sequence){
+        this.userId = userId;
         setPage(page);
         this.renderSequence = sequence;
     }
@@ -88,13 +94,8 @@ public class JpaPageUser implements BasicEntity, Serializable, PageUser {
     }
 
     @Override
-    public Long getId() {
-        return getEntityId();
-    }
-
-    @Override
-    public void setId(Long id) {
-        setEntityId(id);
+    public String getId() {
+        return this.getEntityId() == null ? null : this.getEntityId().toString();
     }
 
     /**
@@ -114,19 +115,19 @@ public class JpaPageUser implements BasicEntity, Serializable, PageUser {
     }
 
     /**
-    * @return the user
+    * @return the userId
     */
     @Override
-    public JpaUser getUser() {
-        return user;
+    public String getUserId() {
+        return userId;
     }
 
     /**
-    * @param user the user to set
-    */
+     * @param userId the userId to set
+     */
     @Override
-    public void setUser(User user) {
-        this.user = JpaConverter.getInstance().convert(user, User.class);
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     /**

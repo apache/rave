@@ -18,15 +18,27 @@
  */
 package org.apache.rave.portal.web.api.rpc;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.rave.portal.model.Page;
 import org.apache.rave.portal.model.Region;
 import org.apache.rave.portal.model.RegionWidget;
+import org.apache.rave.portal.service.OmdlService;
 import org.apache.rave.portal.service.PageService;
 import org.apache.rave.portal.web.api.rpc.model.RpcOperation;
 import org.apache.rave.portal.web.api.rpc.model.RpcResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 /**
  * Defines RPC operations for a Page or its components
@@ -35,11 +47,14 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(value = "/api/rpc/page/*")
 public class PageApi {
 
+    private Logger logger = LoggerFactory.getLogger(getClass());
     private final PageService pageService;
+    private OmdlService omdlService;
 
     @Autowired
-    public PageApi(PageService pageService) {
+    public PageApi(PageService pageService, OmdlService omdlService) {
         this.pageService = pageService;
+        this.omdlService = omdlService;
     }
 
     /**
@@ -58,7 +73,7 @@ public class PageApi {
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "{pageId}/widget/add")
     public RpcResult<RegionWidget> addWidgetToPage(
-            @PathVariable final long pageId, @RequestParam final long widgetId) {
+            @PathVariable final String pageId, @RequestParam final String widgetId) {
 
         return new RpcOperation<RegionWidget>() {
             @Override
@@ -67,6 +82,36 @@ public class PageApi {
             }
         }.getResult();
     }
+
+    /**
+     * Adds a widget to the given page region
+     *
+     * @param pageId
+     *            the ID of the {@link org.apache.rave.portal.model.Page} to add
+     *            the widget to
+     * @param widgetId
+     *            the ID of the {@link org.apache.rave.portal.model.Widget} to
+     *            add do the page
+     * @param regionId
+     *            the ID of the {@link org.apache.rave.portal.model.Region} to
+     *            add the the widget to
+     * @return a {@link RpcOperation} containing the new widget instance (
+     *         {@link org.apache.rave.portal.model.RegionWidget }) or any errors
+     *         encountered while performing the RPC operation
+     */
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.POST, value = "{pageId}/widget/add/region/{regionId}")
+    public RpcResult<RegionWidget> addWidgetToPageRegion(
+            @PathVariable final String pageId, @RequestParam final String widgetId, @PathVariable final String regionId) {
+
+        return new RpcOperation<RegionWidget>() {
+            @Override
+            public RegionWidget execute() {
+                return pageService.addWidgetToPageRegion(pageId, widgetId, regionId);
+            }
+        }.getResult();
+    }
+    
 
     /**
      * Moves a widget to a new location
@@ -92,10 +137,10 @@ public class PageApi {
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "regionWidget/{regionWidgetId}/move")
     public RpcResult<RegionWidget> moveWidgetOnPage(
-            @PathVariable final long regionWidgetId,
+            @PathVariable final String regionWidgetId,
             @RequestParam final int newPosition,
-            @RequestParam final long toRegion,
-            @RequestParam final long fromRegion) {
+            @RequestParam final String toRegion,
+            @RequestParam final String fromRegion) {
 
         return new RpcOperation<RegionWidget>() {
             @Override
@@ -117,7 +162,7 @@ public class PageApi {
      */
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "regionWidget/{regionWidgetId}/delete")
-    public RpcResult<Region> removeWidgetFromPage(@PathVariable final long regionWidgetId) {
+    public RpcResult<Region> removeWidgetFromPage(@PathVariable final String regionWidgetId) {
         return new RpcOperation<Region>() {
             @Override
             public Region execute() {
@@ -149,7 +194,7 @@ public class PageApi {
 
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value="get")
-    public RpcResult<Page> getPage(@RequestParam final long pageId) {
+    public RpcResult<Page> getPage(@RequestParam final String pageId) {
         return new RpcOperation<Page>() {
             @Override
             public Page execute() {
@@ -160,7 +205,7 @@ public class PageApi {
 
     @ResponseBody
     @RequestMapping(value = "{pageId}/update", method = RequestMethod.POST)
-    public RpcResult<Page> updatePageProperties(@PathVariable final long pageId,
+    public RpcResult<Page> updatePageProperties(@PathVariable final String pageId,
                                         @RequestParam final String name,
                                         @RequestParam final String layout) {
         return new RpcOperation<Page>() {
@@ -181,8 +226,8 @@ public class PageApi {
      */
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "{pageId}/move")
-    public RpcResult<Page> movePage(@PathVariable final long pageId,
-                                    @RequestParam(required=false) final Long moveAfterPageId) {
+    public RpcResult<Page> movePage(@PathVariable final String pageId,
+                                    @RequestParam(required=false) final String moveAfterPageId) {
         return new RpcOperation<Page>() {
             @Override
             public Page execute() {
@@ -207,8 +252,8 @@ public class PageApi {
      */
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "{toPageId}/moveWidget")
-    public RpcResult<RegionWidget> moveWidgetToPage(@PathVariable final long toPageId,
-                                                    @RequestParam(required=false) final long regionWidgetId) {
+    public RpcResult<RegionWidget> moveWidgetToPage(@PathVariable final String toPageId,
+                                                    @RequestParam(required=false) final String regionWidgetId) {
         return new RpcOperation<RegionWidget>() {
             @Override
             public RegionWidget execute() {
@@ -218,8 +263,19 @@ public class PageApi {
     }
 
     @ResponseBody
+    @RequestMapping(value = "{pageId}/clone", method = RequestMethod.POST)
+    public RpcResult<Boolean> clonePageForUser(@PathVariable final String pageId, @RequestParam final String userId, @RequestParam final String pageName) {
+        return new RpcOperation<Boolean>() {
+             @Override
+             public Boolean execute() {
+               return pageService.clonePageForUser(pageId, userId, pageName);
+             }
+        }.getResult();
+    }
+
+    @ResponseBody
     @RequestMapping(value = "{pageId}/addmember", method = RequestMethod.POST)
-    public RpcResult<Boolean> addMemberToPage(@PathVariable final long pageId, @RequestParam final long userId) {
+    public RpcResult<Boolean> addMemberToPage(@PathVariable final String pageId, @RequestParam final String userId) {
         return new RpcOperation<Boolean>() {
              @Override
              public Boolean execute() {
@@ -230,7 +286,7 @@ public class PageApi {
 
     @ResponseBody
     @RequestMapping(value = "{pageId}/removemember", method = RequestMethod.POST)
-    public RpcResult<Boolean> removeMemberFromPage(@PathVariable final long pageId, @RequestParam final long userId) {
+    public RpcResult<Boolean> removeMemberFromPage(@PathVariable final String pageId, @RequestParam final String userId) {
         return new RpcOperation<Boolean>() {
              @Override
              public Boolean execute() {
@@ -241,7 +297,7 @@ public class PageApi {
 
     @ResponseBody
     @RequestMapping(value = "{pageId}/sharestatus", method = RequestMethod.POST)
-    public RpcResult<Boolean> updateSharedPageStatus(@PathVariable final long pageId, @RequestParam final String shareStatus) {
+    public RpcResult<Boolean> updateSharedPageStatus(@PathVariable final String pageId, @RequestParam final String shareStatus) {
         return new RpcOperation<Boolean>() {
              @Override
              public Boolean execute() {
@@ -252,11 +308,25 @@ public class PageApi {
 
     @ResponseBody
     @RequestMapping(value = "{pageId}/editstatus", method = RequestMethod.POST)
-    public RpcResult<Boolean> updatePageEditingStatus(@PathVariable final long pageId, @RequestParam final long userId, @RequestParam final boolean isEditor) {
+    public RpcResult<Boolean> updatePageEditingStatus(@PathVariable final String pageId, @RequestParam final String userId, @RequestParam final boolean isEditor) {
         return new RpcOperation<Boolean>() {
              @Override
              public Boolean execute() {
                return pageService.updatePageEditingStatus(pageId, userId, isEditor);
+             }
+        }.getResult();
+    }
+
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.POST, value = "import/omdl")
+    public RpcResult<Page> importPage(HttpServletRequest request, final HttpServletResponse response,
+            @RequestParam final String pageName) {
+        MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
+        final MultipartFile multipartFile = multipartRequest.getFile("omdlFile");
+        return new RpcOperation<Page>() {
+             @Override
+             public Page execute() {
+               return omdlService.importOmdl(multipartFile, pageName);
              }
         }.getResult();
     }

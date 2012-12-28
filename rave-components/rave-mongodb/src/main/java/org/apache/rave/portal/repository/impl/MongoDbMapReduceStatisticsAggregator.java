@@ -56,7 +56,9 @@ public class MongoDbMapReduceStatisticsAggregator implements StatisticsAggregato
     public MongoDbMapReduceStatisticsAggregator(MongoOperations mongoOperations) {
         this.mongoOperations = mongoOperations;
     }
-    public WidgetStatistics getWidgetStatistics(long widget_id, long user_id) {
+
+    @Override
+    public WidgetStatistics getWidgetStatistics(String widget_id, String user_id) {
         WidgetUsersMapReduceResult userResult = mongoOperations.findById(widget_id, WidgetUsersMapReduceResult.class, WIDGET_USERS);
         WidgetRatingsMapReduceResult ratingResult = mongoOperations.findById(widget_id, WidgetRatingsMapReduceResult.class, WIDGET_RATINGS);
 
@@ -73,12 +75,12 @@ public class MongoDbMapReduceStatisticsAggregator implements StatisticsAggregato
     }
 
     @Override
-    public Map<Long, WidgetStatistics> getAllWidgetStatistics(long userId) {
+    public Map<String , WidgetStatistics> getAllWidgetStatistics(String userId) {
         List<WidgetRatingsMapReduceResult> widgetStats = mongoOperations.findAll(WidgetRatingsMapReduceResult.class, WIDGET_RATINGS);
         List<WidgetUsersMapReduceResult> widgetUsers = mongoOperations.findAll(WidgetUsersMapReduceResult.class, WIDGET_USERS);
 
-        Map<Long, WidgetStatistics> stats = Maps.newHashMap();
-        Map<Long, Integer> userStats = mapUsersResults(widgetUsers);
+        Map<String, WidgetStatistics> stats = Maps.newHashMap();
+        Map<String, Integer> userStats = mapUsersResults(widgetUsers);
 
         if (widgetStats.size() > 0) {
             addCombinedStats(userId, widgetStats, userStats, stats);
@@ -113,8 +115,8 @@ public class MongoDbMapReduceStatisticsAggregator implements StatisticsAggregato
         }
     }
 
-    private Map<Long, Integer> mapUsersResults(List<WidgetUsersMapReduceResult> widgetUsersMapReduceResults) {
-        Map<Long, Integer> map = Maps.newHashMap();
+    private Map<String, Integer> mapUsersResults(List<WidgetUsersMapReduceResult> widgetUsersMapReduceResults) {
+        Map<String, Integer> map = Maps.newHashMap();
         for (WidgetUsersMapReduceResult result : widgetUsersMapReduceResults) {
             if (result.getId() != null) {
                 map.put(result.getId(), result.getValue().size());
@@ -135,18 +137,18 @@ public class MongoDbMapReduceStatisticsAggregator implements StatisticsAggregato
         return mongoOperations.mapReduce(WIDGET_COLLECTION, RATINGS_MAP, RATINGS_REDUCE, getOptions(WIDGET_RATINGS), WidgetRatingsMapReduceResult.class);
     }
 
-    private void addUserCount(Map<Long, Integer> users, Map<Long, WidgetStatistics> stats) {
-        for (Map.Entry<Long, Integer> result : users.entrySet()) {
+    private void addUserCount(Map<String, Integer> users, Map<String, WidgetStatistics> stats) {
+        for (Map.Entry<String, Integer> result : users.entrySet()) {
             WidgetStatistics widgetStatistics = getTotalUserOnlyWidgetStatistics(result.getValue());
             stats.put(result.getKey(), widgetStatistics);
         }
     }
 
-    private void addCombinedStats(long userId, List<WidgetRatingsMapReduceResult> widgetStats, Map<Long, Integer> usersMap, Map<Long, WidgetStatistics> stats) {
+    private void addCombinedStats(String userId, List<WidgetRatingsMapReduceResult> widgetStats, Map<String, Integer> usersMap, Map<String , WidgetStatistics> stats) {
         for (WidgetRatingsMapReduceResult result : widgetStats) {
             stats.put(result.getId(), createWidgetStatisticsFromResults(userId, result));
         }
-        for(Map.Entry<Long, Integer> id : usersMap.entrySet()) {
+        for(Map.Entry<String, Integer> id : usersMap.entrySet()) {
             Integer value = id.getValue();
             if(stats.containsKey(id.getKey())) {
                 stats.get(id.getKey()).setTotalUserCount(value);
@@ -164,7 +166,7 @@ public class MongoDbMapReduceStatisticsAggregator implements StatisticsAggregato
         return stat;
     }
 
-    private WidgetStatistics createWidgetStatisticsFromResults(long user_id, WidgetRatingsMapReduceResult statsResult) {
+    private WidgetStatistics createWidgetStatisticsFromResults(String user_id, WidgetRatingsMapReduceResult statsResult) {
         WidgetStatistics statistics = new WidgetStatistics();
         WidgetRatingsMapReduceResult.WidgetStatisticsMapReduceResult result = statsResult.getValue();
         if (result != null) {

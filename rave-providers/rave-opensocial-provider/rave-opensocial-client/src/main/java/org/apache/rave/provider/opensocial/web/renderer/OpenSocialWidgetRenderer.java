@@ -20,14 +20,12 @@
 package org.apache.rave.provider.opensocial.web.renderer;
 
 import org.apache.rave.exception.NotSupportedException;
-import org.apache.rave.portal.model.Page;
-import org.apache.rave.portal.model.PageType;
-import org.apache.rave.portal.model.RegionWidget;
-import org.apache.rave.portal.model.RegionWidgetPreference;
+import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.web.renderer.RegionWidgetRenderer;
 import org.apache.rave.portal.web.renderer.RenderScope;
 import org.apache.rave.portal.web.renderer.ScriptLocation;
 import org.apache.rave.portal.web.renderer.ScriptManager;
+import org.apache.rave.portal.web.renderer.model.RegionWidgetWrapper;
 import org.apache.rave.portal.web.renderer.model.RenderContext;
 import org.apache.rave.provider.opensocial.Constants;
 import org.apache.rave.provider.opensocial.service.OpenSocialService;
@@ -94,22 +92,24 @@ public class OpenSocialWidgetRenderer implements RegionWidgetRenderer {
      * @return valid HTML markup
      */
     @Override
-    public String render(RegionWidget item, RenderContext context) {
-        String type = item.getWidget().getType();
+    public String render(RegionWidgetWrapper item, RenderContext context) {
+        Widget widget = item.getWidget();
+        String type = widget.getType();
         if (!Constants.WIDGET_TYPE.equals(type)) {
             throw new NotSupportedException("Invalid widget type passed to renderer: " + type);
         }
 
-        String widgetScript = getWidgetScript(item);
+        RegionWidget regionWidget = item.getRegionWidget();
+        String widgetScript = getWidgetScript(regionWidget, widget);
         // the key is based off the RegionWidget.id to ensure uniqueness
-        String key = REGISTER_WIDGET_KEY  + (item.getId() == null ? "" :  "-" + item.getId());
+        String key = REGISTER_WIDGET_KEY  + (regionWidget.getId() == null ? "" :  "-" + regionWidget.getId());
         scriptManager.registerScriptBlock(key, widgetScript, ScriptLocation.AFTER_RAVE, RenderScope.CURRENT_REQUEST, context);
-        logger.debug("Gadget Script Data: " + widgetScript);
+        logger.debug("Gadget Script Data from OpenSocialWidgetRenderer: " + widgetScript);
 
-        return String.format(MARKUP, item.getId());
+        return String.format(MARKUP, regionWidget.getId());
     }
 
-    private String getWidgetScript(RegionWidget item) {
+    private String getWidgetScript(RegionWidget item, Widget widget) {
         JSONObject userPrefs = new JSONObject();
         if (item.getPreferences() != null) {
             for (RegionWidgetPreference regionWidgetPreference : item.getPreferences()) {
@@ -139,12 +139,12 @@ public class OpenSocialWidgetRenderer implements RegionWidgetRenderer {
                 item.getRegion().getId(),
                 Constants.WIDGET_TYPE,
                 item.getId(),
-                item.getWidget().getUrl(),
-                securityTokenService.getEncryptedSecurityToken(item),
-                openSocialService.getGadgetMetadata(item.getWidget().getUrl()),
+                widget.getUrl(),
+                securityTokenService.getEncryptedSecurityToken(item, widget),
+                openSocialService.getGadgetMetadata(widget.getUrl()),
                 userPrefs.toString(),
                 item.isCollapsed(),
-                item.getWidget().getId(),
+                widget.getId(),
                 item.isLocked(),
                 item.isHideChrome(),
                 pageId,

@@ -37,10 +37,10 @@ public class MongoDbPersonAssociationTest {
 
         MongoDbPersonAssociation personAssociation = new MongoDbPersonAssociation();
         personAssociation.setRequestStatus(FriendRequestStatus.ACCEPTED);
-        personAssociation.setPersonId((long)46765);
+        personAssociation.setPersonId("46765");
 
         assertThat(personAssociation.getRequestStatus(), is(equalTo(FriendRequestStatus.ACCEPTED)));
-        assertThat(personAssociation.getPersonId(), is(equalTo((long)46765)));
+        assertThat(personAssociation.getPersonId(), is(equalTo("46765")));
 
     }
 }

@@ -22,7 +22,6 @@ package org.apache.rave.portal.repository.impl;
 import org.apache.rave.portal.model.Category;
 import org.apache.rave.portal.model.MongoDbCategory;
 import org.apache.rave.portal.model.conversion.HydratingConverterFactory;
-import org.apache.rave.portal.model.impl.CategoryImpl;
 import org.apache.rave.portal.repository.util.CollectionNames;
 import org.apache.rave.util.CollectionUtils;
 import org.junit.Before;
@@ -35,9 +34,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.easymock.EasyMock.*;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.sameInstance;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.springframework.data.mongodb.core.query.Query.query;
@@ -79,7 +76,7 @@ public class MongoDbCategoryRepositoryTest {
         List<MongoDbCategory> categoryList = new ArrayList<MongoDbCategory>();
         MongoDbCategory category = new MongoDbCategory();
         categoryList.add(category);
-        long userId = 123;
+        String userId = "123";
         category.setCreatedUserId(userId);
         category.setLastModifiedUserId(userId);
         MongoDbCategory converted = new MongoDbCategory();
@@ -101,11 +98,11 @@ public class MongoDbCategoryRepositoryTest {
 
     @Test
     public void removeFromCreatedOrModifiedFields_NotUpdated(){
-        long userId = 54321;
+        String userId = "54321";
         MongoDbCategory category = new MongoDbCategory();
         List<MongoDbCategory> categories = Arrays.asList(category);
-        category.setCreatedUserId((long)234);
-        category.setLastModifiedUserId((long)234);
+        category.setCreatedUserId("234");
+        category.setLastModifiedUserId("234");
         expect(template.find(query(Criteria.where("lastModifiedUserId").is(userId).orOperator(Criteria.where("createdUserId").is(userId))), categoryRepository.CLASS, CollectionNames.CATEGORY_COLLECTION)).andReturn(categories);
         replay(template);
 
@@ -120,7 +117,7 @@ public class MongoDbCategoryRepositoryTest {
 
     @Test
     public void get_Valid(){
-        long id = 123;
+        String id = "123";
         MongoDbCategory category = new MongoDbCategory();
         expect(template.findById(id, categoryRepository.CLASS, CollectionNames.CATEGORY_COLLECTION)).andReturn(category);
         converter.hydrate(category, Category.class);
@@ -149,7 +146,7 @@ public class MongoDbCategoryRepositoryTest {
     @Test
     public void delete_Valid(){
         Category item = new MongoDbCategory();
-        long id = 123;
+        String id = "123";
         item.setId(id);
         MongoDbCategory hydrate = new MongoDbCategory();
 

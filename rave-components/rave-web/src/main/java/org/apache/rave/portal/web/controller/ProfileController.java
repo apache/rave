@@ -19,8 +19,6 @@
 
 package org.apache.rave.portal.web.controller;
 
-import java.util.List;
-
 import org.apache.rave.portal.model.Page;
 import org.apache.rave.portal.model.Person;
 import org.apache.rave.portal.model.User;
@@ -35,15 +33,14 @@ import org.apache.rave.portal.web.util.ViewNames;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 @Controller
 @RequestMapping(value = {"/person/*", "/person"})
@@ -69,17 +66,14 @@ public class ProfileController {
 	 * @return the view name of the user profile page
 	 */
 	@RequestMapping(value = {"/{username:.*}"}, method = RequestMethod.GET)
-	public String viewProfile(@PathVariable String username, ModelMap model, @RequestParam(required = false) Long referringPageId) {
+	public String viewProfileByUsername(@PathVariable String username, ModelMap model, @RequestParam(required = false) String referringPageId, HttpServletResponse response) {
         User user = null;
         try{
             user = userService.getUserByUsername(username);
             logger.debug("Viewing person profile for: " + user.getUsername());
             return viewProfileCommon(user, model, referringPageId);
         }catch(Exception e){
-            addAttributesToModel(model, user, referringPageId);
-            String view = ViewNames.USER_NOT_FOUND;
-            addNavItemsToModel(view, model, referringPageId, user, null);
-            return view;
+            return profileNotFoundErrorHelper(model, referringPageId, response, user, e);
         }
 	}
 	  /**
@@ -91,23 +85,39 @@ public class ProfileController {
 		 * @return the view name of the user profile page
 		 */
 	@RequestMapping(value = {"/id/{userid:.*}"}, method = RequestMethod.GET)
-	public String viewProfile(@PathVariable Long userid, ModelMap model, @RequestParam(required = false) Long referringPageId) {
+	public String viewProfile(@PathVariable String userid, ModelMap model, @RequestParam(required = false) String referringPageId, HttpServletResponse response) {
         User user = null;
         try{
             user = userService.getUserById(userid);
             logger.debug("Viewing person profile for: " + user.getUsername());
             return viewProfileCommon(user, model, referringPageId);
         }catch (Exception e){
-            addAttributesToModel(model, user, referringPageId);
-            String view = ViewNames.USER_NOT_FOUND;
-            addNavItemsToModel(view, model, referringPageId, user, null);
-            return view;
+            return profileNotFoundErrorHelper(model, referringPageId, response, user, e);
         }
 	}
 
-    private String viewProfileCommon(User user, ModelMap model, Long referringPageId){
+    /**
+     * Helper method to handle error when a person's profile is not found
+     * @param model Model map of values for view
+     * @param referringPageId String
+     * @param response HttpServletResponse object
+     * @param user User of page
+     * @param e Exception that was caught
+     * @return String of the viewname to render
+     */
+    private String profileNotFoundErrorHelper(ModelMap model, String referringPageId, HttpServletResponse response, User user, Exception e) {
+        logger.error("Caught an exception: " + e.getMessage());
+        addAttributesToModel(model, user, referringPageId);
+        response.setStatus(HttpStatus.NOT_FOUND.value());
+        String view = ViewNames.USER_NOT_FOUND;
+        addNavItemsToModel(view, model, referringPageId, user, null);
+        return view;
+    }
+
+    private String viewProfileCommon(User user, ModelMap model, String referringPageId){
         Page personProfilePage = pageService.getPersonProfilePage(user.getId());
         addAttributesToModel(model, user, referringPageId);
+
         model.addAttribute(ModelKeys.PAGE, personProfilePage);
         String view =  ViewNames.getPersonPageView(personProfilePage.getPageLayout().getCode());
         List<Person> friendRequests = userService.getFriendRequestsReceived(user.getUsername());
@@ -125,7 +135,7 @@ public class ProfileController {
 	 */
     @RequestMapping(method = RequestMethod.POST)
     public String updateProfile(ModelMap model,
-                                @RequestParam(required = false) Long referringPageId,
+                                @RequestParam(required = false) String referringPageId,
                                 @ModelAttribute("updatedUser") UserForm updatedUser) {
 
         User user = userService.getAuthenticatedUser();
@@ -151,13 +161,13 @@ public class ProfileController {
 	/*
 	 * Function to add attributes to model map
 	 */
-	private void addAttributesToModel(ModelMap model, User user, Long referringPageId) {
+	private void addAttributesToModel(ModelMap model, User user, String referringPageId) {
     	model.addAttribute(ModelKeys.USER_PROFILE, user);
     	model.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
     }
 
-    public static void addNavItemsToModel(String view, ModelMap model, Long referringPageId, User user, List<Person> friendRequests) {
-        long refPageId = referringPageId != null ? referringPageId : 0;
+    public static void addNavItemsToModel(String view, ModelMap model, String referringPageId, User user, List<Person> friendRequests) {
+        String refPageId = referringPageId != null ? referringPageId : "";
         final NavigationMenu topMenu = new NavigationMenu("topnav");
 
         if(friendRequests != null){

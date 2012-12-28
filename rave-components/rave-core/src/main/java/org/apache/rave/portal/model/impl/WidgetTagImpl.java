@@ -26,58 +26,37 @@ import java.util.Date;
 
 public class WidgetTagImpl implements WidgetTag {
 
-    private Long widgetId;
-    private User user;
-    private Tag tag;
+    private String userId;
+    private String tagId;
     private Date createdDate;
 
     public WidgetTagImpl() {
     }
 
-    public WidgetTagImpl(Long widgetId, User user, Date createdDate, Tag tag) {
-        this.widgetId = widgetId;
-        this.user = user;
-        this.tag = tag;
+    public WidgetTagImpl(User user, Date createdDate, Tag tag) {
+        this.userId = user.getId();
+        this.tagId = tag.getId();
+        this.createdDate = createdDate;
+    }
+
+    public WidgetTagImpl(String userId, Date createdDate, String tagId) {
+        this.userId = userId;
+        this.tagId = tagId;
         this.createdDate = createdDate;
     }
 
     @Override
-    public Long getWidgetId() {
-        return this.widgetId;
+    public String getUserId() {
+        return this.userId;
     }
 
     @Override
-    public void setWidgetId(Long id) {
-        this.widgetId = id;
-    }
-
-    @Override
-    public User getUser() {
-        return this.user;
-    }
-
-    @Override
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    @Override
-    public Tag getTag() {
-        return this.tag;
-    }
-
-    @Override
-    public void setTag(Tag tag) {
-        this.tag = tag;
+    public String getTagId() {
+        return this.tagId;
     }
 
     @Override
     public Date getCreatedDate() {
        return this.createdDate;
-    }
-
-    @Override
-    public void setCreatedDate(Date date) {
-        this.createdDate = date;
     }
 }

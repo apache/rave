@@ -63,14 +63,14 @@ public class JpaRegionWidgetRepositoryTest {
 
     @Test
     public void getById_validId() {
-        RegionWidget regionWidget = repository.get(VALID_REGION_WIDGET_ID);
+        RegionWidget regionWidget = repository.get(VALID_REGION_WIDGET_ID.toString());
         assertThat(regionWidget, is(notNullValue()));
-        assertThat(regionWidget.getId(), is(equalTo(VALID_REGION_WIDGET_ID)));
+        assertThat(regionWidget.getId(), is(equalTo(VALID_REGION_WIDGET_ID.toString())));
     }
 
     @Test
     public void getById_invalidId() {
-        RegionWidget regionWidget = repository.get(INVALID_REGION_WIDGET_ID);
+        RegionWidget regionWidget = repository.get(INVALID_REGION_WIDGET_ID.toString());
         assertThat(regionWidget, is(nullValue()));
     }
 
@@ -89,8 +89,7 @@ public class JpaRegionWidgetRepositoryTest {
     @Test
     @Rollback(true)
     public void save_existingEntity() {
-        RegionWidget regionWidget = new JpaRegionWidget();
-        regionWidget.setId(VALID_REGION_WIDGET_ID);
+        RegionWidget regionWidget = new JpaRegionWidget(VALID_REGION_WIDGET_ID);
         regionWidget.setPreferences(new ArrayList<RegionWidgetPreference>());
 
         RegionWidget saved = repository.save(regionWidget);
@@ -123,8 +122,7 @@ public class JpaRegionWidgetRepositoryTest {
     public void save_cascadeMerge() {
         long VALID_PREFERENCE_ID = addPreferenceToRegionWidget(VALID_REGION_WIDGET_ID);
 
-        RegionWidget regionWidget = new JpaRegionWidget();
-        regionWidget.setId(VALID_REGION_WIDGET_ID);
+        RegionWidget regionWidget = new JpaRegionWidget(VALID_REGION_WIDGET_ID);
         regionWidget.setPreferences(new ArrayList<RegionWidgetPreference>());
         JpaRegionWidgetPreference regionWidgetPreference = new JpaRegionWidgetPreference(VALID_PREFERENCE_ID,
                 VALID_REGION_WIDGET_ID, VALID_PREFERENCE_NAME, VALID_PREFERENCE_VALUE);
@@ -145,7 +143,7 @@ public class JpaRegionWidgetRepositoryTest {
     public void save_cascadeOrphan() {
         long VALID_PREFERENCE_ID = addPreferenceToRegionWidget(VALID_REGION_WIDGET_ID);
 
-        RegionWidget regionWidget = repository.get(VALID_REGION_WIDGET_ID);
+        RegionWidget regionWidget = repository.get(VALID_REGION_WIDGET_ID.toString());
         regionWidget.getPreferences().remove(0);
 
         RegionWidget saved = repository.save(regionWidget);
@@ -159,26 +157,26 @@ public class JpaRegionWidgetRepositoryTest {
     @Test
     @Rollback(true)
     public void delete_jpaObject() {
-        RegionWidget regionWidget = repository.get(VALID_REGION_WIDGET_ID);
+        RegionWidget regionWidget = repository.get(VALID_REGION_WIDGET_ID.toString());
         assertThat(regionWidget, is(notNullValue()));
         repository.delete(regionWidget);
-        regionWidget = repository.get(VALID_REGION_WIDGET_ID);
+        regionWidget = repository.get(VALID_REGION_WIDGET_ID.toString());
         assertThat(regionWidget, is(nullValue()));
     }
 
     @Test
     @Rollback(true)
     public void delete_implObject() {
-        RegionWidget regionWidget = repository.get(VALID_REGION_WIDGET_ID);
+        RegionWidget regionWidget = repository.get(VALID_REGION_WIDGET_ID.toString());
         assertThat(regionWidget, is(notNullValue()));
         RegionWidgetImpl impl = new RegionWidgetImpl(regionWidget.getId());
         repository.delete(impl);
-        regionWidget = repository.get(VALID_REGION_WIDGET_ID);
+        regionWidget = repository.get(VALID_REGION_WIDGET_ID.toString());
         assertThat(regionWidget, is(nullValue()));
     }
 
-    private long addPreferenceToRegionWidget(long validRegionWidgetId) {
-        RegionWidget regionWidget = repository.get(validRegionWidgetId);
+    private long addPreferenceToRegionWidget(Long validRegionWidgetId) {
+        RegionWidget regionWidget = repository.get(validRegionWidgetId.toString());
         RegionWidgetPreference regionWidgetPreference = new JpaRegionWidgetPreference(null, validRegionWidgetId,
                 VALID_PREFERENCE_NAME, VALID_PREFERENCE_VALUE);
         regionWidget.getPreferences().add(regionWidgetPreference);

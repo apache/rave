@@ -21,15 +21,16 @@ package org.apache.rave.portal.service;
 
 import org.apache.rave.portal.model.Tag;
 
+import javax.swing.text.html.parser.TagElement;
 import java.util.List;
 
 public interface TagService {
 
     /**
-     * @param entityId unique identifier of the {@link org.apache.rave.portal.model.Tag}
+     * @param id unique identifier of the {@link org.apache.rave.portal.model.Tag}
      * @return Tag if it can be found, otherwise {@literal null}
      */
-    Tag getTagById(long entityId);
+    Tag getTagById(String id);
 
 
     /**
@@ -48,6 +49,8 @@ public interface TagService {
      * @return a {@link org.apache.rave.portal.model.util.SearchResult} with all {@link org.apache.rave.portal.model.Tag}'s
      *         Not link to a widget
      */
-    List<Tag> getAvailableTagsByWidgetId(Long widgetId);
+    //List<Tag> getAvailableTagsByWidgetId(String widgetId);
+
+    Tag save(Tag tag);
 
 }

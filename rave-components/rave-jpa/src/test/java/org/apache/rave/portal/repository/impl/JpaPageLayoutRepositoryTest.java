@@ -61,7 +61,7 @@ public class JpaPageLayoutRepositoryTest {
 
     @Test
     public void get() {
-        JpaPageLayout p = (JpaPageLayout) repository.get(VALID_ID);
+        JpaPageLayout p = (JpaPageLayout) repository.get(VALID_ID.toString());
         assertThat(p.getEntityId(), is(VALID_ID));
         assertThat(p.getCode(), is(VALID_LAYOUT_CODE));
     }
@@ -124,9 +124,9 @@ public class JpaPageLayoutRepositoryTest {
 
         assertThat(pageLayout.getEntityId(), is(nullValue()));
         repository.save(pageLayout);
-        long newId = pageLayout.getEntityId();
+        Long newId = pageLayout.getEntityId();
         assertThat(newId > 0, is(true));
-        PageLayout newLayout = repository.get(newId);
+        PageLayout newLayout = repository.get(newId.toString());
         assertThat(newLayout.getCode(), is(newCode));
         assertThat(newLayout.getRenderSequence(), is(newRenderSeq));
         assertThat(newLayout.getNumberOfRegions(), is(newNumRegions));
@@ -138,11 +138,11 @@ public class JpaPageLayoutRepositoryTest {
     @Rollback(true)
     public void save_existing() {
         final String UPDATED_CODE = "updated code";
-        PageLayout pageLayout = repository.get(VALID_ID);
+        PageLayout pageLayout = repository.get(VALID_ID.toString());
         assertThat(pageLayout.getCode(), is(not(UPDATED_CODE)));
         pageLayout.setCode(UPDATED_CODE);
         repository.save(pageLayout);
-        PageLayout updatedPageLayout = repository.get(VALID_ID);
+        PageLayout updatedPageLayout = repository.get(VALID_ID.toString());
         assertThat(updatedPageLayout.getCode(), is(UPDATED_CODE));
     }
 
@@ -150,10 +150,10 @@ public class JpaPageLayoutRepositoryTest {
     @Transactional(readOnly = false)
     @Rollback(true)
     public void delete() {
-        PageLayout pl = repository.get(VALID_ID);
+        PageLayout pl = repository.get(VALID_ID.toString());
         assertThat(pl, is(notNullValue()));
         repository.delete(pl);
-        pl = repository.get(VALID_ID);
+        pl = repository.get(VALID_ID.toString());
         assertThat(pl, is(nullValue()));
     }
 }

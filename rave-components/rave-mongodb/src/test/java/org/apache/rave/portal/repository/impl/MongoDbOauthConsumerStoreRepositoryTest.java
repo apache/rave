@@ -27,10 +27,7 @@ import org.junit.Test;
 import org.springframework.data.mongodb.core.MongoOperations;
 
 import static org.easymock.EasyMock.*;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.sameInstance;
-import static org.junit.Assert.assertNotNull;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static org.springframework.data.mongodb.core.query.Query.query;
@@ -71,7 +68,7 @@ public class MongoDbOauthConsumerStoreRepositoryTest {
 
     @Test
     public void get_Valid() {
-        long id = 123;
+        String id = "123";
         OAuthConsumerStoreImpl found = new OAuthConsumerStoreImpl();
         expect(template.findById(id, oauthConsumerStoreRepository.CLASS, CollectionNames.OAUTH_CONSUMER_COLLECTION)).andReturn(found);
         replay(template);
@@ -88,14 +85,13 @@ public class MongoDbOauthConsumerStoreRepositoryTest {
 
         OAuthConsumerStore returned = oauthConsumerStoreRepository.save(item);
 
-        assertNotNull(returned.getId());
-        assertThat(item, is(sameInstance(returned)));
+        verify(template);
     }
 
     @Test
     public void save_Null_Id(){
         OAuthConsumerStore item = new OAuthConsumerStoreImpl();
-        item.setId((long)1232);
+        item.setId("1232");
         template.save(item, CollectionNames.OAUTH_CONSUMER_COLLECTION);
         expectLastCall();
         replay(template);
@@ -108,7 +104,7 @@ public class MongoDbOauthConsumerStoreRepositoryTest {
     @Test
     public void delete_Valid() {
         OAuthConsumerStore item = new OAuthConsumerStoreImpl();
-        item.setId((long)123);
+        item.setId("123");
 
         expect(template.findById(item.getId(), oauthConsumerStoreRepository.CLASS, CollectionNames.OAUTH_CONSUMER_COLLECTION)).andReturn((OAuthConsumerStoreImpl)item);
         template.remove(item);

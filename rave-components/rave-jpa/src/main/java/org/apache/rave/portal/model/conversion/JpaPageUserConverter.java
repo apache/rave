@@ -48,7 +48,7 @@ public class JpaPageUserConverter implements ModelConverter<PageUser, JpaPageUse
     private JpaPageUser createEntity(PageUser source) {
         JpaPageUser converted = null;
         if (source != null) {
-            converted = manager.find(JpaPageUser.class, source.getId());
+            converted = manager.find(JpaPageUser.class, source.getId() == null ? null : Long.parseLong(source.getId()));
             if (converted == null) {
                 converted = new JpaPageUser();
             }
@@ -58,12 +58,11 @@ public class JpaPageUserConverter implements ModelConverter<PageUser, JpaPageUse
     }
 
     private void updateProperties(PageUser source, JpaPageUser converted) {
-        converted.setEntityId(source.getId());
-        converted.setId(source.getId());
+        converted.setEntityId(source.getId() == null ? null : Long.parseLong(source.getId()));
         converted.setPage(source.getPage());
         converted.setPageStatus(source.getPageStatus());
         converted.setRenderSequence(source.getRenderSequence());
-        converted.setUser(source.getUser());
+        converted.setUserId(source.getUserId());
         converted.setEditor(source.isEditor());
     }
 }

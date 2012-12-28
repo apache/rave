@@ -26,10 +26,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.stereotype.Repository;
 
-import static org.apache.rave.portal.model.util.MongoDbModelUtil.generateId;
+import static org.apache.rave.portal.repository.util.CollectionNames.OAUTH_CONSUMER_COLLECTION;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static org.springframework.data.mongodb.core.query.Query.query;
-import static org.apache.rave.portal.repository.util.CollectionNames.OAUTH_CONSUMER_COLLECTION;
 
 @Repository
 public class MongoDbOauthConsumerStoreRepository implements OAuthConsumerStoreRepository {
@@ -49,15 +48,12 @@ public class MongoDbOauthConsumerStoreRepository implements OAuthConsumerStoreRe
     }
 
     @Override
-    public OAuthConsumerStore get(long id) {
+    public OAuthConsumerStore get(String id) {
         return template.findById(id, CLASS, OAUTH_CONSUMER_COLLECTION);
     }
 
     @Override
     public OAuthConsumerStore save(OAuthConsumerStore item) {
-        if(item.getId() == null) {
-            item.setId(generateId());
-        }
         template.save(item, OAUTH_CONSUMER_COLLECTION);
         return item;
     }

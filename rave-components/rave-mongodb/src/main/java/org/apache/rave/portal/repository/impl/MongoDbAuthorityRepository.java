@@ -74,7 +74,7 @@ public class MongoDbAuthorityRepository implements AuthorityRepository {
     }
 
     @Override
-    public Authority get(long id) {
+    public Authority get(String id) {
         throw new NotSupportedException();
     }
 

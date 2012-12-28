@@ -58,66 +58,67 @@ public class MongoDbRegionRepositoryTest {
 
     @Test
     public void get(){
-        Page page = new PageImpl(1234L);
+        String id = "1111L";
+        Page page = new PageImpl("1234L");
         List<Region> regions = Lists.newArrayList();
-        Region region = new RegionImpl(1111L);
+        Region region = new RegionImpl(id);
         regions.add(region);
         page.setRegions(regions);
 
-        expect( template.findOne(new Query(Criteria.where("regions").elemMatch(Criteria.where("_id").is(1111L))))).andReturn(page);
+        expect( template.findOne(new Query(Criteria.where("regions").elemMatch(Criteria.where("_id").is(id))))).andReturn(page);
         replay(template);
 
-        Region result = repo.get(1111L);
+        Region result = repo.get(id);
         assertNotNull(result);
         assertThat(result, is(equalTo(region)));
-        assertThat(result.getId(), equalTo(1111L));
+        assertThat(result.getId(), equalTo(id));
 
     }
 
     @Test
     public void get_null(){
-        Page page = new PageImpl(1234L);
+        Page page = new PageImpl("1234L");
         List<Region> regions = Lists.newArrayList();
-        Region region = new RegionImpl(1111L);
+        Region region = new RegionImpl("1111L");
         regions.add(region);
         page.setRegions(regions);
 
-        expect(template.findOne(new Query(Criteria.where("regions").elemMatch(Criteria.where("_id").is(2222L))))).andReturn(page);
+        expect(template.findOne(new Query(Criteria.where("regions").elemMatch(Criteria.where("_id").is("2222L"))))).andReturn(page);
         replay(template);
 
-        Region result = repo.get(2222L);
+        Region result = repo.get("2222L");
         assertNull(result);
 
     }
 
     @Test
     public void save(){
-        Page page = new PageImpl(1234L);
+        Page page = new PageImpl("1234L");
         List<Region> regions = Lists.newArrayList();
-        Region item = new RegionImpl(1111L);
+        Region item = new RegionImpl("1111L");
         regions.add(item);
         page.setRegions(regions);
 
-        expect(template.findOne(new Query(Criteria.where("regions").elemMatch(Criteria.where("_id").is(1111L))))).andReturn(page);
+        expect(template.findOne(new Query(Criteria.where("regions").elemMatch(Criteria.where("_id").is("1111L"))))).andReturn(page);
         expect(template.save(isA(Page.class))).andReturn(page);
         replay(template);
 
         Region result = repo.save(item);
-        assertThat(result.getId(), is(equalTo(1111L)));
+        assertThat(result.getId(), is(equalTo("1111L")));
         assertThat(result, is(sameInstance(item)));
 
     }
 
     @Test
     public void save_null(){
-        Page page = new PageImpl(1234L);
+        Page page = new PageImpl("1234L");
         List<Region> regions = Lists.newArrayList();
         Region item = new RegionImpl();
         item.setPage(page);
         regions.add(item);
         page.setRegions(regions);
 
-        expect(template.get(1234L)).andReturn(page);
+        expect(template.get("1234L")).andReturn(page);
         expect(template.save(isA(Page.class))).andReturn(page);
         replay(template);
 
@@ -128,13 +129,13 @@ public class MongoDbRegionRepositoryTest {
 
     @Test
      public void delete(){
-        Page page = new PageImpl(1234L);
+        Page page = new PageImpl("1234L");
         List<Region> regions = Lists.newArrayList();
-        Region item = new RegionImpl(1111L);
+        Region item = new RegionImpl("1111L");
         regions.add(item);
         page.setRegions(regions);
 
-        expect(template.findOne(new Query(Criteria.where("regions").elemMatch(Criteria.where("_id").is(1111L))))).andReturn(page);
+        expect(template.findOne(new Query(Criteria.where("regions").elemMatch(Criteria.where("_id").is("1111L"))))).andReturn(page);
         expect(template.save(isA(Page.class))).andReturn(page);
         replay(template);
 
@@ -144,7 +145,7 @@ public class MongoDbRegionRepositoryTest {
 
     @Test (expected = IllegalStateException.class)
     public void delete_null(){
-        Page page = new PageImpl(1234L);
+        Page page = new PageImpl("1234L");
         List<Region> regions = Lists.newArrayList();
         Region item = new RegionImpl();
         regions.add(item);

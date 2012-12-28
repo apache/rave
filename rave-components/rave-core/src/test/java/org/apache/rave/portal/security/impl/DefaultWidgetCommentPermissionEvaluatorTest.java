@@ -18,7 +18,7 @@ package org.apache.rave.portal.security.impl;
 import org.apache.rave.portal.model.WidgetComment;
 import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.model.impl.WidgetCommentImpl;
-import org.apache.rave.portal.repository.WidgetCommentRepository;
+import org.apache.rave.portal.repository.WidgetRepository;
 import org.apache.rave.portal.security.ModelPermissionEvaluator.Permission;
 import org.apache.rave.portal.security.util.AuthenticationUtils;
 import org.easymock.EasyMock;
@@ -42,23 +42,23 @@ import static org.junit.Assert.assertThat;
 public class DefaultWidgetCommentPermissionEvaluatorTest {
 
     private DefaultWidgetCommentPermissionEvaluator defaultWidgetCommentPermissionEvaluator;
-    private WidgetCommentRepository mockWidgetCommentRepository;
+    private WidgetRepository widgetRepository;
     private Authentication mockAuthentication;
     private WidgetComment widgetComment;
     private UserImpl user, user2;
     private List<GrantedAuthority> grantedAuthoritiesList;
 
-    private final Long VALID_COMMENT_ID = 3L;
-    private final Long VALID_USER_ID = 99L;
-    private final Long INVALID_USER_ID = VALID_USER_ID + 1;
+    private final String VALID_COMMENT_ID = "3";
+    private final String VALID_USER_ID = "99";
+    private final String INVALID_USER_ID = VALID_USER_ID + 1;
     private final String VALID_USERNAME = "john.doe";
     private final String VALID_USERNAME2 = "jane.doe";
 
     @Before
     public void setUp() {
-        mockWidgetCommentRepository = createMock(WidgetCommentRepository.class);
+        widgetRepository = createMock(WidgetRepository.class);
         mockAuthentication = createMock(Authentication.class);
-        defaultWidgetCommentPermissionEvaluator = new DefaultWidgetCommentPermissionEvaluator(mockWidgetCommentRepository);
+        defaultWidgetCommentPermissionEvaluator = new DefaultWidgetCommentPermissionEvaluator(widgetRepository);
 
         user = new UserImpl();
         user.setUsername(VALID_USERNAME);
@@ -66,9 +66,8 @@ public class DefaultWidgetCommentPermissionEvaluatorTest {
         user2 = new UserImpl();
         user2.setUsername(VALID_USERNAME2);
         user2.setId(INVALID_USER_ID);
-        widgetComment = new WidgetCommentImpl();
-        widgetComment.setId(VALID_COMMENT_ID);
-        widgetComment.setUser(user);
+        widgetComment = new WidgetCommentImpl(VALID_COMMENT_ID);
+        widgetComment.setUserId(VALID_USER_ID);
         grantedAuthoritiesList = new ArrayList<GrantedAuthority>();
         grantedAuthoritiesList.add(new SimpleGrantedAuthority("ROLE_USER"));
     }
@@ -108,8 +107,8 @@ public class DefaultWidgetCommentPermissionEvaluatorTest {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList).anyTimes();
         expect(mockAuthentication.getPrincipal()).andReturn(user).anyTimes();
         replay(mockAuthentication);
-        expect(mockWidgetCommentRepository.get(VALID_COMMENT_ID)).andReturn(widgetComment).anyTimes();
-        replay(mockWidgetCommentRepository);
+        expect(widgetRepository.getCommentById(null, VALID_COMMENT_ID)).andReturn(widgetComment).anyTimes();
+        replay(widgetRepository);
 
         assertThat(defaultWidgetCommentPermissionEvaluator.hasPermission(mockAuthentication, widgetComment, Permission.ADMINISTER), is(false));
         assertThat(defaultWidgetCommentPermissionEvaluator.hasPermission(mockAuthentication, widgetComment, Permission.CREATE), is(true));
@@ -118,7 +117,7 @@ public class DefaultWidgetCommentPermissionEvaluatorTest {
         assertThat(defaultWidgetCommentPermissionEvaluator.hasPermission(mockAuthentication, widgetComment, Permission.UPDATE), is(true));
         assertThat(defaultWidgetCommentPermissionEvaluator.hasPermission(mockAuthentication, widgetComment, Permission.CREATE_OR_UPDATE), is(true));
         verify(mockAuthentication);
-        verify(mockWidgetCommentRepository);
+        verify(widgetRepository);
     }
 
     @Test
@@ -126,18 +125,18 @@ public class DefaultWidgetCommentPermissionEvaluatorTest {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList).anyTimes();
         expect(mockAuthentication.getPrincipal()).andReturn(user2).anyTimes();
         replay(mockAuthentication);
-        expect(mockWidgetCommentRepository.get(VALID_COMMENT_ID)).andReturn(widgetComment).anyTimes();
-        replay(mockWidgetCommentRepository);
+        expect(widgetRepository.getCommentById(null, VALID_COMMENT_ID)).andReturn(widgetComment).anyTimes();
+        replay(widgetRepository);
 
         assertThat(defaultWidgetCommentPermissionEvaluator.hasPermission(mockAuthentication, widgetComment, Permission.ADMINISTER), is(false));
-        assertThat(defaultWidgetCommentPermissionEvaluator.hasPermission(mockAuthentication, widgetComment, Permission.CREATE), is(false));
+        assertThat(defaultWidgetCommentPermissionEvaluator.hasPermission(mockAuthentication, widgetComment, Permission.CREATE), is(true));
         assertThat(defaultWidgetCommentPermissionEvaluator.hasPermission(mockAuthentication, widgetComment, Permission.READ), is(true));
         assertThat(defaultWidgetCommentPermissionEvaluator.hasPermission(mockAuthentication, widgetComment, Permission.DELETE), is(false));
         assertThat(defaultWidgetCommentPermissionEvaluator.hasPermission(mockAuthentication, widgetComment, Permission.UPDATE), is(false));
 
         assertThat(defaultWidgetCommentPermissionEvaluator.hasPermission(mockAuthentication, widgetComment, Permission.CREATE_OR_UPDATE), is(false));
         verify(mockAuthentication);
-        verify(mockWidgetCommentRepository);
+        verify(widgetRepository);
     }
 
     @Test
@@ -145,8 +144,8 @@ public class DefaultWidgetCommentPermissionEvaluatorTest {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList).anyTimes();
         expect(mockAuthentication.getPrincipal()).andReturn(user).anyTimes();
         replay(mockAuthentication);
-        expect(mockWidgetCommentRepository.get(VALID_COMMENT_ID)).andReturn(widgetComment).anyTimes();
-        replay(mockWidgetCommentRepository);
+        expect(widgetRepository.getCommentById(null, VALID_COMMENT_ID)).andReturn(widgetComment).anyTimes();
+        replay(widgetRepository);
 
         assertThat(defaultWidgetCommentPermissionEvaluator.hasPermission(mockAuthentication, VALID_COMMENT_ID, WidgetComment.class.getName(), Permission.ADMINISTER), is(false));
         assertThat(defaultWidgetCommentPermissionEvaluator.hasPermission(mockAuthentication, VALID_COMMENT_ID, WidgetComment.class.getName(), Permission.CREATE), is(true));
@@ -155,7 +154,7 @@ public class DefaultWidgetCommentPermissionEvaluatorTest {
         assertThat(defaultWidgetCommentPermissionEvaluator.hasPermission(mockAuthentication, VALID_COMMENT_ID, WidgetComment.class.getName(), Permission.UPDATE), is(true));
         assertThat(defaultWidgetCommentPermissionEvaluator.hasPermission(mockAuthentication, VALID_COMMENT_ID, WidgetComment.class.getName(), Permission.CREATE_OR_UPDATE), is(true));
         verify(mockAuthentication);
-        verify(mockWidgetCommentRepository);
+        verify(widgetRepository);
     }
 
     @Test
@@ -163,18 +162,18 @@ public class DefaultWidgetCommentPermissionEvaluatorTest {
         EasyMock.<Collection<? extends GrantedAuthority>>expect(mockAuthentication.getAuthorities()).andReturn(grantedAuthoritiesList).anyTimes();
         expect(mockAuthentication.getPrincipal()).andReturn(user2).anyTimes();
         replay(mockAuthentication);
-        expect(mockWidgetCommentRepository.get(VALID_COMMENT_ID)).andReturn(widgetComment).anyTimes();
-        replay(mockWidgetCommentRepository);
+        expect(widgetRepository.getCommentById(null, VALID_COMMENT_ID)).andReturn(widgetComment).anyTimes();
+        replay(widgetRepository);
 
         assertThat(defaultWidgetCommentPermissionEvaluator.hasPermission(mockAuthentication, VALID_COMMENT_ID, WidgetComment.class.getName(), Permission.ADMINISTER), is(false));
-        assertThat(defaultWidgetCommentPermissionEvaluator.hasPermission(mockAuthentication, VALID_COMMENT_ID, WidgetComment.class.getName(), Permission.CREATE), is(false));
+        assertThat(defaultWidgetCommentPermissionEvaluator.hasPermission(mockAuthentication, VALID_COMMENT_ID, WidgetComment.class.getName(), Permission.CREATE), is(true));
         assertThat(defaultWidgetCommentPermissionEvaluator.hasPermission(mockAuthentication, VALID_COMMENT_ID, WidgetComment.class.getName(), Permission.READ), is(true));
         assertThat(defaultWidgetCommentPermissionEvaluator.hasPermission(mockAuthentication, VALID_COMMENT_ID, WidgetComment.class.getName(), Permission.DELETE), is(false));
         assertThat(defaultWidgetCommentPermissionEvaluator.hasPermission(mockAuthentication, VALID_COMMENT_ID, WidgetComment.class.getName(), Permission.UPDATE), is(false));
 
         assertThat(defaultWidgetCommentPermissionEvaluator.hasPermission(mockAuthentication, VALID_COMMENT_ID, WidgetComment.class.getName(), Permission.CREATE_OR_UPDATE), is(false));
         verify(mockAuthentication);
-        verify(mockWidgetCommentRepository);
+        verify(widgetRepository);
     }
 
     @Test
@@ -221,13 +220,13 @@ public class DefaultWidgetCommentPermissionEvaluatorTest {
         WidgetComment localWidgetComment = new WidgetCommentImpl();
         UserImpl localUser = new UserImpl();
         localUser.setId(VALID_USER_ID);
-        localWidgetComment.setUser(localUser);
-        expect(mockWidgetCommentRepository.get(VALID_COMMENT_ID)).andReturn(localWidgetComment).anyTimes();
-        replay(mockWidgetCommentRepository);
+        localWidgetComment.setUserId(VALID_USER_ID);
+        expect(widgetRepository.getCommentById(null, VALID_COMMENT_ID)).andReturn(localWidgetComment).anyTimes();
+        replay(widgetRepository);
 
         assertThat(defaultWidgetCommentPermissionEvaluator.hasPermission(mockAuthentication, localWidgetComment, Permission.CREATE), is(true));
 
         verify(mockAuthentication);
-        verify(mockWidgetCommentRepository);
+        verify(widgetRepository);
     }
 }

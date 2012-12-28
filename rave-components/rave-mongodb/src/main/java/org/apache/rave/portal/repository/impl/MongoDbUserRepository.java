@@ -20,6 +20,7 @@
 package org.apache.rave.portal.repository.impl;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import org.apache.rave.portal.model.MongoDbUser;
 import org.apache.rave.portal.model.Page;
 import org.apache.rave.portal.model.User;
@@ -31,7 +32,9 @@ import org.springframework.data.mongodb.core.query.Order;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import static org.springframework.data.mongodb.core.query.Criteria.where;
@@ -86,16 +89,16 @@ public class MongoDbUserRepository implements UserRepository {
     }
 
     @Override
-    public List<User> getAllByAddedWidget(long widgetId) {
+    public List<User> getAllByAddedWidget(String  widgetId) {
         Query q = query(where("regions").elemMatch(where("regionWidgets").elemMatch(where("widgetId").is(widgetId))));
         List<Page> pages = pageTemplate.find(q);
-        List<User> users = Lists.newArrayList();
+        Set<String> userIds = Sets.newHashSet();
         for(Page p : pages) {
-            if(!users.contains(p.getOwner())){
-                users.add(p.getOwner());
+            if(!userIds.contains(p.getOwnerId())){
+                userIds.add(p.getOwnerId());
             }
         }
-        return users;
+        return getUsersById(userIds);
     }
 
     @Override
@@ -109,7 +112,7 @@ public class MongoDbUserRepository implements UserRepository {
     }
 
     @Override
-    public User get(long id) {
+    public User get(String  id) {
         return template.get(id);
     }
 
@@ -121,6 +124,14 @@ public class MongoDbUserRepository implements UserRepository {
     @Override
     public void delete(User item) {
         template.remove(query(where("_id").is(item.getId())));
+    }
+
+    private List<User> getUsersById(Collection<String> userIds) {
+        List<User> users = Lists.newArrayList();
+        for(String userId : userIds) {
+            users.add(template.get(userId));
+        }
+        return users;
     }
 
     private Query getSearchQuery(String searchTerm) {

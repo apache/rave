@@ -43,8 +43,8 @@ public class DefaultRegionWidgetServiceTest {
     private RegionWidgetRepository regionWidgetRepository;
     private RegionWidgetService regionWidgetService;
 
-    final Long VALID_REGION_WIDGET_ID = 1L;
-    final Long INVALID_REGION_WIDGET_ID = 100L;
+    final String VALID_REGION_WIDGET_ID = "1";
+    final String INVALID_REGION_WIDGET_ID = "100";
 
     @Before
     public void setup() {

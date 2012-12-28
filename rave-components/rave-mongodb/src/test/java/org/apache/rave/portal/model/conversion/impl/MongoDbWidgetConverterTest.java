@@ -42,7 +42,7 @@ public class MongoDbWidgetConverterTest {
     private UserRepository userRepository;
     private CategoryRepository categoryRepository;
     private MongoDbWidgetConverter converter;
-    private static final long ID = 1234L;
+    private static final String ID = "1234L";
     public static final Date DATE = new Date();
 
     @Before
@@ -51,7 +51,6 @@ public class MongoDbWidgetConverterTest {
         userRepository = createNiceMock(UserRepository.class);
         categoryRepository = createNiceMock(CategoryRepository.class);
         converter = new MongoDbWidgetConverter();
-        converter.setUserRepository(userRepository);
         converter.setCategoryRepository(categoryRepository);
     }
 
@@ -61,19 +60,16 @@ public class MongoDbWidgetConverterTest {
         MongoDbWidget dehydrated = new MongoDbWidget();
 
         dehydrated.setComments(Lists.<WidgetComment>newLinkedList());
-        MongoDbWidgetComment wc = new MongoDbWidgetComment();
+        WidgetCommentImpl wc = new WidgetCommentImpl();
         dehydrated.getComments().add(wc);
 
         dehydrated.setTags(Lists.<WidgetTag>newLinkedList());
-        MongoDbWidgetTag wt = new MongoDbWidgetTag();
+        WidgetTagImpl wt = new WidgetTagImpl();
         dehydrated.getTags().add(wt);
 
         converter.hydrate(dehydrated);
 
-        assertThat(wc.getUserRepository(), is(sameInstance(userRepository)));
-        assertThat(wt.getUserRepository(), is(sameInstance(userRepository)));
         assertThat(dehydrated.getCategoryRepository(), is(sameInstance(categoryRepository)));
-        assertThat(dehydrated.getUserRepository(), is(sameInstance(userRepository)));
 
     }
 
@@ -82,7 +78,6 @@ public class MongoDbWidgetConverterTest {
         MongoDbWidget dehydrated = new MongoDbWidget();
         converter.hydrate(dehydrated);
         assertThat(dehydrated.getCategoryRepository(), is(sameInstance(categoryRepository)));
-        assertThat(dehydrated.getUserRepository(), is(sameInstance(userRepository)));
     }
 
     @Test
@@ -111,9 +106,7 @@ public class MongoDbWidgetConverterTest {
 
         MongoDbWidget converted;
         Widget source = new WidgetImpl(ID);
-
-        User user = new UserImpl(ID);
-        source.setOwner(user);
+        source.setOwnerId(ID);
         source.setUrl("http://mitre.org");
         source.setType("type");
         source.setTitle("title");
@@ -134,20 +127,14 @@ public class MongoDbWidgetConverterTest {
 
         source.setComments(Lists.<WidgetComment>newLinkedList());
         WidgetComment wc = new WidgetCommentImpl(ID);
-        wc.setUser(user);
+        wc.setUserId(ID);
         wc.setCreatedDate(DATE);
         wc.setLastModifiedDate(DATE);
         wc.setText("text");
-        wc.setWidgetId(ID);
         source.getComments().add(wc);
 
         source.setTags(Lists.<WidgetTag>newLinkedList());
-        WidgetTag wt = new WidgetTagImpl();
-        wt.setUser(user);
-        wt.setCreatedDate(DATE);
-        wt.setWidgetId(ID);
-        Tag tag = new TagImpl();
-        wt.setTag(tag);
+        WidgetTagImpl wt = new WidgetTagImpl(ID, DATE, ID);
         source.getTags().add(wt);
 
         source.setRatings(Lists.<WidgetRating>newLinkedList());
@@ -175,31 +162,24 @@ public class MongoDbWidgetConverterTest {
 
         //Test convertComments method
         assertNotNull(converted.getComments());
-        assertThat(converted.getComments().get(0), is(instanceOf(MongoDbWidgetComment.class)));
-        assertThat(((MongoDbWidgetComment) (converted.getComments().get(0))).getUserId(), is(equalTo(ID)));
+        assertThat(converted.getComments().get(0), is(instanceOf(WidgetCommentImpl.class)));
+        assertThat(((WidgetCommentImpl) (converted.getComments().get(0))).getUserId(), is(equalTo(ID)));
         assertThat(converted.getComments().get(0).getId(), is(equalTo(ID)));
-        assertNull(((MongoDbWidgetComment) (converted.getComments().get(0))).getUserRepository());
         assertThat(converted.getComments().get(0).getCreatedDate(), is(equalTo(DATE)));
         assertThat(converted.getComments().get(0).getLastModifiedDate(), is(equalTo(DATE)));
         assertThat(converted.getComments().get(0).getText(), is(equalTo("text")));
-        assertThat(converted.getComments().get(0).getWidgetId(), is(equalTo(ID)));
 
         //Test convertTags method
         assertNotNull(converted.getTags());
-        assertThat(converted.getTags().get(0), is(instanceOf(MongoDbWidgetTag.class)));
-        assertNotNull(converted.getTags().get(0).getTag());
-        assertThat(converted.getTags().get(0).getTag(), is(sameInstance(tag)));
+        assertThat(converted.getTags().get(0), is(instanceOf(WidgetTagImpl.class)));
+        assertNotNull(converted.getTags().get(0).getTagId());
+        assertThat(converted.getTags().get(0).getTagId(), is(equalTo(ID)));
         assertThat(converted.getTags().get(0).getCreatedDate(), is(equalTo(DATE)));
-        assertThat(((MongoDbWidgetTag) (converted.getTags().get(0))).getUserId(), is(equalTo(ID)));
-        assertThat(converted.getTags().get(0).getWidgetId(), is(equalTo(ID)));
+        assertThat(((WidgetTagImpl) (converted.getTags().get(0))).getUserId(), is(equalTo(ID)));
 
         //Test convertRatings method
         assertNotNull(converted.getRatings());
-        assertThat(converted.getRatings().get(0), is(equalTo(wr)));
         assertNotNull(converted.getRatings().get(0).getId());
-        assertThat(converted.getRatings().get(0).getWidgetId(), is(equalTo(ID)));
-
-
     }
 
     @Test
@@ -218,24 +198,21 @@ public class MongoDbWidgetConverterTest {
     @Test
     public void convert_MongoInstance() {
         Widget source = new MongoDbWidget();
-        WidgetComment comment = new MongoDbWidgetComment();
-        comment.setUser(new UserImpl());
+        WidgetComment comment = new WidgetCommentImpl();
+        comment.setUserId(ID);
         source.setComments(Arrays.asList(comment));
 
-        WidgetTag tag = new MongoDbWidgetTag();
-        tag.setUser(new UserImpl());
+        WidgetTag tag = new WidgetTagImpl(ID, DATE, ID);
         source.setTags(Arrays.asList(tag));
 
-        WidgetRating rating = new WidgetRatingImpl();
-        rating.setId((long)123);
-        source.setRatings(Arrays.asList(rating));
+        WidgetRatingImpl rating = new WidgetRatingImpl();
+        rating.setId(ID);
+        source.setRatings(Arrays.<WidgetRating>asList(rating));
 
         Widget converted = converter.convert(source);
 
-        assertTrue(converted.getComments().get(0) instanceof MongoDbWidgetComment);
-        assertTrue(converted.getTags().get(0) instanceof MongoDbWidgetTag);
-        assertThat(converted.getRatings().get(0).getId(), is(equalTo((long)123)));
+        assertTrue(converted.getComments().get(0) instanceof WidgetCommentImpl);
+        assertTrue(converted.getTags().get(0) instanceof WidgetTagImpl);
+        assertThat(converted.getRatings().get(0).getId(), is(equalTo(ID)));
     }
-
-
 }

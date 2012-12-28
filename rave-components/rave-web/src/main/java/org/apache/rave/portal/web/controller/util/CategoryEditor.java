@@ -38,7 +38,7 @@ public class CategoryEditor extends PropertyEditorSupport {
 
     @Override
     public void setAsText(String text) throws IllegalArgumentException {
-        setValue(categoryService.get(Long.parseLong(text)));
+        setValue(categoryService.get(text));
     }
 
     @Override

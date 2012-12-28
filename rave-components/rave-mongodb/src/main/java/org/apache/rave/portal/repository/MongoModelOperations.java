@@ -31,7 +31,7 @@ public interface MongoModelOperations<T> {
     long count(Query query);
     T findOne(Query query);
     List<T> find(Query query);
-    T get(long id);
+    T get(String id);
     T save(T item);
     void remove(Query query);
     int update(Query query, Update update);

@@ -78,4 +78,5 @@
             </div>
         </div>
     </div>
+    <div class="logo-wrapper"></div>
 </c:if>

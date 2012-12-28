@@ -20,8 +20,8 @@
 package org.apache.rave.portal.repository.impl;
 
 import org.apache.commons.lang.NotImplementedException;
-import org.apache.rave.portal.model.PageLayout;
 import org.apache.rave.portal.model.MongoDbPageLayout;
+import org.apache.rave.portal.model.PageLayout;
 import org.apache.rave.portal.repository.PageLayoutRepository;
 import org.apache.rave.util.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,9 +31,8 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-import static org.apache.rave.portal.model.util.MongoDbModelUtil.generateId;
-import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static org.apache.rave.portal.repository.util.CollectionNames.PAGE_LAYOUT_COLLECTION;
+import static org.springframework.data.mongodb.core.query.Criteria.where;
 
 @Repository
 public class MongoDbPageLayoutRepository implements PageLayoutRepository {
@@ -64,7 +63,7 @@ public class MongoDbPageLayoutRepository implements PageLayoutRepository {
     }
 
     @Override
-    public PageLayout get(long id) {
+    public PageLayout get(String id) {
         throw new NotImplementedException("No use for an id");
     }
 
@@ -73,7 +72,6 @@ public class MongoDbPageLayoutRepository implements PageLayoutRepository {
         MongoDbPageLayout toSave = (MongoDbPageLayout)getByPageLayoutCode(item.getCode());
         if(toSave == null) {
             toSave = new MongoDbPageLayout();
-            toSave.setId(generateId());
         }
         update(item, toSave);
         template.save(toSave, PAGE_LAYOUT_COLLECTION);

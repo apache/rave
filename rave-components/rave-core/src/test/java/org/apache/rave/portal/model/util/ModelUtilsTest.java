@@ -29,7 +29,7 @@ import java.util.List;
 import static org.junit.Assert.assertTrue;
 
 public class ModelUtilsTest {
-    long VALID_REGION_WIDGET_ID = 1L;
+    String VALID_REGION_WIDGET_ID = "1";
 
     @Test
     public void normalizeRegionWidgetPreference() {
@@ -50,7 +50,7 @@ public class ModelUtilsTest {
 
     public List<RegionWidgetPreference> getTestRegionWidgetPreferences() {
         return Arrays.asList((RegionWidgetPreference)new RegionWidgetPreferenceImpl( null, "camelCaseName", "FOO"),
-                (RegionWidgetPreference)new RegionWidgetPreferenceImpl(20L, "lowercasename", "FOO"),
-                (RegionWidgetPreference)new RegionWidgetPreferenceImpl( -100L, "UPPERCASENAME", "FOO"));
+                (RegionWidgetPreference)new RegionWidgetPreferenceImpl("20", "lowercasename", "FOO"),
+                (RegionWidgetPreference)new RegionWidgetPreferenceImpl( "-100", "UPPERCASENAME", "FOO"));
     }
 }

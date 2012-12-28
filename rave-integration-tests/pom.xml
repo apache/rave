@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.apache.rave</groupId>
         <artifactId>rave-project</artifactId>
-        <version>0.17-MONGO-SNAPSHOT</version>
+        <version>0.19-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -36,13 +36,13 @@
     <description>Test stories verifying functionality of Apache Rave using Java and Spring</description>
 
     <properties>
-        <jbehave.core.version>3.6.1</jbehave.core.version>
-        <jbehave.web.version>3.5.1</jbehave.web.version>
+        <jbehave.core.version>3.7.4</jbehave.core.version>
+        <jbehave.web.version>3.5.5</jbehave.web.version>
         <jbehave.site.version>3.1.1</jbehave.site.version>
         <org.hamcrest.version>1.2.1</org.hamcrest.version>
         <commons-logging.version>1.1.1</commons-logging.version>
         <!-- New Selenium versions are often needed after an upgrade of Mozilla Firefox -->
-        <selenium.version>[2.25.0,2.26)</selenium.version>
+        <selenium.version>[2.25.0,2.28.99)</selenium.version>
         <meta.filter />
 
         <!-- Cargo configuration properties -->

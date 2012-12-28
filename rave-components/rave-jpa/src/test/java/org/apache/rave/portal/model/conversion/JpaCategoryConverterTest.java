@@ -55,22 +55,22 @@ public class JpaCategoryConverterTest {
     public void newCategory() {
         Category category = new CategoryImpl();
         category.setCreatedDate(new Date());
-        category.setId(9L);
+        category.setId("9");
         category.setLastModifiedDate(new Date());
         category.setText("hello");
-        category.setCreatedUser(new JpaUser(1L));
-        category.setLastModifiedUser(new JpaUser(1L));
+        category.setCreatedUserId("1");
+        category.setLastModifiedUserId("1");
         category.setWidgets(new ArrayList<Widget>());
 
         JpaCategory converted = categoryConverter.convert(category);
         assertThat(converted, is(not(sameInstance(category))));
         assertThat(converted, is(instanceOf(JpaCategory.class)));
         assertThat(converted.getCreatedDate(), is(equalTo(category.getCreatedDate())));
-        assertThat(converted.getCreatedUser(), is(equalTo(category.getCreatedUser())));
-        assertThat(converted.getEntityId(), is(equalTo(category.getId())));
+        assertThat(converted.getCreatedUserId(), is(equalTo(category.getCreatedUserId())));
+        assertThat(converted.getEntityId().toString(), is(equalTo(category.getId())));
         assertThat(converted.getId(), is(equalTo(category.getId())));
         assertThat(converted.getLastModifiedDate(), is(equalTo(category.getLastModifiedDate())));
-        assertThat(converted.getLastModifiedUser(), is(equalTo(category.getLastModifiedUser())));
+        assertThat(converted.getLastModifiedUserId(), is(equalTo(category.getLastModifiedUserId())));
         assertThat(converted.getText(), is(equalTo(category.getText())));
         assertThat(converted.getWidgets(), is(equalTo(category.getWidgets())));
     }

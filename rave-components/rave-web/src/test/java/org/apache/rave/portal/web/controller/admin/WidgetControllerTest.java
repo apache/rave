@@ -138,7 +138,7 @@ public class WidgetControllerTest {
     public void viewAdminWidgetDetail() throws Exception {
         Model model = new ExtendedModelMap();
         WidgetImpl widget = new WidgetImpl();
-        final long entityId = 123L;
+        final String entityId = "123";
         widget.setId(entityId);
         widget.setTitle("My widget");
 
@@ -158,7 +158,7 @@ public class WidgetControllerTest {
     @Test
     public void updateWidget_valid() {
         final String widgetUrl = "http://example.com/widget";
-        WidgetImpl widget = new WidgetImpl(123L, widgetUrl);
+        WidgetImpl widget = new WidgetImpl("123", widgetUrl);
         widget.setTitle("WidgetImpl title");
         widget.setType("OpenSocial");
         widget.setDescription("Lorem ipsum");
@@ -200,7 +200,7 @@ public class WidgetControllerTest {
 
     @Test
     public void updateWidget_invalid() {
-        WidgetImpl widget = new WidgetImpl(123L, "http://broken/url");
+        WidgetImpl widget = new WidgetImpl("123", "http://broken/url");
         BindingResult errors = new BeanPropertyBindingResult(widget, "widget");
         SessionStatus sessionStatus = createMock(SessionStatus.class);
         ModelMap modelMap = new ExtendedModelMap();

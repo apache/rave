@@ -45,7 +45,7 @@ public class JpaPageTemplateRegionConverter implements ModelConverter<PageTempla
         JpaPageTemplateRegion converted = null;
 
         if (source != null) {
-            converted = manager.find(JpaPageTemplateRegion.class, source.getId());
+            converted = manager.find(JpaPageTemplateRegion.class, source.getId() == null ? null : Long.parseLong(source.getId()));
 
             if (converted == null) {
                 converted = new JpaPageTemplateRegion();
@@ -56,7 +56,7 @@ public class JpaPageTemplateRegionConverter implements ModelConverter<PageTempla
     }
 
     private void updateProperties(PageTemplateRegion source, JpaPageTemplateRegion converted) {
-        converted.setEntityId(source.getId());
+        converted.setEntityId(source.getId() == null ? null : Long.parseLong(source.getId()));
         converted.setRenderSequence(source.getRenderSequence());
         converted.setPageTemplateWidgets(source.getPageTemplateWidgets());
         converted.setPageTemplate(source.getPageTemplate());

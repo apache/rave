@@ -85,7 +85,7 @@ public class MongoDbPortalPreferenceRepositoryTest {
 
     @Test
     public void get_Valid(){
-        long id = 123;
+        String id = "123";
         PortalPreference found = new PortalPreferenceImpl();
         expect(template.findById(id, preferenceRepository.CLASS, CollectionNames.PREFERENCE_COLLECTION)).andReturn((PortalPreferenceImpl)found);
         replay(template);
@@ -98,7 +98,7 @@ public class MongoDbPortalPreferenceRepositoryTest {
         PortalPreference item = new PortalPreferenceImpl();
         item.setKey("123");
         PortalPreference fromDb = new MongoDbPortalPreference();
-        ((MongoDbPortalPreference)fromDb).setId((long) 123);
+        ((MongoDbPortalPreference)fromDb).setId("123");
         PortalPreference converted = new MongoDbPortalPreference();
         expect(converter.convert(item, PortalPreference.class)).andReturn(converted);
         expect(template.findOne(query(where("key").is("123")), preferenceRepository.CLASS, CollectionNames.PREFERENCE_COLLECTION)).andReturn((MongoDbPortalPreference)fromDb);

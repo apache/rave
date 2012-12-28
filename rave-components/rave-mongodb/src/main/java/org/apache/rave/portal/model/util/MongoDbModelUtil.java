@@ -19,7 +19,7 @@
 
 package org.apache.rave.portal.model.util;
 
-import java.util.Random;
+import java.util.UUID;
 
 /**
  *
@@ -28,8 +28,7 @@ public class MongoDbModelUtil {
 
     private MongoDbModelUtil(){}
 
-    public static long generateId() {
-        //Use INT as javascript has issues with truncating longs and we are moving model Ids to String
-        return Math.abs(new Random().nextInt());
+    public static String generateId() {
+        return UUID.randomUUID().toString();
     }
 }

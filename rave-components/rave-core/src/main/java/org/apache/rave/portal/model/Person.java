@@ -25,6 +25,10 @@ import java.util.List;
  */
 @XmlTransient
 public interface Person {
+    String getId();
+
+    void setId(String userId);
+
     String getUsername();
 
     void setUsername(String username);

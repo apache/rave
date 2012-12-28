@@ -23,13 +23,8 @@ import java.util.Date;
 
 @XmlTransient
 public interface WidgetTag {
-    
-    Long getWidgetId();
-    void setWidgetId(Long id);
-    User getUser();
-    void setUser(User user);
-    Tag getTag();
-    void setTag(Tag tag);
+
+    String getTagId();
+    String getUserId();
     Date getCreatedDate();
-    void setCreatedDate(Date date);
 }

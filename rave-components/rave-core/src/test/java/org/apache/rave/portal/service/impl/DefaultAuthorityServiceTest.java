@@ -52,9 +52,9 @@ public class DefaultAuthorityServiceTest {
     public void getAuthorityById() {
         Authority authority = createAuthority();
 
-        expect(repository.get(123L)).andReturn(authority);
+        expect(repository.get("123")).andReturn(authority);
         replay(repository);
-        Authority sAuthority = service.getAuthorityById(123L);
+        Authority sAuthority = service.getAuthorityById("123");
         assertEquals(sAuthority, authority);
 
         verify(repository);
@@ -84,7 +84,7 @@ public class DefaultAuthorityServiceTest {
     public void getAuthorityById_NotFound() {
         AuthorityImpl authority = new AuthorityImpl();
         authority.setAuthority("BAR");
-        final long entityId = 456L;
+        final String entityId = "456";
 
         expect(repository.get(entityId)).andReturn(null);
         replay(repository);
