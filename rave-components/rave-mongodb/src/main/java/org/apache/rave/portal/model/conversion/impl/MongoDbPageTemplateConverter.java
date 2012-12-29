@@ -26,11 +26,14 @@ import org.apache.rave.portal.model.PageTemplateRegion;
 import org.apache.rave.portal.model.PageTemplateWidget;
 import org.apache.rave.portal.model.conversion.HydratingModelConverter;
 import org.apache.rave.portal.model.impl.PageTemplateRegionImpl;
+import org.apache.rave.portal.model.impl.PageTemplateWidgetImpl;
 import org.apache.rave.portal.repository.PageLayoutRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+
+import static org.apache.rave.portal.model.util.MongoDbModelUtil.generateId;
 
 @Component
 public class MongoDbPageTemplateConverter implements HydratingModelConverter<PageTemplate, MongoDbPageTemplate> {
@@ -97,12 +100,35 @@ public class MongoDbPageTemplateConverter implements HydratingModelConverter<Pag
     private PageTemplateRegion convert(PageTemplateRegion region) {
         PageTemplateRegionImpl converted = region instanceof PageTemplateRegionImpl ? ((PageTemplateRegionImpl) region) : new PageTemplateRegionImpl();
         updateProperties(region, converted);
-        converted.setPageTemplateWidgets(region.getPageTemplateWidgets());
+
+        if (region.getPageTemplateWidgets() != null) {
+            List<PageTemplateWidget> convertedWidgets = Lists.newArrayList();
+            for (PageTemplateWidget widget : region.getPageTemplateWidgets()) {
+                convertedWidgets.add(convert(widget));
+            }
+            converted.setPageTemplateWidgets(convertedWidgets);
+        }
         return converted;
     }
 
+    private PageTemplateWidget convert(PageTemplateWidget widget) {
+        PageTemplateWidgetImpl converted = widget instanceof PageTemplateWidgetImpl ? ((PageTemplateWidgetImpl) widget) : new PageTemplateWidgetImpl();
+        updateProperties(widget, converted);
+        return converted;
+    }
+
+
+    private void updateProperties(PageTemplateWidget source, PageTemplateWidgetImpl converted) {
+        converted.setId(source.getId() == null ? generateId() : source.getId());
+        converted.setHideChrome(source.isHideChrome());
+        converted.setPageTemplateRegion(null);
+        converted.setRenderSeq(source.getRenderSeq());
+        converted.setWidgetId(source.getWidgetId());
+        converted.setLocked(source.isLocked());
+    }
+
     private void updateProperties(PageTemplateRegion source, PageTemplateRegionImpl converted) {
-        converted.setId(source.getId());
+        converted.setId(source.getId() == null ? generateId() : source.getId());
         converted.setRenderSequence(source.getRenderSequence());
         converted.setPageTemplate(null);
         converted.setLocked(source.isLocked());

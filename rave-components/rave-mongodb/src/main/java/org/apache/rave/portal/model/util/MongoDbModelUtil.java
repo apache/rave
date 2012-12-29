@@ -19,6 +19,7 @@
 
 package org.apache.rave.portal.model.util;
 
+import java.util.Random;
 import java.util.UUID;
 
 /**
@@ -29,6 +30,11 @@ public class MongoDbModelUtil {
     private MongoDbModelUtil(){}
 
     public static String generateId() {
-        return UUID.randomUUID().toString();
+        return UUID.randomUUID().toString().replace("-", "_");
+    }
+
+    public static Long generateLongId() {
+        Random random = new Random();
+        return Math.abs(random.nextLong());
     }
 }

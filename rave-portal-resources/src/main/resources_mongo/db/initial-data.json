@@ -1266,517 +1266,42 @@
     {
         "id": 1,
         "text": "Technology",
-        "createdUser": {
-            "id": 1,
-            "username": "canonical",
-            "email": "canonical@example.com",
-            "displayName": "Canonical User",
-            "additionalName": null,
-            "familyName": "User",
-            "givenName": "Canonical",
-            "honorificPrefix": null,
-            "honorificSuffix": null,
-            "preferredName": null,
-            "aboutMe": null,
-            "status": "Single",
-            "addresses": [],
-            "organizations": [],
-            "properties": [],
-            "groups": [],
-            "password": "$2a$10$TkEgze5kLy9nRlfd8PT1zunh6P1ND8WPjLojFjAMNgZMu1D9D1n4.",
-            "expired": false,
-            "locked": false,
-            "enabled": true,
-            "openId": null,
-            "forgotPasswordHash": null,
-            "forgotPasswordTime": null,
-            "defaultPageLayout": {
-                "id": 4,
-                "code": "columns_3",
-                "numberOfRegions": 3,
-                "renderSequence": 3,
-                "userSelectable": true
-            },
-            "confirmPassword": null,
-            "defaultPageLayoutCode": null,
-            "authorities": [
-                {
-                    "id": 2,
-                    "authority": "ROLE_ADMIN",
-                    "users": [],
-                    "defaultForNewUser": false
-                }
-            ],
-            "pageUsers": [],
-            "widgetTags": [],
-            "id": 1,
-            "accountNonLocked": true,
-            "credentialsNonExpired": true,
-            "accountNonExpired": true
-        },
+        "createdUserId": "1",
         "createdDate": 1326949200000,
-        "lastModifiedUser": {
-            "id": 1,
-            "username": "canonical",
-            "email": "canonical@example.com",
-            "displayName": "Canonical User",
-            "additionalName": null,
-            "familyName": "User",
-            "givenName": "Canonical",
-            "honorificPrefix": null,
-            "honorificSuffix": null,
-            "preferredName": null,
-            "aboutMe": null,
-            "status": "Single",
-            "addresses": [],
-            "organizations": [],
-            "properties": [],
-            "groups": [],
-            "password": "$2a$10$TkEgze5kLy9nRlfd8PT1zunh6P1ND8WPjLojFjAMNgZMu1D9D1n4.",
-            "expired": false,
-            "locked": false,
-            "enabled": true,
-            "openId": null,
-            "forgotPasswordHash": null,
-            "forgotPasswordTime": null,
-            "defaultPageLayout": {
-                "id": 4,
-                "code": "columns_3",
-                "numberOfRegions": 3,
-                "renderSequence": 3,
-                "userSelectable": true
-            },
-            "confirmPassword": null,
-            "defaultPageLayoutCode": null,
-            "authorities": [
-                {
-                    "id": 2,
-                    "authority": "ROLE_ADMIN",
-                    "users": [],
-                    "defaultForNewUser": false
-                }
-            ],
-            "pageUsers": [],
-            "widgetTags": [],
-            "id": 1,
-            "accountNonLocked": true,
-            "credentialsNonExpired": true,
-            "accountNonExpired": true
-        },
-        "lastModifiedDate": 1326949200000,
-        "id": 1
+        "lastModifiedUserId": "1",
+        "lastModifiedDate": 1326949200000
     },
     {
         "id": 2,
         "text": "News",
-        "createdUser": {
-            "id": 1,
-            "username": "canonical",
-            "email": "canonical@example.com",
-            "displayName": "Canonical User",
-            "additionalName": null,
-            "familyName": "User",
-            "givenName": "Canonical",
-            "honorificPrefix": null,
-            "honorificSuffix": null,
-            "preferredName": null,
-            "aboutMe": null,
-            "status": "Single",
-            "addresses": [],
-            "organizations": [],
-            "properties": [],
-            "groups": [],
-            "password": "$2a$10$TkEgze5kLy9nRlfd8PT1zunh6P1ND8WPjLojFjAMNgZMu1D9D1n4.",
-            "expired": false,
-            "locked": false,
-            "enabled": true,
-            "openId": null,
-            "forgotPasswordHash": null,
-            "forgotPasswordTime": null,
-            "defaultPageLayout": {
-                "id": 4,
-                "code": "columns_3",
-                "numberOfRegions": 3,
-                "renderSequence": 3,
-                "userSelectable": true
-            },
-            "confirmPassword": null,
-            "defaultPageLayoutCode": null,
-            "authorities": [
-                {
-                    "id": 2,
-                    "authority": "ROLE_ADMIN",
-                    "users": [],
-                    "defaultForNewUser": false
-                }
-            ],
-            "pageUsers": [],
-            "widgetTags": [],
-            "id": 1,
-            "accountNonLocked": true,
-            "credentialsNonExpired": true,
-            "accountNonExpired": true
-        },
+        "createdUsedId": "1",
         "createdDate": 1326949200000,
-        "lastModifiedUser": {
-            "id": 1,
-            "username": "canonical",
-            "email": "canonical@example.com",
-            "displayName": "Canonical User",
-            "additionalName": null,
-            "familyName": "User",
-            "givenName": "Canonical",
-            "honorificPrefix": null,
-            "honorificSuffix": null,
-            "preferredName": null,
-            "aboutMe": null,
-            "status": "Single",
-            "addresses": [],
-            "organizations": [],
-            "properties": [],
-            "groups": [],
-            "password": "$2a$10$TkEgze5kLy9nRlfd8PT1zunh6P1ND8WPjLojFjAMNgZMu1D9D1n4.",
-            "expired": false,
-            "locked": false,
-            "enabled": true,
-            "openId": null,
-            "forgotPasswordHash": null,
-            "forgotPasswordTime": null,
-            "defaultPageLayout": {
-                "id": 4,
-                "code": "columns_3",
-                "numberOfRegions": 3,
-                "renderSequence": 3,
-                "userSelectable": true
-            },
-            "confirmPassword": null,
-            "defaultPageLayoutCode": null,
-            "authorities": [
-                {
-                    "id": 2,
-                    "authority": "ROLE_ADMIN",
-                    "users": [],
-                    "defaultForNewUser": false
-                }
-            ],
-            "pageUsers": [],
-            "widgetTags": [],
-            "id": 1,
-            "accountNonLocked": true,
-            "credentialsNonExpired": true,
-            "accountNonExpired": true
-        },
-        "lastModifiedDate": 1326949200000,
-        "id": 2
+        "lastModifiedUserId": "1",
+        "lastModifiedDate": 1326949200000
     },
     {
         "id": 3,
         "text": "Travel",
-        "createdUser": {
-            "id": 1,
-            "username": "canonical",
-            "email": "canonical@example.com",
-            "displayName": "Canonical User",
-            "additionalName": null,
-            "familyName": "User",
-            "givenName": "Canonical",
-            "honorificPrefix": null,
-            "honorificSuffix": null,
-            "preferredName": null,
-            "aboutMe": null,
-            "status": "Single",
-            "addresses": [],
-            "organizations": [],
-            "properties": [],
-            "groups": [],
-            "password": "$2a$10$TkEgze5kLy9nRlfd8PT1zunh6P1ND8WPjLojFjAMNgZMu1D9D1n4.",
-            "expired": false,
-            "locked": false,
-            "enabled": true,
-            "openId": null,
-            "forgotPasswordHash": null,
-            "forgotPasswordTime": null,
-            "defaultPageLayout": {
-                "id": 4,
-                "code": "columns_3",
-                "numberOfRegions": 3,
-                "renderSequence": 3,
-                "userSelectable": true
-            },
-            "confirmPassword": null,
-            "defaultPageLayoutCode": null,
-            "authorities": [
-                {
-                    "id": 2,
-                    "authority": "ROLE_ADMIN",
-                    "users": [],
-                    "defaultForNewUser": false
-                }
-            ],
-            "pageUsers": [],
-            "widgetTags": [],
-            "id": 1,
-            "accountNonLocked": true,
-            "credentialsNonExpired": true,
-            "accountNonExpired": true
-        },
+        "createdUserId": "1",
         "createdDate": 1326949200000,
-        "lastModifiedUser": {
-            "id": 1,
-            "username": "canonical",
-            "email": "canonical@example.com",
-            "displayName": "Canonical User",
-            "additionalName": null,
-            "familyName": "User",
-            "givenName": "Canonical",
-            "honorificPrefix": null,
-            "honorificSuffix": null,
-            "preferredName": null,
-            "aboutMe": null,
-            "status": "Single",
-            "addresses": [],
-            "organizations": [],
-            "properties": [],
-            "groups": [],
-            "password": "$2a$10$TkEgze5kLy9nRlfd8PT1zunh6P1ND8WPjLojFjAMNgZMu1D9D1n4.",
-            "expired": false,
-            "locked": false,
-            "enabled": true,
-            "openId": null,
-            "forgotPasswordHash": null,
-            "forgotPasswordTime": null,
-            "defaultPageLayout": {
-                "id": 4,
-                "code": "columns_3",
-                "numberOfRegions": 3,
-                "renderSequence": 3,
-                "userSelectable": true
-            },
-            "confirmPassword": null,
-            "defaultPageLayoutCode": null,
-            "authorities": [
-                {
-                    "id": 2,
-                    "authority": "ROLE_ADMIN",
-                    "users": [],
-                    "defaultForNewUser": false
-                }
-            ],
-            "pageUsers": [],
-            "widgetTags": [],
-            "id": 1,
-            "accountNonLocked": true,
-            "credentialsNonExpired": true,
-            "accountNonExpired": true
-        },
-        "lastModifiedDate": 1326949200000,
-        "id": 3
+        "lastModifiedUserId": "1",
+        "lastModifiedDate": 1326949200000
     },
     {
         "id": 4,
         "text": "Projects",
-        "createdUser": {
-            "id": 1,
-            "username": "canonical",
-            "email": "canonical@example.com",
-            "displayName": "Canonical User",
-            "additionalName": null,
-            "familyName": "User",
-            "givenName": "Canonical",
-            "honorificPrefix": null,
-            "honorificSuffix": null,
-            "preferredName": null,
-            "aboutMe": null,
-            "status": "Single",
-            "addresses": [],
-            "organizations": [],
-            "properties": [],
-            "groups": [],
-            "password": "$2a$10$TkEgze5kLy9nRlfd8PT1zunh6P1ND8WPjLojFjAMNgZMu1D9D1n4.",
-            "expired": false,
-            "locked": false,
-            "enabled": true,
-            "openId": null,
-            "forgotPasswordHash": null,
-            "forgotPasswordTime": null,
-            "defaultPageLayout": {
-                "id": 4,
-                "code": "columns_3",
-                "numberOfRegions": 3,
-                "renderSequence": 3,
-                "userSelectable": true
-            },
-            "confirmPassword": null,
-            "defaultPageLayoutCode": null,
-            "authorities": [
-                {
-                    "id": 2,
-                    "authority": "ROLE_ADMIN",
-                    "users": [],
-                    "defaultForNewUser": false
-                }
-            ],
-            "pageUsers": [],
-            "widgetTags": [],
-            "id": 1,
-            "accountNonLocked": true,
-            "credentialsNonExpired": true,
-            "accountNonExpired": true
-        },
+        "createdUserId": "1",
         "createdDate": 1326949200000,
-        "lastModifiedUser": {
-            "id": 1,
-            "username": "canonical",
-            "email": "canonical@example.com",
-            "displayName": "Canonical User",
-            "additionalName": null,
-            "familyName": "User",
-            "givenName": "Canonical",
-            "honorificPrefix": null,
-            "honorificSuffix": null,
-            "preferredName": null,
-            "aboutMe": null,
-            "status": "Single",
-            "addresses": [],
-            "organizations": [],
-            "properties": [],
-            "groups": [],
-            "password": "$2a$10$TkEgze5kLy9nRlfd8PT1zunh6P1ND8WPjLojFjAMNgZMu1D9D1n4.",
-            "expired": false,
-            "locked": false,
-            "enabled": true,
-            "openId": null,
-            "forgotPasswordHash": null,
-            "forgotPasswordTime": null,
-            "defaultPageLayout": {
-                "id": 4,
-                "code": "columns_3",
-                "numberOfRegions": 3,
-                "renderSequence": 3,
-                "userSelectable": true
-            },
-            "confirmPassword": null,
-            "defaultPageLayoutCode": null,
-            "authorities": [
-                {
-                    "id": 2,
-                    "authority": "ROLE_ADMIN",
-                    "users": [],
-                    "defaultForNewUser": false
-                }
-            ],
-            "pageUsers": [],
-            "widgetTags": [],
-            "id": 1,
-            "accountNonLocked": true,
-            "credentialsNonExpired": true,
-            "accountNonExpired": true
-        },
-        "lastModifiedDate": 1326949200000,
-        "id": 4
+        "lastModifiedUserId": "1",
+        "lastModifiedDate": 1326949200000
     },
     {
         "id": 5,
         "text": "Communications",
-        "createdUser": {
-            "id": 1,
-            "username": "canonical",
-            "email": "canonical@example.com",
-            "displayName": "Canonical User",
-            "additionalName": null,
-            "familyName": "User",
-            "givenName": "Canonical",
-            "honorificPrefix": null,
-            "honorificSuffix": null,
-            "preferredName": null,
-            "aboutMe": null,
-            "status": "Single",
-            "addresses": [],
-            "organizations": [],
-            "properties": [],
-            "groups": [],
-            "password": "$2a$10$TkEgze5kLy9nRlfd8PT1zunh6P1ND8WPjLojFjAMNgZMu1D9D1n4.",
-            "expired": false,
-            "locked": false,
-            "enabled": true,
-            "openId": null,
-            "forgotPasswordHash": null,
-            "forgotPasswordTime": null,
-            "defaultPageLayout": {
-                "id": 4,
-                "code": "columns_3",
-                "numberOfRegions": 3,
-                "renderSequence": 3,
-                "userSelectable": true
-            },
-            "confirmPassword": null,
-            "defaultPageLayoutCode": null,
-            "authorities": [
-                {
-                    "id": 2,
-                    "authority": "ROLE_ADMIN",
-                    "users": [],
-                    "defaultForNewUser": false
-                }
-            ],
-            "pageUsers": [],
-            "widgetTags": [],
-            "id": 1,
-            "accountNonLocked": true,
-            "credentialsNonExpired": true,
-            "accountNonExpired": true
-        },
+        "createdUserId": "1",
         "createdDate": 1326949200000,
-        "lastModifiedUser": {
-            "id": 1,
-            "username": "canonical",
-            "email": "canonical@example.com",
-            "displayName": "Canonical User",
-            "additionalName": null,
-            "familyName": "User",
-            "givenName": "Canonical",
-            "honorificPrefix": null,
-            "honorificSuffix": null,
-            "preferredName": null,
-            "aboutMe": null,
-            "status": "Single",
-            "addresses": [],
-            "organizations": [],
-            "properties": [],
-            "groups": [],
-            "password": "$2a$10$TkEgze5kLy9nRlfd8PT1zunh6P1ND8WPjLojFjAMNgZMu1D9D1n4.",
-            "expired": false,
-            "locked": false,
-            "enabled": true,
-            "openId": null,
-            "forgotPasswordHash": null,
-            "forgotPasswordTime": null,
-            "defaultPageLayout": {
-                "id": 4,
-                "code": "columns_3",
-                "numberOfRegions": 3,
-                "renderSequence": 3,
-                "userSelectable": true
-            },
-            "confirmPassword": null,
-            "defaultPageLayoutCode": null,
-            "authorities": [
-                {
-                    "id": 2,
-                    "authority": "ROLE_ADMIN",
-                    "users": [],
-                    "defaultForNewUser": false
-                }
-            ],
-            "pageUsers": [],
-            "widgetTags": [],
-            "id": 1,
-            "accountNonLocked": true,
-            "credentialsNonExpired": true,
-            "accountNonExpired": true
-        },
-        "lastModifiedDate": 1326949200000,
-        "id": 5
+        "lastModifiedUserId":"1",
+        "lastModifiedDate": 1326949200000
     }
 ],
     "pageTemplates": [
@@ -1810,49 +1335,25 @@
                             {
                                 "id": 3,
                                 "pageTemplateRegion": null,
-                                "widget": {
-                                    "id" : 15,
-                                    "title": "Favorite Websites",
-                                    "url": "http://localhost:8080/demogadgets/favorite_websites.xml",
-                                    "type": "OpenSocial",
-                                    "author": "Anthony Carlucci",
-                                    "description": "Static widget of favorite websites for demoing on the Person Profile page",
-                                    "disableRendering": false,
-                                    "featured": false,
-                                    "status": "PUBLISHED"
-                                },
+                                "widgetId": "15",
                                 "locked": true,
                                 "hideChrome": false,
-                                "id": 3,
                                 "renderSeq": 0
                             },
                             {
                                 "id": 4,
                                 "pageTemplateRegion": null,
-                                "widget": {
-                                    "id" :14,
-                                    "title": "Current Schedule",
-                                    "url": "http://localhost:8080/demogadgets/schedule.xml",
-                                    "type": "OpenSocial",
-                                    "author": "Anthony Carlucci",
-                                    "description": "Static widget of a schedule for demoing on the Person Profile page",
-                                    "disableRendering": false,
-                                    "featured": false,
-                                    "status": "PUBLISHED"
-                                },
+                                "widgetId": "14",
                                 "locked": true,
                                 "hideChrome": false,
-                                "id": 4,
                                 "renderSeq": 1
                             }
                         ],
-                        "locked": true,
-                        "id": 2
+                        "locked": true
                     }
                 ],
                 "renderSequence": 0,
-                "defaultTemplate": false,
-                "id": 2
+                "defaultTemplate": false
             },
             {
                 "id": 3,
@@ -1877,30 +1378,17 @@
                             {
                                 "id": 5,
                                 "pageTemplateRegion": null,
-                                "widget": {
-                                    "id": 3,
-                                    "title": "My Activity",
-                                    "url": "http://localhost:8080/demogadgets/my_activity.xml",
-                                    "type": "OpenSocial",
-                                    "author": "Anthony Carlucci",
-                                    "description": "Static widget of activities for demoing on the Person Profile page",
-                                    "disableRendering": false,
-                                    "featured": false,
-                                    "status": "PUBLISHED"
-                                },
+                                "widgetId": "3",
                                 "locked": true,
                                 "hideChrome": false,
-                                "id": 5,
                                 "renderSeq": 0
                             }
                         ],
-                        "locked": true,
-                        "id": 3
+                        "locked": true
                     }
                 ],
                 "renderSequence": 1,
-                "defaultTemplate": false,
-                "id": 3
+                "defaultTemplate": false
             }
         ],
         "pageLayout": {
@@ -1919,49 +1407,25 @@
                     {
                         "id": 1,
                         "pageTemplateRegion": null,
-                        "widget": {
-                            "id": 16,
-                            "title": "My Groups",
-                            "url": "http://localhost:8080/demogadgets/my_groups.xml",
-                            "type": "OpenSocial",
-                            "author": "Anthony Carlucci",
-                            "description": "Static widget of groups for demoing on the Person Profile page",
-                            "disableRendering": false,
-                            "featured": false,
-                            "status": "PUBLISHED"
-                        },
+                        "widgetId": "1",
                         "locked": true,
                         "hideChrome": true,
-                        "id": 1,
                         "renderSeq": 0
                     },
                     {
                         "id": 2,
                         "pageTemplateRegion": null,
-                        "widget": {
-                            "id": 17,
-                            "title": "My Experience",
-                            "url": "http://localhost:8080/demogadgets/my_experience.xml",
-                            "type": "OpenSocial",
-                            "author": "Anthony Carlucci",
-                            "description": "Static widget of experience for demoing on the Person Profile page",
-                            "disableRendering": false,
-                            "featured": false,
-                            "status": "PUBLISHED"
-                        },
+                        "widgetId": "17",
                         "locked": true,
                         "hideChrome": true,
-                        "id": 2,
                         "renderSeq": 1
                     }
                 ],
-                "locked": true,
-                "id": 1
+                "locked": true
             }
         ],
         "renderSequence": 0,
-        "defaultTemplate": true,
-        "id": 1
+        "defaultTemplate": true
     },
     {
         "id": 2,
@@ -1984,7 +1448,7 @@
                 "pageTemplateWidgets": [
                     {
                         "pageTemplateRegion": null,
-                        "widget": {"id": 2},
+                        "widgetId": "2",
                         "locked": false,
                         "hideChrome": false,
                         "id": 3,
@@ -1992,7 +1456,7 @@
                     },
                     {
                         "pageTemplateRegion": null,
-                        "widget": {"id": 7},
+                        "widgetId": "7",
                         "locked": false,
                         "hideChrome": false,
                         "id": 4,
@@ -2008,7 +1472,7 @@
                 "pageTemplateWidgets": [
                     {
                         "pageTemplateRegion": null,
-                        "widget": {"id": 10},
+                        "widgetId": "10",
                         "locked": false,
                         "hideChrome": false,
                         "id": 3,
@@ -2016,7 +1480,7 @@
                     },
                     {
                         "pageTemplateRegion": null,
-                        "widget": {"id": 23},
+                        "widgetId": "23",
                         "locked": false,
                         "hideChrome": false,
                         "id": 4,
@@ -2032,7 +1496,7 @@
                 "pageTemplateWidgets": [
                     {
                         "pageTemplateRegion": null,
-                        "widget": {"id": 11},
+                        "widgetId": "11",
                         "locked": false,
                         "hideChrome": false,
                         "id": 3,
@@ -2044,8 +1508,7 @@
             }
         ],
         "renderSequence": 0,
-        "defaultTemplate": true,
-        "id": 2
+        "defaultTemplate": true
     }
 ]
 }

@@ -29,7 +29,7 @@
         <oxm:class-to-be-bound name="org.apache.rave.portal.model.MongoDbUser"/>
         <oxm:class-to-be-bound name="org.apache.rave.portal.model.MongoDbPage"/>
         <oxm:class-to-be-bound name="org.apache.rave.portal.model.impl.RegionImpl"/>
-        <oxm:class-to-be-bound name="org.apache.rave.portal.model.MongoDbRegionWidget"/>
+        <oxm:class-to-be-bound name="org.apache.rave.portal.model.impl.RegionWidgetImpl"/>
         <oxm:class-to-be-bound name="org.apache.rave.portal.model.impl.RegionWidgetPreferenceImpl"/>
         <oxm:class-to-be-bound name="org.apache.rave.portal.model.MongoDbWidget"/>
         <oxm:class-to-be-bound name="org.apache.rave.portal.web.model.RegionWidgetPreferenceListWrapper"/>

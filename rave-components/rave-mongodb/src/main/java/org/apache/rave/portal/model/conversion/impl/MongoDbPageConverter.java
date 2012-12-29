@@ -32,6 +32,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+import static org.apache.rave.portal.model.util.MongoDbModelUtil.generateLongId;
 import static org.apache.rave.portal.model.util.MongoDbModelUtil.generateId;
 
 @Component
@@ -120,7 +121,8 @@ public class MongoDbPageConverter implements HydratingModelConverter<Page, Mongo
 
     public RegionWidgetImpl convert(RegionWidget sourceRegionWidget) {
         RegionWidgetImpl regionWidget = sourceRegionWidget instanceof RegionWidgetImpl ? (RegionWidgetImpl) sourceRegionWidget : new RegionWidgetImpl();
-        regionWidget.setId(sourceRegionWidget.getId() == null ? generateId() : sourceRegionWidget.getId());
+        //RegionWidgetIds MUST be a Long due to the mapping of ModuleID in Shindig.
+        regionWidget.setId(sourceRegionWidget.getId() == null ? generateLongId().toString() : sourceRegionWidget.getId());
         regionWidget.setWidgetId(sourceRegionWidget.getWidgetId());
         regionWidget.setRegion(null);
         regionWidget.setPreferences(sourceRegionWidget.getPreferences());
@@ -131,8 +133,8 @@ public class MongoDbPageConverter implements HydratingModelConverter<Page, Mongo
 
     private void updatePreferences(RegionWidgetImpl regionWidget) {
         List<RegionWidgetPreference> converted = Lists.newArrayList();
-        if(regionWidget.getPreferences() != null) {
-            for(RegionWidgetPreference preference : regionWidget.getPreferences()) {
+        if (regionWidget.getPreferences() != null) {
+            for (RegionWidgetPreference preference : regionWidget.getPreferences()) {
                 converted.add(convert(preference));
             }
         }
@@ -147,8 +149,12 @@ public class MongoDbPageConverter implements HydratingModelConverter<Page, Mongo
     }
 
     private void hydrate(Region region) {
-        for (RegionWidget regionWidget : region.getRegionWidgets()) {
-            hydrate((RegionWidgetImpl) regionWidget, region);
+        if (region.getRegionWidgets() == null) {
+            region.setRegionWidgets(Lists.<RegionWidget>newArrayList());
+        } else {
+            for (RegionWidget regionWidget : region.getRegionWidgets()) {
+                hydrate((RegionWidgetImpl) regionWidget, region);
+            }
         }
     }
 

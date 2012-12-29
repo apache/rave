@@ -65,7 +65,7 @@ public class MongoModelTemplate<T, E extends T> implements MongoModelOperations<
     public T get(String id) {
         E fromDb = mongoTemplate.findById(id, dbType, collection);
         if(fromDb == null) {
-            throw new IllegalStateException("Could not find requested page: " + id);
+            throw new IllegalStateException(String.format("Could not find requested %2$s instance: %1$s", id, dbType));
         }
         return hydrate(fromDb);
     }
