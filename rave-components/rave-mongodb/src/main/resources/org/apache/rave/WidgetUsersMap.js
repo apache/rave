@@ -29,7 +29,7 @@ function () {
                         if (!widgetMap[regionWidget.widgetId]) {
                             widgetMap[regionWidget.widgetId] = true;
                             var userMap = {};
-                            userMap[self.ownerId.floatApprox] = 1;
+                            userMap[self.ownerId] = 1;
                             emit(regionWidget.widgetId, userMap);
                         }
                     })

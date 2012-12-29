@@ -218,12 +218,12 @@
                                         </span>
                                         <c:if test="${userProfile.id eq comment.userId}">
                                             <button id="comment-delete-${comment.id}" class="btn btn-danger btn-mini commentDeleteButton"
-                                                    value="Delete" title="Delete comment" data-widgetid="<c:out value="${comment.widgetId}"/>">
+                                                    value="Delete" title="Delete comment" data-widgetid="<c:out value="${widget.id}"/>">
                                                 <i class="icon-remove icon-white"></i>
                                             </button>
                                             <button id="comment-edit-${comment.id}" class="btn btn-mini commentEditButton"
                                                     value="Edit" title="Edit comment"
-                                                    data-widgetid="<c:out value="${comment.widgetId}"/>"
+                                                    data-widgetid="<c:out value="${widget.id}"/>"
                                                     data-toggle="modal" data-target="#editComment-dialog">
                                                 <i class="icon-pencil"></i>
                                             </button>

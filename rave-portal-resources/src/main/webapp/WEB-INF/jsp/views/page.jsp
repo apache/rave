@@ -100,7 +100,7 @@
                         </li>
                     </c:when>
                     <c:otherwise>
-                        <li id="tab-${userPage.id}" onclick="rave.viewPage(${userPage.id});">
+                        <li id="tab-${userPage.id}" onclick="rave.viewPage('${userPage.id}');">
                             <c:choose>
                                 <c:when test="${isSharedToMe}">
                                     <a href="#" class="rave-ui-tab-shared-to-me">

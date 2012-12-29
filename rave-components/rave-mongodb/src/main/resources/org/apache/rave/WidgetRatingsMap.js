@@ -21,7 +21,7 @@ function () {
         var self = this;
         this.ratings.forEach(function(rating){
             var userMap = {};
-            userMap[rating.userId.floatApprox] = rating.score;
+            userMap[rating.userId] = rating.score;
             emit(self._id, {
                 like:rating.score == 10 ? 1 : 0,
                 dislike:rating.score == 0 ? 1 : 0,

@@ -23,6 +23,8 @@ import com.mongodb.WriteResult;
 import org.apache.rave.portal.model.conversion.HydratingConverterFactory;
 import org.apache.rave.portal.repository.MongoModelOperations;
 import org.apache.rave.util.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.mapreduce.MapReduceResults;
@@ -34,6 +36,8 @@ import java.util.List;
 /**
  */
 public class MongoModelTemplate<T, E extends T> implements MongoModelOperations<T> {
+
+    private static final Logger logger = LoggerFactory.getLogger(MongoModelTemplate.class);
 
     @Autowired
     protected MongoOperations mongoTemplate;
@@ -65,7 +69,7 @@ public class MongoModelTemplate<T, E extends T> implements MongoModelOperations<
     public T get(String id) {
         E fromDb = mongoTemplate.findById(id, dbType, collection);
         if(fromDb == null) {
-            throw new IllegalStateException(String.format("Could not find requested %2$s instance: %1$s", id, dbType));
+            logger.warn(String.format("Could not find requested %2$s instance: %1$s", id, dbType));
         }
         return hydrate(fromDb);
     }

@@ -39,6 +39,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import static org.bson.types.ObjectId.massageToObjectId;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static org.springframework.data.mongodb.core.query.Query.query;
 import static org.springframework.data.mongodb.core.query.Update.update;
@@ -181,7 +182,7 @@ public class MongoDbWidgetRepository implements WidgetRepository {
 
     @Override
     public void delete(Widget item) {
-        template.remove(new Query(where("_id").is(item.getId())));
+        template.remove(new Query(where("_id").is(massageToObjectId(item.getId()))));
     }
 
     /*

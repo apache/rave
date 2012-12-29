@@ -37,6 +37,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import static org.bson.types.ObjectId.massageToObjectId;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static org.springframework.data.mongodb.core.query.Query.query;
 
@@ -123,7 +124,7 @@ public class MongoDbUserRepository implements UserRepository {
 
     @Override
     public void delete(User item) {
-        template.remove(query(where("_id").is(item.getId())));
+        template.remove(query(where("_id").is(massageToObjectId(item.getId()))));
     }
 
     private List<User> getUsersById(Collection<String> userIds) {

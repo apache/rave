@@ -47,7 +47,7 @@ public class MongoDbMapReduceStatisticsAggregator implements StatisticsAggregato
     public static final String RATINGS_REDUCE = "classpath:/org/apache/rave/WidgetRatingsReduce.js";
     public static final String USERS_MAP = "classpath:/org/apache/rave/WidgetUsersMap.js";
     public static final String USERS_REDUCE = "classpath:/org/apache/rave/WidgetUsersReduce.js";
-    public static final int DEFAULT_RESULT_VALIDITY = 60000;
+    public static final int DEFAULT_RESULT_VALIDITY = 60;
     public static final String ID = "metadata";
 
     private final MongoOperations mongoOperations;
@@ -97,7 +97,7 @@ public class MongoDbMapReduceStatisticsAggregator implements StatisticsAggregato
             public void run() {
                 buildStats();
             }
-        }, 0, DEFAULT_RESULT_VALIDITY, TimeUnit.MILLISECONDS);
+        }, 0, DEFAULT_RESULT_VALIDITY, TimeUnit.SECONDS);
     }
 
     public void buildStats() {

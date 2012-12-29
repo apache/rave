@@ -30,6 +30,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+import static org.bson.types.ObjectId.massageToObjectId;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static org.springframework.data.mongodb.core.query.Query.query;
 
@@ -71,7 +72,7 @@ public class MongoDbTagRepository implements TagRepository {
 
     @Override
     public void delete(Tag item) {
-        template.remove(query(where("_id").is(item.getId())));
+        template.remove(query(where("_id").is(massageToObjectId(item.getId()))));
     }
 
     public void setWidgetTemplate(MongoTagOperations tagTemplate) {

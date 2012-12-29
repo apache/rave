@@ -107,4 +107,33 @@ public class PageUserImpl implements PageUser {
     public void setPageStatus(PageInvitationStatus pageStatus) {
         this.pageStatus = pageStatus;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof PageUserImpl)) return false;
+
+        PageUserImpl pageUser = (PageUserImpl) o;
+
+        if (editor != pageUser.editor) return false;
+        if (id != null ? !id.equals(pageUser.id) : pageUser.id != null) return false;
+        if (page != null ? !page.equals(pageUser.page) : pageUser.page != null) return false;
+        if (pageStatus != pageUser.pageStatus) return false;
+        if (renderSequence != null ? !renderSequence.equals(pageUser.renderSequence) : pageUser.renderSequence != null)
+            return false;
+        if (userId != null ? !userId.equals(pageUser.userId) : pageUser.userId != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (userId != null ? userId.hashCode() : 0);
+        result = 31 * result + (editor ? 1 : 0);
+        result = 31 * result + (renderSequence != null ? renderSequence.hashCode() : 0);
+        result = 31 * result + (pageStatus != null ? pageStatus.hashCode() : 0);
+        result = 31 * result + (page != null ? page.hashCode() : 0);
+        return result;
+    }
 }
