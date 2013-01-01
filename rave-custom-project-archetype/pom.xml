@@ -36,7 +36,7 @@
     <properties>
         <customproject.app.groupId>org.apache.rave.custom</customproject.app.groupId>
         <customproject.app.artifactId>myproject</customproject.app.artifactId>
-        <customproject.app.version>1.01.00</customproject.app.version>
+        <customproject.app.version>${project.version}</customproject.app.version>
         <customproject.app.name>My Custom Rave Project</customproject.app.name>
     </properties>
 
@@ -153,7 +153,7 @@
                                             <include name="**/*.jar"/>
                                         </fileset>
                                     </classpath>
-                                    <arg value="install"/>
+                                    <arg value="package"/>
                                     <arg value="-Dmaven.repo.local=${settings.localRepository}"/>
                                 </java>
                             </target>
