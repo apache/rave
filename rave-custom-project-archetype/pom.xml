@@ -133,6 +133,7 @@
                                     <arg value="-DartifactId=${customproject.app.artifactId}"/>
                                     <arg value="-Dversion=${customproject.app.version}"/>
                                     <arg value="-DprojectName=${customproject.app.name}"/>
+                                    <arg value="-Dmaven.repo.local=${settings.localRepository}"/>
                                 </java>
 
                                 <echo message="$$$$$$$$$$ Installing custom Rave project $$$$$$$$$$"/>
@@ -153,6 +154,7 @@
                                         </fileset>
                                     </classpath>
                                     <arg value="install"/>
+                                    <arg value="-Dmaven.repo.local=${settings.localRepository}"/>
                                 </java>
                             </target>
                         </configuration>
