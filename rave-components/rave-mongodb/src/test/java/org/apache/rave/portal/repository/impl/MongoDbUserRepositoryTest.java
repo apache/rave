@@ -19,18 +19,19 @@
 
 package org.apache.rave.portal.repository.impl;
 
+import com.google.common.collect.Sets;
 import org.apache.rave.portal.model.MongoDbUser;
-import org.apache.rave.portal.model.Page;
 import org.apache.rave.portal.model.User;
-import org.apache.rave.portal.model.impl.PageImpl;
 import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.repository.MongoUserOperations;
+import org.apache.rave.portal.repository.StatisticsAggregator;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.data.mongodb.core.query.Query;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import static org.easymock.EasyMock.*;
 import static org.easymock.EasyMock.isA;
@@ -48,15 +49,15 @@ import static org.springframework.data.mongodb.core.query.Query.query;
 public class MongoDbUserRepositoryTest {
     private MongoDbUserRepository userRepository;
     private MongoUserOperations template;
-    private MongoPageTemplate pageTemplate;
+    private StatisticsAggregator aggregator;
 
     @Before
     public void setup() {
         userRepository = new MongoDbUserRepository();
         template = createMock(MongoUserOperations.class);
-        pageTemplate = createMock(MongoPageTemplate.class);
+        aggregator = createMock(StatisticsAggregator.class);
         userRepository.setTemplate(template);
-        userRepository.setPageTemplate(pageTemplate);
+        userRepository.setStatisticsAggregator(aggregator);
     }
 
     @Test
@@ -128,47 +129,20 @@ public class MongoDbUserRepositoryTest {
 
     @Test
     public void getAllByAddedWidget_Valid(){
-          String widgetId = "123";
+        String widgetId = "123";
         String ownerId = "ABC";
-        List<Page> pages = new ArrayList<Page>();
-        Page page = new PageImpl();
-        page.setOwnerId(ownerId);
-        pages.add(page);
-        expect(pageTemplate.find(query(where("regions").elemMatch(where("regionWidgets").elemMatch(where("widgetId").is(widgetId)))))).andReturn(pages);
-        replay(pageTemplate);
+        Set<String> userIds = Sets.newHashSet();
+        userIds.add(ownerId);
+
+        expect(aggregator.getUsersWithWidget(widgetId)).andReturn(userIds);
         UserImpl owner = new UserImpl(ownerId);
         expect(template.get(ownerId)).andReturn(owner);
-        replay(template);
-
-        List<User> users = userRepository.getAllByAddedWidget(widgetId);
-
-        assertTrue(users.size() == pages.size());
-        assertTrue(users.contains(owner));
-    }
-
-    @Test
-    public void getAllByAddedWidget_ContainsOwner(){
-        String widgetId = "123";
-        String ownerId = "1234";
-
-        List<Page> pages = new ArrayList<Page>();
-        Page page = new PageImpl();
-        Page page_2 = new PageImpl();
-        page.setOwnerId(ownerId);
-        page_2.setOwnerId(ownerId);
-        pages.add(page);
-        pages.add(page_2);
-        expect(pageTemplate.find(query(where("regions").elemMatch(where("regionWidgets").elemMatch(where("widgetId").is(widgetId)))))).andReturn(pages);
-        replay(pageTemplate);
-        UserImpl user = new UserImpl(ownerId);
-        expect(template.get(ownerId)).andReturn(user);
-        replay(template);
+        replay(template, aggregator);
 
         List<User> users = userRepository.getAllByAddedWidget(widgetId);
 
         assertTrue(users.size() == 1);
-        assertTrue(users.contains(user));
-
+        assertTrue(users.contains(owner));
     }
 
     @Test

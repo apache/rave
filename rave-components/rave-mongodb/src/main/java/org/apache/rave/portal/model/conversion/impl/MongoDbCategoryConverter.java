@@ -26,6 +26,8 @@ import org.apache.rave.portal.repository.MongoWidgetOperations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import static org.apache.rave.portal.model.util.MongoDbModelUtil.generateId;
+
 @Component
 public class MongoDbCategoryConverter implements HydratingModelConverter<Category, MongoDbCategory> {
 
@@ -49,7 +51,7 @@ public class MongoDbCategoryConverter implements HydratingModelConverter<Categor
     @Override
     public MongoDbCategory convert(Category source) {
         MongoDbCategory category = new MongoDbCategory();
-        category.setId(source.getId());
+        category.setId(source.getId() == null ? generateId() : source.getId());
         category.setCreatedDate(source.getCreatedDate());
         category.setCreatedUserId(source.getCreatedUserId());
         category.setLastModifiedUserId(source.getLastModifiedUserId());

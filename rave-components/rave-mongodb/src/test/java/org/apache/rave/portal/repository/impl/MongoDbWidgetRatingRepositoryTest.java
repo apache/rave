@@ -25,7 +25,6 @@ import org.apache.rave.portal.model.impl.WidgetImpl;
 import org.apache.rave.portal.model.impl.WidgetRatingImpl;
 import org.apache.rave.portal.repository.MongoWidgetOperations;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -33,6 +32,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.easymock.EasyMock.*;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.junit.Assert.*;
@@ -168,7 +168,7 @@ public class MongoDbWidgetRatingRepositoryTest {
         assertNull(ratingRepository.getRatingById(widgetId, id));
     }
 
-    @Test @Ignore("Fix Before Merge")
+    @Test
     public void save_Id_Valid(){
         WidgetRatingImpl item = new WidgetRatingImpl();
         WidgetRatingImpl lookup = new WidgetRatingImpl();
@@ -183,15 +183,15 @@ public class MongoDbWidgetRatingRepositoryTest {
         Widget widget = new WidgetImpl();
         widget.setRatings(Arrays.asList((WidgetRating)lookup));
 
-        expect(template.get(id)).andReturn(widget);
+        expect(template.get(widgetId)).andReturn(widget);
         expect(template.save(widget)).andReturn(widget);
         replay(template);
 
         WidgetRating widgetRating = ratingRepository.updateWidgetRating(widgetId, item);
 
-        assertThat(item.getScore(), is(sameInstance(lookup.getScore())));
-        assertThat(item.getUserId(), is(sameInstance(lookup.getUserId())));
-        assertThat(item.getScore(), is(sameInstance(lookup.getScore())));
+        assertThat(item.getScore(), is(equalTo(lookup.getScore())));
+        assertThat(item.getUserId(), is(equalTo(lookup.getUserId())));
+        assertThat(item.getScore(), is(equalTo(lookup.getScore())));
         assertThat(widgetRating, is(sameInstance((WidgetRating)lookup)));
     }
 

@@ -72,7 +72,7 @@ public class MongoDbTagRepository implements TagRepository {
 
     @Override
     public void delete(Tag item) {
-        template.remove(query(where("_id").is(massageToObjectId(item.getId()))));
+        template.remove(query(where("_id").is(item.getId())));
     }
 
     public void setWidgetTemplate(MongoTagOperations tagTemplate) {

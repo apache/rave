@@ -24,8 +24,6 @@ import org.apache.rave.portal.model.MongoDbAuthority;
 import org.apache.rave.portal.model.conversion.HydratingModelConverter;
 import org.springframework.stereotype.Component;
 
-import static org.apache.rave.portal.model.util.MongoDbModelUtil.generateId;
-
 @Component
 public class MongoDbAuthorityConverter implements HydratingModelConverter<Authority, MongoDbAuthority> {
     @Override
@@ -40,13 +38,7 @@ public class MongoDbAuthorityConverter implements HydratingModelConverter<Author
 
     @Override
     public MongoDbAuthority convert(Authority source) {
-        MongoDbAuthority converted;
-        if(source instanceof MongoDbAuthority) {
-            converted = ((MongoDbAuthority)source);
-        } else {
-            converted = new MongoDbAuthority();
-            converted.setId(generateId());
-        }
+        MongoDbAuthority converted = source instanceof MongoDbAuthority ? (MongoDbAuthority) source : new MongoDbAuthority();
         converted.setAuthority(source.getAuthority());
         converted.setDefaultForNewUser(source.isDefaultForNewUser());
         return converted;

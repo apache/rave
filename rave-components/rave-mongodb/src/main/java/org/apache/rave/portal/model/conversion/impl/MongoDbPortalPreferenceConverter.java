@@ -24,8 +24,6 @@ import org.apache.rave.portal.model.PortalPreference;
 import org.apache.rave.portal.model.conversion.HydratingModelConverter;
 import org.springframework.stereotype.Component;
 
-import static org.apache.rave.portal.model.util.MongoDbModelUtil.generateId;
-
 @Component
 public class MongoDbPortalPreferenceConverter implements HydratingModelConverter<PortalPreference, MongoDbPortalPreference> {
     @Override
@@ -40,14 +38,7 @@ public class MongoDbPortalPreferenceConverter implements HydratingModelConverter
 
     @Override
     public MongoDbPortalPreference convert(PortalPreference source) {
-        MongoDbPortalPreference converted;
-        if (source instanceof MongoDbPortalPreference) {
-            converted = ((MongoDbPortalPreference) source);
-        }
-        else {
-            converted = new MongoDbPortalPreference();
-            converted.setId(generateId());
-        }
+        MongoDbPortalPreference converted = source instanceof MongoDbPortalPreference ? (MongoDbPortalPreference) source : new MongoDbPortalPreference();
         converted.setKey(source.getKey());
         converted.setValues(source.getValues());
         return converted;

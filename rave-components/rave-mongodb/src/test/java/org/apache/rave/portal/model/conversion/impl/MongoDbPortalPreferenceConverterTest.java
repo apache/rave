@@ -60,7 +60,7 @@ public class MongoDbPortalPreferenceConverterTest {
 
         assertThat(converted.getKey(), is(equalTo("key")));
         assertTrue(converted.getValues().isEmpty());
-        assertNotNull(converted.getId());
+        //assertNotNull(converted.getId());
 
         converted = converter.convert(mpp);
 

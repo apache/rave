@@ -20,11 +20,10 @@
 package org.apache.rave.portal.repository.impl;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import org.apache.rave.portal.model.MongoDbUser;
-import org.apache.rave.portal.model.Page;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.repository.MongoUserOperations;
+import org.apache.rave.portal.repository.StatisticsAggregator;
 import org.apache.rave.portal.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -34,10 +33,8 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 import java.util.regex.Pattern;
 
-import static org.bson.types.ObjectId.massageToObjectId;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static org.springframework.data.mongodb.core.query.Query.query;
 
@@ -51,7 +48,7 @@ public class MongoDbUserRepository implements UserRepository {
     private MongoUserOperations template;
 
     @Autowired
-    private MongoPageTemplate pageTemplate;
+    private StatisticsAggregator statisticsAggregator;
 
     @Override
     public User getByUsername(String username) {
@@ -91,15 +88,7 @@ public class MongoDbUserRepository implements UserRepository {
 
     @Override
     public List<User> getAllByAddedWidget(String  widgetId) {
-        Query q = query(where("regions").elemMatch(where("regionWidgets").elemMatch(where("widgetId").is(widgetId))));
-        List<Page> pages = pageTemplate.find(q);
-        Set<String> userIds = Sets.newHashSet();
-        for(Page p : pages) {
-            if(!userIds.contains(p.getOwnerId())){
-                userIds.add(p.getOwnerId());
-            }
-        }
-        return getUsersById(userIds);
+        return getUsersById(statisticsAggregator.getUsersWithWidget(widgetId));
     }
 
     @Override
@@ -124,7 +113,7 @@ public class MongoDbUserRepository implements UserRepository {
 
     @Override
     public void delete(User item) {
-        template.remove(query(where("_id").is(massageToObjectId(item.getId()))));
+        template.remove(query(where("_id").is(item.getId())));
     }
 
     private List<User> getUsersById(Collection<String> userIds) {
@@ -149,7 +138,7 @@ public class MongoDbUserRepository implements UserRepository {
         this.template = template;
     }
 
-    public void setPageTemplate(MongoPageTemplate pageTemplate) {
-        this.pageTemplate = pageTemplate;
+    public void setStatisticsAggregator(StatisticsAggregator statisticsAggregator) {
+        this.statisticsAggregator = statisticsAggregator;
     }
 }

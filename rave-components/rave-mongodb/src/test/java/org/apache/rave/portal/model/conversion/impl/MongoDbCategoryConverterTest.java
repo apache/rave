@@ -102,6 +102,6 @@ public class MongoDbCategoryConverterTest {
 
         assertNull(converted.getLastModifiedUserId());
         assertNull(converted.getCreatedUserId());
-        assertNull(converted.getId());
+        assertNotNull(converted.getId());
     }
 }

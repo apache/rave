@@ -67,7 +67,7 @@ public class MongoDbUserConverter implements HydratingModelConverter<User, Mongo
 
     @Override
     public MongoDbUser convert(User source) {
-        MongoDbUser user = new MongoDbUser();
+        MongoDbUser user = source instanceof MongoDbUser ? (MongoDbUser)source : new MongoDbUser();
         List<String> authorityCodes = Lists.newArrayList();
         for(GrantedAuthority authority : source.getAuthorities()) {
             authorityCodes.add(authority.getAuthority());
@@ -102,7 +102,7 @@ public class MongoDbUserConverter implements HydratingModelConverter<User, Mongo
         converted.setOpenId(source.getOpenId());
         converted.setForgotPasswordHash(source.getForgotPasswordHash());
         converted.setForgotPasswordTime(source.getForgotPasswordTime());
-
+        converted.setPageLayoutRepository(null);
     }
 
     private String getPageLayoutCode(User source) {

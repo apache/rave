@@ -135,7 +135,7 @@ public class MongoDbPageTemplateConverter implements HydratingModelConverter<Pag
     }
 
     private void updateProperties(PageTemplate source, MongoDbPageTemplate converted) {
-        converted.setId(source.getId());
+        converted.setId(source.getId() == null ? generateId() : source.getId());
         converted.setName(source.getName());
         converted.setDescription(source.getDescription());
         converted.setPageType(source.getPageType());

@@ -22,6 +22,7 @@ package org.apache.rave.portal.repository;
 import org.apache.rave.portal.model.util.WidgetStatistics;
 
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Manages statistics for various attributes of the Rave
@@ -29,4 +30,5 @@ import java.util.Map;
 public interface StatisticsAggregator {
     Map<String, WidgetStatistics> getAllWidgetStatistics(String  userId);
     WidgetStatistics getWidgetStatistics(String widget_id, String user_id);
+    Set<String> getUsersWithWidget(String widgetId);
 }

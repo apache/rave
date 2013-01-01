@@ -5,6 +5,8 @@ import org.apache.rave.portal.model.conversion.HydratingModelConverter;
 import org.apache.rave.portal.model.impl.TagImpl;
 import org.springframework.stereotype.Component;
 
+import static org.apache.rave.portal.model.util.MongoDbModelUtil.generateId;
+
 @Component
 public class TagImplConverter implements HydratingModelConverter<Tag, TagImpl> {
     @Override
@@ -19,6 +21,7 @@ public class TagImplConverter implements HydratingModelConverter<Tag, TagImpl> {
 
     @Override
     public TagImpl convert(Tag tag) {
-        return new TagImpl(tag.getId(), tag.getKeyword());
+        String id = tag.getId() == null ? generateId() : tag.getId();
+        return new TagImpl(id, tag.getKeyword());
     }
 }

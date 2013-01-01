@@ -182,7 +182,7 @@ public class MongoDbWidgetRepository implements WidgetRepository {
 
     @Override
     public void delete(Widget item) {
-        template.remove(new Query(where("_id").is(massageToObjectId(item.getId()))));
+        template.remove(new Query(where("_id").is(item.getId())));
     }
 
     /*
@@ -221,7 +221,10 @@ public class MongoDbWidgetRepository implements WidgetRepository {
 
     @Override
     public WidgetRating updateWidgetRating(String widgetId, WidgetRating rating) {
-        return null;
+        Widget widget = template.get(widgetId);
+        WidgetRating updated = updateRating(widget, rating);
+        save(widget);
+        return updated;
     }
 
     @Override
@@ -229,6 +232,17 @@ public class MongoDbWidgetRepository implements WidgetRepository {
         Widget widget = template.get(widgetId);
         removeRating(item.getId(), widget);
         template.save(widget);
+    }
+
+    private WidgetRating updateRating(Widget widget, WidgetRating rating) {
+        for(WidgetRating currentRating : widget.getRatings()) {
+            if(currentRating.getId().equals(rating.getId())) {
+                currentRating.setScore(rating.getScore());
+                currentRating.setUserId(rating.getUserId());
+                return currentRating;
+            }
+        }
+        return null;
     }
 
     private void removeRating(String ratingId, Widget widget) {
@@ -444,7 +458,6 @@ public class MongoDbWidgetRepository implements WidgetRepository {
     /*
      * End WidgetComment Repository
      */
-
     private Query getWidgetStatusFreeTextQuery(WidgetStatus widgetStatus, String type, String searchTerm) {
         Criteria criteria = addFreeTextClause(searchTerm, new Criteria());
         if (type != null && !type.isEmpty()) {

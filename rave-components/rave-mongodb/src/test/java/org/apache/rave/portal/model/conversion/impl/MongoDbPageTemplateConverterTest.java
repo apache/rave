@@ -148,7 +148,7 @@ public class MongoDbPageTemplateConverterTest {
 
         MongoDbPageTemplate converted = pageTemplateConverter.convert(pageTemplate);
 
-        assertNull(converted.getId());
+        assertNotNull(converted.getId());
         assertNotNull(converted.getPageTemplateRegions());
         assertNotNull(converted.getSubPageTemplates());
     }
@@ -211,7 +211,7 @@ public class MongoDbPageTemplateConverterTest {
 
         MongoDbPageTemplate converted = pageTemplateConverter.convert(pageTemplate);
 
-        assertNull(converted.getId());
+        assertNotNull(converted.getId());
     }
 
     @Test

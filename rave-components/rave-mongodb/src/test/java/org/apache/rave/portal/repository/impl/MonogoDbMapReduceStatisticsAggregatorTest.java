@@ -270,10 +270,9 @@ public class MonogoDbMapReduceStatisticsAggregatorTest {
         assertThat(result.getTotalUserCount(), is(equalTo(0)));
     }
 
-    @Test
-    @Ignore
+    @Test @Ignore
     public void init_existing() {
-        expect(mongoOperations.findById(eq(ID), eq(RunStatistics.class), eq(OPERATIONS))).andReturn(new RunStatistics(ID, System.currentTimeMillis() - DEFAULT_RESULT_VALIDITY));
+        expect(mongoOperations.findById(eq(ID), eq(RunStatistics.class), eq(OPERATIONS))).andReturn(new RunStatistics(ID, System.currentTimeMillis() - (DEFAULT_RESULT_VALIDITY * 1000)));
         setMapReduceExpectations();
         mongoOperations.save(isA(RunStatistics.class), eq(OPERATIONS));
         expectLastCall();

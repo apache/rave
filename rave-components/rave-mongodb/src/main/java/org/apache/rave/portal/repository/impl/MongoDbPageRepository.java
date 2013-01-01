@@ -36,7 +36,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import static org.bson.types.ObjectId.massageToObjectId;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static org.springframework.data.mongodb.core.query.Query.query;
 
@@ -108,7 +107,7 @@ public class MongoDbPageRepository implements PageRepository {
 
     @Override
     public void delete(Page item) {
-        template.remove(query(where("_id").is(massageToObjectId(item.getId()))));
+        template.remove(query(where("_id").is(item.getId())));
     }
 
     private List<Page> sort(List<Page> pages, final String  userId) {

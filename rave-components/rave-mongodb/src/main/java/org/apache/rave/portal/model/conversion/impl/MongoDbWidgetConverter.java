@@ -97,7 +97,7 @@ public class MongoDbWidgetConverter implements HydratingModelConverter<Widget, M
     }
 
     private void updateProperties(Widget source, MongoDbWidget converted) {
-        converted.setId(source.getId());
+        converted.setId(source.getId() == null ? generateId() : source.getId());
         converted.setUrl(source.getUrl());
         converted.setType(source.getType());
         converted.setTitle(source.getTitle());

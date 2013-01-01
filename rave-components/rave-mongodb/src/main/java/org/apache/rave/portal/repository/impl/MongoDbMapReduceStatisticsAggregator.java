@@ -33,6 +33,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
@@ -75,6 +76,12 @@ public class MongoDbMapReduceStatisticsAggregator implements StatisticsAggregato
     }
 
     @Override
+    public Set<String> getUsersWithWidget(String widgetId) {
+        WidgetUsersMapReduceResult result = mongoOperations.findById(widgetId, WidgetUsersMapReduceResult.class, WIDGET_USERS);
+        return result.getValue().keySet();
+    }
+
+    @Override
     public Map<String , WidgetStatistics> getAllWidgetStatistics(String userId) {
         List<WidgetRatingsMapReduceResult> widgetStats = mongoOperations.findAll(WidgetRatingsMapReduceResult.class, WIDGET_RATINGS);
         List<WidgetUsersMapReduceResult> widgetUsers = mongoOperations.findAll(WidgetUsersMapReduceResult.class, WIDGET_USERS);
@@ -102,7 +109,7 @@ public class MongoDbMapReduceStatisticsAggregator implements StatisticsAggregato
 
     public void buildStats() {
         RunStatistics runStats = mongoOperations.findById(ID, RunStatistics.class, OPERATIONS);
-        if(runStats == null || (System.currentTimeMillis() - runStats.getRefreshedTimeStamp() > DEFAULT_RESULT_VALIDITY)) {
+        if(runStats == null || (System.currentTimeMillis() - (runStats.getRefreshedTimeStamp()*1000) > DEFAULT_RESULT_VALIDITY)) {
             queryForUserStats();
         }
     }
@@ -126,7 +133,8 @@ public class MongoDbMapReduceStatisticsAggregator implements StatisticsAggregato
     }
 
     private MapReduceOptions getOptions(String collection) {
-        return MapReduceOptions.options().javaScriptMode(true).outputCollection(collection).outputTypeReplace();
+        //Currently a bug in javascriptMode prevents maps from being correctly stored by the db
+        return MapReduceOptions.options().outputCollection(collection).outputTypeReplace();
     }
 
     private MapReduceResults<WidgetUsersMapReduceResult> executeUsersMapReduce() {
