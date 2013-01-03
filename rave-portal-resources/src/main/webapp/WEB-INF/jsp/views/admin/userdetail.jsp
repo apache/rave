@@ -115,7 +115,7 @@
 	                        </fieldset>
 	                        <fieldset>
 	                            <span class="control-label"><fmt:message key="admin.userdata.authorities"/></span>
-	                                <%--@elvariable id="authorities" type="org.apache.rave.portal.model.util.SearchResult<org.apache.rave.portal.model.JpaAuthority>"--%>
+	                                <%--@elvariable id="authorities" type="org.apache.rave.portal.model.util.SearchResult<org.apache.rave.portal.model.Authority>"--%>
 	                            <ul class="checkboxlist">
 	                                <form:checkboxes path="authorities" items="${authorities.resultSet}" itemLabel="authority" itemValue="authority" element="li"/>
 	                            </ul>

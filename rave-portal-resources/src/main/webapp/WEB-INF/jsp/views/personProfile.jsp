@@ -21,7 +21,7 @@
 <%@ page errorPage="/WEB-INF/jsp/views/error.jsp" %>
 <%@ include file="/WEB-INF/jsp/includes/taglibs.jsp" %>
 <fmt:setBundle basename="messages"/>
-<jsp:useBean id="userProfile" type="org.apache.rave.portal.model.JpaUser" scope="request"/>
+<jsp:useBean id="userProfile" type="org.apache.rave.portal.model.User" scope="request"/>
 <sec:authentication property="principal.username" var="principleUsername" scope="request"/>
 <sec:authentication property="principal.displayName" var="displayName" scope="request"/>
 
@@ -165,7 +165,7 @@
             </div>
         </div>
         <div class="span3">
-            <portal:person id="${page.ownerId}" var="${owner}" />
+            <portal:person id="${page.ownerId}" var="owner" />
         	<button type="button" id="addRemoveFriend" value="${owner.username}" class="btn btn-primary profile-info-visible"><fmt:message key="page.personProfile.addremove.friends"/></button>
         </div>
         <div class="span3">

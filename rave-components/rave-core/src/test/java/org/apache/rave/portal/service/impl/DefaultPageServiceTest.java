@@ -19,6 +19,7 @@
 
 package org.apache.rave.portal.service.impl;
 
+import com.google.common.collect.Lists;
 import org.apache.rave.portal.model.Page;
 import org.apache.rave.portal.model.PageLayout;
 import org.apache.rave.portal.model.PageTemplate;
@@ -1307,21 +1308,25 @@ public class DefaultPageServiceTest {
 
         Region region = new RegionImpl();
         region.setLocked(false);
+        region.setRegionWidgets(Lists.<RegionWidget>newArrayList());
 
         RegionWidget regionWidget = new RegionWidgetImpl(VALID_REGION_WIDGET_ID);
         regionWidget.setRegion(region);
+        region.getRegionWidgets().add(regionWidget);
 
         expect(pageRepository.get(TO_PAGE_ID)).andReturn(toPageValue);
         expect(regionWidgetRepository.get(WIDGET_ID)).andReturn(regionWidget).times(2);
+        expect(regionRepository.save(originalRegion)).andReturn(originalRegion);
+        expect(regionRepository.save(region)).andReturn(region);
 
-        replay(pageRepository);
-        replay(regionWidgetRepository);
+        replay(pageRepository, regionWidgetRepository, regionRepository);
 
         RegionWidget updatedRegionWidget = pageService.moveRegionWidgetToPage(VALID_REGION_WIDGET_ID, TO_PAGE_ID);
 
         verify(pageRepository);
         verify(regionWidgetRepository);
         verifyPositions(0, regionWidget, true);
+        assertThat(region.getRegionWidgets().isEmpty(), is(true));
 
     }
 

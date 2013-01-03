@@ -50,13 +50,6 @@
     <context:component-scan base-package="org.apache.rave.portal.service"/>
     <context:component-scan base-package="org.apache.rave.portal.security"/>
 
-    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-        <property name="url" value="${portal.dataSource.url}"/>
-        <property name="driverClassName" value="${portal.dataSource.driver}"/>
-        <property name="username" value="${portal.dataSource.username}"/>
-        <property name="password" value="${portal.dataSource.password}"/>
-    </bean>
-
     <!-- Password encoding -->
     <bean class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" id="passwordEncoder">
         <!--<constructor-arg index="0" value="10"/>-->

@@ -146,6 +146,7 @@ public class UserImpl extends PersonImpl implements User, Serializable {
 
     public Person toPerson() {
         PersonImpl p = new PersonImpl();
+        p.setId(this.getId());
         p.setAboutMe(this.getAboutMe());
         p.setAdditionalName(this.getAdditionalName());
         p.setAddresses(this.getAddresses());

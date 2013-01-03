@@ -21,6 +21,7 @@ package org.apache.rave.portal.repository.impl;
 import org.apache.rave.portal.model.JpaPageTemplate;
 import org.apache.rave.portal.model.PageTemplate;
 import org.apache.rave.portal.model.PageType;
+import org.apache.rave.portal.model.conversion.JpaConverter;
 import org.apache.rave.portal.repository.PageTemplateRepository;
 import org.apache.rave.util.CollectionUtils;
 import org.springframework.stereotype.Repository;
@@ -29,6 +30,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.List;
+
+import static org.apache.rave.persistence.jpa.util.JpaUtil.saveOrUpdate;
 
 @Repository
 public class JpaPageTemplateRepository implements PageTemplateRepository {
@@ -47,5 +50,10 @@ public class JpaPageTemplateRepository implements PageTemplateRepository {
         TypedQuery<JpaPageTemplate> query = manager.createNamedQuery(JpaPageTemplate.PAGE_TEMPLATE_GET_DEFAULT_PAGE_BY_TYPE, JpaPageTemplate.class);
         query.setParameter("pageType", pageType);
         return query.getSingleResult();
+    }
+
+    @Override
+    public PageTemplate save(PageTemplate template) {
+        return (PageTemplate) saveOrUpdate(template.getId(), manager, JpaConverter.getInstance().convert(template, PageTemplate.class));
     }
 }

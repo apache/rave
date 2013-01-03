@@ -206,7 +206,7 @@ public class DefaultPageService implements PageService {
         RegionWidget regionWidget = regionWidgetRepository.get(regionWidgetId);
         verifyRegionWidgetIsNotLocked(regionWidget);
         verifyRegionIsNotLocked(target);
-        if (toRegionId == fromRegionId) {
+        if (toRegionId.equals(fromRegionId)) {
             moveWithinRegion(regionWidgetId, newPosition, target);
         } else {
             moveBetweenRegions(regionWidgetId, newPosition, fromRegionId, target);
@@ -223,6 +223,8 @@ public class DefaultPageService implements PageService {
         // Get the region widget
         RegionWidget regionWidget = getFromRepository(regionWidgetId, regionWidgetRepository);
 
+        Region moveFromRegion = regionWidget.getRegion();
+
         // Move it to first position of the first region
         Region moveToRegion = toPage.getRegions().get(0);
 
@@ -233,10 +235,14 @@ public class DefaultPageService implements PageService {
         regionWidget.setRenderOrder(0);
         regionWidget.setRegion(moveToRegion);
         moveToRegion.getRegionWidgets().add(0, regionWidget);
+        //remove it from the old region
+        moveFromRegion.getRegionWidgets().remove(regionWidget);
         // update the rendersequences of the widgets in this region
         updateRenderSequences(moveToRegion.getRegionWidgets());
+        updateRenderSequences(moveFromRegion.getRegionWidgets());
         // persist it
         regionRepository.save(moveToRegion);
+        regionRepository.save(moveFromRegion);
         return getFromRepository(regionWidgetId, regionWidgetRepository);
     }
 
@@ -318,7 +324,6 @@ public class DefaultPageService implements PageService {
 
     @Transactional
     public Boolean clonePageForUser(String pageId, String userId, String pageName) {
-        Widget widget = null;
         Page page = getPage(pageId);
         if(pageName == null || pageName.equals("null")){
             // try to use the original page name if none supplied
@@ -329,10 +334,10 @@ public class DefaultPageService implements PageService {
         for(int i=0; i<page.getRegions().size(); i++){
             for(int j=0; j<page.getRegions().get(i).getRegionWidgets().size(); j++){
                 String widgetId = page.getRegions().get(i).getRegionWidgets().get(j).getWidgetId();
-                widget = widgetRepository.get(widgetId);
-                addWidgetToPageRegion(clonedPage.getId(), widget.getId(), clonedPage.getRegions().get(i).getId());
+                addWidgetToPageRegion(clonedPage.getId(), widgetId, clonedPage.getRegions().get(i).getId());
             }
         }
+        clonedPage = getFromRepository(clonedPage.getId(), pageRepository);
         // newly created page - so only one pageUser
         PageUser pageUser = clonedPage.getMembers().get(0);
         // update status to pending

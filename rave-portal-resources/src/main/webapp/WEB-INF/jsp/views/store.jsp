@@ -76,7 +76,7 @@
                     </div>
                 </c:if>
                 <ul class="storeItems">
-                        <%--@elvariable id="widget" type="org.apache.rave.portal.model.JpaWidget"--%>
+                        <%--@elvariable id="widget" type="org.apache.rave.portal.model.Widget"--%>
                     <c:forEach var="widget" items="${widgets.resultSet}">
                         <%--@elvariable id="widgetsStatistics" type="org.apache.rave.portal.model.util.WidgetStatistics"--%>
                         <c:set var="widgetStatistics" value="${widgetsStatistics[widget.id]}"/>
@@ -100,7 +100,7 @@
 
                             <div id="widgetAdded_${widget.id}" class="storeButton">
                                 <button class="btn btn-small btn-primary" id="addWidget_${widget.id}"
-                                        onclick="rave.api.rpc.addWidgetToPage({widgetId: ${widget.id}, pageId: ${referringPageId}, buttonId: this.id});" 
+                                        onclick="rave.api.rpc.addWidgetToPage({widgetId: '${widget.id}', pageId: '${referringPageId}', buttonId: this.id});"
                                         data-success="<fmt:message key="page.widget.addedToPage"/>">
                                     <fmt:message key="page.widget.addToPage"/>
                                 </button>

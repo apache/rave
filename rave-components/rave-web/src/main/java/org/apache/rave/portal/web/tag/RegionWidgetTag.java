@@ -27,7 +27,6 @@ import org.apache.rave.portal.web.renderer.RenderService;
 import org.apache.rave.portal.web.renderer.ScriptLocation;
 import org.apache.rave.portal.web.renderer.ScriptManager;
 import org.apache.rave.portal.web.renderer.model.RegionWidgetWrapper;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.jsp.JspException;
 
@@ -43,13 +42,12 @@ public class RegionWidgetTag extends AbstractContextAwareSingletonBeanDependentT
 
     // Script block for disabled gadget
     private static final String DISABLED_SCRIPT_BLOCK =
-            "<script>rave.registerWidget(%1$s, {type: 'DISABLED'," +
-            " regionWidgetId: %2$s," +
+            "<script>rave.registerWidget('%1$s', {type: 'DISABLED'," +
+            " regionWidgetId: '%2$s'," +
             " disabledMessage: '%3$s'," +
             " collapsed: %4$s," +
-            " widgetId: %5$s});</script>";
+            " widgetId: '%5$s'});</script>";
 
-    @Autowired
     public RegionWidgetTag() {
         super(RenderService.class);
     }

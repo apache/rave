@@ -30,6 +30,9 @@ public class WidgetTagImpl implements WidgetTag {
     private String tagId;
     private Date createdDate;
 
+    public WidgetTagImpl() {
+    }
+
     public WidgetTagImpl(User user, Date createdDate, Tag tag) {
         this.userId = user.getId();
         this.tagId = tag.getId();

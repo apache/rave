@@ -23,7 +23,6 @@ import org.apache.rave.portal.model.WidgetRating;
 public class WidgetRatingImpl implements WidgetRating {
 
     private String id;
-    private String widgetId;
     private String userId;
     private Integer score;
 
@@ -34,7 +33,7 @@ public class WidgetRatingImpl implements WidgetRating {
         this.id = id;
     }
 
-    public WidgetRatingImpl(String id, String userId, int score) {
+    public WidgetRatingImpl(String id, String userId, Integer score) {
         this.id = id;
         this.userId = userId;
         this.score = score;
@@ -74,7 +73,6 @@ public class WidgetRatingImpl implements WidgetRating {
         if (id != null ? !id.equals(that.id) : that.id != null) return false;
         if (score != null ? !score.equals(that.score) : that.score != null) return false;
         if (userId != null ? !userId.equals(that.userId) : that.userId != null) return false;
-        if (widgetId != null ? !widgetId.equals(that.widgetId) : that.widgetId != null) return false;
 
         return true;
     }
@@ -82,7 +80,6 @@ public class WidgetRatingImpl implements WidgetRating {
     @Override
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (widgetId != null ? widgetId.hashCode() : 0);
         result = 31 * result + (userId != null ? userId.hashCode() : 0);
         result = 31 * result + (score != null ? score.hashCode() : 0);
         return result;

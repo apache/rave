@@ -201,7 +201,7 @@
                             <!--  un-comment following property for: Loading the SizeOfAgent will probably fail,
                             as you are running on Apple OS X and have a value set for java.io.tmpdir  -->
                             <!-- <net.sf.ehcache.pool.sizeof.AgentSizeOf.bypass>true</net.sf.ehcache.pool.sizeof.AgentSizeOf.bypass>  -->
-	                  
+
 	                   <!-- Documentation: http://rave.apache.org/documentation/host-configuration.html -->
                             <!--
                                 <portal.override.properties>/path/to/custom.portal.properties</portal.override.properties>
@@ -284,6 +284,74 @@
                 </plugins>
             </build>
         </profile>
+            <profile>
+                <id>jpa</id>
+                <activation>
+                    <activeByDefault>true</activeByDefault>
+                </activation>
+                <build>
+                    <testResources>
+                        <testResource>
+                            <directory>${project.basedir}/src/test/resources_jpa</directory>
+                        </testResource>
+                    </testResources>
+                </build>
+            </profile>
+            <profile>
+                <id>mongodb</id>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.rave</groupId>
+                        <artifactId>rave-portal-dependencies</artifactId>
+                        <type>pom</type>
+                        <exclusions>
+                            <exclusion>
+                                <groupId>org.apache.rave</groupId>
+                                <artifactId>rave-jpa</artifactId>
+                            </exclusion>
+                        </exclusions>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.apache.rave</groupId>
+                        <artifactId>rave-mongodb</artifactId>
+                    </dependency>
+                    <dependency>
+                        <groupId>de.flapdoodle.embed</groupId>
+                        <artifactId>de.flapdoodle.embed.mongo</artifactId>
+                        <scope>test</scope>
+                    </dependency>
+                </dependencies>
+                <build>
+                    <testResources>
+                        <testResource>
+                            <directory>${project.basedir}/src/test/resources_mongo</directory>
+                        </testResource>
+                    </testResources>
+                    <plugins>
+                        <plugin>
+                            <groupId>com.github.joelittlejohn.embedmongo</groupId>
+                            <artifactId>embedmongo-maven-plugin</artifactId>
+                            <version>0.1.5</version>
+                            <executions>
+                                <execution>
+                                    <id>start</id>
+                                    <phase>test-compile</phase>
+                                    <goals>
+                                        <goal>start</goal>
+                                    </goals>
+                                </execution>
+                                <execution>
+                                    <id>stop</id>
+                                    <phase>post-integration-test</phase>
+                                    <goals>
+                                        <goal>stop</goal>
+                                    </goals>
+                                </execution>
+                            </executions>
+                        </plugin>
+                    </plugins>
+                </build>
+            </profile>
     </profiles>
 
 </project>

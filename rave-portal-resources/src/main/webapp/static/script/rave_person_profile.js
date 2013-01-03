@@ -130,33 +130,33 @@ rave.personprofile = rave.personprofile || (function() {
                      )
                      .append(
                          $("<td/>")
-                         .attr("id", "friendStatusButtonHolder" + this.entityId)
+                         .attr("id", "friendStatusButtonHolder" + this.id)
                      )
                  );
 
                  if(this.username != currentUser){
                      // check if already added
                      if(rave.personprofile.isUserAlreadyFriend(this.username)){
-                         $('#friendStatusButtonHolder'+this.entityId)
+                         $('#friendStatusButtonHolder'+this.id)
                          .append(
                              $("<a/>")
                              .attr("href", "#")
                              .attr("id", this.entityId)
-                             .attr("onclick", "rave.personprofile.removeFriend("+this.entityId+", '"+this.username+"');")
+                             .attr("onclick", "rave.personprofile.removeFriend("+this.id+", '"+this.username+"');")
                              .text(rave.getClientMessage("common.remove"))
                          );
                      // check if already sent friend request
                      }else if(rave.personprofile.isFriendRequestSent(this.username)){
-                         $('#friendStatusButtonHolder'+this.entityId)
+                         $('#friendStatusButtonHolder'+this.id)
                          .append(
                              $("<a/>")
                              .attr("href", "#")
                              .attr("id", this.entityId)
-                             .attr("onclick", "rave.personprofile.removeFriendRequestSent("+this.entityId+", '"+this.username+"');")
+                             .attr("onclick", "rave.personprofile.removeFriendRequestSent("+this.id+", '"+this.username+"');")
                              .text(rave.getClientMessage("common.cancel.request"))
                          );
                      }else if(rave.personprofile.isFriendRequestReceived(this.username)){
-                         $('#friendStatusButtonHolder'+this.entityId)
+                         $('#friendStatusButtonHolder'+this.id)
                          .append(
                              $("<a/>")
                              .attr("href", "#")
@@ -166,17 +166,17 @@ rave.personprofile = rave.personprofile || (function() {
                              ' / ',
                              $("<a/>")
                              .attr("href", "#")
-                             .attr("id", this.entityId)
-                             .attr("onclick", "rave.personprofile.declineFriendRequest("+this.entityId+", '"+this.username+"');")
+                             .attr("id", this.id)
+                             .attr("onclick", "rave.personprofile.declineFriendRequest("+this.id+", '"+this.username+"');")
                              .text(rave.getClientMessage("common.decline"))
                          );
                      }else {
-                         $('#friendStatusButtonHolder'+this.entityId)
+                         $('#friendStatusButtonHolder'+this.id)
                          .append(
                              $("<a/>")
                              .attr("href", "#")
-                             .attr("id", this.entityId)
-                             .attr("onclick", "rave.personprofile.addFriend("+this.entityId+", '"+this.username+"');")
+                             .attr("id", this.id)
+                             .attr("onclick", "rave.personprofile.addFriend("+this.id+", '"+this.username+"');")
                              .text(rave.getClientMessage("common.add"))
                          );
                      }
