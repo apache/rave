@@ -24,6 +24,8 @@ import org.apache.rave.portal.model.WidgetRatingsMapReduceResult;
 import org.apache.rave.portal.model.WidgetUsersMapReduceResult;
 import org.apache.rave.portal.model.util.WidgetStatistics;
 import org.apache.rave.portal.repository.StatisticsAggregator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.mapreduce.MapReduceOptions;
@@ -44,6 +46,9 @@ import static org.apache.rave.portal.repository.util.CollectionNames.*;
  */
 @Component
 public class MongoDbMapReduceStatisticsAggregator implements StatisticsAggregator {
+
+    private static final Logger log = LoggerFactory.getLogger(MongoDbMapReduceStatisticsAggregator.class);
+
     public static final String RATINGS_MAP = "classpath:/org/apache/rave/WidgetRatingsMap.js";
     public static final String RATINGS_REDUCE = "classpath:/org/apache/rave/WidgetRatingsReduce.js";
     public static final String USERS_MAP = "classpath:/org/apache/rave/WidgetUsersMap.js";
@@ -102,14 +107,19 @@ public class MongoDbMapReduceStatisticsAggregator implements StatisticsAggregato
         Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {
-                buildStats();
+                try {
+                    log.debug("Executing Map/Reduce Statistics Aggregation");
+                    buildStats();
+                } catch (Exception e) {
+                    log.error("Error executing Map/Reduce Statistics Aggregation!", e);
+                }
             }
         }, 0, DEFAULT_RESULT_VALIDITY, TimeUnit.SECONDS);
     }
 
     public void buildStats() {
         RunStatistics runStats = mongoOperations.findById(ID, RunStatistics.class, OPERATIONS);
-        if(runStats == null || (System.currentTimeMillis() - (runStats.getRefreshedTimeStamp()*1000) > DEFAULT_RESULT_VALIDITY)) {
+        if(runStats == null || (System.currentTimeMillis() - runStats.getRefreshedTimeStamp()) > (DEFAULT_RESULT_VALIDITY * 1000)) {
             queryForUserStats();
         }
     }

@@ -165,7 +165,7 @@
             </div>
         </div>
         <div class="span3">
-            <portal:person id="${page.ownerId}" var="${owner}" />
+            <portal:person id="${page.ownerId}" var="owner" />
         	<button type="button" id="addRemoveFriend" value="${owner.username}" class="btn btn-primary profile-info-visible"><fmt:message key="page.personProfile.addremove.friends"/></button>
         </div>
         <div class="span3">

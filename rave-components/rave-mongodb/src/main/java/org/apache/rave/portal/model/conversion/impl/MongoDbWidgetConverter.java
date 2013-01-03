@@ -22,6 +22,7 @@ package org.apache.rave.portal.model.conversion.impl;
 import com.google.common.collect.Lists;
 import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.model.conversion.HydratingModelConverter;
+import org.apache.rave.portal.model.impl.WidgetCommentImpl;
 import org.apache.rave.portal.model.impl.WidgetRatingImpl;
 import org.apache.rave.portal.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,8 +63,11 @@ public class MongoDbWidgetConverter implements HydratingModelConverter<Widget, M
             convertCategories(source, widget);
         }
 
-        List<WidgetComment> comments = source.getComments() == null ? Lists.<WidgetComment>newArrayList() : source.getComments();
-        widget.setComments(comments);
+        if (source.getComments() == null) {
+            widget.setComments(Lists.<WidgetComment>newArrayList());
+        } else {
+            convertComments(source, widget);
+        }
 
         List<WidgetTag> tags = source.getTags() == null ? Lists.<WidgetTag>newArrayList() : source.getTags();
         widget.setTags(tags);
@@ -84,6 +88,27 @@ public class MongoDbWidgetConverter implements HydratingModelConverter<Widget, M
             converted.add(new WidgetRatingImpl(id, rating.getUserId(), rating.getScore()));
         }
         widget.setRatings(converted);
+    }
+
+
+    private void convertComments(Widget source, MongoDbWidget widget) {
+        List<WidgetComment> convertedComments = Lists.newArrayList();
+        for (WidgetComment comment : source.getComments()) {
+            convertedComments.add(convert(comment, widget));
+        }
+        widget.setComments(convertedComments);
+    }
+
+
+    private WidgetCommentImpl convert(WidgetComment comment, Widget widget) {
+        WidgetCommentImpl converted = comment instanceof WidgetCommentImpl ? ((WidgetCommentImpl) comment) : new WidgetCommentImpl();
+        converted.setUserId(comment.getUserId());
+        converted.setId(comment.getId() == null ? generateId() : comment.getId());
+
+        converted.setCreatedDate(comment.getCreatedDate());
+        converted.setLastModifiedDate(comment.getLastModifiedDate());
+        converted.setText(comment.getText());
+        return converted;
     }
 
     private void convertCategories(Widget source, MongoDbWidget converted) {

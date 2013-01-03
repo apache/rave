@@ -348,8 +348,12 @@ public class MongoDbWidgetRepository implements WidgetRepository {
     }
 
     private WidgetTag getTagByKeyword(String keyword, Widget widget) {
-        Tag tag = tagTemplate.findOne(query(where("keyword").is(keyword)));
+        Tag tag = getTag(keyword);
         return tag == null ? null : getWidgetTagByTagId(widget, tag.getId());
+    }
+
+    private Tag getTag(String keyword) {
+        return tagTemplate.findOne(query(where("keyword").is(keyword)));
     }
 
     private WidgetTag getWidgetTagByTagId(Widget widget, String tagId) {
@@ -377,14 +381,15 @@ public class MongoDbWidgetRepository implements WidgetRepository {
     public WidgetComment createWidgetComment(String widgetId, WidgetComment comment) {
         Widget widget = template.get(widgetId);
         widget.getComments().add(comment);
-        save(widget);
-        return comment;
+        widget = save(widget);
+        return findCommentByProperties(widget, comment);
     }
 
     @Override
     public WidgetComment updateWidgetComment(String widgetId, WidgetComment comment) {
         Widget widget = template.get(widgetId);
-        return updateComment(widget, comment);
+        updateComment(widget, comment);
+        return getCommentById(save(widget), comment.getId());
     }
 
     @Override
@@ -480,7 +485,8 @@ public class MongoDbWidgetRepository implements WidgetRepository {
     }
 
     private Query getTagQuery(String tagKeyWord) {
-        return query(where("tags").elemMatch(where("tag.keyword").is(tagKeyWord)));
+        Tag tag = getTag(tagKeyWord);
+        return query(where("tags").elemMatch(where("tagId").is(tag.getId())));
     }
 
     private String getWidgetStatusString(WidgetStatus widgetStatus) {
@@ -490,6 +496,17 @@ public class MongoDbWidgetRepository implements WidgetRepository {
     private Query addSort(Query query) {
         query.sort().on("featured", Order.DESCENDING).on("title", Order.ASCENDING);
         return query;
+    }
+
+    private WidgetComment findCommentByProperties(Widget widget, WidgetComment comment) {
+        for(WidgetComment c : widget.getComments()) {
+            if(c.getUserId().equals(comment.getUserId()) &&
+                    c.getText().equals(comment.getText()) &&
+                    c.getCreatedDate().equals(comment.getCreatedDate())) {
+                return c;
+            }
+        }
+        return null;
     }
 
     public void setTemplate(MongoWidgetOperations template) {
