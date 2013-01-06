@@ -20,8 +20,21 @@
 package org.apache.rave.portal.model.conversion.impl;
 
 import com.google.common.collect.Lists;
-import org.apache.rave.portal.model.*;
-import org.apache.rave.portal.model.impl.*;
+import org.apache.rave.portal.model.MongoDbPage;
+import org.apache.rave.portal.model.Page;
+import org.apache.rave.portal.model.PageInvitationStatus;
+import org.apache.rave.portal.model.PageLayout;
+import org.apache.rave.portal.model.PageType;
+import org.apache.rave.portal.model.PageUser;
+import org.apache.rave.portal.model.Region;
+import org.apache.rave.portal.model.RegionWidget;
+import org.apache.rave.portal.model.RegionWidgetPreference;
+import org.apache.rave.portal.model.impl.PageImpl;
+import org.apache.rave.portal.model.impl.PageLayoutImpl;
+import org.apache.rave.portal.model.impl.PageUserImpl;
+import org.apache.rave.portal.model.impl.RegionImpl;
+import org.apache.rave.portal.model.impl.RegionWidgetImpl;
+import org.apache.rave.portal.model.impl.RegionWidgetPreferenceImpl;
 import org.apache.rave.portal.repository.PageLayoutRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,9 +43,18 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.easymock.EasyMock.*;
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
+import static org.easymock.EasyMock.createNiceMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.CoreMatchers.sameInstance;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Test class for MongoDb Page Converter
@@ -267,6 +289,7 @@ public class MongoDbPageConverterTest {
 
         PageLayout pageLayout = new PageLayoutImpl();
         pageLayout.setCode("asdf");
+        page.setPageLayoutCode(pageLayout.getCode());
 
         expect(pageLayoutRepository.getByPageLayoutCode(page.getPageLayoutCode())).andReturn(pageLayout);
         replay(pageLayoutRepository);
