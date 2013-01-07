@@ -1,5 +1,31 @@
 Apache Rave Change Log
 https://issues.apache.org/jira/secure/ReleaseNote.jspa?projectId=12311290 (select the version of release and output as text to create this file)
+
+===========================================================================================================
+Release Notes - Rave - Version 0.19
+===========================================================================================================
+
+** Sub-task
+    * [RAVE-532] - Bootstrap-enable widget controls
+    * [RAVE-533] - Re-implement page background
+    * [RAVE-858] - Style tags on widget store's main page
+
+** Bug
+    * [RAVE-848] - profile controller not reporting exceptions
+    * [RAVE-866] - Duplicate jars in rave-shindig
+
+** Dependency upgrade
+    * [RAVE-862] - Check and update 3rd party dependencies
+    * [RAVE-861] - Upgrade to Shindig 2.5-beta5
+
+** Improvement
+    * [RAVE-822] - Widget added message barely noticeable
+    * [RAVE-864] - Create archetype as starting point for custom projects
+
+** Story
+    * [RAVE-818] - MongoDB Support
+    * [RAVE-851] - Opening an embedded experience in Rave does not work
+
 ===========================================================================================================
 Release Notes - Rave - Version 0.18
 ===========================================================================================================
