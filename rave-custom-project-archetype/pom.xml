@@ -17,14 +17,13 @@
   specific language governing permissions and limitations
   under the License.
   -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
         <groupId>org.apache.rave</groupId>
         <artifactId>rave-project</artifactId>
-        <version>0.19-SNAPSHOT</version>
+        <version>0.19</version>
     </parent>
 
     <artifactId>rave-custom-project-archetype</artifactId>
@@ -104,57 +103,52 @@
                         <phase>install</phase>
                         <configuration>
                             <target>
-                                <echo message="$$$$$$$$$$ Deleting the existing custom Rave project if it exists. $$$$$$$$$$"/>
-                                <delete dir="${project.build.directory}/${customproject.app.artifactId}"/>
+                                <echo message="$$$$$$$$$$ Deleting the existing custom Rave project if it exists. $$$$$$$$$$" />
+                                <delete dir="${project.build.directory}/${customproject.app.artifactId}" />
 
-                                <echo message="$$$$$$$$$$ Generating a custom Rave project from the archetype $$$$$$$$$$"/>
-                                <java classname="org.codehaus.classworlds.Launcher" dir="${project.build.directory}"
-                                      fork="true" failonerror="true">
+                                <echo message="$$$$$$$$$$ Generating a custom Rave project from the archetype $$$$$$$$$$" />
+                                <java classname="org.codehaus.classworlds.Launcher" dir="${project.build.directory}" fork="true" failonerror="true">
                                     <permissions>
-                                        <grant class="java.security.AllPermission"/>
-                                        <grant class="java.io.FilePermission" name="${maven.home}/bin/m2.conf"
-                                               actions="read"/>
-                                        <grant class="java.util.PropertyPermission" name="*" actions="read,write"/>
+                                        <grant class="java.security.AllPermission" />
+                                        <grant class="java.io.FilePermission" name="${maven.home}/bin/m2.conf" actions="read" />
+                                        <grant class="java.util.PropertyPermission" name="*" actions="read,write" />
                                     </permissions>
-                                    <sysproperty key="classworlds.conf" value="${maven.home}/bin/m2.conf"/>
-                                    <sysproperty key="maven.home" value="${maven.home}"/>
+                                    <sysproperty key="classworlds.conf" value="${maven.home}/bin/m2.conf" />
+                                    <sysproperty key="maven.home" value="${maven.home}" />
                                     <classpath>
                                         <fileset dir="${maven.home}/boot">
-                                            <include name="**/*.jar"/>
+                                            <include name="**/*.jar" />
                                         </fileset>
                                     </classpath>
-                                    <arg value="-B"/>
-                                    <arg value="org.apache.maven.plugins:maven-archetype-plugin:2.2:generate"/>
-                                    <arg value="-DarchetypeCatalog=local"/>
-                                    <arg value="-DarchetypeGroupId=org.apache.rave"/>
-                                    <arg value="-DarchetypeArtifactId=rave-custom-project-archetype"/>
-                                    <arg value="-DarchetypeVersion=${project.version}"/>
-                                    <arg value="-DgroupId=${customproject.app.groupId}"/>
-                                    <arg value="-DartifactId=${customproject.app.artifactId}"/>
-                                    <arg value="-Dversion=${customproject.app.version}"/>
-                                    <arg value="-DprojectName=${customproject.app.name}"/>
-                                    <arg value="-Dmaven.repo.local=${settings.localRepository}"/>
+                                    <arg value="-B" />
+                                    <arg value="org.apache.maven.plugins:maven-archetype-plugin:2.2:generate" />
+                                    <arg value="-DarchetypeCatalog=local" />
+                                    <arg value="-DarchetypeGroupId=org.apache.rave" />
+                                    <arg value="-DarchetypeArtifactId=rave-custom-project-archetype" />
+                                    <arg value="-DarchetypeVersion=${project.version}" />
+                                    <arg value="-DgroupId=${customproject.app.groupId}" />
+                                    <arg value="-DartifactId=${customproject.app.artifactId}" />
+                                    <arg value="-Dversion=${customproject.app.version}" />
+                                    <arg value="-DprojectName=${customproject.app.name}" />
+                                    <arg value="-Dmaven.repo.local=${settings.localRepository}" />
                                 </java>
 
-                                <echo message="$$$$$$$$$$ Installing custom Rave project $$$$$$$$$$"/>
-                                <java classname="org.codehaus.classworlds.Launcher"
-                                      dir="${project.build.directory}/${customproject.app.artifactId}" fork="true"
-                                      failonerror="true">
+                                <echo message="$$$$$$$$$$ Installing custom Rave project $$$$$$$$$$" />
+                                <java classname="org.codehaus.classworlds.Launcher" dir="${project.build.directory}/${customproject.app.artifactId}" fork="true" failonerror="true">
                                     <permissions>
-                                        <grant class="java.security.AllPermission"/>
-                                        <grant class="java.io.FilePermission" name="${maven.home}/bin/m2.conf"
-                                               actions="read"/>
-                                        <grant class="java.util.PropertyPermission" name="*" actions="read,write"/>
+                                        <grant class="java.security.AllPermission" />
+                                        <grant class="java.io.FilePermission" name="${maven.home}/bin/m2.conf" actions="read" />
+                                        <grant class="java.util.PropertyPermission" name="*" actions="read,write" />
                                     </permissions>
-                                    <sysproperty key="classworlds.conf" value="${maven.home}/bin/m2.conf"/>
-                                    <sysproperty key="maven.home" value="${maven.home}"/>
+                                    <sysproperty key="classworlds.conf" value="${maven.home}/bin/m2.conf" />
+                                    <sysproperty key="maven.home" value="${maven.home}" />
                                     <classpath>
                                         <fileset dir="${maven.home}/boot">
-                                            <include name="**/*.jar"/>
+                                            <include name="**/*.jar" />
                                         </fileset>
                                     </classpath>
-                                    <arg value="package"/>
-                                    <arg value="-Dmaven.repo.local=${settings.localRepository}"/>
+                                    <arg value="package" />
+                                    <arg value="-Dmaven.repo.local=${settings.localRepository}" />
                                 </java>
                             </target>
                         </configuration>
