@@ -105,6 +105,10 @@
                     <excludes>
                       <exclude>WEB-INF/lib/commons-logging-*.jar</exclude>
                       <exclude>WEB-INF/lib/slf4j-*.jar</exclude>
+                      <exclude>WEB-INF/lib/commons-codec-*.jar</exclude>
+                      <exclude>WEB-INF/lib/httpclient-*.jar</exclude>
+                      <exclude>WEB-INF/lib/httpcore-*.jar</exclude>
+                      <exclude>WEB-INF/lib/icu4j-*.jar</exclude>
                     </excludes>
                   </overlay>
                 </overlays>
@@ -140,6 +144,12 @@
                 <dependency>
                     <groupId>org.apache.rave</groupId>
                     <artifactId>rave-jpa</artifactId>
+                    <exclusions>
+                        <exclusion>
+                            <groupId>org.json</groupId>
+                            <artifactId>json</artifactId>
+                        </exclusion>
+                    </exclusions>
                 </dependency>
             </dependencies>
         </profile>
@@ -149,6 +159,12 @@
                 <dependency>
                     <groupId>org.apache.rave</groupId>
                     <artifactId>rave-mongodb</artifactId>
+                    <exclusions>
+                        <exclusion>
+                            <groupId>org.json</groupId>
+                            <artifactId>json</artifactId>
+                        </exclusion>
+                    </exclusions>
                 </dependency>
             </dependencies>
         </profile>
