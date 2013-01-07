@@ -57,7 +57,6 @@ public class MongoDbWidgetConverter implements HydratingModelConverter<Widget, M
     public MongoDbWidget convert(Widget source) {
         MongoDbWidget widget = new MongoDbWidget();
         updateProperties(source, widget);
-        widget.setOwnerId(source.getOwnerId());
 
         if (source.getCategories() != null) {
             convertCategories(source, widget);
@@ -134,9 +133,10 @@ public class MongoDbWidgetConverter implements HydratingModelConverter<Widget, M
         converted.setAuthorEmail(source.getAuthorEmail());
         converted.setDescription(source.getDescription());
         converted.setWidgetStatus(source.getWidgetStatus());
-        converted.setComments(source.getComments());
         converted.setDisableRendering(source.isDisableRendering());
+        converted.setDisableRenderingMessage(source.getDisableRenderingMessage());
         converted.setFeatured(source.isFeatured());
+        converted.setOwnerId(source.getOwnerId());
     }
 
     public void setCategoryRepository(CategoryRepository categoryRepository) {
