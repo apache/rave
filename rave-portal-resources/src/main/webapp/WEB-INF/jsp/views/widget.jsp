@@ -138,7 +138,7 @@
                     <c:set var="widgetUserCountGreaterThanZero"
                            value="${widgetStatistics != null && widgetStatistics.totalUserCount > 0}"/>
                     <c:if test="${widgetUserCountGreaterThanZero}"><a href="javascript:void(0);"
-                                                                      onclick="rave.displayUsersOfWidget(${widget.id});"></c:if>
+                                                                      onclick="rave.displayUsersOfWidget('${widget.id}');"></c:if>
                     <fmt:formatNumber groupingUsed="true" value="${widgetStatistics.totalUserCount}"/>&nbsp;<fmt:message
                             key="page.widget.usercount"/>
                     <c:if test="${widgetUserCountGreaterThanZero}"></a></c:if>
