@@ -411,6 +411,11 @@ var rave = rave || (function () {
             var widget = rave.getRegionWidgetById(regionWidgetId);
             if (typeof widget != "undefined" && isFunction(widget.maximize)) {
                 widget.maximize(view_params, args.data.view);
+                // due to widget list changing height of the window, we have to set the height of the sneeze-guard here.
+                var overlayStyleMap = {
+                    height:$('.wrapper').height() - $('.navbar').height() - $('.logo-wrapper').height()
+                };
+                $('.canvas-overlay').css(overlayStyleMap);
             }
         }
 
