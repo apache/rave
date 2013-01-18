@@ -82,7 +82,7 @@ public class JpaAuthorityRepository implements AuthorityRepository {
 
     @Override
     public Authority get(String id) {
-        return manager.find(JpaAuthority.class, id);
+        return manager.find(JpaAuthority.class, Long.parseLong(id));
     }
 
     @Override

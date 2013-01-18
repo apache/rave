@@ -52,7 +52,7 @@ public class JpaOAuthTokenInfoRepository implements OAuthTokenInfoRepository {
 
     @Override
     public OAuthTokenInfo get(String id) {
-        return manager.find(JpaOAuthTokenInfo.class, id);
+        return manager.find(JpaOAuthTokenInfo.class, Long.parseLong(id));
     }
 
     @Override

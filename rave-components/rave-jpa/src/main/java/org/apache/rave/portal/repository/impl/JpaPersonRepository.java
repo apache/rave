@@ -155,7 +155,7 @@ public class JpaPersonRepository implements PersonRepository {
 
     @Override
     public Person get(String id) {
-        return manager.find(JpaPerson.class, id);
+        return manager.find(JpaPerson.class, Long.parseLong(id));
     }
 
     @Override

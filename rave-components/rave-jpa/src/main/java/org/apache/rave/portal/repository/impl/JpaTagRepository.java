@@ -79,7 +79,7 @@ public class JpaTagRepository implements TagRepository {
 
     @Override
     public Tag get(String id) {
-        return manager.find(JpaTag.class, id);
+        return manager.find(JpaTag.class, Long.parseLong(id));
     }
 
     @Override

@@ -52,7 +52,7 @@ public class JpaCategoryRepository implements CategoryRepository {
 
     @Override
     public Category get(String id) {
-        return manager.find(JpaCategory.class, id);
+        return manager.find(JpaCategory.class, Long.parseLong(id));
     }
 
     @Override

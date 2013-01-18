@@ -25,7 +25,6 @@ import org.apache.rave.portal.model.Region;
 import org.apache.rave.portal.model.RegionWidget;
 import org.apache.rave.portal.model.impl.RegionImpl;
 import org.apache.rave.portal.repository.RegionRepository;
-import org.hamcrest.CoreMatchers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +38,8 @@ import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
 
 import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 @Transactional
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -143,7 +143,7 @@ public class JpaRegionRepositoryTest {
 
         Region saved = repository.save(region);
         manager.flush();
-        RegionWidget widget = manager.find(JpaRegionWidget.class, id);
+        RegionWidget widget = manager.find(JpaRegionWidget.class, Long.parseLong(id));
 
         assertThat(saved.getRegionWidgets().size(), is(equalTo(1)));
         assertThat(widget, is(nullValue()));

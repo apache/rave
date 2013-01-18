@@ -51,7 +51,7 @@ public class JpaPageRepository implements PageRepository {
 
     @Override
     public Page get(String id) {
-        return manager.find(JpaPage.class, id);
+        return manager.find(JpaPage.class, Long.parseLong(id));
     }
 
     @Override

@@ -307,7 +307,7 @@ public class JpaWidgetRepository implements WidgetRepository {
 
     @Override
     public Widget get(String id) {
-        return manager.find(JpaWidget.class, id);
+        return manager.find(JpaWidget.class, Long.parseLong(id));
     }
 
     @Override
@@ -398,7 +398,7 @@ public class JpaWidgetRepository implements WidgetRepository {
 
     @Override
     public WidgetTag getTagById(String widgetTagId) {
-        return manager.find(JpaWidgetTag.class, widgetTagId);
+        return manager.find(JpaWidgetTag.class, Long.parseLong(widgetTagId));
     }
 
     @Override
@@ -410,7 +410,7 @@ public class JpaWidgetRepository implements WidgetRepository {
 
     @Override
     public void deleteWidgetTag(WidgetTag tag) {
-        manager.remove(tag instanceof JpaWidgetTag ? tag: manager.find(Tag.class, tag.getTagId()));
+        manager.remove(tag instanceof JpaWidgetTag ? tag: manager.find(Tag.class, Long.parseLong(tag.getTagId())));
     }
 
     // ***************************************************************************************************************
@@ -456,7 +456,7 @@ public class JpaWidgetRepository implements WidgetRepository {
 
     @Override
     public WidgetRating getRatingById(String widgetId, String widgetRatingId) {
-        return manager.find(JpaWidgetRating.class, widgetRatingId);
+        return manager.find(JpaWidgetRating.class, Long.parseLong(widgetRatingId));
     }
 
     @Override

@@ -71,7 +71,7 @@ public class JpaPageLayoutRepository implements PageLayoutRepository{
 
     @Override
     public PageLayout get(String id) {
-        return manager.find(JpaPageLayout.class, id);
+        return manager.find(JpaPageLayout.class, Long.parseLong(id));
     }
 
     @Override
