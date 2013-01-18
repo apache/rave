@@ -44,7 +44,9 @@ public class JpaPageTemplateWidgetConverter implements ModelConverter<PageTempla
     private JpaPageTemplateWidget createEntity(PageTemplateWidget source) {
         JpaPageTemplateWidget converted = null;
         if (source != null) {
-            converted = source.getId() == null ? new JpaPageTemplateWidget() : manager.find(JpaPageTemplateWidget.class, Long.parseLong(source.getId()));
+            converted = source.getId() == null ? new JpaPageTemplateWidget() : manager.find(JpaPageTemplateWidget.class, Long.parseLong(source.getId()));   if(converted == null) {
+                converted = new JpaPageTemplateWidget();
+            }
             updateProperties(source, converted);
         }
         return converted;

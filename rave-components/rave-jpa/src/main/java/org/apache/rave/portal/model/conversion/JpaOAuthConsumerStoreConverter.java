@@ -49,6 +49,9 @@ public class JpaOAuthConsumerStoreConverter implements ModelConverter<OAuthConsu
         JpaOAuthConsumerStore converted = null;
         if (source != null) {
             converted = source.getId() == null ? new JpaOAuthConsumerStore() : manager.find(JpaOAuthConsumerStore.class, Long.parseLong(source.getId()));
+            if(converted == null) {
+                converted = new JpaOAuthConsumerStore();
+            }
             updateProperties(source, converted);
         }
         return converted;

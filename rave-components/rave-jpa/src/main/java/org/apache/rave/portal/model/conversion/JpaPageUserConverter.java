@@ -48,7 +48,9 @@ public class JpaPageUserConverter implements ModelConverter<PageUser, JpaPageUse
     private JpaPageUser createEntity(PageUser source) {
         JpaPageUser converted = null;
         if (source != null) {
-            converted = source.getId() == null ? new JpaPageUser() : manager.find(JpaPageUser.class, Long.parseLong(source.getId()));
+            converted = source.getId() == null ? new JpaPageUser() : manager.find(JpaPageUser.class, Long.parseLong(source.getId()));  if(converted == null) {
+                converted = new JpaPageUser();
+            }
             updateProperties(source, converted);
         }
         return converted;

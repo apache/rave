@@ -49,6 +49,9 @@ public class JpaCategoryConverter implements ModelConverter<Category, JpaCategor
         JpaCategory converted = null;
         if (source != null) {
             converted = source.getId() == null ? new JpaCategory() : manager.find(JpaCategory.class, Long.parseLong(source.getId()));
+            if(converted == null) {
+                converted = new JpaCategory();
+            }
             updateProperties(source, converted);
         }
         return converted;

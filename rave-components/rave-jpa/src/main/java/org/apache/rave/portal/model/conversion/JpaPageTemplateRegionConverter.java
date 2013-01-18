@@ -45,7 +45,9 @@ public class JpaPageTemplateRegionConverter implements ModelConverter<PageTempla
         JpaPageTemplateRegion converted = null;
 
         if (source != null) {
-            converted = source.getId() == null ? new JpaPageTemplateRegion() : manager.find(JpaPageTemplateRegion.class, Long.parseLong(source.getId()));
+            converted = source.getId() == null ? new JpaPageTemplateRegion() : manager.find(JpaPageTemplateRegion.class, Long.parseLong(source.getId()));    if(converted == null) {
+                converted = new JpaPageTemplateRegion();
+            }
             updateProperties(source, converted);
         }
         return converted;

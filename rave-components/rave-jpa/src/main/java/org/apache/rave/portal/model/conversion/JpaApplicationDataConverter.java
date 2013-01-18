@@ -49,6 +49,9 @@ public class JpaApplicationDataConverter implements ModelConverter<ApplicationDa
         JpaApplicationData converted = null;
         if (source != null) {
             converted = source.getId() == null ? new JpaApplicationData() : manager.find(JpaApplicationData.class, Long.parseLong(source.getId()));
+            if(converted == null) {
+                converted = new JpaApplicationData();
+            }
             updateProperties(source, converted);
         }
         return converted;
