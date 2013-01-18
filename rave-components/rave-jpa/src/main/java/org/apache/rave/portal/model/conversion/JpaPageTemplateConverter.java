@@ -44,7 +44,7 @@ public class JpaPageTemplateConverter implements ModelConverter<PageTemplate, Jp
     private JpaPageTemplate createEntity(PageTemplate source) {
         JpaPageTemplate converted = null;
         if(source != null) {
-            converted = manager.find(JpaPageTemplate.class, source.getId() == null ? null : Long.parseLong(source.getId()));
+            converted = source.getId() == null ? new JpaPageTemplate() : manager.find(JpaPageTemplate.class, Long.parseLong(source.getId()));
 
             if(converted == null) {
                 converted = new JpaPageTemplate();
