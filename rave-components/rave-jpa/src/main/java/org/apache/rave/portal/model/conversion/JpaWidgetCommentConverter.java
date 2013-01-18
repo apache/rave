@@ -18,7 +18,6 @@
  */
 package org.apache.rave.portal.model.conversion;
 
-import org.apache.rave.model.ModelConverter;
 import org.apache.rave.portal.model.JpaWidgetComment;
 import org.apache.rave.portal.model.WidgetComment;
 import org.springframework.stereotype.Component;
@@ -46,7 +45,7 @@ public class JpaWidgetCommentConverter {
     private JpaWidgetComment createEntity(WidgetComment source, String widgetId) {
         JpaWidgetComment converted = null;
         if (source != null) {
-            converted = manager.find(JpaWidgetComment.class, source.getId() == null ? null : Long.parseLong(source.getId()));
+            converted = source.getId() == null ? new JpaWidgetComment() : manager.find(JpaWidgetComment.class, Long.parseLong(source.getId()));
 
             if (converted == null) {
                 converted = new JpaWidgetComment();
