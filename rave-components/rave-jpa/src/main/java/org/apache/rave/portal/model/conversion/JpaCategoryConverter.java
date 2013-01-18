@@ -48,10 +48,7 @@ public class JpaCategoryConverter implements ModelConverter<Category, JpaCategor
     private JpaCategory createEntity(Category source) {
         JpaCategory converted = null;
         if (source != null) {
-            converted = manager.find(JpaCategory.class, source.getId() == null ? null : Long.parseLong(source.getId()));
-            if (converted == null) {
-                converted = new JpaCategory();
-            }
+            converted = source.getId() == null ? new JpaCategory() : manager.find(JpaCategory.class, Long.parseLong(source.getId()));
             updateProperties(source, converted);
         }
         return converted;
