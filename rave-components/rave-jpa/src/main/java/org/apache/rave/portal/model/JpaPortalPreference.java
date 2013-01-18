@@ -37,6 +37,8 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
+import javax.persistence.JoinColumn;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -74,6 +76,7 @@ public class JpaPortalPreference implements BasicEntity, Serializable, PortalPre
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "portal_preference_values")
+    @Column(name="element")
     private List<String> values = new LinkedList<String>();
 
     public JpaPortalPreference() {

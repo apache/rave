@@ -49,10 +49,7 @@ public class JpaPageConverter implements ModelConverter<Page, JpaPage> {
     private JpaPage createEntity(Page source) {
         JpaPage converted = null;
         if (source != null) {
-            converted = manager.find(JpaPage.class, source.getId() == null ? null : Long.parseLong(source.getId()));
-            if (converted == null) {
-                converted = new JpaPage();
-            }
+            converted = source.getId() == null ? new JpaPage() : manager.find(JpaPage.class, source.getId());
             updateProperties(source, converted);
         }
         return converted;

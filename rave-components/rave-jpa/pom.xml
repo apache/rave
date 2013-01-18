@@ -157,7 +157,7 @@
 
     <build>
         <defaultGoal>install</defaultGoal>
-        <plugins>
+  	<plugins>
             <plugin>
                 <groupId>org.apache.openjpa</groupId>
                 <artifactId>openjpa-maven-plugin</artifactId>
