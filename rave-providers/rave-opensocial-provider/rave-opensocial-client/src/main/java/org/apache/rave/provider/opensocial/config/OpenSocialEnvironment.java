@@ -42,13 +42,13 @@ import javax.annotation.PostConstruct;
 public class OpenSocialEnvironment implements PortalPreferenceJavascriptDebugModeEventListener{
 
     private static final Log log = LogFactory.getLog(OpenSocialEnvironment.class);
-    
+
     private static final String CONTAINER_JS_KEY = "containerJs";
     private static final String SCRIPT_RENDER_DEBUG_ON = "1";
-    private final static String SCRIPT_TEMPLATE = "<script src=\"%1$s://%2$s%3$s/js/container:pubsub-2:open-views.js?c=1&amp;container=default&amp;debug=%4$s\"></script>";
+    private final static String SCRIPT_TEMPLATE = "<script src=\"%1$s://%2$s%3$s/js/%4$s.js?c=1&amp;container=default&amp;debug=%5$s\"></script>";
 
     private String currentDebugMode;
-    
+
     private ScriptManager scriptManager;
 
     /**
@@ -63,13 +63,17 @@ public class OpenSocialEnvironment implements PortalPreferenceJavascriptDebugMod
      * Path after the root for gadgets (gadgets)
      */
     private String engineGadgetPath;
+    /**
+     * The features to request from epensocial engine
+     */
+    private String containerFeatures;
 
     @Autowired
     RaveEventManager eventManager;
 
     @Autowired
     PortalPreferenceService portalPreferenceService;
-    
+
     @PostConstruct
     public void init() {
         eventManager.addListener(PortalPreferenceJavascriptDebugModeSaveEvent.class, this);
@@ -118,6 +122,15 @@ public class OpenSocialEnvironment implements PortalPreferenceJavascriptDebugMod
         return engineGadgetPath;
     }
 
+    @Value("${portal.opensocial_engine.container_features}")
+    public void setContainerFeatures(String containerFeatures) {
+        this.containerFeatures = containerFeatures;
+    }
+
+    public String getContainerFeatures() {
+        return containerFeatures;
+    }
+
     public String getCurrentDebugMode() {
         return currentDebugMode;
     }
@@ -133,11 +146,11 @@ public class OpenSocialEnvironment implements PortalPreferenceJavascriptDebugMod
             log.debug("found event to change debug mode of JS new value =" + this.getCurrentDebugMode());
             registerScriptBlock();
         } else {
-            log.warn("Unhandled event received. " + event.getClass()); 
+            log.warn("Unhandled event received. " + event.getClass());
         }
     }
 
     private void registerScriptBlock(){
-        scriptManager.registerScriptBlock(CONTAINER_JS_KEY, String.format(SCRIPT_TEMPLATE, engineProtocol, engineRoot, engineGadgetPath, this.getCurrentDebugMode()), ScriptLocation.BEFORE_RAVE);
+        scriptManager.registerScriptBlock(CONTAINER_JS_KEY, String.format(SCRIPT_TEMPLATE, engineProtocol, engineRoot, engineGadgetPath, containerFeatures, this.getCurrentDebugMode()), ScriptLocation.BEFORE_RAVE);
     }
 }
