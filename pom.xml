@@ -175,6 +175,18 @@
             </dependency>
             <dependency>
                 <groupId>org.apache.shindig</groupId>
+                <artifactId>shindig-server-resources</artifactId>
+                <version>${apache.shindig.version}</version>
+                <type>war</type>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.shindig</groupId>
+                <artifactId>shindig-server-dependencies</artifactId>
+                <version>${apache.shindig.version}</version>
+                <type>pom</type>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.shindig</groupId>
                 <artifactId>shindig-social-api</artifactId>
                 <version>${apache.shindig.version}</version>
             </dependency>
