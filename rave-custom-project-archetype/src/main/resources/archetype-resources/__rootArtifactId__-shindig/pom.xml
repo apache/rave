@@ -33,7 +33,13 @@
   <dependencies>
     <dependency>
       <groupId>org.apache.rave</groupId>
-      <artifactId>rave-shindig</artifactId>
+      <artifactId>rave-shindig-dependencies</artifactId>
+      <type>pom</type>
+      <version>${apache.rave.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.rave</groupId>
+      <artifactId>rave-shindig-resources</artifactId>
       <type>war</type>
       <version>${apache.rave.version}</version>
     </dependency>
@@ -61,7 +67,7 @@
           <overlays>
             <overlay>
               <groupId>org.apache.rave</groupId>
-              <artifactId>rave-shindig</artifactId>
+              <artifactId>rave-shindig-resources</artifactId>
               <!-- Example exclusions for files we overrides
                    This isn't technically required (as we overlay) but made explicit this way
               -->
