@@ -35,6 +35,8 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>rave-shindig-dependencies</module>
+        <module>rave-shindig-resources</module>
         <module>rave-shindig</module>
     </modules>
 
