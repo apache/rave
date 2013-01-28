@@ -163,6 +163,7 @@ public class DataSourcePopulator implements Serializable {
             result = executeScriptQuery == null || !executeQuery(conn, executeScriptQuery).first();
         } catch (SQLException e) {
             //Only return true if the execption we got is that the table was not found
+        	logger.warn("SQL Exception while running the query used to determine if the data should be loaded: "+e.getMessage());
             result = e.getMessage().toLowerCase().matches("table \".*\" not found.*\n*.*");
         }
         logger.debug("Executed query " + executeScriptQuery + " with result " + result);

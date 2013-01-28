@@ -28,7 +28,7 @@
         Spring implementation
     -->
     <bean id="dataSourcePopulator" class="org.apache.rave.jdbc.util.DataSourcePopulator">
-        <property name="executeScriptQuery" value="SELECT * FROM WIDGET"/>
+        <property name="executeScriptQuery" value="SELECT * FROM widget"/>
         <property name="scriptLocations">
             <list>
                 <value>/WEB-INF/db/initial_data.sql</value>
