@@ -32,6 +32,14 @@
     <artifactId>rave-shindig-resources</artifactId>
     <name>Apache Rave :: rave-shindig-resources</name>
     <description>Apache Rave Shindig Resources</description>
-    <packaging>pom</packaging>
+    <packaging>war</packaging>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.shindig</groupId>
+            <artifactId>shindig-server-resources</artifactId>
+            <type>war</type>
+        </dependency>
+    </dependencies>
 
 </project>
