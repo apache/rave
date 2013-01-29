@@ -192,22 +192,12 @@
             </dependency>
             <dependency>
                 <groupId>org.apache.shindig</groupId>
-                <artifactId>shindig-social-api</artifactId>
-                <type>test-jar</type>
-                <scope>test</scope>
-                <version>${apache.shindig.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.shindig</groupId>
                 <artifactId>shindig-common</artifactId>
-                <type>test-jar</type>
-                <scope>test</scope>
                 <version>${apache.shindig.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.shindig</groupId>
                 <artifactId>shindig-gadgets</artifactId>
-                <scope>test</scope>
                 <version>${apache.shindig.version}</version>
             </dependency>
             <dependency>

@@ -50,21 +50,7 @@
                     <groupId>org.apache.shindig</groupId>
                     <artifactId>shindig-common</artifactId>
                 </exclusion>
-                <!--
-                    Shindig contains JSON files with "comments" as if they were JavaScript files.
-                    The JSON parser that ships with rave-core isn't as lenient as older versions and throws an exception
-                    on comments.
-                 -->
-                <exclusion>
-                    <groupId>org.json</groupId>
-                    <artifactId>json</artifactId>
-                </exclusion>
             </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.shindig</groupId>
-            <artifactId>shindig-server</artifactId>
-            <type>war</type>
         </dependency>
 
         <!-- log4j logging -->

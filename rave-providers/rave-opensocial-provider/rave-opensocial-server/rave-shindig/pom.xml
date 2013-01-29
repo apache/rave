@@ -35,6 +35,7 @@
     <packaging>war</packaging>
 
     <properties>
+        <shindig.json.version>20070829</shindig.json.version>
     </properties>
 
     <dependencies>
@@ -42,11 +43,29 @@
             <groupId>org.apache.rave</groupId>
             <artifactId>rave-shindig-dependencies</artifactId>
             <type>pom</type>
+            <exclusions>
+                <!--
+                    Shindig contains JSON files with "comments" as if they were JavaScript files.
+                    The JSON parser that ships with rave-core isn't as lenient as older versions and throws an exception
+                    on comments.
+                 -->
+                <exclusion>
+                    <groupId>org.json</groupId>
+                    <artifactId>json</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.rave</groupId>
             <artifactId>rave-shindig-resources</artifactId>
             <type>war</type>
         </dependency>
+
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>${shindig.json.version}</version>
+        </dependency>
+
     </dependencies>
 </project>
