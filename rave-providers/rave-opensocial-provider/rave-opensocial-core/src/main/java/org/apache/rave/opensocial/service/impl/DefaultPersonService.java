@@ -41,6 +41,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Future;
+import java.util.logging.Logger;
 
 /**
  * Implementation of the {@link PersonService} SPI
@@ -49,6 +50,7 @@ import java.util.concurrent.Future;
 public class DefaultPersonService implements PersonService, SimplePersonService {
 
     private final OpenSocialPersonRepository repository;
+    private static Logger log = Logger.getLogger(DefaultPersonService.class.getName());
 
     @Autowired
     public DefaultPersonService(OpenSocialPersonRepository repository) {
@@ -69,6 +71,7 @@ public class DefaultPersonService implements PersonService, SimplePersonService 
 
     @Override
     public Future<Person> getPerson(UserId id, Set<String> fields, SecurityToken token) throws ProtocolException {
+
         return ImmediateFuture.newInstance(convertPerson(getPersonForId(id, token), fields));
     }
 
@@ -192,10 +195,12 @@ public class DefaultPersonService implements PersonService, SimplePersonService 
     }
 
     private org.apache.rave.portal.model.Person getPersonForId(UserId id, SecurityToken token) {
+
         return getFromRepository(id.getUserId(token));
     }
 
     private org.apache.rave.portal.model.Person getFromRepository(String userId) {
+
         org.apache.rave.portal.model.Person person = repository.findByUsername(userId);
         if (person == null) {
             throw new ProtocolException(HttpServletResponse.SC_NOT_FOUND, "The person with the id " + userId + " was not found.");

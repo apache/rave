@@ -19,15 +19,14 @@
 
 package org.apache.rave.persistence.jpa.util;
 
-import java.util.List;
-
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
-
 import org.apache.rave.exception.NotSupportedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
+
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
+import java.util.List;
 
 /**
  * JPA utilities
@@ -39,7 +38,7 @@ public class JpaUtil {
     private static final int LARGE_PAGESIZE = 1000;
 
 
-    private JpaUtil() {}
+    public JpaUtil() {}
 
     /**
      * Gets a single, unique result from the list

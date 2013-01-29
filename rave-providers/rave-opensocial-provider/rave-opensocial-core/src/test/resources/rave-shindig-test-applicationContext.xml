@@ -67,6 +67,10 @@
         <constructor-arg value="org.apache.rave.opensocial.repository.OpenSocialPersonRepository"/>
     </bean>
 
+    <bean id="mockActivitiesRepo" class="org.easymock.EasyMock" factory-method="createNiceMock">
+        <constructor-arg value="org.apache.rave.portal.repository.ActivityStreamsRepository"/>
+    </bean>
+
     <bean id="mockLockService" class="org.easymock.EasyMock" factory-method="createNiceMock"  primary="true">
         <constructor-arg value="org.apache.rave.service.LockService"/>
     </bean>
@@ -87,6 +91,10 @@
 
     <bean id="personService" class="org.apache.rave.opensocial.service.impl.DefaultPersonService">
         <constructor-arg name="repository" ref="mockPersonRepo" />
+    </bean>
+
+    <bean id="activityStreamsService" class="org.apache.rave.opensocial.service.impl.DefaultActivityStreamsService">
+        <constructor-arg name="repository" ref="mockActivitiesRepo" />
     </bean>
 
     <bean id="springBindingModule" class="org.apache.rave.inject.SpringBindingModule" />
