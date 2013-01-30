@@ -33,6 +33,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.List;
+import java.util.UUID;
 
 
 @Repository
@@ -52,23 +53,29 @@ public class JpaActivityStreamsRepository implements ActivityStreamsRepository {
     @Transactional
 	public ActivityStreamsEntry save(ActivityStreamsEntry e) {
         JpaActivityStreamsEntry entry = converter.convert(e);
+
         if(entry.getUserId() == null && entry.getActor() != null) {
             entry.setUserId(entry.getActor().getId());
         }
-		return JpaUtil.saveOrUpdate(entry.getId(), manager, entry);
+        if(entry.getId() == null) {
+            entry.setId(UUID.randomUUID().toString());
+        }
+        return JpaUtil.saveOrUpdate(entry.getId(), manager, entry);
 	}
 
-	public List<ActivityStreamsEntry> getAll() {
-		TypedQuery<JpaActivityStreamsEntry> query = manager.createNamedQuery("JpaActivityStreamsEntry.findAll", JpaActivityStreamsEntry.class);
+    public List<ActivityStreamsEntry> getAll() {
+		TypedQuery<JpaActivityStreamsEntry> query = manager.createNamedQuery(JpaActivityStreamsEntry.FIND_ALL, JpaActivityStreamsEntry.class);
 		return CollectionUtils.<ActivityStreamsEntry>toBaseTypedList(query.getResultList());
 	}
 
 	public ActivityStreamsEntry get(String id) {
-		return manager.find(JpaActivityStreamsEntry.class, id);
+        TypedQuery<JpaActivityStreamsEntry> query = manager.createNamedQuery(JpaActivityStreamsEntry.FIND_BY_ID, JpaActivityStreamsEntry.class);
+        query.setParameter("id", id);
+		return CollectionUtils.getSingleValue(query.getResultList());
 	}
 
 	public List<ActivityStreamsEntry> getByUserId(String id) {
-		TypedQuery<JpaActivityStreamsEntry> query = manager.createNamedQuery("JpaActivityStreamsEntry.findByUserId", JpaActivityStreamsEntry.class);
+		TypedQuery<JpaActivityStreamsEntry> query = manager.createNamedQuery(JpaActivityStreamsEntry.FIND_BY_USERID, JpaActivityStreamsEntry.class);
         query.setParameter("userId", id);
 		return CollectionUtils.<ActivityStreamsEntry>toBaseTypedList(query.getResultList());
 	}

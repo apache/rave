@@ -1,6 +1,8 @@
 package org.apache.rave.portal.model;
 
 
+import org.apache.rave.persistence.BasicEntity;
+
 import javax.persistence.*;
 import java.util.Date;
 import java.util.HashMap;
@@ -11,12 +13,15 @@ import java.util.HashMap;
 @Table(name = "activities")
 @SequenceGenerator(name="activityEntrySequence", sequenceName = "activity_entry_sequence")
 @DiscriminatorValue("Item")
-public class JpaActivityStreamsItem implements ActivityStreamsItem {
+public class JpaActivityStreamsItem implements ActivityStreamsItem, BasicEntity {
 
     private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy=GenerationType.SEQUENCE, generator = "activityEntrySequence")
+    private Long entityId;
+
+    @Basic
     private String id;
 
     @Basic
@@ -39,6 +44,14 @@ public class JpaActivityStreamsItem implements ActivityStreamsItem {
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private HashMap extensions;
+
+    public Long getEntityId() {
+        return entityId;
+    }
+
+    public void setEntityId(Long entityId) {
+        this.entityId = entityId;
+    }
 
     public String getId() {
         return id;

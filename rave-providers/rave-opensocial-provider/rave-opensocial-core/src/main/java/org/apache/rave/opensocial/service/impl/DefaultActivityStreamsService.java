@@ -66,7 +66,6 @@ public class DefaultActivityStreamsService implements ActivityStreamService {
     public Future<RestfulCollection<ActivityEntry>> getActivityEntries(Set<UserId> userIds, GroupId groupId, String appId, Set<String> fields, CollectionOptions options, SecurityToken token) {
         List<ActivityEntry> result = getFromRepository(userIds, groupId, appId, fields, options, token);
 
-
         return ImmediateFuture.newInstance(new RestfulCollection<ActivityEntry>(result));
 
     }
@@ -249,8 +248,8 @@ public class DefaultActivityStreamsService implements ActivityStreamService {
 
         ActivityStreamsEntryImpl activityEntity = converter.convert(activity);
 
-        repository.save(activityEntity);
-        return ImmediateFuture.newInstance((ActivityEntry)converter.convert(activityEntity));
+        ActivityStreamsEntry saved = repository.save(activityEntity);
+        return ImmediateFuture.newInstance((ActivityEntry)converter.convert(saved));
 
     }
 
@@ -375,10 +374,5 @@ public class DefaultActivityStreamsService implements ActivityStreamService {
     public void setRepository(ActivityStreamsRepository repository) {
         this.repository = repository;
     }
-
-
-
-
-
 
 }
