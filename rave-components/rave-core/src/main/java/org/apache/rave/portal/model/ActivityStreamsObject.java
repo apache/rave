@@ -7,9 +7,9 @@ import java.util.List;
 public interface ActivityStreamsObject extends ActivityStreamsItem {
 
 
-    public List<? extends ActivityStreamsObject> getAttachments() ;
+    public List<ActivityStreamsObject> getAttachments() ;
 
-    public void setAttachments(List<? extends ActivityStreamsObject> attachments) ;
+    public void setAttachments(List<ActivityStreamsObject> attachments) ;
 
     public ActivityStreamsObject getAuthor() ;
 

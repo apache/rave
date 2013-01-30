@@ -20,7 +20,11 @@
 package org.apache.rave.portal.model;
 
 
+import com.google.common.collect.Lists;
+import org.apache.rave.portal.model.conversion.ConvertingListProxyFactory;
+import org.apache.rave.portal.model.conversion.JpaConverter;
 import org.apache.rave.portal.model.impl.ActivityStreamsObjectImpl;
+import org.apache.rave.util.CollectionUtils;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -30,201 +34,129 @@ import java.util.List;
 
 @Entity
 @Access(AccessType.FIELD)
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-@Table(name = "activitystreams_objectjpa")
-@SequenceGenerator(name="activityObjectSequence", sequenceName = "activity_object_sequence")
+@DiscriminatorValue("Object")
 @NamedQueries({
         @NamedQuery(name = JpaActivityStreamsObject.FIND_BY_ID, query = "SELECT a FROM JpaActivityStreamsObject a WHERE a.id = :id")
 })
-
-public class JpaActivityStreamsObject extends ActivityStreamsObjectImpl {
+public class JpaActivityStreamsObject extends JpaActivityStreamsItem implements ActivityStreamsObject {
 
     private static final long serialVersionUID = 1L;
 
     public static final String FIND_BY_ID = "JpaActivityStreamsObject.findById";
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-
-    private List<? extends ActivityStreamsObject> attachments;
+    private List<JpaActivityStreamsObject> attachments;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private JpaActivityStreamsObject author;
 
-
     @Basic
     private String content;
-
 
     @Basic
     private String displayName;
 
-
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> downstreamDuplicates;
-
-
-    @Id
-    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator = "activityObjectSequence")
-    private String id;
-
-
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     protected JpaActivityStreamsMediaLink image;
 
-
     @Basic
     private String summary;
-
 
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> upstreamDuplicates;
 
-
     @Basic
     private String alias;
-
 
     @Basic
     private String attendedBy;
 
-
     @Basic
     private String attending;
-
 
     @Basic
     private String dc;
 
-
     @Basic
     private Date endTime;
-
 
     @Basic
     private String followers;
 
-
     @Basic
     private String following;
-
 
     @Basic
     private String friend_requests;
 
-
     @Basic
     private String friends;
-
 
     @Basic
     private String geojson;
 
-
     @Basic
     private String invited;
-
 
     @Basic
     private String likes;
 
-
     @Basic
     private String ld;
-
 
     @Basic
     private String links;
 
-
     @Basic
     private String location;
-
 
     @Basic
     private String maybeAttending;
 
-
     @Basic
     private String members;
-
 
     @Basic
     private String notAttendedBy;
 
-
     @Basic
     private String mood;
-
 
     @Basic
     private String notAttending;
 
-
     @Basic
     private String odata;
-
 
     @Basic
     private String opengraph;
 
-
     @Basic
     private String rating;
-
 
     @Basic
     private String replies;
 
-
     @Basic
     private String reviews;
-
 
     @Basic
     private String saves;
 
-
     @Basic
     private String schema_org;
-
 
     @Basic
     private String shares;
 
-
     @Basic
     private String source;
 
-
     @Basic
     private Date startTime;
-
-
-    @Basic
-    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
-    private Date published;
-
-
-    @Basic
-    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
-    private Date updated;
-
-
-    @Basic
-    private String url;
-
-
-    @Basic
-    private String objectType;
-
-
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private HashMap openSocial;
-
-
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private HashMap extensions;
 
     /**
      * Constructs an empty ActivityObject.
@@ -233,102 +165,18 @@ public class JpaActivityStreamsObject extends ActivityStreamsObjectImpl {
     }
 
 
-    /** {@inheritDoc} */
-
-    public Date getPublished() {
-        return published;
+    public List<ActivityStreamsObject> getAttachments() {
+        return ConvertingListProxyFactory.createProxyList(ActivityStreamsObject.class, this.attachments);
     }
 
-    /** {@inheritDoc} */
-    public void setPublished(Date published) {
-        this.published = published;
-    }
-
-    public Date getUpdated(){
-        return updated;
-    }
-
-    public void setUpdated(Date updated){
-        this.updated=updated;
-    }
-
-    public String getUrl(){
-        return this.url;
-    }
-
-    public void setUrl(String url){
-        this.url=url;
-    }
-
-    public String getObjectType(){
-        return this.objectType;
-    }
-
-    public void setObjectType(String objectType){
-        this.objectType=objectType;
-    }
-
-    /** {@inheritDoc} */
-
-    public HashMap getOpenSocial() {
-        return openSocial;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void setOpenSocial(HashMap openSocial) {
-
-        this.openSocial = openSocial;
-    }
-
-    /** {@inheritDoc} */
-
-    public HashMap getExtensions() {
-        return extensions;
-    }
-
-    /** {@inheritDoc} */
-    public void setExtensions(HashMap extensions) {
-
-
-        this.extensions = extensions;
-    }
-
-
-    /**
-     * {@inheritDoc}
-     */
-
-    protected List<? extends ActivityStreamsObject> getNativeAttachments() {
-        return attachments;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    protected void setNativeAttachments(List<? extends ActivityStreamsObject> attachments) {
-        this.attachments = attachments;
-    }
-
-    public List<? extends ActivityStreamsObject> getAttachments() {
-        return this.attachments;
-    }
-
-    public void setAttachments(List<? extends ActivityStreamsObject> attachments) {
-        this.attachments = attachments;
-    }
-
-
-    /** {@inheritDoc} */
-
-    public String getId() {
-        return id;
-    }
-
-    /** {@inheritDoc} */
-    public void setId(String id) {
-        this.id = id;
+    public void setAttachments(List<ActivityStreamsObject> attachments) {
+        if(this.attachments == null) {
+            this.attachments = Lists.newArrayList();
+        }
+        this.attachments.clear();
+        if(attachments != null) {
+            this.getAttachments().addAll(attachments);
+        }
     }
 
     /**
@@ -342,8 +190,8 @@ public class JpaActivityStreamsObject extends ActivityStreamsObjectImpl {
     /**
      * {@inheritDoc}
      */
-    public void setAuthor(JpaActivityStreamsObject author) {
-        this.author = author;
+    public void setAuthor(ActivityStreamsObject author) {
+        this.author = JpaConverter.getInstance().convert(author, ActivityStreamsObject.class);
     }
 
     /**
@@ -397,17 +245,16 @@ public class JpaActivityStreamsObject extends ActivityStreamsObjectImpl {
      * {@inheritDoc}
      */
 
-    public JpaActivityStreamsMediaLink getImage() {
+    public ActivityStreamsMediaLink getImage() {
         return image;
     }
 
     /**
      * {@inheritDoc}
      */
-    public void setImage(JpaActivityStreamsMediaLink image) {
-        this.image = image;
+    public void setImage(ActivityStreamsMediaLink image) {
+        this.image = JpaConverter.getInstance().convert(image, ActivityStreamsMediaLink.class);
     }
-
 
     /**
      * {@inheritDoc}

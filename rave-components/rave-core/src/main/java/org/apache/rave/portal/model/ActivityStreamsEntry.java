@@ -28,7 +28,7 @@ public interface ActivityStreamsEntry extends ActivityStreamsItem {
     public void setIcon(ActivityStreamsMediaLink icon) ;
 
 
-    public ActivityStreamsItem getObject() ;
+    public ActivityStreamsObject getObject() ;
 
 
     public void setObject(ActivityStreamsObject object) ;

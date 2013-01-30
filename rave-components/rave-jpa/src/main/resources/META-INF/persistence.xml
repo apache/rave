@@ -51,6 +51,7 @@
             <class>org.apache.rave.portal.model.JpaOAuthTokenInfo</class>
             <class>org.apache.rave.portal.model.JpaOAuthConsumerStore</class>
             <class>org.apache.rave.portal.repository.impl.JpaApplicationDataRepository$JpaSerializableApplicationData</class>
+            <class>org.apache.rave.portal.model.JpaActivityStreamsItem</class>
             <class>org.apache.rave.portal.model.JpaActivityStreamsEntry</class>
             <class>org.apache.rave.portal.model.JpaActivityStreamsObject</class>
             <class>org.apache.rave.portal.model.JpaActivityStreamsMediaLink</class>

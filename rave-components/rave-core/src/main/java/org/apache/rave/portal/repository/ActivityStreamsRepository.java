@@ -19,24 +19,24 @@
 
 package org.apache.rave.portal.repository;
 
+import org.apache.rave.persistence.Repository;
 import org.apache.rave.portal.model.ActivityStreamsEntry;
 
-import java.util.Collection;
+import java.util.List;
 
-public interface ActivityStreamsRepository {
+public interface ActivityStreamsRepository extends Repository<ActivityStreamsEntry> {
 
+    /**
+     * Retrieves all ActivityStreamsEntry instances from the persistence layer
+     * @return a list of {@link ActivityStreamsEntry}
+     */
+    List<ActivityStreamsEntry> getAll();
 
+    /**
+     * Retrieves the ActivityStreamsEntry instances for a given user from the persistence layer
+     * @return a list of {@link ActivityStreamsEntry}
+     */
+    List<ActivityStreamsEntry> getByUserId(String id);
 
-    public <T extends ActivityStreamsEntry> T save(T e);
-
-    public Collection<? extends ActivityStreamsEntry> getAll();
-
-    public <T extends ActivityStreamsEntry> T getById(String id);
-
-    public Collection<? extends ActivityStreamsEntry> getByUserId(String id);
-
-    public <T extends ActivityStreamsEntry> void delete(T e);
-
-
-    public <T extends ActivityStreamsEntry> void deleteById(String id) ;
+    public void deleteById(String id) ;
 }

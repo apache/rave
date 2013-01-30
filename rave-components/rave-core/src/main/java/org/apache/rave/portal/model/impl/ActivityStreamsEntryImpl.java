@@ -21,13 +21,12 @@ package org.apache.rave.portal.model.impl;
 
 
 import org.apache.rave.portal.model.ActivityStreamsEntry;
-import org.apache.rave.portal.model.ActivityStreamsItem;
-import org.apache.rave.portal.model.ActivityStreamsObject;
 import org.apache.rave.portal.model.ActivityStreamsMediaLink;
+import org.apache.rave.portal.model.ActivityStreamsObject;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.logging.Logger;
-import java.util.Date;
 
 /**
  * A simple bean implementation of an ActivityStream Entry. See
@@ -43,125 +42,86 @@ public class ActivityStreamsEntryImpl implements ActivityStreamsEntry {
 
     private String id;
 
-
     private ActivityStreamsObject actor;
-
 
     private String content;
 
-
     private ActivityStreamsObject generator;
-
 
     private ActivityStreamsMediaLink icon;
 
-
-    private ActivityStreamsItem object;
-
+    private ActivityStreamsObject object;
 
     private ActivityStreamsObject provider;
 
-
     private ActivityStreamsObject target;
-
 
     private String title;
 
-
     private String verb;
-
     //The user who verb'd this activity
 
     private String userId;
-
     //If this activity was generated as part of a group, this indicates the group's id
 
     private String groupId;
-
     //The id of the application that published this activity
 
     private String appId;
 
-
     private String bcc;
-
 
     private String bto;
 
-
     private String cc;
-
 
     private String context;
 
-
     private String dc;
-
 
     private Date endTime;
 
-
     private String geojson;
-
 
     private String inReplyTo;
 
-
     private String ld;
-
 
     private String links;
 
-
     private String location;
-
 
     private String mood;
 
-
     private String odata;
-
 
     private String opengraph;
 
-
     private String priority;
-
 
     private String rating;
 
-
     private String result;
-
 
     private String schema_org;
 
-
     private String source;
-
 
     private Date startTime;
 
-
     private String tags;
-
 
     private String to;
 
     private Date published;
 
-
     private Date updated;
-
 
     private String url;
 
-
     private String objectType;
 
-
     private HashMap openSocial;
-
 
     private HashMap extensions;
 
@@ -233,10 +193,6 @@ public class ActivityStreamsEntryImpl implements ActivityStreamsEntry {
         this.extensions = extensions;
     }
 
-
-
-
-
     public ActivityStreamsObject getActor() {
         return actor;
     }
@@ -289,7 +245,7 @@ public class ActivityStreamsEntryImpl implements ActivityStreamsEntry {
     }
 
     /** {@inheritDoc} */
-    public ActivityStreamsItem getObject() {
+    public ActivityStreamsObject getObject() {
         return object;
     }
 

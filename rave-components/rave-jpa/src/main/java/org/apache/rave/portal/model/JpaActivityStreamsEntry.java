@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.logging.Logger;
 import java.util.Date;
 
+import org.apache.rave.portal.model.conversion.JpaConverter;
 import org.apache.rave.portal.model.impl.ActivityStreamsEntryImpl;
 import org.apache.rave.portal.model.impl.ActivityStreamsMediaLinkImpl;
 import org.apache.rave.portal.model.impl.ActivityStreamsObjectImpl;
@@ -31,9 +32,7 @@ import org.apache.rave.portal.model.impl.ActivityStreamsObjectImpl;
 
 @Entity
 @Access(AccessType.FIELD)
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-@Table(name = "activityentry_entityjpa")
-@SequenceGenerator(name="activityEntrySequence", sequenceName = "activity_entry_sequence")
+@DiscriminatorValue("Activity")
 @NamedQueries({
         @NamedQuery(name = JpaActivityStreamsEntry.FIND_ALL, query = "SELECT a FROM JpaActivityStreamsEntry a ORDER BY a.updated DESC"),
         @NamedQuery(name = JpaActivityStreamsEntry.FIND_BY_ID, query = "SELECT a FROM JpaActivityStreamsEntry a WHERE a.id = :id"),
@@ -41,7 +40,7 @@ import org.apache.rave.portal.model.impl.ActivityStreamsObjectImpl;
         @NamedQuery(name = JpaActivityStreamsEntry.FIND_BY_GROUPID, query = "SELECT a FROM JpaActivityStreamsEntry a WHERE a.groupId = :groupId ORDER BY a.updated DESC"),
         @NamedQuery(name = JpaActivityStreamsEntry.FIND_BY_APPID, query = "SELECT a FROM JpaActivityStreamsEntry a WHERE a.appId = :appId ORDER BY a.updated DESC")
 })
-public class JpaActivityStreamsEntry extends ActivityStreamsEntryImpl {
+public class JpaActivityStreamsEntry extends JpaActivityStreamsItem implements ActivityStreamsEntry {
 
     private static final long serialVersionUID = 1L;
     private static Logger log = Logger.getLogger(JpaActivityStreamsEntry.class.getName());
@@ -53,174 +52,111 @@ public class JpaActivityStreamsEntry extends ActivityStreamsEntryImpl {
     public static final String FIND_BY_APPID = "JpaActivityStreamsEntry.findByAppId";
 
 
-    @Id
-    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator = "activityEntrySequence")
-    private String id;
-
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    private ActivityStreamsObject actor;
-
+    private JpaActivityStreamsObject actor;
 
     @Basic
     private String content;
 
-
     @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    private ActivityStreamsObject generator;
-
+    private JpaActivityStreamsObject generator;
 
     @OneToOne
-    private ActivityStreamsMediaLink icon;
-
+    private JpaActivityStreamsMediaLink icon;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private ActivityStreamsItem object;
-
-
-    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    private ActivityStreamsObject provider;
-
+    private JpaActivityStreamsObject object;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    private ActivityStreamsObject target;
+    private JpaActivityStreamsObject provider;
 
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    private JpaActivityStreamsObject target;
 
     @Basic
     private String title;
-
 
     @Basic
     private String verb;
 
     //The user who verb'd this activity
-
     @Basic
     private String userId;
 
     //If this activity was generated as part of a group, this indicates the group's id
-
     @Basic
     private String groupId;
 
     //The id of the application that published this activity
-
     @Basic
     private String appId;
-
 
     @Basic
     private String bcc;
 
-
     @Basic
     private String bto;
-
 
     @Basic
     private String cc;
 
-
     @Basic
     private String context;
-
 
     @Basic
     private String dc;
 
-
     @Basic
     private Date endTime;
-
 
     @Basic
     private String geojson;
 
-
     @Basic
     private String inReplyTo;
-
 
     @Basic
     private String ld;
 
-
     @Basic
     private String links;
-
 
     @Basic
     private String location;
 
-
     @Basic
     private String mood;
-
 
     @Basic
     private String odata;
 
-
     @Basic
     private String opengraph;
-
 
     @Basic
     private String priority;
 
-
     @Basic
     private String rating;
-
 
     @Basic
     private String result;
 
-
     @Basic
     private String schema_org;
-
 
     @Basic
     private String source;
 
-
     @Basic
     private Date startTime;
-
 
     @Basic
     private String tags;
 
-
     @Basic
     private String to;
-
-
-    @Basic
-    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
-    private Date published;
-
-
-    @Basic
-    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
-    private Date updated;
-
-
-    @Basic
-    private String url;
-
-
-    @Basic
-    private String objectType;
-
-
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private HashMap openSocial;
-
-
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private HashMap extensions;
 
 
     /**
@@ -229,79 +165,13 @@ public class JpaActivityStreamsEntry extends ActivityStreamsEntryImpl {
     public JpaActivityStreamsEntry() {
     }
 
-    /** {@inheritDoc} */
-
-    public Date getPublished() {
-        return published;
-    }
-
-    /** {@inheritDoc} */
-    public void setPublished(Date published) {
-        this.published = published;
-    }
-
-    public Date getUpdated(){
-        return updated;
-    }
-
-    public void setUpdated(Date updated){
-        this.updated=updated;
-    }
-
-    public String getUrl(){
-        return this.url;
-    }
-
-    public void setUrl(String url){
-        this.url=url;
-    }
-
-    public String getObjectType(){
-        return this.objectType;
-    }
-
-    public void setObjectType(String objectType){
-        this.objectType=objectType;
-    }
-
-    /** {@inheritDoc} */
-
-    public HashMap getOpenSocial() {
-        return openSocial;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void setOpenSocial(HashMap openSocial) {
-
-        this.openSocial = openSocial;
-    }
-
-    /** {@inheritDoc} */
-
-    public HashMap getExtensions() {
-        return extensions;
-    }
-
-    /** {@inheritDoc} */
-    public void setExtensions(HashMap extensions) {
-
-
-        this.extensions = extensions;
-    }
-
-
-
-
-
     public ActivityStreamsObject getActor() {
         return actor;
     }
 
     /** {@inheritDoc} */
     public void setActor(ActivityStreamsObject actor) {
-        this.actor = actor;
+        this.actor = JpaConverter.getInstance().convert(actor, ActivityStreamsObject.class);
     }
 
     /** {@inheritDoc} */
@@ -322,7 +192,7 @@ public class JpaActivityStreamsEntry extends ActivityStreamsEntryImpl {
 
     /** {@inheritDoc} */
     public void setGenerator(ActivityStreamsObject generator) {
-        this.generator = generator;
+        this.generator = JpaConverter.getInstance().convert(generator, ActivityStreamsObject.class);
     }
 
     /** {@inheritDoc} */
@@ -332,31 +202,18 @@ public class JpaActivityStreamsEntry extends ActivityStreamsEntryImpl {
 
     /** {@inheritDoc} */
     public void setIcon(ActivityStreamsMediaLink icon) {
-        this.icon = icon;
+        this.icon = JpaConverter.getInstance().convert(icon, ActivityStreamsMediaLink.class);
     }
 
     /** {@inheritDoc} */
-
-    public String getId() {
-        return id;
-    }
-
-    /** {@inheritDoc} */
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    /** {@inheritDoc} */
-    public ActivityStreamsItem getObject() {
+    public ActivityStreamsObject getObject() {
         return object;
     }
 
     /** {@inheritDoc} */
-    public void setObject(ActivityStreamsItem object) {
-        this.object = object;
+    public void setObject(ActivityStreamsObject object) {
+        this.object = JpaConverter.getInstance().convert(object, ActivityStreamsObject.class);
     }
-
-
 
     /** {@inheritDoc} */
     public ActivityStreamsObject getProvider() {
@@ -365,7 +222,7 @@ public class JpaActivityStreamsEntry extends ActivityStreamsEntryImpl {
 
     /** {@inheritDoc} */
     public void setProvider(ActivityStreamsObject provider) {
-        this.provider = provider;
+        this.provider = JpaConverter.getInstance().convert(provider, ActivityStreamsObject.class);
     }
 
     /** {@inheritDoc} */
@@ -375,7 +232,7 @@ public class JpaActivityStreamsEntry extends ActivityStreamsEntryImpl {
 
     /** {@inheritDoc} */
     public void setTarget(ActivityStreamsObject target) {
-        this.target = target;
+        this.target = JpaConverter.getInstance().convert(target, ActivityStreamsObject.class);
     }
 
     /** {@inheritDoc} */
@@ -651,7 +508,5 @@ public class JpaActivityStreamsEntry extends ActivityStreamsEntryImpl {
     public void setTo(String to) {
         this.to = to;
     }
-
-
 
 }

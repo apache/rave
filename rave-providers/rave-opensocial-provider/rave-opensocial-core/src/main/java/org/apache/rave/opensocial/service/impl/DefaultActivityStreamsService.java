@@ -4,21 +4,19 @@ import com.google.common.collect.ImmutableSortedSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import org.apache.rave.portal.model.ActivityStreamsEntry;
+import org.apache.rave.portal.model.impl.ActivityStreamsEntryImpl;
+import org.apache.rave.portal.repository.ActivityStreamsRepository;
+import org.apache.rave.util.ActivityConversionUtil;
 import org.apache.shindig.auth.SecurityToken;
 import org.apache.shindig.common.util.ImmediateFuture;
 import org.apache.shindig.protocol.ProtocolException;
 import org.apache.shindig.protocol.RestfulCollection;
-import org.apache.shindig.social.opensocial.model.ActivityEntry;
-import org.apache.shindig.social.opensocial.spi.*;
-import org.apache.rave.util.ActivityConversionUtil;
 import org.apache.shindig.social.core.model.ActivityEntryImpl;
+import org.apache.shindig.social.opensocial.model.ActivityEntry;
 import org.apache.shindig.social.opensocial.model.Person;
-import org.apache.rave.portal.model.impl.ActivityStreamsEntryImpl;
-
-import org.apache.rave.portal.repository.ActivityStreamsRepository;
-
+import org.apache.shindig.social.opensocial.spi.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Primary;
+import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.concurrent.ExecutionException;
@@ -26,7 +24,7 @@ import java.util.concurrent.Future;
 import java.util.logging.Logger;
 
 
-@Primary
+@Service
 public class DefaultActivityStreamsService implements ActivityStreamService {
 
     @Autowired
@@ -99,7 +97,7 @@ public class DefaultActivityStreamsService implements ActivityStreamService {
         List<ActivityEntry> entries = Lists.newLinkedList();
 
         for (String id : activityIds) {
-            ActivityStreamsEntryImpl entry = repository.getById(id);
+            ActivityStreamsEntry entry = repository.get(id);
 
             if (entry!=null){
                 if (entry.getUserId().equalsIgnoreCase(uid)) {
@@ -132,7 +130,7 @@ public class DefaultActivityStreamsService implements ActivityStreamService {
 
         String uid = userId.getUserId(token);
 
-        ActivityStreamsEntryImpl entry = repository.getById(activityId);
+        ActivityStreamsEntry entry = repository.get(activityId);
 
         if (entry!=null){
             if (entry.getUserId().equalsIgnoreCase(uid)) {
@@ -167,7 +165,7 @@ public class DefaultActivityStreamsService implements ActivityStreamService {
         String uid = userId.getUserId(token);
 
         for (String id : activityIds) {
-            ActivityStreamsEntryImpl activity = repository.getById(id);
+            ActivityStreamsEntry activity = repository.get(id);
             //TODO: should we be checking against the user id?
             if (activity != null && activity.getUserId().equalsIgnoreCase(uid)) {
                 repository.delete(activity);
@@ -222,7 +220,7 @@ public class DefaultActivityStreamsService implements ActivityStreamService {
         tmp.setGroupId(groupId.getObjectId().toString());
         tmp.setAppId(appId);
 
-        ActivityStreamsEntryImpl saved = repository.save(tmp);
+        ActivityStreamsEntry saved = repository.save(tmp);
         ActivityEntryImpl impl = converter.convert(saved);
         return ImmediateFuture.newInstance((ActivityEntry) impl);
     }
@@ -344,7 +342,7 @@ public class DefaultActivityStreamsService implements ActivityStreamService {
      * @param fields
      * @return
      */
-    private ActivityEntry filterFields(ActivityStreamsEntryImpl entry,
+    private ActivityEntry filterFields(ActivityStreamsEntry entry,
                                        Set<String> fields) {
         // TODO: implement
 

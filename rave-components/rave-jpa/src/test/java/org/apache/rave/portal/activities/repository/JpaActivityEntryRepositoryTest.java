@@ -20,7 +20,6 @@ package org.apache.rave.portal.activities.repository;
 
 import org.apache.rave.portal.model.ActivityStreamsEntry;
 import org.apache.rave.portal.model.JpaActivityStreamsEntry;
-import org.apache.rave.portal.model.impl.ActivityStreamsEntryImpl;
 import org.apache.rave.portal.repository.ActivityStreamsRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -84,7 +83,7 @@ public class JpaActivityEntryRepositoryTest {
         List<ActivityStreamsEntry> collection =
                 (List<ActivityStreamsEntry>)repository.getAll();
 
-        ActivityStreamsEntryImpl t = repository.getById(collection.get(0).getId());
+        ActivityStreamsEntry t = repository.get(collection.get(0).getId());
         assertEquals(t.getId(), collection.get(0).getId());
     }
 
@@ -103,7 +102,7 @@ public class JpaActivityEntryRepositoryTest {
         // Check that it was actually test2 that was deleted
         Iterator it = collection.iterator();
         while(it.hasNext()) {
-          ActivityStreamsEntryImpl ae = (ActivityStreamsEntryImpl)it.next();
+          ActivityStreamsEntry ae = (ActivityStreamsEntry)it.next();
           assertNotEquals(ae.getId(), deletedId);
         }
         assertEquals(2, collection.size());
@@ -130,7 +129,7 @@ public class JpaActivityEntryRepositoryTest {
         // Check that it was actually test1 that was deleted
         Iterator it = collection.iterator();
         while(it.hasNext()) {
-          ActivityStreamsEntryImpl ae = (ActivityStreamsEntryImpl)it.next();
+          ActivityStreamsEntry ae = (ActivityStreamsEntry)it.next();
           assertNotEquals(ae.getId(), deletedId);
         }
         assertEquals(2, collection.size());

@@ -37,8 +37,7 @@ public class JpaUtil {
 
     private static final int LARGE_PAGESIZE = 1000;
 
-
-    public JpaUtil() {}
+    private JpaUtil() {}
 
     /**
      * Gets a single, unique result from the list

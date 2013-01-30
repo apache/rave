@@ -33,137 +33,93 @@ public class ActivityStreamsObjectImpl implements ActivityStreamsObject {
     private static final long serialVersionUID = 1L;
 
 
-
-    private List<? extends ActivityStreamsObject> attachments;
-
-
+    private List<ActivityStreamsObject> attachments;
 
     private ActivityStreamsObject author;
 
-
     private String content;
-
 
     private String displayName;
 
-
     private List<String> downstreamDuplicates;
-
 
     private String id;
 
     private ActivityStreamsMediaLink image;
 
-
     private String summary;
-
 
     private List<String> upstreamDuplicates;
 
-
     private String alias;
-
 
     private String attendedBy;
 
-
     private String attending;
-
 
     private String dc;
 
-
     private Date endTime;
-
 
     private String followers;
 
-
     private String following;
-
 
     private String friend_requests;
 
-
     private String friends;
-
 
     private String geojson;
 
-
     private String invited;
-
 
     private String likes;
 
-
     private String ld;
-
 
     private String links;
 
-
     private String location;
-
 
     private String maybeAttending;
 
-
     private String members;
-
 
     private String notAttendedBy;
 
-
     private String mood;
-
 
     private String notAttending;
 
-
     private String odata;
-
 
     private String opengraph;
 
-
     private String rating;
-
 
     private String replies;
 
-
     private String reviews;
-
 
     private String saves;
 
-
     private String schema_org;
-
 
     private String shares;
 
-
     private String source;
-
 
     private Date startTime;
 
     private Date published;
 
-
     private Date updated;
-
 
     private String url;
 
-
     private String objectType;
 
-
     private HashMap openSocial;
-
 
     private HashMap extensions;
 
@@ -174,43 +130,48 @@ public class ActivityStreamsObjectImpl implements ActivityStreamsObject {
     }
 
 
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
 
     public Date getPublished() {
         return published;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public void setPublished(Date published) {
         this.published = published;
     }
 
-    public Date getUpdated(){
+    public Date getUpdated() {
         return updated;
     }
 
-    public void setUpdated(Date updated){
-        this.updated=updated;
+    public void setUpdated(Date updated) {
+        this.updated = updated;
     }
 
-    public String getUrl(){
+    public String getUrl() {
         return this.url;
     }
 
-    public void setUrl(String url){
-        this.url=url;
+    public void setUrl(String url) {
+        this.url = url;
     }
 
-    public String getObjectType(){
+    public String getObjectType() {
         return this.objectType;
     }
 
-    public void setObjectType(String objectType){
-        this.objectType=objectType;
+    public void setObjectType(String objectType) {
+        this.objectType = objectType;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
 
     public HashMap getOpenSocial() {
         return openSocial;
@@ -224,13 +185,17 @@ public class ActivityStreamsObjectImpl implements ActivityStreamsObject {
         this.openSocial = openSocial;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
 
     public HashMap getExtensions() {
         return extensions;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public void setExtensions(HashMap extensions) {
 
 
@@ -249,26 +214,30 @@ public class ActivityStreamsObjectImpl implements ActivityStreamsObject {
     /**
      * {@inheritDoc}
      */
-    private void setNativeAttachments(List<? extends ActivityStreamsObject> attachments) {
+    private void setNativeAttachments(List<ActivityStreamsObject> attachments) {
         this.attachments = attachments;
     }
 
-    public List<? extends ActivityStreamsObject> getAttachments() {
+    public List<ActivityStreamsObject> getAttachments() {
         return this.attachments;
     }
 
-    public void setAttachments(List<? extends ActivityStreamsObject> attachments) {
+    public void setAttachments(List<ActivityStreamsObject> attachments) {
         this.attachments = attachments;
     }
 
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
 
     public String getId() {
         return id;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public void setId(String id) {
         this.id = id;
     }
@@ -302,7 +271,6 @@ public class ActivityStreamsObjectImpl implements ActivityStreamsObject {
     public void setContent(String content) {
         this.content = content;
     }
-
 
 
     /**
@@ -622,16 +590,13 @@ public class ActivityStreamsObjectImpl implements ActivityStreamsObject {
     }
 
 
-
     public List<ActivityStreamsObjectImpl> convertAll(List<ActivityStreamsObjectImpl> objects) {
         List<ActivityStreamsObjectImpl> entity = Lists.newArrayList();
-        for(ActivityStreamsObjectImpl object : objects) {
+        for (ActivityStreamsObjectImpl object : objects) {
             entity.add(object);
         }
         return entity;
     }
-
-
 
 
 }

@@ -171,7 +171,7 @@ public class DefaultActivityStreamsServiceTest {
         Set<String> fields = new HashSet<String>();
 
         expect(repository.save(activityStreamsEntry)).andReturn(activityStreamsEntry);
-        expect(repository.getById(ACTIVITY_ID)).andReturn(activityStreamsEntry);
+        expect(repository.get(ACTIVITY_ID)).andReturn(activityStreamsEntry);
         expect(personService.getPeople(users,groupId,null,fields,token)).andReturn(ImmediateFuture.newInstance(new RestfulCollection<Person>(getDbPersonList())));
         replay(repository);
         replay(personService);
@@ -199,7 +199,7 @@ public class DefaultActivityStreamsServiceTest {
 
 
         expect(repository.save(activityStreamsEntry)).andReturn(activityStreamsEntry);
-        expect(repository.getById(ACTIVITY_ID)).andReturn(activityStreamsEntry);
+        expect(repository.get(ACTIVITY_ID)).andReturn(activityStreamsEntry);
         replay(repository);
 
 
@@ -224,7 +224,7 @@ public class DefaultActivityStreamsServiceTest {
 
 
         expect(repository.save(activityStreamsEntry)).andReturn(activityStreamsEntry);
-        expect(repository.getById(ACTIVITY_ID)).andReturn(activityStreamsEntry);
+        expect(repository.get(ACTIVITY_ID)).andReturn(activityStreamsEntry);
         repository.delete(activityStreamsEntry);
         expectLastCall();
         replay(repository);

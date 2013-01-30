@@ -19,19 +19,20 @@
 
 package org.apache.rave.portal.repository.impl;
 
-import java.util.Collection;
+import org.apache.rave.persistence.jpa.util.JpaUtil;
+import org.apache.rave.portal.model.ActivityStreamsEntry;
+import org.apache.rave.portal.model.JpaActivityStreamsEntry;
+import org.apache.rave.portal.model.conversion.JpaActivityStreamsEntryConverter;
+import org.apache.rave.portal.repository.ActivityStreamsRepository;
+import org.apache.rave.util.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-
-import org.apache.rave.portal.model.ActivityStreamsEntry;
-import org.apache.rave.portal.model.ActivityStreamsItem;
-import org.apache.rave.portal.model.JpaActivityStreamsEntry;
-import org.apache.rave.persistence.jpa.util.JpaUtil;
-import org.apache.rave.portal.repository.ActivityStreamsRepository;
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
+import java.util.List;
 
 
 @Repository
@@ -40,37 +41,46 @@ public class JpaActivityStreamsRepository implements ActivityStreamsRepository {
 	@PersistenceContext
     private EntityManager manager;
 
-	@Transactional
-	public <T extends ActivityStreamsEntry> T save(T e) {
-		return JpaUtil.saveOrUpdate(e.getId(), manager, e);
-	}
-	
-	@Transactional
-	public Collection<? extends ActivityStreamsEntry> getAll() {
-		TypedQuery<JpaActivityStreamsEntry> query = manager.createNamedQuery("JpaActivityStreamsEntry.findAll", JpaActivityStreamsEntry.class);
-		return query.getResultList();
+    @Autowired
+    private JpaActivityStreamsEntryConverter converter;
+
+    @Override
+    public Class<? extends ActivityStreamsEntry> getType() {
+        return JpaActivityStreamsEntry.class;
+    }
+
+    @Transactional
+	public ActivityStreamsEntry save(ActivityStreamsEntry e) {
+        JpaActivityStreamsEntry entry = converter.convert(e);
+        if(entry.getUserId() == null && entry.getActor() != null) {
+            entry.setUserId(entry.getActor().getId());
+        }
+		return JpaUtil.saveOrUpdate(entry.getId(), manager, entry);
 	}
 
-	@Transactional
-	public <T extends ActivityStreamsEntry> T getById(String id) {
-		return (T)manager.find(JpaActivityStreamsEntry.class, id);
+	public List<ActivityStreamsEntry> getAll() {
+		TypedQuery<JpaActivityStreamsEntry> query = manager.createNamedQuery("JpaActivityStreamsEntry.findAll", JpaActivityStreamsEntry.class);
+		return CollectionUtils.<ActivityStreamsEntry>toBaseTypedList(query.getResultList());
 	}
-	
-	@Transactional
-	public Collection<? extends ActivityStreamsEntry> getByUserId(String id) {
+
+	public ActivityStreamsEntry get(String id) {
+		return manager.find(JpaActivityStreamsEntry.class, id);
+	}
+
+	public List<ActivityStreamsEntry> getByUserId(String id) {
 		TypedQuery<JpaActivityStreamsEntry> query = manager.createNamedQuery("JpaActivityStreamsEntry.findByUserId", JpaActivityStreamsEntry.class);
         query.setParameter("userId", id);
-		return query.getResultList();
+		return CollectionUtils.<ActivityStreamsEntry>toBaseTypedList(query.getResultList());
+	}
+
+    @Transactional
+	public void delete(ActivityStreamsEntry e) {
+		deleteById(e.getId());
 	}
 	
 	@Transactional
-	public <T extends ActivityStreamsEntry> void delete(T e) {
-		manager.remove(manager.merge(e));
-	}
-	
-	@Transactional
-	public <T extends ActivityStreamsEntry> void deleteById(String id) {
-        T e = getById(id);
-		manager.remove(manager.merge(e));
+	public void deleteById(String id) {
+        ActivityStreamsEntry e = get(id);
+		manager.remove(e);
 	}
 }
