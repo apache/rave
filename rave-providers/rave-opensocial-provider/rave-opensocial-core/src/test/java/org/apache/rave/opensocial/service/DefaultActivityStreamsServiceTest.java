@@ -30,7 +30,6 @@ import org.apache.rave.util.ActivityConversionUtil;
 import org.apache.shindig.auth.SecurityToken;
 import org.apache.shindig.common.util.ImmediateFuture;
 import org.apache.shindig.protocol.RestfulCollection;
-import org.apache.shindig.social.core.model.ActivityEntryImpl;
 import org.apache.shindig.social.core.model.ActivityObjectImpl;
 import org.apache.shindig.social.core.model.PersonImpl;
 import org.apache.shindig.social.opensocial.model.ActivityEntry;
@@ -40,7 +39,6 @@ import org.apache.shindig.social.opensocial.spi.PersonService;
 import org.apache.shindig.social.opensocial.spi.UserId;
 import org.easymock.EasyMock;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.*;
@@ -50,10 +48,8 @@ import java.util.logging.Logger;
 
 import static org.easymock.EasyMock.*;
 import static org.hamcrest.CoreMatchers.*;
-import static org.hamcrest.CoreMatchers.isA;
 import static org.junit.Assert.assertThat;
 
-@Ignore
 public class DefaultActivityStreamsServiceTest {
 
     private static Logger log = Logger.getLogger(DefaultActivityStreamsServiceTest.class.getName());
@@ -178,7 +174,7 @@ public class DefaultActivityStreamsServiceTest {
         replay(repository);
         replay(personService);
 
-        Future<ActivityEntry> entry =  service.createActivityEntry(id,groupId,APP_ID,fields,conversionUtilTest.convert(activityStreamsEntry),eq(token));
+        Future<ActivityEntry> entry =  service.createActivityEntry(id,groupId,APP_ID,fields,conversionUtilTest.convert(activityStreamsEntry),token);
 
         HashSet<String> activityIds = new HashSet<String>();
         activityIds.add(entry.get().getId());
