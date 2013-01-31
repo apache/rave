@@ -550,6 +550,8 @@ public class ActivityStreamsEntryImpl implements ActivityStreamsEntry {
         this.to = to;
     }
 
+
+
     /**
      * Sorts ActivityEntries in ascending order based on publish date.
      *
@@ -569,6 +571,104 @@ public class ActivityStreamsEntryImpl implements ActivityStreamsEntry {
         } else { // compare publish dates in lexicographical order
             return this.getPublished().compareTo(that.getPublished());
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ActivityStreamsEntryImpl that = (ActivityStreamsEntryImpl) o;
+
+        if (actor != null ? !actor.equals(that.actor) : that.actor != null) return false;
+        if (appId != null ? !appId.equals(that.appId) : that.appId != null) return false;
+        if (bcc != null ? !bcc.equals(that.bcc) : that.bcc != null) return false;
+        if (bto != null ? !bto.equals(that.bto) : that.bto != null) return false;
+        if (cc != null ? !cc.equals(that.cc) : that.cc != null) return false;
+        if (content != null ? !content.equals(that.content) : that.content != null) return false;
+        if (context != null ? !context.equals(that.context) : that.context != null) return false;
+        if (dc != null ? !dc.equals(that.dc) : that.dc != null) return false;
+        if (endTime != null ? !endTime.equals(that.endTime) : that.endTime != null) return false;
+        if (extensions != null ? !extensions.equals(that.extensions) : that.extensions != null) return false;
+        if (generator != null ? !generator.equals(that.generator) : that.generator != null) return false;
+        if (geojson != null ? !geojson.equals(that.geojson) : that.geojson != null) return false;
+        if (groupId != null ? !groupId.equals(that.groupId) : that.groupId != null) return false;
+        if (icon != null ? !icon.equals(that.icon) : that.icon != null) return false;
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
+        if (inReplyTo != null ? !inReplyTo.equals(that.inReplyTo) : that.inReplyTo != null) return false;
+        if (ld != null ? !ld.equals(that.ld) : that.ld != null) return false;
+        if (links != null ? !links.equals(that.links) : that.links != null) return false;
+        if (location != null ? !location.equals(that.location) : that.location != null) return false;
+        if (mood != null ? !mood.equals(that.mood) : that.mood != null) return false;
+        if (object != null ? !object.equals(that.object) : that.object != null) return false;
+        if (objectType != null ? !objectType.equals(that.objectType) : that.objectType != null) return false;
+        if (odata != null ? !odata.equals(that.odata) : that.odata != null) return false;
+        if (openSocial != null ? !openSocial.equals(that.openSocial) : that.openSocial != null) return false;
+        if (opengraph != null ? !opengraph.equals(that.opengraph) : that.opengraph != null) return false;
+        if (priority != null ? !priority.equals(that.priority) : that.priority != null) return false;
+        if (provider != null ? !provider.equals(that.provider) : that.provider != null) return false;
+        if (published != null ? !published.equals(that.published) : that.published != null) return false;
+        if (rating != null ? !rating.equals(that.rating) : that.rating != null) return false;
+        if (result != null ? !result.equals(that.result) : that.result != null) return false;
+        if (schema_org != null ? !schema_org.equals(that.schema_org) : that.schema_org != null) return false;
+        if (source != null ? !source.equals(that.source) : that.source != null) return false;
+        if (startTime != null ? !startTime.equals(that.startTime) : that.startTime != null) return false;
+        if (tags != null ? !tags.equals(that.tags) : that.tags != null) return false;
+        if (target != null ? !target.equals(that.target) : that.target != null) return false;
+        if (title != null ? !title.equals(that.title) : that.title != null) return false;
+        if (to != null ? !to.equals(that.to) : that.to != null) return false;
+        if (updated != null ? !updated.equals(that.updated) : that.updated != null) return false;
+        if (url != null ? !url.equals(that.url) : that.url != null) return false;
+        if (userId != null ? !userId.equals(that.userId) : that.userId != null) return false;
+        if (verb != null ? !verb.equals(that.verb) : that.verb != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result1 = id != null ? id.hashCode() : 0;
+        result1 = 31 * result1 + (actor != null ? actor.hashCode() : 0);
+        result1 = 31 * result1 + (content != null ? content.hashCode() : 0);
+        result1 = 31 * result1 + (generator != null ? generator.hashCode() : 0);
+        result1 = 31 * result1 + (icon != null ? icon.hashCode() : 0);
+        result1 = 31 * result1 + (object != null ? object.hashCode() : 0);
+        result1 = 31 * result1 + (provider != null ? provider.hashCode() : 0);
+        result1 = 31 * result1 + (target != null ? target.hashCode() : 0);
+        result1 = 31 * result1 + (title != null ? title.hashCode() : 0);
+        result1 = 31 * result1 + (verb != null ? verb.hashCode() : 0);
+        result1 = 31 * result1 + (userId != null ? userId.hashCode() : 0);
+        result1 = 31 * result1 + (groupId != null ? groupId.hashCode() : 0);
+        result1 = 31 * result1 + (appId != null ? appId.hashCode() : 0);
+        result1 = 31 * result1 + (bcc != null ? bcc.hashCode() : 0);
+        result1 = 31 * result1 + (bto != null ? bto.hashCode() : 0);
+        result1 = 31 * result1 + (cc != null ? cc.hashCode() : 0);
+        result1 = 31 * result1 + (context != null ? context.hashCode() : 0);
+        result1 = 31 * result1 + (dc != null ? dc.hashCode() : 0);
+        result1 = 31 * result1 + (endTime != null ? endTime.hashCode() : 0);
+        result1 = 31 * result1 + (geojson != null ? geojson.hashCode() : 0);
+        result1 = 31 * result1 + (inReplyTo != null ? inReplyTo.hashCode() : 0);
+        result1 = 31 * result1 + (ld != null ? ld.hashCode() : 0);
+        result1 = 31 * result1 + (links != null ? links.hashCode() : 0);
+        result1 = 31 * result1 + (location != null ? location.hashCode() : 0);
+        result1 = 31 * result1 + (mood != null ? mood.hashCode() : 0);
+        result1 = 31 * result1 + (odata != null ? odata.hashCode() : 0);
+        result1 = 31 * result1 + (opengraph != null ? opengraph.hashCode() : 0);
+        result1 = 31 * result1 + (priority != null ? priority.hashCode() : 0);
+        result1 = 31 * result1 + (rating != null ? rating.hashCode() : 0);
+        result1 = 31 * result1 + (result != null ? result.hashCode() : 0);
+        result1 = 31 * result1 + (schema_org != null ? schema_org.hashCode() : 0);
+        result1 = 31 * result1 + (source != null ? source.hashCode() : 0);
+        result1 = 31 * result1 + (startTime != null ? startTime.hashCode() : 0);
+        result1 = 31 * result1 + (tags != null ? tags.hashCode() : 0);
+        result1 = 31 * result1 + (to != null ? to.hashCode() : 0);
+        result1 = 31 * result1 + (published != null ? published.hashCode() : 0);
+        result1 = 31 * result1 + (updated != null ? updated.hashCode() : 0);
+        result1 = 31 * result1 + (url != null ? url.hashCode() : 0);
+        result1 = 31 * result1 + (objectType != null ? objectType.hashCode() : 0);
+        result1 = 31 * result1 + (openSocial != null ? openSocial.hashCode() : 0);
+        result1 = 31 * result1 + (extensions != null ? extensions.hashCode() : 0);
+        return result1;
     }
 
 

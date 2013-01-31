@@ -526,6 +526,26 @@ public class JpaActivityStreamsObject extends JpaActivityStreamsItem implements 
         this.startTime = startTime;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final JpaActivityStreamsObject other = (JpaActivityStreamsObject) obj;
+        if (this.entityId != other.entityId && (this.entityId == null || !this.entityId.equals(other.entityId))) {
+            return false;
+        }
+        return true;
+    }
 
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 89 * hash + (this.entityId != null ? this.entityId.hashCode() : 0);
+        return hash;
+    }
 
 }

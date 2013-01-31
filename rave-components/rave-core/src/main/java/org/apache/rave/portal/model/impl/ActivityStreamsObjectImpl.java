@@ -598,5 +598,114 @@ public class ActivityStreamsObjectImpl implements ActivityStreamsObject {
         return entity;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
+        ActivityStreamsObjectImpl that = (ActivityStreamsObjectImpl) o;
+
+        if (alias != null ? !alias.equals(that.alias) : that.alias != null) return false;
+        if (attachments != null ? !attachments.equals(that.attachments) : that.attachments != null) return false;
+        if (attendedBy != null ? !attendedBy.equals(that.attendedBy) : that.attendedBy != null) return false;
+        if (attending != null ? !attending.equals(that.attending) : that.attending != null) return false;
+        if (author != null ? !author.equals(that.author) : that.author != null) return false;
+        if (content != null ? !content.equals(that.content) : that.content != null) return false;
+        if (dc != null ? !dc.equals(that.dc) : that.dc != null) return false;
+        if (displayName != null ? !displayName.equals(that.displayName) : that.displayName != null) return false;
+        if (downstreamDuplicates != null ? !downstreamDuplicates.equals(that.downstreamDuplicates) : that.downstreamDuplicates != null)
+            return false;
+        if (endTime != null ? !endTime.equals(that.endTime) : that.endTime != null) return false;
+        if (extensions != null ? !extensions.equals(that.extensions) : that.extensions != null) return false;
+        if (followers != null ? !followers.equals(that.followers) : that.followers != null) return false;
+        if (following != null ? !following.equals(that.following) : that.following != null) return false;
+        if (friend_requests != null ? !friend_requests.equals(that.friend_requests) : that.friend_requests != null)
+            return false;
+        if (friends != null ? !friends.equals(that.friends) : that.friends != null) return false;
+        if (geojson != null ? !geojson.equals(that.geojson) : that.geojson != null) return false;
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
+        if (image != null ? !image.equals(that.image) : that.image != null) return false;
+        if (invited != null ? !invited.equals(that.invited) : that.invited != null) return false;
+        if (ld != null ? !ld.equals(that.ld) : that.ld != null) return false;
+        if (likes != null ? !likes.equals(that.likes) : that.likes != null) return false;
+        if (links != null ? !links.equals(that.links) : that.links != null) return false;
+        if (location != null ? !location.equals(that.location) : that.location != null) return false;
+        if (maybeAttending != null ? !maybeAttending.equals(that.maybeAttending) : that.maybeAttending != null)
+            return false;
+        if (members != null ? !members.equals(that.members) : that.members != null) return false;
+        if (mood != null ? !mood.equals(that.mood) : that.mood != null) return false;
+        if (notAttendedBy != null ? !notAttendedBy.equals(that.notAttendedBy) : that.notAttendedBy != null)
+            return false;
+        if (notAttending != null ? !notAttending.equals(that.notAttending) : that.notAttending != null) return false;
+        if (objectType != null ? !objectType.equals(that.objectType) : that.objectType != null) return false;
+        if (odata != null ? !odata.equals(that.odata) : that.odata != null) return false;
+        if (openSocial != null ? !openSocial.equals(that.openSocial) : that.openSocial != null) return false;
+        if (opengraph != null ? !opengraph.equals(that.opengraph) : that.opengraph != null) return false;
+        if (published != null ? !published.equals(that.published) : that.published != null) return false;
+        if (rating != null ? !rating.equals(that.rating) : that.rating != null) return false;
+        if (replies != null ? !replies.equals(that.replies) : that.replies != null) return false;
+        if (reviews != null ? !reviews.equals(that.reviews) : that.reviews != null) return false;
+        if (saves != null ? !saves.equals(that.saves) : that.saves != null) return false;
+        if (schema_org != null ? !schema_org.equals(that.schema_org) : that.schema_org != null) return false;
+        if (shares != null ? !shares.equals(that.shares) : that.shares != null) return false;
+        if (source != null ? !source.equals(that.source) : that.source != null) return false;
+        if (startTime != null ? !startTime.equals(that.startTime) : that.startTime != null) return false;
+        if (summary != null ? !summary.equals(that.summary) : that.summary != null) return false;
+        if (updated != null ? !updated.equals(that.updated) : that.updated != null) return false;
+        if (upstreamDuplicates != null ? !upstreamDuplicates.equals(that.upstreamDuplicates) : that.upstreamDuplicates != null)
+            return false;
+        if (url != null ? !url.equals(that.url) : that.url != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = attachments != null ? attachments.hashCode() : 0;
+        result = 31 * result + (author != null ? author.hashCode() : 0);
+        result = 31 * result + (content != null ? content.hashCode() : 0);
+        result = 31 * result + (displayName != null ? displayName.hashCode() : 0);
+        result = 31 * result + (downstreamDuplicates != null ? downstreamDuplicates.hashCode() : 0);
+        result = 31 * result + (id != null ? id.hashCode() : 0);
+        result = 31 * result + (image != null ? image.hashCode() : 0);
+        result = 31 * result + (summary != null ? summary.hashCode() : 0);
+        result = 31 * result + (upstreamDuplicates != null ? upstreamDuplicates.hashCode() : 0);
+        result = 31 * result + (alias != null ? alias.hashCode() : 0);
+        result = 31 * result + (attendedBy != null ? attendedBy.hashCode() : 0);
+        result = 31 * result + (attending != null ? attending.hashCode() : 0);
+        result = 31 * result + (dc != null ? dc.hashCode() : 0);
+        result = 31 * result + (endTime != null ? endTime.hashCode() : 0);
+        result = 31 * result + (followers != null ? followers.hashCode() : 0);
+        result = 31 * result + (following != null ? following.hashCode() : 0);
+        result = 31 * result + (friend_requests != null ? friend_requests.hashCode() : 0);
+        result = 31 * result + (friends != null ? friends.hashCode() : 0);
+        result = 31 * result + (geojson != null ? geojson.hashCode() : 0);
+        result = 31 * result + (invited != null ? invited.hashCode() : 0);
+        result = 31 * result + (likes != null ? likes.hashCode() : 0);
+        result = 31 * result + (ld != null ? ld.hashCode() : 0);
+        result = 31 * result + (links != null ? links.hashCode() : 0);
+        result = 31 * result + (location != null ? location.hashCode() : 0);
+        result = 31 * result + (maybeAttending != null ? maybeAttending.hashCode() : 0);
+        result = 31 * result + (members != null ? members.hashCode() : 0);
+        result = 31 * result + (notAttendedBy != null ? notAttendedBy.hashCode() : 0);
+        result = 31 * result + (mood != null ? mood.hashCode() : 0);
+        result = 31 * result + (notAttending != null ? notAttending.hashCode() : 0);
+        result = 31 * result + (odata != null ? odata.hashCode() : 0);
+        result = 31 * result + (opengraph != null ? opengraph.hashCode() : 0);
+        result = 31 * result + (rating != null ? rating.hashCode() : 0);
+        result = 31 * result + (replies != null ? replies.hashCode() : 0);
+        result = 31 * result + (reviews != null ? reviews.hashCode() : 0);
+        result = 31 * result + (saves != null ? saves.hashCode() : 0);
+        result = 31 * result + (schema_org != null ? schema_org.hashCode() : 0);
+        result = 31 * result + (shares != null ? shares.hashCode() : 0);
+        result = 31 * result + (source != null ? source.hashCode() : 0);
+        result = 31 * result + (startTime != null ? startTime.hashCode() : 0);
+        result = 31 * result + (published != null ? published.hashCode() : 0);
+        result = 31 * result + (updated != null ? updated.hashCode() : 0);
+        result = 31 * result + (url != null ? url.hashCode() : 0);
+        result = 31 * result + (objectType != null ? objectType.hashCode() : 0);
+        result = 31 * result + (openSocial != null ? openSocial.hashCode() : 0);
+        result = 31 * result + (extensions != null ? extensions.hashCode() : 0);
+        return result;
+    }
 }

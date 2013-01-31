@@ -20,6 +20,7 @@
 package org.apache.rave.portal.model;
 
 
+import org.apache.rave.persistence.BasicEntity;
 import org.apache.rave.portal.model.impl.ActivityStreamsMediaLinkImpl;
 
 import javax.persistence.*;
@@ -30,12 +31,12 @@ import java.util.HashMap;
 @Entity
 @Access(AccessType.FIELD)
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-@Table(name = "activitystreams_medialinkjpa")
+@Table(name = "activitystreams_medialink")
 @SequenceGenerator(name="activityMediaLinkSequence", sequenceName = "activity_media_link_sequence")
 @NamedQueries({
         @NamedQuery(name = JpaActivityStreamsMediaLink.FIND_BY_ID, query = "SELECT a FROM JpaActivityStreamsMediaLink a WHERE a.id = :id")
 })
-public class JpaActivityStreamsMediaLink extends ActivityStreamsMediaLinkImpl {
+public class JpaActivityStreamsMediaLink implements ActivityStreamsMediaLink, BasicEntity {
 
     private static final long serialVersionUID = 1L;
 
@@ -43,21 +44,19 @@ public class JpaActivityStreamsMediaLink extends ActivityStreamsMediaLinkImpl {
 
     @Id
     @GeneratedValue(strategy=GenerationType.SEQUENCE, generator = "activityMediaLinkSequence")
+    private Long entityId;
+
+    @Basic
     private String id;
-
-
 
     @Basic
     private Integer duration;
 
-
     @Basic
     private Integer height;
 
-
     @Basic
     private String url;
-
 
     @Basic
     private Integer width;
@@ -72,7 +71,21 @@ public class JpaActivityStreamsMediaLink extends ActivityStreamsMediaLinkImpl {
     public JpaActivityStreamsMediaLink() {
     }
 
+    public Long getEntityId() {
+        return entityId;
+    }
 
+    public void setEntityId(Long entityId) {
+        this.entityId = entityId;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     /** {@inheritDoc} */
 
@@ -134,6 +147,26 @@ public class JpaActivityStreamsMediaLink extends ActivityStreamsMediaLinkImpl {
 
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final JpaActivityStreamsMediaLink other = (JpaActivityStreamsMediaLink) obj;
+        if (this.entityId != other.entityId && (this.entityId == null || !this.entityId.equals(other.entityId))) {
+            return false;
+        }
+        return true;
+    }
 
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 89 * hash + (this.entityId != null ? this.entityId.hashCode() : 0);
+        return hash;
+    }
 
 }

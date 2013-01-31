@@ -19,7 +19,7 @@ public class JpaActivityStreamsItem implements ActivityStreamsItem, BasicEntity 
 
     @Id
     @GeneratedValue(strategy=GenerationType.SEQUENCE, generator = "activityEntrySequence")
-    private Long entityId;
+    protected Long entityId;
 
     @Basic
     private String id;
