@@ -2,6 +2,32 @@ Apache Rave Change Log
 https://issues.apache.org/jira/secure/ReleaseNote.jspa?projectId=12311290 (select the version of release and output as text to create this file)
 
 ===========================================================================================================
+Release Notes - Rave - Version 0.20
+===========================================================================================================
+
+** Technical task
+    * [RAVE-525] - Break Rave-shindig into multiple composable modules
+
+
+** Bug
+    * [RAVE-863] - Featured Widgets no longer visually distinguishable 
+    * [RAVE-870] - Canvas "sneeze guard" doesn't cover whole screen
+    * [RAVE-872] - Widget user dialog fails with strings as IDs
+    * [RAVE-875] - Jpa package is incompatible with alternative providers, such as eclispelink
+    * [RAVE-879] - Gadgets requiring security token fail after Shindig upgrade
+
+
+** Improvement
+    * [RAVE-881] - German translation for Rave
+
+** New Feature
+    * [RAVE-877] - Dynamic Features Included in ContainerJS
+
+** Story
+    * [RAVE-873] - Add Pooling Support to Mongo
+
+
+===========================================================================================================
 Release Notes - Rave - Version 0.19
 ===========================================================================================================
 
