@@ -20,13 +20,14 @@ package org.apache.rave.portal.model.conversion;
 
 import org.apache.rave.model.ModelConverter;
 import org.apache.rave.portal.model.ActivityStreamsEntry;
-
 import org.apache.rave.portal.model.JpaActivityStreamsEntry;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+
+import java.util.UUID;
 
 import static org.apache.rave.persistence.jpa.util.JpaUtil.getSingleResult;
 
@@ -38,6 +39,9 @@ public class JpaActivityStreamsEntryConverter implements ModelConverter<Activity
 
     @Override
     public JpaActivityStreamsEntry convert(ActivityStreamsEntry source) {
+        if(source != null && source.getId() == null) {
+            source.setId(UUID.randomUUID().toString());
+        }
         return source instanceof JpaActivityStreamsEntry ? (JpaActivityStreamsEntry) source : createEntity(source);
     }
 
@@ -62,6 +66,7 @@ public class JpaActivityStreamsEntryConverter implements ModelConverter<Activity
     }
 
     private void updateProperties(ActivityStreamsEntry source, JpaActivityStreamsEntry converted) {
+        converted.setId(source.getId());
         converted.setActor(source.getActor());
         converted.setOpenSocial(source.getOpenSocial());
         converted.setObject(source.getObject());

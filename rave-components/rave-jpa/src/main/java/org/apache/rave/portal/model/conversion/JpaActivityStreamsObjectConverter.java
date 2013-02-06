@@ -20,13 +20,14 @@ package org.apache.rave.portal.model.conversion;
 
 import org.apache.rave.model.ModelConverter;
 import org.apache.rave.portal.model.ActivityStreamsObject;
-
 import org.apache.rave.portal.model.JpaActivityStreamsObject;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+
+import java.util.UUID;
 
 import static org.apache.rave.persistence.jpa.util.JpaUtil.getSingleResult;
 
@@ -38,6 +39,9 @@ public class JpaActivityStreamsObjectConverter implements ModelConverter<Activit
 
     @Override
     public JpaActivityStreamsObject convert(ActivityStreamsObject source) {
+        if(source != null && source.getId() == null) {
+            source.setId(UUID.randomUUID().toString());
+        }
         return source instanceof JpaActivityStreamsObject ? (JpaActivityStreamsObject) source : createEntity(source);
     }
 
@@ -62,9 +66,8 @@ public class JpaActivityStreamsObjectConverter implements ModelConverter<Activit
     }
 
     private void updateProperties(ActivityStreamsObject source, JpaActivityStreamsObject converted) {
-
+        converted.setId(source.getId());
         converted.setOpenSocial(source.getOpenSocial());
-
         converted.setObjectType(source.getObjectType());
         converted.setExtensions(source.getExtensions());
         converted.setDisplayName(source.getDisplayName());
@@ -91,30 +94,19 @@ public class JpaActivityStreamsObjectConverter implements ModelConverter<Activit
         converted.setReplies(source.getReplies());
         converted.setContent(source.getContent());
         converted.setDc(source.getDc());
-
         converted.setGeojson(source.getGeojson());
-
         converted.setLd(source.getLd());
         converted.setLinks(source.getLinks());
         converted.setEndTime(source.getEndTime());
         converted.setLocation(source.getLocation());
         converted.setMood(source.getMood());
         converted.setOdata(source.getOdata());
-
         converted.setPublished(source.getPublished());
-
         converted.setOpengraph(source.getOpengraph());
-
         converted.setRating(source.getRating());
-
         converted.setSchema_org(source.getSchema_org());
         converted.setSource(source.getSource());
-
-
         converted.setUpdated(source.getUpdated());
-
         converted.setUrl(source.getUrl());
-
-
     }
 }

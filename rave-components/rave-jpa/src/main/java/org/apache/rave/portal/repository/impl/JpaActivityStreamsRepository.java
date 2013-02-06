@@ -33,7 +33,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.List;
-import java.util.UUID;
 
 
 @Repository
@@ -56,9 +55,6 @@ public class JpaActivityStreamsRepository implements ActivityStreamsRepository {
 
         if(entry.getUserId() == null && entry.getActor() != null) {
             entry.setUserId(entry.getActor().getId());
-        }
-        if(entry.getId() == null) {
-            entry.setId(UUID.randomUUID().toString());
         }
         return JpaUtil.saveOrUpdate(entry.getId(), manager, entry);
 	}

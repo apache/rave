@@ -20,7 +20,6 @@ package org.apache.rave.portal.model.conversion;
 
 import org.apache.rave.model.ModelConverter;
 import org.apache.rave.portal.model.ActivityStreamsMediaLink;
-
 import org.apache.rave.portal.model.JpaActivityStreamsMediaLink;
 import org.springframework.stereotype.Component;
 
@@ -62,8 +61,7 @@ public class JpaActivityStreamsMediaLinkConverter implements ModelConverter<Acti
     }
 
     private void updateProperties(ActivityStreamsMediaLink source, JpaActivityStreamsMediaLink converted) {
-
-       converted.setDuration(source.getDuration());
+        converted.setDuration(source.getDuration());
         converted.setHeight(source.getHeight());
         converted.setWidth(source.getWidth());
         converted.setUrl(source.getUrl());
