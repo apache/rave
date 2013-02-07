@@ -46,6 +46,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.easymock.EasyMock.*;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
@@ -55,6 +56,7 @@ import static org.junit.Assert.*;
 public class WidgetControllerTest {
 
     private static final String TABS = "tabs";
+    private static final String REFERRER_ID = "35";
     public static final int DEFAULT_OFFSET = 0;
     public static final int DEFAULT_PAGESIZE = AdminControllerUtil.DEFAULT_PAGE_SIZE;
 
@@ -102,11 +104,12 @@ public class WidgetControllerTest {
         replay(service);
 
 
-        String adminWidgetsView = controller.viewWidgets(DEFAULT_OFFSET, null, model);
+        String adminWidgetsView = controller.viewWidgets(DEFAULT_OFFSET, null,REFERRER_ID, model);
         verify(service);
         assertEquals(ViewNames.ADMIN_WIDGETS, adminWidgetsView);
         assertEquals(widgetSearchResult, model.asMap().get(ModelKeys.SEARCHRESULT));
         assertTrue(model.containsAttribute(TABS));
+        assertThat((String) model.asMap().get(ModelKeys.REFERRING_PAGE_ID), is(equalTo(REFERRER_ID)));
     }
 
     @Test
@@ -124,13 +127,14 @@ public class WidgetControllerTest {
         replay(service);
 
 
-        String searchView = controller.searchWidgets(searchTerm, type, status, DEFAULT_OFFSET, model);
+        String searchView = controller.searchWidgets(searchTerm, type, status, DEFAULT_OFFSET,REFERRER_ID, model);
         verify(service);
 
         assertEquals(ViewNames.ADMIN_WIDGETS, searchView);
         assertEquals(searchTerm, model.asMap().get(ModelKeys.SEARCH_TERM));
         assertEquals(type, model.asMap().get("selectedWidgetType"));
         assertEquals(status, model.asMap().get("selectedWidgetStatus"));
+        assertThat((String) model.asMap().get(ModelKeys.REFERRING_PAGE_ID), is(equalTo(REFERRER_ID)));
     }
 
     @SuppressWarnings("unchecked")
@@ -145,7 +149,7 @@ public class WidgetControllerTest {
         expect(service.getWidget(entityId)).andReturn(widget);
         expect(categoryService.getAll()).andReturn(categories);
         replay(service, categoryService);
-        String adminWidgetDetailView = controller.viewWidgetDetail(entityId, model);
+        String adminWidgetDetailView = controller.viewWidgetDetail(entityId,REFERRER_ID, model);
         verify(service, categoryService);
 
         assertEquals(ViewNames.ADMIN_WIDGETDETAIL, adminWidgetDetailView);
@@ -153,6 +157,7 @@ public class WidgetControllerTest {
         assertEquals(widget, model.asMap().get("widget"));
         assertThat(model.containsAttribute(ModelKeys.CATEGORIES), is(true));
         assertThat((List<Category>) model.asMap().get(ModelKeys.CATEGORIES), is(categories));
+        assertThat((String) model.asMap().get(ModelKeys.REFERRING_PAGE_ID), is(equalTo(REFERRER_ID)));
     }
 
     @Test
@@ -171,11 +176,13 @@ public class WidgetControllerTest {
         sessionStatus.setComplete();
         expectLastCall();
         replay(service, sessionStatus);
-        String view = controller.updateWidgetDetail(widget, errors, validToken, validToken, modelMap, sessionStatus);
+        String view = controller.updateWidgetDetail(widget, errors, validToken, validToken,REFERRER_ID, modelMap, sessionStatus);
         verify(service, sessionStatus);
 
         assertFalse("No errors", errors.hasErrors());
-        assertEquals("redirect:/app/admin/widgets?action=update", view);
+        assertEquals("redirect:/app/admin/widgets?action=update&referringPageId=" +REFERRER_ID, view);
+
+
 
     }
 
@@ -192,7 +199,7 @@ public class WidgetControllerTest {
 
         String otherToken = AdminControllerUtil.generateSessionToken();
 
-        controller.updateWidgetDetail(widget, errors, "sessionToken", otherToken, modelMap, sessionStatus);
+        controller.updateWidgetDetail(widget, errors, "sessionToken", otherToken,REFERRER_ID, modelMap, sessionStatus);
 
         verify(sessionStatus);
         assertFalse("Can't come here", true);
@@ -205,7 +212,7 @@ public class WidgetControllerTest {
         SessionStatus sessionStatus = createMock(SessionStatus.class);
         ModelMap modelMap = new ExtendedModelMap();
 
-        String view = controller.updateWidgetDetail(widget, errors, validToken, validToken, modelMap, sessionStatus);
+        String view = controller.updateWidgetDetail(widget, errors, validToken, validToken,REFERRER_ID, modelMap, sessionStatus);
 
         assertTrue("Errors", errors.hasErrors());
         assertEquals(ViewNames.ADMIN_WIDGETDETAIL, view);

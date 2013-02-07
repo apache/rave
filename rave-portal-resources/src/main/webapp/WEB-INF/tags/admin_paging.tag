@@ -32,7 +32,7 @@ under the License.
                     <c:if test="${not empty selectedWidgetStatus}"><c:param name="widgetstatus" value="${selectedWidgetStatus}"/></c:if>
                     <c:param name="offset" value="${(searchResult.currentPage - 2)  * searchResult.pageSize}"/>
                 </c:url>
-                <li><a href="<c:out value="${pageUrl}"/>">&lt;</a></li>
+                <li><a href="<c:out value="${pageUrl}&referringPageId=${referringPageId}"/>">&lt;</a></li>
             </c:if>
             <c:forEach var="i" begin="1" end="${searchResult.numberOfPages}">
                 <c:choose>
@@ -46,7 +46,7 @@ under the License.
                             <c:if test="${not empty selectedWidgetStatus}"><c:param name="widgetstatus" value="${selectedWidgetStatus}"/></c:if>
                             <c:param name="offset" value="${(i - 1) * searchResult.pageSize}"/>
                         </c:url>
-                        <li><a href="<c:out value="${pageUrl}"/>">${i}</a></li>
+                        <li><a href="<c:out value="${pageUrl}&referringPageId=${referringPageId}"/>">${i}</a></li>
                     </c:otherwise>
                 </c:choose>
             </c:forEach>
@@ -57,7 +57,7 @@ under the License.
                     <c:if test="${not empty selectedWidgetStatus}"><c:param name="widgetstatus" value="${selectedWidgetStatus}"/></c:if>
                     <c:param name="offset" value="${(searchResult.currentPage)  * searchResult.pageSize}"/>
                 </c:url>
-                <li><a href="<c:out value="${pageUrl}"/>">&gt;</a></li>
+                <li><a href="<c:out value="${pageUrl}&referringPageId=${referringPageId}"/>">&gt;</a></li>
             </c:if>
         </ul>
     </div>

@@ -19,6 +19,7 @@
 
 package org.apache.rave.portal.web.controller.admin;
 
+import org.apache.rave.portal.web.util.ModelKeys;
 import org.apache.rave.portal.web.util.ViewNames;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,6 +28,9 @@ import org.springframework.ui.Model;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 /**
  * Test for {@link AdminHomeController}
@@ -34,15 +38,17 @@ import static junit.framework.Assert.assertTrue;
 public class AdminHomeControllerTest {
 
     private static final String TABS = "tabs";
+    private static final String REFERRER_ID = "35";
 
     private AdminHomeController controller;
 
     @Test
     public void adminHome() throws Exception {
         Model model = new ExtendedModelMap();
-        String homeView = controller.viewDefault(model);
+        String homeView = controller.viewDefault(model, REFERRER_ID);
         assertEquals(ViewNames.ADMIN_HOME, homeView);
         assertTrue(model.containsAttribute(TABS));
+        assertThat((String) model.asMap().get(ModelKeys.REFERRING_PAGE_ID), is(equalTo(REFERRER_ID)));
     }
 
     @Before

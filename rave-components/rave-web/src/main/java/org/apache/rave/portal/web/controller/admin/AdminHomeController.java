@@ -19,11 +19,13 @@
 
 package org.apache.rave.portal.web.controller.admin;
 
+import org.apache.rave.portal.web.util.ModelKeys;
 import org.apache.rave.portal.web.util.ViewNames;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * Controller for the admin pages
@@ -33,8 +35,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class AdminHomeController {
 
     @RequestMapping(method = RequestMethod.GET)
-    public String viewDefault(Model model) {
-        AdminControllerUtil.addNavigationMenusToModel("home", model);
+    public String viewDefault(Model model, @RequestParam (required = false) String referringPageId) {
+        model.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
+        AdminControllerUtil.addNavigationMenusToModel("home", model, referringPageId);
         return ViewNames.ADMIN_HOME;
     }
 

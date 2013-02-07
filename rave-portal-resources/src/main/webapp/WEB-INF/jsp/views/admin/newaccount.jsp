@@ -30,7 +30,7 @@
 	    	</div>
 	    </div>
 	    <div class="span10">
-            <a href="<spring:url value="/app/admin/users"/>"><fmt:message key="admin.userdetail.goback"/></a>
+            <a href="<spring:url value="/app/admin/users?referringPageId=${referringPageId}"/>"><fmt:message key="admin.userdetail.goback"/></a>
 
             <section class="formbox">
                 <h2><fmt:message key="page.login.createaccount"/></h2>

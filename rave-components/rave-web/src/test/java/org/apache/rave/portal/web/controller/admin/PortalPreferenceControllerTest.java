@@ -42,6 +42,9 @@ import java.util.Set;
 
 import static junit.framework.Assert.*;
 import static org.easymock.EasyMock.*;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 /**
  * Test for {@link PortalPreferenceController}
@@ -51,6 +54,7 @@ public class PortalPreferenceControllerTest {
     private PortalPreferenceController controller;
     private PortalPreferenceService service;
     private String validToken;
+    private static final String REFERRER_ID = "35";
 
     @Before
     public void setUp() {
@@ -69,13 +73,14 @@ public class PortalPreferenceControllerTest {
         expect(service.getPreferencesAsMap()).andReturn(preferenceMap);
         replay(service);
 
-        String view = controller.viewPreferences(null, model);
+        String view = controller.viewPreferences(null,REFERRER_ID, model);
 
         assertEquals(ViewNames.ADMIN_PREFERENCES, view);
         assertEquals(preferenceMap, model.asMap().get("preferenceMap"));
         assertFalse(model.containsAttribute("actionresult"));
         assertTrue(model.containsAttribute("topnav"));
         assertTrue(model.containsAttribute("tabs"));
+        assertThat((String) model.asMap().get(ModelKeys.REFERRING_PAGE_ID), is(equalTo(REFERRER_ID)));
 
         verify(service);
     }
@@ -90,13 +95,14 @@ public class PortalPreferenceControllerTest {
         replay(service);
 
         final String action = "update";
-        String view = controller.viewPreferences(action, model);
+        String view = controller.viewPreferences(action,REFERRER_ID, model);
 
         assertEquals(ViewNames.ADMIN_PREFERENCES, view);
         assertEquals(preferenceMap, model.asMap().get("preferenceMap"));
         assertEquals(action, model.asMap().get("actionresult"));
         assertTrue(model.containsAttribute("topnav"));
         assertTrue(model.containsAttribute("tabs"));
+        assertThat((String) model.asMap().get(ModelKeys.REFERRING_PAGE_ID), is(equalTo(REFERRER_ID)));
 
         verify(service);
     }
@@ -109,13 +115,14 @@ public class PortalPreferenceControllerTest {
 
         expect(service.getPreferencesAsMap()).andReturn(preferenceMap);
         replay(service);
-        String view = controller.editPreferences(model);
+        String view = controller.editPreferences(model,REFERRER_ID);
         assertEquals(ViewNames.ADMIN_PREFERENCE_DETAIL, view);
 
         assertTrue(model.asMap().get("preferenceForm") instanceof PortalPreferenceForm);
         assertTrue(model.containsAttribute(ModelKeys.TOKENCHECK));
         assertTrue(model.containsAttribute("topnav"));
         assertTrue(model.containsAttribute("tabs"));
+        assertThat((String) model.asMap().get(ModelKeys.REFERRING_PAGE_ID), is(equalTo(REFERRER_ID)));
     }
 
     @Test
@@ -134,9 +141,9 @@ public class PortalPreferenceControllerTest {
 
         expectLastCall();
         replay(service, sessionStatus);
-        String view = controller.updatePreferences(form, errors, validToken, validToken, model, sessionStatus);
+        String view = controller.updatePreferences(form, errors, validToken, validToken,REFERRER_ID, model, sessionStatus);
 
-        assertEquals("redirect:/app/admin/preferences?action=update", view);
+        assertEquals("redirect:/app/admin/preferences?action=update&referringPageId=" + REFERRER_ID, view);
         assertTrue("Model has been cleared", model.isEmpty());
 
         verify(service, sessionStatus);
@@ -153,7 +160,7 @@ public class PortalPreferenceControllerTest {
         
         expectLastCall();
         replay(service, sessionStatus);
-        controller.updatePreferences(form, errors, validToken, invalidToken, model, sessionStatus);
+        controller.updatePreferences(form, errors, validToken, invalidToken,REFERRER_ID, model, sessionStatus);
 
         assertFalse("Should not end up here", true);
         verify(service, sessionStatus);
@@ -170,7 +177,7 @@ public class PortalPreferenceControllerTest {
         SessionStatus sessionStatus = createMock(SessionStatus.class);
 
         replay(service, sessionStatus);
-        String view = controller.updatePreferences(form, errors, validToken, validToken, model, sessionStatus);
+        String view = controller.updatePreferences(form, errors, validToken, validToken,REFERRER_ID, model, sessionStatus);
 
         assertEquals(ViewNames.ADMIN_PREFERENCE_DETAIL, view);
         assertTrue(errors.hasErrors());

@@ -35,6 +35,9 @@ import java.util.List;
 
 import static junit.framework.Assert.*;
 import static org.easymock.EasyMock.*;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 /**
  * Test for {@link CategoryController}
@@ -49,6 +52,7 @@ public class CategoryControllerTest {
     private static final String UPDATE = "update";
     private static final String DELETE = "delete";
     private static final String CREATE = "create";
+    private static final String REFERRER_ID = "35";
 
     @Before
     public void setup() {
@@ -68,7 +72,7 @@ public class CategoryControllerTest {
 
         Model model = new ExtendedModelMap();
 
-        String viewName = controller.getCategories("", model);
+        String viewName = controller.getCategories("",REFERRER_ID, model);
         verify(categoryService);
 
         assertEquals(ViewNames.ADMIN_CATEGORIES, viewName);
@@ -79,6 +83,7 @@ public class CategoryControllerTest {
         assertTrue(model.containsAttribute("topnav"));
         assertTrue(model.containsAttribute("tabs"));
         assertTrue("verify tokencheck", model.asMap().containsKey(ModelKeys.TOKENCHECK));
+        assertThat((String) model.asMap().get(ModelKeys.REFERRING_PAGE_ID), is(equalTo(REFERRER_ID)));
     }
 
     @Test
@@ -89,7 +94,7 @@ public class CategoryControllerTest {
 
         Model model = new ExtendedModelMap();
 
-        String viewName = controller.getCategories(UPDATE, model);
+        String viewName = controller.getCategories(UPDATE,REFERRER_ID, model);
         verify(categoryService);
 
         assertEquals(ViewNames.ADMIN_CATEGORIES, viewName);
@@ -100,6 +105,7 @@ public class CategoryControllerTest {
         assertEquals("Check that the category object available", new CategoryImpl(), model.asMap().get("category"));
         assertTrue(model.containsAttribute("topnav"));
         assertTrue(model.containsAttribute("tabs"));
+        assertThat((String) model.asMap().get(ModelKeys.REFERRING_PAGE_ID), is(equalTo(REFERRER_ID)));
     }
 
     @Test
@@ -110,7 +116,7 @@ public class CategoryControllerTest {
 
         Model model = new ExtendedModelMap();
 
-        String viewName = controller.getCategories(DELETE, model);
+        String viewName = controller.getCategories(DELETE,REFERRER_ID, model);
         verify(categoryService);
 
         assertEquals(ViewNames.ADMIN_CATEGORIES, viewName);
@@ -121,6 +127,7 @@ public class CategoryControllerTest {
         assertEquals("Check that the category object available", new CategoryImpl(), model.asMap().get("category"));
         assertTrue(model.containsAttribute("topnav"));
         assertTrue(model.containsAttribute("tabs"));
+        assertThat((String) model.asMap().get(ModelKeys.REFERRING_PAGE_ID), is(equalTo(REFERRER_ID)));
     }
 
     @Test
@@ -131,7 +138,7 @@ public class CategoryControllerTest {
 
         Model model = new ExtendedModelMap();
 
-        String viewName = controller.getCategories(CREATE, model);
+        String viewName = controller.getCategories(CREATE,REFERRER_ID, model);
         verify(categoryService);
 
         assertEquals(ViewNames.ADMIN_CATEGORIES, viewName);
@@ -142,6 +149,7 @@ public class CategoryControllerTest {
         assertEquals("Check category object available", new CategoryImpl(), model.asMap().get("category"));
         assertTrue(model.containsAttribute("topnav"));
         assertTrue(model.containsAttribute("tabs"));
+        assertThat((String) model.asMap().get(ModelKeys.REFERRING_PAGE_ID), is(equalTo(REFERRER_ID)));
     }
 
     @Test
@@ -157,8 +165,8 @@ public class CategoryControllerTest {
         sessionStatus.setComplete();
         expectLastCall();
         replay(userService, categoryService,sessionStatus);
-        String view = controller.createCategory(category, validToken, validToken, model, sessionStatus);
-        assertEquals("ViewName match", "redirect:/app/admin/categories?action=create", view);
+        String view = controller.createCategory(category, validToken, validToken,REFERRER_ID, model, sessionStatus);
+        assertEquals("ViewName match", "redirect:/app/admin/categories?action=create&referringPageId=" +REFERRER_ID, view);
         assertTrue("empty model", model.asMap().isEmpty());
         verify(userService, categoryService, sessionStatus);
     }
@@ -177,7 +185,7 @@ public class CategoryControllerTest {
         sessionStatus.setComplete();
         expectLastCall();
         replay(userService, categoryService,sessionStatus);
-        String view = controller.createCategory(category, validToken, invalidToken, model, sessionStatus);
+        String view = controller.createCategory(category, validToken, invalidToken,REFERRER_ID, model, sessionStatus);
         assertTrue("Test should catch exception and never hit this test", false);
     }
 
@@ -191,7 +199,7 @@ public class CategoryControllerTest {
         SessionStatus sessionStatus = createMock(SessionStatus.class);
         expect(userService.getAuthenticatedUser()).andReturn(user).once();
         replay(userService);
-        String view = controller.createCategory(category, validToken, validToken, model, sessionStatus);
+        String view = controller.createCategory(category, validToken, validToken,REFERRER_ID, model, sessionStatus);
         assertEquals("ViewName match", ViewNames.ADMIN_CATEGORIES, view);
         assertFalse("empty model", model.asMap().isEmpty());
         verify(userService);
@@ -213,8 +221,8 @@ public class CategoryControllerTest {
         sessionStatus.setComplete();
         expectLastCall();
         replay(userService, categoryService,sessionStatus);
-        String view = controller.updateCategory(category, validToken, validToken, model, sessionStatus);
-        assertEquals("ViewName match", "redirect:/app/admin/categories?action=update", view);
+        String view = controller.updateCategory(category, validToken, validToken,REFERRER_ID, model, sessionStatus);
+        assertEquals("ViewName match", "redirect:/app/admin/categories?action=update&referringPageId=" + REFERRER_ID, view);
         assertTrue("empty model", model.asMap().isEmpty());
         verify(userService, categoryService, sessionStatus);
     }
@@ -237,7 +245,7 @@ public class CategoryControllerTest {
         sessionStatus.setComplete();
         expectLastCall();
         replay(userService, categoryService,sessionStatus);
-        String view = controller.updateCategory(category, validToken, invalidToken, model, sessionStatus);assertTrue("Test should catch exception and never hit this test", false);
+        String view = controller.updateCategory(category, validToken, invalidToken,REFERRER_ID, model, sessionStatus);assertTrue("Test should catch exception and never hit this test", false);
         assertTrue("Test should catch exception and never hit this test", false);
     }
 
@@ -255,7 +263,7 @@ public class CategoryControllerTest {
         SessionStatus sessionStatus = createMock(SessionStatus.class);
         expect(userService.getAuthenticatedUser()).andReturn(user).once();
         replay(userService);
-        String view = controller.updateCategory(category, validToken, validToken, model, sessionStatus);
+        String view = controller.updateCategory(category, validToken, validToken,REFERRER_ID, model, sessionStatus);
         assertEquals("ViewName match", ViewNames.ADMIN_CATEGORY_DETAIL, view);
         assertFalse("empty model", model.asMap().isEmpty());
         verify(userService);
@@ -274,7 +282,7 @@ public class CategoryControllerTest {
         SessionStatus sessionStatus = createMock(SessionStatus.class);
         expect(userService.getAuthenticatedUser()).andReturn(user).once();
         replay(userService);
-        String view = controller.updateCategory(category, validToken, validToken, model, sessionStatus);
+        String view = controller.updateCategory(category, validToken, validToken,REFERRER_ID, model, sessionStatus);
         assertEquals("ViewName match", ViewNames.ADMIN_CATEGORY_DETAIL, view);
         assertFalse("empty model", model.asMap().isEmpty());
         verify(userService);
@@ -294,7 +302,7 @@ public class CategoryControllerTest {
         expect(userService.getAuthenticatedUser()).andReturn(user).once();
         expect(categoryService.get(id)).andReturn(null).once();
         replay(userService, categoryService);
-        String view = controller.updateCategory(category, validToken, validToken, model, sessionStatus);
+        String view = controller.updateCategory(category, validToken, validToken, REFERRER_ID, model, sessionStatus);
         assertEquals("ViewName match", ViewNames.ADMIN_CATEGORY_DETAIL, view);
         assertFalse("empty model", model.asMap().isEmpty());
         verify(userService, categoryService);
@@ -318,8 +326,8 @@ public class CategoryControllerTest {
         sessionStatus.setComplete();
         expectLastCall();
         replay(userService, categoryService,sessionStatus);
-        String view = controller.deleteCategory(category, validToken, validToken, "true", model,sessionStatus);
-        assertEquals("ViewName match", "redirect:/app/admin/categories?action=delete", view);
+        String view = controller.deleteCategory(category, validToken, validToken, "true",REFERRER_ID, model,sessionStatus);
+        assertEquals("ViewName match", "redirect:/app/admin/categories?action=delete&referringPageId=" + REFERRER_ID, view);
         assertTrue("empty model", model.asMap().isEmpty());
         verify(userService, categoryService, sessionStatus);
     }
@@ -343,7 +351,7 @@ public class CategoryControllerTest {
         sessionStatus.setComplete();
         expectLastCall();
         replay(userService, categoryService,sessionStatus);
-        String view = controller.deleteCategory(category, validToken, invalidToken, "true", model, sessionStatus);assertTrue("Test should catch exception and never hit this test", false);
+        String view = controller.deleteCategory(category, validToken, invalidToken, "true",REFERRER_ID, model, sessionStatus);assertTrue("Test should catch exception and never hit this test", false);
         assertTrue("Test should catch exception and never hit this test", false);
     }
 
@@ -361,7 +369,7 @@ public class CategoryControllerTest {
         SessionStatus sessionStatus = createMock(SessionStatus.class);
         expect(userService.getAuthenticatedUser()).andReturn(user).once();
         replay(userService);
-        String view = controller.deleteCategory(category, validToken, validToken, "true", model, sessionStatus);
+        String view = controller.deleteCategory(category, validToken, validToken, "true",REFERRER_ID, model, sessionStatus);
         assertEquals("ViewName match", ViewNames.ADMIN_CATEGORY_DETAIL, view);
         assertFalse("empty model", model.asMap().isEmpty());
         verify(userService);
@@ -380,7 +388,7 @@ public class CategoryControllerTest {
         SessionStatus sessionStatus = createMock(SessionStatus.class);
         expect(userService.getAuthenticatedUser()).andReturn(user).once();
         replay(userService);
-        String view = controller.deleteCategory(category, validToken, validToken, "true", model, sessionStatus);
+        String view = controller.deleteCategory(category, validToken, validToken, "true",REFERRER_ID, model, sessionStatus);
         assertEquals("ViewName match", ViewNames.ADMIN_CATEGORY_DETAIL, view);
         assertFalse("empty model", model.asMap().isEmpty());
         verify(userService);
@@ -400,7 +408,7 @@ public class CategoryControllerTest {
         expect(userService.getAuthenticatedUser()).andReturn(user).once();
         expect(categoryService.get(id)).andReturn(null).once();
         replay(userService, categoryService);
-        String view = controller.deleteCategory(category, validToken, validToken,"true", model, sessionStatus);
+        String view = controller.deleteCategory(category, validToken, validToken,"true",REFERRER_ID, model, sessionStatus);
         assertEquals("ViewName match", ViewNames.ADMIN_CATEGORY_DETAIL, view);
         assertFalse("empty model", model.asMap().isEmpty());
         verify(userService, categoryService);
@@ -419,7 +427,7 @@ public class CategoryControllerTest {
         SessionStatus sessionStatus = createMock(SessionStatus.class);
         expect(userService.getAuthenticatedUser()).andReturn(user).once();
         replay(userService);
-        String view = controller.deleteCategory(category, validToken, validToken,"false", model, sessionStatus);
+        String view = controller.deleteCategory(category, validToken, validToken,"false",REFERRER_ID, model, sessionStatus);
         assertEquals("ViewName match", ViewNames.ADMIN_CATEGORY_DETAIL, view);
         assertEquals("missing confirmation", true, model.asMap().get("missingConfirm"));
         verify(userService);
@@ -437,7 +445,7 @@ public class CategoryControllerTest {
         category.setId(id);
         expect(categoryService.get(id)).andReturn(category).once();
         replay(categoryService);
-        String view = controller.editCategory(id, model);
+        String view = controller.editCategory(id,REFERRER_ID, model);
         assertEquals("ViewName match", ViewNames.ADMIN_CATEGORY_DETAIL, view);
         assertFalse("model is not empty", model.asMap().isEmpty());
         assertSame("check model object", category, model.asMap().get("category"));

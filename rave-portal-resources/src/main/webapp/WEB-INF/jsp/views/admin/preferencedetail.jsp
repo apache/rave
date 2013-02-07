@@ -31,7 +31,7 @@
 	    </div>
 	    <div class="span10">
 	        <article>
-	           <a href="<spring:url value="/app/admin/preferences"/>"><fmt:message key="admin.preferencedetail.goback"/></a>
+	           <a href="<spring:url value="/app/admin/preferences?referringPageId=${referringPageId}"/>"><fmt:message key="admin.preferencedetail.goback"/></a>
 	
 	            <h2><fmt:message key="admin.preferences.shorttitle"/></h2>
 	
@@ -40,6 +40,7 @@
 	                <form:form action="${formAction}" method="POST" modelAttribute="preferenceForm" class="form-horizontal">
 	                    <form:errors cssClass="error" element="p"/>
                         <input type="hidden" name="token" value="<c:out value="${tokencheck}"/>"/>
+                        <input type="hidden" name="referringPageId" value="<c:out value="${referringPageId}"/>"/>
                         <p><fmt:message key="form.some.fields.required"/></p>
 
                         <div class="control-group">

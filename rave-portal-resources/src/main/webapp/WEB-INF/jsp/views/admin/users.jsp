@@ -21,6 +21,7 @@
 <fmt:setBundle basename="messages"/>
 <%--@elvariable id="searchResult" type="org.apache.rave.portal.model.util.SearchResult<org.apache.rave.portal.model.User>"--%>
 
+
 <fmt:message key="${pageTitleKey}" var="pagetitle"/>
 <rave:navbar pageTitle="${pagetitle}"/>
 <div class="container-fluid">
@@ -51,12 +52,14 @@
                         <fieldset>
                             <div class="input-append">
 	                            <input type="text" class="input-medium" id="searchTerm" name="searchTerm" value="<c:out value="${searchTerm}"/>" placeholder='<fmt:message key="admin.users.search"/>'
-	                            /><fmt:message key="page.store.search.button" var="searchButtonText"
+	                            />
+                                <input type="hidden" name="referringPageId" value="<c:out value="${referringPageId}"/>"/>
+                                <fmt:message key="page.store.search.button" var="searchButtonText"
 	                            /><button class="btn btn-primary" type="submit" value="${searchButtonText}">${searchButtonText}</button>
                             </div>
                         </fieldset>
                     </form>
-	                <c:if test="${not empty searchTerm}"><a class="btn btn-success" href="<spring:url value="/app/admin/users"/>"><fmt:message key="admin.clearsearch"/></a>
+	                <c:if test="${not empty searchTerm}"><a class="btn btn-success" href="<spring:url value="/app/admin/users?referringPageId=${referringPageId}"/>"><fmt:message key="admin.clearsearch"/></a>
 	                </c:if>
 	            </div>
 	            <c:if test="${searchResult.totalResults > 0}">
@@ -70,7 +73,7 @@
 	                    </thead>
 	                    <tbody>
 	                    <c:forEach var="user" items="${searchResult.resultSet}">
-	                        <spring:url value="/app/admin/userdetail/${user.id}" var="detaillink"/>
+	                        <spring:url value="/app/admin/userdetail/${user.id}?referringPageId=${referringPageId}" var="detaillink"/>
 	                        <tr data-detaillink="${detaillink}">
 	                            <td><a href="${detaillink}"><c:out value="${user.username}"/></a></td>
 	                            <td><c:out value="${user.email}"/></td>
@@ -86,7 +89,7 @@
 	            <fieldset>
 	            	<legend>Add New User</legend>
 	            	<br/>
-	            	<a class="btn btn-primary" href="<spring:url value="/app/admin/adduser"/>"><i class="icon-plus icon-white"></i> <fmt:message key="admin.users.add"/></a>
+	            	<a class="btn btn-primary" href="<spring:url value="/app/admin/adduser?referringPageId=${referringPageId}"/>"><i class="icon-plus icon-white"></i> <fmt:message key="admin.users.add"/></a>
 	            	<br/>
 	            </fieldset>
 	            <div>
@@ -100,6 +103,7 @@
     <script>
         $(function() {
             rave.admin.initAdminUi();
+
         });
     </script>
 </portal:register-init-script>

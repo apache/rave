@@ -25,6 +25,7 @@
 
         <p><form:errors cssClass="error"/></p>
 
+
         <div class="control-group">
             <label class="control-label" for="userNameField"><fmt:message key="page.general.username"/></label>
             <div class="controls">
@@ -134,6 +135,7 @@
     </fieldset>
 
     <fieldset>
+        <input type="hidden" name="referringPageId" value="<c:out value="${referringPageId}"/>"/>
         <fmt:message key="page.newaccount.button" var="submitButtonText"/>
         <button class="btn btn-primary" type="submit" value="${submitButtonText}">${submitButtonText}</button>
     </fieldset>

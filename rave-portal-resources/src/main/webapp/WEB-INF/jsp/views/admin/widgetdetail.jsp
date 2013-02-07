@@ -31,7 +31,7 @@
 	    </div>
 	    <div class="span10">
 		    <article>
-		        <a href="<spring:url value="/app/admin/widgets"/>"><fmt:message key="admin.widgetdetail.goback"/> </a></li>
+		        <a href="<spring:url value="/app/admin/widgets?referringPageId=${referringPageId}"/>"><fmt:message key="admin.widgetdetail.goback"/> </a>
 		        <h2>
 		            <c:out value="${widget.title}"/>
 		        </h2>
@@ -68,6 +68,7 @@
 		                    
 		                    <input type="hidden" name="token"
 		                           value="<c:out value="${tokencheck}"/>"/>
+                            <input type="hidden" name="referringPageId" value="<c:out value="${referringPageId}"/>"/>
 		                    <p>
 		                        <fmt:message key="form.some.fields.required"/>
 		                    </p>

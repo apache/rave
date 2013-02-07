@@ -49,14 +49,16 @@
 			                    <input class="input-medium" type="search" id="searchTerm" name="searchTerm"
 			                           value="<c:out value="${searchTerm}"/>"
 			                            placeholder='<fmt:message key="admin.widgets.search"/>'
-			                    /><fmt:message key="page.store.search.button" var="searchButtonText"
+			                    />
+                                <input type="hidden" name="referringPageId" value="<c:out value="${referringPageId}"/>"/>
+                                <fmt:message key="page.store.search.button" var="searchButtonText"
 			                    /><button class="btn btn-primary" type="submit" value="${searchButtonText}">${searchButtonText}</button>
 							  
 							</div>
 							
 							<p>
 								<c:if test="${not empty searchTerm or not empty selectedWidgetType or not empty selectedWidgetStatus}">
-							    	<a href="<spring:url value="/app/admin/widgets"/>" ><i class="icon-remove"></i> <fmt:message key="admin.clearsearch"/></a>&nbsp;&nbsp;
+							    	<a href="<spring:url value="/app/admin/widgets?referringPageId=${referringPageId}"/>" ><i class="icon-remove"></i> <fmt:message key="admin.clearsearch"/></a>&nbsp;&nbsp;
 							</c:if>
 								<a href="#" data-toggle="collapse" data-target="#searchFilters">
 									<fmt:message key="admin.widgets.search.options"/>
@@ -96,7 +98,7 @@
 	                    </thead>
 	                    <tbody>
 	                    <c:forEach var="widget" items="${searchResult.resultSet}">
-	                        <spring:url value="/app/admin/widgetdetail/${widget.id}" var="detaillink"/>
+	                        <spring:url value="/app/admin/widgetdetail/${widget.id}?referringPageId=${referringPageId}" var="detaillink"/>
 	                        <tr data-detaillink="${detaillink}">
 	                            <td><a href="${detaillink}"><c:out value="${widget.title}"/></a></td>
 	                            <td><fmt:message key="widget.type.${widget.type}"/></td>

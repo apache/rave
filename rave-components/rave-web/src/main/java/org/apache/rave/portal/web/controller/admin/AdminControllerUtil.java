@@ -56,47 +56,75 @@ public final class AdminControllerUtil {
         return "create".equals(action) || isDeleteOrUpdate(action);
     }
 
-    static void addNavigationMenusToModel(String selectedItem, Model model) {
-        final NavigationMenu topMenu = getTopMenu();
+    static void addNavigationMenusToModel(String selectedItem, Model model,  String referringPageId) {
+        final NavigationMenu topMenu = getTopMenu(referringPageId);
         model.addAttribute(topMenu.getName(), topMenu);
-        final NavigationMenu tabMenu = getTabMenu(selectedItem);
+        final NavigationMenu tabMenu = getTabMenu(selectedItem, referringPageId);
         model.addAttribute(tabMenu.getName(), tabMenu);
     }
 
     // For the time being hard coded NavigationMenu's
-    private static NavigationMenu getTopMenu() {
+    private static NavigationMenu getTopMenu(String referringPageId) {
         NavigationMenu menu = new NavigationMenu("topnav");
-
-        NavigationItem raveHome = new NavigationItem("page.general.back", null, "/");
-        menu.addNavigationItem(raveHome);
 
         NavigationItem logout = new NavigationItem("page.general.logout", null, "/j_spring_security_logout");
         menu.addNavigationItem(logout);
 
+        NavigationItem raveHome = new NavigationItem();
+        raveHome.setName("page.general.back");
+
+        if (referringPageId != null && !referringPageId.isEmpty()) {
+            raveHome.setUrl("/app/page/view/" + referringPageId);
+        } else {
+            raveHome.setUrl("/");
+        }
+        menu.addNavigationItem(raveHome);
+
         return menu;
     }
 
-    private static NavigationMenu getTabMenu(String selectedItem) {
+    private static NavigationMenu getTabMenu(String selectedItem, String referringPageId) {
         NavigationMenu menu = new NavigationMenu("tabs");
 
-        NavigationItem home = new NavigationItem("admin.home.shorttitle", null, "/app/admin/");
+        NavigationItem home = new NavigationItem("admin.home.shorttitle", null, null);
         home.setSelected("home".equals(selectedItem));
-        menu.addNavigationItem(home);
 
-        NavigationItem users = new NavigationItem("admin.users.shorttitle", null, "/app/admin/users");
+
+        NavigationItem users = new NavigationItem("admin.users.shorttitle", null, null);
         users.setSelected("users".equals(selectedItem));
-        menu.addNavigationItem(users);
 
-        NavigationItem widgets = new NavigationItem("admin.widgets.shorttitle", null, "/app/admin/widgets");
+
+        NavigationItem widgets = new NavigationItem("admin.widgets.shorttitle", null, null);
         widgets.setSelected("widgets".equals(selectedItem));
-        menu.addNavigationItem(widgets);
 
-        NavigationItem preferences = new NavigationItem("admin.preferences.shorttitle", null, "/app/admin/preferences");
+
+        NavigationItem preferences = new NavigationItem("admin.preferences.shorttitle", null, null);
         preferences.setSelected("preferences".equals(selectedItem));
-        menu.addNavigationItem(preferences);
 
-        NavigationItem categories = new NavigationItem("admin.category.shortTitle", null, "/app/admin/categories");
+
+        NavigationItem categories = new NavigationItem("admin.category.shortTitle", null, null);
         categories.setSelected("categories".equals(selectedItem));
+
+        // set url of nav items with or without the referring page id
+        if (referringPageId != null && !referringPageId.isEmpty()) {
+            home.setUrl("/app/admin?referringPageId=" + referringPageId);
+            users.setUrl("/app/admin/users?referringPageId=" + referringPageId);
+            widgets.setUrl("/app/admin/widgets?referringPageId=" + referringPageId);
+            preferences.setUrl("/app/admin/preferences?referringPageId=" + referringPageId);
+            categories.setUrl("/app/admin/categories?referringPageId=" + referringPageId);
+        } else {
+            home.setUrl("/app/admin");
+            users.setUrl("/app/admin/users");
+            widgets.setUrl("/app/admin/widgets");
+            preferences.setUrl("/app/admin/preferences");
+            categories.setUrl("/app/admin/categories");
+        }
+
+        // add nav items to menu
+        menu.addNavigationItem(home);
+        menu.addNavigationItem(users);
+        menu.addNavigationItem(widgets);
+        menu.addNavigationItem(preferences);
         menu.addNavigationItem(categories);
 
         return menu;

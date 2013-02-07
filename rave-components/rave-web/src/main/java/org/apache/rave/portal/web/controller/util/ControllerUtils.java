@@ -79,7 +79,7 @@ public class ControllerUtils {
                 NavigationItem store = new NavigationItem("page.store.title", null, "/app/store?referringPageId=" + referringPageId);
                 menu.addNavigationItem(store);
             }
-            NavigationItem admin = getAdminItem();
+            NavigationItem admin = getAdminItem(referringPageId);
             menu.addNavigationItem(admin);
 
             NavigationItem logout = getLogoutItem();
@@ -91,7 +91,7 @@ public class ControllerUtils {
             NavigationItem back = getBackItem(referringPageId);
             menu.addNavigationItem(back);
 
-            NavigationItem admin = getAdminItem();
+            NavigationItem admin = getAdminItem(referringPageId);
             menu.addNavigationItem(admin);
 
             NavigationItem logout = getLogoutItem();
@@ -100,7 +100,7 @@ public class ControllerUtils {
             NavigationItem back = getBackItem(referringPageId);
             menu.addNavigationItem(back);
 
-            NavigationItem admin = getAdminItem();
+            NavigationItem admin = getAdminItem(referringPageId);
             menu.addNavigationItem(admin);
 
             NavigationItem logout = getLogoutItem();
@@ -117,7 +117,7 @@ public class ControllerUtils {
             NavigationItem back = getBackItem(referringPageId);
             menu.addNavigationItem(back);
 
-            NavigationItem admin = getAdminItem();
+            NavigationItem admin = getAdminItem(referringPageId);
             menu.addNavigationItem(admin);
 
             NavigationItem logout = getLogoutItem();
@@ -143,8 +143,15 @@ public class ControllerUtils {
         return back;
     }
 
-    private static NavigationItem getAdminItem() {
-        return new NavigationItem("page.general.toadmininterface", null, "/app/admin/");
+    private static NavigationItem getAdminItem(String referringPageId) {
+        NavigationItem admin = new NavigationItem();
+        admin.setName("page.general.toadmininterface");
+        if (referringPageId != null && !referringPageId.isEmpty()) {
+            admin.setUrl("/app/admin?referringPageId=" + referringPageId);
+        } else {
+            admin.setUrl("/app/admin");
+        }
+        return admin;
     }
 
     private static NavigationItem getLogoutItem() {

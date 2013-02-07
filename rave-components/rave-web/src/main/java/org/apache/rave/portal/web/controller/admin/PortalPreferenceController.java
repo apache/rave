@@ -59,8 +59,10 @@ public class PortalPreferenceController {
     private PortalPreferenceFormValidator formValidator;
 
     @RequestMapping(value = {"/admin/preferences", "/admin/preferences/"}, method = RequestMethod.GET)
-    public String viewPreferences(@RequestParam(required = false) final String action, Model model) {
-        addNavigationMenusToModel(SELECTED_ITEM, model);
+    public String viewPreferences(@RequestParam(required = false) final String action,
+                                  @RequestParam(required = false) String referringPageId,Model model) {
+        model.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
+        addNavigationMenusToModel(SELECTED_ITEM, model, referringPageId);
 
         final Map<String, PortalPreference> preferenceMap = preferenceService.getPreferencesAsMap();
 
@@ -74,8 +76,9 @@ public class PortalPreferenceController {
     }
 
     @RequestMapping(value = "/admin/preferencedetail/edit", method = RequestMethod.GET)
-    public String editPreferences(Model model) {
-        addNavigationMenusToModel(SELECTED_ITEM, model);
+    public String editPreferences(Model model, @RequestParam(required = false) String referringPageId) {
+        model.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
+        addNavigationMenusToModel(SELECTED_ITEM, model, referringPageId);
         final Map<String, PortalPreference> preferenceMap = preferenceService.getPreferencesAsMap();
 
         PortalPreferenceForm form = new PortalPreferenceForm(preferenceMap);
@@ -89,13 +92,15 @@ public class PortalPreferenceController {
     public String updatePreferences(@ModelAttribute("preferenceForm") PortalPreferenceForm form, BindingResult result,
                                     @ModelAttribute(ModelKeys.TOKENCHECK) String sessionToken,
                                     @RequestParam String token,
+                                    @RequestParam(required = false) String referringPageId,
                                     ModelMap modelMap,
                                     SessionStatus status) {
         checkTokens(sessionToken, token, status);
 
         formValidator.validate(form, result);
         if (result.hasErrors()) {
-            addNavigationMenusToModel(SELECTED_ITEM, (Model) modelMap);
+            modelMap.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
+            addNavigationMenusToModel(SELECTED_ITEM, (Model) modelMap, referringPageId);
             return ViewNames.ADMIN_PREFERENCE_DETAIL;
         }
 
@@ -107,7 +112,7 @@ public class PortalPreferenceController {
 
         modelMap.clear();
         status.setComplete();
-        return "redirect:/app/admin/preferences?action=update";
+        return "redirect:/app/admin/preferences?action=update&referringPageId=" + referringPageId;
     }
 
     void setFormValidator(PortalPreferenceFormValidator formValidator) {

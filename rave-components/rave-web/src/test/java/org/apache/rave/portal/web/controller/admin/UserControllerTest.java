@@ -48,6 +48,9 @@ import java.util.List;
 
 import static junit.framework.Assert.*;
 import static org.easymock.EasyMock.*;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 /**
  * Test for {@link UserController}
@@ -55,6 +58,7 @@ import static org.easymock.EasyMock.*;
 public class UserControllerTest {
 
     private static final String TABS = "tabs";
+    private static final String REFERRER_ID = "35";
 
     private UserController controller;
     private UserService userService;
@@ -74,10 +78,11 @@ public class UserControllerTest {
         expect(userService.getLimitedListOfUsers(offset, pageSize)).andReturn(searchResult);
         replay(userService);
 
-        String adminUsersView = controller.viewUsers(offset, referer, model);
+        String adminUsersView = controller.viewUsers(offset, referer,REFERRER_ID, model);
         assertEquals(ViewNames.ADMIN_USERS, adminUsersView);
         assertEquals(searchResult, model.asMap().get(ModelKeys.SEARCHRESULT));
         assertTrue(model.containsAttribute(TABS));
+        assertThat((String) model.asMap().get(ModelKeys.REFERRING_PAGE_ID), is(equalTo(REFERRER_ID)));
     }
 
     @Test
@@ -92,11 +97,12 @@ public class UserControllerTest {
         expect(userService.getUsersByFreeTextSearch(searchTerm, offset, pageSize)).andReturn(searchResult);
         replay(userService);
 
-        String adminUsersView = controller.searchUsers(searchTerm, offset, model);
+        String adminUsersView = controller.searchUsers(searchTerm, offset,REFERRER_ID, model);
         assertEquals(ViewNames.ADMIN_USERS, adminUsersView);
         assertEquals(searchResult, model.asMap().get(ModelKeys.SEARCHRESULT));
         assertEquals(searchTerm, model.asMap().get(ModelKeys.SEARCH_TERM));
         assertTrue(model.containsAttribute(TABS));
+        assertThat((String) model.asMap().get(ModelKeys.REFERRING_PAGE_ID), is(equalTo(REFERRER_ID)));
     }
 
 
@@ -109,12 +115,13 @@ public class UserControllerTest {
         expect(userService.getUserById(userid)).andReturn(user);
         replay(userService);
 
-        String adminUserDetailView = controller.viewUserDetail(userid, model);
+        String adminUserDetailView = controller.viewUserDetail(userid,REFERRER_ID, model);
         verify(userService);
 
         assertEquals(ViewNames.ADMIN_USERDETAIL, adminUserDetailView);
         assertTrue(model.containsAttribute(TABS));
         assertEquals(user, model.asMap().get("user"));
+        assertThat((String) model.asMap().get(ModelKeys.REFERRING_PAGE_ID), is(equalTo(REFERRER_ID)));
     }
 
 
@@ -137,11 +144,12 @@ public class UserControllerTest {
         expectLastCall();
         replay(userService, sessionStatus);
 
-        final String view = controller.updateUserDetail(user, errors, validToken, validToken, modelMap, sessionStatus);
+        final String view = controller.updateUserDetail(user, errors, validToken, validToken,REFERRER_ID, modelMap, sessionStatus);
         verify(userService, sessionStatus);
 
         assertFalse(errors.hasErrors());
-        assertEquals("redirect:/app/admin/users?action=update", view);
+        assertEquals("redirect:/app/admin/users?action=update&referringPageId=" + REFERRER_ID, view);
+
     }
 
     @Test
@@ -153,7 +161,7 @@ public class UserControllerTest {
 
         SessionStatus sessionStatus = createMock(SessionStatus.class);
         replay(sessionStatus);
-        final String view = controller.updateUserDetail(user, errors, validToken, validToken, modelMap, sessionStatus);
+        final String view = controller.updateUserDetail(user, errors, validToken, validToken,REFERRER_ID, modelMap, sessionStatus);
         verify(sessionStatus);
 
         assertTrue(errors.hasErrors());
@@ -173,7 +181,7 @@ public class UserControllerTest {
 
         String otherToken = AdminControllerUtil.generateSessionToken();
 
-        controller.updateUserDetail(user, errors, validToken, otherToken, modelMap, sessionStatus);
+        controller.updateUserDetail(user, errors, validToken, otherToken,REFERRER_ID, modelMap, sessionStatus);
         verify(sessionStatus);
 
         assertFalse("SecurityException", true);
@@ -196,10 +204,11 @@ public class UserControllerTest {
         expectLastCall();
         replay(userService, sessionStatus);
 
-        final String view = controller.deleteUserDetail(user, validToken, validToken, "true", modelMap, sessionStatus);
+        final String view = controller.deleteUserDetail(user, validToken, validToken, "true",REFERRER_ID, modelMap, sessionStatus);
         verify(userService, sessionStatus);
 
-        assertEquals("redirect:/app/admin/users?action=delete", view);
+        assertEquals("redirect:/app/admin/users?action=delete&referringPageId=" + REFERRER_ID, view);
+
     }
 
     @Test
@@ -210,10 +219,11 @@ public class UserControllerTest {
 
         SessionStatus sessionStatus = createMock(SessionStatus.class);
         replay(sessionStatus);
-        final String view = controller.deleteUserDetail(user, validToken, validToken, null, modelMap, sessionStatus);
+        final String view = controller.deleteUserDetail(user, validToken, validToken, null,REFERRER_ID, modelMap, sessionStatus);
         verify(sessionStatus);
 
         assertEquals(ViewNames.ADMIN_USERDETAIL, view);
+        assertThat((String) modelMap.get(ModelKeys.REFERRING_PAGE_ID), is(equalTo(REFERRER_ID)));
     }
 
     @Test(expected = SecurityException.class)
@@ -228,7 +238,7 @@ public class UserControllerTest {
 
         String otherToken = AdminControllerUtil.generateSessionToken();
 
-        controller.deleteUserDetail(user, validToken, otherToken, "true", modelMap, sessionStatus);
+        controller.deleteUserDetail(user, validToken, otherToken, "true",REFERRER_ID, modelMap, sessionStatus);
         verify(sessionStatus);
 
         assertFalse("SecurityException", true);
@@ -238,10 +248,11 @@ public class UserControllerTest {
     @Test
     public void setupForm() {
         ModelMap modelMap = new ExtendedModelMap();
-        final String viewName = controller.setUpForm(modelMap);
+        final String viewName = controller.setUpForm(modelMap,REFERRER_ID);
         assertEquals(ViewNames.ADMIN_NEW_ACCOUNT, viewName);
         assertTrue(modelMap.containsAttribute(TABS));
         assertTrue(modelMap.get(ModelKeys.NEW_USER) instanceof UserImpl);
+        assertThat((String) modelMap.get(ModelKeys.REFERRING_PAGE_ID), is(equalTo(REFERRER_ID)));
     }
 
     @Test
@@ -268,11 +279,12 @@ public class UserControllerTest {
         expectLastCall();
         replay(userService, model, newAccountService, redirectAttributes);
 
-        String result = controller.create(User, errors, model, redirectAttributes);
+        String result = controller.create(User, errors, model,REFERRER_ID,redirectAttributes);
         verify(userService, model, newAccountService, redirectAttributes);
 
         assertFalse(errors.hasErrors());
-        assertEquals("redirect:/app/admin/users", result);
+        assertEquals("redirect:/app/admin/users?referringPageId=" +REFERRER_ID, result);
+
     }
     @Test
     public void create_EmptyForm() throws Exception {
@@ -294,11 +306,12 @@ public class UserControllerTest {
 
         replay(model);
 
-        String result = controller.create(User, errors, model, redirectAttributes);
+        String result = controller.create(User, errors, model,REFERRER_ID, redirectAttributes);
         verify(model);
 
         assertTrue(errors.hasErrors());
         assertEquals(ViewNames.ADMIN_NEW_ACCOUNT, result);
+
     }
 
     @Test

@@ -52,7 +52,7 @@
 	                </thead>
 	                <tbody>
 	                <c:forEach items="${categories}" var="category">
-	                    <spring:url value="/app/admin/category/edit?id=${category.id}" var="detaillink"/>
+	                    <spring:url value="/app/admin/category/edit?id=${category.id}&referringPageId=${referringPageId}" var="detaillink"/>
                         <portal:person id="${category.createdUserId}" var="createdUser" />
                         <portal:person id="${category.lastModifiedUserId}" var="modifiedUser" />
 
@@ -85,6 +85,7 @@
 	                <fieldset>
 	                    <legend><fmt:message key="admin.category.create"/></legend>
 	                    <input type="hidden" name="token" value="<c:out value="${tokencheck}"/>"/>
+                        <input type="hidden" name="referringPageId" value="<c:out value="${referringPageId}"/>"/>
 	                    <br/>
 	                    <div class="control-group">
 	                        <label class="control-label" for="text">

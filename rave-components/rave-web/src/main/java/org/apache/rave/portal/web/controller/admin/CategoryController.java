@@ -45,8 +45,9 @@ public class CategoryController {
     private CategoryService categoryService;
 
     @RequestMapping(value = {"/admin/categories", "/admin/categories/"}, method = RequestMethod.GET)
-    public String getCategories(@RequestParam(required = false) final String action, Model model){
-        addNavigationMenusToModel(SELECTED_ITEM, model);
+    public String getCategories(@RequestParam(required = false) final String action,
+                                @RequestParam(required = false) String referringPageId,Model model){
+        addNavigationMenusToModel(SELECTED_ITEM, model, referringPageId);
 
         List<Category> categories = categoryService.getAll();
 
@@ -55,6 +56,7 @@ public class CategoryController {
         model.addAttribute(ModelKeys.CATEGORY, new CategoryImpl());
         // add tokencheck attribute for creating new category
         model.addAttribute(ModelKeys.TOKENCHECK, AdminControllerUtil.generateSessionToken());
+        model.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
 
         if (isCreateDeleteOrUpdate(action)) {
             model.addAttribute("actionresult", action);
@@ -67,6 +69,7 @@ public class CategoryController {
     public String createCategory(@ModelAttribute CategoryImpl category,
                                  @ModelAttribute(ModelKeys.TOKENCHECK) String sessionToken,
                                  @RequestParam String token,
+                                 @RequestParam(required = false) String referringPageId,
                                  Model model,
                                  SessionStatus status) {
         checkTokens(sessionToken, token, status);
@@ -75,31 +78,34 @@ public class CategoryController {
         if (isValidRequest) {
             categoryService.create(category.getText(), creator);
         } else {
-            addNavigationMenusToModel(SELECTED_ITEM, model);
+            model.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
+            addNavigationMenusToModel(SELECTED_ITEM, model, referringPageId);
             return ViewNames.ADMIN_CATEGORIES;
         }
         status.setComplete();
-        return "redirect:/app/admin/categories?action=create";
+        return "redirect:/app/admin/categories?action=create&referringPageId=" + referringPageId;
     }
 
     @RequestMapping(value = {"/admin/category/update"}, method = RequestMethod.POST)
     public String updateCategory(@ModelAttribute(ModelKeys.CATEGORY) Category category,
                                  @ModelAttribute(ModelKeys.TOKENCHECK) String sessionToken,
                                  @RequestParam String token,
+                                 @RequestParam(required = false) String referringPageId,
                                  Model model,
                                  SessionStatus status){
         checkTokens(sessionToken, token, status);
+        model.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
         User currentUser = userService.getAuthenticatedUser();
         boolean isValidRequest = validateRequest(category, currentUser);
         if (isValidRequest) {
             categoryService.update(category.getId(), category.getText(), currentUser);
         } else {
-            addNavigationMenusToModel(SELECTED_ITEM, model);
+            addNavigationMenusToModel(SELECTED_ITEM, model, referringPageId);
             return ViewNames.ADMIN_CATEGORY_DETAIL;
         }
         status.setComplete();
         model.asMap().clear();
-        return "redirect:/app/admin/categories?action=update";
+        return "redirect:/app/admin/categories?action=update&referringPageId=" + referringPageId;
     }
 
     @RequestMapping(value = {"/admin/category/delete"}, method = RequestMethod.POST)
@@ -107,12 +113,14 @@ public class CategoryController {
                                  @ModelAttribute(ModelKeys.TOKENCHECK) String sessionToken,
                                  @RequestParam String token,
                                  @RequestParam(required = false) String confirmdelete,
+                                 @RequestParam(required = false) String referringPageId,
                                  Model model,
                                  SessionStatus status){
         checkTokens(sessionToken, token, status);
         User creator = userService.getAuthenticatedUser();
         if (!Boolean.parseBoolean(confirmdelete)) {
-            AdminControllerUtil.addNavigationMenusToModel(SELECTED_ITEM, model);
+            model.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
+            AdminControllerUtil.addNavigationMenusToModel(SELECTED_ITEM, model, referringPageId);
             model.addAttribute("missingConfirm", true);
             return ViewNames.ADMIN_CATEGORY_DETAIL;
         }
@@ -120,16 +128,19 @@ public class CategoryController {
         if (isValidRequest) {
             categoryService.delete(category);
         } else {
-            addNavigationMenusToModel(SELECTED_ITEM, model);
+            model.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
+            addNavigationMenusToModel(SELECTED_ITEM, model, referringPageId);
             return ViewNames.ADMIN_CATEGORY_DETAIL;
         }
         status.setComplete();
-        return "redirect:/app/admin/categories?action=delete";
+        return "redirect:/app/admin/categories?action=delete&referringPageId=" + referringPageId;
     }
 
     @RequestMapping(value = "/admin/category/edit", method = RequestMethod.GET)
-    public String editCategory(@RequestParam(required = true) String id, Model model) {
-        addNavigationMenusToModel(SELECTED_ITEM, model);
+    public String editCategory(@RequestParam(required = true) String id,
+                               @RequestParam(required = false) String referringPageId,Model model) {
+        model.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
+        addNavigationMenusToModel(SELECTED_ITEM, model, referringPageId);
 
         model.addAttribute(ModelKeys.TOKENCHECK, AdminControllerUtil.generateSessionToken());
         model.addAttribute(ModelKeys.CATEGORY, categoryService.get(id));

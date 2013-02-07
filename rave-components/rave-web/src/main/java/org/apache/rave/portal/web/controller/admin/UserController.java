@@ -95,8 +95,10 @@ public class UserController {
     @RequestMapping(value = {"/admin/users"}, method = RequestMethod.GET)
     public String viewUsers(@RequestParam(required = false, defaultValue = "0") int offset,
                             @RequestParam(required = false) final String action,
+                            @RequestParam(required = false) String referringPageId,
                             Model model) {
-        addNavigationMenusToModel(SELECTED_ITEM, model);
+        model.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
+        addNavigationMenusToModel(SELECTED_ITEM, model, referringPageId);
         final SearchResult<User> users = userService.getLimitedListOfUsers(offset, getPageSize());
         model.addAttribute(ModelKeys.SEARCHRESULT, users);
 
@@ -109,8 +111,10 @@ public class UserController {
 
     @RequestMapping(value = "/admin/users/search", method = RequestMethod.GET)
     public String searchUsers(@RequestParam(required = true) String searchTerm,
-                              @RequestParam(required = false, defaultValue = "0") int offset, Model model) {
-        addNavigationMenusToModel(SELECTED_ITEM, model);
+                              @RequestParam(required = false, defaultValue = "0") int offset,
+                              @RequestParam(required = false) String referringPageId,Model model) {
+        model.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
+        addNavigationMenusToModel(SELECTED_ITEM, model, referringPageId);
         final SearchResult<User> users = userService.getUsersByFreeTextSearch(
                 searchTerm, offset, getPageSize());
         model.addAttribute(ModelKeys.SEARCH_TERM, searchTerm);
@@ -119,8 +123,11 @@ public class UserController {
     }
 
     @RequestMapping(value = "/admin/userdetail/{userid}", method = RequestMethod.GET)
-    public String viewUserDetail(@PathVariable("userid") String userid, Model model) {
-        addNavigationMenusToModel(SELECTED_ITEM, model);
+    public String viewUserDetail(@PathVariable("userid") String userid,
+                                 @RequestParam(required = false) String referringPageId,
+                                 Model model) {
+        model.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
+        addNavigationMenusToModel(SELECTED_ITEM, model,referringPageId );
         model.addAttribute(ModelKeys.USER, userService.getUserById(userid));
         model.addAttribute(ModelKeys.TOKENCHECK, AdminControllerUtil.generateSessionToken());
         return ViewNames.ADMIN_USERDETAIL;
@@ -130,19 +137,21 @@ public class UserController {
     public String updateUserDetail(@ModelAttribute User user, BindingResult result,
                                    @ModelAttribute(ModelKeys.TOKENCHECK) String sessionToken,
                                    @RequestParam() String token,
+                                   @RequestParam(required = false) String referringPageId,
                                    ModelMap modelMap,
                                    SessionStatus status) {
         checkTokens(sessionToken, token, status);
         user.setConfirmPassword(user.getPassword());
         userProfileValidator.validate(user, result);
         if (result.hasErrors()) {
-            AdminControllerUtil.addNavigationMenusToModel(SELECTED_ITEM, (Model) modelMap);
+            modelMap.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
+            AdminControllerUtil.addNavigationMenusToModel(SELECTED_ITEM, (Model) modelMap, referringPageId);
             return ViewNames.ADMIN_USERDETAIL;
         }
         userService.updateUserProfile(user);
         modelMap.clear();
         status.setComplete();
-        return "redirect:/app/admin/users?action=update";
+        return "redirect:/app/admin/users?action=update&referringPageId=" + referringPageId;
     }
 
     @RequestMapping(value = "/admin/userdetail/delete", method = RequestMethod.POST)
@@ -150,24 +159,27 @@ public class UserController {
                                    @ModelAttribute(ModelKeys.TOKENCHECK) String sessionToken,
                                    @RequestParam String token,
                                    @RequestParam(required = false) String confirmdelete,
+                                   @RequestParam(required = false) String referringPageId,
                                    ModelMap modelMap,
                                    SessionStatus status) {
         checkTokens(sessionToken, token, status);
         if (!Boolean.parseBoolean(confirmdelete)) {
-            AdminControllerUtil.addNavigationMenusToModel(SELECTED_ITEM, (Model) modelMap);
+            modelMap.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
+            AdminControllerUtil.addNavigationMenusToModel(SELECTED_ITEM, (Model) modelMap, referringPageId);
             modelMap.addAttribute("missingConfirm", true);
             return ViewNames.ADMIN_USERDETAIL;
         }
         userService.deleteUser(user.getId());
         modelMap.clear();
         status.setComplete();
-        return "redirect:/app/admin/users?action=delete";
+        return "redirect:/app/admin/users?action=delete&referringPageId=" + referringPageId;
     }
 
     @RequestMapping(method = RequestMethod.GET, value = {"/admin/adduser"})
-    public String setUpForm(ModelMap model) {
+    public String setUpForm(ModelMap model, @RequestParam(required = false) String referringPageId) {
         logger.debug("Initializing new account form");
-        AdminControllerUtil.addNavigationMenusToModel(SELECTED_ITEM, (Model) model);
+        model.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
+        AdminControllerUtil.addNavigationMenusToModel(SELECTED_ITEM, (Model) model, referringPageId);
         model.addAttribute(ModelKeys.NEW_USER, new UserImpl());
         return ViewNames.ADMIN_NEW_ACCOUNT;
 
@@ -175,22 +187,25 @@ public class UserController {
 
     @RequestMapping(value = {"/admin/newaccount", "/admin/newaccount/*"}, method = RequestMethod.POST)
     public String create(@ModelAttribute(value = "newUser") UserForm newUser, BindingResult results, Model model,
+                         @RequestParam(required = false) String referringPageId,
                          RedirectAttributes redirectAttributes) {
         logger.debug("Creating a new user account");
         model.addAttribute(ModelKeys.NEW_USER, newUser);
         newAccountValidator.validate(newUser, results);
         if (results.hasErrors()) {
             logger.info("newaccount.jsp: shows validation errors");
-            addNavigationMenusToModel(SELECTED_ITEM, model);
+            model.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
+            addNavigationMenusToModel(SELECTED_ITEM, model, referringPageId);
             return ViewNames.ADMIN_NEW_ACCOUNT;
         }
         try {
             logger.debug("newaccount.jsp: passed form validation");
             newAccountService.createNewAccount(ModelUtils.convert(newUser));
             redirectAttributes.addFlashAttribute(ModelKeys.REDIRECT_MESSAGE, messageSuccess);
-            return "redirect:/app/admin/users";
+            return "redirect:/app/admin/users?referringPageId=" +referringPageId;
         } catch (org.springframework.dao.IncorrectResultSizeDataAccessException ex) {
-            addNavigationMenusToModel(SELECTED_ITEM, model);
+            model.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
+            addNavigationMenusToModel(SELECTED_ITEM, model, referringPageId);
             logger.info("Account creation failed: ", ex);
             results.reject("Account already exists", "Unable to create account");
             return ViewNames.ADMIN_NEW_ACCOUNT;
@@ -202,7 +217,8 @@ public class UserController {
                 logger.error("Account creation failed: {}", ex.getMessage());
             }
             results.reject("Unable to create account:" + ex.getMessage(), "Unable to create account");
-            addNavigationMenusToModel(SELECTED_ITEM, model);
+            model.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
+            addNavigationMenusToModel(SELECTED_ITEM, model, referringPageId);
             return ViewNames.ADMIN_NEW_ACCOUNT;
         }
 

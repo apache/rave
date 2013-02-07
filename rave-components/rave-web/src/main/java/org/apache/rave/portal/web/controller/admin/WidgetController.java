@@ -77,8 +77,10 @@ public class WidgetController {
     @RequestMapping(value = "/admin/widgets", method = RequestMethod.GET)
     public String viewWidgets(@RequestParam(required = false, defaultValue = "0") int offset,
                               @RequestParam(required = false) final String action,
+                              @RequestParam(required = false) String referringPageId,
                               Model model) {
-        addNavigationMenusToModel(SELECTED_ITEM, model);
+        model.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
+        addNavigationMenusToModel(SELECTED_ITEM, model, referringPageId);
         final SearchResult<Widget> widgets =
                 widgetService.getLimitedListOfWidgets(offset, getPageSize());
         model.addAttribute(ModelKeys.SEARCHRESULT, widgets);
@@ -94,8 +96,10 @@ public class WidgetController {
     public String searchWidgets(@RequestParam(required = false) String searchTerm,
                                 @RequestParam(required = false) String widgettype,
                                 @RequestParam(required = false) String widgetstatus,
-                                @RequestParam(required = false, defaultValue = "0") int offset, Model model) {
-        addNavigationMenusToModel(SELECTED_ITEM, model);
+                                @RequestParam(required = false, defaultValue = "0") int offset,
+                                @RequestParam(required = false) String referringPageId, Model model) {
+        model.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
+        addNavigationMenusToModel(SELECTED_ITEM, model, referringPageId);
         final SearchResult<Widget> widgets = widgetService.getWidgetsBySearchCriteria(searchTerm, widgettype,
                 widgetstatus, offset, getPageSize());
         model.addAttribute(ModelKeys.SEARCHRESULT, widgets);
@@ -106,8 +110,10 @@ public class WidgetController {
     }
 
     @RequestMapping(value = "/admin/widgetdetail/{widgetid}", method = RequestMethod.GET)
-    public String viewWidgetDetail(@PathVariable("widgetid") String widgetid, Model model) {
-        addNavigationMenusToModel(SELECTED_ITEM, model);
+    public String viewWidgetDetail(@PathVariable("widgetid") String widgetid,
+                                   @RequestParam(required = false) String referringPageId,Model model) {
+        addNavigationMenusToModel(SELECTED_ITEM, model, referringPageId);
+        model.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
         model.addAttribute(ModelKeys.WIDGET, widgetService.getWidget(widgetid));
         model.addAttribute(ModelKeys.TOKENCHECK, AdminControllerUtil.generateSessionToken());
         model.addAttribute(ModelKeys.CATEGORIES, categoryService.getAll());
@@ -119,19 +125,21 @@ public class WidgetController {
     public String updateWidgetDetail(@ModelAttribute(ModelKeys.WIDGET) Widget widget, BindingResult result,
                                      @ModelAttribute(ModelKeys.TOKENCHECK) String sessionToken,
                                      @RequestParam String token,
+                                     @RequestParam(required = false) String referringPageId,
                                      ModelMap modelMap,
                                      SessionStatus status) {
         checkTokens(sessionToken, token, status);
         widgetValidator.validate(widget, result);
         if (result.hasErrors()) {
-            addNavigationMenusToModel(SELECTED_ITEM, (Model) modelMap);
+            addNavigationMenusToModel(SELECTED_ITEM, (Model) modelMap, referringPageId);
+            modelMap.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
             modelMap.addAttribute(ModelKeys.CATEGORIES, categoryService.getAll());
             return ViewNames.ADMIN_WIDGETDETAIL;
         }
         widgetService.updateWidget(widget);
         modelMap.clear();
         status.setComplete();
-        return "redirect:/app/admin/widgets?action=update";
+        return "redirect:/app/admin/widgets?action=update&referringPageId=" + referringPageId;
     }
 
     @ModelAttribute("widgetStatus")

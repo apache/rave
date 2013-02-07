@@ -31,7 +31,7 @@
 	    </div>
 	    <div class="span10">
 	        <article>
-	            <a href="<spring:url value="/app/admin/categories"/>"><fmt:message key="admin.categoryDetail.goback"/></a>
+	            <a href="<spring:url value="/app/admin/categories?referringPageId=${referringPageId}"/>"><fmt:message key="admin.categoryDetail.goback"/></a>
 	                
 	            <h2><c:out value="${category.text}"/></h2>
 	            <div class="well">
@@ -40,6 +40,7 @@
 		                	<fieldset>
                             	<legend><fmt:message key="admin.delete"/><c:out value=" ${category.text}"/></legend>
                             	<input type="hidden" name="token" value="<c:out value="${tokencheck}"/>"/>
+                                <input type="hidden" name="referringPageId" value="<c:out value="${referringPageId}"/>"/>
                             	<br/>
 		                        <div>
 		                            <label class="checkbox">
@@ -66,6 +67,7 @@
 		            	<br/>
 		                <form:errors cssClass="error" element="p"/>
 	                    <input type="hidden" name="token" value="<c:out value="${tokencheck}"/>"/>
+                        <input type="hidden" name="referringPageId" value="<c:out value="${referringPageId}"/>"/>
 	                    
 	                    <div class="control-group">
 	                        <label for="text" class="control-label">
