@@ -199,14 +199,14 @@ public class ActivityConversionUtil {
     public HashMap convert (ExtendableBean bean) {
         if(bean == null) return null;
         HashMap entity = new HashMap();
-        bean.putAll(entity);
+        entity.putAll(bean);
         return entity;
     }
 
     public ExtendableBean convert(HashMap map){
         if(map == null) return null;
         ExtendableBean bean = new ExtendableBeanImpl();
-        map.putAll(bean);
+        bean.putAll(map);
         return bean;
     }
 
