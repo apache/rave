@@ -18,6 +18,7 @@
  */
 package org.apache.rave.portal.model;
 
+import org.apache.rave.model.ModelConverter;
 import org.apache.rave.persistence.BasicEntity;
 import org.apache.rave.portal.model.conversion.ConvertingListProxyFactory;
 import org.apache.rave.portal.model.conversion.JpaConverter;
@@ -166,7 +167,10 @@ public class JpaRegion implements BasicEntity, Serializable, Region {
         }
         this.getRegionWidgets().clear();
         if(regionWidgets != null) {
-            this.getRegionWidgets().addAll(regionWidgets);
+            for(RegionWidget widget : regionWidgets) {
+                widget.setRegion(this);
+                this.getRegionWidgets().add(widget);
+            }
         }
     }
 

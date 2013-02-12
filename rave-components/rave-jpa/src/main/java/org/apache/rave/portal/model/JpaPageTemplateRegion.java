@@ -19,6 +19,7 @@
 
 package org.apache.rave.portal.model;
 
+import org.apache.rave.model.ModelConverter;
 import org.apache.rave.persistence.BasicEntity;
 import org.apache.rave.portal.model.conversion.ConvertingListProxyFactory;
 import org.apache.rave.portal.model.conversion.JpaConverter;
@@ -109,7 +110,10 @@ public class JpaPageTemplateRegion implements BasicEntity, Serializable, PageTem
         }
         this.getPageTemplateWidgets().clear();
         if(pageTemplateWidgets != null) {
-            this.getPageTemplateWidgets().addAll(pageTemplateWidgets);
+            for(PageTemplateWidget widget : pageTemplateWidgets) {
+                widget.setPageTemplateRegion(this);
+                this.getPageTemplateWidgets().add(widget);
+            }
         }
     }
 

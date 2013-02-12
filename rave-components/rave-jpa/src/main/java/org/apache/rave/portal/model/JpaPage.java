@@ -18,6 +18,7 @@
  */
 package org.apache.rave.portal.model;
 
+import org.apache.rave.model.ModelConverter;
 import org.apache.rave.persistence.BasicEntity;
 import org.apache.rave.portal.model.conversion.ConvertingListProxyFactory;
 import org.apache.rave.portal.model.conversion.JpaConverter;
@@ -197,7 +198,10 @@ public class JpaPage implements BasicEntity, Serializable, Page {
         }
         this.getRegions().clear();
         if(regions != null) {
-            this.getRegions().addAll(regions);
+            for(Region region : regions) {
+                region.setPage(this);
+                this.getRegions().add(region);
+            }
         }
     }
 
@@ -239,8 +243,12 @@ public class JpaPage implements BasicEntity, Serializable, Page {
             this.subPages = new ArrayList<JpaPage>();
         }
         this.getSubPages().clear();
+
         if(subPages != null) {
-            this.getSubPages().addAll(subPages);
+            for(Page subPage : subPages) {
+                subPage.setParentPage(this);
+                this.getSubPages().add(subPage);
+            }
         }
     }
 
