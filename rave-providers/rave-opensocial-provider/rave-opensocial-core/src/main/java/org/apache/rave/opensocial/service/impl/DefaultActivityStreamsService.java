@@ -30,6 +30,7 @@ import org.apache.shindig.auth.SecurityToken;
 import org.apache.shindig.common.util.ImmediateFuture;
 import org.apache.shindig.protocol.ProtocolException;
 import org.apache.shindig.protocol.RestfulCollection;
+import org.apache.shindig.protocol.model.SortOrder;
 import org.apache.shindig.social.core.model.ActivityEntryImpl;
 import org.apache.shindig.social.opensocial.model.ActivityEntry;
 import org.apache.shindig.social.opensocial.model.Person;
@@ -368,16 +369,42 @@ public class DefaultActivityStreamsService implements ActivityStreamService {
     }
 
     private List<ActivityEntry> getFromRepository(Set<UserId> userIds, GroupId groupId, String appId, Set<String> fields, CollectionOptions options, SecurityToken token) {
-        List<ActivityEntry> result = Lists.newArrayList();
+        List<ActivityStreamsEntry> result = Lists.newArrayList();
         Set<String> idSet = getIdSet(userIds, groupId, token);
         for (String id : idSet) {
-            Collection<? extends ActivityStreamsEntry> entries = repository.getByUserId(id);
+            List<ActivityStreamsEntry> entries = repository.getByUserId(id);
 
             if (entries!=null){
-                result.addAll(converter.convert(entries));
+                result.addAll(entries);
             }
         }
-        return result;
+        sortByPublished(result, options == null ? null : options.getSortOrder());
+        return convert(result);
+    }
+
+    private void sortByPublished(List<ActivityStreamsEntry> result, final SortOrder order) {
+        Collections.sort(result, new Comparator<ActivityStreamsEntry>() {
+            @Override
+            public int compare(ActivityStreamsEntry one, ActivityStreamsEntry two) {
+                Date publishedOne = one.getPublished();
+                Date publishedTwo = two.getPublished();
+                if (publishedOne == null) {
+                    return publishedTwo == null ? 0 : -1;
+                } else if (publishedTwo == null) {
+                    return 1;
+                } else {
+                    return order != null && order == SortOrder.descending ? publishedOne.compareTo(publishedTwo) : publishedTwo.compareTo(publishedOne);
+                }
+            }
+        });
+    }
+
+    private List<ActivityEntry> convert(List<ActivityStreamsEntry> result) {
+        List<ActivityEntry> converted = Lists.newArrayList();
+        for(ActivityStreamsEntry entry : result) {
+            converted.add(converter.convert(entry));
+        }
+        return converted;
     }
 
     /**
