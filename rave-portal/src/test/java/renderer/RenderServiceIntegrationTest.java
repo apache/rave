@@ -25,6 +25,7 @@ import org.apache.rave.portal.model.Region;
 import org.apache.rave.portal.model.RegionWidget;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.impl.*;
+import org.apache.rave.portal.repository.UserRepository;
 import org.apache.rave.portal.web.renderer.RenderService;
 import org.apache.rave.portal.web.renderer.ScriptLocation;
 import org.apache.rave.portal.web.renderer.ScriptManager;
@@ -68,6 +69,9 @@ public class RenderServiceIntegrationTest {
     @Autowired
     private ShindigGadgetMetadataRepository metadataRepository;
 
+    @Autowired
+    private UserRepository repository;
+
     private RestOperations restOperations;
 
     private static final String VALID_METADATA = "[{\"id\":\"gadgets.metadata\",\"result\"" +
@@ -107,7 +111,7 @@ public class RenderServiceIntegrationTest {
 
     @Test
     public void renderOpenSocial() {
-        Page page = new PageImpl("1", VALID_USER_ID);
+        Page page = new PageImpl("1", repository.getByUsername(VALID_USER_NAME).getId());
         Region region = new RegionImpl("1", page, 1);
         page.setRegions(Arrays.asList(region));
 
