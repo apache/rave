@@ -55,6 +55,10 @@ public class ActivityStreamsMediaLinkImpl implements ActivityStreamsMediaLink{
          return id;
      }
 
+    public void setId(String id) {
+        this.id=id;
+    }
+
 	/** {@inheritDoc} */
 
 	  public Integer getDuration() {

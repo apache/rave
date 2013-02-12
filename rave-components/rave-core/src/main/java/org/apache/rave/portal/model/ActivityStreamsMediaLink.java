@@ -35,6 +35,8 @@ public interface ActivityStreamsMediaLink {
 
     public String getId();
 
+    void setId(String id);
+
     public Integer getWidth() ;
 
     public void setWidth(Integer width) ;
@@ -43,8 +45,7 @@ public interface ActivityStreamsMediaLink {
 
     public String getUrl() ;
 
-
     public void setOpenSocial(HashMap social);
-    public HashMap getOpenSocial();
 
+    public HashMap getOpenSocial();
 }

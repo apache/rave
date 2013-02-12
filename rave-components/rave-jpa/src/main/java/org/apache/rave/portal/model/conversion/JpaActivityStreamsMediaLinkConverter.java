@@ -27,6 +27,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
+import java.util.UUID;
+
 import static org.apache.rave.persistence.jpa.util.JpaUtil.getSingleResult;
 
 
@@ -37,6 +39,9 @@ public class JpaActivityStreamsMediaLinkConverter implements ModelConverter<Acti
 
     @Override
     public JpaActivityStreamsMediaLink convert(ActivityStreamsMediaLink source) {
+        if(source != null && source.getId() == null) {
+            source.setId(source.getUrl() == null ? UUID.randomUUID().toString() : source.getUrl());
+        }
         return source instanceof JpaActivityStreamsMediaLink ? (JpaActivityStreamsMediaLink) source : createEntity(source);
     }
 
