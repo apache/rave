@@ -92,7 +92,8 @@ public class DefaultPersonService implements PersonService, SimplePersonService 
             case objectId:
                 return getGroupMembersFromRepository(collectionOptions, groupId.getObjectId().toString(), token.getAppId());
             case self:
-                return Lists.newArrayList(getPersonForId(new UserId(UserId.Type.me, null), token));
+                UserId id = userIds.size() == 1 ? userIds.iterator().next() : new UserId(UserId.Type.me, null);
+                return Lists.newArrayList(getPersonForId(id, token));
             case custom:
                 throw new ProtocolException(HttpServletResponse.SC_NOT_IMPLEMENTED, "Custom GroupIDs are not tracked by the container");
             default:

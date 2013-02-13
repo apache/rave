@@ -24,6 +24,7 @@ rave.opensocial = rave.opensocial || (function () {
         CANVAS:"canvas",
         DEFAULT:"default",
         HOME:"home",
+        PROFILE:"profile",
         PREFERENCES:"preferences"
     };
     var VIEW_TARGETS = {
@@ -31,14 +32,15 @@ rave.opensocial = rave.opensocial || (function () {
         DIALOG: 'dialog',
         MODALDIALOG: 'modal_dialog',
         SIDEBAR: 'sidebar'
-    }
+    };
 
-    var container;
+    var container, defaultView;
 
     /**
      * Initialization
      */
-    function initOpenSocial() {
+    function initOpenSocial(view) {
+        defaultView = typeof view == "string" ? view :VIEW_NAMES.HOME;
         initContainer();
         registerRpcHooks();
         implementViews();
@@ -196,7 +198,7 @@ rave.opensocial = rave.opensocial || (function () {
             renderGadgetView(viewName, this, view_params);
         };
         gadget.minimize = function (view_params, view) {
-            var viewName = (typeof(view) === "undefined" || view === null) ? rave.opensocial.VIEW_NAMES.HOME : view;
+            var viewName = (typeof(view) === "undefined" || view === null) ? defaultView : view;
             renderGadgetViewIfNotCollapsed(viewName, this, view_params);
         };
         gadget.collapse = function () {
@@ -204,7 +206,7 @@ rave.opensocial = rave.opensocial || (function () {
             $(getGadgetIframeByWidgetId(this.regionWidgetId)).hide();
         };
         gadget.restore = function () {
-            renderGadgetView(rave.opensocial.VIEW_NAMES.HOME, rave.getRegionWidgetById(this.regionWidgetId));
+            renderGadgetView(defaultView, rave.getRegionWidgetById(this.regionWidgetId));
         };
         gadget.hide = function(){
             $(getGadgetIframeByWidgetId(this.regionWidgetId)).closest('.widget-wrapper').hide();
@@ -243,7 +245,7 @@ rave.opensocial = rave.opensocial || (function () {
         // if the gadget is on a top level page, or an active sub page tab, render it
         if (!rave.layout.isWidgetOnHiddenTab(gadget)) {
             // if the gadget is not collapsed, render it
-            renderGadgetViewIfNotCollapsed(rave.opensocial.VIEW_NAMES.HOME, gadget);
+            renderGadgetViewIfNotCollapsed(defaultView, gadget);
         }
     }
 

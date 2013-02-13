@@ -954,13 +954,13 @@ var rave = rave || (function () {
         widgetsByRegionIdArray = [];
     }
 
-    function initializeProviders() {
+    function initializeProviders(pageType) {
         //Current providers are rave.wookie and rave.opensocial.
         //Providers register themselves when loaded, so
         //JavaScript library importing order is important.
         //See page.jsp for example.
         for (var key in providerMap) {
-            providerMap[key].init();
+            providerMap[key].init(pageType);
         }
 
         if(onProvidersInitializedHandlers !== null && onProvidersInitializedHandlers.length > 0){

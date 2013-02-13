@@ -1606,6 +1606,30 @@
                     "context": "9gW2YVBrNVA"
                 }
             }
+        },
+        {
+            "published": "2013-02-12T15:04:55Z",
+            "actor": {
+                "url": "http://localhost:8080/portal/app/people/john.doe",
+                "objectType": "person",
+                "id": "john.doe",
+                "image": {
+                    "url": "http://example.org/john.doe/image",
+                    "width": 250,
+                    "height": 250
+                }
+            },
+            "verb": "make-friend",
+            "object" : {
+                "url": "http://localhost:8080/portal/app/people/jane.doe",
+                "objectType": "person",
+                "id": "jane.doe",
+                "image": {
+                    "url": "http://example.org/jane.doe/image",
+                    "width": 250,
+                    "height": 250
+                }
+            }
         }
     ]
 }

@@ -206,7 +206,7 @@
 <portal:register-init-script location="${'AFTER_RAVE'}">
     <script>
         $(function () {
-            rave.initProviders();
+            rave.initProviders("profile");
             rave.initWidgets();
             rave.initUI();
             rave.layout.init();
