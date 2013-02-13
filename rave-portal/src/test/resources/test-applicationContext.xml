@@ -23,7 +23,6 @@
                            http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <import resource="classpath:org/apache/rave/core-applicationContext.xml"/>
-    <import resource="classpath:org/apache/rave/persistence-applicationContext.xml"/>
     <import resource="classpath:org/apache/rave/web-applicationContext.xml"/>
     <import resource="classpath:org/apache/rave/opensocial-provider-applicationContext.xml"/>
 

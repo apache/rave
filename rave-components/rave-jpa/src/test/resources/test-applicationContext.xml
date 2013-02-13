@@ -142,6 +142,4 @@ be overridden by setting a system property "portal.override.properties" -->
     </bean>
     -->
 
-    <import resource="classpath:org/apache/rave/persistence-applicationContext.xml"/>
-
 </beans>

@@ -19,9 +19,14 @@
   -->
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mongo="http://www.springframework.org/schema/data/mongo"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-                           http://www.springframework.org/schema/beans/spring-beans.xsd">
+                           http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/data/mongo
+                           http://www.springframework.org/schema/data/mongo/spring-mongo.xsd">
 
+
+    <import resource="classpath*:org/apache/rave/persistence-applicationContext.xml" />
 
     <bean id="dataImporter" class="org.apache.rave.portal.util.data.DataImporter">
         <property name="dataExecutor">
@@ -29,7 +34,7 @@
         </property>
         <property name="scriptLocations">
             <list>
-                <value>/WEB-INF/db/initial-data.json</value>
+                <value>classpath:db/initial-data.json</value>
             </list>
         </property>
     </bean>

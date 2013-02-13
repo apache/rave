@@ -50,9 +50,6 @@
     <context:component-scan base-package="org.apache.rave.opensocial" annotation-config="true"/>
     <context:component-scan base-package="org.apache.rave.service" annotation-config="true"/>
 
-    <import resource="classpath*:org/apache/rave/persistence-applicationContext.xml" />
-
-
     <bean id="oAuthStore" class="org.apache.rave.gadgets.oauth.inject.DefaultOAuthStore">
         <constructor-arg name="defaultCallbackUrl" value="${shindig.signing.global-callback-url}"/>
         <constructor-arg name="pathToPrivateKey" value="${shindig.signing.key-file}"/>

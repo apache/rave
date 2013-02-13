@@ -118,6 +118,9 @@ public class DataImporter {
         @Autowired
         private PageTemplateRepository pageTemplateRepository;
 
+        @Autowired
+        private ActivityStreamsRepository activityStreamsRepository;
+
         public boolean needsLoading() {
             return widgetRepository.getCountAll() == 0;
         }
@@ -132,6 +135,15 @@ public class DataImporter {
             savePages(wrapper, usersByOriginalId, widgetsById);
             savePreferences(wrapper);
             saveTemplates(wrapper, widgetsById);
+            saveActivities(wrapper);
+        }
+
+        private void saveActivities(ModelWrapper wrapper) {
+            if(wrapper.getActivities() != null) {
+                for(ActivityStreamsEntry activity : wrapper.getActivities()) {
+                    activityStreamsRepository.save(activity);
+                }
+            }
         }
 
         private void saveTemplates(ModelWrapper wrapper, Map<String, Widget> widgetsById) {
@@ -372,6 +384,10 @@ public class DataImporter {
 
         public void setPageTemplateRepository(PageTemplateRepository pageTemplateRepository) {
             this.pageTemplateRepository = pageTemplateRepository;
+        }
+
+        public void setActivityStreamsRepository(ActivityStreamsRepository activityStreamsRepository) {
+            this.activityStreamsRepository = activityStreamsRepository;
         }
     }
 }

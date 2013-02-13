@@ -19,19 +19,22 @@
   -->
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:p="http://www.springframework.org/schema/p"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-                           http://www.springframework.org/schema/beans/spring-beans.xsd">
+                           http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/tx
+                           http://www.springframework.org/schema/tx/spring-tx.xsd">
 
-    <!--
-        Bean that executes the given set of resources (SQL scripts) in order
-        To remove runtime initialization of initial data, remove this bean and change the entity manager factory to the default
-        Spring implementation
-    -->
-    <bean id="dataSourcePopulator" class="org.apache.rave.jdbc.util.DataSourcePopulator">
-        <property name="executeScriptQuery" value="SELECT * FROM widget"/>
+   <import resource="classpath*:org/apache/rave/persistence-applicationContext.xml" />
+
+    <bean id="dataImporter" class="org.apache.rave.portal.util.data.DataImporter">
+        <property name="dataExecutor">
+            <bean class="org.apache.rave.portal.util.data.DataImporter$ExecutorImpl" />
+        </property>
         <property name="scriptLocations">
             <list>
-                <value>/WEB-INF/db/initial_data.sql</value>
+                <value>classpath:db/initial-data.json</value>
             </list>
         </property>
     </bean>

@@ -33,6 +33,7 @@ public class ModelWrapper {
     private List<PortalPreference> portalPreferences;
     private List<Category> categories;
     private List<PageTemplate> pageTemplates;
+    private List<ActivityStreamsEntry> activities;
 
     public List<PageLayout> getPageLayouts() {
         return pageLayouts;
@@ -104,5 +105,13 @@ public class ModelWrapper {
 
     public void setPageTemplates(List<PageTemplate> pageTemplates) {
         this.pageTemplates = pageTemplates;
+    }
+
+    public List<ActivityStreamsEntry> getActivities() {
+        return activities;
+    }
+
+    public void setActivities(List<ActivityStreamsEntry> activities) {
+        this.activities = activities;
     }
 }

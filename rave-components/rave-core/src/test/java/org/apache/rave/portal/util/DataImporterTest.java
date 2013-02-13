@@ -42,6 +42,7 @@ public class DataImporterTest {
     private PortalPreferenceRepository portalPreferenceRepository;
     private CategoryRepository categoryRepository;
     private PageTemplateRepository pageTemplateRepository;
+    private ActivityStreamsRepository activityStreamsRepository;
     private DataImporter importer;
 
     @Before
@@ -54,6 +55,7 @@ public class DataImporterTest {
         portalPreferenceRepository = createMock(PortalPreferenceRepository.class);
         categoryRepository = createMock(CategoryRepository.class);
         pageTemplateRepository = createMock(PageTemplateRepository.class);
+        activityStreamsRepository = createMock(ActivityStreamsRepository.class);
 
         DataImporter.ExecutorImpl executor = new DataImporter.ExecutorImpl();
         executor.setPageLayoutRepository(pageLayoutRepository);
@@ -64,6 +66,7 @@ public class DataImporterTest {
         executor.setPortalPreferenceRepository(portalPreferenceRepository);
         executor.setCategoryRepository(categoryRepository);
         executor.setPageTemplateRepository(pageTemplateRepository);
+        executor.setActivityStreamsRepository(activityStreamsRepository);
 
         importer = new DataImporter();
         importer.setScriptLocations(Arrays.asList((Resource) new ClassPathResource("test-data.json")));
@@ -80,22 +83,23 @@ public class DataImporterTest {
         expect(portalPreferenceRepository.save(isA(PortalPreference.class))).andReturn(new PortalPreferenceImpl()).times(2);
         expect(categoryRepository.save(isA(Category.class))).andReturn(new CategoryImpl()).times(2);
         expect(pageTemplateRepository.save(isA(PageTemplate.class))).andReturn(new PageTemplateImpl()).times(2);
-        replay(pageTemplateRepository, pageLayoutRepository, userRepository, widgetRepository, pageRepository, authorityRepository, portalPreferenceRepository, categoryRepository);
+        expect(activityStreamsRepository.save(isA(ActivityStreamsEntry.class))).andReturn(new ActivityStreamsEntryImpl()).times(2);
+        replay(pageTemplateRepository, pageLayoutRepository, userRepository, widgetRepository, pageRepository, authorityRepository, portalPreferenceRepository, categoryRepository, activityStreamsRepository);
 
         importer.importData();
 
-        verify(pageTemplateRepository, pageLayoutRepository, userRepository, widgetRepository, pageRepository, authorityRepository, portalPreferenceRepository, categoryRepository);
+        verify(pageTemplateRepository, pageLayoutRepository, userRepository, widgetRepository, pageRepository, authorityRepository, portalPreferenceRepository, categoryRepository, activityStreamsRepository);
 
     }
 
     @Test
     public void populated() {
         expect(widgetRepository.getCountAll()).andReturn(1);
-        replay(pageTemplateRepository, pageLayoutRepository, userRepository, widgetRepository, pageRepository, authorityRepository, portalPreferenceRepository, categoryRepository);
+        replay(pageTemplateRepository, pageLayoutRepository, userRepository, widgetRepository, pageRepository, authorityRepository, portalPreferenceRepository, categoryRepository, activityStreamsRepository);
 
         importer.importData();
 
-        verify(pageTemplateRepository, pageLayoutRepository, userRepository, widgetRepository, pageRepository, authorityRepository, portalPreferenceRepository, categoryRepository);
+        verify(pageTemplateRepository, pageLayoutRepository, userRepository, widgetRepository, pageRepository, authorityRepository, portalPreferenceRepository, categoryRepository, activityStreamsRepository);
 
     }
 

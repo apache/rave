@@ -511,5 +511,98 @@
         "renderSequence": 1,
         "defaultTemplate": true
     }
-]
+]  ,
+    "activities" : [{
+        "published": "2013-02-07T15:04:55Z",
+        "generator": {
+            "url": "http://example.org/activities-app"
+        },
+        "provider": {
+            "url": "http://example.org/activity-stream"
+        },
+        "actor": {
+            "url": "http://localhost:8080/portal/app/people/canonical",
+            "objectType": "person",
+            "id": "canonical",
+            "image": {
+                "url": "http://example.org/canonical/image",
+                "width": 250,
+                "height": 250
+            }
+        },
+        "content" : "Boston as seen from the Charles River",
+        "verb": "post",
+        "object" : {
+            "objectType": "photo",
+            "image": {
+                "url": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcSSNgusdAMMfrJ2-CJThZp83-FMtj8LDgw7v-RGzTd2aGLIDArV-A",
+                "width": 250,
+                "height": 250
+            }
+        },
+        "target": {
+            "url": "http://example.org/album/",
+            "objectType": "photo-album",
+            "displayName": "Canonical's Photo Album"
+        },
+        "openSocial": {
+            "embed": {
+                "gadget": "http://eedemos.opensocial2.org/gadgets/jquery/photos/jquery_photo_ee.xml",
+                "preferredExperience": {
+                    "display":{
+                        "type": "text",
+                        "label": "Add Comment ...",
+                        "title": "Click this link to add a comment"
+                    }
+                },
+                "context" : {
+                    "url": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcSSNgusdAMMfrJ2-CJThZp83-FMtj8LDgw7v-RGzTd2aGLIDArV-A",
+                    "comment": "Boston as seen from the Charles River",
+                    "author": "Canonical User"
+                }
+            }
+        }
+    },
+        {
+            "published": "2013-02-08T15:04:55Z",
+            "actor": {
+                "url": "http://localhost:8080/portal/app/people/canonical",
+                "objectType": "person",
+                "id": "canonical",
+                "image": {
+                    "url": "http://example.org/canonical/image",
+                    "width": 250,
+                    "height": 250
+                }
+            },
+            "content": "OpenSocial Getting Started Video 1",
+            "verb": "post",
+            "object" : {
+                "objectType": "video",
+                "image": {
+                    "url": "http://i.ytimg.com/vi/9gW2YVBrNVA/1.jpg",
+                    "width": 250,
+                    "height": 250
+                }
+            },
+            "openSocial": {
+                "embed": {
+                    "gadget": "http://opensocial2.org:8080/collabapp/pages/home/embeddedExperiences/YouTube.xml",
+                    "preferredExperience": {
+                        "display":{
+                            "type": "text",
+                            "label": "Open Video",
+                            "title": "Click this link to open the video"
+                        },
+                        "target": {
+                            "view": "embedded",
+                            "viewTarget": "sidebar"
+
+                        }
+                    },
+                    "context" : "9gW2YVBrNVA"
+                }
+            }
+        }
+    ]
 }
