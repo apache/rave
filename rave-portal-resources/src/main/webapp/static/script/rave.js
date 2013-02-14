@@ -28,12 +28,12 @@ var rave = rave || (function () {
     // UI actions should be propagated back to the server
     var pageEditor = true;
     var pageViewer = {
-        username: "Unknown",
-        id: -1
+        username:"Unknown",
+        id:-1
     };
     var pageOwner = {
-        username: "Unknown",
-        id: -1
+        username:"Unknown",
+        id:-1
     };
     // JS debug mode is off by default
     var javaScriptDebugMode = 0;
@@ -57,23 +57,23 @@ var rave = rave || (function () {
         var WIDGET_PREFS_INPUT_FAILED_VALIDATION = "widget-prefs-input-failed-validation";
 
         var POPUPS = {
-            sidebar: {
-                name: "sidebar",
-                containerSelector: '.popup.slideout',
-                contentSelector: '.slideout-content',
-                template: 'popup-slideout',
-                initialize: function (container) {
+            sidebar:{
+                name:"sidebar",
+                containerSelector:'.popup.slideout',
+                contentSelector:'.slideout-content',
+                template:'popup-slideout',
+                initialize:function (container) {
                     container.find(this.contentSelector).data('popupType', this.name);
-                    container.show("slide", { direction: "right" }, 'fast');
+                    container.show("slide", { direction:"right" }, 'fast');
                     $('body').addClass('modal-open');
                     $('body').append('<div class="modal-backdrop fade in"></div>');
                     // hide the main browser window's scrollbar to prevent possible "double scrollbar" rendering
                     // between it and an iframe vertical scrollbar
                     $('body').addClass('no-scroll');
                 },
-                cleanup: function (content) {
+                cleanup:function (content) {
                     var container = content.parents(this.containerSelector);
-                    container.hide("slide", { direction: "right" }, 'fast', function () {
+                    container.hide("slide", { direction:"right" }, 'fast', function () {
                         container.detach();
                         $('body').removeClass('modal-open');
                         $('.modal-backdrop').remove();
@@ -81,14 +81,14 @@ var rave = rave || (function () {
                         $('body').removeClass('no-scroll');
                     });
                 },
-                singleton: true
+                singleton:true
             },
-            dialog: {
-                name: "dialog",
-                containerSelector: '.popup.dialog',
-                contentSelector: '.modal-body',
-                template: 'popup-dialog',
-                initialize: function (container) {
+            dialog:{
+                name:"dialog",
+                containerSelector:'.popup.dialog',
+                contentSelector:'.modal-body',
+                template:'popup-dialog',
+                initialize:function (container) {
                     container.find(this.contentSelector).data('popupType', this.name);
                     var cfg = {
                     };
@@ -98,24 +98,24 @@ var rave = rave || (function () {
                         container.remove();
                     })
                 },
-                cleanup: function (content) {
+                cleanup:function (content) {
                     var container = content.parents(this.containerSelector);
 
                     container.modal('hide');
                 },
-                singleton: false
+                singleton:false
             },
-            modal_dialog: {
-                name: "modal_dialog",
-                containerSelector: '.popup.modal_dialog',
-                contentSelector: '.modal-body',
-                template: 'popup-modal',
-                initialize: function (container) {
+            modal_dialog:{
+                name:"modal_dialog",
+                containerSelector:'.popup.modal_dialog',
+                contentSelector:'.modal-body',
+                template:'popup-modal',
+                initialize:function (container) {
                     container.find(this.contentSelector).data('popupType', this.name);
                     var cfg = {
-                        keyboard: false,
-                        backdrop: 'static',
-                        show: true
+                        keyboard:false,
+                        backdrop:'static',
+                        show:true
                     };
                     container.modal(cfg);
 
@@ -123,15 +123,15 @@ var rave = rave || (function () {
                         container.detach();
                     })
                 },
-                cleanup: function (content) {
+                cleanup:function (content) {
                     var container = content.parents(this.containerSelector);
 
                     container.modal('hide');
                 },
-                singleton: true
+                singleton:true
             },
-            "float": false,
-            tab: false
+            "float":false,
+            tab:false
         };
 
         // variable to store whether or not the
@@ -143,10 +143,10 @@ var rave = rave || (function () {
         }
 
         var uiState = {
-            widget: null,
-            currentRegion: null,
-            targetRegion: null,
-            targetIndex: null
+            widget:null,
+            currentRegion:null,
+            targetRegion:null,
+            targetIndex:null
         };
 
         function setMobileState(mobileState) {
@@ -160,17 +160,17 @@ var rave = rave || (function () {
         function init() {
             // initialize the sortable regions
             getNonLockedRegions().sortable({
-                connectWith: '.region', // defines which regions are dnd-able
-                scroll: true, // whether to scroll the window if the user goes outside the areas
-                opacity: 0.5, // the opacity of the object being dragged
-                revert: true, // smooth snap animation
-                cursor: 'move', // the cursor to show while dnd
-                handle: '.widget-title-bar', // the draggable handle
-                forcePlaceholderSize: true, // size the placeholder to the size of the widget
-                tolerance: 'pointer', // change dnd drop zone on mouse-over
-                start: dragStart, // event listener for drag start
-                stop: dragStop, // event listener for drag stop
-                over: dragOver // event listener for drag over
+                connectWith:'.region', // defines which regions are dnd-able
+                scroll:true, // whether to scroll the window if the user goes outside the areas
+                opacity:0.5, // the opacity of the object being dragged
+                revert:true, // smooth snap animation
+                cursor:'move', // the cursor to show while dnd
+                handle:'.widget-title-bar', // the draggable handle
+                forcePlaceholderSize:true, // size the placeholder to the size of the widget
+                tolerance:'pointer', // change dnd drop zone on mouse-over
+                start:dragStart, // event listener for drag start
+                stop:dragStop, // event listener for drag stop
+                over:dragOver // event listener for drag over
             });
             initWidgetUI();
 
@@ -353,7 +353,7 @@ var rave = rave || (function () {
                 var widget = rave.getRegionWidgetById(widgetId);
 
                 // init the collapse/restore toggle for the title bar
-                $(this).find(".widget-title-bar-mobile").click({id: widgetId}, toggleCollapseAction);
+                $(this).find(".widget-title-bar-mobile").click({id:widgetId}, toggleCollapseAction);
             });
         }
 
@@ -373,7 +373,7 @@ var rave = rave || (function () {
                 widget.maximize(view_params, args.data.view);
                 // due to widget list changing height of the window, we have to set the height of the sneeze-guard here.
                 var overlayStyleMap = {
-                    height: $('.wrapper').height() - $('.navbar').height() - $('.logo-wrapper').height()
+                    height:$('.wrapper').height() - $('.navbar').height() - $('.logo-wrapper').height()
                 };
                 $('.canvas-overlay').css(overlayStyleMap);
             }
@@ -473,7 +473,7 @@ var rave = rave || (function () {
             var widget = getRegionWidgetById(regionWidgetId);
             // toggle the collapse state of the widget
             var newCollapsedValue = !widget.collapsed;
-            var functionArgs = {"regionWidgetId": regionWidgetId, "collapsed": newCollapsedValue};
+            var functionArgs = {"regionWidgetId":regionWidgetId, "collapsed":newCollapsedValue};
 
             // if this type of widget has a collapse or restore callback invoke it upon
             // successful persistence
@@ -530,7 +530,7 @@ var rave = rave || (function () {
         }
 
         /*
-        Displays the edit preferences panel for a gadet
+         Displays the edit preferences panel for a gadet
          */
         function editPrefsAction(regionWidgetId) {
             var regionWidget = getRegionWidgetById(regionWidgetId);
@@ -547,13 +547,13 @@ var rave = rave || (function () {
                 }
 
                 //for ENUM preferences find which option should be selected
-                if(pref.dataType == 'ENUM'){
-                    var selectedPref = _.find(pref.orderedEnumValues, function(option){
+                if (pref.dataType == 'ENUM') {
+                    var selectedPref = _.find(pref.orderedEnumValues, function (option) {
                         return option.value == pref.value;
                     });
                     selectedPref.selected = true;
                 }
-                if(pref.dataType == 'LIST'){
+                if (pref.dataType == 'LIST') {
                     pref.value = pref.value.replace(PIPE_REGEX, "\n");
                 }
 
@@ -563,15 +563,15 @@ var rave = rave || (function () {
             });
 
             var markup = rave.ui.templates['widget-preferences']({
-                userPrefs: userPrefs,
-                hasRequiredUserPrefs: hasRequiredUserPrefs
+                userPrefs:userPrefs,
+                hasRequiredUserPrefs:hasRequiredUserPrefs
             });
             var $markup = $(markup);
 
-            $('.prefs-save-button', $markup).click({id: regionWidget.regionWidgetId},
+            $('.prefs-save-button', $markup).click({id:regionWidget.regionWidgetId},
                 saveEditPrefsAction);
 
-            $('.prefs-cancel-button', $markup).click({id: regionWidget.regionWidgetId},
+            $('.prefs-cancel-button', $markup).click({id:regionWidget.regionWidgetId},
                 cancelEditPrefsAction);
 
             var prefsElement = $("#" + WIDGET_PREFS_CONTENT(regionWidget.regionWidgetId));
@@ -650,12 +650,12 @@ var rave = rave || (function () {
         function addOverlay(jqElm) {
             var overlay = $('<div></div>');
             var styleMap = {
-                position: "absolute",
-                height: jqElm.height(),
-                width: jqElm.width(),
-                'z-index': 10,
-                opacity: 0.7,
-                background: "#FFFFFF"
+                position:"absolute",
+                height:jqElm.height(),
+                width:jqElm.width(),
+                'z-index':10,
+                opacity:0.7,
+                background:"#FFFFFF"
             };
 
             // style it and give it the marker class
@@ -668,7 +668,7 @@ var rave = rave || (function () {
         function addCanvasOverlay(jqElm) {
             var overlay = $('<div></div>');
             var styleMap = {
-                height: $('body').height() - 40
+                height:$('body').height() - 40
             };
 
             // style it and give it the marker class
@@ -699,14 +699,14 @@ var rave = rave || (function () {
 
             // init the widget minimize button which is hidden by default
             // and only renders when widget is in maximized view
-            $("#widget-" + widgetId + "-min").click({id: widgetId}, rave.minimizeWidget);
+            $("#widget-" + widgetId + "-min").click({id:widgetId}, rave.minimizeWidget);
 
             // init the collapse/restore toggle
             // conditionally style the icon and setup the event handlers
             var $toggleCollapseIcon = $("#widget-" + widgetId + "-collapse");
             $toggleCollapseIcon.html((widget.collapsed) ? WIDGET_TOGGLE_DISPLAY_COLLAPSED_HTML : WIDGET_TOGGLE_DISPLAY_NORMAL_HTML);
             $toggleCollapseIcon
-                .click({id: widgetId}, toggleCollapseAction)
+                .click({id:widgetId}, toggleCollapseAction)
                 .mousedown(function (event) {
                     // don't allow drag and drop when this item is clicked
                     event.stopPropagation();
@@ -740,24 +740,24 @@ var rave = rave || (function () {
         }
 
         function displayUsersOfWidget(widgetId) {
-            rave.api.rest.getUsersForWidget({widgetId: widgetId, successCallback: function (data) {
+            rave.api.rest.getUsersForWidget({widgetId:widgetId, successCallback:function (data) {
 
                 //format data for display
-                _.each(data, function(person){
+                _.each(data, function (person) {
                     person.name = person.displayName || person.preferredName || (person.givenName + " " + person.familyName);
                 });
 
                 var markup = rave.ui.templates['users-of-widget']({
-                    users: data,
+                    users:data,
                     //TODO: data from dom evil! should be using gadget object to get name
-                    widgetName: $("#widget-" + widgetId + "-title").text().trim()
+                    widgetName:$("#widget-" + widgetId + "-title").text().trim()
                 });
 
                 //TODO: don't use jquery ui dialogs?
                 $(markup).dialog({
-                    modal: true,
-                    buttons: [
-                        {text: "Close", click: function () {
+                    modal:true,
+                    buttons:[
+                        {text:"Close", click:function () {
                             $(this).dialog("close");
                         }}
                     ]
@@ -769,13 +769,13 @@ var rave = rave || (function () {
         function showInfoMessage(message) {
 
             var markup = rave.ui.templates['info-message']({
-                message: message
+                message:message
             });
 
             $(markup).hide()
                 .prependTo("body")
                 //TODO: add a class for flash box and attach these styles
-                .css({ position: 'fixed', top: 0, left: 0, width: 'auto', 'max-width': '60%', 'font-size': '1.25em', padding: '.6em 1em', 'z-index': 9999, 'border-radius': '0 0 4px 0'})
+                .css({ position:'fixed', top:0, left:0, width:'auto', 'max-width':'60%', 'font-size':'1.25em', padding:'.6em 1em', 'z-index':9999, 'border-radius':'0 0 4px 0'})
                 .fadeIn('fast').delay(8000)
                 .fadeOut(function () {
                     $(this).remove();
@@ -791,26 +791,26 @@ var rave = rave || (function () {
         }
 
         return {
-            init: init,
-            initMobile: initMobileWidgetUI,
-            toggleCollapseWidgetIcon: toggleCollapseWidgetIcon,
-            maximizeAction: maximizeAction,
-            minimizeAction: minimizeAction,
-            hideAction: hideAction,
-            showAction: showAction,
-            createPopup: createPopup,
-            destroyPopup: destroyPopup,
-            editPrefsAction: editPrefsAction,
-            editCustomPrefsAction: editCustomPrefsAction,
-            setMobileState: setMobileState,
-            getMobileState: getMobileState,
-            doWidgetUiCollapse: doWidgetUiCollapse,
-            toggleMobileWidget: toggleMobileWidget,
-            displayEmptyPageMessage: displayEmptyPageMessage,
-            displayUsersOfWidget: displayUsersOfWidget,
-            showInfoMessage: showInfoMessage,
-            registerPopup: registerPopup,
-            styleWidgetButtons: styleWidgetButtons
+            init:init,
+            initMobile:initMobileWidgetUI,
+            toggleCollapseWidgetIcon:toggleCollapseWidgetIcon,
+            maximizeAction:maximizeAction,
+            minimizeAction:minimizeAction,
+            hideAction:hideAction,
+            showAction:showAction,
+            createPopup:createPopup,
+            destroyPopup:destroyPopup,
+            editPrefsAction:editPrefsAction,
+            editCustomPrefsAction:editCustomPrefsAction,
+            setMobileState:setMobileState,
+            getMobileState:getMobileState,
+            doWidgetUiCollapse:doWidgetUiCollapse,
+            toggleMobileWidget:toggleMobileWidget,
+            displayEmptyPageMessage:displayEmptyPageMessage,
+            displayUsersOfWidget:displayUsersOfWidget,
+            showInfoMessage:showInfoMessage,
+            registerPopup:registerPopup,
+            styleWidgetButtons:styleWidgetButtons
         };
 
     })();
@@ -838,7 +838,7 @@ var rave = rave || (function () {
 
         // if this region doesn't exist yet add it to the widgetsByRegionIdArray
         if (!regionExists) {
-            widgetsByRegionIdArray.push({regionId: regionId, widgets: [widget]});
+            widgetsByRegionIdArray.push({regionId:regionId, widgets:[widget]});
         }
     }
 
@@ -877,15 +877,15 @@ var rave = rave || (function () {
                 "Please ensure that an implementation has been included in the page.";
         }
         return new OpenAjax.hub.ManagedHub({
-            onSubscribe: function (topic, container) {
+            onSubscribe:function (topic, container) {
                 log((container == null ? "Container" : container.getClientID()) + " subscribes to this topic '" + topic + "'");
                 return true;
             },
-            onUnsubscribe: function (topic, container) {
+            onUnsubscribe:function (topic, container) {
                 log((container == null ? "Container" : container.getClientID()) + " unsubscribes from this topic '" + topic + "'");
                 return true;
             },
-            onPublish: function (topic, data, pcont, scont) {
+            onPublish:function (topic, data, pcont, scont) {
                 log((pcont == null ? "Container" : pcont.getClientID()) + " publishes '" + data + "' to topic '" + topic + "' subscribed by " + (scont == null ? "Container" : scont.getClientID()));
                 return true;
             }
@@ -1191,18 +1191,18 @@ var rave = rave || (function () {
          * @param regionId The regionId.
          * @param widget The widget.
          */
-        registerWidget: registerWidget,
+        registerWidget:registerWidget,
 
         /**
          * Render a newly-added widget in the page
          * @param regionWidgetId the regionWidgetId of the widget to render
          */
-        renderNewWidget: renderNewWidget,
+        renderNewWidget:renderNewWidget,
 
         /**
          * Initialize all of the registered providers
          */
-        initProviders: initializeProviders,
+        initProviders:initializeProviders,
 
         /**
          * Initializes the given set of widgets
@@ -1212,17 +1212,17 @@ var rave = rave || (function () {
          *      type,
          *      regionWidgetId
          */
-        initWidgets: initializeWidgets,
+        initWidgets:initializeWidgets,
 
         /**
          * Initialize Rave's drag and drop facilities
          */
-        initUI: ui.init,
+        initUI:ui.init,
 
         /**
          * Initialize the mobile UI
          */
-        initMobileUI: ui.initMobile,
+        initMobileUI:ui.initMobile,
 
         /**
          * Parses the given string conforming to a rave object's DOM element ID and return
@@ -1235,7 +1235,7 @@ var rave = rave || (function () {
          *
          * @param elementId the ID of the DOM element containing the widget
          */
-        getObjectIdFromDomId: extractObjectIdFromElementId,
+        getObjectIdFromDomId:extractObjectIdFromElementId,
 
         /**
          * Registers a new provider with Rave.  All providers MUST have init and initWidget functions as well as a
@@ -1243,7 +1243,7 @@ var rave = rave || (function () {
          *
          * @param provider a valid Rave widget provider
          */
-        registerProvider: addProviderToList,
+        registerProvider:addProviderToList,
 
         /**
          * Renders an error in place of the widget
@@ -1251,75 +1251,75 @@ var rave = rave || (function () {
          * @param id the RegionWidgetId of the widget to render in error mode
          * @param message The message to display to the user
          */
-        errorWidget: renderErrorWidget,
+        errorWidget:renderErrorWidget,
 
         /**
          * Sets the context path for the Rave web application
          *
          * @param contextPath the context path of the rave webapp
          */
-        setContext: updateContext,
+        setContext:updateContext,
 
         /**
          * Gets the current context
          */
-        getContext: getContext,
+        getContext:getContext,
 
         /**
          * Gets the value of the JavaScriptDebugMode flag
          * 0 = off
          * 1 = on
          */
-        getJavaScriptDebugMode: getJavaScriptDebugMode,
+        getJavaScriptDebugMode:getJavaScriptDebugMode,
 
         /**
          * Sets the value of the JavaScriptDebugMode flag
          * 0 = off
          * 1 = on
          */
-        setJavaScriptDebugMode: setJavaScriptDebugMode,
+        setJavaScriptDebugMode:setJavaScriptDebugMode,
 
         /*Gets the value of the Default Widget Height*/
-        getDefaultWidgetHeight: getDefaultWidgetHeight,
+        getDefaultWidgetHeight:getDefaultWidgetHeight,
 
         /*Sets the value of the Default Widget Height*/
-        setDefaultWidgetHeight: setDefaultWidgetHeight,
+        setDefaultWidgetHeight:setDefaultWidgetHeight,
 
         /**
          * Sets the authenticated page viewer for the Rave web application
          *
          * @param viewer an object representing the authenticated user viewing the page {username:"bob", id:"1"}
          */
-        setPageViewer: setPageViewer,
+        setPageViewer:setPageViewer,
 
         /**
          * Gets the current viewer
          */
-        getPageViewer: getPageViewer,
+        getPageViewer:getPageViewer,
 
         /**
          * Sets the owner of the current page
          *
          * @param owner an object representing the owner of the page
          */
-        setPageOwner: setPageOwner,
+        setPageOwner:setPageOwner,
 
         /**
          * Gets the page owner
          */
-        getPageOwner: getPageOwner,
+        getPageOwner:getPageOwner,
 
         /**
          * Gets a regionwidget by region widget id
          */
-        getRegionWidgetById: getRegionWidgetById,
+        getRegionWidgetById:getRegionWidgetById,
 
         /**
          * View a page
          *
          * @param pageId the pageId to view, or if null, the user's default page
          */
-        viewPage: viewPage,
+        viewPage:viewPage,
 
         /**
          * View the widget detail page of a widget
@@ -1327,14 +1327,14 @@ var rave = rave || (function () {
          * @param widgetId to widgetId to view
          * @param referringPageId the id of the page the call is coming from
          */
-        viewWidgetDetail: viewWidgetDetail,
+        viewWidgetDetail:viewWidgetDetail,
 
         /**
          * Toggles the collapse/restore icon of the rendered widget
          *
          * @param widgetId the widgetId of the rendered widget to toggle
          */
-        toggleCollapseWidgetIcon: ui.toggleCollapseWidgetIcon,
+        toggleCollapseWidgetIcon:ui.toggleCollapseWidgetIcon,
 
         /***
          * Utility function to determine if a javascript object is a function or not
@@ -1342,35 +1342,35 @@ var rave = rave || (function () {
          * @param obj the object to check
          * @return true if obj is a function, false otherwise
          */
-        isFunction: isFunction,
+        isFunction:isFunction,
 
         /***
          * Maximize the widget view
          *
          * @param args the argument object
          */
-        maximizeWidget: ui.maximizeAction,
+        maximizeWidget:ui.maximizeAction,
 
         /***
          * Minimize the widget view (render in non full-screen mode)
          *
          * @param args the argument object
          */
-        minimizeWidget: ui.minimizeAction,
+        minimizeWidget:ui.minimizeAction,
 
         /**
          * Hide the widget and its chrome
          *
          * @param args the argument object
          */
-        hideWidget: ui.hideAction,
+        hideWidget:ui.hideAction,
 
         /**
          * Show the widget and its chrome
          *
          * @param args the argument object
          */
-        showWidget: ui.showAction,
+        showWidget:ui.showAction,
 
         /***
          * Create a new popup in the rave container
@@ -1378,14 +1378,14 @@ var rave = rave || (function () {
          * @param popupType the type of popup that will be created
          * @return the new dom element created
          */
-        createPopup: ui.createPopup,
+        createPopup:ui.createPopup,
 
         /***
          * Destroy a popup currently active in the rave container
          *
          * @param element the popup dom element
          */
-        destroyPopup: ui.destroyPopup,
+        destroyPopup:ui.destroyPopup,
 
         /***
          * Display the inline edit prefs section for widget preferences inside
@@ -1394,20 +1394,20 @@ var rave = rave || (function () {
          * @param regionWidgetId the regionWidgetId of the widget
          *
          */
-        editPrefs: ui.editPrefsAction,
+        editPrefs:ui.editPrefsAction,
 
         /***
          * "Preferences" view
          *
          * @param args the argument object
          */
-        editCustomPrefs: ui.editCustomPrefsAction,
+        editCustomPrefs:ui.editCustomPrefsAction,
 
         /***
          * Get the mobile state - used by the UI to render mobile or normal content
          *
          */
-        isMobile: ui.getMobileState,
+        isMobile:ui.getMobileState,
 
         /***
          * Set the mobile state - used by the UI to render mobile or normal content
@@ -1415,56 +1415,56 @@ var rave = rave || (function () {
          * @param mobileState boolean to represent the mobile state
          *
          */
-        setMobile: ui.setMobileState,
+        setMobile:ui.setMobileState,
 
         /**
          * Performs the client side work of collapsing/restoring a widget
          * @param args
          */
-        doWidgetUiCollapse: ui.doWidgetUiCollapse,
+        doWidgetUiCollapse:ui.doWidgetUiCollapse,
 
         /**
          * Toggles a mobile widget collapse/restore
          * @param args
          */
-        toggleMobileWidget: ui.toggleMobileWidget,
+        toggleMobileWidget:ui.toggleMobileWidget,
 
         /**
          * Determines if a page is empty (has zero widgets)
          * @param widgetByIdMap the map of widgets on the page
          */
-        isPageEmpty: isPageEmpty,
+        isPageEmpty:isPageEmpty,
 
         /**
          * Removes a regionWidgetId from the internal widget map
          * @param regionWidgetId the region widget id to remove
          */
-        removeWidgetFromMap: removeWidgetFromMap,
+        removeWidgetFromMap:removeWidgetFromMap,
 
         /**
          * Displays the "empty page" message on the page
          */
-        displayEmptyPageMessage: ui.displayEmptyPageMessage,
+        displayEmptyPageMessage:ui.displayEmptyPageMessage,
 
         /**
          * Displays the users of a supplied widgetId in a dialog box
          */
-        displayUsersOfWidget: ui.displayUsersOfWidget,
+        displayUsersOfWidget:ui.displayUsersOfWidget,
 
         /**
          * Displays an info message at the top of the page.
          * @param message The message to display.
          */
-        showInfoMessage: ui.showInfoMessage,
+        showInfoMessage:ui.showInfoMessage,
 
-        styleWidgetButtons: ui.styleWidgetButtons,
+        styleWidgetButtons:ui.styleWidgetButtons,
 
         /**
          * Returns a language specific message based on the supplied key
          *
          * @param key the key of the message
          */
-        getClientMessage: getClientMessage,
+        getClientMessage:getClientMessage,
 
         /**
          * Adds a message to the internal client message map
@@ -1472,39 +1472,39 @@ var rave = rave || (function () {
          * @param key
          * @param message
          */
-        addClientMessage: addClientMessage,
+        addClientMessage:addClientMessage,
 
         /**
          * Gets the singleton Managed OpenAJAX 2.0 Hub
          */
-        getManagedHub: getOpenAjaxHubInstance,
+        getManagedHub:getOpenAjaxHubInstance,
 
         /**
          * Resets the managed hub
          */
-        resetManagedHub: resetOpenAjaxHubInstance,
+        resetManagedHub:resetOpenAjaxHubInstance,
 
         /**
          * Logs a message to a central logging facility (console by default)
          *
          * @param message the message to log
          */
-        log: log,
+        log:log,
 
         /**
          * Returns the widgetsByRegionIdArray
          */
-        getWidgetsByRegionIdArray: getWidgetsByRegionIdArray,
+        getWidgetsByRegionIdArray:getWidgetsByRegionIdArray,
 
         /**
          * Clears the widgetsByRegionIdArray.  Useful for testing.
          */
-        clearWidgetsByRegionIdArray: clearWidgetsByRegionIdArray,
+        clearWidgetsByRegionIdArray:clearWidgetsByRegionIdArray,
 
         /**
          * Registers a new popup definition
          */
-        registerPopup: ui.registerPopup,
+        registerPopup:ui.registerPopup,
 
         /**
          * Set if user of a page has editing permission
@@ -1512,21 +1512,21 @@ var rave = rave || (function () {
          * than actually implementing any permission rules
          * (which are set on the server)
          */
-        initPageEditorStatus: initPageEditorStatus,
+        initPageEditorStatus:initPageEditorStatus,
 
         /**
          * Returns a boolean indicating if the user
          * should be treated as an page editor or not
          */
-        isPageEditor: isPageEditor,
+        isPageEditor:isPageEditor,
 
         /**
          * Registration methods for initialization events
          */
-        registerOnWidgetsInitizalizedHandler: registerOnWidgetsInitizalizedHandler,
-        registerOnProvidersInitizalizedHandler: registerOnProvidersInitizalizedHandler,
-        registerOnUIInitizalizedHandler: registerOnUIInitizalizedHandler,
-        registerOnPageInitizalizedHandler: registerOnPageInitizalizedHandler,
-        runOnPageInitializedHandlers: runOnPageInitializedHandlers
+        registerOnWidgetsInitizalizedHandler:registerOnWidgetsInitizalizedHandler,
+        registerOnProvidersInitizalizedHandler:registerOnProvidersInitizalizedHandler,
+        registerOnUIInitizalizedHandler:registerOnUIInitizalizedHandler,
+        registerOnPageInitizalizedHandler:registerOnPageInitizalizedHandler,
+        runOnPageInitializedHandlers:runOnPageInitializedHandlers
     }
 })();
