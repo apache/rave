@@ -30,9 +30,29 @@ rave.personprofile = rave.personprofile || (function() {
          
         //Make the tab identified by hash url active, defaulting to the first tab (Twitter Bootstrap)
          var activeSubPage = decodeURIComponent(location.hash).slice(1);
+         activeSubPage = activeSubPageExists(activeSubPage, $tabs) ? activeSubPage : "";
          if (activeSubPage===''){
              activeSubPage = $tabs.first().text();
+             location.hash = encodeURIComponent(activeSubPage);
          }
+
+         $tabs.on('shown', function(event, ui) {
+             //on tab click, change the url hash
+             var page = $(this).text();
+             var target = $(this).attr('href');
+             location.hash = encodeURIComponent(page);
+
+             // refresh the widgets on the sub page when selected to ensure proper sizing
+             if (subPagesViewedStatus[page] == false) {
+                 $(target + " .widget-wrapper").each(function(){
+                     var regionWidget = rave.getRegionWidgetById(rave.getObjectIdFromDomId(this.id));
+                     regionWidget.restore();
+                 });
+                 // mark that this sub page has been viewed at least once and there is no need to refresh
+                 // the widgets in future views
+                 subPagesViewedStatus[page] = true;
+             }
+         });
 
          // build the subPageViewedStatus map to track if a given sub page has been viewed yet to determine if we need
          // to refresh the widgets upon first viewing to ensure they are sized properly.  Set the default active tab to
@@ -41,30 +61,23 @@ rave.personprofile = rave.personprofile || (function() {
              var $tab = $(el);
              var page = $tab.text();
              var isActive =  (page == activeSubPage);
-             subPagesViewedStatus[page] = isActive;
+             subPagesViewedStatus[page] = false;
             //show the initial tab
              if(isActive){
                  $tab.tab('show');
              }
          });
+     }
 
-         $tabs.on('shown', function(event, ui) {
-             //on tab click, change the url hash
-             var page = $(this).text();
-             var target = $(this).attr('href');
-             location.hash = encodeURIComponent(page);
+     function activeSubPageExists(activeSubPage, tabs){
+         var exists = false;
+         $.each(tabs, function(i, el){
+             if(el.innerHTML === activeSubPage){
+                 exists = true;
+             }
+         });
 
-            // refresh the widgets on the sub page when selected to ensure proper sizing
-            if (subPagesViewedStatus[page] == false) {
-                $(target + " .widget-wrapper").each(function(){
-                    var regionWidget = rave.getRegionWidgetById(rave.getObjectIdFromDomId(this.id));
-                    regionWidget.restore();
-                });
-                // mark that this sub page has been viewed at least once and there is no need to refresh
-                // the widgets in future views
-                subPagesViewedStatus[page] = true;
-            }
-        });
+         return exists;
      }
 
      function dealWithUserResults(userResults){
