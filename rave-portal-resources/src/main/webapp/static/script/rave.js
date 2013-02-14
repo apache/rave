@@ -29,11 +29,11 @@ var rave = rave || (function () {
     var pageEditor = true;
     var pageViewer = {
         username: "Unknown",
-        id:-1
+        id: -1
     };
     var pageOwner = {
         username: "Unknown",
-        id:-1
+        id: -1
     };
     // JS debug mode is off by default
     var javaScriptDebugMode = 0;
@@ -50,58 +50,30 @@ var rave = rave || (function () {
      * NOTE: The UI implementation has dependencies on jQuery and jQuery UI
      */
     var ui = (function () {
-        var TEXT_FIELD_TEMPLATE = "<tr>{prefLabelTemplate}<td><input type='text' id='{name}' name='{name}' value='{value}' class='{class}'></td></tr>";
-        var CHECKBOX_TEMPLATE = "<tr>{prefLabelTemplate}<td><input type='checkbox' id='{name}' name='{name}' class='{class}' {checked}></td></tr>";
-        var SELECT_FIELD_TEMPLATE = "<tr>{prefLabelTemplate}<td><select id='{name}' name='{name}' class='{class}'>{options}</select></td></tr>";
-        var SELECT_OPTION_TEMPLATE = "<option value='{value}' {selected}>{displayValue}</option>";
-        var TEXTAREA_TEMPLATE = "<tr>{prefLabelTemplate}<td><textarea id='{name}' name='{name}' rows='5' cols='12' class='{class}'>{value}</textarea></td></tr>";
-        var HIDDEN_FIELD_TEMPLATE = "<input type='hidden' id='{name}' name='{name}' value='{value}'>";
-        var PREFS_SAVE_BUTTON_TEMPLATE = "<button type='button' id='{elementId}'>{buttonText}</button>";
-        var PREFS_CANCEL_BUTTON_TEMPLATE = "<button type='button' id='{elementId}'>{buttonText}</button>";
-
-        var NAME_REGEX = /{name}/g;
-        var VALUE_REGEX = /{value}/g;
-        var OPTIONS_REGEX = /{options}/g;
-        var SELECTED_REGEX = /{selected}/g;
-        var CHECKED_REGEX = /{checked}/g;
-        var DISPLAY_VALUE_REGEX = /{displayValue}/g;
-        var PIPE_REGEX = /\|/g;
-        var ELEMENT_ID_REGEX = /{elementId}/g;
-        var PREF_LABEL_TEMPLATE_REGEX = /{prefLabelTemplate}/g;
-        var CLASS_REGEX = /{class}/g;
-        var BUTTON_TEXT_REGEX = /{buttonText}/g;
-
         var WIDGET_TOGGLE_DISPLAY_COLLAPSED_HTML = '<i class="icon-chevron-down"></i>';
         var WIDGET_TOGGLE_DISPLAY_NORMAL_HTML = '<i class="icon-chevron-up"></i>';
 
-        var WIDGET_PREFS_LABEL_CLASS = "widget-prefs-label";
-        var WIDGET_PREFS_LABEL_REQUIRED_CLASS = "widget-prefs-label-required";
-        var WIDGET_PREFS_INPUT_CLASS = "widget-prefs-input";
         var WIDGET_PREFS_INPUT_REQUIRED_CLASS = "widget-prefs-input-required";
         var WIDGET_PREFS_INPUT_FAILED_VALIDATION = "widget-prefs-input-failed-validation";
 
-        var WIDGET_ICON_BASE_CLASS = "ui-icon";
-        var WIDGET_BTN_MINIMIZE_CLASS = "ui-icon-arrowthick-1-sw";
-        var WIDGET_TOGGLE_DISPLAY_COLLAPSED = "ui-icon-triangle-1-e";
-        var WIDGET_TOGGLE_DISPLAY_NORMAL = "ui-icon-triangle-1-s";
         var POPUPS = {
-            sidebar:{
-                name:"sidebar",
-                containerSelector:'.popup.slideout',
-                contentSelector:'.slideout-content',
-                markup:'<div class="popup slideout"><div class="slideout-content"></div></div>',
-                initialize:function (container) {
+            sidebar: {
+                name: "sidebar",
+                containerSelector: '.popup.slideout',
+                contentSelector: '.slideout-content',
+                template: 'popup-slideout',
+                initialize: function (container) {
                     container.find(this.contentSelector).data('popupType', this.name);
-                    container.show("slide", { direction:"right" }, 'fast');
+                    container.show("slide", { direction: "right" }, 'fast');
                     $('body').addClass('modal-open');
                     $('body').append('<div class="modal-backdrop fade in"></div>');
                     // hide the main browser window's scrollbar to prevent possible "double scrollbar" rendering
                     // between it and an iframe vertical scrollbar
                     $('body').addClass('no-scroll');
                 },
-                cleanup:function (content) {
+                cleanup: function (content) {
                     var container = content.parents(this.containerSelector);
-                    container.hide("slide", { direction:"right" }, 'fast', function () {
+                    container.hide("slide", { direction: "right" }, 'fast', function () {
                         container.detach();
                         $('body').removeClass('modal-open');
                         $('.modal-backdrop').remove();
@@ -109,16 +81,41 @@ var rave = rave || (function () {
                         $('body').removeClass('no-scroll');
                     });
                 },
-                singleton:true
+                singleton: true
             },
-            dialog:{
-                name:"dialog",
-                containerSelector:'.popup.dialog',
-                contentSelector:'.modal-body',
-                markup:'<div class="popup dialog modal fade"><a href="#" class="close" data-dismiss="modal">&times;</a><div class="modal-body"></div></div>',
-                initialize:function (container) {
+            dialog: {
+                name: "dialog",
+                containerSelector: '.popup.dialog',
+                contentSelector: '.modal-body',
+                template: 'popup-dialog',
+                initialize: function (container) {
                     container.find(this.contentSelector).data('popupType', this.name);
                     var cfg = {
+                    };
+                    container.modal(cfg);
+
+                    container.on('hidden', function () {
+                        container.remove();
+                    })
+                },
+                cleanup: function (content) {
+                    var container = content.parents(this.containerSelector);
+
+                    container.modal('hide');
+                },
+                singleton: false
+            },
+            modal_dialog: {
+                name: "modal_dialog",
+                containerSelector: '.popup.modal_dialog',
+                contentSelector: '.modal-body',
+                template: 'popup-modal',
+                initialize: function (container) {
+                    container.find(this.contentSelector).data('popupType', this.name);
+                    var cfg = {
+                        keyboard: false,
+                        backdrop: 'static',
+                        show: true
                     };
                     container.modal(cfg);
 
@@ -126,67 +123,30 @@ var rave = rave || (function () {
                         container.detach();
                     })
                 },
-                cleanup:function (content) {
+                cleanup: function (content) {
                     var container = content.parents(this.containerSelector);
 
                     container.modal('hide');
                 },
-                singleton:false
+                singleton: true
             },
-            modal_dialog:{
-                name:"modal_dialog",
-                containerSelector:'.popup.modal_dialog',
-                contentSelector:'.modal-body',
-                markup:'<div class="popup modal_dialog modal fade"><a href="#" class="close" data-dismiss="modal">&times;</a><div class="modal-body"></div></div>',
-                initialize:function (container) {
-                    container.find(this.contentSelector).data('popupType', this.name);
-                    var cfg = {
-                        keyboard:false,
-                        backdrop:'static',
-                        show:true
-                    };
-                    container.modal(cfg);
-
-                    container.on('hidden', function () {
-                        container.detach();
-                    })
-                },
-                cleanup:function (content) {
-                    var container = content.parents(this.containerSelector);
-
-                    container.modal('hide');
-                },
-                singleton:true
-            },
-            "float":false,
-            tab:false
+            "float": false,
+            tab: false
         };
 
         // variable to store whether or not the
         // client is a mobile device
         var mobileState = false;
 
-        function WIDGET_PREFS_EDIT_BUTTON(regionWidgetId) {
-            return "widget-" + regionWidgetId + "-prefs";
-        }
-
-        function WIDGET_PREFS_SAVE_BUTTON(regionWidgetId) {
-            return "widget-" + regionWidgetId + "-prefs-save-button";
-        }
-
-        function WIDGET_PREFS_CANCEL_BUTTON(regionWidgetId) {
-            return "widget-" + regionWidgetId + "-prefs-cancel-button";
-        }
-
         function WIDGET_PREFS_CONTENT(regionWidgetId) {
             return "widget-" + regionWidgetId + "-prefs-content";
         }
 
         var uiState = {
-            widget:null,
-            currentRegion:null,
-            targetRegion:null,
-            targetIndex:null
+            widget: null,
+            currentRegion: null,
+            targetRegion: null,
+            targetIndex: null
         };
 
         function setMobileState(mobileState) {
@@ -200,26 +160,26 @@ var rave = rave || (function () {
         function init() {
             // initialize the sortable regions
             getNonLockedRegions().sortable({
-                connectWith:'.region', // defines which regions are dnd-able
-                scroll:true, // whether to scroll the window if the user goes outside the areas
-                opacity:0.5, // the opacity of the object being dragged
-                revert:true, // smooth snap animation
-                cursor:'move', // the cursor to show while dnd
-                handle:'.widget-title-bar', // the draggable handle
-                forcePlaceholderSize:true, // size the placeholder to the size of the widget
-                tolerance:'pointer', // change dnd drop zone on mouse-over
-                start:dragStart, // event listener for drag start
-                stop:dragStop, // event listener for drag stop
-                over:dragOver // event listener for drag over
+                connectWith: '.region', // defines which regions are dnd-able
+                scroll: true, // whether to scroll the window if the user goes outside the areas
+                opacity: 0.5, // the opacity of the object being dragged
+                revert: true, // smooth snap animation
+                cursor: 'move', // the cursor to show while dnd
+                handle: '.widget-title-bar', // the draggable handle
+                forcePlaceholderSize: true, // size the placeholder to the size of the widget
+                tolerance: 'pointer', // change dnd drop zone on mouse-over
+                start: dragStart, // event listener for drag start
+                stop: dragStop, // event listener for drag stop
+                over: dragOver // event listener for drag over
             });
             initWidgetUI();
 
-            if(onUIInitializedHandlers !== null && onUIInitializedHandlers.length > 0){
+            if (onUIInitializedHandlers !== null && onUIInitializedHandlers.length > 0) {
                 for (var i = 0, j = onUIInitializedHandlers.length; i < j; ++i) {
                     try {
                         onUIInitializedHandlers[i]();
                     } catch (ex) {
-                        gadgets.warn("Could not fire onUIInitializedHandler "+ex.message);
+                        gadgets.warn("Could not fire onUIInitializedHandler " + ex.message);
                     }
                 }
             }
@@ -393,7 +353,7 @@ var rave = rave || (function () {
                 var widget = rave.getRegionWidgetById(widgetId);
 
                 // init the collapse/restore toggle for the title bar
-                $(this).find(".widget-title-bar-mobile").click({id:widgetId}, toggleCollapseAction);
+                $(this).find(".widget-title-bar-mobile").click({id: widgetId}, toggleCollapseAction);
             });
         }
 
@@ -413,7 +373,7 @@ var rave = rave || (function () {
                 widget.maximize(view_params, args.data.view);
                 // due to widget list changing height of the window, we have to set the height of the sneeze-guard here.
                 var overlayStyleMap = {
-                    height:$('.wrapper').height() - $('.navbar').height() - $('.logo-wrapper').height()
+                    height: $('.wrapper').height() - $('.navbar').height() - $('.logo-wrapper').height()
                 };
                 $('.canvas-overlay').css(overlayStyleMap);
             }
@@ -471,11 +431,11 @@ var rave = rave || (function () {
                 return $(target.contentSelector).get(0);
             }
 
-            var container = $(target.markup);
-            if(height) {
+            var container = $(rave.ui.templates[target.template]());
+            if (height) {
                 container.height(height);
             }
-            if(width) {
+            if (width) {
                 container.width(width);
             }
             $("#pageContent").prepend(container);
@@ -513,7 +473,7 @@ var rave = rave || (function () {
             var widget = getRegionWidgetById(regionWidgetId);
             // toggle the collapse state of the widget
             var newCollapsedValue = !widget.collapsed;
-            var functionArgs = {"regionWidgetId":regionWidgetId, "collapsed":newCollapsedValue};
+            var functionArgs = {"regionWidgetId": regionWidgetId, "collapsed": newCollapsedValue};
 
             // if this type of widget has a collapse or restore callback invoke it upon
             // successful persistence
@@ -556,39 +516,6 @@ var rave = rave || (function () {
         }
 
         /**
-         * Utility function to generate the html label for a userPref
-         * based on if it is required or not
-         */
-        function generatePrefLabelMarkup(userPref) {
-            var markup = [];
-            var prefLabel = (userPref.required) ? "* " + userPref.displayName : userPref.displayName;
-            markup.push("<td class='");
-            markup.push(WIDGET_PREFS_LABEL_CLASS);
-            if (userPref.required) {
-                markup.push(" ");
-                markup.push(WIDGET_PREFS_LABEL_REQUIRED_CLASS);
-            }
-            markup.push("'>");
-            markup.push(prefLabel);
-            markup.push("</td>");
-            return markup.join("");
-        }
-
-        /**
-         * Utility function to generate the css class(es) of a userPref input
-         * field based on if it is required or not
-         */
-        function generatePrefInputClassMarkup(userPref) {
-            var markup = [];
-            markup.push(WIDGET_PREFS_INPUT_CLASS);
-            if (userPref.required) {
-                markup.push(" ");
-                markup.push(WIDGET_PREFS_INPUT_REQUIRED_CLASS);
-            }
-            return markup.join("");
-        }
-
-        /**
          * Utility function to validate a userPref input element
          */
         function validatePrefInput(element) {
@@ -602,93 +529,53 @@ var rave = rave || (function () {
             return isValid;
         }
 
+        /*
+        Displays the edit preferences panel for a gadet
+         */
         function editPrefsAction(regionWidgetId) {
             var regionWidget = getRegionWidgetById(regionWidgetId);
             var userPrefs = regionWidget.metadata.userPrefs;
             var hasRequiredUserPrefs = false;
 
-            var prefsFormMarkup = [];
-            prefsFormMarkup.push("<table>");
+            //format the data for display
+            _.each(userPrefs, function (pref) {
+                //find current value of each pref
+                pref.value = regionWidget.userPrefs[pref.name] || pref.defaultValue;
 
-            for (var prefName in userPrefs) {
-                var userPref = userPrefs[prefName];
-                var currentPrefValue = regionWidget.userPrefs[userPref.name];
-                var prefLabelMarkup = generatePrefLabelMarkup(userPref);
-                var prefInputClassMarkup = generatePrefInputClassMarkup(userPref);
-                if (userPref.required) {
+                if (pref.required) {
                     hasRequiredUserPrefs = true;
                 }
 
-                switch (userPref.dataType) {
-                    case "STRING":
-                        prefsFormMarkup.push(TEXT_FIELD_TEMPLATE.replace(PREF_LABEL_TEMPLATE_REGEX, prefLabelMarkup)
-                            .replace(CLASS_REGEX, prefInputClassMarkup)
-                            .replace(NAME_REGEX, userPref.name)
-                            .replace(VALUE_REGEX, typeof currentPrefValue != "undefined" ? currentPrefValue :
-                            userPref.defaultValue));
-                        break;
-                    case "BOOL":
-                        var checked = typeof currentPrefValue != "undefined" ?
-                            currentPrefValue === 'true' || currentPrefValue === true :
-                            userPref.defaultValue === 'true' || userPref.defaultValue === true;
-
-                        prefsFormMarkup.push(CHECKBOX_TEMPLATE.replace(PREF_LABEL_TEMPLATE_REGEX, prefLabelMarkup)
-                            .replace(CLASS_REGEX, prefInputClassMarkup)
-                            .replace(NAME_REGEX, userPref.name)
-                            .replace(CHECKED_REGEX, checked ? "checked" : ""));
-                        break;
-                    case "ENUM":
-                        var options = [];
-
-                        for (var i = 0; i < userPref.orderedEnumValues.length; i++) {
-                            var option = userPref.orderedEnumValues[i];
-                            var selected = currentPrefValue == option.value || (typeof currentPrefValue == "undefined" &&
-                                option.value == userPref.defaultValue);
-                            options.push(SELECT_OPTION_TEMPLATE.replace(VALUE_REGEX, option.value)
-                                .replace(DISPLAY_VALUE_REGEX, option.displayValue)
-                                .replace(SELECTED_REGEX, selected ? "selected" : ""));
-                        }
-
-                        prefsFormMarkup.push(SELECT_FIELD_TEMPLATE.replace(PREF_LABEL_TEMPLATE_REGEX, prefLabelMarkup)
-                            .replace(CLASS_REGEX, prefInputClassMarkup)
-                            .replace(NAME_REGEX, userPref.name)
-                            .replace(OPTIONS_REGEX, options.join("")));
-                        break;
-                    case "LIST":
-                        var values = typeof currentPrefValue != "undefined" ? currentPrefValue : userPref.defaultValue;
-                        values = values.replace(PIPE_REGEX, "\n");
-                        prefsFormMarkup.push(TEXTAREA_TEMPLATE.replace(PREF_LABEL_TEMPLATE_REGEX, prefLabelMarkup)
-                            .replace(CLASS_REGEX, prefInputClassMarkup)
-                            .replace(NAME_REGEX, userPref.name)
-                            .replace(VALUE_REGEX, values));
-                        break;
-                    default:
-                        prefsFormMarkup.push(HIDDEN_FIELD_TEMPLATE.replace(NAME_REGEX, userPref.name)
-                            .replace(VALUE_REGEX, typeof currentPrefValue != "undefined" ? currentPrefValue :
-                            userPref.defaultValue));
+                //for ENUM preferences find which option should be selected
+                if(pref.dataType == 'ENUM'){
+                    var selectedPref = _.find(pref.orderedEnumValues, function(option){
+                        return option.value == pref.value;
+                    });
+                    selectedPref.selected = true;
                 }
-            }
+                if(pref.dataType == 'LIST'){
+                    pref.value = pref.value.replace(PIPE_REGEX, "\n");
+                }
 
-            // if this widget has one or more required inputs display the helper message
-            if (hasRequiredUserPrefs) {
-                prefsFormMarkup.push("<tr><td colspan='2' class='widget-prefs-required-text'>" + rave.getClientMessage("widget.prefs.required.title") + "</td></tr>");
-            }
+                //if pref.dataType = "LIST", add a flag pref.LIST to #if against in the template
+                pref[pref.dataType] = true;
 
-            prefsFormMarkup.push("<tr><td colspan='2'>");
-            prefsFormMarkup.push(PREFS_SAVE_BUTTON_TEMPLATE.replace(ELEMENT_ID_REGEX, WIDGET_PREFS_SAVE_BUTTON(regionWidget.regionWidgetId))
-                .replace(BUTTON_TEXT_REGEX, rave.getClientMessage("common.save")));
-            prefsFormMarkup.push(PREFS_CANCEL_BUTTON_TEMPLATE.replace(ELEMENT_ID_REGEX, WIDGET_PREFS_CANCEL_BUTTON(regionWidget.regionWidgetId))
-                .replace(BUTTON_TEXT_REGEX, rave.getClientMessage("common.cancel")));
-            prefsFormMarkup.push("</td></tr>");
-            prefsFormMarkup.push("</table>");
+            });
+
+            var markup = rave.ui.templates['widget-preferences']({
+                userPrefs: userPrefs,
+                hasRequiredUserPrefs: hasRequiredUserPrefs
+            });
+            var $markup = $(markup);
+
+            $('.prefs-save-button', $markup).click({id: regionWidget.regionWidgetId},
+                saveEditPrefsAction);
+
+            $('.prefs-cancel-button', $markup).click({id: regionWidget.regionWidgetId},
+                cancelEditPrefsAction);
 
             var prefsElement = $("#" + WIDGET_PREFS_CONTENT(regionWidget.regionWidgetId));
-            prefsElement.html(prefsFormMarkup.join(""));
-
-            $("#" + WIDGET_PREFS_SAVE_BUTTON(regionWidget.regionWidgetId)).click({id:regionWidget.regionWidgetId},
-                saveEditPrefsAction);
-            $("#" + WIDGET_PREFS_CANCEL_BUTTON(regionWidget.regionWidgetId)).click({id:regionWidget.regionWidgetId},
-                cancelEditPrefsAction);
+            prefsElement.html($markup);
 
             prefsElement.show();
         }
@@ -763,12 +650,12 @@ var rave = rave || (function () {
         function addOverlay(jqElm) {
             var overlay = $('<div></div>');
             var styleMap = {
-                position:"absolute",
-                height:jqElm.height(),
-                width:jqElm.width(),
-                'z-index':10,
-                opacity:0.7,
-                background:"#FFFFFF"
+                position: "absolute",
+                height: jqElm.height(),
+                width: jqElm.width(),
+                'z-index': 10,
+                opacity: 0.7,
+                background: "#FFFFFF"
             };
 
             // style it and give it the marker class
@@ -778,11 +665,11 @@ var rave = rave || (function () {
             jqElm.prepend(overlay[0]);
         }
 
-        function addCanvasOverlay(jqElm){
+        function addCanvasOverlay(jqElm) {
             var overlay = $('<div></div>');
             var styleMap = {
-                height:$('body').height()-40
-             };
+                height: $('body').height() - 40
+            };
 
             // style it and give it the marker class
             $(overlay).css(styleMap);
@@ -812,14 +699,14 @@ var rave = rave || (function () {
 
             // init the widget minimize button which is hidden by default
             // and only renders when widget is in maximized view
-            $("#widget-" + widgetId + "-min").click({id:widgetId}, rave.minimizeWidget);
+            $("#widget-" + widgetId + "-min").click({id: widgetId}, rave.minimizeWidget);
 
             // init the collapse/restore toggle
             // conditionally style the icon and setup the event handlers
             var $toggleCollapseIcon = $("#widget-" + widgetId + "-collapse");
             $toggleCollapseIcon.html((widget.collapsed) ? WIDGET_TOGGLE_DISPLAY_COLLAPSED_HTML : WIDGET_TOGGLE_DISPLAY_NORMAL_HTML);
             $toggleCollapseIcon
-                .click({id:widgetId}, toggleCollapseAction)
+                .click({id: widgetId}, toggleCollapseAction)
                 .mousedown(function (event) {
                     // don't allow drag and drop when this item is clicked
                     event.stopPropagation();
@@ -853,21 +740,24 @@ var rave = rave || (function () {
         }
 
         function displayUsersOfWidget(widgetId) {
-            rave.api.rest.getUsersForWidget({widgetId:widgetId, successCallback:function (data) {
-                var html = "<ul class='widget-users'>";
-                for (var i = 0; i < data.length; i++) {
-                    var person = data[i];
-                    var name = (person.displayName) ? person.displayName :
-                        ((person.preferredName) ? person.preferredName : person.givenName) + " " + person.familyName;
+            rave.api.rest.getUsersForWidget({widgetId: widgetId, successCallback: function (data) {
 
-                    html += "<li class='widget-user'>" + name + "</li>";
-                }
-                html += "</ul>";
+                //format data for display
+                _.each(data, function(person){
+                    person.name = person.displayName || person.preferredName || (person.givenName + " " + person.familyName);
+                });
 
-                $("<div class='dialog widget-users-dialog' title='" + $("#widget-" + widgetId + "-title").text().trim() + " " + rave.getClientMessage("widget.users.added_by") + "'>" + html + "</div>").dialog({
-                    modal:true,
-                    buttons:[
-                        {text:"Close", click:function () {
+                var markup = rave.ui.templates['users-of-widget']({
+                    users: data,
+                    //TODO: data from dom evil! should be using gadget object to get name
+                    widgetName: $("#widget-" + widgetId + "-title").text().trim()
+                });
+
+                //TODO: don't use jquery ui dialogs?
+                $(markup).dialog({
+                    modal: true,
+                    buttons: [
+                        {text: "Close", click: function () {
                             $(this).dialog("close");
                         }}
                     ]
@@ -875,11 +765,17 @@ var rave = rave || (function () {
             }});
         }
 
+        //TODO: rename as flash?
         function showInfoMessage(message) {
-            $("<div />", {'class':'alert alert-success navbar-spacer', 'text':message})
-                .hide()
+
+            var markup = rave.ui.templates['info-message']({
+                message: message
+            });
+
+            $(markup).hide()
                 .prependTo("body")
-                .css({ position: 'fixed', top: 0, left: 0, width: 'auto', 'max-width': '60%', 'font-size': '1.25em',  padding:'.6em 1em', 'z-index':9999, 'border-radius': '0 0 4px 0'})
+                //TODO: add a class for flash box and attach these styles
+                .css({ position: 'fixed', top: 0, left: 0, width: 'auto', 'max-width': '60%', 'font-size': '1.25em', padding: '.6em 1em', 'z-index': 9999, 'border-radius': '0 0 4px 0'})
                 .fadeIn('fast').delay(8000)
                 .fadeOut(function () {
                     $(this).remove();
@@ -895,25 +791,25 @@ var rave = rave || (function () {
         }
 
         return {
-            init:init,
-            initMobile:initMobileWidgetUI,
-            toggleCollapseWidgetIcon:toggleCollapseWidgetIcon,
-            maximizeAction:maximizeAction,
-            minimizeAction:minimizeAction,
+            init: init,
+            initMobile: initMobileWidgetUI,
+            toggleCollapseWidgetIcon: toggleCollapseWidgetIcon,
+            maximizeAction: maximizeAction,
+            minimizeAction: minimizeAction,
             hideAction: hideAction,
             showAction: showAction,
-            createPopup:createPopup,
-            destroyPopup:destroyPopup,
-            editPrefsAction:editPrefsAction,
-            editCustomPrefsAction:editCustomPrefsAction,
-            setMobileState:setMobileState,
-            getMobileState:getMobileState,
-            doWidgetUiCollapse:doWidgetUiCollapse,
-            toggleMobileWidget:toggleMobileWidget,
-            displayEmptyPageMessage:displayEmptyPageMessage,
-            displayUsersOfWidget:displayUsersOfWidget,
-            showInfoMessage:showInfoMessage,
-            registerPopup:registerPopup,
+            createPopup: createPopup,
+            destroyPopup: destroyPopup,
+            editPrefsAction: editPrefsAction,
+            editCustomPrefsAction: editCustomPrefsAction,
+            setMobileState: setMobileState,
+            getMobileState: getMobileState,
+            doWidgetUiCollapse: doWidgetUiCollapse,
+            toggleMobileWidget: toggleMobileWidget,
+            displayEmptyPageMessage: displayEmptyPageMessage,
+            displayUsersOfWidget: displayUsersOfWidget,
+            showInfoMessage: showInfoMessage,
+            registerPopup: registerPopup,
             styleWidgetButtons: styleWidgetButtons
         };
 
@@ -963,12 +859,12 @@ var rave = rave || (function () {
             providerMap[key].init(pageType);
         }
 
-        if(onProvidersInitializedHandlers !== null && onProvidersInitializedHandlers.length > 0){
+        if (onProvidersInitializedHandlers !== null && onProvidersInitializedHandlers.length > 0) {
             for (var i = 0, j = onProvidersInitializedHandlers.length; i < j; ++i) {
                 try {
                     onProvidersInitializedHandlers[i]();
                 } catch (ex) {
-                    gadgets.warn("Could not fire onProvidersInitializedHandler "+ex.message);
+                    gadgets.warn("Could not fire onProvidersInitializedHandler " + ex.message);
                 }
             }
         }
@@ -981,15 +877,15 @@ var rave = rave || (function () {
                 "Please ensure that an implementation has been included in the page.";
         }
         return new OpenAjax.hub.ManagedHub({
-            onSubscribe:function (topic, container) {
+            onSubscribe: function (topic, container) {
                 log((container == null ? "Container" : container.getClientID()) + " subscribes to this topic '" + topic + "'");
                 return true;
             },
-            onUnsubscribe:function (topic, container) {
+            onUnsubscribe: function (topic, container) {
                 log((container == null ? "Container" : container.getClientID()) + " unsubscribes from this topic '" + topic + "'");
                 return true;
             },
-            onPublish:function (topic, data, pcont, scont) {
+            onPublish: function (topic, data, pcont, scont) {
                 log((pcont == null ? "Container" : pcont.getClientID()) + " publishes '" + data + "' to topic '" + topic + "' subscribed by " + (scont == null ? "Container" : scont.getClientID()));
                 return true;
             }
@@ -1007,29 +903,29 @@ var rave = rave || (function () {
         openAjaxHub = null;
     }
 
-    function renderNewWidget(regionWidgetId, init, regionId){
+    function renderNewWidget(regionWidgetId, init, regionId) {
         // When run as the callback argument supplied to rave.api.rpc.addWidgetToPage
         // or rave.api.rpc.addWidgetToPageRegion
         // this method will render the widget in the current page.
         // load widget into a placeholder element
         var placeholder = document.createElement("div");
-        $(placeholder).load(rave.getContext()+"api/rest/regionwidget/"+regionWidgetId, function(){
+        $(placeholder).load(rave.getContext() + "api/rest/regionwidget/" + regionWidgetId, function () {
             var region = null;
-            if(regionId != undefined){
+            if (regionId != undefined) {
                 // get specified region
-                region = $("#region-"+regionId+"-id");
+                region = $("#region-" + regionId + "-id");
             }
-            else{
+            else {
                 var $firstRegion = $(".region:not(.region-locked):first")
                 var firstRegionId = ($firstRegion).attr('id');
                 // prepend to first region
-                region = $("#"+firstRegionId);
+                region = $("#" + firstRegionId);
             }
             region.prepend(placeholder);
             // remove the placeholder around the widget-wrapper
             region.children(":first").children(":first").unwrap();
-            
-            if(init){
+
+            if (init) {
                 initializeWidgets();
                 rave.styleWidgetButtons(regionWidgetId);
                 rave.layout.bindWidgetMenu(regionWidgetId);
@@ -1077,12 +973,12 @@ var rave = rave || (function () {
             }
         }
 
-        if(onWidgetsInitializedHandlers !== null && onWidgetsInitializedHandlers.length > 0){
+        if (onWidgetsInitializedHandlers !== null && onWidgetsInitializedHandlers.length > 0) {
             for (var i = 0, j = onWidgetsInitializedHandlers.length; i < j; ++i) {
                 try {
                     onWidgetsInitializedHandlers[i]();
                 } catch (ex) {
-                    gadgets.warn("Could not fire onWidgetInitializedHandler "+ex.message);
+                    gadgets.warn("Could not fire onWidgetInitializedHandler " + ex.message);
                 }
             }
         }
@@ -1092,12 +988,12 @@ var rave = rave || (function () {
     function initializeWidget(widget) {
         // Widget has been deleted on the page but not removed from list
         var widgetBody = $(["#widget-", widget.regionWidgetId, "-body"].join(""));
-        if(widgetBody.length === 0){
-          return;
+        if (widgetBody.length === 0) {
+            return;
         } else {
             // Widget has already been initialized
-            if(typeof widgetBody.children !== "undefined" && widgetBody.children().length !== 0){
-              return;
+            if (typeof widgetBody.children !== "undefined" && widgetBody.children().length !== 0) {
+                return;
             }
         }
 
@@ -1146,7 +1042,7 @@ var rave = rave || (function () {
         javaScriptDebugMode = debugMode;
     }
 
-    function getJavaScriptDebugMode(){
+    function getJavaScriptDebugMode() {
         return javaScriptDebugMode;
     }
 
@@ -1154,7 +1050,7 @@ var rave = rave || (function () {
         defaultWidgetHeight = widgetHeight;
     }
 
-    function getDefaultWidgetHeight(){
+    function getDefaultWidgetHeight() {
         return defaultWidgetHeight;
     }
 
@@ -1162,15 +1058,15 @@ var rave = rave || (function () {
         pageViewer = viewer;
     }
 
-    function getPageViewer(){
+    function getPageViewer() {
         return pageViewer;
     }
 
-    function setPageOwner(owner){
+    function setPageOwner(owner) {
         pageOwner = owner;
     }
 
-    function getPageOwner(){
+    function getPageOwner() {
         return pageOwner;
     }
 
@@ -1184,13 +1080,13 @@ var rave = rave || (function () {
     }
 
     function viewWidgetDetail(widgetId, referringPageId, jumpToId) {
-    	if(jumpToId){
-	    	jumpToId = '#' + jumpToId;
-    	}
-    	else{
-	    	jumpToId = '';
-    	}
-    	window.location.href = rave.getContext() + "store/widget/" + widgetId + "?referringPageId=" + referringPageId  + jumpToId;
+        if (jumpToId) {
+            jumpToId = '#' + jumpToId;
+        }
+        else {
+            jumpToId = '';
+        }
+        window.location.href = rave.getContext() + "store/widget/" + widgetId + "?referringPageId=" + referringPageId + jumpToId;
     }
 
     /**
@@ -1227,18 +1123,18 @@ var rave = rave || (function () {
         }
     }
 
-    function initPageEditorStatus(status){
-        if(status != "undefined"){
+    function initPageEditorStatus(status) {
+        if (status != "undefined") {
             this.pageEditor = status;
         }
-     }
+    }
 
-    function isPageEditor(){
+    function isPageEditor() {
         return this.pageEditor;
     }
 
     function registerOnWidgetsInitizalizedHandler(callback) {
-        if(onWidgetsInitializedHandlers !== null) {
+        if (onWidgetsInitializedHandlers !== null) {
             onWidgetsInitializedHandlers.push(callback);
         } else {
             callback();
@@ -1246,7 +1142,7 @@ var rave = rave || (function () {
     };
 
     function registerOnProvidersInitizalizedHandler(callback) {
-        if(onProvidersInitializedHandlers !== null) {
+        if (onProvidersInitializedHandlers !== null) {
             onProvidersInitializedHandlers.push(callback);
         } else {
             callback();
@@ -1254,7 +1150,7 @@ var rave = rave || (function () {
     };
 
     function registerOnUIInitizalizedHandler(callback) {
-        if(onUIInitializedHandlers !== null) {
+        if (onUIInitializedHandlers !== null) {
             onUIInitializedHandlers.push(callback);
         } else {
             callback();
@@ -1262,7 +1158,7 @@ var rave = rave || (function () {
     };
 
     function registerOnPageInitizalizedHandler(callback) {
-        if(onPageInitializedHandlers !== null) {
+        if (onPageInitializedHandlers !== null) {
             onPageInitializedHandlers.push(callback);
         } else {
             callback();
@@ -1274,12 +1170,12 @@ var rave = rave || (function () {
      * Internal method should only be called from the page.jsp
      */
     function runOnPageInitializedHandlers() {
-        if(onPageInitializedHandlers !== null && onPageInitializedHandlers.length > 0){
+        if (onPageInitializedHandlers !== null && onPageInitializedHandlers.length > 0) {
             for (var i = 0, j = onPageInitializedHandlers.length; i < j; ++i) {
                 try {
                     onPageInitializedHandlers[i]();
                 } catch (ex) {
-                    gadgets.warn("Could not fire onPageInitializedHandler "+ex.message);
+                    gadgets.warn("Could not fire onPageInitializedHandler " + ex.message);
                 }
             }
         }
@@ -1295,18 +1191,18 @@ var rave = rave || (function () {
          * @param regionId The regionId.
          * @param widget The widget.
          */
-        registerWidget:registerWidget,
+        registerWidget: registerWidget,
 
         /**
          * Render a newly-added widget in the page
          * @param regionWidgetId the regionWidgetId of the widget to render
          */
-        renderNewWidget:renderNewWidget,
+        renderNewWidget: renderNewWidget,
 
         /**
          * Initialize all of the registered providers
          */
-        initProviders:initializeProviders,
+        initProviders: initializeProviders,
 
         /**
          * Initializes the given set of widgets
@@ -1316,17 +1212,17 @@ var rave = rave || (function () {
          *      type,
          *      regionWidgetId
          */
-        initWidgets:initializeWidgets,
+        initWidgets: initializeWidgets,
 
         /**
          * Initialize Rave's drag and drop facilities
          */
-        initUI:ui.init,
+        initUI: ui.init,
 
         /**
          * Initialize the mobile UI
          */
-        initMobileUI:ui.initMobile,
+        initMobileUI: ui.initMobile,
 
         /**
          * Parses the given string conforming to a rave object's DOM element ID and return
@@ -1339,7 +1235,7 @@ var rave = rave || (function () {
          *
          * @param elementId the ID of the DOM element containing the widget
          */
-        getObjectIdFromDomId:extractObjectIdFromElementId,
+        getObjectIdFromDomId: extractObjectIdFromElementId,
 
         /**
          * Registers a new provider with Rave.  All providers MUST have init and initWidget functions as well as a
@@ -1347,7 +1243,7 @@ var rave = rave || (function () {
          *
          * @param provider a valid Rave widget provider
          */
-        registerProvider:addProviderToList,
+        registerProvider: addProviderToList,
 
         /**
          * Renders an error in place of the widget
@@ -1355,19 +1251,19 @@ var rave = rave || (function () {
          * @param id the RegionWidgetId of the widget to render in error mode
          * @param message The message to display to the user
          */
-        errorWidget:renderErrorWidget,
+        errorWidget: renderErrorWidget,
 
         /**
          * Sets the context path for the Rave web application
          *
          * @param contextPath the context path of the rave webapp
          */
-        setContext:updateContext,
+        setContext: updateContext,
 
         /**
          * Gets the current context
          */
-        getContext:getContext,
+        getContext: getContext,
 
         /**
          * Gets the value of the JavaScriptDebugMode flag
@@ -1394,36 +1290,36 @@ var rave = rave || (function () {
          *
          * @param viewer an object representing the authenticated user viewing the page {username:"bob", id:"1"}
          */
-        setPageViewer:setPageViewer,
+        setPageViewer: setPageViewer,
 
         /**
          * Gets the current viewer
          */
-        getPageViewer:getPageViewer,
+        getPageViewer: getPageViewer,
 
         /**
          * Sets the owner of the current page
          *
          * @param owner an object representing the owner of the page
          */
-        setPageOwner:setPageOwner,
+        setPageOwner: setPageOwner,
 
         /**
          * Gets the page owner
          */
-        getPageOwner:getPageOwner,
+        getPageOwner: getPageOwner,
 
         /**
          * Gets a regionwidget by region widget id
          */
-        getRegionWidgetById:getRegionWidgetById,
+        getRegionWidgetById: getRegionWidgetById,
 
         /**
          * View a page
          *
          * @param pageId the pageId to view, or if null, the user's default page
          */
-        viewPage:viewPage,
+        viewPage: viewPage,
 
         /**
          * View the widget detail page of a widget
@@ -1431,14 +1327,14 @@ var rave = rave || (function () {
          * @param widgetId to widgetId to view
          * @param referringPageId the id of the page the call is coming from
          */
-        viewWidgetDetail:viewWidgetDetail,
+        viewWidgetDetail: viewWidgetDetail,
 
         /**
          * Toggles the collapse/restore icon of the rendered widget
          *
          * @param widgetId the widgetId of the rendered widget to toggle
          */
-        toggleCollapseWidgetIcon:ui.toggleCollapseWidgetIcon,
+        toggleCollapseWidgetIcon: ui.toggleCollapseWidgetIcon,
 
         /***
          * Utility function to determine if a javascript object is a function or not
@@ -1446,21 +1342,21 @@ var rave = rave || (function () {
          * @param obj the object to check
          * @return true if obj is a function, false otherwise
          */
-        isFunction:isFunction,
+        isFunction: isFunction,
 
         /***
          * Maximize the widget view
          *
          * @param args the argument object
          */
-        maximizeWidget:ui.maximizeAction,
+        maximizeWidget: ui.maximizeAction,
 
         /***
          * Minimize the widget view (render in non full-screen mode)
          *
          * @param args the argument object
          */
-        minimizeWidget:ui.minimizeAction,
+        minimizeWidget: ui.minimizeAction,
 
         /**
          * Hide the widget and its chrome
@@ -1482,14 +1378,14 @@ var rave = rave || (function () {
          * @param popupType the type of popup that will be created
          * @return the new dom element created
          */
-        createPopup:ui.createPopup,
+        createPopup: ui.createPopup,
 
         /***
          * Destroy a popup currently active in the rave container
          *
          * @param element the popup dom element
          */
-        destroyPopup:ui.destroyPopup,
+        destroyPopup: ui.destroyPopup,
 
         /***
          * Display the inline edit prefs section for widget preferences inside
@@ -1498,20 +1394,20 @@ var rave = rave || (function () {
          * @param regionWidgetId the regionWidgetId of the widget
          *
          */
-        editPrefs:ui.editPrefsAction,
+        editPrefs: ui.editPrefsAction,
 
         /***
          * "Preferences" view
          *
          * @param args the argument object
          */
-        editCustomPrefs:ui.editCustomPrefsAction,
+        editCustomPrefs: ui.editCustomPrefsAction,
 
         /***
          * Get the mobile state - used by the UI to render mobile or normal content
          *
          */
-        isMobile:ui.getMobileState,
+        isMobile: ui.getMobileState,
 
         /***
          * Set the mobile state - used by the UI to render mobile or normal content
@@ -1519,56 +1415,56 @@ var rave = rave || (function () {
          * @param mobileState boolean to represent the mobile state
          *
          */
-        setMobile:ui.setMobileState,
+        setMobile: ui.setMobileState,
 
         /**
          * Performs the client side work of collapsing/restoring a widget
          * @param args
          */
-        doWidgetUiCollapse:ui.doWidgetUiCollapse,
+        doWidgetUiCollapse: ui.doWidgetUiCollapse,
 
         /**
          * Toggles a mobile widget collapse/restore
          * @param args
          */
-        toggleMobileWidget:ui.toggleMobileWidget,
+        toggleMobileWidget: ui.toggleMobileWidget,
 
         /**
          * Determines if a page is empty (has zero widgets)
          * @param widgetByIdMap the map of widgets on the page
          */
-        isPageEmpty:isPageEmpty,
+        isPageEmpty: isPageEmpty,
 
         /**
          * Removes a regionWidgetId from the internal widget map
          * @param regionWidgetId the region widget id to remove
          */
-        removeWidgetFromMap:removeWidgetFromMap,
+        removeWidgetFromMap: removeWidgetFromMap,
 
         /**
          * Displays the "empty page" message on the page
          */
-        displayEmptyPageMessage:ui.displayEmptyPageMessage,
+        displayEmptyPageMessage: ui.displayEmptyPageMessage,
 
         /**
          * Displays the users of a supplied widgetId in a dialog box
          */
-        displayUsersOfWidget:ui.displayUsersOfWidget,
+        displayUsersOfWidget: ui.displayUsersOfWidget,
 
         /**
          * Displays an info message at the top of the page.
          * @param message The message to display.
          */
-        showInfoMessage:ui.showInfoMessage,
-        
-        styleWidgetButtons : ui.styleWidgetButtons,
+        showInfoMessage: ui.showInfoMessage,
+
+        styleWidgetButtons: ui.styleWidgetButtons,
 
         /**
          * Returns a language specific message based on the supplied key
          *
          * @param key the key of the message
          */
-        getClientMessage:getClientMessage,
+        getClientMessage: getClientMessage,
 
         /**
          * Adds a message to the internal client message map
@@ -1576,39 +1472,39 @@ var rave = rave || (function () {
          * @param key
          * @param message
          */
-        addClientMessage:addClientMessage,
+        addClientMessage: addClientMessage,
 
         /**
          * Gets the singleton Managed OpenAJAX 2.0 Hub
          */
-        getManagedHub:getOpenAjaxHubInstance,
+        getManagedHub: getOpenAjaxHubInstance,
 
         /**
          * Resets the managed hub
          */
-        resetManagedHub:resetOpenAjaxHubInstance,
+        resetManagedHub: resetOpenAjaxHubInstance,
 
         /**
          * Logs a message to a central logging facility (console by default)
          *
          * @param message the message to log
          */
-        log:log,
+        log: log,
 
         /**
          * Returns the widgetsByRegionIdArray
          */
-        getWidgetsByRegionIdArray:getWidgetsByRegionIdArray,
+        getWidgetsByRegionIdArray: getWidgetsByRegionIdArray,
 
         /**
          * Clears the widgetsByRegionIdArray.  Useful for testing.
          */
-        clearWidgetsByRegionIdArray:clearWidgetsByRegionIdArray,
+        clearWidgetsByRegionIdArray: clearWidgetsByRegionIdArray,
 
         /**
          * Registers a new popup definition
          */
-        registerPopup:ui.registerPopup,
+        registerPopup: ui.registerPopup,
 
         /**
          * Set if user of a page has editing permission
@@ -1616,21 +1512,21 @@ var rave = rave || (function () {
          * than actually implementing any permission rules
          * (which are set on the server)
          */
-        initPageEditorStatus:initPageEditorStatus,
+        initPageEditorStatus: initPageEditorStatus,
 
         /**
          * Returns a boolean indicating if the user
          * should be treated as an page editor or not
          */
-        isPageEditor:isPageEditor,
+        isPageEditor: isPageEditor,
 
         /**
          * Registration methods for initialization events
          */
-        registerOnWidgetsInitizalizedHandler:registerOnWidgetsInitizalizedHandler,
-        registerOnProvidersInitizalizedHandler:registerOnProvidersInitizalizedHandler,
-        registerOnUIInitizalizedHandler:registerOnUIInitizalizedHandler,
-        registerOnPageInitizalizedHandler:registerOnPageInitizalizedHandler,
-        runOnPageInitializedHandlers:runOnPageInitializedHandlers
+        registerOnWidgetsInitizalizedHandler: registerOnWidgetsInitizalizedHandler,
+        registerOnProvidersInitizalizedHandler: registerOnProvidersInitizalizedHandler,
+        registerOnUIInitizalizedHandler: registerOnUIInitizalizedHandler,
+        registerOnPageInitizalizedHandler: registerOnPageInitizalizedHandler,
+        runOnPageInitializedHandlers: runOnPageInitializedHandlers
     }
 })();

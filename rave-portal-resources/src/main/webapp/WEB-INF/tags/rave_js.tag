@@ -33,6 +33,7 @@
         <script src="<spring:url value="/static/script/rave_opensocial.js"/>"></script>
         <script src="<spring:url value="/static/script/rave_wookie.js"/>"></script>
         <script src="<spring:url value="/static/script/rave_layout.js"/>"></script>
+        <script src="<spring:url value="/static/script/rave_ui.js"/>"></script>
         <script src="<spring:url value="/static/script/rave_forms.js"/>"></script>
         <script src="<spring:url value="/static/script/rave_person_profile.js"/>"></script>
         <script src="<spring:url value="/static/script/rave_store.js"/>"></script>

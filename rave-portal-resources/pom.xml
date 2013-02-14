@@ -115,6 +115,7 @@
                             <debug>true</debug>
                             <sourceExcludes>
                                 <exclude>rave_layout.js</exclude>
+                                <exclude>rave_ui.js</exclude>
                                 <!-- exclude the combined js file from our tests, created by the wro4j plugin  -->
                                 <exclude>all.min.js</exclude>
                             </sourceExcludes>

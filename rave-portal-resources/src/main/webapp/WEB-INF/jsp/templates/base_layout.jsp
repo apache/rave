@@ -26,6 +26,7 @@ under the License.
 <head>
     <rave:rave_meta_data />
     <title><rave:title /></title>
+    <rave:client_side_templates/>
     <rave:rave_css/>
     <rave:custom_css/>
     <rave:third_party_head_js/>
