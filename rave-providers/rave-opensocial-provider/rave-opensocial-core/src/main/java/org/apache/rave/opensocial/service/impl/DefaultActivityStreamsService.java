@@ -21,11 +21,15 @@ package org.apache.rave.opensocial.service.impl;
 
 import com.google.common.collect.ImmutableSortedSet;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import org.apache.rave.portal.model.ActivityStreamsEntry;
+import org.apache.rave.portal.model.ActivityStreamsObject;
 import org.apache.rave.portal.model.impl.ActivityStreamsEntryImpl;
+import org.apache.rave.portal.model.impl.ActivityStreamsMediaLinkImpl;
 import org.apache.rave.portal.repository.ActivityStreamsRepository;
 import org.apache.rave.util.ActivityConversionUtil;
+import org.apache.shindig.auth.BasicSecurityToken;
 import org.apache.shindig.auth.SecurityToken;
 import org.apache.shindig.common.util.ImmediateFuture;
 import org.apache.shindig.protocol.ProtocolException;
@@ -47,6 +51,7 @@ import java.util.logging.Logger;
 @Service
 public class DefaultActivityStreamsService implements ActivityStreamService {
 
+    public static final String OBJECT_TYPE_PERSON = "person";
     @Autowired
     private ActivityStreamsRepository repository;
 
@@ -85,7 +90,6 @@ public class DefaultActivityStreamsService implements ActivityStreamService {
     @Override
     public Future<RestfulCollection<ActivityEntry>> getActivityEntries(Set<UserId> userIds, GroupId groupId, String appId, Set<String> fields, CollectionOptions options, SecurityToken token) {
         List<ActivityEntry> result = getFromRepository(userIds, groupId, appId, fields, options, token);
-
         return ImmediateFuture.newInstance(new RestfulCollection<ActivityEntry>(result));
 
     }
@@ -110,19 +114,11 @@ public class DefaultActivityStreamsService implements ActivityStreamService {
      */
     @Override
     public Future<RestfulCollection<ActivityEntry>> getActivityEntries(UserId userId, GroupId groupId, String appId, Set<String> fields, CollectionOptions options, Set<String> activityIds, SecurityToken token) throws ProtocolException {
-
-        String uid = userId.getUserId(token);
-
         List<ActivityEntry> entries = Lists.newLinkedList();
+        Map<String, Person> peopleById = Maps.newHashMap();
 
         for (String id : activityIds) {
-            ActivityStreamsEntry entry = repository.get(id);
-
-            if (entry!=null){
-                if (entry.getUserId().equalsIgnoreCase(uid)) {
-                 entries.add(filterFields(entry, fields));
-                }
-            }
+            entries.add(getActivity(fields, userId.getUserId(token), peopleById, id));
         }
 
         return ImmediateFuture.newInstance(new RestfulCollection<ActivityEntry>(entries));
@@ -146,21 +142,7 @@ public class DefaultActivityStreamsService implements ActivityStreamService {
      */
     @Override
     public Future<ActivityEntry> getActivityEntry(UserId userId, GroupId groupId, String appId, Set<String> fields, String activityId, SecurityToken token) throws ProtocolException {
-
-        String uid = userId.getUserId(token);
-
-        ActivityStreamsEntry entry = repository.get(activityId);
-
-        if (entry!=null){
-            if (entry.getUserId().equalsIgnoreCase(uid)) {
-                ActivityEntry activityEntry = filterFields(entry, fields);
-                return ImmediateFuture.newInstance(activityEntry);
-            } else {
-                //TODO: Throw an error?
-            }
-        }
-
-        return null;
+        return ImmediateFuture.newInstance(getActivity(fields, userId.getUserId(token), Maps.<String, Person>newHashMap(), activityId));
     }
 
     /**
@@ -321,6 +303,18 @@ public class DefaultActivityStreamsService implements ActivityStreamService {
         return ids;
     }
 
+    private ActivityEntry getActivity(Set<String> fields, String uid, Map<String, Person> peopleById, String id) {
+        ActivityStreamsEntry entry = repository.get(id);
+
+        if (entry!=null){
+            if (entry.getUserId().equalsIgnoreCase(uid)) {
+                populatePersonObjects(entry, peopleById);
+                return filterFields(entry, fields);
+            }
+        }
+        return null;
+    }
+
     //From JsonDbOpensocialService
     private Set<String> getIdSet(UserId user, GroupId group, SecurityToken token) {
         String userId = user.getUserId(token);
@@ -370,16 +364,24 @@ public class DefaultActivityStreamsService implements ActivityStreamService {
 
     private List<ActivityEntry> getFromRepository(Set<UserId> userIds, GroupId groupId, String appId, Set<String> fields, CollectionOptions options, SecurityToken token) {
         List<ActivityStreamsEntry> result = Lists.newArrayList();
+        Map<String, Person> peopleById = Maps.newHashMap();
         Set<String> idSet = getIdSet(userIds, groupId, token);
         for (String id : idSet) {
             List<ActivityStreamsEntry> entries = repository.getByUserId(id);
 
             if (entries!=null){
-                result.addAll(entries);
+                result.addAll(populateActivityEntries(entries, peopleById));
             }
         }
         sortByPublished(result, options == null ? null : options.getSortOrder());
         return convert(result);
+    }
+
+    private List<ActivityStreamsEntry> populateActivityEntries(List<ActivityStreamsEntry> entries, Map<String, Person> peopleById) {
+        for(ActivityStreamsEntry entry : entries) {
+            populatePersonObjects(entry, peopleById);
+        }
+        return entries;
     }
 
     private void sortByPublished(List<ActivityStreamsEntry> result, final SortOrder order) {
@@ -405,6 +407,40 @@ public class DefaultActivityStreamsService implements ActivityStreamService {
             converted.add(converter.convert(entry));
         }
         return converted;
+    }
+
+    private void populatePersonObjects(ActivityStreamsEntry entry, Map<String, Person> peopleById) {
+        ActivityStreamsObject actor = entry.getActor();
+        if(OBJECT_TYPE_PERSON.equals(actor.getObjectType())) {
+            populatePerson(peopleById, actor);
+        }
+        if(OBJECT_TYPE_PERSON.equals(entry.getObject().getObjectType())) {
+            populatePerson(peopleById, entry.getObject());
+        }
+    }
+
+    private void populatePerson(Map<String, Person> peopleById, ActivityStreamsObject actor) {
+        String id = actor.getId();
+        Person person = peopleById.containsKey(id) ? peopleById.get(id) : getPerson(id);
+        if(person != null) {
+            peopleById.put(id, person);
+            actor.setUrl(person.getProfileUrl());
+            actor.setDisplayName(person.getDisplayName());
+            ActivityStreamsMediaLinkImpl image = new ActivityStreamsMediaLinkImpl();
+            image.setUrl(person.getThumbnailUrl());
+            actor.setImage(image);
+        }
+    }
+
+    private Person getPerson(String id) {
+        Person person;
+        SecurityToken token = new BasicSecurityToken(null, id, null, null, null, null, null, null, null);
+        try {
+            person =  personService.getPerson(new UserId(UserId.Type.viewer, id), null, token).get();
+        } catch (Exception e) {
+            throw new RuntimeException("Unable to retrieve person", e);
+        }
+        return person;
     }
 
     /**

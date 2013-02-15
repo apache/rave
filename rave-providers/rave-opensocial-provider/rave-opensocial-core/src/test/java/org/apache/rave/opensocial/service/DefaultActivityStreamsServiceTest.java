@@ -237,7 +237,7 @@ public class DefaultActivityStreamsServiceTest {
 
         Future<ActivityEntry> activity = service.getActivityEntry(id,groupId,APP_ID,fields,ACTIVITY_ID,token);
 
-        assertThat(activity, is(nullValue()));
+        assertThat(activity.get(), is(nullValue()));
 
     }
 
