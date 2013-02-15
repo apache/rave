@@ -63,7 +63,9 @@ var rave = rave || (function () {
                 contentSelector: '.slideout-content',
                 template: 'popup-slideout',
                 initialize: function (container) {
-                    container.find(this.contentSelector).data('popupType', this.name);
+                    var content = container.find(this.contentSelector);
+                    content.data('popupType', this.name);
+                    container.find('.close').click(function(){ destroyPopup(content);});
                     container.show("slide", { direction: "right" }, 'fast');
                     $('body').addClass('modal-open');
                     $('body').append('<div class="modal-backdrop fade in"></div>');

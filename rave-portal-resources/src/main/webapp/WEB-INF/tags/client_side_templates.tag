@@ -63,6 +63,7 @@
 
 <script type="text/handlebars" data-template-for="popup-slideout">
     <div class="popup slideout">
+        <a href="#" class="close" >&times;</a>
         <div class="slideout-content">
         </div>
     </div>
