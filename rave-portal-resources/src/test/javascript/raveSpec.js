@@ -405,7 +405,7 @@ describe("Rave", function() {
             expect(sortableArgs).toBeDefined();
             expect(sortableArgs.selector).toEqual(".region:not(.region-locked)");
             expect(sortableArgs.connectWith).toEqual(".region");
-            expect(sortableArgs.handle).toEqual(".widget-title-bar");
+            expect(sortableArgs.handle).toEqual(".widget-title-bar-draggable");
             expect(typeof(sortableArgs.start)).toEqual("function");
             expect(typeof(sortableArgs.stop)).toEqual("function");
         });

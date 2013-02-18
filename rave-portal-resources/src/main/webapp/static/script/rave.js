@@ -167,7 +167,7 @@ var rave = rave || (function () {
                 opacity: 0.5, // the opacity of the object being dragged
                 revert: true, // smooth snap animation
                 cursor: 'move', // the cursor to show while dnd
-                handle: '.widget-title-bar', // the draggable handle
+                handle: '.widget-title-bar-draggable', // the draggable handle
                 forcePlaceholderSize: true, // size the placeholder to the size of the widget
                 tolerance: 'pointer', // change dnd drop zone on mouse-over
                 start: dragStart, // event listener for drag start

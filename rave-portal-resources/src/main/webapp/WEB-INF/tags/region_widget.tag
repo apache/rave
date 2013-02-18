@@ -34,7 +34,7 @@ Template for rendering a RegionWidget including wrapper chrome, toolbars, menus,
 <div class="widget-wrapper<c:if test="${isLocked}"> widget-wrapper-locked</c:if><c:if test="${isHideChrome}"> widget-wrapper-hidechrome</c:if>" id="widget-${regionWidget.id}-wrapper">
 
     <c:if test="${!isHideChrome}">
-        <div class="widget-title-bar<c:if test="${isLocked}"> widget-title-bar-locked</c:if>">
+        <div class="widget-title-bar<c:choose><c:when test="${isLocked}"> widget-title-bar-locked</c:when><c:otherwise> widget-title-bar-draggable</c:otherwise></c:choose>">
             <c:if test="${!isLocked}">
                 <div id="widget-${regionWidget.id}-collapse" class="widget-toolbar-toggle-collapse" title="<fmt:message key="widget.chrome.toggle"/>"></div>
             </c:if>
