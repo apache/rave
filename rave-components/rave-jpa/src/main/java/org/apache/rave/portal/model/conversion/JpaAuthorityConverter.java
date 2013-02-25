@@ -54,8 +54,8 @@ public class JpaAuthorityConverter implements ModelConverter<Authority, JpaAutho
 
             if (converted == null) {
                 converted = new JpaAuthority();
+                updateProperties(source, converted);
             }
-            updateProperties(source, converted);
         }
         return converted;
     }
