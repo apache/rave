@@ -411,11 +411,14 @@ public class DefaultActivityStreamsService implements ActivityStreamService {
 
     private void populatePersonObjects(ActivityStreamsEntry entry, Map<String, Person> peopleById) {
         ActivityStreamsObject actor = entry.getActor();
-        if(OBJECT_TYPE_PERSON.equals(actor.getObjectType())) {
+        if(entry.getActor() != null && OBJECT_TYPE_PERSON.equals(actor.getObjectType())) {
             populatePerson(peopleById, actor);
         }
-        if(OBJECT_TYPE_PERSON.equals(entry.getObject().getObjectType())) {
+        if(entry.getObject() != null && OBJECT_TYPE_PERSON.equals(entry.getObject().getObjectType())) {
             populatePerson(peopleById, entry.getObject());
+        }
+        if(entry.getTarget() != null && OBJECT_TYPE_PERSON.equals(entry.getTarget().getObjectType())) {
+            populatePerson(peopleById, entry.getTarget());
         }
     }
 
