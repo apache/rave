@@ -1285,7 +1285,7 @@
         {
             "id": 2,
             "text": "News",
-            "createdUserdId": "1",
+            "createdUserId": "1",
             "createdDate": 1326949200000,
             "lastModifiedUserId": "1",
             "lastModifiedDate": 1326949200000
