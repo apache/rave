@@ -61,11 +61,9 @@
         </property>
     </bean>
 
-    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-        <property name="url" value="${jpa.dataSource.url}"/>
-        <property name="driverClassName" value="${jpa.dataSource.driver}"/>
-        <property name="username" value="${jpa.dataSource.username}"/>
-        <property name="password" value="${jpa.dataSource.password}"/>
-    </bean>
+  <bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+    <property name="jndiName" value="java:comp/env/${rave.dataSource.name}"/>
+    <property name="resourceRef" value="true"/>
+  </bean>
 
 </beans>

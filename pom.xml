@@ -82,11 +82,29 @@
         <org.mongodb.driver.version>2.9.1</org.mongodb.driver.version>
         <de.flapdoodle.embed.mongo.version>1.28</de.flapdoodle.embed.mongo.version>
 
+        <!-- Rave default jdbc datasource configuration -->
+
         <!-- The location of Rave's H2 file DB. No trailing / -->
         <rave.database.location>/tmp/rave_db</rave.database.location>
+        <rave.dataSource.driver>org.h2.Driver</rave.dataSource.driver>
+        <rave.dataSource.username>sa</rave.dataSource.username>
+        <rave.dataSource.password>local</rave.dataSource.password>
+        <rave.dataSource.url>jdbc:h2:${rave.database.location};AUTO_SERVER=TRUE</rave.dataSource.url>
 
-        <!-- Force maven-filesync-plugin rewrite the Eclipse FileSync plugin configuration with
-            $mvn filesync:generate -Dmaven.filesync.override=true -->
+        <!-- Rave Portal default jdbc datasource configuration: using rave default configuration shared with Shindig -->
+        <portal.dataSource.driver>${rave.dataSource.driver}</portal.dataSource.driver>
+        <portal.dataSource.url>${rave.dataSource.url}</portal.dataSource.url>
+        <portal.dataSource.username>${rave.dataSource.username}</portal.dataSource.username>
+        <portal.dataSource.password>${rave.dataSource.password}</portal.dataSource.password>
+
+      <!-- Rave Shindig default jdbc datasource configuration: using rave default configuration shared with Portal -->
+        <shindig.dataSource.driver>${rave.dataSource.driver}</shindig.dataSource.driver>
+        <shindig.dataSource.url>${rave.dataSource.url}</shindig.dataSource.url>
+        <shindig.dataSource.username>${rave.dataSource.username}</shindig.dataSource.username>
+        <shindig.dataSource.password>${rave.dataSource.password}</shindig.dataSource.password>
+
+      <!-- Force maven-filesync-plugin rewrite the Eclipse FileSync plugin configuration with
+          $mvn filesync:generate -Dmaven.filesync.override=true -->
         <maven.filesync.override>false</maven.filesync.override>
 
         <cargo.version>1.3.1</cargo.version>
