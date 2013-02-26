@@ -19,7 +19,7 @@
 
 package org.apache.rave.persistence.jpa.util;
 
-import org.apache.rave.persistence.BasicEntity;
+import org.apache.rave.portal.model.BasicEntity;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;

@@ -18,7 +18,6 @@
  */
 package org.apache.rave.portal.model.conversion;
 
-import org.apache.rave.model.ModelConverter;
 import org.apache.rave.persistence.jpa.util.JpaUtil;
 import org.apache.rave.portal.model.JpaWidgetTag;
 import org.apache.rave.portal.model.WidgetTag;

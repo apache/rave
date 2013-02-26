@@ -20,7 +20,6 @@
 package org.apache.rave.portal.model;
 
 import org.apache.rave.exception.NotSupportedException;
-import org.apache.rave.persistence.BasicEntity;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
@@ -37,7 +36,6 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
-import javax.persistence.JoinColumn;
 
 import java.io.Serializable;
 import java.util.ArrayList;

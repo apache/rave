@@ -19,7 +19,6 @@
 
 package org.apache.rave.portal.model.util;
 
-import org.apache.rave.persistence.BasicEntity;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -68,7 +67,7 @@ public class SearchResultTest {
     @Before
     @SuppressWarnings("unchecked")
     public void setup() {
-        List<? extends BasicEntity> results = new ArrayList<BasicEntity>();
+        List<? extends String> results = new ArrayList<String>();
         searchResult = new SearchResult(results, 15);
     }
 

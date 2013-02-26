@@ -20,8 +20,6 @@
 package org.apache.rave.portal.model;
 
 
-import org.apache.rave.persistence.BasicEntity;
-
 import javax.persistence.*;
 import java.util.Date;
 import java.util.HashMap;

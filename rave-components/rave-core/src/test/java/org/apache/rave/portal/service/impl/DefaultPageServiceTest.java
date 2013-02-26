@@ -49,8 +49,6 @@ import org.easymock.IAnswer;
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.persistence.NoResultException;
-import javax.persistence.NonUniqueResultException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -236,74 +234,6 @@ public class DefaultPageServiceTest {
         expect(pageRepository.createPageForUser(user, pageTemplate)).andReturn(expectedPage);
         expect(pageRepository.getAllPages(user.getId(), PageType.USER)).andReturn(new ArrayList<Page>());
 
-        replay(userService, pageLayoutRepository, pageRepository, pageTemplateRepository);
-
-        Page newPage = pageService.addNewUserPage(PAGE_NAME, PAGE_LAYOUT_CODE);
-        assertThat(newPage.getMembers().get(0).getRenderSequence(), is(EXPECTED_RENDER_SEQUENCE));
-        assertThat(newPage.getName(), is(PAGE_NAME));
-        assertThat(newPage.getRegions().size(), is(pageLayout.getNumberOfRegions().intValue()));
-        assertThat(newPage.getPageType(), is(PageType.USER));
-
-        verify(userService, pageLayoutRepository, pageRepository, pageTemplateRepository);
-    }
-
-    @Test
-    public void addNewUserPage_noExistingPages_no_result_exception() {
-        final String PAGE_NAME = "my new page";
-        final Long EXPECTED_RENDER_SEQUENCE = 1L;
-
-        Page expectedPage = new PageImpl();
-        expectedPage.setName(PAGE_NAME);
-        expectedPage.setOwnerId(user.getId());
-        expectedPage.setPageLayout(pageLayout);
-        expectedPage.setRegions(createEmptyRegionList(pageLayout.getNumberOfRegions()));
-        expectedPage.setPageType(PageType.USER);
-
-        expect(userService.getAuthenticatedUser()).andReturn(user);
-        expect(pageLayoutRepository.getByPageLayoutCode(PAGE_LAYOUT_CODE)).andReturn(pageLayout);
-        expect(pageRepository.save(expectedPage)).andAnswer(new IAnswer<Page>() {
-            @Override
-            public Page answer() throws Throwable {
-                return (Page)EasyMock.getCurrentArguments()[0];
-            }
-        });
-        expect(pageTemplateRepository.getDefaultPage(PageType.USER)).andThrow(new NoResultException("No Result Exception"));
-
-        expect(pageRepository.getAllPages(user.getId(), PageType.USER)).andReturn(new ArrayList<Page>());
-        replay(userService, pageLayoutRepository, pageRepository, pageTemplateRepository);
-
-        Page newPage = pageService.addNewUserPage(PAGE_NAME, PAGE_LAYOUT_CODE);
-        assertThat(newPage.getMembers().get(0).getRenderSequence(), is(EXPECTED_RENDER_SEQUENCE));
-        assertThat(newPage.getName(), is(PAGE_NAME));
-        assertThat(newPage.getRegions().size(), is(pageLayout.getNumberOfRegions().intValue()));
-        assertThat(newPage.getPageType(), is(PageType.USER));
-
-        verify(userService, pageLayoutRepository, pageRepository, pageTemplateRepository);
-    }
-
-    @Test
-    public void addNewUserPage_noExistingPages_Non_Unique_ResultException_exception() {
-        final String PAGE_NAME = "my new page";
-        final Long EXPECTED_RENDER_SEQUENCE = 1L;
-
-        Page expectedPage = new PageImpl();
-        expectedPage.setName(PAGE_NAME);
-        expectedPage.setOwnerId(user.getId());
-        expectedPage.setPageLayout(pageLayout);
-        expectedPage.setRegions(createEmptyRegionList(pageLayout.getNumberOfRegions()));
-        expectedPage.setPageType(PageType.USER);
-
-        expect(userService.getAuthenticatedUser()).andReturn(user);
-        expect(pageLayoutRepository.getByPageLayoutCode(PAGE_LAYOUT_CODE)).andReturn(pageLayout);
-        expect(pageRepository.save(expectedPage)).andAnswer(new IAnswer<Page>() {
-            @Override
-            public Page answer() throws Throwable {
-                return (Page)EasyMock.getCurrentArguments()[0];
-            }
-        });
-        expect(pageTemplateRepository.getDefaultPage(PageType.USER)).andThrow(new NonUniqueResultException("Non-Unique Result Exception"));
-
-        expect(pageRepository.getAllPages(user.getId(), PageType.USER)).andReturn(new ArrayList<Page>());
         replay(userService, pageLayoutRepository, pageRepository, pageTemplateRepository);
 
         Page newPage = pageService.addNewUserPage(PAGE_NAME, PAGE_LAYOUT_CODE);

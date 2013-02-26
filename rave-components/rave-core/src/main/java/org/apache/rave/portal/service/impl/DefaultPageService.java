@@ -38,8 +38,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.NoResultException;
-import javax.persistence.NonUniqueResultException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -552,14 +550,7 @@ public class DefaultPageService implements PageService {
         List<Page> defaultUserPage = pageRepository.getAllPages(user.getId(), PageType.USER);
         // Is there a default page for this user
         if (defaultUserPage.isEmpty()) {
-            // Do we have a default User template defined, if so create the page based on the template
-            try {
-                return pageRepository.createPageForUser(user, pageTemplateRepository.getDefaultPage(PageType.USER));
-            } catch ( NoResultException nre ) {
-                // There are no default user page template records in DB
-            } catch ( NonUniqueResultException nue ) {
-                // There are more than 1 default user page template records in DB
-            }
+            return pageRepository.createPageForUser(user, pageTemplateRepository.getDefaultPage(PageType.USER));
         }
 
         // If we have a page already or if there was an exception from above then create the page

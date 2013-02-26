@@ -20,9 +20,6 @@
 package org.apache.rave.portal.model;
 
 
-import org.apache.rave.persistence.BasicEntity;
-import org.apache.rave.portal.model.impl.ActivityStreamsMediaLinkImpl;
-
 import javax.persistence.*;
 import java.util.HashMap;
 

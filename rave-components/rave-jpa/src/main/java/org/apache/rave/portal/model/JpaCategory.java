@@ -15,9 +15,7 @@
  */
 package org.apache.rave.portal.model;
 
-import org.apache.rave.persistence.BasicEntity;
 import org.apache.rave.portal.model.conversion.ConvertingListProxyFactory;
-import org.apache.rave.portal.model.conversion.JpaConverter;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 import javax.persistence.*;

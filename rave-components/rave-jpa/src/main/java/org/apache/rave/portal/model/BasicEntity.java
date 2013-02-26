@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.apache.rave.persistence;
+package org.apache.rave.portal.model;
 
 /**
  * Defines common properties implemented by Entities in the model

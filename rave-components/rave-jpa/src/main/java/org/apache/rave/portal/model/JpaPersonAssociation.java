@@ -36,8 +36,6 @@ import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.UniqueConstraint;
 
-import org.apache.rave.persistence.BasicEntity;
-
 /**
  * Represents an association between people
  */

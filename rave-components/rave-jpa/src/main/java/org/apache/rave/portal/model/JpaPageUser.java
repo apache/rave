@@ -22,7 +22,6 @@ import java.io.Serializable;
 
 import javax.persistence.*;
 
-import org.apache.rave.persistence.BasicEntity;
 import org.apache.rave.portal.model.conversion.JpaConverter;
 import org.codehaus.jackson.annotate.JsonBackReference;
 @Entity

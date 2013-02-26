@@ -20,7 +20,7 @@ package org.apache.rave.portal.repository;
 
 import org.apache.openjpa.meta.FieldMetaData;
 import org.apache.openjpa.persistence.JPAFacadeHelper;
-import org.apache.rave.persistence.BasicEntity;
+import org.apache.rave.portal.model.BasicEntity;
 import org.apache.rave.portal.model.PageType;
 
 import javax.persistence.EntityManager;

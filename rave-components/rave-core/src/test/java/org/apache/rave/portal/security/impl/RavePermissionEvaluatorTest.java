@@ -18,7 +18,6 @@
  */
 package org.apache.rave.portal.security.impl;
 
-import org.apache.rave.persistence.BasicEntity;
 import org.apache.rave.portal.security.ModelPermissionEvaluator;
 import org.apache.rave.portal.security.ModelPermissionEvaluator.Permission;
 import org.junit.Before;
@@ -136,7 +135,7 @@ public class RavePermissionEvaluatorTest {
 
     class TestModelImpl implements TestModel {}
 
-    class BasicEntityModel implements BasicEntity {
+    class BasicEntityModel {
         private Long entityId;
 
         public BasicEntityModel() { }
@@ -145,12 +144,10 @@ public class RavePermissionEvaluatorTest {
             this.entityId = entityId;
         }
 
-        @Override
         public Long getEntityId() {
             return entityId;
         }
 
-        @Override
         public void setEntityId(Long entityId) {
             this.entityId = entityId;
         }

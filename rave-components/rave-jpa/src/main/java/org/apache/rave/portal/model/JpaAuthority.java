@@ -19,7 +19,6 @@
 
 package org.apache.rave.portal.model;
 
-import org.apache.rave.persistence.BasicEntity;
 import org.apache.rave.portal.model.conversion.ConvertingListProxyFactory;
 import org.springframework.security.core.GrantedAuthority;
 

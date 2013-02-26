@@ -18,14 +18,7 @@
  */
 package org.apache.rave.portal.model;
 
-import org.apache.rave.persistence.BasicEntity;
-import org.apache.rave.portal.model.conversion.ConvertingListProxyFactory;
-import org.apache.rave.portal.model.conversion.JpaWidgetTagConverter;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Represents a group in the social database. The assumption in this object is that groups are
