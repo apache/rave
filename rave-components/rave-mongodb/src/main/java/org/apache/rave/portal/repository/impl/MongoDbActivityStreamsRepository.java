@@ -19,50 +19,71 @@
 
 package org.apache.rave.portal.repository.impl;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.apache.rave.portal.model.ActivityStreamsEntry;
+import org.apache.rave.portal.model.conversion.HydratingConverterFactory;
+import org.apache.rave.portal.model.impl.ActivityStreamsEntryImpl;
 import org.apache.rave.portal.repository.ActivityStreamsRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+
+import static org.apache.rave.portal.repository.util.CollectionNames.ACTIVITIES;
+import static org.apache.rave.util.CollectionUtils.toBaseTypedList;
+import static org.springframework.data.mongodb.core.query.Criteria.where;
+import static org.springframework.data.mongodb.core.query.Query.query;
 
 /**
  *  Placeholder repository
  */
 @Repository
 public class MongoDbActivityStreamsRepository implements ActivityStreamsRepository {
+    private static final Class<? extends ActivityStreamsEntry> CLASS = ActivityStreamsEntryImpl.class;
+
+    private final MongoOperations template;
+    private final HydratingConverterFactory converter;
+
+    @Autowired
+    public MongoDbActivityStreamsRepository(MongoOperations template, HydratingConverterFactory converter) {
+        this.template = template;
+        this.converter = converter;
+    }
+
     @Override
     public List<ActivityStreamsEntry> getAll() {
-        throw new NotImplementedException();
+        return toBaseTypedList(template.findAll(CLASS, ACTIVITIES));
     }
 
     @Override
     public List<ActivityStreamsEntry> getByUserId(String id) {
-        throw new NotImplementedException();
+        return toBaseTypedList(template.find(query(where("actor._id").is(id)),CLASS, ACTIVITIES));
     }
 
     @Override
     public void deleteById(String id) {
-        throw new NotImplementedException();
+        template.remove(query(where("_id").is(id)), ACTIVITIES);
     }
 
     @Override
     public Class<? extends ActivityStreamsEntry> getType() {
-        return ActivityStreamsEntry.class;
+        return CLASS;
     }
 
     @Override
     public ActivityStreamsEntry get(String id) {
-        throw new NotImplementedException();
+        return template.findById(id, CLASS, ACTIVITIES);
     }
 
     @Override
     public ActivityStreamsEntry save(ActivityStreamsEntry item) {
-        throw new NotImplementedException();
+        ActivityStreamsEntryImpl converted = converter.convert(item, ActivityStreamsEntry.class);
+        template.save(converted, ACTIVITIES);
+        return converted;
     }
 
     @Override
     public void delete(ActivityStreamsEntry item) {
-        throw new NotImplementedException();
+        if(item != null) deleteById(item.getId());
     }
 }

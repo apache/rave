@@ -39,4 +39,5 @@ public class CollectionNames {
     public static final String WIDGET_RATINGS = "rating_statistics";
     public static final String WIDGET_USERS = "user_statistics";
     public static final String OPERATIONS = "ops";
+    public static final String ACTIVITIES = "activities";
 }

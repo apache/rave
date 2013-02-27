@@ -22,8 +22,10 @@ package org.apache.rave.portal.model.conversion.impl;
 import com.google.common.collect.Lists;
 import org.apache.rave.portal.model.MongoDbPersonAssociation;
 import org.apache.rave.portal.model.MongoDbUser;
+import org.apache.rave.portal.model.PersonProperty;
 import org.apache.rave.portal.model.User;
 import org.apache.rave.portal.model.conversion.HydratingModelConverter;
+import org.apache.rave.portal.model.impl.PersonPropertyImpl;
 import org.apache.rave.portal.repository.PageLayoutRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -92,7 +94,7 @@ public class MongoDbUserConverter implements HydratingModelConverter<User, Mongo
         converted.setStatus(source.getStatus());
         converted.setAddresses(source.getAddresses());
         converted.setOrganizations(source.getOrganizations());
-        converted.setProperties(source.getProperties());
+        converted.setProperties(convert(source.getProperties()));
         converted.setPassword(source.getPassword());
         converted.setConfirmPassword(source.getConfirmPassword());
         converted.setDefaultPageLayoutCode(getPageLayoutCode(source));
@@ -103,6 +105,27 @@ public class MongoDbUserConverter implements HydratingModelConverter<User, Mongo
         converted.setForgotPasswordHash(source.getForgotPasswordHash());
         converted.setForgotPasswordTime(source.getForgotPasswordTime());
         converted.setPageLayoutRepository(null);
+    }
+
+    private List<PersonProperty> convert(List<PersonProperty> sources) {
+        if(sources != null) {
+            List<PersonProperty> converted = Lists.newArrayList();
+            for(PersonProperty source : sources) {
+                converted.add(convert(source));
+            }
+            return converted;
+        }
+        return null;
+    }
+
+    private PersonProperty convert(PersonProperty source) {
+        PersonProperty converted = new PersonPropertyImpl();
+        converted.setType(source.getType());
+        converted.setValue(source.getValue());
+        converted.setExtendedValue(source.getExtendedValue());
+        converted.setQualifier(source.getQualifier());
+        converted.setPrimary(source.getPrimary());
+        return converted;
     }
 
     private String getPageLayoutCode(User source) {
