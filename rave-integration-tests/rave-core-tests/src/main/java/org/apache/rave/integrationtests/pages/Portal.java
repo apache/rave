@@ -56,57 +56,57 @@ public class Portal extends WebDriverPage {
     public WebElement getLoginForm() {
         return findElement(By.id("loginForm"));
     }
-	 
-	 public WebElement getOpenIdLoginForm() {
-		  return findElement(By.id("openIdForm"));
-	 }
+
+    public WebElement getOpenIdLoginForm() {
+        return findElement(By.id("openIdForm"));
+    }
 
     public WebElement getEmptyPageBox() {
         return findElement(By.id("emptyPageMessageWrapper"));
     }
 
-	 public void login(String username, String password) {
-		  final WebElement loginForm=getLoginForm();
-		  loginForm.findElement(By.id("usernameField")).sendKeys(username);
-		  loginForm.findElement(By.id("passwordField")).sendKeys(password);
-		  loginForm.submit();
-	 }
-	 
-	 public void openIdLogin(String openIdUrl) {
-		  final WebElement openIdLogin=getOpenIdLoginForm();
-		  openIdLogin.findElement(By.id("openid_identifier")).sendKeys(openIdUrl);
-		  openIdLogin.submit();
-	 }
-
-	 public void logout() {
-		  final WebElement logoutLink=findElement(By.linkText("Logout"));
-		  logoutLink.click();
-	 }
-
-	 public void clickLink(WebElement linkToClick) {
-		  //TODO Should make sure this is clickable.
-		  linkToClick.click();
-	 }
-
-	 public WebElement findElement(By by) {
-     return this.delayedFindElement(by, 1);
-	 }
-
-  // Do 3 attempts with increasing interval to find a DOM element.
-  // The DOM may not have finished when the check is fired.
-  private WebElement delayedFindElement(By by, int attempt) {
-    try {
-      return super.findElement(by);
-    } catch (NoSuchElementException e) {
-      if (attempt >= MAX_ATTEMPTS) {
-        throw e;
-      }
-      try {
-        Thread.sleep(attempt * SLEEP_TIME);
-      } catch (InterruptedException ie) {
-        throw new RuntimeException("Could not sleep thread", ie);
-      }
-      return this.delayedFindElement(by, attempt + 1);
+    public void login(String username, String password) {
+        final WebElement loginForm = getLoginForm();
+        loginForm.findElement(By.id("usernameField")).sendKeys(username);
+        loginForm.findElement(By.id("passwordField")).sendKeys(password);
+        loginForm.submit();
     }
-  }
+
+    public void openIdLogin(String openIdUrl) {
+        final WebElement openIdLogin = getOpenIdLoginForm();
+        openIdLogin.findElement(By.id("openid_identifier")).sendKeys(openIdUrl);
+        openIdLogin.submit();
+    }
+
+    public void logout() {
+        final WebElement logoutLink = findElement(By.linkText("Logout"));
+        logoutLink.click();
+    }
+
+    public void clickLink(WebElement linkToClick) {
+        //TODO Should make sure this is clickable.
+        linkToClick.click();
+    }
+
+    public WebElement findElement(By by) {
+        return this.delayedFindElement(by, 1);
+    }
+
+    // Do 3 attempts with increasing interval to find a DOM element.
+    // The DOM may not have finished when the check is fired.
+    private WebElement delayedFindElement(By by, int attempt) {
+        try {
+            return super.findElement(by);
+        } catch (NoSuchElementException e) {
+            if (attempt >= MAX_ATTEMPTS) {
+                throw e;
+            }
+            try {
+                Thread.sleep(attempt * SLEEP_TIME);
+            } catch (InterruptedException ie) {
+                throw new RuntimeException("Could not sleep thread", ie);
+            }
+            return this.delayedFindElement(by, attempt + 1);
+        }
+    }
 }

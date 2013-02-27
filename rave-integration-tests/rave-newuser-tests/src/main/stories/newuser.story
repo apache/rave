@@ -34,4 +34,4 @@ And I submit the new account form
 Then I see the login page
 And A message appears "Account successfully created"
 When I fill in the login form with username "newuser" password "password"
-Then I see my portal page with the add new widgets box
+Then I see my portal page with the new user widget page

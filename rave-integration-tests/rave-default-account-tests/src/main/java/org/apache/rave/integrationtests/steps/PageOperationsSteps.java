@@ -85,6 +85,7 @@ public class PageOperationsSteps {
         sleep(2000L);
         final WebElement deletePageLink = portal.findElement(By.xpath("//li[@id='pageMenuDelete']/a"));
         deletePageLink.click();
+        sleep(2000L);
     }
 
 

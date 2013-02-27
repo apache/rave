@@ -89,10 +89,10 @@ public class NewUserSteps {
         loginForm.submit();
     }
 
-    @Then("I see my portal page with the add new widgets box")
-    public void iSeeMyEmptyPortalPage() {
-        final WebElement emptyPageBox = portal.getEmptyPageBox();
-        assertThat(emptyPageBox.isDisplayed(), equalTo(Boolean.TRUE));
+    @Then("I see my portal page with the new user widget page")
+    public void iSeeMyNewUserPortalPage() {
+        final WebElement newUserDiv = portal.findElement(By.className("columns_3_newuser_static"));
+        assertThat(newUserDiv.isDisplayed(), equalTo(Boolean.TRUE));
     }
 
 
