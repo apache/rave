@@ -25,48 +25,35 @@ import java.util.List;
 
 public interface ActivityStreamsObject extends ActivityStreamsItem {
 
-
     public List<ActivityStreamsObject> getAttachments() ;
 
     public void setAttachments(List<ActivityStreamsObject> attachments) ;
 
     public ActivityStreamsObject getAuthor() ;
 
-
     public void setAuthor(ActivityStreamsObject author) ;
-
 
     public String getContent() ;
 
-
     public void setContent(String content) ;
-
 
     public String getDisplayName() ;
 
-
     public void setDisplayName(String displayName) ;
-
 
     public List<String> getDownstreamDuplicates() ;
 
-
     public void setDownstreamDuplicates(List<String> downstreamDuplicates) ;
-
 
     public ActivityStreamsMediaLink getImage() ;
 
-
     public void setImage(ActivityStreamsMediaLink image) ;
-
 
     public String getSummary() ;
 
     public void setSummary(String summary) ;
 
-
     public List<String> getUpstreamDuplicates() ;
-
 
     public void setUpstreamDuplicates(List<String> upstreamDuplicates) ;
 

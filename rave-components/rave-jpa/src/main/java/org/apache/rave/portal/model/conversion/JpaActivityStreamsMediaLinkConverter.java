@@ -70,7 +70,5 @@ public class JpaActivityStreamsMediaLinkConverter implements ModelConverter<Acti
         converted.setHeight(source.getHeight());
         converted.setWidth(source.getWidth());
         converted.setUrl(source.getUrl());
-
-
     }
 }

@@ -107,12 +107,14 @@ rave.opensocial = rave.opensocial || (function () {
             			  	  "widgetUrl": widgetUrl,
             			  	  "securityToken": data.securityToken,
             			  	  "metadata": opt_gadgetInfo
-            				}
-            		
+                            },
+                            height = data.metadata ? data.metadata.height : 500,
+                            width = data.metadata ? data.metadata.width : 525;
+
             				preloadMetadata(gadget);
                         
             				if (opt_viewTarget) {
-            					opt_callback(rave.createPopup(opt_viewTarget));
+            					opt_callback(rave.createPopup(opt_viewTarget, {"preferredHeight" : height, preferredWidth: width}));
             				}
             			} else {
             				console.log(data.error.message);
