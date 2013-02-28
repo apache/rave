@@ -29,7 +29,6 @@ import java.util.HashMap;
 @Access(AccessType.FIELD)
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @Table(name = "activitystreams_medialink")
-@SequenceGenerator(name="activityMediaLinkSequence", sequenceName = "activity_media_link_sequence")
 @NamedQueries({
         @NamedQuery(name = JpaActivityStreamsMediaLink.FIND_BY_ID, query = "SELECT a FROM JpaActivityStreamsMediaLink a WHERE a.id = :id")
 })
@@ -40,7 +39,9 @@ public class JpaActivityStreamsMediaLink implements ActivityStreamsMediaLink, Ba
     public static final String FIND_BY_ID = "JpaActivityStreamsMediaLink.findById";
 
     @Id
-    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator = "activityMediaLinkSequence")
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "activityMediaSequence")
+    @TableGenerator(name = "activityMediaSequence", table = "RAVE_PORTAL_SEQUENCES", pkColumnName = "SEQ_NAME",
+            valueColumnName = "SEQ_COUNT", pkColumnValue = "activity_media", allocationSize = 1, initialValue = 1)
     private Long entityId;
 
     @Basic

@@ -28,14 +28,15 @@ import java.util.HashMap;
 @Access(AccessType.FIELD)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @Table(name = "activities")
-@SequenceGenerator(name="activityEntrySequence", sequenceName = "activity_entry_sequence")
 @DiscriminatorValue("Item")
 public class JpaActivityStreamsItem implements ActivityStreamsItem, BasicEntity {
 
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator = "activityEntrySequence")
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "activityEntrySequence")
+    @TableGenerator(name = "activityEntrySequence", table = "RAVE_PORTAL_SEQUENCES", pkColumnName = "SEQ_NAME",
+            valueColumnName = "SEQ_COUNT", pkColumnValue = "activity_entry", allocationSize = 1, initialValue = 1)
     protected Long entityId;
 
     @Basic
