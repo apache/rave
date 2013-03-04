@@ -20,7 +20,6 @@
 package org.apache.rave.portal.repository.impl;
 
 import org.apache.rave.portal.model.*;
-import org.apache.rave.portal.model.conversion.JpaConverter;
 import org.apache.rave.portal.model.conversion.JpaPageConverter;
 import org.apache.rave.portal.repository.PageRepository;
 import org.apache.rave.util.CollectionUtils;
@@ -153,12 +152,11 @@ public class JpaPageRepository implements PageRepository {
      * @return Page
      */
     private Page convert(PageTemplate pt, User user) {
-        JpaUser jpaUser = JpaConverter.getInstance().convert(user, User.class);
         Page p = new JpaPage();
         p.setName(pt.getName());
         p.setPageType(pt.getPageType());
-        p.setOwnerId(jpaUser.getId());
-        PageUser pageUser = new JpaPageUser(jpaUser, p, pt.getRenderSequence());
+        p.setOwnerId(user.getId());
+        PageUser pageUser = new JpaPageUser(user, p, pt.getRenderSequence());
         pageUser.setPageStatus(PageInvitationStatus.OWNER);
         pageUser.setEditor(true);
         List<PageUser> members = new ArrayList<PageUser>();
