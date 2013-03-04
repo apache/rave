@@ -2,6 +2,27 @@ Apache Rave Change Log
 https://issues.apache.org/jira/secure/ReleaseNote.jspa?projectId=12311290 (select the version of release and output as text to create this file)
 
 ===========================================================================================================
+Release Notes - Rave - Version 0.21
+===========================================================================================================
+
+** Bug
+    * [RAVE-884] - When adding a hash to the end of a profile page with a tab name which does not exist, no tabs are rendered 
+    * [RAVE-888] - Locked widgets still allow you to attempt the drag-n-drop functionality to move them around then throw an error
+    * [RAVE-889] - Gadgets are rendered in HOME view on Profile page rather than PROFILE view
+    * [RAVE-893] - New users cannot use the portal due to empty authority
+    * [RAVE-899] - Error administrating categories due to missing creator ID
+    * [RAVE-900] - iTests Fail due to DB "Locked by another user error"
+    * [RAVE-903] - DB Schema isn't created when using MySQL
+    * [RAVE-904] - Distribution building failing at rave-integration-tests
+
+** Improvement
+    * [RAVE-898] - Move JPA specific stuff out of rave-commons and into rave-jpa
+    * [RAVE-901] - Move database access to container provided JNDI resource
+
+** New Feature
+    * [RAVE-882] - Implement Opensocial actions
+
+===========================================================================================================
 Release Notes - Rave - Version 0.20
 ===========================================================================================================
 
