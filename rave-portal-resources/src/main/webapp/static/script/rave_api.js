@@ -490,7 +490,7 @@ rave.api = rave.api || (function() {
 
         function getUsers(args){
             var offset = args.offset;
-            $.get(rave.getContext() + path + "users/get",
+            $.get(rave.getContext() + path + "person/get",
                 {"offset": offset},
                 function(result) {
                     if (result.error) {
@@ -511,7 +511,7 @@ rave.api = rave.api || (function() {
                 alert(rave.getClientMessage("api.rpc.empty.search.term"));
                 return;
             }
-            $.get(rave.getContext() + path + "users/search",
+            $.get(rave.getContext() + path + "person/search",
                     {"searchTerm": searchTerm, "offset": offset},
                     function(result) {
                         if (result.error) {

@@ -206,4 +206,23 @@ public interface UserService extends UserDetailsService, AuthenticationUserDetai
      */
 	User getUserByOpenId(String openId);
 
+    /**
+     * Gets a limited {@link SearchResult} for {@link org.apache.rave.portal.model.Person}'s
+     *
+     * @param offset   start point within the resultset (for paging)
+     * @param pageSize maximum number of items to be returned (for paging)
+     * @return SearchResult
+     */
+    SearchResult<Person> getLimitedListOfPersons(int offset, int pageSize);
+
+    /**
+     * Gets a {@link SearchResult} for {@link org.apache.rave.portal.model.Person}'s that match the search term
+     *
+     * @param searchTerm free text input to search on users
+     * @param offset     start point within the resultset (for paging)
+     * @param pageSize   maximum number of items to be returned (for paging)
+     * @return SearchResult
+     */
+    SearchResult<Person> getPersonsByFreeTextSearch(String searchTerm, int offset, int pageSize);
+
 }
