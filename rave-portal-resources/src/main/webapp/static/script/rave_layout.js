@@ -263,7 +263,7 @@ rave.layout = rave.layout || (function() {
                             if(userId == rave.layout.searchHandler.userId){
                                 alert(rave.getClientMessage("revoke.share.current.user"));
                                 // reload as page has been removed
-                                document.location.href='/';
+                                document.location.href = rave.getContext() + "/page/view";
                             }else{
                                 alert("(" + username + ") " + rave.getClientMessage("revoke.share"));
                             }
@@ -376,7 +376,7 @@ rave.layout = rave.layout || (function() {
                     successCallback: function(result) {
                         rave.api.rpc.removeMemberFromPage({pageId:rave.layout.searchHandler.pageId, userId:rave.layout.searchHandler.userId,
                             successCallback:function (result) {
-                                document.location.href='/';
+                                document.location.href = rave.getContext() + "/page/view";
                             }});
                     }
                 })
