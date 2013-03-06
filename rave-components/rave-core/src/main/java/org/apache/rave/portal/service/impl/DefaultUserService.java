@@ -223,6 +223,21 @@ public class DefaultUserService implements UserService {
         searchResult.setPageSize(pageSize);
         return searchResult;
     }
+ 
+    
+    @Override
+    public SearchResult<Person> getLimitedListOfPersons(int offset, int pageSize) {
+        SearchResult<User> users = getLimitedListOfUsers(offset, pageSize);
+        int count = users.getTotalResults();
+        List<Person> people = new ArrayList<Person>();
+        Person person = null;
+        for(User user : users.getResultSet()){
+            person = user.toPerson();
+            person.setId(user.getId());
+            people.add(person);
+        }
+        return new SearchResult<Person>(people, count);
+    }
 
     @Override
     public SearchResult<User> getUsersByFreeTextSearch(String searchTerm, int offset, int pageSize) {
@@ -232,6 +247,20 @@ public class DefaultUserService implements UserService {
         searchResult.setOffset(offset);
         searchResult.setPageSize(pageSize);
         return searchResult;
+    }
+    
+    @Override
+    public SearchResult<Person> getPersonsByFreeTextSearch(String searchTerm, int offset, int pageSize) {
+        SearchResult<User> users = getUsersByFreeTextSearch(searchTerm, offset, pageSize);
+        int count = users.getTotalResults();
+        List<Person> people = new ArrayList<Person>();
+        Person person = null;
+        for(User user : users.getResultSet()){
+            person = user.toPerson();
+            person.setId(user.getId());
+            people.add(person);
+        }
+        return new SearchResult<Person>(people, count);
     }
 
     @Override

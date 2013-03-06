@@ -18,21 +18,19 @@
  */
 package org.apache.rave.portal.web.api.rpc;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.util.HashMap;
-import java.util.List;
-
 import org.apache.rave.portal.model.Person;
+import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.portal.web.api.rpc.model.RpcOperation;
 import org.apache.rave.portal.web.api.rpc.model.RpcResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * Defines RPC operations for adding and removing friends
@@ -40,6 +38,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller(value="rpcPersonApi")
 @RequestMapping(value = "/api/rpc/person/*")
 public class PersonApi {
+
+    public static final int DEFAULT_PAGE_SIZE = 10;
 
     private final UserService userService;
 
@@ -129,5 +129,27 @@ public class PersonApi {
 			    }
     		}
     	}.getResult();
+    }
+    
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.GET, value = "get")
+    public RpcResult<SearchResult<Person>> viewUsers(@RequestParam final int offset) {
+        return new RpcOperation<SearchResult<Person>>() {
+            @Override
+            public SearchResult<Person> execute() {
+                return userService.getLimitedListOfPersons(offset, DEFAULT_PAGE_SIZE);
+            }
+        }.getResult();
+    }
+
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.GET, value = "search")
+    public RpcResult<SearchResult<Person>> searchUsers(@RequestParam final String searchTerm, @RequestParam final int offset) {
+        return new RpcOperation<SearchResult<Person>>() {
+            @Override
+            public SearchResult<Person> execute() {
+                return userService.getPersonsByFreeTextSearch(searchTerm, offset, DEFAULT_PAGE_SIZE);
+            }
+        }.getResult();
     }
 }
