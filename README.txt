@@ -67,4 +67,3 @@ To run a local Tomcat instance with rave-shindig and rave-portal deployed:
   - open url http://localhost:8080/ in a browser
   - press Ctrl-C in the console to stop Tomcat again
 --------------------------------------------------------------------------------
-
