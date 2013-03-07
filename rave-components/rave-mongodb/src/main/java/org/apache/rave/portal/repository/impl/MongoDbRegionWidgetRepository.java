@@ -26,12 +26,13 @@ import org.apache.rave.portal.model.impl.RegionWidgetImpl;
 import org.apache.rave.portal.repository.MongoPageOperations;
 import org.apache.rave.portal.repository.RegionWidgetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 import static org.springframework.data.mongodb.core.query.Criteria.where;
+import static org.springframework.data.mongodb.core.query.Query.query;
 
 @Repository
 public class MongoDbRegionWidgetRepository implements RegionWidgetRepository {
@@ -81,7 +82,19 @@ public class MongoDbRegionWidgetRepository implements RegionWidgetRepository {
     }
 
     private RegionWidget getRegionWidgetById(Page page, String id) {
-        for(Region region : page.getRegions()) {
+        List<Region> regions = page.getRegions();
+        RegionWidget regionWidget = getRegionWidget(id, regions);
+        if(regionWidget == null && page.getSubPages() != null) {
+            for(Page subPage : page.getSubPages()) {
+                regionWidget = getRegionWidgetById(subPage, id);
+                if(regionWidget != null) break;
+            }
+        }
+        return regionWidget;
+    }
+
+    private RegionWidget getRegionWidget(String id, List<Region> regions) {
+        for(Region region : regions) {
             for(RegionWidget widget : region.getRegionWidgets()) {
                 if(widget.getId().equals(id)) {
                     return widget;
@@ -92,7 +105,20 @@ public class MongoDbRegionWidgetRepository implements RegionWidgetRepository {
     }
 
     private int replaceOrRemoveWidget(Page page, RegionWidget item, boolean replace) {
-        for(Region region : page.getRegions()) {
+        List<Region> regions = page.getRegions();
+        int index = replaceOrRemoveWidget(item, replace, regions);
+        if(index == -1 && page.getSubPages() != null) {
+            for(Page subPage : page.getSubPages()) {
+                index = replaceOrRemoveWidget(item, replace, page.getRegions());
+                if(index != -1) break;
+            }
+        }
+        if(index == -1) throw new IllegalStateException("Widget does not exist in parent page regions");
+        return index;
+    }
+
+    private int replaceOrRemoveWidget(RegionWidget item, boolean replace, List<Region> regions) {
+        for(Region region : regions) {
             List<RegionWidget> regionWidgets = region.getRegionWidgets();
             for(int i=0; i< regionWidgets.size(); i++) {
                 if(regionWidgets.get(i).getId().equals(item.getId())) {
@@ -104,7 +130,7 @@ public class MongoDbRegionWidgetRepository implements RegionWidgetRepository {
                 }
             }
         }
-        throw new IllegalStateException("Widget does not exist in parent page regions");
+        return -1;
     }
 
     private Region getRegionById(String id, List<Region> regions) {
@@ -126,7 +152,12 @@ public class MongoDbRegionWidgetRepository implements RegionWidgetRepository {
     }
 
     private Page getPageByRegionWidgetId(String id) {
-        return template.findOne(new Query(where("regions").elemMatch(where("regionWidgets").elemMatch(where("_id").is(id)))));
+        Criteria criteria = getRegionWidgetIdCriteria(id);
+        return template.findOne(query(new Criteria().orOperator(criteria, where("subPages").elemMatch(criteria))));
+    }
+
+    private Criteria getRegionWidgetIdCriteria(String id) {
+        return where("regions").elemMatch(where("regionWidgets").elemMatch(where("_id").is(id)));
     }
 
     public void setTemplate(MongoPageOperations template) {

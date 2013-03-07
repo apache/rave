@@ -31,6 +31,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
 import java.util.ArrayList;
@@ -38,9 +39,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.easymock.EasyMock.*;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.sameInstance;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 
@@ -80,7 +79,7 @@ public class MongoDbRegionWidgetRepositoryTest {
         region.setRegionWidgets(Arrays.<RegionWidget>asList(widget));
         widget.setRegion(region);
 
-        expect(template.findOne(new Query(where("regions").elemMatch(where("regionWidgets").elemMatch(where("_id").is(id)))))).andReturn(page);
+        expect(template.findOne(getQuery(id))).andReturn(page);
         replay(template);
         RegionWidget result = widgetRepository.get(id);
         assertNull(result);
@@ -96,7 +95,7 @@ public class MongoDbRegionWidgetRepositoryTest {
         RegionWidgetImpl widget = new RegionWidgetImpl();
         region.setRegionWidgets(Arrays.<RegionWidget>asList(widget));
         widget.setId("123");
-        expect(template.findOne(new Query(where("regions").elemMatch(where("regionWidgets").elemMatch(where("_id").is(id)))))).andReturn(found);
+        expect(template.findOne(getQuery(id))).andReturn(found);
         replay(template);
 
         assertThat(widget, is(sameInstance(widgetRepository.get(id))));
@@ -107,7 +106,7 @@ public class MongoDbRegionWidgetRepositoryTest {
         String id = "321";
         Page found = new MongoDbPage();
         found.setRegions(new ArrayList<Region>());
-        expect(template.findOne(new Query(where("regions").elemMatch(where("regionWidgets").elemMatch(where("_id").is(id)))))).andReturn(found);
+        expect(template.findOne(getQuery(id))).andReturn(found);
         replay(template);
         assertNull(widgetRepository.get(id));
     }
@@ -130,7 +129,7 @@ public class MongoDbRegionWidgetRepositoryTest {
         parent.setRegions(regions);
         region.setRegionWidgets(regionWidgets);
 
-        expect(template.findOne(new Query(where("regions").elemMatch(where("regionWidgets").elemMatch(where("_id").is(id)))))).andReturn(parent);
+        expect(template.findOne(getQuery(id))).andReturn(parent);
         expect(template.save(parent)).andReturn(parent);
         replay(template);
 
@@ -149,7 +148,7 @@ public class MongoDbRegionWidgetRepositoryTest {
         Page page = new PageImpl();
         page.setRegions(new ArrayList<Region>());
 
-        expect(template.findOne(new Query(where("regions").elemMatch(where("regionWidgets").elemMatch(where("_id").is(id)))))).andReturn(page);
+        expect(template.findOne(getQuery(id))).andReturn(page);
         replay(template);
 
         thrown.expect(IllegalStateException.class);
@@ -277,7 +276,7 @@ public class MongoDbRegionWidgetRepositoryTest {
         found.setRegions(regions);
         region.setRegionWidgets(regionWidgets);
 
-        expect(template.findOne(new Query(where("regions").elemMatch(where("regionWidgets").elemMatch(where("_id").is(id)))))).andReturn(found);
+        expect(template.findOne(getQuery(id))).andReturn(found);
         expect(template.save(found)).andReturn(null);
         replay(template);
 
@@ -295,13 +294,17 @@ public class MongoDbRegionWidgetRepositoryTest {
         Page page = new PageImpl();
         page.setRegions(new ArrayList<Region>());
 
-        expect(template.findOne(new Query(where("regions").elemMatch(where("regionWidgets").elemMatch(where("_id").is(id)))))).andReturn(page);
+        expect(template.findOne(getQuery(id))).andReturn(page);
         replay(template);
 
         thrown.expect(IllegalStateException.class);
         thrown.expectMessage("Widget does not exist in parent page regions");
 
         widgetRepository.delete(item);
+    }
+
+    private Query getQuery(String id) {
+        return new Query(new Criteria().orOperator(where("subPages").elemMatch(where("regions").elemMatch(where("regionWidgets").elemMatch(where("_id").is(id)))),where("regions").elemMatch(where("regionWidgets").elemMatch(where("_id").is(id)))));
     }
 
     @Test
@@ -317,7 +320,7 @@ public class MongoDbRegionWidgetRepositoryTest {
         String id = "4344";
         item.setId(id);
 
-        expect(template.findOne(new Query(where("regions").elemMatch(where("regionWidgets").elemMatch(where("_id").is(id)))))).andReturn(page);
+        expect(template.findOne(getQuery(id))).andReturn(page);
         replay(template);
 
         thrown.expect(IllegalStateException.class);

@@ -46,7 +46,7 @@ rave.personprofile = rave.personprofile || (function() {
              if (subPagesViewedStatus[page] == false) {
                  $(target + " .widget-wrapper").each(function(){
                      var regionWidget = rave.getRegionWidgetById(rave.getObjectIdFromDomId(this.id));
-                     regionWidget.restore();
+                     if(regionWidget.restore) regionWidget.restore();
                  });
                  // mark that this sub page has been viewed at least once and there is no need to refresh
                  // the widgets in future views

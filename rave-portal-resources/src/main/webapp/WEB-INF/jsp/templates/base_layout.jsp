@@ -30,6 +30,7 @@ under the License.
     <rave:rave_css/>
     <rave:custom_css/>
     <rave:third_party_head_js/>
+    <portal:render-script location="${'HEAD'}" />
  </head>
 <body>
 <div class="wrapper">

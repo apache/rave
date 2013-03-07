@@ -24,6 +24,10 @@ package org.apache.rave.portal.web.renderer;
  */
 public enum ScriptLocation {
     /**
+     * Renders the given script in the head
+     */
+    HEAD,
+    /**
      * Renders before any third party Rave dependencies
      */
     BEFORE_LIB,

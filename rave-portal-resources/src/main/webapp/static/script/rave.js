@@ -992,11 +992,10 @@ var rave = rave || (function () {
         var widgetBody = $(["#widget-", widget.regionWidgetId, "-body"].join(""));
         if (widgetBody.length === 0) {
             return;
-        } else {
-            // Widget has already been initialized
-            if (typeof widgetBody.children !== "undefined" && widgetBody.children().length !== 0) {
-                return;
-            }
+        }
+        // Widget has already been initialized
+        if (widget.initialized) {
+            return;
         }
 
         if (widget.type == "DISABLED") {
@@ -1009,6 +1008,7 @@ var rave = rave || (function () {
         } else {
             provider.initWidget(widget);
         }
+        widget.initialized = true;
     }
 
     function addProviderToList(provider) {
