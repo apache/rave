@@ -109,7 +109,7 @@ public class MongoDbRegionWidgetRepository implements RegionWidgetRepository {
         int index = replaceOrRemoveWidget(item, replace, regions);
         if(index == -1 && page.getSubPages() != null) {
             for(Page subPage : page.getSubPages()) {
-                index = replaceOrRemoveWidget(item, replace, page.getRegions());
+                index = replaceOrRemoveWidget(item, replace, subPage.getRegions());
                 if(index != -1) break;
             }
         }
