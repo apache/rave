@@ -284,13 +284,19 @@ rave.opensocial = rave.opensocial || (function () {
         var elem = document.getElementById("widget-" + id + "-wrapper");
 
         // determine the height of the gadget's iframe
-        var height = rave.getDefaultWidgetHeight();
+        var height = rave.getDefaultWidgetHeight(), width="100%";
         if (view == rave.opensocial.VIEW_NAMES.CANVAS) {
             height = elem.clientHeight;
-        } else if (gadget.metadata.modulePrefs && gadget.metadata.modulePrefs.height) {
-            height = gadget.metadata.modulePrefs.height;
+            width = "99%";
+        } else {
+            if (gadget.metadata.modulePrefs && gadget.metadata.modulePrefs.height) {
+                height = gadget.metadata.modulePrefs.height;
+            }
+            if(gadget.metadata.modulePrefs && gadget.metadata.modulePrefs.width) {
+                width = gadget.metadata.modulePrefs.width;
+            }
         }
-        return {width:"100%", height:height};
+        return {width:width, height:height};
     }
 
     /**

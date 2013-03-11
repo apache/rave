@@ -28,19 +28,19 @@
           http://www.springframework.org/schema/beans/spring-beans.xsd
           http://www.springframework.org/schema/security
           http://www.springframework.org/schema/security/spring-security.xsd">
-    <security:http auto-config="true" use-expressions="true" disable-url-rewriting="true">
-        <security:intercept-url pattern="/static/**" access="permitAll"/>
-        <security:intercept-url pattern="/login" access="permitAll"/>
-        <security:intercept-url pattern="/newaccount.jsp*" access="permitAll"/>
-		<security:intercept-url pattern="/app/newaccount*" access="permitAll"/>
-		<security:intercept-url pattern="/app/openidregister*" access="permitAll"/>
-        <security:intercept-url pattern="/app/newpassword/**" access="permitAll"/>
-        <security:intercept-url pattern="/app/retrieveusername/**" access="permitAll"/>
-        <security:intercept-url pattern="/app/changepassword/**" access="permitAll"/>
-        <security:intercept-url pattern="/app/messagebundle/*.js" access="permitAll"/>
-        <security:intercept-url pattern="/app/admin/**" access="hasRole('ROLE_ADMIN')"/>
+    <security:http auto-config="true" use-expressions="true" disable-url-rewriting="true" path-type="regex">
+        <security:intercept-url pattern="\A/static(\?.*|/.*)\Z" access="permitAll"/>
+        <security:intercept-url pattern="\A/login\Z" access="permitAll"/>
+        <security:intercept-url pattern="\A/newaccount\.jsp(\\?.*)?\Z" access="permitAll"/>
+		<security:intercept-url pattern="\A/app/newaccount(\?.*|/.*)\Z" access="permitAll"/>
+		<security:intercept-url pattern="\A/app/openidregister(\?.*|/.*)\Z" access="permitAll"/>
+        <security:intercept-url pattern="\A/app/newpassword(\?.*|/.*)\Z" access="permitAll"/>
+        <security:intercept-url pattern="\A/app/retrieveusername(\?.*|/.*)\Z" access="permitAll"/>
+        <security:intercept-url pattern="\A/app/changepassword(\?.*|/.*)*\Z" access="permitAll"/>
+        <security:intercept-url pattern="\A/app/messagebundle/.*\.js\Z" access="permitAll"/>
+        <security:intercept-url pattern="\A/app/admin(\?.*|/.*)\Z" access="hasRole('ROLE_ADMIN')"/>
         <!-- all urls must be authenticated -->
-        <security:intercept-url pattern="/**" access="hasAnyRole('ROLE_USER','ROLE_ADMIN')"/>
+        <security:intercept-url pattern="\A/.*\Z" access="hasAnyRole('ROLE_USER','ROLE_ADMIN')"/>
         <security:openid-login user-service-ref="userService" authentication-failure-handler-ref="openIdAuthFailureHandler">
             <security:attribute-exchange identifier-match="https://www.google.com.*">
                 <security:openid-attribute name="email" type="http://axschema.org/contact/email" required="true" count="1"/>
