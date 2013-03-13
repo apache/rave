@@ -116,6 +116,8 @@
                             <sourceExcludes>
                                 <exclude>rave_layout.js</exclude>
                                 <exclude>rave_ui.js</exclude>
+                                <exclude>rave_backbone.js</exclude>
+                                <exclude>rave_models.js</exclude>
                                 <!-- exclude the combined js file from our tests, created by the wro4j plugin  -->
                                 <exclude>all.min.js</exclude>
                             </sourceExcludes>
@@ -150,8 +152,8 @@
                     <minimize>true</minimize>
                     <!-- location of the javascript after processing -->
                     <jsDestinationFolder>${project.build.directory}/${project.build.finalName}/static/script/</jsDestinationFolder>
-					<!-- location of the CSS after processing -->
-					<cssDestinationFolder>${project.build.directory}/${project.build.finalName}/static/css/</cssDestinationFolder>
+                    <!-- location of the CSS after processing -->
+                    <cssDestinationFolder>${project.build.directory}/${project.build.finalName}/static/css/</cssDestinationFolder>
                     <!-- location of webapp directory that wro4j uses for its location context -->
                     <contextFolder>${basedir}/src/main/webapp/</contextFolder>
                     <wroManagerFactory>ro.isdc.wro.maven.plugin.manager.factory.ConfigurableWroManagerFactory</wroManagerFactory>

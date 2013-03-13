@@ -19,5 +19,5 @@
   $Id$
 --%>
 <%
- response.sendRedirect("/portal");
+    response.sendRedirect("/portal");
 %>

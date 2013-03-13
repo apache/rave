@@ -86,17 +86,120 @@
 </script>
 
 <script type="text/handlebars" data-template-for="users-of-widget">
-    <div class="dialog widget-users-dialog" title="{{widgetName}} {{getClientMessage "widget.users.added_by"}}">
-        <ul class="widget-users">
-            {{#each users}}
-            <li class="widget-user">{{this.name}}</li>
-            {{/each}}
-        </ul>
+    <div class="dialog widget-users-dialog" title="{{widgetName}} {{getClientMessage " widget.users.added_by
+    "}}">
+    <ul class="widget-users">
+        {{#each users}}
+        <li class="widget-user">{{this.name}}</li>
+        {{/each}}
+    </ul>
     </div>
 </script>
 
 <script type="text/handlebars" data-template-for="info-message">
-   <div class="alert alert-success navbar-spacer">
-       {{message}}
-   </div>
+    <div class="alert alert-success navbar-spacer">
+        {{message}}
+    </div>
+</script>
+
+<script type="text/handlebars" data-template-for="user-search-view">
+    <div id="shareContent">
+        <div id="searchControls"><input id="searchTerm" name="searchTerm" type="text" value="{{users.searchTerm}}"/>
+            {{!TODO: these buttons should be using client messages}}
+            <input id="shareSearchButton" value="Search" type="submit"/>
+            <input id="clearSearchButton" value="Clear" type="submit" class="{{#unless users.searchTerm}}hide{{/unless}}"/>
+        </div>
+        <div id="shareSearchListHeader">
+            {{#if users.pagination.total}}
+            Showing {{users.pagination.start}} - {{users.pagination.finish}} of {{users.pagination.total}} results
+            {{else}}
+            No results found
+            {{/if}}
+        </div>
+        <div id="shareSearchListPaging">
+            <div class="pagination">
+                {{#with users.pagination}}
+                <ul id="pagingul">
+                    {{#if prevLink.show}}
+                    <li><a href="#" data-pagenumber="{{prevLink.pageNumber}}">&lt;</a></li>
+                    {{/if}}
+                    {{#each pages}}
+                    <li class="{{#if this.current}}active{{/if}}"><a href="#" data-pagenumber="{{this.pageNumber}}">{{this.pageNumber}}</a>
+                    </li>
+                    {{/each}}
+                    {{#if nextLink.show}}
+                    <li><a href="#" data-pagenumber="{{nextLink.pageNumber}}">&gt;</a></li>
+                    {{/if}}
+                </ul>
+                {{/with}}
+            </div>
+        </div>
+        <div id="shareSearchResults">
+            <table class="searchdialogcontent">
+                <thead>
+                <tr>
+                    <td class="textcell">
+                        <b>{{getClientMessage "common.username"}}</b>
+                    </td>
+                    <td class="booleancell">
+                        {{getClientMessage "common.username"}}
+                    </td>
+                    <td class="booleancell">
+                        {{getClientMessage "common.editing.auth"}}
+                    </td>
+                    <td class="booleancell">
+                        {{getClientMessage "page.clone.dialog.title"}}
+                    </td>
+                </tr>
+                </thead>
+                <tbody>
+                {{#each users.users}}
+                <tr class="searchResultRecord">
+                    <td>{{this.username}}</td>
+                    {{#if this.isOwner}}
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    {{else}}
+                    <td class="shareButtonHolder">
+                        {{#if this.hasShare}}
+                        <a href="#" data-userid="{{this.id}}" data-username="{{this.username}}"
+                           data-action="removeMember">
+                            {{getClientMessage "common.remove"}}
+                        </a>
+                        {{else}}
+                        <a href="#" data-userid="{{this.id}}" data-username="{{this.username}}"
+                           data-action="addMember">
+                            {{getClientMessage "common.add"}}
+                        </a>
+                        {{/if}}
+                    </td>
+                    <td class="pageEditorStatusHolder">
+                        {{#if this.hasShare}}
+                        {{#if this.hasEdit}}
+                        <a href="#" data-userid="{{this.id}}" data-username="{{this.username}}"
+                           data-action="removeEditor">
+                            {{getClientMessage "common.remove"}}
+                        </a>
+                        {{else}}
+                        <a href="#" data-userid="{{this.id}}" data-username="{{this.username}}"
+                           data-action="addEditor">
+                            {{getClientMessage "common.add"}}
+                        </a>
+                        {{/if}}
+                        {{/if}}
+                    </td>
+                    <td class="cloneButtonHolder">
+                        <a href="#" data-userid="{{this.id}}" data-username="{{this.username}}"
+                           data-action="cloneForUser">
+                            {{getClientMessage "page.clone.dialog.detail"}}
+                        </a>
+                    </td>
+                    {{/if}}
+                </tr>
+                {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </div>
 </script>

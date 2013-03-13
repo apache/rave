@@ -98,12 +98,12 @@ public class DefaultPageService implements PageService {
 
     @Override
     public Page getPageFromList(String pageId, List<Page> pages) {
-       for(Page page: pages) {
-           if(page.getId().equals(pageId)){
-               return page;
-           }
-       }
-       return null;
+        for(Page page: pages) {
+            if(page.getId().equals(pageId)){
+                return page;
+            }
+        }
+        return null;
     }
 
     @Override
@@ -262,7 +262,7 @@ public class DefaultPageService implements PageService {
         verifyRegionIsNotLocked(region);
         return createWidgetInstance(widget, region, 0);
     }
-    
+
     @Override
     @Transactional
     public RegionWidget addWidgetToPageRegion(String pageId, String widgetId, String regionId) {
@@ -435,8 +435,8 @@ public class DefaultPageService implements PageService {
      */
     private boolean isLayoutAdjustmentNeeded(PageLayout newLayout, PageLayout curLayout) {
         return newLayout != null &&
-               !curLayout.equals(newLayout) &&
-               !curLayout.getNumberOfRegions().equals(newLayout.getNumberOfRegions());
+                !curLayout.equals(newLayout) &&
+                !curLayout.getNumberOfRegions().equals(newLayout.getNumberOfRegions());
     }
 
     /***

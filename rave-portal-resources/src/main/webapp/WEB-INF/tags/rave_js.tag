@@ -29,6 +29,8 @@
 <c:choose>
     <c:when test="${jsDebugMode == '1'}">
         <script src="<spring:url value="/static/script/rave.js"/>"></script>
+        <script src="<spring:url value="/static/script/rave_backbone.js"/>"></script>
+        <script src="<spring:url value="/static/script/rave_models.js"/>"></script>
         <script src="<spring:url value="/static/script/rave_api.js"/>"></script>
         <script src="<spring:url value="/static/script/rave_opensocial.js"/>"></script>
         <script src="<spring:url value="/static/script/rave_wookie.js"/>"></script>
@@ -41,22 +43,22 @@
     </c:when>
     <c:otherwise>
         <script src="<spring:url value="/static/script/rave_all.min.js"/>"></script>
-    </c:otherwise>
-</c:choose>
-<script src="<spring:url value="/app/messagebundle/rave_client_messages.js"/>"></script>
-<portal:render-script location="${'AFTER_RAVE'}"/>
-<%-- common javascript to execute on all pages --%>
-<script>
-    <%-- set the web application context --%>
-    rave.setContext("<spring:url value="/app/" />");
-    <%-- set the javascript debug mode so js code has access to it --%>
-    rave.setJavaScriptDebugMode(<c:out value="${jsDebugMode}"/>);
-    <%-- set the default widget height so js code has access to it --%>
-    rave.setDefaultWidgetHeight(<c:out value="${portalSettings['defaultWidgetHeight'].value}"/>);
-    <%-- set the current page viewer --%>
-    <sec:authorize access="isAuthenticated()">
-        <sec:authentication property="principal.username" scope="request" var="username"/>
-        <sec:authentication property="principal.id" scope="request" var="id"/>
-        rave.setPageViewer({username:"${username}", id:"${id}"});
-    </sec:authorize>
-</script>
+        </c:otherwise>
+                </c:choose>
+        <script src="<spring:url value="/app/messagebundle/rave_client_messages.js"/>"></script>
+        <portal:render-script location="${'AFTER_RAVE'}"/>
+        <%-- common javascript to execute on all pages --%>
+        <script>
+            <%-- set the web application context --%>
+            rave.setContext("<spring:url value="/app/" />");
+            <%-- set the javascript debug mode so js code has access to it --%>
+            rave.setJavaScriptDebugMode(<c:out value="${jsDebugMode}"/>);
+            <%-- set the default widget height so js code has access to it --%>
+            rave.setDefaultWidgetHeight(<c:out value="${portalSettings['defaultWidgetHeight'].value}"/>);
+            <%-- set the current page viewer --%>
+            <sec:authorize access="isAuthenticated()">
+                    <sec:authentication property="principal.username" scope="request" var="username"/>
+            <sec:authentication property="principal.id" scope="request" var="id"/>
+            rave.setPageViewer({username:"${username}", id:"${id}"});
+            </sec:authorize>
+        </script>
