@@ -164,12 +164,14 @@ public class DefaultOmdlService implements OmdlService, OmdlConstants {
                 if(!providerType.equals(null)){
                     try {
                         Widget resolvedWidget = widgetResolverService.resolveAndDownloadWidgetMetadata(widgetReference.getWidgetLink(), providerType);
-                        // Check again in case the OMDL id attribute is not the same as the one found in the href attribute
-                        if(widgetService.getWidgetByUrl(resolvedWidget.getUrl())==null){
-                            raveWidget = widgetResolverService.addWidget(resolvedWidget);
-                            logger.info("Widget added to rave. ("+raveWidget.getUrl()+")");
-                        }else{
-                            logger.info("Widget was already added to rave. ("+resolvedWidget.getUrl()+")");
+                        if(resolvedWidget!=null){
+                            // Check again in case the OMDL id attribute is not the same as the one found in the href attribute
+                            if(widgetService.getWidgetByUrl(resolvedWidget.getUrl())==null){
+                                raveWidget = widgetResolverService.addWidget(resolvedWidget);
+                                logger.info("Widget added to rave. ("+raveWidget.getUrl()+")");
+                            }else{
+                                logger.info("Widget was already added to rave. ("+resolvedWidget.getUrl()+")");
+                            }
                         }
                     } catch (Exception e) {
                         logger.error("Problem installing widget: "+ e.getMessage());
