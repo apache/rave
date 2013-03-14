@@ -64,7 +64,7 @@ public class WidgetMarketplaceController {
 	 * @param referringPageId
 	 * @return the view name of the marketplace tab
 	 */
-	@RequestMapping(value = { "marketplace" }, method = RequestMethod.GET)
+	@RequestMapping(method = RequestMethod.GET)
 	public String viewSearchResult(Model model,
 			@RequestParam String referringPageId,
             @RequestParam(required = false, defaultValue = "0") int offset) {
