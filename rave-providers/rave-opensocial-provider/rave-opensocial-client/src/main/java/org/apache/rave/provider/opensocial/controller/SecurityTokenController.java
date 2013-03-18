@@ -19,72 +19,86 @@
 
 package org.apache.rave.provider.opensocial.controller;
 
-import org.apache.rave.portal.model.Page;
-import org.apache.rave.portal.model.RegionWidget;
-import org.apache.rave.portal.model.Widget;
-import org.apache.rave.portal.model.WidgetStatus;
-import org.apache.rave.portal.model.impl.RegionImpl;
-import org.apache.rave.portal.model.impl.RegionWidgetImpl;
-import org.apache.rave.portal.service.PageService;
-import org.apache.rave.portal.service.WidgetService;
-import org.apache.rave.provider.opensocial.exception.SecurityTokenException;
-import org.apache.rave.provider.opensocial.service.impl.EncryptedBlobSecurityTokenService;
+import com.google.common.collect.Maps;
+import org.apache.rave.exception.ResourceNotFoundException;
+import org.apache.rave.provider.opensocial.service.OpenSocialService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Admin controller to manipulate Widget data
  */
-@Controller
-public class SecurityTokenController{
+@Controller @RequestMapping(value = "/api/rest/opensocial")
+public class SecurityTokenController {
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private WidgetService widgetService;
-    
-    @Autowired
-    private PageService pageService;
-    
-    @Autowired
-    private EncryptedBlobSecurityTokenService securityTokenService;
+    private OpenSocialService openSocialService;
 
-    @RequestMapping(value = "/api/rest/st", method = RequestMethod.GET, produces="application/json")
+    @RequestMapping(value = "/gadget", method = RequestMethod.GET, produces="application/json")
     @ResponseBody
-    public Map<String, Object> getSecurityToken(@RequestParam("url") final String url, @RequestParam("pageid") final String pageId) {
-    	Widget widget = widgetService.getWidgetByUrl(url);
-    	Page page = pageService.getPage(pageId);
-    	
-    	// Use a dummy RegionWidget to generate the security token
-    	RegionWidget regionWidget = new RegionWidgetImpl(String.valueOf(System.currentTimeMillis()),"-1",
-    			new RegionImpl("-1", page, -1));
-    	
+    public Map<String, Object> getUnboundTokenAndMetadata(@RequestParam("url") final String url, @RequestParam("pageid") final String pageId) {
     	Map<String, Object> jsonResponse = new HashMap<String, Object>();
-    	Map<String, String> errorMessage = new HashMap<String, String>();
-    	
-    	String securityToken = "";
-    	if (widget != null && widget.getWidgetStatus() == WidgetStatus.PUBLISHED) {
-    		try {
-    			securityToken = securityTokenService.getEncryptedSecurityToken(regionWidget, widget);
-    		} catch (SecurityTokenException e) {
-    			errorMessage.put("message", "There was a problem creating the security token.");
-    		}
-    	} else if (widget != null && widget.getWidgetStatus() == WidgetStatus.PREVIEW) {
-    		errorMessage.put("message", "The requested gadget exists in the gadget store but is not published.");
-    	} else {
-    		errorMessage.put("message", "The requested gadget does not exist in the gadget store.");
-    	}
-    	
-    	jsonResponse.put("securityToken", securityToken);
-    	if (!errorMessage.isEmpty()) {
-    		jsonResponse.put("error", errorMessage);
-    	}
-    	
+        jsonResponse.put("securityToken", openSocialService.getEncryptedSecurityToken(pageId, url));
+        jsonResponse.put("metadata", openSocialService.getGadgetMetadata(url));
     	return jsonResponse;
+    }
+
+    /**
+     * Return a 404 response code when any ResourceNotFoundException is thrown
+     *
+     * @param ex the ResourceNotFoundException
+     * @param request the http request
+     * @param response the http response
+     */
+    @ExceptionHandler(ResourceNotFoundException.class)
+    @ResponseBody
+    public Map<String, String> handleNotFound(Exception ex, HttpServletRequest request, HttpServletResponse response) {
+        return setResponse(ex, request, response, HttpStatus.NOT_FOUND);
+    }
+
+
+    /**
+     * Return a 400 response code when any IllegalState is thrown
+     *
+     * @param ex the IllegalStateException
+     * @param request the http request
+     * @param response the http response
+     */
+    @ExceptionHandler(IllegalStateException.class)
+    @ResponseBody
+    public Map<String, String> handleIllegalState(Exception ex, HttpServletRequest request, HttpServletResponse response) {
+        return setResponse(ex, request, response, HttpStatus.BAD_REQUEST);
+    }
+
+
+    /**
+     * Return a 500 response code when any unknown exception is thrown
+     *
+     * @param ex the exeption
+     * @param request the http request
+     * @param response the http response
+     */
+    @ExceptionHandler(Exception.class)
+    @ResponseBody
+    public Map<String, String> handleALl(Exception ex, HttpServletRequest request, HttpServletResponse response) {
+        return setResponse(ex, request, response, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    private Map<String, String> setResponse(Exception ex, HttpServletRequest request, HttpServletResponse response, HttpStatus status) {
+        logger.error("Not Found Exception: " + request.getUserPrincipal().getName() + " attempted to access resource " + request.getRequestURI(), ex);
+        response.setStatus(status.value());
+        Map<String, String> errors = Maps.newHashMap();
+        errors.put("error", ex.getMessage());
+        return errors;
     }
 }

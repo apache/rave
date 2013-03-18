@@ -27,4 +27,11 @@ public interface OpenSocialService {
      * @return The raw JSON response from the Shindig metadata RPC call.
      */
     String getGadgetMetadata(String gadgetUrl);
+
+    /**
+     * Gets a security token for a new instance (RegionWidget) of the given url
+     * @param widget the gadget URL to create a new instance for
+     * @return a valid, encrypted securityToken
+     */
+    String getEncryptedSecurityToken(String pageId, String widget);
 }

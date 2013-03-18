@@ -106,10 +106,10 @@ rave.opensocial = rave.opensocial || (function () {
             				var gadget = {
             			  	  "widgetUrl": widgetUrl,
             			  	  "securityToken": data.securityToken,
-            			  	  "metadata": opt_gadgetInfo
+            			  	  "metadata": gadgets.json.parse(data.metadata)
                             },
-                            height = data.metadata ? data.metadata.height : 500,
-                            width = data.metadata ? data.metadata.width : 525;
+                            height = gadget.metadata.modulePrefs.height ? gadget.metadata.modulePrefs.height : 500,
+                            width = gadget.metadata.modulePrefs.width ? gadget.metadata.modulePrefs.width : 525;
 
             				preloadMetadata(gadget);
                         
@@ -140,7 +140,7 @@ rave.opensocial = rave.opensocial || (function () {
     function getSecurityToken(args) {
         $.ajax({
             type: 'GET',
-            url: rave.getContext() + "api/rest/" + "st?url=" + args.url + "&pageid=" + args.pageid,
+            url: rave.getContext() + "api/rest/opensocial/gadget?url=" + args.url + "&pageid=" + args.pageid,
             dataType: "json",
             success: function (data) {
                 if (typeof args.successCallback == 'function') {

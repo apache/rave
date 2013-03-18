@@ -203,6 +203,8 @@
     </div>
 <div class="clear-float">&nbsp;</div>
 
+<input id="currentPageId" type="hidden" value="${page.id}"/>
+
 <portal:register-init-script location="${'AFTER_RAVE'}">
     <script>
         $(function () {

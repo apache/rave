@@ -19,23 +19,60 @@
 
 package org.apache.rave.provider.opensocial.service.impl;
 
+import org.apache.rave.exception.ResourceNotFoundException;
+import org.apache.rave.portal.model.Page;
+import org.apache.rave.portal.model.RegionWidget;
+import org.apache.rave.portal.model.Widget;
+import org.apache.rave.portal.model.WidgetStatus;
+import org.apache.rave.portal.model.impl.RegionImpl;
+import org.apache.rave.portal.model.impl.RegionWidgetImpl;
+import org.apache.rave.portal.service.PageService;
+import org.apache.rave.portal.service.WidgetService;
 import org.apache.rave.provider.opensocial.repository.GadgetMetadataRepository;
 import org.apache.rave.provider.opensocial.service.OpenSocialService;
+import org.apache.rave.provider.opensocial.service.SecurityTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class DefaultOpenSocialService implements OpenSocialService {
     private GadgetMetadataRepository gadgetMetadataRepository;
+    private final WidgetService widgetService;
+    private final PageService pageService;
+    private final SecurityTokenService tokenService;
 
     @Autowired
-    public DefaultOpenSocialService(GadgetMetadataRepository gadgetMetadataRepository) {
+    public DefaultOpenSocialService(GadgetMetadataRepository gadgetMetadataRepository, WidgetService widgetService, PageService pageService, SecurityTokenService tokenService) {
         this.gadgetMetadataRepository = gadgetMetadataRepository;
+        this.widgetService = widgetService;
+        this.pageService = pageService;
+        this.tokenService = tokenService;
     }
 
     @Override
     public String getGadgetMetadata(String gadgetUrl) {
         //TODO RAVE-243 -- Add caching of gadget metadata in this service layer
         return gadgetMetadataRepository.getGadgetMetadata(gadgetUrl);
+    }
+
+    @Override
+    public String getEncryptedSecurityToken(String pageId, String url) {
+        Widget widget = widgetService.getWidgetByUrl(url);
+        Page page = pageService.getPage(pageId);
+        validate(widget);
+        // Use a dummy RegionWidget to generate the security token
+        RegionWidget regionWidget = new RegionWidgetImpl(String.valueOf(System.currentTimeMillis()),"-1",
+                new RegionImpl("-1", page, -1));
+        String securityToken = "";
+        securityToken = tokenService.getEncryptedSecurityToken(regionWidget, widget);
+        return securityToken;
+    }
+
+    private void validate(Widget widget) {
+        if(widget == null) {
+            throw new ResourceNotFoundException("The requested gadget does not exist in the gadget store.");
+        } else if(widget.getWidgetStatus().equals(WidgetStatus.PREVIEW)) {
+            throw new IllegalStateException("The requested gadget exists in the gadget store but is not published.");
+        }
     }
 }
