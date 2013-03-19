@@ -55,28 +55,25 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class NewAccountControllerTest {
 	 //Tests need to be implemented.
 	private NewAccountController newAccountController;
-	private NewAccountService newAccountService;
-	private NewAccountValidator newAccountValidator;
-	private CaptchaService captchaService;
-    private MockHttpServletRequest request;
+  private MockHttpServletRequest request;
     private RedirectAttributes redirectAttributes;
 	private UserService userService;
 
 	@Before
 	public void setup() {
-		newAccountService = createNiceMock(NewAccountService.class);
+    NewAccountService newAccountService = createNiceMock(NewAccountService.class);
 		userService = createNiceMock(UserService.class);
-        request = new MockHttpServletRequest();
-        redirectAttributes = createNiceMock(RedirectAttributes.class);
-		newAccountValidator = new NewAccountValidator(userService);
-		captchaService = new ReCaptchaService(false, null, null, false, "error message");
+    request = new MockHttpServletRequest();
+    redirectAttributes = createNiceMock(RedirectAttributes.class);
+    NewAccountValidator newAccountValidator = new NewAccountValidator(userService);
+    CaptchaService captchaService = new ReCaptchaService(false, null, null, false, "error message");
 		newAccountController = new NewAccountController(newAccountService, newAccountValidator, captchaService);
 	}
 
 	@Test
 	public void setUpForm_ShouldAddAttributeForUser() {
 		final ModelMap model = new ModelMap();
-		String User = new String(ModelKeys.NEW_USER);
+		String User = ModelKeys.NEW_USER;
 		newAccountController.setUpForm(model, request);
 
 		//assert that the model is not null
@@ -114,7 +111,7 @@ public class NewAccountControllerTest {
 		replay(errors);
 
         replay(model);
-		String result = new String(newAccountController.create(User, errors, model, request, redirectAttributes));
+		String result = newAccountController.create(User, errors, model, request, redirectAttributes);
 		errorList = errors.getAllErrors();
 
 		assertThat(errorList.size(), CoreMatchers.equalTo(1));
@@ -151,7 +148,7 @@ public class NewAccountControllerTest {
 		expect(userService.getUserByUsername(username)).andReturn(existingUser).anyTimes();
 		replay(userService);
 		replay(model);
-		String result = new String(newAccountController.create(User, errors, model, request, redirectAttributes));
+		String result = newAccountController.create(User, errors, model, request, redirectAttributes);
 		errorList = errors.getAllErrors();
 
 		assertThat(errorList.size(), CoreMatchers.equalTo(1));
@@ -181,7 +178,7 @@ public class NewAccountControllerTest {
 		replay(errors);
 		replay(model);
 
-		String result = new String(newAccountController.create(User, errors, model, request, redirectAttributes));
+		String result = newAccountController.create(User, errors, model, request, redirectAttributes);
 		errorList = errors.getAllErrors();
 
 		assertThat(errorList.size(), CoreMatchers.equalTo(1));
@@ -210,7 +207,7 @@ public class NewAccountControllerTest {
 		expect(errors.getAllErrors()).andReturn(errorList).anyTimes();
 		replay(errors);
 		replay(model);
-		String result = new String(newAccountController.create(User, errors, model, request, redirectAttributes));
+		String result = newAccountController.create(User, errors, model, request, redirectAttributes);
 		errorList = errors.getAllErrors();
 
 		assertThat(errorList.size(), CoreMatchers.equalTo(2));
@@ -240,7 +237,7 @@ public class NewAccountControllerTest {
 		replay(errors);
 
         replay(model);
-		String result = new String(newAccountController.create(User, errors, model, request, redirectAttributes));
+		String result = newAccountController.create(User, errors, model, request, redirectAttributes);
 		errorList = errors.getAllErrors();
 
 		assertThat(errorList.size(), CoreMatchers.equalTo(1));
@@ -268,7 +265,7 @@ public class NewAccountControllerTest {
 		expect(errors.getAllErrors()).andReturn(errorList).anyTimes();
 		replay(errors);
 		replay(model);
-		String result = new String(newAccountController.create(User, errors, model, request, redirectAttributes));
+		String result = newAccountController.create(User, errors, model, request, redirectAttributes);
 		errorList = errors.getAllErrors();
 
 		assertThat(errorList.size(), CoreMatchers.equalTo(1));
@@ -324,7 +321,7 @@ public class NewAccountControllerTest {
 		expect(errors.getAllErrors()).andReturn(errorList).anyTimes();
 		replay(errors);
         replay(model);
-		String result = new String(newAccountController.create(User, errors, model, request, redirectAttributes));
+		String result = newAccountController.create(User, errors, model, request, redirectAttributes);
 		errorList = errors.getAllErrors();
 
 		assertThat(errorList.size(), CoreMatchers.equalTo(1));
@@ -355,7 +352,7 @@ public class NewAccountControllerTest {
 		replay(errors);
 
         replay(model);
-		String result = new String(newAccountController.create(User, errors, model, request, redirectAttributes));
+		String result = newAccountController.create(User, errors, model, request, redirectAttributes);
 		errorList = errors.getAllErrors();
 
 		assertThat(errorList.size(), CoreMatchers.equalTo(3));
@@ -383,7 +380,7 @@ public class NewAccountControllerTest {
 		expect(errors.getAllErrors()).andReturn(errorList).anyTimes();
 		replay(errors);
 
-		String result = new String(newAccountController.create(User, errors, model, request, redirectAttributes));
+		String result = newAccountController.create(User, errors, model, request, redirectAttributes);
 		errorList = errors.getAllErrors();
 
 		assertThat(errorList.size(), CoreMatchers.equalTo(0));
