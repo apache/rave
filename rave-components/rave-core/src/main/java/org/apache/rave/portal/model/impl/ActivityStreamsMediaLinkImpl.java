@@ -23,8 +23,7 @@ package org.apache.rave.portal.model.impl;
 
 import org.apache.rave.portal.model.ActivityStreamsMediaLink;
 
-import java.util.HashMap;
-
+import java.util.Map;
 
 
 public class ActivityStreamsMediaLinkImpl implements ActivityStreamsMediaLink{
@@ -41,7 +40,7 @@ public class ActivityStreamsMediaLinkImpl implements ActivityStreamsMediaLink{
 
     private String id;
 
-    private HashMap openSocial;
+    private Map openSocial;
 
 
 
@@ -109,12 +108,12 @@ public class ActivityStreamsMediaLinkImpl implements ActivityStreamsMediaLink{
 
     /** {@inheritDoc} */
 
-    public HashMap getOpenSocial() {
+    public Map getOpenSocial() {
         return openSocial;
     }
 
     /** {@inheritDoc} */
-    public void setOpenSocial(HashMap openSocial) {
+    public void setOpenSocial(Map openSocial) {
         this.openSocial = openSocial;
 
     }

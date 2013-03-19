@@ -20,7 +20,7 @@
 package org.apache.rave.portal.model;
 
 
-import java.util.HashMap;
+import java.util.Map;
 
 public interface ActivityStreamsMediaLink {
 
@@ -45,7 +45,7 @@ public interface ActivityStreamsMediaLink {
 
     public String getUrl() ;
 
-    public void setOpenSocial(HashMap social);
+    public void setOpenSocial(Map social);
 
-    public HashMap getOpenSocial();
+    public Map getOpenSocial();
 }

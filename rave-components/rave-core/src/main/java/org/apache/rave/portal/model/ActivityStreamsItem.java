@@ -20,7 +20,7 @@
 package org.apache.rave.portal.model;
 
 import java.util.Date;
-import java.util.HashMap;
+import java.util.Map;
 
 
 public interface ActivityStreamsItem {
@@ -35,8 +35,8 @@ public interface ActivityStreamsItem {
     public void setUrl(String url);
     public String getObjectType();
     public void setObjectType(String objectType);
-    public HashMap getExtensions();
-    public void setExtensions(HashMap extensions);
-    public HashMap getOpenSocial();
-    public void setOpenSocial(HashMap openSocial);
+    public Map getExtensions();
+    public void setExtensions(Map extensions);
+    public Map getOpenSocial();
+    public void setOpenSocial(Map openSocial);
 }

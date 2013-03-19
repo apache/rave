@@ -22,7 +22,10 @@ package org.apache.rave.portal.model;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.Map;
+
+import static org.apache.rave.util.JsonUtils.parse;
+import static org.apache.rave.util.JsonUtils.stringify;
 
 @Entity
 @Access(AccessType.FIELD)
@@ -56,12 +59,11 @@ public class JpaActivityStreamsItem implements ActivityStreamsItem, BasicEntity 
     @Basic
     private String objectType;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private HashMap openSocial;
+    @Lob
+    private String openSocial;
 
-
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private HashMap extensions;
+    @Lob
+    private String extensions;
 
     public Long getEntityId() {
         return entityId;
@@ -111,19 +113,19 @@ public class JpaActivityStreamsItem implements ActivityStreamsItem, BasicEntity 
         this.objectType = objectType;
     }
 
-    public HashMap getOpenSocial() {
-        return openSocial;
+    public Map getOpenSocial() {
+        return parse(this.openSocial, Map.class);
     }
 
-    public void setOpenSocial(HashMap openSocial) {
-        this.openSocial = openSocial;
+    public void setOpenSocial(Map openSocial) {
+        this.openSocial = stringify(openSocial);
     }
 
-    public HashMap getExtensions() {
-        return extensions;
+    public Map getExtensions() {
+        return parse(this.extensions, Map.class);
     }
 
-    public void setExtensions(HashMap extensions) {
-        this.extensions = extensions;
+    public void setExtensions(Map extensions) {
+        this.extensions = stringify(extensions);
     }
 }

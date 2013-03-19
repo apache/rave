@@ -23,23 +23,19 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.repository.*;
-import org.codehaus.jackson.map.AnnotationIntrospector;
-import org.codehaus.jackson.map.DeserializationConfig;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.introspect.JacksonAnnotationIntrospector;
-import org.codehaus.jackson.mrbean.MrBeanModule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+
+import static org.apache.rave.util.JsonUtils.parse;
 
 public class DataImporter {
 
@@ -58,7 +54,7 @@ public class DataImporter {
     public void importData() {
         if (scriptLocations != null && dataExecutor.needsLoading()) {
             for (Resource resource : scriptLocations) {
-                ModelWrapper wrapper = mapObject(resource);
+                ModelWrapper wrapper = parse(resource, ModelWrapper.class);
                 dataExecutor.loadData(wrapper);
             }
         }
@@ -66,23 +62,6 @@ public class DataImporter {
 
     public void setDataExecutor(Executor dataExecutor) {
         this.dataExecutor = dataExecutor;
-    }
-
-    private ModelWrapper mapObject(Resource resource) {
-        try {
-            return getMapper().readValue(resource.getFile(), ModelWrapper.class);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private ObjectMapper getMapper() {
-        ObjectMapper jacksonMapper = new ObjectMapper();
-        AnnotationIntrospector primary = new JacksonAnnotationIntrospector();
-        jacksonMapper.setAnnotationIntrospector(primary);
-        jacksonMapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        jacksonMapper.registerModule(new MrBeanModule());
-        return jacksonMapper;
     }
 
     public static interface Executor {

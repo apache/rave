@@ -24,8 +24,8 @@ import org.apache.rave.portal.model.ActivityStreamsMediaLink;
 import org.apache.rave.portal.model.ActivityStreamsObject;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class ActivityStreamsObjectImpl implements ActivityStreamsObject {
@@ -119,9 +119,9 @@ public class ActivityStreamsObjectImpl implements ActivityStreamsObject {
 
     private String objectType;
 
-    private HashMap openSocial;
+    private Map openSocial;
 
-    private HashMap extensions;
+    private Map extensions;
 
     /**
      * Constructs an empty ActivityObject.
@@ -173,14 +173,14 @@ public class ActivityStreamsObjectImpl implements ActivityStreamsObject {
      * {@inheritDoc}
      */
 
-    public HashMap getOpenSocial() {
+    public Map getOpenSocial() {
         return openSocial;
     }
 
     /**
      * {@inheritDoc}
      */
-    public void setOpenSocial(HashMap openSocial) {
+    public void setOpenSocial(Map openSocial) {
 
         this.openSocial = openSocial;
     }
@@ -189,16 +189,14 @@ public class ActivityStreamsObjectImpl implements ActivityStreamsObject {
      * {@inheritDoc}
      */
 
-    public HashMap getExtensions() {
+    public Map getExtensions() {
         return extensions;
     }
 
     /**
      * {@inheritDoc}
      */
-    public void setExtensions(HashMap extensions) {
-
-
+    public void setExtensions(Map extensions) {
         this.extensions = extensions;
     }
 

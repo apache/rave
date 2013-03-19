@@ -21,8 +21,10 @@ package org.apache.rave.portal.model;
 
 
 import javax.persistence.*;
-import java.util.HashMap;
+import java.util.Map;
 
+import static org.apache.rave.util.JsonUtils.parse;
+import static org.apache.rave.util.JsonUtils.stringify;
 
 
 @Entity
@@ -59,9 +61,8 @@ public class JpaActivityStreamsMediaLink implements ActivityStreamsMediaLink, Ba
     @Basic
     private Integer width;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private HashMap openSocial;
-
+    @Lob
+    private String openSocial;
 
     /**
      * Create a new MediaLink
@@ -135,13 +136,13 @@ public class JpaActivityStreamsMediaLink implements ActivityStreamsMediaLink, Ba
 
     /** {@inheritDoc} */
 
-    public HashMap getOpenSocial() {
-        return openSocial;
+    public Map getOpenSocial() {
+        return parse(this.openSocial, Map.class);
     }
 
     /** {@inheritDoc} */
-    public void setOpenSocial(HashMap openSocial) {
-        this.openSocial = openSocial;
+    public void setOpenSocial(Map openSocial) {
+        this.openSocial = stringify(openSocial);
 
     }
 
