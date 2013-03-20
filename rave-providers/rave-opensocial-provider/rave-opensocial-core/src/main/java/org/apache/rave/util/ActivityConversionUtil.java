@@ -20,9 +20,14 @@
 package org.apache.rave.util;
 
 import com.google.common.collect.Lists;
+import org.apache.rave.portal.model.ActivityStreamsEntry;
 import org.apache.rave.portal.model.ActivityStreamsItem;
+import org.apache.rave.portal.model.ActivityStreamsMediaLink;
+import org.apache.rave.portal.model.ActivityStreamsObject;
+import org.apache.rave.portal.model.impl.ActivityStreamsEntryImpl;
 import org.apache.rave.portal.model.impl.ActivityStreamsMediaLinkImpl;
 import org.apache.rave.portal.model.impl.ActivityStreamsObjectImpl;
+import org.apache.rave.portal.util.ModelUtil;
 import org.apache.shindig.protocol.model.ExtendableBean;
 import org.apache.shindig.protocol.model.ExtendableBeanImpl;
 import org.apache.shindig.social.core.model.ActivityEntryImpl;
@@ -31,16 +36,11 @@ import org.apache.shindig.social.core.model.MediaLinkImpl;
 import org.apache.shindig.social.opensocial.model.ActivityEntry;
 import org.apache.shindig.social.opensocial.model.ActivityObject;
 import org.apache.shindig.social.opensocial.model.MediaLink;
-import org.apache.rave.portal.model.impl.ActivityStreamsEntryImpl;
-import org.apache.rave.portal.model.ActivityStreamsEntry;
-import org.apache.rave.portal.model.ActivityStreamsObject;
-import org.apache.rave.portal.model.ActivityStreamsMediaLink;
-import org.apache.rave.portal.util.ModelUtil;
-
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.apache.rave.portal.util.ModelUtil.dateToString;
 
@@ -196,14 +196,14 @@ public class ActivityConversionUtil {
         return entity;
     }
 
-    public HashMap convert (ExtendableBean bean) {
+    public Map convert (ExtendableBean bean) {
         if(bean == null) return null;
-        HashMap entity = new HashMap();
+        Map entity = new HashMap();
         entity.putAll(bean);
         return entity;
     }
 
-    public ExtendableBean convert(HashMap map){
+    public ExtendableBean convert(Map map){
         if(map == null) return null;
         ExtendableBean bean = new ExtendableBeanImpl();
         bean.putAll(map);
