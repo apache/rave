@@ -108,6 +108,7 @@ public class JpaActivityStreamsEntry extends JpaActivityStreamsItem implements A
     private String dc;
 
     @Basic
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date endTime;
 
     @Basic
@@ -150,6 +151,7 @@ public class JpaActivityStreamsEntry extends JpaActivityStreamsItem implements A
     private String source;
 
     @Basic
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date startTime;
 
     @Basic
