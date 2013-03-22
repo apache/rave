@@ -72,10 +72,6 @@
             <artifactId>cxf-rt-frontend-jaxrs</artifactId>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>jackson-jaxrs</artifactId>
-        </dependency>
     </dependencies>
 
     <build>
