@@ -28,15 +28,15 @@
           http://www.springframework.org/schema/beans/spring-beans.xsd
           http://www.springframework.org/schema/security
           http://www.springframework.org/schema/security/spring-security.xsd">
-    <security:http auto-config="true" use-expressions="true" disable-url-rewriting="true" path-type="regex">
+    <security:http auto-config="true" use-expressions="true" disable-url-rewriting="true" request-matcher="regex">
         <security:intercept-url pattern="\A/static(\?.*|/.*)\Z" access="permitAll"/>
         <security:intercept-url pattern="\A/login\Z" access="permitAll"/>
-        <security:intercept-url pattern="\A/newaccount\.jsp(\\?.*)?\Z" access="permitAll"/>
-		<security:intercept-url pattern="\A/app/newaccount(\?.*|/.*)\Z" access="permitAll"/>
-		<security:intercept-url pattern="\A/app/openidregister(\?.*|/.*)\Z" access="permitAll"/>
-        <security:intercept-url pattern="\A/app/newpassword(\?.*|/.*)\Z" access="permitAll"/>
-        <security:intercept-url pattern="\A/app/retrieveusername(\?.*|/.*)\Z" access="permitAll"/>
-        <security:intercept-url pattern="\A/app/changepassword(\?.*|/.*)*\Z" access="permitAll"/>
+        <security:intercept-url pattern="\A/app/newaccount\.jsp(\?.*)?\Z" access="permitAll"/>
+        <security:intercept-url pattern="\A/app/newaccount(\?.*|/.*)?\Z" access="permitAll"/>
+        <security:intercept-url pattern="\A/app/openidregister(\?.*|/.*)?\Z" access="permitAll"/>
+        <security:intercept-url pattern="\A/app/newpassword(\?.*|/.*)?\Z" access="permitAll"/>
+        <security:intercept-url pattern="\A/app/retrieveusername(\?.*|/.*)?\Z" access="permitAll"/>
+        <security:intercept-url pattern="\A/app/changepassword(\?.*|/.*)?\Z" access="permitAll"/>
         <security:intercept-url pattern="\A/app/messagebundle/.*\.js\Z" access="permitAll"/>
         <security:intercept-url pattern="\A/app/admin(\?.*|/.*)\Z" access="hasRole('ROLE_ADMIN')"/>
         <!-- all urls must be authenticated -->
@@ -63,7 +63,7 @@
         </security:openid-login>
         <security:form-login login-page="/login" default-target-url="/" authentication-failure-url="/login?authfail=form" />
         <security:logout/>
-        <security:remember-me/>
+        <security:remember-me user-service-ref="userService" />
     </security:http>
 
     <security:ldap-server ldif="classpath:users.ldiff" root="dc=rave,dc=apache,dc=org" />
@@ -93,7 +93,7 @@
     </bean>
     
     <bean id="openIdAuthFailureHandler" class="org.apache.rave.portal.web.controller.handler.OpenIDAuthenticationFailureHandler">
-    	<property name="defaultFailureUrl" value="/login?authfail=openid"/>
+        <property name="defaultFailureUrl" value="/login?authfail=openid"/>
     </bean>
     
 
