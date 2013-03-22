@@ -18,9 +18,9 @@
  */
 package org.apache.rave.portal.model.impl;
 
-import org.apache.rave.portal.model.User;
-import org.apache.rave.portal.model.Tag;
-import org.apache.rave.portal.model.WidgetTag;
+import org.apache.rave.model.Tag;
+import org.apache.rave.model.User;
+import org.apache.rave.model.WidgetTag;
 
 import java.util.Date;
 

@@ -19,7 +19,7 @@
 
 package org.apache.rave.portal.service.impl;
 
-import org.apache.rave.portal.model.Tag;
+import org.apache.rave.model.Tag;
 import org.apache.rave.portal.repository.TagRepository;
 import org.apache.rave.portal.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;

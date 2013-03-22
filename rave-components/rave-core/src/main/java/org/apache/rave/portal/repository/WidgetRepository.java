@@ -19,7 +19,7 @@
 package org.apache.rave.portal.repository;
 
 import org.apache.rave.persistence.Repository;
-import org.apache.rave.portal.model.*;
+import org.apache.rave.model.*;
 import org.apache.rave.portal.model.util.WidgetStatistics;
 
 import java.util.List;
@@ -45,7 +45,7 @@ public interface WidgetRepository extends Repository<Widget> {
     List<Widget> getLimitedList(int offset, int pageSize);
 
     /**
-     * @return the total number of {@link Widget}'s in the repository. Useful for paging.
+     * @return the total number of {@link org.apache.rave.model.Widget}'s in the repository. Useful for paging.
      */
     int getCountAll();
 
@@ -143,7 +143,7 @@ public interface WidgetRepository extends Repository<Widget> {
      * Generates the mapping of widget ratings for the user.
      *
      * @param userId id of the user
-     * @return Mapping of {@link org.apache.rave.portal.model.WidgetRating} objects keyed off of the widget's entityId
+     * @return Mapping of {@link org.apache.rave.model.WidgetRating} objects keyed off of the widget's entityId
      */
     Map<String, WidgetRating> getUsersWidgetRatings(String userId);
 
@@ -178,19 +178,19 @@ public interface WidgetRepository extends Repository<Widget> {
     // ***************************************************************************************************************
 
     /**
-     * Tries to find a {@link org.apache.rave.portal.model.WidgetTag} by the id's of a Widget and Tag keyword
+     * Tries to find a {@link org.apache.rave.model.WidgetTag} by the id's of a Widget and Tag keyword
      *
      * @param widgetId unique identifier of a Widget
      * @param keyword   tag's keyword
-     * @return {@link org.apache.rave.portal.model.WidgetTag} if it exists, otherwise {@literal null}
+     * @return {@link org.apache.rave.model.WidgetTag} if it exists, otherwise {@literal null}
      */
      WidgetTag getTagByWidgetIdAndKeyword(String widgetId, String keyword);
 
     /**
-     * Tries to find a {@link org.apache.rave.portal.model.WidgetTag} by the id of the Tag
+     * Tries to find a {@link org.apache.rave.model.WidgetTag} by the id of the Tag
      *
      * @param widgetTagId   tag's id
-     * @return {@link org.apache.rave.portal.model.WidgetTag} if it exists, otherwise {@literal null}
+     * @return {@link org.apache.rave.model.WidgetTag} if it exists, otherwise {@literal null}
      */
     WidgetTag getTagById(String widgetTagId);
 
@@ -231,11 +231,11 @@ public interface WidgetRepository extends Repository<Widget> {
     void deleteWidgetRating(String widgetId, WidgetRating rating);
 
     /**
-     * Tries to find a {@link org.apache.rave.portal.model.WidgetRating} by the id's of a Widget and USer
+     * Tries to find a {@link org.apache.rave.model.WidgetRating} by the id's of a Widget and USer
      *
      * @param widgetId unique identifier of a Widget
      * @param userId   unique identifier of a User
-     * @return {@link org.apache.rave.portal.model.WidgetRating} if it exists, otherwise {@literal null}
+     * @return {@link org.apache.rave.model.WidgetRating} if it exists, otherwise {@literal null}
      */
     WidgetRating getWidgetRatingsByWidgetIdAndUserId(String widgetId, String userId);
 

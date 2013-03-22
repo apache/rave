@@ -21,7 +21,7 @@ package org.apache.rave.opensocial.service;
 
 import com.google.common.collect.Lists;
 import org.apache.rave.opensocial.service.impl.DefaultActivityStreamsService;
-import org.apache.rave.portal.model.ActivityStreamsEntry;
+import org.apache.rave.model.ActivityStreamsEntry;
 import org.apache.rave.portal.model.impl.ActivityStreamsEntryImpl;
 import org.apache.rave.portal.model.impl.ActivityStreamsMediaLinkImpl;
 import org.apache.rave.portal.model.impl.ActivityStreamsObjectImpl;

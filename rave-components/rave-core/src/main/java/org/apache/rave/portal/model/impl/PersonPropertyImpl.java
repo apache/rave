@@ -18,7 +18,7 @@
  */
 package org.apache.rave.portal.model.impl;
 
-import org.apache.rave.portal.model.PersonProperty;
+import org.apache.rave.model.PersonProperty;
 
 /** **/
 public class PersonPropertyImpl implements PersonProperty {

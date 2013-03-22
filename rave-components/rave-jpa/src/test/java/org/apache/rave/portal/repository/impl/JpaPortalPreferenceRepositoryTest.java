@@ -20,7 +20,7 @@
 package org.apache.rave.portal.repository.impl;
 
 import org.apache.rave.portal.model.JpaPortalPreference;
-import org.apache.rave.portal.model.PortalPreference;
+import org.apache.rave.model.PortalPreference;
 import org.apache.rave.portal.repository.PortalPreferenceRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;

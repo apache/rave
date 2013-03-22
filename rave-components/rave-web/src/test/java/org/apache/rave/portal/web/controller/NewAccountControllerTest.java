@@ -27,7 +27,7 @@ import static org.junit.Assert.assertThat;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.rave.portal.model.User;
+import org.apache.rave.model.User;
 import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.service.CaptchaService;
 import org.apache.rave.portal.service.NewAccountService;
@@ -127,7 +127,7 @@ public class NewAccountControllerTest {
 		final String username = "canonical"; //specified username already exists in database
 		final String password = "password";
 		final String confirmPassword = password;
-		final User existingUser = new UserImpl();
+		final org.apache.rave.model.User existingUser = new UserImpl();
 		List<ObjectError> errorList = new ArrayList<ObjectError>();
 		final ObjectError error = new ObjectError("username.exists", "Username already exists");
 

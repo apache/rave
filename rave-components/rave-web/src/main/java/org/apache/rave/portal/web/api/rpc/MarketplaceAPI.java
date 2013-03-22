@@ -18,7 +18,7 @@
  */
 package org.apache.rave.portal.web.api.rpc;
 
-import org.apache.rave.portal.model.Widget;
+import org.apache.rave.model.Widget;
 import org.apache.rave.portal.service.WidgetMarketplaceService;
 import org.apache.rave.portal.service.WidgetService;
 import org.apache.rave.portal.web.api.rpc.model.RpcOperation;

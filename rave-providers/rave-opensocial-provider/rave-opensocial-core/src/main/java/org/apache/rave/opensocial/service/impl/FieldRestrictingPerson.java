@@ -20,7 +20,8 @@
 package org.apache.rave.opensocial.service.impl;
 
 import org.apache.rave.exception.NotSupportedException;
-import org.apache.rave.portal.model.PersonProperty;
+import org.apache.rave.model.Person;
+import org.apache.rave.model.PersonProperty;
 import org.apache.rave.portal.model.util.ModelUtils;
 import org.apache.rave.util.CollectionUtils;
 import org.apache.shindig.protocol.model.Enum;
@@ -56,7 +57,7 @@ import java.util.Set;
 import static org.apache.rave.util.CollectionUtils.getSingleValue;
 
 /**
- * Wraps a {@link org.apache.rave.portal.model.Person} model object and returns values only if
+ * Wraps a {@link org.apache.rave.model.Person} model object and returns values only if
  * the field set contains the requested field
  * <p/>
  * Usage of this wrapper is made possible by Shindig's use of a getter based serialization model
@@ -66,14 +67,14 @@ import static org.apache.rave.util.CollectionUtils.getSingleValue;
  */
 public class FieldRestrictingPerson implements org.apache.shindig.social.opensocial.model.Person, Serializable {
 
-    private org.apache.rave.portal.model.Person internal;
+    private Person internal;
     private Set<String> fields;
     private Map<String, ?> appData;
     private boolean isOwner;
     private boolean isViewer;
     private Map<String, List<PersonProperty>> propertyMap;
 
-    public FieldRestrictingPerson(org.apache.rave.portal.model.Person internal, Set<String> fields) {
+    public FieldRestrictingPerson(Person internal, Set<String> fields) {
         this.internal = internal;
         this.fields = fields;
         this.propertyMap = internal != null && internal.getProperties() != null ?
@@ -230,7 +231,7 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
     public Address getCurrentLocation() {
         String qualifier = getSingleValueFromProperties(Field.CURRENT_LOCATION);
         if (qualifier != null) {
-            for (org.apache.rave.portal.model.Address address : internal.getAddresses()) {
+            for (org.apache.rave.model.Address address : internal.getAddresses()) {
                 if (qualifier.equals(address.getQualifier())) {
                     return convertAddress(address);
                 }
@@ -852,17 +853,17 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
         return new UrlImpl(property.getValue(), property.getExtendedValue(), property.getQualifier());
     }
 
-    private List<Address> convertAddresses(List<org.apache.rave.portal.model.Address> addresses) {
+    private List<Address> convertAddresses(List<org.apache.rave.model.Address> addresses) {
         List<Address> converted = new ArrayList<Address>();
         if (addresses != null) {
-            for (org.apache.rave.portal.model.Address address : addresses) {
+            for (org.apache.rave.model.Address address : addresses) {
                 converted.add(convertAddress(address));
             }
         }
         return converted;
     }
 
-    private Address convertAddress(org.apache.rave.portal.model.Address address) {
+    private Address convertAddress(org.apache.rave.model.Address address) {
         Address converted = new AddressImpl(address.getFormatted());
         converted.setCountry(address.getCountry());
         converted.setLatitude(address.getLatitude());
@@ -910,17 +911,17 @@ public class FieldRestrictingPerson implements org.apache.shindig.social.opensoc
         return account;
     }
 
-    private List<Organization> convertOrganizations(List<org.apache.rave.portal.model.Organization> organizations) {
+    private List<Organization> convertOrganizations(List<org.apache.rave.model.Organization> organizations) {
         List<Organization> converted = new ArrayList<Organization>();
         if (organizations != null) {
-            for (org.apache.rave.portal.model.Organization org : organizations) {
+            for (org.apache.rave.model.Organization org : organizations) {
                 converted.add(convertOrganization(org));
             }
         }
         return converted;
     }
 
-    private Organization convertOrganization(org.apache.rave.portal.model.Organization org) {
+    private Organization convertOrganization(org.apache.rave.model.Organization org) {
         Organization converted = new org.apache.shindig.social.core.model.OrganizationImpl();
         converted.setAddress(convertAddress(org.getAddress()));
         converted.setDescription(org.getDescription());

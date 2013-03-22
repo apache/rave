@@ -21,7 +21,8 @@ package org.apache.rave.portal.web.security;
 
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.rave.portal.model.User;
+import org.apache.rave.model.User;
+import org.apache.rave.model.User;
 import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.service.NewAccountService;
 import org.apache.rave.portal.service.UserService;

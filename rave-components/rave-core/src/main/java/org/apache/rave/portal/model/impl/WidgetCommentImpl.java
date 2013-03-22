@@ -19,7 +19,7 @@
 package org.apache.rave.portal.model.impl;
 
 
-import org.apache.rave.portal.model.*;
+import org.apache.rave.model.WidgetComment;
 
 import java.util.Date;
 

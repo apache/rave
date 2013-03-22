@@ -18,6 +18,10 @@
  */
 package org.apache.rave.portal.model;
 
+import org.apache.rave.model.Authority;
+import org.apache.rave.model.PageLayout;
+import org.apache.rave.model.Person;
+import org.apache.rave.model.User;
 import org.apache.rave.portal.model.conversion.JpaConverter;
 import org.apache.rave.portal.model.impl.PersonImpl;
 import org.apache.rave.util.CollectionUtils;

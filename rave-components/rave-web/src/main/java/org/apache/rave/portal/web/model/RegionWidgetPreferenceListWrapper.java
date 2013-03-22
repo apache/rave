@@ -19,7 +19,7 @@
 
 package org.apache.rave.portal.web.model;
 
-import org.apache.rave.portal.model.RegionWidgetPreference;
+import org.apache.rave.model.RegionWidgetPreference;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;

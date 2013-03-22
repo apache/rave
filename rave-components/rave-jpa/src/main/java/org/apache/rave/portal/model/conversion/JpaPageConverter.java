@@ -20,8 +20,8 @@ package org.apache.rave.portal.model.conversion;
 
 import org.apache.rave.model.ModelConverter;
 import org.apache.rave.portal.model.JpaPage;
-import org.apache.rave.portal.model.Page;
-import org.apache.rave.portal.model.PageUser;
+import org.apache.rave.model.Page;
+import org.apache.rave.model.PageUser;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;

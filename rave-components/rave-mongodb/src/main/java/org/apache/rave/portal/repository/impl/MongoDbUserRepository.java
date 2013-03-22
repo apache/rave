@@ -21,7 +21,7 @@ package org.apache.rave.portal.repository.impl;
 
 import com.google.common.collect.Lists;
 import org.apache.rave.portal.model.MongoDbUser;
-import org.apache.rave.portal.model.User;
+import org.apache.rave.model.User;
 import org.apache.rave.portal.repository.MongoUserOperations;
 import org.apache.rave.portal.repository.StatisticsAggregator;
 import org.apache.rave.portal.repository.UserRepository;

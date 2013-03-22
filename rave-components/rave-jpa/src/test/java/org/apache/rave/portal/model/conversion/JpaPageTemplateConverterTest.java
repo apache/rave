@@ -18,7 +18,11 @@
  */
 package org.apache.rave.portal.model.conversion;
 
-import org.apache.rave.portal.model.*;
+import org.apache.rave.model.PageTemplate;
+import org.apache.rave.model.PageTemplateRegion;
+import org.apache.rave.model.PageType;
+import org.apache.rave.portal.model.JpaPageLayout;
+import org.apache.rave.portal.model.JpaPageTemplate;
 import org.apache.rave.portal.model.impl.PageLayoutImpl;
 import org.apache.rave.portal.model.impl.PageTemplateImpl;
 import org.junit.Before;

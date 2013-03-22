@@ -21,6 +21,7 @@ package org.apache.rave.portal.repository.impl;
 
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.rave.model.*;
 import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.model.conversion.JpaWidgetCommentConverter;
 import org.apache.rave.portal.model.conversion.JpaWidgetConverter;

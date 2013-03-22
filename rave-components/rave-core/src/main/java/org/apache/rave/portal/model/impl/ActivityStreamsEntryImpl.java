@@ -20,9 +20,9 @@
 package org.apache.rave.portal.model.impl;
 
 
-import org.apache.rave.portal.model.ActivityStreamsEntry;
-import org.apache.rave.portal.model.ActivityStreamsMediaLink;
-import org.apache.rave.portal.model.ActivityStreamsObject;
+import org.apache.rave.model.ActivityStreamsMediaLink;
+import org.apache.rave.model.ActivityStreamsObject;
+import org.apache.rave.model.ActivityStreamsEntry;
 
 import java.util.Date;
 import java.util.Map;

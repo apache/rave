@@ -20,7 +20,7 @@
 package org.apache.rave.portal.repository;
 
 import org.apache.rave.persistence.Repository;
-import org.apache.rave.portal.model.ActivityStreamsEntry;
+import org.apache.rave.model.ActivityStreamsEntry;
 
 import java.util.List;
 
@@ -28,7 +28,7 @@ public interface ActivityStreamsRepository extends Repository<ActivityStreamsEnt
 
     /**
      * Retrieves all ActivityStreamsEntry instances from the persistence layer
-     * @return a list of {@link ActivityStreamsEntry}
+     * @return a list of {@link org.apache.rave.model.ActivityStreamsEntry}
      */
     List<ActivityStreamsEntry> getAll();
 

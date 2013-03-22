@@ -23,7 +23,7 @@ import com.google.common.collect.Lists;
 import org.apache.rave.opensocial.repository.OpenSocialPersonRepository;
 import org.apache.rave.opensocial.service.impl.DefaultPersonService;
 import org.apache.rave.opensocial.service.impl.FieldRestrictingPerson;
-import org.apache.rave.portal.model.PersonProperty;
+import org.apache.rave.model.PersonProperty;
 import org.apache.rave.portal.model.impl.PersonImpl;
 import org.apache.rave.portal.model.impl.PersonPropertyImpl;
 import org.apache.shindig.auth.SecurityToken;
@@ -81,7 +81,7 @@ public class PersonServiceTest {
         UserId id = new UserId(UserId.Type.userId, ID_1);
         Set<String> fields = new HashSet<String>();
 
-        org.apache.rave.portal.model.Person dbPerson = getDbPerson(ID_1);
+        org.apache.rave.model.Person dbPerson = getDbPerson(ID_1);
         expect(repository.findByUsername(ID_1)).andReturn(dbPerson);
         replay(repository);
 
@@ -103,7 +103,7 @@ public class PersonServiceTest {
         fields.add(Person.Field.DISPLAY_NAME.toString());
         fields.add(Person.Field.ID.toString());
 
-        org.apache.rave.portal.model.Person dbPerson = getDbPerson();
+        org.apache.rave.model.Person dbPerson = getDbPerson();
         expect(repository.findByUsername(ID_1)).andReturn(dbPerson);
         replay(repository);
 
@@ -121,7 +121,7 @@ public class PersonServiceTest {
     public void getPerson_nullFields() throws ExecutionException, InterruptedException {
         UserId id = new UserId(UserId.Type.userId, ID_1);
 
-        org.apache.rave.portal.model.Person dbPerson = getDbPerson(ID_1);
+        org.apache.rave.model.Person dbPerson = getDbPerson(ID_1);
         expect(repository.findByUsername(ID_1)).andReturn(dbPerson);
         replay(repository);
 
@@ -142,7 +142,7 @@ public class PersonServiceTest {
         expect(token.getViewerId()).andReturn(ID_1);
         replay(token);
 
-        org.apache.rave.portal.model.Person dbPerson = getDbPerson(ID_1);
+        org.apache.rave.model.Person dbPerson = getDbPerson(ID_1);
         expect(repository.findByUsername(ID_1)).andReturn(dbPerson);
         replay(repository);
 
@@ -485,8 +485,8 @@ public class PersonServiceTest {
 //        Future<RestfulCollection<Person>> people = service.getPeople(ids, groupId, null, null, token);
 //    }
 
-    private List<org.apache.rave.portal.model.Person> getDbPersonList() {
-        return Lists.asList(getDbPerson(), new org.apache.rave.portal.model.Person[]{});
+    private List<org.apache.rave.model.Person> getDbPersonList() {
+        return Lists.asList(getDbPerson(), new org.apache.rave.model.Person[]{});
     }
 
     private Set<UserId> getUserIdSet() {
@@ -496,14 +496,14 @@ public class PersonServiceTest {
         return ids;
     }
 
-    private org.apache.rave.portal.model.Person getDbPerson() {
+    private org.apache.rave.model.Person getDbPerson() {
         PersonImpl dbPerson = new PersonImpl();
         dbPerson.setUsername(ID_1);
         dbPerson.setDisplayName(DISPLAY_NAME);
         return dbPerson;
     }
 
-    private org.apache.rave.portal.model.Person getDbPerson(String id) {
+    private org.apache.rave.model.Person getDbPerson(String id) {
         PersonImpl dbPerson = new PersonImpl();
         dbPerson.setUsername(id);
         dbPerson.setDisplayName(DISPLAY_NAME);

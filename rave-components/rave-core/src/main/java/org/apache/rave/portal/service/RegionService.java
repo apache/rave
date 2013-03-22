@@ -18,7 +18,7 @@
  */
 package org.apache.rave.portal.service;
 
-import org.apache.rave.portal.model.Region;
+import org.apache.rave.model.Region;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface RegionService {
@@ -27,6 +27,6 @@ public interface RegionService {
       * Register a new region
       * @param region the region object to register
       */
-     @PreAuthorize("hasPermission(#region.id, 'org.apache.rave.portal.model.Region', 'create')")
+     @PreAuthorize("hasPermission(#region.id, 'org.apache.rave.model.Region', 'create')")
      void registerNewRegion(Region region);
 }

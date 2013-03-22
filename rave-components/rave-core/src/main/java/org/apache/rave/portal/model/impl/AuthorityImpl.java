@@ -18,8 +18,8 @@
  */
 package org.apache.rave.portal.model.impl;
 
-import org.apache.rave.portal.model.Authority;
-import org.apache.rave.portal.model.User;
+import org.apache.rave.model.User;
+import org.apache.rave.model.Authority;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.ArrayList;

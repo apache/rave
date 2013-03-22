@@ -18,7 +18,7 @@
  */
 package org.apache.rave.portal.service;
 
-import org.apache.rave.portal.model.PageLayout;
+import org.apache.rave.model.PageLayout;
 
 import java.util.List;
 

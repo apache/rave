@@ -20,12 +20,12 @@
 package org.apache.rave.portal.repository;
 
 import org.apache.rave.persistence.Repository;
-import org.apache.rave.portal.model.PortalPreference;
+import org.apache.rave.model.PortalPreference;
 
 import java.util.List;
 
 /**
- * Provides persistence operations for the {@link org.apache.rave.portal.model.PortalPreference}
+ * Provides persistence operations for the {@link org.apache.rave.model.PortalPreference}
  */
 public interface PortalPreferenceRepository extends Repository<PortalPreference> {
 

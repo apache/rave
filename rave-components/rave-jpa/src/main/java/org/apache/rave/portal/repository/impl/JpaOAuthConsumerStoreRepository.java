@@ -20,7 +20,7 @@
 package org.apache.rave.portal.repository.impl;
 
 import org.apache.rave.portal.model.JpaOAuthConsumerStore;
-import org.apache.rave.portal.model.OAuthConsumerStore;
+import org.apache.rave.model.OAuthConsumerStore;
 import org.apache.rave.portal.model.conversion.JpaOAuthConsumerStoreConverter;
 import org.apache.rave.portal.repository.OAuthConsumerStoreRepository;
 import org.springframework.beans.factory.annotation.Autowired;

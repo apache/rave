@@ -19,7 +19,7 @@
 
 package org.apache.rave.portal.repository.impl;
 
-import org.apache.rave.portal.model.Category;
+import org.apache.rave.model.Category;
 import org.apache.rave.portal.model.JpaCategory;
 import org.apache.rave.portal.model.conversion.JpaCategoryConverter;
 import org.apache.rave.portal.repository.CategoryRepository;

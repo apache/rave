@@ -19,6 +19,10 @@
 
 package org.apache.rave.portal.model;
 
+import org.apache.rave.model.Address;
+import org.apache.rave.model.Organization;
+import org.apache.rave.model.Person;
+import org.apache.rave.model.PersonProperty;
 import org.apache.rave.portal.model.conversion.ConvertingListProxyFactory;
 
 import javax.persistence.*;

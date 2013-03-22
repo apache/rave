@@ -18,7 +18,10 @@
  */
 package org.apache.rave.portal.security.impl;
 
-import org.apache.rave.portal.model.*;
+import org.apache.rave.model.Page;
+import org.apache.rave.model.PageUser;
+import org.apache.rave.model.Region;
+import org.apache.rave.model.User;
 import org.apache.rave.portal.repository.RegionRepository;
 import org.apache.rave.portal.repository.UserRepository;
 import org.slf4j.Logger;

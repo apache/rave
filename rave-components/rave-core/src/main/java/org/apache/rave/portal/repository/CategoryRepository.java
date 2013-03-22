@@ -16,7 +16,7 @@
 package org.apache.rave.portal.repository;
 
 import org.apache.rave.persistence.Repository;
-import org.apache.rave.portal.model.Category;
+import org.apache.rave.model.Category;
 import java.util.List;
 
 public interface CategoryRepository extends Repository<Category> {

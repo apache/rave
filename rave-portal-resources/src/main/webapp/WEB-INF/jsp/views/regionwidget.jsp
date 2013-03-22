@@ -20,6 +20,6 @@
 <%@ page language="java" trimDirectiveWhitespaces="true" %>
 <%@ include file="/WEB-INF/jsp/includes/taglibs.jsp" %>
 <fmt:setBundle basename="messages"/>
-<%--@elvariable id="regionWidget" type="org.apache.rave.portal.model.RegionWidget"--%>
+<%--@elvariable id="regionWidget" type="org.apache.rave.model.RegionWidget"--%>
 <rave:region_widget regionWidget="${regionWidget}" />
 <portal:render-script location="${'AFTER_RAVE'}" />

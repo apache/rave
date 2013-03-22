@@ -19,7 +19,7 @@
 package org.apache.rave.portal.model.conversion;
 
 import org.apache.rave.portal.model.JpaWidgetComment;
-import org.apache.rave.portal.model.WidgetComment;
+import org.apache.rave.model.WidgetComment;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;

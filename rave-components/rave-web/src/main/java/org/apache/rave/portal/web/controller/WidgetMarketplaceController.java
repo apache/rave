@@ -18,8 +18,8 @@
  */
 package org.apache.rave.portal.web.controller;
 
-import org.apache.rave.portal.model.PortalPreference;
-import org.apache.rave.portal.model.User;
+import org.apache.rave.model.PortalPreference;
+import org.apache.rave.model.User;
 import org.apache.rave.portal.service.PortalPreferenceService;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.portal.service.WidgetMarketplaceService;

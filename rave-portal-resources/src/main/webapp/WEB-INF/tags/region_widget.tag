@@ -24,13 +24,13 @@ Template for rendering a RegionWidget including wrapper chrome, toolbars, menus,
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="portal" uri="http://www.apache.org/rave/tags" %>
-<%@ attribute name="regionWidget" type="org.apache.rave.portal.model.RegionWidget" required="true" description="The regionWidget object" %>
+<%@ attribute name="regionWidget" type="org.apache.rave.model.RegionWidget" required="true" description="The regionWidget object" %>
 
 <portal:widget var="widget" id="${regionWidget.widgetId}" />
 <c:set var="isLocked" value="${regionWidget.locked}" />
 <c:set var="isHideChrome" value="${regionWidget.hideChrome}" />
 <fmt:setBundle basename="messages"/>
-<%--@elvariable id="regionWidget" type="org.apache.rave.portal.model.RegionWidget"--%>
+<%--@elvariable id="regionWidget" type="org.apache.rave.model.RegionWidget"--%>
 <div class="widget-wrapper<c:if test="${isLocked}"> widget-wrapper-locked</c:if><c:if test="${isHideChrome}"> widget-wrapper-hidechrome</c:if>" id="widget-${regionWidget.id}-wrapper">
 
     <c:if test="${!isHideChrome}">

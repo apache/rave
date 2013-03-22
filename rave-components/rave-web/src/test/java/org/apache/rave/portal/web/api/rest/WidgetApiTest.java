@@ -19,7 +19,7 @@
 
 package org.apache.rave.portal.web.api.rest;
 
-import org.apache.rave.portal.model.*;
+import org.apache.rave.model.*;
 import org.apache.rave.portal.model.impl.*;
 import org.apache.rave.portal.service.*;
 import org.junit.Before;

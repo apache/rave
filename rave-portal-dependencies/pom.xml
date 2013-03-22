@@ -141,6 +141,12 @@
             <artifactId>tiles-jsp</artifactId>
         </dependency>
 
+        <!-- CXF -->
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-bundle-jaxrs</artifactId>
+        </dependency>
+
     </dependencies>
 
 </project>

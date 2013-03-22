@@ -40,6 +40,7 @@
         <module>rave-jpa</module>
         <module>rave-mongodb</module>
         <module>rave-web</module>
+        <module>rave-core-api</module>
     </modules>
 
 </project>

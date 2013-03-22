@@ -19,6 +19,7 @@
 
 package org.apache.rave.portal.model;
 
+import org.apache.rave.model.Widget;
 import org.apache.rave.portal.repository.MongoWidgetOperations;
 import org.apache.rave.portal.repository.UserRepository;
 import org.junit.Before;

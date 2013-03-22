@@ -20,14 +20,13 @@
 package org.apache.rave.portal.model;
 
 import javax.persistence.*;
-import java.util.HashMap;
 import java.util.logging.Logger;
 import java.util.Date;
 
+import org.apache.rave.model.ActivityStreamsEntry;
+import org.apache.rave.model.ActivityStreamsMediaLink;
+import org.apache.rave.model.ActivityStreamsObject;
 import org.apache.rave.portal.model.conversion.JpaConverter;
-import org.apache.rave.portal.model.impl.ActivityStreamsEntryImpl;
-import org.apache.rave.portal.model.impl.ActivityStreamsMediaLinkImpl;
-import org.apache.rave.portal.model.impl.ActivityStreamsObjectImpl;
 
 
 @Entity

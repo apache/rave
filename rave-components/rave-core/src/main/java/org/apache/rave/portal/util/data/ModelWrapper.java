@@ -19,7 +19,7 @@
 
 package org.apache.rave.portal.util.data;
 
-import org.apache.rave.portal.model.*;
+import org.apache.rave.model.*;
 
 import java.util.List;
 

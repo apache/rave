@@ -18,9 +18,9 @@
  */
 package org.apache.rave.portal.model.impl;
 
-import org.apache.rave.portal.model.Region;
-import org.apache.rave.portal.model.RegionWidget;
-import org.apache.rave.portal.model.RegionWidgetPreference;
+import org.apache.rave.model.Region;
+import org.apache.rave.model.RegionWidget;
+import org.apache.rave.model.RegionWidgetPreference;
 import org.codehaus.jackson.annotate.JsonBackReference;
 
 import java.util.List;

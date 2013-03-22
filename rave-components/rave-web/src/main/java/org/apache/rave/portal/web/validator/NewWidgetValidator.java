@@ -19,14 +19,14 @@
 
 package org.apache.rave.portal.web.validator;
 
-import org.apache.rave.portal.model.Widget;
+import org.apache.rave.model.Widget;
 import org.apache.rave.portal.service.WidgetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 
 /**
- * Validator for adding a new {@link org.apache.rave.portal.model.Widget}
+ * Validator for adding a new {@link org.apache.rave.model.Widget}
  */
 @Component
 public class NewWidgetValidator extends WidgetValidator {

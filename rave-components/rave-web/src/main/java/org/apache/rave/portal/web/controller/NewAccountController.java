@@ -21,7 +21,7 @@ package org.apache.rave.portal.web.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.rave.portal.model.User;
+import org.apache.rave.model.User;
 import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.service.CaptchaService;
 import org.apache.rave.portal.service.NewAccountService;

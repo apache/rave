@@ -20,7 +20,7 @@
 package org.apache.rave.portal.repository.impl;
 
 import org.apache.rave.portal.model.MongoDbPage;
-import org.apache.rave.portal.model.Page;
+import org.apache.rave.model.Page;
 import org.apache.rave.portal.repository.MongoPageOperations;
 import org.springframework.stereotype.Component;
 

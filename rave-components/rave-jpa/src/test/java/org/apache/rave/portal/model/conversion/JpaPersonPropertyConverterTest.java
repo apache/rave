@@ -19,7 +19,7 @@
 package org.apache.rave.portal.model.conversion;
 
 import org.apache.rave.portal.model.JpaPersonProperty;
-import org.apache.rave.portal.model.PersonProperty;
+import org.apache.rave.model.PersonProperty;
 import org.apache.rave.portal.model.impl.PersonPropertyImpl;
 import org.junit.Before;
 import org.junit.Test;

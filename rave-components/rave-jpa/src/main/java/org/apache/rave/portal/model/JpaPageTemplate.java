@@ -19,6 +19,10 @@
 
 package org.apache.rave.portal.model;
 
+import org.apache.rave.model.PageLayout;
+import org.apache.rave.model.PageTemplate;
+import org.apache.rave.model.PageTemplateRegion;
+import org.apache.rave.model.PageType;
 import org.apache.rave.portal.model.conversion.ConvertingListProxyFactory;
 import org.apache.rave.portal.model.conversion.JpaConverter;
 

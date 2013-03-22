@@ -18,7 +18,7 @@
  */
 package org.apache.rave.portal.repository;
 
-import org.apache.rave.portal.model.Tag;
+import org.apache.rave.model.Tag;
 
 /**
  * Provides Mongo Model Template operations for Tags

@@ -21,7 +21,7 @@ package org.apache.rave.portal.util.data;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import org.apache.rave.portal.model.*;
+import org.apache.rave.model.*;
 import org.apache.rave.portal.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;

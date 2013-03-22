@@ -20,8 +20,8 @@
 package org.apache.rave.portal.web.renderer.model;
 
 
-import org.apache.rave.portal.model.RegionWidget;
-import org.apache.rave.portal.model.Widget;
+import org.apache.rave.model.RegionWidget;
+import org.apache.rave.model.Widget;
 
 public class RegionWidgetWrapper {
     private Widget widget;

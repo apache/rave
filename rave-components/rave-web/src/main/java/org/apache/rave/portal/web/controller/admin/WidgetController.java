@@ -19,10 +19,10 @@
 
 package org.apache.rave.portal.web.controller.admin;
 
-import org.apache.rave.portal.model.Category;
-import org.apache.rave.portal.model.PortalPreference;
-import org.apache.rave.portal.model.Widget;
-import org.apache.rave.portal.model.WidgetStatus;
+import org.apache.rave.model.Category;
+import org.apache.rave.model.PortalPreference;
+import org.apache.rave.model.Widget;
+import org.apache.rave.model.WidgetStatus;
 import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.service.CategoryService;
 import org.apache.rave.portal.service.PortalPreferenceService;
@@ -41,7 +41,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 
-import static org.apache.rave.portal.model.WidgetStatus.values;
+import static org.apache.rave.model.WidgetStatus.values;
 import static org.apache.rave.portal.web.controller.admin.AdminControllerUtil.*;
 
 /**

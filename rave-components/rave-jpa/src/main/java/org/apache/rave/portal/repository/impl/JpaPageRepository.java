@@ -19,6 +19,7 @@
 
 package org.apache.rave.portal.repository.impl;
 
+import org.apache.rave.model.*;
 import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.model.conversion.JpaPageConverter;
 import org.apache.rave.portal.repository.PageRepository;

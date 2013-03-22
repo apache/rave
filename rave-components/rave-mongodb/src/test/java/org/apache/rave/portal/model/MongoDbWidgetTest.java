@@ -19,6 +19,8 @@
 
 package org.apache.rave.portal.model;
 
+import org.apache.rave.model.Category;
+import org.apache.rave.model.Widget;
 import org.apache.rave.portal.model.impl.CategoryImpl;
 import org.apache.rave.portal.repository.CategoryRepository;
 import org.junit.Before;

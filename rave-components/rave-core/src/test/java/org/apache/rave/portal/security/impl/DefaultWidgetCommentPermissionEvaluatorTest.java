@@ -15,7 +15,7 @@
  */
 package org.apache.rave.portal.security.impl;
 
-import org.apache.rave.portal.model.WidgetComment;
+import org.apache.rave.model.WidgetComment;
 import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.model.impl.WidgetCommentImpl;
 import org.apache.rave.portal.repository.WidgetRepository;

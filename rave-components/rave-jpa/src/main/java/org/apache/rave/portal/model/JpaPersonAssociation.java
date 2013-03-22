@@ -18,6 +18,8 @@
  */
 package org.apache.rave.portal.model;
 
+import org.apache.rave.model.FriendRequestStatus;
+
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Basic;

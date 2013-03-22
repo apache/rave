@@ -19,8 +19,8 @@
 
 package org.apache.rave.portal.service.impl;
 
-import org.apache.rave.portal.model.Authority;
-import org.apache.rave.portal.model.User;
+import org.apache.rave.model.Authority;
+import org.apache.rave.model.User;
 import org.apache.rave.portal.model.impl.AuthorityImpl;
 import org.apache.rave.portal.model.impl.PageLayoutImpl;
 import org.apache.rave.portal.model.impl.UserImpl;

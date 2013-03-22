@@ -18,6 +18,9 @@
  */
 package org.apache.rave.portal.model;
 
+import org.apache.rave.model.Page;
+import org.apache.rave.model.Region;
+import org.apache.rave.model.RegionWidget;
 import org.apache.rave.portal.model.conversion.ConvertingListProxyFactory;
 import org.apache.rave.portal.model.conversion.JpaConverter;
 import org.codehaus.jackson.annotate.JsonBackReference;

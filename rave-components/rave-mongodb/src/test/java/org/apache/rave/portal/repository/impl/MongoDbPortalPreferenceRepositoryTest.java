@@ -20,7 +20,7 @@
 package org.apache.rave.portal.repository.impl;
 
 import org.apache.rave.portal.model.MongoDbPortalPreference;
-import org.apache.rave.portal.model.PortalPreference;
+import org.apache.rave.model.PortalPreference;
 import org.apache.rave.portal.model.conversion.HydratingConverterFactory;
 import org.apache.rave.portal.model.impl.PortalPreferenceImpl;
 import org.apache.rave.portal.repository.util.CollectionNames;

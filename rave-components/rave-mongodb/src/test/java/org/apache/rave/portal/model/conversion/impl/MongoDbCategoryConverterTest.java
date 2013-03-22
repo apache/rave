@@ -20,9 +20,9 @@
 package org.apache.rave.portal.model.conversion.impl;
 
 import com.google.common.collect.Lists;
-import org.apache.rave.portal.model.Category;
+import org.apache.rave.model.Category;
 import org.apache.rave.portal.model.MongoDbCategory;
-import org.apache.rave.portal.model.Widget;
+import org.apache.rave.model.Widget;
 import org.apache.rave.portal.model.impl.CategoryImpl;
 import org.apache.rave.portal.repository.MongoWidgetOperations;
 import org.junit.Before;

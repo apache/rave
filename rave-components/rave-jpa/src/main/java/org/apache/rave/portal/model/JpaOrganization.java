@@ -18,6 +18,8 @@
  */
 package org.apache.rave.portal.model;
 
+import org.apache.rave.model.Address;
+import org.apache.rave.model.Organization;
 import org.apache.rave.portal.model.conversion.JpaConverter;
 
 import javax.persistence.*;

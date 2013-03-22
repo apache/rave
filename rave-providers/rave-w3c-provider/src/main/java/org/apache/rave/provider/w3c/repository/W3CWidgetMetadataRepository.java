@@ -19,7 +19,7 @@
 
 package org.apache.rave.provider.w3c.repository;
 
-import org.apache.rave.portal.model.Widget;
+import org.apache.rave.model.Widget;
 
 public interface W3CWidgetMetadataRepository {
     /**

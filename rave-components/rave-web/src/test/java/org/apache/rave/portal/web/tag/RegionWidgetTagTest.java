@@ -19,8 +19,8 @@
 
 package org.apache.rave.portal.web.tag;
 
-import org.apache.rave.portal.model.Region;
-import org.apache.rave.portal.model.RegionWidget;
+import org.apache.rave.model.Region;
+import org.apache.rave.model.RegionWidget;
 import org.apache.rave.portal.model.impl.RegionImpl;
 import org.apache.rave.portal.model.impl.RegionWidgetImpl;
 import org.apache.rave.portal.model.impl.WidgetImpl;

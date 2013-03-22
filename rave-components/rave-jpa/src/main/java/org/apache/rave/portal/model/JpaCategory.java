@@ -15,6 +15,9 @@
  */
 package org.apache.rave.portal.model;
 
+import org.apache.rave.model.Category;
+import org.apache.rave.model.User;
+import org.apache.rave.model.Widget;
 import org.apache.rave.portal.model.conversion.ConvertingListProxyFactory;
 import org.codehaus.jackson.annotate.JsonIgnore;
 

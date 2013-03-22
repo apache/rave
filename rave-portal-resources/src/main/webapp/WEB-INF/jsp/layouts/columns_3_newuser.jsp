@@ -19,7 +19,7 @@
   --%>
 
 <fmt:setBundle basename="messages"/>
-<%--@elvariable id="page" type="org.apache.rave.portal.model.Page"--%>
+<%--@elvariable id="page" type="org.apache.rave.model.Page"--%>
 <div class="columns_3_newuser_static">
     <fmt:message key="page.layout.newuser.introtext"/>
 </div>

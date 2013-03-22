@@ -18,6 +18,8 @@
  */
 package org.apache.rave.portal.model;
 
+import org.apache.rave.model.WidgetRating;
+
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;

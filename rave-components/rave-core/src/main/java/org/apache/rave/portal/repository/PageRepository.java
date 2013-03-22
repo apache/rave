@@ -19,12 +19,12 @@
 package org.apache.rave.portal.repository;
 
 import org.apache.rave.persistence.Repository;
-import org.apache.rave.portal.model.*;
+import org.apache.rave.model.*;
 
 import java.util.List;
 
 /**
- * Provides persistence operations for the {@link org.apache.rave.portal.model.Page} class
+ * Provides persistence operations for the {@link org.apache.rave.model.Page} class
  */
 public interface PageRepository extends Repository<Page> {
     /**

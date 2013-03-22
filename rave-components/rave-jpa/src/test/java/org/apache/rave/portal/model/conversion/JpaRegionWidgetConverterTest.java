@@ -18,10 +18,12 @@
  */
 package org.apache.rave.portal.model.conversion;
 
-import org.apache.rave.portal.model.*;
+import org.apache.rave.model.RegionWidget;
+import org.apache.rave.model.RegionWidgetPreference;
+import org.apache.rave.portal.model.JpaRegion;
+import org.apache.rave.portal.model.JpaRegionWidget;
 import org.apache.rave.portal.model.impl.RegionImpl;
 import org.apache.rave.portal.model.impl.RegionWidgetImpl;
-import org.apache.rave.portal.model.impl.WidgetImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -19,6 +19,8 @@
 
 package org.apache.rave.portal.model;
 
+import org.apache.rave.model.PageLayout;
+
 import javax.persistence.*;
 import java.io.Serializable;
 

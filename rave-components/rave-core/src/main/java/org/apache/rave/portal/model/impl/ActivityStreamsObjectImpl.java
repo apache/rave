@@ -20,8 +20,8 @@
 package org.apache.rave.portal.model.impl;
 
 import com.google.common.collect.Lists;
-import org.apache.rave.portal.model.ActivityStreamsMediaLink;
-import org.apache.rave.portal.model.ActivityStreamsObject;
+import org.apache.rave.model.ActivityStreamsMediaLink;
+import org.apache.rave.model.ActivityStreamsObject;
 
 import java.util.Date;
 import java.util.List;

@@ -18,9 +18,8 @@
  */
 package org.apache.rave.portal.model.conversion;
 
-import org.apache.rave.model.ModelConverter;
 import org.apache.rave.portal.model.JpaWidgetRating;
-import org.apache.rave.portal.model.WidgetRating;
+import org.apache.rave.model.WidgetRating;
 import org.springframework.stereotype.Component;
 
 /**

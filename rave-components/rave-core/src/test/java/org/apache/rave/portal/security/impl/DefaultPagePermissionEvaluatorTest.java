@@ -19,8 +19,8 @@
 
 package org.apache.rave.portal.security.impl;
 
-import org.apache.rave.portal.model.Page;
-import org.apache.rave.portal.model.PageType;
+import org.apache.rave.model.Page;
+import org.apache.rave.model.PageType;
 import org.apache.rave.portal.model.impl.PageImpl;
 import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.repository.PageRepository;
@@ -417,7 +417,7 @@ public class DefaultPagePermissionEvaluatorTest {
 
     @Test
     public void testHasPermission_4args_update_isPageOwner_withRaveSecurityContextObject() {
-        RaveSecurityContext raveSecurityContext = new RaveSecurityContext(VALID_USER_ID, "org.apache.rave.portal.model.User");
+        RaveSecurityContext raveSecurityContext = new RaveSecurityContext(VALID_USER_ID, "org.apache.rave.model.User");
 
         expect(mockAuthentication.getPrincipal()).andReturn(user);
         replay(mockAuthentication);

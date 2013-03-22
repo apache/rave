@@ -20,8 +20,8 @@
 package org.apache.rave.portal.web.tag;
 
 import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.rave.portal.model.RegionWidget;
-import org.apache.rave.portal.model.Widget;
+import org.apache.rave.model.RegionWidget;
+import org.apache.rave.model.Widget;
 import org.apache.rave.portal.web.renderer.RenderScope;
 import org.apache.rave.portal.web.renderer.RenderService;
 import org.apache.rave.portal.web.renderer.ScriptLocation;

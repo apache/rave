@@ -19,8 +19,8 @@
 
 package org.apache.rave.portal.repository.impl;
 
-import org.apache.rave.portal.model.Page;
-import org.apache.rave.portal.model.Region;
+import org.apache.rave.model.Page;
+import org.apache.rave.model.Region;
 import org.apache.rave.portal.model.impl.RegionImpl;
 import org.apache.rave.portal.repository.MongoPageOperations;
 import org.apache.rave.portal.repository.RegionRepository;

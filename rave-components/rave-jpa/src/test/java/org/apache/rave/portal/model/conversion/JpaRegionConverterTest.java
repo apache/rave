@@ -18,8 +18,11 @@
  */
 package org.apache.rave.portal.model.conversion;
 
-import org.apache.rave.portal.model.*;
-import org.apache.rave.portal.model.impl.PageImpl;
+import org.apache.rave.model.Page;
+import org.apache.rave.model.Region;
+import org.apache.rave.model.RegionWidget;
+import org.apache.rave.portal.model.JpaPage;
+import org.apache.rave.portal.model.JpaRegion;
 import org.apache.rave.portal.model.impl.RegionImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;

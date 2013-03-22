@@ -21,7 +21,7 @@ package org.apache.rave.portal.repository.impl;
 
 
 import com.google.common.collect.Lists;
-import org.apache.rave.portal.model.ActivityStreamsEntry;
+import org.apache.rave.model.ActivityStreamsEntry;
 import org.apache.rave.portal.model.conversion.HydratingConverterFactory;
 import org.apache.rave.portal.model.impl.ActivityStreamsEntryImpl;
 import org.apache.rave.portal.repository.ActivityStreamsRepository;

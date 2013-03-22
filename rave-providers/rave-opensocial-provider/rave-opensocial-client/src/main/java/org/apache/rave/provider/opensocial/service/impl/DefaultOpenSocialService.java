@@ -20,10 +20,10 @@
 package org.apache.rave.provider.opensocial.service.impl;
 
 import org.apache.rave.exception.ResourceNotFoundException;
-import org.apache.rave.portal.model.Page;
-import org.apache.rave.portal.model.RegionWidget;
-import org.apache.rave.portal.model.Widget;
-import org.apache.rave.portal.model.WidgetStatus;
+import org.apache.rave.model.Page;
+import org.apache.rave.model.RegionWidget;
+import org.apache.rave.model.Widget;
+import org.apache.rave.model.WidgetStatus;
 import org.apache.rave.portal.model.impl.RegionImpl;
 import org.apache.rave.portal.model.impl.RegionWidgetImpl;
 import org.apache.rave.portal.service.PageService;

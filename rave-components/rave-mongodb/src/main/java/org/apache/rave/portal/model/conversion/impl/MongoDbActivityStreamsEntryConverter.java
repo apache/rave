@@ -20,9 +20,9 @@
 package org.apache.rave.portal.model.conversion.impl;
 
 import com.google.common.collect.Lists;
-import org.apache.rave.portal.model.ActivityStreamsEntry;
-import org.apache.rave.portal.model.ActivityStreamsMediaLink;
-import org.apache.rave.portal.model.ActivityStreamsObject;
+import org.apache.rave.model.ActivityStreamsEntry;
+import org.apache.rave.model.ActivityStreamsMediaLink;
+import org.apache.rave.model.ActivityStreamsObject;
 import org.apache.rave.portal.model.conversion.HydratingModelConverter;
 import org.apache.rave.portal.model.impl.ActivityStreamsEntryImpl;
 import org.apache.rave.portal.model.impl.ActivityStreamsMediaLinkImpl;

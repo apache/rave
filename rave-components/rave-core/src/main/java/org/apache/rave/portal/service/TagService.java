@@ -19,7 +19,7 @@
 
 package org.apache.rave.portal.service;
 
-import org.apache.rave.portal.model.Tag;
+import org.apache.rave.model.Tag;
 
 import javax.swing.text.html.parser.TagElement;
 import java.util.List;
@@ -27,26 +27,26 @@ import java.util.List;
 public interface TagService {
 
     /**
-     * @param id unique identifier of the {@link org.apache.rave.portal.model.Tag}
+     * @param id unique identifier of the {@link org.apache.rave.model.Tag}
      * @return Tag if it can be found, otherwise {@literal null}
      */
     Tag getTagById(String id);
 
 
     /**
-     * @return a {@link org.apache.rave.portal.model.util.SearchResult} with all {@link org.apache.rave.portal.model.Tag}'s
+     * @return a {@link org.apache.rave.portal.model.util.SearchResult} with all {@link org.apache.rave.model.Tag}'s
      */
     List<Tag> getAllTags();
 
 
     /**
-     * @param keyword unique keyword of the {@link org.apache.rave.portal.model.Tag}
+     * @param keyword unique keyword of the {@link org.apache.rave.model.Tag}
      * @return Tag if it can be found, otherwise {@literal null}
      */
     Tag getTagByKeyword(String keyword);
 
     /**
-     * @return a {@link org.apache.rave.portal.model.util.SearchResult} with all {@link org.apache.rave.portal.model.Tag}'s
+     * @return a {@link org.apache.rave.portal.model.util.SearchResult} with all {@link org.apache.rave.model.Tag}'s
      *         Not link to a widget
      */
     //List<Tag> getAvailableTagsByWidgetId(String widgetId);

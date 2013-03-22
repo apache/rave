@@ -17,8 +17,8 @@
  * under the License.
  */
 package org.apache.rave.portal.model.impl;
-import org.apache.rave.portal.model.Address;
-import org.apache.rave.portal.model.Organization;
+import org.apache.rave.model.Address;
+import org.apache.rave.model.Organization;
 
 import java.util.Date;
 

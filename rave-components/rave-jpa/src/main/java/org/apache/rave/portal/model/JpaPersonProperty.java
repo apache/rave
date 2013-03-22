@@ -18,6 +18,8 @@
  */
 package org.apache.rave.portal.model;
 
+import org.apache.rave.model.PersonProperty;
+
 import javax.persistence.*;
 
 /**

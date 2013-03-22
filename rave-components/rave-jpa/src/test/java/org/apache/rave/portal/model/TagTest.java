@@ -19,6 +19,7 @@
 
 package org.apache.rave.portal.model;
 
+import org.apache.rave.model.Tag;
 import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;

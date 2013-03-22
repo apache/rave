@@ -22,7 +22,7 @@
 
 package ${package};
 
-import org.apache.rave.portal.model.User;
+import org.apache.rave.model.User;
 import org.apache.rave.portal.repository.CategoryRepository;
 import org.apache.rave.portal.repository.PageRepository;
 import org.apache.rave.portal.repository.PageTemplateRepository;

@@ -19,7 +19,7 @@
 package org.apache.rave.portal.model.conversion;
 
 import org.apache.rave.portal.model.JpaPortalPreference;
-import org.apache.rave.portal.model.PortalPreference;
+import org.apache.rave.model.PortalPreference;
 import org.apache.rave.portal.model.impl.PortalPreferenceImpl;
 import org.junit.Before;
 import org.junit.Test;

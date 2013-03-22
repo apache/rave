@@ -18,6 +18,7 @@
  */
 package org.apache.rave.portal.model;
 
+import org.apache.rave.model.Authority;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;

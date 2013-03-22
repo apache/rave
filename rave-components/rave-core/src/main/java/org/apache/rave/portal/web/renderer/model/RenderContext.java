@@ -19,7 +19,7 @@
 
 package org.apache.rave.portal.web.renderer.model;
 
-import org.apache.rave.portal.model.User;
+import org.apache.rave.model.User;
 
 import java.util.Map;
 

@@ -19,6 +19,7 @@
 
 package org.apache.rave.portal.model;
 
+import org.apache.rave.model.FriendRequestStatus;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.equalTo;

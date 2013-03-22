@@ -18,9 +18,9 @@
  */
 package org.apache.rave.portal.security.impl;
 
-import org.apache.rave.portal.model.Page;
-import org.apache.rave.portal.model.Region;
-import org.apache.rave.portal.model.RegionWidget;
+import org.apache.rave.model.Page;
+import org.apache.rave.model.Region;
+import org.apache.rave.model.RegionWidget;
 import org.apache.rave.portal.model.impl.PageImpl;
 import org.apache.rave.portal.model.impl.RegionImpl;
 import org.apache.rave.portal.model.impl.RegionWidgetImpl;
@@ -308,7 +308,7 @@ public class DefaultRegionWidgetPermissionEvaluatorTest {
 
     @Test
     public void testHasPermission_4args_update_isRegionWidgetOwner_withRaveSecurityContextObject() {
-        RaveSecurityContext raveSecurityContext = new RaveSecurityContext(VALID_USER_ID, "org.apache.rave.portal.model.User");
+        RaveSecurityContext raveSecurityContext = new RaveSecurityContext(VALID_USER_ID, "org.apache.rave.model.User");
 
         expect(mockAuthentication.getPrincipal()).andReturn(user);
         replay(mockAuthentication);

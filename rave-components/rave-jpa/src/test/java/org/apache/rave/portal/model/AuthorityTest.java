@@ -19,6 +19,7 @@
 
 package org.apache.rave.portal.model;
 
+import org.apache.rave.model.Authority;
 import org.junit.Test;
 import org.springframework.security.core.GrantedAuthority;
 

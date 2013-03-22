@@ -18,7 +18,7 @@
  */
 package org.apache.rave.portal.web.controller;
 
-import org.apache.rave.portal.model.RegionWidget;
+import org.apache.rave.model.RegionWidget;
 import org.apache.rave.portal.service.RegionWidgetService;
 import org.apache.rave.portal.service.WidgetService;
 import org.apache.rave.portal.web.util.ModelKeys;

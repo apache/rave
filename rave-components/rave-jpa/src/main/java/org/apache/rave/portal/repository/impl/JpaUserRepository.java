@@ -20,7 +20,7 @@
 package org.apache.rave.portal.repository.impl;
 
 import org.apache.rave.portal.model.JpaUser;
-import org.apache.rave.portal.model.User;
+import org.apache.rave.model.User;
 import org.apache.rave.portal.model.conversion.JpaUserConverter;
 import org.apache.rave.portal.repository.UserRepository;
 import org.apache.rave.util.CollectionUtils;

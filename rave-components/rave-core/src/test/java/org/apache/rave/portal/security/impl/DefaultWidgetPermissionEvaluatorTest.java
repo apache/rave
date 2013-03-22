@@ -18,9 +18,9 @@
  */
 package org.apache.rave.portal.security.impl;
 
-import org.apache.rave.portal.model.Page;
-import org.apache.rave.portal.model.Widget;
-import org.apache.rave.portal.model.WidgetStatus;
+import org.apache.rave.model.Page;
+import org.apache.rave.model.Widget;
+import org.apache.rave.model.WidgetStatus;
 import org.apache.rave.portal.model.impl.PageImpl;
 import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.model.impl.WidgetImpl;
@@ -321,7 +321,7 @@ public class DefaultWidgetPermissionEvaluatorTest {
 
     @Test
     public void testHasPermission_4args_update_isWidgetOwner_withRaveSecurityContextObject() {
-        RaveSecurityContext raveSecurityContext = new RaveSecurityContext(VALID_USER_ID, "org.apache.rave.portal.model.User");
+        RaveSecurityContext raveSecurityContext = new RaveSecurityContext(VALID_USER_ID, "org.apache.rave.model.User");
 
         expect(mockAuthentication.getPrincipal()).andReturn(user);
         replay(mockAuthentication);

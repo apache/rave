@@ -20,6 +20,7 @@
 package org.apache.rave.portal.repository.impl;
 
 import com.google.common.collect.Lists;
+import org.apache.rave.model.*;
 import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.model.impl.PageImpl;
 import org.apache.rave.portal.model.impl.PageUserImpl;

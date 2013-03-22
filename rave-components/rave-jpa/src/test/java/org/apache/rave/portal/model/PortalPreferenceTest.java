@@ -20,6 +20,7 @@
 package org.apache.rave.portal.model;
 
 import org.apache.rave.exception.NotSupportedException;
+import org.apache.rave.model.PortalPreference;
 import org.junit.Test;
 
 import java.util.ArrayList;

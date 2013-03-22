@@ -18,7 +18,7 @@
  */
 package org.apache.rave.portal.model.conversion;
 
-import org.apache.rave.portal.model.ActivityStreamsEntry;
+import org.apache.rave.model.ActivityStreamsEntry;
 import org.apache.rave.portal.model.JpaActivityStreamsEntry;
 import org.apache.rave.portal.model.impl.ActivityStreamsEntryImpl;
 import org.junit.Before;

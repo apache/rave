@@ -19,8 +19,8 @@
 
 package org.apache.rave.portal.service;
 
-import org.apache.rave.portal.model.Category;
-import org.apache.rave.portal.model.User;
+import org.apache.rave.model.Category;
+import org.apache.rave.model.User;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -30,14 +30,14 @@ import java.util.List;
 public interface CategoryService {
 
     /**
-     * @param id unique identifier of the {@link org.apache.rave.portal.model.Category}
+     * @param id unique identifier of the {@link org.apache.rave.model.Category}
      * @return Category if it can be found, otherwise {@literal null}
      */
     @PostAuthorize("returnObject == null or hasPermission(returnObject, 'read')")
     Category get(String id);
 
     /**
-     * @return a {@link java.util.List} with all {@link org.apache.rave.portal.model.Category}'s
+     * @return a {@link java.util.List} with all {@link org.apache.rave.model.Category}'s
      */
     @PostFilter("hasPermission(filterObject, 'read')")
     List<Category> getAll();
@@ -59,7 +59,7 @@ public interface CategoryService {
      * @param lastModifiedUser the user performing the update
      * @return the updated Category object
      */
-    @PreAuthorize("hasPermission(#categoryId, 'org.apache.rave.portal.model.Category', 'update')")
+    @PreAuthorize("hasPermission(#categoryId, 'org.apache.rave.model.Category', 'update')")
     Category update(String categoryId, String text, User lastModifiedUser);
 
     /**
@@ -67,6 +67,6 @@ public interface CategoryService {
      *
      * @param category
      */
-    @PreAuthorize("hasPermission(#category.id, 'org.apache.rave.portal.model.Category', 'delete')")
+    @PreAuthorize("hasPermission(#category.id, 'org.apache.rave.model.Category', 'delete')")
     void delete(Category category);
 }

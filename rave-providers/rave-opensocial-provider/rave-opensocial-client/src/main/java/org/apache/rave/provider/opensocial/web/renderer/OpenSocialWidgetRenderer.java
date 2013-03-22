@@ -20,7 +20,7 @@
 package org.apache.rave.provider.opensocial.web.renderer;
 
 import org.apache.rave.exception.NotSupportedException;
-import org.apache.rave.portal.model.*;
+import org.apache.rave.model.*;
 import org.apache.rave.portal.web.renderer.RegionWidgetRenderer;
 import org.apache.rave.portal.web.renderer.RenderScope;
 import org.apache.rave.portal.web.renderer.ScriptLocation;
@@ -84,7 +84,7 @@ public class OpenSocialWidgetRenderer implements RegionWidgetRenderer {
     }
 
     /**
-     * Renders a {@link org.apache.rave.portal.model.RegionWidget} as HTML markup
+     * Renders a {@link org.apache.rave.model.RegionWidget} as HTML markup
      *
      *
      * @param item RegionWidget to render

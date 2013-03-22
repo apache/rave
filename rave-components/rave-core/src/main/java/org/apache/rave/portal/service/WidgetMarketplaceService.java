@@ -21,7 +21,7 @@ package org.apache.rave.portal.service;
 
 import java.util.List;
 
-import org.apache.rave.portal.model.Widget;
+import org.apache.rave.model.Widget;
 import org.apache.rave.portal.model.util.SearchResult;
 
 /**

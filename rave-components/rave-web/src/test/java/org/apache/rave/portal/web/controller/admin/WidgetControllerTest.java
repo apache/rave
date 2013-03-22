@@ -19,8 +19,8 @@
 
 package org.apache.rave.portal.web.controller.admin;
 
-import org.apache.rave.portal.model.Category;
-import org.apache.rave.portal.model.Widget;
+import org.apache.rave.model.Category;
+import org.apache.rave.model.Widget;
 import org.apache.rave.portal.model.impl.CategoryImpl;
 import org.apache.rave.portal.model.impl.WidgetImpl;
 import org.apache.rave.portal.model.util.SearchResult;

@@ -19,6 +19,7 @@
 
 package org.apache.rave.portal.model;
 
+import org.apache.rave.model.PageLayout;
 import org.junit.Before;
 import org.junit.Test;
 

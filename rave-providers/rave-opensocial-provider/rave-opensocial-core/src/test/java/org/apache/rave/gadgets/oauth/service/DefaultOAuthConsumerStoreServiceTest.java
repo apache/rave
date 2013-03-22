@@ -19,7 +19,7 @@
 
 package org.apache.rave.gadgets.oauth.service;
 
-import org.apache.rave.portal.model.OAuthConsumerStore;
+import org.apache.rave.model.OAuthConsumerStore;
 import org.apache.rave.portal.model.impl.OAuthConsumerStoreImpl;
 import org.apache.rave.portal.repository.OAuthConsumerStoreRepository;
 import org.apache.rave.gadgets.oauth.service.impl.DefaultOAuthConsumerStoreService;

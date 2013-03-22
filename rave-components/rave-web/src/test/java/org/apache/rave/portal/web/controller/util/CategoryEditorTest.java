@@ -18,7 +18,7 @@
  */
 package org.apache.rave.portal.web.controller.util;
 
-import org.apache.rave.portal.model.Category;
+import org.apache.rave.model.Category;
 import org.apache.rave.portal.model.impl.CategoryImpl;
 import org.apache.rave.portal.service.CategoryService;
 import org.junit.Before;

@@ -20,14 +20,14 @@
 package org.apache.rave.portal.service.impl;
 
 import com.google.common.collect.Lists;
-import org.apache.rave.portal.model.Page;
-import org.apache.rave.portal.model.PageLayout;
-import org.apache.rave.portal.model.PageTemplate;
-import org.apache.rave.portal.model.PageType;
-import org.apache.rave.portal.model.PageUser;
-import org.apache.rave.portal.model.Region;
-import org.apache.rave.portal.model.RegionWidget;
-import org.apache.rave.portal.model.Widget;
+import org.apache.rave.model.Page;
+import org.apache.rave.model.PageLayout;
+import org.apache.rave.model.PageTemplate;
+import org.apache.rave.model.PageType;
+import org.apache.rave.model.PageUser;
+import org.apache.rave.model.Region;
+import org.apache.rave.model.RegionWidget;
+import org.apache.rave.model.Widget;
 import org.apache.rave.portal.model.impl.PageImpl;
 import org.apache.rave.portal.model.impl.PageLayoutImpl;
 import org.apache.rave.portal.model.impl.PageTemplateImpl;

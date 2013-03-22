@@ -19,7 +19,7 @@
 
 package org.apache.rave.portal.web.controller.admin;
 
-import org.apache.rave.portal.model.PortalPreference;
+import org.apache.rave.model.PortalPreference;
 import org.apache.rave.portal.service.PortalPreferenceService;
 import org.apache.rave.portal.web.model.PortalPreferenceForm;
 import org.apache.rave.portal.web.util.ModelKeys;

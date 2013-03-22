@@ -19,6 +19,7 @@
 
 package org.apache.rave.portal.model;
 
+import org.apache.rave.model.PageLayout;
 import org.apache.rave.portal.model.impl.PageLayoutImpl;
 import org.apache.rave.portal.repository.PageLayoutRepository;
 import org.junit.Before;

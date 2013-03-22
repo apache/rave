@@ -18,8 +18,8 @@
  */
 package org.apache.rave.portal.web.controller.util;
 
-import org.apache.rave.portal.model.Authority;
-import org.apache.rave.portal.model.User;
+import org.apache.rave.model.Authority;
+import org.apache.rave.model.User;
 import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.web.model.UserForm;
 import org.apache.rave.util.CollectionUtils;

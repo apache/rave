@@ -19,7 +19,7 @@
 package org.apache.rave.portal.model.conversion;
 
 import org.apache.rave.portal.model.JpaWidgetComment;
-import org.apache.rave.portal.model.WidgetComment;
+import org.apache.rave.model.WidgetComment;
 import org.apache.rave.portal.model.impl.WidgetCommentImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -28,13 +28,11 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlValue;
 
-import org.apache.rave.portal.model.Page;
-import org.apache.rave.portal.model.User;
-import org.apache.rave.portal.model.Widget;
+import org.apache.rave.model.Page;
+import org.apache.rave.model.User;
+import org.apache.rave.model.Widget;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.portal.service.WidgetService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 /**
  * This is a jaxb page export format for the OMDL specification

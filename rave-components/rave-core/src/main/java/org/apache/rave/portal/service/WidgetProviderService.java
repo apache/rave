@@ -18,8 +18,8 @@
  */
 package org.apache.rave.portal.service;
 
-import org.apache.rave.portal.model.User;
-import org.apache.rave.portal.model.Widget;
+import org.apache.rave.model.User;
+import org.apache.rave.model.Widget;
 
 public interface WidgetProviderService {
     

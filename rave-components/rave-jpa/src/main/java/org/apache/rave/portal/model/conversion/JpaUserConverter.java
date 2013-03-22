@@ -19,9 +19,9 @@
 package org.apache.rave.portal.model.conversion;
 
 import org.apache.rave.model.ModelConverter;
-import org.apache.rave.portal.model.Authority;
+import org.apache.rave.model.Authority;
 import org.apache.rave.portal.model.JpaUser;
-import org.apache.rave.portal.model.User;
+import org.apache.rave.model.User;
 import org.apache.rave.portal.model.impl.AuthorityImpl;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
@@ -30,7 +30,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 /**
- * Converts from a {@link org.apache.rave.portal.model.User} to a {@link org.apache.rave.portal.model.JpaUser}
+ * Converts from a {@link org.apache.rave.model.User} to a {@link org.apache.rave.portal.model.JpaUser}
  */
 @Component
 public class JpaUserConverter implements ModelConverter<User, JpaUser> {

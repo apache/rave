@@ -18,8 +18,8 @@
  */
 package org.apache.rave.portal.security.impl;
 
-import org.apache.rave.portal.model.Category;
-import org.apache.rave.portal.model.Widget;
+import org.apache.rave.model.Category;
+import org.apache.rave.model.Widget;
 import org.apache.rave.portal.model.impl.CategoryImpl;
 import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.repository.CategoryRepository;
@@ -210,7 +210,7 @@ public class DefaultCategoryPermissionEvaluatorTest {
 
     @Test
     public void testHasPermission_4args_update_withRaveSecurityContextObject() {
-        RaveSecurityContext raveSecurityContext = new RaveSecurityContext(VALID_USER_ID, "org.apache.rave.portal.model.User");
+        RaveSecurityContext raveSecurityContext = new RaveSecurityContext(VALID_USER_ID, "org.apache.rave.model.User");
 
         expect(mockAuthentication.getPrincipal()).andReturn(user);
         replay(mockAuthentication);

@@ -19,7 +19,7 @@
 
 package org.apache.rave.portal.web.validator;
 
-import org.apache.rave.portal.model.User;
+import org.apache.rave.model.User;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.portal.web.model.UserForm;
 import org.junit.Before;
@@ -49,7 +49,7 @@ public class NewAccountValidatorTest {
 
     @Test
     public void testSupports() throws Exception {
-        assertTrue("Can validate org.apache.rave.portal.model.User",
+        assertTrue("Can validate org.apache.rave.model.User",
                 newAccountValidator.supports(UserForm.class));
     }
 

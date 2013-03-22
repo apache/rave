@@ -19,6 +19,10 @@
 
 package org.apache.rave.portal.model;
 
+import org.apache.rave.model.WidgetComment;
+import org.apache.rave.model.WidgetRating;
+import org.apache.rave.model.WidgetStatus;
+import org.apache.rave.model.WidgetTag;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;

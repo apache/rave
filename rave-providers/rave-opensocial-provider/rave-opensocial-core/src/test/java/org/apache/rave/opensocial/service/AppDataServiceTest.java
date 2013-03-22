@@ -19,9 +19,9 @@
 
 package org.apache.rave.opensocial.service;
 
-import org.apache.rave.portal.model.ApplicationData;
+import org.apache.rave.model.ApplicationData;
 import org.apache.rave.portal.model.impl.ApplicationDataImpl;
-import org.apache.rave.portal.model.Person;
+import org.apache.rave.model.Person;
 import org.apache.rave.portal.repository.ApplicationDataRepository;
 import org.apache.rave.opensocial.service.impl.DefaultAppDataService;
 import org.apache.rave.portal.model.impl.PersonImpl;
@@ -63,7 +63,7 @@ public class AppDataServiceTest {
     private Map<String, String> validApplicationDataMap;
     private ApplicationData validApplicationData;
 
-    private org.apache.rave.portal.model.Person validPerson;
+    private Person validPerson;
 
     @Before
     public void setup() {
@@ -392,7 +392,7 @@ public class AppDataServiceTest {
 
     private List<String> convertPeopleToUserIds(List<Person> people) {
         List<String> ids = new ArrayList<String>(people.size());
-        for (org.apache.rave.portal.model.Person person : people) {
+        for (Person person : people) {
             ids.add(String.valueOf(person.getUsername()));
         }
         return ids;

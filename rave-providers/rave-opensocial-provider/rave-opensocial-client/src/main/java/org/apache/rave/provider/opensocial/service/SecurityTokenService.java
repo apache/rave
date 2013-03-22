@@ -19,8 +19,8 @@
 
 package org.apache.rave.provider.opensocial.service;
 
-import org.apache.rave.portal.model.RegionWidget;
-import org.apache.rave.portal.model.Widget;
+import org.apache.rave.model.RegionWidget;
+import org.apache.rave.model.Widget;
 import org.apache.rave.provider.opensocial.exception.SecurityTokenException;
 import org.apache.shindig.auth.SecurityToken;
 

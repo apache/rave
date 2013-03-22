@@ -18,6 +18,8 @@
  */
 package org.apache.rave.portal.model;
 
+import org.apache.rave.model.Tag;
+
 import javax.persistence.*;
 
 /**

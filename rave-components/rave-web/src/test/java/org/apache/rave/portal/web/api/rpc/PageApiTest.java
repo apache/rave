@@ -19,9 +19,9 @@
 
 package org.apache.rave.portal.web.api.rpc;
 
-import org.apache.rave.portal.model.Page;
-import org.apache.rave.portal.model.Region;
-import org.apache.rave.portal.model.RegionWidget;
+import org.apache.rave.model.Page;
+import org.apache.rave.model.Region;
+import org.apache.rave.model.RegionWidget;
 import org.apache.rave.portal.model.impl.*;
 import org.apache.rave.portal.service.OmdlService;
 import org.apache.rave.portal.service.PageService;

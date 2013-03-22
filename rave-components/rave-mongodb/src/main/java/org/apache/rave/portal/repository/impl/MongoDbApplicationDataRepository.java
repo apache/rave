@@ -20,7 +20,7 @@
 package org.apache.rave.portal.repository.impl;
 
 
-import org.apache.rave.portal.model.ApplicationData;
+import org.apache.rave.model.ApplicationData;
 import org.apache.rave.portal.model.impl.ApplicationDataImpl;
 import org.apache.rave.portal.repository.ApplicationDataRepository;
 import org.apache.rave.util.CollectionUtils;

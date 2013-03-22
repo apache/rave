@@ -20,7 +20,7 @@
 package org.apache.rave.portal.repository.impl;
 
 import org.apache.rave.portal.model.JpaOAuthTokenInfo;
-import org.apache.rave.portal.model.OAuthTokenInfo;
+import org.apache.rave.model.OAuthTokenInfo;
 import org.apache.rave.portal.model.conversion.JpaOAuthTokenInfoConverter;
 import org.apache.rave.portal.repository.OAuthTokenInfoRepository;
 import org.springframework.beans.factory.annotation.Autowired;

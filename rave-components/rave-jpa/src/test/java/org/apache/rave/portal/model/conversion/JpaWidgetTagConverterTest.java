@@ -18,6 +18,7 @@
  */
 package org.apache.rave.portal.model.conversion;
 
+import org.apache.rave.model.WidgetTag;
 import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.model.impl.WidgetTagImpl;
 import org.junit.Test;

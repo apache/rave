@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:jaxrs="http://cxf.apache.org/jaxrs"
+       xsi:schemaLocation="
+            http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://cxf.apache.org/jaxrs
+            http://cxf.apache.org/schemas/jaxrs.xsd">
+
+    <!-- do not use import statements if CXFServlet init parameters link to this beans.xml -->
+
+    <import resource="classpath:META-INF/cxf/cxf.xml"/>
+    <import resource="classpath:META-INF/cxf/cxf-servlet.xml"/>
+
+    <jaxrs:server id="rave" address="/rest">
+        <jaxrs:providers>
+            <bean class="org.apache.cxf.jaxrs.provider.JAXBElementProvider"/>
+        </jaxrs:providers>
+        <jaxrs:serviceBeans>
+            <ref bean="peopleBean"/>
+            <ref bean="usersBean"/>
+        </jaxrs:serviceBeans>
+    </jaxrs:server>
+
+    <bean id="peopleBean" class="org.apache.rave.rest.impl.DefaultPeopleResource">
+        <property name="userService" ref="userService"/>
+    </bean>
+
+    <bean id="usersBean" class="org.apache.rave.rest.impl.DefaultUsersResource">
+        <property name="userService" ref="userService"/>
+    </bean>
+</beans>

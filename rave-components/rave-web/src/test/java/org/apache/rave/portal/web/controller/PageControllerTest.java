@@ -19,10 +19,10 @@
 
 package org.apache.rave.portal.web.controller;
 
-import org.apache.rave.portal.model.Page;
-import org.apache.rave.portal.model.PageInvitationStatus;
-import org.apache.rave.portal.model.PageLayout;
-import org.apache.rave.portal.model.PageUser;
+import org.apache.rave.model.Page;
+import org.apache.rave.model.PageInvitationStatus;
+import org.apache.rave.model.PageLayout;
+import org.apache.rave.model.PageUser;
 import org.apache.rave.portal.model.impl.PageImpl;
 import org.apache.rave.portal.model.impl.PageLayoutImpl;
 import org.apache.rave.portal.model.impl.PageUserImpl;

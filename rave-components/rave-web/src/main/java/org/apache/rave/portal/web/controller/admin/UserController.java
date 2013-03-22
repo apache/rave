@@ -19,7 +19,9 @@
 
 package org.apache.rave.portal.web.controller.admin;
 
-import org.apache.rave.portal.model.*;
+import org.apache.rave.model.Authority;
+import org.apache.rave.model.PortalPreference;
+import org.apache.rave.model.User;
 import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.service.AuthorityService;
@@ -262,7 +264,7 @@ public class UserController {
 
 
     /**
-     * Mapping between the submitted form value and an {@link org.apache.rave.portal.model.Authority}
+     * Mapping between the submitted form value and an {@link org.apache.rave.model.Authority}
      */
     private class AuthorityEditor extends PropertyEditorSupport {
 

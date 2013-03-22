@@ -29,8 +29,8 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.rave.exception.DuplicateItemException;
-import org.apache.rave.portal.model.Page;
-import org.apache.rave.portal.model.Widget;
+import org.apache.rave.model.Page;
+import org.apache.rave.model.Widget;
 import org.apache.rave.portal.model.impl.WidgetImpl;
 import org.apache.rave.portal.model.util.omdl.BadOmdlXmlFormatException;
 import org.apache.rave.portal.model.util.omdl.OmdlConstants;

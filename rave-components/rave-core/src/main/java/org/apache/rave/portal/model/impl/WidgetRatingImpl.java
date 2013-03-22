@@ -18,7 +18,7 @@
  */
 package org.apache.rave.portal.model.impl;
 
-import org.apache.rave.portal.model.WidgetRating;
+import org.apache.rave.model.WidgetRating;
 
 public class WidgetRatingImpl implements WidgetRating {
 

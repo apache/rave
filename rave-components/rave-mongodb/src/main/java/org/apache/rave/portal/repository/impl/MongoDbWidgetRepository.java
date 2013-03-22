@@ -21,6 +21,7 @@ package org.apache.rave.portal.repository.impl;
 
 import com.google.common.collect.Maps;
 import org.apache.rave.exception.NotSupportedException;
+import org.apache.rave.model.*;
 import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.model.util.WidgetStatistics;
 import org.apache.rave.portal.repository.MongoTagOperations;

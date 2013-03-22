@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.apache.rave.persistence.Repository;
-import org.apache.rave.portal.model.Person;
+import org.apache.rave.model.Person;
 
 
 public interface PersonRepository extends Repository<Person> {

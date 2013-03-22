@@ -18,7 +18,7 @@
  */
 package org.apache.rave.portal.model.conversion;
 
-import org.apache.rave.portal.model.Address;
+import org.apache.rave.model.Address;
 import org.apache.rave.portal.model.JpaAddress;
 import org.apache.rave.portal.model.impl.AddressImpl;
 import org.junit.Test;

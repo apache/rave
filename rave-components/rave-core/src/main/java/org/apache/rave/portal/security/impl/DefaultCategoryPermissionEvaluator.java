@@ -18,8 +18,8 @@
  */
 package org.apache.rave.portal.security.impl;
 
-import org.apache.rave.portal.model.Category;
-import org.apache.rave.portal.model.User;
+import org.apache.rave.model.Category;
+import org.apache.rave.model.User;
 import org.apache.rave.portal.repository.CategoryRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

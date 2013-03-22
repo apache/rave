@@ -21,6 +21,10 @@ package org.apache.rave.portal.repository.impl;
 
 import com.google.common.collect.Lists;
 import org.apache.rave.exception.NotSupportedException;
+import org.apache.rave.model.FriendRequestStatus;
+import org.apache.rave.model.Person;
+import org.apache.rave.model.User;
+import org.apache.rave.model.Widget;
 import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.model.conversion.JpaPersonConverter;
 import org.apache.rave.portal.repository.PersonRepository;

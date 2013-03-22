@@ -20,7 +20,7 @@ package org.apache.rave.portal.repository.impl;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.rave.exception.DataSerializationException;
-import org.apache.rave.portal.model.ApplicationData;
+import org.apache.rave.model.ApplicationData;
 import org.apache.rave.portal.model.JpaApplicationData;
 import org.apache.rave.portal.model.conversion.JpaApplicationDataConverter;
 import org.apache.rave.portal.repository.ApplicationDataRepository;

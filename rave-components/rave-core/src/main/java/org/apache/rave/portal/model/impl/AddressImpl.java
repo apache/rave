@@ -18,7 +18,7 @@
  */
 package org.apache.rave.portal.model.impl;
 
-import org.apache.rave.portal.model.Address;
+import org.apache.rave.model.Address;
 
 /**
  */

@@ -19,7 +19,7 @@
 
 package org.apache.rave.portal.repository;
 
-import org.apache.rave.portal.model.User;
+import org.apache.rave.model.User;
 
 public interface MongoUserOperations extends MongoModelOperations<User> {
 }

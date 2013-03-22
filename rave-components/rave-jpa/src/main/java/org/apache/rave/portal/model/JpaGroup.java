@@ -19,6 +19,7 @@
 package org.apache.rave.portal.model;
 
 import com.google.common.collect.Lists;
+import org.apache.rave.model.Group;
 
 import javax.persistence.*;
 import java.util.List;

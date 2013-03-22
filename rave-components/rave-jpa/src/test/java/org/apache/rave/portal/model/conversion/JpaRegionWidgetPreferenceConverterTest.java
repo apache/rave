@@ -19,7 +19,7 @@
 package org.apache.rave.portal.model.conversion;
 
 import org.apache.rave.portal.model.JpaRegionWidgetPreference;
-import org.apache.rave.portal.model.RegionWidgetPreference;
+import org.apache.rave.model.RegionWidgetPreference;
 import org.apache.rave.portal.model.impl.RegionWidgetPreferenceImpl;
 import org.junit.Before;
 import org.junit.Test;

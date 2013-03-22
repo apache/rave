@@ -21,7 +21,7 @@
 <fmt:setBundle basename="messages"/>
 <c:set var="profileTitleKey" value="page.profile.title" />
 <c:set var="personProfileTitleKey" value="page.personProfile.title" />
-<%--@elvariable id="page" type="org.apache.rave.portal.model.Page"--%>
+<%--@elvariable id="page" type="org.apache.rave.model.Page"--%>
 <%-- determine if this is a user page, and if so, display the page name in the HTML title --%>
 <c:choose>
     <c:when test="${not empty page}">

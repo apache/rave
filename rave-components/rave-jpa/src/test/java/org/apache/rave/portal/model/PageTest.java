@@ -18,6 +18,10 @@
  */
 package org.apache.rave.portal.model;
 
+import org.apache.rave.model.Page;
+import org.apache.rave.model.PageLayout;
+import org.apache.rave.model.PageUser;
+import org.apache.rave.model.Region;
 import org.apache.rave.portal.model.impl.PageImpl;
 import org.apache.rave.portal.model.impl.PageLayoutImpl;
 import org.apache.rave.portal.model.impl.PageUserImpl;

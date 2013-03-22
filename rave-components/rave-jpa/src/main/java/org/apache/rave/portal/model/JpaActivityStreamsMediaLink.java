@@ -20,6 +20,8 @@
 package org.apache.rave.portal.model;
 
 
+import org.apache.rave.model.ActivityStreamsMediaLink;
+
 import javax.persistence.*;
 import java.util.Map;
 

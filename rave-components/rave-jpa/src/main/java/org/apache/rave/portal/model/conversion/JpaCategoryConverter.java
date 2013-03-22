@@ -19,7 +19,7 @@
 package org.apache.rave.portal.model.conversion;
 
 import org.apache.rave.model.ModelConverter;
-import org.apache.rave.portal.model.Category;
+import org.apache.rave.model.Category;
 import org.apache.rave.portal.model.JpaCategory;
 import org.springframework.stereotype.Component;
 

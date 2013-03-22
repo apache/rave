@@ -20,14 +20,14 @@ package org.apache.rave.portal.model.conversion;
 
 import org.apache.rave.model.ModelConverter;
 import org.apache.rave.portal.model.JpaWidget;
-import org.apache.rave.portal.model.Widget;
+import org.apache.rave.model.Widget;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 /**
- * Converts from a {@link org.apache.rave.portal.model.Widget} to a {@link org.apache.rave.portal.model.JpaWidget}
+ * Converts from a {@link org.apache.rave.model.Widget} to a {@link org.apache.rave.portal.model.JpaWidget}
  */
 @Component
 public class JpaWidgetConverter implements ModelConverter<Widget, JpaWidget> {

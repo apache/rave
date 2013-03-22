@@ -18,6 +18,7 @@
  */
 package org.apache.rave.portal.model;
 
+import org.apache.rave.model.*;
 import org.apache.rave.portal.model.conversion.ConvertingListProxyFactory;
 import org.apache.rave.portal.model.conversion.JpaConverter;
 import org.codehaus.jackson.annotate.JsonManagedReference;
@@ -151,7 +152,7 @@ public class JpaPage implements BasicEntity, Serializable, Page {
     /**
      * Gets the {@link User} that owns the page
      *
-     * @return Valid {@link User}
+     * @return Valid {@link org.apache.rave.model.User}
      */
     @Override
     public String getOwnerId() {

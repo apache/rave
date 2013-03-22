@@ -19,7 +19,7 @@
 package org.apache.rave.portal.model.conversion;
 
 import org.apache.rave.portal.model.JpaOAuthConsumerStore;
-import org.apache.rave.portal.model.OAuthConsumerStore;
+import org.apache.rave.model.OAuthConsumerStore;
 import org.apache.rave.portal.model.impl.OAuthConsumerStoreImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;

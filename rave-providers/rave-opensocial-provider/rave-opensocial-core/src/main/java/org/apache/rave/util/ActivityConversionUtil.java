@@ -20,10 +20,10 @@
 package org.apache.rave.util;
 
 import com.google.common.collect.Lists;
-import org.apache.rave.portal.model.ActivityStreamsEntry;
-import org.apache.rave.portal.model.ActivityStreamsItem;
-import org.apache.rave.portal.model.ActivityStreamsMediaLink;
-import org.apache.rave.portal.model.ActivityStreamsObject;
+import org.apache.rave.model.ActivityStreamsEntry;
+import org.apache.rave.model.ActivityStreamsMediaLink;
+import org.apache.rave.model.ActivityStreamsItem;
+import org.apache.rave.model.ActivityStreamsObject;
 import org.apache.rave.portal.model.impl.ActivityStreamsEntryImpl;
 import org.apache.rave.portal.model.impl.ActivityStreamsMediaLinkImpl;
 import org.apache.rave.portal.model.impl.ActivityStreamsObjectImpl;

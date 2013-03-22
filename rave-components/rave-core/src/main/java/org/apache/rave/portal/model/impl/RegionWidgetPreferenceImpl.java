@@ -18,7 +18,7 @@
  */
 package org.apache.rave.portal.model.impl;
 
-import org.apache.rave.portal.model.RegionWidgetPreference;
+import org.apache.rave.model.RegionWidgetPreference;
 
 public class RegionWidgetPreferenceImpl implements RegionWidgetPreference {
 

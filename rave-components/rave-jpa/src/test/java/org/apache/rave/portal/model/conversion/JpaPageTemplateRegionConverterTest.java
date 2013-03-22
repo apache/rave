@@ -20,8 +20,8 @@ package org.apache.rave.portal.model.conversion;
 
 import org.apache.rave.portal.model.JpaPageTemplate;
 import org.apache.rave.portal.model.JpaPageTemplateRegion;
-import org.apache.rave.portal.model.PageTemplateRegion;
-import org.apache.rave.portal.model.PageTemplateWidget;
+import org.apache.rave.model.PageTemplateRegion;
+import org.apache.rave.model.PageTemplateWidget;
 import org.apache.rave.portal.model.impl.PageTemplateImpl;
 import org.apache.rave.portal.model.impl.PageTemplateRegionImpl;
 import org.junit.Before;

@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.rave.portal.model.Widget;
+import org.apache.rave.model.Widget;
 import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.service.PortalPreferenceService;
 import org.apache.rave.portal.service.RemoteWidgetResolverService;

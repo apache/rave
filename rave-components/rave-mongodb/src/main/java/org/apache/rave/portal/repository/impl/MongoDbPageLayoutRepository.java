@@ -21,7 +21,7 @@ package org.apache.rave.portal.repository.impl;
 
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.rave.portal.model.MongoDbPageLayout;
-import org.apache.rave.portal.model.PageLayout;
+import org.apache.rave.model.PageLayout;
 import org.apache.rave.portal.repository.PageLayoutRepository;
 import org.apache.rave.util.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -19,7 +19,7 @@
 
 package org.apache.rave.portal.web.validator;
 
-import org.apache.rave.portal.model.Widget;
+import org.apache.rave.model.Widget;
 import org.apache.rave.portal.model.impl.WidgetImpl;
 import org.apache.rave.portal.service.WidgetService;
 import org.junit.Before;

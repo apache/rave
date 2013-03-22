@@ -19,9 +19,9 @@
 package org.apache.rave.portal.model.conversion;
 
 import org.apache.rave.model.ModelConverter;
-import org.apache.rave.portal.model.Authority;
+import org.apache.rave.model.Authority;
 import org.apache.rave.portal.model.JpaAuthority;
-import org.apache.rave.portal.model.User;
+import org.apache.rave.model.User;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;

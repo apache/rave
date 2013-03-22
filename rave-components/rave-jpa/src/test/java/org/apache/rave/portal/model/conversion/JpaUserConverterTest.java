@@ -18,6 +18,10 @@
  */
 package org.apache.rave.portal.model.conversion;
 
+import org.apache.rave.model.Address;
+import org.apache.rave.model.Organization;
+import org.apache.rave.model.PersonProperty;
+import org.apache.rave.model.User;
 import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.model.impl.AuthorityImpl;
 import org.apache.rave.portal.model.impl.PageLayoutImpl;

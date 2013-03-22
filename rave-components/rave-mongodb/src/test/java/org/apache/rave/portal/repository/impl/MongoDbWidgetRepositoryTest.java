@@ -21,6 +21,7 @@ package org.apache.rave.portal.repository.impl;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import org.apache.rave.model.*;
 import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.model.impl.TagImpl;
 import org.apache.rave.portal.model.impl.UserImpl;

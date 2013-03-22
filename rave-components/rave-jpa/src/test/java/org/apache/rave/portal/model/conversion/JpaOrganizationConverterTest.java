@@ -19,7 +19,7 @@
 package org.apache.rave.portal.model.conversion;
 
 import org.apache.rave.portal.model.JpaOrganization;
-import org.apache.rave.portal.model.Organization;
+import org.apache.rave.model.Organization;
 import org.apache.rave.portal.model.impl.AddressImpl;
 import org.apache.rave.portal.model.impl.OrganizationImpl;
 import org.junit.Before;

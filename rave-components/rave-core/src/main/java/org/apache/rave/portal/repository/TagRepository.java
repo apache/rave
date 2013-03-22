@@ -20,16 +20,16 @@
 package org.apache.rave.portal.repository;
 
 import org.apache.rave.persistence.Repository;
-import org.apache.rave.portal.model.Tag;
+import org.apache.rave.model.Tag;
 
 import java.util.List;
 
 /**
- * Repository interface for {@link org.apache.rave.portal.model.Tag}
+ * Repository interface for {@link org.apache.rave.model.Tag}
  */
 public interface TagRepository extends Repository<Tag> {
     /**
-     * @return a List of all {@link org.apache.rave.portal.model.Tag}'s.
+     * @return a List of all {@link org.apache.rave.model.Tag}'s.
      */
 
     List<Tag> getAll();

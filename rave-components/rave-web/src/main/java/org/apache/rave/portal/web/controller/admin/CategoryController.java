@@ -15,8 +15,8 @@
  */
 package org.apache.rave.portal.web.controller.admin;
 
-import org.apache.rave.portal.model.Category;
-import org.apache.rave.portal.model.User;
+import org.apache.rave.model.Category;
+import org.apache.rave.model.User;
 import org.apache.rave.portal.model.impl.CategoryImpl;
 import org.apache.rave.portal.service.CategoryService;
 import org.apache.rave.portal.service.UserService;

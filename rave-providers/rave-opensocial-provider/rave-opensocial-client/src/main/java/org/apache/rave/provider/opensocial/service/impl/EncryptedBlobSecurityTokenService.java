@@ -20,9 +20,9 @@
 package org.apache.rave.provider.opensocial.service.impl;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.rave.portal.model.RegionWidget;
-import org.apache.rave.portal.model.User;
-import org.apache.rave.portal.model.Widget;
+import org.apache.rave.model.RegionWidget;
+import org.apache.rave.model.User;
+import org.apache.rave.model.Widget;
 import org.apache.rave.portal.model.impl.*;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.provider.opensocial.exception.SecurityTokenException;

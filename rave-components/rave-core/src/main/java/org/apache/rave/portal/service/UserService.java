@@ -22,8 +22,8 @@ package org.apache.rave.portal.service;
 import java.util.HashMap;
 import java.util.List;
 
-import org.apache.rave.portal.model.Person;
-import org.apache.rave.portal.model.User;
+import org.apache.rave.model.Person;
+import org.apache.rave.model.User;
 import org.apache.rave.portal.model.util.SearchResult;
 import org.springframework.security.core.userdetails.AuthenticationUserDetailsService;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -60,7 +60,7 @@ public interface UserService extends UserDetailsService, AuthenticationUserDetai
      * Return the requested user object using the user's name.
      *
      * @param userName (unique) name of the user
-     * @return {@link org.apache.rave.portal.model.User} if one exists, otherwise {@literal null}
+     * @return {@link org.apache.rave.model.User} if one exists, otherwise {@literal null}
      */
     User getUserByUsername(String userName);
 
@@ -68,7 +68,7 @@ public interface UserService extends UserDetailsService, AuthenticationUserDetai
      * Return a user object by the user ID.
      *
      * @param id the user ID
-     * @return {@link org.apache.rave.portal.model.User} if one exists, otherwise {@literal null}
+     * @return {@link org.apache.rave.model.User} if one exists, otherwise {@literal null}
      */
     User getUserById(String id);
 
@@ -76,7 +76,7 @@ public interface UserService extends UserDetailsService, AuthenticationUserDetai
      * Return a user object by the user email.
      *
      * @param userEmail email address of the user
-     * @return {@link org.apache.rave.portal.model.User} if one exists, otherwise {@literal null}
+     * @return {@link org.apache.rave.model.User} if one exists, otherwise {@literal null}
      */
     User getUserByEmail(String userEmail);
 
@@ -88,7 +88,7 @@ public interface UserService extends UserDetailsService, AuthenticationUserDetai
     void updateUserProfile(User user);
 
     /**
-     * Gets a limited {@link SearchResult} for {@link org.apache.rave.portal.model.User}'s
+     * Gets a limited {@link SearchResult} for {@link org.apache.rave.model.User}'s
      *
      * @param offset   start point within the resultset (for paging)
      * @param pageSize maximum number of items to be returned (for paging)
@@ -97,7 +97,7 @@ public interface UserService extends UserDetailsService, AuthenticationUserDetai
     SearchResult<User> getLimitedListOfUsers(int offset, int pageSize);
 
     /**
-     * Gets a {@link SearchResult} for {@link org.apache.rave.portal.model.User}'s that match the search term
+     * Gets a {@link SearchResult} for {@link org.apache.rave.model.User}'s that match the search term
      *
      * @param searchTerm free text input to search on users
      * @param offset     start point within the resultset (for paging)
@@ -124,14 +124,14 @@ public interface UserService extends UserDetailsService, AuthenticationUserDetai
     /**
      * Sends an email which contains link for changing user password
      *
-     * @param user the {@link org.apache.rave.portal.model.User} which requested password change
+     * @param user the {@link org.apache.rave.model.User} which requested password change
      */
     void sendPasswordReminder(User user);
 
     /**
      * Sends an email which contains username
      *
-     * @param user the {@link org.apache.rave.portal.model.User} which requested username reminder
+     * @param user the {@link org.apache.rave.model.User} which requested username reminder
      */
     void sendUserNameReminder(User user);
 
@@ -139,7 +139,7 @@ public interface UserService extends UserDetailsService, AuthenticationUserDetai
     /**
      * Changes password for given user
      *
-     * @param user the {@link org.apache.rave.portal.model.User} which requested password change
+     * @param user the {@link org.apache.rave.model.User} which requested password change
      * @throws Exception in case something goes wrong
      */
     void updatePassword(User user);
@@ -202,12 +202,12 @@ public interface UserService extends UserDetailsService, AuthenticationUserDetai
      * Return a user object by the openId.
      *
      * @param openId OpenId url of the user
-     * @return {@link org.apache.rave.portal.model.User} if one exists, otherwise {@literal null}
+     * @return {@link org.apache.rave.model.User} if one exists, otherwise {@literal null}
      */
 	User getUserByOpenId(String openId);
 
     /**
-     * Gets a limited {@link SearchResult} for {@link org.apache.rave.portal.model.Person}'s
+     * Gets a limited {@link SearchResult} for {@link org.apache.rave.model.Person}'s
      *
      * @param offset   start point within the resultset (for paging)
      * @param pageSize maximum number of items to be returned (for paging)
@@ -216,7 +216,7 @@ public interface UserService extends UserDetailsService, AuthenticationUserDetai
     SearchResult<Person> getLimitedListOfPersons(int offset, int pageSize);
 
     /**
-     * Gets a {@link SearchResult} for {@link org.apache.rave.portal.model.Person}'s that match the search term
+     * Gets a {@link SearchResult} for {@link org.apache.rave.model.Person}'s that match the search term
      *
      * @param searchTerm free text input to search on users
      * @param offset     start point within the resultset (for paging)

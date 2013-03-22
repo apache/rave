@@ -19,8 +19,37 @@
 
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-                           http://www.springframework.org/schema/beans/spring-beans.xsd">
+                           http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+                           http://www.springframework.org/schema/util
+                           http://www.springframework.org/schema/util/spring-util.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
+
+    <!-- make the the portal.properties props available to autowire injectors, location of the properties can
+be overridden by setting a system property "portal.override.properties" -->
+    <bean id="portalPropertyPlaceholder" class="org.apache.rave.util.OverridablePropertyPlaceholderConfigurer">
+        <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE"/>
+        <property name="systemPropertyName" value="portal.override.properties"/>
+        <property name="location" value="classpath:portal.properties"/>
+    </bean>
+
+    <!-- bean post-processor for JPA annotations -->
+    <context:annotation-config/>
+
+    <!-- enable the use of the @AspectJ style of Spring AOP -->
+    <aop:aspectj-autoproxy/>
+
+    <!-- rave-common component base-package scan (maybe move to a separate common-applicationContext.xml?) -->
+    <context:component-scan base-package="org.apache.rave.service"/>
+    <context:component-scan base-package="org.apache.rave.synchronization"/>
+
+    <!-- rave-core component base-package scan -->
+    <context:component-scan base-package="org.apache.rave.portal.model"/>
+    <context:component-scan base-package="org.apache.rave.portal.repository"/>
 
     <import resource="classpath:org/apache/rave/core-applicationContext.xml"/>
     <import resource="classpath:org/apache/rave/web-applicationContext.xml"/>

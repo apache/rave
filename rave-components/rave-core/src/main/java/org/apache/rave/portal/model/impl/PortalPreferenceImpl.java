@@ -19,7 +19,7 @@
 package org.apache.rave.portal.model.impl;
 
 import org.apache.rave.exception.NotSupportedException;
-import org.apache.rave.portal.model.PortalPreference;
+import org.apache.rave.model.PortalPreference;
 
 import java.util.ArrayList;
 import java.util.LinkedList;

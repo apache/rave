@@ -19,7 +19,7 @@
 
 package org.apache.rave.portal.web.interceptors;
 
-import org.apache.rave.portal.model.PortalPreference;
+import org.apache.rave.model.PortalPreference;
 import org.apache.rave.portal.service.PortalPreferenceService;
 import org.apache.rave.portal.web.util.ModelKeys;
 import org.apache.rave.service.StaticContentFetcherService;

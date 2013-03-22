@@ -21,9 +21,9 @@ package org.apache.rave.portal.model.conversion.impl;
 
 import com.google.common.collect.Lists;
 import org.apache.rave.portal.model.MongoDbPageTemplate;
-import org.apache.rave.portal.model.PageTemplate;
-import org.apache.rave.portal.model.PageTemplateRegion;
-import org.apache.rave.portal.model.PageTemplateWidget;
+import org.apache.rave.model.PageTemplate;
+import org.apache.rave.model.PageTemplateRegion;
+import org.apache.rave.model.PageTemplateWidget;
 import org.apache.rave.portal.model.conversion.HydratingModelConverter;
 import org.apache.rave.portal.model.impl.PageTemplateRegionImpl;
 import org.apache.rave.portal.model.impl.PageTemplateWidgetImpl;

@@ -19,7 +19,7 @@
 
 package org.apache.rave.gadgets.oauth.service;
 
-import org.apache.rave.portal.model.OAuthConsumerStore;
+import org.apache.rave.model.OAuthConsumerStore;
 
 /**
  * Service to handle OAuth Consumer store
@@ -27,27 +27,27 @@ import org.apache.rave.portal.model.OAuthConsumerStore;
 public interface OAuthConsumerStoreService {
 
     /**
-     * Fetches {@link org.apache.rave.portal.model.OAuthConsumerStore} based on the gadget location and the service provider
+     * Fetches {@link org.apache.rave.model.OAuthConsumerStore} based on the gadget location and the service provider
      *
      * @param gadgetUri   location of the gadget definition
      * @param serviceName name of the service provider
-     * @return {@link org.apache.rave.portal.model.OAuthConsumerStore} or {@literal null} if none matches the criteria
+     * @return {@link org.apache.rave.model.OAuthConsumerStore} or {@literal null} if none matches the criteria
      */
     OAuthConsumerStore findByUriAndServiceName(String gadgetUri, String serviceName);
 
     /**
-     * Persists {@link org.apache.rave.portal.model.OAuthConsumerStore}
+     * Persists {@link org.apache.rave.model.OAuthConsumerStore}
      *
-     * @param oAuthConsumerStore {@link org.apache.rave.portal.model.OAuthConsumerStore} to store
-     * @return persisted {@link org.apache.rave.portal.model.OAuthConsumerStore}
+     * @param oAuthConsumerStore {@link org.apache.rave.model.OAuthConsumerStore} to store
+     * @return persisted {@link org.apache.rave.model.OAuthConsumerStore}
      */
 
     OAuthConsumerStore save(OAuthConsumerStore oAuthConsumerStore);
 
     /**
-     * Removes the {@link org.apache.rave.portal.model.OAuthConsumerStore} from the database
+     * Removes the {@link org.apache.rave.model.OAuthConsumerStore} from the database
      *
-     * @param oAuthConsumerStore {@link org.apache.rave.portal.model.OAuthConsumerStore} to delete
+     * @param oAuthConsumerStore {@link org.apache.rave.model.OAuthConsumerStore} to delete
      */
     void delete(OAuthConsumerStore oAuthConsumerStore);
 }

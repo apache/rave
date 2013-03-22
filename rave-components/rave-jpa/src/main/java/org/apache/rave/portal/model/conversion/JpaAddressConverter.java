@@ -19,7 +19,7 @@
 package org.apache.rave.portal.model.conversion;
 
 import org.apache.rave.model.ModelConverter;
-import org.apache.rave.portal.model.Address;
+import org.apache.rave.model.Address;
 import org.apache.rave.portal.model.JpaAddress;
 import org.springframework.stereotype.Component;
 

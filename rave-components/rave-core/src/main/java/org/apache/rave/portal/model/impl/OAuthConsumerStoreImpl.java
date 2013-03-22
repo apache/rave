@@ -19,7 +19,7 @@
 
 package org.apache.rave.portal.model.impl;
 
-import org.apache.rave.portal.model.OAuthConsumerStore;
+import org.apache.rave.model.OAuthConsumerStore;
 
 public class OAuthConsumerStoreImpl implements OAuthConsumerStore {
     private String id;

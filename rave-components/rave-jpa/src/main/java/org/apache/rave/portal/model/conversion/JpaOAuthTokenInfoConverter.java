@@ -20,7 +20,7 @@ package org.apache.rave.portal.model.conversion;
 
 import org.apache.rave.model.ModelConverter;
 import org.apache.rave.portal.model.JpaOAuthTokenInfo;
-import org.apache.rave.portal.model.OAuthTokenInfo;
+import org.apache.rave.model.OAuthTokenInfo;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;

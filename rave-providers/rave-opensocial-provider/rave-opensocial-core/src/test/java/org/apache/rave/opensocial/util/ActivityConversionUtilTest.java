@@ -21,8 +21,8 @@ package org.apache.rave.opensocial.util;
 
 
 
-import org.apache.rave.portal.model.ActivityStreamsMediaLink;
-import org.apache.rave.portal.model.ActivityStreamsObject;
+import org.apache.rave.model.ActivityStreamsObject;
+import org.apache.rave.model.ActivityStreamsMediaLink;
 import org.apache.rave.portal.model.impl.ActivityStreamsEntryImpl;
 import org.apache.rave.portal.model.impl.ActivityStreamsMediaLinkImpl;
 import org.apache.rave.portal.model.impl.ActivityStreamsObjectImpl;

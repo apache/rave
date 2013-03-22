@@ -19,7 +19,7 @@
 package org.apache.rave.portal.model.conversion;
 
 import org.apache.rave.model.ModelConverter;
-import org.apache.rave.portal.model.Group;
+import org.apache.rave.model.Group;
 import org.apache.rave.portal.model.JpaGroup;
 import org.springframework.stereotype.Component;
 

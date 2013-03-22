@@ -18,9 +18,9 @@
  */
 package org.apache.rave.portal.web.api.rest;
 
-import org.apache.rave.portal.model.Page;
-import org.apache.rave.portal.model.Region;
-import org.apache.rave.portal.model.RegionWidget;
+import org.apache.rave.model.Page;
+import org.apache.rave.model.Region;
+import org.apache.rave.model.RegionWidget;
 import org.apache.rave.portal.model.util.omdl.OmdlOutputAdapter;
 import org.apache.rave.portal.service.OmdlService;
 import org.apache.rave.portal.service.PageService;

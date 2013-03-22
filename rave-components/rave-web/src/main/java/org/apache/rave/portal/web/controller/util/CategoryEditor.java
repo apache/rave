@@ -17,7 +17,7 @@ package org.apache.rave.portal.web.controller.util;
  * specific language governing permissions and limitations
  * under the License.
  */
-import org.apache.rave.portal.model.Category;
+import org.apache.rave.model.Category;
 import org.apache.rave.portal.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -25,7 +25,7 @@ import org.springframework.stereotype.Component;
 import java.beans.PropertyEditorSupport;
 
 /**
- * Mapping between the submitted form value and a {@link org.apache.rave.portal.model.Category}
+ * Mapping between the submitted form value and a {@link org.apache.rave.model.Category}
  */
 @Component
 public class CategoryEditor extends PropertyEditorSupport {

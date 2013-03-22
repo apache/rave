@@ -19,7 +19,7 @@
 package org.apache.rave.portal.model.conversion;
 
 import org.apache.rave.model.ModelConverter;
-import org.apache.rave.portal.model.ActivityStreamsMediaLink;
+import org.apache.rave.model.ActivityStreamsMediaLink;
 import org.apache.rave.portal.model.JpaActivityStreamsMediaLink;
 import org.springframework.stereotype.Component;
 

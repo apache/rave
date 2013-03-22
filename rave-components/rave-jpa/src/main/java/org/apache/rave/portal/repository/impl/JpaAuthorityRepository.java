@@ -19,7 +19,7 @@
 
 package org.apache.rave.portal.repository.impl;
 
-import org.apache.rave.portal.model.Authority;
+import org.apache.rave.model.Authority;
 import org.apache.rave.portal.model.JpaAuthority;
 import org.apache.rave.portal.model.conversion.JpaAuthorityConverter;
 import org.apache.rave.portal.repository.AuthorityRepository;

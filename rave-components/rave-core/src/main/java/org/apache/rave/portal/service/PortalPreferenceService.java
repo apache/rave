@@ -19,7 +19,7 @@
 
 package org.apache.rave.portal.service;
 
-import org.apache.rave.portal.model.PortalPreference;
+import org.apache.rave.model.PortalPreference;
 
 import java.util.List;
 import java.util.Map;
@@ -30,14 +30,14 @@ import java.util.Map;
 public interface PortalPreferenceService {
 
     /**
-     * Creates a Map of all {@link org.apache.rave.portal.model.PortalPreference}'s using the preference key as key for the Map.Entry
+     * Creates a Map of all {@link org.apache.rave.model.PortalPreference}'s using the preference key as key for the Map.Entry
      *
      * @return Map of PortalPreference's
      */
     Map<String, PortalPreference> getPreferencesAsMap();
 
     /**
-     * Gets a {@link org.apache.rave.portal.model.PortalPreference} by its key
+     * Gets a {@link org.apache.rave.model.PortalPreference} by its key
      *
      * @param key unique name of the preference
      * @return PortalPreference if it exists, otherwise {@literal null}
@@ -45,7 +45,7 @@ public interface PortalPreferenceService {
     PortalPreference getPreference(String key);
 
     /**
-     * Saves a {@link org.apache.rave.portal.model.PortalPreference} with a single value.
+     * Saves a {@link org.apache.rave.model.PortalPreference} with a single value.
      * If a PortalPreference already exists with this key, its value(s) will be overwritten.
      *
      * @param key   of the preference, e.g. {@literal title}
@@ -54,7 +54,7 @@ public interface PortalPreferenceService {
     void savePreference(String key, String value);
 
     /**
-     * Saves a {@link org.apache.rave.portal.model.PortalPreference} with a List of values.
+     * Saves a {@link org.apache.rave.model.PortalPreference} with a List of values.
      * If a PortalPreference already exists with this key, its value(s) will be overwritten.
      *
      * @param key    of the preference, e.g. {@literal colors}
@@ -63,7 +63,7 @@ public interface PortalPreferenceService {
     void savePreference(String key, List<String> values);
 
     /**
-     * Saves a {@link org.apache.rave.portal.model.PortalPreference}
+     * Saves a {@link org.apache.rave.model.PortalPreference}
      *
      * @param preference PortalPreference to save
      */

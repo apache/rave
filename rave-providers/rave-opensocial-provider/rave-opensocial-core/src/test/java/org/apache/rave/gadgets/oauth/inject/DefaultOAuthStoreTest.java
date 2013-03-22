@@ -21,8 +21,8 @@ package org.apache.rave.gadgets.oauth.inject;
 
 import net.oauth.OAuth;
 import net.oauth.OAuthServiceProvider;
-import org.apache.rave.portal.model.OAuthConsumerStore;
-import org.apache.rave.portal.model.OAuthTokenInfo;
+import org.apache.rave.model.OAuthConsumerStore;
+import org.apache.rave.model.OAuthTokenInfo;
 import org.apache.rave.portal.model.impl.OAuthConsumerStoreImpl;
 import org.apache.rave.portal.model.impl.OAuthTokenInfoImpl;
 import org.apache.rave.gadgets.oauth.service.OAuthConsumerStoreService;

@@ -18,7 +18,7 @@
  */
 package org.apache.rave.portal.model.conversion;
 
-import org.apache.rave.portal.model.ApplicationData;
+import org.apache.rave.model.ApplicationData;
 import org.apache.rave.portal.model.JpaApplicationData;
 import org.apache.rave.portal.model.impl.ApplicationDataImpl;
 import org.junit.Test;

@@ -19,7 +19,7 @@
 package org.apache.rave.portal.web.util;
 
 /**
- * Utility class for {@link org.apache.rave.portal.model.PortalPreference} keys
+ * Utility class for {@link org.apache.rave.model.PortalPreference} keys
  */
 public final class PortalPreferenceKeys {
     private PortalPreferenceKeys() { }

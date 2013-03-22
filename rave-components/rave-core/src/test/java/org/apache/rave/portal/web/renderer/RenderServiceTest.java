@@ -20,7 +20,7 @@
 package org.apache.rave.portal.web.renderer;
 
 import org.apache.rave.exception.NotSupportedException;
-import org.apache.rave.portal.model.RegionWidget;
+import org.apache.rave.model.RegionWidget;
 import org.apache.rave.portal.model.impl.RegionWidgetImpl;
 import org.apache.rave.portal.model.impl.WidgetImpl;
 import org.apache.rave.portal.repository.WidgetRepository;

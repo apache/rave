@@ -19,7 +19,7 @@
 
 package org.apache.rave.portal.service.impl;
 
-import org.apache.rave.portal.model.PageLayout;
+import org.apache.rave.model.PageLayout;
 import org.apache.rave.portal.model.impl.PageLayoutImpl;
 import org.apache.rave.portal.repository.PageLayoutRepository;
 import org.apache.rave.portal.service.PageLayoutService;
@@ -39,7 +39,7 @@ public class DefaultPageLayoutServiceTest {
     
     private final String VALID_LAYOUT_CODE = "columns_1";
     private final String INVALID_LAYOUT_CODE = "qqqqqq";
-    private PageLayout validPageLayout;                        
+    private PageLayout validPageLayout;
 
     @Before
     public void setup() {

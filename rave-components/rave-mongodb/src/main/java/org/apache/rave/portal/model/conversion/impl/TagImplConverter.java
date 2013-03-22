@@ -18,7 +18,7 @@
  */
 package org.apache.rave.portal.model.conversion.impl;
 
-import org.apache.rave.portal.model.Tag;
+import org.apache.rave.model.Tag;
 import org.apache.rave.portal.model.conversion.HydratingModelConverter;
 import org.apache.rave.portal.model.impl.TagImpl;
 import org.springframework.stereotype.Component;

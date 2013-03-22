@@ -18,8 +18,8 @@
  */
 package org.apache.rave.portal.repository;
 
-import org.apache.rave.portal.model.PageTemplate;
-import org.apache.rave.portal.model.PageType;
+import org.apache.rave.model.PageTemplate;
+import org.apache.rave.model.PageType;
 
 import java.util.List;
 

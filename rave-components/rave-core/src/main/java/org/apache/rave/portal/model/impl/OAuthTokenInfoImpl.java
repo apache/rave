@@ -19,7 +19,7 @@
 
 package org.apache.rave.portal.model.impl;
 
-import org.apache.rave.portal.model.OAuthTokenInfo;
+import org.apache.rave.model.OAuthTokenInfo;
 
 public class OAuthTokenInfoImpl implements OAuthTokenInfo {
     private String id;

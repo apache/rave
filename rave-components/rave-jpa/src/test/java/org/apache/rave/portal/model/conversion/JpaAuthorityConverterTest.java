@@ -19,7 +19,7 @@
 package org.apache.rave.portal.model.conversion;
 
 import org.apache.rave.portal.model.JpaAuthority;
-import org.apache.rave.portal.model.Authority;
+import org.apache.rave.model.Authority;
 import org.apache.rave.portal.model.impl.AuthorityImpl;
 import org.apache.rave.portal.model.impl.UserImpl;
 import org.junit.Before;

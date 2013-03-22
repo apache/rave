@@ -20,7 +20,7 @@ package org.apache.rave.portal.model.conversion;
 
 import org.apache.rave.model.ModelConverter;
 import org.apache.rave.portal.model.JpaPerson;
-import org.apache.rave.portal.model.Person;
+import org.apache.rave.model.Person;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;
@@ -30,7 +30,7 @@ import javax.persistence.TypedQuery;
 import static org.apache.rave.persistence.jpa.util.JpaUtil.getSingleResult;
 
 /**
- * Converts from a {@link org.apache.rave.portal.model.Person} to a {@link org.apache.rave.portal.model.JpaPerson}
+ * Converts from a {@link org.apache.rave.model.Person} to a {@link org.apache.rave.portal.model.JpaPerson}
  */
 @Component
 public class JpaPersonConverter implements ModelConverter<Person, JpaPerson> {

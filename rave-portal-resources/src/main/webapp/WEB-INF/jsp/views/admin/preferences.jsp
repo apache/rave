@@ -42,7 +42,7 @@
 	            <h2><fmt:message key="admin.preferences.shorttitle"/></h2>
 	
 	            <spring:url value="/app/admin/preferencedetail/edit?referringPageId=${referringPageId}" var="detaillink"/>
-	                <%--@elvariable id="preferenceMap" type="java.util.Map<java.lang.String, org.apache.rave.portal.model.PortalPreference>"--%>
+                    <%--@elvariable id="preferenceMap" type="java.util.Map<java.lang.String, org.apache.rave.model.PortalPreference>"--%>
 	            <c:choose>
 	                <c:when test="${fn:length(preferenceMap) eq 0}">
 	                    <a class="btn btn-primary" href="<c:out value="${detaillink}"/>"><fmt:message key="admin.preferences.edit"/></a>

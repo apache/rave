@@ -21,14 +21,13 @@ package org.apache.rave.portal.model;
 
 
 import com.google.common.collect.Lists;
+import org.apache.rave.model.ActivityStreamsMediaLink;
+import org.apache.rave.model.ActivityStreamsObject;
 import org.apache.rave.portal.model.conversion.ConvertingListProxyFactory;
 import org.apache.rave.portal.model.conversion.JpaConverter;
-import org.apache.rave.portal.model.impl.ActivityStreamsObjectImpl;
-import org.apache.rave.util.CollectionUtils;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 

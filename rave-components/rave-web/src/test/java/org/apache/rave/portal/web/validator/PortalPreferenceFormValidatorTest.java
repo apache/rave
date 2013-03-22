@@ -19,7 +19,7 @@
 
 package org.apache.rave.portal.web.validator;
 
-import org.apache.rave.portal.model.PortalPreference;
+import org.apache.rave.model.PortalPreference;
 import org.apache.rave.portal.model.impl.PortalPreferenceImpl;
 import org.apache.rave.portal.web.model.PortalPreferenceForm;
 import org.junit.Before;

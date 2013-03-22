@@ -19,6 +19,8 @@
 
 package org.apache.rave.portal.model;
 
+import org.apache.rave.model.Authority;
+import org.apache.rave.model.User;
 import org.apache.rave.portal.model.conversion.ConvertingListProxyFactory;
 import org.springframework.security.core.GrantedAuthority;
 

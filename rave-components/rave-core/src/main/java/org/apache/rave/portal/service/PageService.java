@@ -18,7 +18,10 @@
  */
 package org.apache.rave.portal.service;
 
-import org.apache.rave.portal.model.*;
+import org.apache.rave.model.Page;
+import org.apache.rave.model.PageType;
+import org.apache.rave.model.Region;
+import org.apache.rave.model.RegionWidget;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 
@@ -43,7 +46,7 @@ public interface PageService {
      * @param userId The user to retrieve pages for.
      * @return A non null possible empty list of pages for the given user.
      */   
-    @PreAuthorize("hasPermission(new org.apache.rave.portal.security.impl.RaveSecurityContext(#userId, 'org.apache.rave.portal.model.User'), 'org.apache.rave.portal.model.Page', 'read')") 
+    @PreAuthorize("hasPermission(new org.apache.rave.portal.security.impl.RaveSecurityContext(#userId, 'org.apache.rave.model.User'), 'org.apache.rave.model.Page', 'read')")
     List<Page> getAllUserPages(String userId);
     
     /**
@@ -90,7 +93,7 @@ public interface PageService {
      * @param userId the entityId of the user to create a default page for
      * @return the new default Page object for the user
      */        
-    @PreAuthorize("hasPermission(new org.apache.rave.portal.security.impl.RaveSecurityContext(#userId, 'org.apache.rave.portal.model.User'), 'org.apache.rave.portal.model.Page', 'create')")         
+    @PreAuthorize("hasPermission(new org.apache.rave.portal.security.impl.RaveSecurityContext(#userId, 'org.apache.rave.model.User'), 'org.apache.rave.model.Page', 'create')")
     Page addNewDefaultUserPage(String userId);
 
     /**
@@ -116,7 +119,7 @@ public interface PageService {
      * 
      * @param pageId the pageId to delete
      */
-    @PreAuthorize("hasPermission(#pageId, 'org.apache.rave.portal.model.Page', 'delete')") 
+    @PreAuthorize("hasPermission(#pageId, 'org.apache.rave.model.Page', 'delete')")
     void deletePage(String pageId);
 
     /**
@@ -125,7 +128,7 @@ public interface PageService {
      * @param userId
      * @param pageType
      */
-    @PreAuthorize("hasPermission(new org.apache.rave.portal.security.impl.RaveSecurityContext(#userId, 'org.apache.rave.portal.model.User'), 'org.apache.rave.portal.model.Page', 'delete')")
+    @PreAuthorize("hasPermission(new org.apache.rave.portal.security.impl.RaveSecurityContext(#userId, 'org.apache.rave.model.User'), 'org.apache.rave.model.Page', 'delete')")
     int deletePages(String userId, PageType pageType);
     
     /**
@@ -137,9 +140,9 @@ public interface PageService {
      * @param fromRegionId the id of the Region where the RegionWidget currently resides
      * @return the updated RegionWidget
      */
-    @PreAuthorize("hasPermission(#regionWidgetId, 'org.apache.rave.portal.model.RegionWidget', 'update') and " +
-                  "hasPermission(#toRegionId, 'org.apache.rave.portal.model.Region', 'update') and " +
-                  "hasPermission(#fromRegionId, 'org.apache.rave.portal.model.Region', 'update')")
+    @PreAuthorize("hasPermission(#regionWidgetId, 'org.apache.rave.model.RegionWidget', 'update') and " +
+                  "hasPermission(#toRegionId, 'org.apache.rave.model.Region', 'update') and " +
+                  "hasPermission(#fromRegionId, 'org.apache.rave.model.Region', 'update')")
     RegionWidget moveRegionWidget(String regionWidgetId, int newPosition, String toRegionId, String fromRegionId);
 
     /**
@@ -149,28 +152,28 @@ public interface PageService {
      * @param toPageId the new page to move the regionWidgetTo
      * @return the updated RegionWidget object
      */
-    @PreAuthorize("hasPermission(#regionWidgetId, 'org.apache.rave.portal.model.RegionWidget', 'update') and " +
-                  "hasPermission(#toPageId, 'org.apache.rave.portal.model.Page', 'update')")
+    @PreAuthorize("hasPermission(#regionWidgetId, 'org.apache.rave.model.RegionWidget', 'update') and " +
+                  "hasPermission(#toPageId, 'org.apache.rave.model.Page', 'update')")
     RegionWidget moveRegionWidgetToPage(String regionWidgetId, String toPageId);
     
     /**
      * Creates a new instance of a widget and adds it to the first position of the first region on the page
      * @param pageId the id of the page to add the widget to
-     * @param widgetId the {@link org.apache.rave.portal.model.Widget} id to add
+     * @param widgetId the {@link org.apache.rave.model.Widget} id to add
      * @return a valid widget instance
      */
-    @PreAuthorize("hasPermission(#pageId, 'org.apache.rave.portal.model.Page', 'update') and " +
-                  "hasPermission(#widgetId, 'org.apache.rave.portal.model.Widget', 'read')") 
+    @PreAuthorize("hasPermission(#pageId, 'org.apache.rave.model.Page', 'update') and " +
+                  "hasPermission(#widgetId, 'org.apache.rave.model.Widget', 'read')")
     RegionWidget addWidgetToPage(String pageId, String widgetId);
     
     /**
      * Creates a new instance of a widget and adds it to the first position of the identified region on the page
      * @param pageId the id of the page to add the widget to
-     * @param widgetId the {@link org.apache.rave.portal.model.Widget} id to add
+     * @param widgetId the {@link org.apache.rave.model.Widget} id to add
      * @return a valid widget instance
      */
-    @PreAuthorize("hasPermission(#pageId, 'org.apache.rave.portal.model.Page', 'update') and " +
-                  "hasPermission(#widgetId, 'org.apache.rave.portal.model.Widget', 'read')") 
+    @PreAuthorize("hasPermission(#pageId, 'org.apache.rave.model.Page', 'update') and " +
+                  "hasPermission(#widgetId, 'org.apache.rave.model.Widget', 'read')")
     RegionWidget addWidgetToPageRegion(String pageId, String widgetId, String regionId);
 
     /**
@@ -179,7 +182,7 @@ public interface PageService {
      * @param regionWidgetId the id of the region widget to delete.\
      * @return the region from which the widget was deleted
      */
-    @PreAuthorize("hasPermission(#regionWidgetId, 'org.apache.rave.portal.model.RegionWidget', 'delete')")
+    @PreAuthorize("hasPermission(#regionWidgetId, 'org.apache.rave.model.RegionWidget', 'delete')")
     Region removeWidgetFromPage(String regionWidgetId);
 
     /**
@@ -189,7 +192,7 @@ public interface PageService {
      * @param name the new name for the page
      * @param pageLayoutCode the new layout for the page
      */
-    @PreAuthorize("hasPermission(#pageId, 'org.apache.rave.portal.model.Page', 'update')") 
+    @PreAuthorize("hasPermission(#pageId, 'org.apache.rave.model.Page', 'update')")
     Page updatePage(String pageId, String name, String pageLayoutCode);
     
     /**
@@ -200,8 +203,8 @@ public interface PageService {
      *                        -1 if you want this to be the first page
      * @return the updated Page object containing its new render sequence
      */
-    @PreAuthorize("hasPermission(#pageId, 'org.apache.rave.portal.model.Page', 'read') and " +
-                  "hasPermission(#moveAfterPageId, 'org.apache.rave.portal.model.Page', 'read')")
+    @PreAuthorize("hasPermission(#pageId, 'org.apache.rave.model.Page', 'read') and " +
+                  "hasPermission(#moveAfterPageId, 'org.apache.rave.model.Page', 'read')")
     Page movePage(String pageId, String moveAfterPageId);
     
     /**
@@ -210,7 +213,7 @@ public interface PageService {
      * @param pageId the pageId of the page to move to the default position
      * @return the updated Page object containing its new render sequence
      */
-    @PreAuthorize("hasPermission(#pageId, 'org.apache.rave.portal.model.Page', 'read')") 
+    @PreAuthorize("hasPermission(#pageId, 'org.apache.rave.model.Page', 'read')")
     Page movePageToDefault(String pageId);
 
     /**
@@ -220,7 +223,7 @@ public interface PageService {
      * @param pageName = name of the page
      * @return true or false whether the user was added
      */
-    @PreAuthorize("hasPermission(#pageId, 'org.apache.rave.portal.model.Page', 'update')")
+    @PreAuthorize("hasPermission(#pageId, 'org.apache.rave.model.Page', 'update')")
     Boolean clonePageForUser(String pageId, String userId, String pageName);
 
     /**
@@ -229,7 +232,7 @@ public interface PageService {
      * @param userId - the userid to add
      * @return true or false whether the user was added
      */
-    @PreAuthorize("hasPermission(#pageId, 'org.apache.rave.portal.model.Page', 'update')")
+    @PreAuthorize("hasPermission(#pageId, 'org.apache.rave.model.Page', 'update')")
     Boolean addMemberToPage(String pageId, String userId);
 
     /**
@@ -240,7 +243,7 @@ public interface PageService {
      * Note: this is read access because a page shared to a non page owner means they have 'read' access
      * unless they are set as an 'editor' of the page, which means 'update' access. 
      */
-    @PreAuthorize("hasPermission(#pageId, 'org.apache.rave.portal.model.Page', 'read')")
+    @PreAuthorize("hasPermission(#pageId, 'org.apache.rave.model.Page', 'read')")
     Boolean removeMemberFromPage(String pageId, String userId);
 
     /**
@@ -249,7 +252,7 @@ public interface PageService {
      * @param shareStatus - a string value defined in PageStatus
      * @return
      */
-    @PreAuthorize("hasPermission(#pageId, 'org.apache.rave.portal.model.Page', 'read')")
+    @PreAuthorize("hasPermission(#pageId, 'org.apache.rave.model.Page', 'read')")
     Boolean updateSharedPageStatus(String pageId, String shareStatus);
 
     /**
@@ -260,7 +263,7 @@ public interface PageService {
      * @param isEditor - value to denote if the user can edit or not
      * @return
      */
-    @PreAuthorize("hasPermission(#pageId, 'org.apache.rave.portal.model.Page', 'update')")
+    @PreAuthorize("hasPermission(#pageId, 'org.apache.rave.model.Page', 'update')")
     Boolean updatePageEditingStatus(String pageId, String userId, boolean isEditor);
 
 }

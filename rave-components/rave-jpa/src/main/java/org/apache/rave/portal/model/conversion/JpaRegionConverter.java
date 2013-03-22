@@ -20,7 +20,7 @@ package org.apache.rave.portal.model.conversion;
 
 import org.apache.rave.model.ModelConverter;
 import org.apache.rave.portal.model.JpaRegion;
-import org.apache.rave.portal.model.Region;
+import org.apache.rave.model.Region;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;

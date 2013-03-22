@@ -20,7 +20,7 @@
 package org.apache.rave.portal.web.controller;
 
 import org.apache.rave.portal.model.impl.UserImpl;
-import org.apache.rave.portal.model.User;
+import org.apache.rave.model.User;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.portal.web.controller.util.ModelUtils;
 import org.apache.rave.portal.web.model.UserForm;
@@ -45,7 +45,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  * Only requests that have a valid (matched) forgotPasswordHash will be honored
  *
  * @version "$Id$"
- * @see org.apache.rave.portal.model.User#getForgotPasswordHash()
+ * @see org.apache.rave.model.User#getForgotPasswordHash()
  */
 @Controller
 public class ChangePasswordController {

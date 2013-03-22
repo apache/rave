@@ -20,7 +20,7 @@ package org.apache.rave.portal.model.conversion;
 
 import org.apache.rave.persistence.jpa.util.JpaUtil;
 import org.apache.rave.portal.model.JpaWidgetTag;
-import org.apache.rave.portal.model.WidgetTag;
+import org.apache.rave.model.WidgetTag;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;
@@ -28,7 +28,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 /**
- * Converts from a {@link org.apache.rave.portal.model.WidgetTag} to a {@link org.apache.rave.portal.model.JpaWidgetTag}
+ * Converts from a {@link org.apache.rave.model.WidgetTag} to a {@link org.apache.rave.portal.model.JpaWidgetTag}
  */
 @Component
 public class JpaWidgetTagConverter {

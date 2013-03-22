@@ -19,13 +19,13 @@
 
 package org.apache.rave.portal.service;
 
-import org.apache.rave.portal.model.Authority;
+import org.apache.rave.model.Authority;
 import org.apache.rave.portal.model.util.SearchResult;
 
 public interface AuthorityService {
 
     /**
-     * @param id unique identifier of the {@link org.apache.rave.portal.model.Authority}
+     * @param id unique identifier of the {@link org.apache.rave.model.Authority}
      * @return Authority if it can be found, otherwise {@literal null}
      */
     Authority getAuthorityById(String id);
@@ -37,13 +37,13 @@ public interface AuthorityService {
     Authority getAuthorityByName(String authorityName);
 
     /**
-     * @return a {@link SearchResult} with all {@link org.apache.rave.portal.model.Authority}'s
+     * @return a {@link SearchResult} with all {@link org.apache.rave.model.Authority}'s
      */
     SearchResult<Authority> getAllAuthorities();
 
      /**
      * @return a {@link SearchResult} with the list of all default
-     * {@link org.apache.rave.portal.model.Authority}'s
+     * {@link org.apache.rave.model.Authority}'s
      */
     SearchResult<Authority> getDefaultAuthorities();
 }

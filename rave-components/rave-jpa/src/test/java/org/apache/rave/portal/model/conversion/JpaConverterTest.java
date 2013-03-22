@@ -20,13 +20,13 @@
 package org.apache.rave.portal.model.conversion;
 
 import org.apache.rave.model.ModelConverter;
-import org.apache.rave.portal.model.Address;
-import org.apache.rave.portal.model.Group;
+import org.apache.rave.model.Address;
+import org.apache.rave.model.Group;
 import org.apache.rave.portal.model.JpaAddress;
 import org.apache.rave.portal.model.JpaPageLayout;
 import org.apache.rave.portal.model.JpaPerson;
-import org.apache.rave.portal.model.PageLayout;
-import org.apache.rave.portal.model.Person;
+import org.apache.rave.model.PageLayout;
+import org.apache.rave.model.Person;
 import org.apache.rave.portal.model.impl.AddressImpl;
 import org.apache.rave.portal.model.impl.GroupImpl;
 import org.apache.rave.portal.model.impl.PersonImpl;

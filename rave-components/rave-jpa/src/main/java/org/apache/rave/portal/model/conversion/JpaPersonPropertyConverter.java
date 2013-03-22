@@ -20,7 +20,7 @@ package org.apache.rave.portal.model.conversion;
 
 import org.apache.rave.model.ModelConverter;
 import org.apache.rave.portal.model.JpaPersonProperty;
-import org.apache.rave.portal.model.PersonProperty;
+import org.apache.rave.model.PersonProperty;
 import org.springframework.stereotype.Component;
 
 /**

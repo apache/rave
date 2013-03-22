@@ -19,7 +19,7 @@
 package org.apache.rave.portal.model.conversion;
 
 import org.apache.rave.model.ModelConverter;
-import org.apache.rave.portal.model.ActivityStreamsObject;
+import org.apache.rave.model.ActivityStreamsObject;
 import org.apache.rave.portal.model.JpaActivityStreamsObject;
 import org.springframework.stereotype.Component;
 

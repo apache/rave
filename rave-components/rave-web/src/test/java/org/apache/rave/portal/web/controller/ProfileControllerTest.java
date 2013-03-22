@@ -19,16 +19,15 @@
 
 package org.apache.rave.portal.web.controller;
 
-import org.apache.rave.portal.model.Page;
-import org.apache.rave.portal.model.PageLayout;
-import org.apache.rave.portal.model.Person;
-import org.apache.rave.portal.model.User;
+import org.apache.rave.model.Page;
+import org.apache.rave.model.PageLayout;
+import org.apache.rave.model.Person;
+import org.apache.rave.model.User;
 import org.apache.rave.portal.model.impl.PageImpl;
 import org.apache.rave.portal.model.impl.PageLayoutImpl;
 import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.service.PageService;
 import org.apache.rave.portal.service.UserService;
-import org.apache.rave.portal.service.WidgetService;
 import org.apache.rave.portal.web.model.UserForm;
 import org.apache.rave.portal.web.util.ModelKeys;
 import org.apache.rave.portal.web.util.ViewNames;

@@ -18,7 +18,7 @@
  */
 package org.apache.rave.portal.web.tag;
 
-import org.apache.rave.portal.model.PortalPreference;
+import org.apache.rave.model.PortalPreference;
 import org.apache.rave.portal.model.impl.PortalPreferenceImpl;
 import org.apache.rave.portal.service.PortalPreferenceService;
 import org.apache.rave.portal.web.util.PortalPreferenceKeys;

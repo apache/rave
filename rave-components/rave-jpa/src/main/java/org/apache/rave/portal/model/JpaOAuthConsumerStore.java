@@ -19,6 +19,8 @@
 
 package org.apache.rave.portal.model;
 
+import org.apache.rave.model.OAuthConsumerStore;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;

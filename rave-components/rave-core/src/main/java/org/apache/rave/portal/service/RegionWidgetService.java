@@ -19,8 +19,8 @@
 
 package org.apache.rave.portal.service;
 
-import org.apache.rave.portal.model.RegionWidget;
-import org.apache.rave.portal.model.RegionWidgetPreference;
+import org.apache.rave.model.RegionWidget;
+import org.apache.rave.model.RegionWidgetPreference;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 
@@ -42,7 +42,7 @@ public interface RegionWidgetService {
      * @param regionWidget The RegionWidget to save.
      * @return The updated RegionWidget with all ID numbers populated.
      */
-    @PreAuthorize("hasPermission(#regionWidget.id, 'org.apache.rave.portal.model.RegionWidget', 'update')")
+    @PreAuthorize("hasPermission(#regionWidget.id, 'org.apache.rave.model.RegionWidget', 'update')")
     RegionWidget saveRegionWidget(RegionWidget regionWidget);
 
     /**
@@ -52,7 +52,7 @@ public interface RegionWidgetService {
      * @param preferences    The collection of new RegionWidgetPreferences.
      * @return The updated RegionWidgetPreferences with all ID numbers populated.
      */
-    @PreAuthorize("hasPermission(#regionWidgetId, 'org.apache.rave.portal.model.RegionWidget', 'update')")
+    @PreAuthorize("hasPermission(#regionWidgetId, 'org.apache.rave.model.RegionWidget', 'update')")
     List<RegionWidgetPreference> saveRegionWidgetPreferences(String regionWidgetId,
                                                              List<RegionWidgetPreference> preferences);
 
@@ -64,7 +64,7 @@ public interface RegionWidgetService {
      * @param preference     The RegionWidgetPreference to save.
      * @return The updated RegionWidgetPreference with all ID numbers populated.
      */
-    @PreAuthorize("hasPermission(#regionWidgetId, 'org.apache.rave.portal.model.RegionWidget', 'update')")
+    @PreAuthorize("hasPermission(#regionWidgetId, 'org.apache.rave.model.RegionWidget', 'update')")
     RegionWidgetPreference saveRegionWidgetPreference(String regionWidgetId, RegionWidgetPreference preference);
     
     /**
@@ -74,6 +74,6 @@ public interface RegionWidgetService {
      * @param collapsed the collapsed state of the RegionWidget
      * @return The updated RegionWidget with the new collapsed value
      */
-    @PreAuthorize("hasPermission(#regionWidgetId, 'org.apache.rave.portal.model.RegionWidget', 'update')")
+    @PreAuthorize("hasPermission(#regionWidgetId, 'org.apache.rave.model.RegionWidget', 'update')")
     RegionWidget saveRegionWidgetCollapsedState(String regionWidgetId, boolean collapsed);
 }

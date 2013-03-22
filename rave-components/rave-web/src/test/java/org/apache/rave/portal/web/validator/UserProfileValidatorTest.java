@@ -19,7 +19,7 @@
 
 package org.apache.rave.portal.web.validator;
 
-import org.apache.rave.portal.model.User;
+import org.apache.rave.model.User;
 import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.service.UserService;
 import org.junit.Before;
@@ -45,7 +45,7 @@ public class UserProfileValidatorTest {
 
     @Test
     public void testSupports() throws Exception {
-        assertTrue("Can validate org.apache.rave.portal.model.User", validator.supports(UserImpl.class));
+        assertTrue("Can validate org.apache.rave.model.User", validator.supports(UserImpl.class));
     }
 
     @Test

@@ -18,7 +18,7 @@
  */
 package org.apache.rave.portal.service;
 
-import org.apache.rave.portal.model.Page;
+import org.apache.rave.model.Page;
 import org.apache.rave.portal.model.util.omdl.OmdlOutputAdapter;
 import org.springframework.web.multipart.MultipartFile;
 

@@ -19,7 +19,7 @@
 
 package org.apache.rave.portal.model.conversion.impl;
 
-import org.apache.rave.portal.model.Authority;
+import org.apache.rave.model.Authority;
 import org.apache.rave.portal.model.MongoDbAuthority;
 import org.apache.rave.portal.model.impl.AuthorityImpl;
 import org.junit.Before;

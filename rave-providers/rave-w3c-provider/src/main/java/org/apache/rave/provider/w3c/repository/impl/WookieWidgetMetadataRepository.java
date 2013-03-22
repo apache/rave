@@ -19,9 +19,7 @@
 
 package org.apache.rave.provider.w3c.repository.impl;
 
-import java.io.IOException;
-
-import org.apache.rave.portal.model.Widget;
+import org.apache.rave.model.Widget;
 import org.apache.rave.portal.service.WidgetProviderService;
 import org.apache.rave.provider.w3c.repository.W3CWidgetMetadataRepository;
 import org.apache.rave.provider.w3c.service.impl.WookieWidgetService;

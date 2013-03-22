@@ -21,7 +21,7 @@ package org.apache.rave.portal.repository.impl;
 
 import org.apache.rave.exception.NotSupportedException;
 import org.apache.rave.portal.model.JpaPerson;
-import org.apache.rave.portal.model.Person;
+import org.apache.rave.model.Person;
 import org.apache.rave.portal.model.impl.PersonImpl;
 import org.apache.rave.portal.repository.PersonRepository;
 import org.junit.Test;

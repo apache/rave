@@ -19,35 +19,35 @@
 
 package org.apache.rave.gadgets.oauth.service;
 
-import org.apache.rave.portal.model.OAuthTokenInfo;
+import org.apache.rave.model.OAuthTokenInfo;
 
 /**
  * Service to handle OAuth Tokens
  */
 public interface OAuthTokenInfoService {
     /**
-     * Retrieves {@link org.apache.rave.portal.model.OAuthTokenInfo}
+     * Retrieves {@link org.apache.rave.model.OAuthTokenInfo}
      *
      * @param userId      unique identifier of gadget viewer
      * @param appUrl      URL of the gadget
      * @param moduleId    the module ID of the application
      * @param tokenName   gadget's nickname for the token to use
      * @param serviceName name of the service provider
-     * @return {@link org.apache.rave.portal.model.OAuthTokenInfo} or {@literal null} if none matches the criteria
+     * @return {@link org.apache.rave.model.OAuthTokenInfo} or {@literal null} if none matches the criteria
      */
     OAuthTokenInfo findOAuthTokenInfo(String userId, String appUrl, String moduleId,
                                              String tokenName, String serviceName);
 
     /**
-     * Persists the {@link org.apache.rave.portal.model.OAuthTokenInfo} to the data store
+     * Persists the {@link org.apache.rave.model.OAuthTokenInfo} to the data store
      *
-     * @param tokenInfo {@link org.apache.rave.portal.model.OAuthTokenInfo} to save
+     * @param tokenInfo {@link org.apache.rave.model.OAuthTokenInfo} to save
      * @return persisted OAuthTokenInfo
      */
     OAuthTokenInfo saveOAuthTokenInfo(OAuthTokenInfo tokenInfo);
 
     /**
-     * Removes the {@link org.apache.rave.portal.model.OAuthTokenInfo}'s that match the criteria from the data store
+     * Removes the {@link org.apache.rave.model.OAuthTokenInfo}'s that match the criteria from the data store
      *
      * @param userId      unique identifier of the gadget viewer
      * @param appUrl      URL of the gadget

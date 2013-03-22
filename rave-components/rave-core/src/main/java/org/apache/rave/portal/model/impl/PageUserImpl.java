@@ -18,7 +18,9 @@
  */
 package org.apache.rave.portal.model.impl;
 
-import org.apache.rave.portal.model.*;
+import org.apache.rave.model.Page;
+import org.apache.rave.model.PageInvitationStatus;
+import org.apache.rave.model.PageUser;
 import org.codehaus.jackson.annotate.JsonBackReference;
 
 public class PageUserImpl implements PageUser {

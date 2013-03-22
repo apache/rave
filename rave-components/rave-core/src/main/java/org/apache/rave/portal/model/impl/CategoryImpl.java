@@ -18,7 +18,8 @@
  */
 package org.apache.rave.portal.model.impl;
 
-import org.apache.rave.portal.model.*;
+import org.apache.rave.model.Category;
+import org.apache.rave.model.Widget;
 
 import java.util.Date;
 import java.util.List;

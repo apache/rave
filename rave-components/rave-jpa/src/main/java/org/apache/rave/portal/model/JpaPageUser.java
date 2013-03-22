@@ -22,6 +22,10 @@ import java.io.Serializable;
 
 import javax.persistence.*;
 
+import org.apache.rave.model.Page;
+import org.apache.rave.model.PageInvitationStatus;
+import org.apache.rave.model.PageUser;
+import org.apache.rave.model.User;
 import org.apache.rave.portal.model.conversion.JpaConverter;
 import org.codehaus.jackson.annotate.JsonBackReference;
 @Entity

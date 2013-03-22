@@ -26,8 +26,8 @@ import net.oauth.signature.RSA_SHA1;
 import org.apache.commons.io.IOUtils;
 import org.apache.rave.gadgets.oauth.service.OAuthConsumerStoreService;
 import org.apache.rave.gadgets.oauth.service.OAuthTokenInfoService;
-import org.apache.rave.portal.model.OAuthConsumerStore;
-import org.apache.rave.portal.model.OAuthTokenInfo;
+import org.apache.rave.model.OAuthConsumerStore;
+import org.apache.rave.model.OAuthTokenInfo;
 import org.apache.rave.portal.model.impl.OAuthTokenInfoImpl;
 import org.apache.shindig.auth.SecurityToken;
 import org.apache.shindig.gadgets.GadgetException;
@@ -132,7 +132,7 @@ public class DefaultOAuthStore implements OAuthStore {
      * Creates an {@link OAuthConsumer} based on the OAuth signature method
      *
      * @param provider      {@link net.oauth.OAuthServiceProvider}
-     * @param consumerStore {@link org.apache.rave.portal.model.OAuthConsumerStore}
+     * @param consumerStore {@link org.apache.rave.model.OAuthConsumerStore}
      *                      persistent OAuth consumer keys & secrets
      * @return {@link OAuthConsumer} if the signature method is supported
      */

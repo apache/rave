@@ -19,7 +19,7 @@
 
 package org.apache.rave.portal.web.api.rest;
 
-import org.apache.rave.portal.model.*;
+import org.apache.rave.model.*;
 import org.apache.rave.portal.model.impl.TagImpl;
 import org.apache.rave.portal.model.impl.WidgetCommentImpl;
 import org.apache.rave.portal.model.impl.WidgetRatingImpl;

@@ -19,8 +19,8 @@
 <%@ page language="java" trimDirectiveWhitespaces="true" %>
 <%@ include file="/WEB-INF/jsp/includes/taglibs.jsp" %>
 <fmt:setBundle basename="messages"/>
-<jsp:useBean id="pages" type="java.util.List<org.apache.rave.portal.model.Page>" scope="request"/>
-<%--@elvariable id="page" type="org.apache.rave.portal.model.Page"--%>
+<jsp:useBean id="pages" type="java.util.List<org.apache.rave.model.Page>" scope="request"/>
+<%--@elvariable id="page" type="org.apache.rave.model.Page"--%>
 <sec:authentication property="principal.username" var="principleUsername" scope="request"/>
 <sec:authentication property="principal.displayName" var="displayName" scope="request"/>
 

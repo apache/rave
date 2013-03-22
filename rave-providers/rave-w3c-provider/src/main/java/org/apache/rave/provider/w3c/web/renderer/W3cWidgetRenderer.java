@@ -20,7 +20,7 @@
 package org.apache.rave.provider.w3c.web.renderer;
 
 import org.apache.rave.exception.NotSupportedException;
-import org.apache.rave.portal.model.*;
+import org.apache.rave.model.*;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.portal.service.WidgetProviderService;
 import org.apache.rave.portal.web.renderer.RegionWidgetRenderer;
@@ -85,7 +85,7 @@ public class W3cWidgetRenderer implements RegionWidgetRenderer {
     }
 
     /**
-     * Renders a {@link org.apache.rave.portal.model.RegionWidget} as HTML markup
+     * Renders a {@link org.apache.rave.model.RegionWidget} as HTML markup
      *
      * @param wrapper RegionWidgetImpl to render
      * @param context

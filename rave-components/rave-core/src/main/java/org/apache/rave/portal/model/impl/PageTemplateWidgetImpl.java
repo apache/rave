@@ -18,7 +18,8 @@
  */
 package org.apache.rave.portal.model.impl;
 
-import org.apache.rave.portal.model.*;
+import org.apache.rave.model.PageTemplateRegion;
+import org.apache.rave.model.PageTemplateWidget;
 
 public class PageTemplateWidgetImpl implements PageTemplateWidget {
     private String id;

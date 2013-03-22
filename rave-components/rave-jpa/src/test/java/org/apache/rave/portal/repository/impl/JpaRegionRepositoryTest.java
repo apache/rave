@@ -21,8 +21,8 @@ package org.apache.rave.portal.repository.impl;
 
 import org.apache.rave.portal.model.JpaRegion;
 import org.apache.rave.portal.model.JpaRegionWidget;
-import org.apache.rave.portal.model.Region;
-import org.apache.rave.portal.model.RegionWidget;
+import org.apache.rave.model.Region;
+import org.apache.rave.model.RegionWidget;
 import org.apache.rave.portal.model.impl.RegionImpl;
 import org.apache.rave.portal.repository.RegionRepository;
 import org.junit.Test;

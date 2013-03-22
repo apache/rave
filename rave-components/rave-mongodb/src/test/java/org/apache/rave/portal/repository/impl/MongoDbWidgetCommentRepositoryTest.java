@@ -20,8 +20,8 @@
 package org.apache.rave.portal.repository.impl;
 
 import com.google.common.collect.Lists;
-import org.apache.rave.portal.model.Widget;
-import org.apache.rave.portal.model.WidgetComment;
+import org.apache.rave.model.Widget;
+import org.apache.rave.model.WidgetComment;
 import org.apache.rave.portal.model.impl.WidgetCommentImpl;
 import org.apache.rave.portal.model.impl.WidgetImpl;
 import org.apache.rave.portal.repository.MongoWidgetOperations;

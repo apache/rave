@@ -20,8 +20,8 @@
 package org.apache.rave.portal.repository.impl;
 
 import org.apache.rave.portal.model.MongoDbPageTemplate;
-import org.apache.rave.portal.model.PageTemplate;
-import org.apache.rave.portal.model.PageType;
+import org.apache.rave.model.PageTemplate;
+import org.apache.rave.model.PageType;
 import org.apache.rave.portal.model.conversion.HydratingConverterFactory;
 import org.apache.rave.portal.model.impl.PageTemplateImpl;
 import org.apache.rave.portal.repository.util.CollectionNames;

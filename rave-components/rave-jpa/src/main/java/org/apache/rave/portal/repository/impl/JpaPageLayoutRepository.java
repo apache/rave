@@ -20,7 +20,7 @@
 package org.apache.rave.portal.repository.impl;
 
 import org.apache.rave.portal.model.JpaPageLayout;
-import org.apache.rave.portal.model.PageLayout;
+import org.apache.rave.model.PageLayout;
 import org.apache.rave.portal.model.conversion.JpaPageLayoutConverter;
 import org.apache.rave.portal.repository.PageLayoutRepository;
 import org.apache.rave.util.CollectionUtils;

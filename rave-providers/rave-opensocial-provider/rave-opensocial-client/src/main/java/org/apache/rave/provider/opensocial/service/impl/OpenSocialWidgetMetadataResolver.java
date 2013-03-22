@@ -19,7 +19,7 @@
 
 package org.apache.rave.provider.opensocial.service.impl;
 
-import org.apache.rave.portal.model.Widget;
+import org.apache.rave.model.Widget;
 import org.apache.rave.portal.model.impl.WidgetImpl;
 import org.apache.rave.portal.service.WidgetMetadataResolver;
 import org.apache.rave.provider.opensocial.Constants;

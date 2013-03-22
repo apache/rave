@@ -21,12 +21,12 @@
 package org.apache.rave.portal.model.impl;
 
 
-import org.apache.rave.portal.model.ActivityStreamsMediaLink;
+import org.apache.rave.model.ActivityStreamsMediaLink;
 
 import java.util.Map;
 
 
-public class ActivityStreamsMediaLinkImpl implements ActivityStreamsMediaLink{
+public class ActivityStreamsMediaLinkImpl implements ActivityStreamsMediaLink {
 
 	private static final long serialVersionUID = 1L;
 

@@ -19,7 +19,10 @@
 
 package org.apache.rave.portal.web.controller;
 
-import org.apache.rave.portal.model.*;
+import org.apache.rave.model.PortalPreference;
+import org.apache.rave.model.User;
+import org.apache.rave.model.Widget;
+import org.apache.rave.model.WidgetStatus;
 import org.apache.rave.portal.model.impl.WidgetImpl;
 import org.apache.rave.portal.service.*;
 import org.apache.rave.portal.web.controller.util.ControllerUtils;
@@ -68,7 +71,7 @@ public class WidgetStoreController {
      * @param model
      *            model map
      * @param referringPageId
-     *            the source {@link org.apache.rave.portal.model.Page } ID
+     *            the source {@link org.apache.rave.model.Page } ID
      * @param offset
      *            offset within the total amount of results (to enable paging)
      * @return the view name of the main store page
@@ -100,9 +103,9 @@ public class WidgetStoreController {
      * @param model
      *            model map
      * @param widgetId
-     *            ID of the {@link org.apache.rave.portal.model.Widget } to view
+     *            ID of the {@link org.apache.rave.model.Widget } to view
      * @param referringPageId
-     *            the source {@link org.apache.rave.portal.model.Page } ID
+     *            the source {@link org.apache.rave.model.Page } ID
      * @return the view name of the widget detail page
      */
     @RequestMapping(method = RequestMethod.GET, value = "widget/{widgetId}")
@@ -122,7 +125,7 @@ public class WidgetStoreController {
      * @param model
      *            {@link Model} map
      * @param referringPageId
-     *            the source {@link org.apache.rave.portal.model.Page } ID
+     *            the source {@link org.apache.rave.model.Page } ID
      * @param searchTerm
      *            free text searchTerm query
      * @param offset
@@ -148,7 +151,7 @@ public class WidgetStoreController {
      * @param model
      *            {@link Model} map
      * @param referringPageId
-     *            the source {@link org.apache.rave.portal.model.Page } ID
+     *            the source {@link org.apache.rave.model.Page } ID
      * @param keyword
      *            free text tag keyword
      * @param offset
@@ -190,7 +193,7 @@ public class WidgetStoreController {
      * @param model
      *            {@link Model}
      * @param referringPageId
-     *            the source {@link org.apache.rave.portal.model.Page } ID
+     *            the source {@link org.apache.rave.model.Page } ID
      * @return the view name of the Add new Widget form
      */
     @RequestMapping(method = RequestMethod.GET, value = "widget/add")
@@ -210,7 +213,7 @@ public class WidgetStoreController {
      * @param model
      *            {@link Model}
      * @param referringPageId
-     *            the source {@link org.apache.rave.portal.model.Page } ID
+     *            the source {@link org.apache.rave.model.Page } ID
      * @param type
      *            the type of widget add form to display, e.g. W3C or OpenSocial (default)
      * @return the view name of the Add new Widget form
@@ -237,13 +240,13 @@ public class WidgetStoreController {
      * Validates the form input, if valid, tries to store the Widget data
      *
      * @param widget
-     *            {@link org.apache.rave.portal.model.Widget} as submitted by the user
+     *            {@link org.apache.rave.model.Widget} as submitted by the user
      * @param results
      *            {@link BindingResult}
      * @param model
      *            {@link Model}
      * @param referringPageId
-     *            the source {@link org.apache.rave.portal.model.Page } ID
+     *            the source {@link org.apache.rave.model.Page } ID
      * @return if successful the view name of the widget, otherwise the form
      */
     @RequestMapping(method = RequestMethod.POST, value = "widget/add")
@@ -265,13 +268,13 @@ public class WidgetStoreController {
      * Validates the form input, if valid, tries to store the Widget data
      *
      * @param widget
-     *            {@link org.apache.rave.portal.model.Widget} as submitted by the user
+     *            {@link org.apache.rave.model.Widget} as submitted by the user
      * @param results
      *            {@link BindingResult}
      * @param model
      *            {@link Model}
      * @param referringPageId
-     *            the source {@link org.apache.rave.portal.model.Page } ID
+     *            the source {@link org.apache.rave.model.Page } ID
      * @return if successful the view name of the widget, otherwise the form
      */
     @RequestMapping(method = RequestMethod.POST, value = "widget/add/w3c")
@@ -293,7 +296,7 @@ public class WidgetStoreController {
     /**
      * Finalize adding a new widget created from validated form data, and redirect to its store detail page
      * @param widget
-     *            {@link org.apache.rave.portal.model.Widget} as created from form input
+     *            {@link org.apache.rave.model.Widget} as created from form input
      * @param user
      *            the user submitting the new widget
      * @param referringPageId

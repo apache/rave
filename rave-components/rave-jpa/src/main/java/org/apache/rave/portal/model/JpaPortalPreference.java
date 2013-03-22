@@ -20,6 +20,7 @@
 package org.apache.rave.portal.model;
 
 import org.apache.rave.exception.NotSupportedException;
+import org.apache.rave.model.PortalPreference;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;

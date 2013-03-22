@@ -20,7 +20,7 @@
 package org.apache.rave.portal.web.api.rest;
 
 import org.apache.commons.lang.Validate;
-import org.apache.rave.portal.model.RegionWidgetPreference;
+import org.apache.rave.model.RegionWidgetPreference;
 import org.apache.rave.portal.service.RegionWidgetService;
 import org.apache.rave.portal.web.model.RegionWidgetPreferenceListWrapper;
 import org.slf4j.Logger;
@@ -30,7 +30,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import org.apache.rave.portal.model.RegionWidget;
+import org.apache.rave.model.RegionWidget;
 
 /**
  * Handler for all services exposed under the /api/regionWidgets path.

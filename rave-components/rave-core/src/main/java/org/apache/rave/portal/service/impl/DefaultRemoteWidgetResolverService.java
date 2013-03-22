@@ -22,10 +22,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.rave.portal.model.PortalPreference;
-import org.apache.rave.portal.model.User;
-import org.apache.rave.portal.model.Widget;
-import org.apache.rave.portal.model.WidgetStatus;
+import org.apache.rave.model.PortalPreference;
+import org.apache.rave.model.User;
+import org.apache.rave.model.Widget;
+import org.apache.rave.model.WidgetStatus;
 import org.apache.rave.portal.service.PortalPreferenceService;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.portal.service.WidgetMetadataResolver;
@@ -83,7 +83,7 @@ public class DefaultRemoteWidgetResolverService implements RemoteWidgetResolverS
 
     /*
      * (non-Javadoc)
-     * @see org.apache.rave.portal.service.WidgetResolverService#addWidget(org.apache.rave.portal.model.Widget)
+     * @see org.apache.rave.portal.service.WidgetResolverService#addWidget(org.apache.rave.model.Widget)
      */
     @Override
     public Widget addWidget(Widget widget) throws Exception{

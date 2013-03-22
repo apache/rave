@@ -76,7 +76,7 @@
                     </div>
                 </c:if>
                 <ul class="storeItems">
-                        <%--@elvariable id="widget" type="org.apache.rave.portal.model.Widget"--%>
+                        <%--@elvariable id="widget" type="org.apache.rave.model.Widget"--%>
                     <c:forEach var="widget" items="${widgets.resultSet}">
                         <%--@elvariable id="widgetsStatistics" type="org.apache.rave.portal.model.util.WidgetStatistics"--%>
                         <c:set var="widgetStatistics" value="${widgetsStatistics[widget.id]}"/>

@@ -147,6 +147,7 @@ be overridden by setting a system property "portal.override.properties" -->
 
     <import resource="classpath*:org/apache/rave/core-applicationContext.xml"/>
     <import resource="classpath*:org/apache/rave/web-applicationContext.xml"/>
+    <import resource="cxf-applicationContext.xml"/>
     <import resource="classpath*:org/apache/rave/opensocial-provider-applicationContext.xml"/>
     <import resource="classpath*:org/apache/rave/w3c-provider-applicationContext.xml"/>
 

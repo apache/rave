@@ -19,10 +19,10 @@
 
 package org.apache.rave.portal.repository.impl;
 
-import org.apache.rave.portal.model.Authority;
+import org.apache.rave.model.Authority;
 import org.apache.rave.portal.model.JpaAuthority;
 import org.apache.rave.portal.model.JpaUser;
-import org.apache.rave.portal.model.User;
+import org.apache.rave.model.User;
 import org.apache.rave.portal.repository.AuthorityRepository;
 import org.apache.rave.portal.repository.UserRepository;
 import org.junit.Assert;

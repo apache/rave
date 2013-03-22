@@ -31,8 +31,8 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.rave.portal.model.User;
-import org.apache.rave.portal.model.Widget;
+import org.apache.rave.model.User;
+import org.apache.rave.model.Widget;
 import org.apache.rave.portal.service.WidgetProviderService;
 import org.apache.wookie.connector.framework.WidgetInstance;
 import org.apache.wookie.connector.framework.WookieConnectorException;
@@ -57,7 +57,7 @@ public class WookieWidgetService implements WidgetProviderService {
     }
 
     /* (non-Javadoc)
-     * @see org.apache.rave.portal.service.WidgetProviderService#getWidget(org.apache.rave.portal.model.User)
+     * @see org.apache.rave.portal.service.WidgetProviderService#getWidget(org.apache.rave.model.User)
      */
     @Override
     public Widget getWidget(User viewer, String sharedDataKey, Widget widget) {

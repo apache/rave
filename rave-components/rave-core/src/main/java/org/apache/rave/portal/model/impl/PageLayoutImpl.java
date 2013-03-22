@@ -18,7 +18,7 @@
  */
 package org.apache.rave.portal.model.impl;
 
-import org.apache.rave.portal.model.PageLayout;
+import org.apache.rave.model.PageLayout;
 
 public class PageLayoutImpl implements PageLayout {
     private String code;

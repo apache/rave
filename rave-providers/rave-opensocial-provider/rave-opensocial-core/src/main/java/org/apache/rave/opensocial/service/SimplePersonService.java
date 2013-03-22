@@ -18,7 +18,7 @@
  */
 package org.apache.rave.opensocial.service;
 
-import org.apache.rave.portal.model.Person;
+import org.apache.rave.model.Person;
 import org.apache.shindig.auth.SecurityToken;
 import org.apache.shindig.social.opensocial.spi.CollectionOptions;
 import org.apache.shindig.social.opensocial.spi.GroupId;

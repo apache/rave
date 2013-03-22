@@ -20,9 +20,10 @@
 package org.apache.rave.portal.web.controller;
 
 
-import org.apache.rave.portal.model.Category;
-import org.apache.rave.portal.model.Tag;
-import org.apache.rave.portal.model.Widget;
+import org.apache.rave.model.Category;
+import org.apache.rave.model.Widget;
+import org.apache.rave.model.Tag;
+import org.apache.rave.model.Widget;
 import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.model.impl.WidgetImpl;
 import org.apache.rave.portal.model.util.SearchResult;

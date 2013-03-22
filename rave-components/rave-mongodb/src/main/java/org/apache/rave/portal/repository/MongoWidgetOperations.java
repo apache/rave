@@ -19,7 +19,7 @@
 
 package org.apache.rave.portal.repository;
 
-import org.apache.rave.portal.model.Widget;
+import org.apache.rave.model.Widget;
 
 public interface MongoWidgetOperations extends MongoModelOperations<Widget> {
 }

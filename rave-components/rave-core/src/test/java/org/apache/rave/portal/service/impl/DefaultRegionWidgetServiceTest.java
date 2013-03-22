@@ -20,8 +20,8 @@
 package org.apache.rave.portal.service.impl;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.rave.portal.model.RegionWidget;
-import org.apache.rave.portal.model.RegionWidgetPreference;
+import org.apache.rave.model.RegionWidget;
+import org.apache.rave.model.RegionWidgetPreference;
 import org.apache.rave.portal.model.impl.RegionWidgetImpl;
 import org.apache.rave.portal.model.impl.RegionWidgetPreferenceImpl;
 import org.apache.rave.portal.repository.RegionWidgetRepository;

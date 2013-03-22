@@ -18,7 +18,7 @@
  */
 package org.apache.rave.portal.web.tag;
 
-import org.apache.rave.portal.model.Person;
+import org.apache.rave.model.Person;
 import org.apache.rave.portal.repository.PersonRepository;
 
 import javax.servlet.jsp.JspException;

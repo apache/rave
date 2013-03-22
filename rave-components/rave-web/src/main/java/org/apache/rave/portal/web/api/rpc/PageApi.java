@@ -21,9 +21,9 @@ package org.apache.rave.portal.web.api.rpc;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.rave.portal.model.Page;
-import org.apache.rave.portal.model.Region;
-import org.apache.rave.portal.model.RegionWidget;
+import org.apache.rave.model.Page;
+import org.apache.rave.model.Region;
+import org.apache.rave.model.RegionWidget;
 import org.apache.rave.portal.service.OmdlService;
 import org.apache.rave.portal.service.PageService;
 import org.apache.rave.portal.web.api.rpc.model.RpcOperation;
@@ -61,13 +61,13 @@ public class PageApi {
      * Adds a widget to the given page
      *
      * @param pageId
-     *            the ID of the {@link org.apache.rave.portal.model.Page} to add
+     *            the ID of the {@link org.apache.rave.model.Page} to add
      *            the widget to
      * @param widgetId
-     *            the ID of the {@link org.apache.rave.portal.model.Widget} to
+     *            the ID of the {@link org.apache.rave.model.Widget} to
      *            add do the page
      * @return a {@link RpcOperation} containing the new widget instance (
-     *         {@link org.apache.rave.portal.model.RegionWidget }) or any errors
+     *         {@link org.apache.rave.model.RegionWidget }) or any errors
      *         encountered while performing the RPC operation
      */
     @ResponseBody
@@ -87,16 +87,16 @@ public class PageApi {
      * Adds a widget to the given page region
      *
      * @param pageId
-     *            the ID of the {@link org.apache.rave.portal.model.Page} to add
+     *            the ID of the {@link org.apache.rave.model.Page} to add
      *            the widget to
      * @param widgetId
-     *            the ID of the {@link org.apache.rave.portal.model.Widget} to
+     *            the ID of the {@link org.apache.rave.model.Widget} to
      *            add do the page
      * @param regionId
-     *            the ID of the {@link org.apache.rave.portal.model.Region} to
+     *            the ID of the {@link org.apache.rave.model.Region} to
      *            add the the widget to
      * @return a {@link RpcOperation} containing the new widget instance (
-     *         {@link org.apache.rave.portal.model.RegionWidget }) or any errors
+     *         {@link org.apache.rave.model.RegionWidget }) or any errors
      *         encountered while performing the RPC operation
      */
     @ResponseBody
@@ -120,18 +120,18 @@ public class PageApi {
      *
      * @param regionWidgetId
      *            the ID of the
-     *            {@link org.apache.rave.portal.model.RegionWidget} to move
+     *            {@link org.apache.rave.model.RegionWidget} to move
      * @param newPosition
      *            the 0 based index within the region where the RegionWidget
      *            will now be located
      * @param toRegion
-     *            the Id of the {@link org.apache.rave.portal.model.Region }
+     *            the Id of the {@link org.apache.rave.model.Region }
      *            where the widget will now be located
      * @param fromRegion
-     *            the Id of the {@link org.apache.rave.portal.model.Region }
+     *            the Id of the {@link org.apache.rave.model.Region }
      *            where the widget is currently located
      * @return a {@link RpcOperation} containing the updated widget instance (
-     *         {@link org.apache.rave.portal.model.RegionWidget }) or any errors
+     *         {@link org.apache.rave.model.RegionWidget }) or any errors
      *         encountered while performing the RPC operation
      */
     @ResponseBody
@@ -155,7 +155,7 @@ public class PageApi {
      * Deletes a widget
      *
      * @param regionWidgetId
-     *            the ID of the {@link org.apache.rave.portal.model.Widget} to
+     *            the ID of the {@link org.apache.rave.model.Widget} to
      *            delete
      * @return an {@link RpcOperation} containing the updated region or any
      *         errors encountered.

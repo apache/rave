@@ -35,7 +35,7 @@ public interface RenderService {
     Collection<String> getSupportedWidgetTypes();
 
     /**
-     * Renders the {@link org.apache.rave.portal.model.RegionWidget} as a String\
+     * Renders the {@link org.apache.rave.model.RegionWidget} as a String\
      *
      * @param regionWidgetWrapper widget to renderer
      * @param context the cotnext under which to render the widget

@@ -20,6 +20,7 @@
 package org.apache.rave.portal.model;
 
 
+import org.apache.rave.model.PageLayout;
 import org.apache.rave.portal.model.impl.PageTemplateImpl;
 import org.apache.rave.portal.repository.PageLayoutRepository;
 import org.codehaus.jackson.annotate.JsonAutoDetect;

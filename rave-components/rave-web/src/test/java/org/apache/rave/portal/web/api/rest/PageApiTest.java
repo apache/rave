@@ -18,8 +18,11 @@
  */
 package org.apache.rave.portal.web.api.rest;
 
+import org.apache.rave.model.Page;
+import org.apache.rave.model.Region;
+import org.apache.rave.model.RegionWidget;
+import org.apache.rave.model.RegionWidgetPreference;
 import org.apache.rave.portal.model.impl.*;
-import org.apache.rave.portal.model.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.apache.rave.portal.service.OmdlService;

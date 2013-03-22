@@ -18,10 +18,10 @@
  */
 package org.apache.rave.portal.model.impl;
 
-import org.apache.rave.portal.model.Authority;
-import org.apache.rave.portal.model.PageLayout;
-import org.apache.rave.portal.model.Person;
-import org.apache.rave.portal.model.User;
+import org.apache.rave.model.Authority;
+import org.apache.rave.model.PageLayout;
+import org.apache.rave.model.Person;
+import org.apache.rave.model.User;
 import org.apache.rave.util.CollectionUtils;
 import org.springframework.security.core.GrantedAuthority;
 

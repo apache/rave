@@ -19,20 +19,20 @@
 
 package org.apache.rave.portal.repository;
 
-import org.apache.rave.portal.model.OAuthConsumerStore;
+import org.apache.rave.model.OAuthConsumerStore;
 import org.apache.rave.persistence.Repository;
 
 /**
- * Repository interface for {@link org.apache.rave.portal.model.OAuthConsumerStore}
+ * Repository interface for {@link org.apache.rave.model.OAuthConsumerStore}
  */
 public interface OAuthConsumerStoreRepository extends Repository<OAuthConsumerStore> {
 
     /**
-     * Fetches {@link org.apache.rave.portal.model.OAuthConsumerStore} based on the gadget location and the service provider
+     * Fetches {@link org.apache.rave.model.OAuthConsumerStore} based on the gadget location and the service provider
      *
      * @param gadgetUri   location of the gadget definition
      * @param serviceName name of the service provider
-     * @return {@link org.apache.rave.portal.model.OAuthConsumerStore} or {@literal null} if none matches the criteria
+     * @return {@link org.apache.rave.model.OAuthConsumerStore} or {@literal null} if none matches the criteria
      */
     OAuthConsumerStore findByUriAndServiceName(String gadgetUri, String serviceName);
 }

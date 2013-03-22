@@ -19,7 +19,7 @@
 
 package org.apache.rave.portal.model.util;
 
-import org.apache.rave.portal.model.RegionWidgetPreference;
+import org.apache.rave.model.RegionWidgetPreference;
 
 import java.util.List;
 

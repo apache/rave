@@ -21,9 +21,9 @@ package org.apache.rave.portal.service.impl;
 
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.rave.portal.model.PageType;
-import org.apache.rave.portal.model.Person;
-import org.apache.rave.portal.model.User;
+import org.apache.rave.model.PageType;
+import org.apache.rave.model.Person;
+import org.apache.rave.model.User;
 import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.repository.*;
 import org.apache.rave.portal.service.EmailService;

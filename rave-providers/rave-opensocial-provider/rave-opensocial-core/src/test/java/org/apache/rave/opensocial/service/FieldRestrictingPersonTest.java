@@ -22,7 +22,7 @@ package org.apache.rave.opensocial.service;
 
 import org.apache.rave.exception.NotSupportedException;
 import org.apache.rave.opensocial.service.impl.FieldRestrictingPerson;
-import org.apache.rave.portal.model.PersonProperty;
+import org.apache.rave.model.PersonProperty;
 import org.apache.rave.portal.model.impl.AddressImpl;
 import org.apache.rave.portal.model.impl.PersonImpl;
 import org.apache.rave.portal.model.impl.PersonPropertyImpl;
@@ -263,7 +263,7 @@ public class FieldRestrictingPersonTest {
 
     @Test
     public void getGender_null() {
-        org.apache.rave.portal.model.Person testPerson = getTestPerson();
+        org.apache.rave.model.Person testPerson = getTestPerson();
         testPerson.setProperties(new ArrayList<PersonProperty>());
         Person p = new FieldRestrictingPerson(testPerson, getFieldSet(Person.Field.GENDER));
         assertThat(p.getGender(), is(nullValue()));
@@ -631,8 +631,8 @@ public class FieldRestrictingPersonTest {
         new FieldRestrictingPerson(null, null).setHappiestWhen(SUFFIX);
     }
 
-    private org.apache.rave.portal.model.Person getTestPerson() {
-        org.apache.rave.portal.model.Person person = new PersonImpl();
+    private org.apache.rave.model.Person getTestPerson() {
+        org.apache.rave.model.Person person = new PersonImpl();
         person.setUsername(USERNAME);
         person.setAboutMe(ABOUT_ME);
         person.setAdditionalName(ADDITIONAL_NAME);
@@ -663,7 +663,7 @@ public class FieldRestrictingPersonTest {
         properties.add(new PersonPropertyImpl("1", "currentLocation", QUALIFIER, null, null, null));
         properties.add(new PersonPropertyImpl("1", "account", IM_1, "1", IM_PROVIDER_1, false));
         person.setProperties(properties);
-        org.apache.rave.portal.model.Address address = new AddressImpl();
+        org.apache.rave.model.Address address = new AddressImpl();
         address.setCountry(COUNTRY);
         address.setLatitude(LATITUDE);
         address.setLongitude(LONGITUDE);
@@ -672,7 +672,7 @@ public class FieldRestrictingPersonTest {
         address.setPostalCode(POSTAL_CODE);
         address.setStreetAddress(STREET);
         address.setQualifier(QUALIFIER);
-        List<org.apache.rave.portal.model.Address> addresses = new ArrayList<org.apache.rave.portal.model.Address>();
+        List<org.apache.rave.model.Address> addresses = new ArrayList<org.apache.rave.model.Address>();
         addresses.add(new AddressImpl());
         addresses.add(address);
         person.setAddresses(addresses);

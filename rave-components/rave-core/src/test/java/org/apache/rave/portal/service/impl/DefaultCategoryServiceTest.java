@@ -19,8 +19,8 @@
 
 package org.apache.rave.portal.service.impl;
 
-import org.apache.rave.portal.model.Category;
-import org.apache.rave.portal.model.User;
+import org.apache.rave.model.Category;
+import org.apache.rave.model.User;
 import org.apache.rave.portal.model.impl.CategoryImpl;
 import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.repository.CategoryRepository;

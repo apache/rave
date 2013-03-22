@@ -18,10 +18,11 @@
  */
 package org.apache.rave.portal.security.impl;
 
-import org.apache.rave.portal.model.*;
+import org.apache.rave.model.User;
+import org.apache.rave.model.Widget;
+import org.apache.rave.model.WidgetStatus;
 import org.apache.rave.portal.repository.TagRepository;
 import org.apache.rave.portal.repository.WidgetRepository;
-import org.apache.rave.portal.security.util.AuthenticationUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

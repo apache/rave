@@ -19,8 +19,8 @@
 package org.apache.rave.portal.repository.impl;
 
 import org.apache.rave.portal.model.JpaPageTemplate;
-import org.apache.rave.portal.model.PageTemplate;
-import org.apache.rave.portal.model.PageType;
+import org.apache.rave.model.PageTemplate;
+import org.apache.rave.model.PageType;
 import org.apache.rave.portal.model.conversion.JpaConverter;
 import org.apache.rave.portal.repository.PageTemplateRepository;
 import org.apache.rave.util.CollectionUtils;

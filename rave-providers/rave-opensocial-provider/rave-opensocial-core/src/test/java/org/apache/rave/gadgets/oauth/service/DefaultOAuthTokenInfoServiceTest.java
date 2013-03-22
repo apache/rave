@@ -19,7 +19,7 @@
 
 package org.apache.rave.gadgets.oauth.service;
 
-import org.apache.rave.portal.model.OAuthTokenInfo;
+import org.apache.rave.model.OAuthTokenInfo;
 import org.apache.rave.portal.model.impl.OAuthTokenInfoImpl;
 import org.apache.rave.portal.repository.OAuthTokenInfoRepository;
 import org.apache.rave.gadgets.oauth.service.impl.DefaultOAuthTokenInfoService;

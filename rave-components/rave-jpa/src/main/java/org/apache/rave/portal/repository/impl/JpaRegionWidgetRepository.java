@@ -20,7 +20,7 @@
 package org.apache.rave.portal.repository.impl;
 
 import org.apache.rave.portal.model.JpaRegionWidget;
-import org.apache.rave.portal.model.RegionWidget;
+import org.apache.rave.model.RegionWidget;
 import org.apache.rave.portal.model.conversion.JpaRegionWidgetConverter;
 import org.apache.rave.portal.repository.RegionWidgetRepository;
 import org.springframework.beans.factory.annotation.Autowired;

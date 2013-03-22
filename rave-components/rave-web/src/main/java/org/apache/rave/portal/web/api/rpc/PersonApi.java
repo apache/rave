@@ -23,7 +23,7 @@ import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.List;
 
-import org.apache.rave.portal.model.Person;
+import org.apache.rave.model.Person;
 import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.portal.web.api.rpc.model.RpcOperation;

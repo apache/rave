@@ -19,7 +19,7 @@
 
 package org.apache.rave.provider.opensocial.service;
 
-import org.apache.rave.portal.model.*;
+import org.apache.rave.model.*;
 import org.apache.rave.portal.model.impl.*;
 import org.apache.rave.portal.repository.WidgetRepository;
 import org.apache.rave.portal.service.UserService;

@@ -18,6 +18,8 @@
  */
 package org.apache.rave.portal.model;
 
+import org.apache.rave.model.PageTemplateRegion;
+import org.apache.rave.model.PageTemplateWidget;
 import org.apache.rave.portal.model.conversion.JpaConverter;
 
 import javax.persistence.*;

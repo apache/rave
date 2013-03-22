@@ -20,7 +20,7 @@
 package org.apache.rave.portal.model.conversion.impl;
 
 import org.apache.rave.portal.model.MongoDbPortalPreference;
-import org.apache.rave.portal.model.PortalPreference;
+import org.apache.rave.model.PortalPreference;
 import org.apache.rave.portal.model.conversion.HydratingModelConverter;
 import org.springframework.stereotype.Component;
 

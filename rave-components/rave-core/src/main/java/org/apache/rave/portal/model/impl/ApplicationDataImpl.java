@@ -18,7 +18,7 @@
  */
 package org.apache.rave.portal.model.impl;
 
-import org.apache.rave.portal.model.ApplicationData;
+import org.apache.rave.model.ApplicationData;
 
 import java.util.Map;
 

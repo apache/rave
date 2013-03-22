@@ -21,7 +21,7 @@ package org.apache.rave.portal.model.conversion;
 import org.apache.rave.model.ModelConverter;
 import org.apache.rave.persistence.jpa.util.JpaUtil;
 import org.apache.rave.portal.model.JpaTag;
-import org.apache.rave.portal.model.Tag;
+import org.apache.rave.model.Tag;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;
@@ -29,7 +29,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 /**
- * Converts from a {@link org.apache.rave.portal.model.Tag} to a {@link org.apache.rave.portal.model.JpaTag}
+ * Converts from a {@link org.apache.rave.model.Tag} to a {@link org.apache.rave.portal.model.JpaTag}
  */
 @Component
 public class JpaTagConverter implements ModelConverter<Tag, JpaTag> {

@@ -20,6 +20,8 @@
 package org.apache.rave.portal.model;
 
 import com.google.common.collect.Lists;
+import org.apache.rave.model.Authority;
+import org.apache.rave.model.PageLayout;
 import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.repository.PageLayoutRepository;
 import org.codehaus.jackson.annotate.JsonAutoDetect;

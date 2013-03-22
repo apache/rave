@@ -18,7 +18,7 @@
  */
 package org.apache.rave.portal.web.controller.util;
 
-import org.apache.rave.portal.model.User;
+import org.apache.rave.model.User;
 import org.apache.rave.portal.model.impl.UserImpl;
 import org.junit.Before;
 import org.junit.Test;

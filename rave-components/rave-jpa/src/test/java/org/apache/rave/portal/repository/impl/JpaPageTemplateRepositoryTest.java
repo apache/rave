@@ -18,6 +18,9 @@
  */
 package org.apache.rave.portal.repository.impl;
 
+import org.apache.rave.model.PageTemplate;
+import org.apache.rave.model.PageTemplateWidget;
+import org.apache.rave.model.PageType;
 import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.repository.PageTemplateRepository;
 import org.junit.Test;

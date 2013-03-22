@@ -19,7 +19,7 @@
 
 package org.apache.rave.portal.repository;
 
-import org.apache.rave.portal.model.Page;
+import org.apache.rave.model.Page;
 
 public interface MongoPageOperations extends MongoModelOperations<Page> {
 }

@@ -20,7 +20,7 @@
 package org.apache.rave.portal.model.conversion;
 
 import org.apache.rave.model.ModelConverter;
-import org.apache.rave.portal.model.Person;
+import org.apache.rave.model.Person;
 import org.apache.rave.portal.model.impl.PersonImpl;
 import org.junit.After;
 import org.junit.Before;

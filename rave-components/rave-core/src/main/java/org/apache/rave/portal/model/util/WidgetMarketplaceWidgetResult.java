@@ -18,7 +18,7 @@
  */
 package org.apache.rave.portal.model.util;
 
-import org.apache.rave.portal.model.Widget;
+import org.apache.rave.model.Widget;
 import org.apache.rave.portal.model.impl.ExternalWidgetImpl;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;

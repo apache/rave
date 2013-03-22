@@ -21,7 +21,7 @@ package org.apache.rave.opensocial.repository.impl;
 
 import org.apache.rave.exception.NotSupportedException;
 import org.apache.rave.opensocial.repository.OpenSocialPersonRepository;
-import org.apache.rave.portal.model.Person;
+import org.apache.rave.model.Person;
 import org.apache.rave.portal.repository.PersonRepository;
 import org.apache.shindig.protocol.model.FilterOperation;
 import org.springframework.beans.factory.annotation.Autowired;

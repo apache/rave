@@ -21,7 +21,7 @@ package org.apache.rave.portal.web.controller.util;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.rave.portal.model.User;
+import org.apache.rave.model.User;
 import org.apache.rave.portal.web.model.NavigationItem;
 import org.apache.rave.portal.web.model.NavigationMenu;
 import org.apache.rave.portal.web.util.ViewNames;
