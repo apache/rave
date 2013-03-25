@@ -31,6 +31,10 @@ rave.registerProvider(
             containerConfig[osapi.container.ContainerConfig.RENDER_DEBUG] = rave.getJavaScriptDebugMode();
             container = new osapi.container.Container(containerConfig);
 
+            gadgets.pubsub2router.init({
+                hub:rave.getManagedHub()
+            });
+
             rpcRegister();
             implementViews();
         }
