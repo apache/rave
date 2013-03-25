@@ -31,16 +31,49 @@ rave.registerProvider(
             containerConfig[osapi.container.ContainerConfig.RENDER_DEBUG] = rave.getJavaScriptDebugMode();
             container = new osapi.container.Container(containerConfig);
 
-            //rpcRegister();
+            rpcRegister();
             implementViews();
         }
 
         function rpcRegister() {
-            container.rpcRegister('set_title', setTitle);
             container.rpcRegister('requestNavigateTo', requestNavigateTo);
             container.rpcRegister('set_pref', setPref);
+            container.rpcRegister('set_title', setTitle);
             container.rpcRegister('hideWidget', hideWidget);
             container.rpcRegister('showWidget', showWidget);
+        }
+
+        function requestNavigateTo(args, viewName, opt_params, opt_ownerId) {
+            var widget = args.gs._widget;
+            widget.render(widget._el, {view: viewName, view_params: opt_params, ownerId: opt_ownerId});
+        }
+
+        function setPref(args, editToken, prefName, prefValue) {
+            var widget = args.gs._widget;
+            widget.savePreference(prefName, prefValue);
+        }
+
+        /*
+        TODO: these rely on a gadget's view implementing a method
+         */
+        function setTitle(args) {
+            var widget = args.gs._widget;
+            if (widget._view && widget._view.setTitle) {
+                var title = _.isArray(args.a) ? args.a[0] : args.a;
+                widget._view.setTitle(title);
+            }
+        }
+        function hideWidget(args, viewName, opt_params, opt_ownerId) {
+            var widget = args.gs._widget;
+            if (widget._view && widget._view.collapse) {
+                widget._view.collapse();
+            }
+        }
+        function showWidget(args, viewName, opt_params, opt_ownerId) {
+            var widget = args.gs._widget;
+            if (widget._view && widget._view.expand) {
+                widget._view.expand();
+            }
         }
 
         function implementViews() {
@@ -119,6 +152,7 @@ rave.registerProvider(
         exports.renderWidget = function (widget, el, opts) {
             opts = opts || {};
             var site = container.newGadgetSite(el);
+            site._widget = widget;
             widget._site = site;
 
             var renderParams = {};

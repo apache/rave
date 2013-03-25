@@ -57,7 +57,7 @@ rave.RegionWidget = (function () {
      */
     Widget.prototype.render = function (el, opts) {
         if (this.error) {
-            this.view = rave.renderView('errorWidget', el, this);
+            this._view = rave.renderView('errorWidget', el, this);
             return;
         }
         if (_.isString(el)) {
@@ -114,6 +114,11 @@ rave.RegionWidget = (function () {
             toRegionId: toRegionId,
             toIndex: toIndex
         });
+    }
+
+    Widget.prototype.savePreference = function(name, val) {
+        this.userPrefs[name] = val;
+        rave.api.rest.saveWidgetPreference({regionWidgetId: this.regionWidgetId, prefName: name, prefValue: val});
     }
 
     Widget.prototype.savePreferences = function (updatedPrefs) {

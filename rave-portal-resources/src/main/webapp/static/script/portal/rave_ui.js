@@ -211,6 +211,8 @@ _.extend(rave.ui, (function () {
     }
 
     function renderWidgets() {
+        rave.setDefaultGadgetView('home');
+
         if (_.isEmpty(rave.getWidgets())) {
             displayEmptyPageMessage();
         }

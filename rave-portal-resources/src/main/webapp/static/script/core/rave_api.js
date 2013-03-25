@@ -202,7 +202,7 @@ rave.api = rave.api || (function () {
         function getSecurityToken(args) {
             rave.ajax({
                 type: 'GET',
-                url: context + "api/rest/" + "st?url=" + args.url + "&pageid=" + args.pageid,
+                url: context + "api/rest/opensocial/gadget?url=" + args.url + "&pageid=" + args.pageid,
                 dataType: "json",
                 success: function (data) {
                     if (typeof args.successCallback == 'function') {
@@ -224,7 +224,8 @@ rave.api = rave.api || (function () {
             deletePage: deletePage,
             getUsersForWidget: getUsersForWidget,
             createWidgetTag: createWidgetTag,
-            getTags: getTags
+            getTags: getTags,
+            getSecurityToken: getSecurityToken
         };
     })();
 
