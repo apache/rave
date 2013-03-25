@@ -208,9 +208,8 @@
 <portal:register-init-script location="${'AFTER_RAVE'}">
     <script>
         $(function () {
-            rave.initProviders("profile");
-            rave.initWidgets();
-            rave.initUI();
+            rave.init();
+            rave.setDefaultGadgetView('profile');
             rave.layout.init();
             rave.personprofile.init();
             rave.setPageOwner({

@@ -36,7 +36,9 @@ Template for rendering a RegionWidget including wrapper chrome, toolbars, menus,
     <c:if test="${!isHideChrome}">
         <div class="widget-title-bar<c:choose><c:when test="${isLocked}"> widget-title-bar-locked</c:when><c:otherwise> widget-title-bar-draggable</c:otherwise></c:choose>">
             <c:if test="${!isLocked}">
-                <div id="widget-${regionWidget.id}-collapse" class="widget-toolbar-toggle-collapse" title="<fmt:message key="widget.chrome.toggle"/>"></div>
+                <div id="widget-${regionWidget.id}-collapse" class="widget-toolbar-toggle-collapse" title="<fmt:message key="widget.chrome.toggle"/>">
+                    <i class="icon-chevron-down"></i>
+                </div>
             </c:if>
             <div id="widget-${regionWidget.id}-title" class="widget-title">
                 <c:choose>
@@ -49,18 +51,18 @@ Template for rendering a RegionWidget including wrapper chrome, toolbars, menus,
                 </c:choose>
             </div>
 
-            <%-- These are toolbar buttons --%>
+                <%-- These are toolbar buttons --%>
             <div id="widget-${regionWidget.id}-toolbar" class="widget-toolbar <c:if test="${isLocked}">hidden</c:if>">
                 <div id="widget-${regionWidget.id}-widget-menu-wrapper" class="dropdown widget-menu-wrapper">
                     <a id="widget-${regionWidget.id}-menu-button" class="dropdown-toggle"  onclick="rave.layout.addIframeOverlays(event)">
                         <i class="icon-cog"></i>
                     </a>
                     <ul id="widget-${regionWidget.id}-menu" class="dropdown-menu widget-menu">
-                        <%--
-                            By default the edit prefs item is disabled.
-                            Each provider's widget initialization will be responsible for enabling this item
-                            if the widget has preferences to be edited
-                        --%>
+                            <%--
+                                By default the edit prefs item is disabled.
+                                Each provider's widget initialization will be responsible for enabling this item
+                                if the widget has preferences to be edited
+                            --%>
                         <li id="widget-${regionWidget.id}-menu-editprefs-item" class="menu-item-disabled">
                             <a href="#">
                                 <fmt:message key="widget.menu.editprefs"/>
@@ -100,13 +102,13 @@ Template for rendering a RegionWidget including wrapper chrome, toolbars, menus,
                     </ul>
                 </div>
 
-                <%-- the minimize widget button, which is hidden by default and only displays in maximized view --%>
+                    <%-- the minimize widget button, which is hidden by default and only displays in maximized view --%>
                 <span id="widget-${regionWidget.id}-min" class="widget-toolbar-btn widget-toolbar-btn-min">
                     <i class="icon-resize-small"></i>
                 </span>
             </div>
 
-            <%-- if widget is disabled then display notification in titlebar --%>
+                <%-- if widget is disabled then display notification in titlebar --%>
             <c:if test="${widget.disableRendering}">
                 <div id="widget-${regionWidget.id}-disabled" class="widget-disabled-icon ui-icon ui-icon-alert" title="<fmt:message key="widget.chrome.disabled"/>"></div>
             </c:if>

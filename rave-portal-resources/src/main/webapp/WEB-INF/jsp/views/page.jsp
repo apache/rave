@@ -100,22 +100,22 @@
                         </li>
                     </c:when>
                     <c:otherwise>
-                        <li id="tab-${userPage.id}" onclick="rave.viewPage('${userPage.id}');">
+                        <li id="tab-${userPage.id}">
                             <c:choose>
                                 <c:when test="${isSharedToMe}">
-                                    <a href="#" class="rave-ui-tab-shared-to-me">
+                                    <a href="<spring:url value="/app/page/view/${userPage.id}"/>" class="rave-ui-tab-shared-to-me">
                                         <b id="pageMenuSharedIcon" class="ui-icon ui-icon-person" title="<c:out value="${iconShareToolTipFrom}"/>"></b>
                                         <c:out value="${userPage.name}"/>
                                     </a>
                                 </c:when>
                                 <c:when test="${isSharedByMe}">
-                                    <a href="#" class="rave-ui-tab-shared-by-me">
+                                    <a href="<spring:url value="/app/page/view/${userPage.id}" />" class="rave-ui-tab-shared-by-me">
                                         <b id="pageMenuSharedIcon" class="ui-icon ui-icon-folder-open" title="<c:out value="${iconShareToolTipTo}"/>"></b>
                                         <c:out value="${userPage.name}"/>
                                     </a>
                                 </c:when>
                                 <c:otherwise>
-                                    <a href="#"><c:out value="${userPage.name}"/></a>
+                                    <a href="<spring:url value="/app/page/view/${userPage.id}" />"><c:out value="${userPage.name}"/></a>
                                 </c:otherwise>
                             </c:choose>
                         </li>
@@ -133,57 +133,57 @@
 </div>
 
 <div class="row-fluid">
-    <div class=" tab-content">
-        <div id="emptyPageMessageWrapper" class="emptyPageMessageWrapper hidden">
-            <c:if test="${pageUser.pageStatus != 'PENDING'}">
-                <div class="emptyPageMessage">
-                    <c:choose>
-                        <c:when test="${pageUser.editor == true}">
-                            <a href="<spring:url value="/app/store?referringPageId=${page.id}" />"><fmt:message key="page.general.empty"/></a>
-                        </c:when>
-                        <c:otherwise>
-                            <fmt:message key="page.general.non.editing.empty"/>
-                        </c:otherwise>
-                    </c:choose>
+<div class=" tab-content">
+    <div id="emptyPageMessageWrapper" class="emptyPageMessageWrapper hidden">
+        <c:if test="${pageUser.pageStatus != 'PENDING'}">
+            <div class="emptyPageMessage">
+                <c:choose>
+                    <c:when test="${pageUser.editor == true}">
+                        <a href="<spring:url value="/app/store?referringPageId=${page.id}" />"><fmt:message key="page.general.empty"/></a>
+                    </c:when>
+                    <c:otherwise>
+                        <fmt:message key="page.general.non.editing.empty"/>
+                    </c:otherwise>
+                </c:choose>
+            </div>
+        </c:if>
+    </div>
+    <c:choose>
+        <c:when test="${pageUser.pageStatus != 'PENDING'}">
+            <div class="regions">
+                    <%-- insert the region layout template --%>
+                <tiles:insertTemplate template="${layout}"/>
+            </div>
+            <div class="clear-float">&nbsp;</div>
+        </c:when>
+        <c:otherwise>
+            <div class="emptyPageMessage">
+                <div>
+                    <div id="confirmSharePageLegend">
+                        <c:choose>
+                            <c:when test="${page.ownerId == principalId}">
+                                <fmt:message key="cloned.page.confirm.message"/>
+                            </c:when>
+                            <c:otherwise>
+                                <portal:person id="${page.ownerId}" var="owner" />
+                                <fmt:message key="sharing.page.confirm.message">
+                                    <fmt:param value="${owner.username}"/>
+                                </fmt:message>
+                            </c:otherwise>
+                        </c:choose>
+                    </div>
                 </div>
-            </c:if>
-        </div>
-        <c:choose>
-            <c:when test="${pageUser.pageStatus != 'PENDING'}">
-                <div class="regions">
-                        <%-- insert the region layout template --%>
-                    <tiles:insertTemplate template="${layout}"/>
+                <div>&nbsp;</div>
+                <div>
+                    <a href="#" onclick="rave.models.currentPage.acceptShare()"><fmt:message key="_rave_client.common.accept"/></a>
+                </div>
+                <div>
+                    <a href="#" onclick="rave.models.currentPage.declineShare();"><fmt:message key="_rave_client.common.decline"/></a>
                 </div>
                 <div class="clear-float">&nbsp;</div>
-            </c:when>
-            <c:otherwise>
-                <div class="emptyPageMessage">
-                    <div>
-                        <div id="confirmSharePageLegend">
-                            <c:choose>
-                                <c:when test="${page.ownerId == principalId}">
-                                    <fmt:message key="cloned.page.confirm.message"/>
-                                </c:when>
-                                <c:otherwise>
-                                    <portal:person id="${page.ownerId}" var="owner" />
-                                    <fmt:message key="sharing.page.confirm.message">
-                                        <fmt:param value="${owner.username}"/>
-                                    </fmt:message>
-                                </c:otherwise>
-                            </c:choose>
-                        </div>
-                    </div>
-                    <div>&nbsp;</div>
-                    <div>
-                        <a href="#" onclick="rave.models.currentPage.acceptShare()"><fmt:message key="_rave_client.common.accept"/></a>
-                    </div>
-                    <div>
-                        <a href="#" onclick="rave.models.currentPage.declineShare();"><fmt:message key="_rave_client.common.decline"/></a>
-                    </div>
-                    <div class="clear-float">&nbsp;</div>
-                </div>
-            </c:otherwise>
-        </c:choose>
+            </div>
+        </c:otherwise>
+    </c:choose>
     </div>
 </div>
 
@@ -389,19 +389,16 @@
 </div>
 
 <portal:register-init-script location="${'AFTER_RAVE'}">
-    <script>
-        $(function() {
-            rave.initPageEditorStatus(<c:out value="${pageUser.editor}"/>);
-            rave.initProviders();
-            rave.initWidgets();
-            rave.initUI();
-            rave.layout.init(${applicationProperties['portal.export.ui.enable']});
-            rave.runOnPageInitializedHandlers();
-        });
-    </script>
-    <script>rave.models.currentPage.set({id: ${page.id}, ownerId: ${page.ownerId}, viewerId: <sec:authentication property="principal.id" />}, {silent:true})</script>
-    <c:forEach var="members" items="${page.members}">
-        <portal:person id="${members.userId}" var="member" />
-        <script>rave.models.currentPage.addInitData('${member.id}', ${members.editor})</script>
-    </c:forEach>
+<script>
+    $(function() {
+        rave.initPageEditorStatus(<c:out value="${pageUser.editor}"/>);
+        rave.init();
+        rave.layout.init(${applicationProperties['portal.export.ui.enable']});
+    });
+</script>
+<script>rave.models.currentPage.set({id: ${page.id}, ownerId: ${page.ownerId}, viewerId: <sec:authentication property="principal.id" />}, {silent:true})</script>
+<c:forEach var="members" items="${page.members}">
+    <portal:person id="${members.userId}" var="member" />
+<script>rave.models.currentPage.addInitData('${member.id}', ${members.editor})</script>
+</c:forEach>
 </portal:register-init-script>

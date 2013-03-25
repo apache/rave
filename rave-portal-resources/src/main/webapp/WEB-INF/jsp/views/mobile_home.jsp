@@ -34,40 +34,40 @@
 </fmt:message>
 <rave:navbar pageTitle="${pagetitle}"/>
 
-    <input id="currentPageId" type="hidden" value="${page.id}" />
-    <c:set var="hasOnlyOnePage" scope="request">
-        <c:choose>
-            <c:when test="${fn:length(pages) == 1}">true</c:when>
-            <c:otherwise>false</c:otherwise>
-        </c:choose>
-    </c:set>
-    <div id="tabsHeader">
-        <%-- render the page links --%>
-        <div id="tabs" class="rave-ui-tabs">
-            <c:forEach var="userPage" items="${pages}">
-                 <%-- determine if the current page in the list matches the page the user is viewing --%>
-                 <c:set var="isCurrentPage">
-                     <c:choose>
-                         <c:when test="${page.id == userPage.id}">true</c:when>
-                         <c:otherwise>false</c:otherwise>
-                     </c:choose>
-                 </c:set>
-                 <div id="tab-${userPage.id}" class="rave-ui-tab rave-ui-tab-mobile<c:if test="${isCurrentPage}"> rave-ui-tab-selected rave-ui-tab-selected-mobile</c:if>">
-                    <div id="pageTitle-${userPage.id}" class="page-title" onclick="rave.viewPage(${userPage.id});"><c:out value="${userPage.name}"/></div>
-                </div>
-            </c:forEach>
-            <%-- display the add page button at the end of the tabs --%>
-            <fmt:message key="page.general.addnewpage" var="addNewPageTitle"/>
-            <button id="add_page" title="${addNewPageTitle}" style="display: none;"></button>
-        </div>
+<input id="currentPageId" type="hidden" value="${page.id}" />
+<c:set var="hasOnlyOnePage" scope="request">
+    <c:choose>
+        <c:when test="${fn:length(pages) == 1}">true</c:when>
+        <c:otherwise>false</c:otherwise>
+    </c:choose>
+</c:set>
+<div id="tabsHeader">
+    <%-- render the page links --%>
+    <div id="tabs" class="rave-ui-tabs">
+        <c:forEach var="userPage" items="${pages}">
+            <%-- determine if the current page in the list matches the page the user is viewing --%>
+            <c:set var="isCurrentPage">
+                <c:choose>
+                    <c:when test="${page.id == userPage.id}">true</c:when>
+                    <c:otherwise>false</c:otherwise>
+                </c:choose>
+            </c:set>
+            <div id="tab-${userPage.id}" class="rave-ui-tab rave-ui-tab-mobile<c:if test="${isCurrentPage}"> rave-ui-tab-selected rave-ui-tab-selected-mobile</c:if>">
+                <div id="pageTitle-${userPage.id}" class="page-title"><a href="<spring:url value="page/view/${userPage.id}" />"><c:out value="${userPage.name}"/></a></div>
+            </div>
+        </c:forEach>
+        <%-- display the add page button at the end of the tabs --%>
+        <fmt:message key="page.general.addnewpage" var="addNewPageTitle"/>
+        <button id="add_page" title="${addNewPageTitle}" style="display: none;"></button>
     </div>
-    <%-- the mobile view will only show one column of widgets --%>
-    <div id="pageContent" class="pageContent-mobile">
-        <c:forEach var="region" items="${page.regions}">
-            <div class="region-mobile" id="region-${region.id}-id">
+</div>
+<%-- the mobile view will only show one column of widgets --%>
+<div id="pageContent" class="pageContent-mobile">
+    <c:forEach var="region" items="${page.regions}">
+        <div class="region-mobile" id="region-${region.id}-id">
             <c:forEach var="regionWidget" items="${region.regionWidgets}">
-               <portal:widget var="widget" id="${regionWidget.widgetId}" />
-               <div class="widget-wrapper widget-wrapper-mobile" id="widget-${regionWidget.id}-wrapper">
+                <portal:widget var="widget" id="${regionWidget.widgetId}" />
+                <div class="widget-wrapper widget-wrapper-mobile" id="widget-${regionWidget.id}-wrapper">
                     <div class="widget-title-bar widget-title-bar-mobile" onclick="rave.toggleMobileWidget(${regionWidget.id});">
                         <span id="widget-${regionWidget.id}-collapse" class="widget-toolbar-toggle-collapse" title="<fmt:message key="widget.chrome.toggle"/>"><i class="icon-chevron-down"></i></span>
                         <div id="widget-${regionWidget.id}-title" class="widget-title">
@@ -80,65 +80,65 @@
                     </div>
                 </div>
             </c:forEach>
-            </div>
-        </c:forEach>
-    </div>
-    <fmt:message key="page.general.addnewpage" var="addNewPageTitle"/>
-    <div id="dialog" title="${addNewPageTitle}" class="dialog hidden">
-        <form id="pageForm">
-            <div id="pageFormErrors" class="error"></div>
-            <fieldset class="ui-helper-reset">
-                <input type="hidden" name="tab_id" id="tab_id" value="" />
-                <label for="tab_title"><fmt:message key="page.general.addpage.title"/></label>
-                <input type="text" name="tab_title" id="tab_title" value="" class="required ui-widget-content ui-corner-all" />
-                <label for="pageLayout"><fmt:message key="page.general.addpage.selectlayout"/></label>
-                <select name="pageLayout" id="pageLayout">
-                    <option value="columns_1" id="columns_1_id"><fmt:message key="page.general.addpage.layout.columns_1"/></option>
-                    <option value="columns_2" id="columns_2_id" selected="selected"><fmt:message key="page.general.addpage.layout.columns_2"/></option>
-                    <option value="columns_2wn" id="columns_2wn_id"><fmt:message key="page.general.addpage.layout.columns_2wn"/></option>
-                    <option value="columns_3" id="columns_3_id"><fmt:message key="page.general.addpage.layout.columns_3"/></option>
-                    <option value="columns_3nwn" id="columns_3nwn_id"><fmt:message key="page.general.addpage.layout.columns_3nwn"/></option>
-                    <option value="columns_4" id="columns_4_id"><fmt:message key="page.general.addpage.layout.columns_4"/></option>
-                    <option value="columns_3nwn_1_bottom" id="columns_3nwn_1_bottom"><fmt:message key="page.general.addpage.layout.columns_3nwn_1_bottom"/></option>
-                </select>
-            </fieldset>
-        </form>
-    </div>
-    <fmt:message key="page.general.movepage" var="movePageTitle"/>
-    <div id="movePageDialog" title="${movePageTitle}" class="dialog hidden">
-        <div><fmt:message key="page.general.movethispage"/></div>
-        <form id="movePageForm">
-            <select id="moveAfterPageId">
-                <c:if test="${pageUser.renderSequence != 1}">
-                    <option value="-1"><fmt:message key="page.general.movethispage.tofirst"/></option>
+        </div>
+    </c:forEach>
+</div>
+<fmt:message key="page.general.addnewpage" var="addNewPageTitle"/>
+<div id="dialog" title="${addNewPageTitle}" class="dialog hidden">
+    <form id="pageForm">
+        <div id="pageFormErrors" class="error"></div>
+        <fieldset class="ui-helper-reset">
+            <input type="hidden" name="tab_id" id="tab_id" value="" />
+            <label for="tab_title"><fmt:message key="page.general.addpage.title"/></label>
+            <input type="text" name="tab_title" id="tab_title" value="" class="required ui-widget-content ui-corner-all" />
+            <label for="pageLayout"><fmt:message key="page.general.addpage.selectlayout"/></label>
+            <select name="pageLayout" id="pageLayout">
+                <option value="columns_1" id="columns_1_id"><fmt:message key="page.general.addpage.layout.columns_1"/></option>
+                <option value="columns_2" id="columns_2_id" selected="selected"><fmt:message key="page.general.addpage.layout.columns_2"/></option>
+                <option value="columns_2wn" id="columns_2wn_id"><fmt:message key="page.general.addpage.layout.columns_2wn"/></option>
+                <option value="columns_3" id="columns_3_id"><fmt:message key="page.general.addpage.layout.columns_3"/></option>
+                <option value="columns_3nwn" id="columns_3nwn_id"><fmt:message key="page.general.addpage.layout.columns_3nwn"/></option>
+                <option value="columns_4" id="columns_4_id"><fmt:message key="page.general.addpage.layout.columns_4"/></option>
+                <option value="columns_3nwn_1_bottom" id="columns_3nwn_1_bottom"><fmt:message key="page.general.addpage.layout.columns_3nwn_1_bottom"/></option>
+            </select>
+        </fieldset>
+    </form>
+</div>
+<fmt:message key="page.general.movepage" var="movePageTitle"/>
+<div id="movePageDialog" title="${movePageTitle}" class="dialog hidden">
+    <div><fmt:message key="page.general.movethispage"/></div>
+    <form id="movePageForm">
+        <select id="moveAfterPageId">
+            <c:if test="${pageUser.renderSequence != 1}">
+                <option value="-1"><fmt:message key="page.general.movethispage.tofirst"/></option>
+            </c:if>
+            <c:forEach var="userPage" items="${pages}">
+                <c:if test="${userPage.id != page.id}">
+                    <option value="${userPage.id}">
+                        <fmt:message key="page.general.movethispage.after">
+                            <fmt:param><c:out value="${userPage.name}"/></fmt:param>
+                        </fmt:message>
+                    </option>
                 </c:if>
-                <c:forEach var="userPage" items="${pages}">
-                    <c:if test="${userPage.id != page.id}">
-                        <option value="${userPage.id}">
-                          <fmt:message key="page.general.movethispage.after">
-                              <fmt:param><c:out value="${userPage.name}"/></fmt:param>
-                          </fmt:message>
-                        </option>
-                    </c:if>
-                </c:forEach>
-            </select>
-        </form>
-    </div>
-    <fmt:message key="widget.menu.movetopage" var="moveWidgetToPageTitle"/>
-    <div id="moveWidgetDialog" title="${moveWidgetToPageTitle}" class="dialog hidden">
-        <div><fmt:message key="widget.menu.movethiswidget"/></div>
-        <form id="moveWidgetForm">
-            <select id="moveToPageId">
-                <c:forEach var="userPage" items="${pages}">
-                    <c:if test="${userPage.id != page.id}">
-                        <option value="${userPage.id}">
-                            <c:out value="${userPage.name}"/>
-                        </option>
-                    </c:if>
-                </c:forEach>
-            </select>
-        </form>
-    </div>
+            </c:forEach>
+        </select>
+    </form>
+</div>
+<fmt:message key="widget.menu.movetopage" var="moveWidgetToPageTitle"/>
+<div id="moveWidgetDialog" title="${moveWidgetToPageTitle}" class="dialog hidden">
+    <div><fmt:message key="widget.menu.movethiswidget"/></div>
+    <form id="moveWidgetForm">
+        <select id="moveToPageId">
+            <c:forEach var="userPage" items="${pages}">
+                <c:if test="${userPage.id != page.id}">
+                    <option value="${userPage.id}">
+                        <c:out value="${userPage.name}"/>
+                    </option>
+                </c:if>
+            </c:forEach>
+        </select>
+    </form>
+</div>
 
 <portal:register-init-script location="${'AFTER_RAVE'}">
     <script>
