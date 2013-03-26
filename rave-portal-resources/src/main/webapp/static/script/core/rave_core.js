@@ -100,7 +100,8 @@ rave = (function () {
         }
         //if registered view is a constructor, create a new instance
         if (_.isFunction(view)) {
-            view = new view();
+            //TODO: this makes sure that the constructor gets a widget object, but it's cheesy. Should clean it up.
+            view = new view(args[0]);
         }
         view.render.apply(view, args);
         view._uid = _.uniqueId('rave_view_');

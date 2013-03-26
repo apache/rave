@@ -218,169 +218,7 @@ _.extend(rave.ui, (function () {
         }
 
         _.each(rave.getWidgets(), function (widget) {
-            var widgetId = widget.regionWidgetId;
-
-            var $chrome = $('#widget-' + widgetId + '-wrapper');
-            var $minimizeIcon = $("#widget-" + widgetId + "-min");
-            var $toggleCollapseIcon = $("#widget-" + widgetId + "-collapse");
-            var $menuItemMove = $("#widget-" + widgetId + "-menu-move-item");
-            var $menuItemDelete = $("#widget-" + widgetId + "-menu-delete-item");
-            var $menuItemMaximize = $("#widget-" + widgetId + "-menu-maximize-item");
-            var $menuItemAbout = $("#widget-" + widgetId + "-menu-about-item");
-            var $menuItemComment = $("#widget-" + widgetId + "-menu-comment-item");
-            var $menuItemRate = $("#widget-" + widgetId + "-menu-rate-item");
-            var $menuItemEditPrefs = $("#widget-" + widgetId + "-menu-editprefs-item");
-            var $widgetSite = $("#widget-" + widgetId + "-body");
-
-            widget.render($widgetSite[0]);
-            doCollapseExpand();
-
-            function minimize() {
-                $(".dnd-overlay, .canvas-overlay").remove();
-                getNonLockedRegions().sortable("option", "disabled", false);
-                // display the widget in normal view
-                $("#widget-" + widgetId + "-wrapper").removeClass("widget-wrapper-canvas").addClass("widget-wrapper");
-                // hide the widget minimize button
-                $("#widget-" + widgetId + "-min").hide();
-                // show the widget menu
-                $("#widget-" + widgetId + "-widget-menu-wrapper").show();
-                // show the collapse/restore toggle icon
-                $("#widget-" + widgetId + "-collapse").show();
-                // if the widget is collapsed execute the collapse function
-                // otherwise execute the minimize function
-                widget.render(widget._el);
-                return false;
-            }
-
-            function maximize() {
-                // display the widget in maximized view
-                openFullScreenOverlay(widgetId);
-                // due to widget list changing height of the window, we have to set the height of the sneeze-guard here.
-                var overlayStyleMap = {
-                    height: $('.wrapper').height() - $('.navbar').height() - $('.logo-wrapper').height()
-                };
-                $('.canvas-overlay').css(overlayStyleMap);
-
-                widget.render(widget._el, {view: 'canvas'});
-
-                function openFullScreenOverlay(widgetId) {
-                    addCanvasOverlay($("#pageContent"));
-                    //TODO: make this work
-                    getNonLockedRegions().sortable("option", "disabled", true);
-                    $("#widget-" + widgetId + "-wrapper").removeClass("widget-wrapper").addClass("widget-wrapper-canvas");
-                    // hide the widget menu
-                    $("#widget-" + widgetId + "-widget-menu-wrapper").hide();
-                    // display the widget minimize button
-                    $("#widget-" + widgetId + "-min").show();
-                    // hide the collapse/restore toggle icon in canvas mode
-                    $("#widget-" + widgetId + "-collapse").hide();
-                }
-
-                function addCanvasOverlay(jqElm) {
-                    var overlay = $('<div></div>');
-                    var styleMap = {
-                        height: $('body').height() - 40
-                    };
-
-                    // style it and give it the marker class
-                    $(overlay).css(styleMap);
-                    $(overlay).addClass("canvas-overlay");
-                    // add it to the dom before the iframe so it covers it
-                    jqElm.prepend(overlay[0]);
-                }
-            }
-
-            function toggleCollapse() {
-                var hidden = widget.collapsed
-                if (hidden) {
-                    widget.show();
-                }
-                else {
-                    widget.hide();
-                }
-                doCollapseExpand();
-                return false;
-            }
-
-            function doCollapseExpand() {
-                var expanded = !widget.collapsed
-                $('iframe', $widgetSite).toggle(expanded);
-                $('i', $toggleCollapseIcon).toggleClass('icon-chevron-down', expanded);
-                $('i', $toggleCollapseIcon).toggleClass('icon-chevron-up', !expanded);
-            }
-
-            function showMovePageDialog() {
-                // Clear the dropdown box; needing to do this may be a bug?
-                $('.dropdown').removeClass('open');
-                // Open the modal
-                $("#moveWidgetModal").data('regionWidgetId', widgetId);
-                $("#moveWidgetModal").modal('show');
-
-                return false;
-            }
-
-            function deleteWidget() {
-                $chrome.remove();
-                widget.close();
-                rave.unregisterWidget(widget);
-                if (_.isEmpty(rave.getWidgets())) {
-                    displayEmptyPageMessage();
-                }
-                return false;
-            }
-
-            function aboutWidget() {
-                rave.viewWidgetDetail(widgetId, getCurrentPageId());
-                return false;
-            }
-
-            function commentOnWidget() {
-                rave.viewWidgetDetail(widgetId, getCurrentPageId(), 'widgetComments');
-                return false;
-            }
-
-            function rateWidget() {
-                rave.viewWidgetDetail(widgetId, getCurrentPageId(), 'widgetRatings');
-                return false;
-            }
-
-            function showPrefsPane() {
-                showWidgetPrefs(widget);
-                return false;
-            }
-
-            $('#widget-' + widgetId + '-toolbar').mousedown(function (event) {
-                // don't allow drag and drop when this item is clicked
-                event.stopPropagation();
-            });
-
-            //bind widget menu items
-            $minimizeIcon.click(minimize);
-            $toggleCollapseIcon.click(toggleCollapse);
-            if (!$menuItemMove.hasClass("menu-item-disabled")) {
-                $menuItemMove.click(showMovePageDialog);
-            }
-            if (!$menuItemDelete.hasClass("menu-item-disabled")) {
-                $menuItemDelete.click(deleteWidget);
-            }
-            if (!$menuItemMaximize.hasClass("menu-item-disabled")) {
-                $menuItemMaximize.click(maximize);
-            }
-            if (!$menuItemAbout.hasClass("menu-item-disabled")) {
-                $menuItemAbout.click(aboutWidget)
-            }
-            if (!$menuItemComment.hasClass("menu-item-disabled")) {
-                $menuItemComment.click(commentOnWidget);
-            }
-            if (!$menuItemRate.hasClass("menu-item-disabled")) {
-                $menuItemRate.click(rateWidget);
-            }
-            var metadata = widget.metadata;
-            if (metadata && (metadata.hasPrefsToEdit || (metadata.views && metadata.views.preferences))) {
-                $menuItemEditPrefs.removeClass("menu-item-disabled");
-                $menuItemEditPrefs.click(showPrefsPane);
-            }
-
+            widget.render('home');
         });
     }
 
@@ -722,7 +560,233 @@ _.extend(rave.ui, (function () {
         }
     }
 
-    function registerViews() {
+    function registerHomeView() {
+        var HomeView = function (widget) {
+            this.widget = widget;
+
+            var widgetId = widget.regionWidgetId;
+
+            this.$chrome = $('#widget-' + widgetId + '-wrapper');
+            this.$minimizeIcon = $("#widget-" + widgetId + "-min");
+            this.$toggleCollapseIcon = $("#widget-" + widgetId + "-collapse");
+            this.$menuItemMove = $("#widget-" + widgetId + "-menu-move-item");
+            this.$menuItemDelete = $("#widget-" + widgetId + "-menu-delete-item");
+            this.$menuItemMaximize = $("#widget-" + widgetId + "-menu-maximize-item");
+            this.$menuItemAbout = $("#widget-" + widgetId + "-menu-about-item");
+            this.$menuItemComment = $("#widget-" + widgetId + "-menu-comment-item");
+            this.$menuItemRate = $("#widget-" + widgetId + "-menu-rate-item");
+            this.$menuItemEditPrefs = $("#widget-" + widgetId + "-menu-editprefs-item");
+            this.$widgetSite = $("#widget-" + widgetId + "-body");
+        }
+
+        HomeView.prototype.render = function (widget) {
+            var widgetId = this.widget.regionWidgetId;
+            var self = this;
+
+            doCollapseExpand();
+            cleanupFromCanvas();
+
+            function cleanupFromCanvas() {
+                $(".dnd-overlay, .canvas-overlay").remove();
+                getNonLockedRegions().sortable("option", "disabled", false);
+                // display the widget in normal view
+                $("#widget-" + widgetId + "-wrapper").removeClass("widget-wrapper-canvas").addClass("widget-wrapper");
+                // hide the widget minimize button
+                $("#widget-" + widgetId + "-min").hide();
+                // show the widget menu
+                $("#widget-" + widgetId + "-widget-menu-wrapper").show();
+                // show the collapse/restore toggle icon
+                $("#widget-" + widgetId + "-collapse").show();
+                // if the widget is collapsed execute the collapse function
+                // otherwise execute the minimize function
+                return false;
+            }
+
+            function minimize() {
+                self.widget.render('home');
+            }
+
+            function maximize() {
+                self.widget.render('canvas');
+            }
+
+            function toggleCollapse() {
+                var hidden = self.widget.collapsed
+                if (hidden) {
+                    self.widget.show();
+                }
+                else {
+                    self.widget.hide();
+                }
+                doCollapseExpand();
+                return false;
+            }
+
+            function doCollapseExpand() {
+                var expanded = !widget.collapsed
+                $('iframe', self.$widgetSite).toggle(expanded);
+                $('i', self.$toggleCollapseIcon).toggleClass('icon-chevron-down', expanded);
+                $('i', self.$toggleCollapseIcon).toggleClass('icon-chevron-up', !expanded);
+            }
+
+            function showMovePageDialog() {
+                // Clear the dropdown box; needing to do self may be a bug?
+                $('.dropdown').removeClass('open');
+                // Open the modal
+                $("#moveWidgetModal").data('regionWidgetId', widgetId);
+                $("#moveWidgetModal").modal('show');
+
+                return false;
+            }
+
+            function deleteWidget() {
+                self.widget.close();
+                return false;
+            }
+
+            function aboutWidget() {
+                rave.viewWidgetDetail(widgetId, getCurrentPageId());
+                return false;
+            }
+
+            function commentOnWidget() {
+                rave.viewWidgetDetail(widgetId, getCurrentPageId(), 'widgetComments');
+                return false;
+            }
+
+            function rateWidget() {
+                rave.viewWidgetDetail(widgetId, getCurrentPageId(), 'widgetRatings');
+                return false;
+            }
+
+            function showPrefsPane() {
+                showWidgetPrefs(widget);
+                return false;
+            }
+
+            $('#widget-' + widgetId + '-toolbar').mousedown(function (event) {
+                // don't allow drag and drop when self item is clicked
+                event.stopPropagation();
+            });
+
+            //bind widget menu items
+            self.$minimizeIcon.click(minimize);
+            self.$toggleCollapseIcon.click(toggleCollapse);
+            if (!self.$menuItemMove.hasClass("menu-item-disabled")) {
+                self.$menuItemMove.click(showMovePageDialog);
+            }
+            if (!self.$menuItemDelete.hasClass("menu-item-disabled")) {
+                self.$menuItemDelete.click(deleteWidget);
+            }
+            if (!self.$menuItemMaximize.hasClass("menu-item-disabled")) {
+                self.$menuItemMaximize.click(maximize);
+            }
+            if (!self.$menuItemAbout.hasClass("menu-item-disabled")) {
+                self.$menuItemAbout.click(aboutWidget)
+            }
+            if (!self.$menuItemComment.hasClass("menu-item-disabled")) {
+                self.$menuItemComment.click(commentOnWidget);
+            }
+            if (!self.$menuItemRate.hasClass("menu-item-disabled")) {
+                self.$menuItemRate.click(rateWidget);
+            }
+            var metadata = self.widget.metadata;
+            if (metadata && (metadata.hasPrefsToEdit || (metadata.views && metadata.views.preferences))) {
+                self.$menuItemEditPrefs.removeClass("menu-item-disabled");
+                self.$menuItemEditPrefs.click(showPrefsPane);
+            }
+        }
+        HomeView.prototype.getWidgetSite = function () {
+            return this.$widgetSite[0];
+        }
+        HomeView.prototype.destroy = function (widget) {
+            this.$chrome.remove();
+            if (_.isEmpty(rave.getWidgets())) {
+                displayEmptyPageMessage();
+            }
+        }
+
+        rave.registerView('home', HomeView);
+
+
+        rave.registerView('errorWidget', {
+            render: function (el, widget) {
+                el.innerHTML = rave.getClientMessage("opensocial.render_error") + "<br /><br />" + widget.error.message;
+                return this;
+            },
+            destroy: function () {
+            }
+        });
+    }
+
+    function registerCanvasView() {
+        var CanvasView = function () {
+            this.widget;
+        }
+        CanvasView.prototype.render = function (widget) {
+            this.widget = widget;
+            // display the widget in maximized view
+            openFullScreenOverlay(widget.regionWidgetId);
+            // due to widget list changing height of the window, we have to set the height of the sneeze-guard here.
+            var overlayStyleMap = {
+                height: $('.wrapper').height() - $('.navbar').height() - $('.logo-wrapper').height()
+            };
+            $('.canvas-overlay').css(overlayStyleMap);
+
+            widget.render(widget._el, {view: 'canvas'});
+
+            function openFullScreenOverlay(widgetId) {
+                addCanvasOverlay($("#pageContent"));
+                //TODO: make this work
+                getNonLockedRegions().sortable("option", "disabled", true);
+                $("#widget-" + widgetId + "-wrapper").removeClass("widget-wrapper").addClass("widget-wrapper-canvas");
+                // hide the widget menu
+                $("#widget-" + widgetId + "-widget-menu-wrapper").hide();
+                // display the widget minimize button
+                $("#widget-" + widgetId + "-min").show();
+                // hide the collapse/restore toggle icon in canvas mode
+                $("#widget-" + widgetId + "-collapse").hide();
+            }
+
+            function addCanvasOverlay(jqElm) {
+                if ($('.canvas-overlay').length > 0) {
+                    return;
+                }
+                var overlay = $('<div></div>');
+                var styleMap = {
+                    height: $('body').height() - 40
+                };
+
+                // style it and give it the marker class
+                $(overlay).css(styleMap);
+                $(overlay).addClass("canvas-overlay");
+                // add it to the dom before the iframe so it covers it
+                jqElm.prepend(overlay[0]);
+            }
+        }
+        CanvasView.prototype.getWidgetSite = function () {
+            return $("#widget-" + this.widget.regionWidgetId + "-body")[0];
+        }
+        CanvasView.prototype.destroy = function () {
+            $(".dnd-overlay, .canvas-overlay").remove();
+            getNonLockedRegions().sortable("option", "disabled", false);
+            // display the widget in normal view
+            $("#widget-" + widgetId + "-wrapper").removeClass("widget-wrapper-canvas").addClass("widget-wrapper");
+            // hide the widget minimize button
+            $("#widget-" + widgetId + "-min").hide();
+            // show the widget menu
+            $("#widget-" + widgetId + "-widget-menu-wrapper").show();
+            // show the collapse/restore toggle icon
+            $("#widget-" + widgetId + "-collapse").show();
+            // if the widget is collapsed execute the collapse function
+            // otherwise execute the minimize function
+            return false;
+        }
+
+        rave.registerView('canvas', CanvasView);
+    }
+
+    function registerPopups() {
         var POPUPS = {
             sidebar: {
                 name: "sidebar",
@@ -805,7 +869,6 @@ _.extend(rave.ui, (function () {
         };
 
         _.each(POPUPS, function (target) {
-
             var $container = $(rave.ui.templates[target.template]());
             var $site = $(target.contentSelector, $container);
 
@@ -839,20 +902,12 @@ _.extend(rave.ui, (function () {
                 }
             });
         });
-
-        rave.registerView('errorWidget', {
-            render: function (el, widget) {
-                el.innerHTML = rave.getClientMessage("opensocial.render_error") + "<br /><br />" + widget.error.message;
-                return this;
-            },
-            destroy: function () {
-            }
-        });
-
     }
 
     function init() {
-        registerViews();
+        registerHomeView();
+        registerCanvasView();
+        registerPopups();
         renderWidgets();
         setupDragAndDrop();
     }

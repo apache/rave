@@ -48,8 +48,11 @@ rave.registerProvider(
         }
 
         function requestNavigateTo(args, viewName, opt_params, opt_ownerId) {
-            var widget = args.gs._widget;
-            widget.render(widget._el, {view: viewName, view_params: opt_params, ownerId: opt_ownerId});
+            var widget = args.gs._widget,
+                viewSurface = viewName.split('.')[0],
+                renderInto = rave.getView(viewSurface) ? viewSurface : widget._el;
+
+            widget.render(renderInto, {view: viewName, view_params: opt_params, ownerId: opt_ownerId});
         }
 
         function setPref(args, editToken, prefName, prefValue) {
