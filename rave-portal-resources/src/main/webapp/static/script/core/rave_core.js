@@ -51,6 +51,9 @@ rave = (function () {
         //make regionId optional
         if (!definition) {
             definition = regionId;
+        } else {
+            //TODO: until api can be updated, attach regionid as an attribute on the widget so that we can filter on this
+            definition.regionId = regionId;
         }
         regionWidgets[definition.regionWidgetId] = definition;
         if (INITIALIZED) {
@@ -71,16 +74,17 @@ rave = (function () {
         return regionWidgets[regionWidgetId];
     }
 
-    //TODO: add some sort of filtering?
-    exports.getWidgets = function () {
-        return regionWidgets;
+    exports.getWidgets = function (filter) {
+        var widgets = _.toArray(regionWidgets);
+        if(filter) {
+            widgets = _.where(widgets, filter);
+        }
+        return widgets;
     }
 
     /*
      key: view name
      view: any object that manages and renders a view. At minimum must have render and destroy methods. render should return 'this'
-     TODO: any view that will be used for gadget injection (popups, widget chrome) should also have a function
-     getWidgetSite that returns a dom element where the widget is injected.
      */
     exports.registerView = function (key, view) {
         registeredViews[key.toLowerCase()] = view;

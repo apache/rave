@@ -21,7 +21,8 @@ describe('rave', function () {
     var providerName = 'opensocial',
         viewName = 'modal',
         provider,
-        widget,
+        widget1,
+        widget2,
         viewObject,
         testScope = {};
 
@@ -77,9 +78,9 @@ describe('rave', function () {
             return this;
         });
 
-        widget = {
+        widget1 = {
             "type": "OpenSocial",
-            "regionWidgetId": "5",
+            "regionWidgetId": "1",
             "widgetUrl": "http://widgets.nytimes.com/packages/html/igoogle/topstories.xml",
             "metadata": {
                 "userPrefs": {
@@ -97,7 +98,32 @@ describe('rave', function () {
             },
             "userPrefs": { "headlineCount": "9", "summaryCount": "1"},
             "collapsed": false,
-            "widgetId": "3"
+            "widgetId": "3",
+            "regionId": "1"
+        };
+
+        widget2 = {
+            "type": "OpenSocial",
+            "regionWidgetId": "2",
+            "widgetUrl": "http://widgets.nytimes.com/packages/html/igoogle/topstories.xml",
+            "metadata": {
+                "userPrefs": {
+                },
+                "hasPrefsToEdit": true,
+                "views": {
+                    "home": {
+                        "preferredHeight": 0, "quirks": true, "preferredWidth": 0},
+                    "default": {
+                        "preferredHeight": 0, "quirks": true, "preferredWidth": 0},
+                    "canvas": {
+                        "preferredHeight": 0, "quirks": true, "preferredWidth": 0}},
+                "modulePrefs": {
+                }
+            },
+            "userPrefs": { "headlineCount": "9", "summaryCount": "1"},
+            "collapsed": false,
+            "widgetId": "3",
+            "regionId": "2"
         };
     });
 
@@ -137,8 +163,16 @@ describe('rave', function () {
 
     describe('registerWidget', function () {
 
+        it('accepts one or two arguments', function(){
+            var registeredWidget1 = rave.registerWidget(widget1);
+            var registeredWidget2 = rave.registerWidget(2, widget2);
+
+            expect(registeredWidget1).toEqual(widget1);
+            expect(registeredWidget2).toEqual(widget2);
+        });
+
         it('does not call RegionWidget constructor until rave.init is called', function () {
-            rave.registerWidget(widget);
+            rave.registerWidget(widget1);
             expect(rave.RegionWidget).not.toHaveBeenCalled();
             rave.init();
             expect(rave.RegionWidget).toHaveBeenCalled();
@@ -147,7 +181,7 @@ describe('rave', function () {
         it('instatiates a new RegionWidget immediately if rave.init was already called', function () {
             expect(rave.RegionWidget).not.toHaveBeenCalled();
             rave.init();
-            rave.registerWidget(widget);
+            rave.registerWidget(widget1);
             expect(rave.RegionWidget).toHaveBeenCalled();
         });
 
@@ -155,38 +189,43 @@ describe('rave', function () {
 
     describe('getWidget', function () {
         it('can retrieve a registed widget by regionWidgetId', function () {
-            expect(rave.getWidget(widget.regionWidgetId)).toBeUndefined();
-            rave.registerWidget(widget);
-            expect(rave.getWidget(widget.regionWidgetId)).toBe(widget);
+            expect(rave.getWidget(widget1.regionWidgetId)).toBeUndefined();
+            rave.registerWidget(widget1);
+            expect(rave.getWidget(widget1.regionWidgetId)).toBe(widget1);
         });
     });
 
     describe('getWidgets', function () {
         it('returns the set of all registered widgets', function () {
-            var expectedOutput = {};
-            expectedOutput[widget.regionWidgetId] = widget;
+            expect(rave.getWidgets()).toEqual([]);
+            rave.registerWidget(widget1);
+            expect(rave.getWidgets()).toEqual([widget1]);
+        });
 
-            expect(rave.getWidgets()).toEqual({});
-            rave.registerWidget(widget);
-            expect(rave.getWidgets()).toEqual(expectedOutput);
+        it('filters widgets', function(){
+            rave.registerWidget(widget1);
+            rave.registerWidget(widget2);
+
+            expect(rave.getWidgets({regionId: "1"})).toEqual([widget1]);
+            expect(rave.getWidgets({widgetId: "3"})).toEqual([widget1, widget2]);
         });
     });
 
     describe('unregisterWidget', function () {
         it('unregisters a widget by regionWidgetId', function () {
-            expect(rave.getWidget(widget.regionWidgetId)).toBeUndefined();
-            rave.registerWidget(widget);
-            expect(rave.getWidget(widget.regionWidgetId)).toBe(widget);
-            rave.unregisterWidget(widget.regionWidgetId);
-            expect(rave.getWidget(widget.regionWidgetId)).toBeUndefined();
+            expect(rave.getWidget(widget1.regionWidgetId)).toBeUndefined();
+            rave.registerWidget(widget1);
+            expect(rave.getWidget(widget1.regionWidgetId)).toBe(widget1);
+            rave.unregisterWidget(widget1.regionWidgetId);
+            expect(rave.getWidget(widget1.regionWidgetId)).toBeUndefined();
         });
 
         it('unregisters a widget by object', function () {
-            expect(rave.getWidget(widget.regionWidgetId)).toBeUndefined();
-            rave.registerWidget(widget);
-            expect(rave.getWidget(widget.regionWidgetId)).toBe(widget);
-            rave.unregisterWidget(widget);
-            expect(rave.getWidget(widget.regionWidgetId)).toBeUndefined();
+            expect(rave.getWidget(widget1.regionWidgetId)).toBeUndefined();
+            rave.registerWidget(widget1);
+            expect(rave.getWidget(widget1.regionWidgetId)).toBe(widget1);
+            rave.unregisterWidget(widget1);
+            expect(rave.getWidget(widget1.regionWidgetId)).toBeUndefined();
         });
     });
 

@@ -61,6 +61,7 @@ rave.RegionWidget = (function () {
             return;
         }
         if (_.isString(el)) {
+            //TODO: potential memory leak - rendering a widget into new views does not force cleanup of current view
             var view = rave.renderView(el, this);
             el = view.getWidgetSite();
             this._view = view;
