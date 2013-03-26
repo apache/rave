@@ -261,7 +261,7 @@ _.extend(rave.ui, (function () {
                 };
                 $('.canvas-overlay').css(overlayStyleMap);
 
-                widget.render(widget._el, 'canvas');
+                widget.render(widget._el, {view: 'canvas'});
 
                 function openFullScreenOverlay(widgetId) {
                     addCanvasOverlay($("#pageContent"));
@@ -810,8 +810,17 @@ _.extend(rave.ui, (function () {
             var $site = $(target.contentSelector, $container);
 
             rave.registerView(target.name, {
-                render: function () {
+                render: function (prefs) {
+                    var height = (prefs && prefs.preferredHeight);
+                    var width = (prefs && prefs.preferredWidth);
+                    if (height) {
+                        $container.height(height);
+                    }
+                    if (width) {
+                        $container.width(width);
+                    }
                     $("#pageContent").prepend($container);
+
                     if (_.isFunction(target.initialize)) {
                         target.initialize($container)
                     }

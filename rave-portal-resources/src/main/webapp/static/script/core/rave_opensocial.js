@@ -58,7 +58,7 @@ rave.registerProvider(
         }
 
         /*
-        TODO: these rely on a gadget's view implementing a method
+         TODO: these rely on a gadget's view implementing a method
          */
         function setTitle(args) {
             var widget = args.gs._widget;
@@ -67,12 +67,14 @@ rave.registerProvider(
                 widget._view.setTitle(title);
             }
         }
+
         function hideWidget(args, viewName, opt_params, opt_ownerId) {
             var widget = args.gs._widget;
             if (widget._view && widget._view.collapse) {
                 widget._view.collapse();
             }
         }
+
         function showWidget(args, viewName, opt_params, opt_ownerId) {
             var widget = args.gs._widget;
             if (widget._view && widget._view.expand) {
@@ -111,8 +113,8 @@ rave.registerProvider(
                             "securityToken": data.securityToken,
                             "metadata": opt_gadgetInfo
                         },
-                        height = data.metadata ? data.metadata.height : 500,
-                        width = data.metadata ? data.metadata.width : 525;
+                        height = gadget.metadata.modulePrefs.height || 500,
+                        width = gadget.metadata.modulePrefs.width || 525;
 
                     preloadMetadata(gadget);
 
