@@ -235,6 +235,10 @@ rave.registerProvider(
             defaultView = view;
         }
 
+        exports.getContainer = function() {
+            return container;
+        }
+
         return exports;
     })()
 )
