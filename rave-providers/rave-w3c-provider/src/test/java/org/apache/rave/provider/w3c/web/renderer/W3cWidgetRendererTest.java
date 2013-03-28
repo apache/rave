@@ -60,7 +60,7 @@ public class W3cWidgetRendererTest {
         wookieService = createNiceMock(WidgetProviderService.class);
         userService = createNiceMock(UserService.class);
         scriptManager = createNiceMock(ScriptManager.class);
-        renderer = new W3cWidgetRenderer(wookieService, userService, scriptManager);
+        renderer = new W3cWidgetWrapperRenderer(wookieService, userService, scriptManager);
     }
 
     @Test

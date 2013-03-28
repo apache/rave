@@ -24,4 +24,4 @@ import org.apache.rave.portal.web.renderer.model.RegionWidgetWrapper;
 /**
  * Scoped renderer that provides additional RegionWidget related rendering operations
  */
-public interface RegionWidgetRenderer extends Renderer<RegionWidgetWrapper> {}
+public interface RegionWidgetWrapperRenderer extends Renderer<RegionWidgetWrapper> {}

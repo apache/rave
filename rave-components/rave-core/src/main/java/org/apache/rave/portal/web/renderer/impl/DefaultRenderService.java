@@ -24,6 +24,8 @@ import org.apache.rave.portal.repository.WidgetRepository;
 import org.apache.rave.portal.web.renderer.model.RegionWidgetWrapper;
 import org.apache.rave.portal.web.renderer.model.RenderContext;
 import org.apache.rave.portal.web.renderer.*;
+import org.apache.rave.rest.model.Page;
+import org.apache.rave.rest.model.RegionWidget;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,11 +42,11 @@ public class DefaultRenderService implements RenderService {
 
     public static final String WIDGET_CONTEXT_KEY = "widget";
 
-    private final Map<String, RegionWidgetRenderer> supportedWidgets;
+    private final Map<String, RegionWidgetWrapperRenderer> supportedWidgets;
 
     @Autowired
-    public DefaultRenderService(List<RegionWidgetRenderer> widgetRenderers, WidgetRepository widgetRepository) {
-        this.supportedWidgets = new HashMap<String, RegionWidgetRenderer>();
+    public DefaultRenderService(List<RegionWidgetWrapperRenderer> widgetRenderers, WidgetRepository widgetRepository) {
+        this.supportedWidgets = new HashMap<String, RegionWidgetWrapperRenderer>();
         mapRenderersByType(this.supportedWidgets, widgetRenderers);
     }
 
@@ -54,7 +56,7 @@ public class DefaultRenderService implements RenderService {
     }
 
     /**
-     * Renders the given rw iff there is a {@link org.apache.rave.portal.web.renderer.RegionWidgetRenderer } for the
+     * Renders the given rw iff there is a {@link org.apache.rave.portal.web.renderer.RegionWidgetWrapperRenderer } for the
      * rw type
      *
      * @param rw RegionWidget to renderer
@@ -64,11 +66,21 @@ public class DefaultRenderService implements RenderService {
      */
     @Override
     public String render(RegionWidgetWrapper rw, RenderContext context) {
-        RegionWidgetRenderer renderer = supportedWidgets.get(rw.getWidget().getType());
+        RegionWidgetWrapperRenderer renderer = supportedWidgets.get(rw.getWidget().getType());
         if(renderer == null) {
             throw new NotSupportedException(rw.getWidget().getType() + " is not supported");
         }
         return renderer.render(rw, context);
+    }
+
+    @Override
+    public RegionWidget prepareForRender(RegionWidget source) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public Page prepareForRender(Page source) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     private static <T extends Renderer> void mapRenderersByType(Map<String, T> map, List<T> renderers) {

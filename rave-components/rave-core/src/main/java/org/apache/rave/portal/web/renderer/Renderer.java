@@ -38,5 +38,13 @@ public interface Renderer<T> {
      * @param context
      * @return String representing the rendered item
      */
+    @Deprecated
     String render(T item, RenderContext context);
+
+    /**
+     * Prepares the item for rendering
+     * @param item the item to prepare
+     * @return an instance of a prepared item
+     */
+    T prepareForRender(T item);
 }

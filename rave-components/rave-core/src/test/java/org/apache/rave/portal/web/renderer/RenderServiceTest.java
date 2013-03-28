@@ -46,17 +46,17 @@ public class RenderServiceTest {
     private static final String RENDERED_TYPE_2 = "BAR_RENDERED";
 
     private RenderService service;
-    private List<RegionWidgetRenderer> widgetRenderers;
-    private RegionWidgetRenderer widgetRenderer2;
-    private RegionWidgetRenderer widgetRenderer1;
+    private List<RegionWidgetWrapperRenderer> widgetRenderers;
+    private RegionWidgetWrapperRenderer widgetRenderer2;
+    private RegionWidgetWrapperRenderer widgetRenderer1;
     private RenderContext context;
     private WidgetRepository widgetRepository;
 
     @Before
     public void setup() {
-        widgetRenderers = new ArrayList<RegionWidgetRenderer>();
-        widgetRenderer2 = createStrictMock(RegionWidgetRenderer.class);
-        widgetRenderer1 = createStrictMock(RegionWidgetRenderer.class);
+        widgetRenderers = new ArrayList<RegionWidgetWrapperRenderer>();
+        widgetRenderer2 = createStrictMock(RegionWidgetWrapperRenderer.class);
+        widgetRenderer1 = createStrictMock(RegionWidgetWrapperRenderer.class);
         widgetRepository = createMock(WidgetRepository.class);
 
         expect(widgetRenderer1.getSupportedContext()).andReturn(SUPPORTED_TYPE_1);

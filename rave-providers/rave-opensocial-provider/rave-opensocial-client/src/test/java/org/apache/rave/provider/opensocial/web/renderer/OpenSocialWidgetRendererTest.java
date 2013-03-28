@@ -63,7 +63,7 @@ public class OpenSocialWidgetRendererTest {
         scriptManager = createStrictMock(ScriptManager.class);
         openSocialService = createNiceMock(OpenSocialService.class);
         securityTokenService = createNiceMock(SecurityTokenService.class);
-        renderer = new OpenSocialWidgetRenderer(openSocialService, securityTokenService, scriptManager);
+        renderer = new OpenSocialWidgetWrapperRenderer(openSocialService, securityTokenService, scriptManager);
     }
 
     @Test
@@ -126,7 +126,7 @@ public class OpenSocialWidgetRendererTest {
         expect(securityTokenService.getEncryptedSecurityToken(rw, w)).andReturn(VALID_SECURITY_TOKEN);
         replay(securityTokenService);
 
-        String key = OpenSocialWidgetRenderer.REGISTER_WIDGET_KEY+"-"+rw.getId();
+        String key = OpenSocialWidgetWrapperRenderer.REGISTER_WIDGET_KEY+"-"+rw.getId();
         scriptManager.registerScriptBlock(key, markup, ScriptLocation.AFTER_RAVE, RenderScope.CURRENT_REQUEST, renderContext);
         expectLastCall();
         replay(scriptManager);
@@ -171,7 +171,7 @@ public class OpenSocialWidgetRendererTest {
             " subPage: {id: null, name: '', isDefault: false}" +
             "});</script>";
 
-        scriptManager.registerScriptBlock(OpenSocialWidgetRenderer.REGISTER_WIDGET_KEY, markup, ScriptLocation.AFTER_RAVE, RenderScope.CURRENT_REQUEST, null);
+        scriptManager.registerScriptBlock(OpenSocialWidgetWrapperRenderer.REGISTER_WIDGET_KEY, markup, ScriptLocation.AFTER_RAVE, RenderScope.CURRENT_REQUEST, null);
         expectLastCall();
         replay(scriptManager);
 

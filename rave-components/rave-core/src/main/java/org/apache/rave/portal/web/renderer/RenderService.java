@@ -21,6 +21,8 @@ package org.apache.rave.portal.web.renderer;
 
 import org.apache.rave.portal.web.renderer.model.RegionWidgetWrapper;
 import org.apache.rave.portal.web.renderer.model.RenderContext;
+import org.apache.rave.rest.model.Page;
+import org.apache.rave.rest.model.RegionWidget;
 
 import java.util.Collection;
 
@@ -41,6 +43,21 @@ public interface RenderService {
      * @param context the cotnext under which to render the widget
      * @return a String representing the rendered widget
      */
+    @Deprecated
     String render(RegionWidgetWrapper regionWidgetWrapper, RenderContext context);
+
+    /**
+     * Assigns all necessary properties for rendering to the RegionWidget
+     * @param source widget to update
+     * @return the updated instance of the RegionWidget.
+     */
+    RegionWidget prepareForRender(RegionWidget source);
+
+    /**
+     * Assigns all necessary properties for rendering to the Page
+     * @param source page to update
+     * @return the updated instance of the Page.
+     */
+    Page prepareForRender(Page source);
 
 }

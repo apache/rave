@@ -21,7 +21,7 @@ package org.apache.rave.provider.opensocial.web.renderer;
 
 import org.apache.rave.exception.NotSupportedException;
 import org.apache.rave.model.*;
-import org.apache.rave.portal.web.renderer.RegionWidgetRenderer;
+import org.apache.rave.portal.web.renderer.RegionWidgetWrapperRenderer;
 import org.apache.rave.portal.web.renderer.RenderScope;
 import org.apache.rave.portal.web.renderer.ScriptLocation;
 import org.apache.rave.portal.web.renderer.ScriptManager;
@@ -43,8 +43,8 @@ import org.springframework.stereotype.Component;
  * //TODO RAVE-29: Create infrastructure for rendering inline gadgets via Caja
  */
 @Component
-public class OpenSocialWidgetRenderer implements RegionWidgetRenderer {
-    private static Logger logger = LoggerFactory.getLogger(OpenSocialWidgetRenderer.class);
+public class OpenSocialWidgetWrapperRenderer implements RegionWidgetWrapperRenderer {
+    private static Logger logger = LoggerFactory.getLogger(OpenSocialWidgetWrapperRenderer.class);
 
     public static final String REGISTER_WIDGET_KEY = "openSocialRegisterWidget";
 
@@ -53,9 +53,9 @@ public class OpenSocialWidgetRenderer implements RegionWidgetRenderer {
     private ScriptManager scriptManager;
 
     @Autowired
-    public OpenSocialWidgetRenderer(OpenSocialService openSocialService,
-                                    SecurityTokenService securityTokenService,
-                                    ScriptManager scriptManager) {
+    public OpenSocialWidgetWrapperRenderer(OpenSocialService openSocialService,
+                                           SecurityTokenService securityTokenService,
+                                           ScriptManager scriptManager) {
         this.openSocialService = openSocialService;
         this.securityTokenService = securityTokenService;
         this.scriptManager = scriptManager;
@@ -104,9 +104,14 @@ public class OpenSocialWidgetRenderer implements RegionWidgetRenderer {
         // the key is based off the RegionWidget.id to ensure uniqueness
         String key = REGISTER_WIDGET_KEY  + (regionWidget.getId() == null ? "" :  "-" + regionWidget.getId());
         scriptManager.registerScriptBlock(key, widgetScript, ScriptLocation.AFTER_RAVE, RenderScope.CURRENT_REQUEST, context);
-        logger.debug("Gadget Script Data from OpenSocialWidgetRenderer: " + widgetScript);
+        logger.debug("Gadget Script Data from OpenSocialWidgetWrapperRenderer: " + widgetScript);
 
         return String.format(MARKUP, regionWidget.getId());
+    }
+
+    @Override
+    public RegionWidgetWrapper prepareForRender(RegionWidgetWrapper item) {
+        throw new UnsupportedOperationException();
     }
 
     private String getWidgetScript(RegionWidget item, Widget widget) {

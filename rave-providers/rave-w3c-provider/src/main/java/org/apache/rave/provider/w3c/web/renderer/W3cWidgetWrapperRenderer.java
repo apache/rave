@@ -23,7 +23,7 @@ import org.apache.rave.exception.NotSupportedException;
 import org.apache.rave.model.*;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.portal.service.WidgetProviderService;
-import org.apache.rave.portal.web.renderer.RegionWidgetRenderer;
+import org.apache.rave.portal.web.renderer.RegionWidgetWrapperRenderer;
 import org.apache.rave.portal.web.renderer.RenderScope;
 import org.apache.rave.portal.web.renderer.ScriptLocation;
 import org.apache.rave.portal.web.renderer.ScriptManager;
@@ -44,8 +44,8 @@ import static org.apache.rave.provider.w3c.Constants.WIDGET_TYPE;
  * Creates the appropriate markup to represent a W3C widget
  */
 @Component
-public class W3cWidgetRenderer implements RegionWidgetRenderer {
-    private static Logger logger = LoggerFactory.getLogger(W3cWidgetRenderer.class);
+public class W3cWidgetWrapperRenderer implements RegionWidgetWrapperRenderer {
+    private static Logger logger = LoggerFactory.getLogger(W3cWidgetWrapperRenderer.class);
     
     private static final String REGISTER_WIDGET_KEY = "wookieRegisterWidget";
 
@@ -54,8 +54,8 @@ public class W3cWidgetRenderer implements RegionWidgetRenderer {
     private ScriptManager scriptManager;
 
     @Autowired
-    public W3cWidgetRenderer(@Qualifier("wookieWidgetService") WidgetProviderService widgetService,
-                             UserService userService, ScriptManager scriptManager) {
+    public W3cWidgetWrapperRenderer(@Qualifier("wookieWidgetService") WidgetProviderService widgetService,
+                                    UserService userService, ScriptManager scriptManager) {
         this.widgetService = widgetService;
         this.userService = userService;
         this.scriptManager = scriptManager;
@@ -106,6 +106,11 @@ public class W3cWidgetRenderer implements RegionWidgetRenderer {
         logger.debug("Gadget Script Data: " + widgetScript);
 
         return String.format(MARKUP, item.getId());
+    }
+
+    @Override
+    public RegionWidgetWrapper prepareForRender(RegionWidgetWrapper item) {
+        throw new UnsupportedOperationException();
     }
 
     /**
