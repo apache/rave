@@ -33,7 +33,7 @@ public class RegionWidget {
     @XmlElement(name = "hideChrome")
     private boolean hideChrome;
     @XmlElement(name = "userPrefs")
-    @XmlJavaTypeAdapter(value = XmlMapAdapter.class, type=Map.class)
+    @XmlJavaTypeAdapter(value = XmlMapAdapter.class)
     private Map<String, String> userPrefs;
 
     public RegionWidget() {  }

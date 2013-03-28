@@ -10,6 +10,7 @@ import java.util.List;
 })
 @XmlRootElement(name = "Page")
 public class Page {
+
     @XmlAttribute(name="id")
     private String id;
     @XmlElement(name="name")

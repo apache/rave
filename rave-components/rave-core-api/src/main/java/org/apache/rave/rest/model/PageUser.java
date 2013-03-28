@@ -9,15 +9,18 @@ import javax.xml.bind.annotation.*;
 @XmlRootElement(name = "PageUser")
 public class PageUser {
     @XmlElement(name="editor")
-    boolean editor;
+    private boolean editor;
+    @XmlElement(name = "status")
+    private String status;
     @XmlElement(name="personId")
-    String personId;
+    private String personId;
 
     public PageUser() { }
 
     public PageUser(org.apache.rave.model.PageUser member) {
         this.editor = member.isEditor();
         this.personId = member.getUserId();
+        this.status = member.getPageStatus().getPageStatus();
     }
 
     public boolean isEditor() {
@@ -34,5 +37,13 @@ public class PageUser {
 
     public void setPersonId(String personId) {
         this.personId = personId;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

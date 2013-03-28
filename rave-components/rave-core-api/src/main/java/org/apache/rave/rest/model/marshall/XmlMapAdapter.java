@@ -38,9 +38,7 @@ public class XmlMapAdapter<E, T> extends XmlAdapter<XmlMapAdapter.EntryList<E, T
     }
 
     @XmlAccessorType(XmlAccessType.FIELD)
-    @XmlType(name = "entry", propOrder = {
-            "key", "value"
-    })
+    @XmlType(name = "entry", propOrder = { "key", "value"  })
     public static class Entry<E, T> {
 
         @XmlElement(name = "key")
@@ -74,9 +72,7 @@ public class XmlMapAdapter<E, T> extends XmlAdapter<XmlMapAdapter.EntryList<E, T
     }
 
     @XmlAccessorType(XmlAccessType.FIELD)
-    @XmlType(name = "map", propOrder = {
-            "entries"
-    })
+    @XmlType(name = "map", propOrder = { "entries" })
     @XmlRootElement(name = "map")
     public static class EntryList<E, T> {
 
