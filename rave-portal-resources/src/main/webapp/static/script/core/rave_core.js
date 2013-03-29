@@ -152,18 +152,6 @@ rave = (function () {
         return openAjaxHub;
     }
 
-    /*
-     //TODO: should this be a thing? I think no. what's up css.
-     width, height value in pixels
-     */
-    exports.setDefaultGadgetSize = function (width, height) {
-        _.invoke(providers, 'setDefaultGadgetSize', width, height);
-    }
-
-    exports.setDefaultGadgetView = function (view) {
-        _.invoke(providers, 'setDefaultGadgetView', view);
-    }
-
     exports.registerOnInitHandler = function (handler) {
         if (!_.isFunction(handler)) {
             throw new Error('Init event handler must be a function');

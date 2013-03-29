@@ -22,8 +22,7 @@ rave.registerProvider(
     (function () {
         var exports = {};
 
-        var container,
-            defaultView = 'default';
+        var container;
 
         exports.init = function () {
             var containerConfig = {};
@@ -116,8 +115,8 @@ rave.registerProvider(
                             "securityToken": data.securityToken,
                             "metadata": opt_gadgetInfo
                         },
-                        height = gadget.metadata.modulePrefs.height || 500,
-                        width = gadget.metadata.modulePrefs.width || 525;
+                        height = gadget.metadata.modulePrefs.height || rave.RegionWidget.defaultHeight,
+                        width = gadget.metadata.modulePrefs.width || rave.RegionWidget.defaultWidth;
 
                     preloadMetadata(gadget);
 
@@ -159,19 +158,23 @@ rave.registerProvider(
          full spectrum of allowed render options!
          */
         exports.renderWidget = function (widget, el, opts) {
+            if(widget.error) {
+                widget.renderError(el, widget.error.message);
+                return;
+            }
             opts = opts || {};
             var site = container.newGadgetSite(el);
             site._widget = widget;
             widget._site = site;
 
             var renderParams = {};
-            renderParams[osapi.container.RenderParam.VIEW] = opts.view || defaultView;
+            renderParams[osapi.container.RenderParam.VIEW] = opts.view || rave.RegionWidget.defaultView;
             renderParams[osapi.container.RenderParam.ALLOW_DEFAULT_VIEW ] = opts.allowDefaultView;
             renderParams[osapi.container.RenderParam.DEBUG ] = opts.debug;
-            renderParams[osapi.container.RenderParam.HEIGHT ] = opts.height;
+            renderParams[osapi.container.RenderParam.HEIGHT ] = opts.height || rave.RegionWidget.defaultHeight;
             renderParams[osapi.container.RenderParam.NO_CACHE ] = opts.noCache;
             renderParams[osapi.container.RenderParam.TEST_MODE] = opts.testMode;
-            renderParams[osapi.container.RenderParam.WIDTH ] = opts.width;
+            renderParams[osapi.container.RenderParam.WIDTH ] = opts.width || rave.RegionWidget.defaultWidth;
             renderParams[osapi.container.RenderParam.USER_PREFS] = getCompleteUserPrefSet(widget.userPrefs, widget.metadata.userPrefs);
             container.navigateGadget(site, widget.widgetUrl, opts.view_params, renderParams, opts.callback);
         }
@@ -220,19 +223,6 @@ rave.registerProvider(
             if (widget._site) {
                 container.closeGadget(widget._site);
             }
-        }
-
-        exports.setDefaultGadgetSize = function (width, height) {
-            if (_.isNumber(width)) {
-                osapi.container.GadgetSite.DEFAULT_WIDTH_ = width;
-            }
-            if (_.isNumber(height)) {
-                osapi.container.GadgetSite.DEFAULT_HEIGHT_ = height;
-            }
-        }
-
-        exports.setDefaultGadgetView = function (view) {
-            defaultView = view;
         }
 
         exports.getContainer = function() {

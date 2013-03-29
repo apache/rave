@@ -48,12 +48,13 @@ describe('rave.RegionWidget', function () {
             render: function () {
             },
             getWidgetSite: function () {
+                return document.createElement('div');
             },
             destroy: function () {
             }
         }
         _.each(viewObject, function (fn, key) {
-            spyOn(viewObject, key);
+            spyOn(viewObject, key).andCallThrough();
         });
 
         validWidget = {
@@ -155,11 +156,20 @@ describe('rave.RegionWidget', function () {
         })
 
         describe('render', function () {
-            it('renders the errorWidget if the definition has errrors', function () {
-                var el = {};
-                errorRegionWidget.render(el);
-                expect(rave.renderView).toHaveBeenCalledWith('errorWidget', el, errorRegionWidget);
-                expect(provider.renderWidget).not.toHaveBeenCalled();
+            it('throws an error if you do not provide a valid el to render into', function(){
+                function doRenderWithNoArgs(){
+                    regionWidget.render();
+                }
+                function doRenderWithOptsOnly(){
+                    regionWidget.render({view: 'myView'});
+                }
+                function doRenderWithNonDomObject(){
+                    regionWidget.render({}, {view: 'myView'});
+                }
+
+                expect(doRenderWithNoArgs).toThrow();
+                expect(doRenderWithOptsOnly).toThrow();
+                expect(doRenderWithNonDomObject).toThrow();
             });
 
             it('retrieves a registered view if el is a string', function () {
@@ -171,10 +181,24 @@ describe('rave.RegionWidget', function () {
             });
 
             it("invokes the provider's renderWidget function", function () {
-                var el = {dom: 'element'};
+                var el =  document.createElement('div');
                 var opts = {opts: true}
                 regionWidget.render(el, opts);
 
+                expect(provider.renderWidget).toHaveBeenCalledWith(regionWidget, el, opts);
+            });
+
+            it("defaults to the widget's current el if the widget has been rendered already", function(){
+                var el =  document.createElement('div');
+                var opts = {opts: true}
+
+                expect(function(){
+                    regionWidget.render();
+                }).toThrow();
+
+                regionWidget.render(el, opts);
+                expect(provider.renderWidget).toHaveBeenCalledWith(regionWidget, el, opts);
+                regionWidget.render(opts);
                 expect(provider.renderWidget).toHaveBeenCalledWith(regionWidget, el, opts);
             });
         });

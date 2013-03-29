@@ -22,11 +22,6 @@ rave.registerProvider(
     (function () {
         var exports = {}
 
-        //set default widget size to the same as opensocial spec
-        var defaultHeight = 200,
-            defaultWidth = 320,
-            defaultView = 'default';
-
         exports.init = function(){};
         exports.initWidget = function(widget){}
         exports.renderWidget = function(widget, el, opts){
@@ -42,8 +37,8 @@ rave.registerProvider(
                         //TODO: I dropped a bunch of the attrs here - seems like it should all be css
                         //unless it is being defined by the gadget spec
                         iframeAttrs: {
-                            height: widget.height || defaultHeight,
-                            width:  widget.width || defaultWidth
+                            height: widget.height || rave.RegionWidget.defaultHeight,
+                            width:  widget.width || rave.RegionWidget.defaultWidth
                         },
                         uri: widget.widgetUrl
                     }
@@ -57,19 +52,6 @@ rave.registerProvider(
 
         exports.closeWidget = function(widget){
             //TODO...
-        }
-
-        exports.setDefaultGadgetSize = function(width, height){
-            if(_.isNumber(width)){
-                defaultWidth = width;
-            }
-            if(_.isNumber(height)){
-                defaultHeight = height;
-            }
-        }
-
-        exports.setDefaultGadgetView = function(view){
-            defaultView = view;
         }
 
         return exports;

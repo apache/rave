@@ -211,8 +211,6 @@ _.extend(rave.ui, (function () {
     }
 
     function renderWidgets() {
-        rave.setDefaultGadgetView('home');
-
         if (_.isEmpty(rave.getWidgets())) {
             displayEmptyPageMessage();
         }
@@ -561,6 +559,13 @@ _.extend(rave.ui, (function () {
     }
 
     function registerHomeView() {
+
+        rave.RegionWidget.extend({
+            renderError: function(el, errors) {
+                el.innerHTML = rave.getClientMessage("opensocial.render_error") + "<br /><br />" + errors;
+            }
+        });
+
         var HomeView = function (widget) {
             this.widget = widget;
 
@@ -707,16 +712,6 @@ _.extend(rave.ui, (function () {
         }
 
         rave.registerView('home', HomeView);
-
-
-        rave.registerView('errorWidget', {
-            render: function (el, widget) {
-                el.innerHTML = rave.getClientMessage("opensocial.render_error") + "<br /><br />" + widget.error.message;
-                return this;
-            },
-            destroy: function () {
-            }
-        });
     }
 
     function registerCanvasView() {

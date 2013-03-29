@@ -58,7 +58,7 @@
     <%-- set the javascript debug mode so js code has access to it --%>
     rave.setJavaScriptDebugMode(<c:out value="${jsDebugMode}"/>);
     <%-- set the default widget height so js code has access to it --%>
-    rave.setDefaultGadgetSize(undefined, <c:out value="${portalSettings['defaultWidgetHeight'].value}"/>);
+    rave.RegionWidget.defaultHeight = <c:out value="${portalSettings['defaultWidgetHeight'].value}"/>;
     <%-- set the current page viewer --%>
     <sec:authorize access="isAuthenticated()">
     <sec:authentication property="principal.username" scope="request" var="username"/>

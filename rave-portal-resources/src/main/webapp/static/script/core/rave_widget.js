@@ -38,37 +38,47 @@ rave.RegionWidget = (function () {
 
         this._provider = rave.getProvider(provider);
 
-        if(!this._provider) {
-            throw new Error('Cannot render widget '+definition.widgetUrl+ '. ' +
-                'Provider '+provider+' is not registered.');
+        if (!this._provider) {
+            throw new Error('Cannot render widget ' + definition.widgetUrl + '. ' +
+                'Provider ' + provider + ' is not registered.');
         }
 
         this._provider.initWidget(this);
     }
 
+    Widget.defaultView = 'default';
+    Widget.defaultWidth = 320;
+    Widget.defaultHeight = 200;
+
     Widget.extend = function (mixin) {
         _.extend(this.prototype, mixin);
     }
 
-    /*
-     el: valid dom element to which the widget will be injected
-     OR valid view name that has been registered via rave.registerView
-     opts: rendering options
-     */
     Widget.prototype.render = function (el, opts) {
-        if (this.error) {
-            this._view = rave.renderView('errorWidget', el, this);
-            return;
+        //if we receive only one argument, and the first arg is not a string or dom element, assume it is an opts object
+        //and el should default to the widgets current render element
+        if (!opts && !(_.isString(el) || (el instanceof HTMLElement))) {
+            opts = el;
+            el = this._el;
         }
+        //if el is a string, go to rave's view system
         if (_.isString(el)) {
             //TODO: potential memory leak - rendering a widget into new views does not force cleanup of current view
             var view = rave.renderView(el, this);
             el = view.getWidgetSite();
             this._view = view;
         }
+        //at this point el must be a valid dom element. if not, throw an error
+        if (!(el instanceof HTMLElement)) {
+            throw new Error('Cannot render widget. You must provide an el to render the view into');
+        }
         this._el = el;
         this._provider.renderWidget(this, el, opts);
         return this;
+    }
+
+    Widget.prototype.renderError = function (el, errors) {
+        el.innerHTML = 'Error rendering widget.' + "<br /><br />" + errors;
     }
 
     Widget.prototype.hide = function () {
@@ -117,7 +127,7 @@ rave.RegionWidget = (function () {
         });
     }
 
-    Widget.prototype.savePreference = function(name, val) {
+    Widget.prototype.savePreference = function (name, val) {
         this.userPrefs[name] = val;
         rave.api.rest.saveWidgetPreference({regionWidgetId: this.regionWidgetId, prefName: name, prefValue: val});
     }

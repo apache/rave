@@ -356,22 +356,6 @@ describe('rave', function () {
         });
     });
 
-    describe('setDefaultGadgetSize', function () {
-        it('invokes function on registered providers', function () {
-            rave.registerProvider(providerName, provider);
-            rave.setDefaultGadgetSize(100, 200);
-            expect(provider.setDefaultGadgetSize).toHaveBeenCalledWith(100, 200);
-        });
-    });
-
-    describe('setDefaultGadgetView', function () {
-        it('invokes function on registered providers', function () {
-            rave.registerProvider(providerName, provider);
-            rave.setDefaultGadgetView('asdf');
-            expect(provider.setDefaultGadgetView).toHaveBeenCalledWith('asdf');
-        });
-    });
-
     describe('registerOnInitHandler', function () {
         it('throws an error if handler is not a function', function () {
             expect(function () {
