@@ -25,6 +25,7 @@ import org.apache.rave.portal.model.impl.CategoryImpl;
 import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.repository.CategoryRepository;
 import org.apache.rave.portal.service.CategoryService;
+import org.apache.rave.portal.service.impl.mock.MockCategoryRepository;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -104,19 +105,26 @@ public class DefaultCategoryServiceTest {
     @Test
     public void create() {
         final String NEW_CATEGORY_TEXT = "new category";
+        final String NEW_ID = "1";
         Category expectedCategory = new CategoryImpl();
         expectedCategory.setText(NEW_CATEGORY_TEXT);
 
-        expect(repository.save(expectedCategory)).andReturn(expectedCategory);
+        expect(repository.save(expectedCategory)).andDelegateTo(new MockCategoryRepository() {
+            @Override
+            public Category save(Category item) {
+                item.setId(NEW_ID);
+                return item;
+            }
+        });
         replay(repository);
 
         Category wc = service.create(NEW_CATEGORY_TEXT, validCreatedUser);
         assertThat(wc.getText(), is(NEW_CATEGORY_TEXT));
-        // Commented out for now until a good test solution is found
-        //assertThat(wc.getCreatedDate(), is(notNullValue(Date.class)));
-        //assertThat(wc.getCreatedDate(), is(wc.getLastModifiedDate()));
-        //assertThat(wc.getCreatedUserId(), is(VALID_CREATED_USER_ID));
-        //assertThat(wc.getLastModifiedUserId(), is(VALID_CREATED_USER_ID));
+        assertThat(wc.getCreatedDate(), is(notNullValue(Date.class)));
+        assertThat(wc.getCreatedDate(), is(wc.getLastModifiedDate()));
+        assertThat(wc.getCreatedUserId(), is(VALID_CREATED_USER_ID));
+        assertThat(wc.getLastModifiedUserId(), is(VALID_CREATED_USER_ID));
+        assertThat(wc.getId(), is(NEW_ID));
 
         verify(repository);
     }
