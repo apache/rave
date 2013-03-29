@@ -60,8 +60,7 @@ public class DefaultCategoryService implements CategoryService {
         category.setCreatedUserId(createdUser.getId());
         category.setLastModifiedDate(now);
         category.setLastModifiedUserId(createdUser.getId());
-        categoryRepository.save(category);
-        return category;
+        return categoryRepository.save(category);
     }
 
     @Override
