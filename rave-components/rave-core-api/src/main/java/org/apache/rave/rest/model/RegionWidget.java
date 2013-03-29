@@ -17,24 +17,26 @@ import java.util.Map;
 public class RegionWidget {
 
     @XmlAttribute(name="id")
-    private String id;
+    protected String id;
     @XmlAttribute(name="type")
-    private String type;
+    protected String type;
     @XmlElement(name = "widgetId")
-    private String widgetId;
+    protected String widgetId;
     @XmlElement(name = "widgetUrl")
-    private String widgetUrl;
+    protected String widgetUrl;
     @XmlElement(name = "regionId")
-    private String regionId;
+    protected String regionId;
     @XmlElement(name = "collapsed")
-    private boolean collapsed;
+    protected boolean collapsed;
     @XmlElement(name = "locked")
-    private boolean locked;
+    protected boolean locked;
     @XmlElement(name = "hideChrome")
-    private boolean hideChrome;
+    protected boolean hideChrome;
+    @XmlElement(name = "ownerId")
+    protected String ownerId;
     @XmlElement(name = "userPrefs")
     @XmlJavaTypeAdapter(value = XmlMapAdapter.class)
-    private Map<String, String> userPrefs;
+    protected Map<String, String> userPrefs;
 
     public RegionWidget() {  }
 
@@ -44,6 +46,7 @@ public class RegionWidget {
         this.regionId = widget.getRegion().getId();
         this.collapsed = widget.isCollapsed();
         this.locked = widget.isLocked();
+        this.ownerId = widget.getRegion().getPage().getOwnerId();
         this.hideChrome = widget.isHideChrome();
         this.userPrefs = createPrefs(widget);
     }
@@ -112,15 +115,23 @@ public class RegionWidget {
         this.hideChrome = hideChrome;
     }
 
-    public Map getUserPrefs() {
+    public Map<String, String> getUserPrefs() {
         return userPrefs;
     }
 
-    public void setUserPrefs(Map userPrefs) {
+    public void setUserPrefs(Map<String, String> userPrefs) {
         this.userPrefs = userPrefs;
     }
 
-    private Map<String, String> createPrefs(org.apache.rave.model.RegionWidget widget) {
+    public String getOwnerId() {
+        return ownerId;
+    }
+
+    public void setOwnerId(String ownerId) {
+        this.ownerId = ownerId;
+    }
+
+    protected Map<String, String> createPrefs(org.apache.rave.model.RegionWidget widget) {
         Map<String, String> created = null;
         List<RegionWidgetPreference> preferences = widget.getPreferences();
         if(preferences != null) {

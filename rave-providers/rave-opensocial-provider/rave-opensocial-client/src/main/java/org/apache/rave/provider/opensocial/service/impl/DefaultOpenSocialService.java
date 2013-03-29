@@ -63,9 +63,12 @@ public class DefaultOpenSocialService implements OpenSocialService {
         // Use a dummy RegionWidget to generate the security token
         RegionWidget regionWidget = new RegionWidgetImpl(String.valueOf(System.currentTimeMillis()),"-1",
                 new RegionImpl("-1", page, -1));
-        String securityToken = "";
-        securityToken = tokenService.getEncryptedSecurityToken(regionWidget, widget);
-        return securityToken;
+        return tokenService.getEncryptedSecurityToken(regionWidget, widget);
+    }
+
+    @Override
+    public String getEncryptedSecurityToken(org.apache.rave.rest.model.RegionWidget item) {
+        return tokenService.getEncryptedSecurityToken(item.getId(), item.getWidgetUrl(), item.getOwnerId());
     }
 
     private void validate(Widget widget) {

@@ -9,7 +9,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.File;
 
-public interface PageResource {
+@Path("/pages")
+public interface PagesResource {
 
     /**
      * Deletes the given page
@@ -17,7 +18,7 @@ public interface PageResource {
      * @return
      */
     @DELETE
-    @Path("/pages/{id}")
+    @Path("/{id}")
     Response deletePage(@PathParam("id") String id);
 
     /**
@@ -26,7 +27,7 @@ public interface PageResource {
      * @return
      */
     @GET
-    @Path("/pages/{id}")
+    @Path("/{id}")
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     Response getPage(@PathParam("id") String id);
 
@@ -37,7 +38,7 @@ public interface PageResource {
      * @return
      */
     @PUT
-    @Path("/pages/{id}")
+    @Path("/{id}")
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     Response updatePage(@PathParam("id") String id, Page page);
@@ -48,7 +49,7 @@ public interface PageResource {
      * @return
      */
     @GET
-    @Path("/pages/{id}")
+    @Path("/{id}")
     @Produces({"application/vnd.omdl+xml"})
     Response getPageOmdl(@PathParam("id") String id);
 
@@ -61,7 +62,7 @@ public interface PageResource {
      * @return
      */
     @GET
-    @Path("/{context}/{identifier}/pages")
+    @Path("/{context}/{identifier}")
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     Response getPagesForRender(@PathParam("context") String context, @PathParam("identifier") String identifier);
 
@@ -74,7 +75,7 @@ public interface PageResource {
      * @return
      */
     @GET
-    @Path("/{context}/{identifier}/pages/{id}")
+    @Path("/{context}/{identifier}/{id}")
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     Response getPageForRender(@PathParam("context") String context,
                               @PathParam("identifier") String identifier,
@@ -90,7 +91,7 @@ public interface PageResource {
      * @return
      */
     @POST
-    @Path("/{context}/{identifier}/pages/{id}/clone")
+    @Path("/{context}/{identifier}/{id}/clone")
     Response clonePage(@PathParam("context") String context,
                        @PathParam("identifier") String identifier,
                        @PathParam("id") String id);
@@ -103,7 +104,7 @@ public interface PageResource {
      * @return
      */
     @POST
-    @Path("/{context}/{identifier}/pages")
+    @Path("/{context}/{identifier}")
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     @Consumes({"application/vnd.omdl+xml"})
     Response importOmdlPage(@PathParam("context") String context,
@@ -118,7 +119,7 @@ public interface PageResource {
      * @return
      */
     @POST
-    @Path("/{context}/{identifier}/pages")
+    @Path("/{context}/{identifier}")
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     Response createPage(@PathParam("context") String context,
@@ -131,7 +132,7 @@ public interface PageResource {
      * @return
      */
     @DELETE
-    @Path("/{context}/{identifier}/pages/{id}")
+    @Path("/{context}/{identifier}/{id}")
     Response deletePageInContext(@PathParam("id") String id);
 
     /**
@@ -141,7 +142,7 @@ public interface PageResource {
      * @return
      */
     @PUT
-    @Path("/{context}/{identifier}/pages/{id}")
+    @Path("/{context}/{identifier}/{id}")
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     Response updatePageInContext(@PathParam("id") String id, Page page);
@@ -154,7 +155,7 @@ public interface PageResource {
      */
     @PUT
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    @Path("/{context}/{identifier}/pages/{id}/move")
+    @Path("/{context}/{identifier}/{id}/move")
     Response movePage(@PathParam("id") String id, @QueryParam("moveAfterPageId") final String moveAfterPageId);
 
 
@@ -165,7 +166,7 @@ public interface PageResource {
      * @return
      */
     @POST
-    @Path("/{context}/{identifier}/pages/{id}/regionWidgets")
+    @Path("/{context}/{identifier}/{id}/regionWidgets")
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     Response addWidgetToPage(@PathParam("id") String id, RegionWidget widget);
@@ -177,7 +178,7 @@ public interface PageResource {
      * @return
      */
     @DELETE
-    @Path("/{context}/{identifier}/pages/{id}/regionWidgets/{regionWidgetId}")
+    @Path("/{context}/{identifier}/{id}/regionWidgets/{regionWidgetId}")
     Response removeWidgetFromPage(@PathParam("id") String id, @PathParam("regionWidgetId") String regionWidgetId);
 
     /**
@@ -188,7 +189,7 @@ public interface PageResource {
      * @return
      */
     @POST
-    @Path("/{context}/{identifier}/pages/{id}/regions/{regionId}/regionWidgets")
+    @Path("/{context}/{identifier}/{id}/regions/{regionId}/regionWidgets")
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     Response addWidgetToRegion(@PathParam("id") String id, @PathParam("regionId") String regionId, RegionWidget widget);
@@ -202,7 +203,7 @@ public interface PageResource {
      * @return
      */
     @PUT
-    @Path("/{context}/{identifier}/pages/{id}/regions/{toRegionId}/regionWidgets/{regionWidgetId}/move")
+    @Path("/{context}/{identifier}/{id}/regions/{toRegionId}/regionWidgets/{regionWidgetId}/move")
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     Response moveWidgetOnPage(@PathParam("id") String id,
@@ -217,7 +218,7 @@ public interface PageResource {
      * @return
      */
     @PUT
-    @Path("/{context}/{identifier}/pages/{targetPageId}/regionWidgets/{regionWidgetId}/move")
+    @Path("/{context}/{identifier}/{targetPageId}/regionWidgets/{regionWidgetId}/move")
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     Response moveWidgetToPage(@PathParam("targetPageId") String targetPageId,
@@ -228,20 +229,20 @@ public interface PageResource {
      * @return
      */
     @POST
-    @Path("/{context}/{identifier}/pages/{id}/members")
+    @Path("/{context}/{identifier}/{id}/members")
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     Response addMemberToPage(@PathParam("id") String id);
 
     @DELETE
-    @Path("/{context}/{identifier}/pages/{id}/members/{userId}")
+    @Path("/{context}/{identifier}/{id}/members/{userId}")
     Response removeMemberFromPage(@PathParam("id") String id, @PathParam("userId") String userId);
 
     @PUT
-    @Path("/{context}/{identifier}/pages/{id}/members/{userId}/status")
+    @Path("/{context}/{identifier}/{id}/members/{userId}/status")
     Response updateSharedPageStatus(@PathParam("id") String id, @PathParam("userId") String userId, String status);
 
     @PUT
-    @Path("/{context}/{identifier}/pages/{id}/members/{userId}/editor")
+    @Path("/{context}/{identifier}/{id}/members/{userId}/editor")
     Response updatePageEditingStatus(@PathParam("id") String id, @PathParam("userId") String userId, boolean editor);
 }

@@ -15,6 +15,12 @@ public class PageList {
     @XmlElement(name = "Page")
     private List<Page> pages;
 
+    public PageList() { }
+
+    public PageList(List<Page> pages) {
+        this.pages = pages;
+    }
+
     public List<Page> getPages() {
         if(pages == null) pages = new ArrayList<Page>();
         return pages;

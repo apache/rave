@@ -32,4 +32,6 @@ public interface SecurityTokenService {
     SecurityToken decryptSecurityToken(String encryptedSecurityToken) throws SecurityTokenException;
 
     String refreshEncryptedSecurityToken(String encryptedSecurityToken) throws SecurityTokenException;
+
+    String getEncryptedSecurityToken(String moduleId, String url, String ownerId);
 }

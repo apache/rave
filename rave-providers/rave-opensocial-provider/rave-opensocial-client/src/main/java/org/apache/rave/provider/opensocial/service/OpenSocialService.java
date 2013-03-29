@@ -19,6 +19,8 @@
 
 package org.apache.rave.provider.opensocial.service;
 
+import org.apache.rave.rest.model.RegionWidget;
+
 public interface OpenSocialService {
     /**
      * Fetches gadget metadata for the specified gadget URL.
@@ -34,4 +36,11 @@ public interface OpenSocialService {
      * @return a valid, encrypted securityToken
      */
     String getEncryptedSecurityToken(String pageId, String widget);
+
+    /**
+     * Gets a security token for the given RegionWidget
+     * @param item the region widget to get a security token for
+     * @return a valid, encrypted securityToken
+     */
+    String getEncryptedSecurityToken(RegionWidget item);
 }

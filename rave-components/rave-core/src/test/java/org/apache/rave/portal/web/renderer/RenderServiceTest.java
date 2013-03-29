@@ -146,12 +146,12 @@ public class RenderServiceTest {
     private void constructFooBarRenderService() {
         widgetRenderers.add(widgetRenderer1);
         widgetRenderers.add(widgetRenderer2);
-        service = new DefaultRenderService(widgetRenderers, widgetRepository);
+        service = new DefaultRenderService(widgetRenderers, null, widgetRepository);
     }
 
     private void constructFooRenderService() {
         widgetRenderers.add(widgetRenderer1);
-        service = new DefaultRenderService(widgetRenderers, widgetRepository);
+        service = new DefaultRenderService(widgetRenderers, null, widgetRepository);
     }
 
     private void replayMocks() {

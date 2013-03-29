@@ -148,25 +148,45 @@ public class EncryptedBlobSecurityTokenService implements SecurityTokenService {
         return getEncryptedSecurityToken(regionWidget, new WidgetImpl("-1", securityToken.getAppUrl()));
     }
 
+    @Override
+    public String getEncryptedSecurityToken(String moduleId, String url, String ownerId) {
+        String encryptedToken;
+
+        try {
+            BlobCrypterSecurityToken securityToken = this.getBlobCrypterSecurityToken(url, moduleId,  ownerId, userService.getAuthenticatedUser());
+            encryptedToken = this.encryptSecurityToken(securityToken);
+        } catch (Exception e) {
+            throw new SecurityTokenException("Error creating security token from regionWidget", e);
+        }
+
+        return encryptedToken;
+    }
+
     private BlobCrypterSecurityToken getBlobCrypterSecurityToken(RegionWidget regionWidget, Widget widget)
             throws SecurityTokenException {
+        String moduleUrl = widget != null ? widget.getUrl() : "";
+        String moduleId = String.valueOf(regionWidget.getId());
+        String ownerId = regionWidget.getRegion().getPage().getOwnerId();
         User user = userService.getAuthenticatedUser();
 
-        Map<String, String> values = new HashMap<String, String>();
-        values.put(AbstractSecurityToken.Keys.APP_URL.getKey(), widget != null ? widget.getUrl() : "");
-        values.put(AbstractSecurityToken.Keys.MODULE_ID.getKey(), String.valueOf(regionWidget.getId()));
-        values.put(AbstractSecurityToken.Keys.OWNER.getKey(),
-                String.valueOf(userService.getUserById(regionWidget.getRegion().getPage().getOwnerId()).getUsername()));
-        values.put(AbstractSecurityToken.Keys.VIEWER.getKey(), String.valueOf(user.getUsername()));
-        values.put(AbstractSecurityToken.Keys.TRUSTED_JSON.getKey(), "");
-
-        BlobCrypterSecurityToken securityToken = new BlobCrypterSecurityToken(container, domain, null, values);
+        BlobCrypterSecurityToken securityToken = getBlobCrypterSecurityToken(moduleUrl, moduleId, ownerId, user);
 
         if (logger.isTraceEnabled()) {
             logger.trace("Token created for regionWidget " + regionWidget.toString() + " and user " + user.toString());
         }
 
         return securityToken;
+    }
+
+    private BlobCrypterSecurityToken getBlobCrypterSecurityToken(String moduleUrl, String moduleId, String ownerId, User user) {
+       Map<String, String> values = new HashMap<String, String>();
+        values.put(AbstractSecurityToken.Keys.APP_URL.getKey(), moduleUrl);
+        values.put(AbstractSecurityToken.Keys.MODULE_ID.getKey(), moduleId);
+        values.put(AbstractSecurityToken.Keys.OWNER.getKey(), String.valueOf(userService.getUserById(ownerId).getUsername()));
+        values.put(AbstractSecurityToken.Keys.VIEWER.getKey(), String.valueOf(user.getUsername()));
+        values.put(AbstractSecurityToken.Keys.TRUSTED_JSON.getKey(), "");
+        values.put(AbstractSecurityToken.Keys.EXPIRES.getKey(), String.valueOf(System.currentTimeMillis() + (24 * 60 * 60 * 1000)));
+        return new BlobCrypterSecurityToken(container, domain, null, values);
     }
 
     private String encryptSecurityToken(BlobCrypterSecurityToken securityToken) throws SecurityTokenException {

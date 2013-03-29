@@ -21,6 +21,7 @@
         <jaxrs:serviceBeans>
             <ref bean="peopleBean"/>
             <ref bean="usersBean"/>
+            <ref bean="pagesBean" />
             <ref bean="categoriesBean"/>
         </jaxrs:serviceBeans>
     </jaxrs:server>
@@ -37,4 +38,7 @@
         <property name="categoryService" ref="defaultCategoryService"/>
         <property name="userService" ref="userService"/>
     </bean>
+
+    <bean id="pagesBean" class="org.apache.rave.rest.impl.DefaultPageResource" autowire="byType" />
+
 </beans>
