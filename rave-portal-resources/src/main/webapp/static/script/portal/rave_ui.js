@@ -805,7 +805,7 @@ _.extend(rave.ui, (function () {
                 cleanup: function (content) {
                     var container = content.parents(this.containerSelector);
                     container.hide("slide", { direction: "right" }, 'fast', function () {
-                        container.detach();
+                        container.remove();
                         $('body').removeClass('modal-open');
                         $('.modal-backdrop').remove();
                         // restore the main browser window's scrollbar
@@ -851,7 +851,7 @@ _.extend(rave.ui, (function () {
                     container.modal(cfg);
 
                     container.on('hidden', function () {
-                        container.detach();
+                        container.remove();
                     })
                 },
                 cleanup: function (content) {
@@ -864,11 +864,14 @@ _.extend(rave.ui, (function () {
         };
 
         _.each(POPUPS, function (target) {
-            var $container = $(rave.ui.templates[target.template]());
-            var $site = $(target.contentSelector, $container);
+            var $container,
+                $site;
 
             rave.registerView(target.name, {
                 render: function (prefs) {
+                    $container = $(rave.ui.templates[target.template]());
+                    $site = $(target.contentSelector, $container);
+
                     var height = (prefs && prefs.preferredHeight);
                     var width = (prefs && prefs.preferredWidth);
                     if (height) {
@@ -892,7 +895,7 @@ _.extend(rave.ui, (function () {
                         target.cleanup($site);
                     }
                     else {
-                        $container.detach();
+                        $container.remove();
                     }
                 }
             });
