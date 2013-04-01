@@ -208,8 +208,9 @@
 <portal:register-init-script location="${'AFTER_RAVE'}">
     <script>
         $(function () {
+            rave.RegionWidget.defaultView = 'profile';
+
             rave.init();
-            rave.setDefaultGadgetView('profile');
             rave.layout.init();
             rave.personprofile.init();
             rave.setPageOwner({
