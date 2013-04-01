@@ -49,6 +49,10 @@
                     <groupId>org.apache.shindig</groupId>
                     <artifactId>shindig-common</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.apache.cxf</groupId>
+                    <artifactId>cxf-frontend-jaxrs</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
 
