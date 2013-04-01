@@ -21,8 +21,13 @@ package org.apache.rave.provider.opensocial.web.model;
 
 import org.apache.rave.rest.model.RegionWidget;
 
+import javax.xml.bind.annotation.*;
+
+@XmlAccessorType(XmlAccessType.FIELD)
 public class OpenSocialRegionWidget extends RegionWidget {
+    @XmlElement(name="securityToken")
     protected String securityToken;
+    @XmlElement(name="metadata")
     protected String metadata;
 
     public OpenSocialRegionWidget() {  }

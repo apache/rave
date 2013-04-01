@@ -20,17 +20,14 @@
 package org.apache.rave.rest.model;
 
 import org.apache.rave.model.RegionWidgetPreference;
-import org.apache.rave.rest.model.marshall.XmlMapAdapter;
 
 import javax.xml.bind.annotation.*;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "RegionWidget", propOrder = {
-        "id", "type", "widgetId", "widgetUrl", "regionId", "collapsed", "locked", "hideChrome", "userPrefs"
+        "id", "type", "widgetId", "widgetUrl", "regionId", "collapsed", "locked", "hideChrome", "ownerId", "userPrefs"
 })
 @XmlRootElement(name = "RegionWidget")
 public class RegionWidget {
@@ -54,8 +51,7 @@ public class RegionWidget {
     @XmlElement(name = "ownerId")
     protected String ownerId;
     @XmlElement(name = "userPrefs")
-    @XmlJavaTypeAdapter(value = XmlMapAdapter.class)
-    protected Map<String, String> userPrefs;
+    protected HashMap<String, String> userPrefs;
 
     public RegionWidget() {  }
 
@@ -134,11 +130,11 @@ public class RegionWidget {
         this.hideChrome = hideChrome;
     }
 
-    public Map<String, String> getUserPrefs() {
+    public HashMap<String, String> getUserPrefs() {
         return userPrefs;
     }
 
-    public void setUserPrefs(Map<String, String> userPrefs) {
+    public void setUserPrefs(HashMap<String, String> userPrefs) {
         this.userPrefs = userPrefs;
     }
 
@@ -150,8 +146,8 @@ public class RegionWidget {
         this.ownerId = ownerId;
     }
 
-    protected Map<String, String> createPrefs(org.apache.rave.model.RegionWidget widget) {
-        Map<String, String> created = null;
+    protected HashMap<String, String> createPrefs(org.apache.rave.model.RegionWidget widget) {
+        HashMap<String, String> created = null;
         List<RegionWidgetPreference> preferences = widget.getPreferences();
         if(preferences != null) {
             created = new HashMap<String, String>();

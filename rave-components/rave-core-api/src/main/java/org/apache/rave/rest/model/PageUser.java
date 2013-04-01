@@ -23,7 +23,7 @@ import javax.xml.bind.annotation.*;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "PageUser", propOrder = {
-        "editor", "personId"
+        "editor", "status","personId"
 })
 @XmlRootElement(name = "PageUser")
 public class PageUser {
