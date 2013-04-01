@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.rave.rest;
 
 import org.apache.rave.model.FriendRequest;
