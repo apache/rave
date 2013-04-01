@@ -115,7 +115,7 @@
                         </goals>
                         <configuration>
                             <preloadSources>
-                                <source>${project.basedir}/src/test/dependencies/underscore.min.js</source>
+                                <source>${project.basedir}/src/test/dependencies/underscore.js</source>
                             </preloadSources>
                             <jsSrcDir>${project.basedir}/src/main/webapp/static/script/core</jsSrcDir>
                             <debug>true</debug>
