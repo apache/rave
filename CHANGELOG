@@ -4,6 +4,9 @@ https://issues.apache.org/jira/secure/ReleaseNote.jspa?projectId=12311290 (selec
 ===========================================================================================================
 Release Notes - Rave - Version 0.21
 ===========================================================================================================
+** Sub-task
+    * [RAVE-890] - Refactor SearchHandler
+    * [RAVE-925] - allow rave.getWidgets() to take a filter argument
 
 ** Bug
     * [RAVE-884] - When adding a hash to the end of a profile page with a tab name which does not exist, no tabs are rendered 
@@ -14,13 +17,28 @@ Release Notes - Rave - Version 0.21
     * [RAVE-900] - iTests Fail due to DB "Locked by another user error"
     * [RAVE-903] - DB Schema isn't created when using MySQL
     * [RAVE-904] - Distribution building failing at rave-integration-tests
+    * [RAVE-905] - http://localhost:8080/ not forwarded to http://localhost:8080/portal/
+    * [RAVE-906] - Admin interface link is coming for new user
+    * [RAVE-908] - JPA Page Repository uses JpaUser object
+    * [RAVE-912] - OpenSocial Embedded Experiences won't work with Shindig deployed to separate domain
+    * [RAVE-918] - Gadget is displaying the "default" view instead of the "home" view when in home mode (canvas-nav)
+    * [RAVE-919] - Error opening embedded experience (streams gadget)
+    * [RAVE-921] - Canvas Nav demo gadget doesn't work
+    * [RAVE-938] - Edit User profile not working
+    * [RAVE-939] - Fix licenses for the Rave release
 
 ** Improvement
     * [RAVE-898] - Move JPA specific stuff out of rave-commons and into rave-jpa
     * [RAVE-901] - Move database access to container provided JNDI resource
+    * [RAVE-911] - Upgrade to Shindig 2.5 Beta 6
+    * [RAVE-935] - default gadget size and view should be properties of rave.RegionWidget
+    * [RAVE-940] - Check NOTICE & LICENSE for Release
 
 ** New Feature
     * [RAVE-882] - Implement Opensocial actions
+
+** Task
+    * [RAVE-907] - Update Wookie to latest version (0.13.1)
 
 ===========================================================================================================
 Release Notes - Rave - Version 0.20
