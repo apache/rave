@@ -255,8 +255,8 @@ _.extend(rave.ui, (function () {
             $regions.removeClass("regionNonDragging");
 
             var widgetEl = ui.item.children(".widget").get(0);
-            uiState.widget = rave.getWidget(rave.extractObjectIdFromElementId(widgetEl.id));
-            uiState.currentRegion = rave.extractObjectIdFromElementId(ui.item.parent().get(0).id);
+            uiState.widget = rave.getWidget(rave.getObjectIdFromDomId(widgetEl.id));
+            uiState.currentRegion = rave.getObjectIdFromDomId(ui.item.parent().get(0).id);
 
             //for every drag operation, create an overlay for each iframe
             //to prevent the iframe from intercepting mouse events
@@ -283,7 +283,7 @@ _.extend(rave.ui, (function () {
             $(".dnd-overlay").remove();
             //Fixes a bug where the jQuery style attribute remains set in chrome
             ui.item.attr("style", "");
-            uiState.targetRegion = rave.extractObjectIdFromElementId(ui.item.parent().get(0).id);
+            uiState.targetRegion = rave.getObjectIdFromDomId(ui.item.parent().get(0).id);
             uiState.targetIndex = ui.item.index();
 
             uiState.widget.moveToRegion(uiState.currentRegion, uiState.targetRegion, uiState.targetIndex);
