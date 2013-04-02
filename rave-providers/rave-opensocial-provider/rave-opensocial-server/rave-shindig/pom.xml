@@ -89,6 +89,10 @@
                     <artifactId>rave-jpa</artifactId>
                     <exclusions>
                         <exclusion>
+                            <groupId>org.apache.cxf</groupId>
+                            <artifactId>cxf-rt-frontend-jaxrs</artifactId>
+                        </exclusion>
+                        <exclusion>
                             <groupId>org.json</groupId>
                             <artifactId>json</artifactId>
                         </exclusion>
