@@ -141,7 +141,7 @@ public class JpaOAuthConsumerStore implements BasicEntity, OAuthConsumerStore {
      */
     @Override
     public void setId(String id) {
-        setEntityId(Long.parseLong(id));
+        setEntityId(id == null ? null : Long.parseLong(id));
     }
 
     /**

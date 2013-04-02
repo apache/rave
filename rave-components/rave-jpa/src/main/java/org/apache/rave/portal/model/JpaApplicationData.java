@@ -75,7 +75,7 @@ public class JpaApplicationData implements BasicEntity, ApplicationData {
 
     @Override
     public void setId(String id) {
-        entityId = Long.parseLong(id);
+        setEntityId(id == null ? null : Long.parseLong(id));
     }
 
     @Override

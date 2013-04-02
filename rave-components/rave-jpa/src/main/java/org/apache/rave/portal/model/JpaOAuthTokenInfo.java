@@ -133,7 +133,7 @@ public class JpaOAuthTokenInfo implements BasicEntity, OAuthTokenInfo {
 
     @Override
     public void setId(String id) {
-        setEntityId(Long.parseLong(id));
+        setEntityId(id == null ? null : Long.parseLong(id));
     }
 
     @Override
