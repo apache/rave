@@ -194,10 +194,38 @@ var rave = _.extend(rave, (function () {
             });
     }
 
+    function displayUsersOfWidget(widgetId) {
+        rave.api.rest.getUsersForWidget({widgetId: widgetId, successCallback: function (data) {
+
+            //format data for display
+            _.each(data, function (person) {
+                person.name = person.displayName || person.preferredName || (person.givenName + " " + person.familyName);
+            });
+
+            var markup = rave.ui.templates['users-of-widget']({
+                users: data,
+                //TODO: data from dom evil! should be using gadget object to get name
+                widgetName: $("#widget-" + widgetId + "-title").text().trim()
+            });
+
+            //TODO: don't use jquery ui dialogs?
+            $(markup).dialog({
+                modal: true,
+                buttons: [
+                    {text: "Close", click: function () {
+                        $(this).dialog("close");
+                    }}
+                ]
+            });
+        }});
+    }
+
     /**
      * Public API
      */
     return {
+        displayUsersOfWidget: displayUsersOfWidget,
+
         showInfoMessage: showInfoMessage,
 
         getObjectIdFromDomId: extractObjectIdFromElementId,
