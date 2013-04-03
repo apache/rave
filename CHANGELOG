@@ -26,6 +26,8 @@ Release Notes - Rave - Version 0.21
     * [RAVE-921] - Canvas Nav demo gadget doesn't work
     * [RAVE-938] - Edit User profile not working
     * [RAVE-939] - Fix licenses for the Rave release
+    * [RAVE-944] - Widget store like/dislike buttons are not working
+    * [RAVE-945] - Widget info page Users link, comments, Add tags links not working
 
 ** Improvement
     * [RAVE-898] - Move JPA specific stuff out of rave-commons and into rave-jpa
