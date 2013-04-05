@@ -18,7 +18,7 @@
  */
 
 rave.registerProvider(
-    'wookie',
+    'w3c',
     (function () {
         var exports = {}
 

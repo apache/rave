@@ -174,8 +174,11 @@ rave = (function () {
     }
 
     //wrap a safe version of console.log
-    exports.log = (console && console.log) || function () {
-    };
+    exports.log = function(msg){
+        if  (console && console.log) {
+            console.log(msg);
+        }
+    }
 
     //reset internal data - used for testing cleanup
     exports.reset = function () {
