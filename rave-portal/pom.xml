@@ -347,7 +347,7 @@
                             <directory>${project.basedir}/src/test/resources_mongo</directory>
                         </testResource>
                     </testResources>
-                    <plugins>
+                    <plugins><!--
                         <plugin>
                             <groupId>com.github.joelittlejohn.embedmongo</groupId>
                             <artifactId>embedmongo-maven-plugin</artifactId>
@@ -368,7 +368,7 @@
                                     </goals>
                                 </execution>
                             </executions>
-                        </plugin>
+                        </plugin>-->
                     </plugins>
                 </build>
             </profile>
