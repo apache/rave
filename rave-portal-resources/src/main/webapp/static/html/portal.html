@@ -1,0 +1,20 @@
+<div class="navbar">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="brand"><span ng-show="user.username">Hello {{user.username}}. </span>Welcome to Rave!</a>
+            <ul class="nav pull-right">
+                <li ng-show="user.username"><a href="/portal/app/person/id/1">{{user.username}}'s Profile</a>
+                </li>
+                <li ng-show="user.username"><a href="/portal/app/store">Widget Store</a></li>
+                <li ng-show="user.admin"><a href="/portal/app/admin">Admin Interface</a></li>
+                <li ng-show="user.username"><a ng-click="logout()" href="#">Logout</a></li>
+                <li ng-hide="user.username"><a ng-click="login()" href="#">Login/Register</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="logo-wrapper"></div>
+<div id="pageContent" class="container-fluid">
+    <ng-include src="templateUrl"></ng-include>
+</div>
+

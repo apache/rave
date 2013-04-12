@@ -1,0 +1,100 @@
+<div ng-controller="tabsController">
+    <nav>
+        <ul class="nav nav-tabs">
+            <script type="text/ng-template" id="currentTab">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    {{page.name}}<b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu">
+                    <li class=""><a href="#">Edit Page</a></li>
+                    <li class=""><a href="#">Delete Page</a></li>
+                    <li class=""><a href="#">Move Page</a></li>
+                    <li class="hidden"><a href="#">Export Page</a></li>
+                    <li class=""><a href="#sharePageDialog" data-toggle="modal">Share Page</a></li>
+                    <li class="menu-item-disabled"><a href="#">Remove share</a></li>
+                </ul>
+            </script>
+            <script type="text/ng-template" id="otherTab">
+                <a href="{{page.id}}">
+                    {{page.name}}
+                </a>
+            </script>
+            <li ng-repeat="page in pages" ng-class="{active:page.isCurrent, dropdown:page.isCurrent}"
+                ng-include="page.template">
+            </li>
+            <li id="addPageButton"><a href="#"><i class="icon-plus"></i></a></li>
+        </ul>
+    </nav>
+    <div class="row-fluid">
+        <div class="tab-content">
+            <div ng-repeat="(regionIndex, region) in currentPage.regions" ng-class="currentPage.pageLayoutCode">
+                <div ng-repeat="regionWidget in region.regionWidgets">
+
+                    <div class="widget-wrapper">
+                        <div class="widget-title-bar widget-title-bar-draggable">
+                            <div class="widget-toolbar-toggle-collapse" title="Collapse/Restore Widget" style="">
+                                <i class="icon-chevron-down"></i>
+                            </div>
+                            <div class="widget-title">
+                                {{regionWidget.widgetUrl}}
+                            </div>
+                            <div class="widget-toolbar ">
+                                <div class="dropdown widget-menu-wrapper" style="">
+                                    <a class="dropdown-toggle">
+                                        <i class="icon-cog"></i>
+                                    </a>
+                                    <ul class="dropdown-menu widget-menu">
+                                        <li class="">
+                                            <a href="#">
+                                                Edit Preferences
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#">
+                                                Maximize
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#">
+                                                Move to Page
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#">
+                                                Delete Widget
+                                            </a>
+                                        </li>
+                                        <li class="divider"></li>
+                                        <li>
+                                            <a href="#">
+                                                About this Widget
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#">
+                                                Comment on this Widget
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#">
+                                                Rate this Widget
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            <span class="widget-toolbar-btn widget-toolbar-btn-min" style="display: none;">
+                                <i class="icon-resize-small"></i>
+                            </span>
+                            </div>
+                        </div>
+
+                        <div class="widget-prefs"></div>
+                        <div class="widget">
+                            {{regionWidget.widgetUrl}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

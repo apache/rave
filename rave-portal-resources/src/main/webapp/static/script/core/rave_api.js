@@ -21,7 +21,7 @@ var rave = rave || {};
  * Namespace that provides client access to Rave server APIs.
  * Note required jquery libraries must be imported by the containing page.
  */
-rave.api = rave.api || (function () {
+rave.api = (function () {
     //stores virtual host context of application execution
     var context = "";
 

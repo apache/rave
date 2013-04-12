@@ -17,7 +17,7 @@
  * under the License.
  */
 
-rave = rave || {};
+var rave = rave || {};
 
 /*
 The rave.ajax function is a simple wrapper for jquery's ajax function.

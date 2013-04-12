@@ -27,7 +27,8 @@ rave.registerProvider(
         exports.init = function () {
             var containerConfig = {};
             containerConfig[osapi.container.ServiceConfig.API_PATH] = "/rpc";
-            containerConfig[osapi.container.ContainerConfig.RENDER_DEBUG] = rave.getJavaScriptDebugMode();
+            //TODO: if we want to support js debug mode in core, figure it out.
+            //containerConfig[osapi.container.ContainerConfig.RENDER_DEBUG] = rave.getJavaScriptDebugMode();
             container = new osapi.container.Container(containerConfig);
 
             gadgets.pubsub2router.init({

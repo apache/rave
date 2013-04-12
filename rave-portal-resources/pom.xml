@@ -136,10 +136,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <!--
-               wro4j maven plugin is used for optimization (concatenation, minification, etc) of our static resources
-               it is invoked as part of the compile phase of the maven lifecycle
-            -->
             <plugin>
                 <groupId>ro.isdc.wro4j</groupId>
                 <artifactId>wro4j-maven-plugin</artifactId>
@@ -153,19 +149,12 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <!-- wro.properties defines which pre and post processors to execute -->
                     <extraConfigFile>${basedir}/src/main/resources/wro.properties</extraConfigFile>
-                    <!-- wro.xml defines the resource groups -->
                     <wroFile>${basedir}/src/main/resources/wro.xml</wroFile>
-                    <!-- targetGroups is the set of resource groups, defined in wro.xml, that you want to process -->
                     <targetGroups>rave.core.min,rave.portal.min,rave</targetGroups>
-                    <!-- minimize instructs the processors to handle their minimization work -->
                     <minimize>true</minimize>
-                    <!-- location of the javascript after processing -->
                     <jsDestinationFolder>${project.build.directory}/${project.build.finalName}/static/script/</jsDestinationFolder>
-                    <!-- location of the CSS after processing -->
                     <cssDestinationFolder>${project.build.directory}/${project.build.finalName}/static/css/</cssDestinationFolder>
-                    <!-- location of webapp directory that wro4j uses for its location context -->
                     <contextFolder>${basedir}/src/main/webapp/</contextFolder>
                     <wroManagerFactory>ro.isdc.wro.maven.plugin.manager.factory.ConfigurableWroManagerFactory</wroManagerFactory>
                     <ignoreMissingResources>false</ignoreMissingResources>

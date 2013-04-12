@@ -16,8 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+var rave = rave || {};
 
-rave = (function () {
+_.extend(rave, (function () {
     var INITIALIZED = false,
     //providers - opensocial, wookie...
         providers = {},
@@ -190,4 +191,5 @@ rave = (function () {
 
     return exports;
 
-})();
+})()
+);
