@@ -56,23 +56,23 @@ _.extend(rave, (function () {
             //TODO: until api can be updated, attach regionid as an attribute on the widget so that we can filter on this
             definition.regionId = regionId;
         }
-        regionWidgets[definition.regionWidgetId] = definition;
+        regionWidgets[definition.id] = definition;
         if (INITIALIZED) {
-            regionWidgets[definition.regionWidgetId] = new rave.RegionWidget(definition)
+            regionWidgets[definition.id] = new rave.RegionWidget(definition)
         }
-        return regionWidgets[definition.regionWidgetId];
+        return regionWidgets[definition.id];
     }
 
     //uregister a regionwidget, identified by a RegionWidget object, a widget definition, or just an id
     exports.unregisterWidget = function (widget) {
-        var regionWidgetId = widget.regionWidgetId || widget;
+        var id = widget.id || widget;
 
-        delete regionWidgets[regionWidgetId];
+        delete regionWidgets[id];
     }
 
-    //get registered widget by regionWidgetId
-    exports.getWidget = function (regionWidgetId) {
-        return regionWidgets[regionWidgetId];
+    //get registered widget by id
+    exports.getWidget = function (id) {
+        return regionWidgets[id];
     }
 
     exports.getWidgets = function (filter) {
@@ -167,7 +167,7 @@ _.extend(rave, (function () {
         INITIALIZED = true;
         _.invoke(providers, 'init');
         _.each(regionWidgets, function (definition) {
-            regionWidgets[definition.regionWidgetId] = new rave.RegionWidget(definition)
+            regionWidgets[definition.id] = new rave.RegionWidget(definition)
         });
         _.each(initHandlers, function (fn) {
             fn();

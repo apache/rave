@@ -10,6 +10,7 @@ angular.module('rave.controller', [])
         pages.then(function(pages){
             $scope.pages = pages;
             setCurrentPage($routeParams.tabId);
+            registerWidgets();
         });
 
         function setCurrentPage(pageId) {
@@ -25,5 +26,15 @@ angular.module('rave.controller', [])
                     $scope.currentPage = page;
                 }
             })
+        }
+
+        function registerWidgets(){
+            rave.init();
+            var widgets = _.chain($scope.pages).pluck('regions').flatten().pluck('regionWidgets').flatten().value();
+            var i = 0;
+            _.each(widgets, function(widget){
+                widget.metadata = JSON.parse(widget.metadata);
+                rave.registerWidget(widget);
+            });
         }
     }]);

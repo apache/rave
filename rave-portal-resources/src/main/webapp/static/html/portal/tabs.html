@@ -27,9 +27,8 @@
     </nav>
     <div class="row-fluid">
         <div class="tab-content">
-            <div ng-repeat="(regionIndex, region) in currentPage.regions" ng-class="currentPage.pageLayoutCode">
+            <div ng-repeat="(regionIndex, region) in currentPage.regions" ng-class="currentPage.pageLayoutCode+'_'+regionIndex" class="region regionNonDragging">
                 <div ng-repeat="regionWidget in region.regionWidgets">
-
                     <div class="widget-wrapper">
                         <div class="widget-title-bar widget-title-bar-draggable">
                             <div class="widget-toolbar-toggle-collapse" title="Collapse/Restore Widget" style="">
@@ -89,8 +88,8 @@
                         </div>
 
                         <div class="widget-prefs"></div>
-                        <div class="widget">
-                            {{regionWidget.widgetUrl}}
+                        <div class="widget" render-widget="regionWidget.id">
+
                         </div>
                     </div>
                 </div>
