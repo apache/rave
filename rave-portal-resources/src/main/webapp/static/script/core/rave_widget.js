@@ -85,7 +85,7 @@ rave.RegionWidget = (function () {
         this.collapsed = true;
 
         rave.api.rest.saveWidgetCollapsedState({
-            regionWidgetId: this.regionWidgetId,
+            regionWidgetId: this.id,
             collapsed: this.collapsed
         });
     }
@@ -94,7 +94,7 @@ rave.RegionWidget = (function () {
         this.collapsed = false;
 
         rave.api.rest.saveWidgetCollapsedState({
-            regionWidgetId: this.regionWidgetId,
+            regionWidgetId: this.id,
             collapsed: this.collapsed
         });
     }
@@ -106,21 +106,21 @@ rave.RegionWidget = (function () {
         }
 
         rave.api.rpc.removeWidget({
-            regionWidgetId: this.regionWidgetId
+            regionWidgetId: this.id
         });
     }
 
     Widget.prototype.moveToPage = function (toPageId, cb) {
         rave.api.rpc.moveWidgetToPage({
             toPageId: toPageId,
-            regionWidgetId: this.regionWidgetId,
+            regionWidgetId: this.id,
             successCallback: cb
         });
     }
 
     Widget.prototype.moveToRegion = function (fromRegionId, toRegionId, toIndex) {
         rave.api.rpc.moveWidgetToRegion({
-            regionWidgetId: this.regionWidgetId,
+            regionWidgetId: this.id,
             fromRegionId: fromRegionId,
             toRegionId: toRegionId,
             toIndex: toIndex
@@ -129,12 +129,12 @@ rave.RegionWidget = (function () {
 
     Widget.prototype.savePreference = function (name, val) {
         this.userPrefs[name] = val;
-        rave.api.rest.saveWidgetPreference({regionWidgetId: this.regionWidgetId, prefName: name, prefValue: val});
+        rave.api.rest.saveWidgetPreference({regionWidgetId: this.id, prefName: name, prefValue: val});
     }
 
     Widget.prototype.savePreferences = function (updatedPrefs) {
         this.userPrefs = updatedPrefs;
-        rave.api.rest.saveWidgetPreferences({regionWidgetId: this.regionWidgetId, userPrefs: updatedPrefs});
+        rave.api.rest.saveWidgetPreferences({regionWidgetId: this.id, userPrefs: updatedPrefs});
     }
 
 

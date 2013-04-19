@@ -1,40 +1,46 @@
 angular.module('rave.controller', [])
-    .controller('tabsController', ['$scope', 'rave', 'pages', '$routeParams', function ($scope, rave, pages, $routeParams) {
-        $scope.pages;
-        $scope.currentPage;
+    .controller('PortalController', ['$scope', 'rave', 'Pages', '$routeParams', '$q', function ($scope, rave, Pages, $routeParams, $q) {
+        $scope.user;
+        $scope.portalPrefs;
+        $scope.pages = Pages.get('portal', '@self');
+        $scope.selectedPageId = $routeParams.tabId;
 
-        $scope.$on('$routeChangeSuccess', function(oldRoute, newRoute){
-            setCurrentPage(newRoute.params.tabId);
-        });
-
-        pages.then(function(pages){
-            $scope.pages = pages;
-            setCurrentPage($routeParams.tabId);
-            registerWidgets();
-        });
-
-        function setCurrentPage(pageId) {
-            if(_.isUndefined(pageId)) {
-                pageId = $scope.pages[0].id;
-            }
-            _.each($scope.pages, function(page) {
-                page.template = 'otherTab'
-                page.isCurrent = false;
-                if(page.id == pageId) {
-                    page.isCurrent = true;
-                    page.template = 'currentTab'
-                    $scope.currentPage = page;
-                }
-            })
+        if (_.isUndefined($scope.selectedPageId)) {
+            $scope.pages.then(function (pages) {
+                $scope.selectedPageId = pages[0] && pages[0].id;
+            });
         }
+        $scope.pages.then(registerWidgetsForPages);
 
-        function registerWidgets(){
+        $scope.$on('$routeChangeSuccess', function (oldRoute, newRoute) {
+            $scope.selectedPageId = newRoute.params.tabId;
+        });
+
+        function registerWidgetsForPages(pages) {
             rave.init();
-            var widgets = _.chain($scope.pages).pluck('regions').flatten().pluck('regionWidgets').flatten().value();
+            var widgets = _.chain(pages).pluck('regions').flatten().pluck('regionWidgets').flatten().value();
             var i = 0;
-            _.each(widgets, function(widget){
+            _.each(widgets, function (widget) {
                 widget.metadata = JSON.parse(widget.metadata);
                 rave.registerWidget(widget);
             });
         }
-    }]);
+    }])
+    .controller('WidgetController', ['$scope', 'rave',
+        function ($scope, rave) {
+            $scope.regionWidget;
+            $scope.showPrefs = false;
+
+            $scope.init = function (regionWidgetId) {
+                $scope.regionWidget = rave.getWidget(regionWidgetId);
+            }
+
+            $scope.toggleCollapse = function () {
+                if ($scope.regionWidget.collapsed) {
+                    $scope.regionWidget.show();
+                } else {
+                    $scope.regionWidget.hide();
+                }
+            }
+        }
+    ]);

@@ -1,6 +1,10 @@
-<div ng-controller="tabsController">
+<div ng-controller="PortalController">
     <nav>
         <ul class="nav nav-tabs">
+            <li ng-repeat="page in pages" ng-class="{active:page.id == selectedPageId, dropdown:page.id == selectedPageId}"
+                    ng-include=" page.id == selectedPageId && 'currentTab'|| 'otherTab' ">
+            </li>
+
             <script type="text/ng-template" id="currentTab">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                     {{page.name}}<b class="caret"></b>
@@ -14,37 +18,36 @@
                     <li class="menu-item-disabled"><a href="#">Remove share</a></li>
                 </ul>
             </script>
+
             <script type="text/ng-template" id="otherTab">
                 <a href="{{page.id}}">
                     {{page.name}}
                 </a>
             </script>
-            <li ng-repeat="page in pages" ng-class="{active:page.isCurrent, dropdown:page.isCurrent}"
-                ng-include="page.template">
-            </li>
+
             <li id="addPageButton"><a href="#"><i class="icon-plus"></i></a></li>
         </ul>
     </nav>
     <div class="row-fluid">
-        <div class="tab-content">
-            <div ng-repeat="(regionIndex, region) in currentPage.regions" ng-class="currentPage.pageLayoutCode+'_'+regionIndex" class="region regionNonDragging">
+        <div class="tab-content" ng-show="selectedPageId == page.id" ng-repeat="page in pages">
+            <div ng-repeat="(regionIndex, region) in page.regions" ng-class="page.pageLayoutCode+'_'+regionIndex" class="region regionNonDragging">
                 <div ng-repeat="regionWidget in region.regionWidgets">
-                    <div class="widget-wrapper">
+                    <div class="widget-wrapper" ng-controller="WidgetController" ng-init="init(regionWidget.id)">
                         <div class="widget-title-bar widget-title-bar-draggable">
-                            <div class="widget-toolbar-toggle-collapse" title="Collapse/Restore Widget" style="">
-                                <i class="icon-chevron-down"></i>
+                            <div class="widget-toolbar-toggle-collapse" title="Collapse/Restore Widget">
+                                <i ng-class="{'icon-chevron-down':!regionWidget.collapsed, 'icon-chevron-up':regionWidget.collapsed}" ng-click="toggleCollapse()"></i>
                             </div>
                             <div class="widget-title">
                                 {{regionWidget.widgetUrl}}
                             </div>
                             <div class="widget-toolbar ">
                                 <div class="dropdown widget-menu-wrapper" style="">
-                                    <a class="dropdown-toggle">
+                                    <a class="dropdown-toggle" data-toggle="dropdown">
                                         <i class="icon-cog"></i>
                                     </a>
                                     <ul class="dropdown-menu widget-menu">
                                         <li class="">
-                                            <a href="#">
+                                            <a ng-click="showPrefs=true">
                                                 Edit Preferences
                                             </a>
                                         </li>
@@ -81,14 +84,14 @@
                                         </li>
                                     </ul>
                                 </div>
-                            <span class="widget-toolbar-btn widget-toolbar-btn-min" style="display: none;">
+                            <span class="widget-toolbar-btn widget-toolbar-btn-min">
                                 <i class="icon-resize-small"></i>
                             </span>
                             </div>
                         </div>
 
-                        <div class="widget-prefs"></div>
-                        <div class="widget" render-widget="regionWidget.id">
+                        <div class="widget-prefs" ng-show="showPrefs">Edit Prefs Pane</div>
+                        <div class="widget" render-widget="regionWidget.id" ng-hide="regionWidget.collapsed">
 
                         </div>
                     </div>
