@@ -1,21 +1,22 @@
 <div ng-controller="PortalController">
     <nav>
         <ul class="nav nav-tabs">
-            <li ng-repeat="page in pages" ng-class="{active:page.id == selectedPageId, dropdown:page.id == selectedPageId}"
-                    ng-include=" page.id == selectedPageId && 'currentTab'|| 'otherTab' ">
+            <li ng-repeat="page in pages"
+                ng-class="{active:page.id == selectedPageId, dropdown:page.id == selectedPageId}"
+                ng-include=" page.id == selectedPageId && 'currentTab'|| 'otherTab' ">
             </li>
 
             <script type="text/ng-template" id="currentTab">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                     {{page.name}}<b class="caret"></b>
                 </a>
-                <ul class="dropdown-menu">
-                    <li class=""><a href="#">Edit Page</a></li>
-                    <li class=""><a href="#">Delete Page</a></li>
-                    <li class=""><a href="#">Move Page</a></li>
-                    <li class="hidden"><a href="#">Export Page</a></li>
-                    <li class=""><a href="#sharePageDialog" data-toggle="modal">Share Page</a></li>
-                    <li class="menu-item-disabled"><a href="#">Remove share</a></li>
+                <ul class="dropdown-menu" ng-controller="CurrentPageController">
+                    <li class=""><a ng-click="edit()">Edit Page</a></li>
+                    <li class=""><a ng-click="delete()">Delete Page</a></li>
+                    <li class=""><a ng-click="move()">Move Page</a></li>
+                    <li class="hidden"><a ng-click="export()">Export Page</a></li>
+                    <li class=""><a ng-click="share()">Share Page</a></li>
+                    <li class="menu-item-disabled"><a ng-click="unshare()">Remove share</a></li>
                 </ul>
             </script>
 
@@ -25,17 +26,21 @@
                 </a>
             </script>
 
-            <li id="addPageButton"><a href="#"><i class="icon-plus"></i></a></li>
+            <li id="addPageButton">
+                <a ng-click="addPage()"><i class="icon-plus"></i></a>
+            </li>
         </ul>
     </nav>
     <div class="row-fluid">
         <div class="tab-content" ng-show="selectedPageId == page.id" ng-repeat="page in pages">
-            <div ng-repeat="(regionIndex, region) in page.regions" ng-class="page.pageLayoutCode+'_'+regionIndex" class="region regionNonDragging">
+            <div ng-repeat="(regionIndex, region) in page.regions" ng-class="page.pageLayoutCode+'_'+regionIndex"
+                 class="region regionNonDragging">
                 <div ng-repeat="regionWidget in region.regionWidgets">
-                    <div class="widget-wrapper" ng-controller="WidgetController" ng-init="init(regionWidget.id)">
+                    <div class="widget-wrapper" ng-controller="WidgetController">
                         <div class="widget-title-bar widget-title-bar-draggable">
                             <div class="widget-toolbar-toggle-collapse" title="Collapse/Restore Widget">
-                                <i ng-class="{'icon-chevron-down':!regionWidget.collapsed, 'icon-chevron-up':regionWidget.collapsed}" ng-click="toggleCollapse()"></i>
+                                <i ng-class="{'icon-chevron-down':!regionWidget.collapsed, 'icon-chevron-up':regionWidget.collapsed}"
+                                   ng-click="toggleCollapse()"></i>
                             </div>
                             <div class="widget-title">
                                 {{regionWidget.widgetUrl}}
@@ -98,5 +103,52 @@
                 </div>
             </div>
         </div>
+    </div>
+</div>
+
+<script type="text/ng-template" id="editPageModal">
+        <div class="modal-header">
+            <a class="close" ng-click="close()">&times;</a>
+
+            <h3 id="pageMenuDialogHeader">Add New Page</h3>
+        </div>
+        <div class="modal-body">
+            <form id="pageForm" class="form-horizontal">
+                <input type="hidden" name="tab_id" id="tab_id" value=""/>
+                <fieldset>
+                    <div class="control-group error">
+                        <label id="pageFormErrors" class="control-label"></label>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="tab_title">Title </label>
+
+                        <div class="controls">
+                            <input id="tab_title" class="input-xlarge focused" type="text" ng-model="page.name" required
+                                   ng-class="{'ng-invalid':errorMsg}"/>
+                            <span class="error">{{errorMsg}}</span>
+                        </div>
+                    </div>
+                    <div class="control-group" id="pageLayoutGroup">
+                        <label class="control-label" for="pageLayout">Select Layout </label>
+
+                        <div class="controls">
+                            <select id="pageLayout" ng-model="page.pageLayoutCode" ng-options="l.value as l.label for l in layouts">
+                            </select>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <a id="pageMenuCloseButton" class="btn" ng-click="close()">Cancel</a>
+            <a id="pageMenuUpdateButton" class="btn btn-primary" ng-click="savePage()">Save</a>
+        </div>
+</script>
+
+
+<div class="popup slideout">
+    <a href="#" class="close">&times;</a>
+
+    <div class="slideout-content">
     </div>
 </div>

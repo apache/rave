@@ -377,8 +377,7 @@ rave.api = (function () {
                     if (result.error) {
                         // check to see if a duplicate page name error occurred
                         if (result.errorCode == 'DUPLICATE_ITEM') {
-                            //TODO: git rid of dom manipulation
-                            $("#" + args.errorLabel).html(rave.getClientMessage("page.duplicate_name"));
+                            args.successCallback('DUPLICATE_ITEM');
                         } else {
                             handleRpcError(result);
                         }
