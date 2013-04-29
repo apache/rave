@@ -1,4 +1,4 @@
-angular.module('rave.controller', ['ui.bootstrap'])
+angular.module('rave.controller', ['ui.bootstrap', 'ui'])
     .config(['$dialogProvider',
         function ($dialogProvider) {
             $dialogProvider.options({
@@ -14,6 +14,25 @@ angular.module('rave.controller', ['ui.bootstrap'])
             $scope.portalPrefs;
             $scope.pages = Pages.get('portal', '@self');
             $scope.selectedPageId = $routeParams.tabId;
+            $scope.dragging = false;
+            $scope.sortingOpts = {
+                connectWith: '.region', // defines which regions are dnd-able
+                scroll: true, // whether to scroll the window if the user goes outside the areas
+                opacity: 0.5, // the opacity of the object being dragged
+                revert: true, // smooth snap animation
+                cursor: 'move', // the cursor to show while dnd
+                handle: '.widget-title-bar-draggable', // the draggable handle
+                tolerance: 'pointer', // change dnd drop zone on mouse-over
+                start: function (e, ui) {
+                    ui.placeholder.height(ui.item.height());
+                    $scope.dragging = true;
+                    $scope.$apply();
+                },
+                stop: function (e, ui) {
+                    $scope.dragging = false;
+                    $scope.$apply();
+                }
+            }
 
             if (_.isUndefined($scope.selectedPageId)) {
                 $scope.pages.then(function (pages) {
@@ -21,8 +40,10 @@ angular.module('rave.controller', ['ui.bootstrap'])
                 });
             }
             $scope.pages.then(registerWidgetsForPages);
+            $scope.pages.then(watchForMove)
 
-            //TODO: this does not fire on first load?
+
+            //TODO: this does not fire on first load - why?
             $scope.$on('$routeChangeSuccess', function (oldRoute, newRoute) {
                 if (_.isUndefined(newRoute.params.tabId)) {
                     $scope.pages.then(function (pages) {
@@ -34,14 +55,49 @@ angular.module('rave.controller', ['ui.bootstrap'])
             });
 
             function registerWidgetsForPages(pages) {
-                //TODO
                 rave.init();
                 var widgets = _.chain(pages).pluck('regions').flatten().pluck('regionWidgets').flatten().value();
-                var i = 0;
                 _.each(widgets, function (widget) {
+                    //TODO: this is a fix for a bug in the api
                     widget.metadata = JSON.parse(widget.metadata);
                     rave.registerWidget(widget);
                 });
+            }
+
+            function watchForMove(pages) {
+                $scope.$watch(function () {
+                    return _.chain(pages)
+                        .where({id: $scope.selectedPageId})
+                        .pluck('regions').flatten()
+                        .map(function (region, regionIndex) {
+                            return _.map(region.regionWidgets, function (widget, index) {
+                                return  {
+                                    id: widget.id,
+                                    //TODO: it's dumb that region index is 1-based
+                                    regionId: regionIndex + 1,
+                                    index: index
+                                }
+                            });
+                        })
+                        .flatten().value();
+                }, function (newValue, oldValue) {
+                    var oldRegion;
+
+                    var movedWidget = _.find(newValue, function (widget) {
+                        var isChanged = !_.any(oldValue, function (val) {
+                            return _.isEqual(widget, val);
+                        });
+
+                        if (isChanged) {
+                            return widget;
+                        }
+                    });
+
+                    if(movedWidget) {
+                        oldRegion = _.findWhere(oldValue, {id: movedWidget.id}).regionId;
+                        rave.getWidget(movedWidget.id).moveToRegion(oldRegion, movedWidget.regionId, movedWidget.index);
+                    }
+                }, true)
             }
 
             $scope.addPage = function () {
@@ -55,11 +111,14 @@ angular.module('rave.controller', ['ui.bootstrap'])
                     }
                 }).open();
             }
+
+            $scope.hasWidgets = function (page) {
+                return _.chain(page.regions).pluck('regionWidgets').flatten().value().length > 0;
+            }
         }
     ])
     .controller('CurrentPageController', ['$scope', 'Pages', '$dialog', '$location',
         function ($scope, Pages, $dialog, $location) {
-
 
             $scope.edit = function () {
                 $dialog.dialog({
@@ -73,7 +132,18 @@ angular.module('rave.controller', ['ui.bootstrap'])
                 }).open();
             }
             $scope.move = function () {
-
+                $dialog.dialog({
+                    templateUrl: 'movePageModal',
+                    controller: 'MovePageController',
+                    resolve: {
+                        pages: function () {
+                            return angular.copy($scope.pages);
+                        },
+                        page: function () {
+                            return angular.copy($scope.page);
+                        }
+                    }
+                }).open();
             }
             $scope.delete = function () {
                 Pages.delete($scope.page.id).then(function () {
@@ -106,8 +176,8 @@ angular.module('rave.controller', ['ui.bootstrap'])
             }
         }
     ])
-    .controller('EditPageController', ['$scope', 'Pages', 'dialog', 'page',
-        function ($scope, Pages, dialog, page) {
+    .controller('EditPageController', ['$scope', 'Pages', 'dialog', 'page', '$location',
+        function ($scope, Pages, dialog, page, $location) {
             //TODO: layouts needs to come from a service
             $scope.layouts = [
                 {label: 'One Column',
@@ -151,11 +221,38 @@ angular.module('rave.controller', ['ui.bootstrap'])
                 $scope.savePage = function () {
                     Pages.add($scope.page.name, $scope.page.pageLayoutCode).then(function (result) {
                         dialog.close();
+                        $location.path(result.id);
                     }, function () {
                         $scope.errorMsg = 'A page with that name already exists';
                     });
                 }
             }
+
+        }
+    ])
+    //TODO: try drag&drop for moving pages?
+    .controller('MovePageController', [ '$scope', 'Pages', 'dialog', 'page', 'pages',
+        function ($scope, Pages, dialog, page, pages) {
+            $scope.pages = pages;
+            $scope.page = page;
+            $scope.locations = [
+                {label: '', value: ''}
+            ];
+            $scope.newLocation = $scope.locations[0].value;
+
+            $scope.close = function () {
+                dialog.close();
+            }
+
+            $scope.movePage = function () {
+                Pages.move(page.id, newLocationId);
+                dialog.close();
+            }
+
+        }
+    ])
+    .controller('SharePageController', ['$scope', 'Pages',
+        function () {
 
         }
     ]);

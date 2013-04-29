@@ -1,0 +1,71 @@
+<!-- TODO: page.regions.indexOf - view logic and embedded js. That sucks. -->
+<div ng-class="{regionDragging:dragging, regionNonDragging:!dragging}"
+     class="region {{page.pageLayoutCode}}_{{page.regions.indexOf(region)+1}}"
+     ui-sortable="sortingOpts" ng-model="region.regionWidgets">
+    <div ng-repeat="regionWidget in region.regionWidgets">
+        <div class="widget-wrapper" ng-controller="WidgetController">
+            <div class="widget-title-bar widget-title-bar-draggable">
+                <div class="widget-toolbar-toggle-collapse" title="Collapse/Restore Widget">
+                    <i ng-class="{'icon-chevron-down':!regionWidget.collapsed, 'icon-chevron-up':regionWidget.collapsed}"
+                       ng-click="toggleCollapse()"></i>
+                </div>
+                <div class="widget-title">
+                    {{regionWidget.widgetUrl}}
+                </div>
+                <div class="widget-toolbar ">
+                    <div class="dropdown widget-menu-wrapper" style="">
+                        <a class="dropdown-toggle" data-toggle="dropdown">
+                            <i class="icon-cog"></i>
+                        </a>
+                        <ul class="dropdown-menu widget-menu">
+                            <li class="">
+                                <a ng-click="showPrefs=true">
+                                    Edit Preferences
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    Maximize
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    Move to Page
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    Delete Widget
+                                </a>
+                            </li>
+                            <li class="divider"></li>
+                            <li>
+                                <a href="#">
+                                    About this Widget
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    Comment on this Widget
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    Rate this Widget
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                            <span class="widget-toolbar-btn widget-toolbar-btn-min">
+                                <i class="icon-resize-small"></i>
+                            </span>
+                </div>
+            </div>
+
+            <div class="widget-prefs" ng-show="showPrefs">Edit Prefs Pane</div>
+            <div class="widget" render-widget="regionWidget.id" ng-hide="regionWidget.collapsed">
+
+            </div>
+        </div>
+    </div>
+</div>

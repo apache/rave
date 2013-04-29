@@ -1,4 +1,4 @@
-angular.module('rave.service', ['ngResource'])
+angular.module('rave.service', [])
     .value('rave', rave)
     .service('Pages', ['$http', '$interpolate', '$q', '$rootScope', 'rave',
         function ($http, $interpolate, $q, $rootScope, rave) {
@@ -35,9 +35,14 @@ angular.module('rave.service', ['ngResource'])
                         else {
                             var newPage = result.result;
                             pages.then(function (pages) {
+                                /*
+                                TODO: newPage object returned by rpc api is different format from rest api,
+                                screws up pagelayout code and possibly more
+                                 */
+                                newPage.pageLayoutCode = newPage.pageLayout.code;
                                 pages.push(newPage);
                             });
-                            $rootScope.$apply(deferred.resolve(result));
+                            $rootScope.$apply(deferred.resolve(newPage));
                         }
                     }
                 });
@@ -52,6 +57,13 @@ angular.module('rave.service', ['ngResource'])
                     pageId: pageId,
                     moveAfterPageId: afterPageId,
                     successCallback: function (result) {
+                        pages.then(function (pages) {
+                            var movingPage =  _.findWhere(pages, {id: pageId})
+                            var fromIdx = _.indexOf(pages, movingPage);
+                            var toIdx = _.indexOf(pages, _.findWhere(pages, {id: afterPageId}));
+                            pages.splice(fromIdx,1)
+                            pages.splice(toIdx, 0, movingPage);
+                        });
                         $rootScope.$apply(deferred.resolve(result));
                     }
                 });
@@ -100,16 +112,30 @@ angular.module('rave.service', ['ngResource'])
                 return deferred.promise;
             }
 
+            Pages.share = function(pageId, userId, role){}
+
             return Pages;
         }
     ])
-    .service('settings', ['$resource',
+    .service('user', ['$q',
+        function($q){
+            var deferred = $q.defer();
+
+            deferred.resolve({
+
+            });
+
+            return deferred.promise;
+        }
+    ])
+    .service('users', [function(){}])
+    .service('settings', [
         function () {
 
         }
     ])
-    .service('popups', [
+    .service('views', [
         function () {
-
+            //TODO: write a view service to be more robust than ng-include, probably with a corresponding directive
         }
     ])
