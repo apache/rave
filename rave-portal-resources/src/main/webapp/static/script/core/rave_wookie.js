@@ -18,13 +18,18 @@
  */
 
 rave.registerProvider(
-    'wookie',
+    'W3C',
     (function () {
         var exports = {}
 
         exports.init = function(){};
         exports.initWidget = function(widget){}
         exports.renderWidget = function(widget, el, opts){
+            var widgetBodyElement = document.getElementById(["widget-", widget.regionWidgetId, "-body"].join(""));
+            window["onWidget"+widget.regionWidgetId+"Load"] = function(){
+                window.document.getElementById(widget.regionWidgetId).style.visibility="visible";
+            };
+
             new OpenAjax.hub.IframeContainer(rave.getManagedHub() , ""+widget.regionWidgetId,
                 {
                     Container: {
@@ -38,9 +43,11 @@ rave.registerProvider(
                         //unless it is being defined by the gadget spec
                         iframeAttrs: {
                             height: widget.height || rave.RegionWidget.defaultHeight,
-                            width:  widget.width || rave.RegionWidget.defaultWidth
+                            width:  widget.width || rave.RegionWidget.defaultWidth,
+                            frameborder: 0
                         },
-                        uri: widget.widgetUrl
+                        uri: widget.widgetUrl,
+                        onGadgetLoad: "onWidget"+widget.regionWidgetId+"Load"
                     }
                 }
             );
