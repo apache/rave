@@ -20,6 +20,7 @@
 package org.apache.rave.portal.model.conversion.impl;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import org.apache.rave.model.ActivityStreamsEntry;
 import org.apache.rave.model.ActivityStreamsMediaLink;
 import org.apache.rave.model.ActivityStreamsObject;
@@ -30,6 +31,7 @@ import org.apache.rave.portal.model.impl.ActivityStreamsObjectImpl;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.apache.rave.portal.model.util.MongoDbModelUtil.generateId;
 
@@ -71,7 +73,7 @@ public class MongoDbActivityStreamsEntryConverter implements HydratingModelConve
             converted.setHeight(source.getHeight());
             converted.setWidth(source.getWidth());
             converted.setUrl(source.getUrl());
-            converted.setOpenSocial(source.getOpenSocial());
+            converted.setOpenSocial(getConvertedMap(source.getOpenSocial()));
             return converted;
         }
         return null;
@@ -101,9 +103,9 @@ public class MongoDbActivityStreamsEntryConverter implements HydratingModelConve
 
     private void updateSimpleProperties(ActivityStreamsObject source, ActivityStreamsObjectImpl converted) {
         converted.setId(source.getId() == null ? generateId() : source.getId());
-        converted.setOpenSocial(source.getOpenSocial());
+        converted.setOpenSocial(getConvertedMap(source.getOpenSocial()));
         converted.setObjectType(source.getObjectType());
-        converted.setExtensions(source.getExtensions());
+        converted.setExtensions(getConvertedMap(source.getExtensions()));
         converted.setDisplayName(source.getDisplayName());
         converted.setAlias(source.getAlias());
         converted.setAttendedBy(source.getAttendedBy());
@@ -143,9 +145,9 @@ public class MongoDbActivityStreamsEntryConverter implements HydratingModelConve
 
     private void updateSimpleProperties(ActivityStreamsEntry source, ActivityStreamsEntry converted) {
         converted.setId(source.getId() == null ? generateId() : source.getId());
-        converted.setOpenSocial(source.getOpenSocial());
+        converted.setOpenSocial(getConvertedMap(source.getOpenSocial()));
         converted.setObjectType(source.getObjectType());
-        converted.setExtensions(source.getExtensions());
+        converted.setExtensions(getConvertedMap(source.getExtensions()));
         converted.setUrl(source.getUrl());
         converted.setAppId(source.getAppId());
         converted.setBcc(source.getBcc());
@@ -178,5 +180,15 @@ public class MongoDbActivityStreamsEntryConverter implements HydratingModelConve
         converted.setUserId(source.getUserId());
         converted.setVerb(source.getVerb());
         converted.setUrl(source.getUrl());
+    }
+
+    @SuppressWarnings("unchecked")
+    private Map getConvertedMap(Map toConvert) {
+        Map converted = null;
+        if(toConvert != null) {
+            converted= Maps.newHashMap();
+            converted.putAll(toConvert);
+        }
+        return converted;
     }
 }
