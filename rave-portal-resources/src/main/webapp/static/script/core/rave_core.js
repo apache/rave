@@ -69,6 +69,11 @@ rave = (function () {
         delete regionWidgets[regionWidgetId];
     }
 
+    //convenience method to render all registered widgets
+    exports.renderWidgets = function(el, opts) {
+        _.invoke(rave.getWidgets(), 'render', el, opts);
+    }
+
     //get registered widget by regionWidgetId
     exports.getWidget = function (regionWidgetId) {
         return regionWidgets[regionWidgetId];

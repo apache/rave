@@ -210,14 +210,10 @@ _.extend(rave.ui, (function () {
         $("#emptyPageMessageWrapper").removeClass("hidden");
     }
 
-    function renderWidgets() {
+    function showEmptyDisplay() {
         if (_.isEmpty(rave.getWidgets())) {
             displayEmptyPageMessage();
         }
-
-        _.each(rave.getWidgets(), function (widget) {
-            widget.render('home');
-        });
     }
 
     function getNonLockedRegions() {
@@ -913,7 +909,7 @@ _.extend(rave.ui, (function () {
         registerHomeView();
         registerCanvasView();
         registerPopups();
-        renderWidgets();
+        showEmptyDisplay();
         setupDragAndDrop();
     }
 
