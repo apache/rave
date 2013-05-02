@@ -20,6 +20,7 @@
 package org.apache.rave.portal.repository.impl;
 
 import org.apache.rave.model.ActivityStreamsEntry;
+import org.apache.rave.portal.model.MongoDbActivityStreamsEntry;
 import org.apache.rave.portal.model.conversion.HydratingConverterFactory;
 import org.apache.rave.portal.model.impl.ActivityStreamsEntryImpl;
 import org.apache.rave.portal.repository.ActivityStreamsRepository;
@@ -39,7 +40,7 @@ import static org.springframework.data.mongodb.core.query.Query.query;
  */
 @Repository
 public class MongoDbActivityStreamsRepository implements ActivityStreamsRepository {
-    private static final Class<? extends ActivityStreamsEntry> CLASS = ActivityStreamsEntryImpl.class;
+    private static final Class<? extends ActivityStreamsEntry> CLASS = MongoDbActivityStreamsEntry.class;
 
     private final MongoOperations template;
     private final HydratingConverterFactory converter;
