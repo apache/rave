@@ -106,11 +106,5 @@
        ]]>
     </Content>
 
-    <Content type="html" view="default">
-       <![CDATA[
-         Default view.
-       ]]>
-    </Content>
-
 </Module>
 
