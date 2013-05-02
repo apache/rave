@@ -609,7 +609,7 @@ _.extend(rave.ui, (function () {
             }
 
             function maximize() {
-                self.widget.render('canvas');
+                self.widget.render('canvas', {view: 'canvas'});
             }
 
             function toggleCollapse() {

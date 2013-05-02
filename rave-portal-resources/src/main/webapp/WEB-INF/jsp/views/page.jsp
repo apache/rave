@@ -391,6 +391,7 @@
 <portal:register-init-script location="${'AFTER_RAVE'}">
 <script>
     rave.init();
+    rave.RegionWidget.defaultView = 'home';
 
     $(function() {
         rave.initPageEditorStatus(<c:out value="${pageUser.editor}"/>);
