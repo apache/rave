@@ -33,12 +33,12 @@
     <name>Apache Rave :: rave-project</name>
     <description>Apache Rave Project</description>
     <packaging>pom</packaging>
-    <version>0.21.1-SNAPSHOT</version>
+    <version>0.21.1</version>
 
     <scm>
-        <connection>scm:svn:http://svn.apache.org/repos/asf/rave/branches/0.21.1</connection>
-        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/rave/branches/0.21.1</developerConnection>
-        <url>http://svn.apache.org/viewvc/rave/branches/0.21.1</url>
+        <connection>scm:svn:http://svn.apache.org/repos/asf/rave/tags/0.21.1</connection>
+        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/rave/tags/0.21.1</developerConnection>
+        <url>http://svn.apache.org/viewvc/rave/tags/0.21.1</url>
     </scm>
 
     <properties>
