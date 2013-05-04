@@ -22,7 +22,7 @@ package org.apache.rave.portal.repository;
 import java.util.HashMap;
 import java.util.List;
 
-import org.apache.rave.persistence.Repository;
+import org.apache.rave.repository.Repository;
 import org.apache.rave.model.Person;
 
 

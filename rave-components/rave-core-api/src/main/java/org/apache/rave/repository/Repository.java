@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.apache.rave.persistence;
+package org.apache.rave.repository;
 
 /**
  * Defines generic operations for a repository
