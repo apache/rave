@@ -48,7 +48,7 @@ public class JpaGroupConverter implements ModelConverter<Group, JpaGroup> {
         JpaGroup converted = null;
         if (source != null) {
             TypedQuery<JpaGroup> query = manager.createNamedQuery(JpaGroup.FIND_BY_TITLE, JpaGroup.class);
-            query.setParameter(JpaGroup.GROUP_ID_PARAM, source.getTitle());
+            query.setParameter(JpaGroup.GROUP_TITLE_PARAM, source.getTitle());
             converted = getSingleResult(query.getResultList());
 
             if (converted == null) {

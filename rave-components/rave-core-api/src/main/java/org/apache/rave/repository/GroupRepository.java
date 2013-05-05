@@ -16,33 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.rave.model;
+package org.apache.rave.repository;
 
-import javax.xml.bind.annotation.XmlTransient;
-import java.util.List;
+import org.apache.rave.model.Group;
 
-/**
- *
- */
-@XmlTransient
-public interface Group {
-    String getId();
+public interface GroupRepository extends Repository<Group> {
 
-    void setId(String id);
-
-    String getOwnerId();
-
-    void setOwnerId(String ownerId);
-
-    String getDescription();
-
-    void setDescription(String description);
-
-    List<String> getMemberIds();
-
-    void setMemberIds(List<String> members);
-
-    String getTitle();
-
-    void setTitle(String title);
+    Group findByTitle(String title);
 }
