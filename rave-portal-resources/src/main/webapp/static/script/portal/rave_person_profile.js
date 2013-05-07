@@ -40,6 +40,7 @@ rave.personprofile = rave.personprofile || (function() {
             //on tab click, change the url hash
             var page = $(this).text();
             var target = $(this).attr('href');
+            var regionId = target.split('-')[1];
             location.hash = encodeURIComponent(page);
 
             // refresh the widgets on the sub page when selected to ensure proper sizing

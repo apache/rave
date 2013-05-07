@@ -2,6 +2,15 @@ Apache Rave Change Log
 https://issues.apache.org/jira/secure/ReleaseNote.jspa?projectId=12311290 (select the version of release and output as text to create this file)
 
 ===========================================================================================================
+Release Notes - Rave - Version 0.21.1
+===========================================================================================================
+** Bug
+    * [RAVE-946] - Rate this widget, comment on this widget, about this widget buttons go to wrong widget
+    * [RAVE-947] - rave.log throws error in google chrome
+    * [RAVE-948] - W3C Widgets can not be loaded
+    * [RAVE-958] - MongoDB profile fails integration tests
+
+===========================================================================================================
 Release Notes - Rave - Version 0.21
 ===========================================================================================================
 ** Sub-task

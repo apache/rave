@@ -390,10 +390,13 @@
 
 <portal:register-init-script location="${'AFTER_RAVE'}">
 <script>
+    rave.init();
+    rave.RegionWidget.defaultView = 'home';
+
     $(function() {
         rave.initPageEditorStatus(<c:out value="${pageUser.editor}"/>);
-        rave.init();
         rave.layout.init(${applicationProperties['portal.export.ui.enable']});
+        rave.renderWidgets('home');
     });
 </script>
 <script>rave.models.currentPage.set({id: ${page.id}, ownerId: ${page.ownerId}, viewerId: <sec:authentication property="principal.id" />}, {silent:true})</script>

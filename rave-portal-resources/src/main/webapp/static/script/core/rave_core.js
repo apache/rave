@@ -69,6 +69,11 @@ rave = (function () {
         delete regionWidgets[regionWidgetId];
     }
 
+    //convenience method to render all registered widgets
+    exports.renderWidgets = function(el, opts) {
+        _.invoke(rave.getWidgets(), 'render', el, opts);
+    }
+
     //get registered widget by regionWidgetId
     exports.getWidget = function (regionWidgetId) {
         return regionWidgets[regionWidgetId];
@@ -174,8 +179,11 @@ rave = (function () {
     }
 
     //wrap a safe version of console.log
-    exports.log = (console && console.log) || function () {
-    };
+    exports.log = function(msg){
+        if  (console && console.log) {
+            console.log(msg);
+        }
+    }
 
     //reset internal data - used for testing cleanup
     exports.reset = function () {

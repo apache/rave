@@ -22,6 +22,7 @@ package org.apache.rave.portal.repository.impl;
 
 import com.google.common.collect.Lists;
 import org.apache.rave.model.ActivityStreamsEntry;
+import org.apache.rave.portal.model.MongoDbActivityStreamsEntry;
 import org.apache.rave.portal.model.conversion.HydratingConverterFactory;
 import org.apache.rave.portal.model.impl.ActivityStreamsEntryImpl;
 import org.apache.rave.portal.repository.ActivityStreamsRepository;
@@ -41,6 +42,7 @@ import static org.junit.Assert.assertThat;
 
 public class MongoDbActivityStreamsRepositoryTest {
     public static final String ID = "1";
+    public static final Class<MongoDbActivityStreamsEntry> ENTITY_CLASS = MongoDbActivityStreamsEntry.class;
     private MongoOperations template;
     private HydratingConverterFactory factory;
     private ActivityStreamsRepository repository;
@@ -54,8 +56,8 @@ public class MongoDbActivityStreamsRepositoryTest {
 
     @Test
     public void getAll() {
-        List<ActivityStreamsEntryImpl> result = Lists.newArrayList();
-        expect(template.findAll(eq(ActivityStreamsEntryImpl.class), eq(ACTIVITIES))).andReturn(result);
+        List<MongoDbActivityStreamsEntry> result = Lists.newArrayList();
+        expect(template.findAll(eq(ENTITY_CLASS), eq(ACTIVITIES))).andReturn(result);
         replay(template);
 
         List<ActivityStreamsEntry> entries = repository.getAll();
@@ -64,8 +66,8 @@ public class MongoDbActivityStreamsRepositoryTest {
 
     @Test
     public void getByUserId() {
-        List<ActivityStreamsEntryImpl> result = Lists.newArrayList();
-        expect(template.find(Query.query(Criteria.where("actor._id").is(ID)), ActivityStreamsEntryImpl.class, ACTIVITIES)).andReturn(result);
+        List<MongoDbActivityStreamsEntry> result = Lists.newArrayList();
+        expect(template.find(Query.query(Criteria.where("actor._id").is(ID)), ENTITY_CLASS, ACTIVITIES)).andReturn(result);
         replay(template);
 
         List<ActivityStreamsEntry> entries = repository.getByUserId(ID);
@@ -102,9 +104,9 @@ public class MongoDbActivityStreamsRepositoryTest {
 
     @Test
     public void getById() {
-        ActivityStreamsEntryImpl entry = new ActivityStreamsEntryImpl();
+        MongoDbActivityStreamsEntry entry = new MongoDbActivityStreamsEntry();
         entry.setId(ID);
-        expect(template.findById(ID, ActivityStreamsEntryImpl.class, ACTIVITIES)).andReturn(entry);
+        expect(template.findById(ID, ENTITY_CLASS, ACTIVITIES)).andReturn(entry);
         replay(template);
 
         ActivityStreamsEntry result = repository.get(ID);

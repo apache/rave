@@ -207,10 +207,10 @@
 
 <portal:register-init-script location="${'AFTER_RAVE'}">
     <script>
-        $(function () {
-            rave.RegionWidget.defaultView = 'profile';
+        rave.init();
+        rave.RegionWidget.defaultView = 'profile';
 
-            rave.init();
+        $(function () {
             rave.layout.init();
             rave.personprofile.init();
             rave.setPageOwner({
@@ -218,6 +218,7 @@
                 id: "<c:out value="${userProfile.id}"/>"
             });
             rave.forms.validateEditAccountForm();
+            rave.renderWidgets('home');
         });
     </script>
 </portal:register-init-script>

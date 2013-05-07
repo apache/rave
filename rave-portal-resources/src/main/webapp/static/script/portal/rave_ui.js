@@ -210,14 +210,10 @@ _.extend(rave.ui, (function () {
         $("#emptyPageMessageWrapper").removeClass("hidden");
     }
 
-    function renderWidgets() {
+    function showEmptyDisplay() {
         if (_.isEmpty(rave.getWidgets())) {
             displayEmptyPageMessage();
         }
-
-        _.each(rave.getWidgets(), function (widget) {
-            widget.render('home');
-        });
     }
 
     function getNonLockedRegions() {
@@ -569,23 +565,24 @@ _.extend(rave.ui, (function () {
         var HomeView = function (widget) {
             this.widget = widget;
 
-            var widgetId = widget.regionWidgetId;
+            var regionWidgetId = widget.regionWidgetId;
 
-            this.$chrome = $('#widget-' + widgetId + '-wrapper');
-            this.$minimizeIcon = $("#widget-" + widgetId + "-min");
-            this.$toggleCollapseIcon = $("#widget-" + widgetId + "-collapse");
-            this.$menuItemMove = $("#widget-" + widgetId + "-menu-move-item");
-            this.$menuItemDelete = $("#widget-" + widgetId + "-menu-delete-item");
-            this.$menuItemMaximize = $("#widget-" + widgetId + "-menu-maximize-item");
-            this.$menuItemAbout = $("#widget-" + widgetId + "-menu-about-item");
-            this.$menuItemComment = $("#widget-" + widgetId + "-menu-comment-item");
-            this.$menuItemRate = $("#widget-" + widgetId + "-menu-rate-item");
-            this.$menuItemEditPrefs = $("#widget-" + widgetId + "-menu-editprefs-item");
-            this.$widgetSite = $("#widget-" + widgetId + "-body");
+            this.$chrome = $('#widget-' + regionWidgetId + '-wrapper');
+            this.$minimizeIcon = $("#widget-" + regionWidgetId + "-min");
+            this.$toggleCollapseIcon = $("#widget-" + regionWidgetId + "-collapse");
+            this.$menuItemMove = $("#widget-" + regionWidgetId + "-menu-move-item");
+            this.$menuItemDelete = $("#widget-" + regionWidgetId + "-menu-delete-item");
+            this.$menuItemMaximize = $("#widget-" + regionWidgetId + "-menu-maximize-item");
+            this.$menuItemAbout = $("#widget-" + regionWidgetId + "-menu-about-item");
+            this.$menuItemComment = $("#widget-" + regionWidgetId + "-menu-comment-item");
+            this.$menuItemRate = $("#widget-" + regionWidgetId + "-menu-rate-item");
+            this.$menuItemEditPrefs = $("#widget-" + regionWidgetId + "-menu-editprefs-item");
+            this.$widgetSite = $("#widget-" + regionWidgetId + "-body");
         }
 
         HomeView.prototype.render = function (widget) {
-            var widgetId = this.widget.regionWidgetId;
+            var regionWidgetId = this.widget.regionWidgetId;
+            var widgetId = this.widget.widgetId;
             var self = this;
 
             doCollapseExpand();
@@ -595,13 +592,13 @@ _.extend(rave.ui, (function () {
                 $(".dnd-overlay, .canvas-overlay").remove();
                 getNonLockedRegions().sortable("option", "disabled", false);
                 // display the widget in normal view
-                $("#widget-" + widgetId + "-wrapper").removeClass("widget-wrapper-canvas").addClass("widget-wrapper");
+                $("#widget-" + regionWidgetId + "-wrapper").removeClass("widget-wrapper-canvas").addClass("widget-wrapper");
                 // hide the widget minimize button
-                $("#widget-" + widgetId + "-min").hide();
+                $("#widget-" + regionWidgetId + "-min").hide();
                 // show the widget menu
-                $("#widget-" + widgetId + "-widget-menu-wrapper").show();
+                $("#widget-" + regionWidgetId + "-widget-menu-wrapper").show();
                 // show the collapse/restore toggle icon
-                $("#widget-" + widgetId + "-collapse").show();
+                $("#widget-" + regionWidgetId + "-collapse").show();
                 // if the widget is collapsed execute the collapse function
                 // otherwise execute the minimize function
                 return false;
@@ -612,7 +609,7 @@ _.extend(rave.ui, (function () {
             }
 
             function maximize() {
-                self.widget.render('canvas');
+                self.widget.render('canvas', {view: 'canvas'});
             }
 
             function toggleCollapse() {
@@ -638,7 +635,7 @@ _.extend(rave.ui, (function () {
                 // Clear the dropdown box; needing to do self may be a bug?
                 $('.dropdown').removeClass('open');
                 // Open the modal
-                $("#moveWidgetModal").data('regionWidgetId', widgetId);
+                $("#moveWidgetModal").data('regionWidgetId', regionWidgetId);
                 $("#moveWidgetModal").modal('show');
 
                 return false;
@@ -669,7 +666,7 @@ _.extend(rave.ui, (function () {
                 return false;
             }
 
-            $('#widget-' + widgetId + '-toolbar').mousedown(function (event) {
+            $('#widget-' + regionWidgetId + '-toolbar').mousedown(function (event) {
                 // don't allow drag and drop when self item is clicked
                 event.stopPropagation();
             });
@@ -709,6 +706,12 @@ _.extend(rave.ui, (function () {
             if (_.isEmpty(rave.getWidgets())) {
                 displayEmptyPageMessage();
             }
+        }
+        HomeView.prototype.expand = function(){
+            this.$chrome.show();
+        }
+        HomeView.prototype.collapse = function(){
+            this.$chrome.hide();
         }
 
         rave.registerView('home', HomeView);
@@ -906,7 +909,7 @@ _.extend(rave.ui, (function () {
         registerHomeView();
         registerCanvasView();
         registerPopups();
-        renderWidgets();
+        showEmptyDisplay();
         setupDragAndDrop();
     }
 

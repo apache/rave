@@ -23,9 +23,10 @@ import com.google.common.collect.Lists;
 import org.apache.rave.model.ActivityStreamsEntry;
 import org.apache.rave.model.ActivityStreamsMediaLink;
 import org.apache.rave.model.ActivityStreamsObject;
+import org.apache.rave.portal.model.MongoDbActivityStreamsEntry;
+import org.apache.rave.portal.model.MongoDbActivityStreamsMediaLink;
+import org.apache.rave.portal.model.MongoDbActivityStreamsObject;
 import org.apache.rave.portal.model.conversion.HydratingModelConverter;
-import org.apache.rave.portal.model.impl.ActivityStreamsEntryImpl;
-import org.apache.rave.portal.model.impl.ActivityStreamsMediaLinkImpl;
 import org.apache.rave.portal.model.impl.ActivityStreamsObjectImpl;
 import org.springframework.stereotype.Component;
 
@@ -34,10 +35,10 @@ import java.util.List;
 import static org.apache.rave.portal.model.util.MongoDbModelUtil.generateId;
 
 @Component
-public class MongoDbActivityStreamsEntryConverter implements HydratingModelConverter<ActivityStreamsEntry, ActivityStreamsEntryImpl> {
+public class MongoDbActivityStreamsEntryConverter implements HydratingModelConverter<ActivityStreamsEntry, MongoDbActivityStreamsEntry> {
 
     @Override
-    public void hydrate(ActivityStreamsEntryImpl dehydrated) {
+    public void hydrate(MongoDbActivityStreamsEntry dehydrated) {
     }
 
     @Override
@@ -46,9 +47,9 @@ public class MongoDbActivityStreamsEntryConverter implements HydratingModelConve
     }
 
     @Override
-    public ActivityStreamsEntryImpl convert(ActivityStreamsEntry source) {
+    public MongoDbActivityStreamsEntry convert(ActivityStreamsEntry source) {
         if (source != null) {
-            ActivityStreamsEntryImpl converted = new ActivityStreamsEntryImpl();
+            MongoDbActivityStreamsEntry converted = new MongoDbActivityStreamsEntry();
             converted.setActor(convert(source.getActor()));
             converted.setObject(convert(source.getObject()));
             converted.setGenerator(convert(source.getGenerator()));
@@ -65,7 +66,7 @@ public class MongoDbActivityStreamsEntryConverter implements HydratingModelConve
 
     private ActivityStreamsMediaLink convert(ActivityStreamsMediaLink source) {
         if (source != null) {
-            ActivityStreamsMediaLink converted = new ActivityStreamsMediaLinkImpl();
+            MongoDbActivityStreamsMediaLink converted = new MongoDbActivityStreamsMediaLink();
             converted.setId(source.getId() == null ? generateId() : source.getId());
             converted.setDuration(source.getDuration());
             converted.setHeight(source.getHeight());
@@ -79,7 +80,7 @@ public class MongoDbActivityStreamsEntryConverter implements HydratingModelConve
 
     public ActivityStreamsObject convert(ActivityStreamsObject source) {
         if (source != null) {
-            ActivityStreamsObjectImpl converted = new ActivityStreamsObjectImpl();
+            MongoDbActivityStreamsObject converted = new MongoDbActivityStreamsObject();
             converted.setAuthor(convert(source.getAuthor()));
             converted.setAttachments(convert(source.getAttachments()));
             converted.setImage(convert(source.getImage()));
