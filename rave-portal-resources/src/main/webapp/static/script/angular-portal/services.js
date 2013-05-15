@@ -128,7 +128,11 @@ angular.module('rave.service', [])
             return deferred.promise;
         }
     ])
-    .service('users', [function(){}])
+    .service('Users', [
+        function(){
+
+        }
+    ])
     .service('settings', [
         function () {
 

@@ -19,7 +19,7 @@
 <script src="http://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.5/angular.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui/0.4.0/angular-ui.min.js"></script>
-<script src="https://raw.github.com/angular-ui/bootstrap/gh-pages/ui-bootstrap-0.2.0.min.js"></script>
+<script src="https://raw.github.com/angular-ui/bootstrap/gh-pages/ui-bootstrap-0.3.0.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.0.3/bootstrap.min.js"></script>
 
 

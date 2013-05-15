@@ -18,39 +18,39 @@
                             <i class="icon-cog"></i>
                         </a>
                         <ul class="dropdown-menu widget-menu">
-                            <li class="">
-                                <a ng-click="showPrefs=true">
+                            <li ng-class="{'menu-item-disabled':menu.editPrefs.disable}">
+                                <a ng-click="togglePrefs()">
                                     Edit Preferences
                                 </a>
                             </li>
                             <li>
-                                <a href="#">
+                                <a ng-click="maximize()">
                                     Maximize
                                 </a>
                             </li>
-                            <li>
-                                <a href="#">
+                            <li ng-class="{'menu-item-disabled':menu.move.disable}">
+                                <a ng-click="moveToPage()">
                                     Move to Page
                                 </a>
                             </li>
                             <li>
-                                <a href="#">
+                                <a >
                                     Delete Widget
                                 </a>
                             </li>
                             <li class="divider"></li>
                             <li>
-                                <a href="#">
+                                <a >
                                     About this Widget
                                 </a>
                             </li>
                             <li>
-                                <a href="#">
+                                <a >
                                     Comment on this Widget
                                 </a>
                             </li>
                             <li>
-                                <a href="#">
+                                <a >
                                     Rate this Widget
                                 </a>
                             </li>
@@ -62,9 +62,40 @@
                 </div>
             </div>
 
-            <div class="widget-prefs" ng-show="showPrefs">Edit Prefs Pane</div>
-            <div class="widget" render-widget="regionWidget.id" ng-hide="regionWidget.collapsed">
+            <div class="widget-prefs" ng-show="showPrefs">
+                <form class="form-horizontal" ng-submit="savePrefs()">
+                    <div class="control-group" ng-repeat="pref in regionWidgetPrefs" ng-hide="pref.dataType=='HIDDEN'">
+                        <label class="control-label"
+                               for="{{regionWidget.id}}-{{pref.name}}">{{pref.displayName}}</label>
 
+                        <div class="controls" ng-switch="pref.dataType">
+                            <div ng-switch-when="STRING">
+                                <input type="text" id="{{regionWidget.id}}-{{pref.name}}" ng-model="pref.value">
+                            </div>
+                            <div ng-switch-when="BOOL">
+                                <input type="checkbox" id="{{regionWidget.id}}-{{pref.name}}" ng-model="pref.value">
+                            </div>
+                            <div ng-switch-when="ENUM">
+                                <select id="{{regionWidget.id}}-{{pref.name}}" ng-model="pref.value"
+                                        ng-options="o.value as o.displayValue for o in pref.orderedEnumValues"></select>
+                            </div>
+                            <div ng-switch-when="LIST">
+                                <textarea type="text" id="{{regionWidget.id}}-{{pref.name}}" ng-model="pref.value">
+                                </textarea>
+                            </div>
+                            <div ng-switch-when="hidden">
+                                <input type="hidden" ng-model="pref.value">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" ng-click="togglePrefs()" class="btn">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                    </div>
+                </form>
+            </div>
+            <div class="widget" ng-hide="regionWidget.collapsed">
+                <div rave-render-widget="regionWidget" rave-render-opts="{view:'home'}"></div>
             </div>
         </div>
     </div>

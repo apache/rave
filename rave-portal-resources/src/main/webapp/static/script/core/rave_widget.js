@@ -127,16 +127,30 @@ rave.RegionWidget = (function () {
         });
     }
 
-    Widget.prototype.savePreference = function (name, val) {
-        this.userPrefs[name] = val;
-        rave.api.rest.saveWidgetPreference({regionWidgetId: this.id, prefName: name, prefValue: val});
+    Widget.prototype.getPrefs = function () {
+        var self = this;
+        var combined = [];
+        //TODO: I think this is opensocial specific - need to investigate wookie and possibly delegate to providers
+        _.each(self.metadata.userPrefs, function (data) {
+            var value = self.userPrefs[data.name];
+            data = _.clone(data);
+            data.value = value || data.defaultValue;
+            data.displayName = data.displayName || data.name;
+            combined.push(data);
+        });
+        return _.isEmpty(combined)?undefined:combined;
     }
 
-    Widget.prototype.savePreferences = function (updatedPrefs) {
-        this.userPrefs = updatedPrefs;
-        rave.api.rest.saveWidgetPreferences({regionWidgetId: this.id, userPrefs: updatedPrefs});
+    Widget.prototype.setPrefs = function (name, val) {
+        if (_.isObject(name)) {
+            var updatedPrefs = name;
+            this.userPrefs = _.object(_.pluck(updatedPrefs,'name'), _.pluck(updatedPrefs, 'value'));
+            rave.api.rest.saveWidgetPreferences({regionWidgetId: this.id, userPrefs: this.userPrefs});
+        } else {
+            this.userPrefs[name] = val;
+            rave.api.rest.saveWidgetPreference({regionWidgetId: this.id, prefName: name, prefValue: val});
+        }
     }
-
 
     return Widget;
 

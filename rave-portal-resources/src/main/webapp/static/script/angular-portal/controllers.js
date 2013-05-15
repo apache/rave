@@ -64,10 +64,10 @@ angular.module('rave.controller', ['ui.bootstrap', 'ui'])
                 });
             }
 
+            //TODO: this might not be the best way to handle moving widgets
             function watchForMove(pages) {
                 $scope.$watch(function () {
                     return _.chain(pages)
-                        .where({id: $scope.selectedPageId})
                         .pluck('regions').flatten()
                         .map(function (region, regionIndex) {
                             return _.map(region.regionWidgets, function (widget, index) {
@@ -93,7 +93,7 @@ angular.module('rave.controller', ['ui.bootstrap', 'ui'])
                         }
                     });
 
-                    if(movedWidget) {
+                    if (movedWidget) {
                         oldRegion = _.findWhere(oldValue, {id: movedWidget.id}).regionId;
                         rave.getWidget(movedWidget.id).moveToRegion(oldRegion, movedWidget.regionId, movedWidget.index);
                     }
@@ -164,15 +164,39 @@ angular.module('rave.controller', ['ui.bootstrap', 'ui'])
     .controller('WidgetController', ['$scope', 'rave',
         function ($scope, rave) {
             //Grab a handle on rave's registered regionWidget object to get that functionality in scope.
-            $scope.regionWidget = rave.getWidget($scope.regionWidget.id);
+            var regionWidget = $scope.regionWidget = rave.getWidget($scope.regionWidget.id);
             $scope.showPrefs = false;
+            $scope.regionWidgetPrefs = $scope.regionWidget.getPrefs();
 
+            $scope.menu = {
+                editPrefs: {
+                    disable: _.isUndefined(regionWidget.getPrefs() )
+                },
+                maximize: {
+                },
+                move: {
+                    disable: $scope.pages.length < 2
+                },
+                del: {},
+                about: {},
+                comment: {},
+                rate: {}
+            }
             $scope.toggleCollapse = function () {
                 if ($scope.regionWidget.collapsed) {
                     $scope.regionWidget.show();
                 } else {
                     $scope.regionWidget.hide();
                 }
+            }
+
+            $scope.togglePrefs = function () {
+                $scope.showPrefs = !$scope.showPrefs
+            }
+
+            $scope.savePrefs = function () {
+                $scope.regionWidget.setPrefs($scope.regionWidgetPrefs);
+                $scope.togglePrefs();
             }
         }
     ])
