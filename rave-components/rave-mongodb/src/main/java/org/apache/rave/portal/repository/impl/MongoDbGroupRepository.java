@@ -5,7 +5,10 @@ import org.apache.rave.portal.model.MongoDbGroup;
 import org.apache.rave.portal.repository.MongoGroupOperations;
 import org.apache.rave.repository.GroupRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static org.springframework.data.mongodb.core.query.Query.query;
@@ -29,6 +32,11 @@ public class MongoDbGroupRepository implements GroupRepository {
     @Override
     public Group get(String id) {
         return template.get(id);
+    }
+
+    @Override
+    public List<Group> getAll() {
+        return template.find(new Query());
     }
 
     @Override

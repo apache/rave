@@ -79,6 +79,18 @@ public class MongoDbGroupRepositoryTest {
     }
 
     @Test
+    public void getAll() {
+        List<Group> groups = Arrays.<Group>asList(new GroupImpl(), new GroupImpl());
+
+        expect(groupTemplate.find(new Query())).andReturn(groups);
+        replay(groupTemplate);
+
+        List<Group> result = repo.getAll();
+        assertNotNull(result);
+        assertThat(result.size(), is(equalTo(groups.size())));
+    }
+
+    @Test
     public void save(){
         String title = "TITLE";
         Group group = new GroupImpl();

@@ -22,12 +22,15 @@ import org.apache.rave.model.Group;
 import org.apache.rave.portal.model.JpaGroup;
 import org.apache.rave.portal.model.conversion.JpaGroupConverter;
 import org.apache.rave.repository.GroupRepository;
+import org.apache.rave.util.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+
+import java.util.List;
 
 import static org.apache.rave.persistence.jpa.util.JpaUtil.getSingleResult;
 import static org.apache.rave.persistence.jpa.util.JpaUtil.saveOrUpdate;
@@ -50,6 +53,12 @@ public class JpaGroupRepository implements GroupRepository {
     public Group get(String id) {
         long primaryKey = Long.parseLong(id);
         return manager.find(JpaGroup.class, primaryKey);
+    }
+
+    @Override
+    public List<Group> getAll() {
+        TypedQuery<JpaGroup> query = manager.createNamedQuery(JpaGroup.GET_ALL, JpaGroup.class);
+        return CollectionUtils.<Group>toBaseTypedList(query.getResultList());
     }
 
     @Override

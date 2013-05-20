@@ -32,10 +32,12 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import java.util.Arrays;
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 @Transactional
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -72,6 +74,12 @@ public class JpaGroupRepositoryTest {
     @Test
     public void getType() {
         assertEquals(repository.getType(), JpaGroup.class);
+    }
+
+    @Test
+    public void getList() {
+        List<Group> list = repository.getAll();
+        assertEquals(2, list.size());
     }
 
     @Test

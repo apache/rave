@@ -31,12 +31,14 @@ import java.util.List;
 @Entity
 @Access(AccessType.FIELD)
 @Table(name = "groups")
-@NamedQueries(
-        @NamedQuery(name = JpaGroup.FIND_BY_TITLE, query="select g from JpaGroup g where g.title = :title")
-)
+@NamedQueries({
+        @NamedQuery(name = JpaGroup.FIND_BY_TITLE, query="select g from JpaGroup g where g.title = :title"),
+        @NamedQuery(name = JpaGroup.GET_ALL, query = "select g from JpaGroup g order by g.title asc")
+})
 public class JpaGroup implements BasicEntity, Group {
 
     public static final String FIND_BY_TITLE = "Group.findByTitle";
+    public static final String GET_ALL = "Group.getAll";
     public static final String GROUP_TITLE_PARAM = "title";
 
     /**

@@ -16,15 +16,20 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.rave.repository;
+
+package org.apache.rave.service;
 
 import org.apache.rave.model.Group;
 
 import java.util.List;
 
-public interface GroupRepository extends Repository<Group> {
+public interface GroupService {
 
-    Group findByTitle(String title);
+    Group getGroupByID(String id);
 
-    List<Group> getAll();
+    List<Group> getAllGroups();
+
+    Group getGroupByTitle(String title);
+
+    Group save(Group group);
 }
