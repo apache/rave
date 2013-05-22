@@ -17,6 +17,7 @@
 // under the License.
 
 /* Sticky footer */
+
 * {
   margin: 0;
 }
@@ -1204,7 +1205,6 @@ span.error, label.error {
   position: fixed;
   top: 5%;
   right: 0;
-  display: none;
   background: #ffffff;
   border: 1px solid #999;
   border: 1px solid rgba(0, 0, 0, 0.3);
@@ -1220,8 +1220,14 @@ span.error, label.error {
   height: 90%;
   padding: 15px;
   overflow: hidden;
-  z-index: 5000
+  z-index: 5000;
+  .transition(~"all .5s ease-in-out");
+  .translate(100%, 0);
 }
+.popup.slideout.shown {
+  .translate(0, 0);
+}
+
 
 .slideout-content {
   box-sizing: border-box;

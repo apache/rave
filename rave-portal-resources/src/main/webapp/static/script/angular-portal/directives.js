@@ -11,12 +11,14 @@ angular.module('rave.directive', [])
                     var regionWidget = scope.raveRenderWidget(),
                         opts = scope.raveRenderOpts();
 
-                    scope.$watch(function(){
-                        return regionWidget.userPrefs;
+                    scope.$watch(function () {
+                        return regionWidget && regionWidget.userPrefs;
                     }, doRender);
 
                     function doRender() {
-                        regionWidget.render(el[0], opts);
+                        if (regionWidget) {
+                            regionWidget.render(el[0], opts);
+                        }
                     }
                 }
             }
@@ -24,18 +26,86 @@ angular.module('rave.directive', [])
             return directive;
         }
     ])
-    //TODO: these are hacky - think of a better more declarative approach for register
+    .directive('raveRegisterView', [ 'rave', '$compile',
+        function (rave, $compile) {
+            var directive = {
+                restrict: 'AE',
+                scope: {},
+                priority: -1,
+                controller: ['$scope', '$element',
+                    function ($scope, $element) {
+                        this.render = function (opts) {
+                            $scope.show = true;
+                            _.extend($scope, opts);
+                            $scope.$apply();
+                        }
+
+                        this.getWidgetSite = function () {
+                            return $element.find('[rave-render-widget]')[0];
+                        }
+
+                        this.destroy = function () {
+                            $scope.show = false;
+                            $scope.$apply();
+                        }
+                    }
+                ],
+                link: function (scope, el, attrs, controller) {
+
+                    var viewName = attrs.raveRegisterView;
+
+                    rave.registerView(viewName, {
+                        render: controller.render,
+                        getWidgetSite: controller.getWidgetSite,
+                        destroy: controller.destroy
+                    });
+
+                }
+            }
+
+            return directive;
+        }
+    ])
+    .directive('dialog', [
+        function () {
+            var directive = {
+                restrict: 'A',
+                require: 'raveRegisterView',
+                link: function (scope, el, attrs, controller) {
+                    el.on('hidden', function(){
+                        //TODO: close gadget to clean up after ourselves, but we need a ref to the site?
+                    })
+
+                    controller.render = function () {
+                        var opts = attrs.opts || {};
+
+                        el.modal(_.extend(opts, {show: true}));
+                    }
+
+                    controller.destroy = function () {
+                        el.modal('hide');
+                    }
+                }
+            }
+
+            return directive;
+        }
+    ])
+    /*
+
+
+     */
     .directive('raveModal', [
-        function(){
+        function () {
             var directive = {
                 limit: 'A',
                 replace: true,
                 transclude: true,
                 template: '<div ng-transclude></div>',
-                link: function(scope, el, attrs) {
+                link: function (scope, el, attrs) {
                     var modal = el.find('.popup');
                     rave.registerView('modal_dialog', {
-                        render: function(){
+                        render: function () {
                             var cfg = {
                                 keyboard: false,
                                 backdrop: 'static',
@@ -43,10 +113,10 @@ angular.module('rave.directive', [])
                             };
                             modal.modal(cfg);
                         },
-                        getWidgetSite: function(){
+                        getWidgetSite: function () {
                             return el.find('.site')[0];
                         },
-                        destroy: function(){
+                        destroy: function () {
                             modal.modal('hide');
                         }
                     });
@@ -57,22 +127,22 @@ angular.module('rave.directive', [])
         }
     ])
     .directive('raveDialog', [
-        function(){
+        function () {
             var directive = {
                 limit: 'A',
                 replace: true,
                 transclude: true,
                 template: '<div ng-transclude></div>',
-                link: function(scope, el, attrs) {
+                link: function (scope, el, attrs) {
                     var modal = el.find('.popup');
                     rave.registerView('dialog', {
-                        render: function(){
+                        render: function () {
                             modal.modal();
                         },
-                        getWidgetSite: function(){
+                        getWidgetSite: function () {
                             return el.find('.site')[0];
                         },
-                        destroy: function(){
+                        destroy: function () {
                             modal.modal('hide');
                         }
                     });
@@ -83,18 +153,18 @@ angular.module('rave.directive', [])
         }
     ])
     .directive('raveSidebar', [
-        function(){
+        function () {
             var directive = {
                 limit: 'A',
                 replace: true,
                 transclude: true,
                 template: '<div ng-transclude></div>',
-                link: function(scope, el, attrs) {
+                link: function (scope, el, attrs) {
                     var popup = el.find('.popup');
 
                     rave.registerView('sidebar', {
-                        render: function(){
-                            var self =this;
+                        render: function () {
+                            var self = this;
                             popup.find('.close').click(function () {
                                 self.destroy();
                             });
@@ -105,10 +175,10 @@ angular.module('rave.directive', [])
                             // between it and an iframe vertical scrollbar
                             $('body').addClass('no-scroll');
                         },
-                        getWidgetSite: function(){
+                        getWidgetSite: function () {
                             return popup.find('.site')[0];
                         },
-                        destroy: function(){
+                        destroy: function () {
                             popup.hide("slide", { direction: "right" }, 'fast', function () {
                                 $('body').removeClass('modal-open');
                                 $('.modal-backdrop').remove();

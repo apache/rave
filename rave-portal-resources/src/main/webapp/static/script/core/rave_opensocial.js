@@ -32,7 +32,7 @@ rave.registerProvider(
             container = new osapi.container.Container(containerConfig);
 
             gadgets.pubsub2router.init({
-                hub:rave.getManagedHub()
+                hub: rave.getManagedHub()
             });
 
             rpcRegister();
@@ -88,10 +88,18 @@ rave.registerProvider(
         function implementViews() {
             container.views.createElementForGadget = function (metadata, rel, opt_view, opt_viewTarget, opt_coordinates, parentSite, opt_callback) {
                 if (opt_viewTarget) {
+                    var el = document.createElement('div');
+
                     var prefs = (metadata && metadata.views && metadata.views[opt_view])
                     var view = rave.renderView(opt_viewTarget, prefs);
-                    var el = view.getWidgetSite();
-                    el.setAttribute('data-rave-view', view._uid);
+                    if(view.inject){
+                        view.inject(el);
+                    }
+                    if (view.getWidgetSite) {
+                        el = view.getWidgetSite();
+                        el.setAttribute('data-rave-view', view._uid);
+                    }
+
                     return el;
                 }
             };
@@ -159,7 +167,7 @@ rave.registerProvider(
          full spectrum of allowed render options!
          */
         exports.renderWidget = function (widget, el, opts) {
-            if(widget.error) {
+            if (widget.error) {
                 widget.renderError(el, widget.error.message);
                 return;
             }
@@ -226,7 +234,7 @@ rave.registerProvider(
             }
         }
 
-        exports.getContainer = function() {
+        exports.getContainer = function () {
             return container;
         }
 

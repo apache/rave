@@ -126,6 +126,7 @@ _.extend(rave, (function () {
             view = rave.getRenderedView(view);
         }
         delete renderedViews[view._uid];
+        delete view._uid;
         view.destroy(args);
     }
 

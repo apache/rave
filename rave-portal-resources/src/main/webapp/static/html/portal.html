@@ -17,55 +17,33 @@
 <div id="pageContent" class="container-fluid" ng-include="templateUrl">
 </div>
 
-<div rave-modal>
-    <div class="popup modal_dialog modal fade">
-        <a href="#" class="close" data-dismiss="modal">&times;</a>
-
-        <div class="site"></div>
+<div rave-register-view="dialog" dialog class="modal fade">
+    <div class="modal-header">
+        <a class="close" data-dismiss="modal">&times;</a>
+    </div>
+    <div class="modal-body">
+        <div rave-render-widget></div>
     </div>
 </div>
 
-<div rave-dialog>
-    <div class="popup dialog modal fade">
-        <a href="#" class="close" data-dismiss="modal">&times;</a>
-
-        <div class="site"></div>
+<div rave-register-view="modal_dialog" dialog="{keyboard: false, backdrop: 'static'}" class="modal fade">
+    <div class="modal-header">
+        <a class="close" data-dismiss="modal">&times;</a>
+    </div>
+    <div class="modal-body">
+        <div rave-render-widget></div>
     </div>
 </div>
 
-<div rave-sidebar>
-    <div class="popup slideout">
-        <a href="#" class="close">&times;</a>
+<div rave-register-view="sidebar" >
+    <div class="no-scroll">
+        <div class="modal-backdrop fade in" ng-show="show"></div>
+        <div class="popup slideout" ng-class="{'shown':show}">
+            <a class="close" ng-click="show=false">&times;</a>
 
-        <div class="slideout-content site">
+            <div rave-render-widget class="slideout-content">
+            </div>
         </div>
     </div>
 </div>
 
-<div rave-canvas>
-    <div class="widget-wrapper-canvas" id="widget-4-wrapper">
-        <div class="widget-title-bar">
-
-            <div class="widget-title">
-
-
-                Gadget View Type
-
-
-            </div>
-
-
-            <div class="widget-toolbar ">
-                <div class="dropdown widget-menu-wrapper" style="display: none;">
-
-                <span id="widget-4-min" class="widget-toolbar-btn widget-toolbar-btn-min" style="display: inline;">
-                    <i class="icon-resize-small"></i>
-                </span>
-                </div>
-
-
-            </div>
-            <div class="site"></div>
-        </div>
-    </div>
-</div>
