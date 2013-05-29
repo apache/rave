@@ -20,7 +20,7 @@
 rave = rave || {};
 rave.ui = rave.ui || {}
 _.extend(rave.ui, (function () {
-    var exports = {}, templates=null;
+    var exports = {}, templates=exports.templates={};
 
 
     /*
@@ -57,8 +57,6 @@ _.extend(rave.ui, (function () {
      Register templates
      */
     function initializeTemplates() {
-
-        templates = exports.templates = {};
         $('[data-template-for]').each(function () {
             var key = $(this).data('template-for');
             var source = $(this).html();
