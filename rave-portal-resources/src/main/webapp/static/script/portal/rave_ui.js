@@ -423,6 +423,8 @@ _.extend(rave.ui, (function () {
         var WIDGET_PREFS_INPUT_REQUIRED_CLASS = "widget-prefs-input-required";
         var WIDGET_PREFS_INPUT_FAILED_VALIDATION = "widget-prefs-input-failed-validation";
 
+        var PIPE_REGEX = /\|/g;
+
         function WIDGET_PREFS_CONTENT(regionWidgetId) {
             return "widget-" + regionWidgetId + "-prefs-content";
         }
