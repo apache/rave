@@ -16,12 +16,10 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-var rave = rave || {};
+define(['underscore', './rave_widget', './rave_log'], function (_, RegionWidget, log) {
+    var rave = {};
 
-_.extend(rave, (function () {
     var INITIALIZED = false,
-    //providers - opensocial, wookie...
-        providers = {},
     //hash of widgets by regionWidgetId
         regionWidgets = {},
     //hash of registered views by name
@@ -33,22 +31,8 @@ _.extend(rave, (function () {
     //oajaxhub to support pubsub. only initialized if needed
         openAjaxHub;
 
-    var exports = {};
-
-    exports.registerProvider = function (name, provider) {
-        providers[name.toLowerCase()] = provider;
-        if (INITIALIZED) {
-            provider.init();
-        }
-        return provider;
-    }
-
-    exports.getProvider = function (name) {
-        return providers[name.toLowerCase()];
-    }
-
     //TODO: regionId isn't really needed, but the script text is hard coded and I don't want to mess with it yet
-    exports.registerWidget = function (regionId, definition) {
+    rave.registerWidget = function (regionId, definition) {
         //make regionId optional
         if (!definition) {
             definition = regionId;
@@ -58,26 +42,26 @@ _.extend(rave, (function () {
         }
         regionWidgets[definition.id] = definition;
         if (INITIALIZED) {
-            regionWidgets[definition.id] = new rave.RegionWidget(definition)
+            regionWidgets[definition.id] = new RegionWidget(definition)
         }
         return regionWidgets[definition.id];
     }
 
     //uregister a regionwidget, identified by a RegionWidget object, a widget definition, or just an id
-    exports.unregisterWidget = function (widget) {
+    rave.unregisterWidget = function (widget) {
         var id = widget.id || widget;
 
         delete regionWidgets[id];
     }
 
     //get registered widget by id
-    exports.getWidget = function (id) {
+    rave.getWidget = function (id) {
         return regionWidgets[id];
     }
 
-    exports.getWidgets = function (filter) {
+    rave.getWidgets = function (filter) {
         var widgets = _.toArray(regionWidgets);
-        if(filter) {
+        if (filter) {
             widgets = _.where(widgets, filter);
         }
         return widgets;
@@ -85,17 +69,18 @@ _.extend(rave, (function () {
 
     /*
      key: view name
+     used to register view surfaces and view targets
      view: any object that manages and renders a view. At minimum must have render and destroy methods. render should return 'this'
      */
-    exports.registerView = function (key, view) {
+    rave.registerView = function (key, view) {
         registeredViews[key.toLowerCase()] = view;
     }
 
-    exports.getView = function (key) {
+    rave.getView = function (key) {
         return registeredViews[key.toLowerCase()];
     }
 
-    exports.renderView = function (key) {
+    rave.renderView = function (key, el, scope) {
         //apply remaining arguments to the view function - you know best!
         var args = _.toArray(arguments).slice(1);
 
@@ -103,22 +88,26 @@ _.extend(rave, (function () {
         if (!view) {
             throw new Error('Attempted to render undefined view: ' + key);
         }
-        //if registered view is a constructor, create a new instance
-        if (_.isFunction(view)) {
-            //TODO: this makes sure that the constructor gets a widget object, but it's cheesy. Should clean it up.
-            view = new view(args[0]);
-        }
-        view.render.apply(view, args);
-        view._uid = _.uniqueId('rave_view_');
-        renderedViews[view._uid] = view;
-        return view;
+
+        //TODO: ignore renderviews and cleanup for a moment
+        return view.render(el, scope);
+//
+//        //if registered view is a constructor, create a new instance
+//        if (_.isFunction(view)) {
+//            //TODO: this makes sure that the constructor gets a widget object, but it's cheesy. Should clean it up.
+//            view = new view(args[0]);
+//        }
+//        view.render.apply(view, args);
+//        view._uid = _.uniqueId('rave_view_');
+//        renderedViews[view._uid] = view;
+//        return view;
     }
 
-    exports.getRenderedView = function (_uid) {
+    rave.getRenderedView = function (_uid) {
         return renderedViews[_uid];
     }
 
-    exports.destroyView = function (view) {
+    rave.destroyView = function (view) {
         var args = _.toArray(arguments).slice(1);
 
         //accept view object or view _uid
@@ -130,31 +119,31 @@ _.extend(rave, (function () {
         view.destroy(args);
     }
 
-    exports.getManagedHub = function () {
+    rave.getManagedHub = function () {
         if (!openAjaxHub) {
             if (_.isUndefined(OpenAjax)) {
                 throw new Error("No implementation of OpenAjax found.  " +
                     "Please ensure that an implementation has been included in the page.");
             }
             openAjaxHub = new OpenAjax.hub.ManagedHub({
-                    onSubscribe:function (topic, container) {
-                        rave.log((container == null ? "Container" : container.getClientID()) + " subscribes to this topic '" + topic + "'");
-                        return true;
-                    },
-                    onUnsubscribe:function (topic, container) {
-                        rave.log((container == null ? "Container" : container.getClientID()) + " unsubscribes from this topic '" + topic + "'");
-                        return true;
-                    },
-                    onPublish:function (topic, data, pcont, scont) {
-                        rave.log((pcont == null ? "Container" : pcont.getClientID()) + " publishes '" + data + "' to topic '" + topic + "' subscribed by " + (scont == null ? "Container" : scont.getClientID()));
-                        return true;
-                    }
+                onSubscribe: function (topic, container) {
+                    log((container == null ? "Container" : container.getClientID()) + " subscribes to this topic '" + topic + "'");
+                    return true;
+                },
+                onUnsubscribe: function (topic, container) {
+                    log((container == null ? "Container" : container.getClientID()) + " unsubscribes from this topic '" + topic + "'");
+                    return true;
+                },
+                onPublish: function (topic, data, pcont, scont) {
+                    log((pcont == null ? "Container" : pcont.getClientID()) + " publishes '" + data + "' to topic '" + topic + "' subscribed by " + (scont == null ? "Container" : scont.getClientID()));
+                    return true;
+                }
             });
         }
         return openAjaxHub;
     }
 
-    exports.registerOnInitHandler = function (handler) {
+    rave.registerOnInitHandler = function (handler) {
         if (!_.isFunction(handler)) {
             throw new Error('Init event handler must be a function');
         }
@@ -164,25 +153,22 @@ _.extend(rave, (function () {
         initHandlers.push(handler);
     }
 
-    exports.init = function () {
+    rave.init = function () {
         INITIALIZED = true;
         _.invoke(providers, 'init');
         _.each(regionWidgets, function (definition) {
-            regionWidgets[definition.id] = new rave.RegionWidget(definition)
+            regionWidgets[definition.id] = new RegionWidget(definition)
         });
         _.each(initHandlers, function (fn) {
             fn();
         });
     }
 
-    //wrap a safe version of console.log
-    exports.log = (console && console.log) || function () {
-    };
+    rave.log = log;
 
     //reset internal data - used for testing cleanup
-    exports.reset = function () {
+    rave.reset = function () {
         INITIALIZED = false;
-        providers = {};
         regionWidgets = {};
         registeredViews = {};
         renderedViews = {};
@@ -190,7 +176,6 @@ _.extend(rave, (function () {
         openAjaxHub;
     }
 
-    return exports;
+    return rave;
 
-})()
-);
+});

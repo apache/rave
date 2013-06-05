@@ -16,12 +16,8 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-var rave = rave || {};
-/**
- * Namespace that provides client access to Rave server APIs.
- * Note required jquery libraries must be imported by the containing page.
- */
-rave.api = (function () {
+
+define(['underscore', './rave_ajax'], function (_, ajax) {
     //stores virtual host context of application execution
     var context = "";
 
@@ -39,7 +35,7 @@ rave.api = (function () {
                 preferencesData.preferences.push({"name": prefName, "value": args.userPrefs[prefName]});
             }
 
-            rave.ajax({
+            ajax({
                 type: 'PUT',
                 url: context + path + "regionWidgets/" + args.regionWidgetId + "/preferences",
                 data: JSON.stringify(preferencesData),
@@ -55,7 +51,7 @@ rave.api = (function () {
         }
 
         function saveWidgetPreference(args) {
-            rave.ajax({
+            ajax({
                 type: 'PUT',
                 url: context + path + "regionWidgets/" + args.regionWidgetId + "/preferences/" + args.userPref.prefName,
                 data: JSON.stringify({"name": args.userPref.prefName, "value": args.userPref.prefValue}),
@@ -71,7 +67,7 @@ rave.api = (function () {
         }
 
         function saveWidgetCollapsedState(args) {
-            rave.ajax({
+            ajax({
                 type: 'PUT',
                 url: context + path + "regionWidgets/" + args.regionWidgetId + "/collapsed",
                 data: JSON.stringify(args.collapsed),
@@ -83,7 +79,7 @@ rave.api = (function () {
         }
 
         function deletePage(args) {
-            rave.ajax({
+            ajax({
                 type: 'DELETE',
                 url: context + path + "page/" + args.pageId,
                 success: function (result) {
@@ -96,7 +92,7 @@ rave.api = (function () {
         }
 
         function deleteWidgetRating(args) {
-            rave.ajax({
+            ajax({
                 type: 'DELETE',
                 url: context + path + "widgets/" + args.widgetId + "/rating",
                 success: function (result) {
@@ -109,7 +105,7 @@ rave.api = (function () {
         }
 
         function updateWidgetRating(args) {
-            rave.ajax({
+            ajax({
                 type: 'POST',
                 url: context + path + "widgets/" + args.widgetId + "/rating?score=" + args.score,
                 success: function (result) {
@@ -122,7 +118,7 @@ rave.api = (function () {
         }
 
         function createWidgetComment(args) {
-            rave.ajax({
+            ajax({
                 type: 'POST',
                 url: context + path + "widgets/" + args.widgetId + "/comments?text=" + escape(args.text),
                 success: function (result) {
@@ -135,7 +131,7 @@ rave.api = (function () {
         }
 
         function deleteWidgetComment(args) {
-            rave.ajax({
+            ajax({
                 type: 'DELETE',
                 url: context + path + "widgets/" + args.widgetId + "/comments/" + args.commentId,
                 success: function (result) {
@@ -148,7 +144,7 @@ rave.api = (function () {
         }
 
         function updateWidgetComment(args) {
-            rave.ajax({
+            ajax({
                 type: 'POST',
                 url: context + path + "widgets/" + args.widgetId + "/comments/" + args.commentId + "?text=" + escape(args.text),
                 success: function (result) {
@@ -161,7 +157,7 @@ rave.api = (function () {
         }
 
         function getUsersForWidget(args) {
-            rave.ajax({
+            ajax({
                 type: 'GET',
                 url: context + path + "widgets/" + args.widgetId + "/users",
                 success: function (result) {
@@ -174,7 +170,7 @@ rave.api = (function () {
         }
 
         function createWidgetTag(args) {
-            rave.ajax({
+            ajax({
                 type: 'POST',
                 url: context + path + "widgets/" + args.widgetId + "/tags?tagText=" + escape(args.text),
                 success: function (result) {
@@ -187,7 +183,7 @@ rave.api = (function () {
         }
 
         function getTags(args) {
-            rave.ajax({
+            ajax({
                 type: 'GET',
                 url: context + path + "widgets/" + args.widgetId + "/tags",
                 dataType: "json",
@@ -200,7 +196,7 @@ rave.api = (function () {
         }
 
         function getSecurityToken(args) {
-            rave.ajax({
+            ajax({
                 type: 'GET',
                 url: context + "api/rest/opensocial/gadget?url=" + args.url + "&pageid=" + args.pageid,
                 dataType: "json",
@@ -240,7 +236,7 @@ rave.api = (function () {
             var toRegionObjectId = rave.getObjectIdFromDomId(args.targetRegion.id);
             var fromRegionObjectId = rave.getObjectIdFromDomId(args.currentRegion.id);
             //Note context must be set outside this library.  See page.jsp for example.
-            rave.ajax({
+            ajax({
                 type: 'POST',
                 url: context + path + "page/regionWidget/" + widgetObjectId + "/move",
                 data: {
@@ -259,7 +255,7 @@ rave.api = (function () {
         }
 
         function moveWidgetToRegion(args) {
-            rave.ajax({
+            ajax({
                 type: 'POST',
                 url: context + path + "page/regionWidget/" + args.regionWidgetId + "/move",
                 data: {
@@ -278,7 +274,7 @@ rave.api = (function () {
         }
 
         function addWidgetToPage(args) {
-            rave.ajax({
+            ajax({
                 type: 'POST',
                 url: context + path + "page/" + args.pageId + "/widget/add",
                 data: {
@@ -315,7 +311,7 @@ rave.api = (function () {
         }
 
         function addWidgetToPageRegion(args) {
-            rave.ajax({
+            ajax({
                 type: 'POST',
                 url: context + path + "page/" + args.pageId + "/widget/add/region/" + args.regionId,
                 data: {
@@ -345,7 +341,7 @@ rave.api = (function () {
         }
 
         function deleteWidgetOnPage(args) {
-            rave.ajax({
+            ajax({
                 type: 'POST',
                 url: context + path + "page/regionWidget/" + args.regionWidgetId + "/delete",
                 data: null,
@@ -365,7 +361,7 @@ rave.api = (function () {
 
         function addPage(args) {
 
-            rave.ajax({
+            ajax({
                 type: 'POST',
                 url: context + path + "page/add",
                 data: {
@@ -393,7 +389,7 @@ rave.api = (function () {
 
         //TODO: what does this do...
         function getPage(args) {
-            rave.ajax({
+            ajax({
                 type: 'GET',
                 url: context + path + "page/get",
                 dataType: 'json',
@@ -419,7 +415,7 @@ rave.api = (function () {
                 data["moveAfterPageId"] = args.moveAfterPageId;
             }
 
-            rave.ajax({
+            ajax({
                 type: 'POST',
                 url: context + path + "page/" + args.pageId + "/move",
                 data: data,
@@ -444,7 +440,7 @@ rave.api = (function () {
                 data["regionWidgetId"] = args.regionWidgetId;
             }
 
-            rave.ajax({
+            ajax({
                 type: 'POST',
                 url: context + path + "page/" + args.toPageId + "/moveWidget",
                 data: data,
@@ -463,7 +459,7 @@ rave.api = (function () {
         }
 
         function updatePagePrefs(args) {
-            rave.ajax({
+            ajax({
                 type: 'POST',
                 url: context + path + "page/" + args.pageId + "/update",
                 data: {
@@ -491,7 +487,7 @@ rave.api = (function () {
         }
 
         function getPagePrefs(args) {
-            rave.ajax({
+            ajax({
                 type: 'GET',
                 url: context + path + "page/get?pageId=" + args.pageId,
                 dataType: 'json',
@@ -526,7 +522,7 @@ rave.api = (function () {
                 return;
             }
 
-            rave.ajax({
+            ajax({
                 type: 'POST',
                 url: context + path + "widget/metadata/get",
                 data: {
@@ -556,7 +552,7 @@ rave.api = (function () {
                 return;
             }
 
-            rave.ajax({
+            ajax({
                 type: 'POST',
                 url: context + path + "widget/metadatagroup/get",
                 data: {
@@ -579,7 +575,7 @@ rave.api = (function () {
         }
 
         function getAllWidgets(args) {
-            rave.ajax({
+            ajax({
                 type: 'GET',
                 url: context + path + "widget/getall",
                 dataType: 'json',
@@ -600,7 +596,7 @@ rave.api = (function () {
         function getUsers(args) {
             var offset = args.offset;
 
-            rave.ajax({
+            ajax({
                 type: 'GET',
                 url: context + path + "person/get",
                 data: {"offset": offset},
@@ -627,7 +623,7 @@ rave.api = (function () {
                 return;
             }
 
-            rave.ajax({
+            ajax({
                 type: 'GET',
                 url: context + path + "person/search",
                 data: {"searchTerm": searchTerm, "offset": offset},
@@ -647,7 +643,7 @@ rave.api = (function () {
         }
 
         function clonePageForUser(args) {
-            rave.ajax({
+            ajax({
                 type: 'POST',
                 url: context + path + "page/" + args.pageId + "/clone",
                 data: {
@@ -665,7 +661,7 @@ rave.api = (function () {
         }
 
         function addMemberToPage(args) {
-            rave.ajax({
+            ajax({
                 type: 'POST',
                 url: context + path + "page/" + args.pageId + "/addmember",
                 data: {
@@ -687,7 +683,7 @@ rave.api = (function () {
         }
 
         function removeMemberFromPage(args) {
-            rave.ajax({
+            ajax({
                 type: 'POST',
                 url: context + path + "page/" + args.pageId + "/removemember",
                 data: {
@@ -709,7 +705,7 @@ rave.api = (function () {
         }
 
         function updateSharedPageStatus(args) {
-            rave.ajax({
+            ajax({
                 type: 'POST',
                 url: context + path + "page/" + args.pageId + "/sharestatus",
                 data: {
@@ -731,7 +727,7 @@ rave.api = (function () {
         }
 
         function updatePageEditingStatus(args) {
-            rave.ajax({
+            ajax({
                 type: 'POST',
                 url: context + path + "page/" + args.pageId + "/editstatus",
                 data: {
@@ -756,7 +752,7 @@ rave.api = (function () {
         function addFriend(args) {
             var user = encodeURIComponent(encodeURIComponent(args.friendUsername));
 
-            rave.ajax({
+            ajax({
                 type: 'POST',
                 url: context + path + "person/" + user + "/addfriend",
                 data: null,
@@ -778,7 +774,7 @@ rave.api = (function () {
         function removeFriend(args) {
             var user = encodeURIComponent(encodeURIComponent(args.friendUsername));
 
-            rave.ajax({
+            ajax({
                 type: 'POST',
                 url: context + path + "person/" + user + "/removefriend",
                 data: null,
@@ -798,7 +794,7 @@ rave.api = (function () {
         }
 
         function getFriends(args) {
-            rave.ajax({
+            ajax({
                 type: 'POST',
                 url: context + path + "person/getFriends",
                 data: null,
@@ -819,7 +815,7 @@ rave.api = (function () {
 
         function acceptFriendRequest(args) {
             var user = encodeURIComponent(encodeURIComponent(args.friendUsername));
-            rave.ajax({
+            ajax({
                 type: 'POST',
                 url: context + path + "person/" + user + "/acceptfriendrequest",
                 data: null,
@@ -839,7 +835,7 @@ rave.api = (function () {
         }
 
         function addWidgetFromMarketplace(args) {
-            rave.ajax({
+            ajax({
                 type: 'POST',
                 url: context + path + "marketplace/add",
                 data: {"url": args.url,
@@ -1084,5 +1080,5 @@ rave.api = (function () {
         handler: handlerApi,
         setContext: setContext
     };
-})();
+});
 

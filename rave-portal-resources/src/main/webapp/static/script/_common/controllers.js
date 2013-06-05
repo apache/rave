@@ -56,12 +56,14 @@ angular.module('rave.controller', ['ui.bootstrap', 'ui'])
 
             function registerWidgetsForPages(pages) {
                 rave.init();
-                var widgets = _.chain(pages).pluck('regions').flatten().pluck('regionWidgets').flatten().value();
-                _.each(widgets, function (widget) {
-                    //TODO: this is a fix for a bug in the api
-                    widget.metadata = JSON.parse(widget.metadata);
-                    rave.registerWidget(widget);
-                });
+                _.each(pages, function (page) {
+                    _.each(page.regions, function (region) {
+                        _.each(region.regionWidgets, function (regionWidget, i) {
+                            regionWidget.metadata = JSON.parse(regionWidget.metadata);
+                            region.regionWidgets[i] = rave.registerWidget(regionWidget);
+                        });
+                    });
+                })
             }
 
             //TODO: this might not be the best way to handle moving widgets
@@ -161,16 +163,15 @@ angular.module('rave.controller', ['ui.bootstrap', 'ui'])
             }
         }
     ])
-    .controller('WidgetController', ['$scope', 'rave',
-        function ($scope, rave) {
+    .controller('WidgetController', ['$scope', 'rave', 'Pages',
+        function ($scope, rave, Pages) {
             //Grab a handle on rave's registered regionWidget object to get that functionality in scope.
-            var regionWidget = $scope.regionWidget = rave.getWidget($scope.regionWidget.id);
             $scope.showPrefs = false;
             $scope.regionWidgetPrefs = $scope.regionWidget.getPrefs();
 
             $scope.menu = {
                 editPrefs: {
-                    disable: _.isUndefined(regionWidget.getPrefs() )
+                    disable: _.isUndefined(regionWidget.getPrefs())
                 },
                 maximize: {
                 },
@@ -189,14 +190,21 @@ angular.module('rave.controller', ['ui.bootstrap', 'ui'])
                     $scope.regionWidget.hide();
                 }
             }
-
             $scope.togglePrefs = function () {
                 $scope.showPrefs = !$scope.showPrefs
             }
-
             $scope.savePrefs = function () {
                 $scope.regionWidget.setPrefs($scope.regionWidgetPrefs);
                 $scope.togglePrefs();
+            }
+            $scope.maximize = function () {
+                $scope.regionWidget.navigate({view: 'canvas'});
+            }
+            $scope.minimize = function () {
+                $scope.regionWidget.navigate({view: 'home'});
+            }
+            $scope.delete = function () {
+                Pages.deleteRegionWidget($scope.regionWidget);
             }
         }
     ])

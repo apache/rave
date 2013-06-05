@@ -1,5 +1,21 @@
-angular.module('rave.service', [])
+angular.module('rave.service', ['ngResource'])
     .value('rave', rave)
+    .factory('Pages', ['$resource',
+        function ($resource) {
+            return $resource('/portal/api/rest/pages/:context/:identifier/:id')
+        }
+    ])
+    .factory('PagesLoader', ['Pages', '$q',
+        function(Pages, $q){
+            var deferred = $q.defer();
+
+            Pages.query({context: 'portal', identifier: '@self'}, function(pages){
+                deferred.resolve(pages);
+            });
+
+            return deferred.promise;
+        }
+    ])
     .service('Pages', ['$http', '$interpolate', '$q', '$rootScope', 'rave',
         function ($http, $interpolate, $q, $rootScope, rave) {
             var urlTemplate = $interpolate('/portal/api/rest/pages/{{context}}/{{identifier}}'),
@@ -36,8 +52,8 @@ angular.module('rave.service', [])
                             var newPage = result.result;
                             pages.then(function (pages) {
                                 /*
-                                TODO: newPage object returned by rpc api is different format from rest api,
-                                screws up pagelayout code and possibly more
+                                 TODO: newPage object returned by rpc api is different format from rest api,
+                                 screws up pagelayout code and possibly more
                                  */
                                 newPage.pageLayoutCode = newPage.pageLayout.code;
                                 pages.push(newPage);
@@ -58,10 +74,10 @@ angular.module('rave.service', [])
                     moveAfterPageId: afterPageId,
                     successCallback: function (result) {
                         pages.then(function (pages) {
-                            var movingPage =  _.findWhere(pages, {id: pageId})
+                            var movingPage = _.findWhere(pages, {id: pageId})
                             var fromIdx = _.indexOf(pages, movingPage);
                             var toIdx = _.indexOf(pages, _.findWhere(pages, {id: afterPageId}));
-                            pages.splice(fromIdx,1)
+                            pages.splice(fromIdx, 1)
                             pages.splice(toIdx, 0, movingPage);
                         });
                         $rootScope.$apply(deferred.resolve(result));
@@ -112,13 +128,31 @@ angular.module('rave.service', [])
                 return deferred.promise;
             }
 
-            Pages.share = function(pageId, userId, role){}
+            Pages.deleteRegionWidget = function (regionWidget) {
+                //TODO: we need a better way to represent & keep data in sync
+                pages.then(function (pages) {
+                    _.find(pages, function (page) {
+                        return _.find(page.regions, function (region) {
+                            return _.find(region.regionWidgets, function (widget, i) {
+                                if (widget.id == regionWidget.id) {
+                                    region.regionWidgets.splice(i, 1);
+                                    regionWidget.close();
+                                    return true;
+                                }
+                            })
+                        })
+                    })
+                });
+            }
+
+            Pages.share = function (pageId, userId, role) {
+            }
 
             return Pages;
         }
     ])
     .service('user', ['$q',
-        function($q){
+        function ($q) {
             var deferred = $q.defer();
 
             deferred.resolve({
@@ -129,7 +163,7 @@ angular.module('rave.service', [])
         }
     ])
     .service('Users', [
-        function(){
+        function () {
 
         }
     ])

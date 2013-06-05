@@ -3,7 +3,15 @@ angular.module('rave.routing', [])
 
         //The routes that our angular app will handle
         $routeProvider
-            .when('/', { templateUrl: "/portal/static/html/portal/tabs.html"})
+            .when('/', {
+                resolve: {
+                    controller: '',
+                    pages: ['PagesLoader', function(PagesLoader){
+                        return PagesLoader();
+                    }]
+                },
+                templateUrl: "/portal/static/html/portal/tabs.html"
+            })
             .when('/:tabId', { templateUrl: "/portal/static/html/portal/tabs.html"})
             .otherwise({ templateUrl: '/portal/static/html/portal/404.html'});
 

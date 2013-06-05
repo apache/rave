@@ -16,27 +16,16 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+define(['underscore',  './eventemitter', './rave_api', './rave_providers'], function (_, EventEmitter, api, providers) {
 
-var rave = rave || {};
-
-/*
- Rave RegionWidget Interface
-
- Dependencies:
- rave.ui
- rave.api
- */
-
-rave.RegionWidget = (function () {
-    /*
-     rave widget constructor
-     */
     var Widget = function (definition) {
         var provider = definition.type;
 
         _.extend(this, definition);
 
-        this._provider = rave.getProvider(provider);
+        this._provider = providers[provider.toLowerCase()];
+        this._el = document.createElement('div');
+        this._surface = Widget.defaultView;
 
         if (!this._provider) {
             throw new Error('Cannot render widget ' + definition.widgetUrl + '. ' +
@@ -46,112 +35,141 @@ rave.RegionWidget = (function () {
         this._provider.initWidget(this);
     }
 
+    /*
+     Static properties
+     */
     Widget.defaultView = 'default';
     Widget.defaultWidth = 320;
     Widget.defaultHeight = 200;
 
-    Widget.extend = function (mixin) {
-        _.extend(this.prototype, mixin);
-    }
+    /*
+     Set up widget as an event emitter
+     */
+    _.extend(Widget.prototype, EventEmitter.prototype);
 
-    Widget.prototype.render = function (el, opts) {
-        //if we receive only one argument, and the first arg is not a string or dom element, assume it is an opts object
-        //and el should default to the widgets current render element
-        if (!opts && !(_.isString(el) || (el instanceof HTMLElement))) {
-            opts = el;
-            el = this._el;
-        }
-        //if el is a string, go to rave's view system
-        if (_.isString(el)) {
-            //TODO: potential memory leak - rendering a widget into new views does not force cleanup of current view
-            var view = rave.renderView(el, this);
-            el = view.getWidgetSite();
-            this._view = view;
-        }
-        //at this point el must be a valid dom element. if not, throw an error
-        if (!(el instanceof HTMLElement)) {
-            throw new Error('Cannot render widget. You must provide an el to render the view into');
-        }
-        this._el = el;
-        this._provider.renderWidget(this, el, opts);
-        return this;
-    }
-
-    Widget.prototype.renderError = function (el, errors) {
-        el.innerHTML = 'Error rendering widget.' + "<br /><br />" + errors;
-    }
-
-    Widget.prototype.hide = function () {
-        this.collapsed = true;
-
-        rave.api.rest.saveWidgetCollapsedState({
-            regionWidgetId: this.id,
-            collapsed: this.collapsed
-        });
-    }
-
-    Widget.prototype.show = function () {
-        this.collapsed = false;
-
-        rave.api.rest.saveWidgetCollapsedState({
-            regionWidgetId: this.id,
-            collapsed: this.collapsed
-        });
-    }
-
-    Widget.prototype.close = function (opts) {
-        this._provider.closeWidget(this, opts);
-        if (this._view) {
-            rave.destroyView(this._view);
-        }
-
-        rave.api.rpc.removeWidget({
-            regionWidgetId: this.id
-        });
-    }
-
-    Widget.prototype.moveToPage = function (toPageId, cb) {
-        rave.api.rpc.moveWidgetToPage({
-            toPageId: toPageId,
-            regionWidgetId: this.id,
-            successCallback: cb
-        });
-    }
-
-    Widget.prototype.moveToRegion = function (fromRegionId, toRegionId, toIndex) {
-        rave.api.rpc.moveWidgetToRegion({
-            regionWidgetId: this.id,
-            fromRegionId: fromRegionId,
-            toRegionId: toRegionId,
-            toIndex: toIndex
-        });
-    }
-
-    Widget.prototype.getPrefs = function () {
+    /*
+     Convenience function for adding functionality to Widget prototype with events
+     */
+    Widget.extend = function (key, fn) {
         var self = this;
-        var combined = [];
-        //TODO: I think this is opensocial specific - need to investigate wookie and possibly delegate to providers
-        _.each(self.metadata.userPrefs, function (data) {
-            var value = self.userPrefs[data.name];
-            data = _.clone(data);
-            data.value = value || data.defaultValue;
-            data.displayName = data.displayName || data.name;
-            combined.push(data);
-        });
-        return _.isEmpty(combined)?undefined:combined;
-    }
-
-    Widget.prototype.setPrefs = function (name, val) {
-        if (_.isObject(name)) {
-            var updatedPrefs = name;
-            this.userPrefs = _.object(_.pluck(updatedPrefs,'name'), _.pluck(updatedPrefs, 'value'));
-            rave.api.rest.saveWidgetPreferences({regionWidgetId: this.id, userPrefs: this.userPrefs});
-        } else {
-            this.userPrefs[name] = val;
-            rave.api.rest.saveWidgetPreference({regionWidgetId: this.id, prefName: name, prefValue: val});
+        if (_.isObject(key)) {
+            return _.each(key, function (f, k) {
+                self.extend(k, f);
+            });
+        }
+        this.prototype[key] = function () {
+            var args = _.toArray(arguments);
+            fn.apply(this, args);
+            this.emitEvent(key, args);
         }
     }
+
+    Widget.extend({
+
+        'render': function (el) {
+            if (el) {
+                el.appendChild(this._el);
+            }
+
+            this._provider.renderWidget(this, this._opts);
+            return this;
+        },
+
+        'navigate': function (opts) {
+            opts = opts || {};
+
+            var viewSurface = opts.view || Widget.defaultView;
+            viewSurface = viewSurface.split('.')[0];
+
+            this._opts = opts;
+            this._surface = viewSurface;
+            this.render();
+        },
+
+        'unrender': function () {
+            this._provider.unrenderWidget(this);
+            return this;
+        },
+
+        'renderError': function (errors) {
+            this._el.innerHTML = 'Error rendering widget.' + "<br /><br />" + errors;
+        },
+
+        'hide': function () {
+            this.collapsed = true;
+
+            api.rest.saveWidgetCollapsedState({
+                regionWidgetId: this.id,
+                collapsed: this.collapsed
+            });
+        },
+
+        'show': function () {
+            this.collapsed = false;
+
+            api.rest.saveWidgetCollapsedState({
+                regionWidgetId: this.id,
+                collapsed: this.collapsed
+            });
+        },
+
+        'close': function (opts) {
+            this.unrender();
+
+            api.rpc.removeWidget({
+                regionWidgetId: this.id
+            });
+        },
+
+        'moveToPage': function (toPageId, cb) {
+            api.rpc.moveWidgetToPage({
+                toPageId: toPageId,
+                regionWidgetId: this.id,
+                successCallback: cb
+            });
+        },
+
+        'moveToRegion': function (fromRegionId, toRegionId, toIndex) {
+            api.rpc.moveWidgetToRegion({
+                regionWidgetId: this.id,
+                fromRegionId: fromRegionId,
+                toRegionId: toRegionId,
+                toIndex: toIndex
+            });
+        },
+
+        'getPrefs': function () {
+            var self = this;
+            var combined = [];
+            //TODO: I think this is opensocial specific - need to investigate wookie and possibly delegate to providers
+            _.each(self.metadata.userPrefs, function (data) {
+                var value = self.userPrefs[data.name];
+                data = _.clone(data);
+                data.value = value || data.defaultValue;
+                data.displayName = data.displayName || data.name;
+                combined.push(data);
+            });
+            return _.isEmpty(combined) ? undefined : combined;
+        },
+
+        'setPrefs': function (name, val) {
+            if (_.isObject(name)) {
+                var updatedPrefs = name;
+                this.userPrefs = _.object(_.pluck(updatedPrefs, 'name'), _.pluck(updatedPrefs, 'value'));
+                api.rest.saveWidgetPreferences({regionWidgetId: this.id, userPrefs: this.userPrefs});
+            } else {
+                this.userPrefs[name] = val;
+                api.rest.saveWidgetPreference({regionWidgetId: this.id, prefName: name, prefValue: val});
+            }
+        }
+    })
+
 
     return Widget;
+});
+/*
+ Rave RegionWidget Interface
 
-})();
+ Dependencies:
+ api
+ */

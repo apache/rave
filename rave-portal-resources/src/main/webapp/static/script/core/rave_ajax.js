@@ -17,11 +17,12 @@
  * under the License.
  */
 
-var rave = rave || {};
-
 /*
 The rave.ajax function is a simple wrapper for jquery's ajax function.
 If you wish to use a different ajax library, you can overlay this file and
 wrap it to match jquery's ajax api: http://api.jquery.com/jQuery.ajax/
  */
-rave.ajax = $.ajax;
+
+define(['jquery'], function($){
+    return $.ajax;
+});
