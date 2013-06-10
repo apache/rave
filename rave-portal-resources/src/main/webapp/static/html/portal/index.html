@@ -1,16 +1,3 @@
-<script src="//cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
-<script src="http://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
-<!--<script src="http://code.angularjs.org/1.1.5/angular-resource.js"></script>-->
-<script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui/0.4.0/angular-ui.min.js"></script>
-<script src="/portal/static/script/angular-portal/ui-bootstrap-0.3.0.js"></script>
-<!--<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.0.3/bootstrap.min.js"></script>-->
-
-<script src="/portal/static/script/angular-portal/portal.js"></script>
-<script src="/portal/static/script/angular-portal/controllers.js"></script>
-<script src="/portal/static/script/angular-portal/directives.js"></script>
-<script src="/portal/static/script/angular-portal/services.js"></script>
-<script src="/portal/static/script/angular-portal/routing.js"></script>
-
 <div class="navbar">
     <div class="navbar-inner">
         <div class="container">
@@ -27,8 +14,7 @@
     </div>
 </div>
 <div class="logo-wrapper"></div>
-<div id="pageContent" class="container-fluid" ng-include="templateUrl">
-</div>
+<div id="pageContent" class="container-fluid" ng-view></div>
 
 <div rave-register-view="dialog" dialog class="modal fade">
     <div class="modal-header">
@@ -66,19 +52,18 @@
             </div>
             <div class="widget-toolbar ">
                 <span class="widget-toolbar-btn" ng-click="minimize()">
-                    <i class="icon-resize-small"></i>
+                <i class="icon-resize-small"></i>
                 </span>
             </div>
         </div>
         <div class="widget">
             <div rave-render-widget="regionWidget"></div>
         </div>
-
     </div>
 </div>
 
-
-<div class="widget-wrapper" rave-register-view="home" ng-controller="WidgetController">
+<!--ng-controller="WidgetController"-->
+<div class="widget-wrapper" rave-register-view="home" >
     <div class="widget-title-bar widget-title-bar-draggable">
         <div class="widget-toolbar-toggle-collapse" title="Collapse/Restore Widget">
             <i ng-class="{'icon-chevron-down':!regionWidget.collapsed, 'icon-chevron-up':regionWidget.collapsed}"
@@ -131,9 +116,9 @@
                     </li>
                 </ul>
             </div>
-                            <span class="widget-toolbar-btn widget-toolbar-btn-min">
-                                <i class="icon-resize-small"></i>
-                            </span>
+<span class="widget-toolbar-btn widget-toolbar-btn-min">
+<i class="icon-resize-small"></i>
+</span>
         </div>
     </div>
 

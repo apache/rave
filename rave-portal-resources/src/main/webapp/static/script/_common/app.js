@@ -1,4 +1,3 @@
-angular.module('rave', [])
-
-//TODO: drop it!
-rave.api.setContext('/portal/app/');
+define(['angular'], function(angular){
+    return angular.module('rave', []);
+});

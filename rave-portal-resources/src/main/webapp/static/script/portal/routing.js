@@ -1,21 +1,31 @@
-define(['angular'], function (angular) {
+define(['app', 'core/rave_core'], function (app, rave) {
 
-
-    angular.module('rave.routing', [])
-        .config(['$routeProvider', '$locationProvider', '$httpProvider', function ($routeProvider, $locationProvider, $httpProvider) {
+    app.config([function () {
+            rave.RegionWidget.defaultView = 'home';
+            rave.api.setContext('/portal/app/');
+        }]).
+        config(['$routeProvider', '$locationProvider', '$httpProvider', function ($routeProvider, $locationProvider, $httpProvider) {
 
             //The routes that our angular app will handle
             $routeProvider
                 .when('/', {
+                    controller: 'PortalController',
                     resolve: {
-                        controller: '',
                         pages: ['PagesLoader', function (PagesLoader) {
                             return PagesLoader();
                         }]
                     },
                     templateUrl: "/portal/static/html/portal/tabs.html"
                 })
-                .when('/:tabId', { templateUrl: "/portal/static/html/portal/tabs.html"})
+                .when('/:tabId', {
+                    controller: 'PortalController',
+                    resolve: {
+                        pages: ['PagesLoader', function (PagesLoader) {
+                            return PagesLoader();
+                        }]
+                    },
+                    templateUrl: "/portal/static/html/portal/tabs.html"
+                })
                 .otherwise({ templateUrl: '/portal/static/html/portal/404.html'});
 
 
@@ -52,8 +62,9 @@ define(['angular'], function (angular) {
             $httpProvider.responseInterceptors.push(interceptor);
         }])
         .run(['$route', '$rootScope', function ($route, $rootScope) {
-            $rootScope.$on('$routeChangeSuccess', function (oldRoute, newRoute) {
-                $rootScope.templateUrl = newRoute.templateUrl;
-            });
+//            $rootScope.$on('$routeChangeSuccess', function (oldRoute, newRoute) {
+//                $rootScope.templateUrl = newRoute.templateUrl;
+//            });
         }]);
+
 })

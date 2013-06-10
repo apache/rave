@@ -1,7 +1,6 @@
-define(['angular', 'bootstrap'], function (angular) {
+define(['app', 'core/rave_core', 'bootstrap', 'jqueryUi', 'angularUi'], function (app, rave) {
 
-    angular.module('rave.directive', [])
-        .directive('raveViewSurface', ['$compile',
+    app.directive('raveViewSurface', ['$compile',
             function ($compile) {
                 var directive = {
                     restrict: 'A',
@@ -49,8 +48,8 @@ define(['angular', 'bootstrap'], function (angular) {
                 return directive;
             }
         ])
-        .directive('raveRegisterView', [ 'rave', '$compile',
-            function (rave, $compile) {
+        .directive('raveRegisterView', ['$compile',
+            function ($compile) {
                 var directive = {
                     restrict: 'AE',
                     scope: {},

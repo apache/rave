@@ -1,4 +1,5 @@
-<div ng-controller="PortalController" ng-show="pages">
+<!--ng-controller="PortalController"-->
+<div ng-show="pages">
     <nav>
         <ul class="nav nav-tabs">
             <li ng-repeat="page in pages"
@@ -10,7 +11,8 @@
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                     {{page.name}}<b class="caret"></b>
                 </a>
-                <ul class="dropdown-menu" ng-controller="CurrentPageController">
+                <!--ng-controller="CurrentPageController"-->
+                <ul class="dropdown-menu">
                     <li class=""><a ng-click="edit()">Edit Page</a></li>
                     <li class=""><a ng-click="delete()">Delete Page</a></li>
                     <li class=""><a ng-click="move()">Move Page</a></li>

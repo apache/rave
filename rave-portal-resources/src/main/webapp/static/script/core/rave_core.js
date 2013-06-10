@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-define(['underscore', './rave_widget', './rave_log'], function (_, RegionWidget, log) {
+define(['underscore', './rave_widget', './rave_log', './rave_api'], function (_, RegionWidget, log, api) {
     var rave = {};
 
     var INITIALIZED = false,
@@ -155,7 +155,6 @@ define(['underscore', './rave_widget', './rave_log'], function (_, RegionWidget,
 
     rave.init = function () {
         INITIALIZED = true;
-        _.invoke(providers, 'init');
         _.each(regionWidgets, function (definition) {
             regionWidgets[definition.id] = new RegionWidget(definition)
         });
@@ -165,6 +164,10 @@ define(['underscore', './rave_widget', './rave_log'], function (_, RegionWidget,
     }
 
     rave.log = log;
+
+    rave.RegionWidget = RegionWidget;
+
+    rave.api = api;
 
     //reset internal data - used for testing cleanup
     rave.reset = function () {

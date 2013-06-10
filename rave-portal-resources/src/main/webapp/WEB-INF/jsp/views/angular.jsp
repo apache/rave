@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app="rave">
+<html>
 <head>
     <base href="/portal/app/angular/${context}/">
     <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/css/bootstrap-combined.min.css" rel="stylesheet">
