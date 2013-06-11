@@ -392,11 +392,14 @@ rave.api = rave.api || (function () {
             });
         }
 
-        //TODO: what does this do...
+        //allows us to examine the page layout, number of regions etc in js
         function getPage(args) {
             rave.ajax({
                 type: 'GET',
                 url: context + path + "page/get",
+                data: {
+                    pageId: args.pageId
+                },
                 dataType: 'json',
                 success: function (result) {
                     if (result.error) {
