@@ -166,6 +166,12 @@
                 rave.api.rpc.getWidgetMetadataGroup({
                     url: "?all=true",
                     providerType: "W3C",
+                    alertInvalidParams: function(){
+                        alert(ravePortal.getClientMessage("api.widget_metadata.invalid_params"));
+                    },
+                    errorCallback: function(){
+                        alert(ravePortal.getClientMessage("api.widget_metadata.parse_error"));
+                    },
                     successCallback: function(result) {
                         var i=0;
                         var widgets = result.result;

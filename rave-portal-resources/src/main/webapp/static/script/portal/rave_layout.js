@@ -425,6 +425,9 @@ define(["jquery", "./rave_portal", "core/rave_api", "./rave_models", "./rave_ui"
                     errorLabel: 'pageFormErrorsTabbed1',
                     successCallback: function (result) {
                         ravePortal.viewPage(result.result.id);
+                    },
+                    errorCallback: function(errorLabel){
+                        $("#" + errorLabel).html(ravePortal.getClientMessage("page.duplicate_name"));
                     }
                 });
             }
@@ -438,6 +441,9 @@ define(["jquery", "./rave_portal", "core/rave_api", "./rave_models", "./rave_ui"
                     errorLabel: 'pageFormErrors',
                     successCallback: function (result) {
                         ravePortal.viewPage(result.result.id);
+                    },
+                    errorCallback: function(errorLabel){
+                        $("#" + errorLabel).html(ravePortal.getClientMessage("page.duplicate_name"));
                     }
                 });
             }
@@ -518,7 +524,11 @@ define(["jquery", "./rave_portal", "core/rave_api", "./rave_models", "./rave_ui"
                 errorLabel: 'pageFormErrors',
                 successCallback: function (result) {
                     ravePortal.viewPage(result.result.id);
-                }});
+                },
+                errorCallback: function(errorLabel){
+                    $("#" + errorLabel).html(ravePortal.getClientMessage("page.duplicate_name"));
+                }
+            });
         }
     }
 

@@ -54,7 +54,11 @@ define(["underscore", "./rave_backbone", "core/rave_api"], function(_, raveBackb
             this.searchTerm = term;
 
             if (this.searchTerm) {
-                api.rpc.searchUsers({searchTerm: this.searchTerm, offset: 0, successCallback: this.parse });
+                api.rpc.searchUsers({searchTerm: this.searchTerm,
+                    offset: 0,
+                    successCallback: this.parse,
+                    alertEmptySearch: function(){alert(ravePortal.getClientMessage("api.rpc.empty.search.term"));}
+                });
             }
             else {
                 api.rpc.getUsers({offset: 0, successCallback: this.parse });
@@ -69,7 +73,11 @@ define(["underscore", "./rave_backbone", "core/rave_api"], function(_, raveBackb
             offset *= this.pageSize;
 
             if (this.searchTerm) {
-                api.rpc.searchUsers({searchTerm: this.searchTerm, offset: offset, successCallback: this.parse });
+                api.rpc.searchUsers({searchTerm: this.searchTerm,
+                    offset: offset,
+                    successCallback: this.parse,
+                    alertEmptySearch: function(){alert(ravePortal.getClientMessage("api.rpc.empty.search.term"));}
+                });
             }
             else {
                 api.rpc.getUsers({offset: offset, successCallback: this.parse });

@@ -425,7 +425,8 @@ define(["jquery", "./rave_portal", "core/rave_api"], function($, ravePortal, api
             api.rpc.searchUsers({searchTerm: $('#searchTerm').get(0).value, offset: 0,
                 successCallback: function(result) {
                     dealWithUserResults(result);
-                }
+                },
+                alertEmptySearch: function(){alert(ravePortal.getClientMessage("api.rpc.empty.search.term"));}
             });
         });
 

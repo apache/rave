@@ -46,4 +46,4 @@ requirejs.config({
 }
 })
 
-requirejs(["core/rave_core", "portal/portalRool"]);
+requirejs(["core/main"]);

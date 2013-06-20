@@ -5,8 +5,8 @@
  * Time: 11:28 AM
  * To change this template use File | Settings | File Templates.
  */
-define(["jquery", 'core/rave_api', 'core/rave_store', 'portal/rave_models', 'portal/rave_layout', 'portal/rave_display'],
-    function($, raveApi, raveStore, raveModels, raveLayout, raveDisplay){
+define(["jquery", 'core/rave_api', 'core/rave_store', 'portal/rave_models', 'portal/rave_layout', 'portal/rave_display', 'portal/rave_portal'],
+    function($, raveApi, raveStore, raveModels, raveLayout, raveDisplay, ravePortal){
 
         var pageNameToFunctionMap = {
             "addWidget.jsp": addWidgetEventBindings,
@@ -41,6 +41,12 @@ define(["jquery", 'core/rave_api', 'core/rave_store', 'portal/rave_models', 'por
                         $('#authorEmail').val(widget.authorEmail);
                         $('#addWidgetForm').show();
                         $('#addWidgetFormSubmit').show();
+                    },
+                    errorCallback: function(){
+                        alert(ravePortal.getClientMessage("api.widget_metadata.parse_error"));
+                    },
+                    alertInvalidParams: function(){
+                        alert(ravePortal.getClientMessage("api.widget_metadata.invalid_params"));
                     }
                 })
             })
@@ -91,7 +97,10 @@ define(["jquery", 'core/rave_api', 'core/rave_store', 'portal/rave_models', 'por
         function storeEventBindings(){
             $("#storeItems").on("click", "button.widgetAddButton", function(event){
                 var element = $(this);
-                raveApi.rpc.addWidgetToPage({widgetId: element.data('widget-id'), pageId: element.data('referring-page-id'), buttonId: element.attr('id')});
+                raveApi.rpc.addWidgetToPage({widgetId: element.data('widget-id'),
+                    pageId: element.data('referring-page-id'), buttonId: element.attr('id'),
+                    successCallback: addWidgetToPageCallback
+                });
             });
 
             $("#storeItems").on("click", "a.displayUsersLink", function(event){
@@ -105,7 +114,7 @@ define(["jquery", 'core/rave_api', 'core/rave_store', 'portal/rave_models', 'por
                 var element = $(this);
                 var widgetId = element.data('widget-id');
                 var pageId = element.data('page-id');
-                raveApi.addWidgetToPage({widgetId: widgetId, pageId: pageId, redirectAfterAdd: true})
+                raveApi.addWidgetToPage({widgetId: widgetId, pageId: pageId, redirectAfterAdd: true, successCallback: addWidgetToPageCallback})
             })
 
             $('#displayUsersOfWidgetLink').click(function(){
@@ -134,6 +143,12 @@ define(["jquery", 'core/rave_api', 'core/rave_store', 'portal/rave_models', 'por
                         $('#titleUrl').val(widget.titleUrl);
                         $('#author').val(widget.author);
                         $('#authorEmail').val(widget.authorEmail);
+                    },
+                    errorCallback: function(){
+                        alert(ravePortal.getClientMessage("api.widget_metadata.parse_error"));
+                    },
+                    alertInvalidParams: function(){
+                        alert(ravePortal.getClientMessage("api.widget_metadata.invalid_params"));
                     }
                 })
             })
@@ -143,7 +158,28 @@ define(["jquery", 'core/rave_api', 'core/rave_store', 'portal/rave_models', 'por
             $('.addIframeOverlaysLink').click(function(event){
                 raveLayout.addIframeOverlays(event)
             })
+        };
+
+        /********************************
+         Helper Functions
+         ********************************/
+        function addWidgetToPageCallback (result){
+            var widgetTitle = ravePortal.getClientMessage("widget.add_prefix");
+            var addedWidget = result != undefined ? result.widgetId : undefined;
+
+            if (addedWidget != undefined && addedWidget.title != undefined && addedWidget.title.length > 0) {
+                widgetTitle = addedWidget.title;
+            }
+            ravePortal.showInfoMessage(widgetTitle + ' ' + ravePortal.getClientMessage("widget.add_suffix"));
+
+            // Update Add Widget button to reflect status
+            var addWidgetButton = "#addWidget_" + args.widgetId;
+            var addedText = '<i class="icon icon-ok icon-white"></i> ' + $(addWidgetButton).data('success');
+
+            $(addWidgetButton).removeClass("btn-primary").addClass("btn-success").html(addedText);
         }
+
+
 
 
         return {

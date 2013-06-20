@@ -17,10 +17,9 @@
  * under the License.
  */
 
-//All set!!
-
-define(["./rave_core", "./rave_view_manager", "./rave_widget", "./rave_api", "portal/rave_portal", "portal/rave_ui"],
-    function(core, viewManager, regionWidget, api, ravePortal, raveUi){
+//TODO: Remove dependency on rave_ui when moving to angular
+define(["./rave_core", "./rave_view_manager", "./rave_widget", "./rave_api", "portal/rave_ui"],
+    function(core, viewManager, regionWidget, api, raveUi){
     var exports = {};
 
     var container;

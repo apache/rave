@@ -19,12 +19,12 @@
 
 //All set!!
 
-define(["./rave_ajax", "underscore", "jquery", "portal/rave_portal"], function(ajax, _, $, ravePortal){
+define(["./rave_ajax", "underscore", "jquery"], function(ajax, _, $){
     //stores virtual host context of application execution
     var context = "";
 
     function handleError(jqXhr, status, error) {
-        alert(ravePortal.getClientMessage("api.error") + error);
+        alert(error);
     }
 
     var restApi = (function () {
@@ -262,55 +262,10 @@ define(["./rave_ajax", "underscore", "jquery", "portal/rave_portal"], function(a
                     if (result.error) {
                         handleRpcError(result);
                     } else {
-                        //TODO: get rid of any dom manipulation here!
-                        //TODO: this is breaking core dependency chain
-                        var widgetTitle = ravePortal.getClientMessage("widget.add_prefix");
-                        var addedWidget = result.result != undefined ? result.result.widgetId : undefined;
-
-                        if (addedWidget != undefined && addedWidget.title != undefined && addedWidget.title.length > 0) {
-                            widgetTitle = addedWidget.title;
-                        }
                         // if a callback is supplied, invoke it with the regionwidget id
                         if (args.successCallback && addedWidget != undefined) {
-                            args.successCallback(result.result.id);
+                            args.successCallback(result.result);
                         }
-                        ravePortal.showInfoMessage(widgetTitle + ' ' + ravePortal.getClientMessage("widget.add_suffix"));
-
-                        // Update Add Widget button to reflect status
-                        var addWidgetButton = "#addWidget_" + args.widgetId;
-                        var addedText = '<i class="icon icon-ok icon-white"></i> ' + $(addWidgetButton).data('success');
-
-                        $(addWidgetButton).removeClass("btn-primary").addClass("btn-success").html(addedText);
-                    }
-                },
-                error: handleError
-            });
-        }
-
-        function addWidgetToPageRegion(args) {
-            ajax({
-                type: 'POST',
-                url: context + path + "page/" + args.pageId + "/widget/add/region/" + args.regionId,
-                data: {
-                    widgetId: args.widgetId
-                },
-                dataType: 'json',
-                success: function (result) {
-                    if (result.error) {
-                        handleRpcError(result);
-                    } else {
-                        //TODO: move this logic
-                        var widgetTitle = ravePortal.getClientMessage("widget.add_prefix");
-                        var addedWidget = result.result != undefined ? result.result.widgetId : undefined;
-
-                        if (addedWidget != undefined && addedWidget.title != undefined && addedWidget.title.length > 0) {
-                            widgetTitle = addedWidget.title;
-                        }
-                        // if a callback is supplied, invoke it with the regionwidget id
-                        if (args.successCallback && addedWidget != undefined) {
-                            args.successCallback(result.result.id);
-                        }
-                        ravePortal.showInfoMessage(widgetTitle + ' ' + ravePortal.getClientMessage("widget.add_suffix"));
                     }
                 },
                 error: handleError
@@ -350,8 +305,9 @@ define(["./rave_ajax", "underscore", "jquery", "portal/rave_portal"], function(a
                     if (result.error) {
                         // check to see if a duplicate page name error occurred
                         if (result.errorCode == 'DUPLICATE_ITEM') {
-                            //TODO: git rid of dom manipulation
-                            $("#" + args.errorLabel).html(ravePortal.getClientMessage("page.duplicate_name"));
+                            if (typeof args.errorCallback == 'function') {
+                                args.errorCallback(args.errorLabel);
+                            }
                         } else {
                             handleRpcError(result);
                         }
@@ -451,8 +407,9 @@ define(["./rave_ajax", "underscore", "jquery", "portal/rave_portal"], function(a
                 success: function (result) {
                     if (result.error) {
                         if (result.errorCode == 'DUPLICATE_ITEM') {
-                            //TODO: git rid of dom manipulation
-                            $("#" + args.errorLabel).html(ravePortal.getClientMessage("page.duplicate_name"));
+                            if (typeof args.errorCallback == 'function') {
+                                args.errorCallback(args.errorLabel);
+                            }
                         } else {
                             handleRpcError(result);
                         }
@@ -482,6 +439,7 @@ define(["./rave_ajax", "underscore", "jquery", "portal/rave_portal"], function(a
         }
 
         //TODO RAVE-228: Create a more robust error handling system and interrogation of RPC results
+        //TODO: Move dom alerts out of core code when going to angular branch
         function handleRpcError(rpcResult) {
             switch (rpcResult.errorCode) {
                 case "NO_ERROR" :
@@ -498,8 +456,9 @@ define(["./rave_ajax", "underscore", "jquery", "portal/rave_portal"], function(a
         function getWidgetMetadata(args) {
             var url = args.url;
             var providerType = args.providerType;
-            if (url == null || providerType == null) {
-                alert(ravePortal.getClientMessage("api.widget_metadata.invalid_params"));
+
+            if ((url == null || providerType == null) && typeof args.alertInvalidParams == 'function') {
+                args.alertInvalidParams();
                 return;
             }
 
@@ -512,8 +471,8 @@ define(["./rave_ajax", "underscore", "jquery", "portal/rave_portal"], function(a
                 },
                 dataType: 'json',
                 success: function (result) {
-                    if (result.error) {
-                        alert(ravePortal.getClientMessage("api.widget_metadata.parse_error"));
+                    if (result.error && typeof args.errorCallback == 'function') {
+                        args.errorCallback();
                     }
                     else {
                         if (typeof args.successCallback == 'function') {
@@ -528,8 +487,8 @@ define(["./rave_ajax", "underscore", "jquery", "portal/rave_portal"], function(a
         function getWidgetMetadataGroup(args) {
             var url = args.url;
             var providerType = args.providerType;
-            if (url == null || providerType == null) {
-                alert(ravePortal.getClientMessage("api.widget_metadata.invalid_params"));
+            if ((url == null || providerType == null) && typeof args.alertInvalidParams == 'function') {
+                args.alertInvalidParams();
                 return;
             }
 
@@ -542,8 +501,8 @@ define(["./rave_ajax", "underscore", "jquery", "portal/rave_portal"], function(a
                 },
                 dataType: 'json',
                 success: function (result) {
-                    if (result.error) {
-                        alert(ravePortal.getClientMessage("api.widget_metadata.parse_error"));
+                    if (result.error && typeof args.errorCallback == 'function') {
+                        args.errorCallback();
                     }
                     else {
                         if (typeof args.successCallback == 'function') {
@@ -599,8 +558,8 @@ define(["./rave_ajax", "underscore", "jquery", "portal/rave_portal"], function(a
         function searchUsers(args) {
             var searchTerm = args.searchTerm;
             var offset = args.offset;
-            if (searchTerm == null || searchTerm == "") {
-                alert(ravePortal.getClientMessage("api.rpc.empty.search.term"));
+            if ((searchTerm == null || searchTerm == "") && typeof args.alertEmptySearch == 'function') {
+                args.alertEmptySearch();
                 return;
             }
 
@@ -839,7 +798,6 @@ define(["./rave_ajax", "underscore", "jquery", "portal/rave_portal"], function(a
         return {
             moveWidgetToRegion: moveWidgetToRegion,
             addWidgetToPage: addWidgetToPage,
-            addWidgetToPageRegion: addWidgetToPageRegion,
             removeWidget: deleteWidgetOnPage,
             addPage: addPage,
             getPage: getPage,

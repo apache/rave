@@ -28,7 +28,7 @@
 <%-- require.js --%>
 <script data-main="/portal/static/script/app" src="//cdnjs.cloudflare.com/ajax/libs/require.js/2.1.5/require.min.js"></script>
 <%-- jquery scripts --%>
-<script src="//ajax.aspnetcdn.com/ajax/jquery/jquery-1.7.2.min.js"></script>
+<%--<script src="//ajax.aspnetcdn.com/ajax/jquery/jquery-1.7.2.min.js"></script>--%>
 <script src="//ajax.aspnetcdn.com/ajax/jquery.ui/1.8.17/jquery-ui.min.js"></script>
 <script src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.8.1/jquery.validate.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-hashchange/v1.3/jquery.ba-hashchange.min.js"></script>
