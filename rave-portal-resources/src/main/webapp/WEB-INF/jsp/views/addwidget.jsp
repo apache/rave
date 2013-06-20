@@ -55,23 +55,7 @@
             <form:hidden path="type" value="OpenSocial"/>
 			<div class="control-group">
 	            <a href="#" class="btn btn-primary"
-	               id="fetchMetadataButton"
-	               onclick="rave.api.rpc.getWidgetMetadata({
-	                                url: $('#url').get(0).value,
-	                                providerType: 'OpenSocial',
-	                                successCallback: function(result) {
-	                                    var widget = result.result;
-	                                    $('#title').val(widget.title);
-	                                    $('#description').val(widget.description);
-	                                    $('#thumbnailUrl').val(widget.thumbnailUrl);
-	                                    $('#screenshotUrl').val(widget.screenshotUrl);
-	                                    $('#titleUrl').val(widget.titleUrl);
-	                                    $('#author').val(widget.author);
-	                                    $('#authorEmail').val(widget.authorEmail);
-	                                    $('#addWidgetForm').show();
-	                                    $('#addWidgetFormSubmit').show();
-	                                }
-	                            });">
+	               id="fetchMetadataButton">
 	                <fmt:message key="page.getWidgetMetadata.button"/>
 	            </a>
 			</div>
@@ -147,13 +131,15 @@
 
 <portal:register-init-script location="${'AFTER_RAVE'}">
 <script>
-    $(function() {
-        if ($('#url').val().length === 0) {
-            $('#addWidgetForm').hide();
-            $('#addWidgetFormSubmit').hide();
-        }
+    require(['portal/rave_event_bindings', "jquery"], function(raveEventBindings, $){
+        $(function() {
+            if ($('#url').val().length === 0) {
+                $('#addWidgetForm').hide();
+                $('#addWidgetFormSubmit').hide();
+            }
 
-    });
+            raveEventBindings.bindEvents('addWidget.jsp');
+    })});
 </script>
 </portal:register-init-script>
 

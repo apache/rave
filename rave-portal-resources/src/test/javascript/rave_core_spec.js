@@ -15,7 +15,8 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- */
+ *//*
+
 
 describe('rave', function () {
     var providerName = 'opensocial',
@@ -26,9 +27,11 @@ describe('rave', function () {
         viewObject,
         testScope = {};
 
-    /*
+    */
+/*
      setup mock objects to be used in tests
-     */
+     *//*
+
     beforeEach(function () {
         provider = {
             init: function () {
@@ -391,4 +394,4 @@ describe('rave', function () {
             expect(scope.handler).toHaveBeenCalled();
         });
     });
-});
+});*/

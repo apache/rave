@@ -60,8 +60,8 @@
                     </div>
                 </c:if>
                         <div id="widgetAdded_${widget.id}" class="detailWidgetAdd">
-                            <button class="btn btn-primary btn-large storeItemButton"
-	                                onclick="rave.store.confirmAddFromMarketplace('<c:out value="${widget.url}"/>', '<c:out value="${widget.type}"/>');">
+                            <button class="btn btn-primary btn-large storeItemButton" id="widgetMarketplaceConfirmAddButton"
+	                                data-widget-url="<c:out value='${widget.url}'/>" data-widget-type="<c:out value='${widget.type}'/>">
                                     <fmt:message key="page.widget.marketplace.addToStore"/>
                             </button>
                         </div>
@@ -108,10 +108,15 @@
 
 <portal:register-init-script location="${'AFTER_RAVE'}">
     <script>
-        $(function () {
-            rave.store.init('<c:out value="${referringPageId}"/>');
-            rave.store.initTags("<c:out value="${widget.id}"/>");
-        });
+        require(["portal/rave_store", "portal/rave_event_bindings", "jquery"],
+                function(raveStore, raveEventBindings, $){
+            $(function () {
+                raveStore.init('<c:out value="${referringPageId}"/>');
+                raveStore.initTags("<c:out value="${widget.id}"/>");
+
+                raveEventBindings.bindEvents('widget.marketplace.jsp');
+            });
+        })
     </script>
 </portal:register-init-script>
 </c:otherwise>

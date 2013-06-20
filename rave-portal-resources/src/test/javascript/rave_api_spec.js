@@ -15,15 +15,18 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- */
+ *//*
+
 
 describe('Rave API', function () {
 
     var testScope;
 
-    /*
+    */
+/*
     Start stubs
-     */
+     *//*
+
     //TODO: there are several bad dependencies in rave_api on portal functionality - stub the calls until I can fix
     rave.getClientMessage = function () {
     };
@@ -45,9 +48,11 @@ describe('Rave API', function () {
             }
         }
     }
-    /*
+    */
+/*
      End stubs
-     */
+     *//*
+
 
     beforeEach(function () {
         rave.ajax = function (args) {
@@ -632,4 +637,4 @@ describe('Rave API', function () {
             });
         });
     });
-});
+});*/

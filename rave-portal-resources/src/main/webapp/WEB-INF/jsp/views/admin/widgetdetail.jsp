@@ -45,21 +45,7 @@
 		                		<fmt:message key="admin.widgetdetail.editdata"/>
 		                		<div class="control-group pull-right">
 		                    	<div class="controls">
-		                        <a href="#" class="btn btn-warning storeItemButton" id="fetchMetadataButton"
-		                           onclick="rave.api.rpc.getWidgetMetadata({
-		                                url: $('#url').get(0).value,
-		                                providerType: $('input:radio[name=type]:checked').val(),
-		                                successCallback: function(result) {
-		                                    var widget = result.result;
-		                                    $('#title').val(widget.title);
-		                                    $('#description').val(widget.description);
-		                                    $('#thumbnailUrl').val(widget.thumbnailUrl);
-		                                    $('#screenshotUrl').val(widget.screenshotUrl);
-		                                    $('#titleUrl').val(widget.titleUrl);
-		                                    $('#author').val(widget.author);
-		                                    $('#authorEmail').val(widget.authorEmail);
-		                                }
-		                            });">
+		                        <a href="#" class="btn btn-warning storeItemButton" id="fetchMetadataButton">
 		                            <fmt:message key="page.updateWidgetMetadata.button"/> </a>
 		                        </div>
 		                    </div>
@@ -278,8 +264,12 @@
 </div>
 <portal:register-init-script location="${'AFTER_RAVE'}">
     <script>
-        $(function() {
-            rave.admin.initAdminUi();
-        });
+        require(["portal/rave_admin", "portal/rave_event_bindings", "jquery"], function(raveAdmin, raveEventBindings, $){
+            $(function() {
+                raveAdmin.initAdminUi();
+
+                raveEventBindings.bindEvents('widgetdetail.jsp');
+            });
+        })
     </script>
 </portal:register-init-script>

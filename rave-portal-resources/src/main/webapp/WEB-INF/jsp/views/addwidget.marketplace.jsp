@@ -83,7 +83,7 @@
                     </div>
 
                 </c:if>
-                <ul class="storeItems">
+                <ul class="storeItems" id="marketplaceWidgetList">
 
                     <c:forEach var="widget" items="${widgets.resultSet}">
                         <li class="storeItem">
@@ -94,8 +94,8 @@
                                      width="120" height="60"/>
                             </c:if>
                             <div id="widgetAdded_${widget.id}" class="storeButton">
-                                <button class="btn btn-small btn-primary" id="addWidget_${widget.id}"
-	                                onclick="rave.store.confirmAddFromMarketplace('<c:out value="${widget.url}"/>', '<c:out value="${widget.type}"/>');">
+                                <button class="btn btn-small btn-primary widgetAddButton" id="addWidget_${widget.id}"
+                                        data-widget-url="<c:out value="${widget.url}"/>" data-widget-type="<c:out value="${widget.type}"/>">
                                     <fmt:message key="page.widget.marketplace.addToStore"/>
                                 </button>
                             </div>
@@ -243,8 +243,11 @@
 
 <portal:register-init-script location="${'AFTER_RAVE'}">
     <script>
-        $(function () {
-            rave.store.init('<c:out value="${referringPageId}"/>');
-        });
+        require(["portal/rave_store", "portal/rave_event_bindings", "jquery"], function(raveStore, raveEventBindings, $){
+            $(function () {
+                raveStore.init('<c:out value="${referringPageId}"/>');
+                raveEventBindings.bindEvents("addwidget.marketplace.jsp")
+            });
+        })
     </script>
 </portal:register-init-script>

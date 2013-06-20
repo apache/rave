@@ -198,7 +198,7 @@
             </div>
         </div>
         <div class="modal-footer">
-            <a href="#" class="btn" onclick="$('#userDialog').modal('hide');">Close</a>
+            <a href="#" class="btn" data-dismiss="modal" data-target="#userDialog">Close</a>
         </div>
     </div>
 <div class="clear-float">&nbsp;</div>
@@ -207,18 +207,21 @@
 
 <portal:register-init-script location="${'AFTER_RAVE'}">
     <script>
-        rave.init();
-        rave.RegionWidget.defaultView = 'profile';
+        require(["core/rave_core", "core/rave_widget", "portal/rave_layout", "portal/rave_person_profile", "portal/rave_portal", "portal/rave_forms", "jquery"],
+                function(raveCore, raveRegionWidget, raveLayout, ravePersonProfile, ravePortal, raveForms, $){
+                    raveCore.init();
+                    raveRegionWidget.defaultView = 'profile';
 
-        $(function () {
-            rave.layout.init();
-            rave.personprofile.init();
-            rave.setPageOwner({
-                username: "<c:out value="${userProfile.username}"/>",
-                id: "<c:out value="${userProfile.id}"/>"
-            });
-            rave.forms.validateEditAccountForm();
-            rave.renderWidgets('home');
-        });
+                    $(function () {
+                        raveLayout.init();
+                        ravePersonProfile.init();
+                        ravePortal.setPageOwner({
+                            username: "<c:out value="${userProfile.username}"/>",
+                            id: "<c:out value="${userProfile.id}"/>"
+                        });
+                        raveForms.validateEditAccountForm();
+                        raveCore.renderWidgets('home');
+                    });
+        })
     </script>
 </portal:register-init-script>

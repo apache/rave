@@ -41,9 +41,9 @@
                 <c:choose>
                     <c:when test="${widget.widgetStatus eq 'PUBLISHED'}">
                         <div id="widgetAdded_${widget.id}" class="detailWidgetAdd">
-                            <button class="btn btn-primary btn-large storeItemButton"
+                            <button class="btn btn-primary btn-large storeItemButton widgetJspAddWidgetButton"
                                     id="addWidget_${widget.id}"
-                                    onclick="rave.api.rpc.addWidgetToPage({widgetId: '${widget.id}', pageId: '${referringPageId}', redirectAfterAdd:true});"
+                                    data-widget-id="${widget.id}" data-page-id="${referringPageId}"
                                     data-success="<fmt:message key="page.widget.addedToPage"/>">
                                 <fmt:message key="page.widget.addToPage"/>
                             </button>
@@ -137,8 +137,8 @@
                 <div class="detail-widget-users">
                     <c:set var="widgetUserCountGreaterThanZero"
                            value="${widgetStatistics != null && widgetStatistics.totalUserCount > 0}"/>
-                    <c:if test="${widgetUserCountGreaterThanZero}"><a href="javascript:void(0);"
-                                                                      onclick="rave.displayUsersOfWidget('${widget.id}');"></c:if>
+                    <c:if test="${widgetUserCountGreaterThanZero}"><a href="javascript:void(0);" id="displayUsersOfWidgetLink"
+                                                                      data-widget-id="${widget.id}"></c:if>
                     <fmt:formatNumber groupingUsed="true" value="${widgetStatistics.totalUserCount}"/>&nbsp;<fmt:message
                             key="page.widget.usercount"/>
                     <c:if test="${widgetUserCountGreaterThanZero}"></a></c:if>
@@ -259,9 +259,15 @@
 
 <portal:register-init-script location="${'AFTER_RAVE'}">
     <script>
-        $(function () {
-            rave.store.init('<c:out value="${referringPageId}"/>');
-            rave.store.initTags("<c:out value="${widget.id}"/>");
-        });
+        require(["portal/rave_store", "portal/rave_event_bindings", "jquery"], function(raveStore, raveEventBindings, $){
+            $(function () {
+                raveStore.init('<c:out value="${referringPageId}"/>');
+                raveStore.initTags("<c:out value="${widget.id}"/>");
+
+                raveEventBindings.bindEvents('widget.jsp');
+            });
+
+
+        })
     </script>
 </portal:register-init-script>

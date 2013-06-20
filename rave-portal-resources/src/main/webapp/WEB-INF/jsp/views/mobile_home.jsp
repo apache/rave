@@ -68,7 +68,7 @@
             <c:forEach var="regionWidget" items="${region.regionWidgets}">
                 <portal:widget var="widget" id="${regionWidget.widgetId}" />
                 <div class="widget-wrapper widget-wrapper-mobile" id="widget-${regionWidget.id}-wrapper">
-                    <div class="widget-title-bar widget-title-bar-mobile" onclick="rave.toggleMobileWidget(${regionWidget.id});">
+                    <div class="widget-title-bar widget-title-bar-mobile" data-regionWidget-id="${regionWidget.id}">
                         <span id="widget-${regionWidget.id}-collapse" class="widget-toolbar-toggle-collapse" title="<fmt:message key="widget.chrome.toggle"/>"><i class="icon-chevron-down"></i></span>
                         <div id="widget-${regionWidget.id}-title" class="widget-title">
                             <c:out value="${widget.title}"/>
@@ -142,11 +142,12 @@
 
 <portal:register-init-script location="${'AFTER_RAVE'}">
     <script>
-        $(function() {
-            rave.initPageEditorStatus(<c:out value="${pageUser.editor}"/>);
-            rave.setMobile(true);
-            rave.initProviders();
-            rave.initWidgets();
-        });
+        require(["portal/rave_portal", "portal/rave_event_bindings", "jquery"], function(ravePortal, raveEventBindings, $){
+            $(function() {
+                ravePortal.initPageEditorStatus(<c:out value="${pageUser.editor}"/>);
+
+                raveEventBindings.bindEvents('mobile_home.jsp');
+            });
+        })
     </script>
 </portal:register-init-script>

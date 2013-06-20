@@ -75,7 +75,7 @@
                         </ul>
                     </div>
                 </c:if>
-                <ul class="storeItems">
+                <ul id="storeItems" class="storeItems">
                         <%--@elvariable id="widget" type="org.apache.rave.model.Widget"--%>
                     <c:forEach var="widget" items="${widgets.resultSet}">
                         <%--@elvariable id="widgetsStatistics" type="org.apache.rave.portal.model.util.WidgetStatistics"--%>
@@ -99,8 +99,8 @@
                             </c:if>
 
                             <div id="widgetAdded_${widget.id}" class="storeButton">
-                                <button class="btn btn-small btn-primary" id="addWidget_${widget.id}"
-                                        onclick="rave.api.rpc.addWidgetToPage({widgetId: '${widget.id}', pageId: '${referringPageId}', buttonId: this.id});"
+                                <button class="btn btn-small btn-primary widgetAddButton" id="addWidget_${widget.id}"
+                                        data-widget-id="${widget.id}" data-referring-page-id="${referringPageId}"
                                         data-success="<fmt:message key="page.widget.addedToPage"/>">
                                     <fmt:message key="page.widget.addToPage"/>
                                 </button>
@@ -203,7 +203,7 @@
                                 <c:set var="widgetUserCountGreaterThanZero"
                                        value="${widgetStatistics != null && widgetStatistics.totalUserCount > 0}"/>
                                 <c:if test="${widgetUserCountGreaterThanZero}">
-                                    <a href="javascript:void(0);" onclick="rave.displayUsersOfWidget('${widget.id}');">
+                                    <a href="javascript:void(0);" class="displayUsersLink" data-widget-id="${widget.id}">
                                 </c:if>
                                 <fmt:formatNumber groupingUsed="true"
                                                   value="${widgetStatistics!=null?widgetStatistics.totalUserCount:0}"/>&nbsp;<fmt:message key="page.widget.usercount"/>
@@ -306,8 +306,12 @@
 
 <portal:register-init-script location="${'AFTER_RAVE'}">
     <script>
-        $(function () {
-            rave.store.init('<c:out value="${referringPageId}"/>');
-        });
+        require(["portal/rave_store", "portal/rave_event_bindings", "jquery"], function(raveStore, raveEventBindings, $){
+            $(function () {
+                raveStore.init('<c:out value="${referringPageId}"/>');
+
+                raveEventBindings.bindEvents('store.jsp');
+            });
+        })
     </script>
 </portal:register-init-script>

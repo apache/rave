@@ -98,7 +98,7 @@ public class MessageBundleController  {
             sb.append(add_client_message).append(mapEntry.getKey()).append(key_value_separator);
             sb.append(mapEntry.getValue()).append(message_suffix);
         }
-        return sb.toString();
+        return "require(['core/main'], function(main){" + sb.toString() + "})";
     }
     
     private String getClientMessagesJSForLocale(Locale locale) {

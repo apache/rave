@@ -175,10 +175,10 @@
                 </div>
                 <div>&nbsp;</div>
                 <div>
-                    <a href="#" onclick="rave.models.currentPage.acceptShare()"><fmt:message key="_rave_client.common.accept"/></a>
+                    <a href="#" id="acceptShareLink"><fmt:message key="_rave_client.common.accept"/></a>
                 </div>
                 <div>
-                    <a href="#" onclick="rave.models.currentPage.declineShare();"><fmt:message key="_rave_client.common.decline"/></a>
+                    <a href="#" id="declineShareLink"><fmt:message key="_rave_client.common.decline"/></a>
                 </div>
                 <div class="clear-float">&nbsp;</div>
             </div>
@@ -327,8 +327,8 @@
         </form>
     </div>
     <div class="modal-footer">
-        <a href="#" class="btn" onclick="$('#movePageDialog').modal('hide');"><fmt:message key="_rave_client.common.cancel"/></a>
-        <a href="#" class="btn btn-primary" onclick="rave.layout.movePage();"><fmt:message key="page.general.movepage"/></a>
+        <a href="#" class="btn" data-dismiss="modal" data-target="#movePageDialog"><fmt:message key="_rave_client.common.cancel"/></a>
+        <a href="#" class="btn btn-primary" id="movePageButton"><fmt:message key="page.general.movepage"/></a>
     </div>
 </div>
 
@@ -360,8 +360,8 @@
         </form>
     </div>
     <div class="modal-footer">
-        <a href="#" class="btn" onclick="$('#moveWidgetModal').modal('hide');"><fmt:message key="_rave_client.common.cancel"/></a>
-        <a href="#" class="btn btn-primary" onclick="rave.layout.moveWidgetToPage($('#moveWidgetModal').data('regionWidgetId'));"><fmt:message key="_rave_client.common.move"/></a>
+        <a href="#" class="btn" data-dismiss="modal" data-target="#moveWidgetModal"><fmt:message key="_rave_client.common.cancel"/></a>
+        <a href="#" class="btn btn-primary" id="moveWidgetToPageButton"><fmt:message key="_rave_client.common.move"/></a>
     </div>
 </div>
 
@@ -390,18 +390,27 @@
 
 <portal:register-init-script location="${'AFTER_RAVE'}">
 <script>
-    rave.init();
-    rave.RegionWidget.defaultView = 'home';
+    require(["core/rave_core", "core/rave_widget", "portal/rave_portal", "portal/rave_layout", "portal/rave_models", "portal/rave_event_bindings", "jquery"], function(raveCore, raveRegionWidget, ravePortal, raveLayout, raveModels, raveEventBindings, $){
+        raveCore.init();
+        raveRegionWidget.defaultView = 'home';
 
-    $(function() {
-        rave.initPageEditorStatus(<c:out value="${pageUser.editor}"/>);
-        rave.layout.init(${applicationProperties['portal.export.ui.enable']});
-        rave.renderWidgets('home');
-    });
+        $(function() {
+            ravePortal.initPageEditorStatus(<c:out value="${pageUser.editor}"/>);
+            raveLayout.init(${applicationProperties['portal.export.ui.enable']});
+            raveCore.renderWidgets('home');
+
+            raveEventBindings.bindEvents('page.jsp');
+        });
+
+        raveModels.currentPage.set({id: ${page.id}, ownerId: ${page.ownerId}, viewerId: <sec:authentication property="principal.id" />}, {silent:true})
+
+
+    })
+
 </script>
-<script>rave.models.currentPage.set({id: ${page.id}, ownerId: ${page.ownerId}, viewerId: <sec:authentication property="principal.id" />}, {silent:true})</script>
 <c:forEach var="members" items="${page.members}">
     <portal:person id="${members.userId}" var="member" />
-<script>rave.models.currentPage.addInitData('${member.id}', ${members.editor})</script>
+<script>require(["portal/rave_models", "jquery"], function(raveModels, $){raveModels.currentPage.addInitData('${member.id}', ${members.editor})})</script>
 </c:forEach>
 </portal:register-init-script>
+                                                                                    F

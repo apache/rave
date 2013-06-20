@@ -54,7 +54,7 @@ Template for rendering a RegionWidget including wrapper chrome, toolbars, menus,
                 <%-- These are toolbar buttons --%>
             <div id="widget-${regionWidget.id}-toolbar" class="widget-toolbar <c:if test="${isLocked}">hidden</c:if>">
                 <div id="widget-${regionWidget.id}-widget-menu-wrapper" class="dropdown widget-menu-wrapper">
-                    <a id="widget-${regionWidget.id}-menu-button" class="dropdown-toggle"  onclick="rave.layout.addIframeOverlays(event)">
+                    <a id="widget-${regionWidget.id}-menu-button" class="dropdown-toggle addIframeOverlaysLink">
                         <i class="icon-cog"></i>
                     </a>
                     <ul id="widget-${regionWidget.id}-menu" class="dropdown-menu widget-menu">
@@ -120,3 +120,8 @@ Template for rendering a RegionWidget including wrapper chrome, toolbars, menus,
         <portal:render-widget regionWidget="${regionWidget}" widget="${widget}" />
     </div>
 </div>
+<script>
+    require(["portal/rave_event_bindings", "jquery"], function(raveEventBindings, $){
+        $(function(){raveEventBindings.bindEvents('region_widget.tag');})
+    })
+</script>

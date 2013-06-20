@@ -16,7 +16,10 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-var rave = _.extend(rave, (function () {
+
+//All set!
+
+define(["jquery", "underscore", "core/rave_api", "./rave_templates"], function($, _, api, raveTemplates){
     var clientMessages = {};
     var context="";
 
@@ -77,7 +80,7 @@ var rave = _.extend(rave, (function () {
 
     function viewPage(pageId) {
         var fragment = (pageId != null) ? ("/" + pageId) : "";
-        window.location.href = rave.getContext() + "page/view" + fragment;
+        window.location.href = getContext() + "page/view" + fragment;
     }
 
     function viewWidgetDetail(widgetId, referringPageId, jumpToId) {
@@ -87,7 +90,7 @@ var rave = _.extend(rave, (function () {
         else {
             jumpToId = '';
         }
-        window.location.href = rave.getContext() + "store/widget/" + widgetId + "?referringPageId=" + referringPageId + jumpToId;
+        window.location.href = getContext() + "store/widget/" + widgetId + "?referringPageId=" + referringPageId + jumpToId;
     }
 
     /**
@@ -164,15 +167,6 @@ var rave = _.extend(rave, (function () {
         onPageInitializedHandlers = null;  // No need to hold these references anymore.
     }
 
-    function setContext(contextPath) {
-        context = contextPath;
-        rave.api.setContext(contextPath);
-    }
-
-    function getContext() {
-        return context;
-    }
-
     function extractObjectIdFromElementId(elementId) {
         var tokens = elementId.split("-");
         return tokens.length > 2 && tokens[0] == "widget" || tokens[0] == "region" ? tokens[1] : null;
@@ -180,7 +174,7 @@ var rave = _.extend(rave, (function () {
 
     function showInfoMessage(message) {
 
-        var markup = rave.ui.templates['info-message']({
+        var markup = raveTemplates.templates['info-message']({
             message: message
         });
 
@@ -194,52 +188,15 @@ var rave = _.extend(rave, (function () {
             });
     }
 
-    function displayUsersOfWidget(widgetId) {
-        rave.api.rest.getUsersForWidget({widgetId: widgetId, successCallback: function (data) {
-
-            //format data for display
-            _.each(data, function (person) {
-                person.name = person.displayName || person.preferredName || (person.givenName + " " + person.familyName);
-            });
-
-            var markup = rave.ui.templates['users-of-widget']({
-                users: data,
-                //TODO: data from dom evil! should be using gadget object to get name
-                widgetName: $("#widget-" + widgetId + "-title").text().trim()
-            });
-
-            //TODO: don't use jquery ui dialogs?
-            $(markup).dialog({
-                modal: true,
-                buttons: [
-                    {text: "Close", click: function () {
-                        $(this).dialog("close");
-                    }}
-                ]
-            });
-        }});
-    }
 
     /**
      * Public API
      */
     return {
-        displayUsersOfWidget: displayUsersOfWidget,
 
         showInfoMessage: showInfoMessage,
 
         getObjectIdFromDomId: extractObjectIdFromElementId,
-        /**
-         * Sets the context path for the Rave web application
-         *
-         * @param contextPath the context path of the rave webapp
-         */
-        setContext: setContext,
-
-        /**
-         * Gets the current context
-         */
-        getContext: getContext,
         /**
          * Renders an error in place of the widget
          *
@@ -307,6 +264,7 @@ var rave = _.extend(rave, (function () {
          */
         isPageEmpty: isPageEmpty,
 
+
         /**
          * Returns a language specific message based on the supplied key
          *
@@ -345,5 +303,4 @@ var rave = _.extend(rave, (function () {
         registerOnPageInitizalizedHandler: registerOnPageInitizalizedHandler,
         runOnPageInitializedHandlers: runOnPageInitializedHandlers
     }
-})()
-);
+})

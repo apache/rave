@@ -64,7 +64,7 @@ public class OpenSocialWidgetWrapperRenderer implements RegionWidgetWrapperRende
     //Note the widgets.push() call.  This defines the widget objects, which are
     //added to the widgets[] array in home.jsp.
     private static final String SCRIPT_BLOCK =
-            "<script>rave.registerWidget('%1$s', {type: '%2$s'," +
+            "<script>require(['core/main'], function(main){rave.registerWidget('%1$s', {type: '%2$s'," +
             " regionWidgetId: '%3$s'," +
             " widgetUrl: '%4$s', " +
             " securityToken: '%5$s', " +
@@ -75,7 +75,7 @@ public class OpenSocialWidgetWrapperRenderer implements RegionWidgetWrapperRende
             " locked: %10$s," +
             " hideChrome: %11$s," +
             " subPage: {id: %12$s, name: '%13$s', isDefault: %14$s}" +
-            "});</script>";
+            "})});</script>";
     private static final String MARKUP = "<!-- RegionWidget '%1$s' placeholder -->";
 
     @Override

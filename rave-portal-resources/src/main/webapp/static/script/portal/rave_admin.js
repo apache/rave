@@ -17,9 +17,9 @@
  * under the License.
  */
 
-var rave = rave || {};
-rave.admin = rave.admin || (function() {
+//All set!
 
+define(["jquery"], function($){
     var adminUi = (function() {
 
         function datatableClick() {
@@ -63,5 +63,55 @@ rave.admin = rave.admin || (function() {
     return {
         initAdminUi : adminUi.init
     }
+})
 
-})();
+/*
+ var rave = rave || {};
+ rave.admin = rave.admin || (function() {
+
+ var adminUi = (function() {
+
+ function datatableClick() {
+ $('.datatable tr').bind('click', function() {
+ var link = $(this).attr('data-detaillink');
+ if (link != undefined && link != '') {
+ window.location = link;
+ }
+ });
+ }
+
+ //Resize bootstrap modal & adjust margins to size of image.
+ function resizeImageModal(){
+ $('#thumbnailModal, #screenshotModal').on('shown', function () {
+ if(!$(this).hasClass("sized")){
+ var imageWidth = $(this).find("img").width(),
+ imageHeight = $(this).find("img").height(),
+ footerHeight = $(this).find(".modal-footer").outerHeight(),
+ headerHeight = $(this).find(".modal-header").outerHeight(),
+ totalHeight = imageHeight + footerHeight + headerHeight;
+
+ $(this).css({
+ width: imageWidth + "px",
+ 'margin-top': "-" + Math.round(totalHeight/2) + "px",
+ 'margin-left': "-" + Math.round(imageWidth/2) + "px"
+ }).addClass("sized");
+ }
+ });
+ }
+
+ function init() {
+ datatableClick();
+ resizeImageModal();
+ }
+
+ return {
+ init:init
+ }
+ })();
+
+ return {
+ initAdminUi : adminUi.init
+ }
+
+ })();
+ */
