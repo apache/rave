@@ -23,7 +23,7 @@
 --%>
 <%-- json script --%>
 <script src="//cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
-<%-- require.js --%>
-<script data-main="/portal/static/script/app" src="//cdnjs.cloudflare.com/ajax/libs/require.js/2.1.5/require.js"></script>
 <%-- google code css3 mediaqueries script --%>
 <!--[if lt IE 9]><script src="//css3-mediaqueries-js.googlecode.com/svn/trunk/css3-mediaqueries.js"></script><![endif]-->
+<%-- require.js --%>
+<script src="//cdnjs.cloudflare.com/ajax/libs/require.js/2.1.5/require.js"></script>

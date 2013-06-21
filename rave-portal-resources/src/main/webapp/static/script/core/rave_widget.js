@@ -17,7 +17,7 @@
  * under the License.
  */
 
-define(['underscore', './rave_api', './rave_providers'], function(_, api, providers){
+define(['underscore', 'core/rave_api', 'core/rave_providers'], function(_, api, providers){
 
     function getProvider(name) {
         return providers[name.toLowerCase()];

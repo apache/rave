@@ -17,7 +17,7 @@
  * under the License.
  */
 
-define(['underscore', './rave_core', './rave_api', './rave_widget', './rave_log', './rave_view_manager'],
+define(['underscore', 'core/rave_core', 'core/rave_api', 'core/rave_widget', 'core/rave_log', 'core/rave_view_manager'],
     function (_, rave, api, RegionWidget, log, viewManager) {
 
         rave.api = api;

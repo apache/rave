@@ -17,7 +17,7 @@
  * under the License.
  */
 
-define(['underscore', './rave_log', 'osapi'], function(_, log){
+define(['underscore', 'core/rave_log', 'osapi'], function(_, log){
     var openAjaxHub;
 
     if (!openAjaxHub) {

@@ -24,47 +24,36 @@
 <%-- local rave scripts --%>
 <portal:render-script location="${'BEFORE_RAVE'}"/>
 <%-- get the javaScriptDebugMode portal preference value --%>
-<c:set var="jsDebugMode"><portal:render-js-debug-mode /></c:set>
+<c:set var="jsDebugMode"><portal:render-js-debug-mode/></c:set>
 <%-- check to see if the javaScriptDebugMode is on, if so render the individual JS files, otherwise render the minified single file --%>
 <c:choose>
     <c:when test="${jsDebugMode == '1'}">
-<%--        <script src="<spring:url value="/static/script/core/rave_core.js"/>"></script>
-        <script src="<spring:url value="/static/script/core/rave_ajax.js"/>"></script>
-        <script src="<spring:url value="/static/script/core/rave_api.js"/>"></script>
-        <script src="<spring:url value="/static/script/core/rave_widget.js"/>"></script>
-        <script src="<spring:url value="/static/script/core/rave_opensocial.js"/>"></script>
-        <script src="<spring:url value="/static/script/core/rave_wookie.js"/>"></script>--%>
-<%--        <script src="<spring:url value="/static/script/portal/rave_portal.js"/>"></script>
-        <script src="<spring:url value="/static/script/portal/rave_backbone.js"/>"></script>
-        <script src="<spring:url value="/static/script/portal/rave_models.js"/>"></script>
-        <script src="<spring:url value="/static/script/portal/rave_layout.js"/>"></script>
-        <script src="<spring:url value="/static/script/portal/rave_ui.js"/>"></script>
-        <script src="<spring:url value="/static/script/portal/rave_forms.js"/>"></script>
-        <script src="<spring:url value="/static/script/portal/rave_person_profile.js"/>"></script>
-        <script src="<spring:url value="/static/script/portal/rave_store.js"/>"></script>
-        <script src="<spring:url value="/static/script/portal/rave_admin.js"/>"></script>--%>
+        <!--TODO: figure out js debug mode -->
     </c:when>
     <c:otherwise>
-<%--        <script src="<spring:url value="/static/script/rave.core.min.js"/>"></script>--%>
-<%--        <script src="<spring:url value="/static/script/rave.portal.min.js"/>"></script>--%>
+
     </c:otherwise>
 </c:choose>
-<script src="<spring:url value="/app/messagebundle/rave_client_messages.js"/>"></script>
+<script src="<spring:url value="/static/script/app.js"/>"></script>
 <portal:render-script location="${'AFTER_RAVE'}"/>
 <%-- common javascript to execute on all pages --%>
 <script>
-    require(["core/rave_api", "portal/rave_portal", "core/rave_widget"], function(raveApi, ravePortal, raveRegionWidget){
-        <%-- set the web application context --%>
-        raveApi.setContext("<spring:url value="/app/" />");
-        <%-- set the javascript debug mode so js code has access to it --%>
-        ravePortal.setJavaScriptDebugMode(<c:out value="${jsDebugMode}"/>);
-        <%-- set the default widget height so js code has access to it --%>
-        raveRegionWidget.defaultHeight = <c:out value="${portalSettings['defaultWidgetHeight'].value}"/>;
-        <%-- set the current page viewer --%>
-        <sec:authorize access="isAuthenticated()">
-        <sec:authentication property="principal.username" scope="request" var="username"/>
-        <sec:authentication property="principal.id" scope="request" var="id"/>
-        ravePortal.setPageViewer({username:"${username}", id:"${id}"});
-        </sec:authorize>
-    })
+    <%--require(["rave", "portal/rave_portal"], function (rave, ravePortal) {--%>
+        <%--&lt;%&ndash; set the web application context &ndash;%&gt;--%>
+        <%--rave.api.setContext("<spring:url value="/app/" />");--%>
+        <%--&lt;%&ndash; set the javascript debug mode so js code has access to it &ndash;%&gt;--%>
+        <%--ravePortal.setJavaScriptDebugMode(<c:out value="${jsDebugMode}"/>);--%>
+        <%--&lt;%&ndash; set the default widget height so js code has access to it &ndash;%&gt;--%>
+        <%--rave.RegionWidget.defaultHeight = <c:out value="${portalSettings['defaultWidgetHeight'].value}"/>;--%>
+        <%--&lt;%&ndash; set the current page viewer &ndash;%&gt;--%>
+        <%--<sec:authorize access="isAuthenticated()">--%>
+            <%--<sec:authentication property="principal.username" scope="request" var="username"/>--%>
+            <%--<sec:authentication property="principal.id" scope="request" var="id"/>--%>
+            <%--ravePortal.setPageViewer({username: "${username}", id: "${id}"});--%>
+        <%--</sec:authorize>--%>
+    <%--})--%>
+
+    require(['rave'], function(rave) {
+        rave.init();
+    });
 </script>

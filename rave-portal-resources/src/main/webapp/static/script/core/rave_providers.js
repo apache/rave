@@ -17,7 +17,7 @@
  * under the License.
  */
 
-define(['./rave_wookie', './rave_opensocial'], function(wookie, os){
+define(['core/rave_wookie', 'core/rave_opensocial'], function(wookie, os){
     return{
         w3c:wookie,
         opensocial:os

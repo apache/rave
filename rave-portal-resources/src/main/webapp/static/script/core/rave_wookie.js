@@ -17,7 +17,7 @@
  * under the License.
  */
 
-define(['./rave_widget', './rave_openajax_hub'], function(regionWidget, managedHub){
+define(['core/rave_openajax_hub'], function(managedHub){
         var exports = {}
 
         exports.initWidget = function(widget){}
@@ -36,11 +36,10 @@ define(['./rave_widget', './rave_openajax_hub'], function(regionWidget, managedH
                     },
                     IframeContainer: {
                         parent:      el,
-                        //TODO: I dropped a bunch of the attrs here - seems like it should all be css
-                        //unless it is being defined by the gadget spec
                         iframeAttrs: {
-                            height: widget.height || regionWidget.defaultHeight,
-                            width:  widget.width || regionWidget.defaultWidth,
+                            //TODO: hardcoding numbers, should come from regionWidget?
+                            height: widget.height || widget.constructor.defaultHeight,
+                            width:  widget.width || widget.constructor.defaultWidth,
                             frameborder: 0
                         },
                         uri: widget.widgetUrl,

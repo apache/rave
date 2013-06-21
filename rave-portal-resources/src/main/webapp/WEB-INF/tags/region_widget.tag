@@ -121,7 +121,7 @@ Template for rendering a RegionWidget including wrapper chrome, toolbars, menus,
     </div>
 </div>
 <script>
-    require(["portal/rave_event_bindings", "jquery"], function(raveEventBindings, $){
-        $(function(){raveEventBindings.bindEvents('region_widget.tag');})
-    })
+//    require(["portal/rave_event_bindings", "jquery"], function(raveEventBindings, $){
+//        $(function(){raveEventBindings.bindEvents('region_widget.tag');})
+//    })
 </script>

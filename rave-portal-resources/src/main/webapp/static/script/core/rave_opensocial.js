@@ -18,8 +18,8 @@
  */
 
 //TODO: Remove dependency on rave_ui when moving to angular
-define(['underscore', './rave_view_manager', './rave_widget', './rave_api', 'portal/rave_ui', './rave_openajax_hub', './rave_log', 'osapi'],
-    function(_, viewManager, regionWidget, api, raveUi, managedHub, log){
+define(['underscore', 'core/rave_view_manager', 'core/rave_api', 'core/rave_openajax_hub', 'core/rave_log', 'osapi'],
+    function(_, viewManager, api, managedHub, log){
     var exports = {};
 
     var container;
@@ -115,8 +115,9 @@ define(['underscore', './rave_view_manager', './rave_widget', './rave_api', 'por
                         "securityToken": data.securityToken,
                         "metadata": opt_gadgetInfo
                     },
-                    height = gadget.metadata.modulePrefs.height || regionWidget.defaultHeight,
-                    width = gadget.metadata.modulePrefs.width || regionWidget.defaultWidth;
+                //TODO: hardcoded default height and width
+                    height = gadget.metadata.modulePrefs.height || 200,
+                    width = gadget.metadata.modulePrefs.width || 320;
 
                 preloadMetadata(gadget);
 
@@ -168,13 +169,13 @@ define(['underscore', './rave_view_manager', './rave_widget', './rave_api', 'por
         widget._site = site;
 
         var renderParams = {};
-        renderParams[osapi.container.RenderParam.VIEW] = opts.view || regionWidget.defaultView;
+        renderParams[osapi.container.RenderParam.VIEW] = opts.view || widget.constructor.defaultView;
         renderParams[osapi.container.RenderParam.ALLOW_DEFAULT_VIEW ] = opts.allowDefaultView;
         renderParams[osapi.container.RenderParam.DEBUG ] = opts.debug;
-        renderParams[osapi.container.RenderParam.HEIGHT ] = opts.height || regionWidget.defaultHeight;
+        renderParams[osapi.container.RenderParam.HEIGHT ] = opts.height || widget.constructor.defaultHeight;
         renderParams[osapi.container.RenderParam.NO_CACHE ] = opts.noCache;
         renderParams[osapi.container.RenderParam.TEST_MODE] = opts.testMode;
-        renderParams[osapi.container.RenderParam.WIDTH ] = opts.width || regionWidget.defaultWidth;
+        renderParams[osapi.container.RenderParam.WIDTH ] = opts.width || widget.constructor.defaultWidth;
         renderParams[osapi.container.RenderParam.USER_PREFS] = getCompleteUserPrefSet(widget.userPrefs, widget.metadata.userPrefs);
         container.navigateGadget(site, widget.widgetUrl, opts.view_params, renderParams, opts.callback);
     }

@@ -18,10 +18,11 @@
  */
 
 requirejs.config({
+    baseUrl: 'static/script',
     "paths":{
         "backbone":"//cdnjs.cloudflare.com/ajax/libs/backbone.js/0.9.10/backbone-min",
         "bootstrap": '//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.0.3/bootstrap.min',
-        "rave": "./core/main",
+        "clientMessages": "/portal/app/messagebundle/rave_client_messages",
         "event_bindings": "./portal",
         "handlebars":"//cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.0.rc.2/handlebars.min",
         "jquery": "//ajax.aspnetcdn.com/ajax/jquery/jquery-1.7.2.min",
@@ -31,6 +32,7 @@ requirejs.config({
         "jqueryTouchPouch": '//cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.2/jquery.ui.touch-punch.min',
         "osapi":"/gadgets/js/container:pubsub-2:open-views.js?c=1&container=default&debug=1",
         "portal": "./portal",
+        "rave": "./core/main",
         "underscore": "//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min"
     },
     shim: {

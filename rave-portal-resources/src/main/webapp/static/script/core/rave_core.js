@@ -17,7 +17,7 @@
  * under the License.
  */
 
-define([ 'underscore', './rave_widget'], function(_, regionWidget){
+define(['underscore', 'core/rave_widget'], function(_, regionWidget){
     var INITIALIZED = false,
     //hash of widgets by regionWidgetId
         regionWidgets = {},
