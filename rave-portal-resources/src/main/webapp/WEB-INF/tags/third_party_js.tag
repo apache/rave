@@ -23,22 +23,7 @@
 --%>
 <%-- json script --%>
 <script src="//cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
-<%-- underscore --%>
-<%--<script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>--%>
 <%-- require.js --%>
-<script data-main="/portal/static/script/app" src="//cdnjs.cloudflare.com/ajax/libs/require.js/2.1.5/require.min.js"></script>
-<%-- jquery scripts --%>
-<%--<script src="//ajax.aspnetcdn.com/ajax/jquery/jquery-1.7.2.min.js"></script>--%>
-<script src="//ajax.aspnetcdn.com/ajax/jquery.ui/1.8.17/jquery-ui.min.js"></script>
-<script src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.8.1/jquery.validate.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-hashchange/v1.3/jquery.ba-hashchange.min.js"></script>
-<%-- Touch devices --%>
-<script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.2/jquery.ui.touch-punch.min.js"></script>
-<%-- backbone --%>
-<%--<script src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/0.9.10/backbone-min.js"></script>--%>
-<%-- bootstrap --%>
-<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.0.3/bootstrap.min.js"></script>
-<%-- handelbars --%>
-<%--<script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.0.rc.2/handlebars.min.js"></script>--%>
+<script data-main="/portal/static/script/app" src="//cdnjs.cloudflare.com/ajax/libs/require.js/2.1.5/require.js"></script>
 <%-- google code css3 mediaqueries script --%>
 <!--[if lt IE 9]><script src="//css3-mediaqueries-js.googlecode.com/svn/trunk/css3-mediaqueries.js"></script><![endif]-->

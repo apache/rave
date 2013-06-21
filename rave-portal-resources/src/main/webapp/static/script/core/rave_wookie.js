@@ -17,8 +17,6 @@
  * under the License.
  */
 
-//Depends on rave.core where registerProvider is defined
-
 define(["./rave_widget", "./rave_core"], function(regionWidget, core){
         var exports = {}
 
@@ -62,58 +60,3 @@ define(["./rave_widget", "./rave_core"], function(regionWidget, core){
 
         return exports;
 })
-
-/*
-rave.registerProvider(
-    'W3C',
-    (function () {
-        var exports = {}
-
-        exports.init = function(){};
-        exports.initWidget = function(widget){}
-        exports.renderWidget = function(widget, el, opts){
-            var widgetBodyElement = document.getElementById(["widget-", widget.regionWidgetId, "-body"].join(""));
-            window["onWidget"+widget.regionWidgetId+"Load"] = function(){
-                window.document.getElementById(widget.regionWidgetId).style.visibility="visible";
-            };
-
-            new OpenAjax.hub.IframeContainer(rave.getManagedHub() , ""+widget.regionWidgetId,
-                {
-                    Container: {
-                        onSecurityAlert: onClientSecurityAlert,
-                        onConnect:       onClientConnect,
-                        onDisconnect:    onClientDisconnect
-                    },
-                    IframeContainer: {
-                        parent:      el,
-                        //TODO: I dropped a bunch of the attrs here - seems like it should all be css
-                        //unless it is being defined by the gadget spec
-                        iframeAttrs: {
-                            height: widget.height || rave.RegionWidget.defaultHeight,
-                            width:  widget.width || rave.RegionWidget.defaultWidth,
-                            frameborder: 0
-                        },
-                        uri: widget.widgetUrl,
-                        onGadgetLoad: "onWidget"+widget.regionWidgetId+"Load"
-                    }
-                }
-            );
-        }
-
-        function onClientSecurityAlert(source, alertType) {  */
-/* Handle client-side security alerts *//*
-  }
-        function onClientConnect(container) {        */
-/* Called when client connects *//*
-   }
-        function onClientDisconnect(container) {     */
-/* Called when client disconnects *//*
- }
-
-        exports.closeWidget = function(widget){
-            //TODO...
-        }
-
-        return exports;
-    })()
-)*/

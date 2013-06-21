@@ -17,10 +17,6 @@
  * under the License.
  */
 
-//Ask Erin about the functions on the rave namespace which aren't defined anywhere in the project
-
-//All set!! ^^ Besides that ^^
-
 define(["jquery", "./rave_portal", "core/rave_api", "./rave_models", "./rave_ui", "./rave_context"], function($, ravePortal, api, raveModels, raveUi, raveContext){
     var MOVE_PAGE_DEFAULT_POSITION_IDX = -1;
     var $moveWidgetDialog;

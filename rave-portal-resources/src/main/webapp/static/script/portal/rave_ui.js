@@ -17,8 +17,6 @@
  * under the License.
  */
 
-//All set!!
-
 define(["core/rave_core", "jquery", "underscore", "handlebars","./rave_portal", "./rave_backbone", "./rave_models", "./rave_templates", "core/rave_view_manager", "core/rave_widget", "./rave_context"],
     function(raveCore, $, _, Handlebars, ravePortal, raveBackbone, raveModels, raveTemplates, raveViewManager, raveRegionWidget, raveContext){
     var exports = {};

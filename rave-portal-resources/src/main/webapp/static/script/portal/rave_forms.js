@@ -17,8 +17,6 @@
  * under the License.
  */
 
-//All set!!
-
 define(["jquery", "./rave_portal"], function($, ravePortal){
     function validateNewAccountForm() {
         $("#newAccountForm").validate({
@@ -98,87 +96,3 @@ define(["jquery", "./rave_portal"], function($, ravePortal){
         validatePageForm: validatePageForm
     };
 })
-
-/*
-var rave = rave || {};
-rave.forms = rave.forms || (function() {
-
-    function validateNewAccountForm() {
-        $("#newAccountForm").validate({
-            rules: {
-                username : {
-                    required: true,
-                    minlength: 2
-                },
-                password : {
-                    required: true,
-                    minlength: 4
-                },
-                confirmPassword : {
-                    required: true,
-                    minlength: 4,
-                    equalTo: "#passwordField"
-                },
-                email : {
-                    required: true,
-                    email: true
-                }
-            },
-            messages: {
-                confirmPassword: {
-                    equalTo: rave.getClientMessage("form.password.invalid_match")
-                }
-            }
-        });
-    }
-
-    function validateUserProfileForm() {
-        $("#userProfileForm").validate({
-            rules: {
-                password : {
-                    required: true,
-                    minlength: 4
-                },
-                passwordConfirm : {
-                    required: true,
-                    minlength: 4,
-                    equalTo: "#passwordField"
-                }
-            },
-            messages: {
-                passwordConfirm: {
-                    equalTo: rave.getClientMessage("form.password.invalid_match")
-                }
-            }
-        });
-    }
-    
-    function validateEditAccountForm() {
-        $("#editAccountForm").validate({
-            rules: {
-            	 email : {
-                     required: true,
-                     email: true
-                 }
-            }            
-        });
-    }
-    
-    function validatePageForm() {
-        $("#pageForm").validate({
-            rules: {
-                tab_title : {
-                    required: true
-                }
-            }
-        });
-    }
-
-    return {
-        validateNewAccountForm : validateNewAccountForm,
-	    validateUserProfileForm: validateUserProfileForm,
-	    validateEditAccountForm: validateEditAccountForm,
-        validatePageForm: validatePageForm
-    };
-})();
-*/

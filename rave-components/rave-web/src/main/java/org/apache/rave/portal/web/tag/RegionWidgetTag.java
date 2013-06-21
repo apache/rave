@@ -42,7 +42,7 @@ public class RegionWidgetTag extends AbstractContextAwareSingletonBeanDependentT
 
     // Script block for disabled gadget
     private static final String DISABLED_SCRIPT_BLOCK =
-            "<script>require(['core/main'], function(main){rave.registerWidget('%1$s', {type: 'DISABLED'," +
+            "<script>require(['core/rave_core'], function(raveCore){raveCore.registerWidget('%1$s', {type: 'DISABLED'," +
             " regionWidgetId: '%2$s'," +
             " disabledMessage: '%3$s'," +
             " collapsed: %4$s," +

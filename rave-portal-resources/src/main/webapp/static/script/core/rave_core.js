@@ -17,10 +17,7 @@
  * under the License.
  */
 
-//All set!!
-
-define(["./rave_widget", "underscore", "./rave_providers"], function(regionWidget, _, raveProviders){
-    console.log("INSIDE RAVE CORE");
+define(["./rave_widget", "underscore"], function(regionWidget, _){
     var INITIALIZED = false,
     //providers - opensocial, wookie...
         providers = {},
@@ -33,6 +30,7 @@ define(["./rave_widget", "underscore", "./rave_providers"], function(regionWidge
 
     var exports = {};
 
+/*
     exports.registerProvider = function (name, provider) {
         raveProviders[name.toLowerCase()] = provider;
         return provider;
@@ -41,6 +39,7 @@ define(["./rave_widget", "underscore", "./rave_providers"], function(regionWidge
     exports.getProvider = function (name) {
         return raveProviders[name.toLowerCase()];
     }
+*/
 
     //TODO: regionId isn't really needed, but the script text is hard coded and I don't want to mess with it yet
     exports.registerWidget = function (regionId, definition) {

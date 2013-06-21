@@ -91,14 +91,14 @@ public class MessageBundleController  {
 
     private String convertClientMessagesMapToJavaScriptOutput(Map<String, String> clientMessagesMap) {
         StringBuilder sb = new StringBuilder();
-        final String add_client_message = "rave.addClientMessage(\"";
+        final String add_client_message = "ravePortal.addClientMessage(\"";
         final String key_value_separator = "\",\"";
         final String message_suffix = "\");";
         for (Map.Entry<String, String> mapEntry : clientMessagesMap.entrySet()) {
             sb.append(add_client_message).append(mapEntry.getKey()).append(key_value_separator);
             sb.append(mapEntry.getValue()).append(message_suffix);
         }
-        return "require(['core/main'], function(main){" + sb.toString() + "})";
+        return "require(['portal/rave_portal'], function(ravePortal){" + sb.toString() + "})";
     }
     
     private String getClientMessagesJSForLocale(Locale locale) {

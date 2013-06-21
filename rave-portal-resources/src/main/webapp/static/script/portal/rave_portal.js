@@ -17,8 +17,6 @@
  * under the License.
  */
 
-//All set!
-
 define(["jquery", "underscore", "core/rave_api", "./rave_templates"], function($, _, api, raveTemplates){
     var clientMessages = {};
     var context="";
