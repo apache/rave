@@ -17,10 +17,8 @@
  * under the License.
  */
 
-define(["./rave_widget", "underscore"], function(regionWidget, _){
+define([ 'underscore', './rave_widget'], function(_, regionWidget){
     var INITIALIZED = false,
-    //providers - opensocial, wookie...
-        providers = {},
     //hash of widgets by regionWidgetId
         regionWidgets = {},
     //event handlers to fire on rave init
@@ -28,21 +26,10 @@ define(["./rave_widget", "underscore"], function(regionWidget, _){
     //oajaxhub to support pubsub. only initialized if needed
         openAjaxHub;
 
-    var exports = {};
-
-/*
-    exports.registerProvider = function (name, provider) {
-        raveProviders[name.toLowerCase()] = provider;
-        return provider;
-    }
-
-    exports.getProvider = function (name) {
-        return raveProviders[name.toLowerCase()];
-    }
-*/
+    var rave = {};
 
     //TODO: regionId isn't really needed, but the script text is hard coded and I don't want to mess with it yet
-    exports.registerWidget = function (regionId, definition) {
+    rave.registerWidget = function (regionId, definition) {
         //make regionId optional
         if (!definition) {
             definition = regionId;
@@ -58,23 +45,23 @@ define(["./rave_widget", "underscore"], function(regionWidget, _){
     }
 
     //uregister a regionwidget, identified by a RegionWidget object, a widget definition, or just an id
-    exports.unregisterWidget = function (widget) {
+    rave.unregisterWidget = function (widget) {
         var regionWidgetId = widget.regionWidgetId || widget;
 
         delete regionWidgets[regionWidgetId];
     }
 
     //convenience method to render all registered widgets
-    exports.renderWidgets = function(el, opts) {
-        _.invoke(exports.getWidgets(), 'render', el, opts);
+    rave.renderWidgets = function(el, opts) {
+        _.invoke(rave.getWidgets(), 'render', el, opts);
     }
 
     //get registered widget by regionWidgetId
-    exports.getWidget = function (regionWidgetId) {
+    rave.getWidget = function (regionWidgetId) {
         return regionWidgets[regionWidgetId];
     }
 
-    exports.getWidgets = function (filter) {
+    rave.getWidgets = function (filter) {
         var widgets = _.toArray(regionWidgets);
         if(filter) {
             widgets = _.where(widgets, filter);
@@ -82,33 +69,9 @@ define(["./rave_widget", "underscore"], function(regionWidget, _){
         return widgets;
     }
 
-    exports.getManagedHub = function () {
-        if (!openAjaxHub) {
-            if (_.isUndefined(OpenAjax)) {
-                throw new Error("No implementation of OpenAjax found.  " +
-                    "Please ensure that an implementation has been included in the page.");
-            }
-            openAjaxHub = new OpenAjax.hub.ManagedHub({
-                onSubscribe:function (topic, container) {
-                    //TODO:ask erin about changing rave to exports
-                    exports.log((container == null ? "Container" : container.getClientID()) + " subscribes to this topic '" + topic + "'");
-                    return true;
-                },
-                onUnsubscribe:function (topic, container) {
-                    //TODO:ask erin about changing rave to exports
-                    exports.log((container == null ? "Container" : container.getClientID()) + " unsubscribes from this topic '" + topic + "'");
-                    return true;
-                },
-                onPublish:function (topic, data, pcont, scont) {
-                    exports.log((pcont == null ? "Container" : pcont.getClientID()) + " publishes '" + data + "' to topic '" + topic + "' subscribed by " + (scont == null ? "Container" : scont.getClientID()));
-                    return true;
-                }
-            });
-        }
-        return openAjaxHub;
-    }
 
-    exports.registerOnInitHandler = function (handler) {
+
+    rave.registerOnInitHandler = function (handler) {
         if (!(_.isFunction(handler))) {
             throw new Error('Init event handler must be a function');
         }
@@ -118,7 +81,7 @@ define(["./rave_widget", "underscore"], function(regionWidget, _){
         initHandlers.push(handler);
     }
 
-    exports.init = function () {
+    rave.init = function () {
         INITIALIZED = true;
         _.each(regionWidgets, function (definition) {
             regionWidgets[definition.regionWidgetId] = new regionWidget(definition)
@@ -128,15 +91,8 @@ define(["./rave_widget", "underscore"], function(regionWidget, _){
         });
     }
 
-    //wrap a safe version of console.log
-    exports.log = function(msg){
-        if  (console && console.log) {
-            console.log(msg);
-        }
-    }
-
     //reset internal data - used for testing cleanup
-    exports.reset = function () {
+    rave.reset = function () {
         INITIALIZED = false;
         providers = {};
         regionWidgets = {};
@@ -144,5 +100,5 @@ define(["./rave_widget", "underscore"], function(regionWidget, _){
         openAjaxHub;
     }
 
-    return exports;
+    return rave;
 })

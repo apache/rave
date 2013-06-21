@@ -390,22 +390,20 @@
 
 <portal:register-init-script location="${'AFTER_RAVE'}">
 <script>
-    require(["core/rave_core", "core/rave_widget", "portal/rave_portal", "portal/rave_layout", "portal/rave_models", "portal/rave_event_bindings", "jquery"], function(raveCore, raveRegionWidget, ravePortal, raveLayout, raveModels, raveEventBindings, $){
-        raveCore.init();
-        raveRegionWidget.defaultView = 'home';
+    require(["rave", "core/rave_widget", "portal/rave_portal", "portal/rave_layout", "portal/rave_models", "portal/rave_event_bindings", "jquery"], function(rave, raveRegionWidget, ravePortal, raveLayout, raveModels, raveEventBindings, $){
+        rave.init();
+        rave.RegionWidget.defaultView = 'home';
 
         $(function() {
             ravePortal.initPageEditorStatus(<c:out value="${pageUser.editor}"/>);
             raveLayout.init(${applicationProperties['portal.export.ui.enable']});
-            raveCore.renderWidgets('home');
+            rave.renderWidgets('home');
 
             raveEventBindings.bindEvents('page.jsp');
         });
 
         raveModels.currentPage.set({id: ${page.id}, ownerId: ${page.ownerId}, viewerId: <sec:authentication property="principal.id" />}, {silent:true})
-
-
-    })
+    });
 
 </script>
 <c:forEach var="members" items="${page.members}">

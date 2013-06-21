@@ -17,7 +17,7 @@
  * under the License.
  */
 
-define(["underscore"], function(_){
+define(['underscore'], function(_){
     //hash of registered views by name
     var registeredViews = {}
     //hash of registered views that have been rendered by a generated uid

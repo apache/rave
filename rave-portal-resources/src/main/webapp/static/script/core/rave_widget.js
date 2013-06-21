@@ -17,7 +17,12 @@
  * under the License.
  */
 
-define(["./rave_api", "underscore"], function(api, _){
+define(['underscore', './rave_api', './rave_providers'], function(_, api, providers){
+
+    function getProvider(name) {
+        return providers[name.toLowerCase()];
+    }
+
     /*
      rave widget constructor
      */
@@ -26,7 +31,7 @@ define(["./rave_api", "underscore"], function(api, _){
 
         _.extend(this, definition);
 
-        this._provider = rave.getProvider(provider);
+        this._provider = getProvider(provider);
 
         if (!this._provider) {
             throw new Error('Cannot render widget ' + definition.widgetUrl + '. ' +

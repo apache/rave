@@ -18,8 +18,8 @@
  */
 
 //TODO: Remove dependency on rave_ui when moving to angular
-define(["./rave_core", "./rave_view_manager", "./rave_widget", "./rave_api", "portal/rave_ui"],
-    function(core, viewManager, regionWidget, api, raveUi){
+define(['underscore', './rave_view_manager', './rave_widget', './rave_api', 'portal/rave_ui', './rave_openajax_hub', './rave_log', 'osapi'],
+    function(_, viewManager, regionWidget, api, raveUi, managedHub, log){
     var exports = {};
 
     var container;
@@ -31,7 +31,7 @@ define(["./rave_core", "./rave_view_manager", "./rave_widget", "./rave_api", "po
     container = new osapi.container.Container(containerConfig);
 
     gadgets.pubsub2router.init({
-        hub:core.getManagedHub()
+        hub:managedHub
     });
 
     rpcRegister();
@@ -108,7 +108,7 @@ define(["./rave_core", "./rave_view_manager", "./rave_widget", "./rave_api", "po
 
             function renderEE(data) {
                 if (data.error) {
-                    return core.log(data.error.message)
+                    return log(data.error.message)
                 }
                 var gadget = {
                         "widgetUrl": widgetUrl,

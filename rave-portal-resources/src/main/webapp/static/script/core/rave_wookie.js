@@ -17,7 +17,7 @@
  * under the License.
  */
 
-define(["./rave_widget", "./rave_core"], function(regionWidget, core){
+define(['./rave_widget', './rave_openajax_hub'], function(regionWidget, managedHub){
         var exports = {}
 
         exports.initWidget = function(widget){}
@@ -27,7 +27,7 @@ define(["./rave_widget", "./rave_core"], function(regionWidget, core){
                 window.document.getElementById(widget.regionWidgetId).style.visibility="visible";
             };
 
-            new OpenAjax.hub.IframeContainer(core.getManagedHub() , ""+widget.regionWidgetId,
+            new OpenAjax.hub.IframeContainer(managedHub , ""+widget.regionWidgetId,
                 {
                     Container: {
                         onSecurityAlert: onClientSecurityAlert,

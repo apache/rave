@@ -17,7 +17,8 @@
  * under the License.
  */
 
-define(["./rave_ajax", "underscore", "jquery"], function(ajax, _, $){
+//TODO: jquery dependency should not be here.
+define(['underscore', 'jquery', './rave_ajax'], function(_, $, ajax){
     //stores virtual host context of application execution
     var context = "";
 
