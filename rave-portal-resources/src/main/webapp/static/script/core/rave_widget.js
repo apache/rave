@@ -17,7 +17,7 @@
  * under the License.
  */
 
-define(['underscore', 'core/rave_api', 'core/rave_providers'], function(_, api, providers){
+define(['underscore', 'core/rave_api', 'core/rave_view_manager', 'core/rave_providers'], function(_, api, viewManager, providers){
 
     function getProvider(name) {
         return providers[name.toLowerCase()];
@@ -55,7 +55,7 @@ define(['underscore', 'core/rave_api', 'core/rave_providers'], function(_, api, 
         //if el is a string, go to rave's view system
         if (_.isString(el)) {
             //TODO: potential memory leak - rendering a widget into new views does not force cleanup of current view
-            var view = rave.renderView(el, this);
+            var view = viewManager.renderView(el, this);
             el = view.getWidgetSite();
             this._view = view;
         }
@@ -93,7 +93,7 @@ define(['underscore', 'core/rave_api', 'core/rave_providers'], function(_, api, 
     Widget.prototype.close = function (opts) {
         this._provider.closeWidget(this, opts);
         if (this._view) {
-            rave.destroyView(this._view);
+            viewManager.destroyView(this._view);
         }
 
         api.rpc.removeWidget({

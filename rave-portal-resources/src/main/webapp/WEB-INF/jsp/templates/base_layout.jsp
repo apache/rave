@@ -30,8 +30,6 @@ under the License.
     <rave:rave_css/>
     <rave:custom_css/>
     <rave:third_party_head_js/>
-    <%--TODO: Ask Erin about moving this.--%>
-    <rave:rave_js/>
     <portal:render-script location="${'HEAD'}" />
  </head>
 <body>
@@ -46,6 +44,8 @@ under the License.
 <tiles:insertAttribute name="footer"/>
 <%-- render any script that needs to execute pre-src includes --%>
 <portal:render-init-script location="${'BEFORE_RAVE'}" />
+<%-- render rave_js tag --%>
+<rave:rave_js/>
 <%-- render any script that needs to execute post-src includes --%>
 <portal:render-init-script location="${'AFTER_RAVE'}" />
 <%-- render custom javascript from extension projects if the tag is overlayed --%>

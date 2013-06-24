@@ -35,8 +35,6 @@
     </c:otherwise>
 </c:choose>
 <script src="<spring:url value="/static/script/app.js"/>"></script>
-<portal:render-script location="${'AFTER_RAVE'}"/>
-<%-- common javascript to execute on all pages --%>
 <script>
     require(["rave"], function (rave) {
         <%-- set the web application context --%>
@@ -52,5 +50,8 @@
 
         <%-- set the javascript debug mode so js code has access to it --%>
         <%--ui.setJavaScriptDebugMode(<c:out value="${jsDebugMode}"/>);--%>
-    })
+    });
 </script>
+<portal:render-script location="${'AFTER_RAVE'}"/>
+<%-- common javascript to execute on all pages --%>
+

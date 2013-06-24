@@ -21,6 +21,7 @@
 <%@ include file="/WEB-INF/jsp/includes/taglibs.jsp" %>
 <fmt:setBundle basename="messages"/>
 <jsp:useBean id="pages" type="java.util.List<org.apache.rave.model.Page>" scope="request"/>
+<jsp:useBean id="pageUser" type="org.apache.rave.model.PageUser" scope="request"/>
 <jsp:useBean id="pageLayouts" type="java.util.List" scope="request"/>
 
 <%--@elvariable id="page" type="org.apache.rave.model.Page"--%>
@@ -453,5 +454,4 @@
         });
 
     </script>
-
 </portal:register-init-script>
