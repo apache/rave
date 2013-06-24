@@ -557,6 +557,7 @@ define(["jquery", "underscore", "handlebars", "rave",
                 this.$chrome = $('#widget-' + regionWidgetId + '-wrapper');
                 this.$minimizeIcon = $("#widget-" + regionWidgetId + "-min");
                 this.$toggleCollapseIcon = $("#widget-" + regionWidgetId + "-collapse");
+                this.$cogIcon = $('#widget-'+regionWidgetId+'-menu-button');
                 this.$menuItemMove = $("#widget-" + regionWidgetId + "-menu-move-item");
                 this.$menuItemDelete = $("#widget-" + regionWidgetId + "-menu-delete-item");
                 this.$menuItemMaximize = $("#widget-" + regionWidgetId + "-menu-maximize-item");
@@ -591,6 +592,38 @@ define(["jquery", "underscore", "handlebars", "rave",
                     return false;
                 }
 
+                function addIframeOverlays(event) {
+                    //e.preventDefault();
+
+                    var i = 0;
+                    $(".widget").each(function () {
+                        var W = $(this).outerWidth(),
+                            H = $(this).outerHeight(),
+                            X = $(this).position().left,
+                            Y = $(this).position().top;
+
+                        $(this).after('<div class="iframe-overlay" />');
+                        $(this).next('.iframe-overlay').css({
+                            width: W,
+                            height: H,
+                            position: "absolute",
+                            top: Y,
+                            left: X
+                        });
+
+                    });
+
+                    $('.iframe-overlay').click(function () {
+                        self.$cogIcon.dropdown('toggle');
+                        $(".iframe-overlay").remove();
+                    })
+
+                    // Remove any overlays onclick of all the things!!!
+                    $("*:not(.dropdown-toggle)").on("click", function () {
+                        $(".iframe-overlay").remove();
+                    });
+                }
+
                 function minimize() {
                     self.widget.render('home');
                 }
@@ -613,7 +646,7 @@ define(["jquery", "underscore", "handlebars", "rave",
 
                 function doCollapseExpand() {
                     var expanded = !widget.collapsed
-                    $('iframe', self.$widgetSite).toggle(expanded);
+                    $(self.$widgetSite).toggle(expanded);
                     $('i', self.$toggleCollapseIcon).toggleClass('icon-chevron-down', expanded);
                     $('i', self.$toggleCollapseIcon).toggleClass('icon-chevron-up', !expanded);
                 }
@@ -661,6 +694,8 @@ define(["jquery", "underscore", "handlebars", "rave",
                 //bind widget menu items
                 self.$minimizeIcon.click(minimize);
                 self.$toggleCollapseIcon.click(toggleCollapse);
+                self.$cogIcon.click(addIframeOverlays);
+                self.$cogIcon.dropdown();
                 if (!self.$menuItemMove.hasClass("menu-item-disabled")) {
                     self.$menuItemMove.click(showMovePageDialog);
                 }
@@ -893,7 +928,6 @@ define(["jquery", "underscore", "handlebars", "rave",
         }
 
         function init() {
-
             initializePageSharing();
             registerHomeView();
             registerCanvasView();

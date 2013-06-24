@@ -120,8 +120,3 @@ Template for rendering a RegionWidget including wrapper chrome, toolbars, menus,
         <portal:render-widget regionWidget="${regionWidget}" widget="${widget}" />
     </div>
 </div>
-<script>
-//    require(["portal/rave_event_bindings", "jquery"], function(raveEventBindings, $){
-//        $(function(){raveEventBindings.bindEvents('region_widget.tag');})
-//    })
-</script>

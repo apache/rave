@@ -30,9 +30,7 @@ define(["jquery", 'rave', 'portal/rave_store', 'portal/rave_models', 'portal/rav
             "store.jsp": storeEventBindings,
             "widget.jsp": widgetEventBindings,
             "widget.marketplace.jsp": widgetMarketplaceEventBindings,
-            "widgetdetail.jsp": widgetDetailEventBindings,
-            "region_widget.tag": regionWidgetEventBindings
-
+            "widgetdetail.jsp": widgetDetailEventBindings
         };
 
         /********************************
@@ -164,12 +162,6 @@ define(["jquery", 'rave', 'portal/rave_store', 'portal/rave_models', 'portal/rav
                         alert(ravePortal.getClientMessage("api.widget_metadata.invalid_params"));
                     }
                 })
-            })
-        };
-
-        function regionWidgetEventBindings(){
-            $('.addIframeOverlaysLink').click(function(event){
-                raveLayout.addIframeOverlays(event)
             })
         };
 

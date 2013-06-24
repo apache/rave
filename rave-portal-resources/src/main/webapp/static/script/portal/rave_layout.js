@@ -177,36 +177,7 @@ define(["jquery", "rave", "portal/rave_portal", "portal/rave_models", "bootstrap
 
         // functions associated with the user search for sharing pages
 
-        function addIframeOverlays(event) {
-            //e.preventDefault();
 
-            var i = 0;
-            $(".widget").each(function () {
-                var W = $(this).outerWidth(),
-                    H = $(this).outerHeight(),
-                    X = $(this).position().left,
-                    Y = $(this).position().top;
-
-                $(this).after('<div class="iframe-overlay" />');
-                $(this).next('.iframe-overlay').css({
-                    width: W,
-                    height: H,
-                    position: "absolute",
-                    top: Y,
-                    left: X
-                });
-
-            });
-
-            $('.iframe-overlay').click(function () {
-                widgetMenu.hideWidgetMenu();
-            })
-
-            // Remove any overlays onclick of all the things!!!
-            $("*:not(.dropdown-toggle)").on("click", function () {
-                $(".iframe-overlay").remove();
-            });
-        }
 
         /**
          * Submits the RPC call to move the widget to a new page
@@ -389,9 +360,8 @@ define(["jquery", "rave", "portal/rave_portal", "portal/rave_models", "bootstrap
                 (hash === "" && subPage.isDefault));
         }
 
-        function init() {
+        function init(){
             pageMenu.init(rave.getExportEnabled());
-            $(".dropdown-toggle").dropdown();
         }
 
         rave.registerOnInitHandler(init);
@@ -406,7 +376,6 @@ define(["jquery", "rave", "portal/rave_portal", "portal/rave_models", "bootstrap
             closePageDialog: closePageDialog,
             closePageDialogTabbed: closePageDialogTabbed,
             moveWidgetToPage: moveWidgetToPage,
-            isWidgetOnHiddenTab: isWidgetOnHiddenTab,
-            addIframeOverlays: addIframeOverlays
+            isWidgetOnHiddenTab: isWidgetOnHiddenTab
         };
     })
