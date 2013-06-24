@@ -17,9 +17,9 @@
  * under the License.
  */
 
-define(["core/rave_api"], function(api){
+define(["rave"], function (rave) {
     function displayUsersOfWidget(widgetId) {
-        api.rest.getUsersForWidget({widgetId: widgetId, successCallback: function (data) {
+        rave.api.rest.getUsersForWidget({widgetId: widgetId, successCallback: function (data) {
 
             //format data for display
             _.each(data, function (person) {

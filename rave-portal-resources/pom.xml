@@ -120,7 +120,7 @@
                             <jsSrcDir>${project.basedir}/src/main/webapp/static/script/core</jsSrcDir>
                             <debug>true</debug>
                             <sourceIncludes>
-                                <include>rave_core.js</include>
+                                <include>rave_widget_manager.js</include>
                                 <include>rave_api.js</include>
                                 <include>rave_widget.js</include>
                                 <include>rave_opensocial.js</include>

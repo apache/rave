@@ -17,14 +17,9 @@
  * under the License.
  */
 
-define(['underscore', 'core/rave_widget'], function(_, regionWidget){
-    var INITIALIZED = false,
+define(['underscore', 'core/rave_widget'], function (_, regionWidget) {
     //hash of widgets by regionWidgetId
-        regionWidgets = {},
-    //event handlers to fire on rave init
-        initHandlers = [],
-    //oajaxhub to support pubsub. only initialized if needed
-        openAjaxHub;
+    var regionWidgets = {};
 
     var rave = {};
 
@@ -37,10 +32,7 @@ define(['underscore', 'core/rave_widget'], function(_, regionWidget){
             //TODO: until api can be updated, attach regionid as an attribute on the widget so that we can filter on this
             definition.regionId = regionId;
         }
-        regionWidgets[definition.regionWidgetId] = definition;
-        if (INITIALIZED) {
-            regionWidgets[definition.regionWidgetId] = new regionWidget(definition)
-        }
+        regionWidgets[definition.regionWidgetId] = new regionWidget(definition)
         return regionWidgets[definition.regionWidgetId];
     }
 
@@ -52,7 +44,7 @@ define(['underscore', 'core/rave_widget'], function(_, regionWidget){
     }
 
     //convenience method to render all registered widgets
-    rave.renderWidgets = function(el, opts) {
+    rave.renderWidgets = function (el, opts) {
         _.invoke(rave.getWidgets(), 'render', el, opts);
     }
 
@@ -63,42 +55,14 @@ define(['underscore', 'core/rave_widget'], function(_, regionWidget){
 
     rave.getWidgets = function (filter) {
         var widgets = _.toArray(regionWidgets);
-        if(filter) {
+        if (filter) {
             widgets = _.where(widgets, filter);
         }
         return widgets;
     }
 
+    //TODO: I killed registerInitHandlers! Tell people.
 
-
-    rave.registerOnInitHandler = function (handler) {
-        if (!(_.isFunction(handler))) {
-            throw new Error('Init event handler must be a function');
-        }
-        if (INITIALIZED) {
-            return handler();
-        }
-        initHandlers.push(handler);
-    }
-
-    rave.init = function () {
-        INITIALIZED = true;
-        _.each(regionWidgets, function (definition) {
-            regionWidgets[definition.regionWidgetId] = new regionWidget(definition)
-        });
-        _.each(initHandlers, function (fn) {
-            fn();
-        });
-    }
-
-    //reset internal data - used for testing cleanup
-    rave.reset = function () {
-        INITIALIZED = false;
-        providers = {};
-        regionWidgets = {};
-        initHandlers = [];
-        openAjaxHub;
-    }
-
+    //TODO: reset isn't going to work well with individual modules holding private data
     return rave;
 })

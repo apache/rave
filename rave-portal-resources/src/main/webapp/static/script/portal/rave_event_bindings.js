@@ -17,8 +17,9 @@
  * under the License.
  */
 
-define(["jquery", 'core/rave_api', 'portal/rave_store', 'portal/rave_models', 'portal/rave_layout', 'portal/rave_display', 'portal/rave_portal'],
-    function($, raveApi, raveStore, raveModels, raveLayout, raveDisplay, ravePortal){
+define(["jquery", 'rave', 'portal/rave_store', 'portal/rave_models', 'portal/rave_layout', 'portal/rave_display',
+    'portal/rave_portal'],
+    function($, rave, raveStore, raveModels, raveLayout, raveDisplay, ravePortal){
 
         var pageNameToFunctionMap = {
             "addWidget.jsp": addWidgetEventBindings,
@@ -109,7 +110,7 @@ define(["jquery", 'core/rave_api', 'portal/rave_store', 'portal/rave_models', 'p
         function storeEventBindings(){
             $("#storeItems").on("click", "button.widgetAddButton", function(event){
                 var element = $(this);
-                raveApi.rpc.addWidgetToPage({widgetId: element.data('widget-id'),
+                rave.api.rpc.addWidgetToPage({widgetId: element.data('widget-id'),
                     pageId: element.data('referring-page-id'), buttonId: element.attr('id'),
                     successCallback: addWidgetToPageCallback
                 });
@@ -126,7 +127,7 @@ define(["jquery", 'core/rave_api', 'portal/rave_store', 'portal/rave_models', 'p
                 var element = $(this);
                 var widgetId = element.data('widget-id');
                 var pageId = element.data('page-id');
-                raveApi.addWidgetToPage({widgetId: widgetId, pageId: pageId, redirectAfterAdd: true, successCallback: addWidgetToPageCallback})
+                rave.api.addWidgetToPage({widgetId: widgetId, pageId: pageId, redirectAfterAdd: true, successCallback: addWidgetToPageCallback})
             })
 
             $('#displayUsersOfWidgetLink').click(function(){
@@ -143,7 +144,7 @@ define(["jquery", 'core/rave_api', 'portal/rave_store', 'portal/rave_models', 'p
 
         function widgetDetailEventBindings(){
             $('#fetchMetadataButton').click(function(){
-                raveApi.rpc.getWidgetMetadata({
+                rave.api.rpc.getWidgetMetadata({
                     url: $('#url').get(0).value,
                     providerType: $('input:radio[name=type]:checked').val(),
                     successCallback: function(result) {
@@ -190,9 +191,6 @@ define(["jquery", 'core/rave_api', 'portal/rave_store', 'portal/rave_models', 'p
 
             $(addWidgetButton).removeClass("btn-primary").addClass("btn-success").html(addedText);
         }
-
-
-
 
         return {
             bindEvents: function(pageName){

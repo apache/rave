@@ -18,12 +18,11 @@
  */
 
 requirejs.config({
-    baseUrl: 'static/script',
+    baseUrl: '/portal/static/script',
     "paths":{
         "backbone":"//cdnjs.cloudflare.com/ajax/libs/backbone.js/0.9.10/backbone-min",
         "bootstrap": '//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.0.3/bootstrap.min',
         "clientMessages": "/portal/app/messagebundle/rave_client_messages",
-        "event_bindings": "./portal",
         "handlebars":"//cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.0.rc.2/handlebars.min",
         "jquery": "//ajax.aspnetcdn.com/ajax/jquery/jquery-1.7.2.min",
         "jqueryUi":"//ajax.aspnetcdn.com/ajax/jquery.ui/1.8.17/jquery-ui.min",
@@ -31,8 +30,8 @@ requirejs.config({
         "jqueryHashChange":'//cdnjs.cloudflare.com/ajax/libs/jquery-hashchange/v1.3/jquery.ba-hashchange.min',
         "jqueryTouchPouch": '//cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.2/jquery.ui.touch-punch.min',
         "osapi":"/gadgets/js/container:pubsub-2:open-views.js?c=1&container=default&debug=1",
-        "portal": "./portal",
-        "rave": "./core/main",
+        "rave": "core/main",
+        "ui": "portal/main",
         "underscore": "//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min"
     },
     shim: {

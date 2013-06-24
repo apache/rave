@@ -17,7 +17,7 @@
  * under the License.
  */
 
-define(["jquery", "core/rave_api", "./rave_portal", "./rave_context"], function($, api, ravePortal, raveContext){
+define(["jquery", "rave", "portal/rave_portal"], function($, rave, ravePortal){
     function initRatings() {
         $('.ratingButtons').button();
 
@@ -47,7 +47,7 @@ define(["jquery", "core/rave_api", "./rave_portal", "./rave_context"], function(
                 var widgetId = this.id.substring("like-".length);
 
                 //update the widget score in database
-                api.rest.updateWidgetRating({widgetId: widgetId, score: 10});
+                rave.api.rest.updateWidgetRating({widgetId: widgetId, score: 10});
 
                 //call update widget rating handler function
                 var widgetRating = {
@@ -58,7 +58,7 @@ define(["jquery", "core/rave_api", "./rave_portal", "./rave_context"], function(
                 };
 
                 //update the widget ratings on web page
-                api.handler.widgetRatingHandler(widgetRating);
+                rave.api.handler.widgetRatingHandler(widgetRating);
 
                 $(this).addClass('btn-success');
                 $(this).siblings('.btn').removeClass('btn-danger');
@@ -72,7 +72,7 @@ define(["jquery", "core/rave_api", "./rave_portal", "./rave_context"], function(
                 var widgetId = this.id.substring("dislike-".length);
 
                 //update the widget score in database
-                api.rest.updateWidgetRating({widgetId: widgetId, score: 0});
+                rave.api.rest.updateWidgetRating({widgetId: widgetId, score: 0});
 
                 //call update widget rating handler function
                 var widgetRating = {
@@ -83,7 +83,7 @@ define(["jquery", "core/rave_api", "./rave_portal", "./rave_context"], function(
                 };
 
                 //update the widget ratings on web page
-                api.handler.widgetRatingHandler(widgetRating);
+                rave.api.handler.widgetRatingHandler(widgetRating);
 
                 $(this).addClass('btn-danger');
                 $(this).siblings('.btn').removeClass('btn-success');
@@ -99,7 +99,7 @@ define(["jquery", "core/rave_api", "./rave_portal", "./rave_context"], function(
             text: false
         }).click(function() {
                 var widgetId = this.id.substring("comment-new-".length);
-                api.rest.createWidgetComment({widgetId: widgetId,
+                rave.api.rest.createWidgetComment({widgetId: widgetId,
                     text: $("#newComment-"+widgetId).get(0).value,
                     successCallback: function() { window.location.reload(); }});
             });
@@ -110,7 +110,7 @@ define(["jquery", "core/rave_api", "./rave_portal", "./rave_context"], function(
         }).click(function() {
                 var commentId = this.id.substring("comment-delete-".length);
                 var widgetId = this.getAttribute('data-widgetid');
-                api.rest.deleteWidgetComment({widgetId: widgetId,
+                rave.api.rest.deleteWidgetComment({widgetId: widgetId,
                     commentId: commentId,
                     successCallback: function() { window.location.reload(); }});
             });
@@ -121,7 +121,7 @@ define(["jquery", "core/rave_api", "./rave_portal", "./rave_context"], function(
             var commentText = $(this).parents(".comment").find(".commentText").text();
             $("#editComment").html(commentText);
             $("#editComment-dialog #updateComment").click( function(){
-                api.rest.updateWidgetComment({widgetId: widgetId,
+                rave.api.rest.updateWidgetComment({widgetId: widgetId,
                     commentId: commentId,
                     text: $("#editComment").get(0).value,
                     successCallback: function() { window.location.reload(); }
@@ -152,14 +152,14 @@ define(["jquery", "core/rave_api", "./rave_portal", "./rave_context"], function(
         });
         $(".tagNewButton").click(function () {
             var widgetId = this.id.substring("tag-new-".length);
-            api.rest.createWidgetTag({widgetId:widgetId,
+            rave.api.rest.createWidgetTag({widgetId:widgetId,
                 text:$("#tags").get(0).value,
                 successCallback:function () {
                     window.location.reload();
                 }});
         });
         //    load the tag by widgetId
-        api.rest.getTags({ widgetId:widgetId,
+        rave.api.rest.getTags({ widgetId:widgetId,
             successCallback:function (data) {
                 var result = ($.map(data, function (tag) {
                     return {
@@ -181,7 +181,7 @@ define(["jquery", "core/rave_api", "./rave_portal", "./rave_context"], function(
                 var selected = $("#tagList option:selected").text();
                 selected=$.trim(selected)
                 if (selected.length > 1) {
-                    document.location.href = raveContext.getContext() + "store/tag?keyword=" + selected
+                    document.location.href = rave.getContext() + "store/tag?keyword=" + selected
                         +"&referringPageId="+referringPageId;
                 }
             });
@@ -195,10 +195,10 @@ define(["jquery", "core/rave_api", "./rave_portal", "./rave_context"], function(
                 var selected = $("#categoryList option:selected").val();
                 selected = parseInt(selected);
                 if (!isNaN(selected) && selected != "0") {
-                    document.location.href = raveContext.getContext() + "store/category?categoryId=" + selected
+                    document.location.href = rave.getContext() + "store/category?categoryId=" + selected
                         +"&referringPageId="+referringPageId;
                 } else {
-                    document.location.href = raveContext.getContext() + "store?referringPageId="+referringPageId;
+                    document.location.href = rave.getContext() + "store?referringPageId="+referringPageId;
                 }
             });
         }
@@ -209,7 +209,7 @@ define(["jquery", "core/rave_api", "./rave_portal", "./rave_context"], function(
             // category list box
             $("#marketplaceCategoryList").change(function() {
                 var selectedCategory = $("#marketplaceCategoryList option:selected").val();
-                document.location.href = raveContext.getContext() + "marketplace/category/"+selectedCategory
+                document.location.href = rave.getContext() + "marketplace/category/"+selectedCategory
                     +"?referringPageId="+referringPageId;
             });
         }
@@ -218,7 +218,7 @@ define(["jquery", "core/rave_api", "./rave_portal", "./rave_context"], function(
     function confirmAddFromMarketplace(uri, pType){
         var answer = confirm(ravePortal.getClientMessage("confirm.add.from.marketplace"));
         if(answer){
-            api.rpc.addWidgetFromMarketplace({
+            rave.api.rpc.addWidgetFromMarketplace({
                 url: uri,
                 providerType: pType,
                 successCallback: function(widget){

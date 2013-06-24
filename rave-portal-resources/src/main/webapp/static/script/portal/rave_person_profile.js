@@ -17,7 +17,7 @@
  * under the License.
  */
 
-define(["jquery", "./rave_portal", "core/rave_api"], function($, ravePortal, api){
+define(["jquery", "portal/rave_portal", "rave"], function($, ravePortal, rave){
     // map of {subpage name, boolean} tracking whether or not a sub page has been viewed at least once
     var subPagesViewedStatus = {};
     var friends = new Array();
@@ -231,7 +231,7 @@ define(["jquery", "./rave_portal", "core/rave_api"], function($, ravePortal, api
         }
 
         $('.paginationLink').click(function(){
-            api.rpc.getUsers({
+            rave.api.rpc.getUsers({
                 offset: $(this).data('offset'),
                 successCallback: function(result){
                     dealWithUserResults(result);
@@ -243,7 +243,7 @@ define(["jquery", "./rave_portal", "core/rave_api"], function($, ravePortal, api
     // Add a friend to the current user
     function addFriend(userId, username){
         $('#friendStatusButtonHolder'+userId).hide();
-        api.rpc.addFriend({friendUsername : username,
+        rave.api.rpc.addFriend({friendUsername : username,
             successCallback: function(result) {
                 addFriendRequestUI(username);
                 $('#friendStatusButtonHolder'+userId).empty();
@@ -266,7 +266,7 @@ define(["jquery", "./rave_portal", "core/rave_api"], function($, ravePortal, api
             new Array(username));
         if(confirm(message)){
             $('#friendStatusButtonHolder'+userId).hide();
-            api.rpc.removeFriend({friendUsername : username,
+            rave.api.rpc.removeFriend({friendUsername : username,
                 successCallback: function(result) {
                     removeFriendUI(username);
                     $('#friendStatusButtonHolder'+userId).empty();
@@ -290,7 +290,7 @@ define(["jquery", "./rave_portal", "core/rave_api"], function($, ravePortal, api
             new Array(username));
         if(confirm(message)){
             $('#friendStatusButtonHolder'+userId).hide();
-            api.rpc.removeFriend({friendUsername : username,
+            rave.api.rpc.removeFriend({friendUsername : username,
                 successCallback: function(result) {
                     removeFriendRequestSentUI(username);
                     $('#friendStatusButtonHolder'+userId).empty();
@@ -311,7 +311,7 @@ define(["jquery", "./rave_portal", "core/rave_api"], function($, ravePortal, api
     // Accept the friend request received by user
     function acceptFriendRequest(userId, username){
         $('#friendStatusButtonHolder'+userId).hide();
-        api.rpc.acceptFriendRequest({friendUsername : username,
+        rave.api.rpc.acceptFriendRequest({friendUsername : username,
             successCallback: function(result) {
                 removeFriendRequestReceivedUI(username);
                 $('#friendStatusButtonHolder'+userId).empty();
@@ -331,7 +331,7 @@ define(["jquery", "./rave_portal", "core/rave_api"], function($, ravePortal, api
     // Decline the friend request received by user
     function declineFriendRequest(userId, username){
         $('#friendStatusButtonHolder'+userId).hide();
-        api.rpc.removeFriend({friendUsername : username,
+        rave.api.rpc.removeFriend({friendUsername : username,
             successCallback: function(result) {
                 removeFriendRequestReceivedUI(username);
                 $('#friendStatusButtonHolder'+userId).empty();
@@ -399,7 +399,7 @@ define(["jquery", "./rave_portal", "core/rave_api"], function($, ravePortal, api
         var $editButton = $("#profileEdit");
         if ($editButton) {
             $editButton.click(function() {
-                api.handler.userProfileEditHandler(true);
+                rave.api.handler.userProfileEditHandler(true);
             });
         }
         //user clicks add/remove friend button in the profile page
@@ -407,7 +407,7 @@ define(["jquery", "./rave_portal", "core/rave_api"], function($, ravePortal, api
         if ($friendButton) {
             $friendButton.click(function() {
                 getFriends({successCallback : function() {
-                    api.rpc.getUsers({offset: 0,
+                    rave.api.rpc.getUsers({offset: 0,
                         successCallback: function(result) {
                             dealWithUserResults(result);
                             $("#userDialog").modal('show');
@@ -420,7 +420,7 @@ define(["jquery", "./rave_portal", "core/rave_api"], function($, ravePortal, api
         // user clicks "search" in the find users dialog
         $("#userSearchButton").click(function() {
             $('#userSearchResults').empty();
-            api.rpc.searchUsers({searchTerm: $('#searchTerm').get(0).value, offset: 0,
+            rave.api.rpc.searchUsers({searchTerm: $('#searchTerm').get(0).value, offset: 0,
                 successCallback: function(result) {
                     dealWithUserResults(result);
                 },
@@ -432,7 +432,7 @@ define(["jquery", "./rave_portal", "core/rave_api"], function($, ravePortal, api
         $("#clearSearchButton").click(function() {
             $('#searchTerm').get(0).value = "";
             $('#userSearchResults').empty();
-            api.rpc.getUsers({offset: 0,
+            rave.api.rpc.getUsers({offset: 0,
                 successCallback: function(result) {
                     dealWithUserResults(result);
                 }
@@ -443,7 +443,7 @@ define(["jquery", "./rave_portal", "core/rave_api"], function($, ravePortal, api
         var $cancelButton = $("#cancelEdit");
         if ($cancelButton) {
             $cancelButton.click(function() {
-                api.handler.userProfileEditHandler(false);
+                rave.api.handler.userProfileEditHandler(false);
             });
         }
 
@@ -451,7 +451,7 @@ define(["jquery", "./rave_portal", "core/rave_api"], function($, ravePortal, api
         var $acceptFriend = $(".acceptFriendRequest");
         if($acceptFriend) {
             $acceptFriend.click(function(e) {
-                api.rpc.acceptFriendRequest({friendUsername : this.id});
+                rave.api.rpc.acceptFriendRequest({friendUsername : this.id});
                 var listRequestItem = $(this).parents('.requestItem');
                 var friendRequestMenu = $(listRequestItem).parent();
                 $(listRequestItem).remove();
@@ -471,7 +471,7 @@ define(["jquery", "./rave_portal", "core/rave_api"], function($, ravePortal, api
         var $declineFriend = $(".declineFriendRequest");
         if($declineFriend) {
             $declineFriend.click(function(e) {
-                api.rpc.removeFriend({friendUsername : this.id});
+                rave.api.rpc.removeFriend({friendUsername : this.id});
                 var listRequestItem = $(this).parents('.requestItem');
                 var friendRequestMenu = $(listRequestItem).parent();
                 $(listRequestItem).remove();
@@ -490,7 +490,7 @@ define(["jquery", "./rave_portal", "core/rave_api"], function($, ravePortal, api
 
     // Gets the list of friends from the DB
     function getFriends(args) {
-        api.rpc.getFriends({
+        rave.api.rpc.getFriends({
             successCallback: function(result) {
                 $.each(result.result.accepted, function() {
                     if(!isUserAlreadyFriend(this.username))

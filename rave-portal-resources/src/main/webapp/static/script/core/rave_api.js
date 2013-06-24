@@ -18,9 +18,9 @@
  */
 
 //TODO: jquery dependency should not be here.
-define(['underscore', 'jquery', 'core/rave_ajax'], function(_, $, ajax){
+define(['underscore', 'jquery', 'core/rave_ajax', 'core/rave_state_manager'], function(_, $, ajax, stateManager){
     //stores virtual host context of application execution
-    var context = "";
+    var context = stateManager.getContext();
 
     function handleError(jqXhr, status, error) {
         alert(error);
@@ -1007,14 +1007,10 @@ define(['underscore', 'jquery', 'core/rave_ajax'], function(_, $, ajax){
 
     })();
 
-    var setContext = function (ctx) {
-        context = ctx;
-    }
 
     return {
         rest: restApi,
         rpc: rpcApi,
-        handler: handlerApi,
-        setContext: setContext
+        handler: handlerApi
     };
 })

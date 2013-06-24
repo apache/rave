@@ -17,13 +17,18 @@
  * under the License.
  */
 
-define(['underscore', 'core/rave_core', 'core/rave_api', 'core/rave_widget', 'core/rave_log', 'core/rave_view_manager'],
-    function (_, rave, api, RegionWidget, log, viewManager) {
+define(['underscore', 'core/rave_widget_manager', 'core/rave_api',
+    'core/rave_widget', 'core/rave_log', 'core/rave_view_manager', 'core/rave_state_manager'],
+    function (_, widgetManager, api, RegionWidget, log, viewManager, stateManager) {
+
+        var rave = {};
 
         rave.api = api;
         rave.RegionWidget = RegionWidget;
         rave.log = log;
         _.extend(rave, viewManager);
+        _.extend(rave, widgetManager);
+        _.extend(rave, stateManager);
 
         return rave;
     }

@@ -38,22 +38,19 @@
 <portal:render-script location="${'AFTER_RAVE'}"/>
 <%-- common javascript to execute on all pages --%>
 <script>
-    <%--require(["rave", "portal/rave_portal"], function (rave, ravePortal) {--%>
-        <%--&lt;%&ndash; set the web application context &ndash;%&gt;--%>
-        <%--rave.api.setContext("<spring:url value="/app/" />");--%>
-        <%--&lt;%&ndash; set the javascript debug mode so js code has access to it &ndash;%&gt;--%>
-        <%--ravePortal.setJavaScriptDebugMode(<c:out value="${jsDebugMode}"/>);--%>
-        <%--&lt;%&ndash; set the default widget height so js code has access to it &ndash;%&gt;--%>
-        <%--rave.RegionWidget.defaultHeight = <c:out value="${portalSettings['defaultWidgetHeight'].value}"/>;--%>
-        <%--&lt;%&ndash; set the current page viewer &ndash;%&gt;--%>
-        <%--<sec:authorize access="isAuthenticated()">--%>
-            <%--<sec:authentication property="principal.username" scope="request" var="username"/>--%>
-            <%--<sec:authentication property="principal.id" scope="request" var="id"/>--%>
-            <%--ravePortal.setPageViewer({username: "${username}", id: "${id}"});--%>
-        <%--</sec:authorize>--%>
-    <%--})--%>
+    require(["rave"], function (rave) {
+        <%-- set the web application context --%>
+        rave.setContext("<spring:url value="/app/" />");
+        <%-- set the default widget height so js code has access to it --%>
+        rave.setDefaultHeight(<c:out value="${portalSettings['defaultWidgetHeight'].value}"/>);
+        <%-- set the current page viewer --%>
+        <sec:authorize access="isAuthenticated()">
+        <sec:authentication property="principal.username" scope="request" var="username"/>
+        <sec:authentication property="principal.id" scope="request" var="id"/>
+        rave.setViewer({username: "${username}", id: "${id}"});
+        </sec:authorize>
 
-    require(['rave'], function(rave) {
-        rave.init();
-    });
+        <%-- set the javascript debug mode so js code has access to it --%>
+        <%--ui.setJavaScriptDebugMode(<c:out value="${jsDebugMode}"/>);--%>
+    })
 </script>

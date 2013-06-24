@@ -41,10 +41,6 @@ define(['underscore', 'core/rave_api', 'core/rave_providers'], function(_, api, 
         this._provider.initWidget(this);
     }
 
-    Widget.defaultView = 'default';
-    Widget.defaultWidth = 320;
-    Widget.defaultHeight = 200;
-
     Widget.extend = function (mixin) {
         _.extend(this.prototype, mixin);
     }

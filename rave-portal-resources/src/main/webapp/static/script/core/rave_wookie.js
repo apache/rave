@@ -17,7 +17,7 @@
  * under the License.
  */
 
-define(['core/rave_openajax_hub'], function(managedHub){
+define(['core/rave_openajax_hub', 'core/rave_state_manager'], function(managedHub, stateManager){
         var exports = {}
 
         exports.initWidget = function(widget){}
@@ -38,8 +38,8 @@ define(['core/rave_openajax_hub'], function(managedHub){
                         parent:      el,
                         iframeAttrs: {
                             //TODO: hardcoding numbers, should come from regionWidget?
-                            height: widget.height || widget.constructor.defaultHeight,
-                            width:  widget.width || widget.constructor.defaultWidth,
+                            height: widget.height || stateManager.getDefaultHeight(),
+                            width:  widget.width || stateManager.getDefaultWidth(),
                             frameborder: 0
                         },
                         uri: widget.widgetUrl,

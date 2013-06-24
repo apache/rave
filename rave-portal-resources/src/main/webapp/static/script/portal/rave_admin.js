@@ -17,11 +17,11 @@
  * under the License.
  */
 
-define(["jquery"], function($){
-    var adminUi = (function() {
+define(["jquery"], function ($) {
+    var adminUi = (function () {
 
         function datatableClick() {
-            $('.datatable tr').bind('click', function() {
+            $('.datatable tr').bind('click', function () {
                 var link = $(this).attr('data-detaillink');
                 if (link != undefined && link != '') {
                     window.location = link;
@@ -30,9 +30,9 @@ define(["jquery"], function($){
         }
 
         //Resize bootstrap modal & adjust margins to size of image.
-        function resizeImageModal(){
+        function resizeImageModal() {
             $('#thumbnailModal, #screenshotModal').on('shown', function () {
-                if(!$(this).hasClass("sized")){
+                if (!$(this).hasClass("sized")) {
                     var imageWidth = $(this).find("img").width(),
                         imageHeight = $(this).find("img").height(),
                         footerHeight = $(this).find(".modal-footer").outerHeight(),
@@ -41,24 +41,15 @@ define(["jquery"], function($){
 
                     $(this).css({
                         width: imageWidth + "px",
-                        'margin-top': "-" + Math.round(totalHeight/2) + "px",
-                        'margin-left': "-" + Math.round(imageWidth/2) + "px"
+                        'margin-top': "-" + Math.round(totalHeight / 2) + "px",
+                        'margin-left': "-" + Math.round(imageWidth / 2) + "px"
                     }).addClass("sized");
                 }
             });
         }
 
-        function init() {
-            datatableClick();
-            resizeImageModal();
-        }
+        datatableClick();
+        resizeImageModal();
 
-        return {
-            init:init
-        }
     })();
-
-    return {
-        initAdminUi : adminUi.init
-    }
 })

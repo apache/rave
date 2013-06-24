@@ -21,7 +21,6 @@
 <%@ include file="/WEB-INF/jsp/includes/taglibs.jsp" %>
 <fmt:setBundle basename="messages"/>
 <jsp:useBean id="pages" type="java.util.List<org.apache.rave.model.Page>" scope="request"/>
-<jsp:useBean id="pageUser" type="org.apache.rave.model.PageUser" scope="request"/>
 <jsp:useBean id="pageLayouts" type="java.util.List" scope="request"/>
 
 <%--@elvariable id="page" type="org.apache.rave.model.Page"--%>
@@ -433,29 +432,26 @@
 
 <portal:register-init-script location="${'AFTER_RAVE'}">
     <script>
-        <%--require(["rave", "core/rave_widget", "portal/rave_portal", "portal/rave_layout", "portal/rave_models", "portal/rave_event_bindings", "jquery"], function (rave, raveRegionWidget, ravePortal, raveLayout, raveModels, raveEventBindings, $) {--%>
-            <%--rave.init();--%>
-            <%--rave.RegionWidget.defaultView = 'home';--%>
+        require(["rave"], function (rave) {
+            rave.setDefaultView('home');
+            rave.setPage({id: ${page.id}, ownerId: ${page.ownerId}, viewerId: <sec:authentication property="principal.id" />});
+            rave.getViewer.editor=<c:out value="${pageUser.editor}"/>;
+            rave.setExportEnabled(${applicationProperties['portal.export.ui.enable']});
 
-            <%--$(function () {--%>
-                <%--ravePortal.initPageEditorStatus(<c:out value="${pageUser.editor}"/>);--%>
-                <%--raveLayout.init(${applicationProperties['portal.export.ui.enable']});--%>
-                <%--rave.renderWidgets('home');--%>
+            require(["ui", 'jquery'], function (ui, $) {
+                ui.models.currentPage.set({id: ${page.id}, ownerId: ${page.ownerId}, viewerId: <sec:authentication property="principal.id" />}, {silent: true})
 
-                <%--raveEventBindings.bindEvents('page.jsp');--%>
-            <%--});--%>
-
-            <%--raveModels.currentPage.set({id: ${page.id}, ownerId: ${page.ownerId}, viewerId: <sec:authentication property="principal.id" />}, {silent: true})--%>
-        <%--});--%>
+                <c:forEach var="members" items="${page.members}">
+                <portal:person id="${members.userId}" var="member"/>
+                ui.models.currentPage.addInitData('${member.id}', ${members.editor})
+                </c:forEach>
+                $(function () {
+                    ui.bindEvents('page.jsp');
+                    rave.renderWidgets('home');
+                });
+            });
+        });
 
     </script>
-    <c:forEach var="members" items="${page.members}">
-        <portal:person id="${members.userId}" var="member"/>
-        <script>
-            <%--require(["portal/rave_models", "jquery"], function (raveModels, $) {--%>
-                <%--raveModels.currentPage.addInitData('${member.id}', ${members.editor})--%>
-            <%--})--%>
-        </script>
-    </c:forEach>
+
 </portal:register-init-script>
-F

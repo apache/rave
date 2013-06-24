@@ -20,7 +20,7 @@ under the License.
 <groups xmlns="http://www.isdc.ro/wro">
     <!-- defines a wro4j group called rave-all.min which represents all of our javascript files -->
     <group name="rave.core.min">
-        <js>/static/script/core/rave_core.js</js>
+        <js>/static/script/core/rave_widget_manager.js</js>
         <js>/static/script/core/rave_ajax.js</js>
         <js>/static/script/core/rave_api.js</js>
         <js>/static/script/core/rave_widget.js</js>

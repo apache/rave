@@ -19,7 +19,7 @@
 
 //All set!!
 
-define(["underscore", "./rave_backbone", "core/rave_api"], function(_, raveBackbone, api){
+define(["underscore", "portal/rave_backbone", "rave"], function(_, raveBackbone, rave){
     /*
      User model. Further implementation pending.
      */
@@ -54,14 +54,14 @@ define(["underscore", "./rave_backbone", "core/rave_api"], function(_, raveBackb
             this.searchTerm = term;
 
             if (this.searchTerm) {
-                api.rpc.searchUsers({searchTerm: this.searchTerm,
+                rave.api.rpc.searchUsers({searchTerm: this.searchTerm,
                     offset: 0,
                     successCallback: this.parse,
                     alertEmptySearch: function(){alert(ravePortal.getClientMessage("api.rpc.empty.search.term"));}
                 });
             }
             else {
-                api.rpc.getUsers({offset: 0, successCallback: this.parse });
+                rave.api.rpc.getUsers({offset: 0, successCallback: this.parse });
             }
         },
 
@@ -73,14 +73,14 @@ define(["underscore", "./rave_backbone", "core/rave_api"], function(_, raveBackb
             offset *= this.pageSize;
 
             if (this.searchTerm) {
-                api.rpc.searchUsers({searchTerm: this.searchTerm,
+                rave.api.rpc.searchUsers({searchTerm: this.searchTerm,
                     offset: offset,
                     successCallback: this.parse,
                     alertEmptySearch: function(){alert(ravePortal.getClientMessage("api.rpc.empty.search.term"));}
                 });
             }
             else {
-                api.rpc.getUsers({offset: offset, successCallback: this.parse });
+                rave.api.rpc.getUsers({offset: offset, successCallback: this.parse });
             }
         },
 
@@ -169,7 +169,7 @@ define(["underscore", "./rave_backbone", "core/rave_api"], function(_, raveBackb
         addMember: function (userId) {
             var self = this;
 
-            api.rpc.addMemberToPage({pageId: self.get('id'), userId: userId,
+            rave.api.rpc.addMemberToPage({pageId: self.get('id'), userId: userId,
                 successCallback: function (result) {
                     var members = self.get('members');
 
@@ -193,7 +193,7 @@ define(["underscore", "./rave_backbone", "core/rave_api"], function(_, raveBackb
         removeMember: function (userId) {
             var self = this;
 
-            api.rpc.removeMemberFromPage({pageId: self.get('id'), userId: userId,
+            rave.api.rpc.removeMemberFromPage({pageId: self.get('id'), userId: userId,
                 successCallback: function (result) {
                     var members = self.get('members');
 
@@ -208,7 +208,7 @@ define(["underscore", "./rave_backbone", "core/rave_api"], function(_, raveBackb
         removeForSelf: function(){
             var self = this;
 
-            api.rpc.removeMemberFromPage({pageId: self.get('id'), userId: self.get('viewerId'),
+            rave.api.rpc.removeMemberFromPage({pageId: self.get('id'), userId: self.get('viewerId'),
                 successCallback: function () {
                     self.trigger('declineShare', self.get('id'));
                 }
@@ -218,7 +218,7 @@ define(["underscore", "./rave_backbone", "core/rave_api"], function(_, raveBackb
         addEditor: function (userId) {
             var self = this;
             //updatePageEditingStatus
-            api.rpc.updatePageEditingStatus({pageId: self.get('id'), userId: userId, isEditor: true,
+            rave.api.rpc.updatePageEditingStatus({pageId: self.get('id'), userId: userId, isEditor: true,
                 successCallback: function () {
                     var members = self.get('members');
 
@@ -235,7 +235,7 @@ define(["underscore", "./rave_backbone", "core/rave_api"], function(_, raveBackb
 
         removeEditor: function (userId) {
             var self = this;
-            api.rpc.updatePageEditingStatus({pageId: self.get('id'), userId: userId, isEditor: false,
+            rave.api.rpc.updatePageEditingStatus({pageId: self.get('id'), userId: userId, isEditor: false,
                 successCallback: function () {
 
                     var members = self.get('members');
@@ -254,7 +254,7 @@ define(["underscore", "./rave_backbone", "core/rave_api"], function(_, raveBackb
         cloneForUser: function (userId, pageName) {
             pageName = pageName || null;
             var self =this;
-            api.rpc.clonePageForUser({pageId: this.get('id'), userId: userId, pageName: pageName,
+            rave.api.rpc.clonePageForUser({pageId: this.get('id'), userId: userId, pageName: pageName,
                 successCallback: function(result){
                     if(result.error) {
                         /*
@@ -271,7 +271,7 @@ define(["underscore", "./rave_backbone", "core/rave_api"], function(_, raveBackb
 
         acceptShare: function(){
             var self = this;
-            api.rpc.updateSharedPageStatus({pageId: this.get('id'), shareStatus: 'accepted',
+            rave.api.rpc.updateSharedPageStatus({pageId: this.get('id'), shareStatus: 'accepted',
                 successCallback: function (result) {
                     self.trigger('acceptShare', self.get('id'));
                 }
@@ -281,9 +281,9 @@ define(["underscore", "./rave_backbone", "core/rave_api"], function(_, raveBackb
         declineShare: function(){
             var self = this;
 
-            api.rpc.updateSharedPageStatus({pageId: this.get('id'), shareStatus: 'refused',
+            rave.api.rpc.updateSharedPageStatus({pageId: this.get('id'), shareStatus: 'refused',
                 successCallback: function (result) {
-                    api.rpc.removeMemberFromPage({pageId: self.get('id'), userId: self.get('viewerId'),
+                    rave.api.rpc.removeMemberFromPage({pageId: self.get('id'), userId: self.get('viewerId'),
                         successCallback: function (result) {
                             self.trigger('declineShare', self.get('id'));
                         }

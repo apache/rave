@@ -17,7 +17,7 @@
  * under the License.
  */
 
-define(["jquery", "./rave_portal"], function($, ravePortal){
+define(["jquery", "portal/rave_portal", "jqueryValidate"], function($, ravePortal){
     function validateNewAccountForm() {
         $("#newAccountForm").validate({
             rules: {

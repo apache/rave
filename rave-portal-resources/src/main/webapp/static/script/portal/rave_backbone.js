@@ -21,7 +21,7 @@ define(["underscore", "backbone"], function(_, Backbone){
     /*
      Extend backbone's standard model and collection with some
      */
-    Model = Backbone.Model.extend({
+    var Model = Backbone.Model.extend({
         get: function(attr){
             //tweak model get so that array / object members are passed by value instead of reference
             //needed for managing deep objects
@@ -38,7 +38,7 @@ define(["underscore", "backbone"], function(_, Backbone){
         }
     });
 
-    Collection = Backbone.Collection.extend({
+    var Collection = Backbone.Collection.extend({
         toViewModel: function () {
             return this.map(function (model) {
                 return model.toViewModel();
@@ -53,7 +53,7 @@ define(["underscore", "backbone"], function(_, Backbone){
      time. By default on any change to the models the view will be re-rendered. Also provides an implementation of
      render that probably will not need to be overrridden.
      */
-    View = Backbone.View.extend({
+    var View = Backbone.View.extend({
         initialize: function () {
             var self = this;
             _.bindAll(this);
