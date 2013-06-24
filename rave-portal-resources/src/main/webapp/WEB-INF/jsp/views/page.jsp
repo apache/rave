@@ -435,7 +435,7 @@
         require(["rave"], function (rave) {
             rave.setDefaultView('home');
             rave.setPage({id: ${page.id}, ownerId: ${page.ownerId}, viewerId: <sec:authentication property="principal.id" />});
-            rave.getViewer.editor=<c:out value="${pageUser.editor}"/>;
+            rave.getViewer().editor=<c:out value="${pageUser.editor}"/>;
             rave.setExportEnabled(${applicationProperties['portal.export.ui.enable']});
 
             require(["ui", 'jquery'], function (ui, $) {
