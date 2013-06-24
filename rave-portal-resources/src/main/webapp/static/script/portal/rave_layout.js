@@ -389,8 +389,12 @@ define(["jquery", "rave", "portal/rave_portal", "portal/rave_models", "bootstrap
                 (hash === "" && subPage.isDefault));
         }
 
-        pageMenu.init(rave.getExportEnabled());
-        $(".dropdown-toggle").dropdown();
+        function init() {
+            pageMenu.init(rave.getExportEnabled());
+            $(".dropdown-toggle").dropdown();
+        }
+
+        rave.registerOnInitHandler(init);
 
         // public rave.layout API
         return {

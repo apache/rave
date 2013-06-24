@@ -17,15 +17,16 @@
  * under the License.
  */
 
-define(['underscore', 'core/rave_widget_manager', 'core/rave_api',
-    'core/rave_widget', 'core/rave_log', 'core/rave_view_manager', 'core/rave_state_manager'],
-    function (_, widgetManager, api, RegionWidget, log, viewManager, stateManager) {
+define(['underscore', 'core/rave_widget_manager', 'core/rave_api', 'core/rave_widget', 'core/rave_log',
+    'core/rave_event_manager', 'core/rave_view_manager', 'core/rave_state_manager'],
+    function (_, widgetManager, api, RegionWidget, log, eventManager, viewManager, stateManager) {
 
         var rave = {};
 
         rave.api = api;
         rave.RegionWidget = RegionWidget;
         rave.log = log;
+        _.extend(rave, eventManager);
         _.extend(rave, viewManager);
         _.extend(rave, widgetManager);
         _.extend(rave, stateManager);

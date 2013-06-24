@@ -892,12 +892,17 @@ define(["jquery", "underscore", "handlebars", "rave",
             });
         }
 
-        initializePageSharing();
-        registerHomeView();
-        registerCanvasView();
-        registerPopups();
-        showEmptyDisplay();
-        setupDragAndDrop();
+        function init() {
+
+            initializePageSharing();
+            registerHomeView();
+            registerCanvasView();
+            registerPopups();
+            showEmptyDisplay();
+            setupDragAndDrop();
+        }
+
+        rave.registerOnInitHandler(init);
 
         return exports;
     })

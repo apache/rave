@@ -17,12 +17,30 @@
  * under the License.
  */
 
-define(['core/rave_wookie', 'core/rave_opensocial'], function(wookie, os){
-    /*
-    All providers should be registered with ALL LOWERCASE keys
-     */
-    return{
-        w3c:wookie,
-        opensocial:os
+define(['underscore'], function(_){
+
+    var INITIALIZED = false,
+        initHandlers = [];
+
+    var exports = {}
+
+    exports.registerOnInitHandler = function (handler) {
+        if (!(_.isFunction(handler))) {
+            throw new Error('Init event handler must be a function');
+        }
+        if (INITIALIZED) {
+            return handler();
+        }
+        initHandlers.push(handler);
     }
+
+    exports.init = function () {
+        INITIALIZED = true;
+        _.each(initHandlers, function (fn) {
+            fn();
+        });
+    }
+
+    return exports;
+
 })
