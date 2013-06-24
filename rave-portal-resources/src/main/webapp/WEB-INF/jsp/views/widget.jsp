@@ -119,7 +119,7 @@
 		                    <i class="icon-thumbs-down" title="${widgetDislikes}&nbsp;<fmt:message key="page.widget.rate.dislikes"/>"></i>
                         </span>
                     </div>
-                    <div id="rating-${widget.id}" class="ratingButtons" data-toggle="buttons-radio">
+                    <div id="rating-${widget.id}"  data-toggle="buttons-radio">
                     	<button id="like-${widget.id}" class="widgetLikeButton btn btn-mini ${widgetsStatistics[widget.id].userRating==10? 'active btn-success':''}"
                                 ${widgetsStatistics[widget.id].userRating==10 ? " checked='true'":""} name="rating-${widget.id}">
                             <fmt:message key="page.widget.rate.likebtn"/> 

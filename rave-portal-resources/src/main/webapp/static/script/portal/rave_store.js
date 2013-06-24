@@ -19,7 +19,6 @@
 
 define(["jquery", "rave", "portal/rave_portal"], function($, rave, ravePortal){
     function initRatings() {
-        $('.ratingButtons').button();
 
         //Adjust width's
         $('.widgetRating').each(function(){
@@ -136,11 +135,9 @@ define(["jquery", "rave", "portal/rave_portal"], function($, rave, ravePortal){
 
             if($(this).attr("data-target")){
                 target = $(this).attr("data-target");
-                console.log($(this).attr("data-target"));
             }
             else{
                 target = $(this).attr("href");
-                console.log("else");
             }
 
             if($(this).attr('data-toggle-text')){

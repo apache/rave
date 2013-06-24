@@ -36,7 +36,7 @@
 </c:choose>
 <script src="<spring:url value="/static/script/app.js"/>"></script>
 <script>
-    require(["rave"], function (rave) {
+    require(["rave", "jquery"], function (rave, $) {
         <%-- set the web application context --%>
         rave.setContext("<spring:url value="/app/" />");
         <%-- set the default widget height so js code has access to it --%>
@@ -47,6 +47,10 @@
         <sec:authentication property="principal.id" scope="request" var="id"/>
         rave.setViewer({username: "${username}", id: "${id}"});
         </sec:authorize>
+
+        $(function(){
+            rave.init();
+        });
 
         <%-- set the javascript debug mode so js code has access to it --%>
         <%--ui.setJavaScriptDebugMode(<c:out value="${jsDebugMode}"/>);--%>

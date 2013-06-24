@@ -266,7 +266,7 @@
     <script>
         require(["portal/rave_admin", "portal/rave_event_bindings", "jquery"], function(raveAdmin, raveEventBindings, $){
             $(function() {
-                raveAdmin.initAdminUi();
+                raveAdmin.init();
 
                 raveEventBindings.bindEvents('widgetdetail.jsp');
             });

@@ -69,8 +69,8 @@ and use it as the default error page for the entire application. --%>
 
 
         <script>
-            require(["portal/rave_event_bindings", "jquery"], function(raveEventBindings, $){
-                $(function(){raveEventBindings.bindEvents('error.jsp')});
+            require(["ui", "jquery"], function(ui, $){
+                $(function(){ui.bindEvents('error.jsp')});
             })
         </script>
     </tiles:putAttribute>

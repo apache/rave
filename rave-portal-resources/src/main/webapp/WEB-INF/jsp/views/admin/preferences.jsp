@@ -76,10 +76,10 @@
 </div>	
 <portal:register-init-script location="${'AFTER_RAVE'}">
     <script>
-       require(["portal/rave_admin", "jquery"], function(raveAdmin, $){
-           $(function() {
-               raveAdmin.initAdminUi();
-           });
-       })
+        require(["portal/rave_admin", "jquery"], function(raveAdmin, $){
+            $(function() {
+                raveAdmin.init();
+            });
+        })
     </script>
 </portal:register-init-script>

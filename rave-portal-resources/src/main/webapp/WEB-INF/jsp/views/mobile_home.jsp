@@ -142,11 +142,11 @@
 
 <portal:register-init-script location="${'AFTER_RAVE'}">
     <script>
-        require(["portal/rave_portal", "portal/rave_event_bindings", "jquery"], function(ravePortal, raveEventBindings, $){
+        require(["rave", "ui", "jquery"], function(rave, ui, $){
             $(function() {
-                ravePortal.initPageEditorStatus(<c:out value="${pageUser.editor}"/>);
+                rave.getViewer().editor =<c:out value="${pageUser.editor}"/>;
 
-                raveEventBindings.bindEvents('mobile_home.jsp');
+                ui.bindEvents('mobile_home.jsp');
             });
         })
     </script>

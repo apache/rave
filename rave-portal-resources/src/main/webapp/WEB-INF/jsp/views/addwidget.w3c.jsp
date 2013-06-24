@@ -137,7 +137,7 @@
 
 <portal:register-init-script location="${'AFTER_RAVE'}">
 <script>
-    require(["core/main"], function(main){
+    require(["rave"], function(rave){
         $(function() {
             if ($('#url').val().length === 0) {
                 $('#addWidgetForm').hide();

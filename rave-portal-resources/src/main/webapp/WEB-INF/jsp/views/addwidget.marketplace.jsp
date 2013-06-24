@@ -243,10 +243,10 @@
 
 <portal:register-init-script location="${'AFTER_RAVE'}">
     <script>
-        require(["portal/rave_store", "portal/rave_event_bindings", "jquery"], function(raveStore, raveEventBindings, $){
+        require(["portal/rave_store", "ui", "jquery"], function(raveStore, ui, $){
             $(function () {
                 raveStore.init('<c:out value="${referringPageId}"/>');
-                raveEventBindings.bindEvents("addwidget.marketplace.jsp")
+                ui.bindEvents("addwidget.marketplace.jsp")
             });
         })
     </script>

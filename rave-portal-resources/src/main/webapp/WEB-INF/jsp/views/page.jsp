@@ -446,8 +446,6 @@
             ui.models.currentPage.addInitData('${member.id}', ${members.editor})
             </c:forEach>
 
-            rave.init();
-
             $(function () {
                 ui.bindEvents('page.jsp');
                 rave.renderWidgets('home');

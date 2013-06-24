@@ -306,7 +306,8 @@
 
 <portal:register-init-script location="${'AFTER_RAVE'}">
     <script>
-        require(["portal/rave_store", "portal/rave_event_bindings", "jquery"], function(raveStore, raveEventBindings, $){
+        require(["rave", "portal/rave_store", "portal/rave_event_bindings", "jquery"],
+                function(rave, raveStore, raveEventBindings, $){
             $(function () {
                 raveStore.init('<c:out value="${referringPageId}"/>');
 

@@ -131,14 +131,14 @@
 
 <portal:register-init-script location="${'AFTER_RAVE'}">
 <script>
-    require(['portal/rave_event_bindings', "jquery"], function(raveEventBindings, $){
+    require(['ui', "jquery"], function(ui, $){
         $(function() {
             if ($('#url').val().length === 0) {
                 $('#addWidgetForm').hide();
                 $('#addWidgetFormSubmit').hide();
             }
 
-            raveEventBindings.bindEvents('addWidget.jsp');
+            ui.bindEvents('addWidget.jsp');
     })});
 </script>
 </portal:register-init-script>

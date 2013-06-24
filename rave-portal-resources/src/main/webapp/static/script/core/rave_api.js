@@ -267,6 +267,8 @@ define(['underscore', 'jquery', 'core/rave_ajax', 'core/rave_state_manager', 'co
                             handleRpcError(result);
                         } else {
                             // if a callback is supplied, invoke it with the regionwidget id
+                            var addedWidget = result.result != undefined ? result.result.widgetId : undefined;
+
                             if (args.successCallback && addedWidget != undefined) {
                                 args.successCallback(result.result);
                             }

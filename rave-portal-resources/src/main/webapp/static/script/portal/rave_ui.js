@@ -17,18 +17,11 @@
  * under the License.
  */
 
-define(["jquery", "underscore", "handlebars", "rave",
+define(["jquery", "underscore", "rave",
     "portal/rave_portal", "portal/rave_backbone", "portal/rave_models", "portal/rave_templates",
     "jqueryUi"],
-    function ($, _, Handlebars, rave, ravePortal, raveBackbone, raveModels, raveTemplates) {
+    function ($, _, rave, ravePortal, raveBackbone, raveModels, raveTemplates) {
         var exports = {};
-
-        /*
-         Register View Helpers
-         */
-        Handlebars.registerHelper('getClientMessage', function (key) {
-            return ravePortal.getClientMessage(key);
-        })
 
         /*
          Build rave client side views

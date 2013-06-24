@@ -18,7 +18,7 @@
  */
 
 define(['underscore', 'portal/rave_portal', 'portal/rave_event_bindings', 'portal/rave_models', 'portal/rave_ui',
-    'portal/rave_layout', 'portal/rave_forms', 'portal/rave_store', 'portal/rave_admin', 'portal/rave_person_profile'],
+    'portal/rave_layout', 'portal/rave_forms'],
     function (_, portal, eventBindings, models) {
 
         _.extend(portal, eventBindings);

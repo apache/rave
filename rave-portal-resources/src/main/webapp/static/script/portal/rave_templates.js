@@ -17,7 +17,7 @@
  * under the License.
  */
 
-define(["handlebars", "jquery"], function(Handlebars, $){
+define(["handlebars", "jquery", "clientMessages"], function(Handlebars, $, clientMessages){
     var templates = {}
 
     $('[data-template-for]').each(function () {
@@ -25,6 +25,13 @@ define(["handlebars", "jquery"], function(Handlebars, $){
         var source = $(this).html();
 
         templates[key] = Handlebars.compile(source);
+    });
+
+    /*
+     Register View Helpers
+     */
+    Handlebars.registerHelper('getClientMessage', function (key) {
+        return clientMessages[key];
     });
 
     return{

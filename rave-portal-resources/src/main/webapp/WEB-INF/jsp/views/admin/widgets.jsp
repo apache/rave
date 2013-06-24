@@ -117,7 +117,7 @@
     <script>
         require(["portal/rave_admin", "jquery"], function(raveAdmin, $){
             $(function() {
-                raveAdmin.initAdminUi();
+                raveAdmin.init();
             });
         })
     </script>
