@@ -159,12 +159,7 @@
             })
         })
 
-        $(function() {
-            if ($('#url').val().length === 0) {
-                $('#addWidgetForm').hide();
-                $('#addWidgetFormSubmit').hide();
-            }
-    })});
+       });
 </script>
 </portal:register-init-script>
 
