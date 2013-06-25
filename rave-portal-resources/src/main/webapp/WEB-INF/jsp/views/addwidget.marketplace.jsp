@@ -243,10 +243,15 @@
 
 <portal:register-init-script location="${'AFTER_RAVE'}">
     <script>
-        require(["portal/rave_store", "ui", "jquery"], function(raveStore, ui, $){
+        require(["portal/rave_store", "rave", "jquery"], function(raveStore, rave, $){
+            rave.registerOnInitHandler(function(){
+                $("#marketplaceWidgetList").on("click", "button.widgetAddButton", function(event){
+                    raveStore.confirmAddFromMarketplace($(this).data('widget-url'), $(this).data('widget-type'));
+                });
+            })
+
             $(function () {
                 raveStore.init('<c:out value="${referringPageId}"/>');
-                ui.bindEvents("addwidget.marketplace.jsp")
             });
         })
     </script>

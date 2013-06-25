@@ -259,12 +259,40 @@
 
 <portal:register-init-script location="${'AFTER_RAVE'}">
     <script>
-        require(["portal/rave_store", "portal/rave_event_bindings", "jquery"], function(raveStore, raveEventBindings, $){
+        require(["rave", "ui", "portal/rave_display", "portal/rave_store", "jquery"], function(rave, ui, raveDisplay, raveStore, $){
+            //TODO: Ask Erin about duplicate code, put it in a module?
+            //Helper function for callback below
+            function addWidgetToPageCallback (result){
+                var widgetTitle = ui.getClientMessage("widget.add_prefix");
+
+                if (result != undefined && result.title != undefined && result.title.length > 0) {
+                    widgetTitle = result.title;
+                }
+                ui.showInfoMessage(widgetTitle + ' ' + ui.getClientMessage("widget.add_suffix"));
+
+                // Update Add Widget button to reflect status
+                var addWidgetButton = "#addWidget_" + result.widgetId;
+                var addedText = '<i class="icon icon-ok icon-white"></i> ' + $(addWidgetButton).data('success');
+
+                $(addWidgetButton).removeClass("btn-primary").addClass("btn-success").html(addedText);
+            }
+
+            rave.registerOnInitHandler(function(){
+                $('.widgetJspAddWidgetButton').click(function(){
+                    var element = $(this);
+                    var widgetId = element.data('widget-id');
+                    var pageId = element.data('page-id');
+                    rave.api.addWidgetToPage({widgetId: widgetId, pageId: pageId, redirectAfterAdd: true, successCallback: addWidgetToPageCallback})
+                })
+
+                $('#displayUsersOfWidgetLink').click(function(){
+                    raveDisplay.displayUsersOfWidget($(this).data('widget-id'))
+                })
+            })
+
             $(function () {
                 raveStore.init('<c:out value="${referringPageId}"/>');
                 raveStore.initTags("<c:out value="${widget.id}"/>");
-
-                raveEventBindings.bindEvents('widget.jsp');
             });
 
 

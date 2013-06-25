@@ -17,12 +17,12 @@
  * under the License.
  */
 
-define(['underscore', 'portal/rave_portal', 'portal/rave_event_bindings', 'portal/rave_models', 'portal/rave_ui',
+define(['underscore', 'portal/rave_portal', 'portal/rave_models', 'portal/rave_ui',
     'portal/rave_layout', 'portal/rave_forms'],
-    function (_, portal, eventBindings, models) {
+    function (_, portal, models, ui, layout, forms) {
 
-        _.extend(portal, eventBindings);
         portal.models = models;
+        portal.layout = layout;
 
         return portal
 

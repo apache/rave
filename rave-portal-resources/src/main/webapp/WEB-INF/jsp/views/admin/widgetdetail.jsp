@@ -264,11 +264,34 @@
 </div>
 <portal:register-init-script location="${'AFTER_RAVE'}">
     <script>
-        require(["portal/rave_admin", "portal/rave_event_bindings", "jquery"], function(raveAdmin, raveEventBindings, $){
+        require(["rave", "ui", "portal/rave_admin", "jquery"], function(rave, ui, raveAdmin, $){
+            rave.registerOnInitHandler(function(){
+                $('#fetchMetadataButton').click(function(){
+                    rave.api.rpc.getWidgetMetadata({
+                        url: $('#url').get(0).value,
+                        providerType: $('input:radio[name=type]:checked').val(),
+                        successCallback: function(result) {
+                            var widget = result.result;
+                            $('#title').val(widget.title);
+                            $('#description').val(widget.description);
+                            $('#thumbnailUrl').val(widget.thumbnailUrl);
+                            $('#screenshotUrl').val(widget.screenshotUrl);
+                            $('#titleUrl').val(widget.titleUrl);
+                            $('#author').val(widget.author);
+                            $('#authorEmail').val(widget.authorEmail);
+                        },
+                        errorCallback: function(){
+                            alert(ui.getClientMessage("api.widget_metadata.parse_error"));
+                        },
+                        alertInvalidParams: function(){
+                            alert(ui.getClientMessage("api.widget_metadata.invalid_params"));
+                        }
+                    })
+                })
+            })
+
             $(function() {
                 raveAdmin.init();
-
-                raveEventBindings.bindEvents('widgetdetail.jsp');
             });
         })
     </script>

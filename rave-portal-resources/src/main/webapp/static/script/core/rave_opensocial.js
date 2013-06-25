@@ -17,7 +17,6 @@
  * under the License.
  */
 
-//TODO: Remove dependency on rave_ui when moving to angular
 define(['underscore', 'core/rave_view_manager', 'core/rave_api', 'core/rave_openajax_hub', 'core/rave_log', 'core/rave_state_manager', 'osapi'],
     function (_, viewManager, api, managedHub, log, stateManager) {
         var exports = {};
@@ -62,8 +61,6 @@ define(['underscore', 'core/rave_view_manager', 'core/rave_api', 'core/rave_open
 
                 api.rest.getSecurityToken({
                     "url": widgetUrl,
-                    //TODO: need to remove reference to rave.ui once we understand need for current pageid
-                    //violates core dependency
                     "pageid": stateManager.getPage().id,
                     "successCallback": renderEE
                 });
@@ -77,7 +74,6 @@ define(['underscore', 'core/rave_view_manager', 'core/rave_api', 'core/rave_open
                             "securityToken": data.securityToken,
                             "metadata": opt_gadgetInfo
                         },
-                    //TODO: hardcoded default height and width
                         height = gadget.metadata.modulePrefs.height || stateManager.getDefaultHeight(),
                         width = gadget.metadata.modulePrefs.width || stateManager.getDefaultWidth();
 

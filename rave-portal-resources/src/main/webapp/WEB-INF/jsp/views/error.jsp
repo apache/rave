@@ -69,8 +69,16 @@ and use it as the default error page for the entire application. --%>
 
 
         <script>
-            require(["ui", "jquery"], function(ui, $){
-                $(function(){ui.bindEvents('error.jsp')});
+            require(["rave", "jquery"], function(rave, $){
+                rave.registerOnInitHandler(function(){
+                    $("#showErrorStack").click(function(){
+                        document.getElementById('errorStack').style.display = 'block';
+                    })
+
+                    $("#hideErrorStack").click(function(){
+                        document.getElementById('errorStack').style.display = 'none';
+                    })
+                })
             })
         </script>
     </tiles:putAttribute>

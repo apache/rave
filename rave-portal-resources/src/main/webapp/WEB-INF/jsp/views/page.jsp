@@ -434,6 +434,24 @@
 <portal:register-init-script location="${'AFTER_RAVE'}">
     <script>
         require(["rave", "ui", 'jquery'], function (rave, ui, $) {
+            rave.registerOnInitHandler(function(){
+                $('#acceptShareLink').click(function(){
+                    ui.models.currentPage.acceptShare();
+                });
+
+                $('#declineShareLink').click(function(){
+                    ui.models.currentPage.declineShare();
+                });
+
+                $('#movePageButton').click(function(){
+                    ui.models.movePage();
+                })
+
+                $('#moveWidgetToPageButton').click(function(){
+                    ui.layout.moveWidgetToPage($('#moveWidgetModal').data('regionWidgetId'));
+                })
+            });
+
             rave.setDefaultView('home');
             rave.setPage({id: ${page.id}, ownerId: ${page.ownerId}, viewerId: <sec:authentication property="principal.id" />});
             rave.getViewer().editor =<c:out value="${pageUser.editor}"/>;
@@ -447,10 +465,8 @@
             </c:forEach>
 
             $(function () {
-                ui.bindEvents('page.jsp');
                 rave.renderWidgets('home');
             });
         });
-
     </script>
 </portal:register-init-script>

@@ -142,11 +142,17 @@
 
 <portal:register-init-script location="${'AFTER_RAVE'}">
     <script>
-        require(["rave", "ui", "jquery"], function(rave, ui, $){
+        require(["rave", "jquery"], function(rave, $){
+            rave.registerOnInitHandler(function(){
+                $("#pageContent").on("click", ".widget-title-bar-mobile", function(event){
+                    //TODO:This function is undefined, must re-define before un-commenting out
+                    //rave.toggleMobileWidget($(this).data('regionWidget-id'));
+                    console.log("rave.toggleMobileWidget function is undefined");
+                });
+            });
+
             $(function() {
                 rave.getViewer().editor =<c:out value="${pageUser.editor}"/>;
-
-                ui.bindEvents('mobile_home.jsp');
             });
         })
     </script>

@@ -17,8 +17,6 @@
  * under the License.
  */
 
-//All set!!
-
 define(["underscore", "portal/rave_backbone", "rave"], function(_, raveBackbone, rave){
     /*
      User model. Further implementation pending.
