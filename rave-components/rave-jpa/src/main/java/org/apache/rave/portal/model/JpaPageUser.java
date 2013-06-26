@@ -27,7 +27,7 @@ import org.apache.rave.model.PageInvitationStatus;
 import org.apache.rave.model.PageUser;
 import org.apache.rave.model.User;
 import org.apache.rave.portal.model.conversion.JpaConverter;
-import org.codehaus.jackson.annotate.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 @Entity
 @Access(AccessType.FIELD)
 @Table(name = "page_user", uniqueConstraints={@UniqueConstraint(columnNames={"page_id","user_id"})})

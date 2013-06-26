@@ -66,7 +66,7 @@
         <org.openid4java.version>0.9.6</org.openid4java.version>
         <jersey-server.version>1.16</jersey-server.version>
         <jersey-spring.version>1.16</jersey-spring.version>
-        <jackson.version>1.9.11</jackson.version>
+        <jackson.version>2.1.5</jackson.version>
         <json.version>20090211</json.version>
         <guice.version>3.0</guice.version>
         <httpclient.version>4.2.2</httpclient.version>
@@ -351,23 +351,18 @@
                 <version>${org.springframework.data.mongodb.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.codehaus.jackson</groupId>
-                <artifactId>jackson-mrbean</artifactId>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-annotations</artifactId>
                 <version>${jackson.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.codehaus.jackson</groupId>
-                <artifactId>jackson-mapper-asl</artifactId>
+                <groupId>com.fasterxml.jackson.jaxrs</groupId>
+                <artifactId>jackson-jaxrs-json-provider</artifactId>
                 <version>${jackson.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.codehaus.jackson</groupId>
-                <artifactId>jackson-jaxrs</artifactId>
-                <version>${jackson.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.codehaus.jackson</groupId>
-                <artifactId>jackson-xc</artifactId>
+                <groupId>com.fasterxml.jackson.module</groupId>
+                <artifactId>jackson-module-mrbean</artifactId>
                 <version>${jackson.version}</version>
             </dependency>
             <dependency>

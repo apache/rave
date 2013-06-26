@@ -70,16 +70,6 @@
             <artifactId>spring-security-web</artifactId>
         </dependency>
 
-        <!-- Jackson JSON Mapper -->
-        <dependency>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>jackson-mrbean</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>jackson-mapper-asl</artifactId>
-        </dependency>
-
         <!-- JSON Support -->
         <dependency>
             <groupId>org.json</groupId>
@@ -155,6 +145,11 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-library</artifactId>
+            <version>${org.hamcrest.version}</version>
         </dependency>
     </dependencies>
 

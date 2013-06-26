@@ -18,8 +18,8 @@
  */
 package org.apache.rave.portal.web.model;
 
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.mrbean.MrBeanModule;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.module.mrbean.MrBeanModule;
 import org.springframework.beans.factory.FactoryBean;
 
 /**

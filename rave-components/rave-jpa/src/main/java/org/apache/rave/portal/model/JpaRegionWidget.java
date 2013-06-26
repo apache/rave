@@ -23,7 +23,7 @@ import org.apache.rave.model.RegionWidget;
 import org.apache.rave.model.RegionWidgetPreference;
 import org.apache.rave.portal.model.conversion.ConvertingListProxyFactory;
 import org.apache.rave.portal.model.conversion.JpaConverter;
-import org.codehaus.jackson.annotate.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import javax.persistence.*;
 import java.io.Serializable;

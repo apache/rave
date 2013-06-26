@@ -34,7 +34,7 @@
 
     <jaxrs:server id="rave" address="/rest">
         <jaxrs:providers>
-            <bean class="org.codehaus.jackson.jaxrs.JacksonJaxbJsonProvider"/>
+            <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider"/>
             <bean class="org.apache.cxf.jaxrs.provider.JAXBElementProvider"/>
         </jaxrs:providers>
         <jaxrs:serviceBeans>

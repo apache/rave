@@ -19,14 +19,13 @@
 
 package org.apache.rave.portal.model;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Lists;
 import org.apache.rave.model.Category;
 import org.apache.rave.model.Widget;
 import org.apache.rave.portal.model.impl.WidgetImpl;
 import org.apache.rave.portal.repository.CategoryRepository;
-import org.codehaus.jackson.annotate.JsonAutoDetect;
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonMethod;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -37,7 +36,7 @@ import java.util.List;
  */
 
 @XmlAccessorType(value = XmlAccessType.FIELD)
-@JsonAutoDetect(value = JsonMethod.FIELD, fieldVisibility = JsonAutoDetect.Visibility.ANY)
+@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class MongoDbWidget extends WidgetImpl {
 
     @XmlTransient @JsonIgnore

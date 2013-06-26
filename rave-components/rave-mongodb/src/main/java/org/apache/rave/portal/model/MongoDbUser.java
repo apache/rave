@@ -19,14 +19,13 @@
 
 package org.apache.rave.portal.model;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Lists;
 import org.apache.rave.model.Authority;
 import org.apache.rave.model.PageLayout;
 import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.repository.PageLayoutRepository;
-import org.codehaus.jackson.annotate.JsonAutoDetect;
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonMethod;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
@@ -39,7 +38,7 @@ import java.util.List;
 /**
  */
 @XmlAccessorType(value = XmlAccessType.FIELD)
-@JsonAutoDetect(value = JsonMethod.FIELD, fieldVisibility = JsonAutoDetect.Visibility.ANY)
+@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class MongoDbUser extends UserImpl {
 
     private List<String> authorityCodes;
