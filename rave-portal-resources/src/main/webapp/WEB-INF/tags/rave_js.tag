@@ -29,12 +29,18 @@
 <c:choose>
     <c:when test="${jsDebugMode == '1'}">
         <!--TODO: figure out js debug mode -->
+        <script src="<spring:url value="/static/script/requireConfig.js"/>"></script>
+        <script>
+            requirejs.config({baseUrl:"/portal/static/script"});
+        </script>
     </c:when>
     <c:otherwise>
-
+        <script src="<spring:url value="/static/script-built/requireConfig.js"/>"></script>
+        <script>
+            requirejs.config({baseUrl:"/portal/static/script-built"});
+        </script>
     </c:otherwise>
 </c:choose>
-<script src="<spring:url value="/static/script/app.js"/>"></script>
 <script>
     require(["rave", "jquery"], function (rave, $) {
         <%-- set the web application context --%>
