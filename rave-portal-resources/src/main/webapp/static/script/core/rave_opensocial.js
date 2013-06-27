@@ -25,8 +25,7 @@ define(['underscore', 'core/rave_view_manager', 'core/rave_api', 'core/rave_open
 
         var containerConfig = {};
         containerConfig[osapi.container.ServiceConfig.API_PATH] = "/rpc";
-        //TODO: Handle moving out javaScriptDebugMode
-        //containerConfig[osapi.container.ContainerConfig.RENDER_DEBUG] = ravePortal.getJavaScriptDebugMode();
+        containerConfig[osapi.container.ContainerConfig.RENDER_DEBUG] = stateManager.getDebugMode();
         container = new osapi.container.Container(containerConfig);
 
         gadgets.pubsub2router.init({

@@ -58,8 +58,7 @@
             rave.init();
         });
 
-        <%-- set the javascript debug mode so js code has access to it --%>
-        <%--ui.setJavaScriptDebugMode(<c:out value="${jsDebugMode}"/>);--%>
+        rave.setDebugMode(<c:out value="${jsDebugMode}"/>);
     });
 </script>
 <portal:render-script location="${'AFTER_RAVE'}"/>

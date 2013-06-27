@@ -26,7 +26,8 @@ define([], function () {
         exportEnabled,
         defaultHeight = 200,
         defaultWidth = 320,
-        defaultView = 'default';
+        defaultView = 'default',
+        debugMode = false;
 
     var exports = {};
 
@@ -92,6 +93,14 @@ define([], function () {
 
     exports.getDefaultView = function(){
         return defaultView;
+    }
+
+    exports.setDebugMode = function(b) {
+        debugMode = b;
+    }
+
+    exports.getDebugMode = function(){
+        return debugMode;
     }
 
     return exports;
