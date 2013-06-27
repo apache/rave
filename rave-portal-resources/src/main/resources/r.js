@@ -24048,9 +24048,6 @@ define('build', function (require) {
     };
 
     build.makeAbsPath = function (path, absFilePath) {
-        if(!path) {
-            console.trace();
-        }
         if (!absFilePath) {
             return path;
         }
@@ -24304,8 +24301,6 @@ define('build', function (require) {
                 //If no baseUrl, then use the directory holding the main config.
                 if (!mainConfig.baseUrl) {
                     mainConfig.baseUrl = mainConfigPath;
-                    console.log('im writing config path!')
-                    console.log(mainConfigPath);
                 }
 
                 build.makeAbsConfig(mainConfig, mainConfigPath);
@@ -24335,8 +24330,6 @@ define('build', function (require) {
 
         //Set final output dir
         if (hasProp(config, "baseUrl")) {
-            console.log(hasProp(config, "baseUrl"));
-            console.log(config.baseUrl);
             if (config.appDir) {
                 config.dirBaseUrl = build.makeAbsPath(config.originalBaseUrl, config.dir);
             } else {
