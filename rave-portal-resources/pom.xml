@@ -113,36 +113,22 @@
                             <goal>bdd</goal>
                             <goal>test</goal>
                         </goals>
-                        <!--<configuration>-->
-                            <!--<preloadSources>-->
-                                <!--<source>${project.basedir}/src/test/dependencies/underscore.js</source>-->
-                            <!--</preloadSources>-->
-                            <!--<jsSrcDir>${project.basedir}/src/main/webapp/static/script/core</jsSrcDir>-->
-                            <!--<debug>true</debug>-->
-                            <!--<sourceIncludes>-->
-                                <!--<include>rave_widget_manager.js</include>-->
-                                <!--<include>rave_api.js</include>-->
-                                <!--<include>rave_widget.js</include>-->
-                                <!--<include>rave_opensocial.js</include>-->
-                                <!--<include>rave_wookie.js</include>-->
-                            <!--</sourceIncludes>-->
-                            <!--<sourceExcludes>-->
-                                <!--&lt;!&ndash; rave_ajax can be excluded since it is just a wrapper for jquery.ajax &ndash;&gt;-->
-                                <!--<include>rave_ajax.js</include>-->
-                                <!--&lt;!&ndash; exclude the combined js file from our tests, created by the wro4j plugin  &ndash;&gt;-->
-                                <!--<exclude>*.min.js</exclude>-->
-                            <!--</sourceExcludes>-->
-                        <!--</configuration>-->
                     </execution>
                 </executions>
                 <configuration>
-                    <specRunnerTemplate>REQUIRE_JS</specRunnerTemplate>
-                    <jsSrcDir>${project.basedir}/src/main/webapp/static/script/core</jsSrcDir>
+                    <jsSrcDir>${project.basedir}/src/main/webapp/static/script</jsSrcDir>
                     <jsTestSrcDir>${project.basedir}/src/test/javascript</jsTestSrcDir>
-                    <customRunnerConfiguration>${project.basedir}/src/test/customJasmineConfig.txt</customRunnerConfiguration>
+                    <specDirectoryName>/src/test/javascript</specDirectoryName>
+                    <sourceIncludes>
+                        <include>core/rave_api.js</include>
+                        <include>core/rave_ajax.js</include>
+                    </sourceIncludes>
                     <preloadSources>
-                        <source>${project.basedir}/src/test/dependencies/require.js</source>
+                        <source>http://localhost:8234/src/test/dependencies/require.js</source>
+                        <source>http://localhost:8234/src/test/dependencies/testr.js</source>
+                        <source>http://localhost:8234/src/test/dependencies/underscore.js</source>
                     </preloadSources>
+                    <customRunnerTemplate>src/test/testTemplate.htmltemplate</customRunnerTemplate>
                 </configuration>
             </plugin>
             <!--
