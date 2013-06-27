@@ -121,6 +121,7 @@
                     <specDirectoryName>/src/test/javascript</specDirectoryName>
                     <sourceIncludes>
                         <include>core/rave_api.js</include>
+                        <include>core/rave_state_manager.js</include>
                         <include>core/rave_ajax.js</include>
                     </sourceIncludes>
                     <preloadSources>
