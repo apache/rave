@@ -17,7 +17,7 @@
  * under the License.
  */
 
-define(["underscore", "portal/rave_backbone", "rave"], function(_, raveBackbone, rave){
+define(["underscore", "portal/rave_backbone", "portal/rave_portal", "rave"], function(_, raveBackbone, ravePortal, rave){
     /*
      User model. Further implementation pending.
      */

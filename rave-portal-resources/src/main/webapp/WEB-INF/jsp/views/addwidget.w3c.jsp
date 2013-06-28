@@ -137,7 +137,7 @@
 
 <portal:register-init-script location="${'AFTER_RAVE'}">
 <script>
-    require(["rave", "jquery", "jqueryUi"], function(rave, $){
+    require(["rave", "ui", "jquery"], function(rave, ui, $){
         $(function() {
             if ($('#url').val().length === 0) {
                 $('#addWidgetForm').hide();
@@ -167,16 +167,15 @@
                     url: "?all=true",
                     providerType: "W3C",
                     alertInvalidParams: function(){
-                        alert(ravePortal.getClientMessage("api.widget_metadata.invalid_params"));
+                        alert(ui.getClientMessage("api.widget_metadata.invalid_params"));
                     },
                     errorCallback: function(){
-                        alert(ravePortal.getClientMessage("api.widget_metadata.parse_error"));
+                        alert(ui.getClientMessage("api.widget_metadata.parse_error"));
                     },
                     successCallback: function(result) {
-                        var i=0;
                         var widgets = result.result;
                         PostLoadW3cWidgets.setList(widgets);
-                        jQuery.each(widgets, function() {
+                        $.each(widgets, function(index) {
                             $('#w3cwidgetsList')
                                     .append(
                                     $("<li/>")
@@ -190,7 +189,7 @@
                                                             .css('width','50%')
                                                             .append(
                                                             $("<div/>")
-                                                                    .attr("id", "w3cImageHolder"+i)
+                                                                    .attr("id", "w3cImageHolder"+index)
                                                     )
                                                             .append(
                                                             $("<div/>")
@@ -200,8 +199,8 @@
                                                                     $("<button/>")
                                                                             .addClass("btn btn-small btn-primary")
                                                                             .attr("id", this.url)
-                                                                            .click(function(){updateRaveMetadata(i)})
-                                                                            .text(rave.getClientMessage("get.metadata"))
+                                                                            .click(function(){updateRaveMetadata(index)})
+                                                                            .text(ui.getClientMessage("get.metadata"))
                                                             )
                                                     )
                                             )
@@ -237,7 +236,7 @@
                             )
                             // add the thumbnail image if found
                             if(this.thumbnailUrl!=null){
-                                $('#w3cImageHolder'+i)
+                                $('#w3cImageHolder'+index)
                                         .append(
                                         $("<img/>")
                                                 .addClass("storeWidgetThumbnail")
@@ -248,7 +247,6 @@
                                                 .attr("height", "80")
                                 )
                             }
-                            i++;
                         });
                         $("#w3cBrowseForm").dialog("open");
                     }
@@ -272,7 +270,7 @@
 
         function updateRaveMetadata(id){
             if(id != null){
-                widget = PostLoadW3cWidgets.getListItemByIndex(id);
+                var widget = PostLoadW3cWidgets.getListItemByIndex(id);
                 $('#title').val(widget.title);
                 $('#description').val(widget.description);
                 $('#thumbnailUrl').val(widget.thumbnailUrl);

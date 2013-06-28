@@ -65,7 +65,7 @@ public class W3cWidgetWrapperRenderer implements RegionWidgetWrapperRenderer {
      * The script block template
      */
     private static final String SCRIPT_BLOCK =
-        "<script>rave.registerWidget(%1$s, {type: '%2$s'," +
+        "<script>require(['rave'], function(rave){rave.registerWidget('%1$s', {type: '%2$s'," +
         " regionWidgetId: %3$s," +
         " widgetUrl: '%4$s', " +
         " height: '%5$s', " +
@@ -75,7 +75,7 @@ public class W3cWidgetWrapperRenderer implements RegionWidgetWrapperRenderer {
         " locked: %9$s, " +
         " hideChrome: %10$s, " +
         " subPage: {id: %11$s, name: '%12$s', isDefault: %13$s}" +
-        "});</script>";
+        "})});</script>";
     private static final String MARKUP = "<!-- RegionWidget %1$s placeholder -->";
 
 

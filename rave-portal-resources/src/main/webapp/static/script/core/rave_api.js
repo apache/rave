@@ -450,10 +450,10 @@ define(['underscore', 'core/rave_ajax', 'core/rave_state_manager', 'core/rave_ev
                     case "NO_ERROR" :
                         break;
                     case "INVALID_PARAMS":
-                        alert(ravePortal.getClientMessage("api.rpc.error.invalid_params"));
+                        alert(rpcResult);
                         break;
                     case "INTERNAL_ERROR":
-                        alert(ravePortal.getClientMessage("api.rpc.error.internal"));
+                        alert(rpcResult);
                         break;
                 }
             }

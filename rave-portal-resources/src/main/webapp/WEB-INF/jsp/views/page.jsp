@@ -450,6 +450,8 @@
                 $('#moveWidgetToPageButton').click(function(){
                     ui.layout.moveWidgetToPage($('#moveWidgetModal').data('regionWidgetId'));
                 })
+
+                rave.renderWidgets('home');
             });
 
             rave.setDefaultView('home');
@@ -467,10 +469,6 @@
             <portal:person id="${members.userId}" var="member"/>
             ui.models.currentPage.addInitData('${member.id}', ${members.editor})
             </c:forEach>
-
-            $(function () {
-                rave.renderWidgets('home');
-            });
         });
     </script>
 </portal:register-init-script>

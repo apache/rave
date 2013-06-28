@@ -237,18 +237,18 @@
 
 <portal:register-init-script location="${'AFTER_RAVE'}">
     <script>
-        require(["rave", "ui", "portal/rave_person_profile", "jquery"],
-                function (rave, ui, ravePersonProfile, $) {
+        require(["rave", "ui", "portal/rave_person_profile"],
+                function (rave, ui, ravePersonProfile) {
                     rave.setDefaultView('profile');
                     rave.setOwner({
                         username: "<c:out value="${userProfile.username}"/>",
                         id: "<c:out value="${userProfile.id}"/>"
                     });
 
-                    $(function () {
+                    rave.registerOnInitHandler(function () {
                         ui.forms.validateEditAccountForm();
                         rave.renderWidgets('home');
-                    });
+                    })
                 })
     </script>
 </portal:register-init-script>

@@ -337,11 +337,9 @@
                             var element = $(this);
                             ui.displayUsersOfWidget(element.data('widget-id'));
                         });
-                    })
 
-                    $(function () {
                         raveStore.init('<c:out value="${referringPageId}"/>');
-                    });
+                    })
         })
     </script>
 </portal:register-init-script>

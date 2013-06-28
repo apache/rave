@@ -281,20 +281,16 @@
                     var element = $(this);
                     var widgetId = element.data('widget-id');
                     var pageId = element.data('page-id');
-                    rave.api.addWidgetToPage({widgetId: widgetId, pageId: pageId, redirectAfterAdd: true, successCallback: addWidgetToPageCallback})
+                    rave.api.rpc.addWidgetToPage({widgetId: widgetId, pageId: pageId, redirectAfterAdd: true, successCallback: addWidgetToPageCallback})
                 })
 
                 $('#displayUsersOfWidgetLink').click(function(){
                     ui.displayUsersOfWidget($(this).data('widget-id'))
                 })
-            })
 
-            $(function () {
                 raveStore.init('<c:out value="${referringPageId}"/>');
                 raveStore.initTags("<c:out value="${widget.id}"/>");
-            });
-
-
+            })
         })
     </script>
 </portal:register-init-script>
