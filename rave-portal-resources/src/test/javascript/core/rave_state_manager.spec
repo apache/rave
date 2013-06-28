@@ -226,6 +226,30 @@ describe('state_manager', function(){
             expect(stateManager.getDefaultView.mostRecentCall.args.length).toEqual(0)
         })
     })
+
+    describe('set javascript debug mode', function(){
+        it('sets the java script debug mode correctly', function(){
+            spyOn(stateManager, 'setDebugMode').andCallThrough();
+
+            stateManager.setDebugMode(true);
+
+            expect(stateManager.getDebugMode()).toBe(true);
+            expect(stateManager.setDebugMode).toHaveBeenCalled();
+            expect(stateManager.setDebugMode.mostRecentCall.args[0]).toEqual(true)
+        })
+    })
+
+    describe('get javascript debug mode', function(){
+        it('gets the javascript debug mode correctly', function(){
+            spyOn(stateManager, 'getDebugMode').andCallThrough();
+
+            var output = stateManager.getDebugMode();
+
+            expect(output).toBe(false);
+            expect(stateManager.getDebugMode).toHaveBeenCalled()
+            expect(stateManager.getDebugMode.mostRecentCall.args.length).toEqual(0)
+        })
+    })
 })
 
 

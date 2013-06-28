@@ -23,15 +23,6 @@ var mock = {
     }
 }
 
-var eventManager = {
-    registerOnInitHandler: function(){}
-}
-
-var stateManager = {
-    getContext: function(){}
-}
-
-
 
 
 describe('rave_api', function(){
@@ -43,9 +34,9 @@ describe('rave_api', function(){
 
         spyOn(mock, 'ajax').andCallThrough();
         api = testr('core/rave_api', {
-            './rave_ajax': mock.ajax,
-            './rave_state_manager': stateManager,
-            './rave_event_manager': eventManager
+            'core/rave_ajax': mock.ajax,
+            'core/rave_state_manager': {getContext: function(){}},
+            'core/rave_event_manager': {registerOnInitHandler: function(){}}
         })
         spyOn(testScope, 'callback');
     });
