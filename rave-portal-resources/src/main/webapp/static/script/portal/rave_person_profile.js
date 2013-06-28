@@ -88,6 +88,29 @@ define(["jquery", "portal/rave_portal", "rave"], function($, ravePortal, rave){
         return i18nStr;
     }
 
+    function userProfileEditHandler(isEdit) {
+        //get the edit element
+        var profileInfo = document.getElementById("profileInfo");
+        //extract hidden fields through their class
+        var hiddenFields = "." + profileInfo.value + "-hidden";
+        //extract labels through their class
+        var visibleFields = "." + profileInfo.value + "-visible";
+
+        if (isEdit) {
+            //make hidden fields visible
+            $(hiddenFields).show();
+            //make visible fields invisible
+            $(visibleFields).hide();
+        }
+
+        else {
+            //make hidden fields invisible
+            $(hiddenFields).hide();
+            //make visible fields visible
+            $(visibleFields).show();
+        }
+    }
+
     function dealWithUserResults(userResults){
         var currentUser = $("#addRemoveFriend").get(0).value;
         var searchTerm = $('#searchTerm').get(0).value;
@@ -399,7 +422,7 @@ define(["jquery", "portal/rave_portal", "rave"], function($, ravePortal, rave){
         var $editButton = $("#profileEdit");
         if ($editButton) {
             $editButton.click(function() {
-                rave.api.handler.userProfileEditHandler(true);
+                userProfileEditHandler(true);
             });
         }
         //user clicks add/remove friend button in the profile page
@@ -443,7 +466,7 @@ define(["jquery", "portal/rave_portal", "rave"], function($, ravePortal, rave){
         var $cancelButton = $("#cancelEdit");
         if ($cancelButton) {
             $cancelButton.click(function() {
-                rave.api.handler.userProfileEditHandler(false);
+                userProfileEditHandler(false);
             });
         }
 
