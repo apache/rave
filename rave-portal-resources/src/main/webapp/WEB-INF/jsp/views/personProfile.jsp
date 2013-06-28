@@ -237,8 +237,8 @@
 
 <portal:register-init-script location="${'AFTER_RAVE'}">
     <script>
-        require(["rave", "ui", "portal/rave_person_profile", "portal/rave_portal", "portal/rave_forms", "jquery"],
-                function (rave, ui, ravePersonProfile, ravePortal, raveForms, $) {
+        require(["rave", "ui", "portal/rave_person_profile", "jquery"],
+                function (rave, ui, ravePersonProfile, $) {
                     rave.setDefaultView('profile');
                     rave.setOwner({
                         username: "<c:out value="${userProfile.username}"/>",
@@ -246,8 +246,7 @@
                     });
 
                     $(function () {
-                        ravePersonProfile.init();
-                        raveForms.validateEditAccountForm();
+                        ui.forms.validateEditAccountForm();
                         rave.renderWidgets('home');
                     });
                 })

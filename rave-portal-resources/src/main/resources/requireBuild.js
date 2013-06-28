@@ -29,6 +29,18 @@
         {
             name: 'ui',
             exclude: ['rave']
+        },
+        {
+            name: 'portal/rave_admin',
+            exclude: ['rave']
+        },
+        {
+            name: 'portal/rave_store',
+            exclude: ['rave']
+        },
+        {
+            name: 'portal/rave_forms',
+            exclude: ['rave']
         }
     ]
 })

@@ -133,8 +133,7 @@
                 </configuration>
             </plugin>
             <!--
-               wro4j maven plugin is used for optimization (concatenation, minification, etc) of our static resources
-               it is invoked as part of the compile phase of the maven lifecycle
+               wro4j maven plugin is used for lesscss compilation
             -->
             <plugin>
                 <groupId>ro.isdc.wro4j</groupId>
@@ -154,11 +153,9 @@
                     <!-- wro.xml defines the resource groups -->
                     <wroFile>${basedir}/src/main/resources/wro.xml</wroFile>
                     <!-- targetGroups is the set of resource groups, defined in wro.xml, that you want to process -->
-                    <targetGroups>rave.core.min,rave.portal.min,rave</targetGroups>
+                    <targetGroups>rave</targetGroups>
                     <!-- minimize instructs the processors to handle their minimization work -->
                     <minimize>true</minimize>
-                    <!-- location of the javascript after processing -->
-                    <jsDestinationFolder>${project.build.directory}/${project.build.finalName}/static/script/</jsDestinationFolder>
                     <!-- location of the CSS after processing -->
                     <cssDestinationFolder>${project.build.directory}/${project.build.finalName}/static/css/</cssDestinationFolder>
                     <!-- location of webapp directory that wro4j uses for its location context -->

@@ -30,13 +30,13 @@
     <c:when test="${jsDebugMode == '1'}">
         <script src="<spring:url value="/static/script/requireConfig.js"/>"></script>
         <script>
-            requirejs.config({baseUrl:"/portal/static/script"});
+            requirejs.config({baseUrl:"<c:url value="/static/script"/>"});
         </script>
     </c:when>
     <c:otherwise>
         <script src="<spring:url value="/static/script-built/requireConfig.js"/>"></script>
         <script>
-            requirejs.config({baseUrl:"/portal/static/script-built"});
+            requirejs.config({baseUrl:"<c:url value="/static/script-built"/>"});
         </script>
     </c:otherwise>
 </c:choose>

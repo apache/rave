@@ -306,8 +306,8 @@
 
 <portal:register-init-script location="${'AFTER_RAVE'}">
     <script>
-        require(["rave", "ui", "portal/rave_store", "portal/rave_display", "jquery"],
-                function(rave, ui, raveStore, raveDisplay, $){
+        require(["rave", "ui", "portal/rave_store", "jquery"],
+                function(rave, ui, raveStore, $){
                     //Helper function for callback below
                     function addWidgetToPageCallback (result){
                         var widgetTitle = ui.getClientMessage("widget.add_prefix");
@@ -335,7 +335,7 @@
 
                         $("#storeItems").on("click", "a.displayUsersLink", function(event){
                             var element = $(this);
-                            raveDisplay.displayUsersOfWidget(element.data('widget-id'));
+                            ui.displayUsersOfWidget(element.data('widget-id'));
                         });
                     })
 

@@ -831,6 +831,6 @@ define(['underscore', 'core/rave_ajax', 'core/rave_state_manager', 'core/rave_ev
 
         return {
             rest: restApi,
-            rpc: rpcApi,
+            rpc: rpcApi
         };
     })

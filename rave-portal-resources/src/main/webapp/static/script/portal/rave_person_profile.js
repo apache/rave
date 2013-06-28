@@ -539,8 +539,9 @@ define(["jquery", "portal/rave_portal", "rave"], function($, ravePortal, rave){
         initButtons();
     }
 
+    rave.registerOnInitHandler(init);
+
     return {
-        init : init,
         dealWithUserResults : dealWithUserResults,
         addFriend : addFriend,
         removeFriend : removeFriend,

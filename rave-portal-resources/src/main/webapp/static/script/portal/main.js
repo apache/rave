@@ -17,12 +17,16 @@
  * under the License.
  */
 
-define(['underscore', 'portal/rave_portal', 'portal/rave_models', 'portal/rave_ui',
-    'portal/rave_layout', 'portal/rave_forms'],
-    function (_, portal, models, ui, layout, forms) {
+define(['underscore', 'portal/rave_portal', 'portal/rave_models', 'portal/rave_layout', 'portal/rave_ui',
+    'portal/rave_forms', 'portal/rave_display'],
+    function (_, portal, models, layout, ui, forms, display) {
 
         portal.models = models;
         portal.layout = layout;
+        _.extend(portal, ui);
+        portal.forms = forms;
+        _.extend(portal, display);
+
 
         return portal
 
