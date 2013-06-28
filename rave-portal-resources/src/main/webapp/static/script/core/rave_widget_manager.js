@@ -61,8 +61,5 @@ define(['underscore', 'core/rave_widget'], function (_, regionWidget) {
         return widgets;
     }
 
-    //TODO: I killed registerInitHandlers! Tell people.
-
-    //TODO: reset isn't going to work well with individual modules holding private data
     return rave;
 })

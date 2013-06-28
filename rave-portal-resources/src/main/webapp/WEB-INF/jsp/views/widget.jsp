@@ -260,7 +260,6 @@
 <portal:register-init-script location="${'AFTER_RAVE'}">
     <script>
         require(["rave", "ui", "portal/rave_display", "portal/rave_store", "jquery"], function(rave, ui, raveDisplay, raveStore, $){
-            //TODO: Ask Erin about duplicate code, put it in a module?
             //Helper function for callback below
             function addWidgetToPageCallback (result){
                 var widgetTitle = ui.getClientMessage("widget.add_prefix");

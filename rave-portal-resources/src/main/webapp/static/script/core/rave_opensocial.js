@@ -142,7 +142,6 @@ define(['underscore', 'core/rave_view_manager', 'core/rave_api', 'core/rave_open
             }
         }
 
-
         exports.initWidget = function (widget) {
             widget.error = getMetadataErrors(widget.metadata);
             if (!widget.error) {

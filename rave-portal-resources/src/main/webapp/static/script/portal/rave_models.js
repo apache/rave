@@ -131,11 +131,6 @@ define(["underscore", "portal/rave_backbone", "rave"], function(_, raveBackbone,
             members: {}
         },
 
-        /*
-         TODO: currently this is used to silently bootstrap the page model from the page view. Once
-         the jsp views are lightened up we should be able to provide a full representation of the page
-         model to pass to .set() and this should not be needed.
-         */
         addInitData: function (userId, isEditor) {
             var members = this.get('members');
 
@@ -180,7 +175,6 @@ define(["underscore", "portal/rave_backbone", "rave"], function(_, raveBackbone,
                     /*
                      The model does not manage or care about views. Instead it fires events
                      that views can subscribe to for ui representation.
-                     TODO: solidify and document eventing model
                      */
                     self.trigger('share', 'member:add', userId);
                 }
@@ -255,11 +249,6 @@ define(["underscore", "portal/rave_backbone", "rave"], function(_, raveBackbone,
             rave.api.rpc.clonePageForUser({pageId: this.get('id'), userId: userId, pageName: pageName,
                 successCallback: function(result){
                     if(result.error) {
-                        /*
-                         TODO: this is a weird error handling condition used by clone to catch duplicate
-                         named pages. Firing an event and letting the view handle for now, but the api
-                         should be managing errors better.
-                         */
                         return self.trigger('error', result.errorCode, userId);
                     }
                     self.trigger('share', 'clone', userId);

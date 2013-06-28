@@ -27,12 +27,10 @@ define(['underscore', 'core/rave_log', 'osapi'], function(_, log){
         }
         openAjaxHub = new OpenAjax.hub.ManagedHub({
             onSubscribe:function (topic, container) {
-                //TODO:ask erin about changing rave to exports
                 log((container == null ? "Container" : container.getClientID()) + " subscribes to this topic '" + topic + "'");
                 return true;
             },
             onUnsubscribe:function (topic, container) {
-                //TODO:ask erin about changing rave to exports
                 log((container == null ? "Container" : container.getClientID()) + " unsubscribes from this topic '" + topic + "'");
                 return true;
             },

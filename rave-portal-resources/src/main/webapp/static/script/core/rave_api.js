@@ -17,7 +17,6 @@
  * under the License.
  */
 
-//TODO: jquery dependency should not be here.
 define(['underscore', 'core/rave_ajax', 'core/rave_state_manager', 'core/rave_event_manager'],
     function (_, ajax, stateManager, eventManager) {
         //stores virtual host context of application execution

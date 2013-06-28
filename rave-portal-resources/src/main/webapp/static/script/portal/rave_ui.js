@@ -28,7 +28,6 @@ define(["jquery", "underscore", "rave",
          */
         var views = exports.views = {};
 
-        //TODO: root app view, will be expanded significantly
         var App = raveBackbone.View.extend({
             models: {
                 page: raveModels.currentPage
@@ -393,7 +392,6 @@ define(["jquery", "underscore", "rave",
             }
         }
 
-        //TODO: this is a travesty for now but will be replaced by views
         function showWidgetPrefs(widget) {
             var WIDGET_PREFS_INPUT_REQUIRED_CLASS = "widget-prefs-input-required";
             var WIDGET_PREFS_INPUT_FAILED_VALIDATION = "widget-prefs-input-failed-validation";
@@ -750,7 +748,6 @@ define(["jquery", "underscore", "rave",
 
                 function openFullScreenOverlay(widgetId) {
                     addCanvasOverlay($("#pageContent"));
-                    //TODO: make this work
                     getNonLockedRegions().sortable("option", "disabled", true);
                     $("#widget-" + widgetId + "-wrapper").removeClass("widget-wrapper").addClass("widget-wrapper-canvas");
                     // hide the widget menu

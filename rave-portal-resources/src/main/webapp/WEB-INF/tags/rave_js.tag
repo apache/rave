@@ -28,7 +28,6 @@
 <%-- check to see if the javaScriptDebugMode is on, if so render the individual JS files, otherwise render the minified single file --%>
 <c:choose>
     <c:when test="${jsDebugMode == '1'}">
-        <!--TODO: figure out js debug mode -->
         <script src="<spring:url value="/static/script/requireConfig.js"/>"></script>
         <script>
             requirejs.config({baseUrl:"/portal/static/script"});

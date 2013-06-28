@@ -37,7 +37,6 @@ define(['core/rave_openajax_hub', 'core/rave_state_manager'], function(managedHu
                     IframeContainer: {
                         parent:      el,
                         iframeAttrs: {
-                            //TODO: hardcoding numbers, should come from regionWidget?
                             height: widget.height || stateManager.getDefaultHeight(),
                             width:  widget.width || stateManager.getDefaultWidth(),
                             frameborder: 0

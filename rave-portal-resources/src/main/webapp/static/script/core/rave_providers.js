@@ -17,10 +17,12 @@
  * under the License.
  */
 
+
+/*
+    This determines which providers the client supports. If you need only os or wookie, overlay this file.
+    Providers should be registered with ALL LOWERCASE keys
+ */
 define(['core/rave_wookie', 'core/rave_opensocial'], function(wookie, os){
-    /*
-    All providers should be registered with ALL LOWERCASE keys
-     */
     return{
         w3c:wookie,
         opensocial:os
