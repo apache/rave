@@ -191,7 +191,7 @@
                     must resolve to absolute paths (see below)
                     -->
                     <filterConfig>
-                        false
+                        true
                     </filterConfig>
                     <!-- Skip requirejs optimization if true -->
                     <skip>

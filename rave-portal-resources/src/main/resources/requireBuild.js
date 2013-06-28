@@ -18,10 +18,10 @@
  */
 
 ({
-    appDir: '../webapp/static/script',
-    mainConfigFile: '../webapp/static/script/requireConfig.js',
+    appDir: '${basedir}/src/main/webapp/static/script',
+    mainConfigFile: '${basedir}/src/main/webapp/static/script/requireConfig.js',
     baseUrl: '.',
-    dir: '../webapp/static/script-built',
+    dir: '${project.build.directory}/${project.build.finalName}/static/script-built',
     modules: [
         {
             name: 'rave'
