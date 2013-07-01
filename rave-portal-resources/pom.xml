@@ -122,6 +122,10 @@
                     <sourceIncludes>
                         <include>core/rave_api.js</include>
                         <include>core/rave_state_manager.js</include>
+                        <include>core/rave_event_manager.js</include>
+                        <include>core/rave_widget.js</include>
+                        <include>core/rave_widget_manager.js</include>
+                        <include>core/rave_view_manager.js</include>
                         <include>core/rave_ajax.js</include>
                     </sourceIncludes>
                     <preloadSources>

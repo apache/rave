@@ -15,49 +15,14 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *//*
+ */
 
-
-describe('rave.RegionWidget', function () {
-
-    var provider,
-        viewObject,
-        validWidget,
-        invalidWidget,
-        errorWidget;
+describe('rave_widget', function(){
 
     beforeEach(function () {
-        provider = {
-            init: function () {
-            },
-            initWidget: function () {
-            },
-            renderWidget: function () {
-            },
-            closeWidget: function () {
-            },
-            setDefaultGadgetSize: function () {
-            },
-            setDefaultGadgetView: function () {
-            }
-        }
-        _.each(provider, function (fn, key) {
-            spyOn(provider, key);
-        });
-
-        viewObject = {
-            render: function () {
-            },
-            getWidgetSite: function () {
-                return document.createElement('div');
-            },
-            destroy: function () {
-            }
-        }
-        _.each(viewObject, function (fn, key) {
-            spyOn(viewObject, key).andCallThrough();
-        });
-
+        /**************
+         Widget Examples
+         ****************/
         validWidget = {
             "type": "OpenSocial",
             "regionWidgetId": "5",
@@ -89,43 +54,117 @@ describe('rave.RegionWidget', function () {
             "error": "error text"
         };
 
-        spyOn(rave, 'getProvider').andReturn(provider);
-        spyOn(rave, 'renderView').andReturn(viewObject);
-        spyOn(rave, 'destroyView');
+        /*************************
+         Mock Module Dependencies
+         ************************/
+        mockApi = {
+            rest: {
+                saveWidgetCollapsedState: function(){},
+                saveWidgetPreference: function(){},
+                saveWidgetPreferences: function(){}
+            },
+            rpc: {
+                removeWidget: function(){},
+                moveWidgetToPage: function(){},
+                moveWidgetToRegion: function(){}
+            }
+        }
 
-        _.each(rave.api.rest, function (fn, key) {
-            spyOn(rave.api.rest, key);
+        mockViewManager = {
+            destroyView: function(){},
+            renderView: function(){},
+        }
+
+        /****************
+           Mock View Obj
+         ****************/
+        viewObject = {
+            render: function () {
+            },
+            getWidgetSite: function () {
+                return document.createElement('div');
+            },
+            destroy: function () {
+            }
+        }
+
+        /****************
+           Mock Provider
+         ****************/
+        provider = {
+            init: function () {
+            },
+            initWidget: function () {
+            },
+            renderWidget: function () {
+            },
+            closeWidget: function () {
+            },
+            setDefaultGadgetSize: function () {
+            },
+            setDefaultGadgetView: function () {
+            }
+        }
+
+        /**************
+              Spies
+         ****************/
+        _.each(mockApi.rest, function (fn, key) {
+            spyOn(mockApi.rest, key);
         });
-        _.each(rave.api.rpc, function (fn, key) {
-            spyOn(rave.api.rpc, key);
+        _.each(mockApi.rpc, function (fn, key) {
+            spyOn(mockApi.rpc, key);
         });
+        spyOn(mockViewManager, 'destroyView');
+        spyOn(mockViewManager, 'renderView').andReturn(viewObject);
+        _.each(provider, function (fn, key) {
+            spyOn(provider, key);
+        });
+
+        _.each(viewObject, function (fn, key) {
+            spyOn(viewObject, key).andCallThrough();
+        });
+
+        RegionWidget = testr('core/rave_widget', {
+            './rave_api': mockApi,
+            './rave_view_manager': mockViewManager,
+            './rave_providers': {
+                opensocial: provider
+            }
+        })
     });
 
     describe('constructor', function () {
         it('returns a new object with all the properties of the definition', function () {
-            var regionWidget = new rave.RegionWidget(validWidget);
+            var regionWidget = new RegionWidget(validWidget);
             _.each(validWidget, function (value, key) {
                 expect(regionWidget[key]).toEqual(value);
             });
         });
 
         it('throws an error if the expected provider is not registered', function () {
-            rave.getProvider.andReturn(undefined);
+            RegionWidgetNoProvider = testr('core/rave_widget', {
+                './rave_api': mockApi,
+                './rave_view_manager': mockViewManager,
+                './rave_providers': {
+                    opensocial: undefined
+                }
+            })
 
             expect(function () {
-                new rave.RegionWidget(validWidget);
+                new RegionWidgetNoProvider(validWidget);
             }).toThrow();
         });
 
         it('invokes the initWidget method of the provider', function () {
             expect(provider.initWidget).not.toHaveBeenCalled();
-            var regionWidget = new rave.RegionWidget(validWidget);
+            var regionWidget = new RegionWidget(validWidget);
             expect(provider.initWidget).toHaveBeenCalled();
         });
     });
 
     describe('extend', function () {
-        it('allows you to extend the rave.RegionWidget prototype', function () {
+        it('allows you to extend the RegionWidget prototype', function () {
             var mixin = {
                 fn: function () {
                 },
@@ -134,10 +173,10 @@ describe('rave.RegionWidget', function () {
 
             spyOn(mixin, 'fn');
 
-            var regionWidget1 = new rave.RegionWidget(validWidget);
+            var regionWidget1 = new RegionWidget(validWidget);
             expect(regionWidget1.fn).toBeUndefined();
-            rave.RegionWidget.extend(mixin);
-            var regionWidget2 = new rave.RegionWidget(validWidget);
+            RegionWidget.extend(mixin);
+            var regionWidget2 = new RegionWidget(validWidget);
             expect(regionWidget1.prop).toEqual(7);
             expect(regionWidget2.prop).toEqual(7);
 
@@ -152,8 +191,8 @@ describe('rave.RegionWidget', function () {
             errorRegionWidget;
 
         beforeEach(function () {
-            regionWidget = new rave.RegionWidget(validWidget);
-            errorRegionWidget = new rave.RegionWidget(invalidWidget);
+            regionWidget = new RegionWidget(validWidget);
+            errorRegionWidget = new RegionWidget(invalidWidget);
         })
 
         describe('render', function () {
@@ -176,7 +215,7 @@ describe('rave.RegionWidget', function () {
             it('retrieves a registered view if el is a string', function () {
                 regionWidget.render('asdf');
 
-                expect(rave.renderView).toHaveBeenCalledWith('asdf', regionWidget);
+                expect(mockViewManager.renderView).toHaveBeenCalledWith('asdf', regionWidget);
                 expect(viewObject.getWidgetSite).toHaveBeenCalled();
                 expect(regionWidget._view).toBe(viewObject);
             });
@@ -211,7 +250,7 @@ describe('rave.RegionWidget', function () {
                 expect(regionWidget.collapsed).toEqual('asdf');
                 regionWidget.hide();
                 expect(regionWidget.collapsed).toEqual(true);
-                expect(rave.api.rest.saveWidgetCollapsedState).toHaveBeenCalledWith({
+                expect(mockApi.rest.saveWidgetCollapsedState).toHaveBeenCalledWith({
                     regionWidgetId: regionWidget.regionWidgetId,
                     collapsed: true
                 });
@@ -225,7 +264,7 @@ describe('rave.RegionWidget', function () {
                 expect(regionWidget.collapsed).toEqual('asdf');
                 regionWidget.show();
                 expect(regionWidget.collapsed).toEqual(false);
-                expect(rave.api.rest.saveWidgetCollapsedState).toHaveBeenCalledWith({
+                expect(mockApi.rest.saveWidgetCollapsedState).toHaveBeenCalledWith({
                     regionWidgetId: regionWidget.regionWidgetId,
                     collapsed: false
                 });
@@ -237,9 +276,9 @@ describe('rave.RegionWidget', function () {
                 var opts = {opts: true}
                 regionWidget.close(opts);
 
-                expect(rave.destroyView).not.toHaveBeenCalled();
+                expect(mockViewManager.destroyView).not.toHaveBeenCalled();
                 expect(provider.closeWidget).toHaveBeenCalledWith(regionWidget, opts);
-                expect(rave.api.rpc.removeWidget).toHaveBeenCalledWith({
+                expect(mockApi.rpc.removeWidget).toHaveBeenCalledWith({
                     regionWidgetId: regionWidget.regionWidgetId
                 });
             });
@@ -250,7 +289,7 @@ describe('rave.RegionWidget', function () {
                 expect(regionWidget._view).toBe(viewObject);
 
                 regionWidget.close();
-                expect(rave.destroyView).toHaveBeenCalledWith(viewObject);
+                expect(mockViewManager.destroyView).toHaveBeenCalledWith(viewObject);
             });
         });
 
@@ -260,7 +299,7 @@ describe('rave.RegionWidget', function () {
                 }
                 regionWidget.moveToPage(1, cb);
 
-                expect(rave.api.rpc.moveWidgetToPage).toHaveBeenCalledWith({
+                expect(mockApi.rpc.moveWidgetToPage).toHaveBeenCalledWith({
                     toPageId: 1,
                     regionWidgetId: regionWidget.regionWidgetId,
                     successCallback: cb
@@ -272,11 +311,26 @@ describe('rave.RegionWidget', function () {
             it('calls the rave api', function () {
                 regionWidget.moveToRegion(1, 2, 3);
 
-                expect(rave.api.rpc.moveWidgetToRegion).toHaveBeenCalledWith({
+                expect(mockApi.rpc.moveWidgetToRegion).toHaveBeenCalledWith({
                     regionWidgetId: regionWidget.regionWidgetId,
                     fromRegionId: 1,
                     toRegionId: 2,
                     toIndex: 3
+                });
+            });
+        });
+
+        describe('savePreference', function () {
+            it('calls the rave api updates the widget state', function () {
+                var name = 'color';
+                var pref = 'blue';
+                var prefs = {color: 'blue'}
+                regionWidget.savePreference(name, pref);
+
+                expect(mockApi.rest.saveWidgetPreference).toHaveBeenCalledWith({
+                    regionWidgetId: regionWidget.regionWidgetId,
+                    prefName: name,
+                    prefValue: pref
                 });
             });
         });
@@ -287,11 +341,11 @@ describe('rave.RegionWidget', function () {
                 regionWidget.savePreferences(prefs);
 
                 expect(regionWidget.userPrefs).toBe(prefs);
-                expect(rave.api.rest.saveWidgetPreferences).toHaveBeenCalledWith({
+                expect(mockApi.rest.saveWidgetPreferences).toHaveBeenCalledWith({
                     regionWidgetId: regionWidget.regionWidgetId,
                     userPrefs: prefs
                 });
             });
         });
     });
-});*/
+})
