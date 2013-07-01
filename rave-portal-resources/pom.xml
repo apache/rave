@@ -126,7 +126,7 @@
                         <include>core/rave_widget.js</include>
                         <include>core/rave_widget_manager.js</include>
                         <include>core/rave_view_manager.js</include>
-                        <include>core/rave_ajax.js</include>
+                        <include>core/rave_openajax_hub.js</include>
                     </sourceIncludes>
                     <preloadSources>
                         <source>/src/test/dependencies/require.js</source>
