@@ -1,10 +1,23 @@
-/**
- * Created with IntelliJ IDEA.
- * User: dgornstein
- * Date: 6/26/13
- * Time: 8:29 AM
- * To change this template use File | Settings | File Templates.
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * 'License'); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * 'AS IS' BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
+
+
 window.___jsl=window.___jsl||{};
 (window.___jsl.ci=window.___jsl.ci||[]).push({opensocial:{invalidatePath:"http://%host%/rpc",path:"http://%host%/rpc",domain:"shindig",supportedFields:{person:["id",{name:["familyName","givenName","unstructured"]},"thumbnailUrl","profileUrl"],mediaItem:"album_id created description duration file_size id language last_updated location mime_type num_comments num_views num_votes rating start_time tagged_people tags thumbnail_url title type url".split(" "),album:"id thumbnailUrl title description location ownerId".split(" "),group:["id",
     "title","description"],activity:"appId body bodyId externalId id mediaItems postedTime priority streamFaviconUrl streamSourceUrl streamTitle streamUrl templateParams title url userId".split(" "),activityEntry:"actor content generator icon id object published provider target title updated url verb openSocial extensions".split(" ")},enableCaja:!1},rpc:{commSwf:"/xpc.swf",passReferrer:"c2p:query",parentRelayUrl:"/container/rpc_relay.html",useLegacyProtocol:!1},"shindig.auth":{},views:{"default":{isOnlyVisible:!1,

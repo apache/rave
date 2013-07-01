@@ -43,7 +43,8 @@ describe('rave_widget_manager', function () {
             "userPrefs": { "headlineCount": "9", "summaryCount": "1"},
             "collapsed": false,
             "widgetId": "3",
-            "regionId": "1"
+            "regionId": "1",
+            "render": function(){}
         };
 
         widget2 = {
@@ -67,7 +68,8 @@ describe('rave_widget_manager', function () {
             "userPrefs": { "headlineCount": "9", "summaryCount": "1"},
             "collapsed": false,
             "widgetId": "3",
-            "regionId": "2"
+            "regionId": "2",
+            "render":function(){}
         };
 
         /*************************
@@ -140,21 +142,6 @@ describe('rave_widget_manager', function () {
             expect(registeredWidget1).toEqual(widget1);
             expect(registeredWidget2).toEqual(widget2);
         });
-        /*
-       it('does not call RegionWidget constructor until rave.init is called', function () {
-           WidgetManager.registerWidget(widget1);
-            expect(mockRegionWidget.RegionWidget).not.toHaveBeenCalled();
-            eventManager.init();
-            expect(mockRegionWidget.RegionWidget).toHaveBeenCalled();
-        });
-
-        it('instatiates a new RegionWidget immediately if rave.init was already called', function () {
-            expect(rave.RegionWidget).not.toHaveBeenCalled();
-            rave.init();
-            rave.registerWidget(widget1);
-            expect(rave.RegionWidget).toHaveBeenCalled();
-        });*/
-
     });
 
     describe('unregisterWidget', function () {
@@ -198,4 +185,17 @@ describe('rave_widget_manager', function () {
             expect(WidgetManager.getWidgets({widgetId: "3"})).toEqual([widget1, widget2]);
         });
     });
+
+    describe('renderWidgets', function(){
+        it('renders the widget correctly', function(){
+            WidgetManager.registerWidget(widget1);
+            var widget = WidgetManager.getWidget(widget1.regionWidgetId);
+
+            spyOn(widget, 'render');
+
+            expect(widget.render).not.toHaveBeenCalled();
+            WidgetManager.renderWidgets('el', 'opts');
+            expect(widget.render).toHaveBeenCalled();
+        })
+    })
 });
