@@ -1,3 +1,4 @@
+w
 <%@ taglib prefix="portal" uri="http://www.apache.org/rave/tags" %>
 <%--
   Licensed to the Apache Software Foundation (ASF) under one
@@ -434,20 +435,20 @@
 <portal:register-init-script location="${'AFTER_RAVE'}">
     <script>
         require(["rave", "ui", 'jquery'], function (rave, ui, $) {
-            rave.registerOnInitHandler(function(){
-                $('#acceptShareLink').click(function(){
+            rave.registerOnInitHandler(function () {
+                $('#acceptShareLink').click(function () {
                     ui.models.currentPage.acceptShare();
                 });
 
-                $('#declineShareLink').click(function(){
+                $('#declineShareLink').click(function () {
                     ui.models.currentPage.declineShare();
                 });
 
-                $('#movePageButton').click(function(){
+                $('#movePageButton').click(function () {
                     ui.models.movePage();
                 })
 
-                $('#moveWidgetToPageButton').click(function(){
+                $('#moveWidgetToPageButton').click(function () {
                     ui.layout.moveWidgetToPage($('#moveWidgetModal').data('regionWidgetId'));
                 })
 
@@ -457,13 +458,17 @@
             rave.setDefaultView('home');
             rave.setPage({
                 id: "${page.id}",
-                ownerId: "${page.ownerId}", viewerId:
-                "<sec:authentication property="principal.id" />"
+                ownerId: "${page.ownerId}",
+                viewerId: "<sec:authentication property="principal.id" />"
             });
             rave.getViewer().editor =<c:out value="${pageUser.editor}"/>;
             rave.setExportEnabled(${applicationProperties['portal.export.ui.enable']});
 
-            ui.models.currentPage.set({id: ${page.id}, ownerId: ${page.ownerId}, viewerId: <sec:authentication property="principal.id" />}, {silent: true})
+            ui.models.currentPage.set({
+                id: "${page.id}",
+                ownerId: "${page.ownerId}",
+                viewerId: "<sec:authentication property="principal.id" />"
+            }, {silent: true})
 
             <c:forEach var="members" items="${page.members}">
             <portal:person id="${members.userId}" var="member"/>

@@ -21,7 +21,9 @@ requirejs.config({
     "paths":{
         "backbone":"//cdnjs.cloudflare.com/ajax/libs/backbone.js/0.9.10/backbone-min",
         "bootstrap": '//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.0.3/bootstrap.min',
-        "clientMessages": "/portal/app/messagebundle/rave_client_messages.js?a=b",
+        //The qs param ?a=b is a hack to force r.js optimizer to treat this as a network script, so it
+        //won't try to bundle the resource
+        "clientMessages": "../../app/messagebundle/rave_client_messages.js?a=b",
         "handlebars":"//cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.0.rc.2/handlebars.min",
         "jquery": "//ajax.aspnetcdn.com/ajax/jquery/jquery-1.7.2.min",
         "jqueryUi":"//ajax.aspnetcdn.com/ajax/jquery.ui/1.8.17/jquery-ui.min",
@@ -36,8 +38,6 @@ requirejs.config({
     shim: {
         backbone: {
             deps: ['underscore', 'jquery'],
-            //Once loaded, use the global 'Backbone' as the
-            //module value.
             exports: 'Backbone'
         },
         bootstrap:{
