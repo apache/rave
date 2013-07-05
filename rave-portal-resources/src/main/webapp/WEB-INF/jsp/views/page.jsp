@@ -1,4 +1,3 @@
-w
 <%@ taglib prefix="portal" uri="http://www.apache.org/rave/tags" %>
 <%--
   Licensed to the Apache Software Foundation (ASF) under one

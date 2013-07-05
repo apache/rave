@@ -30,7 +30,7 @@ requirejs.config({
         "jqueryValidate":"//ajax.aspnetcdn.com/ajax/jquery.validate/1.8.1/jquery.validate.min",
         "jqueryHashChange":'//cdnjs.cloudflare.com/ajax/libs/jquery-hashchange/v1.3/jquery.ba-hashchange.min',
         "jqueryTouchPouch": '//cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.2/jquery.ui.touch-punch.min',
-        "osapi":"/gadgets/js/container:pubsub-2:open-views.js?c=1&container=default&debug=1",
+        "osapi":"//placeholder.url.will.be.replaced.by.opensocial.environment",
         "rave": "core/main",
         "ui": "portal/main",
         "underscore": "//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min"
