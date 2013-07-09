@@ -399,7 +399,10 @@
         rave.renderWidgets('home');
     });
 </script>
-<script>rave.models.currentPage.set({id: ${page.id}, ownerId: ${page.ownerId}, viewerId: <sec:authentication property="principal.id" />}, {silent:true})</script>
+<script>rave.models.currentPage.set({id: "${page.id}",
+    ownerId: "${page.ownerId}",
+    viewerId: "<sec:authentication property="principal.id" />"
+}, {silent:true})</script>
 <c:forEach var="members" items="${page.members}">
     <portal:person id="${members.userId}" var="member" />
 <script>rave.models.currentPage.addInitData('${member.id}', ${members.editor})</script>
