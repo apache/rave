@@ -2,6 +2,23 @@ Apache Rave Change Log
 https://issues.apache.org/jira/secure/ReleaseNote.jspa?projectId=12311290 (select the version of release and output as text to create this file)
 
 ===========================================================================================================
+Release Notes - Rave - Version 0.22
+===========================================================================================================
+** Sub-task
+    * [RAVE-965] - Create JPA Group Repository
+    * [RAVE-966] - Create MongoDB Group Repository
+    * [RAVE-967] - Create Group Service
+
+** Bug
+    * [RAVE-908] - JPA Page Repository uses JpaUser object
+    * [RAVE-972] - UI templates are initialized during parsing of rave_portal.js
+    * [RAVE-973] - LIST type preferences are broken
+
+** Improvement
+    * [RAVE-960] - Separate Groups into a stand alone repository/service
+    * [RAVE-982] - Upgrade to Jackson 2.1.x
+
+===========================================================================================================
 Release Notes - Rave - Version 0.21.1
 ===========================================================================================================
 ** Bug
