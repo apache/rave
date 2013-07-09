@@ -1,0 +1,488 @@
+Apache Rave Change Log
+https://issues.apache.org/jira/secure/ReleaseNote.jspa?projectId=12311290 (select the version of release and output as text to create this file)
+
+===========================================================================================================
+Release Notes - Rave - Version 0.22
+===========================================================================================================
+** Sub-task
+    * [RAVE-965] - Create JPA Group Repository
+    * [RAVE-966] - Create MongoDB Group Repository
+    * [RAVE-967] - Create Group Service
+
+** Bug
+    * [RAVE-908] - JPA Page Repository uses JpaUser object
+    * [RAVE-972] - UI templates are initialized during parsing of rave_portal.js
+    * [RAVE-973] - LIST type preferences are broken
+
+** Improvement
+    * [RAVE-960] - Separate Groups into a stand alone repository/service
+    * [RAVE-982] - Upgrade to Jackson 2.1.x
+
+===========================================================================================================
+Release Notes - Rave - Version 0.21.1
+===========================================================================================================
+** Bug
+    * [RAVE-946] - Rate this widget, comment on this widget, about this widget buttons go to wrong widget
+    * [RAVE-947] - rave.log throws error in google chrome
+    * [RAVE-948] - W3C Widgets can not be loaded
+    * [RAVE-958] - MongoDB profile fails integration tests
+
+===========================================================================================================
+Release Notes - Rave - Version 0.21
+===========================================================================================================
+** Sub-task
+    * [RAVE-890] - Refactor SearchHandler
+    * [RAVE-925] - allow rave.getWidgets() to take a filter argument
+
+** Bug
+    * [RAVE-884] - When adding a hash to the end of a profile page with a tab name which does not exist, no tabs are rendered 
+    * [RAVE-888] - Locked widgets still allow you to attempt the drag-n-drop functionality to move them around then throw an error
+    * [RAVE-889] - Gadgets are rendered in HOME view on Profile page rather than PROFILE view
+    * [RAVE-893] - New users cannot use the portal due to empty authority
+    * [RAVE-899] - Error administrating categories due to missing creator ID
+    * [RAVE-900] - iTests Fail due to DB "Locked by another user error"
+    * [RAVE-903] - DB Schema isn't created when using MySQL
+    * [RAVE-904] - Distribution building failing at rave-integration-tests
+    * [RAVE-905] - http://localhost:8080/ not forwarded to http://localhost:8080/portal/
+    * [RAVE-906] - Admin interface link is coming for new user
+    * [RAVE-908] - JPA Page Repository uses JpaUser object
+    * [RAVE-912] - OpenSocial Embedded Experiences won't work with Shindig deployed to separate domain
+    * [RAVE-918] - Gadget is displaying the "default" view instead of the "home" view when in home mode (canvas-nav)
+    * [RAVE-919] - Error opening embedded experience (streams gadget)
+    * [RAVE-921] - Canvas Nav demo gadget doesn't work
+    * [RAVE-938] - Edit User profile not working
+    * [RAVE-939] - Fix licenses for the Rave release
+    * [RAVE-944] - Widget store like/dislike buttons are not working
+    * [RAVE-945] - Widget info page Users link, comments, Add tags links not working
+
+** Improvement
+    * [RAVE-898] - Move JPA specific stuff out of rave-commons and into rave-jpa
+    * [RAVE-901] - Move database access to container provided JNDI resource
+    * [RAVE-911] - Upgrade to Shindig 2.5 Beta 6
+    * [RAVE-935] - default gadget size and view should be properties of rave.RegionWidget
+    * [RAVE-940] - Check NOTICE & LICENSE for Release
+
+** New Feature
+    * [RAVE-882] - Implement Opensocial actions
+
+** Task
+    * [RAVE-907] - Update Wookie to latest version (0.13.1)
+
+===========================================================================================================
+Release Notes - Rave - Version 0.20
+===========================================================================================================
+
+** Technical task
+    * [RAVE-525] - Break Rave-shindig into multiple composable modules
+
+
+** Bug
+    * [RAVE-863] - Featured Widgets no longer visually distinguishable 
+    * [RAVE-870] - Canvas "sneeze guard" doesn't cover whole screen
+    * [RAVE-872] - Widget user dialog fails with strings as IDs
+    * [RAVE-875] - Jpa package is incompatible with alternative providers, such as eclispelink
+    * [RAVE-879] - Gadgets requiring security token fail after Shindig upgrade
+
+
+** Improvement
+    * [RAVE-881] - German translation for Rave
+
+** New Feature
+    * [RAVE-877] - Dynamic Features Included in ContainerJS
+
+** Story
+    * [RAVE-873] - Add Pooling Support to Mongo
+
+
+===========================================================================================================
+Release Notes - Rave - Version 0.19
+===========================================================================================================
+
+** Sub-task
+    * [RAVE-532] - Bootstrap-enable widget controls
+    * [RAVE-533] - Re-implement page background
+    * [RAVE-858] - Style tags on widget store's main page
+
+** Bug
+    * [RAVE-848] - profile controller not reporting exceptions
+    * [RAVE-866] - Duplicate jars in rave-shindig
+
+** Dependency upgrade
+    * [RAVE-862] - Check and update 3rd party dependencies
+    * [RAVE-861] - Upgrade to Shindig 2.5-beta5
+
+** Improvement
+    * [RAVE-822] - Widget added message barely noticeable
+    * [RAVE-864] - Create archetype as starting point for custom projects
+
+** Story
+    * [RAVE-818] - MongoDB Support
+    * [RAVE-851] - Opening an embedded experience in Rave does not work
+
+===========================================================================================================
+Release Notes - Rave - Version 0.18
+===========================================================================================================
+** Sub-task
+    * [RAVE-731] - Refactor Widget model to replace object graphs with IDs along the edges of the groups
+    * [RAVE-753] - Convert interfaces to use Strings as the IDs
+    * [RAVE-774] - Refactor People according to strategy on wiki
+    * [RAVE-834] - Perform final reverse merge from trunk into branch
+    * [RAVE-835] - Merge branch into trunk
+    * [RAVE-836] - Revert version in pom files
+    * [RAVE-853] - Verify LICENSE & NOTICE
+    * [RAVE-855] - Execute functional tests
+    * [RAVE-856] - Create release candidate
+    * [RAVE-857] - Publish release
+
+** Bug
+    * [RAVE-749] - The email field in the profile page is not validated when user edits the value
+    * [RAVE-775] - username for OpenID users
+    * [RAVE-805] - Catch error when trying to visit a user's page who does not exist
+    * [RAVE-812] - OpenID Integration Test is failing
+    * [RAVE-813] - Script Registration order is getting lost in DefaultScriptManager
+    * [RAVE-816] - Incorrect widget initialization order
+    * [RAVE-817] - dependencies missing in maven central repository
+    * [RAVE-837] - Error while deleting Category
+    * [RAVE-838] - Performance problems after model-split merge
+    * [RAVE-839] - Mobile broken after model-split merge
+    * [RAVE-840] - Profile page widgets no longer render after model-split merge
+    * [RAVE-841] - Accepting a shared page no longer is working
+    * [RAVE-845] - Cannot delete a user which has one or more friend associations
+
+** Improvement
+    * [RAVE-454] - Reformate Widget Store with better UX
+    * [RAVE-717] - Screenshot alignment on the widget detail page
+    * [RAVE-802] - Make it easier to set default height of widgets through database preference
+    * [RAVE-806] - Show stack trace error or fiendly error message page depending on jsDebugMode
+    * [RAVE-809] - Convert the hasPermission checks to use a string based permission vs enum based.
+    * [RAVE-846] - Add integration tests: Category Administration
+
+** New Feature
+    * [RAVE-808] - Add ability to hide / show a widget
+
+** Story
+    * [RAVE-729] - Split model into multiple interface groups
+
+===========================================================================================================
+Release Notes - Rave - Version 0.17
+===========================================================================================================
+
+** Sub-task
+    * [RAVE-731] - Refactor Widget model to replace object graphs with IDs along the edges of the groups
+    * [RAVE-753] - Convert interfaces to use Strings as the IDs
+    * [RAVE-774] - Refactor People according to strategy on wiki
+    * [RAVE-834] - Perform final reverse merge from trunk into branch
+    * [RAVE-835] - Merge branch into trunk
+    * [RAVE-836] - Revert version in pom files
+
+** Bug
+    * [RAVE-775] - username for OpenID users
+    * [RAVE-805] - Catch error when trying to visit a user's page who does not exist
+    * [RAVE-812] - OpenID Integration Test is failing
+    * [RAVE-813] - Script Registration order is getting lost in DefaultScriptManager
+    * [RAVE-816] - Incorrect widget initialization order
+    * [RAVE-817] - dependencies missing in maven central repository
+    * [RAVE-837] - Error while deleting Category
+    * [RAVE-839] - Mobile broken after model-split merge
+    * [RAVE-840] - Profile page widgets no longer render after model-split merge
+    * [RAVE-841] - Accepting a shared page no longer is working
+
+** Improvement
+    * [RAVE-454] - Reformate Widget Store with better UX
+    * [RAVE-717] - Screenshot alignment on the widget detail page
+    * [RAVE-802] - Make it easier to set default height of widgets through database preference
+    * [RAVE-806] - Show stack trace error or fiendly error message page depending on jsDebugMode
+
+** New Feature
+    * [RAVE-808] - Add ability to hide / show a widget
+
+** Story
+    * [RAVE-729] - Split model into multiple interface groups
+
+** Task
+    * [RAVE-842] - Tag and release 0.17
+
+
+Release Notes - Rave - Version 0.16
+===========================================================================================================
+
+** Bug
+    * [RAVE-781] - WidgetTags are failing
+    * [RAVE-795] - Widgets ignore iframe size on iPad
+    * [RAVE-796] - Widget menu not closed on iPad
+    * [RAVE-801] - Profile picture placeholder is retrieved from external source
+    * [RAVE-804] - Empty marketplace URL enables the marketplace link in Add new widget
+
+** Improvement
+    * [RAVE-792] - Make login name case-insensitive
+    * [RAVE-797] - Make widgets draggable on mobile devices
+
+** Task
+    * [RAVE-800] - Add missing translations
+    * [RAVE-803] - Release version 0.16
+
+
+Release Notes - Rave - Version 0.15
+===========================================================================================================
+
+** Sub-task
+    * [RAVE-783] - Verify LICENSE & NOTICE
+    * [RAVE-784] - CLONE - Update JIRA issues
+    * [RAVE-785] - Execute functional tests
+    * [RAVE-786] - Create release candidate
+    * [RAVE-787] - CLONE - Publish release
+
+** Bug
+    * [RAVE-528] - Demo portal: unchecking featured widget still makes it sort in top of the store
+    * [RAVE-674] - Modal dialog boxes should have a focus in input field once invoked
+    * [RAVE-705] - Shindig 2.5.0-beta2 no longer supports OpenSocial < 1.0: gifts gadget no longer works, possibly other features too
+    * [RAVE-746] - Cannot change preferences through admin interface
+    * [RAVE-747] - initial_data.sql is not working in MySQL
+    * [RAVE-757] - Update the documentation instructions on the article "Extend Apache Rave to build your own portal"
+    * [RAVE-762] - Guice binding module does not support primary beans
+    * [RAVE-763] - Cannot add multiple base package names to Spring Guice binding
+    * [RAVE-771] - Profile page for OpenID user does not work because of URL encoding
+    * [RAVE-788] - Profile link by ID posts data to incorrect URL
+
+** Improvement
+    * [RAVE-468] - Update instructions to use a different database
+    * [RAVE-691] - Table name for PortalPreference#values is generated, should get proper name
+    * [RAVE-744] - Update and align to latest Springframework project releases
+    * [RAVE-751] - Add client side concept of page owner and viewer
+    * [RAVE-752] - Update to Shindig 2.5-beta3
+    * [RAVE-756] - Support window hashchange event
+    * [RAVE-768] - OpenSocial Container Config has a hard-coded debug flag set to on
+    * [RAVE-770] - Update slideout popup to respect preferredWidth & preferredHeight module prefs.
+    * [RAVE-776] - Don't render Widgets on hidden sub-pages / tabs upon initial page load
+    * [RAVE-778] - Hide main browser scrollbar when widget slideout renders
+    * [RAVE-780] - Allow direct linking to subpages on person profile page
+
+** New Feature
+    * [RAVE-396] - Concatenate and Compress Javascript and CSS files
+    * [RAVE-690] - Manage Friend Data in Rave
+    * [RAVE-761] - Friend Requests in Rave
+
+** Story
+    * [RAVE-742] - Option to choose initial status of user-added widgets
+    * [RAVE-743] - Add a widget to a page without requiring a page refresh
+
+** Umbrella
+    * [RAVE-782] - Release 0.15
+
+
+Release Notes - Rave - Version 0.14
+===========================================================================================================
+
+** Sub-task
+    * [RAVE-452] - Clean up User Profile layout
+    * [RAVE-536] - Admin area: fix layout
+    * [RAVE-579] - Rework the notification mechanism
+    * [RAVE-683] - Revamp like/dislike display
+
+** Bug
+    * [RAVE-624] - Shindig common container is hard coded to debug script
+    * [RAVE-658] - Rave footer is coming twice on submit of newpassword and request user pages
+    * [RAVE-703] - Missing JpaPersonProperties in JpaPerson
+    * [RAVE-712] - Owner does not see that sharing has been declined
+    * [RAVE-713] - Null bean error in SpringBindingModule
+    * [RAVE-714] - Security token Id does not match shindig person id
+    * [RAVE-716] - Late event registrations are never called
+    * [RAVE-722] - Shindig webapp component can't be re-deployed without a container restart
+    * [RAVE-723] - Widget comment button seems to be working for only canonical user
+    * [RAVE-732] - Unable to render two widgets of the same type on the same page
+    * [RAVE-733] - Wrong display name shown in page title on top left for person profile view
+
+** Improvement
+    * [RAVE-556] - User Display name empty
+    * [RAVE-657] - Create new user button on new account page 
+    * [RAVE-673] - Rework login screen
+    * [RAVE-702] - Implementation of FriendsWithFriend
+    * [RAVE-720] - Support navigating to secondary named views (i.e. canvas.foo, canvas.bar)
+    * [RAVE-726] - Update the Rave Extension SSO Provider for Rave 0.14-SNAPSHOT
+    * [RAVE-727] - Providing options for relationship status
+    * [RAVE-735] - Bootstrap the log in error messages
+
+** Story
+    * [RAVE-709] - Remove version numbers in URLs for Spring XSDs
+
+
+Release Notes - Rave - Version 0.13 (Note: only tagged, not released, see RAVE-704)
+================================================================================================================
+
+** Sub-task
+    * [RAVE-577] - Reformat canvas view
+    * [RAVE-578] - Detect & factor out jQuery UI references
+    * [RAVE-619] - Fix search box in widget store
+    * [RAVE-632] - Refactor Tag and WidgetTag
+    * [RAVE-635] - Refactor Group
+    * [RAVE-644] - Fix ModelPermissionEvaluators
+    * [RAVE-645] - Refactor WidgetComment
+    * [RAVE-647] - Refactor Region and Region Widget
+    * [RAVE-648] - Refactor PageTemplate
+    * [RAVE-653] - Refactor PageUser
+    * [RAVE-662] - Ensure no JPA model references in the Service or Controller layers
+    * [RAVE-663] - Refactor RegionWidgetPreference
+    * [RAVE-664] - Refactor Authority
+    * [RAVE-665] - Move Jpa implementation to rave-jpa module
+    * [RAVE-666] - Jpa Implementation Cleanup
+    * [RAVE-667] - Fix serialization/deserialization
+    * [RAVE-669] - Refactor User
+    * [RAVE-670] - Refactor OAuthTokenInfo
+    * [RAVE-671] - Refactor OauthConsumerStore
+    * [RAVE-672] - Refactor ApplicationData
+
+** Technical task
+    * [RAVE-626] - Modify POM files so that they produce a different version
+    * [RAVE-627] - Revert POM files prior to merging into trunk
+    * [RAVE-628] - reintegrate branch into trunk
+    * [RAVE-629] - Create new rave-jpa module
+    * [RAVE-630] - Refactor Person
+    * [RAVE-631] - Refactor Page
+    * [RAVE-646] - Refactor WidgetRating
+    * [RAVE-650] - Refactor Widget
+    * [RAVE-651] - Refactor Page Layout
+    * [RAVE-652] - Cleanup TODO
+    * [RAVE-659] - PortalPreference
+    * [RAVE-686] - Merge changes from trunk
+
+** Bug
+    * [RAVE-618] - Conflict between two features: open-views and pubsub-2
+    * [RAVE-637] - After moving an accepted, shared page, the user has to approve the sharing again
+    * [RAVE-680] - Rave is not generating Foreign Keys with default JPA implementation
+
+** Improvement
+    * [RAVE-675] - Set default log level for OpenJPA to WARN
+    * [RAVE-684] - Re-structure static content directories
+    * [RAVE-685] - Upgrade to Shindig 2.5.0-beta2
+    * [RAVE-688] - Add function to render OpenSocial gadget in any custom supplied view
+
+** New Feature
+    * [RAVE-687] - Add callbacks to Rave container initialization events
+
+** Story
+    * [RAVE-625] - Models as Interfaces
+
+** Task
+    * [RAVE-668] - Add Spanish translations
+
+
+Release Notes - Rave - Version 0.12
+================================================================================================================
+
+** Sub-task
+    * [RAVE-539] - Widget store: fix widget detail display
+    * [RAVE-543] - Implement LESS compilation for Bootstrap
+    * [RAVE-586] - Break out the navbar
+    * [RAVE-592] - Rename header.tag to navbar.tag
+    * [RAVE-606] - Factor out "old" CSS files
+    * [RAVE-614] - Update Bootstrap JavaScript to 2.0.3
+
+** Bug
+    * [RAVE-599] - OpenSocial query for listing viewer friends returns always zero results
+    * [RAVE-600] - JavaScript Closure Compiler is failing
+    * [RAVE-623] - Logging for OpenAjax.hub methods causes error and silently fails
+
+** Improvement
+    * [RAVE-601] - Upgrade wro4j to 1.4.5 to fix Bootstrap processing errors
+    * [RAVE-602] - Improve overlap between Modernizr, CSS3 Mediaqueries, and HTMLShiv Javascript Libraries
+    * [RAVE-604] - refactor <meta> tags into their own JSP tag for easier overlaying
+    * [RAVE-605] - Add a consumer notification ability to the StaticContentFetcherService
+    * [RAVE-613] - Support registering custom popup types with the container
+
+** New Feature
+    * [RAVE-612] - Add ability to hide/display the widget title and widget border
+    * [RAVE-615] - An easy way to determine the version of RAVE
+
+** Task
+    * [RAVE-633] - Upgrade the version of wookie bundled with rave to 0.10.0
+
+** Test
+    * [RAVE-610] - Add integration tests to the project
+
+
+Release Notes - Rave - Version 0.11
+================================================================================================================
+** Sub-task
+    * [RAVE-532] - Bootstrap-enable widget controls
+    * [RAVE-534] - Bootstrap-enable page tabs and tab controls
+    * [RAVE-535] - Make title bar more appealing
+    * [RAVE-537] - Widget store: fix layout
+    * [RAVE-538] - Widget store: fix item list display
+    * [RAVE-540] - Widget store: rework navigational options
+    * [RAVE-545] - Upgrade jQuery to 1.7.2
+    * [RAVE-547] - support openview sidebar view
+    * [RAVE-549] - support openview DIALOG view
+    * [RAVE-550] - support openview MODALDIALOG view
+    * [RAVE-557] - Sync Git Repo to SVN Branch
+    * [RAVE-558] - Merge the bootstrap branch into trunk once all changes are completed
+    * [RAVE-563] - Update the Widget Open View components: modal dialog, dialog, and slideout
+    * [RAVE-564] - Update the Person Profile page
+    * [RAVE-567] - Clean up implementation
+    * [RAVE-575] - Add widget: link to Wookie instance is missing
+    * [RAVE-594] - Verify LICENSE & NOTICE
+    * [RAVE-595] - Update JIRA issues
+    * [RAVE-596] - Execute Functional Tests
+    * [RAVE-597] - Create Release Candidate
+    * [RAVE-598] - Publish Release
+
+** Technical task
+    * [RAVE-102] - Implement Rave inter-gadget messaging with OpenSocial
+
+** Bug
+    * [RAVE-553] - Exception thrown when new user logs in
+    * [RAVE-559] - JPA error on deletion of OAuthTokenInfo
+    * [RAVE-590] - Add widget: when form submission does not validate, additional fields are hidden by the Javascript
+
+** Improvement
+    * [RAVE-511] - Use User model for new user creation
+    * [RAVE-552] - Refactor base_layout.jsp to allow for better customization
+    * [RAVE-562] - Upgrade cargo to version 1.2, use mvn cargo:run instead of mvn cargo:start.
+    * [RAVE-576] - The user search form needs an id attribute.
+    * [RAVE-583] - Refactor global widgetsByRegionIdMap javascript variable
+
+** New Feature
+    * [RAVE-541] - Create the Default User page automatically based on a Page Template
+    * [RAVE-571] - Support passing parameters when changing between views
+
+** Story
+    * [RAVE-95] - Implement Rave inter-widget event wrapper with OpenSocial
+    * [RAVE-560] - Upgrade Rave Shindig to 2.5 beta 1
+
+Release Notes - Rave - Version 0.10.1
+================================================================================================================
+** Bug
+    * [RAVE-553] - Exception thrown when new user logs in
+
+** New Feature
+    * [RAVE-541] - Create the Default User page automatically based on a Page Template
+
+** Task
+    * [RAVE-542] - Create 0.10 release of rave-master pom
+
+Release Notes - Rave - Version 0.10
+================================================================================================================
+** Sub-task
+    * [RAVE-519] - Centralize JavaScript imports
+    * [RAVE-520] - Concatenate and Minify Rave JavaScript files
+    * [RAVE-522] - Administrative Preference to choose which JavaScript file to serve
+
+** Bug
+    * [RAVE-485] - W3C widgets sometimes render on screen outside of the container object
+    * [RAVE-504] - Sub Pages are not in correct render order
+    * [RAVE-512] - OpenSocial gadgets on non-active Person Profile tabs are not autosizing properly
+    * [RAVE-526] - Support height attribute of open social gadget definition
+	
+
+** Improvement
+    * [RAVE-492] - Although wookie is now bundled with rave, a user is still unable to add a w3c widget.
+    * [RAVE-495] - Unable to login to Wookie as admin user when currently deployed with rave.
+    * [RAVE-507] - Update all Spring XSD references to 3.1
+    * [RAVE-510] - Use localized datetime in categories admin screen
+    * [RAVE-518] - JavaScript Improvements
+
+** New Feature
+    * [RAVE-506] - Static Content Fetcher
+    * [RAVE-541] - Create the Default User page automatically based on a Page Template
+
+
+

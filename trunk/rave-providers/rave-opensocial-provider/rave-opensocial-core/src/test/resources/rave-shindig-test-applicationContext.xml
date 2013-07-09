@@ -1,0 +1,108 @@
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License.
+  -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop" xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
+
+    <!-- make the the rave.shindig.properties props available to autowire injectors, location of the properties can
+     be overridden by setting a system property "rave-shindig.override.properties" -->
+    <bean id="shindigPropertyPlaceholder" class="org.apache.rave.util.OverridablePropertyPlaceholderConfigurer">
+        <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE"/>
+        <property name="systemPropertyName" value="rave-shindig.override.properties"/>
+        <property name="location" value="classpath:rave.shindig.properties"/>
+    </bean>
+
+    <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean" name="propertyInjector" autowire-candidate="false" id="propertyInjector">
+        <property name="targetObject">
+            <!-- System.getProperties() -->
+            <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+                <property name="targetClass" value="java.lang.System" />
+                <property name="targetMethod" value="getProperties" />
+            </bean>
+        </property>
+        <property name="targetMethod" value="putAll" />
+        <property name="arguments">
+            <!-- The new Properties -->
+            <util:properties>
+                <prop key="shindig.spring.base-package">org.apache.rave:org.apache.log4j</prop>
+            </util:properties>
+        </property>
+    </bean>
+
+    <!-- bean post-processor for JPA annotations -->
+    <context:annotation-config/>
+
+    <!-- enable the use of the @AspectJ style of Spring AOP -->
+    <aop:aspectj-autoproxy />
+
+<!--    <context:component-scan base-package="org.apache.rave.commoncontainer" annotation-config="true"/>
+    <context:component-scan base-package="org.apache.rave.gadgets" annotation-config="true"/>
+    <context:component-scan base-package="org.apache.rave.inject" annotation-config="true"/>
+    <context:component-scan base-package="org.apache.rave.portal.model" annotation-config="true"/>
+    <context:component-scan base-package="org.apache.rave.portal.repository" annotation-config="true"/>
+    <context:component-scan base-package="org.apache.rave.opensocial" annotation-config="true"/>
+    <context:component-scan base-package="org.apache.rave.service" annotation-config="true"/>-->
+    <bean id="mockPersonRepo" class="org.easymock.EasyMock" factory-method="createNiceMock">
+        <constructor-arg value="org.apache.rave.opensocial.repository.OpenSocialPersonRepository"/>
+    </bean>
+
+    <bean id="mockActivitiesRepo" class="org.easymock.EasyMock" factory-method="createNiceMock">
+        <constructor-arg value="org.apache.rave.portal.repository.ActivityStreamsRepository"/>
+    </bean>
+
+    <bean id="mockLockService" class="org.easymock.EasyMock" factory-method="createNiceMock"  primary="true">
+        <constructor-arg value="org.apache.rave.service.LockService"/>
+    </bean>
+
+    <bean id="lockService" class="org.apache.rave.service.impl.DefaultLockService" />
+
+    <bean id="mockGroupService" class="org.easymock.EasyMock" factory-method="createNiceMock">
+        <constructor-arg value="org.apache.shindig.social.opensocial.spi.GroupService"/>
+    </bean>
+
+    <bean id="nonRaveBean" class="org.apache.log4j.spi.NOPLoggerRepository" />
+
+    <bean id="mockSpringBean" class="org.easymock.EasyMock" factory-method="createNiceMock">
+        <constructor-arg value="org.springframework.jdbc.core.ResultSetExtractor"/>
+    </bean>
+
+    <bean id="groupService" class="org.apache.rave.opensocial.service.impl.DefaultGroupService" />
+
+    <bean id="personService" class="org.apache.rave.opensocial.service.impl.DefaultPersonService">
+        <constructor-arg name="repository" ref="mockPersonRepo" />
+    </bean>
+
+    <bean id="activityStreamsService" class="org.apache.rave.opensocial.service.impl.DefaultActivityStreamsService">
+        <constructor-arg name="repository" ref="mockActivitiesRepo" />
+    </bean>
+
+    <bean id="springBindingModule" class="org.apache.rave.inject.SpringBindingModule" />
+    <!--
+    <bean id="oAuthStore" class="org.apache.rave.gadgets.oauth.inject.DefaultOAuthStore">
+        <constructor-arg name="defaultCallbackUrl" value="${shindig.signing.global-callback-url}"/>
+        <constructor-arg name="pathToPrivateKey" value="${shindig.signing.key-file}"/>
+        <constructor-arg name="privateKeyName" value="${shindig.signing.key-name}"/>
+    </bean>-->
+
+</beans>

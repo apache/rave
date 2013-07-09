@@ -1,0 +1,76 @@
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License.
+  -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/tx
+                           http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <bean id="dataSourcePopulator" class="org.apache.rave.jdbc.util.DataSourcePopulator">
+        <property name="executeScriptQuery" value="SELECT * FROM WIDGET"/>
+        <property name="scriptLocations">
+            <list>
+                <value>classpath:test_data.sql</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory"/>
+    </bean>
+
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+
+    <bean id="entityManagerFactory"
+          class="org.apache.rave.persistence.jpa.PopulatedLocalContainerEntityManagerFactory">
+        <property name="populator" ref="dataSourcePopulator" />
+        <property name="loadTimeWeaver">
+            <bean class="org.springframework.instrument.classloading.InstrumentationLoadTimeWeaver"/>
+        </property>
+        <property name="persistenceUnitName" value="ravePersistenceUnit"/>
+        <property name="dataSource" ref="dataSource"/>
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.OpenJpaVendorAdapter"
+                  p:databasePlatform="${jpa.jpaVendorAdapter.databasePlatform}"
+                  p:database="${jpa.jpaVendorAdapter.database}"
+                  p:showSql="${jpa.jpaVendorAdapter.showSql}"/>
+        </property>
+        <property name="jpaDialect">
+            <bean class="${jpa.jpaDialect}"/>
+        </property>
+        <property name="jpaPropertyMap">
+            <map>
+                <entry key="openjpa.Log" value="${jpa.openjpa.Log}"/>
+                <entry key="openjpa.RuntimeUnenhancedClasses" value="${jpa.openjpa.RuntimeUnenhancedClasses}"/>
+                <entry key="openjpa.jdbc.SynchronizeMappings" value="${jpa.openjpa.jdbc.SynchronizeMappings}"/>
+                <entry key="openjpa.jdbc.MappingDefaults" value="${jpa.openjpa.jdbc.MappingDefaults}"/>
+            </map>
+        </property>
+    </bean>
+
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="url" value="${jpa.dataSource.url}"/>
+        <property name="driverClassName" value="${jpa.dataSource.driver}"/>
+        <property name="username" value="${jpa.dataSource.username}"/>
+        <property name="password" value="${jpa.dataSource.password}"/>
+    </bean>
+</beans>

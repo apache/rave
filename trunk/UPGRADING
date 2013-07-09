@@ -1,0 +1,7 @@
+Licensed under Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0
+--------------------------------------------------------------------------------
+
+Upgrading from Rave < 0.18 to 0.19
+=======================================
+  - rave.shindig.properties & portal.properties keys have been changed for JPA operations.  The prefix is now jpa.xxx.xxxx
+  - the MongoDB implementation has properties added to rave.shindig.properties and portal.properties

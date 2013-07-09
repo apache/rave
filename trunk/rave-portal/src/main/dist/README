@@ -1,0 +1,72 @@
+Apache Rave Demo - README
+
+ABOUT
+
+Apache Rave is a new web and social mashup engine.
+Its goal is to provide an out-of-the-box as well as an extendible lightweight
+Java platform to host, serve and aggregate (Open)Social Gadgets and services
+through a highly customizable and Web 2.0 friendly front-end.
+
+For more information, see http://rave.apache.org/
+
+The binary release includes Tomcat 6 and four WAR files: Apache Rave,
+Apache Shindig and Apache Wookie (Incubating) as well as sample demogadgets war. 
+
+This is a self-contained release: you should be able to run Rave with no
+additional downloads.
+
+MINIMUM REQUIREMENTS
+
+The binary distribution (.tar.gz or .zip) must be unpacked with the appropriate
+tool. The minimum requirement for running the binary release is Java SDK 6+.
+Rave should work on standard operating systems (Linux and Unix flavors
+including Mac OS X; Windows Vista and 7).  
+
+RUNNING TOMCAT
+
+From the unpacked RAVE distribution directory, execute the startup script from
+Rave's bin subdirectory, either startup.sh (linux/unix/osx) or startup.bat
+(windows).
+
+To shut down tomcat, run either shutdown.sh or shutdown.bat, also
+located in Rave's bin subdirectory.
+
+Tomcat logging and error messages are in logs/catalina.out.
+Unix users can follow output with tail -f logs/catalina.out.
+
+Tomcat by defualt uses the port 8080, if the port is used, an alternative port
+can be specified in the conf/server.xml. Further details on this configuration
+can be refered from http://tomcat.apache.org/tomcat-6.0-doc/config/server.html.
+
+BROWSER ACCESS
+
+After starting tomcat, point your browser to http://localhost:8080/portal.
+There are currently no known browser restrictions.
+
+LOGIN ACCOUNTS
+
+Rave comes with the following built-in accounts (username and password are the
+same): canonical, john.doe, jane.doe, george.doe, mario.rossi, and maija.m.
+
+Rave also supports OpenID login to one account: http://rave2011.myopenid.com.
+The OpenID password is "rave2011".  
+
+KNOWN ISSUES
+
+This is an early release of Rave that the developers hope will prompt greater
+participation from the Apache community.
+
+For a comprehensive set of developement issues,
+see https://issues.apache.org/jira/browse/rave.
+
+Rave has also not been extensively tested on a range of operating systems and
+browsers besides mainstream and latest versions.
+
+
+LINKS/REFERENCES
+
+Apache Rave Web Site: http://rave.apache.org/
+Apache Rave Source Code (SVN Browse): http://svn.apache.org/viewvc/rave/
+Apache Rave Issue Tracker: https://issues.apache.org/jira/browse/rave
+Apache Rave Mailing Lists: http://rave.apache.org/mailing-lists.html
+

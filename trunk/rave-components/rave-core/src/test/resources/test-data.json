@@ -1,0 +1,608 @@
+{
+    "pageLayouts": [
+    {
+        "id": 1,
+        "code": "columns_1",
+        "numberOfRegions": 1,
+        "renderSequence": 0,
+        "userSelectable": true
+    },
+    {
+        "id": 2,
+        "code": "columns_2",
+        "numberOfRegions": 2,
+        "renderSequence": 1,
+        "userSelectable": true
+    }
+],
+    "users": [
+    {
+        "id": 1,
+        "username": "canonical",
+        "email": "canonical@example.com",
+        "displayName": "Canonical User",
+        "additionalName": null,
+        "familyName": "User",
+        "givenName": "Canonical",
+        "honorificPrefix": null,
+        "honorificSuffix": null,
+        "preferredName": null,
+        "aboutMe": null,
+        "status": "Single",
+        "addresses": [],
+        "organizations": [],
+        "properties": [],
+        "groups": [],
+        "password": "$2a$10$TkEgze5kLy9nRlfd8PT1zunh6P1ND8WPjLojFjAMNgZMu1D9D1n4.",
+        "expired": false,
+        "locked": false,
+        "enabled": true,
+        "openId": null,
+        "forgotPasswordHash": null,
+        "forgotPasswordTime": null,
+        "defaultPageLayout": {
+            "id": 4,
+            "code": "columns_3",
+            "numberOfRegions": 3,
+            "renderSequence": 3,
+            "userSelectable": true
+        },
+        "confirmPassword": null,
+        "defaultPageLayoutCode": null,
+        "authorities": [
+            {
+                "id": 2,
+                "authority": "ROLE_ADMIN",
+                "users": [],
+                "defaultForNewUser": false
+            }
+        ],
+        "pageUsers": [],
+        "widgetTags": [],
+        "id": 1,
+        "accountNonLocked": true,
+        "credentialsNonExpired": true,
+        "accountNonExpired": true
+    },
+    {
+        "id": 2,
+        "username": "john.doe",
+        "email": "john.doe@example.com",
+        "displayName": "John Doe",
+        "additionalName": null,
+        "familyName": "Doe",
+        "givenName": "John",
+        "honorificPrefix": null,
+        "honorificSuffix": null,
+        "preferredName": null,
+        "aboutMe": null,
+        "status": "Single",
+        "addresses": [],
+        "organizations": [],
+        "properties": [],
+        "groups": [],
+        "password": "$2a$10$8Dir7boy3UyVqy6erfj6WuQXUTf.ejTldPSsVIty7.pPT3Krkly26",
+        "expired": false,
+        "locked": false,
+        "enabled": true,
+        "openId": null,
+        "forgotPasswordHash": null,
+        "forgotPasswordTime": null,
+        "defaultPageLayout": {
+            "id": 4,
+            "code": "columns_3",
+            "numberOfRegions": 3,
+            "renderSequence": 3,
+            "userSelectable": true
+        },
+        "confirmPassword": null,
+        "defaultPageLayoutCode": null,
+        "authorities": [
+            {
+                "id": 1,
+                "authority": "ROLE_USER",
+                "users": [],
+                "defaultForNewUser": true
+            }
+        ],
+        "pageUsers": [],
+        "widgetTags": [],
+        "id": 2,
+        "accountNonLocked": true,
+        "credentialsNonExpired": true,
+        "accountNonExpired": true
+    }
+],
+    "groups": [
+    {
+        "id": 1,
+        "title": "Party",
+        "description": "Party Group",
+        "owner": null,
+        "members": [
+            {
+                "id": 1,
+                "username": "canonical",
+                "email": "canonical@example.com",
+                "displayName": "Canonical User",
+                "additionalName": null,
+                "familyName": "User",
+                "givenName": "Canonical",
+                "honorificPrefix": null,
+                "honorificSuffix": null,
+                "preferredName": null,
+                "aboutMe": null,
+                "status": "Single",
+                "addresses": [],
+                "organizations": [],
+                "properties": [],
+                "groups": [],
+                "password": "$2a$10$TkEgze5kLy9nRlfd8PT1zunh6P1ND8WPjLojFjAMNgZMu1D9D1n4.",
+                "expired": false,
+                "locked": false,
+                "enabled": true,
+                "openId": null,
+                "forgotPasswordHash": null,
+                "forgotPasswordTime": null,
+                "defaultPageLayout": {
+                    "id": 4,
+                    "code": "columns_3",
+                    "numberOfRegions": 3,
+                    "renderSequence": 3,
+                    "userSelectable": true
+                },
+                "confirmPassword": null,
+                "defaultPageLayoutCode": null,
+                "authorities": [
+                    {
+                        "id": 2,
+                        "authority": "ROLE_ADMIN",
+                        "users": [],
+                        "defaultForNewUser": false
+                    }
+                ],
+                "pageUsers": [],
+                "widgetTags": [],
+                "id": 1,
+                "accountNonLocked": true,
+                "credentialsNonExpired": true,
+                "accountNonExpired": true
+            }
+        ]
+    },
+    {
+        "id": 2,
+        "title": "Portal",
+        "description": "Portal Group",
+        "owner": null,
+        "members": [
+            {
+                "id": 2,
+                "username": "john.doe",
+                "email": "john.doe@example.com",
+                "displayName": "John Doe",
+                "additionalName": null,
+                "familyName": "Doe",
+                "givenName": "John",
+                "honorificPrefix": null,
+                "honorificSuffix": null,
+                "preferredName": null,
+                "aboutMe": null,
+                "status": "Single",
+                "addresses": [],
+                "organizations": [],
+                "properties": [],
+                "groups": [],
+                "password": "$2a$10$8Dir7boy3UyVqy6erfj6WuQXUTf.ejTldPSsVIty7.pPT3Krkly26",
+                "expired": false,
+                "locked": false,
+                "enabled": true,
+                "openId": null,
+                "forgotPasswordHash": null,
+                "forgotPasswordTime": null,
+                "defaultPageLayout": {
+                    "id": 4,
+                    "code": "columns_3",
+                    "numberOfRegions": 3,
+                    "renderSequence": 3,
+                    "userSelectable": true
+                },
+                "confirmPassword": null,
+                "defaultPageLayoutCode": null,
+                "authorities": [
+                    {
+                        "id": 1,
+                        "authority": "ROLE_USER",
+                        "users": [],
+                        "defaultForNewUser": true
+                    }
+                ],
+                "pageUsers": [],
+                "widgetTags": [],
+                "id": 2,
+                "accountNonLocked": true,
+                "credentialsNonExpired": true,
+                "accountNonExpired": true
+            }
+        ]
+    }
+],
+    "widgets": [
+    {
+        "id" : 1,
+        "title": "Wikipedia",
+        "titleUrl": "http://en.wikipedia.org/wiki/Main_Page",
+        "url": "http://www.widget-dico.com/wikipedia/google/wikipedia.xml",
+        "type": "OpenSocial",
+        "author": "WidgetMe",
+        "authorEmail": "google@widgetme.com",
+        "description": "A Wikipedia Search and Go widget. Language choice.",
+        "disableRendering": false,
+        "featured": false,
+        "widgetStatus": "PUBLISHED"
+    },
+    {
+        "id" : 2,
+        "title": "Translate Gadget",
+        "titleUrl": "http://translate.google.com/",
+        "url": "http://www.gstatic.com/ig/modules/dictionary/dictionary.xml",
+        "type": "OpenSocial",
+        "author": "Google Taiwan",
+        "authorEmail": "googlemodules+dictionary+201109071@google.com",
+        "description": "Google Translation gadget.",
+        "disableRendering": false,
+        "featured": false,
+        "widgetStatus": "PUBLISHED"
+    }
+],
+    "authorities": [
+    {
+        "id": 1,
+        "authority": "ROLE_USER",
+        "users": [],
+        "defaultForNewUser": true
+    },
+    {
+        "id": 2,
+        "authority": "ROLE_ADMIN",
+        "users": [],
+        "defaultForNewUser": false
+    }
+],
+    "portalPreferences": [
+    {
+        "id": 1,
+        "key": "titleSuffix",
+        "values": [
+            " - Rave"
+        ],
+        "value": " - Rave"
+    },
+    {
+        "id": 2,
+        "key": "pageSize",
+        "values": [
+            "10"
+        ],
+        "value": "10"
+    }
+],
+    "categories": [
+    {
+        "id": 1,
+        "text": "Technology",
+        "createdUserId": "1",
+        "createdDate": 1326949200000,
+        "lastModifiedUserId": "1",
+        "lastModifiedDate": 1326949200000
+    },
+    {
+        "id": 2,
+        "text": "News",
+        "createdUsedId": "1",
+        "createdDate": 1326949200000,
+        "lastModifiedUserId": "1",
+        "lastModifiedDate": 1326949200000
+    }
+],
+    "pageTemplates": [
+    {
+        "id": 1,
+        "name": "Person Profile",
+        "description": "Template for person profile pages",
+        "pageType": "PERSON_PROFILE",
+        "parentPageTemplate": null,
+        "subPageTemplates": [
+            {
+                "id": 2,
+                "name": "About",
+                "description": "Template for the About sub page for the person profile",
+                "pageType": "SUB_PAGE",
+                "parentPageTemplate": null,
+                "subPageTemplates": [],
+                "pageLayout": {
+                    "id": 1,
+                    "code": "columns_1",
+                    "numberOfRegions": 1,
+                    "renderSequence": 0,
+                    "userSelectable": true
+                },
+                "pageTemplateRegions": [
+                    {
+                        "id": 2,
+                        "renderSequence": 0,
+                        "pageTemplate": null,
+                        "pageTemplateWidgets": [
+                            {
+                                "id": 1,
+                                "pageTemplateRegion": null,
+                                "widgetId": "15",
+                                "locked": true,
+                                "hideChrome": false,
+                                "renderSeq": 0
+                            },
+                            {
+                                "id": 2,
+                                "pageTemplateRegion": null,
+                                "widgetId": "14",
+                                "locked": true,
+                                "hideChrome": false,
+                                "renderSeq": 1
+                            }
+                        ],
+                        "locked": true
+                    }
+                ],
+                "renderSequence": 0,
+                "defaultTemplate": false
+            },
+            {
+                "id": 3,
+                "name": "My Activity",
+                "description": "Template for the My Activity sub page for the person profile",
+                "pageType": "SUB_PAGE",
+                "parentPageTemplate": null,
+                "subPageTemplates": [],
+                "pageLayout": {
+                    "id": 1,
+                    "code": "columns_1",
+                    "numberOfRegions": 1,
+                    "renderSequence": 0,
+                    "userSelectable": true
+                },
+                "pageTemplateRegions": [
+                    {
+                        "id": 1,
+                        "renderSequence": 0,
+                        "pageTemplate": null,
+                        "pageTemplateWidgets": [
+                            {
+                                "id": 2,
+                                "pageTemplateRegion": null,
+                                "widgetId": "3",
+                                "locked": true,
+                                "hideChrome": false,
+                                "renderSeq": 0
+                            }
+                        ],
+                        "locked": true
+                    }
+                ],
+                "renderSequence": 1,
+                "defaultTemplate": false
+            }
+        ],
+        "pageLayout": {
+            "id": 2,
+            "code": "person_profile",
+            "numberOfRegions": 1,
+            "renderSequence": 8,
+            "userSelectable": false
+        },
+        "pageTemplateRegions": [
+            {
+                "id": 1,
+                "renderSequence": 0,
+                "pageTemplate": null,
+                "pageTemplateWidgets": [
+                    {
+                        "id": 1,
+                        "pageTemplateRegion": null,
+                        "widgetId": "1",
+                        "locked": true,
+                        "hideChrome": true,
+                        "renderSeq": 0
+                    },
+                    {
+                        "id": 2,
+                        "pageTemplateRegion": null,
+                        "widgetId": "17",
+                        "locked": true,
+                        "hideChrome": true,
+                        "renderSeq": 1
+                    }
+                ],
+                "locked": true
+            }
+        ],
+        "renderSequence": 0,
+        "defaultTemplate": true
+    },
+    {
+        "id": 2,
+        "name": "Default Home",
+        "description": "Default User Template",
+        "pageType": "USER",
+        "parentPageTemplate": null,
+        "subPageTemplates": [],
+        "pageLayout": {
+            "id": 1,
+            "code": "columns_3_newuser",
+            "numberOfRegions": 1,
+            "renderSequence": 0,
+            "userSelectable": true
+        },
+        "pageTemplateRegions": [
+            {
+                "renderSequence": 0,
+                "pageTemplate": null,
+                "pageTemplateWidgets": [
+                    {
+                        "pageTemplateRegion": null,
+                        "widgetId": "2",
+                        "locked": false,
+                        "hideChrome": false,
+                        "id": 3,
+                        "renderSeq": 0
+                    },
+                    {
+                        "pageTemplateRegion": null,
+                        "widgetId": "2",
+                        "locked": false,
+                        "hideChrome": false,
+                        "id": 4,
+                        "renderSeq": 1
+                    }
+                ],
+                "locked": false,
+                "id": 2
+            },
+            {
+                "renderSequence": 1,
+                "pageTemplate": null,
+                "pageTemplateWidgets": [
+                    {
+                        "pageTemplateRegion": null,
+                        "widgetId": "1",
+                        "locked": false,
+                        "hideChrome": false,
+                        "id": 3,
+                        "renderSeq": 0
+                    },
+                    {
+                        "pageTemplateRegion": null,
+                        "widgetId": "1",
+                        "locked": false,
+                        "hideChrome": false,
+                        "id": 4,
+                        "renderSeq": 1
+                    }
+                ],
+                "locked": false,
+                "id": 2
+            },
+            {
+                "renderSequence": 2,
+                "pageTemplate": null,
+                "pageTemplateWidgets": [
+                    {
+                        "pageTemplateRegion": null,
+                        "widgetId": "1",
+                        "locked": false,
+                        "hideChrome": false,
+                        "id": 3,
+                        "renderSeq": 0
+                    }
+                ],
+                "locked": false,
+                "id": 2
+            }
+        ],
+        "renderSequence": 1,
+        "defaultTemplate": true
+    }
+]  ,
+    "activities" : [{
+        "published": "2013-02-07T15:04:55Z",
+        "generator": {
+            "url": "http://example.org/activities-app"
+        },
+        "provider": {
+            "url": "http://example.org/activity-stream"
+        },
+        "actor": {
+            "url": "http://localhost:8080/portal/app/people/canonical",
+            "objectType": "person",
+            "id": "canonical",
+            "image": {
+                "url": "http://example.org/canonical/image",
+                "width": 250,
+                "height": 250
+            }
+        },
+        "content" : "Boston as seen from the Charles River",
+        "verb": "post",
+        "object" : {
+            "objectType": "photo",
+            "image": {
+                "url": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcSSNgusdAMMfrJ2-CJThZp83-FMtj8LDgw7v-RGzTd2aGLIDArV-A",
+                "width": 250,
+                "height": 250
+            }
+        },
+        "target": {
+            "url": "http://example.org/album/",
+            "objectType": "photo-album",
+            "displayName": "Canonical's Photo Album"
+        },
+        "openSocial": {
+            "embed": {
+                "gadget": "http://eedemos.opensocial2.org/gadgets/jquery/photos/jquery_photo_ee.xml",
+                "preferredExperience": {
+                    "display":{
+                        "type": "text",
+                        "label": "Add Comment ...",
+                        "title": "Click this link to add a comment"
+                    }
+                },
+                "context" : {
+                    "url": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcSSNgusdAMMfrJ2-CJThZp83-FMtj8LDgw7v-RGzTd2aGLIDArV-A",
+                    "comment": "Boston as seen from the Charles River",
+                    "author": "Canonical User"
+                }
+            }
+        }
+    },
+        {
+            "published": "2013-02-08T15:04:55Z",
+            "actor": {
+                "url": "http://localhost:8080/portal/app/people/canonical",
+                "objectType": "person",
+                "id": "canonical",
+                "image": {
+                    "url": "http://example.org/canonical/image",
+                    "width": 250,
+                    "height": 250
+                }
+            },
+            "content": "OpenSocial Getting Started Video 1",
+            "verb": "post",
+            "object" : {
+                "objectType": "video",
+                "image": {
+                    "url": "http://i.ytimg.com/vi/9gW2YVBrNVA/1.jpg",
+                    "width": 250,
+                    "height": 250
+                }
+            },
+            "openSocial": {
+                "embed": {
+                    "gadget": "http://opensocial2.org:8080/collabapp/pages/home/embeddedExperiences/YouTube.xml",
+                    "preferredExperience": {
+                        "display":{
+                            "type": "text",
+                            "label": "Open Video",
+                            "title": "Click this link to open the video"
+                        },
+                        "target": {
+                            "view": "embedded",
+                            "viewTarget": "sidebar"
+
+                        }
+                    },
+                    "context" : "9gW2YVBrNVA"
+                }
+            }
+        }
+    ]
+}

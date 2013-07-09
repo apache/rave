@@ -1,0 +1,459 @@
+//
+// Licensed to the Apache Software Foundation (ASF) under one
+// or more contributor license agreements.  See the NOTICE file
+// distributed with this work for additional information
+// regarding copyright ownership.  The ASF licenses this file
+// to you under the Apache License, Version 2.0 (the
+// "License"); you may not use this file except in compliance
+// with the License.  You may obtain a copy of the License at
+//
+//   http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
+//
+// This file contains Rave specific branding styles.
+// This adds brand css unique to Rave. Replace this file with 
+// your own skin to customize style without loosing the
+// styles holding the layout together.
+
+
+
+/* GLOBAL
+=========================================================================================*/
+/* Variables
+----------------------------------------------------*/
+@imageDirPath:"../images";
+
+@lightestGray: #e3e3e3;
+@lighterGray: #DDD;
+@lightGray: mix(@lighterGray, @gray, 50%);
+@gray: #999;
+@darkGray: #777777;
+@darkerGray: #5c5c5c;
+@darkestGray: #363636;
+
+@titleBarLight: #5c5c5c;
+@titleBarMiddle: #555;
+@titleBarDark: #363636;
+
+@redLight: #CA2017;
+@redDark: #AD261F;
+@red: mix(@redLight, @redDark, 50%);
+
+@defaultBoxShadow: 1px 1px 5px rgba(0, 0, 0, 0.15);
+
+
+body{
+	background-color: @lightestGray;
+	background-image: -moz-linear-gradient(top, @white 100px, @lightestGray 700px); // FF 3.6+
+    background-image: -ms-linear-gradient(top, @white 100px, @lightestGray 700px); // IE10
+    background-image: -webkit-linear-gradient(top, @white 100px, @lightestGray 700px); // Safari 5.1+, Chrome 10+
+    background-image: -o-linear-gradient(top, @white 100px, @lightestGray 700px); // Opera 11.10
+    background-image: linear-gradient(top, @white 100px, @lightestGray 700px); // The standard
+    background-repeat: repeat-x;
+    filter: e(%("progid:DXImageTransform.Microsoft.gradient(startColorstr='%d', endColorstr='%d', GradientType=0)",@white, @lightestGray)); // IE9 and down
+}
+input, textarea, select, .uneditable-input{
+	color: @darkerGray;
+}
+.logo-wrapper{
+	width: 100%;
+	height: 35px;
+	padding: 5px 0;
+	background: url("@{imageDirPath}/rave-logo-sm.png") no-repeat 15px 0;
+}
+.well{
+	.box-shadow(inset 0 1px 3px rgba(0, 0, 0, 0.25));
+	background: @lighterGray;
+	border: 1px solid @lightGray;
+}
+.table-bordered{
+	.box-shadow(1px 1px 5px 0px rgba(0, 0, 0, 0.05));
+	background: @white;
+}
+.table tbody tr:hover td, 
+.table tbody tr:hover th{
+	background-color: mix(@white, @lightestGray, 50%);	
+}
+legend, h3{
+	color: black;
+	font-size: 14px;
+	border-bottom: 1px solid @lighterGray;
+	text-transform: uppercase;
+}
+input{
+	padding-top: 7px;
+	padding-bottom: 6px;
+}
+footer{
+	background: @white;
+	position: relative;
+    // Makes sure footer is behind the canvas
+	z-index: 998;
+}
+
+/* Buttons
+----------------------------------------------------*/
+.btn{
+	letter-spacing: .03em;
+	padding: .5em 1.5em;
+	.border-radius(7px);
+}
+.btn.btn-small,
+.btn.btn-mini{
+	.border-radius(5px);
+}
+.btn.btn-mini{
+	padding: 2px 6px;
+}
+.btn-primary {
+  .buttonBackground(@redLight, @redDark);
+}
+.btn.btn-link{
+	background: none;
+	padding: 0;
+	color:  @redLight;
+	text-shadow: none;
+	.box-shadow(none);
+}
+
+/* Text
+----------------------------------------------------*/
+a{ color: @redLight; }
+//a:hover{ color: @redDark; }
+
+
+/* Modals
+----------------------------------------------------*/
+.modal{ .border-radius(10px); z-index: 9999;}
+.modal-header{
+	.widget-title-bar;
+	margin: 0;
+	padding: 3px 10px;
+	.border-radius(6px 6px 0 0);
+	//#gradient > .vertical( @lightGray, @lightestGray);
+	background: @lighterGray url("@{imageDirPath}/gradient-light.jpg") repeat-x 0 center;
+	border-bottom-color: @lightGray;
+	
+	h3{
+		font-size: 14px;
+		line-height: 24px;
+		font-weight: normal;
+		border: none;
+	}
+	.close{
+		color: @black;
+		.opacity(100);
+		line-height: 12px;
+	}
+}
+.modal-footer{
+	border: none;
+	background: #fff;
+	padding: 0px 15px 15px;
+}
+
+
+/* Pagination
+----------------------------------------------------*/
+.pagination-header{
+	h2{
+		text-transform: uppercase;
+		color: @black;
+		font-size: 16px;
+		border-bottom: 1px solid @lighterGray;
+	}
+}
+.pagination{
+	height: 24px;
+	margin: 12px 0 18px;
+	position: relative;
+	z-index: 1000;
+	
+	a, 
+	li:first-child a, 
+	li:last-child a{
+		border: none;
+		line-height: 14px;
+		background: @black;
+		.border-radius(0);
+		margin-right: 3px;
+		padding: .4em .65em;
+		color: @white;
+	
+		
+		&:hover{
+			background: @redDark;
+		}
+	}
+	li.active a,
+	li.active a:hover{
+		background: @gray;
+		color: @white;
+	}
+}
+/* Tabs
+----------------------------------------------------*/
+.nav-tabs{
+	margin-bottom: 0;
+	margin-right: 10px; // to prevent overlap over border radius
+}
+.nav-tabs > li{
+	margin-bottom: 0;
+
+	& > a, 
+	& > a:hover{
+		border: 1px solid @lighterGray;
+		border-bottom-color: transparent;
+		margin-right: 6px;
+		color: @darkGray;
+		background: @white;
+	}
+}
+
+.nav-tabs > .active > a, 
+.nav-tabs > .active > a:hover,
+.nav-tabs > li > a:hover,
+.tab-content{
+	background:@lightestGray;
+	color: @darkerGray;
+}
+.tab-padding{
+	padding: 1em 2em;
+}
+.nav-tabs .open .dropdown-toggle, 
+.nav-pills .open .dropdown-toggle, 
+.nav > li.dropdown.open.active > a:hover{
+	background:@lightestGray;
+}
+.tab-content{
+	border: 1px solid @lightestGray;
+	margin-top: -1px;
+	padding-top: 18px;
+	.border-radius(0 10px);
+}
+
+/* Outlined
+*/
+
+.nav-tabs.outlined > li{
+	margin-bottom: -1px;
+}
+
+
+.nav-tabs.outlined > li > a, 
+.nav-tabs.outlined > li > a:hover,
+.tab-content.outlined{
+	border-color: @lightGray;
+	border-bottom: 1px solid @lightGray;
+	background: @lighterGray;
+	color: @black;
+	.box-shadow(3px 1px 4px -3px rgba(0,0,0,0.25));
+
+}
+.nav-tabs.outlined > .active > a, 
+.nav-tabs.outlined > .active > a:hover{
+	border-color: @lightGray;
+	border-bottom-color: @white;
+	background: @white;
+}
+.tab-content.outlined{
+	background: @white;
+	.box-shadow(1px 1px 5px rgba(0,0,0,0.25));
+}
+
+/* Left */
+
+.tabs-left > .nav-tabs > li > a{
+	border-color:@lightGray;
+	border-right: none;
+	margin-right: 0;
+	color:@gray;
+	background: @lightestGray;
+}
+.tabs-left > .nav-tabs{
+	padding: 5px 0;
+	border-color:@lightGray;
+}
+.tabs-left > .nav-tabs > li > a:hover,
+.tabs-left > .nav-tabs > li.active > a, 
+.tabs-left > .nav-tabs > li.active > a:hover{
+	background: @white;
+	color: @black;
+	border-color:@lightGray;
+	border-right: none;
+}
+.tabs-left > .nav-tabs > li:last-child a{
+	margin-bottom: 0;
+}
+
+/* Stacked */
+.nav-tabs.nav-stacked {
+	margin-top: 2.75em; // For admin, might need to make more specific
+	.box-shadow(1px 1px 5px 0 rgba(0, 0, 0, 0.25));
+	border: 1px solid @lightGray;
+	
+	.border-radius(5px);
+	& > li{
+		
+		& > a{
+			margin: 0;
+			background: @white;
+			color: @darkerGray;
+			border: none;
+			border-bottom: 1px solid @lighterGray;
+			
+			&:hover{
+				background: @redDark;
+				color: @white;
+				border-top: none;
+				border-right: none;
+				border-left: none;
+			}
+		}
+		&.active > a{
+			background: @lightestGray;
+			color: @darkerGray;
+		}
+		&:last-child > a{
+			border-bottom: none;
+		}
+	}
+}
+
+
+/* Widgets
+----------------------------------------------------*/
+.widget{
+	.border-radius(0 0 8px 8px);
+}
+.widget-wrapper{
+	border-color: @lighterGray;
+	.border-radius(5px 5px 8px 8px);
+	.box-shadow(1px 1px 7px rgba(0, 0, 0, 0.35));
+}
+.widget-wrapper-hidechrome{
+    border: 1px solid @lighterGray !important;
+    border-radius: 5px 5px 8px 8px !important;
+}
+
+.widget-title-bar{
+	.clearfix;
+/* Until IE supports gradients AND border-radius, this needs to be an image.
+
+	background-image: linear-gradient(bottom, rgb(54,54,54) 11%, rgb(85,85,85) 48%, rgb(92,92,92) 54%);
+	background-image: -o-linear-gradient(bottom, rgb(54,54,54) 11%, rgb(85,85,85) 48%, rgb(92,92,92) 54%);
+	background-image: -moz-linear-gradient(bottom, rgb(54,54,54) 11%, rgb(85,85,85) 48%, rgb(92,92,92) 54%);
+	background-image: -webkit-linear-gradient(bottom, rgb(54,54,54) 11%, rgb(85,85,85) 48%, rgb(92,92,92) 54%);
+	background-image: -ms-linear-gradient(bottom, rgb(54,54,54) 11%, rgb(85,85,85) 48%, rgb(92,92,92) 54%);
+	background-image: -webkit-gradient(
+		linear,
+		left bottom,
+		left top,
+		color-stop(0.11, rgb(54,54,54)),
+		color-stop(0.48, rgb(85,85,85)),
+		color-stop(0.54, rgb(92,92,92))
+	);
+    filter: e(%("progid:DXImageTransform.Microsoft.gradient(startColorstr='%d', endColorstr='%d', GradientType=0)",#4e4e4e, @titleBarLight)); // IE9 and down
+*/
+	background: @titleBarMiddle url("@{imageDirPath}/gradient-dark.jpg") repeat-x 0 center;
+	text-align: left;
+	padding-left: 5px;
+	color: @lightestGray;
+	letter-spacing: 0.1em;
+	margin: -1px -1px 0;
+	
+	.widget-title{ float: left; }
+	
+	a, a:hover{
+		color: @lightestGray;
+		
+	}
+	.widget-menu a{
+		color: @darkestGray;
+	}
+	.menu-item-disabled a{
+		color: @gray !important;
+		
+		&:hover{ background: @white; cursor: default; }
+	}
+}
+
+.widget-toolbar-toggle-collapse{
+	margin-right: 5px;
+}
+.emptyPageMessage{
+	.box-shadow(@defaultBoxShadow);
+	border: 1px solid @lighterGray;
+	.border-radius(4px);
+}
+
+
+.dropdown-menu li > a:hover, 
+.dropdown-menu .active > a, 
+.dropdown-menu .active > a:hover{
+	background: @redDark;
+	color: @white;
+}
+/* PAGE SPECIFIC
+=========================================================================================*/
+
+/* LOGIN RELATED PAGES
+------------------------------------------------------------------------*/
+
+.navbar .btn.btn-link{
+	padding: 9px 10px 11px;
+	line-height: 19px;
+	color: @gray;
+	text-decoration: none;
+	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+	margin: 0;
+	
+	&:hover{
+		color: @white;
+	}
+}
+
+/* WIDGET STORE
+------------------------------------------------------------------------*/
+#widgetStore{
+	margin-top: 2.5em;
+}	
+.storeItem{
+	padding: 0 0 10px 0;
+	background-color: @white;
+	.box-shadow(1px 1px 4px rgba(0, 0, 0, 0.2));
+	
+	.widget-title-bar{
+		margin-bottom: 1em;
+		margin-left: -1px;
+		padding: 5px 15px;
+		cursor: inherit;
+	}
+	.storeItemLeft{
+		margin-left: 10px;
+		width: 130px;
+	}
+	.storeItemCenter{
+		margin-right: 10px;
+		margin-left: 150px;
+	}
+	.btn-success{
+		.buttonBackground(@darkGray, @darkestGray);
+	}
+}
+
+.secondaryPageItemTitle{ font-weight: bold; }
+
+/* WIDGET DETAIL
+------------------------------------------------------------------------*/
+.detail-widget-main > div{
+	margin: 0 0 1em;
+}
+.widgetRating .ratingCounts{margin-top: .5em; }
+.commentNewButton{margin-top: 1em;}

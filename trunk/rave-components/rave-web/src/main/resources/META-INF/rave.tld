@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one
+  ~ or more contributor license agreements.  See the NOTICE file
+  ~ distributed with this work for additional information
+  ~ regarding copyright ownership.  The ASF licenses this file
+  ~ to you under the Apache License, Version 2.0 (the
+  ~ "License"); you may not use this file except in compliance
+  ~ with the License.  You may obtain a copy of the License at
+  ~
+  ~   http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing,
+  ~ software distributed under the License is distributed on an
+  ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~ KIND, either express or implied.  See the License for the
+  ~ specific language governing permissions and limitations
+  ~ under the License.
+  -->
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd"
+		version="2.0">
+    <tlib-version>1.0</tlib-version>
+    <short-name>rave</short-name>
+    <uri>http://www.apache.org/rave/tags</uri>
+
+    <tag>
+        <description>Allows access to a org.apache.rave.model.Person object via the configured variable</description>
+        <name>person</name>
+        <tag-class>org.apache.rave.portal.web.tag.PersonTag</tag-class>
+        <body-content>JSP</body-content>
+        <attribute>
+            <description>The ID of the person to load</description>
+            <name>id</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <description>The variable to assign the resulting person to</description>
+            <name>var</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <description>The scope under which the assignment is valid</description>
+            <name>scope</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+    <tag>
+        <description>Allows access to a org.apache.rave.model.Widget object via the configured variable</description>
+        <name>widget</name>
+        <tag-class>org.apache.rave.portal.web.tag.WidgetTag</tag-class>
+        <body-content>JSP</body-content>
+        <attribute>
+            <description>The ID of the widget to load</description>
+            <name>id</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <description>The variable to assign the resulting widget to</description>
+            <name>var</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <description>The scope under which the assignment is valid</description>
+            <name>scope</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+    <tag>
+        <description>Renders a given RegionWidget in the page</description>
+        <name>render-widget</name>
+        <tag-class>org.apache.rave.portal.web.tag.RegionWidgetTag</tag-class>
+        <body-content>JSP</body-content>
+        <attribute>
+            <description>The region widget to render</description>
+            <name>regionWidget</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <description>The widget to render</description>
+            <name>widget</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+    <tag>
+        <description>Renders a set of script blocks for the current location</description>
+        <name>render-script</name>
+        <tag-class>org.apache.rave.portal.web.tag.ScriptTag</tag-class>
+        <body-content>JSP</body-content>
+        <attribute>
+            <description>The page location for the scripts</description>
+            <name>location</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>org.apache.rave.portal.web.renderer.ScriptLocation</type>
+        </attribute>
+    </tag>
+    <tag>
+        <description>Renders a static content fragment based on the cache key</description>
+        <name>render-static-content</name>
+        <tag-class>org.apache.rave.portal.web.tag.StaticContentTag</tag-class>
+        <body-content>JSP</body-content>
+        <attribute>
+            <description>The cache key of the static content to render</description>
+            <name>contentKey</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+    </tag>
+    <tag>
+        <description>Registers a script block for later inclusion in a JSP page</description>
+        <name>register-init-script</name>
+        <tag-class>org.apache.rave.portal.web.tag.RegisterInitializationScriptTag</tag-class>
+        <body-content>JSP</body-content>
+        <attribute>
+            <description>The page location for the scripts</description>
+            <name>location</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>org.apache.rave.portal.web.renderer.ScriptLocation</type>
+        </attribute>
+    </tag>
+    <tag>
+        <description>Renders the initialization script block</description>
+        <name>render-init-script</name>
+        <tag-class>org.apache.rave.portal.web.tag.RenderInitializationScriptTag</tag-class>
+        <body-content>JSP</body-content>
+        <attribute>
+            <description>The page location for the scripts</description>
+            <name>location</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>org.apache.rave.portal.web.renderer.ScriptLocation</type>
+        </attribute>
+    </tag>
+    <tag>
+        <description>Renders the value of the JavaScriptDebugMode portal preference</description>
+        <name>render-js-debug-mode</name>
+        <tag-class>org.apache.rave.portal.web.tag.JavaScriptDebugModeTag</tag-class>
+        <body-content>JSP</body-content>
+    </tag>
+    <tag>
+        <description>Renders the value of the ShowStackTrace portal preference</description>
+        <name>render-show-stack-trace</name>
+        <tag-class>org.apache.rave.portal.web.tag.ShowStackTraceTag</tag-class>
+        <body-content>JSP</body-content>
+    </tag>
+</taglib>

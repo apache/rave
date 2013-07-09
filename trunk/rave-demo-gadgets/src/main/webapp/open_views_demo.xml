@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License.
+
+  $Id:$
+-->
+<Module>
+    <ModulePrefs title="Slideout test gadget" description="Test for slideout" author="CIT" author_email="" thumbnail=""
+                 screenshot="">
+        <Require feature="open-views"/>
+        <Require feature="dynamic-height"/>
+    </ModulePrefs>
+    <Content type="html" view="default">
+        <![CDATA[
+<script type="text/javascript" src="http://code.jquery.com/jquery.js"></script>
+<script type="text/javascript">
+    $(initPage);
+
+    var popups = ['sidebar', 'dialog', 'modal_dialog']
+
+    function initPage() {
+        var viewParams = {"person":{"name":"Aaron", "lastName":"Gooch"}};
+        var opt_params = {"view":"popup", "viewTarget":"", "viewParams":viewParams};
+
+        for (var i in popups) {
+            //iife to create closure and preserve value of popup at this time
+            (function bindClickActions() {
+                var popup = popups[i];
+
+                $('#' + popup).click(function () {
+                    var target = '#' + popup + '_output'
+                    opt_params.viewTarget = popup;
+                    opt_params.viewParams = {value:$('#view_param').val(), retVal: $(target).text()}
+
+                    gadgets.views.openGadget(displayReturnValue, onPopupOpen, opt_params);
+
+                    function onPopupOpen(site, metadata) {
+                        console.log(site);
+                    }
+
+                    function displayReturnValue(retVal) {
+                        if (retVal!==undefined && retVal!==null) {
+                            $(target).text(retVal);
+                        }
+                    }
+                });
+            })();
+
+
+        }
+    }
+</script>
+
+Hey, this is a view parameter: <input id="view_param" type="text" value="yarrrgh"> </input>
+<br/>
+<button id="sidebar">Open Sidebar</button>
+Output from sidebar: <b><span id="sidebar_output"></span></b><br/>
+<button id="dialog">Open Dialog</button>
+Output from dialog: <b><span id="dialog_output"></span></b><br/>
+<button id="modal_dialog">Open Modal</button>
+Output from modal: <b><span id="modal_dialog_output"></span></b><br/>
+
+]]>
+    </Content>
+    <Content type="html" view="popup">
+        <![CDATA[
+
+
+<script type="text/javascript" src="http://code.jquery.com/jquery.js"></script>
+<script type="text/javascript">
+    $(initPage);
+
+    function initPage() {
+        var viewParams = gadgets.views.getParams();
+        $('#viewParam').text(viewParams.value);
+        $('#retVal').val(viewParams.retVal);
+
+        $('#cancelButton').click(function () {
+            gadgets.views.close();
+        });
+
+        $('#saveButton').click(function () {
+            gadgets.views.setReturnValue($('#retVal').val());
+            gadgets.views.close();
+        });
+
+                 gadgets.window.adjustHeight()
+
+    }
+</script>
+
+Hi, I'm a popup. You sent me this view parameter: <b><span id="viewParam"></span></b><br/>
+<br/>
+What value do you want to return? <input id="retVal" type="text"> </input><br/>
+<br/>
+<button id="cancelButton">Cancel</button>
+<button id="saveButton">Save</button>
+]]>
+    </Content>
+</Module>
