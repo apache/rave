@@ -24,7 +24,7 @@
     <parent>
         <artifactId>rave-components</artifactId>
         <groupId>org.apache.rave</groupId>
-        <version>0.22-SNAPSHOT</version>
+        <version>0.22</version>
     </parent>
 
     <artifactId>rave-commons</artifactId>
