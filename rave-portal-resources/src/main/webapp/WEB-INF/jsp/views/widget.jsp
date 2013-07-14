@@ -259,10 +259,39 @@
 
 <portal:register-init-script location="${'AFTER_RAVE'}">
     <script>
-        $(function () {
-            rave.init();
-            rave.store.init('<c:out value="${referringPageId}"/>');
-            rave.store.initTags("<c:out value="${widget.id}"/>");
-        });
+        require(["rave", "ui", "portal/rave_store", "jquery"], function(rave, ui, raveStore, $){
+            //Helper function for callback below
+            function addWidgetToPageCallback (result){
+                var widgetTitle = ui.getClientMessage("widget.add_prefix");
+
+                if (result != undefined && result.title != undefined && result.title.length > 0) {
+                    widgetTitle = result.title;
+                }
+                ui.showInfoMessage(widgetTitle + ' ' + ui.getClientMessage("widget.add_suffix"));
+
+                // Update Add Widget button to reflect status
+                var addWidgetButton = "#addWidget_" + result.widgetId;
+                var addedText = '<i class="icon icon-ok icon-white"></i> ' + $(addWidgetButton).data('success');
+
+                $(addWidgetButton).removeClass("btn-primary").addClass("btn-success").html(addedText);
+            }
+
+            rave.registerOnInitHandler(function(){
+                $('.widgetJspAddWidgetButton').click(function(){
+                    var element = $(this);
+                    var widgetId = element.data('widget-id');
+                    var pageId = element.data('page-id');
+                    rave.api.rpc.addWidgetToPage({widgetId: widgetId, pageId: pageId, redirectAfterAdd: true, successCallback: addWidgetToPageCallback})
+                })
+
+                $('#displayUsersOfWidgetLink').click(function(){
+                    ui.displayUsersOfWidget($(this).data('widget-id'))
+                })
+
+                rave.init();
+                raveStore.init('<c:out value="${referringPageId}"/>');
+                raveStore.initTags("<c:out value="${widget.id}"/>");
+            })
+        })
     </script>
 </portal:register-init-script>

@@ -41,7 +41,7 @@ import java.util.ResourceBundle;
  */
 @Controller
 @RequestMapping("/messagebundle/*")
-public class MessageBundleController  {
+public class MessageBundleController {
     private static final String CLIENT_MESSAGE_IDENTIFIER = "_rave_client.";
     private static final String CLIENT_MESSAGES_BUNDLE_NAME = "messages";
     private static final String JAVASCRIPT_CONTENT_TYPE = "text/javascript";
@@ -66,7 +66,7 @@ public class MessageBundleController  {
      * in the Rave javascript namespace.  It uses the Locale specified by the client's browser to determine
      * which message bundle language to use.
      *
-     * @param request  The incoming HttpServletRequest
+     * @param request The incoming HttpServletRequest
      * @return the JavaScript content to load from the client
      */
     @ResponseBody
@@ -91,16 +91,22 @@ public class MessageBundleController  {
 
     private String convertClientMessagesMapToJavaScriptOutput(Map<String, String> clientMessagesMap) {
         StringBuilder sb = new StringBuilder();
-        final String add_client_message = "rave.addClientMessage(\"";
-        final String key_value_separator = "\",\"";
-        final String message_suffix = "\");";
+        int i = 0;
+        final String add_client_message = "\"";
+        final String key_value_separator = "\":\"";
+        final String message_suffix = "\"";
+        final String message_newline = ",";
         for (Map.Entry<String, String> mapEntry : clientMessagesMap.entrySet()) {
+            i++;
             sb.append(add_client_message).append(mapEntry.getKey()).append(key_value_separator);
             sb.append(mapEntry.getValue()).append(message_suffix);
+            if (i<clientMessagesMap.size()) {
+                sb.append(message_newline);
+            }
         }
-        return sb.toString();
+        return "define([], function(){ return {" + sb.toString() + "}; })";
     }
-    
+
     private String getClientMessagesJSForLocale(Locale locale) {
         String javascriptOutput = getClientMessagesJSFromCache(locale);
         if (javascriptOutput == null) {
@@ -108,20 +114,20 @@ public class MessageBundleController  {
         }
         return javascriptOutput;
     }
-    
+
     private String getClientMessagesJSFromCache(Locale locale) {
         return clientMessagesCache.get(locale);
     }
-    
+
     private String getClientMessagesJSFromBundle(Locale locale) {
         String javascriptOutput = convertClientMessagesMapToJavaScriptOutput(
                 convertResourceBundleToClientMessagesMap(
-                    ResourceBundle.getBundle(CLIENT_MESSAGES_BUNDLE_NAME, locale)));
+                        ResourceBundle.getBundle(CLIENT_MESSAGES_BUNDLE_NAME, locale)));
 
         cacheClientMessages(locale, javascriptOutput);
         return javascriptOutput;
     }
-    
+
     private void cacheClientMessages(Locale locale, String javascriptOutput) {
         clientMessagesCache.put(locale, javascriptOutput);
     }

@@ -106,14 +106,22 @@
 </div>
 
 
-<portal:register-init-script location="${'AFTER_RAVE'}">
-    <script>
-        $(function () {
-            rave.init();
-            rave.store.init('<c:out value="${referringPageId}"/>');
-            rave.store.initTags("<c:out value="${widget.id}"/>");
-        });
-    </script>
-</portal:register-init-script>
-</c:otherwise>
+        <portal:register-init-script location="${'AFTER_RAVE'}">
+            <script>
+                require(["rave", "portal/rave_store", "jquery"],
+                        function (rave, raveStore, raveEventBindings, $) {
+                            rave.registerOnInitHandler(function () {
+                                $('#widgetMarketplaceConfirmAddButton').click(function () {
+                                    var element = $(this);
+                                    raveStore.confirmAddFromMarketplace(element.data('widget-url'), element.data('widget-type'));
+                                })
+
+                                rave.init();
+                                raveStore.init('<c:out value="${referringPageId}"/>');
+                                raveStore.initTags("<c:out value="${widget.id}"/>");
+                            })
+                        })
+            </script>
+        </portal:register-init-script>
+    </c:otherwise>
 </c:choose>

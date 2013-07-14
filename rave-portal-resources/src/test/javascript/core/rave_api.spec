@@ -4,69 +4,48 @@
  * distributed with this work for additional information
  * regarding copyright ownership.  The ASF licenses this file
  * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
+ * 'License'); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
  *
  *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * 'AS IS' BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
 
-describe('Rave API', function () {
-
-    var testScope;
-
-    /*
-    Start stubs
-     */
-    //TODO: there are several bad dependencies in rave_api on portal functionality - stub the calls until I can fix
-    rave.getClientMessage = function () {
-    };
-    rave.showInfoMessage = function () {
+var mock = {
+    ajax: function(args){
+        args.success({})
     }
-    $ = function () {
-        return {
-            data: function () {
-                return this;
-            },
-            removeClass: function () {
-                return this;
-            },
-            addClass: function () {
-                return this;
-            },
-            html: function () {
-                return this;
-            }
-        }
-    }
-    /*
-     End stubs
-     */
+}
 
+
+
+describe('rave_api', function(){
     beforeEach(function () {
-        rave.ajax = function (args) {
-            args.success({});
-        }
         testScope = {
             callback: function () {
             }
         }
 
-        spyOn(rave, 'ajax').andCallThrough();
+        spyOn(mock, 'ajax').andCallThrough();
+        api = testr('core/rave_api', {
+            'core/rave_ajax': mock.ajax,
+            'core/rave_state_manager': {getContext: function(){}},
+            'core/rave_event_manager': {registerOnInitHandler: function(){}}
+        })
         spyOn(testScope, 'callback');
     });
 
     //test helper function
     function expectAjax(type, url, data) {
-        var args = rave.ajax.mostRecentCall.args[0];
+        var args = mock.ajax.mostRecentCall.args[0];
 
-        expect(rave.ajax).toHaveBeenCalled();
+        expect(mock.ajax).toHaveBeenCalled();
         expect(args.type).toEqual(type);
         expect(args.url).toEqual(url);
         if (data) {
@@ -77,12 +56,11 @@ describe('Rave API', function () {
         }
     }
 
-    describe('rest', function () {
-
+    describe('rest', function(){
         describe('saveWidgetPreferences', function () {
             it('makes the correct api call', function () {
 
-                rave.api.rest.saveWidgetPreferences({regionWidgetId: 1, userPrefs: {"color": "blue", "speed": "fast"},
+                api.rest.saveWidgetPreferences({regionWidgetId: 1, userPrefs: {"color": "blue", "speed": "fast"},
                     successCallback: testScope.callback});
 
                 expectAjax(
@@ -99,13 +77,15 @@ describe('Rave API', function () {
         describe('saveWidgetPreference', function () {
             it('makes the correct api call', function () {
 
-                rave.api.rest.saveWidgetPreference({regionWidgetId: 1, userPref: {prefName: 'color', prefValue: 'blue'},
+                api.rest.saveWidgetPreference({regionWidgetId: 1, userPref: {"prefName": "color", prefValue:"blue"},
                     successCallback: testScope.callback});
 
                 expectAjax(
                     'PUT',
                     'api/rest/regionWidgets/1/preferences/color',
-                    JSON.stringify({name: 'color', value: 'blue'})
+                    JSON.stringify(
+                        {name: 'color', value: 'blue'}
+                    )
                 );
             });
         });
@@ -113,7 +93,7 @@ describe('Rave API', function () {
         describe('saveWidgetCollapsedState', function () {
             it('makes the correct api call', function () {
 
-                rave.api.rest.saveWidgetCollapsedState({regionWidgetId: 1, collapsed: true,
+                api.rest.saveWidgetCollapsedState({regionWidgetId: 1, collapsed: true,
                     successCallback: testScope.callback});
 
                 expectAjax(
@@ -127,7 +107,7 @@ describe('Rave API', function () {
         describe('deletePage', function () {
             it('makes the correct api call', function () {
 
-                rave.api.rest.deletePage({pageId: 1,
+                api.rest.deletePage({pageId: 1,
                     successCallback: testScope.callback});
 
                 expectAjax(
@@ -139,7 +119,7 @@ describe('Rave API', function () {
         describe('deleteWidgetRating', function () {
             it('makes the correct api call', function () {
 
-                rave.api.rest.deleteWidgetRating({widgetId: 1, collapsed: true,
+                api.rest.deleteWidgetRating({widgetId: 1, collapsed: true,
                     successCallback: testScope.callback});
 
                 expectAjax(
@@ -152,7 +132,7 @@ describe('Rave API', function () {
         describe('updateWidgetRating', function () {
             it('makes the correct api call', function () {
 
-                rave.api.rest.updateWidgetRating({widgetId: 1, score: 2,
+                api.rest.updateWidgetRating({widgetId: 1, score: 2,
                     successCallback: testScope.callback});
 
                 expectAjax(
@@ -166,7 +146,7 @@ describe('Rave API', function () {
 
                 var text = 'my comment'
 
-                rave.api.rest.createWidgetComment({widgetId: 1, text: text,
+                api.rest.createWidgetComment({widgetId: 1, text: text,
                     successCallback: testScope.callback});
 
                 expectAjax(
@@ -178,7 +158,7 @@ describe('Rave API', function () {
         describe('deleteWidgetComment', function () {
             it('makes the correct api call', function () {
 
-                rave.api.rest.deleteWidgetComment({widgetId: 1, commentId: 2,
+                api.rest.deleteWidgetComment({widgetId: 1, commentId: 2,
                     successCallback: testScope.callback});
 
                 expectAjax(
@@ -192,7 +172,7 @@ describe('Rave API', function () {
 
                 var text = 'my comment'
 
-                rave.api.rest.updateWidgetComment({widgetId: 1, commentId: 2, text: text,
+                api.rest.updateWidgetComment({widgetId: 1, commentId: 2, text: text,
                     successCallback: testScope.callback});
 
                 expectAjax(
@@ -204,7 +184,7 @@ describe('Rave API', function () {
         describe('getUsersForWidget', function () {
             it('makes the correct api call', function () {
 
-                rave.api.rest.getUsersForWidget({widgetId: 1,
+                api.rest.getUsersForWidget({widgetId: 1,
                     successCallback: testScope.callback});
 
                 expectAjax(
@@ -219,7 +199,7 @@ describe('Rave API', function () {
 
                 var text = 'my tag'
 
-                rave.api.rest.createWidgetTag({widgetId: 1, text: text,
+                api.rest.createWidgetTag({widgetId: 1, text: text,
                     successCallback: testScope.callback});
 
                 expectAjax(
@@ -231,7 +211,7 @@ describe('Rave API', function () {
         describe('getTags', function () {
             it('makes the correct api call', function () {
 
-                rave.api.rest.getTags({widgetId: 1,
+                api.rest.getTags({widgetId: 1,
                     successCallback: testScope.callback});
 
                 expectAjax(
@@ -239,13 +219,24 @@ describe('Rave API', function () {
                     'api/rest/widgets/1/tags');
             });
         });
+        describe('getSecurityToken', function () {
+            it('makes the correct api call', function () {
+
+                api.rest.getSecurityToken({url: 'http://test.com', pageid: 1,
+                    successCallback: testScope.callback});
+
+                expectAjax(
+                    'GET',
+                    'api/rest/opensocial/gadget?url=http://test.com&pageid=1');
+            });
+        });
+
     });
 
     describe('rpc', function () {
-
         describe('moveWidgetToRegion', function () {
             it('makes the correct api call', function () {
-                rave.api.rpc.moveWidgetToRegion({regionWidgetId: 1, toIndex: 2, toRegionId: 3, fromRegionId: 4,
+                api.rpc.moveWidgetToRegion({regionWidgetId: 1, toIndex: 2, toRegionId: 3, fromRegionId: 4,
                     successCallback: testScope.callback
                 });
 
@@ -263,7 +254,7 @@ describe('Rave API', function () {
 
         describe('addWidgetToPage', function () {
             it('makes the correct api call', function () {
-                rave.api.rpc.addWidgetToPage({pageId: 1, widgetId: 2,
+                api.rpc.addWidgetToPage({pageId: 1, widgetId: 2,
                     successCallback: testScope.callback
                 });
 
@@ -277,25 +268,9 @@ describe('Rave API', function () {
             });
         });
 
-        describe('addWidgetToPageRegion', function () {
-            it('makes the correct api call', function () {
-                rave.api.rpc.addWidgetToPageRegion({pageId: 1, widgetId: 2, regionId: 3,
-                    successCallback: testScope.callback
-                });
-
-                expectAjax(
-                    'POST',
-                    'api/rpc/page/1/widget/add/region/3',
-                    {
-                        widgetId: 2
-                    }
-                );
-            });
-        });
-
         describe('deleteWidgetOnPage', function () {
             it('makes the correct api call', function () {
-                rave.api.rpc.removeWidget({regionWidgetId: 1,
+                api.rpc.removeWidget({regionWidgetId: 1,
                     successCallback: testScope.callback
                 });
 
@@ -310,7 +285,7 @@ describe('Rave API', function () {
             it('makes the correct api call', function () {
                 var pageName = "tom's page"
 
-                rave.api.rpc.addPage({pageName: pageName, pageLayoutCode: 1,
+                api.rpc.addPage({pageName: pageName, pageLayoutCode: 1,
                     successCallback: testScope.callback
                 });
 
@@ -325,7 +300,7 @@ describe('Rave API', function () {
 
         describe('getPage', function () {
             it('makes the correct api call', function () {
-                rave.api.rpc.getPage({
+                api.rpc.getPage({
                     successCallback: testScope.callback
                 });
 
@@ -338,7 +313,7 @@ describe('Rave API', function () {
 
         describe('movePage', function () {
             it('makes the correct api call', function () {
-                rave.api.rpc.movePage({moveAfterPageId: 1, pageId: 2,
+                api.rpc.movePage({moveAfterPageId: 1, pageId: 2,
                     successCallback: testScope.callback
                 });
 
@@ -354,7 +329,7 @@ describe('Rave API', function () {
 
         describe('moveWidgetToPage', function () {
             it('makes the correct api call', function () {
-                rave.api.rpc.moveWidgetToPage({toPageId: 1, regionWidgetId: 2,
+                api.rpc.moveWidgetToPage({toPageId: 1, regionWidgetId: 2,
                     successCallback: testScope.callback
                 });
 
@@ -371,7 +346,7 @@ describe('Rave API', function () {
 
         describe('updatePagePrefs', function () {
             it('makes the correct api call', function () {
-                rave.api.rpc.updatePagePrefs({pageId: 1, title: 'test title', layout: 2,
+                api.rpc.updatePagePrefs({pageId: 1, title: 'test title', layout: 2,
                     successCallback: testScope.callback
                 });
 
@@ -388,7 +363,7 @@ describe('Rave API', function () {
 
         describe('getPagePrefs', function () {
             it('makes the correct api call', function () {
-                rave.api.rpc.getPagePrefs({pageId: 1,
+                api.rpc.getPagePrefs({pageId: 1,
                     successCallback: testScope.callback
                 });
 
@@ -403,7 +378,7 @@ describe('Rave API', function () {
             it('makes the correct api call', function () {
                 var url = 'http://www.example.com/path?with=args#hash'
 
-                rave.api.rpc.getWidgetMetadata({url: url, providerType: 'opensocial',
+                api.rpc.getWidgetMetadata({url: url, providerType: 'opensocial',
                     successCallback: testScope.callback
                 });
 
@@ -422,7 +397,7 @@ describe('Rave API', function () {
             it('makes the correct api call', function () {
                 var url = 'http://www.example.com/path?with=args#hash'
 
-                rave.api.rpc.getWidgetMetadataGroup({url: url, providerType: 'opensocial',
+                api.rpc.getWidgetMetadataGroup({url: url, providerType: 'opensocial',
                     successCallback: testScope.callback
                 });
 
@@ -439,7 +414,7 @@ describe('Rave API', function () {
 
         describe('getAllWidgets', function () {
             it('makes the correct api call', function () {
-                rave.api.rpc.getAllWidgets({
+                api.rpc.getAllWidgets({
                     successCallback: testScope.callback
                 });
 
@@ -452,7 +427,7 @@ describe('Rave API', function () {
 
         describe('getUsers', function () {
             it('makes the correct api call', function () {
-                rave.api.rpc.getUsers({offset: 1,
+                api.rpc.getUsers({offset: 1,
                     successCallback: testScope.callback
                 });
 
@@ -466,7 +441,7 @@ describe('Rave API', function () {
 
         describe('searchUsers', function () {
             it('makes the correct api call', function () {
-                rave.api.rpc.searchUsers({ searchTerm: 'term', offset: 1,
+                api.rpc.searchUsers({ searchTerm: 'term', offset: 1,
                     successCallback: testScope.callback
                 });
 
@@ -481,7 +456,7 @@ describe('Rave API', function () {
 
         describe('clonePageForUser', function () {
             it('makes the correct api call', function () {
-                rave.api.rpc.clonePageForUser({ pageId: 1, userId: 2, pageName: 'page name',
+                api.rpc.clonePageForUser({ pageId: 1, userId: 2, pageName: 'page name',
                     successCallback: testScope.callback
                 });
 
@@ -498,7 +473,7 @@ describe('Rave API', function () {
 
         describe('addMemberToPage', function () {
             it('makes the correct api call', function () {
-                rave.api.rpc.addMemberToPage({ pageId: 1, userId: 2,
+                api.rpc.addMemberToPage({ pageId: 1, userId: 2,
                     successCallback: testScope.callback
                 });
 
@@ -514,7 +489,7 @@ describe('Rave API', function () {
 
         describe('removeMemberFromPage', function () {
             it('makes the correct api call', function () {
-                rave.api.rpc.removeMemberFromPage({ pageId: 1, userId: 2,
+                api.rpc.removeMemberFromPage({ pageId: 1, userId: 2,
                     successCallback: testScope.callback
                 });
 
@@ -530,7 +505,7 @@ describe('Rave API', function () {
 
         describe('updateSharedPageStatus', function () {
             it('makes the correct api call', function () {
-                rave.api.rpc.updateSharedPageStatus({ pageId: 1, shareStatus: 2,
+                api.rpc.updateSharedPageStatus({ pageId: 1, shareStatus: 2,
                     successCallback: testScope.callback
                 });
 
@@ -546,7 +521,7 @@ describe('Rave API', function () {
 
         describe('updatePageEditingStatus', function () {
             it('makes the correct api call', function () {
-                rave.api.rpc.updatePageEditingStatus({ pageId: 1, userId: 2, isEditor: true,
+                api.rpc.updatePageEditingStatus({ pageId: 1, userId: 2, isEditor: true,
                     successCallback: testScope.callback
                 });
 
@@ -563,7 +538,7 @@ describe('Rave API', function () {
 
         describe('addFriend', function () {
             it('makes the correct api call', function () {
-                rave.api.rpc.addFriend({ friendUsername: 'ted',
+                api.rpc.addFriend({ friendUsername: 'ted',
                     successCallback: testScope.callback
                 });
 
@@ -576,7 +551,7 @@ describe('Rave API', function () {
 
         describe('removeFriend', function () {
             it('makes the correct api call', function () {
-                rave.api.rpc.removeFriend({ friendUsername: 'ted',
+                api.rpc.removeFriend({ friendUsername: 'ted',
                     successCallback: testScope.callback
                 });
 
@@ -589,7 +564,7 @@ describe('Rave API', function () {
 
         describe('getFriends', function () {
             it('makes the correct api call', function () {
-                rave.api.rpc.getFriends({
+                api.rpc.getFriends({
                     successCallback: testScope.callback
                 });
 
@@ -602,7 +577,7 @@ describe('Rave API', function () {
 
         describe('acceptFriendRequest', function () {
             it('makes the correct api call', function () {
-                rave.api.rpc.acceptFriendRequest({ friendUsername: 'ted',
+                api.rpc.acceptFriendRequest({ friendUsername: 'ted',
                     successCallback: testScope.callback
                 });
 
@@ -617,7 +592,7 @@ describe('Rave API', function () {
             it('makes the correct api call', function () {
                 var url = 'http://www.example.com/path?with=args#hash'
 
-                rave.api.rpc.addWidgetFromMarketplace({ url: url, providerType: 'opensocial',
+                api.rpc.addWidgetFromMarketplace({ url: url, providerType: 'opensocial',
                     successCallback: testScope.callback
                 });
 
@@ -632,4 +607,5 @@ describe('Rave API', function () {
             });
         });
     });
-});
+
+})

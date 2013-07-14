@@ -306,9 +306,41 @@
 
 <portal:register-init-script location="${'AFTER_RAVE'}">
     <script>
-        $(function () {
-            rave.init();
-            rave.store.init('<c:out value="${referringPageId}"/>');
-        });
+        require(["rave", "ui", "portal/rave_store", "jquery"],
+                function(rave, ui, raveStore, $){
+                    //Helper function for callback below
+                    function addWidgetToPageCallback (result){
+                        var widgetTitle = ui.getClientMessage("widget.add_prefix");
+
+                        if (result != undefined && result.title != undefined && result.title.length > 0) {
+                            widgetTitle = result.title;
+                        }
+                        ui.showInfoMessage(widgetTitle + ' ' + ui.getClientMessage("widget.add_suffix"));
+
+                        // Update Add Widget button to reflect status
+                        var addWidgetButton = "#addWidget_" + result.widgetId;
+                        var addedText = '<i class="icon icon-ok icon-white"></i> ' + $(addWidgetButton).data('success');
+
+                        $(addWidgetButton).removeClass("btn-primary").addClass("btn-success").html(addedText);
+                    }
+
+                    rave.registerOnInitHandler(function(){
+                        $("#storeItems").on("click", "button.widgetAddButton", function(event){
+                            var element = $(this);
+                            rave.api.rpc.addWidgetToPage({widgetId: element.data('widget-id'),
+                                pageId: element.data('referring-page-id'), buttonId: element.attr('id'),
+                                successCallback: addWidgetToPageCallback
+                            });
+                        });
+
+                        $("#storeItems").on("click", "a.displayUsersLink", function(event){
+                            var element = $(this);
+                            ui.displayUsersOfWidget(element.data('widget-id'));
+                        });
+
+                        rave.init();
+                        raveStore.init('<c:out value="${referringPageId}"/>');
+                    })
+        })
     </script>
 </portal:register-init-script>

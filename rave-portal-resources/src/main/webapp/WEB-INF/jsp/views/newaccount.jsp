@@ -39,6 +39,8 @@ under the License.
 
 <portal:register-init-script location="${'AFTER_RAVE'}">
     <script>
-        $(document).ready(rave.forms.validateNewAccountForm());
+        require(["portal/rave_forms", "jquery"], function(raveForms, $){
+            $(document).ready(raveForms.validateNewAccountForm());
+        })
     </script>
 </portal:register-init-script>

@@ -17,9 +17,7 @@
  * under the License.
  */
 
-var rave = rave || {};
-rave.forms = rave.forms || (function() {
-
+define(["jquery", "portal/rave_portal", "jqueryValidate"], function($, ravePortal){
     function validateNewAccountForm() {
         $("#newAccountForm").validate({
             rules: {
@@ -43,7 +41,7 @@ rave.forms = rave.forms || (function() {
             },
             messages: {
                 confirmPassword: {
-                    equalTo: rave.getClientMessage("form.password.invalid_match")
+                    equalTo: ravePortal.getClientMessage("form.password.invalid_match")
                 }
             }
         });
@@ -64,23 +62,23 @@ rave.forms = rave.forms || (function() {
             },
             messages: {
                 passwordConfirm: {
-                    equalTo: rave.getClientMessage("form.password.invalid_match")
+                    equalTo: ravePortal.getClientMessage("form.password.invalid_match")
                 }
             }
         });
     }
-    
+
     function validateEditAccountForm() {
         $("#editAccountForm").validate({
             rules: {
-            	 email : {
-                     required: true,
-                     email: true
-                 }
-            }            
+                email : {
+                    required: true,
+                    email: true
+                }
+            }
         });
     }
-    
+
     function validatePageForm() {
         $("#pageForm").validate({
             rules: {
@@ -93,8 +91,8 @@ rave.forms = rave.forms || (function() {
 
     return {
         validateNewAccountForm : validateNewAccountForm,
-	    validateUserProfileForm: validateUserProfileForm,
-	    validateEditAccountForm: validateEditAccountForm,
+        validateUserProfileForm: validateUserProfileForm,
+        validateEditAccountForm: validateEditAccountForm,
         validatePageForm: validatePageForm
     };
-})();
+})

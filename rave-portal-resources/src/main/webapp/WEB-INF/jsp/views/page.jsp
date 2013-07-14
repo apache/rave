@@ -393,18 +393,40 @@
     rave.init();
     rave.RegionWidget.defaultView = 'home';
 
-    $(function() {
-        rave.initPageEditorStatus(<c:out value="${pageUser.editor}"/>);
-        rave.layout.init(${applicationProperties['portal.export.ui.enable']});
-        rave.renderWidgets('home');
-    });
-</script>
-<script>rave.models.currentPage.set({id: "${page.id}",
-    ownerId: "${page.ownerId}",
-    viewerId: "<sec:authentication property="principal.id" />"
-}, {silent:true})</script>
-<c:forEach var="members" items="${page.members}">
-    <portal:person id="${members.userId}" var="member" />
-<script>rave.models.currentPage.addInitData('${member.id}', ${members.editor})</script>
-</c:forEach>
+                $('#declineShareLink').click(function () {
+                    ui.models.currentPage.declineShare();
+                });
+
+                $('#movePageButton').click(function () {
+                    ui.models.movePage();
+                })
+
+                $('#moveWidgetToPageButton').click(function () {
+                    ui.layout.moveWidgetToPage($('#moveWidgetModal').data('regionWidgetId'));
+                })
+
+                rave.renderWidgets('home');
+            });
+
+            rave.setDefaultView('home');
+            rave.setPage({
+                id: "${page.id}",
+                ownerId: "${page.ownerId}",
+                viewerId: "<sec:authentication property="principal.id" />"
+            });
+            rave.getViewer().editor =<c:out value="${pageUser.editor}"/>;
+            rave.setExportEnabled(${applicationProperties['portal.export.ui.enable']});
+
+            ui.models.currentPage.set({
+                id: "${page.id}",
+                ownerId: "${page.ownerId}",
+                viewerId: "<sec:authentication property="principal.id" />"
+            }, {silent: true})
+
+            <c:forEach var="members" items="${page.members}">
+            <portal:person id="${members.userId}" var="member"/>
+            ui.models.currentPage.addInitData('${member.id}', ${members.editor})
+            </c:forEach>
+        });
+    </script>
 </portal:register-init-script>

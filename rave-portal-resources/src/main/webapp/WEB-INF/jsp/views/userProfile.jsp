@@ -67,6 +67,8 @@
 
 <portal:register-init-script location="${'AFTER_RAVE'}">
     <script>
-        $(document).ready(rave.forms.validateUserProfileForm());
+        require(["portal/rave_forms", "jquery"], function(raveForms, $){
+            $(function(){raveForms.validateUserProfileForm()});
+        })
     </script>
 </portal:register-init-script>

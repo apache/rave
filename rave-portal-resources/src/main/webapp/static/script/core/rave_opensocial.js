@@ -17,26 +17,24 @@
  * under the License.
  */
 
-rave.registerProvider(
-    'opensocial',
-    (function () {
+define(['underscore', 'core/rave_view_manager', 'core/rave_api', 'core/rave_openajax_hub', 'core/rave_log', 'core/rave_state_manager', 'osapi'],
+    function (_, viewManager, api, managedHub, log, stateManager) {
         var exports = {};
 
         var container;
 
-        exports.init = function () {
-            var containerConfig = {};
-            containerConfig[osapi.container.ServiceConfig.API_PATH] = "/rpc";
-            containerConfig[osapi.container.ContainerConfig.RENDER_DEBUG] = rave.getJavaScriptDebugMode();
-            container = new osapi.container.Container(containerConfig);
+        var containerConfig = {};
+        containerConfig[osapi.container.ServiceConfig.API_PATH] = "/rpc";
+        containerConfig[osapi.container.ContainerConfig.RENDER_DEBUG] = stateManager.getDebugMode();
+        container = new osapi.container.Container(containerConfig);
 
-            gadgets.pubsub2router.init({
-                hub:rave.getManagedHub()
-            });
+        gadgets.pubsub2router.init({
+            hub: managedHub
+        });
 
-            rpcRegister();
-            implementViews();
-        }
+        rpcRegister();
+        implementViews();
+
 
         function rpcRegister() {
             container.rpcRegister('requestNavigateTo', requestNavigateTo);
@@ -46,10 +44,70 @@ rave.registerProvider(
             container.rpcRegister('showWidget', showWidget);
         }
 
+        function implementViews() {
+            container.views.createElementForGadget = function (metadata, rel, opt_view, opt_viewTarget, opt_coordinates, parentSite, opt_callback) {
+                if (opt_viewTarget) {
+                    var prefs = (metadata && metadata.views && metadata.views[opt_view])
+                    var view = viewManager.renderView(opt_viewTarget, prefs);
+                    var el = view.getWidgetSite();
+                    el.setAttribute('data-rave-view', view._uid);
+                    return el;
+                }
+            };
+
+            container.views.createElementForEmbeddedExperience = function (rel, opt_gadgetInfo, opt_viewTarget, opt_coordinates, parentSite, opt_callback) {
+                var widgetUrl = opt_gadgetInfo.url;
+
+                api.rest.getSecurityToken({
+                    "url": widgetUrl,
+                    "pageid": stateManager.getPage().id,
+                    "successCallback": renderEE
+                });
+
+                function renderEE(data) {
+                    if (data.error) {
+                        return log(data.error.message)
+                    }
+                    var gadget = {
+                            "widgetUrl": widgetUrl,
+                            "securityToken": data.securityToken,
+                            "metadata": opt_gadgetInfo
+                        },
+                        height = gadget.metadata.modulePrefs.height || stateManager.getDefaultHeight(),
+                        width = gadget.metadata.modulePrefs.width || stateManager.getDefaultWidth();
+
+                    preloadMetadata(gadget);
+
+                    if (opt_viewTarget) {
+                        var view = viewManager.renderView(opt_viewTarget, {"preferredHeight": height, preferredWidth: width});
+                        var el = view.getWidgetSite();
+                        el.setAttribute('data-rave-view', view._uid);
+                        opt_callback(el);
+                    }
+                }
+            };
+
+            container.views.createElementForUrl = function (rel, opt_viewTarget, opt_coordinates, parentSite, opt_callback) {
+                if (opt_viewTarget) {
+                    var view = viewManager.renderView(opt_viewTarget);
+                    var el = view.getWidgetSite();
+                    el.setAttribute('data-rave-view', view._uid);
+                    opt_callback(el);
+                }
+            };
+
+            container.views.destroyElement = function (site) {
+                var el = site.el_;
+                container.closeGadget(site);
+                var _uid = el.getAttribute('data-rave-view');
+                viewManager.destroyView(_uid);
+            };
+        }
+
         function requestNavigateTo(args, viewName, opt_params, opt_ownerId) {
             var widget = args.gs._widget,
                 viewSurface = viewName.split('.')[0],
-                renderInto = rave.getView(viewSurface) ? viewSurface : widget._el;
+                renderInto = viewManager.getView(viewSurface) ? viewSurface : widget._el;
 
             widget.render(renderInto, {view: viewName, view_params: opt_params, ownerId: opt_ownerId});
         }
@@ -84,68 +142,6 @@ rave.registerProvider(
             }
         }
 
-        function implementViews() {
-            container.views.createElementForGadget = function (metadata, rel, opt_view, opt_viewTarget, opt_coordinates, parentSite, opt_callback) {
-                if (opt_viewTarget) {
-                    var prefs = (metadata && metadata.views && metadata.views[opt_view])
-                    var view = rave.renderView(opt_viewTarget, prefs);
-                    var el = view.getWidgetSite();
-                    el.setAttribute('data-rave-view', view._uid);
-                    return el;
-                }
-            };
-
-            container.views.createElementForEmbeddedExperience = function (rel, opt_gadgetInfo, opt_viewTarget, opt_coordinates, parentSite, opt_callback) {
-                var widgetUrl = opt_gadgetInfo.url;
-
-                rave.api.rest.getSecurityToken({
-                    "url": widgetUrl,
-                    //TODO: need to remove reference to rave.ui once we understand need for current pageid
-                    //violates core dependency
-                    "pageid": rave.ui.getCurrentPageId(),
-                    "successCallback": renderEE
-                });
-
-                function renderEE(data) {
-                    if (data.error) {
-                        return rave.log(data.error.message)
-                    }
-                    var gadget = {
-                            "widgetUrl": widgetUrl,
-                            "securityToken": data.securityToken,
-                            "metadata": opt_gadgetInfo
-                        },
-                        height = gadget.metadata.modulePrefs.height || rave.RegionWidget.defaultHeight,
-                        width = gadget.metadata.modulePrefs.width || rave.RegionWidget.defaultWidth;
-
-                    preloadMetadata(gadget);
-
-                    if (opt_viewTarget) {
-                        var view = rave.renderView(opt_viewTarget, {"preferredHeight": height, preferredWidth: width});
-                        var el = view.getWidgetSite();
-                        el.setAttribute('data-rave-view', view._uid);
-                        opt_callback(el);
-                    }
-                }
-            };
-
-            container.views.createElementForUrl = function (rel, opt_viewTarget, opt_coordinates, parentSite, opt_callback) {
-                if (opt_viewTarget) {
-                    var view = rave.renderView(opt_viewTarget);
-                    var el = view.getWidgetSite();
-                    el.setAttribute('data-rave-view', view._uid);
-                    opt_callback(el);
-                }
-            };
-
-            container.views.destroyElement = function (site) {
-                var el = site.el_;
-                container.closeGadget(site);
-                var _uid = el.getAttribute('data-rave-view');
-                rave.destroyView(_uid);
-            };
-        }
-
         exports.initWidget = function (widget) {
             widget.error = getMetadataErrors(widget.metadata);
             if (!widget.error) {
@@ -158,7 +154,7 @@ rave.registerProvider(
          full spectrum of allowed render options!
          */
         exports.renderWidget = function (widget, el, opts) {
-            if(widget.error) {
+            if (widget.error) {
                 widget.renderError(el, widget.error.message);
                 return;
             }
@@ -168,13 +164,13 @@ rave.registerProvider(
             widget._site = site;
 
             var renderParams = {};
-            renderParams[osapi.container.RenderParam.VIEW] = opts.view || rave.RegionWidget.defaultView;
+            renderParams[osapi.container.RenderParam.VIEW] = opts.view || stateManager.getDefaultView();
             renderParams[osapi.container.RenderParam.ALLOW_DEFAULT_VIEW ] = opts.allowDefaultView;
             renderParams[osapi.container.RenderParam.DEBUG ] = opts.debug;
-            renderParams[osapi.container.RenderParam.HEIGHT ] = opts.height || rave.RegionWidget.defaultHeight;
+            renderParams[osapi.container.RenderParam.HEIGHT ] = opts.height || stateManager.getDefaultHeight();
             renderParams[osapi.container.RenderParam.NO_CACHE ] = opts.noCache;
             renderParams[osapi.container.RenderParam.TEST_MODE] = opts.testMode;
-            renderParams[osapi.container.RenderParam.WIDTH ] = opts.width || rave.RegionWidget.defaultWidth;
+            renderParams[osapi.container.RenderParam.WIDTH ] = opts.width || stateManager.getDefaultWidth();
             renderParams[osapi.container.RenderParam.USER_PREFS] = getCompleteUserPrefSet(widget.userPrefs, widget.metadata.userPrefs);
             container.navigateGadget(site, widget.widgetUrl, opts.view_params, renderParams, opts.callback);
         }
@@ -225,10 +221,9 @@ rave.registerProvider(
             }
         }
 
-        exports.getContainer = function() {
+        exports.getContainer = function () {
             return container;
         }
 
         return exports;
-    })()
-)
+    })

@@ -30,3 +30,5 @@
 --%>
 <!-- Modernizr MUST come first!-->
 <script src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.5.3/modernizr.min.js"></script>
+<%-- require.js --%>
+<script src="//cdnjs.cloudflare.com/ajax/libs/require.js/2.1.5/require.js"></script>

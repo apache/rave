@@ -243,9 +243,17 @@
 
 <portal:register-init-script location="${'AFTER_RAVE'}">
     <script>
-        $(function () {
-            rave.init();
-            rave.store.init('<c:out value="${referringPageId}"/>');
-        });
+        require(["portal/rave_store", "rave", "jquery"], function(raveStore, rave, $){
+            rave.registerOnInitHandler(function(){
+                $("#marketplaceWidgetList").on("click", "button.widgetAddButton", function(event){
+                    raveStore.confirmAddFromMarketplace($(this).data('widget-url'), $(this).data('widget-type'));
+                });
+            })
+
+            $(function () {
+                rave.init();
+                raveStore.init('<c:out value="${referringPageId}"/>');
+            });
+        })
     </script>
 </portal:register-init-script>

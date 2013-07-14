@@ -17,21 +17,18 @@
  * under the License.
  */
 
-var rave = rave || {};
-
-rave.models = (function () {
-
+define(["underscore", "portal/rave_backbone", "portal/rave_portal", "rave"], function(_, raveBackbone, ravePortal, rave){
     /*
      User model. Further implementation pending.
      */
-    var User = rave.Model.extend({
+    var User = raveBackbone.Model.extend({
 
     });
 
     /*
      Collection of users. Currently used for the share page users search.
      */
-    var Users = rave.Collection.extend({
+    var Users = raveBackbone.Collection.extend({
         model: User,
         pageSize: 10,
 
@@ -55,7 +52,11 @@ rave.models = (function () {
             this.searchTerm = term;
 
             if (this.searchTerm) {
-                rave.api.rpc.searchUsers({searchTerm: this.searchTerm, offset: 0, successCallback: this.parse });
+                rave.api.rpc.searchUsers({searchTerm: this.searchTerm,
+                    offset: 0,
+                    successCallback: this.parse,
+                    alertEmptySearch: function(){alert(ravePortal.getClientMessage("api.rpc.empty.search.term"));}
+                });
             }
             else {
                 rave.api.rpc.getUsers({offset: 0, successCallback: this.parse });
@@ -70,7 +71,11 @@ rave.models = (function () {
             offset *= this.pageSize;
 
             if (this.searchTerm) {
-                rave.api.rpc.searchUsers({searchTerm: this.searchTerm, offset: offset, successCallback: this.parse });
+                rave.api.rpc.searchUsers({searchTerm: this.searchTerm,
+                    offset: offset,
+                    successCallback: this.parse,
+                    alertEmptySearch: function(){alert(ravePortal.getClientMessage("api.rpc.empty.search.term"));}
+                });
             }
             else {
                 rave.api.rpc.getUsers({offset: offset, successCallback: this.parse });
@@ -120,17 +125,12 @@ rave.models = (function () {
     /*
      Page model. Used for managing most of the sharing functionality.
      */
-    var Page = rave.Model.extend({
+    var Page = raveBackbone.Model.extend({
 
         defaults: {
             members: {}
         },
 
-        /*
-         TODO: currently this is used to silently bootstrap the page model from the page view. Once
-         the jsp views are lightened up we should be able to provide a full representation of the page
-         model to pass to .set() and this should not be needed.
-         */
         addInitData: function (userId, isEditor) {
             var members = this.get('members');
 
@@ -175,7 +175,6 @@ rave.models = (function () {
                     /*
                      The model does not manage or care about views. Instead it fires events
                      that views can subscribe to for ui representation.
-                     TODO: solidify and document eventing model
                      */
                     self.trigger('share', 'member:add', userId);
                 }
@@ -250,11 +249,6 @@ rave.models = (function () {
             rave.api.rpc.clonePageForUser({pageId: this.get('id'), userId: userId, pageName: pageName,
                 successCallback: function(result){
                     if(result.error) {
-                        /*
-                         TODO: this is a weird error handling condition used by clone to catch duplicate
-                         named pages. Firing an event and letting the view handle for now, but the api
-                         should be managing errors better.
-                         */
                         return self.trigger('error', result.errorCode, userId);
                     }
                     self.trigger('share', 'clone', userId);
@@ -290,7 +284,4 @@ rave.models = (function () {
         currentPage: new Page(),
         users: new Users()
     }
-
-})();
-
-
+})

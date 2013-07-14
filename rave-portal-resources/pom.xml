@@ -118,32 +118,31 @@
                             <goal>bdd</goal>
                             <goal>test</goal>
                         </goals>
-                        <configuration>
-                            <preloadSources>
-                                <source>${project.basedir}/src/test/dependencies/underscore.js</source>
-                            </preloadSources>
-                            <jsSrcDir>${project.basedir}/src/main/webapp/static/script/core</jsSrcDir>
-                            <debug>true</debug>
-                            <sourceIncludes>
-                                <include>rave_core.js</include>
-                                <include>rave_api.js</include>
-                                <include>rave_widget.js</include>
-                                <include>rave_opensocial.js</include>
-                                <include>rave_wookie.js</include>
-                            </sourceIncludes>
-                            <sourceExcludes>
-                                <!-- rave_ajax can be excluded since it is just a wrapper for jquery.ajax -->
-                                <include>rave_ajax.js</include>
-                                <!-- exclude the combined js file from our tests, created by the wro4j plugin  -->
-                                <exclude>*.min.js</exclude>
-                            </sourceExcludes>
-                        </configuration>
                     </execution>
                 </executions>
+                <configuration>
+                    <jsSrcDir>${project.basedir}/src/main/webapp/static/script</jsSrcDir>
+                    <jsTestSrcDir>${project.basedir}/src/test/javascript</jsTestSrcDir>
+                    <specDirectoryName>/src/test/javascript</specDirectoryName>
+                    <sourceIncludes>
+                        <include>core/rave_api.js</include>
+                        <include>core/rave_state_manager.js</include>
+                        <include>core/rave_event_manager.js</include>
+                        <include>core/rave_widget.js</include>
+                        <include>core/rave_widget_manager.js</include>
+                        <include>core/rave_view_manager.js</include>
+                        <include>core/rave_openajax_hub.js</include>
+                    </sourceIncludes>
+                    <preloadSources>
+                        <source>/src/test/dependencies/require.js</source>
+                        <source>/src/test/dependencies/testr.js</source>
+                        <source>/src/test/dependencies/underscore.js</source>
+                    </preloadSources>
+                    <customRunnerTemplate>src/test/testTemplate.htmltemplate</customRunnerTemplate>
+                </configuration>
             </plugin>
             <!--
-               wro4j maven plugin is used for optimization (concatenation, minification, etc) of our static resources
-               it is invoked as part of the compile phase of the maven lifecycle
+               wro4j maven plugin is used for lesscss compilation
             -->
             <plugin>
                 <groupId>ro.isdc.wro4j</groupId>
@@ -163,17 +162,50 @@
                     <!-- wro.xml defines the resource groups -->
                     <wroFile>${basedir}/src/main/resources/wro.xml</wroFile>
                     <!-- targetGroups is the set of resource groups, defined in wro.xml, that you want to process -->
-                    <targetGroups>rave.core.min,rave.portal.min,rave</targetGroups>
+                    <targetGroups>rave</targetGroups>
                     <!-- minimize instructs the processors to handle their minimization work -->
                     <minimize>true</minimize>
-                    <!-- location of the javascript after processing -->
-                    <jsDestinationFolder>${project.build.directory}/${project.build.finalName}/static/script/</jsDestinationFolder>
                     <!-- location of the CSS after processing -->
                     <cssDestinationFolder>${project.build.directory}/${project.build.finalName}/static/css/</cssDestinationFolder>
                     <!-- location of webapp directory that wro4j uses for its location context -->
                     <contextFolder>${basedir}/src/main/webapp/</contextFolder>
                     <wroManagerFactory>ro.isdc.wro.maven.plugin.manager.factory.ConfigurableWroManagerFactory</wroManagerFactory>
                     <ignoreMissingResources>false</ignoreMissingResources>
+                </configuration>
+            </plugin>
+            <!-- requirejs optimizer -->
+            <plugin>
+                <groupId>com.github.mcheely</groupId>
+                <artifactId>requirejs-maven-plugin</artifactId>
+                <version>2.0.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>optimize</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <!-- path to optimizer json config file -->
+                    <configFile>
+                        ${basedir}/src/main/resources/requireBuild.js
+                    </configFile>
+                    <!-- optional path to optimizer executable -->
+                    <optimizerFile>
+                        ${basedir}/src/main/resources/r.js
+                    </optimizerFile>
+                    <!--
+                    Whether or not to process configFile with maven filters.
+                    If you use this option, some options in your configFile
+                    must resolve to absolute paths (see below)
+                    -->
+                    <filterConfig>
+                        true
+                    </filterConfig>
+                    <!-- Skip requirejs optimization if true -->
+                    <skip>
+                        false
+                    </skip>
                 </configuration>
             </plugin>
         </plugins>
