@@ -390,10 +390,14 @@
 
 <portal:register-init-script location="${'AFTER_RAVE'}">
 <script>
-    rave.init();
-    rave.RegionWidget.defaultView = 'home';
+    require(["rave", "ui", 'jquery'], function (rave, ui, $) {
+        rave.registerOnInitHandler(function () {
+            $('#acceptShareLink').click(function () {
+                ui.models.currentPage.acceptShare();
+            });
 
-                $('#declineShareLink').click(function () {
+
+            $('#declineShareLink').click(function () {
                     ui.models.currentPage.declineShare();
                 });
 
