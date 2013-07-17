@@ -17,6 +17,15 @@
  * under the License.
  */
 
+/**
+ * Implements opensocial specific features of the rave_widget interface
+ * @module rave_opensocial
+ * @requires rave_view_manager
+ * @requires rave_api
+ * @requires rave_openajax_hub
+ * @requires rave_log
+ * @requires rave_state_manager
+ */
 define(['underscore', 'core/rave_view_manager', 'core/rave_api', 'core/rave_openajax_hub', 'core/rave_log', 'core/rave_state_manager', 'osapi'],
     function (_, viewManager, api, managedHub, log, stateManager) {
         var exports = {};
@@ -142,6 +151,10 @@ define(['underscore', 'core/rave_view_manager', 'core/rave_api', 'core/rave_open
             }
         }
 
+        /**
+         *
+         * @param widget
+         */
         exports.initWidget = function (widget) {
             widget.error = getMetadataErrors(widget.metadata);
             if (!widget.error) {

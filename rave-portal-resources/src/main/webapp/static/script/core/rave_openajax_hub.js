@@ -17,7 +17,16 @@
  * under the License.
  */
 
+/**
+ * @module rave_openajax_hub
+ * @requires rave_log
+ */
 define(['underscore', 'core/rave_log', 'osapi'], function(_, log){
+    /**
+     * Returns an OpenAjax.hub.ManagedHub instance.w
+     * @exports rave_openajax_hub
+     * @see http://www.openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Managed_Hub_APIs
+     */
     var openAjaxHub;
 
     if (!openAjaxHub) {

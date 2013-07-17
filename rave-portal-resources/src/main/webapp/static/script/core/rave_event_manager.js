@@ -17,6 +17,10 @@
  * under the License.
  */
 
+/**
+ * Manages the registering and execution of initialization handlers
+ * @module rave_event_manager
+ */
 define(['underscore'], function(_){
 
     var INITIALIZED = false,
@@ -24,6 +28,10 @@ define(['underscore'], function(_){
 
     var exports = {}
 
+    /**
+     * Registers a callback function to be executed at the time that rave is initialized.
+     * @param {function} handler
+     */
     exports.registerOnInitHandler = function (handler) {
         if (!(_.isFunction(handler))) {
             throw new Error('Init event handler must be a function');
@@ -34,6 +42,9 @@ define(['underscore'], function(_){
         initHandlers.push(handler);
     }
 
+    /**
+     * Executes all registered init handlers in the order they were registered.
+     */
     exports.init = function () {
         INITIALIZED = true;
         _.each(initHandlers, function (fn) {

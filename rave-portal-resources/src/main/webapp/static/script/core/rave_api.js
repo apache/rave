@@ -17,9 +17,16 @@
  * under the License.
  */
 
+/**
+ * Helper functions for interacting with the rave rpc and rest apis.
+ *
+ * @module rave_api
+ * @requires rave_ajax
+ * @requires rave_state_manager
+ * @requires rave_event_manager
+ */
 define(['underscore', 'core/rave_ajax', 'core/rave_state_manager', 'core/rave_event_manager'],
     function (_, ajax, stateManager, eventManager) {
-        //stores virtual host context of application execution
 
         var context = '';
         eventManager.registerOnInitHandler(function () {
@@ -828,7 +835,9 @@ define(['underscore', 'core/rave_ajax', 'core/rave_state_manager', 'core/rave_ev
             };
 
         })();
-
+        /**
+         * @exports rave_api
+         */
         return {
             rest: restApi,
             rpc: rpcApi

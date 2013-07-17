@@ -20,7 +20,7 @@
 
 /**
  * Manages the state of page-level variables.
- * @module rave
+ * @module rave_state_manager
  */
 define([], function () {
 

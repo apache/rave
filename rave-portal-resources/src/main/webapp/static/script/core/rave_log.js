@@ -17,7 +17,15 @@
  * under the License.
  */
 
+/**
+ * @module rave_log
+ */
 define([], function(){
+
+    /**
+     * Safely wraps console.log to prevent errors on browsers without console support.
+     * @exports rave_log
+     */
     return function(msg){
         if  (console && console.log) {
             console.log(msg);

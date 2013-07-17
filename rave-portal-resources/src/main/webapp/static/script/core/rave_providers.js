@@ -18,11 +18,19 @@
  */
 
 
-/*
-    This determines which providers the client supports. If you need only os or wookie, overlay this file.
-    Providers should be registered with ALL LOWERCASE keys
+/**
+ * Exports the providers that the rave client will support. If your implementation does
+ * not need to support both opensocial and wookie providers, overlay this file to
+ * export only the providers you will support. This reduces the amount of script that will
+ * be downloaded and parsed by the client.
+ * @module rave_providers
+ * @requires rave_wookie
+ * @requires rave_opensocial
  */
 define(['core/rave_wookie', 'core/rave_opensocial'], function(wookie, os){
+    /**
+     * @exports rave_providers
+     */
     return{
         w3c:wookie,
         opensocial:os
