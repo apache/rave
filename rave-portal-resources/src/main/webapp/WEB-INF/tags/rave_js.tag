@@ -20,8 +20,11 @@
 <%@ include file="/WEB-INF/jsp/includes/taglibs.jsp" %>
 <portal:render-script location="${'BEFORE_LIB'}"/>
 <rave:third_party_js/>
+<%-- get the javaScriptDebugMode portal preference value --%>
+<c:set var="jsDebugMode"><portal:render-js-debug-mode/></c:set>
 <portal:render-script location="${'AFTER_LIB'}"/>
 <c:choose>
+    <%-- check to see if the javaScriptDebugMode is on, if so render the individual JS files, otherwise render the minified single file --%>
     <c:when test="${jsDebugMode == '1'}">
         <script src="<spring:url value="/static/script/requireConfig.js"/>"></script>
         <script>
@@ -38,12 +41,10 @@
 
 <%-- local rave scripts --%>
 <portal:render-script location="${'BEFORE_RAVE'}"/>
-<%-- get the javaScriptDebugMode portal preference value --%>
-<c:set var="jsDebugMode"><portal:render-js-debug-mode/></c:set>
-<%-- check to see if the javaScriptDebugMode is on, if so render the individual JS files, otherwise render the minified single file --%>
+
 
 <script>
-    require(["rave", "jquery"], function (rave, $) {
+    require(["rave", "jquery", "bootstrap"], function (rave, $) {
         <%-- set the web application context --%>
         rave.setContext("<spring:url value="/app/" />");
         <%-- set the default widget height so js code has access to it --%>
