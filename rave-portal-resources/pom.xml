@@ -208,6 +208,25 @@
                     </skip>
                 </configuration>
             </plugin>
+            <!-- js doc plugin -->
+            <plugin>
+                <groupId>com.github.phasebash</groupId>
+                <artifactId>jsdoc3-maven-plugin</artifactId>
+                <version>1.0.4</version>
+                <configuration>
+                    <recursive>true</recursive>
+                    <directoryRoots>
+                        <directoryRoot>${basedir}/src/main/webapp/static/script/core</directoryRoot>
+                    </directoryRoots>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>jsdoc3</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
     <profiles>

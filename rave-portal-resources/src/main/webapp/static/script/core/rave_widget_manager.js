@@ -17,8 +17,10 @@
  * under the License.
  */
 
+/**
+ * Manages region widgets on a page, including registration and retrieval
+ */
 define(['underscore', 'core/rave_widget'], function (_, regionWidget) {
-    //hash of widgets by regionWidgetId
     var regionWidgets = {};
 
     var rave = {};

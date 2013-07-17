@@ -414,9 +414,7 @@
 
             rave.setDefaultView('home');
             rave.setPage({
-                id: "${page.id}",
-                ownerId: "${page.ownerId}",
-                viewerId: "<sec:authentication property="principal.id" />"
+                id: "${page.id}"
             });
             rave.getViewer().editor =<c:out value="${pageUser.editor}"/>;
             rave.setExportEnabled(${applicationProperties['portal.export.ui.enable']});

@@ -19,9 +19,21 @@
 
 
 /*
-    By default rave uses jquery as its ajax library. If you want to use another ajax library overlay this file
-    and return a function that conforms with the api of jquery's ajax() function - http://api.jquery.com/jQuery.ajax/
+
+ */
+
+/**
+ Wraps the rave client's ajax functionality.
+ By default rave uses jquery as its ajax library. If you want to use another ajax library overlay this file
+ and return a function that conforms with the api of jquery's ajax() function - http://api.jquery.com/jQuery.ajax/
+ @module rave_ajax
  */
 define(['jquery'], function($){
-    return $.ajax;
+
+    /**
+    Function ajax
+     */
+    var ajax = $.ajax;
+
+    return ajax;
 })
