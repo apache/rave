@@ -18,37 +18,34 @@
  */
 
 /**
- * @module rave_openajax_hub
  * @requires rave_log
  */
-define(['underscore', 'core/rave_log', 'osapi'], function(_, log){
+define(['underscore', 'core/rave_log', 'osapi'], function (_, log) {
+
+    if (_.isUndefined(OpenAjax)) {
+        throw new Error("No implementation of OpenAjax found.  " +
+            "Please ensure that an implementation has been included in the page.");
+    }
+
     /**
-     * Returns an OpenAjax.hub.ManagedHub instance.w
+     * Returns an OpenAjax.hub.ManagedHub instance.
      * @exports rave_openajax_hub
      * @see http://www.openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Managed_Hub_APIs
      */
-    var openAjaxHub;
-
-    if (!openAjaxHub) {
-        if (_.isUndefined(OpenAjax)) {
-            throw new Error("No implementation of OpenAjax found.  " +
-                "Please ensure that an implementation has been included in the page.");
+    var exports = new OpenAjax.hub.ManagedHub({
+        onSubscribe: function (topic, container) {
+            log((container == null ? "Container" : container.getClientID()) + " subscribes to this topic '" + topic + "'");
+            return true;
+        },
+        onUnsubscribe: function (topic, container) {
+            log((container == null ? "Container" : container.getClientID()) + " unsubscribes from this topic '" + topic + "'");
+            return true;
+        },
+        onPublish: function (topic, data, pcont, scont) {
+            log((pcont == null ? "Container" : pcont.getClientID()) + " publishes '" + data + "' to topic '" + topic + "' subscribed by " + (scont == null ? "Container" : scont.getClientID()));
+            return true;
         }
-        openAjaxHub = new OpenAjax.hub.ManagedHub({
-            onSubscribe:function (topic, container) {
-                log((container == null ? "Container" : container.getClientID()) + " subscribes to this topic '" + topic + "'");
-                return true;
-            },
-            onUnsubscribe:function (topic, container) {
-                log((container == null ? "Container" : container.getClientID()) + " unsubscribes from this topic '" + topic + "'");
-                return true;
-            },
-            onPublish:function (topic, data, pcont, scont) {
-                log((pcont == null ? "Container" : pcont.getClientID()) + " publishes '" + data + "' to topic '" + topic + "' subscribed by " + (scont == null ? "Container" : scont.getClientID()));
-                return true;
-            }
-        });
-    }
+    });
 
-    return openAjaxHub;
+    return exports;
 })

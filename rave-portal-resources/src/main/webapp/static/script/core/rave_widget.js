@@ -57,8 +57,8 @@ define(['underscore', 'core/rave_api', 'core/rave_view_manager', 'core/rave_prov
         }
 
         /**
-         * Extends the regionWidget's prototype. Convenience function for adding functionality
-         * to the regionWidget interface
+         * Extends the RegionWidget's prototype. Convenience function for adding functionality
+         * to the RegionWidget interface
          * @param mixin {object}
          */
         Widget.extend = function (mixin) {

@@ -17,6 +17,12 @@
  * under the License.
  */
 
+/**
+ * Implements wookie specific features of the rave_widget interface
+ * @module rave_wookie
+ * @requires rave_openajax_hub
+ * @requires rave_state_manager
+ */
 define(['core/rave_openajax_hub', 'core/rave_state_manager'], function(managedHub, stateManager){
         var exports = {}
 

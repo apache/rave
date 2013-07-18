@@ -151,10 +151,6 @@ define(['underscore', 'core/rave_view_manager', 'core/rave_api', 'core/rave_open
             }
         }
 
-        /**
-         *
-         * @param widget
-         */
         exports.initWidget = function (widget) {
             widget.error = getMetadataErrors(widget.metadata);
             if (!widget.error) {
@@ -162,10 +158,6 @@ define(['underscore', 'core/rave_view_manager', 'core/rave_api', 'core/rave_open
             }
         }
 
-        /*
-         Opts -
-         full spectrum of allowed render options!
-         */
         exports.renderWidget = function (widget, el, opts) {
             if (widget.error) {
                 widget.renderError(el, widget.error.message);

@@ -89,8 +89,8 @@ define(['underscore', 'core/rave_widget'], function (_, regionWidget) {
      * @return {Array.<RegionWidget>}
      * @example
      *
-     * registerWidget({id: '1', regionId: '1'});
-     * registerWidget({id: '2', regionId: '2'});
+     * registerWidget('1', {id: '1', regionId: '1'});
+     * registerWidget('2', {id: '2', regionId: '2'});
      *
      * getWidgets();  //returns both regionWidgets
      * getWidgets({regionId: '2'}); //returns only the second regionWidget

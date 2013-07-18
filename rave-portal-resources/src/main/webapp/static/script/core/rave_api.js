@@ -837,7 +837,13 @@ define(['underscore', 'core/rave_ajax', 'core/rave_state_manager', 'core/rave_ev
         })();
 
         var exports = {
+            /**
+             * Rest api namespace
+             */
             rest: restApi,
+            /**
+             * Rpc namespace
+             */
             rpc: rpcApi
         };
 
