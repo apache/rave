@@ -28,7 +28,6 @@ define(['jquery'], function ($) {
      * By default rave uses jquery as its ajax library. If you want to use another ajax library overlay this file
      * and return a function that conforms with the api of jquery's ajax() function.
      * @exports rave_ajax
-     * @borrows $.ajax as rave_ajax
      * @see {@link http://api.jquery.com/jQuery.ajax/ $.ajax}
      */
     var ajax = $.ajax;

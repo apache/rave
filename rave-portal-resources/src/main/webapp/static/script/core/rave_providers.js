@@ -28,11 +28,19 @@
  * @requires rave_opensocial
  */
 define(['core/rave_wookie', 'core/rave_opensocial'], function(wookie, os){
+    var exports = {};
+
     /**
-     * @exports rave_providers
+     * Rave wookie provider module
+     * @see module:rave_wookie
      */
-    return{
-        w3c:wookie,
-        opensocial:os
-    }
+    exports.w3c = wookie;
+
+    /**
+     * Rave opensocial provider module.
+     * @see module:rave_opensocial
+     */
+    exports.opensocial = os;
+
+    return exports;
 })

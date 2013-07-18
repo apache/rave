@@ -18,31 +18,40 @@
  */
 
 /**
- * @namespace rave
+ * The rave core module.
+ *
+ * @module rave
+ * @mixes module:rave_event_manager
+ * @mixes module:rave_widget_manager
+ * @mixes module:rave_state_manager
+ * @mixes module:rave_view_manager
  */
 define(['underscore', 'core/rave_widget_manager', 'core/rave_api', 'core/rave_widget', 'core/rave_log',
     'core/rave_event_manager', 'core/rave_view_manager', 'core/rave_state_manager'],
     function (_, widgetManager, api, RegionWidget, log, eventManager, viewManager, stateManager) {
 
-        var rave = {};
+        var exports = {};
 
         /**
-         * @
+         * @see module:rave_api
          */
-        rave.api = api;
-        rave.RegionWidget = RegionWidget;
-        rave.log = log;
-
-
-        _.extend(rave, eventManager);
-        _.extend(rave, viewManager);
-        _.extend(rave, widgetManager);
+        exports.api = api;
 
         /**
-         * @mixes rave_state_manager
+         * @see module:rave_widget
          */
-        _.extend(rave, stateManager);
+        exports.RegionWidget = RegionWidget;
 
-        return rave;
+        /**
+         * @see module:rave_log
+         */
+        exports.log = log;
+
+        _.extend(exports, eventManager);
+        _.extend(exports, viewManager);
+        _.extend(exports, widgetManager);
+        _.extend(exports, stateManager);
+
+        return exports;
     }
 )

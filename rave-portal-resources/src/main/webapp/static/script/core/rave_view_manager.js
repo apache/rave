@@ -17,6 +17,10 @@
  * under the License.
  */
 
+/**
+ * Manages rave the registering and rendering of view objects.
+ * @module rave_view_manager
+ */
 define(['underscore'], function(_){
     //hash of registered views by name
     var registeredViews = {}
@@ -25,20 +29,76 @@ define(['underscore'], function(_){
 
     var exports = {};
 
-    /*
-     key: view name
-     view: any object that manages and renders a view. At minimum must have render and destroy methods. render should return 'this'
+    /**
+     *
+     * @typedef View
+     * @desc A view object may be either an object literal with the following properties, or a
+     * constructor for an object that has these properties on its prototype.
+     * @property render {function} When invoked will display the view on the page.
+     * Must return a reference to 'this'.
+     * @property [getWidgetSite] {function} Optional. Required if the view will be used as a container
+     * for regionWidgets. Must return an HTMLElement into which the regionWidget will be rendered.
+     * @property destroy {function} When invoked will hide the view on the page and do any
+     * necessary clean up.
+     * @see module:rave_view_manager
+     * @see module:rave_widget
+     *
+     * @example
+     * view1 = {
+     *      render: function(){
+     *          $('#mydiv').show();
+     *          return this;
+     *      },
+     *      getWidgetSite: function(){
+     *          return $('#myDiv')[0];
+     *      },
+     *      destroy: function(){
+     *          $('#mydiv').hide();
+     *      }
+     * }
+     *
+     * view2 = function(){
+     *     this.div = $('<div>').addClass('popup');
+     * }
+     * view2.prototype.render = function(){
+     *     this.div.show();
+     *     return this;
+     * }
+     * view2.prototype.getWidgetSite = function(){
+     *     return this.div[0];
+     * }
+     * view2.prototype.destroy = function(){
+     *      this.div.remove();
+     * }
+     */
+
+    /**
+     * Registers a view object by its name.
+     * @param key {string} name of view
+     * @param view {View}
      */
     exports.registerView = function (key, view) {
         registeredViews[key.toLowerCase()] = view;
     }
 
+    /**
+     * Gets a registered view object
+     * @param key {string}
+     * @return {View}
+     */
     exports.getView = function (key) {
         return registeredViews[key.toLowerCase()];
     }
 
+    /**
+     * Invokes the render function of a registered view. Any remaining arguments are applied to
+     * the render function. A _uid property is set on the view object, which can also be used to retrieve
+     * view object.
+     * @param key {string}
+     * @param args [...] {*} Any arguments following the key will be applied to the view's render function.
+     * @return {View} A reference to the rendered view object
+     */
     exports.renderView = function (key) {
-        //apply remaining arguments to the view function - you know best!
         var args = _.toArray(arguments).slice(1);
 
         var view = exports.getView(key);
@@ -56,10 +116,20 @@ define(['underscore'], function(_){
         return view;
     }
 
+    /**
+     * Retrieves a rendered view based on it's _uid property.
+     * @param _uid {string}
+     * @return {View}
+     */
     exports.getRenderedView = function (_uid) {
         return renderedViews[_uid];
     }
 
+    /**
+     * Invokes the destroy method on a registered view object
+     * @param view {View|string} Accepts a reference to the view object
+     * or its _uid property, by which the view object is retrieved and destroyed
+     */
     exports.destroyView = function (view) {
         var args = _.toArray(arguments).slice(1);
 
@@ -71,7 +141,10 @@ define(['underscore'], function(_){
         view.destroy(args);
     }
 
-    //reset internal data - used for testing cleanup
+    /**
+     * Resets the view registry. Intended only for testing internal use.
+     * @private
+     */
     exports.reset = function () {
         registeredViews = {};
     }

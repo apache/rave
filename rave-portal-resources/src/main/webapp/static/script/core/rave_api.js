@@ -835,11 +835,11 @@ define(['underscore', 'core/rave_ajax', 'core/rave_state_manager', 'core/rave_ev
             };
 
         })();
-        /**
-         * @exports rave_api
-         */
-        return {
+
+        var exports = {
             rest: restApi,
             rpc: rpcApi
         };
+
+        return exports;
     })

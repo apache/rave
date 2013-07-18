@@ -24,11 +24,14 @@ define([], function(){
 
     /**
      * Safely wraps console.log to prevent errors on browsers without console support.
-     * @exports rave_log
+     * @alias module:rave_log
+     * @param msg {*} message to be passed to console.log
      */
-    return function(msg){
+    var log = function(msg){
         if  (console && console.log) {
             console.log(msg);
         }
     }
+
+    return log;
 })
