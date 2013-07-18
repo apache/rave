@@ -32,7 +32,8 @@
                                     <fmt:message key="page.widget.title"/>
                                 </h2>
                                 <br/>
-                                <span id="widget-0-title"><fmt:message key="page.widget.marketplace.showdetail.notavailable"/></span>
+                                <span id="widget-0-title"><fmt:message
+                                        key="page.widget.marketplace.showdetail.notavailable"/></span>
                             </div>
                         </div>
                     </div>
@@ -40,70 +41,74 @@
             </div>
         </div>
     </c:when>
-<c:otherwise>
-<rave:navbar pageTitle="${widget.title}"/>
-<div id="na_content" class="container">
-    <div class="row detail-widget storeItem">
-        <div class="span3">
-            <div class="detail-widget-preview">
-                <c:if test="${not empty widget.screenshotUrl}">
-                    <div class="detailWidgetScreenshot">
-                        <img src="${widget.screenshotUrl}"
-                             alt="<fmt:message key="page.general.screenshot"/>"
-                             title="<c:out value="${widget.title}"/> <fmt:message key="page.general.screenshot"/>"/>
-                    </div>
-                </c:if>
-                <c:if test="${not empty widget.thumbnailUrl}">
-                    <div >
-                        <img src="<c:out value="${widget.thumbnailUrl}"/>" title="<c:out value="${widget.title}"/>"
-                             alt="<fmt:message key="page.general.thumbnail"/>"/>
-                    </div>
-                </c:if>
+    <c:otherwise>
+        <rave:navbar pageTitle="${widget.title}"/>
+        <div id="na_content" class="container">
+            <div class="row detail-widget storeItem">
+                <div class="span3">
+                    <div class="detail-widget-preview">
+                        <c:if test="${not empty widget.screenshotUrl}">
+                            <div class="detailWidgetScreenshot">
+                                <img src="${widget.screenshotUrl}"
+                                     alt="<fmt:message key="page.general.screenshot"/>"
+                                     title="<c:out value="${widget.title}"/> <fmt:message key="page.general.screenshot"/>"/>
+                            </div>
+                        </c:if>
+                        <c:if test="${not empty widget.thumbnailUrl}">
+                            <div>
+                                <img src="<c:out value="${widget.thumbnailUrl}"/>"
+                                     title="<c:out value="${widget.title}"/>"
+                                     alt="<fmt:message key="page.general.thumbnail"/>"/>
+                            </div>
+                        </c:if>
                         <div id="widgetAdded_${widget.id}" class="detailWidgetAdd">
                             <button class="btn btn-primary btn-large storeItemButton"
-	                                onclick="rave.store.confirmAddFromMarketplace('<c:out value="${widget.url}"/>', '<c:out value="${widget.type}"/>');">
-                                    <fmt:message key="page.widget.marketplace.addToStore"/>
+                                    id="widgetMarketplaceConfirmAddButton"
+                                    data-widget-url="<c:out value='${widget.url}'/>"
+                                    data-widget-type="<c:out value='${widget.type}'/>">
+                                <fmt:message key="page.widget.marketplace.addToStore"/>
                             </button>
                         </div>
-            </div>
-        </div>
-        <div class="span8 detail-widget-main">
-           <div>
-			   <h2>
-					<c:set var="widgetHasTitleUrl" value="${not empty widget.titleUrl}"/>
-					<c:if test="${widgetHasTitleUrl}"><a href="<c:out value="${widget.titleUrl}"/>" rel="external">
-					</c:if>
-					<span id="widget-${widget.id}-title"><c:out value="${widget.title}"/></span>
-					<c:if test="${widgetHasTitleUrl}"></a></c:if>
-			   </h2>
-                <c:if test="${widget.disableRendering}">
-                    <div class="storeWidgetDisabled">
+                    </div>
+                </div>
+                <div class="span8 detail-widget-main">
+                    <div>
+                        <h2>
+                            <c:set var="widgetHasTitleUrl" value="${not empty widget.titleUrl}"/>
+                            <c:if test="${widgetHasTitleUrl}"><a href="<c:out value="${widget.titleUrl}"/>"
+                                                                 rel="external">
+                            </c:if>
+                            <span id="widget-${widget.id}-title"><c:out value="${widget.title}"/></span>
+                            <c:if test="${widgetHasTitleUrl}"></a></c:if>
+                        </h2>
+                        <c:if test="${widget.disableRendering}">
+                            <div class="storeWidgetDisabled">
                         <span class="widget-disabled-icon-store ui-icon ui-icon-alert"
                               title="<fmt:message key="widget.chrome.disabled"/>"></span>
-                        <c:out value="${widget.disableRenderingMessage}" escapeXml="true"/>
-                    </div>
-                </c:if>
-                <c:if test="${not empty widget.author}">
-                    <p class="storeWidgetAuthor">
-                        <fmt:message key="widget.author"/>
-                        <c:out value=" "/><%-- intentional empty String in the c:out --%>
-                        <c:choose>
-                            <c:when test="${not empty widget.authorEmail}">
-                                <a href="mailto:<c:out value="${widget.authorEmail}"/>"><c:out
-                                        value="${widget.author}"/></a>
-                            </c:when>
-                            <c:otherwise><c:out value="${widget.author}"/></c:otherwise>
-                        </c:choose>
-                    </p>
-                </c:if>
+                                <c:out value="${widget.disableRenderingMessage}" escapeXml="true"/>
+                            </div>
+                        </c:if>
+                        <c:if test="${not empty widget.author}">
+                            <p class="storeWidgetAuthor">
+                                <fmt:message key="widget.author"/>
+                                <c:out value=" "/><%-- intentional empty String in the c:out --%>
+                                <c:choose>
+                                    <c:when test="${not empty widget.authorEmail}">
+                                        <a href="mailto:<c:out value="${widget.authorEmail}"/>"><c:out
+                                                value="${widget.author}"/></a>
+                                    </c:when>
+                                    <c:otherwise><c:out value="${widget.author}"/></c:otherwise>
+                                </c:choose>
+                            </p>
+                        </c:if>
 
-                <c:if test="${not empty widget.description}">
-                    <p class="storeWidgetDesc"><c:out value="${widget.description}"/></p>
-                </c:if>
-           </div>
+                        <c:if test="${not empty widget.description}">
+                            <p class="storeWidgetDesc"><c:out value="${widget.description}"/></p>
+                        </c:if>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
-</div>
 
 
         <portal:register-init-script location="${'AFTER_RAVE'}">

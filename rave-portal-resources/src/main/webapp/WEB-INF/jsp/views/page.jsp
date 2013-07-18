@@ -71,31 +71,42 @@
                         <c:otherwise>false</c:otherwise>
                     </c:choose>
                 </c:set>
-                <portal:person id="${userPage.ownerId}" var="userPageOwner" />
+                <portal:person id="${userPage.ownerId}" var="userPageOwner"/>
                 <fmt:message key="sharing.page.tab.icon.tip.from" var="iconShareToolTipFrom">
                     <fmt:param value="${userPageOwner.username}"/>
                 </fmt:message>
                 <fmt:message key="sharing.page.tab.icon.tip.to" var="iconShareToolTipTo"/>
                 <c:choose>
                     <c:when test="${isCurrentPage}">
-                        <li id="tab-${userPage.id}" class="active dropdown" >
+                        <li id="tab-${userPage.id}" class="active dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                 <c:if test="${isSharedToMe}">
-                                    <b id="pageMenuSharedIcon" class="ui-icon ui-icon-person" title="<c:out value="${iconShareToolTipFrom}"/>"></b>
+                                    <b id="pageMenuSharedIcon" class="ui-icon ui-icon-person"
+                                       title="<c:out value="${iconShareToolTipFrom}"/>"></b>
                                 </c:if>
                                 <c:if test="${isSharedByMe}">
-                                    <b id="pageMenuSharedIcon" class="ui-icon ui-icon-folder-open" title="<c:out value="${iconShareToolTipTo}"/>"></b>
+                                    <b id="pageMenuSharedIcon" class="ui-icon ui-icon-folder-open"
+                                       title="<c:out value="${iconShareToolTipTo}"/>"></b>
                                 </c:if>
                                 <c:out value="${userPage.name}"/>
                                 <b class="caret"></b>
                             </a>
-                            <ul class="dropdown-menu" >
-                                <li id="pageMenuEdit" class="<c:if test="${isSharedToMe}">menu-item-disabled</c:if>"><a href="#"><fmt:message key="page.general.editpage"/></a></li>
-                                <li id="pageMenuDelete" class="<c:if test='${hasOnlyOnePage or isSharedToMe}'>menu-item-disabled</c:if>"><a href="#"><fmt:message key="page.general.deletepage"/></a></li>
-                                <li id="pageMenuMove" class="<c:if test='${hasOnlyOnePage}'>menu-item-disabled</c:if>"><a href="#"><fmt:message key="page.general.movepage"/></a></li>
-                                <li id="pageMenuExport" class="hidden"><a href="#"><fmt:message key="page.general.exportpage"/></a></li>
-                                <li id="pageMenuShare" class="<c:if test="${isSharedToMe}">menu-item-disabled</c:if>"><a href="#sharePageDialog" data-toggle="modal"><fmt:message key="page.general.sharepage"/></a></li>
-                                <li id="pageMenuRevokeShare" class="<c:if test="${isSharedToMe == false}">menu-item-disabled</c:if>"><a href="#"><fmt:message key="page.general.removeshare"/></a></li>
+                            <ul class="dropdown-menu">
+                                <li id="pageMenuEdit" class="<c:if test="${isSharedToMe}">menu-item-disabled</c:if>"><a
+                                        href="#"><fmt:message key="page.general.editpage"/></a></li>
+                                <li id="pageMenuDelete"
+                                    class="<c:if test='${hasOnlyOnePage or isSharedToMe}'>menu-item-disabled</c:if>"><a
+                                        href="#"><fmt:message key="page.general.deletepage"/></a></li>
+                                <li id="pageMenuMove" class="<c:if test='${hasOnlyOnePage}'>menu-item-disabled</c:if>">
+                                    <a href="#"><fmt:message key="page.general.movepage"/></a></li>
+                                <li id="pageMenuExport" class="hidden"><a href="#"><fmt:message
+                                        key="page.general.exportpage"/></a></li>
+                                <li id="pageMenuShare" class="<c:if test="${isSharedToMe}">menu-item-disabled</c:if>"><a
+                                        href="#sharePageDialog" data-toggle="modal"><fmt:message
+                                        key="page.general.sharepage"/></a></li>
+                                <li id="pageMenuRevokeShare"
+                                    class="<c:if test="${isSharedToMe == false}">menu-item-disabled</c:if>"><a href="#"><fmt:message
+                                        key="page.general.removeshare"/></a></li>
                             </ul>
                         </li>
                     </c:when>
@@ -103,19 +114,24 @@
                         <li id="tab-${userPage.id}">
                             <c:choose>
                                 <c:when test="${isSharedToMe}">
-                                    <a href="<spring:url value="/app/page/view/${userPage.id}"/>" class="rave-ui-tab-shared-to-me">
-                                        <b id="pageMenuSharedIcon" class="ui-icon ui-icon-person" title="<c:out value="${iconShareToolTipFrom}"/>"></b>
+                                    <a href="<spring:url value="/app/page/view/${userPage.id}"/>"
+                                       class="rave-ui-tab-shared-to-me">
+                                        <b id="pageMenuSharedIcon" class="ui-icon ui-icon-person"
+                                           title="<c:out value="${iconShareToolTipFrom}"/>"></b>
                                         <c:out value="${userPage.name}"/>
                                     </a>
                                 </c:when>
                                 <c:when test="${isSharedByMe}">
-                                    <a href="<spring:url value="/app/page/view/${userPage.id}" />" class="rave-ui-tab-shared-by-me">
-                                        <b id="pageMenuSharedIcon" class="ui-icon ui-icon-folder-open" title="<c:out value="${iconShareToolTipTo}"/>"></b>
+                                    <a href="<spring:url value="/app/page/view/${userPage.id}" />"
+                                       class="rave-ui-tab-shared-by-me">
+                                        <b id="pageMenuSharedIcon" class="ui-icon ui-icon-folder-open"
+                                           title="<c:out value="${iconShareToolTipTo}"/>"></b>
                                         <c:out value="${userPage.name}"/>
                                     </a>
                                 </c:when>
                                 <c:otherwise>
-                                    <a href="<spring:url value="/app/page/view/${userPage.id}" />"><c:out value="${userPage.name}"/></a>
+                                    <a href="<spring:url value="/app/page/view/${userPage.id}" />"><c:out
+                                            value="${userPage.name}"/></a>
                                 </c:otherwise>
                             </c:choose>
                         </li>
@@ -133,57 +149,58 @@
 </div>
 
 <div class="row-fluid">
-<div class=" tab-content">
-    <div id="emptyPageMessageWrapper" class="emptyPageMessageWrapper hidden">
-        <c:if test="${pageUser.pageStatus != 'PENDING'}">
-            <div class="emptyPageMessage">
-                <c:choose>
-                    <c:when test="${pageUser.editor == true}">
-                        <a href="<spring:url value="/app/store?referringPageId=${page.id}" />"><fmt:message key="page.general.empty"/></a>
-                    </c:when>
-                    <c:otherwise>
-                        <fmt:message key="page.general.non.editing.empty"/>
-                    </c:otherwise>
-                </c:choose>
-            </div>
-        </c:if>
-    </div>
-    <c:choose>
-        <c:when test="${pageUser.pageStatus != 'PENDING'}">
-            <div class="regions">
-                    <%-- insert the region layout template --%>
-                <tiles:insertTemplate template="${layout}"/>
-            </div>
-            <div class="clear-float">&nbsp;</div>
-        </c:when>
-        <c:otherwise>
-            <div class="emptyPageMessage">
-                <div>
-                    <div id="confirmSharePageLegend">
-                        <c:choose>
-                            <c:when test="${page.ownerId == principalId}">
-                                <fmt:message key="cloned.page.confirm.message"/>
-                            </c:when>
-                            <c:otherwise>
-                                <portal:person id="${page.ownerId}" var="owner" />
-                                <fmt:message key="sharing.page.confirm.message">
-                                    <fmt:param value="${owner.username}"/>
-                                </fmt:message>
-                            </c:otherwise>
-                        </c:choose>
-                    </div>
+    <div class=" tab-content">
+        <div id="emptyPageMessageWrapper" class="emptyPageMessageWrapper hidden">
+            <c:if test="${pageUser.pageStatus != 'PENDING'}">
+                <div class="emptyPageMessage">
+                    <c:choose>
+                        <c:when test="${pageUser.editor == true}">
+                            <a href="<spring:url value="/app/store?referringPageId=${page.id}" />"><fmt:message
+                                    key="page.general.empty"/></a>
+                        </c:when>
+                        <c:otherwise>
+                            <fmt:message key="page.general.non.editing.empty"/>
+                        </c:otherwise>
+                    </c:choose>
                 </div>
-                <div>&nbsp;</div>
-                <div>
-                    <a href="#" onclick="rave.models.currentPage.acceptShare()"><fmt:message key="_rave_client.common.accept"/></a>
-                </div>
-                <div>
-                    <a href="#" onclick="rave.models.currentPage.declineShare();"><fmt:message key="_rave_client.common.decline"/></a>
+            </c:if>
+        </div>
+        <c:choose>
+            <c:when test="${pageUser.pageStatus != 'PENDING'}">
+                <div class="regions">
+                        <%-- insert the region layout template --%>
+                    <tiles:insertTemplate template="${layout}"/>
                 </div>
                 <div class="clear-float">&nbsp;</div>
-            </div>
-        </c:otherwise>
-    </c:choose>
+            </c:when>
+            <c:otherwise>
+                <div class="emptyPageMessage">
+                    <div>
+                        <div id="confirmSharePageLegend">
+                            <c:choose>
+                                <c:when test="${page.ownerId == principalId}">
+                                    <fmt:message key="cloned.page.confirm.message"/>
+                                </c:when>
+                                <c:otherwise>
+                                    <portal:person id="${page.ownerId}" var="owner"/>
+                                    <fmt:message key="sharing.page.confirm.message">
+                                        <fmt:param value="${owner.username}"/>
+                                    </fmt:message>
+                                </c:otherwise>
+                            </c:choose>
+                        </div>
+                    </div>
+                    <div>&nbsp;</div>
+                    <div>
+                        <a href="#" id="acceptShareLink"><fmt:message key="_rave_client.common.accept"/></a>
+                    </div>
+                    <div>
+                        <a href="#" id="declineShareLink"><fmt:message key="_rave_client.common.decline"/></a>
+                    </div>
+                    <div class="clear-float">&nbsp;</div>
+                </div>
+            </c:otherwise>
+        </c:choose>
     </div>
 </div>
 
@@ -205,18 +222,24 @@
                             <label id="pageFormErrorsTabbed1" class="control-label"></label>
                         </div>
                         <div class="control-group">
-                            <label class="control-label" for="tab_titleTabbed1"><fmt:message key="page.general.addpage.title"/></label>
+                            <label class="control-label" for="tab_titleTabbed1"><fmt:message
+                                    key="page.general.addpage.title"/></label>
+
                             <div class="controls">
-                                <input id="tab_titleTabbed1" name="tab_titleTabbed1" class="input-xlarge focused required" type="text" value="" />
+                                <input id="tab_titleTabbed1" name="tab_titleTabbed1"
+                                       class="input-xlarge focused required" type="text" value=""/>
                             </div>
                         </div>
                         <div class="control-group">
-                            <label class="control-label" for="pageLayoutTabbed"><fmt:message key="page.general.addpage.selectlayout"/></label>
+                            <label class="control-label" for="pageLayoutTabbed"><fmt:message
+                                    key="page.general.addpage.selectlayout"/></label>
+
                             <div class="controls">
                                 <select name="pageLayoutTabbed" id="pageLayoutTabbed">
                                     <c:forEach var="pageLayoutTabbed" items="${pageLayouts}">
                                         <option value="${pageLayoutTabbed.code}" id="${pageLayoutTabbed.code}_id">
-                                            <fmt:message key="page.general.addpage.layout.${pageLayoutTabbed.code}"/></option>
+                                            <fmt:message
+                                                    key="page.general.addpage.layout.${pageLayoutTabbed.code}"/></option>
                                     </c:forEach>
                                 </select>
                             </div>
@@ -227,26 +250,34 @@
         </div>
 
         <div id="tabs-2">
-            <div  class="modal-body">
+            <div class="modal-body">
                 <form method="post" id="pageFormImport" class="form-horizontal" enctype="multipart/form-data">
                     <fieldset>
                         <div class="control-group error">
                             <label id="pageFormErrorsTabbed2" class="control-label"></label>
                         </div>
                         <div class="control-group">
-                            <label class="control-label" for="tab_titleTabbed2"><fmt:message key="page.general.addpage.title"/></label>
+                            <label class="control-label" for="tab_titleTabbed2"><fmt:message
+                                    key="page.general.addpage.title"/></label>
+
                             <div class="controls">
-                                <input id="tab_titleTabbed2" name="pageName" class="input-xlarge focused required" type="text" value="" />
+                                <input id="tab_titleTabbed2" name="pageName" class="input-xlarge focused required"
+                                       type="text" value=""/>
                             </div>
                         </div>
                         <div class="control-group">
                             <label class="control-label" for="omdlFile">Browse for File</label>
+
                             <div class="controls">
-                                <input id="omdlFile" name="omdlFile" class="input-xlarge focused required" type="file" value="" />
+                                <input id="omdlFile" name="omdlFile" class="input-xlarge focused required" type="file"
+                                       value=""/>
                             </div>
                         </div>
                         <div class="control-group">
-                            <div class="controls"><iframe id="file_upload_frame" name="file_upload_frame" src="" style="width:0;height:0;border:0px solid black;"></iframe></div>
+                            <div class="controls">
+                                <iframe id="file_upload_frame" name="file_upload_frame" src=""
+                                        style="width:0;height:0;border:0px solid black;"></iframe>
+                            </div>
                         </div>
                     </fieldset>
                 </form>
@@ -262,6 +293,7 @@
 <div id="pageMenuDialog" class="modal hide" data-backdrop="static">
     <div class="modal-header">
         <a href="#" class="close" data-dismiss="modal">&times;</a>
+
         <h3 id="pageMenuDialogHeader"><fmt:message key="page.general.addnewpage"/></h3>
     </div>
     <div class="modal-body">
@@ -273,12 +305,16 @@
                 </div>
                 <div class="control-group">
                     <label class="control-label" for="tab_title"><fmt:message key="page.general.addpage.title"/></label>
+
                     <div class="controls">
-                        <input id="tab_title" name="tab_title" class="input-xlarge focused required" type="text" value="" />
+                        <input id="tab_title" name="tab_title" class="input-xlarge focused required" type="text"
+                               value=""/>
                     </div>
                 </div>
                 <div class="control-group" id="pageLayoutGroup">
-                    <label class="control-label" for="pageLayout"><fmt:message key="page.general.addpage.selectlayout"/></label>
+                    <label class="control-label" for="pageLayout"><fmt:message
+                            key="page.general.addpage.selectlayout"/></label>
+
                     <div class="controls">
                         <select name="pageLayout" id="pageLayout">
                             <c:forEach var="pageLayout" items="${pageLayouts}">
@@ -300,6 +336,7 @@
 <div id="movePageDialog" class="modal hide" data-backdrop="static">
     <div class="modal-header">
         <a href="#" class="close" data-dismiss="modal">&times;</a>
+
         <h3><fmt:message key="page.general.movethispage"/></h3>
     </div>
     <div class="modal-body">
@@ -327,8 +364,9 @@
         </form>
     </div>
     <div class="modal-footer">
-        <a href="#" class="btn" onclick="$('#movePageDialog').modal('hide');"><fmt:message key="_rave_client.common.cancel"/></a>
-        <a href="#" class="btn btn-primary" onclick="rave.layout.movePage();"><fmt:message key="page.general.movepage"/></a>
+        <a href="#" class="btn" data-dismiss="modal" data-target="#movePageDialog"><fmt:message
+                key="_rave_client.common.cancel"/></a>
+        <a href="#" class="btn btn-primary" id="movePageButton"><fmt:message key="page.general.movepage"/></a>
     </div>
 </div>
 
@@ -336,6 +374,7 @@
 <div id="moveWidgetModal" class="modal hide" data-backdrop="static">
     <div class="modal-header">
         <a href="#" class="close" data-dismiss="modal">&times;</a>
+
         <h3><fmt:message key="widget.menu.movethiswidget"/></h3>
     </div>
     <div class="modal-body">
@@ -360,22 +399,26 @@
         </form>
     </div>
     <div class="modal-footer">
-        <a href="#" class="btn" onclick="$('#moveWidgetModal').modal('hide');"><fmt:message key="_rave_client.common.cancel"/></a>
-        <a href="#" class="btn btn-primary" onclick="rave.layout.moveWidgetToPage($('#moveWidgetModal').data('regionWidgetId'));"><fmt:message key="_rave_client.common.move"/></a>
+        <a href="#" class="btn" data-dismiss="modal" data-target="#moveWidgetModal"><fmt:message
+                key="_rave_client.common.cancel"/></a>
+        <a href="#" class="btn btn-primary" id="moveWidgetToPageButton"><fmt:message
+                key="_rave_client.common.move"/></a>
     </div>
 </div>
 
 <div id="sharePageDialog" class="modal hide" data-backdrop="static">
     <div class="modal-header">
         <a href="#" class="close" data-dismiss="modal">&times;</a>
+
         <h3><fmt:message key="page.general.search.title"/></h3>
     </div>
     <div class="modal-body">
-        <div id="sharePageDialogContent" >
+        <div id="sharePageDialogContent">
             <div id="shareContent">
                 <div id="searchControls"><input id="searchTerm" name="searchTerm" type="text"/>
                     <input id="shareSearchButton" value="<fmt:message key="page.store.search.button"/>" type="submit"/>
-                    <input id="clearSearchButton" value="<fmt:message key="admin.clearsearch"/>" type="submit" class="hide"/>
+                    <input id="clearSearchButton" value="<fmt:message key="admin.clearsearch"/>" type="submit"
+                           class="hide"/>
                 </div>
                 <div id="shareSearchListHeader"></div>
                 <div id="shareSearchListPaging"></div>
