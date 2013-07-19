@@ -19,7 +19,7 @@
 
 package org.apache.rave.portal.web.tag;
 
-import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.rave.model.RegionWidget;
 import org.apache.rave.model.Widget;
 import org.apache.rave.portal.web.renderer.RenderScope;
@@ -86,7 +86,7 @@ public class RegionWidgetTag extends AbstractContextAwareSingletonBeanDependentT
                 ScriptManager scriptManager = getBeanFromContext(ScriptManager.class);
                 String widgetScript = String.format(DISABLED_SCRIPT_BLOCK, regionWidget.getRegion().getId(),
                         regionWidget.getId(),
-                        StringEscapeUtils.escapeJavaScript(widget.getDisableRenderingMessage()),
+                        StringEscapeUtils.escapeEcmaScript(widget.getDisableRenderingMessage()),
                         regionWidget.isCollapsed(),
                         widget.getId());
                 String key = REGISTER_DISABLED_WIDGET_KEY + "-" + widget.getId();

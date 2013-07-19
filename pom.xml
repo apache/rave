@@ -28,7 +28,6 @@
         <relativePath>../rave-master-pom/pom.xml</relativePath>
     </parent>
 
-    <groupId>org.apache.rave</groupId>
     <artifactId>rave-project</artifactId>
     <name>Apache Rave :: rave-project</name>
     <description>Apache Rave Project</description>
@@ -56,6 +55,7 @@
         <log4j.version>1.2.17</log4j.version>
         <junit.version>4.11</junit.version>
         <commons-lang.version>2.6</commons-lang.version>
+        <commons-lang3.version>3.1</commons-lang3.version>
         <commons-validator.version>1.4.0</commons-validator.version>
         <commons-collections.version>3.2.1</commons-collections.version>
         <commons-codec.version>1.8</commons-codec.version>
@@ -457,6 +457,11 @@
                 <groupId>commons-lang</groupId>
                 <artifactId>commons-lang</artifactId>
                 <version>${commons-lang.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${commons-lang3.version}</version>
             </dependency>
 
             <!-- Validation -->

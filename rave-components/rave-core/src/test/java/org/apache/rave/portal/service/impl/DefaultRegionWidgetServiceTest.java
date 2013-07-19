@@ -19,7 +19,7 @@
 
 package org.apache.rave.portal.service.impl;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.rave.model.RegionWidget;
 import org.apache.rave.model.RegionWidgetPreference;
 import org.apache.rave.portal.model.impl.RegionWidgetImpl;
@@ -34,8 +34,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.easymock.EasyMock.*;
-import static org.hamcrest.CoreMatchers.*;
+import static org.easymock.EasyMock.createNiceMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 

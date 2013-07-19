@@ -18,7 +18,7 @@
  */
 package org.apache.rave.portal.web.controller;
 
-import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -83,7 +83,7 @@ public class MessageBundleController {
             // only load the messages that are specifically used by the client code for performance reasons
             // strip off the _rave_client. part of the key
             if (key.startsWith(CLIENT_MESSAGE_IDENTIFIER)) {
-                map.put(key.replaceFirst(CLIENT_MESSAGE_IDENTIFIER, ""), StringEscapeUtils.escapeJavaScript(resourceBundle.getString(key)));
+                map.put(key.replaceFirst(CLIENT_MESSAGE_IDENTIFIER, ""), StringEscapeUtils.escapeEcmaScript(resourceBundle.getString(key)));
             }
         }
         return map;

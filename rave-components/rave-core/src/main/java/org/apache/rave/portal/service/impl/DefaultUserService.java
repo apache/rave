@@ -20,12 +20,17 @@
 package org.apache.rave.portal.service.impl;
 
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.rave.model.PageType;
 import org.apache.rave.model.Person;
 import org.apache.rave.model.User;
 import org.apache.rave.portal.model.util.SearchResult;
-import org.apache.rave.portal.repository.*;
+import org.apache.rave.portal.repository.CategoryRepository;
+import org.apache.rave.portal.repository.PageRepository;
+import org.apache.rave.portal.repository.PageTemplateRepository;
+import org.apache.rave.portal.repository.PersonRepository;
+import org.apache.rave.portal.repository.UserRepository;
+import org.apache.rave.portal.repository.WidgetRepository;
 import org.apache.rave.portal.service.EmailService;
 import org.apache.rave.portal.service.UserService;
 import org.slf4j.Logger;
@@ -46,7 +51,12 @@ import org.springframework.security.openid.OpenIDAuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  *

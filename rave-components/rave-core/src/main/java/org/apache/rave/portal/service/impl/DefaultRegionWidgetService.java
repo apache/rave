@@ -19,7 +19,7 @@
 
 package org.apache.rave.portal.service.impl;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.rave.model.RegionWidget;
 import org.apache.rave.model.RegionWidgetPreference;
 import org.apache.rave.portal.model.util.ModelUtils;
@@ -29,10 +29,10 @@ import org.apache.rave.synchronization.annotation.Synchronized;
 import org.apache.rave.util.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.List;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class DefaultRegionWidgetService implements RegionWidgetService {

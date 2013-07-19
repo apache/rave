@@ -19,7 +19,8 @@
 
 package org.apache.rave.portal.web.api.rest;
 
-import org.apache.commons.lang.Validate;
+import org.apache.commons.lang3.Validate;
+import org.apache.rave.model.RegionWidget;
 import org.apache.rave.model.RegionWidgetPreference;
 import org.apache.rave.portal.service.RegionWidgetService;
 import org.apache.rave.portal.web.model.RegionWidgetPreferenceListWrapper;
@@ -27,10 +28,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
-import org.apache.rave.model.RegionWidget;
 
 /**
  * Handler for all services exposed under the /api/regionWidgets path.

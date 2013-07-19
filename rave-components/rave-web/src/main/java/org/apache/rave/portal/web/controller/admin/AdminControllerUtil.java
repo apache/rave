@@ -19,8 +19,8 @@
 
 package org.apache.rave.portal.web.controller.admin;
 
-import org.apache.commons.lang.RandomStringUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.rave.portal.web.model.NavigationItem;
 import org.apache.rave.portal.web.model.NavigationMenu;
 import org.springframework.ui.Model;

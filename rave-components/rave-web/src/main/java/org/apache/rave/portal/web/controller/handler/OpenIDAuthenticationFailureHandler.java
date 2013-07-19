@@ -19,14 +19,7 @@
 
 package org.apache.rave.portal.web.controller.handler;
 
-import java.io.IOException;
-import java.util.List;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.rave.model.User;
 import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.web.util.ModelKeys;
@@ -41,6 +34,12 @@ import org.springframework.security.openid.OpenIDAuthenticationToken;
 import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.stereotype.Controller;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.List;
 
 /**
  * Controller which processes openid authentication failure. If the user record for particular

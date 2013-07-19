@@ -18,11 +18,10 @@
  */
 package org.apache.rave.rest.impl;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.apache.rave.model.FriendRequest;
-import org.apache.rave.rest.model.Person;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.rest.PeopleResource;
+import org.apache.rave.rest.model.Person;
 
 import javax.ws.rs.core.Response;
 
@@ -32,7 +31,7 @@ public class DefaultPeopleResource implements PeopleResource {
 
     @Override
     public Response getPeople() {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException("Not implemented");
     }
 
     @Override

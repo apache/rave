@@ -19,9 +19,8 @@
 
 package org.apache.rave.portal.repository.impl;
 
-import org.apache.commons.lang.NotImplementedException;
-import org.apache.rave.portal.model.MongoDbPageLayout;
 import org.apache.rave.model.PageLayout;
+import org.apache.rave.portal.model.MongoDbPageLayout;
 import org.apache.rave.portal.repository.PageLayoutRepository;
 import org.apache.rave.util.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,7 +63,7 @@ public class MongoDbPageLayoutRepository implements PageLayoutRepository {
 
     @Override
     public PageLayout get(String id) {
-        throw new NotImplementedException("No use for an id");
+        throw new UnsupportedOperationException("No use for an id");
     }
 
     @Override

@@ -22,7 +22,7 @@ package org.apache.rave.portal.service.impl;
 import net.tanesha.recaptcha.ReCaptcha;
 import net.tanesha.recaptcha.ReCaptchaFactory;
 import net.tanesha.recaptcha.ReCaptchaResponse;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.rave.portal.service.CaptchaService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

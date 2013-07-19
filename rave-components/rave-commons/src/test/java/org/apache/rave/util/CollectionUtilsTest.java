@@ -19,7 +19,7 @@
 
 package org.apache.rave.util;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -29,8 +29,13 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.CoreMatchers.sameInstance;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class CollectionUtilsTest {
     private CollectionUtils.CollectionReconciliationHelper<TestObject, String> reconciliationHelper =

@@ -19,7 +19,7 @@
 
 package org.apache.rave.portal.service.impl;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.rave.model.User;
 import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.service.AuthorityService;

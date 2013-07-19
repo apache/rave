@@ -19,9 +19,15 @@
 
 package org.apache.rave.portal.service.impl;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.rave.exception.DuplicateItemException;
-import org.apache.rave.model.*;
+import org.apache.rave.model.Category;
+import org.apache.rave.model.User;
+import org.apache.rave.model.Widget;
+import org.apache.rave.model.WidgetComment;
+import org.apache.rave.model.WidgetRating;
+import org.apache.rave.model.WidgetStatus;
+import org.apache.rave.model.WidgetTag;
 import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.model.util.WidgetStatistics;
 import org.apache.rave.portal.repository.CategoryRepository;

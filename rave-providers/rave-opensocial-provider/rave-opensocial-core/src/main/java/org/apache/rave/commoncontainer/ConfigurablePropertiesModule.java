@@ -23,7 +23,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.CreationException;
 import com.google.inject.name.Names;
 import com.google.inject.spi.Message;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
