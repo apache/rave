@@ -21,7 +21,8 @@ package org.apache.rave.portal.repository.impl;
 import org.apache.rave.model.PageTemplate;
 import org.apache.rave.model.PageTemplateWidget;
 import org.apache.rave.model.PageType;
-import org.apache.rave.portal.model.*;
+import org.apache.rave.portal.model.JpaPageTemplate;
+import org.apache.rave.portal.model.JpaPageTemplateRegion;
 import org.apache.rave.portal.repository.PageTemplateRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,7 +35,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 
-import static junit.framework.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 @Transactional(readOnly=true)
 @RunWith(SpringJUnit4ClassRunner.class)

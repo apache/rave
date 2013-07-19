@@ -43,8 +43,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.expectLastCall;

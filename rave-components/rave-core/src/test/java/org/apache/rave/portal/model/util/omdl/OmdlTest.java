@@ -18,10 +18,10 @@
  */
 package org.apache.rave.portal.model.util.omdl;
 
-import static junit.framework.Assert.assertEquals;
-
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 public class OmdlTest {
     

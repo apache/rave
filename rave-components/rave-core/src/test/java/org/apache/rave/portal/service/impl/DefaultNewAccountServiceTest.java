@@ -40,8 +40,13 @@ import org.springframework.test.util.ReflectionTestUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-import static junit.framework.Assert.fail;
-import static org.easymock.EasyMock.*;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.easymock.EasyMock.isA;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+import static org.junit.Assert.fail;
 
 /**
  * Test class for {@link org.apache.rave.portal.service.impl.DefaultNewAccountService}

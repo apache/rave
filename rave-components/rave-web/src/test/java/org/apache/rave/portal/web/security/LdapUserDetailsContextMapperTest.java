@@ -20,7 +20,6 @@
 package org.apache.rave.portal.web.security;
 
 import org.apache.rave.model.User;
-import org.apache.rave.model.User;
 import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.service.NewAccountService;
 import org.apache.rave.portal.service.UserService;
@@ -33,8 +32,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collections;
 
-import static junit.framework.Assert.*;
-import static org.easymock.EasyMock.*;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Test class for {@link LdapUserDetailsContextMapper}

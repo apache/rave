@@ -27,8 +27,10 @@ import org.junit.Test;
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
 
-import static junit.framework.Assert.*;
 import static org.easymock.EasyMock.createMock;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Test class for {@link UserProfileValidator}

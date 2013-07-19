@@ -19,8 +19,8 @@
 
 package org.apache.rave.portal.service.impl;
 
-import org.apache.rave.portal.events.RaveEventManager;
 import org.apache.rave.model.PortalPreference;
+import org.apache.rave.portal.events.RaveEventManager;
 import org.apache.rave.portal.model.impl.PortalPreferenceImpl;
 import org.apache.rave.portal.repository.PortalPreferenceRepository;
 import org.apache.rave.portal.service.PortalPreferenceService;
@@ -32,8 +32,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import static junit.framework.Assert.*;
-import static org.easymock.EasyMock.*;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Test class for {@link DefaultPortalPreferenceService}

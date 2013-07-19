@@ -27,11 +27,11 @@ import org.junit.Test;
 import java.util.HashMap;
 import java.util.Map;
 
-import static junit.framework.Assert.assertEquals;
 import static org.apache.rave.portal.web.util.PortalPreferenceKeys.INITIAL_WIDGET_STATUS;
 import static org.apache.rave.portal.web.util.PortalPreferenceKeys.JAVASCRIPT_DEBUG_MODE;
 import static org.apache.rave.portal.web.util.PortalPreferenceKeys.PAGE_SIZE;
 import static org.apache.rave.portal.web.util.PortalPreferenceKeys.TITLE_SUFFIX;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Test for {@link PortalPreferenceForm}

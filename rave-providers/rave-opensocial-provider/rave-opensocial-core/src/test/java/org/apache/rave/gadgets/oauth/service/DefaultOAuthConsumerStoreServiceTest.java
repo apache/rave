@@ -19,19 +19,19 @@
 
 package org.apache.rave.gadgets.oauth.service;
 
+import org.apache.rave.gadgets.oauth.service.impl.DefaultOAuthConsumerStoreService;
 import org.apache.rave.model.OAuthConsumerStore;
 import org.apache.rave.portal.model.impl.OAuthConsumerStoreImpl;
 import org.apache.rave.portal.repository.OAuthConsumerStoreRepository;
-import org.apache.rave.gadgets.oauth.service.impl.DefaultOAuthConsumerStoreService;
 import org.junit.Before;
 import org.junit.Test;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertNull;
 import static org.easymock.EasyMock.createNiceMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 /**
  * Test class for {@link DefaultOAuthConsumerStoreService}
