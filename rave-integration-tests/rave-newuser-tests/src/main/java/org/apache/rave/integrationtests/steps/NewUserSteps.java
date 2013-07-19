@@ -19,13 +19,12 @@
 
 package org.apache.rave.integrationtests.steps;
 
+import org.apache.rave.integrationtests.pages.Portal;
 import org.jbehave.core.annotations.Then;
 import org.jbehave.core.annotations.When;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import org.apache.rave.integrationtests.pages.Portal;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -46,8 +45,8 @@ public class NewUserSteps {
 
     @Then("I see the login page")
     public void isLoginPage() {
-        final WebElement title = portal.findElement(By.tagName("title"));
-        assertThat(title.getText().trim(), equalTo("Login - Rave"));
+        final String title = portal.getTitle();
+        assertThat(title.trim(), equalTo("Login - Rave"));
     }
 
     @When("I follow the new account link")

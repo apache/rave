@@ -294,7 +294,7 @@
                         <timeout>180000</timeout>
                         <zipUrlInstaller>
                             <downloadDir>${settings.localRepository}/org/codehaus/cargo/cargo-container-archives</downloadDir>
-                            <url>http://archive.apache.org/dist/tomcat/tomcat-6/v6.0.35/bin/apache-tomcat-6.0.35.tar.gz</url>
+                            <url>http://archive.apache.org/dist/tomcat/tomcat-6/v${tomcat.version}/bin/apache-tomcat-${tomcat.version}.tar.gz</url>
                         </zipUrlInstaller>
                         <systemProperties>
                             <net.sf.ehcache.skipUpdateCheck>true</net.sf.ehcache.skipUpdateCheck>

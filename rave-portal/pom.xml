@@ -136,7 +136,6 @@
                 <artifactId>cargo-maven2-plugin</artifactId>
                 <version>${cargo.version}</version>
                 <configuration>
-                    <wait>true</wait>
                     <deployables>
                         <deployable>
                             <groupId>org.apache.wookie</groupId>
@@ -208,7 +207,7 @@
                         <zipUrlInstaller>
                             <downloadDir>${settings.localRepository}/org/codehaus/cargo/cargo-container-archives</downloadDir>
                             <url>
-                                http://archive.apache.org/dist/tomcat/tomcat-6/v6.0.35/bin/apache-tomcat-6.0.35.tar.gz
+                                http://archive.apache.org/dist/tomcat/tomcat-6/v${tomcat.version}/bin/apache-tomcat-${tomcat.version}.tar.gz
                             </url>
                         </zipUrlInstaller>
                         <systemProperties>
