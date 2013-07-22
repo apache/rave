@@ -34,7 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Arrays;
 import java.util.List;
 
-@Service
+@Service(value = "regionWidgetService")
 public class DefaultRegionWidgetService implements RegionWidgetService {
     private RegionWidgetRepository regionWidgetRepository;
 
@@ -91,7 +91,7 @@ public class DefaultRegionWidgetService implements RegionWidgetService {
         regionWidget.setCollapsed(collapsed);
         return saveRegionWidget(regionWidget);
     }
-    
+
     private RegionWidget getValidRegionWidget(String regionWidgetId) {
         RegionWidget regionWidget = this.getRegionWidget(regionWidgetId);
         if (regionWidget == null) {

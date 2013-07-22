@@ -41,6 +41,7 @@
             <ref bean="peopleBean"/>
             <ref bean="usersBean"/>
             <ref bean="pagesBean" />
+            <ref bean="pagesForRenderBean" />
             <ref bean="categoriesBean"/>
         </jaxrs:serviceBeans>
     </jaxrs:server>
@@ -59,5 +60,6 @@
     </bean>
 
     <bean id="pagesBean" class="org.apache.rave.rest.impl.DefaultPageResource" autowire="byType" />
+    <bean id="pagesForRenderBean" class="org.apache.rave.rest.impl.DefaultPageForRenderResource" autowire="byType" />
 
 </beans>
