@@ -21,14 +21,17 @@ package org.apache.rave.portal.web.controller;
 
 
 import org.apache.rave.model.Category;
-import org.apache.rave.model.Widget;
 import org.apache.rave.model.Tag;
 import org.apache.rave.model.Widget;
 import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.model.impl.WidgetImpl;
 import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.model.util.WidgetStatistics;
-import org.apache.rave.portal.service.*;
+import org.apache.rave.portal.service.CategoryService;
+import org.apache.rave.portal.service.PortalPreferenceService;
+import org.apache.rave.portal.service.TagService;
+import org.apache.rave.portal.service.UserService;
+import org.apache.rave.portal.service.WidgetService;
 import org.apache.rave.portal.web.util.ModelKeys;
 import org.apache.rave.portal.web.util.PortalPreferenceKeys;
 import org.apache.rave.portal.web.util.ViewNames;
@@ -45,10 +48,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static junit.framework.Assert.assertEquals;
-import static org.easymock.EasyMock.*;
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.sameInstance;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 
 /**

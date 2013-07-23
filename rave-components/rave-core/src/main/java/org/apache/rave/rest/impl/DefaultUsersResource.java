@@ -18,10 +18,9 @@
  */
 package org.apache.rave.rest.impl;
 
-import org.apache.commons.lang.NotImplementedException;
-import org.apache.rave.rest.model.User;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.rest.UsersResource;
+import org.apache.rave.rest.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,7 +33,7 @@ public class DefaultUsersResource implements UsersResource {
 
     @Override
     public Response getUsers() {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException("Not implemented");
     }
 
     @Override

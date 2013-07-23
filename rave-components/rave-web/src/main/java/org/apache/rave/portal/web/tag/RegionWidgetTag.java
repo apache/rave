@@ -19,7 +19,7 @@
 
 package org.apache.rave.portal.web.tag;
 
-import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.rave.model.RegionWidget;
 import org.apache.rave.model.Widget;
 import org.apache.rave.portal.web.renderer.RenderScope;
@@ -42,11 +42,11 @@ public class RegionWidgetTag extends AbstractContextAwareSingletonBeanDependentT
 
     // Script block for disabled gadget
     private static final String DISABLED_SCRIPT_BLOCK =
-            "<script>rave.registerWidget('%1$s', {type: 'DISABLED'," +
+            "<script>require(['rave'], function(rave){rave.registerWidget('%1$s', {type: 'DISABLED'," +
             " regionWidgetId: '%2$s'," +
             " disabledMessage: '%3$s'," +
             " collapsed: %4$s," +
-            " widgetId: '%5$s'});</script>";
+            " widgetId: '%5$s'})});</script>";
 
     public RegionWidgetTag() {
         super(RenderService.class);
@@ -86,7 +86,7 @@ public class RegionWidgetTag extends AbstractContextAwareSingletonBeanDependentT
                 ScriptManager scriptManager = getBeanFromContext(ScriptManager.class);
                 String widgetScript = String.format(DISABLED_SCRIPT_BLOCK, regionWidget.getRegion().getId(),
                         regionWidget.getId(),
-                        StringEscapeUtils.escapeJavaScript(widget.getDisableRenderingMessage()),
+                        StringEscapeUtils.escapeEcmaScript(widget.getDisableRenderingMessage()),
                         regionWidget.isCollapsed(),
                         widget.getId());
                 String key = REGISTER_DISABLED_WIDGET_KEY + "-" + widget.getId();

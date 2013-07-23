@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.apache.rave</groupId>
         <artifactId>rave-project</artifactId>
-        <version>0.23-ANGULAR-SNAPSHOT</version>
+        <version>0.23-SNAPSHOT</version>
     </parent>
 
     <artifactId>rave-portal</artifactId>
@@ -136,7 +136,6 @@
                 <artifactId>cargo-maven2-plugin</artifactId>
                 <version>${cargo.version}</version>
                 <configuration>
-                    <wait>true</wait>
                     <deployables>
                         <deployable>
                             <groupId>org.apache.wookie</groupId>
@@ -208,7 +207,7 @@
                         <zipUrlInstaller>
                             <downloadDir>${settings.localRepository}/org/codehaus/cargo/cargo-container-archives</downloadDir>
                             <url>
-                                http://archive.apache.org/dist/tomcat/tomcat-6/v6.0.35/bin/apache-tomcat-6.0.35.tar.gz
+                                http://archive.apache.org/dist/tomcat/tomcat-6/v${tomcat.version}/bin/apache-tomcat-${tomcat.version}.tar.gz
                             </url>
                         </zipUrlInstaller>
                         <systemProperties>
@@ -347,7 +346,7 @@
                             <directory>${project.basedir}/src/test/resources_mongo</directory>
                         </testResource>
                     </testResources>
-                    <plugins>
+                    <plugins><!--
                         <plugin>
                             <groupId>com.github.joelittlejohn.embedmongo</groupId>
                             <artifactId>embedmongo-maven-plugin</artifactId>
@@ -368,7 +367,7 @@
                                     </goals>
                                 </execution>
                             </executions>
-                        </plugin>
+                        </plugin>-->
                     </plugins>
                 </build>
             </profile>

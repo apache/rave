@@ -22,8 +22,8 @@ package org.apache.rave.portal.web.controller.admin;
 import org.junit.Test;
 import org.springframework.web.bind.support.SessionStatus;
 
-import static junit.framework.Assert.assertTrue;
 import static org.easymock.EasyMock.createMock;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Test for {@link AdminControllerUtil}

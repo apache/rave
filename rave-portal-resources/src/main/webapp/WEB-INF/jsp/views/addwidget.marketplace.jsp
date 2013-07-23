@@ -83,22 +83,22 @@
                     </div>
 
                 </c:if>
-                <ul class="storeItems">
+                <ul class="storeItems" id="marketplaceWidgetList">
 
                     <c:forEach var="widget" items="${widgets.resultSet}">
                         <li class="storeItem">
-                        <div class="storeItemLeft">
-                            <c:if test="${not empty widget.thumbnailUrl}">
-                                <img class="storeWidgetThumbnail" src="${widget.thumbnailUrl}"
-                                     title="<c:out value="${widget.title}"/>" alt=""
-                                     width="120" height="60"/>
-                            </c:if>
-                            <div id="widgetAdded_${widget.id}" class="storeButton">
-                                <button class="btn btn-small btn-primary" id="addWidget_${widget.id}"
-	                                onclick="rave.store.confirmAddFromMarketplace('<c:out value="${widget.url}"/>', '<c:out value="${widget.type}"/>');">
-                                    <fmt:message key="page.widget.marketplace.addToStore"/>
-                                </button>
-                            </div>
+                            <div class="storeItemLeft">
+                                <c:if test="${not empty widget.thumbnailUrl}">
+                                    <img class="storeWidgetThumbnail" src="${widget.thumbnailUrl}"
+                                         title="<c:out value="${widget.title}"/>" alt=""
+                                         width="120" height="60"/>
+                                </c:if>
+                                <div id="widgetAdded_${widget.id}" class="storeButton">
+                                    <button class="btn btn-small btn-primary widgetAddButton" id="addWidget_${widget.id}"
+                                            data-widget-url="<c:out value="${widget.url}"/>" data-widget-type="<c:out value="${widget.type}"/>">
+                                        <fmt:message key="page.widget.marketplace.addToStore"/>
+                                    </button>
+                                </div>
 
                         </div>
 
@@ -243,8 +243,17 @@
 
 <portal:register-init-script location="${'AFTER_RAVE'}">
     <script>
-        $(function () {
-            rave.store.init('<c:out value="${referringPageId}"/>');
-        });
+        require(["portal/rave_store", "rave", "jquery"], function(raveStore, rave, $){
+            rave.registerOnInitHandler(function(){
+                $("#marketplaceWidgetList").on("click", "button.widgetAddButton", function(event){
+                    raveStore.confirmAddFromMarketplace($(this).data('widget-url'), $(this).data('widget-type'));
+                });
+            })
+
+            $(function () {
+                rave.init();
+                raveStore.init('<c:out value="${referringPageId}"/>');
+            });
+        })
     </script>
 </portal:register-init-script>

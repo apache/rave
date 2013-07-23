@@ -21,10 +21,10 @@ package org.apache.rave.portal.model.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.rave.model.Widget;
 import org.apache.rave.portal.model.impl.ExternalWidgetImpl;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.codehaus.jackson.annotate.JsonProperty;
 
 /**
  * Wrapper for a set of search results from an external marketplace,

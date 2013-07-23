@@ -105,28 +105,30 @@ public class OpenSocialWidgetRendererTest {
         rw.setRegion(region);
         rw.setHideChrome(VALID_HIDE_CHROME);
         rw.setLocked(VALID_LOCKED);
-        rw.setPreferences(Arrays.asList((RegionWidgetPreference)new RegionWidgetPreferenceImpl( "1", "color", "blue"),
-                                        new RegionWidgetPreferenceImpl("1", "speed", "fast"),
-                                        new RegionWidgetPreferenceImpl( "1", null, null)));
+        rw.setPreferences(Arrays.asList((RegionWidgetPreference) new RegionWidgetPreferenceImpl("1", "color", "blue"),
+                new RegionWidgetPreferenceImpl("1", "speed", "fast"),
+                new RegionWidgetPreferenceImpl("1", null, null)));
 
         final String markup =
-            "<script>rave.registerWidget('" + REGION_ID + "', {type: 'OpenSocial'," +
-            " regionWidgetId: '" + REGION_WIDGET_ID + "'," +
-            " widgetUrl: '" + VALID_GADGET_URL +"', " +
-            " securityToken: '" + VALID_SECURITY_TOKEN + "', " +
-            " metadata: " + VALID_METADATA + "," +
-            " userPrefs: {\"speed\":\"fast\",\"color\":\"blue\"}," +
-            " collapsed: " + VALID_COLLAPSED + ", " +
-            " widgetId: '" + WIDGET_ID + "'," +
-            " locked: " + VALID_LOCKED + "," +
-            " hideChrome: " + VALID_HIDE_CHROME + "," +
-            " subPage: {id: '" + VALID_SUBPAGE_ID + "', name: '" + VALID_SUBPAGE_NAME + "', isDefault: " + VALID_IS_DEFAULT_SUBPAGE + "}" +
-            "});</script>";
+                "<script>require(['rave'], function(rave){" +
+                        "rave.registerWidget('" + REGION_ID + "', {type: 'OpenSocial'," +
+                        " regionWidgetId: '" + REGION_WIDGET_ID + "'," +
+                        " widgetUrl: '" + VALID_GADGET_URL + "', " +
+                        " securityToken: '" + VALID_SECURITY_TOKEN + "', " +
+                        " metadata: " + VALID_METADATA + "," +
+                        " userPrefs: {\"speed\":\"fast\",\"color\":\"blue\"}," +
+                        " collapsed: " + VALID_COLLAPSED + ", " +
+                        " widgetId: '" + WIDGET_ID + "'," +
+                        " locked: " + VALID_LOCKED + "," +
+                        " hideChrome: " + VALID_HIDE_CHROME + "," +
+                        " subPage: {id: '" + VALID_SUBPAGE_ID + "', name: '" + VALID_SUBPAGE_NAME + "', isDefault: " + VALID_IS_DEFAULT_SUBPAGE + "}" +
+                        "})" +
+                        "});</script>";
 
         expect(securityTokenService.getEncryptedSecurityToken(rw, w)).andReturn(VALID_SECURITY_TOKEN);
         replay(securityTokenService);
 
-        String key = OpenSocialWidgetWrapperRenderer.REGISTER_WIDGET_KEY+"-"+rw.getId();
+        String key = OpenSocialWidgetWrapperRenderer.REGISTER_WIDGET_KEY + "-" + rw.getId();
         scriptManager.registerScriptBlock(key, markup, ScriptLocation.AFTER_RAVE, RenderScope.CURRENT_REQUEST, renderContext);
         expectLastCall();
         replay(scriptManager);
@@ -147,7 +149,7 @@ public class OpenSocialWidgetRendererTest {
 
         Page page = new PageImpl();
         page.setPageType(PageType.USER);
-        
+
         WidgetImpl w = new WidgetImpl();
         w.setType(Constants.WIDGET_TYPE);
 
@@ -158,18 +160,20 @@ public class OpenSocialWidgetRendererTest {
         rw.setRegion(region);
 
         final String markup =
-            "<script>rave.registerWidget('8675309', {type: 'OpenSocial'," +
-            " regionWidgetId: 'null'," +
-            " widgetUrl: 'null', " +
-            " securityToken: 'null', " +
-            " metadata: null," +
-            " userPrefs: {}," +
-            " collapsed: false, " +
-            " widgetId: 'null'," +
-            " locked: false," +
-            " hideChrome: false," +
-            " subPage: {id: null, name: '', isDefault: false}" +
-            "});</script>";
+                "<script>require(['rave'], function(rave){" +
+                        "rave.registerWidget('8675309', {type: 'OpenSocial'," +
+                        " regionWidgetId: 'null'," +
+                        " widgetUrl: 'null', " +
+                        " securityToken: 'null', " +
+                        " metadata: null," +
+                        " userPrefs: {}," +
+                        " collapsed: false, " +
+                        " widgetId: 'null'," +
+                        " locked: false," +
+                        " hideChrome: false," +
+                        " subPage: {id: null, name: '', isDefault: false}" +
+                        "})" +
+                        "});</script>";
 
         scriptManager.registerScriptBlock(OpenSocialWidgetWrapperRenderer.REGISTER_WIDGET_KEY, markup, ScriptLocation.AFTER_RAVE, RenderScope.CURRENT_REQUEST, null);
         expectLastCall();

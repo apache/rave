@@ -19,12 +19,11 @@
 
 package org.apache.rave.util;
 
-
-import org.codehaus.jackson.map.AnnotationIntrospector;
-import org.codehaus.jackson.map.DeserializationConfig;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.introspect.JacksonAnnotationIntrospector;
-import org.codehaus.jackson.mrbean.MrBeanModule;
+import com.fasterxml.jackson.databind.AnnotationIntrospector;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
+import com.fasterxml.jackson.module.mrbean.MrBeanModule;
 import org.springframework.core.io.Resource;
 
 import java.io.IOException;
@@ -61,7 +60,7 @@ public class JsonUtils {
         ObjectMapper jacksonMapper = new ObjectMapper();
         AnnotationIntrospector primary = new JacksonAnnotationIntrospector();
         jacksonMapper.setAnnotationIntrospector(primary);
-        jacksonMapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        jacksonMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         jacksonMapper.registerModule(new MrBeanModule());
         return jacksonMapper;
     }

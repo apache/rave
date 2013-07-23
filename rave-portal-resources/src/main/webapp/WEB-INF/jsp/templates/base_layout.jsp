@@ -44,7 +44,7 @@ under the License.
 <tiles:insertAttribute name="footer"/>
 <%-- render any script that needs to execute pre-src includes --%>
 <portal:render-init-script location="${'BEFORE_RAVE'}" />
-<%-- render the javascript src includes at the bottom of the page for performance --%>
+<%-- render rave_js tag --%>
 <rave:rave_js/>
 <%-- render any script that needs to execute post-src includes --%>
 <portal:render-init-script location="${'AFTER_RAVE'}" />

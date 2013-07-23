@@ -45,21 +45,7 @@
 		                		<fmt:message key="admin.widgetdetail.editdata"/>
 		                		<div class="control-group pull-right">
 		                    	<div class="controls">
-		                        <a href="#" class="btn btn-warning storeItemButton" id="fetchMetadataButton"
-		                           onclick="rave.api.rpc.getWidgetMetadata({
-		                                url: $('#url').get(0).value,
-		                                providerType: $('input:radio[name=type]:checked').val(),
-		                                successCallback: function(result) {
-		                                    var widget = result.result;
-		                                    $('#title').val(widget.title);
-		                                    $('#description').val(widget.description);
-		                                    $('#thumbnailUrl').val(widget.thumbnailUrl);
-		                                    $('#screenshotUrl').val(widget.screenshotUrl);
-		                                    $('#titleUrl').val(widget.titleUrl);
-		                                    $('#author').val(widget.author);
-		                                    $('#authorEmail').val(widget.authorEmail);
-		                                }
-		                            });">
+		                        <a href="#" class="btn btn-warning storeItemButton" id="fetchMetadataButton">
 		                            <fmt:message key="page.updateWidgetMetadata.button"/> </a>
 		                        </div>
 		                    </div>
@@ -278,8 +264,35 @@
 </div>
 <portal:register-init-script location="${'AFTER_RAVE'}">
     <script>
-        $(function() {
-            rave.admin.initAdminUi();
-        });
+        require(["rave", "ui", "portal/rave_admin", "jquery"], function(rave, ui, raveAdmin, $){
+            rave.registerOnInitHandler(function(){
+                $('#fetchMetadataButton').click(function(){
+                    rave.api.rpc.getWidgetMetadata({
+                        url: $('#url').get(0).value,
+                        providerType: $('input:radio[name=type]:checked').val(),
+                        successCallback: function(result) {
+                            var widget = result.result;
+                            $('#title').val(widget.title);
+                            $('#description').val(widget.description);
+                            $('#thumbnailUrl').val(widget.thumbnailUrl);
+                            $('#screenshotUrl').val(widget.screenshotUrl);
+                            $('#titleUrl').val(widget.titleUrl);
+                            $('#author').val(widget.author);
+                            $('#authorEmail').val(widget.authorEmail);
+                        },
+                        errorCallback: function(){
+                            alert(ui.getClientMessage("api.widget_metadata.parse_error"));
+                        },
+                        alertInvalidParams: function(){
+                            alert(ui.getClientMessage("api.widget_metadata.invalid_params"));
+                        }
+                    })
+                })
+            })
+
+            $(function() {
+                raveAdmin.init();
+            });
+        })
     </script>
 </portal:register-init-script>

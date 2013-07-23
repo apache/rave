@@ -20,9 +20,19 @@
 package org.apache.rave.portal.repository.impl;
 
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.rave.model.*;
-import org.apache.rave.portal.model.*;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.rave.model.Tag;
+import org.apache.rave.model.User;
+import org.apache.rave.model.Widget;
+import org.apache.rave.model.WidgetComment;
+import org.apache.rave.model.WidgetRating;
+import org.apache.rave.model.WidgetStatus;
+import org.apache.rave.model.WidgetTag;
+import org.apache.rave.portal.model.JpaRegionWidget;
+import org.apache.rave.portal.model.JpaWidget;
+import org.apache.rave.portal.model.JpaWidgetComment;
+import org.apache.rave.portal.model.JpaWidgetRating;
+import org.apache.rave.portal.model.JpaWidgetTag;
 import org.apache.rave.portal.model.conversion.JpaWidgetCommentConverter;
 import org.apache.rave.portal.model.conversion.JpaWidgetConverter;
 import org.apache.rave.portal.model.conversion.JpaWidgetRatingConverter;
@@ -36,14 +46,25 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.*;
-import javax.persistence.criteria.*;
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Order;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.apache.rave.persistence.jpa.util.JpaUtil.*;
+import static org.apache.rave.persistence.jpa.util.JpaUtil.getPagedResultList;
+import static org.apache.rave.persistence.jpa.util.JpaUtil.getSingleResult;
+import static org.apache.rave.persistence.jpa.util.JpaUtil.saveOrUpdate;
 
 @Repository
 public class JpaWidgetRepository implements WidgetRepository {

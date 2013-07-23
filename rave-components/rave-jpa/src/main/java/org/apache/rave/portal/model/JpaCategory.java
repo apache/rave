@@ -15,11 +15,11 @@
  */
 package org.apache.rave.portal.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.rave.model.Category;
 import org.apache.rave.model.User;
 import org.apache.rave.model.Widget;
 import org.apache.rave.portal.model.conversion.ConvertingListProxyFactory;
-import org.codehaus.jackson.annotate.JsonIgnore;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;

@@ -85,13 +85,13 @@ public class MessageBundleControllerTest {
 
     private String buildExpectedJavaScript(String test1, String test2, String test3) {
         StringBuilder sb = new StringBuilder();
-        sb.append("rave.addClientMessage(\"test1\",\"");
+        sb.append("define([], function(){ return {\"test1\":\"");
         sb.append(test1);
-        sb.append("\");rave.addClientMessage(\"test2\",\"");
+        sb.append("\",\"test2\":\"");
         sb.append(test2);
-        sb.append("\");rave.addClientMessage(\"test3\",\"");
+        sb.append("\",\"test3\":\"");
         sb.append(test3);
-        sb.append("\");");
+        sb.append("\"}; })");
         return sb.toString();
     }
 }

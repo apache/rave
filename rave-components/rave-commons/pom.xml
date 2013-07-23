@@ -24,7 +24,7 @@
     <parent>
         <artifactId>rave-components</artifactId>
         <groupId>org.apache.rave</groupId>
-        <version>0.23-ANGULAR-SNAPSHOT</version>
+        <version>0.23-SNAPSHOT</version>
     </parent>
 
     <artifactId>rave-commons</artifactId>
@@ -70,22 +70,17 @@
             <artifactId>spring-security-web</artifactId>
         </dependency>
         <dependency>
-            <groupId>commons-lang</groupId>
-            <artifactId>commons-lang</artifactId>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
         </dependency>
         <dependency>
             <groupId>commons-collections</groupId>
             <artifactId>commons-collections</artifactId>
         </dependency>
+
         <dependency>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>jackson-mrbean</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>jackson-mapper-asl</artifactId>
-            <scope>provided</scope>
+            <groupId>com.fasterxml.jackson.module</groupId>
+            <artifactId>jackson-module-mrbean</artifactId>
         </dependency>
 
         <!-- Test -->

@@ -20,49 +20,49 @@
 <%@ include file="/WEB-INF/jsp/includes/taglibs.jsp" %>
 <portal:render-script location="${'BEFORE_LIB'}"/>
 <rave:third_party_js/>
-<portal:render-script location="${'AFTER_LIB'}"/>
-<%-- local rave scripts --%>
-<portal:render-script location="${'BEFORE_RAVE'}"/>
 <%-- get the javaScriptDebugMode portal preference value --%>
-<c:set var="jsDebugMode"><portal:render-js-debug-mode /></c:set>
-<%-- check to see if the javaScriptDebugMode is on, if so render the individual JS files, otherwise render the minified single file --%>
+<c:set var="jsDebugMode"><portal:render-js-debug-mode/></c:set>
+<portal:render-script location="${'AFTER_LIB'}"/>
 <c:choose>
+    <%-- check to see if the javaScriptDebugMode is on, if so render the individual JS files, otherwise render the minified single file --%>
     <c:when test="${jsDebugMode == '1'}">
-        <script src="<spring:url value="/static/script/core/rave_core.js"/>"></script>
-        <script src="<spring:url value="/static/script/core/rave_ajax.js"/>"></script>
-        <script src="<spring:url value="/static/script/core/rave_api.js"/>"></script>
-        <script src="<spring:url value="/static/script/core/rave_widget.js"/>"></script>
-        <script src="<spring:url value="/static/script/core/rave_opensocial.js"/>"></script>
-        <script src="<spring:url value="/static/script/core/rave_wookie.js"/>"></script>
-        <script src="<spring:url value="/static/script/portal/rave_portal.js"/>"></script>
-        <script src="<spring:url value="/static/script/portal/rave_backbone.js"/>"></script>
-        <script src="<spring:url value="/static/script/portal/rave_models.js"/>"></script>
-        <script src="<spring:url value="/static/script/portal/rave_layout.js"/>"></script>
-        <script src="<spring:url value="/static/script/portal/rave_ui.js"/>"></script>
-        <script src="<spring:url value="/static/script/portal/rave_forms.js"/>"></script>
-        <script src="<spring:url value="/static/script/portal/rave_person_profile.js"/>"></script>
-        <script src="<spring:url value="/static/script/portal/rave_store.js"/>"></script>
-        <script src="<spring:url value="/static/script/portal/rave_admin.js"/>"></script>
+        <script src="<spring:url value="/static/script/requireConfig.js"/>"></script>
+        <script>
+            requirejs.config({baseUrl:"<c:url value="/static/script"/>"});
+        </script>
     </c:when>
     <c:otherwise>
-        <script src="<spring:url value="/static/script/rave.core.min.js"/>"></script>
-        <script src="<spring:url value="/static/script/rave.portal.min.js"/>"></script>
+        <script src="<spring:url value="/static/script-built/requireConfig.js"/>"></script>
+        <script>
+            requirejs.config({baseUrl:"<c:url value="/static/script-built"/>"});
+        </script>
     </c:otherwise>
 </c:choose>
-<script src="<spring:url value="/app/messagebundle/rave_client_messages.js"/>"></script>
+
+<%-- local rave scripts --%>
+<portal:render-script location="${'BEFORE_RAVE'}"/>
+
+
+<script>
+    require(["rave", "jquery", "bootstrap"], function (rave, $) {
+        <%-- set the web application context --%>
+        rave.setContext("<spring:url value="/app/" />");
+        <%-- set the default widget height so js code has access to it --%>
+        rave.setDefaultHeight(<c:out value="${portalSettings['defaultWidgetHeight'].value}"/>);
+        <%-- set the current page viewer --%>
+        <sec:authorize access="isAuthenticated()">
+        <sec:authentication property="principal.username" scope="request" var="username"/>
+        <sec:authentication property="principal.id" scope="request" var="id"/>
+        rave.setViewer({username: "${username}", id: "${id}"});
+        </sec:authorize>
+
+        $(function(){
+            rave.init();
+        });
+
+        rave.setDebugMode(<c:out value="${jsDebugMode}"/>);
+    });
+</script>
 <portal:render-script location="${'AFTER_RAVE'}"/>
 <%-- common javascript to execute on all pages --%>
-<script>
-    <%-- set the web application context --%>
-    rave.setContext("<spring:url value="/app/" />");
-    <%-- set the javascript debug mode so js code has access to it --%>
-    rave.setJavaScriptDebugMode(<c:out value="${jsDebugMode}"/>);
-    <%-- set the default widget height so js code has access to it --%>
-    rave.RegionWidget.defaultHeight = <c:out value="${portalSettings['defaultWidgetHeight'].value}"/>;
-    <%-- set the current page viewer --%>
-    <sec:authorize access="isAuthenticated()">
-    <sec:authentication property="principal.username" scope="request" var="username"/>
-    <sec:authentication property="principal.id" scope="request" var="id"/>
-    rave.setPageViewer({username:"${username}", id:"${id}"});
-    </sec:authorize>
-</script>
+

@@ -38,7 +38,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
@@ -161,7 +161,7 @@ public class DefaultWidgetMarketplaceService implements WidgetMarketplaceService
         RestTemplate restTemplate = new RestTemplate();
         List<HttpMessageConverter<?>> mc = restTemplate.getMessageConverters();
         // Add JSON message handler
-        MappingJacksonHttpMessageConverter json = new MappingJacksonHttpMessageConverter();
+        MappingJackson2HttpMessageConverter json = new MappingJackson2HttpMessageConverter();
         List<MediaType> supportedMediaTypes = new ArrayList<MediaType>();
         supportedMediaTypes.add(new MediaType("application","json", Charset.forName("UTF-8")));
         // Add default media type in case marketplace uses incorrect MIME type, otherwise

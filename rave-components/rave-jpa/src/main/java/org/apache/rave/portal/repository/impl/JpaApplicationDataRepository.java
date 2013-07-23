@@ -18,7 +18,7 @@
  */
 package org.apache.rave.portal.repository.impl;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.rave.exception.DataSerializationException;
 import org.apache.rave.model.ApplicationData;
 import org.apache.rave.portal.model.JpaApplicationData;
@@ -31,8 +31,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.*;
-import java.util.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EntityManager;
+import javax.persistence.Lob;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import static org.apache.rave.persistence.jpa.util.JpaUtil.getSingleResult;
 import static org.apache.rave.persistence.jpa.util.JpaUtil.saveOrUpdate;

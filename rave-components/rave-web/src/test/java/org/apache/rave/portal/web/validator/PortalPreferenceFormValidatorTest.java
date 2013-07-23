@@ -30,9 +30,12 @@ import org.springframework.validation.Errors;
 import java.util.HashMap;
 import java.util.Map;
 
-import static junit.framework.Assert.*;
 import static org.apache.rave.portal.web.util.PortalPreferenceKeys.PAGE_SIZE;
 import static org.apache.rave.portal.web.util.PortalPreferenceKeys.TITLE_SUFFIX;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
 Test for {@link {PortalPreferenceFormValidator}

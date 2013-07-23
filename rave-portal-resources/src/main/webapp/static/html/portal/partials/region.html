@@ -1,8 +1,0 @@
-<!-- TODO: page.regions.indexOf - view logic and embedded js. That sucks. -->
-<div ng-class="{regionDragging:dragging, regionNonDragging:!dragging}"
-     class="region {{page.pageLayoutCode}}_{{page.regions.indexOf(region)+1}}"
-     ui-sortable="sortingOpts" ng-model="region.regionWidgets">
-    <div ng-repeat="regionWidget in region.regionWidgets">
-        <div rave-view-surface="regionWidget"></div>
-    </div>
-</div>

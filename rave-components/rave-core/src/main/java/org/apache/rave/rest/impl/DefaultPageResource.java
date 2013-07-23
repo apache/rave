@@ -25,25 +25,27 @@ import org.apache.rave.portal.service.PageService;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.portal.web.renderer.RenderService;
 import org.apache.rave.rest.PagesResource;
-import org.apache.rave.rest.model.Page;
-import org.apache.rave.rest.model.PageList;
-import org.apache.rave.rest.model.RegionWidget;
+import org.apache.rave.rest.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.ws.rs.core.Response;
-import java.io.File;
-import java.util.Arrays;
-import java.util.List;
 
 public class DefaultPageResource implements PagesResource {
 
-    public static final String SELF = "@self";
     private Logger logger = LoggerFactory.getLogger(getClass());
     private PageService pageService;
-    private RenderService renderService;
-    private UserService userService;
+
+    @Override
+    public Response getPages() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public Response createPage(Page page) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
 
     @Override
     public Response deletePage(String id) {
@@ -56,13 +58,22 @@ public class DefaultPageResource implements PagesResource {
     public Response getPage(String id) {
         logger.debug("Retrieving page for export: " + id);
         org.apache.rave.model.Page fromDb = pageService.getPage(id);
-        return fromDb == null ? Response.status(Response.Status.NOT_FOUND).build() : Response.ok(new Page(fromDb)).build();
+        if(fromDb == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        else {
+            Page responsePage =  new Page(fromDb);
+
+            return Response.ok(new JsonResponseWrapper(responsePage)).build();
+        }
     }
 
     @Override
     public Response updatePage(String id, Page page) {
         org.apache.rave.model.Page fromDb = pageService.updatePage(id, page.getName(), page.getPageLayoutCode());
-        return Response.ok(new Page(fromDb)).build();
+        Page responsePage =  new Page(fromDb);
+
+        return Response.ok(new JsonResponseWrapper(responsePage)).build();
     }
 
     @Override
@@ -71,116 +82,57 @@ public class DefaultPageResource implements PagesResource {
     }
 
     @Override
-    public Response getPagesForRender(String context, String identifier) {
-        List<org.apache.rave.model.Page> pages;
-        if("portal".equals(context)) {
-            String userId = SELF.equals(identifier) ? userService.getAuthenticatedUser().getId() : identifier;
-            pages = pageService.getAllUserPages(userId);
-        } else if("profile".equals(context)) {
-            pages = Arrays.asList(pageService.getPersonProfilePage(identifier));
-        } else {
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
-        List<Page> converted = Lists.newArrayList();
-        for(org.apache.rave.model.Page page : pages) {
-            Page convert = new Page(page);
-            converted.add(renderService.prepareForRender(convert));
-        }
-        return Response.ok(new PageList(converted)).build();
-    }
-
-    @Override
-    public Response getPageForRender(String context, String identifier, String id) {
-        return getPage(id);
-    }
-
-    @Override
-    public Response clonePage(String context, String identifier, String id) {
-        return null;
-    }
-
-    @Override
-    public Response importOmdlPage(String context, String identifier, File page) {
-        return null;
-    }
-
-    @Override
-    public Response createPage(String context, String identifier, Page page) {
+    public Response getPageRegions(String pageId) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
-    public Response deletePageInContext(String id) {
+    public Response createPageRegion(String pageId, Region region) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
-    public Response updatePageInContext(String id, Page page) {
+    public Response getPageRegion(String id, String regionId) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
-    public Response movePage(String id, String moveAfterPageId) {
+    public Response updatePageRegion(String pageId, String regionId, Region region) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
-    public Response addWidgetToPage(String id, RegionWidget widget) {
+    public Response deletePageRegion(String pageId, String regionId) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
-    public Response removeWidgetFromPage(String id, String regionWidgetId) {
+    public Response createPageRegionRegionWidget(String pageId, String regionId, RegionWidget regionWidget) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
-    public Response addWidgetToRegion(String id, String regionId, RegionWidget widget) {
+    public Response getPageRegionRegionWidgets(String id, String regionId) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
-    public Response moveWidgetOnPage(String id, String toRegionId, String regionWidgetId, int position) {
+    public Response getPageRegionRegionWidget(String id, String regionId, String regionWidgetId) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
-    public Response moveWidgetToPage(String targetPageId, String regionWidgetId) {
+    public Response updatePageRegionRegionWidget(String pageId, String regionId, String regionWidgetId, RegionWidget regionWidget) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
-    public Response addMemberToPage(String id) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public Response removeMemberFromPage(String id, String userId) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public Response updateSharedPageStatus(String id, String userId, String status) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public Response updatePageEditingStatus(String id, String userId, boolean editor) {
+    public Response deletePageRegionRegionWidget(String pageId, String regionId, String regionWidgetId) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Inject
     public void setPageService(PageService pageService) {
         this.pageService = pageService;
-    }
-
-    @Inject
-    public void setRenderService(RenderService renderService) {
-        this.renderService = renderService;
-    }
-
-    @Inject
-    public void setUserService(UserService userService) {
-        this.userService = userService;
     }
 }

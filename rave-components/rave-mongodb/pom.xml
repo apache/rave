@@ -22,7 +22,7 @@
     <parent>
         <artifactId>rave-components</artifactId>
         <groupId>org.apache.rave</groupId>
-        <version>0.23-ANGULAR-SNAPSHOT</version>
+        <version>0.23-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -80,16 +80,6 @@
         </dependency>
 
         <!-- Jackson JSON Mapper -->
-        <dependency>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>jackson-mapper-asl</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>jackson-mrbean</artifactId>
-            <scope>provided</scope>
-        </dependency>
         <dependency>
             <groupId>de.flapdoodle.embed</groupId>
             <artifactId>de.flapdoodle.embed.mongo</artifactId>

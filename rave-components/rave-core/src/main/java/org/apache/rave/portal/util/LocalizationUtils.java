@@ -22,7 +22,7 @@ package org.apache.rave.portal.util;
 
 import com.ibm.icu.util.GlobalizationPreferences;
 import com.ibm.icu.util.ULocale;
-import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.rave.portal.model.util.LocalizedString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

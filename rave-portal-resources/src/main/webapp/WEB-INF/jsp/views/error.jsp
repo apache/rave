@@ -36,7 +36,7 @@ and use it as the default error page for the entire application. --%>
             <div id="errorMessage" class="errorMessage">
                 <h2><fmt:message key="page.error.message" />
                     &nbsp;<a href="javascript: window.location.reload();"><fmt:message key="page.error.reload" /></a>.</h2><br/>
-                <a onclick="document.getElementById('errorStack').style.display = 'block';"><fmt:message key="page.error.details" /></a>
+                <a id="showErrorStack"><fmt:message key="page.error.details" /></a>
             </div>
             <div id="errorStack" title="Error Details" >
                 <pre class="errorTrace">
@@ -46,8 +46,8 @@ and use it as the default error page for the entire application. --%>
                         <c:out value="${i}" /><br />
                     </c:forEach>
                 </pre>
-                <button type="button"
-                        onClick="document.getElementById('errorStack').style.display = 'none';">Close
+                <button type="button" class="toggleErrorStack" id="hideErrorStack">
+                    Close
                 </button>
             </div>
         </div>
@@ -66,5 +66,20 @@ and use it as the default error page for the entire application. --%>
                 </div>
             </div>
         </c:if>
+
+
+        <script>
+            require(["rave", "jquery"], function(rave, $){
+                rave.registerOnInitHandler(function(){
+                    $("#showErrorStack").click(function(){
+                        document.getElementById('errorStack').style.display = 'block';
+                    })
+
+                    $("#hideErrorStack").click(function(){
+                        document.getElementById('errorStack').style.display = 'none';
+                    })
+                })
+            })
+        </script>
     </tiles:putAttribute>
 </tiles:insertDefinition>

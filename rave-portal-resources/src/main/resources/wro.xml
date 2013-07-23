@@ -18,13 +18,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 <groups xmlns="http://www.isdc.ro/wro">
-    <!-- defines a wro4j group called rave-all.min which represents all of our javascript files -->
-    <group name="rave.core.min">
-        <js>/static/script/core/*.js</js>
-    </group>
-    <group name="rave.portal.min">
-        <js>/static/script/portal/*.js</js>
-    </group>
     <!-- defines a wro4j group called rave_css which represents the rave less file -->
     <group name="rave">
         <css>/static/css/rave.less</css>

@@ -137,148 +137,154 @@
 
 <portal:register-init-script location="${'AFTER_RAVE'}">
 <script>
-    $(function() {
-        if ($('#url').val().length === 0) {
-            $('#addWidgetForm').hide();
-            $('#addWidgetFormSubmit').hide();
-        }
-
-        $('#w3cBrowseLink').show();
-
-        $("#w3cBrowseForm").dialog({
-            autoOpen: false,
-            height: 300,
-            width: 350,
-            modal: true,
-            buttons: {
-                Cancel: function(){
-                    $(this).dialog("close");
-                }
-            },
-            close: function(){
-                // clear contents
-                $('#w3cwidgetsList').empty();
+    require(["rave", "ui", "jquery"], function(rave, ui, $){
+        $(function() {
+            if ($('#url').val().length === 0) {
+                $('#addWidgetForm').hide();
+                $('#addWidgetFormSubmit').hide();
             }
-        });
 
-        $("#w3cBrowseLink").click(function() {
-            rave.api.rpc.getWidgetMetadataGroup({
-                url: "?all=true",
-                providerType: "W3C",
-                successCallback: function(result) {
-                var i=0;
-                var widgets = result.result;
-                PostLoadW3cWidgets.setList(widgets);
-                jQuery.each(widgets, function() {
-                    $('#w3cwidgetsList')
-                        .append(
-                            $("<li/>")
-                            .addClass("storeItem")
-                            .append( // container
-                                $("<div/>")
-                                .css('overflow','hidden')
-                                .append(
-                                    $("<div/>")
-                                    .css('float','left')
-                                    .css('width','50%')
-                                    .append(
-                                        $("<div/>")
-                                        .attr("id", "w3cImageHolder"+i)
-                                    )
-                                    .append(
-                                        $("<div/>")
-                                        .attr("id", "widgetAdded")
-                                        .addClass("storeButton")
-                                        .append(
-                                            $("<button/>")
-                                            .addClass("btn btn-small btn-primary")
-                                            .attr("id", this.url)
-                                            .attr("onclick", "updateRaveMetadata("+i+");")
-                                            .text(rave.getClientMessage("get.metadata"))
-                                        )
-                                    )
-                                )
-                                .append(
-                                    $("<div/>")
-                                    .css('float','left')
-                                    .css('width','50%')
-                                    .css('margin-right','-1px')
-                                    .append(
-                                        $("<div/>")
-                                        .addClass("secondaryPageItemTitle")
-                                        .css('padding', '2px')
-                                        .text(this.title)
-                                    )
-                                    .append(
-                                        $("<div/>")
-                                        .addClass("storeWidgetAuthor")
-                                        .css('padding', '2px')
-                                        .text(this.author)
-                                    )
-                                    .append(
-                                        $("<div/>")
-                                        .addClass("storeWidgetDesc")
-                                        .css('padding', '2px')
-                                        .text(this.description)
-                                    )
-                                )
-                                .append(
-                                    $("<div/>")
-                                    .addClass("clear-float")
-                                )
-                            )
-                        )
-                        // add the thumbnail image if found
-                        if(this.thumbnailUrl!=null){
-                            $('#w3cImageHolder'+i)
-                            .append(
-                                $("<img/>")
-                                .addClass("storeWidgetThumbnail")
-                                .attr("src", this.thumbnailUrl)
-                                .attr("title", this.title)
-                                .attr("alt", "")
-                                .attr("width", "80")
-                                .attr("height", "80")
-                            )
-                        }
-                    i++;
-                    });
-                    $("#w3cBrowseForm").dialog("open");
+            $('#w3cBrowseLink').show();
+
+            $("#w3cBrowseForm").dialog({
+                autoOpen: false,
+                height: 300,
+                width: 350,
+                modal: true,
+                buttons: {
+                    Cancel: function(){
+                        $(this).dialog("close");
+                    }
+                },
+                close: function(){
+                    // clear contents
+                    $('#w3cwidgetsList').empty();
                 }
-            })
+            });
+
+            $("#w3cBrowseLink").click(function() {
+                rave.api.rpc.getWidgetMetadataGroup({
+                    url: "?all=true",
+                    providerType: "W3C",
+                    alertInvalidParams: function(){
+                        alert(ui.getClientMessage("api.widget_metadata.invalid_params"));
+                    },
+                    errorCallback: function(){
+                        alert(ui.getClientMessage("api.widget_metadata.parse_error"));
+                    },
+                    successCallback: function(result) {
+                        var widgets = result.result;
+                        PostLoadW3cWidgets.setList(widgets);
+                        $.each(widgets, function(index) {
+                            $('#w3cwidgetsList')
+                                    .append(
+                                    $("<li/>")
+                                            .addClass("storeItem")
+                                            .append( // container
+                                            $("<div/>")
+                                                    .css('overflow','hidden')
+                                                    .append(
+                                                    $("<div/>")
+                                                            .css('float','left')
+                                                            .css('width','50%')
+                                                            .append(
+                                                            $("<div/>")
+                                                                    .attr("id", "w3cImageHolder"+index)
+                                                    )
+                                                            .append(
+                                                            $("<div/>")
+                                                                    .attr("id", "widgetAdded")
+                                                                    .addClass("storeButton")
+                                                                    .append(
+                                                                    $("<button/>")
+                                                                            .addClass("btn btn-small btn-primary")
+                                                                            .attr("id", this.url)
+                                                                            .click(function(){updateRaveMetadata(index)})
+                                                                            .text(ui.getClientMessage("get.metadata"))
+                                                            )
+                                                    )
+                                            )
+                                                    .append(
+                                                    $("<div/>")
+                                                            .css('float','left')
+                                                            .css('width','50%')
+                                                            .css('margin-right','-1px')
+                                                            .append(
+                                                            $("<div/>")
+                                                                    .addClass("secondaryPageItemTitle")
+                                                                    .css('padding', '2px')
+                                                                    .text(this.title)
+                                                    )
+                                                            .append(
+                                                            $("<div/>")
+                                                                    .addClass("storeWidgetAuthor")
+                                                                    .css('padding', '2px')
+                                                                    .text(this.author)
+                                                    )
+                                                            .append(
+                                                            $("<div/>")
+                                                                    .addClass("storeWidgetDesc")
+                                                                    .css('padding', '2px')
+                                                                    .text(this.description)
+                                                    )
+                                            )
+                                                    .append(
+                                                    $("<div/>")
+                                                            .addClass("clear-float")
+                                            )
+                                    )
+                            )
+                            // add the thumbnail image if found
+                            if(this.thumbnailUrl!=null){
+                                $('#w3cImageHolder'+index)
+                                        .append(
+                                        $("<img/>")
+                                                .addClass("storeWidgetThumbnail")
+                                                .attr("src", this.thumbnailUrl)
+                                                .attr("title", this.title)
+                                                .attr("alt", "")
+                                                .attr("width", "80")
+                                                .attr("height", "80")
+                                )
+                            }
+                        });
+                        $("#w3cBrowseForm").dialog("open");
+                    }
+                })
+            });
         });
-    });
 
-   // use this object to hold the choices of w3c widgets after the page has loaded.
-    var PostLoadW3cWidgets = new function PostLoadW3cWidgets() {
-        this.list = null;
-        this.setList = function (list) {
-            this.list = list;
+        // use this object to hold the choices of w3c widgets after the page has loaded.
+        var PostLoadW3cWidgets = new function PostLoadW3cWidgets() {
+            this.list = null;
+            this.setList = function (list) {
+                this.list = list;
+            }
+            this.getList = function () {
+                return this.list;
+            }
+            this.getListItemByIndex = function(idx){
+                return this.list[idx];
+            }
         }
-        this.getList = function () {
-            return this.list;
-        }
-        this.getListItemByIndex = function(idx){
-            return this.list[idx];
-        }
-    }
 
-    function updateRaveMetadata(id){
-        if(id != null){
-            widget = PostLoadW3cWidgets.getListItemByIndex(id);
-            $('#title').val(widget.title);
-            $('#description').val(widget.description);
-            $('#thumbnailUrl').val(widget.thumbnailUrl);
-            $('#screenshotUrl').val(widget.screenshotUrl);
-            $('#titleUrl').val(widget.titleUrl);
-            $('#author').val(widget.author);
-            $('#authorEmail').val(widget.authorEmail);
-            $('#url').val(widget.url);
-            $('#addWidgetForm').show();
-            $('#addWidgetFormSubmit').show();
+        function updateRaveMetadata(id){
+            if(id != null){
+                var widget = PostLoadW3cWidgets.getListItemByIndex(id);
+                $('#title').val(widget.title);
+                $('#description').val(widget.description);
+                $('#thumbnailUrl').val(widget.thumbnailUrl);
+                $('#screenshotUrl').val(widget.screenshotUrl);
+                $('#titleUrl').val(widget.titleUrl);
+                $('#author').val(widget.author);
+                $('#authorEmail').val(widget.authorEmail);
+                $('#url').val(widget.url);
+                $('#addWidgetForm').show();
+                $('#addWidgetFormSubmit').show();
+            }
+            $("#w3cBrowseForm").dialog("close");
         }
-        $("#w3cBrowseForm").dialog("close");
-    }
+    })
 </script>
 </portal:register-init-script>
 

@@ -20,7 +20,7 @@
 package org.apache.rave.portal.repository;
 
 import org.apache.rave.model.OAuthTokenInfo;
-import org.apache.rave.persistence.Repository;
+import org.apache.rave.repository.Repository;
 
 /**
  * Interface for handling {@link org.apache.rave.model.OAuthTokenInfo} queries

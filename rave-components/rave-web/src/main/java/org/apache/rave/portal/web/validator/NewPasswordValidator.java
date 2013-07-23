@@ -19,7 +19,7 @@
 
 package org.apache.rave.portal.web.validator;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.rave.model.User;
 import org.apache.rave.portal.service.UserService;
 import org.slf4j.Logger;

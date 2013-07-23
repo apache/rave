@@ -22,9 +22,13 @@ package org.apache.rave.portal.repository.impl;
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import org.apache.commons.lang.NotImplementedException;
-import org.apache.rave.model.*;
-import org.apache.rave.portal.model.*;
+import org.apache.rave.model.FriendRequestStatus;
+import org.apache.rave.model.Page;
+import org.apache.rave.model.Person;
+import org.apache.rave.model.User;
+import org.apache.rave.model.Widget;
+import org.apache.rave.portal.model.MongoDbPersonAssociation;
+import org.apache.rave.portal.model.MongoDbUser;
 import org.apache.rave.portal.repository.MongoPageOperations;
 import org.apache.rave.portal.repository.MongoUserOperations;
 import org.apache.rave.portal.repository.MongoWidgetOperations;
@@ -34,7 +38,9 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static org.springframework.data.mongodb.core.query.Query.query;
@@ -108,17 +114,17 @@ public class MongoDbPersonRepository implements PersonRepository {
 
     @Override
     public List<Person> findByGroup(String groupId) {
-        throw new NotImplementedException(); //TODO build query
+        throw new UnsupportedOperationException("Not implemented"); //TODO build query
     }
 
     @Override
     public List<Person> findByGroup(String groupId, String appId) {
-        throw new NotImplementedException();  //TODO build query
+        throw new UnsupportedOperationException("Not implemented");  //TODO build query
     }
 
     @Override
     public List<Person> findByGroupWithFriend(String groupId, String friendUsername) {
-        throw new NotImplementedException();  //TODO build query
+        throw new UnsupportedOperationException("Not implemented");  //TODO build query
     }
 
     @Override

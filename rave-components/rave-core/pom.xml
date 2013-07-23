@@ -24,7 +24,7 @@
     <parent>
         <artifactId>rave-components</artifactId>
         <groupId>org.apache.rave</groupId>
-        <version>0.23-ANGULAR-SNAPSHOT</version>
+        <version>0.23-SNAPSHOT</version>
     </parent>
 
     <artifactId>rave-core</artifactId>
@@ -91,18 +91,6 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-oxm</artifactId>
-        </dependency>
-
-        <!-- Jackson JSON Mapper -->
-        <dependency>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>jackson-mapper-asl</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>jackson-mrbean</artifactId>
-            <scope>provided</scope>
         </dependency>
 
         <!-- JSON Support -->

@@ -19,7 +19,7 @@
 
 package org.apache.rave.model;
 
-import org.codehaus.jackson.annotate.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import javax.xml.bind.annotation.XmlTransient;
 import java.util.List;

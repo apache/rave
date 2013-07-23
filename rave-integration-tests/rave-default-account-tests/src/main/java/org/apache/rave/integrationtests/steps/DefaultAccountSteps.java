@@ -45,49 +45,49 @@ public class DefaultAccountSteps {
 
     @Then("I see the login page")
     public void isLoginPage() {
-        final WebElement title = portal.findElement(By.tagName("title"));
-        assertThat(title.getText().trim(), equalTo("Login - Rave"));
+        final String title = portal.getTitle();
+        assertThat(title.trim(), equalTo("Login - Rave"));
     }
 
     @When("I log in with username \"$username\" and password \"$password\"")
     public void loginAsUser(String username, String password) {
-		  portal.login(username,password);
+        portal.login(username, password);
     }
 
     @Then("I see the message \"$welcomeMessage\" for the user \"$username\"")
     public void getLoggedInPage(String welcomeMessage, String username) {
-		  final WebElement displayedWelcome=portal.findElement(By.className("brand"));
-		  assertThat(displayedWelcome.getText().trim(),equalTo(welcomeMessage));
+        final WebElement displayedWelcome = portal.findElement(By.className("brand"));
+        assertThat(displayedWelcome.getText().trim(), equalTo(welcomeMessage));
     }
-	 
-	 @When("I provide my OpenID identity \"$openIdUrl\"")
-	 public void openIdLogin(String openIdUrl) {
-		  portal.openIdLogin(openIdUrl);
-	 }
 
-	 @Then("I see the OpenID authentication page")
-	 public void getOpenIdPage(){
-		  //Note this is specific to MyOpenID (and presumably their English page)
-		  final WebElement openIdPage=portal.findElement(By.linkText("myOpenID - The free, secure OpenID server"));
-	 }
+    @When("I provide my OpenID identity \"$openIdUrl\"")
+    public void openIdLogin(String openIdUrl) {
+        portal.openIdLogin(openIdUrl);
+    }
 
-	 @When("I provide my OpenID password \"$openIdPassword\"")
-	 public void loginToOpenIdProvider(String openIdPassword){
-		  final WebElement openIdLoginForm=portal.findElement(By.id("password-signin-form"));
-		  openIdLoginForm.findElement(By.id("password")).sendKeys(openIdPassword);
-		  openIdLoginForm.submit();
-	 }
+    @Then("I see the OpenID authentication page")
+    public void getOpenIdPage() {
+        //Note this is specific to MyOpenID (and presumably their English page)
+        final WebElement openIdPage = portal.findElement(By.linkText("myOpenID - The free, secure OpenID server"));
+    }
+
+    @When("I provide my OpenID password \"$openIdPassword\"")
+    public void loginToOpenIdProvider(String openIdPassword) {
+        final WebElement openIdLoginForm = portal.findElement(By.id("password-signin-form"));
+        openIdLoginForm.findElement(By.id("password")).sendKeys(openIdPassword);
+        openIdLoginForm.submit();
+    }
 
 
-	 @When("I log out")
-	 public void iLogOut() {
-		  portal.logout();
-	 }
+    @When("I log out")
+    public void iLogOut() {
+        portal.logout();
+    }
 
-	 @Then("I see the Rave login page")
-	 public void backToLoginPage() {
-        final WebElement title = portal.findElement(By.tagName("title"));
-        assertThat(title.getText().trim(), equalTo("Login - Rave"));
-	 }
+    @Then("I see the Rave login page")
+    public void backToLoginPage() {
+        final String title = portal.getTitle();
+        assertThat(title.trim(), equalTo("Login - Rave"));
+    }
 
 }

@@ -17,49 +17,50 @@
  * under the License.
  */
 
-define(['underscore', './rave_openAjaxHub'], function (_, getManagedHub) {
-    var exports = {}
+/**
+ * Implements wookie specific features of the rave_widget interface
+ * @module rave_wookie
+ * @requires rave_openajax_hub
+ * @requires rave_state_manager
+ */
+define(['core/rave_openajax_hub', 'core/rave_state_manager'], function(managedHub, stateManager){
+        var exports = {}
 
-    function init() {
-    };
-    exports.initWidget = function (widget) {
-    }
-    exports.renderWidget = function (widget, el, opts) {
-        new OpenAjax.hub.IframeContainer(getManagedHub(), "" + widget.regionWidgetId,
-            {
-                Container: {
-                    onSecurityAlert: onClientSecurityAlert,
-                    onConnect: onClientConnect,
-                    onDisconnect: onClientDisconnect
-                },
-                IframeContainer: {
-                    parent: el,
-                    //TODO: I dropped a bunch of the attrs here - seems like it should all be css
-                    //unless it is being defined by the gadget spec
-                    iframeAttrs: {
-                        height: widget.height || rave.RegionWidget.defaultHeight,
-                        width: widget.width || rave.RegionWidget.defaultWidth
+        exports.initWidget = function(widget){}
+        exports.renderWidget = function(widget, el, opts){
+            var widgetBodyElement = document.getElementById(["widget-", widget.regionWidgetId, "-body"].join(""));
+            window["onWidget"+widget.regionWidgetId+"Load"] = function(){
+                window.document.getElementById(widget.regionWidgetId).style.visibility="visible";
+            };
+
+            new OpenAjax.hub.IframeContainer(managedHub , ""+widget.regionWidgetId,
+                {
+                    Container: {
+                        onSecurityAlert: onClientSecurityAlert,
+                        onConnect:       onClientConnect,
+                        onDisconnect:    onClientDisconnect
                     },
-                    uri: widget.widgetUrl
+                    IframeContainer: {
+                        parent:      el,
+                        iframeAttrs: {
+                            height: widget.height || stateManager.getDefaultHeight(),
+                            width:  widget.width || stateManager.getDefaultWidth(),
+                            frameborder: 0
+                        },
+                        uri: widget.widgetUrl,
+                        onGadgetLoad: "onWidget"+widget.regionWidgetId+"Load"
+                    }
                 }
-            }
-        );
-    }
+            );
+        }
 
-    function onClientSecurityAlert(source, alertType) {  /* Handle client-side security alerts */
-    }
+        function onClientSecurityAlert(source, alertType) {  /* Handle client-side security alerts */  }
+        function onClientConnect(container) {        /* Called when client connects */   }
+        function onClientDisconnect(container) {     /* Called when client disconnects */ }
 
-    function onClientConnect(container) {        /* Called when client connects */
-    }
+        exports.closeWidget = function(widget){
+            //TODO...
+        }
 
-    function onClientDisconnect(container) {     /* Called when client disconnects */
-    }
-
-    exports.closeWidget = function (widget) {
-        //TODO...
-    }
-
-    init()
-
-    return exports;
-});
+        return exports;
+})

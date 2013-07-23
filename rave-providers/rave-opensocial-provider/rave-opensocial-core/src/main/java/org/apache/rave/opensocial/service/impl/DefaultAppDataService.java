@@ -19,12 +19,12 @@
 
 package org.apache.rave.opensocial.service.impl;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.rave.model.ApplicationData;
+import org.apache.rave.model.Person;
+import org.apache.rave.opensocial.service.SimplePersonService;
 import org.apache.rave.portal.model.impl.ApplicationDataImpl;
 import org.apache.rave.portal.repository.ApplicationDataRepository;
-import org.apache.rave.opensocial.service.SimplePersonService;
-import org.apache.rave.model.Person;
 import org.apache.rave.service.LockService;
 import org.apache.shindig.auth.SecurityToken;
 import org.apache.shindig.common.util.ImmediateFuture;
@@ -37,7 +37,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.Future;
 import java.util.concurrent.locks.Lock;
 

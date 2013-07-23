@@ -107,10 +107,9 @@
     </Content>
 
     <Content type="html" view="default">
-       <![CDATA[
+        <![CDATA[
          Default view.
        ]]>
     </Content>
-
 </Module>
 

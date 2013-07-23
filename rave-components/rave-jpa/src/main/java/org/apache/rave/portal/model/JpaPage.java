@@ -18,10 +18,10 @@
  */
 package org.apache.rave.portal.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.apache.rave.model.*;
 import org.apache.rave.portal.model.conversion.ConvertingListProxyFactory;
 import org.apache.rave.portal.model.conversion.JpaConverter;
-import org.codehaus.jackson.annotate.JsonManagedReference;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.*;

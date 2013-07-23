@@ -18,10 +18,10 @@
  */
 package org.apache.rave.portal.model.impl;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.apache.rave.model.Region;
 import org.apache.rave.model.RegionWidget;
 import org.apache.rave.model.RegionWidgetPreference;
-import org.codehaus.jackson.annotate.JsonBackReference;
 
 import java.util.List;
 

@@ -24,10 +24,21 @@ import java.util.List;
 
 public class GroupImpl implements Group {
 
+    protected String id;
     protected String description;
     protected String owner;
     protected String title;
     protected List<String> members;
+
+    @Override
+    public String getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(String id) {
+        this.id = id;
+    }
 
     @Override
     public String getOwnerId() {

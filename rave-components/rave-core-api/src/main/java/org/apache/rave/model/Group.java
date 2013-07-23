@@ -26,6 +26,10 @@ import java.util.List;
  */
 @XmlTransient
 public interface Group {
+    String getId();
+
+    void setId(String id);
+
     String getOwnerId();
 
     void setOwnerId(String ownerId);

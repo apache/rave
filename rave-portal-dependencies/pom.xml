@@ -26,7 +26,7 @@
     <parent>
         <artifactId>rave-project</artifactId>
         <groupId>org.apache.rave</groupId>
-        <version>0.23-ANGULAR-SNAPSHOT</version>
+        <version>0.23-SNAPSHOT</version>
     </parent>
 
     <artifactId>rave-portal-dependencies</artifactId>
@@ -149,12 +149,8 @@
 
         <!-- Jackson -->
         <dependency>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>jackson-jaxrs</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>jackson-xc</artifactId>
+            <groupId>com.fasterxml.jackson.jaxrs</groupId>
+            <artifactId>jackson-jaxrs-json-provider</artifactId>
         </dependency>
 
     </dependencies>

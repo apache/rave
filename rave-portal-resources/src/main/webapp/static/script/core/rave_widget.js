@@ -16,160 +16,208 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-define(['underscore',  './eventemitter', './rave_api', './rave_providers'], function (_, EventEmitter, api, providers) {
 
-    var Widget = function (definition) {
-        var provider = definition.type;
+/**
+ * @module rave_widget
+ * @requires rave_api
+ * @requires rave_view_manager
+ * @requires rave_providers
+ */
+define(['underscore', 'core/rave_api', 'core/rave_view_manager', 'core/rave_providers'],
+    function (_, api, viewManager, providers) {
 
-        _.extend(this, definition);
-
-        this._provider = providers[provider.toLowerCase()];
-        this._el = document.createElement('div');
-        this._surface = Widget.defaultView;
-
-        if (!this._provider) {
-            throw new Error('Cannot render widget ' + definition.widgetUrl + '. ' +
-                'Provider ' + provider + ' is not registered.');
+        function getProvider(name) {
+            return providers[name.toLowerCase()];
         }
 
-        this._provider.initWidget(this);
-    }
+        /**
+         * Constructor for the rave RegionWidget object
+         * @param definition {object} json object defining the regionWidget
+         * @param definition.type {string} string corresponding to the regionWidget provider ('opensocial' | 'w3c').
+         * Lookup of provider is case-insensitive.
+         * @throws Will throw an error if definition.type does not match a registered provider, as defined in
+         * rave_providers (case-insensitive).
+         * @constructor
+         * @alias module:rave_widget
+         * @see module:rave_providers
+         */
+        var Widget = function (definition) {
+            var provider = definition.type;
 
-    /*
-     Static properties
-     */
-    Widget.defaultView = 'default';
-    Widget.defaultWidth = 320;
-    Widget.defaultHeight = 200;
+            _.extend(this, definition);
 
-    /*
-     Set up widget as an event emitter
-     */
-    _.extend(Widget.prototype, EventEmitter.prototype);
+            this._provider = getProvider(provider);
 
-    /*
-     Convenience function for adding functionality to Widget prototype with events
-     */
-    Widget.extend = function (key, fn) {
-        var self = this;
-        if (_.isObject(key)) {
-            return _.each(key, function (f, k) {
-                self.extend(k, f);
-            });
-        }
-        this.prototype[key] = function () {
-            var args = _.toArray(arguments);
-            fn.apply(this, args);
-            this.emitEvent(key, args);
-        }
-    }
-
-    Widget.extend({
-
-        'render': function (el) {
-            if (el) {
-                el.appendChild(this._el);
+            if (!this._provider) {
+                throw new Error('Cannot render widget ' + definition.widgetUrl + '. ' +
+                    'Provider ' + provider + ' is not registered.');
             }
 
-            this._provider.renderWidget(this, this._opts);
+            this._provider.initWidget(this);
+        }
+
+        /**
+         * Extends the RegionWidget's prototype. Convenience function for adding functionality
+         * to the RegionWidget interface
+         * @param mixin {object}
+         */
+        Widget.extend = function (mixin) {
+            _.extend(this.prototype, mixin);
+        }
+
+        /**
+         * Renders the regionWidget onto the page into the given dom element. This will delegate to
+         * the regionWidget's provider.
+         * @param [el] {(HTMLElement | string)} DOM element into which the widget iframe will be rendered. If the
+         * argument is an HTMLElement, the regionWidget will be rendered directly into that element. If it is a
+         * string, it will delegate to the rave_view_manager - rendering the registered view, and rendering the
+         * regionWidget into the return value of that views getWidgetSite method.
+         * A regionWidget keeps a handle on the dom element it was rendered into, so after the first render
+         * if this argument is omitted, the region will re-render into that element.
+         * @param [opts] {object} Render options which are passed to the provider's renderWidget method.
+         * Supported options are therefore provider-specific.
+         * @return this
+         * @see module:rave_view_manager
+         */
+        Widget.prototype.render = function (el, opts) {
+            //if we receive only one argument, and the first arg is not a string or dom element, assume it is an opts object
+            //and el should default to the widgets current render element
+            if (!opts && !(_.isString(el) || (el instanceof HTMLElement))) {
+                opts = el;
+                el = this._el;
+            }
+            //if el is a string, go to rave's view system
+            if (_.isString(el)) {
+                //TODO: potential memory leak - rendering a widget into new views does not force cleanup of current view
+                var view = viewManager.renderView(el, this);
+                el = view.getWidgetSite();
+                this._view = view;
+            }
+            //at this point el must be a valid dom element. if not, throw an error
+            if (!(el instanceof HTMLElement)) {
+                throw new Error('Cannot render widget. You must provide an el to render the view into');
+            }
+            this._el = el;
+            this._provider.renderWidget(this, el, opts);
             return this;
-        },
+        }
 
-        'navigate': function (opts) {
-            opts = opts || {};
+        /**
+         * Prints error messages into the given dom element.
+         * @param el {HTMLElement}
+         * @param errors {string}
+         */
+        Widget.prototype.renderError = function (el, errors) {
+            el.innerHTML = 'Error rendering widget.' + "<br /><br />" + errors;
+        }
 
-            var viewSurface = opts.view || Widget.defaultView;
-            viewSurface = viewSurface.split('.')[0];
-
-            this._opts = opts;
-            this._surface = viewSurface;
-            this.render();
-        },
-
-        'unrender': function () {
-            this._provider.unrenderWidget(this);
-            return this;
-        },
-
-        'renderError': function (errors) {
-            this._el.innerHTML = 'Error rendering widget.' + "<br /><br />" + errors;
-        },
-
-        'hide': function () {
+        /**
+         * Sets the collapsed property of the regionWidget object to true, and persists state to the server.
+         * Does not cause any dom manipulation.
+         */
+        Widget.prototype.hide = function () {
             this.collapsed = true;
 
             api.rest.saveWidgetCollapsedState({
-                regionWidgetId: this.id,
+                regionWidgetId: this.regionWidgetId,
                 collapsed: this.collapsed
             });
-        },
+        }
 
-        'show': function () {
+        /**
+         * Sets the collapsed property of the regionWidget object to false, and persists state to the server.
+         * Does not cause any dom manipulation.
+         */
+        Widget.prototype.show = function () {
             this.collapsed = false;
 
             api.rest.saveWidgetCollapsedState({
-                regionWidgetId: this.id,
+                regionWidgetId: this.regionWidgetId,
                 collapsed: this.collapsed
             });
-        },
+        }
 
-        'close': function (opts) {
-            this.unrender();
+        /**
+         * Unrenders the regionWidget from the page, and persists state to the server. If the regionWidget was
+         * rendered into a view, also invokes module:rave_view_manager.destroyView method on that view.
+         * @param [opts] {object} options object that is passed to the provider's close widget method.
+         */
+        Widget.prototype.close = function (opts) {
+            this._provider.closeWidget(this, opts);
+            if (this._view) {
+                viewManager.destroyView(this._view);
+            }
 
             api.rpc.removeWidget({
-                regionWidgetId: this.id
+                regionWidgetId: this.regionWidgetId
             });
-        },
+        }
 
-        'moveToPage': function (toPageId, cb) {
+        /**
+         * A callback invoked after a successful call to the jsonRpc api.
+         * @callback apiSuccessCallback
+         * @param jsonRpcResult {object} - json rpc api result object.
+         */
+
+        /**
+         * Makes api calls to persists move state to the server. Moves regionWidget object from one page to another.
+         * Does not cause any dom manipulation.
+         * @param toPageId {string}
+         * @param [cb] {apiSuccessCallback} - callback function that will be invoked only if the state is successfully
+         * saved to the server.
+         */
+        Widget.prototype.moveToPage = function (toPageId, cb) {
             api.rpc.moveWidgetToPage({
                 toPageId: toPageId,
-                regionWidgetId: this.id,
+                regionWidgetId: this.regionWidgetId,
                 successCallback: cb
             });
-        },
+        }
 
-        'moveToRegion': function (fromRegionId, toRegionId, toIndex) {
+        /**
+         * Makes api calls to persist move state to the server. Moves the regionWidget object between regions on a page.
+         * Does not cause any dom manipulation.
+         * @param fromRegionId {string}
+         * @param toRegionId {string}
+         * @param toIndex {string}
+         */
+        Widget.prototype.moveToRegion = function (fromRegionId, toRegionId, toIndex) {
             api.rpc.moveWidgetToRegion({
-                regionWidgetId: this.id,
+                regionWidgetId: this.regionWidgetId,
                 fromRegionId: fromRegionId,
                 toRegionId: toRegionId,
                 toIndex: toIndex
             });
-        },
-
-        'getPrefs': function () {
-            var self = this;
-            var combined = [];
-            //TODO: I think this is opensocial specific - need to investigate wookie and possibly delegate to providers
-            _.each(self.metadata.userPrefs, function (data) {
-                var value = self.userPrefs[data.name];
-                data = _.clone(data);
-                data.value = value || data.defaultValue;
-                data.displayName = data.displayName || data.name;
-                combined.push(data);
-            });
-            return _.isEmpty(combined) ? undefined : combined;
-        },
-
-        'setPrefs': function (name, val) {
-            if (_.isObject(name)) {
-                var updatedPrefs = name;
-                this.userPrefs = _.object(_.pluck(updatedPrefs, 'name'), _.pluck(updatedPrefs, 'value'));
-                api.rest.saveWidgetPreferences({regionWidgetId: this.id, userPrefs: this.userPrefs});
-            } else {
-                this.userPrefs[name] = val;
-                api.rest.saveWidgetPreference({regionWidgetId: this.id, prefName: name, prefValue: val});
-            }
         }
+
+        /**
+         * Regionwidget userPref object
+         * @typedef Pref
+         * @property name {string} Preference name
+         * @property value {*} Preference value
+         */
+
+        /**
+         * Updates the regionWidget's userPrefs object, updating a single preference, and persists state to server.
+         * Does not cause any dom manipulation.
+         * @param name {string}
+         * @param val {*} new preference value
+         */
+        Widget.prototype.savePreference = function (name, val) {
+            this.userPrefs[name] = val;
+            api.rest.saveWidgetPreference({regionWidgetId: this.regionWidgetId, prefName: name, prefValue: val});
+        }
+
+        /**
+         * Updates the regionWidget's userPrefs property, overwriting the entire object, and persists state to the
+         * server. Does not cause any dom manipulation.
+         * @param updatedPrefs {Array.<Pref>} Array of new preference objects
+         */
+        Widget.prototype.savePreferences = function (updatedPrefs) {
+            this.userPrefs = updatedPrefs;
+            api.rest.saveWidgetPreferences({regionWidgetId: this.regionWidgetId, userPrefs: updatedPrefs});
+        }
+
+
+        return Widget;
     })
-
-
-    return Widget;
-});
-/*
- Rave RegionWidget Interface
-
- Dependencies:
- api
- */

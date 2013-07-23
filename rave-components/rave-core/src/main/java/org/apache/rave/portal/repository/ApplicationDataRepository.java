@@ -19,7 +19,7 @@
 package org.apache.rave.portal.repository;
 
 import org.apache.rave.model.ApplicationData;
-import org.apache.rave.persistence.Repository;
+import org.apache.rave.repository.Repository;
 
 import java.util.List;
 

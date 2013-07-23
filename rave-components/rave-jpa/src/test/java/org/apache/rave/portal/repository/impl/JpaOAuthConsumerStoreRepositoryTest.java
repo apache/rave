@@ -19,8 +19,8 @@
 
 package org.apache.rave.portal.repository.impl;
 
-import org.apache.rave.portal.model.JpaOAuthConsumerStore;
 import org.apache.rave.model.OAuthConsumerStore;
+import org.apache.rave.portal.model.JpaOAuthConsumerStore;
 import org.apache.rave.portal.repository.OAuthConsumerStoreRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,9 +33,13 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import static junit.framework.Assert.*;
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
 /**

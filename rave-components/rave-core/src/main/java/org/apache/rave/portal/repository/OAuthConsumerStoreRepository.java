@@ -20,7 +20,7 @@
 package org.apache.rave.portal.repository;
 
 import org.apache.rave.model.OAuthConsumerStore;
-import org.apache.rave.persistence.Repository;
+import org.apache.rave.repository.Repository;
 
 /**
  * Repository interface for {@link org.apache.rave.model.OAuthConsumerStore}

@@ -19,9 +19,9 @@
 
 package org.apache.rave.synchronization;
 
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.Validate;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Validate;
 import org.apache.rave.service.LockService;
 import org.apache.rave.synchronization.annotation.Synchronized;
 import org.aspectj.lang.ProceedingJoinPoint;

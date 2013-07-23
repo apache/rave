@@ -18,10 +18,10 @@
  */
 package org.apache.rave.portal.model.util;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.rave.model.Widget;
 import org.apache.rave.portal.model.impl.ExternalWidgetImpl;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.codehaus.jackson.annotate.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class WidgetMarketplaceWidgetResult {

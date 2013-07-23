@@ -138,7 +138,7 @@ public class JpaPersonRepository implements PersonRepository {
     @Override
     public List<Person> findByGroup(String groupId) {
         TypedQuery<JpaGroup> query = manager.createNamedQuery(JpaGroup.FIND_BY_TITLE, JpaGroup.class);
-        query.setParameter(JpaGroup.GROUP_ID_PARAM, groupId);
+        query.setParameter(JpaGroup.GROUP_TITLE_PARAM, groupId);
         return getPeopleByIds(getSingleResult(query.getResultList()));
     }
 

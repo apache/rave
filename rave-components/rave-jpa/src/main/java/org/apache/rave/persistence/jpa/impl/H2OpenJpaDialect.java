@@ -15,9 +15,9 @@
  */
 package org.apache.rave.persistence.jpa.impl;
 
-import org.apache.rave.persistence.impl.TranslatedH2Exception;
-import org.apache.commons.lang.exception.ExceptionUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.rave.exception.DuplicateItemException;
+import org.apache.rave.persistence.impl.TranslatedH2Exception;
 import org.h2.constant.ErrorCode;
 import org.h2.jdbc.JdbcSQLException;
 import org.springframework.dao.DataAccessException;

@@ -42,37 +42,37 @@ public class CommonSteps {
 
     @Then("I see the login page")
     public void isLoginPage() {
-        final WebElement title = portal.findElement(By.tagName("title"));
-        assertThat(title.getText().trim(), equalTo("Login - Rave"));
+        final String title = portal.getTitle();
+        assertThat(title.trim(), equalTo("Login - Rave"));
     }
 
     @When("I log in as an administrator with username \"$username\" and password \"$password\"")
     public void loginAsAdmin(String username, String password) {
-        portal.login(username,password);
+        portal.login(username, password);
     }
 
     @Then("I see the admin interface link")
     public void getAdminInterfaceLink() {
         //TODO: make sure the admin interface actually is loaded
-        final WebElement adminInterfaceLink=portal.findElement(By.linkText("Admin interface"));
+        final WebElement adminInterfaceLink = portal.findElement(By.linkText("Admin interface"));
     }
 
     @When("I click the admin interface link")
     public void clickAdminInterfaceLink() {
         //TODO: there should be consequences if this fails.
-        final WebElement adminInterfaceLink=portal.findElement(By.linkText("Admin interface"));
+        final WebElement adminInterfaceLink = portal.findElement(By.linkText("Admin interface"));
         portal.clickLink(adminInterfaceLink);
     }
 
     @Then("I see the admin interface")
     public void getAdminInterface() {
-        final WebElement adminInterface=portal.findElement(By.tagName("title"));
-        assertThat(adminInterface.getText().trim(),startsWith("Rave admin interface"));
+        final String adminInterface = portal.getTitle();
+        assertThat(adminInterface.trim(), startsWith("Rave admin interface"));
     }
 
     @When("I click the \"$linkName\" link")
     public void clickLink(String linkName) {
-        final WebElement usersLink=portal.findElement(By.linkText(linkName));
+        final WebElement usersLink = portal.findElement(By.linkText(linkName));
         usersLink.click();
     }
 
@@ -83,7 +83,7 @@ public class CommonSteps {
 
     @Then("I see the Rave login page")
     public void backToLoginPage() {
-        final WebElement title = portal.findElement(By.tagName("title"));
-        assertThat(title.getText().trim(), equalTo("Login - Rave"));
+        final String title = portal.getTitle();
+        assertThat(title.trim(), equalTo("Login - Rave"));
     }
 }

@@ -19,9 +19,8 @@
 
 package org.apache.rave.portal.repository.impl;
 
-import org.apache.commons.lang.NotImplementedException;
-import org.apache.rave.portal.model.MongoDbPageLayout;
 import org.apache.rave.model.PageLayout;
+import org.apache.rave.portal.model.MongoDbPageLayout;
 import org.apache.rave.portal.repository.util.CollectionNames;
 import org.apache.rave.util.CollectionUtils;
 import org.junit.Before;
@@ -34,9 +33,17 @@ import org.springframework.data.mongodb.core.query.Query;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.easymock.EasyMock.*;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.eq;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
 import static org.easymock.EasyMock.isA;
-import static org.hamcrest.CoreMatchers.*;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.junit.Assert.assertThat;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 
@@ -97,7 +104,7 @@ public class MongoDbPageLayoutRepositoryTest {
     public void get_Valid() {
         String id = "123";
 
-        thrown.expect(NotImplementedException.class);
+        thrown.expect(UnsupportedOperationException.class);
         thrown.expectMessage("No use for an id");
         pageLayoutRepository.get(id);
     }

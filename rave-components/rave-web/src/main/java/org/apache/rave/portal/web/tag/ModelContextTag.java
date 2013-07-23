@@ -19,7 +19,7 @@
 
 package org.apache.rave.portal.web.tag;
 
-import org.apache.rave.persistence.Repository;
+import org.apache.rave.repository.Repository;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;

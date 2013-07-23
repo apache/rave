@@ -27,7 +27,7 @@
 
 <!-- get the display name of user -->
 <fmt:message key="page.personProfile.title" var="pageTitle">
-       <fmt:param><c:out value="${userProfile.displayName}" /></fmt:param>
+    <fmt:param><c:out value="${userProfile.displayName}"/></fmt:param>
 </fmt:message>
 <tiles:putAttribute name="pageTitleKey" value="${pageTitle}"/>
 <tiles:importAttribute name="pageTitleKey" scope="request"/>
@@ -55,9 +55,10 @@
         <div class="span9">
             <div id="personProfileContent">
                 <c:url var="profileUrl" value="/app/person">
-                    <c:param name="referringPageId" value="${referringPageId}" />
+                    <c:param name="referringPageId" value="${referringPageId}"/>
                 </c:url>
-                <form:form id="editAccountForm" commandName="userProfile" action="${profileUrl}" method="POST" class="form-horizontal">
+                <form:form id="editAccountForm" commandName="userProfile" action="${profileUrl}" method="POST"
+                           class="form-horizontal">
 
                     <fieldset class="row-fluid" id="userProfilePrimaryData">
                         <div class="span2 profile-user-thumb">
@@ -68,11 +69,15 @@
                             <!-- Display user info-->
                             <div class="profile-info-visible">
                                 <h2><c:out value="${userProfile.displayName}"/></h2>
-                                <h3><span id="givenName"><c:out value="${userProfile.givenName}"/></span>&nbsp;<span id="familyName"><c:out value="${userProfile.familyName}"/></span></h3>
+
+                                <h3><span id="givenName"><c:out value="${userProfile.givenName}"/></span>&nbsp;<span
+                                        id="familyName"><c:out value="${userProfile.familyName}"/></span></h3>
+
                                 <p class="profile-user-status">
                                     <fmt:message key="page.profile.status"/>
                                     &nbsp;<span id="status"><c:out value="${userProfile.status}"/></span>
                                 </p>
+
                                 <p class="profile-info-visible">
                                     <fmt:message key="page.profile.about.me"/>
                                     &nbsp;<span id="aboutMe"><c:out value=" ${userProfile.aboutMe}"/></span>
@@ -81,37 +86,52 @@
                             <!-- Display edit view of user info-->
                             <div class="profile-info-hidden">
                                 <div class="control-group">
-                                    <label for="displayNameField" class="control-label"><fmt:message key="page.profile.display.name"/></label>
+                                    <label for="displayNameField" class="control-label"><fmt:message
+                                            key="page.profile.display.name"/></label>
+
                                     <div class="controls">
-                                        <form:input id="displayNameField" path="displayName" value="${userProfile.displayName}" class="span6"/>
+                                        <form:input id="displayNameField" path="displayName"
+                                                    value="${userProfile.displayName}" class="span6"/>
                                     </div>
                                 </div>
                                 <div class="control-group">
-                                    <label class="control-label pull-left"><fmt:message key="page.profile.first.name"/></label>
-                                        <form:input id="givenNameField" path="givenName" class="span3 pull-left" value="${userProfile.givenName}" />&nbsp;
+                                    <label class="control-label pull-left"><fmt:message
+                                            key="page.profile.first.name"/></label>
+                                    <form:input id="givenNameField" path="givenName" class="span3 pull-left"
+                                                value="${userProfile.givenName}"/>&nbsp;
 
-                                    <label class="control-label pull-left"><fmt:message key="page.profile.last.name"/></label>
-                                        <form:input id="familyNameField" path="familyName" class="span3 pull-left" value="${userProfile.familyName}"/>
+                                    <label class="control-label pull-left"><fmt:message
+                                            key="page.profile.last.name"/></label>
+                                    <form:input id="familyNameField" path="familyName" class="span3 pull-left"
+                                                value="${userProfile.familyName}"/>
                                 </div>
                                 <div class="control-group">
-                                    <label for="statusField" class="control-label"><fmt:message key="page.profile.status"/></label>
+                                    <label for="statusField" class="control-label"><fmt:message
+                                            key="page.profile.status"/></label>
+
                                     <div class="controls">
                                         <form:select path="status" class="span3" id="statusField">
                                             <fmt:message key="page.general.relation.single" var="singleText"/>
-                                            <form:option value="${singleText}" id="single_id">${singleText}</form:option>
+                                            <form:option value="${singleText}"
+                                                         id="single_id">${singleText}</form:option>
                                             <fmt:message key="page.general.relation.committed" var="committedText"/>
-                                            <form:option value="${committedText}" id="committed_id">${committedText}</form:option>
+                                            <form:option value="${committedText}"
+                                                         id="committed_id">${committedText}</form:option>
                                             <fmt:message key="page.general.relation.married" var="marriedText"/>
-                                            <form:option value="${marriedText}" id="married_id">${marriedText}</form:option>
+                                            <form:option value="${marriedText}"
+                                                         id="married_id">${marriedText}</form:option>
                                             <fmt:message key="page.general.relation.other" var="otherText"/>
                                             <form:option value="${otherText}" id="other_id">${otherText}</form:option>
                                         </form:select>
                                     </div>
                                 </div>
                                 <div class="control-group">
-                                    <label for="aboutMeField" class="control-label"><fmt:message key="page.profile.about.me"/></label>
+                                    <label for="aboutMeField" class="control-label"><fmt:message
+                                            key="page.profile.about.me"/></label>
+
                                     <div class="controls">
-                                        <form:textarea id="aboutMeField" path="aboutMe" value="${userProfile.aboutMe}" class="span11" />
+                                        <form:textarea id="aboutMeField" path="aboutMe" value="${userProfile.aboutMe}"
+                                                       class="span11"/>
                                     </div>
                                 </div>
                             </div>
@@ -122,15 +142,19 @@
                     <fieldset class="row-fluid">
                         <div class=" span12">
                             <div class="well">
-                                <h4><fmt:message key="page.profile.contact.info" /></h4>
+                                <h4><fmt:message key="page.profile.contact.info"/></h4>
+
                                 <div class="profile-info-visible">
                                     <p id='email'><c:out value=" ${userProfile.email}"/></p>
                                 </div>
                                 <div class="profile-info-hidden">
                                     <div class="control-group">
-                                        <label for="emailField" class="control-label"><fmt:message key="page.profile.email"/></label>
+                                        <label for="emailField" class="control-label"><fmt:message
+                                                key="page.profile.email"/></label>
+
                                         <div class="controls">
-                                            <form:input id="emailField" name="email" required="required" path="email" class="span5" value="${userProfile.email}" />
+                                            <form:input id="emailField" name="email" required="required" path="email"
+                                                        class="span5" value="${userProfile.email}"/>
                                         </div>
                                     </div>
                                 </div>
@@ -139,18 +163,20 @@
                     </fieldset>
 
                     <%-- only display the edit profile button if the current logged in user matches the profile being viewed --%>
-                    <c:set var="currentUsername"><sec:authentication property="principal.username" htmlEscape="false" /></c:set>
+                    <c:set var="currentUsername"><sec:authentication property="principal.username" htmlEscape="false"/></c:set>
                     <c:if test="${currentUsername == userProfile.username}">
                         <fieldset class="row-fluid">
                             <div class="span12">
                                 <p>
-                                    <input type="hidden" id="profileInfo" value="profile-info" />
-                                    <button type="button" id="profileEdit" class="btn btn-primary profile-info-visible"><fmt:message key="page.profile.edit"/></button>
+                                    <input type="hidden" id="profileInfo" value="profile-info"/>
+                                    <button type="button" id="profileEdit" class="btn btn-primary profile-info-visible">
+                                        <fmt:message key="page.profile.edit"/></button>
                                     <fmt:message key="page.profile.save" var="save"/>
                                     <input type="submit" class="btn btn-primary profile-info-hidden" value="${save}"/>
-                                    <button type="button" class="btn profile-info-hidden" id="cancelEdit"><fmt:message key="page.profile.cancel"/></button>
+                                    <button type="button" class="btn profile-info-hidden" id="cancelEdit"><fmt:message
+                                            key="page.profile.cancel"/></button>
                                 </p>
-                             </div>
+                            </div>
                         </fieldset>
                     </c:if>
 
@@ -165,59 +191,64 @@
             </div>
         </div>
         <div class="span3">
-            <portal:person id="${page.ownerId}" var="owner" />
-        	<button type="button" id="addRemoveFriend" value="${owner.username}" class="btn btn-primary profile-info-visible"><fmt:message key="page.personProfile.addremove.friends"/></button>
+            <portal:person id="${page.ownerId}" var="owner"/>
+            <button type="button" id="addRemoveFriend" value="${owner.username}"
+                    class="btn btn-primary profile-info-visible"><fmt:message
+                    key="page.personProfile.addremove.friends"/></button>
         </div>
         <div class="span3">
             <div>
                 <%-- render the person profile parent page region/widgets --%>
                 <c:forEach var="region" items="${page.regions}" varStatus="status">
-                    <rave:region region="${region}" regionIdx="${status.count}" />
+                    <rave:region region="${region}" regionIdx="${status.count}"/>
                 </c:forEach>
             </div>
         </div>
-    <div class="clear-float">&nbsp;</div>
+        <div class="clear-float">&nbsp;</div>
     </div>
 </div>
-    <div id="userDialog" class="modal hide" data-backdrop="static">
-        <div class="modal-header">
-            <a href="#" class="close" data-dismiss="modal">&times;</a>
-            <h3><fmt:message key="page.general.search.title"/></h3>
-        </div>
-        <div class="modal-body">
-            <div id="userDialogContent" >
-                <div id="userContent">
-                    <div id="searchControls"><input id="searchTerm" name="searchTerm" type="text"/>
-                        <input id="userSearchButton" value="<fmt:message key="page.store.search.button"/>" type="submit"/>
-                        <input id="clearSearchButton" value="<fmt:message key="admin.clearsearch"/>" type="submit" class="hide"/>
-                    </div>
-                    <div id="userSearchListHeader"></div>
-                    <div id="userSearchListPaging"></div>
-                    <div id="userSearchResults"></div>
+<div id="userDialog" class="modal hide" data-backdrop="static">
+    <div class="modal-header">
+        <a href="#" class="close" data-dismiss="modal">&times;</a>
+
+        <h3><fmt:message key="page.general.search.title"/></h3>
+    </div>
+    <div class="modal-body">
+        <div id="userDialogContent">
+            <div id="userContent">
+                <div id="searchControls"><input id="searchTerm" name="searchTerm" type="text"/>
+                    <input id="userSearchButton" value="<fmt:message key="page.store.search.button"/>" type="submit"/>
+                    <input id="clearSearchButton" value="<fmt:message key="admin.clearsearch"/>" type="submit"
+                           class="hide"/>
                 </div>
+                <div id="userSearchListHeader"></div>
+                <div id="userSearchListPaging"></div>
+                <div id="userSearchResults"></div>
             </div>
         </div>
-        <div class="modal-footer">
-            <a href="#" class="btn" onclick="$('#userDialog').modal('hide');">Close</a>
-        </div>
     </div>
+    <div class="modal-footer">
+        <a href="#" class="btn" data-dismiss="modal" data-target="#userDialog">Close</a>
+    </div>
+</div>
 <div class="clear-float">&nbsp;</div>
 
 <input id="currentPageId" type="hidden" value="${page.id}"/>
 
 <portal:register-init-script location="${'AFTER_RAVE'}">
     <script>
-        $(function () {
-            rave.RegionWidget.defaultView = 'profile';
+        require(["rave", "ui", "portal/rave_person_profile"],
+                function (rave, ui, ravePersonProfile) {
+                    rave.setDefaultView('profile');
+                    rave.setOwner({
+                        username: "<c:out value="${userProfile.username}"/>",
+                        id: "<c:out value="${userProfile.id}"/>"
+                    });
 
-            rave.init();
-            rave.layout.init();
-            rave.personprofile.init();
-            rave.setPageOwner({
-                username: "<c:out value="${userProfile.username}"/>",
-                id: "<c:out value="${userProfile.id}"/>"
-            });
-            rave.forms.validateEditAccountForm();
-        });
+                    rave.registerOnInitHandler(function () {
+                        ui.forms.validateEditAccountForm();
+                        rave.renderWidgets('home');
+                    })
+                })
     </script>
 </portal:register-init-script>

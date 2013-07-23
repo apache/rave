@@ -17,18 +17,12 @@
 // under the License.
 
 /* Sticky footer */
-
 * {
   margin: 0;
 }
 html, body {
   height: 100%;
 }
-
-a:hover {
-  cursor: pointer;
-}
-
 .wrapper {
   min-height: 100%;
   height: auto !important;
@@ -151,7 +145,7 @@ width: 90%;*/
 }
 .widget-wrapper-canvas {
   position: absolute;
-  z-index: 5000;
+  z-index: 999;
   left: 1.25%;
   top: 50px;
   width: 97.5%;
@@ -260,6 +254,7 @@ width: 90%;*/
 .widget-prefs {
   border: 1px solid #D3D3D3;
   background-color: white;
+  display: none;
 }
 
 .widget-prefs-required-text {
@@ -1205,6 +1200,7 @@ span.error, label.error {
   position: fixed;
   top: 5%;
   right: 0;
+  display: none;
   background: #ffffff;
   border: 1px solid #999;
   border: 1px solid rgba(0, 0, 0, 0.3);
@@ -1220,14 +1216,8 @@ span.error, label.error {
   height: 90%;
   padding: 15px;
   overflow: hidden;
-  z-index: 5000;
-  .transition(~"all .5s ease-in-out");
-  .translate(100%, 0);
+  z-index: 5000
 }
-.popup.slideout.shown {
-  .translate(0, 0);
-}
-
 
 .slideout-content {
   box-sizing: border-box;
@@ -1251,6 +1241,10 @@ footer {
 
 .no-scroll {
   overflow: hidden;
+}
+
+#addWidgetForm, #addWidgetFormSubmit{
+  display:none;
 }
 
 /* RESPONSIVE */

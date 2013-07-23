@@ -17,222 +17,218 @@
  * under the License.
  */
 
-define(['underscore', './rave_openAjaxHub', './rave_log', 'opensocial'], function(_, getManagedHub, log){
-    var exports = {};
+/**
+ * Implements opensocial specific features of the rave_widget interface
+ * @module rave_opensocial
+ * @requires rave_view_manager
+ * @requires rave_api
+ * @requires rave_openajax_hub
+ * @requires rave_log
+ * @requires rave_state_manager
+ */
+define(['underscore', 'core/rave_view_manager', 'core/rave_api', 'core/rave_openajax_hub', 'core/rave_log', 'core/rave_state_manager', 'osapi'],
+    function (_, viewManager, api, managedHub, log, stateManager) {
+        var exports = {};
 
-    var container;
+        var container;
 
-    function init () {
         var containerConfig = {};
         containerConfig[osapi.container.ServiceConfig.API_PATH] = "/rpc";
-        //TODO: if we want to support js debug mode in core, figure it out.
-        //containerConfig[osapi.container.ContainerConfig.RENDER_DEBUG] = rave.getJavaScriptDebugMode();
+        containerConfig[osapi.container.ContainerConfig.RENDER_DEBUG] = stateManager.getDebugMode();
         container = new osapi.container.Container(containerConfig);
 
         gadgets.pubsub2router.init({
-            hub: getManagedHub()
+            hub: managedHub
         });
 
         rpcRegister();
         implementViews();
-    }
 
-    function rpcRegister() {
-        container.rpcRegister('requestNavigateTo', requestNavigateTo);
-        container.rpcRegister('set_pref', setPref);
-        container.rpcRegister('set_title', setTitle);
-        container.rpcRegister('hideWidget', hideWidget);
-        container.rpcRegister('showWidget', showWidget);
-    }
 
-    function requestNavigateTo(args, viewName, opt_params, opt_ownerId) {
-        var widget = args.gs._widget;
-
-        widget.navigate({view: viewName, view_params: opt_params, ownerId: opt_ownerId});
-    }
-
-    function setPref(args, editToken, prefName, prefValue) {
-        var widget = args.gs._widget;
-        widget.savePreference(prefName, prefValue);
-    }
-
-    /*
-     TODO: these rely on a gadget's view implementing a method
-     */
-    function setTitle(args) {
-        var widget = args.gs._widget;
-        if (widget._view && widget._view.setTitle) {
-            var title = _.isArray(args.a) ? args.a[0] : args.a;
-            widget._view.setTitle(title);
+        function rpcRegister() {
+            container.rpcRegister('requestNavigateTo', requestNavigateTo);
+            container.rpcRegister('set_pref', setPref);
+            container.rpcRegister('set_title', setTitle);
+            container.rpcRegister('hideWidget', hideWidget);
+            container.rpcRegister('showWidget', showWidget);
         }
-    }
 
-    function hideWidget(args, viewName, opt_params, opt_ownerId) {
-        var widget = args.gs._widget;
-        if (widget._view && widget._view.collapse) {
-            widget._view.collapse();
-        }
-    }
-
-    function showWidget(args, viewName, opt_params, opt_ownerId) {
-        var widget = args.gs._widget;
-        if (widget._view && widget._view.expand) {
-            widget._view.expand();
-        }
-    }
-
-    function implementViews() {
-        container.views.createElementForGadget = function (metadata, rel, opt_view, opt_viewTarget, opt_coordinates, parentSite, opt_callback) {
-            if (opt_viewTarget) {
-                var el;
-
-                var prefs = (metadata && metadata.views && metadata.views[opt_view])
-                var view = rave.renderView(opt_viewTarget, prefs);
-                if (view.getWidgetSite) {
-                    el = view.getWidgetSite();
-                    el.setAttribute('data-rave-view', view._uid);
-                }
-
-                return el;
-            }
-        };
-
-        container.views.createElementForEmbeddedExperience = function (rel, opt_gadgetInfo, opt_viewTarget, opt_coordinates, parentSite, opt_callback) {
-            var widgetUrl = opt_gadgetInfo.url;
-
-            rave.api.rest.getSecurityToken({
-                "url": widgetUrl,
-                //TODO: need to remove reference to rave.ui once we understand need for current pageid
-                //violates core dependency
-                "pageid": rave.ui.getCurrentPageId(),
-                "successCallback": renderEE
-            });
-
-            function renderEE(data) {
-                if (data.error) {
-                    return log(data.error.message)
-                }
-                var gadget = {
-                        "widgetUrl": widgetUrl,
-                        "securityToken": data.securityToken,
-                        "metadata": opt_gadgetInfo
-                    },
-                    height = gadget.metadata.modulePrefs.height || rave.RegionWidget.defaultHeight,
-                    width = gadget.metadata.modulePrefs.width || rave.RegionWidget.defaultWidth;
-
-                preloadMetadata(gadget);
-
+        function implementViews() {
+            container.views.createElementForGadget = function (metadata, rel, opt_view, opt_viewTarget, opt_coordinates, parentSite, opt_callback) {
                 if (opt_viewTarget) {
-                    var view = rave.renderView(opt_viewTarget, {"preferredHeight": height, preferredWidth: width});
+                    var prefs = (metadata && metadata.views && metadata.views[opt_view])
+                    var view = viewManager.renderView(opt_viewTarget, prefs);
+                    var el = view.getWidgetSite();
+                    el.setAttribute('data-rave-view', view._uid);
+                    return el;
+                }
+            };
+
+            container.views.createElementForEmbeddedExperience = function (rel, opt_gadgetInfo, opt_viewTarget, opt_coordinates, parentSite, opt_callback) {
+                var widgetUrl = opt_gadgetInfo.url;
+
+                api.rest.getSecurityToken({
+                    "url": widgetUrl,
+                    "pageid": stateManager.getPage().id,
+                    "successCallback": renderEE
+                });
+
+                function renderEE(data) {
+                    if (data.error) {
+                        return log(data.error.message)
+                    }
+                    var gadget = {
+                            "widgetUrl": widgetUrl,
+                            "securityToken": data.securityToken,
+                            "metadata": opt_gadgetInfo
+                        },
+                        height = gadget.metadata.modulePrefs.height || stateManager.getDefaultHeight(),
+                        width = gadget.metadata.modulePrefs.width || stateManager.getDefaultWidth();
+
+                    preloadMetadata(gadget);
+
+                    if (opt_viewTarget) {
+                        var view = viewManager.renderView(opt_viewTarget, {"preferredHeight": height, preferredWidth: width});
+                        var el = view.getWidgetSite();
+                        el.setAttribute('data-rave-view', view._uid);
+                        opt_callback(el);
+                    }
+                }
+            };
+
+            container.views.createElementForUrl = function (rel, opt_viewTarget, opt_coordinates, parentSite, opt_callback) {
+                if (opt_viewTarget) {
+                    var view = viewManager.renderView(opt_viewTarget);
                     var el = view.getWidgetSite();
                     el.setAttribute('data-rave-view', view._uid);
                     opt_callback(el);
                 }
+            };
+
+            container.views.destroyElement = function (site) {
+                var el = site.el_;
+                container.closeGadget(site);
+                var _uid = el.getAttribute('data-rave-view');
+                viewManager.destroyView(_uid);
+            };
+        }
+
+        function requestNavigateTo(args, viewName, opt_params, opt_ownerId) {
+            var widget = args.gs._widget,
+                viewSurface = viewName.split('.')[0],
+                renderInto = viewManager.getView(viewSurface) ? viewSurface : widget._el;
+
+            widget.render(renderInto, {view: viewName, view_params: opt_params, ownerId: opt_ownerId});
+        }
+
+        function setPref(args, editToken, prefName, prefValue) {
+            var widget = args.gs._widget;
+            widget.savePreference(prefName, prefValue);
+        }
+
+        /*
+         TODO: these rely on a gadget's view implementing a method
+         */
+        function setTitle(args) {
+            var widget = args.gs._widget;
+            if (widget._view && widget._view.setTitle) {
+                var title = _.isArray(args.a) ? args.a[0] : args.a;
+                widget._view.setTitle(title);
             }
-        };
+        }
 
-        container.views.createElementForUrl = function (rel, opt_viewTarget, opt_coordinates, parentSite, opt_callback) {
-            if (opt_viewTarget) {
-                var view = rave.renderView(opt_viewTarget);
-                var el = view.getWidgetSite();
-                el.setAttribute('data-rave-view', view._uid);
-                opt_callback(el);
+        function hideWidget(args, viewName, opt_params, opt_ownerId) {
+            var widget = args.gs._widget;
+            if (widget._view && widget._view.collapse) {
+                widget._view.collapse();
             }
-        };
-
-        container.views.destroyElement = function (site) {
-            var el = site.el_;
-            container.closeGadget(site);
-            var _uid = el.getAttribute('data-rave-view');
-            rave.destroyView(_uid);
-        };
-    }
-
-    exports.initWidget = function (widget) {
-        widget.error = getMetadataErrors(widget.metadata);
-        if (!widget.error) {
-            preloadMetadata(widget);
-        }
-    }
-
-    /*
-     Opts -
-     full spectrum of allowed render options!
-     */
-    exports.renderWidget = function (widget, opts) {
-        if (widget.error) {
-            widget.renderError(widget.error.message);
-            return;
-        }
-        opts = opts || {};
-        if(!widget._site) {
-            widget._site = container.newGadgetSite(widget._el);
-            widget._site._widget = widget;
         }
 
-        var renderParams = {};
-        renderParams[osapi.container.RenderParam.VIEW] = opts.view || rave.RegionWidget.defaultView;
-        renderParams[osapi.container.RenderParam.ALLOW_DEFAULT_VIEW ] = opts.allowDefaultView;
-        renderParams[osapi.container.RenderParam.DEBUG ] = opts.debug;
-        renderParams[osapi.container.RenderParam.HEIGHT ] = opts.height || rave.RegionWidget.defaultHeight;
-        renderParams[osapi.container.RenderParam.NO_CACHE ] = opts.noCache;
-        renderParams[osapi.container.RenderParam.TEST_MODE] = opts.testMode;
-        renderParams[osapi.container.RenderParam.WIDTH ] = opts.width || rave.RegionWidget.defaultWidth;
-        renderParams[osapi.container.RenderParam.USER_PREFS] = getCompleteUserPrefSet(widget.userPrefs, widget.metadata.userPrefs);
-        container.navigateGadget(widget._site, widget.widgetUrl, opts.view_params, renderParams, opts.callback);
-    }
-
-    exports.unrenderWidget = function(widget){
-        if (widget._site) {
-            container.closeGadget(widget._site);
+        function showWidget(args, viewName, opt_params, opt_ownerId) {
+            var widget = args.gs._widget;
+            if (widget._view && widget._view.expand) {
+                widget._view.expand();
+            }
         }
-    }
 
-    /**
-     * Combines the default user pref list from the metadata with those set by the user
-     * @param setPrefs preferences already set by the user
-     * @param metadataPrefs list of all available metadata objects
-     */
-    function getCompleteUserPrefSet(setPrefs, metadataPrefs) {
-        var combined = {};
-        _.each(metadataPrefs, function (metaPref) {
-            var userPref = setPrefs[metaPref.name];
-            combined[metaPref.name] = _.isUndefined(userPref) ? metaPref.defaultValue : userPref;
-        });
-        return combined;
-    }
+        exports.initWidget = function (widget) {
+            widget.error = getMetadataErrors(widget.metadata);
+            if (!widget.error) {
+                preloadMetadata(widget);
+            }
+        }
 
-    function preloadMetadata(gadget) {
-        //Put our gadget metadata into the form that the common container is expecting
-        var commonContainerMetadataWrapper = {};
-        commonContainerMetadataWrapper[gadget.widgetUrl] = gadget.metadata;
+        exports.renderWidget = function (widget, el, opts) {
+            if (widget.error) {
+                widget.renderError(el, widget.error.message);
+                return;
+            }
+            opts = opts || {};
+            var site = container.newGadgetSite(el);
+            site._widget = widget;
+            widget._site = site;
 
-        //Put our gadget security token data into the form that the common container is expecting
-        var commonContainerTokenData = {};
-        commonContainerTokenData[osapi.container.TokenResponse.TOKEN] = gadget.securityToken;
-        commonContainerTokenData[osapi.container.MetadataResponse.RESPONSE_TIME_MS] = new Date().getTime();
-        var commonContainerTokenWrapper = {};
-        commonContainerTokenWrapper[gadget.widgetUrl] = commonContainerTokenData;
+            var renderParams = {};
+            renderParams[osapi.container.RenderParam.VIEW] = opts.view || stateManager.getDefaultView();
+            renderParams[osapi.container.RenderParam.ALLOW_DEFAULT_VIEW ] = opts.allowDefaultView;
+            renderParams[osapi.container.RenderParam.DEBUG ] = opts.debug;
+            renderParams[osapi.container.RenderParam.HEIGHT ] = opts.height || stateManager.getDefaultHeight();
+            renderParams[osapi.container.RenderParam.NO_CACHE ] = opts.noCache;
+            renderParams[osapi.container.RenderParam.TEST_MODE] = opts.testMode;
+            renderParams[osapi.container.RenderParam.WIDTH ] = opts.width || stateManager.getDefaultWidth();
+            renderParams[osapi.container.RenderParam.USER_PREFS] = getCompleteUserPrefSet(widget.userPrefs, widget.metadata.userPrefs);
+            container.navigateGadget(site, widget.widgetUrl, opts.view_params, renderParams, opts.callback);
+        }
 
-        //Setup the preloadConfig data with all our preload data
-        var preloadConfig = {};
-        preloadConfig[osapi.container.ContainerConfig.PRELOAD_METADATAS] = commonContainerMetadataWrapper;
-        preloadConfig[osapi.container.ContainerConfig.PRELOAD_TOKENS] = commonContainerTokenWrapper;
-        preloadConfig[osapi.container.ContainerConfig.PRELOAD_REF_TIME] = null;
+        /**
+         * Combines the default user pref list from the metadata with those set by the user
+         * @param setPrefs preferences already set by the user
+         * @param metadataPrefs list of all available metadata objects
+         */
+        function getCompleteUserPrefSet(setPrefs, metadataPrefs) {
+            var combined = {};
+            _.each(metadataPrefs, function (metaPref) {
+                var userPref = setPrefs[metaPref.name];
+                combined[metaPref.name] = _.isUndefined(userPref) ? metaPref.defaultValue : userPref;
+            });
+            return combined;
+        }
 
-        //Preload our data into the common container
-        container.preloadCaches(preloadConfig);
-    }
+        function preloadMetadata(gadget) {
+            //Put our gadget metadata into the form that the common container is expecting
+            var commonContainerMetadataWrapper = {};
+            commonContainerMetadataWrapper[gadget.widgetUrl] = gadget.metadata;
 
-    function getMetadataErrors(metadata) {
-        return metadata.error;
-    }
+            //Put our gadget security token data into the form that the common container is expecting
+            var commonContainerTokenData = {};
+            commonContainerTokenData[osapi.container.TokenResponse.TOKEN] = gadget.securityToken;
+            commonContainerTokenData[osapi.container.MetadataResponse.RESPONSE_TIME_MS] = new Date().getTime();
+            var commonContainerTokenWrapper = {};
+            commonContainerTokenWrapper[gadget.widgetUrl] = commonContainerTokenData;
 
-    exports.getContainer = function () {
-        return container;
-    }
+            //Setup the preloadConfig data with all our preload data
+            var preloadConfig = {};
+            preloadConfig[osapi.container.ContainerConfig.PRELOAD_METADATAS] = commonContainerMetadataWrapper;
+            preloadConfig[osapi.container.ContainerConfig.PRELOAD_TOKENS] = commonContainerTokenWrapper;
+            preloadConfig[osapi.container.ContainerConfig.PRELOAD_REF_TIME] = null;
 
-    init();
+            //Preload our data into the common container
+            container.preloadCaches(preloadConfig);
+        }
 
-    return exports;
-});
+        function getMetadataErrors(metadata) {
+            return metadata.error;
+        }
+
+        exports.closeWidget = function (widget) {
+            if (widget._site) {
+                container.closeGadget(widget._site);
+            }
+        }
+
+        exports.getContainer = function () {
+            return container;
+        }
+
+        return exports;
+    })

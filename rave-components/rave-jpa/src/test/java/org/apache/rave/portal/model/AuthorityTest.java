@@ -23,7 +23,7 @@ import org.apache.rave.model.Authority;
 import org.junit.Test;
 import org.springframework.security.core.GrantedAuthority;
 
-import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Test for {@link JpaAuthority}

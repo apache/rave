@@ -19,7 +19,7 @@
 
 package org.apache.rave.portal.web.validator;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.validator.routines.RegexValidator;
 import org.apache.commons.validator.routines.UrlValidator;
 import org.apache.rave.model.Widget;
