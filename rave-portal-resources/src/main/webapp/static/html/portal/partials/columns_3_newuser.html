@@ -1,0 +1,28 @@
+<div class="columns_3_newuser_static">
+    This is the default page layout for new users. We suggest you play with some of the Rave features:
+    <ul>
+        <li>Rename this page and change the widget layout</li>
+        <li>Add a new page</li>
+        <li>Add widgets from the Widget Store</li>
+        <li>Edit the preferences for a widget</li>
+        <li>Move widgets around on a page</li>
+        <li>Collapse and restore a widget</li>
+        <li>much more...</li>
+    </ul>
+</div>
+
+<div class="columns_3_newuser_widgets">
+    <div class="columns_3_newuser_subtitle">We have provided a few sample widgets for you to try out. Click on the
+        Widget Store link above to add more widgets!
+    </div>
+    <div class="widgetRow upperRow">
+        <div ng-repeat="region in page.regions.slice(0,2)">
+            <div ng-include="'/portal/static/html/portal/partials/region.html'"></div>
+        </div>
+    </div>
+    <div class="widgetRow bottomRow">
+        <div ng-repeat="region in page.regions.slice(2)">
+            <div ng-include="'/portal/static/html/portal/partials/region.html'"></div>
+        </div>
+    </div>
+</div>
