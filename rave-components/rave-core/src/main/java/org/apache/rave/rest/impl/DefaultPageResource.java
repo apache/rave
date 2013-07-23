@@ -20,10 +20,7 @@
 package org.apache.rave.rest.impl;
 
 
-import com.google.common.collect.Lists;
 import org.apache.rave.portal.service.PageService;
-import org.apache.rave.portal.service.UserService;
-import org.apache.rave.portal.web.renderer.RenderService;
 import org.apache.rave.rest.PagesResource;
 import org.apache.rave.rest.model.*;
 import org.slf4j.Logger;
@@ -55,17 +52,11 @@ public class DefaultPageResource implements PagesResource {
     }
 
     @Override
-    public Response getPage(String id) {
+    public Page getPage(String id) {
         logger.debug("Retrieving page for export: " + id);
         org.apache.rave.model.Page fromDb = pageService.getPage(id);
-        if(fromDb == null) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-        else {
-            Page responsePage =  new Page(fromDb);
 
-            return Response.ok(new JsonResponseWrapper(responsePage)).build();
-        }
+        return new Page(fromDb);
     }
 
     @Override

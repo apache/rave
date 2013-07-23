@@ -22,25 +22,12 @@
     mainConfigFile: '${basedir}/src/main/webapp/static/script/requireConfig.js',
     baseUrl: '.',
     dir: '${project.build.directory}/${project.build.finalName}/static/script-built',
+    paths: {
+        'clientMessages': 'empty:'
+    },
     modules: [
         {
             name: 'rave'
-        },
-        {
-            name: 'ui',
-            exclude: ['rave']
-        },
-        {
-            name: 'portal/rave_admin',
-            exclude: ['rave']
-        },
-        {
-            name: 'portal/rave_store',
-            exclude: ['rave']
-        },
-        {
-            name: 'portal/rave_forms',
-            exclude: ['rave']
         }
     ]
 })
