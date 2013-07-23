@@ -69,13 +69,14 @@ public interface PagesResource {
     /**
      * Returns the given page
      *
-     * @param pageId ID of the page on which the operation is to take place
+     *
+     * @param id ID of the page on which the operation is to take place
      * @return
      */
     @GET
     @Path("/{pageId}")
     @Produces(MediaType.APPLICATION_JSON)
-    Response getPage(@PathParam("pageId") String pageId);
+    Page getPage(@PathParam("pageId") String id);
 
     /**
      * Updates the given page

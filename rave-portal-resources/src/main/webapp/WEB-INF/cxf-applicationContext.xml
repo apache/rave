@@ -21,11 +21,14 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:jaxrs="http://cxf.apache.org/jaxrs"
+       xmlns:cxf="http://cxf.apache.org/core"
        xsi:schemaLocation="
             http://www.springframework.org/schema/beans
             http://www.springframework.org/schema/beans/spring-beans.xsd
             http://cxf.apache.org/jaxrs
-            http://cxf.apache.org/schemas/jaxrs.xsd">
+            http://cxf.apache.org/schemas/jaxrs.xsd
+            http://cxf.apache.org/core
+            http://cxf.apache.org/schemas/core.xsd">
 
     <!-- do not use import statements if CXFServlet init parameters link to this beans.xml -->
 
@@ -46,6 +49,12 @@
         </jaxrs:serviceBeans>
     </jaxrs:server>
 
+    <cxf:bus>
+        <cxf:outInterceptors>
+            <ref bean="JsonResponseWrapperInterceptor" />
+        </cxf:outInterceptors>
+    </cxf:bus>
+
     <bean id="peopleBean" class="org.apache.rave.rest.impl.DefaultPeopleResource">
         <property name="userService" ref="userService"/>
     </bean>
@@ -61,5 +70,7 @@
 
     <bean id="pagesBean" class="org.apache.rave.rest.impl.DefaultPageResource" autowire="byType" />
     <bean id="pagesForRenderBean" class="org.apache.rave.rest.impl.DefaultPageForRenderResource" autowire="byType" />
+
+    <bean id="JsonResponseWrapperInterceptor" class="org.apache.rave.rest.interceptor.JsonResponseWrapperInterceptor"/>
 
 </beans>
