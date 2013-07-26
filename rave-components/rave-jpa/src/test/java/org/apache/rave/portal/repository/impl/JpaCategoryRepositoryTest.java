@@ -138,6 +138,19 @@ public class JpaCategoryRepositoryTest {
             lastText = currentText;
         }
     }
+    @Test
+    public void getLimitedList() {
+        List<Category> list = repository.getLimitedList(1, 2);
+        assertThat(list.size(), is(2));
+        assertThat(list.get(0).getText(), is("Cat99"));
+        assertThat(list.get(1).getText(), is("News Category"));
+    }
+
+    @Test
+    public void getCountAll(){
+        int count = repository.getCountAll();
+        assertThat(count, is(6));
+    }
 
     /**
      * Verify that a unique constraint exception is thrown if a duplicate text value is attempted to be added

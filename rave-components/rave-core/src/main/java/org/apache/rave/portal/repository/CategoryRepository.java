@@ -17,16 +17,11 @@ package org.apache.rave.portal.repository;
 
 import org.apache.rave.repository.Repository;
 import org.apache.rave.model.Category;
+import org.apache.rave.repository.ResourceRepository;
+
 import java.util.List;
 
-public interface CategoryRepository extends Repository<Category> {
-    /**
-     * Gets a list of <strong>all</strong> Category objects in the repository
-     *
-     * @return a valid List
-     */
-    List<Category> getAll();
-
+public interface CategoryRepository extends Repository<Category>, ResourceRepository<Category> {
     /**
      * Removes a user from the createdBy or modifiedBy fields for any Category they are associated with and assigns
      * the values to null

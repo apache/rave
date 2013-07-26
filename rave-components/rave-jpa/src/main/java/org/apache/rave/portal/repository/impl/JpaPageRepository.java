@@ -269,7 +269,7 @@ public class JpaPageRepository implements PageRepository {
 
     @Override
     public int getCountAll() {
-        Query query = manager.createNamedQuery(JpaWidget.WIDGET_COUNT_ALL);
+        Query query = manager.createNamedQuery(JpaPage.GET_COUNT);
         Number countResult = (Number) query.getSingleResult();
         return countResult.intValue();
     }

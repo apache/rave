@@ -26,6 +26,7 @@ import org.apache.rave.portal.repository.CategoryRepository;
 import org.apache.rave.util.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -47,6 +48,16 @@ public class MongoDbCategoryRepository implements CategoryRepository {
     @Override
     public List<Category> getAll() {
         return CollectionUtils.<Category>toBaseTypedList(hydrate(template.findAll(CLASS, CATEGORY_COLLECTION)));
+    }
+
+    @Override
+    public List<Category> getLimitedList(int offset, int limit) {
+        return CollectionUtils.<Category>toBaseTypedList(hydrate(template.find(new Query().skip(offset).limit(limit), CLASS)));
+    }
+
+    @Override
+    public int getCountAll() {
+        return (int) template.count(new Query(), CLASS);
     }
 
     @Override

@@ -298,4 +298,27 @@ public class JpaPageRepositoryTest {
     public void getType() {
         assertEquals(repository.getType(), JpaPage.class);
     }
+
+    @Test
+    public void getAll(){
+        List<Page> pages = repository.getAll();
+        assertThat(pages.size(), is(17));
+    }
+
+    @Test
+    public void getLimitedList(){
+        List<Page> pages = repository.getLimitedList(2, 5);
+        assertThat(pages.size(), is(5));
+        assertThat(pages.get(0).getId(), is("3"));
+        assertThat(pages.get(1).getId(), is("4"));
+        assertThat(pages.get(2).getId(), is("5"));
+        assertThat(pages.get(3).getId(), is("6"));
+        assertThat(pages.get(4).getId(), is("7"));
+    }
+
+    @Test
+    public void getCountAll(){
+        int count = repository.getCountAll();
+        assertThat(count, is(17));
+    }
 }
