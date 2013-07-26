@@ -21,34 +21,13 @@ package org.apache.rave.portal.repository;
 import org.apache.rave.repository.Repository;
 import org.apache.rave.model.*;
 import org.apache.rave.portal.model.util.WidgetStatistics;
+import org.apache.rave.repository.ResourceRepository;
 
 import java.util.List;
 import java.util.Map;
 
 
-public interface WidgetRepository extends Repository<Widget> {
-    /**
-     * Gets a list of <strong>all</strong> widgets in the repository
-     *
-     * @return a valid List
-     */
-    List<Widget> getAll();
-
-    /**
-     * List of Widgets with the same condition as in {@link #getAll()}
-     * but with a limited amount of Widgets.
-     *
-     * @param offset   start point within the total resultset
-     * @param pageSize maximum number of items to be returned (for paging)
-     * @return a List of widgets with of at most the number of items in pageSize
-     */
-    List<Widget> getLimitedList(int offset, int pageSize);
-
-    /**
-     * @return the total number of {@link org.apache.rave.model.Widget}'s in the repository. Useful for paging.
-     */
-    int getCountAll();
-
+public interface WidgetRepository extends Repository<Widget>, ResourceRepository<Widget> {
     /**
      * Gets a List of {@link Widget}'s by performing a free text search
      *

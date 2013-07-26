@@ -266,4 +266,18 @@ public class MongoDbPageRepository implements PageRepository {
     }
 
 
+    @Override
+    public List<Page> getAll() {
+        return template.find(new Query());
+    }
+
+    @Override
+    public List<Page> getLimitedList(int offset, int pageSize) {
+        return template.find(new Query().skip(offset).limit(pageSize));
+    }
+
+    @Override
+    public int getCountAll() {
+        return (int) template.count(new Query());
+    }
 }
