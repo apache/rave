@@ -88,6 +88,14 @@ public class MongoDbUserRepositoryTest {
     }
 
     @Test
+    public void getAll(){
+        List<User> users = new ArrayList<User>();
+        expect(template.find(isA(Query.class))).andReturn(users);
+        replay(template);
+        assertThat(users, is(sameInstance(userRepository.getAll())));
+    }
+
+    @Test
     public void getLimitedList_Valid(){
         int offset = 234;
         int pageSize = 123;

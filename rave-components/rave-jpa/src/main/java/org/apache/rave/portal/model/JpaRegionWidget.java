@@ -42,7 +42,9 @@ import java.util.List;
         @NamedQuery(name = JpaRegionWidget.REGION_WIDGET_GET_DISTINCT_USER_COUNT_SINGLE_WIDGET,
                     query = "select count(distinct rw.region.page.ownerId) from JpaRegionWidget rw where rw.widgetId = :widgetId"),
         @NamedQuery(name = JpaRegionWidget.FIND_BY_ID,
-                    query = "select rw from JpaRegionWidget rw where rw.entityId = :widgetId")
+                    query = "select rw from JpaRegionWidget rw where rw.entityId = :widgetId"),
+        @NamedQuery(name = JpaRegionWidget.REGION_WIDGET_GET_ALL, query = JpaRegionWidget.SELECT_R_FROM_REGION_WIDGET_R),
+        @NamedQuery(name = JpaRegionWidget.REGION_WIDGET_COUNT_ALL, query = JpaRegionWidget.SELECT_COUNT_R_FROM_REGION_WIDGET_R)
 })
 public class JpaRegionWidget implements BasicEntity, Serializable, RegionWidget {
     private static final long serialVersionUID = 1L;
@@ -50,8 +52,14 @@ public class JpaRegionWidget implements BasicEntity, Serializable, RegionWidget 
     public static final String FIND_BY_ID = "RegionWidget.findById";
     public static final String REGION_WIDGET_GET_DISTINCT_USER_COUNT_ALL_WIDGETS = "JpaRegionWidget.getDistinctUserCountForAllWidgets";
     public static final String REGION_WIDGET_GET_DISTINCT_USER_COUNT_SINGLE_WIDGET = "JpaRegionWidget.getDistinctUserCount";
+    public static final String REGION_WIDGET_GET_ALL = "JpaRegionWidget.getAll";
+    public static final String REGION_WIDGET_COUNT_ALL = "JpaRegionWidget.countAll";
+
 
     public static final String PARAM_WIDGET_ID = "widgetId";
+
+    static final String SELECT_R_FROM_REGION_WIDGET_R = "SELECT r FROM JpaRegionWidget r order by r.entityId";
+    static final String SELECT_COUNT_R_FROM_REGION_WIDGET_R = "SELECT count(r) FROM JpaRegionWidget r ";
 
     @Id
     @Column(name = "entity_id")

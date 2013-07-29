@@ -65,7 +65,7 @@ public class MongoDbRegionRepositoryTest {
         regions.add(region);
         page.setRegions(regions);
 
-        expect( template.findOne(new Query(Criteria.where("regions").elemMatch(Criteria.where("_id").is(id))))).andReturn(page);
+        expect(template.findOne(new Query(Criteria.where("regions").elemMatch(Criteria.where("_id").is(id))))).andReturn(page);
         replay(template);
 
         Region result = repo.get(id);
@@ -154,4 +154,75 @@ public class MongoDbRegionRepositoryTest {
         repo.delete(item);
     }
 
+    @Test
+    public void getAll(){
+        String id = "1111L";
+        String id2 = "2222L";
+        Page page = new PageImpl("1234L");
+        List<Page> pages = Lists.newArrayList();
+        List<Region> regions = Lists.newArrayList();
+        Region region = new RegionImpl(id);
+        Region region2 = new RegionImpl(id2);
+        regions.add(region);
+        regions.add(region2);
+        pages.add(page);
+        page.setRegions(regions);
+
+
+        Query q = new Query();
+        expect(template.find(q)).andReturn(pages);
+        replay(template);
+
+        List<Region> result = repo.getAll();
+        assertNotNull(result);
+        assertThat(result, is(equalTo(regions)));
+        assertThat(result.size(), equalTo(2));
+    }
+
+    @Test
+    public void getLimitedList(){
+        String id = "1111L";
+        String id2 = "2222L";
+        Page page = new PageImpl("1234L");
+        List<Page> pages = Lists.newArrayList();
+        List<Region> regions = Lists.newArrayList();
+        Region region = new RegionImpl(id);
+        Region region2 = new RegionImpl(id2);
+        regions.add(region);
+        regions.add(region2);
+        pages.add(page);
+        page.setRegions(regions);
+
+        Query q = new Query();
+        expect(template.find(q)).andReturn(pages);
+        replay(template);
+
+        List<Region> result = repo.getLimitedList(1, 1);
+        assertNotNull(result);
+        assertThat(result.size(), equalTo(1));
+    }
+
+
+    @Test
+    public void getCount(){
+        String id = "1111L";
+        String id2 = "2222L";
+        Page page = new PageImpl("1234L");
+        List<Page> pages = Lists.newArrayList();
+        List<Region> regions = Lists.newArrayList();
+        Region region = new RegionImpl(id);
+        Region region2 = new RegionImpl(id2);
+        regions.add(region);
+        regions.add(region2);
+        pages.add(page);
+        page.setRegions(regions);
+
+        Query q = new Query();
+        expect(template.find(q)).andReturn(pages);
+        replay(template);
+
+        int count = repo.getCountAll();
+        assertNotNull(count);
+        assertThat(count, equalTo(2));
+    }
 }

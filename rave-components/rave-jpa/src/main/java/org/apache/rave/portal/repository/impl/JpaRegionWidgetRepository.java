@@ -23,17 +23,26 @@ import org.apache.rave.portal.model.JpaRegionWidget;
 import org.apache.rave.model.RegionWidget;
 import org.apache.rave.portal.model.conversion.JpaRegionWidgetConverter;
 import org.apache.rave.portal.repository.RegionWidgetRepository;
+import org.apache.rave.util.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 
+import java.util.List;
+
+import static org.apache.rave.persistence.jpa.util.JpaUtil.getPagedResultList;
 import static org.apache.rave.persistence.jpa.util.JpaUtil.saveOrUpdate;
 
 
 @Repository
 public class JpaRegionWidgetRepository implements RegionWidgetRepository {
+    private final Logger log = LoggerFactory.getLogger(JpaRegionWidgetRepository.class);
 
     @PersistenceContext
     private EntityManager manager;
@@ -60,5 +69,25 @@ public class JpaRegionWidgetRepository implements RegionWidgetRepository {
     @Override
     public void delete(RegionWidget item) {
         manager.remove(item instanceof JpaRegionWidget ? item : get(item.getId()));
+    }
+
+    @Override
+    public List<RegionWidget> getAll() {
+        log.warn("Requesting potentially large resultset of RegionWidget. No pagesize set.");
+        TypedQuery<JpaRegionWidget> query = manager.createNamedQuery(JpaRegionWidget.REGION_WIDGET_GET_ALL, JpaRegionWidget.class);
+        return CollectionUtils.<RegionWidget>toBaseTypedList(query.getResultList());
+    }
+
+    @Override
+    public List<RegionWidget> getLimitedList(int offset, int pageSize) {
+        TypedQuery<JpaRegionWidget> query = manager.createNamedQuery(JpaRegionWidget.REGION_WIDGET_GET_ALL, JpaRegionWidget.class);
+        return CollectionUtils.<RegionWidget>toBaseTypedList(getPagedResultList(query, offset, pageSize));
+    }
+
+    @Override
+    public int getCountAll() {
+        Query query = manager.createNamedQuery(JpaRegionWidget.REGION_WIDGET_COUNT_ALL);
+        Number countResult = (Number) query.getSingleResult();
+        return countResult.intValue();
     }
 }

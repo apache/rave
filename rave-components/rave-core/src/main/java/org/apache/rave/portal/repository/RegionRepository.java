@@ -21,8 +21,9 @@ package org.apache.rave.portal.repository;
 
 import org.apache.rave.repository.Repository;
 import org.apache.rave.model.Region;
+import org.apache.rave.repository.ResourceRepository;
 
 /**
  * Provides persistence operations for the {@link Region} class
  */
-public interface RegionRepository extends Repository<Region> { }
+public interface RegionRepository extends Repository<Region>, ResourceRepository<Region> { }

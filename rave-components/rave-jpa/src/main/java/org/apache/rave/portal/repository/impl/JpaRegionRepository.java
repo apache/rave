@@ -23,17 +23,28 @@ import org.apache.rave.portal.model.JpaRegion;
 import org.apache.rave.model.Region;
 import org.apache.rave.portal.model.conversion.JpaRegionConverter;
 import org.apache.rave.portal.repository.RegionRepository;
+import org.apache.rave.repository.ResourceRepository;
+import org.apache.rave.util.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 
+import java.util.List;
+
+import static org.apache.rave.persistence.jpa.util.JpaUtil.getPagedResultList;
 import static org.apache.rave.persistence.jpa.util.JpaUtil.saveOrUpdate;
 
 
 @Repository
 public class JpaRegionRepository implements RegionRepository {
+    private final Logger log = LoggerFactory.getLogger(JpaRegionRepository.class);
+
     @PersistenceContext
     private EntityManager manager;
 
@@ -59,5 +70,25 @@ public class JpaRegionRepository implements RegionRepository {
     @Override
     public void delete(Region item) {
         manager.remove(item instanceof JpaRegion ? item : get(item.getId()));
+    }
+
+    @Override
+    public List<Region> getAll() {
+        log.warn("Requesting potentially large resultset of Region. No pagesize set.");
+        TypedQuery<JpaRegion> query = manager.createNamedQuery(JpaRegion.REGION_GET_ALL, JpaRegion.class);
+        return CollectionUtils.<Region>toBaseTypedList(query.getResultList());
+    }
+
+    @Override
+    public List<Region> getLimitedList(int offset, int pageSize) {
+        TypedQuery<JpaRegion> query = manager.createNamedQuery(JpaRegion.REGION_GET_ALL, JpaRegion.class);
+        return CollectionUtils.<Region>toBaseTypedList(getPagedResultList(query, offset, pageSize));
+    }
+
+    @Override
+    public int getCountAll() {
+        Query query = manager.createNamedQuery(JpaRegion.REGION_COUNT_ALL);
+        Number countResult = (Number) query.getSingleResult();
+        return countResult.intValue();
     }
 }

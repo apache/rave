@@ -36,6 +36,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertEquals;
@@ -73,6 +74,27 @@ public class JpaRegionWidgetRepositoryTest {
         RegionWidget regionWidget = repository.get(INVALID_REGION_WIDGET_ID.toString());
         assertThat(regionWidget, is(nullValue()));
     }
+
+    @Test
+    public void getAll(){
+        List<RegionWidget> regions = repository.getAll();
+        assertThat(regions, is(notNullValue()));
+        assertThat(regions.size(), is(equalTo(51)));
+    }
+
+    @Test
+    public void getLimitedSet(){
+        List<RegionWidget> regions = repository.getLimitedList(0, 10);
+        assertThat(regions.size(), is(equalTo(10)));
+    }
+
+    @Test
+    public void getCount(){
+        int count = repository.getCountAll();
+        assertThat(count, is(notNullValue()));
+        assertThat(count, is(equalTo(51)));
+    }
+
 
     @Test
     @Rollback(true)

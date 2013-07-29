@@ -51,6 +51,7 @@ import java.util.List;
 @Table(name = "portal_preference")
 @NamedQueries({
         @NamedQuery(name = JpaPortalPreference.GET_ALL, query = "SELECT pp FROM JpaPortalPreference pp"),
+        @NamedQuery(name = JpaPortalPreference.COUNT_ALL, query = "SELECT count(pp) FROM JpaPortalPreference pp"),
         @NamedQuery(name = JpaPortalPreference.GET_BY_KEY,
                 query = "SELECT pp FROM JpaPortalPreference pp WHERE pp.key = :" + JpaPortalPreference.PARAM_KEY)
 })
@@ -59,6 +60,7 @@ public class JpaPortalPreference implements BasicEntity, Serializable, PortalPre
     private static final long serialVersionUID = 1L;
 
     public static final String GET_ALL = "PortalPreference.getAll";
+    public static final String COUNT_ALL = "PortalPreference.countAll";
     public static final String GET_BY_KEY = "PortalPreference.getByKey";
     public static final String PARAM_KEY = "key";
 

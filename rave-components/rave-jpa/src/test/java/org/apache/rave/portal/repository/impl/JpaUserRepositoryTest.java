@@ -151,6 +151,13 @@ public class JpaUserRepositoryTest {
     }
 
     @Test
+    public void getAll(){
+        List<User> users = repository.getAll();
+        assertNotNull(users);
+        assertThat(users.size(), is(13));
+    }
+
+    @Test
     public void getLimitedList() {
         final int offset = 0;
         final int pageSize = 5;
