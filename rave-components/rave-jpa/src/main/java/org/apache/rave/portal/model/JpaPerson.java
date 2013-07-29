@@ -37,6 +37,8 @@ import java.util.List;
 @Table(name = "person")
 @Access(AccessType.FIELD)
 @NamedQueries(value = {
+    @NamedQuery(name = JpaPerson.GET_ALL, query = "select p from JpaPerson p"),
+    @NamedQuery(name = JpaPerson.GET_COUNT, query = "select count(p) from JpaPerson p where p.username like :username"),
     @NamedQuery(name = JpaPerson.FIND_BY_USERNAME, query = "select p from JpaPerson p where p.username like :username"),
     @NamedQuery(name = JpaPerson.FIND_FRIENDS_BY_USERNAME, query = "select a.followedby from JpaPersonAssociation a where a.follower.username = :username and a.status = :status")
 })
@@ -47,6 +49,8 @@ public class JpaPerson implements BasicEntity, Person, Serializable {
     public static final String FIND_FRIENDS_BY_USERNAME = "Person.findFriendsByUsername";
     public static final String USERNAME_PARAM = "username";
     public static final String STATUS_PARAM = "status";
+    public static final String GET_ALL = "Person.getAll";
+    public static final String GET_COUNT = "Person.getCount";
 
     @Id
     @Column(name = "entity_id")

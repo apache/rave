@@ -34,11 +34,13 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import static org.apache.rave.persistence.jpa.util.JpaUtil.getPagedResultList;
 import static org.apache.rave.persistence.jpa.util.JpaUtil.getSingleResult;
 import static org.apache.rave.persistence.jpa.util.JpaUtil.saveOrUpdate;
 
@@ -70,7 +72,7 @@ public class JpaPersonRepository implements PersonRepository {
             connections.addAll(findFriends(username));
             TypedQuery<JpaGroup> members = manager.createQuery("SELECT g from JpaGroup g where :userId member of g.members", JpaGroup.class);
             members.setParameter("userId", personId);
-            for(JpaGroup groups : members.getResultList()) {
+            for (JpaGroup groups : members.getResultList()) {
                 addPeopleByIds(groups, connections);
             }
         }
@@ -248,7 +250,7 @@ public class JpaPersonRepository implements PersonRepository {
 
         return receiverItem.getEntityId() != null && senderItem.getEntityId() != null;
     }
-    
+
     @Override
     public int removeAllFriendsAndRequests(String userid) {
         TypedQuery<JpaPersonAssociation> query = manager.createNamedQuery(JpaPersonAssociation.DELETE_ASSOCIATION_ITEMS_BY_USERID, JpaPersonAssociation.class);
@@ -271,5 +273,24 @@ public class JpaPersonRepository implements PersonRepository {
                 }
             }
         }
+    }
+
+    @Override
+    public List<Person> getAll() {
+        TypedQuery<Person> query = manager.createNamedQuery(JpaPerson.GET_ALL, Person.class);
+        return CollectionUtils.<Person>toBaseTypedList(query.getResultList());
+    }
+
+    @Override
+    public List<Person> getLimitedList(int offset, int limit) {
+        TypedQuery<Person> query = manager.createNamedQuery(JpaPerson.GET_ALL, Person.class);
+        return CollectionUtils.<Person>toBaseTypedList(getPagedResultList(query, offset, limit));
+    }
+
+    @Override
+    public int getCountAll() {
+        Query query = manager.createNamedQuery(JpaPerson.GET_COUNT);
+        Number countResult = (Number) query.getSingleResult();
+        return countResult.intValue();
     }
 }
