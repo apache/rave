@@ -22,7 +22,10 @@ require.config({
     paths:{
         "osapi": "/src/test/dependencies/osapi",
         "jquery": "/src/test/dependencies/jquery",
-        "underscore": "/src/test/dependencies/underscore"
+        "underscore": "/src/test/dependencies/underscore",
+        "angular": "/src/test/dependencies/angular",
+        "angularResource": "/src/test/dependencies/angular-resource",
+        "angularMocks": "/src/test/dependencies/angular-mocks"
     },
     shim: {
         underscore:{
@@ -30,6 +33,16 @@ require.config({
         },
         jquery:{
             exports: '$'
+        },
+        angular:{
+            exports: 'angular',
+            deps:['jquery']
+        },
+        angularResource:{
+            deps:['angular']
+        },
+        angularMocks:{
+            deps:['angularResource']
         }
     }
 });

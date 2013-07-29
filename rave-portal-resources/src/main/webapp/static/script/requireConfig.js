@@ -28,9 +28,11 @@ requirejs.config({
         "jqueryValidate":"//ajax.aspnetcdn.com/ajax/jquery.validate/1.8.1/jquery.validate.min",
         "jqueryHashChange":'//cdnjs.cloudflare.com/ajax/libs/jquery-hashchange/v1.3/jquery.ba-hashchange.min',
         "jqueryTouchPouch": '//cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.2/jquery.ui.touch-punch.min',
+        "angular": '//cdnjs.cloudflare.com/ajax/libs/angular.js/1.1.5/angular.min',
+        "angularResource": '//cdnjs.cloudflare.com/ajax/libs/angular.js/1.1.5/angular-resource.min',
         "osapi":"//placeholder.url.will.be.replaced.by.opensocial.environment",
         "rave": "core/main",
-        "underscore": "//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min"
+        "underscore": "//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min
     },
     shim: {
         backbone: {
@@ -60,6 +62,13 @@ requirejs.config({
         },
         underscore: {
             exports: '_'
+        },
+        angular:{
+            deps: ['jquery'],
+            exports: 'angular'
+        },
+        angularResource:{
+            deps: ['angular']
         }
     }
 });

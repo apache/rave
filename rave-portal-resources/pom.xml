@@ -132,11 +132,15 @@
                         <include>core/rave_widget_manager.js</include>
                         <include>core/rave_view_manager.js</include>
                         <include>core/rave_openajax_hub.js</include>
+                        <include>common/common.js</include>
                     </sourceIncludes>
                     <preloadSources>
                         <source>/src/test/dependencies/require.js</source>
                         <source>/src/test/dependencies/testr.js</source>
                         <source>/src/test/dependencies/underscore.js</source>
+                        <source>/src/test/dependencies/angular.js</source>
+                        <source>/src/test/dependencies/angular-resource.js</source>
+                        <source>/src/test/dependencies/angular-mocks.js</source>
                     </preloadSources>
                     <customRunnerTemplate>src/test/testTemplate.htmltemplate</customRunnerTemplate>
                 </configuration>
