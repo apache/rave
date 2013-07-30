@@ -76,7 +76,7 @@ public class JpaPageRepository implements PageRepository {
     }
 
     @Override
-    public List<Page> getAllPages(String userId, PageType pageType) {
+    public List<Page> getAllPagesForUserType(String userId, PageType pageType) {
         TypedQuery<JpaPage> query = manager.createNamedQuery(JpaPageUser.GET_BY_USER_ID_AND_PAGE_TYPE, JpaPage.class);
         query.setParameter("userId", userId);
         query.setParameter("pageType", pageType);
@@ -85,7 +85,7 @@ public class JpaPageRepository implements PageRepository {
 
     @Override
     public int deletePages(String userId, PageType pageType) {
-        List<Page> pages = getAllPages(userId, pageType);
+        List<Page> pages = getAllPagesForUserType(userId, pageType);
         int pageCount = pages.size();
         for(Page page : pages) {
             if(page.getOwnerId().equals(userId)){

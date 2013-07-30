@@ -36,11 +36,13 @@ public class DefaultPageResource implements PagesResource {
 
     @Override
     public Response getPages() {
+        //pageService.getAllPagesForUserType();
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
     public Response createPage(Page page) {
+        //pageService.createPage(page)
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 

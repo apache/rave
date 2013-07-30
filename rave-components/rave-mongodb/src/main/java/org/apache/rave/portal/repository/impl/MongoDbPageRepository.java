@@ -49,7 +49,7 @@ public class MongoDbPageRepository implements PageRepository {
     private MongoPageOperations template;
 
     @Override
-    public List<Page> getAllPages(String  userId, PageType pageType) {
+    public List<Page> getAllPagesForUserType(String userId, PageType pageType) {
         return sort(template.find(query(where("pageType").is(getString(pageType)).andOperator(where("members").elemMatch(where("userId").is(userId))))), userId);
     }
 

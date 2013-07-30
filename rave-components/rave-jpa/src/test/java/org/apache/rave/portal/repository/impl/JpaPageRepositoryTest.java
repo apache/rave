@@ -84,7 +84,7 @@ public class JpaPageRepositoryTest {
 
     @Test
     public void getAllPages_validUser_validUserPageSet() {
-        List<Page> pages = repository.getAllPages(USER_ID, PageType.USER);
+        List<Page> pages = repository.getAllPagesForUserType(USER_ID, PageType.USER);
         assertThat(pages, is(notNullValue()));
         assertThat(pages.size(), equalTo(2));
         assertThat(pages.get(0).getRegions().size(), equalTo(2));
@@ -105,7 +105,7 @@ public class JpaPageRepositoryTest {
 
     @Test
     public void getAllPages_validUser_validPersonProfilePageSet() {
-        List<Page> pages = repository.getAllPages(USER_ID, PageType.PERSON_PROFILE);
+        List<Page> pages = repository.getAllPagesForUserType(USER_ID, PageType.PERSON_PROFILE);
         assertThat(pages, is(notNullValue()));
         assertThat(pages.size(), is(1));
         assertThat(pages.get(0).getRegions().size(), is(1));
@@ -122,7 +122,7 @@ public class JpaPageRepositoryTest {
 
     @Test
     public void getAllPages_validUser_validSubPagePageSet() {
-        List<Page> pages = repository.getAllPages(USER_ID, PageType.SUB_PAGE);
+        List<Page> pages = repository.getAllPagesForUserType(USER_ID, PageType.SUB_PAGE);
         assertThat(pages, is(notNullValue()));
         assertThat(pages.size(), is(2));
         assertThat(pages.get(0).getRegions().size(), is(1));
@@ -140,19 +140,19 @@ public class JpaPageRepositoryTest {
 
     @Test
     public void getAllPages_invalidUser_emptySet() {
-        List<Page> pages = repository.getAllPages(INVALID_USER, PageType.USER);
+        List<Page> pages = repository.getAllPagesForUserType(INVALID_USER, PageType.USER);
         assertThat(pages.isEmpty(), is(true));
     }
 
     @Test
     public void getAllPages_person_profile_invalidUser_emptySet() {
-        List<Page> pages = repository.getAllPages(INVALID_USER, PageType.PERSON_PROFILE);
+        List<Page> pages = repository.getAllPagesForUserType(INVALID_USER, PageType.PERSON_PROFILE);
         assertThat(pages.isEmpty(), is(true));
     }
 
     @Test
     public void getAllPages_nullUser_emptySet() {
-        List<Page> pages = repository.getAllPages(null, PageType.USER);
+        List<Page> pages = repository.getAllPagesForUserType(null, PageType.USER);
         assertThat(pages.isEmpty(), is(true));
     }
 
@@ -206,12 +206,12 @@ public class JpaPageRepositoryTest {
     @Transactional(readOnly=false)
     @Rollback(true)
     public void deletePages_userPageType() {
-        int numPages = repository.getAllPages(USER_ID, PageType.USER).size();
+        int numPages = repository.getAllPagesForUserType(USER_ID, PageType.USER).size();
         assertThat(numPages > 0, is(true));
         int deletedPages = repository.deletePages(USER_ID, PageType.USER);
         assertThat(deletedPages, is(numPages));
         // ensure pages are deleted
-        assertThat(repository.getAllPages(USER_ID, PageType.USER).isEmpty(), is(true));
+        assertThat(repository.getAllPagesForUserType(USER_ID, PageType.USER).isEmpty(), is(true));
     }
 
     @Test

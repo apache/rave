@@ -35,7 +35,7 @@ public interface PageRepository extends Repository<Page>{
      * @param pageType the pageType to search by
      * @return a list of all the Page objects owned by userId of type pageType
      */
-    List<Page> getAllPages(String userId, PageType pageType);
+    List<Page> getAllPagesForUserType(String userId, PageType pageType);
 
     /**
      * Delete all pages for a userId of the supplied pageType

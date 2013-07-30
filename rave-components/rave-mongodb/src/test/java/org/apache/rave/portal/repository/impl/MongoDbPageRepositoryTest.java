@@ -21,7 +21,6 @@ package org.apache.rave.portal.repository.impl;
 
 import com.google.common.collect.Lists;
 import org.apache.rave.model.*;
-import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.model.impl.*;
 import org.apache.rave.portal.repository.*;
 import org.junit.Before;
@@ -77,7 +76,7 @@ public class MongoDbPageRepositoryTest {
         expect(template.find(isA(Query.class))).andReturn(pages);
         replay(template);
 
-        List<Page> result = repo.getAllPages(userId, pageType);
+        List<Page> result = repo.getAllPagesForUserType(userId, pageType);
         assertNotNull(result);
 
     }

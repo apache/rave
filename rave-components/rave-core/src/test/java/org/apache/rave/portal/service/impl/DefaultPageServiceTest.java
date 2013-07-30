@@ -36,6 +36,7 @@ import org.apache.rave.portal.model.impl.RegionImpl;
 import org.apache.rave.portal.model.impl.RegionWidgetImpl;
 import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.model.impl.WidgetImpl;
+import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.repository.PageLayoutRepository;
 import org.apache.rave.portal.repository.PageRepository;
 import org.apache.rave.portal.repository.PageTemplateRepository;
@@ -52,17 +53,12 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.createStrictMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.expectLastCall;
-import static org.easymock.EasyMock.isA;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
+import static org.easymock.EasyMock.*;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.CoreMatchers.sameInstance;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
@@ -168,10 +164,44 @@ public class DefaultPageServiceTest {
     }
 
     @Test
+    public void getAllPages() {
+        final List<Page> VALID_PAGES = new ArrayList<Page>();
+        expect(pageRepository.getAll()).andReturn(VALID_PAGES);
+        expect(pageRepository.getCountAll()).andReturn(0);
+        replay(pageRepository);
+
+        SearchResult<Page> result = pageService.getAllPages();
+
+        assertThat(result.getResultSet(), sameInstance(VALID_PAGES));
+        assertEquals(result.getTotalResults(), 0);
+
+        verify(pageRepository);
+    }
+
+    @Test
+    public void getLimitedPages() {
+        final List<Page> VALID_PAGES = new ArrayList<Page>();
+        expect(pageRepository.getLimitedList(1, 5)).andReturn(VALID_PAGES);
+        expect(pageRepository.getCountAll()).andReturn(20);
+        replay(pageRepository);
+
+        SearchResult<Page> result = pageService.getLimitedPages(1, 5);
+
+        assertThat(result.getResultSet(), sameInstance(VALID_PAGES));
+        assertEquals(result.getTotalResults(), 20);
+        assertEquals(result.getOffset(), 1);
+        assertEquals(result.getPageSize(), 5);
+        assertEquals(result.getCurrentPage(), 1);
+        assertEquals(result.getNumberOfPages(), 4);
+
+        verify(pageRepository);
+    }
+
+    @Test
     public void getAllUserPages() {
         final List<Page> VALID_PAGES = new ArrayList<Page>();
 
-        expect(pageRepository.getAllPages(VALID_USER_ID, PageType.USER)).andReturn(VALID_PAGES);
+        expect(pageRepository.getAllPagesForUserType(VALID_USER_ID, PageType.USER)).andReturn(VALID_PAGES);
         replay(pageRepository);
 
         assertThat(pageService.getAllUserPages(VALID_USER_ID), sameInstance(VALID_PAGES));
@@ -186,7 +216,7 @@ public class DefaultPageServiceTest {
         Page personPage = new PageImpl();
         VALID_PAGES.add(personPage);
 
-        expect(pageRepository.getAllPages(VALID_USER_ID, PageType.PERSON_PROFILE)).andReturn(VALID_PAGES);
+        expect(pageRepository.getAllPagesForUserType(VALID_USER_ID, PageType.PERSON_PROFILE)).andReturn(VALID_PAGES);
         replay(pageRepository,userService,pageTemplateRepository);
 
         assertThat(pageService.getPersonProfilePage(VALID_USER_ID), sameInstance(personPage));
@@ -201,7 +231,7 @@ public class DefaultPageServiceTest {
         PageTemplate pageTemplate = new PageTemplateImpl();
         UserImpl user = new UserImpl();
 
-        expect(pageRepository.getAllPages(VALID_USER_ID, PageType.PERSON_PROFILE)).andReturn(VALID_PAGES);
+        expect(pageRepository.getAllPagesForUserType(VALID_USER_ID, PageType.PERSON_PROFILE)).andReturn(VALID_PAGES);
         expect(userService.getUserById(isA(String.class))).andReturn(user).once();
         expect(pageTemplateRepository.getDefaultPage(PageType.PERSON_PROFILE)).andReturn(pageTemplate).once();
         expect(pageRepository.createPageForUser(user, pageTemplate)).andReturn(personPage);
@@ -232,7 +262,7 @@ public class DefaultPageServiceTest {
         expect(pageLayoutRepository.getByPageLayoutCode(PAGE_LAYOUT_CODE)).andReturn(pageLayout);
         expect(pageTemplateRepository.getDefaultPage(PageType.USER)).andReturn(pageTemplate);
         expect(pageRepository.createPageForUser(user, pageTemplate)).andReturn(expectedPage);
-        expect(pageRepository.getAllPages(user.getId(), PageType.USER)).andReturn(new ArrayList<Page>());
+        expect(pageRepository.getAllPagesForUserType(user.getId(), PageType.USER)).andReturn(new ArrayList<Page>());
 
         replay(userService, pageLayoutRepository, pageRepository, pageTemplateRepository);
 
@@ -267,7 +297,7 @@ public class DefaultPageServiceTest {
 
         expect(userService.getAuthenticatedUser()).andReturn(user);
         expect(pageLayoutRepository.getByPageLayoutCode(PAGE_LAYOUT_CODE)).andReturn(pageLayout);
-        expect(pageRepository.getAllPages(user.getId(), PageType.USER)).andReturn(new ArrayList<Page>());
+        expect(pageRepository.getAllPagesForUserType(user.getId(), PageType.USER)).andReturn(new ArrayList<Page>());
         expect(pageRepository.createPageForUser(user, pageTemplate)).andReturn(userPage);
         expect(pageTemplateRepository.getDefaultPage(PageType.USER)).andReturn(pageTemplate);
         replay(userService, pageLayoutRepository, pageRepository, pageTemplateRepository);
@@ -307,7 +337,7 @@ public class DefaultPageServiceTest {
                 return (Page)EasyMock.getCurrentArguments()[0];
             }
         });
-        expect(pageRepository.getAllPages(user.getId(), PageType.USER)).andReturn(existingPages);
+        expect(pageRepository.getAllPagesForUserType(user.getId(), PageType.USER)).andReturn(existingPages);
         replay(userService, pageLayoutRepository, pageRepository);
 
         Page newPage = pageService.addNewUserPage(PAGE_NAME, PAGE_LAYOUT_CODE);
@@ -415,7 +445,7 @@ public class DefaultPageServiceTest {
         expect(pageLayoutRepository.getByPageLayoutCode(PAGE_LAYOUT_CODE)).andReturn(pageLayout);
         expect(pageTemplateRepository.getDefaultPage(PageType.USER)).andReturn(pageTemplate);
         expect(pageRepository.createPageForUser(user, pageTemplate)).andReturn(expectedPage);
-        expect(pageRepository.getAllPages(user.getId(), PageType.USER)).andReturn(new ArrayList<Page>());
+        expect(pageRepository.getAllPagesForUserType(user.getId(), PageType.USER)).andReturn(new ArrayList<Page>());
         replay(userService, pageLayoutRepository, pageRepository, pageTemplateRepository);
 
         Page newPage = pageService.addNewDefaultUserPage(user.getId());
@@ -871,7 +901,7 @@ public class DefaultPageServiceTest {
 
         expect(pageRepository.get(INVALID_PAGE_ID)).andReturn(null);
         expect(pageRepository.get(page2.getId())).andReturn(page2);
-        expect(pageRepository.getAllPages(user.getId(), PageType.USER)).andReturn(pageList);
+        expect(pageRepository.getAllPagesForUserType(user.getId(), PageType.USER)).andReturn(pageList);
         replay(userService);
         replay(pageRepository);
 
