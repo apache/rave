@@ -25,6 +25,4 @@ import java.util.List;
 public interface GroupRepository extends Repository<Group> {
 
     Group findByTitle(String title);
-
-    List<Group> getAll();
 }

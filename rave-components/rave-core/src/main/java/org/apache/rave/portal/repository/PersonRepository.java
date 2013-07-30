@@ -24,10 +24,10 @@ import java.util.List;
 
 import org.apache.rave.repository.Repository;
 import org.apache.rave.model.Person;
-import org.apache.rave.repository.ResourceRepository;
 
 
-public interface PersonRepository extends Repository<Person>, ResourceRepository<Person> {
+
+public interface PersonRepository extends Repository<Person> {
     /**
      * Gets a user by their username
      *

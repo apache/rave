@@ -19,6 +19,7 @@
 
 package org.apache.rave.portal.repository.impl;
 
+import org.apache.rave.exception.NotSupportedException;
 import org.apache.rave.persistence.jpa.util.JpaUtil;
 import org.apache.rave.model.ActivityStreamsEntry;
 import org.apache.rave.portal.model.JpaActivityStreamsEntry;
@@ -64,7 +65,17 @@ public class JpaActivityStreamsRepository implements ActivityStreamsRepository {
 		return CollectionUtils.<ActivityStreamsEntry>toBaseTypedList(query.getResultList());
 	}
 
-	public ActivityStreamsEntry get(String id) {
+    @Override
+    public List<ActivityStreamsEntry> getLimitedList(int offset, int limit) {
+        throw new NotSupportedException("This function is not yet implemented for this class.");
+    }
+
+    @Override
+    public int getCountAll() {
+        throw new NotSupportedException("This function is not yet implemented for this class.");
+    }
+
+    public ActivityStreamsEntry get(String id) {
         TypedQuery<JpaActivityStreamsEntry> query = manager.createNamedQuery(JpaActivityStreamsEntry.FIND_BY_ID, JpaActivityStreamsEntry.class);
         query.setParameter("id", id);
 		return CollectionUtils.getSingleValue(query.getResultList());

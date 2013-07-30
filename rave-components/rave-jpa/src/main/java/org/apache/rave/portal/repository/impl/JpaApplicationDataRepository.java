@@ -18,6 +18,7 @@
  */
 package org.apache.rave.portal.repository.impl;
 
+import org.apache.rave.exception.NotSupportedException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.rave.exception.DataSerializationException;
 import org.apache.rave.model.ApplicationData;
@@ -81,6 +82,21 @@ public class JpaApplicationDataRepository implements ApplicationDataRepository {
     @Override
     public void delete(ApplicationData item) {
         manager.remove(item instanceof JpaApplicationData ? item : get(item.getId()));
+    }
+
+    @Override
+    public List<ApplicationData> getAll() {
+        throw new NotSupportedException("This function is not yet implemented for this class.");
+    }
+
+    @Override
+    public List<ApplicationData> getLimitedList(int offset, int limit) {
+        throw new NotSupportedException("This function is not yet implemented for this class.");
+    }
+
+    @Override
+    public int getCountAll() {
+        throw new NotSupportedException("This function is not yet implemented for this class.");
     }
 
     @Override

@@ -27,6 +27,7 @@ import org.apache.rave.portal.repository.ActivityStreamsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.stereotype.Repository;
+import org.apache.rave.exception.NotSupportedException;
 
 import java.util.List;
 
@@ -54,6 +55,16 @@ public class MongoDbActivityStreamsRepository implements ActivityStreamsReposito
     @Override
     public List<ActivityStreamsEntry> getAll() {
         return toBaseTypedList(template.findAll(CLASS, ACTIVITIES));
+    }
+
+    @Override
+    public List<ActivityStreamsEntry> getLimitedList(int offset, int limit) {
+        throw new NotSupportedException("This function is not yet implemented for this class.");
+    }
+
+    @Override
+    public int getCountAll() {
+        throw new NotSupportedException("This function is not yet implemented for this class.");
     }
 
     @Override

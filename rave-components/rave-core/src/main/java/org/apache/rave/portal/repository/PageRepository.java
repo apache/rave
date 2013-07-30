@@ -20,14 +20,14 @@ package org.apache.rave.portal.repository;
 
 import org.apache.rave.repository.Repository;
 import org.apache.rave.model.*;
-import org.apache.rave.repository.ResourceRepository;
+
 
 import java.util.List;
 
 /**
  * Provides persistence operations for the {@link org.apache.rave.model.Page} class
  */
-public interface PageRepository extends Repository<Page>, ResourceRepository<Page> {
+public interface PageRepository extends Repository<Page>{
     /**
      * Returns all pages of a given PageType owned by the user
      *

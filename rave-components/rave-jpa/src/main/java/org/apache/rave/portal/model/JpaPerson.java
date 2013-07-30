@@ -38,7 +38,7 @@ import java.util.List;
 @Access(AccessType.FIELD)
 @NamedQueries(value = {
     @NamedQuery(name = JpaPerson.GET_ALL, query = "select p from JpaPerson p"),
-    @NamedQuery(name = JpaPerson.GET_COUNT, query = "select count(p) from JpaPerson p where p.username like :username"),
+    @NamedQuery(name = JpaPerson.GET_COUNT, query = "select count(p) from JpaPerson p"),
     @NamedQuery(name = JpaPerson.FIND_BY_USERNAME, query = "select p from JpaPerson p where p.username like :username"),
     @NamedQuery(name = JpaPerson.FIND_FRIENDS_BY_USERNAME, query = "select a.followedby from JpaPersonAssociation a where a.follower.username = :username and a.status = :status")
 })

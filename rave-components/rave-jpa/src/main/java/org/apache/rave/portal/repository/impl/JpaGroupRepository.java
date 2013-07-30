@@ -18,6 +18,7 @@
  */
 package org.apache.rave.portal.repository.impl;
 
+import org.apache.rave.exception.NotSupportedException;
 import org.apache.rave.model.Group;
 import org.apache.rave.portal.model.JpaGroup;
 import org.apache.rave.portal.model.conversion.JpaGroupConverter;
@@ -59,6 +60,16 @@ public class JpaGroupRepository implements GroupRepository {
     public List<Group> getAll() {
         TypedQuery<JpaGroup> query = manager.createNamedQuery(JpaGroup.GET_ALL, JpaGroup.class);
         return CollectionUtils.<Group>toBaseTypedList(query.getResultList());
+    }
+
+    @Override
+    public List<Group> getLimitedList(int offset, int limit) {
+        throw new NotSupportedException("This function is not yet implemented for this class.");
+    }
+
+    @Override
+    public int getCountAll() {
+        throw new NotSupportedException("This function is not yet implemented for this class.");
     }
 
     @Override

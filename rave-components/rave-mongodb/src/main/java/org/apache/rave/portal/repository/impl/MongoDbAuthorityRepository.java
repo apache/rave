@@ -59,6 +59,11 @@ public class MongoDbAuthorityRepository implements AuthorityRepository {
     }
 
     @Override
+    public List<Authority> getLimitedList(int offset, int limit) {
+        throw new NotSupportedException("This function is not yet implemented for this class.");
+    }
+
+    @Override
     public List<Authority> getAllDefault() {
         return CollectionUtils.<Authority>toBaseTypedList(template.find(query(where("defaultForNewUser").is(true)), CLASS, AUTHORITY_COLLECTION));
     }

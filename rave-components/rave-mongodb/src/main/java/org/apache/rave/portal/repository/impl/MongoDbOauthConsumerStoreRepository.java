@@ -19,12 +19,15 @@
 
 package org.apache.rave.portal.repository.impl;
 
+import org.apache.rave.exception.NotSupportedException;
 import org.apache.rave.model.OAuthConsumerStore;
 import org.apache.rave.portal.model.impl.OAuthConsumerStoreImpl;
 import org.apache.rave.portal.repository.OAuthConsumerStoreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 import static org.apache.rave.portal.repository.util.CollectionNames.OAUTH_CONSUMER_COLLECTION;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
@@ -61,6 +64,21 @@ public class MongoDbOauthConsumerStoreRepository implements OAuthConsumerStoreRe
     @Override
     public void delete(OAuthConsumerStore item) {
         template.remove(get(item.getId()));
+    }
+
+    @Override
+    public List<OAuthConsumerStore> getAll() {
+        throw new NotSupportedException("This function is not yet implemented for this class.");
+    }
+
+    @Override
+    public List<OAuthConsumerStore> getLimitedList(int offset, int limit) {
+        throw new NotSupportedException("This function is not yet implemented for this class.");
+    }
+
+    @Override
+    public int getCountAll() {
+        throw new NotSupportedException("This function is not yet implemented for this class.");
     }
 
     public void setTemplate(MongoOperations template) {

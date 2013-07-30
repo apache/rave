@@ -46,6 +46,12 @@ public class MongoDbTagRepository implements TagRepository {
     }
 
     @Override
+    public List<Tag> getLimitedList(int offset, int pageSize){
+        Query query = new Query().skip(offset).limit(pageSize);
+        return template.find(query);
+    }
+
+    @Override
     public int getCountAll() {
         return (int)template.count(new Query());
     }

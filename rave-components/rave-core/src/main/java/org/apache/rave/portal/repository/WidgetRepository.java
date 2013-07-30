@@ -21,13 +21,13 @@ package org.apache.rave.portal.repository;
 import org.apache.rave.repository.Repository;
 import org.apache.rave.model.*;
 import org.apache.rave.portal.model.util.WidgetStatistics;
-import org.apache.rave.repository.ResourceRepository;
+
 
 import java.util.List;
 import java.util.Map;
 
 
-public interface WidgetRepository extends Repository<Widget>, ResourceRepository<Widget> {
+public interface WidgetRepository extends Repository<Widget> {
     /**
      * Gets a List of {@link Widget}'s by performing a free text search
      *

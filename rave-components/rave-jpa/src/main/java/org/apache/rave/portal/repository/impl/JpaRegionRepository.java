@@ -23,7 +23,7 @@ import org.apache.rave.portal.model.JpaRegion;
 import org.apache.rave.model.Region;
 import org.apache.rave.portal.model.conversion.JpaRegionConverter;
 import org.apache.rave.portal.repository.RegionRepository;
-import org.apache.rave.repository.ResourceRepository;
+
 import org.apache.rave.util.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

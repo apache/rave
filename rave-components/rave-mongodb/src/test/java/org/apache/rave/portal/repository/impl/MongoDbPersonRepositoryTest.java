@@ -30,12 +30,14 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.data.mongodb.core.query.Query;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import static org.easymock.EasyMock.*;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.junit.Assert.*;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static org.springframework.data.mongodb.core.query.Query.query;
@@ -243,6 +245,33 @@ public class MongoDbPersonRepositoryTest {
 
         boolean result = repo.acceptFriendRequest(friendUsername, username);
         assertTrue(result);
+    }
 
+    @Test
+    public void getAll(){
+        List<Person> people = new ArrayList<Person>();
+        List<User> users = new ArrayList<User>();
+        expect(template.find(isA(Query.class))).andReturn(users);
+        replay(template);
+        assertThat(people, is(repo.getAll()));
+    }
+
+    @Test
+    public void getLimitedList_Valid(){
+        int offset = 234;
+        int pageSize = 123;
+        List<User> users = new ArrayList<User>();
+        List<Person> people = new ArrayList<Person>();
+        expect(template.find(isA(Query.class))).andReturn(users);
+        replay(template);
+        assertThat(people, is(repo.getLimitedList(offset, pageSize)));
+    }
+
+    @Test
+    public void getCountAll_Valid(){
+        long doubleOseven = 007;
+        expect(template.count(new Query())).andReturn(doubleOseven);
+        replay(template);
+        assertThat((int)doubleOseven, is(sameInstance(repo.getCountAll())));
     }
 }

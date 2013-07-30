@@ -20,11 +20,11 @@ package org.apache.rave.portal.repository;
 
 import org.apache.rave.repository.Repository;
 import org.apache.rave.model.User;
-import org.apache.rave.repository.ResourceRepository;
+
 
 import java.util.List;
 
-public interface UserRepository extends Repository<User>, ResourceRepository<User> {
+public interface UserRepository extends Repository<User> {
 
     /**
      * Gets a {@link org.apache.rave.model.User} by its username

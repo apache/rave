@@ -20,6 +20,7 @@
 package org.apache.rave.portal.repository.impl;
 
 
+import org.apache.rave.exception.NotSupportedException;
 import org.apache.rave.model.ApplicationData;
 import org.apache.rave.portal.model.impl.ApplicationDataImpl;
 import org.apache.rave.portal.repository.ApplicationDataRepository;
@@ -70,6 +71,21 @@ public class MongoDbApplicationDataRepository implements ApplicationDataReposito
     @Override
     public void delete(ApplicationData item) {
         template.remove(item, APP_DATA_COLLECTION);
+    }
+
+    @Override
+    public List<ApplicationData> getAll() {
+        throw new NotSupportedException("This function is not yet implemented for this class.");
+    }
+
+    @Override
+    public List<ApplicationData> getLimitedList(int offset, int limit) {
+        throw new NotSupportedException("This function is not yet implemented for this class.");
+    }
+
+    @Override
+    public int getCountAll() {
+        throw new NotSupportedException("This function is not yet implemented for this class.");
     }
 
     public void setTemplate(MongoOperations template) {

@@ -38,17 +38,7 @@ public interface AuthorityRepository extends Repository<Authority> {
     Authority getByAuthority(String authorityName);
 
     /**
-     * @return a List of all {@link org.apache.rave.model.Authority}'s.
-     */
-    List<Authority> getAll();
-
-    /**
      * @return a List of all default {@link org.apache.rave.model.Authority}'s.
      */
     List<Authority> getAllDefault();
-
-    /**
-     * @return the total number of authorities in the repository
-     */
-    int getCountAll();
 }

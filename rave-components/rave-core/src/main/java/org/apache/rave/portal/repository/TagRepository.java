@@ -22,24 +22,10 @@ package org.apache.rave.portal.repository;
 import org.apache.rave.repository.Repository;
 import org.apache.rave.model.Tag;
 
-import java.util.List;
-
 /**
  * Repository interface for {@link org.apache.rave.model.Tag}
  */
 public interface TagRepository extends Repository<Tag> {
-    /**
-     * @return a List of all {@link org.apache.rave.model.Tag}'s.
-     */
-
-    List<Tag> getAll();
-
-
-    /**
-     * @return the total number of tags in the repository
-     */
-    int getCountAll();
-
     /**
      * @return the tag matching the keyword
      */

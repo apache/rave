@@ -19,6 +19,7 @@
 
 package org.apache.rave.portal.repository.impl;
 
+import org.apache.rave.exception.NotSupportedException;
 import org.apache.rave.portal.model.JpaOAuthTokenInfo;
 import org.apache.rave.model.OAuthTokenInfo;
 import org.apache.rave.portal.model.conversion.JpaOAuthTokenInfoConverter;
@@ -29,6 +30,8 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+
+import java.util.List;
 
 import static org.apache.rave.persistence.jpa.util.JpaUtil.getSingleResult;
 import static org.apache.rave.persistence.jpa.util.JpaUtil.saveOrUpdate;
@@ -64,6 +67,21 @@ public class JpaOAuthTokenInfoRepository implements OAuthTokenInfoRepository {
     @Override
     public void delete(OAuthTokenInfo item) {
         manager.remove(converter.convert(item));
+    }
+
+    @Override
+    public List<OAuthTokenInfo> getAll() {
+        throw new NotSupportedException("This function is not yet implemented for this class.");
+    }
+
+    @Override
+    public List<OAuthTokenInfo> getLimitedList(int offset, int limit) {
+        throw new NotSupportedException("This function is not yet implemented for this class.");
+    }
+
+    @Override
+    public int getCountAll() {
+        throw new NotSupportedException("This function is not yet implemented for this class.");
     }
 
     /**

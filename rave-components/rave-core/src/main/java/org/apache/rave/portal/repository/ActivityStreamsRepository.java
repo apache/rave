@@ -27,12 +27,6 @@ import java.util.List;
 public interface ActivityStreamsRepository extends Repository<ActivityStreamsEntry> {
 
     /**
-     * Retrieves all ActivityStreamsEntry instances from the persistence layer
-     * @return a list of {@link org.apache.rave.model.ActivityStreamsEntry}
-     */
-    List<ActivityStreamsEntry> getAll();
-
-    /**
      * Retrieves the ActivityStreamsEntry instances for a given user from the persistence layer
      * @return a list of {@link ActivityStreamsEntry}
      */

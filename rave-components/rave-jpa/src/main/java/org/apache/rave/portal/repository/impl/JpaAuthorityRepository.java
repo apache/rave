@@ -19,6 +19,7 @@
 
 package org.apache.rave.portal.repository.impl;
 
+import org.apache.rave.exception.NotSupportedException;
 import org.apache.rave.model.Authority;
 import org.apache.rave.portal.model.JpaAuthority;
 import org.apache.rave.portal.model.conversion.JpaAuthorityConverter;
@@ -61,7 +62,12 @@ public class JpaAuthorityRepository implements AuthorityRepository {
         TypedQuery<JpaAuthority> query = manager.createNamedQuery(JpaAuthority.GET_ALL, JpaAuthority.class);
         return CollectionUtils.<Authority>toBaseTypedList(query.getResultList());
     }
-    
+
+    @Override
+    public List<Authority> getLimitedList(int offset, int limit) {
+        throw new NotSupportedException("This function is not yet implemented for this class.");
+    }
+
     @Override
     public List<Authority> getAllDefault() {
         TypedQuery<JpaAuthority> query = manager.createNamedQuery(JpaAuthority.GET_ALL_DEFAULT, JpaAuthority.class);

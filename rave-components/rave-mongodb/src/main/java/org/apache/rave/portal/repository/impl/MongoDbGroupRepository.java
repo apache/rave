@@ -19,6 +19,7 @@
 
 package org.apache.rave.portal.repository.impl;
 
+import org.apache.rave.exception.NotSupportedException;
 import org.apache.rave.model.Group;
 import org.apache.rave.portal.model.MongoDbGroup;
 import org.apache.rave.portal.repository.MongoGroupOperations;
@@ -56,6 +57,16 @@ public class MongoDbGroupRepository implements GroupRepository {
     @Override
     public List<Group> getAll() {
         return template.find(new Query());
+    }
+
+    @Override
+    public List<Group> getLimitedList(int offset, int limit) {
+        throw new NotSupportedException("This function is not yet implemented for this class.");
+    }
+
+    @Override
+    public int getCountAll() {
+        throw new NotSupportedException("This function is not yet implemented for this class.");
     }
 
     @Override
