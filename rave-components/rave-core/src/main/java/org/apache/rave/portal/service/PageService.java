@@ -38,7 +38,7 @@ public interface PageService {
      *
      * @return search results
      */
-    SearchResult<Page> getAllPages();
+    SearchResult<Page> getAll();
 
     /**
      * Gets a limited list of pages
@@ -47,7 +47,7 @@ public interface PageService {
      * @param limit  number of results to return
      * @return search results
      */
-    SearchResult<Page> getLimitedPages(int offset, int limit);
+    SearchResult<Page> getLimited(int offset, int limit);
 
     /**
      * Gets a page based on the id

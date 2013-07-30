@@ -170,7 +170,7 @@ public class DefaultPageServiceTest {
         expect(pageRepository.getCountAll()).andReturn(0);
         replay(pageRepository);
 
-        SearchResult<Page> result = pageService.getAllPages();
+        SearchResult<Page> result = pageService.getAll();
 
         assertThat(result.getResultSet(), sameInstance(VALID_PAGES));
         assertEquals(result.getTotalResults(), 0);
@@ -185,7 +185,7 @@ public class DefaultPageServiceTest {
         expect(pageRepository.getCountAll()).andReturn(20);
         replay(pageRepository);
 
-        SearchResult<Page> result = pageService.getLimitedPages(1, 5);
+        SearchResult<Page> result = pageService.getLimited(1, 5);
 
         assertThat(result.getResultSet(), sameInstance(VALID_PAGES));
         assertEquals(result.getTotalResults(), 20);

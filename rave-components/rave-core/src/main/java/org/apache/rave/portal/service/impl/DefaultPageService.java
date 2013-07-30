@@ -75,14 +75,14 @@ public class DefaultPageService implements PageService {
     }
 
     @Override
-    public SearchResult<Page> getAllPages() {
+    public SearchResult<Page> getAll() {
         List<Page> pages = pageRepository.getAll();
         int count = pageRepository.getCountAll();
         return new SearchResult<Page>(pages, count);
     }
 
     @Override
-    public SearchResult<Page> getLimitedPages(int offset, int limit) {
+    public SearchResult<Page> getLimited(int offset, int limit) {
         List<Page> pages = pageRepository.getLimitedList(offset, limit);
         int count = pageRepository.getCountAll();
         SearchResult<Page> result = new SearchResult<Page>(pages, count);
