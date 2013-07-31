@@ -22,6 +22,7 @@ package org.apache.rave.portal.service.impl;
 import org.apache.rave.model.PortalPreference;
 import org.apache.rave.portal.events.RaveEventManager;
 import org.apache.rave.portal.model.impl.PortalPreferenceImpl;
+import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.repository.PortalPreferenceRepository;
 import org.apache.rave.portal.service.PortalPreferenceService;
 import org.junit.Before;
@@ -36,9 +37,11 @@ import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.sameInstance;
+import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertSame;
 
 /**
  * Test class for {@link DefaultPortalPreferenceService}
@@ -106,6 +109,37 @@ public class DefaultPortalPreferenceServiceTest {
         verify(repository);
 
         assertNull(preference);
+    }
+
+    @Test
+    public void getAll() {
+        List<PortalPreference> portalPreferences = new ArrayList<PortalPreference>();
+        expect(repository.getCountAll()).andReturn(1);
+        expect(repository.getAll()).andReturn(portalPreferences);
+        replay(repository);
+
+        List<PortalPreference> result = service.getAll().getResultSet();
+        assertThat(result, is(sameInstance(portalPreferences)));
+
+        verify(repository);
+    }
+
+    @Test
+    public void getLimitedList() {
+        PortalPreference pp1 = new PortalPreferenceImpl("key1", "value1");
+        PortalPreference pp2 = new PortalPreferenceImpl("key2", "value1");
+        List<PortalPreference> portalPreferences = new ArrayList<PortalPreference>();
+        portalPreferences.add(pp1);
+        portalPreferences.add(pp2);
+        final int pageSize = 10;
+        expect(repository.getCountAll()).andReturn(2);
+        expect(repository.getLimitedList(0, pageSize)).andReturn(portalPreferences);
+        replay(repository);
+
+        SearchResult<PortalPreference> result = service.getLimitedList(0, pageSize);
+        assertEquals(pageSize, result.getPageSize());
+        assertSame(portalPreferences, result.getResultSet());
+        verify(repository);
     }
 
     @Test

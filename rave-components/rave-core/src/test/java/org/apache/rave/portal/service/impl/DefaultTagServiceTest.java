@@ -21,6 +21,7 @@ package org.apache.rave.portal.service.impl;
 
 import org.apache.rave.model.Tag;
 import org.apache.rave.portal.model.impl.TagImpl;
+import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.repository.TagRepository;
 import org.apache.rave.portal.service.TagService;
 import org.junit.Before;
@@ -30,7 +31,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.easymock.EasyMock.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Test for {@link DefaultTagService}
@@ -53,6 +57,37 @@ public class DefaultTagServiceTest {
         replay(repository);
         Tag sTag = service.getTagById("1");
         assertEquals(sTag, tag);
+        verify(repository);
+    }
+
+    @Test
+    public void getAll() {
+        List<Tag> tags = new ArrayList<Tag>();
+        expect(repository.getCountAll()).andReturn(1);
+        expect(repository.getAll()).andReturn(tags);
+        replay(repository);
+
+        List<Tag> result = service.getAll().getResultSet();
+        assertThat(result, is(sameInstance(tags)));
+
+        verify(repository);
+    }
+
+    @Test
+    public void getLimitedList() {
+        Tag tag1 = new TagImpl("1", "tag");
+        Tag tag2 = new TagImpl("2", "fakeTag");
+        List<Tag> tags = new ArrayList<Tag>();
+        tags.add(tag1);
+        tags.add(tag2);
+        final int pageSize = 10;
+        expect(repository.getCountAll()).andReturn(2);
+        expect(repository.getLimitedList(0, pageSize)).andReturn(tags);
+        replay(repository);
+
+        SearchResult<Tag> result = service.getLimitedList(0, pageSize);
+        assertEquals(pageSize, result.getPageSize());
+        assertSame(tags, result.getResultSet());
         verify(repository);
     }
 
@@ -80,7 +115,7 @@ public class DefaultTagServiceTest {
         tags.add(tag);
         expect(repository.getAll()).andReturn(tags);
         replay(repository);
-        List<Tag> allTags = service.getAllTags();
+        List<Tag> allTags = service.getAllTagsList();
         verify(repository);
         assertTrue(allTags.size() > 0);
     }

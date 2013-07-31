@@ -23,6 +23,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.rave.model.RegionWidget;
 import org.apache.rave.model.RegionWidgetPreference;
 import org.apache.rave.portal.model.util.ModelUtils;
+import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.repository.RegionWidgetRepository;
 import org.apache.rave.portal.service.RegionWidgetService;
 import org.apache.rave.synchronization.annotation.Synchronized;
@@ -47,6 +48,24 @@ public class DefaultRegionWidgetService implements RegionWidgetService {
     public RegionWidget getRegionWidget(String regionWidgetId) {
         return regionWidgetRepository.get(regionWidgetId);
     }
+
+    @Override
+    public SearchResult<RegionWidget> getAll() {
+        final int count = regionWidgetRepository.getCountAll();
+        final List<RegionWidget> regionWidgets = regionWidgetRepository.getAll();
+        return new SearchResult<RegionWidget>(regionWidgets, count);
+    }
+
+    @Override
+    public SearchResult<RegionWidget> getLimitedList(int offset, int pageSize) {
+        final int count = regionWidgetRepository.getCountAll();
+        final List<RegionWidget> regionWidgets = regionWidgetRepository.getLimitedList(offset, pageSize);
+        final SearchResult<RegionWidget> searchResult = new SearchResult<RegionWidget>(regionWidgets, count);
+        searchResult.setOffset(offset);
+        searchResult.setPageSize(pageSize);
+        return searchResult;
+    }
+
 
     @Override
     @Transactional

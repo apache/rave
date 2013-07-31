@@ -20,11 +20,14 @@
 package org.apache.rave.portal.service.impl;
 
 import org.apache.rave.model.Region;
+import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.repository.RegionRepository;
 import org.apache.rave.portal.service.RegionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class DefaultRegionService implements RegionService {
@@ -41,5 +44,22 @@ public class DefaultRegionService implements RegionService {
 	 public void registerNewRegion(Region region) {
 		  regionRepository.save(region);
 	 }
-	 
+
+    @Override
+    public SearchResult<Region> getAll() {
+        final int count = regionRepository.getCountAll();
+        final List<Region> regions = regionRepository.getAll();
+        return new SearchResult<Region>(regions, count);
+    }
+
+    @Override
+    public SearchResult<Region> getLimitedList(int offset, int pageSize) {
+        final int count = regionRepository.getCountAll();
+        final List<Region> regions = regionRepository.getLimitedList(offset, pageSize);
+        final SearchResult<Region> searchResult = new SearchResult<Region>(regions, count);
+        searchResult.setOffset(offset);
+        searchResult.setPageSize(pageSize);
+        return searchResult;
+    }
+
 }

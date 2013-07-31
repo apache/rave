@@ -264,7 +264,20 @@ public class DefaultUserServiceTest {
     }
 
     @Test
-    public void getLimitedListOfUsers() {
+    public void getAll(){
+        List<User> users = new ArrayList<User>();
+        expect(userRepository.getCountAll()).andReturn(1);
+        expect(userRepository.getAll()).andReturn(users);
+        replay(userRepository);
+
+        List<User> result = service.getAll().getResultSet();
+        assertThat(result, is(sameInstance(users)));
+
+        verify(userRepository);
+    }
+
+    @Test
+    public void getLimitedList() {
         User user1 = new UserImpl("123", "john.doe.sr");
         User user2 = new UserImpl("456", "john.doe.jr");
         List<User> users = new ArrayList<User>();
@@ -276,7 +289,7 @@ public class DefaultUserServiceTest {
         expect(userRepository.getLimitedList(offset, pageSize)).andReturn(users);
         replay(userRepository);
 
-        SearchResult<User> result = service.getLimitedListOfUsers(offset, pageSize);
+        SearchResult<User> result = service.getLimitedList(offset, pageSize);
         assertEquals(pageSize, result.getPageSize());
         assertEquals(users.size(), result.getResultSet().size());
         assertEquals(user1, result.getResultSet().get(0));

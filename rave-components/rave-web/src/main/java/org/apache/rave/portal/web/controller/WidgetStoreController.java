@@ -334,8 +334,8 @@ public class WidgetStoreController {
     private void widgetStoreModelHelper(Model model, String referringPageId, User user, String view) {
         model.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
         model.addAttribute(ModelKeys.WIDGETS_STATISTICS, widgetService.getAllWidgetStatistics(user.getId()));
-        model.addAttribute(ModelKeys.TAGS, tagService.getAllTags());
-        model.addAttribute(ModelKeys.CATEGORIES, categoryService.getAll());
+        model.addAttribute(ModelKeys.TAGS, tagService.getAllTagsList());
+        model.addAttribute(ModelKeys.CATEGORIES, categoryService.getAllList());
         ControllerUtils.addNavItemsToModel(view, model, referringPageId, user);
     }
 

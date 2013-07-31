@@ -87,6 +87,16 @@ public interface UserService extends UserDetailsService, AuthenticationUserDetai
      */
     void updateUserProfile(User user);
 
+    //TODO: Put correct spring security annotations on following three methods (getAll, getLimitedList, getCountAll)
+    /**
+     * Gets a {@link org.apache.rave.portal.model.util.SearchResult} for {@link User}'s that a user can add to their context
+     * <p/>
+     * May return a very large resultset
+     *
+     * @return SearchResult
+     */
+    SearchResult<User> getAll();
+
     /**
      * Gets a limited {@link SearchResult} for {@link org.apache.rave.model.User}'s
      *
@@ -94,7 +104,7 @@ public interface UserService extends UserDetailsService, AuthenticationUserDetai
      * @param pageSize maximum number of items to be returned (for paging)
      * @return SearchResult
      */
-    SearchResult<User> getLimitedListOfUsers(int offset, int pageSize);
+    SearchResult<User> getLimitedList(int offset, int pageSize);
 
     /**
      * Gets a {@link SearchResult} for {@link org.apache.rave.model.User}'s that match the search term

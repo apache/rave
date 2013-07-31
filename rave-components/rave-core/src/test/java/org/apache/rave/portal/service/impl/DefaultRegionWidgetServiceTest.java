@@ -20,10 +20,15 @@
 package org.apache.rave.portal.service.impl;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.rave.model.Page;
+import org.apache.rave.model.Region;
 import org.apache.rave.model.RegionWidget;
 import org.apache.rave.model.RegionWidgetPreference;
+import org.apache.rave.portal.model.impl.PageImpl;
+import org.apache.rave.portal.model.impl.RegionImpl;
 import org.apache.rave.portal.model.impl.RegionWidgetImpl;
 import org.apache.rave.portal.model.impl.RegionWidgetPreferenceImpl;
+import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.repository.RegionWidgetRepository;
 import org.apache.rave.portal.service.RegionWidgetService;
 import org.junit.Before;
@@ -34,14 +39,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.easymock.EasyMock.createNiceMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.*;
+import static org.easymock.EasyMock.verify;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.CoreMatchers.sameInstance;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class DefaultRegionWidgetServiceTest {
     private RegionWidgetRepository regionWidgetRepository;
@@ -72,6 +76,39 @@ public class DefaultRegionWidgetServiceTest {
         replay(regionWidgetRepository);
 
         assertThat(regionWidgetService.getRegionWidget(INVALID_REGION_WIDGET_ID), is(nullValue()));
+    }
+
+    @Test
+    public void getAll() {
+        List<RegionWidget> regionWidgets = new ArrayList<RegionWidget>();
+        expect(regionWidgetRepository.getCountAll()).andReturn(1);
+        expect(regionWidgetRepository.getAll()).andReturn(regionWidgets);
+        replay(regionWidgetRepository);
+
+        List<RegionWidget> result = regionWidgetService.getAll().getResultSet();
+        assertThat(result, is(sameInstance(regionWidgets)));
+
+        verify(regionWidgetRepository);
+    }
+
+    @Test
+    public void getLimitedList() {
+        Page page = new PageImpl("1", "3");
+        Region region = new RegionImpl("4", page, 0);
+        RegionWidget rw1 = new RegionWidgetImpl("1", "4", region);
+        RegionWidget rw2 = new RegionWidgetImpl("2", "7", region);
+        List<RegionWidget> regionWidgets = new ArrayList<RegionWidget>();
+        regionWidgets.add(rw1);
+        regionWidgets.add(rw2);
+        final int pageSize = 10;
+        expect(regionWidgetRepository.getCountAll()).andReturn(2);
+        expect(regionWidgetRepository.getLimitedList(0, pageSize)).andReturn(regionWidgets);
+        replay(regionWidgetRepository);
+
+        SearchResult<RegionWidget> result = regionWidgetService.getLimitedList(0, pageSize);
+        assertEquals(pageSize, result.getPageSize());
+        assertSame(regionWidgets, result.getResultSet());
+        verify(regionWidgetRepository);
     }
 
     @Test

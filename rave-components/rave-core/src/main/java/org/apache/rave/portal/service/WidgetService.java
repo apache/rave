@@ -42,7 +42,7 @@ public interface WidgetService {
      *
      * @return SearchResult
      */
-    SearchResult<Widget> getAllWidgets();
+    SearchResult<Widget> getAll();
 
 
     /**
@@ -53,7 +53,7 @@ public interface WidgetService {
      * @param pageSize maximum number of items to be returned (for paging)
      * @return SearchResult
      */
-    SearchResult<Widget> getLimitedListOfWidgets(int offset, int pageSize);
+    SearchResult<Widget> getLimitedList(int offset, int pageSize);
 
     /**
      * Gets a SearchResult for {@link Widget}'s by performing a free text search

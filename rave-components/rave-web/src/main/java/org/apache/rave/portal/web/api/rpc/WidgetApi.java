@@ -92,7 +92,7 @@ public class WidgetApi {
         return new RpcOperation<SearchResult<Widget>>() {
             @Override
             public SearchResult<Widget> execute() {
-               SearchResult<Widget> results = widgetService.getAllWidgets();
+               SearchResult<Widget> results = widgetService.getAll();
                // strip out the owner and tag info 
                for(Widget widget : results.getResultSet()){
                    widget.setOwnerId(null);

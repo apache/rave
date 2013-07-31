@@ -83,7 +83,7 @@ public class UserControllerTest {
         final String referer = "http://example.com/index.html";
         SearchResult<User> searchResult = createSearchResultWithTwoUsers();
 
-        expect(userService.getLimitedListOfUsers(offset, pageSize)).andReturn(searchResult);
+        expect(userService.getLimitedList(offset, pageSize)).andReturn(searchResult);
         replay(userService);
 
         String adminUsersView = controller.viewUsers(offset, referer,REFERRER_ID, model);

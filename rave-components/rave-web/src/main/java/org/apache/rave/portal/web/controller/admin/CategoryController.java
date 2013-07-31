@@ -49,7 +49,7 @@ public class CategoryController {
                                 @RequestParam(required = false) String referringPageId,Model model){
         addNavigationMenusToModel(SELECTED_ITEM, model, referringPageId);
 
-        List<Category> categories = categoryService.getAll();
+        List<Category> categories = categoryService.getAllList();
 
         model.addAttribute("categories", categories);
         // put category object in the model to allow creating categories from view

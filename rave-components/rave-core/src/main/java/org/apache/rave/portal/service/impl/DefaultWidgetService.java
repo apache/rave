@@ -57,14 +57,14 @@ public class DefaultWidgetService implements WidgetService {
     }
 
     @Override
-    public SearchResult<Widget> getAllWidgets() {
+    public SearchResult<Widget> getAll() {
         final int count = widgetRepository.getCountAll();
         final List<Widget> widgets = widgetRepository.getAll();
         return new SearchResult<Widget>(widgets, count);
     }
 
     @Override
-    public SearchResult<Widget> getLimitedListOfWidgets(int offset, int pageSize) {
+    public SearchResult<Widget> getLimitedList(int offset, int pageSize) {
         final int count = widgetRepository.getCountAll();
         final List<Widget> widgets = widgetRepository.getLimitedList(offset, pageSize);
         final SearchResult<Widget> searchResult = new SearchResult<Widget>(widgets, count);
@@ -77,7 +77,7 @@ public class DefaultWidgetService implements WidgetService {
     public SearchResult<Widget> getWidgetsByFreeTextSearch(String searchTerm,
                                                            int offset, int pageSize) {
         if (StringUtils.isBlank(searchTerm)) {
-            return getLimitedListOfWidgets(offset, pageSize);
+            return getLimitedList(offset, pageSize);
         }
 
         final int count = widgetRepository.getCountFreeTextSearch(searchTerm);

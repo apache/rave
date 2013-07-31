@@ -21,6 +21,7 @@ package org.apache.rave.portal.service;
 
 import org.apache.rave.model.Category;
 import org.apache.rave.model.User;
+import org.apache.rave.portal.model.util.SearchResult;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -40,7 +41,28 @@ public interface CategoryService {
      * @return a {@link java.util.List} with all {@link org.apache.rave.model.Category}'s
      */
     @PostFilter("hasPermission(filterObject, 'read')")
-    List<Category> getAll();
+    List<Category> getAllList();
+
+    //TODO: Put correct spring security annotations on following three methods (getAll, getLimitedList, getCountAll)
+    /**
+     * Gets a {@link SearchResult} for {@link Category}'s that a user can add to their context
+     * <p/>
+     * May return a very large resultset
+     *
+     * @return SearchResult
+     */
+    SearchResult<Category> getAll();
+
+
+    /**
+     * Gets a limited {@link org.apache.rave.portal.model.util.SearchResult} for {@link Category}'s that a user can add to their
+     * context.
+     *
+     * @param offset   start point within the resultset (for paging)
+     * @param pageSize maximum number of items to be returned (for paging)
+     * @return SearchResult
+     */
+    SearchResult<Category> getLimitedList(int offset, int pageSize);
 
     /**
      * Creates a new Category object

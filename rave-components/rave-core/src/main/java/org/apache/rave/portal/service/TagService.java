@@ -20,6 +20,7 @@
 package org.apache.rave.portal.service;
 
 import org.apache.rave.model.Tag;
+import org.apache.rave.portal.model.util.SearchResult;
 
 import javax.swing.text.html.parser.TagElement;
 import java.util.List;
@@ -36,7 +37,28 @@ public interface TagService {
     /**
      * @return a {@link org.apache.rave.portal.model.util.SearchResult} with all {@link org.apache.rave.model.Tag}'s
      */
-    List<Tag> getAllTags();
+    List<Tag> getAllTagsList();
+
+    //TODO: Put correct spring security annotations on following three methods (getAll, getLimitedList, getCountAll)
+    /**
+     * Gets a {@link org.apache.rave.portal.model.util.SearchResult} for {@link Tag}'s that a user can add to their context
+     * <p/>
+     * May return a very large resultset
+     *
+     * @return SearchResult
+     */
+    SearchResult<Tag> getAll();
+
+
+    /**
+     * Gets a limited {@link org.apache.rave.portal.model.util.SearchResult} for {@link Tag}'s that a user can add to their
+     * context.
+     *
+     * @param offset   start point within the resultset (for paging)
+     * @param pageSize maximum number of items to be returned (for paging)
+     * @return SearchResult
+     */
+    SearchResult<Tag> getLimitedList(int offset, int pageSize);
 
 
     /**

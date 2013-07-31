@@ -101,7 +101,7 @@ public class UserController {
                             Model model) {
         model.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
         addNavigationMenusToModel(SELECTED_ITEM, model, referringPageId);
-        final SearchResult<User> users = userService.getLimitedListOfUsers(offset, getPageSize());
+        final SearchResult<User> users = userService.getLimitedList(offset, getPageSize());
         model.addAttribute(ModelKeys.SEARCHRESULT, users);
 
         if (isDeleteOrUpdate(action)) {

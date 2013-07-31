@@ -66,25 +66,25 @@ public class DefaultWidgetServiceTest {
         expect(widgetRepository.getAll()).andReturn(widgets);
         replay(widgetRepository);
 
-        List<Widget> result = widgetService.getAllWidgets().getResultSet();
+        List<Widget> result = widgetService.getAll().getResultSet();
         assertThat(result, is(sameInstance(widgets)));
 
         verify(widgetRepository);
     }
 
     @Test
-    public void getLimitedListOfWidgets() {
+    public void getLimitedList() {
         Widget widget1 = new WidgetImpl("2", "http://example.com/widget1.xml");
         Widget widget2 = new WidgetImpl("3", "http://example.com/widget2.xml");
         List<Widget> widgets = new ArrayList<Widget>();
         widgets.add(widget1);
         widgets.add(widget2);
         final int pageSize = 10;
-        expect(widgetRepository.getCountAll()).andReturn(1);
+        expect(widgetRepository.getCountAll()).andReturn(2);
         expect(widgetRepository.getLimitedList(0, pageSize)).andReturn(widgets);
         replay(widgetRepository);
 
-        SearchResult<Widget> result = widgetService.getLimitedListOfWidgets(0, pageSize);
+        SearchResult<Widget> result = widgetService.getLimitedList(0, pageSize);
         assertEquals(pageSize, result.getPageSize());
         assertSame(widgets, result.getResultSet());
         verify(widgetRepository);

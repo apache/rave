@@ -23,6 +23,7 @@ import org.apache.rave.portal.events.PortalPreferenceJavascriptDebugModeSaveEven
 import org.apache.rave.portal.events.RaveEventManager;
 import org.apache.rave.model.PortalPreference;
 import org.apache.rave.portal.model.impl.PortalPreferenceImpl;
+import org.apache.rave.portal.model.util.SearchResult;
 import org.apache.rave.portal.repository.PortalPreferenceRepository;
 import org.apache.rave.portal.service.PortalPreferenceService;
 import org.apache.rave.portal.web.util.PortalPreferenceKeys;
@@ -64,6 +65,23 @@ public class DefaultPortalPreferenceService implements PortalPreferenceService {
     @Override
     public PortalPreference getPreference(String key) {
         return repository.getByKey(key);
+    }
+
+    @Override
+    public SearchResult<PortalPreference> getAll() {
+        final int count = repository.getCountAll();
+        final List<PortalPreference> portalPreferences = repository.getAll();
+        return new SearchResult<PortalPreference>(portalPreferences, count);
+    }
+
+    @Override
+    public SearchResult<PortalPreference> getLimitedList(int offset, int pageSize) {
+        final int count = repository.getCountAll();
+        final List<PortalPreference> portalPreferences = repository.getLimitedList(offset, pageSize);
+        final SearchResult<PortalPreference> searchResult = new SearchResult<PortalPreference>(portalPreferences, count);
+        searchResult.setOffset(offset);
+        searchResult.setPageSize(pageSize);
+        return searchResult;
     }
 
     @Override

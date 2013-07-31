@@ -100,7 +100,7 @@ public class WidgetControllerTest {
         replay(preferenceService);
 
         SearchResult<Widget> widgetSearchResult = populateWidgetSearchResult();
-        expect(service.getLimitedListOfWidgets(DEFAULT_OFFSET, DEFAULT_PAGESIZE)).andReturn(widgetSearchResult);
+        expect(service.getLimitedList(DEFAULT_OFFSET, DEFAULT_PAGESIZE)).andReturn(widgetSearchResult);
         replay(service);
 
 
@@ -147,7 +147,7 @@ public class WidgetControllerTest {
         widget.setTitle("My widget");
 
         expect(service.getWidget(entityId)).andReturn(widget);
-        expect(categoryService.getAll()).andReturn(categories);
+        expect(categoryService.getAllList()).andReturn(categories);
         replay(service, categoryService);
         String adminWidgetDetailView = controller.viewWidgetDetail(entityId,REFERRER_ID, model);
         verify(service, categoryService);

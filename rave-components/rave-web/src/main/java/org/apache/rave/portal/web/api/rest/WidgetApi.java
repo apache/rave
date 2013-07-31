@@ -190,7 +190,7 @@ public class WidgetApi extends AbstractRestApi {
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/tags")
     public List<Tag> getAllTags() {
-        return tagService.getAllTags();
+        return tagService.getAllTagsList();
     }
 
     private Tag getTag(String keyword) {

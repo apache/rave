@@ -36,7 +36,7 @@ public class DefaultCategoriesResource implements CategoriesResource {
     @Override
     public Response getCategories() {
         CategoryList categoryList = new CategoryList();
-        for (org.apache.rave.model.Category category : categoryService.getAll()) {
+        for (org.apache.rave.model.Category category : categoryService.getAllList()) {
             categoryList.getCategories().add(new Category((category)));
         }
 
