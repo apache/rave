@@ -24,7 +24,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.rave.model.PageType;
 import org.apache.rave.model.Person;
 import org.apache.rave.model.User;
-import org.apache.rave.portal.model.util.SearchResult;
+import org.apache.rave.rest.model.SearchResult;
 import org.apache.rave.portal.repository.CategoryRepository;
 import org.apache.rave.portal.repository.PageRepository;
 import org.apache.rave.portal.repository.PageTemplateRepository;

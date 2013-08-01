@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.apache.rave.portal.model.util;
+package org.apache.rave.rest.model;
 
 import java.util.List;
 

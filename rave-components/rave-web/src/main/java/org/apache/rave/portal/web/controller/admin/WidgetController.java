@@ -23,7 +23,7 @@ import org.apache.rave.model.Category;
 import org.apache.rave.model.PortalPreference;
 import org.apache.rave.model.Widget;
 import org.apache.rave.model.WidgetStatus;
-import org.apache.rave.portal.model.util.SearchResult;
+import org.apache.rave.rest.model.SearchResult;
 import org.apache.rave.portal.service.CategoryService;
 import org.apache.rave.portal.service.PortalPreferenceService;
 import org.apache.rave.portal.service.WidgetService;

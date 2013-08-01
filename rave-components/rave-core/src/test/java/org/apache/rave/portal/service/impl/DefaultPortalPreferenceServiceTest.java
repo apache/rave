@@ -22,7 +22,7 @@ package org.apache.rave.portal.service.impl;
 import org.apache.rave.model.PortalPreference;
 import org.apache.rave.portal.events.RaveEventManager;
 import org.apache.rave.portal.model.impl.PortalPreferenceImpl;
-import org.apache.rave.portal.model.util.SearchResult;
+import org.apache.rave.rest.model.SearchResult;
 import org.apache.rave.portal.repository.PortalPreferenceRepository;
 import org.apache.rave.portal.service.PortalPreferenceService;
 import org.junit.Before;

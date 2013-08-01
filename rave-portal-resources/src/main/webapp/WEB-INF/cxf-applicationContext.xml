@@ -39,6 +39,7 @@
         <jaxrs:providers>
             <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider"/>
             <bean class="org.apache.cxf.jaxrs.provider.JAXBElementProvider"/>
+            <ref bean="JsonWrapperResponseFilter"/>
         </jaxrs:providers>
         <jaxrs:serviceBeans>
             <ref bean="peopleBean"/>
@@ -48,12 +49,6 @@
             <ref bean="categoriesBean"/>
         </jaxrs:serviceBeans>
     </jaxrs:server>
-
-    <cxf:bus>
-        <cxf:outInterceptors>
-            <ref bean="JsonResponseWrapperInterceptor" />
-        </cxf:outInterceptors>
-    </cxf:bus>
 
     <bean id="peopleBean" class="org.apache.rave.rest.impl.DefaultPeopleResource">
         <property name="userService" ref="userService"/>
@@ -71,6 +66,6 @@
     <bean id="pagesBean" class="org.apache.rave.rest.impl.DefaultPageResource" autowire="byType" />
     <bean id="pagesForRenderBean" class="org.apache.rave.rest.impl.DefaultPageForRenderResource" autowire="byType" />
 
-    <bean id="JsonResponseWrapperInterceptor" class="org.apache.rave.rest.interceptor.JsonResponseWrapperInterceptor"/>
+    <bean id="JsonWrapperResponseFilter" class="org.apache.rave.rest.filters.JsonWrapperResponseFilter"/>
 
 </beans>

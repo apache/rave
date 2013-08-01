@@ -21,7 +21,7 @@ package org.apache.rave.portal.service;
 
 import org.apache.rave.model.Category;
 import org.apache.rave.model.User;
-import org.apache.rave.portal.model.util.SearchResult;
+import org.apache.rave.rest.model.SearchResult;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -55,7 +55,7 @@ public interface CategoryService {
 
 
     /**
-     * Gets a limited {@link org.apache.rave.portal.model.util.SearchResult} for {@link Category}'s that a user can add to their
+     * Gets a limited {@link org.apache.rave.rest.model.SearchResult} for {@link Category}'s that a user can add to their
      * context.
      *
      * @param offset   start point within the resultset (for paging)

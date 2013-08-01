@@ -19,7 +19,7 @@
 package org.apache.rave.portal.service;
 
 import org.apache.rave.model.Region;
-import org.apache.rave.portal.model.util.SearchResult;
+import org.apache.rave.rest.model.SearchResult;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface RegionService {
@@ -33,7 +33,7 @@ public interface RegionService {
 
     //TODO: Put correct spring security annotations on following three methods (getAll, getLimitedList, getCountAll)
     /**
-     * Gets a {@link org.apache.rave.portal.model.util.SearchResult} for {@link Region}'s that a user can add to their context
+     * Gets a {@link org.apache.rave.rest.model.SearchResult} for {@link Region}'s that a user can add to their context
      * <p/>
      * May return a very large resultset
      *
@@ -43,7 +43,7 @@ public interface RegionService {
 
 
     /**
-     * Gets a limited {@link org.apache.rave.portal.model.util.SearchResult} for {@link Region}'s that a user can add to their
+     * Gets a limited {@link org.apache.rave.rest.model.SearchResult} for {@link Region}'s that a user can add to their
      * context.
      *
      * @param offset   start point within the resultset (for paging)

@@ -19,7 +19,7 @@
 <%@ page language="java" trimDirectiveWhitespaces="true" %>
 <%@ include file="/WEB-INF/jsp/includes/taglibs.jsp" %>
 <fmt:setBundle basename="messages"/>
-<%--@elvariable id="searchResult" type="org.apache.rave.portal.model.util.SearchResult<org.apache.rave.model.User>"--%>
+<%--@elvariable id="searchResult" type="org.apache.rave.rest.model.SearchResult<org.apache.rave.model.User>"--%>
 
 
 <fmt:message key="${pageTitleKey}" var="pagetitle"/>

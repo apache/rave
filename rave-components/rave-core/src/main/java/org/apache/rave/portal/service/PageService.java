@@ -22,7 +22,7 @@ import org.apache.rave.model.Page;
 import org.apache.rave.model.PageType;
 import org.apache.rave.model.Region;
 import org.apache.rave.model.RegionWidget;
-import org.apache.rave.portal.model.util.SearchResult;
+import org.apache.rave.rest.model.SearchResult;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 

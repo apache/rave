@@ -51,7 +51,7 @@
     </c:otherwise>
 </c:choose>
 <h2>${listheader}</h2>
-<%--@elvariable id="widgets" type="org.apache.rave.portal.model.util.SearchResult"--%>
+<%--@elvariable id="widgets" type="org.apache.rave.rest.model.SearchResult"--%>
 <c:if test="${widgets.totalResults gt 0}">
     <c:if test="${widgets.numberOfPages gt 1}">
         <div>

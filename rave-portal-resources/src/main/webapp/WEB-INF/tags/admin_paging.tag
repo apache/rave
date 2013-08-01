@@ -20,7 +20,7 @@ under the License.
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<%--@elvariable id="searchResult" type="org.apache.rave.portal.model.util.SearchResult"--%>
+<%--@elvariable id="searchResult" type="org.apache.rave.rest.model.SearchResult"--%>
 <c:if test="${searchResult.pageSize lt searchResult.totalResults}">
     <%-- offset is 0 based, pages 1 based --%>
     <div class="pagination">

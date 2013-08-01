@@ -25,6 +25,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.rave.model.Widget;
 import org.apache.rave.portal.model.impl.ExternalWidgetImpl;
+import org.apache.rave.rest.model.SearchResult;
 
 /**
  * Wrapper for a set of search results from an external marketplace,

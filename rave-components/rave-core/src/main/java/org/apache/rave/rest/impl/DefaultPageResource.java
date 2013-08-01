@@ -22,6 +22,7 @@ package org.apache.rave.rest.impl;
 
 import org.apache.rave.portal.service.PageService;
 import org.apache.rave.rest.PagesResource;
+import org.apache.rave.rest.RegionsResource;
 import org.apache.rave.rest.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,8 +37,7 @@ public class DefaultPageResource implements PagesResource {
 
     @Override
     public Response getPages() {
-        //pageService.getAllPagesForUserType();
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return Response.ok(pageService.getAll()).build();
     }
 
     @Override
@@ -54,11 +54,11 @@ public class DefaultPageResource implements PagesResource {
     }
 
     @Override
-    public Page getPage(String id) {
+    public Response getPage(String id) {
         logger.debug("Retrieving page for export: " + id);
         org.apache.rave.model.Page fromDb = pageService.getPage(id);
 
-        return new Page(fromDb);
+        return Response.ok(new Page(fromDb)).build();
     }
 
     @Override
@@ -75,53 +75,11 @@ public class DefaultPageResource implements PagesResource {
     }
 
     @Override
-    public Response getPageRegions(String pageId) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
+    public RegionsResource getRegionsResource(String pageId) {
+        org.apache.rave.model.Page fromDb = pageService.getPage(pageId);
+        Page page = new Page(fromDb);
 
-    @Override
-    public Response createPageRegion(String pageId, Region region) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public Response getPageRegion(String id, String regionId) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public Response updatePageRegion(String pageId, String regionId, Region region) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public Response deletePageRegion(String pageId, String regionId) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public Response createPageRegionRegionWidget(String pageId, String regionId, RegionWidget regionWidget) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public Response getPageRegionRegionWidgets(String id, String regionId) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public Response getPageRegionRegionWidget(String id, String regionId, String regionWidgetId) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public Response updatePageRegionRegionWidget(String pageId, String regionId, String regionWidgetId, RegionWidget regionWidget) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public Response deletePageRegionRegionWidget(String pageId, String regionId, String regionWidgetId) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return new DefaultRegionsResource(page);
     }
 
     @Inject

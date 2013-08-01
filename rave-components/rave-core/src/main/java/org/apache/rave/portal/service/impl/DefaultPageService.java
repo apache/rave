@@ -19,7 +19,7 @@
 
 package org.apache.rave.portal.service.impl;
 
-import org.apache.rave.portal.model.util.SearchResult;
+import org.apache.rave.rest.model.SearchResult;
 import org.apache.rave.repository.Repository;
 import org.apache.rave.model.*;
 import org.apache.rave.portal.model.impl.PageImpl;

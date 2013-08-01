@@ -24,7 +24,7 @@ import org.apache.rave.portal.model.impl.AuthorityImpl;
 import org.apache.rave.portal.model.impl.PageImpl;
 import org.apache.rave.portal.model.impl.PageTemplateImpl;
 import org.apache.rave.portal.model.impl.UserImpl;
-import org.apache.rave.portal.model.util.SearchResult;
+import org.apache.rave.rest.model.SearchResult;
 import org.apache.rave.portal.repository.CategoryRepository;
 import org.apache.rave.portal.repository.PageRepository;
 import org.apache.rave.portal.repository.PageTemplateRepository;

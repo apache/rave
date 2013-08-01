@@ -28,7 +28,7 @@ import org.apache.rave.portal.model.impl.PageImpl;
 import org.apache.rave.portal.model.impl.RegionImpl;
 import org.apache.rave.portal.model.impl.RegionWidgetImpl;
 import org.apache.rave.portal.model.impl.RegionWidgetPreferenceImpl;
-import org.apache.rave.portal.model.util.SearchResult;
+import org.apache.rave.rest.model.SearchResult;
 import org.apache.rave.portal.repository.RegionWidgetRepository;
 import org.apache.rave.portal.service.RegionWidgetService;
 import org.junit.Before;

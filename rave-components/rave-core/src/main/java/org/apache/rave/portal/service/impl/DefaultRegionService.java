@@ -20,7 +20,7 @@
 package org.apache.rave.portal.service.impl;
 
 import org.apache.rave.model.Region;
-import org.apache.rave.portal.model.util.SearchResult;
+import org.apache.rave.rest.model.SearchResult;
 import org.apache.rave.portal.repository.RegionRepository;
 import org.apache.rave.portal.service.RegionService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -22,7 +22,7 @@ package org.apache.rave.portal.service.impl;
 import org.apache.rave.exception.DuplicateItemException;
 import org.apache.rave.model.*;
 import org.apache.rave.portal.model.impl.*;
-import org.apache.rave.portal.model.util.SearchResult;
+import org.apache.rave.rest.model.SearchResult;
 import org.apache.rave.portal.model.util.WidgetStatistics;
 import org.apache.rave.portal.repository.CategoryRepository;
 import org.apache.rave.portal.repository.UserRepository;

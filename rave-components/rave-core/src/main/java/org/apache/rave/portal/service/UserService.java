@@ -24,7 +24,7 @@ import java.util.List;
 
 import org.apache.rave.model.Person;
 import org.apache.rave.model.User;
-import org.apache.rave.portal.model.util.SearchResult;
+import org.apache.rave.rest.model.SearchResult;
 import org.springframework.security.core.userdetails.AuthenticationUserDetailsService;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.openid.OpenIDAuthenticationToken;
@@ -89,7 +89,7 @@ public interface UserService extends UserDetailsService, AuthenticationUserDetai
 
     //TODO: Put correct spring security annotations on following three methods (getAll, getLimitedList, getCountAll)
     /**
-     * Gets a {@link org.apache.rave.portal.model.util.SearchResult} for {@link User}'s that a user can add to their context
+     * Gets a {@link org.apache.rave.rest.model.SearchResult} for {@link User}'s that a user can add to their context
      * <p/>
      * May return a very large resultset
      *

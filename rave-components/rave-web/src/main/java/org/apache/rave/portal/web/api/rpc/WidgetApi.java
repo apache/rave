@@ -20,7 +20,7 @@
 package org.apache.rave.portal.web.api.rpc;
 
 import org.apache.rave.model.Widget;
-import org.apache.rave.portal.model.util.SearchResult;
+import org.apache.rave.rest.model.SearchResult;
 import org.apache.rave.portal.service.WidgetMetadataResolver;
 import org.apache.rave.portal.service.WidgetService;
 import org.apache.rave.portal.web.api.rpc.model.RpcOperation;

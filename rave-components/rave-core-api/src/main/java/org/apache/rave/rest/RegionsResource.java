@@ -27,87 +27,80 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("/pages")
-public interface PagesResource {
+public interface RegionsResource {
 
     /*
-    --- Page operations
+    --- Region Operations
      */
 
     /**
-     * Returns a list of pages
+     * Returns the regions associated with a page
      *
      * @return
      */
     @GET
     @Path("/")
     @Produces(MediaType.APPLICATION_JSON)
-    Response getPages();
+    Response getPageRegions();
 
     /**
-     * Creates a new page
+     * Creates a new page region
      *
-     * @param page the definition of the new page
+     * @param region the definition of the region
      * @return
      */
     @POST
     @Path("/")
-    @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    Response createPage(Page page);
+    @Produces(MediaType.APPLICATION_JSON)
+    Response createPageRegion( Region region);
 
     /**
-     * Deletes the given page
+     * Returns a particular region associated with a page
      *
-     * @param pageId ID of the page on which the operation is to take place
-     * @return
-     */
-    @DELETE
-    @Path("/{pageId}")
-    Response deletePage(@PathParam("pageId") String pageId);
-
-    /**
-     * Returns the given page
-     *
-     *
-     * @param id ID of the page on which the operation is to take place
+     * @param regionId the region id
      * @return
      */
     @GET
-    @Path("/{pageId}")
+    @Path("/{regionId}")
     @Produces(MediaType.APPLICATION_JSON)
-    Response getPage(@PathParam("pageId") String id);
+    Response getPageRegion( @PathParam("regionId") String regionId);
 
     /**
-     * Updates the given page
+     * Update a page region
      *
-     * @param pageId ID of the page on which the operation is to take place
-     * @param page   the new definition of the page
+     * @param regionId the region id
+     * @param region   the new region definition
      * @return
      */
     @PUT
-    @Path("/{pageId}")
-    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/{regionId}")
     @Consumes(MediaType.APPLICATION_JSON)
-    Response updatePage(@PathParam("pageId") String pageId, Page page);
+    @Produces(MediaType.APPLICATION_JSON)
+    Response updatePageRegion( @PathParam("regionId") String regionId, Region region);
 
     /**
-     * Returns the OMDL representation of the page
+     * Deletes a page region
      *
-     * @param pageId ID of the page on which the operation is to take place
+     * @param regionId the region id
      * @return
      */
-    @GET
-    @Path("/{pageId}")
-    @Produces({"application/vnd.omdl+xml"})
-    Response getPageOmdl(@PathParam("pageId") String pageId);
+    @DELETE
+    @Path("/{regionId}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    Response deletePageRegion( @PathParam("regionId") String regionId);
+
+    /*
+    --- RegionWidget Operations
+     */
 
     /**
-     * Delegates to the RegionsResource sub-resource.
+     * Delegates to the RegionWidgetsResource sub-resource
      *
-     * @param pageId the page id
+     * @param regionId the region id
      * @return
      */
-    @Path("/{pageId}/regions")
-    RegionsResource getRegionsResource(@PathParam("pageId") String pageId);
+    @Path("/{regionId}/regionWidgets")
+    RegionWidgetsResource getRegionWidgetsResource( @PathParam("regionId") String regionId);
 }

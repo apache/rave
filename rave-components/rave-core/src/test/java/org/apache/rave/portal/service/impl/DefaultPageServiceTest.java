@@ -36,7 +36,7 @@ import org.apache.rave.portal.model.impl.RegionImpl;
 import org.apache.rave.portal.model.impl.RegionWidgetImpl;
 import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.model.impl.WidgetImpl;
-import org.apache.rave.portal.model.util.SearchResult;
+import org.apache.rave.rest.model.SearchResult;
 import org.apache.rave.portal.repository.PageLayoutRepository;
 import org.apache.rave.portal.repository.PageRepository;
 import org.apache.rave.portal.repository.PageTemplateRepository;

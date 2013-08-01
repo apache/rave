@@ -23,7 +23,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.rave.model.RegionWidget;
 import org.apache.rave.model.RegionWidgetPreference;
 import org.apache.rave.portal.model.util.ModelUtils;
-import org.apache.rave.portal.model.util.SearchResult;
+import org.apache.rave.rest.model.SearchResult;
 import org.apache.rave.portal.repository.RegionWidgetRepository;
 import org.apache.rave.portal.service.RegionWidgetService;
 import org.apache.rave.synchronization.annotation.Synchronized;

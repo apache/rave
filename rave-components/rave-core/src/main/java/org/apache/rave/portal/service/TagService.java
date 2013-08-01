@@ -20,9 +20,8 @@
 package org.apache.rave.portal.service;
 
 import org.apache.rave.model.Tag;
-import org.apache.rave.portal.model.util.SearchResult;
+import org.apache.rave.rest.model.SearchResult;
 
-import javax.swing.text.html.parser.TagElement;
 import java.util.List;
 
 public interface TagService {
@@ -35,13 +34,13 @@ public interface TagService {
 
 
     /**
-     * @return a {@link org.apache.rave.portal.model.util.SearchResult} with all {@link org.apache.rave.model.Tag}'s
+     * @return a {@link org.apache.rave.rest.model.SearchResult} with all {@link org.apache.rave.model.Tag}'s
      */
     List<Tag> getAllTagsList();
 
     //TODO: Put correct spring security annotations on following three methods (getAll, getLimitedList, getCountAll)
     /**
-     * Gets a {@link org.apache.rave.portal.model.util.SearchResult} for {@link Tag}'s that a user can add to their context
+     * Gets a {@link org.apache.rave.rest.model.SearchResult} for {@link Tag}'s that a user can add to their context
      * <p/>
      * May return a very large resultset
      *
@@ -51,7 +50,7 @@ public interface TagService {
 
 
     /**
-     * Gets a limited {@link org.apache.rave.portal.model.util.SearchResult} for {@link Tag}'s that a user can add to their
+     * Gets a limited {@link org.apache.rave.rest.model.SearchResult} for {@link Tag}'s that a user can add to their
      * context.
      *
      * @param offset   start point within the resultset (for paging)
@@ -68,7 +67,7 @@ public interface TagService {
     Tag getTagByKeyword(String keyword);
 
     /**
-     * @return a {@link org.apache.rave.portal.model.util.SearchResult} with all {@link org.apache.rave.model.Tag}'s
+     * @return a {@link org.apache.rave.rest.model.SearchResult} with all {@link org.apache.rave.model.Tag}'s
      *         Not link to a widget
      */
     //List<Tag> getAvailableTagsByWidgetId(String widgetId);
