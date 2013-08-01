@@ -20,6 +20,7 @@
 package org.apache.rave.rest.impl;
 
 
+import org.apache.rave.model.PageType;
 import org.apache.rave.portal.service.PageService;
 import org.apache.rave.rest.PagesResource;
 import org.apache.rave.rest.RegionsResource;
@@ -29,6 +30,8 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DefaultPageResource implements PagesResource {
 
@@ -36,37 +39,55 @@ public class DefaultPageResource implements PagesResource {
     private PageService pageService;
 
     @Override
-    public Response getPages() {
-        return Response.ok(pageService.getAll()).build();
+    public SearchResult<Page> getPages() {
+        SearchResult<org.apache.rave.model.Page> fromDb = pageService.getAll();
+        List<Page> pages = new ArrayList<Page>();
+
+        for(org.apache.rave.model.Page page : fromDb.getResultSet()) {
+            pages.add(new Page(page));
+        }
+
+        SearchResult<Page> returnPages = new SearchResult<Page>(pages, fromDb.getTotalResults());
+        return returnPages;
     }
 
     @Override
-    public Response createPage(Page page) {
-        //pageService.createPage(page)
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    public Page createPage(Page page) {
+        //TODO: RAVE-977 - when Page type enum is deprecated escape from this logic
+        if(page.getPageType() == "user") {
+            org.apache.rave.model.Page fromDb = pageService.addNewUserPage(page.getName(), page.getPageLayoutCode());
+            Page responsePage =  new Page(fromDb);
+
+            return responsePage;
+        } else {
+            //TODO: throw 400 exception
+            return null;
+        }
     }
 
     @Override
-    public Response deletePage(String id) {
+    public Page deletePage(String id) {
         logger.debug("Deleting page " + id);
         pageService.deletePage(id);
-        return Response.noContent().build();
+        return null;
     }
 
     @Override
-    public Response getPage(String id) {
+    public Page getPage(String id) {
         logger.debug("Retrieving page for export: " + id);
         org.apache.rave.model.Page fromDb = pageService.getPage(id);
+        //TODO: throw 404 exception if getPage returns null
+        Page responsePage =  new Page(fromDb);
 
-        return Response.ok(new Page(fromDb)).build();
+        return responsePage;
     }
 
     @Override
-    public Response updatePage(String id, Page page) {
+    public Page updatePage(String id, Page page) {
         org.apache.rave.model.Page fromDb = pageService.updatePage(id, page.getName(), page.getPageLayoutCode());
         Page responsePage =  new Page(fromDb);
 
-        return Response.ok(new JsonResponseWrapper(responsePage)).build();
+        return responsePage;
     }
 
     @Override
@@ -76,8 +97,7 @@ public class DefaultPageResource implements PagesResource {
 
     @Override
     public RegionsResource getRegionsResource(String pageId) {
-        org.apache.rave.model.Page fromDb = pageService.getPage(pageId);
-        Page page = new Page(fromDb);
+        Page page = getPage(pageId);
 
         return new DefaultRegionsResource(page);
     }

@@ -66,7 +66,7 @@ public class JsonResponseWrapper {
         Integer prevOffset = null;
         Integer nextOffset = null;
 
-        //if limit = 0, then we return full data set and there is no pagination
+        //if limit == 0, then we return full data set and there is no pagination
         if (limit > 0) {
             //build prev offset
             if (offset > 0) {

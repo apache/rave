@@ -21,48 +21,76 @@ package org.apache.rave.rest.impl;
 
 
 import org.apache.rave.portal.service.PageService;
-import org.apache.rave.portal.service.RegionWidgetService;
+import org.apache.rave.rest.model.Page;
+import org.apache.rave.rest.model.Region;
 import org.apache.rave.rest.RegionWidgetsResource;
 import org.apache.rave.rest.model.RegionWidget;
+import org.apache.rave.rest.model.SearchResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
+import java.util.List;
 
 public class DefaultRegionWidgetsResource implements RegionWidgetsResource {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
-    private RegionWidgetService regionWidgetService;
+    private static PageService pageService;
+
+    private Page page;
+    private Region region;
+
+    public DefaultRegionWidgetsResource(Page page, Region region) {
+        this.page = page;
+        this.region = region;
+    }
+
+    @Override
+    public SearchResult<RegionWidget> getPageRegionRegionWidgets() {
+        List<RegionWidget> regionWidgets = region.getRegionWidgets();
+        SearchResult<RegionWidget> results = new SearchResult<RegionWidget>(regionWidgets, regionWidgets.size());
+
+        return results;
+    }
+
+    @Override
+    public RegionWidget createPageRegionRegionWidget(RegionWidget regionWidget) {
+        //TODO: pageService is not being injected - how do I get that to work with an instantiated class?
+        org.apache.rave.model.RegionWidget fromDb =
+                pageService.addWidgetToPageRegion(page.getId(), regionWidget.getWidgetId(), regionWidget.getRegionId());
+
+        return new RegionWidget(fromDb);
+    }
+
+    @Override
+    public RegionWidget getPageRegionRegionWidget(String regionWidgetId) {
+        List<RegionWidget> regionWidgets = region.getRegionWidgets();
+        RegionWidget match = null;
+        for(RegionWidget widget: regionWidgets) {
+            if(widget.getId().equals(regionWidgetId)) {
+                match = widget;
+                break;
+            }
+        }
+        //TODO: if match == null throw 404 exception
+
+        return match;
+    }
+
+    @Override
+    public RegionWidget updatePageRegionRegionWidget(String regionWidgetId, RegionWidget regionWidget) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public RegionWidget deletePageRegionRegionWidget(String regionWidgetId) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
 
     @Inject
-    public void setRegionWidgetService(RegionWidgetService regionWidgetService) {
-        this.regionWidgetService = regionWidgetService;
-    }
-
-    @Override
-    public Response getPageRegionRegionWidgets() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public Response createPageRegionRegionWidget(RegionWidget regionWidget) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public Response getPageRegionRegionWidget(@PathParam("regionWidgetId") String regionWidgetId) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public Response updatePageRegionRegionWidget(@PathParam("regionWidgetId") String regionWidgetId, RegionWidget regionWidget) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public Response deletePageRegionRegionWidget(@PathParam("regionWidgetId") String regionWidgetId) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    public static void setPageService(PageService pS) {
+        pageService = pS;
     }
 }

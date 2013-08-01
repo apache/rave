@@ -20,25 +20,20 @@
 package org.apache.rave.rest.impl;
 
 
-import org.apache.rave.portal.service.PageService;
-import org.apache.rave.portal.service.RegionService;
 import org.apache.rave.rest.RegionWidgetsResource;
 import org.apache.rave.rest.RegionsResource;
 import org.apache.rave.rest.model.Page;
 import org.apache.rave.rest.model.Region;
+import org.apache.rave.rest.model.SearchResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Inject;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
 public class DefaultRegionsResource implements RegionsResource {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
-    private RegionService regionService;
-    private PageService pageService;
     private Page page;
 
     public DefaultRegionsResource(Page page) {
@@ -46,32 +41,50 @@ public class DefaultRegionsResource implements RegionsResource {
     }
 
     @Override
-    public Response getPageRegions() {
-        return Response.ok(page.getRegions()).build();
+    public SearchResult<Region> getPageRegions() {
+        List<Region> regions = page.getRegions();
+        SearchResult<Region> results = new SearchResult<Region>(regions, regions.size());
+
+        return results;
     }
 
     @Override
-    public Response createPageRegion(Region region) {
+    public Region createPageRegion(Region region) {
+        //TODO: this method does not make sense since regions are changed via a page's pageLayoutCode
+        return null;
+    }
+
+    @Override
+    public Region getPageRegion(String regionId) {
+        List<Region> regions = page.getRegions();
+        Region match = null;
+        for(Region region: regions) {
+            if(region.getId().equals(regionId)) {
+                match = region;
+                break;
+            }
+        }
+
+        //TODO: throw a 404 exception if match == null
+        return match;
+    }
+
+    @Override
+    public Region updatePageRegion(String regionId, Region region) {
+        //TODO: this method does not make sense since regions are changed via a page's pageLayoutCode
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
-    public Response getPageRegion(String regionId) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public Response updatePageRegion(String regionId, Region region) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public Response deletePageRegion(String regionId) {
+    public Region deletePageRegion(String regionId) {
+        //TODO: this method does not make sense since regions are changed via a page's pageLayoutCode
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
     public RegionWidgetsResource getRegionWidgetsResource(String regionId) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        Region region = getPageRegion(regionId);
+
+        return new DefaultRegionWidgetsResource(page, region);
     }
 }

@@ -22,10 +22,12 @@ package org.apache.rave.rest;
 import org.apache.rave.rest.model.Page;
 import org.apache.rave.rest.model.Region;
 import org.apache.rave.rest.model.RegionWidget;
+import org.apache.rave.rest.model.SearchResult;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.List;
 
 @Path("/pages")
 public interface PagesResource {
@@ -42,7 +44,7 @@ public interface PagesResource {
     @GET
     @Path("/")
     @Produces(MediaType.APPLICATION_JSON)
-    Response getPages();
+    SearchResult<Page> getPages();
 
     /**
      * Creates a new page
@@ -54,7 +56,7 @@ public interface PagesResource {
     @Path("/")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    Response createPage(Page page);
+    Page createPage(Page page);
 
     /**
      * Deletes the given page
@@ -64,7 +66,7 @@ public interface PagesResource {
      */
     @DELETE
     @Path("/{pageId}")
-    Response deletePage(@PathParam("pageId") String pageId);
+    Page deletePage(@PathParam("pageId") String pageId);
 
     /**
      * Returns the given page
@@ -76,7 +78,7 @@ public interface PagesResource {
     @GET
     @Path("/{pageId}")
     @Produces(MediaType.APPLICATION_JSON)
-    Response getPage(@PathParam("pageId") String id);
+    Page getPage(@PathParam("pageId") String id);
 
     /**
      * Updates the given page
@@ -89,7 +91,7 @@ public interface PagesResource {
     @Path("/{pageId}")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    Response updatePage(@PathParam("pageId") String pageId, Page page);
+    Page updatePage(@PathParam("pageId") String pageId, Page page);
 
     /**
      * Returns the OMDL representation of the page

@@ -22,6 +22,7 @@ package org.apache.rave.rest;
 import org.apache.rave.rest.model.Page;
 import org.apache.rave.rest.model.Region;
 import org.apache.rave.rest.model.RegionWidget;
+import org.apache.rave.rest.model.SearchResult;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -41,7 +42,7 @@ public interface RegionsResource {
     @GET
     @Path("/")
     @Produces(MediaType.APPLICATION_JSON)
-    Response getPageRegions();
+    SearchResult<Region> getPageRegions();
 
     /**
      * Creates a new page region
@@ -53,7 +54,7 @@ public interface RegionsResource {
     @Path("/")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    Response createPageRegion( Region region);
+    Region createPageRegion( Region region);
 
     /**
      * Returns a particular region associated with a page
@@ -64,7 +65,7 @@ public interface RegionsResource {
     @GET
     @Path("/{regionId}")
     @Produces(MediaType.APPLICATION_JSON)
-    Response getPageRegion( @PathParam("regionId") String regionId);
+    Region getPageRegion( @PathParam("regionId") String regionId);
 
     /**
      * Update a page region
@@ -77,7 +78,7 @@ public interface RegionsResource {
     @Path("/{regionId}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    Response updatePageRegion( @PathParam("regionId") String regionId, Region region);
+    Region updatePageRegion( @PathParam("regionId") String regionId, Region region);
 
     /**
      * Deletes a page region
@@ -89,7 +90,7 @@ public interface RegionsResource {
     @Path("/{regionId}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    Response deletePageRegion( @PathParam("regionId") String regionId);
+    Region deletePageRegion( @PathParam("regionId") String regionId);
 
     /*
     --- RegionWidget Operations

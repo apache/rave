@@ -22,12 +22,12 @@ package org.apache.rave.rest;
 import org.apache.rave.rest.model.Page;
 import org.apache.rave.rest.model.Region;
 import org.apache.rave.rest.model.RegionWidget;
+import org.apache.rave.rest.model.SearchResult;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("/pages")
 public interface RegionWidgetsResource {
 
     /*
@@ -42,13 +42,13 @@ public interface RegionWidgetsResource {
     @GET
     @Path("/")
     @Produces(MediaType.APPLICATION_JSON)
-    Response getPageRegionRegionWidgets();
+    SearchResult<RegionWidget> getPageRegionRegionWidgets();
 
     @POST
     @Path("/")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    Response createPageRegionRegionWidget(RegionWidget regionWidget);
+    RegionWidget createPageRegionRegionWidget(RegionWidget regionWidget);
 
     /**
      * Returns a regionWidget associated with a page and a region
@@ -59,7 +59,7 @@ public interface RegionWidgetsResource {
     @GET
     @Path("/{regionWidgetId}")
     @Produces(MediaType.APPLICATION_JSON)
-    Response getPageRegionRegionWidget(@PathParam("regionWidgetId") String regionWidgetId);
+    RegionWidget getPageRegionRegionWidget(@PathParam("regionWidgetId") String regionWidgetId);
 
     /**
      * Updates a regionWidget associated with a page and a region
@@ -72,7 +72,7 @@ public interface RegionWidgetsResource {
     @Path("/{regionWidgetId}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    Response updatePageRegionRegionWidget(@PathParam("regionWidgetId") String regionWidgetId, RegionWidget regionWidget);
+    RegionWidget updatePageRegionRegionWidget(@PathParam("regionWidgetId") String regionWidgetId, RegionWidget regionWidget);
 
     /**
      * Deletes a regionWidget from a page region
@@ -83,5 +83,5 @@ public interface RegionWidgetsResource {
     @DELETE
     @Path("/{regionWidgetId}")
     @Produces(MediaType.APPLICATION_JSON)
-    Response deletePageRegionRegionWidget(@PathParam("regionWidgetId") String regionWidgetId);
+    RegionWidget deletePageRegionRegionWidget(@PathParam("regionWidgetId") String regionWidgetId);
 }
