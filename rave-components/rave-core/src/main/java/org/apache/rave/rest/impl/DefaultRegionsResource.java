@@ -20,7 +20,7 @@
 package org.apache.rave.rest.impl;
 
 
-import org.apache.rave.exception.ResourceNotFoundException;
+import org.apache.rave.rest.exception.ResourceNotFoundException;
 import org.apache.rave.rest.RegionWidgetsResource;
 import org.apache.rave.rest.RegionsResource;
 import org.apache.rave.rest.model.Page;

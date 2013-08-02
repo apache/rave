@@ -37,13 +37,15 @@
 
     <jaxrs:server id="rave" address="/rest">
         <jaxrs:providers>
-            <!-- Exception Mappers -->
-            <ref bean="NotFoundExceptionMapper"/>
+            <!-- Marshalling providers -->
+            <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider"/>
+            <bean class="org.apache.cxf.jaxrs.provider.JAXBElementProvider"/>
+
             <!-- Custom filters -->
             <ref bean="JsonWrapperResponseFilter"/>
 
-            <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider"/>
-            <bean class="org.apache.cxf.jaxrs.provider.JAXBElementProvider"/>
+            <!-- Exception Mappers -->
+            <ref bean="NotFoundExceptionMapper"/>
         </jaxrs:providers>
         <jaxrs:serviceBeans>
             <ref bean="peopleBean"/>
