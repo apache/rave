@@ -19,14 +19,11 @@
 
 package org.apache.rave.rest;
 
-import org.apache.rave.rest.model.Page;
 import org.apache.rave.rest.model.Region;
-import org.apache.rave.rest.model.RegionWidget;
 import org.apache.rave.rest.model.SearchResult;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 
 public interface RegionsResource {
 

@@ -37,9 +37,13 @@
 
     <jaxrs:server id="rave" address="/rest">
         <jaxrs:providers>
+            <!-- Exception Mappers -->
+            <ref bean="NotFoundExceptionMapper"/>
+            <!-- Custom filters -->
+            <ref bean="JsonWrapperResponseFilter"/>
+
             <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider"/>
             <bean class="org.apache.cxf.jaxrs.provider.JAXBElementProvider"/>
-            <ref bean="JsonWrapperResponseFilter"/>
         </jaxrs:providers>
         <jaxrs:serviceBeans>
             <ref bean="peopleBean"/>
@@ -64,8 +68,11 @@
     </bean>
 
     <bean id="pagesBean" class="org.apache.rave.rest.impl.DefaultPageResource" autowire="byType" />
+    <bean id="regionsBean" class="org.apache.rave.rest.impl.DefaultRegionsResource" autowire="byType" />
+    <bean id="regionWidgetsBean" class="org.apache.rave.rest.impl.DefaultRegionWidgetsResource" autowire="byType" />
     <bean id="pagesForRenderBean" class="org.apache.rave.rest.impl.DefaultPageForRenderResource" autowire="byType" />
 
     <bean id="JsonWrapperResponseFilter" class="org.apache.rave.rest.filters.JsonWrapperResponseFilter"/>
+    <bean id="NotFoundExceptionMapper" class="org.apache.rave.rest.filters.NotFoundExceptionMapper"/>
 
 </beans>

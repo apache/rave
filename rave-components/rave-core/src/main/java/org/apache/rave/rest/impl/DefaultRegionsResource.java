@@ -20,6 +20,7 @@
 package org.apache.rave.rest.impl;
 
 
+import org.apache.rave.exception.ResourceNotFoundException;
 import org.apache.rave.rest.RegionWidgetsResource;
 import org.apache.rave.rest.RegionsResource;
 import org.apache.rave.rest.model.Page;
@@ -28,6 +29,7 @@ import org.apache.rave.rest.model.SearchResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
@@ -36,7 +38,9 @@ public class DefaultRegionsResource implements RegionsResource {
     private Logger logger = LoggerFactory.getLogger(getClass());
     private Page page;
 
-    public DefaultRegionsResource(Page page) {
+    private DefaultRegionWidgetsResource regionWidgetsResource;
+
+    public void setPage(Page page) {
         this.page = page;
     }
 
@@ -65,7 +69,10 @@ public class DefaultRegionsResource implements RegionsResource {
             }
         }
 
-        //TODO: throw a 404 exception if match == null
+        if(match == null) {
+            throw new ResourceNotFoundException(regionId);
+        }
+
         return match;
     }
 
@@ -84,7 +91,14 @@ public class DefaultRegionsResource implements RegionsResource {
     @Override
     public RegionWidgetsResource getRegionWidgetsResource(String regionId) {
         Region region = getPageRegion(regionId);
+        regionWidgetsResource.setPage(page);
+        regionWidgetsResource.setRegion(region);
 
-        return new DefaultRegionWidgetsResource(page, region);
+        return regionWidgetsResource;
+    }
+
+    @Inject
+    public void setRegionWidgetsResource(DefaultRegionWidgetsResource regionWidgetsResource) {
+        this.regionWidgetsResource = regionWidgetsResource;
     }
 }

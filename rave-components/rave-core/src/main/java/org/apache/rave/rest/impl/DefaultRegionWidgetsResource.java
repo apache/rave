@@ -37,13 +37,16 @@ import java.util.List;
 public class DefaultRegionWidgetsResource implements RegionWidgetsResource {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
-    private static PageService pageService;
+    private PageService pageService;
 
     private Page page;
     private Region region;
 
-    public DefaultRegionWidgetsResource(Page page, Region region) {
+    public void setPage(Page page) {
         this.page = page;
+    }
+
+    public void setRegion(Region region) {
         this.region = region;
     }
 
@@ -90,7 +93,7 @@ public class DefaultRegionWidgetsResource implements RegionWidgetsResource {
     }
 
     @Inject
-    public static void setPageService(PageService pS) {
-        pageService = pS;
+    public void setPageService(PageService pageService) {
+        this.pageService = pageService;
     }
 }

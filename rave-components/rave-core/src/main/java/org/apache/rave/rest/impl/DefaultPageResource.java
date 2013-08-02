@@ -20,6 +20,7 @@
 package org.apache.rave.rest.impl;
 
 
+import org.apache.rave.exception.ResourceNotFoundException;
 import org.apache.rave.model.PageType;
 import org.apache.rave.portal.service.PageService;
 import org.apache.rave.rest.PagesResource;
@@ -37,6 +38,8 @@ public class DefaultPageResource implements PagesResource {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
     private PageService pageService;
+
+    private DefaultRegionsResource regionsResouce;
 
     @Override
     public SearchResult<Page> getPages() {
@@ -76,7 +79,10 @@ public class DefaultPageResource implements PagesResource {
     public Page getPage(String id) {
         logger.debug("Retrieving page for export: " + id);
         org.apache.rave.model.Page fromDb = pageService.getPage(id);
-        //TODO: throw 404 exception if getPage returns null
+        //TODO: with a bad ID a 403 gets thrown before I hit this block. Why?
+        if(fromDb == null) {
+            throw new ResourceNotFoundException(id);
+        }
         Page responsePage =  new Page(fromDb);
 
         return responsePage;
@@ -98,12 +104,18 @@ public class DefaultPageResource implements PagesResource {
     @Override
     public RegionsResource getRegionsResource(String pageId) {
         Page page = getPage(pageId);
+        regionsResouce.setPage(page);
 
-        return new DefaultRegionsResource(page);
+        return regionsResouce;
     }
 
     @Inject
     public void setPageService(PageService pageService) {
         this.pageService = pageService;
+    }
+
+    @Inject
+    public void setRegionsResouce(DefaultRegionsResource regionsResouce) {
+        this.regionsResouce = regionsResouce;
     }
 }
