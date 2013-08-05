@@ -19,36 +19,33 @@
 
 package org.apache.rave.rest.filters;
 
-import org.apache.cxf.jaxrs.ext.ResponseHandler;
-import org.apache.cxf.jaxrs.model.OperationResourceInfo;
-import org.apache.cxf.message.Message;
 import org.apache.rave.rest.model.JsonResponseWrapper;
+import org.apache.rave.rest.model.RestEntity;
 import org.apache.rave.rest.model.SearchResult;
 
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerResponseContext;
 import javax.ws.rs.container.ContainerResponseFilter;
 import javax.ws.rs.core.Response;
-
 import java.io.IOException;
 import java.util.List;
+import javax.ws.rs.core.Response;
 
-public class JsonWrapperResponseFilter implements ContainerResponseFilter {
+
+public class LocationHeaderResponseFilter implements ContainerResponseFilter {
 
     @Override
     public void filter(ContainerRequestContext containerRequestContext, ContainerResponseContext containerResponseContext) throws IOException {
-        Object o = containerResponseContext.getEntity();
-        JsonResponseWrapper wrapper;
+        String method = containerRequestContext.getRequest().getMethod();
 
-        Class clazz = o.getClass();
-        if (List.class.isAssignableFrom(clazz)) {
-            wrapper = new JsonResponseWrapper((List) o);
-        } else if (SearchResult.class.isAssignableFrom(clazz)) {
-            wrapper = new JsonResponseWrapper((SearchResult) o);
-        } else {
-            wrapper = new JsonResponseWrapper(o);
+        if(method.equals("POST")) {
+            containerResponseContext.setStatus(Response.Status.CREATED.getStatusCode());
+            RestEntity entity = (RestEntity) containerResponseContext.getEntity();
+            String id = entity.getId();
+            containerResponseContext.getHeaders().add("Location",
+                    containerRequestContext.getUriInfo().getAbsolutePathBuilder().path(id).build().toString());
         }
 
-        containerResponseContext.setEntity(wrapper, containerResponseContext.getEntityAnnotations(), containerResponseContext.getMediaType());
+         //containerResponseContext.getHeaders().put("Location")
     }
 }

@@ -26,7 +26,7 @@ import javax.xml.bind.annotation.*;
         "id", "username", "locked", "enabled"
 })
 @XmlRootElement(name = "User")
-public class User {
+public class User  implements RestEntity{
     @XmlAttribute(name = "id")
     private String id;
     @XmlElement(name = "Username")

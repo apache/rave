@@ -525,6 +525,7 @@ public class DefaultPageService implements PageService {
         //       to allow for more flexibility?
         regionWidget.setLocked(false);
         regionWidget.setHideChrome(false);
+        regionWidget.setRegion(region);
         region.getRegionWidgets().add(position, regionWidget);
         updateRenderSequences(region.getRegionWidgets());
         Region persistedRegion = regionRepository.save(region);

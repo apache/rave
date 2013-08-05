@@ -17,25 +17,15 @@
  * under the License.
  */
 
-package org.apache.rave.rest.filters;
+package org.apache.rave.rest.model;
 
-import org.apache.rave.rest.exception.ResourceNotFoundException;
-import org.apache.rave.rest.model.ErrorWrapperResponse;
-
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.ext.ExceptionMapper;
-
-@Produces(MediaType.APPLICATION_JSON)
-public class NotFoundExceptionMapper implements ExceptionMapper<ResourceNotFoundException> {
-
-    @Override
-    public Response toResponse(ResourceNotFoundException e) {
-        String id = e.getMessage();
-        return Response.status(Response.Status.NOT_FOUND).entity(new ErrorWrapperResponse(
-                "The requested resource could not be found.",
-                "The requested resource could not be found."
-        )).build();
-    }
+/**
+ * Created with IntelliJ IDEA.
+ * User: erinnp
+ * Date: 8/5/13
+ * Time: 1:45 PM
+ * To change this template use File | Settings | File Templates.
+ */
+public interface RestEntity {
+    public String getId();
 }

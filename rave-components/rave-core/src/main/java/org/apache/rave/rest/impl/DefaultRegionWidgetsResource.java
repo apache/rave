@@ -60,9 +60,8 @@ public class DefaultRegionWidgetsResource implements RegionWidgetsResource {
 
     @Override
     public RegionWidget createPageRegionRegionWidget(RegionWidget regionWidget) {
-        //TODO: pageService is not being injected - how do I get that to work with an instantiated class?
         org.apache.rave.model.RegionWidget fromDb =
-                pageService.addWidgetToPageRegion(page.getId(), regionWidget.getWidgetId(), regionWidget.getRegionId());
+                pageService.addWidgetToPageRegion(page.getId(), regionWidget.getWidgetId(), region.getId());
 
         return new RegionWidget(fromDb);
     }

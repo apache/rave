@@ -27,7 +27,7 @@ import java.util.List;
         "locked", "regionWidgets"
 })
 @XmlRootElement(name = "Region")
-public class Region {
+public class Region  implements RestEntity{
     @XmlElement(name = "locked")
     private boolean  locked;
 

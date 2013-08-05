@@ -28,7 +28,7 @@ import java.util.List;
         "id", "name", "ownerId", "pageType", "pageLayoutCode", "subPages", "regions", "members"
 })
 @XmlRootElement(name = "Page")
-public class Page {
+public class Page  implements RestEntity{
 
     @XmlAttribute(name="id")
     private String id;
