@@ -42,11 +42,13 @@
             <bean class="org.apache.cxf.jaxrs.provider.JAXBElementProvider"/>
 
             <!-- Custom filters -->
-            <ref bean="LocationHeaderResponseFilter"/>
+            <ref bean="NoContentResponseFilter"/>
+            <ref bean="CreatedResponseFilter"/>
             <ref bean="JsonWrapperResponseFilter"/>
 
             <!-- Exception Mappers -->
             <ref bean="NotFoundExceptionMapper"/>
+            <ref bean="BadRequestExceptionMapper"/>
         </jaxrs:providers>
         <jaxrs:serviceBeans>
             <ref bean="peopleBean"/>
@@ -76,7 +78,10 @@
     <bean id="pagesForRenderBean" class="org.apache.rave.rest.impl.DefaultPageForRenderResource" autowire="byType" />
 
     <bean id="JsonWrapperResponseFilter" class="org.apache.rave.rest.filters.JsonWrapperResponseFilter"/>
-    <bean id="LocationHeaderResponseFilter" class="org.apache.rave.rest.filters.LocationHeaderResponseFilter"/>
+    <bean id="CreatedResponseFilter" class="org.apache.rave.rest.filters.CreatedResponseFilter"/>
+    <bean id="NoContentResponseFilter" class="org.apache.rave.rest.filters.NoContentResponseFilter"/>
+
     <bean id="NotFoundExceptionMapper" class="org.apache.rave.rest.filters.NotFoundExceptionMapper"/>
+    <bean id="BadRequestExceptionMapper" class="org.apache.rave.rest.filters.BadRequestExceptionMapper"/>
 
 </beans>

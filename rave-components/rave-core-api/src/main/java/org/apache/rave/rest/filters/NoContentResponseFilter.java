@@ -33,25 +33,14 @@ import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.List;
 
-public class JsonWrapperResponseFilter implements ContainerResponseFilter {
+public class NoContentResponseFilter implements ContainerResponseFilter {
 
     @Override
     public void filter(ContainerRequestContext containerRequestContext, ContainerResponseContext containerResponseContext) throws IOException {
-        if (containerResponseContext.getStatus() == Response.Status.OK.getStatusCode()) {
+        Object o = containerResponseContext.getEntity();
 
-            Object o = containerResponseContext.getEntity();
-            JsonResponseWrapper wrapper;
-
-            Class clazz = o.getClass();
-            if (List.class.isAssignableFrom(clazz)) {
-                wrapper = new JsonResponseWrapper((List) o);
-            } else if (SearchResult.class.isAssignableFrom(clazz)) {
-                wrapper = new JsonResponseWrapper((SearchResult) o);
-            } else {
-                wrapper = new JsonResponseWrapper(o);
-            }
-
-            containerResponseContext.setEntity(wrapper, containerResponseContext.getEntityAnnotations(), containerResponseContext.getMediaType());
+        if(o == null) {
+            containerResponseContext.setStatus(Response.Status.NO_CONTENT.getStatusCode());
         }
     }
 }

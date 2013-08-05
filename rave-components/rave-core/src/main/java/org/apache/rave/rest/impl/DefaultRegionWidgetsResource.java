@@ -21,6 +21,7 @@ package org.apache.rave.rest.impl;
 
 
 import org.apache.rave.portal.service.PageService;
+import org.apache.rave.rest.exception.ResourceNotFoundException;
 import org.apache.rave.rest.model.Page;
 import org.apache.rave.rest.model.Region;
 import org.apache.rave.rest.RegionWidgetsResource;
@@ -76,19 +77,24 @@ public class DefaultRegionWidgetsResource implements RegionWidgetsResource {
                 break;
             }
         }
-        //TODO: if match == null throw 404 exception
+
+        if(match == null) {
+            throw new ResourceNotFoundException(regionWidgetId);
+        }
 
         return match;
     }
 
     @Override
     public RegionWidget updatePageRegionRegionWidget(String regionWidgetId, RegionWidget regionWidget) {
+
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
     public RegionWidget deletePageRegionRegionWidget(String regionWidgetId) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        pageService.removeWidgetFromPage(regionWidgetId);
+        return null;
     }
 
     @Inject

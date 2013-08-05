@@ -20,22 +20,19 @@
 package org.apache.rave.rest.impl;
 
 
+import org.apache.rave.rest.exception.BadRequestException;
 import org.apache.rave.rest.exception.ResourceNotFoundException;
 import org.apache.rave.rest.RegionWidgetsResource;
 import org.apache.rave.rest.RegionsResource;
 import org.apache.rave.rest.model.Page;
 import org.apache.rave.rest.model.Region;
 import org.apache.rave.rest.model.SearchResult;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
-import javax.ws.rs.core.Response;
 import java.util.List;
 
 public class DefaultRegionsResource implements RegionsResource {
 
-    private Logger logger = LoggerFactory.getLogger(getClass());
     private Page page;
 
     private DefaultRegionWidgetsResource regionWidgetsResource;
@@ -54,8 +51,8 @@ public class DefaultRegionsResource implements RegionsResource {
 
     @Override
     public Region createPageRegion(Region region) {
-        //TODO: this method does not make sense since regions are changed via a page's pageLayoutCode
-        return null;
+        throw new BadRequestException("Direct manipulation of Regions is not allowed. " +
+                "Too add or delete page regions, edit a page's pageLayoutCode property.");
     }
 
     @Override
@@ -78,14 +75,14 @@ public class DefaultRegionsResource implements RegionsResource {
 
     @Override
     public Region updatePageRegion(String regionId, Region region) {
-        //TODO: this method does not make sense since regions are changed via a page's pageLayoutCode
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        throw new BadRequestException("Direct manipulation of Regions is not allowed. " +
+                "Too add or delete page regions, edit a page's pageLayoutCode property.");
     }
 
     @Override
     public Region deletePageRegion(String regionId) {
-        //TODO: this method does not make sense since regions are changed via a page's pageLayoutCode
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        throw new BadRequestException("Direct manipulation of Regions is not allowed. " +
+                "Too add or delete page regions, edit a page's pageLayoutCode property.");
     }
 
     @Override

@@ -55,7 +55,7 @@ public interface PageService {
      * @param pageId to lookup
      * @return the Page object
      */
-    @PostAuthorize("hasPermission(returnObject, 'read')")
+    @PostAuthorize("returnObject == null or hasPermission(returnObject, 'read')")
     Page getPage(String pageId);
 
     /**
@@ -73,7 +73,7 @@ public interface PageService {
      * @param userId The user to retrieve the page for.
      * @return The profile page
      */
-    @PostAuthorize("hasPermission(returnObject, 'read')")
+    @PostAuthorize("returnObject == null or hasPermission(returnObject, 'read')")
     Page getPersonProfilePage(String userId);
 
     /**

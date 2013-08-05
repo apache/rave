@@ -32,7 +32,7 @@ import java.util.List;
 import javax.ws.rs.core.Response;
 
 
-public class LocationHeaderResponseFilter implements ContainerResponseFilter {
+public class CreatedResponseFilter implements ContainerResponseFilter {
 
     @Override
     public void filter(ContainerRequestContext containerRequestContext, ContainerResponseContext containerResponseContext) throws IOException {

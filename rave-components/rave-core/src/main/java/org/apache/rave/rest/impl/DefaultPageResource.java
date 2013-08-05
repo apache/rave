@@ -20,11 +20,12 @@
 package org.apache.rave.rest.impl;
 
 
-import org.apache.rave.exception.ResourceNotFoundException;
+import org.apache.rave.rest.exception.ResourceNotFoundException;
 import org.apache.rave.model.PageType;
 import org.apache.rave.portal.service.PageService;
 import org.apache.rave.rest.PagesResource;
 import org.apache.rave.rest.RegionsResource;
+import org.apache.rave.rest.exception.BadRequestException;
 import org.apache.rave.rest.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,7 +47,7 @@ public class DefaultPageResource implements PagesResource {
         SearchResult<org.apache.rave.model.Page> fromDb = pageService.getAll();
         List<Page> pages = new ArrayList<Page>();
 
-        for(org.apache.rave.model.Page page : fromDb.getResultSet()) {
+        for (org.apache.rave.model.Page page : fromDb.getResultSet()) {
             pages.add(new Page(page));
         }
 
@@ -57,19 +58,26 @@ public class DefaultPageResource implements PagesResource {
     @Override
     public Page createPage(Page page) {
         //TODO: RAVE-977 - when Page type enum is deprecated escape from this logic
-        if(page.getPageType() == "user") {
+        if (page.getPageType() == "user") {
+            if (page.getName() == null) {
+                throw new BadRequestException("Page name property must be defined.");
+            }
+            if (page.getPageLayoutCode() == null) {
+                throw new BadRequestException("Page pageLayoutCode property must be defined.");
+            }
             org.apache.rave.model.Page fromDb = pageService.addNewUserPage(page.getName(), page.getPageLayoutCode());
-            Page responsePage =  new Page(fromDb);
+            Page responsePage = new Page(fromDb);
 
             return responsePage;
         } else {
-            //TODO: throw 400 exception
-            return null;
+            //TODO: RAVE-977 this will change
+            throw new BadRequestException("Page pageType property must equal 'user'.");
         }
     }
 
     @Override
     public Page deletePage(String id) {
+        //TODO: this cannot return a 404
         logger.debug("Deleting page " + id);
         pageService.deletePage(id);
         return null;
@@ -80,18 +88,24 @@ public class DefaultPageResource implements PagesResource {
         logger.debug("Retrieving page for export: " + id);
         org.apache.rave.model.Page fromDb = pageService.getPage(id);
         //TODO: with a bad ID a 403 gets thrown before I hit this block. Why?
-        if(fromDb == null) {
+        if (fromDb == null) {
             throw new ResourceNotFoundException(id);
         }
-        Page responsePage =  new Page(fromDb);
+        Page responsePage = new Page(fromDb);
 
         return responsePage;
     }
 
     @Override
     public Page updatePage(String id, Page page) {
+        if (page.getName() == null) {
+            throw new BadRequestException("Page name property must be defined.");
+        }
+        if (page.getPageLayoutCode() == null) {
+            throw new BadRequestException("Page pageLayoutCode property must be defined.");
+        }
         org.apache.rave.model.Page fromDb = pageService.updatePage(id, page.getName(), page.getPageLayoutCode());
-        Page responsePage =  new Page(fromDb);
+        Page responsePage = new Page(fromDb);
 
         return responsePage;
     }
