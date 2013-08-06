@@ -20,6 +20,7 @@
 package org.apache.rave.rest;
 
 import org.apache.rave.rest.model.Category;
+import org.apache.rave.rest.model.SearchResult;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -31,21 +32,21 @@ import javax.ws.rs.core.UriInfo;
 public interface CategoriesResource {
     @GET
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    public Response getCategories();
+    public SearchResult<Category> getCategories();
 
     @GET
     @Path("/{id}")
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    public Response getCategory(@PathParam("id") String id);
+    public Category getCategory(@PathParam("id") String id);
 
     @PUT
     @Path("/{id}")
     @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    public Response updateCategory(@PathParam("id") String id, Category category, @Context UriInfo uri);
+    public Category updateCategory(@PathParam("id") String id, Category category, @Context UriInfo uri);
 
     @POST
     @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    public Response createCategory(Category category);
+    public Category createCategory(Category category);
 }
