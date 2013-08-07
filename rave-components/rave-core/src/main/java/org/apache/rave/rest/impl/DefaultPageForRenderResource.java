@@ -43,7 +43,6 @@ import java.util.List;
 public class DefaultPageForRenderResource implements PagesForRenderResource {
 
     public static final String SELF = "@self";
-    private Logger logger = LoggerFactory.getLogger(getClass());
     private PageService pageService;
     private RenderService renderService;
     private UserService userService;
