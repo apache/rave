@@ -429,6 +429,22 @@ public class DefaultPageService implements PageService {
 
     @Override
     @Transactional
+    public Boolean updateSharedPageStatus(String pageId, String userId, String shareStatus) {
+        Page page = this.getPage(pageId);
+        for(PageUser pageUser : page.getMembers()){
+            if(pageUser.getUserId().equals(userId)){
+                pageUser.setPageStatus(PageInvitationStatus.get(shareStatus));
+            }
+        }
+        if(pageRepository.save(page) != null){
+            return Boolean.TRUE;
+        }else{
+            return Boolean.FALSE;
+        }
+    }
+
+    @Override
+    @Transactional
     public Boolean updatePageEditingStatus(String pageId, String userId, boolean isEditor) {
         Page page = this.getPage(pageId);
         for(PageUser pageUser : page.getMembers()){

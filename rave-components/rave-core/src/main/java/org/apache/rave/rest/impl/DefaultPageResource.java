@@ -20,6 +20,7 @@
 package org.apache.rave.rest.impl;
 
 
+import org.apache.rave.rest.PageUsersResource;
 import org.apache.rave.rest.exception.ResourceNotFoundException;
 import org.apache.rave.model.PageType;
 import org.apache.rave.portal.service.PageService;
@@ -31,6 +32,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +43,7 @@ public class DefaultPageResource implements PagesResource {
     private PageService pageService;
 
     private DefaultRegionsResource regionsResouce;
+    private DefaultPageUsersResource pageUsersResource;
 
     @Override
     public SearchResult<Page> getPages() {
@@ -123,6 +126,14 @@ public class DefaultPageResource implements PagesResource {
         return regionsResouce;
     }
 
+    @Override
+    public PageUsersResource getPageMembersResource(String pageId) {
+        Page page = getPage(pageId);
+        pageUsersResource.setPage(page);
+
+        return pageUsersResource;
+    }
+
     @Inject
     public void setPageService(PageService pageService) {
         this.pageService = pageService;
@@ -131,5 +142,10 @@ public class DefaultPageResource implements PagesResource {
     @Inject
     public void setRegionsResouce(DefaultRegionsResource regionsResouce) {
         this.regionsResouce = regionsResouce;
+    }
+
+    @Inject
+    public void setPageUsersResource(DefaultPageUsersResource pageUsersResource) {
+        this.pageUsersResource = pageUsersResource;
     }
 }

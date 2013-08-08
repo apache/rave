@@ -75,6 +75,7 @@
     <bean id="pagesBean" class="org.apache.rave.rest.impl.DefaultPageResource" autowire="byType" />
     <bean id="regionsBean" class="org.apache.rave.rest.impl.DefaultRegionsResource" autowire="byType" />
     <bean id="regionWidgetsBean" class="org.apache.rave.rest.impl.DefaultRegionWidgetsResource" autowire="byType" />
+    <bean id="pageUsersResource" class="org.apache.rave.rest.impl.DefaultPageUsersResource" autowire="byType" />
     <bean id="pagesForRenderBean" class="org.apache.rave.rest.impl.DefaultPageForRenderResource" autowire="byType" />
 
     <bean id="JsonWrapperResponseFilter" class="org.apache.rave.rest.filters.JsonWrapperResponseFilter"/>

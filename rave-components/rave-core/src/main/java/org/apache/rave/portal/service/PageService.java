@@ -280,6 +280,16 @@ public interface PageService {
     Boolean updateSharedPageStatus(String pageId, String shareStatus);
 
     /**
+     * Allows a user to accept or decline a page share
+     *
+     * @param pageId      - the id of the page in question
+     * @param shareStatus - a string value defined in PageStatus
+     * @return
+     */
+    @PreAuthorize("hasPermission(#pageId, 'org.apache.rave.model.Page', 'read')")
+    Boolean updateSharedPageStatus(String pageId, String userId, String shareStatus);
+
+    /**
      * Update a user who has shared access to a given page, so that they can edit the page (true)
      * or can only view it (false)
      *

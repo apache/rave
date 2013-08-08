@@ -31,8 +31,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.core.Response;
 import java.util.List;
 
 public class DefaultRegionWidgetsResource implements RegionWidgetsResource {

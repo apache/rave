@@ -109,4 +109,13 @@ public interface PagesResource {
      */
     @Path("/{pageId}/regions")
     RegionsResource getRegionsResource(@PathParam("pageId") String pageId);
+
+    /**
+     * Delegates to the RegionsResource sub-resource.
+     *
+     * @param pageId the page id
+     * @return
+     */
+    @Path("/{pageId}/members")
+    PageUsersResource getPageMembersResource(@PathParam("pageId") String pageId);
 }
