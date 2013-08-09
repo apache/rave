@@ -34,7 +34,7 @@ public class NotFoundExceptionMapper implements ExceptionMapper<ResourceNotFound
     public Response toResponse(ResourceNotFoundException e) {
         String id = e.getMessage();
         return Response.status(Response.Status.NOT_FOUND).entity(new ErrorWrapperResponse(
-                "The requested resource could not be found.",
+                "The requested resource could not be found. "+e.getMessage(),
                 "The requested resource could not be found."
         )).build();
     }

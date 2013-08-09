@@ -19,28 +19,42 @@
 package org.apache.rave.rest.impl;
 
 import org.apache.rave.model.FriendRequest;
+import org.apache.rave.model.User;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.rest.PeopleResource;
+import org.apache.rave.rest.exception.BadRequestException;
+import org.apache.rave.rest.exception.ResourceNotFoundException;
 import org.apache.rave.rest.model.Person;
+import org.apache.rave.rest.model.SearchResult;
 
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DefaultPeopleResource implements PeopleResource {
 
     private UserService userService;
 
     @Override
-    public Response getPeople() {
-        throw new UnsupportedOperationException("Not implemented");
+    public SearchResult<Person> getPeople() {
+        SearchResult<org.apache.rave.model.User> fromDb = userService.getAll();
+        List<Person> people = new ArrayList<Person>();
+
+        for (org.apache.rave.model.User user : fromDb.getResultSet()) {
+            people.add(new Person(user));
+        }
+
+        SearchResult<Person> returnPeople = new SearchResult<Person>(people, fromDb.getTotalResults());
+        return returnPeople;
     }
 
     @Override
-    public Response getPerson(String id) {
+    public Person getPerson(String id) {
         org.apache.rave.model.Person person = userService.getUserById(id);
         if (person != null) {
-            return Response.ok(new Person(person)).build();
+            return new Person(person);
         } else {
-            return Response.status(Response.Status.NOT_FOUND).build();
+            throw new ResourceNotFoundException(id);
         }
     }
 

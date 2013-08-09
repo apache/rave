@@ -22,6 +22,7 @@ package org.apache.rave.rest;
 import org.apache.cxf.jaxrs.ext.multipart.Multipart;
 import org.apache.rave.rest.model.Page;
 import org.apache.rave.rest.model.RegionWidget;
+import org.apache.rave.rest.model.SearchResult;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -41,7 +42,7 @@ public interface PagesForRenderResource {
     @GET
     @Path("/{context}/{identifier}")
     @Produces(MediaType.APPLICATION_JSON)
-    Response getPagesForRender(@PathParam("context") String context, @PathParam("identifier") String identifier);
+    SearchResult<Page> getPagesForRender(@PathParam("context") String context, @PathParam("identifier") String identifier);
 
     /**
      * Gets the render-ready page definition for the given context, identifier & page id
@@ -53,7 +54,7 @@ public interface PagesForRenderResource {
     @GET
     @Path("/{context}/{identifier}/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    Response getPageForRender(@PathParam("context") String context,
+    Page getPageForRender(@PathParam("context") String context,
                               @PathParam("identifier") String identifier,
                               @PathParam("id") String id);
 }
