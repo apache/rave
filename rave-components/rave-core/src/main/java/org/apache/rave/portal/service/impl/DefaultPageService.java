@@ -432,7 +432,7 @@ public class DefaultPageService implements PageService {
     public Boolean updateSharedPageStatus(String pageId, String userId, String shareStatus) {
         Page page = this.getPage(pageId);
         for(PageUser pageUser : page.getMembers()){
-            if(pageUser.getUserId().equals(userId)){
+            if(pageUser.getUserId().equals()){
                 pageUser.setPageStatus(PageInvitationStatus.get(shareStatus));
             }
         }

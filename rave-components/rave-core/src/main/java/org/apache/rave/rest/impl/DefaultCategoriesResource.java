@@ -45,14 +45,12 @@ public class DefaultCategoriesResource implements CategoriesResource {
         }
 
         return new SearchResult<Category>(categories, fromDb.getTotalResults());
-
     }
 
     @Override
     public Category getCategory(String id) {
 
         org.apache.rave.model.Category fromDb = categoryService.get(id);
-        //TODO: with a bad ID a 403 gets thrown before I hit this block. Why?
         if(fromDb == null) {
             throw new ResourceNotFoundException(id);
         }

@@ -25,18 +25,11 @@ import org.apache.rave.portal.service.PageService;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.portal.web.renderer.RenderService;
 import org.apache.rave.rest.PagesForRenderResource;
-import org.apache.rave.rest.PagesResource;
 import org.apache.rave.rest.model.Page;
 import org.apache.rave.rest.model.PageList;
-import org.apache.rave.rest.model.RegionWidget;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
-import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 

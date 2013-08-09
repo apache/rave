@@ -58,10 +58,24 @@ public class DefaultPageResource implements PagesResource {
         return returnPages;
     }
 
+
+    @Override
+    public Page getPage(String id) {
+        logger.debug("Retrieving page for export: " + id);
+        org.apache.rave.model.Page fromDb = pageService.getPage(id);
+        if (fromDb == null) {
+            throw new ResourceNotFoundException(id);
+        }
+        Page responsePage = new Page(fromDb);
+
+        return responsePage;
+    }
+
+
     @Override
     public Page createPage(Page page) {
         //TODO: RAVE-977 - when Page type enum is deprecated escape from this logic
-        if (page.getPageType() == "user") {
+        if (page.getPageType().equals("user")) {
             if (page.getName() == null) {
                 throw new BadRequestException("Page name property must be defined.");
             }
@@ -79,27 +93,6 @@ public class DefaultPageResource implements PagesResource {
     }
 
     @Override
-    public Page deletePage(String id) {
-        //TODO: this cannot return a 404
-        logger.debug("Deleting page " + id);
-        pageService.deletePage(id);
-        return null;
-    }
-
-    @Override
-    public Page getPage(String id) {
-        logger.debug("Retrieving page for export: " + id);
-        org.apache.rave.model.Page fromDb = pageService.getPage(id);
-        //TODO: with a bad ID a 403 gets thrown before I hit this block. Why?
-        if (fromDb == null) {
-            throw new ResourceNotFoundException(id);
-        }
-        Page responsePage = new Page(fromDb);
-
-        return responsePage;
-    }
-
-    @Override
     public Page updatePage(String id, Page page) {
         if (page.getName() == null) {
             throw new BadRequestException("Page name property must be defined.");
@@ -107,10 +100,19 @@ public class DefaultPageResource implements PagesResource {
         if (page.getPageLayoutCode() == null) {
             throw new BadRequestException("Page pageLayoutCode property must be defined.");
         }
+        //TODO: a bad page layout code can corrupt the data
         org.apache.rave.model.Page fromDb = pageService.updatePage(id, page.getName(), page.getPageLayoutCode());
         Page responsePage = new Page(fromDb);
 
         return responsePage;
+    }
+
+    @Override
+    public Page deletePage(String id) {
+        //TODO: this cannot return a 404
+        logger.debug("Deleting page " + id);
+        pageService.deletePage(id);
+        return null;
     }
 
     @Override
