@@ -20,7 +20,6 @@
 package org.apache.rave.rest.filters;
 
 import org.apache.rave.rest.exception.BadRequestException;
-import org.apache.rave.rest.exception.ResourceNotFoundException;
 import org.apache.rave.rest.model.ErrorWrapperResponse;
 
 import javax.ws.rs.Produces;

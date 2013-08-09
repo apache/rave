@@ -21,6 +21,7 @@ package org.apache.rave.rest.impl;
 
 
 import org.apache.rave.portal.service.PageService;
+import org.apache.rave.rest.exception.BadRequestException;
 import org.apache.rave.rest.exception.ResourceNotFoundException;
 import org.apache.rave.rest.model.Page;
 import org.apache.rave.rest.model.Region;
@@ -59,6 +60,9 @@ public class DefaultRegionWidgetsResource implements RegionWidgetsResource {
 
     @Override
     public RegionWidget createPageRegionRegionWidget(RegionWidget regionWidget) {
+        if(regionWidget.getWidgetId() == null) {
+            throw new BadRequestException("RegionWidget widgetId property must be defined.");
+        }
         org.apache.rave.model.RegionWidget fromDb =
                 pageService.addWidgetToPageRegion(page.getId(), regionWidget.getWidgetId(), region.getId());
 

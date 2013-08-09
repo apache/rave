@@ -38,7 +38,7 @@ public class CreatedResponseFilter implements ContainerResponseFilter {
     public void filter(ContainerRequestContext containerRequestContext, ContainerResponseContext containerResponseContext) throws IOException {
         String method = containerRequestContext.getRequest().getMethod();
 
-        if(method.equals("POST")) {
+        if (method.equals("POST") && containerResponseContext.getStatus() == Response.Status.OK.getStatusCode()) {
             containerResponseContext.setStatus(Response.Status.CREATED.getStatusCode());
             RestEntity entity = (RestEntity) containerResponseContext.getEntity();
             String id = entity.getId();
@@ -46,6 +46,6 @@ public class CreatedResponseFilter implements ContainerResponseFilter {
                     containerRequestContext.getUriInfo().getAbsolutePathBuilder().path(id).build().toString());
         }
 
-         //containerResponseContext.getHeaders().put("Location")
+        //containerResponseContext.getHeaders().put("Location")
     }
 }

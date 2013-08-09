@@ -37,10 +37,13 @@ public class NoContentResponseFilter implements ContainerResponseFilter {
 
     @Override
     public void filter(ContainerRequestContext containerRequestContext, ContainerResponseContext containerResponseContext) throws IOException {
-        Object o = containerResponseContext.getEntity();
+        if (containerResponseContext.getStatus() == Response.Status.OK.getStatusCode()) {
 
-        if(o == null) {
-            containerResponseContext.setStatus(Response.Status.NO_CONTENT.getStatusCode());
+            Object o = containerResponseContext.getEntity();
+
+            if (o == null) {
+                containerResponseContext.setStatus(Response.Status.NO_CONTENT.getStatusCode());
+            }
         }
     }
 }

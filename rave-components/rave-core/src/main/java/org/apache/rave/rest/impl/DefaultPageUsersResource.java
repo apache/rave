@@ -59,7 +59,7 @@ public class DefaultPageUsersResource implements PageUsersResource {
         }
         pageService.addMemberToPage(page.getId(), user.getPersonId());
         pageService.updatePageEditingStatus(page.getId(), user.getPersonId(), user.isEditor());
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return user;
     }
 
     @Override
