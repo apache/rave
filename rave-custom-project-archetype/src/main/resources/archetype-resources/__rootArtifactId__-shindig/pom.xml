@@ -36,6 +36,20 @@
       <artifactId>rave-shindig-dependencies</artifactId>
       <type>pom</type>
       <version>${apache.rave.version}</version>
+        <exclusions>
+            <exclusion>
+                <groupId>org.json</groupId>
+                <artifactId>json</artifactId>
+            </exclusion>
+            <exclusion>
+                <groupId>org.apache.rave</groupId>
+                <artifactId>rave-jpa</artifactId>
+            </exclusion>
+            <exclusion>
+                <groupId>org.apache.tomcat</groupId>
+                <artifactId>el-api</artifactId>
+            </exclusion>
+        </exclusions>
     </dependency>
     <dependency>
       <groupId>org.apache.rave</groupId>
@@ -43,6 +57,26 @@
       <type>war</type>
       <version>${apache.rave.version}</version>
     </dependency>
+      <dependency>
+          <groupId>org.json</groupId>
+          <artifactId>json</artifactId>
+          <version>${shindig.json.version}</version>
+      </dependency>
+      <dependency>
+          <groupId>org.apache.rave</groupId>
+          <artifactId>rave-jpa</artifactId>
+          <version>${apache.rave.version}</version>
+          <exclusions>
+              <exclusion>
+                  <groupId>org.apache.cxf</groupId>
+                  <artifactId>cxf-rt-frontend-jaxrs</artifactId>
+              </exclusion>
+              <exclusion>
+                  <groupId>org.json</groupId>
+                  <artifactId>json</artifactId>
+              </exclusion>
+          </exclusions>
+      </dependency>
   </dependencies>
 
   <build>
