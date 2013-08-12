@@ -57,6 +57,7 @@
             <ref bean="pageLayoutBean" />
             <ref bean="pagesForRenderBean" />
             <ref bean="categoriesBean"/>
+            <ref bean="preferencesBean"/>
         </jaxrs:serviceBeans>
     </jaxrs:server>
 
@@ -72,6 +73,8 @@
         <property name="categoryService" ref="defaultCategoryService"/>
         <property name="userService" ref="userService"/>
     </bean>
+
+    <bean id="preferencesBean" class="org.apache.rave.rest.impl.DefaultPortalPreferenceResource" autowire="byType" />
 
     <bean id="pageLayoutBean" class="org.apache.rave.rest.impl.DefaultPageLayoutResource" autowire="byType" />
 
