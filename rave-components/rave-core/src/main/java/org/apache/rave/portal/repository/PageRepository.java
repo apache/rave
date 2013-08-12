@@ -21,12 +21,13 @@ package org.apache.rave.portal.repository;
 import org.apache.rave.repository.Repository;
 import org.apache.rave.model.*;
 
+
 import java.util.List;
 
 /**
  * Provides persistence operations for the {@link org.apache.rave.model.Page} class
  */
-public interface PageRepository extends Repository<Page> {
+public interface PageRepository extends Repository<Page>{
     /**
      * Returns all pages of a given PageType owned by the user
      *
@@ -34,7 +35,7 @@ public interface PageRepository extends Repository<Page> {
      * @param pageType the pageType to search by
      * @return a list of all the Page objects owned by userId of type pageType
      */
-    List<Page> getAllPages(String userId, PageType pageType);
+    List<Page> getAllPagesForUserType(String userId, PageType pageType);
 
     /**
      * Delete all pages for a userId of the supplied pageType

@@ -22,14 +22,13 @@ package org.apache.rave.portal.repository;
 import org.apache.rave.repository.Repository;
 import org.apache.rave.model.PortalPreference;
 
+
 import java.util.List;
 
 /**
  * Provides persistence operations for the {@link org.apache.rave.model.PortalPreference}
  */
 public interface PortalPreferenceRepository extends Repository<PortalPreference> {
-
-    List<PortalPreference> getAll();
 
     PortalPreference getByKey(String key);
 }

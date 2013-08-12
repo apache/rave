@@ -19,6 +19,7 @@
 
 package org.apache.rave.portal.repository.impl;
 
+import com.google.common.collect.Lists;
 import org.apache.rave.portal.model.MongoDbPage;
 import org.apache.rave.model.Page;
 import org.apache.rave.model.Region;
@@ -328,6 +329,114 @@ public class MongoDbRegionWidgetRepositoryTest {
 
         widgetRepository.delete(item);
 
+    }
+
+    @Test
+    public void getAll(){
+        String id = "1111L";
+        String id2 = "2222L";
+        String regionWidgetId1 = "9876L";
+        String regionWidgetId2 = "6543L";
+        String regionWidgetId3 = "2874L";
+        Page page = new PageImpl("1234L");
+        List<Page> pages = Lists.newArrayList();
+        List<Region> regions = Lists.newArrayList();
+        List<RegionWidget> regionWidgets = Lists.newArrayList();
+        Region region = new RegionImpl(id);
+        Region region2 = new RegionImpl(id2);
+        RegionWidget rw1 = new RegionWidgetImpl(regionWidgetId1);
+        RegionWidget rw2 = new RegionWidgetImpl(regionWidgetId2);
+        RegionWidget rw3 = new RegionWidgetImpl(regionWidgetId3);
+        regions.add(region);
+        regions.add(region2);
+        regionWidgets.add(rw1);
+        regionWidgets.add(rw2);
+        regionWidgets.add(rw3);
+        region.setRegionWidgets(regionWidgets);
+        pages.add(page);
+        page.setRegions(regions);
+
+
+        Query q = new Query();
+        expect(template.find(q)).andReturn(pages);
+        replay(template);
+
+        List<RegionWidget> result = widgetRepository.getAll();
+        assertNotNull(result);
+        assertThat(result, is(equalTo(regionWidgets)));
+        assertThat(result.size(), equalTo(3));
+    }
+
+    @Test
+    public void getLimitedList(){
+        String id = "1111L";
+        String id2 = "2222L";
+        String regionWidgetId1 = "9876L";
+        String regionWidgetId2 = "6543L";
+        String regionWidgetId3 = "2874L";
+        Page page = new PageImpl("1234L");
+        List<Page> pages = Lists.newArrayList();
+        List<Region> regions = Lists.newArrayList();
+        List<RegionWidget> regionWidgets = Lists.newArrayList();
+        Region region = new RegionImpl(id);
+        Region region2 = new RegionImpl(id2);
+        RegionWidget rw1 = new RegionWidgetImpl(regionWidgetId1);
+        RegionWidget rw2 = new RegionWidgetImpl(regionWidgetId2);
+        RegionWidget rw3 = new RegionWidgetImpl(regionWidgetId3);
+        regions.add(region);
+        regions.add(region2);
+        regionWidgets.add(rw1);
+        regionWidgets.add(rw2);
+        regionWidgets.add(rw3);
+        region.setRegionWidgets(regionWidgets);
+        pages.add(page);
+        page.setRegions(regions);
+
+
+        Query q = new Query();
+        expect(template.find(q)).andReturn(pages);
+        replay(template);
+
+        List<RegionWidget> result = widgetRepository.getLimitedList(1,2);
+        assertNotNull(result);
+        assertThat(result, is(equalTo(regionWidgets.subList(1,3))));
+        assertThat(result.size(), equalTo(2));
+    }
+
+
+    @Test
+    public void getCount(){
+        String id = "1111L";
+        String id2 = "2222L";
+        String regionWidgetId1 = "9876L";
+        String regionWidgetId2 = "6543L";
+        String regionWidgetId3 = "2874L";
+        Page page = new PageImpl("1234L");
+        List<Page> pages = Lists.newArrayList();
+        List<Region> regions = Lists.newArrayList();
+        List<RegionWidget> regionWidgets = Lists.newArrayList();
+        Region region = new RegionImpl(id);
+        Region region2 = new RegionImpl(id2);
+        RegionWidget rw1 = new RegionWidgetImpl(regionWidgetId1);
+        RegionWidget rw2 = new RegionWidgetImpl(regionWidgetId2);
+        RegionWidget rw3 = new RegionWidgetImpl(regionWidgetId3);
+        regions.add(region);
+        regions.add(region2);
+        regionWidgets.add(rw1);
+        regionWidgets.add(rw2);
+        regionWidgets.add(rw3);
+        region.setRegionWidgets(regionWidgets);
+        pages.add(page);
+        page.setRegions(regions);
+
+
+        Query q = new Query();
+        expect(template.find(q)).andReturn(pages);
+        replay(template);
+
+        int result = widgetRepository.getCountAll();
+        assertNotNull(result);
+        assertThat(result, equalTo(3));
     }
 
 }

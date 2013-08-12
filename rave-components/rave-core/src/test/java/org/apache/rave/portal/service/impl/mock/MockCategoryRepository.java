@@ -30,6 +30,16 @@ public class MockCategoryRepository implements CategoryRepository {
     }
 
     @Override
+    public List<Category> getLimitedList(int offset, int limit) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public int getCountAll() {
+        return 0;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
     public int removeFromCreatedOrModifiedFields(String userId) {
         return 0;  //To change body of implemented methods use File | Settings | File Templates.
     }

@@ -23,7 +23,7 @@ import org.apache.rave.model.Authority;
 import org.apache.rave.model.PortalPreference;
 import org.apache.rave.model.User;
 import org.apache.rave.portal.model.impl.UserImpl;
-import org.apache.rave.portal.model.util.SearchResult;
+import org.apache.rave.rest.model.SearchResult;
 import org.apache.rave.portal.service.AuthorityService;
 import org.apache.rave.portal.service.NewAccountService;
 import org.apache.rave.portal.service.PortalPreferenceService;
@@ -101,7 +101,7 @@ public class UserController {
                             Model model) {
         model.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
         addNavigationMenusToModel(SELECTED_ITEM, model, referringPageId);
-        final SearchResult<User> users = userService.getLimitedListOfUsers(offset, getPageSize());
+        final SearchResult<User> users = userService.getLimitedList(offset, getPageSize());
         model.addAttribute(ModelKeys.SEARCHRESULT, users);
 
         if (isDeleteOrUpdate(action)) {

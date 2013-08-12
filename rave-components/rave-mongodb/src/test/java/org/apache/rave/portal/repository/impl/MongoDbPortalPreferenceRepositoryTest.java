@@ -28,12 +28,14 @@ import org.apache.rave.util.CollectionUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.query.Query;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.apache.rave.portal.repository.util.CollectionNames.PREFERENCE_COLLECTION;
 import static org.easymock.EasyMock.*;
+import static org.easymock.EasyMock.isA;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
@@ -66,6 +68,25 @@ public class MongoDbPortalPreferenceRepositoryTest {
         replay(template);
 
         assertThat(CollectionUtils.<PortalPreference>toBaseTypedList(found), is(sameInstance(preferenceRepository.getAll())));
+    }
+
+    @Test
+    public void getLimitedList_Valid(){
+        int offset = 234;
+        int pageSize = 123;
+        List<PortalPreferenceImpl> found = new ArrayList<PortalPreferenceImpl>();
+        Query q = new Query().skip(offset).limit(pageSize);
+        expect(template.find(q, preferenceRepository.CLASS, CollectionNames.PREFERENCE_COLLECTION)).andReturn(found);
+        replay(template);
+        assertThat(CollectionUtils.<PortalPreference>toBaseTypedList(found), is(sameInstance(preferenceRepository.getLimitedList(offset, pageSize))));
+    }
+
+    @Test
+    public void getCountAll(){
+        long doubleOseven = 007;
+        expect(template.count(new Query(), preferenceRepository.CLASS)).andReturn(doubleOseven);
+        replay(template);
+        assertThat((int)doubleOseven, is(sameInstance(preferenceRepository.getCountAll())));
     }
 
     @Test

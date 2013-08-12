@@ -157,4 +157,19 @@ public class DecoratingOpenSocialPersonRepository implements OpenSocialPersonRep
 	public int removeAllFriendsAndRequests(String userid) {
 		return underlying.removeAllFriendsAndRequests(userid);
 	}
+
+    @Override
+    public List<Person> getAll() {
+        throw new NotSupportedException();
+    }
+
+    @Override
+    public List<Person> getLimitedList(int offset, int limit) {
+        throw new NotSupportedException();
+    }
+
+    @Override
+    public int getCountAll() {
+        throw new NotSupportedException();
+    }
 }

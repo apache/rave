@@ -20,6 +20,7 @@
 package org.apache.rave.portal.service.impl;
 
 import org.apache.rave.model.Tag;
+import org.apache.rave.rest.model.SearchResult;
 import org.apache.rave.portal.repository.TagRepository;
 import org.apache.rave.portal.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,8 +47,25 @@ public class DefaultTagService implements TagService {
 
 
     @Override
-    public List<Tag> getAllTags() {
+    public List<Tag> getAllTagsList() {
         return repository.getAll();
+    }
+
+    @Override
+    public SearchResult<Tag> getAll() {
+        final int count = repository.getCountAll();
+        final List<Tag> tags = repository.getAll();
+        return new SearchResult<Tag>(tags, count);
+    }
+
+    @Override
+    public SearchResult<Tag> getLimitedList(int offset, int pageSize) {
+        final int count = repository.getCountAll();
+        final List<Tag> tags = repository.getLimitedList(offset, pageSize);
+        final SearchResult<Tag> searchResult = new SearchResult<Tag>(tags, count);
+        searchResult.setOffset(offset);
+        searchResult.setPageSize(pageSize);
+        return searchResult;
     }
 
     @Override

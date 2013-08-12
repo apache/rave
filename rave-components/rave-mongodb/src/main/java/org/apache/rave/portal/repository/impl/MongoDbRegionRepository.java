@@ -26,9 +26,11 @@ import org.apache.rave.portal.repository.MongoPageOperations;
 import org.apache.rave.portal.repository.RegionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Field;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -86,6 +88,42 @@ public class MongoDbRegionRepository implements RegionRepository {
         }
         template.save(page);
     }
+
+    @Override
+    public List<Region> getAll(){
+
+        Query q = new Query();
+
+        List<Page> allPages = template.find(q);
+
+        List<Region> regions = new ArrayList<Region>();
+
+        for(Page page: allPages){
+            List<Region> rgns = page.getRegions();
+            if(rgns != null){
+                for(Region region : rgns) {
+                    regions.add(region);
+                }
+            }
+
+        }
+
+        return regions;
+    }
+
+    @Override
+    public List<Region> getLimitedList(int offset, int pageSize){
+        List<Region> regions = this.getAll();
+        int end = regions.size() < offset + pageSize ? regions.size() : offset + pageSize;
+
+        return regions.subList(offset, end);
+    }
+
+    @Override
+    public int getCountAll() {
+        return this.getAll().size();
+    }
+
 
     private void removeRegion(Page page, Region item) {
         Iterator<Region> iterator = page.getRegions().iterator();

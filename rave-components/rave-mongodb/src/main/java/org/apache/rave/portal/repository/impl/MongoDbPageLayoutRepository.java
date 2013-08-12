@@ -19,6 +19,7 @@
 
 package org.apache.rave.portal.repository.impl;
 
+import org.apache.rave.exception.NotSupportedException;
 import org.apache.rave.model.PageLayout;
 import org.apache.rave.portal.model.MongoDbPageLayout;
 import org.apache.rave.portal.repository.PageLayoutRepository;
@@ -48,6 +49,16 @@ public class MongoDbPageLayoutRepository implements PageLayoutRepository {
     @Override
     public List<PageLayout> getAll() {
         return CollectionUtils.<PageLayout>toBaseTypedList(template.findAll(CLASS, PAGE_LAYOUT_COLLECTION));
+    }
+
+    @Override
+    public List<PageLayout> getLimitedList(int offset, int limit) {
+        throw new NotSupportedException("This function is not yet implemented for this class.");
+    }
+
+    @Override
+    public int getCountAll() {
+        throw new NotSupportedException("This function is not yet implemented for this class.");
     }
 
     @Override

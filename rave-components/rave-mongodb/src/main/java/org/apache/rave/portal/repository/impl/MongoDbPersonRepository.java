@@ -38,6 +38,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -187,7 +188,7 @@ public class MongoDbPersonRepository implements PersonRepository {
 
     @Override
     public int removeAllFriendsAndRequests(String userid) {
-        MongoDbUser person = (MongoDbUser)template.get(userid);
+        MongoDbUser person = (MongoDbUser) template.get(userid);
         int count = person.getFriends().size();
         person.setFriends(Lists.<MongoDbPersonAssociation>newArrayList());
         save(person);
@@ -300,5 +301,30 @@ public class MongoDbPersonRepository implements PersonRepository {
 
     public void setWidgetOperations(MongoWidgetOperations widgetOperations) {
         this.widgetOperations = widgetOperations;
+    }
+
+    @Override
+    public List<Person> getAll() {
+        List<User> users = template.find(new Query());
+        ArrayList<Person> persons= new ArrayList<Person>();
+        for(User user : users) {
+            persons.add(user.toPerson());
+        }
+        return persons;
+    }
+
+    @Override
+    public List<Person> getLimitedList(int offset, int limit) {
+        List<User> users = template.find(new Query().skip(offset).limit(limit));
+        ArrayList<Person> persons= new ArrayList<Person>();
+        for(User user : users) {
+            persons.add(user.toPerson());
+        }
+        return persons;
+    }
+
+    @Override
+    public int getCountAll() {
+        return (int) template.count(new Query());
     }
 }

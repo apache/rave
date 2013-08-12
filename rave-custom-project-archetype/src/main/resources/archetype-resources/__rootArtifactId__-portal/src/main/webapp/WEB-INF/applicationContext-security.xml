@@ -95,5 +95,6 @@
 
     <!-- Need to define customUserService because its package is not scanned automatically -->
     <bean id="customUserService" class="${package}.CustomUserService"/>
-
+    <!-- Override the default "userService" bean alias -->
+    <alias name="customUserService" alias="userService"/>
 </beans>

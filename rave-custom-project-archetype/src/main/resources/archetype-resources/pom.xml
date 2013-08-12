@@ -34,6 +34,7 @@
     <javax.servlet.version>${javax.servlet.version}</javax.servlet.version>
     <javax.mail.version>${javax.mail.version}</javax.mail.version>
     <jsp-api.version>${jsp-api.version}</jsp-api.version>
+    <shindig.json.version>20070829</shindig.json.version>
     <el-api.version>${el-api.version}</el-api.version>
     <org.slf4j.version>${org.slf4j.version}</org.slf4j.version>
     <log4j.version>${log4j.version}</log4j.version>
@@ -41,9 +42,22 @@
     <commons-lang.version>${commons-lang.version}</commons-lang.version>
     <junit.version>${junit.version}</junit.version>
     <easymock.version>${easymock.version}</easymock.version>
-
+    <tomcat.version>${tomcat.version}</tomcat.version>
     <cargo.version>${cargo.version}</cargo.version>
-    <javaagent/>
+
+  <!-- Rave Portal default jdbc datasource configuration: using rave default configuration shared with Shindig -->
+  <portal.dataSource.driver>${rave.dataSource.driver}</portal.dataSource.driver>
+  <portal.dataSource.url>${rave.dataSource.url}</portal.dataSource.url>
+  <portal.dataSource.username>${rave.dataSource.username}</portal.dataSource.username>
+  <portal.dataSource.password>${rave.dataSource.password}</portal.dataSource.password>
+
+  <!-- Rave Shindig default jdbc datasource configuration: using rave default configuration shared with Portal -->
+  <shindig.dataSource.driver>${rave.dataSource.driver}</shindig.dataSource.driver>
+  <shindig.dataSource.url>${rave.dataSource.url}</shindig.dataSource.url>
+  <shindig.dataSource.username>${rave.dataSource.username}</shindig.dataSource.username>
+  <shindig.dataSource.password>${rave.dataSource.password}</shindig.dataSource.password>
+
+      <javaagent/>
 
       <!-- Force maven-filesync-plugin rewrite the Eclipse FileSync plugin configuration with
    $mvn filesync:generate -Dmaven.filesync.override=true -->

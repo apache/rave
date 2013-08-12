@@ -23,7 +23,7 @@ import org.apache.rave.model.Category;
 import org.apache.rave.model.PortalPreference;
 import org.apache.rave.model.Widget;
 import org.apache.rave.model.WidgetStatus;
-import org.apache.rave.portal.model.util.SearchResult;
+import org.apache.rave.rest.model.SearchResult;
 import org.apache.rave.portal.service.CategoryService;
 import org.apache.rave.portal.service.PortalPreferenceService;
 import org.apache.rave.portal.service.WidgetService;
@@ -82,7 +82,7 @@ public class WidgetController {
         model.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
         addNavigationMenusToModel(SELECTED_ITEM, model, referringPageId);
         final SearchResult<Widget> widgets =
-                widgetService.getLimitedListOfWidgets(offset, getPageSize());
+                widgetService.getLimitedList(offset, getPageSize());
         model.addAttribute(ModelKeys.SEARCHRESULT, widgets);
 
         if (isDeleteOrUpdate(action)) {
@@ -116,7 +116,7 @@ public class WidgetController {
         model.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
         model.addAttribute(ModelKeys.WIDGET, widgetService.getWidget(widgetid));
         model.addAttribute(ModelKeys.TOKENCHECK, AdminControllerUtil.generateSessionToken());
-        model.addAttribute(ModelKeys.CATEGORIES, categoryService.getAll());
+        model.addAttribute(ModelKeys.CATEGORIES, categoryService.getAllList());
 
         return ViewNames.ADMIN_WIDGETDETAIL;
     }
@@ -133,7 +133,7 @@ public class WidgetController {
         if (result.hasErrors()) {
             addNavigationMenusToModel(SELECTED_ITEM, (Model) modelMap, referringPageId);
             modelMap.addAttribute(ModelKeys.REFERRING_PAGE_ID, referringPageId);
-            modelMap.addAttribute(ModelKeys.CATEGORIES, categoryService.getAll());
+            modelMap.addAttribute(ModelKeys.CATEGORIES, categoryService.getAllList());
             return ViewNames.ADMIN_WIDGETDETAIL;
         }
         widgetService.updateWidget(widget);

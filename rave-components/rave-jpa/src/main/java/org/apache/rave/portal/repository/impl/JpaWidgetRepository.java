@@ -92,19 +92,19 @@ public class JpaWidgetRepository implements WidgetRepository {
     @Override
     public List<Widget> getAll() {
         log.warn("Requesting potentially large resultset of Widget. No pagesize set.");
-        TypedQuery<JpaWidget> query = manager.createNamedQuery(JpaWidget.WIDGET_GET_ALL, JpaWidget.class);
+        TypedQuery<JpaWidget> query = manager.createNamedQuery(JpaWidget.GET_ALL, JpaWidget.class);
         return CollectionUtils.<Widget>toBaseTypedList(query.getResultList());
     }
 
     @Override
     public List<Widget> getLimitedList(int offset, int pageSize) {
-        TypedQuery<JpaWidget> query = manager.createNamedQuery(JpaWidget.WIDGET_GET_ALL, JpaWidget.class);
+        TypedQuery<JpaWidget> query = manager.createNamedQuery(JpaWidget.GET_ALL, JpaWidget.class);
         return CollectionUtils.<Widget>toBaseTypedList(getPagedResultList(query, offset, pageSize));
     }
 
     @Override
     public int getCountAll() {
-        Query query = manager.createNamedQuery(JpaWidget.WIDGET_COUNT_ALL);
+        Query query = manager.createNamedQuery(JpaWidget.GET_COUNT);
         Number countResult = (Number) query.getSingleResult();
         return countResult.intValue();
     }

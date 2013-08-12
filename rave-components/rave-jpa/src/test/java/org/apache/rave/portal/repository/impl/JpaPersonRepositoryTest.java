@@ -24,6 +24,7 @@ import org.apache.rave.portal.model.JpaPerson;
 import org.apache.rave.model.Person;
 import org.apache.rave.portal.model.impl.PersonImpl;
 import org.apache.rave.portal.repository.PersonRepository;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 
+import static junit.framework.Assert.assertNotNull;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
@@ -43,6 +45,7 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations={"classpath:test-applicationContext.xml",
@@ -76,6 +79,28 @@ public class JpaPersonRepositoryTest {
         JpaPerson p = (JpaPerson) repository.get(VALID_ID);
         assertThat(p.getEntityId().toString(), is(VALID_ID));
         assertThat(p.getUsername(), is(VALID_USER));
+    }
+
+    @Test
+    public void getAll(){
+        List<Person> people = repository.getAll();
+        assertNotNull(people);
+        assertThat(people.size(), is(13));
+    }
+
+    @Test
+    public void getLimitedList() {
+        final int offset = 5;
+        final int pageSize = 5;
+        List<Person> people = repository.getLimitedList(offset, pageSize);
+        Assert.assertNotNull(people);
+        assertThat(people.size(), is(5));
+    }
+
+    @Test
+    public void countAll() {
+        int count = repository.getCountAll();
+        assertThat(count, is(13));
     }
 
     @Test

@@ -19,6 +19,7 @@
 
 package org.apache.rave.portal.repository.impl;
 
+import org.apache.rave.exception.NotSupportedException;
 import org.apache.rave.portal.model.JpaOAuthConsumerStore;
 import org.apache.rave.model.OAuthConsumerStore;
 import org.apache.rave.portal.model.conversion.JpaOAuthConsumerStoreConverter;
@@ -29,6 +30,8 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+
+import java.util.List;
 
 import static org.apache.rave.persistence.jpa.util.JpaUtil.getSingleResult;
 import static org.apache.rave.persistence.jpa.util.JpaUtil.saveOrUpdate;
@@ -65,6 +68,22 @@ public class JpaOAuthConsumerStoreRepository implements OAuthConsumerStoreReposi
     public void delete(OAuthConsumerStore item) {
         manager.remove(converter.convert(item));
     }
+
+    @Override
+    public List<OAuthConsumerStore> getAll() {
+        throw new NotSupportedException("This function is not yet implemented for this class.");
+    }
+
+    @Override
+    public List<OAuthConsumerStore> getLimitedList(int offset, int limit) {
+        throw new NotSupportedException("This function is not yet implemented for this class.");
+    }
+
+    @Override
+    public int getCountAll() {
+        throw new NotSupportedException("This function is not yet implemented for this class.");
+    }
+
     /**
      * {@inheritDoc}
      */

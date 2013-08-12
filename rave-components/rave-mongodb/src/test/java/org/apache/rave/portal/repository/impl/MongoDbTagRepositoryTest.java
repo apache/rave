@@ -66,6 +66,18 @@ public class MongoDbTagRepositoryTest {
     }
 
     @Test
+    public void getLimitedList(){
+        List<Tag> tags = Arrays.<Tag>asList(new TagImpl(), new TagImpl());
+
+        expect(tagTemplate.find(new Query())).andReturn(tags);
+        replay(tagTemplate);
+
+        List<Tag> result = repo.getAll();
+        assertNotNull(result);
+        assertThat(result.size(), is(equalTo(tags.size())));
+    }
+
+    @Test
     public void countAll(){
 
         expect(tagTemplate.count(new Query())).andReturn(2L);

@@ -20,6 +20,8 @@
 package org.apache.rave.rest;
 
 import org.apache.rave.model.FriendRequest;
+import org.apache.rave.rest.model.Person;
+import org.apache.rave.rest.model.SearchResult;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -30,12 +32,12 @@ public interface PeopleResource {
 
     @GET
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    public Response getPeople();
+    public SearchResult<Person> getPeople();
 
     @GET
     @Path("/{id}")
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    public Response getPerson(@PathParam("id") String id);
+    public Person getPerson(@PathParam("id") String id);
 
     @GET
     @Path("/{id}/friends")

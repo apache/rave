@@ -59,8 +59,8 @@ import java.util.List;
 @Access(AccessType.FIELD)
 @Table(name = "widget")
 @NamedQueries({
-        @NamedQuery(name = JpaWidget.WIDGET_GET_ALL, query = JpaWidget.SELECT_W_FROM_WIDGET_W + JpaWidget.ORDER_BY_TITLE_ASC),
-        @NamedQuery(name = JpaWidget.WIDGET_COUNT_ALL, query = JpaWidget.SELECT_COUNT_W_FROM_WIDGET_W),
+        @NamedQuery(name = JpaWidget.GET_ALL, query = JpaWidget.SELECT_W_FROM_WIDGET_W + JpaWidget.ORDER_BY_TITLE_ASC),
+        @NamedQuery(name = JpaWidget.GET_COUNT, query = JpaWidget.SELECT_COUNT_W_FROM_WIDGET_W),
 
         @NamedQuery(name = JpaWidget.WIDGET_GET_BY_OWNER,
                 query = JpaWidget.SELECT_W_FROM_WIDGET_W + JpaWidget.WHERE_CLAUSE_OWNER + JpaWidget.ORDER_BY_TITLE_ASC),
@@ -92,8 +92,8 @@ public class JpaWidget implements BasicEntity, Serializable, Widget {
     public static final String PARAM_OWNER = "owner";
     public static final String PARAM_TAG_ID = "tagId";
 
-    public static final String WIDGET_GET_ALL = "Widget.getAll";
-    public static final String WIDGET_COUNT_ALL = "Widget.countAll";
+    public static final String GET_ALL = "Widget.getAll";
+    public static final String GET_COUNT = "Widget.countAll";
     public static final String WIDGET_GET_BY_OWNER = "Widget.getByOwner";
     public static final String WIDGET_COUNT_BY_OWNER = "Widget.countByOwner";
     public static final String WIDGET_GET_BY_FREE_TEXT = "Widget.getByFreeText";

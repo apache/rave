@@ -19,6 +19,7 @@
 
 package org.apache.rave.portal.model.util;
 
+import org.apache.rave.rest.model.SearchResult;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -28,7 +29,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 
 /**
- * Test for {@link SearchResult}
+ * Test for {@link org.apache.rave.rest.model.SearchResult}
  */
 public class SearchResultTest {
     SearchResult searchResult;

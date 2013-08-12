@@ -21,6 +21,7 @@ package org.apache.rave.portal.repository.impl;
 
 import org.apache.rave.model.Category;
 import org.apache.rave.portal.model.JpaCategory;
+import org.apache.rave.portal.model.JpaWidget;
 import org.apache.rave.portal.model.conversion.JpaCategoryConverter;
 import org.apache.rave.portal.repository.CategoryRepository;
 import org.apache.rave.util.CollectionUtils;
@@ -29,8 +30,11 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import java.util.List;
 
+import static org.apache.rave.persistence.jpa.util.JpaUtil.getPagedResultList;
 import static org.apache.rave.persistence.jpa.util.JpaUtil.saveOrUpdate;
 
 /**
@@ -71,7 +75,20 @@ public class JpaCategoryRepository implements CategoryRepository {
         List<JpaCategory> resultList = manager.createNamedQuery(JpaCategory.GET_ALL, JpaCategory.class).getResultList();
         return CollectionUtils.<Category>toBaseTypedList(resultList);
     }
-    
+
+    @Override
+    public List<Category> getLimitedList(int offset, int limit) {
+        TypedQuery<JpaCategory> query = manager.createNamedQuery(JpaCategory.GET_ALL, JpaCategory.class);
+        return CollectionUtils.<Category>toBaseTypedList(getPagedResultList(query, offset, limit));
+    }
+
+    @Override
+    public int getCountAll() {
+        Query query = manager.createNamedQuery(JpaCategory.GET_COUNT);
+        Number countResult = (Number) query.getSingleResult();
+        return countResult.intValue();
+    }
+
     @Override
     public int removeFromCreatedOrModifiedFields(String userId) {
        List<Category> categories = getAll();

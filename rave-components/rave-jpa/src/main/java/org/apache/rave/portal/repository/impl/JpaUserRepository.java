@@ -24,6 +24,8 @@ import org.apache.rave.model.User;
 import org.apache.rave.portal.model.conversion.JpaUserConverter;
 import org.apache.rave.portal.repository.UserRepository;
 import org.apache.rave.util.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -39,6 +41,8 @@ import static org.apache.rave.persistence.jpa.util.JpaUtil.*;
  */
 @Repository
 public class JpaUserRepository implements UserRepository {
+
+    private final Logger log = LoggerFactory.getLogger(JpaUserRepository.class);
 
     @Autowired
     private JpaUserConverter converter;
@@ -65,6 +69,14 @@ public class JpaUserRepository implements UserRepository {
     	TypedQuery<JpaUser> query = manager.createNamedQuery(JpaUser.USER_GET_BY_OPENID, JpaUser.class);
         query.setParameter(JpaUser.PARAM_OPENID, openId);
         return getSingleResult(query.getResultList());
+    }
+
+    @Override
+    public List<User> getAll() {
+        log.warn("Requesting potentially large resultset of Users. No pagesize set.");
+        TypedQuery<JpaUser> query = manager.createNamedQuery(JpaUser.USER_GET_ALL, JpaUser.class);
+        return CollectionUtils.<User>toBaseTypedList(query.getResultList());
+
     }
 
     @Override

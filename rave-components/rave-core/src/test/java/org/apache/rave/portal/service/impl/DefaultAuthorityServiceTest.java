@@ -21,7 +21,7 @@ package org.apache.rave.portal.service.impl;
 
 import org.apache.rave.model.Authority;
 import org.apache.rave.portal.model.impl.AuthorityImpl;
-import org.apache.rave.portal.model.util.SearchResult;
+import org.apache.rave.rest.model.SearchResult;
 import org.apache.rave.portal.repository.AuthorityRepository;
 import org.apache.rave.portal.service.AuthorityService;
 import org.junit.Before;

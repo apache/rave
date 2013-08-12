@@ -26,6 +26,7 @@ import org.apache.rave.repository.Repository;
 import org.apache.rave.model.Person;
 
 
+
 public interface PersonRepository extends Repository<Person> {
     /**
      * Gets a user by their username

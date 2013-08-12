@@ -24,7 +24,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.rave.model.PageType;
 import org.apache.rave.model.Person;
 import org.apache.rave.model.User;
-import org.apache.rave.portal.model.util.SearchResult;
+import org.apache.rave.rest.model.SearchResult;
 import org.apache.rave.portal.repository.CategoryRepository;
 import org.apache.rave.portal.repository.PageRepository;
 import org.apache.rave.portal.repository.PageTemplateRepository;
@@ -225,7 +225,14 @@ public class DefaultUserService implements UserService {
     }
 
     @Override
-    public SearchResult<User> getLimitedListOfUsers(int offset, int pageSize) {
+    public SearchResult<User> getAll() {
+        final int count = userRepository.getCountAll();
+        final List<User> users = userRepository.getAll();
+        return new SearchResult<User>(users, count);
+    }
+
+    @Override
+    public SearchResult<User> getLimitedList(int offset, int pageSize) {
         final int count = userRepository.getCountAll();
         final List<User> users = userRepository.getLimitedList(offset, pageSize);
         final SearchResult<User> searchResult = new SearchResult<User>(users, count);
@@ -233,11 +240,10 @@ public class DefaultUserService implements UserService {
         searchResult.setPageSize(pageSize);
         return searchResult;
     }
- 
-    
+
     @Override
     public SearchResult<Person> getLimitedListOfPersons(int offset, int pageSize) {
-        SearchResult<User> users = getLimitedListOfUsers(offset, pageSize);
+        SearchResult<User> users = getLimitedList(offset, pageSize);
         int count = users.getTotalResults();
         List<Person> people = new ArrayList<Person>();
         Person person = null;

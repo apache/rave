@@ -22,6 +22,7 @@ package org.apache.rave.portal.repository;
 import org.apache.rave.repository.Repository;
 import org.apache.rave.model.Region;
 
+
 /**
  * Provides persistence operations for the {@link Region} class
  */

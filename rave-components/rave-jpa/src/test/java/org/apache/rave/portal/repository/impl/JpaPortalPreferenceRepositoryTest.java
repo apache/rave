@@ -74,6 +74,18 @@ public class JpaPortalPreferenceRepositoryTest {
     }
 
     @Test
+    public void testGetLimitedList(){
+        final List<PortalPreference> preferences = repository.getLimitedList(1, 1);
+        assertTrue(preferences.size() == 1);
+    }
+
+    @Test
+    public void testCountAll(){
+        int count = repository.getCountAll();
+        assertTrue(count == 2);
+    }
+
+    @Test
     public void testGetByKey() {
         PortalPreference preference = repository.getByKey("color");
         assertNotNull(preference);

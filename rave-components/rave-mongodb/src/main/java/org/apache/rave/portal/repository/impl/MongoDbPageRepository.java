@@ -49,7 +49,7 @@ public class MongoDbPageRepository implements PageRepository {
     private MongoPageOperations template;
 
     @Override
-    public List<Page> getAllPages(String  userId, PageType pageType) {
+    public List<Page> getAllPagesForUserType(String userId, PageType pageType) {
         return sort(template.find(query(where("pageType").is(getString(pageType)).andOperator(where("members").elemMatch(where("userId").is(userId))))), userId);
     }
 
@@ -266,4 +266,18 @@ public class MongoDbPageRepository implements PageRepository {
     }
 
 
+    @Override
+    public List<Page> getAll() {
+        return template.find(new Query());
+    }
+
+    @Override
+    public List<Page> getLimitedList(int offset, int pageSize) {
+        return template.find(new Query().skip(offset).limit(pageSize));
+    }
+
+    @Override
+    public int getCountAll() {
+        return (int) template.count(new Query());
+    }
 }

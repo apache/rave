@@ -26,7 +26,7 @@ import javax.xml.bind.annotation.*;
         "id", "text"
 })
 @XmlRootElement(name = "Category")
-public class Category {
+public class Category implements RestEntity{
     @XmlAttribute(name = "id")
     private String id;
     @XmlElement(name = "Text")

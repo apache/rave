@@ -20,7 +20,7 @@
 package org.apache.rave.portal.service;
 
 import org.apache.rave.model.Authority;
-import org.apache.rave.portal.model.util.SearchResult;
+import org.apache.rave.rest.model.SearchResult;
 
 public interface AuthorityService {
 

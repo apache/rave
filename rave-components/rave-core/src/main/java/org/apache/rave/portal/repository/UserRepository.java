@@ -21,6 +21,7 @@ package org.apache.rave.portal.repository;
 import org.apache.rave.repository.Repository;
 import org.apache.rave.model.User;
 
+
 import java.util.List;
 
 public interface UserRepository extends Repository<User> {

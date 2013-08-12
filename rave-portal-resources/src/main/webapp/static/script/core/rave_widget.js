@@ -57,6 +57,23 @@ define(['underscore', 'core/rave_api', 'core/rave_view_manager', 'core/rave_prov
         }
 
         /**
+         * Workaround for IE8 (HTMLElement is undefined)
+         * An item will have a nodeType of 1 if it is an HTMLElement
+         * Defaults to use instanceof if HTMLElement is defined
+         */
+        isHTMLElement = (function() {
+            if (window.HTMLElement) {
+                return function(item) {
+                    return item instanceof HTMLElement;
+                }
+            } else {
+                return function(item) {
+                    return item.nodeType && item.nodeType == 1;
+                }
+            }
+        })();
+
+        /**
          * Extends the RegionWidget's prototype. Convenience function for adding functionality
          * to the RegionWidget interface
          * @param mixin {object}
@@ -80,9 +97,12 @@ define(['underscore', 'core/rave_api', 'core/rave_view_manager', 'core/rave_prov
          * @see module:rave_view_manager
          */
         Widget.prototype.render = function (el, opts) {
+
+
+
             //if we receive only one argument, and the first arg is not a string or dom element, assume it is an opts object
             //and el should default to the widgets current render element
-            if (!opts && !(_.isString(el) || (el instanceof HTMLElement))) {
+            if (!opts && !(_.isString(el) || (isHTMLElement(el)))) {
                 opts = el;
                 el = this._el;
             }
@@ -94,7 +114,7 @@ define(['underscore', 'core/rave_api', 'core/rave_view_manager', 'core/rave_prov
                 this._view = view;
             }
             //at this point el must be a valid dom element. if not, throw an error
-            if (!(el instanceof HTMLElement)) {
+            if (!(isHTMLElement(el))) {
                 throw new Error('Cannot render widget. You must provide an el to render the view into');
             }
             this._el = el;

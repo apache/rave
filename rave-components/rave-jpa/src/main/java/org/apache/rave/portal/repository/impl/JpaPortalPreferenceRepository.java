@@ -29,9 +29,11 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
+import static org.apache.rave.persistence.jpa.util.JpaUtil.getPagedResultList;
 import static org.apache.rave.persistence.jpa.util.JpaUtil.getSingleResult;
 import static org.apache.rave.persistence.jpa.util.JpaUtil.saveOrUpdate;
 
@@ -53,6 +55,20 @@ public class JpaPortalPreferenceRepository implements PortalPreferenceRepository
         final TypedQuery<JpaPortalPreference> query =
                 manager.createNamedQuery(JpaPortalPreference.GET_ALL, JpaPortalPreference.class);
         return CollectionUtils.<PortalPreference>toBaseTypedList(query.getResultList());
+    }
+
+    @Override
+    public List<PortalPreference> getLimitedList(int offset, int pageSize) {
+        final TypedQuery<JpaPortalPreference> query =
+                manager.createNamedQuery(JpaPortalPreference.GET_ALL, JpaPortalPreference.class);
+        return CollectionUtils.<PortalPreference>toBaseTypedList(getPagedResultList(query, offset, pageSize));
+    }
+
+    @Override
+    public int getCountAll() {
+        Query query = manager.createNamedQuery(JpaPortalPreference.COUNT_ALL);
+        Number countResult = (Number) query.getSingleResult();
+        return countResult.intValue();
     }
 
     @Override

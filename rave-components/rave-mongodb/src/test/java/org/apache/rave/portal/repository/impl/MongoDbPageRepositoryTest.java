@@ -21,13 +21,13 @@ package org.apache.rave.portal.repository.impl;
 
 import com.google.common.collect.Lists;
 import org.apache.rave.model.*;
-import org.apache.rave.portal.model.*;
 import org.apache.rave.portal.model.impl.*;
 import org.apache.rave.portal.repository.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.data.mongodb.core.query.Query;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.easymock.EasyMock.*;
@@ -76,7 +76,7 @@ public class MongoDbPageRepositoryTest {
         expect(template.find(isA(Query.class))).andReturn(pages);
         replay(template);
 
-        List<Page> result = repo.getAllPages(userId, pageType);
+        List<Page> result = repo.getAllPagesForUserType(userId, pageType);
         assertNotNull(result);
 
     }
@@ -337,6 +337,33 @@ public class MongoDbPageRepositoryTest {
 
         result = repo.getSingleRecord(userId, pageId);
         assertNull(result);
+    }
+
+    @Test
+    public void getAll(){
+        List<Page> pages = new ArrayList<Page>();
+        expect(template.find(isA(Query.class))).andReturn(pages);
+        replay(template);
+
+        assertThat(pages, is(sameInstance(repo.getAll())));
+    }
+
+    @Test
+    public void getLimitedList(){
+        int offset = 234;
+        int pageSize = 123;
+        List<Page> found = new ArrayList<Page>();
+        expect(template.find(isA(Query.class))).andReturn(found);
+        replay(template);
+        assertThat(found, is(sameInstance(repo.getLimitedList(offset, pageSize))));
+    }
+
+    @Test
+    public void getCountAll_Valid(){
+        long doubleOseven = 007;
+        expect(template.count(new Query())).andReturn(doubleOseven);
+        replay(template);
+        assertThat((int)doubleOseven, is(sameInstance(repo.getCountAll())));
     }
 
 }

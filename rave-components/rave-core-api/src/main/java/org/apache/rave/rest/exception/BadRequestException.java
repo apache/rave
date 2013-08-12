@@ -17,25 +17,25 @@
  * under the License.
  */
 
-package org.apache.rave.rest.model;
+package org.apache.rave.rest.exception;
 
-import javax.xml.bind.annotation.*;
-import java.util.ArrayList;
-import java.util.List;
-
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "People", propOrder = {
-        "people"
-})
-@XmlRootElement(name = "People")
-public class PersonList {
-    @XmlElement(name = "Person")
-    protected List<Person> people;
-
-    public List<Person> getPeople() {
-        if (people == null) {
-            people = new ArrayList<Person>();
-        }
-        return this.people;
+/**
+ * Thrown when a required resource is not present
+ */
+public class BadRequestException extends RuntimeException {
+    public BadRequestException() {
     }
+
+    public BadRequestException(String s) {
+        super(s);
+    }
+
+    public BadRequestException(String s, Throwable throwable) {
+        super(s, throwable);
+    }
+
+    public BadRequestException(Throwable throwable) {
+        super(throwable);
+    }
+    
 }

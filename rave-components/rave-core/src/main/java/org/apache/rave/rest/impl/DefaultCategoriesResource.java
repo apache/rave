@@ -18,58 +18,62 @@
  */
 package org.apache.rave.rest.impl;
 
+import org.apache.rave.exception.ResourceNotFoundException;
 import org.apache.rave.model.User;
 import org.apache.rave.portal.service.CategoryService;
 import org.apache.rave.portal.service.UserService;
 import org.apache.rave.rest.CategoriesResource;
 import org.apache.rave.rest.model.Category;
-import org.apache.rave.rest.model.CategoryList;
+import org.apache.rave.rest.model.SearchResult;
 
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DefaultCategoriesResource implements CategoriesResource {
     private CategoryService categoryService;
     private UserService userService;
 
     @Override
-    public Response getCategories() {
-        CategoryList categoryList = new CategoryList();
-        for (org.apache.rave.model.Category category : categoryService.getAll()) {
-            categoryList.getCategories().add(new Category((category)));
+    public SearchResult<Category> getCategories() {
+
+        SearchResult<org.apache.rave.model.Category> fromDb = categoryService.getAll();
+        List<Category> categories = new ArrayList<Category>();
+
+        for (org.apache.rave.model.Category category : fromDb.getResultSet()) {
+            categories.add(new Category((category)));
         }
 
-        return Response.ok(categoryList).build();
+        return new SearchResult<Category>(categories, fromDb.getTotalResults());
     }
 
     @Override
-    public Response getCategory(String id) {
-        org.apache.rave.model.Category category = categoryService.get(id);
-        if (category == null) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        } else {
-            return Response.ok(new Category(category)).build();
+    public Category getCategory(String id) {
+
+        org.apache.rave.model.Category fromDb = categoryService.get(id);
+        if(fromDb == null) {
+            throw new ResourceNotFoundException(id);
         }
+
+        return new Category(fromDb);
     }
 
     @Override
-    public Response updateCategory(String id, Category category,UriInfo uri) {
+    public Category updateCategory(String id, Category category, UriInfo uri) {
+
         User user = userService.getAuthenticatedUser();
-
         org.apache.rave.model.Category updatedCategory = categoryService.update(id, category.getText(), user);
 
-        return Response.ok(new Category(updatedCategory)).location(uri.getRequestUri()).build();
+        return new Category(updatedCategory);
     }
 
     @Override
-    public Response createCategory(Category category) {
-        User user = userService.getAuthenticatedUser();
+    public Category createCategory(Category category) {
 
+        User user = userService.getAuthenticatedUser();
         org.apache.rave.model.Category newCategory = categoryService.create(category.getText(), user);
 
-        UriBuilder builder = UriBuilder.fromResource(CategoriesResource.class).path("/{id}");
-        return Response.created(builder.build(newCategory.getId())).entity(new Category(newCategory)).build();
+        return new Category(newCategory);
     }
 
     public void setCategoryService(CategoryService categoryService) {

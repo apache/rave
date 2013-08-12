@@ -24,7 +24,7 @@ import org.apache.rave.model.User;
 import org.apache.rave.portal.model.impl.AuthorityImpl;
 import org.apache.rave.portal.model.impl.PageLayoutImpl;
 import org.apache.rave.portal.model.impl.UserImpl;
-import org.apache.rave.portal.model.util.SearchResult;
+import org.apache.rave.rest.model.SearchResult;
 import org.apache.rave.portal.service.AuthorityService;
 import org.apache.rave.portal.service.NewAccountService;
 import org.apache.rave.portal.service.PageLayoutService;

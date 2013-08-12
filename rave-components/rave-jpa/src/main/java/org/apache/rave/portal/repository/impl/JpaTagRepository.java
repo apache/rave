@@ -33,6 +33,7 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
+import static org.apache.rave.persistence.jpa.util.JpaUtil.getPagedResultList;
 import static org.apache.rave.persistence.jpa.util.JpaUtil.getSingleResult;
 import static org.apache.rave.persistence.jpa.util.JpaUtil.saveOrUpdate;
 
@@ -53,6 +54,12 @@ public class JpaTagRepository implements TagRepository {
     public List<Tag> getAll() {
         TypedQuery<JpaTag> query = manager.createNamedQuery(JpaTag.GET_ALL, JpaTag.class);
         return CollectionUtils.<Tag>toBaseTypedList(query.getResultList());
+    }
+
+    @Override
+    public List<Tag> getLimitedList(int offset, int limit) {
+        TypedQuery<JpaTag> query = manager.createNamedQuery(JpaTag.GET_ALL, JpaTag.class);
+        return CollectionUtils.<Tag>toBaseTypedList(getPagedResultList(query, offset, limit));
     }
 
     @Override

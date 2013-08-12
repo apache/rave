@@ -37,23 +37,29 @@
 
     <jaxrs:server id="rave" address="/rest">
         <jaxrs:providers>
+            <!-- Marshalling providers -->
             <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider"/>
             <bean class="org.apache.cxf.jaxrs.provider.JAXBElementProvider"/>
+
+            <!-- Custom filters -->
+            <ref bean="NoContentResponseFilter"/>
+            <ref bean="CreatedResponseFilter"/>
+            <ref bean="JsonWrapperResponseFilter"/>
+
+            <!-- Exception Mappers -->
+            <ref bean="NotFoundExceptionMapper"/>
+            <ref bean="BadRequestExceptionMapper"/>
         </jaxrs:providers>
         <jaxrs:serviceBeans>
             <ref bean="peopleBean"/>
             <ref bean="usersBean"/>
             <ref bean="pagesBean" />
+            <ref bean="pageLayoutBean" />
             <ref bean="pagesForRenderBean" />
             <ref bean="categoriesBean"/>
+            <ref bean="preferencesBean"/>
         </jaxrs:serviceBeans>
     </jaxrs:server>
-
-    <cxf:bus>
-        <cxf:outInterceptors>
-            <ref bean="JsonResponseWrapperInterceptor" />
-        </cxf:outInterceptors>
-    </cxf:bus>
 
     <bean id="peopleBean" class="org.apache.rave.rest.impl.DefaultPeopleResource">
         <property name="userService" ref="userService"/>
@@ -68,9 +74,21 @@
         <property name="userService" ref="userService"/>
     </bean>
 
+    <bean id="preferencesBean" class="org.apache.rave.rest.impl.DefaultPortalPreferenceResource" autowire="byType" />
+
+    <bean id="pageLayoutBean" class="org.apache.rave.rest.impl.DefaultPageLayoutResource" autowire="byType" />
+
     <bean id="pagesBean" class="org.apache.rave.rest.impl.DefaultPageResource" autowire="byType" />
+    <bean id="regionsBean" class="org.apache.rave.rest.impl.DefaultRegionsResource" autowire="byType" />
+    <bean id="regionWidgetsBean" class="org.apache.rave.rest.impl.DefaultRegionWidgetsResource" autowire="byType" />
+    <bean id="pageUsersResource" class="org.apache.rave.rest.impl.DefaultPageUsersResource" autowire="byType" />
     <bean id="pagesForRenderBean" class="org.apache.rave.rest.impl.DefaultPageForRenderResource" autowire="byType" />
 
-    <bean id="JsonResponseWrapperInterceptor" class="org.apache.rave.rest.interceptor.JsonResponseWrapperInterceptor"/>
+    <bean id="JsonWrapperResponseFilter" class="org.apache.rave.rest.filters.JsonWrapperResponseFilter"/>
+    <bean id="CreatedResponseFilter" class="org.apache.rave.rest.filters.CreatedResponseFilter"/>
+    <bean id="NoContentResponseFilter" class="org.apache.rave.rest.filters.NoContentResponseFilter"/>
+
+    <bean id="NotFoundExceptionMapper" class="org.apache.rave.rest.filters.NotFoundExceptionMapper"/>
+    <bean id="BadRequestExceptionMapper" class="org.apache.rave.rest.filters.BadRequestExceptionMapper"/>
 
 </beans>

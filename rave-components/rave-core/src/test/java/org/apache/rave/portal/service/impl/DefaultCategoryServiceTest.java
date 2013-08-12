@@ -23,6 +23,7 @@ import org.apache.rave.model.Category;
 import org.apache.rave.model.User;
 import org.apache.rave.portal.model.impl.CategoryImpl;
 import org.apache.rave.portal.model.impl.UserImpl;
+import org.apache.rave.rest.model.SearchResult;
 import org.apache.rave.portal.repository.CategoryRepository;
 import org.apache.rave.portal.service.CategoryService;
 import org.apache.rave.portal.service.impl.mock.MockCategoryRepository;
@@ -35,6 +36,8 @@ import java.util.List;
 
 import static org.easymock.EasyMock.*;
 import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertThat;
 
 /**
@@ -90,7 +93,7 @@ public class DefaultCategoryServiceTest {
     }
 
     @Test
-    public void getAll() {
+    public void getAllList() {
         List<Category> list = new ArrayList<Category>();
         list.add(validCategory);
         list.add(new CategoryImpl());
@@ -98,7 +101,36 @@ public class DefaultCategoryServiceTest {
 
         expect(repository.getAll()).andReturn(list);
         replay(repository);
-        assertThat(service.getAll(), is(list));
+        assertThat(service.getAllList(), is(list));
+        verify(repository);
+    }
+
+    @Test
+    public void getAll(){
+        List<Category> categories = new ArrayList<Category>();
+        expect(repository.getAll()).andReturn(categories);
+        expect(repository.getCountAll()).andReturn(1);
+        replay(repository);
+
+        List<Category> result = service.getAll().getResultSet();
+        assertThat(result, is(sameInstance(categories)));
+    }
+
+    @Test
+    public void getLimitedList(){
+        Category cat1 = new CategoryImpl("2", "Fake Category");
+        Category cat2 = new CategoryImpl("3", "Another Fake Category");
+        List<Category> categories = new ArrayList<Category>();
+        categories.add(cat1);
+        categories.add(cat2);
+        final int pageSize = 10;
+        expect(repository.getCountAll()).andReturn(2);
+        expect(repository.getLimitedList(0, pageSize)).andReturn(categories);
+        replay(repository);
+
+        SearchResult<Category> result = service.getLimitedList(0, pageSize);
+        assertEquals(pageSize, result.getPageSize());
+        assertSame(categories, result.getResultSet());
         verify(repository);
     }
 

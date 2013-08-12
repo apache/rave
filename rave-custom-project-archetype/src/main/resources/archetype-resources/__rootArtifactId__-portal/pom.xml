@@ -277,6 +277,20 @@
                     </deployables>
                     <configuration>
                         <properties>
+                            <cargo.datasource.datasource.portalDB>
+                                cargo.datasource.jndi=jdbc/ravePortalDB|
+                                cargo.datasource.driver=${portal.dataSource.driver}|
+                                cargo.datasource.url=${portal.dataSource.url}|
+                                cargo.datasource.username=${portal.dataSource.username}|
+                                cargo.datasource.password=${portal.dataSource.password}
+                            </cargo.datasource.datasource.portalDB>
+                            <cargo.datasource.datasource.shindigDB>
+                                cargo.datasource.jndi=jdbc/raveShindigDB|
+                                cargo.datasource.driver=${shindig.dataSource.driver}|
+                                cargo.datasource.url=${shindig.dataSource.url}|
+                                cargo.datasource.username=${shindig.dataSource.username}|
+                                cargo.datasource.password=${shindig.dataSource.password}
+                            </cargo.datasource.datasource.shindigDB>
                             <cargo.jvmargs><![CDATA[-Dh2.bindAddress="localhost" -Xdebug -Xrunjdwp:transport=dt_socket,address=${cargo.debug.address},server=y,suspend=${cargo.debug.suspend} -noverify ${javaagent} ${cargo.args}]]></cargo.jvmargs>
                             <cargo.tomcat.context.reloadable>true</cargo.tomcat.context.reloadable>
                         </properties>
@@ -311,6 +325,23 @@
                                 <shindig.contextroot />
                             -->
                         </systemProperties>
+                        <dependencies>
+                            <dependency>
+                                <groupId>javax.mail</groupId>
+                                <artifactId>mail</artifactId>
+                                <classpath>shared</classpath>
+                            </dependency>
+                            <dependency>
+                                <groupId>javax.activation</groupId>
+                                <artifactId>activation</artifactId>
+                                <classpath>shared</classpath>
+                            </dependency>
+                            <dependency>
+                                <groupId>com.h2database</groupId>
+                                <artifactId>h2</artifactId>
+                                <classpath>extra</classpath>
+                            </dependency>
+                        </dependencies>
                     </container>
                 </configuration>
             </plugin>

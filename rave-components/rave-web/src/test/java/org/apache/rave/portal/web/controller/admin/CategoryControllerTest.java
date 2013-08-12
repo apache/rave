@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2012 The Apache Software Foundation.
  *
@@ -74,7 +73,7 @@ public class CategoryControllerTest {
     @Test
     public void getCategories_valid(){
         List<Category> categories = new ArrayList<Category>();
-        expect(categoryService.getAll()).andReturn(categories);
+        expect(categoryService.getAllList()).andReturn(categories);
         replay(categoryService);
 
         Model model = new ExtendedModelMap();
@@ -96,7 +95,7 @@ public class CategoryControllerTest {
     @Test
     public void getCategory_valid_update() {
         List<Category> categories = new ArrayList<Category>();
-        expect(categoryService.getAll()).andReturn(categories);
+        expect(categoryService.getAllList()).andReturn(categories);
         replay(categoryService);
 
         Model model = new ExtendedModelMap();
@@ -118,7 +117,7 @@ public class CategoryControllerTest {
     @Test
     public void getCategory_valid_delete(){
         List<Category> categories = new ArrayList<Category>();
-        expect(categoryService.getAll()).andReturn(categories);
+        expect(categoryService.getAllList()).andReturn(categories);
         replay(categoryService);
 
         Model model = new ExtendedModelMap();
@@ -140,7 +139,7 @@ public class CategoryControllerTest {
     @Test
     public void getCategory_valid_create(){
         List<Category> categories = new ArrayList<Category>();
-        expect(categoryService.getAll()).andReturn(categories);
+        expect(categoryService.getAllList()).andReturn(categories);
         replay(categoryService);
 
         Model model = new ExtendedModelMap();

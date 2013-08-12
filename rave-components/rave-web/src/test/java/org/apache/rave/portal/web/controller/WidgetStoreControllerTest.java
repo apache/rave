@@ -25,7 +25,7 @@ import org.apache.rave.model.Tag;
 import org.apache.rave.model.Widget;
 import org.apache.rave.portal.model.impl.UserImpl;
 import org.apache.rave.portal.model.impl.WidgetImpl;
-import org.apache.rave.portal.model.util.SearchResult;
+import org.apache.rave.rest.model.SearchResult;
 import org.apache.rave.portal.model.util.WidgetStatistics;
 import org.apache.rave.portal.service.CategoryService;
 import org.apache.rave.portal.service.PortalPreferenceService;
@@ -159,8 +159,8 @@ public class WidgetStoreControllerTest {
         Widget w = new WidgetImpl("1", "http://example.com/widget.xml");
 
         expect(widgetService.getAllWidgetStatistics(validUser.getId())).andReturn(allWidgetStatisticsMap);
-        expect(tagService.getAllTags()).andReturn(new ArrayList<Tag>());
-        expect(categoryService.getAll()).andReturn(new ArrayList<Category>());
+        expect(tagService.getAllTagsList()).andReturn(new ArrayList<Tag>());
+        expect(categoryService.getAllList()).andReturn(new ArrayList<Category>());
         expect(widgetService.getWidget(WIDGET_ID)).andReturn(w);
         expect(widgetService.getWidgetStatistics(WIDGET_ID, validUser.getId())).andReturn(widgetStatistics);
         replay(widgetService);
@@ -187,8 +187,8 @@ public class WidgetStoreControllerTest {
         int pageSize = 10;
         SearchResult<Widget> searchResults = new SearchResult<Widget>(new ArrayList<Widget>(),0);
         expect(widgetService.getAllWidgetStatistics(validUser.getId())).andReturn(allWidgetStatisticsMap);
-        expect(tagService.getAllTags()).andReturn(new ArrayList<Tag>());
-        expect(categoryService.getAll()).andReturn(new ArrayList<Category>());
+        expect(tagService.getAllTagsList()).andReturn(new ArrayList<Tag>());
+        expect(categoryService.getAllList()).andReturn(new ArrayList<Category>());
         expect(widgetService.getWidgetsByCategory(categoryId, offset, pageSize)).andReturn(searchResults);
         replay(widgetService, tagService, categoryService);
 

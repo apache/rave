@@ -18,6 +18,7 @@ package org.apache.rave.portal.service.impl;
 import org.apache.rave.model.Category;
 import org.apache.rave.portal.model.impl.CategoryImpl;
 import org.apache.rave.model.User;
+import org.apache.rave.rest.model.SearchResult;
 import org.apache.rave.portal.repository.CategoryRepository;
 import org.apache.rave.portal.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,8 +47,25 @@ public class DefaultCategoryService implements CategoryService {
 
 
     @Override
-    public List<Category> getAll() {
+    public List<Category> getAllList() {
         return categoryRepository.getAll();
+    }
+
+    @Override
+    public SearchResult<Category> getAll() {
+        final int count = categoryRepository.getCountAll();
+        final List<Category> categories = categoryRepository.getAll();
+        return new SearchResult<Category>(categories, count);
+    }
+
+    @Override
+    public SearchResult<Category> getLimitedList(int offset, int pageSize) {
+        final int count = categoryRepository.getCountAll();
+        final List<Category> categories = categoryRepository.getLimitedList(offset, pageSize);
+        final SearchResult<Category> searchResult = new SearchResult<Category>(categories, count);
+        searchResult.setOffset(offset);
+        searchResult.setPageSize(pageSize);
+        return searchResult;
     }
 
     @Override

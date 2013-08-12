@@ -41,14 +41,21 @@ import java.util.List;
 @Entity
 @Table(name="region")
 @Access(AccessType.FIELD)
-@NamedQueries(
-        @NamedQuery(name = JpaRegion.FIND_BY_ENTITY_ID, query="select r from JpaRegion r where r.entityId = :entity_id")
-)
+@NamedQueries({
+        @NamedQuery(name = JpaRegion.FIND_BY_ENTITY_ID, query="select r from JpaRegion r where r.entityId = :entity_id"),
+        @NamedQuery(name = JpaRegion.REGION_GET_ALL, query = JpaRegion.SELECT_R_FROM_REGION_R),
+        @NamedQuery(name = JpaRegion.REGION_COUNT_ALL, query = JpaRegion.SELECT_COUNT_R_FROM_REGION_R)
+})
 public class JpaRegion implements BasicEntity, Serializable, Region {
     private static final long serialVersionUID = 1L;
 
     public static final String FIND_BY_ENTITY_ID = "Region.findByEntityId";
+    public static final String REGION_GET_ALL = "Region.getAll";
+    public static final String REGION_COUNT_ALL = "Region.countAll";
     public static final String ENTITY_ID_PARAM = "entity_id";
+
+    static final String SELECT_R_FROM_REGION_R = "SELECT r FROM JpaRegion r order by r.entityId";
+    static final String SELECT_COUNT_R_FROM_REGION_R = "SELECT count(r) FROM JpaRegion r ";
 
     @Id @Column(name="entity_id")
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "regionIdGenerator")

@@ -41,8 +41,8 @@
  * });
  */
 define(['underscore', 'core/rave_widget_manager', 'core/rave_api', 'core/rave_widget', 'core/rave_log',
-    'core/rave_event_manager', 'core/rave_view_manager', 'core/rave_state_manager'],
-    function (_, widgetManager, api, RegionWidget, log, eventManager, viewManager, stateManager) {
+    'core/rave_event_manager', 'core/rave_view_manager', 'core/rave_state_manager', 'core/rave_openajax_hub'],
+    function (_, widgetManager, api, RegionWidget, log, eventManager, viewManager, stateManager, managedHub) {
 
         var exports = {};
 
@@ -60,6 +60,11 @@ define(['underscore', 'core/rave_widget_manager', 'core/rave_api', 'core/rave_wi
          * @see module:rave_log
          */
         exports.log = log;
+
+        /**
+         * @see module:rave_openajax_hub
+         */
+        exports.getManagedHub = function(){return managedHub};
 
         _.extend(exports, eventManager);
         _.extend(exports, viewManager);

@@ -27,8 +27,10 @@ import org.apache.rave.portal.repository.MongoPageOperations;
 import org.apache.rave.portal.repository.RegionWidgetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.springframework.data.mongodb.core.query.Criteria.where;
@@ -61,6 +63,45 @@ public class MongoDbRegionWidgetRepository implements RegionWidgetRepository {
         Page page = getPageByRegionWidgetId(item.getId());
         replaceOrRemoveWidget(page, item, false);
         template.save(page);
+    }
+
+    @Override
+    public List<RegionWidget> getAll(){
+        Query q = new Query();
+
+        List<Page> allPages = template.find(q);
+
+        List<RegionWidget> regionWidgets = new ArrayList<RegionWidget>();
+
+        for(Page page: allPages){
+            List<Region> regions = page.getRegions();
+            if(regions != null){
+                for(Region region : regions) {
+                    List<RegionWidget> rws = region.getRegionWidgets();
+                    if(rws != null){
+                        for(RegionWidget rw : rws){
+                            regionWidgets.add(rw);
+                        }
+                    }
+                }
+            }
+
+        }
+
+        return regionWidgets;
+    }
+
+    @Override
+    public List<RegionWidget> getLimitedList(int offset, int pageSize) {
+        List<RegionWidget> regionWidgets = this.getAll();
+        int end = regionWidgets.size() < offset + pageSize ? regionWidgets.size() : offset + pageSize;
+
+        return regionWidgets.subList(offset, end);
+    }
+
+    @Override
+    public int getCountAll() {
+        return this.getAll().size();
     }
 
     private RegionWidget updateRegionWidget(RegionWidget item) {

@@ -30,7 +30,7 @@ import java.util.List;
         "id", "type", "widgetId", "widgetUrl", "regionId", "collapsed", "locked", "hideChrome", "ownerId", "userPrefs"
 })
 @XmlRootElement(name = "RegionWidget")
-public class RegionWidget {
+public class RegionWidget  implements RestEntity{
 
     @XmlAttribute(name="id")
     protected String id;

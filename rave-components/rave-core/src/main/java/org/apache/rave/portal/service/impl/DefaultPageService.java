@@ -19,6 +19,7 @@
 
 package org.apache.rave.portal.service.impl;
 
+import org.apache.rave.rest.model.SearchResult;
 import org.apache.rave.repository.Repository;
 import org.apache.rave.model.*;
 import org.apache.rave.portal.model.impl.PageImpl;
@@ -74,19 +75,36 @@ public class DefaultPageService implements PageService {
     }
 
     @Override
+    public SearchResult<Page> getAll() {
+        List<Page> pages = pageRepository.getAll();
+        int count = pageRepository.getCountAll();
+        return new SearchResult<Page>(pages, count);
+    }
+
+    @Override
+    public SearchResult<Page> getLimited(int offset, int limit) {
+        List<Page> pages = pageRepository.getLimitedList(offset, limit);
+        int count = pageRepository.getCountAll();
+        SearchResult<Page> result = new SearchResult<Page>(pages, count);
+        result.setOffset(offset);
+        result.setPageSize(limit);
+        return result;
+    }
+
+    @Override
     public Page getPage(String pageId) {
         return pageRepository.get(pageId);
     }
 
     @Override
     public List<Page> getAllUserPages(String userId) {
-        return pageRepository.getAllPages(userId, PageType.USER);
+        return pageRepository.getAllPagesForUserType(userId, PageType.USER);
     }
 
     @Override
     @Transactional
     public Page getPersonProfilePage(String userId) {
-        List<Page> profilePages = pageRepository.getAllPages(userId, PageType.PERSON_PROFILE);
+        List<Page> profilePages = pageRepository.getAllPagesForUserType(userId, PageType.PERSON_PROFILE);
         Page personPage = null;
         if (profilePages.isEmpty()){
             personPage = pageRepository.createPageForUser(userService.getUserById(userId), pageTemplateRepository.getDefaultPage(PageType.PERSON_PROFILE));
@@ -411,6 +429,22 @@ public class DefaultPageService implements PageService {
 
     @Override
     @Transactional
+    public Boolean updateSharedPageStatus(String pageId, String userId, String shareStatus) {
+        Page page = this.getPage(pageId);
+        for(PageUser pageUser : page.getMembers()){
+            if(pageUser.getUserId().equals(userId)){
+                pageUser.setPageStatus(PageInvitationStatus.get(shareStatus));
+            }
+        }
+        if(pageRepository.save(page) != null){
+            return Boolean.TRUE;
+        }else{
+            return Boolean.FALSE;
+        }
+    }
+
+    @Override
+    @Transactional
     public Boolean updatePageEditingStatus(String pageId, String userId, boolean isEditor) {
         Page page = this.getPage(pageId);
         for(PageUser pageUser : page.getMembers()){
@@ -507,6 +541,7 @@ public class DefaultPageService implements PageService {
         //       to allow for more flexibility?
         regionWidget.setLocked(false);
         regionWidget.setHideChrome(false);
+        regionWidget.setRegion(region);
         region.getRegionWidgets().add(position, regionWidget);
         updateRenderSequences(region.getRegionWidgets());
         Region persistedRegion = regionRepository.save(region);
@@ -546,7 +581,7 @@ public class DefaultPageService implements PageService {
         }
         // Get all User Pages
         Page page = null;
-        List<Page> defaultUserPage = pageRepository.getAllPages(user.getId(), PageType.USER);
+        List<Page> defaultUserPage = pageRepository.getAllPagesForUserType(user.getId(), PageType.USER);
         // Is there a default page for this user
         if (defaultUserPage.isEmpty()) {
             return pageRepository.createPageForUser(user, pageTemplateRepository.getDefaultPage(PageType.USER));

@@ -23,7 +23,7 @@ import org.apache.rave.model.Authority;
 import org.apache.rave.model.User;
 import org.apache.rave.portal.model.impl.AuthorityImpl;
 import org.apache.rave.portal.model.impl.UserImpl;
-import org.apache.rave.portal.model.util.SearchResult;
+import org.apache.rave.rest.model.SearchResult;
 import org.apache.rave.portal.service.AuthorityService;
 import org.apache.rave.portal.service.NewAccountService;
 import org.apache.rave.portal.service.PortalPreferenceService;
@@ -83,7 +83,7 @@ public class UserControllerTest {
         final String referer = "http://example.com/index.html";
         SearchResult<User> searchResult = createSearchResultWithTwoUsers();
 
-        expect(userService.getLimitedListOfUsers(offset, pageSize)).andReturn(searchResult);
+        expect(userService.getLimitedList(offset, pageSize)).andReturn(searchResult);
         replay(userService);
 
         String adminUsersView = controller.viewUsers(offset, referer,REFERRER_ID, model);

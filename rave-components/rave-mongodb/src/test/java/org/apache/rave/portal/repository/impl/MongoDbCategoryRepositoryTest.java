@@ -22,18 +22,21 @@ package org.apache.rave.portal.repository.impl;
 import org.apache.rave.model.Category;
 import org.apache.rave.portal.model.MongoDbCategory;
 import org.apache.rave.portal.model.conversion.HydratingConverterFactory;
+import org.apache.rave.portal.model.impl.CategoryImpl;
 import org.apache.rave.portal.repository.util.CollectionNames;
 import org.apache.rave.util.CollectionUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.easymock.EasyMock.*;
+import static org.easymock.EasyMock.isA;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
@@ -161,4 +164,33 @@ public class MongoDbCategoryRepositoryTest {
 
         verify(converter, template);
     }
+
+    @Test
+    public void getAll(){
+        List<MongoDbCategory> categories = new ArrayList<MongoDbCategory>();
+        expect(template.findAll(categoryRepository.CLASS, CollectionNames.CATEGORY_COLLECTION)).andReturn(categories);
+        replay(template);
+
+        assertThat(CollectionUtils.<Category>toBaseTypedList(categories), is(sameInstance(categoryRepository.getAll())));
+    }
+
+    @Test
+    public void getLimitedList(){
+        int offset = 234;
+        int pageSize = 123;
+        List<MongoDbCategory> found = new ArrayList<MongoDbCategory>();
+        Query q = new Query().skip(offset).limit(pageSize);
+        expect(template.find(q, categoryRepository.CLASS)).andReturn(found);
+        replay(template);
+        assertThat(CollectionUtils.<Category>toBaseTypedList(found), is(sameInstance(categoryRepository.getLimitedList(offset, pageSize))));
+    }
+
+    @Test
+    public void getCountAll_Valid(){
+        long doubleOseven = 007;
+        expect(template.count(new Query(), categoryRepository.CLASS)).andReturn(doubleOseven);
+        replay(template);
+        assertThat((int)doubleOseven, is(sameInstance(categoryRepository.getCountAll())));
+    }
+
 }

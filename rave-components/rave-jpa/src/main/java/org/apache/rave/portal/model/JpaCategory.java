@@ -34,11 +34,13 @@ import java.util.List;
 @Access(AccessType.FIELD)
 @XmlRootElement
 @NamedQueries({
-        @NamedQuery(name = JpaCategory.GET_ALL, query = "select c from JpaCategory c order by c.text")
+        @NamedQuery(name = JpaCategory.GET_ALL, query = "select c from JpaCategory c order by c.text"),
+        @NamedQuery(name = JpaCategory.GET_COUNT, query = "select count(c) from JpaCategory c")
 })
 public class JpaCategory implements BasicEntity, Serializable, Category {
     // constants for JPA query names
     public static final String GET_ALL = "Category.getAll";
+    public static final String GET_COUNT = "Category.getCountAll";
 
     @Id
     @Column(name = "entity_id")

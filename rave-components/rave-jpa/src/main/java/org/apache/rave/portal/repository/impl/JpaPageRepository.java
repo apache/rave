@@ -29,10 +29,12 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.apache.rave.persistence.jpa.util.JpaUtil.getPagedResultList;
 import static org.apache.rave.persistence.jpa.util.JpaUtil.saveOrUpdate;
 
 @Repository
@@ -74,7 +76,7 @@ public class JpaPageRepository implements PageRepository {
     }
 
     @Override
-    public List<Page> getAllPages(String userId, PageType pageType) {
+    public List<Page> getAllPagesForUserType(String userId, PageType pageType) {
         TypedQuery<JpaPage> query = manager.createNamedQuery(JpaPageUser.GET_BY_USER_ID_AND_PAGE_TYPE, JpaPage.class);
         query.setParameter("userId", userId);
         query.setParameter("pageType", pageType);
@@ -83,7 +85,7 @@ public class JpaPageRepository implements PageRepository {
 
     @Override
     public int deletePages(String userId, PageType pageType) {
-        List<Page> pages = getAllPages(userId, pageType);
+        List<Page> pages = getAllPagesForUserType(userId, pageType);
         int pageCount = pages.size();
         for(Page page : pages) {
             if(page.getOwnerId().equals(userId)){
@@ -253,4 +255,22 @@ public class JpaPageRepository implements PageRepository {
         return pages;
     }
 
+    @Override
+    public List<Page> getAll() {
+        TypedQuery<Page> query = manager.createNamedQuery(JpaPage.GET_ALL, Page.class);
+        return CollectionUtils.<Page>toBaseTypedList(query.getResultList());
+    }
+
+    @Override
+    public List<Page> getLimitedList(int offset, int limit) {
+        TypedQuery<Page> query = manager.createNamedQuery(JpaPage.GET_ALL, Page.class);
+        return CollectionUtils.<Page>toBaseTypedList(getPagedResultList(query, offset, limit));
+    }
+
+    @Override
+    public int getCountAll() {
+        Query query = manager.createNamedQuery(JpaPage.GET_COUNT);
+        Number countResult = (Number) query.getSingleResult();
+        return countResult.intValue();
+    }
 }

@@ -27,6 +27,7 @@ import org.apache.rave.portal.repository.PortalPreferenceRepository;
 import org.apache.rave.util.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -50,6 +51,17 @@ public class MongoDbPortalPreferenceRepository implements PortalPreferenceReposi
     @Override
     public List<PortalPreference> getAll() {
         return CollectionUtils.<PortalPreference>toBaseTypedList(template.findAll(CLASS, PREFERENCE_COLLECTION));
+    }
+
+    @Override
+    public List<PortalPreference> getLimitedList(int offset, int pageSize) {
+        Query q = new Query().skip(offset).limit(pageSize);
+        return CollectionUtils.<PortalPreference>toBaseTypedList(template.find(q, CLASS, PREFERENCE_COLLECTION));
+    }
+
+    @Override
+    public int getCountAll() {
+        return (int)template.count(new Query(), CLASS);
     }
 
     @Override

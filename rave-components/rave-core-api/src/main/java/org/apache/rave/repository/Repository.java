@@ -19,6 +19,8 @@
 
 package org.apache.rave.repository;
 
+import java.util.List;
+
 /**
  * Defines generic operations for a repository
  */
@@ -50,4 +52,25 @@ public interface Repository<T> {
      * @param item the item to delete
      */
     void delete(T item);
+
+    /**
+     * Retrieve all objects from the persistence context.
+     *
+     * @return a list of all objects
+     */
+    List<T> getAll();
+
+    /**
+     * Retrieve a limited list of objects as a SearchResult
+     * @param offset the integer offset from 0 index
+     * @param limit the size limit of the result set
+     * @return
+     */
+    List<T> getLimitedList(int offset, int limit);
+
+    /**
+     * Retrieves the count of all records
+     * @return
+     */
+    int getCountAll();
 }

@@ -17,25 +17,24 @@
  * under the License.
  */
 
-package org.apache.rave.rest.model;
+package org.apache.rave.rest.filters;
 
-import javax.xml.bind.annotation.*;
-import java.util.ArrayList;
-import java.util.List;
+import org.apache.rave.rest.exception.BadRequestException;
+import org.apache.rave.rest.model.ErrorWrapperResponse;
 
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "Categories", propOrder = {
-        "categories"
-})
-@XmlRootElement(name = "Categories")
-public class CategoryList {
-    @XmlElement(name = "Category")
-    protected List<Category> categories;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.ext.ExceptionMapper;
 
-    public List<Category> getCategories() {
-        if (categories == null) {
-            categories = new ArrayList<Category>();
-        }
-        return this.categories;
+@Produces(MediaType.APPLICATION_JSON)
+public class BadRequestExceptionMapper implements ExceptionMapper<BadRequestException> {
+
+    @Override
+    public Response toResponse(BadRequestException e) {
+        return Response.status(Response.Status.BAD_REQUEST).entity(new ErrorWrapperResponse(
+                e.getMessage(),
+                "The server received a bad request."
+        )).build();
     }
 }

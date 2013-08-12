@@ -20,8 +20,7 @@
 package org.apache.rave.rest;
 
 import org.apache.rave.rest.model.Page;
-import org.apache.rave.rest.model.Region;
-import org.apache.rave.rest.model.RegionWidget;
+import org.apache.rave.rest.model.SearchResult;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -41,8 +40,8 @@ public interface PagesResource {
      */
     @GET
     @Path("/")
-    @Consumes(MediaType.APPLICATION_JSON)
-    Response getPages();
+    @Produces(MediaType.APPLICATION_JSON)
+    SearchResult<Page> getPages();
 
     /**
      * Creates a new page
@@ -54,7 +53,7 @@ public interface PagesResource {
     @Path("/")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    Response createPage(Page page);
+    Page createPage(Page page);
 
     /**
      * Deletes the given page
@@ -64,7 +63,7 @@ public interface PagesResource {
      */
     @DELETE
     @Path("/{pageId}")
-    Response deletePage(@PathParam("pageId") String pageId);
+    Page deletePage(@PathParam("pageId") String pageId);
 
     /**
      * Returns the given page
@@ -89,7 +88,7 @@ public interface PagesResource {
     @Path("/{pageId}")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    Response updatePage(@PathParam("pageId") String pageId, Page page);
+    Page updatePage(@PathParam("pageId") String pageId, Page page);
 
     /**
      * Returns the OMDL representation of the page
@@ -102,137 +101,21 @@ public interface PagesResource {
     @Produces({"application/vnd.omdl+xml"})
     Response getPageOmdl(@PathParam("pageId") String pageId);
 
-    /*
-    --- Region Operations
-     */
-
     /**
-     * Returns the regions associated with a page
+     * Delegates to the RegionsResource sub-resource.
      *
      * @param pageId the page id
      * @return
      */
-    @GET
     @Path("/{pageId}/regions")
-    @Produces(MediaType.APPLICATION_JSON)
-    Response getPageRegions(@PathParam("pageId") String pageId);
+    RegionsResource getRegionsResource(@PathParam("pageId") String pageId);
 
     /**
-     * Creates a new page region
+     * Delegates to the RegionsResource sub-resource.
      *
      * @param pageId the page id
-     * @param region the definition of the region
      * @return
      */
-    @POST
-    @Path("/{pageId}/regions")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    Response createPageRegion(@PathParam("pageId") String pageId, Region region);
-
-    /**
-     * Returns a particular region associated with a page
-     *
-     * @param pageId   the page id
-     * @param regionId the region id
-     * @return
-     */
-    @GET
-    @Path("/{pageId}/regions/{regionId}")
-    @Produces(MediaType.APPLICATION_JSON)
-    Response getPageRegion(@PathParam("pageId") String pageId, @PathParam("regionId") String regionId);
-
-    /**
-     * Update a page region
-     *
-     * @param pageId   the page id
-     * @param regionId the region id
-     * @param region   the new region definition
-     * @return
-     */
-    @PUT
-    @Path("/{pageId}/regions/{regionId}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    Response updatePageRegion(@PathParam("pageId") String pageId, @PathParam("regionId") String regionId, Region region);
-
-    /**
-     * Deletes a page region
-     *
-     * @param pageId   the id of the page
-     * @param regionId the region id
-     * @return
-     */
-    @DELETE
-    @Path("/{pageId}/regions/{regionId}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    Response deletePageRegion(@PathParam("pageId") String pageId, @PathParam("regionId") String regionId);
-
-    /*
-    --- RegionWidget Operations
-     */
-
-    /**
-     * Returns the regionWidgets associated with a page and a region
-     *
-     * @param pageId   the page id
-     * @param regionId the region id
-     * @return
-     */
-    @GET
-    @Path("/{pageId}/regions/{regionId}/regionWidgets")
-    @Produces(MediaType.APPLICATION_JSON)
-    Response getPageRegionRegionWidgets(@PathParam("pageId") String pageId, @PathParam("regionId") String regionId);
-
-    @POST
-    @Path("/{pageId}/regions/{regionId}/regionWidgets")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    Response createPageRegionRegionWidget(@PathParam("pageId") String pageId, @PathParam("regionId") String regionId,
-                                          RegionWidget regionWidget);
-
-    /**
-     * Returns a regionWidget associated with a page and a region
-     *
-     * @param pageId         the page id
-     * @param regionId       the region id
-     * @param regionWidgetId the regionWidget id
-     * @return
-     */
-    @GET
-    @Path("/{pageId}/regions/{regionId}/regionWidgets/{regionWidgetId}")
-    @Produces(MediaType.APPLICATION_JSON)
-    Response getPageRegionRegionWidget(@PathParam("pageId") String pageId, @PathParam("regionId") String regionId,
-                                       @PathParam("regionWidgetId") String regionWidgetId);
-
-    /**
-     * Updates a regionWidget associated with a page and a region
-     *
-     * @param pageId         the page id
-     * @param regionId       the region id
-     * @param regionWidgetId the regionWidget id
-     * @param regionWidget   the new regionWidget definition
-     * @return
-     */
-    @PUT
-    @Path("/{pageId}/regions/{regionId}/regionWidgets/{regionWidgetId}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    Response updatePageRegionRegionWidget(@PathParam("pageId") String pageId, @PathParam("regionId") String regionId,
-                                          @PathParam("regionWidgetId") String regionWidgetId, RegionWidget regionWidget);
-
-    /**
-     * Deletes a regionWidget from a page region
-     *
-     * @param pageId         the page id
-     * @param regionId       the region id
-     * @param regionWidgetId the regionWidget id
-     * @return
-     */
-    @DELETE
-    @Path("/{pageId}/regions/{regionId}/regionWidgets/{regionWidgetId}")
-    @Produces(MediaType.APPLICATION_JSON)
-    Response deletePageRegionRegionWidget(@PathParam("pageId") String pageId, @PathParam("regionId") String regionId,
-                                          @PathParam("regionWidgetId") String regionWidgetId);
+    @Path("/{pageId}/members")
+    PageUsersResource getPageMembersResource(@PathParam("pageId") String pageId);
 }

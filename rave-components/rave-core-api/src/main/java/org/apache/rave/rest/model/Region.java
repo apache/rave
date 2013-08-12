@@ -27,9 +27,11 @@ import java.util.List;
         "locked", "regionWidgets"
 })
 @XmlRootElement(name = "Region")
-public class Region {
+public class Region  implements RestEntity{
     @XmlElement(name = "locked")
     private boolean  locked;
+
+    private String id;
     @XmlElementWrapper(name = "regionWidgets")
     @XmlElement(name="RegionWidget")
     private List<RegionWidget> regionWidgets;
@@ -39,6 +41,7 @@ public class Region {
     public Region(org.apache.rave.model.Region source) {
         this.locked = source.isLocked();
         this.regionWidgets = createRegionWidgets(source);
+        this.id = source.getId();
     }
 
     public boolean isLocked() {
@@ -47,6 +50,14 @@ public class Region {
 
     public void setLocked(boolean locked) {
         this.locked = locked;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public List<RegionWidget> getRegionWidgets() {

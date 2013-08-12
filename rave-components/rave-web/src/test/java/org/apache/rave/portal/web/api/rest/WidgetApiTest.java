@@ -218,7 +218,7 @@ public class WidgetApiTest {
 
     @Test
     public void getAllTags() {
-        expect(tagService.getAllTags()).andReturn(tagList);
+        expect(tagService.getAllTagsList()).andReturn(tagList);
         replay(tagService);
 
         assertThat(widgetApi.getAllTags(), is(tagList));
