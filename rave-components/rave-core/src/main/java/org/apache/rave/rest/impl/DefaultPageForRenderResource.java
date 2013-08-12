@@ -29,7 +29,6 @@ import org.apache.rave.rest.PagesForRenderResource;
 import org.apache.rave.rest.PagesResource;
 import org.apache.rave.rest.exception.BadRequestException;
 import org.apache.rave.rest.model.Page;
-import org.apache.rave.rest.model.PageList;
 import org.apache.rave.rest.model.RegionWidget;
 import org.apache.rave.rest.model.SearchResult;
 import org.slf4j.Logger;

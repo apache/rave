@@ -54,6 +54,7 @@
             <ref bean="peopleBean"/>
             <ref bean="usersBean"/>
             <ref bean="pagesBean" />
+            <ref bean="pageLayoutBean" />
             <ref bean="pagesForRenderBean" />
             <ref bean="categoriesBean"/>
         </jaxrs:serviceBeans>
@@ -71,6 +72,8 @@
         <property name="categoryService" ref="defaultCategoryService"/>
         <property name="userService" ref="userService"/>
     </bean>
+
+    <bean id="pageLayoutBean" class="org.apache.rave.rest.impl.DefaultPageLayoutResource" autowire="byType" />
 
     <bean id="pagesBean" class="org.apache.rave.rest.impl.DefaultPageResource" autowire="byType" />
     <bean id="regionsBean" class="org.apache.rave.rest.impl.DefaultRegionsResource" autowire="byType" />
