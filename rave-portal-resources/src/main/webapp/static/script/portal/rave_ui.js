@@ -557,6 +557,7 @@ define(["jquery", "underscore", "rave",
                 this.$menuItemRate = $("#widget-" + regionWidgetId + "-menu-rate-item");
                 this.$menuItemEditPrefs = $("#widget-" + regionWidgetId + "-menu-editprefs-item");
                 this.$widgetSite = $("#widget-" + regionWidgetId + "-body");
+                this.$title = $("#widget-" + regionWidgetId + "-title");
             }
 
             HomeView.prototype.render = function (widget) {
@@ -726,13 +727,17 @@ define(["jquery", "underscore", "rave",
             HomeView.prototype.collapse = function () {
                 this.$chrome.hide();
             }
+            HomeView.prototype.setTitle = function(title) {
+                this.$title.html(title);
+            }
 
             rave.registerView('home', HomeView);
         }
 
         function registerCanvasView() {
-            var CanvasView = function () {
-                this.widget;
+            var CanvasView = function (widget) {
+                this.widget = widget;
+                this.$title = $("#widget-" + widget.regionWidgetId + "-title");
             }
             CanvasView.prototype.render = function (widget) {
                 this.widget = widget;
@@ -791,6 +796,9 @@ define(["jquery", "underscore", "rave",
                 // if the widget is collapsed execute the collapse function
                 // otherwise execute the minimize function
                 return false;
+            }
+            CanvasView.prototype.setTitle  = function(title) {
+                this.$title.html(title);
             }
 
             rave.registerView('canvas', CanvasView);
