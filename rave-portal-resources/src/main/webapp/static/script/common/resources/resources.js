@@ -21,9 +21,9 @@ define(['common/resources/category_resources', 'common/resources/page_resources'
     function(category, page, person, region, regionWidget, user, _) {
         'use strict';
         var servicesModule =  angular.module('common.resources', ['ngResource'], ['$httpProvider', function($httpProvider){
-            $httpProvider.defaults.transformResponse = function(data, headers) {
+            $httpProvider.defaults.transformResponse.push(function(data, headers) {
                 return data.data;
-            };
+            });
         }]);
 
         //Array of services
