@@ -20,7 +20,6 @@ package org.apache.rave.portal.repository.impl;
 
 import org.apache.rave.portal.model.JpaPageTemplate;
 import org.apache.rave.model.PageTemplate;
-import org.apache.rave.model.PageType;
 import org.apache.rave.portal.model.conversion.JpaConverter;
 import org.apache.rave.portal.repository.PageTemplateRepository;
 import org.apache.rave.util.CollectionUtils;
@@ -46,9 +45,9 @@ public class JpaPageTemplateRepository implements PageTemplateRepository {
     }
 
     @Override
-    public JpaPageTemplate getDefaultPage(PageType pageType) {
+    public JpaPageTemplate getDefaultPage(String pageType) {
         TypedQuery<JpaPageTemplate> query = manager.createNamedQuery(JpaPageTemplate.PAGE_TEMPLATE_GET_DEFAULT_PAGE_BY_TYPE, JpaPageTemplate.class);
-        query.setParameter("pageType", pageType);
+        query.setParameter("pageType", pageType.toUpperCase());
         return query.getSingleResult();
     }
 

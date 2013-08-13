@@ -38,18 +38,21 @@ public class JpaPageTemplateConverter implements ModelConverter<PageTemplate, Jp
 
     @Override
     public JpaPageTemplate convert(PageTemplate source) {
-        return source instanceof JpaPageTemplate ? (JpaPageTemplate)source : createEntity(source);
+        if (source != null) {
+            //Enforce consistent casing for page types
+            source.setPageType(source.getPageType() == null ? null : source.getPageType().toUpperCase());
+            return source instanceof JpaPageTemplate ? (JpaPageTemplate) source : createEntity(source);
+        }
+        return null;
     }
 
     private JpaPageTemplate createEntity(PageTemplate source) {
-        JpaPageTemplate converted = null;
-        if(source != null) {
-            converted = source.getId() == null ? new JpaPageTemplate() : manager.find(JpaPageTemplate.class, Long.parseLong(source.getId()));
-            if(converted == null) {
-                converted = new JpaPageTemplate();
-            }
-            updateProperties(source, converted);
+        JpaPageTemplate converted = source.getId() == null ? new JpaPageTemplate() : manager.find(JpaPageTemplate.class, Long.parseLong(source.getId()));
+        if (converted == null) {
+            converted = new JpaPageTemplate();
         }
+        updateProperties(source, converted);
+
         return converted;
     }
 

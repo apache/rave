@@ -98,21 +98,27 @@ public class DefaultPageService implements PageService {
 
     @Override
     public List<Page> getAllUserPages(String userId) {
-        return pageRepository.getAllPagesForUserType(userId, PageType.USER);
+        return pageRepository.getAllPagesForUserType(userId, PageType.USER.toString());
     }
 
     @Override
     @Transactional
     public Page getPersonProfilePage(String userId) {
-        List<Page> profilePages = pageRepository.getAllPagesForUserType(userId, PageType.PERSON_PROFILE);
+        List<Page> profilePages = pageRepository.getAllPagesForUserType(userId, PageType.PERSON_PROFILE.toString());
         Page personPage = null;
         if (profilePages.isEmpty()){
-            personPage = pageRepository.createPageForUser(userService.getUserById(userId), pageTemplateRepository.getDefaultPage(PageType.PERSON_PROFILE));
+            personPage = pageRepository.createPageForUser(userService.getUserById(userId), pageTemplateRepository.getDefaultPage(PageType.PERSON_PROFILE.toString()));
         } else {
             personPage = profilePages.get(0);
         }
         return personPage;
     }
+
+    @Override
+    public List<Page> getPages(String context, String userId) {
+        return null;
+    }
+
 
     @Override
     public Page getPageFromList(String pageId, List<Page> pages) {
@@ -169,7 +175,7 @@ public class DefaultPageService implements PageService {
         page.setPageLayout(pageLayout);
         page.setRegions(regions);
         // set this as a "sub-page" page type
-        page.setPageType(PageType.SUB_PAGE);
+        page.setPageType(PageType.SUB_PAGE.toString());
 
         PageUser pageUser = new PageUserImpl(page.getOwnerId(), page, renderSequence);
         pageUser.setPageStatus(PageInvitationStatus.OWNER);
@@ -204,13 +210,13 @@ public class DefaultPageService implements PageService {
 
         //TODO RAVE-237:  We should be able to delete these lines.  If there are gaps in the sequence numbers, then it will still
         //TODO RAVE-237:  return values in the correct order.  We only need to update sequences when there is a change in order
-        List<PageUser> thisUsersPages = new ArrayList<PageUser>(pageRepository.getPagesForUser(user.getId(), PageType.USER));
+        List<PageUser> thisUsersPages = new ArrayList<PageUser>(pageRepository.getPagesForUser(user.getId(), PageType.USER.toString()));
         updatePageRenderSequences(thisUsersPages);
     }
 
     @Override
     @Transactional
-    public int deletePages(String userId, PageType pageType) {
+    public int deletePages(String userId, String pageType) {
         return pageRepository.deletePages(userId, pageType);
     }
 
@@ -372,7 +378,7 @@ public class DefaultPageService implements PageService {
         pageUser.setUserId(userService.getUserById(userId).getId());
         pageUser.setPage(page);
         pageUser.setPageStatus(PageInvitationStatus.PENDING);
-        List<PageUser> thisUsersPages = pageRepository.getPagesForUser(userService.getUserById(userId).getId(), PageType.USER);
+        List<PageUser> thisUsersPages = pageRepository.getPagesForUser(userService.getUserById(userId).getId(), PageType.USER.toString());
         pageUser.setRenderSequence(new Long(thisUsersPages.size() + 1));
         page.getMembers().add(pageUser);
         if(pageRepository.save(page) != null){
@@ -581,10 +587,10 @@ public class DefaultPageService implements PageService {
         }
         // Get all User Pages
         Page page = null;
-        List<Page> defaultUserPage = pageRepository.getAllPagesForUserType(user.getId(), PageType.USER);
+        List<Page> defaultUserPage = pageRepository.getAllPagesForUserType(user.getId(), PageType.USER.toString());
         // Is there a default page for this user
         if (defaultUserPage.isEmpty()) {
-            return pageRepository.createPageForUser(user, pageTemplateRepository.getDefaultPage(PageType.USER));
+            return pageRepository.createPageForUser(user, pageTemplateRepository.getDefaultPage(PageType.USER.toString()));
         }
 
         // If we have a page already or if there was an exception from above then create the page
@@ -604,7 +610,7 @@ public class DefaultPageService implements PageService {
 
         page.setRegions(regions);
         // set this as a "user" page type
-        page.setPageType(PageType.USER);
+        page.setPageType(PageType.USER.toString());
         return pageRepository.save(page);
     }
 
@@ -636,7 +642,7 @@ public class DefaultPageService implements PageService {
         // get all of the user's pages
         // the pageRepository returns an un-modifiable list
         // so we need to create a modifyable arraylist
-        List<PageUser> thisUsersPages = new ArrayList<PageUser>(pageRepository.getPagesForUser(user.getId(), PageType.USER));
+        List<PageUser> thisUsersPages = new ArrayList<PageUser>(pageRepository.getPagesForUser(user.getId(), PageType.USER.toString()));
         // first remove it from the list
         if (!thisUsersPages.remove(movingPageUser)) {
             throw new RuntimeException("unable to find pageId " + pageId + " attempted to be moved for user " + user);

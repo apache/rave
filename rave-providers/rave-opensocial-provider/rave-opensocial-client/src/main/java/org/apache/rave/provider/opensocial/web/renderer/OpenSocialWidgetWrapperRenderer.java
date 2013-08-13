@@ -132,7 +132,7 @@ public class OpenSocialWidgetWrapperRenderer implements RegionWidgetWrapperRende
         String pageName = "";
         boolean isDefault = false;
         Page page =  item.getRegion().getPage();
-        if (PageType.SUB_PAGE.equals(page.getPageType())) {
+        if (page.getParentPage() != null) {
             pageId = "'" + page.getId() + "'";
             pageName = page.getName();
             // check to see if this regionWidget is on the first sub page, which will be the default

@@ -231,7 +231,7 @@ public class MongoDbPageTemplateConverterTest {
         ((MongoDbPageTemplate)mongoPageTemplate1).setId("1234");
         mongoPageTemplate1.setName("Blah");
         mongoPageTemplate1.setDescription("Blahty Blahty Blah");
-        mongoPageTemplate1.setPageType(PageType.get("user"));
+        mongoPageTemplate1.setPageType("user");
         MongoDbPageLayout mongoDbPageLayout1 = new MongoDbPageLayout();
         mongoDbPageLayout1.setId("7777");
         mongoDbPageLayout1.setCode("4321");
@@ -243,7 +243,7 @@ public class MongoDbPageTemplateConverterTest {
         ((MongoDbPageTemplate)mongoPageTemplate2).setId("3232");
         mongoPageTemplate2.setName("Yeah");
         mongoPageTemplate2.setDescription("Yeah Yeah Ya");
-        mongoPageTemplate2.setPageType(PageType.get("user"));
+        mongoPageTemplate2.setPageType("user");
         MongoDbPageLayout mongoDbPageLayout2 = new MongoDbPageLayout();
         mongoDbPageLayout2.setId("8888");
         mongoDbPageLayout2.setCode("2345");

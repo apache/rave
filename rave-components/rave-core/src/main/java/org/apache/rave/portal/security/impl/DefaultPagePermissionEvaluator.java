@@ -195,9 +195,10 @@ public class DefaultPagePermissionEvaluator extends AbstractModelPermissionEvalu
     }
 
     private boolean isPersonProfilePageOrSubPage(Page page) {
-        PageType pageType = page.getPageType();
-        PageType parentPageType = (page.getParentPage() == null) ? null : page.getParentPage().getPageType();
-        return PageType.PERSON_PROFILE.equals(pageType) || PageType.PERSON_PROFILE.equals(parentPageType);
+        String pageType = page.getPageType();
+        String parentPageType = (page.getParentPage() == null) ? null : page.getParentPage().getPageType();
+        //TODO: Remove the dependency on PageType & find a more generic way to handle the visibility of pages
+        return PageType.PERSON_PROFILE.toString().equals(pageType) || PageType.PERSON_PROFILE.toString().equals(parentPageType);
     }
 
     // checks to see if the Authentication object principal is a member of the supplied page object

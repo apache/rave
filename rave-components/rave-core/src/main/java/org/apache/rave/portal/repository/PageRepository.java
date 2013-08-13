@@ -35,18 +35,20 @@ public interface PageRepository extends Repository<Page>{
      * @param pageType the pageType to search by
      * @return a list of all the Page objects owned by userId of type pageType
      */
-    List<Page> getAllPagesForUserType(String userId, PageType pageType);
+    List<Page> getAllPagesForUserType(String userId, String pageType);
 
     /**
      * Delete all pages for a userId of the supplied pageType
-     * @param userId
-     * @param pageType
+     *
+     * @param userId the userId to search by
+     * @param pageType the pageType to search by
      * @return the number of pages deleted
      */
-    int deletePages(String userId, PageType pageType);
+    int deletePages(String userId, String pageType);
 
     /**
      * Create either a Person or User Page from PageTemplate for the given user
+     *
      * @param user User
      * @param pt PageTemplate
      * @return Page
@@ -56,19 +58,32 @@ public interface PageRepository extends Repository<Page>{
     /**
      * Determine if the given user has a person page
      *
-     * @param userId
+     * Deprecated in favor of hasPage(String userId, String pageType)
+     *
+     * @param userId the user to test for a person page
      * @return boolean
      */
+    @Deprecated
     boolean hasPersonPage(String userId);
+
+    /**
+     * Tests to see if a person has any pages for the specified type
+     *
+     * @param userId the userId to search by
+     * @param pageType the pageType to search by
+     * @return true if the user has a page matching the type, false otherwise
+     */
+    boolean hasPage(String userId, String pageType);
 
     /**
      * Returns a list of pageUser records of a certain pageType.
      * Used to get a list of a users pages(user) with render sequencing.
-     * @param userId
-     * @param pageType
+     *
+     * @param userId the ID of the users who the pages are being requested for
+     * @param pageType the type identifier for the user pages
      * @return a list of pageUser
      */
-    public List<PageUser> getPagesForUser(String userId, PageType pageType);
+    public List<PageUser> getPagesForUser(String userId, String pageType);
 
 
     /**

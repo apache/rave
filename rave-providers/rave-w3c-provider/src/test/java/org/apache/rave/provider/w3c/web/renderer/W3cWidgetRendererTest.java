@@ -86,7 +86,7 @@ public class W3cWidgetRendererTest {
         subPage.setId(VALID_SUBPAGE_ID);
         subPage.setName(VALID_SUBPAGE_NAME);
         subPage.setParentPage(page);
-        subPage.setPageType(PageType.SUB_PAGE);
+        subPage.setPageType(PageType.SUB_PAGE.toString());
         page.getSubPages().add(subPage);
 
         W3CWidget w = new W3CWidget("1");

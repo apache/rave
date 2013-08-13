@@ -76,15 +76,15 @@ public class JpaPageRepository implements PageRepository {
     }
 
     @Override
-    public List<Page> getAllPagesForUserType(String userId, PageType pageType) {
+    public List<Page> getAllPagesForUserType(String userId, String pageType) {
         TypedQuery<JpaPage> query = manager.createNamedQuery(JpaPageUser.GET_BY_USER_ID_AND_PAGE_TYPE, JpaPage.class);
         query.setParameter("userId", userId);
-        query.setParameter("pageType", pageType);
+        query.setParameter("pageType", pageType.toUpperCase());
         return CollectionUtils.<Page>toBaseTypedList(query.getResultList());
     }
 
     @Override
-    public int deletePages(String userId, PageType pageType) {
+    public int deletePages(String userId, String pageType) {
         List<Page> pages = getAllPagesForUserType(userId, pageType);
         int pageCount = pages.size();
         for(Page page : pages) {
@@ -113,15 +113,20 @@ public class JpaPageRepository implements PageRepository {
     public boolean hasPersonPage(String userId){
         TypedQuery<Long> query = manager.createNamedQuery(JpaPage.USER_HAS_PERSON_PAGE, Long.class);
         query.setParameter("userId", userId);
-        query.setParameter("pageType", PageType.PERSON_PROFILE);
+        query.setParameter("pageType", PageType.PERSON_PROFILE.toString().toUpperCase());
         return query.getSingleResult() > 0;
     }
 
     @Override
-    public List<PageUser> getPagesForUser(String userId, PageType pageType) {
+    public boolean hasPage(String userId, String pageType) {
+        return false;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public List<PageUser> getPagesForUser(String userId, String pageType) {
         TypedQuery<JpaPageUser> query = manager.createNamedQuery(JpaPageUser.GET_PAGES_FOR_USER, JpaPageUser.class);
         query.setParameter("userId", userId);
-        query.setParameter("pageType", pageType);
+        query.setParameter("pageType", pageType.toUpperCase());
         return CollectionUtils.<PageUser>toBaseTypedList(query.getResultList());
     }
 

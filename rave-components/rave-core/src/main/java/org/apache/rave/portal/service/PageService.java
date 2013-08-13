@@ -61,20 +61,37 @@ public interface PageService {
     /**
      * Gets all user pages for the given user.
      *
+     * @deprecated method is deprecated in favor of getPages("portal", userId);
+     *
      * @param userId The user to retrieve pages for.
      * @return A non null possible empty list of pages for the given user.
      */
+    @Deprecated
     @PreAuthorize("hasPermission(new org.apache.rave.portal.security.impl.RaveSecurityContext(#userId, 'org.apache.rave.model.User'), 'org.apache.rave.model.Page', 'read')")
     List<Page> getAllUserPages(String userId);
 
     /**
      * Gets the profile page for the given user.
      *
+     * @deprecated method is deprecated in favor of getPages("profile", userId);
+     *
      * @param userId The user to retrieve the page for.
      * @return The profile page
      */
+    @Deprecated
     @PostAuthorize("returnObject == null or hasPermission(returnObject, 'read')")
     Page getPersonProfilePage(String userId);
+
+    /**
+     * Gets the set of pages for the given user and context
+     *
+     * @since 0.22
+     * @param context the context for the pages ex: "portal", "profile", etc.
+     * @param userId the user to retrieve the page for
+     * @return A non-null, possibly empty list of page for the given user.
+     */
+    @PreAuthorize("hasPermission(new org.apache.rave.portal.security.impl.RaveSecurityContext(#userId, 'org.apache.rave.model.User'), 'org.apache.rave.model.Page', 'read')")
+    List<Page> getPages(String context, String userId);
 
     /**
      * Return the page object from a list of pages given the pageId
@@ -147,8 +164,8 @@ public interface PageService {
      * @param pageType
      */
     @PreAuthorize("hasPermission(new org.apache.rave.portal.security.impl.RaveSecurityContext(#userId, 'org.apache.rave.model.User'), 'org.apache.rave.model.Page', 'delete')")
-    int deletePages(String userId, PageType pageType);
-
+    int deletePages(String userId, String pageType);
+    
     /**
      * Moves a Region widget's position in a region or across regions
      *

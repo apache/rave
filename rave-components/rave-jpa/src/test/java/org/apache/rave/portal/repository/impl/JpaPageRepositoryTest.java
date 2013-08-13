@@ -79,12 +79,12 @@ public class JpaPageRepositoryTest {
     @Before
     public void setup(){
         user = (JpaUser)userRepository.get(CREATED_USER_ID);
-        defaultPageTemplate = pageTemplateRepository.getDefaultPage(PageType.PERSON_PROFILE);
+        defaultPageTemplate = pageTemplateRepository.getDefaultPage(PageType.PERSON_PROFILE.toString().toUpperCase());
     }
 
     @Test
     public void getAllPages_validUser_validUserPageSet() {
-        List<Page> pages = repository.getAllPagesForUserType(USER_ID, PageType.USER);
+        List<Page> pages = repository.getAllPagesForUserType(USER_ID, PageType.USER.toString());
         assertThat(pages, is(notNullValue()));
         assertThat(pages.size(), equalTo(2));
         assertThat(pages.get(0).getRegions().size(), equalTo(2));
@@ -93,7 +93,7 @@ public class JpaPageRepositoryTest {
         assertThat(widget, is(notNullValue()));
         assertThat(widget.getUrl(), equalTo(WIDGET_URL));
 
-        List<PageUser> pageUserPages = repository.getPagesForUser(USER_ID, PageType.USER);
+        List<PageUser> pageUserPages = repository.getPagesForUser(USER_ID, PageType.USER.toString().toUpperCase());
         // test that the query returns the pages in proper render sequence order
         Long lastRenderSequence = -1L;
         for (PageUser p : pageUserPages) {
@@ -105,12 +105,12 @@ public class JpaPageRepositoryTest {
 
     @Test
     public void getAllPages_validUser_validPersonProfilePageSet() {
-        List<Page> pages = repository.getAllPagesForUserType(USER_ID, PageType.PERSON_PROFILE);
+        List<Page> pages = repository.getAllPagesForUserType(USER_ID, PageType.PERSON_PROFILE.toString());
         assertThat(pages, is(notNullValue()));
         assertThat(pages.size(), is(1));
         assertThat(pages.get(0).getRegions().size(), is(1));
 
-        List<PageUser> pageUserPages = repository.getPagesForUser(USER_ID, PageType.PERSON_PROFILE);
+        List<PageUser> pageUserPages = repository.getPagesForUser(USER_ID, PageType.PERSON_PROFILE.toString().toUpperCase());
         // test that the query returns the pages in proper render sequence order
         Long lastRenderSequence = -1L;
         for (PageUser p : pageUserPages) {
@@ -122,13 +122,13 @@ public class JpaPageRepositoryTest {
 
     @Test
     public void getAllPages_validUser_validSubPagePageSet() {
-        List<Page> pages = repository.getAllPagesForUserType(USER_ID, PageType.SUB_PAGE);
+        List<Page> pages = repository.getAllPagesForUserType(USER_ID, PageType.SUB_PAGE.toString());
         assertThat(pages, is(notNullValue()));
         assertThat(pages.size(), is(2));
         assertThat(pages.get(0).getRegions().size(), is(1));
         assertThat(pages.get(0).getParentPage().getId(), is("3"));
 
-        List<PageUser> pageUserPages = repository.getPagesForUser(USER_ID, PageType.SUB_PAGE);
+        List<PageUser> pageUserPages = repository.getPagesForUser(USER_ID, PageType.SUB_PAGE.toString().toUpperCase());
         // test that the query returns the pages in proper render sequence order
         Long lastRenderSequence = -1L;
         for (PageUser p : pageUserPages) {
@@ -140,19 +140,19 @@ public class JpaPageRepositoryTest {
 
     @Test
     public void getAllPages_invalidUser_emptySet() {
-        List<Page> pages = repository.getAllPagesForUserType(INVALID_USER, PageType.USER);
+        List<Page> pages = repository.getAllPagesForUserType(INVALID_USER, PageType.USER.toString());
         assertThat(pages.isEmpty(), is(true));
     }
 
     @Test
     public void getAllPages_person_profile_invalidUser_emptySet() {
-        List<Page> pages = repository.getAllPagesForUserType(INVALID_USER, PageType.PERSON_PROFILE);
+        List<Page> pages = repository.getAllPagesForUserType(INVALID_USER, PageType.PERSON_PROFILE.toString());
         assertThat(pages.isEmpty(), is(true));
     }
 
     @Test
     public void getAllPages_nullUser_emptySet() {
-        List<Page> pages = repository.getAllPagesForUserType(null, PageType.USER);
+        List<Page> pages = repository.getAllPagesForUserType(null, PageType.USER.toString());
         assertThat(pages.isEmpty(), is(true));
     }
 
@@ -161,7 +161,7 @@ public class JpaPageRepositoryTest {
         Page p = repository.get(USER_PAGE_ID);
         assertThat(p, is(notNullValue()));
         assertThat(p.getId(), is(equalTo(USER_PAGE_ID)));
-        assertThat(p.getPageType(), is(PageType.USER));
+        assertThat(p.getPageType(), is(PageType.USER.toString().toUpperCase()));
         assertThat(p.getParentPage(), is(nullValue(Page.class)));
         assertThat(p.getSubPages().isEmpty(), is(true));
     }
@@ -170,7 +170,7 @@ public class JpaPageRepositoryTest {
     public void getById_valid_personProfilePage() {
         Page p = repository.get(PERSON_PROFILE_PAGE_ID);
         assertThat(p.getId(), is(equalTo(PERSON_PROFILE_PAGE_ID)));
-        assertThat(p.getPageType(), is(PageType.PERSON_PROFILE));
+        assertThat(p.getPageType(), is(PageType.PERSON_PROFILE.toString().toUpperCase()));
         assertThat(p.getParentPage(), is(nullValue(Page.class)));
         assertThat(p.getSubPages().isEmpty(), is(false));
 
@@ -191,7 +191,7 @@ public class JpaPageRepositoryTest {
         Page p = repository.get(SUB_PAGE_ID);
         assertThat(p, is(notNullValue()));
         assertThat(p.getId(), is(equalTo(SUB_PAGE_ID)));
-        assertThat(p.getPageType(), is(PageType.SUB_PAGE));
+        assertThat(p.getPageType(), is(PageType.SUB_PAGE.toString().toUpperCase()));
         assertThat(p.getParentPage(), is(notNullValue(Page.class)));
         assertThat(p.getSubPages().isEmpty(), is(true));
     }
@@ -206,12 +206,12 @@ public class JpaPageRepositoryTest {
     @Transactional(readOnly=false)
     @Rollback(true)
     public void deletePages_userPageType() {
-        int numPages = repository.getAllPagesForUserType(USER_ID, PageType.USER).size();
+        int numPages = repository.getAllPagesForUserType(USER_ID, PageType.USER.toString()).size();
         assertThat(numPages > 0, is(true));
-        int deletedPages = repository.deletePages(USER_ID, PageType.USER);
+        int deletedPages = repository.deletePages(USER_ID, PageType.USER.toString().toUpperCase());
         assertThat(deletedPages, is(numPages));
         // ensure pages are deleted
-        assertThat(repository.getAllPagesForUserType(USER_ID, PageType.USER).isEmpty(), is(true));
+        assertThat(repository.getAllPagesForUserType(USER_ID, PageType.USER.toString()).isEmpty(), is(true));
     }
 
     @Test
@@ -261,7 +261,7 @@ public class JpaPageRepositoryTest {
         assertNotNull(page.getPageLayout());
         assertEquals("person_profile", page.getPageLayout().getCode());
         assertEquals(1, page.getRegions().size());
-        assertEquals(PageType.PERSON_PROFILE, page.getPageType());
+        assertEquals(PageType.PERSON_PROFILE.toString().toUpperCase(), page.getPageType());
         Page subPage1 = page.getSubPages().get(0);
         Page subPage2 = page.getSubPages().get(1);
         assertEquals("Widgets on sub page 1", 2, subPage1.getRegions().get(0).getRegionWidgets().size());
@@ -276,9 +276,9 @@ public class JpaPageRepositoryTest {
         assertEquals("sub page 2 regions refers to sub page 2", subPage2.getId(), subPage2.getRegions().get(0).getPage().getId());
         assertEquals("sub page 1 has one column layout", "columns_1", subPage1.getPageLayout().getCode());
         assertEquals("sub page 2 has one column layout", "columns_1", subPage2.getPageLayout().getCode());
-        assertEquals(PageType.SUB_PAGE, subPage1.getPageType());
+        assertEquals(PageType.SUB_PAGE.toString().toUpperCase(), subPage1.getPageType());
         assertEquals(defaultPageTemplate.getSubPageTemplates().get(0).getName(), subPage1.getName());
-        assertEquals(PageType.SUB_PAGE, subPage2.getPageType());
+        assertEquals(PageType.SUB_PAGE.toString().toUpperCase(), subPage2.getPageType());
         assertEquals(defaultPageTemplate.getSubPageTemplates().get(1).getName(), subPage2.getName());
         assertEquals(user.getId(), subPage1.getOwnerId());
         assertEquals(user.getId(), subPage2.getOwnerId());

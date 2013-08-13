@@ -29,7 +29,7 @@ public class PageTemplateImpl implements PageTemplate {
     private String id;
     private String name;
     private String description;
-    private PageType pageType;
+    private String pageType;
     private PageTemplate parentPageTemplate;
     private List<PageTemplate> subPageTemplates;
     private PageLayout pageLayout;
@@ -69,11 +69,11 @@ public class PageTemplateImpl implements PageTemplate {
         this.description = description;
     }
 
-    public PageType getPageType() {
+    public String getPageType() {
         return pageType;
     }
 
-    public void setPageType(PageType pageType) {
+    public void setPageType(String pageType) {
         this.pageType = pageType;
     }
 

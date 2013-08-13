@@ -38,8 +38,8 @@ public interface Page {
     List<Region> getRegions();
     void setRegions(List<Region> regions);
 
-    PageType getPageType();
-    void setPageType(PageType pageType);
+    String getPageType();
+    void setPageType(String pageType);
 
     Page getParentPage();
     void setParentPage(Page parentPage);

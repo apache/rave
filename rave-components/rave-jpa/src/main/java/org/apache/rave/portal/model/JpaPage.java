@@ -94,8 +94,7 @@ public class JpaPage implements BasicEntity, Serializable, Page {
 
     @Basic
     @Column(name = "page_type")
-    @Enumerated(EnumType.STRING)
-    private PageType pageType;
+    private String pageType;
 
     @OneToMany(targetEntity=JpaPageUser.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy="page", orphanRemoval=true)
     private List<JpaPageUser> members;
@@ -209,12 +208,12 @@ public class JpaPage implements BasicEntity, Serializable, Page {
     }
 
     @Override
-    public PageType getPageType() {
+    public String getPageType() {
         return pageType;
     }
 
     @Override
-    public void setPageType(PageType pageType) {
+    public void setPageType(String pageType) {
         this.pageType = pageType;
     }
 

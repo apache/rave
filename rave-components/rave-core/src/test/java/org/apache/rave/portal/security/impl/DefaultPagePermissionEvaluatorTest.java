@@ -79,22 +79,22 @@ public class DefaultPagePermissionEvaluatorTest {
         page = new PageImpl();
         page.setId(VALID_PAGE_ID);
         page.setOwnerId(user.getId());
-        page.setPageType(PageType.USER);
+        page.setPageType(PageType.USER.toString());
 
         pageSubPage = new PageImpl();
         pageSubPage.setId(VALID_PAGE_ID4);
         pageSubPage.setOwnerId(user.getId());
-        pageSubPage.setPageType(PageType.SUB_PAGE);
+        pageSubPage.setPageType(PageType.SUB_PAGE.toString());
         pageSubPage.setParentPage(page);
 
         personProfilePage = new PageImpl();
         personProfilePage.setId(VALID_PAGE_ID2);
         personProfilePage.setOwnerId(user.getId());
-        personProfilePage.setPageType(PageType.PERSON_PROFILE);
+        personProfilePage.setPageType(PageType.PERSON_PROFILE.toString());
         personProfileSubPage = new PageImpl();
         personProfileSubPage.setId(VALID_PAGE_ID3);
         personProfileSubPage.setOwnerId(user.getId());
-        personProfileSubPage.setPageType(PageType.PERSON_PROFILE);
+        personProfileSubPage.setPageType(PageType.PERSON_PROFILE.toString());
         personProfileSubPage.setParentPage(personProfilePage);
 
         grantedAuthoritiesList = new ArrayList<GrantedAuthority>();

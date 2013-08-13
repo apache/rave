@@ -21,7 +21,6 @@ package org.apache.rave.portal.repository.impl;
 
 import org.apache.rave.portal.model.MongoDbPageTemplate;
 import org.apache.rave.model.PageTemplate;
-import org.apache.rave.model.PageType;
 import org.apache.rave.portal.model.conversion.HydratingConverterFactory;
 import org.apache.rave.portal.repository.PageTemplateRepository;
 import org.apache.rave.util.CollectionUtils;
@@ -56,8 +55,8 @@ public class MongoDbPageTemplateRepository implements PageTemplateRepository {
     }
 
     @Override
-    public PageTemplate getDefaultPage(PageType pageType) {
-        PageTemplate temp = template.findOne(new Query(where("pageType").is(pageType.getPageType().toUpperCase()).andOperator(where("defaultTemplate").is(true))), MongoDbPageTemplate.class, PAGE_TEMPLATE_COLLECTION);
+    public PageTemplate getDefaultPage(String pageType) {
+        PageTemplate temp = template.findOne(new Query(where("pageType").is(pageType.toUpperCase()).andOperator(where("defaultTemplate").is(true))), MongoDbPageTemplate.class, PAGE_TEMPLATE_COLLECTION);
         converter.hydrate(temp, PageTemplate.class);
         return temp;
     }

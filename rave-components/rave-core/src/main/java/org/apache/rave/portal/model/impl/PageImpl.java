@@ -30,7 +30,7 @@ public class PageImpl implements Page {
     private List<Page> subPages;
     private PageLayout pageLayout;
     private List<Region> regions;
-    private PageType pageType;
+    private String pageType;
     private List<PageUser> members;
 
     public PageImpl() {}
@@ -115,12 +115,12 @@ public class PageImpl implements Page {
     }
 
     @Override
-    public PageType getPageType() {
+    public String getPageType() {
         return pageType;
     }
 
     @Override
-    public void setPageType(PageType pageType) {
+    public void setPageType(String pageType) {
         this.pageType = pageType;
     }
 

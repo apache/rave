@@ -339,8 +339,8 @@ public class DefaultUserServiceTest {
         pages.add(page);
 
         expect(userRepository.get(USER_ID)).andReturn(user);
-        expect(pageRepository.deletePages(USER_ID, PageType.USER)).andReturn(pages.size());
-        expect(pageRepository.deletePages(USER_ID, PageType.PERSON_PROFILE)).andReturn(pages.size());
+        expect(pageRepository.deletePages(USER_ID, PageType.USER.toString())).andReturn(pages.size());
+        expect(pageRepository.deletePages(USER_ID, PageType.PERSON_PROFILE.toString())).andReturn(pages.size());
         expect(widgetRepository.deleteAllWidgetComments(USER_ID)).andReturn(NUM_COMMENTS);
         expect(widgetRepository.deleteAllWidgetRatings(USER_ID)).andReturn(NUM_RATINGS);
         expect(widgetRepository.unassignWidgetOwner(USER_ID)).andReturn( NUM_WIDGETS_OWNED);
@@ -387,7 +387,7 @@ public class DefaultUserServiceTest {
     public void registerNewUser_valid(){
         User user = new UserImpl();
         expect(userRepository.save(user)).andReturn(user).once();
-        expect(pageTemplateRepository.getDefaultPage(PageType.PERSON_PROFILE)).andReturn(new PageTemplateImpl()).once();
+        expect(pageTemplateRepository.getDefaultPage(PageType.PERSON_PROFILE.toString())).andReturn(new PageTemplateImpl()).once();
         expect(pageRepository.createPageForUser(isA(UserImpl.class), isA(PageTemplate.class))).andReturn(new PageImpl());
         replay(userRepository, pageTemplateRepository, pageRepository);
         service.registerNewUser(user);
