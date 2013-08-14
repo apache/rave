@@ -18,12 +18,9 @@
  */
 
 define([], function(){
-    var userResource = ['$resource', function($resource){
-        return $resource('/users/:id', {id: '@id'});
+    return ['$resource', function($resource){
+        return $resource('/pages/:pageId/regions/:regionId/regionWidgets/:id',
+            {id: '@id', regionId: '@regionId'});
     }];
-
-    return {
-        User: userResource
-    }
-})
+});
 

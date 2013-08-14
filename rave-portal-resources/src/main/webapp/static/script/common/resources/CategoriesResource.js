@@ -18,22 +18,8 @@
  */
 
 define([], function(){
-    var personResource = ['$resource', function($resource){
-        return $resource('/people/:id', {id: '@id'});
+    return ['$resource', function($resource){
+        return $resource('/categories/:id', {id: '@id'});
     }];
-
-    var friendResource = ['$resource', function($resource){
-        return $resource('/people/:personId/friends/:id', {id: '@id'});
-    }];
-
-    var requestResource = ['$resource', function($resource){
-        return $resource('/people/:personId/requests/:requestId');
-    }];
-
-    return {
-        Person: personResource,
-        Friend: friendResource,
-        Request: requestResource
-    }
-})
+});
 

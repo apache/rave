@@ -42,18 +42,14 @@ define(['angular', '../common/resources/index'], function (angular) {
 
             $routeProvider
                 .when('/', {
-                    controller: 'MainCtrl',
                     resolve: {
                         pages: getPages
-                    },
-                    templateUrl: "/portal/static/html/portal/tabs.html"
+                    }
                 })
                 .when('/:tabId', {
-                    controller: 'TabsController',
                     resolve: {
                         pages: getPages
-                    },
-                    templateUrl: "/portal/static/html/portal/tabs.html"
+                    }
                 })
                 .otherwise({ templateUrl: '/portal/static/html/portal/404.html'});
 

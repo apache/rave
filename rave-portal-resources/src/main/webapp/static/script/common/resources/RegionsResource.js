@@ -18,13 +18,8 @@
  */
 
 define([], function(){
-    var regionWidgetResource = ['$resource', function($resource){
-        return $resource('/pages/:pageId/regions/:regionId/regionWidgets/:id',
-            {id: '@id', regionId: '@regionId'});
+    return ['$resource', function($resource){
+        return $resource('/pages/:pageId/regions/:id', {id: '@id'});
     }];
-
-    return {
-        RegionWidget: regionWidgetResource
-    }
 })
 

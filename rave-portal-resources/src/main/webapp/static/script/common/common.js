@@ -17,7 +17,7 @@
  * under the License.
  */
 
-define(['angular', 'angularResource', 'common/resources/resources'], function(angular, angularResource, services){
+define(['angular', 'angularResource', 'common/resources/index'], function(angular, angularResource, services){
     var common = angular.module('common', ['common.resources']);
 
     return common;

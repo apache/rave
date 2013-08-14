@@ -18,12 +18,8 @@
  */
 
 define([], function(){
-    var regionResource = ['$resource', function($resource){
-        return $resource('/pages/:pageId/regions/:id', {id: '@id'});
+    return ['$resource', function($resource){
+        return $resource('/portal/api/rest/pages/render/:context/:identifier/:id');
     }];
-
-    return {
-        Region: regionResource
-    }
 })
 

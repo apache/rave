@@ -17,7 +17,7 @@
  * under the License.
  */
 
-describe('Region Widget Resources', function(){
+xdescribe('Region Widget Resources', function(){
     var mockBackend, regionWidget;
 
     beforeEach(module('common.resources'));
@@ -31,9 +31,9 @@ describe('Region Widget Resources', function(){
         });
     });
 
-    beforeEach(inject(function(_$httpBackend_, RegionWidget){
+    beforeEach(inject(function(_$httpBackend_, RegionWidgets){
         mockBackend = _$httpBackend_;
-        regionWidget = RegionWidget;
+        regionWidget = RegionWidgets;
     }));
 
     describe('RegionWidget get all', function(){

@@ -17,14 +17,16 @@
  * under the License.
  */
 
-define(['angular', './category_resources', './page_resources', './pages_for_render_resource',
-    './person_resources', './region_resources', './region_widget_resources', './user_resources',
+define(['angular', './CategoriesResource', './PagesResource', './PagesForRenderResource',
+    './PeopleResource', './RegionsResource', './RegionWidgetsResource', './UsersResource',
     'underscore', 'angularResource'],
-    function (angular, category, page, pageForRender, person, region, regionWidget, user, _) {
-        'use strict';
-        var servicesModule = angular.module('common.resources', ['ngResource'], ['$httpProvider', function ($httpProvider) {
+    function (angular, categories, pages, pagesForRender, people, regions, regionWidgets, users, _) {
+
+        var resources = angular.module('common.resources', ['ngResource'])
+
+        resources.config(['$httpProvider', function ($httpProvider) {
             $httpProvider.defaults.transformResponse.push(function (data, headers) {
-                if(headers('CONTENT-TYPE') === 'application/json' && data.data) {
+                if (headers('CONTENT-TYPE') === 'application/json' && data.data) {
                     return data.data;
                 }
                 else {
@@ -33,18 +35,13 @@ define(['angular', './category_resources', './page_resources', './pages_for_rend
             });
         }]);
 
-        //Array of services
-        //For any common services added, they must be required in this file and added
-        //to the array below.
-        var services = [category, page, pageForRender, person, region, regionWidget, user];
+        resources.factory('Categories', categories);
+        resources.factory('Pages', pages);
+        resources.factory('PagesForRender', pagesForRender);
+        resources.factory('People', people);
+        resources.factory('Regions', regions);
+        resources.factory('RegionWidgets', regionWidgets);
+        resources.factory('Users', users);
 
-        //Loop through array to add services
-        _.each(services, function (e, i) {
-            //Loop through each service on the object adding it to the serviceModule
-            _.each(e, function (service, name) {
-                servicesModule.factory(name, service);
-            })
-        })
-
-        return servicesModule;
+        return resources;
     });

@@ -18,12 +18,16 @@
  */
 
 define([], function(){
-    var pageResource = ['$resource', function($resource){
-        return $resource('/portal/api/rest/pages/render/:context/:identifier/:id');
+     return['$resource', function($resource){
+        return $resource('/people/:id', {id: '@id'});
     }];
 
-    return {
-        PagesForRender: pageResource
-    }
+//    var friendResource = ['$resource', function($resource){
+//        return $resource('/people/:personId/friends/:id', {id: '@id'});
+//    }];
+//
+//    var requestResource = ['$resource', function($resource){
+//        return $resource('/people/:personId/requests/:requestId');
+//    }];
 })
 

@@ -18,12 +18,8 @@
  */
 
 define([], function(){
-    var categoryResource = ['$resource', function($resource){
-        return $resource('/categories/:id', {id: '@id'});
+    return ['$resource', function($resource){
+        return $resource('/pages/:id', {id: '@id'});
     }];
-
-    return {
-        Category: categoryResource
-    }
-});
+})
 
