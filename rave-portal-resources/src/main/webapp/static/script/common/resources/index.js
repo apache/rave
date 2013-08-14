@@ -17,24 +17,31 @@
  * under the License.
  */
 
-define(['common/resources/category_resources', 'common/resources/page_resources', 'common/resources/person_resources', 'common/resources/region_resources', 'common/resources/region_widget_resources', 'common/resources/user_resources', 'underscore'],
-    function(category, page, person, region, regionWidget, user, _) {
+define(['angular', './category_resources', './page_resources', './pages_for_render_resource',
+    './person_resources', './region_resources', './region_widget_resources', './user_resources',
+    'underscore', 'angularResource'],
+    function (angular, category, page, pageForRender, person, region, regionWidget, user, _) {
         'use strict';
-        var servicesModule =  angular.module('common.resources', ['ngResource'], ['$httpProvider', function($httpProvider){
-            $httpProvider.defaults.transformResponse.push(function(data, headers) {
-                return data.data;
+        var servicesModule = angular.module('common.resources', ['ngResource'], ['$httpProvider', function ($httpProvider) {
+            $httpProvider.defaults.transformResponse.push(function (data, headers) {
+                if(headers('CONTENT-TYPE') === 'application/json' && data.data) {
+                    return data.data;
+                }
+                else {
+                    return data;
+                }
             });
         }]);
 
         //Array of services
-        //For any common services added, they must be requried in this file and added
+        //For any common services added, they must be required in this file and added
         //to the array below.
-        var services = [category, page, person, region, regionWidget, user];
+        var services = [category, page, pageForRender, person, region, regionWidget, user];
 
         //Loop through array to add services
-        _.each(services, function(e, i){
+        _.each(services, function (e, i) {
             //Loop through each service on the object adding it to the serviceModule
-            _.each(e, function(service, name){
+            _.each(e, function (service, name) {
                 servicesModule.factory(name, service);
             })
         })

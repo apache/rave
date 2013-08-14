@@ -17,6 +17,10 @@
  * under the License.
  */
 
-define(['angular', './routes', './controllers/index'], function (angular) {
-    return angular.module('portal', ['portal.routes', 'portal.controllers']);
+define(['angular', './MainCtrl'], function (angular, MainCtrl) {
+    var controllers = angular.module('portal.controllers', []);
+
+    controllers.controller('MainCtrl', MainCtrl);
+
+    return controllers;
 });

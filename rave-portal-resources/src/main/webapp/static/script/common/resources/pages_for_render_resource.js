@@ -17,6 +17,13 @@
  * under the License.
  */
 
-define(['angular', './routes', './controllers/index'], function (angular) {
-    return angular.module('portal', ['portal.routes', 'portal.controllers']);
-});
+define([], function(){
+    var pageResource = ['$resource', function($resource){
+        return $resource('/portal/api/rest/pages/render/:context/:identifier/:id');
+    }];
+
+    return {
+        PagesForRender: pageResource
+    }
+})
+

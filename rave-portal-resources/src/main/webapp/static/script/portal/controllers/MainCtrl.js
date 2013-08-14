@@ -17,8 +17,9 @@
  * under the License.
  */
 
-define(['angular'], function (angular) {
-    var controllers = angular.module('portal.controllers', []);
-
-    return controllers;
+define([], function () {
+    return ['$route', '$scope', function ($route, $scope) {
+        $scope.pages = [];
+        console.log('holler!');
+    }]
 });

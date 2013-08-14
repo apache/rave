@@ -1,0 +1,159 @@
+<div class="navbar">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="brand"><span ng-show="user.username">Hello {{user.username}}. </span>Welcome to Rave!</a>
+            <ul class="nav pull-right">
+                <li ng-show="user.username"><a href="/portal/app/person/id/1">{{user.username}}'s Profile</a>
+                </li>
+                <li ng-show="user.username"><a href="/portal/app/store">Widget Store</a></li>
+                <li ng-show="user.admin"><a href="/portal/app/admin">Admin Interface</a></li>
+                <li ng-show="user.username"><a ng-click="logout()" href="#">Logout</a></li>
+                <li ng-hide="user.username"><a ng-click="login()" href="#">Login/Register</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="logo-wrapper"></div>
+<div id="pageContent" class="container-fluid" ng-view></div>
+
+<div rave-register-view="dialog" dialog class="modal fade">
+    <div class="modal-header">
+        <a class="close" data-dismiss="modal">&times;</a>
+    </div>
+    <div class="modal-body">
+        <div rave-render-widget="regionWidget"></div>
+    </div>
+</div>
+
+<div rave-register-view="modal_dialog" dialog="{keyboard: false, backdrop: 'static'}" class="modal fade">
+    <div class="modal-header">
+        <a class="close" data-dismiss="modal">&times;</a>
+    </div>
+    <div class="modal-body">
+        <div rave-render-widget="regionWidget"></div>
+    </div>
+</div>
+
+<div rave-register-view="sidebar">
+    <div class="modal-backdrop fade in" ng-show="isOpen"></div>
+    <div class="popup slideout" ng-class="{'shown':isOpen}">
+        <a class="close" ng-click="close()">&times;</a>
+
+        <div rave-render-widget="regionWidget" class="slideout-content"></div>
+    </div>
+</div>
+
+<div rave-register-view="canvas">
+    <div class="modal-backdrop fade in"></div>
+    <div class="widget-wrapper-canvas">
+        <div class="widget-title-bar widget-title-bar-draggable">
+            <div class="widget-title">
+                {{regionWidget.widgetUrl}}
+            </div>
+            <div class="widget-toolbar ">
+                <span class="widget-toolbar-btn" ng-click="minimize()">
+                <i class="icon-resize-small"></i>
+                </span>
+            </div>
+        </div>
+        <div class="widget">
+            <div rave-render-widget="regionWidget"></div>
+        </div>
+    </div>
+</div>
+
+<div class="widget-wrapper" rave-register-view="home" >
+    <div class="widget-title-bar widget-title-bar-draggable" ng-controller="WidgetController">
+        <div class="widget-toolbar-toggle-collapse" title="Collapse/Restore Widget">
+            <i ng-class="{'icon-chevron-down':!regionWidget.collapsed, 'icon-chevron-up':regionWidget.collapsed}"
+               ng-click="toggleCollapse()"></i>
+        </div>
+        <div class="widget-title">
+            {{regionWidget.widgetUrl}}
+        </div>
+        <div class="widget-toolbar ">
+            <div class="dropdown widget-menu-wrapper" style="">
+                <a class="dropdown-toggle" data-toggle="dropdown">
+                    <i class="icon-cog"></i>
+                </a>
+                <ul class="dropdown-menu widget-menu">
+                    <li ng-class="{'menu-item-disabled':menu.editPrefs.disable}">
+                        <a ng-click="togglePrefs()">
+                            Edit Preferences
+                        </a>
+                    </li>
+                    <li>
+                        <a ng-click="maximize()">
+                            Maximize
+                        </a>
+                    </li>
+                    <li ng-class="{'menu-item-disabled':menu.move.disable}">
+                        <a ng-click="moveToPage()">
+                            Move to Page
+                        </a>
+                    </li>
+                    <li>
+                        <a ng-click="delete()">
+                            Delete Widget
+                        </a>
+                    </li>
+                    <li class="divider"></li>
+                    <li>
+                        <a>
+                            About this Widget
+                        </a>
+                    </li>
+                    <li>
+                        <a>
+                            Comment on this Widget
+                        </a>
+                    </li>
+                    <li>
+                        <a>
+                            Rate this Widget
+                        </a>
+                    </li>
+                </ul>
+            </div>
+<span class="widget-toolbar-btn widget-toolbar-btn-min">
+<i class="icon-resize-small"></i>
+</span>
+        </div>
+    </div>
+
+    <div class="widget-prefs" ng-show="showPrefs">
+        <form class="form-horizontal" ng-submit="savePrefs()">
+            <div class="control-group" ng-repeat="pref in regionWidgetPrefs" ng-hide="pref.dataType=='HIDDEN'">
+                <label class="control-label"
+                       for="{{regionWidget.id}}-{{pref.name}}">{{pref.displayName}}</label>
+
+                <div class="controls" ng-switch="pref.dataType">
+                    <div ng-switch-when="STRING">
+                        <input type="text" id="{{regionWidget.id}}-{{pref.name}}" ng-model="pref.value">
+                    </div>
+                    <div ng-switch-when="BOOL">
+                        <input type="checkbox" id="{{regionWidget.id}}-{{pref.name}}" ng-model="pref.value">
+                    </div>
+                    <div ng-switch-when="ENUM">
+                        <select id="{{regionWidget.id}}-{{pref.name}}" ng-model="pref.value"
+                                ng-options="o.value as o.displayValue for o in pref.orderedEnumValues"></select>
+                    </div>
+                    <div ng-switch-when="LIST">
+                        <textarea type="text" id="{{regionWidget.id}}-{{pref.name}}" ng-model="pref.value">
+                        </textarea>
+                    </div>
+                    <div ng-switch-when="hidden">
+                        <input type="hidden" ng-model="pref.value">
+                    </div>
+                </div>
+            </div>
+            <div class="form-actions">
+                <button type="button" ng-click="togglePrefs()" class="btn">Cancel</button>
+                <button type="submit" class="btn btn-primary">Save changes</button>
+            </div>
+        </form>
+    </div>
+    <div class="widget" ng-hide="regionWidget.collapsed">
+        <div rave-render-widget="regionWidget"></div>
+    </div>
+</div>
