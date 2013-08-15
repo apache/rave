@@ -20,7 +20,7 @@
 define([], function () {
     return [
         function Context(){
-            var context = '';
+            var context = '/portal';
 
             return {
                 getContext: function(){

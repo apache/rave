@@ -17,14 +17,17 @@
  * under the License.
  */
 
-define(['rave'], function (rave) {
+define([], function (rave) {
     return [ 'Context',
-        function(context){
-            return function link(scope, el, attrs) {
-                var href = attrs.href;
+        function (context) {
+            return {
+                restrict: 'E',
+                link: function link(scope, el, attrs) {
+                    var href = attrs.href;
 
-                context.setContext(href);
+                    context.setContext(href);
+                }
             }
         }
-    ];
+    ]
 });

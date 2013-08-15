@@ -17,7 +17,7 @@
  * under the License.
  */
 
-define(['angular', './Context', '../directives/index'], function (angular, context) {
+define(['angular', 'common/services/Context', 'common/directives/index'], function (angular, context) {
     var services = angular.module('common.services', ['common.directives']);
 
     services.service('Context', context);

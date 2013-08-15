@@ -17,8 +17,8 @@
  * under the License.
  */
 
-define(['./Base'],
-    function (base) {
+define(['angular', './Base'],
+    function (angular, base) {
         var directives = angular.module('common.directives', []);
 
         directives.directive('base', base);

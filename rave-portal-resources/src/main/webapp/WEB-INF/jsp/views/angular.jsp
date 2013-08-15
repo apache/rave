@@ -29,25 +29,30 @@
     <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/css/bootstrap-combined.min.css" rel="stylesheet">
     <link href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" rel="stylesheet">
     <link rel="stylesheet" href="<spring:url value="/static/css/rave.css"/>"/>
-
-    <%--
+    <script>
+        require = {
+            paths: {}
+        };
+    </script>>
+<%--
     check to see if the javaScriptDebugMode is on, if so render the individual JS files,
     otherwise render the minified single file
     --%>
     <c:choose>
         <c:when test="${jsDebugMode == '1'}">
             <script>
-                require = { baseUrl: '<spring:url value="/static/script/"/>' };
+                require.baseUrl = '<spring:url value="/static/script/"/>';
             </script>
         </c:when>
         <c:otherwise>
             <script>
-                require = { baseUrl: '<spring:url value="/static/script-built/"/>' };
+                require.baseUrl = '<spring:url value="/static/script-built/"/>';
             </script>
         </c:otherwise>
     </c:choose>
     <script data-main="${context}/main.js"
             src="//cdnjs.cloudflare.com/ajax/libs/require.js/2.1.5/require.min.js"></script>
+
 </head>
 <body>
 <div class="wrapper" ng-include="'/portal/static/html/${context}/index.html'" ng-cloak>
