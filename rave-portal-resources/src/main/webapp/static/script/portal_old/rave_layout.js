@@ -17,7 +17,7 @@
  * under the License.
  */
 
-define(["jquery", "rave", "portal/rave_portal", "portal/rave_models", "bootstrap", "jqueryValidate"],
+define(["jquery", "rave", "portal_old/rave_portal", "portal_old/rave_models", "bootstrap", "jqueryValidate"],
     function ($, rave, ravePortal, raveModels) {
         var MOVE_PAGE_DEFAULT_POSITION_IDX = -1;
         var $moveWidgetDialog;

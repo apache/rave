@@ -18,7 +18,7 @@
  */
 
 define(["jquery", "underscore", "rave",
-    "portal/rave_portal", "portal/rave_backbone", "portal/rave_models", "portal/rave_templates",
+    "portal_old/rave_portal", "portal_old/rave_backbone", "portal_old/rave_models", "portal_old/rave_templates",
     "jqueryUi"],
     function ($, _, rave, ravePortal, raveBackbone, raveModels, raveTemplates) {
         var exports = {};

@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-define(["underscore", "jquery", "rave", "portal/rave_templates", "clientMessages"],
+define(["underscore", "jquery", "rave", "portal_old/rave_templates", "clientMessages"],
     function (_, $, rave, raveTemplates, clientMessages) {
 
         // JS debug mode is off by default

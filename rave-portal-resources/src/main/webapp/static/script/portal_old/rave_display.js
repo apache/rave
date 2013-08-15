@@ -17,7 +17,7 @@
  * under the License.
  */
 
-define(["rave", "portal/rave_templates", "jqueryUi"], function (rave, raveTemplates) {
+define(["rave", "portal_old/rave_templates", "jqueryUi"], function (rave, raveTemplates) {
     function displayUsersOfWidget(widgetId) {
         rave.api.rest.getUsersForWidget({widgetId: widgetId, successCallback: function (data) {
 

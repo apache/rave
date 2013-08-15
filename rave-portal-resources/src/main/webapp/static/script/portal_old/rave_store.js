@@ -17,7 +17,7 @@
  * under the License.
  */
 
-define(["jquery", "rave", "portal/rave_portal"], function($, rave, ravePortal){
+define(["jquery", "rave", "portal_old/rave_portal"], function($, rave, ravePortal){
     function initRatings() {
 
         //Adjust width's

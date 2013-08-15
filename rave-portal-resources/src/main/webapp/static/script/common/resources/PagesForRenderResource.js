@@ -18,9 +18,9 @@
  */
 
 define(['underscore'], function (_) {
-    return ['$resource', 'Pages', 'Regions', 'RegionWidgets',
-        function ($resource, Pages, Regions, RegionWidgets) {
-            var res = $resource('/portal/api/rest/pages/render/:context/:identifier/:id', {},
+    return ['$resource', 'Pages', 'Regions', 'RegionWidgets', 'Context',
+        function ($resource, Pages, Regions, RegionWidgets, Context) {
+            var res = $resource(Context.getContext()+'/api/rest/pages/render/:context/:identifier/:id', {},
                 {
                     _query: { method: 'GET', isArray: true }
                 });

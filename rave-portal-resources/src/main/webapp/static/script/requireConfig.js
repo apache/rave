@@ -32,6 +32,8 @@ requirejs.config({
         "angularResource": '//cdnjs.cloudflare.com/ajax/libs/angular.js/1.1.5/angular-resource.min',
         "osapi":"//placeholder.url.will.be.replaced.by.opensocial.environment",
         "rave": "core/main",
+        //TODO: This is in support of old portal and should go away eventually
+        "ui":"portal_old/main",
         "underscore": "//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min"
     },
     shim: {

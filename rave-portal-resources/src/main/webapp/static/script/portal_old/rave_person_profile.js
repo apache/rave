@@ -17,7 +17,7 @@
  * under the License.
  */
 
-define(["jquery", "portal/rave_portal", "rave", "bootstrap"], function($, ravePortal, rave){
+define(["jquery", "portal_old/rave_portal", "rave", "bootstrap"], function($, ravePortal, rave){
     // map of {subpage name, boolean} tracking whether or not a sub page has been viewed at least once
     var subPagesViewedStatus = {};
     var friends = new Array();

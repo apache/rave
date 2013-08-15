@@ -17,18 +17,14 @@
  * under the License.
  */
 
-define(['underscore', 'portal_old/rave_portal', 'portal_old/rave_models', 'portal_old/rave_layout', 'portal_old/rave_ui',
-    'portal_old/rave_forms', 'portal_old/rave_display'],
-    function (_, portal, models, layout, ui, forms, display) {
+define(['rave'], function (rave) {
+    return [ 'Context',
+        function(context){
+            return function link(scope, el, attrs) {
+                var href = attrs.href;
 
-        portal.models = models;
-        portal.layout = layout;
-        _.extend(portal, ui);
-        portal.forms = forms;
-        _.extend(portal, display);
-
-
-        return portal
-
-    }
-);
+                href = href.split('/');
+            }
+        }
+    ];
+});
