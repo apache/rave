@@ -77,7 +77,7 @@ describe('rave_api', function(){
         describe('saveWidgetPreference', function () {
             it('makes the correct api call', function () {
 
-                api.rest.saveWidgetPreference({regionWidgetId: 1, userPref: {"prefName": "color", prefValue:"blue"},
+                api.rest.saveWidgetPreference({regionWidgetId: 1, "prefName": "color", prefValue:"blue",
                     successCallback: testScope.callback});
 
                 expectAjax(
