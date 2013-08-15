@@ -407,7 +407,9 @@ define(["jquery", "underscore", "rave",
             var hasRequiredUserPrefs = false;
 
             if (widgetDefinition.metadata.views.preferences) {
-                widget.render('dialog', {view: widgetDefinition.metadata.views.preferences});
+                var opts = {};
+                _.extend(opts, widgetDefinition.metadata.views.preferences, {view: 'preferences'});
+                widget.render('dialog', opts);
             } else {
                 //format the data for display
                 _.each(userPrefs, function (pref) {
