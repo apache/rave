@@ -82,8 +82,8 @@ define(['underscore', 'core/rave_view_manager', 'core/rave_api', 'core/rave_open
                             "securityToken": data.securityToken,
                             "metadata": opt_gadgetInfo
                         },
-                        height = gadget.metadata.modulePrefs.height || stateManager.getDefaultHeight(),
-                        width = gadget.metadata.modulePrefs.width || stateManager.getDefaultWidth();
+                        height = getHeightFromParams(gadget.metadata.modulePrefs),
+                        width  = getWidthFromParams(gadget.metadata.modulePrefs);
 
                     preloadMetadata(gadget);
 
@@ -158,6 +158,34 @@ define(['underscore', 'core/rave_view_manager', 'core/rave_api', 'core/rave_open
             }
         }
 
+        function getHeightFromParams(opts) {
+            var height;
+            if(opts.height) {
+                height = opts.height;
+            }
+            else if(opts.preferredHeight) {
+                height = opts.preferredHeight;
+            }
+            else {
+                height = stateManager.getDefaultHeight();
+            }
+            return height;
+        }
+
+        function getWidthFromParams(opts) {
+            var width;
+            if(opts.width) {
+                width = opts.width;
+            }
+            else if(opts.preferredWidth) {
+                width = opts.preferredWidth;
+            }
+            else {
+                width = stateManager.getDefaultWidth();
+            }
+            return width;
+        }
+
         exports.renderWidget = function (widget, el, opts) {
             if (widget.error) {
                 widget.renderError(el, widget.error.message);
@@ -172,10 +200,10 @@ define(['underscore', 'core/rave_view_manager', 'core/rave_api', 'core/rave_open
             renderParams[osapi.container.RenderParam.VIEW] = opts.view || stateManager.getDefaultView();
             renderParams[osapi.container.RenderParam.ALLOW_DEFAULT_VIEW ] = opts.allowDefaultView;
             renderParams[osapi.container.RenderParam.DEBUG ] = opts.debug;
-            renderParams[osapi.container.RenderParam.HEIGHT ] = opts.height || stateManager.getDefaultHeight();
+            renderParams[osapi.container.RenderParam.HEIGHT ] = getHeightFromParams(opts);
             renderParams[osapi.container.RenderParam.NO_CACHE ] = opts.noCache;
             renderParams[osapi.container.RenderParam.TEST_MODE] = opts.testMode;
-            renderParams[osapi.container.RenderParam.WIDTH ] = opts.width || stateManager.getDefaultWidth();
+            renderParams[osapi.container.RenderParam.WIDTH ] = getWidthFromParams(opts);
             renderParams[osapi.container.RenderParam.USER_PREFS] = getCompleteUserPrefSet(widget.userPrefs, widget.metadata.userPrefs);
             container.navigateGadget(site, widget.widgetUrl, opts.view_params, renderParams, opts.callback);
         }
