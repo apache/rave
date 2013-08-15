@@ -65,8 +65,8 @@ define(['underscore', 'core/rave_ajax', 'core/rave_state_manager', 'core/rave_ev
             function saveWidgetPreference(args) {
                 ajax({
                     type: 'PUT',
-                    url: context + path + "regionWidgets/" + args.regionWidgetId + "/preferences/" + args.userPref.prefName,
-                    data: JSON.stringify({"name": args.userPref.prefName, "value": args.userPref.prefValue}),
+                    url: context + path + "regionWidgets/" + args.regionWidgetId + "/preferences/" + args.prefName,
+                    data: JSON.stringify({"name": args.prefName, "value": args.prefValue}),
                     contentType: 'application/json',
                     dataType: 'json',
                     success: function (result) {
