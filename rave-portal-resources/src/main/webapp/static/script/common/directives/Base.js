@@ -17,13 +17,17 @@
  * under the License.
  */
 
-define([], function (rave) {
+define([], function () {
     return [ 'Context',
         function (context) {
             return {
                 restrict: 'E',
                 link: function link(scope, el, attrs) {
                     var href = attrs.href;
+
+                    href = href.split('/')
+                    href.splice(-4);
+                    href = href.join('/');
 
                     context.setContext(href);
                 }
