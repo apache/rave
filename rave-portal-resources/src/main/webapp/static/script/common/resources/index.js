@@ -19,10 +19,10 @@
 
 define(['angular', './CategoriesResource', './PagesResource', './PagesForRenderResource',
     './PeopleResource', './RegionsResource', './RegionWidgetsResource', './UsersResource',
-    'underscore', 'angularResource'],
+    '../services/index', 'underscore', 'angularResource'],
     function (angular, categories, pages, pagesForRender, people, regions, regionWidgets, users, _) {
 
-        var resources = angular.module('common.resources', ['ngResource'])
+        var resources = angular.module('common.resources', ['ngResource', 'common.services'])
 
         resources.config(['$httpProvider', function ($httpProvider) {
             $httpProvider.defaults.transformResponse.push(function (data, headers) {

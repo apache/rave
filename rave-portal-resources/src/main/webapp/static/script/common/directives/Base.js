@@ -23,7 +23,7 @@ define(['rave'], function (rave) {
             return function link(scope, el, attrs) {
                 var href = attrs.href;
 
-                href = href.split('/');
+                context.setContext(href);
             }
         }
     ];

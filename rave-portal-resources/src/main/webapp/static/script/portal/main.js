@@ -73,6 +73,6 @@ requirejs.config({
     }
 });
 
-require(['angular', './portal'], function(angular, app){
+require(['angular', 'portal/portal'], function(angular, app){
     angular.bootstrap(document, [app.name]);
 });

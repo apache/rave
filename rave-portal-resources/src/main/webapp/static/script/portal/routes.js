@@ -17,7 +17,7 @@
  * under the License.
  */
 
-define(['angular', '../common/resources/index'], function (angular) {
+define(['angular', 'common/resources/index'], function (angular) {
     var router = angular.module('portal.routes', ['common.resources']);
 
     router.config(['$routeProvider', '$locationProvider', '$httpProvider',

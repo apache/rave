@@ -36,15 +36,18 @@
     --%>
     <c:choose>
         <c:when test="${jsDebugMode == '1'}">
-            <script data-main="<spring:url value="/static/script/${context}/main.js"/>"
-                    src="//cdnjs.cloudflare.com/ajax/libs/require.js/2.1.5/require.min.js"></script>
+            <script>
+                require = { baseUrl: '<spring:url value="/static/script/"/>' };
+            </script>
         </c:when>
         <c:otherwise>
-       <script data-main="<spring:url value="/static/script-built/${context}/main.js"/>"
-               src="//cdnjs.cloudflare.com/ajax/libs/require.js/2.1.5/require.min.js"></script>
-   </c:otherwise>
-</c:choose>
-
+            <script>
+                require = { baseUrl: '<spring:url value="/static/script-built/"/>' };
+            </script>
+        </c:otherwise>
+    </c:choose>
+    <script data-main="${context}/main.js"
+            src="//cdnjs.cloudflare.com/ajax/libs/require.js/2.1.5/require.min.js"></script>
 </head>
 <body>
 <div class="wrapper" ng-include="'/portal/static/html/${context}/index.html'" ng-cloak>
