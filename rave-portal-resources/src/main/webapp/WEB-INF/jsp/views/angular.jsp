@@ -33,7 +33,7 @@
         require = {
             paths: {}
         };
-    </script>>
+    </script>
 <%--
     check to see if the javaScriptDebugMode is on, if so render the individual JS files,
     otherwise render the minified single file

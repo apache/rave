@@ -18,18 +18,19 @@
  */
 
 define([], function () {
-    return [ 'Context',
-        function (context) {
+    return [ 'constants',
+        function (constants) {
             return {
                 restrict: 'E',
                 link: function link(scope, el, attrs) {
                     var href = attrs.href;
 
+                    //TODO: this currently accounts for 'angular' in the root path. Once we bump it, needs to become splice(-3)
                     href = href.split('/')
                     href.splice(-4);
                     href = href.join('/');
 
-                    context.setContext(href);
+                    constants.hostedPath = href;
                 }
             }
         }

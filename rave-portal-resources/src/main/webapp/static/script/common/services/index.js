@@ -17,10 +17,12 @@
  * under the License.
  */
 
-define(['angular', 'common/services/Context', 'common/directives/index'], function (angular, context) {
+define(['angular', 'common/directives/index'], function (angular) {
     var services = angular.module('common.services', ['common.directives']);
 
-    services.service('Context', context);
+    services.constant('constants', {
+        hostedPath: ''
+    });
 
     return services;
 });

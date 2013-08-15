@@ -18,8 +18,8 @@
  */
 
 define([], function(){
-    return ['$resource', function($resource){
-        return $resource('/categories/:id', {id: '@id'});
+    return ['$resource', 'constants', function($resource, constants){
+        return $resource(constants.hostedPath + '/api/rest/categories/:id', {id: '@id'});
     }];
 });
 

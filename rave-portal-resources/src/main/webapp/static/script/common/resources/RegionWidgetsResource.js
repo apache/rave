@@ -18,8 +18,8 @@
  */
 
 define([], function(){
-    return ['$resource', function($resource){
-        return $resource('/pages/:pageId/regions/:regionId/regionWidgets/:id',
+    return ['$resource', 'constants', function($resource, constants){
+        return $resource(constants.hostedPath + '/api/rest/pages/:pageId/regions/:regionId/regionWidgets/:id',
             {id: '@id', regionId: '@regionId'});
     }];
 });

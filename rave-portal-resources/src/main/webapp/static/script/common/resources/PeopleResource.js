@@ -18,8 +18,8 @@
  */
 
 define([], function(){
-     return['$resource', function($resource){
-        return $resource('/people/:id', {id: '@id'});
+     return['$resource', 'constants', function($resource, constants){
+        return $resource(constants.hostedPath + '/api/rest/people/:id', {id: '@id'});
     }];
 
 //    var friendResource = ['$resource', function($resource){
