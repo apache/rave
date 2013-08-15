@@ -37,11 +37,11 @@ define(['angular', './CategoriesResource', './PagesResource', './PagesForRenderR
 
         resources.factory('Categories', categories);
         resources.factory('Pages', pages);
-        resources.factory('PagesForRender', pagesForRender);
         resources.factory('People', people);
         resources.factory('Regions', regions);
         resources.factory('RegionWidgets', regionWidgets);
         resources.factory('Users', users);
+        resources.factory('PagesForRender', pagesForRender);
 
         return resources;
     });

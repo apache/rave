@@ -17,9 +17,39 @@
  * under the License.
  */
 
-define([], function(){
-    return ['$resource', function($resource){
-        return $resource('/portal/api/rest/pages/render/:context/:identifier/:id');
-    }];
+define(['underscore'], function (_) {
+    return ['$resource', 'Pages', 'Regions', 'RegionWidgets',
+        function ($resource, Pages, Regions, RegionWidgets) {
+            var res = $resource('/portal/api/rest/pages/render/:context/:identifier/:id', {},
+                {
+                    _query: { method: 'GET', isArray: true }
+                });
+
+            res.query = function (args, onSuccess, onError) {
+                return res._query.call(null, args).$then(function (res) {
+                    //TODO: check for error
+                    var pages = res.data;
+
+                    _.each(pages, function (page, k) {
+                        page = pages[k] = new Pages(page);
+
+                        console.log(page);
+
+                        _.each(page.regions, function (region, j) {
+                            region = page.regions[j] = new Regions(region);
+
+                            _.each(region.regionWidgets, function (regionWidget, i) {
+                                region.regionWidgets[i] = new RegionWidgets(regionWidget);
+                            });
+                        });
+                    });
+
+                    return onSuccess(pages);
+                });
+            }
+
+            return res;
+        }
+    ];
 })
 
