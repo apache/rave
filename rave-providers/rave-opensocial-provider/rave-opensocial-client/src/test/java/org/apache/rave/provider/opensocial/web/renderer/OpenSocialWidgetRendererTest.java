@@ -89,7 +89,7 @@ public class OpenSocialWidgetRendererTest {
         subPage.setId(VALID_SUBPAGE_ID);
         subPage.setName(VALID_SUBPAGE_NAME);
         subPage.setParentPage(page);
-        subPage.setPageType(PageType.SUB_PAGE);
+        subPage.setPageType(PageType.SUB_PAGE.toString());
         page.getSubPages().add(subPage);
 
         WidgetImpl w = new WidgetImpl();
@@ -148,7 +148,7 @@ public class OpenSocialWidgetRendererTest {
         final String REGION_ID = "8675309";
 
         Page page = new PageImpl();
-        page.setPageType(PageType.USER);
+        page.setPageType(PageType.USER.toString());
 
         WidgetImpl w = new WidgetImpl();
         w.setType(Constants.WIDGET_TYPE);

@@ -59,8 +59,7 @@ public class JpaPageTemplate implements BasicEntity, Serializable, PageTemplate 
 
     @Basic(optional = false)
     @Column(name="page_type", unique = false)
-    @Enumerated(EnumType.STRING)
-    private PageType pageType;
+    private String pageType;
 
     @OneToOne(cascade=CascadeType.ALL)
     @JoinColumn(name="parent_page_template_id")
@@ -98,12 +97,12 @@ public class JpaPageTemplate implements BasicEntity, Serializable, PageTemplate 
     }
 
     @Override
-    public PageType getPageType() {
+    public String getPageType() {
         return pageType;
     }
 
     @Override
-    public void setPageType(PageType pageType) {
+    public void setPageType(String pageType) {
         this.pageType = pageType;
     }
 

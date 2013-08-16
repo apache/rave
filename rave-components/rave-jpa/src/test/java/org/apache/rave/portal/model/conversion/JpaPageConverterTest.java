@@ -63,7 +63,7 @@ public class JpaPageConverterTest {
         page.setName("name");
         page.setOwnerId("");
         page.setPageLayout(new PageLayoutImpl());
-        page.setPageType(PageType.USER);
+        page.setPageType(PageType.USER.toString());
         page.setParentPage(new PageImpl("1"));
         page.setRegions(new ArrayList<Region>());
         page.setSubPages(new ArrayList<Page>());

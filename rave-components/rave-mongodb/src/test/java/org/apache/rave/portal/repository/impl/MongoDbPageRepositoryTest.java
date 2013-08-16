@@ -76,7 +76,7 @@ public class MongoDbPageRepositoryTest {
         expect(template.find(isA(Query.class))).andReturn(pages);
         replay(template);
 
-        List<Page> result = repo.getAllPagesForUserType(userId, pageType);
+        List<Page> result = repo.getAllPagesForUserType(userId, pageType.toString());
         assertNotNull(result);
 
     }
@@ -108,7 +108,7 @@ public class MongoDbPageRepositoryTest {
         subRegions.add(subRegion);
         sub.setPageTemplateRegions(subRegions);
         sub.setName("sub");
-        sub.setPageType(PageType.SUB_PAGE);
+        sub.setPageType(PageType.SUB_PAGE.toString());
         sub.setPageLayout(layout);
         sub.setPageTemplateRegions(subRegions);
         sub.setRenderSequence(2000L);
@@ -128,7 +128,7 @@ public class MongoDbPageRepositoryTest {
         regions.add(region);
 
         pt.setName("carol");
-        pt.setPageType(PageType.USER);
+        pt.setPageType(PageType.USER.toString());
         pt.setPageLayout(layout);
         subPageTemplates.add(sub);
         pt.setSubPageTemplates(subPageTemplates);
@@ -165,7 +165,7 @@ public class MongoDbPageRepositoryTest {
         expectLastCall();
         replay(template);
 
-        resultCount = repo.deletePages(userID, PageType.USER);
+        resultCount = repo.deletePages(userID, PageType.USER.toString().toString());
         assertThat(resultCount, is(equalTo(1)));
         verify(template);
     }
@@ -175,10 +175,10 @@ public class MongoDbPageRepositoryTest {
         String userId = "1234L";
         User user = new UserImpl(userId);
         Page page = new PageImpl();
-        page.setPageType(PageType.PERSON_PROFILE);
+        page.setPageType(PageType.PERSON_PROFILE.toString());
         page.setOwnerId(userId);
 
-        expect(template.count(query(where("pageType").is(PageType.PERSON_PROFILE).andOperator(where("ownerId").is(userId))))).andReturn(1L);
+        expect(template.count(query(where("pageType").is("PERSON_PROFILE").andOperator(where("ownerId").is(userId))))).andReturn(1L);
         replay(template);
 
         boolean result = repo.hasPersonPage(userId);
@@ -190,7 +190,7 @@ public class MongoDbPageRepositoryTest {
     public void hasPersonPage_false(){
         String userId = "1234L";
 
-        expect(template.count(query(where("pageType").is(PageType.PERSON_PROFILE).andOperator(where("ownerId").is(userId))))).andReturn(0L);
+        expect(template.count(query(where("pageType").is("PERSON_PROFILE").andOperator(where("ownerId").is(userId))))).andReturn(0L);
         replay(template);
 
         boolean result = repo.hasPersonPage(userId);
@@ -227,7 +227,7 @@ public class MongoDbPageRepositoryTest {
 
         expect(template.find(query(where("members").elemMatch(where("userId").is(userId)).andOperator(where("pageType").is("USER"))))).andReturn(pages);
         replay(template);
-        result = repo.getPagesForUser(userId, PageType.USER);
+        result = repo.getPagesForUser(userId, PageType.USER.toString().toString());
 
         assertThat(result.get(0).getUserId(), is(equalTo(user2.getId())));
         assertThat(result.size(), is(equalTo(2)));
@@ -267,7 +267,7 @@ public class MongoDbPageRepositoryTest {
 
         expect(template.find(query(where("members").elemMatch(where("userId").is(userId)).andOperator(where("pageType").is("USER"))))).andReturn(pages);
         replay(template);
-        result = repo.getPagesForUser(userId, PageType.USER);
+        result = repo.getPagesForUser(userId, PageType.USER.toString().toString());
 
         assertThat(result.get(0).getUserId(), is(equalTo("2222L")));
         assertThat(result.size(), is(equalTo(2)));
@@ -291,7 +291,7 @@ public class MongoDbPageRepositoryTest {
         expect(template.find(query(where("members").elemMatch(where("userId").is(userId)).andOperator(where("pageType").is("USER"))))).andReturn(pages);
         replay(template);
 
-        result = repo.getPagesForUser(userId, PageType.USER);
+        result = repo.getPagesForUser(userId, PageType.USER.toString().toString());
         assertThat(result.size(), is(equalTo(1)));
 
     }

@@ -43,18 +43,20 @@ public class JpaPageConverter implements ModelConverter<Page, JpaPage> {
 
     @Override
     public JpaPage convert(Page source) {
-        return source instanceof JpaPage ? (JpaPage) source : createEntity(source);
+        //Enforce consistent casing for page types
+        if (source != null) {
+            source.setPageType(source.getPageType() == null ? null : source.getPageType().toUpperCase());
+            return source instanceof JpaPage ? (JpaPage) source : createEntity(source);
+        }
+        return null;
     }
 
     private JpaPage createEntity(Page source) {
-        JpaPage converted = null;
-        if (source != null) {
-            converted = source.getId() == null ? new JpaPage() : manager.find(JpaPage.class, Long.parseLong(source.getId()));
-            if(converted == null) {
-                converted = new JpaPage();
-            }
-            updateProperties(source, converted);
+        JpaPage converted = source.getId() == null ? new JpaPage() : manager.find(JpaPage.class, Long.parseLong(source.getId()));
+        if (converted == null) {
+            converted = new JpaPage();
         }
+        updateProperties(source, converted);
         return converted;
     }
 
@@ -72,8 +74,8 @@ public class JpaPageConverter implements ModelConverter<Page, JpaPage> {
     }
 
     private void replacePageReferences(Page source, JpaPage converted) {
-        if(source.getMembers() != null) {
-            for(PageUser user : source.getMembers()) {
+        if (source.getMembers() != null) {
+            for (PageUser user : source.getMembers()) {
                 user.setPage(converted);
             }
         }

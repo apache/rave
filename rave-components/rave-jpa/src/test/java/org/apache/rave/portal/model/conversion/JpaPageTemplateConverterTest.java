@@ -73,7 +73,7 @@ public class JpaPageTemplateConverterTest {
         template.setPageLayout(new PageLayoutImpl());
         template.setParentPageTemplate(new PageTemplateImpl("1"));
         template.setDescription("Description");
-        template.setPageType(PageType.USER);
+        template.setPageType(PageType.USER.toString());
 
         JpaPageTemplate jpaTemplate = converter.convert(template);
 

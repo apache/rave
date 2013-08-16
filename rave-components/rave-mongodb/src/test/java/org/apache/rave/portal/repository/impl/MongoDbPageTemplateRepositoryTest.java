@@ -84,7 +84,7 @@ public class MongoDbPageTemplateRepositoryTest {
         expectLastCall();
         replay(converter, template);
 
-        PageTemplate returned = templateRepository.getDefaultPage(pageType);
+        PageTemplate returned = templateRepository.getDefaultPage(pageType.toString());
 
         assertThat((MongoDbPageTemplate)returned, is(sameInstance(found)));
     }

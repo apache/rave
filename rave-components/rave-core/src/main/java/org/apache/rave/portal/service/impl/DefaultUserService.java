@@ -189,7 +189,7 @@ public class DefaultUserService implements UserService {
     		user.setEnabled(false);
     	}
         User managedUser = userRepository.save(user);
-        pageRepository.createPageForUser(managedUser, pageTemplateRepository.getDefaultPage(PageType.PERSON_PROFILE));
+        pageRepository.createPageForUser(managedUser, pageTemplateRepository.getDefaultPage(PageType.PERSON_PROFILE.toString()));
         if(userAccountApproval && !approvalAdminEmail.isEmpty()){
             Map<String, Object> templateData = new HashMap<String, Object>();
             templateData.put("user", user);
@@ -293,9 +293,9 @@ public class DefaultUserService implements UserService {
         final String username = user.getUsername();
 
         // delete all User type pages
-        int numDeletedPages = pageRepository.deletePages(userId, PageType.USER);
+        int numDeletedPages = pageRepository.deletePages(userId, PageType.USER.toString());
         // delete all person pages
-        int numDeletedPersonPages = pageRepository.deletePages(userId, PageType.PERSON_PROFILE);
+        int numDeletedPersonPages = pageRepository.deletePages(userId, PageType.PERSON_PROFILE.toString());
         // delete all the widget comments
         int numWidgetComments = widgetRepository.deleteAllWidgetComments(userId);
         // delete all the widget ratings

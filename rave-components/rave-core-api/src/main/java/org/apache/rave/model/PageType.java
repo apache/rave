@@ -23,7 +23,10 @@ import java.util.Map;
 
 /**
  * The type of a Page object
+ *
+ * Deprecated in favor of generic context mapping & top-level page checks.
  */
+@Deprecated
 public enum PageType {
     USER("user"),
     PERSON_PROFILE("person_profile"),

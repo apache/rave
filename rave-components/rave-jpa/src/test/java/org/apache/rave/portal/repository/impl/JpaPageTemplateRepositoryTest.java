@@ -70,12 +70,12 @@ public class JpaPageTemplateRepositoryTest {
     @Test
     public void getDefaultPersonPage_valid(){
         // get default page template
-        JpaPageTemplate pt = (JpaPageTemplate)pageTemplateRepository.getDefaultPage(PageType.PERSON_PROFILE);
+        JpaPageTemplate pt = (JpaPageTemplate)pageTemplateRepository.getDefaultPage(PageType.PERSON_PROFILE.toString().toUpperCase());
         // default page tests
         assertNotNull(pt);
         assertEquals("Template for person profile pages", pt.getDescription());
         assertEquals("Person Profile", pt.getName());
-        assertEquals(PageType.PERSON_PROFILE, pt.getPageType());
+        assertEquals(PageType.PERSON_PROFILE.toString().toUpperCase(), pt.getPageType());
         assertEquals(0, pt.getRenderSequence());
         assertTrue(pt.isDefaultTemplate());
         assertEquals("# of regions for parent page", 1, pt.getPageTemplateRegions().size());
@@ -89,7 +89,7 @@ public class JpaPageTemplateRepositoryTest {
         assertNotNull(subPage1);
         assertEquals("Template for the About sub page for the person profile", subPage1.getDescription());
         assertEquals("About", subPage1.getName());
-        assertEquals(PageType.SUB_PAGE, subPage1.getPageType());
+        assertEquals(PageType.SUB_PAGE.toString().toUpperCase(), subPage1.getPageType());
         assertEquals(0, subPage1.getRenderSequence());
         assertFalse(subPage1.isDefaultTemplate());
         assertEquals("# of regions for sub page 1", 1, subPage1.getPageTemplateRegions().size());
@@ -100,7 +100,7 @@ public class JpaPageTemplateRepositoryTest {
         assertNotNull(subPage2);
         assertEquals("Template for the My Activity sub page for the person profile", subPage2.getDescription());
         assertEquals("My Activity", subPage2.getName());
-        assertEquals(PageType.SUB_PAGE, subPage2.getPageType());
+        assertEquals(PageType.SUB_PAGE.toString().toUpperCase(), subPage2.getPageType());
         assertEquals(1, subPage2.getRenderSequence());
         assertFalse(subPage2.isDefaultTemplate());
         assertEquals("# of regions for sub page 2", 1, subPage2.getPageTemplateRegions().size());
@@ -162,12 +162,12 @@ public class JpaPageTemplateRepositoryTest {
     @Test
     public void getDefaultUserPage_valid(){
         // get default page template
-        JpaPageTemplate pt = (JpaPageTemplate)pageTemplateRepository.getDefaultPage(PageType.USER);
+        JpaPageTemplate pt = (JpaPageTemplate)pageTemplateRepository.getDefaultPage(PageType.USER.toString().toUpperCase());
         // default page tests
         assertNotNull(pt);
         assertEquals("User profile pages", pt.getDescription());
         assertEquals("User Profile", pt.getName());
-        assertEquals(PageType.USER, pt.getPageType());
+        assertEquals(PageType.USER.toString().toUpperCase(), pt.getPageType());
         assertEquals(0, pt.getRenderSequence());
         assertTrue(pt.isDefaultTemplate());
         assertEquals("# of regions for parent page", 1, pt.getPageTemplateRegions().size());

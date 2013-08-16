@@ -23,33 +23,31 @@ define(['angular', 'common/resources/index'], function (angular) {
     router.config(['$routeProvider', '$locationProvider', '$httpProvider',
         function ($routeProvider, $locationProvider, $httpProvider) {
 
-            var getPages =  ['PagesForRender', '$q', '$rootScope', function (PagesForRender, $q, $rootScope) {
-                var deferred = $q.defer();
+            var resolve = {
+                pages: ['PagesForRender', '$q', '$rootScope', function (PagesForRender, $q, $rootScope) {
+                    var deferred = $q.defer();
 
-                if($rootScope.pages) {
-                    deferred.resolve($rootScope.pages);
-                } else {
-                    PagesForRender.query({
-                        context: 'portal',
-                        identifier: '@self'
-                    }, function(data){
-                        deferred.resolve(data);
-                    });
-                }
+                    if($rootScope.pages) {
+                        deferred.resolve($rootScope.pages);
+                    } else {
+                        PagesForRender.query({
+                            context: 'portal',
+                            identifier: '@self'
+                        }, function(data){
+                            deferred.resolve(data);
+                        });
+                    }
 
-                return deferred.promise;
-            }]
+                    return deferred.promise;
+                }]
+            }
 
             $routeProvider
                 .when('/', {
-                    resolve: {
-                        pages: getPages
-                    }
+                    resolve: resolve
                 })
                 .when('/:tabId', {
-                    resolve: {
-                        pages: getPages
-                    }
+                    resolve: resolve
                 })
                 .otherwise({ templateUrl: '/portal/static/html/portal/404.html'});
 

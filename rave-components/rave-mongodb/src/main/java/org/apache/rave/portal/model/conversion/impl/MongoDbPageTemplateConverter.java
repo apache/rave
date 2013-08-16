@@ -138,7 +138,9 @@ public class MongoDbPageTemplateConverter implements HydratingModelConverter<Pag
         converted.setId(source.getId() == null ? generateId() : source.getId());
         converted.setName(source.getName());
         converted.setDescription(source.getDescription());
-        converted.setPageType(source.getPageType());
+
+        //Enforce consistent casing for page types
+        converted.setPageType(source.getPageType() == null ? null : source.getPageType().toUpperCase());
         converted.setParentPageTemplate(null);
         converted.setPageLayoutCode(source.getPageLayout().getCode());
         converted.setPageLayout(null);

@@ -18,7 +18,7 @@
  */
 
 define(["jquery", "underscore", "rave",
-    "portal_old/rave_portal", "portal_old/rave_backbone", "portal_old/rave_models", "portal_old/rave_templates",
+    "portal/rave_portal", "portal/rave_backbone", "portal/rave_models", "portal/rave_templates",
     "jqueryUi"],
     function ($, _, rave, ravePortal, raveBackbone, raveModels, raveTemplates) {
         var exports = {};
@@ -407,7 +407,9 @@ define(["jquery", "underscore", "rave",
             var hasRequiredUserPrefs = false;
 
             if (widgetDefinition.metadata.views.preferences) {
-                widget.render('dialog', {view: widgetDefinition.metadata.views.preferences});
+                var opts = {};
+                _.extend(opts, widgetDefinition.metadata.views.preferences, {view: 'preferences'});
+                widget.render('dialog', opts);
             } else {
                 //format the data for display
                 _.each(userPrefs, function (pref) {
@@ -557,6 +559,7 @@ define(["jquery", "underscore", "rave",
                 this.$menuItemRate = $("#widget-" + regionWidgetId + "-menu-rate-item");
                 this.$menuItemEditPrefs = $("#widget-" + regionWidgetId + "-menu-editprefs-item");
                 this.$widgetSite = $("#widget-" + regionWidgetId + "-body");
+                this.$title = $("#widget-" + regionWidgetId + "-title");
             }
 
             HomeView.prototype.render = function (widget) {
@@ -726,13 +729,17 @@ define(["jquery", "underscore", "rave",
             HomeView.prototype.collapse = function () {
                 this.$chrome.hide();
             }
+            HomeView.prototype.setTitle = function(title) {
+                this.$title.html(title);
+            }
 
             rave.registerView('home', HomeView);
         }
 
         function registerCanvasView() {
-            var CanvasView = function () {
-                this.widget;
+            var CanvasView = function (widget) {
+                this.widget = widget;
+                this.$title = $("#widget-" + widget.regionWidgetId + "-title");
             }
             CanvasView.prototype.render = function (widget) {
                 this.widget = widget;
@@ -791,6 +798,9 @@ define(["jquery", "underscore", "rave",
                 // if the widget is collapsed execute the collapse function
                 // otherwise execute the minimize function
                 return false;
+            }
+            CanvasView.prototype.setTitle  = function(title) {
+                this.$title.html(title);
             }
 
             rave.registerView('canvas', CanvasView);

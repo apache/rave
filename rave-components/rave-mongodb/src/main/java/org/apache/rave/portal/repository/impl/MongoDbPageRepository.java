@@ -49,12 +49,12 @@ public class MongoDbPageRepository implements PageRepository {
     private MongoPageOperations template;
 
     @Override
-    public List<Page> getAllPagesForUserType(String userId, PageType pageType) {
+    public List<Page> getAllPagesForUserType(String userId, String pageType) {
         return sort(template.find(query(where("pageType").is(getString(pageType)).andOperator(where("members").elemMatch(where("userId").is(userId))))), userId);
     }
 
     @Override
-    public int deletePages(String userId, PageType pageType) {
+    public int deletePages(String userId, String pageType) {
         Query query = query(where("pageType").is(pageType).andOperator(where("ownerId").is(userId)));
         int count = (int)template.count(query);
         template.remove(query);
@@ -68,11 +68,16 @@ public class MongoDbPageRepository implements PageRepository {
 
     @Override
     public boolean hasPersonPage(String userId) {
-        return template.count(query(where("pageType").is(PageType.PERSON_PROFILE).andOperator(where("ownerId").is(userId)))) > 0;
+        return template.count(query(where("pageType").is(PageType.PERSON_PROFILE.toString().toUpperCase()).andOperator(where("ownerId").is(userId)))) > 0;
     }
 
     @Override
-    public List<PageUser> getPagesForUser(String userId, PageType pageType) {
+    public boolean hasPage(String userId, String pageType) {
+        return false;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public List<PageUser> getPagesForUser(String userId, String pageType) {
         List<Page> pages = template.find(query(where("members").elemMatch(where("userId").is(userId)).andOperator(where("pageType").is(getString(pageType)))));
         List<PageUser> userList = Lists.newArrayList();
         for(Page page : pages) {
@@ -253,8 +258,8 @@ public class MongoDbPageRepository implements PageRepository {
         return null;
     }
 
-    private String getString(PageType pageType) {
-        return pageType.getPageType().toUpperCase();
+    private String getString(String pageType) {
+        return pageType.toUpperCase();
     }
 
     public MongoPageOperations getTemplate() {

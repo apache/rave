@@ -101,12 +101,12 @@ public class MongoDbPageConverterTest {
         sourcePage.setPageLayout(pagelayout);
         sourcePage.setName("Carol");
         sourcePage.setParentPage(parentPage);
-        sourcePage.setPageType(PageType.USER);
+        sourcePage.setPageType(PageType.USER.toString());
 
         results = converter.convert(sourcePage);
 
         assertThat(results.getName(), is(equalTo("Carol")));
-        assertThat(results.getPageType(), is(PageType.USER));
+        assertThat(results.getPageType(), is("USER"));
         assertThat(results.getRegions().size(), is(1));
         assertNotNull(results.getRegions().get(0).getId());
         assertNull(results.getRegions().get(0).getPage());

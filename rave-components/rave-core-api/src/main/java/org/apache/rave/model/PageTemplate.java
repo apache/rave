@@ -26,9 +26,9 @@ public interface PageTemplate {
 
     String getId();
 
-    PageType getPageType();
+    String getPageType();
 
-    void setPageType(PageType pageType);
+    void setPageType(String pageType);
 
     String getName();
 
