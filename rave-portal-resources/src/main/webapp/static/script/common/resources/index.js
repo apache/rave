@@ -24,6 +24,10 @@ define(['angular', './CategoriesResource', './PagesResource', './PagesForRenderR
 
         var resources = angular.module('common.resources', ['ngResource', 'common.services'])
 
+        /**
+         * For all ajax requests, if the request returns json data and has a .data property, return that.
+         * This lets us unwrap our api responses for $resources.
+         */
         resources.config(['$httpProvider', function ($httpProvider) {
             $httpProvider.defaults.transformResponse.push(function (data, headers) {
                 if (headers('CONTENT-TYPE') === 'application/json' && data.data) {

@@ -20,6 +20,11 @@
 define(['angular', 'common/directives/index'], function (angular) {
     var services = angular.module('common.services', ['common.directives']);
 
+    /**
+     * Establishes the constants.hostedPath that can be injected into any service. Note that constants was made an object
+     * with a hostedPath property so that it is mutable. To contrast, services.constant('hostedPath', '') could never
+     * have its value set.
+     */
     services.constant('constants', {
         hostedPath: ''
     });

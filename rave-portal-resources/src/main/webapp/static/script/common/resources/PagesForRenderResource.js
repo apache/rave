@@ -26,6 +26,15 @@ define(['underscore', 'rave'], function (_, rave) {
                     _get: {method: 'GET'}
                 });
 
+            /**
+             * Overwriting the pagesForRender query / get methods to decompose the responses into their subordinate
+             * $resource types. This guarantees that the PagesForRender resource gets us objects on the scope that
+             * we can individually manipulate and update.
+             */
+            /*
+            TODO: One issue with this approach is that currently on a save to a page, the entire page AND all sub-objects
+            are getting posted to the server on $save() - same for regions
+             */
             res.query = function (args, onSuccess, onError) {
                 return res._query.call(null, args).$then(function (res) {
                     //TODO: check for error
@@ -62,7 +71,6 @@ define(['underscore', 'rave'], function (_, rave) {
                     });
                 });
             }
-
 
             return res;
         }

@@ -17,6 +17,11 @@
  * under the License.
  */
 
+/**
+ * The Base directive looks at the <base href=".."> tag on the angular.jsp page and parses it to establish the
+ * hostedPath of the application. This is available on constants.hostedPath and should be injected to any
+ * service, etc that needs to build a url (see all common resources for example).
+ */
 define([], function () {
     return [ 'constants',
         function (constants) {

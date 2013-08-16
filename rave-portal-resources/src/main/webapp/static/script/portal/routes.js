@@ -23,6 +23,12 @@ define(['angular', 'common/resources/index'], function (angular) {
     router.config(['$routeProvider', '$locationProvider', '$httpProvider',
         function ($routeProvider, $locationProvider, $httpProvider) {
 
+            /**
+             * The resolve functions guarantee that needed data is requested and resolved from the server BEFORE route
+             * change is triggered. Notice that each function checks if the property already exists before triggering
+             * resource request. This is to prevent a new request on every change in navigation - it will only happen
+             * on initial load.
+             */
             var resolve = {
                 pages: ['PagesForRender', '$q', '$rootScope',
                     function (PagesForRender, $q, $rootScope) {
@@ -61,6 +67,10 @@ define(['angular', 'common/resources/index'], function (angular) {
                 ]
             }
 
+            /**
+             * The portal context single page app only supports the following routes: "/" or "/:tabId".
+             * Routing should change as user clicks on page tabs.
+             */
             $routeProvider
                 .when('/', {
                     resolve: resolve
@@ -74,6 +84,11 @@ define(['angular', 'common/resources/index'], function (angular) {
         }
     ]);
 
+    /**
+     * This guarantees that pages, user (currently authenticated user), and currentPageId are always available on the
+     * root scope - and therefore any child scopes. currentPageId defaults to the pageId of the [0] element in the pages
+     * array.
+     */
     router.run(['$route', '$rootScope', function ($route, $rootScope) {
         $rootScope.$on('$routeChangeSuccess', function (evt, curr, prev) {
             $rootScope.pages = curr.locals.pages;
