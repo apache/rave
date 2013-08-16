@@ -19,23 +19,28 @@
 
 package org.apache.rave.provider.opensocial.web.model;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.rave.rest.model.RegionWidget;
 
 import javax.xml.bind.annotation.*;
+import java.util.Map;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 public class OpenSocialRegionWidget extends RegionWidget {
-    @XmlElement(name="securityToken")
+    @XmlElement(name = "securityToken")
     protected String securityToken;
-    @XmlElement(name="metadata")
-    protected String metadata;
+    @XmlElement(name = "metadata")
+    protected Map<String, Object> metadata;
 
-    public OpenSocialRegionWidget() {  }
+    private static ObjectMapper mapper = new ObjectMapper();
+
+    public OpenSocialRegionWidget() {
+    }
 
     public OpenSocialRegionWidget(RegionWidget base, String securityToken, String metadata) {
         this(base);
         this.securityToken = securityToken;
-        this.metadata = metadata;
+        setMetadata(metadata);
     }
 
     public OpenSocialRegionWidget(RegionWidget base) {
@@ -59,11 +64,17 @@ public class OpenSocialRegionWidget extends RegionWidget {
         this.securityToken = securityToken;
     }
 
-    public String getMetadata() {
+    public  Map<String, Object> getMetadata() {
         return metadata;
     }
 
     public void setMetadata(String metadata) {
-        this.metadata = metadata;
+        Map<String, Object> metadataObject = null;
+        try {
+            metadataObject = mapper.readValue(metadata, Map.class);
+        } catch (Exception e) {
+            //TODO: Do we need to handle this exception somehow?
+        }
+        this.metadata = metadataObject;
     }
 }
