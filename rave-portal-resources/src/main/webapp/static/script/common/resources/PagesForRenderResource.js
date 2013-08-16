@@ -17,12 +17,13 @@
  * under the License.
  */
 
-define(['underscore'], function (_) {
+define(['underscore', 'rave'], function (_, rave) {
     return ['$resource', 'Pages', 'Regions', 'RegionWidgets', 'constants',
         function ($resource, Pages, Regions, RegionWidgets, constants) {
-            var res = $resource(constants.hostedPath+'/api/rest/pages/render/:context/:identifier/:id', {},
+            var res = $resource(constants.hostedPath + '/api/rest/pages/render/:context/:identifier/:id', {},
                 {
-                    _query: { method: 'GET', isArray: true }
+                    _query: { method: 'GET', isArray: true },
+                    _get: {method: 'GET'}
                 });
 
             res.query = function (args, onSuccess, onError) {
@@ -33,20 +34,35 @@ define(['underscore'], function (_) {
                     _.each(pages, function (page, k) {
                         page = pages[k] = new Pages(page);
 
-                        console.log(page);
-
-                        _.each(page.regions, function (region, j) {
-                            region = page.regions[j] = new Regions(region);
-
-                            _.each(region.regionWidgets, function (regionWidget, i) {
-                                region.regionWidgets[i] = new RegionWidgets(regionWidget);
-                            });
-                        });
+                        decomposePage(page);
                     });
 
                     return onSuccess(pages);
                 });
             }
+
+            res.get = function (args, onSuccess, onError) {
+                return res.get.call(null, args).$then(function (res) {
+                    //TODO: check for error
+                    var page = res.data;
+
+                    decomposePage(page);
+
+                    return onSuccess(page);
+                });
+            }
+
+            function decomposePage(page) {
+                _.each(page.regions, function (region, j) {
+                    region = page.regions[j] = new Regions(region);
+
+                    _.each(region.regionWidgets, function (regionWidget, i) {
+                        regionWidget = rave.registerWidget(regionWidget.regionId, regionWidget);
+                        region.regionWidgets[i] = new RegionWidgets(regionWidget);
+                    });
+                });
+            }
+
 
             return res;
         }

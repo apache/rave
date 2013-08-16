@@ -30,7 +30,9 @@ requirejs.config({
         "jqueryTouchPouch": '//cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.2/jquery.ui.touch-punch.min',
         "angular": '//cdnjs.cloudflare.com/ajax/libs/angular.js/1.1.5/angular.min',
         "angularResource": '//cdnjs.cloudflare.com/ajax/libs/angular.js/1.1.5/angular-resource.min',
-        "osapi":"//placeholder.url.will.be.replaced.by.opensocial.environment",
+        //TODO: We need to get this url from the server either via an endpoint or jsp
+        "osapi":"/gadgets/js/container:pubsub-2:open-views.js?c=1&amp;container=default&amp;debug=1",
+//        "osapi":"//placeholder.url.will.be.replaced.by.opensocial.environment",
         "rave": "core/main",
         "underscore": "//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min"
     },

@@ -24,22 +24,41 @@ define(['angular', 'common/resources/index'], function (angular) {
         function ($routeProvider, $locationProvider, $httpProvider) {
 
             var resolve = {
-                pages: ['PagesForRender', '$q', '$rootScope', function (PagesForRender, $q, $rootScope) {
-                    var deferred = $q.defer();
+                pages: ['PagesForRender', '$q', '$rootScope',
+                    function (PagesForRender, $q, $rootScope) {
+                        var deferred = $q.defer();
 
-                    if($rootScope.pages) {
-                        deferred.resolve($rootScope.pages);
-                    } else {
-                        PagesForRender.query({
-                            context: 'portal',
-                            identifier: '@self'
-                        }, function(data){
-                            deferred.resolve(data);
-                        });
+                        if ($rootScope.pages) {
+                            deferred.resolve($rootScope.pages);
+                        } else {
+                            PagesForRender.query({
+                                context: 'portal',
+                                identifier: '@self'
+                            }, function (data) {
+                                deferred.resolve(data);
+                            });
+                        }
+
+                        return deferred.promise;
                     }
+                ],
+                user: [ 'Users', '$q', '$rootScope',
+                    function (Users, $q, $rootScope) {
+                        var deferred = $q.defer();
 
-                    return deferred.promise;
-                }]
+                        if ($rootScope.user) {
+                            deferred.resolve($rootScope.user);
+                        } else {
+                            Users.get({
+                                id: '@self'
+                            }, function (data) {
+                                deferred.resolve(data);
+                            });
+                        }
+
+                        return deferred.promise;
+                    }
+                ]
             }
 
             $routeProvider
@@ -55,9 +74,10 @@ define(['angular', 'common/resources/index'], function (angular) {
         }
     ]);
 
-    router.run(['$route', '$rootScope', function($route, $rootScope) {
-        $rootScope.$on('$routeChangeSuccess', function(evt, curr, prev){
+    router.run(['$route', '$rootScope', function ($route, $rootScope) {
+        $rootScope.$on('$routeChangeSuccess', function (evt, curr, prev) {
             $rootScope.pages = curr.locals.pages;
+            $rootScope.user = curr.locals.user;
             $rootScope.currentPageId = curr.params.tabId || $rootScope.pages[0].id;
         });
     }]);
