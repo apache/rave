@@ -18,7 +18,7 @@
  */
 
 define([], function(){
-     return['$resource', 'constants', function($resource, constants){
+     return ['$resource', 'constants', function($resource, constants){
         return $resource(constants.hostedPath + '/api/rest/people/:id', {id: '@id'});
     }];
 
