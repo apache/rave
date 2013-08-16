@@ -117,7 +117,8 @@ define(['underscore', 'core/rave_view_manager', 'core/rave_api', 'core/rave_open
             var widget = args.gs._widget,
                 viewSurface = viewName.split('.')[0],
                 renderInto = viewManager.getView(viewSurface) ? viewSurface : widget._el;
-
+            //If the element has no ID then it was launched in some secondary location.  Destroy the view.
+            if(widget._el.id === "") viewManager.destroyView(widget._view);
             widget.render(renderInto, {view: viewName, view_params: opt_params, ownerId: opt_ownerId});
         }
 
