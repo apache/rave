@@ -29,6 +29,7 @@ import javax.ws.rs.core.Response;
 public class DefaultUsersResource implements UsersResource {
     private static final Logger log = LoggerFactory.getLogger(DefaultUsersResource.class);
 
+    public static final String SELF = "@self";
     private UserService userService;
 
     @Override
@@ -38,7 +39,8 @@ public class DefaultUsersResource implements UsersResource {
 
     @Override
     public Response getUser(String id) {
-        org.apache.rave.model.User user = userService.getUserById(id);
+        String userId = SELF.equals(id) ? userService.getAuthenticatedUser().getId() : id;
+        org.apache.rave.model.User user = userService.getUserById(userId);
         if (user != null) {
             return Response.ok(new User(user)).build();
         } else {
