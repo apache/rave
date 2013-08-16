@@ -407,9 +407,7 @@ define(["jquery", "underscore", "rave",
             var hasRequiredUserPrefs = false;
 
             if (widgetDefinition.metadata.views.preferences) {
-                var opts = {};
-                _.extend(opts, widgetDefinition.metadata.views.preferences, {view: 'preferences'});
-                widget.render('dialog', opts);
+                widget._view = rave.renderView('preferences', widgetDefinition);
             } else {
                 //format the data for display
                 _.each(userPrefs, function (pref) {
@@ -676,7 +674,9 @@ define(["jquery", "underscore", "rave",
                 }
 
                 function showPrefsPane() {
-                    showWidgetPrefs(widget);
+                    if(widget._view.name !== "preferences") {
+                        showWidgetPrefs(widget);
+                    }
                     return false;
                 }
 
@@ -734,6 +734,31 @@ define(["jquery", "underscore", "rave",
             }
 
             rave.registerView('home', HomeView);
+        }
+
+        function registerPreferencesView() {
+            var PreferencesView = function(widget) {
+                this.widget = widget;
+                this.name = "preferences";
+            }
+
+            PreferencesView.prototype.render = function () {
+                var opts = {};
+                _.extend(opts, this.widget.metadata.views.preferences, {view:"preferences"});
+                this.view = rave.renderView("modal_dialog");
+                var widgetSite = this.view.getWidgetSite();
+                this.widget.render(widgetSite, opts);
+            }
+
+            PreferencesView.prototype.getWidgetSite = function() {
+                return this.view.getWidgetSite();
+            }
+
+            PreferencesView.prototype.destroy = function () {
+                this.widget._provider.closeWidget(this.widget);
+                rave.destroyView(this.view);
+            }
+            rave.registerView('preferences', PreferencesView);
         }
 
         function registerCanvasView() {
@@ -856,7 +881,6 @@ define(["jquery", "underscore", "rave",
                     },
                     cleanup: function (content) {
                         var container = content.parents(this.containerSelector);
-
                         container.modal('hide');
                     },
                     singleton: false
@@ -881,7 +905,6 @@ define(["jquery", "underscore", "rave",
                     },
                     cleanup: function (content) {
                         var container = content.parents(this.containerSelector);
-
                         container.modal('hide');
                     },
                     singleton: true
@@ -929,6 +952,7 @@ define(["jquery", "underscore", "rave",
 
         function init() {
             initializePageSharing();
+            registerPreferencesView();
             registerHomeView();
             registerCanvasView();
             registerPopups();
